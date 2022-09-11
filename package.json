@@ -1,0 +1,30 @@
+{
+    "name": "fathom-stablecoin-frontend",
+    "version": "1.0.0",
+    "private": true,
+    "description": "Fathom Stablecoin Frontend",
+    "workspaces": [
+      "apps/*",
+      "packages/*"
+    ],
+    "scripts": {
+      "clear:next": "rm -rf apps/**/.next",
+      "build": "turbo run build",
+      "build:desktop": "turbo run build --scope=desktop",
+      "build:graph": "turbo run build --graph",
+      "dev": "rm -rf apps/**/.next && turbo run dev --parallel",
+      "start": "turbo run start --parallel",
+      "lint": "turbo run lint",
+      "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    },
+    "devDependencies": {
+      "prettier": "^2.5.1",
+      "turbo": "latest"
+    },
+    "engines": {
+      "npm": ">=8.12.2",
+      "node": ">=16.0.0"
+    },
+    "packageManager": "npm@8.3.1"
+  }
+  
