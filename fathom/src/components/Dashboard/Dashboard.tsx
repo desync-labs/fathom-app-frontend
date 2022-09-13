@@ -17,10 +17,14 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 // import NotificationsIcon from '@mui/icons-material/Notifications';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import LogoutIcon from '@mui/icons-material/Logout';
 import Copyright from '../Footer/Footer';
 import AppBar from '../AppBar/AppBar';
 import { mainListItems, secondaryListItems } from './listItems';
 import useMetaMask from '../../hooks/metamask';
+import { Chip } from '@mui/material';
+import PoolListView from '../Pools/PoolListView';
+
 // import Chart from './Chart';
 // import Deposits from './Deposits';
 // import Orders from './Orders';
@@ -59,7 +63,7 @@ const mdTheme = createTheme();
 
 function DashboardContent() {
   const [open, setOpen] = React.useState(true);
-  const { connect, shouldDisable } = useMetaMask()!
+  const { connect, isActive, account, disconnect } = useMetaMask()!
 
 
   const toggleDrawer = () => {
@@ -97,8 +101,9 @@ function DashboardContent() {
             >
               Fathom Stablecoin
             </Typography>
-            <IconButton color="inherit" onClick={connect} disabled={shouldDisable}>
-                <AccountBalanceWalletIcon />
+            <Chip label={account} color="primary" />
+            <IconButton color="inherit" >
+                {isActive  ?  <LogoutIcon /> : <AccountBalanceWalletIcon onClick={connect}/>}
             </IconButton>
           </Toolbar>
         </AppBar>
@@ -160,7 +165,7 @@ function DashboardContent() {
                     height: 240,
                   }}
                 >
-                    <div>Pools...</div>
+                    <PoolListView/>
                 </Paper>
               </Grid>
               {/* Open Positions */}

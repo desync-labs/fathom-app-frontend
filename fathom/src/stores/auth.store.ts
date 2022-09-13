@@ -1,4 +1,5 @@
 import { makeObservable, observable, action } from 'mobx';
+import { RootStore } from '.';
 
 interface IUser{
     address: string;
@@ -9,7 +10,7 @@ export default class AuthStore{
     authenticated: boolean;
     currentUser?:IUser;
 
-    constructor() {
+    constructor(rootStore:RootStore) { 
         makeObservable(this, {
             authenticated: observable,
             currentUser: observable,
