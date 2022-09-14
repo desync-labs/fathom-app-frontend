@@ -1,10 +1,9 @@
 // src/stores/user.store.js
 
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, runInAction } from "mobx";
 import { RootStore } from ".";
 import IPoolService from "../services/interfaces/IPoolService";
 import ICollatralPool from "./interfaces/ICollatralPool";
-
 
 export default class PoolStore {
 
@@ -16,12 +15,19 @@ export default class PoolStore {
     this.service = service;
   }
 
-  setPool = (_pool:ICollatralPool) => {
-    this.pools.push(_pool);
+  setPool = (_pool:ICollatralPool[]) => {
+    this.pools = _pool;
   };
 
   fetchPools = async () =>{
-    let pool = await this.service.fetchPools();
-    this.setPool(pool)
+    let pools = await this.service.fetchPools();
+    runInAction(() =>{
+      this.setPool(pools)
+    })
   }
+
+  openPosition = async () =>{
+    await this.service.openPosition();
+  }
+
 }
