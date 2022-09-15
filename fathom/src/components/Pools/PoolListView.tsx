@@ -5,6 +5,7 @@ import { useStores } from "../../stores";
 import { LogLevel, useLogger } from '../../helpers/Logger';
 import { Link, Typography } from '@mui/material';
 import React from 'react';
+import useMetaMask from '../../hooks/metamask';
 
 // import { useWinstonLogger } from 'winston-react'
 
@@ -14,6 +15,7 @@ const PoolListView = observer(() => {
   let poolStore = useStores().poolStore;
   let positionStore = useStores().positionStore;
   let logger = useLogger();
+  const { isActive, account } = useMetaMask()!
   // const logger = useWinstonLogger();
 
 
@@ -21,7 +23,11 @@ const PoolListView = observer(() => {
     // Update the document title using the browser API
     logger.log(LogLevel.info,'fetching pool information.');
     poolStore.fetchPools()
-  },[]); 
+  },[]);
+  
+  const openNewPosition = () => {
+    positionStore.openPosition(account)
+  }
 
   return (
     <>
@@ -45,7 +51,7 @@ const PoolListView = observer(() => {
         {pool.borrowedFathom}
       </Typography>
       <div>
-        <Link color="primary" href="#" onClick={positionStore.openPosition}>
+        <Link color="primary" href="#" onClick={openNewPosition}>
           Open Position
         </Link>
       </div>

@@ -35,7 +35,7 @@ export default class PoolService implements IPoolService{
         let pool  = this.getPools()[0];
         //this.getPools().forEach(async (pool) => {
         let response = await contract.methods.getCollateralPoolInfo(pool.id).call();
-        let debtShare = new BigNumber(response[1])
+        let debtShare = new BigNumber(response[1]).div('1e18')
         let debtCeiling = new BigNumber(response[2]).div('1e45')
         pool.availableFathom = debtCeiling.minus(debtShare).toFormat(0)
         pool.borrowedFathom = debtShare.toFormat(0)

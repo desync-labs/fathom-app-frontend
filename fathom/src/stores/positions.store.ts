@@ -11,7 +11,8 @@ export default class PositionStore {
         this.service = service;
     }
 
-    openPosition = async () =>{
-        await this.service.openPosition();
+    openPosition = async (address:string) =>{
+        console.log(`Open position clicked for address ${address}`)
+        await this.service.openPosition(address);
       }
 }
