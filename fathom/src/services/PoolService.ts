@@ -4,6 +4,9 @@ import { SmartContractFactory } from "../config/SmartContractFactory";
 import ICollatralPool from "../stores/interfaces/ICollatralPool";
 import IPoolService from "./interfaces/IPoolService";
 import BigNumber from "bignumber.js";
+import { Constants } from "../helpers/Constants";
+import { Web3Utils } from "../helpers/Web3Utils";
+
 
 
 export default class PoolService implements IPoolService{
@@ -27,22 +30,18 @@ export default class PoolService implements IPoolService{
        console.log('fetching Pools...');
        let pools:ICollatralPool[] = []
        try{
-        let poolConfigMetaData = SmartContractFactory.PoolConfig;
-        var web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
-
-        let contract = new web3.eth.Contract(poolConfigMetaData.abi, poolConfigMetaData.address)
-
+        let contract = Web3Utils.getContractInstance(SmartContractFactory.PoolConfig)
         let pool  = this.getPools()[0];
         //this.getPools().forEach(async (pool) => {
         let response = await contract.methods.getCollateralPoolInfo(pool.id).call();
-        let debtShare = new BigNumber(response[1]).div('1e18')
-        let debtCeiling = new BigNumber(response[2]).div('1e45')
+        let debtShare = new BigNumber(response[1]).div(Constants.WeiPerWad)
+        let debtCeiling = new BigNumber(response[2]).div(Constants.WeiPerRad)
         pool.availableFathom = debtCeiling.minus(debtShare).toFormat(0)
         pool.borrowedFathom = debtShare.toFormat(0)
         pools.push(pool)
         //});
 
-        console.log(JSON.stringify(pools));
+        console.log(`Pool details ${JSON.stringify(pools)} `);
         return pools;
 
        }catch(exception){

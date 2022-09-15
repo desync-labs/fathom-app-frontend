@@ -1,8 +1,3 @@
-// interface DeployedContract{
-//     address:string,
-//     abi: string
-// }
-
 import { AbiItem } from 'web3-utils'
 import CollateralPoolConfigAbi from './ABI/CollateralPoolConfig.json'
 import ProxyWalletRegistryAbi from './ABI/ProxyWalletRegistry.json'
@@ -39,5 +34,30 @@ export class SmartContractFactory{
         address:'0xc36b26cf999F9f4A085Ce5bD1A541a4B81a70753'
     }
 
+    public static PositionManager  = {
+        abi:[],
+        address:'0xADd9227440f4BB447142b6df006016EA7c0773ba'
+    }
+
+    public static StabilityFeeCollector  = {
+        abi:[],
+        address:'0x0Cdd5Ba91fe821BCa30f901E5805dcDc2d5c2Aa4'
+    }
+
+    public static CollateralTokenAdapter  = {
+        abi:[],
+        address:'0x1A3f51fAA7d76eB482FFC22aec67152A46E0f1dd'
+    }
+
+    public static StablecoinAdapter  = {
+        abi:[],
+        address:'0xfA104bC5010410a03d2846c04373093Ca709c4C6'
+    }
+
+    public static FathomStablecoinProxyActions  = {
+        abi:[],
+        address:'0x8598b178d5e6C40Cb5800De5522184092469b40C'
+    }
+//"":""
 
 }

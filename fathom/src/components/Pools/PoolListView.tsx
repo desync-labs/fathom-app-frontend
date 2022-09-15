@@ -26,7 +26,7 @@ const PoolListView = observer(() => {
   },[]);
   
   const openNewPosition = () => {
-    positionStore.openPosition(account)
+    positionStore.openPosition(account,poolStore.pools[0].id)
   }
 
   return (
