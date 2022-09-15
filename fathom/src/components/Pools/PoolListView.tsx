@@ -12,6 +12,7 @@ import React from 'react';
 const PoolListView = observer(() => {
 
   let poolStore = useStores().poolStore;
+  let positionStore = useStores().positionStore;
   let logger = useLogger();
   // const logger = useWinstonLogger();
 
@@ -44,7 +45,7 @@ const PoolListView = observer(() => {
         {pool.borrowedFathom}
       </Typography>
       <div>
-        <Link color="primary" href="#" onClick={poolStore.openPosition}>
+        <Link color="primary" href="#" onClick={positionStore.openPosition}>
           Open Position
         </Link>
       </div>

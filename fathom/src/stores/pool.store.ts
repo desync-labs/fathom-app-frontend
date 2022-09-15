@@ -26,8 +26,6 @@ export default class PoolStore {
     })
   }
 
-  openPosition = async () =>{
-    await this.service.openPosition();
-  }
+  
 
 }

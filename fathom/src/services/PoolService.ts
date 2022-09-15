@@ -5,20 +5,9 @@ import ICollatralPool from "../stores/interfaces/ICollatralPool";
 import IPoolService from "./interfaces/IPoolService";
 import BigNumber from "bignumber.js";
 
-// function GetProvider (){
-//     let { library, chainId, account } = useWeb3React();
-//     let web3 = new Web3(library.provider);
-//     return web3;
-// }
-
 
 export default class PoolService implements IPoolService{
     
-    // web3
-    // constructor(){
-    //     this.web3 = GetProvider()
-    // }
-
     //Ideally this should be dynamic
     getPools():ICollatralPool[]{
         let pools:ICollatralPool[] =  []
@@ -62,10 +51,4 @@ export default class PoolService implements IPoolService{
         return pools;
        }
     }
-
-    async openPosition(): Promise<void>{
-        console.log('Opening a position...')
-
-    }
-
 }
