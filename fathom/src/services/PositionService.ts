@@ -2,11 +2,15 @@ import { SmartContractFactory } from "../config/SmartContractFactory";
 import IPositionService from "./interfaces/IPositionService";
 import { Constants } from "../helpers/Constants";
 import { Web3Utils } from "../helpers/Web3Utils";
+import OpenPosition from "../stores/interfaces/IOpenPosition"
+import IOpenPosition from "../stores/interfaces/IOpenPosition"
+import BigNumber from "bignumber.js";
+
 
 
 export default class PositionService implements IPositionService{
 
-    async openPosition(address:string, poolId:string): Promise<void>{
+    async openPosition(address:string, poolId:string,collatral:number,fathomToken:number): Promise<void>{
         let proxyWalletaddress = await this.proxyWalletExist(address);
 
         if(proxyWalletaddress === Constants.ZERO_ADDRESS){
@@ -27,8 +31,8 @@ export default class PositionService implements IPositionService{
             SmartContractFactory.CollateralTokenAdapter.address,
             SmartContractFactory.StablecoinAdapter.address,
             poolId,
-            Constants.WeiPerWad.multipliedBy(200).toString(),
-            Constants.WeiPerWad.multipliedBy(90).toString(),
+            Constants.WeiPerWad.multipliedBy(collatral).toString(),
+            Constants.WeiPerWad.multipliedBy(fathomToken).toString(),
             '1',
             encodedResult,
           ]);
@@ -62,6 +66,68 @@ export default class PositionService implements IPositionService{
         }catch(error){
             console.error(`Error in proxyWalletExist: ${error}`)
             return Constants.ZERO_ADDRESS;
+        }
+    }
+
+    async getPositionsForAddress(address:string): Promise<IOpenPosition[]>{
+        try{
+            console.log(`getting Positions For Address ${address}.`)
+            let proxyWallet = await this.proxyWalletExist(address);
+            let getPositionsContract = Web3Utils.getContractInstance(SmartContractFactory.GetPositions)
+            let response = await getPositionsContract.methods.getAllPositionsAsc(SmartContractFactory.PositionManager.address,proxyWallet).call();
+
+            const { 0: positionIds, 1: positionAddresses, 2: collateralPools } = response;
+            let fetchedPositions:IOpenPosition[] = [];
+            let index = 0;
+            positionIds.forEach((positionId:string) => {
+                let positionAddress = positionAddresses[index];
+                let collateralPool = collateralPools[index];
+                let position = new OpenPosition(positionId, positionAddress, collateralPool);
+                fetchedPositions.push(position);
+                index++;
+            });
+
+            console.log(`All Open Positions... ${JSON.stringify(fetchedPositions)}`)
+            return fetchedPositions;
+
+        }catch(error){
+            console.error(`Error in getting Positions: ${error}`)
+            return [];
+        }
+    }
+
+    //TODO: Externalize the pagination
+    //TODO: Find better ways to filter out the posistions.
+    async getPositionsWithSafetyBuffer(address:string): Promise<IOpenPosition[]>{
+        try{
+            console.log(`getting Positions With Safety Buffer For Address ${address}.`)
+            let myPositions = await this.getPositionsForAddress(address);
+            let getPositionsContract = Web3Utils.getContractInstance(SmartContractFactory.GetPositions)
+            let response = await getPositionsContract.methods.getPositionWithSafetyBuffer(SmartContractFactory.PositionManager.address,1,100).call();
+
+            console.log(`Raw response from getPositionsWithSafetyBuffer: ${JSON.stringify(response)}`)
+
+            const { 0: positionAddresses, 1: debtShares, 2: safetyBuffers } = response;
+
+            let fetchedPositions:IOpenPosition[] = [];
+            let index = 0;
+            positionAddresses.forEach((positionAddress:string) => {
+                let position = myPositions.filter((pos) => pos.address === positionAddress)[0] as IOpenPosition
+                
+                if(position){
+                    position.setDebtShare(new BigNumber(debtShares[index]))
+                    position.setSafetyBuffer(new BigNumber(safetyBuffers[index]))
+                    fetchedPositions.push(position);
+                }
+                index++;
+            });
+
+            console.log(`All Open Positions... ${JSON.stringify(fetchedPositions)}`)
+            return fetchedPositions;
+
+        }catch(error){
+            console.error(`Error in getting Positions: ${error}`)
+            return [];
         }
     }
 

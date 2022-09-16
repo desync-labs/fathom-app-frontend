@@ -1,5 +1,3 @@
-// import { useWeb3React } from "@web3-react/core";
-import Web3 from "web3";
 import { SmartContractFactory } from "../config/SmartContractFactory";
 import ICollatralPool from "../stores/interfaces/ICollatralPool";
 import IPoolService from "./interfaces/IPoolService";

@@ -24,6 +24,7 @@ import { mainListItems, secondaryListItems } from './listItems';
 import useMetaMask from '../../hooks/metamask';
 import { Chip } from '@mui/material';
 import PoolListView from '../Pools/PoolListView';
+import OpenPositionsList from '../PositionList/OpenPositionsList';
 
 // import Chart from './Chart';
 // import Deposits from './Deposits';
@@ -171,7 +172,10 @@ function DashboardContent() {
               {/* Open Positions */}
               <Grid item xs={12}>
                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                    <div>Open Positions...</div>
+                <Typography component="h2" variant="h6" color="primary" gutterBottom>
+                  Open Positions
+                </Typography>
+                    <OpenPositionsList></OpenPositionsList>
                 </Paper>
               </Grid>
             </Grid>

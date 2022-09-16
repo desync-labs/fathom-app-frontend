@@ -18,7 +18,7 @@ export class Web3Utils{
         return new web3.eth.Contract(abi, address)
     }
 
-    public static getWeb3Instance:any = (contractMetaData:ContractMetaData) =>{
+    public static getWeb3Instance:any = () =>{
         return new Web3(Web3.givenProvider || process.env.WEB3_PROVIDER_URL);
     }
 }

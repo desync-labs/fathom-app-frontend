@@ -4,6 +4,7 @@ import ProxyWalletRegistryAbi from './ABI/ProxyWalletRegistry.json'
 import ProxyWalletAbi from './ABI/ProxyWallet.json'
 import FathomStablecoinProxyActionAbi from './ABI/FathomStablecoinProxyActions.json'
 import BEP20Abi from './ABI/BEP20.json'
+import GetPositionsAbi from './ABI/GetPositions.json'
 
 
 
@@ -58,6 +59,10 @@ export class SmartContractFactory{
         abi:[],
         address:'0x8598b178d5e6C40Cb5800De5522184092469b40C'
     }
-//"":""
+
+    public static GetPositions  = {
+        abi:GetPositionsAbi.abi as AbiItem [],
+        address:'0x60D00c5CEB25ee50b13B33B2dd52A2F0E3036951'
+    }
 
 }

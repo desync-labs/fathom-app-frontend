@@ -6,6 +6,7 @@ import { LogLevel, useLogger } from '../../helpers/Logger';
 import { Link, Typography } from '@mui/material';
 import React from 'react';
 import useMetaMask from '../../hooks/metamask';
+import CustomizedDialogs from '../Positions/OpenNewPositionDialog';
 
 // import { useWinstonLogger } from 'winston-react'
 
@@ -13,10 +14,7 @@ import useMetaMask from '../../hooks/metamask';
 const PoolListView = observer(() => {
 
   let poolStore = useStores().poolStore;
-  let positionStore = useStores().positionStore;
   let logger = useLogger();
-  const { isActive, account } = useMetaMask()!
-  // const logger = useWinstonLogger();
 
 
   useEffect(() => {
@@ -25,9 +23,7 @@ const PoolListView = observer(() => {
     poolStore.fetchPools()
   },[]);
   
-  const openNewPosition = () => {
-    positionStore.openPosition(account,poolStore.pools[0].id)
-  }
+
 
   return (
     <>
@@ -49,12 +45,8 @@ const PoolListView = observer(() => {
       </Typography>
       <Typography component="p" variant="h4">
         {pool.borrowedFathom}
-      </Typography>
-      <div>
-        <Link color="primary" href="#" onClick={openNewPosition}>
-          Open Position
-        </Link>
-      </div>
+      </Typography >
+      <CustomizedDialogs pool={pool} />
     </React.Fragment>
 
     )}
