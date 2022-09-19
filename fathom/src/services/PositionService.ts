@@ -115,7 +115,7 @@ export default class PositionService implements IPositionService{
             positionAddresses.forEach((positionAddress:string) => {
                 let position = myPositions.filter((pos) => pos.address === positionAddress)[0] as IOpenPosition
                 
-                if(position){
+                if(position && debtShares[index] > 0){
                     position.setDebtShare(new BigNumber(debtShares[index]))
                     position.setSafetyBuffer(new BigNumber(safetyBuffers[index]))
                     fetchedPositions.push(position);

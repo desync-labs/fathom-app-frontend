@@ -11,7 +11,7 @@ import { LogLevel, useLogger } from '../../helpers/Logger';
 import IOpenPosition from '../../stores/interfaces/IOpenPosition';
 import BigNumber from 'bignumber.js';
 import { Constants } from '../../helpers/Constants';
-import { Button } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import { useEffect } from 'react';
 import { observer } from 'mobx-react';
 
@@ -24,7 +24,8 @@ const OpenPositionsList = observer(() => {
         // Update the document title using the browser API
         logger.log(LogLevel.info,`fetching open positions. ${account}`);
         positionStore.fetchPositions(account);
-    },[positionStore,account,logger]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[positionStore,account]);
 
     const getFormattedSaftyBuffer = (safetyBuffer:BigNumber) => {
         return safetyBuffer.div(Constants.WeiPerWad).toString()
@@ -34,9 +35,12 @@ const OpenPositionsList = observer(() => {
         logger.log(LogLevel.info, 'Close position')
         positionStore.closePosition(position.id,account,position.debtShare.div(Constants.WeiPerWad).toNumber())
     };
-   
+  
 
   return (
+    <>
+    {positionStore.positions.length === 0 ? 
+    <Typography variant='h6'>No positions available</Typography> : 
     <TableContainer >
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
@@ -70,6 +74,8 @@ const OpenPositionsList = observer(() => {
         </TableBody>
       </Table>
     </TableContainer>
+    }
+    </>
   );
 })
 

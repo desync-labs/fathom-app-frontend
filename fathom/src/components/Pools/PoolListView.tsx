@@ -8,8 +8,6 @@ import React from 'react';
 import useMetaMask from '../../hooks/metamask';
 import CustomizedDialogs from '../Positions/OpenNewPositionDialog';
 
-// import { useWinstonLogger } from 'winston-react'
-
  
 const PoolListView = observer(() => {
 
@@ -21,8 +19,7 @@ const PoolListView = observer(() => {
     // Update the document title using the browser API
     logger.log(LogLevel.info,'fetching pool information.');
     poolStore.fetchPools()
-  },[]);
-  
+  },[poolStore]);
 
 
   return (
