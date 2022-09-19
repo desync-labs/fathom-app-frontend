@@ -15,8 +15,12 @@ export default class PositionStore {
 
     openPosition = async (address:string, poolId:string,collatral:number,fathomToken:number) =>{
         console.log(`Open position clicked for address ${address}, poolId: ${poolId}, collatral:${collatral}, fathomToken: ${fathomToken}`)
-        
         await this.service.openPosition(address,poolId,collatral,fathomToken);
+    }
+
+    closePosition = async (positionId:string,address:string, fathomToken:number) =>{
+        console.log(`Close position clicked for address ${address}, positionId: ${positionId}, fathomToken: ${fathomToken}`)
+        await this.service.closePosition(positionId,address,fathomToken)
     }
 
     fetchPositions = async (address:string) =>{

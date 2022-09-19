@@ -35,6 +35,11 @@ export class SmartContractFactory{
         address:'0xc36b26cf999F9f4A085Ce5bD1A541a4B81a70753'
     }
 
+    public static FathomStableCoin  = {
+        abi:BEP20Abi.abi as AbiItem [],
+        address:'0x029ed3916B03095908209264304d06cA67a7E593'
+    }
+
     public static PositionManager  = {
         abi:[],
         address:'0xADd9227440f4BB447142b6df006016EA7c0773ba'

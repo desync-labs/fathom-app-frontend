@@ -6,4 +6,5 @@ export default interface IPositionService{
     proxyWalletExist(address:string): Promise<string>;
     getPositionsForAddress(address:string): Promise<IOpenPosition[]>;
     getPositionsWithSafetyBuffer(address:string): Promise<IOpenPosition[]>;
+    closePosition(positionId: string,address:string, debt:number): Promise<void>;
 }

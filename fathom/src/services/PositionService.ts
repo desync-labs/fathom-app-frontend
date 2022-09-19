@@ -9,6 +9,7 @@ import BigNumber from "bignumber.js";
 
 
 export default class PositionService implements IPositionService{
+    
 
     async openPosition(address:string, poolId:string,collatral:number,fathomToken:number): Promise<void>{
         let proxyWalletaddress = await this.proxyWalletExist(address);
@@ -129,7 +130,39 @@ export default class PositionService implements IPositionService{
             console.error(`Error in getting Positions: ${error}`)
             return [];
         }
+
+       
     }
 
+    async closePosition(positionId: string,address:string, debt:number): Promise<void> {
+        try{
+            console.log(`Closing position for position id ${positionId}.`)
+            let proxyWalletaddress = await this.proxyWalletExist(address);
+            const wallet = Web3Utils.getContractInstanceFrom(SmartContractFactory.proxyWallet.abi,proxyWalletaddress)
+        
+            
+            const fathomStableCoin = Web3Utils.getContractInstance(SmartContractFactory.FathomStableCoin)
+            await fathomStableCoin.methods.approve(proxyWalletaddress, Constants.WeiPerWad.multipliedBy(debt)).send({from:address});
+
+            const encodedResult = Web3Utils.getWeb3Instance().eth.abi.encodeParameters(["address"], [address]);
+            let jsonInterface =  SmartContractFactory.FathomStablecoinProxyAction.abi.filter((abi) => abi.name === 'wipeAllAndUnlockToken')[0]  
+    
+         
+            let wipeAllAndUnlockTokenCall =  Web3Utils.getWeb3Instance().eth.abi.encodeFunctionCall(jsonInterface, [
+              SmartContractFactory.PositionManager.address,
+              SmartContractFactory.CollateralTokenAdapter.address,
+              SmartContractFactory.StablecoinAdapter.address,
+              positionId,
+              debt,
+              encodedResult,
+            ]);
+    
+            await wallet.methods.execute2(SmartContractFactory.FathomStablecoinProxyActions.address, wipeAllAndUnlockTokenCall).send({from:address});
+            console.log(`Position closed for position id ${positionId}.`)
+            
+        }catch(error){
+            console.error(`Error in closing position`)
+        }
+    }
 
 }

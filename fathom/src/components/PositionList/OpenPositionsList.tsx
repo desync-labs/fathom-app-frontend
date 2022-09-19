@@ -15,29 +15,6 @@ import { Button } from '@mui/material';
 import { useEffect } from 'react';
 import { observer } from 'mobx-react';
 
-// function createData(
-//   name: string,
-//   calories: number,
-//   fat: number,
-//   carbs: number,
-//   protein: number,
-// ) {
-//   return { name, calories, fat, carbs, protein };
-// }
-
-// const rows = [
-//   createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-//   createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-//   createData('Eclair', 262, 16.0, 24, 6.0),
-//   createData('Cupcake', 305, 3.7, 67, 4.3),
-//   createData('Gingerbread', 356, 16.0, 49, 3.9),
-// ];
-// id:string
-//     address:string
-//     pool:string
-//     debtShare:BigNumber
-//     safetyBuffer:
-
 const OpenPositionsList = observer(() => {
     let positionStore = useStores().positionStore;
     const { account } = useMetaMask()!
@@ -53,10 +30,11 @@ const OpenPositionsList = observer(() => {
         return safetyBuffer.div(Constants.WeiPerWad).toString()
     }
 
-    const handleClickClosePosition = () => {
+    const handleClickClosePosition = (position:IOpenPosition) => {
         logger.log(LogLevel.info, 'Close position')
+        positionStore.closePosition(position.id,account,position.debtShare.div(Constants.WeiPerWad).toNumber())
     };
-    
+   
 
   return (
     <TableContainer >
@@ -71,19 +49,19 @@ const OpenPositionsList = observer(() => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {positionStore.positions.map((row:IOpenPosition) => (
+          {positionStore.positions.map((position:IOpenPosition) => (
             <TableRow
-              key={row.id}
+              key={position.id}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell component="th" scope="row">
-                {row.id}
+                {position.id}
               </TableCell>
               {/* <TableCell align="right">{row.address}</TableCell> */}
               <TableCell align="right">USDT</TableCell>
-              <TableCell align="right">{getFormattedSaftyBuffer(row.debtShare)}</TableCell>
+              <TableCell align="right">{getFormattedSaftyBuffer(position.debtShare)}</TableCell>
               <TableCell align="right">
-                    <Button variant="outlined" onClick={handleClickClosePosition}>
+                    <Button variant="outlined" onClick={() => handleClickClosePosition(position)}>
                         Close
                     </Button>
               </TableCell>
