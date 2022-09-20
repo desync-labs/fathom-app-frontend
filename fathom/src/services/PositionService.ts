@@ -38,6 +38,7 @@ export default class PositionService implements IPositionService{
             encodedResult,
           ]);
 
+          //TODO: Collatral should be dynamic based on selected pool.
           const WXDC = Web3Utils.getContractInstance(SmartContractFactory.WXDC)
           await WXDC.methods.approve(proxyWalletaddress, Constants.WeiPerWad.multipliedBy(10000)).send({from:address});
           await wallet.methods.execute2(SmartContractFactory.FathomStablecoinProxyActions.address, openPositionCall).send({from:address});
