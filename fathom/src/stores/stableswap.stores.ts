@@ -14,10 +14,12 @@ export default class StableSwapStore {
     swapToken = async (index:number, address:string, token:number) =>{
         switch(index) { 
             case 0: { 
-                this.service.swapTokenToStablecoin(address,token)
+                console.log(`swapTokenToStablecoin for address : ${address} token: ${token}`) 
+                await this.service.swapTokenToStablecoin(address,token)
                break; 
             } 
             case 1: { 
+               console.log(`swapStablecoinToToken for address : ${address} token: ${token}`) 
                await this.service.swapStablecoinToToken(address,token)
                break; 
             } 

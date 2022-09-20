@@ -21,17 +21,15 @@ export default class StableSwapService implements IStableSwapService{
     }
 
     async swapStablecoinToToken(address: string, stablecoinIn: number): Promise<void> {
-        
         try{
             console.log(`Performing swapTokenToStablecoin from address: ${address} amount: ${stablecoinIn}`)
             const fathomStableCoin = Web3Utils.getContractInstance(SmartContractFactory.FathomStableCoin)
             const stableSwapModule = Web3Utils.getContractInstance(SmartContractFactory.StableSwapModule)
     
-            await fathomStableCoin.methods.approve(stableSwapModule.address, Constants.WeiPerWad.multipliedBy(stablecoinIn)).send({from:address});
-            
+            await fathomStableCoin.methods.approve(SmartContractFactory.StableSwapModule.address, Constants.WeiPerWad.multipliedBy(stablecoinIn)).send({from:address});
             await stableSwapModule.methods.swapStablecoinToToken(address, Constants.WeiPerWad.multipliedBy(stablecoinIn)).send({from:address});
         }catch(error){
-            console.error(`Error in swapStablecoinToToken`)
+            console.error(`Error in swapStablecoinToToke ${error}`)
         }
     }
 }

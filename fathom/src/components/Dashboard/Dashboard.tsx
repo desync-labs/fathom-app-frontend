@@ -25,6 +25,7 @@ import useMetaMask from '../../hooks/metamask';
 import { Chip } from '@mui/material';
 import PoolListView from '../Pools/PoolListView';
 import OpenPositionsList from '../PositionList/OpenPositionsList';
+import StableSwap from '../Stableswap/StableSwap';
 
 // import Chart from './Chart';
 // import Deposits from './Deposits';
@@ -175,7 +176,8 @@ function DashboardContent() {
                 <Typography component="h2" variant="h6" color="primary" gutterBottom>
                   Open Positions
                 </Typography>
-                    <OpenPositionsList></OpenPositionsList>
+                    <OpenPositionsList/>
+                      <StableSwap />
                 </Paper>
               </Grid>
             </Grid>

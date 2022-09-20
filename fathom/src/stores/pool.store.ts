@@ -25,7 +25,4 @@ export default class PoolStore {
       this.setPool(pools)
     })
   }
-
-  
-
 }
