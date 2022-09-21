@@ -19,6 +19,11 @@ export default class PoolStore {
     this.pools = _pool;
   };
 
+  getPool = (poolId:string) =>{
+    const pool = this.pools.filter(pool => poolId === pool.id)[0];
+    return pool
+  }
+
   fetchPools = async () =>{
     let pools = await this.service.fetchPools();
     runInAction(() =>{

@@ -27,6 +27,10 @@ import PoolListView from '../Pools/PoolListView';
 import OpenPositionsList from '../PositionList/OpenPositionsList';
 import StableSwap from '../Stableswap/StableSwap';
 import { Route, Routes } from 'react-router-dom';
+import { useStores } from '../../stores';
+import { LogLevel, useLogger } from '../../helpers/Logger';
+import { useEffect } from 'react';
+import { observer } from 'mobx-react';
 
 // import Chart from './Chart';
 // import Deposits from './Deposits';
@@ -64,10 +68,19 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 const mdTheme = createTheme();
 
-function DashboardContent() {
+const DashboardContent = observer(() => {
+
   const [open, setOpen] = React.useState(true);
   const { connect, isActive, account, disconnect } = useMetaMask()!
 
+  let poolStore = useStores().poolStore;
+  let logger = useLogger();
+
+  useEffect(() => {
+    // Update the document title using the browser API
+    logger.log(LogLevel.info,'fetching pool information.');
+    poolStore.fetchPools()
+  },[poolStore]);
 
   const toggleDrawer = () => {
     setOpen(!open);
@@ -146,7 +159,7 @@ function DashboardContent() {
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
               {/* Chart */}
-              <Grid item xs={12} md={8} lg={9}>
+              <Grid item xs={12} md={8} lg={6}>
                 <Paper
                   sx={{
                     p: 2,
@@ -159,18 +172,12 @@ function DashboardContent() {
                 </Paper>
               </Grid>
               {/* Available Pools */}
-              <Grid item xs={12} md={4} lg={3}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: 240,
-                  }}
-                >
-                    <PoolListView/>
-                </Paper>
-              </Grid>
+              { poolStore.pools.map(
+                  (pool, idx) =>
+                  <Grid item xs={12} md={4} lg={3}>
+                    <PoolListView pool={pool}/>
+                  </Grid>
+             )}
               <Grid item xs={12}>
                 <Routes>
                   <Route path="/" element={<OpenPositionsList />} />
@@ -184,8 +191,8 @@ function DashboardContent() {
       </Box>
     </ThemeProvider>
   );
-}
+})
 
-export default function Dashboard() {
-  return <DashboardContent />;
-}
+export default DashboardContent;
+
+//export default DashboardContent;

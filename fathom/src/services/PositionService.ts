@@ -5,13 +5,14 @@ import { Web3Utils } from "../helpers/Web3Utils";
 import OpenPosition from "../stores/interfaces/IOpenPosition"
 import IOpenPosition from "../stores/interfaces/IOpenPosition"
 import BigNumber from "bignumber.js";
+import ICollatralPool from "../stores/interfaces/ICollatralPool";
 
 
 
 export default class PositionService implements IPositionService{
     
 
-    async openPosition(address:string, poolId:string,collatral:number,fathomToken:number): Promise<void>{
+    async openPosition(address:string, pool:ICollatralPool,collatral:number,fathomToken:number): Promise<void>{
         let proxyWalletaddress = await this.proxyWalletExist(address);
 
         if(proxyWalletaddress === Constants.ZERO_ADDRESS){
@@ -29,9 +30,9 @@ export default class PositionService implements IPositionService{
         let openPositionCall =  Web3Utils.getWeb3Instance().eth.abi.encodeFunctionCall(jsonInterface, [
             SmartContractFactory.PositionManager.address,
             SmartContractFactory.StabilityFeeCollector.address,
-            SmartContractFactory.CollateralTokenAdapter.address,
+            pool.CollateralTokenAdapterAddress,
             SmartContractFactory.StablecoinAdapter.address,
-            poolId,
+            pool.id,
             Constants.WeiPerWad.multipliedBy(collatral).toString(),
             Constants.WeiPerWad.multipliedBy(fathomToken).toString(),
             '1',
@@ -39,8 +40,8 @@ export default class PositionService implements IPositionService{
           ]);
 
           //TODO: Collatral should be dynamic based on selected pool.
-          const WXDC = Web3Utils.getContractInstance(SmartContractFactory.WXDC)
-          await WXDC.methods.approve(proxyWalletaddress, Constants.WeiPerWad.multipliedBy(collatral)).send({from:address});
+          const BEP20 = Web3Utils.getContractInstance(SmartContractFactory.BEP20(pool.collatralContractAddress))
+          await BEP20.methods.approve(proxyWalletaddress, Constants.WeiPerWad.multipliedBy(collatral)).send({from:address});
           await wallet.methods.execute2(SmartContractFactory.FathomStablecoinProxyActions.address, openPositionCall).send({from:address});
     }
 
@@ -135,7 +136,7 @@ export default class PositionService implements IPositionService{
        
     }
 
-    async closePosition(positionId: string,address:string, debt:number): Promise<void> {
+    async closePosition(positionId: string,pool:ICollatralPool,address:string, debt:number): Promise<void> {
         try{
             console.log(`Closing position for position id ${positionId}.`)
             let proxyWalletaddress = await this.proxyWalletExist(address);
@@ -151,7 +152,7 @@ export default class PositionService implements IPositionService{
          
             let wipeAllAndUnlockTokenCall =  Web3Utils.getWeb3Instance().eth.abi.encodeFunctionCall(jsonInterface, [
               SmartContractFactory.PositionManager.address,
-              SmartContractFactory.CollateralTokenAdapter.address,
+              pool.CollateralTokenAdapterAddress,
               SmartContractFactory.StablecoinAdapter.address,
               positionId,
               debt,

@@ -12,16 +12,20 @@ export default class PoolService implements IPoolService{
     //Ideally this should be dynamic
     getPools():ICollatralPool[]{
         let pools:ICollatralPool[] =  []
-        //
+        //0x5758444300000000000000000000000000000000000000000000000000000000
         pools.push({
-            id: '0x57584443000000000000000000000000000000000000000000000000000000',
+            id: '0x5758444300000000000000000000000000000000000000000000000000000000',
             name:'WXDC',
+            collatralContractAddress:SmartContractFactory.WXDC.address,
+            CollateralTokenAdapterAddress:SmartContractFactory.WXDCCollateralTokenAdapter.address,
             availableFathom: '',
             borrowedFathom: ''
         },
         {
-            id: '0x555344542d535441424c450000000000000000000000000000000000000000',
+            id: '0x555344542d535441424c45000000000000000000000000000000000000000000',
             name:'USDT',
+            collatralContractAddress:SmartContractFactory.USDT.address,
+            CollateralTokenAdapterAddress:SmartContractFactory.USDTCollateralTokenAdapter.address,
             availableFathom: '',
             borrowedFathom: ''
         })
@@ -35,15 +39,15 @@ export default class PoolService implements IPoolService{
        let pools:ICollatralPool[] = []
        try{
         let contract = Web3Utils.getContractInstance(SmartContractFactory.PoolConfig)
-        let pool  = this.getPools()[0];
-        //this.getPools().forEach(async (pool) => {
-        let response = await contract.methods.getCollateralPoolInfo(pool.id).call();
-        let debtShare = new BigNumber(response[1]).div(Constants.WeiPerWad)
-        let debtCeiling = new BigNumber(response[2]).div(Constants.WeiPerRad)
-        pool.availableFathom = debtCeiling.minus(debtShare).toFormat(0)
-        pool.borrowedFathom = debtShare.toFormat(0)
-        pools.push(pool)
-        //});
+        //let pool  = this.getPools()[0];
+        for (const pool of this.getPools()) {
+            let response = await contract.methods.getCollateralPoolInfo(pool.id).call();
+            let debtShare = new BigNumber(response[1]).div(Constants.WeiPerWad)
+            let debtCeiling = new BigNumber(response[2]).div(Constants.WeiPerRad)
+            pool.availableFathom = debtCeiling.minus(debtShare).toFormat(0)
+            pool.borrowedFathom = debtShare.toFormat(0)
+            pools.push(pool)
+        }
 
         console.log(`Pool details ${JSON.stringify(pools)} `);
         return pools;

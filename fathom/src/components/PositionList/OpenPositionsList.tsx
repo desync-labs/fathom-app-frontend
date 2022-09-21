@@ -14,9 +14,11 @@ import { Constants } from '../../helpers/Constants';
 import { Button, Paper, Typography } from '@mui/material';
 import { useEffect } from 'react';
 import { observer } from 'mobx-react';
+import ICollatralPool from '../../stores/interfaces/ICollatralPool';
 
 const OpenPositionsList = observer(() => {
     let positionStore = useStores().positionStore;
+    let poolStore = useStores().poolStore;
     const { account } = useMetaMask()!
     let logger = useLogger();
 
@@ -31,9 +33,9 @@ const OpenPositionsList = observer(() => {
         return safetyBuffer.div(Constants.WeiPerWad).toString()
     }
 
-    const handleClickClosePosition = (position:IOpenPosition) => {
+    const handleClickClosePosition = (position:IOpenPosition, pool: ICollatralPool) => {
         logger.log(LogLevel.info, 'Close position')
-        positionStore.closePosition(position.id,account,position.debtShare.div(Constants.WeiPerWad).toNumber())
+        positionStore.closePosition(position.id,pool,account,position.debtShare.div(Constants.WeiPerWad).toNumber())
     };
   
 
@@ -65,10 +67,10 @@ const OpenPositionsList = observer(() => {
                 {position.id}
               </TableCell>
               {/* <TableCell align="right">{row.address}</TableCell> */}
-              <TableCell align="right">USDT</TableCell>
+              <TableCell align="right">{poolStore.getPool(position.pool).name}</TableCell>
               <TableCell align="right">{getFormattedSaftyBuffer(position.debtShare)}</TableCell>
               <TableCell align="right">
-                    <Button variant="outlined" onClick={() => handleClickClosePosition(position)}>
+                    <Button variant="outlined" onClick={() => handleClickClosePosition(position,poolStore.getPool(position.pool))}>
                         Close
                     </Button>
               </TableCell>

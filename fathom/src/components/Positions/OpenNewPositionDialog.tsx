@@ -65,7 +65,7 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
   const { account } = useMetaMask()!
 
   const openNewPosition = () => {
-    positionStore.openPosition(account,props.pool.id,collatral,fathomToken)
+    positionStore.openPosition(account,props.pool,collatral,fathomToken)
     setOpen(false);
   }
 

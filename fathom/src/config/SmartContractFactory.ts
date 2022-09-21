@@ -65,6 +65,13 @@ export class SmartContractFactory{
         address:SmartContractFactory.Addresses().USDT
     }
 
+    public static BEP20  = (_address:string) =>{
+        return{
+            abi:BEP20Abi.abi as AbiItem [],
+            address:_address
+        }
+    }
+
     public static FathomStableCoin  = {
         abi:BEP20Abi.abi as AbiItem [],
         address:SmartContractFactory.Addresses().fathomStablecoin
@@ -80,9 +87,14 @@ export class SmartContractFactory{
         address:SmartContractFactory.Addresses().stabilityFeeCollector
     }
 
-    public static CollateralTokenAdapter  = {
+    public static WXDCCollateralTokenAdapter  = {
         abi:[],
         address:SmartContractFactory.Addresses().collateralTokenAdapter
+    }
+
+    public static USDTCollateralTokenAdapter  = {
+        abi:[],
+        address:SmartContractFactory.Addresses().collateralTokenAdapterUSDT
     }
 
     public static StablecoinAdapter  = {
