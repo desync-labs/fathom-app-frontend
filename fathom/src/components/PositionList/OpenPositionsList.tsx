@@ -40,7 +40,7 @@ const OpenPositionsList = observer(() => {
   return (
     <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
     <Typography component="h2" variant="h6" color="primary" gutterBottom>
-      Stable Swap
+      Open Positions
     </Typography>
     {positionStore.positions.length === 0 ? 
     <Typography variant='h6'>No positions available</Typography> : 

@@ -12,9 +12,15 @@ export default class PoolService implements IPoolService{
     //Ideally this should be dynamic
     getPools():ICollatralPool[]{
         let pools:ICollatralPool[] =  []
-        
+        //
         pools.push({
-            id: '0x5553445400000000000000000000000000000000000000000000000000000000',
+            id: '0x57584443000000000000000000000000000000000000000000000000000000',
+            name:'WXDC',
+            availableFathom: '',
+            borrowedFathom: ''
+        },
+        {
+            id: '0x555344542d535441424c450000000000000000000000000000000000000000',
             name:'USDT',
             availableFathom: '',
             borrowedFathom: ''
