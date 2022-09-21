@@ -5,15 +5,19 @@ import ListItemText from '@mui/material/ListItemText';
 import ListSubheader from '@mui/material/ListSubheader';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
+import { Link } from 'react-router-dom';
+import { color } from '@mui/system';
 
 export const mainListItems = (
   <React.Fragment>
+    <Link to="/" style={{ color: 'gray', textDecoration: 'inherit'}}>
     <ListItemButton>
       <ListItemIcon>
         <DashboardIcon />
       </ListItemIcon>
-      <ListItemText primary="Dashboard" />
+        <ListItemText primary="Dashboard" />
     </ListItemButton>
+    </Link>
   </React.Fragment>
 );
 
@@ -22,11 +26,13 @@ export const secondaryListItems = (
     {/* <ListSubheader component="div" inset>
       Swap
     </ListSubheader> */}
+    <Link to="/swap" style={{ color: 'gray', textDecoration: 'inherit'}}>
     <ListItemButton>
       <ListItemIcon>
         <SwapHorizIcon />
       </ListItemIcon>
       <ListItemText primary="Stable Swap" />
     </ListItemButton>
+    </Link>
   </React.Fragment>
 );

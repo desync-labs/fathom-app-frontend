@@ -26,6 +26,7 @@ import { Chip } from '@mui/material';
 import PoolListView from '../Pools/PoolListView';
 import OpenPositionsList from '../PositionList/OpenPositionsList';
 import StableSwap from '../Stableswap/StableSwap';
+import { Route, Routes } from 'react-router-dom';
 
 // import Chart from './Chart';
 // import Deposits from './Deposits';
@@ -170,15 +171,11 @@ function DashboardContent() {
                     <PoolListView/>
                 </Paper>
               </Grid>
-              {/* Open Positions */}
               <Grid item xs={12}>
-                <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                <Typography component="h2" variant="h6" color="primary" gutterBottom>
-                  Open Positions
-                </Typography>
-                    <OpenPositionsList/>
-                      <StableSwap />
-                </Paper>
+                <Routes>
+                  <Route path="/" element={<OpenPositionsList />} />
+                  <Route path="/swap" element={<StableSwap />} />
+                </Routes>
               </Grid>
             </Grid>
             <Copyright sx={{ pt: 4 }} />

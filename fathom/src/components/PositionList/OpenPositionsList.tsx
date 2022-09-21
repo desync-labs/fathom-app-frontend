@@ -11,7 +11,7 @@ import { LogLevel, useLogger } from '../../helpers/Logger';
 import IOpenPosition from '../../stores/interfaces/IOpenPosition';
 import BigNumber from 'bignumber.js';
 import { Constants } from '../../helpers/Constants';
-import { Button, Typography } from '@mui/material';
+import { Button, Paper, Typography } from '@mui/material';
 import { useEffect } from 'react';
 import { observer } from 'mobx-react';
 
@@ -38,7 +38,10 @@ const OpenPositionsList = observer(() => {
   
 
   return (
-    <>
+    <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+    <Typography component="h2" variant="h6" color="primary" gutterBottom>
+      Stable Swap
+    </Typography>
     {positionStore.positions.length === 0 ? 
     <Typography variant='h6'>No positions available</Typography> : 
     <TableContainer >
@@ -75,7 +78,7 @@ const OpenPositionsList = observer(() => {
       </Table>
     </TableContainer>
     }
-    </>
+    </Paper>
   );
 })
 

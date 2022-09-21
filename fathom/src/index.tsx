@@ -18,9 +18,7 @@ const root = ReactDOM.createRoot(
 root.render(
     <Web3ReactProvider getLibrary={getLibrary}>
       <MetaMaskProvider>
-      <BrowserRouter>
         <App />
-      </BrowserRouter>
       </MetaMaskProvider>
     </Web3ReactProvider>
 );
