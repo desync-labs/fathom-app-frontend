@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, TextField, Toolbar, Typography } from '@mui/material';
+import { Box, Container, TextField, Toolbar, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
@@ -12,6 +12,7 @@ import MenuList from '@mui/material/MenuList';
 import { observer } from 'mobx-react';
 import { useStores } from '../../stores';
 import useMetaMask from '../../hooks/metamask';
+import AlertMessages from '../Common/AlertMessages';
 
 const options = ['Swap USDT', 'Swap Fathom'];
 
@@ -71,10 +72,13 @@ const StableSwap = observer(() => {
       flexGrow: 1,
       height: '100vh',
       overflow: 'auto',
-      padding: 6
+      // px: 6,
+      // py: 4
     }}
   >
     <Toolbar />
+    <AlertMessages/>
+    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
     <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
     <Typography component="h2" variant="h6" color="primary" gutterBottom>
       Stable Swap
@@ -144,6 +148,7 @@ const StableSwap = observer(() => {
       </Popper>
       </Box>
 </Paper>
+</Container>
 </Box>
   );
 })

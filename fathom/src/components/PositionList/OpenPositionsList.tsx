@@ -16,6 +16,8 @@ import { useEffect } from 'react';
 import { observer } from 'mobx-react';
 import ICollatralPool from '../../stores/interfaces/ICollatralPool';
 
+
+
 const OpenPositionsList = observer(() => {
     let positionStore = useStores().positionStore;
     let poolStore = useStores().poolStore;

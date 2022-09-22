@@ -19,6 +19,7 @@ export default class StableSwapService implements IStableSwapService{
             await stableSwapModule.methods.swapTokenToStablecoin(address, Constants.WeiPerWad.multipliedBy(tokenIn)).send({from:address});
         }catch(error){
             console.error(`Error in swapTokenToStablecoin`)
+            throw error;
         }
     }
 
@@ -33,6 +34,7 @@ export default class StableSwapService implements IStableSwapService{
             await stableSwapModule.methods.swapStablecoinToToken(address, Constants.WeiPerWad.multipliedBy(stablecoinIn)).send({from:address});
         }catch(error){
             console.error(`Error in swapStablecoinToToke ${error}`)
+            throw error;
         }
     }
 }

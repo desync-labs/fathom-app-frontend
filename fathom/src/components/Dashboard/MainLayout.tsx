@@ -17,7 +17,7 @@ import Copyright from '../Footer/Footer';
 import AppBar from '../AppBar/AppBar';
 import { mainListItems, secondaryListItems } from './listItems';
 import useMetaMask from '../../hooks/metamask';
-import { Chip } from '@mui/material';
+import { Alert, Chip } from '@mui/material';
 import { observer } from 'mobx-react';
 import DashboardContent from './Dashboard';
 import { Route, Routes } from 'react-router-dom';
@@ -133,6 +133,10 @@ const MainLayout = observer(() => {
           }}
         >
           {/* <Toolbar /> */}
+            {/* <Alert severity="error">This is an error alert — check it out!</Alert>
+            <Alert severity="warning">This is a warning alert — check it out!</Alert>
+            <Alert severity="info">This is an info alert — check it out!</Alert> */}
+            {/* <Alert severity="success">This is a success alert — check it out!</Alert> */}
             <Routes>
                 <Route path="/" element={<DashboardContent />} />
                 <Route path="/swap" element={<StableSwap />} />

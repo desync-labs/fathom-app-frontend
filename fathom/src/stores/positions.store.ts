@@ -18,16 +18,27 @@ export default class PositionStore {
 
     openPosition = async (address:string, pool:ICollatralPool,collatral:number,fathomToken:number) =>{
         console.log(`Open position clicked for address ${address}, poolId: ${pool.name}, collatral:${collatral}, fathomToken: ${fathomToken}`)
-        await this.service.openPosition(address,pool,collatral,fathomToken);
-        await this.fetchPositions(address) 
-        await this.rootStore.poolStore.fetchPools(); 
+       try{
+            await this.service.openPosition(address,pool,collatral,fathomToken);
+            await this.fetchPositions(address) 
+            await this.rootStore.poolStore.fetchPools(); 
+            this.rootStore.alertStore.setShowSuccessAlert(true,'New position opened succesfully!')
+       }catch(e){
+            this.rootStore.alertStore.setShowErrorAlert(true,'There is some error in opening the position!')
+       }
     }
 
     closePosition = async (positionId:string,pool:ICollatralPool,address:string, fathomToken:number) =>{
         console.log(`Close position clicked for address ${address}, positionId: ${positionId}, fathomToken: ${fathomToken}`)
-        await this.service.closePosition(positionId,pool,address,fathomToken)
-        await this.fetchPositions(address)
-        await this.rootStore.poolStore.fetchPools(); 
+        try{
+            await this.service.closePosition(positionId,pool,address,fathomToken)
+            await this.fetchPositions(address)
+            await this.rootStore.poolStore.fetchPools(); 
+            this.rootStore.alertStore.setShowSuccessAlert(true,'Position closed successfully!')
+        }catch(e){
+            this.rootStore.alertStore.setShowErrorAlert(true,'There is some error in closing the position!')
+        }
+
     }
 
     fetchPositions = async (address:string) =>{

@@ -13,36 +13,41 @@ export default class PositionService implements IPositionService{
     
 
     async openPosition(address:string, pool:ICollatralPool,collatral:number,fathomToken:number): Promise<void>{
-        let proxyWalletaddress = await this.proxyWalletExist(address);
+        
+        try{
+            let proxyWalletaddress = await this.proxyWalletExist(address);
 
-        if(proxyWalletaddress === Constants.ZERO_ADDRESS){
-            console.log('Proxy wallet not exist...')
-            proxyWalletaddress = await this.createProxyWallet(address)
+            if(proxyWalletaddress === Constants.ZERO_ADDRESS){
+                console.log('Proxy wallet not exist...')
+                proxyWalletaddress = await this.createProxyWallet(address)
+            }
+
+            console.log(`Open position for proxy wallet ${proxyWalletaddress}...`)
+
+            const wallet = Web3Utils.getContractInstanceFrom(SmartContractFactory.proxyWallet.abi,proxyWalletaddress)
+            const encodedResult = Web3Utils.getWeb3Instance().eth.abi.encodeParameters(["address"], [address]);
+
+            let jsonInterface =  SmartContractFactory.FathomStablecoinProxyAction.abi.filter((abi) => abi.name === 'openLockTokenAndDraw')[0]  
+
+            let openPositionCall =  Web3Utils.getWeb3Instance().eth.abi.encodeFunctionCall(jsonInterface, [
+                SmartContractFactory.PositionManager.address,
+                SmartContractFactory.StabilityFeeCollector.address,
+                pool.CollateralTokenAdapterAddress,
+                SmartContractFactory.StablecoinAdapter.address,
+                pool.id,
+                Constants.WeiPerWad.multipliedBy(collatral).toString(),
+                Constants.WeiPerWad.multipliedBy(fathomToken).toString(),
+                '1',
+                encodedResult,
+            ]);
+
+            //TODO: Collatral should be dynamic based on selected pool.
+            const BEP20 = Web3Utils.getContractInstance(SmartContractFactory.BEP20(pool.collatralContractAddress))
+            await BEP20.methods.approve(proxyWalletaddress, Constants.WeiPerWad.multipliedBy(collatral)).send({from:address});
+            await wallet.methods.execute2(SmartContractFactory.FathomStablecoinProxyActions.address, openPositionCall).send({from:address});
+        }catch(error){
+            throw error;
         }
-
-        console.log(`Open position for proxy wallet ${proxyWalletaddress}...`)
-
-        const wallet = Web3Utils.getContractInstanceFrom(SmartContractFactory.proxyWallet.abi,proxyWalletaddress)
-        const encodedResult = Web3Utils.getWeb3Instance().eth.abi.encodeParameters(["address"], [address]);
-
-        let jsonInterface =  SmartContractFactory.FathomStablecoinProxyAction.abi.filter((abi) => abi.name === 'openLockTokenAndDraw')[0]  
-
-        let openPositionCall =  Web3Utils.getWeb3Instance().eth.abi.encodeFunctionCall(jsonInterface, [
-            SmartContractFactory.PositionManager.address,
-            SmartContractFactory.StabilityFeeCollector.address,
-            pool.CollateralTokenAdapterAddress,
-            SmartContractFactory.StablecoinAdapter.address,
-            pool.id,
-            Constants.WeiPerWad.multipliedBy(collatral).toString(),
-            Constants.WeiPerWad.multipliedBy(fathomToken).toString(),
-            '1',
-            encodedResult,
-          ]);
-
-          //TODO: Collatral should be dynamic based on selected pool.
-          const BEP20 = Web3Utils.getContractInstance(SmartContractFactory.BEP20(pool.collatralContractAddress))
-          await BEP20.methods.approve(proxyWalletaddress, Constants.WeiPerWad.multipliedBy(collatral)).send({from:address});
-          await wallet.methods.execute2(SmartContractFactory.FathomStablecoinProxyActions.address, openPositionCall).send({from:address});
     }
 
     //Create a proxy wallet for a user
@@ -55,7 +60,7 @@ export default class PositionService implements IPositionService{
             return proxyWallet;
         }catch(error){
             console.error(`Error in createProxyWallet: ${error}`)
-            return Constants.ZERO_ADDRESS;
+            throw error;
         }
     }
 
@@ -68,7 +73,7 @@ export default class PositionService implements IPositionService{
             return proxyWallet;
         }catch(error){
             console.error(`Error in proxyWalletExist: ${error}`)
-            return Constants.ZERO_ADDRESS;
+            throw error;
         }
     }
 
@@ -95,7 +100,7 @@ export default class PositionService implements IPositionService{
 
         }catch(error){
             console.error(`Error in getting Positions: ${error}`)
-            return [];
+            throw error;
         }
     }
 
@@ -130,7 +135,7 @@ export default class PositionService implements IPositionService{
 
         }catch(error){
             console.error(`Error in getting Positions: ${error}`)
-            return [];
+            throw error;
         }
 
        
@@ -164,6 +169,7 @@ export default class PositionService implements IPositionService{
             
         }catch(error){
             console.error(`Error in closing position`)
+            throw error;
         }
     }
 
