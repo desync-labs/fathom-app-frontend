@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, TextField, Typography } from '@mui/material';
+import { Box, TextField, Toolbar, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
@@ -61,6 +61,20 @@ const StableSwap = observer(() => {
   
 
   return (
+    <Box 
+    component="main"
+    sx={{
+      backgroundColor: (theme) =>
+        theme.palette.mode === 'light'
+          ? theme.palette.grey[100]
+          : theme.palette.grey[900],
+      flexGrow: 1,
+      height: '100vh',
+      overflow: 'auto',
+      padding: 6
+    }}
+  >
+    <Toolbar />
     <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
     <Typography component="h2" variant="h6" color="primary" gutterBottom>
       Stable Swap
@@ -130,6 +144,7 @@ const StableSwap = observer(() => {
       </Popper>
       </Box>
 </Paper>
+</Box>
   );
 })
 

@@ -4,6 +4,8 @@ import React from 'react';
 import 'fontsource-roboto'
 import Dashboard from './components/Dashboard/Dashboard';
 import { BrowserRouter as Router} from "react-router-dom";
+import MainLayout from './components/Dashboard/MainLayout';
+import DashboardContent from './components/Dashboard/Dashboard';
 
 // const logger = winston.createLogger({
 //   // ...
@@ -21,7 +23,7 @@ function App() {
   return (
     // <WinstonProvider logger={logger}>
     <Router>
-      <Dashboard/>
+      <MainLayout/>
     </Router>
     // </WinstonProvider>
   );
