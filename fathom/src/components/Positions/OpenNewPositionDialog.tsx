@@ -116,9 +116,9 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
          />
           <TextField
           id="outlined-helperText"
-          label="Fathom Token"
+          label="FXD"
           defaultValue="Default Value"
-          helperText="Enter the desired fathom token."
+          helperText="Enter the desired FXD."
           sx={{ m: 3 }}
           value={fathomToken}
           onChange={handlefathomTokenTextFieldChange}

@@ -5,8 +5,6 @@ import BigNumber from "bignumber.js";
 import { Constants } from "../helpers/Constants";
 import { Web3Utils } from "../helpers/Web3Utils";
 
-
-
 export default class PoolService implements IPoolService{
     
     //Ideally this should be dynamic
@@ -39,7 +37,6 @@ export default class PoolService implements IPoolService{
        let pools:ICollatralPool[] = []
        try{
         let contract = Web3Utils.getContractInstance(SmartContractFactory.PoolConfig)
-        //let pool  = this.getPools()[0];
         for (const pool of this.getPools()) {
             let response = await contract.methods.getCollateralPoolInfo(pool.id).call();
             let debtShare = new BigNumber(response[1]).div(Constants.WeiPerWad)
@@ -53,7 +50,7 @@ export default class PoolService implements IPoolService{
         return pools;
 
        }catch(exception){
-        console.log(`Error fetching pool information: ${exception}`)
+        console.log(`Error fetching pool information: ${JSON.stringify(exception)}`)
        } finally{
         return pools;
        }

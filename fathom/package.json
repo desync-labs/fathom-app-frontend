@@ -38,7 +38,11 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "start:ganache": "env-cmd -f .env.ganache react-scripts start",
+    "start:goerli": "env-cmd -f .env.goerli react-scripts start",
+    "build:goerli": "env-cmd -f .env.goerli react-scripts build",
+    "build:aphothem": "env-cmd -f .env.aphothem react-scripts build"
   },
   "browserslist": {
     "production": [

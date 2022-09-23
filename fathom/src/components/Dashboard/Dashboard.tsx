@@ -12,6 +12,7 @@ import { LogLevel, useLogger } from '../../helpers/Logger';
 import { useEffect } from 'react';
 import { observer } from 'mobx-react';
 import AlertMessages from '../Common/AlertMessages';
+import ProtocolStats from './ProtocolStats';
 
 
 const DashboardContent = observer(() => {
@@ -46,16 +47,7 @@ const DashboardContent = observer(() => {
              <Grid container spacing={3}>
               {/* Chart */}
               <Grid item xs={12} md={8} lg={6}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: 240,
-                  }}
-                >
-                    <div>Protocol Stats...</div>
-                </Paper>
+                <ProtocolStats/>
               </Grid>
               {/* Available Pools */}
               { poolStore.pools.map(

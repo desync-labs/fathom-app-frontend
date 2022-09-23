@@ -12,20 +12,20 @@ export class SmartContractFactory{
 
     public static Addresses(){
         try{
-            let env = process.env.REACT_APP_ENV || 'dev';
+            let env = process.env.REACT_APP_ENV || 'ganache';
             let address:any;
             switch(env){
-                case 'dev':
-                    address = Addresses.dev;
+                case 'ganache':
+                    address = Addresses.ganache;
                     break;
-                case 'staging':
-                    address = Addresses.staging;
+                case 'goerli':
+                    address = Addresses.goerli;
                     break;
-                case 'prod':
-                    address = Addresses.prod;
+                case 'aphothem':
+                    address = Addresses.aphothem;
                     break;
                 default:
-                    address = Addresses.dev;
+                    address = Addresses.ganache;
                     break;
             }
             return address;

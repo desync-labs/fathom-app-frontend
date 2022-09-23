@@ -28,13 +28,13 @@ const PoolListView = observer((props: PoolProps) => {
         {props.pool.name} Pool
         </Typography>
       <Typography color="text.secondary" sx={{ flex: 1 }}>
-          Available Fathom  
+          Available FXD  
       </Typography>
       <Typography component="p" variant="h4">
         {props.pool.availableFathom}
       </Typography>
       <Typography color="text.secondary" sx={{ flex: 1 }}>
-         Borrowed Fathom
+         Borrowed FXD
       </Typography>
       <Typography component="p" variant="h4">
         {props.pool.borrowedFathom}

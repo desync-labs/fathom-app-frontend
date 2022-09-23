@@ -14,8 +14,7 @@ import { useStores } from '../../stores';
 import useMetaMask from '../../hooks/metamask';
 import AlertMessages from '../Common/AlertMessages';
 
-const options = ['Swap USDT', 'Swap Fathom'];
-
+const options = ['USDT To FXD', 'FXD To USDT'];
 
 const StableSwap = observer(() => {
     const [open, setOpen] = React.useState(false);
@@ -72,8 +71,6 @@ const StableSwap = observer(() => {
       flexGrow: 1,
       height: '100vh',
       overflow: 'auto',
-      // px: 6,
-      // py: 4
     }}
   >
     <Toolbar />
@@ -89,7 +86,7 @@ const StableSwap = observer(() => {
     <Box  sx={{marginTop: 2}}>
         <TextField
           id="outlined-start-adornment"
-          label= {placeHolder}
+          label= {'Amount'}
           defaultValue=""
           size="small"
           value={inputValue}

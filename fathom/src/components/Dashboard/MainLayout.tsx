@@ -92,7 +92,7 @@ const MainLayout = observer(() => {
               noWrap
               sx={{ flexGrow: 1 }}
             >
-              Fathom Stablecoin
+              FXD Stablecoin
             </Typography>
             <Chip label={account} color="primary" />
             <IconButton color="inherit" >

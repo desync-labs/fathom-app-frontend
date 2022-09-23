@@ -19,7 +19,7 @@ export default class StableSwapStore {
                try{
                   console.log(`swapTokenToStablecoin for address : ${address} token: ${token}`) 
                   await this.service.swapTokenToStablecoin(address,token)
-                  this.rootStore.alertStore.setShowSuccessAlert(true,'USDT token swapped with Fathom!')
+                  this.rootStore.alertStore.setShowSuccessAlert(true,'USDT token swapped with FXD!')
                }catch(error){
                   this.rootStore.alertStore.setShowErrorAlert(true)
                } 
@@ -29,7 +29,7 @@ export default class StableSwapStore {
                try{
                   console.log(`swapStablecoinToToken for address : ${address} token: ${token}`) 
                   await this.service.swapStablecoinToToken(address,token)
-                  this.rootStore.alertStore.setShowSuccessAlert(true,'Fathom token swapped with USDT!')
+                  this.rootStore.alertStore.setShowSuccessAlert(true,'FXD token swapped with USDT!')
                }catch(error){
                   this.rootStore.alertStore.setShowErrorAlert(true)
                } 
