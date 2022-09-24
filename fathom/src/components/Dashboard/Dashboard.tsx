@@ -12,6 +12,7 @@ import { useEffect } from 'react';
 import { observer } from 'mobx-react';
 import AlertMessages from '../Common/AlertMessages';
 import ProtocolStats from './ProtocolStats';
+import TransactionStatus from '../Transaction/TransactionStatus';
 
 
 const DashboardContent = observer(() => {
@@ -42,6 +43,7 @@ const DashboardContent = observer(() => {
           
           <Toolbar />
           <AlertMessages/>
+          <TransactionStatus/>
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
              <Grid container spacing={3}>
               {/* Chart */}
