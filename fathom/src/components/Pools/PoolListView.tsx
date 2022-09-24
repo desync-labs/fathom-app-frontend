@@ -1,11 +1,6 @@
 //import ICollatralPool from "../../stores/interfaces/ICollatralPool";
 import {observer} from 'mobx-react'
-import { useEffect } from 'react';
-import { useStores } from "../../stores";
-import { LogLevel, useLogger } from '../../helpers/Logger';
-import { Link, Paper, Typography } from '@mui/material';
-import React from 'react';
-import useMetaMask from '../../hooks/metamask';
+import { Paper, Typography } from '@mui/material';
 import CustomizedDialogs from '../Positions/OpenNewPositionDialog';
 import ICollatralPool from '../../stores/interfaces/ICollatralPool';
 

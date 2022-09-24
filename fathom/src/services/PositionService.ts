@@ -6,13 +6,15 @@ import OpenPosition from "../stores/interfaces/IOpenPosition"
 import IOpenPosition from "../stores/interfaces/IOpenPosition"
 import BigNumber from "bignumber.js";
 import ICollatralPool from "../stores/interfaces/ICollatralPool";
+import ActiveWeb3Transactions from "../stores/transaction.store";
+import { TransactionStatus, TransactionType } from "../stores/interfaces/ITransaction";
 
 
 
 export default class PositionService implements IPositionService{
     
 
-    async openPosition(address:string, pool:ICollatralPool,collatral:number,fathomToken:number): Promise<void>{
+    async openPosition(address:string, pool:ICollatralPool,collatral:number,fathomToken:number,transactionStore:ActiveWeb3Transactions): Promise<void>{
         
         try{
             let proxyWalletaddress = await this.proxyWalletExist(address);
@@ -41,10 +43,16 @@ export default class PositionService implements IPositionService{
                 encodedResult,
             ]);
 
-            //TODO: Collatral should be dynamic based on selected pool.
             const BEP20 = Web3Utils.getContractInstance(SmartContractFactory.BEP20(pool.collatralContractAddress))
-            await BEP20.methods.approve(proxyWalletaddress, Constants.WeiPerWad.multipliedBy(collatral)).send({from:address});
-            await wallet.methods.execute2(SmartContractFactory.FathomStablecoinProxyActions.address, openPositionCall).send({from:address});
+            
+            await BEP20.methods.approve(proxyWalletaddress, Constants.WeiPerWad.multipliedBy(collatral)).send({from:address}).on('transactionHash', (hash:any) => {
+                transactionStore.addTransaction({hash:hash, type:TransactionType.Approve,active:false, status:TransactionStatus.None})
+            })
+           
+            await wallet.methods.execute2(SmartContractFactory.FathomStablecoinProxyActions.address, openPositionCall).send({from:address}).on('transactionHash', (hash:any) => {
+                transactionStore.addTransaction({hash:hash, type:TransactionType.OpenPosition,active:false, status:TransactionStatus.None})
+            })
+
         }catch(error){
             throw error;
         }
@@ -67,7 +75,7 @@ export default class PositionService implements IPositionService{
     //Check if proxy wallet for a user
     async proxyWalletExist(address:string): Promise<string>{
         try{
-            console.log('Check if proxy wallet exist.')
+            console.log(`Check if proxy wallet exist for address: ${address}`)
             let proxyWalletRegistry = Web3Utils.getContractInstance(SmartContractFactory.ProxyWalletRegistry)
             let proxyWallet = await proxyWalletRegistry.methods.proxies(address).call();
             return proxyWallet;
@@ -141,7 +149,7 @@ export default class PositionService implements IPositionService{
        
     }
 
-    async closePosition(positionId: string,pool:ICollatralPool,address:string, debt:number): Promise<void> {
+    async closePosition(positionId: string,pool:ICollatralPool,address:string, debt:number,transactionStore:ActiveWeb3Transactions): Promise<void> {
         try{
             console.log(`Closing position for position id ${positionId}.`)
             let proxyWalletaddress = await this.proxyWalletExist(address);
@@ -149,7 +157,10 @@ export default class PositionService implements IPositionService{
         
             
             const fathomStableCoin = Web3Utils.getContractInstance(SmartContractFactory.FathomStableCoin)
-            await fathomStableCoin.methods.approve(proxyWalletaddress, Constants.WeiPerWad.multipliedBy(debt)).send({from:address});
+            
+            await fathomStableCoin.methods.approve(proxyWalletaddress, Constants.WeiPerWad.multipliedBy(debt)).send({from:address}).on('transactionHash', (hash:any) => {
+                transactionStore.addTransaction({hash:hash, type:TransactionType.Approve,active:false, status:TransactionStatus.None})
+            })
 
             const encodedResult = Web3Utils.getWeb3Instance().eth.abi.encodeParameters(["address"], [address]);
             let jsonInterface =  SmartContractFactory.FathomStablecoinProxyAction.abi.filter((abi) => abi.name === 'wipeAllAndUnlockToken')[0]  
@@ -164,7 +175,9 @@ export default class PositionService implements IPositionService{
               encodedResult,
             ]);
     
-            await wallet.methods.execute2(SmartContractFactory.FathomStablecoinProxyActions.address, wipeAllAndUnlockTokenCall).send({from:address});
+            await wallet.methods.execute2(SmartContractFactory.FathomStablecoinProxyActions.address, wipeAllAndUnlockTokenCall).send({from:address}).on('transactionHash', (hash:any) => {
+                transactionStore.addTransaction({hash:hash, type:TransactionType.ClosePosition,active:false, status:TransactionStatus.None})
+            })
             console.log(`Position closed for position id ${positionId}.`)
             
         }catch(error){

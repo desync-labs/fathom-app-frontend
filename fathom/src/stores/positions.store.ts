@@ -17,9 +17,12 @@ export default class PositionStore {
     }
 
     openPosition = async (address:string, pool:ICollatralPool,collatral:number,fathomToken:number) =>{
-        console.log(`Open position clicked for address ${address}, poolId: ${pool.name}, collatral:${collatral}, fathomToken: ${fathomToken}`)
+       console.log(`Open position clicked for address ${address}, poolId: ${pool.name}, collatral:${collatral}, fathomToken: ${fathomToken}`)
        try{
-            await this.service.openPosition(address,pool,collatral,fathomToken);
+            if(address===undefined || address === null)
+                return
+
+            await this.service.openPosition(address,pool,collatral,fathomToken,this.rootStore.transactionStore);
             await this.fetchPositions(address) 
             await this.rootStore.poolStore.fetchPools(); 
             this.rootStore.alertStore.setShowSuccessAlert(true,'New position opened succesfully!')
@@ -31,7 +34,10 @@ export default class PositionStore {
     closePosition = async (positionId:string,pool:ICollatralPool,address:string, fathomToken:number) =>{
         console.log(`Close position clicked for address ${address}, positionId: ${positionId}, fathomToken: ${fathomToken}`)
         try{
-            await this.service.closePosition(positionId,pool,address,fathomToken)
+            if(address===undefined || address === null)
+                return
+
+            await this.service.closePosition(positionId,pool,address,fathomToken,this.rootStore.transactionStore)
             await this.fetchPositions(address)
             await this.rootStore.poolStore.fetchPools(); 
             this.rootStore.alertStore.setShowSuccessAlert(true,'Position closed successfully!')
@@ -42,6 +48,9 @@ export default class PositionStore {
     }
 
     fetchPositions = async (address:string) =>{
+        if(address===undefined || address === null)
+            return
+
         let positions = await this.service.getPositionsWithSafetyBuffer(address);
         runInAction(() =>{
           this.setPositions(positions)

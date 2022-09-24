@@ -4,7 +4,6 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
 import PoolListView from '../Pools/PoolListView';
 import OpenPositionsList from '../PositionList/OpenPositionsList';
 import { useStores } from '../../stores';
@@ -52,7 +51,7 @@ const DashboardContent = observer(() => {
               {/* Available Pools */}
               { poolStore.pools.map(
                   (pool, idx) =>
-                  <Grid item xs={12} md={4} lg={3}>
+                  <Grid key={idx} item xs={12} md={4} lg={3}>
                     <PoolListView pool={pool}/>
                   </Grid>
              )}

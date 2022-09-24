@@ -20,7 +20,7 @@ const StableSwap = observer(() => {
     const [open, setOpen] = React.useState(false);
     const anchorRef = React.useRef<HTMLDivElement>(null);
     const [selectedIndex, setSelectedIndex] = React.useState(1);
-    const [placeHolder, setPlaceHolder] = React.useState(options[0]);
+//    const [placeHolder, setPlaceHolder] = React.useState(options[0]);
     const [inputValue, setInputValue] = React.useState(0);
 
     let stableSwapStore = useStores().stableSwapStore;
@@ -37,7 +37,7 @@ const StableSwap = observer(() => {
     ) => {
       setSelectedIndex(index);
       setOpen(false);
-      setPlaceHolder(options[index])
+      //setPlaceHolder(options[index])
     };
   
     const handleToggle = () => {

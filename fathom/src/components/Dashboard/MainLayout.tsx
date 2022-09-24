@@ -17,7 +17,7 @@ import Copyright from '../Footer/Footer';
 import AppBar from '../AppBar/AppBar';
 import { mainListItems, secondaryListItems } from './listItems';
 import useMetaMask from '../../hooks/metamask';
-import { Alert, Chip } from '@mui/material';
+import { Chip } from '@mui/material';
 import { observer } from 'mobx-react';
 import DashboardContent from './Dashboard';
 import { Route, Routes } from 'react-router-dom';
@@ -95,8 +95,8 @@ const MainLayout = observer(() => {
               FXD Stablecoin
             </Typography>
             <Chip label={account} color="primary" />
-            <IconButton color="inherit" >
-                {isActive  ?  <LogoutIcon /> : <AccountBalanceWalletIcon onClick={connect}/>}
+            <IconButton color="inherit"  onClick={connect}>
+                {isActive  ?  <LogoutIcon /> : <AccountBalanceWalletIcon/>}
             </IconButton>
           </Toolbar>
         </AppBar>
@@ -132,6 +132,7 @@ const MainLayout = observer(() => {
             overflow: 'auto',
           }}
         >
+          {/* <TransactionStatus/> */}
           {/* <Toolbar /> */}
             {/* <Alert severity="error">This is an error alert — check it out!</Alert>
             <Alert severity="warning">This is a warning alert — check it out!</Alert>
