@@ -1,33 +1,33 @@
 //import ICollatralPool from "../../stores/interfaces/ICollatralPool";
 import {observer} from 'mobx-react'
-import { Box, LinearProgress, Paper, Typography } from '@mui/material';
+import { Alert, AlertTitle,LinearProgress, Typography } from '@mui/material';
 import { useStores } from '../../stores';
+import truncateEthAddress from 'truncate-eth-address'
 
 
 const TransactionStatus = observer(() => {
   let transactionStore = useStores().transactionStore
 
-
+  const getTxUrl = (txHash:string) =>{
+    return `https://goerli.etherscan.io/tx/${txHash}`
+  }
 
   return (
   <>
   { transactionStore.transactions.map(
                   (transaction, idx) =>
-    <Paper
-        sx={{
-        p: 2,
-        display: 'flex',
-        flexDirection: 'column',
-        height: 60,
-        }}
-        >
+
+        <Alert severity="info">
+            <AlertTitle>{transaction.title}</AlertTitle>
             <Typography color="text.secondary" sx={{ flex: 1 }}>
-                   Transaction {transaction.hash} is pending  
+                {transaction.message} <strong>
+                                <a target="_blank" href={getTxUrl(transaction.hash)} rel="noreferrer">
+                                [{truncateEthAddress(transaction.hash)}]
+                                </a>
+                                </strong>
             </Typography>
-            <Box sx={{ width: '100%' }}>
-                <LinearProgress />
-            </Box>                
-    </Paper>
+            <LinearProgress />
+        </Alert>
     )}
     </>
   );

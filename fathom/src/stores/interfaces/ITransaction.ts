@@ -16,4 +16,6 @@ export interface ITransaction{
     type:TransactionType
     active:boolean
     status:TransactionStatus
+    title:string
+    message:string
 }

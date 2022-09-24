@@ -13,6 +13,7 @@ import { observer } from 'mobx-react';
 import { useStores } from '../../stores';
 import useMetaMask from '../../hooks/metamask';
 import AlertMessages from '../Common/AlertMessages';
+import TransactionStatus from '../Transaction/TransactionStatus';
 
 const options = ['USDT To FXD', 'FXD To USDT'];
 
@@ -75,6 +76,7 @@ const StableSwap = observer(() => {
   >
     <Toolbar />
     <AlertMessages/>
+    <TransactionStatus/>
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
     <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
     <Typography component="h2" variant="h6" color="primary" gutterBottom>
