@@ -31,7 +31,7 @@ export default class ActiveWeb3Transactions{
 
     private async checkTransactionStatus(): Promise<void> {
         for (const transaction of this.transactions) {
-            if(transaction!=undefined){
+            if(transaction !== undefined){
                 transaction.active = true;
                 let tx = await this.service.checkTransactionStatus(transaction)
                 if(tx.status !== TransactionStatus.None){
