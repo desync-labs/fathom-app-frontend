@@ -6,7 +6,7 @@ import { Constants } from "../helpers/Constants";
 import { Web3Utils } from "../helpers/Web3Utils";
 
 export default class PoolService implements IPoolService {
-  chainId: number = Number(process.env.REACT_APP_ENV) || 1337;
+  chainId = 1337;
   //Ideally this should be dynamic
   getPools(): ICollatralPool[] {
     let pools: ICollatralPool[] = [];
@@ -15,7 +15,8 @@ export default class PoolService implements IPoolService {
       {
         id: "0x5758444300000000000000000000000000000000000000000000000000000000",
         name: "WXDC",
-        collatralContractAddress: SmartContractFactory.WXDC(this.chainId).address,
+        collatralContractAddress: SmartContractFactory.WXDC(this.chainId)
+          .address,
         CollateralTokenAdapterAddress:
           SmartContractFactory.WXDCCollateralTokenAdapter(this.chainId).address,
         availableFathom: "",
@@ -24,7 +25,8 @@ export default class PoolService implements IPoolService {
       {
         id: "0x555344542d535441424c45000000000000000000000000000000000000000000",
         name: "USDT",
-        collatralContractAddress: SmartContractFactory.USDT(this.chainId).address,
+        collatralContractAddress: SmartContractFactory.USDT(this.chainId)
+          .address,
         CollateralTokenAdapterAddress:
           SmartContractFactory.USDTCollateralTokenAdapter(this.chainId).address,
         availableFathom: "",

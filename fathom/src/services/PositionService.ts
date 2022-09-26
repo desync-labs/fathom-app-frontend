@@ -13,7 +13,7 @@ import {
 } from "../stores/interfaces/ITransaction";
 
 export default class PositionService implements IPositionService {
-  chainId: number = Number(process.env.REACT_APP_ENV) || 1337;
+  chainId = 1337;
   async openPosition(
     address: string,
     pool: ICollatralPool,
