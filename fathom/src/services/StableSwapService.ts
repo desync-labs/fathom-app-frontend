@@ -10,7 +10,7 @@ import IStableSwapService from "./interfaces/IStableSwapService";
 
 export default class StableSwapService implements IStableSwapService {
   readonly tokenBuffer: number = 5;
-  chainId: number = Number(process.env.REACT_APP_ENV) || 1337;
+  chainId = 1337;
 
   async swapTokenToStablecoin(
     address: string,
