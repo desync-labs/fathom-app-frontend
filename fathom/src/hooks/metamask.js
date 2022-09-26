@@ -6,7 +6,7 @@ export const MetaMaskContext = createContext(null);
 
 export const MetaMaskProvider = ( { children } ) => {
 
-  const { activate, account, active, deactivate } = useWeb3React();
+  const { activate, account, active, deactivate, chainId, error } = useWeb3React();
 
   const [isActive, setIsActive] = useState(false);
   const [shouldDisable, setShouldDisable] = useState(false); // Should disable connect button while connecting to MetaMask
@@ -59,9 +59,11 @@ export const MetaMaskProvider = ( { children } ) => {
       isLoading,
       connect,
       disconnect,
-      shouldDisable
+      shouldDisable,
+      chainId,
+      error
     }),
-    [isActive, isLoading, shouldDisable, account, connect, disconnect]
+    [isActive, isLoading, shouldDisable, account, connect, disconnect, chainId, error]
   );
 
   return <MetaMaskContext.Provider value={ values }>{ children }</MetaMaskContext.Provider>;

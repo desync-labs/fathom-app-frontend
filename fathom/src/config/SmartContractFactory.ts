@@ -9,19 +9,21 @@ import StableSwapModule from "./ABI/StableSwapModule.json";
 import Addresses from "./addresses.json";
 
 export class SmartContractFactory {
-  public static Addresses() {
+  public static Addresses(chainId: number) {
     try {
-      let env = process.env.REACT_APP_ENV || "ganache";
       let address: any;
-      switch (env) {
-        case "ganache":
+      switch (chainId) {
+        case 1337:
           address = Addresses["1337"];
           break;
-        case "goerli":
+        case 5:
           address = Addresses["5"];
           break;
-        case "aphothem":
+        case 51:
           address = Addresses["51"];
+          break;
+        case 50:
+          address = Addresses["50"];
           break;
         default:
           address = Addresses["1337"];
@@ -34,14 +36,18 @@ export class SmartContractFactory {
     }
   }
 
-  public static PoolConfig = {
-    abi: CollateralPoolConfigAbi.abi as AbiItem[],
-    address: SmartContractFactory.Addresses().collateralPoolConfig,
+  public static PoolConfig(chainId: number) {
+    return {
+      abi: CollateralPoolConfigAbi.abi as AbiItem[],
+      address: SmartContractFactory.Addresses(chainId).collateralPoolConfig,
+    }
   };
 
-  public static ProxyWalletRegistry = {
-    abi: ProxyWalletRegistryAbi.abi as AbiItem[],
-    address: SmartContractFactory.Addresses().proxyWalletRegistry,
+  public static ProxyWalletRegistry(chainId: number) {
+    return {
+      abi: ProxyWalletRegistryAbi.abi as AbiItem[],
+      address: SmartContractFactory.Addresses(chainId).proxyWalletRegistry,
+    }
   };
 
   public static proxyWallet = {
@@ -49,19 +55,25 @@ export class SmartContractFactory {
     address: "",
   };
 
-  public static FathomStablecoinProxyAction = {
-    abi: FathomStablecoinProxyActionAbi.abi as AbiItem[],
-    address: SmartContractFactory.Addresses().fathomStablecoinProxyActions,
+  public static FathomStablecoinProxyAction(chainId: number) {
+    return {
+      abi: FathomStablecoinProxyActionAbi.abi as AbiItem[],
+      address: SmartContractFactory.Addresses(chainId).fathomStablecoinProxyActions,
+    }
   };
 
-  public static WXDC = {
-    abi: BEP20Abi.abi as AbiItem[],
-    address: SmartContractFactory.Addresses().WXDC,
+  public static WXDC(chainId: number) {
+    return {
+      abi: BEP20Abi.abi as AbiItem[],
+      address: SmartContractFactory.Addresses(chainId).WXDC,
+    }
   };
 
-  public static USDT = {
-    abi: BEP20Abi.abi as AbiItem[],
-    address: SmartContractFactory.Addresses().USDT,
+  public static USDT(chainId: number) {
+    return {
+      abi: BEP20Abi.abi as AbiItem[],
+      address: SmartContractFactory.Addresses(chainId).USDT,
+    }
   };
 
   public static BEP20 = (_address: string) => {
@@ -71,53 +83,73 @@ export class SmartContractFactory {
     };
   };
 
-  public static FathomStableCoin = {
-    abi: BEP20Abi.abi as AbiItem[],
-    address: SmartContractFactory.Addresses().fathomStablecoin,
+  public static FathomStableCoin(chainId: number) {
+    return {
+      abi: BEP20Abi.abi as AbiItem[],
+      address: SmartContractFactory.Addresses(chainId).fathomStablecoin,
+    }
   };
 
-  public static PositionManager = {
-    abi: [],
-    address: SmartContractFactory.Addresses().positionManager,
+  public static PositionManager(chainId: number) {
+    return {
+      abi: [],
+      address: SmartContractFactory.Addresses(chainId).positionManager,
+    }
   };
 
-  public static StabilityFeeCollector = {
-    abi: [],
-    address: SmartContractFactory.Addresses().stabilityFeeCollector,
+  public static StabilityFeeCollector(chainId: number) {
+    return {
+      abi: [],
+      address: SmartContractFactory.Addresses(chainId).stabilityFeeCollector,
+    }
   };
 
-  public static WXDCCollateralTokenAdapter = {
-    abi: [],
-    address: SmartContractFactory.Addresses().collateralTokenAdapter,
+  public static WXDCCollateralTokenAdapter(chainId: number) {
+    return {
+      abi: [],
+      address: SmartContractFactory.Addresses(chainId).collateralTokenAdapter,
+    }
   };
 
-  public static USDTCollateralTokenAdapter = {
-    abi: [],
-    address: SmartContractFactory.Addresses().collateralTokenAdapterUSDT,
+  public static USDTCollateralTokenAdapter(chainId: number) {
+    return {
+      abi: [],
+      address: SmartContractFactory.Addresses(chainId).collateralTokenAdapterUSDT,
+    }
   };
 
-  public static StablecoinAdapter = {
-    abi: [],
-    address: SmartContractFactory.Addresses().stablecoinAdapter,
+  public static StablecoinAdapter(chainId: number) {
+    return {
+      abi: [],
+      address: SmartContractFactory.Addresses(chainId).stablecoinAdapter,
+    }
   };
 
-  public static AuthtokenAdapter = {
-    abi: [],
-    address: SmartContractFactory.Addresses().authTokenAdapter,
+  public static AuthtokenAdapter(chainId: number) {
+    return {
+      abi: [],
+      address: SmartContractFactory.Addresses(chainId).authTokenAdapter,
+    }
   };
 
-  public static FathomStablecoinProxyActions = {
-    abi: [],
-    address: SmartContractFactory.Addresses().fathomStablecoinProxyActions,
+  public static FathomStablecoinProxyActions(chainId: number) {
+    return {
+      abi: [],
+      address: SmartContractFactory.Addresses(chainId).fathomStablecoinProxyActions,
+    }
   };
 
-  public static GetPositions = {
-    abi: GetPositionsAbi.abi as AbiItem[],
-    address: SmartContractFactory.Addresses().getPositions,
+  public static GetPositions(chainId: number) {
+    return {
+      abi:GetPositionsAbi.abi as AbiItem [],
+      address:SmartContractFactory.Addresses(chainId).getPositions
+    }
   };
 
-  public static StableSwapModule = {
-    abi: StableSwapModule.abi as AbiItem[],
-    address: SmartContractFactory.Addresses().stableSwapModule,
+  public static StableSwapModule(chainId: number) {
+    return {
+      abi: StableSwapModule.abi as AbiItem[],
+      address: SmartContractFactory.Addresses(chainId).stableSwapModule,
+    }
   };
 }
