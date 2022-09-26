@@ -1,4 +1,8 @@
-import React, { useCallback, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useState
+} from "react";
 import { createTheme, styled, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import MuiDrawer from "@mui/material/Drawer";
@@ -27,6 +31,8 @@ import StableSwap from "../Stableswap/StableSwap";
 import Image from "mui-image";
 
 import FathomLogoAqua from "../../assets/svg/Fathom-logo-aqua.svg";
+import { useStores } from "../../stores";
+import { Web3Status } from "../Web3Status/Web3Status";
 
 const drawerWidth: number = 240;
 
@@ -67,11 +73,17 @@ const mdTheme = createTheme({
 
 const MainLayout = observer(() => {
   const [open, setOpen] = useState<boolean>(true);
-  const { connect, isActive, account } = useMetaMask()!;
+  const { connect, isActive, account, chainId, error } = useMetaMask()!;
 
   const toggleDrawer = useCallback(() => {
     setOpen(!open);
   }, [open, setOpen]);
+
+  let rootStore = useStores();
+
+  useEffect(() => {
+    rootStore.setChainId(chainId!)
+  }, [chainId, rootStore])
 
   return (
     <ThemeProvider theme={mdTheme}>
@@ -104,7 +116,8 @@ const MainLayout = observer(() => {
             >
 
             </Typography>
-            <Chip label={account} color="primary" />
+            { account && !error && <Chip label={account} color="primary" /> }
+            <Web3Status />
             <IconButton color="inherit" onClick={connect}>
               {isActive ? <LogoutIcon /> : <AccountBalanceWalletIcon />}
             </IconButton>
@@ -155,7 +168,6 @@ const MainLayout = observer(() => {
           <Divider />
           <List component="nav">
             <MainListItems open={open} />
-            <Divider sx={{ my: 1 }} />
             <SecondaryListItems open={open} />
           </List>
         </Drawer>
