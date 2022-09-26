@@ -18,7 +18,6 @@ import AppBar from "../AppBar/AppBar";
 import { MainListItems, SecondaryListItems } from "./listItems";
 import useMetaMask from "../../hooks/metamask";
 import {
-  Alert,
   Chip
 } from "@mui/material";
 import { observer } from "mobx-react";
@@ -60,7 +59,11 @@ const Drawer = styled(MuiDrawer, {
   },
 }));
 
-const mdTheme = createTheme();
+const mdTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+});
 
 const MainLayout = observer(() => {
   const [open, setOpen] = useState<boolean>(true);
@@ -99,7 +102,7 @@ const MainLayout = observer(() => {
               noWrap
               sx={{ flexGrow: 1 }}
             >
-              FXD Stablecoin
+
             </Typography>
             <Chip label={account} color="primary" />
             <IconButton color="inherit" onClick={connect}>
