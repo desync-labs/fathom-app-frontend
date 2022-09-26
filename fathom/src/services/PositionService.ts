@@ -45,7 +45,7 @@ export default class PositionService implements IPositionService{
 
             const BEP20 = Web3Utils.getContractInstance(SmartContractFactory.BEP20(pool.collatralContractAddress))
             
-            await BEP20.methods.approve(proxyWalletaddress, Constants.WeiPerWad.multipliedBy(collatral)).send({from:address}).on('transactionHash', (hash:any) => {
+            await BEP20.methods.approve(proxyWalletaddress, Constants.WeiPerWad.multipliedBy(collatral).toString()).send({from:address}).on('transactionHash', (hash:any) => {
                 transactionStore.addTransaction({hash:hash, 
                                                 type:TransactionType.Approve,
                                                 active:false, 
@@ -64,6 +64,7 @@ export default class PositionService implements IPositionService{
             })
 
         }catch(error){
+            console.error(`Error in open position: ${error}`)
             throw error;
         }
     }
@@ -168,7 +169,8 @@ export default class PositionService implements IPositionService{
             
             const fathomStableCoin = Web3Utils.getContractInstance(SmartContractFactory.FathomStableCoin)
             
-            await fathomStableCoin.methods.approve(proxyWalletaddress, Constants.WeiPerWad.multipliedBy(debt)).send({from:address}).on('transactionHash', (hash:any) => {
+            await fathomStableCoin.methods.approve(proxyWalletaddress, Constants.WeiPerWad.multipliedBy(debt).toString()).send({from:address})
+            .on('transactionHash', (hash:any) => {
                 transactionStore.addTransaction({hash:hash, 
                     type:TransactionType.Approve,
                     active:false, 
@@ -203,7 +205,7 @@ export default class PositionService implements IPositionService{
             console.log(`Position closed for position id ${positionId}.`)
             
         }catch(error){
-            console.error(`Error in closing position`)
+            console.error(`Error in closing position ${error}`)
             throw error;
         }
     }
