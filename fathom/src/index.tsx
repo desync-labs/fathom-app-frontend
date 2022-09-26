@@ -6,7 +6,6 @@ import { MetaMaskProvider } from './hooks/metamask';
 import { Web3ReactProvider } from '@web3-react/core'
 import { provider } from 'web3-core';
 import Web3 from 'web3/dist/web3.min.js'
-import { BrowserRouter } from 'react-router-dom';
 
 function getLibrary(provider: provider, connector: any) {
   return new Web3(provider)

@@ -1,7 +1,7 @@
 // import winston from 'winston';
 // import { WinstonProvider } from 'winston-react';
 import 'fontsource-roboto'
-import { BrowserRouter as Router} from "react-router-dom";
+import { HashRouter as Router} from "react-router-dom";
 import MainLayout from './components/Dashboard/MainLayout';
 
 // const logger = winston.createLogger({
