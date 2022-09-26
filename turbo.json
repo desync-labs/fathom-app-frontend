@@ -1,0 +1,28 @@
+{
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**"]
+    },
+    "start": {
+      "dependsOn": ["^build"]
+    },
+    "build:local-prod": {
+      "cache": false,
+      "dependsOn": ["^build:local-prod"],
+      "outputs": ["dist/**", ".next/**"]
+    },
+    "start:local-prod": {
+      "dependsOn": ["^build:local-prod"]
+    },
+    "lint": {
+      "outputs": []
+    },
+    "dev": {
+      "cache": false
+    },
+    "storybook": {
+      "cache": false
+    }
+  }
+}

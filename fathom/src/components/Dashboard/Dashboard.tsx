@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import Box from '@mui/material/Box';
 
 import Toolbar from '@mui/material/Toolbar';
@@ -8,7 +8,6 @@ import PoolListView from '../Pools/PoolListView';
 import OpenPositionsList from '../PositionList/OpenPositionsList';
 import { useStores } from '../../stores';
 import { LogLevel, useLogger } from '../../helpers/Logger';
-import { useEffect } from 'react';
 import { observer } from 'mobx-react';
 import AlertMessages from '../Common/AlertMessages';
 import ProtocolStats from './ProtocolStats';
@@ -18,23 +17,20 @@ import TransactionStatus from '../Transaction/TransactionStatus';
 const DashboardContent = observer(() => {
 
   let rootStore = useStores()
-  let poolStore = useStores().poolStore;
+  let { poolStore } = rootStore;
   let logger = useLogger();
 
   useEffect(() => {
     // Update the document title using the browser API
     logger.log(LogLevel.info,'fetching pool information.');
     poolStore.fetchPools()
-  },[poolStore,rootStore.alertStore]);
+  },[poolStore,rootStore.alertStore, logger]);
 
   return (
         <Box
           component="main"
           sx={{
-            backgroundColor: (theme) =>
-              theme.palette.mode === 'light'
-                ? theme.palette.grey[100]
-                : theme.palette.grey[900],
+            backgroundColor: '#000',
             flexGrow: 1,
             height: '100vh',
             overflow: 'auto',
