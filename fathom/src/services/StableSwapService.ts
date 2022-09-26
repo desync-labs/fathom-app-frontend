@@ -14,7 +14,7 @@ export default class StableSwapService implements IStableSwapService{
             console.log(`Performing swapTokenToStablecoin from address: ${address} amount: ${tokenIn}`)
             const USDT = Web3Utils.getContractInstance(SmartContractFactory.USDT)
             let buffer = Number(tokenIn) + Number((tokenIn * this.tokenBuffer / 100))
-            await USDT.methods.approve(SmartContractFactory.AuthtokenAdapter.address, Constants.WeiPerWad.multipliedBy(buffer)).send({from:address}).on('transactionHash', (hash:any) => {
+            await USDT.methods.approve(SmartContractFactory.AuthtokenAdapter.address, Constants.WeiPerWad.multipliedBy(buffer).toString()).send({from:address}).on('transactionHash', (hash:any) => {
                                         transactionStore.addTransaction({hash:hash, 
                                                 type:TransactionType.ClosePosition,
                                                 active:false, 
@@ -26,7 +26,7 @@ export default class StableSwapService implements IStableSwapService{
     
             const stableSwapModule = Web3Utils.getContractInstance(SmartContractFactory.StableSwapModule)
             
-            await stableSwapModule.methods.swapTokenToStablecoin(address, Constants.WeiPerWad.multipliedBy(tokenIn)).send({from:address}).on('transactionHash', (hash:any) => {
+            await stableSwapModule.methods.swapTokenToStablecoin(address, Constants.WeiPerWad.multipliedBy(tokenIn).toString()).send({from:address}).on('transactionHash', (hash:any) => {
                                         transactionStore.addTransaction({hash:hash, 
                                                 type:TransactionType.ClosePosition,
                                                 active:false, 
@@ -36,7 +36,7 @@ export default class StableSwapService implements IStableSwapService{
                                             })
                                         })
         }catch(error){
-            console.error(`Error in swapTokenToStablecoin`)
+            console.error(`Error in swapTokenToStablecoin ${error}`)
             throw error;
         }
     }
@@ -49,7 +49,7 @@ export default class StableSwapService implements IStableSwapService{
     
             let buffer = Number(stablecoinIn) + Number((stablecoinIn * this.tokenBuffer / 100))
             
-            await fathomStableCoin.methods.approve(SmartContractFactory.StableSwapModule.address, Constants.WeiPerWad.multipliedBy(buffer)).send({from:address}).on('transactionHash', (hash:any) => {
+            await fathomStableCoin.methods.approve(SmartContractFactory.StableSwapModule.address, Constants.WeiPerWad.multipliedBy(buffer).toString()).send({from:address}).on('transactionHash', (hash:any) => {
                                         transactionStore.addTransaction({hash:hash, 
                                                 type:TransactionType.ClosePosition,
                                                 active:false, 
@@ -59,7 +59,7 @@ export default class StableSwapService implements IStableSwapService{
                                             })
                                         })
             
-            await stableSwapModule.methods.swapStablecoinToToken(address, Constants.WeiPerWad.multipliedBy(stablecoinIn)).send({from:address}).on('transactionHash', (hash:any) => {
+            await stableSwapModule.methods.swapStablecoinToToken(address, Constants.WeiPerWad.multipliedBy(stablecoinIn).toString()).send({from:address}).on('transactionHash', (hash:any) => {
                                         transactionStore.addTransaction({hash:hash, 
                                                 type:TransactionType.ClosePosition,
                                                 active:false, 
