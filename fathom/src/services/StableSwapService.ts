@@ -21,7 +21,7 @@ export default class StableSwapService implements IStableSwapService {
       console.log(
         `Performing swapTokenToStablecoin from address: ${address} amount: ${tokenIn}`
       );
-      const USDT = Web3Utils.getContractInstance(SmartContractFactory.USDT);
+      const USDT = Web3Utils.getContractInstance(SmartContractFactory.USDT, this.chainId);
       let buffer = Number(tokenIn) + Number((tokenIn * this.tokenBuffer) / 100);
       await USDT.methods
         .approve(
@@ -41,7 +41,8 @@ export default class StableSwapService implements IStableSwapService {
         });
 
       const stableSwapModule = Web3Utils.getContractInstance(
-        SmartContractFactory.StableSwapModule(this.chainId)
+        SmartContractFactory.StableSwapModule(this.chainId),
+        this.chainId
       );
 
       await stableSwapModule.methods
@@ -76,10 +77,12 @@ export default class StableSwapService implements IStableSwapService {
         `Performing swapTokenToStablecoin from address: ${address} amount: ${stablecoinIn}`
       );
       const fathomStableCoin = Web3Utils.getContractInstance(
-        SmartContractFactory.FathomStableCoin(this.chainId)
+        SmartContractFactory.FathomStableCoin(this.chainId),
+        this.chainId
       );
       const stableSwapModule = Web3Utils.getContractInstance(
-        SmartContractFactory.StableSwapModule(this.chainId)
+        SmartContractFactory.StableSwapModule(this.chainId),
+        this.chainId
       );
 
       let buffer =

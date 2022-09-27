@@ -135,7 +135,7 @@ export class Web3Utils {
       Web3Utils.xdc3 = new Xdc3(
         Xdc3.givenProvider || process.env.REACT_APP_WEB3_PROVIDER_URL
       );
-      return Web3Utils.web3;
+      return Web3Utils.xdc3;
     } else {
       Web3Utils.web3 = new Web3(
         Web3.givenProvider || process.env.REACT_APP_WEB3_PROVIDER_URL

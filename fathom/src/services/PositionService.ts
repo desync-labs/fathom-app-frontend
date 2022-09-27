@@ -33,10 +33,11 @@ export default class PositionService implements IPositionService {
 
       const wallet = Web3Utils.getContractInstanceFrom(
         SmartContractFactory.proxyWallet.abi,
-        proxyWalletaddress
+        proxyWalletaddress,
+        this.chainId
       );
       const encodedResult =
-        Web3Utils.getWeb3Instance().eth.abi.encodeParameters(
+        Web3Utils.getWeb3Instance(this.chainId).eth.abi.encodeParameters(
           ["address"],
           [address]
         );
@@ -46,7 +47,7 @@ export default class PositionService implements IPositionService {
       ).abi.filter((abi) => abi.name === "openLockTokenAndDraw")[0];
 
       let openPositionCall =
-        Web3Utils.getWeb3Instance().eth.abi.encodeFunctionCall(jsonInterface, [
+        Web3Utils.getWeb3Instance(this.chainId).eth.abi.encodeFunctionCall(jsonInterface, [
           SmartContractFactory.PositionManager(this.chainId).address,
           SmartContractFactory.StabilityFeeCollector(this.chainId).address,
           pool.CollateralTokenAdapterAddress,
@@ -107,7 +108,8 @@ export default class PositionService implements IPositionService {
     try {
       console.log("Crteating a proxy wallet...");
       let proxyWalletRegistry = Web3Utils.getContractInstance(
-        SmartContractFactory.ProxyWalletRegistry(this.chainId)
+        SmartContractFactory.ProxyWalletRegistry(this.chainId),
+        this.chainId
       );
       await proxyWalletRegistry.methods.build(address).send({ from: address });
       let proxyWallet = await proxyWalletRegistry.methods
@@ -125,7 +127,8 @@ export default class PositionService implements IPositionService {
     try {
       console.log(`Check if proxy wallet exist for address: ${address}`);
       let proxyWalletRegistry = Web3Utils.getContractInstance(
-        SmartContractFactory.ProxyWalletRegistry(this.chainId)
+        SmartContractFactory.ProxyWalletRegistry(this.chainId),
+        this.chainId
       );
       let proxyWallet = await proxyWalletRegistry.methods
         .proxies(address)
@@ -142,7 +145,8 @@ export default class PositionService implements IPositionService {
       console.log(`getting Positions For Address ${address}.`);
       let proxyWallet = await this.proxyWalletExist(address);
       let getPositionsContract = Web3Utils.getContractInstance(
-        SmartContractFactory.GetPositions(this.chainId)
+        SmartContractFactory.GetPositions(this.chainId),
+        this.chainId
       );
       let response = await getPositionsContract.methods
         .getAllPositionsAsc(
@@ -189,7 +193,8 @@ export default class PositionService implements IPositionService {
       );
       let myPositions = await this.getPositionsForAddress(address);
       let getPositionsContract = Web3Utils.getContractInstance(
-        SmartContractFactory.GetPositions(this.chainId)
+        SmartContractFactory.GetPositions(this.chainId),
+        this.chainId
       );
       let response = await getPositionsContract.methods
         .getPositionWithSafetyBuffer(
@@ -246,11 +251,13 @@ export default class PositionService implements IPositionService {
       let proxyWalletaddress = await this.proxyWalletExist(address);
       const wallet = Web3Utils.getContractInstanceFrom(
         SmartContractFactory.proxyWallet.abi,
-        proxyWalletaddress
+        proxyWalletaddress,
+        this.chainId
       );
 
       const fathomStableCoin = Web3Utils.getContractInstance(
-        SmartContractFactory.FathomStableCoin
+        SmartContractFactory.FathomStableCoin,
+        this.chainId
       );
 
       await fathomStableCoin.methods
@@ -268,7 +275,7 @@ export default class PositionService implements IPositionService {
         });
 
       const encodedResult =
-        Web3Utils.getWeb3Instance().eth.abi.encodeParameters(
+        Web3Utils.getWeb3Instance(this.chainId).eth.abi.encodeParameters(
           ["address"],
           [address]
         );
@@ -277,7 +284,7 @@ export default class PositionService implements IPositionService {
       ).abi.filter((abi) => abi.name === "wipeAllAndUnlockToken")[0];
 
       let wipeAllAndUnlockTokenCall =
-        Web3Utils.getWeb3Instance().eth.abi.encodeFunctionCall(jsonInterface, [
+        Web3Utils.getWeb3Instance(this.chainId).eth.abi.encodeFunctionCall(jsonInterface, [
           SmartContractFactory.PositionManager(this.chainId).address,
           pool.CollateralTokenAdapterAddress,
           SmartContractFactory.StablecoinAdapter(this.chainId).address,

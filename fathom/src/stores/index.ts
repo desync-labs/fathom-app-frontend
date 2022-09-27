@@ -14,6 +14,7 @@ import ActiveWeb3Transactions from "./transaction.store";
 import IPoolService from "../services/interfaces/IPoolService";
 import IPositionService from "../services/interfaces/IPositionService";
 import IStableSwapService from "../services/interfaces/IStableSwapService";
+import IActiveWeb3TransactionsService from "../services/interfaces/IActiveWeb3TransactionsService";
 
 export class RootStore {
   /**
@@ -31,6 +32,7 @@ export class RootStore {
   poolService: IPoolService;
   positionService: IPositionService;
   stableSwapService: IStableSwapService;
+  activeWeb3TransactionService: IActiveWeb3TransactionsService;
 
   chainId: number = 1337;
 
@@ -38,6 +40,7 @@ export class RootStore {
     this.poolService = new PoolService();
     this.positionService = new PositionService();
     this.stableSwapService = new StableSwapService();
+    this.activeWeb3TransactionService = new ActiveWeb3TransactionsService();
 
     this.authStore = new AuthStore(this);
     this.poolStore = new PoolStore(this, this.poolService);
@@ -46,14 +49,19 @@ export class RootStore {
     this.alertStore = new AlertStore(this);
     this.transactionStore = new ActiveWeb3Transactions(
       this,
-      new ActiveWeb3TransactionsService()
+      this.activeWeb3TransactionService
     );
   }
 
   setChainId(chainId: number) {
     this.chainId = chainId;
 
-    ["poolService", "positionService", "stableSwapService"].map((serviceName) =>
+    [
+      "poolService",
+      "positionService",
+      "stableSwapService",
+      "activeWeb3TransactionService",
+    ].map((serviceName) =>
       // @ts-ignore
       this[serviceName].setChainId(chainId)
     );
