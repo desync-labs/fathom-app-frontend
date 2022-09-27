@@ -21,7 +21,7 @@ export default class StableSwapService implements IStableSwapService {
       console.log(
         `Performing swapTokenToStablecoin from address: ${address} amount: ${tokenIn}`
       );
-      const USDT = Web3Utils.getContractInstance(SmartContractFactory.USDT, this.chainId);
+      const USDT = Web3Utils.getContractInstance(SmartContractFactory.USDT(this.chainId), this.chainId);
       let buffer = Number(tokenIn) + Number((tokenIn * this.tokenBuffer) / 100);
       await USDT.methods
         .approve(
@@ -62,7 +62,7 @@ export default class StableSwapService implements IStableSwapService {
           });
         });
     } catch (error) {
-      console.error(`Error in swapTokenToStablecoin`);
+      console.error(`Error in swapTokenToStablecoin: ${error}`);
       throw error;
     }
   }

@@ -1,5 +1,4 @@
 import { Box, CardMedia, Grid, Paper } from '@mui/material';
-// import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import logo from '../../assets/images/fxd-logo.jpg';
 
@@ -14,17 +13,7 @@ const ProtocolStats = function ProtocolStats(props: any) {
           height: 240,
         }}
       >
-      {/* <Typography variant="h6" gutterBottom>
-          FXD
-      </Typography> */}
-      {/* <CardMedia
-        component="img"
-        width="80"
-        height="40"
-        image={logo}
-        alt="Fathom Stablecoin"
-      /> */}
-      <img src={logo} alt="Fathom Stablecoin"  height="40" width="80"></img>
+      <img src={logo} alt="Fathom Stablecoin"  height="40" width="80" color='black'></img>
       <Typography variant="subtitle1" gutterBottom>
           The reliable stablecoin that earns you extra passive income
       </Typography>
