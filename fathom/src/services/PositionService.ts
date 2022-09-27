@@ -256,7 +256,7 @@ export default class PositionService implements IPositionService {
       );
 
       const fathomStableCoin = Web3Utils.getContractInstance(
-        SmartContractFactory.FathomStableCoin,
+        SmartContractFactory.FathomStableCoin(this.chainId),
         this.chainId
       );
 
@@ -312,7 +312,7 @@ export default class PositionService implements IPositionService {
         });
       console.log(`Position closed for position id ${positionId}.`);
     } catch (error) {
-      console.error(`Error in closing position`);
+      console.error(`Error in closing position ${error}`);
       throw error;
     }
   }
