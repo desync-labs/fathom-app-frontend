@@ -62,7 +62,7 @@ export class Web3Utils {
     let contract;
     if (XDC_CHAIN_IDS.includes(chainId)) {
       Web3Utils.xdc3 = new Xdc3(
-        Xdc3.givenProvider || process.env.REACT_APP_WEB3_PROVIDER_URL
+        Xdc3.givenProvider || Web3Utils.getWeb3ProviderUrl(chainId)
       );
 
       contract = new Web3Utils.xdc3.eth.Contract(
@@ -73,7 +73,7 @@ export class Web3Utils {
       Web3Utils.contracts.set(contractKey, contract);
     } else {
       Web3Utils.web3 = new Web3(
-        Web3.givenProvider || process.env.REACT_APP_WEB3_PROVIDER_URL
+        Web3.givenProvider || Web3Utils.getWeb3ProviderUrl(chainId)
       );
 
       contract = new Web3Utils.web3.eth.Contract(
@@ -111,7 +111,7 @@ export class Web3Utils {
     let contract;
     if (XDC_CHAIN_IDS.includes(chainId)) {
       Web3Utils.xdc3 = new Xdc3(
-        Xdc3.givenProvider || process.env.REACT_APP_WEB3_PROVIDER_URL
+        Xdc3.givenProvider || Web3Utils.getWeb3ProviderUrl(chainId)
       );
 
       contract = new Web3Utils.xdc3.eth.Contract(abi as XdcAbiItem[], address);
@@ -119,7 +119,7 @@ export class Web3Utils {
       Web3Utils.contracts.set(contractKey, contract);
     } else {
       Web3Utils.web3 = new Web3(
-        Web3.givenProvider || process.env.REACT_APP_WEB3_PROVIDER_URL
+        Web3.givenProvider || Web3Utils.getWeb3ProviderUrl(chainId)
       );
 
       contract = new Web3Utils.web3.eth.Contract(abi, address);
@@ -139,15 +139,38 @@ export class Web3Utils {
 
     if (XDC_CHAIN_IDS.includes(chainId)) {
       Web3Utils.xdc3 = new Xdc3(
-        Xdc3.givenProvider || process.env.REACT_APP_WEB3_PROVIDER_URL
+        Xdc3.givenProvider || Web3Utils.getWeb3ProviderUrl(chainId)
       );
       return Web3Utils.xdc3;
     } else {
       Web3Utils.web3 = new Web3(
-        Web3.givenProvider || process.env.REACT_APP_WEB3_PROVIDER_URL
+        Web3.givenProvider || Web3Utils.getWeb3ProviderUrl(chainId)
       );
       return Web3Utils.web3;
     }
 
   };
+
+  public static getWeb3ProviderUrl: any = (
+    chainId: number
+  ) => {
+    let web3ProviderUrl = '' 
+    switch (chainId){
+      case 1337: 
+        web3ProviderUrl = 'ws://localhost:8545'
+      break;
+      case 5:
+        web3ProviderUrl = 'https://goerli.infura.io/v3/d85fb151be214d8eaee85c855d9d3dab' 
+      break;
+      case 50: 
+        web3ProviderUrl = ''
+      break;
+      case 51: 
+        web3ProviderUrl = 'https://rpc.apothem.network'
+      break;
+    }
+
+    return web3ProviderUrl
+
+  }
 }

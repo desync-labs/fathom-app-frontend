@@ -17,7 +17,7 @@ const AlertMessages = observer(() => {
   return (
         <div>
             {rootStore.alertStore.showErrorAlert && 
-            <Alert severity="error"
+            <Alert severity="error" variant="filled"
             action={
               <IconButton
                 aria-label="close"
@@ -36,7 +36,7 @@ const AlertMessages = observer(() => {
             </Alert>
           }
           {rootStore.alertStore.showSuccessAlert && 
-            <Alert severity="success"
+            <Alert severity="success" variant="filled"
             action={
               <IconButton
                 aria-label="close"
