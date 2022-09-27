@@ -1,5 +1,7 @@
 import Web3 from "web3";
+import Xdc3 from "xdc3";
 import { AbiItem } from "web3-utils";
+import { XDC_CHAIN_IDS } from "../components/wallet/connectors";
 
 interface ContractMetaData {
   address: string;
@@ -8,18 +10,20 @@ interface ContractMetaData {
 
 export class Web3Utils {
   public static web3: Web3;
+  public static xdc3: Xdc3;
   /**
    * We need to avoid create new instance of contract each time
    */
   public static contracts = new Map();
 
   public static getContractInstance: any = (
-    contractMetaData: ContractMetaData
+    contractMetaData: ContractMetaData,
+    chainId: number
   ) => {
     /**
-     * Get cache key by address
+     * Get cache key by address and chainId
      */
-    const contractKey = contractMetaData.address;
+    const contractKey = `${chainId}:${contractMetaData.address}`;
     /**
      * Check this key in Map, if it has return cached instance
      */
@@ -30,7 +34,15 @@ export class Web3Utils {
      * If we have no this contract, need to create instance and cache it
      * We already has Web3 instance so need to create contract instance and cache it
      */
-    if (Web3Utils.web3 instanceof Web3) {
+    if (XDC_CHAIN_IDS.includes(chainId) && Web3Utils.xdc3 instanceof Xdc3) {
+      const contract = new Web3Utils.xdc3.eth.Contract(
+        contractMetaData.abi,
+        contractMetaData.address
+      );
+
+      Web3Utils.contracts.set(contractKey, contract);
+      return contract;
+    } else if (Web3Utils.web3 instanceof Web3) {
       const contract = new Web3Utils.web3.eth.Contract(
         contractMetaData.abi,
         contractMetaData.address
@@ -41,60 +53,95 @@ export class Web3Utils {
     /**
      * We have no Web3 instance need to create new instance of Web3
      */
-    Web3Utils.web3 = new Web3(
-      Web3.givenProvider || process.env.REACT_APP_WEB3_PROVIDER_URL
-    );
+    let contract;
+    if (XDC_CHAIN_IDS.includes(chainId)) {
+      Web3Utils.xdc3 = new Xdc3(
+        Xdc3.givenProvider || process.env.REACT_APP_WEB3_PROVIDER_URL
+      );
 
-    const contract = new Web3Utils.web3.eth.Contract(
-      contractMetaData.abi,
-      contractMetaData.address
-    );
+      contract = new Web3Utils.xdc3.eth.Contract(
+        contractMetaData.abi,
+        contractMetaData.address
+      );
 
-    Web3Utils.contracts.set(contractKey, contract);
+      Web3Utils.contracts.set(contractKey, contract);
+    } else {
+      Web3Utils.web3 = new Web3(
+        Web3.givenProvider || process.env.REACT_APP_WEB3_PROVIDER_URL
+      );
+
+      contract = new Web3Utils.web3.eth.Contract(
+        contractMetaData.abi,
+        contractMetaData.address
+      );
+
+      Web3Utils.contracts.set(contractKey, contract);
+    }
 
     return contract;
   };
 
   public static getContractInstanceFrom: any = (
     abi: AbiItem[],
-    address: string
+    address: string,
+    chainId: number
   ) => {
-    const contractKey = address;
+    const contractKey = `${chainId}:${address}`;
 
     if (Web3Utils.contracts.has(contractKey)) {
       return Web3Utils.contracts.get(contractKey);
     }
 
-    if (Web3Utils.web3 instanceof Web3) {
-      const contract = new Web3Utils.web3.eth.Contract(
-        abi,
-        address
-      );
+    if (XDC_CHAIN_IDS.includes(chainId) && Web3Utils.xdc3 instanceof Xdc3) {
+      const contract = new Web3Utils.xdc3.eth.Contract(abi, address);
+      Web3Utils.contracts.set(contractKey, contract);
+      return contract;
+    } else if (Web3Utils.web3 instanceof Web3) {
+      const contract = new Web3Utils.web3.eth.Contract(abi, address);
       Web3Utils.contracts.set(contractKey, contract);
       return contract;
     }
 
-    Web3Utils.web3 = new Web3(
-      Web3.givenProvider || process.env.REACT_APP_WEB3_PROVIDER_URL
-    );
+    let contract;
+    if (XDC_CHAIN_IDS.includes(chainId)) {
+      Web3Utils.xdc3 = new Xdc3(
+        Xdc3.givenProvider || process.env.REACT_APP_WEB3_PROVIDER_URL
+      );
 
-    const contract = new Web3Utils.web3.eth.Contract(
-      abi,
-      address
-    );
+      contract = new Web3Utils.xdc3.eth.Contract(abi, address);
 
-    Web3Utils.contracts.set(contractKey, contract);
+      Web3Utils.contracts.set(contractKey, contract);
+    } else {
+      Web3Utils.web3 = new Web3(
+        Web3.givenProvider || process.env.REACT_APP_WEB3_PROVIDER_URL
+      );
+
+      contract = new Web3Utils.web3.eth.Contract(abi, address);
+
+      Web3Utils.contracts.set(contractKey, contract);
+    }
+
     return contract;
   };
 
-  public static getWeb3Instance: any = () => {
-    if (Web3Utils.web3 instanceof Web3) {
+  public static getWeb3Instance: any = (chainId: number) => {
+    if (XDC_CHAIN_IDS.includes(chainId) && Web3Utils.xdc3 instanceof Xdc3) {
+      return Web3Utils.xdc3;
+    } else if (Web3Utils.web3 instanceof Web3) {
       return Web3Utils.web3;
     }
 
-    Web3Utils.web3 = new Web3(
-      Web3.givenProvider || process.env.REACT_APP_WEB3_PROVIDER_URL
-    );
-    return Web3Utils.web3;
+    if (XDC_CHAIN_IDS.includes(chainId)) {
+      Web3Utils.xdc3 = new Xdc3(
+        Xdc3.givenProvider || process.env.REACT_APP_WEB3_PROVIDER_URL
+      );
+      return Web3Utils.web3;
+    } else {
+      Web3Utils.web3 = new Web3(
+        Web3.givenProvider || process.env.REACT_APP_WEB3_PROVIDER_URL
+      );
+      return Web3Utils.web3;
+    }
+
   };
 }
