@@ -17,6 +17,7 @@ const ItemStyles = (isActive: boolean) => ({
   "&:hover": {
     background: "#2B2C31",
     borderRadius: "8px",
+    margin: '0 5px'
   },
 });
 
