@@ -1,6 +1,6 @@
-import { Box, CardMedia, Grid, Paper } from '@mui/material';
+import { Box, Grid, Paper } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import logo from '../../assets/images/fxd-logo.jpg';
+import logo from '../../assets/images/fxd-logo.png';
 
 
 const ProtocolStats = function ProtocolStats(props: any) {
