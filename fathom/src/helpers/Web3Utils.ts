@@ -1,11 +1,17 @@
 import Web3 from "web3";
 import Xdc3 from "xdc3";
 import { AbiItem } from "web3-utils";
+import { AbiItem as XdcAbiItem } from 'xdc3-utils';
 import { XDC_CHAIN_IDS } from "../components/wallet/connectors";
 
 interface ContractMetaData {
   address: string;
   abi: AbiItem[];
+}
+
+interface XdcContractMetaData {
+  address: string;
+  abi: XdcAbiItem[];
 }
 
 export class Web3Utils {
@@ -17,7 +23,7 @@ export class Web3Utils {
   public static contracts = new Map();
 
   public static getContractInstance: any = (
-    contractMetaData: ContractMetaData,
+    contractMetaData: ContractMetaData | XdcContractMetaData,
     chainId: number
   ) => {
     /**
@@ -36,7 +42,7 @@ export class Web3Utils {
      */
     if (XDC_CHAIN_IDS.includes(chainId) && Web3Utils.xdc3 instanceof Xdc3) {
       const contract = new Web3Utils.xdc3.eth.Contract(
-        contractMetaData.abi,
+        contractMetaData.abi as XdcContractMetaData['abi'],
         contractMetaData.address
       );
 
@@ -60,7 +66,7 @@ export class Web3Utils {
       );
 
       contract = new Web3Utils.xdc3.eth.Contract(
-        contractMetaData.abi,
+        contractMetaData.abi as XdcContractMetaData['abi'],
         contractMetaData.address
       );
 
@@ -82,7 +88,7 @@ export class Web3Utils {
   };
 
   public static getContractInstanceFrom: any = (
-    abi: AbiItem[],
+    abi: AbiItem[] | XdcAbiItem[],
     address: string,
     chainId: number
   ) => {
@@ -93,7 +99,7 @@ export class Web3Utils {
     }
 
     if (XDC_CHAIN_IDS.includes(chainId) && Web3Utils.xdc3 instanceof Xdc3) {
-      const contract = new Web3Utils.xdc3.eth.Contract(abi, address);
+      const contract = new Web3Utils.xdc3.eth.Contract(abi as XdcAbiItem[], address);
       Web3Utils.contracts.set(contractKey, contract);
       return contract;
     } else if (Web3Utils.web3 instanceof Web3) {
@@ -108,7 +114,7 @@ export class Web3Utils {
         Xdc3.givenProvider || process.env.REACT_APP_WEB3_PROVIDER_URL
       );
 
-      contract = new Web3Utils.xdc3.eth.Contract(abi, address);
+      contract = new Web3Utils.xdc3.eth.Contract(abi as XdcAbiItem[], address);
 
       Web3Utils.contracts.set(contractKey, contract);
     } else {
