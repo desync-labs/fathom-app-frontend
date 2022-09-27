@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import Box from "@mui/material/Box";
 
 import Toolbar from "@mui/material/Toolbar";
@@ -12,23 +12,29 @@ import { observer } from "mobx-react";
 import AlertMessages from "../Common/AlertMessages";
 import ProtocolStats from "./ProtocolStats";
 import TransactionStatus from "../Transaction/TransactionStatus";
-import { useWeb3React } from "@web3-react/core";
+import {
+  UnsupportedChainIdError,
+  useWeb3React
+} from "@web3-react/core";
 
 const DashboardContent = observer(() => {
-  const { chainId } = useWeb3React()
+  const { chainId, error } = useWeb3React()
   const rootStore = useStores();
   const { poolStore } = rootStore;
   const logger = useLogger();
+  const unsupportedError = useMemo(() => (error as Error) instanceof UnsupportedChainIdError, [error]);
 
   useEffect(() => {
     // Update the document title using the browser API
-    if (chainId) {
+    if (chainId && (!error || !unsupportedError)) {
       logger.log(LogLevel.info, "fetching pool information.");
       setTimeout(() => {
         poolStore.fetchPools();
       })
+    } else {
+      poolStore.setPool([])
     }
-  }, [poolStore, rootStore.alertStore, logger, chainId]);
+  }, [poolStore, rootStore.alertStore, logger, chainId, error, unsupportedError]);
 
   return (
     <Box

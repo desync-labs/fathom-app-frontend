@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useMemo } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -23,7 +23,7 @@ const OpenPositionsList = observer(() => {
   const poolStore = rootStore.poolStore;
   const { account, chainId, error } = useMetaMask()!;
   const logger = useLogger();
-  const unsupportedError = (error as Error) instanceof UnsupportedChainIdError;
+  const unsupportedError = useMemo(() => (error as Error) instanceof UnsupportedChainIdError, [error]);
 
   useEffect(() => {
     // Update the document title using the browser API
@@ -31,10 +31,11 @@ const OpenPositionsList = observer(() => {
       logger.log(LogLevel.info, `fetching open positions. ${account}`);
       setTimeout(() => {
         positionStore.fetchPositions(account);
-      })
+      });
+    } else {
+      positionStore.setPositions([]);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [positionStore, account, chainId, error]);
+  }, [positionStore, account, chainId, error, unsupportedError, logger]);
 
   const getFormattedSaftyBuffer = (safetyBuffer: BigNumber) => {
     return safetyBuffer.div(Constants.WeiPerWad).toString();
