@@ -1,10 +1,23 @@
-import { createContext, useCallback, useEffect, useMemo, useState, useContext } from "react";
+import {
+  createContext,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useContext,
+  ReactElement,
+  FC
+} from "react";
 import { injected } from "../components/wallet/connectors";
 import { useWeb3React } from "@web3-react/core";
 
 export const MetaMaskContext = createContext(null);
 
-export const MetaMaskProvider = ( { children } ) => {
+type MetaMaskProviderType = {
+  children: ReactElement
+}
+
+export const MetaMaskProvider: FC<MetaMaskProviderType> = ( { children } ) => {
 
   const { activate, account, active, deactivate, chainId, error } = useWeb3React();
 
@@ -66,6 +79,7 @@ export const MetaMaskProvider = ( { children } ) => {
     [isActive, isLoading, shouldDisable, account, connect, disconnect, chainId, error]
   );
 
+  // @ts-ignore
   return <MetaMaskContext.Provider value={ values }>{ children }</MetaMaskContext.Provider>;
 };
 
