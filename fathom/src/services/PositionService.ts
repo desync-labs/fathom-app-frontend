@@ -67,7 +67,7 @@ export default class PositionService implements IPositionService {
       await BEP20.methods
         .approve(
           proxyWalletaddress,
-          Constants.WeiPerWad.multipliedBy(collatral)
+          Constants.WeiPerWad.multipliedBy(collatral).toString()
         )
         .send({ from: address })
         .on("transactionHash", (hash: any) => {
@@ -99,6 +99,7 @@ export default class PositionService implements IPositionService {
           });
         });
     } catch (error) {
+      console.error(`Error in openPosition: ${error}`);
       throw error;
     }
   }
@@ -261,7 +262,7 @@ export default class PositionService implements IPositionService {
       );
 
       await fathomStableCoin.methods
-        .approve(proxyWalletaddress, Constants.WeiPerWad.multipliedBy(debt))
+        .approve(proxyWalletaddress, Constants.WeiPerWad.multipliedBy(debt).toString())
         .send({ from: address })
         .on("transactionHash", (hash: any) => {
           transactionStore.addTransaction({

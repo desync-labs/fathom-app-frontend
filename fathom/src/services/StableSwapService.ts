@@ -26,7 +26,7 @@ export default class StableSwapService implements IStableSwapService {
       await USDT.methods
         .approve(
           SmartContractFactory.AuthtokenAdapter(this.chainId).address,
-          Constants.WeiPerWad.multipliedBy(buffer)
+          Constants.WeiPerWad.multipliedBy(buffer).toString()
         )
         .send({ from: address })
         .on("transactionHash", (hash: any) => {
@@ -48,7 +48,7 @@ export default class StableSwapService implements IStableSwapService {
       await stableSwapModule.methods
         .swapTokenToStablecoin(
           address,
-          Constants.WeiPerWad.multipliedBy(tokenIn)
+          Constants.WeiPerWad.multipliedBy(tokenIn).toString()
         )
         .send({ from: address })
         .on("transactionHash", (hash: any) => {
@@ -91,7 +91,7 @@ export default class StableSwapService implements IStableSwapService {
       await fathomStableCoin.methods
         .approve(
           SmartContractFactory.StableSwapModule(this.chainId).address,
-          Constants.WeiPerWad.multipliedBy(buffer)
+          Constants.WeiPerWad.multipliedBy(buffer).toString()
         )
         .send({ from: address })
         .on("transactionHash", (hash: any) => {
@@ -108,7 +108,7 @@ export default class StableSwapService implements IStableSwapService {
       await stableSwapModule.methods
         .swapStablecoinToToken(
           address,
-          Constants.WeiPerWad.multipliedBy(stablecoinIn)
+          Constants.WeiPerWad.multipliedBy(stablecoinIn).toString()
         )
         .send({ from: address })
         .on("transactionHash", (hash: any) => {
