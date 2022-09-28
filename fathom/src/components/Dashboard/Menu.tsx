@@ -31,7 +31,7 @@ const useShowText = (open: boolean) => {
   };
 };
 
-export const LisItems: FC<ItemPropsType> = ({ open }) => {
+export const Menu: FC<ItemPropsType> = ({ open }) => {
   const location = useLocation();
   const isProposalsActive = location.pathname === "/proposals";
   const isMakeProposalActive = location.pathname === "/proposal/make-proposal";
