@@ -60,7 +60,7 @@ export default class PositionService implements IPositionService {
         ]);
 
       const BEP20 = Web3Utils.getContractInstance(
-        SmartContractFactory.BEP20(pool.collatralContractAddress),
+        SmartContractFactory.BEP20(pool.collateralContractAddress),
         this.chainId
       );
 

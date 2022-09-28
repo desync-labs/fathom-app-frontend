@@ -1,25 +1,13 @@
-import {
-  useEffect,
-  useState
-} from "react";
+import { useEffect, useState } from "react";
 import { FC } from "react";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
-import { Link, useLocation } from "react-router-dom";
-
-const ItemStyles = (isActive: boolean) => ({
-  color: isActive ? "#00FFF6" : "#808084",
-  textDecoration: "none",
-  border: "none",
-  "&:hover": {
-    background: "#2B2C31",
-    borderRadius: "8px",
-    margin: '0 5px'
-  },
-});
+import {
+  Dashboard as DashboardIcon,
+  SwapHoriz as SwapHorizIcon,
+  AddBox as AddBoxIcon,
+  DensitySmall as DensitySmallIcon,
+} from "@mui/icons-material";
+import { useLocation } from "react-router-dom";
+import AppMenuItem from "../MenuItem/AppMenuItem";
 
 type ItemPropsType = {
   open: boolean;
@@ -32,73 +20,69 @@ const useShowText = (open: boolean) => {
     if (open) {
       setTimeout(() => {
         setShowText(open);
-      }, 100)
+      }, 100);
     } else {
       setShowText(open);
     }
-  }, [open, setShowText])
+  }, [open, setShowText]);
 
   return {
-    showText
-  }
-}
-
-export const MainListItems: FC<ItemPropsType> = ({ open }) => {
-  const location = useLocation();
-  const isActive = location.pathname === "/";
-  const { showText } = useShowText(open);
-
-  return (
-    <>
-      <Link
-        className={isActive ? "active" : ""}
-        to="/"
-        style={{ textDecoration: "none" }}
-      >
-        <ListItemButton sx={ItemStyles(isActive)}>
-          <ListItemIcon
-            sx={{
-              color: isActive ? "#00FFF6" : "#808084",
-              minWidth: "30px",
-            }}
-          >
-            <DashboardIcon />
-          </ListItemIcon>
-          {showText && (
-            <ListItemText primary="Dashboard" sx={{ fontWeight: "bold" }} />
-          )}
-        </ListItemButton>
-      </Link>
-    </>
-  );
+    showText,
+  };
 };
 
-export const SecondaryListItems: FC<ItemPropsType> = ({ open }) => {
+export const LisItems: FC<ItemPropsType> = ({ open }) => {
   const location = useLocation();
-  const isActive = location.pathname === "/swap";
+  const isProposalsActive = location.pathname === "/proposals";
+  const isMakeProposalActive = location.pathname === "/proposal/make-proposal";
+  const isStableSwapActive = location.pathname === "/swap";
+  const isDashboardActive = location.pathname === "/";
+
   const { showText } = useShowText(open);
+
+  const appMenuItems = [
+    {
+      name: 'Dashboard',
+      link: "/",
+      Icon: DashboardIcon,
+      isActive: isDashboardActive,
+      showText,
+    },
+    {
+      name: 'Stable Swap',
+      link: "/swap",
+      Icon: SwapHorizIcon,
+      isActive: isStableSwapActive,
+      showText,
+    },
+    {
+      name: "Government",
+      isActive: false,
+      showText,
+      items: [
+        {
+          name: "View all Proposals",
+          showText,
+          Icon: DensitySmallIcon,
+          isActive: isProposalsActive,
+          link: '/proposals'
+        },
+        {
+          name: "Make a Proposal",
+          Icon: AddBoxIcon,
+          showText,
+          isActive: isMakeProposalActive,
+          link: '/proposal/make-proposal'
+        },
+      ],
+    },
+  ];
 
   return (
     <>
-      <Link
-        className={isActive ? "active" : ""}
-        to="/swap"
-        style={{ textDecoration: "none" }}
-      >
-        <ListItemButton sx={ItemStyles(isActive)}>
-          <ListItemIcon
-            sx={{
-              color: isActive ? "#00FFF6" : "#808084",
-              minWidth: "30px",
-            }}
-          >
-            <SwapHorizIcon />
-          </ListItemIcon>
-          {showText && (
-            <ListItemText primary="Stable Swap" sx={{ fontWeight: "bold" }} />
-          )}
-        </ListItemButton>
-      </Link>
+      {appMenuItems.map((item, index) => (
+        <AppMenuItem {...item} key={index} />
+      ))}
     </>
   );
 };
