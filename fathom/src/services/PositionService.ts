@@ -192,7 +192,7 @@ export default class PositionService implements IPositionService{
               proxyWalletaddress = await this.createProxyWallet(address)
           }
 
-          const BEP20 = Web3Utils.getContractInstance(SmartContractFactory.BEP20(pool.collatralContractAddress),this.chainId)
+          const BEP20 = Web3Utils.getContractInstance(SmartContractFactory.BEP20(pool.collateralContractAddress),this.chainId)
 
           await BEP20.methods.approve(proxyWalletaddress, Constants.MAX_UINT256).send({from:address}).on('transactionHash', (hash:any) => {
               transactionStore.addTransaction({hash:hash, 
@@ -204,7 +204,7 @@ export default class PositionService implements IPositionService{
           })
 
       }catch(error){
-          console.error(`Error in open position approve token: ${error}`)
+          console.error(`Error in open position approve token 1: ${error}`)
           throw error;
       }
   }
@@ -222,13 +222,13 @@ export default class PositionService implements IPositionService{
               return false
           }
 
-          const BEP20 = Web3Utils.getContractInstance(SmartContractFactory.BEP20(pool.collatralContractAddress),this.chainId)
+          const BEP20 = Web3Utils.getContractInstance(SmartContractFactory.BEP20(pool.collateralContractAddress),this.chainId)
 
           let allowance = await BEP20.methods.allowance(address, proxyWalletaddress).call()
           
           return +allowance > +Constants.WeiPerWad.multipliedBy(collatral);
       }catch(error){
-          console.error(`Error in open position approve token: ${error}`)
+          console.error(`Error in open position approve token 2: ${error}`)
           throw error;
       }
   }
@@ -255,7 +255,7 @@ export default class PositionService implements IPositionService{
                   })
               })
       }catch(error){
-          console.error(`Error in open position approve token: ${error}`)
+          console.error(`Error in open position approve token 3: ${error}`)
           throw error;
       }
   }
@@ -274,7 +274,7 @@ export default class PositionService implements IPositionService{
           
           return +allowance > 10000000000000000
       }catch(error){
-          console.error(`Error in open position approve token: ${error}`)
+          console.error(`Error in open position approve token 4: ${error}`)
           throw error;
       }
   }
