@@ -8,10 +8,13 @@ import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
-import { TextField } from '@mui/material';
+import { TextField} from '@mui/material';
 import { useStores } from '../../stores';
 import useMetaMask from '../../hooks/metamask';
 import ICollatralPool from '../../stores/interfaces/ICollatralPool';
+
+const Web3 = require('web3')
+
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -56,17 +59,50 @@ const BootstrapDialogTitle = (props: DialogTitleProps) => {
   );
 };
 
+
+
+
 export default function CustomizedDialogs(this: any, props: PoolProps) {
+  let positionStore = useStores().positionStore;
+  const { account } = useMetaMask()!
+
+  let [approveBtn, setApproveBtn] = React.useState(true);
+
+  React.useEffect(() => {
+    approvalStatus()
+  })
+
   const [open, setOpen] = React.useState(false);
   const [collatral, setCollatral] = React.useState(0);
   const [fathomToken, setFathomToken] = React.useState(0);
+  const [approvalPending, setApprovalPending] = React.useState(false);
 
-  let positionStore = useStores().positionStore;
-  const { account } = useMetaMask()!
+
+
+  const approvalStatus = async () => {
+    let approved = await positionStore.approvalStatus(account, collatral, props.pool)
+    approved ? setApproveBtn(false) : setApproveBtn(true)
+  }
 
   const openNewPosition = () => {
     positionStore.openPosition(account,props.pool,collatral,fathomToken)
     setOpen(false);
+  }
+
+  const approve = async () => {
+    setApprovalPending(true)
+    try{
+      await  positionStore.approve(account,props.pool)
+      handleCloseApproveBtn()        
+    } catch(e) {
+      setApproveBtn(true)
+    }
+
+    setApprovalPending(false)
+  }
+
+  const handleCloseApproveBtn = () => {
+    setApproveBtn(false)
   }
 
   const handleClickOpen = () => {
@@ -84,7 +120,6 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
   const handlefathomTokenTextFieldChange = (e:any) => {
     setFathomToken(e.target.value)
   }
-  
 
   return (
     <div>
@@ -101,9 +136,7 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
         </BootstrapDialogTitle>
         <DialogContent dividers>
           <Typography gutterBottom>
-            Create a new position for {props.pool.name} Pool to get guranteed return on your collatral.Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
-            dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac
-            consectetur ac, vestibulum at eros.
+            Create a new position for {props.pool.name} Pool to get guranteed return on your collateral.
           </Typography>
           <TextField
           id="outlined-helperText"
@@ -125,7 +158,17 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
          />
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={openNewPosition}>
+          { approvalPending 
+            ? <Typography display="inline">
+                Pending ...
+              </Typography>
+            : approveBtn
+            ? <Button onClick={approve}>
+                Approve {props.pool.name}
+              </Button>
+            : null
+          }
+          <Button autoFocus onClick={openNewPosition} disabled={approveBtn}>
             Open
           </Button>
         </DialogActions>

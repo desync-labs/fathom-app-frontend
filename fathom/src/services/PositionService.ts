@@ -12,7 +12,6 @@ import { TransactionStatus, TransactionType } from "../stores/interfaces/ITransa
 
 
 export default class PositionService implements IPositionService{
-    
 
     async openPosition(address:string, pool:ICollatralPool,collatral:number,fathomToken:number,transactionStore:ActiveWeb3Transactions): Promise<void>{
         
@@ -42,17 +41,6 @@ export default class PositionService implements IPositionService{
                 '1',
                 encodedResult,
             ]);
-
-            const BEP20 = Web3Utils.getContractInstance(SmartContractFactory.BEP20(pool.collatralContractAddress))
-            
-            await BEP20.methods.approve(proxyWalletaddress, Constants.WeiPerWad.multipliedBy(collatral).toString()).send({from:address}).on('transactionHash', (hash:any) => {
-                transactionStore.addTransaction({hash:hash, 
-                                                type:TransactionType.Approve,
-                                                active:false, 
-                                                status:TransactionStatus.None,
-                                                title:`Approval Pending`,
-                                                message:'Click on transaction to view on Etherscan.'})
-            })
            
             await wallet.methods.execute2(SmartContractFactory.FathomStablecoinProxyActions.address, openPositionCall).send({from:address}).on('transactionHash', (hash:any) => {
                 transactionStore.addTransaction({hash:hash, 
@@ -156,8 +144,6 @@ export default class PositionService implements IPositionService{
             console.error(`Error in getting Positions: ${error}`)
             throw error;
         }
-
-       
     }
 
     async closePosition(positionId: string,pool:ICollatralPool,address:string, debt:number,transactionStore:ActiveWeb3Transactions): Promise<void> {
@@ -165,20 +151,6 @@ export default class PositionService implements IPositionService{
             console.log(`Closing position for position id ${positionId}.`)
             let proxyWalletaddress = await this.proxyWalletExist(address);
             const wallet = Web3Utils.getContractInstanceFrom(SmartContractFactory.proxyWallet.abi,proxyWalletaddress)
-        
-            
-            const fathomStableCoin = Web3Utils.getContractInstance(SmartContractFactory.FathomStableCoin)
-            
-            await fathomStableCoin.methods.approve(proxyWalletaddress, Constants.WeiPerWad.multipliedBy(debt).toString()).send({from:address})
-            .on('transactionHash', (hash:any) => {
-                transactionStore.addTransaction({hash:hash, 
-                    type:TransactionType.Approve,
-                    active:false, 
-                    status:TransactionStatus.None,
-                    title:`Approval Pending`,
-                    message:'Click on transaction to view on Etherscan.'
-                })
-            })
 
             const encodedResult = Web3Utils.getWeb3Instance().eth.abi.encodeParameters(["address"], [address]);
             let jsonInterface =  SmartContractFactory.FathomStablecoinProxyAction.abi.filter((abi) => abi.name === 'wipeAllAndUnlockToken')[0]  
@@ -206,6 +178,101 @@ export default class PositionService implements IPositionService{
             
         }catch(error){
             console.error(`Error in closing position ${error}`)
+            throw error;
+        }
+    }
+
+    async approve(address:string, pool:ICollatralPool,transactionStore:ActiveWeb3Transactions): Promise<void>{
+        try{
+            let proxyWalletaddress = await this.proxyWalletExist(address);
+
+            if(proxyWalletaddress === Constants.ZERO_ADDRESS){
+                proxyWalletaddress = await this.createProxyWallet(address)
+            }
+
+            const BEP20 = Web3Utils.getContractInstance(SmartContractFactory.BEP20(pool.collatralContractAddress))
+
+            await BEP20.methods.approve(proxyWalletaddress, Constants.MAX_UINT256).send({from:address}).on('transactionHash', (hash:any) => {
+                transactionStore.addTransaction({hash:hash, 
+                                                type:TransactionType.Approve,
+                                                active:false, 
+                                                status:TransactionStatus.None,
+                                                title:`Approval Pending`,
+                                                message:'Click on transaction to view on Etherscan.'})
+            })
+
+        }catch(error){
+            console.error(`Error in open position approve token: ${error}`)
+            throw error;
+        }
+    }
+
+    async approvalStatus(address:string, pool:ICollatralPool, collatral:number, transactionStore:ActiveWeb3Transactions): Promise<Boolean>{
+        try{
+            // set collateral to zero if not defined
+            if (!collatral) {
+                collatral = 0;
+            }
+
+            let proxyWalletaddress = await this.proxyWalletExist(address);
+
+            if(proxyWalletaddress === Constants.ZERO_ADDRESS){
+                return false
+            }
+
+            const BEP20 = Web3Utils.getContractInstance(SmartContractFactory.BEP20(pool.collatralContractAddress))
+
+            let allowance = await BEP20.methods.allowance(address, proxyWalletaddress).call()
+            
+            return +allowance > +Constants.WeiPerWad.multipliedBy(collatral);
+        }catch(error){
+            console.error(`Error in open position approve token: ${error}`)
+            throw error;
+        }
+    }
+
+    async approveStablecoin(address:string, transactionStore:ActiveWeb3Transactions): Promise<void>{
+        
+        try{
+            let proxyWalletaddress = await this.proxyWalletExist(address);
+
+            if(proxyWalletaddress === Constants.ZERO_ADDRESS){
+                proxyWalletaddress = await this.createProxyWallet(address)
+            }
+
+            const fathomStableCoin = Web3Utils.getContractInstance(SmartContractFactory.FathomStableCoin)
+
+            await fathomStableCoin.methods.approve(proxyWalletaddress, Constants.MAX_UINT256).send({from:address})
+                .on('transactionHash', (hash:any) => {
+                    transactionStore.addTransaction({hash:hash, 
+                        type:TransactionType.Approve,
+                        active:false, 
+                        status:TransactionStatus.None,
+                        title:`Approval Pending`,
+                        message:'Click on transaction to view on Etherscan.'
+                    })
+                })
+        }catch(error){
+            console.error(`Error in open position approve token: ${error}`)
+            throw error;
+        }
+    }
+
+    async approvalStatusStablecoin(address:string): Promise<Boolean>{
+        try{
+            let proxyWalletaddress = await this.proxyWalletExist(address);
+
+            if(proxyWalletaddress === Constants.ZERO_ADDRESS){
+                return false
+            }
+
+            const fathomStableCoin = Web3Utils.getContractInstance(SmartContractFactory.FathomStableCoin)
+
+            let allowance = await fathomStableCoin.methods.allowance(address, proxyWalletaddress).call()
+            
+            return +allowance > 10000000000000000
+        }catch(error){
+            console.error(`Error in open position approve token: ${error}`)
             throw error;
         }
     }

@@ -24,12 +24,23 @@ const OpenPositionsList = observer(() => {
     const { account } = useMetaMask()!
     let logger = useLogger();
 
+    let [approveBtn, setApproveBtn] = React.useState(true);
+
+
     useEffect(() => {
         // Update the document title using the browser API
         logger.log(LogLevel.info,`fetching open positions. ${account}`);
         positionStore.fetchPositions(account);
+        approvalStatus();
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[positionStore,account]);
+
+    const [approvalPending, setApprovalPending] = React.useState(false);
+
+    const approvalStatus = async () => {
+      let approved = await positionStore.approvalStatusStablecoin(account)
+      approved ? setApproveBtn(false) : setApproveBtn(true)
+    }
 
     const getFormattedSaftyBuffer = (safetyBuffer:BigNumber) => {
         return safetyBuffer.div(Constants.WeiPerWad).toString()
@@ -40,6 +51,21 @@ const OpenPositionsList = observer(() => {
         positionStore.closePosition(position.id,pool,account,position.debtShare.div(Constants.WeiPerWad).toNumber())
     };
   
+    const approve = async () => {
+      setApprovalPending(true)
+      try{
+        await  positionStore.approveStablecoin(account)
+        handleCloseApproveBtn()        
+      } catch(e) {
+        setApproveBtn(true)
+      }
+  
+      setApprovalPending(false)
+    }
+
+    const handleCloseApproveBtn = () => {
+      setApproveBtn(false)
+    }
 
   return (
     <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
@@ -72,9 +98,19 @@ const OpenPositionsList = observer(() => {
               <TableCell align="right">{poolStore.getPool(position.pool).name}</TableCell>
               <TableCell align="right">{getFormattedSaftyBuffer(position.debtShare)}</TableCell>
               <TableCell align="right">
-                    <Button variant="outlined" onClick={() => handleClickClosePosition(position,poolStore.getPool(position.pool))}>
-                        Close
+                { approvalPending 
+                  ? <Typography  display="inline" sx={{marginRight: 2}}>
+                      Pending ...
+                    </Typography>
+                  : approveBtn
+                  ? <Button variant="outlined" onClick={approve} sx={{marginRight: 2}}>
+                      Approve FXD
                     </Button>
+                  : null
+                }
+                <Button variant="outlined" disabled={approveBtn} onClick={() => handleClickClosePosition(position,poolStore.getPool(position.pool))}>
+                    Close
+                </Button>
               </TableCell>
             </TableRow>
           ))}

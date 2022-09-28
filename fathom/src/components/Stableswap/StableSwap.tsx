@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, Container, TextField, Toolbar, Typography } from '@mui/material';
+import { Box, Container, TextField, Toolbar, Typography} from '@mui/material';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
@@ -23,10 +23,36 @@ const StableSwap = observer(() => {
     const [selectedIndex, setSelectedIndex] = React.useState(1);
 //    const [placeHolder, setPlaceHolder] = React.useState(options[0]);
     const [inputValue, setInputValue] = React.useState(0);
+    const [approveFxdBtn, setApproveFxdBtn] = React.useState(false);
+    const [approveUsdtBtn, setApproveUsdtBtn] = React.useState(false);
+    const [approvalPending, setApprovalPending] = React.useState(false);
+
 
     let stableSwapStore = useStores().stableSwapStore;
     const { account } = useMetaMask()!
-  
+
+
+    React.useEffect(() => {
+      approvalStatus()
+    })
+
+    const approvalStatus = async () => {
+      let input = inputValue;
+      if (!input) {
+        input = 0;
+      }
+      let approved;
+      if (selectedIndex == 0) {
+        // usdt 
+        approved = await stableSwapStore.approvalStatusUsdt(account, input)
+        approved ? setApproveUsdtBtn(false) : setApproveUsdtBtn(true)
+      } else {
+        // fxd
+        approved = await stableSwapStore.approvalStatusStablecoin(account, input)
+        approved ? setApproveFxdBtn(false) : setApproveFxdBtn(true)
+      }      
+    }
+
     const handleClick = () => {
       console.info(`You clicked ${options[selectedIndex]}`);
       stableSwapStore.swapToken(selectedIndex,account,inputValue);
@@ -36,10 +62,41 @@ const StableSwap = observer(() => {
       event: React.MouseEvent<HTMLLIElement, MouseEvent>,
       index: number,
     ) => {
+      if (index == 0) {
+        setApproveFxdBtn(false)
+      } else {
+        setApproveUsdtBtn(false)
+      }
       setSelectedIndex(index);
       setOpen(false);
-      //setPlaceHolder(options[index])
     };
+
+    const approveFxd = async () => {
+      setApprovalPending(true)
+      try{
+        // approve fxd
+        await stableSwapStore.approveStablecoin(account)
+        setApproveFxdBtn(false)        
+      } catch(e) {
+        setApproveFxdBtn(true)        
+      }
+  
+      setApprovalPending(false)
+    }
+
+    const approveUsdt = async () => {
+      setApprovalPending(true)
+      try{
+        // approve usdt
+        await stableSwapStore.approveUsdt(account, inputValue)
+        setApproveUsdtBtn(false)    
+      } catch(e) {
+        setApproveUsdtBtn(true)    
+      }
+  
+      setApprovalPending(false)
+    }
+
   
     const handleToggle = () => {
       setOpen((prevOpen) => !prevOpen);
@@ -94,9 +151,24 @@ const StableSwap = observer(() => {
           value={inputValue}
           onChange={handleInputValueTextFieldChange}
           sx={{marginRight: 2}}/>
+
+          { approvalPending 
+            ? <Typography display="inline" sx={{marginRight: 2}}>
+                Pending ...
+              </Typography>
+            : approveFxdBtn
+            ? <Button  variant="outlined" onClick={approveFxd} sx={{marginRight: 2}}>
+                Approve FXD
+              </Button>
+            : approveUsdtBtn
+            ? <Button  variant="outlined" onClick={approveUsdt} sx={{marginRight: 2}}>
+                Approve USDT
+              </Button>
+            : null
+          }
          
         <ButtonGroup variant="contained" ref={anchorRef} aria-label="split button">
-        <Button onClick={handleClick}>{options[selectedIndex]}</Button>
+        <Button disabled={approveUsdtBtn || approveFxdBtn || approvalPending} onClick={handleClick}>{options[selectedIndex]}</Button>
         <Button
           size="small"
           aria-controls={open ? 'split-button-menu' : undefined}
