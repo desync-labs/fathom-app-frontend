@@ -20,8 +20,8 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import Copyright from "../Footer/Footer";
 import AppBar from "../AppBar/AppBar";
 import {
-  LisItems
-} from "./listItems";
+  Menu
+} from "./Menu";
 import useMetaMask from "../../hooks/metamask";
 import {
   Chip
@@ -178,7 +178,7 @@ const MainLayout = observer(() => {
           </Toolbar>
           <Divider />
           <List component="nav">
-            <LisItems open={open} />
+            <Menu open={open} />
           </List>
         </Drawer>
         <Box
