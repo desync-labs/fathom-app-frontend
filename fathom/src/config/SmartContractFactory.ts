@@ -7,6 +7,12 @@ import BEP20Abi from "./ABI/BEP20.json";
 import GetPositionsAbi from "./ABI/GetPositions.json";
 import StableSwapModule from "./ABI/StableSwapModule.json";
 import Addresses from "./addresses.json";
+import Staking from "./ABI/Staking.json";
+import StakingGetter from "./ABI/StakingGetter.json";
+import MainToken from "./ABI/MainToken.json"; 
+import VeMainToken from "./ABI/VeMainToken.json"; 
+import Token from "./ABI/Token.json"; 
+ 
 
 import Governor from './ABI/Governor.json'
 
@@ -161,4 +167,41 @@ export class SmartContractFactory {
       address: SmartContractFactory.Addresses(chainId) // '0x62f3d571A7DAcC00C047e58fE500ee99A98E3f63'
     }
   }
+  public static Staking(chainId: number)  {
+    return {
+      abi:Staking.abi as AbiItem [],
+      address: SmartContractFactory.Addresses(chainId).staking 
+    }
+  }
+
+  public static MainToken(chainId: number)  {
+    return {
+      abi:MainToken.abi as AbiItem [],
+      address: SmartContractFactory.Addresses(chainId).mainToken // '0x62f3d571A7DAcC00C047e58fE500ee99A98E3f63'
+    }
+  }
+
+  public static StakingGetter(chainId: number)  {
+    return {
+      abi:StakingGetter.abi as AbiItem [],
+      address: SmartContractFactory.Addresses(chainId).stakingGetter // '0x62f3d571A7DAcC00C047e58fE500ee99A98E3f63'
+    }
+  }
+
+  public static VeMAINToken(chainId: number)  {
+    return {
+      abi:VeMainToken.abi as AbiItem [],
+      address: SmartContractFactory.Addresses(chainId).veMainToken // '0x62f3d571A7DAcC00C047e58fE500ee99A98E3f63'
+    }
+  }
+
+  public static StreamRewardToken(chainId: number)  {
+    return {
+      abi:Token.abi as AbiItem [],
+      address: SmartContractFactory.Addresses(chainId).streamRewardToken // '0x62f3d571A7DAcC00C047e58fE500ee99A98E3f63'
+    }
+  }
 }
+
+ 
+

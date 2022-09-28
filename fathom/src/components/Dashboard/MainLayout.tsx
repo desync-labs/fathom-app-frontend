@@ -38,6 +38,7 @@ import { Web3Status } from "../Web3Status/Web3Status";
 import AllProposalsView from "../Governance/ViewAllProposals";
 import ProposalView from "../Governance/Proposal";
 import MakePropose from "../Governance/Propose";
+import StakingView from "../StakingSubik/StakingView";
 
 const drawerWidth: number = 240;
 
@@ -196,6 +197,7 @@ const MainLayout = observer(() => {
             <Route path="/proposals" element={<AllProposalsView />} />
             <Route path="/proposal/make-proposal" element={<MakePropose />} />
             <Route path="/proposal/:_proposalId" element={<ProposalView />} />
+            <Route path="/staking" element={<StakingView />} />
           </Routes>
           {/*<Alert severity="error">This is an error alert — check it out!</Alert>*/}
           {/*<Alert severity="warning">This is a warning alert — check it out!</Alert>*/}
