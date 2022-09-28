@@ -41,4 +41,56 @@ export default class StableSwapStore {
             } 
          } 
     }
+
+    approveStablecoin = async (address:string) =>{
+      console.log(`Open position token approval clicked for address ${address}`)
+      try{
+           if(address===undefined || address === null)
+               return
+
+           await this.service.approveStablecoin(address,this.rootStore.transactionStore);
+           this.rootStore.alertStore.setShowSuccessAlert(true,'FXD approval was successful!')
+      }catch(e){
+           this.rootStore.alertStore.setShowErrorAlert(true,'There is some error approving the token!')
+           throw e
+      }
+   }
+
+   approveUsdt = async (address:string, tokenIn:number) =>{
+      console.log(`Approved USDT clicked for address ${address}`)
+      try{
+           if(address===undefined || address === null)
+               return
+
+           await this.service.approveUsdt(address,tokenIn,this.rootStore.transactionStore);
+           this.rootStore.alertStore.setShowSuccessAlert(true,'USDT approval was successful!')
+      }catch(e){
+           this.rootStore.alertStore.setShowErrorAlert(true,'There is some error approving the token!')
+           throw e
+      }
+   }
+
+   approvalStatusStablecoin = async (address:string,tokenIn:number) =>{
+      console.log(`Checking stablecoin approval status for address ${address}`)
+      try{
+           if(address===undefined || address === null)
+               return
+
+           return await this.service.approvalStatusStablecoin(address, tokenIn);
+      }catch(e){
+           this.rootStore.alertStore.setShowErrorAlert(true,'There is some error approving the token!')
+      }
+   }
+
+   approvalStatusUsdt = async (address:string, tokenIn:number) =>{
+      console.log(`Checking usdt approval status for address ${address}`)
+      try{
+           if(address===undefined || address === null)
+               return
+
+           return await this.service.approvalStatusUsdt(address, tokenIn);
+      }catch(e){
+           this.rootStore.alertStore.setShowErrorAlert(true,'There is some error approving the token!')
+      }
+   }
   }
