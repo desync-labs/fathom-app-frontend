@@ -60,5 +60,58 @@ export default class PositionStore {
     setPositions = (_positions:IOpenPosition[]) => {
         this.positions = _positions;
     };
+
+    approve = async (address:string, pool:ICollatralPool) =>{
+        console.log(`Open position token approval clicked for address ${address}, poolId: ${pool.name}`)
+        try{
+             if(address===undefined || address === null)
+                 return
+ 
+             await this.service.approve(address,pool,this.rootStore.transactionStore);
+             this.rootStore.alertStore.setShowSuccessAlert(true, `${pool.name} approval was successful!`)
+            }catch(e){
+             this.rootStore.alertStore.setShowErrorAlert(true,'There is some error approving the token!')
+             throw e
+        }
+     }
+
+    approvalStatus = async (address:string, collatral:number, pool:ICollatralPool) =>{
+        console.log(`Checking approval status for address ${address}, poolId: ${pool.name}`)
+        try{
+             if(address===undefined || address === null)
+                 return
+ 
+             return await this.service.approvalStatus(address,pool,collatral,this.rootStore.transactionStore);
+        }catch(e){
+             this.rootStore.alertStore.setShowErrorAlert(true,'There is some error approving the token!')
+        }
+     }
+
+     approveStablecoin = async (address:string) =>{
+        console.log(`Open position token approval clicked for address ${address}`)
+        try{
+             if(address===undefined || address === null)
+                 return
+ 
+             await this.service.approveStablecoin(address,this.rootStore.transactionStore);
+             this.rootStore.alertStore.setShowSuccessAlert(true, 'Token approval was successful!')
+
+        }catch(e){
+             this.rootStore.alertStore.setShowErrorAlert(true,'There is some error approving the token!')
+             throw e
+        }
+     }
+
+    approvalStatusStablecoin = async (address:string) =>{
+        console.log(`Checking stablecoin approval status for address ${address}`)
+        try{
+             if(address===undefined || address === null)
+                 return
+ 
+             return await this.service.approvalStatusStablecoin(address);
+        }catch(e){
+             this.rootStore.alertStore.setShowErrorAlert(true,'There is some error approving the token!')
+        }
+     }
     
 }
