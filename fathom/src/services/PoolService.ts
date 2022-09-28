@@ -6,7 +6,7 @@ import { Constants } from "../helpers/Constants";
 import { Web3Utils } from "../helpers/Web3Utils";
 
 export default class PoolService implements IPoolService {
-  chainId = 1337;
+  chainId = Constants.DEFAULT_CHAINID;
   //Ideally this should be dynamic
   getPools(): ICollatralPool[] {
     let pools: ICollatralPool[] = [];
@@ -67,7 +67,8 @@ export default class PoolService implements IPoolService {
   }
 
   setChainId(chainId: number) {
-    this.chainId = chainId;
+    if(chainId !== undefined)
+      this.chainId = chainId;
   }
 
   async getPriceWithSafetyMargin(pool: ICollatralPool): Promise<number> {
