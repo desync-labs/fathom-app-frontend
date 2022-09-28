@@ -56,7 +56,7 @@ export class RootStore {
 
     this.transactionStore = new ActiveWeb3Transactions(
       this,
-      this.activeWeb3TransactionService
+      this.activeWeb3TransactionService as ActiveWeb3TransactionsService
     );
   }
 
@@ -69,7 +69,7 @@ export class RootStore {
       "stableSwapService",
       "activeWeb3TransactionService",
       "proposalService",
-    ].map((serviceName) => {
+    ].forEach((serviceName) => {
       console.log(`Setting chainid ${chainId} for ${serviceName}`);
       // @ts-ignore
       this[serviceName].setChainId(chainId);

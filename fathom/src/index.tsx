@@ -1,22 +1,30 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
-import { MetaMaskProvider } from './hooks/metamask';
-import { Web3ReactProvider } from '@web3-react/core'
-import { provider } from 'web3-core';
-import Web3 from 'web3/dist/web3.min.js'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import { MetaMaskProvider } from "./hooks/metamask";
+import { Web3ReactProvider } from "@web3-react/core";
+import Web3 from "web3/dist/web3.min.js";
+import { XDC_CHAIN_IDS } from "./components/wallet/connectors";
+import Xdc3 from "xdc3";
 
-function getLibrary(provider: provider, connector: any) {
-  return new Web3(provider)
+async function getLibrary(provider: any) {
+  const instance = new Web3(provider);
+  const chainId = await instance.eth.getChainId();
+
+  if (XDC_CHAIN_IDS.includes(chainId)) {
+    return new Xdc3(provider);
+  }
+
+  return instance;
 }
 
 const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
+  document.getElementById("root") as HTMLElement
 );
 root.render(
-    <Web3ReactProvider getLibrary={getLibrary}>
-      <MetaMaskProvider>
-        <App />
-      </MetaMaskProvider>
-    </Web3ReactProvider>
+  <Web3ReactProvider getLibrary={getLibrary}>
+    <MetaMaskProvider>
+      <App />
+    </MetaMaskProvider>
+  </Web3ReactProvider>
 );
