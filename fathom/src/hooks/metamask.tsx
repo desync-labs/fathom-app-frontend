@@ -1,18 +1,25 @@
 import {
-  useState,
+  createContext,
+  useCallback,
   useEffect,
   useMemo,
-  useCallback,
-  createContext,
+  useState,
   useContext,
+  ReactElement,
+  FC
 } from "react";
 import { injected } from "../components/wallet/connectors";
 import { useWeb3React } from "@web3-react/core";
 
 export const MetaMaskContext = createContext(null);
 
-export const MetaMaskProvider = ({ children }) => {
-  const { activate, account, active, deactivate } = useWeb3React();
+type MetaMaskProviderType = {
+  children: ReactElement
+}
+
+export const MetaMaskProvider: FC<MetaMaskProviderType> = ( { children } ) => {
+
+  const { activate, account, active, deactivate, chainId, error } = useWeb3React();
 
   const [isActive, setIsActive] = useState(false);
   const [shouldDisable, setShouldDisable] = useState(false); // Should disable connect button while connecting to MetaMask
@@ -33,7 +40,7 @@ export const MetaMaskProvider = ({ children }) => {
 
   // Init Loading
   useEffect(() => {
-    connect().then((val) => {
+    connect().then(val => {
       setIsLoading(false);
     });
   }, [connect]);
@@ -66,24 +73,21 @@ export const MetaMaskProvider = ({ children }) => {
       connect,
       disconnect,
       shouldDisable,
+      chainId,
+      error
     }),
-    [isActive, isLoading, shouldDisable, account, connect, disconnect]
+    [isActive, isLoading, shouldDisable, account, connect, disconnect, chainId, error]
   );
 
-  return (
-    <MetaMaskContext.Provider value={values}>
-      {children}
-    </MetaMaskContext.Provider>
-  );
+  // @ts-ignore
+  return <MetaMaskContext.Provider value={ values }>{ children }</MetaMaskContext.Provider>;
 };
 
 const useMetaMask = function useMetaMask() {
   const context = useContext(MetaMaskContext);
 
   if (context === undefined) {
-    throw new Error(
-      "useMetaMask hook must be used with a MetaMaskProvider component"
-    );
+    throw new Error("useMetaMask hook must be used with a MetaMaskProvider component");
   }
 
   return context;
