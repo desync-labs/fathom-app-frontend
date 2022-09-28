@@ -17,7 +17,7 @@ const TransactionStatus = observer(() => {
   { transactionStore.transactions.map(
                   (transaction, idx) =>
 
-        <Alert severity="info">
+        <Alert severity="info" variant="filled">
             <AlertTitle>{transaction.title}</AlertTitle>
             <Typography color="text.secondary" sx={{ flex: 1 }}>
                 {transaction.message} <strong>

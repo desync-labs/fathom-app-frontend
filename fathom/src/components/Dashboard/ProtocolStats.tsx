@@ -1,7 +1,6 @@
-import { Box, CardMedia, Grid, Paper } from '@mui/material';
-// import Link from '@mui/material/Link';
+import { Box, Grid, Paper } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import logo from '../../assets/images/fxd-logo.jpg';
+import logo from '../../assets/images/fxd-logo.png';
 
 
 const ProtocolStats = function ProtocolStats(props: any) {
@@ -14,17 +13,7 @@ const ProtocolStats = function ProtocolStats(props: any) {
           height: 240,
         }}
       >
-      {/* <Typography variant="h6" gutterBottom>
-          FXD
-      </Typography> */}
-      {/* <CardMedia
-        component="img"
-        width="80"
-        height="40"
-        image={logo}
-        alt="Fathom Stablecoin"
-      /> */}
-      <img src={logo} alt="Fathom Stablecoin"  height="40" width="80"></img>
+      <img src={logo} alt="Fathom Stablecoin"  height="40" width="80" color='black'></img>
       <Typography variant="subtitle1" gutterBottom>
           The reliable stablecoin that earns you extra passive income
       </Typography>
@@ -38,7 +27,7 @@ const ProtocolStats = function ProtocolStats(props: any) {
           boxShadow: 2,
           width: '7rem',
           height: '4rem',
-          bgcolor: '#F5F5F5',
+          bgcolor: '#000000',
           p: 1,
           m: 1,
           borderRadius: 2,
@@ -57,7 +46,7 @@ const ProtocolStats = function ProtocolStats(props: any) {
           boxShadow: 2,
           width: '7rem',
           height: '4rem',
-          bgcolor: '#F5F5F5',
+          bgcolor: '#000000',
           p: 1,
           m: 1,
           borderRadius: 2,
@@ -76,7 +65,7 @@ const ProtocolStats = function ProtocolStats(props: any) {
           boxShadow: 2,
           width: '7rem',
           height: '4rem',
-          bgcolor: '#F5F5F5',
+          bgcolor: '#000000',
           p: 1,
           m: 1,
           borderRadius: 2,
@@ -95,7 +84,7 @@ const ProtocolStats = function ProtocolStats(props: any) {
           boxShadow: 2,
           width: '7rem',
           height: '4rem',
-          bgcolor: '#F5F5F5',
+          bgcolor: '#000000',
           p: 1,
           m: 1,
           borderRadius: 2,
