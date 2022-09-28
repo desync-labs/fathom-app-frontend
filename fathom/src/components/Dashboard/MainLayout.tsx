@@ -57,7 +57,7 @@ const mdTheme = createTheme();
 const MainLayout = observer(() => {
 
   const [open, setOpen] = React.useState(true);
-  const { connect, isActive, account, disconnect } = useMetaMask()!
+  const { connect, isActive, account } = useMetaMask()!
 
   const toggleDrawer = () => {
     setOpen(!open);

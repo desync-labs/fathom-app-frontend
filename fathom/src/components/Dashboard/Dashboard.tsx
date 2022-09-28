@@ -25,7 +25,7 @@ const DashboardContent = observer(() => {
     // Update the document title using the browser API
     logger.log(LogLevel.info,'fetching pool information.');
     poolStore.fetchPools()
-  },[poolStore,rootStore.alertStore]);
+  },[poolStore,rootStore.alertStore, logger]);
 
   return (
         <Box
