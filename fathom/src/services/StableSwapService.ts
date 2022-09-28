@@ -10,7 +10,7 @@ import IStableSwapService from "./interfaces/IStableSwapService";
 
 export default class StableSwapService implements IStableSwapService {
   readonly tokenBuffer: number = 5;
-  chainId = 1337;
+  chainId = Constants.DEFAULT_CHAINID;
 
   async swapTokenToStablecoin(
     address: string,
@@ -128,6 +128,7 @@ export default class StableSwapService implements IStableSwapService {
   }
 
   setChainId(chainId: number) {
-    this.chainId = chainId;
+    if(chainId !== undefined)
+      this.chainId = chainId;
   }
 }

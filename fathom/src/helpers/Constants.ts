@@ -7,5 +7,6 @@ export class Constants{
 
     public static ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';  
     public static TransactionCheckUpdateInterval = 2000
+    public static DEFAULT_CHAINID = 51 //Apothem network
     
 }

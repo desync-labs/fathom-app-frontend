@@ -1,3 +1,4 @@
+import { Constants } from "../helpers/Constants";
 import { Web3Utils } from "../helpers/Web3Utils";
 import { ITransaction } from "../stores/interfaces/ITransaction";
 import IActiveWeb3TransactionsService from "./interfaces/IActiveWeb3TransactionsService";
@@ -5,7 +6,7 @@ import IActiveWeb3TransactionsService from "./interfaces/IActiveWeb3Transactions
 export default class ActiveWeb3TransactionsService
   implements IActiveWeb3TransactionsService
 {
-  chainId = 1337;
+  chainId = Constants.DEFAULT_CHAINID;
   async checkTransactionStatus(
     pendingTransaction: ITransaction
   ): Promise<ITransaction> {
@@ -28,6 +29,7 @@ export default class ActiveWeb3TransactionsService
   }
 
   setChainId(chainId: number) {
-    this.chainId = chainId;
+    if(chainId !== undefined)
+      this.chainId = chainId;
   }
 }
