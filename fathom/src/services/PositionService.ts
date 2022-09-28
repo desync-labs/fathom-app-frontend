@@ -13,7 +13,7 @@ import {
 } from "../stores/interfaces/ITransaction";
 
 export default class PositionService implements IPositionService {
-  chainId = 1337;
+  chainId = Constants.DEFAULT_CHAINID;
   async openPosition(
     address: string,
     pool: ICollatralPool,
@@ -319,6 +319,7 @@ export default class PositionService implements IPositionService {
   }
 
   setChainId(chainId: number) {
-    this.chainId = chainId;
+    if(chainId !== undefined)
+      this.chainId = chainId;
   }
 }

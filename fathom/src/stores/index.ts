@@ -68,11 +68,12 @@ export class RootStore {
       "positionService",
       "stableSwapService",
       "activeWeb3TransactionService",
-      "proposalService"
-    ].map((serviceName) =>
+      "proposalService",
+    ].map((serviceName) => {
+      console.log(`Setting chainid ${chainId} for ${serviceName}`);
       // @ts-ignore
-      this[serviceName].setChainId(chainId)
-    );
+      this[serviceName].setChainId(chainId);
+    });
   }
 }
 
