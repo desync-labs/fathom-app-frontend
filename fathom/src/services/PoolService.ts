@@ -88,4 +88,19 @@ export default class PoolService implements IPoolService {
       throw exception;
     }
   }
+
+  async getUserTokenBalance(address:string, pool: ICollatralPool): Promise<number> {
+    try{
+
+        const BEP20 = Web3Utils.getContractInstance(SmartContractFactory.BEP20(pool.collateralContractAddress),this.chainId)
+
+        let balance = await BEP20.methods.balanceOf(address).call();
+      
+        return balance;
+        
+    }catch(exception){
+        console.log(`Error fetching pool information: ${JSON.stringify(exception)}`)
+        throw exception;
+    }
+}
 }

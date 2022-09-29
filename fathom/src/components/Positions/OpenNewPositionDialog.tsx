@@ -66,9 +66,10 @@ const BootstrapDialogTitle = (props: DialogTitleProps) => {
 
 export default function CustomizedDialogs(this: any, props: PoolProps) {
   let positionStore = useStores().positionStore;
+  let poolStore = useStores().poolStore;
+
   const { account } = useMetaMask()!
 
-  let [approveBtn, setApproveBtn] = React.useState(true);
   const { chainId, error } = useWeb3React()
   const unsupportedError = useMemo(() => (error as Error) instanceof UnsupportedChainIdError, [error]);
 
@@ -78,17 +79,64 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
         approvalStatus()
       })
     }
-  }, [])
+  }, [chainId, error])
 
   const [open, setOpen] = React.useState(false);
   const [collatral, setCollatral] = React.useState(0);
   const [fathomToken, setFathomToken] = React.useState(0);
+  const [approveBtn, setApproveBtn] = React.useState(true);
   const [approvalPending, setApprovalPending] = React.useState(false);
+  const [balance, setBalance]  = React.useState(0);
+  const [balanceError, setBalanceError]  = React.useState(false);
+  const [safeMax, setSafeMax] = React.useState(0);
+  const [price, setPrice] = React.useState(0);
 
 
+
+
+
+  const getPrice = async (collateralInput:any) => {
+    // let dexPrice = await poolStore.getDexPrice();
+    // console.log("DEX PRICE IS ", dexPrice)
+    // get user balance 
+    let balance = await poolStore.getUserTokenBalance(account, props.pool)
+    setBalance(balance)
+
+    // check collateral input 
+    let input = 0;
+    if (collateralInput) {
+      input = collateralInput;
+    }
+   
+    // get price with safety margin
+    let priceWithSafetyMargin =  await poolStore.getPriceWithSafetyMargin(props.pool);
+    setPrice(priceWithSafetyMargin);
+    console.log("priceWithSafetyMargin : ", priceWithSafetyMargin)
+    
+    // calculate fathom token out 
+    let stableCoinOut = ((input * 10**18) * (priceWithSafetyMargin * 10**27)) /  10**27;
+
+    stableCoinOut = stableCoinOut / 10**18;
+
+    // update fathom token text field. Should it even be a text field?
+    setSafeMax(stableCoinOut);
+
+     // compare input to user balance 
+     if (+200 < +input) {
+      setBalanceError(true)
+      return
+    } else {
+      setBalanceError(false)
+    }
+  }
+
+  const updateFathomAmount = () => {
+    setFathomToken(safeMax)
+  }
 
   const approvalStatus = async () => {
     let approved = await positionStore.approvalStatus(account, collatral, props.pool)
+    console.log("approved: ", approved)
     approved ? setApproveBtn(false) : setApproveBtn(true)
   }
 
@@ -123,6 +171,7 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
 
   const handleCollatralTextFieldChange = (e:any) => {
     setCollatral(e.target.value)
+    getPrice(e.target.value)
   }
 
   const handlefathomTokenTextFieldChange = (e:any) => {
@@ -146,6 +195,9 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
           <Typography gutterBottom>
             Create a new position for {props.pool.name} Pool to get guranteed return on your collateral.
           </Typography>
+          <Typography gutterBottom>
+            {props.pool.name} balance: {balance / 10**18}
+          </Typography> 
           <TextField
           id="outlined-helperText"
           label="Collatral Value"
@@ -164,6 +216,19 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
           value={fathomToken}
           onChange={handlefathomTokenTextFieldChange}
          />
+
+        {safeMax > 0 
+            ? <Button sx={{ m: 3 }} onClick={updateFathomAmount}>
+              Apply Safe Max: {safeMax}
+            </Button>
+          : null
+        }
+        {balanceError 
+          ? <Typography color="red" gutterBottom>
+              You do not have enough {props.pool.name}
+            </Typography>
+          : null
+        }
         </DialogContent>
         <DialogActions>
           { approvalPending 
@@ -176,7 +241,7 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
               </Button>
             : null
           }
-          <Button autoFocus onClick={openNewPosition} disabled={approveBtn}>
+          <Button autoFocus onClick={openNewPosition} disabled={approveBtn || balanceError}>
             Open
           </Button>
         </DialogActions>
