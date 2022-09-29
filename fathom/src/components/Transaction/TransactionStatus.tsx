@@ -1,15 +1,18 @@
-//import ICollatralPool from "../../stores/interfaces/ICollatralPool";
 import { observer } from "mobx-react";
 import { Alert, AlertTitle, LinearProgress, Typography } from "@mui/material";
 import { useStores } from "../../stores";
 import truncateEthAddress from "truncate-eth-address";
+import { useWeb3React } from "@web3-react/core";
+import { getEtherscanLink } from "../../config/network";
+import { useCallback } from "react";
 
 const TransactionStatus = observer(() => {
-  let transactionStore = useStores().transactionStore;
+  const transactionStore = useStores().transactionStore;
+  const { chainId } = useWeb3React();
 
-  const getTxUrl = (txHash: string) => {
-    return `https://goerli.etherscan.io/tx/${txHash}`;
-  };
+  const getTxUrl = useCallback((txHash: string) => {
+    return getEtherscanLink(chainId!, txHash, "transaction")
+  }, [chainId]);
 
   return (
     <>

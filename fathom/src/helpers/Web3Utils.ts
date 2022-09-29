@@ -2,7 +2,7 @@ import Web3 from "web3";
 import Xdc3 from "xdc3";
 import { AbiItem } from "web3-utils";
 import { AbiItem as XdcAbiItem } from 'xdc3-utils';
-import { XDC_CHAIN_IDS } from "../components/wallet/connectors";
+import { XDC_CHAIN_IDS } from "../connectors/networks";
 
 interface ContractMetaData {
   address: string;

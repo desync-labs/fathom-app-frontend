@@ -1,31 +1,28 @@
-import React, {
-  useCallback,
-  useEffect,
-  useState
-} from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { createTheme, styled, ThemeProvider } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
-import MuiDrawer from "@mui/material/Drawer";
-import Box from "@mui/material/Box";
-
-import Toolbar from "@mui/material/Toolbar";
-import List from "@mui/material/List";
-import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import { ArrowBack, ArrowForward } from "@mui/icons-material";
-import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
-import LogoutIcon from "@mui/icons-material/Logout";
-import Copyright from "../Footer/Footer";
-import AppBar from "../AppBar/AppBar";
 import {
-  Menu
-} from "./Menu";
-import useMetaMask from "../../hooks/metamask";
-import {
+  Container,
+  CssBaseline,
+  Drawer as MuiDrawer,
+  Box,
+  Toolbar,
+  List,
+  Typography,
+  Divider,
+  IconButton,
   Chip
 } from "@mui/material";
+import {
+  ArrowBack,
+  ArrowForward,
+  Menu as MenuIcon,
+  AccountBalanceWallet as AccountBalanceWalletIcon,
+  Logout as LogoutIcon,
+} from "@mui/icons-material";
+import Copyright from "../Footer/Footer";
+import AppBar from "../AppBar/AppBar";
+import { Menu } from "./Menu";
+import useMetaMask from "../../hooks/metamask";
 import { observer } from "mobx-react";
 import DashboardContent from "./Dashboard";
 import { Route, Routes } from "react-router-dom";
@@ -39,6 +36,8 @@ import AllProposalsView from "../Governance/ViewAllProposals";
 import ProposalView from "../Governance/Proposal";
 import MakePropose from "../Governance/Propose";
 import StakingView from "../StakingSubik/StakingView";
+import AlertMessages from "../Common/AlertMessages";
+import TransactionStatus from "../Transaction/TransactionStatus";
 
 const drawerWidth: number = 240;
 
@@ -73,13 +72,13 @@ const Drawer = styled(MuiDrawer, {
 
 const mdTheme = createTheme({
   palette: {
-    mode: 'dark',
+    mode: "dark",
     primary: {
-      main: '#00FFF6',
+      main: "#00FFF6",
     },
     secondary: {
-      main: '#808084'
-    }
+      main: "#808084",
+    },
   },
 });
 
@@ -94,8 +93,8 @@ const MainLayout = observer(() => {
   let rootStore = useStores();
 
   useEffect(() => {
-    rootStore.setChainId(chainId!)
-  }, [chainId, rootStore])
+    rootStore.setChainId(chainId!);
+  }, [chainId, rootStore]);
 
   return (
     <ThemeProvider theme={mdTheme}>
@@ -125,10 +124,8 @@ const MainLayout = observer(() => {
               color="inherit"
               noWrap
               sx={{ flexGrow: 1 }}
-            >
-
-            </Typography>
-            { account && !error && <Chip label={account} color="primary" /> }
+            ></Typography>
+            {account && !error && <Chip label={account} color="primary" />}
             <Web3Status />
             <IconButton color="inherit" onClick={connect}>
               {isActive ? <LogoutIcon /> : <AccountBalanceWalletIcon />}
@@ -185,20 +182,41 @@ const MainLayout = observer(() => {
         <Box
           component="main"
           sx={{
-            backgroundColor: '#000',
+            backgroundColor: "#000",
             flexGrow: 1,
             height: "100vh",
             overflow: "auto",
           }}
         >
-          <Routes>
-            <Route path="/" element={<DashboardContent />} />
-            <Route path="/swap" element={<StableSwap />} />
-            <Route path="/proposals" element={<AllProposalsView />} />
-            <Route path="/proposal/make-proposal" element={<MakePropose />} />
-            <Route path="/proposal/:_proposalId" element={<ProposalView />} />
-            <Route path="/staking" element={<StakingView />} />
-          </Routes>
+          <Box
+            component="main"
+            sx={{
+              backgroundColor: "#000",
+              flexGrow: 1,
+              height: "100vh",
+              overflow: "auto",
+            }}
+          >
+            <Toolbar />
+            <AlertMessages />
+            <TransactionStatus />
+            <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+              <Routes>
+                <Route path="/" element={<DashboardContent />} />
+                <Route path="/swap" element={<StableSwap />} />
+                <Route path="/proposals" element={<AllProposalsView />} />
+                <Route
+                  path="/proposal/make-proposal"
+                  element={<MakePropose />}
+                />
+                <Route
+                  path="/proposal/:_proposalId"
+                  element={<ProposalView />}
+                />
+                <Route path="/staking" element={<StakingView />} />
+              </Routes>
+            </Container>
+          </Box>
           {/*<Alert severity="error">This is an error alert — check it out!</Alert>*/}
           {/*<Alert severity="warning">This is a warning alert — check it out!</Alert>*/}
           {/*<Alert severity="info">This is an info alert — check it out!</Alert>*/}
@@ -211,4 +229,3 @@ const MainLayout = observer(() => {
 });
 
 export default MainLayout;
-

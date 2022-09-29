@@ -19,28 +19,24 @@ export default class StakingStore {
   }
 
   createLock = async (
-    account:string,
-    stakePosition:number, 
+    account: string,
+    stakePosition: number,
     unlockPeriod: number,
     chainId: number
   ) => {
-    console.log(
-      "Running createLock from store"
-    );
+    console.log("Running createLock from store");
     try {
       if (account === undefined || account === null) return;
 
       await this.service.createLock(
         account,
-        stakePosition, 
+        stakePosition,
         unlockPeriod,
         chainId,
         this.rootStore.transactionStore
       );
-      
 
-     // await this.fetchAll(account,chainId)
-      
+      // await this.fetchAll(account,chainId)
     } catch (e) {
       this.rootStore.alertStore.setShowErrorAlert(
         true,
@@ -50,13 +46,11 @@ export default class StakingStore {
   };
 
   handleEarlyWithdrawal = async (
-      account: string, 
-      lockId: number,
-      chainId: number
+    account: string,
+    lockId: number,
+    chainId: number
   ) => {
-    console.log(
-      "Running createLock from store"
-    );
+    console.log("Running createLock from store");
     try {
       if (account === undefined || account === null) return;
 
@@ -67,7 +61,7 @@ export default class StakingStore {
         this.rootStore.transactionStore
       );
 
-   //   await this.fetchAll(account,chainId)
+      //   await this.fetchAll(account,chainId)
     } catch (e) {
       this.rootStore.alertStore.setShowErrorAlert(
         true,
@@ -76,42 +70,29 @@ export default class StakingStore {
     }
   };
 
+  handleUnlock = async (account: string, lockId: number, chainId: number) => {
+    console.log("Running createLock from store");
+    try {
+      if (account === undefined || account === null) return;
 
-  handleUnlock = async (
-    account: string, 
-    lockId: number,
-    chainId: number
-) => {
-  console.log(
-    "Running createLock from store"
-  );
-  try {
-    if (account === undefined || account === null) return;
+      await this.service.handleUnlock(
+        account,
+        lockId,
+        chainId,
+        this.rootStore.transactionStore
+      );
 
-    await this.service.handleUnlock(
-      account,
-      lockId,
-      chainId,
-      this.rootStore.transactionStore
-    );
-
-//    await this.fetchAll(account,chainId)
-
-  } catch (e) {
-    this.rootStore.alertStore.setShowErrorAlert(
-      true,
-      "There is some error in Unlock!"
+      //    await this.fetchAll(account,chainId)
+    } catch (e) {
+      this.rootStore.alertStore.setShowErrorAlert(
+        true,
+        "There is some error in Unlock!"
       );
     }
   };
 
-  handleClaimRewards = async (
-    account: string, 
-    chainId: number
-  ) => {
-    console.log(
-      "Running createLock from store"
-    );
+  handleClaimRewards = async (account: string, chainId: number) => {
+    console.log("Running createLock from store");
     try {
       if (account === undefined || account === null) return;
 
@@ -122,22 +103,17 @@ export default class StakingStore {
         this.rootStore.transactionStore
       );
 
-//      await this.fetchAll(account,chainId)
+      //      await this.fetchAll(account,chainId)
     } catch (e) {
       this.rootStore.alertStore.setShowErrorAlert(
         true,
         "There is some error in claiming rewards!"
-        );
-      }
+      );
+    }
   };
 
-  handleWithdrawRewards = async (
-    account: string, 
-    chainId: number
-  ) => {
-    console.log(
-      "Running createLock from store"
-    );
+  handleWithdrawRewards = async (account: string, chainId: number) => {
+    console.log("Running createLock from store");
     try {
       if (account === undefined || account === null) return;
 
@@ -147,73 +123,65 @@ export default class StakingStore {
         chainId,
         this.rootStore.transactionStore
       );
-
     } catch (e) {
       this.rootStore.alertStore.setShowErrorAlert(
         true,
         "There is some error in Withdrawing Rewards!"
-        );
-      }
+      );
+    }
   };
-  
-  
 
-  setLocks = (_lockPositions:ILockPosition[]) => {
-    this.lockPositions= _lockPositions;
-  }
+  setLocks = (_lockPositions: ILockPosition[]) => {
+    this.lockPositions = _lockPositions;
+  };
 
-  setTotalStakedPosition = (_lockPositions:ILockPosition[]) => {
+  setTotalStakedPosition = (_lockPositions: ILockPosition[]) => {
     this.totalStakedPosition = 0;
-      for(let i = 0; i< _lockPositions.length; i++){
-          this.totalStakedPosition+=_lockPositions[i].MAINTokenBalance;
-      }
-  }
+    for (let i = 0; i < _lockPositions.length; i++) {
+      this.totalStakedPosition += _lockPositions[i].MAINTokenBalance;
+    }
+  };
 
   fetchAPR = async (chainId: number) => {
     let apr = await this.service.getAPR(chainId);
     runInAction(() => {
-      this.setAPR(apr)
-    })
-  }
+      this.setAPR(apr);
+    });
+  };
 
   setAPR = (_apr: number) => {
-    this.apr= _apr;
-  }
+    this.apr = _apr;
+  };
 
   setWalletBalance = (_walletBalance: number) => {
-    this.walletBalance =_walletBalance;
-  }
+    this.walletBalance = _walletBalance;
+  };
 
-  fetchWalletBalance = async (account:string,chainId: number) => {
-    let walletBalance = await this.service.getWalletBalance(account,chainId);
+  fetchWalletBalance = async (account: string, chainId: number) => {
+    let walletBalance = await this.service.getWalletBalance(account, chainId);
     runInAction(() => {
-      this.setWalletBalance(walletBalance)
-    })
-  }
+      this.setWalletBalance(walletBalance);
+    });
+  };
 
   setVOTEBalance = (_voteBalance: number) => {
-    this.voteBalance =_voteBalance;
-  }
+    this.voteBalance = _voteBalance;
+  };
 
-  fetchVOTEBalance = async (account:string,chainId: number) => {
-    let voteBalance = await this.service.getVOTEBalance(account,chainId);
+  fetchVOTEBalance = async (account: string, chainId: number) => {
+    let voteBalance = await this.service.getVOTEBalance(account, chainId);
     runInAction(() => {
-      this.setVOTEBalance(voteBalance)
-    })
-  }
-
-
+      this.setVOTEBalance(voteBalance);
+    });
+  };
 
   fetchLocks = async (account: string, chainId: number) => {
-    let locks = await this.service.getLockPositions(account,chainId);
-    console.log("HEERE LOCKS From Service",locks)
+    let locks = await this.service.getLockPositions(account, chainId);
+    console.log("HEERE LOCKS From Service", locks);
     runInAction(() => {
-      this.setLocks(locks)
-      this.setTotalStakedPosition(locks)
-    })
-    console.log("HEERE LOCKS From Store",this.lockPositions)
-  }
-
-  
-  }
-
+      this.setLocks(locks);
+      this.setTotalStakedPosition(locks);
+    });
+    console.log("HEERE LOCKS From Store", this.lockPositions);
+  };
+}
