@@ -7,7 +7,8 @@ export class Constants {
   public static TransactionCheckUpdateInterval = 2000;
 
   public static DEFAULT_CHAINID = 51 //Apothem network
-  public static MAX_UINT256  = new BigNumber("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+  public static MAX_UINT256  = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
+  //new BigNumber("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
 
   public static Status = [
     "Pending",

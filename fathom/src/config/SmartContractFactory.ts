@@ -158,7 +158,7 @@ export class SmartContractFactory {
   public static FathomGovernor(chainId: number)  {
     return {
       abi:Governor.abi as AbiItem [],
-      address: SmartContractFactory.Addresses(chainId) // '0x62f3d571A7DAcC00C047e58fE500ee99A98E3f63'
+      address: SmartContractFactory.Addresses(chainId).fathomGovernor 
     }
   }
 }

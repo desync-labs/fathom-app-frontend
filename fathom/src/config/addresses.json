@@ -93,6 +93,6 @@
     "stableSwapModule": "0xcFCBaCd7edC0c9afEadf2034A0D35aF84Ec46F12",
     "getPositions": "0xA8FA19C64742C159b27Ce29911d0c3c07670A026",
     "collateralTokenAdapterUSDT": "0xDDB1ec0Eb51f7aeD481ad4D00a44600228E6D270",
-    "fathomGovernor": "xdc0A6Fc6Cb44Fbe7f5e98C428fDAaBd212b8c5d8A2"
+    "fathomGovernor": "0x0A6Fc6Cb44Fbe7f5e98C428fDAaBd212b8c5d8A2"
   }
 }
