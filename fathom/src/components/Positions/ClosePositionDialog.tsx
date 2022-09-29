@@ -94,10 +94,9 @@ export default function ClosePositionDialog(this: any, props: ClosePositionProps
         setOpen(false);
     }
 
-
     const handleClickOpen = async () => {
         let priceWithSafetyMargin = await poolStore.getPriceWithSafetyMargin(pool);
-        let calculatedLockedCollateral = (props.position.safetyBuffer.div(Constants.WeiPerRad).plus(debtShare)).div(priceWithSafetyMargin).toNumber(); 
+        let calculatedLockedCollateral = (props.position.safetyBuffer.div(Constants.WeiPerRad).plus(debtShare)).div(priceWithSafetyMargin).toNumber();
 
         setType(ClosingType.Full);
         setCollateral(calculatedLockedCollateral);
@@ -105,7 +104,7 @@ export default function ClosePositionDialog(this: any, props: ClosePositionProps
         setPrice(priceWithSafetyMargin);
         setFathomToken(debtShare);
         setOpen(true);
-        setLTV(Math.round((debtShare / (calculatedLockedCollateral*priceWithSafetyMargin)) * 10000)/100)
+        setLTV(Math.round((debtShare / (calculatedLockedCollateral * priceWithSafetyMargin)) * 10000) / 100)
     };
 
     const handleClose = () => {
@@ -123,7 +122,7 @@ export default function ClosePositionDialog(this: any, props: ClosePositionProps
     }
 
     const handleTypeChange = (e: any) => {
-        if(e.target.value === ClosingType.Full){
+        if (e.target.value === ClosingType.Full) {
             setFathomToken(debtShare);
             setCollateral(lockedCollateral);
         }
@@ -166,7 +165,7 @@ export default function ClosePositionDialog(this: any, props: ClosePositionProps
                                     <Grid item xs={7}>
                                         <Typography gutterBottom>Liquidation Price</Typography>
                                     </Grid>
-                                    <Grid item xs={5}>{`1 FXD = ${1/price} ${pool.name}`}</Grid>
+                                    <Grid item xs={5}>{`1 FXD = ${1 / price} ${pool.name}`}</Grid>
                                     <Grid item xs={7}>
                                         <Typography gutterBottom>LTV</Typography>
                                     </Grid>
