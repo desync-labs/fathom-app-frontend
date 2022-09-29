@@ -58,7 +58,7 @@ const ProtocolStats = function ProtocolStats(props: any) {
           Total Supply
        </Typography>
        <Typography variant="body2" gutterBottom>
-          {fxdProtocolStatsStore.commarize(fxdProtocolStatsStore.protocolStats.fathomSupplyCap)}
+        {fxdProtocolStatsStore.commarize(fxdProtocolStatsStore.protocolStats.fathomSupplyCap)}
        </Typography>
       </Box>
       <Box
@@ -77,7 +77,7 @@ const ProtocolStats = function ProtocolStats(props: any) {
           TVL
       </Typography>
       <Typography variant="body2" gutterBottom>
-          {fxdProtocolStatsStore.commarize(fxdProtocolStatsStore.protocolStats.totalValueLocked)}
+          {fxdProtocolStatsStore.getFormattedTVL()}
       </Typography>
       </Box>
       <Box
