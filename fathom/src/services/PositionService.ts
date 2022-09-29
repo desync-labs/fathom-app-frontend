@@ -124,7 +124,7 @@ export default class PositionService implements IPositionService{
 
           console.log(`Raw response from getPositionsWithSafetyBuffer: ${JSON.stringify(response)}`)
 
-          const { 0: positionAddresses, 1: debtShares, 2: safetyBuffers } = response;
+          const { 0: positionAddresses, 1: debtShares, 2: safetyBuffers, _lockedCollaterals:lockedCollaterals, _lockedValues:lockedValues, _positionLTVs:ltvs} = response;
 
           let fetchedPositions:IOpenPosition[] = [];
           let index = 0;
@@ -134,6 +134,9 @@ export default class PositionService implements IPositionService{
               if(position && debtShares[index] > 0){
                   position.setDebtShare(new BigNumber(debtShares[index]))
                   position.setSafetyBuffer(new BigNumber(safetyBuffers[index]))
+                  position.setLockedCollateral(new BigNumber(lockedCollaterals[index]))
+                  position.setLockedValue(new BigNumber(lockedValues[index]))
+                  position.setLtv(new BigNumber(ltvs[index]))
                   fetchedPositions.push(position);
               }
               index++;
