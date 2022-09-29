@@ -47,19 +47,19 @@ export default class ProposalStore {
     );
   };
 
-  setproposals = (_proposal: IProposal[]) => {
+  setProposals = (_proposal: IProposal[]) => {
     this.fetchedProposals = _proposal;
   };
 
-  setproposal = (_proposal: IProposal) => {
+  setProposal = (_proposal: IProposal) => {
     this.fetchedProposal = _proposal;
   };
 
-  setproposalState = (_proposalState: string) => {
+  setProposalState = (_proposalState: string) => {
     this.fetchedProposalState = _proposalState;
   };
 
-  setproposalVotes = (_proposalVotes: IVoteCounts) => {
+  setProposalVotes = (_proposalVotes: IVoteCounts) => {
     _proposalVotes.abstainVotes = _proposalVotes.abstainVotes / 10 ** 18;
     _proposalVotes.againstVotes = _proposalVotes.againstVotes / 10 ** 18;
     _proposalVotes.forVotes = _proposalVotes.forVotes / 10 ** 18;
@@ -99,7 +99,7 @@ export default class ProposalStore {
       chainId
     );
     runInAction(() => {
-      this.setproposals(fetchedProposals);
+      this.setProposals(fetchedProposals);
     });
   };
 
@@ -114,7 +114,7 @@ export default class ProposalStore {
       chainId
     );
     runInAction(() => {
-      this.setproposal(fetchedProposal);
+      this.setProposal(fetchedProposal);
     });
   };
 
@@ -129,7 +129,7 @@ export default class ProposalStore {
       chainId
     );
     runInAction(() => {
-      this.setproposalState(fetchedProposalState);
+      this.setProposalState(fetchedProposalState);
     });
   };
 
@@ -144,7 +144,7 @@ export default class ProposalStore {
       chainId
     );
     runInAction(() => {
-      this.setproposalVotes(fetchedVotes);
+      this.setProposalVotes(fetchedVotes);
     });
   };
 }

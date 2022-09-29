@@ -1,5 +1,5 @@
-import React from "react";
-import { Box, Container, TextField, Toolbar, Typography } from "@mui/material";
+import { useState, useRef } from "react";
+import { Box, TextField, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
@@ -12,18 +12,15 @@ import MenuList from "@mui/material/MenuList";
 import { observer } from "mobx-react";
 import { useStores } from "../../stores";
 import useMetaMask from "../../hooks/metamask";
-import AlertMessages from "../Common/AlertMessages";
-import TransactionStatus from "../Transaction/TransactionStatus";
 
 const options = ["USDT To FXD", "FXD To USDT"];
 
 const StableSwap = observer(() => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const { account } = useMetaMask()!;
-  const anchorRef = React.useRef<HTMLDivElement>(null);
-  const [selectedIndex, setSelectedIndex] = React.useState(1);
-  //    const [placeHolder, setPlaceHolder] = React.useState(options[0]);
-  const [inputValue, setInputValue] = React.useState(0);
+  const anchorRef = useRef<HTMLDivElement>(null);
+  const [selectedIndex, setSelectedIndex] = useState(1);
+  const [inputValue, setInputValue] = useState(0);
 
   const rootStore = useStores();
   const { stableSwapStore } = rootStore;
@@ -39,7 +36,6 @@ const StableSwap = observer(() => {
   ) => {
     setSelectedIndex(index);
     setOpen(false);
-    //setPlaceHolder(options[index])
   };
 
   const handleToggle = () => {
@@ -53,7 +49,6 @@ const StableSwap = observer(() => {
     ) {
       return;
     }
-
     setOpen(false);
   };
 
@@ -62,100 +57,83 @@ const StableSwap = observer(() => {
   };
 
   return (
-    <Box
-      component="main"
-      sx={{
-        backgroundColor: "#000",
-        flexGrow: 1,
-        height: "100vh",
-        overflow: "auto",
-      }}
-    >
-      <Toolbar />
-      <AlertMessages />
-      <TransactionStatus />
-      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-        <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-          <Typography component="h2" variant="h6" color="primary" gutterBottom>
-            Stable Swap
-          </Typography>
-          <Typography color="text.secondary" sx={{ flex: 1 }}>
-            Stableswap module is the stablity module to keep stablecoin pegged
-            to it's original value. Arbitrauger uses it to earn profile in case
-            Stablecoin value depagged, that results value reset back to it's
-            original peg.
-          </Typography>
-          <Box sx={{ marginTop: 2 }}>
-            <TextField
-              id="outlined-start-adornment"
-              label={"Amount"}
-              defaultValue=""
-              size="small"
-              value={inputValue}
-              onChange={handleInputValueTextFieldChange}
-              sx={{ marginRight: 2 }}
-            />
+    <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
+      <Typography component="h2" variant="h6" color="primary" gutterBottom>
+        Stable Swap
+      </Typography>
+      <Typography color="text.secondary" sx={{ flex: 1 }}>
+        Stableswap module is the stablity module to keep stablecoin pegged to
+        it's original value. Arbitrauger uses it to earn profile in case
+        Stablecoin value depagged, that results value reset back to it's
+        original peg.
+      </Typography>
+      <Box sx={{ marginTop: 2 }}>
+        <TextField
+          id="outlined-start-adornment"
+          label={"Amount"}
+          defaultValue=""
+          size="small"
+          value={inputValue}
+          onChange={handleInputValueTextFieldChange}
+          sx={{ marginRight: 2 }}
+        />
 
-            <ButtonGroup
-              variant="contained"
-              ref={anchorRef}
-              aria-label="split button"
-            >
-              <Button onClick={handleClick}>{options[selectedIndex]}</Button>
-              <Button
-                size="small"
-                aria-controls={open ? "split-button-menu" : undefined}
-                aria-expanded={open ? "true" : undefined}
-                aria-label="select merge strategy"
-                aria-haspopup="menu"
-                onClick={handleToggle}
-              >
-                <ArrowDropDownIcon />
-              </Button>
-            </ButtonGroup>
-            <Popper
-              sx={{
-                zIndex: 1,
+        <ButtonGroup
+          variant="contained"
+          ref={anchorRef}
+          aria-label="split button"
+        >
+          <Button onClick={handleClick}>{options[selectedIndex]}</Button>
+          <Button
+            size="small"
+            aria-controls={open ? "split-button-menu" : undefined}
+            aria-expanded={open ? "true" : undefined}
+            aria-label="select merge strategy"
+            aria-haspopup="menu"
+            onClick={handleToggle}
+          >
+            <ArrowDropDownIcon />
+          </Button>
+        </ButtonGroup>
+        <Popper
+          sx={{
+            zIndex: 1,
+          }}
+          open={open}
+          anchorEl={anchorRef.current}
+          role={undefined}
+          transition
+          disablePortal
+        >
+          {({ TransitionProps, placement }) => (
+            <Grow
+              {...TransitionProps}
+              style={{
+                transformOrigin:
+                  placement === "bottom" ? "center top" : "center bottom",
               }}
-              open={open}
-              anchorEl={anchorRef.current}
-              role={undefined}
-              transition
-              disablePortal
             >
-              {({ TransitionProps, placement }) => (
-                <Grow
-                  {...TransitionProps}
-                  style={{
-                    transformOrigin:
-                      placement === "bottom" ? "center top" : "center bottom",
-                  }}
-                >
-                  <Paper>
-                    <ClickAwayListener onClickAway={handleClose}>
-                      <MenuList id="split-button-menu" autoFocusItem>
-                        {options.map((option, index) => (
-                          <MenuItem
-                            key={option}
-                            disabled={index === 2}
-                            selected={index === selectedIndex}
-                            onClick={(event) =>
-                              handleMenuItemClick(event, index)
-                            }
-                          >
-                            {option}
-                          </MenuItem>
-                        ))}
-                      </MenuList>
-                    </ClickAwayListener>
-                  </Paper>
-                </Grow>
-              )}
-            </Popper>
-          </Box>
-        </Paper>
-      </Container>
-    </Box>
+              <Paper>
+                <ClickAwayListener onClickAway={handleClose}>
+                  <MenuList id="split-button-menu" autoFocusItem>
+                    {options.map((option, index) => (
+                      <MenuItem
+                        key={option}
+                        disabled={index === 2}
+                        selected={index === selectedIndex}
+                        onClick={(event) => handleMenuItemClick(event, index)}
+                      >
+                        {option}
+                      </MenuItem>
+                    ))}
+                  </MenuList>
+                </ClickAwayListener>
+              </Paper>
+            </Grow>
+          )}
+        </Popper>
+      </Box>
+    </Paper>
   );
 });
 
