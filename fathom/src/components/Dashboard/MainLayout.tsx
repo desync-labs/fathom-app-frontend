@@ -19,7 +19,9 @@ import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Copyright from "../Footer/Footer";
 import AppBar from "../AppBar/AppBar";
-import { MainListItems, SecondaryListItems } from "./listItems";
+import {
+  Menu
+} from "./Menu";
 import useMetaMask from "../../hooks/metamask";
 import {
   Chip
@@ -33,6 +35,11 @@ import Image from "mui-image";
 import FathomLogoAqua from "../../assets/svg/Fathom-logo-aqua.svg";
 import { useStores } from "../../stores";
 import { Web3Status } from "../Web3Status/Web3Status";
+import AllProposalsView from "../Governance/ViewAllProposals";
+import ProposalView from "../Governance/Proposal";
+import MakePropose from "../Governance/Propose";
+import truncateEthAddress from "truncate-eth-address";
+
 
 const drawerWidth: number = 240;
 
@@ -68,6 +75,12 @@ const Drawer = styled(MuiDrawer, {
 const mdTheme = createTheme({
   palette: {
     mode: 'dark',
+    primary: {
+      main: '#00FFF6',
+    },
+    secondary: {
+      main: '#808084'
+    }
   },
 });
 
@@ -116,7 +129,8 @@ const MainLayout = observer(() => {
             >
 
             </Typography>
-            { account && !error && <Chip label={account} color="primary" /> }
+            
+            { account && !error && <Chip label={truncateEthAddress(account)} color="primary" /> }
             <Web3Status />
             <IconButton color="inherit" onClick={connect}>
               {isActive ? <LogoutIcon /> : <AccountBalanceWalletIcon />}
@@ -167,8 +181,7 @@ const MainLayout = observer(() => {
           </Toolbar>
           <Divider />
           <List component="nav">
-            <MainListItems open={open} />
-            <SecondaryListItems open={open} />
+            <Menu open={open} />
           </List>
         </Drawer>
         <Box
@@ -183,6 +196,9 @@ const MainLayout = observer(() => {
           <Routes>
             <Route path="/" element={<DashboardContent />} />
             <Route path="/swap" element={<StableSwap />} />
+            <Route path="/proposals" element={<AllProposalsView />} />
+            <Route path="/proposal/make-proposal" element={<MakePropose />} />
+            <Route path="/proposal/:_proposalId" element={<ProposalView />} />
           </Routes>
           {/*<Alert severity="error">This is an error alert — check it out!</Alert>*/}
           {/*<Alert severity="warning">This is a warning alert — check it out!</Alert>*/}
