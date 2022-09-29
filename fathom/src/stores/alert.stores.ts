@@ -23,6 +23,9 @@ export default class AlertStore {
       this.resetAlerts();
       this.showSuccessAlert = value;
       this.successAlertMessage = successMessage
+      setTimeout(() => {
+        this.resetAlerts();
+      }, 2000);
     })
   }
 
