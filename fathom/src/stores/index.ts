@@ -17,6 +17,10 @@ import IActiveWeb3TransactionsService from "../services/interfaces/IActiveWeb3Tr
 import ProposalStore from "./proposal.store";
 import IProposalService from "../services/interfaces/IProposalService";
 import ProposalService from "../services/ProposalService";
+import FXDProtocolStats from "./fxdstats.stores";
+import IFXDProtocolStatsService from "../services/interfaces/IFXDProtocolStatsService";
+import FXDProtocolStatsService from "../services/FXDProtocolStatsService";
+import FXDProtocolStatsStore from "./fxdstats.stores";
 
 export class RootStore {
   /**
@@ -29,6 +33,8 @@ export class RootStore {
   alertStore: AlertStore;
   transactionStore: ActiveWeb3Transactions;
   proposalStore: ProposalStore;
+  fxdProtocolStatsStore: FXDProtocolStatsStore;
+
   /**
    * Services
    */
@@ -37,6 +43,8 @@ export class RootStore {
   stableSwapService: IStableSwapService;
   activeWeb3TransactionService: IActiveWeb3TransactionsService;
   proposalService: IProposalService;
+  fxdProtocolStatsService: IFXDProtocolStatsService;
+
 
   chainId: number = 1337;
 
@@ -46,6 +54,7 @@ export class RootStore {
     this.stableSwapService = new StableSwapService();
     this.activeWeb3TransactionService = new ActiveWeb3TransactionsService();
     this.proposalService = new ProposalService();
+    this.fxdProtocolStatsService = new FXDProtocolStatsService()
 
     this.authStore = new AuthStore(this);
     this.poolStore = new PoolStore(this, this.poolService);
@@ -53,6 +62,7 @@ export class RootStore {
     this.stableSwapStore = new StableSwapStore(this, this.stableSwapService);
     this.alertStore = new AlertStore(this);
     this.proposalStore = new ProposalStore(this, this.proposalService);
+    this.fxdProtocolStatsStore = new FXDProtocolStatsStore(this,this.fxdProtocolStatsService)
 
     this.transactionStore = new ActiveWeb3Transactions(
       this,
@@ -69,6 +79,7 @@ export class RootStore {
       "stableSwapService",
       "activeWeb3TransactionService",
       "proposalService",
+      "fxdProtocolStatsService",
     ].map((serviceName) => {
       console.log(`Setting chainid ${chainId} for ${serviceName}`);
       // @ts-ignore

@@ -1,9 +1,29 @@
 import { Box, Grid, Paper } from '@mui/material';
 import Typography from '@mui/material/Typography';
+import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
+import { useEffect, useMemo } from 'react';
 import logo from '../../assets/images/fxd-logo.png';
+import { useStores } from '../../stores';
 
 
 const ProtocolStats = function ProtocolStats(props: any) {
+  const { chainId, error } = useWeb3React()
+  const rootStore = useStores();
+  const { fxdProtocolStatsStore }  = rootStore;
+  const unsupportedError = useMemo(() => (error as Error) instanceof UnsupportedChainIdError, [error]);
+
+  useEffect(() => {
+    // Update the document title using the browser API
+    if (chainId && (!error || !unsupportedError)) {
+      setTimeout(() => {
+        fxdProtocolStatsStore.fetchProtocolStats()
+      })
+    } 
+  }, [fxdProtocolStatsStore, rootStore.alertStore,  chainId, error, unsupportedError]);
+
+
+
+
     return (
         <Paper
         sx={{
@@ -38,7 +58,7 @@ const ProtocolStats = function ProtocolStats(props: any) {
           Total Supply
        </Typography>
        <Typography variant="body2" gutterBottom>
-          1000000000
+          {fxdProtocolStatsStore.commarize(fxdProtocolStatsStore.protocolStats.fathomSupplyCap)}
        </Typography>
       </Box>
       <Box
@@ -57,7 +77,7 @@ const ProtocolStats = function ProtocolStats(props: any) {
           TVL
       </Typography>
       <Typography variant="body2" gutterBottom>
-          1000000000
+          {fxdProtocolStatsStore.commarize(fxdProtocolStatsStore.protocolStats.totalValueLocked)}
       </Typography>
       </Box>
       <Box
@@ -76,7 +96,7 @@ const ProtocolStats = function ProtocolStats(props: any) {
           FXD Price
       </Typography>
       <Typography variant="body2" gutterBottom>
-          $ 1.00
+        {fxdProtocolStatsStore.getFormattedFXDPriceRatio()}
       </Typography>
       </Box>
       <Box
@@ -92,10 +112,10 @@ const ProtocolStats = function ProtocolStats(props: any) {
         }}
       >
       <Typography variant="subtitle1" color="text.secondary">
-          Stability Fee
+          Liq. Ratio
       </Typography>
       <Typography variant="body2" gutterBottom>
-          5%
+        {fxdProtocolStatsStore.getFormattedLiquidationRatio()}
       </Typography>
       </Box>
     </Grid>
