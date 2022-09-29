@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect} from "react";
+import React from "react";
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import Dialog from '@mui/material/Dialog';
@@ -12,9 +12,7 @@ import { Container, FormControl, Grid, InputLabel, MenuItem, Select, TextField }
 import { useStores } from '../../stores';
 import useMetaMask from '../../hooks/metamask';
 import IOpenPosition from '../../stores/interfaces/IOpenPosition';
-import { UnsupportedChainIdError } from "@web3-react/core";
 import { Constants } from "../../helpers/Constants";
-import { LogLevel, useLogger } from "../../helpers/Logger";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
@@ -73,26 +71,22 @@ export default function ClosePositionDialog(this: any, props: ClosePositionProps
     const [lockedCollateral, setLockedCollateral] = React.useState(0);
     const [fathomToken, setFathomToken] = React.useState(0);
     const [price, setPrice] = React.useState(0);
-
+    const [ltv, setLTV] = React.useState(0);
     const [closingType, setType] = React.useState(ClosingType.Full);
-    const { account, chainId, error } = useMetaMask()!;
+
+    const { account } = useMetaMask()!;
 
     const pool = poolStore.getPool(props.position.pool)
     const debtShare = props.position.debtShare.div(Constants.WeiPerWad).toNumber();
-
-    const disabled = (closingType === ClosingType.Full);
 
     const closePosition = () => {
         switch (closingType) {
             case ClosingType.Full: {
                 positionStore.closePosition(props.position.id, pool, account, fathomToken)
-                console.log(`positionStore.closePosition(${props.position.id}, ${pool}, ${account}, ${fathomToken})`)
                 break;
             }
             case ClosingType.Partial: {
                 positionStore.partialyClosePosition(props.position, pool, account, fathomToken, collateral)
-                console.log(`positionStore.partialyClosePosition(${props.position}, ${pool}, ${account}, ${fathomToken})`)
-
                 break;
             }
         }
@@ -102,23 +96,21 @@ export default function ClosePositionDialog(this: any, props: ClosePositionProps
 
 
     const handleClickOpen = async () => {
-        let priceWithSafetyMargin =  await poolStore.getPriceWithSafetyMargin(pool);
+        let priceWithSafetyMargin = await poolStore.getPriceWithSafetyMargin(pool);
         let calculatedLockedCollateral = (props.position.safetyBuffer.div(Constants.WeiPerRad).plus(debtShare)).div(priceWithSafetyMargin).toNumber(); 
 
+        setType(ClosingType.Full);
         setCollateral(calculatedLockedCollateral);
         setLockedCollateral(calculatedLockedCollateral);
         setPrice(priceWithSafetyMargin);
         setFathomToken(debtShare);
         setOpen(true);
+        setLTV(Math.round((debtShare / (calculatedLockedCollateral*priceWithSafetyMargin)) * 10000)/100)
     };
 
     const handleClose = () => {
         setOpen(false);
     };
-
-    const handleCollateralTextFieldChange = (e: any) => {
-        setCollateral(e.target.value)
-    }
 
     const handlefathomTokenTextFieldChange = (e: any) => {
         const { value } = e.target;
@@ -176,9 +168,9 @@ export default function ClosePositionDialog(this: any, props: ClosePositionProps
                                     </Grid>
                                     <Grid item xs={5}>{`1 FXD = ${1/price} ${pool.name}`}</Grid>
                                     <Grid item xs={7}>
-                                        <Typography gutterBottom>Safety buffer</Typography>
+                                        <Typography gutterBottom>LTV</Typography>
                                     </Grid>
-                                    <Grid item xs={5}>{props.position.safetyBuffer.div(Constants.WeiPerRad).toString()} FXD</Grid>
+                                    <Grid item xs={5}>{ltv} %</Grid>
                                 </Grid>
                             </Container>
                         </Grid>
@@ -186,10 +178,8 @@ export default function ClosePositionDialog(this: any, props: ClosePositionProps
                             <FormControl fullWidth>
                                 <InputLabel sx={{ m: 3 }} id="closing-type"></InputLabel>
                                 <Select
-                                    // labelId="demo-simple-select-label"
                                     id="closing-type-select"
                                     value={closingType}
-                                    // label="Age"
                                     onChange={handleTypeChange}>
                                     <MenuItem value={ClosingType.Full}>Close entire position</MenuItem>
                                     <MenuItem value={ClosingType.Partial}>Partialy close position</MenuItem>
@@ -197,7 +187,7 @@ export default function ClosePositionDialog(this: any, props: ClosePositionProps
                             </FormControl>
                             <FormControl fullWidth>
                                 <TextField
-                                    disabled={disabled}
+                                    disabled={closingType === ClosingType.Full}
                                     id="outlined-helperText"
                                     label="FXD"
                                     helperText="Enter the desired FXD."

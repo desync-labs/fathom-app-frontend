@@ -181,5 +181,4 @@ export default class PositionStore {
         );
       }
     };
-  }
 }

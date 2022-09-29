@@ -11,7 +11,7 @@ import { LogLevel, useLogger } from '../../helpers/Logger';
 import IOpenPosition from '../../stores/interfaces/IOpenPosition';
 import BigNumber from 'bignumber.js';
 import { Constants } from '../../helpers/Constants';
-import { Button, Paper, Typography } from '@mui/material';
+import { Button, Grid, Paper, Typography } from '@mui/material';
 import { observer } from 'mobx-react';
 import ICollatralPool from '../../stores/interfaces/ICollatralPool';
 import ClosePositionDialog from "../Positions/ClosePositionDialog";
@@ -77,15 +77,13 @@ const OpenPositionsList = observer(() => {
     }
 
   return (
-<<<<<<< HEAD
-    <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
+    <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
       <Typography component="h2" variant="h6" color="primary" gutterBottom>
         Open Positions
       </Typography>
-      {positionStore.positions.length === 0 ? (
-        <Typography variant="h6">No positions available</Typography>
-      ) : (
-        <TableContainer>
+      {positionStore.positions.length === 0 ?
+        <Typography variant='h6'>No positions available</Typography> :
+        <TableContainer >
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
@@ -100,79 +98,40 @@ const OpenPositionsList = observer(() => {
               {positionStore.positions.map((position: IOpenPosition) => (
                 <TableRow
                   key={position.id}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
                   <TableCell component="th" scope="row">
                     {position.id}
                   </TableCell>
                   {/* <TableCell align="right">{row.address}</TableCell> */}
+                  <TableCell align="right">{poolStore.getPool(position.pool).name}</TableCell>
+                  <TableCell align="right">{getFormattedSaftyBuffer(position.debtShare)}</TableCell>
                   <TableCell align="right">
-                    {poolStore.getPool(position.pool).name}
-                  </TableCell>
-                  <TableCell align="right">
-                    {getFormattedSaftyBuffer(position.debtShare)}
-                  </TableCell>
-                  <TableCell align="right">
-                  <ClosePositionDialog position={position} />
+                    <Grid container>
+                      <Grid xs={4} />
+                      <Grid xs={5} >
+                        {approvalPending
+                          ? <Typography display="inline" sx={{ marginRight: 2 }}>
+                            Pending ...
+                          </Typography>
+                          : approveBtn
+                            ? <Button variant="outlined" onClick={approve} sx={{ marginRight: 2 }}>
+                              Approve FXD
+                            </Button>
+                            : null
+                        }
+                      </Grid>
+                      <Grid xs={3}>
+                        <ClosePositionDialog position={position} />
+                      </Grid>
+                    </Grid>
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
-      )}
-=======
-    <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-    <Typography component="h2" variant="h6" color="primary" gutterBottom>
-      Open Positions
-    </Typography>
-    {positionStore.positions.length === 0 ? 
-    <Typography variant='h6'>No positions available</Typography> : 
-    <TableContainer >
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Position Id</TableCell>
-            {/* <TableCell align="right">Address</TableCell> */}
-            <TableCell align="right">Pool</TableCell>
-            <TableCell align="right">Debt Share</TableCell>
-            <TableCell align="right">Close Position</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {positionStore.positions.map((position:IOpenPosition) => (
-            <TableRow
-              key={position.id}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-            >
-              <TableCell component="th" scope="row">
-                {position.id}
-              </TableCell>
-              {/* <TableCell align="right">{row.address}</TableCell> */}
-              <TableCell align="right">{poolStore.getPool(position.pool).name}</TableCell>
-              <TableCell align="right">{getFormattedSaftyBuffer(position.debtShare)}</TableCell>
-              <TableCell align="right">
-                { approvalPending 
-                  ? <Typography  display="inline" sx={{marginRight: 2}}>
-                      Pending ...
-                    </Typography>
-                  : approveBtn
-                  ? <Button variant="outlined" onClick={approve} sx={{marginRight: 2}}>
-                      Approve FXD
-                    </Button>
-                  : null
-                }
-                <Button variant="outlined" disabled={approveBtn} onClick={() => handleClickClosePosition(position,poolStore.getPool(position.pool))}>
-                    Close
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-    }
->>>>>>> dev-fathom-stablecoin-mvp
+      }
     </Paper>
   );
 })
