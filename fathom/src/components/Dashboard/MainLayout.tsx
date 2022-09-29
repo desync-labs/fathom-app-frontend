@@ -35,7 +35,7 @@ import { Web3Status } from "../Web3Status/Web3Status";
 import AllProposalsView from "../Governance/ViewAllProposals";
 import ProposalView from "../Governance/Proposal";
 import MakePropose from "../Governance/Propose";
-import StakingView from "../StakingSubik/StakingView";
+import StakingView from "../Staking/StakingView";
 import AlertMessages from "../Common/AlertMessages";
 import TransactionStatus from "../Transaction/TransactionStatus";
 

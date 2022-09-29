@@ -3,7 +3,7 @@ import { observer } from "mobx-react";
 import { Paper, Typography } from "@mui/material";
 
 
-const StakingModalSubik = observer((props:any) => {
+const StakingModal = observer((props:any) => {
   return (
     <Paper
       sx={{
@@ -22,10 +22,15 @@ const StakingModalSubik = observer((props:any) => {
       <Typography component="p" variant="h6">
           {props.stakedBalance}
       </Typography>
-
+      <Typography color="text.secondary">
+        Vote Balance
+      </Typography>
+      <Typography component="p" variant="h6">
+          {props.voteBalance}
+      </Typography>
      
     </Paper>
   );
 });
 
-export default StakingModalSubik;
+export default StakingModal;

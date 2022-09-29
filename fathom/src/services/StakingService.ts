@@ -356,8 +356,8 @@ export default class StakingService implements IStakingService {
         chainId
       );
 
-      let balance = MainToken.methods.balanceOf(account).call();
-
+      let balance = await MainToken.methods.balanceOf(account).call();
+      balance = await this._convertToEtherBalance(balance, chainId);
       return balance;
     } catch (error) {
       console.error(`Error in get wallet balance: ${error}`);
@@ -373,8 +373,10 @@ export default class StakingService implements IStakingService {
         chainId
       );
 
-      let balance = VeMAINToken.methods.balanceOf(account).call();
-
+      let balance = await VeMAINToken.methods.balanceOf(account).call();
+      
+      balance = await this._convertToEtherBalance(balance, chainId);
+      
       return balance;
     } catch (error) {
       console.error(`Error in get vote balance: ${error}`);
