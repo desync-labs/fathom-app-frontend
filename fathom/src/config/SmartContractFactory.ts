@@ -6,9 +6,10 @@ import FathomStablecoinProxyActionAbi from "./ABI/FathomStablecoinProxyActions.j
 import BEP20Abi from "./ABI/BEP20.json";
 import GetPositionsAbi from "./ABI/GetPositions.json";
 import StableSwapModule from "./ABI/StableSwapModule.json";
-import Addresses from "./addresses.json";
-
+import FathomStats from './ABI/FathomStats.json'
 import Governor from './ABI/Governor.json'
+
+import Addresses from "./addresses.json";
 
 export class SmartContractFactory {
   public static Addresses(chainId: number) {
@@ -152,6 +153,13 @@ export class SmartContractFactory {
     return {
       abi: StableSwapModule.abi as AbiItem[],
       address: SmartContractFactory.Addresses(chainId).stableSwapModule,
+    }
+  };
+
+  public static FathomStats(chainId: number) {
+    return {
+      abi: FathomStats.abi as AbiItem[],
+      address: SmartContractFactory.Addresses(chainId).fathomStats,
     }
   };
 
