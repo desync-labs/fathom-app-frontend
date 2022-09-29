@@ -16,6 +16,7 @@ import { useEffect } from "react";
 import { observer } from "mobx-react";
 import ICollatralPool from "../../stores/interfaces/ICollatralPool";
 import { UnsupportedChainIdError } from "@web3-react/core";
+import ClosePositionDialog from "../Positions/ClosePositionDialog";
 
 const OpenPositionsList = observer(() => {
   const rootStore = useStores();
@@ -90,17 +91,7 @@ const OpenPositionsList = observer(() => {
                     {getFormattedSaftyBuffer(position.debtShare)}
                   </TableCell>
                   <TableCell align="right">
-                    <Button
-                      variant="outlined"
-                      onClick={() =>
-                        handleClickClosePosition(
-                          position,
-                          poolStore.getPool(position.pool)
-                        )
-                      }
-                    >
-                      Close
-                    </Button>
+                  <ClosePositionDialog position={position} />
                   </TableCell>
                 </TableRow>
               ))}
