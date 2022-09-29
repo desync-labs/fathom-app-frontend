@@ -58,7 +58,7 @@
     "dexPriceOracle": "0x5F68b48E9fe12394b3e39b051E665637e4730582",
     "authTokenAdapter": "0x04142C8EfdD8f2a40a34ba4fEA05B1281bA1921D",
     "stableSwapModule": "0x6e6b57A554397ECCd77DA01c4bf4a67fe823925D",
-    "getPositions": "0x9581D07b24c22e71E23EC6aaA5d039f25BE91a41",
+    "getPositions": "0x625014ec971389770910B48fB9773335F8E87079",
     "collateralTokenAdapterUSDT": "0xFcFc4A66Ec36895dc6642843086d8348a0cd38ba",
     "fathomStats":"0x1A1E81de8a839e77A5dE524FaA25ef1aEf4b627f",
     "fathomGovernor": "0x62f3d571A7DAcC00C047e58fE500ee99A98E3f63"
