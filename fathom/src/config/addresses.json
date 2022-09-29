@@ -28,8 +28,14 @@
     "authTokenAdapter": "0x1870f7B76a20aE2a9FD934fD08B3529bf840794e",
     "stableSwapModule": "0x95eE52465d876A4aB2BE7627e929687605e6EBf3",
     "getPositions": "0x864aaEb6AF0a3C55a51CbA75C9d2a26Eb7119d19",
-    "collateralTokenAdapterUSDT": "0x151e078C5C26334C2FC4ebE504F003F3D4665232"
+    "collateralTokenAdapterUSDT": "0x151e078C5C26334C2FC4ebE504F003F3D4665232",
+    "staking": "0xde6Ef25c30e990415a9C0F67f1cCdc2080Ee8045",
+    "mainToken": "0x95F81bA096bdF2316890e5C21A852B9C5cE6BE8A",
+    "stakingGetter": "0x47E5E2227274aa9fa996d60b0DE9baD4602a65A2",
+    "veMainToken": "0x0e52147E1aD0d48F76074214e0782EE4A6Dca120",
+    "streamRewardToken": "0x79dFFC4DcBb1f598EC3741E939f22bAAF56448Da"
   },
+
   "5": {
     "accessControlConfig": "0x9d822e439334E828b6B15dCbD15dA4b307345406",
     "collateralPoolConfig": "0x96AB21F9471c1567A587F9a750B0179a3c77869F",
@@ -60,8 +66,17 @@
     "stableSwapModule": "0x6e6b57A554397ECCd77DA01c4bf4a67fe823925D",
     "getPositions": "0x9581D07b24c22e71E23EC6aaA5d039f25BE91a41",
     "collateralTokenAdapterUSDT": "0xFcFc4A66Ec36895dc6642843086d8348a0cd38ba",
-    "fathomGovernor": "0x62f3d571A7DAcC00C047e58fE500ee99A98E3f63"
+    "fathomGovernor": "0x62f3d571A7DAcC00C047e58fE500ee99A98E3f63",
+    "staking": "0xd4899EA07DC33c8CFA9B3297A558778e456E057D",
+    "mainToken": "0x0574bEc8CD26b50Dc60739FdD06a944892b29Db4",
+    "stakingGetter": "0x770d149ee3b7AE4B7823B68c1F4D02272748Afac",
+    "veMainToken": "0x68e2577F036Ca17a7DE847AC9B338cF2faedF690",
+    "streamRewardToken": "0x4Ee69bCd992Ea00538701FB6cAd2444eC322CF16"
   },
+
+  
+  
+  
   "50": {},
   "51": {
     "accessControlConfig": "0x93645Ef8A2d43E415aF92621d3b18f2e5E6e786D",

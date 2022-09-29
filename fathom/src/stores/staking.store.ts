@@ -112,6 +112,27 @@ export default class StakingStore {
     }
   };
 
+  handleClaimRewardsSingle = async (account: string, lockId: number, chainId: number) => {
+    console.log("Running createLock from store");
+    try {
+      if (account === undefined || account === null) return;
+
+      await this.service.handleClaimRewardsSingle(
+        account,
+        lockId,
+        chainId,
+        this.rootStore.transactionStore
+      );
+
+      //      await this.fetchAll(account,chainId)
+    } catch (e) {
+      this.rootStore.alertStore.setShowErrorAlert(
+        true,
+        "There is some error in claiming rewards!"
+      );
+    }
+  };
+
   handleWithdrawRewards = async (account: string, chainId: number) => {
     console.log("Running createLock from store");
     try {
@@ -143,6 +164,7 @@ export default class StakingStore {
   };
 
   fetchAPR = async (chainId: number) => {
+    console.log("fetching... APR")
     let apr = await this.service.getAPR(chainId);
     runInAction(() => {
       this.setAPR(apr);

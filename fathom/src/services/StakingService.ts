@@ -39,7 +39,7 @@ export default class StakingService implements IStakingService {
           .approve(
             "0xA82a7351ccd2949566305850A0877BA86E0e6a33",
             //SmartContractFactory.Staking(this.chainId).address,
-            Constants.WeiPerWad.multipliedBy(stakePosition).toString()
+            (await this.toWei(stakePosition, chainId))
           )
           .send({ from: address })
           .on("transactionHash", (hash: any) => {
@@ -64,17 +64,18 @@ export default class StakingService implements IStakingService {
         );
         let lockingPeriod = unlockPeriod * day;
         let endTime = await this.getTimestamp(chainId);
-        if (endTime) {
-          endTime = endTime + lockingPeriod;
+      
+        if(lockingPeriod === 0){
+          //if locking period = 0, lock only for 5 mins
+          endTime += 5*60;
         }
-
         if (lockingPeriod > 0) {
-          endTime = (await this.getTimestamp(chainId)) + lockingPeriod;
+          endTime = endTime + lockingPeriod;
         }
 
         await Staking.methods
           .createLock(
-            Constants.WeiPerWad.multipliedBy(stakePosition).toString(),
+            (await this.toWei(stakePosition, chainId)),
             endTime
           )
           .send({ from: address })
@@ -99,7 +100,7 @@ export default class StakingService implements IStakingService {
     chainId: number
   ): Promise<ILockPosition[]> {
     chainId = chainId || this.chainId;
-    let lockPosition = {} as ILockPosition;
+    
     let lockPositionsList = [] as ILockPosition[];
     chainId = chainId || this.chainId;
     try {
@@ -119,6 +120,7 @@ export default class StakingService implements IStakingService {
           .call();
 
         for (let i = 0; i < result; i++) {
+          let lockPosition = {} as ILockPosition;
           const {
             0: amountOfMAINTkn,
             1: amountOfveMAINTkn,
@@ -144,6 +146,8 @@ export default class StakingService implements IStakingService {
               amountOfRewardsAvailable,
               chainId
             );
+
+            lockPosition.timeObject = this._convertToTimeObject(lockPosition.EndTime)
 
           console.log(lockPosition);
           lockPositionsList.push(lockPosition);
@@ -211,6 +215,39 @@ export default class StakingService implements IStakingService {
             active: false,
             status: TransactionStatus.None,
             title: `Hanndling early withdrawal`,
+            message: "Click on transaction to view on Etherscan.",
+          });
+        });
+    } catch (error) {
+      console.error(`Error in Early Withdrawal: ${error}`);
+    }
+  }
+
+  async handleClaimRewardsSingle(
+    account: string,
+    lockId: number,
+    chainId: number,
+    transactionStore: ActiveWeb3Transactions
+  ): Promise<void> {
+    chainId = chainId || this.chainId;
+    console.log("is account here", account);
+    try {
+      const Staking = Web3Utils.getContractInstance(
+        SmartContractFactory.Staking(chainId),
+        chainId
+      );
+      console.log("is account here", account);
+      console.log("getting LockID:", lockId);
+      await Staking.methods
+        .claimRewards(lockId)
+        .send({ from: account })
+        .on("transactionHash", (hash: any) => {
+          transactionStore.addTransaction({
+            hash: hash,
+            type: TransactionType.Approve,
+            active: false,
+            status: TransactionStatus.None,
+            title: `Hanndling Single claim reward`,
             message: "Click on transaction to view on Etherscan.",
           });
         });
@@ -368,6 +405,12 @@ export default class StakingService implements IStakingService {
     return web3.utils.fromWei(balance.toString(), "ether");
   }
 
+  async toWei(balance: number, chainId: number): Promise<number> {
+    chainId = chainId || this.chainId;
+    const web3 = Web3Utils.getWeb3Instance(chainId);
+    return web3.utils.toWei(balance.toString(), "ether");
+  }
+
   async _convertToEtherBalance(
     balance: number,
     chainId: number
@@ -384,6 +427,41 @@ export default class StakingService implements IStakingService {
     return parseFloat(
       (await this.fromWei(balance, chainId)).toString()
     ).toFixed(2);
+  }
+
+   secondsToTime(secs:number){
+
+    let days = Math.floor(secs / (24 * 60 * 60))
+    let remainingSecs = secs - days * 24 * 60 * 60
+    let hours = Math.floor(remainingSecs / (60 * 60));
+
+    let divisor_for_minutes = remainingSecs % (60 * 60);
+    let minutes = Math.floor(divisor_for_minutes / 60);
+
+    let divisor_for_seconds = divisor_for_minutes % 60;
+    let seconds = Math.ceil(divisor_for_seconds);
+
+    let obj = {
+      "days": days,
+      "hour": hours,
+      "min": minutes,
+      "sec": seconds
+    };
+    return obj;
+  }
+
+   _convertToTimeObject(_remainingTime:number){
+    const remainingTime = _remainingTime
+    let obj = {
+      "days": 0,
+      "hour": 0,
+      "min": 0,
+      "sec": 0
+    };
+    if (remainingTime > 0){
+      obj = this.secondsToTime(remainingTime)
+    }
+    return obj;
   }
 
   setChainId(chainId: number) {

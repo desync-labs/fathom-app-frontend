@@ -32,5 +32,11 @@ export default interface IStakingService{
       getAPR(chainId: number):Promise<number>;
       getWalletBalance(account: string,chainId:number):Promise<number>;
       getVOTEBalance(account: string,chainId:number):Promise<number>;
+      handleClaimRewardsSingle(
+        account: string,
+        lockId: number,
+        chainId: number,
+        transactionStore: ActiveWeb3Transactions
+      ): Promise<void>;
 
 }

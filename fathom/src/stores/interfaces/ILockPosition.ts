@@ -1,3 +1,4 @@
+import ITimeObject from './ITimeObject'
 export default interface ILockPosition{
 
     lockId:number
@@ -5,4 +6,5 @@ export default interface ILockPosition{
     MAINTokenBalance:number
     EndTime:number
     RewardsAvailable: string
+    timeObject: ITimeObject
 }
