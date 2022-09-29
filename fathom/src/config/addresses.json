@@ -60,6 +60,7 @@
     "stableSwapModule": "0x6e6b57A554397ECCd77DA01c4bf4a67fe823925D",
     "getPositions": "0x9581D07b24c22e71E23EC6aaA5d039f25BE91a41",
     "collateralTokenAdapterUSDT": "0xFcFc4A66Ec36895dc6642843086d8348a0cd38ba",
+    "fathomStats":"0x1A1E81de8a839e77A5dE524FaA25ef1aEf4b627f",
     "fathomGovernor": "0x62f3d571A7DAcC00C047e58fE500ee99A98E3f63"
   },
   "50": {},
@@ -93,6 +94,7 @@
     "stableSwapModule": "0xcFCBaCd7edC0c9afEadf2034A0D35aF84Ec46F12",
     "getPositions": "0xA8FA19C64742C159b27Ce29911d0c3c07670A026",
     "collateralTokenAdapterUSDT": "0xDDB1ec0Eb51f7aeD481ad4D00a44600228E6D270",
+    "fathomStats":"xdc6401D913E91bd21cba4FE3C9F0574d3ab06aC3eb",
     "fathomGovernor": "0x0A6Fc6Cb44Fbe7f5e98C428fDAaBd212b8c5d8A2"
   }
 }

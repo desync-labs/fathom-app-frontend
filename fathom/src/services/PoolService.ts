@@ -74,13 +74,13 @@ export default class PoolService implements IPoolService {
   async getPriceWithSafetyMargin(pool: ICollatralPool): Promise<number> {
     try {
       let contract = Web3Utils.getContractInstance(
-        SmartContractFactory.PoolConfig
+        SmartContractFactory.PoolConfig(this.chainId)
       );
       let response = await contract.methods
         .getPriceWithSafetyMargin(pool.id)
         .call();
 
-      return new BigNumber(response).div(Constants.WeiPerRad).toNumber();
+      return new BigNumber(response).div(Constants.WeiPerRay).toNumber();
     } catch (exception) {
       console.log(
         `Error fetching pool information: ${JSON.stringify(exception)}`
