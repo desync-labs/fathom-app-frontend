@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect, useMemo } from "react";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -12,9 +12,12 @@ import IOpenPosition from '../../stores/interfaces/IOpenPosition';
 import BigNumber from 'bignumber.js';
 import { Constants } from '../../helpers/Constants';
 import { Button, Paper, Typography } from '@mui/material';
-import { useEffect } from 'react';
 import { observer } from 'mobx-react';
 import ICollatralPool from '../../stores/interfaces/ICollatralPool';
+import {
+  UnsupportedChainIdError,
+  useWeb3React
+} from "@web3-react/core";
 
 
 
@@ -23,17 +26,24 @@ const OpenPositionsList = observer(() => {
     let poolStore = useStores().poolStore;
     const { account } = useMetaMask()!
     let logger = useLogger();
+    const { chainId, error } = useWeb3React()
 
     let [approveBtn, setApproveBtn] = React.useState(true);
+    const unsupportedError = useMemo(() => (error as Error) instanceof UnsupportedChainIdError, [error]);
+
 
 
     useEffect(() => {
-        // Update the document title using the browser API
-        logger.log(LogLevel.info,`fetching open positions. ${account}`);
-        positionStore.fetchPositions(account);
-        approvalStatus();
+      if (chainId && (!error || !unsupportedError)) {
+        setTimeout(() => {
+          // Update the document title using the browser API
+          logger.log(LogLevel.info,`fetching open positions. ${account}`);
+          positionStore.fetchPositions(account);
+          approvalStatus();
+        })
+      } 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[positionStore,account]);
+    },[positionStore, account, chainId, error, unsupportedError]);
 
     const [approvalPending, setApprovalPending] = React.useState(false);
 
