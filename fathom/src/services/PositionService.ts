@@ -201,8 +201,8 @@ export default class PositionService implements IPositionService{
           pool.CollateralTokenAdapterAddress,
           SmartContractFactory.StablecoinAdapter(this.chainId).address,
           position.id,
-          Constants.WeiPerWad.multipliedBy(collateral),
-          Constants.WeiPerWad.multipliedBy(stablecoint),
+          Constants.WeiPerWad.multipliedBy(collateral).toString(),
+          Constants.WeiPerWad.multipliedBy(stablecoint).toString(),
           encodedResult,
         ]);
 
