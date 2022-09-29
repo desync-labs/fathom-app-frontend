@@ -38,7 +38,6 @@ const StakingView = observer(() => {
 
   const fetchAll = useCallback(
     (account: string, chainId: number) => {
-      console.log("HERRRRREEEE... fetcgALL");
       stakingStore.fetchLocks(account, chainId);
       stakingStore.fetchVOTEBalance(account, chainId);
       stakingStore.fetchWalletBalance(account, chainId);
@@ -51,16 +50,12 @@ const StakingView = observer(() => {
     if (chainId) {
       logger.log(LogLevel.info, "fetching lock positions.");
       fetchAll(account, chainId);
-      console.log("stakingStore.lockPositions: ");
-      console.log(stakingStore.lockPositions);
     } else {
       stakingStore.setLocks([]);
     }
   }, [account, logger, stakingStore, chainId, fetchAll]);
 
   const createLock = useCallback(async () => {
-    console.log(",,,,,stakingPositin", stakePosition)
-    console.log(",,,,,Locking Days...", lockDays)
     await stakingStore.createLock(account, stakePosition, lockDays, chainId);
     fetchAll(account, chainId);
     
@@ -71,15 +66,12 @@ const StakingView = observer(() => {
     fetchAll(account, chainId);
   }, [stakingStore, account, chainId, fetchAll]);
 
-  const claimRewardsSingle = useCallback(async (lockId: number) => {
-    await stakingStore.handleClaimRewardsSingle(account, lockId, chainId);
-    fetchAll(account, chainId);
-  }, [stakingStore, account, chainId, fetchAll]);
+  
 
   const withdrawRewards = useCallback(() => {
     stakingStore.handleWithdrawRewards(account, chainId);
     fetchAll(account, chainId);
-  }, [stakingStore, account, chainId]);
+  }, [stakingStore, account, chainId, fetchAll]);
 
   const handleEarlyWithdrawal = useCallback(async (lockId: number) => {
       await stakingStore.handleEarlyWithdrawal(account, lockId, chainId);
@@ -101,17 +93,11 @@ const StakingView = observer(() => {
     return isItUnlockable
   }
 
-  const isItClaimable = (lockId: number) => {
-    let amountClaimable = stakingStore.lockPositions[lockId - 1].RewardsAvailable
-    let integerAmountClaimable = Number(amountClaimable)
-    const isItClaimable = integerAmountClaimable > 0
-    return isItClaimable
-  }
+  
 
  
   const handleStakeChange = (e:any) => {
     setStakePosition(e.target.value)
-    console.log(".......staking Positino trigerre?>", stakePosition)
   }
 
 
@@ -181,7 +167,7 @@ const StakingView = observer(() => {
               <TableRow>
                 <TableCell sx={{ fontSize: "1rem" }}>Lock Position</TableCell>
                 <TableCell sx={{ fontSize: "1rem" }}>Vote Tokens Received</TableCell>
-                <TableCell sx={{ fontSize: "1rem" }}>Rewards</TableCell>
+                <TableCell sx={{ fontSize: "1rem" }}>Stream Rewards</TableCell>
                 <TableCell sx={{textAlign: 'center', fontSize: "1rem"}}>Remaining Period</TableCell>
                 <TableCell sx={{ fontSize: "1rem" }}>Unlock</TableCell>
                 <TableCell sx={{ fontSize: "1rem" }}>Early Unlock</TableCell>
@@ -236,12 +222,12 @@ const StakingView = observer(() => {
   <br/>
 
       <Button variant="outlined" onClick={() => claimRewards()}>
-          Claim Rewards
+          Claim Stream Rewards
       </Button>
       <br/>
 
       <Button variant="outlined" onClick={() => withdrawRewards()}>
-          Withdraw Rewards
+          Withdraw Stream Rewards
       </Button>
       <br/>
     </Paper>

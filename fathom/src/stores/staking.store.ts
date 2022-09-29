@@ -199,11 +199,9 @@ export default class StakingStore {
 
   fetchLocks = async (account: string, chainId: number) => {
     let locks = await this.service.getLockPositions(account, chainId);
-    console.log("HEERE LOCKS From Service", locks);
     runInAction(() => {
       this.setLocks(locks);
       this.setTotalStakedPosition(locks);
     });
-    console.log("HEERE LOCKS From Store", this.lockPositions);
   };
 }
