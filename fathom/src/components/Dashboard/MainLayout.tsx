@@ -68,6 +68,9 @@ const Drawer = styled(MuiDrawer, {
 const mdTheme = createTheme({
   palette: {
     mode: 'dark',
+    primary: {
+      main: '#00FFF6',
+    },
   },
 });
 
