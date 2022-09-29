@@ -11,6 +11,7 @@ import {
   Paper,
   Toolbar,
   Typography,
+  Button
 } from "@mui/material";
 import { useStores } from "../../stores";
 import useMetaMask from "../../hooks/metamask";
@@ -20,18 +21,44 @@ import { observer } from "mobx-react";
 import AlertMessages from "../Common/AlertMessages";
 import TransactionStatus from "../Transaction/TransactionStatus";
 import ILockPosition from "../../stores/interfaces/ILockPosition";
+import { toJS } from "mobx";
 
 const StakingView = observer(() => {
   const { account, chainId } = useMetaMask()!;
   const logger = useLogger();
-  const stakingStore = useStores().stakingStore;
+  const rootStore = useStores();
+
+  const stakingStore = rootStore.stakingStore;
 
   useEffect(() => {
     logger.log(LogLevel.info, "fetching lock positions.");
-    stakingStore.fetchLocks(account,chainId); // where is this being used?
+    stakingStore.fetchLocks(account,chainId)
+    stakingStore.fetchVOTEBalance(account,chainId)
+    stakingStore.fetchWalletBalance(account,chainId)
+    stakingStore.fetchAPR(chainId)
     console.log("stakingStore.lockPositions: ")
     console.log(stakingStore.lockPositions)
   }, [account, logger, stakingStore, chainId]);
+
+  const fetchAll = (account: string, chainId: number) => {
+    console.log("HERRRRREEEE... fetcgALL")
+    stakingStore.fetchLocks(account,chainId)
+    stakingStore.fetchVOTEBalance(account,chainId)
+    stakingStore.fetchWalletBalance(account,chainId)
+    stakingStore.fetchAPR(chainId)
+  }
+  const createLock = () => {
+    stakingStore.createLock(account,500,365,chainId)
+    fetchAll(account,chainId)
+  }
+
+  const claimRewards = () => {
+    stakingStore.handleClaimRewards(account,chainId)
+  }
+
+  const withdrawRewards = () => {
+    stakingStore.handleWithdrawRewards(account,chainId)
+  }
 
   const handleEarlyWithdrawal = (lockId:number) => {
     stakingStore.handleEarlyWithdrawal(account,lockId,chainId)
@@ -54,6 +81,26 @@ const StakingView = observer(() => {
           <Typography component="h2" variant="h6" color="primary" gutterBottom>
             Proposals
           </Typography>
+          <Button
+                      variant="outlined"
+                      onClick={() =>
+                        createLock()
+                      }
+                    >create Lock </Button>
+
+      <Button
+                      variant="outlined"
+                      onClick={() =>
+                        claimRewards()
+                      }
+                    >claim rewards</Button>
+
+<Button
+                      variant="outlined"
+                      onClick={() =>
+                        withdrawRewards()
+                      }
+                    >withdraw rewards</Button>
           {stakingStore.lockPositions.length === 0 ? (
             <Typography variant="h6">No proposals available</Typography>
           ) : (
