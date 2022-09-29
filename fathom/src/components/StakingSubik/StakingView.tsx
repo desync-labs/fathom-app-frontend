@@ -174,7 +174,7 @@ const StakingView = observer(() => {
       <br/>
 
       {stakingStore.lockPositions.length === 0 ? (
-        <Typography variant="h1">Loading Lock Positions</Typography>
+        <Typography variant="h6">Loading Lock Positions</Typography>
       ) : (
         
         <TableContainer>
