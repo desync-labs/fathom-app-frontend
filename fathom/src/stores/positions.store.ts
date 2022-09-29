@@ -93,4 +93,39 @@ export default class PositionStore {
   setPositions = (_positions: IOpenPosition[]) => {
     this.positions = _positions;
   };
+
+  partialyClosePosition = async (
+    position: IOpenPosition,
+    pool: ICollatralPool,
+    address: string,
+    fathomToken: number,
+    collater: number
+  ) => {
+    console.log(
+      `Close position clicked for address ${address}, positionId: ${position.id}, fathomToken: ${fathomToken}`
+    );
+    try {
+      if (address === undefined || address === null) return;
+
+      await this.service.partialyClosePosition(
+        position,
+        pool,
+        address,
+        fathomToken,
+        collater,
+        this.rootStore.transactionStore
+      );
+      await this.fetchPositions(address);
+      await this.rootStore.poolStore.fetchPools();
+      this.rootStore.alertStore.setShowSuccessAlert(
+        true,
+        "Position closed successfully!"
+      );
+    } catch (e) {
+      this.rootStore.alertStore.setShowErrorAlert(
+        true,
+        "There is some error in closing the position!"
+      );
+    }
+  };
 }

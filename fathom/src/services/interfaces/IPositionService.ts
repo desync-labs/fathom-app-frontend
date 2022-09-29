@@ -9,4 +9,13 @@ export default interface IPositionService{
     getPositionsForAddress(address:string): Promise<IOpenPosition[]>;
     getPositionsWithSafetyBuffer(address:string): Promise<IOpenPosition[]>;
     closePosition(positionId: string,pool:ICollatralPool,address:string, debt:number, transactionStore:ActiveWeb3Transactions): Promise<void>;
+    partialyClosePosition(
+        position: IOpenPosition,
+        pool: ICollatralPool, 
+        address: string, 
+        debt: number, 
+        collateralValue: number, 
+        transactionStore: ActiveWeb3Transactions
+    ): Promise<void>;
+    
 }

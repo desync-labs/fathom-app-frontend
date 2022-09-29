@@ -318,7 +318,68 @@ export default class PositionService implements IPositionService {
     }
   }
 
-  setChainId(chainId: number) {
-    this.chainId = chainId;
-  }
+    async partialyClosePosition(position: IOpenPosition, pool: ICollatralPool, address: string, stablecoint: number, collateral: number, transactionStore: ActiveWeb3Transactions): Promise<void> {
+        try {
+            console.log(`Closing position for position id ${position.id}.`)
+            let i = 1;
+            let proxyWalletaddress = await this.proxyWalletExist(address);
+            const wallet = Web3Utils.getContractInstanceFrom(SmartContractFactory.proxyWallet.abi, proxyWalletaddress, this.chainId)
+            console.log("i = " + i++);
+            const encodedResult = Web3Utils.getWeb3Instance(this.chainId).eth.abi.encodeParameters(["address"], [address]);
+            console.log("i = " + i++);
+            const fathomStableCoin = Web3Utils.getContractInstance(SmartContractFactory.FathomStableCoin(this.chainId), this.chainId)
+            console.log("i = " + i++);
+            // Send some stablecoin to the position
+            console.log(`Send some stablecoin to the position.`)
+            await fathomStableCoin.methods.approve(proxyWalletaddress, Constants.WeiPerWad.multipliedBy(stablecoint).toString())
+                .send({ from: address })
+                .on('transactionHash', (hash: any) => {
+                    transactionStore.addTransaction({
+                        hash: hash,
+                        type: TransactionType.Approve,
+                        active: false,
+                        status: TransactionStatus.None,
+                        title: `Approval Pending`,
+                        message: 'Click on transaction to view on Etherscan.'
+                    })
+                })
+
+            let jsonInterface = SmartContractFactory.FathomStablecoinProxyAction(
+                this.chainId
+            ).abi.filter((abi) => abi.name === "wipeAndUnlockToken")[0];
+
+            let wipeAndUnlockTokenCall =
+                Web3Utils.getWeb3Instance(this.chainId).eth.abi.encodeFunctionCall(jsonInterface, [
+                    SmartContractFactory.PositionManager(this.chainId).address,
+                    pool.CollateralTokenAdapterAddress,
+                    SmartContractFactory.StablecoinAdapter(this.chainId).address,
+                    position.id,
+                    Constants.WeiPerWad.multipliedBy(stablecoint),
+                    Constants.WeiPerWad.multipliedBy(collateral),
+                    encodedResult,
+                ]);
+
+            await wallet.methods.execute2(SmartContractFactory.FathomStablecoinProxyActions(this.chainId).address, wipeAndUnlockTokenCall)
+                .send({ from: address })
+                .on('transactionHash', (hash: any) => {
+                    transactionStore.addTransaction({
+                        hash: hash,
+                        type: TransactionType.ClosePosition,
+                        active: false,
+                        status: TransactionStatus.None,
+                        title: 'Close Position Pending.',
+                        message: 'Click on transaction to view on Etherscan.'
+                    })
+                })
+
+            console.log(`Collateral was returned.`)
+        } catch (error) {
+            console.error(`Error in closing position ${error}`)
+            throw error;
+        }
+    }
+
+    setChainId(chainId: number) {
+        this.chainId = chainId;
+    }
 }
