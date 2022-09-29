@@ -78,6 +78,7 @@ const StakingView = observer(() => {
 
   const withdrawRewards = useCallback(() => {
     stakingStore.handleWithdrawRewards(account, chainId);
+    fetchAll(account, chainId);
   }, [stakingStore, account, chainId]);
 
   const handleEarlyWithdrawal = useCallback(async (lockId: number) => {
@@ -125,15 +126,13 @@ const StakingView = observer(() => {
   return (
     <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
         {/* <Grid  item xs={12} md={4} lg={3}>
-          <StakingModalSubik />
         </Grid> */}
       <Typography component="h2" variant="h6" color="primary" gutterBottom>
         STAKING
       </Typography>
-      {/* <StakingModalSubik apr={stakingStore.apr} voteBalance={stakingStore.voteBalance} stakedBalance={stakingStore.totalStakedPosition}/> */}
       <Grid container spacing={2}>
       <Grid item xs={8}>
-        <div>
+
       <TextField
           id="outlined-helperText"
           label="Stake Position"
@@ -143,9 +142,7 @@ const StakingView = observer(() => {
           value={stakePosition}
           onChange={handleStakeChange}
          />
-        </div>
-        <Box>
-        
+        <Box sx={{ m: 3, mr:10}} >
           Unlock Period:
             <Slider
             aria-label="Temperature"
@@ -162,12 +159,12 @@ const StakingView = observer(() => {
          </Box>
          </Grid>
          <Grid item xs={4}>
-            <StakingModal apr={100} stakedBalance={stakingStore.totalStakedPosition} />
+            <StakingModal apr={100} stakedBalance={stakingStore.totalStakedPosition} voteBalance={stakingStore.voteBalance}/>
           </Grid>
          </Grid>
         <div>
     
-        <Button variant="outlined" onClick={() => createLock()}>
+        <Button sx={{ m: 3, mr:10}} variant="outlined" onClick={() => createLock()}>
             Create Lock
         </Button>
       </div>
@@ -182,11 +179,12 @@ const StakingView = observer(() => {
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell>Lock Position</TableCell>
-                <TableCell>Vote Tokens Received</TableCell>
-                <TableCell>Rewards</TableCell>
-                <TableCell sx={{textAlign: 'center'}}>Remaining Period</TableCell>
-                <TableCell align="right"></TableCell>
+                <TableCell sx={{ fontSize: "1rem" }}>Lock Position</TableCell>
+                <TableCell sx={{ fontSize: "1rem" }}>Vote Tokens Received</TableCell>
+                <TableCell sx={{ fontSize: "1rem" }}>Rewards</TableCell>
+                <TableCell sx={{textAlign: 'center', fontSize: "1rem"}}>Remaining Period</TableCell>
+                <TableCell sx={{ fontSize: "1rem" }}>Unlock</TableCell>
+                <TableCell sx={{ fontSize: "1rem" }}>Early Unlock</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
