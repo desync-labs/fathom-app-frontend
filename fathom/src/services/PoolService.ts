@@ -6,16 +6,16 @@ import { Constants } from "../helpers/Constants";
 import { Web3Utils } from "../helpers/Web3Utils";
 
 export default class PoolService implements IPoolService {
-  chainId = 1337;
+  chainId = Constants.DEFAULT_CHAINID;
   //Ideally this should be dynamic
   getPools(): ICollatralPool[] {
-    let pools: ICollatralPool[] = [];
+    const pools: ICollatralPool[] = [];
     //0x5758444300000000000000000000000000000000000000000000000000000000
     pools.push(
       {
         id: "0x5758444300000000000000000000000000000000000000000000000000000000",
         name: "WXDC",
-        collatralContractAddress: SmartContractFactory.WXDC(this.chainId)
+        collateralContractAddress: SmartContractFactory.WXDC(this.chainId)
           .address,
         CollateralTokenAdapterAddress:
           SmartContractFactory.WXDCCollateralTokenAdapter(this.chainId).address,
@@ -25,7 +25,7 @@ export default class PoolService implements IPoolService {
       {
         id: "0x555344542d535441424c45000000000000000000000000000000000000000000",
         name: "USDT",
-        collatralContractAddress: SmartContractFactory.USDT(this.chainId)
+        collateralContractAddress: SmartContractFactory.USDT(this.chainId)
           .address,
         CollateralTokenAdapterAddress:
           SmartContractFactory.USDTCollateralTokenAdapter(this.chainId).address,
@@ -67,21 +67,25 @@ export default class PoolService implements IPoolService {
   }
 
   setChainId(chainId: number) {
-    this.chainId = chainId;
+    if(chainId !== undefined)
+      this.chainId = chainId;
   }
 
   async getPriceWithSafetyMargin(pool: ICollatralPool): Promise<number> {
-    try{
-        let contract = Web3Utils.getContractInstance(SmartContractFactory.PoolConfig)
-        let response = await contract.methods.getPriceWithSafetyMargin(pool.id).call();
+    try {
+      let contract = Web3Utils.getContractInstance(
+        SmartContractFactory.PoolConfig
+      );
+      let response = await contract.methods
+        .getPriceWithSafetyMargin(pool.id)
+        .call();
 
-        return new BigNumber(response).div(Constants.WeiPerRay).toNumber();
-
-    }catch(exception){
-        console.log(`Error fetching pool information: ${JSON.stringify(exception)}`)
-        throw exception;
+      return new BigNumber(response).div(Constants.WeiPerRad).toNumber();
+    } catch (exception) {
+      console.log(
+        `Error fetching pool information: ${JSON.stringify(exception)}`
+      );
+      throw exception;
     }
+  }
 }
-
-}
-

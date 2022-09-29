@@ -1,10 +1,8 @@
-
-export default interface ICollatralPool{
-    id:string
-    name:string
-    collatralContractAddress:string
-    CollateralTokenAdapterAddress:string
-    availableFathom:string
-    borrowedFathom:string
+export default interface ICollatralPool {
+  id: string;
+  name: string;
+  availableFathom: string;
+  borrowedFathom: string;
+  collateralContractAddress: string;
+  CollateralTokenAdapterAddress: string;
 }
-

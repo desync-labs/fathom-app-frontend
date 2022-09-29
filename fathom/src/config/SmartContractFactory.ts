@@ -8,6 +8,8 @@ import GetPositionsAbi from "./ABI/GetPositions.json";
 import StableSwapModule from "./ABI/StableSwapModule.json";
 import Addresses from "./addresses.json";
 
+import Governor from './ABI/Governor.json'
+
 export class SmartContractFactory {
   public static Addresses(chainId: number) {
     try {
@@ -152,4 +154,11 @@ export class SmartContractFactory {
       address: SmartContractFactory.Addresses(chainId).stableSwapModule,
     }
   };
+
+  public static FathomGovernor(chainId: number)  {
+    return {
+      abi:Governor.abi as AbiItem [],
+      address: SmartContractFactory.Addresses(chainId).fathomGovernor 
+    }
+  }
 }
