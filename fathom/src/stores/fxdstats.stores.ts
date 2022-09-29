@@ -42,6 +42,12 @@ service:IFXDProtocolStatsService;
     return new BigNumber(this.protocolStats.fxdPriceFromDex).div(Constants.WeiPerRay).toString();
   }
 
+  getFormattedTVL = () =>{
+    let number =  BigNumber(this.protocolStats.totalValueLocked).div(Constants.WeiPerWad);
+    let formattedNumber =  this.commarize(number)
+    return `$ ${formattedNumber}`;
+  }
+
   commarize = (number:BigNumber) =>{
     let min = 1e3;
     if (number.toNumber() >= min) {
@@ -55,7 +61,7 @@ service:IFXDProtocolStatsService;
         // output number remainder + unitname
         return num + unitname
     }
-    return this.toLocaleString()
+    return number.toLocaleString()
   }
 
 }

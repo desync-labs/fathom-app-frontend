@@ -75,10 +75,10 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
   useEffect(() => {
     if (chainId && (!error || !unsupportedError)) {
       setTimeout(() => {
-        open ?? approvalStatus()
+        approvalStatus()
       })
     }
-  }, [positionStore, account, chainId, error, unsupportedError])
+  }, [])
 
   const [open, setOpen] = React.useState(false);
   const [collatral, setCollatral] = React.useState(0);
