@@ -18,7 +18,8 @@ export default class StakingService implements IStakingService {
     address:string,
     stakePosition:number, 
     unlockPeriod: number,
-    chainId: number
+    chainId: number,
+    transactionStore:ActiveWeb3Transactions
   ): Promise<void> {
     chainId = chainId || this.chainId;
     try {
@@ -39,7 +40,16 @@ export default class StakingService implements IStakingService {
         '0xA82a7351ccd2949566305850A0877BA86E0e6a33',
         //SmartContractFactory.Staking(this.chainId).address,
         Constants.WeiPerWad.multipliedBy(stakePosition).toString()
-      ).send({from:address})
+      ).send({from:address}).on("transactionHash", (hash: any) => {
+        transactionStore.addTransaction({
+          hash: hash,
+          type: TransactionType.Approve,
+          active: false,
+          status: TransactionStatus.None,
+          title: `Approval Pending`,
+          message: "Click on transaction to view on Etherscan.",
+        });
+      });
 
       const Staking = Web3Utils.getContractInstance(
         SmartContractFactory.Staking(chainId),
@@ -60,7 +70,16 @@ export default class StakingService implements IStakingService {
       await Staking.methods.createLock(
         Constants.WeiPerWad.multipliedBy(stakePosition).toString(),
         endTime
-      ).send({from:address})
+      ).send({from:address}).on("transactionHash", (hash: any) => {
+        transactionStore.addTransaction({
+          hash: hash,
+          type: TransactionType.Approve,
+          active: false,
+          status: TransactionStatus.None,
+          title: `Creating Lock`,
+          message: "Click on transaction to view on Etherscan.",
+        });
+      });
     }
     } catch (err) {
         console.log(err);
@@ -94,7 +113,6 @@ export default class StakingService implements IStakingService {
         
       
         for (let i = 0; i < result; i++){
-          console.log("lockPosition....2:",result)
           
           const { 0: amountOfMAINTkn, 
             1: amountOfveMAINTkn, 
@@ -111,9 +129,8 @@ export default class StakingService implements IStakingService {
             lockPosition.lockId = i+1;
             lockPosition.MAINTokenBalance = await this._convertToEtherBalance(amountOfMAINTkn,chainId);
             lockPosition.VOTETokenBalance = await this._convertToEtherBalance(amountOfveMAINTkn,chainId);
-            lockPosition.EndTime = end;
-            lockPosition.RewardsAvailable = await this._convertToEtherBalance(amountOfRewardsAvailable,chainId);
-            
+            lockPosition.EndTime = await this.getRemainingTime(end, chainId);
+            lockPosition.RewardsAvailable = await this._convertToEtherBalanceRewards(amountOfRewardsAvailable,chainId);
             
             console.log(lockPosition)
             lockPositionsList.push(lockPosition)
@@ -132,7 +149,8 @@ export default class StakingService implements IStakingService {
   async handleUnlock(
       account: string, 
       lockId: number,
-      chainId: number): Promise<void> {
+      chainId: number,
+      transactionStore:ActiveWeb3Transactions): Promise<void> {
       chainId = chainId || this.chainId;
       try{
       const Staking = Web3Utils.getContractInstance(
@@ -141,7 +159,16 @@ export default class StakingService implements IStakingService {
         )
         await Staking.methods.unlock(
           lockId
-        ).send({from:account})
+        ).send({from:account}).on("transactionHash", (hash: any) => {
+          transactionStore.addTransaction({
+            hash: hash,
+            type: TransactionType.Approve,
+            active: false,
+            status: TransactionStatus.None,
+            title: `Handling Unlock`,
+            message: "Click on transaction to view on Etherscan.",
+          });
+        });
       }catch(error){
         console.error(`Error in Unlock: ${error}`);
       }
@@ -151,7 +178,8 @@ export default class StakingService implements IStakingService {
   async handleEarlyWithdrawal(
       account: string, 
       lockId: number,
-      chainId: number
+      chainId: number,
+      transactionStore:ActiveWeb3Transactions
   ): Promise<void>{
     chainId = chainId || this.chainId;
     console.log('is account here',account)
@@ -164,7 +192,16 @@ export default class StakingService implements IStakingService {
       console.log('getting LockID:',lockId)
       await Staking.methods.earlyUnlock(
         lockId
-      ).send({from:account})
+      ).send({from:account}).on("transactionHash", (hash: any) => {
+        transactionStore.addTransaction({
+          hash: hash,
+          type: TransactionType.Approve,
+          active: false,
+          status: TransactionStatus.None,
+          title: `Hanndling early withdrawal`,
+          message: "Click on transaction to view on Etherscan.",
+        });
+      });
     }catch(error) {
       console.error(`Error in Early Withdrawal: ${error}`);
     }
@@ -173,7 +210,8 @@ export default class StakingService implements IStakingService {
   async handleClaimRewards(
     account:string,
     streamId: number,
-    chainId: number): Promise<void> {
+    chainId: number,
+    transactionStore:ActiveWeb3Transactions): Promise<void> {
     chainId = chainId || this.chainId;
     try{
       const Staking = Web3Utils.getContractInstance(
@@ -181,6 +219,16 @@ export default class StakingService implements IStakingService {
         chainId
       )
       Staking.methods.claimAllLockRewardsForStream(streamId).send({from: account})
+      .on("transactionHash", (hash: any) => {
+        transactionStore.addTransaction({
+          hash: hash,
+          type: TransactionType.Approve,
+          active: false,
+          status: TransactionStatus.None,
+          title: `Handling claim rewards`,
+          message: "Click on transaction to view on Etherscan.",
+        });
+      });
     }catch(error){
       console.error(`Error in Claim Rewards: ${error}`);
     }
@@ -189,14 +237,25 @@ export default class StakingService implements IStakingService {
   async handleWithdrawRewards(
     account: string,
     streamId: number,
-    chainId: number): Promise<void> {
+    chainId: number,
+    transactionStore:ActiveWeb3Transactions): Promise<void> {
     chainId = chainId || this.chainId;
     try{
       const Staking = Web3Utils.getContractInstance(
         SmartContractFactory.Staking(chainId),
         chainId
       )
-      Staking.methods.withdrawAll(streamId).send({from: account})
+      Staking.methods.withdrawAll().send({from: account}).
+      on("transactionHash", (hash: any) => {
+        transactionStore.addTransaction({
+          hash: hash,
+          type: TransactionType.Approve,
+          active: false,
+          status: TransactionStatus.None,
+          title: `handling withdraw rewards`,
+          message: "Click on transaction to view on Etherscan.",
+        });
+      });
     }catch(error){
       console.error(`Error in Withdraw rewards: ${error}`);
     }
@@ -255,6 +314,32 @@ export default class StakingService implements IStakingService {
     }
   }
 
+  async getVOTEBalance(account: string,chainId:number):Promise<number> {
+    chainId = chainId || this.chainId
+    try{
+    const VeMAINToken = Web3Utils.getContractInstance(
+      SmartContractFactory.VeMAINToken(chainId),
+      chainId
+    )
+
+    let balance = VeMAINToken.methods.balanceOf(
+      account
+    ).call()
+
+    return balance
+    }catch(error){
+      console.error(`Error in get vote balance: ${error}`);
+      return 0;
+    }
+  }
+
+  async getRemainingTime(end: number, chainId: number): Promise<number>{
+    chainId = chainId || this.chainId;
+
+    const currentTimestamp = await this.getTimestamp(chainId)
+    const remainingTime = end - currentTimestamp;
+    return remainingTime;
+  }
   async getTimestamp(chainId: number): Promise<number> {
     chainId = chainId || this.chainId;
     console.log(`getTimestamp`);
@@ -275,6 +360,14 @@ export default class StakingService implements IStakingService {
     chainId = chainId || this.chainId;
     return parseInt((await this.fromWei(balance,chainId)).toString())
   }
+
+  async _convertToEtherBalanceRewards(balance: number, chainId: number): Promise<string>{
+    chainId = chainId || this.chainId;
+    return parseFloat((await this.fromWei(balance,chainId)).toString()).toFixed(2)
+  }
+
+    
+
 
   setChainId(chainId: number) {
     this.chainId = chainId;

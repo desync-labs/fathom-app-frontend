@@ -4,5 +4,5 @@ export default interface ILockPosition{
     VOTETokenBalance:number
     MAINTokenBalance:number
     EndTime:number
-    RewardsAvailable: number
+    RewardsAvailable: string
 }

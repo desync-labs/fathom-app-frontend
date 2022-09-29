@@ -9,6 +9,8 @@ export default class StakingStore {
   rootStore: RootStore;
   totalStakedPosition: number = 0;
   apr: number = 0;
+  walletBalance: number = 0;
+  voteBalance: number = 0;
 
   constructor(rootStore: RootStore, service: IStakingService) {
     makeAutoObservable(this);
@@ -30,10 +32,15 @@ export default class StakingStore {
 
       await this.service.createLock(
         account,
-        500, 
-        2,
-        chainId
+        stakePosition, 
+        unlockPeriod,
+        chainId,
+        this.rootStore.transactionStore
       );
+      
+
+     // await this.fetchAll(account,chainId)
+      
     } catch (e) {
       this.rootStore.alertStore.setShowErrorAlert(
         true,
@@ -56,8 +63,11 @@ export default class StakingStore {
       await this.service.handleEarlyWithdrawal(
         account,
         lockId,
-        chainId
+        chainId,
+        this.rootStore.transactionStore
       );
+
+   //   await this.fetchAll(account,chainId)
     } catch (e) {
       this.rootStore.alertStore.setShowErrorAlert(
         true,
@@ -81,8 +91,11 @@ export default class StakingStore {
     await this.service.handleUnlock(
       account,
       lockId,
-      chainId
+      chainId,
+      this.rootStore.transactionStore
     );
+
+//    await this.fetchAll(account,chainId)
 
   } catch (e) {
     this.rootStore.alertStore.setShowErrorAlert(
@@ -105,8 +118,11 @@ export default class StakingStore {
       await this.service.handleClaimRewards(
         account,
         1,
-        chainId
+        chainId,
+        this.rootStore.transactionStore
       );
+
+//      await this.fetchAll(account,chainId)
     } catch (e) {
       this.rootStore.alertStore.setShowErrorAlert(
         true,
@@ -128,8 +144,10 @@ export default class StakingStore {
       await this.service.handleWithdrawRewards(
         account,
         1,
-        chainId
+        chainId,
+        this.rootStore.transactionStore
       );
+
     } catch (e) {
       this.rootStore.alertStore.setShowErrorAlert(
         true,
@@ -141,7 +159,6 @@ export default class StakingStore {
   
 
   setLocks = (_lockPositions:ILockPosition[]) => {
-    this.lockPositions = []
     this.lockPositions= _lockPositions;
   }
 
@@ -163,11 +180,40 @@ export default class StakingStore {
     this.apr= _apr;
   }
 
+  setWalletBalance = (_walletBalance: number) => {
+    this.walletBalance =_walletBalance;
+  }
+
+  fetchWalletBalance = async (account:string,chainId: number) => {
+    let walletBalance = await this.service.getWalletBalance(account,chainId);
+    runInAction(() => {
+      this.setWalletBalance(walletBalance)
+    })
+  }
+
+  setVOTEBalance = (_voteBalance: number) => {
+    this.voteBalance =_voteBalance;
+  }
+
+  fetchVOTEBalance = async (account:string,chainId: number) => {
+    let voteBalance = await this.service.getVOTEBalance(account,chainId);
+    runInAction(() => {
+      this.setVOTEBalance(voteBalance)
+    })
+  }
+
+
 
   fetchLocks = async (account: string, chainId: number) => {
     let locks = await this.service.getLockPositions(account,chainId);
+    console.log("HEERE LOCKS From Service",locks)
     runInAction(() => {
       this.setLocks(locks)
+      this.setTotalStakedPosition(locks)
     })
+    console.log("HEERE LOCKS From Store",this.lockPositions)
   }
-}
+
+  
+  }
+
