@@ -184,6 +184,48 @@ export default class PositionService implements IPositionService{
       }
   }
 
+  async partialyClosePosition(position: IOpenPosition, pool: ICollatralPool, address: string, stablecoint: number, collateral: number, transactionStore: ActiveWeb3Transactions): Promise<void> {
+    try {
+      console.log(`Closing position for position id ${position.id}.`)
+      let proxyWalletaddress = await this.proxyWalletExist(address);
+      const wallet = Web3Utils.getContractInstanceFrom(SmartContractFactory.proxyWallet.abi, proxyWalletaddress, this.chainId)
+      const encodedResult = Web3Utils.getWeb3Instance(this.chainId).eth.abi.encodeParameters(["address"], [address]);
+
+      let jsonInterface = SmartContractFactory.FathomStablecoinProxyAction(
+        this.chainId
+      ).abi.filter((abi) => abi.name === "wipeAndUnlockToken")[0];
+
+      let wipeAndUnlockTokenCall =
+        Web3Utils.getWeb3Instance(this.chainId).eth.abi.encodeFunctionCall(jsonInterface, [
+          SmartContractFactory.PositionManager(this.chainId).address,
+          pool.CollateralTokenAdapterAddress,
+          SmartContractFactory.StablecoinAdapter(this.chainId).address,
+          position.id,
+          Constants.WeiPerWad.multipliedBy(collateral),
+          Constants.WeiPerWad.multipliedBy(stablecoint),
+          encodedResult,
+        ]);
+
+      await wallet.methods.execute2(SmartContractFactory.FathomStablecoinProxyActions(this.chainId).address, wipeAndUnlockTokenCall)
+        .send({ from: address })
+        .on('transactionHash', (hash: any) => {
+          transactionStore.addTransaction({
+            hash: hash,
+            type: TransactionType.ClosePosition,
+            active: false,
+            status: TransactionStatus.None,
+            title: 'Close Position Pending.',
+            message: 'Click on transaction to view on Etherscan.'
+          })
+        })
+
+      console.log(`Collateral was returned.`)
+    } catch (error) {
+      console.error(`Error in closing position ${error}`)
+      throw error;
+    }
+  }
+
   async approve(address:string, pool:ICollatralPool,transactionStore:ActiveWeb3Transactions): Promise<void>{
       try{
           let proxyWalletaddress = await this.proxyWalletExist(address);
@@ -279,9 +321,8 @@ export default class PositionService implements IPositionService{
       }
   }
 
-  setChainId(chainId: number) {
-    if(chainId !== undefined)
+    setChainId(chainId: number) {
+      if(chainId !== undefined)
       this.chainId = chainId;
   }
-
 }
