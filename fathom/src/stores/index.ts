@@ -21,6 +21,7 @@ import FXDProtocolStats from "./fxdstats.stores";
 import IFXDProtocolStatsService from "../services/interfaces/IFXDProtocolStatsService";
 import FXDProtocolStatsService from "../services/FXDProtocolStatsService";
 import FXDProtocolStatsStore from "./fxdstats.stores";
+import { Constants } from "../helpers/Constants";
 
 export class RootStore {
   /**
@@ -46,7 +47,7 @@ export class RootStore {
   fxdProtocolStatsService: IFXDProtocolStatsService;
 
 
-  chainId: number = 1337;
+  chainId: number = Constants.DEFAULT_CHAINID;
 
   constructor() {
     this.poolService = new PoolService();
