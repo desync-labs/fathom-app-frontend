@@ -75,7 +75,7 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
   useEffect(() => {
     if (chainId && (!error || !unsupportedError)) {
       setTimeout(() => {
-        approvalStatus()
+        open ?? approvalStatus()
       })
     }
   }, [positionStore, account, chainId, error, unsupportedError])

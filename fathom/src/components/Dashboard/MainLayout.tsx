@@ -38,6 +38,8 @@ import { Web3Status } from "../Web3Status/Web3Status";
 import AllProposalsView from "../Governance/ViewAllProposals";
 import ProposalView from "../Governance/Proposal";
 import MakePropose from "../Governance/Propose";
+import truncateEthAddress from "truncate-eth-address";
+
 
 const drawerWidth: number = 240;
 
@@ -127,7 +129,8 @@ const MainLayout = observer(() => {
             >
 
             </Typography>
-            { account && !error && <Chip label={account} color="primary" /> }
+            
+            { account && !error && <Chip label={truncateEthAddress(account)} color="primary" /> }
             <Web3Status />
             <IconButton color="inherit" onClick={connect}>
               {isActive ? <LogoutIcon /> : <AccountBalanceWalletIcon />}
