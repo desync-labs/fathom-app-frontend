@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect, useMemo } from "react";
 import { Box, Container, TextField, Toolbar, Typography} from '@mui/material';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
@@ -14,6 +14,10 @@ import { useStores } from '../../stores';
 import useMetaMask from '../../hooks/metamask';
 import AlertMessages from '../Common/AlertMessages';
 import TransactionStatus from '../Transaction/TransactionStatus';
+import {
+  UnsupportedChainIdError,
+  useWeb3React
+} from "@web3-react/core";
 
 const options = ['USDT To FXD', 'FXD To USDT'];
 
@@ -27,14 +31,20 @@ const StableSwap = observer(() => {
     const [approveUsdtBtn, setApproveUsdtBtn] = React.useState(false);
     const [approvalPending, setApprovalPending] = React.useState(false);
 
+    const { chainId, error } = useWeb3React()
+    const unsupportedError = useMemo(() => (error as Error) instanceof UnsupportedChainIdError, [error]);
 
     let stableSwapStore = useStores().stableSwapStore;
     const { account } = useMetaMask()!
 
 
-    React.useEffect(() => {
-      approvalStatus()
-    })
+    useEffect(() => {
+      if (chainId && (!error || !unsupportedError)) {
+        setTimeout(() => {
+          approvalStatus()
+        })
+      }
+    }, [stableSwapStore, selectedIndex, account, chainId, error, unsupportedError])
 
     const approvalStatus = async () => {
       let input = inputValue;

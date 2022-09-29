@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect, useMemo } from "react";
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import Dialog from '@mui/material/Dialog';
@@ -12,8 +12,10 @@ import { TextField} from '@mui/material';
 import { useStores } from '../../stores';
 import useMetaMask from '../../hooks/metamask';
 import ICollatralPool from '../../stores/interfaces/ICollatralPool';
-
-const Web3 = require('web3')
+import {
+  UnsupportedChainIdError,
+  useWeb3React
+} from "@web3-react/core";
 
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -67,10 +69,16 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
   const { account } = useMetaMask()!
 
   let [approveBtn, setApproveBtn] = React.useState(true);
+  const { chainId, error } = useWeb3React()
+  const unsupportedError = useMemo(() => (error as Error) instanceof UnsupportedChainIdError, [error]);
 
-  React.useEffect(() => {
-    approvalStatus()
-  })
+  useEffect(() => {
+    if (chainId && (!error || !unsupportedError)) {
+      setTimeout(() => {
+        approvalStatus()
+      })
+    }
+  }, [positionStore, account, chainId, error, unsupportedError])
 
   const [open, setOpen] = React.useState(false);
   const [collatral, setCollatral] = React.useState(0);
