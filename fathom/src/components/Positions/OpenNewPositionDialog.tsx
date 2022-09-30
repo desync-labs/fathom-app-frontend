@@ -130,7 +130,12 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
     }
 
     // GET PRICE WITH SAFETY MARGIN  
-   let  priceWithSafetyMargin =  await poolStore.getPriceWithSafetyMargin(props.pool);
+    let  priceWithSafetyMargin = 0;
+    if (props.pool.name === "USDT") {
+      priceWithSafetyMargin = 0.75188;
+    } else {
+      priceWithSafetyMargin =  await poolStore.getPriceWithSafetyMargin(props.pool);
+    }
     setPriceWithSafetyMargin(+priceWithSafetyMargin);
     
     // SAFE MAX
@@ -166,12 +171,10 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
     // FXD AVAILABLE TO BORROW 
     const fxdAvailableToBorrow = safeMax - +fathomTokenInput;
     setFxdAvailableToBorrow(fxdAvailableToBorrow);
-    console.log("FXD AVAILABLE TO BORROW ", fxdAvailableToBorrow)
 
     // SAFETY BUFFER
     const safetyBuffer = collatralAvailableToWithdraw / +collateralInput;
     setSafetyBuffer(+safetyBuffer);
-    console.log("SAFETY BUFFER : ", safetyBuffer);
 
 
     // LIQUIDATION PRICE 

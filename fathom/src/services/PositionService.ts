@@ -246,7 +246,7 @@ export default class PositionService implements IPositionService{
           })
 
       }catch(error){
-          console.error(`Error in open position approve token 1: ${error}`)
+          console.error(`Error in open position approve token: ${error}`)
           throw error;
       }
   }
@@ -267,10 +267,12 @@ export default class PositionService implements IPositionService{
           const BEP20 = Web3Utils.getContractInstance(SmartContractFactory.BEP20(pool.collateralContractAddress),this.chainId)
 
           let allowance = await BEP20.methods.allowance(address, proxyWalletaddress).call()
+
+
           
           return +allowance > +Constants.WeiPerWad.multipliedBy(collatral);
       }catch(error){
-          console.error(`Error in open position approve token 2: ${error}`)
+          console.error(`Error in open position approve token: ${error}`)
           throw error;
       }
   }
@@ -297,7 +299,7 @@ export default class PositionService implements IPositionService{
                   })
               })
       }catch(error){
-          console.error(`Error in open position approve token 3: ${error}`)
+          console.error(`Error in open position approve token: ${error}`)
           throw error;
       }
   }
@@ -313,10 +315,11 @@ export default class PositionService implements IPositionService{
           const fathomStableCoin = Web3Utils.getContractInstance(SmartContractFactory.FathomStableCoin(this.chainId),this.chainId)
 
           let allowance = await fathomStableCoin.methods.allowance(address, proxyWalletaddress).call()
+
           
           return +allowance > 10000000000000000
       }catch(error){
-          console.error(`Error in open position approve token 4: ${error}`)
+          console.error(`Error in open position approve token: ${error}`)
           throw error;
       }
   }
