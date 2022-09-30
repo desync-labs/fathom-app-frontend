@@ -172,6 +172,20 @@ export default class StakingService implements IStakingService {
         SmartContractFactory.Staking(chainId),
         chainId
       );
+
+      await Staking.methods
+        .claimAllStreamRewardsForLock(lockId)
+        .send({ from: account })
+        .on("transactionHash", (hash: any) => {
+          transactionStore.addTransaction({
+            hash: hash,
+            type: TransactionType.Approve,
+            active: false,
+            status: TransactionStatus.None,
+            title: `Hanndling Single claim reward`,
+            message: "Click on transaction to view on Etherscan.",
+          });
+        });
       await Staking.methods
         .unlock(lockId)
         .send({ from: account })
@@ -205,6 +219,20 @@ export default class StakingService implements IStakingService {
       );
       console.log("is account here", account);
       console.log("getting LockID:", lockId);
+      await Staking.methods
+        .claimAllStreamRewardsForLock(lockId)
+        .send({ from: account })
+        .on("transactionHash", (hash: any) => {
+          transactionStore.addTransaction({
+            hash: hash,
+            type: TransactionType.Approve,
+            active: false,
+            status: TransactionStatus.None,
+            title: `Hanndling Single claim reward`,
+            message: "Click on transaction to view on Etherscan.",
+          });
+        });
+
       await Staking.methods
         .earlyUnlock(lockId)
         .send({ from: account })
