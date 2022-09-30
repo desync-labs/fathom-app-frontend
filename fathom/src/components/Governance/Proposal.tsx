@@ -128,16 +128,7 @@ const ProposalView = observer(()  => {
 
     return (
 
-    <Box
-      component="main"
-      sx={{
-        backgroundColor: "#000",
-        flexGrow: 1,
-        height: "100vh",
-        overflow: "auto",
-      }}
-    >
-      <Toolbar />
+    <>
       <AlertMessages />
       <TransactionStatus />
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
@@ -236,7 +227,7 @@ const ProposalView = observer(()  => {
         </Grid>
     </Grid>
     </Container>
-    </Box>
+    </>
     );
 })
 
