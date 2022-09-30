@@ -11,9 +11,9 @@ const TransactionStatus = observer(() => {
 
   const getTxUrl = (txHash: string) => {
     if(rootStore.chainId === Constants.DEFAULT_CHAINID)
-      return `https://explorer.apothem.network/txs/${txHash}`;
+      return `${Constants.APOTHEM_BLOCK_EXPLORER_URL}${txHash}`;
     else
-      return `https://goerli.etherscan.io/tx/${txHash}`;  
+      return `${Constants.GOERLI_BLOCK_EXPLORER_URL}${txHash}`;  
   };
 
   return (
