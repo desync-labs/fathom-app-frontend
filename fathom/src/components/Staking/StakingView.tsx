@@ -13,19 +13,21 @@ import {
   Grid,
   TextField,
   Slider,
+  CircularProgress,
+  Stack,
 } from "@mui/material";
 import { useStores } from "../../stores";
 import useMetaMask from "../../hooks/metamask";
 import { LogLevel, useLogger } from "../../helpers/Logger";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { observer } from "mobx-react";
 import ILockPosition from "../../stores/interfaces/ILockPosition";
 import StakingModal from "./StakingModal";
 
 const StakingView = observer(() => {
-  const [lockDays, setLockDays] = React.useState(0);
-  const [stakePosition, setStakePosition] = React.useState(0);
-  // const [unlockPeriod, setUnlockPeriod] = React.useState(30);
+  const [lockDays, setLockDays] = useState(0);
+  const [stakePosition, setStakePosition] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   const { account, chainId } = useMetaMask()!;
   const logger = useLogger();
   const rootStore = useStores();
@@ -33,13 +35,18 @@ const StakingView = observer(() => {
   const stakingStore = rootStore.stakingStore;
 
   const fetchAll = useCallback(
-    (account: string, chainId: number) => {
-      stakingStore.fetchLocks(account, chainId);
-      stakingStore.fetchVOTEBalance(account, chainId);
-      stakingStore.fetchWalletBalance(account, chainId);
-      stakingStore.fetchAPR(chainId);
+    async (account: string, chainId: number) => {
+      setIsLoading(true);
+      await Promise.all([
+        stakingStore.fetchLocks(account, chainId),
+        stakingStore.fetchVOTEBalance(account, chainId),
+        stakingStore.fetchWalletBalance(account, chainId),
+        stakingStore.fetchAPR(chainId),
+      ]).then(() => {
+        setIsLoading(false);
+      });
     },
-    [stakingStore]
+    [stakingStore, setIsLoading]
   );
 
   useEffect(() => {
@@ -57,29 +64,33 @@ const StakingView = observer(() => {
   }, [stakingStore, account, chainId, stakePosition, lockDays, fetchAll]);
 
   const claimRewards = useCallback(async () => {
+    setIsLoading(true)
     await stakingStore.handleClaimRewards(account, chainId);
     fetchAll(account, chainId);
-  }, [stakingStore, account, chainId, fetchAll]);
+  }, [stakingStore, account, chainId, fetchAll, setIsLoading]);
 
   const withdrawRewards = useCallback(() => {
+    setIsLoading(true)
     stakingStore.handleWithdrawRewards(account, chainId);
     fetchAll(account, chainId);
-  }, [stakingStore, account, chainId, fetchAll]);
+  }, [stakingStore, account, chainId, fetchAll, setIsLoading]);
 
   const handleEarlyWithdrawal = useCallback(
     async (lockId: number) => {
+      setIsLoading(true)
       await stakingStore.handleEarlyWithdrawal(account, lockId, chainId);
       fetchAll(account, chainId);
     },
-    [stakingStore, account, chainId, fetchAll]
+    [stakingStore, account, chainId, fetchAll, setIsLoading]
   );
 
   const handleUnlock = useCallback(
     async (lockId: number) => {
+      setIsLoading(true)
       await stakingStore.handleUnlock(account, lockId, chainId);
       fetchAll(account, chainId);
     },
-    [stakingStore, account, chainId, fetchAll]
+    [stakingStore, account, chainId, fetchAll, setIsLoading]
   );
 
   const isItUnlockable = (lockId: number) => {
@@ -98,8 +109,6 @@ const StakingView = observer(() => {
 
   return (
     <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-      {/* <Grid  item xs={12} md={4} lg={3}>
-        </Grid> */}
       <Typography component="h2" variant="h6" color="primary" gutterBottom>
         STAKING
       </Typography>
@@ -148,46 +157,61 @@ const StakingView = observer(() => {
       </div>
       <br />
 
-      {stakingStore.lockPositions.length === 0 ? (
-        <Typography variant="h6">Loading Lock Positions</Typography>
-      ) : (
-        <TableContainer>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
+      <TableContainer>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell component="th" sx={{ fontSize: "1rem" }}>
+                Lock Position
+              </TableCell>
+              <TableCell component="th" sx={{ fontSize: "1rem" }}>
+                Vote Tokens Received
+              </TableCell>
+              <TableCell component="th" sx={{ fontSize: "1rem" }}>
+                Stream Rewards
+              </TableCell>
+              <TableCell
+                component="th"
+                sx={{ textAlign: "center", fontSize: "1rem" }}
+              >
+                Remaining Period
+              </TableCell>
+              <TableCell component="th" sx={{ fontSize: "1rem" }}>
+                Unlock
+              </TableCell>
+              <TableCell component="th" sx={{ fontSize: "1rem" }}>
+                Early Unlock
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {isLoading ? (
               <TableRow>
-                <TableCell sx={{ fontSize: "1rem" }}>Lock Position</TableCell>
-                <TableCell sx={{ fontSize: "1rem" }}>
-                  Vote Tokens Received
+                <TableCell align="center" colSpan={6}>
+                  <CircularProgress />
                 </TableCell>
-                <TableCell sx={{ fontSize: "1rem" }}>Stream Rewards</TableCell>
-                <TableCell sx={{ textAlign: "center", fontSize: "1rem" }}>
-                  Remaining Period
-                </TableCell>
-                <TableCell sx={{ fontSize: "1rem" }}>Unlock</TableCell>
-                <TableCell sx={{ fontSize: "1rem" }}>Early Unlock</TableCell>
               </TableRow>
-            </TableHead>
-            <TableBody>
-              {stakingStore.lockPositions.map((lockPosition: ILockPosition) => (
+            ) : (
+              stakingStore.lockPositions.map((lockPosition: ILockPosition) => (
                 <TableRow
                   key={lockPosition.lockId}
                   sx={{
                     "&:last-child td, &:last-child th": { border: 0 },
                   }}
                 >
-                  <TableCell component="th" scope="row">
+                  <TableCell component="td" scope="row">
                     {lockPosition.MAINTokenBalance} FTHM
                   </TableCell>
 
-                  <TableCell component="th" scope="row">
+                  <TableCell component="td" scope="row">
                     {lockPosition.VOTETokenBalance} VOTES
                   </TableCell>
 
-                  <TableCell component="th" scope="row">
+                  <TableCell component="td" scope="row">
                     {lockPosition.RewardsAvailable}
                   </TableCell>
 
-                  <TableCell component="th" scope="row">
+                  <TableCell component="td" scope="row">
                     {lockPosition.EndTime > 0 && (
                       <Box sx={{ textAlign: "center" }}>
                         {lockPosition.timeObject.days} days{" "}
@@ -201,7 +225,7 @@ const StakingView = observer(() => {
                     )}
                   </TableCell>
 
-                  <TableCell component="th" scope="row">
+                  <TableCell component="td" scope="row">
                     <Button
                       onClick={() => handleUnlock(lockPosition.lockId)}
                       disabled={!isItUnlockable(lockPosition.lockId)}
@@ -210,7 +234,7 @@ const StakingView = observer(() => {
                     </Button>
                   </TableCell>
 
-                  <TableCell component="th" scope="row">
+                  <TableCell component="td" scope="row">
                     <Button
                       onClick={() => handleEarlyWithdrawal(lockPosition.lockId)}
                       disabled={isItUnlockable(lockPosition.lockId)}
@@ -223,19 +247,17 @@ const StakingView = observer(() => {
                     <Button onClick={() => claimRewardsSingle(lockPosition.lockId)} disabled={!isItClaimable(lockPosition.lockId)}>Claim Rewards</Button>
                   </TableCell> */}
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      )}
-
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
       <br />
 
       <Button variant="outlined" onClick={() => claimRewards()}>
         Claim Stream Rewards
       </Button>
       <br />
-
       <Button variant="outlined" onClick={() => withdrawRewards()}>
         Withdraw Stream Rewards
       </Button>
