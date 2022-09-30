@@ -8,6 +8,8 @@ import {
 } from "../stores/interfaces/ITransaction";
 import ActiveWeb3Transactions from "../stores/transaction.store";
 import IStableSwapService from "./interfaces/IStableSwapService";
+import { toWei } from "web3-utils";
+
 
 export default class StableSwapService implements IStableSwapService {
   readonly tokenBuffer: number = 5;
@@ -23,7 +25,7 @@ export default class StableSwapService implements IStableSwapService {
         );
         
         await stableSwapModule.methods.swapTokenToStablecoin(address, 
-                                            Constants.WeiPerWad.multipliedBy(tokenIn).toString())
+                                            toWei(tokenIn.toString(), "ether"))
                                             .send({from:address})
                                             .on('transactionHash', (hash:any) => {
                                             transactionStore.addTransaction({
@@ -50,7 +52,7 @@ async swapStablecoinToToken(address: string, stablecoinIn: number,transactionSto
           this.chainId
         );  
 
-        await stableSwapModule.methods.swapStablecoinToToken(address, Constants.WeiPerWad.multipliedBy(stablecoinIn).toString())
+        await stableSwapModule.methods.swapStablecoinToToken(address, toWei(stablecoinIn.toString(), "ether"))
                                     .send({from:address}).on('transactionHash', (hash:any) => {
                                     transactionStore.addTransaction({
                                             hash:hash, 
@@ -63,7 +65,7 @@ async swapStablecoinToToken(address: string, stablecoinIn: number,transactionSto
                                     })
     
     }catch(error){
-        console.error(`Error in swapStablecoinToToke ${error}`)
+        console.error(`Error in swapStablecoinToToken ${error}`)
         throw error;
     }
 }
@@ -160,3 +162,4 @@ async approvalStatusUsdt(address:string, tokenIn:number): Promise<Boolean>{
       this.chainId = chainId;
   }
 }
+

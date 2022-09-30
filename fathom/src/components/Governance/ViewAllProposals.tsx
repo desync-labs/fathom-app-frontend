@@ -22,14 +22,19 @@ import AlertMessages from "../Common/AlertMessages";
 import TransactionStatus from "../Transaction/TransactionStatus";
 
 const AllProposalsView = observer(() => {
-  const { account } = useMetaMask()!;
+  const { account, chainId } = useMetaMask()!;
   const logger = useLogger();
   const proposeStore = useStores().proposalStore;
 
   useEffect(() => {
-    logger.log(LogLevel.info, "fetching proposal information.");
-    proposeStore.fetchProposals(account); 
-  }, [account, logger, proposeStore]);
+    if (chainId) {
+      logger.log(LogLevel.info, "fetching proposal information.");
+      proposeStore.fetchProposals(account); 
+    } else {
+      proposeStore.setProposals([]);
+    }
+
+  }, [account, logger, proposeStore, chainId]);
 
   return (
     <Box

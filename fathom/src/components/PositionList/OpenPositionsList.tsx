@@ -52,7 +52,7 @@ const OpenPositionsList = observer(() => {
     }
 
     const getFormattedSaftyBuffer = (safetyBuffer:BigNumber) => {
-        return safetyBuffer.div(Constants.WeiPerWad).toString()
+        return safetyBuffer.div(Constants.WeiPerWad).decimalPlaces(2).toString()
     }
 
     const handleClickClosePosition = (position:IOpenPosition, pool: ICollatralPool) => {
