@@ -10,6 +10,8 @@ import ActiveWeb3Transactions from "../stores/transaction.store";
 import { TransactionStatus, TransactionType } from "../stores/interfaces/ITransaction";
 import { Strings } from "../helpers/Strings";
 
+import { toWei } from "web3-utils";
+
 
 
 export default class PositionService implements IPositionService{
@@ -38,8 +40,8 @@ export default class PositionService implements IPositionService{
               pool.CollateralTokenAdapterAddress,
               SmartContractFactory.StablecoinAdapter(this.chainId).address,
               pool.id,
-              Constants.WeiPerWad.multipliedBy(collatral).toString(),
-              Constants.WeiPerWad.multipliedBy(fathomToken).toString(),
+              toWei(collatral.toString(), "ether"),
+              toWei(fathomToken.toString(), "ether"),
               '1',
               encodedResult,
           ]);
@@ -205,8 +207,8 @@ export default class PositionService implements IPositionService{
           pool.CollateralTokenAdapterAddress,
           SmartContractFactory.StablecoinAdapter(this.chainId).address,
           position.id,
-          Constants.WeiPerWad.multipliedBy(collateral).toString(),
-          Constants.WeiPerWad.multipliedBy(stablecoint).toString(),
+          toWei(collateral.toString(), "ether"),
+          toWei(stablecoint.toString(), "ether"),
           encodedResult,
         ]);
 

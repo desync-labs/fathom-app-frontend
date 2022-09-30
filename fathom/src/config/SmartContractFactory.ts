@@ -8,7 +8,7 @@ import GetPositionsAbi from "./ABI/GetPositions.json";
 import StableSwapModule from "./ABI/StableSwapModule.json";
 import FathomStats from './ABI/FathomStats.json'
 import Governor from './ABI/Governor.json'
-
+import VeFathomAbi from './ABI/VeFathom.json'
 import Addresses from "./addresses.json";
 
 export class SmartContractFactory {
@@ -167,6 +167,13 @@ export class SmartContractFactory {
     return {
       abi:Governor.abi as AbiItem [],
       address: SmartContractFactory.Addresses(chainId).fathomGovernor 
+    }
+  }
+
+  public static VeFathom(chainId: number)  {
+    return {
+      abi:VeFathomAbi.abi as AbiItem [],
+      address: SmartContractFactory.Addresses(chainId).veFTHM 
     }
   }
 }
