@@ -6,7 +6,6 @@ import {
   AddBox as AddBoxIcon,
   DensitySmall as DensitySmallIcon,
   BrowserUpdated as BrowserUpdatedIcon,
-  LocalAtm as LocalAtmIcon
 } from "@mui/icons-material";
 import { useLocation } from "react-router-dom";
 import AppMenuItem from "../MenuItem/AppMenuItem";
@@ -40,7 +39,6 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
   const isStableSwapActive = location.pathname === "/swap";
   const isDashboardActive = location.pathname === "/";
   const isStakingActive = location.pathname === '/staking'
-  const isRewardsActive = location.pathname === '/rewards'
 
   const { showText } = useShowText(open);
 

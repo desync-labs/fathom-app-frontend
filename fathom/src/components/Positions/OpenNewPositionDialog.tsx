@@ -1,28 +1,27 @@
-import React, { useEffect, useMemo } from "react";
-import Button from '@mui/material/Button';
-import { styled } from '@mui/material/styles';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
-import Typography from '@mui/material/Typography';
-import { TextField} from '@mui/material';
-import { useStores } from '../../stores';
-import useMetaMask from '../../hooks/metamask';
-import ICollatralPool from '../../stores/interfaces/ICollatralPool';
-import {
-  UnsupportedChainIdError,
-  useWeb3React
-} from "@web3-react/core";
-
+import React, {
+  useCallback,
+  useEffect
+} from "react";
+import Button from "@mui/material/Button";
+import { styled } from "@mui/material/styles";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
+import Typography from "@mui/material/Typography";
+import { TextField } from "@mui/material";
+import { useStores } from "../../stores";
+import useMetaMask from "../../hooks/metamask";
+import ICollatralPool from "../../stores/interfaces/ICollatralPool";
+import { useWeb3React } from "@web3-react/core";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  '& .MuiDialogContent-root': {
+  "& .MuiDialogContent-root": {
     padding: theme.spacing(2),
   },
-  '& .MuiDialogActions-root': {
+  "& .MuiDialogActions-root": {
     padding: theme.spacing(1),
   },
 }));
@@ -34,7 +33,7 @@ export interface DialogTitleProps {
 }
 
 interface PoolProps {
-    pool: ICollatralPool;
+  pool: ICollatralPool;
 }
 
 const BootstrapDialogTitle = (props: DialogTitleProps) => {
@@ -48,7 +47,7 @@ const BootstrapDialogTitle = (props: DialogTitleProps) => {
           aria-label="close"
           onClick={onClose}
           sx={{
-            position: 'absolute',
+            position: "absolute",
             right: 8,
             top: 8,
             color: (theme) => theme.palette.grey[500],
@@ -61,57 +60,53 @@ const BootstrapDialogTitle = (props: DialogTitleProps) => {
   );
 };
 
-
-
-
 export default function CustomizedDialogs(this: any, props: PoolProps) {
   let positionStore = useStores().positionStore;
-  const { account } = useMetaMask()!
+  const { account } = useMetaMask()!;
 
   let [approveBtn, setApproveBtn] = React.useState(true);
-  const { chainId, error } = useWeb3React()
-  const unsupportedError = useMemo(() => (error as Error) instanceof UnsupportedChainIdError, [error]);
-
-  useEffect(() => {
-    if (chainId && (!error || !unsupportedError)) {
-      setTimeout(() => {
-        approvalStatus()
-      })
-    }
-  }, [])
+  const { chainId } = useWeb3React();
 
   const [open, setOpen] = React.useState(false);
   const [collatral, setCollatral] = React.useState(0);
   const [fathomToken, setFathomToken] = React.useState(0);
   const [approvalPending, setApprovalPending] = React.useState(false);
 
+  const approvalStatus = useCallback(async () => {
+    let approved = await positionStore.approvalStatus(
+      account,
+      collatral,
+      props.pool
+    );
+    approved ? setApproveBtn(false) : setApproveBtn(true);
+  }, [positionStore, setApproveBtn, account, collatral, props.pool]);
 
-
-  const approvalStatus = async () => {
-    let approved = await positionStore.approvalStatus(account, collatral, props.pool)
-    approved ? setApproveBtn(false) : setApproveBtn(true)
-  }
+  useEffect(() => {
+    if (chainId) {
+      setTimeout(() => approvalStatus());
+    }
+  }, [chainId, approvalStatus]);
 
   const openNewPosition = () => {
-    positionStore.openPosition(account,props.pool,collatral,fathomToken)
+    positionStore.openPosition(account, props.pool, collatral, fathomToken);
     setOpen(false);
-  }
+  };
 
   const approve = async () => {
-    setApprovalPending(true)
-    try{
-      await  positionStore.approve(account,props.pool)
-      handleCloseApproveBtn()        
-    } catch(e) {
-      setApproveBtn(true)
+    setApprovalPending(true);
+    try {
+      await positionStore.approve(account, props.pool);
+      handleCloseApproveBtn();
+    } catch (e) {
+      setApproveBtn(true);
     }
 
-    setApprovalPending(false)
-  }
+    setApprovalPending(false);
+  };
 
   const handleCloseApproveBtn = () => {
-    setApproveBtn(false)
-  }
+    setApproveBtn(false);
+  };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -121,13 +116,13 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
     setOpen(false);
   };
 
-  const handleCollatralTextFieldChange = (e:any) => {
-    setCollatral(e.target.value)
-  }
+  const handleCollatralTextFieldChange = (e: any) => {
+    setCollatral(e.target.value);
+  };
 
-  const handlefathomTokenTextFieldChange = (e:any) => {
-    setFathomToken(e.target.value)
-  }
+  const handlefathomTokenTextFieldChange = (e: any) => {
+    setFathomToken(e.target.value);
+  };
 
   return (
     <div>
@@ -139,43 +134,42 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
         aria-labelledby="customized-dialog-title"
         open={open}
       >
-        <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
+        <BootstrapDialogTitle
+          id="customized-dialog-title"
+          onClose={handleClose}
+        >
           Open New Position
         </BootstrapDialogTitle>
         <DialogContent dividers>
           <Typography gutterBottom>
-            Create a new position for {props.pool.name} Pool to get guranteed return on your collateral.
+            Create a new position for {props.pool.name} Pool to get guranteed
+            return on your collateral.
           </Typography>
           <TextField
-          id="outlined-helperText"
-          label="Collatral Value"
-          defaultValue="Default Value"
-          helperText="Enter the collatral."
-          sx={{ m: 3 }}
-          value={collatral}
-          onChange={handleCollatralTextFieldChange}
-         />
+            id="outlined-helperText"
+            label="Collatral Value"
+            defaultValue="Default Value"
+            helperText="Enter the collatral."
+            sx={{ m: 3 }}
+            value={collatral}
+            onChange={handleCollatralTextFieldChange}
+          />
           <TextField
-          id="outlined-helperText"
-          label="FXD"
-          defaultValue="Default Value"
-          helperText="Enter the desired FXD."
-          sx={{ m: 3 }}
-          value={fathomToken}
-          onChange={handlefathomTokenTextFieldChange}
-         />
+            id="outlined-helperText"
+            label="FXD"
+            defaultValue="Default Value"
+            helperText="Enter the desired FXD."
+            sx={{ m: 3 }}
+            value={fathomToken}
+            onChange={handlefathomTokenTextFieldChange}
+          />
         </DialogContent>
         <DialogActions>
-          { approvalPending 
-            ? <Typography display="inline">
-                Pending ...
-              </Typography>
-            : approveBtn
-            ? <Button onClick={approve}>
-                Approve {props.pool.name}
-              </Button>
-            : null
-          }
+          {approvalPending ? (
+            <Typography display="inline">Pending ...</Typography>
+          ) : approveBtn ? (
+            <Button onClick={approve}>Approve {props.pool.name}</Button>
+          ) : null}
           <Button autoFocus onClick={openNewPosition} disabled={approveBtn}>
             Open
           </Button>

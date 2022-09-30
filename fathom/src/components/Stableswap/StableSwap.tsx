@@ -1,5 +1,11 @@
-import { useCallback, useEffect, useState, useRef } from "react";
-import { Box, Container, TextField, Toolbar, Typography } from "@mui/material";
+import {
+  useCallback,
+  useEffect,
+  useState,
+  useRef,
+  useMemo
+} from "react";
+import { Box, TextField, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
@@ -12,8 +18,6 @@ import MenuList from "@mui/material/MenuList";
 import { observer } from "mobx-react";
 import { useStores } from "../../stores";
 import useMetaMask from "../../hooks/metamask";
-import AlertMessages from "../Common/AlertMessages";
-import TransactionStatus from "../Transaction/TransactionStatus";
 import { useWeb3React } from "@web3-react/core";
 
 const options = ["USDT To FXD", "FXD To USDT"];
@@ -86,7 +90,7 @@ const StableSwap = observer(() => {
     }
 
     setApprovalPending(false);
-  }, [setApprovalPending, setApproveFxdBtn, stableSwapStore]);
+  }, [setApprovalPending, setApproveFxdBtn, stableSwapStore, account]);
 
   const approveUsdt = useCallback(async () => {
     setApprovalPending(true);
@@ -99,7 +103,7 @@ const StableSwap = observer(() => {
     }
 
     setApprovalPending(false);
-  }, [stableSwapStore, setApprovalPending, setApproveUsdtBtn]);
+  }, [stableSwapStore, setApprovalPending, setApproveUsdtBtn, account, inputValue]);
 
   const handleToggle = useCallback(() => {
     setOpen((prevOpen) => !prevOpen);
@@ -119,6 +123,40 @@ const StableSwap = observer(() => {
   const handleInputValueTextFieldChange = useCallback((e: any) => {
     setInputValue(e.target.value);
   }, [setInputValue]);
+
+  const RenderApproveButton = useMemo(() => {
+    if (approvalPending) {
+      return (
+        <Typography display="inline" sx={{ marginRight: 2 }}>
+          Pending ...
+        </Typography>
+      )
+    }
+
+    if (approveFxdBtn) {
+      return (
+        <Button
+          variant="outlined"
+          onClick={approveFxd}
+          sx={{ marginRight: 2 }}
+        >
+          Approve FXD
+        </Button>
+      )
+    }
+
+    if (approveUsdtBtn) {
+      return (
+        <Button
+          variant="outlined"
+          onClick={approveUsdt}
+          sx={{ marginRight: 2 }}
+        >
+          Approve USDT
+        </Button>
+      )
+    }
+  }, [approveUsdtBtn, approveFxdBtn, approvalPending, approveFxd, approveUsdt])
 
   return (
     <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
@@ -141,36 +179,14 @@ const StableSwap = observer(() => {
           onChange={handleInputValueTextFieldChange}
           sx={{ marginRight: 2 }}
         />
-
-        {approvalPending ? (
-          <Typography display="inline" sx={{ marginRight: 2 }}>
-            Pending ...
-          </Typography>
-        ) : approveFxdBtn ? (
-          <Button
-            variant="outlined"
-            onClick={approveFxd}
-            sx={{ marginRight: 2 }}
-          >
-            Approve FXD
-          </Button>
-        ) : approveUsdtBtn ? (
-          <Button
-            variant="outlined"
-            onClick={approveUsdt}
-            sx={{ marginRight: 2 }}
-          >
-            Approve USDT
-          </Button>
-        ) : null}
-
+        { RenderApproveButton }
         <ButtonGroup
           variant="contained"
           ref={anchorRef}
           aria-label="split button"
         >
           <Button
-            disabled={approveUsdtBtn || approveFxdBtn || approvalPending}
+            disabled={(!approveUsdtBtn && !approveFxdBtn ) || approvalPending}
             onClick={handleClick}
           >
             {options[selectedIndex]}

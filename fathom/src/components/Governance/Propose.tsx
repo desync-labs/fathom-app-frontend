@@ -7,7 +7,7 @@ import { observer } from "mobx-react";
 import Paper from "@mui/material/Paper";
 import { Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import { FormGroup, FormControlLabel, Checkbox, Toolbar } from "@mui/material";
+import { FormGroup, FormControlLabel, Checkbox } from "@mui/material";
 import { Constants } from "../../helpers/Constants";
 import { useCallback } from "react";
 import useMetaMask from "../../hooks/metamask";

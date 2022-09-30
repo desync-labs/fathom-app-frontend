@@ -5,10 +5,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Box,
-  Container,
   Paper,
-  Toolbar,
   Typography,
 } from "@mui/material";
 import { Link } from "react-router-dom";
@@ -18,8 +15,6 @@ import { LogLevel, useLogger } from "../../helpers/Logger";
 import IProposal from "../../stores/interfaces/IProposal";
 import { useEffect } from "react";
 import { observer } from "mobx-react";
-import AlertMessages from "../Common/AlertMessages";
-import TransactionStatus from "../Transaction/TransactionStatus";
 
 const AllProposalsView = observer(() => {
   const { account } = useMetaMask()!;
