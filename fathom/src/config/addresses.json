@@ -35,7 +35,6 @@
     "veMainToken": "0x0e52147E1aD0d48F76074214e0782EE4A6Dca120",
     "streamRewardToken": "0x79dFFC4DcBb1f598EC3741E939f22bAAF56448Da"
   },
-
   "5": {
     "accessControlConfig": "0x9d822e439334E828b6B15dCbD15dA4b307345406",
     "collateralPoolConfig": "0x96AB21F9471c1567A587F9a750B0179a3c77869F",
@@ -66,17 +65,14 @@
     "stableSwapModule": "0x6e6b57A554397ECCd77DA01c4bf4a67fe823925D",
     "getPositions": "0x9581D07b24c22e71E23EC6aaA5d039f25BE91a41",
     "collateralTokenAdapterUSDT": "0xFcFc4A66Ec36895dc6642843086d8348a0cd38ba",
-    "fathomGovernor": "0x62f3d571A7DAcC00C047e58fE500ee99A98E3f63",
     "staking": "0xd4899EA07DC33c8CFA9B3297A558778e456E057D",
     "mainToken": "0x0574bEc8CD26b50Dc60739FdD06a944892b29Db4",
     "stakingGetter": "0x770d149ee3b7AE4B7823B68c1F4D02272748Afac",
     "veMainToken": "0x68e2577F036Ca17a7DE847AC9B338cF2faedF690",
-    "streamRewardToken": "0x4Ee69bCd992Ea00538701FB6cAd2444eC322CF16"
+    "streamRewardToken": "0x4Ee69bCd992Ea00538701FB6cAd2444eC322CF16",
+    "fathomStats":"0x1A1E81de8a839e77A5dE524FaA25ef1aEf4b627f",
+    "fathomGovernor": "0x62f3d571A7DAcC00C047e58fE500ee99A98E3f63"
   },
-
-  
-  
-  
   "50": {},
   "51": {
     "accessControlConfig": "0x93645Ef8A2d43E415aF92621d3b18f2e5E6e786D",
@@ -108,13 +104,13 @@
     "stableSwapModule": "0xcFCBaCd7edC0c9afEadf2034A0D35aF84Ec46F12",
     "getPositions": "0xA8FA19C64742C159b27Ce29911d0c3c07670A026",
     "collateralTokenAdapterUSDT": "0xDDB1ec0Eb51f7aeD481ad4D00a44600228E6D270",
-    "fathomGovernor": "xdc0A6Fc6Cb44Fbe7f5e98C428fDAaBd212b8c5d8A2",
     "staking": "0xA82a7351ccd2949566305850A0877BA86E0e6a33",
     "mainToken": "0xEFeBB2e6e31C6ff2c1D536ae7e1B36CD4701D963",
     "stakingGetter": "0xAfdEDC7CB11c772CCB4C9210C4D56511f2c1F445",
     "veMainToken": "0xCB3B50041a55584Ae9329BA8767d8051037a452b",
     "streamRewardToken": "0x8cb02BB17033eedb5135f3bb79b4Dce306863c79",
-    "vault": "0x2fee406cB73fDDE6F707b798D445C3D319F9F7e9"
-
+    "vault": "0x2fee406cB73fDDE6F707b798D445C3D319F9F7e9",
+    "fathomStats":"xdc6401D913E91bd21cba4FE3C9F0574d3ab06aC3eb",
+    "fathomGovernor": "0x0A6Fc6Cb44Fbe7f5e98C428fDAaBd212b8c5d8A2"
   }
 }

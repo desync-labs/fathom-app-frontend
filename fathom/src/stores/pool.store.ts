@@ -30,4 +30,9 @@ export default class PoolStore {
       this.setPool(pools)
     })
   }
+
+  getPriceWithSafetyMargin = async (pool:ICollatralPool) => {
+    return await this.service.getPriceWithSafetyMargin(pool);
+  }
+
 }

@@ -8,10 +8,12 @@ export default class ActiveWeb3Transactions {
   transactions: ITransaction[];
   service: ActiveWeb3TransactionsService;
   private fetchHandle: NodeJS.Timeout | null = null;
+  rootStore: RootStore;
 
   constructor(rootStore: RootStore, service: ActiveWeb3TransactionsService) {
     makeAutoObservable(this);
     this.service = service;
+    this.rootStore = rootStore;
     this.transactions = [];
 
     if (this.fetchHandle !== null) clearInterval(this.fetchHandle);
@@ -23,6 +25,7 @@ export default class ActiveWeb3Transactions {
 
   addTransaction(_transaction: ITransaction) {
     this.transactions.push(_transaction);
+    this.rootStore.alertStore.resetAlerts()
   }
 
   removeTransaction() {

@@ -20,6 +20,10 @@ import ProposalService from "../services/ProposalService";
 import StakingStore from "./staking.store"
 import StakingService from "../services/StakingService";
 import IStakingService from "../services/interfaces/IStakingService";
+import IFXDProtocolStatsService from "../services/interfaces/IFXDProtocolStatsService";
+import FXDProtocolStatsService from "../services/FXDProtocolStatsService";
+import FXDProtocolStatsStore from "./fxdstats.stores";
+import { Constants } from "../helpers/Constants";
 
 export class RootStore {
   /**
@@ -32,6 +36,8 @@ export class RootStore {
   alertStore: AlertStore;
   transactionStore: ActiveWeb3Transactions;
   proposalStore: ProposalStore;
+  fxdProtocolStatsStore: FXDProtocolStatsStore;
+
   stakingStore: StakingStore;
   /**
    * Services
@@ -41,9 +47,11 @@ export class RootStore {
   stableSwapService: IStableSwapService;
   activeWeb3TransactionService: IActiveWeb3TransactionsService;
   proposalService: IProposalService;
+  fxdProtocolStatsService: IFXDProtocolStatsService;
   stakingService: IStakingService;
 
-  chainId: number = 1337;
+
+  chainId: number = Constants.DEFAULT_CHAINID;
 
   constructor() {
     this.poolService = new PoolService();
@@ -51,6 +59,7 @@ export class RootStore {
     this.stableSwapService = new StableSwapService();
     this.activeWeb3TransactionService = new ActiveWeb3TransactionsService();
     this.proposalService = new ProposalService();
+    this.fxdProtocolStatsService = new FXDProtocolStatsService()
     this.stakingService = new StakingService();
 
     this.authStore = new AuthStore(this);
@@ -59,6 +68,7 @@ export class RootStore {
     this.stableSwapStore = new StableSwapStore(this, this.stableSwapService);
     this.alertStore = new AlertStore(this);
     this.proposalStore = new ProposalStore(this, this.proposalService);
+    this.fxdProtocolStatsStore = new FXDProtocolStatsStore(this,this.fxdProtocolStatsService)
     this.stakingStore = new StakingStore(this, this.stakingService);
 
     this.transactionStore = new ActiveWeb3Transactions(
@@ -76,6 +86,7 @@ export class RootStore {
       "stableSwapService",
       "activeWeb3TransactionService",
       "proposalService",
+      "fxdProtocolStatsService",
       "stakingService"
     ].forEach((serviceName) => {
       console.log(`Setting chainid ${chainId} for ${serviceName}`);

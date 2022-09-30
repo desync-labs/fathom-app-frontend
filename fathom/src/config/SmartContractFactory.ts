@@ -9,11 +9,12 @@ import StableSwapModule from "./ABI/StableSwapModule.json";
 import Addresses from "./addresses.json";
 import Staking from "./ABI/Staking.json";
 import StakingGetter from "./ABI/StakingGetter.json";
-import MainToken from "./ABI/MainToken.json"; 
-import VeMainToken from "./ABI/VeMainToken.json"; 
-import Token from "./ABI/Token.json"; 
- 
+import MainToken from "./ABI/MainToken.json";
+import VeMainToken from "./ABI/VeMainToken.json";
+import Token from "./ABI/Token.json";
 
+
+import FathomStats from './ABI/FathomStats.json'
 import Governor from './ABI/Governor.json'
 
 export class SmartContractFactory {
@@ -161,16 +162,23 @@ export class SmartContractFactory {
     }
   };
 
+  public static FathomStats(chainId: number) {
+    return {
+      abi: FathomStats.abi as AbiItem[],
+      address: SmartContractFactory.Addresses(chainId).fathomStats,
+    }
+  };
+
   public static FathomGovernor(chainId: number)  {
     return {
       abi:Governor.abi as AbiItem [],
-      address: SmartContractFactory.Addresses(chainId) // '0x62f3d571A7DAcC00C047e58fE500ee99A98E3f63'
+      address: SmartContractFactory.Addresses(chainId).fathomGovernor
     }
   }
   public static Staking(chainId: number)  {
     return {
       abi:Staking.abi as AbiItem [],
-      address: SmartContractFactory.Addresses(chainId).staking 
+      address: SmartContractFactory.Addresses(chainId).staking
     }
   }
 
@@ -203,5 +211,5 @@ export class SmartContractFactory {
   }
 }
 
- 
+
 
