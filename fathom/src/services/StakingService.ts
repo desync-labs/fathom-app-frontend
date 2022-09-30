@@ -9,6 +9,7 @@ import {
 } from "../stores/interfaces/ITransaction";
 import { Constants } from "../helpers/Constants";
 import ILockPosition from "../stores/interfaces/ILockPosition";
+import { Strings } from "../helpers/Strings";
 
 export default class StakingService implements IStakingService {
   chainId = 51;
@@ -49,7 +50,7 @@ export default class StakingService implements IStakingService {
               active: false,
               status: TransactionStatus.None,
               title: `Approval Pending`,
-              message: "Click on transaction to view on Etherscan.",
+              message: Strings.CheckOnBlockExplorer,
             });
           });
 
@@ -86,7 +87,7 @@ export default class StakingService implements IStakingService {
               active: false,
               status: TransactionStatus.None,
               title: `Creating Lock`,
-              message: "Click on transaction to view on Etherscan.",
+              message: Strings.CheckOnBlockExplorer,
             });
           });
       }
@@ -183,7 +184,7 @@ export default class StakingService implements IStakingService {
             active: false,
             status: TransactionStatus.None,
             title: `Hanndling Single claim reward`,
-            message: "Click on transaction to view on Etherscan.",
+            message: Strings.CheckOnBlockExplorer,
           });
         });
       await Staking.methods
@@ -196,7 +197,7 @@ export default class StakingService implements IStakingService {
             active: false,
             status: TransactionStatus.None,
             title: `Handling Unlock`,
-            message: "Click on transaction to view on Etherscan.",
+            message: Strings.CheckOnBlockExplorer,
           });
         });
     } catch (error) {
@@ -229,7 +230,7 @@ export default class StakingService implements IStakingService {
             active: false,
             status: TransactionStatus.None,
             title: `Hanndling Single claim reward`,
-            message: "Click on transaction to view on Etherscan.",
+            message: Strings.CheckOnBlockExplorer,
           });
         });
 
@@ -243,7 +244,7 @@ export default class StakingService implements IStakingService {
             active: false,
             status: TransactionStatus.None,
             title: `Hanndling early withdrawal`,
-            message: "Click on transaction to view on Etherscan.",
+            message: Strings.CheckOnBlockExplorer,
           });
         });
     } catch (error) {
@@ -276,7 +277,7 @@ export default class StakingService implements IStakingService {
             active: false,
             status: TransactionStatus.None,
             title: `Hanndling Single claim reward`,
-            message: "Click on transaction to view on Etherscan.",
+            message: Strings.CheckOnBlockExplorer,
           });
         });
     } catch (error) {
@@ -306,7 +307,7 @@ export default class StakingService implements IStakingService {
             active: false,
             status: TransactionStatus.None,
             title: `Handling claim rewards`,
-            message: "Click on transaction to view on Etherscan.",
+            message: Strings.CheckOnBlockExplorer,
           });
         });
     } catch (error) {
@@ -336,7 +337,7 @@ export default class StakingService implements IStakingService {
             active: false,
             status: TransactionStatus.None,
             title: `handling withdraw rewards`,
-            message: "Click on transaction to view on Etherscan.",
+            message: Strings.CheckOnBlockExplorer,
           });
         });
     } catch (error) {
