@@ -95,9 +95,7 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
 
 
 
-  const getPrice = async (collateralInput:any) => {
-    // let dexPrice = await poolStore.getDexPrice();
-    // console.log("DEX PRICE IS ", dexPrice)
+  const handleFathomTokenOut = async (collateralInput:any) => {
     // get user balance 
     let balance = await poolStore.getUserTokenBalance(account, props.pool)
     setBalance(balance)
@@ -118,11 +116,11 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
 
     stableCoinOut = stableCoinOut / 10**18;
 
-    // update fathom token text field. Should it even be a text field?
+    // update safe max text field.
     setSafeMax(stableCoinOut);
 
      // compare input to user balance 
-     if (+200 < +input) {
+     if ((+balance / 10**18) < +input) {
       setBalanceError(true)
       return
     } else {
@@ -171,7 +169,7 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
 
   const handleCollatralTextFieldChange = (e:any) => {
     setCollatral(e.target.value)
-    getPrice(e.target.value)
+    handleFathomTokenOut(e.target.value)
   }
 
   const handlefathomTokenTextFieldChange = (e:any) => {
@@ -193,7 +191,7 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
         </BootstrapDialogTitle>
         <DialogContent dividers>
           <Typography gutterBottom>
-            Create a new position for {props.pool.name} Pool to get guranteed return on your collateral.
+            Create a new position for {props.pool.name} Pool to get guranteed returns on your collateral.
           </Typography>
           <Typography gutterBottom>
             {props.pool.name} balance: {balance / 10**18}
@@ -217,9 +215,9 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
           onChange={handlefathomTokenTextFieldChange}
          />
 
-        {safeMax > 0 
-            ? <Button sx={{ m: 3 }} onClick={updateFathomAmount}>
-              Apply Safe Max: {safeMax}
+        {safeMax > 0 && !balanceError
+            ? <Button sx={{ marginBottom: -2, marginTop: -2, marginLeft: 4 }} onClick={updateFathomAmount}>
+              Use Safe Max: {safeMax}
             </Button>
           : null
         }
@@ -241,7 +239,7 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
               </Button>
             : null
           }
-          <Button autoFocus onClick={openNewPosition} disabled={approveBtn || balanceError}>
+          <Button onClick={openNewPosition} disabled={approveBtn || balanceError}>
             Open
           </Button>
         </DialogActions>
