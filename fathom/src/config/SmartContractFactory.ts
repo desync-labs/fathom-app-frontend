@@ -8,6 +8,7 @@ import GetPositionsAbi from "./ABI/GetPositions.json";
 import StableSwapModule from "./ABI/StableSwapModule.json";
 import FathomStats from './ABI/FathomStats.json'
 import Governor from './ABI/Governor.json'
+import DexPriceOracle from './ABI/DexPriceOracle.json'
 
 import Addresses from "./addresses.json";
 
@@ -167,6 +168,13 @@ export class SmartContractFactory {
     return {
       abi:Governor.abi as AbiItem [],
       address: SmartContractFactory.Addresses(chainId).fathomGovernor 
+    }
+  }
+
+  public static DexPriceOracle(chainId: number)  {
+    return {
+      abi:DexPriceOracle.abi as AbiItem [],
+      address: SmartContractFactory.Addresses(chainId).dexPriceOracle 
     }
   }
 }

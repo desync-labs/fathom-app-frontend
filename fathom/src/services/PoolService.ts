@@ -103,4 +103,24 @@ export default class PoolService implements IPoolService {
         throw exception;
     }
 }
+
+async getDexPrice(): Promise<number>{
+  console.log("in get dex price")
+  try{
+   
+      let USDT = '0x4Ea3D4e5Fe85E4524c3A6a410B5D6d49E0e10D25';
+      let WXDC = '0x7353Cb92d58108C27D7f7D0a05d7fdC84a844F66';
+
+      const dexPriceOracle = Web3Utils.getContractInstance(SmartContractFactory.DexPriceOracle(this.chainId),this.chainId)
+
+      let price = await dexPriceOracle.methods.getPrice(USDT, WXDC).call()
+      console.log(" dex price is ", price)
+
+      
+      return price
+  }catch(error){
+      console.error(`Error in open position approve token : ${error}`)
+      throw error;
+  }
+}
 }
