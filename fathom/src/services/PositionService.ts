@@ -63,7 +63,7 @@ export default class PositionService implements IPositionService{
   async createProxyWallet(address:string): Promise<string>{
       try{
           console.log('Crteating a proxy wallet...')
-          let proxyWalletRegistry = Web3Utils.getContractInstance(SmartContractFactory.ProxyWalletRegistry,this.chainId)
+          let proxyWalletRegistry = Web3Utils.getContractInstance(SmartContractFactory.ProxyWalletRegistry(this.chainId),this.chainId)
           await proxyWalletRegistry.methods.build(address).send({from:address});
           let proxyWallet = await proxyWalletRegistry.methods.proxies(address).call();
           return proxyWallet;
