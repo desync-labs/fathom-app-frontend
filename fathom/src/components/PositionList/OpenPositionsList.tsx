@@ -108,10 +108,10 @@ const OpenPositionsList = observer(() => {
                   </TableCell>
                   {/* <TableCell align="right">{row.address}</TableCell> */}
                   <TableCell align="right">{poolStore.getPool(position.pool).name}</TableCell>
-                  <TableCell align="right">{getFormattedSaftyBuffer(position.debtShare)}</TableCell>
-                  <TableCell align="right">{getFormattedSaftyBuffer(position.lockedCollateral)}</TableCell>
-                  <TableCell align="right">{getFormattedSaftyBuffer(position.lockedValue)}</TableCell>
-                  <TableCell align="right">{(position.ltv.toNumber() / 1000)}%</TableCell>
+                  <TableCell align="right">{getFormattedSaftyBuffer(position.debtShare)} FXD</TableCell>
+                  <TableCell align="right">{getFormattedSaftyBuffer(position.lockedCollateral)} {poolStore.getPool(position.pool).name} </TableCell>
+                  <TableCell align="right">$ {getFormattedSaftyBuffer(position.lockedValue)}</TableCell>
+                  <TableCell align="right">{(position.ltv.toNumber() / 10)}%</TableCell>
                   <TableCell align="right">
                     <Grid container >
                      <Grid xs={7} > 
