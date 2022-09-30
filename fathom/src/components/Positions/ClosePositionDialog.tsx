@@ -80,17 +80,18 @@ export default function ClosePositionDialog(this: any, props: ClosePositionProps
     let lockedColateral = props.position.lockedCollateral.div(Constants.WeiPerWad).toNumber();
 
     const closePosition = () => {
-        switch (closingType) {
-            case ClosingType.Full: {
-                positionStore.closePosition(props.position.id, pool, account, fathomToken)
-                break;
-            }
-            case ClosingType.Partial: {
-                positionStore.partialyClosePosition(props.position, pool, account, fathomToken, collateral)
-                break;
-            }
-        }
-
+        // switch (closingType) {
+        //     case ClosingType.Full: {
+        //         // positionStore.closePosition(props.position.id, pool, account, fathomToken)
+        //         positionStore.partialyClosePosition(props.position, pool, account, fathomToken, collateral)
+        //         break;
+        //     }
+        //     case ClosingType.Partial: {
+        //         positionStore.partialyClosePosition(props.position, pool, account, fathomToken, collateral)
+        //         break;
+        //     }
+        // }
+        positionStore.partialyClosePosition(props.position, pool, account, fathomToken, collateral)
         setOpen(false);
     }
 
