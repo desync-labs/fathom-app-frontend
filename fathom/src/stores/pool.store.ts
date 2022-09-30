@@ -35,4 +35,11 @@ export default class PoolStore {
     return await this.service.getPriceWithSafetyMargin(pool);
   }
 
+  getUserTokenBalance = async(address:string, pool:ICollatralPool) => {
+    return await this.service.getUserTokenBalance(address, pool);
+  }
+
+  getDexPrice = async() => {
+    return await this.service.getDexPrice();
+  }
 }

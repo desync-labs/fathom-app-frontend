@@ -15,6 +15,7 @@ import Token from "./ABI/Token.json";
 import FathomStats from './ABI/FathomStats.json'
 import Governor from './ABI/Governor.json'
 import VeFathomAbi from './ABI/VeFathom.json'
+import DexPriceOracle from './ABI/DexPriceOracle.json'
 
 export class SmartContractFactory {
   public static Addresses(chainId: number) {
@@ -213,6 +214,13 @@ export class SmartContractFactory {
     return {
       abi:VeFathomAbi.abi as AbiItem [],
       address: SmartContractFactory.Addresses(chainId).veFTHM 
+    }
+  }
+
+  public static DexPriceOracle(chainId: number)  {
+    return {
+      abi:DexPriceOracle.abi as AbiItem [],
+      address: SmartContractFactory.Addresses(chainId).dexPriceOracle 
     }
   }
 }
