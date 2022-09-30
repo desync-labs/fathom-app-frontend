@@ -96,6 +96,9 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
 
 
   const handleFathomTokenOut = async (collateralInput:any) => {
+    let dexPrice = await poolStore.getDexPrice();
+    console.log("DEX PRICE: ", dexPrice)
+
     // get user balance 
     let balance = await poolStore.getUserTokenBalance(account, props.pool)
     setBalance(balance)
@@ -117,7 +120,7 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
     stableCoinOut = stableCoinOut / 10**18;
 
     // update safe max text field.
-    setSafeMax(stableCoinOut);
+    setSafeMax(stableCoinOut); 
 
      // compare input to user balance 
      if ((+balance / 10**18) < +input) {
@@ -159,7 +162,11 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
     setApproveBtn(false)
   }
 
-  const handleClickOpen = () => {
+  const handleClickOpen = async () => {
+    // get user balance 
+    let balance = await poolStore.getUserTokenBalance(account, props.pool)
+    setBalance(balance)
+
     setOpen(true);
   };
 
