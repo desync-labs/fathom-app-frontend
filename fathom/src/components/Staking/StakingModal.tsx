@@ -2,8 +2,7 @@
 import { observer } from "mobx-react";
 import { Paper, Typography } from "@mui/material";
 
-
-const StakingModal = observer((props:any) => {
+const StakingModal = observer((props: any) => {
   return (
     <Paper
       sx={{
@@ -14,21 +13,16 @@ const StakingModal = observer((props:any) => {
       }}
     >
       <Typography component="h2" variant="h5" color="primary" gutterBottom>
-          {props.apr} % APR
+        {props.apr} % APR
       </Typography>
-      <Typography color="text.secondary">
-        Staked Balance
-      </Typography>
+      <Typography color="text.secondary">Staked Balance</Typography>
       <Typography component="p" variant="h6">
-          {props.stakedBalance}
+        {props.stakedBalance}
       </Typography>
-      <Typography color="text.secondary">
-        Vote Balance
-      </Typography>
+      <Typography color="text.secondary">Vote Balance</Typography>
       <Typography component="p" variant="h6">
-          {props.voteBalance}
+        {props.voteBalance}
       </Typography>
-     
     </Paper>
   );
 });
