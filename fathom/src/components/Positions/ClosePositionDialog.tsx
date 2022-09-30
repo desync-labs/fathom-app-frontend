@@ -68,16 +68,16 @@ export default function ClosePositionDialog(this: any, props: ClosePositionProps
     const poolStore = rootStore.poolStore;
     const [open, setOpen] = React.useState(false);
     const [collateral, setCollateral] = React.useState(0);
-    const [lockedCollateral, setLockedCollateral] = React.useState(0);
     const [fathomToken, setFathomToken] = React.useState(0);
     const [price, setPrice] = React.useState(0);
-    const [ltv, setLTV] = React.useState(0);
     const [closingType, setType] = React.useState(ClosingType.Full);
 
     const { account } = useMetaMask()!;
 
     const pool = poolStore.getPool(props.position.pool)
     const debtShare = props.position.debtShare.div(Constants.WeiPerWad).toNumber();
+
+    let lockedColateral = props.position.lockedCollateral.div(Constants.WeiPerWad).toNumber();
 
     const closePosition = () => {
         switch (closingType) {
@@ -96,15 +96,12 @@ export default function ClosePositionDialog(this: any, props: ClosePositionProps
 
     const handleClickOpen = async () => {
         let priceWithSafetyMargin = await poolStore.getPriceWithSafetyMargin(pool);
-        let calculatedLockedCollateral = (props.position.safetyBuffer.div(Constants.WeiPerRad).plus(debtShare)).div(priceWithSafetyMargin).toNumber();
 
         setType(ClosingType.Full);
-        setCollateral(calculatedLockedCollateral);
-        setLockedCollateral(calculatedLockedCollateral);
         setPrice(priceWithSafetyMargin);
         setFathomToken(debtShare);
         setOpen(true);
-        setLTV(Math.round((debtShare / (calculatedLockedCollateral * priceWithSafetyMargin)) * 10000) / 100)
+        setCollateral(lockedColateral);
     };
 
     const handleClose = () => {
@@ -124,7 +121,7 @@ export default function ClosePositionDialog(this: any, props: ClosePositionProps
     const handleTypeChange = (e: any) => {
         if (e.target.value === ClosingType.Full) {
             setFathomToken(debtShare);
-            setCollateral(lockedCollateral);
+            setCollateral(lockedColateral);
         }
 
         setType(e.target.value)
@@ -154,7 +151,7 @@ export default function ClosePositionDialog(this: any, props: ClosePositionProps
                                         <Typography gutterBottom>Locked Collateral</Typography>
                                     </Grid>
                                     <Grid item xs={5}>
-                                        <Typography gutterBottom>{`${lockedCollateral} → ${lockedCollateral - (+collateral)} ${pool.name}`}</Typography>
+                                        <Typography gutterBottom>{`${lockedColateral} → ${lockedColateral - (+collateral)} ${pool.name}`}</Typography>
                                     </Grid>
                                     <Grid item xs={7}>
                                         <Typography gutterBottom>FXD Borrowed</Typography>
@@ -169,7 +166,7 @@ export default function ClosePositionDialog(this: any, props: ClosePositionProps
                                     <Grid item xs={7}>
                                         <Typography gutterBottom>LTV</Typography>
                                     </Grid>
-                                    <Grid item xs={5}>{ltv} %</Grid>
+                                    <Grid item xs={5}>{(props.position.ltv.toNumber() / 10)}%</Grid>
                                 </Grid>
                             </Container>
                         </Grid>
