@@ -118,7 +118,7 @@ const StakingView = observer(() => {
             id="outlined-helperText"
             label="Stake Position"
             defaultValue="Default Value"
-            helperText="Enter the stake position."
+            helperText="FTHM to stake"
             sx={{ m: 3 }}
             value={stakePosition}
             onChange={handleStakeChange}

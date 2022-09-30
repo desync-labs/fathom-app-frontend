@@ -126,10 +126,11 @@ const StableSwap = observer(() => {
         Stable Swap
       </Typography>
       <Typography color="text.secondary" sx={{ flex: 1 }}>
-        Stableswap module is the stablity module to keep stablecoin pegged
+        {/* Stableswap module is the stablity module to keep stablecoin pegged
         to it's original value. Arbitrauger uses it to earn profile in case
         Stablecoin value depagged, that results value reset back to it's
-        original peg.
+        original peg. */}
+        Stableswap.  This module keeps the stablecoin pegged to 1 USD.  When the stablecoin price depegs from 1 USD, an arbitrage can be performed using this module. 
       </Typography>
       <Box sx={{ marginTop: 2 }}>
         <TextField

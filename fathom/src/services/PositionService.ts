@@ -123,7 +123,7 @@ export default class PositionService implements IPositionService{
           console.log(`getting Positions With Safety Buffer For Address ${address}.`)
           let myPositions = await this.getPositionsForAddress(address);
           let getPositionsContract = Web3Utils.getContractInstance(SmartContractFactory.GetPositions(this.chainId),this.chainId)
-          let response = await getPositionsContract.methods.getPositionWithSafetyBuffer(SmartContractFactory.PositionManager(this.chainId).address,1,100).call();
+          let response = await getPositionsContract.methods.getPositionWithSafetyBuffer(SmartContractFactory.PositionManager(this.chainId).address,1,500).call();
 
           console.log(`Raw response from getPositionsWithSafetyBuffer: ${JSON.stringify(response)}`)
 

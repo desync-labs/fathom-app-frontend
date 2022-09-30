@@ -93,6 +93,8 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
   const [liquidationPrice, setLiquidationPrice] = React.useState(0);
   const [fxdAvailableToBorrow, setFxdAvailableToBorrow] = React.useState(0);
 
+  const [disableOpenPosition, setDisableOpenPosition] = React.useState(false);
+
   useEffect(() => {
     if (chainId && (!error || !unsupportedError)) {
       setTimeout(() => {
@@ -102,6 +104,14 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
   }, [])
 
   const handleUpdates = async (collateralInput:number, fathomTokenInput:number) => {
+
+
+    
+    let availableFathom = parseInt(props.pool.availableFathom.replaceAll(",",""))
+    let disable = fathomTokenInput >= availableFathom
+    console.log(`Input token ${fathomTokenInput} and Pool Max: ${availableFathom}`)
+    setDisableOpenPosition(disable)
+
      // check collateral input 
     if (isNaN(collateralInput) || !collateralInput) {
       collateralInput = 0;
@@ -143,8 +153,12 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
     if (priceWithSafetyMargin == 0) {
       safeMax = +collateralInput;
     } else {
-        safeMax = +collateralInput * priceWithSafetyMargin;
+        safeMax = +collateralInput * priceWithSafetyMargin * 0.99;
     }
+
+    //TODO: TODO...
+    safeMax = Math.floor(safeMax)
+
     setSafeMax(+safeMax);
 
     if (+fathomTokenInput > safeMax) {
@@ -381,7 +395,7 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
                 : null
               }
                                     
-              <Button onClick={openNewPosition} disabled={approveBtn || balanceError}>
+              <Button onClick={openNewPosition} disabled={approveBtn || balanceError || disableOpenPosition}>
                 Open
               </Button>
             </DialogActions>
