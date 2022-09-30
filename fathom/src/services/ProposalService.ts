@@ -9,6 +9,7 @@ import {
   TransactionType,
 } from "../stores/interfaces/ITransaction";
 import { Constants } from "../helpers/Constants";
+import { Strings } from "../helpers/Strings";
 
 export default class ProposalService implements IProposalService {
   chainId = Constants.DEFAULT_CHAINID;
@@ -38,7 +39,7 @@ export default class ProposalService implements IProposalService {
             active: false,
             status: TransactionStatus.None,
             title: `Proposal Creation Pending`,
-            message: "Click on transaction to view on Etherscan.",
+            message: Strings.CheckOnBlockExplorer,
           });
         });
     } else {
@@ -205,7 +206,7 @@ export default class ProposalService implements IProposalService {
               active: false,
               status: TransactionStatus.None,
               title: `Vote Pending`,
-              message: "Click on transaction to view on Etherscan.",
+              message: Strings.CheckOnBlockExplorer,
             });
           });
       }

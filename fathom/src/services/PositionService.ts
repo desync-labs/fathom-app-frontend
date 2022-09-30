@@ -8,6 +8,7 @@ import BigNumber from "bignumber.js";
 import ICollatralPool from "../stores/interfaces/ICollatralPool";
 import ActiveWeb3Transactions from "../stores/transaction.store";
 import { TransactionStatus, TransactionType } from "../stores/interfaces/ITransaction";
+import { Strings } from "../helpers/Strings";
 
 
 
@@ -50,7 +51,7 @@ export default class PositionService implements IPositionService{
                                               active:false,
                                               status:TransactionStatus.None,
                                               title:`Opening Position Pending`,
-                                              message:'Click on transaction to view on Etherscan.'})
+                                              message:Strings.CheckOnBlockExplorer})
           })
 
       }catch(error){
@@ -176,7 +177,7 @@ export default class PositionService implements IPositionService{
                                               active:false, 
                                               status:TransactionStatus.None,
                                               title:'Close Position Pending.',
-                                              message:'Click on transaction to view on Etherscan.'
+                                              message:Strings.CheckOnBlockExplorer
                                           })
                                       })
           console.log(`Position closed for position id ${positionId}.`)
@@ -218,7 +219,7 @@ export default class PositionService implements IPositionService{
             active: false,
             status: TransactionStatus.None,
             title: 'Close Position Pending.',
-            message: 'Click on transaction to view on Etherscan.'
+            message: Strings.CheckOnBlockExplorer
           })
         })
 
@@ -245,7 +246,7 @@ export default class PositionService implements IPositionService{
                                               active:false, 
                                               status:TransactionStatus.None,
                                               title:`Approval Pending`,
-                                              message:'Click on transaction to view on Etherscan.'})
+                                              message:Strings.CheckOnBlockExplorer})
           })
 
       }catch(error){
@@ -296,7 +297,7 @@ export default class PositionService implements IPositionService{
                       active:false, 
                       status:TransactionStatus.None,
                       title:`Approval Pending`,
-                      message:'Click on transaction to view on Etherscan.'
+                      message:Strings.CheckOnBlockExplorer
                   })
               })
       }catch(error){

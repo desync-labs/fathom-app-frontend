@@ -1,5 +1,6 @@
 import { SmartContractFactory } from "../config/SmartContractFactory";
 import { Constants } from "../helpers/Constants";
+import { Strings } from "../helpers/Strings";
 import { Web3Utils } from "../helpers/Web3Utils";
 import {
   TransactionStatus,
@@ -31,7 +32,7 @@ export default class StableSwapService implements IStableSwapService {
                                                 active:false, 
                                                 status:TransactionStatus.None,
                                                 title:'USDT to FXD Swap Pending.',
-                                                message:'Click on transaction to view on Etherscan.'
+                                                message:Strings.CheckOnBlockExplorer
                                         })
                                     })
     }catch(error){
@@ -57,7 +58,7 @@ async swapStablecoinToToken(address: string, stablecoinIn: number,transactionSto
                                             active:false, 
                                             status:TransactionStatus.None,
                                             title:'FXD to USDT Swap Pending.',
-                                            message:'Click on transaction to view on Etherscan.'
+                                            message:Strings.CheckOnBlockExplorer
                                         })
                                     })
     
@@ -84,7 +85,7 @@ async approveStablecoin(address:string, transactionStore:ActiveWeb3Transactions)
                     active:false, 
                     status:TransactionStatus.None,
                     title:'Approval Pending.',
-                    message:'Click on transaction to view on Etherscan.'
+                    message:Strings.CheckOnBlockExplorer
                 })
             })
     }catch(error){
@@ -109,7 +110,7 @@ async approveUsdt(address:string, tokenIn:number, transactionStore:ActiveWeb3Tra
                                             active:false, 
                                             status:TransactionStatus.None,
                                             title:'Approval Pending',
-                                            message:'Click on transaction to view on Etherscan.'
+                                            message:Strings.CheckOnBlockExplorer
                                         })
                                     })
     }catch(error){

@@ -9,7 +9,7 @@ export class Constants {
 
   public static DEFAULT_CHAINID = 51 //Apothem network
   public static MAX_UINT256  = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
-
+  
   public static Status = [
     "Pending",
     "Active",
