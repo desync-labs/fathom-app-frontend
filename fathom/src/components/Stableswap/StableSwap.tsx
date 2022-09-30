@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import { Box, Container, TextField, Toolbar, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
@@ -19,13 +19,13 @@ import { useWeb3React } from "@web3-react/core";
 const options = ["USDT To FXD", "FXD To USDT"];
 
 const StableSwap = observer(() => {
-  const [open, setOpen] = React.useState(false);
-  const anchorRef = React.useRef<HTMLDivElement>(null);
-  const [selectedIndex, setSelectedIndex] = React.useState(1);
-  const [inputValue, setInputValue] = React.useState(0);
-  const [approveFxdBtn, setApproveFxdBtn] = React.useState(false);
-  const [approveUsdtBtn, setApproveUsdtBtn] = React.useState(false);
-  const [approvalPending, setApprovalPending] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const anchorRef = useRef<HTMLDivElement>(null);
+  const [selectedIndex, setSelectedIndex] = useState(1);
+  const [inputValue, setInputValue] = useState(0);
+  const [approveFxdBtn, setApproveFxdBtn] = useState(false);
+  const [approveUsdtBtn, setApproveUsdtBtn] = useState(false);
+  const [approvalPending, setApprovalPending] = useState(false);
 
   const { chainId } = useWeb3React();
 
@@ -75,7 +75,7 @@ const StableSwap = observer(() => {
     setOpen(false);
   };
 
-  const approveFxd = async () => {
+  const approveFxd = useCallback(async () => {
     setApprovalPending(true);
     try {
       // approve fxd
@@ -86,9 +86,9 @@ const StableSwap = observer(() => {
     }
 
     setApprovalPending(false);
-  };
+  }, [setApprovalPending, setApproveFxdBtn, stableSwapStore]);
 
-  const approveUsdt = async () => {
+  const approveUsdt = useCallback(async () => {
     setApprovalPending(true);
     try {
       // approve usdt
@@ -99,13 +99,13 @@ const StableSwap = observer(() => {
     }
 
     setApprovalPending(false);
-  };
+  }, [stableSwapStore, setApprovalPending, setApproveUsdtBtn]);
 
-  const handleToggle = () => {
+  const handleToggle = useCallback(() => {
     setOpen((prevOpen) => !prevOpen);
-  };
+  }, [setOpen]);
 
-  const handleClose = (event: Event) => {
+  const handleClose = useCallback((event: Event) => {
     if (
       anchorRef.current &&
       anchorRef.current.contains(event.target as HTMLElement)
@@ -114,134 +114,119 @@ const StableSwap = observer(() => {
     }
 
     setOpen(false);
-  };
+  }, [anchorRef, setOpen]);
 
-  const handleInputValueTextFieldChange = (e: any) => {
+  const handleInputValueTextFieldChange = useCallback((e: any) => {
     setInputValue(e.target.value);
-  };
+  }, [setInputValue]);
 
   return (
-    <Box
-      component="main"
-      sx={{
-        backgroundColor: "#000",
-        flexGrow: 1,
-        height: "100vh",
-        overflow: "auto",
-      }}
-    >
-      <Toolbar />
-      <AlertMessages />
-      <TransactionStatus />
-      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-        <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-          <Typography component="h2" variant="h6" color="primary" gutterBottom>
-            Stable Swap
-          </Typography>
-          <Typography color="text.secondary" sx={{ flex: 1 }}>
-            Stableswap module is the stablity module to keep stablecoin pegged
-            to it's original value. Arbitrauger uses it to earn profile in case
-            Stablecoin value depagged, that results value reset back to it's
-            original peg.
-          </Typography>
-          <Box sx={{ marginTop: 2 }}>
-            <TextField
-              id="outlined-start-adornment"
-              label={"Amount"}
-              defaultValue=""
-              size="small"
-              value={inputValue}
-              onChange={handleInputValueTextFieldChange}
-              sx={{ marginRight: 2 }}
-            />
+    <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
+      <Typography component="h2" variant="h6" color="primary" gutterBottom>
+        Stable Swap
+      </Typography>
+      <Typography color="text.secondary" sx={{ flex: 1 }}>
+        Stableswap module is the stablity module to keep stablecoin pegged
+        to it's original value. Arbitrauger uses it to earn profile in case
+        Stablecoin value depagged, that results value reset back to it's
+        original peg.
+      </Typography>
+      <Box sx={{ marginTop: 2 }}>
+        <TextField
+          id="outlined-start-adornment"
+          label={"Amount"}
+          defaultValue=""
+          size="small"
+          value={inputValue}
+          onChange={handleInputValueTextFieldChange}
+          sx={{ marginRight: 2 }}
+        />
 
-            {approvalPending ? (
-              <Typography display="inline" sx={{ marginRight: 2 }}>
-                Pending ...
-              </Typography>
-            ) : approveFxdBtn ? (
-              <Button
-                variant="outlined"
-                onClick={approveFxd}
-                sx={{ marginRight: 2 }}
-              >
-                Approve FXD
-              </Button>
-            ) : approveUsdtBtn ? (
-              <Button
-                variant="outlined"
-                onClick={approveUsdt}
-                sx={{ marginRight: 2 }}
-              >
-                Approve USDT
-              </Button>
-            ) : null}
+        {approvalPending ? (
+          <Typography display="inline" sx={{ marginRight: 2 }}>
+            Pending ...
+          </Typography>
+        ) : approveFxdBtn ? (
+          <Button
+            variant="outlined"
+            onClick={approveFxd}
+            sx={{ marginRight: 2 }}
+          >
+            Approve FXD
+          </Button>
+        ) : approveUsdtBtn ? (
+          <Button
+            variant="outlined"
+            onClick={approveUsdt}
+            sx={{ marginRight: 2 }}
+          >
+            Approve USDT
+          </Button>
+        ) : null}
 
-            <ButtonGroup
-              variant="contained"
-              ref={anchorRef}
-              aria-label="split button"
-            >
-              <Button
-                disabled={approveUsdtBtn || approveFxdBtn || approvalPending}
-                onClick={handleClick}
-              >
-                {options[selectedIndex]}
-              </Button>
-              <Button
-                size="small"
-                aria-controls={open ? "split-button-menu" : undefined}
-                aria-expanded={open ? "true" : undefined}
-                aria-label="select merge strategy"
-                aria-haspopup="menu"
-                onClick={handleToggle}
-              >
-                <ArrowDropDownIcon />
-              </Button>
-            </ButtonGroup>
-            <Popper
-              sx={{
-                zIndex: 1,
+        <ButtonGroup
+          variant="contained"
+          ref={anchorRef}
+          aria-label="split button"
+        >
+          <Button
+            disabled={approveUsdtBtn || approveFxdBtn || approvalPending}
+            onClick={handleClick}
+          >
+            {options[selectedIndex]}
+          </Button>
+          <Button
+            size="small"
+            aria-controls={open ? "split-button-menu" : undefined}
+            aria-expanded={open ? "true" : undefined}
+            aria-label="select merge strategy"
+            aria-haspopup="menu"
+            onClick={handleToggle}
+          >
+            <ArrowDropDownIcon />
+          </Button>
+        </ButtonGroup>
+        <Popper
+          sx={{
+            zIndex: 1,
+          }}
+          open={open}
+          anchorEl={anchorRef.current}
+          role={undefined}
+          transition
+          disablePortal
+        >
+          {({ TransitionProps, placement }) => (
+            <Grow
+              {...TransitionProps}
+              style={{
+                transformOrigin:
+                  placement === "bottom" ? "center top" : "center bottom",
               }}
-              open={open}
-              anchorEl={anchorRef.current}
-              role={undefined}
-              transition
-              disablePortal
             >
-              {({ TransitionProps, placement }) => (
-                <Grow
-                  {...TransitionProps}
-                  style={{
-                    transformOrigin:
-                      placement === "bottom" ? "center top" : "center bottom",
-                  }}
-                >
-                  <Paper>
-                    <ClickAwayListener onClickAway={handleClose}>
-                      <MenuList id="split-button-menu" autoFocusItem>
-                        {options.map((option, index) => (
-                          <MenuItem
-                            key={option}
-                            disabled={index === 2}
-                            selected={index === selectedIndex}
-                            onClick={(event) =>
-                              handleMenuItemClick(event, index)
-                            }
-                          >
-                            {option}
-                          </MenuItem>
-                        ))}
-                      </MenuList>
-                    </ClickAwayListener>
-                  </Paper>
-                </Grow>
-              )}
-            </Popper>
-          </Box>
-        </Paper>
-      </Container>
-    </Box>
+              <Paper>
+                <ClickAwayListener onClickAway={handleClose}>
+                  <MenuList id="split-button-menu" autoFocusItem>
+                    {options.map((option, index) => (
+                      <MenuItem
+                        key={option}
+                        disabled={index === 2}
+                        selected={index === selectedIndex}
+                        onClick={(event) =>
+                          handleMenuItemClick(event, index)
+                        }
+                      >
+                        {option}
+                      </MenuItem>
+                    ))}
+                  </MenuList>
+                </ClickAwayListener>
+              </Paper>
+            </Grow>
+          )}
+        </Popper>
+      </Box>
+    </Paper>
   );
 });
 
