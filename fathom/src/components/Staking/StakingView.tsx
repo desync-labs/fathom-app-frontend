@@ -259,7 +259,7 @@ const StakingView = observer(() => {
       </Button>
       <br />
       <Button variant="outlined" onClick={() => withdrawRewards()}>
-        Withdraw Stream Rewards
+        Withdraw All Rewards and Remaining Unlocked FTHM
       </Button>
       <br />
     </Paper>
