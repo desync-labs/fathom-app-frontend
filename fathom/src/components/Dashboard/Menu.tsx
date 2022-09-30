@@ -92,13 +92,6 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
           isActive: isStakingActive,
           link: '/staking'
         },
-        {
-          name: "Rewards",
-          Icon: LocalAtmIcon,
-          showText,
-          isActive: isRewardsActive,
-          link: '/rewards'
-        },
       ],
     },
   ];
