@@ -3,12 +3,17 @@ import { observer } from "mobx-react";
 import { Alert, AlertTitle, LinearProgress, Typography } from "@mui/material";
 import { useStores } from "../../stores";
 import truncateEthAddress from "truncate-eth-address";
+import { Constants } from "../../helpers/Constants";
 
 const TransactionStatus = observer(() => {
   let transactionStore = useStores().transactionStore;
+  let rootStore = useStores();
 
   const getTxUrl = (txHash: string) => {
-    return `https://goerli.etherscan.io/tx/${txHash}`;
+    if(rootStore.chainId === Constants.DEFAULT_CHAINID)
+      return `https://explorer.apothem.network/txs/${txHash}`;
+    else
+      return `https://goerli.etherscan.io/tx/${txHash}`;  
   };
 
   return (

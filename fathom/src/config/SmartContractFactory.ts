@@ -29,7 +29,7 @@ export class SmartContractFactory {
           address = Addresses["50"];
           break;
         default:
-          address = Addresses["1337"];
+          address = Addresses["51"];
           break;
       }
       return address;
