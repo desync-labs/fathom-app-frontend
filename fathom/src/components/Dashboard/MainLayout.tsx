@@ -21,7 +21,6 @@ import {
 } from "@mui/icons-material";
 import Copyright from "../Footer/Footer";
 import AppBar from "../AppBar/AppBar";
-import { Menu } from "./Menu";
 import useMetaMask from "../../hooks/metamask";
 import { observer } from "mobx-react";
 import DashboardContent from "./Dashboard";
@@ -38,6 +37,9 @@ import MakePropose from "../Governance/Propose";
 import StakingView from "../Staking/StakingView";
 import AlertMessages from "../Common/AlertMessages";
 import TransactionStatus from "../Transaction/TransactionStatus";
+import truncateEthAddress from "truncate-eth-address";
+import { Menu } from "./Menu";
+
 
 const drawerWidth: number = 240;
 
@@ -125,7 +127,7 @@ const MainLayout = observer(() => {
               noWrap
               sx={{ flexGrow: 1 }}
             ></Typography>
-            {account && !error && <Chip label={account} color="primary" />}
+            { account && !error && <Chip label={truncateEthAddress(account)} color="primary" /> }
             <Web3Status />
             <IconButton color="inherit" onClick={connect}>
               {isActive ? <LogoutIcon /> : <AccountBalanceWalletIcon />}
@@ -214,7 +216,7 @@ const MainLayout = observer(() => {
                   element={<ProposalView />}
                 />
                 <Route path="/staking" element={<StakingView />} />
-      
+
               </Routes>
             </Container>
           </Box>
@@ -230,3 +232,4 @@ const MainLayout = observer(() => {
 });
 
 export default MainLayout;
+

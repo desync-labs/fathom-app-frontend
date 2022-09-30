@@ -11,7 +11,7 @@ import {
 import { Constants } from "../helpers/Constants";
 
 export default class ProposalService implements IProposalService {
-  chainId = 51;
+  chainId = Constants.DEFAULT_CHAINID;
 
   async createProposal(
     targets: string[],
@@ -19,10 +19,9 @@ export default class ProposalService implements IProposalService {
     calldatas: string[],
     description: string,
     account: string,
-    transactionStore: ActiveWeb3Transactions,
-    chainId?: number
+    transactionStore: ActiveWeb3Transactions
   ): Promise<number> {
-    chainId = chainId || this.chainId;
+    const chainId = this.chainId;
 
     if (chainId) {
       const FathomGovernor = Web3Utils.getContractInstance(
@@ -48,11 +47,11 @@ export default class ProposalService implements IProposalService {
   }
 
   async viewAllProposals(
-    account: string,
-    chainId?: number
+    account: string
   ): Promise<IProposal[]> {
     let fetchedProposals: IProposal[] = [];
     try {
+      const chainId = this.chainId;
       if (chainId) {
         const FathomGovernor = Web3Utils.getContractInstance(
           SmartContractFactory.FathomGovernor(chainId)
@@ -96,11 +95,10 @@ export default class ProposalService implements IProposalService {
 
   async viewProposal(
     proposalId: string,
-    account: string,
-    chainId?: number
+    account: string
   ): Promise<IProposal> {
     let proposal = {} as IProposal;
-    chainId = chainId || this.chainId;
+    const chainId = this.chainId;
 
     try {
       if (chainId) {
