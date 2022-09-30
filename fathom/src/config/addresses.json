@@ -89,7 +89,7 @@
     "stabilityFeeCollector": "0x7Db64B685feAA08f0baC868dF137810fd43B7ade",
     "proxyWalletFactory": "0x3597d1Fdcb570d0dDe2096CBAC3422104B943Eb6",
     "proxyWalletRegistry": "0xF7A3331f02B2c2cAbA1Ec2aE5bd717e993dea0fb",
-    "dexPriceOracle": "0xa9AD37D369189e830ef24E576d5Ca556749C7ba8",
+    "dexPriceOracle": "0xfbba07454DAe1D94436cC4241bf31543f426257E",
     "authTokenAdapter": "0xa85882518795f52D1c66a42f9E2899618fF99a0D",
     "stableSwapModule": "0xcFCBaCd7edC0c9afEadf2034A0D35aF84Ec46F12",
     "getPositions": "0xA8FA19C64742C159b27Ce29911d0c3c07670A026",

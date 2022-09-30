@@ -3,7 +3,6 @@ import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
@@ -12,10 +11,6 @@ import { TextField} from '@mui/material';
 import { useStores } from '../../stores';
 import useMetaMask from '../../hooks/metamask';
 import ICollatralPool from '../../stores/interfaces/ICollatralPool';
-import Table from '@mui/material/Table';
-import TableCell from '@mui/material/TableCell';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import {
@@ -79,13 +74,6 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
   const { chainId, error } = useWeb3React()
   const unsupportedError = useMemo(() => (error as Error) instanceof UnsupportedChainIdError, [error]);
 
-  useEffect(() => {
-    if (chainId && (!error || !unsupportedError)) {
-      setTimeout(() => {
-        approvalStatus()
-      })
-    }
-  }, [])
 
   const [open, setOpen] = React.useState(false);
   const [approveBtn, setApproveBtn] = React.useState(true);
@@ -103,23 +91,30 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
   const [safetyBuffer, setSafetyBuffer] = React.useState(0);
   const [debtRatio, setDebtRatio] = React.useState(0);
   const [liquidationPrice, setLiquidationPrice] = React.useState(0);
+  const [fxdAvailableToBorrow, setFxdAvailableToBorrow] = React.useState(0);
 
-
+  useEffect(() => {
+    if (chainId && (!error || !unsupportedError)) {
+      setTimeout(() => {
+        approvalStatus()
+      })
+    }
+  }, [])
 
   const handleUpdates = async (collateralInput:number, fathomTokenInput:number) => {
      // check collateral input 
     if (isNaN(collateralInput) || !collateralInput) {
       collateralInput = 0;
     }
-    console.log("COLLATERAL INPUT: ", collateralInput);
+    // console.log("COLLATERAL INPUT: ", collateralInput);
     setCollatralToBeLocked(+collateralInput)
 
-    let fxdToBorrow = fathomTokenInput;
-    if (isNaN(fxdToBorrow) || !fxdToBorrow) {
-      fxdToBorrow = 0;
+    
+    if (isNaN(fathomTokenInput) || !fathomTokenInput) {
+      fathomTokenInput = 0;
     }
-    console.log("FXD TO BORROW: ", fxdToBorrow);
-    setFxdToBeBorrowed(+fxdToBorrow);
+    // console.log("FXD TO BORROW: ", fxdToBorrow);
+    setFxdToBeBorrowed(+fathomTokenInput);
   
     // GET USER BALANCE
     const balance = await poolStore.getUserTokenBalance(account, props.pool);
@@ -134,55 +129,61 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
       setBalanceError(false);
     }
 
-    // GET PRICE WITH SAFETY MARGIN 
-    const priceWithSafetyMargin =  await poolStore.getPriceWithSafetyMargin(props.pool);
+    // GET PRICE WITH SAFETY MARGIN  
+   let  priceWithSafetyMargin =  await poolStore.getPriceWithSafetyMargin(props.pool);
     setPriceWithSafetyMargin(+priceWithSafetyMargin);
-    console.log("PRICE WITH SAFETYMARGIN : ", priceWithSafetyMargin)
     
     // SAFE MAX
-    const safeMax = ((+collateralInput * 10**18) * (priceWithSafetyMargin * 10**27)) /  10**27 / 10**18;
+    let safeMax = 0;
+    if (priceWithSafetyMargin == 0) {
+      safeMax = +collateralInput;
+    } else {
+        safeMax = +collateralInput * priceWithSafetyMargin;
+    }
     setSafeMax(+safeMax);
-    console.log("SAFE MAX : ", safeMax);
 
-    if (fxdToBorrow > safeMax) {
+    if (+fathomTokenInput > safeMax) {
       setFxdToBeBorrowed(0)
       setFathomToken(0)
     }
 
-    // COLLATERAL AVAILABLE TO WITHDRAW
-    const collatralAvailableToWithdraw = (+collateralInput * +priceWithSafetyMargin - fathomToken) / +priceWithSafetyMargin;
+    let collatralAvailableToWithdraw = 0;
+    if (+priceWithSafetyMargin == 0) {
+      collatralAvailableToWithdraw  = (+collateralInput - +fathomTokenInput);
+    } else {
+      collatralAvailableToWithdraw =  (+collateralInput * +priceWithSafetyMargin - +fathomTokenInput) / +priceWithSafetyMargin;
+    }
+   
     setCollatralAvailableToWithdraw(+collatralAvailableToWithdraw);
-    console.log("COLLATERAL AVAILABLE TO WITHDRAW: ", collatralAvailableToWithdraw);
 
     // PRICE OF COLLATERAL FROM DEX
     const priceOfCollateralFromDex = (props.pool.name === "USDT") ? 10**18 : await poolStore.getDexPrice();
-    console.log("PRICE OF COLLATERAL FROM DEX ", priceOfCollateralFromDex);
 
     // DEBT RATIO
-    const debtRatio = (+fathomToken == 0) ? 0 : +fathomToken / (+collateralInput * +priceOfCollateralFromDex / 10**18);
+    const debtRatio = (+fathomTokenInput == 0) ? 0 : +fathomTokenInput / (+collateralInput * +priceOfCollateralFromDex / 10**18) * 100;
     setDebtRatio(+debtRatio);
-    console.log("DEBT RATIO ", debtRatio);
+
+    // FXD AVAILABLE TO BORROW 
+    const fxdAvailableToBorrow = safeMax - +fathomTokenInput;
+    setFxdAvailableToBorrow(fxdAvailableToBorrow);
+    console.log("FXD AVAILABLE TO BORROW ", fxdAvailableToBorrow)
 
     // SAFETY BUFFER
-    const safetyBuffer = (+collateralInput * priceWithSafetyMargin) - +fathomToken;
+    const safetyBuffer = collatralAvailableToWithdraw / +collateralInput;
     setSafetyBuffer(+safetyBuffer);
     console.log("SAFETY BUFFER : ", safetyBuffer);
 
 
     // LIQUIDATION PRICE 
     let liquidationPrice = 0;
-    if (safetyBuffer == 0) {
-       liquidationPrice = priceOfCollateralFromDex / 10**18 
-    } else {
-       liquidationPrice = priceOfCollateralFromDex / 10**18 - safetyBuffer / +collateralInput;
+    if (priceWithSafetyMargin == 0) { 
+      liquidationPrice  = (priceOfCollateralFromDex / 10**18) - (collatralAvailableToWithdraw  / +collateralInput);
+    } else { 
+      liquidationPrice  = (priceOfCollateralFromDex / 10**18) - ((collatralAvailableToWithdraw * priceWithSafetyMargin) / +collateralInput);
+
     }
+    
     setLiquidationPrice(+liquidationPrice);
-    console.log("LIQUIDATION PRICE : ", liquidationPrice)
-
-
-    // setCollatral(collateralInput)
-    // setFathomToken(fxdToBorrow)
-
   }
 
   const updateFathomAmount = () => {
@@ -281,14 +282,18 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
                       </Grid>
                       <Grid item xs={5}>{fxdToBeBorrowed.toFixed(2)} FXD</Grid>
                       <Grid item xs={7}>
-                          <Typography gutterBottom>Debt Ratio</Typography>
+                          <Typography gutterBottom>FXD Available to Borrow</Typography>
                       </Grid>
-                      <Grid item xs={5}>{debtRatio.toFixed(2)} FXD</Grid>
+                      <Grid item xs={5}>{fxdAvailableToBorrow.toFixed(2)} FXD</Grid>
+                      <Grid item xs={7}>
+                          <Typography gutterBottom>LTV</Typography>
+                      </Grid>
+                      <Grid item xs={5}>{debtRatio.toFixed(2)} %</Grid>
                       <Grid item xs={7}>
                           <Typography gutterBottom>Safety Buffer</Typography>
                       </Grid>
                       {/* <Grid item xs={5}>{(safetyBuffer * 100).toFixed(2)} % </Grid> */}
-                      <Grid item xs={5}>{(safetyBuffer.toFixed(2))}  % </Grid>
+                      <Grid item xs={5}>{(safetyBuffer * 100).toFixed(2)}  % </Grid>
                       <Grid item xs={7}>
                           <Typography gutterBottom>Liquidation Price of {props.pool.name}</Typography>
                       </Grid>
