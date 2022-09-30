@@ -8,7 +8,7 @@ import {
   ReactElement,
   FC
 } from "react";
-import { injected } from "../components/wallet/connectors";
+import { injected } from "../connectors/networks";
 import { useWeb3React } from "@web3-react/core";
 
 export const MetaMaskContext = createContext(null);
