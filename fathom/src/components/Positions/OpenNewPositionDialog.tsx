@@ -3,7 +3,6 @@ import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
@@ -12,6 +11,8 @@ import { TextField} from '@mui/material';
 import { useStores } from '../../stores';
 import useMetaMask from '../../hooks/metamask';
 import ICollatralPool from '../../stores/interfaces/ICollatralPool';
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Grid";
 import {
   UnsupportedChainIdError,
   useWeb3React
@@ -66,11 +67,31 @@ const BootstrapDialogTitle = (props: DialogTitleProps) => {
 
 export default function CustomizedDialogs(this: any, props: PoolProps) {
   let positionStore = useStores().positionStore;
+  let poolStore = useStores().poolStore;
+
   const { account } = useMetaMask()!
 
-  let [approveBtn, setApproveBtn] = React.useState(true);
   const { chainId, error } = useWeb3React()
   const unsupportedError = useMemo(() => (error as Error) instanceof UnsupportedChainIdError, [error]);
+
+
+  const [open, setOpen] = React.useState(false);
+  const [approveBtn, setApproveBtn] = React.useState(true);
+  const [approvalPending, setApprovalPending] = React.useState(false);
+  const [balance, setBalance]  = React.useState(0);
+  const [balanceError, setBalanceError]  = React.useState(false);
+
+  const [fathomToken, setFathomToken] = React.useState(0);
+  const [collatral, setCollatral] = React.useState(0);
+  const [collatralToBeLocked, setCollatralToBeLocked] = React.useState(0);
+  const [fxdToBeBorrowed, setFxdToBeBorrowed] = React.useState(0);
+  const [safeMax, setSafeMax] = React.useState(0);
+  const [collatralAvailableToWithdraw, setCollatralAvailableToWithdraw] = React.useState(0);
+  const [priceWithSafetyMargin, setPriceWithSafetyMargin] = React.useState(0);
+  const [safetyBuffer, setSafetyBuffer] = React.useState(0);
+  const [debtRatio, setDebtRatio] = React.useState(0);
+  const [liquidationPrice, setLiquidationPrice] = React.useState(0);
+  const [fxdAvailableToBorrow, setFxdAvailableToBorrow] = React.useState(0);
 
   useEffect(() => {
     if (chainId && (!error || !unsupportedError)) {
@@ -80,12 +101,98 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
     }
   }, [])
 
-  const [open, setOpen] = React.useState(false);
-  const [collatral, setCollatral] = React.useState(0);
-  const [fathomToken, setFathomToken] = React.useState(0);
-  const [approvalPending, setApprovalPending] = React.useState(false);
+  const handleUpdates = async (collateralInput:number, fathomTokenInput:number) => {
+     // check collateral input 
+    if (isNaN(collateralInput) || !collateralInput) {
+      collateralInput = 0;
+    }
+    // console.log("COLLATERAL INPUT: ", collateralInput);
+    setCollatralToBeLocked(+collateralInput)
+
+    
+    if (isNaN(fathomTokenInput) || !fathomTokenInput) {
+      fathomTokenInput = 0;
+    }
+    // console.log("FXD TO BORROW: ", fxdToBorrow);
+    setFxdToBeBorrowed(+fathomTokenInput);
+  
+    // GET USER BALANCE
+    const balance = await poolStore.getUserTokenBalance(account, props.pool);
+    setBalance(balance);
+
+    // CHECK BALANCE
+    // if the user does not have enough collateral -- show them a balance error
+    if ((+balance / 10**18) < +collateralInput) {
+      setBalanceError(true);
+      return
+    } else { 
+      setBalanceError(false);
+    }
+
+    // GET PRICE WITH SAFETY MARGIN  
+    let  priceWithSafetyMargin = 0;
+    if (props.pool.name === "USDT") {
+      priceWithSafetyMargin = 0.75188;
+    } else {
+      priceWithSafetyMargin =  await poolStore.getPriceWithSafetyMargin(props.pool);
+    }
+    setPriceWithSafetyMargin(+priceWithSafetyMargin);
+    
+    // SAFE MAX
+    let safeMax = 0;
+    if (priceWithSafetyMargin == 0) {
+      safeMax = +collateralInput;
+    } else {
+        safeMax = +collateralInput * priceWithSafetyMargin;
+    }
+    setSafeMax(+safeMax);
+
+    if (+fathomTokenInput > safeMax) {
+      setFxdToBeBorrowed(0)
+      setFathomToken(0)
+    }
+
+    let collatralAvailableToWithdraw = 0;
+    if (+priceWithSafetyMargin == 0) {
+      collatralAvailableToWithdraw  = (+collateralInput - +fathomTokenInput);
+    } else {
+      collatralAvailableToWithdraw =  (+collateralInput * +priceWithSafetyMargin - +fathomTokenInput) / +priceWithSafetyMargin;
+    }
+   
+    setCollatralAvailableToWithdraw(+collatralAvailableToWithdraw);
+
+    // PRICE OF COLLATERAL FROM DEX
+    const priceOfCollateralFromDex = (props.pool.name === "USDT") ? 10**18 : await poolStore.getDexPrice();
+
+    // DEBT RATIO
+    const debtRatio = (+fathomTokenInput == 0) ? 0 : +fathomTokenInput / (+collateralInput * +priceOfCollateralFromDex / 10**18) * 100;
+    setDebtRatio(+debtRatio);
+
+    // FXD AVAILABLE TO BORROW 
+    const fxdAvailableToBorrow = safeMax - +fathomTokenInput;
+    setFxdAvailableToBorrow(fxdAvailableToBorrow);
+
+    // SAFETY BUFFER
+    const safetyBuffer = collatralAvailableToWithdraw / +collateralInput;
+    setSafetyBuffer(+safetyBuffer);
 
 
+    // LIQUIDATION PRICE 
+    let liquidationPrice = 0;
+    if (priceWithSafetyMargin == 0) { 
+      liquidationPrice  = (priceOfCollateralFromDex / 10**18) - (collatralAvailableToWithdraw  / +collateralInput);
+    } else { 
+      liquidationPrice  = (priceOfCollateralFromDex / 10**18) - ((collatralAvailableToWithdraw * priceWithSafetyMargin) / +collateralInput);
+
+    }
+    
+    setLiquidationPrice(+liquidationPrice);
+  }
+
+  const updateFathomAmount = () => {
+    setFathomToken(safeMax)
+    handleUpdates(collatral, safeMax)
+  }
 
   const approvalStatus = async () => {
     let approved = await positionStore.approvalStatus(account, collatral, props.pool)
@@ -113,7 +220,11 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
     setApproveBtn(false)
   }
 
-  const handleClickOpen = () => {
+  const handleClickOpen = async () => {
+    // get user balance 
+    let balance = await poolStore.getUserTokenBalance(account, props.pool)
+    setBalance(balance)
+
     setOpen(true);
   };
 
@@ -122,11 +233,20 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
   };
 
   const handleCollatralTextFieldChange = (e:any) => {
-    setCollatral(e.target.value)
+    let value = e.target.value;
+    if (!isNaN(value)) {
+      setCollatral(value)
+    }
+    
+    handleUpdates(value, fathomToken)
   }
 
   const handlefathomTokenTextFieldChange = (e:any) => {
-    setFathomToken(e.target.value)
+    let value = e.target.value;
+    if (!isNaN(value)) {
+      setFathomToken(value)
+    }
+    handleUpdates(collatral, value)
   }
 
   return (
@@ -138,48 +258,136 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
         open={open}
+        maxWidth="md"
       >
         <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
           Open New Position
         </BootstrapDialogTitle>
-        <DialogContent dividers>
-          <Typography gutterBottom>
-            Create a new position for {props.pool.name} Pool to get guranteed return on your collateral.
-          </Typography>
-          <TextField
-          id="outlined-helperText"
-          label="Collatral Value"
-          defaultValue="Default Value"
-          helperText="Enter the collatral."
-          sx={{ m: 3 }}
-          value={collatral}
-          onChange={handleCollatralTextFieldChange}
-         />
-          <TextField
-          id="outlined-helperText"
-          label="FXD"
-          defaultValue="Default Value"
-          helperText="Enter the desired FXD."
-          sx={{ m: 3 }}
-          value={fathomToken}
-          onChange={handlefathomTokenTextFieldChange}
-         />
-        </DialogContent>
-        <DialogActions>
-          { approvalPending 
-            ? <Typography display="inline">
-                Pending ...
-              </Typography>
-            : approveBtn
-            ? <Button onClick={approve}>
-                Approve {props.pool.name}
+
+        <Grid container spacing={2}>
+          <Grid item xs={7}>
+              <Container>
+                  <Grid container spacing={2}>
+                      <Grid item xs={7}>
+                          <Typography gutterBottom>Collateral to be Locked</Typography>
+                      </Grid>
+                      <Grid item xs={5}>
+                          <Typography gutterBottom>{collatralToBeLocked.toFixed(2)} {props.pool.name}</Typography>
+                      </Grid>
+                      <Grid item xs={7}>
+                          <Typography gutterBottom>Estimated Collateral Available to Withdraw </Typography>
+                      </Grid>
+                      <Grid item xs={5}>
+                          <Typography gutterBottom>{collatralAvailableToWithdraw.toFixed(2)} {props.pool.name}</Typography>
+                      </Grid>
+                      <Grid item xs={7}>
+                          <Typography gutterBottom>FXD to be Borrowed</Typography>
+                      </Grid>
+                      <Grid item xs={5}>{fxdToBeBorrowed.toFixed(2)} FXD</Grid>
+                      <Grid item xs={7}>
+                          <Typography gutterBottom>FXD Available to Borrow</Typography>
+                      </Grid>
+                      <Grid item xs={5}>{fxdAvailableToBorrow.toFixed(2)} FXD</Grid>
+                      <Grid item xs={7}>
+                          <Typography gutterBottom>LTV</Typography>
+                      </Grid>
+                      <Grid item xs={5}>{debtRatio.toFixed(2)} %</Grid>
+                      <Grid item xs={7}>
+                          <Typography gutterBottom>Safety Buffer</Typography>
+                      </Grid>
+                      {/* <Grid item xs={5}>{(safetyBuffer * 100).toFixed(2)} % </Grid> */}
+                      <Grid item xs={5}>{(safetyBuffer * 100).toFixed(2)}  % </Grid>
+                      <Grid item xs={7}>
+                          <Typography gutterBottom>Liquidation Price of {props.pool.name}</Typography>
+                      </Grid>
+                      <Grid item xs={5}>${liquidationPrice.toFixed(2)}</Grid>
+
+
+                      <Grid item xs={7}>
+                          <Typography gutterBottom></Typography>
+                      </Grid>
+                      <Grid item xs={5}></Grid>
+
+
+
+                      <Grid item xs={7}>
+                          <Typography gutterBottom>Lending APR</Typography>
+                      </Grid>
+                      <Grid item xs={5}>1.73%</Grid>
+                      <Grid item xs={7}>
+                          <Typography gutterBottom>Fathom Rewards APR</Typography>
+                      </Grid>
+                      <Grid item xs={5}>0.22%</Grid>
+                      <Grid item xs={7}>
+                          <Typography gutterBottom>Stability Fee</Typography>
+                      </Grid>
+                      <Grid item xs={5}>0.00%</Grid>
+                      <Grid item xs={7}>
+                          <Typography gutterBottom>Total APR</Typography>
+                      </Grid>
+                      <Grid item xs={5}>1.96%</Grid>
+                      <Grid item xs={7}>
+                          <Typography gutterBottom>Total APY</Typography>
+                      </Grid>
+                      <Grid item xs={5}>1.98%</Grid>
+                  </Grid>
+              </Container>
+          </Grid>
+          <Grid item xs={5} >
+            <Grid item xs={7}>
+                <Typography sx={{marginLeft: 3}}>{props.pool.name} balance: {(balance / 10**18).toFixed(2)}</Typography>
+            </Grid>
+                        
+            <TextField
+            id="outlined-helperText"
+            label="Collateral Amount"
+            defaultValue="Default Value"
+            helperText="Enter the Collateral."
+            sx={{ m: 3 }}
+            value={collatral}
+            onChange={handleCollatralTextFieldChange}
+          />
+            {safeMax > 0 && !balanceError
+              ? <Button sx={{ marginBottom: -2, marginTop: -2, marginLeft: 4 }} onClick={updateFathomAmount}>
+                Use Safe Max: {safeMax.toFixed(2)}
               </Button>
             : null
           }
-          <Button autoFocus onClick={openNewPosition} disabled={approveBtn}>
-            Open
-          </Button>
-        </DialogActions>
+            <TextField
+            id="outlined-helperText"
+            label="FXD"
+            defaultValue="Default Value"
+            helperText="Enter the desired FXD."
+            sx={{ m: 3 }}
+            value={fathomToken}
+            onChange={handlefathomTokenTextFieldChange}
+          />
+          {balanceError 
+            ? <Typography color="red" gutterBottom>
+                You do not have enough {props.pool.name}
+              </Typography>
+            : null
+          }
+          <Grid item xs={8}>
+            <DialogActions>
+              { approvalPending 
+                ? <Typography display="inline">
+                    Pending ...
+                  </Typography>
+                : approveBtn
+                ? <Button onClick={approve}>
+                    Approve {props.pool.name}
+                  </Button>
+                : null
+              }
+                                    
+              <Button onClick={openNewPosition} disabled={approveBtn || balanceError}>
+                Open
+              </Button>
+            </DialogActions>
+          </Grid>
+        </Grid>
+      </Grid>
       </BootstrapDialog>
     </div>
   );
