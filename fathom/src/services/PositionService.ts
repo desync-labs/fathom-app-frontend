@@ -169,7 +169,7 @@ export default class PositionService implements IPositionService{
             pool.CollateralTokenAdapterAddress,
             SmartContractFactory.StablecoinAdapter(this.chainId).address,
             positionId,
-            debt.toString(),
+            toWei(debt.toString(), "ether"),
             encodedResult,
           ]);
   
