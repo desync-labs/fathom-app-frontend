@@ -27,7 +27,7 @@ const ProtocolStats = function ProtocolStats(props: any) {
           p: 2,
           display: 'flex',
           flexDirection: 'column',
-          height: 240,
+          height: 360,
         }}
       >
       <img src={logo} alt="Fathom Stablecoin"  height="40" width="80" color='black'></img>
@@ -42,10 +42,10 @@ const ProtocolStats = function ProtocolStats(props: any) {
       <Box
         sx={{
           boxShadow: 2,
-          width: '7rem',
-          height: '4rem',
+          width: '15rem',
+          height: '5rem',
           bgcolor: '#000000',
-          p: 1,
+          p: 1.5,
           m: 1,
           borderRadius: 2,
           textAlign: 'center',
@@ -54,17 +54,17 @@ const ProtocolStats = function ProtocolStats(props: any) {
        <Typography variant="subtitle1" color="text.secondary">
           Total Supply
        </Typography>
-       <Typography variant="body2" gutterBottom>
+       <Typography variant="h6" color="primary" gutterBottom>
         {fxdProtocolStatsStore.commarize(fxdProtocolStatsStore.protocolStats.fathomSupplyCap)}
        </Typography>
       </Box>
       <Box
         sx={{
           boxShadow: 2,
-          width: '7rem',
-          height: '4rem',
+          width: '15rem',
+          height: '5rem',
           bgcolor: '#000000',
-          p: 1,
+          p: 1.5,
           m: 1,
           borderRadius: 2,
           textAlign: 'center',
@@ -73,17 +73,17 @@ const ProtocolStats = function ProtocolStats(props: any) {
       <Typography variant="subtitle1" color="text.secondary">
           TVL
       </Typography>
-      <Typography variant="body2" gutterBottom>
+      <Typography variant="h6" color="primary" gutterBottom>
           {fxdProtocolStatsStore.getFormattedTVL()}
       </Typography>
       </Box>
       <Box
         sx={{
           boxShadow: 2,
-          width: '7rem',
-          height: '4rem',
+          width: '15rem',
+          height: '5rem',
           bgcolor: '#000000',
-          p: 1,
+          p: 1.5,
           m: 1,
           borderRadius: 2,
           textAlign: 'center',
@@ -92,17 +92,17 @@ const ProtocolStats = function ProtocolStats(props: any) {
       <Typography variant="subtitle1" color="text.secondary">
           FXD Price
       </Typography>
-      <Typography variant="body2" gutterBottom>
+      <Typography variant="h6" color="primary" gutterBottom>
         {fxdProtocolStatsStore.getFormattedFXDPriceRatio()}
       </Typography>
       </Box>
       <Box
         sx={{
           boxShadow: 2,
-          width: '7rem',
-          height: '4rem',
+          width: '15rem',
+          height: '5rem',
           bgcolor: '#000000',
-          p: 1,
+          p: 1.5,
           m: 1,
           borderRadius: 2,
           textAlign: 'center',
@@ -111,7 +111,7 @@ const ProtocolStats = function ProtocolStats(props: any) {
       <Typography variant="subtitle1" color="text.secondary">
           Liq. Ratio
       </Typography>
-      <Typography variant="body2" gutterBottom>
+      <Typography variant="h6" color="primary" gutterBottom>
         {fxdProtocolStatsStore.getFormattedLiquidationRatio()}
       </Typography>
       </Box>

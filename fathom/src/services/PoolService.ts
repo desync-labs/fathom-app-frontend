@@ -31,6 +31,16 @@ export default class PoolService implements IPoolService {
           SmartContractFactory.USDTCollateralTokenAdapter(this.chainId).address,
         availableFathom: "",
         borrowedFathom: "",
+      },
+      {
+        id: "0x555344542d535441424c45000000000000000000000000000000000000000000",
+        name: "USDT",
+        collateralContractAddress: SmartContractFactory.USDT(this.chainId)
+          .address,
+        CollateralTokenAdapterAddress:
+          SmartContractFactory.USDTCollateralTokenAdapter(this.chainId).address,
+        availableFathom: "",
+        borrowedFathom: "",
       }
     );
 
