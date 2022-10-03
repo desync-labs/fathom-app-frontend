@@ -22,28 +22,22 @@ import AlertMessages from "../Common/AlertMessages";
 import TransactionStatus from "../Transaction/TransactionStatus";
 
 const AllProposalsView = observer(() => {
-  const { account } = useMetaMask()!;
+  const { account, chainId } = useMetaMask()!;
   const logger = useLogger();
   const proposeStore = useStores().proposalStore;
 
   useEffect(() => {
-    logger.log(LogLevel.info, "fetching proposal information.");
-    proposeStore.fetchProposals(account); 
-  }, [account, logger, proposeStore]);
+    if (chainId) {
+      logger.log(LogLevel.info, "fetching proposal information.");
+      proposeStore.fetchProposals(account); 
+    } else {
+      proposeStore.setProposals([]);
+    }
+
+  }, [account, logger, proposeStore, chainId]);
 
   return (
-    <Box
-      component="main"
-      sx={{
-        backgroundColor: "#000",
-        flexGrow: 1,
-        height: "100vh",
-        overflow: "auto",
-      }}
-    >
-      <Toolbar />
-      <AlertMessages />
-      <TransactionStatus />
+    <>
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
         <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
           <Typography component="h2" variant="h6" color="primary" gutterBottom>
@@ -89,7 +83,7 @@ const AllProposalsView = observer(() => {
           )}
         </Paper>
       </Container>
-    </Box>
+     </>
   );
 });
 

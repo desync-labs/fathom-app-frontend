@@ -88,4 +88,38 @@ export default class PoolService implements IPoolService {
       throw exception;
     }
   }
+
+  async getUserTokenBalance(address:string, pool: ICollatralPool): Promise<number> {
+    try{
+
+        const BEP20 = Web3Utils.getContractInstance(SmartContractFactory.BEP20(pool.collateralContractAddress),this.chainId)
+
+        let balance = await BEP20.methods.balanceOf(address).call();
+      
+        return balance;
+        
+    }catch(exception){
+        console.log(`Error fetching pool information: ${JSON.stringify(exception)}`)
+        throw exception;
+    }
+}
+
+async getDexPrice(): Promise<number>{
+  console.log("in get dex price")
+  try{
+   
+      let USDT = SmartContractFactory.USDT(this.chainId).address;
+      let WXDC = SmartContractFactory.WXDC(this.chainId).address;
+
+      const dexPriceOracle = Web3Utils.getContractInstance(SmartContractFactory.DexPriceOracle(this.chainId),this.chainId)
+
+      let result = await dexPriceOracle.methods.getPrice(USDT, WXDC).call()
+      let price = result[0];
+      
+      return price
+  }catch(error){
+      console.error(`Error in open position approve token : ${error}`)
+      throw error;
+  }
+}
 }

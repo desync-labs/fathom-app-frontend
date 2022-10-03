@@ -20,10 +20,7 @@ const ProtocolStats = function ProtocolStats(props: any) {
       })
     } 
   }, [fxdProtocolStatsStore, rootStore.alertStore,  chainId, error, unsupportedError]);
-
-
-
-
+  
     return (
         <Paper
         sx={{

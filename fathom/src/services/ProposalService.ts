@@ -4,6 +4,7 @@ import { Web3Utils } from "../helpers/Web3Utils";
 import IProposal from "../stores/interfaces/IProposal";
 import IVoteCounts from "../stores/interfaces/IVoteCounts";
 import ActiveWeb3Transactions from "../stores/transaction.store";
+import { keccak256 } from "web3-utils";
 import {
   TransactionStatus,
   TransactionType,
@@ -19,9 +20,10 @@ export default class ProposalService implements IProposalService {
     calldatas: string[],
     description: string,
     account: string,
-    transactionStore: ActiveWeb3Transactions
+    transactionStore: ActiveWeb3Transactions,
+    chainId?: number
   ): Promise<number> {
-    const chainId = this.chainId;
+    chainId = chainId || this.chainId;
 
     if (chainId) {
       const FathomGovernor = Web3Utils.getContractInstance(
@@ -38,7 +40,7 @@ export default class ProposalService implements IProposalService {
             active: false,
             status: TransactionStatus.None,
             title: `Proposal Creation Pending`,
-            message: "Click on transaction to view on Etherscan.",
+            message: "Click on transaction to view on blockexplorer.",
           });
         });
     } else {
@@ -46,12 +48,59 @@ export default class ProposalService implements IProposalService {
     }
   }
 
+  async executeProposal(
+    targets: string[],
+    values: number[],
+    calldatas: string[],
+    description: string,
+    account: string,
+    transactionStore: ActiveWeb3Transactions,
+    chainId?: number
+  ): Promise<number> {
+    chainId = chainId || this.chainId;
+
+    if (chainId) {
+      const FathomGovernor = Web3Utils.getContractInstance(
+        SmartContractFactory.FathomGovernor(chainId),
+        chainId
+      );
+      return await FathomGovernor.methods
+        .execute(targets, values, calldatas, keccak256(description)).send({ from: account })
+    } else {
+      return 0;
+    }
+  }
+
+  async queueProposal(
+    targets: string[],
+    values: number[],
+    calldatas: string[],
+    description: string,
+    account: string,
+    transactionStore: ActiveWeb3Transactions,
+    chainId?: number
+  ): Promise<number> {
+    chainId = chainId || this.chainId;
+
+    if (chainId) {
+      const FathomGovernor = Web3Utils.getContractInstance(
+        SmartContractFactory.FathomGovernor(chainId),
+        chainId
+      );
+      return await FathomGovernor.methods
+        .queue(targets, values, calldatas, keccak256(description)).send({ from: account })
+    } else {
+      return 0;
+    }
+  }
+
   async viewAllProposals(
-    account: string
+    account: string,
+    chainId?: number
   ): Promise<IProposal[]> {
     let fetchedProposals: IProposal[] = [];
     try {
-      const chainId = this.chainId;
+      chainId = chainId || this.chainId;
       if (chainId) {
         const FathomGovernor = Web3Utils.getContractInstance(
           SmartContractFactory.FathomGovernor(chainId)
@@ -95,10 +144,11 @@ export default class ProposalService implements IProposalService {
 
   async viewProposal(
     proposalId: string,
-    account: string
+    account: string,
+    chainId?: number
   ): Promise<IProposal> {
     let proposal = {} as IProposal;
-    const chainId = this.chainId;
+    chainId = chainId || this.chainId;
 
     try {
       if (chainId) {
@@ -197,7 +247,6 @@ export default class ProposalService implements IProposalService {
         weight = await FathomGovernor.methods
           .castVote(proposalId, support)
           .send({ from: account })
-          .send({ from: account })
           .on("transactionHash", (hash: any) => {
             transactionStore.addTransaction({
               hash: hash,
@@ -205,7 +254,7 @@ export default class ProposalService implements IProposalService {
               active: false,
               status: TransactionStatus.None,
               title: `Vote Pending`,
-              message: "Click on transaction to view on Etherscan.",
+              message: "Click on transaction to view on blockexplorer.",
             });
           });
       }
@@ -215,6 +264,24 @@ export default class ProposalService implements IProposalService {
       return weight;
     }
   }
+
+  async getVeBalance(account: string, chainId?: number): Promise<number> {
+    let weight = 0;
+    chainId = chainId || this.chainId;
+    try {
+      if (chainId) {
+        const VeFathom = Web3Utils.getContractInstance(
+          SmartContractFactory.VeFathom(chainId),
+          this.chainId
+        );
+        weight = await VeFathom.methods.balanceOf(account).call()
+      }
+      return weight;
+    } catch (e) {
+      console.error(`Error in getting Ve token blance: ${e}`);
+      return weight;
+    }
+  } 
 
   setChainId(chainId: number) {
     this.chainId = chainId;

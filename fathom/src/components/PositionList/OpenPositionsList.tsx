@@ -52,7 +52,7 @@ const OpenPositionsList = observer(() => {
     }
 
     const getFormattedSaftyBuffer = (safetyBuffer:BigNumber) => {
-        return safetyBuffer.div(Constants.WeiPerWad).toString()
+        return safetyBuffer.div(Constants.WeiPerWad).decimalPlaces(2).toString()
     }
 
     const handleClickClosePosition = (position:IOpenPosition, pool: ICollatralPool) => {
@@ -90,7 +90,10 @@ const OpenPositionsList = observer(() => {
                 <TableCell>Position Id</TableCell>
                 {/* <TableCell align="right">Address</TableCell> */}
                 <TableCell align="right">Pool</TableCell>
-                <TableCell align="right">Debt Share</TableCell>
+                <TableCell align="right">FXD Borrowed</TableCell>
+                <TableCell align="right">Locked Collateral</TableCell>
+                <TableCell align="right">Locked Value</TableCell>
+                <TableCell align="right">LTV</TableCell>
                 <TableCell align="right">Close Position</TableCell>
               </TableRow>
             </TableHead>
@@ -105,17 +108,19 @@ const OpenPositionsList = observer(() => {
                   </TableCell>
                   {/* <TableCell align="right">{row.address}</TableCell> */}
                   <TableCell align="right">{poolStore.getPool(position.pool).name}</TableCell>
-                  <TableCell align="right">{getFormattedSaftyBuffer(position.debtShare)}</TableCell>
+                  <TableCell align="right">{getFormattedSaftyBuffer(position.debtShare)} FXD</TableCell>
+                  <TableCell align="right">{getFormattedSaftyBuffer(position.lockedCollateral)} {poolStore.getPool(position.pool).name} </TableCell>
+                  <TableCell align="right">$ {getFormattedSaftyBuffer(position.lockedValue)}</TableCell>
+                  <TableCell align="right">{(position.ltv.toNumber() / 10)}%</TableCell>
                   <TableCell align="right">
-                    <Grid container>
-                      <Grid xs={4} />
-                      <Grid xs={5} >
+                    <Grid container >
+                     <Grid xs={7} > 
                         {approvalPending
                           ? <Typography display="inline" sx={{ marginRight: 2 }}>
                             Pending ...
                           </Typography>
                           : approveBtn
-                            ? <Button variant="outlined" onClick={approve} sx={{ marginRight: 2 }}>
+                            ? <Button variant="outlined" onClick={approve} sx={{ marginRight: 5 }}>
                               Approve FXD
                             </Button>
                             : null

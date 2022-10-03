@@ -8,6 +8,9 @@ import BigNumber from "bignumber.js";
 import ICollatralPool from "../stores/interfaces/ICollatralPool";
 import ActiveWeb3Transactions from "../stores/transaction.store";
 import { TransactionStatus, TransactionType } from "../stores/interfaces/ITransaction";
+import { Strings } from "../helpers/Strings";
+
+import { toWei } from "web3-utils";
 
 
 
@@ -37,8 +40,8 @@ export default class PositionService implements IPositionService{
               pool.CollateralTokenAdapterAddress,
               SmartContractFactory.StablecoinAdapter(this.chainId).address,
               pool.id,
-              Constants.WeiPerWad.multipliedBy(collatral).toString(),
-              Constants.WeiPerWad.multipliedBy(fathomToken).toString(),
+              toWei(collatral.toString(), "ether"),
+              toWei(fathomToken.toString(), "ether"),
               '1',
               encodedResult,
           ]);
@@ -50,7 +53,7 @@ export default class PositionService implements IPositionService{
                                               active:false,
                                               status:TransactionStatus.None,
                                               title:`Opening Position Pending`,
-                                              message:'Click on transaction to view on Etherscan.'})
+                                              message:Strings.CheckOnBlockExplorer})
           })
 
       }catch(error){
@@ -63,7 +66,7 @@ export default class PositionService implements IPositionService{
   async createProxyWallet(address:string): Promise<string>{
       try{
           console.log('Crteating a proxy wallet...')
-          let proxyWalletRegistry = Web3Utils.getContractInstance(SmartContractFactory.ProxyWalletRegistry,this.chainId)
+          let proxyWalletRegistry = Web3Utils.getContractInstance(SmartContractFactory.ProxyWalletRegistry(this.chainId),this.chainId)
           await proxyWalletRegistry.methods.build(address).send({from:address});
           let proxyWallet = await proxyWalletRegistry.methods.proxies(address).call();
           return proxyWallet;
@@ -120,11 +123,11 @@ export default class PositionService implements IPositionService{
           console.log(`getting Positions With Safety Buffer For Address ${address}.`)
           let myPositions = await this.getPositionsForAddress(address);
           let getPositionsContract = Web3Utils.getContractInstance(SmartContractFactory.GetPositions(this.chainId),this.chainId)
-          let response = await getPositionsContract.methods.getPositionWithSafetyBuffer(SmartContractFactory.PositionManager(this.chainId).address,1,100).call();
+          let response = await getPositionsContract.methods.getPositionWithSafetyBuffer(SmartContractFactory.PositionManager(this.chainId).address,1,500).call();
 
           console.log(`Raw response from getPositionsWithSafetyBuffer: ${JSON.stringify(response)}`)
 
-          const { 0: positionAddresses, 1: debtShares, 2: safetyBuffers } = response;
+          const { 0: positionAddresses, 1: debtShares, 2: safetyBuffers, _lockedCollaterals:lockedCollaterals, _lockedValues:lockedValues, _positionLTVs:ltvs} = response;
 
           let fetchedPositions:IOpenPosition[] = [];
           let index = 0;
@@ -134,6 +137,9 @@ export default class PositionService implements IPositionService{
               if(position && debtShares[index] > 0){
                   position.setDebtShare(new BigNumber(debtShares[index]))
                   position.setSafetyBuffer(new BigNumber(safetyBuffers[index]))
+                  position.setLockedCollateral(new BigNumber(lockedCollaterals[index]))
+                  position.setLockedValue(new BigNumber(lockedValues[index]))
+                  position.setLtv(new BigNumber(ltvs[index]))
                   fetchedPositions.push(position);
               }
               index++;
@@ -163,7 +169,7 @@ export default class PositionService implements IPositionService{
             pool.CollateralTokenAdapterAddress,
             SmartContractFactory.StablecoinAdapter(this.chainId).address,
             positionId,
-            debt.toString(),
+            toWei(debt.toString(), "ether"),
             encodedResult,
           ]);
   
@@ -173,7 +179,7 @@ export default class PositionService implements IPositionService{
                                               active:false, 
                                               status:TransactionStatus.None,
                                               title:'Close Position Pending.',
-                                              message:'Click on transaction to view on Etherscan.'
+                                              message:Strings.CheckOnBlockExplorer
                                           })
                                       })
           console.log(`Position closed for position id ${positionId}.`)
@@ -201,8 +207,8 @@ export default class PositionService implements IPositionService{
           pool.CollateralTokenAdapterAddress,
           SmartContractFactory.StablecoinAdapter(this.chainId).address,
           position.id,
-          Constants.WeiPerWad.multipliedBy(collateral).toString(),
-          Constants.WeiPerWad.multipliedBy(stablecoint).toString(),
+          toWei(collateral.toString(), "ether"),
+          toWei(stablecoint.toString(), "ether"),
           encodedResult,
         ]);
 
@@ -215,7 +221,7 @@ export default class PositionService implements IPositionService{
             active: false,
             status: TransactionStatus.None,
             title: 'Close Position Pending.',
-            message: 'Click on transaction to view on Etherscan.'
+            message: Strings.CheckOnBlockExplorer
           })
         })
 
@@ -242,11 +248,11 @@ export default class PositionService implements IPositionService{
                                               active:false, 
                                               status:TransactionStatus.None,
                                               title:`Approval Pending`,
-                                              message:'Click on transaction to view on Etherscan.'})
+                                              message:Strings.CheckOnBlockExplorer})
           })
 
       }catch(error){
-          console.error(`Error in open position approve token 1: ${error}`)
+          console.error(`Error in open position approve token: ${error}`)
           throw error;
       }
   }
@@ -267,10 +273,12 @@ export default class PositionService implements IPositionService{
           const BEP20 = Web3Utils.getContractInstance(SmartContractFactory.BEP20(pool.collateralContractAddress),this.chainId)
 
           let allowance = await BEP20.methods.allowance(address, proxyWalletaddress).call()
+
+
           
           return +allowance > +Constants.WeiPerWad.multipliedBy(collatral);
       }catch(error){
-          console.error(`Error in open position approve token 2: ${error}`)
+          console.error(`Error in open position approve token: ${error}`)
           throw error;
       }
   }
@@ -293,11 +301,11 @@ export default class PositionService implements IPositionService{
                       active:false, 
                       status:TransactionStatus.None,
                       title:`Approval Pending`,
-                      message:'Click on transaction to view on Etherscan.'
+                      message:Strings.CheckOnBlockExplorer
                   })
               })
       }catch(error){
-          console.error(`Error in open position approve token 3: ${error}`)
+          console.error(`Error in open position approve token: ${error}`)
           throw error;
       }
   }
@@ -313,10 +321,11 @@ export default class PositionService implements IPositionService{
           const fathomStableCoin = Web3Utils.getContractInstance(SmartContractFactory.FathomStableCoin(this.chainId),this.chainId)
 
           let allowance = await fathomStableCoin.methods.allowance(address, proxyWalletaddress).call()
+
           
           return +allowance > 10000000000000000
       }catch(error){
-          console.error(`Error in open position approve token 4: ${error}`)
+          console.error(`Error in open position approve token: ${error}`)
           throw error;
       }
   }

@@ -32,7 +32,7 @@ const AppMenuItemComponent: React.FC<AppMenuItemComponentProps> = (props) => {
       children={children}
       component={forwardRef((props: NavLinkProps, ref: any) => (
         // @ts-ignore
-        <NavLink exact {...props} innerRef={ref} />
+        <NavLink {...props} />
       ))}
       to={link}
     />

@@ -39,7 +39,7 @@ service:IFXDProtocolStatsService;
   }
 
   getFormattedFXDPriceRatio = () =>{
-    return new BigNumber(this.protocolStats.fxdPriceFromDex).div(Constants.WeiPerRay).toString();
+    return new BigNumber(this.protocolStats.fxdPriceFromDex).div(Constants.WeiPerWad).toString();
   }
 
   getFormattedTVL = () =>{
