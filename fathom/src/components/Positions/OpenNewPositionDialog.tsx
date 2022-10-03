@@ -210,6 +210,7 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
 
   const approvalStatus = async () => {
     let approved = await positionStore.approvalStatus(account, collatral, props.pool)
+    console.log(`Approval Status : ${approved}`)
     approved ? setApproveBtn(false) : setApproveBtn(true)
   }
 
@@ -266,7 +267,7 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
   return (
     <div>
       <Button variant="outlined" onClick={handleClickOpen}>
-        Open New Position
+        Open Position
       </Button>
       <BootstrapDialog
         onClose={handleClose}
