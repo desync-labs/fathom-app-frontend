@@ -9,6 +9,10 @@ export class Constants {
 
   public static DEFAULT_CHAINID = 51 //Apothem network
   public static MAX_UINT256  = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
+  
+  public static APOTHEM_BLOCK_EXPLORER_URL = 'https://explorer.apothem.network/txs/' 
+  public static GOERLI_BLOCK_EXPLORER_URL = 'https://goerli.etherscan.io/tx/' 
+
 
   public static Status = [
     "Pending",

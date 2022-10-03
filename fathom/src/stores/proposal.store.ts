@@ -11,6 +11,7 @@ export default class ProposalStore {
   fetchedTotalVotes: number = 0.000000001;
   fetchedProposalState: string = "";
   weight: number = 0;
+  veBalance: number = 0;
   service: IProposalService;
   rootStore: RootStore;
 
@@ -23,10 +24,14 @@ export default class ProposalStore {
     this.rootStore = rootStore;
   }
 
+  // ------------------------------------------------------------------------------
+  // Example input for createProposal(...):
+  //
   // ["0x5B38Da6a701c568545dCfcB03FcB875f56beddC4"],
   // [0],
   // ["0x0000000000000000000000000000000000000000000000000000000000000000"],
   // "Some string"
+  // ------------------------------------------------------------------------------
 
   createProposal = async (
     targets: string[],
@@ -45,19 +50,53 @@ export default class ProposalStore {
     );
   };
 
-  setproposals = (_proposal: IProposal[]) => {
+  executeProposal = async (
+    targets: string[],
+    values: number[],
+    calldatas: string[],
+    description: string,
+    account: string
+  ): Promise<number> => {
+    return await this.service.executeProposal(
+      targets,
+      values,
+      calldatas,
+      description,
+      account,
+      this.rootStore.transactionStore
+    );
+  };
+
+  queueProposal = async (
+    targets: string[],
+    values: number[],
+    calldatas: string[],
+    description: string,
+    account: string
+  ): Promise<number> => {
+    return await this.service.queueProposal(
+      targets,
+      values,
+      calldatas,
+      description,
+      account,
+      this.rootStore.transactionStore
+    );
+  };
+
+  setProposals = (_proposal: IProposal[]) => {
     this.fetchedProposals = _proposal;
   };
 
-  setproposal = (_proposal: IProposal) => {
+  setProposal = (_proposal: IProposal) => {
     this.fetchedProposal = _proposal;
   };
 
-  setproposalState = (_proposalState: string) => {
+  setProposalState = (_proposalState: string) => {
     this.fetchedProposalState = _proposalState;
   };
 
-  setproposalVotes = (_proposalVotes: IVoteCounts) => {
+  setProposalVotes = (_proposalVotes: IVoteCounts) => {
     _proposalVotes.abstainVotes = _proposalVotes.abstainVotes / 10 ** 18;
     _proposalVotes.againstVotes = _proposalVotes.againstVotes / 10 ** 18;
     _proposalVotes.forVotes = _proposalVotes.forVotes / 10 ** 18;
@@ -73,67 +112,90 @@ export default class ProposalStore {
     this.weight = _weight;
   };
 
+  setVeBalance = (_veBalance: number) => {
+    this.veBalance = _veBalance;
+  };
+
+
   castVote = async (
     proposalId: string,
     account: string,
-    support: string
+    support: string,
+    chainId?: number
   ) => {
     let _weight = await this.service.castVote(
       proposalId,
       account,
       support,
-      this.rootStore.transactionStore
+      this.rootStore.transactionStore,
+      chainId
     );
     runInAction(() => {
       this.setWeight(_weight);
     });
   };
 
-  fetchProposals = async (account: string) => {
-    let fetchedProposals = await this.service.viewAllProposals(
-      account
-    );
+  getVeBalance = async (account: string, chainId?: number ) => {
+    let _veBalance = await this.service.getVeBalance(account, chainId)
     runInAction(() => {
-      this.setproposals(fetchedProposals);
+      this.setVeBalance(_veBalance);
     });
   };
+
+  fetchProposals = async (account: string, chainId?: number) => {
+    let fetchedProposals = await this.service.viewAllProposals(
+      account,
+      chainId
+    );
+    runInAction(() => {
+      this.setProposals(fetchedProposals);
+    });
+  };
+
 
   fetchProposal = async (
     proposal: string,
-    account: string
+    account: string,
+    chainId?: number
   ) => {
     let fetchedProposal = await this.service.viewProposal(
       proposal,
-      account
+      account,
+      chainId
     );
     runInAction(() => {
-      this.setproposal(fetchedProposal);
+      this.setProposal(fetchedProposal);
     });
   };
 
+
   fetchProposalState = async (
     proposal: string,
-    account: string
+    account: string,
+    chainId?: number
   ) => {
     let fetchedProposalState = await this.service.viewProposalState(
       proposal,
-      account
+      account,
+      chainId
     );
     runInAction(() => {
-      this.setproposalState(fetchedProposalState);
+      this.setProposalState(fetchedProposalState);
     });
   };
 
   fetchProposalVotes = async (
     proposal: string,
-    account: string
+    account: string,
+    chainId?: number
   ) => {
     let fetchedVotes = await this.service.viewVoteCounts(
       proposal,
-      account
+      account,
+      chainId
     );
     runInAction(() => {
-      this.setproposalVotes(fetchedVotes);
+      this.setProposalVotes(fetchedVotes);
     });
   };
 }
