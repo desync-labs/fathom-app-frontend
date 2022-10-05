@@ -33,7 +33,7 @@ export default class PoolService implements IPoolService {
         borrowedFathom: "",
       },
       {
-        id: "0x555344542d535441424c45000000000000000000000000000000000000000000",
+        id: "0x555344542d535441424c45000000000000000000000000000000000000000001",
         name: "USDT",
         collateralContractAddress: SmartContractFactory.USDT(this.chainId)
           .address,

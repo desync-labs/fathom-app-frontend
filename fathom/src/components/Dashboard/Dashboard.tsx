@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import Grid from "@mui/material/Grid";
-import PoolListView from "../Pools/PoolListView";
 import OpenPositionsList from "../PositionList/OpenPositionsList";
 import { useStores } from "../../stores";
 import { LogLevel, useLogger } from "../../helpers/Logger";
