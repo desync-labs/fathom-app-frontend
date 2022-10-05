@@ -23,6 +23,7 @@ import { observer } from "mobx-react";
 import ILockPosition from "../../stores/interfaces/ILockPosition";
 import StakingModal from "./StakingModal";
 import StakingViewItem from "./StakingViewItem";
+import { useForm } from "react-hook-form";
 
 export type StakingViewItemMethodsPropsType = {
   handleEarlyWithdrawal: (lockId: number) => void;
@@ -40,6 +41,8 @@ const StakingView = observer(() => {
   const { account, chainId } = useMetaMask()!;
   const logger = useLogger();
   const rootStore = useStores();
+
+  const { register, handleSubmit, watch, formState: { errors } } = useForm();
 
   const stakingStore = rootStore.stakingStore;
 
