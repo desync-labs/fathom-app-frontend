@@ -7,8 +7,15 @@ import {
 } from "@mui/material";
 import * as React from "react";
 import ILockPosition from "../../stores/interfaces/ILockPosition";
-import { FC } from "react";
+import {
+  FC,
+  useEffect,
+  useMemo,
+  useState
+} from "react";
 import { ActionType, StakingViewItemMethodsPropsType } from "./StakingView";
+import StakingCountdown from "./StakingCountdown";
+import { secondsToTime } from '../../utils/secondsToTime';
 
 type StakingViewItemPropsType = {
   lockPosition: ILockPosition;
@@ -24,6 +31,22 @@ const StakingViewItem: FC<
   isItUnlockable,
   handleUnlock,
 }) => {
+  const [timer, setTimer] = useState();
+  const [seconds, setSeconds] = useState(lockPosition.timeObject.seconds);
+
+  useEffect(() => {
+    const interval = setInterval(function () {
+      setSeconds((prev) => prev - 1);
+    }, 1000);
+
+    // @ts-ignore
+    setTimer(interval);
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [lockPosition.timeObject, setTimer, setSeconds]);
+
   return (
     <TableRow
       sx={{
@@ -43,13 +66,11 @@ const StakingViewItem: FC<
       </TableCell>
 
       <TableCell component="td" scope="row">
-        {lockPosition.EndTime > 0 && (
-          <Box sx={{ textAlign: "center" }}>
-            {lockPosition.timeObject.days} days {lockPosition.timeObject.hour}{" "}
-            hrs {lockPosition.timeObject.min} min {lockPosition.timeObject.sec}{" "}
-            sec
-          </Box>
-        )}
+        <Box sx={{ textAlign: "center" }}>
+          { useMemo(() => (
+            lockPosition.EndTime > 0 && <StakingCountdown timeObject={secondsToTime(seconds)} />
+          ), [seconds, lockPosition.EndTime]) }
+        </Box>
         {lockPosition.EndTime < 0 && (
           <Box sx={{ textAlign: "center" }}>Lock Open</Box>
         )}
