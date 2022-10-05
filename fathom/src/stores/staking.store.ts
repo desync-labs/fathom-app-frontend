@@ -26,9 +26,9 @@ export default class StakingStore {
   ) => {
     console.log("Running createLock from store");
     try {
-      if (account === undefined || account === null) return;
+      if (!account) return;
 
-      await this.service.createLock(
+      return this.service.createLock(
         account,
         stakePosition,
         unlockPeriod,
@@ -52,9 +52,9 @@ export default class StakingStore {
   ) => {
     console.log("Running createLock from store");
     try {
-      if (account === undefined || account === null) return;
+      if (!account) return;
 
-      await this.service.handleEarlyWithdrawal(
+      return this.service.handleEarlyWithdrawal(
         account,
         lockId,
         chainId,
@@ -73,9 +73,9 @@ export default class StakingStore {
   handleUnlock = async (account: string, lockId: number, chainId: number) => {
     console.log("Running createLock from store");
     try {
-      if (account === undefined || account === null) return;
+      if (!account) return;
 
-      await this.service.handleUnlock(
+      return this.service.handleUnlock(
         account,
         lockId,
         chainId,
@@ -94,16 +94,13 @@ export default class StakingStore {
   handleClaimRewards = async (account: string, chainId: number) => {
     console.log("Running createLock from store");
     try {
-      if (account === undefined || account === null) return;
-
-      await this.service.handleClaimRewards(
+      if (!account) return;
+      return this.service.handleClaimRewards(
         account,
         1,
         chainId,
         this.rootStore.transactionStore
       );
-
-      //      await this.fetchAll(account,chainId)
     } catch (e) {
       this.rootStore.alertStore.setShowErrorAlert(
         true,
@@ -136,9 +133,9 @@ export default class StakingStore {
   handleWithdrawRewards = async (account: string, chainId: number) => {
     console.log("Running createLock from store");
     try {
-      if (account === undefined || account === null) return;
+      if (!account) return;
 
-      await this.service.handleWithdrawRewards(
+      return this.service.handleWithdrawRewards(
         account,
         1,
         chainId,
@@ -165,7 +162,7 @@ export default class StakingStore {
 
   fetchAPR = async (chainId: number) => {
     console.log("fetching... APR")
-    let apr = await this.service.getAPR(chainId);
+    const apr = await this.service.getAPR(chainId);
     runInAction(() => {
       this.setAPR(apr);
     });
@@ -180,7 +177,7 @@ export default class StakingStore {
   };
 
   fetchWalletBalance = async (account: string, chainId: number) => {
-    let walletBalance = await this.service.getWalletBalance(account, chainId);
+    const walletBalance = await this.service.getWalletBalance(account, chainId);
     runInAction(() => {
       this.setWalletBalance(walletBalance);
     });
@@ -191,14 +188,14 @@ export default class StakingStore {
   };
 
   fetchVOTEBalance = async (account: string, chainId: number) => {
-    let voteBalance = await this.service.getVOTEBalance(account, chainId);
+    const voteBalance = await this.service.getVOTEBalance(account, chainId);
     runInAction(() => {
       this.setVOTEBalance(voteBalance);
     });
   };
 
   fetchLocks = async (account: string, chainId: number) => {
-    let locks = await this.service.getLockPositions(account, chainId);
+    const locks = await this.service.getLockPositions(account, chainId);
     runInAction(() => {
       this.setLocks(locks);
       this.setTotalStakedPosition(locks);
