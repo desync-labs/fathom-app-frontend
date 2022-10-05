@@ -22,11 +22,21 @@ import { useCallback, useEffect, useState } from "react";
 import { observer } from "mobx-react";
 import ILockPosition from "../../stores/interfaces/ILockPosition";
 import StakingModal from "./StakingModal";
+import StakingViewItem from "./StakingViewItem";
+
+export type StakingViewItemMethodsPropsType = {
+  handleEarlyWithdrawal: (lockId: number) => void;
+  isItUnlockable: (lockId: number) => boolean;
+  handleUnlock: (lockId: number) => void;
+};
+
+export type ActionType = { type: string; id: number | null };
 
 const StakingView = observer(() => {
   const [lockDays, setLockDays] = useState(0);
   const [stakePosition, setStakePosition] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [action, setAction] = useState<ActionType>();
   const { account, chainId } = useMetaMask()!;
   const logger = useLogger();
   const rootStore = useStores();
@@ -36,7 +46,7 @@ const StakingView = observer(() => {
   const fetchAll = useCallback(
     async (account: string, chainId: number) => {
       setIsLoading(true);
-      await Promise.all([
+      Promise.all([
         stakingStore.fetchLocks(account, chainId),
         stakingStore.fetchVOTEBalance(account, chainId),
         stakingStore.fetchWalletBalance(account, chainId),
@@ -50,7 +60,7 @@ const StakingView = observer(() => {
 
   useEffect(() => {
     if (chainId) {
-      logger.log(LogLevel.info, "fetching lock positions.");
+      logger.log(LogLevel.info, "Fetching lock positions.");
       fetchAll(account, chainId);
     } else {
       stakingStore.setLocks([]);
@@ -59,44 +69,76 @@ const StakingView = observer(() => {
 
   const createLock = useCallback(async () => {
     await stakingStore.createLock(account, stakePosition, lockDays, chainId);
+    setStakePosition(0);
+    setLockDays(0);
     fetchAll(account, chainId);
-  }, [stakingStore, account, chainId, stakePosition, lockDays, fetchAll]);
+  }, [
+    stakingStore,
+    account,
+    chainId,
+    stakePosition,
+    lockDays,
+    fetchAll,
+    setStakePosition,
+    setLockDays,
+  ]);
 
   const claimRewards = useCallback(async () => {
-    setIsLoading(true)
-    await stakingStore.handleClaimRewards(account, chainId);
-    fetchAll(account, chainId);
-  }, [stakingStore, account, chainId, fetchAll, setIsLoading]);
+    setAction({ type: "claim", id: null });
+    try {
+      await stakingStore.handleClaimRewards(account, chainId);
+      fetchAll(account, chainId);
+    } catch (e) {
+      logger.log(LogLevel.error, "Claim error");
+    }
+    setAction(undefined);
+  }, [stakingStore, account, chainId, fetchAll, setAction]);
 
-  const withdrawRewards = useCallback(() => {
-    setIsLoading(true)
-    stakingStore.handleWithdrawRewards(account, chainId);
-    fetchAll(account, chainId);
-  }, [stakingStore, account, chainId, fetchAll, setIsLoading]);
+  const withdrawRewards = useCallback(async () => {
+    setAction({ type: "withdraw", id: null });
+    try {
+      await stakingStore.handleWithdrawRewards(account, chainId);
+      fetchAll(account, chainId);
+    } catch (e) {
+      logger.log(LogLevel.error, "Withdraw error");
+    }
+    setAction(undefined);
+  }, [stakingStore, account, chainId, fetchAll, setAction]);
 
   const handleEarlyWithdrawal = useCallback(
     async (lockId: number) => {
-      setIsLoading(true)
+      setAction({
+        type: "early",
+        id: lockId,
+      });
       await stakingStore.handleEarlyWithdrawal(account, lockId, chainId);
+      setAction(undefined);
       fetchAll(account, chainId);
     },
-    [stakingStore, account, chainId, fetchAll, setIsLoading]
+    [stakingStore, account, chainId, fetchAll, setAction]
   );
 
   const handleUnlock = useCallback(
     async (lockId: number) => {
-      setIsLoading(true)
+      setAction({
+        type: "unlock",
+        id: lockId,
+      });
       await stakingStore.handleUnlock(account, lockId, chainId);
+      setAction(undefined);
       fetchAll(account, chainId);
     },
-    [stakingStore, account, chainId, fetchAll, setIsLoading]
+    [stakingStore, account, chainId, fetchAll, setAction]
   );
 
-  const isItUnlockable = (lockId: number) => {
-    const remainingTime = stakingStore.lockPositions[lockId - 1].EndTime;
-    const isItUnlockable = remainingTime === 0 || remainingTime < 0;
-    return isItUnlockable;
-  };
+  const isItUnlockable = useCallback(
+    (lockId: number) => {
+      const remainingTime = stakingStore.lockPositions[lockId - 1].EndTime;
+      const isItUnlockable = remainingTime <= 0;
+      return isItUnlockable;
+    },
+    [stakingStore.lockPositions]
+  );
 
   const handleStakeChange = useCallback((e: any) => {
     setStakePosition(e.target.value);
@@ -105,6 +147,12 @@ const StakingView = observer(() => {
   const handleSliderChange = useCallback((e: any) => {
     setLockDays(e.target.value);
   }, []);
+
+  const stakingViewItemProps: StakingViewItemMethodsPropsType = {
+    handleEarlyWithdrawal,
+    isItUnlockable,
+    handleUnlock,
+  };
 
   return (
     <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
@@ -192,60 +240,12 @@ const StakingView = observer(() => {
               </TableRow>
             ) : (
               stakingStore.lockPositions.map((lockPosition: ILockPosition) => (
-                <TableRow
+                <StakingViewItem
                   key={lockPosition.lockId}
-                  sx={{
-                    "&:last-child td, &:last-child th": { border: 0 },
-                  }}
-                >
-                  <TableCell component="td" scope="row">
-                    {lockPosition.MAINTokenBalance} FTHM
-                  </TableCell>
-
-                  <TableCell component="td" scope="row">
-                    {lockPosition.VOTETokenBalance} VOTES
-                  </TableCell>
-
-                  <TableCell component="td" scope="row">
-                    {lockPosition.RewardsAvailable}
-                  </TableCell>
-
-                  <TableCell component="td" scope="row">
-                    {lockPosition.EndTime > 0 && (
-                      <Box sx={{ textAlign: "center" }}>
-                        {lockPosition.timeObject.days} days{" "}
-                        {lockPosition.timeObject.hour} hrs{" "}
-                        {lockPosition.timeObject.min} min{" "}
-                        {lockPosition.timeObject.sec} sec
-                      </Box>
-                    )}
-                    {lockPosition.EndTime < 0 && (
-                      <Box sx={{ textAlign: "center" }}>Lock Open</Box>
-                    )}
-                  </TableCell>
-
-                  <TableCell component="td" scope="row">
-                    <Button
-                      onClick={() => handleUnlock(lockPosition.lockId)}
-                      disabled={!isItUnlockable(lockPosition.lockId)}
-                    >
-                      Unlock
-                    </Button>
-                  </TableCell>
-
-                  <TableCell component="td" scope="row">
-                    <Button
-                      onClick={() => handleEarlyWithdrawal(lockPosition.lockId)}
-                      disabled={isItUnlockable(lockPosition.lockId)}
-                    >
-                      Early Unlock
-                    </Button>
-                  </TableCell>
-
-                  {/* <TableCell component="th" scope="row" >
-                    <Button onClick={() => claimRewardsSingle(lockPosition.lockId)} disabled={!isItClaimable(lockPosition.lockId)}>Claim Rewards</Button>
-                  </TableCell> */}
-                </TableRow>
+                  lockPosition={lockPosition}
+                  action={action}
+                  {...stakingViewItemProps}
+                />
               ))
             )}
           </TableBody>
@@ -253,12 +253,20 @@ const StakingView = observer(() => {
       </TableContainer>
       <br />
 
-      <Button variant="outlined" onClick={() => claimRewards()}>
-        Claim Stream Rewards
+      <Button variant="outlined" onClick={claimRewards}>
+        {action?.type === "claim" ? (
+          <CircularProgress size={30} />
+        ) : (
+          "Claim Stream Rewards"
+        )}
       </Button>
       <br />
-      <Button variant="outlined" onClick={() => withdrawRewards()}>
-        Withdraw All Rewards and Remaining Unlocked FTHM
+      <Button variant="outlined" onClick={withdrawRewards}>
+        {action?.type === "withdraw" ? (
+          <CircularProgress size={30} />
+        ) : (
+          "Withdraw All Rewards and Remaining Unlocked FTHM"
+        )}
       </Button>
       <br />
     </Paper>
