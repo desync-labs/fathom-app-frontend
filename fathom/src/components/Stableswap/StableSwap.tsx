@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, useRef } from "react";
-import { Box, Container, TextField, Toolbar, Typography } from "@mui/material";
+import { Box, TextField, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
@@ -12,8 +12,6 @@ import MenuList from "@mui/material/MenuList";
 import { observer } from "mobx-react";
 import { useStores } from "../../stores";
 import useMetaMask from "../../hooks/metamask";
-import AlertMessages from "../Common/AlertMessages";
-import TransactionStatus from "../Transaction/TransactionStatus";
 import { useWeb3React } from "@web3-react/core";
 
 const options = ["USDT To FXD", "FXD To USDT"];
@@ -52,10 +50,7 @@ const StableSwap = observer(() => {
         approvalStatus();
       });
     }
-  }, [
-    chainId,
-    approvalStatus
-  ]);
+  }, [chainId, approvalStatus]);
 
   const handleClick = () => {
     console.info(`You clicked ${options[selectedIndex]}`);
@@ -86,7 +81,7 @@ const StableSwap = observer(() => {
     }
 
     setApprovalPending(false);
-  }, [setApprovalPending, setApproveFxdBtn, stableSwapStore]);
+  }, [setApprovalPending, setApproveFxdBtn, stableSwapStore, account]);
 
   const approveUsdt = useCallback(async () => {
     setApprovalPending(true);
@@ -99,26 +94,32 @@ const StableSwap = observer(() => {
     }
 
     setApprovalPending(false);
-  }, [stableSwapStore, setApprovalPending, setApproveUsdtBtn]);
+  }, [stableSwapStore, setApprovalPending, setApproveUsdtBtn, account, inputValue]);
 
   const handleToggle = useCallback(() => {
     setOpen((prevOpen) => !prevOpen);
   }, [setOpen]);
 
-  const handleClose = useCallback((event: Event) => {
-    if (
-      anchorRef.current &&
-      anchorRef.current.contains(event.target as HTMLElement)
-    ) {
-      return;
-    }
+  const handleClose = useCallback(
+    (event: Event) => {
+      if (
+        anchorRef.current &&
+        anchorRef.current.contains(event.target as HTMLElement)
+      ) {
+        return;
+      }
 
-    setOpen(false);
-  }, [anchorRef, setOpen]);
+      setOpen(false);
+    },
+    [anchorRef, setOpen]
+  );
 
-  const handleInputValueTextFieldChange = useCallback((e: any) => {
-    setInputValue(e.target.value);
-  }, [setInputValue]);
+  const handleInputValueTextFieldChange = useCallback(
+    (e: any) => {
+      setInputValue(e.target.value);
+    },
+    [setInputValue]
+  );
 
   return (
     <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
@@ -130,7 +131,9 @@ const StableSwap = observer(() => {
         to it's original value. Arbitrauger uses it to earn profile in case
         Stablecoin value depagged, that results value reset back to it's
         original peg. */}
-        Stableswap.  This module keeps the stablecoin pegged to 1 USD.  When the stablecoin price depegs from 1 USD, an arbitrage can be performed using this module. 
+        Stableswap. This module keeps the stablecoin pegged to 1 USD. When the
+        stablecoin price depegs from 1 USD, an arbitrage can be performed using
+        this module.
       </Typography>
       <Box sx={{ marginTop: 2 }}>
         <TextField
@@ -213,9 +216,7 @@ const StableSwap = observer(() => {
                         key={option}
                         disabled={index === 2}
                         selected={index === selectedIndex}
-                        onClick={(event) =>
-                          handleMenuItemClick(event, index)
-                        }
+                        onClick={(event) => handleMenuItemClick(event, index)}
                       >
                         {option}
                       </MenuItem>

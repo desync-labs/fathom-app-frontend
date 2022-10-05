@@ -14,7 +14,6 @@ import {
   TextField,
   Slider,
   CircularProgress,
-  Stack,
 } from "@mui/material";
 import { useStores } from "../../stores";
 import useMetaMask from "../../hooks/metamask";
