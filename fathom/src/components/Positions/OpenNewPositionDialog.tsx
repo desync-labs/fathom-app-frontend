@@ -5,7 +5,6 @@ import useMetaMask from "../../hooks/metamask";
 import ICollatralPool from "../../stores/interfaces/ICollatralPool";
 import {
   Grid,
-  Container,
   Typography,
   DialogTitle,
   IconButton,
@@ -14,7 +13,11 @@ import {
   styled,
   TextField,
   Box,
-  DialogContent
+  DialogContent,
+  Divider,
+  ListItem,
+  ListItemText,
+  List,
 } from "@mui/material";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -278,131 +281,86 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
       <DialogContent dividers>
         <Grid container spacing={2}>
           <Grid item xs={7}>
-            <Container>
-              <Grid container spacing={2} color="primary">
-                <Grid item xs={7}>
-                  <Typography color="primary" gutterBottom>
-                    Collateral to be Locked
-                  </Typography>
-                </Grid>
-                <Grid item xs={5}>
-                  <Typography gutterBottom color="primary">
-                    {collatralToBeLocked.toFixed(2)} {props.pool.name}
-                  </Typography>
-                </Grid>
-                <Grid item xs={7}>
-                  <Typography gutterBottom color="primary">
-                    Estimated Collateral Available to Withdraw{" "}
-                  </Typography>
-                </Grid>
-                <Grid item xs={5}>
-                  <Typography gutterBottom color="primary">
-                    {collatralAvailableToWithdraw.toFixed(2)} {props.pool.name}
-                  </Typography>
-                </Grid>
-                <Grid item xs={7}>
-                  <Typography gutterBottom color="primary">
-                    FXD to be Borrowed
-                  </Typography>
-                </Grid>
-                <Grid item xs={5}>
-                  <Typography color="primary">
-                    {fxdToBeBorrowed.toFixed(2)} FXD
-                  </Typography>
-                </Grid>
-                <Grid item xs={7}>
-                  <Typography gutterBottom color="primary">
-                    FXD Available to Borrow
-                  </Typography>
-                </Grid>
-                <Grid item xs={5}>
-                  <Typography color="primary">
-                    {fxdAvailableToBorrow.toFixed(2)} FXD
-                  </Typography>
-                </Grid>
-                <Grid item xs={7}>
-                  <Typography gutterBottom color="primary">
-                    LTV
-                  </Typography>
-                </Grid>
-                <Grid item xs={5}>
-                  <Typography color="primary">
-                    {debtRatio.toFixed(2)} %
-                  </Typography>
-                </Grid>
-                <Grid item xs={7}>
-                  <Typography gutterBottom color="primary">
-                    Safety Buffer
-                  </Typography>
-                </Grid>
-                {/* <Grid item xs={5}>{(safetyBuffer * 100).toFixed(2)} % </Grid> */}
-                <Grid item xs={5}>
-                  <Typography color="primary">
-                    {(safetyBuffer * 100).toFixed(2)} %{" "}
-                  </Typography>
-                </Grid>
-                <Grid item xs={7}>
-                  <Typography gutterBottom color="primary">
-                    Liquidation Price of {props.pool.name}
-                  </Typography>
-                </Grid>
-                <Grid item xs={5}>
-                  <Typography color="primary">
-                    ${liquidationPrice.toFixed(2)}
-                  </Typography>
-                </Grid>
-
-                <Grid item xs={7}>
-                  <Typography color="primary" gutterBottom></Typography>
-                </Grid>
-                <Grid item xs={5}></Grid>
-
-                <Grid item xs={7}>
-                  <Typography gutterBottom color="primary">Lending APR</Typography>
-                </Grid>
-                <Grid item xs={5}>
-                  <Typography color="primary">
-                    1.73%
-                  </Typography>
-                </Grid>
-                <Grid item xs={7}>
-                  <Typography gutterBottom color="primary">Fathom Rewards APR</Typography>
-                </Grid>
-                <Grid item xs={5}>
-                  <Typography color="primary">
-                    0.22%
-                  </Typography>
-                </Grid>
-                <Grid item xs={7}>
-                  <Typography gutterBottom color="primary">Stability Fee</Typography>
-                </Grid>
-                <Grid item xs={5}>
-                  <Typography color="primary">
-                    0.00%
-                  </Typography>
-                </Grid>
-                <Grid item xs={7}>
-                  <Typography gutterBottom color="primary">Total APR</Typography>
-                </Grid>
-                <Grid item xs={5} color="primary">
-                  <Typography color="primary">
-                    1.96%
-                  </Typography>
-                </Grid>
-                <Grid item xs={7} color="primary">
-                  <Typography gutterBottom color="primary">Total APY</Typography>
-                </Grid>
-                <Grid item xs={5}>
-                  <Typography color="primary">
-                    1.98%
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Container>
+            <List sx={{ width: "100%", maxWidth: 360 }}>
+              <ListItem
+                alignItems="flex-start"
+                secondaryAction={`${collatralToBeLocked.toFixed(2)} ${
+                  props.pool.name
+                }`}
+              >
+                <ListItemText primary="Collateral to be Locked" />
+              </ListItem>
+              <Divider component="li" />
+              <ListItem
+                alignItems="flex-start"
+                secondaryAction={`${collatralAvailableToWithdraw.toFixed(2)} ${
+                  props.pool.name
+                }`}
+              >
+                <ListItemText primary="Estimated Collateral Available to Withdraw" />
+              </ListItem>
+              <Divider component="li" />
+              <ListItem
+                alignItems="flex-start"
+                secondaryAction={`${fxdToBeBorrowed.toFixed(2)} FXD`}
+              >
+                <ListItemText primary="FXD to be Borrowed" />
+              </ListItem>
+              <Divider component="li" />
+              <ListItem
+                alignItems="flex-start"
+                secondaryAction={`${fxdAvailableToBorrow.toFixed(2)} FXD`}
+              >
+                <ListItemText primary="FXD Available to Borrow" />
+              </ListItem>
+              <Divider component="li" />
+              <ListItem
+                alignItems="flex-start"
+                secondaryAction={`${debtRatio.toFixed(2)} %`}
+              >
+                <ListItemText primary="LTV" />
+              </ListItem>
+              <Divider component="li" />
+              <ListItem
+                alignItems="flex-start"
+                secondaryAction={`${(safetyBuffer * 100).toFixed(2)} %`}
+              >
+                <ListItemText primary="Safety Buffer" />
+              </ListItem>
+              <Divider component="li" />
+              <ListItem
+                alignItems="flex-start"
+                secondaryAction={`$${liquidationPrice.toFixed(2)}`}
+              >
+                <ListItemText
+                  primary={`Liquidation Price of ${props.pool.name}`}
+                />
+              </ListItem>
+              <Divider component="li" />
+              <ListItem alignItems="flex-start" secondaryAction={`1.73%`}>
+                <ListItemText primary={`Lending APR`} />
+              </ListItem>
+              <Divider component="li" />
+              <ListItem alignItems="flex-start" secondaryAction={`0.22%`}>
+                <ListItemText primary={`Fathom Rewards APR`} />
+              </ListItem>
+              <Divider component="li" />
+              <ListItem alignItems="flex-start" secondaryAction={`0.00%`}>
+                <ListItemText primary={`Stability Fee`} />
+              </ListItem>
+              <Divider component="li" />
+              <ListItem alignItems="flex-start" secondaryAction={`1.96%`}>
+                <ListItemText primary={`Total APR`} />
+              </ListItem>
+              <Divider component="li" />
+              <ListItem alignItems="flex-start" secondaryAction={`1.98%`}>
+                <ListItemText primary={`Total APY`} />
+              </ListItem>
+            </List>
           </Grid>
           <Grid item xs={5}>
             <Grid item xs={7}>
-              <Typography sx={{ marginLeft: 3 }}>
+              <Typography sx={{ ml: 3 }}>
                 {props.pool.name} balance: {(balance / 10 ** 18).toFixed(2)}
               </Typography>
             </Grid>
@@ -426,10 +384,12 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
                 onChange={handlefathomTokenTextFieldChange}
               />
             </Box>
-            <Box display="flex">
+            <Box display="flex" sx={{ mx: 3 }}>
               {safeMax > 0 && !balanceError ? (
                 <Button
                   onClick={updateFathomAmount}
+                  variant="outlined"
+                  sx={{ mr: 2 }}
                 >
                   Use Safe Max: {safeMax.toFixed(2)}
                 </Button>
@@ -443,12 +403,15 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
               {approvalPending ? (
                 <Typography display="inline">Pending ...</Typography>
               ) : approveBtn ? (
-                <Button onClick={approve}>Approve {props.pool.name}</Button>
+                <Button onClick={approve} variant="outlined">
+                  Approve {props.pool.name}
+                </Button>
               ) : null}
 
               <Button
                 onClick={openNewPosition}
                 disabled={approveBtn || balanceError || disableOpenPosition}
+                variant="outlined"
               >
                 Open
               </Button>

@@ -130,7 +130,6 @@ const ProposeListView = observer(() => {
                 p: 2,
                 display: "flex",
                 flexDirection: "column",
-                height: 620,
               }}
             >
               <Typography
@@ -148,76 +147,68 @@ const ProposeListView = observer(() => {
               <Box
                 component="form"
                 sx={{
-                  "& .MuiTextField-root": { m: 1, width: "95%" },
+                  "& .MuiTextField-root": { my: 1, width: "95%" },
                 }}
                 noValidate
                 autoComplete="off"
               >
                 <div>
-                  <div>
-                    <FormGroup>
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            onChange={() => setIsFirstChecked(!isFirstChecked)}
-                          />
-                        }
-                        label="Create proposal with action"
+                  <FormGroup>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          onChange={() => setIsFirstChecked(!isFirstChecked)}
+                        />
+                      }
+                      label="Create proposal with action"
+                    />
+                  </FormGroup>
+                  <TextField
+                    id="outlined-textarea"
+                    label="Title"
+                    multiline
+                    rows={1}
+                    value={descriptionTitle}
+                    onChange={handleDescriptionTitleChange}
+                  />
+                  <TextField
+                    id="outlined-textarea"
+                    label="Description"
+                    multiline
+                    rows={4}
+                    value={description}
+                    onChange={handleDescriptionChange}
+                  />
+                  {isFirstChecked ? (
+                    <>
+                      <TextField
+                        id="outlined-multiline-flexible"
+                        label="Target addresses array"
+                        multiline
+                        value={targets}
+                        maxRows={1}
+                        onChange={handleTargetsChange}
                       />
-                    </FormGroup>
-                  </div>
-                  <div>
-                    <TextField
-                      id="outlined-textarea"
-                      label="Title"
-                      multiline
-                      rows={1}
-                      value={descriptionTitle}
-                      onChange={handleDescriptionTitleChange}
-                    />
-                  </div>
-                  <div>
-                    <TextField
-                      id="outlined-textarea"
-                      label="Description"
-                      multiline
-                      rows={4}
-                      value={description}
-                      onChange={handleDescriptionChange}
-                    />
-                  </div>
-                  <div>
-                    {isFirstChecked ? (
-                      <>
-                        <TextField
-                          id="outlined-multiline-flexible"
-                          label="Target addresses array"
-                          multiline
-                          value={targets}
-                          maxRows={1}
-                          onChange={handleTargetsChange}
-                        />
-                        <TextField
-                          id="outlined-textarea2"
-                          label="Values array"
-                          multiline
-                          value={values}
-                          maxRows={1}
-                          onChange={handleValuesChange}
-                        />
-                        <TextField
-                          id="outlined-multiline-static"
-                          label="Calldatas array"
-                          multiline
-                          value={calldata}
-                          maxRows={1}
-                          onChange={handleCalldataChange}
-                        />
-                      </>
-                    ) : (
-                      ""
-                    )}
-                  </div>
+                      <TextField
+                        id="outlined-textarea2"
+                        label="Values array"
+                        multiline
+                        value={values}
+                        maxRows={1}
+                        onChange={handleValuesChange}
+                      />
+                      <TextField
+                        id="outlined-multiline-static"
+                        label="Calldatas array"
+                        multiline
+                        value={calldata}
+                        maxRows={1}
+                        onChange={handleCalldataChange}
+                      />
+                    </>
+                  ) : (
+                    ""
+                  )}
                 </div>
                 <div>
                   {proposeStore.veBalance / 10 ** 18 < 1000 ? (
@@ -226,6 +217,7 @@ const ProposeListView = observer(() => {
                         variant="outlined"
                         onClick={handleClickPropose}
                         disabled={true}
+                        sx={{ my: 3 }}
                       >
                         Create Proposal
                       </Button>{" "}
@@ -238,6 +230,7 @@ const ProposeListView = observer(() => {
                         variant="outlined"
                         onClick={handleClickPropose}
                         disabled={false}
+                        sx={{ my: 3 }}
                       >
                         Create Proposal
                       </Button>
