@@ -49,4 +49,11 @@ export default interface IStakingService{
           chainId: number
         ): Promise<number>;
 
+        approvalStatusStakingFTHM(address: string, stakingPosition: number,chainId: number): Promise<Boolean>;
+        approveStakingFTHM(
+          address: string,
+          chainId: number,
+          transactionStore: ActiveWeb3Transactions
+        ): Promise<void>;
+
 }

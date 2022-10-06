@@ -11,6 +11,7 @@ import { Constants } from "../helpers/Constants";
 import ILockPosition from "../stores/interfaces/ILockPosition";
 import { Strings } from "../helpers/Strings";
 import { secondsToTime } from "../utils/secondsToTime";
+import Web3 from "web3";
 
 export default class StakingService implements IStakingService {
   chainId = 51;
@@ -23,10 +24,7 @@ export default class StakingService implements IStakingService {
   ): Promise<void> {
     chainId = chainId || this.chainId;
       if (chainId) {
-        const MainToken = Web3Utils.getContractInstance(
-          SmartContractFactory.MainToken(chainId),
-          chainId
-        );
+        
         console.log("HERE1");
         console.log("SmartContractFactory.Staking(this.chainId).address:  ");
         console.log(SmartContractFactory.Staking(chainId).address);
@@ -38,22 +36,6 @@ export default class StakingService implements IStakingService {
 
         return new Promise(async (resolve, reject) => {
           try {
-            await MainToken.methods
-              .approve(
-                SmartContractFactory.Staking(this.chainId).address,
-                await this.toWei(stakePosition, chainId)
-              )
-              .send({ from: address })
-              .on("transactionHash", (hash: any) => {
-                transactionStore.addTransaction({
-                  hash: hash,
-                  type: TransactionType.Approve,
-                  active: false,
-                  status: TransactionStatus.None,
-                  title: `Approval Pending`,
-                  message: Strings.CheckOnBlockExplorer,
-                });
-              });
 
             const Staking = Web3Utils.getContractInstance(
               SmartContractFactory.Staking(chainId),
@@ -595,5 +577,53 @@ export default class StakingService implements IStakingService {
 
   setChainId(chainId: number) {
     this.chainId = chainId;
+  }
+
+  async approvalStatusStakingFTHM(address: string,stakingPosition: number,chainId: number): Promise<Boolean>{
+    try{
+    const FTHM = Web3Utils.getContractInstance(
+      SmartContractFactory.MainToken(chainId),
+      chainId
+    );
+
+    const StakingAddress = SmartContractFactory.Staking(this.chainId).address;
+
+    let allowance = await FTHM.methods.allowance(address, StakingAddress).call();
+    
+    return allowance > this.toWei(stakingPosition,chainId)
+    }
+  catch(error) {
+    console.error(`Error in approval status of FTHM: ${error}`)
+    throw error
+    }
+  }
+
+  async approveStakingFTHM(
+    address: string,
+    chainId: number,
+    transactionStore: ActiveWeb3Transactions
+  ):Promise<void>{
+    try {
+      const FTHM = Web3Utils.getContractInstance(
+        SmartContractFactory.MainToken(chainId),
+        chainId
+      );
+      
+      const StakingAddress = SmartContractFactory.Staking(this.chainId).address;
+
+      await FTHM.methods.approve(StakingAddress, Constants.MAX_UINT256).send({from: address})
+            .on('transactionHash', (hash:any) => {
+                transactionStore.addTransaction({hash: hash,
+                  type: TransactionType.Approve,
+                  active: false,
+                  status: TransactionStatus.None,
+                  title: `Approving the token`,
+                  message: Strings.CheckOnBlockExplorer,})
+            })
+    }
+    catch(error){
+      console.error(`Error in approval of FTHM: ${error}`)
+        throw error;
+    }
   }
 }
