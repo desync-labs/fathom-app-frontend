@@ -29,7 +29,6 @@ export default class ActiveWeb3TransactionsService
   }
 
   setChainId(chainId: number) {
-    if(chainId !== undefined)
-      this.chainId = chainId;
+    if (chainId !== undefined) this.chainId = chainId;
   }
 }
