@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
@@ -12,18 +12,25 @@ import Grid from "@mui/material/Grid";
 import { FormGroup, FormControlLabel, Checkbox } from "@mui/material";
 import { Constants } from "../../helpers/Constants";
 import { useEffect } from "react";
+import { Controller, useForm } from "react-hook-form";
+import * as React from "react";
 
 const ProposeListView = observer(() => {
-  let proposeStore = useStores().proposalStore;
-
-  const [targets, setTargets] = useState("");
-  const [calldata, setCallDatas] = useState("");
-  const [values, setValues] = useState("");
-  const [description, setDescription] = useState("");
-  const [descriptionTitle, setDescriptionTitle] = useState("");
-  const [isFirstChecked, setIsFirstChecked] = useState(false);
-
+  const proposeStore = useStores().proposalStore;
   const { account, chainId } = useMetaMask()!;
+
+  const { handleSubmit, watch, control, reset } = useForm({
+    defaultValues: {
+      withAction: false,
+      descriptionTitle: "",
+      description: "",
+      inputValues: "",
+      calldata: "",
+      targets: "",
+    },
+  });
+
+  const withAction = watch("withAction");
 
   useEffect(() => {
     if (chainId) {
@@ -33,92 +40,50 @@ const ProposeListView = observer(() => {
     }
   }, [account, chainId, proposeStore]);
 
-  const handleTargetsChange = (e: any) => {
-    setTargets(e.target.value);
-  };
+  const onSubmit = useCallback(
+    async (values: Record<string, any>) => {
+      try {
+        if (!chainId) return;
 
-  const handleCalldataChange = (e: any) => {
-    setCallDatas(e.target.value);
-  };
-
-  const handleValuesChange = (e: any) => {
-    setValues(e.target.value);
-  };
-
-  const handleDescriptionChange = (e: any) => {
-    setDescription(e.target.value);
-  };
-
-  const handleDescriptionTitleChange = (e: any) => {
-    setDescriptionTitle(e.target.value);
-  };
-
-  const handleClickPropose = async () => {
-    try {
-      if (isFirstChecked && chainId) {
-        const vals = values.trim().split(",").map(Number);
-        const caldatas = calldata.trim().split(",");
-        const tars = targets.trim().split(",");
-        const combined_text =
+        const {
+          descriptionTitle,
+          description,
+          inputValues,
+          calldata,
+          targets,
+          withAction,
+        } = values;
+        const combinedText =
           descriptionTitle + "    ----------------    " + description;
 
-        await proposeStore.createProposal(
-          tars,
-          vals,
-          caldatas,
-          combined_text,
-          account
-        );
-      } else {
-        const combined_text =
-          descriptionTitle + "    ----------------    " + description;
-        if (chainId) {
+        if (withAction) {
+          const valuesArray = inputValues.trim().split(",").map(Number);
+          const calldataArray = calldata.trim().split(",");
+          const targetsArray = targets.trim().split(",");
+
+          await proposeStore.createProposal(
+            targetsArray,
+            valuesArray,
+            calldataArray,
+            combinedText,
+            account
+          );
+        } else {
           await proposeStore.createProposal(
             [Constants.ZERO_ADDRESS],
             [0],
             [Constants.ZERO_ADDRESS],
-            combined_text,
+            combinedText,
             account
           );
         }
+        reset();
+      } catch (err) {
+        console.log(err);
       }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  // const handleClickQ = async () => {
-  //   try {
-  //     if (isFirstChecked && chainId) {
-  //       const vals = values.trim().split(",").map(Number);
-  //       const caldatas = calldata.trim().split(",");
-  //       const tars = targets.trim().split(",");
-  //       const combined_text =
-  //         descriptionTitle + "    ----------------    " + description;
-  //       await proposeStore.queueProposal(
-  //         tars,
-  //         vals,
-  //         caldatas,
-  //         combined_text,
-  //         account
-  //       );
-  //     } else {
-  //       const combined_text =
-  //         descriptionTitle + "    ----------------    " + description;
-  //       if (chainId) {
-  //         await proposeStore.queueProposal(
-  //           [Constants.ZERO_ADDRESS],
-  //           [0],
-  //           [Constants.ZERO_ADDRESS],
-  //           combined_text,
-  //           account
-  //         );
-  //       }
-  //     }
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
+    },
+    [reset, account, chainId, proposeStore]
+  );
 
   return (
     <>
@@ -146,6 +111,7 @@ const ProposeListView = observer(() => {
               </Typography>
               <Box
                 component="form"
+                onSubmit={handleSubmit(onSubmit)}
                 sx={{
                   "& .MuiTextField-root": { my: 1, width: "95%" },
                 }}
@@ -153,56 +119,120 @@ const ProposeListView = observer(() => {
                 autoComplete="off"
               >
                 <FormGroup>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        onChange={() => setIsFirstChecked(!isFirstChecked)}
+                  <Controller
+                    control={control}
+                    name="withAction"
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <FormControlLabel
+                        control={
+                          <Checkbox onChange={onChange} checked={!!value} />
+                        }
+                        label="Create proposal with action"
                       />
-                    }
-                    label="Create proposal with action"
+                    )}
                   />
                 </FormGroup>
-                <TextField
-                  id="outlined-textarea"
-                  label="Title"
-                  multiline
-                  rows={1}
-                  value={descriptionTitle}
-                  onChange={handleDescriptionTitleChange}
+
+                <Controller
+                  control={control}
+                  name="descriptionTitle"
+                  rules={{ required: true }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
+                    <TextField
+                      error={!!error}
+                      id="outlined-textarea"
+                      label="Title"
+                      multiline
+                      rows={1}
+                      value={value}
+                      onChange={onChange}
+                      helperText={error ? "Field Title is required" : ""}
+                    />
+                  )}
                 />
-                <TextField
-                  id="outlined-textarea"
-                  label="Description"
-                  multiline
-                  rows={4}
-                  value={description}
-                  onChange={handleDescriptionChange}
+                <Controller
+                  control={control}
+                  name="description"
+                  rules={{ required: true }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
+                    <TextField
+                      error={!!error}
+                      id="outlined-textarea"
+                      label="Description"
+                      multiline
+                      rows={4}
+                      value={value}
+                      onChange={onChange}
+                      helperText={error ? "Field Description is required" : ""}
+                    />
+                  )}
                 />
-                {isFirstChecked ? (
+                {withAction ? (
                   <>
-                    <TextField
-                      id="outlined-multiline-flexible"
-                      label="Target addresses array"
-                      multiline
-                      value={targets}
-                      maxRows={1}
-                      onChange={handleTargetsChange}
+                    <Controller
+                      control={control}
+                      name="targets"
+                      render={({
+                        field: { onChange, value },
+                        fieldState: { error },
+                      }) => (
+                        <TextField
+                          error={!!error}
+                          id="outlined-multiline-flexible"
+                          label="Target addresses array"
+                          multiline
+                          value={value}
+                          maxRows={1}
+                          onChange={onChange}
+                        />
+                      )}
                     />
-                    <TextField
-                      id="outlined-textarea2"
-                      label="Values array"
-                      multiline
-                      value={values}
-                      maxRows={1}
-                      onChange={handleValuesChange}
+
+                    <Controller
+                      control={control}
+                      name="inputValues"
+                      render={({
+                        field: { onChange, value },
+                        fieldState: { error },
+                      }) => (
+                        <TextField
+                          error={!!error}
+                          id="outlined-textarea2"
+                          label="Values array"
+                          multiline
+                          value={value}
+                          maxRows={1}
+                          onChange={onChange}
+                        />
+                      )}
                     />
-                    <TextField
-                      id="outlined-multiline-static"
-                      label="Calldatas array"
-                      multiline
-                      value={calldata}
-                      maxRows={1}
-                      onChange={handleCalldataChange}
+
+                    <Controller
+                      control={control}
+                      name="calldata"
+                      render={({
+                        field: { onChange, value },
+                        fieldState: { error },
+                      }) => (
+                        <TextField
+                          error={!!error}
+                          id="outlined-multiline-static"
+                          label="Calldatas array"
+                          multiline
+                          value={value}
+                          maxRows={1}
+                          onChange={onChange}
+                        />
+                      )}
                     />
                   </>
                 ) : (
@@ -212,7 +242,7 @@ const ProposeListView = observer(() => {
                   <>
                     <Button
                       variant="outlined"
-                      onClick={handleClickPropose}
+                      type="submit"
                       disabled={true}
                       sx={{ my: 3 }}
                     >
@@ -223,12 +253,7 @@ const ProposeListView = observer(() => {
                   </>
                 ) : (
                   <>
-                    <Button
-                      variant="outlined"
-                      onClick={handleClickPropose}
-                      disabled={false}
-                      sx={{ my: 3 }}
-                    >
+                    <Button variant="outlined" type="submit" sx={{ my: 3 }}>
                       Create Proposal
                     </Button>
                   </>
