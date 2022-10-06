@@ -216,7 +216,6 @@ const MainLayout = observer(() => {
                   element={<ProposalView />}
                 />
                 <Route path="/staking" element={<StakingView />} />
-
               </Routes>
             </Container>
           </Box>
