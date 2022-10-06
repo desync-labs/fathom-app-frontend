@@ -14,7 +14,8 @@ const StakingLockForm: FC<StakingLockFormPropsType> = ({ fetchAll }) => {
     handleSubmit,
     watch,
     control,
-    reset
+    reset,
+    getValues
   } = useForm({
     defaultValues: {
       lockDays: 30,

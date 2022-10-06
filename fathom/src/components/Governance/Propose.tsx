@@ -244,12 +244,13 @@ const ProposeListView = observer(() => {
                       variant="outlined"
                       type="submit"
                       disabled={true}
-                      sx={{ my: 3 }}
+                      sx={{ my: 4 }}
                     >
                       Create Proposal
-                    </Button>{" "}
-                    A balance of at least 1000 veFTHM is required to create a
-                    proposal.
+                    </Button>
+                    <Box component="span" sx={{ display: "inline-block", mx: 2 }}>
+                      A balance of at least 1000 veFTHM is required to create a proposal.
+                    </Box>
                   </>
                 ) : (
                   <>
