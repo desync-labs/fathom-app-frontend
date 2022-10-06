@@ -7,15 +7,10 @@ import {
 } from "@mui/material";
 import * as React from "react";
 import ILockPosition from "../../stores/interfaces/ILockPosition";
-import {
-  FC,
-  useEffect,
-  useMemo,
-  useState
-} from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { ActionType, StakingViewItemMethodsPropsType } from "./StakingView";
 import StakingCountdown from "./StakingCountdown";
-import { secondsToTime } from '../../utils/secondsToTime';
+import { secondsToTime } from "../../utils/secondsToTime";
 
 type StakingViewItemPropsType = {
   lockPosition: ILockPosition;
@@ -51,6 +46,7 @@ const StakingViewItem: FC<
     <TableRow
       sx={{
         "&:last-child td, &:last-child th": { border: 0 },
+        td: { textAlign: "center" },
       }}
     >
       <TableCell component="td" scope="row">
@@ -67,9 +63,13 @@ const StakingViewItem: FC<
 
       <TableCell component="td" scope="row">
         <Box sx={{ textAlign: "center" }}>
-          { useMemo(() => (
-            lockPosition.EndTime > 0 && <StakingCountdown timeObject={secondsToTime(seconds)} />
-          ), [seconds, lockPosition.EndTime]) }
+          {useMemo(
+            () =>
+              lockPosition.EndTime > 0 && (
+                <StakingCountdown timeObject={secondsToTime(seconds)} />
+              ),
+            [seconds, lockPosition.EndTime]
+          )}
         </Box>
         {lockPosition.EndTime < 0 && (
           <Box sx={{ textAlign: "center" }}>Lock Open</Box>
