@@ -116,7 +116,6 @@ export default class ProposalStore {
     this.veBalance = _veBalance;
   };
 
-
   castVote = async (
     proposalId: string,
     account: string,
@@ -135,8 +134,8 @@ export default class ProposalStore {
     });
   };
 
-  getVeBalance = async (account: string, chainId?: number ) => {
-    let _veBalance = await this.service.getVeBalance(account, chainId)
+  getVeBalance = async (account: string, chainId?: number) => {
+    let _veBalance = await this.service.getVeBalance(account, chainId);
     runInAction(() => {
       this.setVeBalance(_veBalance);
     });
@@ -152,7 +151,6 @@ export default class ProposalStore {
     });
   };
 
-
   fetchProposal = async (
     proposal: string,
     account: string,
@@ -167,7 +165,6 @@ export default class ProposalStore {
       this.setProposal(fetchedProposal);
     });
   };
-
 
   fetchProposalState = async (
     proposal: string,
