@@ -448,7 +448,7 @@ export default class StakingService implements IStakingService {
     chainId = chainId || this.chainId;
 
     const currentTimestamp = await this.getTimestamp(chainId);
-    return  end - currentTimestamp;
+    return end - currentTimestamp;
   }
 
   async getTimestamp(chainId: number): Promise<number> {

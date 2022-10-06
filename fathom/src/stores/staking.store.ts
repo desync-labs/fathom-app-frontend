@@ -109,7 +109,11 @@ export default class StakingStore {
     }
   };
 
-  handleClaimRewardsSingle = async (account: string, lockId: number, chainId: number) => {
+  handleClaimRewardsSingle = async (
+    account: string,
+    lockId: number,
+    chainId: number
+  ) => {
     console.log("Running createLock from store");
     try {
       if (account === undefined || account === null) return;
@@ -161,7 +165,7 @@ export default class StakingStore {
   };
 
   fetchAPR = async (chainId: number) => {
-    console.log("fetching... APR")
+    console.log("fetching... APR");
     const apr = await this.service.getAPR(chainId);
     runInAction(() => {
       this.setAPR(apr);

@@ -25,7 +25,7 @@ export default class ActiveWeb3Transactions {
 
   addTransaction(_transaction: ITransaction) {
     this.transactions.push(_transaction);
-    this.rootStore.alertStore.resetAlerts()
+    this.rootStore.alertStore.resetAlerts();
   }
 
   removeTransaction() {

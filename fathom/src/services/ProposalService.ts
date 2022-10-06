@@ -65,7 +65,8 @@ export default class ProposalService implements IProposalService {
         chainId
       );
       return await FathomGovernor.methods
-        .execute(targets, values, calldatas, keccak256(description)).send({ from: account })
+        .execute(targets, values, calldatas, keccak256(description))
+        .send({ from: account });
     } else {
       return 0;
     }
@@ -88,7 +89,8 @@ export default class ProposalService implements IProposalService {
         chainId
       );
       return await FathomGovernor.methods
-        .queue(targets, values, calldatas, keccak256(description)).send({ from: account })
+        .queue(targets, values, calldatas, keccak256(description))
+        .send({ from: account });
     } else {
       return 0;
     }
@@ -274,14 +276,14 @@ export default class ProposalService implements IProposalService {
           SmartContractFactory.VeFathom(chainId),
           this.chainId
         );
-        weight = await VeFathom.methods.balanceOf(account).call()
+        weight = await VeFathom.methods.balanceOf(account).call();
       }
       return weight;
     } catch (e) {
       console.error(`Error in getting Ve token blance: ${e}`);
       return weight;
     }
-  } 
+  }
 
   setChainId(chainId: number) {
     this.chainId = chainId;
