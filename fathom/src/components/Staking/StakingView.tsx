@@ -36,21 +36,25 @@ const StakingView = observer(() => {
   const { account, chainId } = useMetaMask()!;
   const logger = useLogger();
   const rootStore = useStores();
+  const [approvedBtn, setApprovedBtn] = useState(false);
+  const [approvalPending, setApprovalPending] = useState(false);
+
 
   const stakingStore = rootStore.stakingStore;
+  
 
   const fetchAll = useCallback(
     async (account: string, chainId: number) => {
-      setIsLoading(true);
+      setIsLoading(true); 
       Promise.all([
         stakingStore.fetchLocks(account, chainId),
         stakingStore.fetchVOTEBalance(account, chainId),
         stakingStore.fetchWalletBalance(account, chainId),
         stakingStore.fetchAPR(chainId),
+        
       ]).then(() => {
         setIsLoading(false);
       });
-
     },
     [stakingStore, setIsLoading]
   );
@@ -70,14 +74,26 @@ const StakingView = observer(() => {
   );
 
   useEffect(() => {
-    if (chainId) {
-      logger.log(LogLevel.info, "Fetching lock positions.");
-      fetchAll(account, chainId);
+    if (chainId) { 
+        logger.log(LogLevel.info, "Fetching lock positions.");
+        fetchAll(account, chainId);
     } else {
       stakingStore.setLocks([]);
     }
-  }, [account, logger, stakingStore, chainId, fetchAll]);
+  }, [account, logger, stakingStore, chainId,fetchAll]);
 
+  const approveFTHM =  async () => {
+    setApprovalPending(true);
+    try{
+      await stakingStore.approveFTHM(account,chainId)
+      setApprovedBtn(false);
+    }catch(e){
+      setApprovedBtn(true)
+    }
+
+    setApprovalPending(false);
+  }
+  
   const claimRewards = useCallback(async () => {
     setAction({ type: "claim", id: null });
     try {
@@ -148,7 +164,7 @@ const StakingView = observer(() => {
       </Typography>
       <Grid container spacing={2}>
         <Grid item xs={8}>
-          <StakingLockForm fetchAll={fetchAll} />
+          <StakingLockForm fetchAll={fetchAll}  fetchOverallValues={fetchOverallValues}/>
         </Grid>
         <Grid item xs={4}>
           <StakingModal

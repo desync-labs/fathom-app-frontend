@@ -253,4 +253,31 @@ export default class StakingStore {
       this.lockPositions[i].RewardsAvailable ="0";
     }
   }
+
+  approvalStatusStakingFTHM = async (address: string, stakingPosition: number, chainId: number) => {
+    console.log(`Checking FTHM approval status for address ${address}`)
+    try{
+      if(address===undefined || address === null)
+          return
+      
+      return await this.service.approvalStatusStakingFTHM(address, stakingPosition, chainId);
+   }
+   catch(e){
+      this.rootStore.alertStore.setShowErrorAlert(true,'There is some error retreiving approval status')
+    }
+  }
+
+  approveFTHM = async (address: string, chainId: number)=> {
+    console.log(`Approving staking position for address ${address}`)
+    try{
+      if(address == undefined || address == null)
+        return
+      
+        await this.service.approveStakingFTHM(address, chainId,this.rootStore.transactionStore)
+        this.rootStore.alertStore.setShowSuccessAlert(true,'Token approval was successful')
+    }catch(e){
+        this.rootStore.alertStore.setShowErrorAlert(true,'There is some error approving the token!')
+        throw e
+    }
+  }
 }
