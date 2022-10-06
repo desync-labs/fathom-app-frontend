@@ -152,91 +152,87 @@ const ProposeListView = observer(() => {
                 noValidate
                 autoComplete="off"
               >
-                <div>
-                  <FormGroup>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          onChange={() => setIsFirstChecked(!isFirstChecked)}
-                        />
-                      }
-                      label="Create proposal with action"
+                <FormGroup>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        onChange={() => setIsFirstChecked(!isFirstChecked)}
+                      />
+                    }
+                    label="Create proposal with action"
+                  />
+                </FormGroup>
+                <TextField
+                  id="outlined-textarea"
+                  label="Title"
+                  multiline
+                  rows={1}
+                  value={descriptionTitle}
+                  onChange={handleDescriptionTitleChange}
+                />
+                <TextField
+                  id="outlined-textarea"
+                  label="Description"
+                  multiline
+                  rows={4}
+                  value={description}
+                  onChange={handleDescriptionChange}
+                />
+                {isFirstChecked ? (
+                  <>
+                    <TextField
+                      id="outlined-multiline-flexible"
+                      label="Target addresses array"
+                      multiline
+                      value={targets}
+                      maxRows={1}
+                      onChange={handleTargetsChange}
                     />
-                  </FormGroup>
-                  <TextField
-                    id="outlined-textarea"
-                    label="Title"
-                    multiline
-                    rows={1}
-                    value={descriptionTitle}
-                    onChange={handleDescriptionTitleChange}
-                  />
-                  <TextField
-                    id="outlined-textarea"
-                    label="Description"
-                    multiline
-                    rows={4}
-                    value={description}
-                    onChange={handleDescriptionChange}
-                  />
-                  {isFirstChecked ? (
-                    <>
-                      <TextField
-                        id="outlined-multiline-flexible"
-                        label="Target addresses array"
-                        multiline
-                        value={targets}
-                        maxRows={1}
-                        onChange={handleTargetsChange}
-                      />
-                      <TextField
-                        id="outlined-textarea2"
-                        label="Values array"
-                        multiline
-                        value={values}
-                        maxRows={1}
-                        onChange={handleValuesChange}
-                      />
-                      <TextField
-                        id="outlined-multiline-static"
-                        label="Calldatas array"
-                        multiline
-                        value={calldata}
-                        maxRows={1}
-                        onChange={handleCalldataChange}
-                      />
-                    </>
-                  ) : (
-                    ""
-                  )}
-                </div>
-                <div>
-                  {proposeStore.veBalance / 10 ** 18 < 1000 ? (
-                    <>
-                      <Button
-                        variant="outlined"
-                        onClick={handleClickPropose}
-                        disabled={true}
-                        sx={{ my: 3 }}
-                      >
-                        Create Proposal
-                      </Button>{" "}
-                      A balance of at least 1000 veFTHM is required to create a
-                      proposal.
-                    </>
-                  ) : (
-                    <>
-                      <Button
-                        variant="outlined"
-                        onClick={handleClickPropose}
-                        disabled={false}
-                        sx={{ my: 3 }}
-                      >
-                        Create Proposal
-                      </Button>
-                    </>
-                  )}
-                </div>
+                    <TextField
+                      id="outlined-textarea2"
+                      label="Values array"
+                      multiline
+                      value={values}
+                      maxRows={1}
+                      onChange={handleValuesChange}
+                    />
+                    <TextField
+                      id="outlined-multiline-static"
+                      label="Calldatas array"
+                      multiline
+                      value={calldata}
+                      maxRows={1}
+                      onChange={handleCalldataChange}
+                    />
+                  </>
+                ) : (
+                  ""
+                )}
+                {proposeStore.veBalance / 10 ** 18 < 1000 ? (
+                  <>
+                    <Button
+                      variant="outlined"
+                      onClick={handleClickPropose}
+                      disabled={true}
+                      sx={{ my: 3 }}
+                    >
+                      Create Proposal
+                    </Button>{" "}
+                    A balance of at least 1000 veFTHM is required to create a
+                    proposal.
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      variant="outlined"
+                      onClick={handleClickPropose}
+                      disabled={false}
+                      sx={{ my: 3 }}
+                    >
+                      Create Proposal
+                    </Button>
+                  </>
+                )}
               </Box>
             </Paper>
           </Grid>

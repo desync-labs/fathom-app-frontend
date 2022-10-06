@@ -50,6 +50,21 @@ const StakingView = observer(() => {
       ]).then(() => {
         setIsLoading(false);
       });
+
+    },
+    [stakingStore, setIsLoading]
+  );
+
+  const fetchOverallValues = useCallback(
+    async (account: string, chainId: number) => {
+      setIsLoading(true)
+      await Promise.all([
+        stakingStore.fetchVOTEBalance(account, chainId),
+        stakingStore.fetchWalletBalance(account, chainId),
+        stakingStore.fetchAPR(chainId),
+      ]).then(() => {
+        setIsLoading(false)
+      })
     },
     [stakingStore, setIsLoading]
   );
@@ -67,23 +82,21 @@ const StakingView = observer(() => {
     setAction({ type: "claim", id: null });
     try {
       await stakingStore.handleClaimRewards(account, chainId);
-      fetchAll(account, chainId);
     } catch (e) {
       logger.log(LogLevel.error, "Claim error");
     }
     setAction(undefined);
-  }, [stakingStore, account, chainId, fetchAll, setAction, logger]);
+  }, [stakingStore, account, chainId, setAction, logger]);
 
   const withdrawRewards = useCallback(async () => {
     setAction({ type: "withdraw", id: null });
     try {
       await stakingStore.handleWithdrawRewards(account, chainId);
-      fetchAll(account, chainId);
     } catch (e) {
       logger.log(LogLevel.error, "Withdraw error");
     }
     setAction(undefined);
-  }, [stakingStore, account, chainId, fetchAll, setAction, logger]);
+  }, [stakingStore, account, chainId, setAction, logger]);
 
   const handleEarlyWithdrawal = useCallback(
     async (lockId: number) => {
@@ -92,10 +105,11 @@ const StakingView = observer(() => {
         id: lockId,
       });
       await stakingStore.handleEarlyWithdrawal(account, lockId, chainId);
+      await stakingStore.fetchLockPositionAfterUnlock(lockId);
       setAction(undefined);
-      fetchAll(account, chainId);
+      fetchOverallValues(account, chainId);
     },
-    [stakingStore, account, chainId, fetchAll, setAction]
+    [stakingStore, account, chainId, fetchOverallValues, setAction]
   );
 
   const handleUnlock = useCallback(
@@ -105,10 +119,11 @@ const StakingView = observer(() => {
         id: lockId,
       });
       await stakingStore.handleUnlock(account, lockId, chainId);
+      await stakingStore.fetchLockPositionAfterUnlock(lockId);
       setAction(undefined);
-      fetchAll(account, chainId);
+      fetchOverallValues(account, chainId);
     },
-    [stakingStore, account, chainId, fetchAll, setAction]
+    [stakingStore, account, chainId, fetchOverallValues, setAction]
   );
 
   const isItUnlockable = useCallback(
