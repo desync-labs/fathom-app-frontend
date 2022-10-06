@@ -105,9 +105,9 @@ const StakingView = observer(() => {
     chainId,
     stakePosition,
     lockDays,
-    fetchAll,
     setStakePosition,
     setLockDays,
+    fetchOverallValues
   ]);
 
   const claimRewards = useCallback(async () => {
