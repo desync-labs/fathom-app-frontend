@@ -42,7 +42,12 @@ const StakingView = observer(() => {
   const logger = useLogger();
   const rootStore = useStores();
 
-  const { register, handleSubmit, watch, formState: { errors } } = useForm();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
 
   const stakingStore = rootStore.stakingStore;
 
@@ -210,28 +215,17 @@ const StakingView = observer(() => {
       <TableContainer>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
-            <TableRow>
-              <TableCell component="th" sx={{ fontSize: "1rem" }}>
-                Lock Position
-              </TableCell>
-              <TableCell component="th" sx={{ fontSize: "1rem" }}>
-                Vote Tokens Received
-              </TableCell>
-              <TableCell component="th" sx={{ fontSize: "1rem" }}>
-                Stream Rewards
-              </TableCell>
-              <TableCell
-                component="th"
-                sx={{ textAlign: "center", fontSize: "1rem" }}
-              >
-                Remaining Period
-              </TableCell>
-              <TableCell component="th" sx={{ fontSize: "1rem" }}>
-                Unlock
-              </TableCell>
-              <TableCell component="th" sx={{ fontSize: "1rem" }}>
-                Early Unlock
-              </TableCell>
+            <TableRow
+              sx={{
+                th: { textAlign: "center", fontSize: "1rem" },
+              }}
+            >
+              <TableCell component="th">Lock Position</TableCell>
+              <TableCell component="th">Vote Tokens Received</TableCell>
+              <TableCell component="th">Stream Rewards</TableCell>
+              <TableCell component="th">Remaining Period</TableCell>
+              <TableCell component="th">Unlock</TableCell>
+              <TableCell component="th">Early Unlock</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
