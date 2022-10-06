@@ -25,7 +25,7 @@ import ILockPosition from "../../stores/interfaces/ILockPosition";
 import StakingModal from "./StakingModal";
 
 const StakingView = observer(() => {
-  const [lockDays, setLockDays] = useState(0);
+  const [lockDays, setLockDays] = useState(1);
   const [stakePosition, setStakePosition] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const { account, chainId } = useMetaMask()!;
@@ -36,18 +36,37 @@ const StakingView = observer(() => {
 
   const fetchAll = useCallback(
     async (account: string, chainId: number) => {
-      setIsLoading(true);
+      setIsLoading(true)
       await Promise.all([
-        stakingStore.fetchLocks(account, chainId),
+      
+        stakingStore.fetchLocks(account,chainId),
         stakingStore.fetchVOTEBalance(account, chainId),
         stakingStore.fetchWalletBalance(account, chainId),
         stakingStore.fetchAPR(chainId),
       ]).then(() => {
         setIsLoading(false);
       });
+
     },
     [stakingStore, setIsLoading]
   );
+
+  const fetchAllAfterLockUnlock = useCallback(
+    async (account: string, chainId: number) => {
+      setIsLoading(true)
+      await Promise.all([
+        stakingStore.fetchVOTEBalance(account, chainId),
+        stakingStore.fetchWalletBalance(account, chainId),
+        stakingStore.fetchAPR(chainId),
+      ]).then(() => {
+        setIsLoading(false)
+      })
+    },
+    [stakingStore, setIsLoading]
+  );
+
+  
+  
 
   useEffect(() => {
     if (chainId) {
@@ -60,37 +79,35 @@ const StakingView = observer(() => {
 
   const createLock = useCallback(async () => {
     await stakingStore.createLock(account, stakePosition, lockDays, chainId);
-    fetchAll(account, chainId);
-  }, [stakingStore, account, chainId, stakePosition, lockDays, fetchAll]);
+    fetchAllAfterLockUnlock(account, chainId)
+  }, [stakingStore, account, chainId, stakePosition, lockDays,fetchAllAfterLockUnlock]);
+
+
 
   const claimRewards = useCallback(async () => {
-    setIsLoading(true)
     await stakingStore.handleClaimRewards(account, chainId);
-    fetchAll(account, chainId);
   }, [stakingStore, account, chainId, fetchAll, setIsLoading]);
 
   const withdrawRewards = useCallback(() => {
-    setIsLoading(true)
     stakingStore.handleWithdrawRewards(account, chainId);
-    fetchAll(account, chainId);
   }, [stakingStore, account, chainId, fetchAll, setIsLoading]);
 
   const handleEarlyWithdrawal = useCallback(
     async (lockId: number) => {
-      setIsLoading(true)
+      
       await stakingStore.handleEarlyWithdrawal(account, lockId, chainId);
-      fetchAll(account, chainId);
+      fetchAllAfterLockUnlock(account, chainId)
     },
-    [stakingStore, account, chainId, fetchAll, setIsLoading]
+    [stakingStore, account, chainId, setIsLoading]
   );
 
   const handleUnlock = useCallback(
     async (lockId: number) => {
-      setIsLoading(true)
+      
       await stakingStore.handleUnlock(account, lockId, chainId);
-      fetchAll(account, chainId);
+      fetchAllAfterLockUnlock(account, chainId)
     },
-    [stakingStore, account, chainId, fetchAll, setIsLoading]
+    [stakingStore, account, chainId, setIsLoading]
   );
 
   const isItUnlockable = (lockId: number) => {
@@ -130,7 +147,7 @@ const StakingView = observer(() => {
               defaultValue={30}
               valueLabelDisplay="auto"
               step={1}
-              min={0}
+              min={1}
               max={365}
               value={lockDays}
               onChange={handleSliderChange}

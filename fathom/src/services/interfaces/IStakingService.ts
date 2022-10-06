@@ -39,4 +39,14 @@ export default interface IStakingService{
         transactionStore: ActiveWeb3Transactions
       ): Promise<void>;
 
+      getLockInfo(
+        lockId: number,
+        account: string,
+        chainId: number): Promise<ILockPosition>;
+
+      getLockPositionsLength(
+          account: string,
+          chainId: number
+        ): Promise<number>;
+
 }
