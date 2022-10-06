@@ -36,6 +36,8 @@ export default class StakingStore {
         this.rootStore.transactionStore
       );
 
+      await this.fetchLatestLock(account, chainId)
+
       // await this.fetchAll(account,chainId)
     } catch (e) {
       this.rootStore.alertStore.setShowErrorAlert(
@@ -61,6 +63,8 @@ export default class StakingStore {
         this.rootStore.transactionStore
       );
 
+      await this.fetchLockPositionAfterUnlock(lockId,account, chainId)
+
       //   await this.fetchAll(account,chainId)
     } catch (e) {
       this.rootStore.alertStore.setShowErrorAlert(
@@ -82,6 +86,8 @@ export default class StakingStore {
         this.rootStore.transactionStore
       );
 
+      await this.fetchLockPositionAfterUnlock(lockId,account, chainId)
+
       //    await this.fetchAll(account,chainId)
     } catch (e) {
       this.rootStore.alertStore.setShowErrorAlert(
@@ -102,6 +108,9 @@ export default class StakingStore {
         chainId,
         this.rootStore.transactionStore
       );
+      //TODO: Check This:
+
+      //await this.fetchLocksAfterClaimAllRewards();
 
       //      await this.fetchAll(account,chainId)
     } catch (e) {
@@ -123,6 +132,8 @@ export default class StakingStore {
         chainId,
         this.rootStore.transactionStore
       );
+
+      
 
       //      await this.fetchAll(account,chainId)
     } catch (e) {
@@ -204,4 +215,39 @@ export default class StakingStore {
       this.setTotalStakedPosition(locks);
     });
   };
+
+  fetchLatestLock = async(account: string, chainId: number) => {
+    console.log("......is fetch Latest Lock getting called before,.....")
+    let lockId = await this.service.getLockPositionsLength(account, chainId);
+    if(lockId > 0){
+      let lockPosition = await this.service.getLockInfo(lockId, account, chainId);
+      if(lockPosition.MAINTokenBalance > 0){
+        this.lockPositions.push(lockPosition)
+        this.setTotalStakedPosition(this.lockPositions)
+      }
+
+    }
+  }
+
+  fetchLockPositionAfterUnlock = async(lockId: number, account: string, chainId: number) => {
+    let latestLockId =  this.lockPositions.length
+    
+    if(latestLockId > 1){
+      console.log("........", latestLockId)
+      
+        let lockPosition = this.lockPositions[latestLockId - 1]
+        lockPosition.lockId = lockId;
+        this.lockPositions[lockId - 1] = lockPosition;
+        this.lockPositions.pop();
+        
+    }else{
+        this.lockPositions.pop();
+    }
+  }
+
+  fetchLocksAfterClaimAllRewards = async() => {
+    for (let i = 0; i < this.lockPositions.length; i++) {
+      this.lockPositions[i].RewardsAvailable ="0";
+    }
+  }
 }
