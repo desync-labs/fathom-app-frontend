@@ -9,6 +9,7 @@ import {
 } from "../stores/interfaces/ITransaction";
 import { Constants } from "../helpers/Constants";
 import ILockPosition from "../stores/interfaces/ILockPosition";
+import { Strings } from "../helpers/Strings";
 
 export default class StakingService implements IStakingService {
   chainId = 51;
@@ -34,60 +35,67 @@ export default class StakingService implements IStakingService {
         );
         console.log(Constants.WeiPerWad.multipliedBy(stakePosition).toString());
 
-        await MainToken.methods
-          .approve(
-            "0xA82a7351ccd2949566305850A0877BA86E0e6a33",
-            //SmartContractFactory.Staking(this.chainId).address,
-            (await this.toWei(stakePosition, chainId))
-          )
-          .send({ from: address })
-          .on("transactionHash", (hash: any) => {
-            transactionStore.addTransaction({
-              hash: hash,
-              type: TransactionType.Approve,
-              active: false,
-              status: TransactionStatus.None,
-              title: `Approval Pending`,
-              message: "Click on transaction to view on Etherscan.",
-            });
-          });
+        return new Promise(async (resolve, reject) => {
+          try {
+            await MainToken.methods
+              .approve(
+                SmartContractFactory.Staking(this.chainId).address,
+                await this.toWei(stakePosition, chainId)
+              )
+              .send({ from: address })
+              .on("transactionHash", (hash: any) => {
+                transactionStore.addTransaction({
+                  hash: hash,
+                  type: TransactionType.Approve,
+                  active: false,
+                  status: TransactionStatus.None,
+                  title: `Approval Pending`,
+                  message: Strings.CheckOnBlockExplorer,
+                });
+              });
 
-        const Staking = Web3Utils.getContractInstance(
-          SmartContractFactory.Staking(chainId),
-          chainId
-        );
-        const day = 24 * 60 * 60;
-        console.log(
-          "timestamp  HERE: ",
-          (await this.getTimestamp(chainId)).toString()
-        );
-        let lockingPeriod = unlockPeriod * day;
-        let endTime = await this.getTimestamp(chainId);
-      
-        if(lockingPeriod === 0){
-          //if locking period = 0, lock only for 5 mins
-          endTime += 5*60;
-        }
-        if (lockingPeriod > 0) {
-          endTime = endTime + lockingPeriod;
-        }
+            const Staking = Web3Utils.getContractInstance(
+              SmartContractFactory.Staking(chainId),
+              chainId
+            );
 
-        await Staking.methods
-          .createLock(
-            (await this.toWei(stakePosition, chainId)),
-            endTime
-          )
-          .send({ from: address })
-          .on("transactionHash", (hash: any) => {
-            transactionStore.addTransaction({
-              hash: hash,
-              type: TransactionType.Approve,
-              active: false,
-              status: TransactionStatus.None,
-              title: `Creating Lock`,
-              message: "Click on transaction to view on Etherscan.",
-            });
-          });
+            const day = 24 * 60 * 60;
+
+            console.log(
+              "timestamp  HERE: ",
+              (await this.getTimestamp(chainId)).toString()
+            );
+
+            const lockingPeriod = unlockPeriod * day;
+            let endTime = await this.getTimestamp(chainId);
+
+            if (lockingPeriod === 0) {
+              //if locking period = 0, lock only for 5 mins
+              endTime += 5 * 60;
+            }
+            if (lockingPeriod > 0) {
+              endTime = endTime + lockingPeriod;
+            }
+
+            await Staking.methods
+              .createLock(this.toWei(stakePosition, chainId), endTime)
+              .send({ from: address })
+              .on("transactionHash", (hash: any) => {
+                transactionStore.addTransaction({
+                  hash: hash,
+                  type: TransactionType.Approve,
+                  active: false,
+                  status: TransactionStatus.None,
+                  title: `Creating Lock`,
+                  message: Strings.CheckOnBlockExplorer,
+                });
+              });
+
+            resolve();
+          } catch (error) {
+            reject(error);
+          }
+        });
       }
     
   }
@@ -97,9 +105,9 @@ export default class StakingService implements IStakingService {
     chainId: number
   ): Promise<ILockPosition[]> {
     chainId = chainId || this.chainId;
-    
-    let lockPositionsList = [] as ILockPosition[];
-    chainId = chainId || this.chainId;
+
+    const lockPositionsList = [] as ILockPosition[];
+
     try {
       if (chainId) {
         const Staking = Web3Utils.getContractInstance(
@@ -129,11 +137,11 @@ export default class StakingService implements IStakingService {
             .call();
 
           lockPosition.lockId = i + 1;
-          lockPosition.MAINTokenBalance = await this._convertToEtherBalance(
+          lockPosition.MAINTokenBalance = this._convertToEtherBalance(
             amountOfMAINTkn,
             chainId
           );
-          lockPosition.VOTETokenBalance = await this._convertToEtherBalance(
+          lockPosition.VOTETokenBalance = this._convertToEtherBalance(
             amountOfveMAINTkn,
             chainId
           );
@@ -144,7 +152,9 @@ export default class StakingService implements IStakingService {
               chainId
             );
 
-            lockPosition.timeObject = this._convertToTimeObject(lockPosition.EndTime)
+          lockPosition.timeObject = this._convertToTimeObject(
+            lockPosition.EndTime
+          );
 
           console.log(lockPosition);
           lockPositionsList.push(lockPosition);
@@ -274,33 +284,41 @@ export default class StakingService implements IStakingService {
         chainId
       );
 
-      await Staking.methods
-        .claimAllStreamRewardsForLock(lockId)
-        .send({ from: account })
-        .on("transactionHash", (hash: any) => {
-          transactionStore.addTransaction({
-            hash: hash,
-            type: TransactionType.Approve,
-            active: false,
-            status: TransactionStatus.None,
-            title: `Hanndling Single claim reward`,
-            message: "Click on transaction to view on Etherscan.",
-          });
-        });
-      await Staking.methods
-        .unlock(lockId)
-        .send({ from: account })
-        .on("transactionHash", (hash: any) => {
-          transactionStore.addTransaction({
-            hash: hash,
-            type: TransactionType.Approve,
-            active: false,
-            status: TransactionStatus.None,
-            title: `Handling Unlock`,
-            message: "Click on transaction to view on Etherscan.",
-          });
-        });
-    
+      return new Promise(async (resolve, reject) => {
+        try {
+          await Staking.methods
+            .claimAllStreamRewardsForLock(lockId)
+            .send({ from: account })
+            .on("transactionHash", (hash: any) => {
+              transactionStore.addTransaction({
+                hash: hash,
+                type: TransactionType.Approve,
+                active: false,
+                status: TransactionStatus.None,
+                title: `Handling Single claim reward`,
+                message: Strings.CheckOnBlockExplorer,
+              });
+            });
+
+          await Staking.methods
+            .unlock(lockId)
+            .send({ from: account })
+            .on("transactionHash", (hash: any) => {
+              transactionStore.addTransaction({
+                hash: hash,
+                type: TransactionType.Approve,
+                active: false,
+                status: TransactionStatus.None,
+                title: `Handling Unlock`,
+                message: Strings.CheckOnBlockExplorer,
+              });
+            });
+
+          resolve();
+        } catch (error) {
+          reject(error);
+        }
+      });
   }
 
   async handleEarlyWithdrawal(
@@ -317,34 +335,43 @@ export default class StakingService implements IStakingService {
       );
       console.log("is account here", account);
       console.log("getting LockID:", lockId);
-      await Staking.methods
-        .claimAllStreamRewardsForLock(lockId)
-        .send({ from: account })
-        .on("transactionHash", (hash: any) => {
-          transactionStore.addTransaction({
-            hash: hash,
-            type: TransactionType.Approve,
-            active: false,
-            status: TransactionStatus.None,
-            title: `Hanndling Single claim reward`,
-            message: "Click on transaction to view on Etherscan.",
-          });
-        });
 
-      await Staking.methods
-        .earlyUnlock(lockId)
-        .send({ from: account })
-        .on("transactionHash", (hash: any) => {
-          transactionStore.addTransaction({
-            hash: hash,
-            type: TransactionType.Approve,
-            active: false,
-            status: TransactionStatus.None,
-            title: `Hanndling early withdrawal`,
-            message: "Click on transaction to view on Etherscan.",
-          });
-        });
-   
+      return new Promise(async (resolve, reject) => {
+        try {
+          await Staking.methods
+            .claimAllStreamRewardsForLock(lockId)
+            .send({ from: account })
+            .on("transactionHash", (hash: any) => {
+              transactionStore.addTransaction({
+                hash: hash,
+                type: TransactionType.Approve,
+                active: false,
+                status: TransactionStatus.None,
+                title: `Hanndling Single claim reward`,
+                message: Strings.CheckOnBlockExplorer,
+              });
+            });
+
+          await Staking.methods
+            .earlyUnlock(lockId)
+            .send({ from: account })
+            .on("transactionHash", (hash: any) => {
+              transactionStore.addTransaction({
+                hash: hash,
+                type: TransactionType.Approve,
+                active: false,
+                status: TransactionStatus.None,
+                title: `Hanndling early withdrawal`,
+                message: Strings.CheckOnBlockExplorer,
+              });
+            });
+
+          resolve();
+        } catch (error) {
+          reject(error);
+        }
+      });
+    
   }
 
   async handleClaimRewardsSingle(
@@ -361,7 +388,7 @@ export default class StakingService implements IStakingService {
       );
       console.log("is account here", account);
       console.log("getting LockID:", lockId);
-      await Staking.methods
+      return Staking.methods
         .claimRewards(lockId)
         .send({ from: account })
         .on("transactionHash", (hash: any) => {
@@ -371,7 +398,7 @@ export default class StakingService implements IStakingService {
             active: false,
             status: TransactionStatus.None,
             title: `Hanndling Single claim reward`,
-            message: "Click on transaction to view on Etherscan.",
+            message: Strings.CheckOnBlockExplorer,
           });
         });
   
@@ -389,7 +416,7 @@ export default class StakingService implements IStakingService {
         SmartContractFactory.Staking(chainId),
         chainId
       );
-      Staking.methods
+      return Staking.methods
         .claimAllLockRewardsForStream(streamId)
         .send({ from: account })
         .on("transactionHash", (hash: any) => {
@@ -399,7 +426,7 @@ export default class StakingService implements IStakingService {
             active: false,
             status: TransactionStatus.None,
             title: `Handling claim rewards`,
-            message: "Click on transaction to view on Etherscan.",
+            message: Strings.CheckOnBlockExplorer,
           });
         });
     } catch (error) {
@@ -419,7 +446,7 @@ export default class StakingService implements IStakingService {
         SmartContractFactory.Staking(chainId),
         chainId
       );
-      Staking.methods
+      return Staking.methods
         .withdrawAll()
         .send({ from: account })
         .on("transactionHash", (hash: any) => {
@@ -429,7 +456,7 @@ export default class StakingService implements IStakingService {
             active: false,
             status: TransactionStatus.None,
             title: `handling withdraw rewards`,
-            message: "Click on transaction to view on Etherscan.",
+            message: Strings.CheckOnBlockExplorer,
           });
         });
     } catch (error) {
@@ -459,9 +486,11 @@ export default class StakingService implements IStakingService {
       let totalStaked = await Staking.methods
         .totalAmountOfStakedMAINTkn()
         .call();
-      totalStaked = await this.fromWei(totalStaked, chainId);
-      let totalAPR = (oneYearStreamRewardValue * 100) / totalStaked;
+      totalStaked = this.fromWei(totalStaked, chainId);
+
+      const totalAPR = (oneYearStreamRewardValue * 100) / totalStaked;
       const APR = parseInt(totalAPR.toString());
+
       return APR;
     } catch (error) {
       console.error(`Error in get APR: ${error}`);
@@ -478,7 +507,7 @@ export default class StakingService implements IStakingService {
       );
 
       let balance = await MainToken.methods.balanceOf(account).call();
-      balance = await this._convertToEtherBalance(balance, chainId);
+      balance = this._convertToEtherBalance(balance, chainId);
       return balance;
     } catch (error) {
       console.error(`Error in get wallet balance: ${error}`);
@@ -495,9 +524,8 @@ export default class StakingService implements IStakingService {
       );
 
       let balance = await VeMAINToken.methods.balanceOf(account).call();
-      
-      balance = await this._convertToEtherBalance(balance, chainId);
-      
+      balance = this._convertToEtherBalance(balance, chainId);
+
       return balance;
     } catch (error) {
       console.error(`Error in get vote balance: ${error}`);
@@ -510,79 +538,72 @@ export default class StakingService implements IStakingService {
 
     const currentTimestamp = await this.getTimestamp(chainId);
     const remainingTime = end - currentTimestamp;
+
     return remainingTime;
   }
+
   async getTimestamp(chainId: number): Promise<number> {
     chainId = chainId || this.chainId;
     console.log(`getTimestamp`);
     const web3 = Web3Utils.getWeb3Instance(chainId);
-    var blockNumber = await web3.eth.getBlockNumber();
-    var block = await web3.eth.getBlock(blockNumber);
-    var timestamp = block.timestamp;
-    return timestamp;
+    const blockNumber = await web3.eth.getBlockNumber();
+    const block = await web3.eth.getBlock(blockNumber);
+
+    return block.timestamp;
   }
 
-  async fromWei(balance: number, chainId: number): Promise<number> {
+  fromWei(balance: number, chainId: number): number {
     chainId = chainId || this.chainId;
     const web3 = Web3Utils.getWeb3Instance(chainId);
     return web3.utils.fromWei(balance.toString(), "ether");
   }
 
-  async toWei(balance: number, chainId: number): Promise<number> {
+  toWei(balance: number, chainId: number): number {
     chainId = chainId || this.chainId;
     const web3 = Web3Utils.getWeb3Instance(chainId);
     return web3.utils.toWei(balance.toString(), "ether");
   }
 
-  async _convertToEtherBalance(
-    balance: number,
-    chainId: number
-  ): Promise<number> {
+  _convertToEtherBalance(balance: number, chainId: number): number {
     chainId = chainId || this.chainId;
-    return parseInt((await this.fromWei(balance, chainId)).toString());
+    return parseInt(this.fromWei(balance, chainId).toString());
   }
 
-  async _convertToEtherBalanceRewards(
-    balance: number,
-    chainId: number
-  ): Promise<string> {
+  _convertToEtherBalanceRewards(balance: number, chainId: number): string {
     chainId = chainId || this.chainId;
-    return parseFloat(
-      (await this.fromWei(balance, chainId)).toString()
-    ).toFixed(2);
+    return parseFloat(this.fromWei(balance, chainId).toString()).toFixed(2);
   }
 
-   secondsToTime(secs:number){
+  secondsToTime(secs: number) {
+    const days = Math.floor(secs / (24 * 60 * 60));
+    const remainingSecs = secs - days * 24 * 60 * 60;
+    const hours = Math.floor(remainingSecs / (60 * 60));
 
-    let days = Math.floor(secs / (24 * 60 * 60))
-    let remainingSecs = secs - days * 24 * 60 * 60
-    let hours = Math.floor(remainingSecs / (60 * 60));
+    const divisor_for_minutes = remainingSecs % (60 * 60);
+    const minutes = Math.floor(divisor_for_minutes / 60);
 
-    let divisor_for_minutes = remainingSecs % (60 * 60);
-    let minutes = Math.floor(divisor_for_minutes / 60);
+    const divisor_for_seconds = divisor_for_minutes % 60;
+    const seconds = Math.ceil(divisor_for_seconds);
 
-    let divisor_for_seconds = divisor_for_minutes % 60;
-    let seconds = Math.ceil(divisor_for_seconds);
-
-    let obj = {
-      "days": days,
-      "hour": hours,
-      "min": minutes,
-      "sec": seconds
+    const obj = {
+      days: days,
+      hour: hours,
+      min: minutes,
+      sec: seconds,
     };
     return obj;
   }
 
-   _convertToTimeObject(_remainingTime:number){
-    const remainingTime = _remainingTime
+  _convertToTimeObject(_remainingTime: number) {
+    const remainingTime = _remainingTime;
     let obj = {
-      "days": 0,
-      "hour": 0,
-      "min": 0,
-      "sec": 0
+      days: 0,
+      hour: 0,
+      min: 0,
+      sec: 0,
     };
-    if (remainingTime > 0){
-      obj = this.secondsToTime(remainingTime)
+    if (remainingTime > 0) {
+      obj = this.secondsToTime(remainingTime);
     }
     return obj;
   }

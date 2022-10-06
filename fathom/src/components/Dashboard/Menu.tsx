@@ -6,7 +6,6 @@ import {
   AddBox as AddBoxIcon,
   DensitySmall as DensitySmallIcon,
   BrowserUpdated as BrowserUpdatedIcon,
-  LocalAtm as LocalAtmIcon
 } from "@mui/icons-material";
 import { useLocation } from "react-router-dom";
 import AppMenuItem from "../MenuItem/AppMenuItem";
@@ -39,21 +38,20 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
   const isMakeProposalActive = location.pathname === "/proposal/make-proposal";
   const isStableSwapActive = location.pathname === "/swap";
   const isDashboardActive = location.pathname === "/";
-  const isStakingActive = location.pathname === '/staking'
-  const isRewardsActive = location.pathname === '/rewards'
+  const isStakingActive = location.pathname === "/staking";
 
   const { showText } = useShowText(open);
 
   const appMenuItems = [
     {
-      name: 'Dashboard',
+      name: "Dashboard",
       link: "/",
       Icon: DashboardIcon,
       isActive: isDashboardActive,
       showText,
     },
     {
-      name: 'Stable Swap',
+      name: "Stable Swap",
       link: "/swap",
       Icon: SwapHorizIcon,
       isActive: isStableSwapActive,
@@ -69,14 +67,14 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
           showText,
           Icon: DensitySmallIcon,
           isActive: isProposalsActive,
-          link: '/proposals'
+          link: "/proposals",
         },
         {
           name: "Make a Proposal",
           Icon: AddBoxIcon,
           showText,
           isActive: isMakeProposalActive,
-          link: '/proposal/make-proposal'
+          link: "/proposal/make-proposal",
         },
       ],
     },
@@ -90,7 +88,7 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
           showText,
           Icon: BrowserUpdatedIcon,
           isActive: isStakingActive,
-          link: '/staking'
+          link: "/staking",
         },
       ],
     },

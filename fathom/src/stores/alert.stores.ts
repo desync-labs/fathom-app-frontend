@@ -35,6 +35,9 @@ export default class AlertStore {
       this.resetAlerts();
       this.showErrorAlert = value;
       this.errorAlertMessage = errorMessage;
+      setTimeout(() => {
+        this.resetAlerts();
+      }, 2000);
       })
   }
 
