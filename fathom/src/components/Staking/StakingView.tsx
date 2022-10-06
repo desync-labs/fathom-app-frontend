@@ -50,21 +50,20 @@ const StakingView = observer(() => {
       ]).then(() => {
         setIsLoading(false);
       });
-
     },
     [stakingStore, setIsLoading]
   );
 
   const fetchOverallValues = useCallback(
     async (account: string, chainId: number) => {
-      setIsLoading(true)
+      setIsLoading(true);
       await Promise.all([
         stakingStore.fetchVOTEBalance(account, chainId),
         stakingStore.fetchWalletBalance(account, chainId),
         stakingStore.fetchAPR(chainId),
       ]).then(() => {
-        setIsLoading(false)
-      })
+        setIsLoading(false);
+      });
     },
     [stakingStore, setIsLoading]
   );
@@ -196,14 +195,13 @@ const StakingView = observer(() => {
       </TableContainer>
       <br />
 
-      <Button variant="outlined" onClick={claimRewards}>
+      <Button variant="outlined" onClick={claimRewards} sx={{ my: 2 }}>
         {action?.type === "claim" ? (
           <CircularProgress size={30} />
         ) : (
           "Claim Stream Rewards"
         )}
       </Button>
-      <br />
       <Button variant="outlined" onClick={withdrawRewards}>
         {action?.type === "withdraw" ? (
           <CircularProgress size={30} />
@@ -211,7 +209,6 @@ const StakingView = observer(() => {
           "Withdraw All Rewards and Remaining Unlocked FTHM"
         )}
       </Button>
-      <br />
     </Paper>
   );
 });
