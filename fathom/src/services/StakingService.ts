@@ -227,9 +227,10 @@ export default class StakingService implements IStakingService {
             RewardsAvailable:"0",
             timeObject: {
               hour: 0,
-              sec: 0,
+              seconds: 0,
               days: 0,
-              min: 0
+              min: 0,
+              sec: 0
             }
           }
         }
@@ -244,9 +245,10 @@ export default class StakingService implements IStakingService {
         RewardsAvailable:"0",
         timeObject: {
           hour: 0,
-          sec: 0,
+          seconds: 0,
           days: 0,
-          min: 0
+          min: 0,
+          sec: 0
         }
       }
     }
