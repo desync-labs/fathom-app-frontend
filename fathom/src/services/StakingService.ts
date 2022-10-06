@@ -10,6 +10,7 @@ import {
 import { Constants } from "../helpers/Constants";
 import ILockPosition from "../stores/interfaces/ILockPosition";
 import { Strings } from "../helpers/Strings";
+import { secondsToTime } from "../utils/secondsToTime";
 
 export default class StakingService implements IStakingService {
   chainId = 51;
@@ -141,10 +142,12 @@ export default class StakingService implements IStakingService {
             amountOfMAINTkn,
             chainId
           );
+
           lockPosition.VOTETokenBalance = this._convertToEtherBalance(
             amountOfveMAINTkn,
             chainId
           );
+
           lockPosition.EndTime = await this.getRemainingTime(end, chainId);
           lockPosition.RewardsAvailable =
             await this._convertToEtherBalanceRewards(
@@ -537,9 +540,7 @@ export default class StakingService implements IStakingService {
     chainId = chainId || this.chainId;
 
     const currentTimestamp = await this.getTimestamp(chainId);
-    const remainingTime = end - currentTimestamp;
-
-    return remainingTime;
+    return  end - currentTimestamp;
   }
 
   async getTimestamp(chainId: number): Promise<number> {
@@ -574,26 +575,6 @@ export default class StakingService implements IStakingService {
     return parseFloat(this.fromWei(balance, chainId).toString()).toFixed(2);
   }
 
-  secondsToTime(secs: number) {
-    const days = Math.floor(secs / (24 * 60 * 60));
-    const remainingSecs = secs - days * 24 * 60 * 60;
-    const hours = Math.floor(remainingSecs / (60 * 60));
-
-    const divisor_for_minutes = remainingSecs % (60 * 60);
-    const minutes = Math.floor(divisor_for_minutes / 60);
-
-    const divisor_for_seconds = divisor_for_minutes % 60;
-    const seconds = Math.ceil(divisor_for_seconds);
-
-    const obj = {
-      days: days,
-      hour: hours,
-      min: minutes,
-      sec: seconds,
-    };
-    return obj;
-  }
-
   _convertToTimeObject(_remainingTime: number) {
     const remainingTime = _remainingTime;
     let obj = {
@@ -601,9 +582,11 @@ export default class StakingService implements IStakingService {
       hour: 0,
       min: 0,
       sec: 0,
+      seconds: 0,
     };
+
     if (remainingTime > 0) {
-      obj = this.secondsToTime(remainingTime);
+      obj = secondsToTime(remainingTime);
     }
     return obj;
   }
