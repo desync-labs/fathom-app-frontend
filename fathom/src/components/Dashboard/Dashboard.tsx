@@ -30,7 +30,7 @@ const DashboardContent = observer(() => {
     } else {
       poolStore.setPool([]);
     }
-  }, [poolStore, logger, chainId, account]);
+  }, [poolStore, logger, chainId, account, fetchData]);
 
   return (
     <Grid container spacing={3}>
