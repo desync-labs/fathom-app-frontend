@@ -1,4 +1,3 @@
-//import ICollatralPool from "../../stores/interfaces/ICollatralPool";
 import { observer } from "mobx-react";
 import { Alert, AlertTitle, LinearProgress, Typography } from "@mui/material";
 import { useStores } from "../../stores";
@@ -10,16 +9,15 @@ const TransactionStatus = observer(() => {
   let rootStore = useStores();
 
   const getTxUrl = (txHash: string) => {
-    if(rootStore.chainId === Constants.DEFAULT_CHAINID)
+    if (rootStore.chainId === Constants.DEFAULT_CHAINID)
       return `${Constants.APOTHEM_BLOCK_EXPLORER_URL}${txHash}`;
-    else
-      return `${Constants.GOERLI_BLOCK_EXPLORER_URL}${txHash}`;  
+    else return `${Constants.GOERLI_BLOCK_EXPLORER_URL}${txHash}`;
   };
 
   return (
     <>
       {transactionStore.transactions.map((transaction, idx) => (
-        <Alert severity="info" variant="filled">
+        <Alert severity="info" variant="filled" key={idx}>
           <AlertTitle>{transaction.title}</AlertTitle>
           <Typography color="text.secondary" sx={{ flex: 1 }}>
             {transaction.message}{" "}
