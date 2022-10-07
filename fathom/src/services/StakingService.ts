@@ -152,7 +152,6 @@ export default class StakingService implements IStakingService {
     account: string,
     chainId: number
   ): Promise<ILockPosition> {
-    //TODO: What to return if it fails?
     let lockPosition = {} as ILockPosition;
     chainId = chainId || this.chainId;
     const defaultLockInfo = {
@@ -268,7 +267,7 @@ export default class StakingService implements IStakingService {
               type: TransactionType.Approve,
               active: false,
               status: TransactionStatus.None,
-              title: `Handling Single claim reward`,
+              title: `Claiming All Stream Rewards before unlock`,
               message: Strings.CheckOnBlockExplorer,
             });
           });
@@ -320,7 +319,7 @@ export default class StakingService implements IStakingService {
               type: TransactionType.Approve,
               active: false,
               status: TransactionStatus.None,
-              title: `Hanndling Single claim reward`,
+              title: `Claiming All Stream Rewards before unlock`,
               message: Strings.CheckOnBlockExplorer,
             });
           });
@@ -334,7 +333,7 @@ export default class StakingService implements IStakingService {
               type: TransactionType.Approve,
               active: false,
               status: TransactionStatus.None,
-              title: `Hanndling early withdrawal`,
+              title: `Handling Early Unlock`,
               message: Strings.CheckOnBlockExplorer,
             });
           });
@@ -426,7 +425,7 @@ export default class StakingService implements IStakingService {
             type: TransactionType.Approve,
             active: false,
             status: TransactionStatus.None,
-            title: `handling withdraw rewards`,
+            title: `Handling Withdraw Rewards`,
             message: Strings.CheckOnBlockExplorer,
           });
         });

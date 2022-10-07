@@ -68,7 +68,7 @@ const StakingViewItem: FC<
               seconds > 0 && (
                 <StakingCountdown timeObject={secondsToTime(seconds)} />
               ),
-            [seconds, lockPosition.EndTime]
+            [seconds]
           )}
         </Box>
         {seconds < 0 && (
