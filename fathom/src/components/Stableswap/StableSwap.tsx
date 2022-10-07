@@ -13,7 +13,7 @@ import { observer } from "mobx-react";
 import { useStores } from "../../stores";
 import useMetaMask from "../../hooks/metamask";
 import { useWeb3React } from "@web3-react/core";
-import { AppPaper } from "../AppPaper/AppPaper";
+import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
 
 const options = ["USDT To FXD", "FXD To USDT"];
 

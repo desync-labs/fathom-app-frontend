@@ -12,7 +12,7 @@ import { observer } from "mobx-react";
 import ICollatralPool from "../../stores/interfaces/ICollatralPool";
 import PoolsListItem from "./PoolsListItem";
 import CustomizedDialogs from "../Positions/OpenNewPositionDialog";
-import { AppPaper } from "../AppPaper/AppPaper";
+import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
 
 const PoolsListView = observer(() => {
   const poolStore = useStores().poolStore;

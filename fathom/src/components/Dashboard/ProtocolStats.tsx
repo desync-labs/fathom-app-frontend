@@ -3,8 +3,8 @@ import Typography from "@mui/material/Typography";
 import { useWeb3React } from "@web3-react/core";
 import { useEffect } from "react";
 import logo from "../../assets/images/fxd-logo.png";
-import { useStores } from "../../stores";
-import { AppPaper } from "../AppPaper/AppPaper";
+import { useStores } from "stores";
+import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
 import { observer } from "mobx-react";
 
 const StatsStyles = {

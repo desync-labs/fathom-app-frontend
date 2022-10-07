@@ -12,10 +12,10 @@ import { observer } from "mobx-react";
 import LinearProgress, {
   LinearProgressProps,
 } from "@mui/material/LinearProgress";
-import { useStores } from "../../stores";
-import useMetaMask from "../../hooks/metamask";
+import { useStores } from "stores";
+import useMetaMask from "hooks/metamask";
 import { useParams } from "react-router-dom";
-import { AppPaper } from "../AppPaper/AppPaper";
+import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
 
 const ProposalView = observer(() => {
   const { account, chainId } = useMetaMask()!;

@@ -11,18 +11,18 @@ import {
   Grid,
   CircularProgress,
 } from "@mui/material";
-import { useStores } from "../../stores";
-import useMetaMask from "../../hooks/metamask";
+import { useStores } from "stores";
+import useMetaMask from "hooks/metamask";
 import { LogLevel, useLogger } from "../../helpers/Logger";
 import { useCallback, useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import ILockPosition from "../../stores/interfaces/ILockPosition";
-import StakingModal from "./StakingModal";
-import StakingViewItem from "./StakingViewItem";
-import StakingLockForm from "./StakingLockForm";
-import { AppPaper } from "../AppPaper/AppPaper";
-import { AppTableHeaderRow } from "../AppTable/AppTable";
-import { processRpcError } from "../../utils/processRpcError";
+import ILockPosition from "stores/interfaces/ILockPosition";
+import StakingModal from "components/Staking/StakingModal";
+import StakingViewItem from "components/Staking/StakingViewItem";
+import StakingLockForm from "components/Staking/StakingLockForm";
+import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
+import { AppTableHeaderRow } from "components/AppComponents/AppTable/AppTable";
+import { processRpcError } from "utils/processRpcError";
 
 export type StakingViewItemMethodsPropsType = {
   handleEarlyWithdrawal: (lockId: number) => void;

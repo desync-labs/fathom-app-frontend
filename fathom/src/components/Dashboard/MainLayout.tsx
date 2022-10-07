@@ -20,7 +20,7 @@ import {
   Logout as LogoutIcon,
 } from "@mui/icons-material";
 import Copyright from "../Footer/Footer";
-import AppBar from "../AppBar/AppBar";
+import AppBar from "../AppComponents/AppBar/AppBar";
 import useMetaMask from "../../hooks/metamask";
 import { observer } from "mobx-react";
 import DashboardContent from "./Dashboard";
@@ -39,6 +39,7 @@ import AlertMessages from "../Common/AlertMessages";
 import TransactionStatus from "../Transaction/TransactionStatus";
 import truncateEthAddress from "truncate-eth-address";
 import { Menu } from "./Menu";
+import { ToggleDrawerButton } from "../AppComponents/AppButton/AppButton";
 
 const drawerWidth: number = 240;
 
@@ -162,26 +163,16 @@ const MainLayout = observer(() => {
                 wrapperStyle={{ justifyContent: "left" }}
               />
             )}
-            <IconButton
+            <ToggleDrawerButton
+              open={open}
               onClick={toggleDrawer}
-              sx={{
-                color: "#000",
-                width: "20px",
-                height: "20px",
-                borderRadius: "20px",
-                background: open ? "#808084" : "#3E3F45",
-                padding: 0,
-                position: "absolute",
-                right: "-10px",
-                "&:hover": { background: open ? "#3E3F45" : "#808084" },
-              }}
             >
               {open ? (
                 <ArrowBack sx={{ fontSize: "0.9rem" }} />
               ) : (
                 <ArrowForward sx={{ fontSize: "0.9rem", color: "#fff" }} />
               )}
-            </IconButton>
+            </ToggleDrawerButton>
           </Toolbar>
           <Divider />
           <List

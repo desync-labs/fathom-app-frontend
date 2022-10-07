@@ -1,6 +1,6 @@
 import { observer } from "mobx-react";
 import { Typography } from "@mui/material";
-import { AppPaper } from "../AppPaper/AppPaper";
+import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
 
 const StakingModal = observer((props: any) => {
   return (
