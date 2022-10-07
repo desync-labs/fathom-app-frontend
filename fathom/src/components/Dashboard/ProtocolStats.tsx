@@ -6,6 +6,17 @@ import logo from "../../assets/images/fxd-logo.png";
 import { useStores } from "../../stores";
 import { AppPaper } from "../AppPaper/AppPaper";
 
+const StatsStyles = {
+  boxShadow: 2,
+  width: "15rem",
+  height: "5rem",
+  background: "linear-gradient(180deg, #071126 0%, #050C1A 100%)",
+  p: 1.5,
+  m: 1,
+  borderRadius: 2,
+  textAlign: "center",
+}
+
 const ProtocolStats = function ProtocolStats(props: any) {
   const { chainId } = useWeb3React();
   const rootStore = useStores();
@@ -48,16 +59,7 @@ const ProtocolStats = function ProtocolStats(props: any) {
       </Typography>
       <Grid container>
         <Box
-          sx={{
-            boxShadow: 2,
-            width: "15rem",
-            height: "5rem",
-            bgcolor: "#000000",
-            p: 1.5,
-            m: 1,
-            borderRadius: 2,
-            textAlign: "center",
-          }}
+          sx={StatsStyles}
         >
           <Typography variant="subtitle1" color="text.secondary">
             Total Supply
@@ -69,16 +71,7 @@ const ProtocolStats = function ProtocolStats(props: any) {
           </Typography>
         </Box>
         <Box
-          sx={{
-            boxShadow: 2,
-            width: "15rem",
-            height: "5rem",
-            bgcolor: "#000000",
-            p: 1.5,
-            m: 1,
-            borderRadius: 2,
-            textAlign: "center",
-          }}
+          sx={StatsStyles}
         >
           <Typography variant="subtitle1" color="text.secondary">
             TVL
@@ -88,16 +81,7 @@ const ProtocolStats = function ProtocolStats(props: any) {
           </Typography>
         </Box>
         <Box
-          sx={{
-            boxShadow: 2,
-            width: "15rem",
-            height: "5rem",
-            bgcolor: "#000000",
-            p: 1.5,
-            m: 1,
-            borderRadius: 2,
-            textAlign: "center",
-          }}
+          sx={StatsStyles}
         >
           <Typography variant="subtitle1" color="text.secondary">
             FXD Price
@@ -107,16 +91,7 @@ const ProtocolStats = function ProtocolStats(props: any) {
           </Typography>
         </Box>
         <Box
-          sx={{
-            boxShadow: 2,
-            width: "15rem",
-            height: "5rem",
-            bgcolor: "#000000",
-            p: 1.5,
-            m: 1,
-            borderRadius: 2,
-            textAlign: "center",
-          }}
+          sx={StatsStyles}
         >
           <Typography variant="subtitle1" color="text.secondary">
             Liq. Ratio
