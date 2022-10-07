@@ -36,7 +36,7 @@ export default class StakingStore {
         this.rootStore.transactionStore
       );
 
- //     await this.fetchLatestLock(account, chainId)
+      //     await this.fetchLatestLock(account, chainId)
 
       // await this.fetchAll(account,chainId)
     } catch (e) {
@@ -63,7 +63,7 @@ export default class StakingStore {
         this.rootStore.transactionStore
       );
 
-     // await this.fetchLockPositionAfterUnlock(lockId,account, chainId)
+      // await this.fetchLockPositionAfterUnlock(lockId,account, chainId)
 
       //   await this.fetchAll(account,chainId)
     } catch (e) {
@@ -86,7 +86,7 @@ export default class StakingStore {
         this.rootStore.transactionStore
       );
 
-  //    await this.fetchLockPositionAfterUnlock(lockId,account, chainId)
+      //    await this.fetchLockPositionAfterUnlock(lockId,account, chainId)
 
       //    await this.fetchAll(account,chainId)
     } catch (e) {
@@ -135,8 +135,6 @@ export default class StakingStore {
         chainId,
         this.rootStore.transactionStore
       );
-
-      
 
       //      await this.fetchAll(account,chainId)
     } catch (e) {
@@ -219,38 +217,84 @@ export default class StakingStore {
     });
   };
 
-  fetchLatestLock = async(account: string, chainId: number) => {
-    console.log("......is fetch Latest Lock getting called before,.....")
+  fetchLatestLock = async (account: string, chainId: number) => {
+    console.log("......is fetch Latest Lock getting called before,.....");
     let lockId = await this.service.getLockPositionsLength(account, chainId);
-    if(lockId > 0){
-      let lockPosition = await this.service.getLockInfo(lockId, account, chainId);
-      if(lockPosition.MAINTokenBalance > 0){
-        this.lockPositions.push(lockPosition)
-        this.setTotalStakedPosition(this.lockPositions)
+    if (lockId > 0) {
+      let lockPosition = await this.service.getLockInfo(
+        lockId,
+        account,
+        chainId
+      );
+      if (lockPosition.MAINTokenBalance > 0) {
+        this.lockPositions.push(lockPosition);
+        this.setTotalStakedPosition(this.lockPositions);
       }
-
     }
-  }
+  };
 
   fetchLockPositionAfterUnlock = async (lockId: number) => {
-    let latestLockId =  this.lockPositions.length
-    
-    if(latestLockId > 1){
-      console.log("........", latestLockId)
-      
-        let lockPosition = this.lockPositions[latestLockId - 1]
-        lockPosition.lockId = lockId;
-        this.lockPositions[lockId - 1] = lockPosition;
-        this.lockPositions.pop();
-        
-    }else{
-        this.lockPositions.pop();
-    }
-  }
+    let latestLockId = this.lockPositions.length;
 
-  fetchLocksAfterClaimAllRewards = async() => {
-    for (let i = 0; i < this.lockPositions.length; i++) {
-      this.lockPositions[i].RewardsAvailable ="0";
+    if (latestLockId > 1) {
+      console.log("........", latestLockId);
+
+      let lockPosition = this.lockPositions[latestLockId - 1];
+      lockPosition.lockId = lockId;
+      this.lockPositions[lockId - 1] = lockPosition;
+      this.lockPositions.pop();
+    } else {
+      this.lockPositions.pop();
     }
-  }
+  };
+
+  fetchLocksAfterClaimAllRewards = async () => {
+    for (let i = 0; i < this.lockPositions.length; i++) {
+      this.lockPositions[i].RewardsAvailable = "0";
+    }
+  };
+
+  approvalStatusStakingFTHM = async (
+    address: string,
+    stakingPosition: number,
+    chainId: number
+  ) => {
+    console.log(`Checking FTHM approval status for address ${address}`);
+    try {
+      if (!address) return;
+
+      return this.service.approvalStatusStakingFTHM(
+        address,
+        stakingPosition,
+        chainId
+      );
+    } catch (e) {
+      this.rootStore.alertStore.setShowErrorAlert(
+        true,
+        "There is some error retreiving approval status"
+      );
+    }
+  };
+
+  approveFTHM = async (address: string, chainId: number) => {
+    console.log(`Approving staking position for address ${address}`);
+    try {
+      if (!address) return;
+
+      return this.service
+        .approveStakingFTHM(address, chainId, this.rootStore.transactionStore)
+        .then(() => {
+          this.rootStore.alertStore.setShowSuccessAlert(
+            true,
+            "Token approval was successful"
+          );
+        });
+    } catch (e) {
+      this.rootStore.alertStore.setShowErrorAlert(
+        true,
+        "There is some error approving the token!"
+      );
+      throw e;
+    }
+  };
 }

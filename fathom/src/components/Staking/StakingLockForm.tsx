@@ -1,45 +1,83 @@
-import { Box, Button, Slider, TextField } from "@mui/material";
-import * as React from "react";
+import {
+  Box,
+  Button,
+  Slider,
+  TextField,
+  Grid,
+  Typography,
+} from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
-import { FC, useCallback } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import useMetaMask from "../../hooks/metamask";
 import { useStores } from "../../stores";
+import debounce from 'lodash.debounce';
 
 type StakingLockFormPropsType = {
-  fetchAll: (account: string, chainId: number) => Promise<void>;
+  fetchOverallValues: (account: string, chainId: number) => Promise<void>;
 };
 
-const StakingLockForm: FC<StakingLockFormPropsType> = ({ fetchAll }) => {
-  const {
-    handleSubmit,
-    watch,
-    control,
-    reset,
-    getValues
-  } = useForm({
+const StakingLockForm: FC<StakingLockFormPropsType> = ({
+  fetchOverallValues,
+}) => {
+  const { handleSubmit, watch, control, reset, getValues } = useForm({
     defaultValues: {
       lockDays: 30,
-      stakePosition: null,
+      stakePosition: 0,
     },
   });
   const { account, chainId } = useMetaMask()!;
   const rootStore = useStores();
 
   const lockDays = watch("lockDays");
+  const stakePosition = watch("stakePosition");
 
   const stakingStore = rootStore.stakingStore;
+  const [approvedBtn, setApprovedBtn] = useState(false);
+  const [approvalPending, setApprovalPending] = useState(false);
+
+  const approvalStatus = useCallback(
+    debounce(async (account: string, chainId: number, stakePosition: number) => {
+      const approved = await stakingStore.approvalStatusStakingFTHM(
+        account,
+        stakePosition,
+        chainId
+      );
+
+      console.log('Approve', approved);
+      approved ? setApprovedBtn(false) : setApprovedBtn(true);
+    }, 1000),
+    [stakingStore, setApprovedBtn, getValues]
+  );
+
+  useEffect(() => {
+    if (chainId && stakePosition) {
+      approvalStatus(account, chainId, stakePosition!);
+    }
+  }, [account, chainId, approvalStatus, stakePosition]);
 
   const onSubmit = useCallback(
     async (values: Record<string, any>) => {
       const { stakePosition, lockDays } = values;
 
       await stakingStore.createLock(account, stakePosition, lockDays, chainId);
-
+      await stakingStore.fetchLatestLock(account, chainId);
       reset();
-      fetchAll(account, chainId);
+      fetchOverallValues(account, chainId);
     },
-    [stakingStore, account, chainId, fetchAll, reset]
+    [stakingStore, account, chainId, fetchOverallValues, reset]
   );
+
+  const approveFTHM = useCallback(async () => {
+    setApprovalPending(true);
+    try {
+      await stakingStore.approveFTHM(account, chainId);
+      setApprovedBtn(false);
+    } catch (e) {
+      setApprovedBtn(true);
+    }
+
+    setApprovalPending(false);
+  }, [setApprovalPending, setApprovedBtn, account, chainId, stakingStore]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -78,10 +116,27 @@ const StakingLockForm: FC<StakingLockFormPropsType> = ({ fetchAll }) => {
         />
         {lockDays} days
       </Box>
+      <Grid container>
+        <Button sx={{ m: 3, mr: 10 }} variant="outlined" type="submit">
+          Create Lock
+        </Button>
 
-      <Button sx={{ m: 3, mr: 10 }} variant="outlined" type="submit">
-        Create Lock
-      </Button>
+        <Grid xs={7}>
+          {approvalPending ? (
+            <Typography display="inline" sx={{ marginRight: 2 }}>
+              Pending ...
+            </Typography>
+          ) : approvedBtn ? (
+            <Button
+              variant="outlined"
+              onClick={approveFTHM}
+              sx={{ m: 3, mr: 10 }}
+            >
+              Approve FTHM
+            </Button>
+          ) : null}
+        </Grid>
+      </Grid>
     </form>
   );
 };

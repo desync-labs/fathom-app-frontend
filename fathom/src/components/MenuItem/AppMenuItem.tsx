@@ -10,7 +10,6 @@ import {
 import AppMenuItemComponent from "./AppMenuItemComponent";
 import {
   Collapse,
-  Divider,
   ListItemIcon,
   ListItemText,
   List,
@@ -39,19 +38,36 @@ export type AppMenuItemProps = AppMenuItemPropsWithoutItems & {
 const useStyles = makeStyles<boolean>()((theme, isActive) => ({
   menuItem: {
     "&.active": {
-      background: "rgba(0, 0, 0, 0.08)",
+      background: isActive ? "#2A3E5A" : "transparent",
+      borderRadius: isActive ? "8px" : "0",
+      padding: "8px 16px",
       "& .MuiListItemIcon-root": {
         color: isActive
           ? theme.palette.primary.main
           : theme.palette.secondary.main,
       },
     },
+    "&:hover": {
+      background: "#2A3E5A",
+      borderRadius: "8px",
+    },
+    "& .MuiListItemText-inset": {
+      paddingLeft: "30px"
+    },
+    margin: "6px 0"
   },
   menuItemIcon: {
-    color: isActive ? theme.palette.primary.main : theme.palette.secondary.main,
+    color: isActive ? theme.palette.primary.main : "#415D83",
+    minWidth: "0",
+    paddingRight: "7px",
   },
   menuItemText: {
-    color: isActive ? theme.palette.primary.main : theme.palette.secondary.main,
+    color: isActive ? "#fff" : "#B0C5E7",
+    fontSize: "14px",
+    fontFamily: "Inter",
+    fontStyle: "normal",
+    fontWeight: "600",
+    lineHeight: "20px",
   },
 }));
 
@@ -94,7 +110,6 @@ const AppMenuItem: React.FC<AppMenuItemProps> = (props) => {
   const MenuItemChildren =
     isExpandable || !showText ? (
       <Collapse in={open || !showText!} timeout="auto" unmountOnExit>
-        <Divider />
         <List component="div" disablePadding>
           {items.map((item, index) => (
             <AppMenuItem {...item} key={index} />
@@ -105,7 +120,7 @@ const AppMenuItem: React.FC<AppMenuItemProps> = (props) => {
 
   return (
     <>
-      {showText ? MenuItemRoot : (Icon ? MenuItemRoot : null )}
+      {showText ? MenuItemRoot : Icon ? MenuItemRoot : null}
       {MenuItemChildren}
     </>
   );

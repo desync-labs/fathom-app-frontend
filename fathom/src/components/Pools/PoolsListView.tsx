@@ -3,7 +3,6 @@ import {
   Table,
   TableBody,
   TableContainer,
-  Paper,
   Typography,
 } from "@mui/material";
 import { useStores } from "../../stores";
@@ -13,6 +12,7 @@ import { observer } from "mobx-react";
 import ICollatralPool from "../../stores/interfaces/ICollatralPool";
 import PoolsListItem from "./PoolsListItem";
 import CustomizedDialogs from "../Positions/OpenNewPositionDialog";
+import { AppPaper } from "../AppPaper/AppPaper";
 
 const PoolsListView = observer(() => {
   const poolStore = useStores().poolStore;
@@ -34,7 +34,7 @@ const PoolsListView = observer(() => {
   }, [poolStore, account, chainId, logger, setSelectedPool]);
 
   return (
-    <Paper sx={{ p: 2, display: "flex", flexDirection: "column", height: 360 }}>
+    <AppPaper sx={{ p: 2, display: "flex", flexDirection: "column", height: 360 }}>
       {/* <Typography component="h2" variant="h6" color="primary" gutterBottom>
         Pools
       </Typography> */}
@@ -61,7 +61,7 @@ const PoolsListView = observer(() => {
           onClose={() => setSelectedPool(undefined)}
         />
       )}
-    </Paper>
+    </AppPaper>
   );
 });
 

@@ -13,6 +13,7 @@ import { observer } from "mobx-react";
 import { useStores } from "../../stores";
 import useMetaMask from "../../hooks/metamask";
 import { useWeb3React } from "@web3-react/core";
+import { AppPaper } from "../AppPaper/AppPaper";
 
 const options = ["USDT To FXD", "FXD To USDT"];
 
@@ -94,7 +95,13 @@ const StableSwap = observer(() => {
     }
 
     setApprovalPending(false);
-  }, [stableSwapStore, setApprovalPending, setApproveUsdtBtn, account, inputValue]);
+  }, [
+    stableSwapStore,
+    setApprovalPending,
+    setApproveUsdtBtn,
+    account,
+    inputValue,
+  ]);
 
   const handleToggle = useCallback(() => {
     setOpen((prevOpen) => !prevOpen);
@@ -122,15 +129,11 @@ const StableSwap = observer(() => {
   );
 
   return (
-    <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
+    <AppPaper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
       <Typography component="h2" variant="h6" color="primary" gutterBottom>
         Stable Swap
       </Typography>
       <Typography color="text.secondary" sx={{ flex: 1 }}>
-        {/* Stableswap module is the stablity module to keep stablecoin pegged
-        to it's original value. Arbitrauger uses it to earn profile in case
-        Stablecoin value depagged, that results value reset back to it's
-        original peg. */}
         Stableswap. This module keeps the stablecoin pegged to 1 USD. When the
         stablecoin price depegs from 1 USD, an arbitrage can be performed using
         this module.
@@ -228,7 +231,7 @@ const StableSwap = observer(() => {
           )}
         </Popper>
       </Box>
-    </Paper>
+    </AppPaper>
   );
 });
 
