@@ -1,20 +1,15 @@
-import React, { useEffect, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { useStores } from '../../stores';
 import useMetaMask from '../../hooks/metamask';
 import { LogLevel, useLogger } from '../../helpers/Logger';
-import IOpenPosition from '../../stores/interfaces/IOpenPosition';
-import BigNumber from 'bignumber.js';
-import { Constants } from '../../helpers/Constants';
-import { Button, Grid, Paper, Typography } from '@mui/material';
+import { Paper, Typography } from '@mui/material';
 import { observer } from 'mobx-react';
 import ICollatralPool from '../../stores/interfaces/ICollatralPool';
-import ClosePositionDialog from "../Positions/ClosePositionDialog";
 import {
   UnsupportedChainIdError,
   useWeb3React
@@ -87,7 +82,7 @@ const PoolsListView = observer(() => {
                     </Typography> 
                   </TableCell>
                   <TableCell align="left">
-                    <CustomizedDialogs pool={pool} />
+                    {pool.allowOpenPosition && <CustomizedDialogs pool={pool} />}
                   </TableCell>
                 </TableRow>
               ))}

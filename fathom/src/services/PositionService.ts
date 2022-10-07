@@ -46,7 +46,7 @@ export default class PositionService implements IPositionService{
               encodedResult,
           ]);
           
-          await wallet.methods.execute2(SmartContractFactory.FathomStablecoinProxyActions(this.chainId).address, openPositionCall).send({from:address})
+          let response = await wallet.methods.execute2(SmartContractFactory.FathomStablecoinProxyActions(this.chainId).address, openPositionCall).send({from:address})
               .on('transactionHash', (hash:any) => {
               transactionStore.addTransaction({hash:hash, 
                                               type:TransactionType.OpenPosition,
@@ -55,6 +55,8 @@ export default class PositionService implements IPositionService{
                                               title:`Opening Position Pending`,
                                               message:Strings.CheckOnBlockExplorer})
           })
+
+          console.log(`OPENING POSITION: ${JSON.stringify(response)}`)
 
       }catch(error){
           console.error(`Error in open position: ${error}`)
@@ -94,6 +96,7 @@ export default class PositionService implements IPositionService{
           console.log(`getting Positions For Address ${address}.`)
           let proxyWallet = await this.proxyWalletExist(address);
           let getPositionsContract = Web3Utils.getContractInstance(SmartContractFactory.GetPositions(this.chainId),this.chainId)
+          
           let response = await getPositionsContract.methods.getAllPositionsAsc(SmartContractFactory.PositionManager(this.chainId).address,proxyWallet).call();
 
           const { 0: positionIds, 1: positionAddresses, 2: collateralPools } = response;

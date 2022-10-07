@@ -1,12 +1,12 @@
 import { Box, Grid, Paper } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
+import { observer } from 'mobx-react';
 import { useEffect, useMemo } from 'react';
 import logo from '../../assets/images/fxd-logo.png';
 import { useStores } from '../../stores';
 
-
-const ProtocolStats = function ProtocolStats(props: any) {
+const ProtocolStats = observer(() => {
   const { chainId, error } = useWeb3React()
   const rootStore = useStores();
   const { fxdProtocolStatsStore }  = rootStore;
@@ -120,6 +120,6 @@ const ProtocolStats = function ProtocolStats(props: any) {
       </Paper>
 
     );
-  }
+  })
 
   export default ProtocolStats;
