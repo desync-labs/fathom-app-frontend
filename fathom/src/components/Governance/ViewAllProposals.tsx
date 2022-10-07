@@ -15,6 +15,10 @@ import IProposal from "stores/interfaces/IProposal";
 import { useEffect } from "react";
 import { observer } from "mobx-react";
 import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
+import {
+  AppTableHeaderRow,
+  AppTableRow
+} from "../AppComponents/AppTable/AppTable";
 
 const AllProposalsView = observer(() => {
   const { account, chainId } = useMetaMask()!;
@@ -44,18 +48,18 @@ const AllProposalsView = observer(() => {
           <TableContainer>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
-                <TableRow>
+                <AppTableHeaderRow>
                   <TableCell>Proposal Id Hash:</TableCell>
                   <TableCell>Title:</TableCell>
                   <TableCell>Status:</TableCell>
                   <TableCell align="right"></TableCell>
-                </TableRow>
+                </AppTableHeaderRow>
               </TableHead>
               <TableBody>
                 {proposeStore.fetchedProposals.map((proposal: IProposal) => (
-                  <TableRow
+                  <AppTableRow
                     key={proposal.proposalId}
-                    sx={{ "&:last-child td, &:last-child td": { border: 0 } }}
+                    sx={{ "&:last-child td, &:last-child td": { border: 0 }, td: { textAlign: 'center' } }}
                   >
                     <TableCell component="td" scope="row" color="primary">
                       <Link
@@ -77,7 +81,7 @@ const AllProposalsView = observer(() => {
                     <TableCell component="td" scope="row">
                       {proposal.status}
                     </TableCell>
-                  </TableRow>
+                  </AppTableRow>
                 ))}
               </TableBody>
             </Table>
