@@ -270,7 +270,7 @@ export default class StakingStore {
   approveFTHM = async (address: string, chainId: number)=> {
     console.log(`Approving staking position for address ${address}`)
     try{
-      if(address == undefined || address == null)
+      if(address === undefined || address === null)
         return
       
         await this.service.approveStakingFTHM(address, chainId,this.rootStore.transactionStore)
