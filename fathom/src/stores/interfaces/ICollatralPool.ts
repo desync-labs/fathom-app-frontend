@@ -5,4 +5,5 @@ export default interface ICollatralPool {
   borrowedFathom: string;
   collateralContractAddress: string;
   CollateralTokenAdapterAddress: string;
+  allowOpenPosition: boolean;
 }
