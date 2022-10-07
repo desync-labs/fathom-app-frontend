@@ -121,7 +121,7 @@ const StakingLockForm: FC<StakingLockFormPropsType> = ({
           Create Lock
         </Button>
 
-        <Grid xs={7}>
+        <Grid xs={7} item>
           {approvalPending ? (
             <Typography display="inline" sx={{ marginRight: 2 }}>
               Pending ...

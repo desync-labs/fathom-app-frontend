@@ -19,6 +19,10 @@ import { Constants } from "../../helpers/Constants";
 import { observer } from "mobx-react";
 import ClosePositionDialog from "../Positions/ClosePositionDialog";
 import { AppPaper } from "../AppPaper/AppPaper";
+import {
+  AppTableHeaderRow,
+  AppTableRow
+} from "../AppTable/AppTable";
 
 const OpenPositionsList = observer(() => {
   const positionStore = useStores().positionStore;
@@ -51,19 +55,6 @@ const OpenPositionsList = observer(() => {
     return safetyBuffer.div(Constants.WeiPerWad).decimalPlaces(2).toString();
   };
 
-  // const handleClickClosePosition = (
-  //   position: IOpenPosition,
-  //   pool: ICollatralPool
-  // ) => {
-  //   logger.log(LogLevel.info, "Close position");
-  //   positionStore.closePosition(
-  //     position.id,
-  //     pool,
-  //     account,
-  //     position.debtShare.div(Constants.WeiPerWad).toNumber()
-  //   );
-  // };
-
   const approve = async () => {
     setApprovalPending(true);
     try {
@@ -91,43 +82,45 @@ const OpenPositionsList = observer(() => {
         <TableContainer>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
-              <TableRow>
+              <AppTableHeaderRow
+                sx={{
+                  th: { textAlign: "left", paddingLeft: "10px" },
+                }}
+              >
                 <TableCell>Position Id</TableCell>
-                <TableCell align="right">Pool</TableCell>
-                <TableCell align="right">FXD Borrowed</TableCell>
-                <TableCell align="right">Locked Collateral</TableCell>
-                <TableCell align="right">Locked Value</TableCell>
-                <TableCell align="right">LTV</TableCell>
-                <TableCell align="right">Close Position</TableCell>
-              </TableRow>
+                <TableCell>Pool</TableCell>
+                <TableCell>FXD Borrowed</TableCell>
+                <TableCell>Locked Collateral</TableCell>
+                <TableCell>Locked Value</TableCell>
+                <TableCell>LTV</TableCell>
+                <TableCell></TableCell>
+              </AppTableHeaderRow>
             </TableHead>
             <TableBody>
               {positionStore.positions.map((position: IOpenPosition) => (
-                <TableRow
+                <AppTableRow
                   key={position.id}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  sx={{
+                    "&:last-child td, &:last-child th": { border: 0 },
+                    td: { paddingLeft: "10px", textAlign: "left" },
+                  }}
                 >
-                  <TableCell component="th" scope="row">
+                  <TableCell component="td" scope="row">
                     {position.id}
                   </TableCell>
-                  {/* <TableCell align="right">{row.address}</TableCell> */}
-                  <TableCell align="right">
-                    {poolStore.getPool(position.pool).name}
-                  </TableCell>
-                  <TableCell align="right">
+                  <TableCell>{poolStore.getPool(position.pool).name}</TableCell>
+                  <TableCell>
                     {getFormattedSaftyBuffer(position.debtShare)} FXD
                   </TableCell>
-                  <TableCell align="right">
+                  <TableCell>
                     {getFormattedSaftyBuffer(position.lockedCollateral)}{" "}
                     {poolStore.getPool(position.pool).name}{" "}
                   </TableCell>
-                  <TableCell align="right">
+                  <TableCell>
                     $ {getFormattedSaftyBuffer(position.lockedValue)}
                   </TableCell>
-                  <TableCell align="right">
-                    {position.ltv.toNumber() / 10}%
-                  </TableCell>
-                  <TableCell align="right">
+                  <TableCell>{position.ltv.toNumber() / 10}%</TableCell>
+                  <TableCell>
                     <Grid container>
                       <Grid xs={7} item>
                         {approvalPending ? (
@@ -149,7 +142,7 @@ const OpenPositionsList = observer(() => {
                       </Grid>
                     </Grid>
                   </TableCell>
-                </TableRow>
+                </AppTableRow>
               ))}
             </TableBody>
           </Table>
