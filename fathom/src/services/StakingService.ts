@@ -11,7 +11,6 @@ import { Constants } from "../helpers/Constants";
 import ILockPosition from "../stores/interfaces/ILockPosition";
 import { Strings } from "../helpers/Strings";
 import { secondsToTime } from "../utils/secondsToTime";
-import Web3 from "web3";
 
 export default class StakingService implements IStakingService {
   chainId = 51;

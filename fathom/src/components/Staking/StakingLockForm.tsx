@@ -39,7 +39,7 @@ const StakingLockForm: FC<StakingLockFormPropsType> = ({ fetchAll,fetchOverallVa
     let input = getValues("stakePosition") || 0;
     approved = await stakingStore.approvalStatusStakingFTHM(account,input,chainId)
     approved ? setApprovedBtn(false) : setApprovedBtn(true);
-  },[ stakingStore, setApprovedBtn])
+  },[ stakingStore, setApprovedBtn, getValues])
 
   React.useEffect(() => {
     if (chainId) { 
@@ -54,14 +54,12 @@ const StakingLockForm: FC<StakingLockFormPropsType> = ({ fetchAll,fetchOverallVa
     async (values: Record<string, any>) => {
       const { stakePosition, lockDays } = values;
 
-      console.log("...stake Position, ..", stakePosition)
-
       await stakingStore.createLock(account, stakePosition, lockDays, chainId);
       await stakingStore.fetchLatestLock(account,chainId)
       reset();
       fetchOverallValues(account, chainId);
     },
-    [stakingStore, account, chainId, fetchAll,fetchOverallValues, reset]
+    [stakingStore, account, chainId,fetchOverallValues, reset]
   );
 
   const approveFTHM =  async () => {
