@@ -8,12 +8,7 @@ import {
 } from "@mui/icons-material";
 
 import AppMenuItemComponent from "./AppMenuItemComponent";
-import {
-  Collapse,
-  ListItemIcon,
-  ListItemText,
-  List,
-} from "@mui/material";
+import { Collapse, ListItemIcon, ListItemText, List } from "@mui/material";
 
 // React runtime PropTypes
 export const AppMenuItemPropTypes = {
@@ -35,47 +30,52 @@ export type AppMenuItemProps = AppMenuItemPropsWithoutItems & {
   items?: AppMenuItemProps[];
 };
 
-const useStyles = makeStyles<boolean>()((theme, isActive) => ({
-  menuItem: {
-    "&.active": {
-      background: isActive ? "#2A3E5A" : "transparent",
-      borderRadius: isActive ? "8px" : "0",
-      padding: "8px 16px",
-      "& .MuiListItemIcon-root": {
-        color: isActive
-          ? theme.palette.primary.main
-          : theme.palette.secondary.main,
+const useStyles = makeStyles<{ isActive: boolean; showText: boolean }>()(
+  (theme, { isActive, showText }) => ({
+    menuItem: {
+      "&.active": {
+        background: isActive ? "#2A3E5A" : "transparent",
+        borderRadius: isActive ? "8px" : "0",
+        "& .MuiListItemIcon-root": {
+          color: isActive
+            ? theme.palette.primary.main
+            : theme.palette.secondary.main,
+        },
       },
+      "&:hover": {
+        background: "#2A3E5A",
+        borderRadius: "8px",
+      },
+      "& .MuiListItemText-inset": {
+        paddingLeft: "30px",
+      },
+      margin: "6px 0",
+      padding: showText ? "8px 16px" : "12px",
     },
-    "&:hover": {
-      background: "#2A3E5A",
-      borderRadius: "8px",
+    menuItemIcon: {
+      color: isActive ? theme.palette.primary.main : "#415D83",
+      minWidth: "0",
+      paddingRight: showText ? "7px" : "0",
     },
-    "& .MuiListItemText-inset": {
-      paddingLeft: "30px"
+    menuItemText: {
+      color: isActive ? "#fff" : "#B0C5E7",
+      fontSize: "14px",
+      fontFamily: "Inter",
+      fontStyle: "normal",
+      fontWeight: "600",
+      lineHeight: "20px",
     },
-    margin: "6px 0"
-  },
-  menuItemIcon: {
-    color: isActive ? theme.palette.primary.main : "#415D83",
-    minWidth: "0",
-    paddingRight: "7px",
-  },
-  menuItemText: {
-    color: isActive ? "#fff" : "#B0C5E7",
-    fontSize: "14px",
-    fontFamily: "Inter",
-    fontStyle: "normal",
-    fontWeight: "600",
-    lineHeight: "20px",
-  },
-}));
+  })
+);
 
 const AppMenuItem: React.FC<AppMenuItemProps> = (props) => {
   const { name, link, Icon, items = [], isActive, showText } = props;
-  const { classes } = useStyles(isActive!);
+  const isExpandable = items && items.length > 0 && showText;
 
-  let isExpandable = items && items.length > 0 && showText;
+  const { classes } = useStyles({
+    isActive: isActive!,
+    showText: showText!,
+  });
   const [open, setOpen] = React.useState(false);
 
   function handleClick() {
