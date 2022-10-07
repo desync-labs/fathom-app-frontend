@@ -118,7 +118,7 @@ const StakingLockForm: FC<StakingLockFormPropsType> = ({ fetchAll,fetchOverallVa
      
           <Grid xs={7}>
             {approvalPending ? (
-              <Typography display="inline" sx={{ marginRight: 2 }}>
+              <Typography  sx={{ m: 3, mr: 10 }}>
                 Pending ...
               </Typography>
             ) : approvedBtn ? (
