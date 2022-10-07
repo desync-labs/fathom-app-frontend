@@ -28,7 +28,7 @@ import { Route, Routes } from "react-router-dom";
 import StableSwap from "../Stableswap/StableSwap";
 import Image from "mui-image";
 
-import FathomLogoAqua from "../../assets/svg/Fathom-logo-aqua.svg";
+import FathomAppLogo from "../../assets/svg/Fathom-app-logo.svg";
 import { useStores } from "../../stores";
 import { Web3Status } from "../Web3Status/Web3Status";
 import AllProposalsView from "../Governance/ViewAllProposals";
@@ -148,11 +148,11 @@ const MainLayout = observer(() => {
             {open && (
               <Image
                 duration={0}
-                src={FathomLogoAqua}
+                src={FathomAppLogo}
                 style={{
                   height: "none",
-                  maxWidth: "120px",
-                  marginLeft: "10px",
+                  maxWidth: "140px",
+                  marginLeft: "22px",
                 }}
                 wrapperStyle={{ justifyContent: "left" }}
               />
@@ -226,10 +226,6 @@ const MainLayout = observer(() => {
               </Routes>
             </Container>
           </Box>
-          {/*<Alert severity="error">This is an error alert — check it out!</Alert>*/}
-          {/*<Alert severity="warning">This is a warning alert — check it out!</Alert>*/}
-          {/*<Alert severity="info">This is an info alert — check it out!</Alert>*/}
-          {/*<Alert severity="success">This is a success alert — check it out!</Alert>*/}
           <Copyright sx={{ pt: 4 }} />
         </Box>
       </Box>

@@ -93,7 +93,6 @@ const OpenPositionsList = observer(() => {
             <TableHead>
               <TableRow>
                 <TableCell>Position Id</TableCell>
-                {/* <TableCell align="right">Address</TableCell> */}
                 <TableCell align="right">Pool</TableCell>
                 <TableCell align="right">FXD Borrowed</TableCell>
                 <TableCell align="right">Locked Collateral</TableCell>
@@ -130,7 +129,7 @@ const OpenPositionsList = observer(() => {
                   </TableCell>
                   <TableCell align="right">
                     <Grid container>
-                      <Grid xs={7}>
+                      <Grid xs={7} item>
                         {approvalPending ? (
                           <Typography display="inline" sx={{ marginRight: 2 }}>
                             Pending ...
@@ -145,7 +144,7 @@ const OpenPositionsList = observer(() => {
                           </Button>
                         ) : null}
                       </Grid>
-                      <Grid xs={3}>
+                      <Grid xs={3} item>
                         <ClosePositionDialog position={position} />
                       </Grid>
                     </Grid>

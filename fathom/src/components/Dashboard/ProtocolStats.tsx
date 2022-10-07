@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import logo from "../../assets/images/fxd-logo.png";
 import { useStores } from "../../stores";
 import { AppPaper } from "../AppPaper/AppPaper";
+import { observer } from "mobx-react";
 
 const StatsStyles = {
   boxShadow: 2,
@@ -15,9 +16,9 @@ const StatsStyles = {
   m: 1,
   borderRadius: 2,
   textAlign: "center",
-}
+};
 
-const ProtocolStats = function ProtocolStats(props: any) {
+const ProtocolStats = observer(() => {
   const { chainId } = useWeb3React();
   const rootStore = useStores();
   const { fxdProtocolStatsStore } = rootStore;
@@ -27,11 +28,7 @@ const ProtocolStats = function ProtocolStats(props: any) {
     if (chainId) {
       setTimeout(() => fxdProtocolStatsStore.fetchProtocolStats());
     }
-  }, [
-    fxdProtocolStatsStore,
-    rootStore.alertStore,
-    chainId
-  ]);
+  }, [fxdProtocolStatsStore, rootStore.alertStore, chainId]);
 
   return (
     <AppPaper
@@ -58,9 +55,7 @@ const ProtocolStats = function ProtocolStats(props: any) {
         earning on your collateral.
       </Typography>
       <Grid container>
-        <Box
-          sx={StatsStyles}
-        >
+        <Box sx={StatsStyles}>
           <Typography variant="subtitle1" color="text.secondary">
             Total Supply
           </Typography>
@@ -70,9 +65,7 @@ const ProtocolStats = function ProtocolStats(props: any) {
             )}
           </Typography>
         </Box>
-        <Box
-          sx={StatsStyles}
-        >
+        <Box sx={StatsStyles}>
           <Typography variant="subtitle1" color="text.secondary">
             TVL
           </Typography>
@@ -80,9 +73,7 @@ const ProtocolStats = function ProtocolStats(props: any) {
             {fxdProtocolStatsStore.getFormattedTVL()}
           </Typography>
         </Box>
-        <Box
-          sx={StatsStyles}
-        >
+        <Box sx={StatsStyles}>
           <Typography variant="subtitle1" color="text.secondary">
             FXD Price
           </Typography>
@@ -90,9 +81,7 @@ const ProtocolStats = function ProtocolStats(props: any) {
             {fxdProtocolStatsStore.getFormattedFXDPriceRatio()}
           </Typography>
         </Box>
-        <Box
-          sx={StatsStyles}
-        >
+        <Box sx={StatsStyles}>
           <Typography variant="subtitle1" color="text.secondary">
             Liq. Ratio
           </Typography>
@@ -103,6 +92,6 @@ const ProtocolStats = function ProtocolStats(props: any) {
       </Grid>
     </AppPaper>
   );
-};
+});
 
 export default ProtocolStats;
