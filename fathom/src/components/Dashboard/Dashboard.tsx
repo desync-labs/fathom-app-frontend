@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import Grid from "@mui/material/Grid";
 import OpenPositionsList from "../PositionList/OpenPositionsList";
 import { useStores } from "../../stores";
@@ -7,21 +7,30 @@ import { observer } from "mobx-react";
 import ProtocolStats from "./ProtocolStats";
 import { useWeb3React } from "@web3-react/core";
 import PoolsListView from "../Pools/PoolsListView";
+import debounce from "lodash.debounce";
 
 const DashboardContent = observer(() => {
-  const { chainId } = useWeb3React();
+  const { chainId, account } = useWeb3React();
   const rootStore = useStores();
-  const { poolStore } = rootStore;
+  const { poolStore, positionStore } = rootStore;
   const logger = useLogger();
 
+  const fetchData = useCallback(
+    debounce(async () => {
+      await poolStore.fetchPools();
+      await positionStore.fetchPositions(account!);
+    }, 100),
+    [poolStore, positionStore, account]
+  );
+
   useEffect(() => {
-    if (chainId) {
+    if (chainId && account) {
       logger.log(LogLevel.info, "fetching pool information.");
-      setTimeout(() => poolStore.fetchPools());
+      fetchData();
     } else {
       poolStore.setPool([]);
     }
-  }, [poolStore, logger, chainId]);
+  }, [poolStore, logger, chainId, account]);
 
   return (
     <Grid container spacing={3}>

@@ -1,5 +1,3 @@
-// src/stores/user.store.js
-
 import { makeAutoObservable, runInAction } from "mobx";
 import { RootStore } from ".";
 import IPoolService from "../services/interfaces/IPoolService";
@@ -19,6 +17,7 @@ export default class PoolStore {
   };
 
   getPool = (poolId: string) => {
+    console.log(this.pools);
     const pool = this.pools.filter((pool) => poolId === pool.id)[0];
     return pool;
   };

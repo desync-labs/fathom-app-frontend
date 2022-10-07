@@ -90,22 +90,11 @@ export default function ClosePositionDialog(
     .div(Constants.WeiPerWad)
     .toNumber();
 
-  let lockedColateral = props.position.lockedCollateral
+  const lockedColateral = props.position.lockedCollateral
     .div(Constants.WeiPerWad)
     .toNumber();
 
   const closePosition = () => {
-    // switch (closingType) {
-    //     case ClosingType.Full: {
-    //         // positionStore.closePosition(props.position.id, pool, account, fathomToken)
-    //         positionStore.partialyClosePosition(props.position, pool, account, fathomToken, collateral)
-    //         break;
-    //     }
-    //     case ClosingType.Partial: {
-    //         positionStore.partialyClosePosition(props.position, pool, account, fathomToken, collateral)
-    //         break;
-    //     }
-    // }
     positionStore.partialyClosePosition(
       props.position,
       pool,
@@ -117,8 +106,9 @@ export default function ClosePositionDialog(
   };
 
   const handleClickOpen = async () => {
-    let priceWithSafetyMargin = await poolStore.getPriceWithSafetyMargin(pool);
-
+    const priceWithSafetyMargin = await poolStore.getPriceWithSafetyMargin(
+      pool
+    );
     setType(ClosingType.Full);
     setPrice(priceWithSafetyMargin);
     setFathomToken(debtShare);
@@ -150,8 +140,11 @@ export default function ClosePositionDialog(
   };
 
   return (
-    <div>
-      <Button variant="outlined" onClick={handleClickOpen}>
+    <>
+      <Button
+        variant="outlined"
+        onClick={handleClickOpen}
+      >
         Close
       </Button>
       <BootstrapDialog
@@ -237,6 +230,6 @@ export default function ClosePositionDialog(
           </Button>
         </DialogActions>
       </BootstrapDialog>
-    </div>
+    </>
   );
 }

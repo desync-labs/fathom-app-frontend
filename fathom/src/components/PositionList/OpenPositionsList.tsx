@@ -42,7 +42,6 @@ const OpenPositionsList = observer(() => {
       setTimeout(() => {
         // Update the document title using the browser API
         logger.log(LogLevel.info, `fetching open positions. ${account}`);
-        positionStore.fetchPositions(account);
         approvalStatus();
       });
     } else {
@@ -107,7 +106,9 @@ const OpenPositionsList = observer(() => {
                   <TableCell component="td" scope="row">
                     {position.id}
                   </TableCell>
-                  <TableCell>{poolStore.getPool(position.pool).name}</TableCell>
+                  <TableCell>
+                    {poolStore.getPool(position.pool)?.name}
+                  </TableCell>
                   <TableCell>
                     {getFormattedSaftyBuffer(position.debtShare)} FXD
                   </TableCell>
@@ -120,22 +121,27 @@ const OpenPositionsList = observer(() => {
                   </TableCell>
                   <TableCell>{position.ltv.toNumber() / 10}%</TableCell>
                   <TableCell>
-                    <Grid container>
-                      <Grid xs={7} item>
-                        {approvalPending ? (
-                          <Typography display="inline" sx={{ marginRight: 2 }}>
-                            Pending ...
-                          </Typography>
-                        ) : approveBtn ? (
-                          <Button
-                            variant="outlined"
-                            onClick={approve}
-                            sx={{ marginRight: 5 }}
-                          >
-                            Approve FXD
-                          </Button>
-                        ) : null}
-                      </Grid>
+                    <Grid container justifyContent="center">
+                      {(approvalPending || approveBtn) && (
+                        <Grid xs={7} item>
+                          {approvalPending ? (
+                            <Typography
+                              display="inline"
+                              sx={{ marginRight: 2 }}
+                            >
+                              Pending ...
+                            </Typography>
+                          ) : approveBtn ? (
+                            <Button
+                              variant="outlined"
+                              onClick={approve}
+                              sx={{ marginRight: 5 }}
+                            >
+                              Approve FXD
+                            </Button>
+                          ) : null}
+                        </Grid>
+                      )}
                       <Grid xs={3} item>
                         <ClosePositionDialog position={position} />
                       </Grid>
