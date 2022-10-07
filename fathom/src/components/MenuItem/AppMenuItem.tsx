@@ -19,7 +19,7 @@ import {
 export const AppMenuItemPropTypes = {
   name: PropTypes.string.isRequired,
   link: PropTypes.string,
-  Icon: PropTypes.elementType,
+  Icon: PropTypes.any,
   items: PropTypes.array,
   isActive: PropTypes.bool,
   showText: PropTypes.bool,

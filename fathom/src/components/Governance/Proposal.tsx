@@ -1,16 +1,21 @@
 import { Constants } from "../../helpers/Constants";
-import { Button, Paper, Typography, Container } from "@mui/material";
+import {
+  Button,
+  Typography,
+  Container,
+  Grid,
+  Box,
+  ButtonGroup,
+} from "@mui/material";
 import { useEffect, useCallback } from "react";
 import { observer } from "mobx-react";
-import ButtonGroup from "@mui/material/ButtonGroup";
 import LinearProgress, {
   LinearProgressProps,
 } from "@mui/material/LinearProgress";
-import Grid from "@mui/material/Grid";
 import { useStores } from "../../stores";
 import useMetaMask from "../../hooks/metamask";
 import { useParams } from "react-router-dom";
-import Box from "@mui/material/Box";
+import { AppPaper } from "../AppPaper/AppPaper";
 
 const ProposalView = observer(() => {
   const { account, chainId } = useMetaMask()!;
@@ -113,7 +118,7 @@ const ProposalView = observer(() => {
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
         <Grid container spacing={5}>
           <Grid item xs={8} md={8} lg={9}>
-            <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
+            <AppPaper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
               {proposeStore.fetchedProposals.length === 0 ? (
                 <>
                   <Typography component="h2" color="primary" gutterBottom>
@@ -147,11 +152,11 @@ const ProposalView = observer(() => {
                   </Typography>
                 </>
               )}
-            </Paper>
+            </AppPaper>
           </Grid>
 
           <Grid item xs={3} md={3} lg={3}>
-            <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
+            <AppPaper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
               <Box sx={{ width: "100%" }}>
                 <Typography gutterBottom>For:</Typography>
                 <LinearProgressWithLabel
@@ -219,7 +224,7 @@ const ProposalView = observer(() => {
                   </ButtonGroup>
                 </>
               )}
-            </Paper>
+            </AppPaper>
           </Grid>
         </Grid>
       </Container>

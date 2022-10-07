@@ -1,18 +1,44 @@
-import { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { FC } from "react";
 import {
-  Dashboard as DashboardIcon,
-  SwapHoriz as SwapHorizIcon,
   AddBox as AddBoxIcon,
   DensitySmall as DensitySmallIcon,
-  BrowserUpdated as BrowserUpdatedIcon,
 } from "@mui/icons-material";
 import { useLocation } from "react-router-dom";
 import AppMenuItem from "../MenuItem/AppMenuItem";
 
+import BorrowIconSrc from "../../assets/svg/borrow.svg";
+import BorrowIconActiveSrc from "../../assets/svg/borrow-active.svg";
+import SwapIconSrc from "../../assets/svg/stable-swap.svg";
+import SwapIconActiveSrc from "../../assets/svg/stable-swap-active.svg";
+import StakingIconSrc from "../../assets/svg/staking.svg";
+import StakingIconActiveSrc from "../../assets/svg/staking-active.svg";
+
 type ItemPropsType = {
   open: boolean;
 };
+
+const preloadSrcList: string[] = [
+  BorrowIconSrc,
+  BorrowIconActiveSrc,
+  SwapIconSrc,
+  SwapIconActiveSrc,
+  StakingIconSrc,
+  StakingIconActiveSrc,
+];
+
+function preloadImage(src: string) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = function () {
+      resolve(img);
+    };
+    img.onerror = img.onabort = function () {
+      reject(src);
+    };
+    img.src = src;
+  });
+}
 
 const useShowText = (open: boolean) => {
   const [showText, setShowText] = useState(true);
@@ -34,26 +60,78 @@ const useShowText = (open: boolean) => {
 
 export const Menu: FC<ItemPropsType> = ({ open }) => {
   const location = useLocation();
-  const isProposalsActive = location.pathname === "/proposals";
-  const isMakeProposalActive = location.pathname === "/proposal/make-proposal";
-  const isStableSwapActive = location.pathname === "/swap";
-  const isDashboardActive = location.pathname === "/";
-  const isStakingActive = location.pathname === "/staking";
+
+  useEffect(() => {
+    preloadSrcList.forEach((src) => {
+      preloadImage(src);
+    });
+  }, []);
+
+  const isDashboardActive = useMemo(
+    () => location.pathname === "/",
+    [location.pathname]
+  );
+  const isStableSwapActive = useMemo(
+    () => location.pathname === "/swap",
+    [location.pathname]
+  );
+  const isProposalsActive = useMemo(
+    () => location.pathname === "/proposals",
+    [location.pathname]
+  );
+  const isMakeProposalActive = useMemo(
+    () => location.pathname === "/proposal/make-proposal",
+    [location.pathname]
+  );
+  const isStakingActive = useMemo(
+    () => location.pathname === "/staking",
+    [location.pathname]
+  );
 
   const { showText } = useShowText(open);
+
+  const BorrowIcon = useCallback(
+    () => (
+      <img
+        src={isDashboardActive ? BorrowIconActiveSrc : BorrowIconSrc}
+        alt="borrow-icon"
+      />
+    ),
+    [isDashboardActive]
+  );
+
+  const SwapIcon = useCallback(
+    () => (
+      <img
+        src={isStableSwapActive ? SwapIconActiveSrc : SwapIconSrc}
+        alt="swap-icon"
+      />
+    ),
+    [isStableSwapActive]
+  );
+
+  const Staking = useCallback(
+    () => (
+      <img
+        alt="staking-icon"
+        src={isStakingActive ? StakingIconActiveSrc : StakingIconSrc}
+      />
+    ),
+    [isStakingActive]
+  );
 
   const appMenuItems = [
     {
       name: "Borrow",
       link: "/",
-      Icon: DashboardIcon,
+      Icon: BorrowIcon,
       isActive: isDashboardActive,
       showText,
     },
     {
       name: "Stable Swap",
       link: "/swap",
-      Icon: SwapHorizIcon,
+      Icon: SwapIcon,
       isActive: isStableSwapActive,
       showText,
     },
@@ -80,17 +158,10 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
     },
     {
       name: "Staking",
-      isActive: false,
       showText,
-      items: [
-        {
-          name: "Locking",
-          showText,
-          Icon: BrowserUpdatedIcon,
-          isActive: isStakingActive,
-          link: "/staking",
-        },
-      ],
+      Icon: Staking,
+      isActive: isStakingActive,
+      link: "/staking",
     },
   ];
 
