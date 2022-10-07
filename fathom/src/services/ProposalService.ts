@@ -24,7 +24,7 @@ export default class ProposalService implements IProposalService {
     chainId?: number
   ): Promise<number> {
     chainId = chainId || this.chainId;
-
+    console.log(chainId);
     if (chainId) {
       const FathomGovernor = Web3Utils.getContractInstance(
         SmartContractFactory.FathomGovernor(chainId),

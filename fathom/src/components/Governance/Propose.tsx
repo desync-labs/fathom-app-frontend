@@ -166,6 +166,7 @@ const ProposeListView = observer(() => {
               <Controller
                 control={control}
                 name="targets"
+                rules={{ required: true }}
                 render={({
                   field: { onChange, value },
                   fieldState: { error },
@@ -173,10 +174,11 @@ const ProposeListView = observer(() => {
                   <TextField
                     error={!!error}
                     id="outlined-multiline-flexible"
-                    label="Target addresses array"
+                    label="Target address array"
                     multiline
                     value={value}
                     maxRows={1}
+                    helperText={error ? "Field Target address array is required" : ""}
                     onChange={onChange}
                   />
                 )}
@@ -185,6 +187,7 @@ const ProposeListView = observer(() => {
               <Controller
                 control={control}
                 name="inputValues"
+                rules={{ required: true }}
                 render={({
                   field: { onChange, value },
                   fieldState: { error },
@@ -196,6 +199,7 @@ const ProposeListView = observer(() => {
                     multiline
                     value={value}
                     maxRows={1}
+                    helperText={error ? "Field Values array is required" : ""}
                     onChange={onChange}
                   />
                 )}
@@ -204,6 +208,7 @@ const ProposeListView = observer(() => {
               <Controller
                 control={control}
                 name="calldata"
+                rules={{ required: true }}
                 render={({
                   field: { onChange, value },
                   fieldState: { error },
@@ -211,10 +216,11 @@ const ProposeListView = observer(() => {
                   <TextField
                     error={!!error}
                     id="outlined-multiline-static"
-                    label="Calldatas array"
+                    label="Calldata array"
                     multiline
                     value={value}
                     maxRows={1}
+                    helperText={error ? "Field Calldata array is required" : ""}
                     onChange={onChange}
                   />
                 )}
