@@ -6,40 +6,39 @@ import IPoolService from "../services/interfaces/IPoolService";
 import ICollatralPool from "./interfaces/ICollatralPool";
 
 export default class PoolStore {
+  pools: ICollatralPool[] = [];
+  service: IPoolService;
 
-  pools:ICollatralPool[] = [];
-  service:IPoolService;
-
-  constructor(rootStore:RootStore, service: IPoolService) { 
+  constructor(rootStore: RootStore, service: IPoolService) {
     makeAutoObservable(this);
     this.service = service;
   }
 
-  setPool = (_pool:ICollatralPool[]) => {
+  setPool = (_pool: ICollatralPool[]) => {
     this.pools = _pool;
   };
 
-  getPool = (poolId:string) =>{
-    const pool = this.pools.filter(pool => poolId === pool.id)[0];
-    return pool
-  }
+  getPool = (poolId: string) => {
+    const pool = this.pools.filter((pool) => poolId === pool.id)[0];
+    return pool;
+  };
 
-  fetchPools = async () =>{
+  fetchPools = async () => {
     let pools = await this.service.fetchPools();
-    runInAction(() =>{
-      this.setPool(pools)
-    })
-  }
+    runInAction(() => {
+      this.setPool(pools);
+    });
+  };
 
-  getPriceWithSafetyMargin = async (pool:ICollatralPool) => {
+  getPriceWithSafetyMargin = async (pool: ICollatralPool) => {
     return await this.service.getPriceWithSafetyMargin(pool);
-  }
+  };
 
-  getUserTokenBalance = async(address:string, pool:ICollatralPool) => {
+  getUserTokenBalance = async (address: string, pool: ICollatralPool) => {
     return await this.service.getUserTokenBalance(address, pool);
-  }
+  };
 
-  getDexPrice = async() => {
+  getDexPrice = async () => {
     return await this.service.getDexPrice();
-  }
+  };
 }

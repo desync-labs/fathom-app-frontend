@@ -10,7 +10,6 @@ export default class PoolService implements IPoolService {
   //Ideally this should be dynamic
   getPools(): ICollatralPool[] {
     const pools: ICollatralPool[] = [];
-    //0x5758444300000000000000000000000000000000000000000000000000000000
     pools.push(
       {
         id: "0x5758444300000000000000000000000000000000000000000000000000000000",
@@ -21,9 +20,32 @@ export default class PoolService implements IPoolService {
           SmartContractFactory.WXDCCollateralTokenAdapter(this.chainId).address,
         availableFathom: "",
         borrowedFathom: "",
+        allowOpenPosition: true
       },
       {
-        id: "0x555344542d535441424c45000000000000000000000000000000000000000000",
+        id: "0x555344542d434f4c000000000000000000000000000000000000000000000000",
+        name: "USDT-COL",
+        collateralContractAddress: SmartContractFactory.USDT(this.chainId)
+          .address,
+        CollateralTokenAdapterAddress:
+          SmartContractFactory.USDTCollateralTokenAdapter(this.chainId).address,
+        availableFathom: "",
+        borrowedFathom: "",
+        allowOpenPosition: true
+      },
+      {
+        id: "0x4654484d00000000000000000000000000000000000000000000000000000000",
+        name: "FTHM",
+        collateralContractAddress: SmartContractFactory.FTHMToken(this.chainId)
+          .address,
+        CollateralTokenAdapterAddress:
+          SmartContractFactory.FTHMCollateralTokenAdapter(this.chainId).address,
+        availableFathom: "",
+        borrowedFathom: "",
+        allowOpenPosition: true
+      },
+      {
+        id: "0x555344542d535441424c45000000000000000000000000000000000000000001",
         name: "USDT",
         collateralContractAddress: SmartContractFactory.USDT(this.chainId)
           .address,
@@ -31,6 +53,7 @@ export default class PoolService implements IPoolService {
           SmartContractFactory.USDTCollateralTokenAdapter(this.chainId).address,
         availableFathom: "",
         borrowedFathom: "",
+        allowOpenPosition: false
       }
     );
 
@@ -67,8 +90,7 @@ export default class PoolService implements IPoolService {
   }
 
   setChainId(chainId: number) {
-    if(chainId !== undefined)
-      this.chainId = chainId;
+    if (chainId !== undefined) this.chainId = chainId;
   }
 
   async getPriceWithSafetyMargin(pool: ICollatralPool): Promise<number> {
@@ -89,37 +111,45 @@ export default class PoolService implements IPoolService {
     }
   }
 
-  async getUserTokenBalance(address:string, pool: ICollatralPool): Promise<number> {
-    try{
+  async getUserTokenBalance(
+    address: string,
+    pool: ICollatralPool
+  ): Promise<number> {
+    try {
+      const BEP20 = Web3Utils.getContractInstance(
+        SmartContractFactory.BEP20(pool.collateralContractAddress),
+        this.chainId
+      );
 
-        const BEP20 = Web3Utils.getContractInstance(SmartContractFactory.BEP20(pool.collateralContractAddress),this.chainId)
+      let balance = await BEP20.methods.balanceOf(address).call();
 
-        let balance = await BEP20.methods.balanceOf(address).call();
-      
-        return balance;
-        
-    }catch(exception){
-        console.log(`Error fetching pool information: ${JSON.stringify(exception)}`)
-        throw exception;
+      return balance;
+    } catch (exception) {
+      console.log(
+        `Error fetching pool information: ${JSON.stringify(exception)}`
+      );
+      throw exception;
     }
-}
+  }
 
-async getDexPrice(): Promise<number>{
-  console.log("in get dex price")
-  try{
-   
+  async getDexPrice(): Promise<number> {
+    console.log("in get dex price");
+    try {
       let USDT = SmartContractFactory.USDT(this.chainId).address;
       let WXDC = SmartContractFactory.WXDC(this.chainId).address;
 
-      const dexPriceOracle = Web3Utils.getContractInstance(SmartContractFactory.DexPriceOracle(this.chainId),this.chainId)
+      const dexPriceOracle = Web3Utils.getContractInstance(
+        SmartContractFactory.DexPriceOracle(this.chainId),
+        this.chainId
+      );
 
-      let result = await dexPriceOracle.methods.getPrice(USDT, WXDC).call()
+      let result = await dexPriceOracle.methods.getPrice(USDT, WXDC).call();
       let price = result[0];
-      
-      return price
-  }catch(error){
-      console.error(`Error in open position approve token : ${error}`)
+
+      return price;
+    } catch (error) {
+      console.error(`Error in open position approve token : ${error}`);
       throw error;
+    }
   }
-}
 }
