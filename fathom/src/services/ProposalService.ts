@@ -94,10 +94,12 @@ export default class ProposalService implements IProposalService {
     }
   }
 
+
   async viewAllProposals(
     account: string,
     chainId?: number
   ): Promise<IProposal[]> {
+
     let fetchedProposals: IProposal[] = [];
     try {
       chainId = chainId || this.chainId;
@@ -106,35 +108,25 @@ export default class ProposalService implements IProposalService {
           SmartContractFactory.FathomGovernor(chainId)
         );
 
-        const proposalIds = await FathomGovernor.methods
-          .getProposalIds()
-          .call();
-        console.log(typeof proposalIds[0]);
-        const descriptions: any = [];
-        const statusses: any = [];
+        console.log("HERE1");
 
-        for (let i = 0; i < proposalIds.length; i++) {
-          descriptions.push(
-            await FathomGovernor.methods
-              .getDescription(proposalIds[i])
-              .call({ from: account })
-          );
-          statusses.push(
-            Constants.Status[
-              await FathomGovernor.methods
-                .state(proposalIds[i])
-                .call({ from: account })
-            ]
-          );
+        // const [_proposalIds, _descriptions, _statusses]  = await FathomGovernor.methods.getProposals(8)
+        const result = await FathomGovernor.methods.getProposals(2).call({ from: account });
+        
+        console.log("_proposalIds: ");
+        console.log(result[0]);
+        console.log(result[1]);
+        console.log(result[2]);
 
-          let proposal = {
-            description: descriptions[i],
-            proposalId: proposalIds[i],
-            status: statusses[i],
-          };
-          fetchedProposals.push(proposal);
-        }
+        result[0].forEach((_id:string, i:number) => {
+          fetchedProposals.push({
+            description: result[1][i],
+            proposalId: _id.toString( ),
+            status: Constants.Status[parseInt(result[2][i])]
+          })
+        });
       }
+
       return fetchedProposals;
     } catch (e) {
       console.error(`Error in getting Proposals: ${e}`);

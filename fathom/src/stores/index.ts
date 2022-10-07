@@ -17,7 +17,7 @@ import IActiveWeb3TransactionsService from "../services/interfaces/IActiveWeb3Tr
 import ProposalStore from "./proposal.store";
 import IProposalService from "../services/interfaces/IProposalService";
 import ProposalService from "../services/ProposalService";
-import StakingStore from "./staking.store"
+import StakingStore from "./staking.store";
 import StakingService from "../services/StakingService";
 import IStakingService from "../services/interfaces/IStakingService";
 import IFXDProtocolStatsService from "../services/interfaces/IFXDProtocolStatsService";
@@ -50,7 +50,6 @@ export class RootStore {
   fxdProtocolStatsService: IFXDProtocolStatsService;
   stakingService: IStakingService;
 
-
   chainId: number = Constants.DEFAULT_CHAINID;
 
   constructor() {
@@ -59,7 +58,7 @@ export class RootStore {
     this.stableSwapService = new StableSwapService();
     this.activeWeb3TransactionService = new ActiveWeb3TransactionsService();
     this.proposalService = new ProposalService();
-    this.fxdProtocolStatsService = new FXDProtocolStatsService()
+    this.fxdProtocolStatsService = new FXDProtocolStatsService();
     this.stakingService = new StakingService();
 
     this.authStore = new AuthStore(this);
@@ -68,7 +67,10 @@ export class RootStore {
     this.stableSwapStore = new StableSwapStore(this, this.stableSwapService);
     this.alertStore = new AlertStore(this);
     this.proposalStore = new ProposalStore(this, this.proposalService);
-    this.fxdProtocolStatsStore = new FXDProtocolStatsStore(this,this.fxdProtocolStatsService)
+    this.fxdProtocolStatsStore = new FXDProtocolStatsStore(
+      this,
+      this.fxdProtocolStatsService
+    );
     this.stakingStore = new StakingStore(this, this.stakingService);
 
     this.transactionStore = new ActiveWeb3Transactions(
@@ -87,7 +89,7 @@ export class RootStore {
       "activeWeb3TransactionService",
       "proposalService",
       "fxdProtocolStatsService",
-      "stakingService"
+      "stakingService",
     ].forEach((serviceName) => {
       console.log(`Setting chainid ${chainId} for ${serviceName}`);
       // @ts-ignore
