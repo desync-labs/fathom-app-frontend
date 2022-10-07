@@ -26,15 +26,17 @@ export default class StakingStore {
   ) => {
     console.log("Running createLock from store");
     try {
-      if (account === undefined || account === null) return;
+      if (!account) return;
 
-      await this.service.createLock(
+      return this.service.createLock(
         account,
         stakePosition,
         unlockPeriod,
         chainId,
         this.rootStore.transactionStore
       );
+
+      //     await this.fetchLatestLock(account, chainId)
 
       // await this.fetchAll(account,chainId)
     } catch (e) {
@@ -52,14 +54,16 @@ export default class StakingStore {
   ) => {
     console.log("Running createLock from store");
     try {
-      if (account === undefined || account === null) return;
+      if (!account) return;
 
-      await this.service.handleEarlyWithdrawal(
+      return this.service.handleEarlyWithdrawal(
         account,
         lockId,
         chainId,
         this.rootStore.transactionStore
       );
+
+      // await this.fetchLockPositionAfterUnlock(lockId,account, chainId)
 
       //   await this.fetchAll(account,chainId)
     } catch (e) {
@@ -73,14 +77,16 @@ export default class StakingStore {
   handleUnlock = async (account: string, lockId: number, chainId: number) => {
     console.log("Running createLock from store");
     try {
-      if (account === undefined || account === null) return;
+      if (!account) return;
 
-      await this.service.handleUnlock(
+      return this.service.handleUnlock(
         account,
         lockId,
         chainId,
         this.rootStore.transactionStore
       );
+
+      //    await this.fetchLockPositionAfterUnlock(lockId,account, chainId)
 
       //    await this.fetchAll(account,chainId)
     } catch (e) {
@@ -94,14 +100,16 @@ export default class StakingStore {
   handleClaimRewards = async (account: string, chainId: number) => {
     console.log("Running createLock from store");
     try {
-      if (account === undefined || account === null) return;
-
-      await this.service.handleClaimRewards(
+      if (!account) return;
+      return this.service.handleClaimRewards(
         account,
         1,
         chainId,
         this.rootStore.transactionStore
       );
+      //TODO: Check This:
+
+      //await this.fetchLocksAfterClaimAllRewards();
 
       //      await this.fetchAll(account,chainId)
     } catch (e) {
@@ -112,7 +120,11 @@ export default class StakingStore {
     }
   };
 
-  handleClaimRewardsSingle = async (account: string, lockId: number, chainId: number) => {
+  handleClaimRewardsSingle = async (
+    account: string,
+    lockId: number,
+    chainId: number
+  ) => {
     console.log("Running createLock from store");
     try {
       if (account === undefined || account === null) return;
@@ -123,6 +135,8 @@ export default class StakingStore {
         chainId,
         this.rootStore.transactionStore
       );
+
+
 
       //      await this.fetchAll(account,chainId)
     } catch (e) {
@@ -136,9 +150,9 @@ export default class StakingStore {
   handleWithdrawRewards = async (account: string, chainId: number) => {
     console.log("Running createLock from store");
     try {
-      if (account === undefined || account === null) return;
+      if (!account) return;
 
-      await this.service.handleWithdrawRewards(
+      return this.service.handleWithdrawRewards(
         account,
         1,
         chainId,
@@ -164,8 +178,8 @@ export default class StakingStore {
   };
 
   fetchAPR = async (chainId: number) => {
-    console.log("fetching... APR")
-    let apr = await this.service.getAPR(chainId);
+    console.log("fetching... APR");
+    const apr = await this.service.getAPR(chainId);
     runInAction(() => {
       this.setAPR(apr);
     });
@@ -180,7 +194,7 @@ export default class StakingStore {
   };
 
   fetchWalletBalance = async (account: string, chainId: number) => {
-    let walletBalance = await this.service.getWalletBalance(account, chainId);
+    const walletBalance = await this.service.getWalletBalance(account, chainId);
     runInAction(() => {
       this.setWalletBalance(walletBalance);
     });
@@ -191,17 +205,98 @@ export default class StakingStore {
   };
 
   fetchVOTEBalance = async (account: string, chainId: number) => {
-    let voteBalance = await this.service.getVOTEBalance(account, chainId);
+    const voteBalance = await this.service.getVOTEBalance(account, chainId);
     runInAction(() => {
       this.setVOTEBalance(voteBalance);
     });
   };
 
   fetchLocks = async (account: string, chainId: number) => {
-    let locks = await this.service.getLockPositions(account, chainId);
+    const locks = await this.service.getLockPositions(account, chainId);
     runInAction(() => {
       this.setLocks(locks);
       this.setTotalStakedPosition(locks);
     });
+  };
+
+  fetchLatestLock = async (account: string, chainId: number) => {
+    console.log("......is fetch Latest Lock getting called before,.....");
+    let lockId = await this.service.getLockPositionsLength(account, chainId);
+    if (lockId > 0) {
+      let lockPosition = await this.service.getLockInfo(
+        lockId,
+        account,
+        chainId
+      );
+      if (lockPosition.MAINTokenBalance > 0) {
+        this.lockPositions.push(lockPosition);
+        this.setTotalStakedPosition(this.lockPositions);
+      }
+    }
+  };
+
+  fetchLockPositionAfterUnlock = async (lockId: number) => {
+    let latestLockId = this.lockPositions.length;
+
+    if (latestLockId > 1) {
+      console.log("........", latestLockId);
+
+      let lockPosition = this.lockPositions[latestLockId - 1];
+      lockPosition.lockId = lockId;
+      this.lockPositions[lockId - 1] = lockPosition;
+      this.lockPositions.pop();
+    } else {
+      this.lockPositions.pop();
+    }
+  };
+
+  fetchLocksAfterClaimAllRewards = async () => {
+    for (let i = 0; i < this.lockPositions.length; i++) {
+      this.lockPositions[i].RewardsAvailable = "0";
+    }
+  };
+
+  approvalStatusStakingFTHM = async (
+    address: string,
+    stakingPosition: number,
+    chainId: number
+  ) => {
+    console.log(`Checking FTHM approval status for address ${address}`);
+    try {
+      if (!address) return;
+
+      return this.service.approvalStatusStakingFTHM(
+        address,
+        stakingPosition,
+        chainId
+      );
+    } catch (e) {
+      this.rootStore.alertStore.setShowErrorAlert(
+        true,
+        "There is some error retreiving approval status"
+      );
+    }
+  };
+
+  approveFTHM = async (address: string, chainId: number) => {
+    console.log(`Approving staking position for address ${address}`);
+    try {
+      if (!address) return;
+
+      return this.service
+        .approveStakingFTHM(address, chainId, this.rootStore.transactionStore)
+        .then(() => {
+          this.rootStore.alertStore.setShowSuccessAlert(
+            true,
+            "Token approval was successful"
+          );
+        });
+    } catch (e) {
+      this.rootStore.alertStore.setShowErrorAlert(
+        true,
+        "There is some error approving the token!"
+      );
+      throw e;
+    }
   };
 }
