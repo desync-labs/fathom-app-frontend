@@ -65,8 +65,7 @@ export default class ProposalService implements IProposalService {
         chainId
       );
       return await FathomGovernor.methods
-        .execute(targets, values, calldatas, keccak256(description))
-        .send({ from: account });
+        .execute(targets, values, calldatas, keccak256(description)).send({ from: account })
     } else {
       return 0;
     }
@@ -89,17 +88,18 @@ export default class ProposalService implements IProposalService {
         chainId
       );
       return await FathomGovernor.methods
-        .queue(targets, values, calldatas, keccak256(description))
-        .send({ from: account });
+        .queue(targets, values, calldatas, keccak256(description)).send({ from: account })
     } else {
       return 0;
     }
   }
 
+
   async viewAllProposals(
     account: string,
     chainId?: number
   ): Promise<IProposal[]> {
+
     let fetchedProposals: IProposal[] = [];
     try {
       chainId = chainId || this.chainId;
@@ -108,35 +108,25 @@ export default class ProposalService implements IProposalService {
           SmartContractFactory.FathomGovernor(chainId)
         );
 
-        const proposalIds = await FathomGovernor.methods
-          .getProposalIds()
-          .call();
-        console.log(typeof proposalIds[0]);
-        const descriptions: any = [];
-        const statusses: any = [];
+        console.log("HERE1");
 
-        for (let i = 0; i < proposalIds.length; i++) {
-          descriptions.push(
-            await FathomGovernor.methods
-              .getDescription(proposalIds[i])
-              .call({ from: account })
-          );
-          statusses.push(
-            Constants.Status[
-              await FathomGovernor.methods
-                .state(proposalIds[i])
-                .call({ from: account })
-            ]
-          );
+        // const [_proposalIds, _descriptions, _statusses]  = await FathomGovernor.methods.getProposals(8)
+        const result = await FathomGovernor.methods.getProposals(2).call({ from: account });
+        
+        console.log("_proposalIds: ");
+        console.log(result[0]);
+        console.log(result[1]);
+        console.log(result[2]);
 
-          let proposal = {
-            description: descriptions[i],
-            proposalId: proposalIds[i],
-            status: statusses[i],
-          };
-          fetchedProposals.push(proposal);
-        }
+        result[0].forEach((_id:string, i:number) => {
+          fetchedProposals.push({
+            description: result[1][i],
+            proposalId: _id.toString( ),
+            status: Constants.Status[parseInt(result[2][i])]
+          })
+        });
       }
+
       return fetchedProposals;
     } catch (e) {
       console.error(`Error in getting Proposals: ${e}`);
@@ -276,14 +266,14 @@ export default class ProposalService implements IProposalService {
           SmartContractFactory.VeFathom(chainId),
           this.chainId
         );
-        weight = await VeFathom.methods.balanceOf(account).call();
+        weight = await VeFathom.methods.balanceOf(account).call()
       }
       return weight;
     } catch (e) {
       console.error(`Error in getting Ve token blance: ${e}`);
       return weight;
     }
-  }
+  } 
 
   setChainId(chainId: number) {
     this.chainId = chainId;
