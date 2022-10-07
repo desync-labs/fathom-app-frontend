@@ -5,24 +5,23 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TableRow,
   Button,
   Grid,
   Typography,
 } from "@mui/material";
-import { useStores } from "../../stores";
-import useMetaMask from "../../hooks/metamask";
-import { LogLevel, useLogger } from "../../helpers/Logger";
-import IOpenPosition from "../../stores/interfaces/IOpenPosition";
+import { useStores } from "stores";
+import useMetaMask from "hooks/metamask";
+import { LogLevel, useLogger } from "helpers/Logger";
+import IOpenPosition from "stores/interfaces/IOpenPosition";
 import BigNumber from "bignumber.js";
-import { Constants } from "../../helpers/Constants";
+import { Constants } from "helpers/Constants";
 import { observer } from "mobx-react";
-import ClosePositionDialog from "../Positions/ClosePositionDialog";
-import { AppPaper } from "../AppPaper/AppPaper";
+import ClosePositionDialog from "components/Positions/ClosePositionDialog";
+import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
 import {
   AppTableHeaderRow,
-  AppTableRow
-} from "../AppTable/AppTable";
+  AppTableRow,
+} from "components/AppComponents/AppTable/AppTable";
 
 const OpenPositionsList = observer(() => {
   const positionStore = useStores().positionStore;

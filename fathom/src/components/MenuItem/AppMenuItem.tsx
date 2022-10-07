@@ -50,7 +50,7 @@ const useStyles = makeStyles<{ isActive: boolean; showText: boolean }>()(
         paddingLeft: "30px",
       },
       margin: "6px 0",
-      padding: showText ? "8px 16px" : "12px",
+      padding: showText ? "4px 16px 10px 16px" : "12px",
     },
     menuItemIcon: {
       color: isActive ? theme.palette.primary.main : "#415D83",
@@ -58,12 +58,15 @@ const useStyles = makeStyles<{ isActive: boolean; showText: boolean }>()(
       paddingRight: showText ? "7px" : "0",
     },
     menuItemText: {
+      "> span": {
+        fontSize: "14px",
+        fontStyle: "normal",
+        fontWeight: "600",
+        lineHeight: "20px",
+      },
+      paddingBottom: "4px",
       color: isActive ? "#fff" : "#B0C5E7",
-      fontSize: "14px",
-      fontFamily: "Inter",
-      fontStyle: "normal",
-      fontWeight: "600",
-      lineHeight: "20px",
+      marginBottom: "-4px"
     },
   })
 );
@@ -102,8 +105,8 @@ const AppMenuItem: React.FC<AppMenuItemProps> = (props) => {
         />
       )}
       {/* Display the expand menu if the item has children */}
-      {isExpandable && !open && <IconExpandMore />}
-      {isExpandable && open && <IconExpandLess />}
+      {isExpandable && !open && <IconExpandMore sx={{ pt: '6px' }} />}
+      {isExpandable && open && <IconExpandLess sx={{ pt: '6px' }} />}
     </AppMenuItemComponent>
   );
 

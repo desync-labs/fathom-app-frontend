@@ -8,13 +8,13 @@ import {
   Typography,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import { useStores } from "../../stores";
-import useMetaMask from "../../hooks/metamask";
-import { LogLevel, useLogger } from "../../helpers/Logger";
-import IProposal from "../../stores/interfaces/IProposal";
+import { useStores } from "stores";
+import useMetaMask from "hooks/metamask";
+import { LogLevel, useLogger } from "helpers/Logger";
+import IProposal from "stores/interfaces/IProposal";
 import { useEffect } from "react";
 import { observer } from "mobx-react";
-import { AppPaper } from "../AppPaper/AppPaper";
+import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
 
 const AllProposalsView = observer(() => {
   const { account, chainId } = useMetaMask()!;

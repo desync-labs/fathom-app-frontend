@@ -19,28 +19,6 @@ type ItemPropsType = {
   open: boolean;
 };
 
-const preloadSrcList: string[] = [
-  BorrowIconSrc,
-  BorrowIconActiveSrc,
-  SwapIconSrc,
-  SwapIconActiveSrc,
-  StakingIconSrc,
-  StakingIconActiveSrc,
-];
-
-function preloadImage(src: string) {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.onload = function () {
-      resolve(img);
-    };
-    img.onerror = img.onabort = function () {
-      reject(src);
-    };
-    img.src = src;
-  });
-}
-
 const useShowText = (open: boolean) => {
   const [showText, setShowText] = useState(true);
 
@@ -61,12 +39,6 @@ const useShowText = (open: boolean) => {
 
 export const Menu: FC<ItemPropsType> = ({ open }) => {
   const location = useLocation();
-
-  useEffect(() => {
-    preloadSrcList.forEach((src) => {
-      preloadImage(src);
-    });
-  }, []);
 
   const isDashboardActive = useMemo(
     () => location.pathname === "/",

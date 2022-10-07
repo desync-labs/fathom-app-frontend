@@ -8,13 +8,13 @@ import {
   Checkbox,
   Typography,
 } from "@mui/material";
-import { useStores } from "../../stores";
+import { useStores } from "stores";
 import { observer } from "mobx-react";
-import useMetaMask from "../../hooks/metamask";
-import { Constants } from "../../helpers/Constants";
+import useMetaMask from "hooks/metamask";
+import { Constants } from "helpers/Constants";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { AppPaper } from "../AppPaper/AppPaper";
+import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
 
 const ProposeListView = observer(() => {
   const proposeStore = useStores().proposalStore;
@@ -178,7 +178,9 @@ const ProposeListView = observer(() => {
                     multiline
                     value={value}
                     maxRows={1}
-                    helperText={error ? "Field Target address array is required" : ""}
+                    helperText={
+                      error ? "Field Target address array is required" : ""
+                    }
                     onChange={onChange}
                   />
                 )}
