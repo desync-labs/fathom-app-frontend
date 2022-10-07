@@ -13,6 +13,7 @@ import SwapIconSrc from "../../assets/svg/stable-swap.svg";
 import SwapIconActiveSrc from "../../assets/svg/stable-swap-active.svg";
 import StakingIconSrc from "../../assets/svg/staking.svg";
 import StakingIconActiveSrc from "../../assets/svg/staking-active.svg";
+import { Icon } from "@mui/material";
 
 type ItemPropsType = {
   open: boolean;
@@ -92,30 +93,36 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
 
   const BorrowIcon = useCallback(
     () => (
-      <img
-        src={isDashboardActive ? BorrowIconActiveSrc : BorrowIconSrc}
-        alt="borrow-icon"
-      />
+      <Icon>
+        <img
+          src={isDashboardActive ? BorrowIconActiveSrc : BorrowIconSrc}
+          alt="borrow-icon"
+        />
+      </Icon>
     ),
     [isDashboardActive]
   );
 
   const SwapIcon = useCallback(
     () => (
-      <img
-        src={isStableSwapActive ? SwapIconActiveSrc : SwapIconSrc}
-        alt="swap-icon"
-      />
+      <Icon>
+        <img
+          src={isStableSwapActive ? SwapIconActiveSrc : SwapIconSrc}
+          alt="swap-icon"
+        />
+      </Icon>
     ),
     [isStableSwapActive]
   );
 
   const Staking = useCallback(
     () => (
-      <img
-        alt="staking-icon"
-        src={isStakingActive ? StakingIconActiveSrc : StakingIconSrc}
-      />
+      <Icon>
+        <img
+          alt="staking-icon"
+          src={isStakingActive ? StakingIconActiveSrc : StakingIconSrc}
+        />
+      </Icon>
     ),
     [isStakingActive]
   );

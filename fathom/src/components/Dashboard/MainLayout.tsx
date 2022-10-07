@@ -191,42 +191,26 @@ const MainLayout = observer(() => {
         <Box
           component="main"
           sx={{
-            backgroundColor: "#000",
+            background: "linear-gradient(180deg, #071126 0%, #050C1A 100%)",
             flexGrow: 1,
             height: "100vh",
             overflow: "auto",
           }}
         >
-          <Box
-            component="main"
-            sx={{
-              background: "linear-gradient(180deg, #071126 0%, #050C1A 100%)",
-              flexGrow: 1,
-              height: "100vh",
-              overflow: "auto",
-            }}
-          >
-            <Toolbar />
-            <AlertMessages />
-            <TransactionStatus />
-            <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-              <Routes>
-                <Route path="/" element={<DashboardContent />} />
-                <Route path="/swap" element={<StableSwap />} />
-                <Route path="/proposals" element={<AllProposalsView />} />
-                <Route
-                  path="/proposal/make-proposal"
-                  element={<MakePropose />}
-                />
-                <Route
-                  path="/proposal/:_proposalId"
-                  element={<ProposalView />}
-                />
-                <Route path="/staking" element={<StakingView />} />
-              </Routes>
-            </Container>
-          </Box>
-          <Copyright sx={{ pt: 4 }} />
+          <Toolbar />
+          <AlertMessages />
+          <TransactionStatus />
+          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+            <Routes>
+              <Route path="/" element={<DashboardContent />} />
+              <Route path="/swap" element={<StableSwap />} />
+              <Route path="/proposals" element={<AllProposalsView />} />
+              <Route path="/proposal/make-proposal" element={<MakePropose />} />
+              <Route path="/proposal/:_proposalId" element={<ProposalView />} />
+              <Route path="/staking" element={<StakingView />} />
+            </Routes>
+          </Container>
+          <Copyright/>
         </Box>
       </Box>
     </ThemeProvider>
