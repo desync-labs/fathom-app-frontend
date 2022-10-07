@@ -5,6 +5,8 @@ import CustomizedDialogs from "../Positions/OpenNewPositionDialog";
 import ICollatralPool from "../../stores/interfaces/ICollatralPool";
 import { Grid  } from '@mui/material';
 
+//Deprecated: This component is deprecated, use PoolsListView instead
+//TODO: Remove component if ont required
 interface PoolProps {
   pool: ICollatralPool;
 }

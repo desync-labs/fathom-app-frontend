@@ -10,7 +10,6 @@ export default class PoolService implements IPoolService {
   //Ideally this should be dynamic
   getPools(): ICollatralPool[] {
     const pools: ICollatralPool[] = [];
-    //0x5758444300000000000000000000000000000000000000000000000000000000
     pools.push(
       {
         id: "0x5758444300000000000000000000000000000000000000000000000000000000",
@@ -21,6 +20,29 @@ export default class PoolService implements IPoolService {
           SmartContractFactory.WXDCCollateralTokenAdapter(this.chainId).address,
         availableFathom: "",
         borrowedFathom: "",
+        allowOpenPosition: true
+      },
+      {
+        id: "0x555344542d434f4c000000000000000000000000000000000000000000000000",
+        name: "USDT-COL",
+        collateralContractAddress: SmartContractFactory.USDT(this.chainId)
+          .address,
+        CollateralTokenAdapterAddress:
+          SmartContractFactory.USDTCollateralTokenAdapter(this.chainId).address,
+        availableFathom: "",
+        borrowedFathom: "",
+        allowOpenPosition: true
+      },
+      {
+        id: "0x4654484d00000000000000000000000000000000000000000000000000000000",
+        name: "FTHM",
+        collateralContractAddress: SmartContractFactory.FTHMToken(this.chainId)
+          .address,
+        CollateralTokenAdapterAddress:
+          SmartContractFactory.FTHMCollateralTokenAdapter(this.chainId).address,
+        availableFathom: "",
+        borrowedFathom: "",
+        allowOpenPosition: true
       },
       {
         id: "0x555344542d535441424c45000000000000000000000000000000000000000000",
@@ -31,16 +53,7 @@ export default class PoolService implements IPoolService {
           SmartContractFactory.USDTCollateralTokenAdapter(this.chainId).address,
         availableFathom: "",
         borrowedFathom: "",
-      },
-      {
-        id: "0x555344542d535441424c45000000000000000000000000000000000000000000",
-        name: "USDT",
-        collateralContractAddress: SmartContractFactory.USDT(this.chainId)
-          .address,
-        CollateralTokenAdapterAddress:
-          SmartContractFactory.USDTCollateralTokenAdapter(this.chainId).address,
-        availableFathom: "",
-        borrowedFathom: "",
+        allowOpenPosition: false
       }
     );
 

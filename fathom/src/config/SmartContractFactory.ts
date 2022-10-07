@@ -85,6 +85,13 @@ export class SmartContractFactory {
     }
   };
 
+  public static FTHMToken(chainId: number) {
+    return {
+      abi: BEP20Abi.abi as AbiItem[],
+      address: SmartContractFactory.Addresses(chainId).fathomToken,
+    }
+  };
+
   public static BEP20 = (_address: string) => {
     return {
       abi: BEP20Abi.abi as AbiItem[],
@@ -124,6 +131,13 @@ export class SmartContractFactory {
     return {
       abi: [],
       address: SmartContractFactory.Addresses(chainId).collateralTokenAdapterUSDT,
+    }
+  };
+
+  public static FTHMCollateralTokenAdapter(chainId: number) {
+    return {
+      abi: [],
+      address: SmartContractFactory.Addresses(chainId).collateralTokenAdapterFTHM,
     }
   };
 
