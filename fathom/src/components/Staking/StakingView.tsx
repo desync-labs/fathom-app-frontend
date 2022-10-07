@@ -24,7 +24,7 @@ import { AppPaper } from "../AppPaper/AppPaper";
 
 export type StakingViewItemMethodsPropsType = {
   handleEarlyWithdrawal: (lockId: number) => void;
-  isItUnlockable: (lockId: number) => boolean;
+  isItUnlockable: (remainingTime: number) => boolean;
   handleUnlock: (lockId: number) => void;
 };
 
@@ -36,6 +36,7 @@ const StakingView = observer(() => {
   const { account, chainId } = useMetaMask()!;
   const logger = useLogger();
   const rootStore = useStores();
+
 
   const stakingStore = rootStore.stakingStore;
 
@@ -77,15 +78,17 @@ const StakingView = observer(() => {
     }
   }, [account, logger, stakingStore, chainId, fetchAll]);
 
+
   const claimRewards = useCallback(async () => {
     setAction({ type: "claim", id: null });
     try {
       await stakingStore.handleClaimRewards(account, chainId);
+      fetchAll(account,chainId)
     } catch (e) {
       logger.log(LogLevel.error, "Claim error");
     }
     setAction(undefined);
-  }, [stakingStore, account, chainId, setAction, logger]);
+  }, [stakingStore, account, chainId, setAction, fetchAll,logger]);
 
   const withdrawRewards = useCallback(async () => {
     setAction({ type: "withdraw", id: null });
@@ -126,12 +129,12 @@ const StakingView = observer(() => {
   );
 
   const isItUnlockable = useCallback(
-    (lockId: number) => {
-      const remainingTime = stakingStore.lockPositions[lockId - 1].EndTime;
+    (remainingTime: number) => {
+     // const remainingTime = stakingStore.lockPositions[lockId - 1].EndTime;
       const isItUnlockable = remainingTime <= 0;
       return isItUnlockable;
     },
-    [stakingStore.lockPositions]
+    []
   );
 
   const stakingViewItemProps: StakingViewItemMethodsPropsType = {

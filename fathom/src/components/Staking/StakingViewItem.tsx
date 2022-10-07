@@ -65,13 +65,13 @@ const StakingViewItem: FC<
         <Box sx={{ textAlign: "center" }}>
           {useMemo(
             () =>
-              lockPosition.EndTime > 0 && (
+              seconds > 0 && (
                 <StakingCountdown timeObject={secondsToTime(seconds)} />
               ),
             [seconds, lockPosition.EndTime]
           )}
         </Box>
-        {lockPosition.EndTime < 0 && (
+        {seconds < 0 && (
           <Box sx={{ textAlign: "center" }}>Lock Open</Box>
         )}
       </TableCell>
@@ -79,7 +79,7 @@ const StakingViewItem: FC<
       <TableCell component="td" scope="row">
         <Button
           onClick={() => handleUnlock(lockPosition.lockId)}
-          disabled={!isItUnlockable(lockPosition.lockId)}
+          disabled={!isItUnlockable(seconds)}
           variant="outlined"
         >
           {action?.type === "unlock" && action?.id === lockPosition.lockId ? (
@@ -93,7 +93,7 @@ const StakingViewItem: FC<
       <TableCell component="td" scope="row">
         <Button
           onClick={() => handleEarlyWithdrawal(lockPosition.lockId)}
-          disabled={isItUnlockable(lockPosition.lockId)}
+          disabled={isItUnlockable(seconds)}
           variant="outlined"
         >
           {action?.type === "early" && action?.id === lockPosition.lockId ? (

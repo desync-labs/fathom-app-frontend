@@ -136,6 +136,8 @@ export default class StakingStore {
         this.rootStore.transactionStore
       );
 
+
+
       //      await this.fetchAll(account,chainId)
     } catch (e) {
       this.rootStore.alertStore.setShowErrorAlert(
