@@ -144,7 +144,7 @@ const StakingView = observer(() => {
   };
 
   return (
-    <AppPaper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
+    <AppPaper sx={{ p: 2, display: "flex", flexDirection: "column", mb: 10 }}>
       <Typography component="h2" variant="h6" color="primary" gutterBottom>
         STAKING
       </Typography>
