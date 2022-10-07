@@ -2,11 +2,8 @@ import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 
 const CopyrightStyles = {
-  position: "fixed",
-  bottom: "0",
-  width: '100%',
   my: 4,
-  ml: "-100px"
+  ml: "-80px"
 }
 
 
