@@ -44,7 +44,7 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
 
   const appMenuItems = [
     {
-      name: "Dashboard",
+      name: "Borrow",
       link: "/",
       Icon: DashboardIcon,
       isActive: isDashboardActive,

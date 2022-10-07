@@ -25,16 +25,9 @@ const DashboardContent = observer(() => {
 
   return (
     <Grid container spacing={3}>
-      {/* Chart */}
       <Grid item xs={12} md={8} lg={6}>
         <ProtocolStats />
       </Grid>
-      {/* Available Pools */}
-      {/* {poolStore.pools.map((pool, idx) => (
-        <Grid key={idx} item xs={12} md={4} lg={3}>
-          <PoolListView pool={pool} />
-        </Grid>
-      ))} */}
       <Grid item xs={12} md={8} lg={6}>
         <PoolsListView />
       </Grid>

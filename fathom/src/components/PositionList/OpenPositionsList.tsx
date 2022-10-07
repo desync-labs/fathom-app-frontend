@@ -1,20 +1,24 @@
 import { useCallback, useEffect, useState } from "react";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Button,
+  Grid,
+  Typography,
+} from "@mui/material";
 import { useStores } from "../../stores";
 import useMetaMask from "../../hooks/metamask";
 import { LogLevel, useLogger } from "../../helpers/Logger";
 import IOpenPosition from "../../stores/interfaces/IOpenPosition";
 import BigNumber from "bignumber.js";
 import { Constants } from "../../helpers/Constants";
-import { Button, Grid, Paper, Typography } from "@mui/material";
 import { observer } from "mobx-react";
-// import ICollatralPool from "../../stores/interfaces/ICollatralPool";
 import ClosePositionDialog from "../Positions/ClosePositionDialog";
+import { AppPaper } from "../AppPaper/AppPaper";
 
 const OpenPositionsList = observer(() => {
   const positionStore = useStores().positionStore;
@@ -77,7 +81,7 @@ const OpenPositionsList = observer(() => {
   };
 
   return (
-    <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
+    <AppPaper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
       <Typography component="h2" variant="h6" color="primary" gutterBottom>
         Open Positions
       </Typography>
@@ -152,7 +156,7 @@ const OpenPositionsList = observer(() => {
           </Table>
         </TableContainer>
       )}
-    </Paper>
+    </AppPaper>
   );
 });
 

@@ -11,12 +11,8 @@ interface AppBarProps extends MuiAppBarProps {
     shouldForwardProp: (prop) => prop !== 'open',
   })<AppBarProps>(({ theme, open }) => ({
     zIndex: theme.zIndex.drawer - 1,
-    background: '#000',
-    border: '1px solid #222325',
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
+    background: "linear-gradient(180deg, #071126 0%, #050C1A 100%)",
+    borderBottom: "1px solid #192C46",
     ...(open && {
       marginLeft: drawerWidth,
       width: `calc(100% - ${drawerWidth}px)`,

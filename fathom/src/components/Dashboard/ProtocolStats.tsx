@@ -1,9 +1,10 @@
-import { Box, Grid, Paper } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { useWeb3React } from "@web3-react/core";
 import { useEffect } from "react";
 import logo from "../../assets/images/fxd-logo.png";
 import { useStores } from "../../stores";
+import { AppPaper } from "../AppPaper/AppPaper";
 
 const ProtocolStats = function ProtocolStats(props: any) {
   const { chainId } = useWeb3React();
@@ -22,7 +23,7 @@ const ProtocolStats = function ProtocolStats(props: any) {
   ]);
 
   return (
-    <Paper
+    <AppPaper
       sx={{
         p: 2,
         display: "flex",
@@ -125,7 +126,7 @@ const ProtocolStats = function ProtocolStats(props: any) {
           </Typography>
         </Box>
       </Grid>
-    </Paper>
+    </AppPaper>
   );
 };
 

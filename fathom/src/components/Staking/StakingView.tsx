@@ -6,7 +6,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
   Typography,
   Button,
   Grid,
@@ -21,6 +20,7 @@ import ILockPosition from "../../stores/interfaces/ILockPosition";
 import StakingModal from "./StakingModal";
 import StakingViewItem from "./StakingViewItem";
 import StakingLockForm from "./StakingLockForm";
+import { AppPaper } from "../AppPaper/AppPaper";
 
 export type StakingViewItemMethodsPropsType = {
   handleEarlyWithdrawal: (lockId: number) => void;
@@ -141,13 +141,13 @@ const StakingView = observer(() => {
   };
 
   return (
-    <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
+    <AppPaper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
       <Typography component="h2" variant="h6" color="primary" gutterBottom>
         STAKING
       </Typography>
       <Grid container spacing={2}>
         <Grid item xs={8}>
-          <StakingLockForm fetchAll={fetchAll} />
+          <StakingLockForm fetchOverallValues={fetchOverallValues} />
         </Grid>
         <Grid item xs={4}>
           <StakingModal
@@ -209,7 +209,7 @@ const StakingView = observer(() => {
           "Withdraw All Rewards and Remaining Unlocked FTHM"
         )}
       </Button>
-    </Paper>
+    </AppPaper>
   );
 });
 

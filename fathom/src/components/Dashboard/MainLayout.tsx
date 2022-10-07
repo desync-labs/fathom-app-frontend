@@ -10,7 +10,7 @@ import {
   Typography,
   Divider,
   IconButton,
-  Chip
+  Chip,
 } from "@mui/material";
 import {
   ArrowBack,
@@ -40,7 +40,6 @@ import TransactionStatus from "../Transaction/TransactionStatus";
 import truncateEthAddress from "truncate-eth-address";
 import { Menu } from "./Menu";
 
-
 const drawerWidth: number = 240;
 
 const Drawer = styled(MuiDrawer, {
@@ -49,8 +48,8 @@ const Drawer = styled(MuiDrawer, {
   "& .MuiDrawer-paper": {
     position: "relative",
     whiteSpace: "nowrap",
-    border: "1px solid #222325",
-    background: "#17181A",
+    background: "#101D32",
+    border: "none",
     overflowY: "visible",
     width: drawerWidth,
     transition: theme.transitions.create("width", {
@@ -92,7 +91,7 @@ const MainLayout = observer(() => {
     setOpen(!open);
   }, [open, setOpen]);
 
-  let rootStore = useStores();
+  const rootStore = useStores();
 
   useEffect(() => {
     rootStore.setChainId(chainId!);
@@ -127,7 +126,9 @@ const MainLayout = observer(() => {
               noWrap
               sx={{ flexGrow: 1 }}
             ></Typography>
-            { account && !error && <Chip label={truncateEthAddress(account)} color="primary" /> }
+            {account && !error && (
+              <Chip label={truncateEthAddress(account)} color="primary" />
+            )}
             <Web3Status />
             <IconButton color="inherit" onClick={connect}>
               {isActive ? <LogoutIcon /> : <AccountBalanceWalletIcon />}
@@ -141,6 +142,7 @@ const MainLayout = observer(() => {
               alignItems: "center",
               justifyContent: "flex-end",
               px: [1],
+              background: "linear-gradient(180deg, #071126 0%, #050C1A 100%)",
             }}
           >
             {open && (
@@ -177,7 +179,12 @@ const MainLayout = observer(() => {
             </IconButton>
           </Toolbar>
           <Divider />
-          <List component="nav">
+          <List
+            component="nav"
+            sx={{
+              padding: "24px 12px",
+            }}
+          >
             <Menu open={open} />
           </List>
         </Drawer>
@@ -193,7 +200,7 @@ const MainLayout = observer(() => {
           <Box
             component="main"
             sx={{
-              backgroundColor: "#000",
+              background: "linear-gradient(180deg, #071126 0%, #050C1A 100%)",
               flexGrow: 1,
               height: "100vh",
               overflow: "auto",
@@ -231,4 +238,3 @@ const MainLayout = observer(() => {
 });
 
 export default MainLayout;
-
