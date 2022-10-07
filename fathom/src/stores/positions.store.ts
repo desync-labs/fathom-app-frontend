@@ -25,7 +25,7 @@ export default class PositionStore {
       `Open position clicked for address ${address}, poolId: ${pool.name}, collatral:${collatral}, fathomToken: ${fathomToken}`
     );
     try {
-      if (address === undefined || address === null) return;
+      if (!address) return;
 
       await this.service.openPosition(
         address,
@@ -38,7 +38,7 @@ export default class PositionStore {
       await this.rootStore.poolStore.fetchPools();
       this.rootStore.alertStore.setShowSuccessAlert(
         true,
-        "New position opened succesfully!"
+        "New position opened successfully!"
       );
     } catch (e) {
       this.rootStore.alertStore.setShowErrorAlert(
@@ -58,7 +58,7 @@ export default class PositionStore {
       `Close position clicked for address ${address}, positionId: ${positionId}, fathomToken: ${fathomToken}`
     );
     try {
-      if (address === undefined || address === null) return;
+      if (!address) return;
 
       await this.service.closePosition(
         positionId,

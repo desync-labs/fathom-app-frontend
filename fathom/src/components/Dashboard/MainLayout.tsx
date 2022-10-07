@@ -81,6 +81,11 @@ const mdTheme = createTheme({
       main: "#808084",
     },
   },
+  typography: {
+    fontFamily: [
+      "Inter, sans-serif"
+    ].join(','),
+  },
 });
 
 const MainLayout = observer(() => {
@@ -182,7 +187,7 @@ const MainLayout = observer(() => {
           <List
             component="nav"
             sx={{
-              padding: "24px 12px",
+              padding: "20px 12px",
             }}
           >
             <Menu open={open} />

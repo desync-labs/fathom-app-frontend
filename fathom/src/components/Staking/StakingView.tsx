@@ -21,6 +21,8 @@ import StakingModal from "./StakingModal";
 import StakingViewItem from "./StakingViewItem";
 import StakingLockForm from "./StakingLockForm";
 import { AppPaper } from "../AppPaper/AppPaper";
+import { AppTableHeaderRow } from "../AppTable/AppTable";
+import { processRpcError } from "../../utils/processRpcError";
 
 export type StakingViewItemMethodsPropsType = {
   handleEarlyWithdrawal: (lockId: number) => void;
@@ -36,7 +38,6 @@ const StakingView = observer(() => {
   const { account, chainId } = useMetaMask()!;
   const logger = useLogger();
   const rootStore = useStores();
-
 
   const stakingStore = rootStore.stakingStore;
 
@@ -78,17 +79,16 @@ const StakingView = observer(() => {
     }
   }, [account, logger, stakingStore, chainId, fetchAll]);
 
-
   const claimRewards = useCallback(async () => {
     setAction({ type: "claim", id: null });
     try {
       await stakingStore.handleClaimRewards(account, chainId);
-      fetchAll(account,chainId)
+      fetchAll(account, chainId);
     } catch (e) {
       logger.log(LogLevel.error, "Claim error");
     }
     setAction(undefined);
-  }, [stakingStore, account, chainId, setAction, fetchAll,logger]);
+  }, [stakingStore, account, chainId, setAction, fetchAll, logger]);
 
   const withdrawRewards = useCallback(async () => {
     setAction({ type: "withdraw", id: null });
@@ -106,8 +106,12 @@ const StakingView = observer(() => {
         type: "early",
         id: lockId,
       });
-      await stakingStore.handleEarlyWithdrawal(account, lockId, chainId);
-      await stakingStore.fetchLockPositionAfterUnlock(lockId);
+      try {
+        await stakingStore.handleEarlyWithdrawal(account, lockId, chainId);
+        await stakingStore.fetchLockPositionAfterUnlock(lockId);
+      } catch (e) {
+        console.log(e);
+      }
       setAction(undefined);
       fetchOverallValues(account, chainId);
     },
@@ -120,22 +124,32 @@ const StakingView = observer(() => {
         type: "unlock",
         id: lockId,
       });
-      await stakingStore.handleUnlock(account, lockId, chainId);
-      await stakingStore.fetchLockPositionAfterUnlock(lockId);
+      try {
+        await stakingStore.handleUnlock(account, lockId, chainId);
+        await stakingStore.fetchLockPositionAfterUnlock(lockId);
+      } catch (e) {
+        const err = processRpcError(e);
+        rootStore.alertStore.setShowErrorAlert(true, err.reason || err.message);
+      }
+
       setAction(undefined);
       fetchOverallValues(account, chainId);
     },
-    [stakingStore, account, chainId, fetchOverallValues, setAction]
+    [
+      stakingStore,
+      account,
+      chainId,
+      fetchOverallValues,
+      setAction,
+      rootStore.alertStore,
+    ]
   );
 
-  const isItUnlockable = useCallback(
-    (remainingTime: number) => {
-     // const remainingTime = stakingStore.lockPositions[lockId - 1].EndTime;
-      const isItUnlockable = remainingTime <= 0;
-      return isItUnlockable;
-    },
-    []
-  );
+  const isItUnlockable = useCallback((remainingTime: number) => {
+    // const remainingTime = stakingStore.lockPositions[lockId - 1].EndTime;
+    const isItUnlockable = remainingTime <= 0;
+    return isItUnlockable;
+  }, []);
 
   const stakingViewItemProps: StakingViewItemMethodsPropsType = {
     handleEarlyWithdrawal,
@@ -144,7 +158,7 @@ const StakingView = observer(() => {
   };
 
   return (
-    <AppPaper sx={{ p: 2, display: "flex", flexDirection: "column", mb: 10 }}>
+    <AppPaper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
       <Typography component="h2" variant="h6" color="primary" gutterBottom>
         STAKING
       </Typography>
@@ -163,18 +177,14 @@ const StakingView = observer(() => {
       <TableContainer sx={{ my: 2 }}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
-            <TableRow
-              sx={{
-                th: { textAlign: "center", fontSize: "1rem" },
-              }}
-            >
+            <AppTableHeaderRow>
               <TableCell component="th">Lock Position</TableCell>
               <TableCell component="th">Vote Tokens Received</TableCell>
               <TableCell component="th">Stream Rewards</TableCell>
               <TableCell component="th">Remaining Period</TableCell>
               <TableCell component="th">Unlock</TableCell>
               <TableCell component="th">Early Unlock</TableCell>
-            </TableRow>
+            </AppTableHeaderRow>
           </TableHead>
           <TableBody>
             {isLoading ? (
