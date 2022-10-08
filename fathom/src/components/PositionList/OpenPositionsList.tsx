@@ -113,8 +113,8 @@ const OpenPositionsList = observer(() => {
                     {getFormattedSaftyBuffer(position.debtShare)} FXD
                   </TableCell>
                   <TableCell>
-                    {getFormattedSaftyBuffer(position.lockedCollateral)}{" "}
-                    {poolStore.getPool(position.pool).name}{" "}
+                    {getFormattedSaftyBuffer(position?.lockedCollateral)}{" "}
+                    {poolStore.getPool(position.pool)?.name}
                   </TableCell>
                   <TableCell>
                     $ {getFormattedSaftyBuffer(position.lockedValue)}

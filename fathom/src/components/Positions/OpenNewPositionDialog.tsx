@@ -19,15 +19,7 @@ import {
   ListItemText,
   List,
 } from "@mui/material";
-
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  "& .MuiDialogContent-root": {
-    padding: theme.spacing(2),
-  },
-  "& .MuiDialogActions-root": {
-    padding: theme.spacing(1),
-  },
-}));
+import { AppDialog } from "../AppComponents/AppDialog/AppDialog";
 
 export interface DialogTitleProps {
   id: string;
@@ -268,7 +260,7 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
   };
 
   return (
-    <BootstrapDialog
+    <AppDialog
       onClose={handleClose}
       aria-labelledby="customized-dialog-title"
       maxWidth="md"
@@ -281,7 +273,7 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
       <DialogContent dividers>
         <Grid container spacing={2}>
           <Grid item xs={7}>
-            <List sx={{ width: "100%", maxWidth: 360 }}>
+            <List sx={{ width: "100%" }}>
               <ListItem
                 alignItems="flex-start"
                 secondaryAction={`${collatralToBeLocked.toFixed(2)} ${
@@ -419,6 +411,6 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
           </Grid>
         </Grid>
       </DialogContent>
-    </BootstrapDialog>
+    </AppDialog>
   );
 }
