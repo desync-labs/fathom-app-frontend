@@ -83,7 +83,7 @@ const ProtocolStats = observer(() => {
         </Box>
         <Box sx={StatsStyles}>
           <Typography variant="subtitle1" color="text.secondary">
-            Liq. Ratio
+            Liquidation Ratio
           </Typography>
           <Typography variant="h6" color="primary" gutterBottom>
             {fxdProtocolStatsStore.getFormattedLiquidationRatio()}

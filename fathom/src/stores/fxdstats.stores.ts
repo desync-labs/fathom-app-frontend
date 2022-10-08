@@ -41,9 +41,9 @@ export default class FXDProtocolStatsStore {
   };
 
   getFormattedFXDPriceRatio = () => {
-    return new BigNumber(this.protocolStats.fxdPriceFromDex)
+   let number = new BigNumber(this.protocolStats.fxdPriceFromDex)
       .div(Constants.WeiPerWad)
-      .toString();
+      return `$ ${number.toFormat(2)}`;
   };
 
   getFormattedTVL = () => {

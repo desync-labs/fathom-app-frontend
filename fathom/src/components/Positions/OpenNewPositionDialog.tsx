@@ -209,6 +209,9 @@ const OpenNewPositionDialog: FC<PoolProps> = ({ pool, onClose }) => {
 
   const openNewPosition = () => {
     positionStore.openPosition(account, pool, collatral, fathomToken);
+    setTimeout(() => {
+      onClose()
+    }, 1000);
   };
 
   const approve = async () => {
