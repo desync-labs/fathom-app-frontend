@@ -21,31 +21,38 @@ export default class PositionStore {
     collatral: number,
     fathomToken: number
   ) => {
+    if (!address) return;
     console.log(
       `Open position clicked for address ${address}, poolId: ${pool.name}, collatral:${collatral}, fathomToken: ${fathomToken}`
     );
-    try {
-      if (!address) return;
 
-      await this.service.openPosition(
-        address,
-        pool,
-        collatral,
-        fathomToken,
-        this.rootStore.transactionStore
-      );
-      await this.fetchPositions(address);
-      await this.rootStore.poolStore.fetchPools();
-      this.rootStore.alertStore.setShowSuccessAlert(
-        true,
-        "New position opened successfully!"
-      );
-    } catch (e) {
-      this.rootStore.alertStore.setShowErrorAlert(
-        true,
-        "There is some error in opening the position!"
-      );
-    }
+    return new Promise(async (resolve, reject) => {
+      try {
+        await this.service.openPosition(
+          address,
+          pool,
+          collatral,
+          fathomToken,
+          this.rootStore.transactionStore
+        );
+
+        await this.fetchPositions(address);
+        await this.rootStore.poolStore.fetchPools();
+
+        this.rootStore.alertStore.setShowSuccessAlert(
+          true,
+          "New position opened successfully!"
+        );
+
+        resolve(null);
+      } catch (e) {
+        this.rootStore.alertStore.setShowErrorAlert(
+          true,
+          "There is some error in opening the position!"
+        );
+        reject(e);
+      }
+    });
   };
 
   closePosition = async (
