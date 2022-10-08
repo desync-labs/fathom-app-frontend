@@ -97,21 +97,39 @@ export default class StakingService implements IStakingService {
           chainId
         );
 
-        const result = await StakingGetter.methods
+        const promises = [];
+        const claimPromises = [];
+
+        const length = await StakingGetter.methods
           .getLocksLength(account)
           .call();
 
-        for (let i = 0; i < result; i++) {
+        for (let i = 0; i < length; i++) {
+          promises.push(StakingGetter.methods.getLock(account, i + 1).call());
+          claimPromises.push(
+            Staking.methods
+              .getStreamClaimableAmountPerLock(1, account, i + 1)
+              .call()
+          );
+        }
+
+        const data = await Promise.all([
+          Promise.all(promises),
+          Promise.all(claimPromises),
+        ]);
+        const currentTimestamp = await this.getTimestamp(chainId);
+
+        const [lockData, claimData] = data;
+
+        for (let i = 0; i < length; i++) {
           let lockPosition = {} as ILockPosition;
           const {
             0: amountOfMAINTkn,
             1: amountOfveMAINTkn,
             4: end,
-          } = await StakingGetter.methods.getLock(account, i + 1).call();
+          } = lockData[i];
 
-          const amountOfRewardsAvailable = await Staking.methods
-            .getStreamClaimableAmountPerLock(1, account, i + 1)
-            .call();
+          const amountOfRewardsAvailable = claimData[i];
 
           lockPosition.lockId = i + 1;
           lockPosition.MAINTokenBalance = this._convertToEtherBalance(
@@ -124,7 +142,6 @@ export default class StakingService implements IStakingService {
             chainId
           );
 
-          const currentTimestamp = await this.getTimestamp(chainId);
           lockPosition.EndTime = end - currentTimestamp;
 
           lockPosition.RewardsAvailable = this._convertToEtherBalanceRewards(
@@ -139,6 +156,7 @@ export default class StakingService implements IStakingService {
           console.log(lockPosition);
           lockPositionsList.push(lockPosition);
         }
+
         return lockPositionsList;
       } else return [];
     } catch (error) {
@@ -167,7 +185,7 @@ export default class StakingService implements IStakingService {
         min: 0,
         sec: 0,
       },
-    }
+    };
 
     try {
       if (chainId) {
