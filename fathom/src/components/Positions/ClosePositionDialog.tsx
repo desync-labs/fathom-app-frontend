@@ -21,6 +21,7 @@ import { useStores } from "../../stores";
 import useMetaMask from "../../hooks/metamask";
 import IOpenPosition from "../../stores/interfaces/IOpenPosition";
 import { Constants } from "../../helpers/Constants";
+import { AppDialog } from "../AppComponents/AppDialog/AppDialog";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -147,7 +148,7 @@ export default function ClosePositionDialog(
       >
         Close
       </Button>
-      <BootstrapDialog
+      <AppDialog
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
         open={open}
@@ -229,7 +230,7 @@ export default function ClosePositionDialog(
             Close
           </Button>
         </DialogActions>
-      </BootstrapDialog>
+      </AppDialog>
     </>
   );
 }
