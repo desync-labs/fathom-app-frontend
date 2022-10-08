@@ -17,7 +17,6 @@ export default class PoolStore {
   };
 
   getPool = (poolId: string) => {
-    console.log(this.pools);
     const pool = this.pools.filter((pool) => poolId === pool.id)[0];
     return pool;
   };
