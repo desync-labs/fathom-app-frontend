@@ -10,6 +10,15 @@ const AppPaper = styled(
   borderRadius: "8px",
 }));
 
+export const AppSecondaryPaper = styled(
+  MuiPaper,
+  {}
+)(({ theme }) => ({
+  background: "#192C46",
+  border: "1px solid #101D32",
+  borderRadius: "8px",
+}));
+
 const AppMainPaper = styled(
   MuiPaper,
   {}

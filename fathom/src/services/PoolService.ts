@@ -20,7 +20,7 @@ export default class PoolService implements IPoolService {
           SmartContractFactory.WXDCCollateralTokenAdapter(this.chainId).address,
         availableFathom: "",
         borrowedFathom: "",
-        allowOpenPosition: true
+        allowOpenPosition: true,
       },
       {
         id: "0x555344542d434f4c000000000000000000000000000000000000000000000000",
@@ -31,7 +31,7 @@ export default class PoolService implements IPoolService {
           SmartContractFactory.USDTCollateralTokenAdapter(this.chainId).address,
         availableFathom: "",
         borrowedFathom: "",
-        allowOpenPosition: true
+        allowOpenPosition: true,
       },
       {
         id: "0x4654484d00000000000000000000000000000000000000000000000000000000",
@@ -42,10 +42,10 @@ export default class PoolService implements IPoolService {
           SmartContractFactory.FTHMCollateralTokenAdapter(this.chainId).address,
         availableFathom: "",
         borrowedFathom: "",
-        allowOpenPosition: true
+        allowOpenPosition: true,
       },
       {
-        id: "0x555344542d535441424c45000000000000000000000000000000000000000001",
+        id: "0x555344542d535441424c45000000000000000000000000000000000000000000",
         name: "USDT",
         collateralContractAddress: SmartContractFactory.USDT(this.chainId)
           .address,
@@ -53,7 +53,7 @@ export default class PoolService implements IPoolService {
           SmartContractFactory.USDTCollateralTokenAdapter(this.chainId).address,
         availableFathom: "",
         borrowedFathom: "",
-        allowOpenPosition: false
+        allowOpenPosition: false,
       }
     );
 
@@ -62,31 +62,43 @@ export default class PoolService implements IPoolService {
 
   async fetchPools(): Promise<ICollatralPool[]> {
     console.log("fetching Pools...");
-    let pools: ICollatralPool[] = [];
-    try {
-      let contract = Web3Utils.getContractInstance(
-        SmartContractFactory.PoolConfig(this.chainId)
-      );
-      for (const pool of this.getPools()) {
-        let response = await contract.methods
-          .getCollateralPoolInfo(pool.id)
-          .call();
-        let debtShare = new BigNumber(response[1]).div(Constants.WeiPerWad);
-        let debtCeiling = new BigNumber(response[2]).div(Constants.WeiPerRad);
-        pool.availableFathom = debtCeiling.minus(debtShare).toFormat(0);
-        pool.borrowedFathom = debtShare.toFormat(0);
-        pools.push(pool);
-      }
+    const returnPools: ICollatralPool[] = [];
 
-      console.log(`Pool details ${JSON.stringify(pools)} `);
-      return pools;
-    } catch (exception) {
-      console.log(
-        `Error fetching pool information: ${JSON.stringify(exception)}`
-      );
-    } finally {
-      return pools;
-    }
+    return new Promise(async (resolve, reject) => {
+      try {
+        const contract = Web3Utils.getContractInstance(
+          SmartContractFactory.PoolConfig(this.chainId)
+        );
+        const promises = [];
+        const pools = this.getPools();
+        for (const pool of pools) {
+          promises.push(contract.methods.getCollateralPoolInfo(pool.id).call());
+        }
+
+        const data = await Promise.all(promises);
+
+        for (let i = 0; i < data.length; i++) {
+          const dataItem = data[i];
+          const pool = pools[i];
+
+          const debtShare = new BigNumber(dataItem[1]).div(Constants.WeiPerWad);
+          const debtCeiling = new BigNumber(dataItem[2]).div(
+            Constants.WeiPerRad
+          );
+
+          pool.availableFathom = debtCeiling.minus(debtShare).toFormat(0);
+          pool.borrowedFathom = debtShare.toFormat(0);
+
+          returnPools.push(pool);
+        }
+
+        console.log(`Pool details ${JSON.stringify(pools)}`);
+        resolve(returnPools);
+      } catch (e) {
+        console.log(`Error fetching pool information: ${JSON.stringify(e)}`);
+        reject(e);
+      }
+    });
   }
 
   setChainId(chainId: number) {

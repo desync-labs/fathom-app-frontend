@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import { useStores } from "../../stores";
 import useMetaMask from "../../hooks/metamask";
@@ -8,9 +8,7 @@ import {
   Typography,
   DialogTitle,
   IconButton,
-  Dialog,
   Button,
-  styled,
   TextField,
   Box,
   DialogContent,
@@ -19,15 +17,7 @@ import {
   ListItemText,
   List,
 } from "@mui/material";
-
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  "& .MuiDialogContent-root": {
-    padding: theme.spacing(2),
-  },
-  "& .MuiDialogActions-root": {
-    padding: theme.spacing(1),
-  },
-}));
+import { AppDialog } from "../AppComponents/AppDialog/AppDialog";
 
 export interface DialogTitleProps {
   id: string;
@@ -64,10 +54,9 @@ const BootstrapDialogTitle = (props: DialogTitleProps) => {
   );
 };
 
-export default function CustomizedDialogs(this: any, props: PoolProps) {
+const OpenNewPositionDialog: FC<PoolProps> = ({ pool, onClose }) => {
   const positionStore = useStores().positionStore;
   const poolStore = useStores().poolStore;
-  const { onClose } = props;
 
   const { account, chainId } = useMetaMask()!;
   const [approveBtn, setApproveBtn] = useState(true);
@@ -91,13 +80,9 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
   const [disableOpenPosition, setDisableOpenPosition] = useState(false);
 
   const approvalStatus = useCallback(async () => {
-    let approved = await positionStore.approvalStatus(
-      account,
-      collatral,
-      props.pool
-    );
+    let approved = await positionStore.approvalStatus(account, collatral, pool);
     approved ? setApproveBtn(false) : setApproveBtn(true);
-  }, [positionStore, props.pool, account, collatral]);
+  }, [positionStore, pool, account, collatral]);
 
   useEffect(() => {
     if (chainId) {
@@ -109,9 +94,7 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
     collateralInput: number,
     fathomTokenInput: number
   ) => {
-    const availableFathom = parseInt(
-      props.pool.availableFathom.replaceAll(",", "")
-    );
+    const availableFathom = parseInt(pool.availableFathom.replaceAll(",", ""));
     const disable = fathomTokenInput >= availableFathom;
     console.log(
       `Input token ${fathomTokenInput} and Pool Max: ${availableFathom}`
@@ -132,7 +115,7 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
     setFxdToBeBorrowed(+fathomTokenInput);
 
     // GET USER BALANCE
-    const balance = await poolStore.getUserTokenBalance(account, props.pool);
+    const balance = await poolStore.getUserTokenBalance(account, pool);
     setBalance(balance);
 
     // CHECK BALANCE
@@ -146,12 +129,10 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
 
     // GET PRICE WITH SAFETY MARGIN
     let priceWithSafetyMargin = 0;
-    if (props.pool.name === "USDT") {
+    if (pool.name === "USDT") {
       priceWithSafetyMargin = 0.75188;
     } else {
-      priceWithSafetyMargin = await poolStore.getPriceWithSafetyMargin(
-        props.pool
-      );
+      priceWithSafetyMargin = await poolStore.getPriceWithSafetyMargin(pool);
     }
     // setPriceWithSafetyMargin(+priceWithSafetyMargin);
 
@@ -186,7 +167,7 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
 
     // PRICE OF COLLATERAL FROM DEX
     const priceOfCollateralFromDex =
-      props.pool.name === "USDT" ? 10 ** 18 : await poolStore.getDexPrice();
+      pool.name === "USDT" ? 10 ** 18 : await poolStore.getDexPrice();
 
     // DEBT RATIO
     const debtRatio =
@@ -227,13 +208,13 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
   };
 
   const openNewPosition = () => {
-    positionStore.openPosition(account, props.pool, collatral, fathomToken);
+    positionStore.openPosition(account, pool, collatral, fathomToken);
   };
 
   const approve = async () => {
     setApprovalPending(true);
     try {
-      await positionStore.approve(account, props.pool);
+      await positionStore.approve(account, pool);
       handleCloseApproveBtn();
     } catch (e) {
       setApproveBtn(true);
@@ -246,12 +227,8 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
     setApproveBtn(false);
   };
 
-  const handleClose = () => {
-    onClose();
-  };
-
   const handleCollatralTextFieldChange = (e: any) => {
-    let value = e.target.value;
+    const value = e.target.value;
     if (!isNaN(value)) {
       setCollatral(value);
     }
@@ -268,24 +245,24 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
   };
 
   return (
-    <BootstrapDialog
-      onClose={handleClose}
+    <AppDialog
+      onClose={onClose}
       aria-labelledby="customized-dialog-title"
       maxWidth="md"
       open={true}
       color="primary"
     >
-      <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
+      <BootstrapDialogTitle id="customized-dialog-title" onClose={onClose}>
         Open New Position
       </BootstrapDialogTitle>
       <DialogContent dividers>
         <Grid container spacing={2}>
           <Grid item xs={7}>
-            <List sx={{ width: "100%", maxWidth: 360 }}>
+            <List sx={{ width: "100%" }}>
               <ListItem
                 alignItems="flex-start"
                 secondaryAction={`${collatralToBeLocked.toFixed(2)} ${
-                  props.pool.name
+                  pool.name
                 }`}
               >
                 <ListItemText primary="Collateral to be Locked" />
@@ -294,7 +271,7 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
               <ListItem
                 alignItems="flex-start"
                 secondaryAction={`${collatralAvailableToWithdraw.toFixed(2)} ${
-                  props.pool.name
+                  pool.name
                 }`}
               >
                 <ListItemText primary="Estimated Collateral Available to Withdraw" />
@@ -332,9 +309,7 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
                 alignItems="flex-start"
                 secondaryAction={`$${liquidationPrice.toFixed(2)}`}
               >
-                <ListItemText
-                  primary={`Liquidation Price of ${props.pool.name}`}
-                />
+                <ListItemText primary={`Liquidation Price of ${pool.name}`} />
               </ListItem>
               <Divider component="li" />
               <ListItem alignItems="flex-start" secondaryAction={`1.73%`}>
@@ -361,7 +336,7 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
           <Grid item xs={5}>
             <Grid item xs={7}>
               <Typography sx={{ ml: 3 }}>
-                {props.pool.name} balance: {(balance / 10 ** 18).toFixed(2)}
+                {pool.name} balance: {(balance / 10 ** 18).toFixed(2)}
               </Typography>
             </Grid>
             <Box display="flex">
@@ -396,7 +371,7 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
               ) : null}
               {balanceError ? (
                 <Typography color="red" gutterBottom>
-                  You do not have enough {props.pool.name}
+                  You do not have enough {pool.name}
                 </Typography>
               ) : null}
 
@@ -404,7 +379,7 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
                 <Typography display="inline">Pending ...</Typography>
               ) : approveBtn ? (
                 <Button onClick={approve} variant="outlined">
-                  Approve {props.pool.name}
+                  Approve {pool.name}
                 </Button>
               ) : null}
 
@@ -419,6 +394,8 @@ export default function CustomizedDialogs(this: any, props: PoolProps) {
           </Grid>
         </Grid>
       </DialogContent>
-    </BootstrapDialog>
+    </AppDialog>
   );
-}
+};
+
+export default OpenNewPositionDialog;
