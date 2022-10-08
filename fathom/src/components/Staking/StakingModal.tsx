@@ -1,10 +1,10 @@
 import { observer } from "mobx-react";
 import { Typography } from "@mui/material";
-import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
+import { AppSecondaryPaper } from "components/AppComponents/AppPaper/AppPaper";
 
 const StakingModal = observer((props: any) => {
   return (
-    <AppPaper
+    <AppSecondaryPaper
       sx={{
         p: 2,
         display: "flex",
@@ -23,7 +23,7 @@ const StakingModal = observer((props: any) => {
       <Typography component="p" variant="h6">
         {props.voteBalance}
       </Typography>
-    </AppPaper>
+    </AppSecondaryPaper>
   );
 });
 
