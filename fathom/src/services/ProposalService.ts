@@ -110,8 +110,7 @@ export default class ProposalService implements IProposalService {
 
         console.log("HERE1");
 
-        // const [_proposalIds, _descriptions, _statusses]  = await FathomGovernor.methods.getProposals(8)
-        const result = await FathomGovernor.methods.getProposals(2).call({ from: account });
+        const result = await FathomGovernor.methods.getProposals(12).call({ from: account });
         
         console.log("_proposalIds: ");
         console.log(result[0]);
