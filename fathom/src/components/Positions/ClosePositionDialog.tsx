@@ -1,4 +1,8 @@
-import React from "react";
+import React, {
+  FC,
+  useCallback,
+  useMemo
+} from "react";
 import Button from "@mui/material/Button";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
@@ -60,10 +64,7 @@ const BootstrapDialogTitle = (props: DialogTitleProps) => {
   );
 };
 
-export default function ClosePositionDialog(
-  this: any,
-  props: ClosePositionProps
-) {
+const ClosePositionDialog: FC<ClosePositionProps> = ({ position }) => {
   const rootStore = useStores();
   const positionStore = rootStore.positionStore;
   const poolStore = rootStore.poolStore;
@@ -75,25 +76,25 @@ export default function ClosePositionDialog(
 
   const { account } = useMetaMask()!;
 
-  const pool = poolStore.getPool(props.position.pool);
-  const debtShare = props.position.debtShare
+  const pool = useMemo(() => poolStore.getPool(position.pool), [position.pool, poolStore]);
+  const debtShare = position.debtShare.div(Constants.WeiPerWad).toNumber();
+
+  const lockedColateral = position.lockedCollateral
     .div(Constants.WeiPerWad)
     .toNumber();
 
-  const lockedColateral = props.position.lockedCollateral
-    .div(Constants.WeiPerWad)
-    .toNumber();
-
-  const closePosition = () => {
-    positionStore.partialyClosePosition(
-      props.position,
-      pool,
-      account,
-      fathomToken,
-      collateral
-    );
-    setOpen(false);
-  };
+  const closePosition = useCallback(async () => {
+    try {
+      await positionStore.partialyClosePosition(
+        position,
+        pool,
+        account,
+        fathomToken,
+        collateral
+      );
+      setOpen(false);
+    } catch (e) {}
+  }, [position, pool, account, fathomToken, collateral, positionStore]);
 
   const handleClickOpen = async () => {
     const priceWithSafetyMargin = await poolStore.getPriceWithSafetyMargin(
@@ -131,10 +132,7 @@ export default function ClosePositionDialog(
 
   return (
     <>
-      <Button
-        variant="outlined"
-        onClick={handleClickOpen}
-      >
+      <Button variant="outlined" onClick={handleClickOpen}>
         Close
       </Button>
       <AppDialog
@@ -179,7 +177,7 @@ export default function ClosePositionDialog(
                     <Typography gutterBottom>LTV</Typography>
                   </Grid>
                   <Grid item xs={5}>
-                    {props.position.ltv.toNumber() / 10}%
+                    {position.ltv.toNumber() / 10}%
                   </Grid>
                 </Grid>
               </Container>
@@ -215,11 +213,16 @@ export default function ClosePositionDialog(
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={closePosition}>
+          <Button variant="outlined" autoFocus onClick={closePosition}>
+            Submit
+          </Button>
+          <Button variant="outlined" onClick={() => setOpen(false)}>
             Close
           </Button>
         </DialogActions>
       </AppDialog>
     </>
   );
-}
+};
+
+export default ClosePositionDialog;
