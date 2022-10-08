@@ -24,7 +24,7 @@ export default class PoolService implements IPoolService {
       },
       {
         id: "0x555344542d434f4c000000000000000000000000000000000000000000000000",
-        name: "USDT-COL",
+        name: "USDT",
         collateralContractAddress: SmartContractFactory.USDT(this.chainId)
           .address,
         CollateralTokenAdapterAddress:
@@ -43,18 +43,19 @@ export default class PoolService implements IPoolService {
         availableFathom: "",
         borrowedFathom: "",
         allowOpenPosition: true,
-      },
-      {
-        id: "0x555344542d535441424c45000000000000000000000000000000000000000000",
-        name: "USDT",
-        collateralContractAddress: SmartContractFactory.USDT(this.chainId)
-          .address,
-        CollateralTokenAdapterAddress:
-          SmartContractFactory.USDTCollateralTokenAdapter(this.chainId).address,
-        availableFathom: "",
-        borrowedFathom: "",
-        allowOpenPosition: false,
       }
+      //,
+      // {
+      //   id: "0x555344542d535441424c45000000000000000000000000000000000000000000",
+      //   name: "USDT",
+      //   collateralContractAddress: SmartContractFactory.USDT(this.chainId)
+      //     .address,
+      //   CollateralTokenAdapterAddress:
+      //     SmartContractFactory.USDTCollateralTokenAdapter(this.chainId).address,
+      //   availableFathom: "",
+      //   borrowedFathom: "",
+      //   allowOpenPosition: false,
+      // }
     );
 
     return pools;
