@@ -3,7 +3,6 @@ import {
   Button,
   CircularProgress,
   TableCell,
-  TableRow,
 } from "@mui/material";
 import * as React from "react";
 import ILockPosition from "../../stores/interfaces/ILockPosition";
