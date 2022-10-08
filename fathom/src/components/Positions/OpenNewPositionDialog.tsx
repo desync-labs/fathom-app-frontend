@@ -167,7 +167,7 @@ const OpenNewPositionDialog: FC<PoolProps> = ({ pool, onClose }) => {
 
     // PRICE OF COLLATERAL FROM DEX
     const priceOfCollateralFromDex =
-      pool.name === "USDT" ? 10 ** 18 : await poolStore.getDexPrice();
+      pool.name === "USDT" ? 10 ** 18 : await poolStore.getDexPrice(pool.collateralContractAddress);
 
     // DEBT RATIO
     const debtRatio =

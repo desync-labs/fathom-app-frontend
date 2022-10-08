@@ -106,13 +106,13 @@
     "collateralTokenAdapterUSDT": "0xDDB1ec0Eb51f7aeD481ad4D00a44600228E6D270",
     "collateralTokenAdapterFTHM":"0x86B2E78555fAEA58A522e72193935153D1bBF2Cc",
     "fathomStats":"0x88E004Cc69A813c97e0D33B90e1C075eC4495B31",
-    "fathomGovernor": "",
-    "veFTHM": "",
-    "staking": "",
-    "mainToken": "",
-    "stakingGetter": "",
-    "veMainToken": "",
-    "streamRewardToken": "",
-    "vault": ""
+    "fathomGovernor": "0xa89D95A59cD181c7590AAdA13F67937d3487DbA0",
+    "veFTHM": "0x046fbf910512003a08e170631b9BcDf5235191B6",
+    "staking": "0x70f03000879377A52BCbd5280dC98D9356f9478A",
+    "mainToken": "0x4c52500DdC18EE0C6CB6155961347076E43ABb99",
+    "stakingGetter": "0xC8AB78b60fCe5EB7e3b554c72d605CdFd2D9c47D",
+    "veMainToken": "0x046fbf910512003a08e170631b9BcDf5235191B6",
+    "streamRewardToken": "0xcEc1609Efd3f12d0Da63250eF6761A7482Dda3BF",
+    "vault": "0x5C6E0B80098db345a3e35516e437795D87190262"
   }
 }

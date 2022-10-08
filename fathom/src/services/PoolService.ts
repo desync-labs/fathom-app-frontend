@@ -145,18 +145,18 @@ export default class PoolService implements IPoolService {
     }
   }
 
-  async getDexPrice(): Promise<number> {
+  async getDexPrice(forAddress:string): Promise<number> {
     console.log("in get dex price");
     try {
       let USDT = SmartContractFactory.USDT(this.chainId).address;
-      let WXDC = SmartContractFactory.WXDC(this.chainId).address;
+      //let WXDC = SmartContractFactory.WXDC(this.chainId).address;
 
       const dexPriceOracle = Web3Utils.getContractInstance(
         SmartContractFactory.DexPriceOracle(this.chainId),
         this.chainId
       );
 
-      let result = await dexPriceOracle.methods.getPrice(USDT, WXDC).call();
+      let result = await dexPriceOracle.methods.getPrice(USDT, forAddress).call();
       let price = result[0];
 
       return price;
