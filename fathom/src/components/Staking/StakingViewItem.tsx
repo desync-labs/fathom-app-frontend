@@ -11,6 +11,7 @@ import { FC, useEffect, useMemo, useState } from "react";
 import { ActionType, StakingViewItemMethodsPropsType } from "./StakingView";
 import StakingCountdown from "./StakingCountdown";
 import { secondsToTime } from "../../utils/secondsToTime";
+import { AppTableRow } from "../AppComponents/AppTable/AppTable";
 
 type StakingViewItemPropsType = {
   lockPosition: ILockPosition;
@@ -43,7 +44,7 @@ const StakingViewItem: FC<
   }, [lockPosition.timeObject, setTimer, setSeconds]);
 
   return (
-    <TableRow
+    <AppTableRow
       sx={{
         "&:last-child td, &:last-child th": { border: 0 },
         td: { textAlign: "center" },
@@ -103,7 +104,7 @@ const StakingViewItem: FC<
           )}
         </Button>
       </TableCell>
-    </TableRow>
+    </AppTableRow>
   );
 };
 
