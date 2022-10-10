@@ -1,9 +1,10 @@
-import BigNumber from "bignumber.js";
 import { makeAutoObservable, runInAction } from "mobx";
 import { RootStore } from ".";
 import IPositionService from "../services/interfaces/IPositionService";
 import ICollatralPool from "./interfaces/ICollatralPool";
 import IOpenPosition from "./interfaces/IOpenPosition";
+import { processRpcError } from "../utils/processRpcError";
+import BigNumber from "bignumber.js";
 
 export default class PositionStore {
   positions: IOpenPosition[] = [];
@@ -22,70 +23,87 @@ export default class PositionStore {
     collatral: number,
     fathomToken: number
   ) => {
+    if (!address) return;
+
     console.log(
       `Open position clicked for address ${address}, poolId: ${pool.name}, collatral:${collatral}, fathomToken: ${fathomToken}`
     );
-    try {
-      if (!address) return;
 
-      await this.service.openPosition(
-        address,
-        pool,
-        collatral,
-        fathomToken,
-        this.rootStore.transactionStore
-      );
-      await this.fetchPositions(address);
-      await this.rootStore.poolStore.fetchPools();
-      this.rootStore.alertStore.setShowSuccessAlert(
-        true,
-        "New position opened successfully!"
-      );
-    } catch (e) {
-      this.rootStore.alertStore.setShowErrorAlert(
-        true,
-        "There is some error in opening the position!"
-      );
-    }
+    return new Promise(async (resolve, reject) => {
+      try {
+        await this.service.openPosition(
+          address,
+          pool,
+          collatral,
+          fathomToken,
+          this.rootStore.transactionStore
+        );
+
+        await this.fetchPositions(address);
+        await this.rootStore.poolStore.fetchPools();
+
+        this.rootStore.alertStore.setShowSuccessAlert(
+          true,
+          "New position opened successfully!"
+        );
+
+        resolve(null);
+      } catch (e) {
+        const err = processRpcError(e);
+        this.rootStore.alertStore.setShowErrorAlert(
+          true,
+          err.reason || err.message
+        );
+        reject(e);
+      }
+    });
   };
 
   closePosition = async (
     positionId: string,
     pool: ICollatralPool,
     address: string,
-    lockedCollatral: BigNumber
+    collatral: BigNumber
   ) => {
-    console.log(
-      `Close position clicked for address ${address}, positionId: ${positionId}, lockedCollatral: ${lockedCollatral}`
-    );
-    try {
-      if (!address) return;
+    if (!address) return;
 
-      await this.service.closePosition(
-        positionId,
-        pool,
-        address,
-        lockedCollatral,
-        this.rootStore.transactionStore
-      );
-      await this.fetchPositions(address);
-      await this.rootStore.poolStore.fetchPools();
-      this.rootStore.alertStore.setShowSuccessAlert(
-        true,
-        "Position closed successfully!"
-      );
-    } catch (e) {
-      this.rootStore.alertStore.setShowErrorAlert(
-        true,
-        "There is some error in closing the position!"
-      );
-    }
+    console.log(
+      `Close position clicked for address ${address}, positionId: ${positionId}, fathomToken: ${collatral}`
+    );
+
+    return new Promise(async (resolve, reject) => {
+      try {
+        await this.service.closePosition(
+          positionId,
+          pool,
+          address,
+          collatral,
+          this.rootStore.transactionStore
+        );
+        await this.fetchPositions(address);
+        await this.rootStore.poolStore.fetchPools();
+        this.rootStore.alertStore.setShowSuccessAlert(
+          true,
+          "Position closed successfully!"
+        );
+
+        resolve(null);
+      } catch (e) {
+        const err = processRpcError(e);
+        this.rootStore.alertStore.setShowErrorAlert(
+          true,
+          err.reason || err.message
+        );
+
+        reject(e);
+      }
+    });
   };
 
   fetchPositions = async (address: string) => {
-    if (address === undefined || address === null) return;
+    if (!address) return;
 
-    let positions = await this.service.getPositionsWithSafetyBuffer(address);
+    const positions = await this.service.getPositionsWithSafetyBuffer(address);
     runInAction(() => {
       this.setPositions(positions);
     });
@@ -96,28 +114,33 @@ export default class PositionStore {
   };
 
   approve = async (address: string, pool: ICollatralPool) => {
+    if (!address) return;
+
     console.log(
       `Open position token approval clicked for address ${address}, poolId: ${pool.name}`
     );
-    try {
-      if (address === undefined || address === null) return;
 
-      await this.service.approve(
-        address,
-        pool,
-        this.rootStore.transactionStore
-      );
-      this.rootStore.alertStore.setShowSuccessAlert(
-        true,
-        `${pool.name} approval was successful!`
-      );
-    } catch (e) {
-      this.rootStore.alertStore.setShowErrorAlert(
-        true,
-        "There is some error approving the token!"
-      );
-      throw e;
-    }
+    return new Promise(async (resolve, reject) => {
+      try {
+        await this.service.approve(
+          address,
+          pool,
+          this.rootStore.transactionStore
+        );
+        this.rootStore.alertStore.setShowSuccessAlert(
+          true,
+          `${pool.name} approval was successful!`
+        );
+        resolve(null);
+      } catch (e) {
+        const err = processRpcError(e);
+        this.rootStore.alertStore.setShowErrorAlert(
+          true,
+          err.reason || err.message
+        );
+        reject(e);
+      }
+    });
   };
 
   approvalStatus = async (
@@ -125,43 +148,43 @@ export default class PositionStore {
     collatral: number,
     pool: ICollatralPool
   ) => {
+    if (!address) return;
     console.log(
       `Checking approval status for address ${address}, poolId: ${pool.name}`
     );
     try {
-      if (address === undefined || address === null) return;
-
-      return await this.service.approvalStatus(
+      return this.service.approvalStatus(
         address,
         pool,
         collatral,
         this.rootStore.transactionStore
       );
     } catch (e) {
+      const err = processRpcError(e);
       this.rootStore.alertStore.setShowErrorAlert(
         true,
-        "There is some error approving the token!"
+        err.reason || err.message
       );
     }
   };
 
   approveStablecoin = async (address: string) => {
+    if (!address) return;
     console.log(`Open position token approval clicked for address ${address}`);
     try {
-      if (!address) return;
-
-      await this.service.approveStablecoin(
-        address,
-        this.rootStore.transactionStore
-      );
-      this.rootStore.alertStore.setShowSuccessAlert(
-        true,
-        "Token approval was successful!"
-      );
+      return this.service
+        .approveStablecoin(address, this.rootStore.transactionStore)
+        .then(() => {
+          this.rootStore.alertStore.setShowSuccessAlert(
+            true,
+            "Token approval was successful!"
+          );
+        });
     } catch (e) {
+      const err = processRpcError(e);
       this.rootStore.alertStore.setShowErrorAlert(
         true,
-        "There is some error approving the token!"
+        err.reason || err.message
       );
       throw e;
     }
@@ -171,12 +194,12 @@ export default class PositionStore {
     console.log(`Checking stablecoin approval status for address ${address}`);
     try {
       if (!address) return;
-
-      return await this.service.approvalStatusStablecoin(address);
+      return this.service.approvalStatusStablecoin(address);
     } catch (e) {
+      const err = processRpcError(e);
       this.rootStore.alertStore.setShowErrorAlert(
         true,
-        "There is some error approving the token!"
+        err.reason || err.message
       );
     }
   };
@@ -188,31 +211,37 @@ export default class PositionStore {
     fathomToken: number,
     collater: number
   ) => {
+    if (!address) return;
     console.log(
       `Close position clicked for address ${address}, positionId: ${position.id}, fathomToken: ${fathomToken}`
     );
-    try {
-      if (address === undefined || address === null) return;
 
-      await this.service.partialyClosePosition(
-        position,
-        pool,
-        address,
-        fathomToken,
-        collater,
-        this.rootStore.transactionStore
-      );
-      await this.fetchPositions(address);
-      await this.rootStore.poolStore.fetchPools();
-      this.rootStore.alertStore.setShowSuccessAlert(
-        true,
-        "Position closed successfully!"
-      );
-    } catch (e) {
-      this.rootStore.alertStore.setShowErrorAlert(
-        true,
-        "There is some error in closing the position!"
-      );
-    }
+    return new Promise(async (resolve, reject) => {
+      try {
+        await this.service.partialyClosePosition(
+          position,
+          pool,
+          address,
+          fathomToken,
+          collater,
+          this.rootStore.transactionStore
+        );
+        await this.fetchPositions(address);
+        await this.rootStore.poolStore.fetchPools();
+        this.rootStore.alertStore.setShowSuccessAlert(
+          true,
+          "Position closed successfully!"
+        );
+
+        resolve(null);
+      } catch (e) {
+        const err = processRpcError(e);
+        this.rootStore.alertStore.setShowErrorAlert(
+          true,
+          err.reason || err.message
+        );
+        reject(e);
+      }
+    });
   };
 }
