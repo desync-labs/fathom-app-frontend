@@ -85,21 +85,24 @@ export default function ClosePositionDialog(
     .toNumber();
 
   const closePosition = () => {
-    if(closingType === ClosingType.Partial){
-      positionStore.partialyClosePosition(
-        props.position,
-        pool,
-        account,
-        fathomToken,
-        collateral
-      );
+    console.log(`Fathom Token : ${fathomToken} && Original Debt Share: ${props.position.debtShare.toNumber()}`)
+    if(closingType === ClosingType.Full || debtShare === fathomToken ){
+        console.log('Closing Full...')
+        positionStore.closePosition(
+          props.position.id,
+          pool,
+          account,
+          props.position.lockedCollateral
+        );
     }else{
-      positionStore.closePosition(
-        props.position.id,
-        pool,
-        account,
-        props.position.lockedCollateral
-      );
+      console.log('Partial Closing...')
+        positionStore.partialyClosePosition(
+          props.position,
+          pool,
+          account,
+          fathomToken,
+          collateral
+        );
     }
     setOpen(false);
   };
