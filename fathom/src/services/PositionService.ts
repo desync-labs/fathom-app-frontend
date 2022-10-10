@@ -230,7 +230,7 @@ export default class PositionService implements IPositionService {
     positionId: string,
     pool: ICollatralPool,
     address: string,
-    debt: number,
+    lockedCollatral: BigNumber,
     transactionStore: ActiveWeb3Transactions
   ): Promise<void> {
     try {
@@ -257,7 +257,7 @@ export default class PositionService implements IPositionService {
           pool.CollateralTokenAdapterAddress,
           SmartContractFactory.StablecoinAdapter(this.chainId).address,
           positionId,
-          toWei(debt.toString(), "ether"),
+          lockedCollatral.toString(),
           encodedResult,
         ]);
 

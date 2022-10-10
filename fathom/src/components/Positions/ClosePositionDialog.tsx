@@ -85,13 +85,22 @@ export default function ClosePositionDialog(
     .toNumber();
 
   const closePosition = () => {
-    positionStore.partialyClosePosition(
-      props.position,
-      pool,
-      account,
-      fathomToken,
-      collateral
-    );
+    if(closingType === ClosingType.Partial){
+      positionStore.partialyClosePosition(
+        props.position,
+        pool,
+        account,
+        fathomToken,
+        collateral
+      );
+    }else{
+      positionStore.closePosition(
+        props.position.id,
+        pool,
+        account,
+        props.position.lockedCollateral
+      );
+    }
     setOpen(false);
   };
 
