@@ -1,3 +1,4 @@
+import BigNumber from "bignumber.js";
 import { makeAutoObservable, runInAction } from "mobx";
 import { RootStore } from ".";
 import IPositionService from "../services/interfaces/IPositionService";
@@ -52,10 +53,10 @@ export default class PositionStore {
     positionId: string,
     pool: ICollatralPool,
     address: string,
-    fathomToken: number
+    lockedCollatral: BigNumber
   ) => {
     console.log(
-      `Close position clicked for address ${address}, positionId: ${positionId}, fathomToken: ${fathomToken}`
+      `Close position clicked for address ${address}, positionId: ${positionId}, lockedCollatral: ${lockedCollatral}`
     );
     try {
       if (!address) return;
@@ -64,7 +65,7 @@ export default class PositionStore {
         positionId,
         pool,
         address,
-        fathomToken,
+        lockedCollatral,
         this.rootStore.transactionStore
       );
       await this.fetchPositions(address);
