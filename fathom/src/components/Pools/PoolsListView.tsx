@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Table,
-  TableBody,
-  TableContainer,
-  Typography,
-} from "@mui/material";
+import { Table, TableBody, TableContainer, Typography } from "@mui/material";
 import { useStores } from "../../stores";
 import useMetaMask from "../../hooks/metamask";
 import { LogLevel, useLogger } from "../../helpers/Logger";
@@ -34,7 +29,9 @@ const PoolsListView = observer(() => {
   }, [poolStore, account, chainId, logger, setSelectedPool]);
 
   return (
-    <AppPaper sx={{ p: 2, display: "flex", flexDirection: "column", height: 360 }}>
+    <AppPaper
+      sx={{ p: 2, display: "flex", flexDirection: "column", height: 360 }}
+    >
       {/* <Typography component="h2" variant="h6" color="primary" gutterBottom>
         Pools
       </Typography> */}
@@ -42,7 +39,10 @@ const PoolsListView = observer(() => {
         <Typography variant="h6">No Pool Available!</Typography>
       ) : (
         <TableContainer>
-          <Table sx={{ minWidth: 500 }} aria-label="simple table">
+          <Table
+            sx={{ minWidth: 500, "& td": { padding: "9px" } }}
+            aria-label="simple table"
+          >
             <TableBody>
               {poolStore.pools.map((pool: ICollatralPool) => (
                 <PoolsListItem

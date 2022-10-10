@@ -32,7 +32,8 @@ const PoolsListItem: FC<PoolsListItemPropsType> = ({ pool, setSelectedPool }) =>
         <Typography color="text.secondary">Total APY : 1.04%</Typography>
       </TableCell>
       <TableCell align="left">
-        <Button variant="outlined" color="primary" onClick={() => setSelectedPool(pool)}>
+        <Button variant="outlined" color="primary" onClick={
+          () => setSelectedPool(pool)}>
           Open New Position
         </Button>
       </TableCell>

@@ -65,11 +65,11 @@ const OpenNewPositionDialog: FC<PoolProps> = ({ pool, onClose }) => {
   const [balanceError, setBalanceError] = useState(false);
 
   const [fathomToken, setFathomToken] = useState(0);
-  const [collatral, setCollatral] = useState(0);
-  const [collatralToBeLocked, setCollatralToBeLocked] = useState(0);
+  const [collateral, setCollateral] = useState(0);
+  const [collateralToBeLocked, setCollateralToBeLocked] = useState(0);
   const [fxdToBeBorrowed, setFxdToBeBorrowed] = useState(0);
   const [safeMax, setSafeMax] = useState(0);
-  const [collatralAvailableToWithdraw, setCollatralAvailableToWithdraw] =
+  const [collateralAvailableToWithdraw, setCollateralAvailableToWithdraw] =
     useState(0);
   // const [priceWithSafetyMargin, setPriceWithSafetyMargin] = useState(0);
   const [safetyBuffer, setSafetyBuffer] = useState(0);
@@ -80,9 +80,9 @@ const OpenNewPositionDialog: FC<PoolProps> = ({ pool, onClose }) => {
   const [disableOpenPosition, setDisableOpenPosition] = useState(false);
 
   const approvalStatus = useCallback(async () => {
-    let approved = await positionStore.approvalStatus(account, collatral, pool);
+    let approved = await positionStore.approvalStatus(account, collateral, pool);
     approved ? setApproveBtn(false) : setApproveBtn(true);
-  }, [positionStore, pool, account, collatral]);
+  }, [positionStore, pool, account, collateral]);
 
   useEffect(() => {
     if (chainId) {
@@ -106,7 +106,7 @@ const OpenNewPositionDialog: FC<PoolProps> = ({ pool, onClose }) => {
       collateralInput = 0;
     }
     // console.log("COLLATERAL INPUT: ", collateralInput);
-    setCollatralToBeLocked(+collateralInput);
+    setCollateralToBeLocked(+collateralInput);
 
     if (isNaN(fathomTokenInput) || !fathomTokenInput) {
       fathomTokenInput = 0;
@@ -163,7 +163,7 @@ const OpenNewPositionDialog: FC<PoolProps> = ({ pool, onClose }) => {
         +priceWithSafetyMargin;
     }
 
-    setCollatralAvailableToWithdraw(+collatralAvailableToWithdraw);
+    setCollateralAvailableToWithdraw(+collatralAvailableToWithdraw);
 
     // PRICE OF COLLATERAL FROM DEX
     const priceOfCollateralFromDex =
@@ -204,15 +204,17 @@ const OpenNewPositionDialog: FC<PoolProps> = ({ pool, onClose }) => {
 
   const updateFathomAmount = () => {
     setFathomToken(safeMax);
-    handleUpdates(collatral, safeMax);
+    handleUpdates(collateral, safeMax);
   };
 
-  const openNewPosition = () => {
-    positionStore.openPosition(account, pool, collatral, fathomToken);
-    setTimeout(() => {
+  const openNewPosition = useCallback(async () => {
+    try {
+      await positionStore.openPosition(account, pool, collateral, fathomToken);
       onClose()
-    }, 1000);
-  };
+    } catch (e) {
+      console.log(e)
+    }
+  }, [positionStore, onClose, account, pool, collateral, fathomToken]);
 
   const approve = async () => {
     setApprovalPending(true);
@@ -233,7 +235,7 @@ const OpenNewPositionDialog: FC<PoolProps> = ({ pool, onClose }) => {
   const handleCollatralTextFieldChange = (e: any) => {
     const value = e.target.value;
     if (!isNaN(value)) {
-      setCollatral(value);
+      setCollateral(value);
     }
 
     handleUpdates(value, fathomToken);
@@ -244,7 +246,7 @@ const OpenNewPositionDialog: FC<PoolProps> = ({ pool, onClose }) => {
     if (!isNaN(value)) {
       setFathomToken(value);
     }
-    handleUpdates(collatral, value);
+    handleUpdates(collateral, value);
   };
 
   return (
@@ -264,7 +266,7 @@ const OpenNewPositionDialog: FC<PoolProps> = ({ pool, onClose }) => {
             <List sx={{ width: "100%" }}>
               <ListItem
                 alignItems="flex-start"
-                secondaryAction={`${collatralToBeLocked.toFixed(2)} ${
+                secondaryAction={`${collateralToBeLocked.toFixed(2)} ${
                   pool.name
                 }`}
               >
@@ -273,7 +275,7 @@ const OpenNewPositionDialog: FC<PoolProps> = ({ pool, onClose }) => {
               <Divider component="li" />
               <ListItem
                 alignItems="flex-start"
-                secondaryAction={`${collatralAvailableToWithdraw.toFixed(2)} ${
+                secondaryAction={`${collateralAvailableToWithdraw.toFixed(2)} ${
                   pool.name
                 }`}
               >
@@ -349,7 +351,7 @@ const OpenNewPositionDialog: FC<PoolProps> = ({ pool, onClose }) => {
                 defaultValue="Default Value"
                 helperText="Enter the Collateral."
                 sx={{ m: 3 }}
-                value={collatral}
+                value={collateral}
                 onChange={handleCollatralTextFieldChange}
               />
               <TextField
