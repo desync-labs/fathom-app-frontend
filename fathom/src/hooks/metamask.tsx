@@ -73,7 +73,7 @@ export const MetaMaskProvider: FC<MetaMaskProviderType> = ( { children } ) => {
       connect,
       disconnect,
       shouldDisable,
-      chainId,
+      chainId: chainId || 51,
       error
     }),
     [isActive, isLoading, shouldDisable, account, connect, disconnect, chainId, error]
