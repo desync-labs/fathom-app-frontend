@@ -200,7 +200,7 @@ const MainLayout = observer(() => {
             <Routes>
               <Route path="/" element={<DashboardContent />} />
               <Route path="/swap" element={<StableSwap />} />
-              <Route path="/proposals" element={<AllProposalsView />} />
+              <Route path="/governance" element={<AllProposalsView />} />
               <Route path="/proposal/make-proposal" element={<MakePropose />} />
               <Route path="/proposal/:_proposalId" element={<ProposalView />} />
               <Route path="/staking" element={<StakingView />} />
