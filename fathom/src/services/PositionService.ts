@@ -1,12 +1,12 @@
-import { SmartContractFactory } from "../config/SmartContractFactory";
-import IPositionService from "./interfaces/IPositionService";
-import { Constants } from "../helpers/Constants";
-import { Web3Utils } from "../helpers/Web3Utils";
-import OpenPosition from "../stores/interfaces/IOpenPosition";
-import IOpenPosition from "../stores/interfaces/IOpenPosition";
+import { SmartContractFactory } from "config/SmartContractFactory";
+import IPositionService from "services/interfaces/IPositionService";
+import { Constants } from "helpers/Constants";
+import { Web3Utils } from "helpers/Web3Utils";
+import OpenPosition from "stores/interfaces/IOpenPosition";
+import IOpenPosition from "stores/interfaces/IOpenPosition";
 import BigNumber from "bignumber.js";
-import ICollatralPool from "../stores/interfaces/ICollatralPool";
-import ActiveWeb3Transactions from "../stores/transaction.store";
+import ICollateralPool from "stores/interfaces/ICollateralPool";
+import ActiveWeb3Transactions from "stores/transaction.store";
 import {
   TransactionStatus,
   TransactionType,
@@ -20,7 +20,7 @@ export default class PositionService implements IPositionService {
 
   async openPosition(
     address: string,
-    pool: ICollatralPool,
+    pool: ICollateralPool,
     collatral: number,
     fathomToken: number,
     transactionStore: ActiveWeb3Transactions
@@ -228,7 +228,7 @@ export default class PositionService implements IPositionService {
 
   async closePosition(
     positionId: string,
-    pool: ICollatralPool,
+    pool: ICollateralPool,
     address: string,
     debt: number,
     transactionStore: ActiveWeb3Transactions
@@ -285,9 +285,9 @@ export default class PositionService implements IPositionService {
     }
   }
 
-  async partialyClosePosition(
+  async partiallyClosePosition(
     position: IOpenPosition,
-    pool: ICollatralPool,
+    pool: ICollateralPool,
     address: string,
     stablecoint: number,
     collateral: number,
@@ -348,7 +348,7 @@ export default class PositionService implements IPositionService {
 
   async approve(
     address: string,
-    pool: ICollatralPool,
+    pool: ICollateralPool,
     transactionStore: ActiveWeb3Transactions
   ): Promise<void> {
     try {
@@ -384,7 +384,7 @@ export default class PositionService implements IPositionService {
 
   async approvalStatus(
     address: string,
-    pool: ICollatralPool,
+    pool: ICollateralPool,
     collatral: number,
     transactionStore: ActiveWeb3Transactions
   ): Promise<Boolean> {
@@ -394,7 +394,7 @@ export default class PositionService implements IPositionService {
         collatral = 0;
       }
 
-      let proxyWalletaddress = await this.proxyWalletExist(address);
+      const proxyWalletaddress = await this.proxyWalletExist(address);
 
       if (proxyWalletaddress === Constants.ZERO_ADDRESS) {
         return false;
@@ -451,9 +451,23 @@ export default class PositionService implements IPositionService {
     }
   }
 
+  async balanceStablecoin(address: string): Promise<number> {
+    try {
+      const fathomStableCoin = Web3Utils.getContractInstance(
+        SmartContractFactory.FathomStableCoin(this.chainId),
+        this.chainId
+      );
+
+      return fathomStableCoin.methods.balanceOf(address).call();
+    } catch (error) {
+      console.error(`Error in open position approve token: ${error}`);
+      throw error;
+    }
+  }
+
   async approvalStatusStablecoin(address: string): Promise<Boolean> {
     try {
-      let proxyWalletaddress = await this.proxyWalletExist(address);
+      const proxyWalletaddress = await this.proxyWalletExist(address);
 
       if (proxyWalletaddress === Constants.ZERO_ADDRESS) {
         return false;

@@ -1,22 +1,61 @@
-import { Box, Grid } from "@mui/material";
-import Typography from "@mui/material/Typography";
+import { Grid, Box, Typography, Divider } from "@mui/material";
 import { useWeb3React } from "@web3-react/core";
 import { useEffect } from "react";
-import logo from "../../assets/images/fxd-logo.png";
 import { useStores } from "stores";
-import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
 import { observer } from "mobx-react";
+import { styled } from "@mui/material/styles";
 
-const StatsStyles = {
-  boxShadow: 2,
-  width: "15rem",
-  height: "5rem",
-  background: "linear-gradient(180deg, #071126 0%, #050C1A 100%)",
-  p: 1.5,
-  m: 1,
-  borderRadius: 2,
-  textAlign: "center",
-};
+const StatsItem = styled(
+  Grid,
+  {}
+)(({ theme }) => ({
+  textAlign: "left",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  position: "relative",
+}));
+
+const ProtocolStatsContainer = styled(
+  Grid,
+  {}
+)(({ theme }) => ({
+  background: "linear-gradient(180deg, #101D32 7.88%, #1A2D47 113.25%)",
+  borderRadius: "12px",
+  height: "92px",
+  marginBottom: '30px'
+}));
+
+const StatsTitle = styled(
+  Typography,
+  {}
+)(({ theme }) => ({
+  color: theme.palette.secondary.main,
+  fontSize: "13px",
+  lineHeight: "16px",
+  letterSpacing: "0.02em",
+  textTransform: "uppercase",
+  fontWeight: "bold",
+}));
+
+const StatsDescription = styled(
+  Typography,
+  {}
+)(({ theme }) => ({
+  fontStyle: "normal",
+  fontWeight: "600",
+  fontSize: "24px",
+  lineHeight: "28px",
+  margin: 0,
+  padding: 0,
+  paddingTop: "7px",
+}));
+
+const ProtocolStatsDivider = styled(Divider)(({ theme }) => ({
+  position: "absolute",
+  right: 0,
+  height: "60%",
+}));
 
 const ProtocolStats = observer(() => {
   const { chainId } = useWeb3React();
@@ -31,66 +70,45 @@ const ProtocolStats = observer(() => {
   }, [fxdProtocolStatsStore, rootStore.alertStore, chainId]);
 
   return (
-    <AppPaper
-      sx={{
-        p: 2,
-        display: "flex",
-        flexDirection: "column",
-        height: 360,
-      }}
-    >
-      <img
-        src={logo}
-        alt="Fathom Stablecoin"
-        height="40"
-        width="80"
-        color="black"
-      ></img>
-      <Typography variant="subtitle1" gutterBottom>
-        The reliable stablecoin that earns you extra passive income
-      </Typography>
-      <Typography variant="body2" gutterBottom>
-        FXD is an auto-farming stablecoin that earns passive yields for you in
-        the background. Now, instead of paying for loans,you can get loans while
-        earning on your collateral.
-      </Typography>
-      <Grid container>
-        <Box sx={StatsStyles}>
-          <Typography variant="subtitle1" color="text.secondary">
-            Total Supply
-          </Typography>
-          <Typography variant="h6" color="primary" gutterBottom>
+    <ProtocolStatsContainer container>
+      <StatsItem item xs={3}>
+        <Box>
+          <StatsTitle variant="subtitle1">Total Supply</StatsTitle>
+          <StatsDescription variant="body2">
             {fxdProtocolStatsStore.commarize(
               fxdProtocolStatsStore.protocolStats.fathomSupplyCap
             )}
-          </Typography>
+          </StatsDescription>
         </Box>
-        <Box sx={StatsStyles}>
-          <Typography variant="subtitle1" color="text.secondary">
-            TVL
-          </Typography>
-          <Typography variant="h6" color="primary" gutterBottom>
+        <ProtocolStatsDivider orientation="vertical"></ProtocolStatsDivider>
+      </StatsItem>
+      <StatsItem item xs={3}>
+        <Box>
+          <StatsTitle variant="subtitle1">TVL</StatsTitle>
+          <StatsDescription>
             {fxdProtocolStatsStore.getFormattedTVL()}
-          </Typography>
+          </StatsDescription>
         </Box>
-        <Box sx={StatsStyles}>
-          <Typography variant="subtitle1" color="text.secondary">
-            FXD Price
-          </Typography>
-          <Typography variant="h6" color="primary" gutterBottom>
+        <ProtocolStatsDivider orientation="vertical"></ProtocolStatsDivider>
+      </StatsItem>
+      <StatsItem item xs={3}>
+        <Box>
+          <StatsTitle variant="subtitle1">FXD Price</StatsTitle>
+          <StatsDescription>
             {fxdProtocolStatsStore.getFormattedFXDPriceRatio()}
-          </Typography>
+          </StatsDescription>
         </Box>
-        <Box sx={StatsStyles}>
-          <Typography variant="subtitle1" color="text.secondary">
-            Liquidation Ratio
-          </Typography>
-          <Typography variant="h6" color="primary" gutterBottom>
+        <ProtocolStatsDivider orientation="vertical"></ProtocolStatsDivider>
+      </StatsItem>
+      <StatsItem item xs={3}>
+        <Box>
+          <StatsTitle variant="subtitle1">Liquidation Ratio</StatsTitle>
+          <StatsDescription>
             {fxdProtocolStatsStore.getFormattedLiquidationRatio()}
-          </Typography>
+          </StatsDescription>
         </Box>
-      </Grid>
-    </AppPaper>
+      </StatsItem>
+    </ProtocolStatsContainer>
   );
 });
 

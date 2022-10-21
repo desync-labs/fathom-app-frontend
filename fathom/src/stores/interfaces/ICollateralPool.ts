@@ -1,4 +1,4 @@
-export default interface ICollatralPool {
+export default interface ICollateralPool {
   id: string;
   name: string;
   availableFathom: string;

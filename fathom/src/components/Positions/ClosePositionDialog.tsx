@@ -1,38 +1,64 @@
-import React, {
+import {
   FC,
+  ReactNode,
   useCallback,
-  useMemo
+  useEffect,
+  useMemo,
+  useState,
 } from "react";
-import Button from "@mui/material/Button";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import DialogActions from "@mui/material/DialogActions";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import Typography from "@mui/material/Typography";
 import {
-  Container,
-  FormControl,
+  DialogContent,
+  Typography,
+  Box,
+  Divider,
   Grid,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
+  ListItem,
+  ListItemText,
 } from "@mui/material";
-import { useStores } from "../../stores";
-import useMetaMask from "../../hooks/metamask";
-import IOpenPosition from "../../stores/interfaces/IOpenPosition";
-import { Constants } from "../../helpers/Constants";
-import { AppDialog } from "../AppComponents/AppDialog/AppDialog";
+import { useStores } from "stores";
+import useMetaMask from "hooks/metamask";
+import IOpenPosition from "stores/interfaces/IOpenPosition";
+import { Constants } from "helpers/Constants";
+import {
+  AppDialog,
+  AppDialogTitle,
+} from "components/AppComponents/AppDialog/AppDialog";
+import {
+  ButtonPrimary,
+  ButtonSecondary,
+  ClosePositionRepayTypeWrapper,
+  MaxButton,
+  OpenPositionsButtonsWrapper,
+  RepayTypeButton,
+} from "components/AppComponents/AppButton/AppButton";
+import { AppList } from "components/AppComponents/AppList/AppList";
+import {
+  OpenPositionLabel,
+  OpenPositionValue,
+  OpenPositionWrapper,
+  Summary,
+  WalletBalance,
+} from "components/AppComponents/AppTypography/AppTypography";
+import {
+  AppFormInputLogo,
+  AppFormInputWrapper,
+  AppFormLabel,
+  AppTextField,
+} from "components/AppComponents/AppForm/AppForm";
+import InfoIcon from "@mui/icons-material/Info";
+import { getTokenLogoURL } from "utils/tokenLogo";
 
 export interface DialogTitleProps {
   id: string;
-  children?: React.ReactNode;
+  children?: ReactNode;
   onClose: () => void;
 }
 
 interface ClosePositionProps {
   position: IOpenPosition;
+  onClose: () => void;
 }
 
 enum ClosingType {
@@ -40,11 +66,13 @@ enum ClosingType {
   Partial,
 }
 
-const BootstrapDialogTitle = (props: DialogTitleProps) => {
-  const { children, onClose, ...other } = props;
-
+const BootstrapDialogTitle: FC<DialogTitleProps> = ({
+  children,
+  onClose,
+  ...other
+}) => {
   return (
-    <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
+    <AppDialogTitle {...other}>
       {children}
       {onClose ? (
         <IconButton
@@ -60,28 +88,69 @@ const BootstrapDialogTitle = (props: DialogTitleProps) => {
           <CloseIcon />
         </IconButton>
       ) : null}
-    </DialogTitle>
+    </AppDialogTitle>
   );
 };
 
-const ClosePositionDialog: FC<ClosePositionProps> = ({ position }) => {
-  const rootStore = useStores();
-  const positionStore = rootStore.positionStore;
-  const poolStore = rootStore.poolStore;
-  const [open, setOpen] = React.useState(false);
-  const [collateral, setCollateral] = React.useState(0);
-  const [fathomToken, setFathomToken] = React.useState(0);
-  const [price, setPrice] = React.useState(0);
-  const [closingType, setType] = React.useState(ClosingType.Full);
+const ClosePositionDialog: FC<ClosePositionProps> = ({ position, onClose }) => {
+  const { positionStore, poolStore } = useStores();
+  const [collateral, setCollateral] = useState(0);
+  const [fathomToken, setFathomToken] = useState(0);
+  const [price, setPrice] = useState(0);
+  const [closingType, setType] = useState(ClosingType.Full);
+
+  const [balance, setBalance] = useState(0);
+  const [balanceError, setBalanceError] = useState(false);
+  const [disableClosePosition, setDisableClosePosition] = useState(false);
 
   const { account } = useMetaMask()!;
 
-  const pool = useMemo(() => poolStore.getPool(position.pool), [position.pool, poolStore]);
-  const debtShare = position.debtShare.div(Constants.WeiPerWad).toNumber();
+  const pool = useMemo(
+    () => poolStore.getPool(position.pool),
+    [position.pool, poolStore]
+  );
 
-  const lockedColateral = position.lockedCollateral
-    .div(Constants.WeiPerWad)
-    .toNumber();
+  const debtShare = useMemo(
+    () => position.debtShare.div(Constants.WeiPerWad).toNumber(),
+    [position]
+  );
+
+  const lockedCollateral = useMemo(
+    () => position.lockedCollateral.div(Constants.WeiPerWad).toNumber(),
+    [position]
+  );
+
+  const getBalance = useCallback(async () => {
+    let balance = await positionStore.balanceStablecoin(account);
+    setBalance(balance!);
+  }, [positionStore, account, pool, setBalance]);
+
+  const handleOnOpen = useCallback(async () => {
+    const priceWithSafetyMargin = await poolStore.getPriceWithSafetyMargin(
+      pool
+    );
+    setType(ClosingType.Full);
+    setPrice(priceWithSafetyMargin);
+    setFathomToken(debtShare);
+    setCollateral(lockedCollateral);
+  }, [
+    pool,
+    poolStore,
+    debtShare,
+    lockedCollateral,
+    setType,
+    setPrice,
+    setFathomToken,
+    setCollateral,
+  ]);
+
+  useEffect(() => {
+    getBalance();
+    handleOnOpen();
+  }, [handleOnOpen, getBalance]);
+
+  console.log(debtShare);
+  console.log(lockedCollateral);
 
   const closePosition = useCallback(async () => {
     try {
@@ -92,134 +161,235 @@ const ClosePositionDialog: FC<ClosePositionProps> = ({ position }) => {
         fathomToken,
         collateral
       );
-      setOpen(false);
+      onClose();
     } catch (e) {}
-  }, [position, pool, account, fathomToken, collateral, positionStore]);
+  }, [
+    position,
+    pool,
+    account,
+    fathomToken,
+    collateral,
+    positionStore,
+    onClose,
+  ]);
 
-  const handleClickOpen = async () => {
-    const priceWithSafetyMargin = await poolStore.getPriceWithSafetyMargin(
-      pool
-    );
-    setType(ClosingType.Full);
-    setPrice(priceWithSafetyMargin);
-    setFathomToken(debtShare);
-    setOpen(true);
-    setCollateral(lockedColateral);
-  };
+  const handleFathomTokenTextFieldChange = useCallback(
+    (e: any) => {
+      let { value } = e.target;
+      value = Number(value);
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+      if (isNaN(value)) {
+        return;
+      }
 
-  const handlefathomTokenTextFieldChange = (e: any) => {
-    const { value } = e.target;
-    if (isNaN(+value)) {
-      return;
-    }
+      const walletBalance = Number(balance) / 10 ** 18;
 
-    setFathomToken(value);
-    setCollateral(value / price);
-  };
+      if (value > walletBalance) {
+        setBalanceError(true);
+      } else {
+        setBalanceError(false);
+      }
 
-  const handleTypeChange = (e: any) => {
-    if (e.target.value === ClosingType.Full) {
-      setFathomToken(debtShare);
-      setCollateral(lockedColateral);
-    }
+      value = value > debtShare ? debtShare : value;
+      setFathomToken(value);
+      setCollateral(value / price);
+    },
+    [price, balance, debtShare, setFathomToken, setCollateral, setBalanceError]
+  );
 
-    setType(e.target.value);
-  };
+  const handleTypeChange = useCallback(
+    (type: ClosingType) => {
+      if (type === ClosingType.Full) {
+        setFathomToken(debtShare);
+        setCollateral(lockedCollateral);
+      }
+
+      setType(type);
+    },
+    [setFathomToken, setType, setCollateral, debtShare, lockedCollateral]
+  );
+
+  const setMax = useCallback(
+    (balance: number) => {
+      setFathomToken(balance);
+      setCollateral(balance / price);
+    },
+    [price, setFathomToken, setCollateral]
+  );
 
   return (
     <>
-      <Button variant="outlined" onClick={handleClickOpen}>
-        Close
-      </Button>
       <AppDialog
-        onClose={handleClose}
+        onClose={onClose}
         aria-labelledby="customized-dialog-title"
-        open={open}
+        open={true}
         fullWidth
         maxWidth="md"
+        color="primary"
       >
-        <BootstrapDialogTitle
-          id="customized-dialog-title"
-          onClose={handleClose}
-        >
+        <BootstrapDialogTitle id="customized-dialog-title" onClose={onClose}>
           Close Position
         </BootstrapDialogTitle>
-        <DialogContent dividers>
-          <Grid container spacing={2}>
-            <Grid item xs={7}>
-              <Container>
-                <Grid container spacing={2}>
-                  <Grid item xs={7}>
-                    <Typography gutterBottom>Locked Collateral</Typography>
-                  </Grid>
-                  <Grid item xs={5}>
-                    <Typography gutterBottom>{`${lockedColateral} → ${
-                      lockedColateral - +collateral
-                    } ${pool.name}`}</Typography>
-                  </Grid>
-                  <Grid item xs={7}>
-                    <Typography gutterBottom>FXD Borrowed</Typography>
-                  </Grid>
-                  <Grid item xs={5}>
-                    <Typography gutterBottom>
-                      {`${debtShare} → ${debtShare - fathomToken} FXD`}{" "}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={7}>
-                    <Typography gutterBottom>Liquidation Price</Typography>
-                  </Grid>
-                  <Grid item xs={5}>{`1 FXD = ${1 / price} ${pool.name}`}</Grid>
-                  <Grid item xs={7}>
-                    <Typography gutterBottom>LTV</Typography>
-                  </Grid>
-                  <Grid item xs={5}>
-                    {position.ltv.toNumber() / 10}%
-                  </Grid>
-                </Grid>
-              </Container>
-            </Grid>
-            <Grid item xs={5}>
-              <FormControl fullWidth>
-                <InputLabel sx={{ m: 3 }} id="closing-type"></InputLabel>
-                <Select
-                  id="closing-type-select"
-                  value={closingType}
-                  onChange={handleTypeChange}
+        <DialogContent>
+          <Grid container>
+            <Grid item xs={6}>
+              <AppList sx={{ width: "100%" }}>
+                <ListItem
+                  alignItems="flex-start"
+                  secondaryAction={
+                    <>
+                      {debtShare} FXD{" "}
+                      <Box component="span" sx={{ color: "#29C20A" }}>
+                        → {debtShare - fathomToken} FXD
+                      </Box>
+                    </>
+                  }
                 >
-                  <MenuItem value={ClosingType.Full}>
-                    Close entire position
-                  </MenuItem>
-                  <MenuItem value={ClosingType.Partial}>
-                    Partialy close position
-                  </MenuItem>
-                </Select>
-              </FormControl>
-              <FormControl fullWidth>
-                <TextField
-                  disabled={closingType === ClosingType.Full}
+                  <ListItemText primary="FXD Borrowed" />
+                </ListItem>
+                <ListItem
+                  alignItems="flex-start"
+                  secondaryAction={
+                    <>
+                      {lockedCollateral.toFixed(6)} {pool.name}{" "}
+                      <Box component="span" sx={{ color: "#29C20A" }}>
+                        → {(lockedCollateral - +collateral).toFixed(6)}{" "}
+                        {pool.name}
+                      </Box>
+                    </>
+                  }
+                >
+                  <ListItemText primary="Collateral Locked" />
+                </ListItem>
+                <ListItem
+                  alignItems="flex-start"
+                  secondaryAction={`${position.ltv.toNumber() / 10}%`}
+                >
+                  <ListItemText primary="LTV (Loan-to-Value)" />
+                </ListItem>
+                <ListItem
+                  alignItems="flex-start"
+                  secondaryAction={`1 FXD = ${1 / price} ${pool.name}`}
+                >
+                  <ListItemText primary="Liquidation Price" />
+                </ListItem>
+              </AppList>
+            </Grid>
+            <Divider
+              sx={{ margin: "10px  0 0 0" }}
+              orientation="vertical"
+              flexItem
+            ></Divider>
+            <Grid
+              item
+              sx={{
+                paddingLeft: "20px",
+                width: "calc(50% - 1px)",
+                position: "relative",
+              }}
+            >
+              <Summary>Summary</Summary>
+              <ClosePositionRepayTypeWrapper>
+                <RepayTypeButton
+                  sx={{ marginRight: "5px" }}
+                  className={`${
+                    closingType === ClosingType.Full ? "active" : null
+                  }`}
+                  onClick={() => handleTypeChange(ClosingType.Full)}
+                >
+                  Repay entirely
+                </RepayTypeButton>
+                <RepayTypeButton
+                  className={`${
+                    closingType === ClosingType.Partial ? "active" : null
+                  }`}
+                  onClick={() => handleTypeChange(ClosingType.Partial)}
+                >
+                  Repay partially
+                </RepayTypeButton>
+              </ClosePositionRepayTypeWrapper>
+              <Box sx={{ marginBottom: '20px' }}>
+                <Box
+                  sx={{
+                    fontWeight: "bold",
+                    fontSize: "10px",
+                    textTransform: "uppercase",
+                    color: "#9FADC6",
+                  }}
+                >
+                  Total debt:
+                </Box>
+                <Box sx={{ fontWeight: "bold", fontSize: '14px' }}>{debtShare} FXD</Box>
+              </Box>
+              <AppFormInputWrapper>
+                <AppFormLabel>Repaying</AppFormLabel>
+                {balance ? (
+                  <WalletBalance>
+                    Wallet Available: {+balance / 10 ** 18} FXD
+                  </WalletBalance>
+                ) : null}
+                <AppTextField
+                  error={balanceError}
                   id="outlined-helperText"
-                  label="FXD"
-                  helperText="Enter the desired FXD."
-                  sx={{ m: 3 }}
+                  disabled={closingType === ClosingType.Full}
+                  helperText={
+                    balanceError ? (
+                      <>
+                        <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
+                        <Typography
+                          sx={{ fontSize: "12px", paddingLeft: "22px" }}
+                        >
+                          You don't have enough to repay that amount
+                        </Typography>
+                      </>
+                    ) : (
+                      "Enter the Repaying."
+                    )
+                  }
                   value={fathomToken}
-                  onChange={handlefathomTokenTextFieldChange}
+                  onChange={handleFathomTokenTextFieldChange}
                 />
-              </FormControl>
+                <AppFormInputLogo src={getTokenLogoURL("FXD")} />
+                <MaxButton onClick={() => setMax(debtShare)}>Max</MaxButton>
+              </AppFormInputWrapper>
+              <AppFormInputWrapper>
+                <AppFormLabel>Receive</AppFormLabel>
+                <AppTextField
+                  disabled={true}
+                  id="outlined-helperText"
+                  value={collateral}
+                />
+                <AppFormInputLogo src={getTokenLogoURL(pool.name)} />
+                {/*<MaxButton disabled>Safe Max</MaxButton>*/}
+              </AppFormInputWrapper>
+              {fathomToken ? (
+                <OpenPositionWrapper>
+                  <OpenPositionLabel>Repaying</OpenPositionLabel>
+                  <OpenPositionValue>{fathomToken} FXD</OpenPositionValue>
+                </OpenPositionWrapper>
+              ) : null}
+              {fathomToken ? (
+                <OpenPositionWrapper>
+                  <OpenPositionLabel>Receive</OpenPositionLabel>
+                  <OpenPositionValue>
+                    {collateral} {pool.name}
+                  </OpenPositionValue>
+                </OpenPositionWrapper>
+              ) : null}
+              <OpenPositionsButtonsWrapper
+                sx={{ position: "static", float: "right", marginTop: "20px" }}
+              >
+                <ButtonSecondary onClick={onClose}>Close</ButtonSecondary>
+                <ButtonPrimary
+                  onClick={closePosition}
+                  disabled={balanceError || disableClosePosition}
+                >
+                  Close this position
+                </ButtonPrimary>
+              </OpenPositionsButtonsWrapper>
             </Grid>
           </Grid>
         </DialogContent>
-        <DialogActions>
-          <Button variant="outlined" autoFocus onClick={closePosition}>
-            Submit
-          </Button>
-          <Button variant="outlined" onClick={() => setOpen(false)}>
-            Close
-          </Button>
-        </DialogActions>
       </AppDialog>
     </>
   );

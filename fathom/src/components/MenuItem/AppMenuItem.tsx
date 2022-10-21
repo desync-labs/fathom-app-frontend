@@ -33,9 +33,13 @@ export type AppMenuItemProps = AppMenuItemPropsWithoutItems & {
 const useStyles = makeStyles<{ isActive: boolean; showText: boolean }>()(
   (theme, { isActive, showText }) => ({
     menuItem: {
+      padding: "8px 9px 9px 8px",
+      width: showText ?  "100%" : "40px",
+      borderRadius: isActive ? "8px" : "0",
+      margin: "6px 0",
       "&.active": {
         background: isActive ? "#2A3E5A" : "transparent",
-        borderRadius: isActive ? "8px" : "0",
+
         "& .MuiListItemIcon-root": {
           color: isActive
             ? theme.palette.primary.main
@@ -49,8 +53,6 @@ const useStyles = makeStyles<{ isActive: boolean; showText: boolean }>()(
       "& .MuiListItemText-inset": {
         paddingLeft: "30px",
       },
-      margin: "6px 0",
-      padding: showText ? "4px 16px 10px 16px" : "12px",
     },
     menuItemIcon: {
       color: isActive ? theme.palette.primary.main : "#415D83",
@@ -66,7 +68,7 @@ const useStyles = makeStyles<{ isActive: boolean; showText: boolean }>()(
       },
       paddingBottom: "4px",
       color: isActive ? "#fff" : "#B0C5E7",
-      marginBottom: "-4px"
+      marginBottom: "-4px",
     },
   })
 );
@@ -105,8 +107,8 @@ const AppMenuItem: React.FC<AppMenuItemProps> = (props) => {
         />
       )}
       {/* Display the expand menu if the item has children */}
-      {isExpandable && !open && <IconExpandMore sx={{ pt: '6px' }} />}
-      {isExpandable && open && <IconExpandLess sx={{ pt: '6px' }} />}
+      {isExpandable && !open && <IconExpandMore sx={{ pt: "6px" }} />}
+      {isExpandable && open && <IconExpandLess sx={{ pt: "6px" }} />}
     </AppMenuItemComponent>
   );
 

@@ -1,9 +1,9 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import { RootStore } from ".";
-import IPositionService from "../services/interfaces/IPositionService";
-import ICollatralPool from "./interfaces/ICollatralPool";
-import IOpenPosition from "./interfaces/IOpenPosition";
-import { processRpcError } from "../utils/processRpcError";
+import IPositionService from "services/interfaces/IPositionService";
+import ICollateralPool from "stores/interfaces/ICollateralPool";
+import IOpenPosition from "stores/interfaces/IOpenPosition";
+import { processRpcError } from "utils/processRpcError";
 
 export default class PositionStore {
   positions: IOpenPosition[] = [];
@@ -18,7 +18,7 @@ export default class PositionStore {
 
   openPosition = async (
     address: string,
-    pool: ICollatralPool,
+    pool: ICollateralPool,
     collatral: number,
     fathomToken: number
   ) => {
@@ -60,7 +60,7 @@ export default class PositionStore {
 
   closePosition = async (
     positionId: string,
-    pool: ICollatralPool,
+    pool: ICollateralPool,
     address: string,
     fathomToken: number
   ) => {
@@ -112,7 +112,7 @@ export default class PositionStore {
     this.positions = _positions;
   };
 
-  approve = async (address: string, pool: ICollatralPool) => {
+  approve = async (address: string, pool: ICollateralPool) => {
     if (!address) return;
 
     console.log(
@@ -145,7 +145,7 @@ export default class PositionStore {
   approvalStatus = async (
     address: string,
     collatral: number,
-    pool: ICollatralPool
+    pool: ICollateralPool
   ) => {
     if (!address) return;
     console.log(
@@ -158,6 +158,20 @@ export default class PositionStore {
         collatral,
         this.rootStore.transactionStore
       );
+    } catch (e) {
+      const err = processRpcError(e);
+      this.rootStore.alertStore.setShowErrorAlert(
+        true,
+        err.reason || err.message
+      );
+    }
+  };
+
+  balanceStablecoin = async (address: string) => {
+    if (!address) return;
+
+    try {
+      return this.service.balanceStablecoin(address);
     } catch (e) {
       const err = processRpcError(e);
       this.rootStore.alertStore.setShowErrorAlert(
@@ -205,7 +219,7 @@ export default class PositionStore {
 
   partialyClosePosition = async (
     position: IOpenPosition,
-    pool: ICollatralPool,
+    pool: ICollateralPool,
     address: string,
     fathomToken: number,
     collater: number
@@ -217,7 +231,7 @@ export default class PositionStore {
 
     return new Promise(async (resolve, reject) => {
       try {
-        await this.service.partialyClosePosition(
+        await this.service.partiallyClosePosition(
           position,
           pool,
           address,

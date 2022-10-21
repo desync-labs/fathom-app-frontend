@@ -84,6 +84,8 @@ export class Web3Utils {
       Web3Utils.contracts.set(contractKey, contract);
     }
 
+    console.log(Web3.givenProvider)
+
     return contract;
   };
 

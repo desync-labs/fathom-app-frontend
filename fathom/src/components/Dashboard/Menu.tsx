@@ -17,6 +17,7 @@ import { Icon } from "@mui/material";
 
 type ItemPropsType = {
   open: boolean;
+  isMobile: boolean;
 };
 
 const useShowText = (open: boolean) => {
@@ -37,7 +38,7 @@ const useShowText = (open: boolean) => {
   };
 };
 
-export const Menu: FC<ItemPropsType> = ({ open }) => {
+export const Menu: FC<ItemPropsType> = ({ open, isMobile }) => {
   const location = useLocation();
 
   const isDashboardActive = useMemo(
@@ -105,23 +106,23 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
       link: "/",
       Icon: BorrowIcon,
       isActive: isDashboardActive,
-      showText,
+      showText: isMobile ? false: showText,
     },
     {
       name: "Stable Swap",
       link: "/swap",
       Icon: SwapIcon,
       isActive: isStableSwapActive,
-      showText,
+      showText: isMobile ? false: showText,
     },
     {
       name: "Governance",
       isActive: false,
-      showText,
+      showText: isMobile ? false: showText,
       items: [
         {
           name: "View all Proposals",
-          showText,
+          showText: isMobile ? false: showText,
           Icon: DensitySmallIcon,
           isActive: isProposalsActive,
           link: "/proposals",
@@ -129,7 +130,7 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
         {
           name: "Make a Proposal",
           Icon: AddBoxIcon,
-          showText,
+          showText: isMobile ? false: showText,
           isActive: isMakeProposalActive,
           link: "/proposal/make-proposal",
         },
@@ -137,7 +138,7 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
     },
     {
       name: "Staking",
-      showText,
+      showText: isMobile ? false: showText,
       Icon: Staking,
       isActive: isStakingActive,
       link: "/staking",

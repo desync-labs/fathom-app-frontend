@@ -6,7 +6,7 @@ import {
   useState,
   useContext,
   ReactElement,
-  FC
+  FC,
 } from "react";
 import { injected } from "../connectors/networks";
 import { useWeb3React } from "@web3-react/core";
@@ -14,12 +14,12 @@ import { useWeb3React } from "@web3-react/core";
 export const MetaMaskContext = createContext(null);
 
 type MetaMaskProviderType = {
-  children: ReactElement
-}
+  children: ReactElement;
+};
 
-export const MetaMaskProvider: FC<MetaMaskProviderType> = ( { children } ) => {
-
-  const { activate, account, active, deactivate, chainId, error } = useWeb3React();
+export const MetaMaskProvider: FC<MetaMaskProviderType> = ({ children }) => {
+  const { activate, account, active, deactivate, chainId, error } =
+    useWeb3React();
 
   const [isActive, setIsActive] = useState(false);
   const [shouldDisable, setShouldDisable] = useState(false); // Should disable connect button while connecting to MetaMask
@@ -33,6 +33,8 @@ export const MetaMaskProvider: FC<MetaMaskProviderType> = ( { children } ) => {
       await activate(injected).then(() => {
         setShouldDisable(false);
       });
+
+      localStorage.setItem("isConnected", "true");
     } catch (error) {
       console.log("Error on connecting: ", error);
     }
@@ -40,9 +42,12 @@ export const MetaMaskProvider: FC<MetaMaskProviderType> = ( { children } ) => {
 
   // Init Loading
   useEffect(() => {
-    connect().then(val => {
-      setIsLoading(false);
-    });
+    const isConnected = localStorage.getItem("isConnected");
+    if (isConnected === "true") {
+      connect().then((val) => {
+        setIsLoading(false);
+      });
+    }
   }, [connect]);
 
   // Check when App is Connected or Disconnected to MetaMask
@@ -74,20 +79,35 @@ export const MetaMaskProvider: FC<MetaMaskProviderType> = ( { children } ) => {
       disconnect,
       shouldDisable,
       chainId,
-      error
+      error,
     }),
-    [isActive, isLoading, shouldDisable, account, connect, disconnect, chainId, error]
+    [
+      isActive,
+      isLoading,
+      shouldDisable,
+      account,
+      connect,
+      disconnect,
+      chainId,
+      error,
+    ]
   );
 
-  // @ts-ignore
-  return <MetaMaskContext.Provider value={ values }>{ children }</MetaMaskContext.Provider>;
+  return (
+    // @ts-ignore
+    <MetaMaskContext.Provider value={values}>
+      {children}
+    </MetaMaskContext.Provider>
+  );
 };
 
 const useMetaMask = function useMetaMask() {
   const context = useContext(MetaMaskContext);
 
   if (context === undefined) {
-    throw new Error("useMetaMask hook must be used with a MetaMaskProvider component");
+    throw new Error(
+      "useMetaMask hook must be used with a MetaMaskProvider component"
+    );
   }
 
   return context;

@@ -1,10 +1,10 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import { RootStore } from ".";
-import IPoolService from "../services/interfaces/IPoolService";
-import ICollatralPool from "./interfaces/ICollatralPool";
+import IPoolService from "services/interfaces/IPoolService";
+import ICollateralPool from "stores/interfaces/ICollateralPool";
 
 export default class PoolStore {
-  pools: ICollatralPool[] = [];
+  pools: ICollateralPool[] = [];
   service: IPoolService;
 
   constructor(rootStore: RootStore, service: IPoolService) {
@@ -12,7 +12,7 @@ export default class PoolStore {
     this.service = service;
   }
 
-  setPool = (_pool: ICollatralPool[]) => {
+  setPool = (_pool: ICollateralPool[]) => {
     this.pools = _pool;
   };
 
@@ -28,11 +28,11 @@ export default class PoolStore {
     });
   };
 
-  getPriceWithSafetyMargin = async (pool: ICollatralPool) => {
+  getPriceWithSafetyMargin = async (pool: ICollateralPool) => {
     return await this.service.getPriceWithSafetyMargin(pool);
   };
 
-  getUserTokenBalance = async (address: string, pool: ICollatralPool) => {
+  getUserTokenBalance = async (address: string, pool: ICollateralPool) => {
     return await this.service.getUserTokenBalance(address, pool);
   };
 
