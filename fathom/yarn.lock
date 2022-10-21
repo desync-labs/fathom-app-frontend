@@ -5942,6 +5942,11 @@ fastq@^1.6.0:
   dependencies:
     reusify "^1.0.4"
 
+fathom-swap-standard-token-list@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/fathom-swap-standard-token-list/-/fathom-swap-standard-token-list-1.5.0.tgz#23fc5afda975e128878cd70c4258bf7f5fd78b22"
+  integrity sha512-rScGBrJ60lN/txmZ1RomvCOr5LhC4sR4dN0Q1ycisYM348tclN/0ZW0xbp63MPwPkXH3CnO7l6tpDLVbIK7jqQ==
+
 faye-websocket@^0.11.3, faye-websocket@^0.11.4:
   version "0.11.4"
   resolved "https://registry.npmjs.org/faye-websocket/-/faye-websocket-0.11.4.tgz"

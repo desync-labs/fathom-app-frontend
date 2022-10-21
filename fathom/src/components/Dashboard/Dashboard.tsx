@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from "react";
-import Grid from "@mui/material/Grid";
+import { Grid, Box, Typography } from "@mui/material";
 import OpenPositionsList from "../PositionList/OpenPositionsList";
 import { useStores } from "../../stores";
 import { LogLevel, useLogger } from "../../helpers/Logger";
@@ -34,13 +34,28 @@ const DashboardContent = observer(() => {
 
   return (
     <Grid container spacing={3}>
-      <Grid item xs={12} md={8} lg={6}>
-        <ProtocolStats />
-      </Grid>
-      <Grid item xs={12} md={8} lg={6}>
-        <PoolsListView />
+      <Grid item xs={12} md={9} lg={7}>
+        <Typography
+          component="h2"
+          variant="h6"
+          gutterBottom
+          sx={{ fontWeight: "bold", fontSize: "1.9rem" }}
+        >
+          FXD
+        </Typography>
+        <Box sx={{ fontSize: "14px", color: "#9FADC6" }}>
+          FXD is an auto-farming stablecoin that earns passive yields for you in
+          the background. Now, instead of paying for loans, you can get loans
+          while earning on your collateral.
+        </Box>
       </Grid>
       <Grid item xs={12}>
+        <ProtocolStats />
+      </Grid>
+      <Grid item xs={12}>
+        <PoolsListView />
+      </Grid>
+      <Grid item xs={12} sx={{ marginTop: '30px' }}>
         <OpenPositionsList />
       </Grid>
     </Grid>
