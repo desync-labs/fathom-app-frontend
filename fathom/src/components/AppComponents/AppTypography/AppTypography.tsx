@@ -10,11 +10,11 @@ export const TitleSecondary = styled(Typography)(({ theme }) => ({
 }));
 
 export const Adjust = styled(Typography)(({ theme }) => ({
-  color: "#7D91B5",
   fontSize: "13px",
   fontWeight: "bold",
   paddingTop: "7px",
   marginLeft: "-10px",
+  color: '#43FFF1'
 }));
 
 export const NoResults = styled(Typography)(({ theme }) => ({
@@ -73,4 +73,17 @@ export const ApproveBoxTypography = styled(Typography)(({ theme }) => ({
   fontSize: "14px",
   lineHeight: "20px",
   color: "#9FADC6",
+}));
+
+export const PoolName = styled(Typography)(({ theme }) => ({
+  fontSize: '14px',
+  color: '#fff',
+  textAlign: 'left',
+  lineHeight: '20px'
+}));
+
+export const Fee =  styled(Typography)(({ theme }) => ({
+  fontSize: '12px',
+  color: '#6379A1',
+  lineHeight: '16px'
 }));

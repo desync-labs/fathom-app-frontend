@@ -1,4 +1,4 @@
-import { Icon, TableCell, Box } from "@mui/material";
+import { Icon, TableCell, Box, Stack } from "@mui/material";
 import ICollateralPool from "stores/interfaces/ICollateralPool";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
@@ -8,6 +8,12 @@ import { styled } from "@mui/material/styles";
 import { OpenPositionButton } from "../AppComponents/AppButton/AppButton";
 import RedUrl from "assets/svg/combo-shape.svg";
 import GreenUrl from "assets/svg/hart-arrow-up.svg";
+import { getTokenLogoURL } from "../../utils/tokenLogo";
+import { PoolLogoStack } from "../AppComponents/AppStack/AppStack";
+import {
+  Fee,
+  PoolName
+} from "../AppComponents/AppTypography/AppTypography";
 
 type PoolsListItemPropsType = {
   pool: ICollateralPool;
@@ -60,9 +66,20 @@ const PoolsListItem: FC<PoolsListItemPropsType> = ({
     <PoolsListItemTableRow
       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
     >
-      <TableCell>{pool.name}</TableCell>
-      <TableCell>{pool.availableFathom}</TableCell>
-      <TableCell>{pool.borrowedFathom}</TableCell>
+      <TableCell>
+        <PoolLogoStack direction="row" spacing={2}>
+          <Box>
+            <img src={getTokenLogoURL(pool.name)} alt={pool.name} width={32} />
+          </Box>
+          <Box>
+            <PoolName>{pool.name}</PoolName>
+            <Fee>Sta. Fee 0.13%</Fee>
+          </Box>
+        </PoolLogoStack>
+      </TableCell>
+      <TableCell>{pool.borrowedFathom} FXD</TableCell>
+      <TableCell></TableCell>
+      <TableCell>{pool.availableFathom} FXD</TableCell>
       <TableCell>
         <TextBox>2.60%</TextBox> <IconRed />
       </TableCell>

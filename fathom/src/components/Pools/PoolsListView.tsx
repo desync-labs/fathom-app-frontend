@@ -22,10 +22,7 @@ const PoolsListHeaderRow = styled(AppTableHeaderRow)(({ theme }) => ({
   background: "transparent",
   th: {
     textAlign: "left",
-  },
-  "th:first-child": {
-    textAlign: "center",
-  },
+  }
 }));
 
 const PoolsListView = observer(() => {
@@ -59,12 +56,12 @@ const PoolsListView = observer(() => {
             aria-label="simple table"
           >
             <TableHead>
-              <PoolsListHeaderRow>
+              <PoolsListHeaderRow sx={{ "th:first-child": { paddingLeft: '20px' } }}>
                 <TableCell>Pool</TableCell>
-                <TableCell>Available FXD</TableCell>
-                <TableCell>Total FXD Borrowed</TableCell>
-                <TableCell>Lending APR</TableCell>
-                <TableCell>Staking APR</TableCell>
+                <TableCell>Total Borrowed</TableCell>
+                <TableCell>TVL</TableCell>
+                <TableCell>Available</TableCell>
+                <TableCell>APR</TableCell>
                 <TableCell>Total APY</TableCell>
                 <TableCell></TableCell>
               </PoolsListHeaderRow>

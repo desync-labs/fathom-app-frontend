@@ -75,9 +75,7 @@ const ProtocolStats = observer(() => {
         <Box>
           <StatsTitle variant="subtitle1">Total Supply</StatsTitle>
           <StatsDescription variant="body2">
-            {fxdProtocolStatsStore.commarize(
-              fxdProtocolStatsStore.protocolStats.fathomSupplyCap
-            )}
+            {fxdProtocolStatsStore.getFormattedSupply()}
           </StatsDescription>
         </Box>
         <ProtocolStatsDivider orientation="vertical"></ProtocolStatsDivider>
