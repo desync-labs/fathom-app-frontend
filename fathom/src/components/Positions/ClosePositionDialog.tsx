@@ -132,7 +132,7 @@ const ClosePositionDialog: FC<ClosePositionProps> = ({ position, onClose }) => {
     setType(ClosingType.Full);
     setPrice(priceWithSafetyMargin);
     setFathomToken(debtShare);
-    setCollateral(lockedCollateral);
+    setCollateral(debtShare / priceWithSafetyMargin);
   }, [
     pool,
     poolStore,
@@ -149,10 +149,8 @@ const ClosePositionDialog: FC<ClosePositionProps> = ({ position, onClose }) => {
     handleOnOpen();
   }, [handleOnOpen, getBalance]);
 
-  console.log(debtShare);
-  console.log(lockedCollateral);
-
   const closePosition = useCallback(async () => {
+    setDisableClosePosition(true)
     try {
       await positionStore.partialyClosePosition(
         position,
@@ -163,6 +161,7 @@ const ClosePositionDialog: FC<ClosePositionProps> = ({ position, onClose }) => {
       );
       onClose();
     } catch (e) {}
+    setDisableClosePosition(true)
   }, [
     position,
     pool,
@@ -171,12 +170,14 @@ const ClosePositionDialog: FC<ClosePositionProps> = ({ position, onClose }) => {
     collateral,
     positionStore,
     onClose,
+    setDisableClosePosition
   ]);
 
   const handleFathomTokenTextFieldChange = useCallback(
     (e: any) => {
       let { value } = e.target;
       value = Number(value);
+      value = value > debtShare ? debtShare : value;
 
       if (isNaN(value)) {
         return;
@@ -190,7 +191,6 @@ const ClosePositionDialog: FC<ClosePositionProps> = ({ position, onClose }) => {
         setBalanceError(false);
       }
 
-      value = value > debtShare ? debtShare : value;
       setFathomToken(value);
       setCollateral(value / price);
     },
@@ -251,9 +251,9 @@ const ClosePositionDialog: FC<ClosePositionProps> = ({ position, onClose }) => {
                   alignItems="flex-start"
                   secondaryAction={
                     <>
-                      {lockedCollateral.toFixed(6)} {pool.name}{" "}
+                      {(fathomToken / price).toFixed(6)} {pool.name}{" "}
                       <Box component="span" sx={{ color: "#29C20A" }}>
-                        → {(lockedCollateral - +collateral).toFixed(6)}{" "}
+                        → {(fathomToken / price - +collateral).toFixed(6)}{" "}
                         {pool.name}
                       </Box>
                     </>
@@ -308,7 +308,7 @@ const ClosePositionDialog: FC<ClosePositionProps> = ({ position, onClose }) => {
                   Repay partially
                 </RepayTypeButton>
               </ClosePositionRepayTypeWrapper>
-              <Box sx={{ marginBottom: '20px' }}>
+              <Box sx={{ marginBottom: "20px" }}>
                 <Box
                   sx={{
                     fontWeight: "bold",
@@ -319,7 +319,9 @@ const ClosePositionDialog: FC<ClosePositionProps> = ({ position, onClose }) => {
                 >
                   Total debt:
                 </Box>
-                <Box sx={{ fontWeight: "bold", fontSize: '14px' }}>{debtShare} FXD</Box>
+                <Box sx={{ fontWeight: "bold", fontSize: "14px" }}>
+                  {debtShare} FXD
+                </Box>
               </Box>
               <AppFormInputWrapper>
                 <AppFormLabel>Repaying</AppFormLabel>

@@ -64,7 +64,7 @@ export const Menu: FC<ItemPropsType> = ({ open, isMobile }) => {
 
   const { showText } = useShowText(open);
 
-  const BorrowIcon = useCallback(
+  const FxdIcon = useCallback(
     () => (
       <Icon>
         <img
@@ -102,9 +102,9 @@ export const Menu: FC<ItemPropsType> = ({ open, isMobile }) => {
 
   const appMenuItems = [
     {
-      name: "Borrow",
+      name: "FXD",
       link: "/",
-      Icon: BorrowIcon,
+      Icon: FxdIcon,
       isActive: isDashboardActive,
       showText: isMobile ? false: showText,
     },

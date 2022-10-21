@@ -111,11 +111,11 @@ export const ClosePositionButton = styled(
   MuiButton,
   {}
 )<ToggleDrawerButtonProps>(({ theme, open }) => ({
-  border: "0.7px solid #009E92",
+  border: "0.7px solid #43FFF1",
   borderRadius: "8px",
   background: "transparent",
   padding: "8px 12px",
-  color: "#B3FFF9",
+  color: "#43FFF1",
   fontSize: "13px",
   lineHeight: "16px",
   height: "32px",
