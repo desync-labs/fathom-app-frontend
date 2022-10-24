@@ -1,4 +1,4 @@
-import {
+import React, {
   FC,
   ReactNode,
   useCallback,
@@ -35,6 +35,8 @@ import {
 } from "components/AppComponents/AppButton/AppButton";
 import { AppList } from "components/AppComponents/AppList/AppList";
 import {
+  ClosePositionError,
+  ClosePositionErrorMessage,
   OpenPositionLabel,
   OpenPositionValue,
   OpenPositionWrapper,
@@ -110,33 +112,28 @@ const ClosePositionDialog: FC<ClosePositionProps> = ({ position, onClose }) => {
     [position.pool, poolStore]
   );
 
-  const debtShare = useMemo(
-    () => position.debtShare.div(Constants.WeiPerWad).toNumber(),
-    [position]
-  );
-
   const lockedCollateral = useMemo(
     () => position.lockedCollateral.div(Constants.WeiPerWad).toNumber(),
     [position]
   );
 
   const getBalance = useCallback(async () => {
-    let balance = await positionStore.balanceStablecoin(account);
+    const balance = (await positionStore.balanceStablecoin(account)) || 0;
     setBalance(balance!);
-  }, [positionStore, account, pool, setBalance]);
+  }, [positionStore, account, setBalance]);
 
   const handleOnOpen = useCallback(async () => {
     const priceWithSafetyMargin = await poolStore.getPriceWithSafetyMargin(
       pool
     );
+
     setType(ClosingType.Full);
     setPrice(priceWithSafetyMargin);
-    setFathomToken(debtShare);
-    setCollateral(debtShare / priceWithSafetyMargin);
+    setFathomToken(priceWithSafetyMargin * lockedCollateral);
+    setCollateral(lockedCollateral);
   }, [
     pool,
     poolStore,
-    debtShare,
     lockedCollateral,
     setType,
     setPrice,
@@ -147,10 +144,16 @@ const ClosePositionDialog: FC<ClosePositionProps> = ({ position, onClose }) => {
   useEffect(() => {
     getBalance();
     handleOnOpen();
-  }, [handleOnOpen, getBalance]);
+  }, [getBalance, handleOnOpen]);
+
+  useEffect(() => {
+    balance / 10 ** 18 < fathomToken
+      ? setBalanceError(true)
+      : setBalanceError(false);
+  }, [fathomToken, balance]);
 
   const closePosition = useCallback(async () => {
-    setDisableClosePosition(true)
+    setDisableClosePosition(true);
     try {
       await positionStore.partialyClosePosition(
         position,
@@ -161,7 +164,7 @@ const ClosePositionDialog: FC<ClosePositionProps> = ({ position, onClose }) => {
       );
       onClose();
     } catch (e) {}
-    setDisableClosePosition(true)
+    setDisableClosePosition(true);
   }, [
     position,
     pool,
@@ -170,14 +173,16 @@ const ClosePositionDialog: FC<ClosePositionProps> = ({ position, onClose }) => {
     collateral,
     positionStore,
     onClose,
-    setDisableClosePosition
+    setDisableClosePosition,
   ]);
 
   const handleFathomTokenTextFieldChange = useCallback(
     (e: any) => {
+      const maxAllowed = lockedCollateral * price;
       let { value } = e.target;
       value = Number(value);
-      value = value > debtShare ? debtShare : value;
+
+      value = value > maxAllowed ? maxAllowed : value;
 
       if (isNaN(value)) {
         return;
@@ -194,28 +199,37 @@ const ClosePositionDialog: FC<ClosePositionProps> = ({ position, onClose }) => {
       setFathomToken(value);
       setCollateral(value / price);
     },
-    [price, balance, debtShare, setFathomToken, setCollateral, setBalanceError]
+    [
+      price,
+      lockedCollateral,
+      balance,
+      setFathomToken,
+      setCollateral,
+      setBalanceError,
+    ]
   );
 
   const handleTypeChange = useCallback(
     (type: ClosingType) => {
+      console.log("handleTypeChange");
       if (type === ClosingType.Full) {
-        setFathomToken(debtShare);
+        setFathomToken(lockedCollateral * price);
         setCollateral(lockedCollateral);
       }
-
       setType(type);
     },
-    [setFathomToken, setType, setCollateral, debtShare, lockedCollateral]
+    [price, lockedCollateral, setFathomToken, setType, setCollateral]
   );
 
-  const setMax = useCallback(
-    (balance: number) => {
-      setFathomToken(balance);
-      setCollateral(balance / price);
-    },
-    [price, setFathomToken, setCollateral]
-  );
+  const setMax = useCallback(() => {
+    const walletBalance = balance / 10 ** 18;
+    const maxBalance = lockedCollateral * price;
+
+    const setBalance = walletBalance < maxBalance ? walletBalance : maxBalance;
+
+    setFathomToken(setBalance);
+    setCollateral(setBalance / price);
+  }, [price, lockedCollateral, balance, setFathomToken, setCollateral]);
 
   return (
     <>
@@ -238,9 +252,10 @@ const ClosePositionDialog: FC<ClosePositionProps> = ({ position, onClose }) => {
                   alignItems="flex-start"
                   secondaryAction={
                     <>
-                      {debtShare} FXD{" "}
+                      {(lockedCollateral * price).toFixed(6)} FXD{" "}
                       <Box component="span" sx={{ color: "#29C20A" }}>
-                        → {debtShare - fathomToken} FXD
+                        → {(lockedCollateral * price - fathomToken).toFixed(6)}{" "}
+                        FXD
                       </Box>
                     </>
                   }
@@ -251,9 +266,9 @@ const ClosePositionDialog: FC<ClosePositionProps> = ({ position, onClose }) => {
                   alignItems="flex-start"
                   secondaryAction={
                     <>
-                      {(fathomToken / price).toFixed(6)} {pool.name}{" "}
+                      {lockedCollateral.toFixed(6)} {pool.name}{" "}
                       <Box component="span" sx={{ color: "#29C20A" }}>
-                        → {(fathomToken / price - +collateral).toFixed(6)}{" "}
+                        → {(lockedCollateral - +collateral).toFixed(6)}{" "}
                         {pool.name}
                       </Box>
                     </>
@@ -320,7 +335,7 @@ const ClosePositionDialog: FC<ClosePositionProps> = ({ position, onClose }) => {
                   Total debt:
                 </Box>
                 <Box sx={{ fontWeight: "bold", fontSize: "14px" }}>
-                  {debtShare} FXD
+                  {lockedCollateral * price} FXD
                 </Box>
               </Box>
               <AppFormInputWrapper>
@@ -352,7 +367,7 @@ const ClosePositionDialog: FC<ClosePositionProps> = ({ position, onClose }) => {
                   onChange={handleFathomTokenTextFieldChange}
                 />
                 <AppFormInputLogo src={getTokenLogoURL("FXD")} />
-                <MaxButton onClick={() => setMax(debtShare)}>Max</MaxButton>
+                <MaxButton onClick={() => setMax()}>Max</MaxButton>
               </AppFormInputWrapper>
               <AppFormInputWrapper>
                 <AppFormLabel>Receive</AppFormLabel>
@@ -378,6 +393,21 @@ const ClosePositionDialog: FC<ClosePositionProps> = ({ position, onClose }) => {
                   </OpenPositionValue>
                 </OpenPositionWrapper>
               ) : null}
+              {closingType === ClosingType.Full && balanceError && (
+                <ClosePositionError>
+                  <InfoIcon
+                    sx={{
+                      color: "#CE0000",
+                      float: "left",
+                      marginRight: "10px",
+                    }}
+                  />
+                  <ClosePositionErrorMessage>
+                    Wallet balance is not enough to close this position entirely
+                    (repay in full).
+                  </ClosePositionErrorMessage>
+                </ClosePositionError>
+              )}
               <OpenPositionsButtonsWrapper
                 sx={{ position: "static", float: "right", marginTop: "20px" }}
               >

@@ -28,8 +28,6 @@ export default class FXDProtocolStatsService
         4: closeFactor,
       } = response;
 
-      console.log(response)
-
       const stats: IFXDProtocolStats = {
         fathomSupplyCap: new BigNumber(fathomSupplyCap),
         totalValueLocked: new BigNumber(totalValueLocked),

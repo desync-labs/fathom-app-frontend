@@ -1,5 +1,9 @@
 import { styled } from "@mui/material/styles";
-import { Typography, Box } from "@mui/material";
+import {
+  Typography,
+  Box,
+  Box as MuiBox
+} from "@mui/material";
 
 export const TitleSecondary = styled(Typography)(({ theme }) => ({
   fontSize: "16px",
@@ -87,3 +91,21 @@ export const Fee =  styled(Typography)(({ theme }) => ({
   color: '#6379A1',
   lineHeight: '16px'
 }));
+
+export const ClosePositionError = styled(MuiBox)(({ theme }) => ({
+  display: "flex",
+  flexDirection: "row",
+  alignItems: "flex-start",
+  background: "rgba(51, 13, 13, 0.9)",
+  border: "1px solid #5A0000",
+  borderRadius: "8px",
+  padding: "12px 16px 20px",
+  margin: "20px 0"
+}));
+
+export const ClosePositionErrorMessage = styled(Typography)(({ theme }) => ({
+  fontSize: "14px",
+  lineHeight: "20px",
+  color: "#FF8585",
+}));
+

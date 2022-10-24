@@ -63,7 +63,9 @@ export default class FXDProtocolStatsStore {
     const number = this.protocolStats.fathomSupplyCap.toNumber();
     return this.formatter
       .formatToParts(number)
-      .map((p) => (p.type != "literal" && p.type != "currency" ? p.value : ""))
+      .map((p) =>
+        p.type !== "literal" && p.type !== "currency" ? p.value : ""
+      )
       .join("");
   }
 
