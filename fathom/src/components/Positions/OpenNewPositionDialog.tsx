@@ -104,6 +104,7 @@ const OpenNewPositionDialog: FC<OpenPositionProps> = ({ pool, onClose }) => {
   const [fxdAvailableToBorrow, setFxdAvailableToBorrow] = useState(0);
 
   const [disableOpenPosition, setDisableOpenPosition] = useState(false);
+  const [openPositionLoading, setOpenPositionLoading] = useState(false);
 
   const approvalStatus = useCallback(
     debounce(async () => {
@@ -271,6 +272,7 @@ const OpenNewPositionDialog: FC<OpenPositionProps> = ({ pool, onClose }) => {
 
   const openNewPosition = useCallback(async () => {
     setDisableOpenPosition(true);
+    setOpenPositionLoading(true);
     try {
       await positionStore.openPosition(account, pool, collateral, fathomToken);
       onClose();
@@ -278,6 +280,7 @@ const OpenNewPositionDialog: FC<OpenPositionProps> = ({ pool, onClose }) => {
       console.log(e);
     }
     setDisableOpenPosition(false);
+    setOpenPositionLoading(false);
   }, [
     positionStore,
     onClose,
@@ -286,6 +289,7 @@ const OpenNewPositionDialog: FC<OpenPositionProps> = ({ pool, onClose }) => {
     collateral,
     fathomToken,
     setDisableOpenPosition,
+    setOpenPositionLoading
   ]);
 
   const handleCloseApproveBtn = useCallback(() => {
@@ -517,8 +521,13 @@ const OpenNewPositionDialog: FC<OpenPositionProps> = ({ pool, onClose }) => {
               <ButtonPrimary
                 onClick={openNewPosition}
                 disabled={approveBtn || balanceError || disableOpenPosition}
+                isLoading={openPositionLoading}
               >
-                Open this position
+                {openPositionLoading ? (
+                  <CircularProgress sx={{ color: "#0D1526" }} size={20} />
+                ) : (
+                  "Open this position"
+                )}
               </ButtonPrimary>
             </OpenPositionsButtonsWrapper>
           </Grid>

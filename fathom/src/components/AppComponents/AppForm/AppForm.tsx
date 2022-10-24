@@ -21,11 +21,13 @@ export const AppTextField = styled(
     width: "100%",
     padding: "0 50px 0 35px",
     fontSize: "14px",
-    lineJeight: "20px",
+    lineHeight: "20px",
     color: "#4F658C",
   },
   "& .Mui-error input": {
     color: "#f44336",
+    textFillColor: "#f44336",
+    border: "1px solid #f44336",
   },
   "& input:disabled": {
     cursor: "not-allowed !important",

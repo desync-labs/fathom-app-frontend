@@ -20,36 +20,41 @@ export const ToggleDrawerButton = styled(MuiButton, {
   "&:hover": { background: open ? "#3E3F45" : "#808084" },
 }));
 
-export const ButtonPrimary = styled(
-  MuiButton,
-  {}
-)<ToggleDrawerButtonProps>(({ theme }) => ({
-  borderRadius: "8px",
-  background: "linear-gradient(104.04deg, #B3FFF9 0%, #00DBCB 100%)",
-  padding: "8, 12, 8, 12",
-  fontSize: "13px",
-  lineHeight: "16px",
-  fontWeight: "bold",
-  color: "#00332F",
-  border: "1px solid #B3FFF9",
-  height: "40px",
-  cursor: "pointer",
-  "&:hover": {
-    background: "transparent",
-    color: "#B3FFF9",
+export const ButtonPrimary = styled(MuiButton, {
+  shouldForwardProp: (prop) => prop !== "isLoading",
+})<{ isLoading?: boolean }>(({ theme, isLoading = false }) => {
+  const styles = {
+    borderRadius: "8px",
+    background: "linear-gradient(104.04deg, #B3FFF9 0%, #00DBCB 100%)",
+    padding: "8, 12, 8, 12",
+    fontSize: "13px",
+    lineHeight: "16px",
+    fontWeight: "bold",
+    color: "#00332F",
     border: "1px solid #B3FFF9",
-    svg: {
+    height: "40px",
+    cursor: "pointer",
+    "&:hover": {
+      background: "transparent",
       color: "#B3FFF9",
+      border: "1px solid #B3FFF9",
+      svg: {
+        color: "#B3FFF9",
+      },
     },
-  },
-  "&:disabled": {
-    color: "gray",
-    background: "transparent",
-    borderColor: "gray",
-    cursor: "not-allowed !important",
-    pointerEvents: "all !important",
-  },
-}));
+  };
+
+  if (!isLoading) {
+    // @ts-ignore
+    styles["&:disabled"] = {
+      color: "gray",
+      background: "transparent",
+      borderColor: "gray",
+    };
+  }
+
+  return styles;
+});
 
 export const ButtonSecondary = styled(
   MuiButton,
@@ -84,7 +89,7 @@ export const ButtonSecondary = styled(
 export const OpenPositionButton = styled(
   MuiButton,
   {}
-)<ToggleDrawerButtonProps>(({ theme, open }) => ({
+)(({ theme }) => ({
   borderRadius: "8px",
   background: "linear-gradient(104.04deg, #B3FFF9 0%, #00DBCB 100%)",
   padding: "8, 12, 8, 12",
@@ -110,7 +115,7 @@ export const OpenPositionButton = styled(
 export const ClosePositionButton = styled(
   MuiButton,
   {}
-)<ToggleDrawerButtonProps>(({ theme, open }) => ({
+)(({ theme }) => ({
   border: "0.7px solid #43FFF1",
   borderRadius: "8px",
   background: "transparent",
