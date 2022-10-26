@@ -31,7 +31,7 @@ const OpenPositionsList = observer(() => {
   const [approvalPending, setApprovalPending] = useState(false);
 
   const approvalStatus = useCallback(async () => {
-    const approved = await positionStore.approvalStatusStablecoin(account);
+    const approved = await positionStore.approvalStatusStableCoin(account);
     approved ? setApproveBtn(false) : setApproveBtn(true);
   }, [positionStore, account]);
 
@@ -50,7 +50,7 @@ const OpenPositionsList = observer(() => {
   const approve = useCallback(async () => {
     setApprovalPending(true);
     try {
-      await positionStore.approveStablecoin(account);
+      await positionStore.approveStableCoin(account);
       setApproveBtn(false);
     } catch (e) {
       setApproveBtn(true);

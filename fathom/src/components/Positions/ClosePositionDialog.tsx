@@ -118,7 +118,7 @@ const ClosePositionDialog: FC<ClosePositionProps> = ({ position, onClose }) => {
   );
 
   const getBalance = useCallback(async () => {
-    const balance = (await positionStore.balanceStablecoin(account)) || 0;
+    const balance = (await positionStore.balanceStableCoin(account)) || 0;
     setBalance(balance!);
   }, [positionStore, account, setBalance]);
 
@@ -155,7 +155,7 @@ const ClosePositionDialog: FC<ClosePositionProps> = ({ position, onClose }) => {
   const closePosition = useCallback(async () => {
     setDisableClosePosition(true);
     try {
-      await positionStore.partialyClosePosition(
+      await positionStore.partiallyClosePosition(
         position,
         pool,
         account,

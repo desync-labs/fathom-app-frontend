@@ -1,8 +1,8 @@
 import { makeAutoObservable } from "mobx";
 import { RootStore } from ".";
-import { ITransaction, TransactionStatus } from "./interfaces/ITransaction";
-import { Constants } from "../helpers/Constants";
-import ActiveWeb3TransactionsService from "../services/ActiveWeb3TransactionsService";
+import { ITransaction, TransactionStatus } from "stores/interfaces/ITransaction";
+import { Constants } from "helpers/Constants";
+import ActiveWeb3TransactionsService from "services/ActiveWeb3TransactionsService";
 
 export default class ActiveWeb3Transactions {
   transactions: ITransaction[];

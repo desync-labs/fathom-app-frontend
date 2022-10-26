@@ -50,7 +50,7 @@ export const Menu: FC<ItemPropsType> = ({ open, isMobile }) => {
     [location.pathname]
   );
   const isProposalsActive = useMemo(
-    () => location.pathname === "/proposals",
+    () => location.pathname === "/governance",
     [location.pathname]
   );
   const isMakeProposalActive = useMemo(
@@ -125,7 +125,7 @@ export const Menu: FC<ItemPropsType> = ({ open, isMobile }) => {
           showText: isMobile ? false: showText,
           Icon: DensitySmallIcon,
           isActive: isProposalsActive,
-          link: "/proposals",
+          link: "/governance",
         },
         {
           name: "Make a Proposal",

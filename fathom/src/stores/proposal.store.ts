@@ -1,7 +1,7 @@
 import { RootStore } from ".";
-import IProposalService from "../services/interfaces/IProposalService";
-import IProposal from "../stores/interfaces/IProposal";
-import IVoteCounts from "../stores/interfaces/IVoteCounts";
+import IProposalService from "services/interfaces/IProposalService";
+import IProposal from "stores/interfaces/IProposal";
+import IVoteCounts from "stores/interfaces/IVoteCounts";
 import { makeAutoObservable, runInAction } from "mobx";
 
 export default class ProposalStore {

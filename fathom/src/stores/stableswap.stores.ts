@@ -1,7 +1,7 @@
 import { makeAutoObservable } from "mobx";
 import { RootStore } from ".";
-import IStableSwapService from "../services/interfaces/IStableSwapService";
-import { processRpcError } from "../utils/processRpcError";
+import IStableSwapService from "services/interfaces/IStableSwapService";
+import { processRpcError } from "utils/processRpcError";
 
 export default class StableSwapStore {
   service: IStableSwapService;
