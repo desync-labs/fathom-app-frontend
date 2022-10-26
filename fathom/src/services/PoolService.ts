@@ -126,17 +126,15 @@ export default class PoolService implements IPoolService {
 
   async getUserTokenBalance(
     address: string,
-    pool: ICollateralPool
+    forAddress: string,
   ): Promise<number> {
     try {
       const BEP20 = Web3Utils.getContractInstance(
-        SmartContractFactory.BEP20(pool.collateralContractAddress),
+        SmartContractFactory.BEP20(forAddress),
         this.chainId
       );
 
-      let balance = await BEP20.methods.balanceOf(address).call();
-
-      return balance;
+      return BEP20.methods.balanceOf(address).call();
     } catch (exception) {
       console.log(
         `Error fetching pool information: ${JSON.stringify(exception)}`
@@ -149,7 +147,6 @@ export default class PoolService implements IPoolService {
     console.log("in get dex price");
     try {
       const USDT = SmartContractFactory.USDT(this.chainId).address;
-      //let WXDC = SmartContractFactory.WXDC(this.chainId).address;
 
       const dexPriceOracle = Web3Utils.getContractInstance(
         SmartContractFactory.DexPriceOracle(this.chainId),

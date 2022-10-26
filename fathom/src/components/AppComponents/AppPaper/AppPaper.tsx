@@ -1,7 +1,7 @@
 import { Paper as MuiPaper } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-const AppPaper = styled(
+export const AppPaper = styled(
   MuiPaper,
   {}
 )(({ theme }) => ({
@@ -19,7 +19,7 @@ export const AppSecondaryPaper = styled(
   borderRadius: "8px",
 }));
 
-const AppMainPaper = styled(
+export const AppMainPaper = styled(
   MuiPaper,
   {}
 )(({ theme }) => ({
@@ -28,4 +28,13 @@ const AppMainPaper = styled(
   borderRadius: "12px",
 }));
 
-export { AppPaper, AppMainPaper };
+export const StableSwapPaper = styled(AppPaper)(({ theme }) => ({
+  padding: "24px",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "flex-end",
+  gap: "10px",
+  background: "#131F35",
+  border: "1px solid #253656",
+  borderRadius: "16px",
+}));

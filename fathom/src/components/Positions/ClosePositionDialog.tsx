@@ -37,9 +37,9 @@ import { AppList } from "components/AppComponents/AppList/AppList";
 import {
   ClosePositionError,
   ClosePositionErrorMessage,
-  OpenPositionLabel,
-  OpenPositionValue,
-  OpenPositionWrapper,
+  InfoLabel,
+  InfoValue,
+  InfoWrapper,
   Summary,
   WalletBalance,
 } from "components/AppComponents/AppTypography/AppTypography";
@@ -380,18 +380,18 @@ const ClosePositionDialog: FC<ClosePositionProps> = ({ position, onClose }) => {
                 {/*<MaxButton disabled>Safe Max</MaxButton>*/}
               </AppFormInputWrapper>
               {fathomToken ? (
-                <OpenPositionWrapper>
-                  <OpenPositionLabel>Repaying</OpenPositionLabel>
-                  <OpenPositionValue>{fathomToken} FXD</OpenPositionValue>
-                </OpenPositionWrapper>
+                <InfoWrapper>
+                  <InfoLabel>Repaying</InfoLabel>
+                  <InfoValue>{fathomToken} FXD</InfoValue>
+                </InfoWrapper>
               ) : null}
               {fathomToken ? (
-                <OpenPositionWrapper>
-                  <OpenPositionLabel>Receive</OpenPositionLabel>
-                  <OpenPositionValue>
+                <InfoWrapper>
+                  <InfoLabel>Receive</InfoLabel>
+                  <InfoValue>
                     {collateral} {pool.name}
-                  </OpenPositionValue>
-                </OpenPositionWrapper>
+                  </InfoValue>
+                </InfoWrapper>
               ) : null}
               {closingType === ClosingType.Full && balanceError && (
                 <ClosePositionError>

@@ -117,7 +117,6 @@ export default class StableSwapService implements IStableSwapService {
 
   async approveUsdt(
     address: string,
-    tokenIn: number,
     transactionStore: ActiveWeb3Transactions
   ): Promise<void> {
     try {
@@ -126,7 +125,7 @@ export default class StableSwapService implements IStableSwapService {
         this.chainId
       );
 
-      await USDT.methods
+      return USDT.methods
         .approve(
           SmartContractFactory.AuthtokenAdapter(this.chainId).address,
           Constants.MAX_UINT256
