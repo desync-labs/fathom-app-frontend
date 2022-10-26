@@ -8,35 +8,34 @@ export default class PoolStore {
   service: IPoolService;
 
   constructor(rootStore: RootStore, service: IPoolService) {
-    makeAutoObservable(this);
     this.service = service;
+    makeAutoObservable(this);
   }
 
-  setPool = (_pool: ICollateralPool[]) => {
+  setPool(_pool: ICollateralPool[]){
     this.pools = _pool;
   };
 
-  getPool = (poolId: string) => {
-    const pool = this.pools.filter((pool) => poolId === pool.id)[0];
-    return pool;
-  };
+  getPool(poolId: string) {
+    return this.pools.filter((pool) => poolId === pool.id)[0];
+  }
 
-  fetchPools = async () => {
-    let pools = await this.service.fetchPools();
+  async fetchPools() {
+    const pools = await this.service.fetchPools();
     runInAction(() => {
       this.setPool(pools);
     });
-  };
+  }
 
-  getPriceWithSafetyMargin = async (pool: ICollateralPool) => {
-    return await this.service.getPriceWithSafetyMargin(pool);
-  };
+  async getPriceWithSafetyMargin(pool: ICollateralPool) {
+    return this.service.getPriceWithSafetyMargin(pool);
+  }
 
-  getUserTokenBalance = async (address: string, pool: ICollateralPool) => {
-    return await this.service.getUserTokenBalance(address, pool);
-  };
+  async getUserTokenBalance(address: string, forAddress: string) {
+    return this.service.getUserTokenBalance(address, forAddress);
+  }
 
-  getDexPrice = async (address: string) => {
-    return await this.service.getDexPrice(address);
-  };
+  getDexPrice(address: string) {
+    return this.service.getDexPrice(address);
+  }
 }

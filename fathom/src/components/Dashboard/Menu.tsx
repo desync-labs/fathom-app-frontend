@@ -5,14 +5,14 @@ import {
   DensitySmall as DensitySmallIcon,
 } from "@mui/icons-material";
 import { useLocation } from "react-router-dom";
-import AppMenuItem from "../MenuItem/AppMenuItem";
+import AppMenuItem from "components/MenuItem/AppMenuItem";
 
-import BorrowIconSrc from "../../assets/svg/borrow.svg";
-import BorrowIconActiveSrc from "../../assets/svg/borrow-active.svg";
-import SwapIconSrc from "../../assets/svg/stable-swap.svg";
-import SwapIconActiveSrc from "../../assets/svg/stable-swap-active.svg";
-import StakingIconSrc from "../../assets/svg/staking.svg";
-import StakingIconActiveSrc from "../../assets/svg/staking-active.svg";
+import BorrowIconSrc from "assets/svg/borrow.svg";
+import BorrowIconActiveSrc from "assets/svg/borrow-active.svg";
+import SwapIconSrc from "assets/svg/stable-swap.svg";
+import SwapIconActiveSrc from "assets/svg/stable-swap-active.svg";
+import StakingIconSrc from "assets/svg/staking.svg";
+import StakingIconActiveSrc from "assets/svg/staking-active.svg";
 import { Icon } from "@mui/material";
 
 type ItemPropsType = {

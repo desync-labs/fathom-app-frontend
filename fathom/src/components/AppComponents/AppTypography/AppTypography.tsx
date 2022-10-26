@@ -1,9 +1,5 @@
 import { styled } from "@mui/material/styles";
-import {
-  Typography,
-  Box,
-  Box as MuiBox
-} from "@mui/material";
+import { Typography, Box as MuiBox, Chip as MuiChip } from "@mui/material";
 
 export const TitleSecondary = styled(Typography)(({ theme }) => ({
   fontSize: "16px",
@@ -18,7 +14,7 @@ export const Adjust = styled(Typography)(({ theme }) => ({
   fontWeight: "bold",
   paddingTop: "7px",
   marginLeft: "-10px",
-  color: '#43FFF1'
+  color: "#43FFF1",
 }));
 
 export const NoResults = styled(Typography)(({ theme }) => ({
@@ -48,24 +44,24 @@ export const ErrorMessage = styled(Typography)(({ theme }) => ({
   fontSize: "14px",
 }));
 
-export const OpenPositionLabel = styled(Typography)(({ theme }) => ({
+export const InfoLabel = styled(Typography)(({ theme }) => ({
   fontSize: "14px",
   float: "left",
   color: "#fff",
 }));
 
-export const OpenPositionValue = styled(Typography)(({ theme }) => ({
+export const InfoValue = styled(Typography)(({ theme }) => ({
   fontSize: "14px",
   color: "#fff",
   float: "right",
 }));
 
-export const OpenPositionWrapper = styled(Box)(({ theme }) => ({
+export const InfoWrapper = styled(MuiBox)(({ theme }) => ({
   overflow: "hidden",
   padding: "2px 0",
 }));
 
-export const ApproveBox = styled(Box)(({ theme }) => ({
+export const ApproveBox = styled(MuiBox)(({ theme }) => ({
   background: "#131F35",
   borderRadius: "8px",
   padding: "12px 16px 20px",
@@ -80,16 +76,16 @@ export const ApproveBoxTypography = styled(Typography)(({ theme }) => ({
 }));
 
 export const PoolName = styled(Typography)(({ theme }) => ({
-  fontSize: '14px',
-  color: '#fff',
-  textAlign: 'left',
-  lineHeight: '20px'
+  fontSize: "14px",
+  color: "#fff",
+  textAlign: "left",
+  lineHeight: "20px",
 }));
 
-export const Fee =  styled(Typography)(({ theme }) => ({
-  fontSize: '12px',
-  color: '#6379A1',
-  lineHeight: '16px'
+export const Fee = styled(Typography)(({ theme }) => ({
+  fontSize: "12px",
+  color: "#6379A1",
+  lineHeight: "16px",
 }));
 
 export const ClosePositionError = styled(MuiBox)(({ theme }) => ({
@@ -100,7 +96,7 @@ export const ClosePositionError = styled(MuiBox)(({ theme }) => ({
   border: "1px solid #5A0000",
   borderRadius: "8px",
   padding: "12px 16px 20px",
-  margin: "20px 0"
+  margin: "20px 0",
 }));
 
 export const ClosePositionErrorMessage = styled(Typography)(({ theme }) => ({
@@ -109,3 +105,11 @@ export const ClosePositionErrorMessage = styled(Typography)(({ theme }) => ({
   color: "#FF8585",
 }));
 
+export const WrongNetwork = styled(MuiChip)(({ theme }) => ({
+  background: "#6C1313",
+  border: "1px solid #811717",
+  borderRadius: "8px",
+  color: "#FFFFFF",
+  fontWeight: 'bold',
+  fontSize: '13px'
+}));

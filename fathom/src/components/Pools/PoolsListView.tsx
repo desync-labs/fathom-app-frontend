@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Table,
   TableBody,
@@ -22,7 +22,7 @@ const PoolsListHeaderRow = styled(AppTableHeaderRow)(({ theme }) => ({
   background: "transparent",
   th: {
     textAlign: "left",
-  }
+  },
 }));
 
 const PoolsListView = observer(() => {
@@ -56,7 +56,9 @@ const PoolsListView = observer(() => {
             aria-label="simple table"
           >
             <TableHead>
-              <PoolsListHeaderRow sx={{ "th:first-child": { paddingLeft: '20px' } }}>
+              <PoolsListHeaderRow
+                sx={{ "th:first-child": { paddingLeft: "20px" } }}
+              >
                 <TableCell>Pool</TableCell>
                 <TableCell>Total Borrowed</TableCell>
                 <TableCell>TVL</TableCell>
@@ -79,12 +81,16 @@ const PoolsListView = observer(() => {
           </Table>
         </TableContainer>
       )}
-      {selectedPool && (
-        <CustomizedDialogs
-          pool={selectedPool}
-          onClose={() => setSelectedPool(undefined)}
-        />
-      )}
+      {useMemo(() => {
+        return (
+          selectedPool && (
+            <CustomizedDialogs
+              pool={selectedPool!}
+              onClose={() => setSelectedPool(undefined)}
+            />
+          )
+        );
+      }, [selectedPool])}
     </>
   );
 });

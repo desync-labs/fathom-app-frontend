@@ -33,15 +33,19 @@ export const ButtonPrimary = styled(MuiButton, {
     color: "#00332F",
     border: "1px solid #B3FFF9",
     height: "40px",
-    cursor: "pointer",
     "&:hover": {
       background: "transparent",
       color: "#B3FFF9",
       border: "1px solid #B3FFF9",
+      cursor: 'pointer',
+      pointerEvents: "all !important",
       svg: {
         color: "#B3FFF9",
       },
     },
+    "> .MuiCircularProgress-root": {
+      color: '#1D2D49'
+    }
   };
 
   if (!isLoading) {
@@ -50,6 +54,8 @@ export const ButtonPrimary = styled(MuiButton, {
       color: "gray",
       background: "transparent",
       borderColor: "gray",
+      cursor: "not-allowed !important",
+      pointerEvents: "all !important",
     };
   }
 
@@ -204,3 +210,35 @@ export const RepayTypeButton = styled(MuiButton)(({ theme }) => ({
     border: "1px solid #6379A1",
   },
 }));
+
+export const FathomSwapChangeCurrencyButton = styled(MuiButton)(
+  ({ theme }) => ({
+    width: "40px",
+    height: "40px",
+    background: "#131F35",
+    border: "1px solid #131F35",
+    borderRadius: "8px",
+    left: "calc(50% - 40px/2)",
+    top: "calc(100% - 40px/2 + 6px)",
+    zIndex: "1",
+    position: "absolute",
+  })
+);
+
+export const StableSwapRateSettingsButton = styled(MuiButton)(
+  ({ theme }) => ({
+    float: 'right',
+    '&:hover': {
+      backgroundColor: "transparent"
+    }
+  })
+);
+
+export const QuestionMarkButton = styled(MuiButton)({
+  background: "#061023",
+  border: "2px solid #061023",
+  borderRadius: "8px",
+  cursor: "pointer",
+  width: '20px',
+  height: '20px'
+});

@@ -22,9 +22,9 @@ import { AppList } from "components/AppComponents/AppList/AppList";
 import {
   ApproveBox,
   ApproveBoxTypography,
-  OpenPositionLabel,
-  OpenPositionValue,
-  OpenPositionWrapper,
+  InfoLabel,
+  InfoValue,
+  InfoWrapper,
   Summary,
   WalletBalance,
 } from "components/AppComponents/AppTypography/AppTypography";
@@ -82,8 +82,7 @@ const BootstrapDialogTitle: FC<DialogTitleProps> = ({
 };
 
 const OpenNewPositionDialog: FC<OpenPositionProps> = ({ pool, onClose }) => {
-  const positionStore = useStores().positionStore;
-  const poolStore = useStores().poolStore;
+  const { poolStore, positionStore } = useStores();
 
   const { account, chainId } = useMetaMask()!;
   const [approveBtn, setApproveBtn] = useState(false);
@@ -119,7 +118,7 @@ const OpenNewPositionDialog: FC<OpenPositionProps> = ({ pool, onClose }) => {
   );
 
   const getBalance = useCallback(async () => {
-    const balance = await poolStore.getUserTokenBalance(account, pool);
+    const balance = await poolStore.getUserTokenBalance(account, pool.collateralContractAddress);
     setBalance(balance);
   }, [poolStore, account, pool, setBalance]);
 
@@ -158,7 +157,7 @@ const OpenNewPositionDialog: FC<OpenPositionProps> = ({ pool, onClose }) => {
       setFxdToBeBorrowed(+fathomTokenInput);
 
       // GET USER BALANCE
-      const balance = await poolStore.getUserTokenBalance(account, pool);
+      const balance = await poolStore.getUserTokenBalance(account, pool.collateralContractAddress);
       setBalance(balance);
 
       // CHECK BALANCE
@@ -484,18 +483,18 @@ const OpenNewPositionDialog: FC<OpenPositionProps> = ({ pool, onClose }) => {
               ) : null}
             </AppFormInputWrapper>
             {collateral ? (
-              <OpenPositionWrapper>
-                <OpenPositionLabel>Depositing</OpenPositionLabel>
-                <OpenPositionValue>
+              <InfoWrapper>
+                <InfoLabel>Depositing</InfoLabel>
+                <InfoValue>
                   {collateral} {pool.name}
-                </OpenPositionValue>
-              </OpenPositionWrapper>
+                </InfoValue>
+              </InfoWrapper>
             ) : null}
             {fathomToken ? (
-              <OpenPositionWrapper>
-                <OpenPositionLabel>Receive</OpenPositionLabel>
-                <OpenPositionValue>{fathomToken} FXD</OpenPositionValue>
-              </OpenPositionWrapper>
+              <InfoWrapper>
+                <InfoLabel>Receive</InfoLabel>
+                <InfoValue>{fathomToken} FXD</InfoValue>
+              </InfoWrapper>
             ) : null}
             {approveBtn && !!parseInt(String(balance)) && (
               <ApproveBox>

@@ -1,12 +1,12 @@
 import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
-import { Chip } from "@mui/material";
+import { WrongNetwork } from "components/AppComponents/AppTypography/AppTypography";
 
 export const Web3Status = () => {
   const { error, account } = useWeb3React();
 
   if (error) {
     return (
-      <Chip
+      <WrongNetwork
         color="error"
         label={
           error instanceof UnsupportedChainIdError
@@ -15,7 +15,7 @@ export const Web3Status = () => {
             ? "Wallet Request Permissions Error"
             : "Error"
         }
-      ></Chip>
+      ></WrongNetwork>
     );
   }
 
