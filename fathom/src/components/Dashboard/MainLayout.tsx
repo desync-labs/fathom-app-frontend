@@ -79,19 +79,18 @@ const mdTheme = createTheme({
       main: "#00FFF6",
     },
     secondary: {
-      main: "#808084",
+      main: "#7D91B5",
     },
   },
   typography: {
-    fontFamily: [
-      "Inter, sans-serif"
-    ].join(','),
+    fontFamily: ["Inter, sans-serif"].join(","),
   },
 });
 
 const MainLayout = observer(() => {
   const [open, setOpen] = useState<boolean>(true);
   const { connect, isActive, account, chainId, error } = useMetaMask()!;
+  const [isMobile, setIsMobile] = useState<boolean>(false);
 
   const toggleDrawer = useCallback(() => {
     setOpen(!open);
@@ -102,6 +101,22 @@ const MainLayout = observer(() => {
   useEffect(() => {
     rootStore.setChainId(chainId!);
   }, [chainId, rootStore]);
+
+  const resizeHandler = useCallback(() => {
+    const isMobile = Math.min(window.screen.width, window.screen.height) < 768;
+    setIsMobile(isMobile);
+    if (isMobile) {
+      setOpen(false)
+    } else {
+      setOpen(true)
+    }
+  }, [setIsMobile, setOpen]);
+
+  useEffect(() => {
+    window.addEventListener("resize", resizeHandler);
+    resizeHandler()
+    return () => window.removeEventListener("resize", resizeHandler);
+  }, [resizeHandler]);
 
   return (
     <ThemeProvider theme={mdTheme}>
@@ -151,7 +166,7 @@ const MainLayout = observer(() => {
               background: "linear-gradient(180deg, #071126 0%, #050C1A 100%)",
             }}
           >
-            {open && (
+            {open && !isMobile && (
               <Image
                 duration={0}
                 src={FathomAppLogo}
@@ -163,25 +178,24 @@ const MainLayout = observer(() => {
                 wrapperStyle={{ justifyContent: "left" }}
               />
             )}
-            <ToggleDrawerButton
-              open={open}
-              onClick={toggleDrawer}
-            >
-              {open ? (
-                <ArrowBack sx={{ fontSize: "0.9rem" }} />
-              ) : (
-                <ArrowForward sx={{ fontSize: "0.9rem", color: "#fff" }} />
-              )}
-            </ToggleDrawerButton>
+            {!isMobile && (
+              <ToggleDrawerButton open={open} onClick={toggleDrawer}>
+                {open ? (
+                  <ArrowBack sx={{ fontSize: "0.9rem" }} />
+                ) : (
+                  <ArrowForward sx={{ fontSize: "0.9rem", color: "#fff" }} />
+                )}
+              </ToggleDrawerButton>
+            )}
           </Toolbar>
           <Divider />
           <List
             component="nav"
             sx={{
-              padding: "20px 12px",
+              padding: open && !isMobile ? "20px 12px" : "20px 8px",
             }}
           >
-            <Menu open={open} />
+            <Menu open={open} isMobile={isMobile} />
           </List>
         </Drawer>
         <Box
@@ -206,7 +220,7 @@ const MainLayout = observer(() => {
               <Route path="/staking" element={<StakingView />} />
             </Routes>
           </Container>
-          <Copyright/>
+          <Copyright />
         </Box>
       </Box>
     </ThemeProvider>

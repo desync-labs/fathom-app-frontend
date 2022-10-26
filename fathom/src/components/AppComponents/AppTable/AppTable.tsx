@@ -34,5 +34,8 @@ export const AppTableRow = styled(
     fontWeight: "400",
     fontSize: "14px",
     lineHeight: "20px",
+    borderBottom: "1px solid #1D2D49",
+    height: "50px",
+    padding: 0,
   },
 }));

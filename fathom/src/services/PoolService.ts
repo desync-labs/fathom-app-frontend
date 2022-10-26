@@ -1,15 +1,15 @@
-import { SmartContractFactory } from "../config/SmartContractFactory";
-import ICollatralPool from "../stores/interfaces/ICollatralPool";
-import IPoolService from "./interfaces/IPoolService";
+import { SmartContractFactory } from "config/SmartContractFactory";
+import ICollateralPool from "stores/interfaces/ICollateralPool";
+import IPoolService from "services/interfaces/IPoolService";
 import BigNumber from "bignumber.js";
-import { Constants } from "../helpers/Constants";
-import { Web3Utils } from "../helpers/Web3Utils";
+import { Constants } from "helpers/Constants";
+import { Web3Utils } from "helpers/Web3Utils";
 
 export default class PoolService implements IPoolService {
   chainId = Constants.DEFAULT_CHAINID;
   //Ideally this should be dynamic
-  getPools(): ICollatralPool[] {
-    const pools: ICollatralPool[] = [];
+  getPools(): ICollateralPool[] {
+    const pools: ICollateralPool[] = [];
     pools.push(
       {
         id: "0x5758444300000000000000000000000000000000000000000000000000000000",
@@ -61,9 +61,9 @@ export default class PoolService implements IPoolService {
     return pools;
   }
 
-  async fetchPools(): Promise<ICollatralPool[]> {
+  async fetchPools(): Promise<ICollateralPool[]> {
     console.log("fetching Pools...");
-    const returnPools: ICollatralPool[] = [];
+    const returnPools: ICollateralPool[] = [];
 
     return new Promise(async (resolve, reject) => {
       try {
@@ -106,7 +106,7 @@ export default class PoolService implements IPoolService {
     if (chainId !== undefined) this.chainId = chainId;
   }
 
-  async getPriceWithSafetyMargin(pool: ICollatralPool): Promise<number> {
+  async getPriceWithSafetyMargin(pool: ICollateralPool): Promise<number> {
     try {
       let contract = Web3Utils.getContractInstance(
         SmartContractFactory.PoolConfig(this.chainId)
@@ -126,17 +126,15 @@ export default class PoolService implements IPoolService {
 
   async getUserTokenBalance(
     address: string,
-    pool: ICollatralPool
+    forAddress: string,
   ): Promise<number> {
     try {
       const BEP20 = Web3Utils.getContractInstance(
-        SmartContractFactory.BEP20(pool.collateralContractAddress),
+        SmartContractFactory.BEP20(forAddress),
         this.chainId
       );
 
-      let balance = await BEP20.methods.balanceOf(address).call();
-
-      return balance;
+      return BEP20.methods.balanceOf(address).call();
     } catch (exception) {
       console.log(
         `Error fetching pool information: ${JSON.stringify(exception)}`
@@ -145,19 +143,21 @@ export default class PoolService implements IPoolService {
     }
   }
 
-  async getDexPrice(forAddress:string): Promise<number> {
+  async getDexPrice(forAddress: string): Promise<number> {
     console.log("in get dex price");
     try {
-      let USDT = SmartContractFactory.USDT(this.chainId).address;
-      //let WXDC = SmartContractFactory.WXDC(this.chainId).address;
+      const USDT = SmartContractFactory.USDT(this.chainId).address;
 
       const dexPriceOracle = Web3Utils.getContractInstance(
         SmartContractFactory.DexPriceOracle(this.chainId),
         this.chainId
       );
 
-      let result = await dexPriceOracle.methods.getPrice(USDT, forAddress).call();
-      let price = result[0];
+      const result = await dexPriceOracle.methods
+        .getPrice(USDT, forAddress)
+        .call();
+
+      const price = result[0];
 
       return price;
     } catch (error) {

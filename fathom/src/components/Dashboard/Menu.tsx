@@ -5,18 +5,19 @@ import {
   DensitySmall as DensitySmallIcon,
 } from "@mui/icons-material";
 import { useLocation } from "react-router-dom";
-import AppMenuItem from "../MenuItem/AppMenuItem";
+import AppMenuItem from "components/MenuItem/AppMenuItem";
 
-import BorrowIconSrc from "../../assets/svg/borrow.svg";
-import BorrowIconActiveSrc from "../../assets/svg/borrow-active.svg";
-import SwapIconSrc from "../../assets/svg/stable-swap.svg";
-import SwapIconActiveSrc from "../../assets/svg/stable-swap-active.svg";
-import StakingIconSrc from "../../assets/svg/staking.svg";
-import StakingIconActiveSrc from "../../assets/svg/staking-active.svg";
+import BorrowIconSrc from "assets/svg/borrow.svg";
+import BorrowIconActiveSrc from "assets/svg/borrow-active.svg";
+import SwapIconSrc from "assets/svg/stable-swap.svg";
+import SwapIconActiveSrc from "assets/svg/stable-swap-active.svg";
+import StakingIconSrc from "assets/svg/staking.svg";
+import StakingIconActiveSrc from "assets/svg/staking-active.svg";
 import { Icon } from "@mui/material";
 
 type ItemPropsType = {
   open: boolean;
+  isMobile: boolean;
 };
 
 const useShowText = (open: boolean) => {
@@ -37,7 +38,7 @@ const useShowText = (open: boolean) => {
   };
 };
 
-export const Menu: FC<ItemPropsType> = ({ open }) => {
+export const Menu: FC<ItemPropsType> = ({ open, isMobile }) => {
   const location = useLocation();
 
   const isDashboardActive = useMemo(
@@ -63,7 +64,7 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
 
   const { showText } = useShowText(open);
 
-  const BorrowIcon = useCallback(
+  const FxdIcon = useCallback(
     () => (
       <Icon>
         <img
@@ -101,27 +102,27 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
 
   const appMenuItems = [
     {
-      name: "Borrow",
+      name: "FXD",
       link: "/",
-      Icon: BorrowIcon,
+      Icon: FxdIcon,
       isActive: isDashboardActive,
-      showText,
+      showText: isMobile ? false: showText,
     },
     {
       name: "Stable Swap",
       link: "/swap",
       Icon: SwapIcon,
       isActive: isStableSwapActive,
-      showText,
+      showText: isMobile ? false: showText,
     },
     {
       name: "Governance",
       isActive: false,
-      showText,
+      showText: isMobile ? false: showText,
       items: [
         {
           name: "View all Proposals",
-          showText,
+          showText: isMobile ? false: showText,
           Icon: DensitySmallIcon,
           isActive: isProposalsActive,
           link: "/governance",
@@ -129,7 +130,7 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
         {
           name: "Make a Proposal",
           Icon: AddBoxIcon,
-          showText,
+          showText: isMobile ? false: showText,
           isActive: isMakeProposalActive,
           link: "/proposal/make-proposal",
         },
@@ -137,7 +138,7 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
     },
     {
       name: "Staking",
-      showText,
+      showText: isMobile ? false: showText,
       Icon: Staking,
       isActive: isStakingActive,
       link: "/staking",

@@ -1,9 +1,9 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import { RootStore } from ".";
-import IPositionService from "../services/interfaces/IPositionService";
-import ICollatralPool from "./interfaces/ICollatralPool";
-import IOpenPosition from "./interfaces/IOpenPosition";
-import { processRpcError } from "../utils/processRpcError";
+import IPositionService from "services/interfaces/IPositionService";
+import ICollateralPool from "stores/interfaces/ICollateralPool";
+import IOpenPosition from "stores/interfaces/IOpenPosition";
+import { processRpcError } from "utils/processRpcError";
 import BigNumber from "bignumber.js";
 
 export default class PositionStore {
@@ -17,16 +17,16 @@ export default class PositionStore {
     this.rootStore = rootStore;
   }
 
-  openPosition = async (
+  async openPosition(
     address: string,
-    pool: ICollatralPool,
-    collatral: number,
+    pool: ICollateralPool,
+    collateral: number,
     fathomToken: number
-  ) => {
+  ) {
     if (!address) return;
 
     console.log(
-      `Open position clicked for address ${address}, poolId: ${pool.name}, collatral:${collatral}, fathomToken: ${fathomToken}`
+      `Open position clicked for address ${address}, poolId: ${pool.name}, collatral:${collateral}, fathomToken: ${fathomToken}`
     );
 
     return new Promise(async (resolve, reject) => {
@@ -34,7 +34,7 @@ export default class PositionStore {
         await this.service.openPosition(
           address,
           pool,
-          collatral,
+          collateral,
           fathomToken,
           this.rootStore.transactionStore
         );
@@ -57,18 +57,18 @@ export default class PositionStore {
         reject(e);
       }
     });
-  };
+  }
 
-  closePosition = async (
+  async closePosition(
     positionId: string,
-    pool: ICollatralPool,
+    pool: ICollateralPool,
     address: string,
-    collatral: BigNumber
-  ) => {
+    fathomToken: BigNumber
+  ) {
     if (!address) return;
 
     console.log(
-      `Close position clicked for address ${address}, positionId: ${positionId}, fathomToken: ${collatral}`
+      `Close position clicked for address ${address}, positionId: ${positionId}, fathomToken: ${fathomToken}`
     );
 
     return new Promise(async (resolve, reject) => {
@@ -77,7 +77,7 @@ export default class PositionStore {
           positionId,
           pool,
           address,
-          collatral,
+          fathomToken,
           this.rootStore.transactionStore
         );
         await this.fetchPositions(address);
@@ -98,22 +98,22 @@ export default class PositionStore {
         reject(e);
       }
     });
-  };
+  }
 
-  fetchPositions = async (address: string) => {
+  async fetchPositions(address: string) {
     if (!address) return;
 
     const positions = await this.service.getPositionsWithSafetyBuffer(address);
     runInAction(() => {
       this.setPositions(positions);
     });
-  };
+  }
 
-  setPositions = (_positions: IOpenPosition[]) => {
+  setPositions(_positions: IOpenPosition[]) {
     this.positions = _positions;
-  };
+  }
 
-  approve = async (address: string, pool: ICollatralPool) => {
+  async approve(address: string, pool: ICollateralPool) {
     if (!address) return;
 
     console.log(
@@ -141,13 +141,13 @@ export default class PositionStore {
         reject(e);
       }
     });
-  };
+  }
 
-  approvalStatus = async (
+  async approvalStatus(
     address: string,
     collatral: number,
-    pool: ICollatralPool
-  ) => {
+    pool: ICollateralPool
+  ) {
     if (!address) return;
     console.log(
       `Checking approval status for address ${address}, poolId: ${pool.name}`
@@ -166,9 +166,23 @@ export default class PositionStore {
         err.reason || err.message
       );
     }
-  };
+  }
 
-  approveStablecoin = async (address: string) => {
+  async balanceStableCoin(address: string) {
+    if (!address) return;
+
+    try {
+      return this.service.balanceStablecoin(address);
+    } catch (e) {
+      const err = processRpcError(e);
+      this.rootStore.alertStore.setShowErrorAlert(
+        true,
+        err.reason || err.message
+      );
+    }
+  }
+
+  async approveStableCoin(address: string) {
     if (!address) return;
     console.log(`Open position token approval clicked for address ${address}`);
     try {
@@ -188,9 +202,9 @@ export default class PositionStore {
       );
       throw e;
     }
-  };
+  }
 
-  approvalStatusStablecoin = async (address: string) => {
+  async approvalStatusStableCoin(address: string) {
     console.log(`Checking stablecoin approval status for address ${address}`);
     try {
       if (!address) return;
@@ -202,15 +216,15 @@ export default class PositionStore {
         err.reason || err.message
       );
     }
-  };
+  }
 
-  partialyClosePosition = async (
+  async partiallyClosePosition(
     position: IOpenPosition,
-    pool: ICollatralPool,
+    pool: ICollateralPool,
     address: string,
     fathomToken: number,
-    collater: number
-  ) => {
+    collateral: number
+  ) {
     if (!address) return;
     console.log(
       `Close position clicked for address ${address}, positionId: ${position.id}, fathomToken: ${fathomToken}`
@@ -218,12 +232,12 @@ export default class PositionStore {
 
     return new Promise(async (resolve, reject) => {
       try {
-        await this.service.partialyClosePosition(
+        await this.service.partiallyClosePosition(
           position,
           pool,
           address,
           fathomToken,
-          collater,
+          collateral,
           this.rootStore.transactionStore
         );
         await this.fetchPositions(address);
@@ -243,5 +257,5 @@ export default class PositionStore {
         reject(e);
       }
     });
-  };
+  }
 }

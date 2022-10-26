@@ -1,4 +1,4 @@
-import IAuthService from "./interfaces/IAuthService";
+import IAuthService from "services/interfaces/IAuthService";
 
 export default class AuthService implements IAuthService {
   async authenticate(): Promise<void> {

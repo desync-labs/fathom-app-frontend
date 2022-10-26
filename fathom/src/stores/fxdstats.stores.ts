@@ -1,15 +1,14 @@
-// src/stores/user.store.js
-
 import BigNumber from "bignumber.js";
 import { makeAutoObservable, runInAction } from "mobx";
 import { RootStore } from ".";
-import { Constants } from "../helpers/Constants";
-import IFXDProtocolStatsService from "../services/interfaces/IFXDProtocolStatsService";
-import IFXDProtocolStats from "./interfaces/IFXDProtocolStats";
+import { Constants } from "helpers/Constants";
+import IFXDProtocolStatsService from "services/interfaces/IFXDProtocolStatsService";
+import IFXDProtocolStats from "stores/interfaces/IFXDProtocolStats";
 
 export default class FXDProtocolStatsStore {
   protocolStats: IFXDProtocolStats;
   service: IFXDProtocolStatsService;
+  formatter: Intl.NumberFormat;
 
   constructor(rootStore: RootStore, service: IFXDProtocolStatsService) {
     makeAutoObservable(this);
@@ -21,52 +20,52 @@ export default class FXDProtocolStatsStore {
       liquidationRatio: new BigNumber(0),
       closeFactor: new BigNumber(0),
     };
+    this.formatter = new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    });
   }
 
-  setProtocolStats = (_stats: IFXDProtocolStats) => {
+  setProtocolStats(_stats: IFXDProtocolStats) {
     this.protocolStats = _stats;
-  };
+  }
 
-  fetchProtocolStats = async () => {
-    let stats = await this.service.fetchProtocolStats();
+  async fetchProtocolStats() {
+    const stats = await this.service.fetchProtocolStats();
     runInAction(() => {
       this.setProtocolStats(stats);
     });
-  };
+  }
 
-  getFormattedLiquidationRatio = () => {
+  getFormattedLiquidationRatio() {
     return new BigNumber(this.protocolStats.liquidationRatio)
       .div(Constants.WeiPerRay)
       .toString();
-  };
+  }
 
   getFormattedFXDPriceRatio = () => {
-   let number = new BigNumber(this.protocolStats.fxdPriceFromDex)
-      .div(Constants.WeiPerWad)
-      return `$ ${number.toFormat(2)}`;
-  };
-
-  getFormattedTVL = () => {
-    let number = BigNumber(this.protocolStats.totalValueLocked).div(
+    const number = new BigNumber(this.protocolStats.fxdPriceFromDex).div(
       Constants.WeiPerWad
     );
-    let formattedNumber = this.commarize(number);
-    return `$ ${formattedNumber}`;
+    return `$ ${number.toFormat(2)}`;
   };
 
-  commarize = (number: BigNumber) => {
-    let min = 1e3;
-    if (number.toNumber() >= min) {
-      var units = ["k", "M", "B", "T"];
+  getFormattedTVL() {
+    const number = BigNumber(this.protocolStats.totalValueLocked).div(
+      Constants.WeiPerWad
+    );
+    return this.formatter.format(number.toNumber());
+  }
 
-      var order = Math.floor(Math.log(number.toNumber()) / Math.log(1000));
-
-      var unitname = units[order - 1];
-      var num = Math.floor(number.toNumber() / 1000 ** order);
-
-      // output number remainder + unitname
-      return num + unitname;
-    }
-    return number.toLocaleString();
-  };
+  getFormattedSupply() {
+    const number = this.protocolStats.fathomSupplyCap.toNumber();
+    return this.formatter
+      .formatToParts(number)
+      .map((p) =>
+        p.type !== "literal" && p.type !== "currency" ? p.value : ""
+      )
+      .join("");
+  }
 }

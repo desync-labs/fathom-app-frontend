@@ -1,9 +1,9 @@
 import BigNumber from "bignumber.js";
-import { SmartContractFactory } from "../config/SmartContractFactory";
-import { Constants } from "../helpers/Constants";
-import { Web3Utils } from "../helpers/Web3Utils";
-import IFXDProtocolStats from "../stores/interfaces/IFXDProtocolStats";
-import IFXDProtocolStatsService from "./interfaces/IFXDProtocolStatsService";
+import { SmartContractFactory } from "config/SmartContractFactory";
+import { Constants } from "helpers/Constants";
+import { Web3Utils } from "helpers/Web3Utils";
+import IFXDProtocolStats from "stores/interfaces/IFXDProtocolStats";
+import IFXDProtocolStatsService from "services/interfaces/IFXDProtocolStatsService";
 
 //TODO: Should create a BaseService Class to handle basic setup like chain-id
 export default class FXDProtocolStatsService
@@ -28,7 +28,7 @@ export default class FXDProtocolStatsService
         4: closeFactor,
       } = response;
 
-      let stats: IFXDProtocolStats = {
+      const stats: IFXDProtocolStats = {
         fathomSupplyCap: new BigNumber(fathomSupplyCap),
         totalValueLocked: new BigNumber(totalValueLocked),
         fxdPriceFromDex: new BigNumber(fxdPriceFromDex),

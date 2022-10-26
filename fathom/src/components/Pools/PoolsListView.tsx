@@ -1,19 +1,35 @@
-import React, { useEffect, useState } from "react";
-import { Table, TableBody, TableContainer, Typography } from "@mui/material";
-import { useStores } from "../../stores";
-import useMetaMask from "../../hooks/metamask";
-import { LogLevel, useLogger } from "../../helpers/Logger";
+import React, { useEffect, useMemo, useState } from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  Typography,
+} from "@mui/material";
+import { useStores } from "stores";
+import useMetaMask from "hooks/metamask";
+import { LogLevel, useLogger } from "helpers/Logger";
 import { observer } from "mobx-react";
-import ICollatralPool from "../../stores/interfaces/ICollatralPool";
-import PoolsListItem from "./PoolsListItem";
-import CustomizedDialogs from "../Positions/OpenNewPositionDialog";
-import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
+import ICollateralPool from "stores/interfaces/ICollateralPool";
+import PoolsListItem from "components/Pools/PoolsListItem";
+import CustomizedDialogs from "components/Positions/OpenNewPositionDialog";
+import { styled } from "@mui/material/styles";
+import { AppTableHeaderRow } from "components/AppComponents/AppTable/AppTable";
+import { TitleSecondary } from "components/AppComponents/AppTypography/AppTypography";
+
+const PoolsListHeaderRow = styled(AppTableHeaderRow)(({ theme }) => ({
+  background: "transparent",
+  th: {
+    textAlign: "left",
+  },
+}));
 
 const PoolsListView = observer(() => {
   const poolStore = useStores().poolStore;
   const { account, chainId } = useMetaMask()!;
   const logger = useLogger();
-  const [selectedPool, setSelectedPool] = useState<ICollatralPool>();
+  const [selectedPool, setSelectedPool] = useState<ICollateralPool>();
 
   useEffect(() => {
     if (chainId) {
@@ -29,12 +45,8 @@ const PoolsListView = observer(() => {
   }, [poolStore, account, chainId, logger, setSelectedPool]);
 
   return (
-    <AppPaper
-      sx={{ p: 2, display: "flex", flexDirection: "column", height: 360 }}
-    >
-      {/* <Typography component="h2" variant="h6" color="primary" gutterBottom>
-        Pools
-      </Typography> */}
+    <>
+      <TitleSecondary variant="h2">Availlable Pools</TitleSecondary>
       {poolStore.pools.length === 0 ? (
         <Typography variant="h6">No Pool Available!</Typography>
       ) : (
@@ -43,8 +55,22 @@ const PoolsListView = observer(() => {
             sx={{ minWidth: 500, "& td": { padding: "9px" } }}
             aria-label="simple table"
           >
+            <TableHead>
+              <PoolsListHeaderRow
+                sx={{ "th:first-child": { paddingLeft: "20px" } }}
+              >
+                <TableCell>Pool</TableCell>
+                <TableCell>Total Borrowed</TableCell>
+                <TableCell>TVL</TableCell>
+                <TableCell>Available</TableCell>
+                <TableCell>APR</TableCell>
+                <TableCell>Total APY</TableCell>
+                <TableCell></TableCell>
+              </PoolsListHeaderRow>
+            </TableHead>
+
             <TableBody>
-              {poolStore.pools.map((pool: ICollatralPool) => (
+              {poolStore.pools.map((pool: ICollateralPool) => (
                 <PoolsListItem
                   pool={pool}
                   key={pool.id}
@@ -55,13 +81,17 @@ const PoolsListView = observer(() => {
           </Table>
         </TableContainer>
       )}
-      {selectedPool && (
-        <CustomizedDialogs
-          pool={selectedPool}
-          onClose={() => setSelectedPool(undefined)}
-        />
-      )}
-    </AppPaper>
+      {useMemo(() => {
+        return (
+          selectedPool && (
+            <CustomizedDialogs
+              pool={selectedPool!}
+              onClose={() => setSelectedPool(undefined)}
+            />
+          )
+        );
+      }, [selectedPool])}
+    </>
   );
 });
 

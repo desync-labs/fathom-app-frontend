@@ -1,15 +1,14 @@
-import { SmartContractFactory } from "../config/SmartContractFactory";
-import { Constants } from "../helpers/Constants";
-import { Strings } from "../helpers/Strings";
-import { Web3Utils } from "../helpers/Web3Utils";
+import { SmartContractFactory } from "config/SmartContractFactory";
+import { Constants } from "helpers/Constants";
+import { Strings } from "helpers/Strings";
+import { Web3Utils } from "helpers/Web3Utils";
 import {
   TransactionStatus,
   TransactionType,
-} from "../stores/interfaces/ITransaction";
-import ActiveWeb3Transactions from "../stores/transaction.store";
-import IStableSwapService from "./interfaces/IStableSwapService";
+} from "stores/interfaces/ITransaction";
+import ActiveWeb3Transactions from "stores/transaction.store";
+import IStableSwapService from "services/interfaces/IStableSwapService";
 import { toWei } from "web3-utils";
-
 
 export default class StableSwapService implements IStableSwapService {
   readonly tokenBuffer: number = 5;
@@ -117,7 +116,6 @@ export default class StableSwapService implements IStableSwapService {
 
   async approveUsdt(
     address: string,
-    tokenIn: number,
     transactionStore: ActiveWeb3Transactions
   ): Promise<void> {
     try {
@@ -126,7 +124,7 @@ export default class StableSwapService implements IStableSwapService {
         this.chainId
       );
 
-      await USDT.methods
+      return USDT.methods
         .approve(
           SmartContractFactory.AuthtokenAdapter(this.chainId).address,
           Constants.MAX_UINT256
@@ -165,7 +163,8 @@ export default class StableSwapService implements IStableSwapService {
         )
         .call();
 
-      const buffer = Number(tokenIn) + Number((tokenIn * this.tokenBuffer) / 100);
+      const buffer =
+        Number(tokenIn) + Number((tokenIn * this.tokenBuffer) / 100);
 
       return +allowance > +Constants.WeiPerWad.multipliedBy(buffer);
     } catch (error) {
@@ -201,4 +200,3 @@ export default class StableSwapService implements IStableSwapService {
     if (chainId !== undefined) this.chainId = chainId;
   }
 }
-

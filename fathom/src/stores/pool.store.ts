@@ -1,42 +1,41 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import { RootStore } from ".";
-import IPoolService from "../services/interfaces/IPoolService";
-import ICollatralPool from "./interfaces/ICollatralPool";
+import IPoolService from "services/interfaces/IPoolService";
+import ICollateralPool from "stores/interfaces/ICollateralPool";
 
 export default class PoolStore {
-  pools: ICollatralPool[] = [];
+  pools: ICollateralPool[] = [];
   service: IPoolService;
 
   constructor(rootStore: RootStore, service: IPoolService) {
-    makeAutoObservable(this);
     this.service = service;
+    makeAutoObservable(this);
   }
 
-  setPool = (_pool: ICollatralPool[]) => {
+  setPool(_pool: ICollateralPool[]){
     this.pools = _pool;
   };
 
-  getPool = (poolId: string) => {
-    const pool = this.pools.filter((pool) => poolId === pool.id)[0];
-    return pool;
-  };
+  getPool(poolId: string) {
+    return this.pools.filter((pool) => poolId === pool.id)[0];
+  }
 
-  fetchPools = async () => {
-    let pools = await this.service.fetchPools();
+  async fetchPools() {
+    const pools = await this.service.fetchPools();
     runInAction(() => {
       this.setPool(pools);
     });
-  };
+  }
 
-  getPriceWithSafetyMargin = async (pool: ICollatralPool) => {
-    return await this.service.getPriceWithSafetyMargin(pool);
-  };
+  async getPriceWithSafetyMargin(pool: ICollateralPool) {
+    return this.service.getPriceWithSafetyMargin(pool);
+  }
 
-  getUserTokenBalance = async (address: string, pool: ICollatralPool) => {
-    return await this.service.getUserTokenBalance(address, pool);
-  };
+  async getUserTokenBalance(address: string, forAddress: string) {
+    return this.service.getUserTokenBalance(address, forAddress);
+  }
 
-  getDexPrice = async (address: string) => {
-    return await this.service.getDexPrice(address);
-  };
+  getDexPrice(address: string) {
+    return this.service.getDexPrice(address);
+  }
 }

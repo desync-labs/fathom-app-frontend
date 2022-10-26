@@ -1,43 +1,103 @@
-import { TableRow, TableCell, Typography, Button } from "@mui/material";
-import ICollatralPool from "../../stores/interfaces/ICollatralPool";
+import { Icon, TableCell, Box } from "@mui/material";
+import ICollateralPool from "stores/interfaces/ICollateralPool";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 
+import React, { Dispatch, FC, SetStateAction } from "react";
+import { AppTableRow } from "components/AppComponents/AppTable/AppTable";
+import { styled } from "@mui/material/styles";
+import { OpenPositionButton } from "components/AppComponents/AppButton/AppButton";
+import RedUrl from "assets/svg/combo-shape.svg";
+import GreenUrl from "assets/svg/hart-arrow-up.svg";
+import { getTokenLogoURL } from "utils/tokenLogo";
+import { PoolLogoStack } from "components/AppComponents/AppStack/AppStack";
 import {
-  Dispatch,
-  FC,
-  SetStateAction
-} from "react";
+  Fee,
+  PoolName
+} from "components/AppComponents/AppTypography/AppTypography";
 
 type PoolsListItemPropsType = {
-  pool: ICollatralPool,
-  setSelectedPool: Dispatch<SetStateAction<ICollatralPool | undefined>>
-}
+  pool: ICollateralPool;
+  setSelectedPool: Dispatch<SetStateAction<ICollateralPool | undefined>>;
+};
 
-const PoolsListItem: FC<PoolsListItemPropsType> = ({ pool, setSelectedPool }) => {
+const PoolsListItemTableRow = styled(AppTableRow)(({ theme }) => ({
+  td: {
+    background: "#1D2D49",
+    borderColor: "#121212",
+    padding: "9px 0",
+  },
+  "td:first-child": {
+    borderRadius: "8px 0 0 8px",
+    textAlign: "center",
+  },
+
+  "td:last-child": {
+    borderRadius: "0 8px 8px 0",
+  },
+}));
+
+const TextBox = styled(Box)(({ theme }) => ({
+  float: "left",
+  paddingTop: "2px",
+  marginRight: "7px",
+}));
+
+const IconRed = () => {
   return (
-    <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-      <TableCell align="left" style={{ verticalAlign: "top" }}>
-        <Typography component="h2" variant="h6" color="primary" gutterBottom>
-          {pool.name}
-        </Typography>
-        <Typography variant="body2">
-          Available : {pool.availableFathom}
-        </Typography>
-        <Typography variant="body2">
-          Borrowed : {pool.borrowedFathom}
-        </Typography>
+    <Icon>
+      <img src={RedUrl} alt="borrow-icon" />
+    </Icon>
+  );
+};
+
+const GreenIcon = () => {
+  return (
+    <Icon>
+      <img src={GreenUrl} alt="borrow-icon" />
+    </Icon>
+  );
+};
+
+const PoolsListItem: FC<PoolsListItemPropsType> = ({
+  pool,
+  setSelectedPool,
+}) => {
+  return (
+    <PoolsListItemTableRow
+      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+    >
+      <TableCell>
+        <PoolLogoStack direction="row" spacing={2}>
+          <Box>
+            <img src={getTokenLogoURL(pool.name)} alt={pool.name} width={32} />
+          </Box>
+          <Box>
+            <PoolName>{pool.name}</PoolName>
+            <Fee>Sta. Fee 0.13%</Fee>
+          </Box>
+        </PoolLogoStack>
       </TableCell>
-      <TableCell align="left">
-        <Typography color="text.secondary">Lending APR : 2.60%</Typography>
-        <Typography color="text.secondary">Staking APR : 0.23%</Typography>
-        <Typography color="text.secondary">Total APY : 1.04%</Typography>
+      <TableCell>{pool.borrowedFathom} FXD</TableCell>
+      <TableCell></TableCell>
+      <TableCell>{pool.availableFathom} FXD</TableCell>
+      <TableCell>
+        <TextBox>2.60%</TextBox> <IconRed />
       </TableCell>
-      <TableCell align="left">
-        <Button variant="outlined" color="primary" onClick={
-          () => setSelectedPool(pool)}>
-          Open New Position
-        </Button>
+      <TableCell>
+        <TextBox>0.23%</TextBox> <GreenIcon />
       </TableCell>
-    </TableRow>
+      <TableCell>
+        <TextBox>1.04%</TextBox> <GreenIcon />
+      </TableCell>
+      <TableCell align="right">
+        <OpenPositionButton onClick={() => setSelectedPool(pool)}>
+          <AddCircleIcon
+            sx={{ color: "#005C55", fontSize: "16px", marginRight: "7px" }}
+          />
+          Open Position
+        </OpenPositionButton>
+      </TableCell>
+    </PoolsListItemTableRow>
   );
 };
 

@@ -1,5 +1,5 @@
-import ILockPosition from "../../stores/interfaces/ILockPosition";
-import ActiveWeb3Transactions from "../../stores/transaction.store";
+import ILockPosition from "stores/interfaces/ILockPosition";
+import ActiveWeb3Transactions from "stores/transaction.store";
 
 export default interface IStakingService {
   createLock(

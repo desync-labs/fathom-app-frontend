@@ -1,29 +1,29 @@
 // src/stores/index.js
 import React from "react";
-import ActiveWeb3TransactionsService from "../services/ActiveWeb3TransactionsService";
-import PoolService from "../services/PoolService";
-import PositionService from "../services/PositionService";
-import StableSwapService from "../services/StableSwapService";
-import AlertStore from "./alert.stores";
-import AuthStore from "./auth.store";
-import PoolStore from "./pool.store";
-import PositionStore from "./positions.store";
-import StableSwapStore from "./stableswap.stores";
-import ActiveWeb3Transactions from "./transaction.store";
-import IPoolService from "../services/interfaces/IPoolService";
-import IPositionService from "../services/interfaces/IPositionService";
-import IStableSwapService from "../services/interfaces/IStableSwapService";
-import IActiveWeb3TransactionsService from "../services/interfaces/IActiveWeb3TransactionsService";
-import ProposalStore from "./proposal.store";
-import IProposalService from "../services/interfaces/IProposalService";
-import ProposalService from "../services/ProposalService";
-import StakingStore from "./staking.store";
-import StakingService from "../services/StakingService";
-import IStakingService from "../services/interfaces/IStakingService";
-import IFXDProtocolStatsService from "../services/interfaces/IFXDProtocolStatsService";
-import FXDProtocolStatsService from "../services/FXDProtocolStatsService";
-import FXDProtocolStatsStore from "./fxdstats.stores";
-import { Constants } from "../helpers/Constants";
+import ActiveWeb3TransactionsService from "services/ActiveWeb3TransactionsService";
+import PoolService from "services/PoolService";
+import PositionService from "services/PositionService";
+import StableSwapService from "services/StableSwapService";
+import AlertStore from "stores/alert.stores";
+import AuthStore from "stores/auth.store";
+import PoolStore from "stores/pool.store";
+import PositionStore from "stores/positions.store";
+import StableSwapStore from "stores/stableswap.stores";
+import ActiveWeb3Transactions from "stores/transaction.store";
+import IPoolService from "services/interfaces/IPoolService";
+import IPositionService from "services/interfaces/IPositionService";
+import IStableSwapService from "services/interfaces/IStableSwapService";
+import IActiveWeb3TransactionsService from "services/interfaces/IActiveWeb3TransactionsService";
+import ProposalStore from "stores/proposal.store";
+import IProposalService from "services/interfaces/IProposalService";
+import ProposalService from "services/ProposalService";
+import StakingStore from "stores/staking.store";
+import StakingService from "services/StakingService";
+import IStakingService from "services/interfaces/IStakingService";
+import IFXDProtocolStatsService from "services/interfaces/IFXDProtocolStatsService";
+import FXDProtocolStatsService from "services/FXDProtocolStatsService";
+import FXDProtocolStatsStore from "stores/fxdstats.stores";
+import { Constants } from "helpers/Constants";
 
 export class RootStore {
   /**
