@@ -1,6 +1,7 @@
 import ICollateralPool from "stores/interfaces/ICollateralPool";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
 import ActiveWeb3Transactions from "stores/transaction.store";
+import BigNumber from "bignumber.js";
 
 export default interface IPositionService {
   openPosition(
@@ -18,7 +19,7 @@ export default interface IPositionService {
     positionId: string,
     pool: ICollateralPool,
     address: string,
-    debt: number,
+    lockedCollateral: BigNumber,
     transactionStore: ActiveWeb3Transactions
   ): Promise<void>;
   approve(
@@ -32,9 +33,7 @@ export default interface IPositionService {
     collatral: number,
     transactionStore: ActiveWeb3Transactions
   ): Promise<Boolean>;
-  balanceStablecoin(
-    address: string,
-  ): Promise<number>;
+  balanceStablecoin(address: string): Promise<number>;
   approveStablecoin(
     address: string,
     transactionStore: ActiveWeb3Transactions

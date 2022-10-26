@@ -87,16 +87,16 @@ export default class PositionService implements IPositionService {
   //Create a proxy wallet for a user
   async createProxyWallet(address: string): Promise<string> {
     try {
-      console.log("Crteating a proxy wallet...");
-      let proxyWalletRegistry = Web3Utils.getContractInstance(
+      console.log("Creating a proxy wallet...");
+      const proxyWalletRegistry = Web3Utils.getContractInstance(
         SmartContractFactory.ProxyWalletRegistry(this.chainId),
         this.chainId
       );
+
       await proxyWalletRegistry.methods.build(address).send({ from: address });
-      let proxyWallet = await proxyWalletRegistry.methods
+      return  await proxyWalletRegistry.methods
         .proxies(address)
         .call();
-      return proxyWallet;
     } catch (error) {
       console.error(`Error in createProxyWallet: ${error}`);
       throw error;
@@ -107,14 +107,13 @@ export default class PositionService implements IPositionService {
   async proxyWalletExist(address: string): Promise<string> {
     try {
       console.log(`Check if proxy wallet exist for address: ${address}`);
-      let proxyWalletRegistry = Web3Utils.getContractInstance(
+      const proxyWalletRegistry = Web3Utils.getContractInstance(
         SmartContractFactory.ProxyWalletRegistry(this.chainId),
         this.chainId
       );
-      let proxyWallet = await proxyWalletRegistry.methods
+      return await proxyWalletRegistry.methods
         .proxies(address)
         .call();
-      return proxyWallet;
     } catch (error) {
       console.error(`Error in proxyWalletExist: ${error}`);
       throw error;
@@ -141,12 +140,13 @@ export default class PositionService implements IPositionService {
         1: positionAddresses,
         2: collateralPools,
       } = response;
-      let fetchedPositions: IOpenPosition[] = [];
+      const fetchedPositions: IOpenPosition[] = [];
       let index = 0;
+
       positionIds.forEach((positionId: string) => {
-        let positionAddress = positionAddresses[index];
-        let collateralPool = collateralPools[index];
-        let position = new OpenPosition(
+        const positionAddress = positionAddresses[index];
+        const collateralPool = collateralPools[index];
+        const position = new OpenPosition(
           positionId,
           positionAddress,
           collateralPool
@@ -172,12 +172,12 @@ export default class PositionService implements IPositionService {
       console.log(
         `getting Positions With Safety Buffer For Address ${address}.`
       );
-      let myPositions = await this.getPositionsForAddress(address);
-      let getPositionsContract = Web3Utils.getContractInstance(
+      const myPositions = await this.getPositionsForAddress(address);
+      const getPositionsContract = Web3Utils.getContractInstance(
         SmartContractFactory.GetPositions(this.chainId),
         this.chainId
       );
-      let response = await getPositionsContract.methods
+      const response = await getPositionsContract.methods
         .getPositionWithSafetyBuffer(
           SmartContractFactory.PositionManager(this.chainId).address,
           1,
@@ -200,10 +200,10 @@ export default class PositionService implements IPositionService {
         _positionLTVs: ltvs,
       } = response;
 
-      let fetchedPositions: IOpenPosition[] = [];
+      const fetchedPositions: IOpenPosition[] = [];
       let index = 0;
       positionAddresses.forEach((positionAddress: string) => {
-        let position = myPositions.filter(
+        const position = myPositions.filter(
           (pos) => pos.address === positionAddress
         )[0] as IOpenPosition;
 
@@ -230,15 +230,16 @@ export default class PositionService implements IPositionService {
     positionId: string,
     pool: ICollateralPool,
     address: string,
-    debt: number,
+    lockedCollateral: BigNumber,
     transactionStore: ActiveWeb3Transactions
   ): Promise<void> {
     try {
       console.log(`Closing position for position id ${positionId}.`);
-      let proxyWalletaddress = await this.proxyWalletExist(address);
+      const proxyWalletAddress = await this.proxyWalletExist(address);
+
       const wallet = Web3Utils.getContractInstanceFrom(
         SmartContractFactory.proxyWallet.abi,
-        proxyWalletaddress,
+        proxyWalletAddress,
         this.chainId
       );
 
@@ -247,17 +248,18 @@ export default class PositionService implements IPositionService {
           ["address"],
           [address]
         );
-      let jsonInterface = SmartContractFactory.FathomStablecoinProxyAction(
+
+      const jsonInterface = SmartContractFactory.FathomStablecoinProxyAction(
         this.chainId
       ).abi.filter((abi) => abi.name === "wipeAllAndUnlockToken")[0];
 
-      let wipeAllAndUnlockTokenCall =
+      const wipeAllAndUnlockTokenCall =
         Web3Utils.getWeb3Instance().eth.abi.encodeFunctionCall(jsonInterface, [
           SmartContractFactory.PositionManager(this.chainId).address,
           pool.CollateralTokenAdapterAddress,
           SmartContractFactory.StablecoinAdapter(this.chainId).address,
           positionId,
-          toWei(debt.toString(), "ether"),
+          lockedCollateral.toString(),
           encodedResult,
         ]);
 
@@ -295,21 +297,21 @@ export default class PositionService implements IPositionService {
   ): Promise<void> {
     try {
       console.log(`Closing position for position id ${position.id}.`);
-      let proxyWalletaddress = await this.proxyWalletExist(address);
+      const proxyWalletAddress = await this.proxyWalletExist(address);
       const wallet = Web3Utils.getContractInstanceFrom(
         SmartContractFactory.proxyWallet.abi,
-        proxyWalletaddress,
+        proxyWalletAddress,
         this.chainId
       );
       const encodedResult = Web3Utils.getWeb3Instance(
         this.chainId
       ).eth.abi.encodeParameters(["address"], [address]);
 
-      let jsonInterface = SmartContractFactory.FathomStablecoinProxyAction(
+      const jsonInterface = SmartContractFactory.FathomStablecoinProxyAction(
         this.chainId
       ).abi.filter((abi) => abi.name === "wipeAndUnlockToken")[0];
 
-      let wipeAndUnlockTokenCall = Web3Utils.getWeb3Instance(
+      const wipeAndUnlockTokenCall = Web3Utils.getWeb3Instance(
         this.chainId
       ).eth.abi.encodeFunctionCall(jsonInterface, [
         SmartContractFactory.PositionManager(this.chainId).address,
@@ -405,7 +407,7 @@ export default class PositionService implements IPositionService {
         this.chainId
       );
 
-      let allowance = await BEP20.methods
+      const allowance = await BEP20.methods
         .allowance(address, proxyWalletaddress)
         .call();
 
@@ -421,10 +423,10 @@ export default class PositionService implements IPositionService {
     transactionStore: ActiveWeb3Transactions
   ): Promise<void> {
     try {
-      let proxyWalletaddress = await this.proxyWalletExist(address);
+      let proxyWalletAddress = await this.proxyWalletExist(address);
 
-      if (proxyWalletaddress === Constants.ZERO_ADDRESS) {
-        proxyWalletaddress = await this.createProxyWallet(address);
+      if (proxyWalletAddress === Constants.ZERO_ADDRESS) {
+        proxyWalletAddress = await this.createProxyWallet(address);
       }
 
       const fathomStableCoin = Web3Utils.getContractInstance(
@@ -433,7 +435,7 @@ export default class PositionService implements IPositionService {
       );
 
       await fathomStableCoin.methods
-        .approve(proxyWalletaddress, Constants.MAX_UINT256)
+        .approve(proxyWalletAddress, Constants.MAX_UINT256)
         .send({ from: address })
         .on("transactionHash", (hash: any) => {
           transactionStore.addTransaction({
@@ -478,7 +480,7 @@ export default class PositionService implements IPositionService {
         this.chainId
       );
 
-      let allowance = await fathomStableCoin.methods
+      const allowance = await fathomStableCoin.methods
         .allowance(address, proxyWalletaddress)
         .call();
 

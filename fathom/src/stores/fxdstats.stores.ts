@@ -68,20 +68,4 @@ export default class FXDProtocolStatsStore {
       )
       .join("");
   }
-
-  commarize(number: BigNumber) {
-    let min = 1e3;
-    if (number.toNumber() >= min) {
-      var units = ["k", "M", "B", "T"];
-
-      var order = Math.floor(Math.log(number.toNumber()) / Math.log(1000));
-
-      var unitname = units[order - 1];
-      var num = Math.floor(number.toNumber() / 1000 ** order);
-
-      // output number remainder + unitname
-      return num + unitname;
-    }
-    return number.toLocaleString();
-  }
 }

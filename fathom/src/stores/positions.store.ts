@@ -4,6 +4,7 @@ import IPositionService from "services/interfaces/IPositionService";
 import ICollateralPool from "stores/interfaces/ICollateralPool";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
 import { processRpcError } from "utils/processRpcError";
+import BigNumber from "bignumber.js";
 
 export default class PositionStore {
   positions: IOpenPosition[] = [];
@@ -16,16 +17,16 @@ export default class PositionStore {
     this.rootStore = rootStore;
   }
 
-  openPosition = async (
+  async openPosition(
     address: string,
     pool: ICollateralPool,
-    collatral: number,
+    collateral: number,
     fathomToken: number
-  ) => {
+  ) {
     if (!address) return;
 
     console.log(
-      `Open position clicked for address ${address}, poolId: ${pool.name}, collatral:${collatral}, fathomToken: ${fathomToken}`
+      `Open position clicked for address ${address}, poolId: ${pool.name}, collatral:${collateral}, fathomToken: ${fathomToken}`
     );
 
     return new Promise(async (resolve, reject) => {
@@ -33,7 +34,7 @@ export default class PositionStore {
         await this.service.openPosition(
           address,
           pool,
-          collatral,
+          collateral,
           fathomToken,
           this.rootStore.transactionStore
         );
@@ -56,14 +57,14 @@ export default class PositionStore {
         reject(e);
       }
     });
-  };
+  }
 
-  closePosition = async (
+  async closePosition(
     positionId: string,
     pool: ICollateralPool,
     address: string,
-    fathomToken: number
-  ) => {
+    fathomToken: BigNumber
+  ) {
     if (!address) return;
 
     console.log(
@@ -97,22 +98,22 @@ export default class PositionStore {
         reject(e);
       }
     });
-  };
+  }
 
-  fetchPositions = async (address: string) => {
+  async fetchPositions(address: string) {
     if (!address) return;
 
     const positions = await this.service.getPositionsWithSafetyBuffer(address);
     runInAction(() => {
       this.setPositions(positions);
     });
-  };
+  }
 
-  setPositions = (_positions: IOpenPosition[]) => {
+  setPositions(_positions: IOpenPosition[]) {
     this.positions = _positions;
-  };
+  }
 
-  approve = async (address: string, pool: ICollateralPool) => {
+  async approve(address: string, pool: ICollateralPool) {
     if (!address) return;
 
     console.log(
@@ -140,13 +141,13 @@ export default class PositionStore {
         reject(e);
       }
     });
-  };
+  }
 
-  approvalStatus = async (
+  async approvalStatus(
     address: string,
     collatral: number,
     pool: ICollateralPool
-  ) => {
+  ) {
     if (!address) return;
     console.log(
       `Checking approval status for address ${address}, poolId: ${pool.name}`
@@ -165,9 +166,9 @@ export default class PositionStore {
         err.reason || err.message
       );
     }
-  };
+  }
 
-  balanceStablecoin = async (address: string) => {
+  async balanceStableCoin(address: string) {
     if (!address) return;
 
     try {
@@ -179,9 +180,9 @@ export default class PositionStore {
         err.reason || err.message
       );
     }
-  };
+  }
 
-  approveStablecoin = async (address: string) => {
+  async approveStableCoin(address: string) {
     if (!address) return;
     console.log(`Open position token approval clicked for address ${address}`);
     try {
@@ -201,9 +202,9 @@ export default class PositionStore {
       );
       throw e;
     }
-  };
+  }
 
-  approvalStatusStablecoin = async (address: string) => {
+  async approvalStatusStableCoin(address: string) {
     console.log(`Checking stablecoin approval status for address ${address}`);
     try {
       if (!address) return;
@@ -215,15 +216,15 @@ export default class PositionStore {
         err.reason || err.message
       );
     }
-  };
+  }
 
-  partialyClosePosition = async (
+  async partiallyClosePosition(
     position: IOpenPosition,
     pool: ICollateralPool,
     address: string,
     fathomToken: number,
-    collater: number
-  ) => {
+    collateral: number
+  ) {
     if (!address) return;
     console.log(
       `Close position clicked for address ${address}, positionId: ${position.id}, fathomToken: ${fathomToken}`
@@ -236,7 +237,7 @@ export default class PositionStore {
           pool,
           address,
           fathomToken,
-          collater,
+          collateral,
           this.rootStore.transactionStore
         );
         await this.fetchPositions(address);
@@ -256,5 +257,5 @@ export default class PositionStore {
         reject(e);
       }
     });
-  };
+  }
 }

@@ -1,7 +1,7 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import { RootStore } from ".";
-import IStakingService from "../services/interfaces/IStakingService";
-import ILockPosition from "./interfaces/ILockPosition";
+import IStakingService from "services/interfaces/IStakingService";
+import ILockPosition from "stores/interfaces/ILockPosition";
 
 export default class StakingStore {
   lockPositions: ILockPosition[] = [];
@@ -128,8 +128,6 @@ export default class StakingStore {
         this.rootStore.transactionStore
       );
 
-
-
       //      await this.fetchAll(account,chainId)
     } catch (e) {
       this.rootStore.alertStore.setShowErrorAlert(
@@ -234,7 +232,7 @@ export default class StakingStore {
       lockPosition.lockId = lockId;
       this.lockPositions[lockId - 1] = lockPosition;
       this.lockPositions.pop();
-      this.setTotalStakedPosition(this.lockPositions)
+      this.setTotalStakedPosition(this.lockPositions);
     } else {
       this.lockPositions.pop();
     }

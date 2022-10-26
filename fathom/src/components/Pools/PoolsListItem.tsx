@@ -3,17 +3,17 @@ import ICollateralPool from "stores/interfaces/ICollateralPool";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 import React, { Dispatch, FC, SetStateAction } from "react";
-import { AppTableRow } from "../AppComponents/AppTable/AppTable";
+import { AppTableRow } from "components/AppComponents/AppTable/AppTable";
 import { styled } from "@mui/material/styles";
-import { OpenPositionButton } from "../AppComponents/AppButton/AppButton";
+import { OpenPositionButton } from "components/AppComponents/AppButton/AppButton";
 import RedUrl from "assets/svg/combo-shape.svg";
 import GreenUrl from "assets/svg/hart-arrow-up.svg";
-import { getTokenLogoURL } from "../../utils/tokenLogo";
-import { PoolLogoStack } from "../AppComponents/AppStack/AppStack";
+import { getTokenLogoURL } from "utils/tokenLogo";
+import { PoolLogoStack } from "components/AppComponents/AppStack/AppStack";
 import {
   Fee,
   PoolName
-} from "../AppComponents/AppTypography/AppTypography";
+} from "components/AppComponents/AppTypography/AppTypography";
 
 type PoolsListItemPropsType = {
   pool: ICollateralPool;

@@ -1,7 +1,7 @@
-import { Constants } from "../helpers/Constants";
-import { Web3Utils } from "../helpers/Web3Utils";
-import { ITransaction } from "../stores/interfaces/ITransaction";
-import IActiveWeb3TransactionsService from "./interfaces/IActiveWeb3TransactionsService";
+import { Constants } from "helpers/Constants";
+import { Web3Utils } from "helpers/Web3Utils";
+import { ITransaction } from "stores/interfaces/ITransaction";
+import IActiveWeb3TransactionsService from "services/interfaces/IActiveWeb3TransactionsService";
 
 export default class ActiveWeb3TransactionsService
   implements IActiveWeb3TransactionsService
@@ -13,7 +13,7 @@ export default class ActiveWeb3TransactionsService
     console.log(
       `Checking the transaction status for : ${pendingTransaction.hash}`
     );
-    let response = await Web3Utils.getWeb3Instance(
+    const response = await Web3Utils.getWeb3Instance(
       this.chainId
     ).eth.getTransactionReceipt(pendingTransaction.hash);
     console.log(
