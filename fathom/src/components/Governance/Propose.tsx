@@ -364,18 +364,15 @@ const ProposeListView: FC<ProposeListViewProps> = observer(({ onClose }) => {
               ) : (
                 ""
               )}
-              {
-                // vBalance / 10 ** 18 < MINIMUM_V_BALANCE
-                false && (
-                  <WarningBox>
-                    <InfoIcon
-                      sx={{ width: "16px", color: "#F5953D", height: "16px" }}
-                    />
-                    A balance of at least {MINIMUM_V_BALANCE} vFTHM is required
-                    to create a proposal.
-                  </WarningBox>
-                )
-              }
+              {vBalance / 10 ** 18 < MINIMUM_V_BALANCE && (
+                <WarningBox>
+                  <InfoIcon
+                    sx={{ width: "16px", color: "#F5953D", height: "16px" }}
+                  />
+                  A balance of at least {MINIMUM_V_BALANCE} vFTHM is required to
+                  create a proposal.
+                </WarningBox>
+              )}
 
               <FormGroup sx={{ margin: "10px 0 18px 0" }}>
                 <Controller
@@ -386,7 +383,10 @@ const ProposeListView: FC<ProposeListViewProps> = observer(({ onClose }) => {
                     field: { onChange, value },
                     fieldState: { error },
                   }) => (
-                    <FormControl error={!!error} sx={{ '.Mui-error' : { color: '#f44336' } }}>
+                    <FormControl
+                      error={!!error}
+                      sx={{ ".Mui-error": { color: "#f44336" } }}
+                    >
                       <FormControlLabel
                         sx={{
                           marginTop: "10px",
