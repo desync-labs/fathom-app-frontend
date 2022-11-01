@@ -36,11 +36,7 @@ const DashboardContent = observer(() => {
     <Grid container spacing={3}>
       <PageHeader
         title={"FXD"}
-        description={
-          " FXD is an auto-farming stablecoin that earns passive yields for you in\n" +
-          "        the background. Now, instead of paying for loans, you can get loans\n" +
-          "        while earning on your collateral."
-        }
+        description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit. Eget tristique malesuada pulvinar commodo. Euismod massa, dis metus mattis porttitor ac est quis. Ut quis cursus ac nunc, aliquam curabitur nisl amet. Elit etiam dignissim orci. If this is the first-time you’re here, please <a href="/">visit our Whitepaper.</a`}
       />
       <Grid item xs={12}>
         <ProtocolStats />

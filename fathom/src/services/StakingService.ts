@@ -23,13 +23,6 @@ export default class StakingService implements IStakingService {
   ): Promise<void> {
     chainId = chainId || this.chainId;
     if (chainId) {
-      console.log("HERE1");
-      console.log("SmartContractFactory.Staking(this.chainId).address:  ");
-      console.log(SmartContractFactory.Staking(chainId).address);
-
-      console.log("Constants.WeiPerWad.multipliedBy(stakePosition).toString()");
-      console.log(Constants.WeiPerWad.multipliedBy(stakePosition).toString());
-
       return new Promise(async (resolve, reject) => {
         try {
           const Staking = Web3Utils.getContractInstance(

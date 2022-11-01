@@ -21,11 +21,11 @@ const PageHeaderDescription = styled(Box)(({ theme }) => ({
 
 export const PageHeader: FC<PageHeaderType> = ({ title, description }) => {
   return (
-    <Grid item xs={12} md={9} lg={7}>
+    <Grid item xs={12} md={10} lg={8}>
       <PageHeaderTitle variant="h6" gutterBottom>
         {title}
       </PageHeaderTitle>
-      <PageHeaderDescription>{description}</PageHeaderDescription>
+      <PageHeaderDescription dangerouslySetInnerHTML={{__html: description}}></PageHeaderDescription>
     </Grid>
   );
 };

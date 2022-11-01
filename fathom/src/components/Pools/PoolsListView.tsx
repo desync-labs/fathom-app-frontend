@@ -13,10 +13,10 @@ import { LogLevel, useLogger } from "helpers/Logger";
 import { observer } from "mobx-react";
 import ICollateralPool from "stores/interfaces/ICollateralPool";
 import PoolsListItem from "components/Pools/PoolsListItem";
-import CustomizedDialogs from "components/Positions/OpenNewPositionDialog";
+import OpenNewPositionDialog from "components/Positions/OpenNewPositionDialog";
 import { styled } from "@mui/material/styles";
 import { AppTableHeaderRow } from "components/AppComponents/AppTable/AppTable";
-import { TitleSecondary } from "components/AppComponents/AppTypography/AppTypography";
+import { TitleSecondary } from "components/AppComponents/AppBox/AppBox";
 
 const PoolsListHeaderRow = styled(AppTableHeaderRow)(({ theme }) => ({
   background: "transparent",
@@ -46,7 +46,7 @@ const PoolsListView = observer(() => {
 
   return (
     <>
-      <TitleSecondary variant="h2">Availlable Pools</TitleSecondary>
+      <TitleSecondary variant="h2">Available Pools</TitleSecondary>
       {poolStore.pools.length === 0 ? (
         <Typography variant="h6">No Pool Available!</Typography>
       ) : (
@@ -84,7 +84,7 @@ const PoolsListView = observer(() => {
       {useMemo(() => {
         return (
           selectedPool && (
-            <CustomizedDialogs
+            <OpenNewPositionDialog
               pool={selectedPool!}
               onClose={() => setSelectedPool(undefined)}
             />

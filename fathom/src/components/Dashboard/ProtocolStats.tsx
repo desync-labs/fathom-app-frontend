@@ -1,4 +1,4 @@
-import { Grid, Box, Typography, Divider } from "@mui/material";
+import { Grid, Box, Typography } from "@mui/material";
 import { useWeb3React } from "@web3-react/core";
 import { useEffect } from "react";
 import { useStores } from "stores";
@@ -14,16 +14,19 @@ const StatsItem = styled(
   justifyContent: "center",
   alignItems: "center",
   position: "relative",
+  width: "calc(25% - 8px)",
+  background: '#131F35',
+  borderRadius: '8px',
 }));
 
 const ProtocolStatsContainer = styled(
   Grid,
   {}
 )(({ theme }) => ({
-  background: "linear-gradient(180deg, #101D32 7.88%, #1A2D47 113.25%)",
-  borderRadius: "12px",
   height: "92px",
-  marginBottom: '30px'
+  marginBottom: '30px',
+  display: 'flex',
+  gap: '8px'
 }));
 
 const StatsTitle = styled(
@@ -51,12 +54,6 @@ const StatsDescription = styled(
   paddingTop: "7px",
 }));
 
-const ProtocolStatsDivider = styled(Divider)(({ theme }) => ({
-  position: "absolute",
-  right: 0,
-  height: "60%",
-}));
-
 const ProtocolStats = observer(() => {
   const { chainId } = useWeb3React();
   const rootStore = useStores();
@@ -71,36 +68,33 @@ const ProtocolStats = observer(() => {
 
   return (
     <ProtocolStatsContainer container>
-      <StatsItem item xs={3}>
+      <StatsItem item>
         <Box>
-          <StatsTitle variant="subtitle1">Total Supply</StatsTitle>
+          <StatsTitle>Total Supply</StatsTitle>
           <StatsDescription variant="body2">
             {fxdProtocolStatsStore.getFormattedSupply()}
           </StatsDescription>
         </Box>
-        <ProtocolStatsDivider orientation="vertical"></ProtocolStatsDivider>
       </StatsItem>
-      <StatsItem item xs={3}>
+      <StatsItem item>
         <Box>
-          <StatsTitle variant="subtitle1">TVL</StatsTitle>
+          <StatsTitle>TVL</StatsTitle>
           <StatsDescription>
             {fxdProtocolStatsStore.getFormattedTVL()}
           </StatsDescription>
         </Box>
-        <ProtocolStatsDivider orientation="vertical"></ProtocolStatsDivider>
       </StatsItem>
-      <StatsItem item xs={3}>
+      <StatsItem item>
         <Box>
-          <StatsTitle variant="subtitle1">FXD Price</StatsTitle>
+          <StatsTitle>FXD Price</StatsTitle>
           <StatsDescription>
             {fxdProtocolStatsStore.getFormattedFXDPriceRatio()}
           </StatsDescription>
         </Box>
-        <ProtocolStatsDivider orientation="vertical"></ProtocolStatsDivider>
       </StatsItem>
-      <StatsItem item xs={3}>
+      <StatsItem item>
         <Box>
-          <StatsTitle variant="subtitle1">Liquidation Ratio</StatsTitle>
+          <StatsTitle>Liquidation Ratio</StatsTitle>
           <StatsDescription>
             {fxdProtocolStatsStore.getFormattedLiquidationRatio()}
           </StatsDescription>
