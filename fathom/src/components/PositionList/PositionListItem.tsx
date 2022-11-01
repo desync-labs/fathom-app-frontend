@@ -1,6 +1,6 @@
 import { observer } from "mobx-react";
 import { CircularProgress, Grid, TableCell } from "@mui/material";
-import { Adjust } from "components/AppComponents/AppTypography/AppTypography";
+import { Adjust } from "components/AppComponents/AppBox/AppBox";
 import {
   ButtonPrimary,
   ClosePositionButton,

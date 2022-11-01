@@ -113,3 +113,10 @@ export const WrongNetwork = styled(MuiChip)(({ theme }) => ({
   fontWeight: 'bold',
   fontSize: '13px'
 }));
+
+export const MainBox = styled(MuiBox)(({ theme }) => ({
+  background: "linear-gradient(180deg, #071126 0%, #050C1A 100%)",
+  flexGrow: 1,
+  height: "100vh",
+  overflow: "auto",
+}));

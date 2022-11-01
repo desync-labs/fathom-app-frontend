@@ -18,7 +18,7 @@ import {
 import {
   TitleSecondary,
   NoResults,
-} from "components/AppComponents/AppTypography/AppTypography";
+} from "components/AppComponents/AppBox/AppBox";
 import PositionListItem from "components/PositionList/PositionListItem";
 
 const OpenPositionsList = observer(() => {

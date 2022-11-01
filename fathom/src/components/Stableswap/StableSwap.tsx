@@ -24,7 +24,7 @@ import {
   InfoValue,
   InfoWrapper,
   WalletBalance,
-} from "components/AppComponents/AppTypography/AppTypography";
+} from "components/AppComponents/AppBox/AppBox";
 import {
   ButtonPrimary,
   ButtonSecondary,
@@ -319,9 +319,9 @@ const StableSwap = observer(() => {
                   <Box component="span">
                     {inputCurrency === "USDT"
                       ? "1"
-                      : fxdPrice
+                      : fxdPrice && inputCurrency === "USDT"
                       ? 1 / fxdPrice
-                      : null}{" "}
+                      : fxdPrice}{" "}
                     {inputCurrency} ={" "}
                     {outputCurrency === "USDT"
                       ? "1"
