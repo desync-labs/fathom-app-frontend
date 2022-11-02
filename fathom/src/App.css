@@ -3,3 +3,8 @@
 .MuiList-padding.MuiMenu-list {
   background: #253656;
 }
+
+a {
+  color: #5a81ff;
+  text-decoration: none;
+}

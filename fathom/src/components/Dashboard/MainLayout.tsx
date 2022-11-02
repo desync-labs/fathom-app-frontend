@@ -28,18 +28,18 @@ import { Route, Routes } from "react-router-dom";
 import StableSwap from "../Stableswap/StableSwap";
 import Image from "mui-image";
 
-import FathomAppLogo from "../../assets/svg/Fathom-app-logo.svg";
-import { useStores } from "../../stores";
-import { Web3Status } from "../Web3Status/Web3Status";
-import AllProposalsView from "../Governance/ViewAllProposals";
-import ProposalView from "../Governance/Proposal";
-import MakePropose from "../Governance/Propose";
-import StakingView from "../Staking/StakingView";
-import AlertMessages from "../Common/AlertMessages";
-import TransactionStatus from "../Transaction/TransactionStatus";
+import FathomAppLogo from "assets/svg/Fathom-app-logo.svg";
+import { useStores } from "stores";
+import { Web3Status } from "components/Web3Status/Web3Status";
+import AllProposalsView from "components/Governance/ViewAllProposals";
+import ProposalView from "components/Governance/Proposal";
+import StakingView from "components/Staking/StakingView";
+import AlertMessages from "components/Common/AlertMessages";
+import TransactionStatus from "components/Transaction/TransactionStatus";
 import truncateEthAddress from "truncate-eth-address";
-import { Menu } from "./Menu";
-import { ToggleDrawerButton } from "../AppComponents/AppButton/AppButton";
+import { Menu } from "components/Dashboard/Menu";
+import { ToggleDrawerButton } from "components/AppComponents/AppButton/AppButton";
+import { MainBox } from "components/AppComponents/AppBox/AppBox";
 
 const drawerWidth: number = 240;
 
@@ -81,6 +81,15 @@ const mdTheme = createTheme({
     secondary: {
       main: "#7D91B5",
     },
+    info: {
+      main: "#5A81FF",
+    },
+    success: {
+      main: "#3DA329",
+    },
+    error: {
+      main: "#DD3C3C",
+    },
   },
   typography: {
     fontFamily: ["Inter, sans-serif"].join(","),
@@ -106,15 +115,15 @@ const MainLayout = observer(() => {
     const isMobile = Math.min(window.screen.width, window.screen.height) < 768;
     setIsMobile(isMobile);
     if (isMobile) {
-      setOpen(false)
+      setOpen(false);
     } else {
-      setOpen(true)
+      setOpen(true);
     }
   }, [setIsMobile, setOpen]);
 
   useEffect(() => {
     window.addEventListener("resize", resizeHandler);
-    resizeHandler()
+    resizeHandler();
     return () => window.removeEventListener("resize", resizeHandler);
   }, [resizeHandler]);
 
@@ -198,15 +207,7 @@ const MainLayout = observer(() => {
             <Menu open={open} isMobile={isMobile} />
           </List>
         </Drawer>
-        <Box
-          component="main"
-          sx={{
-            background: "linear-gradient(180deg, #071126 0%, #050C1A 100%)",
-            flexGrow: 1,
-            height: "100vh",
-            overflow: "auto",
-          }}
-        >
+        <MainBox component="main">
           <Toolbar />
           <AlertMessages />
           <TransactionStatus />
@@ -215,13 +216,12 @@ const MainLayout = observer(() => {
               <Route path="/" element={<DashboardContent />} />
               <Route path="/swap" element={<StableSwap />} />
               <Route path="/governance" element={<AllProposalsView />} />
-              <Route path="/proposal/make-proposal" element={<MakePropose />} />
               <Route path="/proposal/:_proposalId" element={<ProposalView />} />
               <Route path="/staking" element={<StakingView />} />
             </Routes>
           </Container>
           <Copyright />
-        </Box>
+        </MainBox>
       </Box>
     </ThemeProvider>
   );

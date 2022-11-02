@@ -13,7 +13,7 @@ import { PoolLogoStack } from "components/AppComponents/AppStack/AppStack";
 import {
   Fee,
   PoolName
-} from "components/AppComponents/AppTypography/AppTypography";
+} from "components/AppComponents/AppBox/AppBox";
 
 type PoolsListItemPropsType = {
   pool: ICollateralPool;

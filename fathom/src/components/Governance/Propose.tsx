@@ -1,261 +1,427 @@
-import { useCallback } from "react";
+import React, { FC, useCallback } from "react";
 import {
   Box,
-  TextField,
-  Button,
-  FormGroup,
   FormControlLabel,
+  Switch,
+  DialogContent,
+  Grid,
+  Stack,
+  Icon,
+  FormGroup,
   Checkbox,
-  Typography,
+  FormControl,
 } from "@mui/material";
-import { useStores } from "stores";
 import { observer } from "mobx-react";
-import useMetaMask from "hooks/metamask";
-import { Constants } from "helpers/Constants";
-import { useEffect } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
+import { Controller } from "react-hook-form";
+import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
+import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
+import {
+  AppFormLabel,
+  AppTextField,
+} from "components/AppComponents/AppForm/AppForm";
+import { getTokenLogoURL } from "utils/tokenLogo";
+import { styled } from "@mui/material/styles";
+import useCreateProposal from "hooks/useCreateProposal";
 
-const ProposeListView = observer(() => {
-  const proposeStore = useStores().proposalStore;
-  const { account, chainId } = useMetaMask()!;
+import requiredSrc from "assets/svg/required.svg";
+import MuiInfoIcon from "@mui/icons-material/Info";
+import {
+  ButtonPrimary,
+  ButtonSecondary,
+} from "components/AppComponents/AppButton/AppButton";
 
-  const { handleSubmit, watch, control, reset } = useForm({
-    defaultValues: {
-      withAction: false,
-      descriptionTitle: "",
-      description: "",
-      inputValues: "",
-      calldata: "",
-      targets: "",
-    },
-  });
+export type ProposeListViewProps = {
+  onClose: () => void;
+};
 
-  const withAction = watch("withAction");
+const ProposeLabel = styled(
+  AppFormLabel,
+  {}
+)(({ theme }) => ({
+  float: "none",
+  width: "100%",
+  fontSize: "11px",
+  lineHeight: "18px",
+  color: "#7D91B5",
+  height: "26px",
+  display: "inline-flex",
+  alignItems: "end",
+  padding: 0,
+}));
 
-  useEffect(() => {
-    if (chainId) {
-      setTimeout(() => {
-        proposeStore.getVeBalance(account, chainId);
-      });
-    }
-  }, [account, chainId, proposeStore]);
+const CurrencyBox = styled(Box)(({ theme }) => ({
+  fontSize: "14px",
+  lineHeight: "20px",
+}));
 
-  const onSubmit = useCallback(
-    async (values: Record<string, any>) => {
-      try {
-        if (!chainId) return;
+const BalanceBox = styled(Box)(({ theme }) => ({
+  fontWeight: "bold",
+  fontSize: "20px",
+  lineHeight: "24px",
+}));
 
-        const {
-          descriptionTitle,
-          description,
-          inputValues,
-          calldata,
-          targets,
-          withAction,
-        } = values;
-        const combinedText =
-          descriptionTitle + "    ----------------    " + description;
+const WarningBox = styled(Box)(({ theme }) => ({
+  background: "#452508",
+  border: "1px solid #5C310A",
+  borderRadius: "8px",
+  padding: "8px 16px",
+  gap: "8px",
+  display: "flex",
+  flexDirection: "row",
+  alignItems: "center",
+  color: "#F7B06E",
+  fontSize: "14px",
+}));
 
-        if (withAction) {
-          const valuesArray = inputValues.trim().split(",").map(Number);
-          const calldataArray = calldata.trim().split(",");
-          const targetsArray = targets.trim().split(",");
+const ProposeButtonPrimary = styled(ButtonPrimary)(({ theme }) => ({
+  height: "48px",
+  fontSize: "17px",
+}));
 
-          await proposeStore.createProposal(
-            targetsArray,
-            valuesArray,
-            calldataArray,
-            combinedText,
-            account
-          );
-        } else {
-          await proposeStore.createProposal(
-            [Constants.ZERO_ADDRESS],
-            [0],
-            [Constants.ZERO_ADDRESS],
-            combinedText,
-            account
-          );
-        }
-        reset();
-      } catch (err) {
-        console.log(err);
-      }
-    },
-    [reset, account, chainId, proposeStore]
-  );
+const ProposeButtonSecondary = styled(ButtonSecondary)(({ theme }) => ({
+  height: "48px",
+  fontSize: "17px",
+  color: "#fff",
+  border: "1px solid #324567",
+}));
+
+const MINIMUM_V_BALANCE = 2000;
+
+const formatter = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 3,
+});
+
+const Required = () => (
+  <Icon sx={{ width: "20px", height: "26px" }}>
+    <img alt="staking-icon" src={requiredSrc} />
+  </Icon>
+);
+
+const Optional = () => (
+  <Box
+    component="span"
+    sx={{
+      fontWeight: "bold",
+      fontSize: "12px",
+      lineHeight: "16px",
+      textTransform: "none",
+      color: "#9FADC6",
+    }}
+  >
+    (Optional)
+  </Box>
+);
+
+const InfoIcon: FC<{ sx?: Record<string, any> }> = ({ sx }) => (
+  <MuiInfoIcon
+    sx={{ width: "11px", height: "11px", marginRight: "5px", ...sx }}
+  />
+);
+
+const ProposeListView: FC<ProposeListViewProps> = observer(({ onClose }) => {
+  const { withAction, handleSubmit, control, onSubmit, vBalance } =
+    useCreateProposal(onClose);
+
+  const formatNumber = useCallback((number: number) => {
+    return formatter
+      .formatToParts(number)
+      .map((p) =>
+        p.type !== "literal" && p.type !== "currency" ? p.value : ""
+      )
+      .join("");
+  }, []);
 
   return (
-    <>
-      <AppPaper
-        sx={{
-          p: 2,
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
-        <Typography component="h2" variant="h6" color="primary" gutterBottom>
-          Create Proposal
-        </Typography>
-        <Typography gutterBottom>
-          Your ve token balance is:{" "}
-          {(proposeStore.veBalance / 10 ** 18).toFixed(2)} veFTHM
-        </Typography>
-        <Box
-          component="form"
-          onSubmit={handleSubmit(onSubmit)}
-          sx={{
-            "& .MuiTextField-root": { my: 1, width: "95%" },
-          }}
-          noValidate
-          autoComplete="off"
-        >
-          <FormGroup>
-            <Controller
-              control={control}
-              name="withAction"
-              render={({
-                field: { onChange, value },
-                fieldState: { error },
-              }) => (
-                <FormControlLabel
-                  control={<Checkbox onChange={onChange} checked={!!value} />}
-                  label="Create proposal with action"
+    <AppDialog
+      aria-labelledby="customized-dialog-title"
+      open={true}
+      fullWidth
+      maxWidth="md"
+      color="primary"
+      sx={{ "& .MuiPaper-root": { width: "700px" } }}
+    >
+      <AppDialogTitle id="customized-dialog-title" onClose={onClose}>
+        New Proposal
+      </AppDialogTitle>
+      <DialogContent sx={{ marginTop: "20px" }}>
+        <Grid container padding={"0 8px"} gap={2}>
+          <Grid item xs={12}>
+            <ProposeLabel>Wallet balance</ProposeLabel>
+            <Stack
+              direction="row"
+              justifyContent="start"
+              alignItems="end"
+              spacing={1}
+            >
+              <img src={getTokenLogoURL("FTHM")} alt="vFTHM-Token" width={28} />
+              <BalanceBox component="span">
+                {formatNumber(vBalance / 10 ** 18)}
+              </BalanceBox>
+              <CurrencyBox component="span">vFHTM</CurrencyBox>
+            </Stack>
+          </Grid>
+          <Box
+            component="form"
+            onSubmit={handleSubmit(onSubmit)}
+            noValidate
+            autoComplete="off"
+          >
+            <Grid item xs={12}>
+              <Controller
+                control={control}
+                name="descriptionTitle"
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <FormGroup>
+                    <ProposeLabel>
+                      Title <Required />
+                    </ProposeLabel>
+                    <AppTextField
+                      error={!!error}
+                      id="outlined-textarea"
+                      multiline
+                      rows={1}
+                      placeholder={"Ex: More stream staking rewards"}
+                      value={value}
+                      onChange={onChange}
+                      helperText={error ? "Field Title is required" : ""}
+                    />
+                  </FormGroup>
+                )}
+              />
+              <Controller
+                control={control}
+                name="description"
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <FormGroup>
+                    <ProposeLabel>
+                      Description <Required />
+                    </ProposeLabel>
+                    <AppTextField
+                      error={!!error}
+                      id="outlined-textarea"
+                      multiline
+                      rows={2}
+                      placeholder={
+                        "Ex: Describe how you propose new way in details..."
+                      }
+                      value={value}
+                      onChange={onChange}
+                      helperText={error ? "Field Description is required" : ""}
+                    />
+                  </FormGroup>
+                )}
+              />
+
+              <Controller
+                control={control}
+                name="link"
+                rules={{ required: false }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <FormGroup>
+                    <ProposeLabel>
+                      Discussion / Detail / Forum link <Optional />
+                    </ProposeLabel>
+                    <AppTextField
+                      error={!!error}
+                      id="outlined-textarea"
+                      multiline
+                      rows={1}
+                      placeholder={"Ex: Discord / Twitter / Medium ..."}
+                      value={value}
+                      onChange={onChange}
+                      helperText={
+                        <Stack direction={"row"} alignItems={"center"}>
+                          <InfoIcon />
+                          Forum discussion will be auto-created if this is left
+                          empty
+                        </Stack>
+                      }
+                    />
+                  </FormGroup>
+                )}
+              />
+
+              <FormGroup sx={{ margin: "10px 0 18px 0" }}>
+                <Controller
+                  control={control}
+                  name="withAction"
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
+                    <FormControlLabel
+                      control={<Switch onChange={onChange} checked={!!value} />}
+                      label="Actionable Proposal"
+                    />
+                  )}
                 />
+              </FormGroup>
+
+              {withAction ? (
+                <>
+                  <Controller
+                    control={control}
+                    name="targets"
+                    rules={{ required: true }}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <FormGroup>
+                        <ProposeLabel>Target addresses</ProposeLabel>
+                        <AppTextField
+                          error={!!error}
+                          placeholder={"Ex: ..."}
+                          id="outlined-multiline-flexible"
+                          multiline
+                          value={value}
+                          maxRows={1}
+                          helperText={
+                            error ? (
+                              "Field Target address array is required"
+                            ) : (
+                              <Stack direction={"row"} alignItems={"center"}>
+                                <InfoIcon />
+                                Once this proposal is accepted, it will
+                                automatically call for this smart contract to
+                                execute.
+                              </Stack>
+                            )
+                          }
+                          onChange={onChange}
+                        />
+                      </FormGroup>
+                    )}
+                  />
+
+                  <Controller
+                    control={control}
+                    name="calldata"
+                    rules={{ required: true }}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <FormGroup>
+                        <ProposeLabel>Calldata</ProposeLabel>
+                        <AppTextField
+                          placeholder={"Ex: ..."}
+                          error={!!error}
+                          id="outlined-multiline-static"
+                          multiline
+                          value={value}
+                          maxRows={1}
+                          helperText={
+                            error ? "Field Calldata array is required" : ""
+                          }
+                          onChange={onChange}
+                        />
+                      </FormGroup>
+                    )}
+                  />
+
+                  <Controller
+                    control={control}
+                    name="inputValues"
+                    rules={{ required: true }}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <FormGroup sx={{ marginBottom: "15px" }}>
+                        <ProposeLabel>Values</ProposeLabel>
+                        <AppTextField
+                          error={!!error}
+                          placeholder={"Ex: ..."}
+                          id="outlined-textarea2"
+                          multiline
+                          value={value}
+                          maxRows={1}
+                          helperText={error ? "Field Values is required" : ""}
+                          onChange={onChange}
+                        />
+                      </FormGroup>
+                    )}
+                  />
+                </>
+              ) : (
+                ""
               )}
-            />
-          </FormGroup>
-
-          <Controller
-            control={control}
-            name="descriptionTitle"
-            rules={{ required: true }}
-            render={({ field: { onChange, value }, fieldState: { error } }) => (
-              <TextField
-                error={!!error}
-                id="outlined-textarea"
-                label="Title"
-                multiline
-                rows={1}
-                value={value}
-                onChange={onChange}
-                helperText={error ? "Field Title is required" : ""}
-              />
-            )}
-          />
-          <Controller
-            control={control}
-            name="description"
-            rules={{ required: true }}
-            render={({ field: { onChange, value }, fieldState: { error } }) => (
-              <TextField
-                error={!!error}
-                id="outlined-textarea"
-                label="Description"
-                multiline
-                rows={4}
-                value={value}
-                onChange={onChange}
-                helperText={error ? "Field Description is required" : ""}
-              />
-            )}
-          />
-          {withAction ? (
-            <>
-              <Controller
-                control={control}
-                name="targets"
-                rules={{ required: true }}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                }) => (
-                  <TextField
-                    error={!!error}
-                    id="outlined-multiline-flexible"
-                    label="Target address array"
-                    multiline
-                    value={value}
-                    maxRows={1}
-                    helperText={
-                      error ? "Field Target address array is required" : ""
-                    }
-                    onChange={onChange}
+              {vBalance / 10 ** 18 < MINIMUM_V_BALANCE && (
+                <WarningBox>
+                  <InfoIcon
+                    sx={{ width: "16px", color: "#F5953D", height: "16px" }}
                   />
-                )}
-              />
+                  A balance of at least {MINIMUM_V_BALANCE} vFTHM is required to
+                  create a proposal.
+                </WarningBox>
+              )}
 
-              <Controller
-                control={control}
-                name="inputValues"
-                rules={{ required: true }}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                }) => (
-                  <TextField
-                    error={!!error}
-                    id="outlined-textarea2"
-                    label="Values array"
-                    multiline
-                    value={value}
-                    maxRows={1}
-                    helperText={error ? "Field Values array is required" : ""}
-                    onChange={onChange}
-                  />
-                )}
-              />
-
-              <Controller
-                control={control}
-                name="calldata"
-                rules={{ required: true }}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                }) => (
-                  <TextField
-                    error={!!error}
-                    id="outlined-multiline-static"
-                    label="Calldata array"
-                    multiline
-                    value={value}
-                    maxRows={1}
-                    helperText={error ? "Field Calldata array is required" : ""}
-                    onChange={onChange}
-                  />
-                )}
-              />
-            </>
-          ) : (
-            ""
-          )}
-          {proposeStore.veBalance / 10 ** 18 < 1000 ? (
-            <>
-              <Button
-                variant="outlined"
-                type="submit"
-                disabled={true}
-                sx={{ my: 4 }}
-              >
-                Create Proposal
-              </Button>
-              <Box component="span" sx={{ display: "inline-block", mx: 2 }}>
-                A balance of at least 1000 veFTHM is required to create a
-                proposal.
-              </Box>
-            </>
-          ) : (
-            <>
-              <Button variant="outlined" type="submit" sx={{ my: 3 }}>
-                Create Proposal
-              </Button>
-            </>
-          )}
-        </Box>
-      </AppPaper>
-    </>
+              <FormGroup sx={{ margin: "10px 0 18px 0" }}>
+                <Controller
+                  control={control}
+                  rules={{ required: true }}
+                  name="agreement"
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
+                    <FormControl
+                      error={!!error}
+                      sx={{ ".Mui-error": { color: "#f44336" } }}
+                    >
+                      <FormControlLabel
+                        sx={{
+                          marginTop: "10px",
+                          ".MuiTypography-root": {
+                            fontSize: "14px",
+                            lineHeight: "20px",
+                          },
+                        }}
+                        control={
+                          <Checkbox onChange={onChange} checked={!!value} />
+                        }
+                        label={`I understand that by submitting this proposal, I will deposit ${formatNumber(
+                          MINIMUM_V_BALANCE
+                        )} vFTHM to complete this proposal creation.`}
+                      />
+                    </FormControl>
+                  )}
+                />
+              </FormGroup>
+            </Grid>
+            <Grid item xs={12}>
+              <Grid container spacing={1}>
+                <Grid item xs={4}>
+                  <ProposeButtonSecondary type="button" sx={{ width: "100%" }}>
+                    Save for later
+                  </ProposeButtonSecondary>
+                </Grid>
+                <Grid item xs={8}>
+                  <ProposeButtonPrimary type="submit" sx={{ width: "100%" }}>
+                    Submit proposal
+                  </ProposeButtonPrimary>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Box>
+        </Grid>
+      </DialogContent>
+    </AppDialog>
   );
 });
 

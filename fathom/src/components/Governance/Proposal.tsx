@@ -1,234 +1,331 @@
-import { Constants } from "../../helpers/Constants";
 import {
   Button,
   Typography,
-  Container,
   Grid,
   Box,
   ButtonGroup,
+  Icon,
+  CircularProgress,
 } from "@mui/material";
-import { useEffect, useCallback } from "react";
 import { observer } from "mobx-react";
-import LinearProgress, {
+import MuiLinearProgress, {
   LinearProgressProps,
 } from "@mui/material/LinearProgress";
-import { useStores } from "stores";
-import useMetaMask from "hooks/metamask";
-import { useParams } from "react-router-dom";
 import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
+import useProposalItem from "hooks/useProposalItem";
+import {
+  BackToProposalsButton,
+  VotingEndedButton,
+} from "components/AppComponents/AppButton/AppButton";
+import backSrc from "assets/svg/back.svg";
+import { styled } from "@mui/material/styles";
+import React from "react";
+import {
+  ProposalItemStatus,
+  ImageSrc,
+} from "components/Governance/ViewAllProposalItem";
+
+const BackIcon = () => (
+  <Icon sx={{ height: "21px" }}>
+    <img alt="staking-icon" src={backSrc} />
+  </Icon>
+);
+
+function LinearProgress(props: LinearProgressProps) {
+  return (
+    <Box sx={{ display: "flex", alignItems: "center" }}>
+      <Box sx={{ width: "100%" }}>
+        <MuiLinearProgress variant="determinate" {...props} />
+      </Box>
+    </Box>
+  );
+}
+
+const ProposalTitle = styled(Typography)(({ theme }) => ({
+  fontWeight: "bold",
+  fontSize: "24px",
+  lineHeight: "28px",
+  marginBottom: "20px",
+}));
+
+const TimeslotContainer = styled(Grid)(({ theme }) => ({
+  borderBottom: "1px solid #253656",
+  padding: "20px 24px 30px",
+}));
+
+const TimeslotTitle = styled(Typography)(({ theme }) => ({
+  textTransform: "uppercase",
+  fontWeight: "700",
+  fontSize: "13px",
+  lineHeight: "16px",
+  color: "#7D91B5",
+}));
+
+const TimeslotValue = styled(Typography)(({ theme }) => ({
+  fontSize: "14px",
+  lineHeight: "20px",
+}));
+
+const TimeslotInProgress = styled(Box, {
+  shouldForwardProp: (prop) => prop !== "lessTimeLeft",
+})<{ lessTimeLeft?: boolean; isDone?: boolean }>(
+  ({ theme, lessTimeLeft, isDone }) => {
+    const styles = {
+      color: "#3DA329",
+      fontSize: "14px",
+    };
+
+    if (lessTimeLeft) {
+      styles.color = "#C37022";
+    } else if (isDone) {
+      styles.color = "#fff";
+    }
+
+    return styles;
+  }
+);
+
+const ProposalLabel = styled(Box)(({ theme }) => ({
+  fontWeight: "600",
+  fontSize: "16px",
+  lineHeight: "24px",
+}));
+
+const ProposalDescription = styled(Box)(({ theme }) => ({
+  color: "#9FADC6",
+  fontSize: "14px",
+  lineHeight: "20px",
+  padding: "10px 0",
+}));
+
+const ProposalStatus = styled(Box)(({ theme }) => ({
+  fontWeight: "600",
+  fontSize: "20px",
+  lineHeight: "24px",
+}));
+
+const VotingWrapperBox = styled(Box)(({ theme }) => ({
+  background: "rgba(79, 101, 140, 0.2)",
+  borderRadius: "8px",
+  padding: "12px",
+  marginBottom: "10px",
+  "> div": {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  "> div > p": {
+    color: "#fff",
+  },
+  "> div > p:first-child": {
+    textTransform: "uppercase",
+    fontSize: "15px",
+    fontWeight: "bold",
+  },
+  "> div > p:last-child": {
+    fontSize: "14px",
+  },
+}));
+
+const VoteButtonGroup = styled(ButtonGroup)(({ theme }) => ({
+  width: "100%",
+  height: "48px",
+
+  button: {
+    background: "#324567",
+    width: "33.33%",
+    border: "1px solid #4F658C",
+    fontWeight: "600",
+    fontSize: "17px",
+    lineHeight: "24px",
+    color: "#fff",
+    textTransform: "none",
+
+    ":hover": {
+      border: "1px solid #324567",
+      background: "rgba(79, 101, 140, 0.2)",
+    },
+  },
+}));
 
 const ProposalView = observer(() => {
-  const { account, chainId } = useMetaMask()!;
+  const {
+    votePending,
+    isDone,
+    handleAbstain,
+    handleAgainst,
+    handleFor,
 
-  const { _proposalId } = useParams();
-  const proposeStore = useStores().proposalStore;
+    getTitle,
+    getDescription,
+    toStatus,
 
-  const toStatus = (_num: string) => {
-    return Constants.Status[parseInt(_num)];
-  };
-
-  function LinearProgressWithLabel(
-    props: LinearProgressProps & { value: number }
-  ) {
-    return (
-      <Box sx={{ display: "flex", alignItems: "center" }}>
-        <Box sx={{ width: "100%", mr: 1 }}>
-          <LinearProgress variant="determinate" {...props} />
-        </Box>
-        <Box sx={{ minWidth: 35 }}>
-          <Typography variant="body2" color="text.secondary">{`${Math.round(
-            props.value
-          )}%`}</Typography>
-        </Box>
-      </Box>
-    );
-  }
-
-  function splitIfTitle_title(_string: string) {
-    if (_string) {
-      if (_string.includes("---------------")) {
-        return _string.split("----------------")[0];
-      } else {
-        return "";
-      }
-    } else {
-      return "";
-    }
-  }
-
-  function splitIfTitle(_string: string) {
-    if (_string) {
-      if (_string.includes("---------------")) {
-        return _string.split("----------------")[1];
-      } else {
-        return _string;
-      }
-    } else {
-      return "";
-    }
-  }
-
-  useEffect(() => {
-    if (chainId) {
-      setTimeout(() => {
-        proposeStore.fetchProposals(account);
-        if (typeof _proposalId === "string") {
-          proposeStore.fetchProposal(_proposalId, account);
-          proposeStore.fetchProposalState(_proposalId, account);
-          proposeStore.fetchProposalVotes(_proposalId, account);
-        }
-      });
-    } else {
-      proposeStore.setProposals([]);
-    }
-  }, [_proposalId, account, chainId, proposeStore]);
-
-  const handleFor = useCallback(async () => {
-    try {
-      if (typeof _proposalId === "string") {
-        await proposeStore.castVote(_proposalId, account, "1", chainId);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  }, [_proposalId, proposeStore, account, chainId]);
-
-  const handleAgainst = useCallback(async () => {
-    try {
-      if (typeof _proposalId === "string") {
-        await proposeStore.castVote(_proposalId, account, "0", chainId);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  }, [_proposalId, proposeStore, account, chainId]);
-
-  const handleAbstain = useCallback(async () => {
-    try {
-      if (typeof _proposalId === "string") {
-        await proposeStore.castVote(_proposalId, account, "2", chainId);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  }, [_proposalId, proposeStore, account, chainId]);
+    fetchedProposal,
+    forVotes,
+    abstainVotes,
+    againstVotes,
+    fetchedTotalVotes,
+    fetchedProposalState,
+    back,
+  } = useProposalItem();
 
   return (
-    <>
-      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-        <Grid container spacing={5}>
-          <Grid item xs={8} md={8} lg={9}>
-            <AppPaper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-              {proposeStore.fetchedProposals.length === 0 ? (
-                <>
-                  <Typography component="h2" color="primary" gutterBottom>
-                    ... Searching for Proposal:{" "}
-                  </Typography>
-                  <Typography gutterBottom>{_proposalId}</Typography>
-                </>
-              ) : (
-                <>
-                  <Typography component="h2" color="primary" gutterBottom>
-                    Proposal Id:
-                  </Typography>
-                  <Typography gutterBottom>{_proposalId}</Typography>
-                  <Typography component="h2" color="primary" gutterBottom>
-                    Title:
-                  </Typography>
-
-                  <Typography gutterBottom>
-                    {splitIfTitle_title(
-                      proposeStore.fetchedProposal.description
-                    )}
-                    {/* {proposeStore.fetchedProposal.description}  */}
-                  </Typography>
-                  <Typography component="h2" color="primary" gutterBottom>
-                    Description:
-                  </Typography>
-
-                  <Typography gutterBottom>
-                    {splitIfTitle(proposeStore.fetchedProposal.description)}
-                    {/* {proposeStore.fetchedProposal.description}  */}
-                  </Typography>
-                </>
-              )}
-            </AppPaper>
+    <Grid container spacing={5}>
+      <Grid item xs={12}>
+        <BackToProposalsButton onClick={back}>
+          <BackIcon />
+          Back to All Proposals
+        </BackToProposalsButton>
+      </Grid>
+      <Grid item xs={8} md={8} lg={8}>
+        <AppPaper>
+          <Grid container>
+            <Grid item xs={12} sx={{ padding: "24px 24px 0" }}>
+              <ProposalTitle>
+                {getTitle(fetchedProposal.description)}
+              </ProposalTitle>
+            </Grid>
+            <Grid item xs={12}>
+              <TimeslotContainer container gap={2}>
+                <Grid item xs={3}>
+                  <TimeslotTitle>Submit time:</TimeslotTitle>
+                  <TimeslotValue>2022-09-30 05:12:49</TimeslotValue>
+                </Grid>
+                <Grid item xs={3}>
+                  <TimeslotTitle>Voting starts:</TimeslotTitle>
+                  <TimeslotValue>2022-09-30 05:12:49</TimeslotValue>
+                </Grid>
+                <Grid item xs={3}>
+                  <TimeslotTitle>Voting ends:</TimeslotTitle>
+                  <TimeslotValue>
+                    {isDone ? "in" : null}
+                    <TimeslotInProgress lessTimeLeft={false} component="span">
+                      3d 18h 55m 34s
+                    </TimeslotInProgress>
+                  </TimeslotValue>
+                </Grid>
+              </TimeslotContainer>
+            </Grid>
+            <Grid item xs={12} sx={{ padding: "24px 24px 12px 24px" }}>
+              <ProposalLabel>Description</ProposalLabel>
+              <ProposalDescription>
+                {getDescription(fetchedProposal.description)}
+              </ProposalDescription>
+            </Grid>
+            <Grid item xs={12} sx={{ padding: "12px 24px" }}>
+              <ProposalLabel>Action</ProposalLabel>
+              <ProposalDescription>
+                Lorem ipsum dolor sit amet. Aicies. Luaicira.
+              </ProposalDescription>
+            </Grid>
+            <Grid item xs={12} sx={{ padding: "12px 24px" }}>
+              <ProposalLabel>Discussion</ProposalLabel>
+              <ProposalDescription>
+                <a href="/">Discord / Forum / Medium / etc...</a>
+              </ProposalDescription>
+            </Grid>
+            <Grid item xs={12} sx={{ padding: "12px 24px 24px 24px" }}>
+              <ProposalLabel>Proposer</ProposalLabel>
+              <ProposalDescription>
+                <a href="/">0xe2F4Ba7d9d0aA7f7d39075a4b4AD9c4aa605b9db</a>
+              </ProposalDescription>
+            </Grid>
           </Grid>
+        </AppPaper>
+      </Grid>
 
-          <Grid item xs={3} md={3} lg={3}>
-            <AppPaper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-              <Box sx={{ width: "100%" }}>
-                <Typography gutterBottom>For:</Typography>
-                <LinearProgressWithLabel
-                  variant="determinate"
-                  value={
-                    (100 * proposeStore.fetchedVotes.forVotes) /
-                      proposeStore.fetchedTotalVotes || 0
-                  }
+      <Grid item xs={4} md={4} lg={4}>
+        <AppPaper sx={{ padding: "24px" }}>
+          <Box sx={{ width: "100%" }}>
+            <ProposalStatus>Proposal Status</ProposalStatus>
+            <ProposalItemStatus
+              className={fetchedProposal.status?.toLowerCase()}
+              sx={{ margin: "10px 0" }}
+            >
+              {["Defeated", "Succeeded"].includes(
+                toStatus(fetchedProposalState)
+              ) ? (
+                <img
+                  src={ImageSrc[fetchedProposal.status]}
+                  alt={fetchedProposal.status}
                 />
+              ) : null}
+              {toStatus(fetchedProposalState)}
+            </ProposalItemStatus>
+            <Box sx={{ margin: "30px 0" }}>
+              <VotingWrapperBox>
+                <Box>
+                  <Typography gutterBottom>For</Typography>
+                  <Typography>
+                    {Math.round((100 * forVotes) / fetchedTotalVotes || 0)}%
+                  </Typography>
+                </Box>
 
-                <Typography gutterBottom>Against:</Typography>
-                <LinearProgressWithLabel
+                <LinearProgress
                   variant="determinate"
-                  value={
-                    (100 * proposeStore.fetchedVotes.againstVotes) /
-                      proposeStore.fetchedTotalVotes || 0
-                  }
+                  color={"success"}
+                  value={(100 * forVotes) / fetchedTotalVotes || 0}
                 />
+              </VotingWrapperBox>
 
-                <Typography gutterBottom>Abstains:</Typography>
-                <LinearProgressWithLabel
+              <VotingWrapperBox>
+                <Box>
+                  <Typography gutterBottom>Against</Typography>
+                  <Typography variant="body2" color="">
+                    {Math.round((100 * againstVotes) / fetchedTotalVotes || 0)}%
+                  </Typography>
+                </Box>
+
+                <LinearProgress
                   variant="determinate"
-                  value={
-                    (100 * proposeStore.fetchedVotes.abstainVotes) /
-                      proposeStore.fetchedTotalVotes || 0
-                  }
+                  color={"error"}
+                  value={(100 * againstVotes) / fetchedTotalVotes || 0}
                 />
-              </Box>
-              <Typography component="h2" color="primary" gutterBottom>
-                Proposal Status:
-              </Typography>
-              <Typography gutterBottom>
-                {toStatus(proposeStore.fetchedProposalState)}
-              </Typography>
+              </VotingWrapperBox>
 
-              {proposeStore.fetchedProposalState !== "1" ? (
-                <>
-                  <Typography variant="h6">Voting closed</Typography>
-                  <ButtonGroup
-                    variant="outlined"
-                    aria-label="outlined button group"
-                  >
-                    <Button onClick={handleFor} disabled={true}>
-                      {" "}
-                      For{" "}
-                    </Button>
-                    <Button onClick={handleAgainst} disabled={true}>
-                      Against
-                    </Button>
-                    <Button onClick={handleAbstain} disabled={true}>
-                      Abstain
-                    </Button>
-                  </ButtonGroup>
-                </>
-              ) : (
-                <>
-                  <Typography variant="h6">Cast Vote:</Typography>
-                  <ButtonGroup
-                    variant="outlined"
-                    aria-label="outlined button group"
-                  >
-                    <Button onClick={handleFor}> For </Button>
-                    <Button onClick={handleAgainst}>Against</Button>
-                    <Button onClick={handleAbstain}>Abstain</Button>
-                  </ButtonGroup>
-                </>
-              )}
-            </AppPaper>
-          </Grid>
-        </Grid>
-      </Container>
-    </>
+              <VotingWrapperBox>
+                <Box>
+                  <Typography gutterBottom>Abstains</Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {Math.round((100 * abstainVotes) / fetchedTotalVotes || 0)}%
+                  </Typography>
+                </Box>
+
+                <LinearProgress
+                  variant="determinate"
+                  color={"info"}
+                  value={(100 * abstainVotes) / fetchedTotalVotes || 0}
+                />
+              </VotingWrapperBox>
+            </Box>
+          </Box>
+
+          {fetchedProposalState !== "1" ? (
+            <VotingEndedButton disabled={true}>Voting Ended</VotingEndedButton>
+          ) : (
+            <VoteButtonGroup variant="outlined">
+              <Button onClick={handleFor}>
+                {votePending === "for" ? <CircularProgress size={25} /> : "For"}
+              </Button>
+              <Button onClick={handleAgainst}>
+                {votePending === "against" ? (
+                  <CircularProgress size={25} />
+                ) : (
+                  "Against"
+                )}
+              </Button>
+              <Button onClick={handleAbstain}>
+                {votePending === "abstain" ? (
+                  <CircularProgress size={25} />
+                ) : (
+                  "Abstain"
+                )}
+              </Button>
+            </VoteButtonGroup>
+          )}
+        </AppPaper>
+      </Grid>
+    </Grid>
   );
 });
 

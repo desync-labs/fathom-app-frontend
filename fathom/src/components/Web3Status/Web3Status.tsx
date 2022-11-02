@@ -1,5 +1,5 @@
 import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
-import { WrongNetwork } from "components/AppComponents/AppTypography/AppTypography";
+import { WrongNetwork } from "components/AppComponents/AppBox/AppBox";
 
 export const Web3Status = () => {
   const { error, account } = useWeb3React();
