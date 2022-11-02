@@ -14,7 +14,7 @@ const StatsItem = styled(
   justifyContent: "center",
   alignItems: "center",
   position: "relative",
-  width: "calc(25% - 8px)",
+  width: "calc(33.33% - 8px)",
   background: '#131F35',
   borderRadius: '8px',
 }));
@@ -89,14 +89,6 @@ const ProtocolStats = observer(() => {
           <StatsTitle>FXD Price</StatsTitle>
           <StatsDescription>
             {fxdProtocolStatsStore.getFormattedFXDPriceRatio()}
-          </StatsDescription>
-        </Box>
-      </StatsItem>
-      <StatsItem item>
-        <Box>
-          <StatsTitle>Liquidation Ratio</StatsTitle>
-          <StatsDescription>
-            {fxdProtocolStatsStore.getFormattedLiquidationRatio()}
           </StatsDescription>
         </Box>
       </StatsItem>

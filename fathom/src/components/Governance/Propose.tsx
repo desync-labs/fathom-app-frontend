@@ -28,9 +28,9 @@ import MuiInfoIcon from "@mui/icons-material/Info";
 import {
   ButtonPrimary,
   ButtonSecondary,
-} from "../AppComponents/AppButton/AppButton";
+} from "components/AppComponents/AppButton/AppButton";
 
-type ProposeListViewProps = {
+export type ProposeListViewProps = {
   onClose: () => void;
 };
 
@@ -123,7 +123,7 @@ const InfoIcon: FC<{ sx?: Record<string, any> }> = ({ sx }) => (
 
 const ProposeListView: FC<ProposeListViewProps> = observer(({ onClose }) => {
   const { withAction, handleSubmit, control, onSubmit, vBalance } =
-    useCreateProposal();
+    useCreateProposal(onClose);
 
   const formatNumber = useCallback((number: number) => {
     return formatter
@@ -166,9 +166,6 @@ const ProposeListView: FC<ProposeListViewProps> = observer(({ onClose }) => {
           <Box
             component="form"
             onSubmit={handleSubmit(onSubmit)}
-            sx={{
-              "& .MuiTextField-root": { my: 1, width: "95%" },
-            }}
             noValidate
             autoComplete="off"
           >

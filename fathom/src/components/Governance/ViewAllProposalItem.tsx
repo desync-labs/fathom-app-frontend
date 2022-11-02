@@ -61,7 +61,7 @@ const ProposalItemTimeLeft = styled(Box)(({ theme }) => ({
   },
 }));
 
-const ProposalItemStatus = styled(Box)(({ theme }) => ({
+export const ProposalItemStatus = styled(Box)(({ theme }) => ({
   borderRadius: "6px",
   display: "flex",
   flexDirection: "row",
@@ -71,11 +71,12 @@ const ProposalItemStatus = styled(Box)(({ theme }) => ({
   gap: "4px",
   fontSize: "14px",
   fontWeight: 400,
+  maxWidth: '110px',
 
+  background: "rgba(99, 121, 161, 0.2)",
   color: "#43FFF1",
 
-  "&.succeeded, &.open": {
-    background: "rgba(99, 121, 161, 0.2)",
+  "&.succeeded": {
     color: "#8AF075",
   },
 
@@ -85,7 +86,7 @@ const ProposalItemStatus = styled(Box)(({ theme }) => ({
   },
 }));
 
-const ImageSrc: { [key: string]: string } = {
+export const ImageSrc: { [key: string]: string } = {
   Defeated: DefeatedSrc,
   Succeeded: SucceededSrc,
 };

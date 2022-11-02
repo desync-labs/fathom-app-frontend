@@ -242,3 +242,29 @@ export const QuestionMarkButton = styled(MuiButton)({
   width: '20px',
   height: '20px'
 });
+
+export const BackToProposalsButton = styled(MuiButton)({
+  fontSize: '15px',
+  lineHeight: '20px',
+  background: 'transparent',
+  color: '#fff',
+  display: 'flex',
+  alignItems: 'center',
+  gap: '5px',
+  ":hover": {
+    background: 'none'
+  }
+});
+
+export const VotingEndedButton = styled(MuiButton)({
+  padding: '8px 20px',
+  width: '100%',
+  color: '#6379A1',
+  fontWeight: '600',
+  fontSize: '17px',
+  lineHeight: '24px',
+  "&.Mui-disabled": {
+    background: '#324567',
+    borderRadius: "8px"
+  }
+});
