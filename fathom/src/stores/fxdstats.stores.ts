@@ -39,12 +39,6 @@ export default class FXDProtocolStatsStore {
     });
   }
 
-  getFormattedLiquidationRatio() {
-    return new BigNumber(this.protocolStats.liquidationRatio)
-      .div(Constants.WeiPerRay)
-      .toString();
-  }
-
   getFormattedFXDPriceRatio = () => {
     const number = new BigNumber(this.protocolStats.fxdPriceFromDex).div(
       Constants.WeiPerWad

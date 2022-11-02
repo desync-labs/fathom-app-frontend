@@ -16,7 +16,7 @@ export class Constants {
 
   public static Status = [
     "Pending",
-    "Active",
+    "Open-to-Vote",
     "Canceled",
     "Defeated",
     "Succeeded",

@@ -81,6 +81,15 @@ const mdTheme = createTheme({
     secondary: {
       main: "#7D91B5",
     },
+    info: {
+      main: "#5A81FF",
+    },
+    success: {
+      main: "#3DA329",
+    },
+    error: {
+      main: "#DD3C3C",
+    },
   },
   typography: {
     fontFamily: ["Inter, sans-serif"].join(","),

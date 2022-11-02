@@ -33,14 +33,14 @@ export default class ProposalStore {
   // "Some string"
   // ------------------------------------------------------------------------------
 
-  createProposal = async (
+  async createProposal(
     targets: string[],
     values: number[],
     calldatas: string[],
     description: string,
     account: string
-  ): Promise<number> => {
-    return await this.service.createProposal(
+  ): Promise<number> {
+    return this.service.createProposal(
       targets,
       values,
       calldatas,
@@ -48,16 +48,16 @@ export default class ProposalStore {
       account,
       this.rootStore.transactionStore
     );
-  };
+  }
 
-  executeProposal = async (
+  async executeProposal(
     targets: string[],
     values: number[],
     calldatas: string[],
     description: string,
     account: string
-  ): Promise<number> => {
-    return await this.service.executeProposal(
+  ): Promise<number> {
+    return this.service.executeProposal(
       targets,
       values,
       calldatas,
@@ -65,16 +65,16 @@ export default class ProposalStore {
       account,
       this.rootStore.transactionStore
     );
-  };
+  }
 
-  queueProposal = async (
+  async queueProposal(
     targets: string[],
     values: number[],
     calldatas: string[],
     description: string,
     account: string
-  ): Promise<number> => {
-    return await this.service.queueProposal(
+  ): Promise<number> {
+    return this.service.queueProposal(
       targets,
       values,
       calldatas,
@@ -82,21 +82,21 @@ export default class ProposalStore {
       account,
       this.rootStore.transactionStore
     );
-  };
+  }
 
-  setProposals = (_proposal: IProposal[]) => {
+  setProposals(_proposal: IProposal[]) {
     this.fetchedProposals = _proposal;
-  };
+  }
 
-  setProposal = (_proposal: IProposal) => {
+  setProposal(_proposal: IProposal) {
     this.fetchedProposal = _proposal;
-  };
+  }
 
-  setProposalState = (_proposalState: string) => {
+  setProposalState(_proposalState: string) {
     this.fetchedProposalState = _proposalState;
-  };
+  }
 
-  setProposalVotes = (_proposalVotes: IVoteCounts) => {
+  setProposalVotes(_proposalVotes: IVoteCounts) {
     _proposalVotes.abstainVotes = _proposalVotes.abstainVotes / 10 ** 18;
     _proposalVotes.againstVotes = _proposalVotes.againstVotes / 10 ** 18;
     _proposalVotes.forVotes = _proposalVotes.forVotes / 10 ** 18;
@@ -106,23 +106,23 @@ export default class ProposalStore {
       _proposalVotes.againstVotes +
       _proposalVotes.forVotes;
     this.fetchedVotes = _proposalVotes;
-  };
+  }
 
-  setWeight = (_weight: number) => {
+  setWeight(_weight: number) {
     this.weight = _weight;
-  };
+  }
 
-  setVeBalance = (_veBalance: number) => {
+  setVeBalance(_veBalance: number) {
     this.veBalance = _veBalance;
-  };
+  }
 
-  castVote = async (
+  async castVote(
     proposalId: string,
     account: string,
     support: string,
     chainId?: number
-  ) => {
-    let _weight = await this.service.castVote(
+  ) {
+    const _weight = await this.service.castVote(
       proposalId,
       account,
       support,
@@ -132,31 +132,27 @@ export default class ProposalStore {
     runInAction(() => {
       this.setWeight(_weight);
     });
-  };
+  }
 
-  getVeBalance = async (account: string, chainId?: number) => {
-    let _veBalance = await this.service.getVeBalance(account, chainId);
+  async getVeBalance(account: string, chainId?: number) {
+    const _veBalance = await this.service.getVeBalance(account, chainId);
     runInAction(() => {
       this.setVeBalance(_veBalance);
     });
-  };
+  }
 
-  fetchProposals = async (account: string, chainId?: number) => {
-    let fetchedProposals = await this.service.viewAllProposals(
+  async fetchProposals(account: string, chainId?: number) {
+    const fetchedProposals = await this.service.viewAllProposals(
       account,
       chainId
     );
     runInAction(() => {
       this.setProposals(fetchedProposals);
     });
-  };
+  }
 
-  fetchProposal = async (
-    proposal: string,
-    account: string,
-    chainId?: number
-  ) => {
-    let fetchedProposal = await this.service.viewProposal(
+  async fetchProposal(proposal: string, account: string, chainId?: number) {
+    const fetchedProposal = await this.service.viewProposal(
       proposal,
       account,
       chainId
@@ -164,14 +160,14 @@ export default class ProposalStore {
     runInAction(() => {
       this.setProposal(fetchedProposal);
     });
-  };
+  }
 
-  fetchProposalState = async (
+  async fetchProposalState(
     proposal: string,
     account: string,
     chainId?: number
-  ) => {
-    let fetchedProposalState = await this.service.viewProposalState(
+  ) {
+    const fetchedProposalState = await this.service.viewProposalState(
       proposal,
       account,
       chainId
@@ -179,14 +175,14 @@ export default class ProposalStore {
     runInAction(() => {
       this.setProposalState(fetchedProposalState);
     });
-  };
+  }
 
-  fetchProposalVotes = async (
+  async fetchProposalVotes(
     proposal: string,
     account: string,
     chainId?: number
-  ) => {
-    let fetchedVotes = await this.service.viewVoteCounts(
+  ) {
+    const fetchedVotes = await this.service.viewVoteCounts(
       proposal,
       account,
       chainId
@@ -194,5 +190,5 @@ export default class ProposalStore {
     runInAction(() => {
       this.setProposalVotes(fetchedVotes);
     });
-  };
+  }
 }

@@ -1,24 +1,27 @@
-import { useStores } from "../stores";
-import useMetaMask from "./metamask";
+import { useStores } from "stores";
+import useMetaMask from "hooks/metamask";
 import { useForm } from "react-hook-form";
 import { useCallback, useEffect } from "react";
-import { Constants } from "../helpers/Constants";
+import { Constants } from "helpers/Constants";
+import { ProposeListViewProps } from "components/Governance/Propose";
 
-const useCreateProposal = () => {
+const defaultValues = {
+  withAction: false,
+  descriptionTitle: "",
+  description: "",
+  inputValues: "",
+  calldata: "",
+  targets: "",
+  link: "",
+  agreement: false,
+}
+
+const useCreateProposal = (onClose: ProposeListViewProps["onClose"]) => {
   const { proposalStore } = useStores();
   const { account, chainId } = useMetaMask()!;
 
-  const { handleSubmit, watch, control, reset } = useForm({
-    defaultValues: {
-      withAction: false,
-      descriptionTitle: "",
-      description: "",
-      inputValues: "",
-      calldata: "",
-      targets: "",
-      link: "",
-      agreement: false,
-    },
+  const { handleSubmit, watch, control, reset, getValues } = useForm({
+    defaultValues,
   });
 
   const withAction = watch("withAction");
@@ -30,6 +33,14 @@ const useCreateProposal = () => {
       });
     }
   }, [account, chainId, proposalStore]);
+
+  useEffect(() => {
+    let values = localStorage.getItem('createProposal')
+    if (values) {
+      values = JSON.parse(values);
+      reset(values as unknown as typeof defaultValues);
+    }
+  }, [reset])
 
   const onSubmit = useCallback(
     async (values: Record<string, any>) => {
@@ -45,17 +56,17 @@ const useCreateProposal = () => {
           withAction,
         } = values;
         const combinedText =
-          descriptionTitle + "    ----------------    " + description;
+          descriptionTitle + "----------------" + description;
 
         if (withAction) {
-          const valuesArray = inputValues.trim().split(",").map(Number);
-          const calldataArray = calldata.trim().split(",");
+          const values = inputValues.trim().split(",").map(Number);
+          const callData = calldata.trim().split(",");
           const targetsArray = targets.trim().split(",");
 
           await proposalStore.createProposal(
             targetsArray,
-            valuesArray,
-            calldataArray,
+            values,
+            callData,
             combinedText,
             account
           );
@@ -69,12 +80,19 @@ const useCreateProposal = () => {
           );
         }
         reset();
+        localStorage.removeItem('createProposal')
+        onClose();
       } catch (err) {
         console.log(err);
       }
     },
     [reset, account, chainId, proposalStore]
   );
+
+  const saveForLater = useCallback(() => {
+    const values = getValues();
+    localStorage.setItem('createProposal', JSON.stringify(values));
+  }, [getValues])
 
   return {
     withAction,
