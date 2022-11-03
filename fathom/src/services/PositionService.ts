@@ -21,23 +21,23 @@ export default class PositionService implements IPositionService {
   async openPosition(
     address: string,
     pool: ICollateralPool,
-    collatral: number,
+    collateral: number,
     fathomToken: number,
     transactionStore: ActiveWeb3Transactions
   ): Promise<void> {
     try {
-      let proxyWalletaddress = await this.proxyWalletExist(address);
+      let proxyWalletAddress = await this.proxyWalletExist(address);
 
-      if (proxyWalletaddress === Constants.ZERO_ADDRESS) {
+      if (proxyWalletAddress === Constants.ZERO_ADDRESS) {
         console.log("Proxy wallet not exist...");
-        proxyWalletaddress = await this.createProxyWallet(address);
+        proxyWalletAddress = await this.createProxyWallet(address);
       }
 
-      console.log(`Open position for proxy wallet ${proxyWalletaddress}...`);
+      console.log(`Open position for proxy wallet ${proxyWalletAddress}...`);
 
       const wallet = Web3Utils.getContractInstanceFrom(
         SmartContractFactory.proxyWallet.abi,
-        proxyWalletaddress,
+        proxyWalletAddress,
         this.chainId
       );
       const encodedResult = Web3Utils.getWeb3Instance(
@@ -49,13 +49,13 @@ export default class PositionService implements IPositionService {
       ).abi.filter((abi) => abi.name === "openLockTokenAndDraw")[0];
 
       let openPositionCall =
-        Web3Utils.getWeb3Instance().eth.abi.encodeFunctionCall(jsonInterface, [
+        Web3Utils.getWeb3Instance(this.chainId).eth.abi.encodeFunctionCall(jsonInterface, [
           SmartContractFactory.PositionManager(this.chainId).address,
           SmartContractFactory.StabilityFeeCollector(this.chainId).address,
           pool.CollateralTokenAdapterAddress,
           SmartContractFactory.StablecoinAdapter(this.chainId).address,
           pool.id,
-          toWei(collatral.toString(), "ether"),
+          toWei(collateral.toString(), "ether"),
           toWei(fathomToken.toString(), "ether"),
           "1",
           encodedResult,
@@ -244,7 +244,7 @@ export default class PositionService implements IPositionService {
       );
 
       const encodedResult =
-        Web3Utils.getWeb3Instance().eth.abi.encodeParameters(
+        Web3Utils.getWeb3Instance(this.chainId).eth.abi.encodeParameters(
           ["address"],
           [address]
         );
@@ -254,7 +254,7 @@ export default class PositionService implements IPositionService {
       ).abi.filter((abi) => abi.name === "wipeAllAndUnlockToken")[0];
 
       const wipeAllAndUnlockTokenCall =
-        Web3Utils.getWeb3Instance().eth.abi.encodeFunctionCall(jsonInterface, [
+        Web3Utils.getWeb3Instance(this.chainId).eth.abi.encodeFunctionCall(jsonInterface, [
           SmartContractFactory.PositionManager(this.chainId).address,
           pool.CollateralTokenAdapterAddress,
           SmartContractFactory.StablecoinAdapter(this.chainId).address,

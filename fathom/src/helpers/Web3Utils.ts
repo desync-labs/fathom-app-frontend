@@ -1,8 +1,8 @@
 import Web3 from "web3";
 import Xdc3 from "xdc3";
 import { AbiItem } from "web3-utils";
-import { AbiItem as XdcAbiItem } from 'xdc3-utils';
-import { XDC_CHAIN_IDS } from "../connectors/networks";
+import { AbiItem as XdcAbiItem } from "xdc3-utils";
+import { XDC_CHAIN_IDS } from "connectors/networks";
 
 interface ContractMetaData {
   address: string;
@@ -22,10 +22,10 @@ export class Web3Utils {
    */
   public static contracts = new Map();
 
-  public static getContractInstance: any = (
+  public static getContractInstance(
     contractMetaData: ContractMetaData | XdcContractMetaData,
     chainId: number
-  ) => {
+  ): any {
     /**
      * Get cache key by address and chainId
      */
@@ -42,7 +42,7 @@ export class Web3Utils {
      */
     if (XDC_CHAIN_IDS.includes(chainId) && Web3Utils.xdc3 instanceof Xdc3) {
       const contract = new Web3Utils.xdc3.eth.Contract(
-        contractMetaData.abi as XdcContractMetaData['abi'],
+        contractMetaData.abi as XdcContractMetaData["abi"],
         contractMetaData.address
       );
 
@@ -66,7 +66,7 @@ export class Web3Utils {
       );
 
       contract = new Web3Utils.xdc3.eth.Contract(
-        contractMetaData.abi as XdcContractMetaData['abi'],
+        contractMetaData.abi as XdcContractMetaData["abi"],
         contractMetaData.address
       );
 
@@ -85,13 +85,13 @@ export class Web3Utils {
     }
 
     return contract;
-  };
+  }
 
-  public static getContractInstanceFrom: any = (
+  public static getContractInstanceFrom(
     abi: AbiItem[] | XdcAbiItem[],
     address: string,
     chainId: number
-  ) => {
+  ): any {
     const contractKey = `${chainId}:${address}`;
 
     if (Web3Utils.contracts.has(contractKey)) {
@@ -99,7 +99,10 @@ export class Web3Utils {
     }
 
     if (XDC_CHAIN_IDS.includes(chainId) && Web3Utils.xdc3 instanceof Xdc3) {
-      const contract = new Web3Utils.xdc3.eth.Contract(abi as XdcAbiItem[], address);
+      const contract = new Web3Utils.xdc3.eth.Contract(
+        abi as XdcAbiItem[],
+        address
+      );
       Web3Utils.contracts.set(contractKey, contract);
       return contract;
     } else if (Web3Utils.web3 instanceof Web3) {
@@ -128,9 +131,9 @@ export class Web3Utils {
     }
 
     return contract;
-  };
+  }
 
-  public static getWeb3Instance: any = (chainId: number) => {
+  public static getWeb3Instance(chainId: number): any {
     if (XDC_CHAIN_IDS.includes(chainId) && Web3Utils.xdc3 instanceof Xdc3) {
       return Web3Utils.xdc3;
     } else if (Web3Utils.web3 instanceof Web3) {
@@ -148,29 +151,26 @@ export class Web3Utils {
       );
       return Web3Utils.web3;
     }
+  }
 
-  };
-
-  public static getWeb3ProviderUrl: any = (
-    chainId: number
-  ) => {
-    let web3ProviderUrl = '' 
-    switch (chainId){
-      case 1337: 
-        web3ProviderUrl = 'ws://localhost:8545'
-      break;
+  public static getWeb3ProviderUrl: any = (chainId: number) => {
+    let web3ProviderUrl = "";
+    switch (chainId) {
+      case 1337:
+        web3ProviderUrl = "ws://localhost:8545";
+        break;
       case 5:
-        web3ProviderUrl = 'https://goerli.infura.io/v3/d85fb151be214d8eaee85c855d9d3dab' 
-      break;
-      case 50: 
-        web3ProviderUrl = ''
-      break;
-      case 51: 
-        web3ProviderUrl = 'https://rpc.apothem.network'
-      break;
+        web3ProviderUrl =
+          "https://goerli.infura.io/v3/d85fb151be214d8eaee85c855d9d3dab";
+        break;
+      case 50:
+        web3ProviderUrl = "";
+        break;
+      case 51:
+        web3ProviderUrl = "https://rpc.apothem.network";
+        break;
     }
 
-    return web3ProviderUrl
-
-  }
+    return web3ProviderUrl;
+  };
 }

@@ -1,6 +1,9 @@
 import { Constants } from "helpers/Constants";
 import { Web3Utils } from "helpers/Web3Utils";
-import { ITransaction } from "stores/interfaces/ITransaction";
+import {
+  ITransaction,
+  TransactionStatus
+} from "stores/interfaces/ITransaction";
 import IActiveWeb3TransactionsService from "services/interfaces/IActiveWeb3TransactionsService";
 
 export default class ActiveWeb3TransactionsService
@@ -22,7 +25,7 @@ export default class ActiveWeb3TransactionsService
       )}`
     );
     if (response !== null) {
-      pendingTransaction.status = response.status;
+      pendingTransaction.status = response.status ? TransactionStatus.Success: TransactionStatus.Error;
     }
 
     return pendingTransaction;

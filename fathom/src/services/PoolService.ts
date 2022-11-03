@@ -68,7 +68,8 @@ export default class PoolService implements IPoolService {
     return new Promise(async (resolve, reject) => {
       try {
         const contract = Web3Utils.getContractInstance(
-          SmartContractFactory.PoolConfig(this.chainId)
+          SmartContractFactory.PoolConfig(this.chainId),
+          this.chainId
         );
         const promises = [];
         const pools = this.getPools();
@@ -109,7 +110,8 @@ export default class PoolService implements IPoolService {
   async getPriceWithSafetyMargin(pool: ICollateralPool): Promise<number> {
     try {
       let contract = Web3Utils.getContractInstance(
-        SmartContractFactory.PoolConfig(this.chainId)
+        SmartContractFactory.PoolConfig(this.chainId),
+        this.chainId
       );
       let response = await contract.methods
         .getPriceWithSafetyMargin(pool.id)

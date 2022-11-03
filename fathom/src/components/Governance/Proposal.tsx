@@ -142,8 +142,9 @@ const VoteButtonGroup = styled(ButtonGroup)(({ theme }) => ({
     textTransform: "none",
 
     ":hover": {
-      border: "1px solid #324567",
-      background: "rgba(79, 101, 140, 0.2)",
+      background: "linear-gradient(104.04deg, #B3FFF9 0%, #00DBCB 100%)",
+      border: "1px solid #B3FFF9",
+      color: "#00332F",
     },
   },
 }));
