@@ -1,3 +1,4 @@
+import {XDC_CHAIN_IDS} from "connectors/networks";
 
 const ETHERSCAN_PREFIXES: { [chainId in number]: string } = {
   1: '',
@@ -8,8 +9,6 @@ const ETHERSCAN_PREFIXES: { [chainId in number]: string } = {
   50: 'xdc.',
   51: 'apothem.'
 }
-
-export const XDC_CHAIN_IDS = [50, 51]
 
 export function getEtherscanLink(
   chainId: number,

@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from "react";
+import React, { FC } from "react";
 import {
   Box,
   FormControlLabel,
@@ -87,13 +87,6 @@ const ProposeButtonSecondary = styled(ButtonSecondary)(({ theme }) => ({
 
 const MINIMUM_V_BALANCE = 2000;
 
-const formatter = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-  minimumFractionDigits: 0,
-  maximumFractionDigits: 3,
-});
-
 const Required = () => (
   <Icon sx={{ width: "20px", height: "26px" }}>
     <img alt="staking-icon" src={requiredSrc} />
@@ -122,17 +115,16 @@ const InfoIcon: FC<{ sx?: Record<string, any> }> = ({ sx }) => (
 );
 
 const ProposeListView: FC<ProposeListViewProps> = observer(({ onClose }) => {
-  const { withAction, handleSubmit, control, onSubmit, vBalance } =
-    useCreateProposal(onClose);
-
-  const formatNumber = useCallback((number: number) => {
-    return formatter
-      .formatToParts(number)
-      .map((p) =>
-        p.type !== "literal" && p.type !== "currency" ? p.value : ""
-      )
-      .join("");
-  }, []);
+  const {
+    withAction,
+    handleSubmit,
+    control,
+    onSubmit,
+    vBalance,
+    saveForLater,
+    validateAddressesArray,
+    formatNumber,
+  } = useCreateProposal(onClose);
 
   return (
     <AppDialog
@@ -276,7 +268,10 @@ const ProposeListView: FC<ProposeListViewProps> = observer(({ onClose }) => {
                   <Controller
                     control={control}
                     name="targets"
-                    rules={{ required: true }}
+                    rules={{
+                      required: true,
+                      validate: validateAddressesArray,
+                    }}
                     render={({
                       field: { onChange, value },
                       fieldState: { error },
@@ -291,8 +286,10 @@ const ProposeListView: FC<ProposeListViewProps> = observer(({ onClose }) => {
                           value={value}
                           maxRows={1}
                           helperText={
-                            error ? (
-                              "Field Target address array is required"
+                            error && error.type === "required" ? (
+                              "Field Target addresses is required"
+                            ) : error && error.type === "validate" ? (
+                              error.message
                             ) : (
                               <Stack direction={"row"} alignItems={"center"}>
                                 <InfoIcon />
@@ -325,9 +322,7 @@ const ProposeListView: FC<ProposeListViewProps> = observer(({ onClose }) => {
                           multiline
                           value={value}
                           maxRows={1}
-                          helperText={
-                            error ? "Field Calldata array is required" : ""
-                          }
+                          helperText={error ? "Field Calldata is required" : ""}
                           onChange={onChange}
                         />
                       </FormGroup>
@@ -407,7 +402,7 @@ const ProposeListView: FC<ProposeListViewProps> = observer(({ onClose }) => {
             <Grid item xs={12}>
               <Grid container spacing={1}>
                 <Grid item xs={4}>
-                  <ProposeButtonSecondary type="button" sx={{ width: "100%" }}>
+                  <ProposeButtonSecondary type="button" sx={{ width: "100%" }} onClick={saveForLater}>
                     Save for later
                   </ProposeButtonSecondary>
                 </Grid>

@@ -1,15 +1,15 @@
-import { SmartContractFactory } from "../config/SmartContractFactory";
-import IProposalService from "./interfaces/IProposalService";
-import { Web3Utils } from "../helpers/Web3Utils";
-import IProposal from "../stores/interfaces/IProposal";
-import IVoteCounts from "../stores/interfaces/IVoteCounts";
-import ActiveWeb3Transactions from "../stores/transaction.store";
+import { SmartContractFactory } from "config/SmartContractFactory";
+import IProposalService from "services/interfaces/IProposalService";
+import { Web3Utils } from "helpers/Web3Utils";
+import IProposal from "stores/interfaces/IProposal";
+import IVoteCounts from "stores/interfaces/IVoteCounts";
+import ActiveWeb3Transactions from "stores/transaction.store";
 import { keccak256 } from "web3-utils";
 import {
   TransactionStatus,
   TransactionType,
-} from "../stores/interfaces/ITransaction";
-import { Constants } from "../helpers/Constants";
+} from "stores/interfaces/ITransaction";
+import { Constants } from "helpers/Constants";
 
 export default class ProposalService implements IProposalService {
   chainId = Constants.DEFAULT_CHAINID;
@@ -106,7 +106,8 @@ export default class ProposalService implements IProposalService {
       chainId = chainId || this.chainId;
       if (chainId) {
         const FathomGovernor = Web3Utils.getContractInstance(
-          SmartContractFactory.FathomGovernor(chainId)
+          SmartContractFactory.FathomGovernor(chainId),
+          this.chainId,
         );
 
         const result = await FathomGovernor.methods.getProposals(12).call();
