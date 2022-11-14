@@ -10,9 +10,7 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
-import {
-  AppDialog,
-} from "components/AppComponents/AppDialog/AppDialog";
+import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
 import { AppList } from "components/AppComponents/AppList/AppList";
 import {
   ApproveBox,

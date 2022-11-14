@@ -1,22 +1,19 @@
 import { styled } from "@mui/material/styles";
 import { List as MuiList } from "@mui/material";
 
-export const AppList = styled(
-  MuiList,
-  {}
-)(({ theme }) => ({
-  "& li": {
-    color: "#9FADC6",
-    fontSize: "14px",
-    paddingTop: "3px",
-    paddingBottom: "3px",
-    paddingLeft: "8px",
-    paddingRight: 0,
-    "span": {
-      fontSize: "14px"
-    },
-    "& div:last-child": {
-      paddingRight: "8px"
+export const AppList = styled(MuiList)`
+  & li {
+    color: #9fadc6;
+    fontsize: 14px;
+    paddingtop: 3px;
+    paddingbottom: 3px;
+    paddingleft: 8px;
+    paddingright: 0;
+    span {
+      font-size: 14px;
     }
-  },
-}));
+    & div:last-child {
+      padding-right: 8px;
+    }
+  }
+`;

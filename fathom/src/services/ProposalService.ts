@@ -17,7 +17,7 @@ export default class ProposalService implements IProposalService {
   async createProposal(
     targets: string[],
     values: number[],
-    calldatas: string[],
+    callData: string[],
     description: string,
     account: string,
     transactionStore: ActiveWeb3Transactions,
@@ -31,7 +31,7 @@ export default class ProposalService implements IProposalService {
         chainId
       );
       return await FathomGovernor.methods
-        .propose(targets, values, calldatas, description)
+        .propose(targets, values, callData, description)
         .send({ from: account })
         .on("transactionHash", (hash: any) => {
           transactionStore.addTransaction({
@@ -40,7 +40,7 @@ export default class ProposalService implements IProposalService {
             active: false,
             status: TransactionStatus.None,
             title: `Proposal Creation Pending`,
-            message: "Click on transaction to view on blockexplorer.",
+            message: "Click on transaction to view on block Explorer.",
           });
         });
     } else {

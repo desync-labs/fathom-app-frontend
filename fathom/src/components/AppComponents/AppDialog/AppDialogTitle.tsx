@@ -5,14 +5,14 @@ import { DialogTitleProps } from "../../Positions/ClosePositionDialog";
 import { styled } from "@mui/material/styles";
 import { DialogTitle as MuiDialogTitle } from "@mui/material";
 
-export const AppDialogTitleWrapper = styled(MuiDialogTitle)(({ theme }) => ({
-  fontWeight: "bold",
-  fontSize: "20px",
-  lineHeight: "24px",
-  color: "#FFFFFF",
-  padding: "20px 32px 15px 23px",
-  margin: 0,
-}));
+export const AppDialogTitleWrapper = styled(MuiDialogTitle)`
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 24px;
+  color: #fff;
+  padding: 20px 32px 15px 32px;
+  margin: 0;
+`
 
 export const AppDialogCloseIcon = styled(IconButton)(({ theme }) => ({
   position: "absolute",

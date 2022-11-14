@@ -12,223 +12,180 @@ import ILockPosition from "stores/interfaces/ILockPosition";
 import { Strings } from "helpers/Strings";
 import { secondsToTime } from "utils/secondsToTime";
 
+const defaultLockInfo = {
+  lockId: 0,
+  VOTETokenBalance: 0,
+  MAINTokenBalance: 0,
+  EndTime: 0,
+  RewardsAvailable: "0",
+  timeObject: {
+    hour: 0,
+    seconds: 0,
+    days: 0,
+    min: 0,
+    sec: 0,
+  },
+};
+
 export default class StakingService implements IStakingService {
   chainId = 51;
   async createLock(
     address: string,
     stakePosition: number,
     unlockPeriod: number,
-    chainId: number,
     transactionStore: ActiveWeb3Transactions
   ): Promise<void> {
-    chainId = chainId || this.chainId;
-    if (chainId) {
-      return new Promise(async (resolve, reject) => {
-        try {
-          const Staking = Web3Utils.getContractInstance(
-            SmartContractFactory.Staking(chainId),
-            chainId
-          );
+    const Staking = Web3Utils.getContractInstance(
+      SmartContractFactory.Staking(this.chainId),
+      this.chainId
+    );
+    const day = 24 * 60 * 60;
 
-          const day = 24 * 60 * 60;
+    console.log("timestamp  HERE: ", (await this.getTimestamp()).toString());
 
-          console.log(
-            "timestamp  HERE: ",
-            (await this.getTimestamp(chainId)).toString()
-          );
+    const lockingPeriod = unlockPeriod * day;
+    let endTime = await this.getTimestamp();
 
-          const lockingPeriod = unlockPeriod * day;
-          let endTime = await this.getTimestamp(chainId);
-
-          if (lockingPeriod === 0) {
-            //if locking period = 0, lock only for 5 mins
-            endTime += 5 * 60;
-          }
-          if (lockingPeriod > 0) {
-            endTime = endTime + lockingPeriod;
-          }
-
-          await Staking.methods
-            .createLock(this.toWei(stakePosition, chainId), endTime)
-            .send({ from: address })
-            .on("transactionHash", (hash: any) => {
-              transactionStore.addTransaction({
-                hash: hash,
-                type: TransactionType.Approve,
-                active: false,
-                status: TransactionStatus.None,
-                title: `Creating Lock`,
-                message: Strings.CheckOnBlockExplorer,
-              });
-            });
-
-          resolve();
-        } catch (error) {
-          reject(error);
-        }
-      });
+    if (lockingPeriod === 0) {
+      //if locking period = 0, lock only for 5 min
+      endTime += 5 * 60;
     }
+    if (lockingPeriod > 0) {
+      endTime = endTime + lockingPeriod;
+    }
+
+    return Staking.methods
+      .createLock(this.toWei(stakePosition), endTime)
+      .send({ from: address })
+      .on("transactionHash", (hash: any) => {
+        transactionStore.addTransaction({
+          hash: hash,
+          type: TransactionType.Approve,
+          active: false,
+          status: TransactionStatus.None,
+          title: `Creating Lock`,
+          message: Strings.CheckOnBlockExplorer,
+        });
+      });
   }
 
-  async getLockPositions(
-    account: string,
-    chainId: number
-  ): Promise<ILockPosition[]> {
-    chainId = chainId || this.chainId;
-
+  async getLockPositions(account: string): Promise<ILockPosition[]> {
     const lockPositionsList = [] as ILockPosition[];
 
     try {
-      if (chainId) {
-        const Staking = Web3Utils.getContractInstance(
-          SmartContractFactory.Staking(chainId),
-          chainId
+      const Staking = Web3Utils.getContractInstance(
+        SmartContractFactory.Staking(this.chainId),
+        this.chainId
+      );
+
+      const StakingGetter = Web3Utils.getContractInstance(
+        SmartContractFactory.StakingGetter(this.chainId),
+        this.chainId
+      );
+
+      const promises = [];
+      const claimPromises = [];
+
+      const length = await StakingGetter.methods.getLocksLength(account).call();
+
+      for (let i = 0; i < length; i++) {
+        promises.push(StakingGetter.methods.getLock(account, i + 1).call());
+        claimPromises.push(
+          Staking.methods
+            .getStreamClaimableAmountPerLock(1, account, i + 1)
+            .call()
         );
+      }
 
-        const StakingGetter = Web3Utils.getContractInstance(
-          SmartContractFactory.StakingGetter(chainId),
-          chainId
-        );
+      const data = await Promise.all([
+        Promise.all(promises),
+        Promise.all(claimPromises),
+      ]);
+      const currentTimestamp = await this.getTimestamp();
 
-        const promises = [];
-        const claimPromises = [];
+      const [lockData, claimData] = data;
 
-        const length = await StakingGetter.methods
-          .getLocksLength(account)
-          .call();
-
-        for (let i = 0; i < length; i++) {
-          promises.push(StakingGetter.methods.getLock(account, i + 1).call());
-          claimPromises.push(
-            Staking.methods
-              .getStreamClaimableAmountPerLock(1, account, i + 1)
-              .call()
-          );
-        }
-
-        const data = await Promise.all([
-          Promise.all(promises),
-          Promise.all(claimPromises),
-        ]);
-        const currentTimestamp = await this.getTimestamp(chainId);
-
-        const [lockData, claimData] = data;
-
-        for (let i = 0; i < length; i++) {
-          let lockPosition = {} as ILockPosition;
-          const {
-            0: amountOfMAINTkn,
-            1: amountOfveMAINTkn,
-            4: end,
-          } = lockData[i];
-
-          const amountOfRewardsAvailable = claimData[i];
-
-          lockPosition.lockId = i + 1;
-          lockPosition.MAINTokenBalance = this._convertToEtherBalance(
-            amountOfMAINTkn,
-            chainId
-          );
-
-          lockPosition.VOTETokenBalance = this._convertToEtherBalance(
-            amountOfveMAINTkn,
-            chainId
-          );
-
-          lockPosition.EndTime = end - currentTimestamp;
-
-          lockPosition.RewardsAvailable = this._convertToEtherBalanceRewards(
-            amountOfRewardsAvailable,
-            chainId
-          );
-
-          lockPosition.timeObject = this._convertToTimeObject(
-            lockPosition.EndTime
-          );
-
-          console.log(lockPosition);
-          lockPositionsList.push(lockPosition);
-        }
-
-        return lockPositionsList;
-      } else return [];
-    } catch (error) {
-      console.error(`Error in fetching Locks: ${error}`);
-      return [];
-    }
-  }
-
-  async getLockInfo(
-    lockId: number,
-    account: string,
-    chainId: number
-  ): Promise<ILockPosition> {
-    let lockPosition = {} as ILockPosition;
-    chainId = chainId || this.chainId;
-    const defaultLockInfo = {
-      lockId: 0,
-      VOTETokenBalance: 0,
-      MAINTokenBalance: 0,
-      EndTime: 0,
-      RewardsAvailable: "0",
-      timeObject: {
-        hour: 0,
-        seconds: 0,
-        days: 0,
-        min: 0,
-        sec: 0,
-      },
-    };
-
-    try {
-      if (chainId) {
-        const Staking = Web3Utils.getContractInstance(
-          SmartContractFactory.Staking(chainId),
-          chainId
-        );
-
-        const StakingGetter = Web3Utils.getContractInstance(
-          SmartContractFactory.StakingGetter(chainId),
-          chainId
-        );
-
-        const currentTimestamp = await this.getTimestamp(chainId);
-
+      for (let i = 0; i < length; i++) {
+        let lockPosition = {} as ILockPosition;
         const {
           0: amountOfMAINTkn,
           1: amountOfveMAINTkn,
           4: end,
-        } = await StakingGetter.methods.getLock(account, lockId).call();
+        } = lockData[i];
 
-        const amountOfRewardsAvailable = await Staking.methods
-          .getStreamClaimableAmountPerLock(1, account, lockId)
-          .call();
+        const amountOfRewardsAvailable = claimData[i];
 
-        lockPosition.lockId = lockId;
-        lockPosition.MAINTokenBalance = this._convertToEtherBalance(
-          amountOfMAINTkn,
-          chainId
-        );
-        lockPosition.VOTETokenBalance = this._convertToEtherBalance(
-          amountOfveMAINTkn,
-          chainId
-        );
+        lockPosition.lockId = i + 1;
+        lockPosition.MAINTokenBalance =
+          this._convertToEtherBalance(amountOfMAINTkn);
+
+        lockPosition.VOTETokenBalance =
+          this._convertToEtherBalance(amountOfveMAINTkn);
 
         lockPosition.EndTime = end - currentTimestamp;
 
         lockPosition.RewardsAvailable = this._convertToEtherBalanceRewards(
-          amountOfRewardsAvailable,
-          chainId
+          amountOfRewardsAvailable
         );
 
         lockPosition.timeObject = this._convertToTimeObject(
           lockPosition.EndTime
         );
 
-        return lockPosition;
-      } else {
-        return defaultLockInfo;
+        console.log(lockPosition);
+        lockPositionsList.push(lockPosition);
       }
+
+      return lockPositionsList;
+    } catch (error) {
+      console.error(`Error in fetching Locks: ${error}`);
+      return [];
+    }
+  }
+
+  async getLockInfo(lockId: number, account: string): Promise<ILockPosition> {
+    let lockPosition = {} as ILockPosition;
+
+    try {
+      const Staking = Web3Utils.getContractInstance(
+        SmartContractFactory.Staking(this.chainId),
+        this.chainId
+      );
+
+      const StakingGetter = Web3Utils.getContractInstance(
+        SmartContractFactory.StakingGetter(this.chainId),
+        this.chainId
+      );
+
+      const currentTimestamp = await this.getTimestamp();
+
+      const {
+        0: amountOfMAINTkn,
+        1: amountOfveMAINTkn,
+        4: end,
+      } = await StakingGetter.methods.getLock(account, lockId).call();
+
+      const amountOfRewardsAvailable = await Staking.methods
+        .getStreamClaimableAmountPerLock(1, account, lockId)
+        .call();
+
+      lockPosition.lockId = lockId;
+
+      lockPosition.MAINTokenBalance =
+        this._convertToEtherBalance(amountOfMAINTkn);
+
+      lockPosition.VOTETokenBalance =
+        this._convertToEtherBalance(amountOfveMAINTkn);
+
+      lockPosition.EndTime = end - currentTimestamp;
+
+      lockPosition.RewardsAvailable = this._convertToEtherBalanceRewards(
+        amountOfRewardsAvailable
+      );
+
+      lockPosition.timeObject = this._convertToTimeObject(lockPosition.EndTime);
+
+      return lockPosition;
     } catch (error) {
       console.error(`Error in fetching latest lock: ${error}`);
       return defaultLockInfo;
@@ -237,34 +194,22 @@ export default class StakingService implements IStakingService {
 
   async getLockPositionsLength(
     account: string,
-    chainId: number
   ): Promise<number> {
-    chainId = chainId || this.chainId;
-    try {
-      const StakingGetter = Web3Utils.getContractInstance(
-        SmartContractFactory.StakingGetter(chainId),
-        chainId
-      );
-      const result = await StakingGetter.methods.getLocksLength(account).call();
-
-      return result;
-    } catch (error) {
-      console.error(`Error in fetching Locks: ${error}`);
-      return 0;
-    }
+    const StakingGetter = Web3Utils.getContractInstance(
+      SmartContractFactory.StakingGetter(this.chainId),
+      this.chainId
+    );
+    return StakingGetter.methods.getLocksLength(account).call();
   }
 
   async handleUnlock(
     account: string,
     lockId: number,
-    chainId: number,
     transactionStore: ActiveWeb3Transactions
   ): Promise<void> {
-    chainId = chainId || this.chainId;
-
     const Staking = Web3Utils.getContractInstance(
-      SmartContractFactory.Staking(chainId),
-      chainId
+      SmartContractFactory.Staking(this.chainId),
+      this.chainId
     );
 
     return new Promise(async (resolve, reject) => {
@@ -307,17 +252,12 @@ export default class StakingService implements IStakingService {
   async handleEarlyWithdrawal(
     account: string,
     lockId: number,
-    chainId: number,
     transactionStore: ActiveWeb3Transactions
   ): Promise<void> {
-    chainId = chainId || this.chainId;
-    console.log("is account here", account);
     const Staking = Web3Utils.getContractInstance(
-      SmartContractFactory.Staking(chainId),
-      chainId
+      SmartContractFactory.Staking(this.chainId),
+      this.chainId
     );
-    console.log("is account here", account);
-    console.log("getting LockID:", lockId);
 
     return new Promise(async (resolve, reject) => {
       try {
@@ -359,17 +299,13 @@ export default class StakingService implements IStakingService {
   async handleClaimRewardsSingle(
     account: string,
     lockId: number,
-    chainId: number,
     transactionStore: ActiveWeb3Transactions
   ): Promise<void> {
-    chainId = chainId || this.chainId;
-    console.log("is account here", account);
     const Staking = Web3Utils.getContractInstance(
-      SmartContractFactory.Staking(chainId),
-      chainId
+      SmartContractFactory.Staking(this.chainId),
+      this.chainId
     );
-    console.log("is account here", account);
-    console.log("getting LockID:", lockId);
+
     return Staking.methods
       .claimRewards(lockId)
       .send({ from: account })
@@ -388,61 +324,51 @@ export default class StakingService implements IStakingService {
   async handleClaimRewards(
     account: string,
     streamId: number,
-    chainId: number,
     transactionStore: ActiveWeb3Transactions
   ): Promise<void> {
-    chainId = chainId || this.chainId;
-    try {
-      const Staking = Web3Utils.getContractInstance(
-        SmartContractFactory.Staking(chainId),
-        chainId
-      );
-      return Staking.methods
-        .claimAllLockRewardsForStream(streamId)
-        .send({ from: account })
-        .on("transactionHash", (hash: any) => {
-          transactionStore.addTransaction({
-            hash: hash,
-            type: TransactionType.Approve,
-            active: false,
-            status: TransactionStatus.None,
-            title: `Handling claim rewards`,
-            message: Strings.CheckOnBlockExplorer,
-          });
+    const Staking = Web3Utils.getContractInstance(
+      SmartContractFactory.Staking(this.chainId),
+      this.chainId
+    );
+
+    return Staking.methods
+      .claimAllLockRewardsForStream(streamId)
+      .send({ from: account })
+      .on("transactionHash", (hash: any) => {
+        transactionStore.addTransaction({
+          hash: hash,
+          type: TransactionType.Approve,
+          active: false,
+          status: TransactionStatus.None,
+          title: `Handling claim rewards`,
+          message: Strings.CheckOnBlockExplorer,
         });
-    } catch (error) {
-      console.error(`Error in Claim Rewards: ${error}`);
-    }
+      });
   }
 
   async handleWithdrawRewards(
     account: string,
     streamId: number,
-    chainId: number,
     transactionStore: ActiveWeb3Transactions
   ): Promise<void> {
-    chainId = chainId || this.chainId;
-    try {
-      const Staking = Web3Utils.getContractInstance(
-        SmartContractFactory.Staking(chainId),
-        chainId
-      );
-      return Staking.methods
-        .withdrawAll()
-        .send({ from: account })
-        .on("transactionHash", (hash: any) => {
-          transactionStore.addTransaction({
-            hash: hash,
-            type: TransactionType.Approve,
-            active: false,
-            status: TransactionStatus.None,
-            title: `Handling Withdraw Rewards`,
-            message: Strings.CheckOnBlockExplorer,
-          });
+    const Staking = Web3Utils.getContractInstance(
+      SmartContractFactory.Staking(this.chainId),
+      this.chainId
+    );
+
+    return Staking.methods
+      .withdrawAll()
+      .send({ from: account })
+      .on("transactionHash", (hash: any) => {
+        transactionStore.addTransaction({
+          hash: hash,
+          type: TransactionType.Approve,
+          active: false,
+          status: TransactionStatus.None,
+          title: `Handling Withdraw Rewards`,
+          message: Strings.CheckOnBlockExplorer,
         });
-    } catch (error) {
-      console.error(`Error in Withdraw rewards: ${error}`);
-    }
+      });
   }
 
   async getOneDayRewardForStream1(): Promise<number> {
@@ -453,97 +379,70 @@ export default class StakingService implements IStakingService {
     return oneDayReward;
   }
 
-  async getAPR(chainId: number): Promise<number> {
-    chainId = chainId || this.chainId;
-    try {
-      const oneDayReward = await this.getOneDayRewardForStream1();
-      const oneYearStreamRewardValue = oneDayReward * 365;
+  async getAPR(): Promise<number> {
+    const oneDayReward = await this.getOneDayRewardForStream1();
+    const oneYearStreamRewardValue = oneDayReward * 365;
 
-      const Staking = Web3Utils.getContractInstance(
-        SmartContractFactory.Staking(chainId),
-        chainId
-      );
+    const Staking = Web3Utils.getContractInstance(
+      SmartContractFactory.Staking(this.chainId),
+      this.chainId
+    );
 
-      let totalStaked = await Staking.methods
-        .totalAmountOfStakedMAINTkn()
-        .call();
-      totalStaked = this.fromWei(totalStaked, chainId);
+    let totalStaked = await Staking.methods.totalAmountOfStakedMAINTkn().call();
 
-      const totalAPR = (oneYearStreamRewardValue * 100) / totalStaked;
-      const APR = parseInt(totalAPR.toString());
+    totalStaked = this.fromWei(totalStaked);
 
-      return APR;
-    } catch (error) {
-      console.error(`Error in get APR: ${error}`);
-      return 0;
-    }
+    const totalAPR = (oneYearStreamRewardValue * 100) / totalStaked;
+    const APR = parseInt(totalAPR.toString());
+
+    return APR;
   }
 
-  async getWalletBalance(account: string, chainId: number): Promise<number> {
-    chainId = chainId || this.chainId;
-    try {
-      const MainToken = Web3Utils.getContractInstance(
-        SmartContractFactory.MainToken(chainId),
-        chainId
-      );
+  async getWalletBalance(account: string): Promise<number> {
+    const MainToken = Web3Utils.getContractInstance(
+      SmartContractFactory.MainToken(this.chainId),
+      this.chainId
+    );
 
-      let balance = await MainToken.methods.balanceOf(account).call();
-      balance = this._convertToEtherBalance(balance, chainId);
-      return balance;
-    } catch (error) {
-      console.error(`Error in get wallet balance: ${error}`);
-      return 0;
-    }
+    const balance = await MainToken.methods.balanceOf(account).call();
+    return parseFloat(this._convertToEtherBalanceRewards(balance));
   }
 
-  async getVOTEBalance(account: string, chainId: number): Promise<number> {
-    chainId = chainId || this.chainId;
-    try {
-      const VeMAINToken = Web3Utils.getContractInstance(
-        SmartContractFactory.VeMAINToken(chainId),
-        chainId
-      );
+  async getVOTEBalance(account: string): Promise<number> {
+    const VeMAINToken = Web3Utils.getContractInstance(
+      SmartContractFactory.VeMAINToken(this.chainId),
+      this.chainId
+    );
 
-      let balance = await VeMAINToken.methods.balanceOf(account).call();
-      balance = this._convertToEtherBalance(balance, chainId);
-
-      return balance;
-    } catch (error) {
-      console.error(`Error in get vote balance: ${error}`);
-      return 0;
-    }
+    const balance = await VeMAINToken.methods.balanceOf(account).call();
+    return this._convertToEtherBalance(balance);
   }
 
-  async getTimestamp(chainId: number): Promise<number> {
-    chainId = chainId || this.chainId;
+  async getTimestamp(): Promise<number> {
     console.log(`getTimestamp`);
-    const web3 = Web3Utils.getWeb3Instance(chainId);
+    const web3 = Web3Utils.getWeb3Instance(this.chainId);
     const blockNumber = await web3.eth.getBlockNumber();
     const block = await web3.eth.getBlock(blockNumber);
 
     return block.timestamp;
   }
 
-  fromWei(balance: number, chainId: number): number {
-    chainId = chainId || this.chainId;
-    const web3 = Web3Utils.getWeb3Instance(chainId);
+  fromWei(balance: number): number {
+    const web3 = Web3Utils.getWeb3Instance(this.chainId);
     return web3.utils.fromWei(balance.toString(), "ether");
   }
 
-  toWei(balance: number, chainId: number): number {
-    chainId = chainId || this.chainId;
-    const web3 = Web3Utils.getWeb3Instance(chainId);
+  toWei(balance: number): number {
+    const web3 = Web3Utils.getWeb3Instance(this.chainId);
     return web3.utils.toWei(balance.toString(), "ether");
   }
 
-  _convertToEtherBalance(balance: number, chainId: number): number {
-    chainId = chainId || this.chainId;
-    return parseInt(this.fromWei(balance, chainId).toString());
+  _convertToEtherBalance(balance: number): number {
+    return parseInt(this.fromWei(balance).toString());
   }
 
-  _convertToEtherBalanceRewards(balance: number, chainId: number): string {
-    chainId = chainId || this.chainId;
-    return parseFloat(this.fromWei(balance, chainId).toString()).toFixed(2);
+  _convertToEtherBalanceRewards(balance: number): string {
+    return parseFloat(this.fromWei(balance).toString()).toFixed(2);
   }
 
   _convertToTimeObject(_remainingTime: number) {
@@ -562,63 +461,51 @@ export default class StakingService implements IStakingService {
     return obj;
   }
 
-  setChainId(chainId: number) {
-    this.chainId = chainId;
-  }
-
   async approvalStatusStakingFTHM(
     address: string,
     stakingPosition: number,
-    chainId: number
   ): Promise<Boolean> {
-    try {
-      const FTHM = Web3Utils.getContractInstance(
-        SmartContractFactory.MainToken(chainId),
-        chainId
-      );
+    const FTHMToken = Web3Utils.getContractInstance(
+      SmartContractFactory.MainToken(this.chainId),
+      this.chainId
+    );
 
-      const StakingAddress = SmartContractFactory.Staking(this.chainId).address;
+    const StakingAddress = SmartContractFactory.Staking(this.chainId).address;
 
-      let allowance = await FTHM.methods
-        .allowance(address, StakingAddress)
-        .call();
+    const allowance = await FTHMToken.methods
+      .allowance(address, StakingAddress)
+      .call();
 
-      return allowance > this.toWei(stakingPosition, chainId);
-    } catch (error) {
-      console.error(`Error in approval status of FTHM: ${error}`);
-      throw error;
-    }
+    return allowance > this.toWei(stakingPosition);
   }
 
-  async approveStakingFTHM(
+  approveStakingFTHM(
     address: string,
-    chainId: number,
     transactionStore: ActiveWeb3Transactions
   ): Promise<void> {
-    try {
-      const FTHM = Web3Utils.getContractInstance(
-        SmartContractFactory.MainToken(chainId),
-        chainId
-      );
+    const FTHMToken = Web3Utils.getContractInstance(
+      SmartContractFactory.MainToken(this.chainId),
+      this.chainId
+    );
 
-      const StakingAddress = SmartContractFactory.Staking(this.chainId).address;
+    const StakingAddress = SmartContractFactory.Staking(this.chainId).address;
 
-      await FTHM.methods
-        .approve(StakingAddress, Constants.MAX_UINT256)
-        .send({ from: address })
-        .on("transactionHash", (hash: any) => {
-          transactionStore.addTransaction({
-            hash: hash,
-            type: TransactionType.Approve,
-            active: false,
-            status: TransactionStatus.None,
-            title: `Approving the token`,
-            message: Strings.CheckOnBlockExplorer,
-          });
+    return FTHMToken.methods
+      .approve(StakingAddress, Constants.MAX_UINT256)
+      .send({ from: address })
+      .on("transactionHash", (hash: any) => {
+        transactionStore.addTransaction({
+          hash: hash,
+          type: TransactionType.Approve,
+          active: false,
+          status: TransactionStatus.None,
+          title: `Approving the token`,
+          message: Strings.CheckOnBlockExplorer,
         });
-    } catch (error) {
-      console.error(`Error in approval of FTHM: ${error}`);
-      throw error;
-    }
+      });
+  }
+
+  setChainId(chainId: number) {
+    this.chainId = chainId;
   }
 }

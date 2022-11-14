@@ -30,13 +30,13 @@ export type AppMenuItemProps = AppMenuItemPropsWithoutItems & {
   items?: AppMenuItemProps[];
 };
 
+
 const useStyles = makeStyles<{ isActive: boolean; showText: boolean }>()(
   (theme, { isActive, showText }) => ({
     menuItem: {
       padding: "8px 9px 9px 8px",
       width: showText ?  "100%" : "40px",
       borderRadius: isActive ? "8px" : "0",
-      margin: "6px 0",
       "&.active": {
         background: isActive ? "#2A3E5A" : "transparent",
 
@@ -87,6 +87,8 @@ const AppMenuItem: React.FC<AppMenuItemProps> = (props) => {
     setOpen(!open);
   }
 
+  console.log(classes.menuItem);
+
   const MenuItemRoot = (
     <AppMenuItemComponent
       className={classes.menuItem}
@@ -96,7 +98,7 @@ const AppMenuItem: React.FC<AppMenuItemProps> = (props) => {
       {/* Display an icon if any */}
       {!!Icon && (
         <ListItemIcon className={classes.menuItemIcon}>
-          <Icon />
+          {Icon}
         </ListItemIcon>
       )}
       {showText && (

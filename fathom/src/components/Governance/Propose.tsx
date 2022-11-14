@@ -307,7 +307,7 @@ const ProposeListView: FC<ProposeListViewProps> = observer(({ onClose }) => {
 
                   <Controller
                     control={control}
-                    name="calldata"
+                    name="callData"
                     rules={{ required: true }}
                     render={({
                       field: { onChange, value },
