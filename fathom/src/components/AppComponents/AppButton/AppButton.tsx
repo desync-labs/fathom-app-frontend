@@ -37,15 +37,15 @@ export const ButtonPrimary = styled(MuiButton, {
       background: "transparent",
       color: "#B3FFF9",
       border: "1px solid #B3FFF9",
-      cursor: 'pointer',
+      cursor: "pointer",
       pointerEvents: "all !important",
       svg: {
         color: "#B3FFF9",
       },
     },
     "> .MuiCircularProgress-root": {
-      color: '#1D2D49'
-    }
+      color: "#1D2D49",
+    },
   };
 
   if (!isLoading) {
@@ -62,209 +62,187 @@ export const ButtonPrimary = styled(MuiButton, {
   return styles;
 });
 
-export const ButtonSecondary = styled(
-  MuiButton,
-  {}
-)(({ theme }) => ({
-  color: "#43FFF1",
-  fontWeight: "bold",
-  fontSize: "15px",
-  lineHeight: "20px",
-  padding: "8px 16px",
-  gap: "8px",
-  border: "1px solid #009E92",
-  borderRadius: "8px",
-  height: "40px",
-  "&:hover": {
-    background: "transparent",
-    color: "#B3FFF9",
-    border: "1px solid #B3FFF9",
+export const ButtonSecondary = styled(MuiButton)`
+  color: #43FFF1;
+  font-weight: bold;
+  font-size: 15px;
+  line-height: 20px;
+  padding: 8px 16px;
+  gap: 8px;
+  border: 1px solid #009E92;
+  border-radius: 8px;
+  height: 40px;
+  &:hover {
+    background: transparent;
+    color: #B3FFF9;
+    border: 1px solid #B3FFF9;
     svg: {
-      color: "#B3FFF9",
-    },
-  },
-  "&:disabled": {
-    color: "gray",
-    background: "transparent",
-    borderColor: "gray",
-    cursor: "not-allowed !important",
-    pointerEvents: "all !important",
-  },
-}));
+      color: #B3FFF9;
+    }, 
+  }
+  &:disabled {
+    color: gray;
+    background: transparent;
+    border-color: gray;
+    cursor: not-allowed !important;
+    pointer-events: all !important; 
+  }
+`;
 
-export const OpenPositionButton = styled(
-  MuiButton,
-  {}
-)(({ theme }) => ({
-  borderRadius: "8px",
-  background: "linear-gradient(104.04deg, #B3FFF9 0%, #00DBCB 100%)",
-  padding: "8, 12, 8, 12",
-  height: "32px",
-  fontSize: "13px",
-  lineHeight: "16px",
-  fontWeight: "bold",
-  color: "#00332F",
-  border: "1px solid #B3FFF9",
-  marginRight: "25px",
-  "&:hover": {
-    background: "transparent",
-    color: "#B3FFF9",
-    border: "1px solid #B3FFF9",
-    pointerEvents: "all !important",
-    cursor: "pointer",
+export const OpenPositionButton = styled(MuiButton)`
+  border-radius: 8px;
+  background: linear-gradient(104.04deg, #b3fff9 0%, #00dbcb 100%);
+  padding: 8px 12px 8px 12px;
+  height: 32px;
+  font-size: 13px;
+  line-height: 16px;
+  font-weight: bold;
+  color: #00332f;
+  border: 1px solid #b3fff9;
+  margin-right: 25px;
+  &:hover {
+    background: transparent;
+    color: #b3fff9;
+    border: 1px solid #b3fff9;
+    pointer-events: all !important;
+    cursor: pointer;
     svg: {
-      color: "#B3FFF9",
-    },
-  },
-}));
+      color: #b3fff9;
+    }
+  }
+`;
 
-export const ClosePositionButton = styled(
-  MuiButton,
-  {}
-)(({ theme }) => ({
-  border: "0.7px solid #43FFF1",
-  borderRadius: "8px",
-  background: "transparent",
-  padding: "8px 12px",
-  color: "#43FFF1",
-  fontSize: "13px",
-  lineHeight: "16px",
-  height: "32px",
-  minWidth: "118px",
-  "&:hover": {
-    background: "transparent",
-    color: "#B3FFF9",
-    border: "1px solid #B3FFF9",
+export const ClosePositionButton = styled(MuiButton)`
+  border: 0.7px solid #43FFF1;
+  border-radius: 8px;
+  background: transparent;
+  padding: 8px 12px;
+  color: #43FFF1;
+  font-size: 13px;
+  line-height: 16px;
+  height: 32px;
+  min-width: 118px;
+  &:hover {
+    background: transparent;
+    color: #B3FFF9;
+    border: 1px solid #B3FFF9;
     svg: {
-      color: "#B3FFF9",
+      color: #B3FFF9;
     },
-  },
-}));
+  }
+`;
 
-export const MaxButton = styled(
-  MuiButton,
-  {}
-)(({ theme }) => ({
-  background: "rgba(50, 69, 103, 0.3)",
-  borderRadius: "6px",
-  justifyContent: "center",
-  alignItems: "center",
-  padding: "4px 8px",
-  gap: "8px",
-  color: "#fff",
-  fontSize: "14px",
-  lineHeight: "20px",
-  position: "absolute",
-  top: "28px",
-  right: "7px",
-  cursor: "pointer",
-}));
+export const MaxButton = styled(MuiButton)`
+  background: rgba(50, 69, 103, 0.3);
+  border-radius: 6px;
+  justify-content: center;
+  align-items: center;
+  padding: 4px 8px;
+  gap: 8px;
+  color: #fff;
+  font-size: 14px;
+  lineHeight: 20px;
+  position: absolute;
+  top: 28px;
+  right: 7px;
+  cursor: pointer;
+`
 
-export const ApproveButton = styled(
-  MuiButton,
-  {}
-)(({ theme }) => ({
-  color: "#00332F",
-  fontWeight: "bold",
-  fontSize: "13px",
-  lineHeight: "16px",
-  background: "linear-gradient(104.04deg, #B3FFF9 0%, #00DBCB 100%)",
-  border: "1px solid #B3FFF9",
-  borderRadius: "8px",
-  marginLeft: "33px",
-  marginTop: "15px",
-  minWidth: "80px",
-  height: "28px",
-}));
+export const ApproveButton = styled(MuiButton)`
+  color: #00332f;
+  font-weight: bold;
+  font-size: 13px;
+  line-height: 16px;
+  background: linear-gradient(104.04deg, #b3fff9 0%, #00dbcb 100%);
+  border: 1px solid #b3fff9;
+  border-radius: 8px;
+  margin-left: 33px;
+  margin-top: 15px;
+  min-width: 80px;
+  height: 28px;
+`;
 
-export const OpenPositionsButtonsWrapper = styled(
-  Box,
-  {}
-)(({ theme }) => ({
-  display: "flex",
-  gap: "10px",
-  position: "absolute",
-  right: 0,
-  bottom: 0,
-}));
+export const OpenPositionsButtonsWrapper = styled(Box)`
+  display: flex;
+  gap: 10px;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+`;
 
 export const ClosePositionRepayTypeWrapper = styled(
   Box,
-  {}
-)(({ theme }) => ({
-  marginBottom: "20px",
-}));
+)`
+  margin-bottom: 20px;
+`
 
-export const RepayTypeButton = styled(MuiButton)(({ theme }) => ({
-  border: "1px solid #6987B8",
-  borderRadius: "8px",
-  alignItems: "center",
-  height: "40px",
-  width: "49%",
-  color: "#FFF",
-  fontSize: "15px",
-  lineHeight: "20px",
-  fontWeight: "bold",
-  "&.active": {
-    background: "#4F658C",
-    border: "1px solid #6379A1",
-  },
-}));
-
-export const FathomSwapChangeCurrencyButton = styled(MuiButton)(
-  ({ theme }) => ({
-    width: "40px",
-    height: "40px",
-    background: "#131F35",
-    border: "1px solid #131F35",
-    borderRadius: "8px",
-    left: "calc(50% - 40px/2)",
-    top: "calc(100% - 40px/2 + 6px)",
-    zIndex: "1",
-    position: "absolute",
-  })
-);
-
-export const StableSwapRateSettingsButton = styled(MuiButton)(
-  ({ theme }) => ({
-    float: 'right',
-    '&:hover': {
-      backgroundColor: "transparent"
-    }
-  })
-);
-
-export const QuestionMarkButton = styled(MuiButton)({
-  background: "#061023",
-  border: "2px solid #061023",
-  borderRadius: "8px",
-  cursor: "pointer",
-  width: '20px',
-  height: '20px'
-});
-
-export const BackToProposalsButton = styled(MuiButton)({
-  fontSize: '15px',
-  lineHeight: '20px',
-  background: 'transparent',
-  color: '#fff',
-  display: 'flex',
-  alignItems: 'center',
-  gap: '5px',
-  ":hover": {
-    background: 'none'
+export const RepayTypeButton = styled(MuiButton)`
+  border: 1px solid #6987b8;
+  border-radius: 8px;
+  align-items: center;
+  height: 40px;
+  width: 49%;
+  color: #fff;
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: bold;
+  &.active {
+    background: #4f658c;
+    border: 1px solid #6379a1;
   }
-});
+`;
 
-export const VotingEndedButton = styled(MuiButton)({
-  padding: '8px 20px',
-  width: '100%',
-  color: '#6379A1',
-  fontWeight: '600',
-  fontSize: '17px',
-  lineHeight: '24px',
-  "&.Mui-disabled": {
-    background: '#324567',
-    borderRadius: "8px"
+export const FathomSwapChangeCurrencyButton = styled(MuiButton)`
+  width: 40px;
+  height: 40px;
+  background: #131f35;
+  border: 1px solid #131f35;
+  border-radius: 8px;
+  left: calc(50% - 40px / 2);
+  top: calc(100% - 40px / 2 + 6px);
+  z-index: 1;
+  position: absolute;
+`;
+
+export const StableSwapRateSettingsButton = styled(MuiButton)`
+  float: right;
+  &:hover {
+    backgroundcolor: transparent;
   }
-});
+`;
+
+export const QuestionMarkButton = styled(MuiButton)`
+  background: #061023;
+  border: 2px solid #061023;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+`;
+
+export const BackToProposalsButton = styled(MuiButton)`
+  font-size: 15px;
+  line-height: 20px;
+  background: transparent;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 600;
+  :hover {
+    background: none;
+  }
+`;
+
+export const VotingEndedButton = styled(MuiButton)`
+  padding: 8px 20px;
+  width: 100%;
+  color: #6379a1;
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 24px;
+  &.Mui-disabled {
+    background: #324567;
+    border-radius: 8px;
+  }
+`;

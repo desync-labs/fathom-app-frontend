@@ -1,12 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { createTheme, styled, ThemeProvider } from "@mui/material/styles";
 import {
-  Container,
   CssBaseline,
   Drawer as MuiDrawer,
   Box,
   Toolbar,
-  List,
   Typography,
   Divider,
   IconButton,
@@ -40,6 +38,7 @@ import truncateEthAddress from "truncate-eth-address";
 import { Menu } from "components/Dashboard/Menu";
 import { ToggleDrawerButton } from "components/AppComponents/AppButton/AppButton";
 import { MainBox } from "components/AppComponents/AppBox/AppBox";
+import DaoView from "./DaoView";
 
 const drawerWidth: number = 240;
 
@@ -71,6 +70,15 @@ const Drawer = styled(MuiDrawer, {
     }),
   },
 }));
+
+const MenuWrapper = styled("nav")<{ open: boolean; isMobile: boolean }>`
+  padding: ${({ open, isMobile }) =>
+    open && !isMobile ? "20px 12px" : "20px 8px"};
+  margintop: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+`;
 
 const mdTheme = createTheme({
   palette: {
@@ -198,28 +206,26 @@ const MainLayout = observer(() => {
             )}
           </Toolbar>
           <Divider />
-          <List
-            component="nav"
-            sx={{
-              padding: open && !isMobile ? "20px 12px" : "20px 8px",
-            }}
-          >
+          <MenuWrapper open={open} isMobile={isMobile}>
             <Menu open={open} isMobile={isMobile} />
-          </List>
+          </MenuWrapper>
         </Drawer>
         <MainBox component="main">
           <Toolbar />
           <AlertMessages />
           <TransactionStatus />
-          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Routes>
-              <Route path="/" element={<DashboardContent />} />
-              <Route path="/swap" element={<StableSwap />} />
-              <Route path="/governance" element={<AllProposalsView />} />
-              <Route path="/proposal/:_proposalId" element={<ProposalView />} />
-              <Route path="/staking" element={<StakingView />} />
-            </Routes>
-          </Container>
+
+          <Routes>
+            <Route path="/" element={<DashboardContent />} />
+            <Route path="/swap" element={<StableSwap />} />
+            <Route path="proposal/:_proposalId" element={<ProposalView />} />
+          </Routes>
+          <Routes>
+            <Route path="/dao" element={<DaoView />}>
+              <Route path="proposals" element={<AllProposalsView />} />
+              <Route path="staking" element={<StakingView />} />
+            </Route>
+          </Routes>
           <Copyright />
         </MainBox>
       </Box>

@@ -1,5 +1,5 @@
 import React, { forwardRef, ReactNode } from "react";
-import { NavLink, NavLinkProps } from "react-router-dom";
+import { NavLink, NavLinkProps, useLocation } from "react-router-dom";
 import { ListItem } from "@mui/material";
 
 export interface AppMenuItemComponentProps {
@@ -11,6 +11,7 @@ export interface AppMenuItemComponentProps {
 
 const AppMenuItemComponent: React.FC<AppMenuItemComponentProps> = (props) => {
   const { className, onClick, link, children } = props;
+  const location = useLocation();
 
   // If link is not set return the orinary ListItem
   if (!link || typeof link !== "string") {
@@ -30,10 +31,16 @@ const AppMenuItemComponent: React.FC<AppMenuItemComponentProps> = (props) => {
       button
       className={className}
       children={children}
-      component={forwardRef((props: NavLinkProps, ref: any) => (
-        // @ts-ignore
-        <NavLink {...props} />
-      ))}
+      component={forwardRef((props: NavLinkProps, ref: any) => {
+        const className =
+          // @ts-ignore
+          !props.className.includes("active") &&
+          location.pathname.includes("dao")
+            ? `${props.className} active`
+            : props.className;
+
+        return <NavLink {...{...props, className}} />;
+      })}
       to={link}
     />
   );

@@ -85,7 +85,7 @@ const useProposalItem = () => {
   }, [_proposalId, proposalStore, account, chainId]);
 
   const back = useCallback(() => {
-    navigate("/governance");
+    navigate("/dao/proposals");
   }, [navigate]);
 
   return {

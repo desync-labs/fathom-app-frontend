@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import { useCallback, useEffect } from "react";
 import { Constants } from "helpers/Constants";
 import { ProposeListViewProps } from "components/Governance/Propose";
-import { Web3Utils } from "helpers/Web3Utils";
 import { XDC_CHAIN_IDS } from "connectors/networks";
 import Xdc3 from "xdc3";
 import Web3 from "web3";
@@ -14,7 +13,7 @@ const defaultValues = {
   descriptionTitle: "",
   description: "",
   inputValues: "",
-  calldata: "",
+  callData: "",
   targets: "",
   link: "",
   agreement: false,
@@ -62,7 +61,7 @@ const useCreateProposal = (onClose: ProposeListViewProps["onClose"]) => {
           descriptionTitle,
           description,
           inputValues,
-          calldata,
+          callData,
           targets,
           withAction,
         } = values;
@@ -71,7 +70,7 @@ const useCreateProposal = (onClose: ProposeListViewProps["onClose"]) => {
 
         if (withAction) {
           const values = inputValues.trim().split(",").map(Number);
-          const callData = calldata.trim().split(",");
+          const callDataArray = callData.trim().split(",");
           const targetsArray = targets
             .trim()
             .split(",")
@@ -80,7 +79,7 @@ const useCreateProposal = (onClose: ProposeListViewProps["onClose"]) => {
           await proposalStore.createProposal(
             targetsArray,
             values,
-            callData,
+            callDataArray,
             combinedText,
             account
           );
@@ -100,7 +99,7 @@ const useCreateProposal = (onClose: ProposeListViewProps["onClose"]) => {
         console.log(err);
       }
     },
-    [reset, account, chainId, proposalStore]
+    [reset, account, chainId, proposalStore, onClose]
   );
 
   const saveForLater = useCallback(() => {
@@ -110,8 +109,6 @@ const useCreateProposal = (onClose: ProposeListViewProps["onClose"]) => {
 
   const validateAddressesArray = useCallback((address: string) => {
     let valid = true;
-
-    const library = Web3Utils.getWeb3Instance(chainId);
     const trimmedAddresses = address
       .trim()
       .split(",")

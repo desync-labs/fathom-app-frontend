@@ -7,17 +7,18 @@ type PageHeaderType = {
   description: string;
 };
 
-const PageHeaderTitle = styled(Typography)(({ theme }) => ({
-  fontWeight: "bold",
-  fontSize: "28px",
-  color: "#9FADC6",
-  lineHeight: "32px",
-}));
-const PageHeaderDescription = styled(Box)(({ theme }) => ({
-  fontSize: "14px",
-  color: "#9FADC6",
-  lineHeight: "20px",
-}));
+const PageHeaderTitle = styled(Typography)`
+  font-weight: bold;
+  font-size: 28px;
+  color: #fff;
+  line-height: 32px;
+`;
+
+const PageHeaderDescription = styled(Box)`
+  font-size: 14px;
+  color: #fff;
+  lineHeight: 20px;
+`
 
 export const PageHeader: FC<PageHeaderType> = ({ title, description }) => {
   return (
@@ -25,7 +26,9 @@ export const PageHeader: FC<PageHeaderType> = ({ title, description }) => {
       <PageHeaderTitle variant="h6" gutterBottom>
         {title}
       </PageHeaderTitle>
-      <PageHeaderDescription dangerouslySetInnerHTML={{__html: description}}></PageHeaderDescription>
+      <PageHeaderDescription
+        dangerouslySetInnerHTML={{ __html: description }}
+      ></PageHeaderDescription>
     </Grid>
   );
 };

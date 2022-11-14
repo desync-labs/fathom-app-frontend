@@ -5,79 +5,89 @@ import {
   Box,
 } from "@mui/material";
 
-export const AppTextField = styled(
-  MuiTextField,
-  {}
-)(({ theme }) => ({
-  width: "100%",
-  padding: 0,
-  margin: 0,
-  "input, textarea": {
-    background: "#0D1526",
-    border: "1px solid #1D2D49",
-    borderRadius: " 8px",
-    height: "40px",
-    width: "100%",
-    padding: "0 50px 0 35px",
-    fontSize: "14px",
-    lineHeight: "20px",
-    color: "#4F658C",
-  },
-  "textarea": {
-    padding: "8px 6px 8px 16px",
-    minHeight: '20px',
-    fontSize: '14px',
-    lineHeight: '20px',
-  },
-  "& .MuiOutlinedInput-root": {
-    padding: 0,
-  },
-  "&.MuiTextField-root.MuiFormControl-root": {
-    marginTop: 0,
-    width: '100%'
-  },
-  "& .Mui-error input, & .Mui-error textarea": {
-    color: "#f44336",
-    textFillColor: "#f44336",
-    border: "1px solid #f44336",
-  },
-  "& input:disabled, textarea:disabled": {
-    cursor: "not-allowed !important",
-    pointerEvents: "all !important",
-  },
-  "& fieldset": { border: "none" },
-  ".MuiFormHelperText-root": {
-    marginLeft: 0,
-    marginTop: 0,
-    color: "#6379A1",
-  },
-}));
+export const AppTextField = styled(MuiTextField)`
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  input,
+  textarea {
+    background: #0d1526;
+    border: 1px solid #1d2d49;
+    border-radius: 8px;
+    height: 40px;
+    width: 100%;
+    padding: 0 50px 0 35px;
+    font-size: 14px;
+    line-height: 20px;
+    color: #4f658c;
+  }
 
-export const AppFormLabel = styled(
-  MuiFormLabel,
-  {}
-)(({ theme }) => ({
-  fontWeight: "bold",
-  fontSize: "10.5px",
-  lineHeight: "16px",
-  color: "#6379A1",
-  textTransform: "uppercase",
-  float: "left",
-  paddingBottom: "5px",
-}));
+  textarea {
+    padding: 8px 6px 8px 16px;
+    min-height: 20px;
+    font-size: 14px;
+    line-height: 20px;
+  }
 
-export const AppFormInputWrapper = styled(
-  Box,
-  {}
-)(({ theme }) => ({
-  position: "relative",
-  marginBottom: '15px'
-}));
+  input[type="number"] {
+    &::-webkit-inner-spin-button,
+    &::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+    }
+  }
 
-export const AppFormInputLogo = styled("img")({
-  width: "20px",
-  height: "20px",
-  position: "absolute",
-  top: "32px",
-  left: "9px",
-});
+  & .MuiOutlinedInput-root {
+    padding: 0;
+  }
+
+  &.MuiTextField-root.MuiFormControl-root {
+    margin-top: 0;
+    width: 100%;
+  }
+
+  & .Mui-error input,
+  & .Mui-error textarea {
+    color: #f44336;
+    text-fill-color: #f44336;
+    border: 1px solid #f44336;
+  }
+
+  & input:disabled,
+  textarea:disabled {
+    cursor: not-allowed !important;
+    pointer-events: all !important;
+  }
+
+  & fieldset {
+    border: none;
+  }
+
+  .MuiFormHelperText-root {
+    margin-left: 0;
+    margin-top: 5px;
+    color: #6379a1;
+  }
+`;
+
+export const AppFormLabel = styled(MuiFormLabel)`
+  font-weight: bold;
+  font-size: 10.5px;
+  line-height: 16px;
+  color: #6379a1;
+  text-transform: uppercase;
+  float: left;
+  padding-bottom: 5px;
+`;
+
+export const AppFormInputWrapper = styled(Box)`
+  position: relative;
+  margin-bottom: 15px;
+`;
+
+export const AppFormInputLogo = styled("img")`
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  top: 32px;
+  left: 9px;
+`;

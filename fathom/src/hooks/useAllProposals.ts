@@ -1,4 +1,4 @@
-import useMetaMask from "./metamask";
+import useMetaMask from "hooks/metamask";
 import {
   LogLevel,
   useLogger
@@ -14,6 +14,7 @@ export const useAllProposals = () => {
   const { account, chainId } = useMetaMask()!;
   const logger = useLogger();
   const { proposalStore } = useStores();
+  const [fetchProposalsPending, setFetchProposalsPending] = useState(true);
   const [search, setSearch] = useState<string>("");
   const [time, setTime] = useState<string>("all");
   const [proposals, setProposals] = useState<string>("all");
@@ -23,14 +24,18 @@ export const useAllProposals = () => {
     if (chainId) {
       setTimeout(() => {
         logger.log(LogLevel.info, "fetching proposal information.");
-        proposalStore.fetchProposals(account);
+        setFetchProposalsPending(true)
+        proposalStore.fetchProposals(account).finally(() => {
+          setFetchProposalsPending(false)
+        });
       });
     } else {
       proposalStore.setProposals([]);
     }
-  }, [account, logger, proposalStore, chainId]);
+  }, [account, logger, proposalStore, chainId, setFetchProposalsPending]);
 
   return {
+    fetchProposalsPending,
     search,
     setSearch,
     time,

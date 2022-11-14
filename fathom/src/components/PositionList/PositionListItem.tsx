@@ -10,26 +10,20 @@ import React, { Dispatch, FC, SetStateAction, useCallback } from "react";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
 import BigNumber from "bignumber.js";
 import { Constants } from "helpers/Constants";
-import PoolStore from "stores/pool.store";
+import { useStores } from "stores";
 
 type PositionListItemProps = {
   position: IOpenPosition;
   setSelectedPosition: Dispatch<SetStateAction<IOpenPosition | undefined>>;
-  poolStore: PoolStore;
   approve: () => void;
   approvalPending: boolean;
   approveBtn: boolean;
 };
 
 const PositionListItem: FC<PositionListItemProps> = observer(
-  ({
-    position,
-    setSelectedPosition,
-    poolStore,
-    approvalPending,
-    approveBtn,
-    approve,
-  }) => {
+  ({ position, setSelectedPosition, approvalPending, approveBtn, approve }) => {
+    const { poolStore } = useStores();
+
     const getFormattedSafetyBuffer = useCallback((safetyBuffer: BigNumber) => {
       return safetyBuffer.div(Constants.WeiPerWad).decimalPlaces(2).toString();
     }, []);

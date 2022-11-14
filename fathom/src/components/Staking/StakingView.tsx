@@ -6,23 +6,20 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
   Button,
   Grid,
   CircularProgress,
 } from "@mui/material";
-import { useStores } from "stores";
-import useMetaMask from "hooks/metamask";
-import { LogLevel, useLogger } from "../../helpers/Logger";
-import { useCallback, useEffect, useState } from "react";
+import { useMemo } from "react";
 import { observer } from "mobx-react";
 import ILockPosition from "stores/interfaces/ILockPosition";
-import StakingModal from "components/Staking/StakingModal";
+import StakingModal from "components/Staking/FTHMStream";
 import StakingViewItem from "components/Staking/StakingViewItem";
 import StakingLockForm from "components/Staking/StakingLockForm";
-import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
 import { AppTableHeaderRow } from "components/AppComponents/AppTable/AppTable";
-import { processRpcError } from "utils/processRpcError";
+import { PageHeader } from "components/Dashboard/PageHeader";
+import useStakingView from "hooks/useStakingView";
+import FTHMStream from "components/Staking/FTHMStream";
 
 export type StakingViewItemMethodsPropsType = {
   handleEarlyWithdrawal: (lockId: number) => void;
@@ -33,145 +30,41 @@ export type StakingViewItemMethodsPropsType = {
 export type ActionType = { type: string; id: number | null };
 
 const StakingView = observer(() => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [action, setAction] = useState<ActionType>();
-  const { account, chainId } = useMetaMask()!;
-  const logger = useLogger();
-  const rootStore = useStores();
-
-  const stakingStore = rootStore.stakingStore;
-
-  const fetchAll = useCallback(
-    async (account: string, chainId: number) => {
-      setIsLoading(true);
-      Promise.all([
-        stakingStore.fetchLocks(account, chainId),
-        stakingStore.fetchVOTEBalance(account, chainId),
-        stakingStore.fetchWalletBalance(account, chainId),
-        stakingStore.fetchAPR(chainId),
-      ]).then(() => {
-        setIsLoading(false);
-      });
-    },
-    [stakingStore, setIsLoading]
-  );
-
-  const fetchOverallValues = useCallback(
-    async (account: string, chainId: number) => {
-      setIsLoading(true);
-      await Promise.all([
-        stakingStore.fetchVOTEBalance(account, chainId),
-        stakingStore.fetchWalletBalance(account, chainId),
-        stakingStore.fetchAPR(chainId),
-      ]).then(() => {
-        setIsLoading(false);
-      });
-    },
-    [stakingStore, setIsLoading]
-  );
-
-  useEffect(() => {
-    if (chainId) {
-      logger.log(LogLevel.info, "Fetching lock positions.");
-      fetchAll(account, chainId);
-    } else {
-      stakingStore.setLocks([]);
-    }
-  }, [account, logger, stakingStore, chainId, fetchAll]);
-
-  const claimRewards = useCallback(async () => {
-    setAction({ type: "claim", id: null });
-    try {
-      await stakingStore.handleClaimRewards(account, chainId);
-      fetchAll(account, chainId);
-    } catch (e) {
-      logger.log(LogLevel.error, "Claim error");
-    }
-    setAction(undefined);
-  }, [stakingStore, account, chainId, setAction, fetchAll, logger]);
-
-  const withdrawRewards = useCallback(async () => {
-    setAction({ type: "withdraw", id: null });
-    try {
-      await stakingStore.handleWithdrawRewards(account, chainId);
-    } catch (e) {
-      logger.log(LogLevel.error, "Withdraw error");
-    }
-    setAction(undefined);
-  }, [stakingStore, account, chainId, setAction, logger]);
-
-  const handleEarlyWithdrawal = useCallback(
-    async (lockId: number) => {
-      setAction({
-        type: "early",
-        id: lockId,
-      });
-      try {
-        await stakingStore.handleEarlyWithdrawal(account, lockId, chainId);
-        await stakingStore.fetchLockPositionAfterUnlock(lockId);
-      } catch (e) {
-        console.log(e);
-      }
-      setAction(undefined);
-      fetchOverallValues(account, chainId);
-    },
-    [stakingStore, account, chainId, fetchOverallValues, setAction]
-  );
-
-  const handleUnlock = useCallback(
-    async (lockId: number) => {
-      setAction({
-        type: "unlock",
-        id: lockId,
-      });
-      try {
-        await stakingStore.handleUnlock(account, lockId, chainId);
-        await stakingStore.fetchLockPositionAfterUnlock(lockId);
-      } catch (e) {
-        const err = processRpcError(e);
-        rootStore.alertStore.setShowErrorAlert(true, err.reason || err.message);
-      }
-
-      setAction(undefined);
-      fetchOverallValues(account, chainId);
-    },
-    [
-      stakingStore,
-      account,
-      chainId,
-      fetchOverallValues,
-      setAction,
-      rootStore.alertStore,
-    ]
-  );
-
-  const isItUnlockable = useCallback((remainingTime: number) => {
-    // const remainingTime = stakingStore.lockPositions[lockId - 1].EndTime;
-    const isItUnlockable = remainingTime <= 0;
-    return isItUnlockable;
-  }, []);
-
-  const stakingViewItemProps: StakingViewItemMethodsPropsType = {
-    handleEarlyWithdrawal,
-    isItUnlockable,
-    handleUnlock,
-  };
+  const {
+    stakingStore,
+    action,
+    isLoading,
+    stakingViewItemProps,
+    withdrawRewards,
+    claimRewards,
+    fetchOverallValues,
+  } = useStakingView();
 
   return (
-    <AppPaper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-      <Typography component="h2" variant="h6" color="primary" gutterBottom>
-        STAKING
-      </Typography>
-      <Grid container spacing={2}>
-        <Grid item xs={8}>
-          <StakingLockForm fetchOverallValues={fetchOverallValues} />
-        </Grid>
-        <Grid item xs={4}>
-          <StakingModal
-            apr={100}
-            stakedBalance={stakingStore.totalStakedPosition}
-            voteBalance={stakingStore.voteBalance}
+    <Grid container spacing={3}>
+      {useMemo(
+        () => (
+          <PageHeader
+            title="Staking"
+            description={
+              "Stake XDC, borrow FXD and earn an attractive yield on FXD in the form of liquid staking rewards."
+            }
           />
+        ),
+        []
+      )}
+      <Grid item xs={12}>
+        <Grid container spacing={2}>
+          <Grid item xs={6}>
+            <StakingLockForm fetchOverallValues={fetchOverallValues} />
+          </Grid>
+          <Grid item xs={6}>
+            <FTHMStream
+              apr={100}
+              stakedBalance={stakingStore.totalStakedPosition}
+              voteBalance={stakingStore.voteBalance}
+            />
+          </Grid>
         </Grid>
       </Grid>
       <TableContainer sx={{ my: 2 }}>
@@ -206,7 +99,6 @@ const StakingView = observer(() => {
           </TableBody>
         </Table>
       </TableContainer>
-      <br />
 
       <Button variant="outlined" onClick={claimRewards} sx={{ my: 2 }}>
         {action?.type === "claim" ? (
@@ -222,7 +114,7 @@ const StakingView = observer(() => {
           "Withdraw All Rewards and Remaining Unlocked FTHM"
         )}
       </Button>
-    </AppPaper>
+    </Grid>
   );
 });
 

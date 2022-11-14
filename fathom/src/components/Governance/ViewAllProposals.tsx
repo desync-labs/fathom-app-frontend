@@ -24,18 +24,19 @@ import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
 import ViewAllProposalItem from "components/Governance/ViewAllProposalItem";
 import Propose from "./Propose";
 
-const ProposalSelect = styled(Select)(({ theme }) => ({
-  padding: "8px 12px",
-  gap: "8px",
-  height: "40px",
-  background: "#253656",
-  border: "1px solid #324567",
-  borderRadius: "8px",
-  width: "100%",
-}));
+const ProposalSelect = styled(Select)`
+  padding: 8px 12px;
+  gap: 8px;
+  height: 40px;
+  background: #253656;
+  border: 1px solid #324567;
+  borderradius: 8px;
+  width: 100%;
+`;
 
 const AllProposalsView = observer(() => {
   const {
+    fetchProposalsPending,
     search,
     setSearch,
     time,
@@ -131,7 +132,7 @@ const AllProposalsView = observer(() => {
         </Grid>
         <Grid item xs={8}>
           <Grid container spacing={1}>
-            {fetchedProposals.length === 0 ? (
+            {fetchProposalsPending ? (
               <Grid item xs={12}>
                 <Typography
                   variant="h6"
