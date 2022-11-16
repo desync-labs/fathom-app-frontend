@@ -87,8 +87,6 @@ const AppMenuItem: React.FC<AppMenuItemProps> = (props) => {
     setOpen(!open);
   }
 
-  console.log(classes.menuItem);
-
   const MenuItemRoot = (
     <AppMenuItemComponent
       className={classes.menuItem}

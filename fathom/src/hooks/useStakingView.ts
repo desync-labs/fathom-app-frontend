@@ -3,10 +3,9 @@ import useMetaMask from "hooks/metamask";
 import { LogLevel, useLogger } from "helpers/Logger";
 import { useStores } from "stores";
 import { processRpcError } from "utils/processRpcError";
-import {
-  ActionType,
-  StakingViewItemMethodsPropsType,
-} from "components/Staking/StakingView";
+import ILockPosition from "../stores/interfaces/ILockPosition";
+
+export type ActionType = { type: string; id: number | null };
 
 const useStakingView = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -64,15 +63,31 @@ const useStakingView = () => {
     setAction(undefined);
   }, [stakingStore, account, setAction, fetchAll, logger]);
 
+  const claimRewardsSingle = useCallback(
+    async (lockId: number) => {
+      setAction({ type: "claimSingle", id: lockId });
+      try {
+        await stakingStore.handleClaimRewardsSingle(account, lockId);
+        fetchAll(account);
+      } catch (e) {
+        logger.log(LogLevel.error, "Claim Rewards Single error");
+      }
+
+      setAction(undefined);
+    },
+    [stakingStore, account, setAction, fetchAll, alertStore]
+  );
+
   const withdrawRewards = useCallback(async () => {
     setAction({ type: "withdraw", id: null });
     try {
       await stakingStore.handleWithdrawRewards(account);
+      fetchOverallValues(account);
     } catch (e) {
       logger.log(LogLevel.error, "Withdraw error");
     }
     setAction(undefined);
-  }, [stakingStore, account, setAction, logger]);
+  }, [stakingStore, account, fetchOverallValues, setAction, logger]);
 
   const handleEarlyWithdrawal = useCallback(
     async (lockId: number) => {
@@ -84,12 +99,12 @@ const useStakingView = () => {
         await stakingStore.handleEarlyWithdrawal(account, lockId);
         await stakingStore.fetchLockPositionAfterUnlock(lockId);
       } catch (e) {
-        console.log(e);
+        logger.log(LogLevel.error, "handle Early Withdrawal");
       }
       setAction(undefined);
       fetchOverallValues(account);
     },
-    [stakingStore, account, fetchOverallValues, setAction]
+    [stakingStore, account, fetchOverallValues, setAction, logger]
   );
 
   const handleUnlock = useCallback(
@@ -112,29 +127,37 @@ const useStakingView = () => {
     [stakingStore, account, fetchOverallValues, setAction, alertStore]
   );
 
-  const isItUnlockable = useCallback((remainingTime: number) => {
+  const isUnlockable = useCallback((remainingTime: number) => {
     return remainingTime <= 0;
   }, []);
 
-  const stakingViewItemProps: StakingViewItemMethodsPropsType = {
-    handleEarlyWithdrawal,
-    isItUnlockable,
-    handleUnlock,
-  };
+  const calculateTotalRewards = useCallback(
+    (lockPositions: ILockPosition[]) => {
+      return lockPositions.reduce(
+        (previousValue, lockPositions) =>
+          previousValue + Number(lockPositions.RewardsAvailable),
+        0
+      );
+    },
+    []
+  );
 
   return {
     stakingStore,
-
     account,
     chainId,
     action,
     isLoading,
-    isItUnlockable,
-
-    stakingViewItemProps,
+    isUnlockable,
     withdrawRewards,
     claimRewards,
     fetchOverallValues,
+
+    handleEarlyWithdrawal,
+    handleUnlock,
+
+    calculateTotalRewards,
+    claimRewardsSingle,
   };
 };
 

@@ -1,59 +1,59 @@
 import * as React from "react";
 import { observer } from "mobx-react";
-import { useStores } from "../../stores";
+import { useStores } from "stores";
 import { useEffect } from "react";
 import { Alert, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
 const AlertMessages = observer(() => {
-  let rootStore = useStores();
+  const { alertStore } = useStores();
 
   useEffect(() => {
     // Update the document title using the browser API
-  }, [rootStore.alertStore]);
+  }, [alertStore]);
 
   return (
     <>
-      {rootStore.alertStore.showErrorAlert && (
+      {alertStore.showErrorAlert && (
         <Alert
           severity="error"
           variant="filled"
+          sx={{ position: 'fixed', width: '100%', mb: 2 }}
           action={
             <IconButton
               aria-label="close"
               color="inherit"
               size="small"
               onClick={() => {
-                rootStore.alertStore.setShowErrorAlert(false);
+                alertStore.setShowErrorAlert(false);
               }}
             >
               <CloseIcon fontSize="inherit" />
             </IconButton>
           }
-          sx={{ mb: 2 }}
         >
-          {rootStore.alertStore.errorAlertMessage}
+          {alertStore.errorAlertMessage}
         </Alert>
       )}
-      {rootStore.alertStore.showSuccessAlert && (
+      {alertStore.showSuccessAlert && (
         <Alert
           severity="success"
           variant="filled"
+          sx={{ position: 'fixed', width: '100%', mb: 2 }}
           action={
             <IconButton
               aria-label="close"
               color="inherit"
               size="small"
               onClick={() => {
-                rootStore.alertStore.setShowSuccessAlert(false);
+                alertStore.setShowSuccessAlert(false);
               }}
             >
               <CloseIcon fontSize="inherit" />
             </IconButton>
           }
-          sx={{ mb: 2 }}
         >
-          {rootStore.alertStore.successAlertMessage}
+          {alertStore.successAlertMessage}
         </Alert>
       )}
     </>
