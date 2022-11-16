@@ -85,11 +85,10 @@ const MyStatsBlock = styled(Box)`
   width: 33.33%;
 `;
 
-const MyStatsUSDPrice = styled(Box)`
+const StatsUSDPrice = styled(Box)`
   font-size: 14px;
   line-height: 20px;
   color: #9fadc6;
-  margin-top: -2px;
 `;
 
 const StreamStats = observer((props: any) => {
@@ -157,7 +156,7 @@ const StreamStats = observer((props: any) => {
           <StatsValue>
             <strong>400</strong>FTHM
           </StatsValue>
-          <MyStatsUSDPrice>$500.00</MyStatsUSDPrice>
+          <StatsUSDPrice>$500.00</StatsUSDPrice>
         </MyStatsBlock>
 
         <MyStatsBlock>
@@ -165,7 +164,7 @@ const StreamStats = observer((props: any) => {
           <StatsValue>
             <strong>100</strong>FTHM
           </StatsValue>
-          <MyStatsUSDPrice>$153.00</MyStatsUSDPrice>
+          <StatsUSDPrice>$153.00</StatsUSDPrice>
         </MyStatsBlock>
 
         <MyStatsBlock>
@@ -175,18 +174,6 @@ const StreamStats = observer((props: any) => {
           </StatsValue>
         </MyStatsBlock>
       </MyStatsBlocks>
-
-      {/*<Typography component="h2" variant="h5" color="primary" gutterBottom>*/}
-      {/*  {props.apr} % APR*/}
-      {/*</Typography>*/}
-      {/*<Typography color="text.secondary">Staked Balance</Typography>*/}
-      {/*<Typography component="p" variant="h6">*/}
-      {/*  {props.stakedBalance}*/}
-      {/*</Typography>*/}
-      {/*<Typography color="text.secondary">Vote Balance</Typography>*/}
-      {/*<Typography component="p" variant="h6">*/}
-      {/*  {props.voteBalance}*/}
-      {/*</Typography>*/}
     </Box>
   );
 });

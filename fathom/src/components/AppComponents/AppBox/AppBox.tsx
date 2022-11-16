@@ -47,6 +47,9 @@ export const InfoLabel = styled(Typography)`
   font-size: 14px;
   float: left;
   color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 `;
 
 export const InfoValue = styled(Typography)`

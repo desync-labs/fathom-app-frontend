@@ -13,7 +13,7 @@ import ILockPosition from "stores/interfaces/ILockPosition";
 import { styled } from "@mui/material/styles";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import InfoIcon from "@mui/icons-material/Info";
-import useStakingView from "../../../hooks/useStakingView";
+import useStakingView from "hooks/useStakingView";
 
 const DialogContentWrapper = styled(Box)`
   display: flex;
@@ -40,7 +40,7 @@ const Amount = styled(Box)`
   }
 `;
 
-const InfoWrapper = styled(Box)`
+export const InfoMessageWrapper = styled(Box)`
   display: flex;
   align-items: start;
   gap: 5px;
@@ -61,6 +61,9 @@ const InfoWrapper = styled(Box)`
 const ConfirmButton = styled(ButtonPrimary)`
   width: 100%;
   height: 48px;
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 24px;
 `;
 
 export enum ClaimRewardsType {
@@ -88,10 +91,14 @@ const ClaimRewardsDialog: FC<ClaimRewardsDialogProps> = ({
 }) => {
   const { claimRewardsSingle, claimRewards, action } = useStakingView();
 
-  const claimRewardsHandler = useCallback(async () => {
+  const claimRewardsHandler = useCallback( () => {
     if (type === ClaimRewardsType.ITEM) {
       // @ts-ignore
       claimRewardsSingle(lockPosition?.lockId).then(() => {
+        onClose();
+      });
+    } else {
+      claimRewards().then(() => {
         onClose();
       });
     }
@@ -143,13 +150,13 @@ const ClaimRewardsDialog: FC<ClaimRewardsDialogProps> = ({
                 </span>
               </Amount>
             </DialogContentWrapper>
-            <InfoWrapper>
+            <InfoMessageWrapper>
               <InfoIcon sx={{ fontSize: "18px", color: "#4F658C" }} />
               <Typography>
                 By clicking “Confirm”, you’ll be withdrawing this amount to your
                 connected wallet.
               </Typography>
-            </InfoWrapper>
+            </InfoMessageWrapper>
           </Grid>
 
           <Grid item xs={12}>

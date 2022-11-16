@@ -15,14 +15,13 @@ import { secondsToTime } from "utils/secondsToTime";
 
 import clockSrc from "assets/svg/clock-circle.svg";
 import ButtonGroup from "@mui/material/ButtonGroup";
-import { ClosePositionButton } from "../AppComponents/AppButton/AppButton";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import Popper from "@mui/material/Popper";
 import Grow from "@mui/material/Grow";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import MenuList from "@mui/material/MenuList";
 import MenuItem from "@mui/material/MenuItem";
-import { AppPaper } from "../AppComponents/AppPaper/AppPaper";
+import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
 
 const StakingViewItemWrapper = styled(Box)`
   display: grid;
@@ -33,7 +32,7 @@ const StakingViewItemWrapper = styled(Box)`
   margin: 3px 0;
 `;
 
-const StakingViewItemLabel = styled(Box)`
+export const StakingViewItemLabel = styled(Box)`
   font-weight: 700;
   font-size: 13px;
   line-height: 16px;
@@ -41,7 +40,7 @@ const StakingViewItemLabel = styled(Box)`
   text-transform: uppercase;
 `;
 
-const StakingViewItemValue = styled(Box)`
+export const StakingViewItemValue = styled(Box)`
   display: flex;
   align-items: center;
   gap: 5px;
@@ -179,6 +178,10 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({ lockPosition, setUnstak
   const { isUnlockable } = useStakingView();
 
   useEffect(() => {
+    setUnstake(lockPosition)
+  }, [setUnstake, lockPosition])
+
+  useEffect(() => {
     const interval = setInterval(function () {
       setSeconds((prev) => prev - 1);
     }, 1000);
@@ -263,7 +266,7 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({ lockPosition, setUnstak
                 <UnstakePaper>
                   <ClickAwayListener onClickAway={() => setOpen(false)}>
                     <MenuList id="split-button-menu" autoFocusItem>
-                      { isUnlockable(seconds) && <MenuItem onClick={() => setUnstake(lockPosition)}>Unstake</MenuItem> }
+                      { !isUnlockable(seconds) && <MenuItem onClick={() => setUnstake(lockPosition)}>Unstake</MenuItem> }
                       { !isUnlockable(seconds) && <MenuItem onClick={() => setEarlyUnstake(lockPosition)}>Early Unstake</MenuItem> }
                     </MenuList>
                   </ClickAwayListener>

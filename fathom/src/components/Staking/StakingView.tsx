@@ -8,7 +8,7 @@ import StakingLockForm from "components/Staking/StakingLockForm";
 import { PageHeader } from "components/Dashboard/PageHeader";
 import useStakingView from "hooks/useStakingView";
 import StreamStats from "components/Staking/StreamStats";
-import StakingPositions from "./StakingPositions";
+import StakingPositions from "components/Staking/StakingPositions";
 
 const StakingView = observer(() => {
   const {
