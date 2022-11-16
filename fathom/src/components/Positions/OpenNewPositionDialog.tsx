@@ -156,7 +156,7 @@ const OpenNewPositionDialog: FC<OpenPositionProps> = ({ pool, onClose }) => {
             </AppList>
           </Grid>
           <Divider
-            sx={{ margin: "10px  0 0 0" }}
+            sx={{ margin: "10px 0 0 0" }}
             orientation="vertical"
             flexItem
           ></Divider>

@@ -9,8 +9,9 @@ import { useStores } from "stores";
 import ClaimRewardsDialog, {
   ClaimRewardsAll,
   ClaimRewardsType,
-} from "./Dialog/ClaimRewardsDialog";
+} from "components/Staking/Dialog/ClaimRewardsDialog";
 import useStakingView from "hooks/useStakingView";
+import UnstakeDialog from "components/Staking/Dialog/UnstakeDialog";
 
 const StreamHeaderWrapper = styled(Box)`
   display: flex;
@@ -163,6 +164,10 @@ const StreamItem = () => {
           }
         />
       )}
+
+      { unstake && (
+        <UnstakeDialog onClose={ () => setUnstake(null) } lockPosition={unstake} />
+      ) }
     </>
   );
 };
