@@ -113,7 +113,7 @@ const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({ onClose, lockPosition
       maxWidth="sm"
     >
       <AppDialogTitle id="customized-dialog-title" onClose={onClose}>
-        Unstake
+        Early Unstake
       </AppDialogTitle>
 
       <DialogContent>
