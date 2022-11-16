@@ -12,6 +12,7 @@ import ClaimRewardsDialog, {
 } from "components/Staking/Dialog/ClaimRewardsDialog";
 import useStakingView from "hooks/useStakingView";
 import UnstakeDialog from "components/Staking/Dialog/UnstakeDialog";
+import EarlyUnstakeDialog from "./Dialog/EarlyUnstakeDialog";
 
 const StreamHeaderWrapper = styled(Box)`
   display: flex;
@@ -112,7 +113,9 @@ const StreamItem = () => {
           <img src={getTokenLogoURL("WXDC")} alt={"token-logo"} width={28} />
         </HeaderTokenLogo>
         <HeaderStreamName>XDC Stream</HeaderStreamName>
-        <HeaderLockedPositions>{ stakingStore.lockPositions.length } Locked Positions</HeaderLockedPositions>
+        <HeaderLockedPositions>
+          {stakingStore.lockPositions.length} Locked Positions
+        </HeaderLockedPositions>
       </StreamHeaderWrapper>
 
       {useMemo(
@@ -165,9 +168,27 @@ const StreamItem = () => {
         />
       )}
 
-      { unstake && (
-        <UnstakeDialog onClose={ () => setUnstake(null) } lockPosition={unstake} />
-      ) }
+      {useMemo(
+        () =>
+          unstake && (
+            <UnstakeDialog
+              onClose={() => setUnstake(null)}
+              lockPosition={unstake}
+            />
+          ),
+        [unstake]
+      )}
+
+      {useMemo(
+        () =>
+          earlyUnstake && (
+            <EarlyUnstakeDialog
+              onClose={() => setEarlyUnstake(null)}
+              lockPosition={earlyUnstake}
+            />
+          ),
+        [earlyUnstake]
+      )}
     </>
   );
 };
