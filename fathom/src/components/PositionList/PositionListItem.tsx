@@ -6,11 +6,29 @@ import {
   ClosePositionButton,
 } from "components/AppComponents/AppButton/AppButton";
 import { AppTableRow } from "components/AppComponents/AppTable/AppTable";
-import React, { Dispatch, FC, SetStateAction, useCallback } from "react";
+import React, {
+  Dispatch,
+  FC,
+  SetStateAction,
+  useCallback,
+  useRef,
+  useState,
+} from "react";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
 import BigNumber from "bignumber.js";
 import { Constants } from "helpers/Constants";
 import { useStores } from "stores";
+import ButtonGroup from "@mui/material/ButtonGroup";
+import Button from "@mui/material/Button";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import Popper from "@mui/material/Popper";
+import Grow from "@mui/material/Grow";
+import Paper from "@mui/material/Paper";
+import ClickAwayListener from "@mui/material/ClickAwayListener";
+import MenuList from "@mui/material/MenuList";
+import MenuItem from "@mui/material/MenuItem";
+import { styled } from "@mui/material/styles";
+import { AppPaper } from "../AppComponents/AppPaper/AppPaper";
 
 type PositionListItemProps = {
   position: IOpenPosition;
@@ -20,9 +38,30 @@ type PositionListItemProps = {
   approveBtn: boolean;
 };
 
+const ClosePositionPaper = styled(AppPaper)`
+  background: #253656;
+  border: 1px solid #4f658c;
+  box-shadow: 0px 12px 32px #000715;
+  border-radius: 8px;
+  padding: 4px;
+  
+  ul {
+    padding: 0;
+    li {
+      padding: 10px 16px;
+      &:hover {
+        background: #324567;
+        border-radius: 6px;
+      }
+    }
+  }
+`;
+
 const PositionListItem: FC<PositionListItemProps> = observer(
   ({ position, setSelectedPosition, approvalPending, approveBtn, approve }) => {
     const { poolStore } = useStores();
+    const anchorRef = useRef<HTMLDivElement>(null);
+    const [open, setOpen] = useState<boolean>(false);
 
     const getFormattedSafetyBuffer = useCallback((safetyBuffer: BigNumber) => {
       return safetyBuffer.div(Constants.WeiPerWad).decimalPlaces(2).toString();
@@ -70,11 +109,51 @@ const PositionListItem: FC<PositionListItemProps> = observer(
               </Grid>
             )}
             <Grid xs={3} item>
-              <ClosePositionButton
-                onClick={() => setSelectedPosition(position)}
+              <ButtonGroup
+                variant="contained"
+                ref={anchorRef}
+                aria-label="split button"
               >
-                Close position
-              </ClosePositionButton>
+                <ClosePositionButton
+                  size="small"
+                  aria-controls={open ? "split-button-menu" : undefined}
+                  aria-expanded={open ? "true" : undefined}
+                  aria-label="select merge strategy"
+                  aria-haspopup="menu"
+                  onClick={() => setOpen(!open)}
+                >
+                  Close position
+                  <ArrowDropDownIcon />
+                </ClosePositionButton>
+              </ButtonGroup>
+              <Popper
+                sx={{
+                  zIndex: 1,
+                }}
+                open={open}
+                anchorEl={anchorRef.current}
+                role={undefined}
+                transition
+                disablePortal
+              >
+                {({ TransitionProps, placement }) => (
+                  <Grow
+                    {...TransitionProps}
+                    style={{
+                      transformOrigin: "center bottom",
+                    }}
+                  >
+                    <ClosePositionPaper>
+                      <ClickAwayListener onClickAway={() => setOpen(false)}>
+                        <MenuList id="split-button-menu" autoFocusItem>
+                          <MenuItem onClick={() => setSelectedPosition(position)}>Repay entirely</MenuItem>
+                          <MenuItem onClick={() => setSelectedPosition(position)}>Repay partially</MenuItem>
+                        </MenuList>
+                      </ClickAwayListener>
+                    </ClosePositionPaper>
+                  </Grow>
+                )}
+              </Popper>
             </Grid>
           </Grid>
         </TableCell>

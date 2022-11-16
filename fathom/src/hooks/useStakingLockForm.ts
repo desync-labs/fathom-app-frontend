@@ -78,7 +78,7 @@ const useStakingLockForm = (
   const approveFTHM = useCallback(async () => {
     setApprovalPending(true);
     try {
-      await stakingStore.approveFTHM(account, chainId);
+      await stakingStore.approveFTHM(account);
       setApprovedBtn(false);
     } catch (e) {
       setApprovedBtn(true);

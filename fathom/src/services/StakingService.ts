@@ -29,6 +29,7 @@ const defaultLockInfo = {
 
 export default class StakingService implements IStakingService {
   chainId = 51;
+
   async createLock(
     address: string,
     stakePosition: number,
@@ -192,9 +193,7 @@ export default class StakingService implements IStakingService {
     }
   }
 
-  async getLockPositionsLength(
-    account: string,
-  ): Promise<number> {
+  async getLockPositionsLength(account: string): Promise<number> {
     const StakingGetter = Web3Utils.getContractInstance(
       SmartContractFactory.StakingGetter(this.chainId),
       this.chainId
@@ -298,6 +297,7 @@ export default class StakingService implements IStakingService {
 
   async handleClaimRewardsSingle(
     account: string,
+    streamId: number,
     lockId: number,
     transactionStore: ActiveWeb3Transactions
   ): Promise<void> {
@@ -307,7 +307,7 @@ export default class StakingService implements IStakingService {
     );
 
     return Staking.methods
-      .claimRewards(lockId)
+      .claimRewards(streamId, lockId)
       .send({ from: account })
       .on("transactionHash", (hash: any) => {
         transactionStore.addTransaction({
@@ -315,7 +315,7 @@ export default class StakingService implements IStakingService {
           type: TransactionType.Approve,
           active: false,
           status: TransactionStatus.None,
-          title: `Hanndling Single claim reward`,
+          title: `Handling Single claim reward`,
           message: Strings.CheckOnBlockExplorer,
         });
       });
@@ -372,11 +372,11 @@ export default class StakingService implements IStakingService {
   }
 
   async getOneDayRewardForStream1(): Promise<number> {
-    const oneDay = 86400;
+    // One day seconds
+    const oneDay = 24 * 60 * 60;
+    // One year seconds
     const oneYear = 365 * 24 * 60 * 60;
-
-    const oneDayReward = (20000 * oneDay) / oneYear;
-    return oneDayReward;
+    return  (20000 * oneDay) / oneYear;
   }
 
   async getAPR(): Promise<number> {
@@ -415,7 +415,7 @@ export default class StakingService implements IStakingService {
     );
 
     const balance = await VeMAINToken.methods.balanceOf(account).call();
-    return this._convertToEtherBalance(balance);
+    return parseFloat(this._convertToEtherBalanceRewards(balance));
   }
 
   async getTimestamp(): Promise<number> {
@@ -463,7 +463,7 @@ export default class StakingService implements IStakingService {
 
   async approvalStatusStakingFTHM(
     address: string,
-    stakingPosition: number,
+    stakingPosition: number
   ): Promise<Boolean> {
     const FTHMToken = Web3Utils.getContractInstance(
       SmartContractFactory.MainToken(this.chainId),

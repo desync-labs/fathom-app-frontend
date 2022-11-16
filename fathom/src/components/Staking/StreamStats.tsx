@@ -1,57 +1,63 @@
 import { observer } from "mobx-react";
-import {
-  Box,
-  Typography
-} from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-import PercentSrc from 'assets/svg/percent.svg';
-import CheckmarkSrc from 'assets/svg/check-mark.svg';
-import LockedSrc from 'assets/svg/locked.svg';
-import RewardsSrc from 'assets/svg/rewards.svg';
+import PercentSrc from "assets/svg/percent.svg";
+import CheckmarkSrc from "assets/svg/check-mark.svg";
+import LockedSrc from "assets/svg/locked.svg";
+import RewardsSrc from "assets/svg/rewards.svg";
 import RiseLabel from "components/AppComponents/AppLabel/RiseLabel";
+import InfoIcon from "@mui/icons-material/Info";
+import React from "react";
 
-const FTHMStreamHeader = styled('h3')`
+const FTHMStreamHeader = styled("h3")`
   font-weight: 600;
   font-size: 24px;
   line-height: 28px;
-  color: #3665FF;
+  color: #3665ff;
   margin-top: 0;
-`
+`;
 
 const StatsTypography = styled(Typography)`
   font-weight: 600;
   font-size: 18px;
   line-height: 22px;
   padding: 4px 0;
-`
+`;
 
-const StatsTypographyDescription =  styled(Typography)`
+const StatsTypographyDescription = styled(Typography)`
   font-weight: 400;
   font-size: 14px;
   line-height: 20px;
-`
+`;
 
 const StatsBlocks = styled(Box)`
   padding: 15px 0;
-  border-bottom: 1px solid #1D2D49;
-`
+  border-bottom: 1px solid #1d2d49;
+`;
 
 const StatsBlock = styled(Box)`
   display: flex;
   align-items: center;
   gap: 15px;
   padding: 15px 0;
-`
+`;
 
 const StatsLabel = styled(Box)`
   font-weight: 700;
   font-size: 13px;
   line-height: 16px;
-  color: #9FADC6;
+  color: #9fadc6;
   text-transform: uppercase;
   padding-bottom: 7px;
-`
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  
+  svg {
+    cursor: pointer;
+  }
+`;
 
 const StatsValue = styled(Box)`
   display: flex;
@@ -66,32 +72,30 @@ const StatsValue = styled(Box)`
     font-weight: 400;
     font-size: 14px;
     line-height: 20px;
-    color: #9FADC6;
+    color: #9fadc6;
   }
-`
+`;
 
 const MyStatsBlocks = styled(Box)`
   display: flex;
   align-items: start;
-`
+`;
 
 const MyStatsBlock = styled(Box)`
   width: 33.33%;
-`
+`;
 
 const MyStatsUSDPrice = styled(Box)`
   font-size: 14px;
   line-height: 20px;
-  color: #9FADC6;
+  color: #9fadc6;
   margin-top: -2px;
-`
+`;
 
-const FTHMStream  = observer((props: any) => {
+const StreamStats = observer((props: any) => {
   return (
-    <Box sx={{ padding: '0 10px' }}>
-      <FTHMStreamHeader>
-        FTHM Stream
-      </FTHMStreamHeader>
+    <Box sx={{ padding: "0 10px" }}>
+      <FTHMStreamHeader>FTHM Stream</FTHMStreamHeader>
       <StatsTypography>Network Stats</StatsTypography>
       <StatsTypographyDescription>
         FTHM stream rewards in FTHM and VeFTHM as Voting power.
@@ -99,11 +103,9 @@ const FTHMStream  = observer((props: any) => {
 
       <StatsBlocks>
         <StatsBlock>
-          <img src={PercentSrc} alt={'percent'} />
+          <img src={PercentSrc} alt={"percent"} />
           <Box>
-            <StatsLabel>
-              APR
-            </StatsLabel>
+            <StatsLabel>APR</StatsLabel>
             <StatsValue>
               <strong>{props.apr}%</strong>
               <RiseLabel>3.45%</RiseLabel>
@@ -112,10 +114,10 @@ const FTHMStream  = observer((props: any) => {
         </StatsBlock>
 
         <StatsBlock>
-          <img src={CheckmarkSrc} alt={'checkmark'} />
+          <img src={CheckmarkSrc} alt={"checkmark"} />
           <Box>
             <StatsLabel>
-              Voting power
+              Voting power <InfoIcon sx={{ fontSize: "18px" }} />
             </StatsLabel>
             <StatsValue>
               <strong>{props.voteBalance}</strong>vFTHM
@@ -125,11 +127,9 @@ const FTHMStream  = observer((props: any) => {
         </StatsBlock>
 
         <StatsBlock>
-          <img src={LockedSrc} alt={'locked'} />
+          <img src={LockedSrc} alt={"locked"} />
           <Box>
-            <StatsLabel>
-              Total value locked
-            </StatsLabel>
+            <StatsLabel>Total value locked</StatsLabel>
             <StatsValue>
               <strong>{props.stakedBalance}</strong>FTHM
               <span>$99M</span>
@@ -138,11 +138,9 @@ const FTHMStream  = observer((props: any) => {
         </StatsBlock>
 
         <StatsBlock>
-          <img src={RewardsSrc} alt={'rewards'} />
+          <img src={RewardsSrc} alt={"rewards"} />
           <Box>
-            <StatsLabel>
-              Daily rewards
-            </StatsLabel>
+            <StatsLabel>Daily rewards <InfoIcon sx={{ fontSize: "18px" }} /></StatsLabel>
             <StatsValue>
               <strong>500K</strong>FTHM
               <span>$670k</span>
@@ -151,7 +149,7 @@ const FTHMStream  = observer((props: any) => {
         </StatsBlock>
       </StatsBlocks>
 
-      <StatsTypography sx={{ padding: '30px 0' }}>My Stats</StatsTypography>
+      <StatsTypography sx={{ padding: "30px 0" }}>My Stats</StatsTypography>
 
       <MyStatsBlocks>
         <MyStatsBlock>
@@ -163,7 +161,7 @@ const FTHMStream  = observer((props: any) => {
         </MyStatsBlock>
 
         <MyStatsBlock>
-          <StatsLabel>Rewards</StatsLabel>
+          <StatsLabel>Rewards <InfoIcon sx={{ fontSize: "18px" }} /></StatsLabel>
           <StatsValue>
             <strong>100</strong>FTHM
           </StatsValue>
@@ -171,11 +169,10 @@ const FTHMStream  = observer((props: any) => {
         </MyStatsBlock>
 
         <MyStatsBlock>
-          <StatsLabel>Voting power</StatsLabel>
+          <StatsLabel>Voting power <InfoIcon sx={{ fontSize: "18px" }} /></StatsLabel>
           <StatsValue>
             <strong>2</strong>vFTHM
           </StatsValue>
-
         </MyStatsBlock>
       </MyStatsBlocks>
 
@@ -194,4 +191,4 @@ const FTHMStream  = observer((props: any) => {
   );
 });
 
-export default FTHMStream;
+export default StreamStats;

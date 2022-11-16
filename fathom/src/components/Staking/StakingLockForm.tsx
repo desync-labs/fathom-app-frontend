@@ -51,14 +51,14 @@ const StakingLabelWhite = styled("div")`
   text-transform: uppercase;
 `;
 
-const StakingChip = styled(Chip)<{ active: boolean }>`
-  background: ${({ active }) =>
-    active ? "transparent" : "rgba(79, 101, 140, 0.2)"};
+const StakingChip = styled(Chip)<{ isActive: boolean }>`
+  background: ${({ isActive }) =>
+    isActive ? "transparent" : "rgba(79, 101, 140, 0.2)"};
   border-radius: 6px;
   width: 19%;
   cursor: pointer;
-  border: ${({ active }) =>
-    active ? "1px solid rgba(79, 101, 140, 0.2)" : "none"};
+  border: ${({ isActive }) =>
+    isActive ? "1px solid rgba(79, 101, 140, 0.2)" : "none"};
 
   &:active {
     border: 1px solid rgba(79, 101, 140, 0.2);
@@ -98,14 +98,14 @@ const USDBalance = styled(Box)`
   color: #9fadc6;
 `;
 
-const StakingLockFormTitle = styled('h2')`
+const StakingLockFormTitle = styled("h2")`
   font-weight: 600;
   font-size: 28px;
   line-height: 32px;
   width: 100%;
   text-align: left;
   margin: 0;
-`
+`;
 
 const StakingLockForm: FC<StakingLockFormPropsType> = ({
   fetchOverallValues,
@@ -208,27 +208,27 @@ const StakingLockForm: FC<StakingLockFormPropsType> = ({
           () => (
             <Stack direction="row" spacing={1}>
               <StakingChip
-                active={lockDays === 30}
+                isActive={lockDays === 30}
                 label="1-Month"
                 onClick={() => setPeriod(30)}
               />
               <StakingChip
-                active={lockDays === 60}
+                isActive={lockDays === 60}
                 label="2-Month"
                 onClick={() => setPeriod(60)}
               />
               <StakingChip
-                active={lockDays === 90}
+                isActive={lockDays === 90}
                 label="3-Month"
                 onClick={() => setPeriod(90)}
               />
               <StakingChip
-                active={lockDays === 180}
+                isActive={lockDays === 180}
                 label="Half-Year"
                 onClick={() => setPeriod(180)}
               />
               <StakingChip
-                active={lockDays === 360}
+                isActive={lockDays === 360}
                 label="1-Year"
                 onClick={() => setPeriod(360)}
               />

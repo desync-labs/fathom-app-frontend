@@ -38,6 +38,7 @@ export default interface IStakingService {
   getVOTEBalance(account: string): Promise<number>;
   handleClaimRewardsSingle(
     account: string,
+    streamId: number,
     lockId: number,
     transactionStore: ActiveWeb3Transactions
   ): Promise<void>;

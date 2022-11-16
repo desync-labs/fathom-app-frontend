@@ -61,44 +61,10 @@ export default class StakingStore {
   }
 
   async handleUnlock(account: string, lockId: number) {
-    console.log("Running createLock from store");
     try {
       if (!account) return;
 
       await this.service.handleUnlock(
-        account,
-        lockId,
-        this.rootStore.transactionStore
-      );
-    } catch (e) {
-      this.rootStore.alertStore.setShowErrorAlert(
-        true,
-        "There is some error in Unlock!"
-      );
-    }
-  }
-
-  async handleClaimRewards(account: string) {
-    console.log("Running createLock from store");
-    try {
-      if (!account) return;
-      await this.service.handleClaimRewards(
-        account,
-        1,
-        this.rootStore.transactionStore
-      );
-    } catch (e) {
-      this.rootStore.alertStore.setShowErrorAlert(
-        true,
-        "There is some error in claiming rewards!"
-      );
-    }
-  }
-
-  async handleClaimRewardsSingle(account: string, lockId: number) {
-    try {
-      if (!account) return;
-      await this.service.handleClaimRewardsSingle(
         account,
         lockId,
         this.rootStore.transactionStore
@@ -110,10 +76,43 @@ export default class StakingStore {
         error.reason || error.message
       );
     }
-  };
+  }
 
-  async handleWithdrawRewards(account: string){
-    console.log("Running createLock from store");
+  async handleClaimRewards(account: string) {
+    try {
+      if (!account) return;
+      await this.service.handleClaimRewards(
+        account,
+        1,
+        this.rootStore.transactionStore
+      );
+    } catch (e) {
+      const error = processRpcError(e);
+      this.rootStore.alertStore.setShowErrorAlert(
+        true,
+        error.reason || error.message
+      );
+    }
+  }
+
+  async handleClaimRewardsSingle(account: string, lockId: number) {
+    try {
+      if (!account) return;
+      await this.service.handleClaimRewardsSingle(
+        account,
+        1,
+        lockId,
+        this.rootStore.transactionStore
+      );
+    } catch (error: any) {
+      this.rootStore.alertStore.setShowErrorAlert(
+        true,
+        error.reason || error.message
+      );
+    }
+  }
+
+  async handleWithdrawRewards(account: string) {
     try {
       if (!account) return;
       await this.service.handleWithdrawRewards(
@@ -128,11 +127,11 @@ export default class StakingStore {
         error.reason || error.message
       );
     }
-  };
+  }
 
-  setLocks(_lockPositions: ILockPosition[]){
+  setLocks(_lockPositions: ILockPosition[]) {
     this.lockPositions = _lockPositions;
-  };
+  }
 
   setTotalStakedPosition(_lockPositions: ILockPosition[]) {
     this.totalStakedPosition = 0;
@@ -203,10 +202,10 @@ export default class StakingStore {
   }
 
   async fetchLatestLock(account: string) {
-    console.log("......is fetch Latest Lock getting called before,.....");
-    let lockId = await this.service.getLockPositionsLength(account);
+    const lockId = await this.service.getLockPositionsLength(account);
+
     if (lockId > 0) {
-      let lockPosition = await this.service.getLockInfo(lockId, account);
+      const lockPosition = await this.service.getLockInfo(lockId, account);
       if (lockPosition.MAINTokenBalance > 0) {
         this.lockPositions.push(lockPosition);
         this.setTotalStakedPosition(this.lockPositions);
@@ -215,10 +214,12 @@ export default class StakingStore {
   }
 
   async fetchLockPositionAfterUnlock(lockId: number) {
-    let latestLockId = this.lockPositions.length;
+    const latestLockId = this.lockPositions.length;
     if (latestLockId > 1) {
-      let lockPosition = this.lockPositions[latestLockId - 1];
+      const lockPosition = this.lockPositions[latestLockId - 1];
+
       lockPosition.lockId = lockId;
+
       this.lockPositions[lockId - 1] = lockPosition;
       this.lockPositions.pop();
       this.setTotalStakedPosition(this.lockPositions);
@@ -237,22 +238,22 @@ export default class StakingStore {
     console.log(`Checking FTHM approval status for address ${address}`);
     try {
       if (!address) return;
-
       return this.service.approvalStatusStakingFTHM(address, stakingPosition);
     } catch (e) {
+      const error = processRpcError(e);
       this.rootStore.alertStore.setShowErrorAlert(
         true,
-        "There is some error retreiving approval status"
+        error.reason || error.message
       );
     }
   }
 
-  async approveFTHM(address: string, chainId: number) {
+  async approveFTHM(address: string) {
     console.log(`Approving staking position for address ${address}`);
     try {
       if (!address) return;
 
-      return this.service
+      await this.service
         .approveStakingFTHM(address, this.rootStore.transactionStore)
         .then(() => {
           this.rootStore.alertStore.setShowSuccessAlert(
@@ -261,11 +262,11 @@ export default class StakingStore {
           );
         });
     } catch (e) {
+      const error = processRpcError(e);
       this.rootStore.alertStore.setShowErrorAlert(
         true,
-        "There is some error approving the token!"
+        error.reason || error.message
       );
-      throw e;
     }
   }
 }
