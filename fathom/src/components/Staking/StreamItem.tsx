@@ -111,7 +111,7 @@ const StreamItem = () => {
           <img src={getTokenLogoURL("WXDC")} alt={"token-logo"} width={28} />
         </HeaderTokenLogo>
         <HeaderStreamName>XDC Stream</HeaderStreamName>
-        <HeaderLockedPositions>3 Locked Positions</HeaderLockedPositions>
+        <HeaderLockedPositions>{ stakingStore.lockPositions.length } Locked Positions</HeaderLockedPositions>
       </StreamHeaderWrapper>
 
       {useMemo(
