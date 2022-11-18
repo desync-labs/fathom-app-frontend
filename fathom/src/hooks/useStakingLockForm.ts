@@ -9,6 +9,7 @@ const useStakingLockForm = (
   fetchOverallValues: StakingLockFormPropsType["fetchOverallValues"]
 ) => {
   const [balanceError, setBalanceError] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const { handleSubmit, watch, control, reset, getValues, setValue } = useForm({
     defaultValues: {
@@ -57,22 +58,26 @@ const useStakingLockForm = (
 
   useEffect(() => {
     if (stakePosition > stakingStore.walletBalance) {
-      setBalanceError(true)
+      setBalanceError(true);
     } else {
-      setBalanceError(false)
+      setBalanceError(false);
     }
-  }, [stakePosition, stakingStore.walletBalance])
+  }, [stakePosition, stakingStore.walletBalance]);
 
   const onSubmit = useCallback(
     async (values: Record<string, any>) => {
       const { stakePosition, lockDays } = values;
+      setIsLoading(true);
 
-      await stakingStore.createLock(account, stakePosition, lockDays);
-      await stakingStore.fetchLatestLock(account);
-      reset();
-      fetchOverallValues(account);
+      try {
+        await stakingStore.createLock(account, stakePosition, lockDays);
+        await stakingStore.fetchLatestLock(account);
+        reset();
+        fetchOverallValues(account);
+      } catch (e) {}
+      setIsLoading(false);
     },
-    [stakingStore, account, fetchOverallValues, reset]
+    [stakingStore, account, fetchOverallValues, reset, setIsLoading]
   );
 
   const approveFTHM = useCallback(async () => {
@@ -85,7 +90,7 @@ const useStakingLockForm = (
     }
 
     setApprovalPending(false);
-  }, [setApprovalPending, setApprovedBtn, account, chainId, stakingStore]);
+  }, [setApprovalPending, setApprovedBtn, account, stakingStore]);
 
   const setMax = useCallback(
     (balance: number) => {
@@ -111,6 +116,7 @@ const useStakingLockForm = (
     balanceError,
     unlockDate,
     lockDays,
+    isLoading,
     approvedBtn,
     approvalPending,
     approveFTHM,

@@ -10,6 +10,8 @@ import {
 } from "react";
 import { injected } from "../connectors/networks";
 import { useWeb3React } from "@web3-react/core";
+import Web3 from "web3";
+import Xdc3 from "xdc3";
 
 export const MetaMaskContext = createContext(null);
 
@@ -18,8 +20,21 @@ type MetaMaskProviderType = {
 };
 
 export const MetaMaskProvider: FC<MetaMaskProviderType> = ({ children }) => {
-  const { activate, account, active, deactivate, chainId, error } =
+  const { activate, account, active, deactivate, chainId, error, library } =
     useWeb3React();
+  const [isMetamask, setIsMetamask] = useState(false)
+
+  useEffect(() => {
+    if (library) {
+      library.then((library: Web3 | Xdc3) => {
+        // @ts-ignore
+        const { isMetaMask } = library.currentProvider
+        setIsMetamask(!!isMetaMask);
+      })
+    } else {
+      setIsMetamask(false);
+    }
+  }, [library, setIsMetamask, chainId])
 
   const [isActive, setIsActive] = useState(false);
   const [shouldDisable, setShouldDisable] = useState(false); // Should disable connect button while connecting to MetaMask
@@ -80,6 +95,7 @@ export const MetaMaskProvider: FC<MetaMaskProviderType> = ({ children }) => {
       shouldDisable,
       chainId,
       error,
+      isMetamask,
     }),
     [
       isActive,
@@ -90,6 +106,7 @@ export const MetaMaskProvider: FC<MetaMaskProviderType> = ({ children }) => {
       disconnect,
       chainId,
       error,
+      isMetamask
     ]
   );
 

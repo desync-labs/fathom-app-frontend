@@ -16,7 +16,10 @@ import PoolsListItem from "components/Pools/PoolsListItem";
 import OpenNewPositionDialog from "components/Positions/OpenNewPositionDialog";
 import { styled } from "@mui/material/styles";
 import { AppTableHeaderRow } from "components/AppComponents/AppTable/AppTable";
-import { TitleSecondary } from "components/AppComponents/AppBox/AppBox";
+import {
+  NoResults,
+  TitleSecondary
+} from "components/AppComponents/AppBox/AppBox";
 
 const PoolsListHeaderRow = styled(AppTableHeaderRow)(({ theme }) => ({
   background: "transparent",
@@ -48,7 +51,7 @@ const PoolsListView = observer(() => {
     <>
       <TitleSecondary variant="h2">Available Pools</TitleSecondary>
       {poolStore.pools.length === 0 ? (
-        <Typography variant="h6">No Pool Available!</Typography>
+        <NoResults variant="h6">No Pool Available!</NoResults>
       ) : (
         <TableContainer>
           <Table

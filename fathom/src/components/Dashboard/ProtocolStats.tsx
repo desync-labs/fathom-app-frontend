@@ -63,6 +63,8 @@ const ProtocolStats = observer(() => {
     // Update the document title using the browser API
     if (chainId) {
       setTimeout(() => fxdProtocolStatsStore.fetchProtocolStats());
+    } else {
+      fxdProtocolStatsStore.setDefaultStats();
     }
   }, [fxdProtocolStatsStore, rootStore.alertStore, chainId]);
 

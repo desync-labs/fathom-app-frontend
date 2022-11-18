@@ -2,7 +2,7 @@ import { SmartContractFactory } from "config/SmartContractFactory";
 import IStakingService from "services/interfaces/IStakingService";
 import { Web3Utils } from "helpers/Web3Utils";
 
-import ActiveWeb3Transactions from "../stores/transaction.store";
+import ActiveWeb3Transactions from "stores/transaction.store";
 import {
   TransactionStatus,
   TransactionType,
@@ -346,7 +346,7 @@ export default class StakingService implements IStakingService {
       });
   }
 
-  async handleWithdrawRewards(
+  async handleWithdrawAll(
     account: string,
     streamId: number,
     transactionStore: ActiveWeb3Transactions

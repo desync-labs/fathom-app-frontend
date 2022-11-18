@@ -4,7 +4,7 @@ import {
   CircularProgress,
   DialogContent,
   Grid,
-  Typography
+  Typography,
 } from "@mui/material";
 import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
 import React, { FC } from "react";
@@ -27,9 +27,9 @@ import InfoIcon from "@mui/icons-material/Info";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import {
   ButtonPrimary,
-  MaxButton
+  MaxButton,
 } from "components/AppComponents/AppButton/AppButton";
-import useEarlyUnstake from "hooks/useUnstake";
+import useEarlyUnstake from "hooks/useEarlyUnstake";
 import { InfoMessageWrapper } from "./ClaimRewardsDialog";
 
 const UnstakeValue = styled(Box)`
@@ -86,12 +86,35 @@ const ConfirmButton = styled(ButtonPrimary)`
   line-height: 24px;
 `;
 
+const WarningBlock = styled(Box)`
+  background: #452508;
+  border: 1px solid #5C310A;
+  border-radius: 8px;
+  color: #F7B06E;
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  gap: 12px;
+  font-size: 14px;
+`
+
+const InfoLabelError = styled(InfoLabel)`
+  color: #F76E6E;
+`
+
+const InfoValueError = styled(InfoValue)`
+  color: #F76E6E;
+`
+
 type EarlyUnstakeDialogProps = {
-  lockPosition: ILockPosition | null;
+  lockPosition: ILockPosition;
   onClose: () => void;
 };
 
-const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({ onClose, lockPosition }) => {
+const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({
+  onClose,
+  lockPosition,
+}) => {
   const {
     balanceError,
     unstakeAmount,
@@ -101,7 +124,7 @@ const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({ onClose, lockPosition
     handleUnstakeAmountChange,
     formatNumber,
     setMax,
-    unstakeHandler,
+    earlyUnstakeHandler,
   } = useEarlyUnstake(lockPosition);
 
   return (
@@ -117,6 +140,16 @@ const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({ onClose, lockPosition
       </AppDialogTitle>
 
       <DialogContent>
+        <UnstakeGrid container sx={{ '&.MuiGrid-container': { padding: '20px 0' } }}>
+          <Grid item xs={12}>
+            <WarningBlock>
+              <InfoIcon sx={{ fontSize: "18px", color: '#F5953D' }} />
+              <Typography component={'span'}>
+                Penalty fee will be applied.
+              </Typography>
+            </WarningBlock>
+          </Grid>
+        </UnstakeGrid>
         <UnstakeBalanceWrapper container>
           <Grid item xs={8}>
             <UnstakeLabel>My staked balance</UnstakeLabel>
@@ -143,7 +176,7 @@ const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({ onClose, lockPosition
         <UnstakeGrid container>
           <Grid item xs={12}>
             <AppFormInputWrapper>
-              <AppFormLabel>unstake amount</AppFormLabel>
+              <AppFormLabel>Unstake amount</AppFormLabel>
               {totalBalance ? (
                 <WalletBalance>
                   Available: {formatNumber(totalBalance)} FTHM
@@ -155,7 +188,7 @@ const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({ onClose, lockPosition
                 helperText={
                   balanceError ? (
                     <>
-                      <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
+                      <InfoIcon sx={{ fontSize: "18px" }} />
                       <Typography
                         sx={{ fontSize: "12px", paddingLeft: "22px" }}
                       >
@@ -185,6 +218,12 @@ const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({ onClose, lockPosition
               <InfoValue>{formatNumber(totalBalance)} FTHM</InfoValue>
             </InfoWrapper>
             <InfoWrapper>
+              <InfoLabelError>
+                Penalty Fee
+              </InfoLabelError>
+              <InfoValueError>6 FTHM (0.03%)</InfoValueError>
+            </InfoWrapper>
+            <InfoWrapper>
               <InfoLabel>
                 Maximum Received
                 <InfoIcon sx={{ fontSize: "18px", color: "#6379A1" }} />
@@ -196,9 +235,9 @@ const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({ onClose, lockPosition
         <InfoMessageWrapper>
           <InfoIcon sx={{ fontSize: "18px", color: "#4F658C" }} />
           <Typography>
-            By clicking “Confirm Unstake”, you’ll be signing 2 transactions in MetaMask
-            to withdraw this amount to your connected wallet, and to unlock the
-            position.
+            By clicking “Confirm Early Unstake”, you’ll be signing 2 transactions in
+            MetaMask to withdraw this amount to your connected wallet, and to
+            unlock the position.
           </Typography>
         </InfoMessageWrapper>
         <UnstakeGrid container>
@@ -206,9 +245,9 @@ const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({ onClose, lockPosition
             <ConfirmButton
               disabled={isLoading}
               isLoading={isLoading}
-              onClick={unstakeHandler}
+              onClick={earlyUnstakeHandler}
             >
-              {isLoading ? <CircularProgress size={30} /> : "Confirm Unstake"}
+              {isLoading ? <CircularProgress size={30} /> : "Confirm Early Unstake"}
             </ConfirmButton>
           </Grid>
         </UnstakeGrid>

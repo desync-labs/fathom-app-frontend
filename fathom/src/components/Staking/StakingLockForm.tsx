@@ -113,6 +113,7 @@ const StakingLockForm: FC<StakingLockFormPropsType> = ({
   const {
     balanceError,
     lockDays,
+    isLoading,
     approvedBtn,
     approvalPending,
     control,
@@ -143,16 +144,25 @@ const StakingLockForm: FC<StakingLockFormPropsType> = ({
                 error={balanceError}
                 id="outlined-helperText"
                 helperText={
-                  balanceError ? (
-                    <>
-                      <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
+                  <>
+                    {  error && (
                       <Typography
                         sx={{ fontSize: "12px", paddingLeft: "22px" }}
                       >
-                        You do not have enough FTHM
+                        Field is required
                       </Typography>
-                    </>
-                  ) : null
+                    ) }
+                    { balanceError && (
+                      <>
+                        <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
+                        <Typography
+                          sx={{ fontSize: "12px", paddingLeft: "22px" }}
+                        >
+                          You do not have enough FTHM
+                        </Typography>
+                      </>
+                    ) }
+                  </>
                 }
                 value={value}
                 onChange={onChange}
@@ -253,8 +263,13 @@ const StakingLockForm: FC<StakingLockFormPropsType> = ({
         }, [lockDays, unlockDate])}
 
         <Grid container mt={3}>
-          <ButtonPrimary type="submit" sx={{ width: "100%", height: "48px" }}>
-            Stake
+          <ButtonPrimary
+            isLoading={isLoading}
+            disabled={isLoading}
+            type="submit"
+            sx={{ width: "100%", height: "48px" }}
+          >
+            {isLoading ? <CircularProgress size={30} /> : "Stake"}
           </ButtonPrimary>
 
           <Grid item xs={12}>
@@ -277,7 +292,12 @@ const StakingLockForm: FC<StakingLockFormPropsType> = ({
 
           <Grid xs={7} item>
             {approvedBtn ? (
-              <ButtonPrimary onClick={approveFTHM} sx={{ mt: 3 }}>
+              <ButtonPrimary
+                onClick={approveFTHM}
+                sx={{ mt: 3 }}
+                isLoading={approvalPending}
+                disabled={approvalPending}
+              >
                 {approvalPending ? (
                   <CircularProgress size={20} />
                 ) : (

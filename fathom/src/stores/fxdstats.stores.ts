@@ -1,9 +1,17 @@
 import BigNumber from "bignumber.js";
-import { makeAutoObservable, runInAction } from "mobx";
+import { makeAutoObservable } from "mobx";
 import { RootStore } from ".";
 import { Constants } from "helpers/Constants";
 import IFXDProtocolStatsService from "services/interfaces/IFXDProtocolStatsService";
 import IFXDProtocolStats from "stores/interfaces/IFXDProtocolStats";
+
+export const defaultProtocolStats = {
+  fathomSupplyCap: new BigNumber(0),
+  totalValueLocked: new BigNumber(0),
+  fxdPriceFromDex: new BigNumber(0),
+  liquidationRatio: new BigNumber(0),
+  closeFactor: new BigNumber(0),
+}
 
 export default class FXDProtocolStatsStore {
   protocolStats: IFXDProtocolStats;
@@ -13,13 +21,7 @@ export default class FXDProtocolStatsStore {
   constructor(rootStore: RootStore, service: IFXDProtocolStatsService) {
     makeAutoObservable(this);
     this.service = service;
-    this.protocolStats = {
-      fathomSupplyCap: new BigNumber(0),
-      totalValueLocked: new BigNumber(0),
-      fxdPriceFromDex: new BigNumber(0),
-      liquidationRatio: new BigNumber(0),
-      closeFactor: new BigNumber(0),
-    };
+    this.protocolStats = defaultProtocolStats;
     this.formatter = new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "USD",
@@ -32,11 +34,13 @@ export default class FXDProtocolStatsStore {
     this.protocolStats = _stats;
   }
 
+  setDefaultStats() {
+    this.protocolStats = defaultProtocolStats;
+  }
+
   async fetchProtocolStats() {
     const stats = await this.service.fetchProtocolStats();
-    runInAction(() => {
-      this.setProtocolStats(stats);
-    });
+    this.setProtocolStats(stats);
   }
 
   getFormattedFXDPriceRatio = () => {

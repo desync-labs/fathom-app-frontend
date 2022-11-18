@@ -11,7 +11,9 @@ import ClaimRewardsDialog, {
   ClaimRewardsType,
 } from "components/Staking/Dialog/ClaimRewardsDialog";
 import useStakingView from "hooks/useStakingView";
-import UnstakeDialog from "components/Staking/Dialog/UnstakeDialog";
+import UnstakeDialog, {
+  UNSTAKE_TYPE,
+} from "components/Staking/Dialog/UnstakeDialog";
 import EarlyUnstakeDialog from "./Dialog/EarlyUnstakeDialog";
 
 const StreamHeaderWrapper = styled(Box)`
@@ -91,7 +93,12 @@ const TokenName = styled(Box)`
 
 const StreamItem = () => {
   const { stakingStore } = useStores();
+
   const [unstake, setUnstake] = useState<null | ILockPosition>(null);
+  const [unstakeType, setUnstakeType] = useState<UNSTAKE_TYPE>(
+    UNSTAKE_TYPE.ITEM
+  );
+
   const [earlyUnstake, setEarlyUnstake] = useState<null | ILockPosition>(null);
 
   const [rewardsPosition, setRewardsPosition] = useState<null | ILockPosition>(
@@ -137,7 +144,11 @@ const StreamItem = () => {
               >
                 Claim all
               </ClaimAllButton>
-              <UnstakeAllButton>Unstake all</UnstakeAllButton>
+              <UnstakeAllButton
+                onClick={() => setUnstakeType(UNSTAKE_TYPE.ALL)}
+              >
+                Unstake all
+              </UnstakeAllButton>
             </TotalRewards>
             {stakingStore.lockPositions.map((lockPosition: ILockPosition) => (
               <StakingViewItem
@@ -170,13 +181,18 @@ const StreamItem = () => {
 
       {useMemo(
         () =>
-          unstake && (
+          (unstake || unstakeType === UNSTAKE_TYPE.ALL) && (
             <UnstakeDialog
-              onClose={() => setUnstake(null)}
+              onClose={() => {
+                setUnstake(null);
+                setUnstakeType(UNSTAKE_TYPE.ITEM);
+              }}
+              type={unstakeType}
               lockPosition={unstake}
+              lockPositions={stakingStore.lockPositions}
             />
           ),
-        [unstake]
+        [unstake, unstakeType]
       )}
 
       {useMemo(
@@ -184,7 +200,7 @@ const StreamItem = () => {
           earlyUnstake && (
             <EarlyUnstakeDialog
               onClose={() => setEarlyUnstake(null)}
-              lockPosition={earlyUnstake}
+              lockPosition={earlyUnstake!}
             />
           ),
         [earlyUnstake]

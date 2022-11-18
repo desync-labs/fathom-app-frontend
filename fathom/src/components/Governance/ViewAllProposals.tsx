@@ -22,7 +22,7 @@ import { useAllProposals } from "hooks/useAllProposals";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
 import ViewAllProposalItem from "components/Governance/ViewAllProposalItem";
-import Propose from "./Propose";
+import Propose from "components/Governance/Propose";
 
 const ProposalSelect = styled(Select)`
   padding: 8px 12px;

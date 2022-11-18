@@ -20,19 +20,22 @@ export const useAllProposals = () => {
   const [proposals, setProposals] = useState<string>("all");
   const [createProposal, setCreateProposal] = useState<boolean>(false);
 
+
   useEffect(() => {
     if (chainId) {
       setTimeout(() => {
-        logger.log(LogLevel.info, "fetching proposal information.");
+        logger.log(LogLevel.info, "Fetching proposal information.");
         setFetchProposalsPending(true)
         proposalStore.fetchProposals(account).finally(() => {
           setFetchProposalsPending(false)
         });
-      });
+      })
     } else {
       proposalStore.setProposals([]);
     }
   }, [account, logger, proposalStore, chainId, setFetchProposalsPending]);
+
+  console.log(proposalStore.fetchedProposals);
 
   return {
     fetchProposalsPending,

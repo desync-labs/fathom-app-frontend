@@ -1,8 +1,8 @@
-import { makeAutoObservable, runInAction } from "mobx";
+import { makeAutoObservable } from "mobx";
 import { RootStore } from ".";
 import IStakingService from "services/interfaces/IStakingService";
 import ILockPosition from "stores/interfaces/ILockPosition";
-import { processRpcError } from "../utils/processRpcError";
+import { processRpcError } from "utils/processRpcError";
 
 export default class StakingStore {
   lockPositions: ILockPosition[] = [];
@@ -112,10 +112,10 @@ export default class StakingStore {
     }
   }
 
-  async handleWithdrawRewards(account: string) {
+  async handleWithdrawAll(account: string) {
     try {
       if (!account) return;
-      await this.service.handleWithdrawRewards(
+      await this.service.handleWithdrawAll(
         account,
         1,
         this.rootStore.transactionStore
@@ -134,10 +134,12 @@ export default class StakingStore {
   }
 
   setTotalStakedPosition(_lockPositions: ILockPosition[]) {
-    this.totalStakedPosition = 0;
+    let totalStakedPosition = 0;
     for (let i = 0; i < _lockPositions.length; i++) {
-      this.totalStakedPosition += _lockPositions[i].MAINTokenBalance;
+      totalStakedPosition += _lockPositions[i].MAINTokenBalance;
     }
+
+    this.totalStakedPosition = totalStakedPosition;
   }
 
   async fetchAPR() {
@@ -188,10 +190,8 @@ export default class StakingStore {
   async fetchLocks(account: string) {
     try {
       const locks = await this.service.getLockPositions(account);
-      runInAction(() => {
-        this.setLocks(locks);
-        this.setTotalStakedPosition(locks);
-      });
+      this.setLocks(locks);
+      this.setTotalStakedPosition(locks);
     } catch (e) {
       const error = processRpcError(e);
       this.rootStore.alertStore.setShowErrorAlert(
@@ -213,25 +213,26 @@ export default class StakingStore {
     }
   }
 
-  async fetchLockPositionAfterUnlock(lockId: number) {
-    const latestLockId = this.lockPositions.length;
-    if (latestLockId > 1) {
-      const lockPosition = this.lockPositions[latestLockId - 1];
-
-      lockPosition.lockId = lockId;
-
-      this.lockPositions[lockId - 1] = lockPosition;
-      this.lockPositions.pop();
-      this.setTotalStakedPosition(this.lockPositions);
-    } else {
-      this.lockPositions.pop();
-    }
+  fetchLockPositionAfterUnlock(lockId: number) {
+    this.lockPositions = this.lockPositions.filter(
+      (lockPosition) => lockPosition.lockId !== lockId
+    );
   }
 
-  async fetchLocksAfterClaimAllRewards() {
-    for (let i = 0; i < this.lockPositions.length; i++) {
-      this.lockPositions[i].RewardsAvailable = "0";
-    }
+  fetchLocksAfterClaimAllRewards() {
+    this.lockPositions = this.lockPositions.map((lockPosition) => {
+      lockPosition.RewardsAvailable = "0";
+      return lockPosition;
+    });
+  }
+
+  fetchLockPositionAfterClaimReward(lockId: number) {
+    this.lockPositions = this.lockPositions.map((lockPosition) => {
+      if (lockPosition.lockId === lockId) {
+        lockPosition.RewardsAvailable = "0";
+      }
+      return lockPosition;
+    });
   }
 
   async approvalStatusStakingFTHM(address: string, stakingPosition: number) {

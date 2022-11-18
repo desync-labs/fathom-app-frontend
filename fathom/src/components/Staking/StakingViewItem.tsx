@@ -1,13 +1,7 @@
 import { Box, Button } from "@mui/material";
 import * as React from "react";
 import ILockPosition from "stores/interfaces/ILockPosition";
-import {
-  Dispatch,
-  FC,
-  useEffect,
-  useRef,
-  useState
-} from "react";
+import { Dispatch, FC, useEffect, useRef, useState } from "react";
 import useStakingView from "hooks/useStakingView";
 import { styled } from "@mui/material/styles";
 import StakingCountdown from "components/Staking/StakingCountdown";
@@ -93,27 +87,27 @@ const UnstakePaper = styled(AppPaper)`
       }
     }
   }
-`
+`;
 
 const UnstakeButton = styled(Button)`
   text-transform: none;
   font-weight: 600;
   font-size: 15px;
   line-height: 20px;
-  color: #43FFF1;
+  color: #43fff1;
   background: none;
   box-shadow: none;
-  
+
   &:hover {
     background: none;
   }
-`
+`;
 
 type StakingViewItemPropsType = {
   lockPosition: ILockPosition;
-  setUnstake: Dispatch<null | ILockPosition>
-  setEarlyUnstake: Dispatch<null | ILockPosition>
-  setRewardsPosition: Dispatch<null | ILockPosition>
+  setUnstake: Dispatch<null | ILockPosition>;
+  setEarlyUnstake: Dispatch<null | ILockPosition>;
+  setRewardsPosition: Dispatch<null | ILockPosition>;
 };
 
 // <TableCell component="td" scope="row">
@@ -169,17 +163,18 @@ type StakingViewItemPropsType = {
 //   </Button>
 // </TableCell>
 
-const StakingViewItem: FC<StakingViewItemPropsType> = ({ lockPosition, setUnstake, setEarlyUnstake, setRewardsPosition }) => {
+const StakingViewItem: FC<StakingViewItemPropsType> = ({
+  lockPosition,
+  setUnstake,
+  setEarlyUnstake,
+  setRewardsPosition,
+}) => {
   const [timer, setTimer] = useState();
   const [seconds, setSeconds] = useState(lockPosition.timeObject.seconds);
   const [open, setOpen] = useState<boolean>(false);
   const anchorRef = useRef<HTMLDivElement>(null);
 
   const { isUnlockable } = useStakingView();
-
-  useEffect(() => {
-    setUnstake(lockPosition)
-  }, [setUnstake, lockPosition])
 
   useEffect(() => {
     const interval = setInterval(function () {
@@ -226,14 +221,16 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({ lockPosition, setUnstak
           </StakingViewItemValue>
         </Box>
         <Box>
-          {lockPosition.RewardsAvailable && <ClaimRewardsButton onClick={() => setRewardsPosition(lockPosition)}>Claim Rewards</ClaimRewardsButton> }
+          {lockPosition.RewardsAvailable && (
+            <ClaimRewardsButton
+              onClick={() => setRewardsPosition(lockPosition)}
+            >
+              Claim Rewards
+            </ClaimRewardsButton>
+          )}
         </Box>
         <Box>
-          <ButtonGroup
-            variant="text"
-            ref={anchorRef}
-            aria-label="split button"
-          >
+          <ButtonGroup variant="text" ref={anchorRef} aria-label="split button">
             <UnstakeButton
               size="small"
               aria-controls={open ? "split-button-menu" : undefined}
@@ -266,8 +263,16 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({ lockPosition, setUnstak
                 <UnstakePaper>
                   <ClickAwayListener onClickAway={() => setOpen(false)}>
                     <MenuList id="split-button-menu" autoFocusItem>
-                      { !isUnlockable(seconds) && <MenuItem onClick={() => setUnstake(lockPosition)}>Unstake</MenuItem> }
-                      { !isUnlockable(seconds) && <MenuItem onClick={() => setEarlyUnstake(lockPosition)}>Early Unstake</MenuItem> }
+                      {!isUnlockable(seconds) && (
+                        <MenuItem onClick={() => setUnstake(lockPosition)}>
+                          Unstake
+                        </MenuItem>
+                      )}
+                      {!isUnlockable(seconds) && (
+                        <MenuItem onClick={() => setEarlyUnstake(lockPosition)}>
+                          Early Unstake
+                        </MenuItem>
+                      )}
                     </MenuList>
                   </ClickAwayListener>
                 </UnstakePaper>

@@ -28,20 +28,23 @@ export default interface IStakingService {
     streamId: number,
     transactionStore: ActiveWeb3Transactions
   ): Promise<void>;
-  handleWithdrawRewards(
-    account: string,
-    streamId: number,
-    transactionStore: ActiveWeb3Transactions
-  ): Promise<void>;
-  getAPR(): Promise<number>;
-  getWalletBalance(account: string): Promise<number>;
-  getVOTEBalance(account: string): Promise<number>;
+
   handleClaimRewardsSingle(
     account: string,
     streamId: number,
     lockId: number,
     transactionStore: ActiveWeb3Transactions
   ): Promise<void>;
+
+  handleWithdrawAll(
+    account: string,
+    streamId: number,
+    transactionStore: ActiveWeb3Transactions
+  ): Promise<void>;
+
+  getAPR(): Promise<number>;
+  getWalletBalance(account: string): Promise<number>;
+  getVOTEBalance(account: string): Promise<number>;
 
   getLockInfo(
     lockId: number,
