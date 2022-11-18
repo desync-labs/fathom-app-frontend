@@ -1,9 +1,13 @@
 import { observer } from "mobx-react";
-import { CircularProgress, Grid, TableCell } from "@mui/material";
+import {
+  CircularProgress,
+  Grid,
+  TableCell
+} from "@mui/material";
 import { Adjust } from "components/AppComponents/AppBox/AppBox";
 import {
   ButtonPrimary,
-  ClosePositionButton,
+  ClosePositionButton
 } from "components/AppComponents/AppButton/AppButton";
 import { AppTableRow } from "components/AppComponents/AppTable/AppTable";
 import React, {
@@ -12,23 +16,22 @@ import React, {
   SetStateAction,
   useCallback,
   useRef,
-  useState,
+  useState
 } from "react";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
 import BigNumber from "bignumber.js";
 import { Constants } from "helpers/Constants";
 import { useStores } from "stores";
 import ButtonGroup from "@mui/material/ButtonGroup";
-import Button from "@mui/material/Button";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import Popper from "@mui/material/Popper";
 import Grow from "@mui/material/Grow";
-import Paper from "@mui/material/Paper";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import MenuList from "@mui/material/MenuList";
 import MenuItem from "@mui/material/MenuItem";
 import { styled } from "@mui/material/styles";
-import { AppPaper } from "../AppComponents/AppPaper/AppPaper";
+import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
+import { ClosingType } from "hooks/useClosePosition";
 
 type PositionListItemProps = {
   position: IOpenPosition;
@@ -36,6 +39,7 @@ type PositionListItemProps = {
   approve: () => void;
   approvalPending: boolean;
   approveBtn: boolean;
+  setType: Dispatch<ClosingType>;
 };
 
 const ClosePositionPaper = styled(AppPaper)`
@@ -44,7 +48,7 @@ const ClosePositionPaper = styled(AppPaper)`
   box-shadow: 0px 12px 32px #000715;
   border-radius: 8px;
   padding: 4px;
-  
+
   ul {
     padding: 0;
     li {
@@ -58,7 +62,14 @@ const ClosePositionPaper = styled(AppPaper)`
 `;
 
 const PositionListItem: FC<PositionListItemProps> = observer(
-  ({ position, setSelectedPosition, approvalPending, approveBtn, approve }) => {
+  ({
+    position,
+    setSelectedPosition,
+    approvalPending,
+    approveBtn,
+    approve,
+    setType,
+  }) => {
     const { poolStore } = useStores();
     const anchorRef = useRef<HTMLDivElement>(null);
     const [open, setOpen] = useState<boolean>(false);
@@ -146,8 +157,22 @@ const PositionListItem: FC<PositionListItemProps> = observer(
                     <ClosePositionPaper>
                       <ClickAwayListener onClickAway={() => setOpen(false)}>
                         <MenuList id="split-button-menu" autoFocusItem>
-                          <MenuItem onClick={() => setSelectedPosition(position)}>Repay entirely</MenuItem>
-                          <MenuItem onClick={() => setSelectedPosition(position)}>Repay partially</MenuItem>
+                          <MenuItem
+                            onClick={() => {
+                              setType(ClosingType.Full);
+                              setSelectedPosition(position);
+                            }}
+                          >
+                            Repay entirely
+                          </MenuItem>
+                          <MenuItem
+                            onClick={() => {
+                              setType(ClosingType.Partial)
+                              setSelectedPosition(position)
+                            }}
+                          >
+                            Repay partially
+                          </MenuItem>
                         </MenuList>
                       </ClickAwayListener>
                     </ClosePositionPaper>

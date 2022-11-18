@@ -162,7 +162,7 @@ const StreamItem = () => {
           </>
         ),
 
-        [stakingStore.lockPositions]
+        [stakingStore.lockPositions, totalRewards]
       )}
 
       {(rewardsPosition || totalRewardsData) && (
@@ -192,7 +192,7 @@ const StreamItem = () => {
               lockPositions={stakingStore.lockPositions}
             />
           ),
-        [unstake, unstakeType]
+        [unstake, unstakeType, stakingStore.lockPositions]
       )}
 
       {useMemo(

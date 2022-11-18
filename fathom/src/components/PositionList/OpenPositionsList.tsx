@@ -19,6 +19,8 @@ import useOpenPositionList from "hooks/useOpenPositionList";
 
 const OpenPositionsList = observer(() => {
   const {
+    closingType,
+    setType,
     approveBtn,
     approvalPending,
     positions,
@@ -65,23 +67,29 @@ const OpenPositionsList = observer(() => {
                       key={position.id}
                       position={position}
                       setSelectedPosition={setSelectedPosition}
+                      setType={setType}
                     />
                   ))}
                 </TableBody>
               </Table>
             </TableContainer>
           ),
-        [positions]
+        [
+          positions,
+          approve,
+          approvalPending,
+          approveBtn,
+          setSelectedPosition,
+          setType,
+        ]
       )}
-      {useMemo(
-        () =>
-          selectedPosition && (
-            <ClosePositionDialog
-              position={selectedPosition}
-              onClose={() => setSelectedPosition(undefined)}
-            />
-          ),
-        [selectedPosition]
+      {selectedPosition && (
+        <ClosePositionDialog
+          position={selectedPosition}
+          onClose={() => setSelectedPosition(undefined)}
+          closingType={closingType}
+          setType={setType}
+        />
       )}
     </>
   );

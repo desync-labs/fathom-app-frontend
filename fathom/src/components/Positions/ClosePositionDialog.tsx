@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from "react";
+import React, { Dispatch, FC, ReactNode, memo } from "react";
 import {
   DialogContent,
   Typography,
@@ -7,6 +7,7 @@ import {
   Grid,
   ListItem,
   ListItemText,
+  CircularProgress,
 } from "@mui/material";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
 import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
@@ -48,16 +49,22 @@ export interface DialogTitleProps {
 export type ClosePositionProps = {
   position: IOpenPosition;
   onClose: () => void;
+  closingType: ClosingType;
+  setType: Dispatch<ClosingType>;
 };
 
-const ClosePositionDialog: FC<ClosePositionProps> = ({ position, onClose }) => {
+const ClosePositionDialog: FC<ClosePositionProps> = ({
+  position,
+  onClose,
+  closingType,
+  setType,
+}) => {
   const {
     collateral,
     lockedCollateral,
     price,
     fathomToken,
     pool,
-    closingType,
     balance,
     balanceError,
     closePosition,
@@ -65,7 +72,9 @@ const ClosePositionDialog: FC<ClosePositionProps> = ({ position, onClose }) => {
     handleFathomTokenTextFieldChange,
     handleTypeChange,
     setMax,
-  } = useClosePosition(position, onClose);
+  } = useClosePosition(position, onClose, closingType, setType);
+
+  console.log(closingType);
 
   return (
     <AppDialog
@@ -251,8 +260,13 @@ const ClosePositionDialog: FC<ClosePositionProps> = ({ position, onClose }) => {
               <ButtonPrimary
                 onClick={closePosition}
                 disabled={balanceError || disableClosePosition}
+                isLoading={disableClosePosition}
               >
-                Close this position
+                {disableClosePosition ? (
+                  <CircularProgress size={20} />
+                ) : (
+                  "Close this position"
+                )}
               </ButtonPrimary>
             </OpenPositionsButtonsWrapper>
           </Grid>
@@ -262,4 +276,4 @@ const ClosePositionDialog: FC<ClosePositionProps> = ({ position, onClose }) => {
   );
 };
 
-export default ClosePositionDialog;
+export default memo(ClosePositionDialog);

@@ -14,7 +14,6 @@ import {
   ArrowForward,
   Menu as MenuIcon,
   AccountBalanceWallet as AccountBalanceWalletIcon,
-  Logout as LogoutIcon,
 } from "@mui/icons-material";
 import Copyright from "components/Footer/Footer";
 import AppBar from "components/AppComponents/AppBar/AppBar";
