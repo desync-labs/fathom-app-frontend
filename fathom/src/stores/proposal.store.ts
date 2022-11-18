@@ -24,26 +24,17 @@ export default class ProposalStore {
     this.rootStore = rootStore;
   }
 
-  // ------------------------------------------------------------------------------
-  // Example input for createProposal(...):
-  //
-  // ["0x5B38Da6a701c568545dCfcB03FcB875f56beddC4"],
-  // [0],
-  // ["0x0000000000000000000000000000000000000000000000000000000000000000"],
-  // "Some string"
-  // ------------------------------------------------------------------------------
-
   async createProposal(
     targets: string[],
     values: number[],
-    calldatas: string[],
+    callData: string[],
     description: string,
     account: string
   ): Promise<number> {
     return this.service.createProposal(
       targets,
       values,
-      calldatas,
+      callData,
       description,
       account,
       this.rootStore.transactionStore
@@ -53,14 +44,14 @@ export default class ProposalStore {
   async executeProposal(
     targets: string[],
     values: number[],
-    calldatas: string[],
+    callData: string[],
     description: string,
     account: string
   ): Promise<number> {
     return this.service.executeProposal(
       targets,
       values,
-      calldatas,
+      callData,
       description,
       account,
       this.rootStore.transactionStore
@@ -70,14 +61,14 @@ export default class ProposalStore {
   async queueProposal(
     targets: string[],
     values: number[],
-    calldatas: string[],
+    callData: string[],
     description: string,
     account: string
   ): Promise<number> {
     return this.service.queueProposal(
       targets,
       values,
-      calldatas,
+      callData,
       description,
       account,
       this.rootStore.transactionStore
@@ -146,9 +137,7 @@ export default class ProposalStore {
       account,
       chainId
     );
-    runInAction(() => {
-      this.setProposals(fetchedProposals);
-    });
+    this.setProposals(fetchedProposals);
   }
 
   async fetchProposal(proposal: string, account: string, chainId?: number) {
@@ -157,9 +146,7 @@ export default class ProposalStore {
       account,
       chainId
     );
-    runInAction(() => {
-      this.setProposal(fetchedProposal);
-    });
+    this.setProposal(fetchedProposal);
   }
 
   async fetchProposalState(
@@ -172,9 +159,7 @@ export default class ProposalStore {
       account,
       chainId
     );
-    runInAction(() => {
-      this.setProposalState(fetchedProposalState);
-    });
+    this.setProposalState(fetchedProposalState);
   }
 
   async fetchProposalVotes(
@@ -187,8 +172,6 @@ export default class ProposalStore {
       account,
       chainId
     );
-    runInAction(() => {
-      this.setProposalVotes(fetchedVotes);
-    });
+    this.setProposalVotes(fetchedVotes);
   }
 }

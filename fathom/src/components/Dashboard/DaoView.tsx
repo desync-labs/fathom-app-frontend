@@ -10,8 +10,6 @@ const DaoNav = styled("nav")`
   border-bottom: 1.5px solid #1d2d49;
   display: flex;
   align-items: center;
-  padding-left: 3rem;
-  gap: 25px;
 `;
 
 const DaoLink = styled(Link)`
@@ -20,14 +18,14 @@ const DaoLink = styled(Link)`
   align-items: center;
   gap: 8px;
   height: 100%;
-  padding: 0 20px;
+  padding: 0 52px;
   font-weight: 600;
   font-size: 17px;
   
   &.active {
     color: #fff;
     border-bottom: 1px solid #00FFF6;
-    
+    background: #131F35;
   }
   
   span {

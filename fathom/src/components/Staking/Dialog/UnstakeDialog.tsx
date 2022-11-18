@@ -4,7 +4,7 @@ import {
   CircularProgress,
   DialogContent,
   Grid,
-  Typography
+  Typography,
 } from "@mui/material";
 import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
 import React, { FC } from "react";
@@ -27,10 +27,10 @@ import InfoIcon from "@mui/icons-material/Info";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import {
   ButtonPrimary,
-  MaxButton
+  MaxButton,
 } from "components/AppComponents/AppButton/AppButton";
 import useUnstake from "hooks/useUnstake";
-import { InfoMessageWrapper } from "./ClaimRewardsDialog";
+import { InfoMessageWrapper } from "components/Staking/Dialog/ClaimRewardsDialog";
 
 const UnstakeValue = styled(Box)`
   display: flex;
@@ -86,23 +86,40 @@ const ConfirmButton = styled(ButtonPrimary)`
   line-height: 24px;
 `;
 
+export enum UNSTAKE_TYPE {
+  ITEM,
+  ALL,
+}
+
 type UnstakeDialogProps = {
   lockPosition: ILockPosition | null;
+  lockPositions: ILockPosition[];
   onClose: () => void;
+  type?: UNSTAKE_TYPE;
 };
 
-const UnstakeDialog: FC<UnstakeDialogProps> = ({ onClose, lockPosition }) => {
+const UnstakeDialog: FC<UnstakeDialogProps> = ({
+  onClose,
+  lockPosition,
+  lockPositions,
+  type = UNSTAKE_TYPE.ITEM,
+}) => {
   const {
     balanceError,
     unstakeAmount,
     totalBalance,
+
     isLoading,
 
     handleUnstakeAmountChange,
     formatNumber,
     setMax,
     unstakeHandler,
-  } = useUnstake(lockPosition);
+
+    totalUnstakeBalance,
+    totalMainTokenBalance,
+    totalRewardBalance,
+  } = useUnstake(lockPosition, lockPositions, type);
 
   return (
     <UnstakeDialogWrapper
@@ -113,7 +130,7 @@ const UnstakeDialog: FC<UnstakeDialogProps> = ({ onClose, lockPosition }) => {
       maxWidth="sm"
     >
       <AppDialogTitle id="customized-dialog-title" onClose={onClose}>
-        Unstake
+        { type === UNSTAKE_TYPE.ALL ? 'Unstake All' : 'Unstake' }
       </AppDialogTitle>
 
       <DialogContent>
@@ -124,6 +141,7 @@ const UnstakeDialog: FC<UnstakeDialogProps> = ({ onClose, lockPosition }) => {
               <strong>
                 {" "}
                 {lockPosition && formatNumber(lockPosition?.MAINTokenBalance)}
+                {type === UNSTAKE_TYPE.ALL && formatNumber(totalMainTokenBalance!)}
               </strong>
               FTHM<span>$2,566.84</span>
             </UnstakeValue>
@@ -134,6 +152,7 @@ const UnstakeDialog: FC<UnstakeDialogProps> = ({ onClose, lockPosition }) => {
               <strong>
                 {lockPosition &&
                   formatNumber(Number(lockPosition.RewardsAvailable))}
+                {type === UNSTAKE_TYPE.ALL && formatNumber(totalRewardBalance!)}
               </strong>
               FTHM<span>$0.00</span>
             </UnstakeValue>
@@ -143,13 +162,19 @@ const UnstakeDialog: FC<UnstakeDialogProps> = ({ onClose, lockPosition }) => {
         <UnstakeGrid container>
           <Grid item xs={12}>
             <AppFormInputWrapper>
-              <AppFormLabel>unstake amount</AppFormLabel>
-              {totalBalance ? (
+              <AppFormLabel>Unstake amount</AppFormLabel>
+              {type === UNSTAKE_TYPE.ITEM && totalBalance ? (
                 <WalletBalance>
                   Available: {formatNumber(totalBalance)} FTHM
                 </WalletBalance>
               ) : null}
+              {type === UNSTAKE_TYPE.ALL && totalUnstakeBalance ? (
+                <WalletBalance>
+                  Available: {formatNumber(totalUnstakeBalance)} FTHM
+                </WalletBalance>
+              ) : null }
               <AppTextField
+                disabled={type === UNSTAKE_TYPE.ALL}
                 error={balanceError}
                 id="outlined-helperText"
                 helperText={
@@ -182,23 +207,32 @@ const UnstakeDialog: FC<UnstakeDialogProps> = ({ onClose, lockPosition }) => {
                 Total Available
                 <InfoIcon sx={{ fontSize: "18px", color: "#6379A1" }} />
               </InfoLabel>
-              <InfoValue>{formatNumber(totalBalance)} FTHM</InfoValue>
+              <InfoValue>
+                { type === UNSTAKE_TYPE.ITEM && formatNumber(totalBalance)}
+                { type === UNSTAKE_TYPE.ALL && formatNumber(totalUnstakeBalance!)}
+                {" "}
+                FTHM
+              </InfoValue>
             </InfoWrapper>
             <InfoWrapper>
               <InfoLabel>
                 Maximum Received
                 <InfoIcon sx={{ fontSize: "18px", color: "#6379A1" }} />
               </InfoLabel>
-              <InfoValue>{formatNumber(totalBalance)} FTHM</InfoValue>
+              <InfoValue>
+                { type === UNSTAKE_TYPE.ITEM && formatNumber(totalBalance)}
+                { type === UNSTAKE_TYPE.ALL && formatNumber(totalUnstakeBalance!)}
+                {" "}
+                FTHM</InfoValue>
             </InfoWrapper>
           </Grid>
         </UnstakeGrid>
         <InfoMessageWrapper>
           <InfoIcon sx={{ fontSize: "18px", color: "#4F658C" }} />
           <Typography>
-            By clicking “Confirm Unstake”, you’ll be signing 2 transactions in MetaMask
-            to withdraw this amount to your connected wallet, and to unlock the
-            position.
+            By clicking “Confirm Unstake”, you’ll be signing 2 transactions in
+            MetaMask to withdraw this amount to your connected wallet, and to
+            unlock the position.
           </Typography>
         </InfoMessageWrapper>
         <UnstakeGrid container>

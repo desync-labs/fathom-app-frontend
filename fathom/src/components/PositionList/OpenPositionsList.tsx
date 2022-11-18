@@ -34,25 +34,6 @@ const OpenPositionsList = observer(() => {
         () =>
           positions.length === 0 ? (
             <>
-              <TableContainer>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                  <TableHead>
-                    <AppTableHeaderRow
-                      sx={{
-                        th: { textAlign: "left", paddingLeft: "10px" },
-                      }}
-                    >
-                      <TableCell>Position Id</TableCell>
-                      <TableCell>Pool</TableCell>
-                      <TableCell>FXD Borrowed</TableCell>
-                      <TableCell>Locked Collateral</TableCell>
-                      <TableCell>Locked Value</TableCell>
-                      <TableCell>LTV</TableCell>
-                      <TableCell></TableCell>
-                    </AppTableHeaderRow>
-                  </TableHead>
-                </Table>
-              </TableContainer>
               <NoResults variant="h6">
                 You have not opened any position
               </NoResults>

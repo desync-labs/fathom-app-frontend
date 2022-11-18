@@ -8,7 +8,6 @@ import {
   Typography,
   Divider,
   IconButton,
-  Chip,
 } from "@mui/material";
 import {
   ArrowBack,
@@ -17,16 +16,19 @@ import {
   AccountBalanceWallet as AccountBalanceWalletIcon,
   Logout as LogoutIcon,
 } from "@mui/icons-material";
-import Copyright from "../Footer/Footer";
-import AppBar from "../AppComponents/AppBar/AppBar";
-import useMetaMask from "../../hooks/metamask";
+import Copyright from "components/Footer/Footer";
+import AppBar from "components/AppComponents/AppBar/AppBar";
+import useMetaMask from "hooks/metamask";
 import { observer } from "mobx-react";
-import DashboardContent from "./Dashboard";
+import DashboardContent from "components/Dashboard/Dashboard";
 import { Route, Routes } from "react-router-dom";
-import StableSwap from "../Stableswap/StableSwap";
+import StableSwap from "components/Stableswap/StableSwap";
 import Image from "mui-image";
 
-import FathomAppLogo from "assets/svg/Fathom-app-logo.svg";
+import FathomAppLogoSrc from "assets/svg/Fathom-app-logo.svg";
+import ExitSrc from "assets/svg/exit.svg";
+import MetamaskSrc from 'assets/svg/metamask.svg';
+
 import { useStores } from "stores";
 import { Web3Status } from "components/Web3Status/Web3Status";
 import AllProposalsView from "components/Governance/ViewAllProposals";
@@ -38,7 +40,7 @@ import truncateEthAddress from "truncate-eth-address";
 import { Menu } from "components/Dashboard/Menu";
 import { ToggleDrawerButton } from "components/AppComponents/AppButton/AppButton";
 import { MainBox } from "components/AppComponents/AppBox/AppBox";
-import DaoView from "./DaoView";
+import DaoView from "components/Dashboard/DaoView";
 
 const drawerWidth: number = 240;
 
@@ -104,9 +106,25 @@ const mdTheme = createTheme({
   },
 });
 
+const MainToolbar = styled(Toolbar)`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 1px;
+  background: linear-gradient(180deg, #071126 0%, #050c1a 100%);
+`;
+
+const WalletBox = styled(Box)`
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  color: #fff;
+  padding: 0 0 0 10px;
+`;
+
 const MainLayout = observer(() => {
   const [open, setOpen] = useState<boolean>(true);
-  const { connect, isActive, account, chainId, error } = useMetaMask()!;
+  const { connect, isActive, account, chainId, error, isMetamask } = useMetaMask()!;
   const [isMobile, setIsMobile] = useState<boolean>(false);
 
   const toggleDrawer = useCallback(() => {
@@ -164,29 +182,30 @@ const MainLayout = observer(() => {
               noWrap
               sx={{ flexGrow: 1 }}
             ></Typography>
-            {account && !error && (
-              <Chip label={truncateEthAddress(account)} color="primary" />
-            )}
+
             <Web3Status />
+
+            { isMetamask && <img src={MetamaskSrc} alt={'metamask'} /> }
+            {account && !error && (
+              <WalletBox>{truncateEthAddress(account)}</WalletBox>
+            )}
+
             <IconButton color="inherit" onClick={connect}>
-              {isActive ? <LogoutIcon /> : <AccountBalanceWalletIcon />}
+
+              {isActive ? (
+                <img src={ExitSrc} alt={"exit"} />
+              ) : (
+                <AccountBalanceWalletIcon />
+              )}
             </IconButton>
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
-          <Toolbar
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "flex-end",
-              px: [1],
-              background: "linear-gradient(180deg, #071126 0%, #050C1A 100%)",
-            }}
-          >
+          <MainToolbar>
             {open && !isMobile && (
               <Image
                 duration={0}
-                src={FathomAppLogo}
+                src={FathomAppLogoSrc}
                 style={{
                   height: "none",
                   maxWidth: "140px",
@@ -204,7 +223,7 @@ const MainLayout = observer(() => {
                 )}
               </ToggleDrawerButton>
             )}
-          </Toolbar>
+          </MainToolbar>
           <Divider />
           <MenuWrapper open={open} isMobile={isMobile}>
             <Menu open={open} isMobile={isMobile} />

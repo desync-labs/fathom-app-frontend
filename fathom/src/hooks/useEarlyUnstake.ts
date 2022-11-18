@@ -1,6 +1,7 @@
 import {
   ChangeEvent,
   useCallback,
+  useEffect,
   useMemo,
   useState
 } from "react";
@@ -14,23 +15,27 @@ const formatter = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 2,
 });
 
-const useEarlyUnstake = (lockPosition: ILockPosition | null) => {
+const useEarlyUnstake = (lockPosition: ILockPosition) => {
   const [balanceError, setBalanceError] = useState<boolean>(false);
   const [unstakeAmount, setUnstakeAmount] = useState<number>(0);
 
-  const { action, handleUnlock } = useStakingView();
+  const { action, handleEarlyUnstake } = useStakingView();
 
   const isLoading = useMemo(() => {
     return action?.type === 'unlock' && action?.id === lockPosition?.lockId
   }, [action, lockPosition])
 
   const totalBalance = useMemo(() => {
-    if (lockPosition) {
-      return Number(lockPosition.MAINTokenBalance) + Number(lockPosition.RewardsAvailable)
-    }
-
-    return 0;
+    return Number(lockPosition.MAINTokenBalance) + Number(lockPosition.RewardsAvailable)
   }, [lockPosition])
+
+  useEffect(() => {
+    if (unstakeAmount > totalBalance) {
+      setBalanceError(true)
+    } else {
+      setBalanceError(false)
+    }
+  }, [unstakeAmount, totalBalance])
 
   const handleUnstakeAmountChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -58,8 +63,8 @@ const useEarlyUnstake = (lockPosition: ILockPosition | null) => {
   }, [totalBalance, setUnstakeAmount])
 
   const earlyUnstakeHandler = useCallback(() => {
-
-  }, [])
+    handleEarlyUnstake(lockPosition.lockId)
+  }, [lockPosition, handleEarlyUnstake])
 
   return {
     balanceError,
