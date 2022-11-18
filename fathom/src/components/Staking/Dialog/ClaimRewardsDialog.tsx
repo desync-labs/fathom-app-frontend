@@ -102,7 +102,7 @@ const ClaimRewardsDialog: FC<ClaimRewardsDialogProps> = ({
         onClose();
       });
     }
-  }, [lockPosition, claimRewardsSingle]);
+  }, [lockPosition, type, claimRewardsSingle, claimRewards, onClose]);
 
   const isLoading = useMemo(
     () =>
@@ -110,7 +110,7 @@ const ClaimRewardsDialog: FC<ClaimRewardsDialogProps> = ({
         ? // @ts-ignore
           action?.type === "claimSingle" && action?.id === lockPosition?.lockId
         : action?.type === "claim",
-    [action]
+    [action, lockPosition?.lockId, type]
   );
 
   return (

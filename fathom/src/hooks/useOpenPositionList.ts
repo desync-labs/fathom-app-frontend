@@ -10,13 +10,16 @@ import {
   useState
 } from "react";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
+import { ClosingType } from "./useClosePosition";
 
 
 const useOpenPositionList = () => {
   const { positionStore } = useStores();
   const { account, chainId } = useMetaMask()!;
   const logger = useLogger();
+
   const [selectedPosition, setSelectedPosition] = useState<IOpenPosition>();
+  const [closingType, setType] = useState(ClosingType.Full);
 
   const [approveBtn, setApproveBtn] = useState(true);
   const [approvalPending, setApprovalPending] = useState(false);
@@ -53,10 +56,12 @@ const useOpenPositionList = () => {
   return {
     approveBtn,
     approvalPending,
+    closingType,
     positions: positionStore.positions,
     approve,
     selectedPosition,
-    setSelectedPosition
+    setSelectedPosition,
+    setType
   }
 }
 

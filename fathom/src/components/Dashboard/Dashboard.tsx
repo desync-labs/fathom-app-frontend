@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Grid, Container } from "@mui/material";
 import OpenPositionsList from "components/PositionList/OpenPositionsList";
 import { useStores } from "stores";
@@ -7,7 +7,6 @@ import { observer } from "mobx-react";
 import ProtocolStats from "components/Dashboard/ProtocolStats";
 import { useWeb3React } from "@web3-react/core";
 import PoolsListView from "components/Pools/PoolsListView";
-import debounce from "lodash.debounce";
 import { PageHeader } from "components/Dashboard/PageHeader";
 
 const DashboardContent = observer(() => {
@@ -15,22 +14,19 @@ const DashboardContent = observer(() => {
   const { poolStore, positionStore } = useStores();
   const logger = useLogger();
 
-  const fetchData = useCallback(
-    debounce(async () => {
-      await poolStore.fetchPools();
-      await positionStore.fetchPositions(account!);
-    }, 100),
-    [poolStore, positionStore, account]
-  );
-
   useEffect(() => {
     if (chainId && account) {
-      logger.log(LogLevel.info, "fetching pool information.");
-      fetchData();
+      logger.log(LogLevel.info, "Fetching pools information.");
+      setTimeout(() => {
+        Promise.all([
+          poolStore.fetchPools(),
+          positionStore.fetchPositions(account!),
+        ]);
+      });
     } else {
       poolStore.setPool([]);
     }
-  }, [poolStore, logger, chainId, account, fetchData]);
+  }, [poolStore, positionStore, logger, chainId, account]);
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>

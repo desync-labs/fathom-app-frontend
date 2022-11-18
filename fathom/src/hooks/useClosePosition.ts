@@ -1,5 +1,11 @@
 import { useStores } from "stores";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  Dispatch,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState
+} from "react";
 import useMetaMask from "hooks/metamask";
 import { Constants } from "helpers/Constants";
 import { ClosePositionProps } from "components/Positions/ClosePositionDialog";
@@ -11,13 +17,14 @@ export enum ClosingType {
 
 const useClosePosition = (
   position: ClosePositionProps["position"],
-  onClose: ClosePositionProps["onClose"]
+  onClose: ClosePositionProps["onClose"],
+  closingType: ClosingType,
+  setType: Dispatch<ClosingType>,
 ) => {
   const { positionStore, poolStore } = useStores();
   const [collateral, setCollateral] = useState(0);
   const [fathomToken, setFathomToken] = useState(0);
   const [price, setPrice] = useState(0);
-  const [closingType, setType] = useState(ClosingType.Full);
 
   const [balance, setBalance] = useState(0);
   const [balanceError, setBalanceError] = useState(false);
@@ -45,7 +52,6 @@ const useClosePosition = (
       pool
     );
 
-    setType(ClosingType.Full);
     setPrice(priceWithSafetyMargin);
     setFathomToken(priceWithSafetyMargin * lockedCollateral);
     setCollateral(lockedCollateral);
@@ -53,7 +59,6 @@ const useClosePosition = (
     pool,
     poolStore,
     lockedCollateral,
-    setType,
     setPrice,
     setFathomToken,
     setCollateral,
@@ -82,7 +87,7 @@ const useClosePosition = (
       );
       onClose();
     } catch (e) {}
-    setDisableClosePosition(true);
+    setDisableClosePosition(false);
   }, [
     position,
     pool,

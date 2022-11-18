@@ -5,7 +5,6 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  Typography,
 } from "@mui/material";
 import { useStores } from "stores";
 import useMetaMask from "hooks/metamask";
