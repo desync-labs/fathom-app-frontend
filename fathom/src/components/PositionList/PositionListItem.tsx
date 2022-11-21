@@ -1,22 +1,20 @@
 import { observer } from "mobx-react";
-import {
-  CircularProgress,
-  Grid,
-  TableCell
-} from "@mui/material";
-import { Adjust } from "components/AppComponents/AppBox/AppBox";
+import { Box, CircularProgress, Grid, TableCell, Stack } from "@mui/material";
+import { Adjust, PoolName, TVL } from "components/AppComponents/AppBox/AppBox";
 import {
   ButtonPrimary,
-  ClosePositionButton
+  ClosePositionButton,
 } from "components/AppComponents/AppButton/AppButton";
 import { AppTableRow } from "components/AppComponents/AppTable/AppTable";
 import React, {
+  memo,
   Dispatch,
   FC,
   SetStateAction,
   useCallback,
+  useMemo,
   useRef,
-  useState
+  useState,
 } from "react";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
 import BigNumber from "bignumber.js";
@@ -32,6 +30,9 @@ import MenuItem from "@mui/material/MenuItem";
 import { styled } from "@mui/material/styles";
 import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
 import { ClosingType } from "hooks/useClosePosition";
+import TokenLogo from "../Common/TokenLogo";
+import { getTokenLogoURL } from "../../utils/tokenLogo";
+import { PoolLogoStack } from "../AppComponents/AppStack/AppStack";
 
 type PositionListItemProps = {
   position: IOpenPosition;
@@ -78,6 +79,8 @@ const PositionListItem: FC<PositionListItemProps> = observer(
       return safetyBuffer.div(Constants.WeiPerWad).decimalPlaces(2).toString();
     }, []);
 
+    const pool = useMemo(() => poolStore.getPool(position.pool), [poolStore]);
+
     return (
       <AppTableRow
         key={position.id}
@@ -89,7 +92,15 @@ const PositionListItem: FC<PositionListItemProps> = observer(
         <TableCell component="td" scope="row">
           {position.id}
         </TableCell>
-        <TableCell>{poolStore.getPool(position.pool)?.name}</TableCell>
+        <TableCell>
+          <Stack direction="row" spacing={2}>
+            <TokenLogo src={getTokenLogoURL(pool.name)} alt={pool.name} />
+            <Box>
+              <PoolName>{pool.name}</PoolName>
+              <TVL>TVL: $1.607M</TVL>
+            </Box>
+          </Stack>
+        </TableCell>
         <TableCell>
           {getFormattedSafetyBuffer(position.debtShare)} FXD
         </TableCell>
@@ -167,8 +178,8 @@ const PositionListItem: FC<PositionListItemProps> = observer(
                           </MenuItem>
                           <MenuItem
                             onClick={() => {
-                              setType(ClosingType.Partial)
-                              setSelectedPosition(position)
+                              setType(ClosingType.Partial);
+                              setSelectedPosition(position);
                             }}
                           >
                             Repay partially
@@ -187,4 +198,4 @@ const PositionListItem: FC<PositionListItemProps> = observer(
   }
 );
 
-export default PositionListItem;
+export default memo(PositionListItem);

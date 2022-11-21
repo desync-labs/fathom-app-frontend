@@ -2,7 +2,6 @@ import { makeAutoObservable } from "mobx";
 import { RootStore } from ".";
 import IStakingService from "services/interfaces/IStakingService";
 import ILockPosition from "stores/interfaces/ILockPosition";
-import { processRpcError } from "utils/processRpcError";
 
 export default class StakingStore {
   lockPositions: ILockPosition[] = [];
@@ -24,7 +23,6 @@ export default class StakingStore {
     stakePosition: number,
     unlockPeriod: number
   ) {
-    console.log("Running createLock from store");
     try {
       if (!account) return;
 
@@ -34,16 +32,15 @@ export default class StakingStore {
         unlockPeriod,
         this.rootStore.transactionStore
       );
-    } catch (e) {
+    } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(
         true,
-        "There is some error in Creating Lock postion!"
+        e.message
       );
     }
   }
 
   async handleEarlyWithdrawal(account: string, lockId: number) {
-    console.log("Running createLock from store");
     try {
       if (!account) return;
 
@@ -52,10 +49,10 @@ export default class StakingStore {
         lockId,
         this.rootStore.transactionStore
       );
-    } catch (e) {
+    } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(
         true,
-        "There is some error in Early Withdrawal!"
+        e.message
       );
     }
   }
@@ -69,11 +66,10 @@ export default class StakingStore {
         lockId,
         this.rootStore.transactionStore
       );
-    } catch (e) {
-      const error = processRpcError(e);
+    } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(
         true,
-        error.reason || error.message
+        e.message
       );
     }
   }
@@ -86,11 +82,10 @@ export default class StakingStore {
         1,
         this.rootStore.transactionStore
       );
-    } catch (e) {
-      const error = processRpcError(e);
+    } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(
         true,
-        error.reason || error.message
+        e.message
       );
     }
   }
@@ -104,10 +99,10 @@ export default class StakingStore {
         lockId,
         this.rootStore.transactionStore
       );
-    } catch (error: any) {
+    } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(
         true,
-        error.reason || error.message
+        e.message
       );
     }
   }
@@ -120,11 +115,10 @@ export default class StakingStore {
         1,
         this.rootStore.transactionStore
       );
-    } catch (e) {
-      const error = processRpcError(e);
+    } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(
         true,
-        error.reason || error.message
+         e.message
       );
     }
   }
@@ -143,7 +137,6 @@ export default class StakingStore {
   }
 
   async fetchAPR() {
-    console.log("fetching... APR");
     const apr = await this.service.getAPR();
     this.setAPR(apr);
   }
@@ -160,12 +153,10 @@ export default class StakingStore {
     try {
       const walletBalance = await this.service.getWalletBalance(account);
       this.setWalletBalance(walletBalance);
-    } catch (e) {
-      const error = processRpcError(e);
-
+    } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(
         true,
-        error.reason || error.message
+        e.message
       );
     }
   }
@@ -178,11 +169,10 @@ export default class StakingStore {
     try {
       const voteBalance = await this.service.getVOTEBalance(account);
       this.setVOTEBalance(voteBalance);
-    } catch (e) {
-      const error = processRpcError(e);
+    } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(
         true,
-        error.reason || error.message
+        e.message
       );
     }
   }
@@ -192,11 +182,10 @@ export default class StakingStore {
       const locks = await this.service.getLockPositions(account);
       this.setLocks(locks);
       this.setTotalStakedPosition(locks);
-    } catch (e) {
-      const error = processRpcError(e);
+    } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(
         true,
-        error.reason || error.message
+        e.message
       );
     }
   }
@@ -239,12 +228,11 @@ export default class StakingStore {
     console.log(`Checking FTHM approval status for address ${address}`);
     try {
       if (!address) return;
-      return this.service.approvalStatusStakingFTHM(address, stakingPosition);
-    } catch (e) {
-      const error = processRpcError(e);
+      return await this.service.approvalStatusStakingFTHM(address, stakingPosition);
+    } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(
         true,
-        error.reason || error.message
+        e.message
       );
     }
   }
@@ -262,11 +250,10 @@ export default class StakingStore {
             "Token approval was successful"
           );
         });
-    } catch (e) {
-      const error = processRpcError(e);
+    } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(
         true,
-        error.reason || error.message
+        e.message
       );
     }
   }

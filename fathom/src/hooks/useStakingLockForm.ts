@@ -14,8 +14,10 @@ const useStakingLockForm = (
   const { handleSubmit, watch, control, reset, getValues, setValue } = useForm({
     defaultValues: {
       lockDays: 30,
-      stakePosition: 0,
+      stakePosition: "",
     },
+    reValidateMode: 'onChange',
+    mode: 'onChange',
   });
   const { account, chainId } = useMetaMask()!;
   const { stakingStore } = useStores();
@@ -44,7 +46,7 @@ const useStakingLockForm = (
 
   useEffect(() => {
     if (chainId && stakePosition) {
-      approvalStatus(account, chainId, stakePosition!);
+      approvalStatus(account, chainId, Number(stakePosition)!);
     }
   }, [account, chainId, approvalStatus, stakePosition]);
 
@@ -57,7 +59,7 @@ const useStakingLockForm = (
   }, [account, stakingStore]);
 
   useEffect(() => {
-    if (stakePosition > stakingStore.walletBalance) {
+    if (Number(stakePosition) > stakingStore.walletBalance) {
       setBalanceError(true);
     } else {
       setBalanceError(false);
@@ -94,7 +96,7 @@ const useStakingLockForm = (
 
   const setMax = useCallback(
     (balance: number) => {
-      setValue("stakePosition", balance);
+      setValue("stakePosition", balance.toString());
     },
     [setValue]
   );

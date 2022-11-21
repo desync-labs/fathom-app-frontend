@@ -7,7 +7,7 @@ import ActiveWeb3TransactionsService from "services/ActiveWeb3TransactionsServic
 export default class ActiveWeb3Transactions {
   transactions: ITransaction[];
   service: ActiveWeb3TransactionsService;
-  private fetchHandle: NodeJS.Timeout | null = null;
+  fetchHandle: NodeJS.Timeout | null = null;
   rootStore: RootStore;
 
   constructor(rootStore: RootStore, service: ActiveWeb3TransactionsService) {

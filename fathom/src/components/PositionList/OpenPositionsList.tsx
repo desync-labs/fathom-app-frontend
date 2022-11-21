@@ -49,8 +49,8 @@ const OpenPositionsList = observer(() => {
                       th: { textAlign: "left", paddingLeft: "10px" },
                     }}
                   >
-                    <TableCell>Position Id</TableCell>
-                    <TableCell>Pool</TableCell>
+                    <TableCell>Id</TableCell>
+                    <TableCell>Asset</TableCell>
                     <TableCell>FXD Borrowed</TableCell>
                     <TableCell>Locked Collateral</TableCell>
                     <TableCell>Locked Value</TableCell>

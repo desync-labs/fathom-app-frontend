@@ -1,4 +1,4 @@
-import { makeAutoObservable, runInAction } from "mobx";
+import { makeAutoObservable } from "mobx";
 import { RootStore } from ".";
 import IPositionService from "services/interfaces/IPositionService";
 import ICollateralPool from "stores/interfaces/ICollateralPool";
@@ -39,8 +39,10 @@ export default class PositionStore {
           this.rootStore.transactionStore
         );
 
-        await this.fetchPositions(address);
-        await this.rootStore.poolStore.fetchPools();
+        Promise.all([
+          this.fetchPositions(address),
+          this.rootStore.poolStore.fetchPools(),
+        ]);
 
         this.rootStore.alertStore.setShowSuccessAlert(
           true,
@@ -48,12 +50,8 @@ export default class PositionStore {
         );
 
         resolve(null);
-      } catch (e) {
-        const err = processRpcError(e);
-        this.rootStore.alertStore.setShowErrorAlert(
-          true,
-          err.reason || err.message
-        );
+      } catch (e: any) {
+        this.rootStore.alertStore.setShowErrorAlert(true, e.message);
         reject(e);
       }
     });
@@ -88,12 +86,8 @@ export default class PositionStore {
         );
 
         resolve(null);
-      } catch (e) {
-        const err = processRpcError(e);
-        this.rootStore.alertStore.setShowErrorAlert(
-          true,
-          err.reason || err.message
-        );
+      } catch (e: any) {
+        this.rootStore.alertStore.setShowErrorAlert(true, e.message);
 
         reject(e);
       }
@@ -102,11 +96,14 @@ export default class PositionStore {
 
   async fetchPositions(address: string) {
     if (!address) return;
-
-    const positions = await this.service.getPositionsWithSafetyBuffer(address);
-    runInAction(() => {
+    try {
+      const positions = await this.service.getPositionsWithSafetyBuffer(
+        address
+      );
       this.setPositions(positions);
-    });
+    } catch (e: any) {
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+    }
   }
 
   setPositions(_positions: IOpenPosition[]) {
@@ -132,12 +129,8 @@ export default class PositionStore {
           `${pool.name} approval was successful!`
         );
         resolve(null);
-      } catch (e) {
-        const err = processRpcError(e);
-        this.rootStore.alertStore.setShowErrorAlert(
-          true,
-          err.reason || err.message
-        );
+      } catch (e: any) {
+        this.rootStore.alertStore.setShowErrorAlert(true, e.message);
         reject(e);
       }
     });
@@ -149,22 +142,15 @@ export default class PositionStore {
     pool: ICollateralPool
   ) {
     if (!address) return;
-    console.log(
-      `Checking approval status for address ${address}, poolId: ${pool.name}`
-    );
     try {
-      return this.service.approvalStatus(
+      return await this.service.approvalStatus(
         address,
         pool,
         collatral,
         this.rootStore.transactionStore
       );
-    } catch (e) {
-      const err = processRpcError(e);
-      this.rootStore.alertStore.setShowErrorAlert(
-        true,
-        err.reason || err.message
-      );
+    } catch (e: any) {
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
     }
   }
 
@@ -194,27 +180,21 @@ export default class PositionStore {
             "Token approval was successful!"
           );
         });
-    } catch (e) {
-      const err = processRpcError(e);
+    } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(
         true,
-        err.reason || err.message
+        e.message
       );
       throw e;
     }
   }
 
   async approvalStatusStableCoin(address: string) {
-    console.log(`Checking stablecoin approval status for address ${address}`);
     try {
       if (!address) return;
-      return this.service.approvalStatusStablecoin(address);
-    } catch (e) {
-      const err = processRpcError(e);
-      this.rootStore.alertStore.setShowErrorAlert(
-        true,
-        err.reason || err.message
-      );
+      return await this.service.approvalStatusStablecoin(address);
+    } catch (e: any) {
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
     }
   }
 
@@ -240,20 +220,18 @@ export default class PositionStore {
           collateral,
           this.rootStore.transactionStore
         );
-        await this.fetchPositions(address);
-        await this.rootStore.poolStore.fetchPools();
+
+        Promise.all([
+          this.fetchPositions(address),
+          this.rootStore.poolStore.fetchPools()
+        ])
         this.rootStore.alertStore.setShowSuccessAlert(
           true,
           "Position closed successfully!"
         );
-
         resolve(null);
-      } catch (e) {
-        const err = processRpcError(e);
-        this.rootStore.alertStore.setShowErrorAlert(
-          true,
-          err.reason || err.message
-        );
+      } catch (e: any) {
+        this.rootStore.alertStore.setShowErrorAlert(true, e.message);
         reject(e);
       }
     });

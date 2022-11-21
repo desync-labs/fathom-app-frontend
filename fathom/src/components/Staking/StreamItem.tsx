@@ -5,7 +5,8 @@ import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
 import React, {
   FC,
   useMemo,
-  useState
+  useState,
+  memo
 } from "react";
 import ILockPosition from "stores/interfaces/ILockPosition";
 import StakingViewItem from "components/Staking/StakingViewItem";
@@ -171,7 +172,7 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
           </>
         ),
 
-        [stakingStore.lockPositions, totalRewards]
+        [stakingStore.lockPositions, totalRewards, token]
       )}
 
       {(rewardsPosition || totalRewardsData) && (
@@ -203,7 +204,7 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
               lockPositions={stakingStore.lockPositions}
             />
           ),
-        [unstake, unstakeType, stakingStore.lockPositions]
+        [unstake, unstakeType, stakingStore.lockPositions, token]
       )}
 
       {useMemo(
@@ -215,10 +216,10 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
               lockPosition={earlyUnstake!}
             />
           ),
-        [earlyUnstake]
+        [earlyUnstake, token]
       )}
     </>
   );
 };
 
-export default StreamItem;
+export default memo(StreamItem);

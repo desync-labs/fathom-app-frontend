@@ -34,56 +34,53 @@ export type ProposeListViewProps = {
   onClose: () => void;
 };
 
-const ProposeLabel = styled(
-  AppFormLabel,
-  {}
-)(({ theme }) => ({
-  float: "none",
-  width: "100%",
-  fontSize: "11px",
-  lineHeight: "18px",
-  color: "#7D91B5",
-  height: "26px",
-  display: "inline-flex",
-  alignItems: "end",
-  padding: 0,
-}));
+const ProposeLabel = styled(AppFormLabel)`
+  float: none;
+  width: 100%;
+  font-size: 11px;
+  line-height: 18px;
+  color: #7d91b5;
+  height: 26px;
+  display: inline-flex;
+  alignitems: end;
+  padding: 0;
+`;
 
-const CurrencyBox = styled(Box)(({ theme }) => ({
-  fontSize: "14px",
-  lineHeight: "20px",
-}));
+const CurrencyBox = styled(Box)`
+  font-size: 14px;
+  line-height: 20px;
+`;
 
-const BalanceBox = styled(Box)(({ theme }) => ({
-  fontWeight: "bold",
-  fontSize: "20px",
-  lineHeight: "24px",
-}));
+const BalanceBox = styled(Box)`
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 24px;
+`;
 
-const WarningBox = styled(Box)(({ theme }) => ({
-  background: "#452508",
-  border: "1px solid #5C310A",
-  borderRadius: "8px",
-  padding: "8px 16px",
-  gap: "8px",
-  display: "flex",
-  flexDirection: "row",
-  alignItems: "center",
-  color: "#F7B06E",
-  fontSize: "14px",
-}));
+const WarningBox = styled(Box)`
+  background: #452508;
+  border: 1px solid #5c310a;
+  border-radius: 8px;
+  padding: 8px 16px;
+  gap: 8px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: #f7b06e;
+  font-size: 14px;
+`;
 
-const ProposeButtonPrimary = styled(ButtonPrimary)(({ theme }) => ({
-  height: "48px",
-  fontSize: "17px",
-}));
+const ProposeButtonPrimary = styled(ButtonPrimary)`
+  height: 48px;
+  font-size: 17px;
+`
 
-const ProposeButtonSecondary = styled(ButtonSecondary)(({ theme }) => ({
-  height: "48px",
-  fontSize: "17px",
-  color: "#fff",
-  border: "1px solid #324567",
-}));
+const ProposeButtonSecondary = styled(ButtonSecondary)`
+  height: 48px;
+  font-size: 17px;
+  color: #fff;
+  border: 1px solid #324567;
+`
 
 const MINIMUM_V_BALANCE = 2000;
 
@@ -402,7 +399,11 @@ const ProposeListView: FC<ProposeListViewProps> = observer(({ onClose }) => {
             <Grid item xs={12}>
               <Grid container spacing={1}>
                 <Grid item xs={4}>
-                  <ProposeButtonSecondary type="button" sx={{ width: "100%" }} onClick={saveForLater}>
+                  <ProposeButtonSecondary
+                    type="button"
+                    sx={{ width: "100%" }}
+                    onClick={saveForLater}
+                  >
                     Save for later
                   </ProposeButtonSecondary>
                 </Grid>

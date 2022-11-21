@@ -1,7 +1,6 @@
 import { useStores } from "stores";
 import useMetaMask from "hooks/metamask";
 import {
-  LogLevel,
   useLogger
 } from "helpers/Logger";
 import {
@@ -10,7 +9,7 @@ import {
   useState
 } from "react";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
-import { ClosingType } from "./useClosePosition";
+import { ClosingType } from "hooks/useClosePosition";
 
 
 const useOpenPositionList = () => {
@@ -21,8 +20,8 @@ const useOpenPositionList = () => {
   const [selectedPosition, setSelectedPosition] = useState<IOpenPosition>();
   const [closingType, setType] = useState(ClosingType.Full);
 
-  const [approveBtn, setApproveBtn] = useState(true);
-  const [approvalPending, setApprovalPending] = useState(false);
+  const [approveBtn, setApproveBtn] = useState<boolean>(true);
+  const [approvalPending, setApprovalPending] = useState<boolean>(false);
 
   const approvalStatus = useCallback(async () => {
     const approved = await positionStore.approvalStatusStableCoin(account);
@@ -32,8 +31,6 @@ const useOpenPositionList = () => {
   useEffect(() => {
     if (chainId) {
       setTimeout(() => {
-        // Update the document title using the browser API
-        logger.log(LogLevel.info, `fetching open positions. ${account}`);
         approvalStatus();
       });
     } else {

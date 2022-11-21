@@ -86,9 +86,10 @@ export const PoolName = styled(Typography)`
   color: #fff;
   text-align: left;
   line-height: 20px;
+  font-weight: 600;
 `;
 
-export const Fee = styled(Typography)`
+export const TVL = styled(Typography)`
   font-size: 12px;
   color: #6379a1;
   line-height: 16px;

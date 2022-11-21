@@ -22,7 +22,7 @@ const useEarlyUnstake = (lockPosition: ILockPosition) => {
   const { action, handleEarlyUnstake } = useStakingView();
 
   const isLoading = useMemo(() => {
-    return action?.type === 'unlock' && action?.id === lockPosition?.lockId
+    return action?.type === 'early' && action?.id === lockPosition?.lockId
   }, [action, lockPosition])
 
   const totalBalance = useMemo(() => {

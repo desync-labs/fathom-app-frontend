@@ -203,6 +203,7 @@ const MainLayout = observer(() => {
             {open && !isMobile && (
               <img
                 src={FathomAppLogoSrc}
+                alt={'logo'}
                 style={{
                   height: "none",
                   maxWidth: "140px",

@@ -30,15 +30,21 @@ export default class ProposalStore {
     callData: string[],
     description: string,
     account: string
-  ): Promise<number> {
-    return this.service.createProposal(
-      targets,
-      values,
-      callData,
-      description,
-      account,
-      this.rootStore.transactionStore
-    );
+  ) {
+    try {
+      await this.service.createProposal(
+        targets,
+        values,
+        callData,
+        description,
+        account,
+        this.rootStore.transactionStore
+      );
+    } catch (e: any) {
+
+    }
+
+
   }
 
   async executeProposal(

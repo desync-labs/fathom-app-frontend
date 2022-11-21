@@ -45,7 +45,7 @@ const useStableSwap = (options: string[]) => {
       approved =
         currency === "USDT"
           ? await stableSwapStore.approvalStatusUsdt(account, input)
-          : await stableSwapStore.approvalStatusStablecoin(account, input);
+          : await stableSwapStore.approvalStatusStableCoin(account, input);
 
       type === "input"
         ? approved
@@ -172,7 +172,7 @@ const useStableSwap = (options: string[]) => {
     try {
       inputCurrency === "USDT"
         ? await stableSwapStore.approveUsdt(account)
-        : await stableSwapStore.approveStablecoin(account);
+        : await stableSwapStore.approveStableCoin(account);
       setApproveInputBtn(false);
     } catch (e) {
       setApproveInputBtn(true);
@@ -191,7 +191,7 @@ const useStableSwap = (options: string[]) => {
     try {
       outputCurrency === "USDT"
         ? await stableSwapStore.approveUsdt(account)
-        : await stableSwapStore.approveStablecoin(account);
+        : await stableSwapStore.approveStableCoin(account);
 
       setApproveOutputBtn(false);
     } catch (e) {

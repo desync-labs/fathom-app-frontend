@@ -1,4 +1,9 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState
+} from "react";
 import {
   Table,
   TableBody,
@@ -28,7 +33,7 @@ const PoolsListHeaderRow = styled(AppTableHeaderRow)(({ theme }) => ({
 }));
 
 const PoolsListView = observer(() => {
-  const poolStore = useStores().poolStore;
+  const { poolStore } = useStores();
   const { account, chainId } = useMetaMask()!;
   const logger = useLogger();
   const [selectedPool, setSelectedPool] = useState<ICollateralPool>();
@@ -46,6 +51,10 @@ const PoolsListView = observer(() => {
     setSelectedPool(undefined);
   }, [poolStore, account, chainId, logger, setSelectedPool]);
 
+  const onCloseNewPosition = useCallback(() => {
+    setSelectedPool(undefined)
+  }, [setSelectedPool])
+
   return (
     <>
       <TitleSecondary variant="h2">Available Pools</TitleSecondary>
@@ -58,9 +67,7 @@ const PoolsListView = observer(() => {
             aria-label="simple table"
           >
             <TableHead>
-              <PoolsListHeaderRow
-                sx={{ "th:first-child": { paddingLeft: "20px" } }}
-              >
+              <PoolsListHeaderRow>
                 <TableCell>Pool</TableCell>
                 <TableCell>Total Borrowed</TableCell>
                 <TableCell>TVL</TableCell>
@@ -88,11 +95,11 @@ const PoolsListView = observer(() => {
           selectedPool && (
             <OpenNewPositionDialog
               pool={selectedPool!}
-              onClose={() => setSelectedPool(undefined)}
+              onClose={onCloseNewPosition}
             />
           )
         );
-      }, [selectedPool])}
+      }, [selectedPool, onCloseNewPosition])}
     </>
   );
 });
