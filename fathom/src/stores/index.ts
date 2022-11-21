@@ -50,7 +50,7 @@ export class RootStore {
   fxdProtocolStatsService: IFXDProtocolStatsService;
   stakingService: IStakingService;
 
-  chainId: number = Constants.DEFAULT_CHAINID;
+  chainId: number = Constants.DEFAULT_CHAIN_ID;
 
   constructor() {
     this.poolService = new PoolService();

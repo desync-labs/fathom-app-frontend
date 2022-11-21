@@ -77,6 +77,7 @@ export type ClaimRewardsAll = {
 };
 
 type ClaimRewardsDialogProps = {
+  token: string;
   lockPosition: ILockPosition | null;
   totalRewards: ClaimRewardsAll | null;
   onClose: () => void;
@@ -84,6 +85,7 @@ type ClaimRewardsDialogProps = {
 };
 
 const ClaimRewardsDialog: FC<ClaimRewardsDialogProps> = ({
+  token,
   onClose,
   lockPosition,
   totalRewards,
@@ -132,7 +134,7 @@ const ClaimRewardsDialog: FC<ClaimRewardsDialogProps> = ({
           <Grid item xs={12}>
             <DialogContentWrapper>
               <img
-                src={getTokenLogoURL("FTHM")}
+                src={getTokenLogoURL(token)}
                 alt={"token-logo"}
                 width={58}
               />
@@ -145,7 +147,7 @@ const ClaimRewardsDialog: FC<ClaimRewardsDialogProps> = ({
                 </Box>
                 <span>
                   {type === ClaimRewardsType.ITEM
-                    ? "FTHM"
+                    ? token
                     : totalRewards?.rewardsToken}
                 </span>
               </Amount>

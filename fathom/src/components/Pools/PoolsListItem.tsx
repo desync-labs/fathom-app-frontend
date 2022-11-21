@@ -6,14 +6,15 @@ import React, { Dispatch, FC, SetStateAction } from "react";
 import { AppTableRow } from "components/AppComponents/AppTable/AppTable";
 import { styled } from "@mui/material/styles";
 import { OpenPositionButton } from "components/AppComponents/AppButton/AppButton";
-import RedUrl from "assets/svg/combo-shape.svg";
-import GreenUrl from "assets/svg/hart-arrow-up.svg";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { PoolLogoStack } from "components/AppComponents/AppStack/AppStack";
 import {
   Fee,
   PoolName
 } from "components/AppComponents/AppBox/AppBox";
+
+import ComboShapeSrc from "assets/svg/combo-shape.svg";
+import GreenSrc from "assets/svg/hart-arrow-up.svg";
 
 type PoolsListItemPropsType = {
   pool: ICollateralPool;
@@ -42,10 +43,10 @@ const TextBox = styled(Box)(({ theme }) => ({
   marginRight: "7px",
 }));
 
-const IconRed = () => {
+const ComboShareIcon = () => {
   return (
     <Icon>
-      <img src={RedUrl} alt="borrow-icon" />
+      <img src={ComboShapeSrc} alt="borrow-icon" width={24} />
     </Icon>
   );
 };
@@ -53,7 +54,7 @@ const IconRed = () => {
 const GreenIcon = () => {
   return (
     <Icon>
-      <img src={GreenUrl} alt="borrow-icon" />
+      <img src={GreenSrc} alt="borrow-icon" />
     </Icon>
   );
 };
@@ -81,7 +82,7 @@ const PoolsListItem: FC<PoolsListItemPropsType> = ({
       <TableCell></TableCell>
       <TableCell>{pool.availableFathom} FXD</TableCell>
       <TableCell>
-        <TextBox>2.60%</TextBox> <IconRed />
+        <TextBox>2.60%</TextBox> <ComboShareIcon />
       </TableCell>
       <TableCell>
         <TextBox>0.23%</TextBox> <GreenIcon />

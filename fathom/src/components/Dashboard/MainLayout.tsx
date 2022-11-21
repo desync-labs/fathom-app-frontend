@@ -22,11 +22,10 @@ import { observer } from "mobx-react";
 import DashboardContent from "components/Dashboard/Dashboard";
 import { Route, Routes } from "react-router-dom";
 import StableSwap from "components/Stableswap/StableSwap";
-import Image from "mui-image";
 
 import FathomAppLogoSrc from "assets/svg/Fathom-app-logo.svg";
 import ExitSrc from "assets/svg/exit.svg";
-import MetamaskSrc from 'assets/svg/metamask.svg';
+import MetamaskSrc from "assets/svg/metamask.svg";
 
 import { useStores } from "stores";
 import { Web3Status } from "components/Web3Status/Web3Status";
@@ -40,8 +39,7 @@ import { Menu } from "components/Dashboard/Menu";
 import { ToggleDrawerButton } from "components/AppComponents/AppButton/AppButton";
 import { MainBox } from "components/AppComponents/AppBox/AppBox";
 import DaoView from "components/Dashboard/DaoView";
-
-const drawerWidth: number = 240;
+import { drawerWidth } from "components/AppComponents/AppBar/AppBar";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -108,7 +106,7 @@ const mdTheme = createTheme({
 const MainToolbar = styled(Toolbar)`
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: flex-start;
   padding: 0 1px;
   background: linear-gradient(180deg, #071126 0%, #050c1a 100%);
 `;
@@ -123,7 +121,8 @@ const WalletBox = styled(Box)`
 
 const MainLayout = observer(() => {
   const [open, setOpen] = useState<boolean>(true);
-  const { connect, isActive, account, chainId, error, isMetamask } = useMetaMask()!;
+  const { connect, isActive, account, chainId, error, isMetamask } =
+    useMetaMask()!;
   const [isMobile, setIsMobile] = useState<boolean>(false);
 
   const toggleDrawer = useCallback(() => {
@@ -139,6 +138,7 @@ const MainLayout = observer(() => {
   const resizeHandler = useCallback(() => {
     const isMobile = Math.min(window.screen.width, window.screen.height) < 768;
     setIsMobile(isMobile);
+
     if (isMobile) {
       setOpen(false);
     } else {
@@ -184,13 +184,12 @@ const MainLayout = observer(() => {
 
             <Web3Status />
 
-            { isMetamask && <img src={MetamaskSrc} alt={'metamask'} /> }
+            {isMetamask && <img src={MetamaskSrc} alt={"metamask"} />}
             {account && !error && (
               <WalletBox>{truncateEthAddress(account)}</WalletBox>
             )}
 
             <IconButton color="inherit" onClick={connect}>
-
               {isActive ? (
                 <img src={ExitSrc} alt={"exit"} />
               ) : (
@@ -202,15 +201,12 @@ const MainLayout = observer(() => {
         <Drawer variant="permanent" open={open}>
           <MainToolbar>
             {open && !isMobile && (
-              <Image
-                duration={0}
+              <img
                 src={FathomAppLogoSrc}
                 style={{
                   height: "none",
                   maxWidth: "140px",
-                  marginLeft: "22px",
                 }}
-                wrapperStyle={{ justifyContent: "left" }}
               />
             )}
             {!isMobile && (

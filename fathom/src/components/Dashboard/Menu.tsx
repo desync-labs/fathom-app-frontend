@@ -118,18 +118,11 @@ export const Menu: FC<ItemPropsType> = ({ open, isMobile }) => {
     },
     {
       name: "DAO",
-      link: "/dao/proposals",
+      link: "/dao/staking",
       showText: isMobile ? false : showText,
       Icon: <GovernanceIcon isDAOActive={isDAOActive} />,
       isActive: isDAOActive,
     },
-    // {
-    //   name: "Staking",
-    //   showText: isMobile ? false : showText,
-    //   Icon: <StakingIcon isStakingActive={isStakingActive} />,
-    //   isActive: isStakingActive,
-    //   link: "/staking",
-    // },
   ];
 
   return (

@@ -6,7 +6,7 @@ import { Constants } from "helpers/Constants";
 import { Web3Utils } from "helpers/Web3Utils";
 
 export default class PoolService implements IPoolService {
-  chainId = Constants.DEFAULT_CHAINID;
+  chainId = Constants.DEFAULT_CHAIN_ID;
   //Ideally this should be dynamic
   getPools(): ICollateralPool[] {
     const pools: ICollateralPool[] = [];

@@ -9,7 +9,7 @@ import IFXDProtocolStatsService from "services/interfaces/IFXDProtocolStatsServi
 export default class FXDProtocolStatsService
   implements IFXDProtocolStatsService
 {
-  chainId = Constants.DEFAULT_CHAINID;
+  chainId = Constants.DEFAULT_CHAIN_ID;
 
   async fetchProtocolStats(): Promise<IFXDProtocolStats> {
     try {

@@ -26,7 +26,6 @@ import React, {
 } from "react";
 import { styled } from "@mui/material/styles";
 import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
-import useMetaMask from "hooks/metamask";
 import Web3 from "web3";
 
 const NetworkPaper = styled(AppPaper)`
@@ -55,11 +54,8 @@ const NetworkPaper = styled(AppPaper)`
 
 export const Web3Status = () => {
   const { error, account, chainId } = useWeb3React();
-  const { isMetamask } = useMetaMask()!;
   const anchorRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState<boolean>(false);
-
-  console.log(isMetamask);
 
   let button: null | ReactElement = null;
 
@@ -71,7 +67,7 @@ export const Web3Status = () => {
 
   const requestChangeNetwork = useCallback(
     async (chainId: string) => {
-      setOpen(false)
+      setOpen(false);
 
       if (window.ethereum) {
         try {
@@ -105,9 +101,7 @@ export const Web3Status = () => {
         </>
       </RightNetwork>
     );
-  }
-
-  if (error) {
+  } else if (error) {
     button = (
       <WrongNetwork onClick={() => setOpen(!open)}>
         <>

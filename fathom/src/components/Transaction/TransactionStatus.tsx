@@ -5,13 +5,15 @@ import truncateEthAddress from "truncate-eth-address";
 import { Constants } from "../../helpers/Constants";
 
 const TransactionStatus = observer(() => {
-  let transactionStore = useStores().transactionStore;
+  let { transactionStore } = useStores();
   let rootStore = useStores();
 
   const getTxUrl = (txHash: string) => {
-    if (rootStore.chainId === Constants.DEFAULT_CHAINID)
+    if (rootStore.chainId === Constants.DEFAULT_CHAIN_ID) {
       return `${Constants.APOTHEM_BLOCK_EXPLORER_URL}${txHash}`;
-    else return `${Constants.GOERLI_BLOCK_EXPLORER_URL}${txHash}`;
+    } else {
+      return `${Constants.GOERLI_BLOCK_EXPLORER_URL}${txHash}`
+    }
   };
 
   return (
