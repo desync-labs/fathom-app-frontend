@@ -55,8 +55,7 @@ const StakingPositions: FC = () => {
   return (
     <>
       <TitleSecondary>My Positions</TitleSecondary>
-      <StreamItem />
-      <StreamItem />
+      <StreamItem token={'FTHM'} />
     </>
   );
 };

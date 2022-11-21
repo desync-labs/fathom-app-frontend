@@ -12,7 +12,7 @@ import {
 import { Constants } from "helpers/Constants";
 
 export default class ProposalService implements IProposalService {
-  chainId = Constants.DEFAULT_CHAINID;
+  chainId = Constants.DEFAULT_CHAIN_ID;
 
   async createProposal(
     targets: string[],

@@ -16,7 +16,7 @@ import { Strings } from "../helpers/Strings";
 import { toWei } from "web3-utils";
 
 export default class PositionService implements IPositionService {
-  chainId = Constants.DEFAULT_CHAINID;
+  chainId = Constants.DEFAULT_CHAIN_ID;
 
   async openPosition(
     address: string,

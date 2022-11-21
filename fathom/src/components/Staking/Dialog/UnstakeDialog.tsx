@@ -94,12 +94,14 @@ export enum UNSTAKE_TYPE {
 type UnstakeDialogProps = {
   lockPosition: ILockPosition | null;
   lockPositions: ILockPosition[];
+  token: string;
   onClose: () => void;
   type?: UNSTAKE_TYPE;
 };
 
 const UnstakeDialog: FC<UnstakeDialogProps> = ({
   onClose,
+  token,
   lockPosition,
   lockPositions,
   type = UNSTAKE_TYPE.ITEM,
@@ -143,7 +145,7 @@ const UnstakeDialog: FC<UnstakeDialogProps> = ({
                 {lockPosition && formatNumber(lockPosition?.MAINTokenBalance)}
                 {type === UNSTAKE_TYPE.ALL && formatNumber(totalMainTokenBalance!)}
               </strong>
-              FTHM<span>$2,566.84</span>
+              { token }<span>$2,566.84</span>
             </UnstakeValue>
           </Grid>
           <Grid item xs={4}>
@@ -154,7 +156,7 @@ const UnstakeDialog: FC<UnstakeDialogProps> = ({
                   formatNumber(Number(lockPosition.RewardsAvailable))}
                 {type === UNSTAKE_TYPE.ALL && formatNumber(totalRewardBalance!)}
               </strong>
-              FTHM<span>$0.00</span>
+              { token }<span>$0.00</span>
             </UnstakeValue>
           </Grid>
         </UnstakeBalanceWrapper>
@@ -165,12 +167,12 @@ const UnstakeDialog: FC<UnstakeDialogProps> = ({
               <AppFormLabel>Unstake amount</AppFormLabel>
               {type === UNSTAKE_TYPE.ITEM && totalBalance ? (
                 <WalletBalance>
-                  Available: {formatNumber(totalBalance)} FTHM
+                  Available: {formatNumber(totalBalance)} { token }
                 </WalletBalance>
               ) : null}
               {type === UNSTAKE_TYPE.ALL && totalUnstakeBalance ? (
                 <WalletBalance>
-                  Available: {formatNumber(totalUnstakeBalance)} FTHM
+                  Available: {formatNumber(totalUnstakeBalance)} { token }
                 </WalletBalance>
               ) : null }
               <AppTextField
@@ -184,7 +186,7 @@ const UnstakeDialog: FC<UnstakeDialogProps> = ({
                       <Typography
                         sx={{ fontSize: "12px", paddingLeft: "22px" }}
                       >
-                        You do not have enough FTHM
+                        You do not have enough { token }
                       </Typography>
                     </>
                   ) : null
@@ -192,7 +194,7 @@ const UnstakeDialog: FC<UnstakeDialogProps> = ({
                 value={unstakeAmount}
                 onChange={handleUnstakeAmountChange}
               />
-              <AppFormInputLogo src={getTokenLogoURL("FTHM")} />
+              <AppFormInputLogo src={getTokenLogoURL(token)} />
               <MaxButton onClick={() => setMax()}>Max</MaxButton>
             </AppFormInputWrapper>
           </Grid>
@@ -211,7 +213,7 @@ const UnstakeDialog: FC<UnstakeDialogProps> = ({
                 { type === UNSTAKE_TYPE.ITEM && formatNumber(totalBalance)}
                 { type === UNSTAKE_TYPE.ALL && formatNumber(totalUnstakeBalance!)}
                 {" "}
-                FTHM
+                { token }
               </InfoValue>
             </InfoWrapper>
             <InfoWrapper>
@@ -223,7 +225,7 @@ const UnstakeDialog: FC<UnstakeDialogProps> = ({
                 { type === UNSTAKE_TYPE.ITEM && formatNumber(totalBalance)}
                 { type === UNSTAKE_TYPE.ALL && formatNumber(totalUnstakeBalance!)}
                 {" "}
-                FTHM</InfoValue>
+                { token }</InfoValue>
             </InfoWrapper>
           </Grid>
         </UnstakeGrid>

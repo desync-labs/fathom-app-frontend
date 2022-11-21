@@ -2,7 +2,11 @@ import { styled } from "@mui/material/styles";
 import { Box, Button } from "@mui/material";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
-import React, { useMemo, useState } from "react";
+import React, {
+  FC,
+  useMemo,
+  useState
+} from "react";
 import ILockPosition from "stores/interfaces/ILockPosition";
 import StakingViewItem from "components/Staking/StakingViewItem";
 import { useStores } from "stores";
@@ -14,7 +18,7 @@ import useStakingView from "hooks/useStakingView";
 import UnstakeDialog, {
   UNSTAKE_TYPE,
 } from "components/Staking/Dialog/UnstakeDialog";
-import EarlyUnstakeDialog from "./Dialog/EarlyUnstakeDialog";
+import EarlyUnstakeDialog from "components/Staking/Dialog/EarlyUnstakeDialog";
 
 const StreamHeaderWrapper = styled(Box)`
   display: flex;
@@ -91,7 +95,11 @@ const TokenName = styled(Box)`
   line-height: 20px;
 `;
 
-const StreamItem = () => {
+type StreamItemProps =  {
+  token: string
+}
+
+const StreamItem: FC<StreamItemProps> = ({ token }) => {
   const { stakingStore } = useStores();
 
   const [unstake, setUnstake] = useState<null | ILockPosition>(null);
@@ -117,9 +125,9 @@ const StreamItem = () => {
     <>
       <StreamHeaderWrapper>
         <HeaderTokenLogo>
-          <img src={getTokenLogoURL("WXDC")} alt={"token-logo"} width={28} />
+          <img src={getTokenLogoURL(token)} alt={"token-logo"} width={28} />
         </HeaderTokenLogo>
-        <HeaderStreamName>XDC Stream</HeaderStreamName>
+        <HeaderStreamName>{ token } Stream</HeaderStreamName>
         <HeaderLockedPositions>
           {stakingStore.lockPositions.length} Locked Positions
         </HeaderLockedPositions>
@@ -131,13 +139,13 @@ const StreamItem = () => {
             <TotalRewards>
               <TotalRewardsTitle>Total Rewards</TotalRewardsTitle>
               <TotalRewardsTokenLogo>
-                <img src={getTokenLogoURL("WXDC")} alt={"xdc"} width={24} />
-                <TokenName>{totalRewards} XDC</TokenName>
+                <img src={getTokenLogoURL(token)} alt={token} width={24} />
+                <TokenName>{totalRewards} { token }</TokenName>
               </TotalRewardsTokenLogo>
               <ClaimAllButton
                 onClick={() =>
                   setTotalRewardsData({
-                    rewardsToken: "XDC",
+                    rewardsToken: token,
                     totalRewards: totalRewards,
                   })
                 }
@@ -153,6 +161,7 @@ const StreamItem = () => {
             {stakingStore.lockPositions.map((lockPosition: ILockPosition) => (
               <StakingViewItem
                 key={lockPosition.lockId}
+                token={token}
                 lockPosition={lockPosition}
                 setUnstake={setUnstake}
                 setEarlyUnstake={setEarlyUnstake}
@@ -169,6 +178,7 @@ const StreamItem = () => {
         <ClaimRewardsDialog
           lockPosition={rewardsPosition}
           totalRewards={totalRewardsData}
+          token={token}
           onClose={() => {
             setRewardsPosition(null);
             setTotalRewardsData(null);
@@ -187,6 +197,7 @@ const StreamItem = () => {
                 setUnstake(null);
                 setUnstakeType(UNSTAKE_TYPE.ITEM);
               }}
+              token={token}
               type={unstakeType}
               lockPosition={unstake}
               lockPositions={stakingStore.lockPositions}
@@ -199,6 +210,7 @@ const StreamItem = () => {
         () =>
           earlyUnstake && (
             <EarlyUnstakeDialog
+              token={token}
               onClose={() => setEarlyUnstake(null)}
               lockPosition={earlyUnstake!}
             />

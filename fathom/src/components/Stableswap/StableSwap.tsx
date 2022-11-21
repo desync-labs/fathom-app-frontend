@@ -44,7 +44,7 @@ const StableSwapInputWrapper = styled(MuiBox)`
   position: relative;
   padding: 20px 24px 44px;
   background: #1d2d49;
-  borderradius: 12px;
+  border-radius: 12px;
   width: 100%;
 `;
 
@@ -71,69 +71,69 @@ const StableSwapCurrencySelect = styled(Select)`
 const StableSwapTextField = styled(AppTextField)`
   input {
     font-size: 20px;
-    color: #4F658C;
+    color: #4f658c;
     padding: 0 50px 0 122px;
     &::-webkit-inner-spin-button,
     &::-webkit-outer-spin-button {
       -webkit-appearance: none;
     }
-    
+
     &[type="number"] {
       -moz-appearance: textfield;
     }
   }
 `;
 
-const StableSwapFormLabel = styled(AppFormLabel)(({ theme }) => ({
-  color: "#9FADC6",
-}));
+const StableSwapFormLabel = styled(AppFormLabel)`
+  color: #9fadc6;
+`;
 
-const StableSwapWalletBalance = styled(WalletBalance)(({ theme }) => ({
-  color: "#5A81FF",
-}));
+const StableSwapWalletBalance = styled(WalletBalance)`
+  color: #5a81ff;
+`;
 
-const StableSwapMaxButton = styled(MaxButton)(({ theme }) => ({
-  top: "48px",
-  right: "32px",
-  color: "#A5BAFF",
-}));
+const StableSwapMaxButton = styled(MaxButton)`
+  top: 48px;
+  right: 32px;
+  color: #a5baff;
+`;
 
-const StableSwapPriceInfoWrapper = styled(InfoWrapper)(({ theme }) => ({
-  width: "100%",
-  padding: "0 0 10px",
-  borderBottom: "1px solid #253656",
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-}));
+const StableSwapPriceInfoWrapper = styled(InfoWrapper)`
+  width: 100%;
+  padding: 0 0 10px;
+  border-bottom: 1px solid #253656;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
 
-const StableSwapInfoWrapper = styled(InfoWrapper)(({ theme }) => ({
-  width: "100%",
-}));
+const StableSwapInfoWrapper = styled(InfoWrapper)`
+  width: 100%;
+`;
 
-const StableSwapInfoContainer = styled(Box)(({ theme }) => ({
-  paddingTop: "15px",
-  width: "100%",
-}));
+const StableSwapInfoContainer = styled(Box)`
+  padding-top: 15px;
+  width: 100%;
+`;
 
-const StableSwapPriceInfo = styled(InfoLabel)(({ theme }) => ({
-  fontSize: "16px",
-  lineHeight: "24px",
-  color: "#fff",
-  textTransform: "uppercase",
-  display: "flex",
-  gap: "7px",
-  justifyContent: "flex-start",
-  alignItems: "center",
-}));
+const StableSwapPriceInfo = styled(InfoLabel)`
+  font-size: 16px;
+  line-height: 24px;
+  color: #fff;
+  text-transform: uppercase;
+  display: flex;
+  gap: 7px;
+  justify-content: flex-start;
+  align-items: center;
+`;
 
-const SwapButton = styled(ButtonPrimary)(({ theme }) => ({
-  height: "48px",
-  width: "100%",
-  fontSize: "17px",
-  lineHeight: "24px",
-  margin: "20px 0 5px 0",
-}));
+const SwapButton = styled(ButtonPrimary)`
+  height: 48px;
+  width: 100%;
+  font-size: 17px;
+  line-height: 24px;
+  margin: 20px 0 5px 0;
+`;
 
 const StableSwap = observer(() => {
   const [options /*setOptions*/] = useState<string[]>(["USDT", "FXD"]);
@@ -172,9 +172,6 @@ const StableSwap = observer(() => {
 
   const inputError = useMemo(() => {
     const formattedBalance = inputBalance / 10 ** 18;
-
-    console.log(inputValue);
-    console.log(formattedBalance);
 
     return inputValue > formattedBalance;
   }, [inputValue, inputBalance]);

@@ -12,7 +12,7 @@ import { toWei } from "web3-utils";
 
 export default class StableSwapService implements IStableSwapService {
   readonly tokenBuffer: number = 5;
-  chainId = Constants.DEFAULT_CHAINID;
+  chainId = Constants.DEFAULT_CHAIN_ID;
 
   async swapTokenToStablecoin(
     address: string,

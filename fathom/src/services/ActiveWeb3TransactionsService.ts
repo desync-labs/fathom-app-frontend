@@ -2,14 +2,14 @@ import { Constants } from "helpers/Constants";
 import { Web3Utils } from "helpers/Web3Utils";
 import {
   ITransaction,
-  TransactionStatus
+  TransactionStatus,
 } from "stores/interfaces/ITransaction";
 import IActiveWeb3TransactionsService from "services/interfaces/IActiveWeb3TransactionsService";
 
 export default class ActiveWeb3TransactionsService
   implements IActiveWeb3TransactionsService
 {
-  chainId = Constants.DEFAULT_CHAINID;
+  chainId = Constants.DEFAULT_CHAIN_ID;
   async checkTransactionStatus(
     pendingTransaction: ITransaction
   ): Promise<ITransaction> {
@@ -25,7 +25,9 @@ export default class ActiveWeb3TransactionsService
       )}`
     );
     if (response !== null) {
-      pendingTransaction.status = response.status ? TransactionStatus.Success: TransactionStatus.Error;
+      pendingTransaction.status = response.status
+        ? TransactionStatus.Success
+        : TransactionStatus.Error;
     }
 
     return pendingTransaction;

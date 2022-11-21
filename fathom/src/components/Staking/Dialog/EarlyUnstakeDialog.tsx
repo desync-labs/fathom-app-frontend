@@ -107,12 +107,14 @@ const InfoValueError = styled(InfoValue)`
 `
 
 type EarlyUnstakeDialogProps = {
+  token: string;
   lockPosition: ILockPosition;
   onClose: () => void;
 };
 
 const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({
   onClose,
+  token,
   lockPosition,
 }) => {
   const {
@@ -158,7 +160,7 @@ const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({
                 {" "}
                 {lockPosition && formatNumber(lockPosition?.MAINTokenBalance)}
               </strong>
-              FTHM<span>$2,566.84</span>
+              { token }<span>$2,566.84</span>
             </UnstakeValue>
           </Grid>
           <Grid item xs={4}>
@@ -168,7 +170,7 @@ const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({
                 {lockPosition &&
                   formatNumber(Number(lockPosition.RewardsAvailable))}
               </strong>
-              FTHM<span>$0.00</span>
+              { token }<span>$0.00</span>
             </UnstakeValue>
           </Grid>
         </UnstakeBalanceWrapper>

@@ -105,66 +105,15 @@ const UnstakeButton = styled(Button)`
 
 type StakingViewItemPropsType = {
   lockPosition: ILockPosition;
+  token: string;
   setUnstake: Dispatch<null | ILockPosition>;
   setEarlyUnstake: Dispatch<null | ILockPosition>;
   setRewardsPosition: Dispatch<null | ILockPosition>;
 };
 
-// <TableCell component="td" scope="row">
-//   {lockPosition.MAINTokenBalance} FTHM
-// </TableCell>
-//
-// <TableCell component="td" scope="row">
-//   {lockPosition.VOTETokenBalance} VOTES
-// </TableCell>
-//
-// <TableCell component="td" scope="row">
-//   {lockPosition.RewardsAvailable}
-// </TableCell>
-//
-// <TableCell component="td" scope="row">
-//   <Box sx={{ textAlign: "center" }}>
-//     {useMemo(
-//       () =>
-//         seconds > 0 && (
-//           <StakingCountdown timeObject={secondsToTime(seconds)} />
-//         ),
-//       [seconds]
-//     )}
-//   </Box>
-//   {seconds < 0 && <Box sx={{ textAlign: "center" }}>Lock Open</Box>}
-// </TableCell>
-//
-// <TableCell component="td" scope="row">
-//   <Button
-//     onClick={() => handleUnlock(lockPosition.lockId)}
-//     disabled={!isItUnlockable(seconds)}
-//     variant="outlined"
-//   >
-//     {action?.type === "unlock" && action?.id === lockPosition.lockId ? (
-//       <CircularProgress size={30} />
-//     ) : (
-//       "Unlock"
-//     )}
-//   </Button>
-// </TableCell>
-//
-// <TableCell component="td" scope="row">
-//   <Button
-//     onClick={() => handleEarlyWithdrawal(lockPosition.lockId)}
-//     disabled={isItUnlockable(seconds)}
-//     variant="outlined"
-//   >
-//     {action?.type === "early" && action?.id === lockPosition.lockId ? (
-//       <CircularProgress size={30} />
-//     ) : (
-//       "Early Unlock"
-//     )}
-//   </Button>
-// </TableCell>
-
 const StakingViewItem: FC<StakingViewItemPropsType> = ({
   lockPosition,
+  token,
   setUnstake,
   setEarlyUnstake,
   setRewardsPosition,
@@ -199,7 +148,7 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
       </Row>
       <Row>
         <StakingViewItemValue>
-          {lockPosition.MAINTokenBalance} XDC
+          {lockPosition.MAINTokenBalance} { token }
         </StakingViewItemValue>
         <StakingViewItemValue className={"blue"}>
           {lockPosition.VOTETokenBalance
@@ -207,7 +156,7 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
             : "None"}
         </StakingViewItemValue>
         <StakingViewItemValue className={"blue"}>
-          {lockPosition.RewardsAvailable} XDC
+          {lockPosition.RewardsAvailable} { token }
         </StakingViewItemValue>
         <StakingViewItemValue>
           <img src={clockSrc} alt={"clock-circle"} />
@@ -217,7 +166,7 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
       <RewardsUnstakeWrapper>
         <Box>
           <StakingViewItemValue>
-            {lockPosition.RewardsAvailable} XDC
+            {lockPosition.RewardsAvailable} { token }
           </StakingViewItemValue>
         </Box>
         <Box>
