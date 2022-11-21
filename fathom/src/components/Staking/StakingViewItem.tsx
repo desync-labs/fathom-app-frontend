@@ -126,7 +126,11 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
   const { isUnlockable } = useStakingView();
 
   useEffect(() => {
-    const interval = setInterval(function () {
+    if (lockPosition.EndTime <= 0) {
+      return setSeconds(0);
+    }
+
+    const interval = setInterval( () => {
       setSeconds((prev) => prev - 1);
     }, 1000);
 
@@ -212,7 +216,7 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
                 <UnstakePaper>
                   <ClickAwayListener onClickAway={() => setOpen(false)}>
                     <MenuList id="split-button-menu" autoFocusItem>
-                      {!isUnlockable(seconds) && (
+                      {isUnlockable(seconds) && (
                         <MenuItem onClick={() => setUnstake(lockPosition)}>
                           Unstake
                         </MenuItem>

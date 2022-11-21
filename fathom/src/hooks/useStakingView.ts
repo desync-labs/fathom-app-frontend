@@ -99,7 +99,7 @@ const useStakingView = () => {
         await stakingStore.handleEarlyWithdrawal(account, lockId);
         stakingStore.fetchLockPositionAfterUnlock(lockId);
       } catch (e) {
-        logger.log(LogLevel.error, "handle Early Withdrawal");
+        logger.log(LogLevel.error, "Handle early withdrawal");
       }
       setAction(undefined);
     },

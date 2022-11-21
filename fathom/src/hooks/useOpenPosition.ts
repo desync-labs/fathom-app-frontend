@@ -1,8 +1,15 @@
-import { useStores } from "../stores";
-import useMetaMask from "./metamask";
-import { useCallback, useEffect, useState } from "react";
+import { useStores } from "stores";
+import useMetaMask from "hooks/metamask";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import debounce from "lodash.debounce";
-import { OpenPositionProps } from "../components/Positions/OpenNewPositionDialog";
+import { OpenPositionProps } from "components/Positions/OpenNewPositionDialog";
+import { useForm } from "react-hook-form";
+
+const defaultValues = {
+  collateral: "",
+  fathomToken: "",
+  safeMax: 0,
+};
 
 const useOpenPosition = (
   pool: OpenPositionProps["pool"],
@@ -11,36 +18,45 @@ const useOpenPosition = (
   const { poolStore, positionStore } = useStores();
 
   const { account, chainId } = useMetaMask()!;
-  const [approveBtn, setApproveBtn] = useState(false);
-  const [approvalPending, setApprovalPending] = useState(false);
-  const [balance, setBalance] = useState(0);
-  const [balanceError, setBalanceError] = useState(false);
 
-  const [fathomToken, setFathomToken] = useState(0);
-  const [collateral, setCollateral] = useState(0);
-  const [collateralToBeLocked, setCollateralToBeLocked] = useState(0);
-  const [fxdToBeBorrowed, setFxdToBeBorrowed] = useState(0);
-  const [safeMax, setSafeMax] = useState(0);
+  const { handleSubmit, watch, control, setValue } = useForm({
+    defaultValues,
+    reValidateMode: 'onChange',
+    mode: 'onChange',
+  });
+
+  const collateral = watch("collateral");
+  const fathomToken = watch("fathomToken");
+  const safeMax = watch("safeMax");
+
+  const [balance, setBalance] = useState<number>(0);
+
+  const [collateralToBeLocked, setCollateralToBeLocked] = useState<number>(0);
+  const [fxdToBeBorrowed, setFxdToBeBorrowed] = useState<number>(0);
+
   const [collateralAvailableToWithdraw, setCollateralAvailableToWithdraw] =
-    useState(0);
-  const [safetyBuffer, setSafetyBuffer] = useState(0);
-  const [debtRatio, setDebtRatio] = useState(0);
-  const [liquidationPrice, setLiquidationPrice] = useState(0);
-  const [fxdAvailableToBorrow, setFxdAvailableToBorrow] = useState(0);
+    useState<number>(0);
+  const [safetyBuffer, setSafetyBuffer] = useState<number>(0);
+  const [debtRatio, setDebtRatio] = useState<number>(0);
+  const [liquidationPrice, setLiquidationPrice] = useState<number>(0);
+  const [fxdAvailableToBorrow, setFxdAvailableToBorrow] = useState<number>(0);
 
-  const [disableOpenPosition, setDisableOpenPosition] = useState(false);
-  const [openPositionLoading, setOpenPositionLoading] = useState(false);
+  const [openPositionLoading, setOpenPositionLoading] =
+    useState<boolean>(false);
+
+  const [approveBtn, setApproveBtn] = useState<boolean>(false);
+  const [approvalPending, setApprovalPending] = useState<boolean>(false);
 
   const approvalStatus = useCallback(
-    debounce(async () => {
+    debounce(async (collateral: string) => {
       let approved = await positionStore.approvalStatus(
         account,
-        collateral,
+        Number(collateral),
         pool
       );
       approved ? setApproveBtn(false) : setApproveBtn(true);
     }, 1000),
-    [positionStore, pool, account, collateral]
+    [positionStore, pool, account]
   );
 
   const getBalance = useCallback(async () => {
@@ -51,38 +67,33 @@ const useOpenPosition = (
     setBalance(balance);
   }, [poolStore, account, pool, setBalance]);
 
+  const availableFathomInPool = useMemo(
+    () => parseInt(pool.availableFathom.replaceAll(",", "")),
+    [pool.availableFathom]
+  );
+
+  console.log(availableFathomInPool);
+
   useEffect(() => {
     getBalance();
   }, [chainId, getBalance]);
 
-  useEffect(() => {
-    if (chainId) {
-      approvalStatus();
-    }
-  }, [approvalStatus, chainId, collateral]);
-
   const handleUpdates = useCallback(
     async (collateralInput: number, fathomTokenInput: number) => {
-      const availableFathom = parseInt(
-        pool.availableFathom.replaceAll(",", "")
-      );
-      const disable = fathomTokenInput >= availableFathom;
       console.log(
-        `Input token ${fathomTokenInput} and Pool Max: ${availableFathom}`
+        `Input token ${fathomTokenInput} and Pool Max: ${availableFathomInPool}`
       );
-      setDisableOpenPosition(disable);
 
       // check collateral input
       if (isNaN(collateralInput) || !collateralInput) {
         collateralInput = 0;
       }
-      // console.log("COLLATERAL INPUT: ", collateralInput);
+
       setCollateralToBeLocked(+collateralInput);
 
       if (isNaN(fathomTokenInput) || !fathomTokenInput) {
         fathomTokenInput = 0;
       }
-      // console.log("FXD TO BORROW: ", fxdToBorrow);
       setFxdToBeBorrowed(+fathomTokenInput);
 
       // GET USER BALANCE
@@ -94,50 +105,31 @@ const useOpenPosition = (
 
       // CHECK BALANCE
       // if the user does not have enough collateral -- show them a balance error
-      if (+balance / 10 ** 18 < +collateralInput) {
-        setBalanceError(true);
-        return;
-      } else {
-        setBalanceError(false);
-      }
+      if (+balance / 10 ** 18 < +collateralInput) return;
 
       // GET PRICE WITH SAFETY MARGIN
-      let priceWithSafetyMargin;
-      if (pool.name === "USDT") {
-        priceWithSafetyMargin = 0.75188;
-      } else {
-        priceWithSafetyMargin = await poolStore.getPriceWithSafetyMargin(pool);
-      }
-      // setPriceWithSafetyMargin(+priceWithSafetyMargin);
+      const priceWithSafetyMargin =
+        pool.name === "USDT"
+          ? 0.75188
+          : await poolStore.getPriceWithSafetyMargin(pool);
 
       // SAFE MAX
-      let safeMax;
-      if (priceWithSafetyMargin === 0) {
-        safeMax = +collateralInput;
-      } else {
-        safeMax = +collateralInput * priceWithSafetyMargin * 0.99;
-      }
+      const safeMax = Math.floor(
+        priceWithSafetyMargin === 0
+          ? +collateralInput
+          : +collateralInput * priceWithSafetyMargin * 0.99
+      );
+      setValue("safeMax", safeMax, { shouldValidate: true });
+      setFxdToBeBorrowed(safeMax);
 
-      //TODO: TODO...
-      safeMax = Math.floor(safeMax);
+      const collateralAvailableToWithdraw =
+        Number(priceWithSafetyMargin) === 0
+          ? Number(collateralInput) - Number(fathomTokenInput)
+          : (Number(collateralInput) * Number(priceWithSafetyMargin) -
+              Number(fathomTokenInput)) /
+            Number(priceWithSafetyMargin);
 
-      setSafeMax(+safeMax);
-
-      if (+fathomTokenInput > safeMax) {
-        setFxdToBeBorrowed(0);
-        setFathomToken(0);
-      }
-
-      let collatralAvailableToWithdraw = 0;
-      if (+priceWithSafetyMargin === 0) {
-        collatralAvailableToWithdraw = +collateralInput - +fathomTokenInput;
-      } else {
-        collatralAvailableToWithdraw =
-          (+collateralInput * +priceWithSafetyMargin - +fathomTokenInput) /
-          +priceWithSafetyMargin;
-      }
-
-      setCollateralAvailableToWithdraw(+collatralAvailableToWithdraw);
+      setCollateralAvailableToWithdraw(collateralAvailableToWithdraw);
 
       // PRICE OF COLLATERAL FROM DEX
       const priceOfCollateralFromDex =
@@ -159,25 +151,26 @@ const useOpenPosition = (
       setFxdAvailableToBorrow(fxdAvailableToBorrow);
 
       // SAFETY BUFFER
-      const safetyBuffer = collatralAvailableToWithdraw / +collateralInput;
+      const safetyBuffer = collateralAvailableToWithdraw / +collateralInput;
       setSafetyBuffer(+safetyBuffer);
 
       // LIQUIDATION PRICE
-      let liquidationPrice = 0;
+      let liquidationPrice;
       if (priceWithSafetyMargin === 0) {
         liquidationPrice =
           priceOfCollateralFromDex / 10 ** 18 -
-          collatralAvailableToWithdraw / +collateralInput;
+          collateralAvailableToWithdraw / +collateralInput;
       } else {
         liquidationPrice =
           priceOfCollateralFromDex / 10 ** 18 -
-          (collatralAvailableToWithdraw * priceWithSafetyMargin) /
+          (collateralAvailableToWithdraw * priceWithSafetyMargin) /
             +collateralInput;
       }
 
       setLiquidationPrice(+liquidationPrice);
     },
     [
+      availableFathomInPool,
       account,
       pool,
       poolStore,
@@ -186,42 +179,41 @@ const useOpenPosition = (
       setFxdAvailableToBorrow,
       setDebtRatio,
       setCollateralAvailableToWithdraw,
-      setSafeMax,
-      setDisableOpenPosition,
       setCollateralToBeLocked,
       setFxdToBeBorrowed,
-      setFathomToken,
-      setBalanceError,
+      setValue,
       setBalance,
     ]
   );
 
-  const updateFathomAmount = useCallback(() => {
-    setFathomToken(safeMax);
-    handleUpdates(collateral, safeMax);
-  }, [safeMax, collateral, setFathomToken, handleUpdates]);
+  useEffect(() => {
+    handleUpdates(Number(collateral), Number(fathomToken));
+    approvalStatus(collateral);
+  }, [collateral, fathomToken, handleUpdates, approvalStatus]);
 
-  const openNewPosition = useCallback(async () => {
-    setDisableOpenPosition(true);
+  const setSafeMax = useCallback(() => {
+    setValue("fathomToken", safeMax.toString(), { shouldValidate: true });
+  }, [safeMax, setValue]);
+
+  const onSubmit = useCallback(async (values: any) => {
     setOpenPositionLoading(true);
+    const { collateral, fathomToken } = values;
+
+    console.log(collateral)
+    console.log(fathomToken)
     try {
-      await positionStore.openPosition(account, pool, collateral, fathomToken);
+      await positionStore.openPosition(
+        account,
+        pool,
+        Number(collateral),
+        Number(fathomToken)
+      );
       onClose();
     } catch (e) {
       console.log(e);
     }
-    setDisableOpenPosition(false);
     setOpenPositionLoading(false);
-  }, [
-    positionStore,
-    onClose,
-    account,
-    pool,
-    collateral,
-    fathomToken,
-    setDisableOpenPosition,
-    setOpenPositionLoading,
-  ]);
+  }, [account, pool, positionStore, setOpenPositionLoading, onClose]);
 
   const handleCloseApproveBtn = useCallback(() => {
     setApproveBtn(false);
@@ -246,39 +238,16 @@ const useOpenPosition = (
     positionStore,
   ]);
 
-  const handleCollateralTextFieldChange = useCallback(
-    (e: any) => {
-      const value = e.target.value;
-      if (!isNaN(value)) {
-        setCollateral(value);
-      }
-
-      handleUpdates(value, fathomToken);
-    },
-    [handleUpdates, setCollateral, fathomToken]
-  );
-
-  const handleFathomTokenTextFieldChange = useCallback(
-    (e: any) => {
-      const value = e.target.value;
-      if (!isNaN(value)) {
-        setFathomToken(value);
-      }
-      handleUpdates(collateral, value);
-    },
-    [collateral, handleUpdates, setFathomToken]
-  );
-
   const setMax = useCallback(
     (balance: number) => {
-      const max = +balance / 10 ** 18;
-      setCollateral(max);
-      handleUpdates(max, fathomToken);
+      const max = balance / 10 ** 18;
+      setValue("collateral", max.toString(), { shouldValidate: true });
     },
-    [setCollateral, handleUpdates, fathomToken]
+    [setValue]
   );
 
   return {
+    safeMax,
     approveBtn,
     approve,
     approvalPending,
@@ -290,18 +259,18 @@ const useOpenPosition = (
     balance,
     safetyBuffer,
     liquidationPrice,
-    balanceError,
     collateral,
     fathomToken,
-    safeMax,
-    disableOpenPosition,
     openPositionLoading,
 
-    handleCollateralTextFieldChange,
-    handleFathomTokenTextFieldChange,
     setMax,
-    updateFathomAmount,
-    openNewPosition,
+    setSafeMax,
+    onSubmit,
+
+    control,
+    handleSubmit,
+
+    availableFathomInPool,
   };
 };
 

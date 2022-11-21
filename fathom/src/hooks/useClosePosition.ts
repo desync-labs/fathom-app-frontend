@@ -1,11 +1,5 @@
 import { useStores } from "stores";
-import {
-  Dispatch,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState
-} from "react";
+import { Dispatch, useCallback, useEffect, useMemo, useState } from "react";
 import useMetaMask from "hooks/metamask";
 import { Constants } from "helpers/Constants";
 import { ClosePositionProps } from "components/Positions/ClosePositionDialog";
@@ -19,18 +13,19 @@ const useClosePosition = (
   position: ClosePositionProps["position"],
   onClose: ClosePositionProps["onClose"],
   closingType: ClosingType,
-  setType: Dispatch<ClosingType>,
+  setType: Dispatch<ClosingType>
 ) => {
   const { positionStore, poolStore } = useStores();
-  const [collateral, setCollateral] = useState(0);
-  const [fathomToken, setFathomToken] = useState(0);
-  const [price, setPrice] = useState(0);
-
-  const [balance, setBalance] = useState(0);
-  const [balanceError, setBalanceError] = useState(false);
-  const [disableClosePosition, setDisableClosePosition] = useState(false);
-
   const { account } = useMetaMask()!;
+
+  const [collateral, setCollateral] = useState<number>(0);
+  const [fathomToken, setFathomToken] = useState<number>(0);
+
+  const [price, setPrice] = useState<number>(0);
+
+  const [balance, setBalance] = useState<number>(0);
+  const [balanceError, setBalanceError] = useState<boolean>(false);
+  const [disableClosePosition, setDisableClosePosition] = useState<boolean>(false);
 
   const pool = useMemo(
     () => poolStore.getPool(position.pool),
@@ -113,11 +108,7 @@ const useClosePosition = (
 
       const walletBalance = Number(balance) / 10 ** 18;
 
-      if (value > walletBalance) {
-        setBalanceError(true);
-      } else {
-        setBalanceError(false);
-      }
+      value > walletBalance ? setBalanceError(true) : setBalanceError(false);
 
       setFathomToken(value);
       setCollateral(value / price);

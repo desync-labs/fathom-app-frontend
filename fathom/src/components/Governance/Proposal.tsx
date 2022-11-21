@@ -1,3 +1,5 @@
+import React from "react";
+import { styled } from "@mui/material/styles";
 import {
   Button,
   Typography,
@@ -18,9 +20,10 @@ import {
   BackToProposalsButton,
   VotingEndedButton,
 } from "components/AppComponents/AppButton/AppButton";
+
 import backSrc from "assets/svg/back.svg";
-import { styled } from "@mui/material/styles";
-import React from "react";
+
+
 import {
   ProposalItemStatus,
   ImageSrc,
@@ -42,30 +45,30 @@ function LinearProgress(props: LinearProgressProps) {
   );
 }
 
-const ProposalTitle = styled(Typography)(({ theme }) => ({
-  fontWeight: "bold",
-  fontSize: "24px",
-  lineHeight: "28px",
-  marginBottom: "20px",
-}));
+const ProposalTitle = styled(Typography)`
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 28px;
+  margin-bottom: 20px;
+`;
 
-const TimeslotContainer = styled(Grid)(({ theme }) => ({
-  borderBottom: "1px solid #253656",
-  padding: "20px 24px 30px",
-}));
+const TimeslotContainer = styled(Grid)`
+  border-bottom: 1px solid #253656;
+  padding: 20px 24px 30px;
+`;
 
-const TimeslotTitle = styled(Typography)(({ theme }) => ({
-  textTransform: "uppercase",
-  fontWeight: "700",
-  fontSize: "13px",
-  lineHeight: "16px",
-  color: "#7D91B5",
-}));
+const TimeslotTitle = styled(Typography)`
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 16px;
+  color: #7d91b5;
+`;
 
-const TimeslotValue = styled(Typography)(({ theme }) => ({
-  fontSize: "14px",
-  lineHeight: "20px",
-}));
+const TimeslotValue = styled(Typography)`
+  font-size: 14px;
+  line-height: 20px;
+`;
 
 const TimeslotInProgress = styled(Box, {
   shouldForwardProp: (prop) => prop !== "lessTimeLeft",
@@ -86,69 +89,72 @@ const TimeslotInProgress = styled(Box, {
   }
 );
 
-const ProposalLabel = styled(Box)(({ theme }) => ({
-  fontWeight: "600",
-  fontSize: "16px",
-  lineHeight: "24px",
-}));
+const ProposalLabel = styled(Box)`
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 24px;
+`;
 
-const ProposalDescription = styled(Box)(({ theme }) => ({
-  color: "#9FADC6",
-  fontSize: "14px",
-  lineHeight: "20px",
-  padding: "10px 0",
-}));
+const ProposalDescription = styled(Box)`
+  color: #9fadc6;
+  font-size: 14px;
+  line-height: 20px;
+  padding: 10px 0;
+`;
 
-const ProposalStatus = styled(Box)(({ theme }) => ({
-  fontWeight: "600",
-  fontSize: "20px",
-  lineHeight: "24px",
-}));
+const ProposalStatus = styled(Box)`
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 24px;
+`;
 
-const VotingWrapperBox = styled(Box)(({ theme }) => ({
-  background: "rgba(79, 101, 140, 0.2)",
-  borderRadius: "8px",
-  padding: "12px",
-  marginBottom: "10px",
-  "> div": {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  "> div > p": {
-    color: "#fff",
-  },
-  "> div > p:first-child": {
-    textTransform: "uppercase",
-    fontSize: "15px",
-    fontWeight: "bold",
-  },
-  "> div > p:last-child": {
-    fontSize: "14px",
-  },
-}));
+const VotingWrapperBox = styled(Box)`
+  background: rgba(79, 101, 140, 0.2);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 10px;
+  > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 
-const VoteButtonGroup = styled(ButtonGroup)(({ theme }) => ({
-  width: "100%",
-  height: "48px",
+  > div > p {
+    color: #fff;
+  }
+
+  > div > p:first-child {
+    text-transform: uppercase;
+    font-size: 15px;
+    font-weight: bold;
+  }
+  ,
+  > div > p:last-child {
+    font-size: 14px;
+  }
+`;
+
+const VoteButtonGroup = styled(ButtonGroup)`
+  width: 100%;
+  height: 48px;
 
   button: {
-    background: "#324567",
-    width: "33.33%",
-    border: "1px solid #4F658C",
-    fontWeight: "600",
-    fontSize: "17px",
-    lineHeight: "24px",
-    color: "#fff",
-    textTransform: "none",
+    background: #324567;
+    width: 33.33%;
+    border: 1px solid #4f658c;
+    font-weight: 600;
+    font-size: 17px;
+    line-height: 24px;
+    color: #fff;
+    text-transform: none;
 
-    ":hover": {
-      background: "linear-gradient(104.04deg, #B3FFF9 0%, #00DBCB 100%)",
-      border: "1px solid #B3FFF9",
-      color: "#00332F",
-    },
-  },
-}));
+    :hover {
+      background: linear-gradient(104.04deg, #b3fff9 0%, #00dbcb 100%);
+      border: 1px solid #b3fff9;
+      color: #00332f;
+    }
+  }
+`;
 
 const ProposalView = observer(() => {
   const {

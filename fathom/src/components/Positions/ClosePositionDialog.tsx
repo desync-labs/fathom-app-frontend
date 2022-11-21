@@ -74,8 +74,6 @@ const ClosePositionDialog: FC<ClosePositionProps> = ({
     setMax,
   } = useClosePosition(position, onClose, closingType, setType);
 
-  console.log(closingType);
-
   return (
     <AppDialog
       onClose={onClose}
@@ -194,6 +192,7 @@ const ClosePositionDialog: FC<ClosePositionProps> = ({
                 error={balanceError}
                 id="outlined-helperText"
                 disabled={closingType === ClosingType.Full}
+                placeholder={'0'}
                 helperText={
                   balanceError ? (
                     <>

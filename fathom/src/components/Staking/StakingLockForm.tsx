@@ -141,18 +141,20 @@ const StakingLockForm: FC<StakingLockFormPropsType> = ({
                 <WalletBalance>Available: {walletBalance} FTHM</WalletBalance>
               ) : null}
               <AppTextField
-                error={balanceError}
+                error={balanceError || !!error}
                 id="outlined-helperText"
+                placeholder={"0"}
+                type="number"
                 helperText={
                   <>
-                    {  error && (
+                    {error && (
                       <Typography
                         sx={{ fontSize: "12px", paddingLeft: "22px" }}
                       >
                         Field is required
                       </Typography>
-                    ) }
-                    { balanceError && (
+                    )}
+                    {balanceError && (
                       <>
                         <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
                         <Typography
@@ -161,7 +163,7 @@ const StakingLockForm: FC<StakingLockFormPropsType> = ({
                           You do not have enough FTHM
                         </Typography>
                       </>
-                    ) }
+                    )}
                   </>
                 }
                 value={value}

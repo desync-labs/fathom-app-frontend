@@ -20,32 +20,25 @@ export default class ProposalService implements IProposalService {
     callData: string[],
     description: string,
     account: string,
-    transactionStore: ActiveWeb3Transactions,
-    chainId?: number
+    transactionStore: ActiveWeb3Transactions
   ): Promise<number> {
-    chainId = chainId || this.chainId;
-
-    if (chainId) {
-      const FathomGovernor = Web3Utils.getContractInstance(
-        SmartContractFactory.FathomGovernor(chainId),
-        chainId
-      );
-      return await FathomGovernor.methods
-        .propose(targets, values, callData, description)
-        .send({ from: account })
-        .on("transactionHash", (hash: any) => {
-          transactionStore.addTransaction({
-            hash: hash,
-            type: TransactionType.Approve,
-            active: false,
-            status: TransactionStatus.None,
-            title: `Proposal Creation Pending`,
-            message: "Click on transaction to view on block Explorer.",
-          });
+    const FathomGovernor = Web3Utils.getContractInstance(
+      SmartContractFactory.FathomGovernor(this.chainId),
+      this.chainId
+    );
+    return FathomGovernor.methods
+      .propose(targets, values, callData, description)
+      .send({ from: account })
+      .on("transactionHash", (hash: any) => {
+        transactionStore.addTransaction({
+          hash: hash,
+          type: TransactionType.Approve,
+          active: false,
+          status: TransactionStatus.None,
+          title: `Proposal Creation Pending`,
+          message: "Click on transaction to view on block Explorer.",
         });
-    } else {
-      return 0;
-    }
+      });
   }
 
   async executeProposal(
@@ -54,23 +47,16 @@ export default class ProposalService implements IProposalService {
     callData: string[],
     description: string,
     account: string,
-    transactionStore: ActiveWeb3Transactions,
-    chainId?: number
+    transactionStore: ActiveWeb3Transactions
   ): Promise<number> {
-    chainId = chainId || this.chainId;
+    const FathomGovernor = Web3Utils.getContractInstance(
+      SmartContractFactory.FathomGovernor(this.chainId),
+      this.chainId
+    );
 
-    if (chainId) {
-      const FathomGovernor = Web3Utils.getContractInstance(
-        SmartContractFactory.FathomGovernor(chainId),
-        chainId
-      );
-      return await FathomGovernor.methods
-        .execute(targets, values, callData, keccak256(description))
-        .send({ from: account });
-
-    } else {
-      return 0;
-    }
+    return FathomGovernor.methods
+      .execute(targets, values, callData, keccak256(description))
+      .send({ from: account });
   }
 
   async queueProposal(
@@ -79,47 +65,35 @@ export default class ProposalService implements IProposalService {
     callData: string[],
     description: string,
     account: string,
-    transactionStore: ActiveWeb3Transactions,
-    chainId?: number
+    transactionStore: ActiveWeb3Transactions
   ): Promise<number> {
-    chainId = chainId || this.chainId;
-
-    if (chainId) {
-      const FathomGovernor = Web3Utils.getContractInstance(
-        SmartContractFactory.FathomGovernor(chainId),
-        chainId
-      );
-      return await FathomGovernor.methods
-        .queue(targets, values, callData, keccak256(description))
-        .send({ from: account });
-    } else {
-      return 0;
-    }
+    const FathomGovernor = Web3Utils.getContractInstance(
+      SmartContractFactory.FathomGovernor(this.chainId),
+      this.chainId
+    );
+    return FathomGovernor.methods
+      .queue(targets, values, callData, keccak256(description))
+      .send({ from: account });
   }
 
-  async viewAllProposals(
-    account: string,
-    chainId?: number
-  ): Promise<IProposal[]> {
-    let fetchedProposals: IProposal[] = [];
+  async viewAllProposals(account: string): Promise<IProposal[]> {
+    const fetchedProposals: IProposal[] = [];
+
     try {
-      chainId = chainId || this.chainId;
-      if (chainId) {
-        const FathomGovernor = Web3Utils.getContractInstance(
-          SmartContractFactory.FathomGovernor(chainId),
-          this.chainId,
-        );
+      const FathomGovernor = Web3Utils.getContractInstance(
+        SmartContractFactory.FathomGovernor(this.chainId),
+        this.chainId
+      );
 
-        const result = await FathomGovernor.methods.getProposals(12).call();
+      const result = await FathomGovernor.methods.getProposals(12).call();
 
-        result[0].forEach((_id: string, i: number) => {
-          fetchedProposals.push({
-            description: result[1][i],
-            proposalId: _id.toString(),
-            status: Constants.Status[parseInt(result[2][i])],
-          });
+      result[0].forEach((_id: string, i: number) => {
+        fetchedProposals.push({
+          description: result[1][i],
+          proposalId: _id.toString(),
+          status: Constants.Status[parseInt(result[2][i])],
         });
-      }
+      });
 
       return fetchedProposals;
     } catch (e) {
@@ -128,91 +102,63 @@ export default class ProposalService implements IProposalService {
     }
   }
 
-  async viewProposal(
-    proposalId: string,
-    account: string,
-    chainId?: number
-  ): Promise<IProposal> {
+  async viewProposal(proposalId: string, account: string): Promise<IProposal> {
     let proposal = {} as IProposal;
-    chainId = chainId || this.chainId;
 
-    try {
-      if (chainId) {
+    return new Promise(async (resolve, reject) => {
+      try {
         const FathomGovernor = Web3Utils.getContractInstance(
-          SmartContractFactory.FathomGovernor(chainId),
-          chainId
+          SmartContractFactory.FathomGovernor(this.chainId),
+          this.chainId
         );
 
-        const _description = await FathomGovernor.methods
-          .getDescription(proposalId)
-          .call({ from: account });
+        const [_description, _status] = await Promise.all([
+          FathomGovernor.methods
+            .getDescription(proposalId)
+            .call({ from: account }),
 
-        const _status = await FathomGovernor.methods
-          .state(proposalId)
-          .call({ from: account });
+          FathomGovernor.methods.state(proposalId).call({ from: account }),
+        ]);
 
         proposal = {
           description: _description,
           proposalId: proposalId,
           status: Constants.Status[parseInt(_status)],
         };
+
+        resolve(proposal);
+      } catch (e) {
+        reject(e);
       }
-      return proposal;
-    } catch (e) {
-      console.error(`Error in getting Proposals: ${e}`);
-      return proposal;
-    }
+    });
   }
 
   async viewProposalState(
     proposalId: string,
-    account: string,
-    chainId?: number
+    account: string
   ): Promise<string> {
-    let proposalState = "";
-    try {
-      chainId = chainId || this.chainId;
-      if (chainId) {
-        const FathomGovernor = Web3Utils.getContractInstance(
-          SmartContractFactory.FathomGovernor(chainId),
-          chainId
-        );
+    const FathomGovernor = Web3Utils.getContractInstance(
+      SmartContractFactory.FathomGovernor(this.chainId),
+      this.chainId
+    );
 
-        proposalState = await FathomGovernor.methods
-          .state(proposalId)
-          .call({ from: account });
-      }
-      return proposalState;
-    } catch (e) {
-      console.error(`Error in getting Proposals: ${e}`);
-      return proposalState;
-    }
+    return FathomGovernor.methods
+      .state(proposalId)
+      .call({ from: account });
   }
 
   async viewVoteCounts(
     proposalId: string,
     account: string,
-    chainId?: number
   ): Promise<IVoteCounts> {
-    let proposalVotes = {} as IVoteCounts;
-    chainId = chainId || this.chainId;
+    const FathomGovernor = Web3Utils.getContractInstance(
+      SmartContractFactory.FathomGovernor(this.chainId),
+      this.chainId
+    );
 
-    try {
-      if (chainId) {
-        const FathomGovernor = Web3Utils.getContractInstance(
-          SmartContractFactory.FathomGovernor(chainId),
-          this.chainId
-        );
-
-        proposalVotes = await FathomGovernor.methods
-          .proposalVotes(proposalId)
-          .call({ from: account });
-      }
-      return proposalVotes;
-    } catch (e) {
-      console.error(`Error in getting Proposals: ${e}`);
-      return proposalVotes;
-    }
+    return FathomGovernor.methods
+      .proposalVotes(proposalId)
+      .call({ from: account });
   }
 
   async castVote(
@@ -220,54 +166,33 @@ export default class ProposalService implements IProposalService {
     account: string,
     support: string,
     transactionStore: ActiveWeb3Transactions,
-    chainId?: number
   ): Promise<number> {
-    let weight = 0;
-    chainId = chainId || this.chainId;
-    try {
-      if (chainId) {
-        const FathomGovernor = Web3Utils.getContractInstance(
-          SmartContractFactory.FathomGovernor(chainId),
-          this.chainId
-        );
+    const FathomGovernor = Web3Utils.getContractInstance(
+      SmartContractFactory.FathomGovernor(this.chainId),
+      this.chainId
+    );
 
-        weight = await FathomGovernor.methods
-          .castVote(proposalId, support)
-          .send({ from: account })
-          .on("transactionHash", (hash: any) => {
-            transactionStore.addTransaction({
-              hash: hash,
-              type: TransactionType.Approve,
-              active: false,
-              status: TransactionStatus.None,
-              title: `Vote Pending`,
-              message: "Click on transaction to view on block Explorer.",
-            });
-          });
-      }
-      return weight;
-    } catch (e) {
-      console.error(`Error in getting Proposals: ${e}`);
-      return weight;
-    }
+    return FathomGovernor.methods
+      .castVote(proposalId, support)
+      .send({ from: account })
+      .on("transactionHash", (hash: any) => {
+        transactionStore.addTransaction({
+          hash: hash,
+          type: TransactionType.Approve,
+          active: false,
+          status: TransactionStatus.None,
+          title: `Vote Pending`,
+          message: "Click on transaction to view on block Explorer.",
+        });
+      });
   }
 
-  async getVeBalance(account: string, chainId?: number): Promise<number> {
-    let weight = 0;
-    chainId = chainId || this.chainId;
-    try {
-      if (chainId) {
-        const VeFathom = Web3Utils.getContractInstance(
-          SmartContractFactory.VeFathom(chainId),
-          this.chainId
-        );
-        weight = await VeFathom.methods.balanceOf(account).call();
-      }
-      return weight;
-    } catch (e) {
-      console.error(`Error in getting Ve token balance: ${e}`);
-      return weight;
-    }
+  async getVeBalance(account: string): Promise<number> {
+    const VeFathom = Web3Utils.getContractInstance(
+      SmartContractFactory.VeFathom(this.chainId),
+      this.chainId
+    );
+    return VeFathom.methods.balanceOf(account).call();
   }
 
   setChainId(chainId: number) {

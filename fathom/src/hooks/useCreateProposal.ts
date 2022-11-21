@@ -32,6 +32,8 @@ const useCreateProposal = (onClose: ProposeListViewProps["onClose"]) => {
 
   const { handleSubmit, watch, control, reset, getValues } = useForm({
     defaultValues,
+    reValidateMode: 'onChange',
+    mode: 'onChange',
   });
 
   const withAction = watch("withAction");

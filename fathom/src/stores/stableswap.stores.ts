@@ -1,7 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import { RootStore } from ".";
 import IStableSwapService from "services/interfaces/IStableSwapService";
-import { processRpcError } from "utils/processRpcError";
 
 export default class StableSwapStore {
   service: IStableSwapService;
@@ -14,62 +13,41 @@ export default class StableSwapStore {
   }
 
   async swapToken(inputCurrency: string, address: string, inputValue: number) {
-    switch (true) {
-      case inputCurrency === "USDT": {
-        try {
-          console.log(
-            `swapTokenToStablecoin for address : ${address} token: ${inputValue}`
-          );
-          await this.service.swapTokenToStablecoin(
-            address,
-            inputValue,
-            this.rootStore.transactionStore
-          );
-          this.rootStore.alertStore.setShowSuccessAlert(
-            true,
-            "USDT token swapped with FXD!"
-          );
-        } catch (e) {
-          const error = processRpcError(e);
-          this.rootStore.alertStore.setShowErrorAlert(
-            true,
-            error.reason || error.message
-          );
-        }
-        break;
+    if (inputCurrency === "USDT") {
+      try {
+        await this.service.swapTokenToStablecoin(
+          address,
+          inputValue,
+          this.rootStore.transactionStore
+        );
+        this.rootStore.alertStore.setShowSuccessAlert(
+          true,
+          "USDT token swapped with FXD!"
+        );
+      } catch (e: any) {
+        this.rootStore.alertStore.setShowErrorAlert(true, e.message);
       }
-      case inputCurrency !== "USDT": {
-        try {
-          console.log(
-            `swapStablecoinToToken for address : ${address} token: ${inputValue}`
-          );
-          await this.service.swapStablecoinToToken(
-            address,
-            inputValue,
-            this.rootStore.transactionStore
-          );
-          this.rootStore.alertStore.setShowSuccessAlert(
-            true,
-            "FXD token swapped with USDT!"
-          );
-        } catch (e) {
-          const error = processRpcError(e);
-          this.rootStore.alertStore.setShowErrorAlert(
-            true,
-            error.reason || error.message
-          );
-        }
-        break;
-      }
-      default: {
-        console.log("Invalid option from Stablecoin module.");
-        break;
+    } else {
+      try {
+        await this.service.swapStablecoinToToken(
+          address,
+          inputValue,
+          this.rootStore.transactionStore
+        );
+        this.rootStore.alertStore.setShowSuccessAlert(
+          true,
+          "FXD token swapped with USDT!"
+        );
+      } catch (e: any) {
+        this.rootStore.alertStore.setShowErrorAlert(
+          true,
+          e.message
+        );
       }
     }
   }
 
-  approveStablecoin = async (address: string) => {
-    console.log(`Open position token approval clicked for address ${address}`);
+  async approveStableCoin(address: string) {
     try {
       if (!address) return;
 
@@ -81,20 +59,19 @@ export default class StableSwapStore {
         true,
         "FXD approval was successful!"
       );
-    } catch (e) {
-      const error = processRpcError(e);
+    } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(
         true,
-        error.reason || error.message
+        e.message
       );
       throw e;
     }
   };
 
-  approveUsdt = async (address: string) => {
+  async approveUsdt(address: string) {
     console.log(`Approved USDT clicked for address ${address}`);
     try {
-      if (address === undefined || address === null) return;
+      if (!address) return;
 
       await this.service
         .approveUsdt(address, this.rootStore.transactionStore)
@@ -104,40 +81,37 @@ export default class StableSwapStore {
             "USDT approval was successful!"
           );
         });
-    } catch (e) {
-      const error = processRpcError(e);
+    } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(
         true,
-        error.reason || error.message
+        e.message
       );
       throw e;
     }
   };
 
-  approvalStatusStablecoin = async (address: string, tokenIn: number) => {
-    console.log(`Checking stablecoin approval status for address ${address}`);
+  async approvalStatusStableCoin(address: string, tokenIn: number) {
+    console.log(`Checking StableCoin approval status for address ${address}`);
     try {
-      if (address === undefined || address === null) return;
-
+      if (!address) return;
       return await this.service.approvalStatusStablecoin(address, tokenIn);
-    } catch (e) {
+    } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(
         true,
-        "There is some error approving the token!"
+        e.message
       );
     }
   };
 
-  approvalStatusUsdt = async (address: string, tokenIn: number) => {
+  async approvalStatusUsdt(address: string, tokenIn: number) {
     console.log(`Checking usdt approval status for address ${address}`);
     try {
-      if (address === undefined || address === null) return;
-
+      if (!address) return;
       return await this.service.approvalStatusUsdt(address, tokenIn);
-    } catch (e) {
+    } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(
         true,
-        "There is some error approving the token!"
+        e.message
       );
     }
   };
