@@ -35,7 +35,7 @@ export default class ProposalService implements IProposalService {
           type: TransactionType.Approve,
           active: false,
           status: TransactionStatus.None,
-          title: `Proposal Creation Pending`,
+          title: "Proposal Creation Pending",
           message: "Click on transaction to view on block Explorer.",
         });
       });
@@ -79,27 +79,31 @@ export default class ProposalService implements IProposalService {
   async viewAllProposals(account: string): Promise<IProposal[]> {
     const fetchedProposals: IProposal[] = [];
 
-    try {
-      const FathomGovernor = Web3Utils.getContractInstance(
-        SmartContractFactory.FathomGovernor(this.chainId),
-        this.chainId
-      );
+    const FathomGovernor = Web3Utils.getContractInstance(
+      SmartContractFactory.FathomGovernor(this.chainId),
+      this.chainId
+    );
 
-      const result = await FathomGovernor.methods.getProposals(12).call();
+    const result = await FathomGovernor.methods.getProposals(12).call();
 
-      result[0].forEach((_id: string, i: number) => {
-        fetchedProposals.push({
-          description: result[1][i],
-          proposalId: _id.toString(),
-          status: Constants.Status[parseInt(result[2][i])],
-        });
+    result[0].forEach((_id: string, i: number) => {
+      fetchedProposals.push({
+        description: result[1][i],
+        proposalId: _id.toString(),
+        status: Constants.Status[parseInt(result[2][i])],
       });
+    });
 
-      return fetchedProposals;
-    } catch (e) {
-      console.error(`Error in getting Proposals: ${e}`);
-      return fetchedProposals;
-    }
+    return fetchedProposals;
+  }
+
+  async hasVoted(proposalId: string, account: string): Promise<boolean> {
+    const FathomGovernor = Web3Utils.getContractInstance(
+      SmartContractFactory.FathomGovernor(this.chainId),
+      this.chainId
+    );
+
+    return FathomGovernor.methods.hasVoted(proposalId, account).call();
   }
 
   async viewProposal(proposalId: string, account: string): Promise<IProposal> {
@@ -192,6 +196,7 @@ export default class ProposalService implements IProposalService {
       SmartContractFactory.VeFathom(this.chainId),
       this.chainId
     );
+
     return VeFathom.methods.balanceOf(account).call();
   }
 

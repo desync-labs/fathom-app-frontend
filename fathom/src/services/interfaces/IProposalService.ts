@@ -18,30 +18,28 @@ export default interface IProposalService {
   viewProposal(
     proposalId: string,
     account: string,
-    chainId?: number
   ): Promise<IProposal>;
 
   viewProposalState(
     proposalId: string,
     account: string,
-    chainId?: number
   ): Promise<string>;
 
   viewVoteCounts(
     proposalId: string,
     account: string,
-    chainId?: number
   ): Promise<IVoteCounts>;
 
   castVote(
     proposalId: string,
     account: string,
     support: string,
-    transactionStore: ActiveWeb3Transactions,
-    chainId?: number
+    transactionStore: ActiveWeb3Transactions
   ): Promise<number>;
 
-  getVeBalance(account: string, chainId?: number): Promise<number>;
+  getVeBalance(account: string): Promise<number>;
+
+  hasVoted(proposalId: string, account: string): Promise<boolean>
 
   executeProposal(
     targets: string[],

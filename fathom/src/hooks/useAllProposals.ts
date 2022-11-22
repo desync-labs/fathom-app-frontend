@@ -15,6 +15,7 @@ export const useAllProposals = () => {
   const logger = useLogger();
   const { proposalStore } = useStores();
   const [fetchProposalsPending, setFetchProposalsPending] = useState(true);
+
   const [search, setSearch] = useState<string>("");
   const [time, setTime] = useState<string>("all");
   const [proposals, setProposals] = useState<string>("all");

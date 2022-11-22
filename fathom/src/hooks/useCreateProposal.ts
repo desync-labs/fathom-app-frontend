@@ -39,12 +39,10 @@ const useCreateProposal = (onClose: ProposeListViewProps["onClose"]) => {
   const withAction = watch("withAction");
 
   useEffect(() => {
-    if (chainId) {
-      setTimeout(() => {
-        proposalStore.getVeBalance(account, chainId);
-      });
-    }
-  }, [account, chainId, proposalStore]);
+    setTimeout(() => {
+      proposalStore.getVeBalance(account);
+    });
+  }, [account, proposalStore]);
 
   useEffect(() => {
     let values = localStorage.getItem("createProposal");

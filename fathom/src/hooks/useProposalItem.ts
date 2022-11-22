@@ -12,21 +12,24 @@ const useProposalItem = () => {
   const { proposalStore } = useStores();
   const navigate = useNavigate();
   const [votePending, setVotePending] = useState<string | null>(null);
+  const [hasVoted, setHasVoted] = useState<boolean>(false)
+
+  const fetchData = useCallback(async () => {
+    if (_proposalId && account) {
+      const [hasVoted] = await Promise.all([
+        proposalStore.hasVoted(_proposalId, account),
+        proposalStore.fetchProposal(_proposalId, account),
+        proposalStore.fetchProposalState(_proposalId, account),
+        proposalStore.fetchProposalVotes(_proposalId, account),
+      ])
+
+      setHasVoted(hasVoted!)
+    }
+  }, [proposalStore, _proposalId, account, setHasVoted])
 
   useEffect(() => {
-    if (chainId) {
-      setTimeout(() => {
-        proposalStore.fetchProposals(account);
-        if (_proposalId) {
-          proposalStore.fetchProposal(_proposalId, account);
-          proposalStore.fetchProposalState(_proposalId, account);
-          proposalStore.fetchProposalVotes(_proposalId, account);
-        }
-      });
-    } else {
-      proposalStore.setProposals([]);
-    }
-  }, [_proposalId, account, chainId, proposalStore]);
+    fetchData()
+  }, [fetchData]);
 
   const toStatus = useCallback((_num: string) => {
     return Constants.Status[parseInt(_num)];
@@ -52,43 +55,47 @@ const useProposalItem = () => {
     try {
       if (typeof _proposalId === "string") {
         setVotePending("for");
-        await proposalStore.castVote(_proposalId, account, "1", chainId);
+        await proposalStore.castVote(_proposalId, account, "1");
+        setHasVoted(true)
       }
     } catch (err) {
       console.log(err);
     }
     setVotePending(null);
-  }, [_proposalId, proposalStore, account, chainId, setVotePending]);
+  }, [_proposalId, proposalStore, account, setVotePending, setHasVoted]);
 
   const handleAgainst = useCallback(async () => {
     try {
       if (typeof _proposalId === "string") {
         setVotePending("against");
-        await proposalStore.castVote(_proposalId, account, "0", chainId);
+        await proposalStore.castVote(_proposalId, account, "0");
+        setHasVoted(true)
       }
     } catch (err) {
       console.log(err);
     }
     setVotePending(null);
-  }, [_proposalId, proposalStore, account, chainId]);
+  }, [_proposalId, proposalStore, account, setVotePending, setHasVoted]);
 
   const handleAbstain = useCallback(async () => {
     try {
       if (typeof _proposalId === "string") {
         setVotePending("abstain");
-        await proposalStore.castVote(_proposalId, account, "2", chainId);
+        await proposalStore.castVote(_proposalId, account, "2");
+        setHasVoted(true)
       }
     } catch (err) {
       console.log(err);
     }
     setVotePending(null);
-  }, [_proposalId, proposalStore, account, chainId]);
+  }, [_proposalId, proposalStore, account, setVotePending, setHasVoted]);
 
   const back = useCallback(() => {
     navigate("/dao/proposals");
   }, [navigate]);
 
   return {
+    hasVoted,
     votePending,
     isDone,
     account,
