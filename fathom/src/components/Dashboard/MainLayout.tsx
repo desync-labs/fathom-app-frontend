@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React from "react";
 import { createTheme, styled, ThemeProvider } from "@mui/material/styles";
 import {
   CssBaseline,
@@ -17,7 +17,6 @@ import {
 } from "@mui/icons-material";
 import Copyright from "components/Footer/Footer";
 import AppBar from "components/AppComponents/AppBar/AppBar";
-import useMetaMask from "hooks/metamask";
 import { observer } from "mobx-react";
 import DashboardContent from "components/Dashboard/Dashboard";
 import { Route, Routes } from "react-router-dom";
@@ -27,7 +26,6 @@ import FathomAppLogoSrc from "assets/svg/Fathom-app-logo.svg";
 import ExitSrc from "assets/svg/exit.svg";
 import MetamaskSrc from "assets/svg/metamask.svg";
 
-import { useStores } from "stores";
 import { Web3Status } from "components/Web3Status/Web3Status";
 import AllProposalsView from "components/Governance/ViewAllProposals";
 import ProposalView from "components/Governance/Proposal";
@@ -40,6 +38,7 @@ import { ToggleDrawerButton } from "components/AppComponents/AppButton/AppButton
 import { MainBox } from "components/AppComponents/AppBox/AppBox";
 import DaoView from "components/Dashboard/DaoView";
 import { drawerWidth } from "components/AppComponents/AppBar/AppBar";
+import useMainLayout from "hooks/useMainLayout";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -120,37 +119,16 @@ const WalletBox = styled(Box)`
 `;
 
 const MainLayout = observer(() => {
-  const [open, setOpen] = useState<boolean>(true);
-  const { connect, isActive, account, chainId, error, isMetamask } =
-    useMetaMask()!;
-  const [isMobile, setIsMobile] = useState<boolean>(false);
-
-  const toggleDrawer = useCallback(() => {
-    setOpen(!open);
-  }, [open, setOpen]);
-
-  const rootStore = useStores();
-
-  useEffect(() => {
-    rootStore.setChainId(chainId!);
-  }, [chainId, rootStore]);
-
-  const resizeHandler = useCallback(() => {
-    const isMobile = Math.min(window.screen.width, window.screen.height) < 768;
-    setIsMobile(isMobile);
-
-    if (isMobile) {
-      setOpen(false);
-    } else {
-      setOpen(true);
-    }
-  }, [setIsMobile, setOpen]);
-
-  useEffect(() => {
-    window.addEventListener("resize", resizeHandler);
-    resizeHandler();
-    return () => window.removeEventListener("resize", resizeHandler);
-  }, [resizeHandler]);
+  const {
+    account,
+    error,
+    isMobile,
+    isActive,
+    open,
+    connect,
+    isMetamask,
+    toggleDrawer,
+  } = useMainLayout()
 
   return (
     <ThemeProvider theme={mdTheme}>

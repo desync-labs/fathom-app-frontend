@@ -13,13 +13,13 @@ type ViewAllProposalItemProps = {
   index: number;
 };
 
-const ProposalItemWrapper = styled(Box)`
+const ProposalItemWrapper = styled(Link)`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
   padding: 16px 20px;
-  gap: 15px;
+  gap: 8px;
   background: #131f35;
   border-radius: 8px;
 `;
@@ -40,9 +40,10 @@ const ProposalItemTitle = styled(Box)`
   font-weight: 400;
   font-size: 16px;
   line-height: 24px;
+  color: #fff;
 `;
 
-const ProposalItemProposalId = styled(Link)`
+const ProposalItemProposalId = styled(Box)`
   color: #9fadc6;
   text-align: left;
   font-weight: bold;
@@ -52,39 +53,40 @@ const ProposalItemProposalId = styled(Link)`
   text-decoration: none;
 `;
 
-const ProposalItemTimeLeft = styled(Box)(({ theme }) => ({
-  color: "#6379A1",
-  marginTop: "-12px",
-  fontSize: "14px",
-  "&.in-progress": {
-    color: "#F5953D",
-  },
-}));
+const ProposalItemTimeLeft = styled(Box)`
+  color: #6379A1;
+  margin-top: -4px;
+  font-size: 14px;
+  &.in-progress {
+    color: #F5953D;
+  }
+`
 
-export const ProposalItemStatus = styled(Box)(({ theme }) => ({
-  borderRadius: "6px",
-  display: "flex",
-  flexDirection: "row",
-  justifyContent: "center",
-  alignItems: "center",
-  padding: "4px 8px",
-  gap: "4px",
-  fontSize: "14px",
-  fontWeight: 400,
-  maxWidth: "110px",
+export const ProposalItemStatus = styled(Box)`
+  border-radius: 6px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 4px 8px;
+  gap: 4px;
+  font-size: 14px;
+  font-weight: 400;
+  max-width: 110px;
+  margin-top: 10px;
 
-  background: "rgba(99, 121, 161, 0.2)",
-  color: "#43FFF1",
+  background: rgba(99, 121, 161, 0.2);
+  color: #43FFF1;
 
-  "&.succeeded": {
-    color: "#8AF075",
-  },
+  &.succeeded {
+    color: #8AF075;
+  }
 
-  "&.defeated": {
-    background: "rgba(143, 36, 36, 0.15)",
-    color: "#F76E6E",
-  },
-}));
+  &.defeated {
+    background: rgba(143, 36, 36, 0.15);
+    color: #F76E6E;
+  }
+`
 
 export const ImageSrc: { [key: string]: string } = {
   Defeated: DefeatedSrc,
@@ -95,6 +97,7 @@ const ViewAllProposalItem: FC<ViewAllProposalItemProps> = ({
   proposal,
   index,
 }) => {
+
   const proposalTitle = useMemo(() => {
     const title = proposal.description.split("----------------")[0];
     return title.substring(0, 50) + (title.length > 50 ? "... " : "");
@@ -102,10 +105,10 @@ const ViewAllProposalItem: FC<ViewAllProposalItemProps> = ({
 
   return (
     <Grid item xs={12} key={proposal.proposalId}>
-      <ProposalItemWrapper key={proposal.proposalId}>
+      <ProposalItemWrapper to={`/proposal/${proposal.proposalId}`} key={proposal.proposalId}>
         <ProposalIdTooltip title={proposal.proposalId} placement="top">
-          <ProposalItemProposalId to={`/proposal/${proposal.proposalId}`}>
-            {proposal.proposalId.substring(0, 4) +
+          <ProposalItemProposalId>
+            Proposal № {proposal.proposalId.substring(0, 4) +
               " ... " +
               proposal.proposalId.slice(-4)}
           </ProposalItemProposalId>

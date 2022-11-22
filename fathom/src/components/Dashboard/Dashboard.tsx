@@ -1,32 +1,14 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Grid, Container } from "@mui/material";
 import OpenPositionsList from "components/PositionList/OpenPositionsList";
-import { useStores } from "stores";
-import { LogLevel, useLogger } from "helpers/Logger";
 import { observer } from "mobx-react";
 import ProtocolStats from "components/Dashboard/ProtocolStats";
-import { useWeb3React } from "@web3-react/core";
 import PoolsListView from "components/Pools/PoolsListView";
 import { PageHeader } from "components/Dashboard/PageHeader";
+import useDashboard from "hooks/useDashboard";
 
 const DashboardContent = observer(() => {
-  const { chainId, account } = useWeb3React();
-  const { poolStore, positionStore } = useStores();
-  const logger = useLogger();
-
-  useEffect(() => {
-    if (chainId && account) {
-      logger.log(LogLevel.info, "Fetching pools information.");
-      setTimeout(() => {
-        Promise.all([
-          poolStore.fetchPools(),
-          positionStore.fetchPositions(account!),
-        ]);
-      });
-    } else {
-      poolStore.setPool([]);
-    }
-  }, [poolStore, positionStore, logger, chainId, account]);
+  useDashboard();
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>

@@ -2,7 +2,7 @@ import { Link, Outlet, useLocation } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { Container } from "@mui/material";
 import { useMemo } from "react";
-import { GovernanceIcon, StakingIcon } from "components/Dashboard/Menu";
+import { GovernanceIcon, StakingIcon } from "components/Common/MenuIcons";
 
 const DaoNav = styled("nav")`
   height: 65px;

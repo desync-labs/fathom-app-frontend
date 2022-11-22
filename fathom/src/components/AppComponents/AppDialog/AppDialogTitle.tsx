@@ -14,12 +14,12 @@ export const AppDialogTitleWrapper = styled(MuiDialogTitle)`
   margin: 0;
 `
 
-export const AppDialogCloseIcon = styled(IconButton)(({ theme }) => ({
-  position: "absolute",
-  right: 8,
-  top: 8,
-  color: theme.palette.grey[500],
-}));
+export const AppDialogCloseIcon = styled(IconButton)`
+  position: absolute;
+  right: 8px;
+  top: 8px;,
+  color: ${({ theme }) => theme.palette.grey[500]};
+`
 
 
 
