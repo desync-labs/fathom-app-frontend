@@ -2,7 +2,7 @@ import { RootStore } from ".";
 import IProposalService from "services/interfaces/IProposalService";
 import IProposal from "stores/interfaces/IProposal";
 import IVoteCounts from "stores/interfaces/IVoteCounts";
-import { makeAutoObservable, runInAction } from "mobx";
+import { makeAutoObservable } from "mobx";
 
 export default class ProposalStore {
   fetchedProposals: IProposal[] = [];
@@ -24,6 +24,13 @@ export default class ProposalStore {
     this.rootStore = rootStore;
   }
 
+  showErrorMessage(msg: string) {
+    this.rootStore.alertStore.setShowErrorAlert(
+      true,
+      msg
+    );
+  }
+
   async createProposal(
     targets: string[],
     values: number[],
@@ -40,11 +47,10 @@ export default class ProposalStore {
         account,
         this.rootStore.transactionStore
       );
+      await this.fetchProposals(account);
     } catch (e: any) {
-
+      this.showErrorMessage(e.message);
     }
-
-
   }
 
   async executeProposal(
@@ -53,44 +59,112 @@ export default class ProposalStore {
     callData: string[],
     description: string,
     account: string
-  ): Promise<number> {
-    return this.service.executeProposal(
-      targets,
-      values,
-      callData,
-      description,
-      account,
-      this.rootStore.transactionStore
-    );
+  ) {
+    try {
+      await this.service.executeProposal(
+        targets,
+        values,
+        callData,
+        description,
+        account,
+        this.rootStore.transactionStore
+      );
+    } catch (e: any) {
+      this.showErrorMessage(e.message);
+    }
   }
 
-  async queueProposal(
-    targets: string[],
-    values: number[],
-    callData: string[],
-    description: string,
-    account: string
-  ): Promise<number> {
-    return this.service.queueProposal(
-      targets,
-      values,
-      callData,
-      description,
-      account,
-      this.rootStore.transactionStore
-    );
+
+  async castVote(
+    proposalId: string,
+    account: string,
+    support: string,
+  ) {
+    try {
+      await this.service.castVote(
+        proposalId,
+        account,
+        support,
+        this.rootStore.transactionStore,
+      );
+
+      await Promise.all([
+        this.fetchProposalState(proposalId, account),
+        this.fetchProposalVotes(proposalId, account)
+      ])
+    } catch (e: any) {
+      this.showErrorMessage(e.message);
+    }
   }
 
-  setProposals(_proposal: IProposal[]) {
-    this.fetchedProposals = _proposal;
+  async hasVoted(proposalId: string, account: string): Promise<boolean | undefined> {
+    try {
+      return await this.service.hasVoted(proposalId, account)
+    } catch (e: any) {
+      this.showErrorMessage(e.message);
+    }
   }
 
-  setProposal(_proposal: IProposal) {
-    this.fetchedProposal = _proposal;
+  async getVeBalance(account: string) {
+    try {
+      const _veBalance = await this.service.getVeBalance(account);
+      this.setVeBalance(_veBalance);
+    } catch (e: any) {
+      this.showErrorMessage(e.message);
+    }
   }
 
-  setProposalState(_proposalState: string) {
-    this.fetchedProposalState = _proposalState;
+  async fetchProposals(account: string) {
+    try {
+      const fetchedProposals = await this.service.viewAllProposals(
+        account,
+      );
+      this.setProposals(fetchedProposals);
+    } catch (e: any) {
+      this.showErrorMessage(e.message);
+    }
+  }
+
+  async fetchProposal(proposal: string, account: string) {
+    try {
+      const fetchedProposal = await this.service.viewProposal(
+        proposal,
+        account,
+      );
+      this.setProposal(fetchedProposal);
+    } catch (e: any) {
+      this.showErrorMessage(e.message);
+    }
+  }
+
+  async fetchProposalState(
+    proposal: string,
+    account: string,
+  ) {
+    try {
+      const fetchedProposalState = await this.service.viewProposalState(
+        proposal,
+        account,
+      );
+      this.setProposalState(fetchedProposalState);
+    } catch (e: any) {
+      this.showErrorMessage(e.message);
+    }
+  }
+
+  async fetchProposalVotes(
+    proposal: string,
+    account: string,
+  ) {
+    try {
+      const fetchedVotes = await this.service.viewVoteCounts(
+        proposal,
+        account,
+      );
+      this.setProposalVotes(fetchedVotes);
+    } catch (e: any) {
+      this.showErrorMessage(e.message);
+    }
   }
 
   setProposalVotes(_proposalVotes: IVoteCounts) {
@@ -113,71 +187,15 @@ export default class ProposalStore {
     this.veBalance = _veBalance;
   }
 
-  async castVote(
-    proposalId: string,
-    account: string,
-    support: string,
-    chainId?: number
-  ) {
-    const _weight = await this.service.castVote(
-      proposalId,
-      account,
-      support,
-      this.rootStore.transactionStore,
-      chainId
-    );
-    runInAction(() => {
-      this.setWeight(_weight);
-    });
+  setProposals(_proposal: IProposal[]) {
+    this.fetchedProposals = _proposal;
   }
 
-  async getVeBalance(account: string, chainId?: number) {
-    const _veBalance = await this.service.getVeBalance(account, chainId);
-    runInAction(() => {
-      this.setVeBalance(_veBalance);
-    });
+  setProposal(_proposal: IProposal) {
+    this.fetchedProposal = _proposal;
   }
 
-  async fetchProposals(account: string, chainId?: number) {
-    const fetchedProposals = await this.service.viewAllProposals(
-      account,
-      chainId
-    );
-    this.setProposals(fetchedProposals);
-  }
-
-  async fetchProposal(proposal: string, account: string, chainId?: number) {
-    const fetchedProposal = await this.service.viewProposal(
-      proposal,
-      account,
-      chainId
-    );
-    this.setProposal(fetchedProposal);
-  }
-
-  async fetchProposalState(
-    proposal: string,
-    account: string,
-    chainId?: number
-  ) {
-    const fetchedProposalState = await this.service.viewProposalState(
-      proposal,
-      account,
-      chainId
-    );
-    this.setProposalState(fetchedProposalState);
-  }
-
-  async fetchProposalVotes(
-    proposal: string,
-    account: string,
-    chainId?: number
-  ) {
-    const fetchedVotes = await this.service.viewVoteCounts(
-      proposal,
-      account,
-      chainId
-    );
-    this.setProposalVotes(fetchedVotes);
+  setProposalState(_proposalState: string) {
+    this.fetchedProposalState = _proposalState;
   }
 }

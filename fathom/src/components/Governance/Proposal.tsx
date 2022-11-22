@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import { styled } from "@mui/material/styles";
 import {
   Button,
@@ -22,7 +22,6 @@ import {
 } from "components/AppComponents/AppButton/AppButton";
 
 import backSrc from "assets/svg/back.svg";
-
 
 import {
   ProposalItemStatus,
@@ -138,7 +137,7 @@ const VoteButtonGroup = styled(ButtonGroup)`
   width: 100%;
   height: 48px;
 
-  button: {
+  button {
     background: #324567;
     width: 33.33%;
     border: 1px solid #4f658c;
@@ -156,8 +155,49 @@ const VoteButtonGroup = styled(ButtonGroup)`
   }
 `;
 
+type ButtonsProps = {
+  hasVoted: boolean;
+  fetchedProposalState: string;
+  handleFor: () => void;
+  handleAgainst: () => void;
+  handleAbstain: () => void;
+  votePending: string;
+};
+
+const Buttons: FC<ButtonsProps> = ({
+  hasVoted,
+  fetchedProposalState,
+  handleFor,
+  votePending,
+  handleAgainst,
+  handleAbstain,
+}) => {
+  if (fetchedProposalState !== "1") {
+    return <VotingEndedButton disabled={true}>Voting Ended</VotingEndedButton>;
+  }
+
+  if (hasVoted) {
+    return <VotingEndedButton disabled={true}>You have already voted.</VotingEndedButton>;
+  }
+
+  return (
+    <VoteButtonGroup variant="outlined">
+      <Button onClick={handleFor}>
+        {votePending === "for" ? <CircularProgress size={25} /> : "For"}
+      </Button>
+      <Button onClick={handleAgainst}>
+        {votePending === "against" ? <CircularProgress size={25} /> : "Against"}
+      </Button>
+      <Button onClick={handleAbstain}>
+        {votePending === "abstain" ? <CircularProgress size={25} /> : "Abstain"}
+      </Button>
+    </VoteButtonGroup>
+  );
+};
+
 const ProposalView = observer(() => {
   const {
+    hasVoted,
     votePending,
     isDone,
     handleAbstain,
@@ -176,6 +216,8 @@ const ProposalView = observer(() => {
     fetchedProposalState,
     back,
   } = useProposalItem();
+
+  console.log(fetchedProposal);
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
@@ -314,36 +356,14 @@ const ProposalView = observer(() => {
                 </VotingWrapperBox>
               </Box>
             </Box>
-
-            {fetchedProposalState !== "1" ? (
-              <VotingEndedButton disabled={true}>
-                Voting Ended
-              </VotingEndedButton>
-            ) : (
-              <VoteButtonGroup variant="outlined">
-                <Button onClick={handleFor}>
-                  {votePending === "for" ? (
-                    <CircularProgress size={25} />
-                  ) : (
-                    "For"
-                  )}
-                </Button>
-                <Button onClick={handleAgainst}>
-                  {votePending === "against" ? (
-                    <CircularProgress size={25} />
-                  ) : (
-                    "Against"
-                  )}
-                </Button>
-                <Button onClick={handleAbstain}>
-                  {votePending === "abstain" ? (
-                    <CircularProgress size={25} />
-                  ) : (
-                    "Abstain"
-                  )}
-                </Button>
-              </VoteButtonGroup>
-            )}
+            <Buttons
+              hasVoted={hasVoted}
+              fetchedProposalState={fetchedProposalState}
+              handleFor={handleFor}
+              handleAbstain={handleAbstain}
+              handleAgainst={handleAgainst}
+              votePending={votePending!}
+            />
           </AppPaper>
         </Grid>
       </Grid>
