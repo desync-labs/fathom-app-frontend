@@ -30,7 +30,7 @@ const ProposalSelect = styled(Select)`
   height: 40px;
   background: #253656;
   border: 1px solid #324567;
-  borderradius: 8px;
+  border-radius: 8px;
   width: 100%;
 `;
 

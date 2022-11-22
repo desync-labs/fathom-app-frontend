@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+import { Link } from "react-router-dom";
 import {
   Box,
   FormControlLabel,
@@ -10,6 +11,7 @@ import {
   FormGroup,
   Checkbox,
   FormControl,
+  Typography
 } from "@mui/material";
 import { observer } from "mobx-react";
 import { Controller } from "react-hook-form";
@@ -23,12 +25,13 @@ import { getTokenLogoURL } from "utils/tokenLogo";
 import { styled } from "@mui/material/styles";
 import useCreateProposal from "hooks/useCreateProposal";
 
-import requiredSrc from "assets/svg/required.svg";
 import MuiInfoIcon from "@mui/icons-material/Info";
 import {
   ButtonPrimary,
   ButtonSecondary,
 } from "components/AppComponents/AppButton/AppButton";
+
+import requiredSrc from "assets/svg/required.svg";
 
 export type ProposeListViewProps = {
   onClose: () => void;
@@ -42,7 +45,7 @@ const ProposeLabel = styled(AppFormLabel)`
   color: #7d91b5;
   height: 26px;
   display: inline-flex;
-  alignitems: end;
+  align-items: end;
   padding: 0;
 `;
 
@@ -66,8 +69,11 @@ const WarningBox = styled(Box)`
   display: flex;
   flex-direction: row;
   align-items: center;
-  color: #f7b06e;
-  font-size: 14px;
+  
+  p {
+    color: #f7b06e;
+    font-size: 14px;  
+  }
 `;
 
 const ProposeButtonPrimary = styled(ButtonPrimary)`
@@ -358,8 +364,10 @@ const ProposeListView: FC<ProposeListViewProps> = observer(({ onClose }) => {
                   <InfoIcon
                     sx={{ width: "16px", color: "#F5953D", height: "16px" }}
                   />
-                  A balance of at least {MINIMUM_V_BALANCE} vFTHM is required to
-                  create a proposal.
+                  <Typography>
+                    You have less than {MINIMUM_V_BALANCE} vFTHM, and you can not create a new proposal.
+                    So please, stake your FTHM tokens in <Link to={'/dao/staking'}>Staking</Link> to get voting power and awesome rewards.
+                  </Typography>
                 </WarningBox>
               )}
 
