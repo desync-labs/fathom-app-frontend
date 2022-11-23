@@ -7,14 +7,9 @@ import {
 } from "react";
 import ILockPosition from "stores/interfaces/ILockPosition";
 import useStakingView from "hooks/useStakingView";
-import { UNSTAKE_TYPE } from "../components/Staking/Dialog/UnstakeDialog";
+import { UNSTAKE_TYPE } from "components/Staking/Dialog/UnstakeDialog";
 
-const formatter = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-  minimumFractionDigits: 0,
-  maximumFractionDigits: 2,
-});
+
 
 const useUnstake = (
   lockPosition: ILockPosition | null,
@@ -87,19 +82,6 @@ const useUnstake = (
     [setUnstakeAmount]
   );
 
-  const formatNumber = useCallback((number: number) => {
-    return formatter
-      .formatToParts(number)
-      .map((p) =>
-        p.type !== "literal" && p.type !== "currency" ? p.value : ""
-      )
-      .join("");
-  }, []);
-
-  const formatCurrency = useCallback((number: number) => {
-    return formatter.format(number);
-  }, []);
-
   const setMax = useCallback(() => {
     setUnstakeAmount(totalBalance);
   }, [totalBalance, setUnstakeAmount]);
@@ -118,8 +100,6 @@ const useUnstake = (
     totalBalance,
 
     handleUnstakeAmountChange,
-    formatNumber,
-    formatCurrency,
     setMax,
     unstakeHandler,
 

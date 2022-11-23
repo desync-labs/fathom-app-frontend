@@ -1,14 +1,18 @@
+import React from "react";
 import { observer } from "mobx-react";
+
 import { Box, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-import PercentSrc from "assets/svg/percent.svg";
-import CheckmarkSrc from "assets/svg/check-mark.svg";
-import LockedSrc from "assets/svg/locked.svg";
-import RewardsSrc from "assets/svg/rewards.svg";
 import RiseLabel from "components/AppComponents/AppLabel/RiseLabel";
 import InfoIcon from "@mui/icons-material/Info";
-import React from "react";
+
+import { formatNumber } from "utils/format";
+import { ButtonSecondary } from "components/AppComponents/AppButton/AppButton";
+
+import PercentSrc from "assets/svg/percent.svg";
+import LockedSrc from "assets/svg/locked.svg";
+import RewardsSrc from "assets/svg/rewards.svg";
 
 const FTHMStreamHeader = styled("h3")`
   font-weight: 600;
@@ -44,16 +48,16 @@ const StatsBlock = styled(Box)`
 `;
 
 const StatsLabel = styled(Box)`
-  font-weight: 700;
-  font-size: 13px;
+  font-weight: 600;
+  font-size: 11px;
   line-height: 16px;
-  color: #9fadc6;
+  color: #6379a1;
   text-transform: uppercase;
-  padding-bottom: 7px;
+  padding-bottom: 5px;
   display: flex;
   align-items: center;
   gap: 7px;
-  
+
   svg {
     cursor: pointer;
   }
@@ -76,19 +80,35 @@ const StatsValue = styled(Box)`
   }
 `;
 
+const MyStatsValue = styled(StatsValue)`
+  strong {
+    font-size: 14px;
+  }
+`;
+
 const MyStatsBlocks = styled(Box)`
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   align-items: start;
+  gap: 25px;
+
+  > div:last-of-type {
+    margin-top: -40px;
+  }
 `;
 
 const MyStatsBlock = styled(Box)`
-  width: 33.33%;
+  width: 100%;
+
+  span:last-of-type {
+    color: #9fadc6;
+    font-size: 14px;
+  }
 `;
 
-const StatsUSDPrice = styled(Box)`
-  font-size: 14px;
-  line-height: 20px;
-  color: #9fadc6;
+const StatsButton = styled(ButtonSecondary)`
+  height: 32px;
+  margin-top: 15px;
 `;
 
 const StreamStats = observer((props: any) => {
@@ -113,24 +133,11 @@ const StreamStats = observer((props: any) => {
         </StatsBlock>
 
         <StatsBlock>
-          <img src={CheckmarkSrc} alt={"checkmark"} />
-          <Box>
-            <StatsLabel>
-              Voting power <InfoIcon sx={{ fontSize: "18px" }} />
-            </StatsLabel>
-            <StatsValue>
-              <strong>{props.voteBalance}</strong>vFTHM
-              <span>(1 staked FTHM = 1 vFTHM)</span>
-            </StatsValue>
-          </Box>
-        </StatsBlock>
-
-        <StatsBlock>
           <img src={LockedSrc} alt={"locked"} />
           <Box>
-            <StatsLabel>Total value locked</StatsLabel>
+            <StatsLabel>Total Value Locked</StatsLabel>
             <StatsValue>
-              <strong>{props.stakedBalance}</strong>FTHM
+              <strong>{formatNumber(props.stakedBalance)}</strong>FTHM
               <span>$99M</span>
             </StatsValue>
           </Box>
@@ -139,7 +146,9 @@ const StreamStats = observer((props: any) => {
         <StatsBlock>
           <img src={RewardsSrc} alt={"rewards"} />
           <Box>
-            <StatsLabel>Daily rewards <InfoIcon sx={{ fontSize: "18px" }} /></StatsLabel>
+            <StatsLabel>
+              Daily rewards <InfoIcon sx={{ fontSize: "18px" }} />
+            </StatsLabel>
             <StatsValue>
               <strong>500K</strong>FTHM
               <span>$670k</span>
@@ -153,25 +162,48 @@ const StreamStats = observer((props: any) => {
       <MyStatsBlocks>
         <MyStatsBlock>
           <StatsLabel>Staked Balance</StatsLabel>
-          <StatsValue>
-            <strong>400</strong>FTHM
-          </StatsValue>
-          <StatsUSDPrice>$500.00</StatsUSDPrice>
+          <MyStatsValue>
+            <strong>400 FTHM</strong>
+            <span>$500.00</span>
+          </MyStatsValue>
         </MyStatsBlock>
 
         <MyStatsBlock>
-          <StatsLabel>Rewards <InfoIcon sx={{ fontSize: "18px" }} /></StatsLabel>
-          <StatsValue>
-            <strong>100</strong>FTHM
-          </StatsValue>
-          <StatsUSDPrice>$153.00</StatsUSDPrice>
+          <StatsLabel>
+            Rewards <InfoIcon sx={{ fontSize: "18px" }} />
+          </StatsLabel>
+          <MyStatsValue>
+            <strong>100 FTHM</strong>
+            <span>$153.00</span>
+          </MyStatsValue>
+          <StatsButton>Claim</StatsButton>
         </MyStatsBlock>
 
         <MyStatsBlock>
-          <StatsLabel>Voting power <InfoIcon sx={{ fontSize: "18px" }} /></StatsLabel>
-          <StatsValue>
-            <strong>2</strong>vFTHM
-          </StatsValue>
+          <StatsLabel>Total Cooling Down</StatsLabel>
+          <MyStatsValue>
+            <strong>800 FTHM</strong>
+          </MyStatsValue>
+        </MyStatsBlock>
+
+        <MyStatsBlock>
+          <StatsLabel>
+            Voting power <InfoIcon sx={{ fontSize: "18px" }} />
+          </StatsLabel>
+          <MyStatsValue>
+            <strong>1,500 vFTHM</strong>
+          </MyStatsValue>
+          <span>(1 staked FTHM = 1 vFTHM)</span>
+        </MyStatsBlock>
+
+        <MyStatsBlock>
+          <StatsLabel>
+            Total ready to withdraw <InfoIcon sx={{ fontSize: "18px" }} />
+          </StatsLabel>
+          <MyStatsValue>
+            <strong>400 FTHM</strong>
+          </MyStatsValue>
+          <StatsButton>Withdraw</StatsButton>
         </MyStatsBlock>
       </MyStatsBlocks>
     </Box>

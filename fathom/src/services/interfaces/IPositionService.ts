@@ -33,12 +33,12 @@ export default interface IPositionService {
     collatral: number,
     transactionStore: ActiveWeb3Transactions
   ): Promise<Boolean>;
-  balanceStablecoin(address: string): Promise<number>;
-  approveStablecoin(
+  balanceStableCoin(address: string): Promise<number>;
+  approveStableCoin(
     address: string,
     transactionStore: ActiveWeb3Transactions
   ): Promise<void>;
-  approvalStatusStablecoin(address: string): Promise<Boolean>;
+  approvalStatusStableCoin(address: string): Promise<Boolean>;
   partiallyClosePosition(
     position: IOpenPosition,
     pool: ICollateralPool,

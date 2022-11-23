@@ -52,8 +52,8 @@ const useStableSwap = (options: string[]) => {
           ? setApproveInputBtn(false)
           : setApproveInputBtn(true)
         : approved
-        ? setApproveOutputBtn(false)
-        : setApproveOutputBtn(true);
+          ? setApproveOutputBtn(false)
+          : setApproveOutputBtn(true);
     }, 300),
     [stableSwapStore, account, setApproveInputBtn, setApproveOutputBtn]
   );
@@ -89,6 +89,9 @@ const useStableSwap = (options: string[]) => {
           const [inputBalance, outputBalance, fxdPrice] = await Promise.all(
             promises
           );
+
+          console.log(FXDContractAddress)
+          console.log(fxdPrice)
 
           setInputBalance(inputBalance);
           setOutputBalance(outputBalance);

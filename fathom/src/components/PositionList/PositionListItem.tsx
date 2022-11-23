@@ -30,9 +30,8 @@ import MenuItem from "@mui/material/MenuItem";
 import { styled } from "@mui/material/styles";
 import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
 import { ClosingType } from "hooks/useClosePosition";
-import TokenLogo from "../Common/TokenLogo";
-import { getTokenLogoURL } from "../../utils/tokenLogo";
-import { PoolLogoStack } from "../AppComponents/AppStack/AppStack";
+import TokenLogo from "components/Common/TokenLogo";
+import { getTokenLogoURL } from "utils/tokenLogo";
 
 type PositionListItemProps = {
   position: IOpenPosition;
@@ -79,7 +78,10 @@ const PositionListItem: FC<PositionListItemProps> = observer(
       return safetyBuffer.div(Constants.WeiPerWad).decimalPlaces(2).toString();
     }, []);
 
-    const pool = useMemo(() => poolStore.getPool(position.pool), [poolStore]);
+    const pool = useMemo(
+      () => poolStore.getPool(position.pool),
+      [poolStore, position.pool]
+    );
 
     return (
       <AppTableRow

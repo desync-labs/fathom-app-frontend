@@ -31,6 +31,7 @@ import {
 } from "components/AppComponents/AppButton/AppButton";
 import useUnstake from "hooks/useUnstake";
 import { InfoMessageWrapper } from "components/Staking/Dialog/ClaimRewardsDialog";
+import { formatNumber } from "../../../utils/format";
 
 const UnstakeValue = styled(Box)`
   display: flex;
@@ -114,7 +115,6 @@ const UnstakeDialog: FC<UnstakeDialogProps> = ({
     isLoading,
 
     handleUnstakeAmountChange,
-    formatNumber,
     setMax,
     unstakeHandler,
 
