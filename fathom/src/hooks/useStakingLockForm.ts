@@ -4,6 +4,7 @@ import { useStores } from "stores";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import debounce from "lodash.debounce";
 import { StakingLockFormPropsType } from "components/Staking/StakingLockForm";
+import { Web3Utils } from "../helpers/Web3Utils";
 
 const useStakingLockForm = (
   fetchOverallValues: StakingLockFormPropsType["fetchOverallValues"]
@@ -16,17 +17,19 @@ const useStakingLockForm = (
       lockDays: 30,
       stakePosition: "",
     },
-    reValidateMode: 'onChange',
-    mode: 'onChange',
+    reValidateMode: "onChange",
+    mode: "onChange",
   });
   const { account, chainId } = useMetaMask()!;
-  const { stakingStore } = useStores();
+  const { stakingStore, positionStore } = useStores();
 
   const lockDays = watch("lockDays");
   const stakePosition = watch("stakePosition");
 
   const [approvedBtn, setApprovedBtn] = useState(false);
   const [approvalPending, setApprovalPending] = useState(false);
+
+  const [xdcBalance, setXdcBalance] = useState<number>(0);
 
   const approvalStatus = useCallback(
     debounce(
@@ -52,11 +55,18 @@ const useStakingLockForm = (
 
   useEffect(() => {
     const getBalance = async () => {
-      stakingStore.fetchWalletBalance(account);
+      const instance = Web3Utils.getWeb3Instance(chainId)
+      const [xdcBalance] = await Promise.all([
+        instance.eth.getBalance(account),
+        stakingStore.fetchWalletBalance(account),
+        positionStore.balanceStableCoin(account),
+      ]);
+
+      setXdcBalance(xdcBalance / (10 ** 18))
     };
 
-    if (account) getBalance();
-  }, [account, stakingStore]);
+    if (account && chainId) getBalance();
+  }, [account, chainId, positionStore, stakingStore, setXdcBalance]);
 
   useEffect(() => {
     if (Number(stakePosition) > stakingStore.walletBalance) {
@@ -128,6 +138,8 @@ const useStakingLockForm = (
     setMax,
     setPeriod,
     walletBalance: stakingStore.walletBalance,
+    fxdBalance: positionStore.stableCoinBalance,
+    xdcBalance,
   };
 };
 

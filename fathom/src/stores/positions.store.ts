@@ -3,13 +3,13 @@ import { RootStore } from ".";
 import IPositionService from "services/interfaces/IPositionService";
 import ICollateralPool from "stores/interfaces/ICollateralPool";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
-import { processRpcError } from "utils/processRpcError";
 import BigNumber from "bignumber.js";
 
 export default class PositionStore {
   positions: IOpenPosition[] = [];
   service: IPositionService;
   rootStore: RootStore;
+  stableCoinBalance: number = 0;
 
   constructor(rootStore: RootStore, service: IPositionService) {
     makeAutoObservable(this);
@@ -110,6 +110,10 @@ export default class PositionStore {
     this.positions = _positions;
   }
 
+  setStableCoinBalance(_stableCoinBalance: number) {
+    this.stableCoinBalance = _stableCoinBalance;
+  }
+
   async approve(address: string, pool: ICollateralPool) {
     if (!address) return;
 
@@ -138,7 +142,7 @@ export default class PositionStore {
 
   async approvalStatus(
     address: string,
-    collatral: number,
+    collateral: number,
     pool: ICollateralPool
   ) {
     if (!address) return;
@@ -146,7 +150,7 @@ export default class PositionStore {
       return await this.service.approvalStatus(
         address,
         pool,
-        collatral,
+        collateral,
         this.rootStore.transactionStore
       );
     } catch (e: any) {
@@ -155,16 +159,11 @@ export default class PositionStore {
   }
 
   async balanceStableCoin(address: string) {
-    if (!address) return;
-
     try {
-      return this.service.balanceStablecoin(address);
-    } catch (e) {
-      const err = processRpcError(e);
-      this.rootStore.alertStore.setShowErrorAlert(
-        true,
-        err.reason || err.message
-      );
+      const balance = await this.service.balanceStableCoin(address);
+      this.setStableCoinBalance(balance);
+    } catch (e: any) {
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
     }
   }
 
@@ -173,7 +172,7 @@ export default class PositionStore {
     console.log(`Open position token approval clicked for address ${address}`);
     try {
       return this.service
-        .approveStablecoin(address, this.rootStore.transactionStore)
+        .approveStableCoin(address, this.rootStore.transactionStore)
         .then(() => {
           this.rootStore.alertStore.setShowSuccessAlert(
             true,
@@ -181,10 +180,7 @@ export default class PositionStore {
           );
         });
     } catch (e: any) {
-      this.rootStore.alertStore.setShowErrorAlert(
-        true,
-        e.message
-      );
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
       throw e;
     }
   }
@@ -192,7 +188,7 @@ export default class PositionStore {
   async approvalStatusStableCoin(address: string) {
     try {
       if (!address) return;
-      return await this.service.approvalStatusStablecoin(address);
+      return await this.service.approvalStatusStableCoin(address);
     } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(true, e.message);
     }
@@ -223,8 +219,8 @@ export default class PositionStore {
 
         Promise.all([
           this.fetchPositions(address),
-          this.rootStore.poolStore.fetchPools()
-        ])
+          this.rootStore.poolStore.fetchPools(),
+        ]);
         this.rootStore.alertStore.setShowSuccessAlert(
           true,
           "Position closed successfully!"

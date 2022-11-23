@@ -133,7 +133,6 @@ export default class StakingService implements IStakingService {
           lockPosition.EndTime
         );
 
-        console.log(lockPosition);
         lockPositionsList.push(lockPosition);
       }
 

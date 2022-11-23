@@ -3,8 +3,6 @@ import {
   Slider,
   Grid,
   Typography,
-  Stack,
-  Chip,
   CircularProgress,
 } from "@mui/material";
 import { Controller } from "react-hook-form";
@@ -25,6 +23,8 @@ import {
 import useStakingLockForm from "hooks/useStakingLockForm";
 import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
 import { styled } from "@mui/material/styles";
+import Period from "components/Staking/Components/Period";
+import { formatNumber } from "utils/format";
 
 export type StakingLockFormPropsType = {
   fetchOverallValues: (account: string) => Promise<void>;
@@ -34,8 +34,8 @@ const StakingLockPaper = styled(AppPaper)`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 32px;
-  gap: 24px;
+  padding: 32px 32px 50px;
+  gap: 35px;
 
   form {
     width: 100%;
@@ -49,21 +49,6 @@ const StakingLabelWhite = styled("div")`
   float: none;
   font-size: 11px;
   text-transform: uppercase;
-`;
-
-const StakingChip = styled(Chip)<{ isActive: boolean }>`
-  background: ${({ isActive }) =>
-    isActive ? "transparent" : "rgba(79, 101, 140, 0.2)"};
-  border-radius: 6px;
-  width: 19%;
-  cursor: pointer;
-  border: ${({ isActive }) =>
-    isActive ? "1px solid rgba(79, 101, 140, 0.2)" : "none"};
-
-  &:active {
-    border: 1px solid rgba(79, 101, 140, 0.2);
-    background: transparent;
-  }
 `;
 
 const WalletBalanceTypography = styled("h3")`
@@ -124,6 +109,8 @@ const StakingLockForm: FC<StakingLockFormPropsType> = ({
     setPeriod,
     unlockDate,
     walletBalance,
+    fxdBalance,
+    xdcBalance,
   } = useStakingLockForm(fetchOverallValues);
 
   return (
@@ -216,38 +203,7 @@ const StakingLockForm: FC<StakingLockFormPropsType> = ({
           Recommended period
         </StakingLabelWhite>
 
-        {useMemo(
-          () => (
-            <Stack direction="row" spacing={1}>
-              <StakingChip
-                isActive={lockDays === 30}
-                label="1-Month"
-                onClick={() => setPeriod(30)}
-              />
-              <StakingChip
-                isActive={lockDays === 60}
-                label="2-Month"
-                onClick={() => setPeriod(60)}
-              />
-              <StakingChip
-                isActive={lockDays === 90}
-                label="3-Month"
-                onClick={() => setPeriod(90)}
-              />
-              <StakingChip
-                isActive={lockDays === 180}
-                label="Half-Year"
-                onClick={() => setPeriod(180)}
-              />
-              <StakingChip
-                isActive={lockDays === 360}
-                label="1-Year"
-                onClick={() => setPeriod(360)}
-              />
-            </Stack>
-          ),
-          [lockDays, setPeriod]
-        )}
+        <Period lockDays={lockDays} setPeriod={setPeriod} />
 
         {useMemo(() => {
           return (
@@ -277,19 +233,53 @@ const StakingLockForm: FC<StakingLockFormPropsType> = ({
           <Grid item xs={12}>
             <WalletBalanceTypography>My Wallet Balance</WalletBalanceTypography>
 
-            <WalletBalanceWrapper>
-              <BalanceImg
-                src={getTokenLogoURL("FTHM")}
-                alt={"fthm"}
-                width={24}
-              />
-              <Box>
-                <FTHMBalance>
-                  <strong>{walletBalance}</strong> FTHM
-                </FTHMBalance>
-                <USDBalance>$123.00</USDBalance>
-              </Box>
-            </WalletBalanceWrapper>
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <WalletBalanceWrapper>
+                  <BalanceImg
+                    src={getTokenLogoURL("FTHM")}
+                    alt={"fthm"}
+                    width={24}
+                  />
+                  <Box>
+                    <FTHMBalance>
+                      <strong>{formatNumber(walletBalance)}</strong> FTHM
+                    </FTHMBalance>
+                    <USDBalance>$123.00</USDBalance>
+                  </Box>
+                </WalletBalanceWrapper>
+              </Grid>
+              <Grid item xs={6}>
+                <WalletBalanceWrapper>
+                  <BalanceImg
+                    src={getTokenLogoURL("FXD")}
+                    alt={"fxd"}
+                    width={24}
+                  />
+                  <Box>
+                    <FTHMBalance>
+                      <strong>{formatNumber(fxdBalance / (10 ** 18))}</strong> FXD
+                    </FTHMBalance>
+                    <USDBalance>$123.00</USDBalance>
+                  </Box>
+                </WalletBalanceWrapper>
+              </Grid>
+              <Grid item xs={6}>
+                <WalletBalanceWrapper>
+                  <BalanceImg
+                    src={getTokenLogoURL("WXDC")}
+                    alt={"xdc"}
+                    width={24}
+                  />
+                  <Box>
+                    <FTHMBalance>
+                      <strong>{formatNumber(xdcBalance)}</strong> XDC
+                    </FTHMBalance>
+                    <USDBalance>$123.00</USDBalance>
+                  </Box>
+                </WalletBalanceWrapper>
+              </Grid>
+            </Grid>
           </Grid>
 
           <Grid xs={7} item>

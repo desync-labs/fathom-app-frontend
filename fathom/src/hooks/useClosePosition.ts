@@ -38,8 +38,8 @@ const useClosePosition = (
   );
 
   const getBalance = useCallback(async () => {
-    const balance = (await positionStore.balanceStableCoin(account)) || 0;
-    setBalance(balance!);
+    await positionStore.balanceStableCoin(account);
+    setBalance(positionStore.stableCoinBalance);
   }, [positionStore, account, setBalance]);
 
   const handleOnOpen = useCallback(async () => {

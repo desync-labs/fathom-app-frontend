@@ -387,18 +387,15 @@ export default class PositionService implements IPositionService {
   async approvalStatus(
     address: string,
     pool: ICollateralPool,
-    collatral: number,
+    collateral: number,
     transactionStore: ActiveWeb3Transactions
   ): Promise<Boolean> {
     try {
-      // set collateral to zero if not defined
-      if (!collatral) {
-        collatral = 0;
-      }
+      collateral = collateral || 0;
 
-      const proxyWalletaddress = await this.proxyWalletExist(address);
+      const proxyWalletAddress = await this.proxyWalletExist(address);
 
-      if (proxyWalletaddress === Constants.ZERO_ADDRESS) {
+      if (proxyWalletAddress === Constants.ZERO_ADDRESS) {
         return false;
       }
 
@@ -408,17 +405,17 @@ export default class PositionService implements IPositionService {
       );
 
       const allowance = await BEP20.methods
-        .allowance(address, proxyWalletaddress)
+        .allowance(address, proxyWalletAddress)
         .call();
 
-      return +allowance > +Constants.WeiPerWad.multipliedBy(collatral);
+      return Number(allowance) > Number(Constants.WeiPerWad.multipliedBy(collateral));
     } catch (error) {
       console.error(`Error in open position approve token: ${error}`);
       throw error;
     }
   }
 
-  async approveStablecoin(
+  async approveStableCoin(
     address: string,
     transactionStore: ActiveWeb3Transactions
   ): Promise<void> {
@@ -453,7 +450,7 @@ export default class PositionService implements IPositionService {
     }
   }
 
-  async balanceStablecoin(address: string): Promise<number> {
+  async balanceStableCoin(address: string): Promise<number> {
     try {
       const fathomStableCoin = Web3Utils.getContractInstance(
         SmartContractFactory.FathomStableCoin(this.chainId),
@@ -467,7 +464,7 @@ export default class PositionService implements IPositionService {
     }
   }
 
-  async approvalStatusStablecoin(address: string): Promise<Boolean> {
+  async approvalStatusStableCoin(address: string): Promise<Boolean> {
     try {
       const proxyWalletaddress = await this.proxyWalletExist(address);
 
