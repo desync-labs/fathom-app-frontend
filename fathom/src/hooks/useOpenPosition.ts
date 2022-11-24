@@ -109,7 +109,7 @@ const useOpenPosition = (
       const priceWithSafetyMargin =
         pool.poolName === "USDT"
           ? 0.75188
-          : await poolStore.getPriceWithSafetyMargin(pool);
+          : Number(pool.priceWithSafetyMargin);
 
       // SAFE MAX
       const safeMax = Math.floor(

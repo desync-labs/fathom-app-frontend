@@ -61,6 +61,15 @@ const ClosePositionPaper = styled(AppPaper)`
   }
 `;
 
+const ButtonsWrapper = styled(Box)`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding-right: 20px;
+  justify-content: right;
+`
+
 const PositionListItem: FC<PositionListItemProps> = observer(
   ({
     position,
@@ -106,7 +115,8 @@ const PositionListItem: FC<PositionListItemProps> = observer(
           {position.lockedCollateral} {position.collatralPoolName}
         </TableCell>
         <TableCell>{ formatNumber(Number(position.safetyBufferInPrecent)) }%</TableCell>
-        <TableCell align={'right'}>
+        <TableCell>
+          <ButtonsWrapper>
           {approveBtn ? (
             <ButtonPrimary onClick={approve} sx={{ height: "32px" }}>
               {approvalPending ? (
@@ -178,6 +188,7 @@ const PositionListItem: FC<PositionListItemProps> = observer(
               </Popper>
             </>
           )}
+          </ButtonsWrapper>
         </TableCell>
       </AppTableRow>
     );

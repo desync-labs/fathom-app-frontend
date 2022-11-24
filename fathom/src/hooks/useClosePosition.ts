@@ -42,6 +42,8 @@ const useClosePosition = (
     [data, loading, position]
   );
 
+  console.log(pool);
+
   const lockedCollateral = useMemo(
     () => Number(position.lockedCollateral),
     [position]
@@ -53,12 +55,8 @@ const useClosePosition = (
   }, [positionStore, account, setBalance]);
 
   const handleOnOpen = useCallback(async () => {
-    const priceWithSafetyMargin = await poolStore.getPriceWithSafetyMargin(
-      pool
-    );
-
-    setPrice(priceWithSafetyMargin);
-    setFathomToken(priceWithSafetyMargin * lockedCollateral);
+    setPrice(pool.priceWithSafetyMargin);
+    setFathomToken(pool.priceWithSafetyMargin * lockedCollateral);
     setCollateral(lockedCollateral);
   }, [
     pool,

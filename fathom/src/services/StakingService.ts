@@ -11,7 +11,8 @@ import { Constants } from "helpers/Constants";
 import ILockPosition from "stores/interfaces/ILockPosition";
 import { Strings } from "helpers/Strings";
 import { secondsToTime } from "utils/secondsToTime";
-
+    //claimAllLockRewardsForStream(uint256 streamId) (pass streamId = 0 as FTHM tokens streamId is 0) --> This function is use to claim all lock rewards for a stream
+    //function withdrawStream(uint256 streamId) -> This is used to withdraw all the fthm token claimed
 const defaultLockInfo = {
   lockId: 0,
   VOTETokenBalance: 0,
@@ -109,28 +110,26 @@ export default class StakingService implements IStakingService {
       for (let i = 0; i < length; i++) {
         let lockPosition = {} as ILockPosition;
         const {
-          0: amountOfMAINTkn,
-          1: amountOfveMAINTkn,
-          4: end,
+          0: amountOfToken,
+          1: amountOfvToken,
+          3: end,
         } = lockData[i];
+
+        console.log(lockData[i])
 
         const amountOfRewardsAvailable = claimData[i];
 
         lockPosition.lockId = i + 1;
         lockPosition.MAINTokenBalance =
-          this._convertToEtherBalance(amountOfMAINTkn);
+          this._convertToEtherBalance(amountOfToken);
 
         lockPosition.VOTETokenBalance =
-          this._convertToEtherBalance(amountOfveMAINTkn);
+          this._convertToEtherBalance(amountOfvToken);
 
         lockPosition.EndTime = end - currentTimestamp;
 
         lockPosition.RewardsAvailable = this._convertToEtherBalanceRewards(
           amountOfRewardsAvailable
-        );
-
-        lockPosition.timeObject = this._convertToTimeObject(
-          lockPosition.EndTime
         );
 
         lockPositionsList.push(lockPosition);
@@ -160,9 +159,9 @@ export default class StakingService implements IStakingService {
       const currentTimestamp = await this.getTimestamp();
 
       const {
-        0: amountOfMAINTkn,
-        1: amountOfveMAINTkn,
-        4: end,
+        0: amountOfToken,
+        1: amountOfvToken,
+        3: end,
       } = await StakingGetter.methods.getLock(account, lockId).call();
 
       const amountOfRewardsAvailable = await Staking.methods
@@ -172,18 +171,16 @@ export default class StakingService implements IStakingService {
       lockPosition.lockId = lockId;
 
       lockPosition.MAINTokenBalance =
-        this._convertToEtherBalance(amountOfMAINTkn);
+        this._convertToEtherBalance(amountOfToken);
 
       lockPosition.VOTETokenBalance =
-        this._convertToEtherBalance(amountOfveMAINTkn);
+        this._convertToEtherBalance(amountOfvToken);
 
       lockPosition.EndTime = end - currentTimestamp;
 
       lockPosition.RewardsAvailable = this._convertToEtherBalanceRewards(
         amountOfRewardsAvailable
       );
-
-      lockPosition.timeObject = this._convertToTimeObject(lockPosition.EndTime);
 
       return lockPosition;
     } catch (error) {
@@ -256,11 +253,12 @@ export default class StakingService implements IStakingService {
       SmartContractFactory.Staking(this.chainId),
       this.chainId
     );
+    
 
     return new Promise(async (resolve, reject) => {
       try {
         await Staking.methods
-          .claimAllStreamRewardsForLock(lockId)
+          .claimAllStreamRewardsForLock(lockId) 
           .send({ from: account })
           .on("transactionHash", (hash: any) => {
             transactionStore.addTransaction({
@@ -387,7 +385,7 @@ export default class StakingService implements IStakingService {
       this.chainId
     );
 
-    let totalStaked = await Staking.methods.totalAmountOfStakedMAINTkn().call();
+    let totalStaked = await Staking.methods.totalAmountOfStakedToken().call();
 
     totalStaked = this.fromWei(totalStaked);
 

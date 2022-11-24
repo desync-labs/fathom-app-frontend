@@ -44,6 +44,8 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
     return calculateTotalRewards(stakingStore.lockPositions);
   }, [calculateTotalRewards, stakingStore.lockPositions]);
 
+  console.log(stakingStore.lockPositions);
+
   return (
     <>
       {useMemo(

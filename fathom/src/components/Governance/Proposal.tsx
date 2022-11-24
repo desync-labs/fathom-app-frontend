@@ -122,7 +122,7 @@ const VotingWrapperBox = styled(Box)`
     color: #fff;
   }
 
-  > div > p:first-child {
+  > div > p:first-of-type {
     text-transform: uppercase;
     font-size: 15px;
     font-weight: bold;

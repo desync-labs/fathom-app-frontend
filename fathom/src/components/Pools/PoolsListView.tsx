@@ -6,7 +6,7 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  Box
+  Box,
 } from "@mui/material";
 import { observer } from "mobx-react";
 import ICollateralPool from "stores/interfaces/ICollateralPool";
@@ -25,7 +25,7 @@ const PoolsListHeaderRow = styled(AppTableHeaderRow)`
   th {
     text-align: left;
   }
-`
+`;
 
 const CircleWrapper = styled(Box)`
   width: 100%;
@@ -33,25 +33,24 @@ const CircleWrapper = styled(Box)`
   display: flex;
   align-items: center;
   justify-content: center;
-`
+`;
 
 const PoolsListView = observer(() => {
-  const {
-    pools,
-    selectedPool,
-    onCloseNewPosition,
-    setSelectedPool,
-    loading,
-  } = usePoolsList();
+  const { pools, selectedPool, onCloseNewPosition, setSelectedPool, loading } =
+    usePoolsList();
 
   return (
     <>
       <TitleSecondary variant="h2">Available Pools</TitleSecondary>
       {pools.length === 0 ? (
         <NoResults variant="h6">
-          { loading ? <CircleWrapper>
-            <CircularProgress size={30} />
-          </CircleWrapper> : 'No Pool Available!' }
+          {loading ? (
+            <CircleWrapper>
+              <CircularProgress size={30} />
+            </CircleWrapper>
+          ) : (
+            "No Pool Available!"
+          )}
         </NoResults>
       ) : (
         <TableContainer>
