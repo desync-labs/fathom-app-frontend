@@ -3,7 +3,6 @@ import { RootStore } from ".";
 import IPositionService from "services/interfaces/IPositionService";
 import ICollateralPool from "stores/interfaces/ICollateralPool";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
-import BigNumber from "bignumber.js";
 
 export default class PositionStore {
   positions: IOpenPosition[] = [];
@@ -26,7 +25,7 @@ export default class PositionStore {
     if (!address) return;
 
     console.log(
-      `Open position clicked for address ${address}, poolId: ${pool.name}, collatral:${collateral}, fathomToken: ${fathomToken}`
+      `Open position clicked for address ${address}, poolId: ${pool.poolName}, collatral:${collateral}, fathomToken: ${fathomToken}`
     );
 
     return new Promise(async (resolve, reject) => {
@@ -38,11 +37,6 @@ export default class PositionStore {
           fathomToken,
           this.rootStore.transactionStore
         );
-
-        Promise.all([
-          this.fetchPositions(address),
-          this.rootStore.poolStore.fetchPools(),
-        ]);
 
         this.rootStore.alertStore.setShowSuccessAlert(
           true,
@@ -57,55 +51,6 @@ export default class PositionStore {
     });
   }
 
-  async closePosition(
-    positionId: string,
-    pool: ICollateralPool,
-    address: string,
-    fathomToken: BigNumber
-  ) {
-    if (!address) return;
-
-    console.log(
-      `Close position clicked for address ${address}, positionId: ${positionId}, fathomToken: ${fathomToken}`
-    );
-
-    return new Promise(async (resolve, reject) => {
-      try {
-        await this.service.closePosition(
-          positionId,
-          pool,
-          address,
-          fathomToken,
-          this.rootStore.transactionStore
-        );
-        await this.fetchPositions(address);
-        await this.rootStore.poolStore.fetchPools();
-        this.rootStore.alertStore.setShowSuccessAlert(
-          true,
-          "Position closed successfully!"
-        );
-
-        resolve(null);
-      } catch (e: any) {
-        this.rootStore.alertStore.setShowErrorAlert(true, e.message);
-
-        reject(e);
-      }
-    });
-  }
-
-  async fetchPositions(address: string) {
-    if (!address) return;
-    try {
-      const positions = await this.service.getPositionsWithSafetyBuffer(
-        address
-      );
-      this.setPositions(positions);
-    } catch (e: any) {
-      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
-    }
-  }
-
   setPositions(_positions: IOpenPosition[]) {
     this.positions = _positions;
   }
@@ -118,7 +63,7 @@ export default class PositionStore {
     if (!address) return;
 
     console.log(
-      `Open position token approval clicked for address ${address}, poolId: ${pool.name}`
+      `Open position token approval clicked for address ${address}, poolId: ${pool.poolName}`
     );
 
     return new Promise(async (resolve, reject) => {
@@ -130,7 +75,7 @@ export default class PositionStore {
         );
         this.rootStore.alertStore.setShowSuccessAlert(
           true,
-          `${pool.name} approval was successful!`
+          `${pool.poolName} approval was successful!`
         );
         resolve(null);
       } catch (e: any) {
@@ -217,10 +162,6 @@ export default class PositionStore {
           this.rootStore.transactionStore
         );
 
-        Promise.all([
-          this.fetchPositions(address),
-          this.rootStore.poolStore.fetchPools(),
-        ]);
         this.rootStore.alertStore.setShowSuccessAlert(
           true,
           "Position closed successfully!"

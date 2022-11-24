@@ -11,10 +11,10 @@ export default interface IPositionService {
     fathomToken: number,
     transactionStore: ActiveWeb3Transactions
   ): Promise<void>;
+
   createProxyWallet(address: string): Promise<string>;
   proxyWalletExist(address: string): Promise<string>;
-  getPositionsForAddress(address: string): Promise<IOpenPosition[]>;
-  getPositionsWithSafetyBuffer(address: string): Promise<IOpenPosition[]>;
+
   closePosition(
     positionId: string,
     pool: ICollateralPool,

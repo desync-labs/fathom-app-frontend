@@ -5,11 +5,8 @@ import { observer } from "mobx-react";
 import ProtocolStats from "components/Dashboard/ProtocolStats";
 import PoolsListView from "components/Pools/PoolsListView";
 import { PageHeader } from "components/Dashboard/PageHeader";
-import useDashboard from "hooks/useDashboard";
 
 const DashboardContent = observer(() => {
-  useDashboard();
-
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Grid container spacing={3}>

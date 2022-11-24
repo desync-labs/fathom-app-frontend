@@ -109,10 +109,10 @@ const ClosePositionDialog: FC<ClosePositionProps> = ({
                 alignItems="flex-start"
                 secondaryAction={
                   <>
-                    {lockedCollateral.toFixed(6)} {pool.name}{" "}
+                    {lockedCollateral.toFixed(6)} {pool.poolName}{" "}
                     <Box component="span" sx={{ color: "#29C20A" }}>
                       → {(lockedCollateral - +collateral).toFixed(6)}{" "}
-                      {pool.name}
+                      {pool.poolName}
                     </Box>
                   </>
                 }
@@ -121,13 +121,13 @@ const ClosePositionDialog: FC<ClosePositionProps> = ({
               </ListItem>
               <ListItem
                 alignItems="flex-start"
-                secondaryAction={`${position.ltv.toNumber() / 10}%`}
+                secondaryAction={`${Number(position.tvl) / 10}%`}
               >
                 <ListItemText primary="LTV (Loan-to-Value)" />
               </ListItem>
               <ListItem
                 alignItems="flex-start"
-                secondaryAction={`1 FXD = ${1 / price} ${pool.name}`}
+                secondaryAction={`1 FXD = ${1 / price} ${pool.poolName}`}
               >
                 <ListItemText primary="Liquidation Price" />
               </ListItem>
@@ -220,7 +220,7 @@ const ClosePositionDialog: FC<ClosePositionProps> = ({
                 id="outlined-helperText"
                 value={collateral}
               />
-              <AppFormInputLogo src={getTokenLogoURL(pool.name)} />
+              <AppFormInputLogo src={getTokenLogoURL(pool.poolName)} />
               {/*<MaxButton disabled>Safe Max</MaxButton>*/}
             </AppFormInputWrapper>
             {fathomToken ? (
@@ -233,7 +233,7 @@ const ClosePositionDialog: FC<ClosePositionProps> = ({
               <InfoWrapper>
                 <InfoLabel>Receive</InfoLabel>
                 <InfoValue>
-                  {collateral} {pool.name}
+                  {collateral} {pool.poolName}
                 </InfoValue>
               </InfoWrapper>
             ) : null}

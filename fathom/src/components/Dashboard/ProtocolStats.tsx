@@ -59,6 +59,7 @@ const StatsDescription = styled(
 const ProtocolStats = observer(() => {
   const { totalSupply, tvl, loading } = useProtocolStats();
 
+
   return (
     <ProtocolStatsContainer container>
       <StatsItem item>

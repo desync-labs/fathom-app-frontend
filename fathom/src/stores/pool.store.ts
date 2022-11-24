@@ -1,4 +1,4 @@
-import { makeAutoObservable, runInAction } from "mobx";
+import { makeAutoObservable } from "mobx";
 import { RootStore } from ".";
 import IPoolService from "services/interfaces/IPoolService";
 import ICollateralPool from "stores/interfaces/ICollateralPool";
@@ -12,19 +12,8 @@ export default class PoolStore {
     makeAutoObservable(this);
   }
 
-  setPool(_pool: ICollateralPool[]){
-    this.pools = _pool;
-  };
-
   getPool(poolId: string) {
     return this.pools.filter((pool) => poolId === pool.id)[0];
-  }
-
-  async fetchPools() {
-    const pools = await this.service.fetchPools();
-    runInAction(() => {
-      this.setPool(pools);
-    });
   }
 
   async getPriceWithSafetyMargin(pool: ICollateralPool) {

@@ -26,12 +26,13 @@ export const FXD_POOLS = gql`
       totalAvailable
       totalBorrowed
       tvl
+      tokenAdapterAddress
     }
   }
 `;
 
 export const FXD_POSITIONS = gql`
-  query MyQuery($walletAddress: String!) {
+  query FXDPositions($walletAddress: String!) {
     positions(
       first: 10
       orderBy: positionId

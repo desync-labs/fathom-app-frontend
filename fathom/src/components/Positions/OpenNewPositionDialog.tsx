@@ -98,7 +98,7 @@ const OpenNewPositionDialog: FC<OpenPositionProps> = ({ pool, onClose }) => {
               <ListItem
                 alignItems="flex-start"
                 secondaryAction={`${collateralToBeLocked.toFixed(2)} ${
-                  pool.name
+                  pool.poolName
                 }`}
               >
                 <ListItemText primary="Collateral to be Locked" />
@@ -106,7 +106,7 @@ const OpenNewPositionDialog: FC<OpenPositionProps> = ({ pool, onClose }) => {
               <ListItem
                 alignItems="flex-start"
                 secondaryAction={`${collateralAvailableToWithdraw.toFixed(2)} ${
-                  pool.name
+                  pool.poolName
                 }`}
               >
                 <ListItemText primary="Estimated Collateral Available to Withdraw" />
@@ -139,7 +139,7 @@ const OpenNewPositionDialog: FC<OpenPositionProps> = ({ pool, onClose }) => {
                 alignItems="flex-start"
                 secondaryAction={`$${liquidationPrice.toFixed(2)}`}
               >
-                <ListItemText primary={`Liquidation Price of ${pool.name}`} />
+                <ListItemText primary={`Liquidation Price of ${pool.poolName}`} />
               </ListItem>
               <Divider component="li" sx={{ margin: "20px 20px 20px 5px" }} />
               <ListItem alignItems="flex-start" secondaryAction={`1.73%`}>
@@ -195,7 +195,7 @@ const OpenNewPositionDialog: FC<OpenPositionProps> = ({ pool, onClose }) => {
                     <AppFormLabel>Collateral</AppFormLabel>
                     {balance ? (
                       <WalletBalance>
-                        Wallet Available: {+balance / 10 ** 18} {pool.name}
+                        Wallet Available: {+balance / 10 ** 18} {pool.poolName}
                       </WalletBalance>
                     ) : null}
                     <AppTextField
@@ -211,7 +211,7 @@ const OpenNewPositionDialog: FC<OpenPositionProps> = ({ pool, onClose }) => {
                             <Typography
                               sx={{ fontSize: "12px", paddingLeft: "22px" }}
                             >
-                              You do not have enough {pool.name}
+                              You do not have enough {pool.poolName}
                             </Typography>
                           </>
                         ) : (
@@ -222,7 +222,7 @@ const OpenNewPositionDialog: FC<OpenPositionProps> = ({ pool, onClose }) => {
                       type="number"
                       onChange={onChange}
                     />
-                    <AppFormInputLogo src={getTokenLogoURL(pool.name)} />
+                    <AppFormInputLogo src={getTokenLogoURL(pool.poolName)} />
                     <MaxButton onClick={() => setMax(balance)}>Max</MaxButton>
                   </AppFormInputWrapper>
                 )}
@@ -287,7 +287,7 @@ const OpenNewPositionDialog: FC<OpenPositionProps> = ({ pool, onClose }) => {
                 <InfoWrapper>
                   <InfoLabel>Depositing</InfoLabel>
                   <InfoValue>
-                    {collateral} {pool.name}
+                    {collateral} {pool.poolName}
                   </InfoValue>
                 </InfoWrapper>
               ) : null}

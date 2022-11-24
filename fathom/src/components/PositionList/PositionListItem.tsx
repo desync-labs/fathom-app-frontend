@@ -1,6 +1,6 @@
 import { observer } from "mobx-react";
-import { Box, CircularProgress, Grid, TableCell, Stack } from "@mui/material";
-import { Adjust, PoolName, TVL } from "components/AppComponents/AppBox/AppBox";
+import { Box, CircularProgress, TableCell, Stack } from "@mui/material";
+import { PoolName, TVL } from "components/AppComponents/AppBox/AppBox";
 import {
   ButtonPrimary,
   ClosePositionButton,
@@ -11,15 +11,10 @@ import React, {
   Dispatch,
   FC,
   SetStateAction,
-  useCallback,
-  useMemo,
   useRef,
   useState,
 } from "react";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
-import BigNumber from "bignumber.js";
-import { Constants } from "helpers/Constants";
-import { useStores } from "stores";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import Popper from "@mui/material/Popper";
@@ -32,6 +27,11 @@ import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
 import { ClosingType } from "hooks/useClosePosition";
 import TokenLogo from "components/Common/TokenLogo";
 import { getTokenLogoURL } from "utils/tokenLogo";
+
+import {
+  formatCurrency,
+  formatNumber
+} from "utils/format";
 
 type PositionListItemProps = {
   position: IOpenPosition;
@@ -70,18 +70,8 @@ const PositionListItem: FC<PositionListItemProps> = observer(
     approve,
     setType,
   }) => {
-    const { poolStore } = useStores();
     const anchorRef = useRef<HTMLDivElement>(null);
     const [open, setOpen] = useState<boolean>(false);
-
-    const getFormattedSafetyBuffer = useCallback((safetyBuffer: BigNumber) => {
-      return safetyBuffer.div(Constants.WeiPerWad).decimalPlaces(2).toString();
-    }, []);
-
-    const pool = useMemo(
-      () => poolStore.getPool(position.pool),
-      [poolStore, position.pool]
-    );
 
     return (
       <AppTableRow
@@ -92,47 +82,41 @@ const PositionListItem: FC<PositionListItemProps> = observer(
         }}
       >
         <TableCell component="td" scope="row">
-          {position.id}
+          {position.positionId}
         </TableCell>
         <TableCell>
           <Stack direction="row" spacing={2}>
-            <TokenLogo src={getTokenLogoURL(pool.name)} alt={pool.name} />
+            <TokenLogo
+              src={getTokenLogoURL(position?.collatralPoolName)}
+              alt={position?.collatralPoolName}
+            />
             <Box>
-              <PoolName>{pool.name}</PoolName>
-              <TVL>TVL: $1.607M</TVL>
+              <PoolName>{position.collatralPoolName}</PoolName>
+              <TVL>TVL: {formatCurrency(Number(position.tvl))}</TVL>
             </Box>
           </Stack>
         </TableCell>
         <TableCell>
-          {getFormattedSafetyBuffer(position.debtShare)} FXD
+          {formatCurrency(Number(position.liquidtionPrice))}
         </TableCell>
         <TableCell>
-          {getFormattedSafetyBuffer(position?.lockedCollateral)}{" "}
-          {poolStore.getPool(position.pool)?.name}
+          {formatNumber(Number(position.debtShare))} FXD
         </TableCell>
         <TableCell>
-          $ {getFormattedSafetyBuffer(position.lockedValue)}
+          {position.lockedCollateral} {position.collatralPoolName}
         </TableCell>
-        <TableCell>{position.ltv.toNumber() / 10}%</TableCell>
-        <TableCell align="right">
-          <Grid container justifyContent="center">
-            <Grid xs={2} item>
-              <Adjust>Adjust</Adjust>
-            </Grid>
-            {(approvalPending || approveBtn) && (
-              <Grid xs={4} item>
-                {approveBtn ? (
-                  <ButtonPrimary onClick={approve} sx={{ height: "32px" }}>
-                    {approvalPending ? (
-                      <CircularProgress size={20} sx={{ color: "#0D1526" }} />
-                    ) : (
-                      "Approve FXD"
-                    )}
-                  </ButtonPrimary>
-                ) : null}
-              </Grid>
-            )}
-            <Grid xs={3} item>
+        <TableCell>{ formatNumber(Number(position.safetyBufferInPrecent)) }%</TableCell>
+        <TableCell align={'right'}>
+          {approveBtn ? (
+            <ButtonPrimary onClick={approve} sx={{ height: "32px" }}>
+              {approvalPending ? (
+                <CircularProgress size={20} sx={{ color: "#0D1526" }} />
+              ) : (
+                "Approve FXD"
+              )}
+            </ButtonPrimary>
+          ) : (
+            <>
               <ButtonGroup
                 variant="contained"
                 ref={anchorRef}
@@ -192,8 +176,8 @@ const PositionListItem: FC<PositionListItemProps> = observer(
                   </Grow>
                 )}
               </Popper>
-            </Grid>
-          </Grid>
+            </>
+          )}
         </TableCell>
       </AppTableRow>
     );
