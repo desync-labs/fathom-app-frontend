@@ -1,9 +1,11 @@
 import { Grid, Box, Typography } from "@mui/material";
-import { useWeb3React } from "@web3-react/core";
-import { useEffect } from "react";
-import { useStores } from "stores";
 import { observer } from "mobx-react";
 import { styled } from "@mui/material/styles";
+import useProtocolStats from "hooks/useProtocolStats";
+import {
+  formatCurrency,
+  formatNumber
+} from "utils/format";
 
 const StatsItem = styled(
   Grid,
@@ -15,8 +17,8 @@ const StatsItem = styled(
   alignItems: "center",
   position: "relative",
   width: "calc(33.33% - 8px)",
-  background: '#131F35',
-  borderRadius: '8px',
+  background: "#131F35",
+  borderRadius: "8px",
 }));
 
 const ProtocolStatsContainer = styled(
@@ -24,9 +26,9 @@ const ProtocolStatsContainer = styled(
   {}
 )(({ theme }) => ({
   height: "92px",
-  marginBottom: '30px',
-  display: 'flex',
-  gap: '8px'
+  marginBottom: "30px",
+  display: "flex",
+  gap: "8px",
 }));
 
 const StatsTitle = styled(
@@ -55,18 +57,7 @@ const StatsDescription = styled(
 }));
 
 const ProtocolStats = observer(() => {
-  const { chainId } = useWeb3React();
-  const rootStore = useStores();
-  const { fxdProtocolStatsStore } = rootStore;
-
-  useEffect(() => {
-    // Update the document title using the browser API
-    if (chainId) {
-      setTimeout(() => fxdProtocolStatsStore.fetchProtocolStats());
-    } else {
-      fxdProtocolStatsStore.setDefaultStats();
-    }
-  }, [fxdProtocolStatsStore, rootStore.alertStore, chainId]);
+  const { totalSupply, tvl, loading } = useProtocolStats();
 
   return (
     <ProtocolStatsContainer container>
@@ -74,7 +65,7 @@ const ProtocolStats = observer(() => {
         <Box>
           <StatsTitle>Total Supply</StatsTitle>
           <StatsDescription variant="body2">
-            {fxdProtocolStatsStore.getFormattedSupply()}
+            { !loading && formatNumber(totalSupply) }
           </StatsDescription>
         </Box>
       </StatsItem>
@@ -82,7 +73,7 @@ const ProtocolStats = observer(() => {
         <Box>
           <StatsTitle>TVL</StatsTitle>
           <StatsDescription>
-            {fxdProtocolStatsStore.getFormattedTVL()}
+            { !loading && formatCurrency(tvl) }
           </StatsDescription>
         </Box>
       </StatsItem>
@@ -90,7 +81,7 @@ const ProtocolStats = observer(() => {
         <Box>
           <StatsTitle>FXD Price</StatsTitle>
           <StatsDescription>
-            {fxdProtocolStatsStore.getFormattedFXDPriceRatio()}
+            {/*{fxdProtocolStatsStore.getFormattedFXDPriceRatio()}*/}
           </StatsDescription>
         </Box>
       </StatsItem>

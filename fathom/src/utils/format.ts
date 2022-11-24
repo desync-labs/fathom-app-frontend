@@ -15,3 +15,7 @@ export const formatNumber = (number: number) => {
     )
     .join("");
 }
+
+export const formatCurrency = (number: number) => {
+  return formatter.format(number);
+}
