@@ -16,10 +16,6 @@ export default class PoolStore {
     return this.pools.filter((pool) => poolId === pool.id)[0];
   }
 
-  async getPriceWithSafetyMargin(pool: ICollateralPool) {
-    return this.service.getPriceWithSafetyMargin(pool);
-  }
-
   async getUserTokenBalance(address: string, forAddress: string) {
     return this.service.getUserTokenBalance(address, forAddress);
   }

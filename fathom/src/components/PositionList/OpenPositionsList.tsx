@@ -1,11 +1,12 @@
 import React, { useMemo } from "react";
 import {
+  Box,
   CircularProgress,
   Table,
   TableBody,
   TableCell,
   TableContainer,
-  TableHead
+  TableHead,
 } from "@mui/material";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
 import { observer } from "mobx-react";
@@ -17,6 +18,15 @@ import {
 } from "components/AppComponents/AppBox/AppBox";
 import PositionListItem from "components/PositionList/PositionListItem";
 import useOpenPositionList from "hooks/useOpenPositionList";
+import { styled } from "@mui/material/styles";
+
+const CircleWrapper = styled(Box)`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
 const OpenPositionsList = observer(() => {
   const {
@@ -38,7 +48,13 @@ const OpenPositionsList = observer(() => {
         () =>
           positions.length === 0 ? (
             <NoResults variant="h6">
-              { loading ? <CircularProgress size={30} /> : 'You have not opened any position' }
+              {loading ? (
+                <CircleWrapper>
+                  <CircularProgress size={30} />
+                </CircleWrapper>
+              ) : (
+                "You have not opened any position"
+              )}
             </NoResults>
           ) : (
             <TableContainer>

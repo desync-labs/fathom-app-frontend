@@ -282,7 +282,7 @@ const StakingLockForm: FC<StakingLockFormPropsType> = ({
             </Grid>
           </Grid>
 
-          <Grid xs={7} item>
+          <Grid item xs={7} >
             {approvedBtn ? (
               <ButtonPrimary
                 onClick={approveFTHM}

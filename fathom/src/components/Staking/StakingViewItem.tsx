@@ -51,7 +51,7 @@ const RewardsUnStakeWrapper = styled(Box)`
   }
 `;
 
-const Number = styled(Box)`
+const Index = styled(Box)`
   width: 23px;
   height: 28px;
   border-radius: 6px;
@@ -193,7 +193,7 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
   index,
 }) => {
   const [timer, setTimer] = useState();
-  const [seconds, setSeconds] = useState(lockPosition.timeObject.seconds);
+  const [seconds, setSeconds] = useState(lockPosition.EndTime);
 
   const { isUnlockable } = useStakingView();
 
@@ -219,7 +219,7 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
       <Grid container>
         <NumberCell item xs={2}>
           <img src={getTokenLogoURL(token)} alt={token} width={28} />
-          <Number>{index + 1}</Number>
+          <Index>{index + 1}</Index>
         </NumberCell>
         <Grid item xs={2}>
           <Label>Locked Amount</Label>
@@ -245,7 +245,7 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
         <Grid item xs={2}>
           <Label>Rewards Accrued</Label>
           <Value className={"green"}>
-            {lockPosition.RewardsAvailable} {token}
+            {formatNumber( Number(lockPosition.RewardsAvailable)! )} {token}
           </Value>
         </Grid>
       </Grid>
@@ -257,7 +257,7 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
           <Grid item xs={6}>
             <Grid container spacing={4}>
               <Grid item xs={12}>
-                <TotalLocked>Total Locked: {lockPosition.MAINTokenBalance} {token}</TotalLocked>
+                <TotalLocked>Total Locked: {formatNumber(lockPosition.MAINTokenBalance)} {token}</TotalLocked>
               </Grid>
 
               <Grid item xs={6}>
@@ -288,12 +288,12 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
               Available to Withdraw <InfoIcon sx={{ fontSize: "18px" }} /> <span className={'green'}>300 FTHM</span>
             </CoolDown>
             <Grid container sx={{ marginTop: '6px' }}>
-              <Grid xs={8}>
+              <Grid item xs={8}>
                 <CoolDownCountDown>
                   Cooldown countdown: 1 day 23 hrs 12 mins left
                 </CoolDownCountDown>
               </Grid>
-              <ButtonGrid xs={4}>
+              <ButtonGrid item xs={4}>
                 <ButtonSecondary className={'without-margin'}>Withdraw</ButtonSecondary>
               </ButtonGrid>
             </Grid>

@@ -12,7 +12,7 @@ export const AppTableHeaderRow = styled(MuiTableRow)`
     border: none;
   }
 
-  th:first-child {
+  th:first-of-type {
     border-radius: 8px 0 0 8px;
     padding-left: 20px;
   }

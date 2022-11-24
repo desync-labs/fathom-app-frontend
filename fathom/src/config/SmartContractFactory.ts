@@ -25,9 +25,6 @@ export class SmartContractFactory {
         case 1337:
           address = Addresses["1337"];
           break;
-        case 5:
-          address = Addresses["5"];
-          break;
         case 51:
           address = Addresses["51"];
           break;
@@ -182,7 +179,7 @@ export class SmartContractFactory {
 
   public static FathomStats(chainId: number) {
     return {
-      abi: FathomStats.abi as AbiItem[],
+      abi: FathomStats.abi as AbiItem[], // subik: dont really know about this well. Have to ask Max For address/abi. Plus is multiSigWallet needed?
       address: SmartContractFactory.Addresses(chainId).fathomStats,
     };
   }
@@ -190,7 +187,7 @@ export class SmartContractFactory {
   public static FathomGovernor(chainId: number) {
     return {
       abi: Governor.abi as AbiItem[],
-      address: SmartContractFactory.Addresses(chainId).fathomGovernor,
+      address: SmartContractFactory.Addresses(chainId).fthmGovernor,
     };
   }
   public static Staking(chainId: number) {
@@ -203,7 +200,7 @@ export class SmartContractFactory {
   public static MainToken(chainId: number) {
     return {
       abi: MainToken.abi as AbiItem[],
-      address: SmartContractFactory.Addresses(chainId).mainToken, // '0x62f3d571A7DAcC00C047e58fE500ee99A98E3f63'
+      address: SmartContractFactory.Addresses(chainId).fthmToken, // '0x62f3d571A7DAcC00C047e58fE500ee99A98E3f63'
     };
   }
 
@@ -217,21 +214,21 @@ export class SmartContractFactory {
   public static VeMAINToken(chainId: number) {
     return {
       abi: VeMainToken.abi as AbiItem[],
-      address: SmartContractFactory.Addresses(chainId).veMainToken, // '0x62f3d571A7DAcC00C047e58fE500ee99A98E3f63'
+      address: SmartContractFactory.Addresses(chainId).vFTHM, // '0x62f3d571A7DAcC00C047e58fE500ee99A98E3f63'
     };
   }
 
   public static StreamRewardToken(chainId: number) {
     return {
       abi: Token.abi as AbiItem[],
-      address: SmartContractFactory.Addresses(chainId).streamRewardToken, // '0x62f3d571A7DAcC00C047e58fE500ee99A98E3f63'
+      address: SmartContractFactory.Addresses(chainId).streamRewardToken, //No Reward Token for now.'
     };
   }
 
   public static VeFathom(chainId: number) {
     return {
       abi: VeFathomAbi.abi as AbiItem[],
-      address: SmartContractFactory.Addresses(chainId).veFTHM,
+      address: SmartContractFactory.Addresses(chainId).vFTHM, // note: VeFathom and VeMainToken is same.
     };
   }
 
