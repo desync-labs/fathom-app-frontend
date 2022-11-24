@@ -98,6 +98,8 @@ const ViewAllProposalItem: FC<ViewAllProposalItemProps> = ({
   index,
 }) => {
 
+  console.log(proposal);
+
   const proposalTitle = useMemo(() => {
     const title = proposal.description.split("----------------")[0];
     return title.substring(0, 50) + (title.length > 50 ? "... " : "");

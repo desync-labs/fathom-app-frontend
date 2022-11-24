@@ -94,14 +94,6 @@ const useOpenPosition = (
       }
       setFxdToBeBorrowed(+fathomTokenInput);
 
-      // GET USER BALANCE
-      const balance = await poolStore.getUserTokenBalance(
-        account,
-        pool.collateralContractAddress
-      );
-      setBalance(balance);
-
-      // CHECK BALANCE
       // if the user does not have enough collateral -- show them a balance error
       if (+balance / 10 ** 18 < +collateralInput) return;
 
@@ -168,6 +160,7 @@ const useOpenPosition = (
       setLiquidationPrice(+liquidationPrice);
     },
     [
+      balance,
       availableFathomInPool,
       account,
       pool,
