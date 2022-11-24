@@ -1,9 +1,17 @@
 export default interface ICollateralPool {
   id: string;
-  name: string;
-  availableFathom: string;
-  borrowedFathom: string;
+  collatralLastPrice: string;
+  collatralPrice: string;
+  debtAccumulatedRate: string;
+  debtCeiling: string;
+  liquidtionRatio: string;
+  lockedCollatral: string;
+  poolName: string;
+  priceWithSafetyMargin: string;
+  stabilityFeeRate: string
+  totalAvailable: string;
+  totalBorrowed: string;
+  tvl: string;
   collateralContractAddress: string;
-  CollateralTokenAdapterAddress: string;
-  allowOpenPosition: boolean;
+  tokenAdapterAddress: string;
 }

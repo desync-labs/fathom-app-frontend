@@ -1,10 +1,11 @@
 import React, { useMemo } from "react";
 import {
+  CircularProgress,
   Table,
   TableBody,
   TableCell,
   TableContainer,
-  TableHead,
+  TableHead
 } from "@mui/material";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
 import { observer } from "mobx-react";
@@ -27,6 +28,7 @@ const OpenPositionsList = observer(() => {
     approve,
     selectedPosition,
     setSelectedPosition,
+    loading,
   } = useOpenPositionList();
 
   return (
@@ -35,11 +37,9 @@ const OpenPositionsList = observer(() => {
       {useMemo(
         () =>
           positions.length === 0 ? (
-            <>
-              <NoResults variant="h6">
-                You have not opened any position
-              </NoResults>
-            </>
+            <NoResults variant="h6">
+              { loading ? <CircularProgress size={30} /> : 'You have not opened any position' }
+            </NoResults>
           ) : (
             <TableContainer>
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -51,10 +51,10 @@ const OpenPositionsList = observer(() => {
                   >
                     <TableCell>Id</TableCell>
                     <TableCell>Asset</TableCell>
-                    <TableCell>FXD Borrowed</TableCell>
-                    <TableCell>Locked Collateral</TableCell>
-                    <TableCell>Locked Value</TableCell>
-                    <TableCell>LTV</TableCell>
+                    <TableCell>Liquidation price</TableCell>
+                    <TableCell>Borrowed</TableCell>
+                    <TableCell>Collateral</TableCell>
+                    <TableCell>Safety buffer</TableCell>
                     <TableCell></TableCell>
                   </AppTableHeaderRow>
                 </TableHead>
@@ -75,6 +75,7 @@ const OpenPositionsList = observer(() => {
             </TableContainer>
           ),
         [
+          loading,
           positions,
           approve,
           approvalPending,

@@ -68,11 +68,9 @@ const useOpenPosition = (
   }, [poolStore, account, pool, setBalance]);
 
   const availableFathomInPool = useMemo(
-    () => parseInt(pool.availableFathom.replaceAll(",", "")),
-    [pool.availableFathom]
+    () => parseFloat(pool.totalAvailable),
+    [pool.totalAvailable]
   );
-
-  console.log(availableFathomInPool);
 
   useEffect(() => {
     getBalance();
@@ -109,7 +107,7 @@ const useOpenPosition = (
 
       // GET PRICE WITH SAFETY MARGIN
       const priceWithSafetyMargin =
-        pool.name === "USDT"
+        pool.poolName === "USDT"
           ? 0.75188
           : await poolStore.getPriceWithSafetyMargin(pool);
 
@@ -133,7 +131,7 @@ const useOpenPosition = (
 
       // PRICE OF COLLATERAL FROM DEX
       const priceOfCollateralFromDex =
-        pool.name === "USDT"
+        pool.poolName === "USDT"
           ? 10 ** 18
           : await poolStore.getDexPrice(pool.collateralContractAddress);
 

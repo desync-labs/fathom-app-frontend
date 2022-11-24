@@ -6,12 +6,14 @@ import React, { Dispatch, FC, SetStateAction } from "react";
 import { AppTableRow } from "components/AppComponents/AppTable/AppTable";
 import { styled } from "@mui/material/styles";
 import { OpenPositionButton } from "components/AppComponents/AppButton/AppButton";
-import { getTokenLogoURL } from "utils/tokenLogo";
+
 import { TVL, PoolName } from "components/AppComponents/AppBox/AppBox";
 import TokenLogo from "components/Common/TokenLogo";
 
-import ComboShapeSrc from "assets/svg/combo-shape.svg";
-import GreenSrc from "assets/svg/hart-arrow-up.svg";
+import { getTokenLogoURL } from "utils/tokenLogo";
+import { formatCurrency, formatNumber } from "utils/format";
+
+import PriceChanged from "components/Common/PriceChange";
 
 type PoolsListItemPropsType = {
   pool: ICollateralPool;
@@ -35,27 +37,13 @@ const PoolsListItemTableRow = styled(AppTableRow)`
   }
 `;
 
-const TextBox = styled(Box)`
-  float: left;
-  padding-top: 2px;
-  margin-right: 7px;
+const PriceWrapper = styled(Box)`
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  height: 100%;
 `;
-
-const ComboShareIcon = () => {
-  return (
-    <Icon>
-      <img src={ComboShapeSrc} alt="borrow-icon" width={24} />
-    </Icon>
-  );
-};
-
-const GreenIcon = () => {
-  return (
-    <Icon>
-      <img src={GreenSrc} alt="borrow-icon" />
-    </Icon>
-  );
-};
 
 const PoolsListItem: FC<PoolsListItemPropsType> = ({
   pool,
@@ -69,25 +57,21 @@ const PoolsListItem: FC<PoolsListItemPropsType> = ({
     >
       <TableCell>
         <Stack direction="row" spacing={2}>
-          <TokenLogo src={getTokenLogoURL(pool.name)} alt={pool.name} />
+          <TokenLogo src={getTokenLogoURL(pool.poolName)} alt={pool.poolName} />
           <Box>
-            <PoolName>{pool.name}</PoolName>
-            <TVL>TVL: $1.607M</TVL>
+            <PoolName>{pool.poolName}</PoolName>
+            <TVL>TVL: {formatCurrency(Number(pool.tvl))}</TVL>
           </Box>
         </Stack>
       </TableCell>
-      <TableCell>{pool.borrowedFathom} FXD</TableCell>
-      <TableCell></TableCell>
-      <TableCell>{pool.availableFathom} FXD</TableCell>
       <TableCell>
-        <TextBox>2.60%</TextBox> <ComboShareIcon />
+        <PriceWrapper>
+          {formatCurrency(Number(pool.collatralPrice))}
+          <PriceChanged current={Number(pool.collatralPrice)} previous={Number(pool.collatralLastPrice)} />
+        </PriceWrapper>
       </TableCell>
-      <TableCell>
-        <TextBox>0.23%</TextBox> <GreenIcon />
-      </TableCell>
-      <TableCell>
-        <TextBox>1.04%</TextBox> <GreenIcon />
-      </TableCell>
+      <TableCell>{formatNumber(Number(pool.totalBorrowed))} FXD</TableCell>
+      <TableCell>{formatNumber(Number(pool.totalAvailable))} FXD</TableCell>
       <TableCell align="right">
         <OpenPositionButton onClick={() => setSelectedPool(pool)}>
           <AddCircleIcon sx={{ fontSize: "16px", marginRight: "7px" }} />

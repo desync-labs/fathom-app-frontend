@@ -5,7 +5,7 @@ export const getTokenLogoURL = (address: string) => {
   let findToken;
   for (let i = 0; i < DEFAULT_TOKEN_LIST.tokens.length; i++) {
     const tokenListItem = DEFAULT_TOKEN_LIST.tokens[i];
-    const addressLowerCase = address.toLowerCase();
+    const addressLowerCase = address?.toLowerCase();
     if (
       tokenListItem.address.toLowerCase() === addressLowerCase ||
       tokenListItem.name.toLowerCase() === addressLowerCase ||

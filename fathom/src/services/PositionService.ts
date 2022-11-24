@@ -1,17 +1,19 @@
-import { SmartContractFactory } from "config/SmartContractFactory";
-import IPositionService from "services/interfaces/IPositionService";
+import BigNumber from "bignumber.js";
 import { Constants } from "helpers/Constants";
 import { Web3Utils } from "helpers/Web3Utils";
-import OpenPosition from "stores/interfaces/IOpenPosition";
+import { Strings } from "helpers/Strings";
+
+import { SmartContractFactory } from "config/SmartContractFactory";
+import IPositionService from "services/interfaces/IPositionService";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
-import BigNumber from "bignumber.js";
+
 import ICollateralPool from "stores/interfaces/ICollateralPool";
 import ActiveWeb3Transactions from "stores/transaction.store";
 import {
   TransactionStatus,
   TransactionType,
-} from "../stores/interfaces/ITransaction";
-import { Strings } from "../helpers/Strings";
+} from "stores/interfaces/ITransaction";
+
 
 import { toWei } from "web3-utils";
 
@@ -52,7 +54,7 @@ export default class PositionService implements IPositionService {
         Web3Utils.getWeb3Instance(this.chainId).eth.abi.encodeFunctionCall(jsonInterface, [
           SmartContractFactory.PositionManager(this.chainId).address,
           SmartContractFactory.StabilityFeeCollector(this.chainId).address,
-          pool.CollateralTokenAdapterAddress,
+          pool.tokenAdapterAddress,
           SmartContractFactory.StablecoinAdapter(this.chainId).address,
           pool.id,
           toWei(collateral.toString(), "ether"),
@@ -120,112 +122,6 @@ export default class PositionService implements IPositionService {
     }
   }
 
-  async getPositionsForAddress(address: string): Promise<IOpenPosition[]> {
-    try {
-      console.log(`getting Positions For Address ${address}.`);
-      let proxyWallet = await this.proxyWalletExist(address);
-      let getPositionsContract = Web3Utils.getContractInstance(
-        SmartContractFactory.GetPositions(this.chainId),
-        this.chainId
-      );
-      let response = await getPositionsContract.methods
-        .getAllPositionsAsc(
-          SmartContractFactory.PositionManager(this.chainId).address,
-          proxyWallet
-        )
-        .call();
-
-      const {
-        0: positionIds,
-        1: positionAddresses,
-        2: collateralPools,
-      } = response;
-      const fetchedPositions: IOpenPosition[] = [];
-      let index = 0;
-
-      positionIds.forEach((positionId: string) => {
-        const positionAddress = positionAddresses[index];
-        const collateralPool = collateralPools[index];
-        const position = new OpenPosition(
-          positionId,
-          positionAddress,
-          collateralPool
-        );
-        fetchedPositions.push(position);
-        index++;
-      });
-
-      console.log(`All Open Positions... ${JSON.stringify(fetchedPositions)}`);
-      return fetchedPositions;
-    } catch (error) {
-      console.error(`Error in getting Positions: ${error}`);
-      throw error;
-    }
-  }
-
-  //TODO: Externalize the pagination
-  //TODO: Find better ways to filter out the posistions.
-  async getPositionsWithSafetyBuffer(
-    address: string
-  ): Promise<IOpenPosition[]> {
-    try {
-      console.log(
-        `getting Positions With Safety Buffer For Address ${address}.`
-      );
-      const myPositions = await this.getPositionsForAddress(address);
-      const getPositionsContract = Web3Utils.getContractInstance(
-        SmartContractFactory.GetPositions(this.chainId),
-        this.chainId
-      );
-      const response = await getPositionsContract.methods
-        .getPositionWithSafetyBuffer(
-          SmartContractFactory.PositionManager(this.chainId).address,
-          1,
-          500
-        )
-        .call();
-
-      console.log(
-        `Raw response from getPositionsWithSafetyBuffer: ${JSON.stringify(
-          response
-        )}`
-      );
-
-      const {
-        0: positionAddresses,
-        1: debtShares,
-        2: safetyBuffers,
-        _lockedCollaterals: lockedCollaterals,
-        _lockedValues: lockedValues,
-        _positionLTVs: ltvs,
-      } = response;
-
-      const fetchedPositions: IOpenPosition[] = [];
-      let index = 0;
-      positionAddresses.forEach((positionAddress: string) => {
-        const position = myPositions.filter(
-          (pos) => pos.address === positionAddress
-        )[0] as IOpenPosition;
-
-        if (position && debtShares[index] > 0) {
-          position.setDebtShare(new BigNumber(debtShares[index]));
-          position.setSafetyBuffer(new BigNumber(safetyBuffers[index]));
-          position.setLockedCollateral(new BigNumber(lockedCollaterals[index]));
-          position.setLockedValue(new BigNumber(lockedValues[index]));
-          position.setLtv(new BigNumber(ltvs[index]));
-          fetchedPositions.push(position);
-        }
-        index++;
-      });
-
-      console.log(`All Open Positions... ${JSON.stringify(fetchedPositions)}`);
-      return fetchedPositions;
-    } catch (error) {
-      console.error(`Error in getPositionsWithSafetyBuffer: ${error}`);
-      throw error;
-    }
-  }
-
   async closePosition(
     positionId: string,
     pool: ICollateralPool,
@@ -256,7 +152,7 @@ export default class PositionService implements IPositionService {
       const wipeAllAndUnlockTokenCall =
         Web3Utils.getWeb3Instance(this.chainId).eth.abi.encodeFunctionCall(jsonInterface, [
           SmartContractFactory.PositionManager(this.chainId).address,
-          pool.CollateralTokenAdapterAddress,
+          pool.tokenAdapterAddress,
           SmartContractFactory.StablecoinAdapter(this.chainId).address,
           positionId,
           lockedCollateral.toString(),
@@ -291,7 +187,7 @@ export default class PositionService implements IPositionService {
     position: IOpenPosition,
     pool: ICollateralPool,
     address: string,
-    stablecoint: number,
+    stableCoin: number,
     collateral: number,
     transactionStore: ActiveWeb3Transactions
   ): Promise<void> {
@@ -315,11 +211,11 @@ export default class PositionService implements IPositionService {
         this.chainId
       ).eth.abi.encodeFunctionCall(jsonInterface, [
         SmartContractFactory.PositionManager(this.chainId).address,
-        pool.CollateralTokenAdapterAddress,
+        pool.tokenAdapterAddress,
         SmartContractFactory.StablecoinAdapter(this.chainId).address,
         position.id,
         toWei(collateral.toString(), "ether"),
-        toWei(stablecoint.toString(), "ether"),
+        toWei(stableCoin.toString(), "ether"),
         encodedResult,
       ]);
 

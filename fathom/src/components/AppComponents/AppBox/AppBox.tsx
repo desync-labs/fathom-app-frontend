@@ -9,14 +9,6 @@ export const TitleSecondary = styled(Typography)`
   margin-bottom: 10px;
 `;
 
-export const Adjust = styled(Typography)`
-  font-size: 13px;
-  font-weight: bold;
-  padding-top: 7px;
-  margin-left: -10px;
-  color: #43fff1;
-`;
-
 export const NoResults = styled(Typography)`
   margin: 0;
   font-weight: 500;

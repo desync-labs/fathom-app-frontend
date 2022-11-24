@@ -3,6 +3,9 @@ import { Dispatch, useCallback, useEffect, useMemo, useState } from "react";
 import useMetaMask from "hooks/metamask";
 import { Constants } from "helpers/Constants";
 import { ClosePositionProps } from "components/Positions/ClosePositionDialog";
+import { useQuery } from "@apollo/client";
+import { FXD_POOLS } from "apollo/queries";
+import ICollateralPool from "stores/interfaces/ICollateralPool";
 
 export enum ClosingType {
   Full,
@@ -18,6 +21,13 @@ const useClosePosition = (
   const { positionStore, poolStore } = useStores();
   const { account } = useMetaMask()!;
 
+  const { data, loading } = useQuery(FXD_POOLS, {
+    variables: {
+      page: 10,
+    },
+    fetchPolicy: 'cache-first'
+  })
+
   const [collateral, setCollateral] = useState<number>(0);
   const [fathomToken, setFathomToken] = useState<number>(0);
 
@@ -28,12 +38,12 @@ const useClosePosition = (
   const [disableClosePosition, setDisableClosePosition] = useState<boolean>(false);
 
   const pool = useMemo(
-    () => poolStore.getPool(position.pool),
-    [position.pool, poolStore]
+    () => data?.pools?.find((pool: ICollateralPool) => pool.id === position?.collatralPool),
+    [data, loading, position]
   );
 
   const lockedCollateral = useMemo(
-    () => position.lockedCollateral.div(Constants.WeiPerWad).toNumber(),
+    () => Number(position.lockedCollateral),
     [position]
   );
 
