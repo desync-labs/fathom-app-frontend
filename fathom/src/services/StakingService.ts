@@ -11,7 +11,8 @@ import { Constants } from "helpers/Constants";
 import ILockPosition from "stores/interfaces/ILockPosition";
 import { Strings } from "helpers/Strings";
 import { secondsToTime } from "utils/secondsToTime";
-
+    //claimAllLockRewardsForStream(uint256 streamId) (pass streamId = 0 as FTHM tokens streamId is 0) --> This function is use to claim all lock rewards for a stream
+    //function withdrawStream(uint256 streamId) -> This is used to withdraw all the fthm token claimed
 const defaultLockInfo = {
   lockId: 0,
   VOTETokenBalance: 0,
@@ -256,11 +257,12 @@ export default class StakingService implements IStakingService {
       SmartContractFactory.Staking(this.chainId),
       this.chainId
     );
+    
 
     return new Promise(async (resolve, reject) => {
       try {
         await Staking.methods
-          .claimAllStreamRewardsForLock(lockId)
+          .claimAllStreamRewardsForLock(lockId) 
           .send({ from: account })
           .on("transactionHash", (hash: any) => {
             transactionStore.addTransaction({
