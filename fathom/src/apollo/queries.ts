@@ -50,8 +50,7 @@ export const FXD_POSITIONS = gql`
       positionStatus
       safetyBuffer
       safetyBufferInPrecent
-      tvl
-      
+      tvl     
       walletAddress
     }
   }

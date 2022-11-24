@@ -86,6 +86,8 @@ export default class ProposalService implements IProposalService {
 
     const result = await FathomGovernor.methods.getProposals(12).call();
 
+    console.log(result);
+
     result[0].forEach((_id: string, i: number) => {
       fetchedProposals.push({
         description: result[1][i],

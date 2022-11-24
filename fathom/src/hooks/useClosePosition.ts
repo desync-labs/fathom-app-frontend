@@ -42,8 +42,6 @@ const useClosePosition = (
     [data, loading, position]
   );
 
-  console.log(pool);
-
   const lockedCollateral = useMemo(
     () => Number(position.lockedCollateral),
     [position]
