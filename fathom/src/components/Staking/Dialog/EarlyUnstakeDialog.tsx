@@ -6,7 +6,10 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
-import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
+import {
+  AppDialog,
+  DialogContentWrapper,
+} from "components/AppComponents/AppDialog/AppDialog";
 import React, { FC } from "react";
 import ILockPosition from "stores/interfaces/ILockPosition";
 import { styled } from "@mui/material/styles";
@@ -18,25 +21,12 @@ import {
 import InfoIcon from "@mui/icons-material/Info";
 import {
   ButtonPrimary,
+  CancelButton,
 } from "components/AppComponents/AppButton/AppButton";
-import useEarlyUnstake from "hooks/useEarlyUnstake";
+import useEarlyUnstake, { PENALTY_FEE } from "hooks/useEarlyUnstake";
 import { InfoMessageWrapper } from "components/Staking/Dialog/ClaimRewardsDialog";
 import { getTokenLogoURL } from "utils/tokenLogo";
-import { formatNumber } from "../../../utils/format";
-
-
-const DialogContentWrapper = styled(Box)`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  margin: 20px 0 30px;
-  
-  > div {
-    font-size: 18px;
-    line-height: 22px;
-  }
-`;
+import { formatNumber } from "utils/format";
 
 const Amount = styled(Box)`
   font-weight: 600;
@@ -82,23 +72,43 @@ const ConfirmButton = styled(ButtonPrimary)`
 
 const WarningBlock = styled(Box)`
   background: #452508;
-  border: 1px solid #5C310A;
+  border: 1px solid #5c310a;
   border-radius: 8px;
-  color: #F7B06E;
+  color: #f7b06e;
   display: flex;
   align-items: center;
   padding: 8px 16px;
   gap: 12px;
   font-size: 14px;
-`
+  margin: 0 15px 40px 15px;
+`;
 
 const InfoLabelError = styled(InfoLabel)`
-  color: #F76E6E;
-`
+  color: #f76e6e;
+`;
 
 const InfoValueError = styled(InfoValue)`
-  color: #F76E6E;
-`
+  color: #f76e6e;
+`;
+
+const ButtonsWrapper = styled(Box)`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 15px;
+
+  > button {
+    width: calc(50% - 3px);
+  }
+`;
+
+const Description = styled(Typography)`
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: #ffffff;
+  padding: 0 15px;
+`;
 
 type EarlyUnstakeDialogProps = {
   token: string;
@@ -132,27 +142,18 @@ const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({
       </AppDialogTitle>
 
       <DialogContent>
-        <UnstakeGrid container sx={{ '&.MuiGrid-container': { padding: '20px 0' } }}>
-          <Grid item xs={12}>
-            <WarningBlock>
-              <InfoIcon sx={{ fontSize: "18px", color: '#F5953D' }} />
-              <Typography component={'span'}>
-                Penalty fee will be applied.
-              </Typography>
-            </WarningBlock>
-          </Grid>
-        </UnstakeGrid>
+        <Description>
+          Claim Rewards only is available for all positions at the moment. You
+          will lose the rewards of the position you proceed to unstake without
+          claiming it here first. <a>Learn more.</a>
+        </Description>
         <DialogContentWrapper>
           <img src={getTokenLogoURL(token)} alt={"token-logo"} width={58} />
           <Box>You’re requesting to unstake</Box>
-          <Amount>
-            <Box>
-              { formatNumber(unstakeAmount) }
-            </Box>
-            <span>
-              { token }
-            </span>
-          </Amount>
+          <Box className={"amount"}>
+            <Box>{formatNumber(unstakeAmount)}</Box>
+            <span>{token}</span>
+          </Box>
         </DialogContentWrapper>
 
         <UnstakeGrid
@@ -165,40 +166,49 @@ const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({
                 Total Available
                 <InfoIcon sx={{ fontSize: "18px", color: "#6379A1" }} />
               </InfoLabel>
-              <InfoValue>{formatNumber(unstakeAmount)} { token }</InfoValue>
+              <InfoValue>
+                {formatNumber(unstakeAmount)} {token}
+              </InfoValue>
             </InfoWrapper>
             <InfoWrapper>
-              <InfoLabelError>
-                Penalty Fee
-              </InfoLabelError>
-              <InfoValueError>{ formatNumber(penaltyFee) } { token } (0.03%)</InfoValueError>
+              <InfoLabelError>Penalty Fee</InfoLabelError>
+              <InfoValueError>
+                {formatNumber(penaltyFee)} {token} ({PENALTY_FEE}%)
+              </InfoValueError>
             </InfoWrapper>
             <InfoWrapper>
               <InfoLabel>
                 Maximum Received
                 <InfoIcon sx={{ fontSize: "18px", color: "#6379A1" }} />
               </InfoLabel>
-              <InfoValue>{formatNumber(unstakeAmountWithFee)} { token }</InfoValue>
+              <InfoValue>
+                {formatNumber(unstakeAmountWithFee)} {token}
+              </InfoValue>
             </InfoWrapper>
           </Grid>
         </UnstakeGrid>
+        <WarningBlock>
+          <InfoIcon sx={{ fontSize: "18px", color: "#F5953D" }} />
+          <Typography component={"span"}>
+            Penalty fee will be applied.
+          </Typography>
+        </WarningBlock>
+        <ButtonsWrapper>
+          <CancelButton>Cancel</CancelButton>
+          <ConfirmButton
+            disabled={isLoading}
+            isLoading={isLoading}
+            onClick={earlyUnstakeHandler}
+          >
+            {isLoading ? <CircularProgress size={30} /> : "Yes, Unstake"}
+          </ConfirmButton>
+        </ButtonsWrapper>
         <InfoMessageWrapper>
           <InfoIcon sx={{ fontSize: "18px", color: "#4F658C" }} />
           <Typography>
-            By clicking “Unstake”, you’ll be signing 2 transactions in MetaMask to withdraw this amount to your connected wallet, and to unlock the position.
+            Proceeding will prompt you to sign 1 txn in MetaMask.
           </Typography>
         </InfoMessageWrapper>
-        <UnstakeGrid container>
-          <Grid item xs={12}>
-            <ConfirmButton
-              disabled={isLoading}
-              isLoading={isLoading}
-              onClick={earlyUnstakeHandler}
-            >
-              {isLoading ? <CircularProgress size={30} /> : "Confirm Early Unstake"}
-            </ConfirmButton>
-          </Grid>
-        </UnstakeGrid>
       </DialogContent>
     </UnstakeDialogWrapper>
   );

@@ -1,7 +1,9 @@
-import React, { FC } from "react";
+import React, {
+  FC,
+  ReactNode
+} from "react";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import { DialogTitleProps } from "../../Positions/ClosePositionDialog";
 import { styled } from "@mui/material/styles";
 import { DialogTitle as MuiDialogTitle } from "@mui/material";
 
@@ -21,7 +23,11 @@ export const AppDialogCloseIcon = styled(IconButton)`
   color: ${({ theme }) => theme.palette.grey[500]};
 `
 
-
+export interface DialogTitleProps {
+  id: string;
+  children?: ReactNode;
+  onClose: () => void;
+}
 
 export const AppDialogTitle: FC<DialogTitleProps> = ({
   children,

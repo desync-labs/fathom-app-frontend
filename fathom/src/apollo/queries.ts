@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-export const FATHOM_FXD_STATS = gql`
+export const FXD_STATS = gql`
   query FxdStats {
     protocolStat(id: "fathom_stats") {
       id

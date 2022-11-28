@@ -5,7 +5,6 @@ import PoolService from "services/PoolService";
 import PositionService from "services/PositionService";
 import StableSwapService from "services/StableSwapService";
 import AlertStore from "stores/alert.stores";
-import AuthStore from "stores/auth.store";
 import PoolStore from "stores/pool.store";
 import PositionStore from "stores/positions.store";
 import StableSwapStore from "stores/stableswap.stores";
@@ -27,7 +26,6 @@ export class RootStore {
    * Stores
    */
   poolStore: PoolStore;
-  authStore: AuthStore;
   positionStore: PositionStore;
   stableSwapStore: StableSwapStore;
   alertStore: AlertStore;
@@ -57,11 +55,10 @@ export class RootStore {
 
     this.stakingService = new StakingService();
 
-    this.authStore = new AuthStore(this);
     this.poolStore = new PoolStore(this, this.poolService);
     this.positionStore = new PositionStore(this, this.positionService);
     this.stableSwapStore = new StableSwapStore(this, this.stableSwapService);
-    this.alertStore = new AlertStore(this);
+    this.alertStore = new AlertStore();
     this.proposalStore = new ProposalStore(this, this.proposalService);
     this.stakingStore = new StakingStore(this, this.stakingService);
 

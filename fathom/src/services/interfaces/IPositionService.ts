@@ -19,18 +19,18 @@ export default interface IPositionService {
     positionId: string,
     pool: ICollateralPool,
     address: string,
-    lockedCollateral: BigNumber,
+    collateral: number,
     transactionStore: ActiveWeb3Transactions
   ): Promise<void>;
   approve(
     address: string,
-    pool: ICollateralPool,
+    tokenAddress: string,
     transactionStore: ActiveWeb3Transactions
   ): Promise<void>;
   approvalStatus(
     address: string,
-    pool: ICollateralPool,
-    collatral: number,
+    tokenAddress: string,
+    collateral: number,
     transactionStore: ActiveWeb3Transactions
   ): Promise<Boolean>;
   balanceStableCoin(address: string): Promise<number>;

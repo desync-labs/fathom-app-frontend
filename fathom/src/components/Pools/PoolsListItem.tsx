@@ -1,4 +1,4 @@
-import { Icon, TableCell, Box, Stack } from "@mui/material";
+import { TableCell, Box, Stack } from "@mui/material";
 import ICollateralPool from "stores/interfaces/ICollateralPool";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 

@@ -3,6 +3,14 @@ import { observer } from "mobx-react";
 import { useStores } from "stores";
 import { Alert, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import { styled } from "@mui/material/styles";
+
+const AlertMessage = styled(Alert)`
+  position: fixed;
+  width: 100%;
+  margin-bottom: 2px;
+  z-index: 1000;
+`;
 
 const AlertMessages = observer(() => {
   const { alertStore } = useStores();
@@ -10,10 +18,9 @@ const AlertMessages = observer(() => {
   return (
     <>
       {alertStore.showErrorAlert && (
-        <Alert
+        <AlertMessage
           severity="error"
           variant="filled"
-          sx={{ position: 'fixed', width: '100%', mb: 2 }}
           action={
             <IconButton
               aria-label="close"
@@ -28,13 +35,12 @@ const AlertMessages = observer(() => {
           }
         >
           {alertStore.errorAlertMessage}
-        </Alert>
+        </AlertMessage>
       )}
       {alertStore.showSuccessAlert && (
-        <Alert
+        <AlertMessage
           severity="success"
           variant="filled"
-          sx={{ position: 'fixed', width: '100%', mb: 2 }}
           action={
             <IconButton
               aria-label="close"
@@ -49,7 +55,7 @@ const AlertMessages = observer(() => {
           }
         >
           {alertStore.successAlertMessage}
-        </Alert>
+        </AlertMessage>
       )}
     </>
   );

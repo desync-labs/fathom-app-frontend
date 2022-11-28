@@ -40,12 +40,6 @@ import { getTokenLogoURL } from "utils/tokenLogo";
 import useClosePosition, { ClosingType } from "hooks/useClosePosition";
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
 
-export interface DialogTitleProps {
-  id: string;
-  children?: ReactNode;
-  onClose: () => void;
-}
-
 export type ClosePositionProps = {
   position: IOpenPosition;
   onClose: () => void;
@@ -198,6 +192,7 @@ const ClosePositionDialog: FC<ClosePositionProps> = ({
                     <>
                       <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
                       <Typography
+                        component={'div'}
                         sx={{ fontSize: "12px", paddingLeft: "22px" }}
                       >
                         You don't have enough to repay that amount

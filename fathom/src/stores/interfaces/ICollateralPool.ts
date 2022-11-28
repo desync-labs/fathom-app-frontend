@@ -12,6 +12,7 @@ export default interface ICollateralPool {
   totalAvailable: string;
   totalBorrowed: string;
   tvl: string;
+
   collateralContractAddress: string;
   tokenAdapterAddress: string;
 }

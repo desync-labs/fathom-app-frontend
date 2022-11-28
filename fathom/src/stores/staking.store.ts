@@ -24,8 +24,6 @@ export default class StakingStore {
     unlockPeriod: number
   ) {
     try {
-      if (!account) return;
-
       await this.service.createLock(
         account,
         stakePosition,
@@ -33,27 +31,20 @@ export default class StakingStore {
         this.rootStore.transactionStore
       );
     } catch (e: any) {
-      this.rootStore.alertStore.setShowErrorAlert(
-        true,
-        e.message
-      );
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+      throw e;
     }
   }
 
   async handleEarlyWithdrawal(account: string, lockId: number) {
     try {
-      if (!account) return;
-
       await this.service.handleEarlyWithdrawal(
         account,
         lockId,
         this.rootStore.transactionStore
       );
     } catch (e: any) {
-      this.rootStore.alertStore.setShowErrorAlert(
-        true,
-        e.message
-      );
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
     }
   }
 
@@ -67,10 +58,7 @@ export default class StakingStore {
         this.rootStore.transactionStore
       );
     } catch (e: any) {
-      this.rootStore.alertStore.setShowErrorAlert(
-        true,
-        e.message
-      );
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
     }
   }
 
@@ -83,10 +71,7 @@ export default class StakingStore {
         this.rootStore.transactionStore
       );
     } catch (e: any) {
-      this.rootStore.alertStore.setShowErrorAlert(
-        true,
-        e.message
-      );
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
     }
   }
 
@@ -100,10 +85,7 @@ export default class StakingStore {
         this.rootStore.transactionStore
       );
     } catch (e: any) {
-      this.rootStore.alertStore.setShowErrorAlert(
-        true,
-        e.message
-      );
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
     }
   }
 
@@ -116,10 +98,7 @@ export default class StakingStore {
         this.rootStore.transactionStore
       );
     } catch (e: any) {
-      this.rootStore.alertStore.setShowErrorAlert(
-        true,
-         e.message
-      );
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
     }
   }
 
@@ -137,27 +116,19 @@ export default class StakingStore {
   }
 
   async fetchAPR() {
-    const apr = await this.service.getAPR();
-    this.setAPR(apr);
-  }
-
-  setAPR(_apr: number) {
-    this.apr = _apr;
+    this.apr = await this.service.getAPR();
   }
 
   setWalletBalance(_walletBalance: number) {
     this.walletBalance = _walletBalance;
   }
 
-  async fetchWalletBalance(account: string) {
+  async fetchWalletBalance(account: string, fthmTokenAddress: string) {
     try {
-      const walletBalance = await this.service.getWalletBalance(account);
+      const walletBalance = await this.service.getWalletBalance(account, fthmTokenAddress);
       this.setWalletBalance(walletBalance);
     } catch (e: any) {
-      this.rootStore.alertStore.setShowErrorAlert(
-        true,
-        e.message
-      );
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
     }
   }
 
@@ -170,10 +141,7 @@ export default class StakingStore {
       const voteBalance = await this.service.getVOTEBalance(account);
       this.setVOTEBalance(voteBalance);
     } catch (e: any) {
-      this.rootStore.alertStore.setShowErrorAlert(
-        true,
-        e.message
-      );
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
     }
   }
 
@@ -183,10 +151,7 @@ export default class StakingStore {
       this.setLocks(locks);
       this.setTotalStakedPosition(locks);
     } catch (e: any) {
-      this.rootStore.alertStore.setShowErrorAlert(
-        true,
-        e.message
-      );
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
     }
   }
 
@@ -224,26 +189,26 @@ export default class StakingStore {
     });
   }
 
-  async approvalStatusStakingFTHM(address: string, stakingPosition: number) {
-    console.log(`Checking FTHM approval status for address ${address}`);
+  async approvalStatusStakingFTHM(
+    address: string,
+    stakingPosition: number,
+    fthmTokenAddress: string
+  ) {
     try {
-      if (!address) return;
-      return await this.service.approvalStatusStakingFTHM(address, stakingPosition);
-    } catch (e: any) {
-      this.rootStore.alertStore.setShowErrorAlert(
-        true,
-        e.message
+      return await this.service.approvalStatusStakingFTHM(
+        address,
+        stakingPosition,
+        fthmTokenAddress
       );
+    } catch (e: any) {
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
     }
   }
 
-  async approveFTHM(address: string) {
-    console.log(`Approving staking position for address ${address}`);
+  async approveFTHM(address: string, fthmTokenAddress: string) {
     try {
-      if (!address) return;
-
       await this.service
-        .approveStakingFTHM(address, this.rootStore.transactionStore)
+        .approveStakingFTHM(address, fthmTokenAddress, this.rootStore.transactionStore)
         .then(() => {
           this.rootStore.alertStore.setShowSuccessAlert(
             true,
@@ -251,10 +216,7 @@ export default class StakingStore {
           );
         });
     } catch (e: any) {
-      this.rootStore.alertStore.setShowErrorAlert(
-        true,
-        e.message
-      );
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
     }
   }
 }

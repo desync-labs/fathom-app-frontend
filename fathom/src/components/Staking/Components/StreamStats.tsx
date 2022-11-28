@@ -1,7 +1,6 @@
-import React from "react";
-import { observer } from "mobx-react";
+import React, { Dispatch, FC } from "react";
 
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 import RiseLabel from "components/AppComponents/AppLabel/RiseLabel";
@@ -84,17 +83,24 @@ const MyStatsValue = styled(StatsValue)`
   strong {
     font-size: 14px;
   }
+
+  &.blue {
+    strong {
+      color: #5a81ff;
+    }
+  }
+  &.green {
+    strong {
+      color: #4dcc33;
+    }
+  }
 `;
 
 const MyStatsBlocks = styled(Box)`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 0.9fr 1.1fr;
   align-items: start;
   gap: 25px;
-
-  > div:last-of-type {
-    margin-top: -40px;
-  }
 `;
 
 const MyStatsBlock = styled(Box)`
@@ -108,16 +114,33 @@ const MyStatsBlock = styled(Box)`
 
 const StatsButton = styled(ButtonSecondary)`
   height: 32px;
-  margin-top: 15px;
 `;
 
-const StreamStats = observer((props: any) => {
+const ButtonGrid = styled(Grid)`
+  display: flex;
+  align-items: end;
+  justify-content: end;
+`;
+
+type StreamStatsPropsType = {
+  stakedBalance: number;
+  voteBalance: number;
+  apr: number;
+  setShowClaimRewards: Dispatch<boolean>;
+};
+
+const StreamStats: FC<StreamStatsPropsType> = ({
+  stakedBalance,
+  voteBalance,
+  apr,
+  setShowClaimRewards,
+}) => {
   return (
     <Box sx={{ padding: "0 10px" }}>
       <FTHMStreamHeader>FTHM Stream</FTHMStreamHeader>
       <StatsTypography>Network Stats</StatsTypography>
       <StatsTypographyDescription>
-        FTHM stream rewards in FTHM and VeFTHM as Voting power.
+        FTHM stream rewards in FTHM and vFTHM as Voting power.
       </StatsTypographyDescription>
 
       <StatsBlocks>
@@ -126,7 +149,7 @@ const StreamStats = observer((props: any) => {
           <Box>
             <StatsLabel>APR</StatsLabel>
             <StatsValue>
-              <strong>{props.apr}%</strong>
+              <strong>{apr}%</strong>
               <RiseLabel>3.45%</RiseLabel>
             </StatsValue>
           </Box>
@@ -137,7 +160,7 @@ const StreamStats = observer((props: any) => {
           <Box>
             <StatsLabel>Total Value Locked</StatsLabel>
             <StatsValue>
-              <strong>{formatNumber(props.stakedBalance)}</strong>FTHM
+              <strong>{formatNumber(stakedBalance)}</strong>FTHM
               <span>$99M</span>
             </StatsValue>
           </Box>
@@ -169,21 +192,22 @@ const StreamStats = observer((props: any) => {
         </MyStatsBlock>
 
         <MyStatsBlock>
-          <StatsLabel>
-            Rewards <InfoIcon sx={{ fontSize: "18px" }} />
-          </StatsLabel>
-          <MyStatsValue>
-            <strong>100 FTHM</strong>
-            <span>$153.00</span>
-          </MyStatsValue>
-          <StatsButton>Claim</StatsButton>
-        </MyStatsBlock>
-
-        <MyStatsBlock>
-          <StatsLabel>Total Cooling Down</StatsLabel>
-          <MyStatsValue>
-            <strong>800 FTHM</strong>
-          </MyStatsValue>
+          <Grid container>
+            <Grid item xs={6}>
+              <StatsLabel>
+                Claimable rewards <InfoIcon sx={{ fontSize: "18px" }} />
+              </StatsLabel>
+              <MyStatsValue className={"blue"}>
+                <strong>100 FTHM</strong>
+                <span>$153.00</span>
+              </MyStatsValue>
+            </Grid>
+            <ButtonGrid item xs={6}>
+              <StatsButton onClick={() => setShowClaimRewards(true)}>
+                Claim
+              </StatsButton>
+            </ButtonGrid>
+          </Grid>
         </MyStatsBlock>
 
         <MyStatsBlock>
@@ -197,17 +221,31 @@ const StreamStats = observer((props: any) => {
         </MyStatsBlock>
 
         <MyStatsBlock>
-          <StatsLabel>
-            Total ready to withdraw <InfoIcon sx={{ fontSize: "18px" }} />
-          </StatsLabel>
+          <Grid container>
+            <Grid item xs={6}>
+              <StatsLabel>
+                Ready to withdraw
+                <InfoIcon sx={{ fontSize: "18px" }} />
+              </StatsLabel>
+              <MyStatsValue className={"green"}>
+                <strong>400 FTHM</strong>
+              </MyStatsValue>
+            </Grid>
+            <ButtonGrid item xs={6}>
+              <StatsButton>Withdraw</StatsButton>
+            </ButtonGrid>
+          </Grid>
+        </MyStatsBlock>
+
+        <MyStatsBlock>
+          <StatsLabel>Total Cooling Down</StatsLabel>
           <MyStatsValue>
-            <strong>400 FTHM</strong>
+            <strong>800 FTHM</strong>
           </MyStatsValue>
-          <StatsButton>Withdraw</StatsButton>
         </MyStatsBlock>
       </MyStatsBlocks>
     </Box>
   );
-});
+};
 
 export default StreamStats;

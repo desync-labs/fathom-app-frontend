@@ -3,6 +3,8 @@ import { RootStore } from ".";
 import IPositionService from "services/interfaces/IPositionService";
 import ICollateralPool from "stores/interfaces/ICollateralPool";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
+import BigNumber from "bignumber.js";
+import ActiveWeb3Transactions from "./transaction.store";
 
 export default class PositionStore {
   positions: IOpenPosition[] = [];
@@ -22,33 +24,22 @@ export default class PositionStore {
     collateral: number,
     fathomToken: number
   ) {
-    if (!address) return;
+    try {
+      await this.service.openPosition(
+        address,
+        pool,
+        collateral,
+        fathomToken,
+        this.rootStore.transactionStore
+      );
 
-    console.log(
-      `Open position clicked for address ${address}, poolId: ${pool.poolName}, collatral:${collateral}, fathomToken: ${fathomToken}`
-    );
-
-    return new Promise(async (resolve, reject) => {
-      try {
-        await this.service.openPosition(
-          address,
-          pool,
-          collateral,
-          fathomToken,
-          this.rootStore.transactionStore
-        );
-
-        this.rootStore.alertStore.setShowSuccessAlert(
-          true,
-          "New position opened successfully!"
-        );
-
-        resolve(null);
-      } catch (e: any) {
-        this.rootStore.alertStore.setShowErrorAlert(true, e.message);
-        reject(e);
-      }
-    });
+      this.rootStore.alertStore.setShowSuccessAlert(
+        true,
+        "New position opened successfully!"
+      );
+    } catch (e: any) {
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+    }
   }
 
   setPositions(_positions: IOpenPosition[]) {
@@ -59,42 +50,31 @@ export default class PositionStore {
     this.stableCoinBalance = _stableCoinBalance;
   }
 
-  async approve(address: string, pool: ICollateralPool) {
-    if (!address) return;
-
-    console.log(
-      `Open position token approval clicked for address ${address}, poolId: ${pool.poolName}`
-    );
-
-    return new Promise(async (resolve, reject) => {
-      try {
-        await this.service.approve(
-          address,
-          pool,
-          this.rootStore.transactionStore
-        );
-        this.rootStore.alertStore.setShowSuccessAlert(
-          true,
-          `${pool.poolName} approval was successful!`
-        );
-        resolve(null);
-      } catch (e: any) {
-        this.rootStore.alertStore.setShowErrorAlert(true, e.message);
-        reject(e);
-      }
-    });
+  async approve(address: string, tokenAddress: string) {
+    try {
+      await this.service.approve(
+        address,
+        tokenAddress,
+        this.rootStore.transactionStore
+      );
+      this.rootStore.alertStore.setShowSuccessAlert(
+        true,
+        "Approval was successful!"
+      );
+    } catch (e: any) {
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+    }
   }
 
   async approvalStatus(
     address: string,
     collateral: number,
-    pool: ICollateralPool
+    tokenAddress: string
   ) {
-    if (!address) return;
     try {
       return await this.service.approvalStatus(
         address,
-        pool,
+        tokenAddress,
         collateral,
         this.rootStore.transactionStore
       );
@@ -113,7 +93,6 @@ export default class PositionStore {
   }
 
   async approveStableCoin(address: string) {
-    if (!address) return;
     console.log(`Open position token approval clicked for address ${address}`);
     try {
       return this.service
@@ -126,16 +105,38 @@ export default class PositionStore {
         });
     } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(true, e.message);
-      throw e;
     }
   }
 
   async approvalStatusStableCoin(address: string) {
     try {
-      if (!address) return;
       return await this.service.approvalStatusStableCoin(address);
     } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+    }
+  }
+
+  async fullyClosePosition(
+    position: IOpenPosition,
+    pool: ICollateralPool,
+    address: string,
+    collateral: number
+  ) {
+    try {
+      await this.service.closePosition(
+        position.positionId,
+        pool,
+        address,
+        collateral,
+        this.rootStore.transactionStore,
+      );
+
+      return this.rootStore.alertStore.setShowSuccessAlert(
+        true,
+        "Position closed successfully!"
+      );
+    } catch (e: any) {
+      return this.rootStore.alertStore.setShowErrorAlert(true, e.message);
     }
   }
 
@@ -146,31 +147,30 @@ export default class PositionStore {
     fathomToken: number,
     collateral: number
   ) {
-    if (!address) return;
-    console.log(
-      `Close position clicked for address ${address}, positionId: ${position.id}, fathomToken: ${fathomToken}`
-    );
+    try {
+      await this.service.partiallyClosePosition(
+        position,
+        pool,
+        address,
+        fathomToken,
+        collateral,
+        this.rootStore.transactionStore
+      );
 
-    return new Promise(async (resolve, reject) => {
-      try {
-        await this.service.partiallyClosePosition(
-          position,
-          pool,
-          address,
-          fathomToken,
-          collateral,
-          this.rootStore.transactionStore
-        );
+      return this.rootStore.alertStore.setShowSuccessAlert(
+        true,
+        "Position closed successfully!"
+      );
+    } catch (e: any) {
+      return this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+    }
+  }
 
-        this.rootStore.alertStore.setShowSuccessAlert(
-          true,
-          "Position closed successfully!"
-        );
-        resolve(null);
-      } catch (e: any) {
-        this.rootStore.alertStore.setShowErrorAlert(true, e.message);
-        reject(e);
-      }
-    });
+  async getProxyWallet(account: string) {
+    try {
+      return await this.service.proxyWalletExist(account);
+    } catch (e: any) {
+      return this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+    }
   }
 }

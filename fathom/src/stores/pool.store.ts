@@ -6,10 +6,12 @@ import ICollateralPool from "stores/interfaces/ICollateralPool";
 export default class PoolStore {
   pools: ICollateralPool[] = [];
   service: IPoolService;
+  rootStore: RootStore;
 
   constructor(rootStore: RootStore, service: IPoolService) {
-    this.service = service;
     makeAutoObservable(this);
+    this.service = service;
+    this.rootStore = rootStore;
   }
 
   getPool(poolId: string) {
@@ -22,5 +24,13 @@ export default class PoolStore {
 
   getDexPrice(address: string) {
     return this.service.getDexPrice(address);
+  }
+
+  async getCollateralTokenAddress(address: string) {
+    try {
+      return await this.service.getCollateralTokenAddress(address);
+    } catch (e: any) {
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+    }
   }
 }

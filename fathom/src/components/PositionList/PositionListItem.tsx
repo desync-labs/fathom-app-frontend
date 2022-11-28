@@ -122,7 +122,7 @@ const PositionListItem: FC<PositionListItemProps> = observer(
               {approvalPending ? (
                 <CircularProgress size={20} sx={{ color: "#0D1526" }} />
               ) : (
-                "Approve FXD"
+                `Approve FXD`
               )}
             </ButtonPrimary>
           ) : (

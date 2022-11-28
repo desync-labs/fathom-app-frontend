@@ -4,20 +4,16 @@ import { useLogger } from "helpers/Logger";
 import { useCallback, useEffect, useState } from "react";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
 import { ClosingType } from "hooks/useClosePosition";
-import { useQuery } from "@apollo/client";
+import { useLazyQuery, useQuery } from "@apollo/client";
 import { FXD_POSITIONS } from "../apollo/queries";
 
 const useOpenPositionList = () => {
   const { positionStore } = useStores();
   const { account, chainId } = useMetaMask()!;
-  const logger = useLogger();
   /**
    * @todo Change walletAddress
    */
-  const { data, loading, refetch } = useQuery(FXD_POSITIONS, {
-    variables: {
-      walletAddress: "0xbb4b23f1374d701747c28039c5a071de4b9fc02b",
-    },
+  const [loadPositions, { loading, data }] = useLazyQuery(FXD_POSITIONS, {
     fetchPolicy: "cache-first",
   });
 
@@ -32,15 +28,26 @@ const useOpenPositionList = () => {
     approved ? setApproveBtn(false) : setApproveBtn(true);
   }, [positionStore, account]);
 
-  useEffect(() => {
-    if (chainId) {
-      setTimeout(() => {
-        approvalStatus();
-      });
-    } else {
-      positionStore.setPositions([]);
+  const loadPositionsCallback = useCallback(async () => {
+    if (account) {
+      const walletProxy = await positionStore.getProxyWallet(account);
+
+      if (walletProxy) {
+        loadPositions({
+          variables: {
+            walletAddress: walletProxy
+          }
+        })
+      }
     }
-  }, [positionStore, account, chainId, approvalStatus, logger]);
+  }, [positionStore, account, loadPositions])
+
+  useEffect(() => {
+    if (chainId && account) {
+      approvalStatus();
+      loadPositionsCallback()
+    }
+  }, [chainId, account, approvalStatus, loadPositionsCallback]);
 
   const approve = useCallback(async () => {
     setApprovalPending(true);
@@ -54,12 +61,16 @@ const useOpenPositionList = () => {
     setApprovalPending(false);
   }, [positionStore, account, setApprovalPending, setApproveBtn]);
 
-
   return {
     approveBtn,
     approvalPending,
     closingType,
-    positions: loading ? [] : data.positions.filter((position: IOpenPosition) => position.positionStatus !== 'closed'),
+    positions:
+      loading || !data
+        ? []
+        : data.positions.filter(
+            (position: IOpenPosition) => position.positionStatus !== "closed"
+          ),
     approve,
     selectedPosition,
     setSelectedPosition,

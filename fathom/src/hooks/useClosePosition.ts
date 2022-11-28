@@ -1,11 +1,18 @@
 import { useStores } from "stores";
 import { Dispatch, useCallback, useEffect, useMemo, useState } from "react";
 import useMetaMask from "hooks/metamask";
-import { Constants } from "helpers/Constants";
 import { ClosePositionProps } from "components/Positions/ClosePositionDialog";
-import { useQuery } from "@apollo/client";
-import { FXD_POOLS } from "apollo/queries";
+import {
+  useLazyQuery,
+  useQuery
+} from "@apollo/client";
+import {
+  FXD_POOLS,
+  FXD_POSITIONS,
+  FXD_STATS
+} from "apollo/queries";
 import ICollateralPool from "stores/interfaces/ICollateralPool";
+import IOpenPosition from "../stores/interfaces/IOpenPosition";
 
 export enum ClosingType {
   Full,
@@ -18,10 +25,12 @@ const useClosePosition = (
   closingType: ClosingType,
   setType: Dispatch<ClosingType>
 ) => {
-  const { positionStore, poolStore } = useStores();
+  const { positionStore } = useStores();
   const { account } = useMetaMask()!;
 
-  const { data, loading } = useQuery(FXD_POOLS, {
+  const { refetch: refetchStats } = useQuery(FXD_STATS);
+  const [_, { refetch: refetchPositions }] = useLazyQuery(FXD_POSITIONS);
+  const { data, loading,  refetch: refetchPools } = useQuery(FXD_POOLS, {
     variables: {
       page: 10,
     },
@@ -52,13 +61,24 @@ const useClosePosition = (
     setBalance(positionStore.stableCoinBalance);
   }, [positionStore, account, setBalance]);
 
+  const refetchData = useCallback(async () => {
+    const walletProxy = await positionStore.getProxyWallet(account)!;
+
+    setTimeout(() => {
+      refetchStats();
+      refetchPools();
+      refetchPositions({
+        walletAddress: walletProxy,
+      });
+    }, 1000)
+  }, [positionStore, refetchStats, refetchPools, refetchPositions])
+
   const handleOnOpen = useCallback(async () => {
     setPrice(pool.priceWithSafetyMargin);
     setFathomToken(pool.priceWithSafetyMargin * lockedCollateral);
     setCollateral(lockedCollateral);
   }, [
     pool,
-    poolStore,
     lockedCollateral,
     setPrice,
     setFathomToken,
@@ -71,7 +91,7 @@ const useClosePosition = (
   }, [getBalance, handleOnOpen]);
 
   useEffect(() => {
-    balance / 10 ** 18 < fathomToken
+    balance && (balance / 10 ** 18 < fathomToken)
       ? setBalanceError(true)
       : setBalanceError(false);
   }, [fathomToken, balance]);
@@ -79,17 +99,31 @@ const useClosePosition = (
   const closePosition = useCallback(async () => {
     setDisableClosePosition(true);
     try {
-      await positionStore.partiallyClosePosition(
-        position,
-        pool,
-        account,
-        fathomToken,
-        collateral
-      );
+      if (closingType === ClosingType.Full) {
+        await positionStore.fullyClosePosition(
+          position,
+          pool,
+          account,
+          collateral,
+        )
+      } else {
+        await positionStore.partiallyClosePosition(
+          position,
+          pool,
+          account,
+          fathomToken,
+          collateral
+        );
+      }
+
+      refetchData();
       onClose();
-    } catch (e) {}
+    } catch (e) {
+      console.error(e)
+    }
     setDisableClosePosition(false);
   }, [
+    closingType,
     position,
     pool,
     account,

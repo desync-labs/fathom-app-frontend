@@ -1,4 +1,7 @@
-import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
+import {
+  AppDialog,
+  DialogContentWrapper
+} from "components/AppComponents/AppDialog/AppDialog";
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
 import {
   Box,
@@ -7,38 +10,17 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
-import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
+import {
+  ButtonPrimary,
+  CancelButton,
+  SkipButton,
+} from "components/AppComponents/AppButton/AppButton";
 import React, { FC, useCallback, useMemo } from "react";
-import ILockPosition from "stores/interfaces/ILockPosition";
 import { styled } from "@mui/material/styles";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import InfoIcon from "@mui/icons-material/Info";
 import useStakingView from "hooks/useStakingView";
-
-const DialogContentWrapper = styled(Box)`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  margin: 20px 0 30px;
-`;
-
-const Amount = styled(Box)`
-  font-weight: 600;
-  font-size: 36px;
-  line-height: 40px;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-
-  span {
-    font-weight: 500;
-    font-size: 20px;
-    line-height: 24px;
-    color: #fff;
-  }
-`;
+import { formatNumber } from "utils/format";
 
 export const InfoMessageWrapper = styled(Box)`
   display: flex;
@@ -66,54 +48,54 @@ const ConfirmButton = styled(ButtonPrimary)`
   line-height: 24px;
 `;
 
+const Description = styled(Typography)`
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: #ffffff;
+  padding: 0 15px;
+`;
+
+const ButtonsWrapper = styled(Box)`
+  width: auto;
+  margin: 20px 15px;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+
+  > button {
+    width: calc(50% - 3px);
+  }
+`;
+
 export enum ClaimRewardsType {
   ITEM,
   FUll,
 }
 
-export type ClaimRewardsAll = {
-  totalRewards?: number;
-  rewardsToken?: string;
-};
-
 type ClaimRewardsDialogProps = {
+  totalRewards: number;
   token: string;
-  lockPosition: ILockPosition | null;
-  totalRewards: ClaimRewardsAll | null;
   onClose: () => void;
-  type: ClaimRewardsType;
+  onSkip?: () => void;
+  type?: ClaimRewardsType;
 };
 
 const ClaimRewardsDialog: FC<ClaimRewardsDialogProps> = ({
+  totalRewards,
   token,
   onClose,
-  lockPosition,
-  totalRewards,
-  type = ClaimRewardsType.ITEM,
+  onSkip,
 }) => {
-  const { claimRewardsSingle, claimRewards, action } = useStakingView();
+  const { claimRewards, action } = useStakingView();
 
-  const claimRewardsHandler = useCallback( () => {
-    if (type === ClaimRewardsType.ITEM) {
-      // @ts-ignore
-      claimRewardsSingle(lockPosition?.lockId).then(() => {
-        onClose();
-      });
-    } else {
-      claimRewards().then(() => {
-        onClose();
-      });
-    }
-  }, [lockPosition, type, claimRewardsSingle, claimRewards, onClose]);
+  const claimRewardsHandler = useCallback(() => {
+    claimRewards().then(() => {
+      onClose();
+    });
+  }, [claimRewards, onClose]);
 
-  const isLoading = useMemo(
-    () =>
-      type === ClaimRewardsType.ITEM
-        ? // @ts-ignore
-          action?.type === "claimSingle" && action?.id === lockPosition?.lockId
-        : action?.type === "claim",
-    [action, lockPosition?.lockId, type]
-  );
+  const isLoading = useMemo(() => action?.type === "claim", [action]);
 
   return (
     <AppDialog
@@ -123,54 +105,46 @@ const ClaimRewardsDialog: FC<ClaimRewardsDialogProps> = ({
       fullWidth
       maxWidth="sm"
       color="primary"
-      sx={{ '.MuiPaper-root':  { maxWidth: "500px" } }}
     >
       <AppDialogTitle id="customized-dialog-title" onClose={onClose}>
         Claim Rewards
       </AppDialogTitle>
 
       <DialogContent>
-        <Grid container>
-          <Grid item xs={12}>
-            <DialogContentWrapper>
-              <img
-                src={getTokenLogoURL(token)}
-                alt={"token-logo"}
-                width={58}
-              />
-              <Box>You’re claiming</Box>
-              <Amount>
-                <Box>
-                  {type === ClaimRewardsType.ITEM
-                    ? lockPosition?.RewardsAvailable
-                    : totalRewards?.totalRewards}
-                </Box>
-                <span>
-                  {type === ClaimRewardsType.ITEM
-                    ? token
-                    : totalRewards?.rewardsToken}
-                </span>
-              </Amount>
-            </DialogContentWrapper>
-            <InfoMessageWrapper>
-              <InfoIcon sx={{ fontSize: "18px", color: "#4F658C" }} />
-              <Typography>
-                By clicking “Confirm”, you’ll be withdrawing this amount to your
-                connected wallet.
-              </Typography>
-            </InfoMessageWrapper>
-          </Grid>
+        <Description>
+          Claim Rewards only is available for all positions at the moment. You
+          will lose the rewards of the position you proceed to unstake without
+          claiming it here first. <a>Learn more.</a>
+        </Description>
+        <DialogContentWrapper>
+          <img src={getTokenLogoURL(token)} alt={"token-logo"} width={58} />
+          <Box sx={{ fontSize: "18px" }}>You’re requesting to claim</Box>
+          <Box className={'amount'}>
+            <Box>{formatNumber(totalRewards)}</Box>
+            <span>{token}</span>
+          </Box>
+        </DialogContentWrapper>
+        <ButtonsWrapper>
+          {onSkip ? (
+            <SkipButton onClick={onSkip}>Skip</SkipButton>
+          ) : (
+            <CancelButton onClick={onClose}>Cancel</CancelButton>
+          )}
 
-          <Grid item xs={12}>
-            <ConfirmButton
-              disabled={isLoading}
-              isLoading={isLoading}
-              onClick={claimRewardsHandler}
-            >
-              {isLoading ? <CircularProgress size={30} /> : "Confirm"}
-            </ConfirmButton>
-          </Grid>
-        </Grid>
+          <ConfirmButton
+            disabled={isLoading}
+            isLoading={isLoading}
+            onClick={claimRewardsHandler}
+          >
+            {isLoading ? <CircularProgress size={30} /> : "Claim All Rewards"}
+          </ConfirmButton>
+        </ButtonsWrapper>
+        <InfoMessageWrapper>
+          <InfoIcon sx={{ fontSize: "18px", color: "#4F658C" }} />
+          <Typography>
+            Proceeding will prompt you to sign 1 txn in MetaMask.
+          </Typography>
+        </InfoMessageWrapper>
       </DialogContent>
     </AppDialog>
   );

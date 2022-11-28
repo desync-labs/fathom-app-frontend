@@ -1,11 +1,6 @@
-import {
-  useCallback,
-  useEffect,
-  useState
-} from "react";
+import { useCallback, useEffect, useState } from "react";
 import useMetaMask from "hooks/metamask";
 import { useStores } from "stores";
-
 
 const useMainLayout = () => {
   const [open, setOpen] = useState<boolean>(true);
@@ -20,7 +15,9 @@ const useMainLayout = () => {
   const rootStore = useStores();
 
   useEffect(() => {
-    rootStore.setChainId(chainId!);
+    if (chainId) {
+      rootStore.setChainId(chainId!);
+    }
   }, [chainId, rootStore]);
 
   const resizeHandler = useCallback(() => {
@@ -40,7 +37,6 @@ const useMainLayout = () => {
     return () => window.removeEventListener("resize", resizeHandler);
   }, [resizeHandler]);
 
-
   return {
     account,
     error,
@@ -50,7 +46,7 @@ const useMainLayout = () => {
     connect,
     isMetamask,
     toggleDrawer,
-  }
-}
+  };
+};
 
 export default useMainLayout;

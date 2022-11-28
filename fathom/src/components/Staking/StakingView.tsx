@@ -1,7 +1,5 @@
 import * as React from "react";
-import {
-  Grid,
-} from "@mui/material";
+import { Grid } from "@mui/material";
 import { useMemo } from "react";
 import { observer } from "mobx-react";
 import StakingLockForm from "components/Staking/StakingLockForm";
@@ -14,6 +12,8 @@ const StakingView = observer(() => {
   const {
     stakingStore,
     fetchOverallValues,
+    showClaimRewards,
+    setShowClaimRewards,
   } = useStakingView();
 
   return (
@@ -37,6 +37,7 @@ const StakingView = observer(() => {
           <Grid item xs={6}>
             <StreamStats
               apr={100}
+              setShowClaimRewards={setShowClaimRewards}
               stakedBalance={stakingStore.totalStakedPosition}
               voteBalance={stakingStore.voteBalance}
             />
@@ -44,7 +45,10 @@ const StakingView = observer(() => {
         </Grid>
       </Grid>
       <Grid item xs={12}>
-        <StakingPositions />
+        <StakingPositions
+          showClaimRewards={showClaimRewards}
+          setShowClaimRewards={setShowClaimRewards}
+        />
       </Grid>
     </Grid>
   );

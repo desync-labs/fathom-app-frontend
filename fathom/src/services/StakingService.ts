@@ -10,29 +10,12 @@ import {
 import { Constants } from "helpers/Constants";
 import ILockPosition from "stores/interfaces/ILockPosition";
 import { Strings } from "helpers/Strings";
-import { secondsToTime } from "utils/secondsToTime";
-    //claimAllLockRewardsForStream(uint256 streamId) (pass streamId = 0 as FTHM tokens streamId is 0) --> This function is use to claim all lock rewards for a stream
-    //function withdrawStream(uint256 streamId) -> This is used to withdraw all the fthm token claimed
-const defaultLockInfo = {
-  lockId: 0,
-  VOTETokenBalance: 0,
-  MAINTokenBalance: 0,
-  EndTime: 0,
-  RewardsAvailable: "0",
-  timeObject: {
-    hour: 0,
-    seconds: 0,
-    days: 0,
-    min: 0,
-    sec: 0,
-  },
-};
 
 export default class StakingService implements IStakingService {
   chainId = 51;
 
   async createLock(
-    address: string,
+    account: string,
     stakePosition: number,
     unlockPeriod: number,
     transactionStore: ActiveWeb3Transactions
@@ -41,24 +24,21 @@ export default class StakingService implements IStakingService {
       SmartContractFactory.Staking(this.chainId),
       this.chainId
     );
-    const day = 24 * 60 * 60;
 
-    console.log("timestamp  HERE: ", (await this.getTimestamp()).toString());
+    const daySecconds = 24 * 60 * 60;
 
-    const lockingPeriod = unlockPeriod * day;
-    let endTime = await this.getTimestamp();
+    const lockingPeriod = unlockPeriod * daySecconds;
+    let endTime = Math.ceil( Date.now() / 1000 );
 
     if (lockingPeriod === 0) {
-      //if locking period = 0, lock only for 5 min
       endTime += 5 * 60;
-    }
-    if (lockingPeriod > 0) {
+    } else if (lockingPeriod > 0) {
       endTime = endTime + lockingPeriod;
     }
 
     return Staking.methods
-      .createLock(this.toWei(stakePosition), endTime)
-      .send({ from: address })
+      .createLock(this.toWei(stakePosition), endTime, account)
+      .send({ from: account })
       .on("transactionHash", (hash: any) => {
         transactionStore.addTransaction({
           hash: hash,
@@ -94,7 +74,7 @@ export default class StakingService implements IStakingService {
         promises.push(StakingGetter.methods.getLock(account, i + 1).call());
         claimPromises.push(
           Staking.methods
-            .getStreamClaimableAmountPerLock(1, account, i + 1)
+            .getStreamClaimableAmountPerLock(0, account, i + 1)
             .call()
         );
       }
@@ -103,19 +83,14 @@ export default class StakingService implements IStakingService {
         Promise.all(promises),
         Promise.all(claimPromises),
       ]);
-      const currentTimestamp = await this.getTimestamp();
+
+      const currentTimestamp = Math.floor(Date.now() / 1000);
 
       const [lockData, claimData] = data;
 
       for (let i = 0; i < length; i++) {
         let lockPosition = {} as ILockPosition;
-        const {
-          0: amountOfToken,
-          1: amountOfvToken,
-          3: end,
-        } = lockData[i];
-
-        console.log(lockData[i])
+        const { 0: amountOfToken, 1: amountOfvToken, 3: end } = lockData[i];
 
         const amountOfRewardsAvailable = claimData[i];
 
@@ -145,48 +120,41 @@ export default class StakingService implements IStakingService {
   async getLockInfo(lockId: number, account: string): Promise<ILockPosition> {
     let lockPosition = {} as ILockPosition;
 
-    try {
-      const Staking = Web3Utils.getContractInstance(
-        SmartContractFactory.Staking(this.chainId),
-        this.chainId
-      );
+    const Staking = Web3Utils.getContractInstance(
+      SmartContractFactory.Staking(this.chainId),
+      this.chainId
+    );
 
-      const StakingGetter = Web3Utils.getContractInstance(
-        SmartContractFactory.StakingGetter(this.chainId),
-        this.chainId
-      );
+    const StakingGetter = Web3Utils.getContractInstance(
+      SmartContractFactory.StakingGetter(this.chainId),
+      this.chainId
+    );
 
-      const currentTimestamp = await this.getTimestamp();
+    const currentTimestamp = Math.floor(Date.now() / 1000);
 
-      const {
-        0: amountOfToken,
-        1: amountOfvToken,
-        3: end,
-      } = await StakingGetter.methods.getLock(account, lockId).call();
+    const {
+      0: amountOfToken,
+      1: amountOfvToken,
+      3: end,
+    } = await StakingGetter.methods.getLock(account, lockId).call();
 
-      const amountOfRewardsAvailable = await Staking.methods
-        .getStreamClaimableAmountPerLock(1, account, lockId)
-        .call();
+    const amountOfRewardsAvailable = await Staking.methods
+      .getStreamClaimableAmountPerLock(0, account, lockId)
+      .call();
 
-      lockPosition.lockId = lockId;
+    lockPosition.lockId = lockId;
 
-      lockPosition.MAINTokenBalance =
-        this._convertToEtherBalance(amountOfToken);
+    lockPosition.MAINTokenBalance = this._convertToEtherBalance(amountOfToken);
 
-      lockPosition.VOTETokenBalance =
-        this._convertToEtherBalance(amountOfvToken);
+    lockPosition.VOTETokenBalance = this._convertToEtherBalance(amountOfvToken);
 
-      lockPosition.EndTime = end - currentTimestamp;
+    lockPosition.EndTime = end - currentTimestamp;
 
-      lockPosition.RewardsAvailable = this._convertToEtherBalanceRewards(
-        amountOfRewardsAvailable
-      );
+    lockPosition.RewardsAvailable = this._convertToEtherBalanceRewards(
+      amountOfRewardsAvailable
+    );
 
-      return lockPosition;
-    } catch (error) {
-      console.error(`Error in fetching latest lock: ${error}`);
-      return defaultLockInfo;
-    }
+    return lockPosition;
   }
 
   async getLockPositionsLength(account: string): Promise<number> {
@@ -207,41 +175,19 @@ export default class StakingService implements IStakingService {
       this.chainId
     );
 
-    return new Promise(async (resolve, reject) => {
-      try {
-        await Staking.methods
-          .claimAllStreamRewardsForLock(lockId)
-          .send({ from: account })
-          .on("transactionHash", (hash: any) => {
-            transactionStore.addTransaction({
-              hash: hash,
-              type: TransactionType.Approve,
-              active: false,
-              status: TransactionStatus.None,
-              title: `Claiming All Stream Rewards before unlock`,
-              message: Strings.CheckOnBlockExplorer,
-            });
-          });
-
-        await Staking.methods
-          .unlock(lockId)
-          .send({ from: account })
-          .on("transactionHash", (hash: any) => {
-            transactionStore.addTransaction({
-              hash: hash,
-              type: TransactionType.Approve,
-              active: false,
-              status: TransactionStatus.None,
-              title: `Handling Unlock`,
-              message: Strings.CheckOnBlockExplorer,
-            });
-          });
-
-        resolve();
-      } catch (error) {
-        reject(error);
-      }
-    });
+    return Staking.methods
+      .unlock(lockId)
+      .send({ from: account })
+      .on("transactionHash", (hash: any) => {
+        transactionStore.addTransaction({
+          hash: hash,
+          type: TransactionType.Approve,
+          active: false,
+          status: TransactionStatus.None,
+          title: `Handling Unlock`,
+          message: Strings.CheckOnBlockExplorer,
+        });
+      });
   }
 
   async handleEarlyWithdrawal(
@@ -253,43 +199,20 @@ export default class StakingService implements IStakingService {
       SmartContractFactory.Staking(this.chainId),
       this.chainId
     );
-    
 
-    return new Promise(async (resolve, reject) => {
-      try {
-        await Staking.methods
-          .claimAllStreamRewardsForLock(lockId) 
-          .send({ from: account })
-          .on("transactionHash", (hash: any) => {
-            transactionStore.addTransaction({
-              hash: hash,
-              type: TransactionType.Approve,
-              active: false,
-              status: TransactionStatus.None,
-              title: `Claiming All Stream Rewards before unlock`,
-              message: Strings.CheckOnBlockExplorer,
-            });
-          });
-
-        await Staking.methods
-          .earlyUnlock(lockId)
-          .send({ from: account })
-          .on("transactionHash", (hash: any) => {
-            transactionStore.addTransaction({
-              hash: hash,
-              type: TransactionType.Approve,
-              active: false,
-              status: TransactionStatus.None,
-              title: `Handling Early Unlock`,
-              message: Strings.CheckOnBlockExplorer,
-            });
-          });
-
-        resolve();
-      } catch (error) {
-        reject(error);
-      }
-    });
+    return Staking.methods
+      .earlyUnlock(lockId)
+      .send({ from: account })
+      .on("transactionHash", (hash: any) => {
+        transactionStore.addTransaction({
+          hash: hash,
+          type: TransactionType.Approve,
+          active: false,
+          status: TransactionStatus.None,
+          title: `Handling Early Unlock`,
+          message: Strings.CheckOnBlockExplorer,
+        });
+      });
   }
 
   async handleClaimRewardsSingle(
@@ -373,7 +296,7 @@ export default class StakingService implements IStakingService {
     const oneDay = 24 * 60 * 60;
     // One year seconds
     const oneYear = 365 * 24 * 60 * 60;
-    return  (20000 * oneDay) / oneYear;
+    return (20000 * oneDay) / oneYear;
   }
 
   async getAPR(): Promise<number> {
@@ -395,9 +318,9 @@ export default class StakingService implements IStakingService {
     return APR;
   }
 
-  async getWalletBalance(account: string): Promise<number> {
+  async getWalletBalance(account: string, fathomToken: string): Promise<number> {
     const MainToken = Web3Utils.getContractInstance(
-      SmartContractFactory.MainToken(this.chainId),
+      SmartContractFactory.MainToken(fathomToken),
       this.chainId
     );
 
@@ -407,7 +330,7 @@ export default class StakingService implements IStakingService {
 
   async getVOTEBalance(account: string): Promise<number> {
     const VeMAINToken = Web3Utils.getContractInstance(
-      SmartContractFactory.VeMAINToken(this.chainId),
+      SmartContractFactory.vFathom(this.chainId),
       this.chainId
     );
 
@@ -416,12 +339,14 @@ export default class StakingService implements IStakingService {
   }
 
   async getTimestamp(): Promise<number> {
-    console.log(`getTimestamp`);
     const web3 = Web3Utils.getWeb3Instance(this.chainId);
     const blockNumber = await web3.eth.getBlockNumber();
-    const block = await web3.eth.getBlock(blockNumber);
+    const timestamp = (await web3.eth.getBlock(blockNumber)).timestamp;
 
-    return block.timestamp;
+    console.log(timestamp);
+    console.log(Date.now() / 1000);
+
+    return timestamp;
   }
 
   fromWei(balance: number): number {
@@ -442,28 +367,13 @@ export default class StakingService implements IStakingService {
     return parseFloat(this.fromWei(balance).toString()).toFixed(2);
   }
 
-  _convertToTimeObject(_remainingTime: number) {
-    const remainingTime = _remainingTime;
-    let obj = {
-      days: 0,
-      hour: 0,
-      min: 0,
-      sec: 0,
-      seconds: 0,
-    };
-
-    if (remainingTime > 0) {
-      obj = secondsToTime(remainingTime);
-    }
-    return obj;
-  }
-
   async approvalStatusStakingFTHM(
     address: string,
-    stakingPosition: number
+    stakingPosition: number,
+    fthmTokenAddress: string
   ): Promise<Boolean> {
     const FTHMToken = Web3Utils.getContractInstance(
-      SmartContractFactory.MainToken(this.chainId),
+      SmartContractFactory.MainToken(fthmTokenAddress),
       this.chainId
     );
 
@@ -473,15 +383,16 @@ export default class StakingService implements IStakingService {
       .allowance(address, StakingAddress)
       .call();
 
-    return allowance > this.toWei(stakingPosition);
+    return Number(allowance) > Number(this.toWei(stakingPosition));
   }
 
   approveStakingFTHM(
     address: string,
-    transactionStore: ActiveWeb3Transactions
+    fthmTokenAddress: string,
+    transactionStore: ActiveWeb3Transactions,
   ): Promise<void> {
     const FTHMToken = Web3Utils.getContractInstance(
-      SmartContractFactory.MainToken(this.chainId),
+      SmartContractFactory.MainToken(fthmTokenAddress),
       this.chainId
     );
 
