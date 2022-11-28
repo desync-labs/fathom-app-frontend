@@ -1,25 +1,32 @@
 import { observer } from "mobx-react";
 import { Alert, AlertTitle, LinearProgress, Typography } from "@mui/material";
-import { useStores } from "../../stores";
+import { useStores } from "stores";
 import truncateEthAddress from "truncate-eth-address";
-import { Constants } from "../../helpers/Constants";
+import { ChainId, EXPLORERS } from "connectors/networks";
+import { styled } from "@mui/material/styles";
+
+const AlertMessage = styled(Alert)`
+  position: fixed;
+  width: 100%;
+  margin-bottom: 2px;
+  z-index: 1000;
+`;
 
 const TransactionStatus = observer(() => {
   let { transactionStore } = useStores();
   let rootStore = useStores();
 
   const getTxUrl = (txHash: string) => {
-    if (rootStore.chainId === Constants.DEFAULT_CHAIN_ID) {
-      return `${Constants.APOTHEM_BLOCK_EXPLORER_URL}${txHash}`;
-    } else {
-      return `${Constants.GOERLI_BLOCK_EXPLORER_URL}${txHash}`
+    if (rootStore.chainId in EXPLORERS) {
+      return `${EXPLORERS[rootStore.chainId as ChainId]}${txHash}`;
     }
+    return "";
   };
 
   return (
     <>
       {transactionStore.transactions.map((transaction, idx) => (
-        <Alert severity="info" variant="filled" key={idx}>
+        <AlertMessage severity="info" variant="filled" key={idx}>
           <AlertTitle>{transaction.title}</AlertTitle>
           <Typography color="text.secondary" sx={{ flex: 1 }}>
             {transaction.message}{" "}
@@ -34,7 +41,7 @@ const TransactionStatus = observer(() => {
             </strong>
           </Typography>
           <LinearProgress />
-        </Alert>
+        </AlertMessage>
       ))}
     </>
   );

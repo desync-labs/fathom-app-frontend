@@ -14,13 +14,15 @@ const useStakingView = () => {
   const logger = useLogger();
   const { stakingStore, alertStore } = useStores();
 
+  const [showClaimRewards, setShowClaimRewards] =
+    useState<boolean>(false);
+
   const fetchAll = useCallback(
     async (account: string) => {
       setIsLoading(true);
       Promise.all([
         stakingStore.fetchLocks(account),
         stakingStore.fetchVOTEBalance(account),
-        stakingStore.fetchWalletBalance(account),
         stakingStore.fetchAPR(),
       ]).then(() => {
         setIsLoading(false);
@@ -34,7 +36,6 @@ const useStakingView = () => {
       setIsLoading(true);
       await Promise.all([
         stakingStore.fetchVOTEBalance(account),
-        stakingStore.fetchWalletBalance(account),
         stakingStore.fetchAPR(),
       ]).then(() => {
         setIsLoading(false);
@@ -45,7 +46,6 @@ const useStakingView = () => {
 
   useEffect(() => {
     if (chainId) {
-      logger.log(LogLevel.info, "Fetching lock positions.");
       fetchAll(account);
     } else {
       stakingStore.setLocks([]);
@@ -157,6 +157,9 @@ const useStakingView = () => {
 
     calculateTotalRewards,
     claimRewardsSingle,
+
+    showClaimRewards,
+    setShowClaimRewards
   };
 };
 

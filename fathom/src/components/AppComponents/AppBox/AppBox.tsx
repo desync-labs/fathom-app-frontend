@@ -35,10 +35,6 @@ export const WalletBalance = styled(Typography)`
   float: right;
 `;
 
-export const ErrorMessage = styled(Typography)`
-  fon-size: 14px;
-`;
-
 export const InfoLabel = styled(Typography)`
   font-size: 14px;
   float: left;

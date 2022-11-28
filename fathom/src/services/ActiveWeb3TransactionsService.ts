@@ -13,17 +13,9 @@ export default class ActiveWeb3TransactionsService
   async checkTransactionStatus(
     pendingTransaction: ITransaction
   ): Promise<ITransaction> {
-    console.log(
-      `Checking the transaction status for : ${pendingTransaction.hash}`
-    );
     const response = await Web3Utils.getWeb3Instance(
       this.chainId
     ).eth.getTransactionReceipt(pendingTransaction.hash);
-    console.log(
-      `status for transaction: ${pendingTransaction.hash} is ${JSON.stringify(
-        response
-      )}`
-    );
     if (response !== null) {
       pendingTransaction.status = response.status
         ? TransactionStatus.Success

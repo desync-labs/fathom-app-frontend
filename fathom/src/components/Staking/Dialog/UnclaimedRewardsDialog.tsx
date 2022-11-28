@@ -1,45 +1,37 @@
-import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
+import {
+  AppDialog,
+  DialogContentWrapper
+} from "components/AppComponents/AppDialog/AppDialog";
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
 import {
   Box,
-  CircularProgress,
   DialogContent,
   Grid,
   Typography,
 } from "@mui/material";
-import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
-import React, { FC, useCallback, useMemo } from "react";
+import {
+  ButtonPrimary,
+  SkipButton
+} from "components/AppComponents/AppButton/AppButton";
+import React, { FC } from "react";
 import ILockPosition from "stores/interfaces/ILockPosition";
 import { styled } from "@mui/material/styles";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import InfoIcon from "@mui/icons-material/Info";
-import useStakingView from "hooks/useStakingView";
+import { formatNumber } from "utils/format";
 
-const DialogContentWrapper = styled(Box)`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  margin: 20px 0 30px;
-`;
-
-const Amount = styled(Box)`
-  font-weight: 600;
-  font-size: 36px;
-  line-height: 40px;
-  color: #fff;
+const WarningBlock = styled(Box)`
+  background: #452508;
+  border: 1px solid #5C310A;
+  border-radius: 8px;
+  color: #F7B06E;
   display: flex;
   align-items: center;
-  gap: 7px;
-
-  span {
-    font-weight: 500;
-    font-size: 20px;
-    line-height: 24px;
-    color: #fff;
-  }
-`;
-
+  padding: 8px 16px;
+  gap: 12px;
+  font-size: 14px;
+  margin: 0 15px 40px 15px;
+`
 export const InfoMessageWrapper = styled(Box)`
   display: flex;
   align-items: start;
@@ -66,55 +58,41 @@ const ConfirmButton = styled(ButtonPrimary)`
   line-height: 24px;
 `;
 
-export enum ClaimRewardsType {
-  ITEM,
-  FUll,
-}
+const Description = styled(Typography)`
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: #FFFFFF;
+  padding: 0 15px;
+`
 
-export type ClaimRewardsAll = {
-  totalRewards?: number;
-  rewardsToken?: string;
-};
+const ButtonsWrapper = styled(Box)`
+  width: auto;
+  margin: 20px 15px;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  
+  > button {
+    width: calc(50% - 3px);
+  }
+`
 
 type ClaimRewardsDialogProps = {
+  position: ILockPosition;
   token: string;
-  lockPosition: ILockPosition | null;
-  totalRewards: ClaimRewardsAll | null;
   onClose: () => void;
-  type: ClaimRewardsType;
+  onSkip: () => void;
+  onClaim: () => void
 };
 
 const UnclaimedRewardsDialog: FC<ClaimRewardsDialogProps> = ({
+  position,
   token,
   onClose,
-  lockPosition,
-  totalRewards,
-  type = ClaimRewardsType.ITEM,
+  onSkip,
+  onClaim
 }) => {
-  const { claimRewardsSingle, claimRewards, action } = useStakingView();
-
-  const claimRewardsHandler = useCallback(() => {
-    if (type === ClaimRewardsType.ITEM) {
-      // @ts-ignore
-      claimRewardsSingle(lockPosition?.lockId).then(() => {
-        onClose();
-      });
-    } else {
-      claimRewards().then(() => {
-        onClose();
-      });
-    }
-  }, [lockPosition, type, claimRewardsSingle, claimRewards, onClose]);
-
-  const isLoading = useMemo(
-    () =>
-      type === ClaimRewardsType.ITEM
-        ? // @ts-ignore
-          action?.type === "claimSingle" && action?.id === lockPosition?.lockId
-        : action?.type === "claim",
-    [action, lockPosition?.lockId, type]
-  );
-
   return (
     <AppDialog
       onClose={onClose}
@@ -123,50 +101,35 @@ const UnclaimedRewardsDialog: FC<ClaimRewardsDialogProps> = ({
       fullWidth
       maxWidth="sm"
       color="primary"
-      sx={{ ".MuiPaper-root": { maxWidth: "500px" } }}
     >
       <AppDialogTitle id="customized-dialog-title" onClose={onClose}>
-        Claim Rewards
+        You have unclaimed rewards!
       </AppDialogTitle>
 
       <DialogContent>
-        <Grid container>
-          <Grid item xs={12}>
-            <DialogContentWrapper>
-              <img src={getTokenLogoURL(token)} alt={"token-logo"} width={58} />
-              <Box>You’re claiming</Box>
-              <Amount>
-                <Box>
-                  {type === ClaimRewardsType.ITEM
-                    ? lockPosition?.RewardsAvailable
-                    : totalRewards?.totalRewards}
-                </Box>
-                <span>
-                  {type === ClaimRewardsType.ITEM
-                    ? token
-                    : totalRewards?.rewardsToken}
-                </span>
-              </Amount>
-            </DialogContentWrapper>
-            <InfoMessageWrapper>
-              <InfoIcon sx={{ fontSize: "18px", color: "#4F658C" }} />
-              <Typography>
-                By clicking “Confirm”, you’ll be withdrawing this amount to your
-                connected wallet.
-              </Typography>
-            </InfoMessageWrapper>
-          </Grid>
-
-          <Grid item xs={12}>
-            <ConfirmButton
-              disabled={isLoading}
-              isLoading={isLoading}
-              onClick={claimRewardsHandler}
-            >
-              {isLoading ? <CircularProgress size={30} /> : "Confirm"}
-            </ConfirmButton>
-          </Grid>
-        </Grid>
+        <Description>
+          If you unstake before claiming rewards, you will lose them. Claim rewards first in My Stats, then Unstake later.
+        </Description>
+        <DialogContentWrapper>
+          <img src={getTokenLogoURL(token)} alt={"token-logo"} width={58} />
+          <Box sx={{ fontSize: '18px' }}>You’re having unclaimed rewards</Box>
+          <Box className={'amount'}>
+            <Box>{formatNumber(Number(position.RewardsAvailable))}</Box>
+            <span>{token}</span>
+          </Box>
+        </DialogContentWrapper>
+        <WarningBlock>
+          <InfoIcon sx={{ fontSize: "18px", color: '#F5953D' }} />
+          <Typography component={'span'}>
+            Penalty fee will be applied.
+          </Typography>
+        </WarningBlock>
+        <ButtonsWrapper>
+          <SkipButton onClick={onSkip}>Skip</SkipButton>
+          <ConfirmButton onClick={onClaim}>
+            Claim All Rewards
+          </ConfirmButton>
+        </ButtonsWrapper>
       </DialogContent>
     </AppDialog>
   );

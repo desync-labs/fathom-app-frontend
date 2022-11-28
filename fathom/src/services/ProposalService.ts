@@ -195,7 +195,7 @@ export default class ProposalService implements IProposalService {
 
   async getVeBalance(account: string): Promise<number> {
     const VeFathom = Web3Utils.getContractInstance(
-      SmartContractFactory.VeFathom(this.chainId),
+      SmartContractFactory.vFathom(this.chainId),
       this.chainId
     );
 

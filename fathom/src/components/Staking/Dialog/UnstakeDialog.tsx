@@ -6,7 +6,10 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
-import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
+import {
+  AppDialog,
+  DialogContentWrapper,
+} from "components/AppComponents/AppDialog/AppDialog";
 import React, { FC } from "react";
 import ILockPosition from "stores/interfaces/ILockPosition";
 import { StakingViewItemLabel } from "components/Staking/StakingViewItem";
@@ -87,41 +90,28 @@ const ConfirmButton = styled(ButtonPrimary)`
   line-height: 24px;
 `;
 
-export enum UNSTAKE_TYPE {
-  ITEM,
-  ALL,
-}
-
 type UnstakeDialogProps = {
   lockPosition: ILockPosition | null;
-  lockPositions: ILockPosition[];
   token: string;
   onClose: () => void;
-  type?: UNSTAKE_TYPE;
 };
 
 const UnstakeDialog: FC<UnstakeDialogProps> = ({
   onClose,
   token,
   lockPosition,
-  lockPositions,
-  type = UNSTAKE_TYPE.ITEM,
 }) => {
   const {
     balanceError,
-    unstakeAmount,
+    unStakeAmount,
     totalBalance,
 
     isLoading,
 
-    handleUnstakeAmountChange,
+    handleUnStakeAmountChange,
     setMax,
-    unstakeHandler,
-
-    totalUnstakeBalance,
-    totalMainTokenBalance,
-    totalRewardBalance,
-  } = useUnstake(lockPosition, lockPositions, type);
+    unStakeHandler,
+  } = useUnstake(lockPosition);
 
   return (
     <UnstakeDialogWrapper
@@ -132,51 +122,18 @@ const UnstakeDialog: FC<UnstakeDialogProps> = ({
       maxWidth="sm"
     >
       <AppDialogTitle id="customized-dialog-title" onClose={onClose}>
-        { type === UNSTAKE_TYPE.ALL ? 'Unstake All' : 'Unstake' }
+        Unstake
       </AppDialogTitle>
 
       <DialogContent>
-        <UnstakeBalanceWrapper container>
-          <Grid item xs={8}>
-            <UnstakeLabel>My staked balance</UnstakeLabel>
-            <UnstakeValue>
-              <strong>
-                {" "}
-                {lockPosition && formatNumber(lockPosition?.MAINTokenBalance)}
-                {type === UNSTAKE_TYPE.ALL && formatNumber(totalMainTokenBalance!)}
-              </strong>
-              { token }<span>$2,566.84</span>
-            </UnstakeValue>
-          </Grid>
-          <Grid item xs={4}>
-            <UnstakeLabel>Claimable rewards</UnstakeLabel>
-            <UnstakeValue>
-              <strong>
-                {lockPosition &&
-                  formatNumber(Number(lockPosition.RewardsAvailable))}
-                {type === UNSTAKE_TYPE.ALL && formatNumber(totalRewardBalance!)}
-              </strong>
-              { token }<span>$0.00</span>
-            </UnstakeValue>
-          </Grid>
-        </UnstakeBalanceWrapper>
-
         <UnstakeGrid container>
           <Grid item xs={12}>
             <AppFormInputWrapper>
               <AppFormLabel>Unstake amount</AppFormLabel>
-              {type === UNSTAKE_TYPE.ITEM && totalBalance ? (
-                <WalletBalance>
-                  Available: {formatNumber(totalBalance)} { token }
-                </WalletBalance>
-              ) : null}
-              {type === UNSTAKE_TYPE.ALL && totalUnstakeBalance ? (
-                <WalletBalance>
-                  Available: {formatNumber(totalUnstakeBalance)} { token }
-                </WalletBalance>
-              ) : null }
+              <WalletBalance>
+                Available: {formatNumber(totalBalance)} {token}
+              </WalletBalance>
               <AppTextField
-                disabled={type === UNSTAKE_TYPE.ALL}
                 error={balanceError}
                 id="outlined-helperText"
                 helperText={
@@ -186,19 +143,30 @@ const UnstakeDialog: FC<UnstakeDialogProps> = ({
                       <Typography
                         sx={{ fontSize: "12px", paddingLeft: "22px" }}
                       >
-                        You do not have enough { token }
+                        You do not have enough {token}
                       </Typography>
                     </>
                   ) : null
                 }
-                value={unstakeAmount}
-                onChange={handleUnstakeAmountChange}
+                value={unStakeAmount}
+                onChange={handleUnStakeAmountChange}
               />
               <AppFormInputLogo src={getTokenLogoURL(token)} />
               <MaxButton onClick={() => setMax()}>Max</MaxButton>
             </AppFormInputWrapper>
           </Grid>
         </UnstakeGrid>
+
+        <DialogContentWrapper>
+          <img src={getTokenLogoURL(token)} alt={"token-logo"} width={58} />
+          <Box sx={{ fontSize: "18px" }}>You’re requesting to unstake</Box>
+          <Box className={"amount"}>
+            <Box>
+              {unStakeAmount ? formatNumber(Number(unStakeAmount)) : "--"}
+            </Box>
+            <span>{token}</span>
+          </Box>
+        </DialogContentWrapper>
         <UnstakeGrid
           container
           sx={{ "&.MuiGrid-container": { marginBottom: "20px" } }}
@@ -210,10 +178,7 @@ const UnstakeDialog: FC<UnstakeDialogProps> = ({
                 <InfoIcon sx={{ fontSize: "18px", color: "#6379A1" }} />
               </InfoLabel>
               <InfoValue>
-                { type === UNSTAKE_TYPE.ITEM && formatNumber(totalBalance)}
-                { type === UNSTAKE_TYPE.ALL && formatNumber(totalUnstakeBalance!)}
-                {" "}
-                { token }
+                {formatNumber(totalBalance)} {token}
               </InfoValue>
             </InfoWrapper>
             <InfoWrapper>
@@ -222,10 +187,8 @@ const UnstakeDialog: FC<UnstakeDialogProps> = ({
                 <InfoIcon sx={{ fontSize: "18px", color: "#6379A1" }} />
               </InfoLabel>
               <InfoValue>
-                { type === UNSTAKE_TYPE.ITEM && formatNumber(totalBalance)}
-                { type === UNSTAKE_TYPE.ALL && formatNumber(totalUnstakeBalance!)}
-                {" "}
-                { token }</InfoValue>
+                {formatNumber(totalBalance)} {token}
+              </InfoValue>
             </InfoWrapper>
           </Grid>
         </UnstakeGrid>
@@ -242,7 +205,7 @@ const UnstakeDialog: FC<UnstakeDialogProps> = ({
             <ConfirmButton
               disabled={isLoading}
               isLoading={isLoading}
-              onClick={unstakeHandler}
+              onClick={unStakeHandler}
             >
               {isLoading ? <CircularProgress size={30} /> : "Confirm Unstake"}
             </ConfirmButton>

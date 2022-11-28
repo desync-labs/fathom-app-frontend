@@ -1,17 +1,17 @@
 import ActiveWeb3Transactions from "stores/transaction.store";
 
 export default interface IStableSwapService {
-  swapTokenToStablecoin(
+  swapTokenToStableCoin(
     address: string,
     tokenIn: number,
     transactionStore: ActiveWeb3Transactions
   ): Promise<void>;
-  swapStablecoinToToken(
+  swapStableCoinToToken(
     address: string,
-    stablecoinIn: number,
+    stableCoinIn: number,
     transactionStore: ActiveWeb3Transactions
   ): Promise<void>;
-  approveStablecoin(
+  approveStableCoin(
     address: string,
     transactionStore: ActiveWeb3Transactions
   ): Promise<void>;

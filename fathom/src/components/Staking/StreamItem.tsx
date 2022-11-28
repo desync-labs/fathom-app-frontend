@@ -1,42 +1,34 @@
-import React, {
-  FC,
-  useMemo,
-  useState,
-  memo
-} from "react";
+import React, { FC, useMemo, useState, memo, Dispatch } from "react";
 import ILockPosition from "stores/interfaces/ILockPosition";
 import StakingViewItem from "components/Staking/StakingViewItem";
 import { useStores } from "stores";
 import ClaimRewardsDialog, {
-  ClaimRewardsAll,
   ClaimRewardsType,
 } from "components/Staking/Dialog/ClaimRewardsDialog";
 import useStakingView from "hooks/useStakingView";
-import UnstakeDialog, {
-  UNSTAKE_TYPE,
-} from "components/Staking/Dialog/UnstakeDialog";
+import UnstakeDialog from "components/Staking/Dialog/UnstakeDialog";
 import EarlyUnstakeDialog from "components/Staking/Dialog/EarlyUnstakeDialog";
+import { CircularProgress } from "@mui/material";
+import { NoResults } from "../AppComponents/AppBox/AppBox";
 
+type StreamItemProps = {
+  token: string;
+  showClaimRewards: boolean;
+  setShowClaimRewards: Dispatch<boolean>;
+};
 
-type StreamItemProps =  {
-  token: string
-}
-
-const StreamItem: FC<StreamItemProps> = ({ token }) => {
+const StreamItem: FC<StreamItemProps> = ({
+  token,
+  showClaimRewards,
+  setShowClaimRewards,
+}) => {
   const { stakingStore } = useStores();
 
   const [unstake, setUnstake] = useState<null | ILockPosition>(null);
-  const [unstakeType, setUnstakeType] = useState<UNSTAKE_TYPE>(
-    UNSTAKE_TYPE.ITEM
-  );
 
   const [earlyUnstake, setEarlyUnstake] = useState<null | ILockPosition>(null);
-
-  const [rewardsPosition, setRewardsPosition] = useState<null | ILockPosition>(
-    null
-  );
-  const [totalRewardsData, setTotalRewardsData] =
-    useState<null | ClaimRewardsAll>(null);
+  const [showUnclaimedRewards, setShowUnclaimedRewards] =
+    useState<boolean>(false);
 
   const { calculateTotalRewards } = useStakingView();
 
@@ -44,60 +36,56 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
     return calculateTotalRewards(stakingStore.lockPositions);
   }, [calculateTotalRewards, stakingStore.lockPositions]);
 
-  console.log(stakingStore.lockPositions);
-
   return (
     <>
       {useMemo(
         () => (
           <>
-            {stakingStore.lockPositions.map((lockPosition: ILockPosition, index: number) => (
-              <StakingViewItem
-                index={index}
-                key={lockPosition.lockId}
-                token={token}
-                lockPosition={lockPosition}
-                setUnstake={setUnstake}
-                setEarlyUnstake={setEarlyUnstake}
-                setRewardsPosition={setRewardsPosition}
-              />
-            ))}
+            {stakingStore.lockPositions.length === 0 ? (
+              <NoResults variant="h6">You have no open positions!</NoResults>
+            ) : (
+              stakingStore.lockPositions.map(
+                (lockPosition: ILockPosition, index: number) => (
+                  <StakingViewItem
+                    index={index}
+                    key={lockPosition.lockId}
+                    token={token}
+                    lockPosition={lockPosition}
+                    setUnstake={setUnstake}
+                    setEarlyUnstake={setEarlyUnstake}
+                  />
+                )
+              )
+            )}
           </>
         ),
 
-        [stakingStore.lockPositions, totalRewards, token]
+        [stakingStore.lockPositions, token]
       )}
 
-      {(rewardsPosition || totalRewardsData) && (
+      {showClaimRewards && (
         <ClaimRewardsDialog
-          lockPosition={rewardsPosition}
-          totalRewards={totalRewardsData}
           token={token}
+          totalRewards={totalRewards}
           onClose={() => {
-            setRewardsPosition(null);
-            setTotalRewardsData(null);
+            setShowClaimRewards(false);
           }}
-          type={
-            totalRewardsData ? ClaimRewardsType.FUll : ClaimRewardsType.ITEM
-          }
+          type={ClaimRewardsType.FUll}
         />
       )}
 
       {useMemo(
         () =>
-          (unstake || unstakeType === UNSTAKE_TYPE.ALL) && (
+          unstake && (
             <UnstakeDialog
               onClose={() => {
                 setUnstake(null);
-                setUnstakeType(UNSTAKE_TYPE.ITEM);
               }}
               token={token}
-              type={unstakeType}
               lockPosition={unstake}
-              lockPositions={stakingStore.lockPositions}
             />
           ),
-        [unstake, unstakeType, stakingStore.lockPositions, token]
+        [unstake, stakingStore.lockPositions, token]
       )}
 
       {useMemo(

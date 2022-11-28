@@ -1,10 +1,4 @@
-import {
-  Box,
-  Slider,
-  Grid,
-  Typography,
-  CircularProgress,
-} from "@mui/material";
+import { Box, Slider, Grid, Typography, CircularProgress } from "@mui/material";
 import { Controller } from "react-hook-form";
 import React, { FC, useMemo } from "react";
 import {
@@ -108,7 +102,7 @@ const StakingLockForm: FC<StakingLockFormPropsType> = ({
     approveFTHM,
     setPeriod,
     unlockDate,
-    walletBalance,
+    fthmBalance,
     fxdBalance,
     xdcBalance,
   } = useStakingLockForm(fetchOverallValues);
@@ -124,8 +118,8 @@ const StakingLockForm: FC<StakingLockFormPropsType> = ({
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <AppFormInputWrapper>
               <AppFormLabel>Staking amount</AppFormLabel>
-              {walletBalance ? (
-                <WalletBalance>Available: {walletBalance} FTHM</WalletBalance>
+              {fthmBalance ? (
+                <WalletBalance>Available: {fthmBalance} FTHM</WalletBalance>
               ) : null}
               <AppTextField
                 error={balanceError || !!error}
@@ -157,7 +151,7 @@ const StakingLockForm: FC<StakingLockFormPropsType> = ({
                 onChange={onChange}
               />
               <AppFormInputLogo src={getTokenLogoURL("FTHM")} />
-              <MaxButton onClick={() => setMax(walletBalance)}>Max</MaxButton>
+              <MaxButton onClick={() => setMax(fthmBalance)}>Max</MaxButton>
             </AppFormInputWrapper>
           )}
         />
@@ -221,14 +215,29 @@ const StakingLockForm: FC<StakingLockFormPropsType> = ({
         }, [lockDays, unlockDate])}
 
         <Grid container mt={3}>
-          <ButtonPrimary
-            isLoading={isLoading}
-            disabled={isLoading}
-            type="submit"
-            sx={{ width: "100%", height: "48px" }}
-          >
-            {isLoading ? <CircularProgress size={30} /> : "Stake"}
-          </ButtonPrimary>
+          {approvedBtn ? (
+            <ButtonPrimary
+              onClick={approveFTHM}
+              isLoading={approvalPending}
+              disabled={approvalPending}
+              sx={{ width: "100%", height: "48px" }}
+            >
+              {approvalPending ? (
+                <CircularProgress size={20} />
+              ) : (
+                "Approve FTHM"
+              )}
+            </ButtonPrimary>
+          ) : (
+            <ButtonPrimary
+              isLoading={isLoading}
+              disabled={isLoading}
+              type="submit"
+              sx={{ width: "100%", height: "48px" }}
+            >
+              {isLoading ? <CircularProgress size={30} /> : "Stake"}
+            </ButtonPrimary>
+          )}
 
           <Grid item xs={12}>
             <WalletBalanceTypography>My Wallet Balance</WalletBalanceTypography>
@@ -243,7 +252,7 @@ const StakingLockForm: FC<StakingLockFormPropsType> = ({
                   />
                   <Box>
                     <FTHMBalance>
-                      <strong>{formatNumber(walletBalance)}</strong> FTHM
+                      <strong>{formatNumber(fthmBalance)}</strong> FTHM
                     </FTHMBalance>
                     <USDBalance>$123.00</USDBalance>
                   </Box>
@@ -258,7 +267,7 @@ const StakingLockForm: FC<StakingLockFormPropsType> = ({
                   />
                   <Box>
                     <FTHMBalance>
-                      <strong>{formatNumber(fxdBalance / (10 ** 18))}</strong> FXD
+                      <strong>{formatNumber(fxdBalance / 10 ** 18)}</strong> FXD
                     </FTHMBalance>
                     <USDBalance>$123.00</USDBalance>
                   </Box>
@@ -280,23 +289,6 @@ const StakingLockForm: FC<StakingLockFormPropsType> = ({
                 </WalletBalanceWrapper>
               </Grid>
             </Grid>
-          </Grid>
-
-          <Grid item xs={7} >
-            {approvedBtn ? (
-              <ButtonPrimary
-                onClick={approveFTHM}
-                sx={{ mt: 3 }}
-                isLoading={approvalPending}
-                disabled={approvalPending}
-              >
-                {approvalPending ? (
-                  <CircularProgress size={20} />
-                ) : (
-                  "Approve FTHM"
-                )}
-              </ButtonPrimary>
-            ) : null}
           </Grid>
         </Grid>
       </form>

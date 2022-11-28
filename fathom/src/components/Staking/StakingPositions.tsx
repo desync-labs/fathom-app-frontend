@@ -1,13 +1,25 @@
 import { TitleSecondary } from "components/AppComponents/AppBox/AppBox";
 import * as React from "react";
-import { FC } from "react";
+import { Dispatch, FC } from "react";
 import StreamItem from "components/Staking/StreamItem";
 
-const StakingPositions: FC = () => {
+type StakingPositionsProps = {
+  showClaimRewards: boolean;
+  setShowClaimRewards: Dispatch<boolean>;
+};
+
+const StakingPositions: FC<StakingPositionsProps> = ({
+  showClaimRewards,
+  setShowClaimRewards,
+}) => {
   return (
     <>
       <TitleSecondary>My Positions</TitleSecondary>
-      <StreamItem token={'FTHM'} />
+      <StreamItem
+        token={"FTHM"}
+        showClaimRewards={showClaimRewards}
+        setShowClaimRewards={setShowClaimRewards}
+      />
     </>
   );
 };

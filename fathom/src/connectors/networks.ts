@@ -14,6 +14,11 @@ export const NETWORK_LABELS = {
   51: "Apothem",
 };
 
+export const EXPLORERS = {
+  51: 'https://explorer.apothem.network/txs/',
+  50: 'https://xdc.blocksscan.io/txs/',
+}
+
 export const XDC_NETWORK_SETTINGS = {
   50: {
     chainName: 'XDC',

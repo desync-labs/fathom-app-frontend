@@ -10,12 +10,11 @@ import Addresses from "config/addresses.json";
 import Staking from "config/ABI/Staking.json";
 import StakingGetter from "config/ABI/StakingGetter.json";
 import MainToken from "config/ABI/MainToken.json";
-import VeMainToken from "config/ABI/VeMainToken.json";
-import Token from "config/ABI/Token.json";
 import FathomStats from "config/ABI/FathomStats.json";
 import Governor from "config/ABI/Governor.json";
 import VeFathomAbi from "config/ABI/VeFathom.json";
 import DexPriceOracle from "config/ABI/DexPriceOracle.json";
+import CollateralTokenAdapterAbi from 'config/ABI/CollateralTokenAdapter.json';
 
 export class SmartContractFactory {
   public static Addresses(chainId: number) {
@@ -37,7 +36,7 @@ export class SmartContractFactory {
       }
       return address;
     } catch (e) {
-      console.error(`Error in fetching address`);
+      console.error("Error in fetching address");
       return {};
     }
   }
@@ -83,14 +82,7 @@ export class SmartContractFactory {
     };
   }
 
-  public static FTHMToken(chainId: number) {
-    return {
-      abi: BEP20Abi.abi as AbiItem[],
-      address: SmartContractFactory.Addresses(chainId).fathomToken,
-    };
-  }
-
-  public static BEP20 = (_address: string) => {
+  public static BEP20(_address: string) {
     return {
       abi: BEP20Abi.abi as AbiItem[],
       address: _address,
@@ -115,29 +107,6 @@ export class SmartContractFactory {
     return {
       abi: [],
       address: SmartContractFactory.Addresses(chainId).stabilityFeeCollector,
-    };
-  }
-
-  public static WXDCCollateralTokenAdapter(chainId: number) {
-    return {
-      abi: [],
-      address: SmartContractFactory.Addresses(chainId).collateralTokenAdapter,
-    };
-  }
-
-  public static USDTCollateralTokenAdapter(chainId: number) {
-    return {
-      abi: [],
-      address:
-        SmartContractFactory.Addresses(chainId).collateralTokenAdapterUSDT,
-    };
-  }
-
-  public static FTHMCollateralTokenAdapter(chainId: number) {
-    return {
-      abi: [],
-      address:
-        SmartContractFactory.Addresses(chainId).collateralTokenAdapterFTHM,
     };
   }
 
@@ -197,10 +166,10 @@ export class SmartContractFactory {
     };
   }
 
-  public static MainToken(chainId: number) {
+  public static MainToken(fthmTokenAddress: string) {
     return {
       abi: MainToken.abi as AbiItem[],
-      address: SmartContractFactory.Addresses(chainId).fthmToken, // '0x62f3d571A7DAcC00C047e58fE500ee99A98E3f63'
+      address: fthmTokenAddress,
     };
   }
 
@@ -211,24 +180,10 @@ export class SmartContractFactory {
     };
   }
 
-  public static VeMAINToken(chainId: number) {
-    return {
-      abi: VeMainToken.abi as AbiItem[],
-      address: SmartContractFactory.Addresses(chainId).vFTHM, // '0x62f3d571A7DAcC00C047e58fE500ee99A98E3f63'
-    };
-  }
-
-  public static StreamRewardToken(chainId: number) {
-    return {
-      abi: Token.abi as AbiItem[],
-      address: SmartContractFactory.Addresses(chainId).streamRewardToken, //No Reward Token for now.'
-    };
-  }
-
-  public static VeFathom(chainId: number) {
+  public static vFathom(chainId: number) {
     return {
       abi: VeFathomAbi.abi as AbiItem[],
-      address: SmartContractFactory.Addresses(chainId).vFTHM, // note: VeFathom and VeMainToken is same.
+      address: SmartContractFactory.Addresses(chainId).vFTHM,
     };
   }
 
@@ -237,6 +192,10 @@ export class SmartContractFactory {
       abi: DexPriceOracle.abi as AbiItem[],
       address: SmartContractFactory.Addresses(chainId).dexPriceOracle,
     };
+  }
+
+  public static CollateralTokenAdapterAbi() {
+    return CollateralTokenAdapterAbi.abi as AbiItem[];
   }
 
   public static getAddressByContractName(chainId: number, name: string) {

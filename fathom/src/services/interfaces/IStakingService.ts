@@ -3,7 +3,7 @@ import ActiveWeb3Transactions from "stores/transaction.store";
 
 export default interface IStakingService {
   createLock(
-    address: string,
+    account: string,
     stakePosition: number,
     unlockPeriod: number,
     transactionStore: ActiveWeb3Transactions
@@ -43,7 +43,7 @@ export default interface IStakingService {
   ): Promise<void>;
 
   getAPR(): Promise<number>;
-  getWalletBalance(account: string): Promise<number>;
+  getWalletBalance(account: string, fthmTokenAddress: string): Promise<number>;
   getVOTEBalance(account: string): Promise<number>;
 
   getLockInfo(
@@ -56,9 +56,11 @@ export default interface IStakingService {
   approvalStatusStakingFTHM(
     address: string,
     stakingPosition: number,
+    fthmTokenAddress: string,
   ): Promise<Boolean>;
   approveStakingFTHM(
     address: string,
+    fthmTokenAddress: string,
     transactionStore: ActiveWeb3Transactions
   ): Promise<void>;
 }

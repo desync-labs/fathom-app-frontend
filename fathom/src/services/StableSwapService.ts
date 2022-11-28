@@ -14,7 +14,7 @@ export default class StableSwapService implements IStableSwapService {
   readonly tokenBuffer: number = 5;
   chainId = Constants.DEFAULT_CHAIN_ID;
 
-  async swapTokenToStablecoin(
+  async swapTokenToStableCoin(
     address: string,
     tokenIn: number,
     transactionStore: ActiveWeb3Transactions
@@ -48,7 +48,7 @@ export default class StableSwapService implements IStableSwapService {
     }
   }
 
-  async swapStablecoinToToken(
+  async swapStableCoinToToken(
     address: string,
     stablecoinIn: number,
     transactionStore: ActiveWeb3Transactions
@@ -82,7 +82,7 @@ export default class StableSwapService implements IStableSwapService {
     }
   }
 
-  async approveStablecoin(
+  async approveStableCoin(
     address: string,
     transactionStore: ActiveWeb3Transactions
   ): Promise<void> {
@@ -118,85 +118,70 @@ export default class StableSwapService implements IStableSwapService {
     address: string,
     transactionStore: ActiveWeb3Transactions
   ): Promise<void> {
-    try {
-      const USDT = Web3Utils.getContractInstance(
-        SmartContractFactory.USDT(this.chainId),
-        this.chainId
-      );
+    const USDT = Web3Utils.getContractInstance(
+      SmartContractFactory.USDT(this.chainId),
+      this.chainId
+    );
 
-      return USDT.methods
-        .approve(
-          SmartContractFactory.AuthtokenAdapter(this.chainId).address,
-          Constants.MAX_UINT256
-        )
-        .send({ from: address })
-        .on("transactionHash", (hash: any) => {
-          transactionStore.addTransaction({
-            hash: hash,
-            type: TransactionType.ClosePosition,
-            active: false,
-            status: TransactionStatus.None,
-            title: "Approval Pending",
-            message: Strings.CheckOnBlockExplorer,
-          });
+    return USDT.methods
+      .approve(
+        SmartContractFactory.AuthtokenAdapter(this.chainId).address,
+        Constants.MAX_UINT256
+      )
+      .send({ from: address })
+      .on("transactionHash", (hash: any) => {
+        transactionStore.addTransaction({
+          hash: hash,
+          type: TransactionType.ClosePosition,
+          active: false,
+          status: TransactionStatus.None,
+          title: "Approval Pending",
+          message: Strings.CheckOnBlockExplorer,
         });
-    } catch (error) {
-      console.error(`Error in open position approve token: ${error}`);
-      throw error;
-    }
+      });
   }
 
   async approvalStatusStablecoin(
     address: string,
     tokenIn: number
   ): Promise<Boolean> {
-    try {
-      const fathomStableCoin = Web3Utils.getContractInstance(
-        SmartContractFactory.FathomStableCoin(this.chainId),
-        this.chainId
-      );
+    const fathomStableCoin = Web3Utils.getContractInstance(
+      SmartContractFactory.FathomStableCoin(this.chainId),
+      this.chainId
+    );
 
-      let allowance = await fathomStableCoin.methods
-        .allowance(
-          address,
-          SmartContractFactory.StableSwapModule(this.chainId).address
-        )
-        .call();
+    let allowance = await fathomStableCoin.methods
+      .allowance(
+        address,
+        SmartContractFactory.StableSwapModule(this.chainId).address
+      )
+      .call();
 
-      const buffer =
-        Number(tokenIn) + Number((tokenIn * this.tokenBuffer) / 100);
+    const buffer =
+      Number(tokenIn) + Number((tokenIn * this.tokenBuffer) / 100);
 
-      return +allowance > +Constants.WeiPerWad.multipliedBy(buffer);
-    } catch (error) {
-      console.error(`Error in open position approve token: ${error}`);
-      throw error;
-    }
+    return +allowance > +Constants.WeiPerWad.multipliedBy(buffer);
   }
 
   async approvalStatusUsdt(address: string, tokenIn: number): Promise<Boolean> {
-    try {
-      const USDT = Web3Utils.getContractInstance(
-        SmartContractFactory.USDT(this.chainId),
-        this.chainId
-      );
+    const USDT = Web3Utils.getContractInstance(
+      SmartContractFactory.USDT(this.chainId),
+      this.chainId
+    );
 
-      let allowance = await USDT.methods
-        .allowance(
-          address,
-          SmartContractFactory.AuthtokenAdapter(this.chainId).address
-        )
-        .call();
+    let allowance = await USDT.methods
+      .allowance(
+        address,
+        SmartContractFactory.AuthtokenAdapter(this.chainId).address
+      )
+      .call();
 
-      let buffer = Number(tokenIn) + Number((tokenIn * this.tokenBuffer) / 100);
+    let buffer = Number(tokenIn) + Number((tokenIn * this.tokenBuffer) / 100);
 
-      return +allowance > +Constants.WeiPerWad.multipliedBy(buffer);
-    } catch (error) {
-      console.error(`Error in open position approve token: ${error}`);
-      throw error;
-    }
+    return +allowance > +Constants.WeiPerWad.multipliedBy(buffer);
   }
 
   setChainId(chainId: number) {
-    if (chainId !== undefined) this.chainId = chainId;
+    this.chainId = chainId;
   }
 }

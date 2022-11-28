@@ -1,5 +1,9 @@
 import { styled } from "@mui/material/styles";
-import { Box, IconButton as MuiButton } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  IconButton as MuiButton
+} from "@mui/material";
 import { IconButtonProps as MuiIconButtonProps } from "@mui/material/IconButton/IconButton";
 
 interface ToggleDrawerButtonProps extends MuiIconButtonProps {
@@ -88,6 +92,29 @@ export const ButtonSecondary = styled(MuiButton)`
     pointer-events: all !important; 
   }
 `;
+
+export const SkipButton = styled(
+  MuiButton
+)`
+  background: rgba(143, 36, 36, 0.25);
+  border-radius: 8px;
+  height: 48px;
+  width: 100%;
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 24px;
+  color: #F76E6E;
+`
+
+export const CancelButton = styled(IconButton)`
+  height: 48px;
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 24px;
+  color: #fff;
+  border: 1px solid #6379A1;
+  border-radius: 8px;
+`
 
 export const OpenPositionButton = styled(MuiButton)`
   border-radius: 8px;
