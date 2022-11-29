@@ -38,7 +38,10 @@ export const FXD_POSITIONS = gql`
       skip: $skip
       orderBy: positionId
       orderDirection: desc
-      where: { walletAddress: $walletAddress }
+      where: { 
+        walletAddress: $walletAddress
+        positionStatus: active
+      }
     ) {
       collateralPool
       collateralPoolName

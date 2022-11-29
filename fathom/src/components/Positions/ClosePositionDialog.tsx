@@ -45,6 +45,7 @@ export type ClosePositionProps = {
   onClose: () => void;
   closingType: ClosingType;
   setType: Dispatch<ClosingType>;
+  refetchData: () => void;
 };
 
 const ClosePositionDialog: FC<ClosePositionProps> = ({
@@ -52,6 +53,7 @@ const ClosePositionDialog: FC<ClosePositionProps> = ({
   onClose,
   closingType,
   setType,
+  refetchData,
 }) => {
   const {
     collateral,
@@ -66,7 +68,7 @@ const ClosePositionDialog: FC<ClosePositionProps> = ({
     handleFathomTokenTextFieldChange,
     handleTypeChange,
     setMax,
-  } = useClosePosition(position, onClose, closingType, setType);
+  } = useClosePosition(position, onClose, closingType, setType, refetchData);
 
   return (
     <AppDialog
@@ -186,13 +188,13 @@ const ClosePositionDialog: FC<ClosePositionProps> = ({
                 error={balanceError}
                 id="outlined-helperText"
                 disabled={closingType === ClosingType.Full}
-                placeholder={'0'}
+                placeholder={"0"}
                 helperText={
                   balanceError ? (
                     <>
                       <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
                       <Typography
-                        component={'div'}
+                        component={"div"}
                         sx={{ fontSize: "12px", paddingLeft: "22px" }}
                       >
                         You don't have enough to repay that amount

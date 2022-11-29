@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, memo } from "react";
 import ICollateralPool from "stores/interfaces/ICollateralPool";
 import InfoIcon from "@mui/icons-material/Info";
 import {
@@ -49,9 +49,10 @@ export interface DialogTitleProps {
 export type OpenPositionProps = {
   pool: ICollateralPool;
   onClose: () => void;
+  refetchData: () => void
 };
 
-const OpenNewPositionDialog: FC<OpenPositionProps> = ({ pool, onClose }) => {
+const OpenNewPositionDialog: FC<OpenPositionProps> = ({ pool, onClose, refetchData }) => {
   const {
     approveBtn,
     approve,
@@ -78,7 +79,7 @@ const OpenNewPositionDialog: FC<OpenPositionProps> = ({ pool, onClose }) => {
     handleSubmit,
 
     availableFathomInPool,
-  } = useOpenPosition(pool, onClose);
+  } = useOpenPosition(pool, onClose, refetchData);
 
   return (
     <AppDialog
@@ -342,4 +343,4 @@ const OpenNewPositionDialog: FC<OpenPositionProps> = ({ pool, onClose }) => {
   );
 };
 
-export default OpenNewPositionDialog;
+export default memo(OpenNewPositionDialog);

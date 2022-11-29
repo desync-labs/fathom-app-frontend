@@ -4,8 +4,6 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import debounce from "lodash.debounce";
 import { OpenPositionProps } from "components/Positions/OpenNewPositionDialog";
 import { useForm } from "react-hook-form";
-import { useLazyQuery, useQuery } from "@apollo/client";
-import { FXD_POOLS, FXD_POSITIONS, FXD_STATS } from "apollo/queries";
 
 const defaultValues = {
   collateral: "",
@@ -15,7 +13,8 @@ const defaultValues = {
 
 const useOpenPosition = (
   pool: OpenPositionProps["pool"],
-  onClose: OpenPositionProps["onClose"]
+  onClose: OpenPositionProps["onClose"],
+  refetchData: OpenPositionProps['refetchData']
 ) => {
   const { poolStore, positionStore } = useStores();
 
@@ -25,13 +24,6 @@ const useOpenPosition = (
     defaultValues,
     reValidateMode: "onChange",
     mode: "onChange",
-  });
-
-  const { refetch: refetchStats } = useQuery(FXD_STATS);
-  const [, { refetch: refetchPositions }] = useLazyQuery(FXD_POSITIONS);
-
-  const { refetch: refetchPools } = useQuery(FXD_POOLS, {
-    fetchPolicy: "cache-first",
   });
 
   const collateral = watch("collateral");
@@ -198,18 +190,6 @@ const useOpenPosition = (
     setValue("fathomToken", safeMax.toString(), { shouldValidate: true });
   }, [safeMax, setValue]);
 
-  const refetchData = useCallback(async () => {
-    const walletProxy = await positionStore.getProxyWallet(account)!;
-
-    setTimeout(() => {
-      refetchStats();
-      refetchPools();
-      refetchPositions({
-        walletAddress: walletProxy,
-      });
-    }, 1000);
-  }, [positionStore, account, refetchStats, refetchPools, refetchPositions]);
-
   const onSubmit = useCallback(
     async (values: any) => {
       setOpenPositionLoading(true);
@@ -223,9 +203,8 @@ const useOpenPosition = (
           Number(fathomToken)
         );
 
-        refetchData();
-
         onClose();
+        refetchData();
       } catch (e) {
         console.log(e);
       }
@@ -237,9 +216,7 @@ const useOpenPosition = (
       positionStore,
       setOpenPositionLoading,
       onClose,
-      refetchStats,
-      refetchPositions,
-      refetchPools,
+      refetchData,
     ]
   );
 

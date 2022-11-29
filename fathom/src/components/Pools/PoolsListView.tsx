@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { FC, useMemo } from "react";
 import {
   CircularProgress,
   Table,
@@ -35,7 +35,11 @@ const CircleWrapper = styled(Box)`
   justify-content: center;
 `;
 
-const PoolsListView = observer(() => {
+type PoolsListViewProps = {
+  refetchData: () => void;
+};
+
+const PoolsListView: FC<PoolsListViewProps> = observer(({ refetchData }) => {
   const { pools, selectedPool, onCloseNewPosition, setSelectedPool, loading } =
     usePoolsList();
 
@@ -86,6 +90,7 @@ const PoolsListView = observer(() => {
             <OpenNewPositionDialog
               pool={selectedPool!}
               onClose={onCloseNewPosition}
+              refetchData={refetchData}
             />
           )
         );
