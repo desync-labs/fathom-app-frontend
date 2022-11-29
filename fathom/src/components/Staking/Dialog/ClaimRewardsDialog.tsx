@@ -7,7 +7,6 @@ import {
   Box,
   CircularProgress,
   DialogContent,
-  Grid,
   Typography,
 } from "@mui/material";
 import {
@@ -114,7 +113,7 @@ const ClaimRewardsDialog: FC<ClaimRewardsDialogProps> = ({
         <Description>
           Claim Rewards only is available for all positions at the moment. You
           will lose the rewards of the position you proceed to unstake without
-          claiming it here first. <a>Learn more.</a>
+          claiming it here first. <a href={'/'}>Learn more.</a>
         </Description>
         <DialogContentWrapper>
           <img src={getTokenLogoURL(token)} alt={"token-logo"} width={58} />

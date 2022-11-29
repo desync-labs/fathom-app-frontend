@@ -49,8 +49,6 @@ const PoolsListItem: FC<PoolsListItemPropsType> = ({
   pool,
   setSelectedPool,
 }) => {
-  console.log(pool);
-
   return (
     <PoolsListItemTableRow
       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -66,8 +64,8 @@ const PoolsListItem: FC<PoolsListItemPropsType> = ({
       </TableCell>
       <TableCell>
         <PriceWrapper>
-          {formatCurrency(Number(pool.collatralPrice))}
-          <PriceChanged current={Number(pool.collatralPrice)} previous={Number(pool.collatralLastPrice)} />
+          {formatCurrency(Number(pool.collateralPrice))}
+          <PriceChanged current={Number(pool.collateralPrice)} previous={Number(pool.collateralLastPrice)} />
         </PriceWrapper>
       </TableCell>
       <TableCell>{formatNumber(Number(pool.totalBorrowed))} FXD</TableCell>

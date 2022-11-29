@@ -3,8 +3,6 @@ import { RootStore } from ".";
 import IPositionService from "services/interfaces/IPositionService";
 import ICollateralPool from "stores/interfaces/ICollateralPool";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
-import BigNumber from "bignumber.js";
-import ActiveWeb3Transactions from "./transaction.store";
 
 export default class PositionStore {
   positions: IOpenPosition[] = [];
@@ -128,7 +126,7 @@ export default class PositionStore {
         pool,
         address,
         collateral,
-        this.rootStore.transactionStore,
+        this.rootStore.transactionStore
       );
 
       return this.rootStore.alertStore.setShowSuccessAlert(

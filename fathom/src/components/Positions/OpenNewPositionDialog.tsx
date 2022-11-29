@@ -80,6 +80,8 @@ const OpenNewPositionDialog: FC<OpenPositionProps> = ({ pool, onClose }) => {
     availableFathomInPool,
   } = useOpenPosition(pool, onClose);
 
+  console.log(pool);
+
   return (
     <AppDialog
       onClose={onClose}
@@ -148,7 +150,7 @@ const OpenNewPositionDialog: FC<OpenPositionProps> = ({ pool, onClose }) => {
               <ListItem alignItems="flex-start" secondaryAction={`0.22%`}>
                 <ListItemText primary={`Fathom Rewards APR`} />
               </ListItem>
-              <ListItem alignItems="flex-start" secondaryAction={`0.00%`}>
+              <ListItem alignItems="flex-start" secondaryAction={`${pool.stabilityFeeRate}%`}>
                 <ListItemText primary={`Stability Fee`} />
               </ListItem>
               <ListItem alignItems="flex-start" secondaryAction={`1.96%`}>

@@ -1,3 +1,4 @@
+import React, { FC } from "react";
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
 import {
   Box,
@@ -10,9 +11,8 @@ import {
   AppDialog,
   DialogContentWrapper,
 } from "components/AppComponents/AppDialog/AppDialog";
-import React, { FC } from "react";
+
 import ILockPosition from "stores/interfaces/ILockPosition";
-import { StakingViewItemLabel } from "components/Staking/StakingViewItem";
 import { styled } from "@mui/material/styles";
 import {
   AppFormInputLogo,
@@ -34,32 +34,10 @@ import {
 } from "components/AppComponents/AppButton/AppButton";
 import useUnstake from "hooks/useUnstake";
 import { InfoMessageWrapper } from "components/Staking/Dialog/ClaimRewardsDialog";
-import { formatNumber } from "../../../utils/format";
+import { formatNumber } from "utils/format";
 
-const UnstakeValue = styled(Box)`
-  display: flex;
-  align-items: center;
-  font-size: 16px;
-  gap: 7px;
-  strong {
-    font-weight: 600;
-    font-size: 20px;
-    line-height: 20px;
-  }
-  span {
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 20px;
-    color: #9fadc6;
-  }
-`;
 
-const UnstakeLabel = styled(StakingViewItemLabel)`
-  padding-bottom: 7px;
-  font-size: 11px;
-`;
-
-const UnstakeDialogWrapper = styled(AppDialog)`
+const UnStakeDialogWrapper = styled(AppDialog)`
   .MuiPaper-root {
     maxwidth: 600px;
   }
@@ -69,12 +47,7 @@ const UnstakeDialogWrapper = styled(AppDialog)`
   }
 `;
 
-const UnstakeBalanceWrapper = styled(Grid)`
-  border-bottom: 1px solid #324567;
-  width: auto;
-`;
-
-const UnstakeGrid = styled(Grid)`
+const UnStakeGrid = styled(Grid)`
   width: auto;
   &.MuiGrid-container {
     margin: 0 17px;
@@ -90,13 +63,13 @@ const ConfirmButton = styled(ButtonPrimary)`
   line-height: 24px;
 `;
 
-type UnstakeDialogProps = {
+type UnStakeDialogProps = {
   lockPosition: ILockPosition | null;
   token: string;
   onClose: () => void;
 };
 
-const UnstakeDialog: FC<UnstakeDialogProps> = ({
+const UnStakeDialog: FC<UnStakeDialogProps> = ({
   onClose,
   token,
   lockPosition,
@@ -114,7 +87,7 @@ const UnstakeDialog: FC<UnstakeDialogProps> = ({
   } = useUnstake(lockPosition);
 
   return (
-    <UnstakeDialogWrapper
+    <UnStakeDialogWrapper
       onClose={onClose}
       aria-labelledby="customized-dialog-title"
       open={true}
@@ -126,7 +99,7 @@ const UnstakeDialog: FC<UnstakeDialogProps> = ({
       </AppDialogTitle>
 
       <DialogContent>
-        <UnstakeGrid container>
+        <UnStakeGrid container>
           <Grid item xs={12}>
             <AppFormInputWrapper>
               <AppFormLabel>Unstake amount</AppFormLabel>
@@ -155,7 +128,7 @@ const UnstakeDialog: FC<UnstakeDialogProps> = ({
               <MaxButton onClick={() => setMax()}>Max</MaxButton>
             </AppFormInputWrapper>
           </Grid>
-        </UnstakeGrid>
+        </UnStakeGrid>
 
         <DialogContentWrapper>
           <img src={getTokenLogoURL(token)} alt={"token-logo"} width={58} />
@@ -167,7 +140,7 @@ const UnstakeDialog: FC<UnstakeDialogProps> = ({
             <span>{token}</span>
           </Box>
         </DialogContentWrapper>
-        <UnstakeGrid
+        <UnStakeGrid
           container
           sx={{ "&.MuiGrid-container": { marginBottom: "20px" } }}
         >
@@ -191,7 +164,7 @@ const UnstakeDialog: FC<UnstakeDialogProps> = ({
               </InfoValue>
             </InfoWrapper>
           </Grid>
-        </UnstakeGrid>
+        </UnStakeGrid>
         <InfoMessageWrapper>
           <InfoIcon sx={{ fontSize: "18px", color: "#4F658C" }} />
           <Typography>
@@ -200,7 +173,7 @@ const UnstakeDialog: FC<UnstakeDialogProps> = ({
             unlock the position.
           </Typography>
         </InfoMessageWrapper>
-        <UnstakeGrid container>
+        <UnStakeGrid container>
           <Grid item xs={12}>
             <ConfirmButton
               disabled={isLoading}
@@ -210,10 +183,10 @@ const UnstakeDialog: FC<UnstakeDialogProps> = ({
               {isLoading ? <CircularProgress size={30} /> : "Confirm Unstake"}
             </ConfirmButton>
           </Grid>
-        </UnstakeGrid>
+        </UnStakeGrid>
       </DialogContent>
-    </UnstakeDialogWrapper>
+    </UnStakeDialogWrapper>
   );
 };
 
-export default UnstakeDialog;
+export default UnStakeDialog;

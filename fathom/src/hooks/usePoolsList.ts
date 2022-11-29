@@ -10,14 +10,8 @@ import { FXD_POOLS } from "apollo/queries";
 const usePoolsList = () => {
   const [selectedPool, setSelectedPool] = useState<ICollateralPool>();
   const { data, loading, refetch } = useQuery(FXD_POOLS, {
-    variables: {
-      page: 10,
-    },
     fetchPolicy: "cache-first"
   })
-
-  console.log(data);
-
 
   const onCloseNewPosition = useCallback(() => {
     setSelectedPool(undefined)

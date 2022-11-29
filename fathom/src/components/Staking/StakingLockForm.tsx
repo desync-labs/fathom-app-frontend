@@ -243,7 +243,7 @@ const StakingLockForm: FC<StakingLockFormPropsType> = ({
             <WalletBalanceTypography>My Wallet Balance</WalletBalanceTypography>
 
             <Grid container spacing={2}>
-              <Grid item xs={6}>
+              <Grid item xs={7}>
                 <WalletBalanceWrapper>
                   <BalanceImg
                     src={getTokenLogoURL("FTHM")}
@@ -258,7 +258,7 @@ const StakingLockForm: FC<StakingLockFormPropsType> = ({
                   </Box>
                 </WalletBalanceWrapper>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={5}>
                 <WalletBalanceWrapper>
                   <BalanceImg
                     src={getTokenLogoURL("FXD")}

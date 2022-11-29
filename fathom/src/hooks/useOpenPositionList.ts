@@ -1,11 +1,11 @@
+import { useCallback, useEffect, useState } from "react";
+
 import { useStores } from "stores";
 import useMetaMask from "hooks/metamask";
-import { useLogger } from "helpers/Logger";
-import { useCallback, useEffect, useState } from "react";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
 import { ClosingType } from "hooks/useClosePosition";
-import { useLazyQuery, useQuery } from "@apollo/client";
-import { FXD_POSITIONS } from "../apollo/queries";
+import { useLazyQuery } from "@apollo/client";
+import { FXD_POSITIONS } from "apollo/queries";
 
 const useOpenPositionList = () => {
   const { positionStore } = useStores();

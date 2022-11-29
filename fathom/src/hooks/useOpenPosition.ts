@@ -4,11 +4,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import debounce from "lodash.debounce";
 import { OpenPositionProps } from "components/Positions/OpenNewPositionDialog";
 import { useForm } from "react-hook-form";
-import {
-  useLazyQuery,
-  useQuery
-} from "@apollo/client";
-import { FXD_POOLS, FXD_POSITIONS, FXD_STATS } from "../apollo/queries";
+import { useLazyQuery, useQuery } from "@apollo/client";
+import { FXD_POOLS, FXD_POSITIONS, FXD_STATS } from "apollo/queries";
 
 const defaultValues = {
   collateral: "",
@@ -31,12 +28,10 @@ const useOpenPosition = (
   });
 
   const { refetch: refetchStats } = useQuery(FXD_STATS);
-  const [_, { refetch: refetchPositions }] = useLazyQuery(FXD_POSITIONS);
+  const [, { refetch: refetchPositions }] = useLazyQuery(FXD_POSITIONS);
 
   const { refetch: refetchPools } = useQuery(FXD_POOLS, {
-    variables: {
-      page: 10,
-    },
+    fetchPolicy: "cache-first",
   });
 
   const collateral = watch("collateral");
@@ -80,6 +75,7 @@ const useOpenPosition = (
       pool.tokenAdapterAddress
     );
     const balance = await poolStore.getUserTokenBalance(account, tokenAddress!);
+
     setCollateralTokenAddress(tokenAddress);
     setBalance(balance);
   }, [poolStore, account, pool, setCollateralTokenAddress]);
@@ -95,37 +91,23 @@ const useOpenPosition = (
 
   const handleUpdates = useCallback(
     async (collateralInput: number, fathomTokenInput: number) => {
-      console.log(
-        `Input token ${fathomTokenInput} and Pool Max: ${availableFathomInPool}`
-      );
-
-      // check collateral input
-      if (isNaN(collateralInput) || !collateralInput) {
-        collateralInput = 0;
-      }
-
-      setCollateralToBeLocked(+collateralInput);
-
-      if (isNaN(fathomTokenInput) || !fathomTokenInput) {
-        fathomTokenInput = 0;
-      }
-      setFxdToBeBorrowed(+fathomTokenInput);
-
-      // if the user does not have enough collateral -- show them a balance error
-      if (+balance / 10 ** 18 < +collateralInput) return;
+      setCollateralToBeLocked(Number(collateralInput) || 0);
+      setFxdToBeBorrowed(Number(fathomTokenInput) || 0);
 
       // GET PRICE WITH SAFETY MARGIN
-      const priceWithSafetyMargin =
-        pool.poolName === "USDT" ? 0.75188 : Number(pool.priceWithSafetyMargin);
+      const priceWithSafetyMargin = Number(pool.priceWithSafetyMargin);
 
       // SAFE MAX
       const safeMax = Math.floor(
-        priceWithSafetyMargin === 0
-          ? +collateralInput
-          : +collateralInput * priceWithSafetyMargin * 0.99
+        Number(collateralInput) *
+          ((priceWithSafetyMargin * (100 - Number(pool.stabilityFeeRate))) /
+            100)
       );
-      setValue("safeMax", safeMax, { shouldValidate: true });
       setFxdToBeBorrowed(safeMax);
+      setValue("safeMax", safeMax, { shouldValidate: true });
+      setValue("fathomToken", fathomTokenInput.toString(), {
+        shouldValidate: true,
+      });
 
       const collateralAvailableToWithdraw =
         Number(priceWithSafetyMargin) === 0
@@ -152,7 +134,7 @@ const useOpenPosition = (
       setDebtRatio(+debtRatio);
 
       // FXD AVAILABLE TO BORROW
-      const fxdAvailableToBorrow = safeMax - +fathomTokenInput;
+      const fxdAvailableToBorrow = safeMax - Number(fathomTokenInput);
       setFxdAvailableToBorrow(fxdAvailableToBorrow);
 
       // SAFETY BUFFER
@@ -178,7 +160,6 @@ const useOpenPosition = (
       balance,
       availableFathomInPool,
       collateralTokenAddress,
-      account,
       pool,
       poolStore,
       setLiquidationPrice,
@@ -189,9 +170,10 @@ const useOpenPosition = (
       setCollateralToBeLocked,
       setFxdToBeBorrowed,
       setValue,
-      setBalance,
     ]
   );
+
+  console.log(fxdToBeBorrowed);
 
   useEffect(() => {
     if (collateralTokenAddress) {
@@ -219,8 +201,8 @@ const useOpenPosition = (
       refetchPositions({
         walletAddress: walletProxy,
       });
-    }, 1000)
-  }, [positionStore, refetchStats, refetchPools, refetchPositions])
+    }, 1000);
+  }, [positionStore, account, refetchStats, refetchPools, refetchPositions]);
 
   const onSubmit = useCallback(
     async (values: any) => {
@@ -255,15 +237,11 @@ const useOpenPosition = (
     ]
   );
 
-  const handleCloseApproveBtn = useCallback(() => {
-    setApproveBtn(false);
-  }, [setApproveBtn]);
-
   const approve = useCallback(async () => {
     setApprovalPending(true);
     try {
       await positionStore.approve(account, collateralTokenAddress!);
-      handleCloseApproveBtn();
+      setApproveBtn(false);
     } catch (e) {
       setApproveBtn(true);
     }
@@ -272,7 +250,6 @@ const useOpenPosition = (
   }, [
     setApprovalPending,
     setApproveBtn,
-    handleCloseApproveBtn,
     account,
     collateralTokenAddress,
     positionStore,

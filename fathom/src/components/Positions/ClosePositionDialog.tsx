@@ -1,4 +1,4 @@
-import React, { Dispatch, FC, ReactNode, memo } from "react";
+import React, { Dispatch, FC, memo } from "react";
 import {
   DialogContent,
   Typography,

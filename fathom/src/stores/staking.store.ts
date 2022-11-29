@@ -123,15 +123,6 @@ export default class StakingStore {
     this.walletBalance = _walletBalance;
   }
 
-  async fetchWalletBalance(account: string, fthmTokenAddress: string) {
-    try {
-      const walletBalance = await this.service.getWalletBalance(account, fthmTokenAddress);
-      this.setWalletBalance(walletBalance);
-    } catch (e: any) {
-      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
-    }
-  }
-
   setVOTEBalance(_voteBalance: number) {
     this.voteBalance = _voteBalance;
   }

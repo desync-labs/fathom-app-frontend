@@ -8,8 +8,7 @@ import ClaimRewardsDialog, {
 import useStakingView from "hooks/useStakingView";
 import UnstakeDialog from "components/Staking/Dialog/UnstakeDialog";
 import EarlyUnstakeDialog from "components/Staking/Dialog/EarlyUnstakeDialog";
-import { CircularProgress } from "@mui/material";
-import { NoResults } from "../AppComponents/AppBox/AppBox";
+import { NoResults } from "components/AppComponents/AppBox/AppBox";
 
 type StreamItemProps = {
   token: string;

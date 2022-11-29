@@ -11,15 +11,15 @@ export const FXD_STATS = gql`
 `;
 
 export const FXD_POOLS = gql`
-  query FXDPools($page: Int!) {
-    pools(first: $page) {
-      collatralLastPrice
-      collatralPrice
+  query FXDPools {
+    pools {
+      collateralLastPrice
+      collateralPrice
       debtAccumulatedRate
       debtCeiling
       id
-      liquidtionRatio
-      lockedCollatral
+      liquidationRatio
+      lockedCollateral
       poolName
       priceWithSafetyMargin
       stabilityFeeRate
@@ -35,22 +35,23 @@ export const FXD_POSITIONS = gql`
   query FXDPositions($walletAddress: String!) {
     positions(
       first: 10
+      skip: 0
       orderBy: positionId
       orderDirection: desc
       where: { walletAddress: $walletAddress }
     ) {
-      collatralPool
-      collatralPoolName
+      collateralPool
+      collateralPoolName
       debtShare
       id
-      liquidtionPrice
+      liquidationPrice
       lockedCollateral
       positionAddress
       positionId
       positionStatus
       safetyBuffer
       safetyBufferInPrecent
-      tvl     
+      tvl
       walletAddress
     }
   }

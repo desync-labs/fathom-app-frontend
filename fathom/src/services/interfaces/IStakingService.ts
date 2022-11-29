@@ -43,7 +43,7 @@ export default interface IStakingService {
   ): Promise<void>;
 
   getAPR(): Promise<number>;
-  getWalletBalance(account: string, fthmTokenAddress: string): Promise<number>;
+
   getVOTEBalance(account: string): Promise<number>;
 
   getLockInfo(
@@ -58,6 +58,7 @@ export default interface IStakingService {
     stakingPosition: number,
     fthmTokenAddress: string,
   ): Promise<Boolean>;
+
   approveStakingFTHM(
     address: string,
     fthmTokenAddress: string,

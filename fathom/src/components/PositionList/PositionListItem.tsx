@@ -96,23 +96,23 @@ const PositionListItem: FC<PositionListItemProps> = observer(
         <TableCell>
           <Stack direction="row" spacing={2}>
             <TokenLogo
-              src={getTokenLogoURL(position?.collatralPoolName)}
-              alt={position?.collatralPoolName}
+              src={getTokenLogoURL(position?.collateralPoolName)}
+              alt={position?.collateralPoolName}
             />
             <Box>
-              <PoolName>{position.collatralPoolName}</PoolName>
+              <PoolName>{position.collateralPoolName}</PoolName>
               <TVL>TVL: {formatCurrency(Number(position.tvl))}</TVL>
             </Box>
           </Stack>
         </TableCell>
         <TableCell>
-          {formatCurrency(Number(position.liquidtionPrice))}
+          {formatCurrency(Number(position.liquidationPrice))}
         </TableCell>
         <TableCell>
           {formatNumber(Number(position.debtShare))} FXD
         </TableCell>
         <TableCell>
-          {position.lockedCollateral} {position.collatralPoolName}
+          {position.lockedCollateral} {position.collateralPoolName}
         </TableCell>
         <TableCell>{ formatNumber(Number(position.safetyBufferInPrecent)) }%</TableCell>
         <TableCell>

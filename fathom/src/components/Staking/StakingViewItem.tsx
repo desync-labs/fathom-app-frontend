@@ -220,7 +220,7 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
     return () => {
       clearInterval(timer);
     };
-  }, [setTimer, setSeconds]);
+  }, [lockPosition, setTimer, setSeconds]);
 
   return (
     <StakingViewItemWrapper>
