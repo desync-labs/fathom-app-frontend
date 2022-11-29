@@ -12,7 +12,6 @@ import {
   FXD_STATS
 } from "apollo/queries";
 import ICollateralPool from "stores/interfaces/ICollateralPool";
-import IOpenPosition from "../stores/interfaces/IOpenPosition";
 
 export enum ClosingType {
   Full,
@@ -29,11 +28,8 @@ const useClosePosition = (
   const { account } = useMetaMask()!;
 
   const { refetch: refetchStats } = useQuery(FXD_STATS);
-  const [_, { refetch: refetchPositions }] = useLazyQuery(FXD_POSITIONS);
+  const [, { refetch: refetchPositions }] = useLazyQuery(FXD_POSITIONS);
   const { data, loading,  refetch: refetchPools } = useQuery(FXD_POOLS, {
-    variables: {
-      page: 10,
-    },
     fetchPolicy: 'cache-first'
   })
 
@@ -47,7 +43,7 @@ const useClosePosition = (
   const [disableClosePosition, setDisableClosePosition] = useState<boolean>(false);
 
   const pool = useMemo(
-    () => data?.pools?.find((pool: ICollateralPool) => pool.id === position?.collatralPool),
+    () => data?.pools?.find((pool: ICollateralPool) => pool.id === position?.collateralPool),
     [data, loading, position]
   );
 

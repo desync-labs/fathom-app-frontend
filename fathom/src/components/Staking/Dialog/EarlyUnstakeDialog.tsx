@@ -28,22 +28,6 @@ import { InfoMessageWrapper } from "components/Staking/Dialog/ClaimRewardsDialog
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatNumber } from "utils/format";
 
-const Amount = styled(Box)`
-  font-weight: 600;
-  font-size: 36px;
-  line-height: 40px;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-
-  span {
-    font-weight: 500;
-    font-size: 20px;
-    line-height: 24px;
-  }
-`;
-
 const UnstakeDialogWrapper = styled(AppDialog)`
   .MuiPaper-root {
     maxwidth: 600px;
@@ -145,7 +129,7 @@ const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({
         <Description>
           Claim Rewards only is available for all positions at the moment. You
           will lose the rewards of the position you proceed to unstake without
-          claiming it here first. <a>Learn more.</a>
+          claiming it here first. <a href={'/'}>Learn more.</a>
         </Description>
         <DialogContentWrapper>
           <img src={getTokenLogoURL(token)} alt={"token-logo"} width={58} />

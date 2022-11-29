@@ -1,9 +1,9 @@
 export default interface IOpenPosition {
-  collatralPool: string
-  collatralPoolName: string;
+  collateralPool: string
+  collateralPoolName: string;
   debtShare: string;
   id: string;
-  liquidtionPrice: string;
+  liquidationPrice: string;
   lockedCollateral: string;
   positionAddress: string;
   positionId: string

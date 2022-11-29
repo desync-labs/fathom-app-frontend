@@ -1,13 +1,14 @@
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import useMetaMask from "hooks/metamask";
 import { useStores } from "stores";
-import { useCallback, useEffect, useMemo, useState } from "react";
+
 import debounce from "lodash.debounce";
 import { StakingLockFormPropsType } from "components/Staking/StakingLockForm";
-import { Web3Utils } from "../helpers/Web3Utils";
+import { Web3Utils } from "helpers/Web3Utils";
 import { useQuery } from "@apollo/client";
-import { FXD_POOLS } from "../apollo/queries";
-import ICollateralPool from "../stores/interfaces/ICollateralPool";
+import { FXD_POOLS } from "apollo/queries";
+import ICollateralPool from "stores/interfaces/ICollateralPool";
 
 const useStakingLockForm = (
   fetchOverallValues: StakingLockFormPropsType["fetchOverallValues"]
@@ -21,13 +22,10 @@ const useStakingLockForm = (
   const { poolStore } = useStores();
 
   const { data } = useQuery(FXD_POOLS, {
-    fetchPolicy: 'cache-first',
-    variables: {
-      page: 10,
-    }
-  })
+    fetchPolicy: "cache-first",
+  });
 
-  const { handleSubmit, watch, control, reset, getValues, setValue } = useForm({
+  const { handleSubmit, watch, control, reset, setValue } = useForm({
     defaultValues: {
       lockDays: 30,
       stakePosition: "",
@@ -48,7 +46,9 @@ const useStakingLockForm = (
 
   const getFTHMTokenBalance = useCallback(async () => {
     if (data?.pools) {
-      const pool = data?.pools.find((pool: ICollateralPool) => pool.poolName.toLowerCase() === 'fthm');
+      const pool = data?.pools.find(
+        (pool: ICollateralPool) => pool.poolName.toLowerCase() === "fthm"
+      );
 
       const fthmTokenAddress = await poolStore.getCollateralTokenAddress(
         pool.tokenAdapterAddress
@@ -59,7 +59,7 @@ const useStakingLockForm = (
         fthmTokenAddress!
       );
 
-      setFthmBalance(balance / (10 ** 18));
+      setFthmBalance(balance / 10 ** 18);
       setFthmTokenAddress(fthmTokenAddress);
     }
   }, [poolStore, data, setFthmBalance]);
@@ -83,7 +83,7 @@ const useStakingLockForm = (
 
   useEffect(() => {
     getFTHMTokenBalance();
-  }, [getFTHMTokenBalance])
+  }, [getFTHMTokenBalance]);
 
   useEffect(() => {
     if (chainId && stakePosition) {
@@ -93,13 +93,13 @@ const useStakingLockForm = (
 
   useEffect(() => {
     const getBalance = async () => {
-      const instance = Web3Utils.getWeb3Instance(chainId)
+      const instance = Web3Utils.getWeb3Instance(chainId);
       const [xdcBalance] = await Promise.all([
         instance.eth.getBalance(account),
         positionStore.balanceStableCoin(account),
       ]);
 
-      setXdcBalance(xdcBalance / (10 ** 18))
+      setXdcBalance(xdcBalance / 10 ** 18);
     };
 
     if (account && chainId) getBalance();
@@ -139,7 +139,13 @@ const useStakingLockForm = (
     }
 
     setApprovalPending(false);
-  }, [account, stakingStore, fthmTokenAddress, setApprovalPending, setApprovedBtn]);
+  }, [
+    account,
+    stakingStore,
+    fthmTokenAddress,
+    setApprovalPending,
+    setApprovedBtn,
+  ]);
 
   const setMax = useCallback(
     (balance: number) => {
