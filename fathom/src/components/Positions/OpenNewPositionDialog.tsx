@@ -80,8 +80,6 @@ const OpenNewPositionDialog: FC<OpenPositionProps> = ({ pool, onClose }) => {
     availableFathomInPool,
   } = useOpenPosition(pool, onClose);
 
-  console.log(pool);
-
   return (
     <AppDialog
       onClose={onClose}

@@ -32,10 +32,10 @@ export const FXD_POOLS = gql`
 `;
 
 export const FXD_POSITIONS = gql`
-  query FXDPositions($walletAddress: String!) {
+  query FXDPositions($walletAddress: String!, $first: Int!, $skip: Int!) {
     positions(
-      first: 10
-      skip: 0
+      first: $first
+      skip: $skip
       orderBy: positionId
       orderDirection: desc
       where: { walletAddress: $walletAddress }
@@ -56,3 +56,12 @@ export const FXD_POSITIONS = gql`
     }
   }
 `;
+
+export const FXD_USER = gql`
+  query FXDUser($walletAddress: String!) {
+    users(where: { address: $walletAddress }) {
+      id
+      activePositionsCount
+    }
+  }
+`
