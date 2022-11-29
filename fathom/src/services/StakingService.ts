@@ -24,18 +24,8 @@ export default class StakingService implements IStakingService {
       SmartContractFactory.Staking(this.chainId),
       this.chainId
     );
-
     const daySeconds = 24 * 60 * 60;
-
-    const lockingPeriod = unlockPeriod * daySeconds;
-    let endTime = Math.ceil(Date.now() / 1000);
-
-    if (lockingPeriod === 0) {
-      endTime += 5 * 60;
-    } else if (lockingPeriod > 0) {
-      endTime = endTime + lockingPeriod;
-    }
-
+    const endTime = unlockPeriod * daySeconds;
     return Staking.methods
       .createLock(this.toWei(stakePosition), endTime, account)
       .send({ from: account })
