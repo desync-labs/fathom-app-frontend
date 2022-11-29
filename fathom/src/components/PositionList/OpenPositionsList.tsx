@@ -7,6 +7,7 @@ import {
   TableCell,
   TableContainer,
   TableHead,
+  Pagination,
 } from "@mui/material";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
 import { observer } from "mobx-react";
@@ -19,6 +20,7 @@ import {
 import PositionListItem from "components/PositionList/PositionListItem";
 import useOpenPositionList from "hooks/useOpenPositionList";
 import { styled } from "@mui/material/styles";
+import { Constants } from "helpers/Constants";
 
 const CircleWrapper = styled(Box)`
   width: 100%;
@@ -27,6 +29,12 @@ const CircleWrapper = styled(Box)`
   align-items: center;
   justify-content: center;
 `;
+
+const PaginationWrapper = styled(Box)`
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+`
 
 const OpenPositionsList = observer(() => {
   const {
@@ -39,6 +47,10 @@ const OpenPositionsList = observer(() => {
     selectedPosition,
     setSelectedPosition,
     loading,
+
+    itemsCount,
+    currentPage,
+    handlePageChange,
   } = useOpenPositionList();
 
   return (
@@ -57,38 +69,43 @@ const OpenPositionsList = observer(() => {
               )}
             </NoResults>
           ) : (
-            <TableContainer>
-              <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
-                  <AppTableHeaderRow
-                    sx={{
-                      th: { textAlign: "left", paddingLeft: "10px" },
-                    }}
-                  >
-                    <TableCell>Id</TableCell>
-                    <TableCell>Asset</TableCell>
-                    <TableCell>Liquidation price</TableCell>
-                    <TableCell>Borrowed</TableCell>
-                    <TableCell>Collateral</TableCell>
-                    <TableCell>Safety buffer</TableCell>
-                    <TableCell></TableCell>
-                  </AppTableHeaderRow>
-                </TableHead>
-                <TableBody>
-                  {positions.map((position: IOpenPosition) => (
-                    <PositionListItem
-                      approve={approve}
-                      approvalPending={approvalPending}
-                      approveBtn={approveBtn}
-                      key={position.id}
-                      position={position}
-                      setSelectedPosition={setSelectedPosition}
-                      setType={setType}
-                    />
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
+            <>
+              <TableContainer>
+                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                  <TableHead>
+                    <AppTableHeaderRow
+                      sx={{
+                        th: { textAlign: "left", paddingLeft: "10px" },
+                      }}
+                    >
+                      <TableCell>Id</TableCell>
+                      <TableCell>Asset</TableCell>
+                      <TableCell>Liquidation price</TableCell>
+                      <TableCell>Borrowed</TableCell>
+                      <TableCell>Collateral</TableCell>
+                      <TableCell>Safety buffer</TableCell>
+                      <TableCell></TableCell>
+                    </AppTableHeaderRow>
+                  </TableHead>
+                  <TableBody>
+                    {positions.map((position: IOpenPosition) => (
+                      <PositionListItem
+                        approve={approve}
+                        approvalPending={approvalPending}
+                        approveBtn={approveBtn}
+                        key={position.id}
+                        position={position}
+                        setSelectedPosition={setSelectedPosition}
+                        setType={setType}
+                      />
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              <PaginationWrapper>
+                <Pagination count={ Math.ceil(itemsCount / Constants.COUNT_PER_PAGE) } page={currentPage} onChange={handlePageChange} />
+              </PaginationWrapper>
+            </>
           ),
         [
           loading,

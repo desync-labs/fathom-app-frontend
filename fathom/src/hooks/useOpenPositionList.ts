@@ -1,11 +1,17 @@
-import { useCallback, useEffect, useState } from "react";
+import {
+  ChangeEvent,
+  useCallback,
+  useEffect,
+  useState
+} from "react";
 
 import { useStores } from "stores";
 import useMetaMask from "hooks/metamask";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
 import { ClosingType } from "hooks/useClosePosition";
 import { useLazyQuery } from "@apollo/client";
-import { FXD_POSITIONS } from "apollo/queries";
+import { FXD_POSITIONS, FXD_USER } from "apollo/queries";
+import { Constants } from "../helpers/Constants";
 
 const useOpenPositionList = () => {
   const { positionStore } = useStores();
@@ -13,7 +19,14 @@ const useOpenPositionList = () => {
   /**
    * @todo Change walletAddress
    */
-  const [loadPositions, { loading, data }] = useLazyQuery(FXD_POSITIONS, {
+  const [loadPositions, { loading, data, fetchMore }] = useLazyQuery(
+    FXD_POSITIONS,
+    {
+      fetchPolicy: "cache-first",
+    }
+  );
+
+  const [loadUserStats] = useLazyQuery(FXD_USER, {
     fetchPolicy: "cache-first",
   });
 
@@ -22,6 +35,9 @@ const useOpenPositionList = () => {
 
   const [approveBtn, setApproveBtn] = useState<boolean>(true);
   const [approvalPending, setApprovalPending] = useState<boolean>(false);
+  const [itemsCount, setItemsCount] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [walletProxy, setWalletProxy] = useState('');
 
   const approvalStatus = useCallback(async () => {
     const approved = await positionStore.approvalStatusStableCoin(account);
@@ -32,20 +48,33 @@ const useOpenPositionList = () => {
     if (account) {
       const walletProxy = await positionStore.getProxyWallet(account);
 
+      setWalletProxy(walletProxy!);
+
       if (walletProxy) {
         loadPositions({
           variables: {
-            walletAddress: walletProxy
-          }
-        })
+            first: Constants.COUNT_PER_PAGE,
+            skip: 0,
+            walletAddress: walletProxy,
+          },
+        });
+
+        loadUserStats({
+          variables: {
+            walletAddress: walletProxy,
+          },
+        }).then(({ data: { users } }) => {
+          const itemsCount = users[0].activePositionsCount;
+          setItemsCount(itemsCount);
+        });
       }
     }
-  }, [positionStore, account, loadPositions])
+  }, [positionStore, account, loadPositions, setItemsCount, setWalletProxy]);
 
   useEffect(() => {
     if (chainId && account) {
       approvalStatus();
-      loadPositionsCallback()
+      loadPositionsCallback();
     }
   }, [chainId, account, approvalStatus, loadPositionsCallback]);
 
@@ -61,6 +90,17 @@ const useOpenPositionList = () => {
     setApprovalPending(false);
   }, [positionStore, account, setApprovalPending, setApproveBtn]);
 
+  const handlePageChange = useCallback((event: ChangeEvent<unknown>, page: number) => {
+    fetchMore({
+      variables: {
+        first: Constants.COUNT_PER_PAGE,
+        skip: page * Constants.COUNT_PER_PAGE,
+        walletAddress: walletProxy,
+      }
+    })
+    setCurrentPage(page);
+  }, [walletProxy, setCurrentPage])
+
   return {
     approveBtn,
     approvalPending,
@@ -73,9 +113,13 @@ const useOpenPositionList = () => {
           ),
     approve,
     selectedPosition,
+    loading,
+    currentPage,
+    itemsCount,
+
     setSelectedPosition,
     setType,
-    loading,
+    handlePageChange,
   };
 };
 

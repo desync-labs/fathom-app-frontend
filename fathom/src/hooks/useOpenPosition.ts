@@ -21,7 +21,7 @@ const useOpenPosition = (
 
   const { account, chainId } = useMetaMask()!;
 
-  const { handleSubmit, watch, control, setValue } = useForm({
+  const { handleSubmit, watch, control, setValue, trigger } = useForm({
     defaultValues,
     reValidateMode: "onChange",
     mode: "onChange",
@@ -103,11 +103,10 @@ const useOpenPosition = (
           ((priceWithSafetyMargin * (100 - Number(pool.stabilityFeeRate))) /
             100)
       );
+
       setFxdToBeBorrowed(safeMax);
-      setValue("safeMax", safeMax, { shouldValidate: true });
-      setValue("fathomToken", fathomTokenInput.toString(), {
-        shouldValidate: true,
-      });
+
+      setValue("safeMax", safeMax);
 
       const collateralAvailableToWithdraw =
         Number(priceWithSafetyMargin) === 0
@@ -155,6 +154,11 @@ const useOpenPosition = (
       }
 
       setLiquidationPrice(+liquidationPrice);
+
+      /**
+       * Revalidate form
+       */
+      trigger();
     },
     [
       balance,
@@ -170,14 +174,16 @@ const useOpenPosition = (
       setCollateralToBeLocked,
       setFxdToBeBorrowed,
       setValue,
+      trigger,
     ]
   );
 
-  console.log(fxdToBeBorrowed);
-
   useEffect(() => {
-    if (collateralTokenAddress) {
-      handleUpdates(Number(collateral), Number(fathomToken));
+    const collateralVal = Number(collateral);
+    const fathomTokenVal = Number(fathomToken);
+
+    if (collateralTokenAddress && (collateralVal || fathomTokenVal)) {
+      handleUpdates(collateralVal, fathomTokenVal);
       approvalStatus(collateral);
     }
   }, [
