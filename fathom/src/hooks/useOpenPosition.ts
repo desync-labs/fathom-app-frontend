@@ -66,6 +66,7 @@ const useOpenPosition = (
     const tokenAddress = await poolStore.getCollateralTokenAddress(
       pool.tokenAdapterAddress
     );
+
     const balance = await poolStore.getUserTokenBalance(account, tokenAddress!);
 
     setCollateralTokenAddress(tokenAddress);
