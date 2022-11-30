@@ -17,9 +17,12 @@ const useDashboard = () => {
   const [positionsItemsCount, setPositionsItemsCount] = useState(0);
   const [proxyWallet, setProxyWallet] = useState("");
 
-  const [loadUserStats] = useLazyQuery(FXD_USER, {
-    fetchPolicy: "cache-first",
-  });
+  const [loadUserStats, { refetch: refetchUserStats }] = useLazyQuery(
+    FXD_USER,
+    {
+      fetchPolicy: "cache-first",
+    }
+  );
 
   const fetchUserStatsAndProxyWallet = useCallback(async () => {
     const proxyWallet = await positionStore.getProxyWallet(account);
@@ -57,6 +60,15 @@ const useDashboard = () => {
         skip: 0,
       }).then(() => {
         setPositionCurrentPage(1);
+      });
+
+      refetchUserStats({
+        variables: {
+          walletAddress: proxyWallet,
+        },
+      }).then(({ data: { users } }) => {
+        const itemsCount = users[0].activePositionsCount;
+        setPositionsItemsCount(itemsCount);
       });
     }, 1200);
   }, [

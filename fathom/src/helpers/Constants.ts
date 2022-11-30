@@ -9,7 +9,7 @@ export class Constants {
   public static DEFAULT_CHAIN_ID = 51;
   public static MAX_UINT256  = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
 
-  public static COUNT_PER_PAGE = 3;
+  public static COUNT_PER_PAGE = 10;
 
   public static Status = [
     "Pending",
