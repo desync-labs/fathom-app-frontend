@@ -9,7 +9,7 @@ export default interface IOpenPosition {
   positionId: string
   positionStatus: string
   safetyBuffer: string;
-  safetyBufferInPrecent: string
+  safetyBufferInPercent: string
   tvl: string
   walletAddress: string
 }
