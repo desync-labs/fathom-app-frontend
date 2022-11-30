@@ -83,17 +83,15 @@ export default class PositionStore {
 
   async balanceStableCoin(address: string) {
     try {
-      const balance = await this.service.balanceStableCoin(address);
-      this.setStableCoinBalance(balance);
+      return await this.service.balanceStableCoin(address);
     } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(true, e.message);
     }
   }
 
   async approveStableCoin(address: string) {
-    console.log(`Open position token approval clicked for address ${address}`);
     try {
-      return this.service
+      return await this.service
         .approveStableCoin(address, this.rootStore.transactionStore)
         .then(() => {
           this.rootStore.alertStore.setShowSuccessAlert(

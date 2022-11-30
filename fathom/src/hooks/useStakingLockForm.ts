@@ -82,8 +82,10 @@ const useStakingLockForm = (
   );
 
   useEffect(() => {
-    getFTHMTokenBalance();
-  }, [getFTHMTokenBalance]);
+    if (account) {
+      getFTHMTokenBalance();
+    }
+  }, [account, getFTHMTokenBalance]);
 
   useEffect(() => {
     if (chainId && stakePosition) {
