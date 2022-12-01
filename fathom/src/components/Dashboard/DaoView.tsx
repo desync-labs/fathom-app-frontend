@@ -42,7 +42,7 @@ const DaoView = () => {
   );
 
   const isGovernmentActive = useMemo(
-    () => location.pathname.includes("proposals"),
+    () => location.pathname.includes("governance"),
     [location.pathname]
   );
 
@@ -53,7 +53,7 @@ const DaoView = () => {
           <StakingIcon isStakingActive={isStakingActive} />
           Staking
         </DaoLink>
-        <DaoLink className={isGovernmentActive ? "active" : ""} to="proposals">
+        <DaoLink className={isGovernmentActive ? "active" : ""} to="governance">
           <GovernanceIcon isDAOActive={isGovernmentActive} />
           Governance
         </DaoLink>
