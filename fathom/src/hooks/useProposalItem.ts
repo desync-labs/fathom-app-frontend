@@ -1,4 +1,4 @@
-import useMetaMask from "hooks/metamask";
+import useMetaMask from "context/metamask";
 import { useNavigate, useParams } from "react-router-dom";
 import { useStores } from "stores";
 import { useCallback, useEffect, useState } from "react";

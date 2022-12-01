@@ -39,6 +39,7 @@ import { MainBox } from "components/AppComponents/AppBox/AppBox";
 import DaoView from "components/Dashboard/DaoView";
 import { drawerWidth } from "components/AppComponents/AppBar/AppBar";
 import useMainLayout from "hooks/useMainLayout";
+import { StakingProvider } from "../../context/staking";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -216,7 +217,11 @@ const MainLayout = observer(() => {
           <Routes>
             <Route path="/dao" element={<DaoView />}>
               <Route path="proposals" element={<AllProposalsView />} />
-              <Route path="staking" element={<StakingView />} />
+              <Route path="staking" element={
+                <StakingProvider>
+                  <StakingView />
+                </StakingProvider>
+              } />
             </Route>
           </Routes>
           <Copyright />

@@ -1,7 +1,7 @@
 import { useStores } from "stores";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import { FXD_POOLS, FXD_POSITIONS, FXD_STATS, FXD_USER } from "apollo/queries";
-import useMetaMask from "hooks/metamask";
+import useMetaMask from "context/metamask";
 import { useCallback, useEffect, useState } from "react";
 import { Constants } from "helpers/Constants";
 
@@ -33,8 +33,7 @@ const useDashboard = () => {
         walletAddress: proxyWallet,
       },
     }).then(({ data: { users } }) => {
-      const itemsCount = users[0].activePositionsCount;
-      setPositionsItemsCount(itemsCount);
+      setPositionsItemsCount(users[0]?.activePositionsCount || 0);
     });
   }, [
     positionStore,
@@ -72,12 +71,11 @@ const useDashboard = () => {
       });
     }, 1200);
   }, [
-    positionStore,
-    account,
     proxyWallet,
     refetchStats,
     refetchPools,
     refetchPositions,
+    refetchUserStats,
   ]);
 
   return {

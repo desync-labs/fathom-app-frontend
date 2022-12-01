@@ -1,5 +1,5 @@
 import { useStores } from "stores";
-import useMetaMask from "hooks/metamask";
+import useMetaMask from "context/metamask";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import debounce from "lodash.debounce";
 import { OpenPositionProps } from "components/Positions/OpenNewPositionDialog";
@@ -14,7 +14,7 @@ const defaultValues = {
 const useOpenPosition = (
   pool: OpenPositionProps["pool"],
   onClose: OpenPositionProps["onClose"],
-  refetchData: OpenPositionProps['refetchData']
+  refetchData: OpenPositionProps["refetchData"]
 ) => {
   const { poolStore, positionStore } = useStores();
 
@@ -50,16 +50,17 @@ const useOpenPosition = (
   const [approveBtn, setApproveBtn] = useState<boolean>(false);
   const [approvalPending, setApprovalPending] = useState<boolean>(false);
 
-  const approvalStatus = useCallback(
-    debounce(async (collateral: string) => {
-      let approved = await positionStore.approvalStatus(
-        account,
-        Number(collateral),
-        collateralTokenAddress!
-      );
-      approved ? setApproveBtn(false) : setApproveBtn(true);
-    }, 1000),
-    [positionStore, collateralTokenAddress, pool, account]
+  const approvalStatus = useMemo(
+    () =>
+      debounce(async (collateral: string) => {
+        let approved = await positionStore.approvalStatus(
+          account,
+          Number(collateral),
+          collateralTokenAddress!
+        );
+        approved ? setApproveBtn(false) : setApproveBtn(true);
+      }, 1000),
+    [positionStore, collateralTokenAddress, account]
   );
 
   const getCollateralTokenAndBalance = useCallback(async () => {
@@ -154,8 +155,6 @@ const useOpenPosition = (
       trigger();
     },
     [
-      balance,
-      availableFathomInPool,
       collateralTokenAddress,
       pool,
       poolStore,
@@ -211,14 +210,7 @@ const useOpenPosition = (
       }
       setOpenPositionLoading(false);
     },
-    [
-      account,
-      pool,
-      positionStore,
-      setOpenPositionLoading,
-      onClose,
-      refetchData,
-    ]
+    [account, pool, positionStore, setOpenPositionLoading, onClose, refetchData]
   );
 
   const approve = useCallback(async () => {

@@ -1,39 +1,34 @@
-import React, { FC, useMemo, useState, memo, Dispatch } from "react";
+import React, { FC, memo, useMemo } from "react";
 import ILockPosition from "stores/interfaces/ILockPosition";
 import StakingViewItem from "components/Staking/StakingViewItem";
 import { useStores } from "stores";
-import ClaimRewardsDialog, {
-  ClaimRewardsType,
-} from "components/Staking/Dialog/ClaimRewardsDialog";
-import useStakingView from "hooks/useStakingView";
+import ClaimRewardsDialog from "components/Staking/Dialog/ClaimRewardsDialog";
+import { DialogActions } from "hooks/useStakingView";
 import UnstakeDialog from "components/Staking/Dialog/UnstakeDialog";
 import EarlyUnstakeDialog from "components/Staking/Dialog/EarlyUnstakeDialog";
 import { NoResults } from "components/AppComponents/AppBox/AppBox";
+import { Grid } from "@mui/material";
+import UnclaimedRewardsDialog from "components/Staking/Dialog/UnclaimedRewardsDialog";
+import ClaimRewardsCoolDown from "components/Staking/Dialog/ClaimRewardsCoolDown";
+import useStakingContext from "context/staking";
 
 type StreamItemProps = {
   token: string;
-  showClaimRewards: boolean;
-  setShowClaimRewards: Dispatch<boolean>;
 };
 
-const StreamItem: FC<StreamItemProps> = ({
-  token,
-  showClaimRewards,
-  setShowClaimRewards,
-}) => {
+const StreamItem: FC<StreamItemProps> = ({ token }) => {
   const { stakingStore } = useStores();
 
-  const [unstake, setUnstake] = useState<null | ILockPosition>(null);
-
-  const [earlyUnstake, setEarlyUnstake] = useState<null | ILockPosition>(null);
-  const [showUnclaimedRewards, setShowUnclaimedRewards] =
-    useState<boolean>(false);
-
-  const { calculateTotalRewards } = useStakingView();
-
-  const totalRewards = useMemo(() => {
-    return calculateTotalRewards(stakingStore.lockPositions);
-  }, [calculateTotalRewards, stakingStore.lockPositions]);
+  const {
+    totalRewards,
+    setUnstake,
+    setEarlyUnstake,
+    dialogAction,
+    unstake,
+    earlyUnstake,
+    onClose,
+    processFlow,
+  } = useStakingContext();
 
   return (
     <>
@@ -43,61 +38,101 @@ const StreamItem: FC<StreamItemProps> = ({
             {stakingStore.lockPositions.length === 0 ? (
               <NoResults variant="h6">You have no open positions!</NoResults>
             ) : (
-              stakingStore.lockPositions.map(
-                (lockPosition: ILockPosition, index: number) => (
-                  <StakingViewItem
-                    index={index}
-                    key={lockPosition.lockId}
-                    token={token}
-                    lockPosition={lockPosition}
-                    setUnstake={setUnstake}
-                    setEarlyUnstake={setEarlyUnstake}
-                  />
-                )
-              )
+              <Grid container sx={{ gap: "12px" }}>
+                {stakingStore.lockPositions.map(
+                  (lockPosition: ILockPosition, index: number) => (
+                    <StakingViewItem
+                      index={index}
+                      key={lockPosition.lockId}
+                      token={token}
+                      lockPosition={lockPosition}
+                      setUnstake={setUnstake}
+                      setEarlyUnstake={setEarlyUnstake}
+                    />
+                  )
+                )}
+              </Grid>
             )}
           </>
         ),
-
-        [stakingStore.lockPositions, token]
+        [stakingStore.lockPositions, token, setUnstake, setEarlyUnstake]
       )}
 
-      {showClaimRewards && (
-        <ClaimRewardsDialog
-          token={token}
-          totalRewards={totalRewards}
-          onClose={() => {
-            setShowClaimRewards(false);
-          }}
-          type={ClaimRewardsType.FUll}
-        />
-      )}
+      {useMemo(() => {
+        return (
+          dialogAction === DialogActions.CLAIM_REWARDS && (
+            <ClaimRewardsDialog
+              token={token}
+              totalRewards={totalRewards}
+              onClose={onClose}
+              onSkip={
+                unstake || earlyUnstake ? () => processFlow("skip") : null
+              }
+              onClaim={() => processFlow("claim-cooldown")}
+            />
+          )
+        );
+      }, [
+        totalRewards,
+        unstake,
+        earlyUnstake,
+        token,
+        dialogAction,
+        onClose,
+        processFlow,
+      ])}
+
+      {useMemo(() => {
+        return (
+          dialogAction === DialogActions.CLAIM_REWARDS_COOLDOWN && (
+            <ClaimRewardsCoolDown
+              totalRewards={totalRewards}
+              token={token}
+              onClose={onClose}
+              onContinue={() => processFlow("continue")}
+            />
+          )
+        );
+      }, [totalRewards, token, dialogAction, onClose, processFlow])}
 
       {useMemo(
         () =>
-          unstake && (
+          dialogAction === DialogActions.UNSTAKE && (
             <UnstakeDialog
-              onClose={() => {
-                setUnstake(null);
-              }}
+              onClose={onClose}
               token={token}
               lockPosition={unstake}
             />
           ),
-        [unstake, stakingStore.lockPositions, token]
+        [unstake, token, dialogAction, onClose]
       )}
 
       {useMemo(
         () =>
-          earlyUnstake && (
+          dialogAction === DialogActions.EARLY_UNSTAKE && (
             <EarlyUnstakeDialog
               token={token}
-              onClose={() => setEarlyUnstake(null)}
+              onClose={onClose}
               lockPosition={earlyUnstake!}
+              onFinish={() => processFlow("unstake-cooldown")}
             />
           ),
-        [earlyUnstake, token]
+        [token, dialogAction, earlyUnstake, onClose, processFlow]
       )}
+
+      {useMemo(() => {
+        return (
+          dialogAction === DialogActions.UNCLAIMED && (
+            <UnclaimedRewardsDialog
+              position={(unstake || earlyUnstake)!}
+              token={token}
+              onClose={onClose}
+              onSkip={() => processFlow("skip")}
+              onClaim={() => processFlow("claim")}
+            />
+          )
+        );
+      }, [unstake, earlyUnstake, token, dialogAction, onClose, processFlow])}
     </>
   );
 };

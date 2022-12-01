@@ -64,7 +64,6 @@ export default class StakingStore {
 
   async handleClaimRewards(account: string) {
     try {
-      if (!account) return;
       await this.service.handleClaimRewards(
         account,
         1,
@@ -72,6 +71,7 @@ export default class StakingStore {
       );
     } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+      throw e;
     }
   }
 

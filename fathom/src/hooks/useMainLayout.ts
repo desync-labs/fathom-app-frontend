@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import useMetaMask from "hooks/metamask";
+import useMetaMask from "context/metamask";
 import { useStores } from "stores";
 
 const useMainLayout = () => {
