@@ -98,12 +98,14 @@ type EarlyUnstakeDialogProps = {
   token: string;
   lockPosition: ILockPosition;
   onClose: () => void;
+  onFinish: () => void;
 };
 
 const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({
   onClose,
   token,
   lockPosition,
+  onFinish
 }) => {
   const {
     unstakeAmount,
@@ -111,7 +113,7 @@ const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({
     unstakeAmountWithFee,
     isLoading,
     earlyUnstakeHandler,
-  } = useEarlyUnstake(lockPosition);
+  } = useEarlyUnstake(lockPosition, onFinish);
 
   return (
     <UnstakeDialogWrapper

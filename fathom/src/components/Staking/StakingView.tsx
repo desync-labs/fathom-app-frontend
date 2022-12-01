@@ -4,17 +4,12 @@ import { useMemo } from "react";
 import { observer } from "mobx-react";
 import StakingLockForm from "components/Staking/StakingLockForm";
 import { PageHeader } from "components/Dashboard/PageHeader";
-import useStakingView from "hooks/useStakingView";
 import StreamStats from "components/Staking/Components/StreamStats";
 import StakingPositions from "components/Staking/StakingPositions";
+import useStakingContext from "context/staking";
 
 const StakingView = observer(() => {
-  const {
-    stakingStore,
-    fetchOverallValues,
-    showClaimRewards,
-    setShowClaimRewards,
-  } = useStakingView();
+  const { stakingStore, fetchOverallValues } = useStakingContext();
 
   return (
     <Grid container spacing={3}>
@@ -37,7 +32,6 @@ const StakingView = observer(() => {
           <Grid item xs={6}>
             <StreamStats
               apr={100}
-              setShowClaimRewards={setShowClaimRewards}
               stakedBalance={stakingStore.totalStakedPosition}
               voteBalance={stakingStore.voteBalance}
             />
@@ -45,10 +39,7 @@ const StakingView = observer(() => {
         </Grid>
       </Grid>
       <Grid item xs={12}>
-        <StakingPositions
-          showClaimRewards={showClaimRewards}
-          setShowClaimRewards={setShowClaimRewards}
-        />
+        <StakingPositions />
       </Grid>
     </Grid>
   );

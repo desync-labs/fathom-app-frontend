@@ -1,7 +1,6 @@
 import React, { memo, Dispatch, FC, useEffect, useState } from "react";
-import { Box, Divider, Grid, Typography } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import ILockPosition from "stores/interfaces/ILockPosition";
-import useStakingView from "hooks/useStakingView";
 import { styled } from "@mui/material/styles";
 import StakingCountdown from "components/Staking/StakingCountdown";
 
@@ -13,26 +12,23 @@ import { ButtonSecondary } from "components/AppComponents/AppButton/AppButton";
 import { formatNumber } from "utils/format";
 import { secondsToTime } from "utils/secondsToTime";
 import { getTokenLogoURL } from "utils/tokenLogo";
+import useStakingContext from "../../context/staking";
 
-const RightGrid = styled(Grid)`
-  width: calc(50% - 1px);
-  padding-left: 20px;
+const StakingViewItemWrapper = styled(Grid)`
+  &.MuiGrid-item {
+    padding: 16px 20px;
+    background: #1d2d49;
+    border-radius: 8px;
+    max-width: calc(50% - 6px);
+  }
 `;
 
-const StakingViewItemWrapper = styled(Box)`
-  padding: 16px 20px;
-  background: #1d2d49;
-  border-radius: 8px;
-  margin-bottom: 10px;
-`;
-
-export const StakingViewItemLabel = styled(Box)`
-  font-weight: 700;
-  font-size: 13px;
-  line-height: 16px;
-  color: #6379a1;
-  text-transform: uppercase;
-`;
+const HeaderWrapper = styled(Box)`
+  display: flex;
+  align-items: start;
+  justify-content: start;
+  gap: 15px;
+`
 
 const RewardsUnStakeWrapper = styled(Box)`
   margin-top: 20px;
@@ -65,7 +61,7 @@ const Index = styled(Box)`
   justify-content: center;
 `;
 
-const NumberCell = styled(Grid)`
+const NumberCell = styled(Box)`
   display: flex;
   align-items: start;
   justify-content: start;
@@ -138,52 +134,13 @@ const CoolDownInfo = styled(Box)`
   height: 100%;
 `;
 
-const CoolDown = styled(Box)`
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 20px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  padding-bottom: 3px;
-
-  svg {
-    color: #7d91b5;
-  }
-
-  span {
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 20px;
-    color: #5a81ff;
-    padding-left: 5px;
-
-    &.green {
-      color: #4dcc33;
-    }
-  }
-`;
-
-const CoolDownCountDown = styled(Box)`
-  font-weight: 400;
-  font-size: 12px;
-  line-height: 16px;
-  color: #5a81ff;
-  display: flex;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-`;
-
 const ButtonGrid = styled(Grid)`
   display: flex;
   align-items: start;
   justify-content: end;
-
-  button:not(.without-margin) {
-    margin-right: 20px;
-  }
 `;
+
+const InfoWrapper = styled(Box)``
 
 type StakingViewItemPropsType = {
   index: number;
@@ -203,7 +160,7 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
   const [timer, setTimer] = useState();
   const [seconds, setSeconds] = useState(lockPosition.EndTime);
 
-  const { isUnlockable } = useStakingView();
+  const { isUnlockable } = useStakingContext();
 
   useEffect(() => {
     if (lockPosition.EndTime <= 0) {
@@ -223,51 +180,55 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
   }, [lockPosition, setTimer, setSeconds]);
 
   return (
-    <StakingViewItemWrapper>
-      <Grid container>
-        <NumberCell item xs={2}>
+    <StakingViewItemWrapper item xs={6}>
+      <HeaderWrapper>
+        <NumberCell>
           <img src={getTokenLogoURL(token)} alt={token} width={28} />
           <Index>{index + 1}</Index>
         </NumberCell>
-        <Grid item xs={2}>
-          <Label>Locked Amount</Label>
-          <Value>
-            {formatNumber(lockPosition.MAINTokenBalance)} {token}
-          </Value>
-        </Grid>
-        <Grid item xs={2}>
-          <Label>Voting Power</Label>
-          <Value>
-            {lockPosition.VOTETokenBalance
-              ? `${formatNumber(lockPosition.VOTETokenBalance)} vFTHM`
-              : "None"}
-          </Value>
-        </Grid>
-        <Grid item xs={4}>
-          <Label>Locking Time</Label>
-          <Value className={"orange"}>
-            <img src={clockSrc} alt={"clock-circle"} />
-            {seconds > 0 ? (
-              <StakingCountdown timeObject={secondsToTime(seconds)} />
-            ) : (
-              <Box>0 days left</Box>
-            )}
-          </Value>
-        </Grid>
-        <Grid item xs={2}>
-          <Label>Rewards Accrued</Label>
-          <Value className={"green"}>
-            {formatNumber(Number(lockPosition.RewardsAvailable) / 10 ** 27!)}{" "}
-            {token}
-          </Value>
-        </Grid>
-      </Grid>
+        <InfoWrapper>
+          <Grid container spacing={2}>
+            <Grid item xs={8}>
+              <Label>Locked Amount</Label>
+              <Value>
+                {formatNumber(lockPosition.MAINTokenBalance)} {token}
+              </Value>
+            </Grid>
+            <Grid item xs={4}>
+              <Label>Voting Power</Label>
+              <Value>
+                {lockPosition.VOTETokenBalance
+                  ? `${formatNumber(lockPosition.VOTETokenBalance)} vFTHM`
+                  : "None"}
+              </Value>
+            </Grid>
+            <Grid item xs={8}>
+              <Label>Locking Time</Label>
+              <Value className={"orange"}>
+                <img src={clockSrc} alt={"clock-circle"} />
+                {seconds > 0 ? (
+                  <StakingCountdown timeObject={secondsToTime(seconds)} />
+                ) : (
+                  <Box>0 days left</Box>
+                )}
+              </Value>
+            </Grid>
+            <Grid item xs={4}>
+              <Label>Rewards Accrued</Label>
+              <Value className={"green"}>
+                {formatNumber(Number(lockPosition.RewardsAvailable) / 10 ** 27!)}{" "}
+                {token}
+              </Value>
+            </Grid>
+          </Grid>
+        </InfoWrapper>
+      </HeaderWrapper>
       <RewardsUnStakeWrapper>
         <Typography component={"h3"} className={"title"}>
           I want to unstake
         </Typography>
         <Grid container sx={{ width: "100%", height: "100%" }}>
-          <Grid item xs={6}>
+          <Grid item xs={12}>
             <Grid container>
               <Grid item xs={12}>
                 <TotalLocked>
@@ -298,7 +259,7 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
                   </ButtonSecondary>
                 ) : (
                   <ButtonSecondary
-                    onClick={() => setUnstake(lockPosition)}
+                    onClick={() => setEarlyUnstake(lockPosition)}
                   >
                     Early Unstake
                   </ButtonSecondary>
@@ -306,33 +267,6 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
               </ButtonGrid>
             </Grid>
           </Grid>
-          <Divider
-            orientation="vertical"
-            flexItem
-            sx={{ margin: "0 0 35px" }}
-          ></Divider>
-          <RightGrid item>
-            <CoolDown>
-              Cooling Down <InfoIcon sx={{ fontSize: "18px" }} />{" "}
-              <span>200 FTHM</span>
-            </CoolDown>
-            <CoolDown>
-              Available to Withdraw <InfoIcon sx={{ fontSize: "18px" }} />{" "}
-              <span className={"green"}>300 FTHM</span>
-            </CoolDown>
-            <Grid container sx={{ marginTop: "6px" }}>
-              <Grid item xs={8}>
-                <CoolDownCountDown>
-                  Cooldown countdown: 1 day 23 hrs 12 mins left
-                </CoolDownCountDown>
-              </Grid>
-              <ButtonGrid item xs={4}>
-                <ButtonSecondary className={"without-margin"}>
-                  Withdraw
-                </ButtonSecondary>
-              </ButtonGrid>
-            </Grid>
-          </RightGrid>
         </Grid>
       </RewardsUnStakeWrapper>
     </StakingViewItemWrapper>

@@ -1,4 +1,5 @@
-import React, { Dispatch, FC } from "react";
+import React, { FC } from "react";
+import useStakingContext from "context/staking";
 
 import { Box, Typography, Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -122,19 +123,35 @@ const ButtonGrid = styled(Grid)`
   justify-content: end;
 `;
 
+const CooldownInProgress = styled(Box)`
+  background: #3665ff;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 12px;
+  padding: 4px 8px;
+  width: 170px;
+  text-align: center;
+`;
+
+const CooldownCountDown = styled(Box)`
+  color: #5a81ff;
+  font-size: 14px;
+  padding: 10px 0;
+`;
+
 type StreamStatsPropsType = {
   stakedBalance: number;
   voteBalance: number;
   apr: number;
-  setShowClaimRewards: Dispatch<boolean>;
 };
 
 const StreamStats: FC<StreamStatsPropsType> = ({
   stakedBalance,
   voteBalance,
   apr,
-  setShowClaimRewards,
 }) => {
+  const { processFlow } = useStakingContext();
+
   return (
     <Box sx={{ padding: "0 10px" }}>
       <FTHMStreamHeader>FTHM Stream</FTHMStreamHeader>
@@ -203,7 +220,7 @@ const StreamStats: FC<StreamStatsPropsType> = ({
               </MyStatsValue>
             </Grid>
             <ButtonGrid item xs={6}>
-              <StatsButton onClick={() => setShowClaimRewards(true)}>
+              <StatsButton onClick={() => processFlow("claim")}>
                 Claim
               </StatsButton>
             </ButtonGrid>
@@ -221,6 +238,14 @@ const StreamStats: FC<StreamStatsPropsType> = ({
         </MyStatsBlock>
 
         <MyStatsBlock>
+          <CooldownInProgress>Cooldown in progress</CooldownInProgress>
+          <CooldownCountDown>
+            1 Day : 10 Hours : 30 Mins : 17 Secs
+          </CooldownCountDown>
+          <MyStatsValue>
+            <strong>400 FTHM</strong>
+            <span>$500.00</span>
+          </MyStatsValue>
           <Grid container>
             <Grid item xs={6}>
               <StatsLabel>
@@ -235,13 +260,6 @@ const StreamStats: FC<StreamStatsPropsType> = ({
               <StatsButton>Withdraw</StatsButton>
             </ButtonGrid>
           </Grid>
-        </MyStatsBlock>
-
-        <MyStatsBlock>
-          <StatsLabel>Total Cooling Down</StatsLabel>
-          <MyStatsValue>
-            <strong>800 FTHM</strong>
-          </MyStatsValue>
         </MyStatsBlock>
       </MyStatsBlocks>
     </Box>

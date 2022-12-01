@@ -1,6 +1,6 @@
 import { useStores } from "stores";
 import { Dispatch, useCallback, useEffect, useMemo, useState } from "react";
-import useMetaMask from "hooks/metamask";
+import useMetaMask from "context/metamask";
 import { ClosePositionProps } from "components/Positions/ClosePositionDialog";
 import { useQuery } from "@apollo/client";
 import { FXD_POOLS } from "apollo/queries";
@@ -21,7 +21,7 @@ const useClosePosition = (
   const { positionStore } = useStores();
   const { account } = useMetaMask()!;
 
-  const { data, loading } = useQuery(FXD_POOLS, {
+  const { data } = useQuery(FXD_POOLS, {
     fetchPolicy: "cache-first",
   });
 
@@ -40,7 +40,7 @@ const useClosePosition = (
       data?.pools?.find(
         (pool: ICollateralPool) => pool.id === position?.collateralPool
       ),
-    [data, loading, position]
+    [data, position]
   );
 
   const lockedCollateral = useMemo(
@@ -106,6 +106,7 @@ const useClosePosition = (
     positionStore,
     onClose,
     setDisableClosePosition,
+    refetchData,
   ]);
 
   const handleFathomTokenTextFieldChange = useCallback(

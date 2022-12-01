@@ -94,7 +94,7 @@ const PoolsListView: FC<PoolsListViewProps> = observer(({ refetchData }) => {
             />
           )
         );
-      }, [selectedPool, onCloseNewPosition])}
+      }, [selectedPool, onCloseNewPosition, refetchData])}
     </>
   );
 });

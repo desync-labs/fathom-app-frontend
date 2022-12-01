@@ -131,6 +131,9 @@ const PositionsList: FC<PositionsListProps> = observer(
             approveBtn,
             setSelectedPosition,
             setType,
+            handlePageChange,
+            positionCurrentPage,
+            positionsItemsCount,
           ]
         )}
         {selectedPosition && (

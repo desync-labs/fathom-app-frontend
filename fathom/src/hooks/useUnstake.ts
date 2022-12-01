@@ -6,7 +6,7 @@ import {
   useState
 } from "react";
 import ILockPosition from "stores/interfaces/ILockPosition";
-import useStakingView from "hooks/useStakingView";
+import useStakingContext from "context/staking";
 
 const useUnstake = (
   lockPosition: ILockPosition | null,
@@ -14,7 +14,7 @@ const useUnstake = (
   const [balanceError, setBalanceError] = useState<boolean>(false);
   const [unStakeAmount, setUnStakeAmount] = useState<number>(0);
 
-  const { action, handleUnlock, withdrawAll } = useStakingView();
+  const { action, handleUnlock } = useStakingContext();
 
   const isLoading = useMemo(() => {
     return action?.type === "unlock" && action?.id === lockPosition?.lockId
@@ -49,7 +49,7 @@ const useUnstake = (
 
   const unStakeHandler = useCallback(() => {
     handleUnlock(lockPosition!.lockId)
-  }, [lockPosition, handleUnlock, withdrawAll]);
+  }, [lockPosition, handleUnlock]);
 
   return {
     balanceError,

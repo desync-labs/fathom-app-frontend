@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useStores } from "stores";
-import useMetaMask from "hooks/metamask";
+import useMetaMask from "context/metamask";
 import debounce from "lodash.debounce";
 import { SmartContractFactory } from "config/SmartContractFactory";
 
@@ -39,66 +39,72 @@ const useStableSwap = (options: string[]) => {
     [fxdPrice, setInputValue, setOutputValue]
   );
 
-  const approvalStatus = useCallback(
-    debounce(async (input: number, currency: string, type: string) => {
-      let approved;
-      approved =
-        currency === "USDT"
-          ? await stableSwapStore.approvalStatusUsdt(account, input)
-          : await stableSwapStore.approvalStatusStableCoin(account, input);
+  const approvalStatus = useMemo(
+    () =>
+      debounce(async (input: number, currency: string, type: string) => {
+        let approved;
+        approved =
+          currency === "USDT"
+            ? await stableSwapStore.approvalStatusUsdt(account, input)
+            : await stableSwapStore.approvalStatusStableCoin(account, input);
 
-      type === "input"
-        ? approved
-          ? setApproveInputBtn(false)
-          : setApproveInputBtn(true)
-        : approved
+        type === "input"
+          ? approved
+            ? setApproveInputBtn(false)
+            : setApproveInputBtn(true)
+          : approved
           ? setApproveOutputBtn(false)
           : setApproveOutputBtn(true);
-    }, 300),
+      }, 300),
     [stableSwapStore, account, setApproveInputBtn, setApproveOutputBtn]
   );
 
-  const handleCurrencyChange = useCallback(
-    debounce(async (inputCurrency: string, outputCurrency: string) => {
-      if (inputCurrency && outputCurrency && inputCurrency !== outputCurrency) {
-        const inputContractAddress =
-          SmartContractFactory.getAddressByContractName(
-            chainId!,
-            inputCurrency
-          );
+  const handleCurrencyChange = useMemo(
+    () =>
+      debounce(async (inputCurrency: string, outputCurrency: string) => {
+        if (
+          inputCurrency &&
+          outputCurrency &&
+          inputCurrency !== outputCurrency
+        ) {
+          const inputContractAddress =
+            SmartContractFactory.getAddressByContractName(
+              chainId!,
+              inputCurrency
+            );
 
-        const outputCurrencyAddress =
-          SmartContractFactory.getAddressByContractName(
-            chainId!,
-            outputCurrency
-          );
+          const outputCurrencyAddress =
+            SmartContractFactory.getAddressByContractName(
+              chainId!,
+              outputCurrency
+            );
 
-        const FXDContractAddress =
-          SmartContractFactory.getAddressByContractName(chainId, "FXD");
+          const FXDContractAddress =
+            SmartContractFactory.getAddressByContractName(chainId, "FXD");
 
-        try {
-          const promises = [];
-          promises.push(
-            poolStore.getUserTokenBalance(account, inputContractAddress)
-          );
-          promises.push(
-            poolStore.getUserTokenBalance(account, outputCurrencyAddress)
-          );
-          promises.push(poolStore.getDexPrice(FXDContractAddress));
+          try {
+            const promises = [];
+            promises.push(
+              poolStore.getUserTokenBalance(account, inputContractAddress)
+            );
+            promises.push(
+              poolStore.getUserTokenBalance(account, outputCurrencyAddress)
+            );
+            promises.push(poolStore.getDexPrice(FXDContractAddress));
 
-          const [inputBalance, outputBalance, fxdPrice] = await Promise.all(
-            promises
-          );
+            const [inputBalance, outputBalance, fxdPrice] = await Promise.all(
+              promises
+            );
 
-          console.log(FXDContractAddress)
-          console.log(fxdPrice)
+            console.log(FXDContractAddress);
+            console.log(fxdPrice);
 
-          setInputBalance(inputBalance);
-          setOutputBalance(outputBalance);
-          setFxdPrice(fxdPrice / 10 ** 18);
-        } catch (e) {}
-      }
-    }, 100),
+            setInputBalance(inputBalance);
+            setOutputBalance(outputBalance);
+            setFxdPrice(fxdPrice / 10 ** 18);
+          } catch (e) {}
+        }
+      }, 100),
     [account, chainId, poolStore, setInputBalance, setOutputBalance]
   );
 

@@ -1,11 +1,21 @@
-import { useCallback, useEffect, useState } from "react";
-import useMetaMask from "hooks/metamask";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import useMetaMask from "context/metamask";
 import { LogLevel, useLogger } from "helpers/Logger";
 import { useStores } from "stores";
 import { processRpcError } from "utils/processRpcError";
 import ILockPosition from "stores/interfaces/ILockPosition";
 
 export type ActionType = { type: string; id: number | null };
+
+export enum DialogActions {
+  NONE,
+  UNCLAIMED,
+  CLAIM_REWARDS,
+  CLAIM_REWARDS_COOLDOWN,
+  EARLY_UNSTAKE,
+  UNSTAKE,
+  UNSTAKE_COOLDOWN,
+}
 
 const useStakingView = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -14,8 +24,35 @@ const useStakingView = () => {
   const logger = useLogger();
   const { stakingStore, alertStore } = useStores();
 
-  const [showClaimRewards, setShowClaimRewards] =
-    useState<boolean>(false);
+  const [unstake, setUnstake] = useState<null | ILockPosition>(null);
+  const [earlyUnstake, setEarlyUnstake] = useState<null | ILockPosition>(null);
+  const [dialogAction, setDialogAction] = useState<DialogActions>(
+    DialogActions.NONE
+  );
+
+  const processFlow = useCallback(
+    (action: string, position?: ILockPosition) => {
+      action === "early" && setEarlyUnstake(position!);
+      action === "unstake" && setUnstake(position!);
+
+      ["early", "unstake"].includes(action) &&
+        !!position!.RewardsAvailable &&
+        setDialogAction(DialogActions.UNCLAIMED);
+
+      action === "skip" || action === "continue"
+        ? unstake && setDialogAction(DialogActions.UNSTAKE)
+        : earlyUnstake && setDialogAction(DialogActions.EARLY_UNSTAKE);
+
+      action === "unstake-cooldown" &&
+        setDialogAction(DialogActions.UNSTAKE_COOLDOWN);
+
+      action === "claim-cooldown" &&
+        setDialogAction(DialogActions.CLAIM_REWARDS_COOLDOWN);
+
+      action === 'claim' && setDialogAction(DialogActions.CLAIM_REWARDS)
+    },
+    [unstake, earlyUnstake, setEarlyUnstake, setUnstake, setDialogAction]
+  );
 
   const fetchAll = useCallback(
     async (account: string) => {
@@ -52,31 +89,17 @@ const useStakingView = () => {
     }
   }, [account, logger, stakingStore, chainId, fetchAll]);
 
-  const claimRewards = useCallback(async () => {
+  const claimRewards = useCallback(async (callback: Function) => {
     setAction({ type: "claim", id: null });
     try {
       await stakingStore.handleClaimRewards(account);
       stakingStore.fetchLocksAfterClaimAllRewards();
+      callback();
     } catch (e) {
       logger.log(LogLevel.error, "Claim error");
     }
     setAction(undefined);
   }, [stakingStore, account, setAction, logger]);
-
-  const claimRewardsSingle = useCallback(
-    async (lockId: number) => {
-      setAction({ type: "claimSingle", id: lockId });
-      try {
-        await stakingStore.handleClaimRewardsSingle(account, lockId);
-        stakingStore.fetchLockPositionAfterClaimReward(lockId)
-      } catch (e) {
-        logger.log(LogLevel.error, "Claim Rewards Single error");
-      }
-
-      setAction(undefined);
-    },
-    [stakingStore, account, logger, setAction]
-  );
 
   const withdrawAll = useCallback(async () => {
     setAction({ type: "withdrawAll", id: null });
@@ -130,16 +153,19 @@ const useStakingView = () => {
     return remainingTime <= 0;
   }, []);
 
-  const calculateTotalRewards = useCallback(
-    (lockPositions: ILockPosition[]) => {
-      return lockPositions.reduce(
-        (previousValue, lockPositions) =>
-          previousValue + Number(lockPositions.RewardsAvailable),
-        0
-      );
-    },
-    []
-  );
+  const totalRewards = useMemo(() => {
+    return stakingStore.lockPositions.reduce(
+      (previousValue, lockPositions) =>
+        previousValue + Number(lockPositions.RewardsAvailable),
+      0
+    );
+  }, [stakingStore.lockPositions]);
+
+  const onClose = useCallback(() => {
+    setEarlyUnstake(null);
+    setUnstake(null);
+    setDialogAction(DialogActions.NONE);
+  }, [setEarlyUnstake, setUnstake, setDialogAction]);
 
   return {
     stakingStore,
@@ -155,12 +181,18 @@ const useStakingView = () => {
     handleEarlyUnstake,
     handleUnlock,
 
-    calculateTotalRewards,
-    claimRewardsSingle,
+    unstake,
+    earlyUnstake,
+    dialogAction,
+    setDialogAction,
+    totalRewards,
 
-    showClaimRewards,
-    setShowClaimRewards
-  };
+    setUnstake,
+    setEarlyUnstake,
+
+    onClose,
+    processFlow,
+  } as const;
 };
 
 export default useStakingView;

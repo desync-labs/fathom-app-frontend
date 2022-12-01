@@ -161,6 +161,4 @@ export const Web3Status = () => {
       </Popper>
     </>
   );
-
-  return null;
 };

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
-import useMetaMask from "hooks/metamask";
+import useMetaMask from "context/metamask";
 import { useStores } from "stores";
 
 import debounce from "lodash.debounce";
@@ -62,22 +62,23 @@ const useStakingLockForm = (
       setFthmBalance(balance / 10 ** 18);
       setFthmTokenAddress(fthmTokenAddress);
     }
-  }, [poolStore, data, setFthmBalance]);
+  }, [account, poolStore, data, setFthmBalance]);
 
-  const approvalStatus = useCallback(
-    debounce(
-      async (account: string, chainId: number, stakePosition: number) => {
-        const approved = await stakingStore.approvalStatusStakingFTHM(
-          account,
-          stakePosition,
-          fthmTokenAddress!
-        );
+  const approvalStatus = useMemo(
+    () =>
+      debounce(
+        async (account: string, chainId: number, stakePosition: number) => {
+          const approved = await stakingStore.approvalStatusStakingFTHM(
+            account,
+            stakePosition,
+            fthmTokenAddress!
+          );
 
-        console.log("Approve", approved);
-        approved ? setApprovedBtn(false) : setApprovedBtn(true);
-      },
-      1000
-    ),
+          console.log("Approve", approved);
+          approved ? setApprovedBtn(false) : setApprovedBtn(true);
+        },
+        1000
+      ),
     [stakingStore, setApprovedBtn, fthmTokenAddress]
   );
 

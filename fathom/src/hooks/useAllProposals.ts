@@ -1,4 +1,4 @@
-import useMetaMask from "hooks/metamask";
+import useMetaMask from "context/metamask";
 import {
   LogLevel,
   useLogger
