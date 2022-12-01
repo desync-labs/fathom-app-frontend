@@ -19,7 +19,11 @@ import Copyright from "components/Footer/Footer";
 import AppBar from "components/AppComponents/AppBar/AppBar";
 import { observer } from "mobx-react";
 import DashboardContent from "components/Dashboard/Dashboard";
-import { Route, Routes } from "react-router-dom";
+import {
+  Navigate,
+  Route,
+  Routes
+} from "react-router-dom";
 import StableSwap from "components/Stableswap/StableSwap";
 
 import FathomAppLogoSrc from "assets/svg/Fathom-app-logo.svg";
@@ -208,21 +212,22 @@ const MainLayout = observer(() => {
           <Toolbar />
           <AlertMessages />
           <TransactionStatus />
-
           <Routes>
             <Route path="/" element={<DashboardContent />} />
             <Route path="/swap" element={<StableSwap />} />
             <Route path="proposal/:_proposalId" element={<ProposalView />} />
-          </Routes>
-          <Routes>
             <Route path="/dao" element={<DaoView />}>
-              <Route path="proposals" element={<AllProposalsView />} />
+              <Route path="governance" element={<AllProposalsView />} />
               <Route path="staking" element={
                 <StakingProvider>
                   <StakingView />
                 </StakingProvider>
               } />
             </Route>
+            <Route
+              path="*"
+              element={<Navigate to="/" replace />}
+            />
           </Routes>
           <Copyright />
         </MainBox>
