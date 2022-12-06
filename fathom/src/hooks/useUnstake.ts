@@ -1,39 +1,29 @@
-import {
-  ChangeEvent,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState
-} from "react";
+import { ChangeEvent, useCallback, useEffect, useMemo, useState } from "react";
 import ILockPosition from "stores/interfaces/ILockPosition";
 import useStakingContext from "context/staking";
 
-const useUnstake = (
-  lockPosition: ILockPosition | null,
-) => {
+const useUnstake = (lockPosition: ILockPosition | null) => {
   const [balanceError, setBalanceError] = useState<boolean>(false);
   const [unStakeAmount, setUnStakeAmount] = useState<number>(0);
 
   const { action, handleUnlock } = useStakingContext();
 
   const isLoading = useMemo(() => {
-    return action?.type === "unlock" && action?.id === lockPosition?.lockId
+    return action?.type === "unlock" && action?.id === lockPosition?.lockId;
   }, [action, lockPosition]);
 
-  const totalBalance = useMemo(() => {
-    return (
-      Number(lockPosition?.MAINTokenBalance) +
-      Number(lockPosition?.RewardsAvailable)
-    );
-  }, [lockPosition]);
+  const totalBalance = useMemo(
+    () => Number(lockPosition?.MAINTokenBalance),
+    [lockPosition]
+  );
 
   useEffect(() => {
     if (unStakeAmount > totalBalance) {
-      setBalanceError(true)
+      setBalanceError(true);
     } else {
-      setBalanceError(false)
+      setBalanceError(false);
     }
-  }, [unStakeAmount, totalBalance])
+  }, [unStakeAmount, totalBalance]);
 
   const handleUnStakeAmountChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -48,7 +38,10 @@ const useUnstake = (
   }, [totalBalance, setUnStakeAmount]);
 
   const unStakeHandler = useCallback(() => {
-    handleUnlock(lockPosition!.lockId)
+    try {
+      handleUnlock(lockPosition!.lockId);
+
+    } catch (e) {}
   }, [lockPosition, handleUnlock]);
 
   return {

@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import useMetaMask from "context/metamask";
 import { LogLevel, useLogger } from "helpers/Logger";
 import { useStores } from "stores";
-import { processRpcError } from "utils/processRpcError";
 import ILockPosition from "stores/interfaces/ILockPosition";
 
 export type ActionType = { type: string; id: number | null };
@@ -15,6 +14,7 @@ export enum DialogActions {
   EARLY_UNSTAKE,
   UNSTAKE,
   UNSTAKE_COOLDOWN,
+  WITHDRAW,
 }
 
 const useStakingView = () => {
@@ -26,6 +26,7 @@ const useStakingView = () => {
 
   const [unstake, setUnstake] = useState<null | ILockPosition>(null);
   const [earlyUnstake, setEarlyUnstake] = useState<null | ILockPosition>(null);
+
   const [dialogAction, setDialogAction] = useState<DialogActions>(
     DialogActions.NONE
   );
@@ -39,9 +40,14 @@ const useStakingView = () => {
         !!position!.RewardsAvailable &&
         setDialogAction(DialogActions.UNCLAIMED);
 
-      action === "skip" || action === "continue"
-        ? unstake && setDialogAction(DialogActions.UNSTAKE)
-        : earlyUnstake && setDialogAction(DialogActions.EARLY_UNSTAKE);
+      console.log(action);
+      console.log(unstake);
+      console.log(earlyUnstake);
+
+      if (action === "skip" || action === "continue") {
+        !!unstake && setDialogAction(DialogActions.UNSTAKE);
+        !!earlyUnstake && setDialogAction(DialogActions.EARLY_UNSTAKE);
+      }
 
       action === "unstake-cooldown" &&
         setDialogAction(DialogActions.UNSTAKE_COOLDOWN);
@@ -49,7 +55,9 @@ const useStakingView = () => {
       action === "claim-cooldown" &&
         setDialogAction(DialogActions.CLAIM_REWARDS_COOLDOWN);
 
-      action === 'claim' && setDialogAction(DialogActions.CLAIM_REWARDS)
+      action === "claim" && setDialogAction(DialogActions.CLAIM_REWARDS);
+
+      action === "withdraw" && setDialogAction(DialogActions.WITHDRAW);
     },
     [unstake, earlyUnstake, setEarlyUnstake, setUnstake, setDialogAction]
   );
@@ -89,17 +97,20 @@ const useStakingView = () => {
     }
   }, [account, logger, stakingStore, chainId, fetchAll]);
 
-  const claimRewards = useCallback(async (callback: Function) => {
-    setAction({ type: "claim", id: null });
-    try {
-      await stakingStore.handleClaimRewards(account);
-      stakingStore.fetchLocksAfterClaimAllRewards();
-      callback();
-    } catch (e) {
-      logger.log(LogLevel.error, "Claim error");
-    }
-    setAction(undefined);
-  }, [stakingStore, account, setAction, logger]);
+  const claimRewards = useCallback(
+    async (callback: Function) => {
+      setAction({ type: "claim", id: null });
+      try {
+        await stakingStore.handleClaimRewards(account);
+        stakingStore.fetchLocksAfterClaimAllRewards();
+        callback();
+      } catch (e) {
+        logger.log(LogLevel.error, "Claim error");
+      }
+      setAction(undefined);
+    },
+    [stakingStore, account, setAction, logger]
+  );
 
   const withdrawAll = useCallback(async () => {
     setAction({ type: "withdrawAll", id: null });
@@ -138,9 +149,9 @@ const useStakingView = () => {
       try {
         await stakingStore.handleUnlock(account, lockId);
         stakingStore.fetchLockPositionAfterUnlock(lockId);
-      } catch (e) {
-        const err = processRpcError(e);
-        alertStore.setShowErrorAlert(true, err.reason || err.message);
+      } catch (e: any) {
+        alertStore.setShowErrorAlert(true, e.message);
+        throw e;
       }
 
       setAction(undefined);

@@ -1,36 +1,19 @@
 import React, { FC } from "react";
 import {
   AppDialog,
-  DialogContentWrapper
+  DialogContentWrapper,
 } from "components/AppComponents/AppDialog/AppDialog";
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
-import {
-  Box,
-  DialogContent,
-  Typography,
-} from "@mui/material";
+import { Box, DialogContent, Typography } from "@mui/material";
 import {
   ButtonPrimary,
-  SkipButton
+  CancelButton,
 } from "components/AppComponents/AppButton/AppButton";
-import ILockPosition from "stores/interfaces/ILockPosition";
 import { styled } from "@mui/material/styles";
 import { getTokenLogoURL } from "utils/tokenLogo";
-import InfoIcon from "@mui/icons-material/Info";
 import { formatNumber } from "utils/format";
+import useStakingContext from "context/staking";
 
-const WarningBlock = styled(Box)`
-  background: #452508;
-  border: 1px solid #5C310A;
-  border-radius: 8px;
-  color: #F7B06E;
-  display: flex;
-  align-items: center;
-  padding: 8px 16px;
-  gap: 12px;
-  font-size: 14px;
-  margin: 0 15px 40px 15px;
-`
 export const InfoMessageWrapper = styled(Box)`
   display: flex;
   align-items: start;
@@ -49,21 +32,13 @@ export const InfoMessageWrapper = styled(Box)`
   }
 `;
 
-const ConfirmButton = styled(ButtonPrimary)`
-  width: 100%;
-  height: 48px;
-  font-weight: 600;
-  font-size: 17px;
-  line-height: 24px;
-`;
-
 const Description = styled(Typography)`
   font-weight: 400;
   font-size: 14px;
   line-height: 20px;
-  color: #FFFFFF;
+  color: #ffffff;
   padding: 0 15px;
-`
+`;
 
 const ButtonsWrapper = styled(Box)`
   width: auto;
@@ -71,27 +46,26 @@ const ButtonsWrapper = styled(Box)`
   display: flex;
   gap: 6px;
   align-items: center;
-  
+
   > button {
     width: calc(50% - 3px);
+    height: 48px;
   }
-`
+`;
 
-type ClaimRewardsDialogProps = {
-  position: ILockPosition;
+type WithdrawDialogProps = {
+  totalRewards: number;
   token: string;
   onClose: () => void;
-  onSkip: () => void;
-  onClaim: () => void
 };
 
-const UnclaimedRewardsDialog: FC<ClaimRewardsDialogProps> = ({
-  position,
+const WithdrawDialog: FC<WithdrawDialogProps> = ({
+  totalRewards,
   token,
   onClose,
-  onSkip,
-  onClaim
 }) => {
+  const { withdrawAll } = useStakingContext()
+
   return (
     <AppDialog
       onClose={onClose}
@@ -102,36 +76,30 @@ const UnclaimedRewardsDialog: FC<ClaimRewardsDialogProps> = ({
       color="primary"
     >
       <AppDialogTitle id="customized-dialog-title" onClose={onClose}>
-        You have unclaimed rewards!
+        Withdraw
       </AppDialogTitle>
 
       <DialogContent>
         <Description>
-          If you unstake before claiming rewards, you will lose them. Claim rewards first in My Stats, then Unstake later.
+          Once it's completed, you'll see this amount in your MetaMask balance...
         </Description>
         <DialogContentWrapper>
           <img src={getTokenLogoURL(token)} alt={"token-logo"} width={58} />
-          <Box sx={{ fontSize: '18px' }}>You’re having unclaimed rewards</Box>
-          <Box className={'amount'}>
-            <Box>{formatNumber(Number(position.RewardsAvailable))}</Box>
+          <Box sx={{ fontSize: "18px" }}>You're withdrawing...</Box>
+          <Box className={"amount"}>
+            <Box>{formatNumber(totalRewards)}</Box>
             <span>{token}</span>
           </Box>
         </DialogContentWrapper>
-        <WarningBlock>
-          <InfoIcon sx={{ fontSize: "18px", color: '#F5953D' }} />
-          <Typography component={'span'}>
-            Penalty fee will be applied.
-          </Typography>
-        </WarningBlock>
         <ButtonsWrapper>
-          <SkipButton onClick={onSkip}>Skip</SkipButton>
-          <ConfirmButton onClick={onClaim}>
-            Claim All Rewards
-          </ConfirmButton>
+          <CancelButton onClick={onClose}>Cancel</CancelButton>
+          <ButtonPrimary onClick={withdrawAll}>
+            Confirm Withdraw
+          </ButtonPrimary>
         </ButtonsWrapper>
       </DialogContent>
     </AppDialog>
   );
 };
 
-export default UnclaimedRewardsDialog;
+export default WithdrawDialog;

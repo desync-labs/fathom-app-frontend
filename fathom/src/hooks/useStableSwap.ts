@@ -96,9 +96,6 @@ const useStableSwap = (options: string[]) => {
               promises
             );
 
-            console.log(FXDContractAddress);
-            console.log(fxdPrice);
-
             setInputBalance(inputBalance);
             setOutputBalance(outputBalance);
             setFxdPrice(fxdPrice / 10 ** 18);

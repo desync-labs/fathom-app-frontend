@@ -256,7 +256,7 @@ const StreamStats: FC<StreamStatsPropsType> = ({
                 <strong>400 FTHM</strong>
               </MyStatsValue>
             </Grid>
-            <ButtonGrid item xs={6}>
+            <ButtonGrid item xs={6} onClick={() => processFlow('withdraw')}>
               <StatsButton>Withdraw</StatsButton>
             </ButtonGrid>
           </Grid>

@@ -9,8 +9,10 @@ import EarlyUnstakeDialog from "components/Staking/Dialog/EarlyUnstakeDialog";
 import { NoResults } from "components/AppComponents/AppBox/AppBox";
 import { Grid } from "@mui/material";
 import UnclaimedRewardsDialog from "components/Staking/Dialog/UnclaimedRewardsDialog";
-import ClaimRewardsCoolDown from "components/Staking/Dialog/ClaimRewardsCoolDown";
 import useStakingContext from "context/staking";
+import UnstakeCoolDownDialog from "./Dialog/UnstakeCoolDownDialog";
+import ClaimRewardsCoolDownDialog from "components/Staking/Dialog/ClaimRewardsCoolDownDialog";
+import WithdrawDialog from "./Dialog/WithdrawDialog";
 
 type StreamItemProps = {
   token: string;
@@ -21,8 +23,6 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
 
   const {
     totalRewards,
-    setUnstake,
-    setEarlyUnstake,
     dialogAction,
     unstake,
     earlyUnstake,
@@ -46,8 +46,6 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
                       key={lockPosition.lockId}
                       token={token}
                       lockPosition={lockPosition}
-                      setUnstake={setUnstake}
-                      setEarlyUnstake={setEarlyUnstake}
                     />
                   )
                 )}
@@ -55,7 +53,7 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
             )}
           </>
         ),
-        [stakingStore.lockPositions, token, setUnstake, setEarlyUnstake]
+        [stakingStore.lockPositions, token]
       )}
 
       {useMemo(() => {
@@ -85,7 +83,7 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
       {useMemo(() => {
         return (
           dialogAction === DialogActions.CLAIM_REWARDS_COOLDOWN && (
-            <ClaimRewardsCoolDown
+            <ClaimRewardsCoolDownDialog
               totalRewards={totalRewards}
               token={token}
               onClose={onClose}
@@ -94,6 +92,18 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
           )
         );
       }, [totalRewards, token, dialogAction, onClose, processFlow])}
+
+      {useMemo(() => {
+        return (
+          dialogAction === DialogActions.UNSTAKE_COOLDOWN && (
+            <UnstakeCoolDownDialog
+              position={unstake || earlyUnstake}
+              token={token}
+              onClose={onClose}
+            />
+          )
+        );
+      }, [unstake, earlyUnstake, dialogAction, token, onClose])}
 
       {useMemo(
         () =>
@@ -133,6 +143,18 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
           )
         );
       }, [unstake, earlyUnstake, token, dialogAction, onClose, processFlow])}
+
+      {useMemo(() => {
+        return (
+          dialogAction === DialogActions.WITHDRAW && (
+            <WithdrawDialog
+              token={token}
+              onClose={onClose}
+              totalRewards={totalRewards}
+            />
+          )
+        );
+      }, [dialogAction, token, onClose, totalRewards])}
     </>
   );
 };

@@ -1,3 +1,4 @@
+import React, { FC, useMemo } from "react";
 import {
   AppDialog,
   DialogContentWrapper,
@@ -14,7 +15,6 @@ import {
   CancelButton,
   SkipButton,
 } from "components/AppComponents/AppButton/AppButton";
-import React, { FC, useMemo } from "react";
 import { styled } from "@mui/material/styles";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import InfoIcon from "@mui/icons-material/Info";
