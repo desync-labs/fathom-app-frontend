@@ -1,3 +1,4 @@
+import React, { FC } from "react";
 import {
   AppDialog,
   DialogContentWrapper,
@@ -9,13 +10,12 @@ import {
   Typography,
 } from "@mui/material";
 import {
-  ButtonPrimary,
   CancelButton,
 } from "components/AppComponents/AppButton/AppButton";
-import React, { FC } from "react";
 import { styled } from "@mui/material/styles";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatNumber } from "utils/format";
+import ILockPosition from "stores/interfaces/ILockPosition";
 
 export const InfoMessageWrapper = styled(Box)`
   display: flex;
@@ -51,23 +51,21 @@ const ButtonsWrapper = styled(Box)`
   align-items: center;
 
   > button {
-    width: calc(50% - 3px);
+    width: 100%;
     height: 48px;
   }
 `;
 
-type ClaimRewardsDialogProps = {
-  totalRewards: number;
+type UnstakeCoolDownDialogProps = {
+  position: ILockPosition;
   token: string;
   onClose: () => void;
-  onContinue: () => void;
 };
 
-const ClaimRewardsDialog: FC<ClaimRewardsDialogProps> = ({
-  totalRewards,
+const UnstakeCoolDownDialog: FC<UnstakeCoolDownDialogProps> = ({
   token,
   onClose,
-  onContinue,
+  position,
 }) => {
   return (
     <AppDialog
@@ -79,29 +77,28 @@ const ClaimRewardsDialog: FC<ClaimRewardsDialogProps> = ({
       color="primary"
     >
       <AppDialogTitle id="customized-dialog-title" onClose={onClose}>
-        Claim Rewards Cooling Down ...
+        Unstake Cooling Down ...
       </AppDialogTitle>
 
       <DialogContent>
         <Description>
-          You successfully requested to claim rewards. Now it's going to a “Cooldown" period for 2 days.
-          After this period, you'll be able to Withdraw it at My Stats &gt; Ready to Withdraw.
+          You successfully requested to unstake. Now it's going to a “Cooldown" period for 2 days.
+          After this period, you'll be able to Withdraw it at My Stats &gt; Ready-to-Withdraw. Learn more
         </Description>
         <DialogContentWrapper>
           <img src={getTokenLogoURL(token)} alt={"token-logo"} width={58} />
-          <Box sx={{ fontSize: "18px" }}>You’re requesting to claim</Box>
+          <Box sx={{ fontSize: "18px" }}>Cooling down ...</Box>
           <Box className={"amount"}>
-            <Box>{formatNumber(totalRewards)}</Box>
+            <Box>{formatNumber(position.MAINTokenBalance)}</Box>
             <span>{token}</span>
           </Box>
         </DialogContentWrapper>
         <ButtonsWrapper>
           <CancelButton onClick={onClose}>Back to My Positions</CancelButton>
-          <ButtonPrimary onClick={onContinue}>Continue to Unstake</ButtonPrimary>
         </ButtonsWrapper>
       </DialogContent>
     </AppDialog>
   );
 };
 
-export default ClaimRewardsDialog;
+export default UnstakeCoolDownDialog;

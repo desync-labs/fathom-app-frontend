@@ -1,4 +1,4 @@
-import React, { memo, Dispatch, FC, useEffect, useState } from "react";
+import React, { memo, FC, useEffect, useState } from "react";
 import { Box, Grid, Typography } from "@mui/material";
 import ILockPosition from "stores/interfaces/ILockPosition";
 import { styled } from "@mui/material/styles";
@@ -12,7 +12,7 @@ import { ButtonSecondary } from "components/AppComponents/AppButton/AppButton";
 import { formatNumber } from "utils/format";
 import { secondsToTime } from "utils/secondsToTime";
 import { getTokenLogoURL } from "utils/tokenLogo";
-import useStakingContext from "../../context/staking";
+import useStakingContext from "context/staking";
 
 const StakingViewItemWrapper = styled(Grid)`
   &.MuiGrid-item {
@@ -146,19 +146,17 @@ type StakingViewItemPropsType = {
   index: number;
   lockPosition: ILockPosition;
   token: string;
-  setUnstake: Dispatch<null | ILockPosition>;
-  setEarlyUnstake: Dispatch<null | ILockPosition>;
 };
 
 const StakingViewItem: FC<StakingViewItemPropsType> = ({
   lockPosition,
   token,
-  setUnstake,
-  setEarlyUnstake,
   index,
 }) => {
   const [timer, setTimer] = useState();
   const [seconds, setSeconds] = useState(lockPosition.EndTime);
+
+  const { processFlow } = useStakingContext();
 
   const { isUnlockable } = useStakingContext();
 
@@ -254,12 +252,12 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
               </Grid>
               <ButtonGrid item xs={6}>
                 {isUnlockable(seconds) ? (
-                  <ButtonSecondary onClick={() => setUnstake(lockPosition)}>
+                  <ButtonSecondary onClick={() => processFlow('unstake', lockPosition)}>
                     Unstake
                   </ButtonSecondary>
                 ) : (
                   <ButtonSecondary
-                    onClick={() => setEarlyUnstake(lockPosition)}
+                    onClick={() => processFlow('early', lockPosition)}
                   >
                     Early Unstake
                   </ButtonSecondary>

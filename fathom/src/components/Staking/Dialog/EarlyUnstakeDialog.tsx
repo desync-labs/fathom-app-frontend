@@ -1,3 +1,4 @@
+import React, { FC } from "react";
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
 import {
   Box,
@@ -10,7 +11,6 @@ import {
   AppDialog,
   DialogContentWrapper,
 } from "components/AppComponents/AppDialog/AppDialog";
-import React, { FC } from "react";
 import ILockPosition from "stores/interfaces/ILockPosition";
 import { styled } from "@mui/material/styles";
 import {
@@ -180,7 +180,7 @@ const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({
           </Typography>
         </WarningBlock>
         <ButtonsWrapper>
-          <CancelButton>Cancel</CancelButton>
+          <CancelButton onClick={onClose}>Cancel</CancelButton>
           <ConfirmButton
             disabled={isLoading}
             isLoading={isLoading}

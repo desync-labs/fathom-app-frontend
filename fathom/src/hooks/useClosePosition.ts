@@ -65,7 +65,7 @@ const useClosePosition = (
   }, [getBalance, handleOnOpen]);
 
   useEffect(() => {
-    balance && balance / 10 ** 18 < fathomToken
+    !isNaN(balance) && balance / 10 ** 18 < fathomToken
       ? setBalanceError(true)
       : setBalanceError(false);
   }, [fathomToken, balance]);
