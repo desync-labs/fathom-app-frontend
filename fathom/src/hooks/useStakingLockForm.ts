@@ -22,6 +22,7 @@ const useStakingLockForm = (
   const { poolStore } = useStores();
 
   const { data } = useQuery(FXD_POOLS, {
+    context: { clientName: "stable" },
     fetchPolicy: "cache-first",
   });
 

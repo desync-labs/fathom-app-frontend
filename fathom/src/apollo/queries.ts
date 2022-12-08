@@ -38,10 +38,7 @@ export const FXD_POSITIONS = gql`
       skip: $skip
       orderBy: positionId
       orderDirection: desc
-      where: { 
-        walletAddress: $walletAddress
-        positionStatus: active
-      }
+      where: { walletAddress: $walletAddress, positionStatus: active }
     ) {
       collateralPool
       collateralPoolName
@@ -67,4 +64,60 @@ export const FXD_USER = gql`
       activePositionsCount
     }
   }
-`
+`;
+
+export const GOVERNANCE_PROPOSALS = gql`
+  query GovernanceProposals($first: Int!, $skip: Int!) {
+    proposals(
+      first: $first
+      skip: $skip
+      orderBy: blockNumber
+      orderDirection: desc
+    ) {
+      id
+      proposalId
+      proposer
+      startBlock
+      endBlock
+      description
+      forVotes
+      againstVotes
+      abstainVotes
+      calldatas
+      signatures
+      values
+      targets
+      blockTimestamp
+    }
+  }
+`;
+
+export const GOVERNANCE_PROPOSAL_ITEM = gql`
+  query GovernanceProposalItem($id: ID!) {
+    proposal(id: $id) {
+      id
+      proposalId
+      proposer
+      startBlock
+      endBlock
+      blockNumber
+      blockTimestamp
+      description
+      forVotes
+      againstVotes
+      abstainVotes
+      calldatas
+      signatures
+      values
+      targets
+    }
+  }
+`;
+
+export const GOVERNANCE_STATS = gql`
+  query GovernanceStats($id: ID!) {
+    governanceStat(id: $id) {
+      totalProposalsCount
+    }
+  }
+`;

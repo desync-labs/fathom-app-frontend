@@ -9,9 +9,15 @@ const useDashboard = () => {
   const { positionStore } = useStores();
   const { account } = useMetaMask()!;
 
-  const { refetch: refetchStats } = useQuery(FXD_STATS);
-  const [, { refetch: refetchPositions }] = useLazyQuery(FXD_POSITIONS);
-  const { refetch: refetchPools } = useQuery(FXD_POOLS);
+  const { refetch: refetchStats } = useQuery(FXD_STATS, {
+    context: { clientName: "stable" },
+  });
+  const [, { refetch: refetchPositions }] = useLazyQuery(FXD_POSITIONS, {
+    context: { clientName: "stable" },
+  });
+  const { refetch: refetchPools } = useQuery(FXD_POOLS, {
+    context: { clientName: "stable" },
+  });
 
   const [positionCurrentPage, setPositionCurrentPage] = useState(1);
   const [positionsItemsCount, setPositionsItemsCount] = useState(0);
@@ -20,6 +26,7 @@ const useDashboard = () => {
   const [loadUserStats, { refetch: refetchUserStats }] = useLazyQuery(
     FXD_USER,
     {
+      context: { clientName: "stable" },
       fetchPolicy: "cache-first",
     }
   );

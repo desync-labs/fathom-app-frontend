@@ -43,7 +43,7 @@ import { MainBox } from "components/AppComponents/AppBox/AppBox";
 import DaoView from "components/Dashboard/DaoView";
 import { drawerWidth } from "components/AppComponents/AppBar/AppBar";
 import useMainLayout from "hooks/useMainLayout";
-import { StakingProvider } from "../../context/staking";
+import { StakingProvider } from "context/staking";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",

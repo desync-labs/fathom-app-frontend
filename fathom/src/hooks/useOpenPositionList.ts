@@ -18,7 +18,9 @@ const useOpenPositionList = (
    * @todo Change walletAddress
    */
   const [loadPositions, { loading, data, fetchMore, called }] =
-    useLazyQuery(FXD_POSITIONS);
+    useLazyQuery(FXD_POSITIONS, {
+      context: { clientName: "stable" },
+    });
 
   const [selectedPosition, setSelectedPosition] = useState<IOpenPosition>();
   const [closingType, setType] = useState(ClosingType.Full);

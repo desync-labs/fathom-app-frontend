@@ -4,9 +4,13 @@ import IProposal from "stores/interfaces/IProposal";
 import { styled } from "@mui/material/styles";
 import { tooltipClasses, TooltipProps } from "@mui/material/Tooltip";
 
+import { Link } from "react-router-dom";
+
 import DefeatedSrc from "assets/svg/rejected.svg";
 import SucceededSrc from "assets/svg/succeeded.svg";
-import { Link } from "react-router-dom";
+import StakingCountdown from "components/Staking/StakingCountdown";
+import { secondsToTime } from "utils/secondsToTime";
+import useViewProposalItem from "hooks/useViewProposalItem";
 
 type ViewAllProposalItemProps = {
   proposal: IProposal;
@@ -54,13 +58,13 @@ const ProposalItemProposalId = styled(Box)`
 `;
 
 const ProposalItemTimeLeft = styled(Box)`
-  color: #6379A1;
+  color: #6379a1;
   margin-top: -4px;
   font-size: 14px;
   &.in-progress {
-    color: #F5953D;
+    color: #f5953d;
   }
-`
+`;
 
 export const ProposalItemStatus = styled(Box)`
   border-radius: 6px;
@@ -76,55 +80,59 @@ export const ProposalItemStatus = styled(Box)`
   margin-top: 10px;
 
   background: rgba(99, 121, 161, 0.2);
-  color: #43FFF1;
+  color: #43fff1;
 
   &.succeeded {
-    color: #8AF075;
+    color: #8af075;
   }
 
   &.defeated {
     background: rgba(143, 36, 36, 0.15);
-    color: #F76E6E;
+    color: #f76e6e;
   }
-`
+`;
 
 export const ImageSrc: { [key: string]: string } = {
   Defeated: DefeatedSrc,
   Succeeded: SucceededSrc,
 };
 
-const ViewAllProposalItem: FC<ViewAllProposalItemProps> = ({
-  proposal,
-  index,
-}) => {
-
-  console.log(proposal);
-
-  const proposalTitle = useMemo(() => {
-    const title = proposal.description.split("----------------")[0];
-    return title.substring(0, 50) + (title.length > 50 ? "... " : "");
-  }, [proposal.description]);
+const ViewAllProposalItem: FC<ViewAllProposalItemProps> = ({ proposal }) => {
+  const { proposalTitle, timestamp, seconds, status } =
+    useViewProposalItem(proposal);
 
   return (
-    <Grid item xs={12} key={proposal.proposalId}>
-      <ProposalItemWrapper to={`/proposal/${proposal.proposalId}`} key={proposal.proposalId}>
+    <Grid item xs={12} key={proposal.id}>
+      <ProposalItemWrapper to={`/proposal/${proposal.id}`} key={proposal.id}>
         <ProposalIdTooltip title={proposal.proposalId} placement="top">
           <ProposalItemProposalId>
-            Proposal № {proposal.proposalId.substring(0, 4) +
+            Proposal №{" "}
+            {proposal.proposalId.substring(0, 4) +
               " ... " +
               proposal.proposalId.slice(-4)}
           </ProposalItemProposalId>
         </ProposalIdTooltip>
 
         <ProposalItemTitle>{proposalTitle}</ProposalItemTitle>
-        <ProposalItemTimeLeft className={index === 1 ? "in-progress" : ""}>
-          Vote ended at 2022-10-07 05:12 UAE
-        </ProposalItemTimeLeft>
-        <ProposalItemStatus className={proposal.status?.toLowerCase()}>
-          {["Defeated", "Succeeded"].includes(proposal.status) ? (
-            <img src={ImageSrc[proposal.status]} alt={proposal.status} />
+        {useMemo(
+          () =>
+            seconds > 0 ? (
+              <ProposalItemTimeLeft className={"in-progress"}>
+                Voting end in{" "}
+                <StakingCountdown timeObject={secondsToTime(seconds)} />
+              </ProposalItemTimeLeft>
+            ) : (
+              <ProposalItemTimeLeft>
+                Vote ended at {new Date(timestamp * 1000).toLocaleString()}
+              </ProposalItemTimeLeft>
+            ),
+          [seconds, timestamp]
+        )}
+        <ProposalItemStatus className={status?.toLowerCase()}>
+          {["Defeated", "Succeeded"].includes(status!) ? (
+            <img src={ImageSrc[status!]} alt={status} />
           ) : null}
-          {proposal.status}
+          {status}
         </ProposalItemStatus>
       </ProposalItemWrapper>
     </Grid>

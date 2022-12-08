@@ -2,6 +2,8 @@ import {
   Typography,
   Grid,
   CircularProgress,
+  Pagination,
+  Box
 } from "@mui/material";
 import IProposal from "stores/interfaces/IProposal";
 import React, { useMemo } from "react";
@@ -11,6 +13,14 @@ import { useAllProposals } from "hooks/useAllProposals";
 import ViewAllProposalItem from "components/Governance/ViewAllProposalItem";
 import Propose from "components/Governance/Propose";
 import ProposalFilters from "components/Governance/ProposalFilters";
+import { Constants } from "helpers/Constants";
+import { styled } from "@mui/material/styles";
+
+const PaginationWrapper = styled(Box)`
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+`;
 
 const AllProposalsView = observer(() => {
   const {
@@ -24,6 +34,11 @@ const AllProposalsView = observer(() => {
     setProposals,
     createProposal,
     setCreateProposal,
+    refetchProposals,
+
+    itemsCount,
+    currentPage,
+    handlePageChange,
   } = useAllProposals();
 
   return (
@@ -59,28 +74,46 @@ const AllProposalsView = observer(() => {
         </Grid>
         <Grid item xs={8}>
           <Grid container spacing={1}>
-            {fetchProposalsPending ? (
-              <Grid item xs={12}>
-                <Typography
-                  variant="h6"
-                  sx={{ display: "flex", alignItems: "center", gap: "10px" }}
-                >
-                  Loading all proposals <CircularProgress size={20} />
-                </Typography>
-              </Grid>
-            ) : (
-              fetchedProposals.map((proposal: IProposal, index: number) => (
-                <ViewAllProposalItem
-                  proposal={proposal}
-                  key={proposal.proposalId}
-                  index={index}
-                />
-              ))
+            {useMemo(
+              () =>
+                fetchProposalsPending ? (
+                  <Grid item xs={12}>
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "10px",
+                      }}
+                    >
+                      Loading all proposals <CircularProgress size={20} />
+                    </Typography>
+                  </Grid>
+                ) : (
+                  fetchedProposals.map((proposal: IProposal, index: number) => (
+                    <ViewAllProposalItem
+                      proposal={proposal}
+                      key={proposal.proposalId}
+                      index={index}
+                    />
+                  ))
+                ),
+              [fetchedProposals, fetchProposalsPending]
             )}
+
+            <Grid item xs={12}>
+              <PaginationWrapper>
+                <Pagination
+                  count={Math.ceil(itemsCount / Constants.COUNT_PER_PAGE)}
+                  page={currentPage}
+                  onChange={handlePageChange}
+                />
+              </PaginationWrapper>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
-      {createProposal && <Propose onClose={() => setCreateProposal(false)} />}
+      {createProposal && <Propose onClose={() => setCreateProposal(false)} onFinish={refetchProposals} />}
     </>
   );
 });
