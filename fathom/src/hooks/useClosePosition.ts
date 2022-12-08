@@ -55,10 +55,12 @@ const useClosePosition = (
   }, [positionStore, account, setBalance]);
 
   const handleOnOpen = useCallback(async () => {
-    setPrice(pool.priceWithSafetyMargin);
-    setFathomToken(pool.priceWithSafetyMargin * lockedCollateral);
+    const price = Number(position.debtShare)
+
+    setPrice(price);
+    setFathomToken(price * lockedCollateral);
     setCollateral(lockedCollateral);
-  }, [pool, lockedCollateral, setPrice, setFathomToken, setCollateral]);
+  }, [position, lockedCollateral, setPrice, setFathomToken, setCollateral]);
 
   useEffect(() => {
     getBalance();

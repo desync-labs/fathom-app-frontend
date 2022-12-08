@@ -132,7 +132,8 @@ export default class PositionStore {
         "Position closed successfully!"
       );
     } catch (e: any) {
-      return this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+      throw e;
     }
   }
 
@@ -158,7 +159,8 @@ export default class PositionStore {
         "Position closed successfully!"
       );
     } catch (e: any) {
-      return this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+      throw e;
     }
   }
 

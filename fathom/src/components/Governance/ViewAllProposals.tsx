@@ -3,7 +3,7 @@ import {
   Grid,
   CircularProgress,
   Pagination,
-  Box
+  Box,
 } from "@mui/material";
 import IProposal from "stores/interfaces/IProposal";
 import React, { useMemo } from "react";
@@ -100,20 +100,26 @@ const AllProposalsView = observer(() => {
                 ),
               [fetchedProposals, fetchProposalsPending]
             )}
-
-            <Grid item xs={12}>
-              <PaginationWrapper>
-                <Pagination
-                  count={Math.ceil(itemsCount / Constants.COUNT_PER_PAGE)}
-                  page={currentPage}
-                  onChange={handlePageChange}
-                />
-              </PaginationWrapper>
-            </Grid>
+            {!fetchProposalsPending && (
+              <Grid item xs={12}>
+                <PaginationWrapper>
+                  <Pagination
+                    count={Math.ceil(itemsCount / Constants.COUNT_PER_PAGE)}
+                    page={currentPage}
+                    onChange={handlePageChange}
+                  />
+                </PaginationWrapper>
+              </Grid>
+            )}
           </Grid>
         </Grid>
       </Grid>
-      {createProposal && <Propose onClose={() => setCreateProposal(false)} onFinish={refetchProposals} />}
+      {createProposal && (
+        <Propose
+          onClose={() => setCreateProposal(false)}
+          onFinish={refetchProposals}
+        />
+      )}
     </>
   );
 });

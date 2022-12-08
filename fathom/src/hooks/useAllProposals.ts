@@ -7,9 +7,11 @@ import { useWeb3React } from "@web3-react/core";
 
 export const useAllProposals = () => {
   const { chainId } = useWeb3React();
+
   const [search, setSearch] = useState<string>("");
   const [time, setTime] = useState<string>("all");
   const [proposals, setProposals] = useState<string>("all");
+
   const [createProposal, setCreateProposal] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
 
@@ -43,14 +45,17 @@ export const useAllProposals = () => {
 
   const refetchProposals = useCallback(() => {
     setTimeout(() => {
-      refetch();
+      refetch({
+        first: Constants.COUNT_PER_PAGE,
+        skip: 0,
+      });
+
       statsRefetch({
         id: GovernanceAddress,
       });
+      setCurrentPage(1);
     }, 1000);
   }, [refetch, statsRefetch, GovernanceAddress]);
-
-  console.log(stats);
 
   const handlePageChange = useCallback(
     (event: ChangeEvent<unknown>, page: number) => {
@@ -79,7 +84,8 @@ export const useAllProposals = () => {
     fetchedProposals: loading ? [] : data.proposals,
 
     currentPage,
-    itemsCount: statsLoading || !stats ? 0 : stats.governanceStat.totalProposalsCount,
+    itemsCount:
+      statsLoading || !stats ? 0 : stats.governanceStat.totalProposalsCount,
     handlePageChange,
   };
 };

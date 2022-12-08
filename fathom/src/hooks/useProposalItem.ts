@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState, useMemo } from "react";
 import useMetaMask from "context/metamask";
 import { useNavigate, useParams } from "react-router-dom";
 import { useStores } from "stores";
-import { ProposalStatus } from "helpers/Constants";
+import { ProposalStatus, XDC_BLOCK_TIME } from "helpers/Constants";
 import IProposal from "stores/interfaces/IProposal";
 import { useQuery } from "@apollo/client";
 import { GOVERNANCE_PROPOSAL_ITEM } from "apollo/queries";
@@ -20,7 +20,7 @@ const useProposalItem = () => {
 
   const [seconds, setSeconds] = useState<number>(0);
 
-  const [status, setStatus] = useState<string>(ProposalStatus.Pending);
+  const [status, setStatus] = useState<string>();
 
   const [votingStartsTime, setVotingStartsTime] = useState<string | null>(null);
   const [votingEndTime, setVotingEndTime] = useState<string | null>(null);
@@ -32,70 +32,93 @@ const useProposalItem = () => {
     context: { clientName: "governance" },
   });
 
-  const fetchData = useCallback(async () => {
-    if (data?.proposal && account) {
-      const [hasVoted, status] = await Promise.all([
-        proposalStore.hasVoted(data.proposal.proposalId, account),
-        proposalStore.fetchProposalState(data.proposal.proposalId, account),
-      ]);
-
+  const fetchHasVoted = useCallback(async () => {
+    if (data && data.proposal && account) {
+      const hasVoted = await proposalStore.hasVoted(
+        data.proposal.proposalId,
+        account
+      );
       setHasVoted(hasVoted!);
+    }
+  }, [proposalStore, data, account, setHasVoted]);
+
+  const fetchStatus = useCallback(async () => {
+    if (data && data.proposal && account) {
+      const status = await proposalStore.fetchProposalState(
+        data.proposal.proposalId,
+        account
+      );
       // @ts-ignore
       setStatus(Object.values(ProposalStatus)[status]);
     }
-  }, [proposalStore, data?.proposal, account, setHasVoted]);
+  }, [proposalStore, data, account, setStatus]);
 
   const getVotingStartsTime = useCallback(async () => {
-    if (data?.proposal) {
+    if (data && data.proposal) {
       const { timestamp } = await Web3Utils.getWeb3Instance(
         chainId
       ).eth.getBlock(data.proposal.startBlock);
 
-      console.log(timestamp);
-
       return setVotingStartsTime(new Date(timestamp * 1000).toLocaleString());
     }
-
-    return setVotingStartsTime(null);
-  }, [data?.proposal, chainId, setVotingStartsTime]);
+  }, [data, chainId, setVotingStartsTime]);
 
   const getVotingEndTime = useCallback(async () => {
-    if (data?.proposal) {
+    if (data && data.proposal) {
       const { timestamp } = await Web3Utils.getWeb3Instance(
         chainId
-      ).eth.getBlock(data.proposal.endBlock);
+      ).eth.getBlock(data.proposal.startBlock);
+
+      const endTimestamp =
+        timestamp +
+        (Number(data.proposal.endBlock) - Number(data.proposal.startBlock)) *
+          XDC_BLOCK_TIME;
 
       const now = Date.now() / 1000;
 
-      if (timestamp - now <= 0) {
-        setVotingEndTime(new Date(timestamp * 1000).toLocaleString());
+      if (endTimestamp - now <= 0) {
+        setVotingEndTime(new Date(endTimestamp * 1000).toLocaleString());
+        const status = await proposalStore.fetchProposalState(
+          data.proposal.proposalId,
+          account
+        );
+        // @ts-ignore
+        setStatus(Object.values(ProposalStatus)[status]);
         return setSeconds(0);
       } else {
-        setSeconds(timestamp - now);
+        setSeconds(endTimestamp - now);
       }
     }
-
-    return setVotingStartsTime(null);
-  }, [data?.proposal, chainId, setVotingEndTime]);
+  }, [proposalStore, data, chainId, account, setVotingEndTime, setStatus]);
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    if (data && data.proposal && account) {
+      fetchHasVoted();
+      fetchStatus();
+    }
+  }, [data, account, fetchHasVoted, fetchStatus]);
 
   useEffect(() => {
-    if (data?.proposal) {
+    if (data && data.proposal) {
       getVotingStartsTime();
       getVotingEndTime();
     }
-  }, [data?.proposal, getVotingStartsTime, getVotingEndTime]);
+  }, [data, getVotingStartsTime, getVotingEndTime]);
 
   useEffect(() => {
     if (seconds > 0) {
       setTimeout(() => {
         setSeconds(seconds - 1);
       }, 1000);
+
+      fetchStatus();
+    } else {
+      setTimeout(() => {
+        console.log('getVotingEndTime')
+        getVotingEndTime();
+      }, 2000);
     }
-  }, [seconds, setSeconds]);
+  }, [seconds, setSeconds, getVotingEndTime, fetchStatus]);
 
   const getTitleDescription = useCallback((title: string, index: number) => {
     if (title) {
@@ -108,7 +131,7 @@ const useProposalItem = () => {
   const vote = useCallback(
     async (support: string) => {
       try {
-        setVotePending("against");
+        setVotePending(support);
         await proposalStore.castVote(_proposalId!, account, support);
         setHasVoted(true);
         refetch();
