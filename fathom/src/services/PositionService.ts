@@ -4,7 +4,6 @@ import { Strings } from "helpers/Strings";
 
 import { SmartContractFactory } from "config/SmartContractFactory";
 import IPositionService from "services/interfaces/IPositionService";
-import IOpenPosition from "stores/interfaces/IOpenPosition";
 
 import ICollateralPool from "stores/interfaces/ICollateralPool";
 import ActiveWeb3Transactions from "stores/transaction.store";
@@ -180,7 +179,7 @@ export default class PositionService implements IPositionService {
   }
 
   async partiallyClosePosition(
-    position: IOpenPosition,
+    positionId: string,
     pool: ICollateralPool,
     address: string,
     stableCoin: number,
@@ -211,7 +210,7 @@ export default class PositionService implements IPositionService {
           SmartContractFactory.PositionManager(this.chainId).address,
           pool.tokenAdapterAddress,
           SmartContractFactory.StablecoinAdapter(this.chainId).address,
-          position.id,
+          positionId,
           toWei(collateral.toString(), "ether"),
           toWei(stableCoin.toString(), "ether"),
           encodedResult,
