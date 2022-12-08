@@ -13,13 +13,6 @@ export default interface IProposalService {
     chainId?: number
   ): Promise<number>;
 
-  viewAllProposals(account: string, chainId?: number): Promise<IProposal[]>;
-
-  viewProposal(
-    proposalId: string,
-    account: string,
-  ): Promise<IProposal>;
-
   viewProposalState(
     proposalId: string,
     account: string,

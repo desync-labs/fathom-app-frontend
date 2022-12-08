@@ -22,6 +22,7 @@ const useClosePosition = (
   const { account } = useMetaMask()!;
 
   const { data } = useQuery(FXD_POOLS, {
+    context: { clientName: "stable" },
     fetchPolicy: "cache-first",
   });
 
@@ -30,7 +31,7 @@ const useClosePosition = (
 
   const [price, setPrice] = useState<number>(0);
 
-  const [balance, setBalance] = useState<number>(0);
+  const [balance, setBalance] = useState<number | null>(null);
   const [balanceError, setBalanceError] = useState<boolean>(false);
   const [disableClosePosition, setDisableClosePosition] =
     useState<boolean>(false);
@@ -49,8 +50,8 @@ const useClosePosition = (
   );
 
   const getBalance = useCallback(async () => {
-    await positionStore.balanceStableCoin(account);
-    setBalance(positionStore.stableCoinBalance);
+    const balance = await positionStore.balanceStableCoin(account);
+    setBalance(balance!);
   }, [positionStore, account, setBalance]);
 
   const handleOnOpen = useCallback(async () => {
@@ -65,7 +66,7 @@ const useClosePosition = (
   }, [getBalance, handleOnOpen]);
 
   useEffect(() => {
-    !isNaN(balance) && balance / 10 ** 18 < fathomToken
+    !isNaN(balance as number) && balance as number / 10 ** 18 < fathomToken
       ? setBalanceError(true)
       : setBalanceError(false);
   }, [fathomToken, balance]);
@@ -150,7 +151,7 @@ const useClosePosition = (
   );
 
   const setMax = useCallback(() => {
-    const walletBalance = balance / 10 ** 18;
+    const walletBalance = balance as number / 10 ** 18;
     const maxBalance = lockedCollateral * price;
 
     const setBalance = walletBalance < maxBalance ? walletBalance : maxBalance;

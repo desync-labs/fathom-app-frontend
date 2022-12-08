@@ -179,9 +179,9 @@ const ClosePositionDialog: FC<ClosePositionProps> = ({
             </Box>
             <AppFormInputWrapper>
               <AppFormLabel>Repaying</AppFormLabel>
-              {!isNaN(balance) ? (
+              {!isNaN(balance as number) ? (
                 <WalletBalance>
-                  Wallet Available: {+balance / 10 ** 18} FXD
+                  Wallet Available: {balance as number / 10 ** 18} FXD
                 </WalletBalance>
               ) : null}
               <AppTextField

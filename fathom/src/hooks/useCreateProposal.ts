@@ -26,14 +26,17 @@ const formatter = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 3,
 });
 
-const useCreateProposal = (onClose: ProposeListViewProps["onClose"]) => {
+const useCreateProposal = (
+  onClose: ProposeListViewProps["onClose"],
+  onFinish: ProposeListViewProps["onFinish"]
+) => {
   const { proposalStore } = useStores();
   const { account, chainId } = useMetaMask()!;
 
   const { handleSubmit, watch, control, reset, getValues } = useForm({
     defaultValues,
-    reValidateMode: 'onChange',
-    mode: 'onChange',
+    reValidateMode: "onChange",
+    mode: "onChange",
   });
 
   const withAction = watch("withAction");
@@ -65,8 +68,8 @@ const useCreateProposal = (onClose: ProposeListViewProps["onClose"]) => {
           targets,
           withAction,
         } = values;
-        const combinedText =
-          descriptionTitle + "----------------" + description;
+
+        const combinedText = `${descriptionTitle}----------------${description}`
 
         if (withAction) {
           const values = inputValues.trim().split(",").map(Number);
@@ -94,12 +97,13 @@ const useCreateProposal = (onClose: ProposeListViewProps["onClose"]) => {
         }
         reset();
         localStorage.removeItem("createProposal");
+        onFinish();
         onClose();
       } catch (err) {
         console.log(err);
       }
     },
-    [reset, account, chainId, proposalStore, onClose]
+    [reset, account, chainId, proposalStore, onClose, onFinish]
   );
 
   const saveForLater = useCallback(() => {
@@ -114,10 +118,13 @@ const useCreateProposal = (onClose: ProposeListViewProps["onClose"]) => {
       .split(",")
       .map((address: string) => address.trim());
 
-    console.log(trimmedAddresses)
+    console.log(trimmedAddresses);
 
     for (let i = 0; i < trimmedAddresses.length; i++) {
-      if (!Xdc3.utils.isAddress(trimmedAddresses[i]) && !Web3.utils.isAddress(trimmedAddresses[i])) {
+      if (
+        !Xdc3.utils.isAddress(trimmedAddresses[i]) &&
+        !Web3.utils.isAddress(trimmedAddresses[i])
+      ) {
         valid = false;
         break;
       }

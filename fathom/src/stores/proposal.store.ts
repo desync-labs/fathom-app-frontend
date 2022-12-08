@@ -1,15 +1,13 @@
 import { RootStore } from ".";
 import IProposalService from "services/interfaces/IProposalService";
-import IProposal from "stores/interfaces/IProposal";
 import IVoteCounts from "stores/interfaces/IVoteCounts";
 import { makeAutoObservable } from "mobx";
 
 export default class ProposalStore {
-  fetchedProposals: IProposal[] = [];
-  fetchedProposal: IProposal;
   fetchedVotes: IVoteCounts;
+
   fetchedTotalVotes: number = 0.000000001;
-  fetchedProposalState: string = "";
+
   weight: number = 0;
   veBalance: number = 0;
   service: IProposalService;
@@ -18,7 +16,6 @@ export default class ProposalStore {
   constructor(rootStore: RootStore, service: IProposalService) {
     makeAutoObservable(this);
     this.service = service;
-    this.fetchedProposal = {} as IProposal;
     this.fetchedVotes = {} as IVoteCounts;
 
     this.rootStore = rootStore;
@@ -47,9 +44,9 @@ export default class ProposalStore {
         account,
         this.rootStore.transactionStore
       );
-      await this.fetchProposals(account);
     } catch (e: any) {
       this.showErrorMessage(e.message);
+      throw e;
     }
   }
 
@@ -114,39 +111,15 @@ export default class ProposalStore {
     }
   }
 
-  async fetchProposals(account: string) {
-    try {
-      const fetchedProposals = await this.service.viewAllProposals(
-        account,
-      );
-      this.setProposals(fetchedProposals);
-    } catch (e: any) {
-      this.showErrorMessage(e.message);
-    }
-  }
-
-  async fetchProposal(proposal: string, account: string) {
-    try {
-      const fetchedProposal = await this.service.viewProposal(
-        proposal,
-        account,
-      );
-      this.setProposal(fetchedProposal);
-    } catch (e: any) {
-      this.showErrorMessage(e.message);
-    }
-  }
-
   async fetchProposalState(
     proposal: string,
     account: string,
   ) {
     try {
-      const fetchedProposalState = await this.service.viewProposalState(
+      return await this.service.viewProposalState(
         proposal,
         account,
       );
-      this.setProposalState(fetchedProposalState);
     } catch (e: any) {
       this.showErrorMessage(e.message);
     }
@@ -185,17 +158,5 @@ export default class ProposalStore {
 
   setVeBalance(_veBalance: number) {
     this.veBalance = _veBalance;
-  }
-
-  setProposals(_proposal: IProposal[]) {
-    this.fetchedProposals = _proposal;
-  }
-
-  setProposal(_proposal: IProposal) {
-    this.fetchedProposal = _proposal;
-  }
-
-  setProposalState(_proposalState: string) {
-    this.fetchedProposalState = _proposalState;
   }
 }

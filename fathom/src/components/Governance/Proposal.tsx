@@ -27,6 +27,8 @@ import {
   ProposalItemStatus,
   ImageSrc,
 } from "components/Governance/ViewAllProposalItem";
+import StakingCountdown from "../Staking/StakingCountdown";
+import { secondsToTime } from "../../utils/secondsToTime";
 
 const BackIcon = () => (
   <Icon sx={{ height: "21px" }}>
@@ -70,7 +72,7 @@ const TimeslotValue = styled(Typography)`
 `;
 
 const TimeslotInProgress = styled(Box, {
-  shouldForwardProp: (prop) => prop !== "lessTimeLeft",
+  shouldForwardProp: (prop) => prop !== "lessTimeLeft" && prop !== "isDone",
 })<{ lessTimeLeft?: boolean; isDone?: boolean }>(
   ({ theme, lessTimeLeft, isDone }) => {
     const styles = {
@@ -158,37 +160,37 @@ const VoteButtonGroup = styled(ButtonGroup)`
 type ButtonsProps = {
   hasVoted: boolean;
   fetchedProposalState: string;
-  handleFor: () => void;
-  handleAgainst: () => void;
-  handleAbstain: () => void;
+  vote: (support: string) => void;
   votePending: string;
 };
 
 const Buttons: FC<ButtonsProps> = ({
   hasVoted,
   fetchedProposalState,
-  handleFor,
   votePending,
-  handleAgainst,
-  handleAbstain,
+  vote,
 }) => {
   if (fetchedProposalState !== "1") {
     return <VotingEndedButton disabled={true}>Voting Ended</VotingEndedButton>;
   }
 
   if (hasVoted) {
-    return <VotingEndedButton disabled={true}>You have already voted.</VotingEndedButton>;
+    return (
+      <VotingEndedButton disabled={true}>
+        You have already voted.
+      </VotingEndedButton>
+    );
   }
 
   return (
     <VoteButtonGroup variant="outlined">
-      <Button onClick={handleFor}>
+      <Button onClick={() => vote("1")}>
         {votePending === "for" ? <CircularProgress size={25} /> : "For"}
       </Button>
-      <Button onClick={handleAgainst}>
+      <Button onClick={() => vote("0")}>
         {votePending === "against" ? <CircularProgress size={25} /> : "Against"}
       </Button>
-      <Button onClick={handleAbstain}>
+      <Button onClick={() => vote("2")}>
         {votePending === "abstain" ? <CircularProgress size={25} /> : "Abstain"}
       </Button>
     </VoteButtonGroup>
@@ -199,22 +201,27 @@ const ProposalView = observer(() => {
   const {
     hasVoted,
     votePending,
-    isDone,
-    handleAbstain,
-    handleAgainst,
-    handleFor,
 
-    getTitle,
-    getDescription,
-    toStatus,
+    getTitleDescription,
 
-    fetchedProposal,
     forVotes,
     abstainVotes,
     againstVotes,
+
+    vote,
+
     fetchedTotalVotes,
-    fetchedProposalState,
+
     back,
+    status,
+
+    fetchedProposal,
+
+    submitTime,
+    votingStartsTime,
+    votingEndTime,
+
+    secondsLeft,
   } = useProposalItem();
 
   console.log(fetchedProposal);
@@ -233,36 +240,48 @@ const ProposalView = observer(() => {
             <Grid container>
               <Grid item xs={12} sx={{ padding: "24px 24px 0" }}>
                 <ProposalTitle>
-                  {getTitle(fetchedProposal.description)}
+                  {getTitleDescription(fetchedProposal.description, 0)}
                 </ProposalTitle>
               </Grid>
               <Grid item xs={12}>
                 <TimeslotContainer container gap={2}>
                   <Grid item xs={3}>
                     <TimeslotTitle>Submit time:</TimeslotTitle>
-                    <TimeslotValue>2022-09-30 05:12:49</TimeslotValue>
+                    <TimeslotValue>{submitTime}</TimeslotValue>
                   </Grid>
                   <Grid item xs={3}>
                     <TimeslotTitle>Voting starts:</TimeslotTitle>
-                    <TimeslotValue>2022-09-30 05:12:49</TimeslotValue>
+                    <TimeslotValue>{votingStartsTime}</TimeslotValue>
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={5}>
                     <TimeslotTitle>Voting ends:</TimeslotTitle>
                     <TimeslotValue>
-                      {isDone ? "in" : null}
-                      <TimeslotInProgress lessTimeLeft={false} component="span">
-                        3d 18h 55m 34s
+                      {secondsLeft ? "in " : null}
+                      <TimeslotInProgress
+                        isDone={secondsLeft <= 0}
+                        lessTimeLeft={secondsLeft > 0 && secondsLeft < 15 * 60}
+                        component="span"
+                      >
+                        {secondsLeft ? (
+                          <StakingCountdown
+                            timeObject={secondsToTime(secondsLeft)}
+                          />
+                        ) : (
+                          votingEndTime
+                        )}
                       </TimeslotInProgress>
                     </TimeslotValue>
                   </Grid>
                 </TimeslotContainer>
               </Grid>
-              <Grid item xs={12} sx={{ padding: "24px 24px 12px 24px" }}>
-                <ProposalLabel>Description</ProposalLabel>
-                <ProposalDescription>
-                  {getDescription(fetchedProposal.description)}
-                </ProposalDescription>
-              </Grid>
+              {!!getTitleDescription(fetchedProposal.description, 1) && (
+                <Grid item xs={12} sx={{ padding: "24px 24px 12px 24px" }}>
+                  <ProposalLabel>Description</ProposalLabel>
+                  <ProposalDescription>
+                    {getTitleDescription(fetchedProposal.description, 1)}
+                  </ProposalDescription>
+                </Grid>
+              )}
               <Grid item xs={12} sx={{ padding: "12px 24px" }}>
                 <ProposalLabel>Action</ProposalLabel>
                 <ProposalDescription>
@@ -290,18 +309,13 @@ const ProposalView = observer(() => {
             <Box sx={{ width: "100%" }}>
               <ProposalStatus>Proposal Status</ProposalStatus>
               <ProposalItemStatus
-                className={fetchedProposal.status?.toLowerCase()}
+                className={status?.toLowerCase()}
                 sx={{ margin: "10px 0" }}
               >
-                {["Defeated", "Succeeded"].includes(
-                  toStatus(fetchedProposalState)
-                ) ? (
-                  <img
-                    src={ImageSrc[fetchedProposal.status]}
-                    alt={fetchedProposal.status}
-                  />
+                {["Defeated", "Succeeded"].includes(status) ? (
+                  <img src={ImageSrc[status]} alt={status} />
                 ) : null}
-                {toStatus(fetchedProposalState)}
+                {status}
               </ProposalItemStatus>
               <Box sx={{ margin: "30px 0" }}>
                 <VotingWrapperBox>
@@ -358,10 +372,8 @@ const ProposalView = observer(() => {
             </Box>
             <Buttons
               hasVoted={hasVoted}
-              fetchedProposalState={fetchedProposalState}
-              handleFor={handleFor}
-              handleAbstain={handleAbstain}
-              handleAgainst={handleAgainst}
+              fetchedProposalState={status}
+              vote={vote}
               votePending={votePending!}
             />
           </AppPaper>
