@@ -29,6 +29,7 @@ import {
 } from "components/Governance/ViewAllProposalItem";
 import StakingCountdown from "../Staking/StakingCountdown";
 import { secondsToTime } from "../../utils/secondsToTime";
+import { ProposalStatus } from "../../helpers/Constants";
 
 const BackIcon = () => (
   <Icon sx={{ height: "21px" }}>
@@ -103,7 +104,7 @@ const ProposalDescription = styled(Box)`
   padding: 10px 0;
 `;
 
-const ProposalStatus = styled(Box)`
+const ProposalStatusBox = styled(Box)`
   font-weight: 600;
   font-size: 20px;
   line-height: 24px;
@@ -170,7 +171,7 @@ const Buttons: FC<ButtonsProps> = ({
   votePending,
   vote,
 }) => {
-  if (fetchedProposalState !== "1") {
+  if (fetchedProposalState !== ProposalStatus.OpenToVote) {
     return <VotingEndedButton disabled={true}>Voting Ended</VotingEndedButton>;
   }
 
@@ -185,13 +186,13 @@ const Buttons: FC<ButtonsProps> = ({
   return (
     <VoteButtonGroup variant="outlined">
       <Button onClick={() => vote("1")}>
-        {votePending === "for" ? <CircularProgress size={25} /> : "For"}
+        {votePending === "1" ? <CircularProgress size={25} /> : "For"}
       </Button>
       <Button onClick={() => vote("0")}>
-        {votePending === "against" ? <CircularProgress size={25} /> : "Against"}
+        {votePending === "0" ? <CircularProgress size={25} /> : "Against"}
       </Button>
       <Button onClick={() => vote("2")}>
-        {votePending === "abstain" ? <CircularProgress size={25} /> : "Abstain"}
+        {votePending === "2" ? <CircularProgress size={25} /> : "Abstain"}
       </Button>
     </VoteButtonGroup>
   );
@@ -223,8 +224,6 @@ const ProposalView = observer(() => {
 
     secondsLeft,
   } = useProposalItem();
-
-  console.log(fetchedProposal);
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
@@ -307,13 +306,13 @@ const ProposalView = observer(() => {
         <Grid item xs={4} md={4} lg={4}>
           <AppPaper sx={{ padding: "24px" }}>
             <Box sx={{ width: "100%" }}>
-              <ProposalStatus>Proposal Status</ProposalStatus>
+              <ProposalStatusBox>Proposal Status</ProposalStatusBox>
               <ProposalItemStatus
                 className={status?.toLowerCase()}
                 sx={{ margin: "10px 0" }}
               >
-                {["Defeated", "Succeeded"].includes(status) ? (
-                  <img src={ImageSrc[status]} alt={status} />
+                {["Defeated", "Succeeded"].includes(status!) ? (
+                  <img src={ImageSrc[status!]} alt={status} />
                 ) : null}
                 {status}
               </ProposalItemStatus>
@@ -372,7 +371,7 @@ const ProposalView = observer(() => {
             </Box>
             <Buttons
               hasVoted={hasVoted}
-              fetchedProposalState={status}
+              fetchedProposalState={status!}
               vote={vote}
               votePending={votePending!}
             />
