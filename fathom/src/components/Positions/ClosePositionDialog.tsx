@@ -174,7 +174,7 @@ const ClosePositionDialog: FC<ClosePositionProps> = ({
                 Total debt:
               </Box>
               <Box sx={{ fontWeight: "bold", fontSize: "14px" }}>
-                {lockedCollateral * price} FXD
+                {position.debtShare} FXD
               </Box>
             </Box>
             <AppFormInputWrapper>

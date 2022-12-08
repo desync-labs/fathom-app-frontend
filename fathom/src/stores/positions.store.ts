@@ -146,7 +146,7 @@ export default class PositionStore {
   ) {
     try {
       await this.service.partiallyClosePosition(
-        position,
+        position.positionId,
         pool,
         address,
         fathomToken,

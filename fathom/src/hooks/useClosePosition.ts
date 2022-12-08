@@ -55,10 +55,10 @@ const useClosePosition = (
   }, [positionStore, account, setBalance]);
 
   const handleOnOpen = useCallback(async () => {
-    const price = Number(position.debtShare)
+    const price = Number(position.debtShare) / Number(position.lockedCollateral)
 
     setPrice(price);
-    setFathomToken(price * lockedCollateral);
+    setFathomToken(Number(position.debtShare));
     setCollateral(lockedCollateral);
   }, [position, lockedCollateral, setPrice, setFathomToken, setCollateral]);
 
@@ -68,7 +68,7 @@ const useClosePosition = (
   }, [getBalance, handleOnOpen]);
 
   useEffect(() => {
-    !isNaN(balance as number) && balance as number / 10 ** 18 < fathomToken
+    balance !== null && balance as number / 10 ** 18 < fathomToken
       ? setBalanceError(true)
       : setBalanceError(false);
   }, [fathomToken, balance]);

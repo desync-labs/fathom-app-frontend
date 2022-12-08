@@ -40,7 +40,7 @@ export default interface IPositionService {
   ): Promise<void>;
   approvalStatusStableCoin(address: string): Promise<Boolean>;
   partiallyClosePosition(
-    position: IOpenPosition,
+    positionId: string,
     pool: ICollateralPool,
     address: string,
     debt: number,
