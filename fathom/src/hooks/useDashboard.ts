@@ -4,10 +4,13 @@ import { FXD_POOLS, FXD_POSITIONS, FXD_STATS, FXD_USER } from "apollo/queries";
 import useMetaMask from "context/metamask";
 import { useCallback, useEffect, useState } from "react";
 import { Constants } from "helpers/Constants";
+import useSyncContext from "../context/sync";
 
 const useDashboard = () => {
   const { positionStore } = useStores();
   const { account } = useMetaMask()!;
+
+  const { syncFXD, prevSyncFxd } = useSyncContext();
 
   const { refetch: refetchStats } = useQuery(FXD_STATS, {
     context: { clientName: "stable" },
@@ -50,33 +53,25 @@ const useDashboard = () => {
     setProxyWallet,
   ]);
 
-  useEffect(() => {
-    if (account) {
-      fetchUserStatsAndProxyWallet();
-    }
-  }, [account, fetchUserStatsAndProxyWallet]);
-
   const refetchData = useCallback(async () => {
-    setTimeout(() => {
-      refetchStats();
-      refetchPools();
-      refetchPositions({
-        walletAddress: proxyWallet,
-        first: Constants.COUNT_PER_PAGE,
-        skip: 0,
-      }).then(() => {
-        setPositionCurrentPage(1);
-      });
+    refetchStats();
+    refetchPools();
+    refetchPositions({
+      walletAddress: proxyWallet,
+      first: Constants.COUNT_PER_PAGE,
+      skip: 0,
+    }).then(() => {
+      setPositionCurrentPage(1);
+    });
 
-      refetchUserStats({
-        variables: {
-          walletAddress: proxyWallet,
-        },
-      }).then(({ data: { users } }) => {
-        const itemsCount = users[0].activePositionsCount;
-        setPositionsItemsCount(itemsCount);
-      });
-    }, 1200);
+    refetchUserStats({
+      variables: {
+        walletAddress: proxyWallet,
+      },
+    }).then(({ data: { users } }) => {
+      const itemsCount = users[0].activePositionsCount;
+      setPositionsItemsCount(itemsCount);
+    });
   }, [
     proxyWallet,
     refetchStats,
@@ -85,11 +80,22 @@ const useDashboard = () => {
     refetchUserStats,
   ]);
 
+  useEffect(() => {
+    if (account) {
+      fetchUserStatsAndProxyWallet();
+    }
+  }, [account, fetchUserStatsAndProxyWallet]);
+
+  useEffect(() => {
+    if (syncFXD && !prevSyncFxd) {
+      refetchData();
+    }
+  }, [syncFXD, prevSyncFxd, refetchData])
+
   return {
     proxyWallet,
     positionCurrentPage,
     positionsItemsCount,
-    refetchData,
     setPositionCurrentPage,
   };
 };

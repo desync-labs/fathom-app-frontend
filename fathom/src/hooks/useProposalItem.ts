@@ -111,12 +111,17 @@ const useProposalItem = () => {
         setSeconds(seconds - 1);
       }, 1000);
 
-      fetchStatus();
+      if (seconds % 2 < 1) {
+        fetchStatus();
+      }
     } else {
       setTimeout(() => {
-        console.log('getVotingEndTime')
         getVotingEndTime();
-      }, 2000);
+      }, 1500);
+
+      setTimeout(() => {
+        fetchStatus();
+      }, 3000);
     }
   }, [seconds, setSeconds, getVotingEndTime, fetchStatus]);
 
@@ -134,7 +139,9 @@ const useProposalItem = () => {
         setVotePending(support);
         await proposalStore.castVote(_proposalId!, account, support);
         setHasVoted(true);
-        refetch();
+        setTimeout(() => {
+          refetch();
+        }, 1500);
       } catch (err) {
         console.log(err);
       }

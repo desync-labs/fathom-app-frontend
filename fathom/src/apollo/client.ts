@@ -13,13 +13,13 @@ const cache = new InMemoryCache({
     Query: {
       fields: {
         positions: {
-          keyArgs: ['id'],
-          merge (existing = [], incoming) {
+          keyArgs: false,
+          merge (existing = [], incoming, other) {
             return incoming;
           },
         },
         proposals: {
-          keyArgs: ['id'],
+          keyArgs: false,
           merge (existing = [], incoming) {
             return incoming;
           },
@@ -37,11 +37,19 @@ const governanceLink = new HttpLink({
   uri: "http://167.71.216.61:8000/subgraphs/name/dao-subgraph",
 })
 
+const defaultLink = new HttpLink({
+  uri: "http://167.71.216.61:8030/graphql",
+})
+
 export const client = new ApolloClient({
   link: ApolloLink.split(
     (operation) => operation.getContext().clientName === "stable", // Routes the query to the proper client
     stableCoinLink,
-    governanceLink
+    ApolloLink.split(
+      (operation) => operation.getContext().clientName === "governance", // Routes the query to the proper client
+      governanceLink,
+      defaultLink
+    )
   ),
   cache,
 })

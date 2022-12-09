@@ -261,7 +261,7 @@ const ProposalView = observer(() => {
                         lessTimeLeft={secondsLeft > 0 && secondsLeft < 15 * 60}
                         component="span"
                       >
-                        {secondsLeft ? (
+                        {secondsLeft > 0 ? (
                           <StakingCountdown
                             timeObject={secondsToTime(secondsLeft)}
                           />

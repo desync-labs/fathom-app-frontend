@@ -12,7 +12,6 @@ const DashboardContent = observer(() => {
     proxyWallet,
     positionCurrentPage,
     positionsItemsCount,
-    refetchData,
     setPositionCurrentPage,
   } = useDashboard();
 
@@ -27,14 +26,13 @@ const DashboardContent = observer(() => {
           <ProtocolStats />
         </Grid>
         <Grid item xs={12}>
-          <PoolsListView refetchData={refetchData} />
+          <PoolsListView />
         </Grid>
         <Grid item xs={12} sx={{ marginTop: "30px" }}>
           <PositionsList
             positionCurrentPage={positionCurrentPage}
             positionsItemsCount={positionsItemsCount}
             proxyWallet={proxyWallet}
-            refetchData={refetchData}
             setPositionCurrentPage={setPositionCurrentPage}
           />
         </Grid>

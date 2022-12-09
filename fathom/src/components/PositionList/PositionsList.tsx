@@ -41,7 +41,6 @@ type PositionsListProps = {
   proxyWallet: string;
   positionCurrentPage: number;
   setPositionCurrentPage: Dispatch<number>;
-  refetchData: () => void;
 };
 
 const PositionsList: FC<PositionsListProps> = observer(
@@ -50,7 +49,6 @@ const PositionsList: FC<PositionsListProps> = observer(
     positionsItemsCount,
     positionCurrentPage,
     setPositionCurrentPage,
-    refetchData,
   }) => {
     const {
       closingType,
@@ -142,7 +140,6 @@ const PositionsList: FC<PositionsListProps> = observer(
             onClose={() => setSelectedPosition(undefined)}
             closingType={closingType}
             setType={setType}
-            refetchData={refetchData}
           />
         )}
       </>

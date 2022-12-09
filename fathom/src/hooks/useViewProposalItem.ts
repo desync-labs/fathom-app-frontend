@@ -52,10 +52,14 @@ const useViewProposalItem = (proposal: IProposal) => {
   useEffect(() => {
     if (seconds > 0) {
       setTimeout(() => {
-        setSeconds(seconds - 1)
-      }, 1000)
+        setSeconds(seconds - 1);
+      }, 1000);
+    } else {
+      setTimeout(() => {
+        fetchProposalState();
+      }, 2000);
     }
-  }, [seconds, setSeconds])
+  }, [seconds, setSeconds, fetchProposalState]);
 
   const proposalTitle = useMemo(() => {
     const title = proposal.description.split("----------------")[0];
@@ -66,9 +70,8 @@ const useViewProposalItem = (proposal: IProposal) => {
     proposalTitle,
     timestamp,
     seconds,
-    status
-  }
+    status,
+  };
 };
-
 
 export default useViewProposalItem;

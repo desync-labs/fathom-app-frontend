@@ -21,20 +21,23 @@ export default class PositionStore {
     pool: ICollateralPool,
     collateral: number,
     fathomToken: number
-  ) {
+  ): Promise<any> {
     try {
-      await this.service.openPosition(
-        address,
-        pool,
-        collateral,
-        fathomToken,
-        this.rootStore.transactionStore
-      );
-
-      this.rootStore.alertStore.setShowSuccessAlert(
-        true,
-        "New position opened successfully!"
-      );
+      return await this.service
+        .openPosition(
+          address,
+          pool,
+          collateral,
+          fathomToken,
+          this.rootStore.transactionStore
+        )
+        .then((receipt) => {
+          this.rootStore.alertStore.setShowSuccessAlert(
+            true,
+            "New position opened successfully!"
+          );
+          return receipt;
+        });
     } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(true, e.message);
     }
@@ -119,18 +122,22 @@ export default class PositionStore {
     collateral: number
   ) {
     try {
-      await this.service.closePosition(
-        position.positionId,
-        pool,
-        address,
-        collateral,
-        this.rootStore.transactionStore
-      );
+      return await this.service
+        .closePosition(
+          position.positionId,
+          pool,
+          address,
+          collateral,
+          this.rootStore.transactionStore
+        )
+        .then((receipt) => {
+          this.rootStore.alertStore.setShowSuccessAlert(
+            true,
+            "Position closed successfully!"
+          );
 
-      return this.rootStore.alertStore.setShowSuccessAlert(
-        true,
-        "Position closed successfully!"
-      );
+          return receipt;
+        });
     } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(true, e.message);
       throw e;
@@ -143,21 +150,25 @@ export default class PositionStore {
     address: string,
     fathomToken: number,
     collateral: number
-  ) {
+  ): Promise<any> {
     try {
-      await this.service.partiallyClosePosition(
-        position.positionId,
-        pool,
-        address,
-        fathomToken,
-        collateral,
-        this.rootStore.transactionStore
-      );
+      return await this.service
+        .partiallyClosePosition(
+          position.positionId,
+          pool,
+          address,
+          fathomToken,
+          collateral,
+          this.rootStore.transactionStore
+        )
+        .then((receipt) => {
+          this.rootStore.alertStore.setShowSuccessAlert(
+            true,
+            "Position closed successfully!"
+          );
 
-      return this.rootStore.alertStore.setShowSuccessAlert(
-        true,
-        "Position closed successfully!"
-      );
+          return receipt;
+        });
     } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(true, e.message);
       throw e;

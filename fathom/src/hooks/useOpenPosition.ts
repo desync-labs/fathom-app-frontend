@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import debounce from "lodash.debounce";
 import { OpenPositionProps } from "components/Positions/OpenNewPositionDialog";
 import { useForm } from "react-hook-form";
+import useSyncContext from "context/sync";
 
 const defaultValues = {
   collateral: "",
@@ -14,7 +15,6 @@ const defaultValues = {
 const useOpenPosition = (
   pool: OpenPositionProps["pool"],
   onClose: OpenPositionProps["onClose"],
-  refetchData: OpenPositionProps["refetchData"]
 ) => {
   const { poolStore, positionStore } = useStores();
 
@@ -36,6 +36,8 @@ const useOpenPosition = (
   const [fxdToBeBorrowed, setFxdToBeBorrowed] = useState<number>(0);
   const [collateralTokenAddress, setCollateralTokenAddress] =
     useState<string>();
+
+  const { setLastTransactionBlock } = useSyncContext();
 
   const [collateralAvailableToWithdraw, setCollateralAvailableToWithdraw] =
     useState<number>(0);
@@ -199,21 +201,21 @@ const useOpenPosition = (
       const { collateral, fathomToken } = values;
 
       try {
-        await positionStore.openPosition(
+        const receipt = await positionStore.openPosition(
           account,
           pool,
           Number(collateral),
           Number(fathomToken)
-        );
+        )
+        setLastTransactionBlock(receipt.blockNumber)
 
         onClose();
-        refetchData();
       } catch (e) {
         console.log(e);
       }
       setOpenPositionLoading(false);
     },
-    [account, pool, positionStore, setOpenPositionLoading, onClose, refetchData]
+    [account, pool, positionStore, setOpenPositionLoading, setLastTransactionBlock, onClose]
   );
 
   const approve = useCallback(async () => {

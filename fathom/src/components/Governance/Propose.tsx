@@ -155,7 +155,7 @@ const ProposeListView: FC<ProposeListViewProps> = observer(
                   width={28}
                 />
                 <BalanceBox component="span">
-                  {formatNumber(vBalance / 10 ** 18)}
+                  {formatNumber(vBalance as number / 10 ** 18)}
                 </BalanceBox>
                 <CurrencyBox component="span">vFHTM</CurrencyBox>
               </Stack>
@@ -381,7 +381,7 @@ const ProposeListView: FC<ProposeListViewProps> = observer(
                     </>
                   )}
                 </Grid>
-                {vBalance / 10 ** 18 < MINIMUM_V_BALANCE && (
+                { vBalance !== null && vBalance as number / 10 ** 18 < MINIMUM_V_BALANCE && (
                   <WarningBox>
                     <InfoIcon
                       sx={{ width: "16px", color: "#F5953D", height: "16px" }}
