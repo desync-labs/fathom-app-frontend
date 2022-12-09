@@ -13,7 +13,7 @@ const useEarlyUnstake = (lockPosition: ILockPosition, onFinish: () => void) => {
   }, [action, lockPosition]);
 
   const penaltyFee = useMemo(() => {
-    return lockPosition.MAINTokenBalance * (PENALTY_FEE / 100)
+    return lockPosition.amount * (PENALTY_FEE / 100)
   }, [lockPosition])
 
   const earlyUnstakeHandler = useCallback(() => {
@@ -21,9 +21,9 @@ const useEarlyUnstake = (lockPosition: ILockPosition, onFinish: () => void) => {
   }, [lockPosition, handleEarlyUnstake]);
 
   return {
-    unstakeAmount: lockPosition.MAINTokenBalance,
+    unstakeAmount: lockPosition.amount,
     penaltyFee,
-    unstakeAmountWithFee: lockPosition.MAINTokenBalance - penaltyFee,
+    unstakeAmountWithFee: lockPosition.amount - penaltyFee,
     isLoading,
     earlyUnstakeHandler,
   };

@@ -1,16 +1,12 @@
 import * as React from "react";
 import { Grid } from "@mui/material";
 import { useMemo } from "react";
-import { observer } from "mobx-react";
 import StakingLockForm from "components/Staking/StakingLockForm";
 import { PageHeader } from "components/Dashboard/PageHeader";
 import StreamStats from "components/Staking/Components/StreamStats";
 import StakingPositions from "components/Staking/StakingPositions";
-import useStakingContext from "context/staking";
 
-const StakingView = observer(() => {
-  const { stakingStore, fetchOverallValues } = useStakingContext();
-
+const StakingView = () => {
   return (
     <Grid container spacing={3}>
       {useMemo(
@@ -27,14 +23,10 @@ const StakingView = observer(() => {
       <Grid item xs={12}>
         <Grid container spacing={2}>
           <Grid item xs={6}>
-            <StakingLockForm fetchOverallValues={fetchOverallValues} />
+            <StakingLockForm />
           </Grid>
           <Grid item xs={6}>
-            <StreamStats
-              apr={100}
-              stakedBalance={stakingStore.totalStakedPosition}
-              voteBalance={stakingStore.voteBalance}
-            />
+            <StreamStats />
           </Grid>
         </Grid>
       </Grid>
@@ -43,6 +35,6 @@ const StakingView = observer(() => {
       </Grid>
     </Grid>
   );
-});
+};
 
 export default StakingView;

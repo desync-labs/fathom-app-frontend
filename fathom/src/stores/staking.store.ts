@@ -1,16 +1,10 @@
 import { makeAutoObservable } from "mobx";
 import { RootStore } from ".";
 import IStakingService from "services/interfaces/IStakingService";
-import ILockPosition from "stores/interfaces/ILockPosition";
 
 export default class StakingStore {
-  lockPositions: ILockPosition[] = [];
   service: IStakingService;
   rootStore: RootStore;
-  totalStakedPosition: number = 0;
-  apr: number = 0;
-  walletBalance: number = 0;
-  voteBalance: number = 0;
 
   constructor(rootStore: RootStore, service: IStakingService) {
     makeAutoObservable(this);
@@ -22,162 +16,108 @@ export default class StakingStore {
     account: string,
     stakePosition: number,
     unlockPeriod: number
-  ) {
+  ): Promise<any> {
     try {
-      await this.service.createLock(
-        account,
-        stakePosition,
-        unlockPeriod,
-        this.rootStore.transactionStore
-      );
+      return await this.service
+        .createLock(
+          account,
+          stakePosition,
+          unlockPeriod,
+          this.rootStore.transactionStore
+        )
+        .then((receipt) => {
+          this.rootStore.alertStore.setShowSuccessAlert(
+            true,
+            "Lock position created successfully!"
+          );
+          return receipt;
+        });
     } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(true, e.message);
       throw e;
     }
   }
 
-  async handleEarlyWithdrawal(account: string, lockId: number) {
+  async handleEarlyWithdrawal(account: string, lockId: number): Promise<any> {
     try {
-      await this.service.handleEarlyWithdrawal(
-        account,
-        lockId,
-        this.rootStore.transactionStore
-      );
-    } catch (e: any) {
-      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
-    }
-  }
-
-  async handleUnlock(account: string, lockId: number) {
-    try {
-      if (!account) return;
-
-      await this.service.handleUnlock(
-        account,
-        lockId,
-        this.rootStore.transactionStore
-      );
-    } catch (e: any) {
-      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
-    }
-  }
-
-  async handleClaimRewards(account: string) {
-    try {
-      await this.service.handleClaimRewards(
-        account,
-        1,
-        this.rootStore.transactionStore
-      );
+      await this.service
+        .handleEarlyWithdrawal(account, lockId, this.rootStore.transactionStore)
+        .then((receipt) => {
+          this.rootStore.alertStore.setShowSuccessAlert(
+            true,
+            "Early withdrawal created successfully!"
+          );
+          return receipt;
+        });
     } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(true, e.message);
       throw e;
     }
   }
 
-  async handleClaimRewardsSingle(account: string, lockId: number) {
+  async handleUnlock(account: string, lockId: number): Promise<any> {
     try {
-      if (!account) return;
-      await this.service.handleClaimRewardsSingle(
+      return await this.service
+        .handleUnlock(account, lockId, this.rootStore.transactionStore)
+        .then((receipt) => {
+          this.rootStore.alertStore.setShowSuccessAlert(
+            true,
+            "Position unlock was successful!"
+          );
+          return receipt;
+        });
+    } catch (e: any) {
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+      throw e;
+    }
+  }
+
+  async handleClaimRewards(account: string): Promise<any> {
+    try {
+      return await this.service
+        .handleClaimRewards(account, 1, this.rootStore.transactionStore)
+        .then((receipt) => {
+          this.rootStore.alertStore.setShowSuccessAlert(
+            true,
+            "Claim Rewards was successful!"
+          );
+          return receipt;
+        });
+    } catch (e: any) {
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+      throw e;
+    }
+  }
+
+  async handleWithdrawAll(account: string): Promise<any> {
+    try {
+      return await this.service
+        .handleWithdrawAll(account, 1, this.rootStore.transactionStore)
+        .then((receipt) => {
+          this.rootStore.alertStore.setShowSuccessAlert(
+            true,
+            "Withdraw all was successful!"
+          );
+
+          return receipt;
+        });
+    } catch (e: any) {
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+      throw e;
+    }
+  }
+
+  async getStreamClaimableAmountPerLock(account: string, lockId: number) {
+    try {
+      return await this.service.getStreamClaimableAmountPerLock(
+        0,
         account,
-        1,
-        lockId,
-        this.rootStore.transactionStore
+        lockId
       );
     } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+      throw e;
     }
-  }
-
-  async handleWithdrawAll(account: string) {
-    try {
-      if (!account) return;
-      await this.service.handleWithdrawAll(
-        account,
-        1,
-        this.rootStore.transactionStore
-      );
-    } catch (e: any) {
-      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
-    }
-  }
-
-  setLocks(_lockPositions: ILockPosition[]) {
-    this.lockPositions = _lockPositions;
-  }
-
-  setTotalStakedPosition(_lockPositions: ILockPosition[]) {
-    let totalStakedPosition = 0;
-    for (let i = 0; i < _lockPositions.length; i++) {
-      totalStakedPosition += _lockPositions[i].MAINTokenBalance;
-    }
-
-    this.totalStakedPosition = totalStakedPosition;
-  }
-
-  async fetchAPR() {
-    this.apr = await this.service.getAPR();
-  }
-
-  setWalletBalance(_walletBalance: number) {
-    this.walletBalance = _walletBalance;
-  }
-
-  setVOTEBalance(_voteBalance: number) {
-    this.voteBalance = _voteBalance;
-  }
-
-  async fetchVOTEBalance(account: string) {
-    try {
-      const voteBalance = await this.service.getVOTEBalance(account);
-      this.setVOTEBalance(voteBalance);
-    } catch (e: any) {
-      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
-    }
-  }
-
-  async fetchLocks(account: string) {
-    try {
-      const locks = await this.service.getLockPositions(account);
-      this.setLocks(locks);
-      this.setTotalStakedPosition(locks);
-    } catch (e: any) {
-      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
-    }
-  }
-
-  async fetchLatestLock(account: string) {
-    const lockId = await this.service.getLockPositionsLength(account);
-
-    if (lockId > 0) {
-      const lockPosition = await this.service.getLockInfo(lockId, account);
-      if (lockPosition.MAINTokenBalance > 0) {
-        this.lockPositions.push(lockPosition);
-        this.setTotalStakedPosition(this.lockPositions);
-      }
-    }
-  }
-
-  fetchLockPositionAfterUnlock(lockId: number) {
-    this.lockPositions = this.lockPositions.filter(
-      (lockPosition) => lockPosition.lockId !== lockId
-    );
-  }
-
-  fetchLocksAfterClaimAllRewards() {
-    this.lockPositions = this.lockPositions.map((lockPosition) => {
-      lockPosition.RewardsAvailable = "0";
-      return lockPosition;
-    });
-  }
-
-  fetchLockPositionAfterClaimReward(lockId: number) {
-    this.lockPositions = this.lockPositions.map((lockPosition) => {
-      if (lockPosition.lockId === lockId) {
-        lockPosition.RewardsAvailable = "0";
-      }
-      return lockPosition;
-    });
   }
 
   async approvalStatusStakingFTHM(
@@ -193,21 +133,29 @@ export default class StakingStore {
       );
     } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+      throw e;
     }
   }
 
   async approveFTHM(address: string, fthmTokenAddress: string) {
     try {
-      await this.service
-        .approveStakingFTHM(address, fthmTokenAddress, this.rootStore.transactionStore)
-        .then(() => {
+      return await this.service
+        .approveStakingFTHM(
+          address,
+          fthmTokenAddress,
+          this.rootStore.transactionStore
+        )
+        .then((receipt) => {
           this.rootStore.alertStore.setShowSuccessAlert(
             true,
             "Token approval was successful"
           );
+
+          return receipt;
         });
     } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+      throw e;
     }
   }
 }

@@ -13,7 +13,7 @@ const useUnstake = (lockPosition: ILockPosition | null) => {
   }, [action, lockPosition]);
 
   const totalBalance = useMemo(
-    () => Number(lockPosition?.MAINTokenBalance),
+    () => Number(lockPosition?.amount),
     [lockPosition]
   );
 

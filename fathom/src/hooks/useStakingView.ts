@@ -1,8 +1,18 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  ChangeEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState
+} from "react";
 import useMetaMask from "context/metamask";
 import { LogLevel, useLogger } from "helpers/Logger";
 import { useStores } from "stores";
 import ILockPosition from "stores/interfaces/ILockPosition";
+import { useLazyQuery, useQuery } from "@apollo/client";
+import { STAKING_PROTOCOL_STATS, STAKING_STAKER } from "../apollo/queries";
+import { Constants } from "helpers/Constants";
+import useSyncContext from "../context/sync";
 
 export type ActionType = { type: string; id: number | null };
 
@@ -18,7 +28,6 @@ export enum DialogActions {
 }
 
 const useStakingView = () => {
-  const [isLoading, setIsLoading] = useState(false);
   const [action, setAction] = useState<ActionType>();
   const { account, chainId } = useMetaMask()!;
   const logger = useLogger();
@@ -26,10 +35,81 @@ const useStakingView = () => {
 
   const [unstake, setUnstake] = useState<null | ILockPosition>(null);
   const [earlyUnstake, setEarlyUnstake] = useState<null | ILockPosition>(null);
+  const [lockPositions, setLockPositions] = useState([]);
+
+  const [currentPage, setCurrentPage] = useState<number>(1);
+
+  const { setLastTransactionBlock, syncGovernance, prevSyncGovernance } =
+    useSyncContext();
 
   const [dialogAction, setDialogAction] = useState<DialogActions>(
     DialogActions.NONE
   );
+
+  const {
+    data: protocolStatsInfo,
+    loading: protocolStatsLoading,
+    refetch: refetchProtocolStats,
+  } = useQuery(STAKING_PROTOCOL_STATS, {
+    context: { clientName: "governance" },
+  });
+
+  const [
+    fetchStakers,
+    { data: stakersData, loading: stakersLoading, refetch: refetchStakers, fetchMore: fetchMoreStakers },
+  ] = useLazyQuery(STAKING_STAKER, {
+    context: { clientName: "governance" },
+  });
+
+  useEffect(() => {
+    if (syncGovernance && !prevSyncGovernance) {
+      refetchStakers({
+        variables: {
+          skip: 0,
+          first: Constants.COUNT_PER_PAGE,
+          address: account,
+        },
+      });
+
+      refetchProtocolStats();
+    }
+  }, [
+    syncGovernance,
+    account,
+    prevSyncGovernance,
+    refetchStakers,
+    refetchProtocolStats,
+  ]);
+
+  useEffect(() => {
+    if (stakersData?.stakers?.length) {
+      const promises: Promise<number>[] = [];
+      stakersData?.stakers[0].lockPositions.forEach(
+        (lockPosition: ILockPosition) => {
+          promises.push(
+            stakingStore.getStreamClaimableAmountPerLock(
+              account,
+              lockPosition.lockId
+            )
+          );
+        }
+      );
+
+      Promise.all(promises).then((result) => {
+        const newLockPositions = stakersData?.stakers[0].lockPositions.map(
+          (lockPosition: ILockPosition, index: number) => {
+            const newLockPosition: ILockPosition = { ...lockPosition };
+            newLockPosition.rewardsAvailable = Number(result[index]);
+            return newLockPosition;
+          }
+        );
+
+        setLockPositions(newLockPositions);
+      });
+    } else {
+      setLockPositions([]);
+    }
+  }, [stakingStore, stakersData, account, setLockPositions]);
 
   const processFlow = useCallback(
     (action: string, position?: ILockPosition) => {
@@ -37,12 +117,8 @@ const useStakingView = () => {
       action === "unstake" && setUnstake(position!);
 
       ["early", "unstake"].includes(action) &&
-        !!position!.RewardsAvailable &&
+        !!position!.rewardsAvailable &&
         setDialogAction(DialogActions.UNCLAIMED);
-
-      console.log(action);
-      console.log(unstake);
-      console.log(earlyUnstake);
 
       if (action === "skip" || action === "continue") {
         !!unstake && setDialogAction(DialogActions.UNSTAKE);
@@ -62,66 +138,43 @@ const useStakingView = () => {
     [unstake, earlyUnstake, setEarlyUnstake, setUnstake, setDialogAction]
   );
 
-  const fetchAll = useCallback(
-    async (account: string) => {
-      setIsLoading(true);
-      Promise.all([
-        stakingStore.fetchLocks(account),
-        stakingStore.fetchVOTEBalance(account),
-        stakingStore.fetchAPR(),
-      ]).then(() => {
-        setIsLoading(false);
-      });
-    },
-    [stakingStore, setIsLoading]
-  );
-
-  const fetchOverallValues = useCallback(
-    async (account: string) => {
-      setIsLoading(true);
-      await Promise.all([
-        stakingStore.fetchVOTEBalance(account),
-        stakingStore.fetchAPR(),
-      ]).then(() => {
-        setIsLoading(false);
-      });
-    },
-    [stakingStore, setIsLoading]
-  );
-
   useEffect(() => {
-    if (chainId) {
-      fetchAll(account);
-    } else {
-      stakingStore.setLocks([]);
+    if (account) {
+      fetchStakers({
+        variables: {
+          skip: 0,
+          first: Constants.COUNT_PER_PAGE,
+          address: account,
+        },
+      });
     }
-  }, [account, logger, stakingStore, chainId, fetchAll]);
+  }, [account, fetchStakers]);
 
   const claimRewards = useCallback(
     async (callback: Function) => {
       setAction({ type: "claim", id: null });
       try {
-        await stakingStore.handleClaimRewards(account);
-        stakingStore.fetchLocksAfterClaimAllRewards();
+        const receipt = await stakingStore.handleClaimRewards(account);
+        setLastTransactionBlock(receipt.blockNumber);
         callback();
       } catch (e) {
         logger.log(LogLevel.error, "Claim error");
       }
       setAction(undefined);
     },
-    [stakingStore, account, setAction, logger]
+    [stakingStore, account, logger, setAction, setLastTransactionBlock]
   );
 
   const withdrawAll = useCallback(async () => {
     setAction({ type: "withdrawAll", id: null });
     try {
-      await stakingStore.handleWithdrawAll(account);
-      fetchOverallValues(account);
+      const receipt = await stakingStore.handleWithdrawAll(account);
+      setLastTransactionBlock(receipt.blockNumber);
     } catch (e) {
       logger.log(LogLevel.error, "Withdraw error");
     }
     setAction(undefined);
-  }, [stakingStore, account, fetchOverallValues, setAction, logger]);
+  }, [stakingStore, account, logger, setAction, setLastTransactionBlock]);
 
   const handleEarlyUnstake = useCallback(
     async (lockId: number) => {
@@ -130,14 +183,17 @@ const useStakingView = () => {
         id: lockId,
       });
       try {
-        await stakingStore.handleEarlyWithdrawal(account, lockId);
-        stakingStore.fetchLockPositionAfterUnlock(lockId);
+        const receipt = await stakingStore.handleEarlyWithdrawal(
+          account,
+          lockId
+        );
+        setLastTransactionBlock(receipt.blockNumber);
       } catch (e) {
         logger.log(LogLevel.error, "Handle early withdrawal");
       }
       setAction(undefined);
     },
-    [stakingStore, account, setAction, logger]
+    [stakingStore, account, logger, setAction, setLastTransactionBlock]
   );
 
   const handleUnlock = useCallback(
@@ -147,17 +203,13 @@ const useStakingView = () => {
         id: lockId,
       });
       try {
-        await stakingStore.handleUnlock(account, lockId);
-        stakingStore.fetchLockPositionAfterUnlock(lockId);
-      } catch (e: any) {
-        alertStore.setShowErrorAlert(true, e.message);
-        throw e;
-      }
+        const receipt = await stakingStore.handleUnlock(account, lockId);
+        setLastTransactionBlock(receipt.blockNumber);
+      } catch (e: any) {}
 
       setAction(undefined);
-      fetchOverallValues(account);
     },
-    [stakingStore, account, fetchOverallValues, setAction, alertStore]
+    [stakingStore, account, alertStore, setAction, setLastTransactionBlock]
   );
 
   const isUnlockable = useCallback((remainingTime: number) => {
@@ -165,12 +217,10 @@ const useStakingView = () => {
   }, []);
 
   const totalRewards = useMemo(() => {
-    return stakingStore.lockPositions.reduce(
-      (previousValue, lockPositions) =>
-        previousValue + Number(lockPositions.RewardsAvailable),
-      0
-    );
-  }, [stakingStore.lockPositions]);
+    return stakersData?.stakers?.length
+      ? Number(stakersData?.stakers[0].claimedAmount)
+      : 0;
+  }, [stakersData]);
 
   const onClose = useCallback(() => {
     setEarlyUnstake(null);
@@ -178,22 +228,35 @@ const useStakingView = () => {
     setDialogAction(DialogActions.NONE);
   }, [setEarlyUnstake, setUnstake, setDialogAction]);
 
+  const handlePageChange = useCallback(
+    (event: ChangeEvent<unknown>, page: number) => {
+      fetchMoreStakers({
+        variables: {
+          address: account,
+          first: Constants.COUNT_PER_PAGE,
+          skip: (page - 1) * Constants.COUNT_PER_PAGE,
+        },
+      });
+      setCurrentPage(page);
+    },
+    [setCurrentPage, fetchMoreStakers, account]
+  );
+
   return {
-    stakingStore,
     account,
     chainId,
     action,
-    isLoading,
+    isLoading: stakersLoading,
     isUnlockable,
     withdrawAll,
     claimRewards,
-    fetchOverallValues,
 
     handleEarlyUnstake,
     handleUnlock,
 
     unstake,
     earlyUnstake,
+
     dialogAction,
     setDialogAction,
     totalRewards,
@@ -203,6 +266,20 @@ const useStakingView = () => {
 
     onClose,
     processFlow,
+
+    staker:
+      !stakersLoading && stakersData?.stakers?.length
+        ? stakersData.stakers[0]
+        : null,
+    lockPositions,
+    protocolStatsInfo:
+      !protocolStatsLoading && protocolStatsInfo.protocolStats.length
+        ? protocolStatsInfo.protocolStats[0]
+        : null,
+
+    itemCount: stakersData?.stakers?.length ? stakersData.stakers[0].lockPositionCount : 0,
+    currentPage,
+    handlePageChange
   } as const;
 };
 

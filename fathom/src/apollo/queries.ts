@@ -140,10 +140,8 @@ export const HEALTH = gql`
 `;
 
 export const STAKING_PROTOCOL_STATS = gql`
-  query ProtocolStats($id: ID!) {
-    protocolStat( 
-      id: $id
-    ) {
+  query ProtocolStats {
+    protocolStats {
       id
       totalStakeFTHM
       totalVotes
@@ -156,10 +154,10 @@ export const STAKING_PROTOCOL_STATS = gql`
 `;
 
 export const STAKING_STAKER = gql`
-  query Staker($id: ID!, $skip: Int, $first: Int) {
-    staker(
-      id: $id
-    ) {
+  query Stakers($address: Bytes, $skip: Int, $first: Int) {
+    stakers(where: {
+      address: $address
+    }) {
       id
       address
       totalStaked
@@ -172,7 +170,7 @@ export const STAKING_STAKER = gql`
         skip: $skip
         first: $first
         orderBy: lockId,
-        desc: desc
+        orderDirection: desc
       ) {
         id
         account
