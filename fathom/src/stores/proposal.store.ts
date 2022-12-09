@@ -9,7 +9,6 @@ export default class ProposalStore {
   fetchedTotalVotes: number = 0.000000001;
 
   weight: number = 0;
-  veBalance: number = 0;
   service: IProposalService;
   rootStore: RootStore;
 
@@ -102,10 +101,9 @@ export default class ProposalStore {
     }
   }
 
-  async getVeBalance(account: string) {
+  async getVBalance(account: string) {
     try {
-      const _veBalance = await this.service.getVeBalance(account);
-      this.setVeBalance(_veBalance);
+      return await this.service.getVeBalance(account);
     } catch (e: any) {
       this.showErrorMessage(e.message);
     }
@@ -154,9 +152,5 @@ export default class ProposalStore {
 
   setWeight(_weight: number) {
     this.weight = _weight;
-  }
-
-  setVeBalance(_veBalance: number) {
-    this.veBalance = _veBalance;
   }
 }

@@ -60,7 +60,7 @@ export default class PositionService implements IPositionService {
           encodedResult,
         ]);
 
-        await wallet.methods
+        const receipt = await wallet.methods
           .execute2(
             SmartContractFactory.FathomStablecoinProxyActions(this.chainId)
               .address,
@@ -78,7 +78,7 @@ export default class PositionService implements IPositionService {
             });
           });
 
-        resolve();
+        resolve(receipt);
       } catch (error) {
         reject(error);
       }
@@ -153,7 +153,7 @@ export default class PositionService implements IPositionService {
           encodedResult,
         ]);
 
-        await wallet.methods
+        const receipt = await wallet.methods
           .execute2(
             SmartContractFactory.FathomStablecoinProxyActions(this.chainId)
               .address,
@@ -171,7 +171,7 @@ export default class PositionService implements IPositionService {
             });
           });
 
-        resolve();
+        resolve(receipt);
       } catch (error) {
         reject(error);
       }
@@ -216,7 +216,7 @@ export default class PositionService implements IPositionService {
           encodedResult,
         ]);
 
-        await wallet.methods
+        const receipt = await wallet.methods
           .execute2(
             SmartContractFactory.FathomStablecoinProxyActions(this.chainId)
               .address,
@@ -234,7 +234,7 @@ export default class PositionService implements IPositionService {
             });
           });
 
-        resolve();
+        resolve(receipt);
       } catch (e) {
         reject(e);
       }
@@ -259,7 +259,7 @@ export default class PositionService implements IPositionService {
           this.chainId
         );
 
-        await BEP20.methods
+        const receipt = await BEP20.methods
           .approve(proxyWalletAddress, Constants.MAX_UINT256)
           .send({ from: address })
           .on("transactionHash", (hash: any) => {
@@ -272,6 +272,8 @@ export default class PositionService implements IPositionService {
               message: Strings.CheckOnBlockExplorer,
             });
           });
+
+        resolve(receipt)
       } catch (e) {
         reject(e);
       }

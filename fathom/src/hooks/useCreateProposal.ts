@@ -1,7 +1,11 @@
 import { useStores } from "stores";
 import useMetaMask from "context/metamask";
 import { useForm } from "react-hook-form";
-import { useCallback, useEffect } from "react";
+import {
+  useCallback,
+  useEffect,
+  useState
+} from "react";
 import { Constants } from "helpers/Constants";
 import { ProposeListViewProps } from "components/Governance/Propose";
 import { XDC_CHAIN_IDS } from "connectors/networks";
@@ -32,6 +36,7 @@ const useCreateProposal = (
 ) => {
   const { proposalStore } = useStores();
   const { account, chainId } = useMetaMask()!;
+  const [vBalance, setVBalance] = useState<null | number>();
 
   const { handleSubmit, watch, control, reset, getValues } = useForm({
     defaultValues,
@@ -42,10 +47,13 @@ const useCreateProposal = (
   const withAction = watch("withAction");
 
   useEffect(() => {
-    setTimeout(() => {
-      proposalStore.getVeBalance(account);
-    });
-  }, [account, proposalStore]);
+    if (account) {
+      proposalStore.getVBalance(account).then((balance) => {
+        console.log(balance);
+        setVBalance(balance)
+      });
+    }
+  }, [account, proposalStore, setVBalance]);
 
   useEffect(() => {
     let values = localStorage.getItem("createProposal");
@@ -155,7 +163,7 @@ const useCreateProposal = (
     account,
     chainId,
     onSubmit,
-    vBalance: proposalStore.veBalance,
+    vBalance,
     saveForLater,
     validateAddressesArray,
     formatNumber,

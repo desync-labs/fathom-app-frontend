@@ -121,3 +121,70 @@ export const GOVERNANCE_STATS = gql`
     }
   }
 `;
+
+export const HEALTH = gql`
+  query FathomHealth($name: String!) {
+    indexingStatusForCurrentVersion(subgraphName: $name) {
+      synced
+      health
+      chains {
+        chainHeadBlock {
+          number
+        }
+        latestBlock {
+          number
+        }
+      }
+    }
+  }
+`;
+
+export const STAKING_PROTOCOL_STATS = gql`
+  query ProtocolStats($id: ID!) {
+    protocolStat( 
+      id: $id
+    ) {
+      id
+      totalStakeFTHM
+      totalVotes
+      totalStakeEvents
+      totalUnstakeEvents
+      stakingAPR
+      oneDayRewards
+    }
+  }
+`;
+
+export const STAKING_STAKER = gql`
+  query Staker($id: ID!, $skip: Int, $first: Int) {
+    staker(
+      id: $id
+    ) {
+      id
+      address
+      totalStaked
+      accruedRewards
+      accruedVotes
+      claimedAmount
+      lockPositionIds
+      lockPositionCount
+      lockPositions(
+        skip: $skip
+        first: $first
+        orderBy: lockId,
+        desc: desc
+      ) {
+        id
+        account
+        streamShares
+        nVoteToken
+        amount
+        lockId      
+        end
+        blockNumber
+        blockTimestamp
+        transaction
+      }
+    }
+  }
+`

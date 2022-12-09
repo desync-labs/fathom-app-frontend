@@ -15,6 +15,7 @@ import Propose from "components/Governance/Propose";
 import ProposalFilters from "components/Governance/ProposalFilters";
 import { Constants } from "helpers/Constants";
 import { styled } from "@mui/material/styles";
+import { NoResults } from "../AppComponents/AppBox/AppBox";
 
 const PaginationWrapper = styled(Box)`
   display: flex;
@@ -89,7 +90,7 @@ const AllProposalsView = observer(() => {
                       Loading all proposals <CircularProgress size={20} />
                     </Typography>
                   </Grid>
-                ) : (
+                ) : fetchedProposals.length ? (
                   fetchedProposals.map((proposal: IProposal, index: number) => (
                     <ViewAllProposalItem
                       proposal={proposal}
@@ -97,10 +98,16 @@ const AllProposalsView = observer(() => {
                       index={index}
                     />
                   ))
+                ) : (
+                  <Grid item xs={12}>
+                    <NoResults>
+                      No opened any proposals
+                    </NoResults>
+                  </Grid>
                 ),
               [fetchedProposals, fetchProposalsPending]
             )}
-            {!fetchProposalsPending && (
+            {!fetchProposalsPending && fetchedProposals.length > 0 && (
               <Grid item xs={12}>
                 <PaginationWrapper>
                   <Pagination

@@ -5,6 +5,7 @@ import { ClosePositionProps } from "components/Positions/ClosePositionDialog";
 import { useQuery } from "@apollo/client";
 import { FXD_POOLS } from "apollo/queries";
 import ICollateralPool from "stores/interfaces/ICollateralPool";
+import useSyncContext from "../context/sync";
 
 export enum ClosingType {
   Full,
@@ -16,7 +17,6 @@ const useClosePosition = (
   onClose: ClosePositionProps["onClose"],
   closingType: ClosingType,
   setType: Dispatch<ClosingType>,
-  refetchData: () => void
 ) => {
   const { positionStore } = useStores();
   const { account } = useMetaMask()!;
@@ -25,6 +25,8 @@ const useClosePosition = (
     context: { clientName: "stable" },
     fetchPolicy: "cache-first",
   });
+
+  const { setLastTransactionBlock } = useSyncContext()
 
   const [collateral, setCollateral] = useState<number>(0);
   const [fathomToken, setFathomToken] = useState<number>(0);
@@ -76,15 +78,16 @@ const useClosePosition = (
   const closePosition = useCallback(async () => {
     setDisableClosePosition(true);
     try {
+      let receipt;
       if (closingType === ClosingType.Full) {
-        await positionStore.fullyClosePosition(
+        receipt = await positionStore.fullyClosePosition(
           position,
           pool,
           account,
           collateral
         );
       } else {
-        await positionStore.partiallyClosePosition(
+        receipt = await positionStore.partiallyClosePosition(
           position,
           pool,
           account,
@@ -92,8 +95,7 @@ const useClosePosition = (
           collateral
         );
       }
-
-      refetchData();
+      setLastTransactionBlock(receipt.blockNumber)
       onClose();
     } catch (e) {
       console.error(e);
@@ -109,7 +111,7 @@ const useClosePosition = (
     positionStore,
     onClose,
     setDisableClosePosition,
-    refetchData,
+    setLastTransactionBlock,
   ]);
 
   const handleFathomTokenTextFieldChange = useCallback(

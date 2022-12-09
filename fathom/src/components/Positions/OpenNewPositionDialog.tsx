@@ -8,7 +8,6 @@ import {
   Divider,
   ListItem,
   ListItemText,
-  Typography,
   Box,
 } from "@mui/material";
 import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
@@ -40,19 +39,12 @@ import useOpenPosition from "hooks/useOpenPosition";
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
 import { Controller } from "react-hook-form";
 
-export interface DialogTitleProps {
-  id: string;
-  children?: React.ReactNode;
-  onClose: () => void;
-}
-
 export type OpenPositionProps = {
   pool: ICollateralPool;
   onClose: () => void;
-  refetchData: () => void
 };
 
-const OpenNewPositionDialog: FC<OpenPositionProps> = ({ pool, onClose, refetchData }) => {
+const OpenNewPositionDialog: FC<OpenPositionProps> = ({ pool, onClose }) => {
   const {
     approveBtn,
     approve,
@@ -79,7 +71,7 @@ const OpenNewPositionDialog: FC<OpenPositionProps> = ({ pool, onClose, refetchDa
     handleSubmit,
 
     availableFathomInPool,
-  } = useOpenPosition(pool, onClose, refetchData);
+  } = useOpenPosition(pool, onClose);
 
   return (
     <AppDialog
@@ -140,7 +132,9 @@ const OpenNewPositionDialog: FC<OpenPositionProps> = ({ pool, onClose, refetchDa
                 alignItems="flex-start"
                 secondaryAction={`$${liquidationPrice.toFixed(2)}`}
               >
-                <ListItemText primary={`Liquidation Price of ${pool.poolName}`} />
+                <ListItemText
+                  primary={`Liquidation Price of ${pool.poolName}`}
+                />
               </ListItem>
               <Divider component="li" sx={{ margin: "20px 20px 20px 5px" }} />
               <ListItem alignItems="flex-start" secondaryAction={`1.73%`}>
@@ -149,7 +143,10 @@ const OpenNewPositionDialog: FC<OpenPositionProps> = ({ pool, onClose, refetchDa
               <ListItem alignItems="flex-start" secondaryAction={`0.22%`}>
                 <ListItemText primary={`Fathom Rewards APR`} />
               </ListItem>
-              <ListItem alignItems="flex-start" secondaryAction={`${pool.stabilityFeeRate}%`}>
+              <ListItem
+                alignItems="flex-start"
+                secondaryAction={`${pool.stabilityFeeRate}%`}
+              >
                 <ListItemText primary={`Stability Fee`} />
               </ListItem>
               <ListItem alignItems="flex-start" secondaryAction={`1.96%`}>
@@ -209,11 +206,12 @@ const OpenNewPositionDialog: FC<OpenPositionProps> = ({ pool, onClose, refetchDa
                             <InfoIcon
                               sx={{ float: "left", fontSize: "18px" }}
                             />
-                            <Typography
-                              sx={{ fontSize: "12px", paddingLeft: "22px" }}
+                            <Box
+                              component={"span"}
+                              sx={{ fontSize: "12px", paddingLeft: "6px" }}
                             >
                               You do not have enough {pool.poolName}
-                            </Typography>
+                            </Box>
                           </>
                         ) : (
                           "Enter the Collateral."
@@ -257,17 +255,25 @@ const OpenNewPositionDialog: FC<OpenPositionProps> = ({ pool, onClose, refetchDa
                         id="outlined-helperText"
                         helperText={
                           <>
-                            {error && error.type === "validate" && <>
-                              <InfoIcon
-                                sx={{ float: "left", fontSize: "18px", marginRight: '5px' }}
-                              />
-                              <Typography
-                                sx={{ fontSize: "12px", paddingLeft: "22px" }}
-                              >
-                                {error?.message}
-                              </Typography>
-                            </>}
-                            {(!error || error.type === 'required') && "Enter the desired FXD."}
+                            {error && error.type === "validate" && (
+                              <>
+                                <InfoIcon
+                                  sx={{
+                                    float: "left",
+                                    fontSize: "18px",
+                                    marginRight: "5px",
+                                  }}
+                                />
+                                <Box
+                                  sx={{ fontSize: "12px", paddingLeft: "22px" }}
+                                  component={"span"}
+                                >
+                                  {error?.message}
+                                </Box>
+                              </>
+                            )}
+                            {(!error || error.type === "required") &&
+                              "Enter the desired FXD."}
                           </>
                         }
                         value={value}
@@ -280,7 +286,7 @@ const OpenNewPositionDialog: FC<OpenPositionProps> = ({ pool, onClose, refetchDa
                         <MaxButton onClick={setSafeMax}>Safe Max</MaxButton>
                       ) : null}
                     </AppFormInputWrapper>
-                  )
+                  );
                 }}
               />
 

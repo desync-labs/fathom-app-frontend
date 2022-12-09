@@ -35,11 +35,7 @@ const CircleWrapper = styled(Box)`
   justify-content: center;
 `;
 
-type PoolsListViewProps = {
-  refetchData: () => void;
-};
-
-const PoolsListView: FC<PoolsListViewProps> = observer(({ refetchData }) => {
+const PoolsListView: FC = observer(() => {
   const { pools, selectedPool, onCloseNewPosition, setSelectedPool, loading } =
     usePoolsList();
 
@@ -90,11 +86,10 @@ const PoolsListView: FC<PoolsListViewProps> = observer(({ refetchData }) => {
             <OpenNewPositionDialog
               pool={selectedPool!}
               onClose={onCloseNewPosition}
-              refetchData={refetchData}
             />
           )
         );
-      }, [selectedPool, onCloseNewPosition, refetchData])}
+      }, [selectedPool, onCloseNewPosition])}
     </>
   );
 });

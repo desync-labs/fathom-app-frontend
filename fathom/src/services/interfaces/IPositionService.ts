@@ -1,13 +1,11 @@
 import ICollateralPool from "stores/interfaces/ICollateralPool";
-import IOpenPosition from "stores/interfaces/IOpenPosition";
 import ActiveWeb3Transactions from "stores/transaction.store";
-import BigNumber from "bignumber.js";
 
 export default interface IPositionService {
   openPosition(
     address: string,
     pool: ICollateralPool,
-    collatral: number,
+    collateral: number,
     fathomToken: number,
     transactionStore: ActiveWeb3Transactions
   ): Promise<void>;

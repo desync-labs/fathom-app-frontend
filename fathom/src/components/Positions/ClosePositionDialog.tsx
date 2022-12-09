@@ -45,7 +45,6 @@ export type ClosePositionProps = {
   onClose: () => void;
   closingType: ClosingType;
   setType: Dispatch<ClosingType>;
-  refetchData: () => void;
 };
 
 const ClosePositionDialog: FC<ClosePositionProps> = ({
@@ -53,7 +52,6 @@ const ClosePositionDialog: FC<ClosePositionProps> = ({
   onClose,
   closingType,
   setType,
-  refetchData,
 }) => {
   const {
     collateral,
@@ -68,7 +66,7 @@ const ClosePositionDialog: FC<ClosePositionProps> = ({
     handleFathomTokenTextFieldChange,
     handleTypeChange,
     setMax,
-  } = useClosePosition(position, onClose, closingType, setType, refetchData);
+  } = useClosePosition(position, onClose, closingType, setType);
 
   return (
     <AppDialog
