@@ -139,18 +139,8 @@ const CooldownCountDown = styled(Box)`
   padding: 10px 0;
 `;
 
-type StreamStatsPropsType = {
-  stakedBalance: number;
-  voteBalance: number;
-  apr: number;
-};
-
-const StreamStats: FC<StreamStatsPropsType> = ({
-  stakedBalance,
-  voteBalance,
-  apr,
-}) => {
-  const { processFlow } = useStakingContext();
+const StreamStats: FC = () => {
+  const { processFlow, protocolStatsInfo, staker } = useStakingContext();
 
   return (
     <Box sx={{ padding: "0 10px" }}>
@@ -163,12 +153,17 @@ const StreamStats: FC<StreamStatsPropsType> = ({
       <StatsBlocks>
         <StatsBlock>
           <img src={PercentSrc} alt={"percent"} />
+
           <Box>
             <StatsLabel>APR</StatsLabel>
-            <StatsValue>
-              <strong>{apr}%</strong>
-              <RiseLabel>3.45%</RiseLabel>
-            </StatsValue>
+            {protocolStatsInfo && (
+              <StatsValue>
+                <strong>
+                  {formatNumber(protocolStatsInfo.stakingAPR / 10 ** 18)}%
+                </strong>
+                <RiseLabel>3.45%</RiseLabel>
+              </StatsValue>
+            )}
           </Box>
         </StatsBlock>
 
@@ -176,23 +171,32 @@ const StreamStats: FC<StreamStatsPropsType> = ({
           <img src={LockedSrc} alt={"locked"} />
           <Box>
             <StatsLabel>Total Value Locked</StatsLabel>
-            <StatsValue>
-              <strong>{formatNumber(stakedBalance)}</strong>FTHM
-              <span>$99M</span>
-            </StatsValue>
+            {protocolStatsInfo && (
+              <StatsValue>
+                <strong>
+                  {formatNumber(protocolStatsInfo.totalStakeFTHM / 10 ** 18)}
+                </strong>
+                FTHM
+                <span>$99M</span>
+              </StatsValue>
+            )}
           </Box>
         </StatsBlock>
-
         <StatsBlock>
           <img src={RewardsSrc} alt={"rewards"} />
           <Box>
             <StatsLabel>
               Daily rewards <InfoIcon sx={{ fontSize: "18px" }} />
             </StatsLabel>
-            <StatsValue>
-              <strong>500K</strong>FTHM
-              <span>$670k</span>
-            </StatsValue>
+            {protocolStatsInfo && (
+              <StatsValue>
+                <strong>
+                  {formatNumber(protocolStatsInfo.oneDayRewards / 10 ** 18)}
+                </strong>
+                FTHM
+                <span>$670k</span>
+              </StatsValue>
+            )}
           </Box>
         </StatsBlock>
       </StatsBlocks>
@@ -202,10 +206,14 @@ const StreamStats: FC<StreamStatsPropsType> = ({
       <MyStatsBlocks>
         <MyStatsBlock>
           <StatsLabel>Staked Balance</StatsLabel>
-          <MyStatsValue>
-            <strong>400 FTHM</strong>
-            <span>$500.00</span>
-          </MyStatsValue>
+          {staker && (
+            <MyStatsValue>
+              <strong>
+                {formatNumber(staker.totalStaked / 10 ** 18)} FTHM
+              </strong>
+              <span>$500.00</span>
+            </MyStatsValue>
+          )}
         </MyStatsBlock>
 
         <MyStatsBlock>
@@ -214,10 +222,14 @@ const StreamStats: FC<StreamStatsPropsType> = ({
               <StatsLabel>
                 Claimable rewards <InfoIcon sx={{ fontSize: "18px" }} />
               </StatsLabel>
-              <MyStatsValue className={"blue"}>
-                <strong>100 FTHM</strong>
-                <span>$153.00</span>
-              </MyStatsValue>
+              {staker && (
+                <MyStatsValue className={"blue"}>
+                  <strong>
+                    {formatNumber(staker.claimedAmount / 10 ** 18)}FTHM
+                  </strong>
+                  <span>$153.00</span>
+                </MyStatsValue>
+              )}
             </Grid>
             <ButtonGrid item xs={6}>
               <StatsButton onClick={() => processFlow("claim")}>
@@ -231,9 +243,13 @@ const StreamStats: FC<StreamStatsPropsType> = ({
           <StatsLabel>
             Voting power <InfoIcon sx={{ fontSize: "18px" }} />
           </StatsLabel>
-          <MyStatsValue>
-            <strong>1,500 vFTHM</strong>
-          </MyStatsValue>
+          {staker && (
+            <MyStatsValue>
+              <strong>
+                {formatNumber(staker.accruedVotes / 10 ** 18)} vFTHM
+              </strong>
+            </MyStatsValue>
+          )}
           <span>(1 staked FTHM = 1 vFTHM)</span>
         </MyStatsBlock>
 
@@ -256,7 +272,7 @@ const StreamStats: FC<StreamStatsPropsType> = ({
                 <strong>400 FTHM</strong>
               </MyStatsValue>
             </Grid>
-            <ButtonGrid item xs={6} onClick={() => processFlow('withdraw')}>
+            <ButtonGrid item xs={6} onClick={() => processFlow("withdraw")}>
               <StatsButton>Withdraw</StatsButton>
             </ButtonGrid>
           </Grid>

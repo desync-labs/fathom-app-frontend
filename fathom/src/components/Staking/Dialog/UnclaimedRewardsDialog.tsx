@@ -113,7 +113,7 @@ const UnclaimedRewardsDialog: FC<ClaimRewardsDialogProps> = ({
           <img src={getTokenLogoURL(token)} alt={"token-logo"} width={58} />
           <Box sx={{ fontSize: '18px' }}>You’re having unclaimed rewards</Box>
           <Box className={'amount'}>
-            <Box>{formatNumber(Number(position.RewardsAvailable))}</Box>
+            <Box>{formatNumber(Number(position.rewardsAvailable))}</Box>
             <span>{token}</span>
           </Box>
         </DialogContentWrapper>

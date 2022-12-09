@@ -2,11 +2,11 @@ import {
   ApolloClient,
   ApolloLink,
   HttpLink,
-  InMemoryCache
+  InMemoryCache,
 } from "@apollo/client";
 
 /***
- * For positions Query we have pagination, So we need to return incoming items
+ * For Query we have pagination, So we need to return incoming items
  */
 const cache = new InMemoryCache({
   typePolicies: {
@@ -14,32 +14,44 @@ const cache = new InMemoryCache({
       fields: {
         positions: {
           keyArgs: false,
-          merge (existing = [], incoming, other) {
+          merge(existing = [], incoming, other) {
             return incoming;
           },
         },
         proposals: {
           keyArgs: false,
-          merge (existing = [], incoming) {
+          merge(existing = [], incoming) {
             return incoming;
           },
-        }
-      }
-    }
-  }
-})
+        },
+      },
+    },
+    Staker: {
+      fields: {
+        lockPositions: {
+          keyArgs: false,
+          merge(existing = [], incoming) {
+            console.log(existing)
+            console.log(incoming)
+            return incoming;
+          },
+        },
+      },
+    },
+  },
+});
 
 const stableCoinLink = new HttpLink({
-  uri: "http://167.71.216.61:8000/subgraphs/name/fathomapp-subgraph",
-})
+  uri: "https://graph.composer.live/subgraphs/name/fathomapp-subgraph",
+});
 
 const governanceLink = new HttpLink({
-  uri: "http://167.71.216.61:8000/subgraphs/name/dao-subgraph",
-})
+  uri: "https://graph.composer.live/subgraphs/name/dao-subgraph",
+});
 
 const defaultLink = new HttpLink({
-  uri: "http://167.71.216.61:8030/graphql",
-})
+  uri: "https://graph.composer.live/graphql",
+});
 
 export const client = new ApolloClient({
   link: ApolloLink.split(
@@ -52,4 +64,4 @@ export const client = new ApolloClient({
     )
   ),
   cache,
-})
+});

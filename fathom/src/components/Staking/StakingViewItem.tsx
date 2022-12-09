@@ -28,7 +28,7 @@ const HeaderWrapper = styled(Box)`
   align-items: start;
   justify-content: start;
   gap: 15px;
-`
+`;
 
 const RewardsUnStakeWrapper = styled(Box)`
   margin-top: 20px;
@@ -140,7 +140,7 @@ const ButtonGrid = styled(Grid)`
   justify-content: end;
 `;
 
-const InfoWrapper = styled(Box)``
+const InfoWrapper = styled(Box)``;
 
 type StakingViewItemPropsType = {
   index: number;
@@ -154,14 +154,14 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
   index,
 }) => {
   const [timer, setTimer] = useState();
-  const [seconds, setSeconds] = useState(lockPosition.EndTime);
+  const [seconds, setSeconds] = useState(lockPosition.end - Date.now());
 
   const { processFlow } = useStakingContext();
 
   const { isUnlockable } = useStakingContext();
 
   useEffect(() => {
-    if (lockPosition.EndTime <= 0) {
+    if (lockPosition.end - Date.now() <= 0) {
       return setSeconds(0);
     }
 
@@ -182,21 +182,21 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
       <HeaderWrapper>
         <NumberCell>
           <img src={getTokenLogoURL(token)} alt={token} width={28} />
-          <Index>{index + 1}</Index>
+          <Index>{lockPosition.lockId}</Index>
         </NumberCell>
         <InfoWrapper>
           <Grid container spacing={2}>
             <Grid item xs={8}>
               <Label>Locked Amount</Label>
               <Value>
-                {formatNumber(lockPosition.MAINTokenBalance)} {token}
+                {formatNumber(lockPosition.amount / 10 ** 18)} {token}
               </Value>
             </Grid>
             <Grid item xs={4}>
               <Label>Voting Power</Label>
               <Value>
-                {lockPosition.VOTETokenBalance
-                  ? `${formatNumber(lockPosition.VOTETokenBalance)} vFTHM`
+                {lockPosition.nVoteToken
+                  ? `${formatNumber(lockPosition.nVoteToken / 10 ** 18)} vFTHM`
                   : "None"}
               </Value>
             </Grid>
@@ -214,8 +214,7 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
             <Grid item xs={4}>
               <Label>Rewards Accrued</Label>
               <Value className={"green"}>
-                {formatNumber(Number(lockPosition.RewardsAvailable) / 10 ** 27!)}{" "}
-                {token}
+                {formatNumber(lockPosition.rewardsAvailable / 10 ** 18)} {token}
               </Value>
             </Grid>
           </Grid>
@@ -230,17 +229,17 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
             <Grid container>
               <Grid item xs={12}>
                 <TotalLocked>
-                  Locked: {formatNumber(lockPosition.MAINTokenBalance)} {token}
+                  Locked: {formatNumber(lockPosition.amount / 10 ** 18)} {token}
                 </TotalLocked>
                 <TotalLocked>
                   Accrued Rewards:{" "}
-                  {formatNumber(Number(lockPosition.RewardsAvailable))} {token}
+                  {formatNumber(lockPosition.rewardsAvailable / 10 ** 18)}{" "}
+                  {token}
                 </TotalLocked>
                 <Penalty className={isUnlockable(seconds) ? "" : "penalty"}>
                   {isUnlockable(seconds)
                     ? "Penalty Fee: No"
-                    : "Penalty Fee: Yes (0.1%)"
-                  }
+                    : "Penalty Fee: Yes (0.1%)"}
                 </Penalty>
               </Grid>
 
@@ -252,12 +251,14 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
               </Grid>
               <ButtonGrid item xs={6}>
                 {isUnlockable(seconds) ? (
-                  <ButtonSecondary onClick={() => processFlow('unstake', lockPosition)}>
+                  <ButtonSecondary
+                    onClick={() => processFlow("unstake", lockPosition)}
+                  >
                     Unstake
                   </ButtonSecondary>
                 ) : (
                   <ButtonSecondary
-                    onClick={() => processFlow('early', lockPosition)}
+                    onClick={() => processFlow("early", lockPosition)}
                   >
                     Early Unstake
                   </ButtonSecondary>

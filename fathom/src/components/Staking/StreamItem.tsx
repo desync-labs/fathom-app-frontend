@@ -1,33 +1,47 @@
 import React, { FC, memo, useMemo } from "react";
 import ILockPosition from "stores/interfaces/ILockPosition";
 import StakingViewItem from "components/Staking/StakingViewItem";
-import { useStores } from "stores";
 import ClaimRewardsDialog from "components/Staking/Dialog/ClaimRewardsDialog";
 import { DialogActions } from "hooks/useStakingView";
 import UnstakeDialog from "components/Staking/Dialog/UnstakeDialog";
 import EarlyUnstakeDialog from "components/Staking/Dialog/EarlyUnstakeDialog";
 import { NoResults } from "components/AppComponents/AppBox/AppBox";
-import { Grid } from "@mui/material";
+import {
+  Box,
+  Grid,
+  Pagination
+} from "@mui/material";
 import UnclaimedRewardsDialog from "components/Staking/Dialog/UnclaimedRewardsDialog";
 import useStakingContext from "context/staking";
 import UnstakeCoolDownDialog from "./Dialog/UnstakeCoolDownDialog";
 import ClaimRewardsCoolDownDialog from "components/Staking/Dialog/ClaimRewardsCoolDownDialog";
-import WithdrawDialog from "./Dialog/WithdrawDialog";
+import WithdrawDialog from "components/Staking/Dialog/WithdrawDialog";
+import { Constants } from "helpers/Constants";
+import { styled } from "@mui/material/styles";
+
+const PaginationWrapper = styled(Box)`
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+`;
 
 type StreamItemProps = {
   token: string;
 };
 
 const StreamItem: FC<StreamItemProps> = ({ token }) => {
-  const { stakingStore } = useStores();
-
   const {
+    lockPositions,
     totalRewards,
     dialogAction,
     unstake,
     earlyUnstake,
     onClose,
     processFlow,
+
+    itemCount,
+    currentPage,
+    handlePageChange
   } = useStakingContext();
 
   return (
@@ -35,11 +49,11 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
       {useMemo(
         () => (
           <>
-            {stakingStore.lockPositions.length === 0 ? (
+            {lockPositions.length === 0 ? (
               <NoResults variant="h6">You have no open positions!</NoResults>
             ) : (
               <Grid container sx={{ gap: "12px" }}>
-                {stakingStore.lockPositions.map(
+                {lockPositions.map(
                   (lockPosition: ILockPosition, index: number) => (
                     <StakingViewItem
                       index={index}
@@ -51,9 +65,16 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
                 )}
               </Grid>
             )}
+            <PaginationWrapper>
+              <Pagination
+                count={Math.ceil(itemCount / Constants.COUNT_PER_PAGE)}
+                page={currentPage}
+                onChange={handlePageChange}
+              />
+            </PaginationWrapper>
           </>
         ),
-        [stakingStore.lockPositions, token]
+        [token, lockPositions, currentPage, itemCount, handlePageChange]
       )}
 
       {useMemo(() => {

@@ -4,14 +4,8 @@ import {
   DialogContentWrapper,
 } from "components/AppComponents/AppDialog/AppDialog";
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
-import {
-  Box,
-  DialogContent,
-  Typography,
-} from "@mui/material";
-import {
-  CancelButton,
-} from "components/AppComponents/AppButton/AppButton";
+import { Box, DialogContent, Typography } from "@mui/material";
+import { CancelButton } from "components/AppComponents/AppButton/AppButton";
 import { styled } from "@mui/material/styles";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatNumber } from "utils/format";
@@ -82,14 +76,15 @@ const UnstakeCoolDownDialog: FC<UnstakeCoolDownDialogProps> = ({
 
       <DialogContent>
         <Description>
-          You successfully requested to unstake. Now it's going to a “Cooldown" period for 2 days.
-          After this period, you'll be able to Withdraw it at My Stats &gt; Ready-to-Withdraw. Learn more
+          You successfully requested to unstake. Now it's going to a “Cooldown"
+          period for 2 days. After this period, you'll be able to Withdraw it at
+          My Stats &gt; Ready-to-Withdraw. Learn more
         </Description>
         <DialogContentWrapper>
           <img src={getTokenLogoURL(token)} alt={"token-logo"} width={58} />
           <Box sx={{ fontSize: "18px" }}>Cooling down ...</Box>
           <Box className={"amount"}>
-            <Box>{formatNumber(position.MAINTokenBalance)}</Box>
+            <Box>{formatNumber(Number(position.amount) / 10 ** 18)}</Box>
             <span>{token}</span>
           </Box>
         </DialogContentWrapper>

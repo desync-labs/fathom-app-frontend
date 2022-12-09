@@ -4,15 +4,13 @@ import useMetaMask from "context/metamask";
 import { useStores } from "stores";
 
 import debounce from "lodash.debounce";
-import { StakingLockFormPropsType } from "components/Staking/StakingLockForm";
 import { Web3Utils } from "helpers/Web3Utils";
 import { useQuery } from "@apollo/client";
 import { FXD_POOLS } from "apollo/queries";
 import ICollateralPool from "stores/interfaces/ICollateralPool";
+import useSyncContext from "../context/sync";
 
-const useStakingLockForm = (
-  fetchOverallValues: StakingLockFormPropsType["fetchOverallValues"]
-) => {
+const useStakingLockForm = () => {
   const [balanceError, setBalanceError] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -36,6 +34,8 @@ const useStakingLockForm = (
   });
   const { account, chainId } = useMetaMask()!;
   const { stakingStore, positionStore } = useStores();
+
+  const { setLastTransactionBlock } = useSyncContext();
 
   const lockDays = watch("lockDays");
   const stakePosition = watch("stakePosition");
@@ -123,14 +123,17 @@ const useStakingLockForm = (
       setIsLoading(true);
 
       try {
-        await stakingStore.createLock(account, stakePosition, lockDays);
-        await stakingStore.fetchLatestLock(account);
+        const receipt = await stakingStore.createLock(
+          account,
+          stakePosition,
+          lockDays
+        );
+        setLastTransactionBlock(receipt.blockNumber);
         reset();
-        fetchOverallValues(account);
       } catch (e) {}
       setIsLoading(false);
     },
-    [stakingStore, account, fetchOverallValues, reset, setIsLoading]
+    [stakingStore, account, reset, setIsLoading, setLastTransactionBlock]
   );
 
   const approveFTHM = useCallback(async () => {

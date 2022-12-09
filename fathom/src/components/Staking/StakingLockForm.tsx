@@ -20,10 +20,6 @@ import { styled } from "@mui/material/styles";
 import Period from "components/Staking/Components/Period";
 import { formatNumber } from "utils/format";
 
-export type StakingLockFormPropsType = {
-  fetchOverallValues: (account: string) => Promise<void>;
-};
-
 const StakingLockPaper = styled(AppPaper)`
   display: flex;
   flex-direction: column;
@@ -86,9 +82,7 @@ const StakingLockFormTitle = styled("h2")`
   margin: 0;
 `;
 
-const StakingLockForm: FC<StakingLockFormPropsType> = ({
-  fetchOverallValues,
-}) => {
+const StakingLockForm: FC = () => {
   const {
     balanceError,
     lockDays,
@@ -105,7 +99,7 @@ const StakingLockForm: FC<StakingLockFormPropsType> = ({
     fthmBalance,
     fxdBalance,
     xdcBalance,
-  } = useStakingLockForm(fetchOverallValues);
+  } = useStakingLockForm();
 
   return (
     <StakingLockPaper>
