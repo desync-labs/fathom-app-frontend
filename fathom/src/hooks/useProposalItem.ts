@@ -7,6 +7,7 @@ import IProposal from "stores/interfaces/IProposal";
 import { useQuery } from "@apollo/client";
 import { GOVERNANCE_PROPOSAL_ITEM } from "apollo/queries";
 import { Web3Utils } from "helpers/Web3Utils";
+import useSyncContext from "../context/sync";
 
 const useProposalItem = () => {
   const { account, chainId } = useMetaMask()!;
@@ -25,12 +26,20 @@ const useProposalItem = () => {
   const [votingStartsTime, setVotingStartsTime] = useState<string | null>(null);
   const [votingEndTime, setVotingEndTime] = useState<string | null>(null);
 
+  const { syncDao, prevSyncDao, setLastTransactionBlock } = useSyncContext()
+
   const { data, loading, refetch } = useQuery(GOVERNANCE_PROPOSAL_ITEM, {
     variables: {
       id: _proposalId,
     },
     context: { clientName: "governance" },
   });
+
+  useEffect(() => {
+    if (syncDao && !prevSyncDao) {
+      refetch()
+    }
+  }, [syncDao, prevSyncDao, refetch])
 
   const fetchHasVoted = useCallback(async () => {
     if (data && data.proposal && account) {
@@ -137,17 +146,15 @@ const useProposalItem = () => {
     async (support: string) => {
       try {
         setVotePending(support);
-        await proposalStore.castVote(_proposalId!, account, support);
+        const receipt = await proposalStore.castVote(_proposalId!, account, support);
+        setLastTransactionBlock(receipt.blockNumber);
         setHasVoted(true);
-        setTimeout(() => {
-          refetch();
-        }, 1500);
       } catch (err) {
         console.log(err);
       }
       setVotePending(null);
     },
-    [_proposalId, proposalStore, account, setVotePending, setHasVoted, refetch]
+    [_proposalId, proposalStore, account, setVotePending, setHasVoted, setLastTransactionBlock]
   );
 
   const back = useCallback(() => {

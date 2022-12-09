@@ -34,7 +34,7 @@ const useUnstake = (lockPosition: ILockPosition | null) => {
   );
 
   const setMax = useCallback(() => {
-    setUnStakeAmount(totalBalance);
+    setUnStakeAmount(totalBalance / 10 ** 18);
   }, [totalBalance, setUnStakeAmount]);
 
   const unStakeHandler = useCallback(() => {

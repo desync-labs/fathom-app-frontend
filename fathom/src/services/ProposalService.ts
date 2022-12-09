@@ -1,7 +1,6 @@
 import { SmartContractFactory } from "config/SmartContractFactory";
 import IProposalService from "services/interfaces/IProposalService";
 import { Web3Utils } from "helpers/Web3Utils";
-import IVoteCounts from "stores/interfaces/IVoteCounts";
 import ActiveWeb3Transactions from "stores/transaction.store";
 import { keccak256 } from "web3-utils";
 import {
@@ -100,20 +99,6 @@ export default class ProposalService implements IProposalService {
       .call({ from: account });
   }
 
-  async viewVoteCounts(
-    proposalId: string,
-    account: string,
-  ): Promise<IVoteCounts> {
-    const FathomGovernor = Web3Utils.getContractInstance(
-      SmartContractFactory.FathomGovernor(this.chainId),
-      this.chainId
-    );
-
-    return FathomGovernor.methods
-      .proposalVotes(proposalId)
-      .call({ from: account });
-  }
-
   async castVote(
     proposalId: string,
     account: string,
@@ -140,7 +125,7 @@ export default class ProposalService implements IProposalService {
       });
   }
 
-  async getVeBalance(account: string): Promise<number> {
+  async getVBalance(account: string): Promise<number> {
     const VeFathom = Web3Utils.getContractInstance(
       SmartContractFactory.vFathom(this.chainId),
       this.chainId

@@ -104,7 +104,7 @@ const UnStakeDialog: FC<UnStakeDialogProps> = ({
             <AppFormInputWrapper>
               <AppFormLabel>Unstake amount</AppFormLabel>
               <WalletBalance>
-                Available: {formatNumber(totalBalance)} {token}
+                Available: {formatNumber(totalBalance / 10 ** 18)} {token}
               </WalletBalance>
               <AppTextField
                 error={balanceError}
@@ -151,7 +151,7 @@ const UnStakeDialog: FC<UnStakeDialogProps> = ({
                 <InfoIcon sx={{ fontSize: "18px", color: "#6379A1" }} />
               </InfoLabel>
               <InfoValue>
-                {formatNumber(totalBalance)} {token}
+                {formatNumber(totalBalance / 10 ** 18)} {token}
               </InfoValue>
             </InfoWrapper>
             <InfoWrapper>
@@ -160,7 +160,7 @@ const UnStakeDialog: FC<UnStakeDialogProps> = ({
                 <InfoIcon sx={{ fontSize: "18px", color: "#6379A1" }} />
               </InfoLabel>
               <InfoValue>
-                {formatNumber(totalBalance)} {token}
+                {formatNumber(totalBalance / 10 ** 18)} {token}
               </InfoValue>
             </InfoWrapper>
           </Grid>

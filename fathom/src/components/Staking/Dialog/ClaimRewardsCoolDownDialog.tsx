@@ -91,7 +91,7 @@ const ClaimRewardsCoolDownDialog: FC<ClaimRewardsDialogProps> = ({
           <img src={getTokenLogoURL(token)} alt={"token-logo"} width={58} />
           <Box sx={{ fontSize: "18px" }}>You’re requesting to claim</Box>
           <Box className={"amount"}>
-            <Box>{formatNumber(totalRewards)}</Box>
+            <Box>{formatNumber(totalRewards / 10 ** 18)}</Box>
             <span>{token}</span>
           </Box>
         </DialogContentWrapper>
