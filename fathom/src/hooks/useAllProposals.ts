@@ -1,13 +1,10 @@
-import { ChangeEvent, useCallback, useEffect, useMemo, useState } from "react";
-import { useLazyQuery, useQuery } from "@apollo/client";
+import { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { useQuery } from "@apollo/client";
 import { GOVERNANCE_PROPOSALS, GOVERNANCE_STATS } from "apollo/queries";
 import { Constants } from "helpers/Constants";
-import { SmartContractFactory } from "config/SmartContractFactory";
-import { useWeb3React } from "@web3-react/core";
+import useSyncContext from "context/sync";
 
 export const useAllProposals = () => {
-  const { chainId } = useWeb3React();
-
   const [search, setSearch] = useState<string>("");
   const [time, setTime] = useState<string>("all");
   const [proposals, setProposals] = useState<string>("all");
@@ -15,10 +12,7 @@ export const useAllProposals = () => {
   const [createProposal, setCreateProposal] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
 
-  const GovernanceAddress = useMemo(
-    () => SmartContractFactory.FathomGovernor(chainId!).address,
-    [chainId]
-  );
+  const { syncDao, prevSyncDao } = useSyncContext();
 
   const { data, loading, refetch, fetchMore } = useQuery(GOVERNANCE_PROPOSALS, {
     variables: {
@@ -28,34 +22,29 @@ export const useAllProposals = () => {
     context: { clientName: "governance" },
   });
 
-  const [
-    fetchStats,
-    { data: stats, loading: statsLoading, refetch: statsRefetch },
-  ] = useLazyQuery(GOVERNANCE_STATS, {
+  const {
+    data: stats,
+    loading: statsLoading,
+    refetch: statsRefetch,
+  } = useQuery(GOVERNANCE_STATS, {
     context: { clientName: "governance" },
   });
 
-  useEffect(() => {
-    fetchStats({
-      variables: {
-        id: GovernanceAddress,
-      },
-    });
-  }, [fetchStats, GovernanceAddress]);
-
   const refetchProposals = useCallback(() => {
-    setTimeout(() => {
-      refetch({
-        first: Constants.COUNT_PER_PAGE,
-        skip: 0,
-      });
+    refetch({
+      first: Constants.COUNT_PER_PAGE,
+      skip: 0,
+    });
 
-      statsRefetch({
-        id: GovernanceAddress,
-      });
-      setCurrentPage(1);
-    }, 1000);
-  }, [refetch, statsRefetch, GovernanceAddress]);
+    statsRefetch();
+    setCurrentPage(1);
+  }, [refetch, statsRefetch]);
+
+  useEffect(() => {
+    if (syncDao && !prevSyncDao) {
+      refetchProposals();
+    }
+  }, [syncDao, prevSyncDao, refetchProposals])
 
   const handlePageChange = useCallback(
     (event: ChangeEvent<unknown>, page: number) => {
@@ -80,12 +69,11 @@ export const useAllProposals = () => {
     setProposals,
     createProposal,
     setCreateProposal,
-    refetchProposals,
     fetchedProposals: loading ? [] : data.proposals,
 
     currentPage,
     itemsCount:
-      statsLoading || !stats ? 0 : stats.governanceStat.totalProposalsCount,
+      statsLoading || !stats ? 0 : stats.governanceStats[0].totalProposalsCount,
     handlePageChange,
   };
 };

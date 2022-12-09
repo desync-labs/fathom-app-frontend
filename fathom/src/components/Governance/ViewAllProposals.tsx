@@ -35,7 +35,6 @@ const AllProposalsView = observer(() => {
     setProposals,
     createProposal,
     setCreateProposal,
-    refetchProposals,
 
     itemsCount,
     currentPage,
@@ -124,7 +123,6 @@ const AllProposalsView = observer(() => {
       {createProposal && (
         <Propose
           onClose={() => setCreateProposal(false)}
-          onFinish={refetchProposals}
         />
       )}
     </>

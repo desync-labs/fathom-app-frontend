@@ -113,14 +113,14 @@ const UnclaimedRewardsDialog: FC<ClaimRewardsDialogProps> = ({
           <img src={getTokenLogoURL(token)} alt={"token-logo"} width={58} />
           <Box sx={{ fontSize: '18px' }}>You’re having unclaimed rewards</Box>
           <Box className={'amount'}>
-            <Box>{formatNumber(Number(position.rewardsAvailable))}</Box>
+            <Box>{formatNumber(Number(position.rewardsAvailable / 10 ** 18))}</Box>
             <span>{token}</span>
           </Box>
         </DialogContentWrapper>
         <WarningBlock>
           <InfoIcon sx={{ fontSize: "18px", color: '#F5953D' }} />
           <Typography component={'span'}>
-            Penalty fee will be applied.
+            You will lose the reward of this position if you proceed to unstake it without claiming the rewards first.
           </Typography>
         </WarningBlock>
         <ButtonsWrapper>

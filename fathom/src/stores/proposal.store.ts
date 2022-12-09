@@ -1,22 +1,14 @@
 import { RootStore } from ".";
 import IProposalService from "services/interfaces/IProposalService";
-import IVoteCounts from "stores/interfaces/IVoteCounts";
 import { makeAutoObservable } from "mobx";
 
 export default class ProposalStore {
-  fetchedVotes: IVoteCounts;
-
-  fetchedTotalVotes: number = 0.000000001;
-
-  weight: number = 0;
   service: IProposalService;
   rootStore: RootStore;
 
   constructor(rootStore: RootStore, service: IProposalService) {
     makeAutoObservable(this);
     this.service = service;
-    this.fetchedVotes = {} as IVoteCounts;
-
     this.rootStore = rootStore;
   }
 
@@ -33,16 +25,22 @@ export default class ProposalStore {
     callData: string[],
     description: string,
     account: string
-  ) {
+  ): Promise<any> {
     try {
-      await this.service.createProposal(
+      return await this.service.createProposal(
         targets,
         values,
         callData,
         description,
         account,
         this.rootStore.transactionStore
-      );
+      ).then((receipt) => {
+        this.rootStore.alertStore.setShowSuccessAlert(
+          true,
+          "Proposal created successfully!"
+        );
+        return receipt;
+      });
     } catch (e: any) {
       this.showErrorMessage(e.message);
       throw e;
@@ -57,14 +55,20 @@ export default class ProposalStore {
     account: string
   ) {
     try {
-      await this.service.executeProposal(
+      return await this.service.executeProposal(
         targets,
         values,
         callData,
         description,
         account,
         this.rootStore.transactionStore
-      );
+      ).then((receipt) => {
+        this.rootStore.alertStore.setShowSuccessAlert(
+          true,
+          "Proposal executed created successfully!"
+        );
+        return receipt;
+      });
     } catch (e: any) {
       this.showErrorMessage(e.message);
     }
@@ -75,19 +79,20 @@ export default class ProposalStore {
     proposalId: string,
     account: string,
     support: string,
-  ) {
+  ): Promise<any> {
     try {
-      await this.service.castVote(
+      return await this.service.castVote(
         proposalId,
         account,
         support,
         this.rootStore.transactionStore,
-      );
-
-      await Promise.all([
-        this.fetchProposalState(proposalId, account),
-        this.fetchProposalVotes(proposalId, account)
-      ])
+      ).then((receipt) => {
+        this.rootStore.alertStore.setShowSuccessAlert(
+          true,
+          "You have successfully voted!"
+        );
+        return receipt;
+      });
     } catch (e: any) {
       this.showErrorMessage(e.message);
     }
@@ -103,7 +108,7 @@ export default class ProposalStore {
 
   async getVBalance(account: string) {
     try {
-      return await this.service.getVeBalance(account);
+      return await this.service.getVBalance(account);
     } catch (e: any) {
       this.showErrorMessage(e.message);
     }
@@ -121,36 +126,5 @@ export default class ProposalStore {
     } catch (e: any) {
       this.showErrorMessage(e.message);
     }
-  }
-
-  async fetchProposalVotes(
-    proposal: string,
-    account: string,
-  ) {
-    try {
-      const fetchedVotes = await this.service.viewVoteCounts(
-        proposal,
-        account,
-      );
-      this.setProposalVotes(fetchedVotes);
-    } catch (e: any) {
-      this.showErrorMessage(e.message);
-    }
-  }
-
-  setProposalVotes(_proposalVotes: IVoteCounts) {
-    _proposalVotes.abstainVotes = _proposalVotes.abstainVotes / 10 ** 18;
-    _proposalVotes.againstVotes = _proposalVotes.againstVotes / 10 ** 18;
-    _proposalVotes.forVotes = _proposalVotes.forVotes / 10 ** 18;
-
-    this.fetchedTotalVotes =
-      _proposalVotes.abstainVotes +
-      _proposalVotes.againstVotes +
-      _proposalVotes.forVotes;
-    this.fetchedVotes = _proposalVotes;
-  }
-
-  setWeight(_weight: number) {
-    this.weight = _weight;
   }
 }

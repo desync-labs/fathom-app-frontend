@@ -115,8 +115,8 @@ export const GOVERNANCE_PROPOSAL_ITEM = gql`
 `;
 
 export const GOVERNANCE_STATS = gql`
-  query GovernanceStats($id: ID!) {
-    governanceStat(id: $id) {
+  query GovernanceStats {
+    governanceStats {
       totalProposalsCount
     }
   }

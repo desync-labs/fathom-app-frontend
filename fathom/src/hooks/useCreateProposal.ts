@@ -1,16 +1,13 @@
 import { useStores } from "stores";
 import useMetaMask from "context/metamask";
 import { useForm } from "react-hook-form";
-import {
-  useCallback,
-  useEffect,
-  useState
-} from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Constants } from "helpers/Constants";
 import { ProposeListViewProps } from "components/Governance/Propose";
 import { XDC_CHAIN_IDS } from "connectors/networks";
 import Xdc3 from "xdc3";
 import Web3 from "web3";
+import useSyncContext from "../context/sync";
 
 const defaultValues = {
   withAction: false,
@@ -30,10 +27,7 @@ const formatter = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 3,
 });
 
-const useCreateProposal = (
-  onClose: ProposeListViewProps["onClose"],
-  onFinish: ProposeListViewProps["onFinish"]
-) => {
+const useCreateProposal = (onClose: ProposeListViewProps["onClose"]) => {
   const { proposalStore } = useStores();
   const { account, chainId } = useMetaMask()!;
   const [vBalance, setVBalance] = useState<null | number>();
@@ -44,13 +38,14 @@ const useCreateProposal = (
     mode: "onChange",
   });
 
+  const { setLastTransactionBlock } = useSyncContext();
+
   const withAction = watch("withAction");
 
   useEffect(() => {
     if (account) {
       proposalStore.getVBalance(account).then((balance) => {
-        console.log(balance);
-        setVBalance(balance)
+        setVBalance(balance);
       });
     }
   }, [account, proposalStore, setVBalance]);
@@ -66,8 +61,6 @@ const useCreateProposal = (
   const onSubmit = useCallback(
     async (values: Record<string, any>) => {
       try {
-        if (!chainId) return;
-
         const {
           descriptionTitle,
           description,
@@ -77,8 +70,8 @@ const useCreateProposal = (
           withAction,
         } = values;
 
-        const combinedText = `${descriptionTitle}----------------${description}`
-
+        const combinedText = `${descriptionTitle}----------------${description}`;
+        let receipt;
         if (withAction) {
           const values = inputValues.trim().split(",").map(Number);
           const callDataArray = callData.trim().split(",");
@@ -87,7 +80,7 @@ const useCreateProposal = (
             .split(",")
             .map((address: string) => String.prototype.trim.call(address));
 
-          await proposalStore.createProposal(
+          receipt = await proposalStore.createProposal(
             targetsArray,
             values,
             callDataArray,
@@ -95,7 +88,7 @@ const useCreateProposal = (
             account
           );
         } else {
-          await proposalStore.createProposal(
+          receipt = await proposalStore.createProposal(
             [Constants.ZERO_ADDRESS],
             [0],
             [Constants.ZERO_ADDRESS],
@@ -103,15 +96,16 @@ const useCreateProposal = (
             account
           );
         }
+
+        setLastTransactionBlock(receipt.blockNumber);
         reset();
         localStorage.removeItem("createProposal");
-        onFinish();
         onClose();
       } catch (err) {
         console.log(err);
       }
     },
-    [reset, account, chainId, proposalStore, onClose, onFinish]
+    [reset, account, proposalStore, onClose, setLastTransactionBlock]
   );
 
   const saveForLater = useCallback(() => {

@@ -39,7 +39,7 @@ const useStakingView = () => {
 
   const [currentPage, setCurrentPage] = useState<number>(1);
 
-  const { setLastTransactionBlock, syncGovernance, prevSyncGovernance } =
+  const { setLastTransactionBlock, syncDao, prevSyncDao } =
     useSyncContext();
 
   const [dialogAction, setDialogAction] = useState<DialogActions>(
@@ -62,7 +62,7 @@ const useStakingView = () => {
   });
 
   useEffect(() => {
-    if (syncGovernance && !prevSyncGovernance) {
+    if (syncDao && !prevSyncDao) {
       refetchStakers({
         variables: {
           skip: 0,
@@ -74,9 +74,9 @@ const useStakingView = () => {
       refetchProtocolStats();
     }
   }, [
-    syncGovernance,
+    syncDao,
     account,
-    prevSyncGovernance,
+    prevSyncDao,
     refetchStakers,
     refetchProtocolStats,
   ]);
@@ -117,7 +117,7 @@ const useStakingView = () => {
       action === "unstake" && setUnstake(position!);
 
       ["early", "unstake"].includes(action) &&
-        !!position!.rewardsAvailable &&
+        position!.rewardsAvailable > 0 &&
         setDialogAction(DialogActions.UNCLAIMED);
 
       if (action === "skip" || action === "continue") {

@@ -20,8 +20,8 @@ type UseSyncContextReturn = {
   setLastTransactionBlock: Dispatch<number>;
   syncFXD: boolean;
   prevSyncFxd: boolean;
-  syncGovernance: boolean;
-  prevSyncGovernance: boolean;
+  syncDao: boolean;
+  prevSyncDao: boolean;
 };
 
 export const SyncContext = createContext<UseSyncContextReturn | undefined>(
@@ -31,10 +31,10 @@ export const SyncContext = createContext<UseSyncContextReturn | undefined>(
 export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
   const [lastTransactionBlock, setLastTransactionBlock] = useState<number>();
   const [syncFXD, setSyncFXD] = useState<boolean>(true);
-  const [syncGovernance, setSyncGovernance] = useState<boolean>(true);
+  const [syncDao, setSyncDao] = useState<boolean>(true);
 
   const prevSyncFxd = useRef<boolean>(true);
-  const prevSyncGovernance = useRef<boolean>(true);
+  const prevSyncDao = useRef<boolean>(true);
 
   const { data: fxdData, refetch: refetchFxd } = useQuery(HEALTH, {
     variables: {
@@ -42,22 +42,29 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
     },
   });
 
+  const { data: daoData, refetch: refetchDao } = useQuery(HEALTH, {
+    variables: {
+      name: "dao-subgraph",
+    }
+  })
+
   const values = useMemo(() => {
     return {
       syncFXD,
-      syncGovernance,
+      syncDao,
       setLastTransactionBlock,
       prevSyncFxd: prevSyncFxd.current,
+      prevSyncDao: prevSyncDao.current,
     };
-  }, [setLastTransactionBlock, syncFXD, syncGovernance]);
+  }, [setLastTransactionBlock, syncFXD, syncDao]);
 
   useEffect(() => {
     prevSyncFxd.current = syncFXD;
   }, [syncFXD]);
 
   useEffect(() => {
-    prevSyncGovernance.current = syncGovernance;
-  }, [syncGovernance]);
+    prevSyncDao.current = syncDao;
+  }, [syncDao]);
 
   useEffect(() => {
     if (
@@ -93,6 +100,42 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
     setLastTransactionBlock,
     refetchFxd,
     setSyncFXD,
+  ]);
+
+  useEffect(() => {
+    if (
+      !lastTransactionBlock &&
+      daoData?.indexingStatusForCurrentVersion?.chains[0]?.latestBlock?.number
+    ) {
+      setSyncDao(true);
+      return setLastTransactionBlock(
+        Number(
+          daoData?.indexingStatusForCurrentVersion?.chains[0]?.latestBlock
+            ?.number
+        )
+      );
+    }
+
+    if (
+      Number(lastTransactionBlock) >
+      Number(
+        daoData?.indexingStatusForCurrentVersion?.chains[0]?.latestBlock?.number
+      )
+    ) {
+      setTimeout(() => {
+        refetchDao();
+      }, 400);
+
+      setSyncDao(false);
+    } else {
+      setSyncDao(true);
+    }
+  }, [
+    lastTransactionBlock,
+    daoData,
+    setLastTransactionBlock,
+    refetchDao,
+    setSyncDao,
   ]);
 
   return (
