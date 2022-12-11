@@ -59,6 +59,8 @@ export const useAllProposals = () => {
     [setCurrentPage, fetchMore]
   );
 
+  console.log(stats)
+
   return {
     fetchProposalsPending: loading,
     search,
@@ -73,7 +75,7 @@ export const useAllProposals = () => {
 
     currentPage,
     itemsCount:
-      statsLoading || !stats ? 0 : stats.governanceStats[0].totalProposalsCount,
+      statsLoading || !stats || !stats.governanceStats.length ? 0 : stats.governanceStats[0].totalProposalsCount,
     handlePageChange,
   };
 };
