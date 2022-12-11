@@ -8,7 +8,7 @@ import { Web3Utils } from "helpers/Web3Utils";
 import { useQuery } from "@apollo/client";
 import { FXD_POOLS } from "apollo/queries";
 import ICollateralPool from "stores/interfaces/ICollateralPool";
-import useSyncContext from "../context/sync";
+import useSyncContext from "context/sync";
 
 const useStakingLockForm = () => {
   const [balanceError, setBalanceError] = useState<boolean>(false);
@@ -55,9 +55,10 @@ const useStakingLockForm = () => {
         pool.tokenAdapterAddress
       );
 
+      // @TODO: hardcoded FTHM address
       const balance = await poolStore.getUserTokenBalance(
         account,
-        fthmTokenAddress!
+        "0xCABd991B08ec1A844b29dDA1Aac697D6ab030e8d"
       );
 
       setFthmBalance(balance / 10 ** 18);
@@ -72,7 +73,8 @@ const useStakingLockForm = () => {
           const approved = await stakingStore.approvalStatusStakingFTHM(
             account,
             stakePosition,
-            fthmTokenAddress!
+            // @TODO: hardcoded FTHM address
+            "0xCABd991B08ec1A844b29dDA1Aac697D6ab030e8d"
           );
 
           console.log("Approve", approved);
@@ -90,10 +92,10 @@ const useStakingLockForm = () => {
   }, [account, getFTHMTokenBalance]);
 
   useEffect(() => {
-    if (chainId && stakePosition) {
+    if (chainId && stakePosition && fthmTokenAddress) {
       approvalStatus(account, chainId, Number(stakePosition)!);
     }
-  }, [account, chainId, approvalStatus, stakePosition]);
+  }, [account, chainId, fthmTokenAddress, approvalStatus, stakePosition]);
 
   useEffect(() => {
     const getBalance = async () => {
@@ -139,7 +141,11 @@ const useStakingLockForm = () => {
   const approveFTHM = useCallback(async () => {
     setApprovalPending(true);
     try {
-      await stakingStore.approveFTHM(account, fthmTokenAddress!);
+      // @TODO: hardcoded FTHM address
+      await stakingStore.approveFTHM(
+        account,
+        "0xCABd991B08ec1A844b29dDA1Aac697D6ab030e8d"
+      );
       setApprovedBtn(false);
     } catch (e) {
       setApprovedBtn(true);
