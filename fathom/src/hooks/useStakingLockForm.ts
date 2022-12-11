@@ -5,24 +5,16 @@ import { useStores } from "stores";
 
 import debounce from "lodash.debounce";
 import { Web3Utils } from "helpers/Web3Utils";
-import { useQuery } from "@apollo/client";
-import { FXD_POOLS } from "apollo/queries";
-import ICollateralPool from "stores/interfaces/ICollateralPool";
 import useSyncContext from "context/sync";
+import { SmartContractFactory } from "config/SmartContractFactory";
 
 const useStakingLockForm = () => {
   const [balanceError, setBalanceError] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [fthmBalance, setFthmBalance] = useState(0);
-  const [fthmTokenAddress, setFthmTokenAddress] = useState<string>();
 
   const { poolStore } = useStores();
-
-  const { data } = useQuery(FXD_POOLS, {
-    context: { clientName: "stable" },
-    fetchPolicy: "cache-first",
-  });
 
   const { handleSubmit, watch, control, reset, setValue } = useForm({
     defaultValues: {
@@ -45,26 +37,20 @@ const useStakingLockForm = () => {
 
   const [xdcBalance, setXdcBalance] = useState<number>(0);
 
+  const fthmTokenAddress = useMemo(() => {
+    return SmartContractFactory.vFathom(chainId).address;
+  }, [chainId]);
+
   const getFTHMTokenBalance = useCallback(async () => {
-    if (data?.pools) {
-      const pool = data?.pools.find(
-        (pool: ICollateralPool) => pool.poolName.toLowerCase() === "fthm"
-      );
-
-      const fthmTokenAddress = await poolStore.getCollateralTokenAddress(
-        pool.tokenAdapterAddress
-      );
-
-      // @TODO: hardcoded FTHM address
+    if (account) {
       const balance = await poolStore.getUserTokenBalance(
         account,
-        "0xCABd991B08ec1A844b29dDA1Aac697D6ab030e8d"
+        fthmTokenAddress
       );
 
       setFthmBalance(balance / 10 ** 18);
-      setFthmTokenAddress(fthmTokenAddress);
     }
-  }, [account, poolStore, data, setFthmBalance]);
+  }, [account, poolStore, fthmTokenAddress, setFthmBalance]);
 
   const approvalStatus = useMemo(
     () =>
@@ -73,8 +59,7 @@ const useStakingLockForm = () => {
           const approved = await stakingStore.approvalStatusStakingFTHM(
             account,
             stakePosition,
-            // @TODO: hardcoded FTHM address
-            "0xCABd991B08ec1A844b29dDA1Aac697D6ab030e8d"
+            fthmTokenAddress
           );
 
           console.log("Approve", approved);
@@ -144,7 +129,7 @@ const useStakingLockForm = () => {
       // @TODO: hardcoded FTHM address
       await stakingStore.approveFTHM(
         account,
-        "0xCABd991B08ec1A844b29dDA1Aac697D6ab030e8d"
+        fthmTokenAddress
       );
       setApprovedBtn(false);
     } catch (e) {

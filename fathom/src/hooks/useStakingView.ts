@@ -10,9 +10,9 @@ import { LogLevel, useLogger } from "helpers/Logger";
 import { useStores } from "stores";
 import ILockPosition from "stores/interfaces/ILockPosition";
 import { useLazyQuery, useQuery } from "@apollo/client";
-import { STAKING_PROTOCOL_STATS, STAKING_STAKER } from "../apollo/queries";
+import { STAKING_PROTOCOL_STATS, STAKING_STAKER } from "apollo/queries";
 import { Constants } from "helpers/Constants";
-import useSyncContext from "../context/sync";
+import useSyncContext from "context/sync";
 
 export type ActionType = { type: string; id: number | null };
 
@@ -31,7 +31,7 @@ const useStakingView = () => {
   const [action, setAction] = useState<ActionType>();
   const { account, chainId } = useMetaMask()!;
   const logger = useLogger();
-  const { stakingStore, alertStore } = useStores();
+  const { stakingStore } = useStores();
 
   const [unstake, setUnstake] = useState<null | ILockPosition>(null);
   const [earlyUnstake, setEarlyUnstake] = useState<null | ILockPosition>(null);
@@ -209,7 +209,7 @@ const useStakingView = () => {
 
       setAction(undefined);
     },
-    [stakingStore, account, alertStore, setAction, setLastTransactionBlock]
+    [stakingStore, account, setAction, setLastTransactionBlock]
   );
 
   const isUnlockable = useCallback((remainingTime: number) => {

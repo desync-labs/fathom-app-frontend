@@ -31,8 +31,6 @@ const cache = new InMemoryCache({
         lockPositions: {
           keyArgs: false,
           merge(existing = [], incoming) {
-            console.log(existing)
-            console.log(incoming)
             return incoming;
           },
         },
