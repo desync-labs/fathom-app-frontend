@@ -261,11 +261,10 @@ const OpenNewPositionDialog: FC<OpenPositionProps> = ({ pool, onClose }) => {
                                   sx={{
                                     float: "left",
                                     fontSize: "18px",
-                                    marginRight: "5px",
                                   }}
                                 />
                                 <Box
-                                  sx={{ fontSize: "12px", paddingLeft: "22px" }}
+                                  sx={{ fontSize: "12px", paddingLeft: "6px" }}
                                   component={"span"}
                                 >
                                   {error?.message}
