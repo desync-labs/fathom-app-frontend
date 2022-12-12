@@ -188,6 +188,15 @@ export default class StakingService implements IStakingService {
       .call();
   }
 
+  getStreamClaimableAmount(account: string): Promise<number> {
+    const StakingGetter = Web3Utils.getContractInstance(
+      SmartContractFactory.StakingGetter(this.chainId),
+      this.chainId
+    );
+
+    return StakingGetter.methods.getStreamClaimableAmount(0, account).call();
+  }
+
   approveStakingFTHM(
     address: string,
     fthmTokenAddress: string,

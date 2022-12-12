@@ -17,7 +17,12 @@ const useEarlyUnstake = (lockPosition: ILockPosition, onFinish: () => void) => {
   }, [lockPosition])
 
   const earlyUnstakeHandler = useCallback(() => {
-    handleEarlyUnstake(lockPosition.lockId);
+    try {
+      handleEarlyUnstake(lockPosition.lockId);
+      onFinish();
+    } catch (e) {
+
+    }
   }, [lockPosition, handleEarlyUnstake]);
 
   return {

@@ -173,7 +173,7 @@ const StableSwap = observer(() => {
   const inputError = useMemo(() => {
     const formattedBalance = inputBalance / 10 ** 18;
 
-    return inputValue > formattedBalance;
+    return inputValue as number > formattedBalance;
   }, [inputValue, inputBalance]);
 
   return (
@@ -246,7 +246,7 @@ const StableSwap = observer(() => {
               />
               <StableSwapMaxButton onClick={setMax}>Max</StableSwapMaxButton>
               {approveInputBtn ? (
-                <ButtonSecondary onClick={approveInput} sx={{ float: "right" }}>
+                <ButtonSecondary onClick={approveInput} sx={{ float: "right", marginTop: "10px" }}>
                   {approvalPending === "input" ? (
                     <CircularProgress size={30} />
                   ) : (
@@ -256,7 +256,7 @@ const StableSwap = observer(() => {
               ) : null}
 
               <FathomSwapChangeCurrencyButton
-                onClick={() => changeCurrenciesPosition(inputValue)}
+                onClick={() => changeCurrenciesPosition(inputValue as number)}
               >
                 <img src={ComboShareSrc} alt="combo-share" />
               </FathomSwapChangeCurrencyButton>
@@ -310,7 +310,7 @@ const StableSwap = observer(() => {
               {approveOutputBtn ? (
                 <ButtonSecondary
                   onClick={approveOutput}
-                  sx={{ float: "right" }}
+                  sx={{ float: "right", marginTop: "10px" }}
                 >
                   {approvalPending === "output" ? (
                     <CircularProgress size={30} />

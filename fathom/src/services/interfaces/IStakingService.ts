@@ -35,14 +35,16 @@ export default interface IStakingService {
   approvalStatusStakingFTHM(
     address: string,
     stakingPosition: number,
-    fthmTokenAddress: string,
+    fthmTokenAddress: string
   ): Promise<boolean>;
 
   getStreamClaimableAmountPerLock(
     streamId: number,
     account: string,
     lockId: number
-  ): Promise<number>
+  ): Promise<number>;
+
+  getStreamClaimableAmount(account: string): Promise<number>;
 
   approveStakingFTHM(
     address: string,

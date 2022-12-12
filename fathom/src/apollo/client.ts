@@ -40,11 +40,11 @@ const cache = new InMemoryCache({
 });
 
 const stableCoinLink = new HttpLink({
-  uri: "https://graph.composer.live/subgraphs/name/fathomapp-subgraph",
+  uri: "http://graph.composer.live:8000/subgraphs/name/fathomapp-subgraph",
 });
 
 const governanceLink = new HttpLink({
-  uri: "https://graph.composer.live/subgraphs/name/dao-subgraph",
+  uri: "http://graph.composer.live:8000/subgraphs/name/dao-subgraph",
 });
 
 const defaultLink = new HttpLink({

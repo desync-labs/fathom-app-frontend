@@ -1,7 +1,7 @@
 import { InjectedConnector } from "@web3-react/injected-connector";
 import Web3 from "web3";
 
-export const supportedChainIds = [50, 51];
+export const supportedChainIds = [1337, 50, 51];
 export const XDC_CHAIN_IDS = [50, 51];
 
 export declare enum ChainId {

@@ -60,7 +60,7 @@ type ClaimRewardsDialogProps = {
   totalRewards: number;
   token: string;
   onClose: () => void;
-  onContinue: () => void;
+  onContinue: (() => void) | null;
 };
 
 const ClaimRewardsCoolDownDialog: FC<ClaimRewardsDialogProps> = ({
@@ -97,7 +97,7 @@ const ClaimRewardsCoolDownDialog: FC<ClaimRewardsDialogProps> = ({
         </DialogContentWrapper>
         <ButtonsWrapper>
           <CancelButton onClick={onClose}>Back to My Positions</CancelButton>
-          <ButtonPrimary onClick={onContinue}>Continue to Unstake</ButtonPrimary>
+          { onContinue && <ButtonPrimary onClick={onContinue}>Continue to Unstake</ButtonPrimary> }
         </ButtonsWrapper>
       </DialogContent>
     </AppDialog>
