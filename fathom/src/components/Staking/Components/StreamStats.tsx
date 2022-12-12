@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
 import useStakingContext from "context/staking";
 
 import { Box, Typography, Grid } from "@mui/material";
@@ -13,6 +13,9 @@ import { ButtonSecondary } from "components/AppComponents/AppButton/AppButton";
 import PercentSrc from "assets/svg/percent.svg";
 import LockedSrc from "assets/svg/locked.svg";
 import RewardsSrc from "assets/svg/rewards.svg";
+import StakingCountdown from "components/Staking/StakingCountdown";
+
+import { secondsToTime } from "utils/secondsToTime";
 
 const FTHMStreamHeader = styled("h3")`
   font-weight: 600;
@@ -140,7 +143,27 @@ const CooldownCountDown = styled(Box)`
 `;
 
 const StreamStats: FC = () => {
-  const { processFlow, protocolStatsInfo, staker, totalRewards } = useStakingContext();
+  const { processFlow, protocolStatsInfo, staker, totalRewards } =
+    useStakingContext();
+
+  const [seconds, setSeconds] = useState<number>(0);
+
+  useEffect(() => {
+    const now = Date.now() / 1000;
+    if (Number(staker?.cooldown) > now) {
+      setSeconds(Number(staker.cooldown) - now);
+    } else {
+      setSeconds(0);
+    }
+  }, [staker, setSeconds]);
+
+  useEffect(() => {
+    if (seconds > 0) {
+      setTimeout(() => {
+        setSeconds(seconds - 1);
+      }, 1000);
+    }
+  }, [seconds, setSeconds]);
 
   return (
     <Box sx={{ padding: "0 10px" }}>
@@ -232,11 +255,13 @@ const StreamStats: FC = () => {
                     </MyStatsValue>
                   )}
                 </Grid>
-                { totalRewards > 0 && <ButtonGrid item xs={4}>
-                  <StatsButton onClick={() => processFlow("claim")}>
-                    Claim
-                  </StatsButton>
-                </ButtonGrid> }
+                {totalRewards > 0 && (
+                  <ButtonGrid item xs={4}>
+                    <StatsButton onClick={() => processFlow("claim")}>
+                      Claim
+                    </StatsButton>
+                  </ButtonGrid>
+                )}
               </Grid>
             </MyStatsBlock>
 
@@ -255,28 +280,39 @@ const StreamStats: FC = () => {
             </MyStatsBlock>
 
             <MyStatsBlock>
-              <CooldownInProgress>Cooldown in progress</CooldownInProgress>
-              <CooldownCountDown>
-                1 Day : 10 Hours : 30 Mins : 17 Secs
-              </CooldownCountDown>
-              <MyStatsValue>
-                <strong>400 FTHM</strong>
-                <span>$500.00</span>
-              </MyStatsValue>
-              <Grid container>
-                <Grid item xs={6}>
-                  <StatsLabel>
-                    Ready to withdraw
-                    <InfoIcon sx={{ fontSize: "18px" }} />
-                  </StatsLabel>
-                  <MyStatsValue className={"green"}>
+              {seconds > 0 && (
+                <>
+                  <CooldownInProgress>Cooldown in progress</CooldownInProgress>
+                  <CooldownCountDown>
+                    <StakingCountdown timeObject={secondsToTime(seconds)} />
+                  </CooldownCountDown>
+                  <MyStatsValue>
                     <strong>400 FTHM</strong>
+                    <span>$500.00</span>
                   </MyStatsValue>
+                </>
+              )}
+              {staker && Number(staker.claimedAmount) > 0 && (
+                <Grid container>
+                  <Grid item xs={6}>
+                    <StatsLabel>
+                      Ready to withdraw
+                      <InfoIcon sx={{ fontSize: "18px" }} />
+                    </StatsLabel>
+                    <MyStatsValue className={"green"}>
+                      <strong>
+                        {formatNumber(Number(staker.claimedAmount) / 10 ** 18)}{" "}
+                        FTHM
+                      </strong>
+                    </MyStatsValue>
+                  </Grid>
+                  <ButtonGrid item xs={6}>
+                    <StatsButton onClick={() => processFlow("withdraw")}>
+                      Withdraw
+                    </StatsButton>
+                  </ButtonGrid>
                 </Grid>
-                <ButtonGrid item xs={6} onClick={() => processFlow("withdraw")}>
-                  <StatsButton>Withdraw</StatsButton>
-                </ButtonGrid>
-              </Grid>
+              )}
             </MyStatsBlock>
           </MyStatsBlocks>
         </>

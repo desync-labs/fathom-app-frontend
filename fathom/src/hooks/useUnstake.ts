@@ -1,8 +1,12 @@
 import { ChangeEvent, useCallback, useEffect, useMemo, useState } from "react";
 import ILockPosition from "stores/interfaces/ILockPosition";
 import useStakingContext from "context/staking";
+import { UnStakeDialogProps } from "components/Staking/Dialog/UnstakeDialog";
 
-const useUnstake = (lockPosition: ILockPosition | null) => {
+const useUnstake = (
+  lockPosition: ILockPosition | null,
+  onFinish: UnStakeDialogProps["onFinish"]
+) => {
   const [balanceError, setBalanceError] = useState<boolean>(false);
   const [unStakeAmount, setUnStakeAmount] = useState<number>(0);
 
@@ -37,12 +41,12 @@ const useUnstake = (lockPosition: ILockPosition | null) => {
     setUnStakeAmount(totalBalance / 10 ** 18);
   }, [totalBalance, setUnStakeAmount]);
 
-  const unStakeHandler = useCallback(() => {
+  const unStakeHandler = useCallback(async () => {
     try {
-      handleUnlock(lockPosition!.lockId);
-
+      await handleUnlock(lockPosition!.lockId);
+      onFinish(unStakeAmount);
     } catch (e) {}
-  }, [lockPosition, handleUnlock]);
+  }, [lockPosition, handleUnlock, onFinish, unStakeAmount]);
 
   return {
     balanceError,

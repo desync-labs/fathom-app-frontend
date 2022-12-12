@@ -163,6 +163,7 @@ export const STAKING_STAKER = gql`
       totalStaked
       accruedRewards
       accruedVotes
+      cooldown
       claimedAmount
       lockPositionIds
       lockPositionCount

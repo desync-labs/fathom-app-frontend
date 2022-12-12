@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import useMetaMask from "context/metamask";
 import { LogLevel, useLogger } from "helpers/Logger";
 import { useStores } from "stores";
@@ -31,7 +31,7 @@ const useStakingView = () => {
   const [earlyUnstake, setEarlyUnstake] = useState<null | ILockPosition>(null);
   const [lockPositions, setLockPositions] = useState<ILockPosition[]>([]);
 
-  const [totalRewards, setTotalRewards] = useState(0);;
+  const [totalRewards, setTotalRewards] = useState(0);
 
   const [currentPage, setCurrentPage] = useState<number>(1);
 
@@ -61,6 +61,12 @@ const useStakingView = () => {
     context: { clientName: "governance" },
   });
 
+  const fetchAllClaimRewards = useCallback(() => {
+    stakingStore.getStreamClaimableAmount(account).then((amount) => {
+      setTotalRewards(Number(amount))
+    })
+  }, [stakingStore, account, setTotalRewards])
+
   useEffect(() => {
     if (syncDao && !prevSyncDao) {
       refetchStakers({
@@ -74,6 +80,8 @@ const useStakingView = () => {
       refetchProtocolStats();
 
       setCurrentPage(1);
+
+      fetchAllClaimRewards();
     }
   }, [
     syncDao,
@@ -82,19 +90,17 @@ const useStakingView = () => {
     refetchStakers,
     refetchProtocolStats,
     setCurrentPage,
+    fetchAllClaimRewards,
   ]);
 
   useEffect(() => {
     if (account && stakersData?.stakers?.length) {
-      stakingStore.getStreamClaimableAmount(account).then((amount) => {
-        setTotalRewards(Number(amount))
-      })
+      fetchAllClaimRewards();
     }
   }, [
     account,
-    stakingStore,
     stakersData,
-    setTotalRewards,
+    fetchAllClaimRewards,
   ])
 
   useEffect(() => {
@@ -148,8 +154,10 @@ const useStakingView = () => {
         !!earlyUnstake && setDialogAction(DialogActions.EARLY_UNSTAKE);
       }
 
-      action === "unstake-cooldown" &&
+      if (action === "unstake-cooldown") {
         setDialogAction(DialogActions.UNSTAKE_COOLDOWN);
+        !!position && setUnstake(position)
+      }
 
       action === "claim-cooldown" &&
         setDialogAction(DialogActions.CLAIM_REWARDS_COOLDOWN);

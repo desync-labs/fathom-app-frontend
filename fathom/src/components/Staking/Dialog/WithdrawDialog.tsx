@@ -1,10 +1,15 @@
-import React, { FC } from "react";
+import React, { FC, useMemo } from "react";
 import {
   AppDialog,
   DialogContentWrapper,
 } from "components/AppComponents/AppDialog/AppDialog";
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
-import { Box, DialogContent, Typography } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  DialogContent,
+  Typography,
+} from "@mui/material";
 import {
   ButtonPrimary,
   CancelButton,
@@ -54,17 +59,16 @@ const ButtonsWrapper = styled(Box)`
 `;
 
 type WithdrawDialogProps = {
-  totalRewards: number;
   token: string;
   onClose: () => void;
 };
 
-const WithdrawDialog: FC<WithdrawDialogProps> = ({
-  totalRewards,
-  token,
-  onClose,
-}) => {
-  const { withdrawAll } = useStakingContext()
+const WithdrawDialog: FC<WithdrawDialogProps> = ({ token, onClose }) => {
+  const { withdrawAll, staker, action } = useStakingContext();
+
+  const isLoading = useMemo(() => {
+    return action?.type === "withdrawAll";
+  }, [action]);
 
   return (
     <AppDialog
@@ -81,20 +85,21 @@ const WithdrawDialog: FC<WithdrawDialogProps> = ({
 
       <DialogContent>
         <Description>
-          Once it's completed, you'll see this amount in your MetaMask balance...
+          Once it's completed, you'll see this amount in your MetaMask
+          balance...
         </Description>
         <DialogContentWrapper>
           <img src={getTokenLogoURL(token)} alt={"token-logo"} width={58} />
           <Box sx={{ fontSize: "18px" }}>You're withdrawing...</Box>
           <Box className={"amount"}>
-            <Box>{formatNumber(totalRewards)}</Box>
+            <Box>{formatNumber(staker.claimedAmount / 10 ** 18)}</Box>
             <span>{token}</span>
           </Box>
         </DialogContentWrapper>
         <ButtonsWrapper>
           <CancelButton onClick={onClose}>Cancel</CancelButton>
           <ButtonPrimary onClick={withdrawAll}>
-            Confirm Withdraw
+            {isLoading ? <CircularProgress size={30} /> : "Confirm Withdraw"}
           </ButtonPrimary>
         </ButtonsWrapper>
       </DialogContent>

@@ -2,7 +2,6 @@ import { useCallback, useMemo } from "react";
 import ILockPosition from "stores/interfaces/ILockPosition";
 import useStakingContext from "context/staking";
 
-
 export const PENALTY_FEE = 0.1;
 
 const useEarlyUnstake = (lockPosition: ILockPosition, onFinish: () => void) => {
@@ -13,17 +12,15 @@ const useEarlyUnstake = (lockPosition: ILockPosition, onFinish: () => void) => {
   }, [action, lockPosition]);
 
   const penaltyFee = useMemo(() => {
-    return lockPosition.amount * (PENALTY_FEE / 100)
-  }, [lockPosition])
+    return lockPosition.amount * (PENALTY_FEE / 100);
+  }, [lockPosition]);
 
-  const earlyUnstakeHandler = useCallback(() => {
+  const earlyUnstakeHandler = useCallback(async () => {
     try {
-      handleEarlyUnstake(lockPosition.lockId);
+      await handleEarlyUnstake(lockPosition.lockId);
       onFinish();
-    } catch (e) {
-
-    }
-  }, [lockPosition, handleEarlyUnstake]);
+    } catch (e) {}
+  }, [lockPosition, handleEarlyUnstake, onFinish]);
 
   return {
     unstakeAmount: lockPosition.amount,

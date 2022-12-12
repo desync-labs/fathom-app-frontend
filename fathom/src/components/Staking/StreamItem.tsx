@@ -154,11 +154,14 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
               token={token}
               lockPosition={unstake}
               onFinish={(unstakeAmount: number) => {
-                processFlow("unstake-cooldown");
+                processFlow("unstake-cooldown", {
+                  ...unstake,
+                  amount: unstakeAmount,
+                } as ILockPosition);
               }}
             />
           ),
-        [unstake, token, dialogAction, onClose]
+        [unstake, token, dialogAction, onClose, processFlow]
       )}
 
       {useMemo(
@@ -194,11 +197,10 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
             <WithdrawDialog
               token={token}
               onClose={onClose}
-              totalRewards={totalRewards}
             />
           )
         );
-      }, [dialogAction, token, onClose, totalRewards])}
+      }, [dialogAction, token, onClose])}
     </>
   );
 };
