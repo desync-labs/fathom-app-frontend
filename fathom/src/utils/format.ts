@@ -6,7 +6,6 @@ const formatter = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 2,
 });
 
-
 export const formatNumber = (number: number) => {
   return formatter
     .formatToParts(number)

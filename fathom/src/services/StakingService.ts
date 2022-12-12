@@ -44,6 +44,7 @@ export default class StakingService implements IStakingService {
   async handleUnlock(
     account: string,
     lockId: number,
+    amount: number,
     transactionStore: ActiveWeb3Transactions
   ): Promise<void> {
     const Staking = Web3Utils.getContractInstance(
@@ -51,7 +52,7 @@ export default class StakingService implements IStakingService {
       this.chainId
     );
     return Staking.methods
-      .unlock(lockId)
+      .unlockPartially(lockId, this.toWei(amount))
       .send({ from: account })
       .on("transactionHash", (hash: any) => {
         transactionStore.addTransaction({
