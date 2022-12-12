@@ -1,10 +1,11 @@
 import { useCallback, useMemo } from "react";
 import ILockPosition from "stores/interfaces/ILockPosition";
 import useStakingContext from "context/staking";
+import { EarlyUnstakeDialogProps } from "components/Staking/Dialog/EarlyUnstakeDialog";
 
 export const PENALTY_FEE = 0.1;
 
-const useEarlyUnstake = (lockPosition: ILockPosition, onFinish: () => void) => {
+const useEarlyUnstake = (lockPosition: ILockPosition, onFinish: EarlyUnstakeDialogProps['onFinish']) => {
   const { action, handleEarlyUnstake } = useStakingContext();
 
   const isLoading = useMemo(() => {
@@ -18,9 +19,9 @@ const useEarlyUnstake = (lockPosition: ILockPosition, onFinish: () => void) => {
   const earlyUnstakeHandler = useCallback(async () => {
     try {
       await handleEarlyUnstake(lockPosition.lockId);
-      onFinish();
+      onFinish(lockPosition.amount - penaltyFee);
     } catch (e) {}
-  }, [lockPosition, handleEarlyUnstake, onFinish]);
+  }, [lockPosition, penaltyFee, handleEarlyUnstake, onFinish]);
 
   return {
     unstakeAmount: lockPosition.amount,

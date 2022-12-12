@@ -27,7 +27,7 @@ const useStakingLockForm = () => {
   const { account, chainId } = useMetaMask()!;
   const { stakingStore, positionStore } = useStores();
 
-  const { setLastTransactionBlock } = useSyncContext();
+  const { setLastTransactionBlock, syncDao, prevSyncDao } = useSyncContext();
 
   const lockDays = watch("lockDays");
   const stakePosition = watch("stakePosition");
@@ -38,7 +38,7 @@ const useStakingLockForm = () => {
   const [xdcBalance, setXdcBalance] = useState<number>(0);
 
   const fthmTokenAddress = useMemo(() => {
-    return SmartContractFactory.vFathom(chainId).address;
+    return SmartContractFactory.FthmToken(chainId).address;
   }, [chainId]);
 
   const getFTHMTokenBalance = useCallback(async () => {
@@ -75,6 +75,12 @@ const useStakingLockForm = () => {
       getFTHMTokenBalance();
     }
   }, [account, getFTHMTokenBalance]);
+
+  useEffect(() => {
+    if (syncDao && !prevSyncDao) {
+      getFTHMTokenBalance();
+    }
+  }, [syncDao, prevSyncDao, getFTHMTokenBalance]);
 
   useEffect(() => {
     if (chainId && stakePosition && fthmTokenAddress) {
@@ -127,10 +133,7 @@ const useStakingLockForm = () => {
     setApprovalPending(true);
     try {
       // @TODO: hardcoded FTHM address
-      await stakingStore.approveFTHM(
-        account,
-        fthmTokenAddress
-      );
+      await stakingStore.approveFTHM(account, fthmTokenAddress);
       setApprovedBtn(false);
     } catch (e) {
       setApprovedBtn(true);

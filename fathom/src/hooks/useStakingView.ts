@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
 import useMetaMask from "context/metamask";
 import { LogLevel, useLogger } from "helpers/Logger";
 import { useStores } from "stores";
@@ -32,7 +32,7 @@ const useStakingView = () => {
   const [lockPositions, setLockPositions] = useState<ILockPosition[]>([]);
 
   const [totalRewards, setTotalRewards] = useState(0);
-
+  const previousTotalRewardsRef = useRef<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
 
   const { setLastTransactionBlock, syncDao, prevSyncDao } = useSyncContext();
@@ -46,7 +46,7 @@ const useStakingView = () => {
     loading: protocolStatsLoading,
     refetch: refetchProtocolStats,
   } = useQuery(STAKING_PROTOCOL_STATS, {
-    context: { clientName: "governance" },
+    context: { clientName: "governance", chainId },
   });
 
   const [
@@ -58,14 +58,18 @@ const useStakingView = () => {
       fetchMore: fetchMoreStakers,
     },
   ] = useLazyQuery(STAKING_STAKER, {
-    context: { clientName: "governance" },
+    context: { clientName: "governance", chainId },
   });
 
   const fetchAllClaimRewards = useCallback(() => {
     stakingStore.getStreamClaimableAmount(account).then((amount) => {
-      setTotalRewards(Number(amount))
-    })
-  }, [stakingStore, account, setTotalRewards])
+      setTotalRewards(Number(amount));
+
+      setTimeout(() => {
+        previousTotalRewardsRef.current = amount!;
+      });
+    });
+  }, [stakingStore, account, setTotalRewards]);
 
   useEffect(() => {
     if (syncDao && !prevSyncDao) {
@@ -80,8 +84,6 @@ const useStakingView = () => {
       refetchProtocolStats();
 
       setCurrentPage(1);
-
-      fetchAllClaimRewards();
     }
   }, [
     syncDao,
@@ -90,18 +92,13 @@ const useStakingView = () => {
     refetchStakers,
     refetchProtocolStats,
     setCurrentPage,
-    fetchAllClaimRewards,
   ]);
 
   useEffect(() => {
     if (account && stakersData?.stakers?.length) {
       fetchAllClaimRewards();
     }
-  }, [
-    account,
-    stakersData,
-    fetchAllClaimRewards,
-  ])
+  }, [account, stakersData, fetchAllClaimRewards]);
 
   useEffect(() => {
     if (stakersData?.stakers?.length) {
@@ -117,28 +114,21 @@ const useStakingView = () => {
         }
       );
 
-      Promise.all(promises)
-        .then((result) => {
-          const newLockPositions = stakersData?.stakers[0].lockPositions.map(
-            (lockPosition: ILockPosition, index: number) => {
-              const newLockPosition: ILockPosition = { ...lockPosition };
-              newLockPosition.rewardsAvailable = Number(result[index]);
-              return newLockPosition;
-            }
-          );
+      Promise.all(promises).then((result) => {
+        const newLockPositions = stakersData?.stakers[0].lockPositions.map(
+          (lockPosition: ILockPosition, index: number) => {
+            const newLockPosition: ILockPosition = { ...lockPosition };
+            newLockPosition.rewardsAvailable = Number(result[index]);
+            return newLockPosition;
+          }
+        );
 
-          setLockPositions(newLockPositions);
-        })
-
+        setLockPositions(newLockPositions);
+      });
     } else {
       setLockPositions([]);
     }
-  }, [
-    stakingStore,
-    stakersData,
-    account,
-    setLockPositions,
-  ]);
+  }, [stakingStore, stakersData, account, setLockPositions]);
 
   const processFlow = useCallback(
     (action: string, position?: ILockPosition) => {
@@ -156,7 +146,7 @@ const useStakingView = () => {
 
       if (action === "unstake-cooldown") {
         setDialogAction(DialogActions.UNSTAKE_COOLDOWN);
-        !!position && setUnstake(position)
+        !!position && setUnstake(position);
       }
 
       action === "claim-cooldown" &&
@@ -221,8 +211,10 @@ const useStakingView = () => {
         setLastTransactionBlock(receipt.blockNumber);
       } catch (e) {
         logger.log(LogLevel.error, "Handle early withdrawal");
+        throw e;
+      } finally {
+        setAction(undefined);
       }
-      setAction(undefined);
     },
     [stakingStore, account, logger, setAction, setLastTransactionBlock]
   );
@@ -236,9 +228,11 @@ const useStakingView = () => {
       try {
         const receipt = await stakingStore.handleUnlock(account, lockId);
         setLastTransactionBlock(receipt.blockNumber);
-      } catch (e: any) {}
-
-      setAction(undefined);
+      } catch (e: any) {
+        throw e;
+      } finally {
+        setAction(undefined);
+      }
     },
     [stakingStore, account, setAction, setLastTransactionBlock]
   );
@@ -284,7 +278,9 @@ const useStakingView = () => {
 
     dialogAction,
     setDialogAction,
+
     totalRewards,
+    previousTotalRewards: previousTotalRewardsRef.current,
 
     setUnstake,
     setEarlyUnstake,

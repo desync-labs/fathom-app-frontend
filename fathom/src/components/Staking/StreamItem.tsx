@@ -29,6 +29,7 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
   const {
     lockPositions,
     totalRewards,
+    previousTotalRewards,
     dialogAction,
     unstake,
     earlyUnstake,
@@ -58,7 +59,7 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
             ) : (
               <Grid container sx={{ gap: "12px" }}>
                 {lockPositions.map(
-                  (lockPosition: ILockPosition, index: number) => (
+                  (lockPosition: ILockPosition) => (
                     <StakingViewItem
                       key={lockPosition.lockId}
                       token={token}
@@ -97,7 +98,7 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
               onSkip={
                 unstake || earlyUnstake ? () => processFlow("skip") : null
               }
-              onClaim={() => processFlow("claim-cooldown")}
+              onClaim={() => processFlow("claim-cooldown", )}
             />
           )
         );
@@ -115,7 +116,7 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
         return (
           dialogAction === DialogActions.CLAIM_REWARDS_COOLDOWN && (
             <ClaimRewardsCoolDownDialog
-              totalRewards={totalRewards}
+              totalRewards={previousTotalRewards}
               token={token}
               onClose={onClose}
               onContinue={
@@ -125,7 +126,7 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
           )
         );
       }, [
-        totalRewards,
+        previousTotalRewards,
         token,
         dialogAction,
         onClose,
@@ -171,7 +172,12 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
               token={token}
               onClose={onClose}
               lockPosition={earlyUnstake!}
-              onFinish={() => processFlow("unstake-cooldown")}
+              onFinish={(unstakeAmount: number) => {
+                processFlow("unstake-cooldown", {
+                  ...earlyUnstake,
+                  amount: unstakeAmount,
+                } as ILockPosition);
+              }}
             />
           ),
         [token, dialogAction, earlyUnstake, onClose, processFlow]

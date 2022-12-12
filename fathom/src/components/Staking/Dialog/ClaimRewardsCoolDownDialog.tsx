@@ -92,13 +92,12 @@ const ClaimRewardsCoolDownDialog: FC<ClaimRewardsDialogProps> = ({
             <span>{token}</span>
           </Box>
         </DialogContentWrapper>
-        <ButtonsWrapper>
-          <CancelButton
-            sx={{ width: onContinue ? "calc(50% - 3px)" : "100%" }}
-            onClick={onClose}
-          >
-            Back to My Positions
-          </CancelButton>
+        <ButtonsWrapper
+          sx={{
+            "> button": { width: onContinue ? "calc(50% - 3px)" : "100%" },
+          }}
+        >
+          <CancelButton onClick={onClose}>Back to My Positions</CancelButton>
           {onContinue && (
             <ButtonPrimary onClick={onContinue}>
               Continue to Unstake
