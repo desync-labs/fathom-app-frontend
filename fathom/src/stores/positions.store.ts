@@ -40,6 +40,7 @@ export default class PositionStore {
         });
     } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+      throw e;
     }
   }
 
@@ -53,17 +54,21 @@ export default class PositionStore {
 
   async approve(address: string, tokenAddress: string) {
     try {
-      await this.service.approve(
+      return await this.service.approve(
         address,
         tokenAddress,
         this.rootStore.transactionStore
-      );
-      this.rootStore.alertStore.setShowSuccessAlert(
-        true,
-        "Approval was successful!"
-      );
+      ).then((receipt) => {
+        this.rootStore.alertStore.setShowSuccessAlert(
+          true,
+          "Approval was successful!"
+        );
+
+        return receipt;
+      });
     } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+      throw e;
     }
   }
 

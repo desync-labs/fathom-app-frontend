@@ -208,7 +208,6 @@ const useOpenPosition = (
           Number(fathomToken)
         )
         setLastTransactionBlock(receipt.blockNumber)
-
         onClose();
       } catch (e) {
         console.log(e);

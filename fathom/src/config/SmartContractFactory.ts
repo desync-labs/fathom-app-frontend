@@ -12,7 +12,7 @@ import StakingGetter from "config/ABI/StakingGetter.json";
 import MainToken from "config/ABI/MainToken.json";
 import FathomStats from "config/ABI/FathomStats.json";
 import Governor from "config/ABI/Governor.json";
-import VeFathomAbi from "config/ABI/VeFathom.json";
+import VeFathomAbi from "config/ABI/vFathom.json";
 import DexPriceOracle from "config/ABI/DexPriceOracle.json";
 import CollateralTokenAdapterAbi from 'config/ABI/CollateralTokenAdapter.json';
 
@@ -170,6 +170,13 @@ export class SmartContractFactory {
     return {
       abi: MainToken.abi as AbiItem[],
       address: fthmTokenAddress,
+    };
+  }
+
+  public static FthmToken(chainId: number) {
+    return {
+      abi: MainToken.abi as AbiItem[],
+      address: SmartContractFactory.Addresses(chainId).fthmToken,
     };
   }
 

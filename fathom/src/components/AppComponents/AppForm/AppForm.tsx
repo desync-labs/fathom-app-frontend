@@ -66,6 +66,9 @@ export const AppTextField = styled(MuiTextField)`
     margin-left: 0;
     margin-top: 5px;
     color: #6379a1;
+    &.Mui-error {
+      color: #DD3C3C;
+    }
     p {
       padding-left: 0;
     }

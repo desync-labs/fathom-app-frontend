@@ -123,20 +123,22 @@ const StakingLockForm: FC = () => {
                 helperText={
                   <>
                     {error && (
-                      <Typography
-                        sx={{ fontSize: "12px", paddingLeft: "22px" }}
+                      <Box
+                        component={'span'}
+                        sx={{ fontSize: "12px" }}
                       >
                         Field is required
-                      </Typography>
+                      </Box>
                     )}
                     {balanceError && (
                       <>
                         <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
-                        <Typography
-                          sx={{ fontSize: "12px", paddingLeft: "22px" }}
+                        <Box
+                          component={'span'}
+                          sx={{ fontSize: "12px" }}
                         >
                           You do not have enough FTHM
-                        </Typography>
+                        </Box>
                       </>
                     )}
                   </>
@@ -158,11 +160,42 @@ const StakingLockForm: FC = () => {
               <AppFormInputWrapper>
                 <AppFormLabel>Lock period</AppFormLabel>
                 <AppTextField
+                  error={!!error}
                   sx={{
                     input: {
                       paddingLeft: "10px",
                     },
                   }}
+                  helperText={
+                    <>
+                      {error && error.type === 'min' && (
+                        <Box
+                          component='span'
+                          sx={{ fontSize: "12px"}}
+                        >
+                          Minimum period is 1 day
+                        </Box>
+                      )}
+                      {
+                        error && error.type === 'max' && (
+                          <Box
+                            component='span'
+                            sx={{ fontSize: "12px" }}
+                          >
+                            Maximum period is 365 days
+                          </Box>
+                        )
+                      }
+                      {error && error.type === 'required' && (
+                        <Box
+                          component={'span'}
+                          sx={{ fontSize: "12px" }}
+                        >
+                          Field is required
+                        </Box>
+                      )}
+                    </>
+                  }
                   id="outlined-helperText"
                   value={value}
                   type="number"

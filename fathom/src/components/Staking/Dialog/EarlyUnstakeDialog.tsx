@@ -94,11 +94,11 @@ const Description = styled(Typography)`
   padding: 0 15px;
 `;
 
-type EarlyUnstakeDialogProps = {
+export type EarlyUnstakeDialogProps = {
   token: string;
   lockPosition: ILockPosition;
   onClose: () => void;
-  onFinish: () => void;
+  onFinish: (unstakeAmount: number) => void;
 };
 
 const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({
