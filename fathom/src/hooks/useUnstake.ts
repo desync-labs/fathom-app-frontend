@@ -8,6 +8,7 @@ const useUnstake = (
   onFinish: UnStakeDialogProps["onFinish"]
 ) => {
   const [balanceError, setBalanceError] = useState<boolean>(false);
+  const [requiredError, setRequiredError] = useState<boolean>(false);
   const [unStakeAmount, setUnStakeAmount] = useState<number>(0);
 
   const { action, handleUnlock } = useStakingContext();
@@ -29,6 +30,14 @@ const useUnstake = (
     }
   }, [unStakeAmount, totalBalance]);
 
+  useEffect(() => {
+    if (!unStakeAmount) {
+      setRequiredError(true);
+    } else {
+      setRequiredError(false);
+    }
+  }, [unStakeAmount, setRequiredError]);
+
   const handleUnStakeAmountChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       const value = Number(e.target.value);
@@ -43,13 +52,14 @@ const useUnstake = (
 
   const unStakeHandler = useCallback(async () => {
     try {
-      await handleUnlock(lockPosition!.lockId);
+      await handleUnlock(lockPosition!.lockId, unStakeAmount);
       onFinish(unStakeAmount);
     } catch (e) {}
   }, [lockPosition, handleUnlock, onFinish, unStakeAmount]);
 
   return {
     balanceError,
+    requiredError,
     unStakeAmount,
     totalBalance,
 

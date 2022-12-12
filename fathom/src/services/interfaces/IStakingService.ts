@@ -11,6 +11,7 @@ export default interface IStakingService {
   handleUnlock(
     account: string,
     lockId: number,
+    amount: number,
     transactionStore: ActiveWeb3Transactions
   ): Promise<void>;
 

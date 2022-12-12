@@ -151,7 +151,6 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
   lockPosition,
   token,
 }) => {
-  const [timer, setTimer] = useState();
   const [seconds, setSeconds] = useState(lockPosition.end - Date.now() / 1000);
 
   const { processFlow } = useStakingContext();
@@ -161,19 +160,18 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
   useEffect(() => {
     if (lockPosition.end - Date.now() / 1000 <= 0) {
       return setSeconds(0);
+    } else {
+      return setSeconds(lockPosition.end - Date.now() / 1000);
     }
+  }, [lockPosition, setSeconds]);
 
-    const interval = setInterval(() => {
-      setSeconds((prev) => prev - 1);
-    }, 1000);
-
-    // @ts-ignore
-    setTimer(interval);
-
-    return () => {
-      clearInterval(timer);
-    };
-  }, [lockPosition, setTimer, setSeconds]);
+  useEffect(() => {
+    if (seconds > 0) {
+      setTimeout(() => {
+        setSeconds(seconds - 1);
+      }, 1000);
+    }
+  }, [seconds, setSeconds]);
 
   return (
     <StakingViewItemWrapper item xs={6}>

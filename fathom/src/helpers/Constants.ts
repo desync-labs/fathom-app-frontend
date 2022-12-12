@@ -23,5 +23,5 @@ export class Constants {
   public static MAX_UINT256 =
     "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
 
-  public static COUNT_PER_PAGE = 3;
+  public static COUNT_PER_PAGE = 4;
 }

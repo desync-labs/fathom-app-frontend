@@ -30,7 +30,8 @@ import InfoIcon from "@mui/icons-material/Info";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import {
   ButtonPrimary,
-  MaxButton,
+  CancelButton,
+  MaxButton
 } from "components/AppComponents/AppButton/AppButton";
 import useUnstake from "hooks/useUnstake";
 import { InfoMessageWrapper } from "components/Staking/Dialog/ClaimRewardsDialog";
@@ -61,6 +62,17 @@ const ConfirmButton = styled(ButtonPrimary)`
   font-weight: 600;
   font-size: 17px;
   line-height: 24px;
+`;
+
+const ButtonsWrapper = styled(Box)`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 15px;
+
+  > button {
+    width: calc(50% - 3px);
+  }
 `;
 
 export type UnStakeDialogProps = {
@@ -149,7 +161,7 @@ const UnStakeDialog: FC<UnStakeDialogProps> = ({
           <Grid item xs={12}>
             <InfoWrapper>
               <InfoLabel>
-                Total Available
+                You locked
                 <InfoIcon sx={{ fontSize: "18px", color: "#6379A1" }} />
               </InfoLabel>
               <InfoValue>
@@ -158,34 +170,31 @@ const UnStakeDialog: FC<UnStakeDialogProps> = ({
             </InfoWrapper>
             <InfoWrapper>
               <InfoLabel>
-                Maximum Received
+                You'll received
                 <InfoIcon sx={{ fontSize: "18px", color: "#6379A1" }} />
               </InfoLabel>
               <InfoValue>
-                {formatNumber(totalBalance / 10 ** 18)} {token}
+                {unStakeAmount ? formatNumber(Number(unStakeAmount)) : "--"} {token}
               </InfoValue>
             </InfoWrapper>
           </Grid>
         </UnStakeGrid>
+        <ButtonsWrapper>
+          <CancelButton onClick={onClose}>Cancel</CancelButton>
+          <ConfirmButton
+            disabled={isLoading}
+            isLoading={isLoading}
+            onClick={unStakeHandler}
+          >
+            {isLoading ? <CircularProgress size={30} /> : "Yes, Unstake"}
+          </ConfirmButton>
+        </ButtonsWrapper>
         <InfoMessageWrapper>
           <InfoIcon sx={{ fontSize: "18px", color: "#4F658C" }} />
           <Typography>
-            By clicking “Confirm Unstake”, you’ll be signing 2 transactions in
-            MetaMask to withdraw this amount to your connected wallet, and to
-            unlock the position.
+            Proceeding will prompt you to sign 1 txn in MetaMask.
           </Typography>
         </InfoMessageWrapper>
-        <UnStakeGrid container>
-          <Grid item xs={12}>
-            <ConfirmButton
-              disabled={isLoading}
-              isLoading={isLoading}
-              onClick={unStakeHandler}
-            >
-              {isLoading ? <CircularProgress size={30} /> : "Confirm Unstake"}
-            </ConfirmButton>
-          </Grid>
-        </UnStakeGrid>
       </DialogContent>
     </UnStakeDialogWrapper>
   );

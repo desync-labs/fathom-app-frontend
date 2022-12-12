@@ -67,7 +67,7 @@ const useStakingView = () => {
 
       setTimeout(() => {
         previousTotalRewardsRef.current = amount!;
-      });
+      }, 1000);
     });
   }, [stakingStore, account, setTotalRewards]);
 
@@ -135,18 +135,30 @@ const useStakingView = () => {
       action === "early" && setEarlyUnstake(position!);
       action === "unstake" && setUnstake(position!);
 
-      ["early", "unstake"].includes(action) &&
-        position!.rewardsAvailable > 0 &&
-        setDialogAction(DialogActions.UNCLAIMED);
+      if (["early", "unstake"].includes(action)) {
+        if (position!.rewardsAvailable > 0) {
+          return setDialogAction(DialogActions.UNCLAIMED);
+        }
+        action === "early"
+          ? setDialogAction(DialogActions.EARLY_UNSTAKE)
+          : setDialogAction(DialogActions.UNSTAKE);
+      }
 
       if (action === "skip" || action === "continue") {
         !!unstake && setDialogAction(DialogActions.UNSTAKE);
         !!earlyUnstake && setDialogAction(DialogActions.EARLY_UNSTAKE);
       }
 
-      if (action === "unstake-cooldown") {
+      if (action === "unstake-cooldown-unstake") {
         setDialogAction(DialogActions.UNSTAKE_COOLDOWN);
+        console.log("Unstake", position);
         !!position && setUnstake(position);
+      }
+
+      if (action === "unstake-cooldown-early-unstake") {
+        setDialogAction(DialogActions.UNSTAKE_COOLDOWN);
+        console.log("Early unstake", position);
+        !!position && setEarlyUnstake(position);
       }
 
       action === "claim-cooldown" &&
@@ -176,26 +188,32 @@ const useStakingView = () => {
       setAction({ type: "claim", id: null });
       try {
         const receipt = await stakingStore.handleClaimRewards(account);
-        setLastTransactionBlock(receipt.blockNumber);
         callback();
+        setLastTransactionBlock(receipt.blockNumber);
       } catch (e) {
         logger.log(LogLevel.error, "Claim error");
+      } finally {
+        setAction(undefined);
       }
-      setAction(undefined);
     },
     [stakingStore, account, logger, setAction, setLastTransactionBlock]
   );
 
-  const withdrawAll = useCallback(async () => {
-    setAction({ type: "withdrawAll", id: null });
-    try {
-      const receipt = await stakingStore.handleWithdrawAll(account);
-      setLastTransactionBlock(receipt.blockNumber);
-    } catch (e) {
-      logger.log(LogLevel.error, "Withdraw error");
-    }
-    setAction(undefined);
-  }, [stakingStore, account, logger, setAction, setLastTransactionBlock]);
+  const withdrawAll = useCallback(
+    async (callback: Function) => {
+      setAction({ type: "withdrawAll", id: null });
+      try {
+        const receipt = await stakingStore.handleWithdrawAll(account);
+        callback();
+        setLastTransactionBlock(receipt.blockNumber);
+      } catch (e) {
+        logger.log(LogLevel.error, "Withdraw error");
+      } finally {
+        setAction(undefined);
+      }
+    },
+    [stakingStore, account, logger, setAction, setLastTransactionBlock]
+  );
 
   const handleEarlyUnstake = useCallback(
     async (lockId: number) => {
@@ -209,6 +227,7 @@ const useStakingView = () => {
           lockId
         );
         setLastTransactionBlock(receipt.blockNumber);
+        return receipt;
       } catch (e) {
         logger.log(LogLevel.error, "Handle early withdrawal");
         throw e;
@@ -220,15 +239,22 @@ const useStakingView = () => {
   );
 
   const handleUnlock = useCallback(
-    async (lockId: number) => {
+    async (lockId: number, amount: number) => {
       setAction({
         type: "unlock",
         id: lockId,
       });
       try {
-        const receipt = await stakingStore.handleUnlock(account, lockId);
+        const receipt = await stakingStore.handleUnlock(
+          account,
+          lockId,
+          amount
+        );
         setLastTransactionBlock(receipt.blockNumber);
+
+        return receipt;
       } catch (e: any) {
+        logger.log(LogLevel.error, "Handle early withdrawal");
         throw e;
       } finally {
         setAction(undefined);

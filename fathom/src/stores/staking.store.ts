@@ -55,10 +55,10 @@ export default class StakingStore {
     }
   }
 
-  async handleUnlock(account: string, lockId: number): Promise<any> {
+  async handleUnlock(account: string, lockId: number, amount: number): Promise<any> {
     try {
       return await this.service
-        .handleUnlock(account, lockId, this.rootStore.transactionStore)
+        .handleUnlock(account, lockId, amount, this.rootStore.transactionStore)
         .then((receipt) => {
           this.rootStore.alertStore.setShowSuccessAlert(
             true,

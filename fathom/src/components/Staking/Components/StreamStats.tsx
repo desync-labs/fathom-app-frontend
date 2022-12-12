@@ -287,12 +287,12 @@ const StreamStats: FC = () => {
                     <StakingCountdown timeObject={secondsToTime(seconds)} />
                   </CooldownCountDown>
                   <MyStatsValue>
-                    <strong>400 FTHM</strong>
+                    <strong>{formatNumber(Number(staker.claimedAmount) / 10 ** 18)}{" "} FTHM</strong>
                     <span>$500.00</span>
                   </MyStatsValue>
                 </>
               )}
-              {staker && Number(staker.claimedAmount) > 0 && (
+              {seconds <= 0 && staker && Number(staker.claimedAmount) > 0 && (
                 <Grid container>
                   <Grid item xs={6}>
                     <StatsLabel>
