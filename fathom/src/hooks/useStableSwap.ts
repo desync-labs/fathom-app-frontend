@@ -11,8 +11,8 @@ const useStableSwap = (options: string[]) => {
   const [inputCurrency, setInputCurrency] = useState<string>(options[0]);
   const [outputCurrency, setOutputCurrency] = useState<string>(options[1]);
 
-  const [inputValue, setInputValue] = useState<number>(0);
-  const [outputValue, setOutputValue] = useState<number>(0);
+  const [inputValue, setInputValue] = useState<number | null>(null);
+  const [outputValue, setOutputValue] = useState<number | null>(null);
 
   const [approveInputBtn, setApproveInputBtn] = useState<boolean>(false);
   const [approveOutputBtn, setApproveOutputBtn] = useState<boolean>(false);
@@ -30,7 +30,7 @@ const useStableSwap = (options: string[]) => {
     (amount: number, currency: string, type: string) => {
       const oppositeValue = Number(
         currency === "USDT" ? amount / fxdPrice : amount * fxdPrice
-      );
+      ) || null;
 
       type === "input"
         ? setOutputValue(oppositeValue)
@@ -159,7 +159,7 @@ const useStableSwap = (options: string[]) => {
   const handleSwap = useCallback(async () => {
     setSwapPending(true);
     try {
-      await stableSwapStore.swapToken(inputCurrency, account, inputValue);
+      await stableSwapStore.swapToken(inputCurrency, account, inputValue as number);
       handleCurrencyChange(inputCurrency, outputCurrency);
     } catch (e) {}
     setSwapPending(false);
@@ -234,7 +234,7 @@ const useStableSwap = (options: string[]) => {
   const setInputCurrencyHandler = useCallback(
     (currency: string) => {
       setInputCurrency(currency);
-      setOppositeCurrency(inputValue, currency, "input");
+      setOppositeCurrency(inputValue as number, currency, "input");
     },
     [inputValue, setInputCurrency, setOppositeCurrency]
   );
@@ -242,15 +242,15 @@ const useStableSwap = (options: string[]) => {
   const setOutputCurrencyHandler = useCallback(
     (currency: string) => {
       setOutputCurrency(currency);
-      setOppositeCurrency(outputValue, currency, "output");
+      setOppositeCurrency(outputValue as number, currency, "output");
     },
     [outputValue, setOutputCurrency, setOppositeCurrency]
   );
 
   const setMax = useCallback(() => {
-    const formattedBalance = Number(inputBalance / 10 ** 18);
+    const formattedBalance = Number(inputBalance / 10 ** 18) || null;
     setInputValue(formattedBalance);
-    setOppositeCurrency(formattedBalance, inputCurrency, "input");
+    setOppositeCurrency(formattedBalance as number, inputCurrency, "input");
   }, [inputBalance, inputCurrency, setInputValue, setOppositeCurrency]);
 
   return {

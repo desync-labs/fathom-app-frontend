@@ -6,11 +6,7 @@ import { DialogActions } from "hooks/useStakingView";
 import UnstakeDialog from "components/Staking/Dialog/UnstakeDialog";
 import EarlyUnstakeDialog from "components/Staking/Dialog/EarlyUnstakeDialog";
 import { NoResults } from "components/AppComponents/AppBox/AppBox";
-import {
-  Box,
-  Grid,
-  Pagination
-} from "@mui/material";
+import { Box, CircularProgress, Grid, Pagination } from "@mui/material";
 import UnclaimedRewardsDialog from "components/Staking/Dialog/UnclaimedRewardsDialog";
 import useStakingContext from "context/staking";
 import UnstakeCoolDownDialog from "./Dialog/UnstakeCoolDownDialog";
@@ -41,7 +37,9 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
 
     itemCount,
     currentPage,
-    handlePageChange
+    handlePageChange,
+
+    isLoading,
   } = useStakingContext();
 
   return (
@@ -49,14 +47,19 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
       {useMemo(
         () => (
           <>
-            {lockPositions.length === 0 ? (
+            {!isLoading && lockPositions.length === 0 ? (
               <NoResults variant="h6">You have no open positions!</NoResults>
+            ) : isLoading ? (
+              <Grid container>
+                <Grid item xs={12} sx={{ textAlign: "center" }}>
+                  <CircularProgress size={30} />
+                </Grid>
+              </Grid>
             ) : (
               <Grid container sx={{ gap: "12px" }}>
                 {lockPositions.map(
                   (lockPosition: ILockPosition, index: number) => (
                     <StakingViewItem
-                      index={index}
                       key={lockPosition.lockId}
                       token={token}
                       lockPosition={lockPosition}
@@ -74,7 +77,14 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
             </PaginationWrapper>
           </>
         ),
-        [token, lockPositions, currentPage, itemCount, handlePageChange]
+        [
+          token,
+          lockPositions,
+          currentPage,
+          itemCount,
+          handlePageChange,
+          isLoading,
+        ]
       )}
 
       {useMemo(() => {
@@ -108,11 +118,21 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
               totalRewards={totalRewards}
               token={token}
               onClose={onClose}
-              onContinue={() => processFlow("continue")}
+              onContinue={
+                unstake || earlyUnstake ? () => processFlow("continue") : null
+              }
             />
           )
         );
-      }, [totalRewards, token, dialogAction, onClose, processFlow])}
+      }, [
+        totalRewards,
+        token,
+        dialogAction,
+        onClose,
+        processFlow,
+        unstake,
+        earlyUnstake,
+      ])}
 
       {useMemo(() => {
         return (
@@ -133,6 +153,9 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
               onClose={onClose}
               token={token}
               lockPosition={unstake}
+              onFinish={(unstakeAmount: number) => {
+                processFlow("unstake-cooldown");
+              }}
             />
           ),
         [unstake, token, dialogAction, onClose]

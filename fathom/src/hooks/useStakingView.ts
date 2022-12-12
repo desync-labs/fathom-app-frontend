@@ -1,10 +1,4 @@
-import {
-  ChangeEvent,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState
-} from "react";
+import { ChangeEvent, useCallback, useEffect, useMemo, useState } from "react";
 import useMetaMask from "context/metamask";
 import { LogLevel, useLogger } from "helpers/Logger";
 import { useStores } from "stores";
@@ -35,12 +29,13 @@ const useStakingView = () => {
 
   const [unstake, setUnstake] = useState<null | ILockPosition>(null);
   const [earlyUnstake, setEarlyUnstake] = useState<null | ILockPosition>(null);
-  const [lockPositions, setLockPositions] = useState([]);
+  const [lockPositions, setLockPositions] = useState<ILockPosition[]>([]);
+
+  const [totalRewards, setTotalRewards] = useState(0);;
 
   const [currentPage, setCurrentPage] = useState<number>(1);
 
-  const { setLastTransactionBlock, syncDao, prevSyncDao } =
-    useSyncContext();
+  const { setLastTransactionBlock, syncDao, prevSyncDao } = useSyncContext();
 
   const [dialogAction, setDialogAction] = useState<DialogActions>(
     DialogActions.NONE
@@ -56,7 +51,12 @@ const useStakingView = () => {
 
   const [
     fetchStakers,
-    { data: stakersData, loading: stakersLoading, refetch: refetchStakers, fetchMore: fetchMoreStakers },
+    {
+      data: stakersData,
+      loading: stakersLoading,
+      refetch: refetchStakers,
+      fetchMore: fetchMoreStakers,
+    },
   ] = useLazyQuery(STAKING_STAKER, {
     context: { clientName: "governance" },
   });
@@ -72,6 +72,8 @@ const useStakingView = () => {
       });
 
       refetchProtocolStats();
+
+      setCurrentPage(1);
     }
   }, [
     syncDao,
@@ -79,7 +81,21 @@ const useStakingView = () => {
     prevSyncDao,
     refetchStakers,
     refetchProtocolStats,
+    setCurrentPage,
   ]);
+
+  useEffect(() => {
+    if (account && stakersData?.stakers?.length) {
+      stakingStore.getStreamClaimableAmount(account).then((amount) => {
+        setTotalRewards(Number(amount))
+      })
+    }
+  }, [
+    account,
+    stakingStore,
+    stakersData,
+    setTotalRewards,
+  ])
 
   useEffect(() => {
     if (stakersData?.stakers?.length) {
@@ -95,21 +111,28 @@ const useStakingView = () => {
         }
       );
 
-      Promise.all(promises).then((result) => {
-        const newLockPositions = stakersData?.stakers[0].lockPositions.map(
-          (lockPosition: ILockPosition, index: number) => {
-            const newLockPosition: ILockPosition = { ...lockPosition };
-            newLockPosition.rewardsAvailable = Number(result[index]);
-            return newLockPosition;
-          }
-        );
+      Promise.all(promises)
+        .then((result) => {
+          const newLockPositions = stakersData?.stakers[0].lockPositions.map(
+            (lockPosition: ILockPosition, index: number) => {
+              const newLockPosition: ILockPosition = { ...lockPosition };
+              newLockPosition.rewardsAvailable = Number(result[index]);
+              return newLockPosition;
+            }
+          );
 
-        setLockPositions(newLockPositions);
-      });
+          setLockPositions(newLockPositions);
+        })
+
     } else {
       setLockPositions([]);
     }
-  }, [stakingStore, stakersData, account, setLockPositions]);
+  }, [
+    stakingStore,
+    stakersData,
+    account,
+    setLockPositions,
+  ]);
 
   const processFlow = useCallback(
     (action: string, position?: ILockPosition) => {
@@ -216,12 +239,6 @@ const useStakingView = () => {
     return remainingTime <= 0;
   }, []);
 
-  const totalRewards = useMemo(() => {
-    return stakersData?.stakers?.length
-      ? Number(stakersData?.stakers[0].claimedAmount)
-      : 0;
-  }, [stakersData]);
-
   const onClose = useCallback(() => {
     setEarlyUnstake(null);
     setUnstake(null);
@@ -277,9 +294,11 @@ const useStakingView = () => {
         ? protocolStatsInfo.protocolStats[0]
         : null,
 
-    itemCount: stakersData?.stakers?.length ? stakersData.stakers[0].lockPositionCount : 0,
+    itemCount: stakersData?.stakers?.length
+      ? stakersData.stakers[0].lockPositionCount
+      : 0,
     currentPage,
-    handlePageChange
+    handlePageChange,
   } as const;
 };
 

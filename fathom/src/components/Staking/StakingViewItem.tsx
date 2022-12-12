@@ -143,7 +143,6 @@ const ButtonGrid = styled(Grid)`
 const InfoWrapper = styled(Box)``;
 
 type StakingViewItemPropsType = {
-  index: number;
   lockPosition: ILockPosition;
   token: string;
 };
@@ -151,17 +150,16 @@ type StakingViewItemPropsType = {
 const StakingViewItem: FC<StakingViewItemPropsType> = ({
   lockPosition,
   token,
-  index,
 }) => {
   const [timer, setTimer] = useState();
-  const [seconds, setSeconds] = useState(lockPosition.end - Date.now());
+  const [seconds, setSeconds] = useState(lockPosition.end - Date.now() / 1000);
 
   const { processFlow } = useStakingContext();
 
   const { isUnlockable } = useStakingContext();
 
   useEffect(() => {
-    if (lockPosition.end - Date.now() <= 0) {
+    if (lockPosition.end - Date.now() / 1000 <= 0) {
       return setSeconds(0);
     }
 

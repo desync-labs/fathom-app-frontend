@@ -120,6 +120,14 @@ export default class StakingStore {
     }
   }
 
+  async getStreamClaimableAmount(account: string) {
+    try {
+      return await this.service.getStreamClaimableAmount(account);
+    } catch (e: any) {
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+    }
+  }
+
   async approvalStatusStakingFTHM(
     address: string,
     stakingPosition: number,

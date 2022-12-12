@@ -140,7 +140,7 @@ const CooldownCountDown = styled(Box)`
 `;
 
 const StreamStats: FC = () => {
-  const { processFlow, protocolStatsInfo, staker } = useStakingContext();
+  const { processFlow, protocolStatsInfo, staker, totalRewards } = useStakingContext();
 
   return (
     <Box sx={{ padding: "0 10px" }}>
@@ -219,24 +219,24 @@ const StreamStats: FC = () => {
 
             <MyStatsBlock>
               <Grid container>
-                <Grid item xs={6}>
+                <Grid item xs={8}>
                   <StatsLabel>
                     Claimable rewards <InfoIcon sx={{ fontSize: "18px" }} />
                   </StatsLabel>
                   {staker && (
                     <MyStatsValue className={"blue"}>
                       <strong>
-                        {formatNumber(staker.claimedAmount / 10 ** 18)}FTHM
+                        {formatNumber(totalRewards / 10 ** 18)} FTHM
                       </strong>
                       <span>$153.00</span>
                     </MyStatsValue>
                   )}
                 </Grid>
-                <ButtonGrid item xs={6}>
+                { totalRewards > 0 && <ButtonGrid item xs={4}>
                   <StatsButton onClick={() => processFlow("claim")}>
                     Claim
                   </StatsButton>
-                </ButtonGrid>
+                </ButtonGrid> }
               </Grid>
             </MyStatsBlock>
 

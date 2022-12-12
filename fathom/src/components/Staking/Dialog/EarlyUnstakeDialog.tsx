@@ -137,7 +137,7 @@ const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({
           <img src={getTokenLogoURL(token)} alt={"token-logo"} width={58} />
           <Box>You’re requesting to unstake</Box>
           <Box className={"amount"}>
-            <Box>{formatNumber(unstakeAmount)}</Box>
+            <Box>{formatNumber(unstakeAmount / 10 ** 18)}</Box>
             <span>{token}</span>
           </Box>
         </DialogContentWrapper>
@@ -153,13 +153,13 @@ const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({
                 <InfoIcon sx={{ fontSize: "18px", color: "#6379A1" }} />
               </InfoLabel>
               <InfoValue>
-                {formatNumber(unstakeAmount)} {token}
+                {formatNumber(unstakeAmount / 10 ** 18)} {token}
               </InfoValue>
             </InfoWrapper>
             <InfoWrapper>
               <InfoLabelError>Penalty Fee</InfoLabelError>
               <InfoValueError>
-                {formatNumber(penaltyFee)} {token} ({PENALTY_FEE}%)
+                {formatNumber(penaltyFee / 10 ** 18)} {token} ({PENALTY_FEE}%)
               </InfoValueError>
             </InfoWrapper>
             <InfoWrapper>
@@ -168,7 +168,7 @@ const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({
                 <InfoIcon sx={{ fontSize: "18px", color: "#6379A1" }} />
               </InfoLabel>
               <InfoValue>
-                {formatNumber(unstakeAmountWithFee)} {token}
+                {formatNumber(unstakeAmountWithFee / 10 ** 18)} {token}
               </InfoValue>
             </InfoWrapper>
           </Grid>

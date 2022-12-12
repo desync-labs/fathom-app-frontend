@@ -67,6 +67,7 @@ type UnStakeDialogProps = {
   lockPosition: ILockPosition | null;
   token: string;
   onClose: () => void;
+  onFinish: (unstakeAmount: number) => void;
 };
 
 const UnStakeDialog: FC<UnStakeDialogProps> = ({
