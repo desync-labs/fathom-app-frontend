@@ -40,7 +40,7 @@ export default class StakingStore {
 
   async handleEarlyWithdrawal(account: string, lockId: number): Promise<any> {
     try {
-      await this.service
+      return await this.service
         .handleEarlyWithdrawal(account, lockId, this.rootStore.transactionStore)
         .then((receipt) => {
           this.rootStore.alertStore.setShowSuccessAlert(
@@ -75,7 +75,7 @@ export default class StakingStore {
   async handleClaimRewards(account: string): Promise<any> {
     try {
       return await this.service
-        .handleClaimRewards(account, 1, this.rootStore.transactionStore)
+        .handleClaimRewards(account, 0, this.rootStore.transactionStore)
         .then((receipt) => {
           this.rootStore.alertStore.setShowSuccessAlert(
             true,

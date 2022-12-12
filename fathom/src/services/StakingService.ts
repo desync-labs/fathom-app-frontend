@@ -125,8 +125,11 @@ export default class StakingService implements IStakingService {
       this.chainId
     );
 
+    /**
+     * For FTHM stream we is 0
+     */
     return Staking.methods
-      .withdrawAll()
+      .withdrawStream(0)
       .send({ from: account })
       .on("transactionHash", (hash: any) => {
         transactionStore.addTransaction({

@@ -3,11 +3,7 @@ import {
   DialogContentWrapper,
 } from "components/AppComponents/AppDialog/AppDialog";
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
-import {
-  Box,
-  DialogContent,
-  Typography,
-} from "@mui/material";
+import { Box, DialogContent, Typography } from "@mui/material";
 import {
   ButtonPrimary,
   CancelButton,
@@ -84,8 +80,9 @@ const ClaimRewardsCoolDownDialog: FC<ClaimRewardsDialogProps> = ({
 
       <DialogContent>
         <Description>
-          You successfully requested to claim rewards. Now it's going to a “Cooldown" period for 2 days.
-          After this period, you'll be able to Withdraw it at My Stats &gt; Ready to Withdraw.
+          You successfully requested to claim rewards. Now it's going to a
+          “Cooldown" period for 2 days. After this period, you'll be able to
+          Withdraw it at My Stats &gt; Ready to Withdraw.
         </Description>
         <DialogContentWrapper>
           <img src={getTokenLogoURL(token)} alt={"token-logo"} width={58} />
@@ -96,8 +93,17 @@ const ClaimRewardsCoolDownDialog: FC<ClaimRewardsDialogProps> = ({
           </Box>
         </DialogContentWrapper>
         <ButtonsWrapper>
-          <CancelButton onClick={onClose}>Back to My Positions</CancelButton>
-          { onContinue && <ButtonPrimary onClick={onContinue}>Continue to Unstake</ButtonPrimary> }
+          <CancelButton
+            sx={{ width: onContinue ? "calc(50% - 3px)" : "100%" }}
+            onClick={onClose}
+          >
+            Back to My Positions
+          </CancelButton>
+          {onContinue && (
+            <ButtonPrimary onClick={onContinue}>
+              Continue to Unstake
+            </ButtonPrimary>
+          )}
         </ButtonsWrapper>
       </DialogContent>
     </AppDialog>

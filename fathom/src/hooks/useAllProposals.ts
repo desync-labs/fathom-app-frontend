@@ -3,8 +3,10 @@ import { useQuery } from "@apollo/client";
 import { GOVERNANCE_PROPOSALS, GOVERNANCE_STATS } from "apollo/queries";
 import { Constants } from "helpers/Constants";
 import useSyncContext from "context/sync";
+import { useWeb3React } from "@web3-react/core";
 
 export const useAllProposals = () => {
+  const { chainId } = useWeb3React();
   const [search, setSearch] = useState<string>("");
   const [time, setTime] = useState<string>("all");
   const [proposals, setProposals] = useState<string>("all");
@@ -19,7 +21,7 @@ export const useAllProposals = () => {
       first: Constants.COUNT_PER_PAGE,
       skip: 0,
     },
-    context: { clientName: "governance" },
+    context: { clientName: "governance", chainId },
   });
 
   const {

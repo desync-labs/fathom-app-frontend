@@ -63,7 +63,7 @@ const ConfirmButton = styled(ButtonPrimary)`
   line-height: 24px;
 `;
 
-type UnStakeDialogProps = {
+export type UnStakeDialogProps = {
   lockPosition: ILockPosition | null;
   token: string;
   onClose: () => void;
@@ -74,6 +74,7 @@ const UnStakeDialog: FC<UnStakeDialogProps> = ({
   onClose,
   token,
   lockPosition,
+  onFinish,
 }) => {
   const {
     balanceError,
@@ -85,7 +86,7 @@ const UnStakeDialog: FC<UnStakeDialogProps> = ({
     handleUnStakeAmountChange,
     setMax,
     unStakeHandler,
-  } = useUnstake(lockPosition);
+  } = useUnstake(lockPosition, onFinish);
 
   return (
     <UnStakeDialogWrapper
