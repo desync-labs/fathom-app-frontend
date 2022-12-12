@@ -159,10 +159,6 @@ export class Web3Utils {
       case 1337:
         web3ProviderUrl = "ws://localhost:8545";
         break;
-      case 5:
-        web3ProviderUrl =
-          "https://goerli.infura.io/v3/d85fb151be214d8eaee85c855d9d3dab";
-        break;
       case 50:
         web3ProviderUrl = "";
         break;
