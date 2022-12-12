@@ -12,6 +12,7 @@ export declare enum ChainId {
 export const NETWORK_LABELS = {
   50: "XDC",
   51: "Apothem",
+  1337: 'Ganache'
 };
 
 export const EXPLORERS = {
