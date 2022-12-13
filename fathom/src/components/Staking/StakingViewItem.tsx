@@ -1,4 +1,10 @@
-import React, { memo, FC, useEffect, useState } from "react";
+import React, {
+  memo,
+  FC,
+  useEffect,
+  useState,
+  useMemo
+} from "react";
 import { Box, Grid, Typography } from "@mui/material";
 import ILockPosition from "stores/interfaces/ILockPosition";
 import { styled } from "@mui/material/styles";
@@ -13,6 +19,7 @@ import { formatNumber } from "utils/format";
 import { secondsToTime } from "utils/secondsToTime";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import useStakingContext from "context/staking";
+import { YEAR_IN_SECONDS } from "helpers/Constants";
 
 const StakingViewItemWrapper = styled(Grid)`
   &.MuiGrid-item {
@@ -153,15 +160,14 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
 }) => {
   const [seconds, setSeconds] = useState(lockPosition.end - Date.now() / 1000);
 
-  const { processFlow } = useStakingContext();
-
-  const { isUnlockable } = useStakingContext();
+  const { processFlow, isUnlockable } = useStakingContext();
 
   useEffect(() => {
-    if (lockPosition.end - Date.now() / 1000 <= 0) {
+    const diff = lockPosition.end - Date.now() / 1000
+    if (diff <= 0) {
       return setSeconds(0);
     } else {
-      return setSeconds(lockPosition.end - Date.now() / 1000);
+      return setSeconds(diff);
     }
   }, [lockPosition, setSeconds]);
 
@@ -173,9 +179,10 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
     }
   }, [seconds, setSeconds]);
 
-  useEffect(() => {
-
-  })
+  const penaltyFee = useMemo(() => {
+    const secondsLeft = Number(lockPosition.end) - Date.now() / 1000;
+    return formatNumber(30 * secondsLeft / YEAR_IN_SECONDS);
+  }, [lockPosition, seconds]);
 
   return (
     <StakingViewItemWrapper item xs={6}>
@@ -239,7 +246,7 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
                 <Penalty className={isUnlockable(seconds) ? "" : "penalty"}>
                   {isUnlockable(seconds)
                     ? "Penalty Fee: No"
-                    : "Penalty Fee: Yes (0.1%)"}
+                    : `Penalty Fee: Yes (${penaltyFee}%)`}
                 </Penalty>
               </Grid>
 
