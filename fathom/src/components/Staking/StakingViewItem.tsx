@@ -1,10 +1,4 @@
-import React, {
-  memo,
-  FC,
-  useEffect,
-  useState,
-  useMemo
-} from "react";
+import React, { memo, FC } from "react";
 import { Box, Grid, Typography } from "@mui/material";
 import ILockPosition from "stores/interfaces/ILockPosition";
 import { styled } from "@mui/material/styles";
@@ -18,8 +12,7 @@ import { ButtonSecondary } from "components/AppComponents/AppButton/AppButton";
 import { formatNumber } from "utils/format";
 import { secondsToTime } from "utils/secondsToTime";
 import { getTokenLogoURL } from "utils/tokenLogo";
-import useStakingContext from "context/staking";
-import { YEAR_IN_SECONDS } from "helpers/Constants";
+import useStakingItemView from "hooks/useStakingItemView";
 
 const StakingViewItemWrapper = styled(Grid)`
   &.MuiGrid-item {
@@ -158,31 +151,8 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
   lockPosition,
   token,
 }) => {
-  const [seconds, setSeconds] = useState(lockPosition.end - Date.now() / 1000);
-
-  const { processFlow, isUnlockable } = useStakingContext();
-
-  useEffect(() => {
-    const diff = lockPosition.end - Date.now() / 1000
-    if (diff <= 0) {
-      return setSeconds(0);
-    } else {
-      return setSeconds(diff);
-    }
-  }, [lockPosition, setSeconds]);
-
-  useEffect(() => {
-    if (seconds > 0) {
-      setTimeout(() => {
-        setSeconds(seconds - 1);
-      }, 1000);
-    }
-  }, [seconds, setSeconds]);
-
-  const penaltyFee = useMemo(() => {
-    const secondsLeft = Number(lockPosition.end) - Date.now() / 1000;
-    return formatNumber(30 * secondsLeft / YEAR_IN_SECONDS);
-  }, [lockPosition, seconds]);
+  const { processFlow, isUnlockable, penaltyFee, seconds } =
+    useStakingItemView(lockPosition);
 
   return (
     <StakingViewItemWrapper item xs={6}>

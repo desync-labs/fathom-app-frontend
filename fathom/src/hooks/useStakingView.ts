@@ -100,7 +100,7 @@ const useStakingView = () => {
     }
   }, [account, stakersData, fetchAllClaimRewards]);
 
-  useEffect(() => {
+  const fetchPositions = useCallback(async () => {
     if (stakersData?.stakers?.length) {
       const promises: Promise<number>[] = [];
       stakersData?.stakers[0].lockPositions.forEach(
@@ -128,7 +128,24 @@ const useStakingView = () => {
     } else {
       setLockPositions([]);
     }
-  }, [stakingStore, stakersData, account, setLockPositions]);
+  }, [stakingStore, stakersData, account, setLockPositions])
+
+  useEffect(() => {
+    if (stakersData?.stakers?.length) {
+      fetchPositions();
+    }
+  }, [stakersData, fetchPositions]);
+
+  /**
+   * Get lockPositions information
+   */
+  useEffect(() => {
+    if (lockPositions && lockPositions.length) {
+      setTimeout(() => {
+        fetchPositions();
+      }, 30 * 1000)
+    }
+  }, [lockPositions, fetchPositions])
 
   const processFlow = useCallback(
     (action: string, position?: ILockPosition) => {
@@ -260,7 +277,7 @@ const useStakingView = () => {
         setAction(undefined);
       }
     },
-    [stakingStore, account, setAction, setLastTransactionBlock]
+    [stakingStore, account, setAction, setLastTransactionBlock, logger]
   );
 
   const isUnlockable = useCallback((remainingTime: number) => {
