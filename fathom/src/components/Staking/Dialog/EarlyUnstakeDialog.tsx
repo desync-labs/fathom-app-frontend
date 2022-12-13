@@ -23,7 +23,7 @@ import {
   ButtonPrimary,
   CancelButton,
 } from "components/AppComponents/AppButton/AppButton";
-import useEarlyUnstake, { PENALTY_FEE } from "hooks/useEarlyUnstake";
+import useEarlyUnstake from "hooks/useEarlyUnstake";
 import { InfoMessageWrapper } from "components/Staking/Dialog/ClaimRewardsDialog";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatNumber } from "utils/format";
@@ -105,7 +105,7 @@ const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({
   onClose,
   token,
   lockPosition,
-  onFinish
+  onFinish,
 }) => {
   const {
     unstakeAmount,
@@ -113,6 +113,7 @@ const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({
     unstakeAmountWithFee,
     isLoading,
     earlyUnstakeHandler,
+    penaltyFeePercent,
   } = useEarlyUnstake(lockPosition, onFinish);
 
   return (
@@ -131,7 +132,7 @@ const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({
         <Description>
           Claim Rewards only is available for all positions at the moment. You
           will lose the rewards of the position you proceed to unstake without
-          claiming it here first. <a href={'/'}>Learn more.</a>
+          claiming it here first. <a href={"/"}>Learn more.</a>
         </Description>
         <DialogContentWrapper>
           <img src={getTokenLogoURL(token)} alt={"token-logo"} width={58} />
@@ -159,7 +160,8 @@ const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({
             <InfoWrapper>
               <InfoLabelError>Penalty Fee</InfoLabelError>
               <InfoValueError>
-                {formatNumber(penaltyFee / 10 ** 18)} {token} ({PENALTY_FEE}%)
+                {formatNumber(penaltyFee / 10 ** 18)} {token} (
+                {formatNumber(penaltyFeePercent)}%)
               </InfoValueError>
             </InfoWrapper>
             <InfoWrapper>

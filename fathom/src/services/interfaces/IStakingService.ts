@@ -1,4 +1,6 @@
 import ActiveWeb3Transactions from "stores/transaction.store";
+import { Web3Utils } from "../../helpers/Web3Utils";
+import { SmartContractFactory } from "../../config/SmartContractFactory";
 
 export default interface IStakingService {
   createLock(
@@ -44,6 +46,8 @@ export default interface IStakingService {
     account: string,
     lockId: number
   ): Promise<number>;
+
+  getPairPrice(token0: string, token1: string): Promise<number>;
 
   getStreamClaimableAmount(account: string): Promise<number>;
 

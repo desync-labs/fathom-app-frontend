@@ -55,7 +55,11 @@ export default class StakingStore {
     }
   }
 
-  async handleUnlock(account: string, lockId: number, amount: number): Promise<any> {
+  async handleUnlock(
+    account: string,
+    lockId: number,
+    amount: number
+  ): Promise<any> {
     try {
       return await this.service
         .handleUnlock(account, lockId, amount, this.rootStore.transactionStore)
@@ -117,6 +121,14 @@ export default class StakingStore {
     } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(true, e.message);
       throw e;
+    }
+  }
+
+  async getPairPrice(token0: string, token1: string) {
+    try {
+      return await this.service.getPairPrice(token0, token1);
+    } catch (e: any) {
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
     }
   }
 

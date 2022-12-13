@@ -173,6 +173,10 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
     }
   }, [seconds, setSeconds]);
 
+  useEffect(() => {
+
+  })
+
   return (
     <StakingViewItemWrapper item xs={6}>
       <HeaderWrapper>

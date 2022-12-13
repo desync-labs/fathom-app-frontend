@@ -41,6 +41,38 @@ const useStakingLockForm = () => {
     return SmartContractFactory.FthmToken(chainId).address;
   }, [chainId]);
 
+  const usdtTokenAddress = useMemo(() => {
+    return SmartContractFactory.USDT(chainId).address;
+  }, [chainId]);
+
+  const fxdTokenAddress = useMemo(() => {
+    return SmartContractFactory.FathomStableCoin(chainId).address;
+  }, [chainId]);
+
+  const wxdcTokenAddress = useMemo(() => {
+    return SmartContractFactory.WXDC(chainId).address;
+  }, [chainId]);
+
+  const fetchPairPrices = useCallback(async () => {
+    // @ts-ignore
+    const [{ 0: fxdPrice }, { 0: fthmPrice }, { 0: wxdcPrice }] =
+      await Promise.all([
+        stakingStore.getPairPrice(usdtTokenAddress, fxdTokenAddress),
+        stakingStore.getPairPrice(usdtTokenAddress, fthmTokenAddress),
+        stakingStore.getPairPrice(usdtTokenAddress, wxdcTokenAddress),
+      ]);
+
+    console.log(fxdPrice);
+    console.log(fthmPrice);
+    console.log(wxdcPrice);
+  }, [
+    stakingStore,
+    usdtTokenAddress,
+    fthmTokenAddress,
+    fxdTokenAddress,
+    wxdcTokenAddress,
+  ]);
+
   const getFTHMTokenBalance = useCallback(async () => {
     if (account) {
       const balance = await poolStore.getUserTokenBalance(
@@ -73,8 +105,9 @@ const useStakingLockForm = () => {
   useEffect(() => {
     if (account) {
       getFTHMTokenBalance();
+      fetchPairPrices();
     }
-  }, [account, getFTHMTokenBalance]);
+  }, [account, getFTHMTokenBalance, fetchPairPrices]);
 
   useEffect(() => {
     if (syncDao && !prevSyncDao) {
