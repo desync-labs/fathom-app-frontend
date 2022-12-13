@@ -228,6 +228,19 @@ export default class StakingService implements IStakingService {
       });
   }
 
+  getPairPrice(token0: string, token1: string) {
+    const DexPriceOracle = Web3Utils.getContractInstance(
+      SmartContractFactory.DexPriceOracle(this.chainId),
+      this.chainId
+    );
+
+    console.log(DexPriceOracle);
+    console.log(token0);
+    console.log(token1);
+
+    return DexPriceOracle.methods.getPrice(token0, token1).call();
+  }
+
   setChainId(chainId: number) {
     this.chainId = chainId;
   }
