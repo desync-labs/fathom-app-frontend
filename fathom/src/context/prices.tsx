@@ -76,7 +76,7 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
 
   useEffect(() => {
     fetchPairPrices();
-  }, []);
+  }, [fetchPairPrices]);
 
   useEffect(() => {
     if ((syncFXD && !prevSyncFxd) || (syncDao && !prevSyncDao)) {
