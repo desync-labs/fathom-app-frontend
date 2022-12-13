@@ -151,7 +151,7 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
   lockPosition,
   token,
 }) => {
-  const { processFlow, isUnlockable, penaltyFee, seconds } =
+  const { processFlow, isUnlockable, penaltyFee, seconds, rewardsAvailable } =
     useStakingItemView(lockPosition);
 
   return (
@@ -191,7 +191,7 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
             <Grid item xs={4}>
               <Label>Rewards Accrued</Label>
               <Value className={"green"}>
-                {formatNumber(lockPosition.rewardsAvailable / 10 ** 18)} {token}
+                {formatNumber(rewardsAvailable / 10 ** 18)} {token}
               </Value>
             </Grid>
           </Grid>
@@ -210,7 +210,7 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
                 </TotalLocked>
                 <TotalLocked>
                   Accrued Rewards:{" "}
-                  {formatNumber(lockPosition.rewardsAvailable / 10 ** 18)}{" "}
+                  {formatNumber(rewardsAvailable / 10 ** 18)}{" "}
                   {token}
                 </TotalLocked>
                 <Penalty className={isUnlockable(seconds) ? "" : "penalty"}>

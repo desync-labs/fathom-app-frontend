@@ -12,37 +12,42 @@ export default class StableSwapStore {
     this.rootStore = rootStore;
   }
 
-  async swapToken(inputCurrency: string, address: string, inputValue: number) {
+  async swapToken(inputCurrency: string, address: string, inputValue: number): Promise<any> {
     if (inputCurrency === "USDT") {
       try {
-        await this.service.swapTokenToStableCoin(
-          address,
-          inputValue,
-          this.rootStore.transactionStore
-        );
-        this.rootStore.alertStore.setShowSuccessAlert(
-          true,
-          "USDT token swapped with FXD!"
-        );
+        return await this.service
+          .swapTokenToStableCoin(
+            address,
+            inputValue,
+            this.rootStore.transactionStore
+          )
+          .then((receipt) => {
+            this.rootStore.alertStore.setShowSuccessAlert(
+              true,
+              "USDT token swapped with FXD!"
+            );
+            return receipt;
+          });
       } catch (e: any) {
         this.rootStore.alertStore.setShowErrorAlert(true, e.message);
       }
     } else {
       try {
-        await this.service.swapStableCoinToToken(
-          address,
-          inputValue,
-          this.rootStore.transactionStore
-        );
-        this.rootStore.alertStore.setShowSuccessAlert(
-          true,
-          "FXD token swapped with USDT!"
-        );
+        return await this.service
+          .swapStableCoinToToken(
+            address,
+            inputValue,
+            this.rootStore.transactionStore
+          )
+          .then((receipt) => {
+            this.rootStore.alertStore.setShowSuccessAlert(
+              true,
+              "FXD token swapped with USDT!"
+            );
+            return receipt;
+          });
       } catch (e: any) {
-        this.rootStore.alertStore.setShowErrorAlert(
-          true,
-          e.message
-        );
+        this.rootStore.alertStore.setShowErrorAlert(true, e.message);
       }
     }
   }
@@ -60,13 +65,10 @@ export default class StableSwapStore {
         "FXD approval was successful!"
       );
     } catch (e: any) {
-      this.rootStore.alertStore.setShowErrorAlert(
-        true,
-        e.message
-      );
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
       throw e;
     }
-  };
+  }
 
   async approveUsdt(address: string) {
     console.log(`Approved USDT clicked for address ${address}`);
@@ -82,37 +84,24 @@ export default class StableSwapStore {
           );
         });
     } catch (e: any) {
-      this.rootStore.alertStore.setShowErrorAlert(
-        true,
-        e.message
-      );
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
       throw e;
     }
-  };
+  }
 
   async approvalStatusStableCoin(address: string, tokenIn: number) {
-    console.log(`Checking StableCoin approval status for address ${address}`);
     try {
-      if (!address) return;
       return await this.service.approvalStatusStablecoin(address, tokenIn);
     } catch (e: any) {
-      this.rootStore.alertStore.setShowErrorAlert(
-        true,
-        e.message
-      );
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
     }
-  };
+  }
 
   async approvalStatusUsdt(address: string, tokenIn: number) {
-    console.log(`Checking usdt approval status for address ${address}`);
     try {
-      if (!address) return;
       return await this.service.approvalStatusUsdt(address, tokenIn);
     } catch (e: any) {
-      this.rootStore.alertStore.setShowErrorAlert(
-        true,
-        e.message
-      );
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
     }
-  };
+  }
 }
