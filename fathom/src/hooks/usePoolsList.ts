@@ -15,7 +15,7 @@ const usePoolsList = () => {
   }, [setSelectedPool]);
 
   return {
-    pools: loading ? [] : data.pools,
+    pools: loading ? [] : data.pools.filter((pool: ICollateralPool) => pool.poolName.toUpperCase() !== 'US+STABLE' ),
     selectedPool,
     onCloseNewPosition,
     setSelectedPool,

@@ -2,10 +2,8 @@ import { Grid, Box, Typography } from "@mui/material";
 import { observer } from "mobx-react";
 import { styled } from "@mui/material/styles";
 import useProtocolStats from "hooks/useProtocolStats";
-import {
-  formatCurrency,
-  formatNumber
-} from "utils/format";
+import { formatCurrency, formatNumber } from "utils/format";
+import usePricesContext from "../../context/prices";
 
 const StatsItem = styled(
   Grid,
@@ -58,7 +56,7 @@ const StatsDescription = styled(
 
 const ProtocolStats = observer(() => {
   const { totalSupply, tvl, loading } = useProtocolStats();
-
+  const { fxdPrice } = usePricesContext();
 
   return (
     <ProtocolStatsContainer container>
@@ -66,23 +64,21 @@ const ProtocolStats = observer(() => {
         <Box>
           <StatsTitle>Total Supply</StatsTitle>
           <StatsDescription variant="body2">
-            { !loading && formatNumber(totalSupply) }
+            {!loading && formatNumber(totalSupply)}
           </StatsDescription>
         </Box>
       </StatsItem>
       <StatsItem item>
         <Box>
           <StatsTitle>TVL</StatsTitle>
-          <StatsDescription>
-            { !loading && formatCurrency(tvl) }
-          </StatsDescription>
+          <StatsDescription>{!loading && formatCurrency(tvl)}</StatsDescription>
         </Box>
       </StatsItem>
       <StatsItem item>
         <Box>
           <StatsTitle>FXD Price</StatsTitle>
           <StatsDescription>
-            {/*{fxdProtocolStatsStore.getFormattedFXDPriceRatio()}*/}
+            {formatCurrency(fxdPrice / 10 ** 18)}
           </StatsDescription>
         </Box>
       </StatsItem>
