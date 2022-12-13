@@ -3,6 +3,7 @@ import { useStores } from "stores";
 import useMetaMask from "context/metamask";
 import debounce from "lodash.debounce";
 import { SmartContractFactory } from "config/SmartContractFactory";
+import useSyncContext from "../context/sync";
 
 const useStableSwap = (options: string[]) => {
   const [inputBalance, setInputBalance] = useState<number>(0);
@@ -25,12 +26,13 @@ const useStableSwap = (options: string[]) => {
   const { stableSwapStore, poolStore } = useStores();
 
   const { account, chainId } = useMetaMask()!;
+  const { setLastTransactionBlock } = useSyncContext();
 
   const setOppositeCurrency = useCallback(
     (amount: number, currency: string, type: string) => {
-      const oppositeValue = Number(
-        currency === "USDT" ? amount / fxdPrice : amount * fxdPrice
-      ) || null;
+      const oppositeValue =
+        Number(currency === "USDT" ? amount / fxdPrice : amount * fxdPrice) ||
+        null;
 
       type === "input"
         ? setOutputValue(oppositeValue)
@@ -55,7 +57,7 @@ const useStableSwap = (options: string[]) => {
           : approved
           ? setApproveOutputBtn(false)
           : setApproveOutputBtn(true);
-      }, 300),
+      }, 1000),
     [stableSwapStore, account, setApproveInputBtn, setApproveOutputBtn]
   );
 
@@ -106,9 +108,11 @@ const useStableSwap = (options: string[]) => {
   );
 
   const changeCurrenciesPosition = useCallback(
-    (inputValue: number) => {
+    (inputValue: number, outputValue: number) => {
       setInputCurrency(outputCurrency);
       setOutputCurrency(inputCurrency);
+
+      approvalStatus(outputValue, outputCurrency, "input");
 
       setOutputValue(inputValue);
       setOppositeCurrency(inputValue, inputCurrency, "output");
@@ -119,14 +123,9 @@ const useStableSwap = (options: string[]) => {
       setInputCurrency,
       setOutputCurrency,
       setOppositeCurrency,
+      approvalStatus,
     ]
   );
-
-  useEffect(() => {
-    if (inputValue) {
-      approvalStatus(inputValue, inputCurrency, "input");
-    }
-  }, [inputValue, inputCurrency, approvalStatus]);
 
   useEffect(() => {
     handleCurrencyChange(inputCurrency, outputCurrency);
@@ -150,19 +149,20 @@ const useStableSwap = (options: string[]) => {
     }
   }, [outputCurrency, options]);
 
-  useEffect(() => {
-    if (outputValue) {
-      approvalStatus(outputValue, outputCurrency, "output");
-    }
-  }, [outputValue, outputCurrency, approvalStatus]);
-
   const handleSwap = useCallback(async () => {
     setSwapPending(true);
     try {
-      await stableSwapStore.swapToken(inputCurrency, account, inputValue as number);
+      const receipt = await stableSwapStore.swapToken(
+        inputCurrency,
+        account,
+        inputValue as number
+      );
+      setLastTransactionBlock(receipt.blockNumber);
       handleCurrencyChange(inputCurrency, outputCurrency);
-    } catch (e) {}
-    setSwapPending(false);
+    } catch (e) {
+    } finally {
+      setSwapPending(false);
+    }
   }, [
     inputCurrency,
     outputCurrency,
@@ -171,6 +171,7 @@ const useStableSwap = (options: string[]) => {
     stableSwapStore,
     setSwapPending,
     handleCurrencyChange,
+    setLastTransactionBlock,
   ]);
 
   const approveInput = useCallback(async () => {
@@ -217,18 +218,20 @@ const useStableSwap = (options: string[]) => {
     (e: any) => {
       const { value } = e.target;
       setInputValue(value);
+      approvalStatus(value, inputCurrency, "input");
       setOppositeCurrency(value, inputCurrency, "input");
     },
-    [inputCurrency, setInputValue, setOppositeCurrency]
+    [inputCurrency, setInputValue, setOppositeCurrency, approvalStatus]
   );
 
   const handleOutputValueTextFieldChange = useCallback(
     (e: any) => {
       const { value } = e.target;
       setOutputValue(value);
+      approvalStatus(value, outputCurrency, "output");
       setOppositeCurrency(value, outputCurrency, "output");
     },
-    [outputCurrency, setOutputValue, setOppositeCurrency]
+    [outputCurrency, setOutputValue, setOppositeCurrency, approvalStatus]
   );
 
   const setInputCurrencyHandler = useCallback(

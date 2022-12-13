@@ -33,6 +33,7 @@ const useStakingView = () => {
 
   const [totalRewards, setTotalRewards] = useState(0);
   const previousTotalRewardsRef = useRef<number>(0);
+
   const [currentPage, setCurrentPage] = useState<number>(1);
 
   const { setLastTransactionBlock, syncDao, prevSyncDao } = useSyncContext();
@@ -82,7 +83,6 @@ const useStakingView = () => {
       });
 
       refetchProtocolStats();
-
       setCurrentPage(1);
     }
   }, [
@@ -128,24 +128,22 @@ const useStakingView = () => {
     } else {
       setLockPositions([]);
     }
-  }, [stakingStore, stakersData, account, setLockPositions])
+  }, [stakingStore, stakersData, account, setLockPositions]);
 
   useEffect(() => {
-    if (stakersData?.stakers?.length) {
+    if (stakersData?.stakers?.length && account) {
       fetchPositions();
     }
-  }, [stakersData, fetchPositions]);
+  }, [stakersData, account, fetchPositions]);
 
   /**
-   * Get lockPositions information
+   * Get All claimed rewards
    */
   useEffect(() => {
-    if (lockPositions && lockPositions.length) {
-      setTimeout(() => {
-        fetchPositions();
-      }, 30 * 1000)
-    }
-  }, [lockPositions, fetchPositions])
+    setTimeout(() => {
+      fetchAllClaimRewards();
+    }, 30 * 1000)
+  }, [totalRewards, fetchAllClaimRewards]);
 
   const processFlow = useCallback(
     (action: string, position?: ILockPosition) => {
@@ -196,9 +194,12 @@ const useStakingView = () => {
           first: Constants.COUNT_PER_PAGE,
           address: account,
         },
+        fetchPolicy: "network-only"
       });
+
+      setCurrentPage(1);
     }
-  }, [account, fetchStakers]);
+  }, [account, fetchStakers, setCurrentPage]);
 
   const claimRewards = useCallback(
     async (callback: Function) => {

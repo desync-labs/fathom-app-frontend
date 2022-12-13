@@ -52,18 +52,21 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
   }, [chainId]);
 
   const fetchPairPrices = useCallback(async () => {
-    // @ts-ignore
-    const [{ 0: fxdPrice }, { 0: fthmPrice }, { 0: wxdcPrice }] =
-      await Promise.all([
-        stakingStore.getPairPrice(usdtTokenAddress, fxdTokenAddress),
-        stakingStore.getPairPrice(usdtTokenAddress, fthmTokenAddress),
-        stakingStore.getPairPrice(usdtTokenAddress, wxdcTokenAddress),
-      ]);
+    if (chainId) {
+      // @ts-ignore
+      const [{ 0: fxdPrice }, { 0: fthmPrice }, { 0: wxdcPrice }] =
+        await Promise.all([
+          stakingStore.getPairPrice(usdtTokenAddress, fxdTokenAddress),
+          stakingStore.getPairPrice(usdtTokenAddress, fthmTokenAddress),
+          stakingStore.getPairPrice(usdtTokenAddress, wxdcTokenAddress),
+        ]);
 
-    setFxdPrice(fxdPrice);
-    setFthmPrice(fthmPrice);
-    setWxdcPrice(wxdcPrice);
+      setFxdPrice(fxdPrice);
+      setFthmPrice(fthmPrice);
+      setWxdcPrice(wxdcPrice);
+    }
   }, [
+    chainId,
     stakingStore,
     usdtTokenAddress,
     fthmTokenAddress,

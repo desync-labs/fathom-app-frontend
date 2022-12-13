@@ -16,7 +16,7 @@ import RewardsSrc from "assets/svg/rewards.svg";
 import StakingCountdown from "components/Staking/StakingCountdown";
 
 import { secondsToTime } from "utils/secondsToTime";
-import usePricesContext from "../../../context/prices";
+import usePricesContext from "context/prices";
 
 const FTHMStreamHeader = styled("h3")`
   font-weight: 600;

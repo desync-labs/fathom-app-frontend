@@ -256,7 +256,7 @@ const StableSwap = observer(() => {
               ) : null}
 
               <FathomSwapChangeCurrencyButton
-                onClick={() => changeCurrenciesPosition(inputValue as number)}
+                onClick={() => changeCurrenciesPosition(inputValue as number, outputValue as number)}
               >
                 <img src={ComboShareSrc} alt="combo-share" />
               </FathomSwapChangeCurrencyButton>

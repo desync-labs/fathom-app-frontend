@@ -15,7 +15,7 @@ const DAY_SECONDS = 24 * 60 * 60;
 export default class StakingService implements IStakingService {
   chainId = Constants.DEFAULT_CHAIN_ID;
 
-  async createLock(
+  createLock(
     account: string,
     stakePosition: number,
     unlockPeriod: number,
@@ -41,7 +41,7 @@ export default class StakingService implements IStakingService {
       });
   }
 
-  async handleUnlock(
+  handleUnlock(
     account: string,
     lockId: number,
     amount: number,
@@ -66,7 +66,7 @@ export default class StakingService implements IStakingService {
       });
   }
 
-  async handleEarlyWithdrawal(
+  handleEarlyWithdrawal(
     account: string,
     lockId: number,
     transactionStore: ActiveWeb3Transactions
@@ -91,7 +91,7 @@ export default class StakingService implements IStakingService {
       });
   }
 
-  async handleClaimRewards(
+  handleClaimRewards(
     account: string,
     streamId: number,
     transactionStore: ActiveWeb3Transactions
@@ -116,7 +116,7 @@ export default class StakingService implements IStakingService {
       });
   }
 
-  async handleWithdrawAll(
+  handleWithdrawAll(
     account: string,
     streamId: number,
     transactionStore: ActiveWeb3Transactions
