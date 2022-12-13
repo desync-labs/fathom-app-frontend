@@ -18,7 +18,8 @@ import useStakingLockForm from "hooks/useStakingLockForm";
 import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
 import { styled } from "@mui/material/styles";
 import Period from "components/Staking/Components/Period";
-import { formatNumber } from "utils/format";
+import { formatCurrency, formatNumber } from "utils/format";
+import usePricesContext from "../../context/prices";
 
 const StakingLockPaper = styled(AppPaper)`
   display: flex;
@@ -101,6 +102,8 @@ const StakingLockForm: FC = () => {
     xdcBalance,
   } = useStakingLockForm();
 
+  const { fthmPrice, wxdcPrice, fxdPrice } = usePricesContext();
+
   return (
     <StakingLockPaper>
       <StakingLockFormTitle>New Stake</StakingLockFormTitle>
@@ -123,20 +126,14 @@ const StakingLockForm: FC = () => {
                 helperText={
                   <>
                     {error && (
-                      <Box
-                        component={'span'}
-                        sx={{ fontSize: "12px" }}
-                      >
+                      <Box component={"span"} sx={{ fontSize: "12px" }}>
                         Field is required
                       </Box>
                     )}
                     {balanceError && (
                       <>
                         <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
-                        <Box
-                          component={'span'}
-                          sx={{ fontSize: "12px" }}
-                        >
+                        <Box component={"span"} sx={{ fontSize: "12px" }}>
                           You do not have enough FTHM
                         </Box>
                       </>
@@ -168,29 +165,18 @@ const StakingLockForm: FC = () => {
                   }}
                   helperText={
                     <>
-                      {error && error.type === 'min' && (
-                        <Box
-                          component='span'
-                          sx={{ fontSize: "12px"}}
-                        >
+                      {error && error.type === "min" && (
+                        <Box component="span" sx={{ fontSize: "12px" }}>
                           Minimum period is 1 day
                         </Box>
                       )}
-                      {
-                        error && error.type === 'max' && (
-                          <Box
-                            component='span'
-                            sx={{ fontSize: "12px" }}
-                          >
-                            Maximum period is 365 days
-                          </Box>
-                        )
-                      }
-                      {error && error.type === 'required' && (
-                        <Box
-                          component={'span'}
-                          sx={{ fontSize: "12px" }}
-                        >
+                      {error && error.type === "max" && (
+                        <Box component="span" sx={{ fontSize: "12px" }}>
+                          Maximum period is 365 days
+                        </Box>
+                      )}
+                      {error && error.type === "required" && (
+                        <Box component={"span"} sx={{ fontSize: "12px" }}>
                           Field is required
                         </Box>
                       )}
@@ -281,7 +267,9 @@ const StakingLockForm: FC = () => {
                     <FTHMBalance>
                       <strong>{formatNumber(fthmBalance)}</strong> FTHM
                     </FTHMBalance>
-                    <USDBalance>$123.00</USDBalance>
+                    <USDBalance>
+                      {formatCurrency((fthmBalance * fthmPrice) / 10 ** 18)}
+                    </USDBalance>
                   </Box>
                 </WalletBalanceWrapper>
               </Grid>
@@ -296,7 +284,11 @@ const StakingLockForm: FC = () => {
                     <FTHMBalance>
                       <strong>{formatNumber(fxdBalance / 10 ** 18)}</strong> FXD
                     </FTHMBalance>
-                    <USDBalance>$123.00</USDBalance>
+                    <USDBalance>
+                      {formatCurrency(
+                        ((fxdBalance / 10 ** 18) * fxdPrice) / 10 ** 18
+                      )}
+                    </USDBalance>
                   </Box>
                 </WalletBalanceWrapper>
               </Grid>
@@ -311,7 +303,9 @@ const StakingLockForm: FC = () => {
                     <FTHMBalance>
                       <strong>{formatNumber(xdcBalance)}</strong> XDC
                     </FTHMBalance>
-                    <USDBalance>$123.00</USDBalance>
+                    <USDBalance>
+                      {formatCurrency((xdcBalance * wxdcPrice) / 10 ** 18)}
+                    </USDBalance>
                   </Box>
                 </WalletBalanceWrapper>
               </Grid>
