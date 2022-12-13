@@ -65,16 +65,21 @@ const PoolsListItem: FC<PoolsListItemPropsType> = ({
       <TableCell>
         <PriceWrapper>
           {formatCurrency(Number(pool.collateralPrice))}
-          <PriceChanged current={Number(pool.collateralPrice)} previous={Number(pool.collateralLastPrice)} />
+          <PriceChanged
+            current={Number(pool.collateralPrice)}
+            previous={Number(pool.collateralLastPrice)}
+          />
         </PriceWrapper>
       </TableCell>
       <TableCell>{formatNumber(Number(pool.totalBorrowed))} FXD</TableCell>
       <TableCell>{formatNumber(Number(pool.totalAvailable))} FXD</TableCell>
       <TableCell align="right">
-        <OpenPositionButton onClick={() => setSelectedPool(pool)}>
-          <AddCircleIcon sx={{ fontSize: "16px", marginRight: "7px" }} />
-          Open Position
-        </OpenPositionButton>
+        {pool.poolName.toUpperCase() !== "US+STABLE" && (
+          <OpenPositionButton onClick={() => setSelectedPool(pool)}>
+            <AddCircleIcon sx={{ fontSize: "16px", marginRight: "7px" }} />
+            Open Position
+          </OpenPositionButton>
+        )}
       </TableCell>
     </PoolsListItemTableRow>
   );
