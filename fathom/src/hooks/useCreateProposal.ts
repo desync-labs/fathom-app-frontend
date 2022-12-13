@@ -3,7 +3,7 @@ import useMetaMask from "context/metamask";
 import { useForm } from "react-hook-form";
 import { useCallback, useEffect, useState } from "react";
 import { Constants } from "helpers/Constants";
-import { ProposeListViewProps } from "components/Governance/Propose";
+import { ProposeProps } from "components/Governance/Propose";
 import { XDC_CHAIN_IDS } from "connectors/networks";
 import Xdc3 from "xdc3";
 import Web3 from "web3";
@@ -27,7 +27,7 @@ const formatter = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 3,
 });
 
-const useCreateProposal = (onClose: ProposeListViewProps["onClose"]) => {
+const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
   const { proposalStore } = useStores();
   const { account, chainId } = useMetaMask()!;
   const [vBalance, setVBalance] = useState<null | number>();

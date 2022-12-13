@@ -33,10 +33,6 @@ import {
 
 import requiredSrc from "assets/svg/required.svg";
 
-export type ProposeListViewProps = {
-  onClose: () => void;
-};
-
 const ProposeLabel = styled(AppFormLabel)`
   float: none;
   width: 100%;
@@ -88,8 +84,6 @@ const ProposeButtonSecondary = styled(ButtonSecondary)`
   border: 1px solid #324567;
 `;
 
-const MINIMUM_V_BALANCE = 2000;
-
 const Required = () => (
   <Icon sx={{ width: "20px", height: "26px" }}>
     <img alt="staking-icon" src={requiredSrc} />
@@ -113,7 +107,13 @@ const InfoIcon: FC<{ sx?: Record<string, any> }> = ({ sx }) => (
   />
 );
 
-const ProposeListView: FC<ProposeListViewProps> = observer(({ onClose }) => {
+const MINIMUM_V_BALANCE = 1000;
+
+export type ProposeProps = {
+  onClose: () => void;
+};
+
+const Propose: FC<ProposeProps> = observer(({ onClose }) => {
   const {
     withAction,
     handleSubmit,
@@ -448,4 +448,4 @@ const ProposeListView: FC<ProposeListViewProps> = observer(({ onClose }) => {
   );
 });
 
-export default ProposeListView;
+export default Propose;
