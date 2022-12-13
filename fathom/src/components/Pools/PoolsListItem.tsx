@@ -74,12 +74,10 @@ const PoolsListItem: FC<PoolsListItemPropsType> = ({
       <TableCell>{formatNumber(Number(pool.totalBorrowed))} FXD</TableCell>
       <TableCell>{formatNumber(Number(pool.totalAvailable))} FXD</TableCell>
       <TableCell align="right">
-        {pool.poolName.toUpperCase() !== "US+STABLE" && (
-          <OpenPositionButton onClick={() => setSelectedPool(pool)}>
-            <AddCircleIcon sx={{ fontSize: "16px", marginRight: "7px" }} />
-            Open Position
-          </OpenPositionButton>
-        )}
+        <OpenPositionButton onClick={() => setSelectedPool(pool)}>
+          <AddCircleIcon sx={{ fontSize: "16px", marginRight: "7px" }} />
+          Open Position
+        </OpenPositionButton>
       </TableCell>
     </PoolsListItemTableRow>
   );
