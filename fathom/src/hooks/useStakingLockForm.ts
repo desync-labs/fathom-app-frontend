@@ -36,6 +36,7 @@ const useStakingLockForm = () => {
   const [approvalPending, setApprovalPending] = useState(false);
 
   const [xdcBalance, setXdcBalance] = useState<number>(0);
+  const [fxdBalance, setFxdBalance] = useState<number>(0)
 
   const fthmTokenAddress = useMemo(() => {
     return SmartContractFactory.FthmToken(chainId).address;
@@ -91,16 +92,17 @@ const useStakingLockForm = () => {
   useEffect(() => {
     const getBalance = async () => {
       const instance = Web3Utils.getWeb3Instance(chainId);
-      const [xdcBalance] = await Promise.all([
+      const [xdcBalance, fxdBalance] = await Promise.all([
         instance.eth.getBalance(account),
         positionStore.balanceStableCoin(account),
       ]);
 
       setXdcBalance(xdcBalance / 10 ** 18);
+      setFxdBalance(fxdBalance! / 10 ** 18)
     };
 
     if (account && chainId) getBalance();
-  }, [account, chainId, positionStore, stakingStore, setXdcBalance]);
+  }, [account, chainId, positionStore, stakingStore, setXdcBalance, setFxdBalance]);
 
   useEffect(() => {
     if (Number(stakePosition) > fthmBalance) {
@@ -132,7 +134,6 @@ const useStakingLockForm = () => {
   const approveFTHM = useCallback(async () => {
     setApprovalPending(true);
     try {
-      // @TODO: hardcoded FTHM address
       await stakingStore.approveFTHM(account, fthmTokenAddress);
       setApprovedBtn(false);
     } catch (e) {
@@ -182,7 +183,7 @@ const useStakingLockForm = () => {
     setMax,
     setPeriod,
     fthmBalance,
-    fxdBalance: positionStore.stableCoinBalance,
+    fxdBalance,
     xdcBalance,
   };
 };

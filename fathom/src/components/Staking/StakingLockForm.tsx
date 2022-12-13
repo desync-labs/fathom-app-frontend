@@ -19,7 +19,7 @@ import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
 import { styled } from "@mui/material/styles";
 import Period from "components/Staking/Components/Period";
 import { formatCurrency, formatNumber } from "utils/format";
-import usePricesContext from "../../context/prices";
+import usePricesContext from "context/prices";
 
 const StakingLockPaper = styled(AppPaper)`
   display: flex;
@@ -282,12 +282,10 @@ const StakingLockForm: FC = () => {
                   />
                   <Box>
                     <FTHMBalance>
-                      <strong>{formatNumber(fxdBalance / 10 ** 18)}</strong> FXD
+                      <strong>{formatNumber(fxdBalance)}</strong> FXD
                     </FTHMBalance>
                     <USDBalance>
-                      {formatCurrency(
-                        ((fxdBalance / 10 ** 18) * fxdPrice) / 10 ** 18
-                      )}
+                      {formatCurrency((fxdBalance * fxdPrice) / 10 ** 18)}
                     </USDBalance>
                   </Box>
                 </WalletBalanceWrapper>

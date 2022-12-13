@@ -6,6 +6,8 @@ const formatter = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 2,
 });
 
+const formatterCompact = Intl.NumberFormat('en', { notation: 'compact' });
+
 export const formatNumber = (number: number) => {
   return formatter
     .formatToParts(number)
@@ -13,6 +15,10 @@ export const formatNumber = (number: number) => {
       p.type !== "literal" && p.type !== "currency" ? p.value : ""
     )
     .join("");
+}
+
+export const formatCompact = (number: number) => {
+  return formatterCompact.format(number);
 }
 
 export const formatCurrency = (number: number) => {

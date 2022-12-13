@@ -8,7 +8,6 @@ export default class PositionStore {
   positions: IOpenPosition[] = [];
   service: IPositionService;
   rootStore: RootStore;
-  stableCoinBalance: number = 0;
 
   constructor(rootStore: RootStore, service: IPositionService) {
     makeAutoObservable(this);
@@ -48,24 +47,18 @@ export default class PositionStore {
     this.positions = _positions;
   }
 
-  setStableCoinBalance(_stableCoinBalance: number) {
-    this.stableCoinBalance = _stableCoinBalance;
-  }
-
   async approve(address: string, tokenAddress: string) {
     try {
-      return await this.service.approve(
-        address,
-        tokenAddress,
-        this.rootStore.transactionStore
-      ).then((receipt) => {
-        this.rootStore.alertStore.setShowSuccessAlert(
-          true,
-          "Approval was successful!"
-        );
+      return await this.service
+        .approve(address, tokenAddress, this.rootStore.transactionStore)
+        .then((receipt) => {
+          this.rootStore.alertStore.setShowSuccessAlert(
+            true,
+            "Approval was successful!"
+          );
 
-        return receipt;
-      });
+          return receipt;
+        });
     } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(true, e.message);
       throw e;
