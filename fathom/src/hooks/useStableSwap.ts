@@ -21,6 +21,9 @@ const useStableSwap = (options: string[]) => {
   const [approvalPending, setApprovalPending] = useState<string | null>(null);
   const [swapPending, setSwapPending] = useState<boolean>(false);
 
+  const [feeIn, setFeeIn] = useState<number>(0);
+  const [feeOut, setFeeOut] = useState<number>(0);
+
   const [fxdPrice, setFxdPrice] = useState<number>(0);
 
   const { stableSwapStore, poolStore } = useStores();
@@ -31,8 +34,9 @@ const useStableSwap = (options: string[]) => {
   const setOppositeCurrency = useCallback(
     (amount: number, currency: string, type: string) => {
       const oppositeValue =
-        Number(currency === options[0] ? amount / fxdPrice : amount * fxdPrice) ||
-        null;
+        Number(
+          currency === options[0] ? amount / fxdPrice : amount * fxdPrice
+        ) || null;
 
       type === "input"
         ? setOutputValue(oppositeValue)
@@ -132,14 +136,24 @@ const useStableSwap = (options: string[]) => {
   }, [inputCurrency, outputCurrency, chainId, handleCurrencyChange]);
 
   useEffect(() => {
-    stableSwapStore.getFeeIn().then((result: number) => {
-      console.log('feeIn', result)
-    })
+    Promise.all([stableSwapStore.getFeeIn(), stableSwapStore.getFeeOut()]).then(
+      ([feeIn, feeOut]) => {
+        setFeeIn(feeIn);
+        setFeeOut(feeOut);
+      }
+    );
+  }, [stableSwapStore, setFeeIn, setFeeOut]);
 
-    stableSwapStore.getFeeOut().then((result: number) => {
-      console.log('feeOut', result)
-    })
-  }, [stableSwapStore])
+  const swapFee = useMemo(() => {
+    /**
+     * US+ to FXD
+     */
+    if (inputCurrency === options[0]) {
+      return (inputValue! * feeIn) / 10 ** 18;
+    } else {
+      return (inputValue! * feeOut) / 10 ** 18;
+    }
+  }, [options, inputCurrency, inputValue, feeIn, feeOut]);
 
   useEffect(() => {
     if (inputCurrency) {
@@ -166,6 +180,7 @@ const useStableSwap = (options: string[]) => {
         inputCurrency,
         account,
         inputValue as number,
+        outputValue as number,
         options[0]
       );
 
@@ -180,6 +195,7 @@ const useStableSwap = (options: string[]) => {
     inputCurrency,
     outputCurrency,
     inputValue,
+    outputValue,
     account,
     stableSwapStore,
     setSwapPending,
@@ -266,10 +282,26 @@ const useStableSwap = (options: string[]) => {
   );
 
   const setMax = useCallback(() => {
-    const formattedBalance = Number(inputBalance / 10 ** 18) || null;
+    /**
+     * FXD to US+
+     */
+    let formattedBalance;
+    if (inputCurrency === options[1]) {
+      formattedBalance =
+        Number(inputBalance / 10 ** 18) * (1 - feeOut / 10 ** 18);
+    } else {
+      formattedBalance = Number(inputBalance / 10 ** 18) || null;
+    }
     setInputValue(formattedBalance);
     setOppositeCurrency(formattedBalance as number, inputCurrency, "input");
-  }, [inputBalance, inputCurrency, setInputValue, setOppositeCurrency]);
+  }, [
+    options,
+    inputBalance,
+    inputCurrency,
+    feeOut,
+    setOppositeCurrency,
+    setInputValue,
+  ]);
 
   return {
     inputValue,
@@ -302,6 +334,7 @@ const useStableSwap = (options: string[]) => {
 
     setInputCurrencyHandler,
     setOutputCurrencyHandler,
+    swapFee,
   };
 };
 
