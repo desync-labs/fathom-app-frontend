@@ -78,7 +78,7 @@ export class SmartContractFactory {
   public static USDT(chainId: number) {
     return {
       abi: BEP20Abi.abi as AbiItem[],
-      address: SmartContractFactory.Addresses(chainId).USDT,
+      address: SmartContractFactory.Addresses(chainId)['US+'],
     };
   }
 
