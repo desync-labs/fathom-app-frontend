@@ -21,4 +21,7 @@ export default interface IStableSwapService {
   ): Promise<void>;
   approvalStatusStablecoin(address: string, tokenIn: number): Promise<Boolean>;
   approvalStatusUsdt(address: string, tokenIn: number): Promise<Boolean>;
+
+  getFeeIn(): Promise<number>;
+  getFeeOut(): Promise<number>;
 }
