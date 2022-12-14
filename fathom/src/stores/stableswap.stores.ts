@@ -12,8 +12,8 @@ export default class StableSwapStore {
     this.rootStore = rootStore;
   }
 
-  async swapToken(inputCurrency: string, address: string, inputValue: number): Promise<any> {
-    if (inputCurrency === "USDT") {
+  async swapToken(inputCurrency: string, address: string, inputValue: number, tokenName: string): Promise<any> {
+    if (inputCurrency === tokenName) {
       try {
         return await this.service
           .swapTokenToStableCoin(

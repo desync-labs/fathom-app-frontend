@@ -114,7 +114,7 @@ const PositionListItem: FC<PositionListItemProps> = observer(
         <TableCell>
           {position.lockedCollateral} {position.collateralPoolName}
         </TableCell>
-        <TableCell>{ formatNumber(Number(position.safetyBufferInPercent)) }%</TableCell>
+        <TableCell>{ formatNumber(Number(position.safetyBufferInPercent) * 100) }%</TableCell>
         <TableCell>
           <ButtonsWrapper>
           {approveBtn ? (

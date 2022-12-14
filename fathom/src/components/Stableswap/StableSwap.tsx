@@ -136,7 +136,7 @@ const SwapButton = styled(ButtonPrimary)`
 `;
 
 const StableSwap = observer(() => {
-  const [options /*setOptions*/] = useState<string[]>(["USDT", "FXD"]);
+  const [options /*setOptions*/] = useState<string[]>(["US+", "FXD"]);
 
   const {
     fxdPrice,
@@ -214,7 +214,7 @@ const StableSwap = observer(() => {
                           <img
                             width={16}
                             src={getTokenLogoURL(option)}
-                            alt={option}
+                            alt={''}
                           />
                         </Box>
                         {option}
@@ -289,7 +289,7 @@ const StableSwap = observer(() => {
                           <img
                             width={16}
                             src={getTokenLogoURL(option)}
-                            alt={option}
+                            alt={''}
                           />
                         </Box>
                         {option}
@@ -326,16 +326,12 @@ const StableSwap = observer(() => {
                 <StableSwapPriceInfoWrapper>
                   <StableSwapPriceInfo>
                     <Box component="span">
-                      {inputCurrency === "USDT"
-                        ? "1"
-                        : fxdPrice && inputCurrency === "USDT"
-                        ? 1 / fxdPrice
-                        : fxdPrice}{" "}
+                      1{" "}
                       {inputCurrency} ={" "}
-                      {outputCurrency === "USDT"
-                        ? "1"
-                        : fxdPrice
+                      {outputCurrency === options[0]
                         ? 1 / fxdPrice
+                        : fxdPrice
+                        ? 1 * fxdPrice
                         : null}{" "}
                       {outputCurrency}
                     </Box>
@@ -352,27 +348,12 @@ const StableSwap = observer(() => {
                   </StableSwapRateSettingsButton>
                 </StableSwapPriceInfoWrapper>
               );
-            }, [inputCurrency, outputCurrency, fxdPrice])}
+            }, [inputCurrency, outputCurrency, fxdPrice, options])}
 
             <StableSwapInfoContainer>
               <StableSwapInfoWrapper>
                 <InfoLabel>Fee</InfoLabel>
-                <InfoValue>0.00 FTHM</InfoValue>
-              </StableSwapInfoWrapper>
-
-              <StableSwapInfoWrapper>
-                <InfoLabel>Price impact</InfoLabel>
-                <InfoValue>0%</InfoValue>
-              </StableSwapInfoWrapper>
-
-              <StableSwapInfoWrapper>
-                <InfoLabel>Minimum received</InfoLabel>
-                <InfoValue>0.00 FXD</InfoValue>
-              </StableSwapInfoWrapper>
-
-              <StableSwapInfoWrapper>
-                <InfoLabel>Slippage tolerance</InfoLabel>
-                <InfoValue>0.5%</InfoValue>
+                <InfoValue>0.00 FTHM (0.1%)</InfoValue>
               </StableSwapInfoWrapper>
             </StableSwapInfoContainer>
 

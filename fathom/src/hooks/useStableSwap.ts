@@ -3,7 +3,7 @@ import { useStores } from "stores";
 import useMetaMask from "context/metamask";
 import debounce from "lodash.debounce";
 import { SmartContractFactory } from "config/SmartContractFactory";
-import useSyncContext from "../context/sync";
+import useSyncContext from "context/sync";
 
 const useStableSwap = (options: string[]) => {
   const [inputBalance, setInputBalance] = useState<number>(0);
@@ -31,14 +31,14 @@ const useStableSwap = (options: string[]) => {
   const setOppositeCurrency = useCallback(
     (amount: number, currency: string, type: string) => {
       const oppositeValue =
-        Number(currency === "USDT" ? amount / fxdPrice : amount * fxdPrice) ||
+        Number(currency === options[0] ? amount / fxdPrice : amount * fxdPrice) ||
         null;
 
       type === "input"
         ? setOutputValue(oppositeValue)
         : setInputValue(oppositeValue);
     },
-    [fxdPrice, setInputValue, setOutputValue]
+    [fxdPrice, setInputValue, setOutputValue, options]
   );
 
   const approvalStatus = useMemo(
@@ -46,7 +46,7 @@ const useStableSwap = (options: string[]) => {
       debounce(async (input: number, currency: string, type: string) => {
         let approved;
         approved =
-          currency === "USDT"
+          currency === options[0]
             ? await stableSwapStore.approvalStatusUsdt(account, input)
             : await stableSwapStore.approvalStatusStableCoin(account, input);
 
@@ -58,7 +58,7 @@ const useStableSwap = (options: string[]) => {
           ? setApproveOutputBtn(false)
           : setApproveOutputBtn(true);
       }, 1000),
-    [stableSwapStore, account, setApproveInputBtn, setApproveOutputBtn]
+    [stableSwapStore, account, options, setApproveInputBtn, setApproveOutputBtn]
   );
 
   const handleCurrencyChange = useMemo(
@@ -155,8 +155,10 @@ const useStableSwap = (options: string[]) => {
       const receipt = await stableSwapStore.swapToken(
         inputCurrency,
         account,
-        inputValue as number
+        inputValue as number,
+        options[0]
       );
+
       setLastTransactionBlock(receipt.blockNumber);
       handleCurrencyChange(inputCurrency, outputCurrency);
     } catch (e) {
@@ -164,6 +166,7 @@ const useStableSwap = (options: string[]) => {
       setSwapPending(false);
     }
   }, [
+    options,
     inputCurrency,
     outputCurrency,
     inputValue,
@@ -177,7 +180,7 @@ const useStableSwap = (options: string[]) => {
   const approveInput = useCallback(async () => {
     setApprovalPending("input");
     try {
-      inputCurrency === "USDT"
+      inputCurrency === options[0]
         ? await stableSwapStore.approveUsdt(account)
         : await stableSwapStore.approveStableCoin(account);
       setApproveInputBtn(false);
@@ -186,17 +189,18 @@ const useStableSwap = (options: string[]) => {
     }
     setApprovalPending(null);
   }, [
-    setApprovalPending,
-    setApproveInputBtn,
+    options,
     inputCurrency,
     stableSwapStore,
     account,
+    setApprovalPending,
+    setApproveInputBtn,
   ]);
 
   const approveOutput = useCallback(async () => {
     setApprovalPending("output");
     try {
-      outputCurrency === "USDT"
+      outputCurrency === options[0]
         ? await stableSwapStore.approveUsdt(account)
         : await stableSwapStore.approveStableCoin(account);
 
@@ -207,11 +211,12 @@ const useStableSwap = (options: string[]) => {
 
     setApprovalPending(null);
   }, [
-    setApprovalPending,
-    setApproveOutputBtn,
+    options,
     outputCurrency,
     stableSwapStore,
     account,
+    setApprovalPending,
+    setApproveOutputBtn,
   ]);
 
   const handleInputValueTextFieldChange = useCallback(
