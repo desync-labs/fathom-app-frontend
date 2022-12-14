@@ -36,7 +36,7 @@ const useStableSwap = (options: string[]) => {
       const oppositeValue =
         Number(
           currency === options[0] ? amount / fxdPrice : amount * fxdPrice
-        ) || null;
+        ) || 0;
 
       type === "input"
         ? setOutputValue(oppositeValue)
@@ -288,9 +288,9 @@ const useStableSwap = (options: string[]) => {
     let formattedBalance;
     if (inputCurrency === options[1]) {
       formattedBalance =
-        Number(inputBalance / 10 ** 18) * (1 - feeOut / 10 ** 18);
+        Number(inputBalance / 10 ** 18) * (1 - feeOut / 10 ** 18) || 0;
     } else {
-      formattedBalance = Number(inputBalance / 10 ** 18) || null;
+      formattedBalance = Number(inputBalance / 10 ** 18) || 0;
     }
     setInputValue(formattedBalance);
     setOppositeCurrency(formattedBalance as number, inputCurrency, "input");
@@ -302,6 +302,8 @@ const useStableSwap = (options: string[]) => {
     setOppositeCurrency,
     setInputValue,
   ]);
+
+  console.log(outputValue);
 
   return {
     inputValue,
