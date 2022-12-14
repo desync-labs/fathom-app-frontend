@@ -12,7 +12,13 @@ export default class StableSwapStore {
     this.rootStore = rootStore;
   }
 
-  async swapToken(inputCurrency: string, address: string, inputValue: number, tokenName: string): Promise<any> {
+  async swapToken(
+    inputCurrency: string,
+    address: string,
+    inputValue: number,
+    outputValue: number,
+    tokenName: string
+  ): Promise<any> {
     if (inputCurrency === tokenName) {
       try {
         return await this.service
@@ -24,7 +30,7 @@ export default class StableSwapStore {
           .then((receipt) => {
             this.rootStore.alertStore.setShowSuccessAlert(
               true,
-              "USDT token swapped with FXD!"
+              `${tokenName} token swapped with FXD!`
             );
             return receipt;
           });
@@ -36,7 +42,7 @@ export default class StableSwapStore {
         return await this.service
           .swapStableCoinToToken(
             address,
-            inputValue,
+            outputValue,
             this.rootStore.transactionStore
           )
           .then((receipt) => {
@@ -54,17 +60,16 @@ export default class StableSwapStore {
 
   async approveStableCoin(address: string) {
     try {
-      return await this.service.approveStableCoin(
-        address,
-        this.rootStore.transactionStore
-      ).then((receipt) => {
-        this.rootStore.alertStore.setShowSuccessAlert(
-          true,
-          "FXD approval was successful!"
-        );
+      return await this.service
+        .approveStableCoin(address, this.rootStore.transactionStore)
+        .then((receipt) => {
+          this.rootStore.alertStore.setShowSuccessAlert(
+            true,
+            "FXD approval was successful!"
+          );
 
-        return receipt;
-      });
+          return receipt;
+        });
     } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(true, e.message);
       throw e;
@@ -113,7 +118,7 @@ export default class StableSwapStore {
     }
   }
 
-  async getFeeOut(): Promise<any>  {
+  async getFeeOut(): Promise<any> {
     try {
       return await this.service.getFeeOut();
     } catch (e: any) {

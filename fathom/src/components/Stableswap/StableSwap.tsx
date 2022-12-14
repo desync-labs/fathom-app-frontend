@@ -39,6 +39,7 @@ import ComboShareSrc from "assets/svg/combo-shape.svg";
 import QuestionMarkSrc from "assets/svg/question-mark.svg";
 import PriceSettingsSrc from "assets/svg/price-settings.svg";
 import InfoIcon from "@mui/icons-material/Info";
+import { formatNumber, formatPercentage } from "utils/format";
 
 const StableSwapInputWrapper = styled(MuiBox)`
   position: relative;
@@ -168,12 +169,13 @@ const StableSwap = observer(() => {
 
     changeCurrenciesPosition,
     setMax,
+    swapFee,
   } = useStableSwap(options);
 
   const inputError = useMemo(() => {
     const formattedBalance = inputBalance / 10 ** 18;
 
-    return inputValue as number > formattedBalance;
+    return (inputValue as number) > formattedBalance;
   }, [inputValue, inputBalance]);
 
   return (
@@ -214,7 +216,7 @@ const StableSwap = observer(() => {
                           <img
                             width={16}
                             src={getTokenLogoURL(option)}
-                            alt={''}
+                            alt={""}
                           />
                         </Box>
                         {option}
@@ -246,7 +248,10 @@ const StableSwap = observer(() => {
               />
               <StableSwapMaxButton onClick={setMax}>Max</StableSwapMaxButton>
               {approveInputBtn ? (
-                <ButtonSecondary onClick={approveInput} sx={{ float: "right", marginTop: "10px" }}>
+                <ButtonSecondary
+                  onClick={approveInput}
+                  sx={{ float: "right", marginTop: "10px" }}
+                >
                   {approvalPending === "input" ? (
                     <CircularProgress size={30} />
                   ) : (
@@ -256,7 +261,12 @@ const StableSwap = observer(() => {
               ) : null}
 
               <FathomSwapChangeCurrencyButton
-                onClick={() => changeCurrenciesPosition(inputValue as number, outputValue as number)}
+                onClick={() =>
+                  changeCurrenciesPosition(
+                    inputValue as number,
+                    outputValue as number
+                  )
+                }
               >
                 <img src={ComboShareSrc} alt="combo-share" />
               </FathomSwapChangeCurrencyButton>
@@ -289,7 +299,7 @@ const StableSwap = observer(() => {
                           <img
                             width={16}
                             src={getTokenLogoURL(option)}
-                            alt={''}
+                            alt={""}
                           />
                         </Box>
                         {option}
@@ -300,6 +310,7 @@ const StableSwap = observer(() => {
               </StableSwapCurrencySelect>
 
               <StableSwapTextField
+                disabled={true}
                 size="small"
                 type="number"
                 placeholder="0.00"
@@ -326,8 +337,7 @@ const StableSwap = observer(() => {
                 <StableSwapPriceInfoWrapper>
                   <StableSwapPriceInfo>
                     <Box component="span">
-                      1{" "}
-                      {inputCurrency} ={" "}
+                      1 {inputCurrency} ={" "}
                       {outputCurrency === options[0]
                         ? 1 * fxdPrice
                         : fxdPrice
@@ -353,7 +363,10 @@ const StableSwap = observer(() => {
             <StableSwapInfoContainer>
               <StableSwapInfoWrapper>
                 <InfoLabel>Fee</InfoLabel>
-                <InfoValue>0.00 FTHM (0.1%)</InfoValue>
+                <InfoValue>
+                  {formatNumber(swapFee)} FTHM{" "}
+                  {inputValue && <>({formatPercentage(swapFee / inputValue! )}%)</>}
+                </InfoValue>
               </StableSwapInfoWrapper>
             </StableSwapInfoContainer>
 
