@@ -54,16 +54,17 @@ export default class StableSwapStore {
 
   async approveStableCoin(address: string) {
     try {
-      if (!address) return;
-
-      await this.service.approveStableCoin(
+      return await this.service.approveStableCoin(
         address,
         this.rootStore.transactionStore
-      );
-      this.rootStore.alertStore.setShowSuccessAlert(
-        true,
-        "FXD approval was successful!"
-      );
+      ).then((receipt) => {
+        this.rootStore.alertStore.setShowSuccessAlert(
+          true,
+          "FXD approval was successful!"
+        );
+
+        return receipt;
+      });
     } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(true, e.message);
       throw e;
@@ -71,17 +72,16 @@ export default class StableSwapStore {
   }
 
   async approveUsdt(address: string) {
-    console.log(`Approved USDT clicked for address ${address}`);
     try {
-      if (!address) return;
-
-      await this.service
+      return await this.service
         .approveUsdt(address, this.rootStore.transactionStore)
-        .then(() => {
+        .then((receipt) => {
           this.rootStore.alertStore.setShowSuccessAlert(
             true,
             "USDT approval was successful!"
           );
+
+          return receipt;
         });
     } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(true, e.message);
@@ -100,6 +100,22 @@ export default class StableSwapStore {
   async approvalStatusUsdt(address: string, tokenIn: number) {
     try {
       return await this.service.approvalStatusUsdt(address, tokenIn);
+    } catch (e: any) {
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+    }
+  }
+
+  async getFeeIn(): Promise<any> {
+    try {
+      return await this.service.getFeeIn();
+    } catch (e: any) {
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+    }
+  }
+
+  async getFeeOut(): Promise<any>  {
+    try {
+      return await this.service.getFeeOut();
     } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(true, e.message);
     }

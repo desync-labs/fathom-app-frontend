@@ -14,17 +14,17 @@ export default class StableSwapService implements IStableSwapService {
   readonly tokenBuffer: number = 5;
   chainId = Constants.DEFAULT_CHAIN_ID;
 
-  async swapTokenToStableCoin(
+  swapTokenToStableCoin(
     address: string,
     tokenIn: number,
     transactionStore: ActiveWeb3Transactions
   ): Promise<void> {
-    const stableSwapModule = Web3Utils.getContractInstance(
+    const StableSwapModule = Web3Utils.getContractInstance(
       SmartContractFactory.StableSwapModule(this.chainId),
       this.chainId
     );
 
-    return stableSwapModule.methods
+    return StableSwapModule.methods
       .swapTokenToStablecoin(address, toWei(tokenIn.toString(), "ether"))
       .send({ from: address })
       .on("transactionHash", (hash: any) => {
@@ -39,17 +39,17 @@ export default class StableSwapService implements IStableSwapService {
       });
   }
 
-  async swapStableCoinToToken(
+  swapStableCoinToToken(
     address: string,
     stablecoinIn: number,
     transactionStore: ActiveWeb3Transactions
   ): Promise<void> {
-    const stableSwapModule = Web3Utils.getContractInstance(
+    const StableSwapModule = Web3Utils.getContractInstance(
       SmartContractFactory.StableSwapModule(this.chainId),
       this.chainId
     );
 
-    return stableSwapModule.methods
+    return StableSwapModule.methods
       .swapStablecoinToToken(address, toWei(stablecoinIn.toString(), "ether"))
       .send({ from: address })
       .on("transactionHash", (hash: any) => {
@@ -64,16 +64,16 @@ export default class StableSwapService implements IStableSwapService {
       });
   }
 
-  async approveStableCoin(
+  approveStableCoin(
     address: string,
     transactionStore: ActiveWeb3Transactions
   ): Promise<void> {
-    const fathomStableCoin = Web3Utils.getContractInstance(
+    const FathomStableCoin = Web3Utils.getContractInstance(
       SmartContractFactory.FathomStableCoin(this.chainId),
       this.chainId
     );
 
-    return fathomStableCoin.methods
+    return FathomStableCoin.methods
       .approve(
         SmartContractFactory.StableSwapModule(this.chainId).address,
         Constants.MAX_UINT256
@@ -91,7 +91,7 @@ export default class StableSwapService implements IStableSwapService {
       });
   }
 
-  async approveUsdt(
+  approveUsdt(
     address: string,
     transactionStore: ActiveWeb3Transactions
   ): Promise<void> {
@@ -122,12 +122,12 @@ export default class StableSwapService implements IStableSwapService {
     address: string,
     tokenIn: number
   ): Promise<Boolean> {
-    const fathomStableCoin = Web3Utils.getContractInstance(
+    const FathomStableCoin = Web3Utils.getContractInstance(
       SmartContractFactory.FathomStableCoin(this.chainId),
       this.chainId
     );
 
-    const allowance = await fathomStableCoin.methods
+    const allowance = await FathomStableCoin.methods
       .allowance(
         address,
         SmartContractFactory.StableSwapModule(this.chainId).address
@@ -155,6 +155,24 @@ export default class StableSwapService implements IStableSwapService {
     const buffer = Number(tokenIn) + Number((tokenIn * this.tokenBuffer) / 100);
 
     return +allowance > +Constants.WeiPerWad.multipliedBy(buffer);
+  }
+
+  getFeeIn() {
+    const StableSwapModule = Web3Utils.getContractInstance(
+      SmartContractFactory.StableSwapModule(this.chainId),
+      this.chainId
+    );
+
+    return StableSwapModule.methods.feeIn().call();
+  }
+
+  getFeeOut() {
+    const StableSwapModule = Web3Utils.getContractInstance(
+      SmartContractFactory.StableSwapModule(this.chainId),
+      this.chainId
+    );
+
+    return StableSwapModule.methods.feeOut().call();
   }
 
   setChainId(chainId: number) {

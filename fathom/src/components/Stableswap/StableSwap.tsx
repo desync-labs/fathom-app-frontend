@@ -170,8 +170,6 @@ const StableSwap = observer(() => {
     setMax,
   } = useStableSwap(options);
 
-  console.log(fxdPrice);
-
   const inputError = useMemo(() => {
     const formattedBalance = inputBalance / 10 ** 18;
 

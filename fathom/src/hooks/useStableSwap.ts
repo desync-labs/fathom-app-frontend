@@ -132,6 +132,16 @@ const useStableSwap = (options: string[]) => {
   }, [inputCurrency, outputCurrency, chainId, handleCurrencyChange]);
 
   useEffect(() => {
+    stableSwapStore.getFeeIn().then((result: number) => {
+      console.log('feeIn', result)
+    })
+
+    stableSwapStore.getFeeOut().then((result: number) => {
+      console.log('feeOut', result)
+    })
+  }, [stableSwapStore])
+
+  useEffect(() => {
     if (inputCurrency) {
       let index = options.indexOf(inputCurrency);
       index++;
