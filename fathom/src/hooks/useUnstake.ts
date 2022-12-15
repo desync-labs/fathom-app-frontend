@@ -23,7 +23,7 @@ const useUnstake = (
   );
 
   useEffect(() => {
-    if (unStakeAmount > totalBalance) {
+    if (unStakeAmount > totalBalance / 10 ** 18) {
       setBalanceError(true);
     } else {
       setBalanceError(false);
