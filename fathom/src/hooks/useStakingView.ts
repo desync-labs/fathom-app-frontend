@@ -54,6 +54,7 @@ const useStakingView = () => {
     fetchStakers,
     {
       data: stakersData,
+      previousData: stakerPreviousData,
       loading: stakersLoading,
       refetch: refetchStakers,
       fetchMore: fetchMoreStakers,
@@ -63,13 +64,15 @@ const useStakingView = () => {
   });
 
   const fetchAllClaimRewards = useCallback(() => {
-    stakingStore.getStreamClaimableAmount(account).then((amount) => {
-      setTotalRewards(Number(amount));
+   if (account) {
+     stakingStore.getStreamClaimableAmount(account).then((amount) => {
+       setTotalRewards(Number(amount));
 
-      setTimeout(() => {
-        previousTotalRewardsRef.current = amount!;
-      }, 1000);
-    });
+       setTimeout(() => {
+         previousTotalRewardsRef.current = amount!;
+       }, 1000);
+     });
+   }
   }, [stakingStore, account, setTotalRewards]);
 
   useEffect(() => {
@@ -336,6 +339,7 @@ const useStakingView = () => {
       !stakersLoading && stakersData?.stakers?.length
         ? stakersData.stakers[0]
         : null,
+    previousStaker: stakerPreviousData?.stakers?.length ? stakerPreviousData.stakers[0] : null,
     lockPositions,
     protocolStatsInfo:
       !protocolStatsLoading && protocolStatsInfo.protocolStats.length
