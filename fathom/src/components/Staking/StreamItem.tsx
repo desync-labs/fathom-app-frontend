@@ -157,7 +157,7 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
               onFinish={(unstakeAmount: number) => {
                 processFlow("unstake-cooldown-unstake", {
                   ...unstake,
-                  amount: unstakeAmount,
+                  amount: unstakeAmount * 10 ** 18,
                 } as ILockPosition);
               }}
             />
