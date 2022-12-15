@@ -290,6 +290,7 @@ const StableSwap = observer(() => {
                 onChange={(event: SelectChangeEvent) => {
                   setOutputCurrencyHandler(event.target.value);
                 }}
+                disabled={true}
               >
                 {useMemo(
                   () =>
@@ -365,7 +366,7 @@ const StableSwap = observer(() => {
                 <InfoLabel>Fee</InfoLabel>
                 <InfoValue>
                   {formatNumber(swapFee)} FTHM{" "}
-                  {inputValue && <>({formatPercentage(swapFee / inputValue! )}%)</>}
+                  {inputValue && <>({formatPercentage(swapFee / Number(inputValue) )}%)</>}
                 </InfoValue>
               </StableSwapInfoWrapper>
             </StableSwapInfoContainer>

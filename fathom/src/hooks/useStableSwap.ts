@@ -12,8 +12,8 @@ const useStableSwap = (options: string[]) => {
   const [inputCurrency, setInputCurrency] = useState<string>(options[0]);
   const [outputCurrency, setOutputCurrency] = useState<string>(options[1]);
 
-  const [inputValue, setInputValue] = useState<number | null>(null);
-  const [outputValue, setOutputValue] = useState<number | null>(null);
+  const [inputValue, setInputValue] = useState<number | string>('');
+  const [outputValue, setOutputValue] = useState<number | string>('');
 
   const [approveInputBtn, setApproveInputBtn] = useState<boolean>(false);
   const [approveOutputBtn, setApproveOutputBtn] = useState<boolean>(false);
@@ -33,16 +33,20 @@ const useStableSwap = (options: string[]) => {
 
   const setOppositeCurrency = useCallback(
     (amount: number, currency: string, type: string) => {
-      const oppositeValue =
-        Number(
-          currency === options[0] ? amount / fxdPrice : amount * fxdPrice
-        ) || 0;
+      let oppositeValue;
+      if (currency === options[0]) {
+        console.log("US+ -> FXD", 1 - feeIn / 10 ** 18);
+        oppositeValue = amount * (1 - feeIn / 10 ** 18);
+      } else {
+        console.log("FXD -> US+", feeOut / 10 ** 18 + 1);
+        oppositeValue = amount / (feeOut / 10 ** 18 + 1);
+      }
 
       type === "input"
         ? setOutputValue(oppositeValue)
         : setInputValue(oppositeValue);
     },
-    [fxdPrice, setInputValue, setOutputValue, options]
+    [options, feeIn, feeOut, setInputValue, setOutputValue]
   );
 
   const approvalStatus = useMemo(
@@ -118,16 +122,17 @@ const useStableSwap = (options: string[]) => {
 
       approvalStatus(outputValue, outputCurrency, "input");
 
-      setOutputValue(inputValue);
-      setOppositeCurrency(inputValue, inputCurrency, "output");
+      setOutputValue('');
+      setInputValue('');
     },
     [
       inputCurrency,
       outputCurrency,
       setInputCurrency,
       setOutputCurrency,
-      setOppositeCurrency,
       approvalStatus,
+      setInputValue,
+      setOutputValue,
     ]
   );
 
@@ -149,9 +154,9 @@ const useStableSwap = (options: string[]) => {
      * US+ to FXD
      */
     if (inputCurrency === options[0]) {
-      return (inputValue! * feeIn) / 10 ** 18;
+      return (Number(inputValue) * feeIn) / 10 ** 18;
     } else {
-      return (inputValue! * feeOut) / 10 ** 18;
+      return (Number(inputValue) * feeOut) / 10 ** 18;
     }
   }, [options, inputCurrency, inputValue, feeIn, feeOut]);
 
@@ -250,6 +255,7 @@ const useStableSwap = (options: string[]) => {
       const { value } = e.target;
       setInputValue(value);
       approvalStatus(value, inputCurrency, "input");
+
       setOppositeCurrency(value, inputCurrency, "input");
     },
     [inputCurrency, setInputValue, setOppositeCurrency, approvalStatus]
@@ -302,8 +308,6 @@ const useStableSwap = (options: string[]) => {
     setOppositeCurrency,
     setInputValue,
   ]);
-
-  console.log(outputValue);
 
   return {
     inputValue,
