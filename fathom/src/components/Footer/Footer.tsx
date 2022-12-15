@@ -11,7 +11,7 @@ const Copyright = function Copyright(props: any) {
   return (
     <Footer color="text.secondary" align="center" {...props}>
       {'Copyright © '}
-      <Link color="inherit" href="https://fathom.com/">
+      <Link color="inherit" href="https://fathom.fi/">
         Fathom App
       </Link>{' '}
       {new Date().getFullYear()}
