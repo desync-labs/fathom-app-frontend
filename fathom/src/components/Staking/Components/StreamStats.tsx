@@ -1,5 +1,4 @@
-import React, { FC, useEffect, useMemo, useState } from "react";
-import useStakingContext from "context/staking";
+import React, { FC } from "react";
 
 import { Box, Typography, Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -16,7 +15,7 @@ import RewardsSrc from "assets/svg/rewards.svg";
 import StakingCountdown from "components/Staking/StakingCountdown";
 
 import { secondsToTime } from "utils/secondsToTime";
-import usePricesContext from "context/prices";
+import useStreamStats from "hooks/useStreamStats";
 
 const FTHMStreamHeader = styled("h3")`
   font-weight: 600;
@@ -144,29 +143,14 @@ const CooldownCountDown = styled(Box)`
 `;
 
 const StreamStats: FC = () => {
-  const { processFlow, protocolStatsInfo, staker, totalRewards } =
-    useStakingContext();
-  const { fthmPrice } = usePricesContext();
-  const fthmPriceFormatted = useMemo(() => fthmPrice / 10 ** 18, [fthmPrice]);
-
-  const [seconds, setSeconds] = useState<number>(0);
-
-  useEffect(() => {
-    const now = Date.now() / 1000;
-    if (Number(staker?.cooldown) > now) {
-      setSeconds(Number(staker.cooldown) - now);
-    } else {
-      setSeconds(0);
-    }
-  }, [staker, setSeconds]);
-
-  useEffect(() => {
-    if (seconds > 0) {
-      setTimeout(() => {
-        setSeconds(seconds - 1);
-      }, 1000);
-    }
-  }, [seconds, setSeconds]);
+  const {
+    staker,
+    seconds,
+    protocolStatsInfo,
+    totalRewards,
+    fthmPriceFormatted,
+    processFlow,
+  } = useStreamStats();
 
   return (
     <Box sx={{ padding: "0 10px" }}>
@@ -333,10 +317,10 @@ const StreamStats: FC = () => {
                         FTHM
                       </strong>
                       <span>
-                      {formatCurrency(
-                        (staker.claimedAmount / 10 ** 18) * fthmPriceFormatted
-                      )}
-                    </span>
+                        {formatCurrency(
+                          (staker.claimedAmount / 10 ** 18) * fthmPriceFormatted
+                        )}
+                      </span>
                     </MyStatsValue>
                   </Grid>
                   <ButtonGrid item xs={6}>
