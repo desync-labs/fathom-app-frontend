@@ -4,6 +4,8 @@ import useMetaMask from "context/metamask";
 import debounce from "lodash.debounce";
 import { SmartContractFactory } from "config/SmartContractFactory";
 import useSyncContext from "context/sync";
+import BigNumber from "bignumber.js";
+import Web3 from "web3";
 
 const useStableSwap = (options: string[]) => {
   const [inputBalance, setInputBalance] = useState<number>(0);
@@ -12,8 +14,8 @@ const useStableSwap = (options: string[]) => {
   const [inputCurrency, setInputCurrency] = useState<string>(options[0]);
   const [outputCurrency, setOutputCurrency] = useState<string>(options[1]);
 
-  const [inputValue, setInputValue] = useState<number | string>('');
-  const [outputValue, setOutputValue] = useState<number | string>('');
+  const [inputValue, setInputValue] = useState<number | string>("");
+  const [outputValue, setOutputValue] = useState<number | string>("");
 
   const [approveInputBtn, setApproveInputBtn] = useState<boolean>(false);
   const [approveOutputBtn, setApproveOutputBtn] = useState<boolean>(false);
@@ -122,8 +124,8 @@ const useStableSwap = (options: string[]) => {
 
       approvalStatus(outputValue, outputCurrency, "input");
 
-      setOutputValue('');
-      setInputValue('');
+      setOutputValue("");
+      setInputValue("");
     },
     [
       inputCurrency,
@@ -293,11 +295,19 @@ const useStableSwap = (options: string[]) => {
      */
     let formattedBalance;
     if (inputCurrency === options[1]) {
-      formattedBalance =
-        Number(inputBalance / 10 ** 18) * (1 - feeOut / 10 ** 18) || 0;
+      formattedBalance = new BigNumber(
+        Web3.utils.fromWei(inputBalance.toString())
+      )
+        .multipliedBy(
+          1 - new BigNumber(Web3.utils.fromWei(feeOut.toString())).toNumber()
+        )
+        .toNumber();
     } else {
-      formattedBalance = Number(inputBalance / 10 ** 18) || 0;
+      formattedBalance =
+        new BigNumber(Web3.utils.fromWei(inputBalance.toString())).toNumber() ||
+        0;
     }
+
     setInputValue(formattedBalance);
     setOppositeCurrency(formattedBalance as number, inputCurrency, "input");
   }, [

@@ -11,7 +11,7 @@ const formatterPercentage = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
   minimumFractionDigits: 0,
-  maximumFractionDigits: 4,
+  maximumFractionDigits: 6,
 });
 
 export const formatNumber = (number: number) => {
