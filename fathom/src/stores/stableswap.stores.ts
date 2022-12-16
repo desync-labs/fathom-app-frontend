@@ -19,6 +19,9 @@ export default class StableSwapStore {
     outputValue: number,
     tokenName: string
   ): Promise<any> {
+    console.log(inputValue)
+    console.log(outputValue)
+
     if (inputCurrency === tokenName) {
       try {
         return await this.service

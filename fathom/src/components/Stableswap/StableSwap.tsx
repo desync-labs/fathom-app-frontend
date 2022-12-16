@@ -39,7 +39,7 @@ import ComboShareSrc from "assets/svg/combo-shape.svg";
 import QuestionMarkSrc from "assets/svg/question-mark.svg";
 import PriceSettingsSrc from "assets/svg/price-settings.svg";
 import InfoIcon from "@mui/icons-material/Info";
-import { formatNumber, formatPercentage } from "utils/format";
+import { formatPercentage } from "utils/format";
 
 const StableSwapInputWrapper = styled(MuiBox)`
   position: relative;
@@ -365,7 +365,7 @@ const StableSwap = observer(() => {
               <StableSwapInfoWrapper>
                 <InfoLabel>Fee</InfoLabel>
                 <InfoValue>
-                  {formatNumber(swapFee)} FTHM{" "}
+                  {formatPercentage(swapFee)} FTHM{" "}
                   {inputValue && <>({formatPercentage(swapFee / Number(inputValue) )}%)</>}
                 </InfoValue>
               </StableSwapInfoWrapper>
