@@ -1,12 +1,19 @@
 import React, { forwardRef, ReactNode } from "react";
 import { NavLink, NavLinkProps, useLocation } from "react-router-dom";
 import { ListItem } from "@mui/material";
+import { styled } from "@mui/material/styles";
+
+const ExternalLink = styled('a')`
+  display: flex;
+  align-items: center;
+`
 
 export interface AppMenuItemComponentProps {
   className?: string;
-  link?: string | null; // because the InferProps props allows alows null value
+  link?: string | null; // because the InferProps props allows null value
   onClick?: (event: React.MouseEvent<HTMLElement>) => void;
   children: ReactNode;
+  target?: string | null; // because the InferProps props allows null value
 }
 
 const AppMenuItemComponent: React.FC<AppMenuItemComponentProps> = (props) => {
@@ -25,6 +32,14 @@ const AppMenuItemComponent: React.FC<AppMenuItemComponentProps> = (props) => {
     );
   }
 
+  if (props.target) {
+    return (
+      <ExternalLink target={props.target!} href={props.link!} className={props.className}>
+        {props.children}
+      </ExternalLink>
+    );
+  }
+
   // Return a LitItem with a link component
   return (
     <ListItem
@@ -39,7 +54,7 @@ const AppMenuItemComponent: React.FC<AppMenuItemComponentProps> = (props) => {
             ? `${props.className} active`
             : props.className;
 
-        return <NavLink {...{...props, className}} />;
+        return <NavLink {...{ ...props, className }} />;
       })}
       to={link}
     />
