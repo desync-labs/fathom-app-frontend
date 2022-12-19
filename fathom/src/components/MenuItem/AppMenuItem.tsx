@@ -18,6 +18,7 @@ export const AppMenuItemPropTypes = {
   items: PropTypes.array,
   isActive: PropTypes.bool,
   showText: PropTypes.bool,
+  target: PropTypes.string,
 };
 
 // TypeScript compile-time props type, infered from propTypes
@@ -92,6 +93,7 @@ const AppMenuItem: React.FC<AppMenuItemProps> = (props) => {
       className={classes.menuItem}
       link={link}
       onClick={handleClick}
+      target={props.target}
     >
       {/* Display an icon if any */}
       {!!Icon && (

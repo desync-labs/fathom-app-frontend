@@ -157,7 +157,6 @@ const useClosePosition = (
   const setMax = useCallback(() => {
     const walletBalance = balance as number / 10 ** 18;
     const maxBalance = lockedCollateral * price;
-
     const setBalance = walletBalance < maxBalance ? walletBalance : maxBalance;
 
     setFathomToken(setBalance);

@@ -8,7 +8,8 @@ import useShowText from "hooks/useShowText";
 import {
   FxdIcon,
   GovernanceIcon,
-  SwapIcon
+  SwapIcon,
+  DexIcon
 } from "components/Common/MenuIcons";
 
 type ItemPropsType = {
@@ -56,6 +57,13 @@ export const Menu: FC<ItemPropsType> = ({ open, isMobile }) => {
       Icon: <GovernanceIcon isDAOActive={isDAOActive} />,
       isActive: isDAOActive,
     },
+    {
+      name: 'DEX',
+      link: 'https://swap.fathom.fi',
+      showText: isMobile ? false : showText,
+      Icon: <DexIcon />,
+      target: '_blank'
+    }
   ];
 
   return (

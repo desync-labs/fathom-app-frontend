@@ -7,6 +7,7 @@ import StakingIconSrc from "assets/svg/staking.svg";
 import StakingIconActiveSrc from "assets/svg/staking-active.svg";
 import GovernanceSrc from "assets/svg/governance.svg";
 import GovernanceActiveSrc from "assets/svg/governance-active.svg";
+import DexSrc from 'assets/svg/dex.svg';
 
 import { styled } from "@mui/material/styles";
 import { Icon } from "@mui/material";
@@ -57,3 +58,12 @@ export const GovernanceIcon: FC<{ isDAOActive: boolean }> = ({
     />
   </MenuIcon>
 );
+
+export const DexIcon: FC = () => (
+  <Icon sx={{ height: '1.2em' }}>
+    <img
+      alt="dex-icon"
+      src={DexSrc}
+    />
+  </Icon>
+)
