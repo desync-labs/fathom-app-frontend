@@ -21,19 +21,23 @@ import {
   VotingEndedButton,
 } from "components/AppComponents/AppButton/AppButton";
 
-import backSrc from "assets/svg/back.svg";
-
 import {
   ProposalItemStatus,
   ImageSrc,
 } from "components/Governance/ViewAllProposalItem";
 import StakingCountdown from "../Staking/StakingCountdown";
-import { secondsToTime } from "../../utils/secondsToTime";
-import { ProposalStatus } from "../../helpers/Constants";
+import { secondsToTime } from "utils/secondsToTime";
+import { ProposalStatus } from "helpers/Constants";
+import { useWeb3React } from "@web3-react/core";
+import { getAccountUrl } from "utils/exporer";
+import { ChainId } from "connectors/networks";
+
+import BackSrc from "assets/svg/back.svg";
+import Web3 from "web3";
 
 const BackIcon = () => (
   <Icon sx={{ height: "21px" }}>
-    <img alt="staking-icon" src={backSrc} />
+    <img alt="staking-icon" src={BackSrc} />
   </Icon>
 );
 
@@ -70,6 +74,20 @@ const TimeslotTitle = styled(Typography)`
 const TimeslotValue = styled(Typography)`
   font-size: 14px;
   line-height: 20px;
+`;
+
+const ActionLabel = styled(Box)`
+  color: #7d91b5;
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 16px;
+`;
+
+const ActionWrapper = styled(Box)`
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  justify-content: start;
 `;
 
 const TimeslotInProgress = styled(Box, {
@@ -199,6 +217,7 @@ const Buttons: FC<ButtonsProps> = ({
 };
 
 const ProposalView = observer(() => {
+  const { chainId } = useWeb3React();
   const {
     hasVoted,
     votePending,
@@ -281,22 +300,45 @@ const ProposalView = observer(() => {
                   </ProposalDescription>
                 </Grid>
               )}
-              <Grid item xs={12} sx={{ padding: "12px 24px" }}>
-                <ProposalLabel>Action</ProposalLabel>
-                <ProposalDescription>
-                  Lorem ipsum dolor sit amet. Aicies. Luaicira.
-                </ProposalDescription>
-              </Grid>
-              <Grid item xs={12} sx={{ padding: "12px 24px" }}>
-                <ProposalLabel>Discussion</ProposalLabel>
-                <ProposalDescription>
-                  <a href="/">Discord / Forum / Medium / etc...</a>
-                </ProposalDescription>
-              </Grid>
+              {fetchedProposal.targets &&
+                fetchedProposal.targets.length &&
+                !Web3.utils.toBN(fetchedProposal.targets[0]).isZero() && (
+                  <Grid item xs={12} sx={{ padding: "12px 24px" }}>
+                    <ProposalLabel>Action</ProposalLabel>
+                    <ProposalDescription>
+                      <ActionWrapper>
+                        <ActionLabel>Targets: </ActionLabel>
+                        {fetchedProposal.targets.join(", ")}
+                      </ActionWrapper>
+                      <ActionWrapper>
+                        <ActionLabel>Values: </ActionLabel>
+                        {fetchedProposal.values.join(", ")}
+                      </ActionWrapper>
+                      <ActionWrapper>
+                        <ActionLabel>Call Data:</ActionLabel>{" "}
+                        {fetchedProposal.calldatas.join(", ")}
+                      </ActionWrapper>
+                    </ProposalDescription>
+                  </Grid>
+                )}
+              {/*<Grid item xs={12} sx={{ padding: "12px 24px" }}>*/}
+              {/*  <ProposalLabel>Discussion</ProposalLabel>*/}
+              {/*  <ProposalDescription>*/}
+              {/*    <a href="/">Discord / Forum / Medium / etc...</a>*/}
+              {/*  </ProposalDescription>*/}
+              {/*</Grid>*/}
               <Grid item xs={12} sx={{ padding: "12px 24px 24px 24px" }}>
                 <ProposalLabel>Proposer</ProposalLabel>
                 <ProposalDescription>
-                  <a href="/">0xe2F4Ba7d9d0aA7f7d39075a4b4AD9c4aa605b9db</a>
+                  <a
+                    target="_blank"
+                    href={getAccountUrl(
+                      fetchedProposal.proposer,
+                      chainId as ChainId
+                    )}
+                  >
+                    {fetchedProposal.proposer}
+                  </a>
                 </ProposalDescription>
               </Grid>
             </Grid>
