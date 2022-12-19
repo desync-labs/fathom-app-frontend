@@ -2,8 +2,10 @@ import { observer } from "mobx-react";
 import { Alert, AlertTitle, LinearProgress, Typography } from "@mui/material";
 import { useStores } from "stores";
 import truncateEthAddress from "truncate-eth-address";
-import { ChainId, EXPLORERS } from "connectors/networks";
 import { styled } from "@mui/material/styles";
+import { useWeb3React } from "@web3-react/core";
+import { getTxUrl } from "utils/exporer";
+import { ChainId } from "connectors/networks";
 
 const AlertMessage = styled(Alert)`
   position: fixed;
@@ -13,15 +15,8 @@ const AlertMessage = styled(Alert)`
 `;
 
 const TransactionStatus = observer(() => {
-  let { transactionStore } = useStores();
-  let rootStore = useStores();
-
-  const getTxUrl = (txHash: string) => {
-    if (rootStore.chainId in EXPLORERS) {
-      return `${EXPLORERS[rootStore.chainId as ChainId]}${txHash}`;
-    }
-    return "";
-  };
+  const { transactionStore } = useStores();
+  const { chainId } = useWeb3React();
 
   return (
     <>
@@ -33,7 +28,7 @@ const TransactionStatus = observer(() => {
             <strong>
               <a
                 target="_blank"
-                href={getTxUrl(transaction.hash)}
+                href={getTxUrl(transaction.hash, chainId as ChainId)}
                 rel="noreferrer"
               >
                 [{truncateEthAddress(transaction.hash)}]

@@ -15,8 +15,8 @@ export const NETWORK_LABELS = {
 };
 
 export const EXPLORERS = {
-  51: 'https://explorer.apothem.network/txs/',
-  50: 'https://xdc.blocksscan.io/txs/',
+  51: 'https://explorer.apothem.network/',
+  50: 'https://xdc.blocksscan.io/',
 }
 
 export const XDC_NETWORK_SETTINGS = {
