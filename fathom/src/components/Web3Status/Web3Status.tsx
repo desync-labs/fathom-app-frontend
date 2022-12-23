@@ -27,6 +27,10 @@ import React, {
 import { styled } from "@mui/material/styles";
 import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
 import Web3 from "web3";
+import {
+  useMediaQuery,
+  useTheme
+} from "@mui/material";
 
 const NetworkPaper = styled(AppPaper)`
   background: #253656;
@@ -56,6 +60,9 @@ export const Web3Status = () => {
   const { error, account, chainId } = useWeb3React();
   const anchorRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState<boolean>(false);
+
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up('sm'));
 
   let button: null | ReactElement = null;
 
@@ -96,7 +103,7 @@ export const Web3Status = () => {
       <RightNetwork onClick={() => setOpen(!open)}>
         <>
           <img src={getTokenLogoURL("WXDC")} alt={"xdc"} width={16} />
-          {NETWORK_LABELS[chainId as ChainId]}
+          { matches && NETWORK_LABELS[chainId as ChainId]}
           <ArrowDropDownIcon />
         </>
       </RightNetwork>

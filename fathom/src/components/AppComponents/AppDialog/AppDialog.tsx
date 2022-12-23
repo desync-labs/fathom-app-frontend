@@ -1,8 +1,5 @@
 import { styled } from "@mui/material/styles";
-import {
-  Box,
-  Dialog as MuiDialog
-} from "@mui/material";
+import { Box, Dialog as MuiDialog } from "@mui/material";
 
 export const AppDialog = styled(
   MuiDialog,
@@ -16,6 +13,15 @@ export const AppDialog = styled(
     border: "1px solid #324567",
     borderRadius: "16px",
     width: "1000px",
+
+    [theme.breakpoints.down("sm")]: {
+      maxWidth: "100%",
+      maxHeight: "100%",
+      width: "100%",
+      height: "100%",
+      margin: 0,
+      borderRadius: 0,
+    },
   },
   "& .MuiDialogActions-root": {
     padding: theme.spacing(1),
@@ -31,15 +37,15 @@ export const DialogContentWrapper = styled(Box)`
   align-items: center;
   gap: 10px;
   margin: 20px 15px 30px 15px;
-  background: #131F35;
+  background: #131f35;
   border-radius: 8px;
   padding: 20px 0;
-  
+
   > div {
     font-size: 18px;
     line-height: 22px;
   }
-  
+
   .amount {
     font-weight: 600;
     font-size: 36px;

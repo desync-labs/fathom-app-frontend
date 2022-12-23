@@ -17,7 +17,7 @@ export const NoResults = styled(Typography)`
   line-height: 20px;
   border-bottom: 1px solid #131f35;
   padding: 8px 10px;
-  background: #131F35;
+  background: #131f35;
   border-radius: 8px;
 `;
 
@@ -126,11 +126,18 @@ export const RightNetwork = styled(MuiBox)`
   line-height: 16px;
   padding: 4px 8px;
   cursor: pointer;
-`
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    background: none;
+    gap: 4px;
+    margin-right: 0;
+  }
+`;
 
 export const MainBox = styled(MuiBox)`
   background: linear-gradient(180deg, #071126 0%, #050c1a 100%);
-  flex-grow: 1;
-  height: 100vh;
+  min-height: 100vh;
   overflow: auto;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 `;
