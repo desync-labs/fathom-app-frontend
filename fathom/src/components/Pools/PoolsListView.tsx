@@ -7,6 +7,8 @@ import {
   TableContainer,
   TableHead,
   Box,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
 import { observer } from "mobx-react";
 import ICollateralPool from "stores/interfaces/ICollateralPool";
@@ -19,6 +21,7 @@ import {
   TitleSecondary,
 } from "components/AppComponents/AppBox/AppBox";
 import usePoolsList from "hooks/usePoolsList";
+import PoolsListItemMobile from "./PoolsListItemMobile";
 
 const PoolsListHeaderRow = styled(AppTableHeaderRow)`
   background: transparent;
@@ -39,6 +42,9 @@ const PoolsListView: FC = observer(() => {
   const { pools, selectedPool, onCloseNewPosition, setSelectedPool, loading } =
     usePoolsList();
 
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up("sm"));
+
   return (
     <>
       <TitleSecondary variant="h2">Available Pools</TitleSecondary>
@@ -53,32 +59,45 @@ const PoolsListView: FC = observer(() => {
           )}
         </NoResults>
       ) : (
-        <TableContainer>
-          <Table
-            sx={{ minWidth: 500, "& td": { padding: "9px" } }}
-            aria-label="simple table"
-          >
-            <TableHead>
-              <PoolsListHeaderRow>
-                <TableCell>Pool</TableCell>
-                <TableCell>Price</TableCell>
-                <TableCell>Borrowed</TableCell>
-                <TableCell>Available</TableCell>
-                <TableCell></TableCell>
-              </PoolsListHeaderRow>
-            </TableHead>
+        <>
+          {matches && (
+            <TableContainer>
+              <Table
+                sx={{ minWidth: 500, "& td": { padding: "9px" } }}
+                aria-label="simple table"
+              >
+                <TableHead>
+                  <PoolsListHeaderRow>
+                    <TableCell>Pool</TableCell>
+                    <TableCell>Price</TableCell>
+                    <TableCell>Borrowed</TableCell>
+                    <TableCell>Available</TableCell>
+                    <TableCell></TableCell>
+                  </PoolsListHeaderRow>
+                </TableHead>
 
-            <TableBody>
-              {pools.map((pool: ICollateralPool) => (
-                <PoolsListItem
-                  pool={pool}
-                  key={pool.id}
-                  setSelectedPool={setSelectedPool!}
-                />
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                <TableBody>
+                  {pools.map((pool: ICollateralPool) => (
+                    <PoolsListItem
+                      pool={pool}
+                      key={pool.id}
+                      setSelectedPool={setSelectedPool!}
+                    />
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
+          { !matches && (
+            pools.map((pool: ICollateralPool) => (
+              <PoolsListItemMobile
+                pool={pool}
+                key={pool.id}
+                setSelectedPool={setSelectedPool!}
+              />
+            ))
+          ) }
+        </>
       )}
       {useMemo(() => {
         return (

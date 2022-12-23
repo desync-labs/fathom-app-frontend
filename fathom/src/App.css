@@ -8,3 +8,7 @@ a {
   color: #5a81ff;
   text-decoration: none;
 }
+
+body {
+  min-height: 100vh;
+}

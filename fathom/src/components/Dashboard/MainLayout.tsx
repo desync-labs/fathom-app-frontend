@@ -19,16 +19,8 @@ import Copyright from "components/Footer/Footer";
 import AppBar from "components/AppComponents/AppBar/AppBar";
 import { observer } from "mobx-react";
 import DashboardContent from "components/Dashboard/Dashboard";
-import {
-  Navigate,
-  Route,
-  Routes
-} from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import StableSwap from "components/Stableswap/StableSwap";
-
-import FathomAppLogoSrc from "assets/svg/Fathom-app-logo.svg";
-import ExitSrc from "assets/svg/exit.svg";
-import MetamaskSrc from "assets/svg/metamask.svg";
 
 import { Web3Status } from "components/Web3Status/Web3Status";
 import AllProposalsView from "components/Governance/ViewAllProposals";
@@ -44,6 +36,12 @@ import DaoView from "components/Dashboard/DaoView";
 import { drawerWidth } from "components/AppComponents/AppBar/AppBar";
 import useMainLayout from "hooks/useMainLayout";
 import { StakingProvider } from "context/staking";
+
+import FathomAppLogoSrc from "assets/svg/Fathom-app-logo.svg";
+import ExitSrc from "assets/svg/exit.svg";
+import MetamaskSrc from "assets/svg/metamask.svg";
+
+import FathomLogoMobileSrc from "assets/svg/Fathom-app-logo-mobile.svg";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -113,6 +111,11 @@ const MainToolbar = styled(Toolbar)`
   justify-content: flex-start;
   padding: 0 1px;
   background: linear-gradient(180deg, #071126 0%, #050c1a 100%);
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 `;
 
 const WalletBox = styled(Box)`
@@ -133,7 +136,7 @@ const MainLayout = observer(() => {
     connect,
     isMetamask,
     toggleDrawer,
-  } = useMainLayout()
+  } = useMainLayout();
 
   return (
     <ThemeProvider theme={mdTheme}>
@@ -186,10 +189,23 @@ const MainLayout = observer(() => {
             {open && !isMobile && (
               <img
                 src={FathomAppLogoSrc}
-                alt={'logo'}
+                alt={"logo"}
                 style={{
                   height: "none",
                   maxWidth: "140px",
+                }}
+              />
+            )}
+            {isMobile && (
+              <img
+                src={FathomLogoMobileSrc}
+                alt={"logo"}
+                style={{
+                  width: "20px",
+                  background: "#80FFF6",
+                  height: "20px",
+                  borderRadius: "6px",
+                  padding: "4px",
                 }}
               />
             )}
@@ -218,16 +234,16 @@ const MainLayout = observer(() => {
             <Route path="proposal/:_proposalId" element={<ProposalView />} />
             <Route path="/dao" element={<DaoView />}>
               <Route path="governance" element={<AllProposalsView />} />
-              <Route path="staking" element={
-                <StakingProvider>
-                  <StakingView />
-                </StakingProvider>
-              } />
+              <Route
+                path="staking"
+                element={
+                  <StakingProvider>
+                    <StakingView />
+                  </StakingProvider>
+                }
+              />
             </Route>
-            <Route
-              path="*"
-              element={<Navigate to="/" replace />}
-            />
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
           <Copyright />
         </MainBox>

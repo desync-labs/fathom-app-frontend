@@ -1,4 +1,3 @@
-import { observer } from "mobx-react";
 import { Box, CircularProgress, TableCell, Stack } from "@mui/material";
 import { PoolName, TVL } from "components/AppComponents/AppBox/AppBox";
 import {
@@ -28,12 +27,9 @@ import { ClosingType } from "hooks/useClosePosition";
 import TokenLogo from "components/Common/TokenLogo";
 import { getTokenLogoURL } from "utils/tokenLogo";
 
-import {
-  formatCurrency,
-  formatNumber
-} from "utils/format";
+import { formatCurrency, formatNumber } from "utils/format";
 
-type PositionListItemProps = {
+export type PositionListItemProps = {
   position: IOpenPosition;
   setSelectedPosition: Dispatch<SetStateAction<IOpenPosition | undefined>>;
   approve: () => void;
@@ -68,55 +64,52 @@ const ButtonsWrapper = styled(Box)`
   align-items: center;
   padding-right: 20px;
   justify-content: right;
-`
+`;
 
-const PositionListItem: FC<PositionListItemProps> = observer(
-  ({
-    position,
-    setSelectedPosition,
-    approvalPending,
-    approveBtn,
-    approve,
-    setType,
-  }) => {
-    const anchorRef = useRef<HTMLDivElement>(null);
-    const [open, setOpen] = useState<boolean>(false);
+const PositionListItem: FC<PositionListItemProps> = ({
+  position,
+  setSelectedPosition,
+  approvalPending,
+  approveBtn,
+  approve,
+  setType,
+}) => {
+  const anchorRef = useRef<HTMLDivElement>(null);
+  const [open, setOpen] = useState<boolean>(false);
 
-    return (
-      <AppTableRow
-        key={position.id}
-        sx={{
-          "&:last-child td, &:last-child th": { border: 0 },
-          td: { paddingLeft: "10px", textAlign: "left" },
-        }}
-      >
-        <TableCell component="td" scope="row">
-          {position.positionId}
-        </TableCell>
-        <TableCell>
-          <Stack direction="row" spacing={2}>
-            <TokenLogo
-              src={getTokenLogoURL(position?.collateralPoolName)}
-              alt={position?.collateralPoolName}
-            />
-            <Box>
-              <PoolName>{position.collateralPoolName}</PoolName>
-              <TVL>TVL: {formatCurrency(Number(position.tvl))}</TVL>
-            </Box>
-          </Stack>
-        </TableCell>
-        <TableCell>
-          {formatCurrency(Number(position.liquidationPrice))}
-        </TableCell>
-        <TableCell>
-          {formatNumber(Number(position.debtShare))} FXD
-        </TableCell>
-        <TableCell>
-          {position.lockedCollateral} {position.collateralPoolName}
-        </TableCell>
-        <TableCell>{ formatNumber(Number(position.safetyBufferInPercent) * 100) }%</TableCell>
-        <TableCell>
-          <ButtonsWrapper>
+  return (
+    <AppTableRow
+      key={position.id}
+      sx={{
+        "&:last-child td, &:last-child th": { border: 0 },
+        td: { paddingLeft: "10px", textAlign: "left" },
+      }}
+    >
+      <TableCell component="td" scope="row">
+        {position.positionId}
+      </TableCell>
+      <TableCell>
+        <Stack direction="row" spacing={2}>
+          <TokenLogo
+            src={getTokenLogoURL(position?.collateralPoolName)}
+            alt={position?.collateralPoolName}
+          />
+          <Box>
+            <PoolName>{position.collateralPoolName}</PoolName>
+            <TVL>TVL: {formatCurrency(Number(position.tvl))}</TVL>
+          </Box>
+        </Stack>
+      </TableCell>
+      <TableCell>{formatCurrency(Number(position.liquidationPrice))}</TableCell>
+      <TableCell>{formatNumber(Number(position.debtShare))} FXD</TableCell>
+      <TableCell>
+        {position.lockedCollateral} {position.collateralPoolName}
+      </TableCell>
+      <TableCell>
+        {formatNumber(Number(position.safetyBufferInPercent) * 100)}%
+      </TableCell>
+      <TableCell>
+        <ButtonsWrapper>
           {approveBtn ? (
             <ButtonPrimary onClick={approve} sx={{ height: "32px" }}>
               {approvalPending ? (
@@ -188,11 +181,10 @@ const PositionListItem: FC<PositionListItemProps> = observer(
               </Popper>
             </>
           )}
-          </ButtonsWrapper>
-        </TableCell>
-      </AppTableRow>
-    );
-  }
-);
+        </ButtonsWrapper>
+      </TableCell>
+    </AppTableRow>
+  );
+};
 
 export default memo(PositionListItem);

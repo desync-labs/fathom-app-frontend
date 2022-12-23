@@ -183,7 +183,12 @@ const OpenNewPositionDialog: FC<OpenPositionProps> = ({ pool, onClose }) => {
                 name="collateral"
                 rules={{
                   required: true,
+                  min: 10,
                   max: +balance / 10 ** 18,
+                  validate: (value: string) => {
+                    console.log(value);
+                    return true;
+                  }
                 }}
                 render={({
                   field: { onChange, value },
@@ -201,21 +206,47 @@ const OpenNewPositionDialog: FC<OpenPositionProps> = ({ pool, onClose }) => {
                       id="outlined-helperText"
                       placeholder={"0"}
                       helperText={
-                        error && error.type === "max" ? (
-                          <>
-                            <InfoIcon
-                              sx={{ float: "left", fontSize: "18px" }}
-                            />
-                            <Box
-                              component={"span"}
-                              sx={{ fontSize: "12px", paddingLeft: "6px" }}
-                            >
-                              You do not have enough {pool.poolName}
-                            </Box>
-                          </>
-                        ) : (
-                          "Enter the Collateral."
-                        )
+                        <>
+                          {error && error.type === "max" && (
+                            <>
+                              <InfoIcon
+                                sx={{ float: "left", fontSize: "18px" }}
+                              />
+                              <Box
+                                component={"span"}
+                                sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                              >
+                                You do not have enough {pool.poolName}
+                              </Box>
+                            </>
+                          )}
+                          {error && error.type === "required" && (
+                            <>
+                              <InfoIcon
+                                sx={{ float: "left", fontSize: "18px" }}
+                              />
+                              <Box
+                                component={"span"}
+                                sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                              >
+                                Collateral amount is required
+                              </Box>
+                            </>
+                          )}
+                          { error && error.type === 'min' && (
+                            <>
+                              <InfoIcon
+                                sx={{ float: "left", fontSize: "18px" }}
+                              />
+                              <Box
+                                component={"span"}
+                                sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                              >
+                                Minimum collateral amount is 10.
+                              </Box>
+                            </>
+                          ) }
+                        </>
                       }
                       value={value}
                       type="number"

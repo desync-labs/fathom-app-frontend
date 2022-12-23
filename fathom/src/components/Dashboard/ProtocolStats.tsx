@@ -5,29 +5,30 @@ import useProtocolStats from "hooks/useProtocolStats";
 import { formatCurrency, formatNumber } from "utils/format";
 import usePricesContext from "../../context/prices";
 
-const StatsItem = styled(
-  Grid,
-  {}
-)(({ theme }) => ({
-  textAlign: "left",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  position: "relative",
-  width: "calc(33.33% - 8px)",
-  background: "#131F35",
-  borderRadius: "8px",
-}));
+const StatsItem = styled(Grid)`
+  text-align: left;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: calc(33.33% - 8px);
+  background: #131f35;
+  border-radius: 8px;
 
-const ProtocolStatsContainer = styled(
-  Grid,
-  {}
-)(({ theme }) => ({
-  height: "92px",
-  marginBottom: "30px",
-  display: "flex",
-  gap: "8px",
-}));
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    width: 100%;
+    padding: 16px 20px;
+    justify-content: start;
+  }
+`;
+
+const ProtocolStatsContainer = styled(Grid)`
+  height: 92px;
+  margin-bottom: 30px;
+  display: flex;
+  gap: 8px;
+  height: 100%;
+`;
 
 const StatsTitle = styled(
   Typography,
@@ -41,18 +42,15 @@ const StatsTitle = styled(
   fontWeight: "bold",
 }));
 
-const StatsDescription = styled(
-  Typography,
-  {}
-)(({ theme }) => ({
-  fontStyle: "normal",
-  fontWeight: "600",
-  fontSize: "24px",
-  lineHeight: "28px",
-  margin: 0,
-  padding: 0,
-  paddingTop: "7px",
-}));
+const StatsDescription = styled(Typography)`
+  font-style: normal;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 28px;
+  margin: 0;
+  padding: 0;
+  padding-top: 7px;
+`;
 
 const ProtocolStats = observer(() => {
   const { totalSupply, tvl, loading } = useProtocolStats();

@@ -3,19 +3,20 @@ import Typography from '@mui/material/Typography';
 import { styled } from "@mui/material/styles";
 
 const Footer = styled(Typography) `
-  margin: 40px 0 40px -80px;
+  display: flex;
+  align-items: start;
+  justify-content: center;
+  gap: 4px;
 `
 
 
 const Copyright = function Copyright(props: any) {
   return (
-    <Footer color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
+    <Footer color="text.secondary" {...props}>
+      {'Copyright©'}
       <Link color="inherit" href="https://fathom.fi/">
         Fathom App
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
+      </Link>{new Date().getFullYear()}.
     </Footer>
   );
 }
