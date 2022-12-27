@@ -14,6 +14,9 @@ export const AppDialogTitleWrapper = styled(MuiDialogTitle)`
   color: #fff;
   padding: 20px 32px 15px 32px;
   margin: 0;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    padding-left: 15px;
+  }
 `
 
 export const AppDialogCloseIcon = styled(IconButton)`

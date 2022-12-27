@@ -21,7 +21,8 @@ import {
   TitleSecondary,
 } from "components/AppComponents/AppBox/AppBox";
 import usePoolsList from "hooks/usePoolsList";
-import PoolsListItemMobile from "./PoolsListItemMobile";
+import PoolsListItemMobile from "components/Pools/PoolsListItemMobile";
+import { OpenPositionProvider } from "context/openPosition";
 
 const PoolsListHeaderRow = styled(AppTableHeaderRow)`
   background: transparent;
@@ -88,24 +89,22 @@ const PoolsListView: FC = observer(() => {
               </Table>
             </TableContainer>
           )}
-          { !matches && (
+          {!matches &&
             pools.map((pool: ICollateralPool) => (
               <PoolsListItemMobile
                 pool={pool}
                 key={pool.id}
                 setSelectedPool={setSelectedPool!}
               />
-            ))
-          ) }
+            ))}
         </>
       )}
       {useMemo(() => {
         return (
           selectedPool && (
-            <OpenNewPositionDialog
-              pool={selectedPool!}
-              onClose={onCloseNewPosition}
-            />
+            <OpenPositionProvider onClose={onCloseNewPosition} pool={selectedPool!}>
+              <OpenNewPositionDialog/>
+            </OpenPositionProvider>
           )
         );
       }, [selectedPool, onCloseNewPosition])}

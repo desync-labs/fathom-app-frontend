@@ -1,12 +1,14 @@
 import { useCallback, useEffect, useState } from "react";
 import useMetaMask from "context/metamask";
 import { useStores } from "stores";
+import { useMediaQuery, useTheme } from "@mui/material";
 
 const useMainLayout = () => {
-  const [open, setOpen] = useState<boolean>(true);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const [open, setOpen] = useState<boolean>(!isMobile);
   const { connect, isActive, account, chainId, error, isMetamask } =
     useMetaMask()!;
-  const [isMobile, setIsMobile] = useState<boolean>(false);
 
   const toggleDrawer = useCallback(() => {
     setOpen(!open);
@@ -20,22 +22,15 @@ const useMainLayout = () => {
     }
   }, [chainId, rootStore]);
 
-  const resizeHandler = useCallback(() => {
-    const isMobile = Math.min(window.screen.width, window.screen.height) < 768;
-    setIsMobile(isMobile);
-
+  useEffect(() => {
     if (isMobile) {
       setOpen(false);
     } else {
       setOpen(true);
     }
-  }, [setIsMobile, setOpen]);
+  }, [isMobile, setOpen]);
 
-  useEffect(() => {
-    window.addEventListener("resize", resizeHandler);
-    resizeHandler();
-    return () => window.removeEventListener("resize", resizeHandler);
-  }, [resizeHandler]);
+  console.log(isMobile);
 
   return {
     account,
