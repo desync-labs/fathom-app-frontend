@@ -1,13 +1,12 @@
 import React from "react";
 import { Grid, Container } from "@mui/material";
 import PositionsList from "components/PositionList/PositionsList";
-import { observer } from "mobx-react";
 import ProtocolStats from "components/Dashboard/ProtocolStats";
 import PoolsListView from "components/Pools/PoolsListView";
 import { PageHeader } from "components/Dashboard/PageHeader";
 import useDashboard from "hooks/useDashboard";
 
-const DashboardContent = observer(() => {
+const DashboardContent = () => {
   const {
     proxyWallet,
     positionCurrentPage,
@@ -39,6 +38,6 @@ const DashboardContent = observer(() => {
       </Grid>
     </Container>
   );
-});
+};
 
 export default DashboardContent;

@@ -13,11 +13,15 @@ import OpenPositionInfo from "components/Positions/OpenPosition/OpenPositionInfo
 import OpenPositionForm from "components/Positions/OpenPosition/OpenPositionForm";
 import { styled } from "@mui/material/styles";
 
-const DividerMobile = styled(Divider)`
+export const DividerMobile = styled(Divider)`
   width: 100%;
   height: 1px;
   margin-top: 20px;
   margin-bottom: 20px;
+`;
+
+export const DividerDefault = styled(Divider)`
+  margin: 10px 0 0 0;
 `;
 
 const OpenNewPositionDialog: FC = () => {
@@ -41,11 +45,7 @@ const OpenNewPositionDialog: FC = () => {
           {!isMobile && (
             <>
               <OpenPositionInfo />
-              <Divider
-                sx={{ margin: "10px 0 0 0" }}
-                orientation="vertical"
-                flexItem
-              ></Divider>
+              <DividerDefault orientation="vertical" flexItem></DividerDefault>
               <OpenPositionForm />
             </>
           )}

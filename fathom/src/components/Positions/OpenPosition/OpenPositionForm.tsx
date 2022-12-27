@@ -3,7 +3,7 @@ import {
   CircularProgress,
   Grid,
   useMediaQuery,
-  useTheme
+  useTheme,
 } from "@mui/material";
 import {
   ApproveBox,
@@ -12,14 +12,14 @@ import {
   InfoValue,
   InfoWrapper,
   Summary,
-  WalletBalance
+  WalletBalance,
 } from "components/AppComponents/AppBox/AppBox";
 import { Controller } from "react-hook-form";
 import {
   AppFormInputLogo,
   AppFormInputWrapper,
   AppFormLabel,
-  AppTextField
+  AppTextField,
 } from "components/AppComponents/AppForm/AppForm";
 import InfoIcon from "@mui/icons-material/Info";
 import { getTokenLogoURL } from "utils/tokenLogo";
@@ -27,8 +27,8 @@ import {
   ApproveButton,
   ButtonPrimary,
   ButtonSecondary,
+  ButtonsWrapper,
   MaxButton,
-  OpenPositionsButtonsWrapper
 } from "components/AppComponents/AppButton/AppButton";
 import React from "react";
 import useOpenPositionContext from "context/openPosition";
@@ -42,7 +42,7 @@ const OpenPositionFormWrapper = styled(Grid)`
     width: 100%;
     padding: 0;
   }
-`
+`;
 
 const OpenPositionForm = () => {
   const {
@@ -67,13 +67,12 @@ const OpenPositionForm = () => {
     onClose,
     pool,
   } = useOpenPositionContext();
+
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
-    <OpenPositionFormWrapper
-      item
-    >
+    <OpenPositionFormWrapper item>
       <Box
         component="form"
         onSubmit={handleSubmit(onSubmit)}
@@ -94,10 +93,7 @@ const OpenPositionForm = () => {
               return true;
             },
           }}
-          render={({
-            field: { onChange, value },
-            fieldState: { error },
-          }) => (
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
             <AppFormInputWrapper>
               <AppFormLabel>Collateral</AppFormLabel>
               {balance ? (
@@ -113,9 +109,7 @@ const OpenPositionForm = () => {
                   <>
                     {error && error.type === "max" && (
                       <>
-                        <InfoIcon
-                          sx={{ float: "left", fontSize: "18px" }}
-                        />
+                        <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
                         <Box
                           component={"span"}
                           sx={{ fontSize: "12px", paddingLeft: "6px" }}
@@ -126,9 +120,7 @@ const OpenPositionForm = () => {
                     )}
                     {error && error.type === "required" && (
                       <>
-                        <InfoIcon
-                          sx={{ float: "left", fontSize: "18px" }}
-                        />
+                        <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
                         <Box
                           component={"span"}
                           sx={{ fontSize: "12px", paddingLeft: "6px" }}
@@ -139,9 +131,7 @@ const OpenPositionForm = () => {
                     )}
                     {error && error.type === "min" && (
                       <>
-                        <InfoIcon
-                          sx={{ float: "left", fontSize: "18px" }}
-                        />
+                        <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
                         <Box
                           component={"span"}
                           sx={{ fontSize: "12px", paddingLeft: "6px" }}
@@ -178,10 +168,7 @@ const OpenPositionForm = () => {
               return true;
             },
           }}
-          render={({
-            field: { onChange, value },
-            fieldState: { error },
-          }) => {
+          render={({ field: { onChange, value }, fieldState: { error } }) => {
             return (
               <AppFormInputWrapper>
                 <AppFormLabel>Borrow Amount</AppFormLabel>
@@ -248,8 +235,7 @@ const OpenPositionForm = () => {
               }}
             />
             <ApproveBoxTypography>
-              First-time connect? Please allow token approval in your
-              MetaMask
+              First-time connect? Please allow token approval in your MetaMask
             </ApproveBoxTypography>
             <ApproveButton onClick={approve}>
               {" "}
@@ -261,8 +247,10 @@ const OpenPositionForm = () => {
             </ApproveButton>
           </ApproveBox>
         )}
-        <OpenPositionsButtonsWrapper>
-          { !isMobile && <ButtonSecondary onClick={onClose}>Close</ButtonSecondary> }
+        <ButtonsWrapper>
+          {!isMobile && (
+            <ButtonSecondary onClick={onClose}>Close</ButtonSecondary>
+          )}
           <ButtonPrimary
             type="submit"
             disabled={approveBtn}
@@ -274,11 +262,13 @@ const OpenPositionForm = () => {
               "Open this position"
             )}
           </ButtonPrimary>
-          { isMobile && <ButtonSecondary onClick={onClose}>Close</ButtonSecondary> }
-        </OpenPositionsButtonsWrapper>
+          {isMobile && (
+            <ButtonSecondary onClick={onClose}>Close</ButtonSecondary>
+          )}
+        </ButtonsWrapper>
       </Box>
     </OpenPositionFormWrapper>
-  )
-}
+  );
+};
 
 export default OpenPositionForm;

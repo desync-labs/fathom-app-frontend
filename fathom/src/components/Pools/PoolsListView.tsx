@@ -10,7 +10,6 @@ import {
   useTheme,
   useMediaQuery,
 } from "@mui/material";
-import { observer } from "mobx-react";
 import ICollateralPool from "stores/interfaces/ICollateralPool";
 import PoolsListItem from "components/Pools/PoolsListItem";
 import OpenNewPositionDialog from "components/Positions/OpenNewPositionDialog";
@@ -39,7 +38,7 @@ const CircleWrapper = styled(Box)`
   justify-content: center;
 `;
 
-const PoolsListView: FC = observer(() => {
+const PoolsListView: FC = () => {
   const { pools, selectedPool, onCloseNewPosition, setSelectedPool, loading } =
     usePoolsList();
 
@@ -102,14 +101,17 @@ const PoolsListView: FC = observer(() => {
       {useMemo(() => {
         return (
           selectedPool && (
-            <OpenPositionProvider onClose={onCloseNewPosition} pool={selectedPool!}>
-              <OpenNewPositionDialog/>
+            <OpenPositionProvider
+              onClose={onCloseNewPosition}
+              pool={selectedPool!}
+            >
+              <OpenNewPositionDialog />
             </OpenPositionProvider>
           )
         );
       }, [selectedPool, onCloseNewPosition])}
     </>
   );
-});
+};
 
 export default PoolsListView;

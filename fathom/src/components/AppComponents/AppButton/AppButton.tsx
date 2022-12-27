@@ -189,13 +189,14 @@ export const ApproveButton = styled(MuiButton)`
   height: 28px;
 `;
 
-export const OpenPositionsButtonsWrapper = styled(Box)`
+export const ButtonsWrapper = styled(Box)`
   display: flex;
   gap: 10px;
   position: absolute;
   right: 0;
   bottom: 0;
   ${({ theme }) => theme.breakpoints.down("sm")} {
+    width: 100%;
     position: static;
     display: block;
     > button {

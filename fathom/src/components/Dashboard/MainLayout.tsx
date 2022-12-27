@@ -15,33 +15,35 @@ import {
   Menu as MenuIcon,
   AccountBalanceWallet as AccountBalanceWalletIcon,
 } from "@mui/icons-material";
+import truncateEthAddress from "truncate-eth-address";
+import { Navigate, Route, Routes } from "react-router-dom";
+
 import Copyright from "components/Footer/Footer";
 import AppBar from "components/AppComponents/AppBar/AppBar";
-import { observer } from "mobx-react";
 import DashboardContent from "components/Dashboard/Dashboard";
-import { Navigate, Route, Routes } from "react-router-dom";
 import StableSwap from "components/Stableswap/StableSwap";
 
-import { Web3Status } from "components/Web3Status/Web3Status";
+import Web3Status from "components/Web3Status/Web3Status";
 import AllProposalsView from "components/Governance/ViewAllProposals";
 import ProposalView from "components/Governance/Proposal";
 import StakingView from "components/Staking/StakingView";
 import AlertMessages from "components/Common/AlertMessages";
 import TransactionStatus from "components/Transaction/TransactionStatus";
-import truncateEthAddress from "truncate-eth-address";
 import { Menu } from "components/Dashboard/Menu";
 import { ToggleDrawerButton } from "components/AppComponents/AppButton/AppButton";
 import { MainBox } from "components/AppComponents/AppBox/AppBox";
 import DaoView from "components/Dashboard/DaoView";
 import { drawerWidth } from "components/AppComponents/AppBar/AppBar";
+
 import useMainLayout from "hooks/useMainLayout";
 import { StakingProvider } from "context/staking";
 
 import FathomAppLogoSrc from "assets/svg/Fathom-app-logo.svg";
 import ExitSrc from "assets/svg/exit.svg";
 import MetamaskSrc from "assets/svg/metamask.svg";
-
 import FathomLogoMobileSrc from "assets/svg/Fathom-app-logo-mobile.svg";
+import MobileMenuIcon from "assets/svg/mobile-menu.svg";
+import MobileMenu from "./MobileMenu";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -72,9 +74,8 @@ const Drawer = styled(MuiDrawer, {
   },
 }));
 
-const MenuWrapper = styled("nav")<{ open: boolean; isMobile: boolean }>`
-  padding: ${({ open, isMobile }) =>
-    open && !isMobile ? "20px 12px" : "20px 8px"};
+const MenuWrapper = styled("nav")<{ open: boolean }>`
+  padding: ${({ open }) => (open ? "20px 12px" : "20px 8px")};
   margintop: 1rem;
   display: flex;
   flex-direction: column;
@@ -115,7 +116,24 @@ const MainToolbar = styled(Toolbar)`
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 14px;
+    width: 100px;
+    margin-left: 14px;
   }
+`;
+
+const MenuLogoWrapper = styled(Box)`
+  display: flex;
+  width: 100px;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const MobileMenuWrapper = styled(Box)`
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  gap: 5px;
 `;
 
 const WalletBox = styled(Box)`
@@ -126,8 +144,9 @@ const WalletBox = styled(Box)`
   padding: 0 0 0 10px;
 `;
 
-const MainLayout = observer(() => {
+const MainLayout = () => {
   const {
+    openMobile,
     account,
     error,
     isMobile,
@@ -136,11 +155,13 @@ const MainLayout = observer(() => {
     connect,
     isMetamask,
     toggleDrawer,
+    mainBlockClickHandler,
+    setOpenMobile,
   } = useMainLayout();
 
   return (
     <ThemeProvider theme={mdTheme}>
-      <Box sx={{ display: "flex" }}>
+      <Box sx={{ display: "flex" }} onClick={mainBlockClickHandler}>
         <CssBaseline />
         <AppBar position="absolute" open={open}>
           <Toolbar
@@ -148,18 +169,44 @@ const MainLayout = observer(() => {
               pr: "24px", // keep right padding when drawer closed
             }}
           >
-            <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="open drawer"
-              onClick={toggleDrawer}
-              sx={{
-                marginRight: "36px",
-                ...(open && { display: "none" }),
-              }}
-            >
-              <MenuIcon />
-            </IconButton>
+            {isMobile && (
+              <MenuLogoWrapper>
+                <img
+                  src={FathomLogoMobileSrc}
+                  alt={"logo"}
+                  style={{
+                    width: "24px",
+                    background: "#80FFF6",
+                    height: "24px",
+                    borderRadius: "6px",
+                    padding: "4px",
+                  }}
+                />
+                <MobileMenuWrapper onClick={() => setOpenMobile(true)}>
+                  <img
+                    src={MobileMenuIcon}
+                    alt={"menu"}
+                    width={20}
+                    height={20}
+                  />
+                  Apps
+                </MobileMenuWrapper>
+              </MenuLogoWrapper>
+            )}
+            {!isMobile && (
+              <IconButton
+                edge="start"
+                color="inherit"
+                aria-label="open drawer"
+                onClick={toggleDrawer}
+                sx={{
+                  marginRight: "36px",
+                  ...(open && { display: "none" }),
+                }}
+              >
+                <MenuIcon />
+              </IconButton>
+            )}
             <Typography
               component="h1"
               variant="h6"
@@ -184,32 +231,20 @@ const MainLayout = observer(() => {
             </IconButton>
           </Toolbar>
         </AppBar>
-        <Drawer variant="permanent" open={open}>
-          <MainToolbar>
-            {open && !isMobile && (
-              <img
-                src={FathomAppLogoSrc}
-                alt={"logo"}
-                style={{
-                  height: "none",
-                  maxWidth: "140px",
-                }}
-              />
-            )}
-            {isMobile && (
-              <img
-                src={FathomLogoMobileSrc}
-                alt={"logo"}
-                style={{
-                  width: "20px",
-                  background: "#80FFF6",
-                  height: "20px",
-                  borderRadius: "6px",
-                  padding: "4px",
-                }}
-              />
-            )}
-            {!isMobile && (
+        {!isMobile && (
+          <Drawer variant="permanent" open={open}>
+            <MainToolbar>
+              {open && (
+                <img
+                  src={FathomAppLogoSrc}
+                  alt={"logo"}
+                  style={{
+                    height: "none",
+                    maxWidth: "140px",
+                  }}
+                />
+              )}
+
               <ToggleDrawerButton open={open} onClick={toggleDrawer}>
                 {open ? (
                   <ArrowBack sx={{ fontSize: "0.9rem" }} />
@@ -217,13 +252,13 @@ const MainLayout = observer(() => {
                   <ArrowForward sx={{ fontSize: "0.9rem", color: "#fff" }} />
                 )}
               </ToggleDrawerButton>
-            )}
-          </MainToolbar>
-          <Divider />
-          <MenuWrapper open={open} isMobile={isMobile}>
-            <Menu open={open} isMobile={isMobile} />
-          </MenuWrapper>
-        </Drawer>
+            </MainToolbar>
+            <Divider />
+            <MenuWrapper open={open}>
+              <Menu open={open} />
+            </MenuWrapper>
+          </Drawer>
+        )}
         <MainBox component="main">
           <Toolbar />
           <AlertMessages />
@@ -248,8 +283,9 @@ const MainLayout = observer(() => {
           <Copyright />
         </MainBox>
       </Box>
+      {isMobile && openMobile && <MobileMenu setOpenMobile={setOpenMobile} />}
     </ThemeProvider>
   );
-});
+};
 
 export default MainLayout;

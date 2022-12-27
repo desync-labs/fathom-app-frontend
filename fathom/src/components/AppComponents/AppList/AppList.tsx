@@ -2,13 +2,11 @@ import { styled } from "@mui/material/styles";
 import { List as MuiList } from "@mui/material";
 
 export const AppList = styled(MuiList)`
+  width: 100%;
   & li {
     color: #9fadc6;
     fontsize: 14px;
-    padding-top: 3px;
-    padding-bottom: 3px;
-    padding-left: 8px;
-    padding-right: 0;
+    padding: 3px 0 3px 8px;
     span {
       font-size: 14px;
     }

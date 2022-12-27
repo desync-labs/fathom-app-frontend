@@ -23,7 +23,8 @@ import PositionListItem from "components/PositionList/PositionListItem";
 import useOpenPositionList from "hooks/useOpenPositionList";
 import { styled } from "@mui/material/styles";
 import { Constants } from "helpers/Constants";
-import PositionListItemMobile from "./PositionListItemMobile";
+import PositionListItemMobile from "components/PositionList/PositionListItemMobile";
+import { ClosePositionProvider } from "context/closePosition";
 
 const CircleWrapper = styled(Box)`
   width: 100%;
@@ -132,7 +133,8 @@ const PositionsList: FC<PositionsListProps> = observer(
                   </PaginationWrapper>
                 </>
               )}
-              { !!positions.length && !matches && (
+              {!!positions.length &&
+                !matches &&
                 positions.map((position: IOpenPosition) => (
                   <PositionListItemMobile
                     approve={approve}
@@ -143,8 +145,7 @@ const PositionsList: FC<PositionsListProps> = observer(
                     setSelectedPosition={setSelectedPosition}
                     setType={setType}
                   />
-                ))
-              ) }
+                ))}
             </>
           ),
           [
@@ -162,12 +163,14 @@ const PositionsList: FC<PositionsListProps> = observer(
           ]
         )}
         {selectedPosition && (
-          <ClosePositionDialog
+          <ClosePositionProvider
             position={selectedPosition}
             onClose={() => setSelectedPosition(undefined)}
             closingType={closingType}
             setType={setType}
-          />
+          >
+            <ClosePositionDialog />
+          </ClosePositionProvider>
         )}
       </>
     );

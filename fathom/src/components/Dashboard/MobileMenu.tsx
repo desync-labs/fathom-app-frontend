@@ -1,22 +1,36 @@
-import React, { useMemo } from "react";
-import { FC } from "react";
+import React, { Dispatch, FC, useMemo } from "react";
 import { useLocation } from "react-router-dom";
-import AppMenuItem from "components/MenuItem/AppMenuItem";
-
-
-import useShowText from "hooks/useShowText";
 import {
+  DexIcon,
   FxdIcon,
   GovernanceIcon,
   SwapIcon,
-  DexIcon
 } from "components/Common/MenuIcons";
+import AppMenuItem from "components/MenuItem/AppMenuItem";
+import { styled } from "@mui/material/styles";
+import { Box } from "@mui/material";
 
-type ItemPropsType = {
-  open: boolean;
+const MobileMenuWrapper = styled(Box)`
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 300px;
+  background: #131f35;
+  z-index: 1000;
+  padding-left: 12px;
+  padding-right: 12px;
+  padding-top: 20px;
+  border-top: 1px solid #192c46;
+  > a {
+    margin-bottom: 14px;
+  }
+`;
+
+type MobileMenuPropsType = {
+  setOpenMobile: Dispatch<boolean>;
 };
 
-export const Menu: FC<ItemPropsType> = ({ open }) => {
+const MobileMenu: FC<MobileMenuPropsType> = ({ setOpenMobile }) => {
   const location = useLocation();
 
   const isDashboardActive = useMemo(
@@ -32,44 +46,44 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
     [location.pathname]
   );
 
-  const { showText } = useShowText(open);
-
   const appMenuItems = [
     {
       name: "FXD",
       link: "/",
       Icon: <FxdIcon isDashboardActive={isDashboardActive} />,
       isActive: isDashboardActive,
-      showText: showText,
+      showText: true,
     },
     {
       name: "Stable Swap",
       link: "/swap",
       Icon: <SwapIcon isStableSwapActive={isStableSwapActive} />,
       isActive: isStableSwapActive,
-      showText: showText,
+      showText: true,
     },
     {
       name: "DAO",
       link: "/dao/staking",
       Icon: <GovernanceIcon isDAOActive={isDAOActive} />,
       isActive: isDAOActive,
-      showText: showText,
+      showText: true,
     },
     {
-      name: 'DEX',
-      link: 'https://swap.fathom.fi',
+      name: "DEX",
+      link: "https://swap.fathom.fi",
       Icon: <DexIcon />,
-      target: '_blank',
-      showText: showText,
-    }
+      target: "_blank",
+      showText: true,
+    },
   ];
 
   return (
-    <>
-      {appMenuItems.map((item, index) => (
+    <MobileMenuWrapper onClick={() => setOpenMobile(false)}>
+      {appMenuItems.map((item) => (
         <AppMenuItem {...item} key={item.name} />
       ))}
-    </>
+    </MobileMenuWrapper>
   );
 };
+
+export default MobileMenu;
