@@ -2,7 +2,7 @@ import { useStores } from "stores";
 import useMetaMask from "context/metamask";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import debounce from "lodash.debounce";
-import { OpenPositionProps } from "components/Positions/OpenNewPositionDialog";
+import { OpenPositionContextType } from "context/openPosition";
 import { useForm } from "react-hook-form";
 import useSyncContext from "context/sync";
 
@@ -13,8 +13,8 @@ const defaultValues = {
 };
 
 const useOpenPosition = (
-  pool: OpenPositionProps["pool"],
-  onClose: OpenPositionProps["onClose"],
+  pool: OpenPositionContextType["pool"],
+  onClose: OpenPositionContextType["onClose"]
 ) => {
   const { poolStore, positionStore } = useStores();
 
@@ -70,8 +70,8 @@ const useOpenPosition = (
       pool.tokenAdapterAddress
     );
 
-    console.log('tokenAdapterAddress', pool.tokenAdapterAddress)
-    console.log('collateral token address', tokenAddress)
+    console.log("tokenAdapterAddress", pool.tokenAdapterAddress);
+    console.log("collateral token address", tokenAddress);
 
     const balance = await poolStore.getUserTokenBalance(account, tokenAddress!);
 
@@ -206,15 +206,22 @@ const useOpenPosition = (
           pool,
           Number(collateral),
           Number(fathomToken)
-        )
-        setLastTransactionBlock(receipt.blockNumber)
+        );
+        setLastTransactionBlock(receipt.blockNumber);
         onClose();
       } catch (e) {
         console.log(e);
       }
       setOpenPositionLoading(false);
     },
-    [account, pool, positionStore, setOpenPositionLoading, setLastTransactionBlock, onClose]
+    [
+      account,
+      pool,
+      positionStore,
+      setOpenPositionLoading,
+      setLastTransactionBlock,
+      onClose,
+    ]
   );
 
   const approve = useCallback(async () => {
@@ -268,6 +275,8 @@ const useOpenPosition = (
     handleSubmit,
 
     availableFathomInPool,
+    pool,
+    onClose,
   };
 };
 

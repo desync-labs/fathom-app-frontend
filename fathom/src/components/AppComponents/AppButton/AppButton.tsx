@@ -195,6 +195,14 @@ export const OpenPositionsButtonsWrapper = styled(Box)`
   position: absolute;
   right: 0;
   bottom: 0;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    position: static;
+    display: block;
+    > button {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  }
 `;
 
 export const ClosePositionRepayTypeWrapper = styled(

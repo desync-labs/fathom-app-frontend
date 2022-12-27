@@ -5,15 +5,26 @@ export const AppList = styled(MuiList)`
   & li {
     color: #9fadc6;
     fontsize: 14px;
-    paddingtop: 3px;
-    paddingbottom: 3px;
-    paddingleft: 8px;
-    paddingright: 0;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 8px;
+    padding-right: 0;
     span {
       font-size: 14px;
     }
     & div:last-child {
       padding-right: 8px;
+    }
+  }
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    > .MuiListItem-root {
+      padding-left: 0;
+      > .MuiListItemText-root {
+        max-width: 75%;
+      }
+      .MuiListItemSecondaryAction-root {
+        right: 0;
+      }
     }
   }
 `;
