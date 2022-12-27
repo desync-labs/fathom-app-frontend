@@ -25,7 +25,7 @@ const OpenPositionInfo = () => {
 
   return (
     <Grid item xs={12} sm={6}>
-      <AppList sx={{ width: "100%" }}>
+      <AppList>
         <ListItem
           alignItems="flex-start"
           secondaryAction={`${collateralToBeLocked.toFixed(2)} ${

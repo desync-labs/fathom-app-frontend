@@ -64,7 +64,7 @@ export const AppTextField = styled(MuiTextField)`
 
   .MuiFormHelperText-root {
     margin-left: 0;
-    margin-top: 5px;
+    margin-top: 0;
     color: #6379a1;
     &.Mui-error {
       color: #DD3C3C;
@@ -82,7 +82,7 @@ export const AppFormLabel = styled(MuiFormLabel)`
   color: #6379a1;
   text-transform: uppercase;
   float: left;
-  padding-bottom: 5px;
+  padding-bottom: 0;
 `;
 
 export const AppFormInputWrapper = styled(Box)`

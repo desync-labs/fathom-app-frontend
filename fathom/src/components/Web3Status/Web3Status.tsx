@@ -2,6 +2,8 @@ import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
 import {
   RightNetwork,
   WrongNetwork,
+  WrongNetworkMobile,
+  WrongNetworkMobileIcon,
 } from "components/AppComponents/AppBox/AppBox";
 import {
   XDC_CHAIN_IDS,
@@ -27,10 +29,7 @@ import React, {
 import { styled } from "@mui/material/styles";
 import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
 import Web3 from "web3";
-import {
-  useMediaQuery,
-  useTheme
-} from "@mui/material";
+import { useMediaQuery, useTheme } from "@mui/material";
 
 const NetworkPaper = styled(AppPaper)`
   background: #253656;
@@ -56,13 +55,13 @@ const NetworkPaper = styled(AppPaper)`
   }
 `;
 
-export const Web3Status = () => {
+const Web3Status = () => {
   const { error, account, chainId } = useWeb3React();
   const anchorRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState<boolean>(false);
 
   const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.up('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   let button: null | ReactElement = null;
 
@@ -103,13 +102,18 @@ export const Web3Status = () => {
       <RightNetwork onClick={() => setOpen(!open)}>
         <>
           <img src={getTokenLogoURL("WXDC")} alt={"xdc"} width={16} />
-          { matches && NETWORK_LABELS[chainId as ChainId]}
+          {!isMobile && NETWORK_LABELS[chainId as ChainId]}
           <ArrowDropDownIcon />
         </>
       </RightNetwork>
     );
   } else if (error) {
-    button = (
+    button = isMobile ? (
+      <WrongNetworkMobile onClick={() => setOpen(!open)}>
+        <WrongNetworkMobileIcon />
+        <ArrowDropDownIcon />
+      </WrongNetworkMobile>
+    ) : (
       <WrongNetwork onClick={() => setOpen(!open)}>
         <>
           {error instanceof UnsupportedChainIdError
@@ -169,3 +173,5 @@ export const Web3Status = () => {
     </>
   );
 };
+
+export default Web3Status;

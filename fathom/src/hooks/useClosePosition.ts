@@ -1,11 +1,11 @@
 import { useStores } from "stores";
 import { Dispatch, useCallback, useEffect, useMemo, useState } from "react";
 import useMetaMask from "context/metamask";
-import { ClosePositionProps } from "components/Positions/ClosePositionDialog";
+import { ClosePositionContextType } from "context/closePosition";
 import { useQuery } from "@apollo/client";
 import { FXD_POOLS } from "apollo/queries";
 import ICollateralPool from "stores/interfaces/ICollateralPool";
-import useSyncContext from "../context/sync";
+import useSyncContext from "context/sync";
 
 export enum ClosingType {
   Full,
@@ -13,10 +13,10 @@ export enum ClosingType {
 }
 
 const useClosePosition = (
-  position: ClosePositionProps["position"],
-  onClose: ClosePositionProps["onClose"],
+  position: ClosePositionContextType["position"],
+  onClose: ClosePositionContextType["onClose"],
   closingType: ClosingType,
-  setType: Dispatch<ClosingType>,
+  setType: Dispatch<ClosingType>
 ) => {
   const { positionStore } = useStores();
   const { account } = useMetaMask()!;
@@ -26,7 +26,7 @@ const useClosePosition = (
     fetchPolicy: "cache-first",
   });
 
-  const { setLastTransactionBlock } = useSyncContext()
+  const { setLastTransactionBlock } = useSyncContext();
 
   const [collateral, setCollateral] = useState<number>(0);
   const [fathomToken, setFathomToken] = useState<number>(0);
@@ -57,7 +57,8 @@ const useClosePosition = (
   }, [positionStore, account, setBalance]);
 
   const handleOnOpen = useCallback(async () => {
-    const price = Number(position.debtShare) / Number(position.lockedCollateral)
+    const price =
+      Number(position.debtShare) / Number(position.lockedCollateral);
 
     setPrice(price);
     setFathomToken(Number(position.debtShare));
@@ -70,7 +71,7 @@ const useClosePosition = (
   }, [getBalance, handleOnOpen]);
 
   useEffect(() => {
-    balance !== null && balance as number / 10 ** 18 < fathomToken
+    balance !== null && (balance as number) / 10 ** 18 < fathomToken
       ? setBalanceError(true)
       : setBalanceError(false);
   }, [fathomToken, balance]);
@@ -95,7 +96,7 @@ const useClosePosition = (
           collateral
         );
       }
-      setLastTransactionBlock(receipt.blockNumber)
+      setLastTransactionBlock(receipt.blockNumber);
       onClose();
     } catch (e) {
       console.error(e);
@@ -155,7 +156,7 @@ const useClosePosition = (
   );
 
   const setMax = useCallback(() => {
-    const walletBalance = balance as number / 10 ** 18;
+    const walletBalance = (balance as number) / 10 ** 18;
     const maxBalance = lockedCollateral * price;
     const setBalance = walletBalance < maxBalance ? walletBalance : maxBalance;
 
@@ -177,6 +178,9 @@ const useClosePosition = (
     handleFathomTokenTextFieldChange,
     handleTypeChange,
     setMax,
+    onClose,
+    position,
+    setType,
   };
 };
 

@@ -1,6 +1,8 @@
 import { styled } from "@mui/material/styles";
 import { Typography, Box as MuiBox } from "@mui/material";
 
+import RemoveCircle from 'assets/svg/remove-circle.svg';
+
 export const TitleSecondary = styled(Typography)`
   font-size: 16px;
   color: #fff;
@@ -112,6 +114,18 @@ export const WrongNetwork = styled(MuiBox)`
   cursor: pointer;
   padding: 4px 12px;
 `;
+
+export const WrongNetworkMobile = styled(MuiBox)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
+export const WrongNetworkMobileIcon = styled(MuiBox)`
+  background: url("${RemoveCircle}") no-repeat center;
+  width: 20px;
+  height: 20px;
+`
 
 export const RightNetwork = styled(MuiBox)`
   background: #253656;

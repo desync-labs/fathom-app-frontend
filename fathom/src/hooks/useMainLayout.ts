@@ -9,6 +9,7 @@ const useMainLayout = () => {
   const [open, setOpen] = useState<boolean>(!isMobile);
   const { connect, isActive, account, chainId, error, isMetamask } =
     useMetaMask()!;
+  const [openMobile, setOpenMobile] = useState(false);
 
   const toggleDrawer = useCallback(() => {
     setOpen(!open);
@@ -30,7 +31,11 @@ const useMainLayout = () => {
     }
   }, [isMobile, setOpen]);
 
-  console.log(isMobile);
+  const mainBlockClickHandler = useCallback(() => {
+    if (isMobile && openMobile) {
+      setOpenMobile(false)
+    }
+  }, [isMobile, openMobile, setOpenMobile])
 
   return {
     account,
@@ -41,6 +46,9 @@ const useMainLayout = () => {
     connect,
     isMetamask,
     toggleDrawer,
+    openMobile,
+    setOpenMobile,
+    mainBlockClickHandler,
   };
 };
 
