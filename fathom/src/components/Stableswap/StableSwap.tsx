@@ -8,7 +8,6 @@ import {
   Typography,
   Container,
 } from "@mui/material";
-import { observer } from "mobx-react";
 import { StableSwapPaper } from "components/AppComponents/AppPaper/AppPaper";
 import { PageHeader } from "components/Dashboard/PageHeader";
 import useStableSwap from "hooks/useStableSwap";
@@ -61,7 +60,7 @@ const StableSwapCurrencySelect = styled(Select)`
   width: 108px;
   position: absolute;
   left: 32px;
-  top: 46px;
+  top: 41px;
   z-index: 1;
   padding-top: 4px;
   .MuiSelect-select {
@@ -136,7 +135,14 @@ const SwapButton = styled(ButtonPrimary)`
   margin: 20px 0 5px 0;
 `;
 
-const StableSwap = observer(() => {
+const StableSwapContainer = styled(Container)`
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    padding: 0;
+    margin-top: 15px;
+  }
+`
+
+const StableSwap = () => {
   const [options /*setOptions*/] = useState<string[]>(["US+", "FXD"]);
 
   const {
@@ -170,24 +176,22 @@ const StableSwap = observer(() => {
     changeCurrenciesPosition,
     setMax,
     swapFee,
+
+    inputError,
+    isMobile,
   } = useStableSwap(options);
 
-  const inputError = useMemo(() => {
-    const formattedBalance = inputBalance / 10 ** 18;
-
-    return (inputValue as number) > formattedBalance;
-  }, [inputValue, inputBalance]);
-
   return (
-    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <Grid container spacing={3}>
+    <StableSwapContainer maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+      <Grid container spacing={isMobile ? 1 : 3}>
         <PageHeader
+          addPadding={true}
           title={"Stable Swap"}
           description={
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Eget tristique malesuada pulvinar commodo. Euismod massa, dis metus mattis porttitor ac est quis. Ut quis cursus ac nunc, aliquam curabitur nisl amet. Elit etiam dignissim orci. If this is the first-time you’re here, please visit our Whitepaper."
           }
         />
-        <Grid item xs={6} sx={{ margin: "0 auto" }}>
+        <Grid item xs={12} sm={6} sx={{ margin: "0 auto" }}>
           <StableSwapPaper>
             <StableSwapInputWrapper>
               <StableSwapFormLabel>From</StableSwapFormLabel>
@@ -366,7 +370,9 @@ const StableSwap = observer(() => {
                 <InfoLabel>Fee</InfoLabel>
                 <InfoValue>
                   {formatPercentage(swapFee)} FTHM{" "}
-                  {inputValue && <>({formatPercentage(swapFee / Number(inputValue) )}%)</>}
+                  {inputValue && (
+                    <>({formatPercentage(swapFee / Number(inputValue))}%)</>
+                  )}
                 </InfoValue>
               </StableSwapInfoWrapper>
             </StableSwapInfoContainer>
@@ -381,8 +387,8 @@ const StableSwap = observer(() => {
           </StableSwapPaper>
         </Grid>
       </Grid>
-    </Container>
+    </StableSwapContainer>
   );
-});
+};
 
 export default StableSwap;

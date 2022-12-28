@@ -1,16 +1,21 @@
 import { useStores } from "stores";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import { FXD_POOLS, FXD_POSITIONS, FXD_STATS, FXD_USER } from "apollo/queries";
-import useMetaMask from "context/metamask";
 import { useCallback, useEffect, useState } from "react";
 import { Constants } from "helpers/Constants";
-import useSyncContext from "../context/sync";
+import useSyncContext from "context/sync";
+import { useWeb3React } from "@web3-react/core";
+import {
+  useMediaQuery,
+  useTheme
+} from "@mui/material";
 
 const useDashboard = () => {
   const { positionStore } = useStores();
-  const { account } = useMetaMask()!;
-
+  const { account } = useWeb3React();
   const { syncFXD, prevSyncFxd } = useSyncContext();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const { refetch: refetchStats } = useQuery(FXD_STATS, {
     context: { clientName: "stable" },
@@ -35,7 +40,7 @@ const useDashboard = () => {
   );
 
   const fetchUserStatsAndProxyWallet = useCallback(async () => {
-    const proxyWallet = await positionStore.getProxyWallet(account);
+    const proxyWallet = await positionStore.getProxyWallet(account!);
     setProxyWallet(proxyWallet!);
 
     loadUserStats({
@@ -93,6 +98,7 @@ const useDashboard = () => {
   }, [syncFXD, prevSyncFxd, refetchData])
 
   return {
+    isMobile,
     proxyWallet,
     positionCurrentPage,
     positionsItemsCount,

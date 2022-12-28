@@ -6,6 +6,10 @@ import { SmartContractFactory } from "config/SmartContractFactory";
 import useSyncContext from "context/sync";
 import BigNumber from "bignumber.js";
 import Web3 from "web3";
+import {
+  useMediaQuery,
+  useTheme
+} from "@mui/material";
 
 const useStableSwap = (options: string[]) => {
   const [inputBalance, setInputBalance] = useState<number>(0);
@@ -32,6 +36,9 @@ const useStableSwap = (options: string[]) => {
 
   const { account, chainId } = useMetaMask()!;
   const { setLastTransactionBlock } = useSyncContext();
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const setOppositeCurrency = useCallback(
     (amount: number, currency: string, type: string) => {
@@ -70,6 +77,12 @@ const useStableSwap = (options: string[]) => {
       }, 1000),
     [stableSwapStore, account, options, setApproveInputBtn, setApproveOutputBtn]
   );
+
+  const inputError = useMemo(() => {
+    const formattedBalance = inputBalance / 10 ** 18;
+
+    return (inputValue as number) > formattedBalance;
+  }, [inputValue, inputBalance]);
 
   const handleCurrencyChange = useMemo(
     () =>
@@ -139,17 +152,20 @@ const useStableSwap = (options: string[]) => {
   );
 
   useEffect(() => {
-    handleCurrencyChange(inputCurrency, outputCurrency);
+    chainId && handleCurrencyChange(inputCurrency, outputCurrency);
   }, [inputCurrency, outputCurrency, chainId, handleCurrencyChange]);
 
   useEffect(() => {
-    Promise.all([stableSwapStore.getFeeIn(), stableSwapStore.getFeeOut()]).then(
-      ([feeIn, feeOut]) => {
+    if (chainId) {
+      Promise.all([
+        stableSwapStore.getFeeIn(),
+        stableSwapStore.getFeeOut(),
+      ]).then(([feeIn, feeOut]) => {
         setFeeIn(feeIn);
         setFeeOut(feeOut);
-      }
-    );
-  }, [stableSwapStore, setFeeIn, setFeeOut]);
+      });
+    }
+  }, [stableSwapStore, chainId, setFeeIn, setFeeOut]);
 
   const swapFee = useMemo(() => {
     /**
@@ -351,6 +367,9 @@ const useStableSwap = (options: string[]) => {
     setInputCurrencyHandler,
     setOutputCurrencyHandler,
     swapFee,
+    inputError,
+
+    isMobile,
   };
 };
 

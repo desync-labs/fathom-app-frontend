@@ -15,6 +15,9 @@ const AlertMessage = styled(Alert)`
 const AlertMessages = observer(() => {
   const { alertStore } = useStores();
 
+  console.log(alertStore.showErrorAlert);
+  console.log(alertStore.showSuccessAlert);
+
   return (
     <>
       {alertStore.showErrorAlert && (

@@ -94,6 +94,6 @@ export const AppFormInputLogo = styled("img")`
   width: 20px;
   height: 20px;
   position: absolute;
-  top: 32px;
+  top: 27px;
   left: 9px;
 `;

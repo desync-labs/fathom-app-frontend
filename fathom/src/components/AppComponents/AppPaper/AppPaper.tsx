@@ -28,4 +28,7 @@ export const StableSwapPaper = styled(AppPaper)`
   background: #131f35;
   border: 1px solid #253656;
   border-radius: 16px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    border-radius: 0;
+  }
 `;
