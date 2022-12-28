@@ -5,9 +5,17 @@ import ProtocolStats from "components/Dashboard/ProtocolStats";
 import PoolsListView from "components/Pools/PoolsListView";
 import { PageHeader } from "components/Dashboard/PageHeader";
 import useDashboard from "hooks/useDashboard";
+import { styled } from "@mui/material/styles";
+
+const DashboardContainer = styled(Container)`
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    margin-top: 15px;
+  }
+`;
 
 const DashboardContent = () => {
   const {
+    isMobile,
     proxyWallet,
     positionCurrentPage,
     positionsItemsCount,
@@ -15,8 +23,8 @@ const DashboardContent = () => {
   } = useDashboard();
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <Grid container spacing={3}>
+    <DashboardContainer maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+      <Grid container spacing={isMobile ? 1 : 3}>
         <PageHeader
           title={"FXD"}
           description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit. Eget tristique malesuada pulvinar commodo. Euismod massa, dis metus mattis porttitor ac est quis. Ut quis cursus ac nunc, aliquam curabitur nisl amet. Elit etiam dignissim orci. If this is the first-time you’re here, please <a href="/">visit our Whitepaper.</a`}
@@ -36,7 +44,7 @@ const DashboardContent = () => {
           />
         </Grid>
       </Grid>
-    </Container>
+    </DashboardContainer>
   );
 };
 

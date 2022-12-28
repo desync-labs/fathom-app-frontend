@@ -1,9 +1,5 @@
 import { styled } from "@mui/material/styles";
-import {
-  Box,
-  IconButton,
-  IconButton as MuiButton
-} from "@mui/material";
+import { Box, IconButton, IconButton as MuiButton } from "@mui/material";
 import { IconButtonProps as MuiIconButtonProps } from "@mui/material/IconButton/IconButton";
 
 interface ToggleDrawerButtonProps extends MuiIconButtonProps {
@@ -93,9 +89,7 @@ export const ButtonSecondary = styled(MuiButton)`
   }
 `;
 
-export const SkipButton = styled(
-  MuiButton
-)`
+export const SkipButton = styled(MuiButton)`
   background: rgba(143, 36, 36, 0.25);
   border-radius: 8px;
   height: 48px;
@@ -103,8 +97,8 @@ export const SkipButton = styled(
   font-weight: 600;
   font-size: 17px;
   line-height: 24px;
-  color: #F76E6E;
-`
+  color: #f76e6e;
+`;
 
 export const CancelButton = styled(IconButton)`
   height: 48px;
@@ -112,9 +106,9 @@ export const CancelButton = styled(IconButton)`
   font-size: 17px;
   line-height: 24px;
   color: #fff;
-  border: 1px solid #6379A1;
+  border: 1px solid #6379a1;
   border-radius: 8px;
-`
+`;
 
 export const OpenPositionButton = styled(MuiButton)`
   border-radius: 8px;
@@ -168,12 +162,12 @@ export const MaxButton = styled(MuiButton)`
   gap: 8px;
   color: #fff;
   font-size: 14px;
-  lineHeight: 20px;
+  lineheight: 20px;
   position: absolute;
-  top: 30px;
+  top: 25px;
   right: 7px;
   cursor: pointer;
-`
+`;
 
 export const ApproveButton = styled(MuiButton)`
   color: #00332f;
@@ -206,11 +200,9 @@ export const ButtonsWrapper = styled(Box)`
   }
 `;
 
-export const ClosePositionRepayTypeWrapper = styled(
-  Box,
-)`
+export const ClosePositionRepayTypeWrapper = styled(Box)`
   margin-bottom: 20px;
-`
+`;
 
 export const RepayTypeButton = styled(MuiButton)`
   border: 1px solid #6987b8;

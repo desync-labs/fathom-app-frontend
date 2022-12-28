@@ -56,7 +56,8 @@ const NetworkPaper = styled(AppPaper)`
 `;
 
 const Web3Status = () => {
-  const { error, account, chainId } = useWeb3React();
+  const web3Data = useWeb3React();
+  const { error, account, chainId } = web3Data;
   const anchorRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState<boolean>(false);
 
@@ -97,13 +98,16 @@ const Web3Status = () => {
     [setOpen]
   );
 
+  const showNetworkSelector =
+    chainId || error instanceof UnsupportedChainIdError;
+
   if (XDC_CHAIN_IDS.includes(chainId!)) {
     button = (
       <RightNetwork onClick={() => setOpen(!open)}>
         <>
           <img src={getTokenLogoURL("WXDC")} alt={"xdc"} width={16} />
           {!isMobile && NETWORK_LABELS[chainId as ChainId]}
-          <ArrowDropDownIcon />
+          {showNetworkSelector && <ArrowDropDownIcon />}
         </>
       </RightNetwork>
     );
@@ -111,7 +115,7 @@ const Web3Status = () => {
     button = isMobile ? (
       <WrongNetworkMobile onClick={() => setOpen(!open)}>
         <WrongNetworkMobileIcon />
-        <ArrowDropDownIcon />
+        {showNetworkSelector && <ArrowDropDownIcon />}
       </WrongNetworkMobile>
     ) : (
       <WrongNetwork onClick={() => setOpen(!open)}>
@@ -127,7 +131,7 @@ const Web3Status = () => {
     );
   }
 
-  return (
+  return chainId || error instanceof UnsupportedChainIdError ? (
     <>
       <ButtonGroup
         variant="contained"
@@ -171,6 +175,8 @@ const Web3Status = () => {
         )}
       </Popper>
     </>
+  ) : (
+    button
   );
 };
 

@@ -85,8 +85,8 @@ const useOpenPosition = (
   );
 
   useEffect(() => {
-    getCollateralTokenAndBalance();
-  }, [chainId, getCollateralTokenAndBalance]);
+    account && chainId && getCollateralTokenAndBalance();
+  }, [chainId, account, getCollateralTokenAndBalance]);
 
   const handleUpdates = useCallback(
     async (collateralInput: number, fathomTokenInput: number) => {
