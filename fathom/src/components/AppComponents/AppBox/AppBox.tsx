@@ -9,6 +9,7 @@ export const TitleSecondary = styled(Typography)`
   font-weight: bold;
   line-height: 24px;
   margin-bottom: 10px;
+  
 `;
 
 export const NoResults = styled(Typography)`

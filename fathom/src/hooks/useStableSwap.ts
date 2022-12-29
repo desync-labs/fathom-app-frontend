@@ -6,10 +6,7 @@ import { SmartContractFactory } from "config/SmartContractFactory";
 import useSyncContext from "context/sync";
 import BigNumber from "bignumber.js";
 import Web3 from "web3";
-import {
-  useMediaQuery,
-  useTheme
-} from "@mui/material";
+import { useMediaQuery, useTheme } from "@mui/material";
 
 const useStableSwap = (options: string[]) => {
   const [inputBalance, setInputBalance] = useState<number>(0);
@@ -61,19 +58,21 @@ const useStableSwap = (options: string[]) => {
   const approvalStatus = useMemo(
     () =>
       debounce(async (input: number, currency: string, type: string) => {
-        let approved;
-        approved =
-          currency === options[0]
-            ? await stableSwapStore.approvalStatusUsdt(account, input)
-            : await stableSwapStore.approvalStatusStableCoin(account, input);
+        if (account) {
+          let approved;
+          approved =
+            currency === options[0]
+              ? await stableSwapStore.approvalStatusUsdt(account, input)
+              : await stableSwapStore.approvalStatusStableCoin(account, input);
 
-        type === "input"
-          ? approved
-            ? setApproveInputBtn(false)
-            : setApproveInputBtn(true)
-          : approved
-          ? setApproveOutputBtn(false)
-          : setApproveOutputBtn(true);
+          type === "input"
+            ? approved
+              ? setApproveInputBtn(false)
+              : setApproveInputBtn(true)
+            : approved
+            ? setApproveOutputBtn(false)
+            : setApproveOutputBtn(true);
+        }
       }, 1000),
     [stableSwapStore, account, options, setApproveInputBtn, setApproveOutputBtn]
   );

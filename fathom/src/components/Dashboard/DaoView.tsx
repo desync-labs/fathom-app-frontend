@@ -10,12 +10,19 @@ const DaoNav = styled("nav")`
   border-bottom: 1.5px solid #1d2d49;
   display: flex;
   align-items: center;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    width: 100%;
+    a {
+      width: 50%;
+    }
+  }
 `;
 
 const DaoLink = styled(Link)`
   color: #9fadc6;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   height: 100%;
   padding: 0 52px;
@@ -32,6 +39,12 @@ const DaoLink = styled(Link)`
     margin-bottom: 5px;
   }
 `;
+
+const DaoContainer = styled(Container)`
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    margin-top: 15px;
+  }
+`
 
 const DaoView = () => {
   const location = useLocation();
@@ -58,9 +71,9 @@ const DaoView = () => {
           Governance
         </DaoLink>
       </DaoNav>
-      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+      <DaoContainer maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
         <Outlet />
-      </Container>
+      </DaoContainer>
     </>
   );
 };

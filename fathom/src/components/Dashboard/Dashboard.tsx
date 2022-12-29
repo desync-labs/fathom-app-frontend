@@ -5,13 +5,6 @@ import ProtocolStats from "components/Dashboard/ProtocolStats";
 import PoolsListView from "components/Pools/PoolsListView";
 import { PageHeader } from "components/Dashboard/PageHeader";
 import useDashboard from "hooks/useDashboard";
-import { styled } from "@mui/material/styles";
-
-const DashboardContainer = styled(Container)`
-  ${({ theme }) => theme.breakpoints.down("sm")} {
-    margin-top: 15px;
-  }
-`;
 
 const DashboardContent = () => {
   const {
@@ -23,7 +16,10 @@ const DashboardContent = () => {
   } = useDashboard();
 
   return (
-    <DashboardContainer maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+    <Container
+      maxWidth="lg"
+      sx={{ mt: isMobile ? 2 : 4, mb: isMobile ? 2 : 4 }}
+    >
       <Grid container spacing={isMobile ? 1 : 3}>
         <PageHeader
           title={"FXD"}
@@ -35,7 +31,7 @@ const DashboardContent = () => {
         <Grid item xs={12}>
           <PoolsListView />
         </Grid>
-        <Grid item xs={12} sx={{ marginTop: "30px" }}>
+        <Grid item xs={12} sx={{ marginTop: isMobile ? "5px" : "30px" }}>
           <PositionsList
             positionCurrentPage={positionCurrentPage}
             positionsItemsCount={positionsItemsCount}
@@ -44,7 +40,7 @@ const DashboardContent = () => {
           />
         </Grid>
       </Grid>
-    </DashboardContainer>
+    </Container>
   );
 };
 

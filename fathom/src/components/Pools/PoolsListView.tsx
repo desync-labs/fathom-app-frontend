@@ -38,6 +38,13 @@ const CircleWrapper = styled(Box)`
   justify-content: center;
 `;
 
+const PoolsTitle = styled(TitleSecondary)`
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    margin-bottom: 15px;
+    margin-top: 25px;
+  }
+`
+
 const PoolsListView: FC = () => {
   const { pools, selectedPool, onCloseNewPosition, setSelectedPool, loading } =
     usePoolsList();
@@ -47,7 +54,7 @@ const PoolsListView: FC = () => {
 
   return (
     <>
-      <TitleSecondary variant="h2">Available Pools</TitleSecondary>
+      <PoolsTitle variant="h2">Available Pools</PoolsTitle>
       {pools.length === 0 ? (
         <NoResults variant="h6">
           {loading ? (

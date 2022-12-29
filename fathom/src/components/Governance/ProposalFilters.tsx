@@ -8,6 +8,7 @@ import React, {
   FC,
   memo
 } from "react";
+import { styled } from "@mui/material/styles";
 
 
 // const ProposalSelect = styled(Select)`
@@ -29,6 +30,12 @@ type ProposalFiltersType = {
   setProposals: Dispatch<string>;
   setCreateProposal: Dispatch<boolean>;
 }
+
+const AddProposalButton = styled(ButtonPrimary)`
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    width: 100%;
+  }
+`
 
 const ProposalFilters: FC<ProposalFiltersType> = ({
   search,
@@ -86,7 +93,7 @@ const ProposalFilters: FC<ProposalFiltersType> = ({
         </Grid>
         */}
         <Grid item xs={12}>
-          <ButtonPrimary
+          <AddProposalButton
             onClick={() => setCreateProposal(true)}
             sx={{ float: "right", padding: "8px 40px" }}
           >
@@ -98,7 +105,7 @@ const ProposalFilters: FC<ProposalFiltersType> = ({
               }}
             />
             Create a proposal
-          </ButtonPrimary>
+          </AddProposalButton>
         </Grid>
       </Grid>
     </Grid>

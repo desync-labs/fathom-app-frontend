@@ -13,7 +13,6 @@ import {
   FormControl,
   Typography,
 } from "@mui/material";
-import { observer } from "mobx-react";
 import { Controller } from "react-hook-form";
 import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
@@ -99,6 +98,13 @@ const OptionalBox = styled(Box)`
   margin-left: 5px;
 `;
 
+const GridContainer = styled(Grid)`
+  padding: 0 8px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    padding: 0;
+  }
+`
+
 const Optional = () => <OptionalBox>(Optional)</OptionalBox>;
 
 const InfoIcon: FC<{ sx?: Record<string, any> }> = ({ sx }) => (
@@ -113,8 +119,9 @@ export type ProposeProps = {
   onClose: () => void;
 };
 
-const Propose: FC<ProposeProps> = observer(({ onClose }) => {
+const Propose: FC<ProposeProps> = ({ onClose }) => {
   const {
+    isMobile,
     withAction,
     handleSubmit,
     control,
@@ -138,7 +145,7 @@ const Propose: FC<ProposeProps> = observer(({ onClose }) => {
         New Proposal
       </AppDialogTitle>
       <DialogContent sx={{ marginTop: "20px" }}>
-        <Grid container padding={"0 8px"} gap={2}>
+        <GridContainer container gap={2}>
           <Grid item xs={12}>
             <ProposeLabel>Wallet balance</ProposeLabel>
             <Stack
@@ -425,7 +432,14 @@ const Propose: FC<ProposeProps> = observer(({ onClose }) => {
             </Grid>
             <Grid item xs={12}>
               <Grid container spacing={1}>
-                <Grid item xs={4}>
+                {isMobile && (
+                  <Grid item xs={12}>
+                    <ProposeButtonPrimary type="submit" sx={{ width: "100%" }}>
+                      Submit proposal
+                    </ProposeButtonPrimary>
+                  </Grid>
+                )}
+                <Grid item xs={12} sm={4}>
                   <ProposeButtonSecondary
                     type="button"
                     sx={{ width: "100%" }}
@@ -434,18 +448,20 @@ const Propose: FC<ProposeProps> = observer(({ onClose }) => {
                     Save for later
                   </ProposeButtonSecondary>
                 </Grid>
-                <Grid item xs={8}>
-                  <ProposeButtonPrimary type="submit" sx={{ width: "100%" }}>
-                    Submit proposal
-                  </ProposeButtonPrimary>
-                </Grid>
+                {!isMobile && (
+                  <Grid item sm={8}>
+                    <ProposeButtonPrimary type="submit" sx={{ width: "100%" }}>
+                      Submit proposal
+                    </ProposeButtonPrimary>
+                  </Grid>
+                )}
               </Grid>
             </Grid>
           </Box>
-        </Grid>
+        </GridContainer>
       </DialogContent>
     </AppDialog>
   );
-});
+};
 
 export default Propose;

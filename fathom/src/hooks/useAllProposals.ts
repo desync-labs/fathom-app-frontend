@@ -4,6 +4,10 @@ import { GOVERNANCE_PROPOSALS, GOVERNANCE_STATS } from "apollo/queries";
 import { Constants } from "helpers/Constants";
 import useSyncContext from "context/sync";
 import { useWeb3React } from "@web3-react/core";
+import {
+  useMediaQuery,
+  useTheme
+} from "@mui/material";
 
 export const useAllProposals = () => {
   const { chainId } = useWeb3React();
@@ -13,6 +17,9 @@ export const useAllProposals = () => {
 
   const [createProposal, setCreateProposal] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const { syncDao, prevSyncDao } = useSyncContext();
 
@@ -61,8 +68,6 @@ export const useAllProposals = () => {
     [setCurrentPage, fetchMore]
   );
 
-  console.log(stats)
-
   return {
     fetchProposalsPending: loading,
     search,
@@ -79,5 +84,7 @@ export const useAllProposals = () => {
     itemsCount:
       statsLoading || !stats || !stats.governanceStats.length ? 0 : stats.governanceStats[0].totalProposalsCount,
     handlePageChange,
+
+    isMobile,
   };
 };

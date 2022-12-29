@@ -2,7 +2,9 @@ import { Chip, Stack } from "@mui/material";
 import React, { FC, memo } from "react";
 import { styled } from "@mui/material/styles";
 
-const StakingChip = styled(Chip)<{ isActive: boolean }>`
+const StakingChip = styled(Chip, {
+  shouldForwardProp: (prop) => prop !== "isActive",
+})<{ isActive: boolean }>`
   background: ${({ isActive }) =>
     isActive ? "transparent" : "rgba(79, 101, 140, 0.2)"};
   border-radius: 6px;

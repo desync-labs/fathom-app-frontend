@@ -50,16 +50,18 @@ const useViewProposalItem = (proposal: IProposal) => {
   }, [proposal, chainId, account, getTimestamp, fetchProposalState]);
 
   useEffect(() => {
-    if (seconds > 0) {
-      setTimeout(() => {
-        setSeconds(seconds - 1);
-      }, 1000);
-    } else {
-      setTimeout(() => {
-        fetchProposalState();
-      }, 2000);
+    if (chainId) {
+      if (seconds > 0) {
+        setTimeout(() => {
+          setSeconds(seconds - 1);
+        }, 1000);
+      } else {
+        setTimeout(() => {
+          fetchProposalState();
+        }, 2000);
+      }
     }
-  }, [seconds, setSeconds, fetchProposalState]);
+  }, [seconds, chainId, setSeconds, fetchProposalState]);
 
   const proposalTitle = useMemo(() => {
     const title = proposal.description.split("----------------")[0];
