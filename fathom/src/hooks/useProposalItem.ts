@@ -1,13 +1,17 @@
 import { useCallback, useEffect, useState, useMemo } from "react";
-import useMetaMask from "context/metamask";
 import { useNavigate, useParams } from "react-router-dom";
+import { useQuery } from "@apollo/client";
+import { GOVERNANCE_PROPOSAL_ITEM } from "apollo/queries";
 import { useStores } from "stores";
 import { ProposalStatus, XDC_BLOCK_TIME } from "helpers/Constants";
 import IProposal from "stores/interfaces/IProposal";
-import { useQuery } from "@apollo/client";
-import { GOVERNANCE_PROPOSAL_ITEM } from "apollo/queries";
 import { Web3Utils } from "helpers/Web3Utils";
-import useSyncContext from "../context/sync";
+import useSyncContext from "context/sync";
+import useMetaMask from "context/metamask";
+import {
+  useMediaQuery,
+  useTheme
+} from "@mui/material";
 
 const useProposalItem = () => {
   const { account, chainId } = useMetaMask()!;
@@ -26,7 +30,10 @@ const useProposalItem = () => {
   const [votingStartsTime, setVotingStartsTime] = useState<string | null>(null);
   const [votingEndTime, setVotingEndTime] = useState<string | null>(null);
 
-  const { syncDao, prevSyncDao, setLastTransactionBlock } = useSyncContext()
+  const { syncDao, prevSyncDao, setLastTransactionBlock } = useSyncContext();
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const { data, loading, refetch } = useQuery(GOVERNANCE_PROPOSAL_ITEM, {
     variables: {
@@ -37,18 +44,16 @@ const useProposalItem = () => {
 
   useEffect(() => {
     if (syncDao && !prevSyncDao) {
-      refetch()
+      refetch();
     }
-  }, [syncDao, prevSyncDao, refetch])
+  }, [syncDao, prevSyncDao, refetch]);
 
   const fetchHasVoted = useCallback(async () => {
-    if (data && data.proposal && account) {
-      const hasVoted = await proposalStore.hasVoted(
-        data.proposal.proposalId,
-        account
-      );
-      setHasVoted(hasVoted!);
-    }
+    const hasVoted = await proposalStore.hasVoted(
+      data.proposal.proposalId,
+      account
+    );
+    setHasVoted(hasVoted!);
   }, [proposalStore, data, account, setHasVoted]);
 
   const fetchStatus = useCallback(async () => {
@@ -73,7 +78,7 @@ const useProposalItem = () => {
   }, [data, chainId, setVotingStartsTime]);
 
   const getVotingEndTime = useCallback(async () => {
-    if (data && data.proposal) {
+    if (data && data.proposal && chainId) {
       const { timestamp } = await Web3Utils.getWeb3Instance(
         chainId
       ).eth.getBlock(data.proposal.startBlock);
@@ -108,11 +113,11 @@ const useProposalItem = () => {
   }, [data, account, fetchHasVoted, fetchStatus]);
 
   useEffect(() => {
-    if (data && data.proposal) {
+    if (chainId && data && data.proposal) {
       getVotingStartsTime();
       getVotingEndTime();
     }
-  }, [data, getVotingStartsTime, getVotingEndTime]);
+  }, [data, chainId, getVotingStartsTime, getVotingEndTime]);
 
   useEffect(() => {
     if (seconds > 0) {
@@ -146,7 +151,11 @@ const useProposalItem = () => {
     async (support: string) => {
       try {
         setVotePending(support);
-        const receipt = await proposalStore.castVote(_proposalId!, account, support);
+        const receipt = await proposalStore.castVote(
+          _proposalId!,
+          account,
+          support
+        );
         setLastTransactionBlock(receipt.blockNumber);
         setHasVoted(true);
       } catch (err) {
@@ -154,7 +163,14 @@ const useProposalItem = () => {
       }
       setVotePending(null);
     },
-    [_proposalId, proposalStore, account, setVotePending, setHasVoted, setLastTransactionBlock]
+    [
+      _proposalId,
+      proposalStore,
+      account,
+      setVotePending,
+      setHasVoted,
+      setLastTransactionBlock,
+    ]
   );
 
   const back = useCallback(() => {
@@ -181,6 +197,7 @@ const useProposalItem = () => {
   }, [data?.proposal]);
 
   return {
+    isMobile,
     hasVoted,
     votePending,
     account,

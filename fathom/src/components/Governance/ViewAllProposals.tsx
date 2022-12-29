@@ -7,7 +7,6 @@ import {
 } from "@mui/material";
 import IProposal from "stores/interfaces/IProposal";
 import React, { useMemo } from "react";
-import { observer } from "mobx-react";
 import { PageHeader } from "components/Dashboard/PageHeader";
 import { useAllProposals } from "hooks/useAllProposals";
 import ViewAllProposalItem from "components/Governance/ViewAllProposalItem";
@@ -23,7 +22,15 @@ const PaginationWrapper = styled(Box)`
   margin-top: 10px;
 `;
 
-const AllProposalsView = observer(() => {
+const AllProposalsTypography = styled("h2")`
+  font-size: 24px;
+  line-height: 28px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    font-size: 16px;
+  }
+`;
+
+const AllProposalsView = () => {
   const {
     fetchProposalsPending,
     search,
@@ -39,21 +46,23 @@ const AllProposalsView = observer(() => {
     itemsCount,
     currentPage,
     handlePageChange,
+    isMobile,
   } = useAllProposals();
 
   return (
     <>
-      <Grid container spacing={3}>
+      <Grid container spacing={isMobile ? 1 : 3}>
         {useMemo(
-          () => (
-            <PageHeader
-              title="Governance"
-              description={
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Eget tristique malesuada pulvinar commodo. Euismod massa, dis metus mattis porttitor ac est quis. Ut quis cursus ac nunc, aliquam curabitur nisl amet. Elit etiam dignissim orci. If this is the first-time you’re here, please visit our Whitepaper."
-              }
-            />
-          ),
-          []
+          () =>
+            !isMobile ? (
+              <PageHeader
+                title="Governance"
+                description={
+                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Eget tristique malesuada pulvinar commodo. Euismod massa, dis metus mattis porttitor ac est quis. Ut quis cursus ac nunc, aliquam curabitur nisl amet. Elit etiam dignissim orci. If this is the first-time you’re here, please visit our Whitepaper."
+                }
+              />
+            ) : null,
+          [isMobile]
         )}
         <ProposalFilters
           search={search}
@@ -65,14 +74,9 @@ const AllProposalsView = observer(() => {
           setCreateProposal={setCreateProposal}
         />
         <Grid item xs={12}>
-          <Typography
-            component={"h2"}
-            sx={{ fontSize: "24px", lineHeight: "28px" }}
-          >
-            All proposals
-          </Typography>
+          <AllProposalsTypography>All proposals</AllProposalsTypography>
         </Grid>
-        <Grid item xs={8}>
+        <Grid item xs={12} sm={8}>
           <Grid container spacing={1}>
             {useMemo(
               () =>
@@ -99,9 +103,7 @@ const AllProposalsView = observer(() => {
                   ))
                 ) : (
                   <Grid item xs={12}>
-                    <NoResults>
-                      No opened any proposals
-                    </NoResults>
+                    <NoResults>No opened any proposals</NoResults>
                   </Grid>
                 ),
               [fetchedProposals, fetchProposalsPending]
@@ -120,13 +122,9 @@ const AllProposalsView = observer(() => {
           </Grid>
         </Grid>
       </Grid>
-      {createProposal && (
-        <Propose
-          onClose={() => setCreateProposal(false)}
-        />
-      )}
+      {createProposal && <Propose onClose={() => setCreateProposal(false)} />}
     </>
   );
-});
+};
 
 export default AllProposalsView;

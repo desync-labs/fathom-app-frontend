@@ -44,6 +44,7 @@ import MetamaskSrc from "assets/svg/metamask.svg";
 import FathomLogoMobileSrc from "assets/svg/Fathom-app-logo-mobile.svg";
 import MobileMenuIcon from "assets/svg/mobile-menu.svg";
 import MobileMenu from "./MobileMenu";
+import { ProposalProvider } from "../../context/proposal";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -266,7 +267,14 @@ const MainLayout = () => {
           <Routes>
             <Route path="/" element={<DashboardContent />} />
             <Route path="/swap" element={<StableSwap />} />
-            <Route path="proposal/:_proposalId" element={<ProposalView />} />
+            <Route
+              path="/proposal/:_proposalId"
+              element={
+                <ProposalProvider>
+                  <ProposalView />
+                </ProposalProvider>
+              }
+            />
             <Route path="/dao" element={<DaoView />}>
               <Route path="governance" element={<AllProposalsView />} />
               <Route

@@ -7,6 +7,7 @@ const Footer = styled(Typography) `
   align-items: start;
   justify-content: center;
   gap: 4px;
+  padding-bottom: 10px;
 `
 
 

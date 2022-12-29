@@ -8,7 +8,9 @@ type PageHeaderType = {
   addPadding?: boolean;
 };
 
-const PageHeaderTitle = styled(Typography)<{ addPadding?: boolean }>`
+const PageHeaderTitle = styled(Typography, {
+  shouldForwardProp: (prop) => prop !== "addPadding",
+})<{ addPadding?: boolean }>`
   font-weight: bold;
   font-size: 28px;
   color: #fff;

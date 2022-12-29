@@ -7,7 +7,11 @@ import { ProposeProps } from "components/Governance/Propose";
 import { XDC_CHAIN_IDS } from "connectors/networks";
 import Xdc3 from "xdc3";
 import Web3 from "web3";
-import useSyncContext from "../context/sync";
+import useSyncContext from "context/sync";
+import {
+  useMediaQuery,
+  useTheme
+} from "@mui/material";
 
 const defaultValues = {
   withAction: false,
@@ -30,7 +34,10 @@ const formatter = new Intl.NumberFormat("en-US", {
 const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
   const { proposalStore } = useStores();
   const { account, chainId } = useMetaMask()!;
-  const [vBalance, setVBalance] = useState<null | number>();
+  const [vBalance, setVBalance] = useState<null | number>(0);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
 
   const { handleSubmit, watch, control, reset, getValues } = useForm({
     defaultValues,
@@ -45,7 +52,7 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
   useEffect(() => {
     if (account) {
       proposalStore.getVBalance(account).then((balance) => {
-        setVBalance(balance);
+        setVBalance(balance!);
       });
     }
   }, [account, proposalStore, setVBalance]);
@@ -149,6 +156,7 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
   }, []);
 
   return {
+    isMobile,
     withAction,
     handleSubmit,
     watch,

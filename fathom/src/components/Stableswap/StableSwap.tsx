@@ -1,3 +1,4 @@
+import React, { useMemo, useState } from "react";
 import {
   Select,
   MenuItem,
@@ -8,17 +9,20 @@ import {
   Typography,
   Container,
 } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import InfoIcon from "@mui/icons-material/Info";
+import { SelectChangeEvent } from "@mui/material/Select";
 import { StableSwapPaper } from "components/AppComponents/AppPaper/AppPaper";
 import { PageHeader } from "components/Dashboard/PageHeader";
-import useStableSwap from "hooks/useStableSwap";
-import { styled } from "@mui/material/styles";
-import { SelectChangeEvent } from "@mui/material/Select";
-import React, { useMemo, useState } from "react";
 import {
   AppFormLabel,
   AppTextField,
 } from "components/AppComponents/AppForm/AppForm";
+import useStableSwap from "hooks/useStableSwap";
+
+import { formatPercentage } from "utils/format";
 import { getTokenLogoURL } from "utils/tokenLogo";
+
 import {
   InfoLabel,
   InfoValue,
@@ -37,8 +41,6 @@ import {
 import ComboShareSrc from "assets/svg/combo-shape.svg";
 import QuestionMarkSrc from "assets/svg/question-mark.svg";
 import PriceSettingsSrc from "assets/svg/price-settings.svg";
-import InfoIcon from "@mui/icons-material/Info";
-import { formatPercentage } from "utils/format";
 
 const StableSwapInputWrapper = styled(MuiBox)`
   position: relative;
@@ -135,13 +137,6 @@ const SwapButton = styled(ButtonPrimary)`
   margin: 20px 0 5px 0;
 `;
 
-const StableSwapContainer = styled(Container)`
-  ${({ theme }) => theme.breakpoints.down("sm")} {
-    padding: 0;
-    margin-top: 15px;
-  }
-`
-
 const StableSwap = () => {
   const [options /*setOptions*/] = useState<string[]>(["US+", "FXD"]);
 
@@ -182,7 +177,10 @@ const StableSwap = () => {
   } = useStableSwap(options);
 
   return (
-    <StableSwapContainer maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+    <Container
+      maxWidth="lg"
+      sx={{ mt: isMobile ? 2 : 4, mb: isMobile ? 2 : 4 }}
+    >
       <Grid container spacing={isMobile ? 1 : 3}>
         <PageHeader
           addPadding={true}
@@ -387,7 +385,7 @@ const StableSwap = () => {
           </StableSwapPaper>
         </Grid>
       </Grid>
-    </StableSwapContainer>
+    </Container>
   );
 };
 
