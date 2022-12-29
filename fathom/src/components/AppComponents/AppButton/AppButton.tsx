@@ -162,7 +162,7 @@ export const MaxButton = styled(MuiButton)`
   gap: 8px;
   color: #fff;
   font-size: 14px;
-  lineheight: 20px;
+  line-height: 20px;
   position: absolute;
   top: 25px;
   right: 7px;

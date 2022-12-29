@@ -1,11 +1,10 @@
-import useStakingContext from "../context/staking";
-import usePricesContext from "../context/prices";
+import useStakingContext from "context/staking";
+import usePricesContext from "context/prices";
 import {
   useEffect,
   useMemo,
   useState
 } from "react";
-
 
 const useStreamStats = () => {
   const {
@@ -15,6 +14,7 @@ const useStreamStats = () => {
     previousStaker,
     totalRewards,
   } = useStakingContext();
+
   const { fthmPrice } = usePricesContext();
   const fthmPriceFormatted = useMemo(() => fthmPrice / 10 ** 18, [fthmPrice]);
 

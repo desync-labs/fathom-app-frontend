@@ -1,6 +1,8 @@
-import { Box, Slider, Grid, Typography, CircularProgress } from "@mui/material";
-import { Controller } from "react-hook-form";
 import React, { FC, useMemo } from "react";
+import { Controller } from "react-hook-form";
+import { Box, Slider, Grid, Typography, CircularProgress } from "@mui/material";
+import InfoIcon from "@mui/icons-material/Info";
+import { styled } from "@mui/material/styles";
 import {
   AppFormInputLogo,
   AppFormInputWrapper,
@@ -8,17 +10,16 @@ import {
   AppTextField,
 } from "components/AppComponents/AppForm/AppForm";
 import { WalletBalance } from "components/AppComponents/AppBox/AppBox";
-import InfoIcon from "@mui/icons-material/Info";
-import { getTokenLogoURL } from "utils/tokenLogo";
 import {
   ButtonPrimary,
   MaxButton,
 } from "components/AppComponents/AppButton/AppButton";
 import useStakingLockForm from "hooks/useStakingLockForm";
 import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
-import { styled } from "@mui/material/styles";
 import Period from "components/Staking/Components/Period";
+import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatCurrency, formatNumber } from "utils/format";
+
 import usePricesContext from "context/prices";
 
 const StakingLockPaper = styled(AppPaper)`
@@ -27,7 +28,9 @@ const StakingLockPaper = styled(AppPaper)`
   align-items: center;
   padding: 32px 32px 50px;
   gap: 35px;
-
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    padding: 20px 12px 25px;
+  }
   form {
     width: 100%;
   }
@@ -113,39 +116,41 @@ const StakingLockForm: FC = () => {
           name="stakePosition"
           rules={{ required: true, min: 1 }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
-            <AppFormInputWrapper>
+            <>
               <AppFormLabel>Staking amount</AppFormLabel>
               {fthmBalance ? (
                 <WalletBalance>Available: {fthmBalance} FTHM</WalletBalance>
               ) : null}
-              <AppTextField
-                error={balanceError || !!error}
-                id="outlined-helperText"
-                placeholder={"0"}
-                type="number"
-                helperText={
-                  <>
-                    {error && (
-                      <Box component={"span"} sx={{ fontSize: "12px" }}>
-                        Field is required
-                      </Box>
-                    )}
-                    {balanceError && (
-                      <>
-                        <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
+              <AppFormInputWrapper>
+                <AppTextField
+                  error={balanceError || !!error}
+                  id="outlined-helperText"
+                  placeholder={"0"}
+                  type="number"
+                  helperText={
+                    <>
+                      {error && (
                         <Box component={"span"} sx={{ fontSize: "12px" }}>
-                          You do not have enough FTHM
+                          Field is required
                         </Box>
-                      </>
-                    )}
-                  </>
-                }
-                value={value}
-                onChange={onChange}
-              />
-              <AppFormInputLogo src={getTokenLogoURL("FTHM")} />
-              <MaxButton onClick={() => setMax(fthmBalance)}>Max</MaxButton>
-            </AppFormInputWrapper>
+                      )}
+                      {balanceError && (
+                        <>
+                          <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
+                          <Box component={"span"} sx={{ fontSize: "12px" }}>
+                            You do not have enough FTHM
+                          </Box>
+                        </>
+                      )}
+                    </>
+                  }
+                  value={value}
+                  onChange={onChange}
+                />
+                <AppFormInputLogo src={getTokenLogoURL("FTHM")} />
+                <MaxButton onClick={() => setMax(fthmBalance)}>Max</MaxButton>
+              </AppFormInputWrapper>
+            </>
           )}
         />
         <Controller

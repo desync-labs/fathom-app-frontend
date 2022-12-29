@@ -16,6 +16,7 @@ import StakingCountdown from "components/Staking/StakingCountdown";
 
 import { secondsToTime } from "utils/secondsToTime";
 import useStreamStats from "hooks/useStreamStats";
+import useStakingContext from "context/staking";
 
 const FTHMStreamHeader = styled("h3")`
   font-weight: 600;
@@ -105,6 +106,9 @@ const MyStatsBlocks = styled(Box)`
   grid-template-columns: 0.9fr 1.1fr;
   align-items: start;
   gap: 25px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const MyStatsBlock = styled(Box)`
@@ -151,6 +155,8 @@ const StreamStats: FC = () => {
     fthmPriceFormatted,
     processFlow,
   } = useStreamStats();
+
+  const { isMobile } = useStakingContext();
 
   return (
     <Box sx={{ padding: "0 10px" }}>
@@ -242,6 +248,76 @@ const StreamStats: FC = () => {
               )}
             </MyStatsBlock>
 
+            {isMobile && (
+              <MyStatsBlock>
+                <StatsLabel>
+                  Voting power <InfoIcon sx={{ fontSize: "18px" }} />
+                </StatsLabel>
+                {staker && (
+                  <MyStatsValue>
+                    <strong>
+                      {formatNumber(staker.accruedVotes / 10 ** 18)} vFTHM
+                    </strong>
+                  </MyStatsValue>
+                )}
+                <span>(1 staked FTHM for 365 days = 1 vFTHM)</span>
+              </MyStatsBlock>
+            )}
+
+            {isMobile && (
+              <MyStatsBlock>
+                {seconds > 0 && (
+                  <>
+                    <CooldownInProgress>
+                      Cooldown in progress
+                    </CooldownInProgress>
+                    <CooldownCountDown>
+                      <StakingCountdown timeObject={secondsToTime(seconds)} />
+                    </CooldownCountDown>
+                    <MyStatsValue>
+                      <strong>
+                        {formatNumber(staker.claimedAmount / 10 ** 18)} FTHM
+                      </strong>
+                      <span>
+                        {formatCurrency(
+                          (staker.claimedAmount / 10 ** 18) * fthmPriceFormatted
+                        )}
+                      </span>
+                    </MyStatsValue>
+                  </>
+                )}
+                {seconds <= 0 && staker && Number(staker.claimedAmount) > 0 && (
+                  <Grid container>
+                    <Grid item xs={6}>
+                      <StatsLabel>
+                        Ready to withdraw
+                        <InfoIcon sx={{ fontSize: "18px" }} />
+                      </StatsLabel>
+                      <MyStatsValue className={"green"}>
+                        <strong>
+                          {formatNumber(
+                            Number(staker.claimedAmount) / 10 ** 18
+                          )}{" "}
+                          FTHM
+                        </strong>
+                        <span>
+                          {formatCurrency(
+                            (staker.claimedAmount / 10 ** 18) *
+                              fthmPriceFormatted
+                          )}
+                        </span>
+                      </MyStatsValue>
+                    </Grid>
+                    <ButtonGrid item xs={6}>
+                      <StatsButton onClick={() => processFlow("withdraw")}>
+                        Withdraw
+                      </StatsButton>
+                    </ButtonGrid>
+                  </Grid>
+                )}
+              </MyStatsBlock>
+            )}
+
             <MyStatsBlock>
               <Grid container>
                 <Grid item xs={8}>
@@ -271,50 +347,35 @@ const StreamStats: FC = () => {
               </Grid>
             </MyStatsBlock>
 
-            <MyStatsBlock>
-              <StatsLabel>
-                Voting power <InfoIcon sx={{ fontSize: "18px" }} />
-              </StatsLabel>
-              {staker && (
-                <MyStatsValue>
-                  <strong>
-                    {formatNumber(staker.accruedVotes / 10 ** 18)} vFTHM
-                  </strong>
-                </MyStatsValue>
-              )}
-              <span>(1 staked FTHM for 365 days = 1 vFTHM)</span>
-            </MyStatsBlock>
-
-            <MyStatsBlock>
-              {seconds > 0 && (
-                <>
-                  <CooldownInProgress>Cooldown in progress</CooldownInProgress>
-                  <CooldownCountDown>
-                    <StakingCountdown timeObject={secondsToTime(seconds)} />
-                  </CooldownCountDown>
+            {!isMobile && (
+              <MyStatsBlock>
+                <StatsLabel>
+                  Voting power <InfoIcon sx={{ fontSize: "18px" }} />
+                </StatsLabel>
+                {staker && (
                   <MyStatsValue>
                     <strong>
-                      {formatNumber(staker.claimedAmount / 10 ** 18)} FTHM
+                      {formatNumber(staker.accruedVotes / 10 ** 18)} vFTHM
                     </strong>
-                    <span>
-                      {formatCurrency(
-                        (staker.claimedAmount / 10 ** 18) * fthmPriceFormatted
-                      )}
-                    </span>
                   </MyStatsValue>
-                </>
-              )}
-              {seconds <= 0 && staker && Number(staker.claimedAmount) > 0 && (
-                <Grid container>
-                  <Grid item xs={6}>
-                    <StatsLabel>
-                      Ready to withdraw
-                      <InfoIcon sx={{ fontSize: "18px" }} />
-                    </StatsLabel>
-                    <MyStatsValue className={"green"}>
+                )}
+                <span>(1 staked FTHM for 365 days = 1 vFTHM)</span>
+              </MyStatsBlock>
+            )}
+
+            {!isMobile && (
+              <MyStatsBlock>
+                {seconds > 0 && (
+                  <>
+                    <CooldownInProgress>
+                      Cooldown in progress
+                    </CooldownInProgress>
+                    <CooldownCountDown>
+                      <StakingCountdown timeObject={secondsToTime(seconds)} />
+                    </CooldownCountDown>
+                    <MyStatsValue>
                       <strong>
-                        {formatNumber(Number(staker.claimedAmount) / 10 ** 18)}{" "}
-                        FTHM
+                        {formatNumber(staker.claimedAmount / 10 ** 18)} FTHM
                       </strong>
                       <span>
                         {formatCurrency(
@@ -322,15 +383,39 @@ const StreamStats: FC = () => {
                         )}
                       </span>
                     </MyStatsValue>
+                  </>
+                )}
+                {seconds <= 0 && staker && Number(staker.claimedAmount) > 0 && (
+                  <Grid container>
+                    <Grid item xs={6}>
+                      <StatsLabel>
+                        Ready to withdraw
+                        <InfoIcon sx={{ fontSize: "18px" }} />
+                      </StatsLabel>
+                      <MyStatsValue className={"green"}>
+                        <strong>
+                          {formatNumber(
+                            Number(staker.claimedAmount) / 10 ** 18
+                          )}{" "}
+                          FTHM
+                        </strong>
+                        <span>
+                          {formatCurrency(
+                            (staker.claimedAmount / 10 ** 18) *
+                              fthmPriceFormatted
+                          )}
+                        </span>
+                      </MyStatsValue>
+                    </Grid>
+                    <ButtonGrid item xs={6}>
+                      <StatsButton onClick={() => processFlow("withdraw")}>
+                        Withdraw
+                      </StatsButton>
+                    </ButtonGrid>
                   </Grid>
-                  <ButtonGrid item xs={6}>
-                    <StatsButton onClick={() => processFlow("withdraw")}>
-                      Withdraw
-                    </StatsButton>
-                  </ButtonGrid>
-                </Grid>
-              )}
-            </MyStatsBlock>
+                )}
+              </MyStatsBlock>
+            )}
           </MyStatsBlocks>
         </>
       )}

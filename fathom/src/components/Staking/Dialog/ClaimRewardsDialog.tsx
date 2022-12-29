@@ -65,6 +65,13 @@ const ButtonsWrapper = styled(Box)`
   > button {
     width: calc(50% - 3px);
   }
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    flex-direction: column;
+    button {
+      width: 100%;
+    }
+  }
 `;
 
 type ClaimRewardsDialogProps = {
@@ -82,7 +89,7 @@ const ClaimRewardsDialog: FC<ClaimRewardsDialogProps> = ({
   onSkip,
   onClaim,
 }) => {
-  const { claimRewards, action } = useStakingContext();
+  const { claimRewards, action, isMobile } = useStakingContext();
 
   const isLoading = useMemo(() => action?.type === "claim", [action]);
 
@@ -114,11 +121,12 @@ const ClaimRewardsDialog: FC<ClaimRewardsDialogProps> = ({
           </Box>
         </DialogContentWrapper>
         <ButtonsWrapper>
-          {onSkip ? (
-            <SkipButton onClick={onSkip}>Skip</SkipButton>
-          ) : (
-            <CancelButton onClick={onClose}>Cancel</CancelButton>
-          )}
+          {!isMobile &&
+            (onSkip ? (
+              <SkipButton onClick={onSkip}>Skip</SkipButton>
+            ) : (
+              <CancelButton onClick={onClose}>Cancel</CancelButton>
+            ))}
 
           <ConfirmButton
             disabled={isLoading}
@@ -127,6 +135,13 @@ const ClaimRewardsDialog: FC<ClaimRewardsDialogProps> = ({
           >
             {isLoading ? <CircularProgress size={30} /> : "Claim All Rewards"}
           </ConfirmButton>
+
+          {isMobile &&
+            (onSkip ? (
+              <SkipButton onClick={onSkip}>Skip</SkipButton>
+            ) : (
+              <CancelButton onClick={onClose}>Cancel</CancelButton>
+            ))}
         </ButtonsWrapper>
         <InfoMessageWrapper>
           <InfoIcon sx={{ fontSize: "18px", color: "#4F658C" }} />
