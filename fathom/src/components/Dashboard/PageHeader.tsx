@@ -24,7 +24,7 @@ const PageHeaderTitle = styled(Typography, {
 const PageHeaderDescription = styled(Box)`
   font-size: 14px;
   color: #fff;
-  lineheight: 20px;
+  line-height: 20px;
 `;
 
 export const PageHeader: FC<PageHeaderType> = ({

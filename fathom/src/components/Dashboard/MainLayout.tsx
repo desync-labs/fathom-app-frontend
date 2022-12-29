@@ -37,14 +37,15 @@ import { drawerWidth } from "components/AppComponents/AppBar/AppBar";
 
 import useMainLayout from "hooks/useMainLayout";
 import { StakingProvider } from "context/staking";
+import MobileMenu from "components/Dashboard/MobileMenu";
+import { ProposalProvider } from "context/proposal";
 
 import FathomAppLogoSrc from "assets/svg/Fathom-app-logo.svg";
 import ExitSrc from "assets/svg/exit.svg";
 import MetamaskSrc from "assets/svg/metamask.svg";
 import FathomLogoMobileSrc from "assets/svg/Fathom-app-logo-mobile.svg";
 import MobileMenuIcon from "assets/svg/mobile-menu.svg";
-import MobileMenu from "./MobileMenu";
-import { ProposalProvider } from "../../context/proposal";
+import MobileMenuIconActive from "assets/svg/mobile-menu-active.svg";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -125,7 +126,7 @@ const MainToolbar = styled(Toolbar)`
 
 const MenuLogoWrapper = styled(Box)`
   display: flex;
-  width: 100px;
+  width: 105px;
   align-items: center;
   justify-content: space-between;
 `;
@@ -134,7 +135,7 @@ const MobileMenuWrapper = styled(Box)`
   display: flex;
   align-items: center;
   justify-content: start;
-  gap: 5px;
+  gap: 7px;
 `;
 
 const WalletBox = styled(Box)`
@@ -185,7 +186,7 @@ const MainLayout = () => {
                 />
                 <MobileMenuWrapper onClick={() => setOpenMobile(true)}>
                   <img
-                    src={MobileMenuIcon}
+                    src={openMobile ? MobileMenuIconActive : MobileMenuIcon}
                     alt={"menu"}
                     width={20}
                     height={20}

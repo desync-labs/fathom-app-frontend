@@ -1,6 +1,7 @@
 import { Chip, Stack } from "@mui/material";
 import React, { FC, memo } from "react";
 import { styled } from "@mui/material/styles";
+import useStakingContext from "context/staking";
 
 const StakingChip = styled(Chip, {
   shouldForwardProp: (prop) => prop !== "isActive",
@@ -12,6 +13,12 @@ const StakingChip = styled(Chip, {
   cursor: pointer;
   border: ${({ isActive }) =>
     isActive ? "1px solid rgba(79, 101, 140, 0.2)" : "none"};
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    width: 30%;
+    margin-bottom: 5px;
+    margin-right: 5px;
+  }
 
   &:active {
     border: 1px solid rgba(79, 101, 140, 0.2);
@@ -25,8 +32,10 @@ type PeriodProps = {
 };
 
 const Period: FC<PeriodProps> = ({ lockDays, setPeriod }) => {
+  const { isMobile } = useStakingContext();
+
   return (
-    <Stack direction="row" spacing={1}>
+    <Stack direction="row" spacing={isMobile ? 0 : 1} flexWrap={"wrap"}>
       <StakingChip
         isActive={lockDays === 30}
         label="1-Month"

@@ -7,6 +7,10 @@ import { useLazyQuery, useQuery } from "@apollo/client";
 import { STAKING_PROTOCOL_STATS, STAKING_STAKER } from "apollo/queries";
 import { Constants } from "helpers/Constants";
 import useSyncContext from "context/sync";
+import {
+  useMediaQuery,
+  useTheme
+} from "@mui/material";
 
 export type ActionType = { type: string; id: number | null };
 
@@ -26,6 +30,9 @@ const useStakingView = () => {
   const { account, chainId } = useMetaMask()!;
   const logger = useLogger();
   const { stakingStore } = useStores();
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [unstake, setUnstake] = useState<null | ILockPosition>(null);
   const [earlyUnstake, setEarlyUnstake] = useState<null | ILockPosition>(null);
@@ -309,6 +316,7 @@ const useStakingView = () => {
   );
 
   return {
+    isMobile,
     account,
     chainId,
     action,

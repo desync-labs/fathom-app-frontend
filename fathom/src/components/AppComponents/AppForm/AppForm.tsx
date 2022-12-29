@@ -85,7 +85,7 @@ export const AppFormLabel = styled(MuiFormLabel)`
   padding-bottom: 0;
 `;
 
-export const AppFormInputWrapper = styled(Box)`
+export const AppFormInputWrapper = styled('div')`
   position: relative;
   margin-bottom: 15px;
 `;

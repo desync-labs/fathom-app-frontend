@@ -51,10 +51,15 @@ const ButtonsWrapper = styled(Box)`
   display: flex;
   gap: 6px;
   align-items: center;
-
   > button {
     width: calc(50% - 3px);
     height: 48px;
+  }
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    flex-direction: column;
+    button {
+      width: 100%;
+    }
   }
 `;
 
@@ -64,7 +69,7 @@ type WithdrawDialogProps = {
 };
 
 const WithdrawDialog: FC<WithdrawDialogProps> = ({ token, onClose }) => {
-  const { withdrawAll, staker, action } = useStakingContext();
+  const { withdrawAll, staker, action, isMobile } = useStakingContext();
 
   const isLoading = useMemo(() => {
     return action?.type === "withdrawAll";
@@ -97,10 +102,11 @@ const WithdrawDialog: FC<WithdrawDialogProps> = ({ token, onClose }) => {
           </Box>
         </DialogContentWrapper>
         <ButtonsWrapper>
-          <CancelButton onClick={onClose}>Cancel</CancelButton>
+          {!isMobile && <CancelButton onClick={onClose}>Cancel</CancelButton>}
           <ButtonPrimary onClick={() => withdrawAll(onClose)}>
             {isLoading ? <CircularProgress size={30} /> : "Confirm Withdraw"}
           </ButtonPrimary>
+          {isMobile && <CancelButton onClick={onClose}>Cancel</CancelButton>}
         </ButtonsWrapper>
       </DialogContent>
     </AppDialog>
