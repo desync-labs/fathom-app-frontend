@@ -27,6 +27,7 @@ import useEarlyUnstake from "hooks/useEarlyUnstake";
 import { InfoMessageWrapper } from "components/Staking/Dialog/ClaimRewardsDialog";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatNumber } from "utils/format";
+import useStakingContext from "../../../context/staking";
 
 const UnstakeDialogWrapper = styled(AppDialog)`
   .MuiPaper-root {
@@ -84,6 +85,12 @@ const ButtonsWrapper = styled(Box)`
   > button {
     width: calc(50% - 3px);
   }
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    flex-direction: column;
+    button {
+      width: 100%;
+    }
+  }
 `;
 
 const Description = styled(Typography)`
@@ -115,6 +122,7 @@ const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({
     earlyUnstakeHandler,
     penaltyFeePercent,
   } = useEarlyUnstake(lockPosition, onFinish);
+  const { isMobile } = useStakingContext();
 
   return (
     <UnstakeDialogWrapper
@@ -182,7 +190,7 @@ const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({
           </Typography>
         </WarningBlock>
         <ButtonsWrapper>
-          <CancelButton onClick={onClose}>Cancel</CancelButton>
+          {!isMobile && <CancelButton onClick={onClose}>Cancel</CancelButton>}
           <ConfirmButton
             disabled={isLoading}
             isLoading={isLoading}
@@ -190,6 +198,7 @@ const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({
           >
             {isLoading ? <CircularProgress size={30} /> : "Yes, Unstake"}
           </ConfirmButton>
+          {isMobile && <CancelButton onClick={onClose}>Cancel</CancelButton>}
         </ButtonsWrapper>
         <InfoMessageWrapper>
           <InfoIcon sx={{ fontSize: "18px", color: "#4F658C" }} />

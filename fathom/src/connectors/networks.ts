@@ -1,8 +1,10 @@
 import { InjectedConnector } from "@web3-react/injected-connector";
+import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import Web3 from "web3";
 
 export const supportedChainIds = [1337, 50, 51];
 export const XDC_CHAIN_IDS = [50, 51];
+const APOTHEM_RPC = 'https://apothem.xdcrpc.com'
 
 export declare enum ChainId {
   XDC = 50,
@@ -35,3 +37,11 @@ export const XDC_NETWORK_SETTINGS = {
 }
 
 export const injected = new InjectedConnector({ supportedChainIds });
+
+// mainnet only
+export const walletconnect = new WalletConnectConnector({
+  rpc: {
+    51: APOTHEM_RPC
+  },
+  qrcode: true
+})

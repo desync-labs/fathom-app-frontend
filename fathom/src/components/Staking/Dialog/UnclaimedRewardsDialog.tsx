@@ -1,36 +1,33 @@
 import React, { FC } from "react";
 import {
   AppDialog,
-  DialogContentWrapper
+  DialogContentWrapper,
 } from "components/AppComponents/AppDialog/AppDialog";
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
-import {
-  Box,
-  DialogContent,
-  Typography,
-} from "@mui/material";
+import { Box, DialogContent, Typography } from "@mui/material";
 import {
   ButtonPrimary,
-  SkipButton
+  SkipButton,
 } from "components/AppComponents/AppButton/AppButton";
 import ILockPosition from "stores/interfaces/ILockPosition";
 import { styled } from "@mui/material/styles";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import InfoIcon from "@mui/icons-material/Info";
 import { formatNumber } from "utils/format";
+import useStakingContext from "../../../context/staking";
 
 const WarningBlock = styled(Box)`
   background: #452508;
-  border: 1px solid #5C310A;
+  border: 1px solid #5c310a;
   border-radius: 8px;
-  color: #F7B06E;
+  color: #f7b06e;
   display: flex;
   align-items: center;
   padding: 8px 16px;
   gap: 12px;
   font-size: 14px;
   margin: 0 15px 40px 15px;
-`
+`;
 export const InfoMessageWrapper = styled(Box)`
   display: flex;
   align-items: start;
@@ -61,9 +58,9 @@ const Description = styled(Typography)`
   font-weight: 400;
   font-size: 14px;
   line-height: 20px;
-  color: #FFFFFF;
+  color: #ffffff;
   padding: 0 15px;
-`
+`;
 
 const ButtonsWrapper = styled(Box)`
   width: auto;
@@ -71,18 +68,24 @@ const ButtonsWrapper = styled(Box)`
   display: flex;
   gap: 6px;
   align-items: center;
-  
+
   > button {
     width: calc(50% - 3px);
   }
-`
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    flex-direction: column;
+    button {
+      width: 100%;
+    }
+  }
+`;
 
 type ClaimRewardsDialogProps = {
   position: ILockPosition;
   token: string;
   onClose: () => void;
   onSkip: () => void;
-  onClaim: () => void
+  onClaim: () => void;
 };
 
 const UnclaimedRewardsDialog: FC<ClaimRewardsDialogProps> = ({
@@ -90,8 +93,10 @@ const UnclaimedRewardsDialog: FC<ClaimRewardsDialogProps> = ({
   token,
   onClose,
   onSkip,
-  onClaim
+  onClaim,
 }) => {
+  const { isMobile } = useStakingContext();
+
   return (
     <AppDialog
       onClose={onClose}
@@ -107,27 +112,30 @@ const UnclaimedRewardsDialog: FC<ClaimRewardsDialogProps> = ({
 
       <DialogContent>
         <Description>
-          If you unstake before claiming rewards, you will lose them. Claim rewards first in My Stats, then Unstake later.
+          If you unstake before claiming rewards, you will lose them. Claim
+          rewards first in My Stats, then Unstake later.
         </Description>
         <DialogContentWrapper>
           <img src={getTokenLogoURL(token)} alt={"token-logo"} width={58} />
-          <Box sx={{ fontSize: '18px' }}>You’re having unclaimed rewards</Box>
-          <Box className={'amount'}>
-            <Box>{formatNumber(Number(position.rewardsAvailable / 10 ** 18))}</Box>
+          <Box sx={{ fontSize: "18px" }}>You’re having unclaimed rewards</Box>
+          <Box className={"amount"}>
+            <Box>
+              {formatNumber(Number(position.rewardsAvailable / 10 ** 18))}
+            </Box>
             <span>{token}</span>
           </Box>
         </DialogContentWrapper>
         <WarningBlock>
-          <InfoIcon sx={{ fontSize: "18px", color: '#F5953D' }} />
-          <Typography component={'span'}>
-            You will lose the reward of this position if you proceed to unstake it without claiming the rewards first.
+          <InfoIcon sx={{ fontSize: "18px", color: "#F5953D" }} />
+          <Typography component={"span"}>
+            You will lose the reward of this position if you proceed to unstake
+            it without claiming the rewards first.
           </Typography>
         </WarningBlock>
         <ButtonsWrapper>
-          <SkipButton onClick={onSkip}>Skip</SkipButton>
-          <ConfirmButton onClick={onClaim}>
-            Claim All Rewards
-          </ConfirmButton>
+          {!isMobile && <SkipButton onClick={onSkip}>Skip</SkipButton>}
+          <ConfirmButton onClick={onClaim}>Claim All Rewards</ConfirmButton>
+          {isMobile && <SkipButton onClick={onSkip}>Skip</SkipButton>}
         </ButtonsWrapper>
       </DialogContent>
     </AppDialog>

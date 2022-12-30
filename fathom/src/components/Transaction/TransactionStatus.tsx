@@ -12,6 +12,7 @@ const AlertMessage = styled(Alert)`
   width: 100%;
   margin-bottom: 2px;
   z-index: 1000;
+  top: 65px;
 `;
 
 const TransactionStatus = observer(() => {

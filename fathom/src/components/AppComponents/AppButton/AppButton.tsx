@@ -164,7 +164,7 @@ export const MaxButton = styled(MuiButton)`
   font-size: 14px;
   line-height: 20px;
   position: absolute;
-  top: 25px;
+  top: 23px;
   right: 7px;
   cursor: pointer;
 `;

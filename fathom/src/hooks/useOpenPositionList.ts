@@ -1,7 +1,7 @@
 import { ChangeEvent, Dispatch, useCallback, useEffect, useState } from "react";
 
 import { useStores } from "stores";
-import useMetaMask from "context/metamask";
+import useMetaMask from "context/connector";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
 import { ClosingType } from "hooks/useClosePosition";
 import { useLazyQuery } from "@apollo/client";

@@ -1,11 +1,11 @@
 import { useStores } from "stores";
 import { Dispatch, useCallback, useEffect, useMemo, useState } from "react";
-import useMetaMask from "context/metamask";
 import { ClosePositionContextType } from "context/closePosition";
 import { useQuery } from "@apollo/client";
 import { FXD_POOLS } from "apollo/queries";
 import ICollateralPool from "stores/interfaces/ICollateralPool";
 import useSyncContext from "context/sync";
+import useConnector from "context/connector";
 
 export enum ClosingType {
   Full,
@@ -19,7 +19,7 @@ const useClosePosition = (
   setType: Dispatch<ClosingType>
 ) => {
   const { positionStore } = useStores();
-  const { account } = useMetaMask()!;
+  const { account } = useConnector()!;
 
   const { data } = useQuery(FXD_POOLS, {
     context: { clientName: "stable" },

@@ -43,9 +43,11 @@ import { ProposalProvider } from "context/proposal";
 import FathomAppLogoSrc from "assets/svg/Fathom-app-logo.svg";
 import ExitSrc from "assets/svg/exit.svg";
 import MetamaskSrc from "assets/svg/metamask.svg";
+import WalletConnectSrc from "assets/svg/wallet-connect.svg";
 import FathomLogoMobileSrc from "assets/svg/Fathom-app-logo-mobile.svg";
 import MobileMenuIcon from "assets/svg/mobile-menu.svg";
 import MobileMenuIconActive from "assets/svg/mobile-menu-active.svg";
+import MobileConnector from "./MobileConnector";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -148,17 +150,22 @@ const WalletBox = styled(Box)`
 
 const MainLayout = () => {
   const {
+    disconnect,
     openMobile,
+    openMobileConnector,
     account,
     error,
     isMobile,
     isActive,
     open,
-    connect,
     isMetamask,
+    isWalletConnect,
     toggleDrawer,
     mainBlockClickHandler,
+    openMobileMenu,
+    openConnectorMenu,
     setOpenMobile,
+    setOpenMobileConnector,
   } = useMainLayout();
 
   return (
@@ -184,7 +191,7 @@ const MainLayout = () => {
                     padding: "4px",
                   }}
                 />
-                <MobileMenuWrapper onClick={() => setOpenMobile(true)}>
+                <MobileMenuWrapper onClick={openMobileMenu}>
                   <img
                     src={openMobile ? MobileMenuIconActive : MobileMenuIcon}
                     alt={"menu"}
@@ -220,11 +227,17 @@ const MainLayout = () => {
             <Web3Status />
 
             {isMetamask && <img src={MetamaskSrc} alt={"metamask"} />}
+            {isWalletConnect && (
+              <img src={WalletConnectSrc} alt={"wallet-connect"} />
+            )}
             {account && !error && (
               <WalletBox>{truncateEthAddress(account)}</WalletBox>
             )}
 
-            <IconButton color="inherit" onClick={connect}>
+            <IconButton
+              color="inherit"
+              onClick={isActive ? disconnect : openConnectorMenu}
+            >
               {isActive ? (
                 <img src={ExitSrc} alt={"exit"} />
               ) : (
@@ -293,6 +306,9 @@ const MainLayout = () => {
         </MainBox>
       </Box>
       {isMobile && openMobile && <MobileMenu setOpenMobile={setOpenMobile} />}
+      {isMobile && openMobileConnector && (
+        <MobileConnector setOpenMobileConnector={setOpenMobileConnector} />
+      )}
     </ThemeProvider>
   );
 };

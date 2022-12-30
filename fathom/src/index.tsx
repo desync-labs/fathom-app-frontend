@@ -1,7 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
-import { MetaMaskProvider } from "context/metamask";
+import {
+  ConnectorProvider,
+} from "context/connector";
 import { Web3ReactProvider } from "@web3-react/core";
 import Web3 from "web3/dist/web3.min.js";
 import { XDC_CHAIN_IDS } from "connectors/networks";
@@ -24,8 +26,8 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <Web3ReactProvider getLibrary={getLibrary}>
-    <MetaMaskProvider>
+    <ConnectorProvider>
       <App />
-    </MetaMaskProvider>
+    </ConnectorProvider>
   </Web3ReactProvider>
 );

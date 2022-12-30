@@ -1,5 +1,5 @@
 import { useStores } from "stores";
-import useMetaMask from "context/metamask";
+import useMetaMask from "context/connector";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import debounce from "lodash.debounce";
 import { OpenPositionContextType } from "context/openPosition";
@@ -70,7 +70,7 @@ const useOpenPosition = (
       pool.tokenAdapterAddress
     );
 
-    console.log("tokenAdapterAddress", pool.tokenAdapterAddress);
+    console.log("token adapter address", pool.tokenAdapterAddress);
     console.log("collateral token address", tokenAddress);
 
     const balance = await poolStore.getUserTokenBalance(account, tokenAddress!);

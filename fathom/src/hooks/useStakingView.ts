@@ -1,5 +1,5 @@
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
-import useMetaMask from "context/metamask";
+import useMetaMask from "context/connector";
 import { LogLevel, useLogger } from "helpers/Logger";
 import { useStores } from "stores";
 import ILockPosition from "stores/interfaces/ILockPosition";
