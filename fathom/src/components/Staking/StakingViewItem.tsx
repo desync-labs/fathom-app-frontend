@@ -2,7 +2,9 @@ import React, { memo, FC } from "react";
 import { Box, Grid, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import InfoIcon from "@mui/icons-material/Info";
+
 import ILockPosition from "stores/interfaces/ILockPosition";
+import useStakingItemView from "hooks/useStakingItemView";
 
 
 import StakingCountdown from "components/Staking/StakingCountdown";
@@ -11,7 +13,6 @@ import { ButtonSecondary } from "components/AppComponents/AppButton/AppButton";
 import { formatNumber } from "utils/format";
 import { secondsToTime } from "utils/secondsToTime";
 import { getTokenLogoURL } from "utils/tokenLogo";
-import useStakingItemView from "hooks/useStakingItemView";
 
 import clockSrc from "assets/svg/clock-circle.svg";
 
@@ -23,6 +24,7 @@ const StakingViewItemWrapper = styled(Grid)`
     max-width: calc(50% - 6px);
     ${({ theme }) => theme.breakpoints.down("sm")} {
       max-width: 100%;
+      padding: 12px;
     }
   }
 `;

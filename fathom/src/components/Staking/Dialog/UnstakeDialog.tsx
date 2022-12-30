@@ -31,12 +31,12 @@ import { getTokenLogoURL } from "utils/tokenLogo";
 import {
   ButtonPrimary,
   CancelButton,
-  MaxButton
+  MaxButton,
 } from "components/AppComponents/AppButton/AppButton";
 import useUnstake from "hooks/useUnstake";
 import { InfoMessageWrapper } from "components/Staking/Dialog/ClaimRewardsDialog";
 import { formatNumber } from "utils/format";
-
+import useStakingContext from "../../../context/staking";
 
 const UnStakeDialogWrapper = styled(AppDialog)`
   .MuiPaper-root {
@@ -73,6 +73,12 @@ const ButtonsWrapper = styled(Box)`
   > button {
     width: calc(50% - 3px);
   }
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    flex-direction: column;
+    button {
+      width: 100%;
+    }
+  }
 `;
 
 export type UnStakeDialogProps = {
@@ -99,6 +105,7 @@ const UnStakeDialog: FC<UnStakeDialogProps> = ({
     setMax,
     unStakeHandler,
   } = useUnstake(lockPosition, onFinish);
+  const { isMobile } = useStakingContext();
 
   return (
     <UnStakeDialogWrapper
@@ -174,13 +181,14 @@ const UnStakeDialog: FC<UnStakeDialogProps> = ({
                 <InfoIcon sx={{ fontSize: "18px", color: "#6379A1" }} />
               </InfoLabel>
               <InfoValue>
-                {unStakeAmount ? formatNumber(Number(unStakeAmount)) : "--"} {token}
+                {unStakeAmount ? formatNumber(Number(unStakeAmount)) : "--"}{" "}
+                {token}
               </InfoValue>
             </InfoWrapper>
           </Grid>
         </UnStakeGrid>
         <ButtonsWrapper>
-          <CancelButton onClick={onClose}>Cancel</CancelButton>
+          {!isMobile && <CancelButton onClick={onClose}>Cancel</CancelButton>}
           <ConfirmButton
             disabled={isLoading}
             isLoading={isLoading}
@@ -188,6 +196,7 @@ const UnStakeDialog: FC<UnStakeDialogProps> = ({
           >
             {isLoading ? <CircularProgress size={30} /> : "Yes, Unstake"}
           </ConfirmButton>
+          {isMobile && <CancelButton onClick={onClose}>Cancel</CancelButton>}
         </ButtonsWrapper>
         <InfoMessageWrapper>
           <InfoIcon sx={{ fontSize: "18px", color: "#4F658C" }} />

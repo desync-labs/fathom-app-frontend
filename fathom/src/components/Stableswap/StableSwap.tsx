@@ -95,7 +95,7 @@ const StableSwapWalletBalance = styled(WalletBalance)`
 `;
 
 const StableSwapMaxButton = styled(MaxButton)`
-  top: 48px;
+  top: 43px;
   right: 32px;
   color: #a5baff;
 `;

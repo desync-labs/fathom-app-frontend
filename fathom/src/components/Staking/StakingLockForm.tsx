@@ -18,7 +18,11 @@ import useStakingLockForm from "hooks/useStakingLockForm";
 import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
 import Period from "components/Staking/Components/Period";
 import { getTokenLogoURL } from "utils/tokenLogo";
-import { formatCurrency, formatNumber } from "utils/format";
+import {
+  formatCurrency,
+  formatNumber,
+  formatPercentage
+} from "utils/format";
 
 import usePricesContext from "context/prices";
 
@@ -119,7 +123,7 @@ const StakingLockForm: FC = () => {
             <>
               <AppFormLabel>Staking amount</AppFormLabel>
               {fthmBalance ? (
-                <WalletBalance>Available: {fthmBalance} FTHM</WalletBalance>
+                <WalletBalance>Available: {formatPercentage(fthmBalance)} FTHM</WalletBalance>
               ) : null}
               <AppFormInputWrapper>
                 <AppTextField

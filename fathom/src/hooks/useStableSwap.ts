@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useStores } from "stores";
-import useMetaMask from "context/metamask";
+import useMetaMask from "context/connector";
 import debounce from "lodash.debounce";
 import { SmartContractFactory } from "config/SmartContractFactory";
 import useSyncContext from "context/sync";

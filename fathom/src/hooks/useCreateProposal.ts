@@ -1,5 +1,5 @@
 import { useStores } from "stores";
-import useMetaMask from "context/metamask";
+import useMetaMask from "context/connector";
 import { useForm } from "react-hook-form";
 import { useCallback, useEffect, useState } from "react";
 import { Constants } from "helpers/Constants";

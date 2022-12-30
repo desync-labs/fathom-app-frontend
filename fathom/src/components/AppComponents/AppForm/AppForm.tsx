@@ -2,7 +2,6 @@ import { styled } from "@mui/material/styles";
 import {
   TextField as MuiTextField,
   FormLabel as MuiFormLabel,
-  Box,
 } from "@mui/material";
 
 export const AppTextField = styled(MuiTextField)`

@@ -7,14 +7,14 @@ import { ProposalStatus, XDC_BLOCK_TIME } from "helpers/Constants";
 import IProposal from "stores/interfaces/IProposal";
 import { Web3Utils } from "helpers/Web3Utils";
 import useSyncContext from "context/sync";
-import useMetaMask from "context/metamask";
+import useConnector from "context/connector";
 import {
   useMediaQuery,
   useTheme
 } from "@mui/material";
 
 const useProposalItem = () => {
-  const { account, chainId } = useMetaMask()!;
+  const { account, chainId } = useConnector()!;
   const navigate = useNavigate();
 
   const { _proposalId } = useParams();

@@ -12,6 +12,7 @@ import React, { FC } from "react";
 import { styled } from "@mui/material/styles";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatNumber } from "utils/format";
+import useStakingContext from "../../../context/staking";
 
 export const InfoMessageWrapper = styled(Box)`
   display: flex;
@@ -39,7 +40,9 @@ const Description = styled(Typography)`
   padding: 0 15px;
 `;
 
-const ButtonsWrapper = styled(Box)`
+const ButtonsWrapper = styled(Box, {
+  shouldForwardProp: (prop) => prop !== "onContinue",
+})<{ onContinue?: boolean }>`
   width: auto;
   margin: 20px 15px;
   display: flex;
@@ -47,8 +50,16 @@ const ButtonsWrapper = styled(Box)`
   align-items: center;
 
   > button {
-    width: calc(50% - 3px);
+    width: ${({ onContinue }) => (onContinue ? "calc(50% - 3px)" : "100%")};
     height: 48px;
+  }
+
+  ${({ theme, onContinue }) =>
+    onContinue ? theme.breakpoints.down("sm") : null} {
+    flex-direction: column;
+    button {
+      width: 100%;
+    }
   }
 `;
 
@@ -65,6 +76,7 @@ const ClaimRewardsCoolDownDialog: FC<ClaimRewardsDialogProps> = ({
   onClose,
   onContinue,
 }) => {
+  const { isMobile } = useStakingContext();
   return (
     <AppDialog
       onClose={onClose}
@@ -92,16 +104,17 @@ const ClaimRewardsCoolDownDialog: FC<ClaimRewardsDialogProps> = ({
             <span>{token}</span>
           </Box>
         </DialogContentWrapper>
-        <ButtonsWrapper
-          sx={{
-            "> button": { width: onContinue ? "calc(50% - 3px)" : "100%" },
-          }}
-        >
-          <CancelButton onClick={onClose}>Back to My Positions</CancelButton>
+        <ButtonsWrapper onContinue={!!onContinue}>
+          {!isMobile && (
+            <CancelButton onClick={onClose}>Back to My Positions</CancelButton>
+          )}
           {onContinue && (
             <ButtonPrimary onClick={onContinue}>
               Continue to Unstake
             </ButtonPrimary>
+          )}
+          {isMobile && (
+            <CancelButton onClick={onClose}>Back to My Positions</CancelButton>
           )}
         </ButtonsWrapper>
       </DialogContent>

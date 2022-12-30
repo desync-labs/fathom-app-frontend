@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
-import useMetaMask from "context/metamask";
+import useMetaMask from "context/connector";
 import { useStores } from "stores";
 
 import debounce from "lodash.debounce";
