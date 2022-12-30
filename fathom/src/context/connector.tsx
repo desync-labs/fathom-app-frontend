@@ -10,9 +10,9 @@ import {
 } from "react";
 import { injected, walletconnect } from "connectors/networks";
 import { useWeb3React } from "@web3-react/core";
-import Web3 from "web3";
 import Xdc3 from "xdc3";
 import WalletConnectProvider from "@walletconnect/ethereum-provider";
+import { Web3Utils } from "../helpers/Web3Utils";
 
 export const ConnectorContext = createContext(null);
 
@@ -28,7 +28,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
 
   useEffect(() => {
     if (library) {
-      library.then((library: Web3 | Xdc3) => {
+      library.then((library: Xdc3) => {
         // @ts-ignore
         const { isMetaMask } = library.currentProvider;
         setIsMetamask(!!isMetaMask);
@@ -36,6 +36,8 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
         setIsWalletConnect(
           library.currentProvider instanceof WalletConnectProvider
         );
+
+        Web3Utils.provider = library.currentProvider;
       });
     } else {
       setIsMetamask(false);

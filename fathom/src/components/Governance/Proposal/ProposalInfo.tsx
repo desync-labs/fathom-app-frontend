@@ -1,5 +1,5 @@
 import React from "react";
-import Web3 from "web3";
+import Xdc3 from 'xdc3';
 import { useWeb3React } from "@web3-react/core";
 import { Box, Grid, Typography } from "@mui/material";
 import { secondsToTime } from "utils/secondsToTime";
@@ -144,7 +144,7 @@ const ProposalInfo = () => {
           )}
           {fetchedProposal.targets &&
             fetchedProposal.targets.length &&
-            !Web3.utils.toBN(fetchedProposal.targets[0]).isZero() && (
+            !Xdc3.utils.toBN(fetchedProposal.targets[0]).isZero() && (
               <Grid item xs={12} sx={{ padding: "12px 24px" }}>
                 <ProposalLabel>Action</ProposalLabel>
                 <ProposalDescription>
