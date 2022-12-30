@@ -5,7 +5,7 @@ import debounce from "lodash.debounce";
 import { SmartContractFactory } from "config/SmartContractFactory";
 import useSyncContext from "context/sync";
 import BigNumber from "bignumber.js";
-import Web3 from "web3";
+import Xdc3 from "xdc3";
 import { useMediaQuery, useTheme } from "@mui/material";
 
 const useStableSwap = (options: string[]) => {
@@ -311,15 +311,15 @@ const useStableSwap = (options: string[]) => {
     let formattedBalance;
     if (inputCurrency === options[1]) {
       formattedBalance = new BigNumber(
-        Web3.utils.fromWei(inputBalance.toString())
+        Xdc3.utils.fromWei(inputBalance.toString())
       )
         .multipliedBy(
-          1 - new BigNumber(Web3.utils.fromWei(feeOut.toString())).toNumber()
+          1 - new BigNumber(Xdc3.utils.fromWei(feeOut.toString())).toNumber()
         )
         .toNumber();
     } else {
       formattedBalance =
-        new BigNumber(Web3.utils.fromWei(inputBalance.toString())).toNumber() ||
+        new BigNumber(Xdc3.utils.fromWei(inputBalance.toString())).toNumber() ||
         0;
     }
 
