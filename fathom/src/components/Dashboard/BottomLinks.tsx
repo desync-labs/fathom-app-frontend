@@ -8,7 +8,7 @@ const LinksWrapper = styled(Box)`
   gap: 7px;
   padding-left: 14px;
   position: absolute;
-  bottom: 40px;
+  bottom: 50px;
   a {
     font-size: 0.825rem;
     font-weight: 500;
