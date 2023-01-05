@@ -29,7 +29,7 @@ const useStableSwap = (options: string[]) => {
 
   const [fxdPrice, setFxdPrice] = useState<number>(0);
 
-  const { stableSwapStore, poolStore } = useStores();
+  const { stableSwapStore, poolService } = useStores();
 
   const { account, chainId, library } = useConnector()!;
   const { setLastTransactionBlock } = useSyncContext();
@@ -62,8 +62,16 @@ const useStableSwap = (options: string[]) => {
           let approved;
           approved =
             currency === options[0]
-              ? await stableSwapStore.approvalStatusUsdt(account, input, library)
-              : await stableSwapStore.approvalStatusStableCoin(account, input, library);
+              ? await stableSwapStore.approvalStatusUsdt(
+                  account,
+                  input,
+                  library
+                )
+              : await stableSwapStore.approvalStatusStableCoin(
+                  account,
+                  input,
+                  library
+                );
 
           type === "input"
             ? approved
@@ -74,7 +82,14 @@ const useStableSwap = (options: string[]) => {
             : setApproveOutputBtn(true);
         }
       }, 1000),
-    [stableSwapStore, account, library, options, setApproveInputBtn, setApproveOutputBtn]
+    [
+      stableSwapStore,
+      account,
+      library,
+      options,
+      setApproveInputBtn,
+      setApproveOutputBtn,
+    ]
   );
 
   const inputError = useMemo(() => {
@@ -109,12 +124,20 @@ const useStableSwap = (options: string[]) => {
           try {
             const promises = [];
             promises.push(
-              poolStore.getUserTokenBalance(account, inputContractAddress, library)
+              poolService.getUserTokenBalance(
+                account,
+                inputContractAddress,
+                library
+              )
             );
             promises.push(
-              poolStore.getUserTokenBalance(account, outputCurrencyAddress, library)
+              poolService.getUserTokenBalance(
+                account,
+                outputCurrencyAddress,
+                library
+              )
             );
-            promises.push(poolStore.getDexPrice(FXDContractAddress, library));
+            promises.push(poolService.getDexPrice(FXDContractAddress, library));
 
             const [inputBalance, outputBalance, fxdPrice] = await Promise.all(
               promises
@@ -126,7 +149,7 @@ const useStableSwap = (options: string[]) => {
           } catch (e) {}
         }
       }, 100),
-    [account, chainId, poolStore, library, setInputBalance, setOutputBalance]
+    [account, chainId, poolService, library, setInputBalance, setOutputBalance]
   );
 
   const changeCurrenciesPosition = useCallback(
@@ -207,6 +230,9 @@ const useStableSwap = (options: string[]) => {
         library
       );
 
+      setInputValue("");
+      setOutputValue("");
+
       setLastTransactionBlock(receipt.blockNumber);
       handleCurrencyChange(inputCurrency, outputCurrency);
     } catch (e) {
@@ -231,7 +257,7 @@ const useStableSwap = (options: string[]) => {
     setApprovalPending("input");
     try {
       inputCurrency === options[0]
-        ? await stableSwapStore.approveUsdt(account, library)
+        ? await stableSwapStore.approveUsdt(account, options[0], library)
         : await stableSwapStore.approveStableCoin(account, library);
       setApproveInputBtn(false);
     } catch (e) {
@@ -252,7 +278,7 @@ const useStableSwap = (options: string[]) => {
     setApprovalPending("output");
     try {
       outputCurrency === options[0]
-        ? await stableSwapStore.approveUsdt(account, library)
+        ? await stableSwapStore.approveUsdt(account, options[0], library)
         : await stableSwapStore.approveStableCoin(account, library);
 
       setApproveOutputBtn(false);

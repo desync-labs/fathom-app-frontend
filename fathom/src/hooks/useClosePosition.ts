@@ -19,7 +19,7 @@ const useClosePosition = (
   closingType: ClosingType,
   setType: Dispatch<ClosingType>
 ) => {
-  const { positionStore } = useStores();
+  const { positionService } = useStores();
   const { account } = useConnector()!;
   const { library } = useWeb3React();
 
@@ -54,9 +54,9 @@ const useClosePosition = (
   );
 
   const getBalance = useCallback(async () => {
-    const balance = await positionStore.balanceStableCoin(account, library);
+    const balance = await positionService.balanceStableCoin(account, library);
     setBalance(balance!);
-  }, [positionStore, account, library, setBalance]);
+  }, [positionService, account, library, setBalance]);
 
   const handleOnOpen = useCallback(async () => {
     const price =
@@ -83,16 +83,16 @@ const useClosePosition = (
     try {
       let receipt;
       if (closingType === ClosingType.Full) {
-        receipt = await positionStore.fullyClosePosition(
-          position,
+        receipt = await positionService.closePosition(
+          position.positionId,
           pool,
           account,
           collateral,
           library
         );
       } else {
-        receipt = await positionStore.partiallyClosePosition(
-          position,
+        receipt = await positionService.partiallyClosePosition(
+          position.positionId,
           pool,
           account,
           fathomToken,
@@ -100,7 +100,8 @@ const useClosePosition = (
           library
         );
       }
-      setLastTransactionBlock(receipt.blockNumber);
+
+      setLastTransactionBlock(receipt!.blockNumber);
       onClose();
     } catch (e) {
       console.error(e);
@@ -114,7 +115,7 @@ const useClosePosition = (
     library,
     fathomToken,
     collateral,
-    positionStore,
+    positionService,
     onClose,
     setDisableClosePosition,
     setLastTransactionBlock,

@@ -2,19 +2,16 @@ import { makeAutoObservable } from "mobx";
 import { RootStore } from ".";
 import { ITransaction, TransactionStatus } from "stores/interfaces/ITransaction";
 import { Constants } from "helpers/Constants";
-import ActiveWeb3TransactionsService from "services/ActiveWeb3TransactionsService";
 import Xdc3 from "xdc3";
 
 export default class ActiveWeb3Transactions {
   transactions: ITransaction[];
-  service: ActiveWeb3TransactionsService;
   fetchHandle: NodeJS.Timeout | null = null;
   rootStore: RootStore;
   library?: Xdc3;
 
-  constructor(rootStore: RootStore, service: ActiveWeb3TransactionsService) {
+  constructor(rootStore: RootStore) {
     makeAutoObservable(this);
-    this.service = service;
     this.rootStore = rootStore;
     this.transactions = [];
 
@@ -38,11 +35,27 @@ export default class ActiveWeb3Transactions {
     this.library = library;
   }
 
+  async checkStatus(
+    pendingTransaction: ITransaction,
+    library: Xdc3
+  ): Promise<ITransaction> {
+    const response = await library.eth.getTransactionReceipt(
+      pendingTransaction.hash
+    );
+    if (response !== null) {
+      pendingTransaction.status = response.status
+        ? TransactionStatus.Success
+        : TransactionStatus.Error;
+    }
+
+    return pendingTransaction;
+  }
+
   private async checkTransactionStatus(library: Xdc3): Promise<void> {
     for (const transaction of this.transactions) {
       if (transaction !== undefined) {
         transaction.active = true;
-        let tx = await this.service.checkTransactionStatus(transaction, library);
+        const tx = await this.checkStatus(transaction, library);
         if (tx.status !== TransactionStatus.None) {
           this.removeTransaction();
         }

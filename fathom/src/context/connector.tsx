@@ -11,7 +11,8 @@ import {
 import { injected, walletconnect } from "connectors/networks";
 import { useWeb3React } from "@web3-react/core";
 import WalletConnectProvider from "@walletconnect/ethereum-provider";
-import { useStores } from "../stores";
+import { useStores } from "stores";
+import { ConnectorEvent } from "@web3-react/types";
 
 export const ConnectorContext = createContext(null);
 
@@ -20,8 +21,16 @@ type ConnectorProviderType = {
 };
 
 export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
-  const { activate, account, active, deactivate, chainId, error, library } =
-    useWeb3React();
+  const {
+    connector,
+    activate,
+    account,
+    active,
+    deactivate,
+    chainId,
+    error,
+    library,
+  } = useWeb3React();
 
   const [isMetamask, setIsMetamask] = useState(false);
   const [isWalletConnect, setIsWalletConnect] = useState(false);
@@ -47,6 +56,22 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
       setIsWalletConnect(false);
     }
   }, [library, transactionStore, setIsMetamask, setIsWalletConnect]);
+
+  const deactivateEvent = useCallback(() => {
+    sessionStorage.removeItem('isConnected')
+  }, []);
+
+  useEffect(() => {
+    if (connector) {
+      connector.on(ConnectorEvent.Deactivate, deactivateEvent);
+    }
+
+    return () => {
+      if (connector) {
+        connector.off(ConnectorEvent.Deactivate, deactivateEvent);
+      }
+    };
+  }, [connector, deactivateEvent]);
 
   // Connect to MetaMask wallet
   const connectMetamask = useCallback(async () => {

@@ -6,6 +6,7 @@ export default interface IStableSwapService {
     address: string,
     tokenIn: number,
     transactionStore: ActiveWeb3Transactions,
+    tokenName: string,
     library: Xdc3
   ): Promise<void>;
   swapStableCoinToToken(
@@ -33,7 +34,7 @@ export default interface IStableSwapService {
     address: string,
     tokenIn: number,
     library: Xdc3
-  ): Promise<Boolean>;
+  ): Promise<boolean>;
 
   getFeeIn(library: Xdc3): Promise<number>;
   getFeeOut(library: Xdc3): Promise<number>;

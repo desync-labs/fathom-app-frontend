@@ -13,7 +13,7 @@ const useStakingLockForm = () => {
 
   const [fthmBalance, setFthmBalance] = useState(0);
 
-  const { poolStore } = useStores();
+  const { poolService } = useStores();
 
   const { handleSubmit, watch, control, reset, setValue } = useForm({
     defaultValues: {
@@ -24,7 +24,7 @@ const useStakingLockForm = () => {
     mode: "onChange",
   });
   const { account, chainId, library } = useConnector()!;
-  const { stakingStore, positionStore } = useStores();
+  const { stakingStore, positionService } = useStores();
 
   const { setLastTransactionBlock, syncDao, prevSyncDao } = useSyncContext();
 
@@ -43,7 +43,7 @@ const useStakingLockForm = () => {
 
   const getFTHMTokenBalance = useCallback(async () => {
     if (account) {
-      const balance = await poolStore.getUserTokenBalance(
+      const balance = await poolService.getUserTokenBalance(
         account,
         fthmTokenAddress,
         library,
@@ -51,7 +51,7 @@ const useStakingLockForm = () => {
 
       setFthmBalance(balance / 10 ** 18);
     }
-  }, [account, poolStore, fthmTokenAddress, library, setFthmBalance]);
+  }, [account, poolService, fthmTokenAddress, library, setFthmBalance]);
 
   const approvalStatus = useMemo(
     () =>
@@ -94,7 +94,7 @@ const useStakingLockForm = () => {
     const getBalance = async () => {
       const [xdcBalance, fxdBalance] = await Promise.all([
         library.eth.getBalance(account),
-        positionStore.balanceStableCoin(account, library),
+        positionService.balanceStableCoin(account, library),
       ]);
 
       setXdcBalance(xdcBalance / 10 ** 18);
@@ -102,7 +102,7 @@ const useStakingLockForm = () => {
     };
 
     if (account && chainId) getBalance();
-  }, [account, library, chainId, positionStore, stakingStore, setXdcBalance, setFxdBalance]);
+  }, [account, library, chainId, positionService, stakingStore, setXdcBalance, setFxdBalance]);
 
   useEffect(() => {
     if (Number(stakePosition) > fthmBalance) {

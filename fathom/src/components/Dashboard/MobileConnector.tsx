@@ -2,7 +2,6 @@ import React, { Dispatch, FC, useCallback } from "react";
 import { styled } from "@mui/material/styles";
 import { Box } from "@mui/material";
 
-import MetamaskSrc from "assets/svg/metamask.svg";
 import WalletConnect from "assets/svg/wallet-connect.svg";
 import useConnector from "context/connector";
 
@@ -10,7 +9,7 @@ const MobileConnectorWrapper = styled(Box)`
   position: fixed;
   bottom: 0;
   width: 100%;
-  height: 200px;
+  height: 100px;
   background: #131f35;
   z-index: 1000;
   padding-left: 12px;
@@ -32,10 +31,11 @@ const Connector = styled("button")`
   gap: 7px;
   color: #fff;
   margin-bottom: 10px;
+  cursor: pointer;
+  height: 56px;
 
   img {
-    max-width: 24px;
-    max-height: 24px;
+    width: 24px;
   }
 `;
 
@@ -46,19 +46,17 @@ type MobileConnectorPropsType = {
 const MobileConnector: FC<MobileConnectorPropsType> = ({
   setOpenMobileConnector,
 }) => {
-  const { connectWalletConnect } = useConnector();
+  const { connectWalletConnect, connectMetamask } = useConnector();
 
   const walletConnectConnect = useCallback(() => {
-    connectWalletConnect();
-    setOpenMobileConnector(false);
+    connectWalletConnect().then(() => {
+      setOpenMobileConnector(false);
+    });
   }, [setOpenMobileConnector, connectWalletConnect]);
+
 
   return (
     <MobileConnectorWrapper>
-      <Connector>
-        <img src={MetamaskSrc} alt={"metamask"} />
-        Metamask
-      </Connector>
       <Connector onClick={walletConnectConnect}>
         <img src={WalletConnect} alt={"wallet-connect"} />
         Wallet Connect
