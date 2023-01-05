@@ -55,7 +55,8 @@ const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
   "& .MuiDrawer-paper": {
-    position: "relative",
+    position: "sticky",
+    height: "100vh",
     whiteSpace: "nowrap",
     background: "#101D32",
     border: "none",
@@ -82,7 +83,8 @@ const Drawer = styled(MuiDrawer, {
 
 const MenuWrapper = styled("nav")<{ open: boolean }>`
   padding: ${({ open }) => (open ? "20px 12px" : "20px 8px")};
-  height: 100%;
+  height: 100vh;
+  position: sticky;
   position: relative;
   margintop: 1rem;
   display: flex;
@@ -315,9 +317,9 @@ const MainLayout = () => {
       {isMobile && openConnector && (
         <MobileConnector setOpenMobileConnector={setOpenConnector} />
       )}
-      { !isMobile && openConnector && (
+      {!isMobile && openConnector && (
         <DesktopConnector onClose={() => setOpenConnector(false)} />
-      ) }
+      )}
     </ThemeProvider>
   );
 };
