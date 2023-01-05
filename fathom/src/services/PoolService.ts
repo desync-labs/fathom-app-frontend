@@ -2,9 +2,16 @@ import { SmartContractFactory } from "config/SmartContractFactory";
 import IPoolService from "services/interfaces/IPoolService";
 import { Constants } from "helpers/Constants";
 import { Web3Utils } from "helpers/Web3Utils";
+import Xdc3 from "xdc3";
+import AlertStore from "stores/alert.stores";
 
 export default class PoolService implements IPoolService {
   chainId = Constants.DEFAULT_CHAIN_ID;
+  alertStore: AlertStore;
+
+  constructor(alertStore: AlertStore) {
+    this.alertStore = alertStore;
+  }
 
   setChainId(chainId: number) {
     this.chainId = chainId;
@@ -12,22 +19,23 @@ export default class PoolService implements IPoolService {
 
   async getUserTokenBalance(
     address: string,
-    forAddress: string
+    forAddress: string,
+    library: Xdc3
   ): Promise<number> {
     const BEP20 = Web3Utils.getContractInstance(
       SmartContractFactory.BEP20(forAddress),
-      this.chainId
+      library
     );
 
     return BEP20.methods.balanceOf(address).call();
   }
 
-  async getDexPrice(forAddress: string): Promise<number> {
+  async getDexPrice(forAddress: string, library: Xdc3): Promise<number> {
     const USDT = SmartContractFactory.USDT(this.chainId).address;
 
     const dexPriceOracle = Web3Utils.getContractInstance(
       SmartContractFactory.DexPriceOracle(this.chainId),
-      this.chainId
+      library
     );
 
     const result = await dexPriceOracle.methods
@@ -37,17 +45,21 @@ export default class PoolService implements IPoolService {
     return result[0];
   }
 
-  getCollateralTokenAddress(forAddress: string) {
-    const abi = SmartContractFactory.CollateralTokenAdapterAbi();
+  getCollateralTokenAddress(forAddress: string, library: Xdc3) {
+    try {
+      const abi = SmartContractFactory.CollateralTokenAdapterAbi();
 
-    const collateralTokenAdapter = Web3Utils.getContractInstance(
-      {
-        address: forAddress,
-        abi,
-      },
-      this.chainId
-    );
+      const collateralTokenAdapter = Web3Utils.getContractInstance(
+        {
+          address: forAddress,
+          abi,
+        },
+        library
+      );
 
-    return collateralTokenAdapter.methods.collateralToken().call();
+      return collateralTokenAdapter.methods.collateralToken().call();
+    } catch (e: any) {
+      this.alertStore.setShowErrorAlert(true, e.message);
+    }
   }
 }

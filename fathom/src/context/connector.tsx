@@ -10,9 +10,9 @@ import {
 } from "react";
 import { injected, walletconnect } from "connectors/networks";
 import { useWeb3React } from "@web3-react/core";
-import Web3 from "web3";
-import Xdc3 from "xdc3";
 import WalletConnectProvider from "@walletconnect/ethereum-provider";
+import { useStores } from "stores";
+import { ConnectorEvent } from "@web3-react/types";
 
 export const ConnectorContext = createContext(null);
 
@@ -21,40 +21,66 @@ type ConnectorProviderType = {
 };
 
 export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
-  const { activate, account, active, deactivate, chainId, error, library } =
-    useWeb3React();
+  const {
+    connector,
+    activate,
+    account,
+    active,
+    deactivate,
+    chainId,
+    error,
+    library,
+  } = useWeb3React();
+
   const [isMetamask, setIsMetamask] = useState(false);
   const [isWalletConnect, setIsWalletConnect] = useState(false);
-
-  useEffect(() => {
-    if (library) {
-      library.then((library: Web3 | Xdc3) => {
-        // @ts-ignore
-        const { isMetaMask } = library.currentProvider;
-        setIsMetamask(!!isMetaMask);
-
-        setIsWalletConnect(
-          library.currentProvider instanceof WalletConnectProvider
-        );
-      });
-    } else {
-      setIsMetamask(false);
-    }
-  }, [library, setIsMetamask, setIsWalletConnect, chainId]);
 
   const [isActive, setIsActive] = useState(false);
   const [shouldDisable, setShouldDisable] = useState(false); // Should disable connect button while connecting to MetaMask
   const [isLoading, setIsLoading] = useState(true);
+  const { transactionStore } = useStores();
+
+  useEffect(() => {
+    if (library) {
+      // @ts-ignore
+      const { isMetaMask } = library.currentProvider;
+      setIsMetamask(!!isMetaMask);
+
+      setIsWalletConnect(
+        library.currentProvider instanceof WalletConnectProvider
+      );
+
+      transactionStore.setLibrary(library);
+    } else {
+      setIsMetamask(false);
+      setIsWalletConnect(false);
+    }
+  }, [library, transactionStore, setIsMetamask, setIsWalletConnect]);
+
+  const deactivateEvent = useCallback(() => {
+    sessionStorage.removeItem('isConnected')
+  }, []);
+
+  useEffect(() => {
+    if (connector) {
+      connector.on(ConnectorEvent.Deactivate, deactivateEvent);
+    }
+
+    return () => {
+      if (connector) {
+        connector.off(ConnectorEvent.Deactivate, deactivateEvent);
+      }
+    };
+  }, [connector, deactivateEvent]);
 
   // Connect to MetaMask wallet
   const connectMetamask = useCallback(async () => {
     setShouldDisable(true);
     try {
-      await activate(injected).then(() => {
+      return await activate(injected).then(() => {
         setShouldDisable(false);
+        sessionStorage.setItem("isConnected", "metamask");
       });
-
-      sessionStorage.setItem("isConnected", "metamask");
     } catch (error) {
       console.log("Error on connecting: ", error);
     }
@@ -63,11 +89,10 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
   const connectWalletConnect = useCallback(async () => {
     setShouldDisable(true);
     try {
-      await activate(walletconnect).then(() => {
+      return await activate(walletconnect).then(() => {
         setShouldDisable(false);
+        sessionStorage.setItem("isConnected", "walletConnect");
       });
-
-      sessionStorage.setItem("isConnected", "walletConnect");
     } catch (error) {
       console.log("Error on connecting: ", error);
     }
@@ -118,6 +143,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
       shouldDisable,
       chainId,
       error,
+      library,
       isMetamask,
       isWalletConnect,
     }),
@@ -131,6 +157,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
       disconnect,
       chainId,
       error,
+      library,
       isMetamask,
       isWalletConnect,
     ]

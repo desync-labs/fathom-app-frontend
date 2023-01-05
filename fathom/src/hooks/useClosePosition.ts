@@ -6,6 +6,7 @@ import { FXD_POOLS } from "apollo/queries";
 import ICollateralPool from "stores/interfaces/ICollateralPool";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
+import { useWeb3React } from "@web3-react/core";
 
 export enum ClosingType {
   Full,
@@ -18,8 +19,9 @@ const useClosePosition = (
   closingType: ClosingType,
   setType: Dispatch<ClosingType>
 ) => {
-  const { positionStore } = useStores();
+  const { positionService } = useStores();
   const { account } = useConnector()!;
+  const { library } = useWeb3React();
 
   const { data } = useQuery(FXD_POOLS, {
     context: { clientName: "stable" },
@@ -52,9 +54,9 @@ const useClosePosition = (
   );
 
   const getBalance = useCallback(async () => {
-    const balance = await positionStore.balanceStableCoin(account);
+    const balance = await positionService.balanceStableCoin(account, library);
     setBalance(balance!);
-  }, [positionStore, account, setBalance]);
+  }, [positionService, account, library, setBalance]);
 
   const handleOnOpen = useCallback(async () => {
     const price =
@@ -81,22 +83,25 @@ const useClosePosition = (
     try {
       let receipt;
       if (closingType === ClosingType.Full) {
-        receipt = await positionStore.fullyClosePosition(
-          position,
+        receipt = await positionService.closePosition(
+          position.positionId,
           pool,
           account,
-          collateral
+          collateral,
+          library
         );
       } else {
-        receipt = await positionStore.partiallyClosePosition(
-          position,
+        receipt = await positionService.partiallyClosePosition(
+          position.positionId,
           pool,
           account,
           fathomToken,
-          collateral
+          collateral,
+          library
         );
       }
-      setLastTransactionBlock(receipt.blockNumber);
+
+      setLastTransactionBlock(receipt!.blockNumber);
       onClose();
     } catch (e) {
       console.error(e);
@@ -107,9 +112,10 @@ const useClosePosition = (
     position,
     pool,
     account,
+    library,
     fathomToken,
     collateral,
-    positionStore,
+    positionService,
     onClose,
     setDisableClosePosition,
     setLastTransactionBlock,

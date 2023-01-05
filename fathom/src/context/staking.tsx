@@ -21,7 +21,7 @@ const useStakingContext = () => {
 
   if (context === undefined) {
     throw new Error(
-      "useMetaMask hook must be used with a MetaMaskProvider component"
+      "useStakingContext hook must be used with a StakingContext component"
     );
   }
 

@@ -28,7 +28,7 @@ import React, {
 } from "react";
 import { styled } from "@mui/material/styles";
 import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
-import Web3 from "web3";
+import Xdc3 from "xdc3";
 import { useMediaQuery, useTheme } from "@mui/material";
 
 const NetworkPaper = styled(AppPaper)`
@@ -81,7 +81,7 @@ const Web3Status = () => {
           // @ts-ignore
           await window!.ethereum?.request({
             method: "wallet_switchEthereumChain",
-            params: [{ chainId: Web3.utils.toHex(chainId) }],
+            params: [{ chainId: Xdc3.utils.toHex(chainId) }],
           });
         } catch (err: any) {
           if (err.code === 4902) {

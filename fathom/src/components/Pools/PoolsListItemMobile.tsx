@@ -20,6 +20,7 @@ const PoolsListItemMobileContainer = styled(Box)`
   border-bottom: 1px solid #131f35;
   border-radius: 8px;
   padding: 20px 16px;
+  margin-bottom: 10px;
 `;
 
 const ListItemWrapper = styled(Box)`

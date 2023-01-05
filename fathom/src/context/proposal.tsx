@@ -21,7 +21,7 @@ const useProposalContext = () => {
 
   if (context === undefined) {
     throw new Error(
-      "useMetaMask hook must be used with a MetaMaskProvider component"
+      "useProposalContext hook must be used with a ProposalContext component"
     );
   }
 

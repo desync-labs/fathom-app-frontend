@@ -2,11 +2,10 @@ import { useWeb3React } from "@web3-react/core";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ProposalStatus, XDC_BLOCK_TIME } from "helpers/Constants";
 import { useStores } from "stores";
-import { Web3Utils } from "helpers/Web3Utils";
 import IProposal from "stores/interfaces/IProposal";
 
 const useViewProposalItem = (proposal: IProposal) => {
-  const { chainId, account } = useWeb3React();
+  const { chainId, account, library } = useWeb3React();
   const [status, setStatus] = useState<ProposalStatus>();
   const { proposalStore } = useStores();
 
@@ -14,9 +13,7 @@ const useViewProposalItem = (proposal: IProposal) => {
   const [seconds, setSeconds] = useState<number>(0);
 
   const getTimestamp = useCallback(async () => {
-    const instance = Web3Utils.getWeb3Instance(chainId!);
-
-    const { timestamp } = await instance.eth.getBlock(proposal.startBlock);
+    const { timestamp } = await library.eth.getBlock(proposal.startBlock);
 
     const endTimestamp =
       timestamp +
@@ -31,16 +28,17 @@ const useViewProposalItem = (proposal: IProposal) => {
     } else {
       setSeconds(endTimestamp - now);
     }
-  }, [proposal, chainId, setSeconds, setTimestamp]);
+  }, [proposal, library, setSeconds, setTimestamp]);
 
   const fetchProposalState = useCallback(async () => {
     const status = await proposalStore.fetchProposalState(
       proposal.proposalId,
-      account!
+      account!,
+      library,
     );
     // @ts-ignore
     setStatus(Object.values(ProposalStatus)[status]);
-  }, [proposalStore, proposal, account]);
+  }, [proposalStore, proposal, account, library]);
 
   useEffect(() => {
     if (proposal && chainId && account) {
