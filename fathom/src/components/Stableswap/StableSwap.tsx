@@ -186,7 +186,7 @@ const StableSwap = () => {
           addPadding={true}
           title={"Stable Swap"}
           description={
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Eget tristique malesuada pulvinar commodo. Euismod massa, dis metus mattis porttitor ac est quis. Ut quis cursus ac nunc, aliquam curabitur nisl amet. Elit etiam dignissim orci. If this is the first-time you’re here, please visit our Whitepaper."
+            "Buy and sell FXD for US+ at a rate of 1:1 with low fees."
           }
         />
         <Grid item xs={12} sm={6} sx={{ margin: "0 auto" }}>
