@@ -35,9 +35,16 @@ const DesktopConnector: FC<DesktopConnectorPropsType> = ({ onClose }) => {
   const { connectWalletConnect, connectMetamask } = useConnector();
 
   const walletConnectConnect = useCallback(() => {
-    connectWalletConnect();
-    onClose();
+    connectWalletConnect().then(() => {
+      onClose();
+    });
   }, [onClose, connectWalletConnect]);
+
+  const metamaskConnect = useCallback(() => {
+    connectMetamask().then(() => {
+      onClose();
+    });
+  }, [onClose, connectMetamask])
 
   return (
     <AppDialog
