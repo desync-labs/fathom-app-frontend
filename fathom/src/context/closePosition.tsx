@@ -34,7 +34,7 @@ const useClosePositionContext = () => {
 
   if (context === undefined) {
     throw new Error(
-      "useMetaMask hook must be used with a MetaMaskProvider component"
+      "useClosePositionContext hook must be used with a ClosePositionContext component"
     );
   }
 

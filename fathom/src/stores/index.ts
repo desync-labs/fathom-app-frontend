@@ -58,10 +58,11 @@ export class RootStore {
     this.poolStore = new PoolStore(this, this.poolService);
     this.positionStore = new PositionStore(this, this.positionService);
     this.stableSwapStore = new StableSwapStore(this, this.stableSwapService);
-    this.alertStore = new AlertStore();
+
     this.proposalStore = new ProposalStore(this, this.proposalService);
     this.stakingStore = new StakingStore(this, this.stakingService);
 
+    this.alertStore = new AlertStore();
     this.transactionStore = new ActiveWeb3Transactions(
       this,
       this.activeWeb3TransactionService as ActiveWeb3TransactionsService
@@ -75,7 +76,6 @@ export class RootStore {
       "poolService",
       "positionService",
       "stableSwapService",
-      "activeWeb3TransactionService",
       "proposalService",
       "stakingService",
     ].forEach((serviceName) => {

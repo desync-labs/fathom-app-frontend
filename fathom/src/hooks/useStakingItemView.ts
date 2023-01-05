@@ -10,7 +10,7 @@ const useStakingItemView = (lockPosition: ILockPosition) => {
   const [seconds, setSeconds] = useState(lockPosition.end - Date.now() / 1000);
   const { processFlow, isUnlockable } = useStakingContext();
   const [timer, setTimer] = useState<ReturnType<typeof setTimeout> | null>();
-  const { account } = useWeb3React();
+  const { account, library } = useWeb3React();
   const { stakingStore } = useStores();
   const [rewardsAvailable, setRewardsAvailable] = useState<number>(
     lockPosition.rewardsAvailable
@@ -19,11 +19,11 @@ const useStakingItemView = (lockPosition: ILockPosition) => {
   const fetchRewards = useCallback(() => {
     !!account &&
       stakingStore
-        .getStreamClaimableAmountPerLock(account, lockPosition.lockId)
+        .getStreamClaimableAmountPerLock(account, lockPosition.lockId, library)
         .then((claimRewards) => {
           setRewardsAvailable(claimRewards);
         });
-  }, [stakingStore, lockPosition, account, setRewardsAvailable]);
+  }, [stakingStore, lockPosition, account, library, setRewardsAvailable]);
 
   useEffect(() => {
     const diff = lockPosition.end - Date.now() / 1000;

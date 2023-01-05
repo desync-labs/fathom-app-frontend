@@ -4,13 +4,11 @@ import ProxyWalletRegistryAbi from "config/ABI/ProxyWalletRegistry.json";
 import ProxyWalletAbi from "config/ABI/ProxyWallet.json";
 import FathomStablecoinProxyActionAbi from "config/ABI/FathomStablecoinProxyActions.json";
 import BEP20Abi from "config/ABI/BEP20.json";
-import GetPositionsAbi from "config/ABI/GetPositions.json";
 import StableSwapModule from "config/ABI/StableSwapModule.json";
 import Addresses from "config/addresses.json";
 import Staking from "config/ABI/Staking.json";
 import StakingGetter from "config/ABI/StakingGetter.json";
 import MainToken from "config/ABI/MainToken.json";
-import FathomStats from "config/ABI/FathomStats.json";
 import Governor from "config/ABI/Governor.json";
 import VeFathomAbi from "config/ABI/vFathom.json";
 import DexPriceOracle from "config/ABI/DexPriceOracle.json";
@@ -132,24 +130,10 @@ export class SmartContractFactory {
     };
   }
 
-  public static GetPositions(chainId: number) {
-    return {
-      abi: GetPositionsAbi.abi as AbiItem[],
-      address: SmartContractFactory.Addresses(chainId).getPositions,
-    };
-  }
-
   public static StableSwapModule(chainId: number) {
     return {
       abi: StableSwapModule.abi as AbiItem[],
       address: SmartContractFactory.Addresses(chainId).stableSwapModule,
-    };
-  }
-
-  public static FathomStats(chainId: number) {
-    return {
-      abi: FathomStats.abi as AbiItem[], // subik: dont really know about this well. Have to ask Max For address/abi. Plus is multiSigWallet needed?
-      address: SmartContractFactory.Addresses(chainId).fathomStats,
     };
   }
 

@@ -1,5 +1,4 @@
 import { useStores } from "stores";
-import useMetaMask from "context/connector";
 import { useForm } from "react-hook-form";
 import { useCallback, useEffect, useState } from "react";
 import { Constants } from "helpers/Constants";
@@ -12,6 +11,7 @@ import {
   useMediaQuery,
   useTheme
 } from "@mui/material";
+import useConnector from "context/connector";
 
 const defaultValues = {
   withAction: false,
@@ -33,7 +33,7 @@ const formatter = new Intl.NumberFormat("en-US", {
 
 const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
   const { proposalStore } = useStores();
-  const { account, chainId } = useMetaMask()!;
+  const { account, chainId, library } = useConnector()!;
   const [vBalance, setVBalance] = useState<null | number>(0);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -51,11 +51,11 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
 
   useEffect(() => {
     if (account) {
-      proposalStore.getVBalance(account).then((balance) => {
+      proposalStore.getVBalance(account, library).then((balance) => {
         setVBalance(balance!);
       });
     }
-  }, [account, proposalStore, setVBalance]);
+  }, [account, library, proposalStore, setVBalance]);
 
   useEffect(() => {
     let values = localStorage.getItem("createProposal");
@@ -92,7 +92,8 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
             values,
             callDataArray,
             combinedText,
-            account
+            account,
+            library,
           );
         } else {
           receipt = await proposalStore.createProposal(
@@ -100,7 +101,8 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
             [0],
             [Constants.ZERO_ADDRESS],
             combinedText,
-            account
+            account,
+            library,
           );
         }
 
@@ -112,7 +114,7 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
         console.log(err);
       }
     },
-    [reset, account, proposalStore, onClose, setLastTransactionBlock]
+    [reset, account, library, proposalStore, onClose, setLastTransactionBlock]
   );
 
   const saveForLater = useCallback(() => {
@@ -126,8 +128,6 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
       .trim()
       .split(",")
       .map((address: string) => address.trim());
-
-    console.log(trimmedAddresses);
 
     for (let i = 0; i < trimmedAddresses.length; i++) {
       if (

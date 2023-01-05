@@ -8,7 +8,8 @@ import { Web3ReactProvider } from "@web3-react/core";
 import Xdc3 from "xdc3";
 
 
-async function getLibrary(provider: any) {
+function getLibrary(provider: any) {
+  console.log('getLibrary', provider)
   return new Xdc3(provider);
 }
 

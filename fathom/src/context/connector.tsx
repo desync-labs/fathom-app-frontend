@@ -10,9 +10,8 @@ import {
 } from "react";
 import { injected, walletconnect } from "connectors/networks";
 import { useWeb3React } from "@web3-react/core";
-import Xdc3 from "xdc3";
 import WalletConnectProvider from "@walletconnect/ethereum-provider";
-import { Web3Utils } from "../helpers/Web3Utils";
+import { useStores } from "../stores";
 
 export const ConnectorContext = createContext(null);
 
@@ -23,30 +22,31 @@ type ConnectorProviderType = {
 export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
   const { activate, account, active, deactivate, chainId, error, library } =
     useWeb3React();
+
   const [isMetamask, setIsMetamask] = useState(false);
   const [isWalletConnect, setIsWalletConnect] = useState(false);
-
-  useEffect(() => {
-    if (library) {
-      library.then((library: Xdc3) => {
-        // @ts-ignore
-        const { isMetaMask } = library.currentProvider;
-        setIsMetamask(!!isMetaMask);
-
-        setIsWalletConnect(
-          library.currentProvider instanceof WalletConnectProvider
-        );
-
-        Web3Utils.provider = library.currentProvider;
-      });
-    } else {
-      setIsMetamask(false);
-    }
-  }, [library, setIsMetamask, setIsWalletConnect, chainId]);
 
   const [isActive, setIsActive] = useState(false);
   const [shouldDisable, setShouldDisable] = useState(false); // Should disable connect button while connecting to MetaMask
   const [isLoading, setIsLoading] = useState(true);
+  const { transactionStore } = useStores();
+
+  useEffect(() => {
+    if (library) {
+      // @ts-ignore
+      const { isMetaMask } = library.currentProvider;
+      setIsMetamask(!!isMetaMask);
+
+      setIsWalletConnect(
+        library.currentProvider instanceof WalletConnectProvider
+      );
+
+      transactionStore.setLibrary(library);
+    } else {
+      setIsMetamask(false);
+      setIsWalletConnect(false);
+    }
+  }, [library, transactionStore, setIsMetamask, setIsWalletConnect]);
 
   // Connect to MetaMask wallet
   const connectMetamask = useCallback(async () => {
@@ -120,6 +120,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
       shouldDisable,
       chainId,
       error,
+      library,
       isMetamask,
       isWalletConnect,
     }),
@@ -133,6 +134,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
       disconnect,
       chainId,
       error,
+      library,
       isMetamask,
       isWalletConnect,
     ]

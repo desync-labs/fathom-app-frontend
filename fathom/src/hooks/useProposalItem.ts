@@ -5,16 +5,12 @@ import { GOVERNANCE_PROPOSAL_ITEM } from "apollo/queries";
 import { useStores } from "stores";
 import { ProposalStatus, XDC_BLOCK_TIME } from "helpers/Constants";
 import IProposal from "stores/interfaces/IProposal";
-import { Web3Utils } from "helpers/Web3Utils";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
-import {
-  useMediaQuery,
-  useTheme
-} from "@mui/material";
+import { useMediaQuery, useTheme } from "@mui/material";
 
 const useProposalItem = () => {
-  const { account, chainId } = useConnector()!;
+  const { account, chainId, library } = useConnector()!;
   const navigate = useNavigate();
 
   const { _proposalId } = useParams();
@@ -51,37 +47,39 @@ const useProposalItem = () => {
   const fetchHasVoted = useCallback(async () => {
     const hasVoted = await proposalStore.hasVoted(
       data.proposal.proposalId,
-      account
+      account,
+      library
     );
     setHasVoted(hasVoted!);
-  }, [proposalStore, data, account, setHasVoted]);
+  }, [proposalStore, data, account, library, setHasVoted]);
 
   const fetchStatus = useCallback(async () => {
     if (data && data.proposal && account) {
       const status = await proposalStore.fetchProposalState(
         data.proposal.proposalId,
-        account
+        account,
+        library
       );
       // @ts-ignore
       setStatus(Object.values(ProposalStatus)[status]);
     }
-  }, [proposalStore, data, account, setStatus]);
+  }, [proposalStore, data, account, library, setStatus]);
 
   const getVotingStartsTime = useCallback(async () => {
     if (data && data.proposal) {
-      const { timestamp } = await Web3Utils.getWeb3Instance(
-        chainId
-      ).eth.getBlock(data.proposal.startBlock);
+      const { timestamp } = await library.eth.getBlock(
+        data.proposal.startBlock
+      );
 
       return setVotingStartsTime(new Date(timestamp * 1000).toLocaleString());
     }
-  }, [data, chainId, setVotingStartsTime]);
+  }, [data, library, setVotingStartsTime]);
 
   const getVotingEndTime = useCallback(async () => {
     if (data && data.proposal && chainId) {
-      const { timestamp } = await Web3Utils.getWeb3Instance(
-        chainId
-      ).eth.getBlock(data.proposal.startBlock);
+      const { timestamp } = await library.eth.getBlock(
+        data.proposal.startBlock
+      );
 
       const endTimestamp =
         timestamp +
@@ -94,7 +92,8 @@ const useProposalItem = () => {
         setVotingEndTime(new Date(endTimestamp * 1000).toLocaleString());
         const status = await proposalStore.fetchProposalState(
           data.proposal.proposalId,
-          account
+          account,
+          library
         );
         // @ts-ignore
         setStatus(Object.values(ProposalStatus)[status]);
@@ -103,7 +102,15 @@ const useProposalItem = () => {
         setSeconds(endTimestamp - now);
       }
     }
-  }, [proposalStore, data, chainId, account, setVotingEndTime, setStatus]);
+  }, [
+    proposalStore,
+    data,
+    chainId,
+    account,
+    library,
+    setVotingEndTime,
+    setStatus,
+  ]);
 
   useEffect(() => {
     if (data && data.proposal && account) {
@@ -154,7 +161,8 @@ const useProposalItem = () => {
         const receipt = await proposalStore.castVote(
           _proposalId!,
           account,
-          support
+          support,
+          library
         );
         setLastTransactionBlock(receipt.blockNumber);
         setHasVoted(true);
@@ -167,6 +175,7 @@ const useProposalItem = () => {
       _proposalId,
       proposalStore,
       account,
+      library,
       setVotePending,
       setHasVoted,
       setLastTransactionBlock,

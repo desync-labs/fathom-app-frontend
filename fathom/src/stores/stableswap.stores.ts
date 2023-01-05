@@ -1,6 +1,7 @@
 import { makeAutoObservable } from "mobx";
 import { RootStore } from ".";
 import IStableSwapService from "services/interfaces/IStableSwapService";
+import Xdc3 from "xdc3";
 
 export default class StableSwapStore {
   service: IStableSwapService;
@@ -17,10 +18,11 @@ export default class StableSwapStore {
     address: string,
     inputValue: number,
     outputValue: number,
-    tokenName: string
+    tokenName: string,
+    library: Xdc3,
   ): Promise<any> {
-    console.log(inputValue)
-    console.log(outputValue)
+    console.log(inputValue);
+    console.log(outputValue);
 
     if (inputCurrency === tokenName) {
       try {
@@ -28,7 +30,8 @@ export default class StableSwapStore {
           .swapTokenToStableCoin(
             address,
             inputValue,
-            this.rootStore.transactionStore
+            this.rootStore.transactionStore,
+            library
           )
           .then((receipt) => {
             this.rootStore.alertStore.setShowSuccessAlert(
@@ -46,7 +49,8 @@ export default class StableSwapStore {
           .swapStableCoinToToken(
             address,
             outputValue,
-            this.rootStore.transactionStore
+            this.rootStore.transactionStore,
+            library
           )
           .then((receipt) => {
             this.rootStore.alertStore.setShowSuccessAlert(
@@ -61,10 +65,10 @@ export default class StableSwapStore {
     }
   }
 
-  async approveStableCoin(address: string) {
+  async approveStableCoin(address: string, library: Xdc3) {
     try {
       return await this.service
-        .approveStableCoin(address, this.rootStore.transactionStore)
+        .approveStableCoin(address, this.rootStore.transactionStore, library)
         .then((receipt) => {
           this.rootStore.alertStore.setShowSuccessAlert(
             true,
@@ -79,10 +83,10 @@ export default class StableSwapStore {
     }
   }
 
-  async approveUsdt(address: string) {
+  async approveUsdt(address: string, library: Xdc3) {
     try {
       return await this.service
-        .approveUsdt(address, this.rootStore.transactionStore)
+        .approveUsdt(address, this.rootStore.transactionStore, library)
         .then((receipt) => {
           this.rootStore.alertStore.setShowSuccessAlert(
             true,
@@ -97,33 +101,41 @@ export default class StableSwapStore {
     }
   }
 
-  async approvalStatusStableCoin(address: string, tokenIn: number) {
+  async approvalStatusStableCoin(
+    address: string,
+    tokenIn: number,
+    library: Xdc3
+  ) {
     try {
-      return await this.service.approvalStatusStablecoin(address, tokenIn);
+      return await this.service.approvalStatusStablecoin(
+        address,
+        tokenIn,
+        library
+      );
     } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(true, e.message);
     }
   }
 
-  async approvalStatusUsdt(address: string, tokenIn: number) {
+  async approvalStatusUsdt(address: string, tokenIn: number, library: Xdc3) {
     try {
-      return await this.service.approvalStatusUsdt(address, tokenIn);
+      return await this.service.approvalStatusUsdt(address, tokenIn, library);
     } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(true, e.message);
     }
   }
 
-  async getFeeIn(): Promise<any> {
+  async getFeeIn(library: Xdc3): Promise<any> {
     try {
-      return await this.service.getFeeIn();
+      return await this.service.getFeeIn(library);
     } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(true, e.message);
     }
   }
 
-  async getFeeOut(): Promise<any> {
+  async getFeeOut(library: Xdc3): Promise<any> {
     try {
-      return await this.service.getFeeOut();
+      return await this.service.getFeeOut(library);
     } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(true, e.message);
     }

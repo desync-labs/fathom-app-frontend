@@ -48,6 +48,7 @@ import FathomLogoMobileSrc from "assets/svg/Fathom-app-logo-mobile.svg";
 import MobileMenuIcon from "assets/svg/mobile-menu.svg";
 import MobileMenuIconActive from "assets/svg/mobile-menu-active.svg";
 import MobileConnector from "./MobileConnector";
+import DesktopConnector from "./DesktopConnector";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -152,7 +153,7 @@ const MainLayout = () => {
   const {
     disconnect,
     openMobile,
-    openMobileConnector,
+    openConnector,
     account,
     error,
     isMobile,
@@ -165,7 +166,7 @@ const MainLayout = () => {
     openMobileMenu,
     openConnectorMenu,
     setOpenMobile,
-    setOpenMobileConnector,
+    setOpenConnector,
   } = useMainLayout();
 
   return (
@@ -306,9 +307,12 @@ const MainLayout = () => {
         </MainBox>
       </Box>
       {isMobile && openMobile && <MobileMenu setOpenMobile={setOpenMobile} />}
-      {isMobile && openMobileConnector && (
-        <MobileConnector setOpenMobileConnector={setOpenMobileConnector} />
+      {isMobile && openConnector && (
+        <MobileConnector setOpenMobileConnector={setOpenConnector} />
       )}
+      { !isMobile && openConnector && (
+        <DesktopConnector onClose={() => setOpenConnector(false)} />
+      ) }
     </ThemeProvider>
   );
 };
