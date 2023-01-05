@@ -9,7 +9,7 @@ const StakingChip = styled(Chip, {
   background: ${({ isActive }) =>
     isActive ? "transparent" : "rgba(79, 101, 140, 0.2)"};
   border-radius: 6px;
-  width: 19%;
+  width: 17%;
   cursor: pointer;
   border: ${({ isActive }) =>
     isActive ? "1px solid rgba(79, 101, 140, 0.2)" : "none"};

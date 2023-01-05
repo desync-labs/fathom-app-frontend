@@ -23,12 +23,13 @@ export default class ActiveWeb3Transactions {
   }
 
   addTransaction(_transaction: ITransaction) {
-    this.transactions.push(_transaction);
+    this.transactions = [...this.transactions, _transaction];
     this.rootStore.alertStore.resetAlerts();
   }
 
   removeTransaction() {
-    this.transactions.pop();
+    this.transactions.splice(-1);
+    this.transactions = [...this.transactions];
   }
 
   setLibrary(library: Xdc3) {
