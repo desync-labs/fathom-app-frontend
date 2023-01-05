@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState, MouseEvent } from "react";
 import useConnector from "context/connector";
 import { useStores } from "stores";
 import { useMediaQuery, useTheme } from "@mui/material";
+import { useLocation } from "react-router-dom";
 
 const useMainLayout = () => {
   const theme = useTheme();
@@ -19,6 +20,8 @@ const useMainLayout = () => {
 
   const [openMobile, setOpenMobile] = useState(false);
   const [openConnector, setOpenConnector] = useState(false);
+  const currentPath = useLocation();
+  const [scroll, setScroll] = useState<number>(0);
 
   const toggleDrawer = useCallback(() => {
     setOpen(!open);
@@ -26,11 +29,31 @@ const useMainLayout = () => {
 
   const rootStore = useStores();
 
+  const scrollHandler = useCallback((event: Event) => {
+    setScroll(window.scrollY)
+  }, [setScroll])
+
   useEffect(() => {
     if (chainId) {
       rootStore.setChainId(chainId!);
     }
   }, [chainId, rootStore]);
+
+  useEffect(() => {
+    document.addEventListener("scroll", scrollHandler);
+    return () => {
+      document.removeEventListener('scroll', scrollHandler);
+    }
+  }, [scrollHandler])
+
+  useEffect(() => {
+    if (isMobile) {
+      const inputs = document.querySelectorAll('input[type="number"]');
+      for (let i = inputs.length; i--;) {
+        inputs[i].setAttribute("pattern", "\\d*");
+      }
+    }
+  }, [currentPath, isMobile]);
 
   useEffect(() => {
     if (isMobile) {
@@ -47,21 +70,28 @@ const useMainLayout = () => {
     }
   }, [isMobile, openMobile, openConnector, setOpenMobile, setOpenConnector]);
 
-  const openMobileMenu = useCallback((event: MouseEvent<HTMLElement>) => {
-    event.stopPropagation();
-    event.preventDefault();
+  const openMobileMenu = useCallback(
+    (event: MouseEvent<HTMLElement>) => {
+      event.stopPropagation();
+      event.preventDefault();
 
-    setOpenMobile(true)
-  }, [setOpenMobile])
+      setOpenMobile(true);
+    },
+    [setOpenMobile]
+  );
 
-  const openConnectorMenu = useCallback((event: MouseEvent<HTMLElement>) => {
-    event.stopPropagation();
-    event.preventDefault();
+  const openConnectorMenu = useCallback(
+    (event: MouseEvent<HTMLElement>) => {
+      event.stopPropagation();
+      event.preventDefault();
 
-    setOpenConnector(true)
-  }, [setOpenConnector])
+      setOpenConnector(true);
+    },
+    [setOpenConnector]
+  );
 
   return {
+    scroll,
     account,
     error,
     isMobile,

@@ -151,6 +151,7 @@ const WalletBox = styled(Box)`
 
 const MainLayout = () => {
   const {
+    scroll,
     disconnect,
     openMobile,
     openConnector,
@@ -277,8 +278,8 @@ const MainLayout = () => {
         )}
         <MainBox component="main">
           <Toolbar />
-          <AlertMessages />
-          <TransactionStatus />
+          <AlertMessages scroll={scroll} />
+          <TransactionStatus scroll={scroll} />
           <Routes>
             <Route path="/" element={<DashboardContent />} />
             <Route path="/swap" element={<StableSwap />} />

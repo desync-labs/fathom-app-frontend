@@ -4,16 +4,23 @@ import { useStores } from "stores";
 import { Alert, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { styled } from "@mui/material/styles";
+import { FC } from "react";
 
-const AlertMessage = styled(Alert)`
+const AlertMessage = styled(Alert, {
+  shouldForwardProp: (prop) => prop !== "scroll",
+})<{ scroll: number }>`
   position: fixed;
   width: 100%;
   margin-bottom: 2px;
   z-index: 1000;
-  top: 65px;
+  top: ${({ scroll }) => (scroll > 65 ? "0" : `${65 - scroll}px`)};
 `;
 
-const AlertMessages = observer(() => {
+type AlertMessagesPropsType = {
+  scroll: number
+}
+
+const AlertMessages: FC<AlertMessagesPropsType> = observer(({ scroll }) => {
   const { alertStore } = useStores();
 
   return (
@@ -22,6 +29,7 @@ const AlertMessages = observer(() => {
         <AlertMessage
           severity="error"
           variant="filled"
+          scroll={scroll}
           action={
             <IconButton
               aria-label="close"
@@ -41,6 +49,7 @@ const AlertMessages = observer(() => {
       {alertStore.showSuccessAlert && (
         <AlertMessage
           severity="success"
+          scroll={scroll}
           variant="filled"
           action={
             <IconButton

@@ -74,39 +74,31 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
   }, [connector, deactivateEvent]);
 
   // Connect to MetaMask wallet
-  const connectMetamask = useCallback(async () => {
+  const connectMetamask = useCallback( () => {
     setShouldDisable(true);
-    try {
-      return await activate(injected).then(() => {
-        setShouldDisable(false);
-        sessionStorage.setItem("isConnected", "metamask");
-      });
-    } catch (error) {
-      console.log("Error on connecting: ", error);
-    }
+    return activate(injected).then(() => {
+      setShouldDisable(false);
+      sessionStorage.setItem("isConnected", "metamask");
+    });
   }, [activate, setShouldDisable]);
 
-  const connectWalletConnect = useCallback(async () => {
+  const connectWalletConnect = useCallback( () => {
     setShouldDisable(true);
-    try {
-      return await activate(walletconnect).then(() => {
-        setShouldDisable(false);
-        sessionStorage.setItem("isConnected", "walletConnect");
-      });
-    } catch (error) {
-      console.log("Error on connecting: ", error);
-    }
+    return activate(walletconnect).then(() => {
+      setShouldDisable(false);
+      sessionStorage.setItem("isConnected", "walletConnect");
+    });
   }, [activate]);
 
   // Init Loading
   useEffect(() => {
     const isConnected = sessionStorage.getItem("isConnected");
     if (isConnected === "metamask") {
-      connectMetamask().then(() => {
+      connectMetamask()!.then(() => {
         setIsLoading(false);
       });
     } else if (isConnected === "walletConnect") {
-      connectWalletConnect().then(() => {
+      connectWalletConnect()!.then(() => {
         setIsLoading(false);
       });
     }

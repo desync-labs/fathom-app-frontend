@@ -28,6 +28,11 @@ export default class StakingService implements IStakingService {
       library,
     );
     const endTime = unlockPeriod * DAY_SECONDS;
+
+    console.log(this.toWei(stakePosition, library))
+    console.log(endTime)
+    console.log(account)
+
     return Staking.methods
       .createLock(this.toWei(stakePosition, library), endTime, account)
       .send({ from: account })
@@ -150,16 +155,8 @@ export default class StakingService implements IStakingService {
       });
   }
 
-  fromWei(balance: number, library: Xdc3): number {
-    return Number(library.utils.fromWei(balance.toString(), "ether"));
-  }
-
-  toWei(balance: number, library:Xdc3): number {
-    return Number(library.utils.toWei(balance.toString(), "ether"));
-  }
-
-  _convertToEtherBalance(balance: number, library: Xdc3): number {
-    return parseInt(this.fromWei(balance, library).toString());
+  toWei(balance: number, library:Xdc3): string {
+    return library.utils.toWei(balance.toString(), "ether");
   }
 
   async approvalStatusStakingFTHM(
