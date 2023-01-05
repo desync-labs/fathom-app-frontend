@@ -7,10 +7,9 @@ import {
   TransactionStatus,
   TransactionType,
 } from "stores/interfaces/ITransaction";
-import {
-  Constants,
-} from "helpers/Constants";
+import { Constants } from "helpers/Constants";
 import Xdc3 from "xdc3";
+import { getUsedGas } from "../utils/getUsedGas";
 
 export default class ProposalService implements IProposalService {
   chainId = Constants.DEFAULT_CHAIN_ID;
@@ -22,15 +21,25 @@ export default class ProposalService implements IProposalService {
     description: string,
     account: string,
     transactionStore: ActiveWeb3Transactions,
-    library: Xdc3,
+    library: Xdc3
   ): Promise<number> {
     const FathomGovernor = Web3Utils.getContractInstance(
       SmartContractFactory.FathomGovernor(this.chainId),
       library
     );
+
+    const options = { from: account, gas: "0" };
+    const gas = await getUsedGas(
+      FathomGovernor,
+      "propose",
+      [targets, values, callData, description],
+      options
+    );
+    options.gas = gas;
+
     return FathomGovernor.methods
       .propose(targets, values, callData, description)
-      .send({ from: account })
+      .send(options)
       .on("transactionHash", (hash: any) => {
         transactionStore.addTransaction({
           hash: hash,
@@ -50,11 +59,11 @@ export default class ProposalService implements IProposalService {
     description: string,
     account: string,
     transactionStore: ActiveWeb3Transactions,
-    library: Xdc3,
+    library: Xdc3
   ): Promise<number> {
     const FathomGovernor = Web3Utils.getContractInstance(
       SmartContractFactory.FathomGovernor(this.chainId),
-      library,
+      library
     );
 
     return FathomGovernor.methods
@@ -69,7 +78,7 @@ export default class ProposalService implements IProposalService {
     description: string,
     account: string,
     transactionStore: ActiveWeb3Transactions,
-    library: Xdc3,
+    library: Xdc3
   ): Promise<number> {
     const FathomGovernor = Web3Utils.getContractInstance(
       SmartContractFactory.FathomGovernor(this.chainId),
@@ -80,10 +89,14 @@ export default class ProposalService implements IProposalService {
       .send({ from: account });
   }
 
-  async hasVoted(proposalId: string, account: string, library: Xdc3): Promise<boolean> {
+  async hasVoted(
+    proposalId: string,
+    account: string,
+    library: Xdc3
+  ): Promise<boolean> {
     const FathomGovernor = Web3Utils.getContractInstance(
       SmartContractFactory.FathomGovernor(this.chainId),
-      library,
+      library
     );
 
     return FathomGovernor.methods.hasVoted(proposalId, account).call();
@@ -92,16 +105,14 @@ export default class ProposalService implements IProposalService {
   async viewProposalState(
     proposalId: string,
     account: string,
-    library: Xdc3,
+    library: Xdc3
   ): Promise<string> {
     const FathomGovernor = Web3Utils.getContractInstance(
       SmartContractFactory.FathomGovernor(this.chainId),
       library
     );
 
-    return FathomGovernor.methods
-      .state(proposalId)
-      .call({ from: account });
+    return FathomGovernor.methods.state(proposalId).call({ from: account });
   }
 
   async castVote(
@@ -109,11 +120,11 @@ export default class ProposalService implements IProposalService {
     account: string,
     support: string,
     transactionStore: ActiveWeb3Transactions,
-    library: Xdc3,
+    library: Xdc3
   ): Promise<number> {
     const FathomGovernor = Web3Utils.getContractInstance(
       SmartContractFactory.FathomGovernor(this.chainId),
-      library,
+      library
     );
 
     return FathomGovernor.methods

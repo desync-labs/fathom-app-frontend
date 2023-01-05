@@ -67,9 +67,19 @@ const useProposalItem = () => {
 
   const getVotingStartsTime = useCallback(async () => {
     if (data && data.proposal) {
-      const { timestamp } = await library.eth.getBlock(
-        data.proposal.startBlock
-      );
+      const currentBlock = await library.eth.getBlockNumber();
+      let timestamp;
+
+      if (Number(currentBlock) < Number(data.proposal.startBlock)) {
+        const blockData = await library.eth.getBlock(currentBlock);
+        timestamp = blockData.timestamp;
+        timestamp += (Number(data.proposal.startBlock) - Number(currentBlock)) * XDC_BLOCK_TIME
+      } else {
+        const blockData = await library.eth.getBlock(
+          data.proposal.startBlock
+        );
+        timestamp = blockData.timestamp;
+      }
 
       return setVotingStartsTime(new Date(timestamp * 1000).toLocaleString());
     }
@@ -77,9 +87,19 @@ const useProposalItem = () => {
 
   const getVotingEndTime = useCallback(async () => {
     if (data && data.proposal && chainId) {
-      const { timestamp } = await library.eth.getBlock(
-        data.proposal.startBlock
-      );
+      const currentBlock = await library.eth.getBlockNumber();
+      let timestamp;
+
+      if (Number(currentBlock) < Number(data.proposal.startBlock)) {
+        const blockData = await library.eth.getBlock(currentBlock);
+        timestamp = blockData.timestamp;
+        timestamp += (Number(data.proposal.startBlock) - Number(currentBlock)) * XDC_BLOCK_TIME
+      } else {
+        const blockData = await library.eth.getBlock(
+          data.proposal.startBlock
+        );
+        timestamp = blockData.timestamp;
+      }
 
       const endTimestamp =
         timestamp +

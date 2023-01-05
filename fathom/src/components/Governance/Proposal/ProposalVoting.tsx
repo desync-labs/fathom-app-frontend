@@ -96,6 +96,10 @@ const Buttons: FC<ButtonsProps> = ({
   votePending,
   vote,
 }) => {
+  if (fetchedProposalState === ProposalStatus.Pending) {
+    return <VotingEndedButton disabled={true}>Voting hasn't started yet</VotingEndedButton>;
+  }
+
   if (fetchedProposalState !== ProposalStatus.OpenToVote) {
     return <VotingEndedButton disabled={true}>Voting Ended</VotingEndedButton>;
   }

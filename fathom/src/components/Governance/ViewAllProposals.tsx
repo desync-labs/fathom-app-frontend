@@ -58,7 +58,7 @@ const AllProposalsView = () => {
               <PageHeader
                 title="Governance"
                 description={
-                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Eget tristique malesuada pulvinar commodo. Euismod massa, dis metus mattis porttitor ac est quis. Ut quis cursus ac nunc, aliquam curabitur nisl amet. Elit etiam dignissim orci. If this is the first-time you’re here, please visit our Whitepaper."
+                  "Participate in Fathom Governance to determine the future of the protocol. All actions require voting power (vFTHM). Voting power can be accrued by staking your FTHM tokens in DAO Staking."
                 }
               />
             ) : null,
