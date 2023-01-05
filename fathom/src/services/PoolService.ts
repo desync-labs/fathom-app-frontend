@@ -3,9 +3,15 @@ import IPoolService from "services/interfaces/IPoolService";
 import { Constants } from "helpers/Constants";
 import { Web3Utils } from "helpers/Web3Utils";
 import Xdc3 from "xdc3";
+import AlertStore from "stores/alert.stores";
 
 export default class PoolService implements IPoolService {
   chainId = Constants.DEFAULT_CHAIN_ID;
+  alertStore: AlertStore;
+
+  constructor(alertStore: AlertStore) {
+    this.alertStore = alertStore;
+  }
 
   setChainId(chainId: number) {
     this.chainId = chainId;
@@ -14,7 +20,7 @@ export default class PoolService implements IPoolService {
   async getUserTokenBalance(
     address: string,
     forAddress: string,
-    library: Xdc3,
+    library: Xdc3
   ): Promise<number> {
     const BEP20 = Web3Utils.getContractInstance(
       SmartContractFactory.BEP20(forAddress),
@@ -40,16 +46,20 @@ export default class PoolService implements IPoolService {
   }
 
   getCollateralTokenAddress(forAddress: string, library: Xdc3) {
-    const abi = SmartContractFactory.CollateralTokenAdapterAbi();
+    try {
+      const abi = SmartContractFactory.CollateralTokenAdapterAbi();
 
-    const collateralTokenAdapter = Web3Utils.getContractInstance(
-      {
-        address: forAddress,
-        abi,
-      },
-      library,
-    );
+      const collateralTokenAdapter = Web3Utils.getContractInstance(
+        {
+          address: forAddress,
+          abi,
+        },
+        library
+      );
 
-    return collateralTokenAdapter.methods.collateralToken().call();
+      return collateralTokenAdapter.methods.collateralToken().call();
+    } catch (e: any) {
+      this.alertStore.setShowErrorAlert(true, e.message);
+    }
   }
 }

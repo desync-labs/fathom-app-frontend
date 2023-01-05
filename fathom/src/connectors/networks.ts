@@ -40,6 +40,7 @@ export const injected = new InjectedConnector({ supportedChainIds });
 
 export const walletconnect = new WalletConnectConnector({
   rpc: {
+    1: APOTHEM_RPC,
     51: APOTHEM_RPC
   },
   qrcode: true

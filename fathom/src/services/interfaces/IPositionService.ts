@@ -1,6 +1,7 @@
-import ICollateralPool from "stores/interfaces/ICollateralPool";
-import ActiveWeb3Transactions from "stores/transaction.store";
 import Xdc3 from "xdc3";
+import { TransactionReceipt } from "web3-eth";
+import ICollateralPool from "stores/interfaces/ICollateralPool";
+
 
 export default interface IPositionService {
   openPosition(
@@ -8,9 +9,8 @@ export default interface IPositionService {
     pool: ICollateralPool,
     collateral: number,
     fathomToken: number,
-    transactionStore: ActiveWeb3Transactions,
     library: Xdc3
-  ): Promise<void>;
+  ): Promise<TransactionReceipt | undefined>;
 
   createProxyWallet(address: string, library: Xdc3): Promise<string>;
   proxyWalletExist(address: string, library: Xdc3): Promise<string>;
@@ -20,36 +20,27 @@ export default interface IPositionService {
     pool: ICollateralPool,
     address: string,
     collateral: number,
-    transactionStore: ActiveWeb3Transactions,
     library: Xdc3
-  ): Promise<void>;
-  approve(
-    address: string,
-    tokenAddress: string,
-    transactionStore: ActiveWeb3Transactions,
-    library: Xdc3
-  ): Promise<void>;
+  ): Promise<TransactionReceipt | undefined>;
+  approve(address: string, tokenAddress: string, library: Xdc3): Promise<TransactionReceipt | undefined>;
   approvalStatus(
     address: string,
     tokenAddress: string,
     collateral: number,
-    transactionStore: ActiveWeb3Transactions,
     library: Xdc3
   ): Promise<Boolean>;
   balanceStableCoin(address: string, library: Xdc3): Promise<number>;
   approveStableCoin(
     address: string,
-    transactionStore: ActiveWeb3Transactions,
     library: Xdc3
-  ): Promise<void>;
-  approvalStatusStableCoin(address: string, library: Xdc3): Promise<Boolean>;
+  ): Promise<TransactionReceipt | undefined>;
+  approvalStatusStableCoin(address: string, library: Xdc3): Promise<boolean>;
   partiallyClosePosition(
     positionId: string,
     pool: ICollateralPool,
     address: string,
     debt: number,
     collateralValue: number,
-    transactionStore: ActiveWeb3Transactions,
     library: Xdc3
-  ): Promise<void>;
+  ): Promise<TransactionReceipt | undefined>;
 }

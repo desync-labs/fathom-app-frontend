@@ -12,7 +12,7 @@ const useOpenPositionList = (
   setPositionCurrentPage: Dispatch<number>,
   proxyWallet: string
 ) => {
-  const { positionStore } = useStores();
+  const { positionService } = useStores();
   const { account, chainId, library } = useConnector()!;
   /**
    * @todo Change walletAddress
@@ -29,9 +29,9 @@ const useOpenPositionList = (
   const [approvalPending, setApprovalPending] = useState<boolean>(false);
 
   const approvalStatus = useCallback(async () => {
-    const approved = await positionStore.approvalStatusStableCoin(account, library);
+    const approved = await positionService.approvalStatusStableCoin(account, library);
     approved ? setApproveBtn(false) : setApproveBtn(true);
-  }, [positionStore, account, library]);
+  }, [positionService, account, library]);
 
   useEffect(() => {
     if (account) approvalStatus();
@@ -53,14 +53,14 @@ const useOpenPositionList = (
   const approve = useCallback(async () => {
     setApprovalPending(true);
     try {
-      await positionStore.approveStableCoin(account, library);
+      await positionService.approveStableCoin(account, library);
       setApproveBtn(false);
     } catch (e) {
       setApproveBtn(true);
     }
 
     setApprovalPending(false);
-  }, [positionStore, account, library, setApprovalPending, setApproveBtn]);
+  }, [positionService, account, library, setApprovalPending, setApproveBtn]);
 
   const handlePageChange = useCallback(
     (event: ChangeEvent<unknown>, page: number) => {

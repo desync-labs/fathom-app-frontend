@@ -16,7 +16,7 @@ const useOpenPosition = (
   pool: OpenPositionContextType["pool"],
   onClose: OpenPositionContextType["onClose"]
 ) => {
-  const { poolService, positionStore } = useStores();
+  const { poolService, positionService } = useStores();
 
   const { account, chainId, library } = useConnector()!;
 
@@ -55,15 +55,15 @@ const useOpenPosition = (
   const approvalStatus = useMemo(
     () =>
       debounce(async (collateral: string) => {
-        let approved = await positionStore.approvalStatus(
+        let approved = await positionService.approvalStatus(
           account,
-          Number(collateral),
           collateralTokenAddress!,
+          Number(collateral),
           library,
         );
         approved ? setApproveBtn(false) : setApproveBtn(true);
       }, 1000),
-    [positionStore, collateralTokenAddress, account, library]
+    [positionService, collateralTokenAddress, account, library]
   );
 
   const getCollateralTokenAndBalance = useCallback(async () => {
@@ -204,14 +204,14 @@ const useOpenPosition = (
       const { collateral, fathomToken } = values;
 
       try {
-        const receipt = await positionStore.openPosition(
+        const receipt = await positionService.openPosition(
           account,
           pool,
           Number(collateral),
           Number(fathomToken),
           library,
         );
-        setLastTransactionBlock(receipt.blockNumber);
+        setLastTransactionBlock(receipt!.blockNumber);
         onClose();
       } catch (e) {
         console.log(e);
@@ -222,7 +222,7 @@ const useOpenPosition = (
       account,
       library,
       pool,
-      positionStore,
+      positionService,
       setOpenPositionLoading,
       setLastTransactionBlock,
       onClose,
@@ -232,7 +232,7 @@ const useOpenPosition = (
   const approve = useCallback(async () => {
     setApprovalPending(true);
     try {
-      await positionStore.approve(account, collateralTokenAddress!, library);
+      await positionService.approve(account, collateralTokenAddress!, library);
       setApproveBtn(false);
     } catch (e) {
       setApproveBtn(true);
@@ -242,7 +242,7 @@ const useOpenPosition = (
   }, [
     account,
     collateralTokenAddress,
-    positionStore,
+    positionService,
     library,
     setApprovalPending,
     setApproveBtn,

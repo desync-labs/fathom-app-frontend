@@ -175,6 +175,7 @@ const ProposalInfo = () => {
               {chainId && (
                 <a
                   target="_blank"
+                  rel="noreferrer"
                   href={getAccountUrl(
                     fetchedProposal.proposer,
                     chainId as ChainId

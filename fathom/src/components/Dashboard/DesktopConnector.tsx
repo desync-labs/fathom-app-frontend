@@ -35,9 +35,7 @@ const DesktopConnector: FC<DesktopConnectorPropsType> = ({ onClose }) => {
   const { connectWalletConnect, connectMetamask } = useConnector();
 
   const walletConnectConnect = useCallback(() => {
-    connectWalletConnect().then(() => {
-      onClose();
-    });
+    connectWalletConnect(onClose)
   }, [onClose, connectWalletConnect]);
 
   const metamaskConnect = useCallback(() => {
@@ -53,7 +51,7 @@ const DesktopConnector: FC<DesktopConnectorPropsType> = ({ onClose }) => {
       sx={{ "& .MuiPaper-root": { width: "500px" } }}
     >
       <DialogContent>
-        <Connector onClick={connectMetamask}>
+        <Connector onClick={metamaskConnect}>
           <img src={MetamaskSrc} alt={"metamask"} />
           Metamask
         </Connector>

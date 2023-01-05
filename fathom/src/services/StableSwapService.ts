@@ -19,7 +19,8 @@ export default class StableSwapService implements IStableSwapService {
     address: string,
     tokenIn: number,
     transactionStore: ActiveWeb3Transactions,
-    library: Xdc3
+    tokenName: string,
+    library: Xdc3,
   ): Promise<void> {
     const StableSwapModule = Web3Utils.getContractInstance(
       SmartContractFactory.StableSwapModule(this.chainId),
@@ -35,7 +36,7 @@ export default class StableSwapService implements IStableSwapService {
           type: TransactionType.ClosePosition,
           active: false,
           status: TransactionStatus.None,
-          title: "USDT to FXD Swap Pending.",
+          title: `${tokenName} to FXD Swap Pending.`,
           message: Strings.CheckOnBlockExplorer,
         });
       });
@@ -149,7 +150,7 @@ export default class StableSwapService implements IStableSwapService {
     address: string,
     tokenIn: number,
     library: Xdc3
-  ): Promise<Boolean> {
+  ): Promise<boolean> {
     const USDT = Web3Utils.getContractInstance(
       SmartContractFactory.USDT(this.chainId),
       library

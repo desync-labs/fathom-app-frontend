@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 
 const useDashboard = () => {
-  const { positionStore } = useStores();
+  const { positionService } = useStores();
   const { account, library } = useWeb3React();
   const { syncFXD, prevSyncFxd } = useSyncContext();
   const theme = useTheme();
@@ -40,7 +40,7 @@ const useDashboard = () => {
   );
 
   const fetchUserStatsAndProxyWallet = useCallback(async () => {
-    const proxyWallet = await positionStore.getProxyWallet(account!, library);
+    const proxyWallet = await positionService.proxyWalletExist(account!, library);
     setProxyWallet(proxyWallet!);
 
     loadUserStats({
@@ -51,7 +51,7 @@ const useDashboard = () => {
       setPositionsItemsCount(users[0]?.activePositionsCount || 0);
     });
   }, [
-    positionStore,
+    positionService,
     account,
     library,
     loadUserStats,
