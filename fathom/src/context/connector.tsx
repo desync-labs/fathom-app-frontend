@@ -52,11 +52,10 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
   const connectMetamask = useCallback(async () => {
     setShouldDisable(true);
     try {
-      await activate(injected).then(() => {
+      return await activate(injected).then(() => {
         setShouldDisable(false);
+        sessionStorage.setItem("isConnected", "metamask");
       });
-
-      sessionStorage.setItem("isConnected", "metamask");
     } catch (error) {
       console.log("Error on connecting: ", error);
     }
@@ -65,11 +64,10 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
   const connectWalletConnect = useCallback(async () => {
     setShouldDisable(true);
     try {
-      await activate(walletconnect).then(() => {
+      return await activate(walletconnect).then(() => {
         setShouldDisable(false);
+        sessionStorage.setItem("isConnected", "walletConnect");
       });
-
-      sessionStorage.setItem("isConnected", "walletConnect");
     } catch (error) {
       console.log("Error on connecting: ", error);
     }
