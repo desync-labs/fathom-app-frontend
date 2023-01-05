@@ -34,10 +34,10 @@ const formatter = new Intl.NumberFormat("en-US", {
 const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
   const { proposalStore } = useStores();
   const { account, chainId, library } = useConnector()!;
-  const [vBalance, setVBalance] = useState<null | number>(0);
+  const [vBalance, setVBalance] = useState<null | number>(null);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const { handleSubmit, watch, control, reset, getValues } = useForm({
     defaultValues,
@@ -67,6 +67,7 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
 
   const onSubmit = useCallback(
     async (values: Record<string, any>) => {
+      setIsLoading(true)
       try {
         const {
           descriptionTitle,
@@ -112,6 +113,8 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
         onClose();
       } catch (err) {
         console.log(err);
+      } finally {
+        setIsLoading(false)
       }
     },
     [reset, account, library, proposalStore, onClose, setLastTransactionBlock]
@@ -157,6 +160,7 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
 
   return {
     isMobile,
+    isLoading,
     withAction,
     handleSubmit,
     watch,

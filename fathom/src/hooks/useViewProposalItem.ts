@@ -13,7 +13,17 @@ const useViewProposalItem = (proposal: IProposal) => {
   const [seconds, setSeconds] = useState<number>(0);
 
   const getTimestamp = useCallback(async () => {
-    const { timestamp } = await library.eth.getBlock(proposal.startBlock);
+    const currentBlock = await library.eth.getBlockNumber();
+    let timestamp;
+
+    if (Number(currentBlock) < Number(proposal.startBlock)) {
+      const blockData = await library.eth.getBlock(currentBlock);
+      timestamp = blockData.timestamp;
+      timestamp += (Number(proposal.startBlock) - Number(currentBlock)) * XDC_BLOCK_TIME
+    } else {
+       const blockData = await library.eth.getBlock(proposal.startBlock);
+       timestamp = blockData.timestamp;
+    }
 
     const endTimestamp =
       timestamp +

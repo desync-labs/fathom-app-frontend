@@ -12,6 +12,7 @@ import {
   Checkbox,
   FormControl,
   Typography,
+  CircularProgress,
 } from "@mui/material";
 import { Controller } from "react-hook-form";
 import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
@@ -103,7 +104,7 @@ const GridContainer = styled(Grid)`
   ${({ theme }) => theme.breakpoints.down("sm")} {
     padding: 0;
   }
-`
+`;
 
 const Optional = () => <OptionalBox>(Optional)</OptionalBox>;
 
@@ -122,6 +123,7 @@ export type ProposeProps = {
 const Propose: FC<ProposeProps> = ({ onClose }) => {
   const {
     isMobile,
+    isLoading,
     withAction,
     handleSubmit,
     control,
@@ -219,9 +221,7 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
                           }
                           value={value}
                           onChange={onChange}
-                          helperText={
-                            error ? "Field Description is required" : ""
-                          }
+                          helperText={error && "Field Description is required"}
                         />
                       </FormGroup>
                     )}
@@ -249,7 +249,11 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
                           value={value}
                           onChange={onChange}
                           helperText={
-                            <Stack direction={"row"} alignItems={"center"}>
+                            <Stack
+                              direction={"row"}
+                              alignItems={"center"}
+                              component={"span"}
+                            >
                               <InfoIcon />
                               Forum discussion will be auto-created if this is
                               left empty
@@ -451,7 +455,11 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
                 {!isMobile && (
                   <Grid item sm={8}>
                     <ProposeButtonPrimary type="submit" sx={{ width: "100%" }}>
-                      Submit proposal
+                      {isLoading ? (
+                        <CircularProgress size={30} />
+                      ) : (
+                        "Submit proposal"
+                      )}
                     </ProposeButtonPrimary>
                   </Grid>
                 )}

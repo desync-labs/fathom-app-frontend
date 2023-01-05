@@ -1,6 +1,7 @@
 import BigNumber from "bignumber.js";
 
 export const XDC_BLOCK_TIME = 2; // 2 seconds
+export const ESTIMATE_GAS_MULTIPLIER = 1.2;
 
 export const YEAR_IN_SECONDS = 365 * 24 * 60 * 60
 
