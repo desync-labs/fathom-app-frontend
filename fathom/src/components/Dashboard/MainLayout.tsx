@@ -49,6 +49,7 @@ import MobileMenuIcon from "assets/svg/mobile-menu.svg";
 import MobileMenuIconActive from "assets/svg/mobile-menu-active.svg";
 import MobileConnector from "./MobileConnector";
 import DesktopConnector from "./DesktopConnector";
+import BottomLinks from "./BottomLinks";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -81,6 +82,8 @@ const Drawer = styled(MuiDrawer, {
 
 const MenuWrapper = styled("nav")<{ open: boolean }>`
   padding: ${({ open }) => (open ? "20px 12px" : "20px 8px")};
+  height: 100%;
+  position: relative;
   margintop: 1rem;
   display: flex;
   flex-direction: column;
@@ -273,6 +276,7 @@ const MainLayout = () => {
             <Divider />
             <MenuWrapper open={open}>
               <Menu open={open} />
+              <BottomLinks></BottomLinks>
             </MenuWrapper>
           </Drawer>
         )}

@@ -17,7 +17,9 @@ const StakingView = () => {
             <PageHeader
               title="Staking"
               description={
-                "Stake XDC, borrow FXD and earn an attractive yield on FXD in the form of liquid staking rewards."
+                "Stake FTHM to get more FTHM rewards and voting power (vFTHM).\n" +
+                "\n" +
+                "The longer the lock period - the more rewards."
               }
             />
           ),
