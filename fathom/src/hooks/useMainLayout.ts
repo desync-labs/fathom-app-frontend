@@ -18,7 +18,7 @@ const useMainLayout = () => {
   } = useConnector()!;
 
   const [openMobile, setOpenMobile] = useState(false);
-  const [openMobileConnector, setOpenMobileConnector] = useState(false);
+  const [openConnector, setOpenConnector] = useState(false);
 
   const toggleDrawer = useCallback(() => {
     setOpen(!open);
@@ -41,11 +41,11 @@ const useMainLayout = () => {
   }, [isMobile, setOpen]);
 
   const mainBlockClickHandler = useCallback(() => {
-    if (isMobile && (openMobile || openMobileConnector)) {
+    if (isMobile && (openMobile || openConnector)) {
       setOpenMobile(false);
-      setOpenMobileConnector(false);
+      setOpenConnector(false);
     }
-  }, [isMobile, openMobile, openMobileConnector, setOpenMobile, setOpenMobileConnector]);
+  }, [isMobile, openMobile, openConnector, setOpenMobile, setOpenConnector]);
 
   const openMobileMenu = useCallback((event: MouseEvent<HTMLElement>) => {
     event.stopPropagation();
@@ -58,8 +58,8 @@ const useMainLayout = () => {
     event.stopPropagation();
     event.preventDefault();
 
-    setOpenMobileConnector(true)
-  }, [setOpenMobileConnector])
+    setOpenConnector(true)
+  }, [setOpenConnector])
 
   return {
     account,
@@ -72,9 +72,9 @@ const useMainLayout = () => {
     isWalletConnect,
     toggleDrawer,
     openMobile,
-    openMobileConnector,
     setOpenMobile,
-    setOpenMobileConnector,
+    openConnector,
+    setOpenConnector,
     mainBlockClickHandler,
     openMobileMenu,
     openConnectorMenu,

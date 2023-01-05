@@ -1,6 +1,7 @@
 import { RootStore } from ".";
 import IProposalService from "services/interfaces/IProposalService";
 import { makeAutoObservable } from "mobx";
+import Xdc3 from "xdc3";
 
 export default class ProposalStore {
   service: IProposalService;
@@ -24,7 +25,8 @@ export default class ProposalStore {
     values: number[],
     callData: string[],
     description: string,
-    account: string
+    account: string,
+    library: Xdc3,
   ): Promise<any> {
     try {
       return await this.service.createProposal(
@@ -33,7 +35,8 @@ export default class ProposalStore {
         callData,
         description,
         account,
-        this.rootStore.transactionStore
+        this.rootStore.transactionStore,
+        library,
       ).then((receipt) => {
         this.rootStore.alertStore.setShowSuccessAlert(
           true,
@@ -52,7 +55,8 @@ export default class ProposalStore {
     values: number[],
     callData: string[],
     description: string,
-    account: string
+    account: string,
+    library: Xdc3,
   ) {
     try {
       return await this.service.executeProposal(
@@ -61,7 +65,8 @@ export default class ProposalStore {
         callData,
         description,
         account,
-        this.rootStore.transactionStore
+        this.rootStore.transactionStore,
+        library,
       ).then((receipt) => {
         this.rootStore.alertStore.setShowSuccessAlert(
           true,
@@ -79,6 +84,7 @@ export default class ProposalStore {
     proposalId: string,
     account: string,
     support: string,
+    library: Xdc3,
   ): Promise<any> {
     try {
       return await this.service.castVote(
@@ -86,6 +92,7 @@ export default class ProposalStore {
         account,
         support,
         this.rootStore.transactionStore,
+        library,
       ).then((receipt) => {
         this.rootStore.alertStore.setShowSuccessAlert(
           true,
@@ -98,17 +105,17 @@ export default class ProposalStore {
     }
   }
 
-  async hasVoted(proposalId: string, account: string): Promise<boolean | undefined> {
+  async hasVoted(proposalId: string, account: string, library: Xdc3): Promise<boolean | undefined> {
     try {
-      return await this.service.hasVoted(proposalId, account)
+      return await this.service.hasVoted(proposalId, account, library)
     } catch (e: any) {
       this.showErrorMessage(e.message);
     }
   }
 
-  async getVBalance(account: string) {
+  async getVBalance(account: string, library: Xdc3) {
     try {
-      return await this.service.getVBalance(account);
+      return await this.service.getVBalance(account, library);
     } catch (e: any) {
       this.showErrorMessage(e.message);
     }
@@ -117,11 +124,13 @@ export default class ProposalStore {
   async fetchProposalState(
     proposal: string,
     account: string,
+    library: Xdc3,
   ) {
     try {
       return await this.service.viewProposalState(
         proposal,
         account,
+        library,
       );
     } catch (e: any) {
       this.showErrorMessage(e.message);

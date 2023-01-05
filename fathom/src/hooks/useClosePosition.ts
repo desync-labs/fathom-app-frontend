@@ -6,6 +6,7 @@ import { FXD_POOLS } from "apollo/queries";
 import ICollateralPool from "stores/interfaces/ICollateralPool";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
+import { useWeb3React } from "@web3-react/core";
 
 export enum ClosingType {
   Full,
@@ -20,6 +21,7 @@ const useClosePosition = (
 ) => {
   const { positionStore } = useStores();
   const { account } = useConnector()!;
+  const { library } = useWeb3React();
 
   const { data } = useQuery(FXD_POOLS, {
     context: { clientName: "stable" },
@@ -52,9 +54,9 @@ const useClosePosition = (
   );
 
   const getBalance = useCallback(async () => {
-    const balance = await positionStore.balanceStableCoin(account);
+    const balance = await positionStore.balanceStableCoin(account, library);
     setBalance(balance!);
-  }, [positionStore, account, setBalance]);
+  }, [positionStore, account, library, setBalance]);
 
   const handleOnOpen = useCallback(async () => {
     const price =
@@ -85,7 +87,8 @@ const useClosePosition = (
           position,
           pool,
           account,
-          collateral
+          collateral,
+          library
         );
       } else {
         receipt = await positionStore.partiallyClosePosition(
@@ -93,7 +96,8 @@ const useClosePosition = (
           pool,
           account,
           fathomToken,
-          collateral
+          collateral,
+          library
         );
       }
       setLastTransactionBlock(receipt.blockNumber);
@@ -107,6 +111,7 @@ const useClosePosition = (
     position,
     pool,
     account,
+    library,
     fathomToken,
     collateral,
     positionStore,

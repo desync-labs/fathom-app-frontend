@@ -3,12 +3,14 @@ import { RootStore } from ".";
 import { ITransaction, TransactionStatus } from "stores/interfaces/ITransaction";
 import { Constants } from "helpers/Constants";
 import ActiveWeb3TransactionsService from "services/ActiveWeb3TransactionsService";
+import Xdc3 from "xdc3";
 
 export default class ActiveWeb3Transactions {
   transactions: ITransaction[];
   service: ActiveWeb3TransactionsService;
   fetchHandle: NodeJS.Timeout | null = null;
   rootStore: RootStore;
+  library?: Xdc3;
 
   constructor(rootStore: RootStore, service: ActiveWeb3TransactionsService) {
     makeAutoObservable(this);
@@ -18,7 +20,7 @@ export default class ActiveWeb3Transactions {
 
     if (this.fetchHandle !== null) clearInterval(this.fetchHandle);
     this.fetchHandle = setInterval(
-      this.checkTransactionStatus.bind(this),
+      () => this.checkTransactionStatus(this.library!),
       Constants.TransactionCheckUpdateInterval
     );
   }
@@ -32,11 +34,15 @@ export default class ActiveWeb3Transactions {
     this.transactions.pop();
   }
 
-  private async checkTransactionStatus(): Promise<void> {
+  setLibrary(library: Xdc3) {
+    this.library = library;
+  }
+
+  private async checkTransactionStatus(library: Xdc3): Promise<void> {
     for (const transaction of this.transactions) {
       if (transaction !== undefined) {
         transaction.active = true;
-        let tx = await this.service.checkTransactionStatus(transaction);
+        let tx = await this.service.checkTransactionStatus(transaction, library);
         if (tx.status !== TransactionStatus.None) {
           this.removeTransaction();
         }

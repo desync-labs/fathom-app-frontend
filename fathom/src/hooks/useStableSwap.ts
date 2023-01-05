@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useStores } from "stores";
-import useMetaMask from "context/connector";
 import debounce from "lodash.debounce";
 import { SmartContractFactory } from "config/SmartContractFactory";
 import useSyncContext from "context/sync";
 import BigNumber from "bignumber.js";
 import Xdc3 from "xdc3";
 import { useMediaQuery, useTheme } from "@mui/material";
+import useConnector from "context/connector";
 
 const useStableSwap = (options: string[]) => {
   const [inputBalance, setInputBalance] = useState<number>(0);
@@ -31,7 +31,7 @@ const useStableSwap = (options: string[]) => {
 
   const { stableSwapStore, poolStore } = useStores();
 
-  const { account, chainId } = useMetaMask()!;
+  const { account, chainId, library } = useConnector()!;
   const { setLastTransactionBlock } = useSyncContext();
 
   const theme = useTheme();
@@ -62,8 +62,8 @@ const useStableSwap = (options: string[]) => {
           let approved;
           approved =
             currency === options[0]
-              ? await stableSwapStore.approvalStatusUsdt(account, input)
-              : await stableSwapStore.approvalStatusStableCoin(account, input);
+              ? await stableSwapStore.approvalStatusUsdt(account, input, library)
+              : await stableSwapStore.approvalStatusStableCoin(account, input, library);
 
           type === "input"
             ? approved
@@ -74,7 +74,7 @@ const useStableSwap = (options: string[]) => {
             : setApproveOutputBtn(true);
         }
       }, 1000),
-    [stableSwapStore, account, options, setApproveInputBtn, setApproveOutputBtn]
+    [stableSwapStore, account, library, options, setApproveInputBtn, setApproveOutputBtn]
   );
 
   const inputError = useMemo(() => {
@@ -109,12 +109,12 @@ const useStableSwap = (options: string[]) => {
           try {
             const promises = [];
             promises.push(
-              poolStore.getUserTokenBalance(account, inputContractAddress)
+              poolStore.getUserTokenBalance(account, inputContractAddress, library)
             );
             promises.push(
-              poolStore.getUserTokenBalance(account, outputCurrencyAddress)
+              poolStore.getUserTokenBalance(account, outputCurrencyAddress, library)
             );
-            promises.push(poolStore.getDexPrice(FXDContractAddress));
+            promises.push(poolStore.getDexPrice(FXDContractAddress, library));
 
             const [inputBalance, outputBalance, fxdPrice] = await Promise.all(
               promises
@@ -126,7 +126,7 @@ const useStableSwap = (options: string[]) => {
           } catch (e) {}
         }
       }, 100),
-    [account, chainId, poolStore, setInputBalance, setOutputBalance]
+    [account, chainId, poolStore, library, setInputBalance, setOutputBalance]
   );
 
   const changeCurrenciesPosition = useCallback(
@@ -157,14 +157,14 @@ const useStableSwap = (options: string[]) => {
   useEffect(() => {
     if (chainId) {
       Promise.all([
-        stableSwapStore.getFeeIn(),
-        stableSwapStore.getFeeOut(),
+        stableSwapStore.getFeeIn(library),
+        stableSwapStore.getFeeOut(library),
       ]).then(([feeIn, feeOut]) => {
         setFeeIn(feeIn);
         setFeeOut(feeOut);
       });
     }
-  }, [stableSwapStore, chainId, setFeeIn, setFeeOut]);
+  }, [stableSwapStore, chainId, library, setFeeIn, setFeeOut]);
 
   const swapFee = useMemo(() => {
     /**
@@ -203,7 +203,8 @@ const useStableSwap = (options: string[]) => {
         account,
         inputValue as number,
         outputValue as number,
-        options[0]
+        options[0],
+        library
       );
 
       setLastTransactionBlock(receipt.blockNumber);
@@ -219,6 +220,7 @@ const useStableSwap = (options: string[]) => {
     inputValue,
     outputValue,
     account,
+    library,
     stableSwapStore,
     setSwapPending,
     handleCurrencyChange,
@@ -229,8 +231,8 @@ const useStableSwap = (options: string[]) => {
     setApprovalPending("input");
     try {
       inputCurrency === options[0]
-        ? await stableSwapStore.approveUsdt(account)
-        : await stableSwapStore.approveStableCoin(account);
+        ? await stableSwapStore.approveUsdt(account, library)
+        : await stableSwapStore.approveStableCoin(account, library);
       setApproveInputBtn(false);
     } catch (e) {
       setApproveInputBtn(true);
@@ -241,6 +243,7 @@ const useStableSwap = (options: string[]) => {
     inputCurrency,
     stableSwapStore,
     account,
+    library,
     setApprovalPending,
     setApproveInputBtn,
   ]);
@@ -249,8 +252,8 @@ const useStableSwap = (options: string[]) => {
     setApprovalPending("output");
     try {
       outputCurrency === options[0]
-        ? await stableSwapStore.approveUsdt(account)
-        : await stableSwapStore.approveStableCoin(account);
+        ? await stableSwapStore.approveUsdt(account, library)
+        : await stableSwapStore.approveStableCoin(account, library);
 
       setApproveOutputBtn(false);
     } catch (e) {
@@ -263,6 +266,7 @@ const useStableSwap = (options: string[]) => {
     outputCurrency,
     stableSwapStore,
     account,
+    library,
     setApprovalPending,
     setApproveOutputBtn,
   ]);

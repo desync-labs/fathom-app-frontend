@@ -1,10 +1,10 @@
 import { useStores } from "stores";
-import useMetaMask from "context/connector";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import debounce from "lodash.debounce";
 import { OpenPositionContextType } from "context/openPosition";
 import { useForm } from "react-hook-form";
 import useSyncContext from "context/sync";
+import useConnector from "context/connector";
 
 const defaultValues = {
   collateral: "",
@@ -16,9 +16,9 @@ const useOpenPosition = (
   pool: OpenPositionContextType["pool"],
   onClose: OpenPositionContextType["onClose"]
 ) => {
-  const { poolStore, positionStore } = useStores();
+  const { poolService, positionStore } = useStores();
 
-  const { account, chainId } = useMetaMask()!;
+  const { account, chainId, library } = useConnector()!;
 
   const { handleSubmit, watch, control, setValue, trigger } = useForm({
     defaultValues,
@@ -58,26 +58,28 @@ const useOpenPosition = (
         let approved = await positionStore.approvalStatus(
           account,
           Number(collateral),
-          collateralTokenAddress!
+          collateralTokenAddress!,
+          library,
         );
         approved ? setApproveBtn(false) : setApproveBtn(true);
       }, 1000),
-    [positionStore, collateralTokenAddress, account]
+    [positionStore, collateralTokenAddress, account, library]
   );
 
   const getCollateralTokenAndBalance = useCallback(async () => {
-    const tokenAddress = await poolStore.getCollateralTokenAddress(
-      pool.tokenAdapterAddress
+    const tokenAddress = await poolService.getCollateralTokenAddress(
+      pool.tokenAdapterAddress,
+      library
     );
 
     console.log("token adapter address", pool.tokenAdapterAddress);
     console.log("collateral token address", tokenAddress);
 
-    const balance = await poolStore.getUserTokenBalance(account, tokenAddress!);
+    const balance = await poolService.getUserTokenBalance(account, tokenAddress!, library);
 
     setCollateralTokenAddress(tokenAddress);
     setBalance(balance);
-  }, [poolStore, account, pool, setCollateralTokenAddress]);
+  }, [poolService, account, pool, library, setCollateralTokenAddress]);
 
   const availableFathomInPool = useMemo(
     () => Number(pool.totalAvailable),
@@ -120,7 +122,7 @@ const useOpenPosition = (
       const priceOfCollateralFromDex =
         pool.poolName === "USDT"
           ? 10 ** 18
-          : await poolStore.getDexPrice(collateralTokenAddress!);
+          : await poolService.getDexPrice(collateralTokenAddress!, library);
 
       // DEBT RATIO
       const debtRatio =
@@ -162,7 +164,7 @@ const useOpenPosition = (
     [
       collateralTokenAddress,
       pool,
-      poolStore,
+      poolService,
       setLiquidationPrice,
       setSafetyBuffer,
       setFxdAvailableToBorrow,
@@ -172,6 +174,7 @@ const useOpenPosition = (
       setFxdToBeBorrowed,
       setValue,
       trigger,
+      library,
     ]
   );
 
@@ -205,7 +208,8 @@ const useOpenPosition = (
           account,
           pool,
           Number(collateral),
-          Number(fathomToken)
+          Number(fathomToken),
+          library,
         );
         setLastTransactionBlock(receipt.blockNumber);
         onClose();
@@ -216,6 +220,7 @@ const useOpenPosition = (
     },
     [
       account,
+      library,
       pool,
       positionStore,
       setOpenPositionLoading,
@@ -227,7 +232,7 @@ const useOpenPosition = (
   const approve = useCallback(async () => {
     setApprovalPending(true);
     try {
-      await positionStore.approve(account, collateralTokenAddress!);
+      await positionStore.approve(account, collateralTokenAddress!, library);
       setApproveBtn(false);
     } catch (e) {
       setApproveBtn(true);
@@ -235,11 +240,12 @@ const useOpenPosition = (
 
     setApprovalPending(false);
   }, [
-    setApprovalPending,
-    setApproveBtn,
     account,
     collateralTokenAddress,
     positionStore,
+    library,
+    setApprovalPending,
+    setApproveBtn,
   ]);
 
   const setMax = useCallback(

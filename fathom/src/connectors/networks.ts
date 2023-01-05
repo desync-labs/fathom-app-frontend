@@ -38,7 +38,6 @@ export const XDC_NETWORK_SETTINGS = {
 
 export const injected = new InjectedConnector({ supportedChainIds });
 
-// mainnet only
 export const walletconnect = new WalletConnectConnector({
   rpc: {
     51: APOTHEM_RPC

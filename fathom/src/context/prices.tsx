@@ -27,8 +27,8 @@ type UsePricesContextReturn = {
 export const PricesContext = createContext<UseStakingViewType>(null);
 
 export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
-  const { stakingStore } = useStores();
-  const { chainId } = useWeb3React();
+  const { stakingService } = useStores();
+  const { chainId, library } = useWeb3React();
   const [fxdPrice, setFxdPrice] = useState(0);
   const [wxdcPrice, setWxdcPrice] = useState(0);
   const [fthmPrice, setFthmPrice] = useState(0);
@@ -56,9 +56,9 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
       // @ts-ignore
       const [{ 0: fxdPrice }, { 0: fthmPrice }, { 0: wxdcPrice }] =
         await Promise.all([
-          stakingStore.getPairPrice(usdtTokenAddress, fxdTokenAddress),
-          stakingStore.getPairPrice(usdtTokenAddress, fthmTokenAddress),
-          stakingStore.getPairPrice(usdtTokenAddress, wxdcTokenAddress),
+          stakingService.getPairPrice(usdtTokenAddress, fxdTokenAddress, library),
+          stakingService.getPairPrice(usdtTokenAddress, fthmTokenAddress, library),
+          stakingService.getPairPrice(usdtTokenAddress, wxdcTokenAddress, library),
         ]);
 
       setFxdPrice(fxdPrice);
@@ -67,11 +67,12 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
     }
   }, [
     chainId,
-    stakingStore,
+    stakingService,
     usdtTokenAddress,
     fthmTokenAddress,
     fxdTokenAddress,
     wxdcTokenAddress,
+    library,
     setFxdPrice,
     setFthmPrice,
     setWxdcPrice,
@@ -105,7 +106,7 @@ const usePricesContext = (): UsePricesContextReturn => {
 
   if (context === undefined) {
     throw new Error(
-      "useMetaMask hook must be used with a MetaMaskProvider component"
+      "usePricesContext hook must be used with a PricesContext component"
     );
   }
 

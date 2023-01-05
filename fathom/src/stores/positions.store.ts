@@ -3,6 +3,7 @@ import { RootStore } from ".";
 import IPositionService from "services/interfaces/IPositionService";
 import ICollateralPool from "stores/interfaces/ICollateralPool";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
+import Xdc3 from "xdc3";
 
 export default class PositionStore {
   positions: IOpenPosition[] = [];
@@ -19,7 +20,8 @@ export default class PositionStore {
     address: string,
     pool: ICollateralPool,
     collateral: number,
-    fathomToken: number
+    fathomToken: number,
+    library: Xdc3,
   ): Promise<any> {
     try {
       return await this.service
@@ -28,7 +30,8 @@ export default class PositionStore {
           pool,
           collateral,
           fathomToken,
-          this.rootStore.transactionStore
+          this.rootStore.transactionStore,
+          library,
         )
         .then((receipt) => {
           this.rootStore.alertStore.setShowSuccessAlert(
@@ -47,10 +50,15 @@ export default class PositionStore {
     this.positions = _positions;
   }
 
-  async approve(address: string, tokenAddress: string) {
+  async approve(address: string, tokenAddress: string, library: Xdc3) {
     try {
       return await this.service
-        .approve(address, tokenAddress, this.rootStore.transactionStore)
+        .approve(
+          address,
+          tokenAddress,
+          this.rootStore.transactionStore,
+          library
+        )
         .then((receipt) => {
           this.rootStore.alertStore.setShowSuccessAlert(
             true,
@@ -68,32 +76,34 @@ export default class PositionStore {
   async approvalStatus(
     address: string,
     collateral: number,
-    tokenAddress: string
+    tokenAddress: string,
+    library: Xdc3
   ) {
     try {
       return await this.service.approvalStatus(
         address,
         tokenAddress,
         collateral,
-        this.rootStore.transactionStore
+        this.rootStore.transactionStore,
+        library
       );
     } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(true, e.message);
     }
   }
 
-  async balanceStableCoin(address: string) {
+  async balanceStableCoin(address: string, library: Xdc3) {
     try {
-      return await this.service.balanceStableCoin(address);
+      return await this.service.balanceStableCoin(address, library);
     } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(true, e.message);
     }
   }
 
-  async approveStableCoin(address: string) {
+  async approveStableCoin(address: string, library: Xdc3) {
     try {
       return await this.service
-        .approveStableCoin(address, this.rootStore.transactionStore)
+        .approveStableCoin(address, this.rootStore.transactionStore, library)
         .then(() => {
           this.rootStore.alertStore.setShowSuccessAlert(
             true,
@@ -105,9 +115,9 @@ export default class PositionStore {
     }
   }
 
-  async approvalStatusStableCoin(address: string) {
+  async approvalStatusStableCoin(address: string, library: Xdc3) {
     try {
-      return await this.service.approvalStatusStableCoin(address);
+      return await this.service.approvalStatusStableCoin(address, library);
     } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(true, e.message);
     }
@@ -117,7 +127,8 @@ export default class PositionStore {
     position: IOpenPosition,
     pool: ICollateralPool,
     address: string,
-    collateral: number
+    collateral: number,
+    library: Xdc3
   ) {
     try {
       return await this.service
@@ -126,7 +137,8 @@ export default class PositionStore {
           pool,
           address,
           collateral,
-          this.rootStore.transactionStore
+          this.rootStore.transactionStore,
+          library
         )
         .then((receipt) => {
           this.rootStore.alertStore.setShowSuccessAlert(
@@ -147,7 +159,8 @@ export default class PositionStore {
     pool: ICollateralPool,
     address: string,
     fathomToken: number,
-    collateral: number
+    collateral: number,
+    library: Xdc3
   ): Promise<any> {
     try {
       return await this.service
@@ -157,7 +170,8 @@ export default class PositionStore {
           address,
           fathomToken,
           collateral,
-          this.rootStore.transactionStore
+          this.rootStore.transactionStore,
+          library
         )
         .then((receipt) => {
           this.rootStore.alertStore.setShowSuccessAlert(
@@ -173,9 +187,9 @@ export default class PositionStore {
     }
   }
 
-  async getProxyWallet(account: string) {
+  async getProxyWallet(account: string, library: Xdc3) {
     try {
-      return await this.service.proxyWalletExist(account);
+      return await this.service.proxyWalletExist(account, library);
     } catch (e: any) {
       return this.rootStore.alertStore.setShowErrorAlert(true, e.message);
     }

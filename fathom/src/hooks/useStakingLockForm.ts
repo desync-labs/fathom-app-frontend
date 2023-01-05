@@ -1,12 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
-import useMetaMask from "context/connector";
 import { useStores } from "stores";
 
 import debounce from "lodash.debounce";
-import { Web3Utils } from "helpers/Web3Utils";
 import useSyncContext from "context/sync";
 import { SmartContractFactory } from "config/SmartContractFactory";
+import useConnector from "context/connector";
 
 const useStakingLockForm = () => {
   const [balanceError, setBalanceError] = useState<boolean>(false);
@@ -24,7 +23,7 @@ const useStakingLockForm = () => {
     reValidateMode: "onChange",
     mode: "onChange",
   });
-  const { account, chainId } = useMetaMask()!;
+  const { account, chainId, library } = useConnector()!;
   const { stakingStore, positionStore } = useStores();
 
   const { setLastTransactionBlock, syncDao, prevSyncDao } = useSyncContext();
@@ -46,12 +45,13 @@ const useStakingLockForm = () => {
     if (account) {
       const balance = await poolStore.getUserTokenBalance(
         account,
-        fthmTokenAddress
+        fthmTokenAddress,
+        library,
       );
 
       setFthmBalance(balance / 10 ** 18);
     }
-  }, [account, poolStore, fthmTokenAddress, setFthmBalance]);
+  }, [account, poolStore, fthmTokenAddress, library, setFthmBalance]);
 
   const approvalStatus = useMemo(
     () =>
@@ -60,7 +60,8 @@ const useStakingLockForm = () => {
           const approved = await stakingStore.approvalStatusStakingFTHM(
             account,
             stakePosition,
-            fthmTokenAddress
+            fthmTokenAddress,
+            library
           );
 
           console.log("Approve", approved);
@@ -68,7 +69,7 @@ const useStakingLockForm = () => {
         },
         1000
       ),
-    [stakingStore, setApprovedBtn, fthmTokenAddress]
+    [stakingStore, library, setApprovedBtn, fthmTokenAddress]
   );
 
   useEffect(() => {
@@ -91,10 +92,9 @@ const useStakingLockForm = () => {
 
   useEffect(() => {
     const getBalance = async () => {
-      const instance = Web3Utils.getWeb3Instance(chainId);
       const [xdcBalance, fxdBalance] = await Promise.all([
-        instance.eth.getBalance(account),
-        positionStore.balanceStableCoin(account),
+        library.eth.getBalance(account),
+        positionStore.balanceStableCoin(account, library),
       ]);
 
       setXdcBalance(xdcBalance / 10 ** 18);
@@ -102,7 +102,7 @@ const useStakingLockForm = () => {
     };
 
     if (account && chainId) getBalance();
-  }, [account, chainId, positionStore, stakingStore, setXdcBalance, setFxdBalance]);
+  }, [account, library, chainId, positionStore, stakingStore, setXdcBalance, setFxdBalance]);
 
   useEffect(() => {
     if (Number(stakePosition) > fthmBalance) {
@@ -121,20 +121,21 @@ const useStakingLockForm = () => {
         const receipt = await stakingStore.createLock(
           account,
           stakePosition,
-          lockDays
+          lockDays,
+          library,
         );
         setLastTransactionBlock(receipt.blockNumber);
         reset();
       } catch (e) {}
       setIsLoading(false);
     },
-    [stakingStore, account, reset, setIsLoading, setLastTransactionBlock]
+    [stakingStore, account, library, reset, setIsLoading, setLastTransactionBlock]
   );
 
   const approveFTHM = useCallback(async () => {
     setApprovalPending(true);
     try {
-      await stakingStore.approveFTHM(account, fthmTokenAddress);
+      await stakingStore.approveFTHM(account, fthmTokenAddress, library,);
       setApprovedBtn(false);
     } catch (e) {
       setApprovedBtn(true);
@@ -143,6 +144,7 @@ const useStakingLockForm = () => {
     setApprovalPending(false);
   }, [
     account,
+    library,
     stakingStore,
     fthmTokenAddress,
     setApprovalPending,

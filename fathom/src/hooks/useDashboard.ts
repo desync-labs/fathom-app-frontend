@@ -12,7 +12,7 @@ import {
 
 const useDashboard = () => {
   const { positionStore } = useStores();
-  const { account } = useWeb3React();
+  const { account, library } = useWeb3React();
   const { syncFXD, prevSyncFxd } = useSyncContext();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -40,7 +40,7 @@ const useDashboard = () => {
   );
 
   const fetchUserStatsAndProxyWallet = useCallback(async () => {
-    const proxyWallet = await positionStore.getProxyWallet(account!);
+    const proxyWallet = await positionStore.getProxyWallet(account!, library);
     setProxyWallet(proxyWallet!);
 
     loadUserStats({
@@ -53,6 +53,7 @@ const useDashboard = () => {
   }, [
     positionStore,
     account,
+    library,
     loadUserStats,
     setPositionsItemsCount,
     setProxyWallet,

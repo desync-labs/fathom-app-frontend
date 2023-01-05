@@ -1,6 +1,7 @@
 import { makeAutoObservable } from "mobx";
 import { RootStore } from ".";
 import IStakingService from "services/interfaces/IStakingService";
+import Xdc3 from "xdc3";
 
 export default class StakingStore {
   service: IStakingService;
@@ -15,7 +16,8 @@ export default class StakingStore {
   async createLock(
     account: string,
     stakePosition: number,
-    unlockPeriod: number
+    unlockPeriod: number,
+    library: Xdc3,
   ): Promise<any> {
     try {
       return await this.service
@@ -23,7 +25,8 @@ export default class StakingStore {
           account,
           stakePosition,
           unlockPeriod,
-          this.rootStore.transactionStore
+          this.rootStore.transactionStore,
+          library,
         )
         .then((receipt) => {
           this.rootStore.alertStore.setShowSuccessAlert(
@@ -38,10 +41,10 @@ export default class StakingStore {
     }
   }
 
-  async handleEarlyWithdrawal(account: string, lockId: number): Promise<any> {
+  async handleEarlyWithdrawal(account: string, lockId: number, library: Xdc3): Promise<any> {
     try {
       return await this.service
-        .handleEarlyWithdrawal(account, lockId, this.rootStore.transactionStore)
+        .handleEarlyWithdrawal(account, lockId, this.rootStore.transactionStore, library)
         .then((receipt) => {
           this.rootStore.alertStore.setShowSuccessAlert(
             true,
@@ -58,11 +61,12 @@ export default class StakingStore {
   async handleUnlock(
     account: string,
     lockId: number,
-    amount: number
+    amount: number,
+    library: Xdc3,
   ): Promise<any> {
     try {
       return await this.service
-        .handleUnlock(account, lockId, amount, this.rootStore.transactionStore)
+        .handleUnlock(account, lockId, amount, this.rootStore.transactionStore, library)
         .then((receipt) => {
           this.rootStore.alertStore.setShowSuccessAlert(
             true,
@@ -76,10 +80,10 @@ export default class StakingStore {
     }
   }
 
-  async handleClaimRewards(account: string): Promise<any> {
+  async handleClaimRewards(account: string, library: Xdc3): Promise<any> {
     try {
       return await this.service
-        .handleClaimRewards(account, 0, this.rootStore.transactionStore)
+        .handleClaimRewards(account, 0, this.rootStore.transactionStore, library)
         .then((receipt) => {
           this.rootStore.alertStore.setShowSuccessAlert(
             true,
@@ -93,10 +97,10 @@ export default class StakingStore {
     }
   }
 
-  async handleWithdrawAll(account: string): Promise<any> {
+  async handleWithdrawAll(account: string, library: Xdc3): Promise<any> {
     try {
       return await this.service
-        .handleWithdrawAll(account, 1, this.rootStore.transactionStore)
+        .handleWithdrawAll(account, 1, this.rootStore.transactionStore, library)
         .then((receipt) => {
           this.rootStore.alertStore.setShowSuccessAlert(
             true,
@@ -111,12 +115,13 @@ export default class StakingStore {
     }
   }
 
-  async getStreamClaimableAmountPerLock(account: string, lockId: number) {
+  async getStreamClaimableAmountPerLock(account: string, lockId: number, library: Xdc3) {
     try {
       return await this.service.getStreamClaimableAmountPerLock(
         0,
         account,
-        lockId
+        lockId,
+        library,
       );
     } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(true, e.message);
@@ -124,17 +129,17 @@ export default class StakingStore {
     }
   }
 
-  async getPairPrice(token0: string, token1: string) {
+  async getPairPrice(token0: string, token1: string, library: Xdc3) {
     try {
-      return await this.service.getPairPrice(token0, token1);
+      return await this.service.getPairPrice(token0, token1, library);
     } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(true, e.message);
     }
   }
 
-  async getStreamClaimableAmount(account: string) {
+  async getStreamClaimableAmount(account: string, library: Xdc3) {
     try {
-      return await this.service.getStreamClaimableAmount(account);
+      return await this.service.getStreamClaimableAmount(account, library);
     } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(true, e.message);
     }
@@ -143,13 +148,15 @@ export default class StakingStore {
   async approvalStatusStakingFTHM(
     address: string,
     stakingPosition: number,
-    fthmTokenAddress: string
+    fthmTokenAddress: string,
+    library: Xdc3,
   ) {
     try {
       return await this.service.approvalStatusStakingFTHM(
         address,
         stakingPosition,
-        fthmTokenAddress
+        fthmTokenAddress,
+        library,
       );
     } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(true, e.message);
@@ -157,13 +164,14 @@ export default class StakingStore {
     }
   }
 
-  async approveFTHM(address: string, fthmTokenAddress: string) {
+  async approveFTHM(address: string, fthmTokenAddress: string, library: Xdc3) {
     try {
       return await this.service
         .approveStakingFTHM(
           address,
           fthmTokenAddress,
-          this.rootStore.transactionStore
+          this.rootStore.transactionStore,
+          library
         )
         .then((receipt) => {
           this.rootStore.alertStore.setShowSuccessAlert(

@@ -149,7 +149,7 @@ const useSyncContext = (): UseSyncContextReturn => {
 
   if (context === undefined) {
     throw new Error(
-      "useMetaMask hook must be used with a MetaMaskProvider component"
+      "useSyncContext hook must be used with a SyncContext component"
     );
   }
 

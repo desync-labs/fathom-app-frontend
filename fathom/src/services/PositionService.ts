@@ -13,6 +13,7 @@ import {
 } from "stores/interfaces/ITransaction";
 
 import { toWei } from "web3-utils";
+import Xdc3 from "xdc3";
 
 export default class PositionService implements IPositionService {
   chainId = Constants.DEFAULT_CHAIN_ID;
@@ -22,33 +23,30 @@ export default class PositionService implements IPositionService {
     pool: ICollateralPool,
     collateral: number,
     fathomToken: number,
-    transactionStore: ActiveWeb3Transactions
+    transactionStore: ActiveWeb3Transactions,
+    library: Xdc3
   ): Promise<void> {
     return new Promise(async (resolve, reject) => {
       try {
-        let proxyWalletAddress = await this.proxyWalletExist(address);
+        let proxyWalletAddress = await this.proxyWalletExist(address, library);
 
         if (proxyWalletAddress === Constants.ZERO_ADDRESS) {
-          proxyWalletAddress = await this.createProxyWallet(address);
+          proxyWalletAddress = await this.createProxyWallet(address, library);
         }
 
         const wallet = Web3Utils.getContractInstanceFrom(
           SmartContractFactory.proxyWallet.abi,
           proxyWalletAddress,
-          this.chainId
+          library
         );
 
-        const encodedResult = Web3Utils.getWeb3Instance(
-          this.chainId
-        ).eth.abi.encodeParameters(["address"], [address]);
+        const encodedResult = library.eth.abi.encodeParameters(["address"], [address]);
 
         const jsonInterface = SmartContractFactory.FathomStablecoinProxyAction(
           this.chainId
         ).abi.filter((abi) => abi.name === "openLockTokenAndDraw")[0];
 
-        const openPositionCall = Web3Utils.getWeb3Instance(
-          this.chainId
-        ).eth.abi.encodeFunctionCall(jsonInterface, [
+        const openPositionCall = library.eth.abi.encodeFunctionCall(jsonInterface, [
           SmartContractFactory.PositionManager(this.chainId).address,
           SmartContractFactory.StabilityFeeCollector(this.chainId).address,
           pool.tokenAdapterAddress,
@@ -85,12 +83,12 @@ export default class PositionService implements IPositionService {
     });
   }
 
-  createProxyWallet(address: string): Promise<string> {
+  createProxyWallet(address: string, library: Xdc3): Promise<string> {
     return new Promise(async (resolve, reject) => {
       try {
         const proxyWalletRegistry = Web3Utils.getContractInstance(
           SmartContractFactory.ProxyWalletRegistry(this.chainId),
-          this.chainId
+          library
         );
 
         await proxyWalletRegistry.methods
@@ -108,10 +106,10 @@ export default class PositionService implements IPositionService {
     });
   }
 
-  proxyWalletExist(address: string): Promise<string> {
+  proxyWalletExist(address: string, library: Xdc3): Promise<string> {
     const proxyWalletRegistry = Web3Utils.getContractInstance(
       SmartContractFactory.ProxyWalletRegistry(this.chainId),
-      this.chainId
+      library
     );
 
     return proxyWalletRegistry.methods.proxies(address).call();
@@ -122,29 +120,32 @@ export default class PositionService implements IPositionService {
     pool: ICollateralPool,
     address: string,
     collateral: number,
-    transactionStore: ActiveWeb3Transactions
+    transactionStore: ActiveWeb3Transactions,
+    library: Xdc3
   ): Promise<void> {
     return new Promise(async (resolve, reject) => {
       try {
-        const proxyWalletAddress = await this.proxyWalletExist(address);
+        const proxyWalletAddress = await this.proxyWalletExist(
+          address,
+          library
+        );
 
         const wallet = Web3Utils.getContractInstanceFrom(
           SmartContractFactory.proxyWallet.abi,
           proxyWalletAddress,
-          this.chainId
+          library
         );
 
-        const encodedResult = Web3Utils.getWeb3Instance(
-          this.chainId
-        ).eth.abi.encodeParameters(["address"], [address]);
+        const encodedResult = library.eth.abi.encodeParameters(
+          ["address"],
+          [address]
+        );
 
         const jsonInterface = SmartContractFactory.FathomStablecoinProxyAction(
           this.chainId
         ).abi.filter((abi) => abi.name === "wipeAllAndUnlockToken")[0];
 
-        const wipeAllAndUnlockTokenCall = Web3Utils.getWeb3Instance(
-          this.chainId
-        ).eth.abi.encodeFunctionCall(jsonInterface, [
+        const wipeAllAndUnlockTokenCall = library.eth.abi.encodeFunctionCall(jsonInterface, [
           SmartContractFactory.PositionManager(this.chainId).address,
           pool.tokenAdapterAddress,
           SmartContractFactory.StablecoinAdapter(this.chainId).address,
@@ -184,29 +185,29 @@ export default class PositionService implements IPositionService {
     address: string,
     stableCoin: number,
     collateral: number,
-    transactionStore: ActiveWeb3Transactions
+    transactionStore: ActiveWeb3Transactions,
+    library: Xdc3
   ): Promise<void> {
     return new Promise(async (resolve, reject) => {
       try {
-        const proxyWalletAddress = await this.proxyWalletExist(address);
+        const proxyWalletAddress = await this.proxyWalletExist(
+          address,
+          library
+        );
 
         const wallet = Web3Utils.getContractInstanceFrom(
           SmartContractFactory.proxyWallet.abi,
           proxyWalletAddress,
-          this.chainId
+          library
         );
 
-        const encodedResult = Web3Utils.getWeb3Instance(
-          this.chainId
-        ).eth.abi.encodeParameters(["address"], [address]);
+        const encodedResult = library.eth.abi.encodeParameters(["address"], [address]);
 
         const jsonInterface = SmartContractFactory.FathomStablecoinProxyAction(
           this.chainId
         ).abi.filter((abi) => abi.name === "wipeAndUnlockToken")[0];
 
-        const wipeAndUnlockTokenCall = Web3Utils.getWeb3Instance(
-          this.chainId
-        ).eth.abi.encodeFunctionCall(jsonInterface, [
+        const wipeAndUnlockTokenCall = library.eth.abi.encodeFunctionCall(jsonInterface, [
           SmartContractFactory.PositionManager(this.chainId).address,
           pool.tokenAdapterAddress,
           SmartContractFactory.StablecoinAdapter(this.chainId).address,
@@ -244,19 +245,20 @@ export default class PositionService implements IPositionService {
   approve(
     address: string,
     tokenAddress: string,
-    transactionStore: ActiveWeb3Transactions
+    transactionStore: ActiveWeb3Transactions,
+    library: Xdc3
   ): Promise<void> {
     return new Promise(async (resolve, reject) => {
       try {
-        let proxyWalletAddress = await this.proxyWalletExist(address);
+        let proxyWalletAddress = await this.proxyWalletExist(address, library);
 
         if (proxyWalletAddress === Constants.ZERO_ADDRESS) {
-          proxyWalletAddress = await this.createProxyWallet(address);
+          proxyWalletAddress = await this.createProxyWallet(address, library);
         }
 
         const BEP20 = Web3Utils.getContractInstance(
           SmartContractFactory.BEP20(tokenAddress),
-          this.chainId
+          library
         );
 
         const receipt = await BEP20.methods
@@ -273,7 +275,7 @@ export default class PositionService implements IPositionService {
             });
           });
 
-        resolve(receipt)
+        resolve(receipt);
       } catch (e) {
         reject(e);
       }
@@ -284,11 +286,12 @@ export default class PositionService implements IPositionService {
     address: string,
     tokenAddress: string,
     collateral: number,
-    transactionStore: ActiveWeb3Transactions
+    transactionStore: ActiveWeb3Transactions,
+    library: Xdc3
   ): Promise<Boolean> {
     collateral = collateral || 0;
 
-    const proxyWalletAddress = await this.proxyWalletExist(address);
+    const proxyWalletAddress = await this.proxyWalletExist(address, library);
 
     if (proxyWalletAddress === Constants.ZERO_ADDRESS) {
       return false;
@@ -296,7 +299,7 @@ export default class PositionService implements IPositionService {
 
     const BEP20 = Web3Utils.getContractInstance(
       SmartContractFactory.BEP20(tokenAddress),
-      this.chainId
+      library
     );
 
     const allowance = await BEP20.methods
@@ -310,17 +313,18 @@ export default class PositionService implements IPositionService {
 
   async approveStableCoin(
     address: string,
-    transactionStore: ActiveWeb3Transactions
+    transactionStore: ActiveWeb3Transactions,
+    library: Xdc3
   ): Promise<void> {
-    let proxyWalletAddress = await this.proxyWalletExist(address);
+    let proxyWalletAddress = await this.proxyWalletExist(address, library);
 
     if (proxyWalletAddress === Constants.ZERO_ADDRESS) {
-      proxyWalletAddress = await this.createProxyWallet(address);
+      proxyWalletAddress = await this.createProxyWallet(address, library);
     }
 
     const fathomStableCoin = Web3Utils.getContractInstance(
       SmartContractFactory.FathomStableCoin(this.chainId),
-      this.chainId
+      library
     );
 
     return fathomStableCoin.methods
@@ -338,17 +342,20 @@ export default class PositionService implements IPositionService {
       });
   }
 
-  balanceStableCoin(address: string): Promise<number> {
+  balanceStableCoin(address: string, library: Xdc3): Promise<number> {
     const fathomStableCoin = Web3Utils.getContractInstance(
       SmartContractFactory.FathomStableCoin(this.chainId),
-      this.chainId
+      library
     );
 
     return fathomStableCoin.methods.balanceOf(address).call();
   }
 
-  async approvalStatusStableCoin(address: string): Promise<Boolean> {
-    const proxyWalletAddress = await this.proxyWalletExist(address);
+  async approvalStatusStableCoin(
+    address: string,
+    library: Xdc3
+  ): Promise<Boolean> {
+    const proxyWalletAddress = await this.proxyWalletExist(address, library);
 
     if (proxyWalletAddress === Constants.ZERO_ADDRESS) {
       return false;
@@ -356,7 +363,7 @@ export default class PositionService implements IPositionService {
 
     const fathomStableCoin = Web3Utils.getContractInstance(
       SmartContractFactory.FathomStableCoin(this.chainId),
-      this.chainId
+      library
     );
 
     const allowance = await fathomStableCoin.methods
