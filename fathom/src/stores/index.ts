@@ -1,18 +1,14 @@
 // src/stores/index.js
 import React from "react";
-import ActiveWeb3TransactionsService from "services/ActiveWeb3TransactionsService";
 import PoolService from "services/PoolService";
 import PositionService from "services/PositionService";
 import StableSwapService from "services/StableSwapService";
 import AlertStore from "stores/alert.stores";
-import PoolStore from "stores/pool.store";
-import PositionStore from "stores/positions.store";
 import StableSwapStore from "stores/stableswap.stores";
 import ActiveWeb3Transactions from "stores/transaction.store";
 import IPoolService from "services/interfaces/IPoolService";
 import IPositionService from "services/interfaces/IPositionService";
 import IStableSwapService from "services/interfaces/IStableSwapService";
-import IActiveWeb3TransactionsService from "services/interfaces/IActiveWeb3TransactionsService";
 import ProposalStore from "stores/proposal.store";
 import IProposalService from "services/interfaces/IProposalService";
 import ProposalService from "services/ProposalService";
@@ -25,13 +21,11 @@ export class RootStore {
   /**
    * Stores
    */
-  poolStore: PoolStore;
-  positionStore: PositionStore;
-  stableSwapStore: StableSwapStore;
   alertStore: AlertStore;
   transactionStore: ActiveWeb3Transactions;
-  proposalStore: ProposalStore;
 
+  stableSwapStore: StableSwapStore;
+  proposalStore: ProposalStore;
   stakingStore: StakingStore;
   /**
    * Services
@@ -39,7 +33,6 @@ export class RootStore {
   poolService: IPoolService;
   positionService: IPositionService;
   stableSwapService: IStableSwapService;
-  activeWeb3TransactionService: IActiveWeb3TransactionsService;
   proposalService: IProposalService;
 
   stakingService: IStakingService;
@@ -47,25 +40,25 @@ export class RootStore {
   chainId: number = Constants.DEFAULT_CHAIN_ID;
 
   constructor() {
-    this.poolService = new PoolService();
-    this.positionService = new PositionService();
-    this.stableSwapService = new StableSwapService();
-    this.activeWeb3TransactionService = new ActiveWeb3TransactionsService();
-    this.proposalService = new ProposalService();
 
-    this.stakingService = new StakingService();
-
-    this.poolStore = new PoolStore(this, this.poolService);
-    this.positionStore = new PositionStore(this, this.positionService);
-    this.stableSwapStore = new StableSwapStore(this, this.stableSwapService);
     this.alertStore = new AlertStore();
-    this.proposalStore = new ProposalStore(this, this.proposalService);
-    this.stakingStore = new StakingStore(this, this.stakingService);
 
     this.transactionStore = new ActiveWeb3Transactions(
       this,
-      this.activeWeb3TransactionService as ActiveWeb3TransactionsService
     );
+
+
+    this.poolService = new PoolService(this.alertStore);
+    this.positionService = new PositionService(this.alertStore, this.transactionStore);
+
+    this.stableSwapService = new StableSwapService();
+    this.proposalService = new ProposalService();
+    this.stakingService = new StakingService();
+
+    this.stableSwapStore = new StableSwapStore(this, this.stableSwapService);
+
+    this.proposalStore = new ProposalStore(this, this.proposalService);
+    this.stakingStore = new StakingStore(this, this.stakingService);
   }
 
   setChainId(chainId: number) {
@@ -75,7 +68,6 @@ export class RootStore {
       "poolService",
       "positionService",
       "stableSwapService",
-      "activeWeb3TransactionService",
       "proposalService",
       "stakingService",
     ].forEach((serviceName) => {

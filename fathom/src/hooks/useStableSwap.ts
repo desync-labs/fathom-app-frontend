@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useStores } from "stores";
-import useMetaMask from "context/connector";
 import debounce from "lodash.debounce";
 import { SmartContractFactory } from "config/SmartContractFactory";
 import useSyncContext from "context/sync";
 import BigNumber from "bignumber.js";
-import Web3 from "web3";
+import Xdc3 from "xdc3";
 import { useMediaQuery, useTheme } from "@mui/material";
+import useConnector from "context/connector";
 
 const useStableSwap = (options: string[]) => {
   const [inputBalance, setInputBalance] = useState<number>(0);
@@ -29,9 +29,9 @@ const useStableSwap = (options: string[]) => {
 
   const [fxdPrice, setFxdPrice] = useState<number>(0);
 
-  const { stableSwapStore, poolStore } = useStores();
+  const { stableSwapStore, poolService } = useStores();
 
-  const { account, chainId } = useMetaMask()!;
+  const { account, chainId, library } = useConnector()!;
   const { setLastTransactionBlock } = useSyncContext();
 
   const theme = useTheme();
@@ -62,8 +62,16 @@ const useStableSwap = (options: string[]) => {
           let approved;
           approved =
             currency === options[0]
-              ? await stableSwapStore.approvalStatusUsdt(account, input)
-              : await stableSwapStore.approvalStatusStableCoin(account, input);
+              ? await stableSwapStore.approvalStatusUsdt(
+                  account,
+                  input,
+                  library
+                )
+              : await stableSwapStore.approvalStatusStableCoin(
+                  account,
+                  input,
+                  library
+                );
 
           type === "input"
             ? approved
@@ -74,7 +82,14 @@ const useStableSwap = (options: string[]) => {
             : setApproveOutputBtn(true);
         }
       }, 1000),
-    [stableSwapStore, account, options, setApproveInputBtn, setApproveOutputBtn]
+    [
+      stableSwapStore,
+      account,
+      library,
+      options,
+      setApproveInputBtn,
+      setApproveOutputBtn,
+    ]
   );
 
   const inputError = useMemo(() => {
@@ -109,12 +124,20 @@ const useStableSwap = (options: string[]) => {
           try {
             const promises = [];
             promises.push(
-              poolStore.getUserTokenBalance(account, inputContractAddress)
+              poolService.getUserTokenBalance(
+                account,
+                inputContractAddress,
+                library
+              )
             );
             promises.push(
-              poolStore.getUserTokenBalance(account, outputCurrencyAddress)
+              poolService.getUserTokenBalance(
+                account,
+                outputCurrencyAddress,
+                library
+              )
             );
-            promises.push(poolStore.getDexPrice(FXDContractAddress));
+            promises.push(poolService.getDexPrice(FXDContractAddress, library));
 
             const [inputBalance, outputBalance, fxdPrice] = await Promise.all(
               promises
@@ -126,7 +149,7 @@ const useStableSwap = (options: string[]) => {
           } catch (e) {}
         }
       }, 100),
-    [account, chainId, poolStore, setInputBalance, setOutputBalance]
+    [account, chainId, poolService, library, setInputBalance, setOutputBalance]
   );
 
   const changeCurrenciesPosition = useCallback(
@@ -157,14 +180,14 @@ const useStableSwap = (options: string[]) => {
   useEffect(() => {
     if (chainId) {
       Promise.all([
-        stableSwapStore.getFeeIn(),
-        stableSwapStore.getFeeOut(),
+        stableSwapStore.getFeeIn(library),
+        stableSwapStore.getFeeOut(library),
       ]).then(([feeIn, feeOut]) => {
         setFeeIn(feeIn);
         setFeeOut(feeOut);
       });
     }
-  }, [stableSwapStore, chainId, setFeeIn, setFeeOut]);
+  }, [stableSwapStore, chainId, library, setFeeIn, setFeeOut]);
 
   const swapFee = useMemo(() => {
     /**
@@ -203,8 +226,12 @@ const useStableSwap = (options: string[]) => {
         account,
         inputValue as number,
         outputValue as number,
-        options[0]
+        options[0],
+        library
       );
+
+      setInputValue("");
+      setOutputValue("");
 
       setLastTransactionBlock(receipt.blockNumber);
       handleCurrencyChange(inputCurrency, outputCurrency);
@@ -219,6 +246,7 @@ const useStableSwap = (options: string[]) => {
     inputValue,
     outputValue,
     account,
+    library,
     stableSwapStore,
     setSwapPending,
     handleCurrencyChange,
@@ -229,8 +257,8 @@ const useStableSwap = (options: string[]) => {
     setApprovalPending("input");
     try {
       inputCurrency === options[0]
-        ? await stableSwapStore.approveUsdt(account)
-        : await stableSwapStore.approveStableCoin(account);
+        ? await stableSwapStore.approveUsdt(account, options[0], library)
+        : await stableSwapStore.approveStableCoin(account, library);
       setApproveInputBtn(false);
     } catch (e) {
       setApproveInputBtn(true);
@@ -241,6 +269,7 @@ const useStableSwap = (options: string[]) => {
     inputCurrency,
     stableSwapStore,
     account,
+    library,
     setApprovalPending,
     setApproveInputBtn,
   ]);
@@ -249,8 +278,8 @@ const useStableSwap = (options: string[]) => {
     setApprovalPending("output");
     try {
       outputCurrency === options[0]
-        ? await stableSwapStore.approveUsdt(account)
-        : await stableSwapStore.approveStableCoin(account);
+        ? await stableSwapStore.approveUsdt(account, options[0], library)
+        : await stableSwapStore.approveStableCoin(account, library);
 
       setApproveOutputBtn(false);
     } catch (e) {
@@ -263,6 +292,7 @@ const useStableSwap = (options: string[]) => {
     outputCurrency,
     stableSwapStore,
     account,
+    library,
     setApprovalPending,
     setApproveOutputBtn,
   ]);
@@ -311,15 +341,15 @@ const useStableSwap = (options: string[]) => {
     let formattedBalance;
     if (inputCurrency === options[1]) {
       formattedBalance = new BigNumber(
-        Web3.utils.fromWei(inputBalance.toString())
+        Xdc3.utils.fromWei(inputBalance.toString())
       )
         .multipliedBy(
-          1 - new BigNumber(Web3.utils.fromWei(feeOut.toString())).toNumber()
+          1 - new BigNumber(Xdc3.utils.fromWei(feeOut.toString())).toNumber()
         )
         .toNumber();
     } else {
       formattedBalance =
-        new BigNumber(Web3.utils.fromWei(inputBalance.toString())).toNumber() ||
+        new BigNumber(Xdc3.utils.fromWei(inputBalance.toString())).toNumber() ||
         0;
     }
 

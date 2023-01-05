@@ -1,10 +1,9 @@
 import { makeAutoObservable } from "mobx";
 import { RootStore } from ".";
 import IPoolService from "services/interfaces/IPoolService";
-import ICollateralPool from "stores/interfaces/ICollateralPool";
+import Xdc3 from "xdc3";
 
 export default class PoolStore {
-  pools: ICollateralPool[] = [];
   service: IPoolService;
   rootStore: RootStore;
 
@@ -14,21 +13,9 @@ export default class PoolStore {
     this.rootStore = rootStore;
   }
 
-  getPool(poolId: string) {
-    return this.pools.filter((pool) => poolId === pool.id)[0];
-  }
-
-  async getUserTokenBalance(address: string, forAddress: string) {
-    return this.service.getUserTokenBalance(address, forAddress);
-  }
-
-  getDexPrice(address: string) {
-    return this.service.getDexPrice(address);
-  }
-
-  async getCollateralTokenAddress(address: string) {
+  async getCollateralTokenAddress(address: string, library: Xdc3) {
     try {
-      return await this.service.getCollateralTokenAddress(address);
+      return await this.service.getCollateralTokenAddress(address, library);
     } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(true, e.message);
     }

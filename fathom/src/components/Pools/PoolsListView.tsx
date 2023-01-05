@@ -50,7 +50,7 @@ const PoolsListView: FC = () => {
     usePoolsList();
 
   const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.up("sm"));
+  const isMobile = useMediaQuery(theme.breakpoints.up("sm"));
 
   return (
     <>
@@ -67,7 +67,7 @@ const PoolsListView: FC = () => {
         </NoResults>
       ) : (
         <>
-          {matches && (
+          {isMobile && (
             <TableContainer>
               <Table
                 sx={{ minWidth: 500, "& td": { padding: "9px" } }}
@@ -95,7 +95,7 @@ const PoolsListView: FC = () => {
               </Table>
             </TableContainer>
           )}
-          {!matches &&
+          {!isMobile &&
             pools.map((pool: ICollateralPool) => (
               <PoolsListItemMobile
                 pool={pool}

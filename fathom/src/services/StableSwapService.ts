@@ -9,6 +9,7 @@ import {
 import ActiveWeb3Transactions from "stores/transaction.store";
 import IStableSwapService from "services/interfaces/IStableSwapService";
 import { toWei } from "web3-utils";
+import Xdc3 from "xdc3";
 
 export default class StableSwapService implements IStableSwapService {
   readonly tokenBuffer: number = 5;
@@ -17,11 +18,13 @@ export default class StableSwapService implements IStableSwapService {
   swapTokenToStableCoin(
     address: string,
     tokenIn: number,
-    transactionStore: ActiveWeb3Transactions
+    transactionStore: ActiveWeb3Transactions,
+    tokenName: string,
+    library: Xdc3,
   ): Promise<void> {
     const StableSwapModule = Web3Utils.getContractInstance(
       SmartContractFactory.StableSwapModule(this.chainId),
-      this.chainId
+      library,
     );
 
     return StableSwapModule.methods
@@ -33,7 +36,7 @@ export default class StableSwapService implements IStableSwapService {
           type: TransactionType.ClosePosition,
           active: false,
           status: TransactionStatus.None,
-          title: "USDT to FXD Swap Pending.",
+          title: `${tokenName} to FXD Swap Pending.`,
           message: Strings.CheckOnBlockExplorer,
         });
       });
@@ -42,11 +45,12 @@ export default class StableSwapService implements IStableSwapService {
   swapStableCoinToToken(
     address: string,
     stablecoinIn: number,
-    transactionStore: ActiveWeb3Transactions
+    transactionStore: ActiveWeb3Transactions,
+    library: Xdc3
   ): Promise<void> {
     const StableSwapModule = Web3Utils.getContractInstance(
       SmartContractFactory.StableSwapModule(this.chainId),
-      this.chainId
+      library,
     );
 
     return StableSwapModule.methods
@@ -66,11 +70,12 @@ export default class StableSwapService implements IStableSwapService {
 
   approveStableCoin(
     address: string,
-    transactionStore: ActiveWeb3Transactions
+    transactionStore: ActiveWeb3Transactions,
+    library: Xdc3
   ): Promise<void> {
     const FathomStableCoin = Web3Utils.getContractInstance(
       SmartContractFactory.FathomStableCoin(this.chainId),
-      this.chainId
+      library,
     );
 
     return FathomStableCoin.methods
@@ -93,11 +98,12 @@ export default class StableSwapService implements IStableSwapService {
 
   approveUsdt(
     address: string,
-    transactionStore: ActiveWeb3Transactions
+    transactionStore: ActiveWeb3Transactions,
+    library: Xdc3
   ): Promise<void> {
     const USDT = Web3Utils.getContractInstance(
       SmartContractFactory.USDT(this.chainId),
-      this.chainId
+      library,
     );
 
     return USDT.methods
@@ -120,11 +126,12 @@ export default class StableSwapService implements IStableSwapService {
 
   async approvalStatusStablecoin(
     address: string,
-    tokenIn: number
+    tokenIn: number,
+    library: Xdc3
   ): Promise<Boolean> {
     const FathomStableCoin = Web3Utils.getContractInstance(
       SmartContractFactory.FathomStableCoin(this.chainId),
-      this.chainId
+      library,
     );
 
     const allowance = await FathomStableCoin.methods
@@ -139,10 +146,14 @@ export default class StableSwapService implements IStableSwapService {
     return Number(allowance) > Number(Constants.WeiPerWad.multipliedBy(buffer));
   }
 
-  async approvalStatusUsdt(address: string, tokenIn: number): Promise<Boolean> {
+  async approvalStatusUsdt(
+    address: string,
+    tokenIn: number,
+    library: Xdc3
+  ): Promise<boolean> {
     const USDT = Web3Utils.getContractInstance(
       SmartContractFactory.USDT(this.chainId),
-      this.chainId
+      library
     );
 
     const allowance = await USDT.methods
@@ -157,19 +168,19 @@ export default class StableSwapService implements IStableSwapService {
     return +allowance > +Constants.WeiPerWad.multipliedBy(buffer);
   }
 
-  getFeeIn() {
+  getFeeIn(library: Xdc3) {
     const StableSwapModule = Web3Utils.getContractInstance(
       SmartContractFactory.StableSwapModule(this.chainId),
-      this.chainId
+      library
     );
 
     return StableSwapModule.methods.feeIn().call();
   }
 
-  getFeeOut() {
+  getFeeOut(library: Xdc3) {
     const StableSwapModule = Web3Utils.getContractInstance(
       SmartContractFactory.StableSwapModule(this.chainId),
-      this.chainId
+      library
     );
 
     return StableSwapModule.methods.feeOut().call();

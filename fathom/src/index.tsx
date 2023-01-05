@@ -5,20 +5,12 @@ import {
   ConnectorProvider,
 } from "context/connector";
 import { Web3ReactProvider } from "@web3-react/core";
-import Web3 from "web3/dist/web3.min.js";
-import { XDC_CHAIN_IDS } from "connectors/networks";
 import Xdc3 from "xdc3";
 
 
-async function getLibrary(provider: any) {
-  const instance = new Web3(provider);
-  const chainId = await instance.eth.getChainId();
-
-  if (XDC_CHAIN_IDS.includes(chainId)) {
-    return new Xdc3(provider);
-  }
-
-  return instance;
+function getLibrary(provider: any) {
+  console.log('getLibrary', provider)
+  return new Xdc3(provider);
 }
 
 const root = ReactDOM.createRoot(

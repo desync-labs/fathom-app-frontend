@@ -24,7 +24,7 @@ const useOpenPositionContext = () => {
 
   if (context === undefined) {
     throw new Error(
-      "useMetaMask hook must be used with a MetaMaskProvider component"
+      "useOpenPositionContext hook must be used with a OpenPositionContext component"
     );
   }
 

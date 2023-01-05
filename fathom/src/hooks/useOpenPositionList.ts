@@ -1,19 +1,19 @@
 import { ChangeEvent, Dispatch, useCallback, useEffect, useState } from "react";
 
 import { useStores } from "stores";
-import useMetaMask from "context/connector";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
 import { ClosingType } from "hooks/useClosePosition";
 import { useLazyQuery } from "@apollo/client";
 import { FXD_POSITIONS } from "apollo/queries";
 import { Constants } from "helpers/Constants";
+import useConnector from "context/connector";
 
 const useOpenPositionList = (
   setPositionCurrentPage: Dispatch<number>,
   proxyWallet: string
 ) => {
-  const { positionStore } = useStores();
-  const { account, chainId } = useMetaMask()!;
+  const { positionService } = useStores();
+  const { account, chainId, library } = useConnector()!;
   /**
    * @todo Change walletAddress
    */
@@ -29,9 +29,9 @@ const useOpenPositionList = (
   const [approvalPending, setApprovalPending] = useState<boolean>(false);
 
   const approvalStatus = useCallback(async () => {
-    const approved = await positionStore.approvalStatusStableCoin(account);
+    const approved = await positionService.approvalStatusStableCoin(account, library);
     approved ? setApproveBtn(false) : setApproveBtn(true);
-  }, [positionStore, account]);
+  }, [positionService, account, library]);
 
   useEffect(() => {
     if (account) approvalStatus();
@@ -53,14 +53,14 @@ const useOpenPositionList = (
   const approve = useCallback(async () => {
     setApprovalPending(true);
     try {
-      await positionStore.approveStableCoin(account);
+      await positionService.approveStableCoin(account, library);
       setApproveBtn(false);
     } catch (e) {
       setApproveBtn(true);
     }
 
     setApprovalPending(false);
-  }, [positionStore, account, setApprovalPending, setApproveBtn]);
+  }, [positionService, account, library, setApprovalPending, setApproveBtn]);
 
   const handlePageChange = useCallback(
     (event: ChangeEvent<unknown>, page: number) => {

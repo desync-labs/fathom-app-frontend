@@ -10,6 +10,7 @@ import {
 import {
   Constants,
 } from "helpers/Constants";
+import Xdc3 from "xdc3";
 
 export default class ProposalService implements IProposalService {
   chainId = Constants.DEFAULT_CHAIN_ID;
@@ -20,11 +21,12 @@ export default class ProposalService implements IProposalService {
     callData: string[],
     description: string,
     account: string,
-    transactionStore: ActiveWeb3Transactions
+    transactionStore: ActiveWeb3Transactions,
+    library: Xdc3,
   ): Promise<number> {
     const FathomGovernor = Web3Utils.getContractInstance(
       SmartContractFactory.FathomGovernor(this.chainId),
-      this.chainId
+      library
     );
     return FathomGovernor.methods
       .propose(targets, values, callData, description)
@@ -47,11 +49,12 @@ export default class ProposalService implements IProposalService {
     callData: string[],
     description: string,
     account: string,
-    transactionStore: ActiveWeb3Transactions
+    transactionStore: ActiveWeb3Transactions,
+    library: Xdc3,
   ): Promise<number> {
     const FathomGovernor = Web3Utils.getContractInstance(
       SmartContractFactory.FathomGovernor(this.chainId),
-      this.chainId
+      library,
     );
 
     return FathomGovernor.methods
@@ -65,21 +68,22 @@ export default class ProposalService implements IProposalService {
     callData: string[],
     description: string,
     account: string,
-    transactionStore: ActiveWeb3Transactions
+    transactionStore: ActiveWeb3Transactions,
+    library: Xdc3,
   ): Promise<number> {
     const FathomGovernor = Web3Utils.getContractInstance(
       SmartContractFactory.FathomGovernor(this.chainId),
-      this.chainId
+      library
     );
     return FathomGovernor.methods
       .queue(targets, values, callData, keccak256(description))
       .send({ from: account });
   }
 
-  async hasVoted(proposalId: string, account: string): Promise<boolean> {
+  async hasVoted(proposalId: string, account: string, library: Xdc3): Promise<boolean> {
     const FathomGovernor = Web3Utils.getContractInstance(
       SmartContractFactory.FathomGovernor(this.chainId),
-      this.chainId
+      library,
     );
 
     return FathomGovernor.methods.hasVoted(proposalId, account).call();
@@ -87,11 +91,12 @@ export default class ProposalService implements IProposalService {
 
   async viewProposalState(
     proposalId: string,
-    account: string
+    account: string,
+    library: Xdc3,
   ): Promise<string> {
     const FathomGovernor = Web3Utils.getContractInstance(
       SmartContractFactory.FathomGovernor(this.chainId),
-      this.chainId
+      library
     );
 
     return FathomGovernor.methods
@@ -104,10 +109,11 @@ export default class ProposalService implements IProposalService {
     account: string,
     support: string,
     transactionStore: ActiveWeb3Transactions,
+    library: Xdc3,
   ): Promise<number> {
     const FathomGovernor = Web3Utils.getContractInstance(
       SmartContractFactory.FathomGovernor(this.chainId),
-      this.chainId
+      library,
     );
 
     return FathomGovernor.methods
@@ -125,10 +131,10 @@ export default class ProposalService implements IProposalService {
       });
   }
 
-  async getVBalance(account: string): Promise<number> {
+  async getVBalance(account: string, library: Xdc3): Promise<number> {
     const VeFathom = Web3Utils.getContractInstance(
       SmartContractFactory.vFathom(this.chainId),
-      this.chainId
+      library
     );
 
     return VeFathom.methods.balanceOf(account).call();
