@@ -16,6 +16,7 @@ import { toWei } from "web3-utils";
 import Xdc3 from "xdc3";
 import AlertStore from "stores/alert.stores";
 import { TransactionReceipt } from "web3-eth";
+import { getEstimateGas } from "utils/getEstimateGas";
 
 export default class PositionService implements IPositionService {
   chainId = Constants.DEFAULT_CHAIN_ID;
@@ -74,13 +75,26 @@ export default class PositionService implements IPositionService {
         ]
       );
 
+      const options = { from: address, gas: 0 };
+      const gas = await getEstimateGas(
+        wallet,
+        "execute2",
+        [
+          SmartContractFactory.FathomStablecoinProxyActions(this.chainId)
+            .address,
+          openPositionCall,
+        ],
+        options
+      );
+      options.gas = gas;
+
       const receipt = await wallet.methods
         .execute2(
           SmartContractFactory.FathomStablecoinProxyActions(this.chainId)
             .address,
           openPositionCall
         )
-        .send({ from: address })
+        .send(options)
         .on("transactionHash", (hash: any) => {
           this.transactionStore.addTransaction({
             hash: hash,
@@ -141,10 +155,7 @@ export default class PositionService implements IPositionService {
     library: Xdc3
   ): Promise<TransactionReceipt | undefined> {
     try {
-      const proxyWalletAddress = await this.proxyWalletExist(
-        address,
-        library
-      );
+      const proxyWalletAddress = await this.proxyWalletExist(address, library);
 
       const wallet = Web3Utils.getContractInstanceFrom(
         SmartContractFactory.proxyWallet.abi,
@@ -173,13 +184,26 @@ export default class PositionService implements IPositionService {
         ]
       );
 
+      const options = { from: address, gas: 0 };
+      const gas = await getEstimateGas(
+        wallet,
+        "execute2",
+        [
+          SmartContractFactory.FathomStablecoinProxyActions(this.chainId)
+            .address,
+          wipeAllAndUnlockTokenCall,
+        ],
+        options
+      );
+      options.gas = gas;
+
       const receipt = await wallet.methods
         .execute2(
           SmartContractFactory.FathomStablecoinProxyActions(this.chainId)
             .address,
           wipeAllAndUnlockTokenCall
         )
-        .send({ from: address })
+        .send(options)
         .on("transactionHash", (hash: any) => {
           this.transactionStore.addTransaction({
             hash: hash,
@@ -190,6 +214,11 @@ export default class PositionService implements IPositionService {
             message: Strings.CheckOnBlockExplorer,
           });
         });
+
+      this.alertStore.setShowSuccessAlert(
+        true,
+        "Position closed successfully!"
+      );
 
       return receipt;
     } catch (error: any) {
@@ -237,13 +266,26 @@ export default class PositionService implements IPositionService {
         ]
       );
 
+      const options = { from: address, gas: 0 };
+      const gas = await getEstimateGas(
+        wallet,
+        "execute2",
+        [
+          SmartContractFactory.FathomStablecoinProxyActions(this.chainId)
+            .address,
+          wipeAndUnlockTokenCall,
+        ],
+        options
+      );
+      options.gas = gas;
+
       const receipt = await wallet.methods
         .execute2(
           SmartContractFactory.FathomStablecoinProxyActions(this.chainId)
             .address,
           wipeAndUnlockTokenCall
         )
-        .send({ from: address })
+        .send(options)
         .on("transactionHash", (hash: any) => {
           this.transactionStore.addTransaction({
             hash: hash,
@@ -254,6 +296,11 @@ export default class PositionService implements IPositionService {
             message: Strings.CheckOnBlockExplorer,
           });
         });
+
+      this.alertStore.setShowSuccessAlert(
+        true,
+        "Position closed successfully!"
+      );
 
       return receipt;
     } catch (error: any) {
@@ -279,9 +326,18 @@ export default class PositionService implements IPositionService {
         library
       );
 
+      const options = { from: address, gas: 0 };
+      const gas = await getEstimateGas(
+        BEP20,
+        "approve",
+        [proxyWalletAddress, Constants.MAX_UINT256],
+        options
+      );
+      options.gas = gas;
+
       const receipt = await BEP20.methods
         .approve(proxyWalletAddress, Constants.MAX_UINT256)
-        .send({ from: address })
+        .send(options)
         .on("transactionHash", (hash: any) => {
           this.transactionStore.addTransaction({
             hash: hash,
@@ -292,6 +348,11 @@ export default class PositionService implements IPositionService {
             message: Strings.CheckOnBlockExplorer,
           });
         });
+
+      this.alertStore.setShowSuccessAlert(
+        true,
+        "Approval was successful!"
+      );
 
       return receipt;
     } catch (error: any) {
@@ -305,7 +366,7 @@ export default class PositionService implements IPositionService {
     tokenAddress: string,
     collateral: number,
     library: Xdc3
-  ): Promise<Boolean> {
+  ): Promise<boolean> {
     collateral = collateral || 0;
 
     const proxyWalletAddress = await this.proxyWalletExist(address, library);
@@ -344,9 +405,18 @@ export default class PositionService implements IPositionService {
         library
       );
 
-      return fathomStableCoin.methods
+      const options = { from: address, gas: 0 };
+      const gas = await getEstimateGas(
+        fathomStableCoin,
+        "approve",
+        [proxyWalletAddress, Constants.MAX_UINT256],
+        options
+      );
+      options.gas = gas;
+
+      const receipt = fathomStableCoin.methods
         .approve(proxyWalletAddress, Constants.MAX_UINT256)
-        .send({ from: address })
+        .send(options)
         .on("transactionHash", (hash: any) => {
           this.transactionStore.addTransaction({
             hash: hash,
@@ -357,6 +427,13 @@ export default class PositionService implements IPositionService {
             message: Strings.CheckOnBlockExplorer,
           });
         });
+
+      this.alertStore.setShowSuccessAlert(
+        true,
+        "Token approval was successful!"
+      );
+
+      return receipt;
     } catch (error: any) {
       this.alertStore.setShowErrorAlert(true, error.message);
       throw error;

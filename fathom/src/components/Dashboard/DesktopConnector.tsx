@@ -31,6 +31,12 @@ const Connector = styled("button")`
   }
 `;
 
+const ConnectorDialogContent = styled(DialogContent)`
+  button:last-of-type {
+    margin-bottom: 0;
+  }
+`
+
 const DesktopConnector: FC<DesktopConnectorPropsType> = ({ onClose }) => {
   const { connectWalletConnect, connectMetamask } = useConnector();
 
@@ -52,7 +58,7 @@ const DesktopConnector: FC<DesktopConnectorPropsType> = ({ onClose }) => {
       open={true}
       sx={{ "& .MuiPaper-root": { width: "500px" } }}
     >
-      <DialogContent>
+      <ConnectorDialogContent>
         <Connector onClick={metamaskConnect}>
           <img src={MetamaskSrc} alt={"metamask"} />
           Metamask
@@ -61,7 +67,7 @@ const DesktopConnector: FC<DesktopConnectorPropsType> = ({ onClose }) => {
           <img src={WalletConnect} alt={"wallet-connect"} />
           Wallet Connect
         </Connector>
-      </DialogContent>
+      </ConnectorDialogContent>
     </AppDialog>
   );
 };
