@@ -9,8 +9,6 @@ import {
   Stack,
   Icon,
   FormGroup,
-  Checkbox,
-  FormControl,
   Typography,
   CircularProgress,
 } from "@mui/material";
@@ -65,6 +63,8 @@ const WarningBox = styled(Box)`
   display: flex;
   flex-direction: row;
   align-items: center;
+
+  margin: 10px 0 20px;
 
   p {
     color: #f7b06e;
@@ -265,7 +265,7 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <FormGroup sx={{ margin: "10px 0 18px 0" }}>
+                  <FormGroup sx={{ margin: "10px 0 0" }}>
                     <Controller
                       control={control}
                       name="withAction"
@@ -387,52 +387,29 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
                 )}
               </Grid>
               {vBalance !== null &&
-                (vBalance as number) / 10 ** 18 < MINIMUM_V_BALANCE && (
-                  <WarningBox>
-                    <InfoIcon
-                      sx={{ width: "16px", color: "#F5953D", height: "16px" }}
-                    />
-                    <Typography>
-                      You have less than {MINIMUM_V_BALANCE} vFTHM, and you can
-                      not create a new proposal. So please, stake your FTHM
-                      tokens in <Link to={"/dao/staking"}>Staking</Link> to get
-                      voting power and awesome rewards.
-                    </Typography>
-                  </WarningBox>
-                )}
-
-              <FormGroup sx={{ margin: "10px 0 18px 0" }}>
-                <Controller
-                  control={control}
-                  rules={{ required: true }}
-                  name="agreement"
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
-                    <FormControl
-                      error={!!error}
-                      sx={{ ".Mui-error": { color: "#f44336" } }}
-                    >
-                      <FormControlLabel
-                        sx={{
-                          marginTop: "10px",
-                          ".MuiTypography-root": {
-                            fontSize: "14px",
-                            lineHeight: "20px",
-                          },
-                        }}
-                        control={
-                          <Checkbox onChange={onChange} checked={!!value} />
-                        }
-                        label={`I understand that by submitting this proposal, I will deposit ${formatNumber(
-                          MINIMUM_V_BALANCE
-                        )} vFTHM to complete this proposal creation.`}
-                      />
-                    </FormControl>
-                  )}
-                />
-              </FormGroup>
+              (vBalance as number) / 10 ** 18 < MINIMUM_V_BALANCE ? (
+                <WarningBox>
+                  <InfoIcon
+                    sx={{ width: "16px", color: "#F5953D", height: "16px" }}
+                  />
+                  <Typography>
+                    You have less than {MINIMUM_V_BALANCE} vFTHM, and you can
+                    not create a new proposal. So please, stake your FTHM tokens
+                    in <Link to={"/dao/staking"}>Staking</Link> to get voting
+                    power and awesome rewards.
+                  </Typography>
+                </WarningBox>
+              ) : (
+                <WarningBox>
+                  <InfoIcon
+                    sx={{ width: "16px", color: "#F5953D", height: "16px" }}
+                  />
+                  <Typography>
+                    To create a proposal, you need to have 1000 vFTHM. <br />
+                    Now you have {vBalance! / 10 ** 18} vFTHM
+                  </Typography>
+                </WarningBox>
+              )}
             </Grid>
             <Grid item xs={12}>
               <Grid container spacing={1}>
