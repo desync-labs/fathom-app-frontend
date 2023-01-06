@@ -68,7 +68,7 @@ const PositionsList: FC<PositionsListProps> = observer(
     } = useOpenPositionList(setPositionCurrentPage, proxyWallet);
 
     const theme = useTheme();
-    const matches = useMediaQuery(theme.breakpoints.up("sm"));
+    const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
     return (
       <>
@@ -88,7 +88,7 @@ const PositionsList: FC<PositionsListProps> = observer(
                 </NoResults>
               )}
 
-              {!!positions.length && matches && (
+              {!!positions.length && !isMobile && (
                 <>
                   <TableContainer>
                     <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -133,19 +133,30 @@ const PositionsList: FC<PositionsListProps> = observer(
                   </PaginationWrapper>
                 </>
               )}
-              {!!positions.length &&
-                !matches &&
-                positions.map((position: IOpenPosition) => (
-                  <PositionListItemMobile
-                    approve={approve}
-                    approvalPending={approvalPending}
-                    approveBtn={approveBtn}
-                    key={position.id}
-                    position={position}
-                    setSelectedPosition={setSelectedPosition}
-                    setType={setType}
-                  />
-                ))}
+              {!!positions.length && isMobile && (
+                <>
+                  {positions.map((position: IOpenPosition) => (
+                    <PositionListItemMobile
+                      approve={approve}
+                      approvalPending={approvalPending}
+                      approveBtn={approveBtn}
+                      key={position.id}
+                      position={position}
+                      setSelectedPosition={setSelectedPosition}
+                      setType={setType}
+                    />
+                  ))}
+                  <PaginationWrapper>
+                    <Pagination
+                      count={Math.ceil(
+                        positionsItemsCount / Constants.COUNT_PER_PAGE
+                      )}
+                      page={positionCurrentPage}
+                      onChange={handlePageChange}
+                    />
+                  </PaginationWrapper>
+                </>
+              )}
             </>
           ),
           [
@@ -159,7 +170,7 @@ const PositionsList: FC<PositionsListProps> = observer(
             handlePageChange,
             positionCurrentPage,
             positionsItemsCount,
-            matches,
+            isMobile,
           ]
         )}
         {selectedPosition && (
