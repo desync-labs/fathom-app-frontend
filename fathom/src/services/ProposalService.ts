@@ -9,7 +9,7 @@ import {
 } from "stores/interfaces/ITransaction";
 import { Constants } from "helpers/Constants";
 import Xdc3 from "xdc3";
-import { getUsedGas } from "../utils/getUsedGas";
+import { getEstimateGas } from "../utils/getEstimateGas";
 
 export default class ProposalService implements IProposalService {
   chainId = Constants.DEFAULT_CHAIN_ID;
@@ -28,8 +28,8 @@ export default class ProposalService implements IProposalService {
       library
     );
 
-    const options = { from: account, gas: "0" };
-    const gas = await getUsedGas(
+    const options = { from: account, gas: 0 };
+    const gas = await getEstimateGas(
       FathomGovernor,
       "propose",
       [targets, values, callData, description],

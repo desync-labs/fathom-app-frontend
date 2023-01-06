@@ -10,26 +10,37 @@ import ActiveWeb3Transactions from "stores/transaction.store";
 import IStableSwapService from "services/interfaces/IStableSwapService";
 import { toWei } from "web3-utils";
 import Xdc3 from "xdc3";
+import { getEstimateGas } from "utils/getEstimateGas";
+import { TransactionReceipt } from "web3-eth";
 
 export default class StableSwapService implements IStableSwapService {
   readonly tokenBuffer: number = 5;
   chainId = Constants.DEFAULT_CHAIN_ID;
 
-  swapTokenToStableCoin(
-    address: string,
+  async swapTokenToStableCoin(
+    account: string,
     tokenIn: number,
     transactionStore: ActiveWeb3Transactions,
     tokenName: string,
-    library: Xdc3,
-  ): Promise<void> {
+    library: Xdc3
+  ): Promise<TransactionReceipt | undefined> {
     const StableSwapModule = Web3Utils.getContractInstance(
       SmartContractFactory.StableSwapModule(this.chainId),
-      library,
+      library
     );
 
+    const options = { from: account, gas: 0 };
+    const gas = await getEstimateGas(
+      StableSwapModule,
+      "swapTokenToStablecoin",
+      [account, toWei(tokenIn.toString(), "ether")],
+      options
+    );
+    options.gas = gas;
+
     return StableSwapModule.methods
-      .swapTokenToStablecoin(address, toWei(tokenIn.toString(), "ether"))
-      .send({ from: address })
+      .swapTokenToStablecoin(account, toWei(tokenIn.toString(), "ether"))
+      .send(options)
       .on("transactionHash", (hash: any) => {
         transactionStore.addTransaction({
           hash: hash,
@@ -42,27 +53,37 @@ export default class StableSwapService implements IStableSwapService {
       });
   }
 
-  swapStableCoinToToken(
-    address: string,
-    stablecoinIn: number,
+  async swapStableCoinToToken(
+    account: string,
+    stableCoinIn: number,
     transactionStore: ActiveWeb3Transactions,
+    tokenName: string,
     library: Xdc3
-  ): Promise<void> {
+  ): Promise<TransactionReceipt | undefined> {
     const StableSwapModule = Web3Utils.getContractInstance(
       SmartContractFactory.StableSwapModule(this.chainId),
-      library,
+      library
     );
 
+    const options = { from: account, gas: 0 };
+    const gas = await getEstimateGas(
+      StableSwapModule,
+      "swapStablecoinToToken",
+      [account, toWei(stableCoinIn.toString(), "ether")],
+      options
+    );
+    options.gas = gas;
+
     return StableSwapModule.methods
-      .swapStablecoinToToken(address, toWei(stablecoinIn.toString(), "ether"))
-      .send({ from: address })
+      .swapStablecoinToToken(account, toWei(stableCoinIn.toString(), "ether"))
+      .send(options)
       .on("transactionHash", (hash: any) => {
         transactionStore.addTransaction({
           hash: hash,
           type: TransactionType.ClosePosition,
           active: false,
           status: TransactionStatus.None,
-          title: "FXD to USDT Swap Pending.",
+          title: `FXD to ${tokenName} Swap Pending.`,
           message: Strings.CheckOnBlockExplorer,
         });
       });
@@ -72,10 +93,10 @@ export default class StableSwapService implements IStableSwapService {
     address: string,
     transactionStore: ActiveWeb3Transactions,
     library: Xdc3
-  ): Promise<void> {
+  ): Promise<TransactionReceipt | undefined> {
     const FathomStableCoin = Web3Utils.getContractInstance(
       SmartContractFactory.FathomStableCoin(this.chainId),
-      library,
+      library
     );
 
     return FathomStableCoin.methods
@@ -100,10 +121,10 @@ export default class StableSwapService implements IStableSwapService {
     address: string,
     transactionStore: ActiveWeb3Transactions,
     library: Xdc3
-  ): Promise<void> {
+  ): Promise<TransactionReceipt | undefined> {
     const USDT = Web3Utils.getContractInstance(
       SmartContractFactory.USDT(this.chainId),
-      library,
+      library
     );
 
     return USDT.methods
@@ -124,14 +145,14 @@ export default class StableSwapService implements IStableSwapService {
       });
   }
 
-  async approvalStatusStablecoin(
+  async approvalStatusStableCoin(
     address: string,
     tokenIn: number,
     library: Xdc3
   ): Promise<Boolean> {
     const FathomStableCoin = Web3Utils.getContractInstance(
       SmartContractFactory.FathomStableCoin(this.chainId),
-      library,
+      library
     );
 
     const allowance = await FathomStableCoin.methods

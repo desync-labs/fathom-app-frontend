@@ -1,5 +1,6 @@
 import ActiveWeb3Transactions from "stores/transaction.store";
 import Xdc3 from "xdc3";
+import { TransactionReceipt } from "web3-eth";
 
 export default interface IStableSwapService {
   swapTokenToStableCoin(
@@ -8,24 +9,25 @@ export default interface IStableSwapService {
     transactionStore: ActiveWeb3Transactions,
     tokenName: string,
     library: Xdc3
-  ): Promise<void>;
+  ): Promise<TransactionReceipt | undefined>;
   swapStableCoinToToken(
     address: string,
     stableCoinIn: number,
     transactionStore: ActiveWeb3Transactions,
+    tokenName: string,
     library: Xdc3
-  ): Promise<void>;
+  ): Promise<TransactionReceipt | undefined>;
   approveStableCoin(
     address: string,
     transactionStore: ActiveWeb3Transactions,
     library: Xdc3
-  ): Promise<void>;
+  ): Promise<TransactionReceipt | undefined>;
   approveUsdt(
     address: string,
     transactionStore: ActiveWeb3Transactions,
     library: Xdc3
-  ): Promise<void>;
-  approvalStatusStablecoin(
+  ): Promise<TransactionReceipt | undefined>;
+  approvalStatusStableCoin(
     address: string,
     tokenIn: number,
     library: Xdc3

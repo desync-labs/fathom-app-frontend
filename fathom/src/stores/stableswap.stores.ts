@@ -46,12 +46,13 @@ export default class StableSwapStore {
             address,
             outputValue,
             this.rootStore.transactionStore,
+            tokenName,
             library
           )
           .then((receipt) => {
             this.rootStore.alertStore.setShowSuccessAlert(
               true,
-              "FXD token swapped with USDT!"
+              `FXD token swapped with ${tokenName}!`
             );
             return receipt;
           });
@@ -103,7 +104,7 @@ export default class StableSwapStore {
     library: Xdc3
   ) {
     try {
-      return await this.service.approvalStatusStablecoin(
+      return await this.service.approvalStatusStableCoin(
         address,
         tokenIn,
         library
