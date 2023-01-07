@@ -232,13 +232,6 @@ export const FathomSwapChangeCurrencyButton = styled(MuiButton)`
   position: absolute;
 `;
 
-export const StableSwapRateSettingsButton = styled(MuiButton)`
-  float: right;
-  &:hover {
-    backgroundcolor: transparent;
-  }
-`;
-
 export const QuestionMarkButton = styled(MuiButton)`
   background: #061023;
   border: 2px solid #061023;
