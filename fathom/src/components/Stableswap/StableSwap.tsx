@@ -35,12 +35,10 @@ import {
   FathomSwapChangeCurrencyButton,
   MaxButton,
   QuestionMarkButton,
-  StableSwapRateSettingsButton,
 } from "components/AppComponents/AppButton/AppButton";
 
 import ComboShareSrc from "assets/svg/combo-shape.svg";
 import QuestionMarkSrc from "assets/svg/question-mark.svg";
-import PriceSettingsSrc from "assets/svg/price-settings.svg";
 
 const StableSwapInputWrapper = styled(MuiBox)`
   position: relative;
@@ -127,6 +125,7 @@ const StableSwapPriceInfo = styled(InfoLabel)`
   gap: 7px;
   justify-content: flex-start;
   align-items: center;
+  padding: 10px 0;
 `;
 
 const SwapButton = styled(ButtonPrimary)`
@@ -352,13 +351,6 @@ const StableSwap = () => {
                       <img src={QuestionMarkSrc} alt="question" width={20} />
                     </QuestionMarkButton>
                   </StableSwapPriceInfo>
-                  <StableSwapRateSettingsButton>
-                    <img
-                      src={PriceSettingsSrc}
-                      alt="price-settings"
-                      width={32}
-                    />
-                  </StableSwapRateSettingsButton>
                 </StableSwapPriceInfoWrapper>
               );
             }, [inputCurrency, outputCurrency, fxdPrice, options])}
