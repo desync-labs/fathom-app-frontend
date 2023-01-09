@@ -361,7 +361,7 @@ const StableSwap = () => {
                 <InfoValue>
                   {formatPercentage(swapFee)} FTHM{" "}
                   {inputValue && (
-                    <>({formatPercentage(swapFee / Number(inputValue))}%)</>
+                    <>({formatPercentage(swapFee / Number(inputValue) * 100)}%)</>
                   )}
                 </InfoValue>
               </StableSwapInfoWrapper>
