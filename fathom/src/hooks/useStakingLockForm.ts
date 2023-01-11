@@ -35,9 +35,10 @@ const useStakingLockForm = () => {
   const [approvalPending, setApprovalPending] = useState(false);
 
   const [xdcBalance, setXdcBalance] = useState<number>(0);
-  const [fxdBalance, setFxdBalance] = useState<number>(0)
+  const [fxdBalance, setFxdBalance] = useState<number>(0);
 
   const fthmTokenAddress = useMemo(() => {
+    console.log("Fathom token address");
     return SmartContractFactory.FthmToken(chainId).address;
   }, [chainId]);
 
@@ -46,7 +47,7 @@ const useStakingLockForm = () => {
       const balance = await poolService.getUserTokenBalance(
         account,
         fthmTokenAddress,
-        library,
+        library
       );
 
       setFthmBalance(balance / 10 ** 18);
@@ -98,11 +99,19 @@ const useStakingLockForm = () => {
       ]);
 
       setXdcBalance(xdcBalance / 10 ** 18);
-      setFxdBalance(fxdBalance! / 10 ** 18)
+      setFxdBalance(fxdBalance! / 10 ** 18);
     };
 
     if (account && chainId) getBalance();
-  }, [account, library, chainId, positionService, stakingStore, setXdcBalance, setFxdBalance]);
+  }, [
+    account,
+    library,
+    chainId,
+    positionService,
+    stakingStore,
+    setXdcBalance,
+    setFxdBalance,
+  ]);
 
   useEffect(() => {
     if (Number(stakePosition) > fthmBalance) {
@@ -122,20 +131,27 @@ const useStakingLockForm = () => {
           account,
           stakePosition,
           lockDays,
-          library,
+          library
         );
         setLastTransactionBlock(receipt.blockNumber);
         reset();
       } catch (e) {}
       setIsLoading(false);
     },
-    [stakingStore, account, library, reset, setIsLoading, setLastTransactionBlock]
+    [
+      stakingStore,
+      account,
+      library,
+      reset,
+      setIsLoading,
+      setLastTransactionBlock,
+    ]
   );
 
   const approveFTHM = useCallback(async () => {
     setApprovalPending(true);
     try {
-      await stakingStore.approveFTHM(account, fthmTokenAddress, library,);
+      await stakingStore.approveFTHM(account, fthmTokenAddress, library);
       setApprovedBtn(false);
     } catch (e) {
       setApprovedBtn(true);
