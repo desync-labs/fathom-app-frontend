@@ -79,7 +79,7 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
   ]);
 
   useEffect(() => {
-    // fetchPairPrices();
+    fetchPairPrices();
   }, [fetchPairPrices]);
 
   useEffect(() => {
