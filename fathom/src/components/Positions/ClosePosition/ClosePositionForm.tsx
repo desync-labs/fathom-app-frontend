@@ -35,6 +35,7 @@ import { getTokenLogoURL } from "utils/tokenLogo";
 import React from "react";
 import useClosePositionContext from "context/closePosition";
 import { styled } from "@mui/material/styles";
+import { formatPercentage } from "../../../utils/format";
 
 const ClosePositionWrapper = styled(Grid)`
   padding-left: 20px;
@@ -96,7 +97,7 @@ const ClosePositionForm = () => {
           Total debt:
         </Box>
         <Box sx={{ fontWeight: "bold", fontSize: "14px" }}>
-          {position.debtShare} FXD
+          {formatPercentage(position.debtShare)} FXD
         </Box>
       </Box>
       <AppFormInputWrapper>

@@ -40,7 +40,7 @@
     "fathomOraclePriceFeedFactory": "0x83622274360fca3eC3a3b9ae07c647FFDbB622b0",
     "collateralTokenAdapterFactory": "0x5B39C24ADaD99603b2C2585f3afBfE5268669bb4",
     "fathomOraclePriceFeed": "0xA71B1843855f2562012943174056c14F811E1af4",
-    "fthmToken": "0x40F6da6A29E293cb560fba616B40aFf56A6aA7c0",
+    "fthmToken": "0xe81e44165c179F958399127277E1FB3D00256E6f",
     "wxdcDelayPriceFeed": "0x3E505Fb49B5edA9FBA6F908ea3c42eD45CA41B69"
   }
 }
