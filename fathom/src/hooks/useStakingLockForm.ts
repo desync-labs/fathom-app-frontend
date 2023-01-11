@@ -38,7 +38,6 @@ const useStakingLockForm = () => {
   const [fxdBalance, setFxdBalance] = useState<number>(0);
 
   const fthmTokenAddress = useMemo(() => {
-    console.log("Fathom token address");
     return SmartContractFactory.FthmToken(chainId).address;
   }, [chainId]);
 
