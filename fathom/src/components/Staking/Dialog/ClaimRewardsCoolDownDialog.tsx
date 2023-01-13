@@ -63,6 +63,13 @@ const ButtonsWrapper = styled(Box, {
   }
 `;
 
+const ConfirmButton = styled(ButtonPrimary)`
+  height: 48px;
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 24px;
+`;
+
 type ClaimRewardsDialogProps = {
   totalRewards: number;
   token: string;
@@ -109,9 +116,9 @@ const ClaimRewardsCoolDownDialog: FC<ClaimRewardsDialogProps> = ({
             <CancelButton onClick={onClose}>Back to My Positions</CancelButton>
           )}
           {onContinue && (
-            <ButtonPrimary onClick={onContinue}>
+            <ConfirmButton onClick={onContinue}>
               Continue to Unstake
-            </ButtonPrimary>
+            </ConfirmButton>
           )}
           {isMobile && (
             <CancelButton onClick={onClose}>Back to My Positions</CancelButton>

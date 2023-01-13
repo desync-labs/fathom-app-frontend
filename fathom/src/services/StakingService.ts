@@ -10,32 +10,44 @@ import {
 import { Constants } from "helpers/Constants";
 import { Strings } from "helpers/Strings";
 import Xdc3 from "xdc3";
+import { getEstimateGas } from "utils/getEstimateGas";
 
 const DAY_SECONDS = 24 * 60 * 60;
 
 export default class StakingService implements IStakingService {
   chainId = Constants.DEFAULT_CHAIN_ID;
 
-  createLock(
+  transactionStore: ActiveWeb3Transactions;
+
+  constructor(transactionStore: ActiveWeb3Transactions) {
+    this.transactionStore = transactionStore;
+  }
+
+  async createLock(
     account: string,
     stakePosition: number,
     unlockPeriod: number,
     transactionStore: ActiveWeb3Transactions,
-    library: Xdc3,
+    library: Xdc3
   ): Promise<void> {
     const Staking = Web3Utils.getContractInstance(
       SmartContractFactory.Staking(this.chainId),
-      library,
+      library
     );
     const endTime = unlockPeriod * DAY_SECONDS;
 
-    console.log(this.toWei(stakePosition, library))
-    console.log(endTime)
-    console.log(account)
+    const options = { from: account, gas: 0 };
+    const gas = await getEstimateGas(
+      Staking,
+      "createLock",
+      [this.toWei(stakePosition, library), endTime, account],
+      options
+    );
+    options.gas = gas;
 
     return Staking.methods
       .createLock(this.toWei(stakePosition, library), endTime, account)
-      .send({ from: account })
+      .send(options)
       .on("transactionHash", (hash: any) => {
         transactionStore.addTransaction({
           hash: hash,
@@ -48,20 +60,30 @@ export default class StakingService implements IStakingService {
       });
   }
 
-  handleUnlock(
+  async handleUnlock(
     account: string,
     lockId: number,
     amount: number,
     transactionStore: ActiveWeb3Transactions,
-    library: Xdc3,
+    library: Xdc3
   ): Promise<void> {
     const Staking = Web3Utils.getContractInstance(
       SmartContractFactory.Staking(this.chainId),
       library
     );
+
+    const options = { from: account, gas: 0 };
+    const gas = await getEstimateGas(
+      Staking,
+      "unlockPartially",
+      [lockId, this.toWei(amount, library)],
+      options
+    );
+    options.gas = gas;
+
     return Staking.methods
       .unlockPartially(lockId, this.toWei(amount, library))
-      .send({ from: account })
+      .send(options)
       .on("transactionHash", (hash: any) => {
         transactionStore.addTransaction({
           hash: hash,
@@ -74,20 +96,29 @@ export default class StakingService implements IStakingService {
       });
   }
 
-  handleEarlyWithdrawal(
+  async handleEarlyWithdrawal(
     account: string,
     lockId: number,
     transactionStore: ActiveWeb3Transactions,
-    library: Xdc3,
+    library: Xdc3
   ): Promise<void> {
     const Staking = Web3Utils.getContractInstance(
       SmartContractFactory.Staking(this.chainId),
-      library,
+      library
     );
+
+    const options = { from: account, gas: 0 };
+    const gas = await getEstimateGas(
+      Staking,
+      "unlockPartially",
+      [lockId],
+      options
+    );
+    options.gas = gas;
 
     return Staking.methods
       .earlyUnlock(lockId)
-      .send({ from: account })
+      .send(options)
       .on("transactionHash", (hash: any) => {
         transactionStore.addTransaction({
           hash: hash,
@@ -100,20 +131,29 @@ export default class StakingService implements IStakingService {
       });
   }
 
-  handleClaimRewards(
+  async handleClaimRewards(
     account: string,
     streamId: number,
     transactionStore: ActiveWeb3Transactions,
-    library: Xdc3,
+    library: Xdc3
   ): Promise<void> {
     const Staking = Web3Utils.getContractInstance(
       SmartContractFactory.Staking(this.chainId),
-      library,
+      library
     );
+
+    const options = { from: account, gas: 0 };
+    const gas = await getEstimateGas(
+      Staking,
+      "claimAllLockRewardsForStream",
+      [streamId],
+      options
+    );
+    options.gas = gas;
 
     return Staking.methods
       .claimAllLockRewardsForStream(streamId)
-      .send({ from: account })
+      .send(options)
       .on("transactionHash", (hash: any) => {
         transactionStore.addTransaction({
           hash: hash,
@@ -126,23 +166,32 @@ export default class StakingService implements IStakingService {
       });
   }
 
-  handleWithdrawAll(
+  async handleWithdrawAll(
     account: string,
     streamId: number,
     transactionStore: ActiveWeb3Transactions,
-    library: Xdc3,
+    library: Xdc3
   ): Promise<void> {
     const Staking = Web3Utils.getContractInstance(
       SmartContractFactory.Staking(this.chainId),
-      library,
+      library
     );
 
     /**
      * For FTHM stream we is 0
      */
+    const options = { from: account, gas: 0 };
+    const gas = await getEstimateGas(
+      Staking,
+      "withdrawStream",
+      [0],
+      options
+    );
+    options.gas = gas;
+
     return Staking.methods
       .withdrawStream(0)
-      .send({ from: account })
+      .send(options)
       .on("transactionHash", (hash: any) => {
         transactionStore.addTransaction({
           hash: hash,
@@ -155,7 +204,7 @@ export default class StakingService implements IStakingService {
       });
   }
 
-  toWei(balance: number, library:Xdc3): string {
+  toWei(balance: number, library: Xdc3): string {
     return library.utils.toWei(balance.toString(), "ether");
   }
 
@@ -163,11 +212,11 @@ export default class StakingService implements IStakingService {
     address: string,
     stakingPosition: number,
     fthmTokenAddress: string,
-    library: Xdc3,
+    library: Xdc3
   ): Promise<boolean> {
     const FTHMToken = Web3Utils.getContractInstance(
       SmartContractFactory.MainToken(fthmTokenAddress),
-      library,
+      library
     );
 
     const StakingAddress = SmartContractFactory.Staking(this.chainId).address;
@@ -183,11 +232,11 @@ export default class StakingService implements IStakingService {
     streamId: number,
     account: string,
     lockId: number,
-    library: Xdc3,
+    library: Xdc3
   ): Promise<number> {
     const Staking = Web3Utils.getContractInstance(
       SmartContractFactory.Staking(this.chainId),
-      library,
+      library
     );
 
     return Staking.methods
@@ -198,28 +247,38 @@ export default class StakingService implements IStakingService {
   getStreamClaimableAmount(account: string, library: Xdc3): Promise<number> {
     const StakingGetter = Web3Utils.getContractInstance(
       SmartContractFactory.StakingGetter(this.chainId),
-      library,
+      library
     );
 
     return StakingGetter.methods.getStreamClaimableAmount(0, account).call();
   }
 
-  approveStakingFTHM(
-    address: string,
+  async approveStakingFTHM(
+    account: string,
     fthmTokenAddress: string,
     transactionStore: ActiveWeb3Transactions,
-    library: Xdc3,
+    library: Xdc3
   ): Promise<void> {
     const FTHMToken = Web3Utils.getContractInstance(
       SmartContractFactory.MainToken(fthmTokenAddress),
-      library,
+      library
     );
 
     const StakingAddress = SmartContractFactory.Staking(this.chainId).address;
 
+    const options = { from: account, gas: 0 };
+    const gas = await getEstimateGas(
+      FTHMToken,
+      "approve",
+      [0],
+      options
+    );
+    options.gas = gas;
+
+
     return FTHMToken.methods
       .approve(StakingAddress, Constants.MAX_UINT256)
-      .send({ from: address })
+      .send(options)
       .on("transactionHash", (hash: any) => {
         transactionStore.addTransaction({
           hash: hash,
@@ -235,7 +294,7 @@ export default class StakingService implements IStakingService {
   getPairPrice(token0: string, token1: string, library: Xdc3) {
     const DexPriceOracle = Web3Utils.getContractInstance(
       SmartContractFactory.DexPriceOracle(this.chainId),
-      library,
+      library
     );
     return DexPriceOracle.methods.getPrice(token0, token1).call();
   }
