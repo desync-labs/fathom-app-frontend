@@ -31,7 +31,7 @@ export default class PoolService implements IPoolService {
   }
 
   async getDexPrice(forAddress: string, library: Xdc3): Promise<number> {
-    const USDT = SmartContractFactory.USDT(this.chainId).address;
+    const USStable = SmartContractFactory.USDT(this.chainId).address;
 
     const dexPriceOracle = Web3Utils.getContractInstance(
       SmartContractFactory.DexPriceOracle(this.chainId),
@@ -39,7 +39,7 @@ export default class PoolService implements IPoolService {
     );
 
     const result = await dexPriceOracle.methods
-      .getPrice(USDT, forAddress)
+      .getPrice(USStable, forAddress)
       .call();
 
     return result[0];

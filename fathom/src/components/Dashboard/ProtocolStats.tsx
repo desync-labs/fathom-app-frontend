@@ -1,9 +1,8 @@
 import { Grid, Box, Typography } from "@mui/material";
-import { observer } from "mobx-react";
 import { styled } from "@mui/material/styles";
 import useProtocolStats from "hooks/useProtocolStats";
 import { formatCurrency, formatNumber } from "utils/format";
-import usePricesContext from "../../context/prices";
+import usePricesContext from "context/prices";
 
 const StatsItem = styled(Grid)`
   text-align: left;
@@ -52,7 +51,7 @@ const StatsDescription = styled(Typography)`
   padding-top: 7px;
 `;
 
-const ProtocolStats = observer(() => {
+const ProtocolStats = () => {
   const { totalSupply, tvl, loading } = useProtocolStats();
   const { fxdPrice } = usePricesContext();
 
@@ -82,6 +81,6 @@ const ProtocolStats = observer(() => {
       </StatsItem>
     </ProtocolStatsContainer>
   );
-});
+};
 
 export default ProtocolStats;

@@ -9,10 +9,16 @@ import {
 } from "stores/interfaces/ITransaction";
 import { Constants } from "helpers/Constants";
 import Xdc3 from "xdc3";
-import { getEstimateGas } from "../utils/getEstimateGas";
+import { getEstimateGas } from "utils/getEstimateGas";
 
 export default class ProposalService implements IProposalService {
   chainId = Constants.DEFAULT_CHAIN_ID;
+
+  transactionStore: ActiveWeb3Transactions;
+
+  constructor(transactionStore: ActiveWeb3Transactions) {
+    this.transactionStore = transactionStore;
+  }
 
   async createProposal(
     targets: string[],
@@ -66,9 +72,18 @@ export default class ProposalService implements IProposalService {
       library
     );
 
+    const options = { from: account, gas: 0 };
+    const gas = await getEstimateGas(
+      FathomGovernor,
+      "execute",
+      [targets, values, callData, keccak256(description)],
+      options
+    );
+    options.gas = gas;
+
     return FathomGovernor.methods
       .execute(targets, values, callData, keccak256(description))
-      .send({ from: account });
+      .send(options);
   }
 
   async queueProposal(
@@ -84,9 +99,19 @@ export default class ProposalService implements IProposalService {
       SmartContractFactory.FathomGovernor(this.chainId),
       library
     );
+
+    const options = { from: account, gas: 0 };
+    const gas = await getEstimateGas(
+      FathomGovernor,
+      "queue",
+      [targets, values, callData, keccak256(description)],
+      options
+    );
+    options.gas = gas;
+
     return FathomGovernor.methods
       .queue(targets, values, callData, keccak256(description))
-      .send({ from: account });
+      .send(options);
   }
 
   async hasVoted(
@@ -127,9 +152,18 @@ export default class ProposalService implements IProposalService {
       library
     );
 
+    const options = { from: account, gas: 0 };
+    const gas = await getEstimateGas(
+      FathomGovernor,
+      "castVote",
+      [proposalId, support],
+      options
+    );
+    options.gas = gas;
+
     return FathomGovernor.methods
       .castVote(proposalId, support)
-      .send({ from: account })
+      .send(options)
       .on("transactionHash", (hash: any) => {
         transactionStore.addTransaction({
           hash: hash,

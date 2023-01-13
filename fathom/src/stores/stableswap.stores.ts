@@ -22,13 +22,7 @@ export default class StableSwapStore {
     if (inputCurrency === tokenName) {
       try {
         return await this.service
-          .swapTokenToStableCoin(
-            address,
-            inputValue,
-            this.rootStore.transactionStore,
-            tokenName,
-            library
-          )
+          .swapTokenToStableCoin(address, inputValue, tokenName, library)
           .then((receipt) => {
             this.rootStore.alertStore.setShowSuccessAlert(
               true,
@@ -42,13 +36,7 @@ export default class StableSwapStore {
     } else {
       try {
         return await this.service
-          .swapStableCoinToToken(
-            address,
-            outputValue,
-            this.rootStore.transactionStore,
-            tokenName,
-            library
-          )
+          .swapStableCoinToToken(address, outputValue, tokenName, library)
           .then((receipt) => {
             this.rootStore.alertStore.setShowSuccessAlert(
               true,
@@ -65,7 +53,7 @@ export default class StableSwapStore {
   async approveStableCoin(address: string, library: Xdc3) {
     try {
       return await this.service
-        .approveStableCoin(address, this.rootStore.transactionStore, library)
+        .approveStableCoin(address, library)
         .then((receipt) => {
           this.rootStore.alertStore.setShowSuccessAlert(
             true,
@@ -83,7 +71,7 @@ export default class StableSwapStore {
   async approveUsdt(address: string, tokenName: string, library: Xdc3) {
     try {
       return await this.service
-        .approveUsdt(address, this.rootStore.transactionStore, library)
+        .approveUsdt(address, library)
         .then((receipt) => {
           this.rootStore.alertStore.setShowSuccessAlert(
             true,

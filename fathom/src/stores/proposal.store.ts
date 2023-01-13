@@ -1,6 +1,5 @@
 import { RootStore } from ".";
 import IProposalService from "services/interfaces/IProposalService";
-import { makeAutoObservable } from "mobx";
 import Xdc3 from "xdc3";
 
 export default class ProposalStore {
@@ -8,7 +7,6 @@ export default class ProposalStore {
   rootStore: RootStore;
 
   constructor(rootStore: RootStore, service: IProposalService) {
-    makeAutoObservable(this);
     this.service = service;
     this.rootStore = rootStore;
   }

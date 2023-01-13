@@ -278,7 +278,7 @@ const MainLayout = () => {
             <Divider />
             <MenuWrapper open={open}>
               <Menu open={open} />
-              <BottomLinks></BottomLinks>
+              { !isMobile && open && <BottomLinks/> }
             </MenuWrapper>
           </Drawer>
         )}

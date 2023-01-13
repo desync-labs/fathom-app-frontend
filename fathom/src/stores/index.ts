@@ -51,12 +51,11 @@ export class RootStore {
     this.poolService = new PoolService(this.alertStore);
     this.positionService = new PositionService(this.alertStore, this.transactionStore);
 
-    this.stableSwapService = new StableSwapService();
-    this.proposalService = new ProposalService();
-    this.stakingService = new StakingService();
+    this.stableSwapService = new StableSwapService(this.transactionStore);
+    this.proposalService = new ProposalService(this.transactionStore);
+    this.stakingService = new StakingService(this.transactionStore);
 
     this.stableSwapStore = new StableSwapStore(this, this.stableSwapService);
-
     this.proposalStore = new ProposalStore(this, this.proposalService);
     this.stakingStore = new StakingStore(this, this.stakingService);
   }

@@ -17,10 +17,15 @@ export default class StableSwapService implements IStableSwapService {
   readonly tokenBuffer: number = 5;
   chainId = Constants.DEFAULT_CHAIN_ID;
 
+  transactionStore: ActiveWeb3Transactions;
+
+  constructor(transactionStore: ActiveWeb3Transactions) {
+    this.transactionStore = transactionStore;
+  }
+
   async swapTokenToStableCoin(
     account: string,
     tokenIn: number,
-    transactionStore: ActiveWeb3Transactions,
     tokenName: string,
     library: Xdc3
   ): Promise<TransactionReceipt | undefined> {
@@ -42,7 +47,7 @@ export default class StableSwapService implements IStableSwapService {
       .swapTokenToStablecoin(account, toWei(tokenIn.toString(), "ether"))
       .send(options)
       .on("transactionHash", (hash: any) => {
-        transactionStore.addTransaction({
+        this.transactionStore.addTransaction({
           hash: hash,
           type: TransactionType.ClosePosition,
           active: false,
@@ -56,7 +61,6 @@ export default class StableSwapService implements IStableSwapService {
   async swapStableCoinToToken(
     account: string,
     stableCoinIn: number,
-    transactionStore: ActiveWeb3Transactions,
     tokenName: string,
     library: Xdc3
   ): Promise<TransactionReceipt | undefined> {
@@ -78,7 +82,7 @@ export default class StableSwapService implements IStableSwapService {
       .swapStablecoinToToken(account, toWei(stableCoinIn.toString(), "ether"))
       .send(options)
       .on("transactionHash", (hash: any) => {
-        transactionStore.addTransaction({
+        this.transactionStore.addTransaction({
           hash: hash,
           type: TransactionType.ClosePosition,
           active: false,
@@ -89,9 +93,8 @@ export default class StableSwapService implements IStableSwapService {
       });
   }
 
-  approveStableCoin(
-    address: string,
-    transactionStore: ActiveWeb3Transactions,
+  async approveStableCoin(
+    account: string,
     library: Xdc3
   ): Promise<TransactionReceipt | undefined> {
     const FathomStableCoin = Web3Utils.getContractInstance(
@@ -99,14 +102,26 @@ export default class StableSwapService implements IStableSwapService {
       library
     );
 
+    const options = { from: account, gas: 0 };
+    const gas = await getEstimateGas(
+      FathomStableCoin,
+      "approve",
+      [
+        SmartContractFactory.StableSwapModule(this.chainId).address,
+        Constants.MAX_UINT256,
+      ],
+      options
+    );
+    options.gas = gas;
+
     return FathomStableCoin.methods
       .approve(
         SmartContractFactory.StableSwapModule(this.chainId).address,
         Constants.MAX_UINT256
       )
-      .send({ from: address })
+      .send(options)
       .on("transactionHash", (hash: any) => {
-        transactionStore.addTransaction({
+        this.transactionStore.addTransaction({
           hash: hash,
           type: TransactionType.ClosePosition,
           active: false,
@@ -117,24 +132,35 @@ export default class StableSwapService implements IStableSwapService {
       });
   }
 
-  approveUsdt(
-    address: string,
-    transactionStore: ActiveWeb3Transactions,
+  async approveUsdt(
+    account: string,
     library: Xdc3
   ): Promise<TransactionReceipt | undefined> {
-    const USDT = Web3Utils.getContractInstance(
+    const USStable = Web3Utils.getContractInstance(
       SmartContractFactory.USDT(this.chainId),
       library
     );
 
-    return USDT.methods
+    const options = { from: account, gas: 0 };
+    const gas = await getEstimateGas(
+      USStable,
+      "approve",
+      [
+        SmartContractFactory.AuthtokenAdapter(this.chainId).address,
+        Constants.MAX_UINT256,
+      ],
+      options
+    );
+    options.gas = gas;
+
+    return USStable.methods
       .approve(
         SmartContractFactory.AuthtokenAdapter(this.chainId).address,
         Constants.MAX_UINT256
       )
-      .send({ from: address })
+      .send(options)
       .on("transactionHash", (hash: any) => {
-        transactionStore.addTransaction({
+        this.transactionStore.addTransaction({
           hash: hash,
           type: TransactionType.ClosePosition,
           active: false,

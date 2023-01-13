@@ -1,4 +1,3 @@
-import { makeAutoObservable } from "mobx";
 import { RootStore } from ".";
 import IStakingService from "services/interfaces/IStakingService";
 import Xdc3 from "xdc3";
@@ -8,7 +7,6 @@ export default class StakingStore {
   rootStore: RootStore;
 
   constructor(rootStore: RootStore, service: IStakingService) {
-    makeAutoObservable(this);
     this.service = service;
     this.rootStore = rootStore;
   }
@@ -126,14 +124,6 @@ export default class StakingStore {
     } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(true, e.message);
       throw e;
-    }
-  }
-
-  async getPairPrice(token0: string, token1: string, library: Xdc3) {
-    try {
-      return await this.service.getPairPrice(token0, token1, library);
-    } catch (e: any) {
-      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
     }
   }
 
