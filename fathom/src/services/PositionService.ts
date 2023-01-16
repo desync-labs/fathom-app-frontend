@@ -285,7 +285,7 @@ export default class PositionService implements IPositionService {
             .address,
           wipeAndUnlockTokenCall
         )
-        .send(options)
+        .send({ from: address })
         .on("transactionHash", (hash: any) => {
           this.transactionStore.addTransaction({
             hash: hash,

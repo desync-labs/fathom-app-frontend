@@ -2,17 +2,17 @@ import React, { FC } from "react";
 
 import { Box, Typography, Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
-
-import RiseLabel from "components/AppComponents/AppLabel/RiseLabel";
 import InfoIcon from "@mui/icons-material/Info";
 
-import { formatCompact, formatCurrency, formatNumber } from "utils/format";
+import RiseLabel from "components/AppComponents/AppLabel/RiseLabel";
 import { ButtonSecondary } from "components/AppComponents/AppButton/AppButton";
+import StakingCountdown from "components/Staking/StakingCountdown";
+
+import { formatCompact, formatCurrency, formatNumber } from "utils/format";
 
 import PercentSrc from "assets/svg/percent.svg";
 import LockedSrc from "assets/svg/locked.svg";
 import RewardsSrc from "assets/svg/rewards.svg";
-import StakingCountdown from "components/Staking/StakingCountdown";
 
 import { secondsToTime } from "utils/secondsToTime";
 import useStreamStats from "hooks/useStreamStats";
