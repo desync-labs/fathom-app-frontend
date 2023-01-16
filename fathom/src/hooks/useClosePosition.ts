@@ -124,10 +124,10 @@ const useClosePosition = (
 
   const handleFathomTokenTextFieldChange = useCallback(
     (e: any) => {
-      const maxAllowed = lockedCollateral * price;
+      const maxAllowed = Number(position.debtShare);
+
       let { value } = e.target;
       value = Number(value);
-
       value = value > maxAllowed ? maxAllowed : value;
 
       if (isNaN(value)) {
@@ -135,7 +135,6 @@ const useClosePosition = (
       }
 
       const walletBalance = Number(balance) / 10 ** 18;
-
       value > walletBalance ? setBalanceError(true) : setBalanceError(false);
 
       setFathomToken(value);
@@ -145,6 +144,7 @@ const useClosePosition = (
       price,
       lockedCollateral,
       balance,
+      position,
       setFathomToken,
       setCollateral,
       setBalanceError,
