@@ -7,6 +7,7 @@ import ICollateralPool from "stores/interfaces/ICollateralPool";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 import { useWeb3React } from "@web3-react/core";
+import BigNumber from "bignumber.js";
 
 export enum ClosingType {
   Full,
@@ -60,9 +61,9 @@ const useClosePosition = (
 
   const handleOnOpen = useCallback(async () => {
     const price =
-      Number(position.debtShare) / Number(position.lockedCollateral);
+      BigNumber(position.debtShare).dividedBy(Number(position.lockedCollateral))
 
-    setPrice(price);
+    setPrice(price.toNumber());
     setFathomToken(Number(position.debtShare));
     setCollateral(lockedCollateral);
   }, [position, lockedCollateral, setPrice, setFathomToken, setCollateral]);
@@ -163,12 +164,12 @@ const useClosePosition = (
 
   const setMax = useCallback(() => {
     const walletBalance = (balance as number) / 10 ** 18;
-    const maxBalance = lockedCollateral * price;
+    const maxBalance = Number(position.debtShare);
     const setBalance = walletBalance < maxBalance ? walletBalance : maxBalance;
 
     setFathomToken(setBalance);
     setCollateral(setBalance / price);
-  }, [price, lockedCollateral, balance, setFathomToken, setCollateral]);
+  }, [price, position, lockedCollateral, balance, setFathomToken, setCollateral]);
 
   return {
     collateral,
