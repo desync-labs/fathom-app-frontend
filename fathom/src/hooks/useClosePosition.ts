@@ -60,8 +60,9 @@ const useClosePosition = (
   }, [positionService, account, library, setBalance]);
 
   const handleOnOpen = useCallback(async () => {
-    const price =
-      BigNumber(position.debtShare).dividedBy(Number(position.lockedCollateral))
+    const price = BigNumber(position.debtShare).dividedBy(
+      Number(position.lockedCollateral)
+    );
 
     setPrice(price.toNumber());
     setFathomToken(Number(position.debtShare));
@@ -140,15 +141,7 @@ const useClosePosition = (
       setFathomToken(value);
       setCollateral(value / price);
     },
-    [
-      price,
-      lockedCollateral,
-      balance,
-      position,
-      setFathomToken,
-      setCollateral,
-      setBalanceError,
-    ]
+    [price, balance, position, setFathomToken, setCollateral, setBalanceError]
   );
 
   const handleTypeChange = useCallback(
@@ -169,7 +162,7 @@ const useClosePosition = (
 
     setFathomToken(setBalance);
     setCollateral(setBalance / price);
-  }, [price, position, lockedCollateral, balance, setFathomToken, setCollateral]);
+  }, [price, position, balance, setFathomToken, setCollateral]);
 
   return {
     collateral,

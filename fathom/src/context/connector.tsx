@@ -13,6 +13,7 @@ import { useWeb3React } from "@web3-react/core";
 import WalletConnectProvider from "@walletconnect/ethereum-provider";
 import { useStores } from "stores";
 import { ConnectorEvent } from "@web3-react/types";
+import { getDefaultProvider } from "../utils/defaultProvider";
 
 export const ConnectorContext = createContext(null);
 
@@ -38,7 +39,15 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
   const [isActive, setIsActive] = useState(false);
   const [shouldDisable, setShouldDisable] = useState(false); // Should disable connect button while connecting to MetaMask
   const [isLoading, setIsLoading] = useState(true);
+  const [web3Library, setWeb3Library] = useState(library);
+
   const { transactionStore } = useStores();
+
+  useEffect(() => {
+    if (!library) {
+      setWeb3Library(getDefaultProvider())
+    }
+  }, [library, setWeb3Library]);
 
   useEffect(() => {
     if (library) {
@@ -135,7 +144,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
       shouldDisable,
       chainId,
       error,
-      library,
+      library: web3Library,
       isMetamask,
       isWalletConnect,
     }),
@@ -149,7 +158,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
       disconnect,
       chainId,
       error,
-      library,
+      web3Library,
       isMetamask,
       isWalletConnect,
     ]
