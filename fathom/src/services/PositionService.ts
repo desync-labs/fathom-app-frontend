@@ -468,7 +468,7 @@ export default class PositionService implements IPositionService {
       .allowance(address, proxyWalletAddress)
       .call();
 
-    return +allowance > 10000000000000000;
+    return Number(allowance) > 10000000000000000;
   }
 
   setChainId(chainId: number) {
