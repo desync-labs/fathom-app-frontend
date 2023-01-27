@@ -40,7 +40,7 @@ const useStableSwap = (options: string[]) => {
   const { account, chainId, library } = useConnector()!;
   const { setLastTransactionBlock } = useSyncContext();
 
-  const { data } = useQuery(STABLE_SWAP_STATS, {
+  const { data, refetch } = useQuery(STABLE_SWAP_STATS, {
     context: { clientName: "stable", chainId },
   });
 
@@ -265,6 +265,11 @@ const useStableSwap = (options: string[]) => {
       setInputValue("");
       setOutputValue("");
 
+      /**
+       * Refetch data from Graph.
+       */
+      refetch();
+
       setLastTransactionBlock(receipt.blockNumber);
       handleCurrencyChange(inputCurrency, outputCurrency);
     } catch (e) {
@@ -280,9 +285,10 @@ const useStableSwap = (options: string[]) => {
     account,
     library,
     stableSwapStore,
-    setSwapPending,
     handleCurrencyChange,
     setLastTransactionBlock,
+    setSwapPending,
+    refetch,
   ]);
 
   const approveInput = useCallback(async () => {
