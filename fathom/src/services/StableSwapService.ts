@@ -146,7 +146,7 @@ export default class StableSwapService implements IStableSwapService {
       USStable,
       "approve",
       [
-        SmartContractFactory.AuthtokenAdapter(this.chainId).address,
+        SmartContractFactory.StableSwapModule(this.chainId).address,
         Constants.MAX_UINT256,
       ],
       options
@@ -155,7 +155,7 @@ export default class StableSwapService implements IStableSwapService {
 
     return USStable.methods
       .approve(
-        SmartContractFactory.AuthtokenAdapter(this.chainId).address,
+        SmartContractFactory.StableSwapModule(this.chainId).address,
         Constants.MAX_UINT256
       )
       .send(options)
@@ -172,7 +172,7 @@ export default class StableSwapService implements IStableSwapService {
   }
 
   async approvalStatusStableCoin(
-    address: string,
+    account: string,
     tokenIn: number,
     library: Xdc3
   ): Promise<Boolean> {
@@ -183,36 +183,36 @@ export default class StableSwapService implements IStableSwapService {
 
     const allowance = await FathomStableCoin.methods
       .allowance(
-        address,
+        account,
         SmartContractFactory.StableSwapModule(this.chainId).address
       )
       .call();
 
     const buffer = Number(tokenIn) + Number((tokenIn * this.tokenBuffer) / 100);
 
-    return Number(allowance) > Number(Constants.WeiPerWad.multipliedBy(buffer));
+    return Number(allowance) > Constants.WeiPerWad.multipliedBy(buffer).toNumber();
   }
 
   async approvalStatusUsdt(
-    address: string,
+    account: string,
     tokenIn: number,
     library: Xdc3
   ): Promise<boolean> {
-    const USDT = Web3Utils.getContractInstance(
+    const USStable = Web3Utils.getContractInstance(
       SmartContractFactory.USDT(this.chainId),
       library
     );
 
-    const allowance = await USDT.methods
+    const allowance = await USStable.methods
       .allowance(
-        address,
-        SmartContractFactory.AuthtokenAdapter(this.chainId).address
+        account,
+        SmartContractFactory.StableSwapModule(this.chainId).address
       )
       .call();
 
     const buffer = Number(tokenIn) + Number((tokenIn * this.tokenBuffer) / 100);
 
-    return +allowance > +Constants.WeiPerWad.multipliedBy(buffer);
+    return Number(allowance) > Constants.WeiPerWad.multipliedBy(buffer).toNumber();
   }
 
   getFeeIn(library: Xdc3) {
@@ -231,6 +231,24 @@ export default class StableSwapService implements IStableSwapService {
     );
 
     return StableSwapModule.methods.feeOut().call();
+  }
+
+  getLastUpdate(library: Xdc3) {
+    const StableSwapModule = Web3Utils.getContractInstance(
+      SmartContractFactory.StableSwapModule(this.chainId),
+      library
+    );
+
+    return StableSwapModule.methods.lastUpdate().call();
+  }
+
+  getDailySwapLimit(library: Xdc3) {
+    const StableSwapModule = Web3Utils.getContractInstance(
+      SmartContractFactory.StableSwapModule(this.chainId),
+      library
+    );
+
+    return StableSwapModule.methods.dailySwapLimit().call();
   }
 
   setChainId(chainId: number) {

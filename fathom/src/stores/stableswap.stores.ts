@@ -32,6 +32,7 @@ export default class StableSwapStore {
           });
       } catch (e: any) {
         this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+        throw e;
       }
     } else {
       try {
@@ -46,6 +47,7 @@ export default class StableSwapStore {
           });
       } catch (e: any) {
         this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+        throw e;
       }
     }
   }
@@ -81,6 +83,8 @@ export default class StableSwapStore {
           return receipt;
         });
     } catch (e: any) {
+      console.log(e)
+      console.log(address)
       this.rootStore.alertStore.setShowErrorAlert(true, e.message);
       throw e;
     }
@@ -110,7 +114,7 @@ export default class StableSwapStore {
     }
   }
 
-  async getFeeIn(library: Xdc3): Promise<any> {
+  async getFeeIn(library: Xdc3): Promise<number | undefined> {
     try {
       return await this.service.getFeeIn(library);
     } catch (e: any) {
@@ -118,9 +122,25 @@ export default class StableSwapStore {
     }
   }
 
-  async getFeeOut(library: Xdc3): Promise<any> {
+  async getFeeOut(library: Xdc3): Promise<number | undefined> {
     try {
       return await this.service.getFeeOut(library);
+    } catch (e: any) {
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+    }
+  }
+
+  async getLastUpdate(library: Xdc3): Promise<number | undefined> {
+    try {
+      return await this.service.getLastUpdate(library);
+    } catch (e: any) {
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+    }
+  }
+
+  async getDailySwapLimit(library: Xdc3): Promise<number | undefined> {
+    try {
+      return await this.service.getDailySwapLimit(library);
     } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(true, e.message);
     }

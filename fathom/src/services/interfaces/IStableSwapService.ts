@@ -36,4 +36,6 @@ export default interface IStableSwapService {
 
   getFeeIn(library: Xdc3): Promise<number>;
   getFeeOut(library: Xdc3): Promise<number>;
+  getLastUpdate(library: Xdc3): Promise<number>;
+  getDailySwapLimit(library: Xdc3): Promise<number>;
 }
