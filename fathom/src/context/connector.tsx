@@ -46,6 +46,8 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
   useEffect(() => {
     if (!library) {
       setWeb3Library(getDefaultProvider())
+    } else {
+      setWeb3Library(library)
     }
   }, [library, setWeb3Library]);
 
