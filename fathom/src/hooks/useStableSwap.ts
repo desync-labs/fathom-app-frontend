@@ -29,6 +29,7 @@ const useStableSwap = (options: string[]) => {
 
   const [lastUpdate, setLastUpdate] = useState<number>();
   const [dailyLimit, setDailyLimit] = useState<number>(0);
+  const [displayDailyLimit, setDisplayDailyLimit] = useState<number>(0);
 
   const [feeIn, setFeeIn] = useState<number>(0);
   const [feeOut, setFeeOut] = useState<number>(0);
@@ -40,7 +41,7 @@ const useStableSwap = (options: string[]) => {
   const { account, chainId, library } = useConnector()!;
   const { setLastTransactionBlock } = useSyncContext();
 
-  const { data, refetch } = useQuery(STABLE_SWAP_STATS, {
+  const { data, loading, refetch } = useQuery(STABLE_SWAP_STATS, {
     context: { clientName: "stable", chainId },
   });
 
@@ -212,14 +213,16 @@ const useStableSwap = (options: string[]) => {
   }, [stableSwapStore, chainId, library, setFeeIn, setFeeOut]);
 
   useEffect(() => {
-    if (data?.stableSwapStats.length && lastUpdate && dailyLimit) {
+    if (data?.stableSwapStats.length && lastUpdate && dailyLimit && !loading) {
       if (lastUpdate! + DAY_IN_SECONDS > Date.now() / 1000) {
-        setDailyLimit(
+        setDisplayDailyLimit(
           Number(data.stableSwapStats[0].remainingDailySwapAmount) / 10 ** 18
         );
+      } else {
+        setDisplayDailyLimit(dailyLimit);
       }
     }
-  }, [data, lastUpdate, dailyLimit, setDailyLimit]);
+  }, [data, loading, lastUpdate, dailyLimit, setDisplayDailyLimit]);
 
   useEffect(() => {
     if (inputCurrency) {
@@ -270,6 +273,8 @@ const useStableSwap = (options: string[]) => {
        */
       refetch();
 
+      setLastUpdate(Date.now() / 1000);
+
       setLastTransactionBlock(receipt.blockNumber);
       handleCurrencyChange(inputCurrency, outputCurrency);
     } catch (e) {
@@ -289,6 +294,7 @@ const useStableSwap = (options: string[]) => {
     setLastTransactionBlock,
     setSwapPending,
     refetch,
+    setLastUpdate,
   ]);
 
   const approveInput = useCallback(async () => {
@@ -403,7 +409,7 @@ const useStableSwap = (options: string[]) => {
   ]);
 
   return {
-    dailyLimit,
+    dailyLimit: displayDailyLimit,
 
     inputValue,
     outputValue,

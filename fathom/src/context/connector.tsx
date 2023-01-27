@@ -44,11 +44,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
   const { transactionStore } = useStores();
 
   useEffect(() => {
-    if (!library) {
-      setWeb3Library(getDefaultProvider())
-    } else {
-      setWeb3Library(library)
-    }
+    !!library ? setWeb3Library(library) : setWeb3Library(getDefaultProvider());
   }, [library, setWeb3Library]);
 
   useEffect(() => {
@@ -69,7 +65,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
   }, [library, transactionStore, setIsMetamask, setIsWalletConnect]);
 
   const deactivateEvent = useCallback(() => {
-    sessionStorage.removeItem('isConnected')
+    sessionStorage.removeItem("isConnected");
   }, []);
 
   useEffect(() => {
@@ -85,7 +81,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
   }, [connector, deactivateEvent]);
 
   // Connect to MetaMask wallet
-  const connectMetamask = useCallback( () => {
+  const connectMetamask = useCallback(() => {
     setShouldDisable(true);
     return activate(injected).then(() => {
       setShouldDisable(false);
@@ -93,7 +89,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
     });
   }, [activate, setShouldDisable]);
 
-  const connectWalletConnect = useCallback( () => {
+  const connectWalletConnect = useCallback(() => {
     setShouldDisable(true);
     return activate(walletconnect).then(() => {
       setShouldDisable(false);
