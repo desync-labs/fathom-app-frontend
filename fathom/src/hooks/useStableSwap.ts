@@ -7,6 +7,9 @@ import BigNumber from "bignumber.js";
 import Xdc3 from "xdc3";
 import { useMediaQuery, useTheme } from "@mui/material";
 import useConnector from "context/connector";
+import { useQuery } from "@apollo/client";
+import { STABLE_SWAP_STATS } from "apollo/queries";
+import { DAY_IN_SECONDS } from "helpers/Constants";
 
 const useStableSwap = (options: string[]) => {
   const [inputBalance, setInputBalance] = useState<number>(0);
@@ -24,6 +27,9 @@ const useStableSwap = (options: string[]) => {
   const [approvalPending, setApprovalPending] = useState<string | null>(null);
   const [swapPending, setSwapPending] = useState<boolean>(false);
 
+  const [lastUpdate, setLastUpdate] = useState<number>();
+  const [dailyLimit, setDailyLimit] = useState<number>(0);
+
   const [feeIn, setFeeIn] = useState<number>(0);
   const [feeOut, setFeeOut] = useState<number>(0);
 
@@ -33,6 +39,10 @@ const useStableSwap = (options: string[]) => {
 
   const { account, chainId, library } = useConnector()!;
   const { setLastTransactionBlock } = useSyncContext();
+
+  const { data } = useQuery(STABLE_SWAP_STATS, {
+    context: { clientName: "stable", chainId },
+  });
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -83,8 +93,8 @@ const useStableSwap = (options: string[]) => {
         }
       }, 1000),
     [
-      stableSwapStore,
       account,
+      stableSwapStore,
       library,
       options,
       setApproveInputBtn,
@@ -180,25 +190,36 @@ const useStableSwap = (options: string[]) => {
   useEffect(() => {
     if (chainId) {
       Promise.all([
+        stableSwapStore.getLastUpdate(library),
+        stableSwapStore.getDailySwapLimit(library),
+      ]).then(([lastUpdate, dailySwapLimit]) => {
+        setLastUpdate(Number(lastUpdate));
+        setDailyLimit(Number(dailySwapLimit) / 10 ** 18);
+      });
+    }
+  }, [chainId, stableSwapStore, library, setLastUpdate, setDailyLimit]);
+
+  useEffect(() => {
+    if (chainId) {
+      Promise.all([
         stableSwapStore.getFeeIn(library),
         stableSwapStore.getFeeOut(library),
       ]).then(([feeIn, feeOut]) => {
-        setFeeIn(feeIn);
-        setFeeOut(feeOut);
+        setFeeIn(feeIn!);
+        setFeeOut(feeOut!);
       });
     }
   }, [stableSwapStore, chainId, library, setFeeIn, setFeeOut]);
 
-  const swapFee = useMemo(() => {
-    /**
-     * US+ to FXD
-     */
-    if (inputCurrency === options[0]) {
-      return (Number(inputValue) * feeIn) / 10 ** 18;
-    } else {
-      return (Number(inputValue) * feeOut) / 10 ** 18;
+  useEffect(() => {
+    if (data?.stableSwapStats.length && lastUpdate && dailyLimit) {
+      if (lastUpdate! + DAY_IN_SECONDS > Date.now() / 1000) {
+        setDailyLimit(
+          Number(data.stableSwapStats[0].remainingDailySwapAmount) / 10 ** 18
+        );
+      }
     }
-  }, [options, inputCurrency, inputValue, feeIn, feeOut]);
+  }, [data, lastUpdate, dailyLimit, setDailyLimit]);
 
   useEffect(() => {
     if (inputCurrency) {
@@ -217,6 +238,17 @@ const useStableSwap = (options: string[]) => {
       setInputCurrency(options[index]);
     }
   }, [outputCurrency, options]);
+
+  const swapFee = useMemo(() => {
+    /**
+     * US+ to FXD
+     */
+    if (inputCurrency === options[0]) {
+      return (Number(inputValue) * feeIn) / 10 ** 18;
+    } else {
+      return (Number(inputValue) * feeOut) / 10 ** 18;
+    }
+  }, [options, inputCurrency, inputValue, feeIn, feeOut]);
 
   const handleSwap = useCallback(async () => {
     setSwapPending(true);
@@ -265,10 +297,10 @@ const useStableSwap = (options: string[]) => {
     }
     setApprovalPending(null);
   }, [
+    account,
     options,
     inputCurrency,
     stableSwapStore,
-    account,
     library,
     setApprovalPending,
     setApproveInputBtn,
@@ -288,10 +320,10 @@ const useStableSwap = (options: string[]) => {
 
     setApprovalPending(null);
   }, [
+    account,
     options,
     outputCurrency,
     stableSwapStore,
-    account,
     library,
     setApprovalPending,
     setApproveOutputBtn,
@@ -365,6 +397,8 @@ const useStableSwap = (options: string[]) => {
   ]);
 
   return {
+    dailyLimit,
+
     inputValue,
     outputValue,
 

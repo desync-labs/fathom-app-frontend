@@ -5,6 +5,7 @@ export const ESTIMATE_GAS_MULTIPLIER = 1.2;
 export const DEFAULT_CHAIN_ID = 51;
 
 export const YEAR_IN_SECONDS = 365 * 24 * 60 * 60
+export const DAY_IN_SECONDS = 24 * 60 * 60
 
 export enum ProposalStatus {
   Pending = "Pending",

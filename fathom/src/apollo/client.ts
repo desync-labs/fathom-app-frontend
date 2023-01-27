@@ -5,6 +5,11 @@ import {
   InMemoryCache,
 } from "@apollo/client";
 
+const STABLE_COIN_DEV =
+  "http://159.223.112.169:8000/subgraphs/name/fathomapp-subgraph";
+const STABLE_COIN_STAGING =
+  "https://graph.composer.live/subgraphs/name/fathomapp-subgraph";
+
 /***
  * For Query we have pagination, So we need to return incoming items
  */
@@ -40,7 +45,7 @@ const cache = new InMemoryCache({
 });
 
 const stableCoinLink = new HttpLink({
-  uri: "https://graph.composer.live/subgraphs/name/fathomapp-subgraph",
+  uri: STABLE_COIN_DEV,
 });
 
 const governanceLink = new HttpLink({

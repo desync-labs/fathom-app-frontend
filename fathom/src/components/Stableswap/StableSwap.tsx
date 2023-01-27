@@ -20,7 +20,10 @@ import {
 } from "components/AppComponents/AppForm/AppForm";
 import useStableSwap from "hooks/useStableSwap";
 
-import { formatPercentage } from "utils/format";
+import {
+  formatNumber,
+  formatPercentage
+} from "utils/format";
 import { getTokenLogoURL } from "utils/tokenLogo";
 
 import {
@@ -140,6 +143,8 @@ const StableSwap = () => {
   const [options /*setOptions*/] = useState<string[]>(["US+", "FXD"]);
 
   const {
+    dailyLimit,
+
     fxdPrice,
 
     inputValue,
@@ -359,10 +364,17 @@ const StableSwap = () => {
               <StableSwapInfoWrapper>
                 <InfoLabel>Fee</InfoLabel>
                 <InfoValue>
-                  {formatPercentage(swapFee)} FTHM{" "}
+                  {formatPercentage(swapFee)} FXD{" "}
                   {inputValue && (
                     <>({formatPercentage(swapFee / Number(inputValue) * 100)}%)</>
                   )}
+                </InfoValue>
+              </StableSwapInfoWrapper>
+
+              <StableSwapInfoWrapper>
+                <InfoLabel>Daily Limit</InfoLabel>
+                <InfoValue>
+                  {formatNumber(dailyLimit!)} FXD{" "}
                 </InfoValue>
               </StableSwapInfoWrapper>
             </StableSwapInfoContainer>
