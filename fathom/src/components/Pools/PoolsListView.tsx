@@ -43,7 +43,7 @@ const PoolsTitle = styled(TitleSecondary)`
     margin-bottom: 15px;
     margin-top: 25px;
   }
-`
+`;
 
 const PoolsListView: FC = () => {
   const { pools, selectedPool, onCloseNewPosition, setSelectedPool, loading } =

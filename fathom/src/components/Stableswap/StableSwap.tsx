@@ -184,6 +184,9 @@ const StableSwap = () => {
 
     inputError,
     isMobile,
+
+    fxdAvailable,
+    usStableAvailable,
   } = useStableSwap(options);
 
   return (
@@ -381,6 +384,16 @@ const StableSwap = () => {
               <StableSwapInfoWrapper>
                 <InfoLabel>Daily Limit</InfoLabel>
                 <InfoValue>{formatNumber(dailyLimit!)} FXD </InfoValue>
+              </StableSwapInfoWrapper>
+
+              <StableSwapInfoWrapper>
+                <InfoLabel>FXD Pool Token Available</InfoLabel>
+                <InfoValue>{formatNumber(fxdAvailable!)} FXD </InfoValue>
+              </StableSwapInfoWrapper>
+
+              <StableSwapInfoWrapper>
+                <InfoLabel>US+ Pool Token Available</InfoLabel>
+                <InfoValue>{formatNumber(usStableAvailable!)} US+ </InfoValue>
               </StableSwapInfoWrapper>
             </StableSwapInfoContainer>
 

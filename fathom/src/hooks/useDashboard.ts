@@ -5,10 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Constants } from "helpers/Constants";
 import useSyncContext from "context/sync";
 import { useWeb3React } from "@web3-react/core";
-import {
-  useMediaQuery,
-  useTheme
-} from "@mui/material";
+import { useMediaQuery, useTheme } from "@mui/material";
 
 const useDashboard = () => {
   const { positionService } = useStores();
@@ -40,15 +37,21 @@ const useDashboard = () => {
   );
 
   const fetchUserStatsAndProxyWallet = useCallback(async () => {
-    const proxyWallet = await positionService.proxyWalletExist(account!, library);
+    const proxyWallet = await positionService.proxyWalletExist(
+      account!,
+      library
+    );
     setProxyWallet(proxyWallet!);
 
     loadUserStats({
       variables: {
         walletAddress: proxyWallet,
       },
-    }).then(({ data: { users } }) => {
-      setPositionsItemsCount(users[0]?.activePositionsCount || 0);
+    }).then((response) => {
+      const { data } = response;
+      data &&
+        Array.isArray(data.users) &&
+        setPositionsItemsCount(data.users[0]?.activePositionsCount || 0);
     });
   }, [
     positionService,
@@ -96,7 +99,7 @@ const useDashboard = () => {
     if (syncFXD && !prevSyncFxd) {
       refetchData();
     }
-  }, [syncFXD, prevSyncFxd, refetchData])
+  }, [syncFXD, prevSyncFxd, refetchData]);
 
   return {
     isMobile,

@@ -1,4 +1,3 @@
-import ActiveWeb3Transactions from "stores/transaction.store";
 import Xdc3 from "xdc3";
 import { TransactionReceipt } from "web3-eth";
 
@@ -38,4 +37,5 @@ export default interface IStableSwapService {
   getFeeOut(library: Xdc3): Promise<number>;
   getLastUpdate(library: Xdc3): Promise<number>;
   getDailySwapLimit(library: Xdc3): Promise<number>;
+  getTokenBalance(tokenAddress: string, library: Xdc3): Promise<number>;
 }
