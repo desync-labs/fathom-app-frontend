@@ -45,6 +45,9 @@ export default class PositionService implements IPositionService {
         proxyWalletAddress = await this.createProxyWallet(address, library);
       }
 
+      /**
+       * Get Proxy Wallet
+       */
       const wallet = Web3Utils.getContractInstanceFrom(
         SmartContractFactory.proxyWallet.abi,
         proxyWalletAddress,
@@ -58,7 +61,7 @@ export default class PositionService implements IPositionService {
 
       const jsonInterface = SmartContractFactory.FathomStablecoinProxyAction(
         this.chainId
-      ).abi.filter((abi) => abi.name === "openLockTokenAndDraw")[0];
+      ).abi.filter((abi) => abi.name === "openLockXDCAndDraw")[0];
 
       const openPositionCall = library.eth.abi.encodeFunctionCall(
         jsonInterface,
@@ -68,32 +71,26 @@ export default class PositionService implements IPositionService {
           pool.tokenAdapterAddress,
           SmartContractFactory.StablecoinAdapter(this.chainId).address,
           pool.id,
-          toWei(collateral.toString(), "ether"),
           toWei(fathomToken.toString(), "ether"),
-          "1",
           encodedResult,
         ]
       );
 
-      const options = { from: address, gas: 0 };
+      const options = {
+        from: address,
+        gas: 0,
+        value: toWei(collateral.toString(), "ether"),
+      };
       const gas = await getEstimateGas(
         wallet,
-        "execute2",
-        [
-          SmartContractFactory.FathomStablecoinProxyActions(this.chainId)
-            .address,
-          openPositionCall,
-        ],
+        "execute",
+        [openPositionCall],
         options
       );
       options.gas = gas;
 
       const receipt = await wallet.methods
-        .execute2(
-          SmartContractFactory.FathomStablecoinProxyActions(this.chainId)
-            .address,
-          openPositionCall
-        )
+        .execute(openPositionCall)
         .send(options)
         .on("transactionHash", (hash: any) => {
           this.transactionStore.addTransaction({
@@ -349,10 +346,7 @@ export default class PositionService implements IPositionService {
           });
         });
 
-      this.alertStore.setShowSuccessAlert(
-        true,
-        "Approval was successful!"
-      );
+      this.alertStore.setShowSuccessAlert(true, "Approval was successful!");
 
       return receipt;
     } catch (error: any) {

@@ -55,7 +55,6 @@ export class SmartContractFactory {
 
   public static proxyWallet = {
     abi: ProxyWalletAbi.abi as AbiItem[],
-    address: "",
   };
 
   public static FathomStablecoinProxyAction(chainId: number) {
