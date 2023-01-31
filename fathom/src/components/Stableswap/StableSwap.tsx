@@ -20,10 +20,7 @@ import {
 } from "components/AppComponents/AppForm/AppForm";
 import useStableSwap from "hooks/useStableSwap";
 
-import {
-  formatNumber,
-  formatPercentage
-} from "utils/format";
+import { formatNumber, formatPercentage } from "utils/format";
 import { getTokenLogoURL } from "utils/tokenLogo";
 
 import {
@@ -84,6 +81,15 @@ const StableSwapTextField = styled(AppTextField)`
     &[type="number"] {
       -moz-appearance: textfield;
     }
+  }
+  .MuiFormHelperText-root {
+    &.Mui-error {
+      padding-top: 5px;
+      p {
+        font-size: 12px;
+        padding-left: 22px;
+      }
+    }  
   }
 `;
 
@@ -233,7 +239,7 @@ const StableSwap = () => {
               </StableSwapCurrencySelect>
 
               <StableSwapTextField
-                error={inputError}
+                error={!!inputError}
                 size="small"
                 type="number"
                 placeholder="0.00"
@@ -243,10 +249,8 @@ const StableSwap = () => {
                   inputError ? (
                     <>
                       <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
-                      <Typography
-                        sx={{ fontSize: "12px", paddingLeft: "22px" }}
-                      >
-                        You do not have enough {inputCurrency}
+                      <Typography>
+                        {inputError}
                       </Typography>
                     </>
                   ) : null
@@ -366,16 +370,17 @@ const StableSwap = () => {
                 <InfoValue>
                   {formatPercentage(swapFee)} FXD{" "}
                   {inputValue && (
-                    <>({formatPercentage(swapFee / Number(inputValue) * 100)}%)</>
+                    <>
+                      ({formatPercentage((swapFee / Number(inputValue)) * 100)}
+                      %)
+                    </>
                   )}
                 </InfoValue>
               </StableSwapInfoWrapper>
 
               <StableSwapInfoWrapper>
                 <InfoLabel>Daily Limit</InfoLabel>
-                <InfoValue>
-                  {formatNumber(dailyLimit!)} FXD{" "}
-                </InfoValue>
+                <InfoValue>{formatNumber(dailyLimit!)} FXD </InfoValue>
               </StableSwapInfoWrapper>
             </StableSwapInfoContainer>
 

@@ -10,6 +10,7 @@ import useConnector from "context/connector";
 import { useQuery } from "@apollo/client";
 import { STABLE_SWAP_STATS } from "apollo/queries";
 import { DAY_IN_SECONDS } from "helpers/Constants";
+import { formatNumber } from "../utils/format";
 
 const useStableSwap = (options: string[]) => {
   const [inputBalance, setInputBalance] = useState<number>(0);
@@ -106,8 +107,16 @@ const useStableSwap = (options: string[]) => {
   const inputError = useMemo(() => {
     const formattedBalance = inputBalance / 10 ** 18;
 
-    return (inputValue as number) > formattedBalance;
-  }, [inputValue, inputBalance]);
+    if ((inputValue as number) > formattedBalance) {
+      return `You do not have enough ${inputCurrency}`;
+    }
+
+    if (displayDailyLimit < inputValue) {
+      return `You can't swap more then remaining daily limit ${formatNumber(displayDailyLimit)} FXD`;
+    }
+
+    return false;
+  }, [inputValue, inputCurrency, inputBalance, displayDailyLimit]);
 
   const handleCurrencyChange = useMemo(
     () =>
@@ -215,13 +224,13 @@ const useStableSwap = (options: string[]) => {
   useEffect(() => {
     if (data?.stableSwapStats.length && lastUpdate && dailyLimit && !loading) {
       if (lastUpdate! + DAY_IN_SECONDS > Date.now() / 1000) {
-        setDisplayDailyLimit(
+        return setDisplayDailyLimit(
           Number(data.stableSwapStats[0].remainingDailySwapAmount) / 10 ** 18
         );
-      } else {
-        setDisplayDailyLimit(dailyLimit);
       }
     }
+
+    setDisplayDailyLimit(dailyLimit);
   }, [data, loading, lastUpdate, dailyLimit, setDisplayDailyLimit]);
 
   useEffect(() => {
@@ -277,7 +286,6 @@ const useStableSwap = (options: string[]) => {
 
       setLastTransactionBlock(receipt.blockNumber);
       handleCurrencyChange(inputCurrency, outputCurrency);
-    } catch (e) {
     } finally {
       setSwapPending(false);
     }
