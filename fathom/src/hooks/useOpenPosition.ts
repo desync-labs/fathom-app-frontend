@@ -34,8 +34,9 @@ const useOpenPosition = (
 
   const [collateralToBeLocked, setCollateralToBeLocked] = useState<number>(0);
   const [fxdToBeBorrowed, setFxdToBeBorrowed] = useState<number>(0);
-  const [collateralTokenAddress, setCollateralTokenAddress] =
-    useState<string>();
+  const [collateralTokenAddress, setCollateralTokenAddress] = useState<
+    string | null
+  >();
 
   const { setLastTransactionBlock } = useSyncContext();
 
@@ -59,7 +60,7 @@ const useOpenPosition = (
           account,
           collateralTokenAddress!,
           Number(collateral),
-          library,
+          library
         );
         approved ? setApproveBtn(false) : setApproveBtn(true);
       }, 1000),
@@ -67,23 +68,33 @@ const useOpenPosition = (
   );
 
   const getCollateralTokenAndBalance = useCallback(async () => {
-    const tokenAddress = await poolService.getCollateralTokenAddress(
-      pool.tokenAdapterAddress,
-      library
-    );
+    if (pool.poolName.toUpperCase() === "XDC") {
+      const balance = await library.eth.getBalance(account);
+      setCollateralTokenAddress(null);
+      setBalance(balance);
+    } else {
+      const tokenAddress = await poolService.getCollateralTokenAddress(
+        pool.tokenAdapterAddress,
+        library
+      );
 
-    console.log("token adapter address", pool.tokenAdapterAddress);
-    console.log("collateral token address", tokenAddress);
+      console.log("Token adapter address", pool.tokenAdapterAddress);
+      console.log("Collateral token address", tokenAddress);
 
-    const balance = await poolService.getUserTokenBalance(account, tokenAddress!, library);
+      const balance = await poolService.getUserTokenBalance(
+        account,
+        tokenAddress!,
+        library
+      );
 
-    setCollateralTokenAddress(tokenAddress);
-    setBalance(balance);
+      setCollateralTokenAddress(tokenAddress);
+      setBalance(balance);
+    }
   }, [poolService, account, pool, library, setCollateralTokenAddress]);
 
   const availableFathomInPool = useMemo(
     () => Number(pool.totalAvailable),
-    [pool.totalAvailable]
+    [pool]
   );
 
   useEffect(() => {
@@ -120,16 +131,17 @@ const useOpenPosition = (
 
       // PRICE OF COLLATERAL FROM DEX
       const priceOfCollateralFromDex =
-        pool.poolName === "USDT"
-          ? 10 ** 18
+        pool.poolName.toUpperCase() === "XDC"
+          ? Number(pool.collateralLastPrice) * 10 ** 18
           : await poolService.getDexPrice(collateralTokenAddress!, library);
 
       // DEBT RATIO
       const debtRatio =
-        +fathomTokenInput === 0
+        Number(fathomTokenInput) === 0
           ? 0
-          : (+fathomTokenInput /
-              ((+collateralInput * +priceOfCollateralFromDex) / 10 ** 18)) *
+          : (Number(fathomTokenInput) /
+              ((Number(collateralInput) * Number(priceOfCollateralFromDex)) /
+                10 ** 18)) *
             100;
       setDebtRatio(+debtRatio);
 
@@ -146,12 +158,12 @@ const useOpenPosition = (
       if (priceWithSafetyMargin === 0) {
         liquidationPrice =
           priceOfCollateralFromDex / 10 ** 18 -
-          collateralAvailableToWithdraw / +collateralInput;
+          collateralAvailableToWithdraw / Number(collateralInput);
       } else {
         liquidationPrice =
           priceOfCollateralFromDex / 10 ** 18 -
           (collateralAvailableToWithdraw * priceWithSafetyMargin) /
-            +collateralInput;
+            Number(collateralInput);
       }
 
       setLiquidationPrice(+liquidationPrice);
@@ -182,11 +194,17 @@ const useOpenPosition = (
     const collateralVal = Number(collateral);
     const fathomTokenVal = Number(fathomToken);
 
-    if (collateralTokenAddress && (collateralVal || fathomTokenVal)) {
+    if (
+      pool?.poolName?.toUpperCase() === "XDC" &&
+      (collateralVal || fathomTokenVal)
+    ) {
+      handleUpdates(collateralVal, fathomTokenVal);
+    } else if (collateralTokenAddress && (collateralVal || fathomTokenVal)) {
       handleUpdates(collateralVal, fathomTokenVal);
       approvalStatus(collateral);
     }
   }, [
+    pool,
     collateral,
     collateralTokenAddress,
     fathomToken,
@@ -209,7 +227,7 @@ const useOpenPosition = (
           pool,
           Number(collateral),
           Number(fathomToken),
-          library,
+          library
         );
         setLastTransactionBlock(receipt!.blockNumber);
         onClose();

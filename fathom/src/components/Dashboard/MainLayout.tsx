@@ -266,7 +266,6 @@ const MainLayout = () => {
                   }}
                 />
               )}
-
               <ToggleDrawerButton open={open} onClick={toggleDrawer}>
                 {open ? (
                   <ArrowBack sx={{ fontSize: "0.9rem" }} />

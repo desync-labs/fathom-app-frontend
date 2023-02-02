@@ -4,7 +4,7 @@ import {
   Grid,
   Typography,
   useMediaQuery,
-  useTheme
+  useTheme,
 } from "@mui/material";
 import {
   ClosePositionError,
@@ -140,7 +140,11 @@ const ClosePositionForm = () => {
           id="outlined-helperText"
           value={collateral}
         />
-        <AppFormInputLogo src={getTokenLogoURL(pool.poolName)} />
+        <AppFormInputLogo
+          src={getTokenLogoURL(
+            pool?.poolName === "XDC" ? "WXDC" : pool?.poolName
+          )}
+        />
         {/*<MaxButton disabled>Safe Max</MaxButton>*/}
       </AppFormInputWrapper>
       {fathomToken ? (
@@ -189,9 +193,7 @@ const ClosePositionForm = () => {
             "Close this position"
           )}
         </ButtonPrimary>
-        {isMobile && (
-          <ButtonSecondary onClick={onClose}>Close</ButtonSecondary>
-        )}
+        {isMobile && <ButtonSecondary onClick={onClose}>Close</ButtonSecondary>}
       </ButtonsWrapper>
     </ClosePositionWrapper>
   );

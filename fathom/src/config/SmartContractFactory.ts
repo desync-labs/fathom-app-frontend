@@ -12,7 +12,7 @@ import MainToken from "config/ABI/MainToken.json";
 import Governor from "config/ABI/Governor.json";
 import VeFathomAbi from "config/ABI/vFathom.json";
 import DexPriceOracle from "config/ABI/DexPriceOracle.json";
-import CollateralTokenAdapterAbi from 'config/ABI/CollateralTokenAdapter.json';
+import CollateralTokenAdapterAbi from "config/ABI/CollateralTokenAdapter.json";
 
 export class SmartContractFactory {
   public static Addresses(chainId: number) {
@@ -75,7 +75,7 @@ export class SmartContractFactory {
   public static USDT(chainId: number) {
     return {
       abi: BEP20Abi.abi as AbiItem[],
-      address: SmartContractFactory.Addresses(chainId)['US+'],
+      address: SmartContractFactory.Addresses(chainId)["US+"],
     };
   }
 
@@ -84,7 +84,7 @@ export class SmartContractFactory {
       abi: BEP20Abi.abi as AbiItem[],
       address: _address,
     };
-  };
+  }
 
   public static FathomStableCoin(chainId: number) {
     return {
@@ -111,13 +111,6 @@ export class SmartContractFactory {
     return {
       abi: [],
       address: SmartContractFactory.Addresses(chainId).stablecoinAdapter,
-    };
-  }
-
-  public static AuthtokenAdapter(chainId: number) {
-    return {
-      abi: [],
-      address: SmartContractFactory.Addresses(chainId).authTokenAdapter,
     };
   }
 
@@ -161,6 +154,10 @@ export class SmartContractFactory {
       abi: MainToken.abi as AbiItem[],
       address: SmartContractFactory.Addresses(chainId).fthmToken,
     };
+  }
+
+  public static aXDCcTokenAddress(chainId: number) {
+    return SmartContractFactory.Addresses(chainId).aXDCc;
   }
 
   public static StakingGetter(chainId: number) {

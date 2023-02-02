@@ -91,7 +91,11 @@ const PositionListItem: FC<PositionListItemProps> = ({
       <TableCell>
         <Stack direction="row" spacing={2}>
           <TokenLogo
-            src={getTokenLogoURL(position?.collateralPoolName)}
+            src={getTokenLogoURL(
+              position?.collateralPoolName === "XDC"
+                ? "WXDC"
+                : position?.collateralPoolName
+            )}
             alt={position?.collateralPoolName}
           />
           <Box>

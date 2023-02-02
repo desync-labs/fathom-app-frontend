@@ -5,7 +5,7 @@ import Xdc3 from "xdc3";
 export const supportedChainIds = [1337, 50, 51];
 export const XDC_CHAIN_IDS = [50, 51];
 
-export const APOTHEM_RPC = "https://apothem.xdcrpc.com/";
+export const APOTHEM_RPC = "https://erpc.apothem.network/";
 export const XDC_RPC = "https://eRPC.BlocksScan.io";
 
 export const DEFAULT_RPC = {
