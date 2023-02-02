@@ -14,4 +14,11 @@ export const getAccountUrl = (account: string, chainId: ChainId) => {
   return "";
 }
 
+export const getToken = (tokenAddress: string, chainId: ChainId) => {
+  if (chainId in EXPLORERS) {
+    return `${EXPLORERS[chainId as ChainId]}tokens/${tokenAddress}`;
+  }
+  return "";
+}
+
 

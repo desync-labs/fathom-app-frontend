@@ -49,7 +49,7 @@ const InfoBox = styled(Box)`
     margin-bottom: 10px;
     overflow: hidden;
   }
-`
+`;
 
 const OpenPositionForm = () => {
   const {
@@ -96,7 +96,7 @@ const OpenPositionForm = () => {
             min: 10,
             max: +balance / 10 ** 18,
             validate: (value: string) => {
-              console.log(value);
+              if (Number(value) < 0) return 'Collateral amount should be positive!'
               return true;
             },
           }}
@@ -153,7 +153,13 @@ const OpenPositionForm = () => {
                 type="number"
                 onChange={onChange}
               />
-              <AppFormInputLogo src={getTokenLogoURL(pool.poolName)} />
+              <AppFormInputLogo
+                src={getTokenLogoURL(
+                  pool?.poolName?.toUpperCase() === "XDC"
+                    ? "WXDC"
+                    : pool?.poolName
+                )}
+              />
               <MaxButton onClick={() => setMax(balance)}>Max</MaxButton>
             </AppFormInputWrapper>
           )}

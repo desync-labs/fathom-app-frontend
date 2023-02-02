@@ -181,8 +181,8 @@ const useStableSwap = (options: string[]) => {
               usStableAvailable,
             ] = await Promise.all(promises);
 
-            setFxdAvailable(fxdAvailable! / 10 ** 18)
-            setUsStableAvailable(usStableAvailable! / 10 ** 18)
+            setFxdAvailable(fxdAvailable! / 10 ** 18);
+            setUsStableAvailable(usStableAvailable! / 10 ** 18);
 
             setInputBalance(inputBalance!);
             setOutputBalance(outputBalance!);
@@ -190,7 +190,15 @@ const useStableSwap = (options: string[]) => {
           } catch (e) {}
         }
       }, 100),
-    [account, chainId, poolService, library, setInputBalance, setOutputBalance]
+    [
+      account,
+      chainId,
+      poolService,
+      library,
+      stableSwapStore,
+      setInputBalance,
+      setOutputBalance,
+    ]
   );
 
   const changeCurrenciesPosition = useCallback(
