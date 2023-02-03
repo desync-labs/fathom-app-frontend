@@ -1,15 +1,8 @@
-import {
-  Grid,
-} from "@mui/material";
+import { Grid } from "@mui/material";
 import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import React, {
-  Dispatch,
-  FC,
-  memo
-} from "react";
+import React, { Dispatch, FC, memo } from "react";
 import { styled } from "@mui/material/styles";
-
 
 // const ProposalSelect = styled(Select)`
 //   padding: 8px 12px;
@@ -29,13 +22,16 @@ type ProposalFiltersType = {
   proposals: string;
   setProposals: Dispatch<string>;
   setCreateProposal: Dispatch<boolean>;
-}
+};
 
 const AddProposalButton = styled(ButtonPrimary)`
+  float: right;
+  padding: 8px 40px;
   ${({ theme }) => theme.breakpoints.down("sm")} {
     width: 100%;
+    margin-top: 10px;
   }
-`
+`;
 
 const ProposalFilters: FC<ProposalFiltersType> = ({
   search,
@@ -44,7 +40,7 @@ const ProposalFilters: FC<ProposalFiltersType> = ({
   setTime,
   proposals,
   setProposals,
-  setCreateProposal
+  setCreateProposal,
 }) => {
   return (
     <Grid item xs={12}>
@@ -93,10 +89,7 @@ const ProposalFilters: FC<ProposalFiltersType> = ({
         </Grid>
         */}
         <Grid item xs={12}>
-          <AddProposalButton
-            onClick={() => setCreateProposal(true)}
-            sx={{ float: "right", padding: "8px 40px" }}
-          >
+          <AddProposalButton onClick={() => setCreateProposal(true)}>
             <AddCircleIcon
               sx={{
                 color: "#005C55",
@@ -109,7 +102,7 @@ const ProposalFilters: FC<ProposalFiltersType> = ({
         </Grid>
       </Grid>
     </Grid>
-  )
-}
+  );
+};
 
 export default memo(ProposalFilters);
