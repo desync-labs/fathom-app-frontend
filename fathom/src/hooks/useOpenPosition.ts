@@ -59,7 +59,7 @@ const useOpenPosition = (
         let approved = await positionService.approvalStatus(
           account,
           collateralTokenAddress!,
-          Number(collateral),
+          collateral,
           library
         );
         approved ? setApproveBtn(false) : setApproveBtn(true);

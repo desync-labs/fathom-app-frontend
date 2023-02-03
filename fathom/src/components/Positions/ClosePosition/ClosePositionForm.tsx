@@ -36,6 +36,7 @@ import React from "react";
 import useClosePositionContext from "context/closePosition";
 import { styled } from "@mui/material/styles";
 import { formatPercentage } from "../../../utils/format";
+import BigNumber from "bignumber.js";
 
 const ClosePositionWrapper = styled(Grid)`
   padding-left: 20px;
@@ -102,11 +103,15 @@ const ClosePositionForm = () => {
       </Box>
       <AppFormInputWrapper>
         <AppFormLabel>Repaying</AppFormLabel>
-        {!isNaN(balance as number) ? (
+        {balance && (
           <WalletBalance>
-            Wallet Available: {(balance as number) / 10 ** 18} FXD
+            Wallet Available:{" "}
+            {BigNumber(balance)
+              .dividedBy(10 ** 18)
+              .toString()}{" "}
+            FXD
           </WalletBalance>
-        ) : null}
+        )}
         <AppTextField
           error={balanceError}
           id="outlined-helperText"
@@ -138,7 +143,9 @@ const ClosePositionForm = () => {
         <AppTextField
           disabled={true}
           id="outlined-helperText"
-          value={collateral}
+          value={BigNumber(collateral)
+            .dividedBy(10 ** 18)
+            .toString()}
         />
         <AppFormInputLogo
           src={getTokenLogoURL(
@@ -150,14 +157,20 @@ const ClosePositionForm = () => {
       {fathomToken ? (
         <InfoWrapper>
           <InfoLabel>Repaying</InfoLabel>
-          <InfoValue>{fathomToken} FXD</InfoValue>
+          <InfoValue>
+            {fathomToken}{" "}
+            FXD
+          </InfoValue>
         </InfoWrapper>
       ) : null}
       {fathomToken ? (
         <InfoWrapper>
           <InfoLabel>Receive</InfoLabel>
           <InfoValue>
-            {collateral} {pool.poolName}
+            {BigNumber(collateral)
+              .dividedBy(10 ** 18)
+              .toString()}{" "}
+            {pool.poolName}
           </InfoValue>
         </InfoWrapper>
       ) : null}

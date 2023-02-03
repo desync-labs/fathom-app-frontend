@@ -95,10 +95,6 @@ const OpenPositionForm = () => {
             required: true,
             min: 10,
             max: +balance / 10 ** 18,
-            validate: (value: string) => {
-              if (Number(value) < 0) return 'Collateral amount should be positive!'
-              return true;
-            },
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <AppFormInputWrapper>

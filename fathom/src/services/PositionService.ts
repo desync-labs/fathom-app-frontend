@@ -18,6 +18,7 @@ import AlertStore from "stores/alert.stores";
 import { TransactionReceipt } from "web3-eth";
 import { getEstimateGas } from "utils/getEstimateGas";
 import { addMetamaskToken } from "utils/addMetamaskToken";
+import BigNumber from "bignumber.js";
 
 export default class PositionService implements IPositionService {
   chainId = Constants.DEFAULT_CHAIN_ID;
@@ -151,7 +152,7 @@ export default class PositionService implements IPositionService {
     positionId: string,
     pool: ICollateralPool,
     address: string,
-    collateral: number,
+    collateral: string,
     library: Xdc3
   ): Promise<TransactionReceipt | undefined> {
     try {
@@ -179,7 +180,7 @@ export default class PositionService implements IPositionService {
           pool.tokenAdapterAddress,
           SmartContractFactory.StablecoinAdapter(this.chainId).address,
           positionId,
-          toWei(collateral.toString(), "ether"),
+          BigNumber(collateral).integerValue(),
           encodedResult,
         ]
       );
@@ -231,8 +232,8 @@ export default class PositionService implements IPositionService {
     positionId: string,
     pool: ICollateralPool,
     address: string,
-    stableCoin: number,
-    collateral: number,
+    stableCoin: string,
+    collateral: string,
     library: Xdc3
   ): Promise<TransactionReceipt | undefined> {
     try {
@@ -253,6 +254,11 @@ export default class PositionService implements IPositionService {
         this.chainId
       ).abi.filter((abi) => abi.name === "wipeAndUnlockXDC")[0];
 
+      console.log({
+        collateral: BigNumber(collateral).integerValue().toString(),
+        stableCoin: BigNumber(stableCoin).multipliedBy(10 ** 18).integerValue(BigNumber.ROUND_CEIL).toString()
+      })
+
       const wipeAndUnlockTokenCall = library.eth.abi.encodeFunctionCall(
         jsonInterface,
         [
@@ -260,8 +266,8 @@ export default class PositionService implements IPositionService {
           pool.tokenAdapterAddress,
           SmartContractFactory.StablecoinAdapter(this.chainId).address,
           positionId,
-          toWei(collateral.toString(), "ether"),
-          toWei(stableCoin.toString(), "ether"),
+          BigNumber(collateral).integerValue(),
+          BigNumber(stableCoin).multipliedBy(10 ** 18).integerValue(BigNumber.ROUND_CEIL),
           encodedResult,
         ]
       );
@@ -363,11 +369,9 @@ export default class PositionService implements IPositionService {
   async approvalStatus(
     address: string,
     tokenAddress: string,
-    collateral: number,
+    collateral: string,
     library: Xdc3
   ): Promise<boolean> {
-    collateral = collateral || 0;
-
     const proxyWalletAddress = await this.proxyWalletExist(address, library);
 
     if (proxyWalletAddress === Constants.ZERO_ADDRESS) {
@@ -440,7 +444,7 @@ export default class PositionService implements IPositionService {
     }
   }
 
-  balanceStableCoin(address: string, library: Xdc3): Promise<number> {
+  balanceStableCoin(address: string, library: Xdc3): Promise<string> {
     const fathomStableCoin = Web3Utils.getContractInstance(
       SmartContractFactory.FathomStableCoin(this.chainId),
       library

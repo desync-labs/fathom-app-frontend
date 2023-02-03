@@ -31,12 +31,12 @@ const useClosePosition = (
 
   const { setLastTransactionBlock } = useSyncContext();
 
-  const [collateral, setCollateral] = useState<number>(0);
-  const [fathomToken, setFathomToken] = useState<number>(0);
+  const [collateral, setCollateral] = useState<string>("");
+  const [fathomToken, setFathomToken] = useState<string>("");
 
-  const [price, setPrice] = useState<number>(0);
+  const [price, setPrice] = useState<string>("");
 
-  const [balance, setBalance] = useState<number | null>(null);
+  const [balance, setBalance] = useState<string>("");
   const [balanceError, setBalanceError] = useState<boolean>(false);
   const [disableClosePosition, setDisableClosePosition] =
     useState<boolean>(false);
@@ -50,24 +50,34 @@ const useClosePosition = (
   );
 
   const lockedCollateral = useMemo(
-    () => Number(position.lockedCollateral),
+    () => library.utils.toWei(position.lockedCollateral, "ether"),
+    [position, library]
+  );
+  const debtShare = useMemo(
+    () =>
+      BigNumber(position.debtShare)
+        .multipliedBy(10 ** 18)
+        .toString(),
     [position]
   );
 
   const getBalance = useCallback(async () => {
     const balance = await positionService.balanceStableCoin(account, library);
-    setBalance(balance!);
+    setBalance(balance);
   }, [positionService, account, library, setBalance]);
 
   const handleOnOpen = useCallback(async () => {
-    const price = BigNumber(position.debtShare).dividedBy(
-      Number(position.lockedCollateral)
-    );
+    const price = BigNumber(debtShare).dividedBy(lockedCollateral);
 
-    setPrice(price.toNumber());
-    setFathomToken(Number(position.debtShare));
+    setPrice(price.toString());
+
+    setFathomToken(
+      BigNumber(debtShare)
+        .dividedBy(10 ** 18)
+        .toString()
+    );
     setCollateral(lockedCollateral);
-  }, [position, lockedCollateral, setPrice, setFathomToken, setCollateral]);
+  }, [lockedCollateral, debtShare, setPrice, setFathomToken, setCollateral]);
 
   useEffect(() => {
     getBalance();
@@ -75,7 +85,7 @@ const useClosePosition = (
   }, [getBalance, handleOnOpen]);
 
   useEffect(() => {
-    balance !== null && (balance as number) / 10 ** 18 < fathomToken
+    balance && BigNumber(balance).isLessThan(fathomToken)
       ? setBalanceError(true)
       : setBalanceError(false);
   }, [fathomToken, balance]);
@@ -84,7 +94,7 @@ const useClosePosition = (
     setDisableClosePosition(true);
     try {
       let receipt;
-      if (closingType === ClosingType.Full) {
+      if (closingType === ClosingType.Full || BigNumber(collateral).isEqualTo(lockedCollateral)) {
         receipt = await positionService.closePosition(
           position.positionId,
           pool,
@@ -113,6 +123,7 @@ const useClosePosition = (
     closingType,
     position,
     pool,
+    debtShare,
     account,
     library,
     fathomToken,
@@ -125,44 +136,46 @@ const useClosePosition = (
 
   const handleFathomTokenTextFieldChange = useCallback(
     (e: any) => {
-      const maxAllowed = Number(position.debtShare);
-
       let { value } = e.target;
-      value = Number(value);
-      value = value > maxAllowed ? maxAllowed : value;
+      let bigIntValue = BigNumber(value).multipliedBy(10 ** 18);
 
-      if (isNaN(value)) {
-        return;
+      if (bigIntValue.isGreaterThan(debtShare)) {
+        bigIntValue = BigNumber(debtShare);
+        value = bigIntValue.dividedBy(10 ** 18).toString();
       }
 
-      const walletBalance = Number(balance) / 10 ** 18;
-      value > walletBalance ? setBalanceError(true) : setBalanceError(false);
+      if (!bigIntValue.toString() || bigIntValue.toString() === "NaN") {
+        bigIntValue = BigNumber(0);
+      }
+
+      bigIntValue.isGreaterThan(balance)
+        ? setBalanceError(true)
+        : setBalanceError(false);
 
       setFathomToken(value);
-      setCollateral(value / price);
+      setCollateral(bigIntValue.dividedBy(price).toString());
     },
-    [price, balance, position, setFathomToken, setCollateral, setBalanceError]
+    [price, debtShare, balance, setFathomToken, setCollateral, setBalanceError]
   );
 
   const handleTypeChange = useCallback(
     (type: ClosingType) => {
       if (type === ClosingType.Full) {
-        setFathomToken(lockedCollateral * price);
+        setFathomToken(debtShare);
         setCollateral(lockedCollateral);
       }
       setType(type);
     },
-    [price, lockedCollateral, setFathomToken, setType, setCollateral]
+    [debtShare, lockedCollateral, setFathomToken, setType, setCollateral]
   );
 
   const setMax = useCallback(() => {
-    const walletBalance = (balance as number) / 10 ** 18;
-    const maxBalance = Number(position.debtShare);
-    const setBalance = walletBalance < maxBalance ? walletBalance : maxBalance;
-
-    setFathomToken(setBalance);
-    setCollateral(setBalance / price);
-  }, [price, position, balance, setFathomToken, setCollateral]);
+    const setBalance = BigNumber(balance).isLessThan(debtShare)
+      ? BigNumber(balance)
+      : BigNumber(debtShare);
+    setFathomToken(setBalance.dividedBy(10 ** 18).toString());
+    setCollateral(setBalance.dividedBy(price).toString());
+  }, [price, debtShare, balance, setFathomToken, setCollateral]);
 
   return {
     collateral,
