@@ -1,3 +1,4 @@
+import React, { useMemo } from "react";
 import {
   Typography,
   Grid,
@@ -6,15 +7,15 @@ import {
   Box,
 } from "@mui/material";
 import IProposal from "stores/interfaces/IProposal";
-import React, { useMemo } from "react";
 import { PageHeader } from "components/Dashboard/PageHeader";
 import { useAllProposals } from "hooks/useAllProposals";
 import ViewAllProposalItem from "components/Governance/ViewAllProposalItem";
 import Propose from "components/Governance/Propose";
 import ProposalFilters from "components/Governance/ProposalFilters";
+import { NoResults } from "components/AppComponents/AppBox/AppBox";
+
 import { Constants } from "helpers/Constants";
 import { styled } from "@mui/material/styles";
-import { NoResults } from "../AppComponents/AppBox/AppBox";
 
 const PaginationWrapper = styled(Box)`
   display: flex;

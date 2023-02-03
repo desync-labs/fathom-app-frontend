@@ -1,16 +1,18 @@
 import React, { FC, memo, useMemo } from "react";
 import { Box, Grid, Tooltip } from "@mui/material";
-import IProposal from "stores/interfaces/IProposal";
+
 import { styled } from "@mui/material/styles";
 import { tooltipClasses, TooltipProps } from "@mui/material/Tooltip";
 
 import { Link } from "react-router-dom";
 
-import DefeatedSrc from "assets/svg/rejected.svg";
-import SucceededSrc from "assets/svg/succeeded.svg";
 import StakingCountdown from "components/Staking/StakingCountdown";
 import { secondsToTime } from "utils/secondsToTime";
 import useViewProposalItem from "hooks/useViewProposalItem";
+import IProposal from "stores/interfaces/IProposal";
+
+import DefeatedSrc from "assets/svg/rejected.svg";
+import SucceededSrc from "assets/svg/succeeded.svg";
 
 type ViewAllProposalItemProps = {
   proposal: IProposal;
