@@ -99,7 +99,7 @@ const useStakingLockForm = () => {
       ]);
 
       setXdcBalance(xdcBalance / 10 ** 18);
-      setFxdBalance(BigNumber(fxdBalance).dividedBy( 10 ** 18).toNumber);
+      setFxdBalance(BigNumber(fxdBalance).dividedBy( 10 ** 18).toNumber());
     };
 
     if (account && chainId) getBalance();

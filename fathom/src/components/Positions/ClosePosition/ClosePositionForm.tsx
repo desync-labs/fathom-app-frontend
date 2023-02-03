@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Box,
   CircularProgress,
@@ -32,10 +33,10 @@ import {
 } from "components/AppComponents/AppForm/AppForm";
 import InfoIcon from "@mui/icons-material/Info";
 import { getTokenLogoURL } from "utils/tokenLogo";
-import React from "react";
+import { formatPercentage } from "utils/format";
+
 import useClosePositionContext from "context/closePosition";
 import { styled } from "@mui/material/styles";
-import { formatPercentage } from "../../../utils/format";
 import BigNumber from "bignumber.js";
 
 const ClosePositionWrapper = styled(Grid)`
