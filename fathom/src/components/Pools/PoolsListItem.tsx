@@ -57,7 +57,7 @@ const PoolsListItem: FC<PoolsListItemPropsType> = ({
         <Stack direction="row" spacing={2}>
           <TokenLogo
             src={getTokenLogoURL(
-              pool.poolName === "XDC" ? "WXDC" : pool.poolName
+              pool.poolName.toUpperCase() === "XDC" ? "WXDC" : pool.poolName
             )}
             alt={pool.poolName}
           />

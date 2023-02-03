@@ -92,7 +92,7 @@ const PositionListItem: FC<PositionListItemProps> = ({
         <Stack direction="row" spacing={2}>
           <TokenLogo
             src={getTokenLogoURL(
-              position?.collateralPoolName === "XDC"
+              position?.collateralPoolName?.toUpperCase() === "XDC"
                 ? "WXDC"
                 : position?.collateralPoolName
             )}

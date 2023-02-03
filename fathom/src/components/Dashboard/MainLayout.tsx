@@ -33,6 +33,9 @@ import { Menu } from "components/Dashboard/Menu";
 import { ToggleDrawerButton } from "components/AppComponents/AppButton/AppButton";
 import { MainBox } from "components/AppComponents/AppBox/AppBox";
 import DaoView from "components/Dashboard/DaoView";
+import MobileConnector from "components/Dashboard/MobileConnector";
+import DesktopConnector from "components/Dashboard/DesktopConnector";
+import BottomLinks from "components/Dashboard/BottomLinks";
 import { drawerWidth } from "components/AppComponents/AppBar/AppBar";
 
 import useMainLayout from "hooks/useMainLayout";
@@ -47,9 +50,6 @@ import WalletConnectSrc from "assets/svg/wallet-connect.svg";
 import FathomLogoMobileSrc from "assets/svg/Fathom-app-logo-mobile.svg";
 import MobileMenuIcon from "assets/svg/mobile-menu.svg";
 import MobileMenuIconActive from "assets/svg/mobile-menu-active.svg";
-import MobileConnector from "./MobileConnector";
-import DesktopConnector from "./DesktopConnector";
-import BottomLinks from "./BottomLinks";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -200,7 +200,15 @@ const MainLayout = () => {
                 />
                 <MobileMenuWrapper onClick={openMobileMenu}>
                   <img
-                    src={openMobile ? MobileMenuIconActive : MobileMenuIcon}
+                    style={{ display: openMobile ? "none" : "block" }}
+                    src={MobileMenuIcon}
+                    alt={"menu"}
+                    width={20}
+                    height={20}
+                  />
+                  <img
+                    style={{ display: openMobile ? "block" : "none" }}
+                    src={MobileMenuIconActive}
                     alt={"menu"}
                     width={20}
                     height={20}
@@ -277,7 +285,7 @@ const MainLayout = () => {
             <Divider />
             <MenuWrapper open={open}>
               <Menu open={open} />
-              { !isMobile && open && <BottomLinks/> }
+              {!isMobile && open && <BottomLinks />}
             </MenuWrapper>
           </Drawer>
         )}
