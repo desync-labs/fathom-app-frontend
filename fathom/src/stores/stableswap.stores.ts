@@ -83,8 +83,6 @@ export default class StableSwapStore {
           return receipt;
         });
     } catch (e: any) {
-      console.log(e);
-      console.log(address);
       this.rootStore.alertStore.setShowErrorAlert(true, e.message);
       throw e;
     }
