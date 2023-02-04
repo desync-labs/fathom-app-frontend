@@ -40,13 +40,13 @@ export default class StakingService implements IStakingService {
     const gas = await getEstimateGas(
       Staking,
       "createLock",
-      [this.toWei(stakePosition, library), endTime, account],
+      [this.toWei(stakePosition, library), endTime],
       options
     );
     options.gas = gas;
 
     return Staking.methods
-      .createLock(this.toWei(stakePosition, library), endTime, account)
+      .createLock(this.toWei(stakePosition, library), endTime)
       .send(options)
       .on("transactionHash", (hash: any) => {
         transactionStore.addTransaction({
