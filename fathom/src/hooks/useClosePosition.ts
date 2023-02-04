@@ -121,14 +121,14 @@ const useClosePosition = (
     setDisableClosePosition(false);
   }, [
     closingType,
+    lockedCollateral,
     position,
     pool,
-    debtShare,
     account,
-    library,
     fathomToken,
     collateral,
     positionService,
+    library,
     onClose,
     setDisableClosePosition,
     setLastTransactionBlock,

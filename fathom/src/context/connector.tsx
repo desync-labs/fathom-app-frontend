@@ -8,7 +8,7 @@ import {
   ReactElement,
   FC,
 } from "react";
-import { injected, walletconnect } from "connectors/networks";
+import { injected, WalletConnect } from "connectors/networks";
 import { useWeb3React } from "@web3-react/core";
 import WalletConnectProvider from "@walletconnect/ethereum-provider";
 import { useStores } from "stores";
@@ -91,7 +91,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
 
   const connectWalletConnect = useCallback(() => {
     setShouldDisable(true);
-    return activate(walletconnect).then(() => {
+    return activate(WalletConnect).then(() => {
       setShouldDisable(false);
       sessionStorage.setItem("isConnected", "walletConnect");
     });
