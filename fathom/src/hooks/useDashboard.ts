@@ -78,8 +78,10 @@ const useDashboard = () => {
         walletAddress: proxyWallet,
       },
     }).then(({ data: { users } }) => {
-      const itemsCount = users[0].activePositionsCount;
-      setPositionsItemsCount(itemsCount);
+      if(users.length>0){
+          const itemsCount = users[0].activePositionsCount;
+          setPositionsItemsCount(itemsCount);
+      }
     });
   }, [
     proxyWallet,
