@@ -38,7 +38,7 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
 
   const { data: fxdData, refetch: refetchFxd } = useQuery(HEALTH, {
     variables: {
-      name: "fathomapp-subgraph",
+      name: "stablecoin-subgraph",
     },
   });
 
