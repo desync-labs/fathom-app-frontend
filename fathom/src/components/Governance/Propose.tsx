@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 import { Link } from "react-router-dom";
+import { Controller } from "react-hook-form";
 import {
   Box,
   FormControlLabel,
@@ -12,22 +13,22 @@ import {
   Typography,
   CircularProgress,
 } from "@mui/material";
-import { Controller } from "react-hook-form";
+
 import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
 import {
   AppFormLabel,
   AppTextField,
 } from "components/AppComponents/AppForm/AppForm";
-import { getTokenLogoURL } from "utils/tokenLogo";
-import { styled } from "@mui/material/styles";
-import useCreateProposal from "hooks/useCreateProposal";
-
-import MuiInfoIcon from "@mui/icons-material/Info";
 import {
   ButtonPrimary,
   ButtonSecondary,
 } from "components/AppComponents/AppButton/AppButton";
+import { getTokenLogoURL } from "utils/tokenLogo";
+import useCreateProposal from "hooks/useCreateProposal";
+
+import MuiInfoIcon from "@mui/icons-material/Info";
+import { styled } from "@mui/material/styles";
 
 import requiredSrc from "assets/svg/required.svg";
 

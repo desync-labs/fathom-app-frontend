@@ -6,6 +6,7 @@ import debounce from "lodash.debounce";
 import useSyncContext from "context/sync";
 import { SmartContractFactory } from "config/SmartContractFactory";
 import useConnector from "context/connector";
+import BigNumber from "bignumber.js";
 
 const useStakingLockForm = () => {
   const [balanceError, setBalanceError] = useState<boolean>(false);
@@ -98,7 +99,7 @@ const useStakingLockForm = () => {
       ]);
 
       setXdcBalance(xdcBalance / 10 ** 18);
-      setFxdBalance(fxdBalance! / 10 ** 18);
+      setFxdBalance(BigNumber(fxdBalance).dividedBy( 10 ** 18).toNumber());
     };
 
     if (account && chainId) getBalance();

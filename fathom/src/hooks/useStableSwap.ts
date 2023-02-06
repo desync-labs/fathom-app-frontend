@@ -16,6 +16,9 @@ const useStableSwap = (options: string[]) => {
   const [inputBalance, setInputBalance] = useState<number>(0);
   const [outputBalance, setOutputBalance] = useState<number>(0);
 
+  const [fxdAvailable, setFxdAvailable] = useState<number>(0);
+  const [usStableAvailable, setUsStableAvailable] = useState<number>(0);
+
   const [inputCurrency, setInputCurrency] = useState<string>(options[0]);
   const [outputCurrency, setOutputCurrency] = useState<string>(options[1]);
 
@@ -112,7 +115,9 @@ const useStableSwap = (options: string[]) => {
     }
 
     if (displayDailyLimit < inputValue) {
-      return `You can't swap more then remaining daily limit ${formatNumber(displayDailyLimit)} FXD`;
+      return `You can't swap more then remaining daily limit ${formatNumber(
+        displayDailyLimit
+      )} FXD`;
     }
 
     return false;
@@ -141,6 +146,9 @@ const useStableSwap = (options: string[]) => {
           const FXDContractAddress =
             SmartContractFactory.getAddressByContractName(chainId, "FXD");
 
+          const UsStableContractAddress =
+            SmartContractFactory.getAddressByContractName(chainId, "US+");
+
           try {
             const promises = [];
             promises.push(
@@ -158,18 +166,39 @@ const useStableSwap = (options: string[]) => {
               )
             );
             promises.push(poolService.getDexPrice(FXDContractAddress, library));
-
-            const [inputBalance, outputBalance, fxdPrice] = await Promise.all(
-              promises
+            promises.push(
+              stableSwapStore.getTokenBalance(FXDContractAddress, library)
+            );
+            promises.push(
+              stableSwapStore.getTokenBalance(UsStableContractAddress, library)
             );
 
-            setInputBalance(inputBalance);
-            setOutputBalance(outputBalance);
-            setFxdPrice(fxdPrice / 10 ** 18);
+            const [
+              inputBalance,
+              outputBalance,
+              fxdPrice,
+              fxdAvailable,
+              usStableAvailable,
+            ] = await Promise.all(promises);
+
+            setFxdAvailable(fxdAvailable! / 10 ** 18);
+            setUsStableAvailable(usStableAvailable! / 10 ** 18);
+
+            setInputBalance(inputBalance!);
+            setOutputBalance(outputBalance!);
+            setFxdPrice(fxdPrice! / 10 ** 18);
           } catch (e) {}
         }
       }, 100),
-    [account, chainId, poolService, library, setInputBalance, setOutputBalance]
+    [
+      account,
+      chainId,
+      poolService,
+      library,
+      stableSwapStore,
+      setInputBalance,
+      setOutputBalance,
+    ]
   );
 
   const changeCurrenciesPosition = useCallback(
@@ -453,6 +482,8 @@ const useStableSwap = (options: string[]) => {
     inputError,
 
     isMobile,
+    fxdAvailable,
+    usStableAvailable,
   };
 };
 

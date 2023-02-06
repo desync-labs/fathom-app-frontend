@@ -55,7 +55,12 @@ const PoolsListItem: FC<PoolsListItemPropsType> = ({
     >
       <TableCell>
         <Stack direction="row" spacing={2}>
-          <TokenLogo src={getTokenLogoURL(pool.poolName)} alt={pool.poolName} />
+          <TokenLogo
+            src={getTokenLogoURL(
+              pool.poolName.toUpperCase() === "XDC" ? "WXDC" : pool.poolName
+            )}
+            alt={pool.poolName}
+          />
           <Box>
             <PoolName>{pool.poolName}</PoolName>
             <TVL>TVL: {formatCurrency(Number(pool.tvl))}</TVL>

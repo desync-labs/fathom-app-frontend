@@ -83,8 +83,6 @@ export default class StableSwapStore {
           return receipt;
         });
     } catch (e: any) {
-      console.log(e)
-      console.log(address)
       this.rootStore.alertStore.setShowErrorAlert(true, e.message);
       throw e;
     }
@@ -141,6 +139,17 @@ export default class StableSwapStore {
   async getDailySwapLimit(library: Xdc3): Promise<number | undefined> {
     try {
       return await this.service.getDailySwapLimit(library);
+    } catch (e: any) {
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+    }
+  }
+
+  async getTokenBalance(
+    tokenAddress: string,
+    library: Xdc3
+  ): Promise<number | undefined> {
+    try {
+      return await this.service.getTokenBalance(tokenAddress, library);
     } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(true, e.message);
     }
