@@ -87,10 +87,10 @@ const ButtonsWrapper = styled(Box)`
   margin-top: 20px;
 `;
 
-const ClosePositionButtonMobile =  styled(ClosePositionButton)`
+const ClosePositionButtonMobile = styled(ClosePositionButton)`
   height: 40px;
   width: 100%;
-`
+`;
 
 const PositionListItemMobile: FC<PositionListItemProps> = ({
   position,
@@ -110,7 +110,11 @@ const PositionListItemMobile: FC<PositionListItemProps> = ({
         <ListValue>
           <PoolWrapper>
             <img
-              src={getTokenLogoURL(position?.collateralPoolName)}
+              src={getTokenLogoURL(
+                position?.collateralPoolName?.toUpperCase() === "XDC"
+                  ? "WXDC"
+                  : position?.collateralPoolName
+              )}
               alt={position?.collateralPoolName}
               width={20}
               height={20}
@@ -156,7 +160,7 @@ const PositionListItemMobile: FC<PositionListItemProps> = ({
         ) : (
           <>
             <ButtonGroup
-              sx={{ width: '100%' }}
+              sx={{ width: "100%" }}
               variant="contained"
               ref={anchorRef}
               aria-label="split button"

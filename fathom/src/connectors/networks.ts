@@ -5,7 +5,7 @@ import Xdc3 from "xdc3";
 export const supportedChainIds = [1337, 50, 51];
 export const XDC_CHAIN_IDS = [50, 51];
 
-export const APOTHEM_RPC = "https://apothem.xdcrpc.com/";
+export const APOTHEM_RPC = "https://erpc.apothem.network/";
 export const XDC_RPC = "https://eRPC.BlocksScan.io";
 
 export const DEFAULT_RPC = {
@@ -33,19 +33,19 @@ export const XDC_NETWORK_SETTINGS = {
     chainName: "XDC",
     chainId: Xdc3.utils.toHex(50),
     nativeCurrency: { name: "XDC", decimals: 18, symbol: "XDC" },
-    rpcUrls: ["https://eRPC.BlocksScan.io/"],
+    rpcUrls: [XDC_RPC],
   },
   51: {
     chainName: "Apothem",
     chainId: Xdc3.utils.toHex(51),
     nativeCurrency: { name: "Apothem", decimals: 18, symbol: "AXDC" },
-    rpcUrls: ["https://apothem.xdcrpc.com/"],
+    rpcUrls: [APOTHEM_RPC],
   },
 };
 
 export const injected = new InjectedConnector({ supportedChainIds });
 
-export const walletconnect = new WalletConnectConnector({
+export const WalletConnect = new WalletConnectConnector({
   rpc: {
     1: APOTHEM_RPC,
     51: APOTHEM_RPC,

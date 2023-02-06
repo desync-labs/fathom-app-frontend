@@ -19,17 +19,17 @@ export default interface IPositionService {
     positionId: string,
     pool: ICollateralPool,
     address: string,
-    collateral: number,
+    collateral: string,
     library: Xdc3
   ): Promise<TransactionReceipt | undefined>;
   approve(address: string, tokenAddress: string, library: Xdc3): Promise<TransactionReceipt | undefined>;
   approvalStatus(
     address: string,
     tokenAddress: string,
-    collateral: number,
+    collateral: string,
     library: Xdc3
   ): Promise<Boolean>;
-  balanceStableCoin(address: string, library: Xdc3): Promise<number>;
+  balanceStableCoin(address: string, library: Xdc3): Promise<string>;
   approveStableCoin(
     address: string,
     library: Xdc3
@@ -39,8 +39,8 @@ export default interface IPositionService {
     positionId: string,
     pool: ICollateralPool,
     address: string,
-    debt: number,
-    collateralValue: number,
+    debt: string,
+    collateralValue: string,
     library: Xdc3
   ): Promise<TransactionReceipt | undefined>;
 }

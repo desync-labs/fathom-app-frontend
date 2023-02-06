@@ -49,7 +49,7 @@ const InfoBox = styled(Box)`
     margin-bottom: 10px;
     overflow: hidden;
   }
-`
+`;
 
 const OpenPositionForm = () => {
   const {
@@ -95,10 +95,6 @@ const OpenPositionForm = () => {
             required: true,
             min: 10,
             max: +balance / 10 ** 18,
-            validate: (value: string) => {
-              console.log(value);
-              return true;
-            },
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <AppFormInputWrapper>
@@ -153,7 +149,13 @@ const OpenPositionForm = () => {
                 type="number"
                 onChange={onChange}
               />
-              <AppFormInputLogo src={getTokenLogoURL(pool.poolName)} />
+              <AppFormInputLogo
+                src={getTokenLogoURL(
+                  pool?.poolName?.toUpperCase() === "XDC"
+                    ? "WXDC"
+                    : pool?.poolName
+                )}
+              />
               <MaxButton onClick={() => setMax(balance)}>Max</MaxButton>
             </AppFormInputWrapper>
           )}

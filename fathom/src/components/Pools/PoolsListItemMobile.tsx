@@ -58,7 +58,7 @@ const OpenPositionButtonMobile = styled(OpenPositionButton)`
   height: 36px;
   width: 100%;
   margin-top: 20px;
-`
+`;
 
 const PoolsListItemMobile: FC<PoolsListItemMobilePropsType> = ({
   pool,
@@ -71,14 +71,18 @@ const PoolsListItemMobile: FC<PoolsListItemMobilePropsType> = ({
         <ListValue>
           <PoolWrapper>
             <img
-              src={getTokenLogoURL(pool.poolName)}
+              src={getTokenLogoURL(
+                pool?.poolName?.toUpperCase() === "XDC" ? "WXDC" : pool.poolName
+              )}
               alt={pool.poolName}
               width={20}
               height={20}
             />
             <PoolName>{pool.poolName}</PoolName>
           </PoolWrapper>
-          <TVL sx={{ textAlign: 'right' }}>TVL: {formatCurrency(Number(pool.tvl))}</TVL>
+          <TVL sx={{ textAlign: "right" }}>
+            TVL: {formatCurrency(Number(pool.tvl))}
+          </TVL>
         </ListValue>
       </ListItemWrapper>
       <ListItemWrapper>

@@ -35,6 +35,7 @@ export type AppMenuItemProps = AppMenuItemPropsWithoutItems & {
 const useStyles = makeStyles<{ isActive: boolean; showText: boolean }>()(
   (theme, { isActive, showText }) => ({
     menuItem: {
+      margin: '0 auto',
       padding: "8px 9px 9px 8px",
       width: showText ?  "100%" : "40px",
       borderRadius: isActive ? "8px" : "0",

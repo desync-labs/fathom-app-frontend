@@ -3,6 +3,7 @@ export enum TransactionType {
   ClosePosition,
   StableSwap,
   Approve,
+  Token,
 }
 
 export enum TransactionStatus {

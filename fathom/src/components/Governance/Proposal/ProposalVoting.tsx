@@ -1,6 +1,8 @@
 import React, { FC } from "react";
 import { styled } from "@mui/material/styles";
-import MuiLinearProgress, { LinearProgressProps } from "@mui/material/LinearProgress";
+import MuiLinearProgress, {
+  LinearProgressProps,
+} from "@mui/material/LinearProgress";
 import {
   Box,
   Button,
@@ -14,10 +16,9 @@ import {
   ImageSrc,
   ProposalItemStatus,
 } from "components/Governance/ViewAllProposalItem";
-import { ProposalStatus } from "helpers/Constants";
 import { VotingEndedButton } from "components/AppComponents/AppButton/AppButton";
+import { ProposalStatus } from "helpers/Constants";
 import useProposalContext from "context/proposal";
-
 
 const ProposalStatusBox = styled(Box)`
   font-weight: 600;
@@ -97,7 +98,11 @@ const Buttons: FC<ButtonsProps> = ({
   vote,
 }) => {
   if (fetchedProposalState === ProposalStatus.Pending) {
-    return <VotingEndedButton disabled={true}>Voting hasn't started yet</VotingEndedButton>;
+    return (
+      <VotingEndedButton disabled={true}>
+        Voting hasn't started yet
+      </VotingEndedButton>
+    );
   }
 
   if (fetchedProposalState !== ProposalStatus.OpenToVote) {
