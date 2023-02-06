@@ -1,68 +1,124 @@
-import React, { useEffect, useState } from "react";
+import React, { FC, useMemo } from "react";
 import {
+  CircularProgress,
   Table,
   TableBody,
+  TableCell,
   TableContainer,
-  Typography,
+  TableHead,
+  Box,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
-import { useStores } from "../../stores";
-import useMetaMask from "../../hooks/metamask";
-import { LogLevel, useLogger } from "../../helpers/Logger";
-import { observer } from "mobx-react";
-import ICollatralPool from "../../stores/interfaces/ICollatralPool";
-import PoolsListItem from "./PoolsListItem";
-import CustomizedDialogs from "../Positions/OpenNewPositionDialog";
-import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
+import ICollateralPool from "stores/interfaces/ICollateralPool";
+import PoolsListItem from "components/Pools/PoolsListItem";
+import OpenNewPositionDialog from "components/Positions/OpenNewPositionDialog";
+import { styled } from "@mui/material/styles";
+import { AppTableHeaderRow } from "components/AppComponents/AppTable/AppTable";
+import {
+  NoResults,
+  TitleSecondary,
+} from "components/AppComponents/AppBox/AppBox";
+import usePoolsList from "hooks/usePoolsList";
+import PoolsListItemMobile from "components/Pools/PoolsListItemMobile";
+import { OpenPositionProvider } from "context/openPosition";
 
-const PoolsListView = observer(() => {
-  const poolStore = useStores().poolStore;
-  const { account, chainId } = useMetaMask()!;
-  const logger = useLogger();
-  const [selectedPool, setSelectedPool] = useState<ICollatralPool>();
+const PoolsListHeaderRow = styled(AppTableHeaderRow)`
+  background: transparent;
+  th {
+    text-align: left;
+  }
+`;
 
-  useEffect(() => {
-    if (chainId) {
-      setTimeout(() => {
-        // Update the document title using the browser API
-        logger.log(LogLevel.info, `fetching open positions. ${account}`);
-        poolStore.fetchPools();
-      });
-    } else {
-      poolStore.setPool([]);
-    }
-    setSelectedPool(undefined);
-  }, [poolStore, account, chainId, logger, setSelectedPool]);
+const CircleWrapper = styled(Box)`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const PoolsTitle = styled(TitleSecondary)`
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    margin-bottom: 15px;
+    margin-top: 25px;
+  }
+`;
+
+const PoolsListView: FC = () => {
+  const { pools, selectedPool, onCloseNewPosition, setSelectedPool, loading } =
+    usePoolsList();
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.up("sm"));
 
   return (
-    <AppPaper sx={{ p: 2, display: "flex", flexDirection: "column", height: 360 }}>
-      {/* <Typography component="h2" variant="h6" color="primary" gutterBottom>
-        Pools
-      </Typography> */}
-      {poolStore.pools.length === 0 ? (
-        <Typography variant="h6">No Pool Available!</Typography>
+    <>
+      <PoolsTitle variant="h2">Available Pools</PoolsTitle>
+      {pools.length === 0 ? (
+        <NoResults variant="h6">
+          {loading ? (
+            <CircleWrapper>
+              <CircularProgress size={30} />
+            </CircleWrapper>
+          ) : (
+            "No Pool Available!"
+          )}
+        </NoResults>
       ) : (
-        <TableContainer>
-          <Table sx={{ minWidth: 500 }} aria-label="simple table">
-            <TableBody>
-              {poolStore.pools.map((pool: ICollatralPool) => (
-                <PoolsListItem
-                  pool={pool}
-                  key={pool.id}
-                  setSelectedPool={setSelectedPool!}
-                />
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <>
+          {isMobile && (
+            <TableContainer>
+              <Table
+                sx={{ minWidth: 500, "& td": { padding: "9px" } }}
+                aria-label="simple table"
+              >
+                <TableHead>
+                  <PoolsListHeaderRow>
+                    <TableCell>Pool</TableCell>
+                    <TableCell>Price</TableCell>
+                    <TableCell>Borrowed</TableCell>
+                    <TableCell>Available</TableCell>
+                    <TableCell></TableCell>
+                  </PoolsListHeaderRow>
+                </TableHead>
+
+                <TableBody>
+                  {pools.map((pool: ICollateralPool) => (
+                    <PoolsListItem
+                      pool={pool}
+                      key={pool.id}
+                      setSelectedPool={setSelectedPool!}
+                    />
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
+          {!isMobile &&
+            pools.map((pool: ICollateralPool) => (
+              <PoolsListItemMobile
+                pool={pool}
+                key={pool.id}
+                setSelectedPool={setSelectedPool!}
+              />
+            ))}
+        </>
       )}
-      {selectedPool && (
-        <CustomizedDialogs
-          pool={selectedPool}
-          onClose={() => setSelectedPool(undefined)}
-        />
-      )}
-    </AppPaper>
+      {useMemo(() => {
+        return (
+          selectedPool && (
+            <OpenPositionProvider
+              onClose={onCloseNewPosition}
+              pool={selectedPool!}
+            >
+              <OpenNewPositionDialog />
+            </OpenPositionProvider>
+          )
+        );
+      }, [selectedPool, onCloseNewPosition])}
+    </>
   );
-});
+};
 
 export default PoolsListView;

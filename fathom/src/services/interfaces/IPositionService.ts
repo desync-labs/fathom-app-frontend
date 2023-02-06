@@ -1,25 +1,46 @@
-import ICollatralPool from "../../stores/interfaces/ICollatralPool";
-import IOpenPosition from "../../stores/interfaces/IOpenPosition";
-import ActiveWeb3Transactions from "../../stores/transaction.store";
+import Xdc3 from "xdc3";
+import { TransactionReceipt } from "web3-eth";
+import ICollateralPool from "stores/interfaces/ICollateralPool";
 
-export default interface IPositionService{
-    openPosition(address:string,pool:ICollatralPool,collatral:number,fathomToken:number, transactionStore:ActiveWeb3Transactions): Promise<void>;
-    createProxyWallet(address:string): Promise<string>;
-    proxyWalletExist(address:string): Promise<string>;
-    getPositionsForAddress(address:string): Promise<IOpenPosition[]>;
-    getPositionsWithSafetyBuffer(address:string): Promise<IOpenPosition[]>;
-    closePosition(positionId: string,pool:ICollatralPool,address:string, debt:number, transactionStore:ActiveWeb3Transactions): Promise<void>;
-    approve(address:string,pool:ICollatralPool,transactionStore:ActiveWeb3Transactions): Promise<void>;
-    approvalStatus(address:string,pool:ICollatralPool,collatral:number,transactionStore:ActiveWeb3Transactions): Promise<Boolean>;
-    approveStablecoin(address:string,transactionStore:ActiveWeb3Transactions): Promise<void>;
-    approvalStatusStablecoin(address:string): Promise<Boolean>;
-    partialyClosePosition(
-        position: IOpenPosition,
-        pool: ICollatralPool, 
-        address: string, 
-        debt: number, 
-        collateralValue: number, 
-        transactionStore: ActiveWeb3Transactions
-    ): Promise<void>;
-    
+
+export default interface IPositionService {
+  openPosition(
+    address: string,
+    pool: ICollateralPool,
+    collateral: number,
+    fathomToken: number,
+    library: Xdc3
+  ): Promise<TransactionReceipt | undefined>;
+
+  createProxyWallet(address: string, library: Xdc3): Promise<string>;
+  proxyWalletExist(address: string, library: Xdc3): Promise<string>;
+
+  closePosition(
+    positionId: string,
+    pool: ICollateralPool,
+    address: string,
+    collateral: string,
+    library: Xdc3
+  ): Promise<TransactionReceipt | undefined>;
+  approve(address: string, tokenAddress: string, library: Xdc3): Promise<TransactionReceipt | undefined>;
+  approvalStatus(
+    address: string,
+    tokenAddress: string,
+    collateral: string,
+    library: Xdc3
+  ): Promise<Boolean>;
+  balanceStableCoin(address: string, library: Xdc3): Promise<string>;
+  approveStableCoin(
+    address: string,
+    library: Xdc3
+  ): Promise<TransactionReceipt | undefined>;
+  approvalStatusStableCoin(address: string, library: Xdc3): Promise<boolean>;
+  partiallyClosePosition(
+    positionId: string,
+    pool: ICollateralPool,
+    address: string,
+    debt: string,
+    collateralValue: string,
+    library: Xdc3
+  ): Promise<TransactionReceipt | undefined>;
 }

@@ -1,22 +1,24 @@
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
+import { styled } from "@mui/material/styles";
 
-const CopyrightStyles = {
-  my: 4,
-  ml: "-80px"
-}
+const Footer = styled(Typography) `
+  display: flex;
+  align-items: start;
+  justify-content: center;
+  gap: 4px;
+  padding-bottom: 10px;
+`
 
 
 const Copyright = function Copyright(props: any) {
   return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props} sx={CopyrightStyles}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://fathom.com/">
+    <Footer color="text.secondary" {...props}>
+      {'Copyright©'}
+      <Link color="inherit" href="https://fathom.fi/">
         Fathom App
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
+      </Link>{new Date().getFullYear()}.
+    </Footer>
   );
 }
 

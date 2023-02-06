@@ -1,43 +1,58 @@
 import * as React from "react";
 import { observer } from "mobx-react";
-import { useStores } from "../../stores";
-import { useEffect } from "react";
+import { useStores } from "stores";
 import { Alert, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import { styled } from "@mui/material/styles";
+import { FC } from "react";
 
-const AlertMessages = observer(() => {
-  let rootStore = useStores();
+const AlertMessage = styled(Alert, {
+  shouldForwardProp: (prop) => prop !== "scroll",
+})<{ scroll: number }>`
+  position: fixed;
+  width: 100%;
+  margin-bottom: 2px;
+  z-index: 1000;
+  top: ${({ scroll }) => (scroll > 65 ? "0" : `${65 - scroll}px`)};
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    z-index: 1301;
+  }
+`;
 
-  useEffect(() => {
-    // Update the document title using the browser API
-  }, [rootStore.alertStore]);
+type AlertMessagesPropsType = {
+  scroll: number
+}
+
+const AlertMessages: FC<AlertMessagesPropsType> = observer(({ scroll }) => {
+  const { alertStore } = useStores();
 
   return (
     <>
-      {rootStore.alertStore.showErrorAlert && (
-        <Alert
+      {alertStore.showErrorAlert && (
+        <AlertMessage
           severity="error"
           variant="filled"
+          scroll={scroll}
           action={
             <IconButton
               aria-label="close"
               color="inherit"
               size="small"
               onClick={() => {
-                rootStore.alertStore.setShowErrorAlert(false);
+                alertStore.setShowErrorAlert(false);
               }}
             >
               <CloseIcon fontSize="inherit" />
             </IconButton>
           }
-          sx={{ mb: 2 }}
         >
-          {rootStore.alertStore.errorAlertMessage}
-        </Alert>
+          {alertStore.errorAlertMessage}
+        </AlertMessage>
       )}
-      {rootStore.alertStore.showSuccessAlert && (
-        <Alert
+      {alertStore.showSuccessAlert && (
+        <AlertMessage
           severity="success"
+          scroll={scroll}
           variant="filled"
           action={
             <IconButton
@@ -45,16 +60,15 @@ const AlertMessages = observer(() => {
               color="inherit"
               size="small"
               onClick={() => {
-                rootStore.alertStore.setShowSuccessAlert(false);
+                alertStore.setShowSuccessAlert(false);
               }}
             >
               <CloseIcon fontSize="inherit" />
             </IconButton>
           }
-          sx={{ mb: 2 }}
         >
-          {rootStore.alertStore.successAlertMessage}
-        </Alert>
+          {alertStore.successAlertMessage}
+        </AlertMessage>
       )}
     </>
   );

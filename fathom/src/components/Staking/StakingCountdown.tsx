@@ -1,5 +1,5 @@
 import { FC } from "react";
-import ILockPosition from "../../stores/interfaces/ITimeObject";
+import ILockPosition from "stores/interfaces/ITimeObject";
 
 const StakingCountdown: FC<{ timeObject: ILockPosition }> = ({
   timeObject,
@@ -7,7 +7,7 @@ const StakingCountdown: FC<{ timeObject: ILockPosition }> = ({
   return (
     <>
       {timeObject.days} days {timeObject.hour} hrs {timeObject.min} min{" "}
-      {timeObject.sec} sec
+      {timeObject.sec} sec left
     </>
   );
 };

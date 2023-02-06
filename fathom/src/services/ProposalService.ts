@@ -1,222 +1,143 @@
-import { SmartContractFactory } from "../config/SmartContractFactory";
-import IProposalService from "./interfaces/IProposalService";
-import { Web3Utils } from "../helpers/Web3Utils";
-import IProposal from "../stores/interfaces/IProposal";
-import IVoteCounts from "../stores/interfaces/IVoteCounts";
-import ActiveWeb3Transactions from "../stores/transaction.store";
+import { SmartContractFactory } from "config/SmartContractFactory";
+import IProposalService from "services/interfaces/IProposalService";
+import { Web3Utils } from "helpers/Web3Utils";
+import ActiveWeb3Transactions from "stores/transaction.store";
 import { keccak256 } from "web3-utils";
 import {
   TransactionStatus,
   TransactionType,
-} from "../stores/interfaces/ITransaction";
-import { Constants } from "../helpers/Constants";
+} from "stores/interfaces/ITransaction";
+import { Constants } from "helpers/Constants";
+import Xdc3 from "xdc3";
+import { getEstimateGas } from "utils/getEstimateGas";
 
 export default class ProposalService implements IProposalService {
-  chainId = Constants.DEFAULT_CHAINID;
+  chainId = Constants.DEFAULT_CHAIN_ID;
+
+  transactionStore: ActiveWeb3Transactions;
+
+  constructor(transactionStore: ActiveWeb3Transactions) {
+    this.transactionStore = transactionStore;
+  }
 
   async createProposal(
     targets: string[],
     values: number[],
-    calldatas: string[],
+    callData: string[],
     description: string,
     account: string,
     transactionStore: ActiveWeb3Transactions,
-    chainId?: number
+    library: Xdc3
   ): Promise<number> {
-    chainId = chainId || this.chainId;
+    const FathomGovernor = Web3Utils.getContractInstance(
+      SmartContractFactory.FathomGovernor(this.chainId),
+      library
+    );
 
-    if (chainId) {
-      const FathomGovernor = Web3Utils.getContractInstance(
-        SmartContractFactory.FathomGovernor(chainId),
-        chainId
-      );
-      return await FathomGovernor.methods
-        .propose(targets, values, calldatas, description)
-        .send({ from: account })
-        .on("transactionHash", (hash: any) => {
-          transactionStore.addTransaction({
-            hash: hash,
-            type: TransactionType.Approve,
-            active: false,
-            status: TransactionStatus.None,
-            title: `Proposal Creation Pending`,
-            message: "Click on transaction to view on blockexplorer.",
-          });
+    const options = { from: account, gas: 0 };
+    const gas = await getEstimateGas(
+      FathomGovernor,
+      "propose",
+      [targets, values, callData, description],
+      options
+    );
+    options.gas = gas;
+
+    return FathomGovernor.methods
+      .propose(targets, values, callData, description)
+      .send(options)
+      .on("transactionHash", (hash: any) => {
+        transactionStore.addTransaction({
+          hash: hash,
+          type: TransactionType.Approve,
+          active: false,
+          status: TransactionStatus.None,
+          title: "Proposal Creation Pending",
+          message: "Click on transaction to view on block Explorer.",
         });
-    } else {
-      return 0;
-    }
+      });
   }
 
   async executeProposal(
     targets: string[],
     values: number[],
-    calldatas: string[],
+    callData: string[],
     description: string,
     account: string,
     transactionStore: ActiveWeb3Transactions,
-    chainId?: number
+    library: Xdc3
   ): Promise<number> {
-    chainId = chainId || this.chainId;
+    const FathomGovernor = Web3Utils.getContractInstance(
+      SmartContractFactory.FathomGovernor(this.chainId),
+      library
+    );
 
-    if (chainId) {
-      const FathomGovernor = Web3Utils.getContractInstance(
-        SmartContractFactory.FathomGovernor(chainId),
-        chainId
-      );
-      return await FathomGovernor.methods
-        .execute(targets, values, calldatas, keccak256(description)).send({ from: account })
-    } else {
-      return 0;
-    }
+    const options = { from: account, gas: 0 };
+    const gas = await getEstimateGas(
+      FathomGovernor,
+      "execute",
+      [targets, values, callData, keccak256(description)],
+      options
+    );
+    options.gas = gas;
+
+    return FathomGovernor.methods
+      .execute(targets, values, callData, keccak256(description))
+      .send(options);
   }
 
   async queueProposal(
     targets: string[],
     values: number[],
-    calldatas: string[],
+    callData: string[],
     description: string,
     account: string,
     transactionStore: ActiveWeb3Transactions,
-    chainId?: number
+    library: Xdc3
   ): Promise<number> {
-    chainId = chainId || this.chainId;
+    const FathomGovernor = Web3Utils.getContractInstance(
+      SmartContractFactory.FathomGovernor(this.chainId),
+      library
+    );
 
-    if (chainId) {
-      const FathomGovernor = Web3Utils.getContractInstance(
-        SmartContractFactory.FathomGovernor(chainId),
-        chainId
-      );
-      return await FathomGovernor.methods
-        .queue(targets, values, calldatas, keccak256(description)).send({ from: account })
-    } else {
-      return 0;
-    }
+    const options = { from: account, gas: 0 };
+    const gas = await getEstimateGas(
+      FathomGovernor,
+      "queue",
+      [targets, values, callData, keccak256(description)],
+      options
+    );
+    options.gas = gas;
+
+    return FathomGovernor.methods
+      .queue(targets, values, callData, keccak256(description))
+      .send(options);
   }
 
-
-  async viewAllProposals(
-    account: string,
-    chainId?: number
-  ): Promise<IProposal[]> {
-
-    let fetchedProposals: IProposal[] = [];
-    try {
-      chainId = chainId || this.chainId;
-      if (chainId) {
-        const FathomGovernor = Web3Utils.getContractInstance(
-          SmartContractFactory.FathomGovernor(chainId)
-        );
-
-        console.log("HERE1");
-
-        const result = await FathomGovernor.methods.getProposals(12).call({ from: account });
-        
-        console.log("_proposalIds: ");
-        console.log(result[0]);
-        console.log(result[1]);
-        console.log(result[2]);
-
-        result[0].forEach((_id:string, i:number) => {
-          fetchedProposals.push({
-            description: result[1][i],
-            proposalId: _id.toString( ),
-            status: Constants.Status[parseInt(result[2][i])]
-          })
-        });
-      }
-
-      return fetchedProposals;
-    } catch (e) {
-      console.error(`Error in getting Proposals: ${e}`);
-      return fetchedProposals;
-    }
-  }
-
-  async viewProposal(
+  async hasVoted(
     proposalId: string,
     account: string,
-    chainId?: number
-  ): Promise<IProposal> {
-    let proposal = {} as IProposal;
-    chainId = chainId || this.chainId;
+    library: Xdc3
+  ): Promise<boolean> {
+    const FathomGovernor = Web3Utils.getContractInstance(
+      SmartContractFactory.FathomGovernor(this.chainId),
+      library
+    );
 
-    try {
-      if (chainId) {
-        const FathomGovernor = Web3Utils.getContractInstance(
-          SmartContractFactory.FathomGovernor(chainId),
-          chainId
-        );
-
-        let _description = await FathomGovernor.methods
-          .getDescription(proposalId)
-          .call({ from: account });
-        let _status = await FathomGovernor.methods
-          .state(proposalId)
-          .call({ from: account });
-
-        proposal = {
-          description: _description,
-          proposalId: proposalId,
-          status: _status,
-        };
-      }
-      return proposal;
-    } catch (e) {
-      console.error(`Error in getting Proposals: ${e}`);
-      return proposal;
-    }
+    return FathomGovernor.methods.hasVoted(proposalId, account).call();
   }
 
   async viewProposalState(
     proposalId: string,
     account: string,
-    chainId?: number
+    library: Xdc3
   ): Promise<string> {
-    let proposalState = "";
-    try {
-      chainId = chainId || this.chainId;
-      if (chainId) {
-        const FathomGovernor = Web3Utils.getContractInstance(
-          SmartContractFactory.FathomGovernor(chainId),
-          chainId
-        );
+    const FathomGovernor = Web3Utils.getContractInstance(
+      SmartContractFactory.FathomGovernor(this.chainId),
+      library
+    );
 
-        proposalState = await FathomGovernor.methods
-          .state(proposalId)
-          .call({ from: account });
-      }
-      return proposalState;
-    } catch (e) {
-      console.error(`Error in getting Proposals: ${e}`);
-      return proposalState;
-    }
-  }
-
-  async viewVoteCounts(
-    proposalId: string,
-    account: string,
-    chainId?: number
-  ): Promise<IVoteCounts> {
-    let proposalVotes = {} as IVoteCounts;
-    chainId = chainId || this.chainId;
-
-    try {
-      if (chainId) {
-        const FathomGovernor = Web3Utils.getContractInstance(
-          SmartContractFactory.FathomGovernor(chainId),
-          this.chainId
-        );
-
-        proposalVotes = await FathomGovernor.methods
-          .proposalVotes(proposalId)
-          .call({ from: account });
-      }
-      return proposalVotes;
-    } catch (e) {
-      console.error(`Error in getting Proposals: ${e}`);
-      return proposalVotes;
-    }
+    return FathomGovernor.methods.state(proposalId).call({ from: account });
   }
 
   async castVote(
@@ -224,55 +145,45 @@ export default class ProposalService implements IProposalService {
     account: string,
     support: string,
     transactionStore: ActiveWeb3Transactions,
-    chainId?: number
+    library: Xdc3
   ): Promise<number> {
-    let weight = 0;
-    chainId = chainId || this.chainId;
-    try {
-      if (chainId) {
-        const FathomGovernor = Web3Utils.getContractInstance(
-          SmartContractFactory.FathomGovernor(chainId),
-          this.chainId
-        );
+    const FathomGovernor = Web3Utils.getContractInstance(
+      SmartContractFactory.FathomGovernor(this.chainId),
+      library
+    );
 
-        weight = await FathomGovernor.methods
-          .castVote(proposalId, support)
-          .send({ from: account })
-          .on("transactionHash", (hash: any) => {
-            transactionStore.addTransaction({
-              hash: hash,
-              type: TransactionType.Approve,
-              active: false,
-              status: TransactionStatus.None,
-              title: `Vote Pending`,
-              message: "Click on transaction to view on blockexplorer.",
-            });
-          });
-      }
-      return weight;
-    } catch (e) {
-      console.error(`Error in getting Proposals: ${e}`);
-      return weight;
-    }
+    const options = { from: account, gas: 0 };
+    const gas = await getEstimateGas(
+      FathomGovernor,
+      "castVote",
+      [proposalId, support],
+      options
+    );
+    options.gas = gas;
+
+    return FathomGovernor.methods
+      .castVote(proposalId, support)
+      .send(options)
+      .on("transactionHash", (hash: any) => {
+        transactionStore.addTransaction({
+          hash: hash,
+          type: TransactionType.Approve,
+          active: false,
+          status: TransactionStatus.None,
+          title: `Vote Pending`,
+          message: "Click on transaction to view on block Explorer.",
+        });
+      });
   }
 
-  async getVeBalance(account: string, chainId?: number): Promise<number> {
-    let weight = 0;
-    chainId = chainId || this.chainId;
-    try {
-      if (chainId) {
-        const VeFathom = Web3Utils.getContractInstance(
-          SmartContractFactory.VeFathom(chainId),
-          this.chainId
-        );
-        weight = await VeFathom.methods.balanceOf(account).call()
-      }
-      return weight;
-    } catch (e) {
-      console.error(`Error in getting Ve token blance: ${e}`);
-      return weight;
-    }
-  } 
+  async getVBalance(account: string, library: Xdc3): Promise<number> {
+    const VeFathom = Web3Utils.getContractInstance(
+      SmartContractFactory.vFathom(this.chainId),
+      library
+    );
+
+    return VeFathom.methods.balanceOf(account).call();
+  }
 
   setChainId(chainId: number) {
     this.chainId = chainId;

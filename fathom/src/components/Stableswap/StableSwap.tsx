@@ -1,238 +1,414 @@
-import { useCallback, useEffect, useState, useRef } from "react";
-import { Box, TextField, Typography } from "@mui/material";
-import Button from "@mui/material/Button";
-import ButtonGroup from "@mui/material/ButtonGroup";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import ClickAwayListener from "@mui/material/ClickAwayListener";
-import Grow from "@mui/material/Grow";
-import Paper from "@mui/material/Paper";
-import Popper from "@mui/material/Popper";
-import MenuItem from "@mui/material/MenuItem";
-import MenuList from "@mui/material/MenuList";
-import { observer } from "mobx-react";
-import { useStores } from "../../stores";
-import useMetaMask from "../../hooks/metamask";
-import { useWeb3React } from "@web3-react/core";
-import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
+import React, { useMemo, useState } from "react";
+import {
+  Select,
+  MenuItem,
+  Grid,
+  Box as MuiBox,
+  Box,
+  CircularProgress,
+  Typography,
+  Container,
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
+import InfoIcon from "@mui/icons-material/Info";
+import { SelectChangeEvent } from "@mui/material/Select";
+import { StableSwapPaper } from "components/AppComponents/AppPaper/AppPaper";
+import { PageHeader } from "components/Dashboard/PageHeader";
+import {
+  AppFormLabel,
+  AppTextField,
+} from "components/AppComponents/AppForm/AppForm";
+import useStableSwap from "hooks/useStableSwap";
 
-const options = ["USDT To FXD", "FXD To USDT"];
+import { formatNumber, formatPercentage } from "utils/format";
+import { getTokenLogoURL } from "utils/tokenLogo";
 
-const StableSwap = observer(() => {
-  const [open, setOpen] = useState(false);
-  const anchorRef = useRef<HTMLDivElement>(null);
-  const [selectedIndex, setSelectedIndex] = useState(1);
-  const [inputValue, setInputValue] = useState(0);
-  const [approveFxdBtn, setApproveFxdBtn] = useState(false);
-  const [approveUsdtBtn, setApproveUsdtBtn] = useState(false);
-  const [approvalPending, setApprovalPending] = useState(false);
+import {
+  InfoLabel,
+  InfoValue,
+  InfoWrapper,
+  WalletBalance,
+} from "components/AppComponents/AppBox/AppBox";
+import {
+  ButtonPrimary,
+  ButtonSecondary,
+  FathomSwapChangeCurrencyButton,
+  MaxButton,
+  QuestionMarkButton,
+} from "components/AppComponents/AppButton/AppButton";
 
-  const { chainId } = useWeb3React();
+import ComboShareSrc from "assets/svg/combo-shape.svg";
+import QuestionMarkSrc from "assets/svg/question-mark.svg";
 
-  const stableSwapStore = useStores().stableSwapStore;
-  const { account } = useMetaMask()!;
+const StableSwapInputWrapper = styled(MuiBox)`
+  position: relative;
+  padding: 20px 24px 44px;
+  background: #1d2d49;
+  border-radius: 12px;
+  width: 100%;
+`;
 
-  const approvalStatus = useCallback(async () => {
-    let input = inputValue || 0;
-    let approved;
-    if (selectedIndex === 0) {
-      // usdt
-      approved = await stableSwapStore.approvalStatusUsdt(account, input);
-      approved ? setApproveUsdtBtn(false) : setApproveUsdtBtn(true);
-    } else {
-      // fxd
-      approved = await stableSwapStore.approvalStatusStablecoin(account, input);
-      approved ? setApproveFxdBtn(false) : setApproveFxdBtn(true);
-    }
-  }, [inputValue, stableSwapStore, account, selectedIndex, setApproveUsdtBtn]);
+const StableSwapCurrencySelect = styled(Select)`
+  background: #253656;
+  border: 1px solid #324567;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: bold;
+  font-size: 13px;
+  line-height: 16px;
+  height: 32px;
+  width: 108px;
+  position: absolute;
+  left: 32px;
+  top: 41px;
+  z-index: 1;
+  padding-top: 4px;
+  .MuiSelect-select {
+    padding-left: 12px;
+  }
+`;
 
-  useEffect(() => {
-    if (chainId) {
-      setTimeout(() => {
-        approvalStatus();
-      });
-    }
-  }, [chainId, approvalStatus]);
-
-  const handleClick = () => {
-    console.info(`You clicked ${options[selectedIndex]}`);
-    stableSwapStore.swapToken(selectedIndex, account, inputValue);
-  };
-
-  const handleMenuItemClick = (
-    event: React.MouseEvent<HTMLLIElement, MouseEvent>,
-    index: number
-  ) => {
-    if (index === 0) {
-      setApproveFxdBtn(false);
-    } else {
-      setApproveUsdtBtn(false);
-    }
-    setSelectedIndex(index);
-    setOpen(false);
-  };
-
-  const approveFxd = useCallback(async () => {
-    setApprovalPending(true);
-    try {
-      // approve fxd
-      await stableSwapStore.approveStablecoin(account);
-      setApproveFxdBtn(false);
-    } catch (e) {
-      setApproveFxdBtn(true);
+const StableSwapTextField = styled(AppTextField)`
+  input {
+    font-size: 20px;
+    color: #4f658c;
+    padding: 0 50px 0 122px;
+    &::-webkit-inner-spin-button,
+    &::-webkit-outer-spin-button {
+      -webkit-appearance: none;
     }
 
-    setApprovalPending(false);
-  }, [setApprovalPending, setApproveFxdBtn, stableSwapStore, account]);
-
-  const approveUsdt = useCallback(async () => {
-    setApprovalPending(true);
-    try {
-      // approve usdt
-      await stableSwapStore.approveUsdt(account, inputValue);
-      setApproveUsdtBtn(false);
-    } catch (e) {
-      setApproveUsdtBtn(true);
+    &[type="number"] {
+      -moz-appearance: textfield;
     }
-
-    setApprovalPending(false);
-  }, [
-    stableSwapStore,
-    setApprovalPending,
-    setApproveUsdtBtn,
-    account,
-    inputValue,
-  ]);
-
-  const handleToggle = useCallback(() => {
-    setOpen((prevOpen) => !prevOpen);
-  }, [setOpen]);
-
-  const handleClose = useCallback(
-    (event: Event) => {
-      if (
-        anchorRef.current &&
-        anchorRef.current.contains(event.target as HTMLElement)
-      ) {
-        return;
+  }
+  .MuiFormHelperText-root {
+    &.Mui-error {
+      padding-top: 5px;
+      p {
+        font-size: 12px;
+        padding-left: 22px;
       }
+    }  
+  }
+`;
 
-      setOpen(false);
-    },
-    [anchorRef, setOpen]
-  );
+const StableSwapFormLabel = styled(AppFormLabel)`
+  color: #9fadc6;
+`;
 
-  const handleInputValueTextFieldChange = useCallback(
-    (e: any) => {
-      setInputValue(e.target.value);
-    },
-    [setInputValue]
-  );
+const StableSwapWalletBalance = styled(WalletBalance)`
+  color: #5a81ff;
+`;
+
+const StableSwapMaxButton = styled(MaxButton)`
+  top: 43px;
+  right: 32px;
+  color: #a5baff;
+`;
+
+const StableSwapPriceInfoWrapper = styled(InfoWrapper)`
+  width: 100%;
+  padding: 0 0 10px;
+  border-bottom: 1px solid #253656;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const StableSwapInfoWrapper = styled(InfoWrapper)`
+  width: 100%;
+`;
+
+const StableSwapInfoContainer = styled(Box)`
+  padding-top: 15px;
+  width: 100%;
+`;
+
+const StableSwapPriceInfo = styled(InfoLabel)`
+  font-size: 16px;
+  line-height: 24px;
+  color: #fff;
+  text-transform: uppercase;
+  display: flex;
+  gap: 7px;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 10px 0;
+`;
+
+const SwapButton = styled(ButtonPrimary)`
+  height: 48px;
+  width: 100%;
+  font-size: 17px;
+  line-height: 24px;
+  margin: 20px 0 5px 0;
+`;
+
+const StableSwap = () => {
+  const [options /*setOptions*/] = useState<string[]>(["US+", "FXD"]);
+
+  const {
+    dailyLimit,
+
+    fxdPrice,
+
+    inputValue,
+    outputValue,
+
+    handleInputValueTextFieldChange,
+    handleOutputValueTextFieldChange,
+
+    approvalPending,
+
+    approveInputBtn,
+    approveOutputBtn,
+    approveInput,
+    approveOutput,
+
+    handleSwap,
+    swapPending,
+
+    inputCurrency,
+    outputCurrency,
+
+    setInputCurrencyHandler,
+    setOutputCurrencyHandler,
+
+    inputBalance,
+    outputBalance,
+
+    changeCurrenciesPosition,
+    setMax,
+    swapFee,
+
+    inputError,
+    isMobile,
+
+    fxdAvailable,
+    usStableAvailable,
+  } = useStableSwap(options);
 
   return (
-    <AppPaper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-      <Typography component="h2" variant="h6" color="primary" gutterBottom>
-        Stable Swap
-      </Typography>
-      <Typography color="text.secondary" sx={{ flex: 1 }}>
-        Stableswap. This module keeps the stablecoin pegged to 1 USD. When the
-        stablecoin price depegs from 1 USD, an arbitrage can be performed using
-        this module.
-      </Typography>
-      <Box sx={{ marginTop: 2 }}>
-        <TextField
-          id="outlined-start-adornment"
-          label={"Amount"}
-          defaultValue=""
-          size="small"
-          value={inputValue}
-          onChange={handleInputValueTextFieldChange}
-          sx={{ marginRight: 2 }}
+    <Container
+      maxWidth="lg"
+      sx={{ mt: isMobile ? 2 : 4, mb: isMobile ? 2 : 4 }}
+    >
+      <Grid container spacing={isMobile ? 1 : 3}>
+        <PageHeader
+          addPadding={true}
+          title={"Stable Swap"}
+          description={
+            "Buy and sell FXD for US+ at a rate of 1:1 with low fees."
+          }
         />
-
-        {approvalPending ? (
-          <Typography display="inline" sx={{ marginRight: 2 }}>
-            Pending ...
-          </Typography>
-        ) : approveFxdBtn ? (
-          <Button
-            variant="outlined"
-            onClick={approveFxd}
-            sx={{ marginRight: 2 }}
-          >
-            Approve FXD
-          </Button>
-        ) : approveUsdtBtn ? (
-          <Button
-            variant="outlined"
-            onClick={approveUsdt}
-            sx={{ marginRight: 2 }}
-          >
-            Approve USDT
-          </Button>
-        ) : null}
-
-        <ButtonGroup
-          variant="contained"
-          ref={anchorRef}
-          aria-label="split button"
-        >
-          <Button
-            disabled={approveUsdtBtn || approveFxdBtn || approvalPending}
-            onClick={handleClick}
-          >
-            {options[selectedIndex]}
-          </Button>
-          <Button
-            size="small"
-            aria-controls={open ? "split-button-menu" : undefined}
-            aria-expanded={open ? "true" : undefined}
-            aria-label="select merge strategy"
-            aria-haspopup="menu"
-            onClick={handleToggle}
-          >
-            <ArrowDropDownIcon />
-          </Button>
-        </ButtonGroup>
-        <Popper
-          sx={{
-            zIndex: 1,
-          }}
-          open={open}
-          anchorEl={anchorRef.current}
-          role={undefined}
-          transition
-          disablePortal
-        >
-          {({ TransitionProps, placement }) => (
-            <Grow
-              {...TransitionProps}
-              style={{
-                transformOrigin:
-                  placement === "bottom" ? "center top" : "center bottom",
-              }}
-            >
-              <Paper>
-                <ClickAwayListener onClickAway={handleClose}>
-                  <MenuList id="split-button-menu" autoFocusItem>
-                    {options.map((option, index) => (
-                      <MenuItem
-                        key={option}
-                        disabled={index === 2}
-                        selected={index === selectedIndex}
-                        onClick={(event) => handleMenuItemClick(event, index)}
-                      >
+        <Grid item xs={12} sm={6} sx={{ margin: "0 auto" }}>
+          <StableSwapPaper>
+            <StableSwapInputWrapper>
+              <StableSwapFormLabel>From</StableSwapFormLabel>
+              {useMemo(
+                () =>
+                  inputBalance ? (
+                    <StableSwapWalletBalance>
+                      Balance: {(+inputBalance / 10 ** 18).toFixed(2)}{" "}
+                      {inputCurrency}
+                    </StableSwapWalletBalance>
+                  ) : null,
+                [inputBalance, inputCurrency]
+              )}
+              <StableSwapCurrencySelect
+                value={inputCurrency}
+                // @ts-ignore
+                onChange={(event: SelectChangeEvent) => {
+                  setInputCurrencyHandler(event.target.value);
+                }}
+              >
+                {useMemo(
+                  () =>
+                    options.map((option) => (
+                      <MenuItem key={option} value={option}>
+                        <Box sx={{ float: "left", paddingRight: "10px" }}>
+                          <img
+                            width={16}
+                            src={getTokenLogoURL(option)}
+                            alt={""}
+                          />
+                        </Box>
                         {option}
                       </MenuItem>
-                    ))}
-                  </MenuList>
-                </ClickAwayListener>
-              </Paper>
-            </Grow>
-          )}
-        </Popper>
-      </Box>
-    </AppPaper>
+                    )),
+                  [options]
+                )}
+              </StableSwapCurrencySelect>
+
+              <StableSwapTextField
+                error={!!inputError}
+                size="small"
+                type="number"
+                placeholder="0.00"
+                value={inputValue}
+                onChange={handleInputValueTextFieldChange}
+                helperText={
+                  inputError ? (
+                    <>
+                      <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
+                      <Typography>
+                        {inputError}
+                      </Typography>
+                    </>
+                  ) : null
+                }
+              />
+              <StableSwapMaxButton onClick={setMax}>Max</StableSwapMaxButton>
+              {approveInputBtn ? (
+                <ButtonSecondary
+                  onClick={approveInput}
+                  sx={{ float: "right", marginTop: "10px" }}
+                >
+                  {approvalPending === "input" ? (
+                    <CircularProgress size={30} />
+                  ) : (
+                    `Approve ${inputCurrency}`
+                  )}
+                </ButtonSecondary>
+              ) : null}
+
+              <FathomSwapChangeCurrencyButton
+                onClick={() =>
+                  changeCurrenciesPosition(
+                    inputValue as number,
+                    outputValue as number
+                  )
+                }
+              >
+                <img src={ComboShareSrc} alt="combo-share" />
+              </FathomSwapChangeCurrencyButton>
+            </StableSwapInputWrapper>
+
+            <StableSwapInputWrapper>
+              <StableSwapFormLabel>To</StableSwapFormLabel>
+              {useMemo(
+                () =>
+                  outputBalance ? (
+                    <StableSwapWalletBalance>
+                      Balance: {(+outputBalance / 10 ** 18).toFixed(2)}{" "}
+                      {outputCurrency}
+                    </StableSwapWalletBalance>
+                  ) : null,
+                [outputBalance, outputCurrency]
+              )}
+              <StableSwapCurrencySelect
+                value={outputCurrency}
+                // @ts-ignore
+                onChange={(event: SelectChangeEvent) => {
+                  setOutputCurrencyHandler(event.target.value);
+                }}
+                disabled={true}
+              >
+                {useMemo(
+                  () =>
+                    options.map((option) => (
+                      <MenuItem key={option} value={option}>
+                        <Box sx={{ float: "left", paddingRight: "10px" }}>
+                          <img
+                            width={16}
+                            src={getTokenLogoURL(option)}
+                            alt={""}
+                          />
+                        </Box>
+                        {option}
+                      </MenuItem>
+                    )),
+                  [options]
+                )}
+              </StableSwapCurrencySelect>
+
+              <StableSwapTextField
+                disabled={true}
+                size="small"
+                type="number"
+                placeholder="0.00"
+                value={outputValue}
+                onChange={handleOutputValueTextFieldChange}
+              />
+
+              {approveOutputBtn ? (
+                <ButtonSecondary
+                  onClick={approveOutput}
+                  sx={{ float: "right", marginTop: "10px" }}
+                >
+                  {approvalPending === "output" ? (
+                    <CircularProgress size={30} />
+                  ) : (
+                    `Approve ${outputCurrency}`
+                  )}
+                </ButtonSecondary>
+              ) : null}
+            </StableSwapInputWrapper>
+
+            {useMemo(() => {
+              return (
+                <StableSwapPriceInfoWrapper>
+                  <StableSwapPriceInfo>
+                    <Box component="span">
+                      1 {inputCurrency} ={" "}
+                      {outputCurrency === options[0]
+                        ? 1 * fxdPrice
+                        : fxdPrice
+                        ? 1 / fxdPrice
+                        : null}{" "}
+                      {outputCurrency}
+                    </Box>
+                    <QuestionMarkButton>
+                      <img src={QuestionMarkSrc} alt="question" width={20} />
+                    </QuestionMarkButton>
+                  </StableSwapPriceInfo>
+                </StableSwapPriceInfoWrapper>
+              );
+            }, [inputCurrency, outputCurrency, fxdPrice, options])}
+
+            <StableSwapInfoContainer>
+              <StableSwapInfoWrapper>
+                <InfoLabel>Fee</InfoLabel>
+                <InfoValue>
+                  {formatPercentage(swapFee)} FXD{" "}
+                  {inputValue && (
+                    <>
+                      ({formatPercentage((swapFee / Number(inputValue)) * 100)}
+                      %)
+                    </>
+                  )}
+                </InfoValue>
+              </StableSwapInfoWrapper>
+
+              <StableSwapInfoWrapper>
+                <InfoLabel>Daily Limit</InfoLabel>
+                <InfoValue>{formatNumber(dailyLimit!)} FXD </InfoValue>
+              </StableSwapInfoWrapper>
+
+              <StableSwapInfoWrapper>
+                <InfoLabel>FXD Pool Token Available</InfoLabel>
+                <InfoValue>{formatNumber(fxdAvailable!)} FXD </InfoValue>
+              </StableSwapInfoWrapper>
+
+              <StableSwapInfoWrapper>
+                <InfoLabel>US+ Pool Token Available</InfoLabel>
+                <InfoValue>{formatNumber(usStableAvailable!)} US+ </InfoValue>
+              </StableSwapInfoWrapper>
+            </StableSwapInfoContainer>
+
+            <SwapButton
+              isLoading={swapPending}
+              disabled={!inputValue || !outputValue || swapPending}
+              onClick={handleSwap}
+            >
+              {swapPending ? <CircularProgress size={30} /> : "Swap"}
+            </SwapButton>
+          </StableSwapPaper>
+        </Grid>
+      </Grid>
+    </Container>
   );
-});
+};
 
 export default StableSwap;

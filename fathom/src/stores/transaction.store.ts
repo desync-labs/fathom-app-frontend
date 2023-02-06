@@ -1,42 +1,62 @@
 import { makeAutoObservable } from "mobx";
 import { RootStore } from ".";
-import { ITransaction, TransactionStatus } from "./interfaces/ITransaction";
-import { Constants } from "../helpers/Constants";
-import ActiveWeb3TransactionsService from "../services/ActiveWeb3TransactionsService";
+import { ITransaction, TransactionStatus } from "stores/interfaces/ITransaction";
+import { Constants } from "helpers/Constants";
+import Xdc3 from "xdc3";
 
 export default class ActiveWeb3Transactions {
   transactions: ITransaction[];
-  service: ActiveWeb3TransactionsService;
-  private fetchHandle: NodeJS.Timeout | null = null;
+  fetchHandle: NodeJS.Timeout | null = null;
   rootStore: RootStore;
+  library?: Xdc3;
 
-  constructor(rootStore: RootStore, service: ActiveWeb3TransactionsService) {
+  constructor(rootStore: RootStore) {
     makeAutoObservable(this);
-    this.service = service;
     this.rootStore = rootStore;
     this.transactions = [];
 
     if (this.fetchHandle !== null) clearInterval(this.fetchHandle);
     this.fetchHandle = setInterval(
-      this.checkTransactionStatus.bind(this),
+      () => this.checkTransactionStatus(this.library!),
       Constants.TransactionCheckUpdateInterval
     );
   }
 
   addTransaction(_transaction: ITransaction) {
-    this.transactions.push(_transaction);
+    this.transactions = [...this.transactions, _transaction];
     this.rootStore.alertStore.resetAlerts();
   }
 
   removeTransaction() {
-    this.transactions.pop();
+    this.transactions.splice(-1);
+    this.transactions = [...this.transactions];
   }
 
-  private async checkTransactionStatus(): Promise<void> {
+  setLibrary(library: Xdc3) {
+    this.library = library;
+  }
+
+  async checkStatus(
+    pendingTransaction: ITransaction,
+    library: Xdc3
+  ): Promise<ITransaction> {
+    const response = await library.eth.getTransactionReceipt(
+      pendingTransaction.hash
+    );
+    if (response !== null) {
+      pendingTransaction.status = response.status
+        ? TransactionStatus.Success
+        : TransactionStatus.Error;
+    }
+
+    return pendingTransaction;
+  }
+
+  private async checkTransactionStatus(library: Xdc3): Promise<void> {
     for (const transaction of this.transactions) {
       if (transaction !== undefined) {
         transaction.active = true;
-        let tx = await this.service.checkTransactionStatus(transaction);
+        const tx = await this.checkStatus(transaction, library);
         if (tx.status !== TransactionStatus.None) {
           this.removeTransaction();
         }
