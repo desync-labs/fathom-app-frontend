@@ -110,7 +110,7 @@ export default class StakingService implements IStakingService {
     const options = { from: account, gas: 0 };
     const gas = await getEstimateGas(
       Staking,
-      "unlockPartially",
+      "earlyUnlock",
       [lockId],
       options
     );
@@ -270,7 +270,7 @@ export default class StakingService implements IStakingService {
     const gas = await getEstimateGas(
       FTHMToken,
       "approve",
-      [0],
+      [StakingAddress, Constants.MAX_UINT256],
       options
     );
     options.gas = gas;
