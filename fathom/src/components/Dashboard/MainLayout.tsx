@@ -1,53 +1,62 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React from "react";
 import { createTheme, styled, ThemeProvider } from "@mui/material/styles";
 import {
-  Container,
   CssBaseline,
   Drawer as MuiDrawer,
   Box,
   Toolbar,
-  List,
   Typography,
   Divider,
   IconButton,
-  Chip,
 } from "@mui/material";
 import {
   ArrowBack,
   ArrowForward,
   Menu as MenuIcon,
   AccountBalanceWallet as AccountBalanceWalletIcon,
-  Logout as LogoutIcon,
 } from "@mui/icons-material";
-import Copyright from "../Footer/Footer";
-import AppBar from "../AppComponents/AppBar/AppBar";
-import useMetaMask from "../../hooks/metamask";
-import { observer } from "mobx-react";
-import DashboardContent from "./Dashboard";
-import { Route, Routes } from "react-router-dom";
-import StableSwap from "../Stableswap/StableSwap";
-import Image from "mui-image";
-
-import FathomAppLogo from "../../assets/svg/Fathom-app-logo.svg";
-import { useStores } from "../../stores";
-import { Web3Status } from "../Web3Status/Web3Status";
-import AllProposalsView from "../Governance/ViewAllProposals";
-import ProposalView from "../Governance/Proposal";
-import MakePropose from "../Governance/Propose";
-import StakingView from "../Staking/StakingView";
-import AlertMessages from "../Common/AlertMessages";
-import TransactionStatus from "../Transaction/TransactionStatus";
 import truncateEthAddress from "truncate-eth-address";
-import { Menu } from "./Menu";
-import { ToggleDrawerButton } from "../AppComponents/AppButton/AppButton";
+import { Navigate, Route, Routes } from "react-router-dom";
 
-const drawerWidth: number = 240;
+import Copyright from "components/Footer/Footer";
+import AppBar from "components/AppComponents/AppBar/AppBar";
+import DashboardContent from "components/Dashboard/Dashboard";
+import StableSwap from "components/Stableswap/StableSwap";
+
+import Web3Status from "components/Web3Status/Web3Status";
+import AllProposalsView from "components/Governance/ViewAllProposals";
+import ProposalView from "components/Governance/Proposal";
+import StakingView from "components/Staking/StakingView";
+import AlertMessages from "components/Common/AlertMessages";
+import TransactionStatus from "components/Transaction/TransactionStatus";
+import { Menu } from "components/Dashboard/Menu";
+import { ToggleDrawerButton } from "components/AppComponents/AppButton/AppButton";
+import { MainBox } from "components/AppComponents/AppBox/AppBox";
+import DaoView from "components/Dashboard/DaoView";
+import MobileConnector from "components/Dashboard/MobileConnector";
+import DesktopConnector from "components/Dashboard/DesktopConnector";
+import BottomLinks from "components/Dashboard/BottomLinks";
+import { drawerWidth } from "components/AppComponents/AppBar/AppBar";
+
+import useMainLayout from "hooks/useMainLayout";
+import { StakingProvider } from "context/staking";
+import MobileMenu from "components/Dashboard/MobileMenu";
+import { ProposalProvider } from "context/proposal";
+
+import FathomAppLogoSrc from "assets/svg/Fathom-app-logo.svg";
+import ExitSrc from "assets/svg/exit.svg";
+import MetamaskSrc from "assets/svg/metamask.svg";
+import WalletConnectSrc from "assets/svg/wallet-connect.svg";
+import FathomLogoMobileSrc from "assets/svg/Fathom-app-logo-mobile.svg";
+import MobileMenuIcon from "assets/svg/mobile-menu.svg";
+import MobileMenuIconActive from "assets/svg/mobile-menu-active.svg";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
   "& .MuiDrawer-paper": {
-    position: "relative",
+    position: "sticky",
+    height: "100vh",
     whiteSpace: "nowrap",
     background: "#101D32",
     border: "none",
@@ -72,6 +81,17 @@ const Drawer = styled(MuiDrawer, {
   },
 }));
 
+const MenuWrapper = styled("nav")<{ open: boolean }>`
+  padding: ${({ open }) => (open ? "20px 12px" : "20px 8px")};
+  height: 100vh;
+  position: sticky;
+  position: relative;
+  margintop: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+`;
+
 const mdTheme = createTheme({
   palette: {
     mode: "dark",
@@ -79,33 +99,85 @@ const mdTheme = createTheme({
       main: "#00FFF6",
     },
     secondary: {
-      main: "#808084",
+      main: "#7D91B5",
+    },
+    info: {
+      main: "#5A81FF",
+    },
+    success: {
+      main: "#3DA329",
+    },
+    error: {
+      main: "#DD3C3C",
     },
   },
   typography: {
-    fontFamily: [
-      "Inter, sans-serif"
-    ].join(','),
+    fontFamily: ["Inter, sans-serif"].join(","),
   },
 });
 
-const MainLayout = observer(() => {
-  const [open, setOpen] = useState<boolean>(true);
-  const { connect, isActive, account, chainId, error } = useMetaMask()!;
+const MainToolbar = styled(Toolbar)`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 1px;
+  background: linear-gradient(180deg, #071126 0%, #050c1a 100%);
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    width: 100px;
+    margin-left: 14px;
+  }
+`;
 
-  const toggleDrawer = useCallback(() => {
-    setOpen(!open);
-  }, [open, setOpen]);
+const MenuLogoWrapper = styled(Box)`
+  display: flex;
+  width: 105px;
+  align-items: center;
+  justify-content: space-between;
+`;
 
-  const rootStore = useStores();
+const MobileMenuWrapper = styled(Box)`
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  gap: 7px;
+`;
 
-  useEffect(() => {
-    rootStore.setChainId(chainId!);
-  }, [chainId, rootStore]);
+const WalletBox = styled(Box)`
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  color: #fff;
+  padding: 0 0 0 10px;
+`;
+
+const MainLayout = () => {
+  const {
+    scroll,
+    disconnect,
+    openMobile,
+    openConnector,
+    account,
+    error,
+    isMobile,
+    isActive,
+    open,
+    isMetamask,
+    isWalletConnect,
+    toggleDrawer,
+    mainBlockClickHandler,
+    openMobileMenu,
+    openConnectorMenu,
+    setOpenMobile,
+    setOpenConnector,
+  } = useMainLayout();
 
   return (
     <ThemeProvider theme={mdTheme}>
-      <Box sx={{ display: "flex" }}>
+      <Box sx={{ display: "flex" }} onClick={mainBlockClickHandler}>
         <CssBaseline />
         <AppBar position="absolute" open={open}>
           <Toolbar
@@ -113,18 +185,52 @@ const MainLayout = observer(() => {
               pr: "24px", // keep right padding when drawer closed
             }}
           >
-            <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="open drawer"
-              onClick={toggleDrawer}
-              sx={{
-                marginRight: "36px",
-                ...(open && { display: "none" }),
-              }}
-            >
-              <MenuIcon />
-            </IconButton>
+            {isMobile && (
+              <MenuLogoWrapper>
+                <img
+                  src={FathomLogoMobileSrc}
+                  alt={"logo"}
+                  style={{
+                    width: "24px",
+                    background: "#80FFF6",
+                    height: "24px",
+                    borderRadius: "6px",
+                    padding: "4px",
+                  }}
+                />
+                <MobileMenuWrapper onClick={openMobileMenu}>
+                  <img
+                    style={{ display: openMobile ? "none" : "block" }}
+                    src={MobileMenuIcon}
+                    alt={"menu"}
+                    width={20}
+                    height={20}
+                  />
+                  <img
+                    style={{ display: openMobile ? "block" : "none" }}
+                    src={MobileMenuIconActive}
+                    alt={"menu"}
+                    width={20}
+                    height={20}
+                  />
+                  Apps
+                </MobileMenuWrapper>
+              </MenuLogoWrapper>
+            )}
+            {!isMobile && (
+              <IconButton
+                edge="start"
+                color="inherit"
+                aria-label="open drawer"
+                onClick={toggleDrawer}
+                sx={{
+                  marginRight: "36px",
+                  ...(open && { display: "none" }),
+                }}
+              >
+                <MenuIcon />
+              </IconButton>
+            )}
             <Typography
               component="h1"
               variant="h6"
@@ -132,85 +238,97 @@ const MainLayout = observer(() => {
               noWrap
               sx={{ flexGrow: 1 }}
             ></Typography>
-            {account && !error && (
-              <Chip label={truncateEthAddress(account)} color="primary" />
-            )}
+
             <Web3Status />
-            <IconButton color="inherit" onClick={connect}>
-              {isActive ? <LogoutIcon /> : <AccountBalanceWalletIcon />}
+
+            {isMetamask && <img src={MetamaskSrc} alt={"metamask"} />}
+            {isWalletConnect && (
+              <img src={WalletConnectSrc} alt={"wallet-connect"} />
+            )}
+            {account && !error && (
+              <WalletBox>{truncateEthAddress(account)}</WalletBox>
+            )}
+
+            <IconButton
+              color="inherit"
+              onClick={isActive ? disconnect : openConnectorMenu}
+            >
+              {isActive ? (
+                <img src={ExitSrc} alt={"exit"} />
+              ) : (
+                <AccountBalanceWalletIcon />
+              )}
             </IconButton>
           </Toolbar>
         </AppBar>
-        <Drawer variant="permanent" open={open}>
-          <Toolbar
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "flex-end",
-              px: [1],
-              background: "linear-gradient(180deg, #071126 0%, #050C1A 100%)",
-            }}
-          >
-            {open && (
-              <Image
-                duration={0}
-                src={FathomAppLogo}
-                style={{
-                  height: "none",
-                  maxWidth: "140px",
-                  marginLeft: "22px",
-                }}
-                wrapperStyle={{ justifyContent: "left" }}
-              />
-            )}
-            <ToggleDrawerButton
-              open={open}
-              onClick={toggleDrawer}
-            >
-              {open ? (
-                <ArrowBack sx={{ fontSize: "0.9rem" }} />
-              ) : (
-                <ArrowForward sx={{ fontSize: "0.9rem", color: "#fff" }} />
+        {!isMobile && (
+          <Drawer variant="permanent" open={open}>
+            <MainToolbar>
+              {open && (
+                <img
+                  src={FathomAppLogoSrc}
+                  alt={"logo"}
+                  style={{
+                    height: "none",
+                    maxWidth: "140px",
+                  }}
+                />
               )}
-            </ToggleDrawerButton>
-          </Toolbar>
-          <Divider />
-          <List
-            component="nav"
-            sx={{
-              padding: "20px 12px",
-            }}
-          >
-            <Menu open={open} />
-          </List>
-        </Drawer>
-        <Box
-          component="main"
-          sx={{
-            background: "linear-gradient(180deg, #071126 0%, #050C1A 100%)",
-            flexGrow: 1,
-            height: "100vh",
-            overflow: "auto",
-          }}
-        >
+              <ToggleDrawerButton open={open} onClick={toggleDrawer}>
+                {open ? (
+                  <ArrowBack sx={{ fontSize: "0.9rem" }} />
+                ) : (
+                  <ArrowForward sx={{ fontSize: "0.9rem", color: "#fff" }} />
+                )}
+              </ToggleDrawerButton>
+            </MainToolbar>
+            <Divider />
+            <MenuWrapper open={open}>
+              <Menu open={open} />
+              {!isMobile && open && <BottomLinks />}
+            </MenuWrapper>
+          </Drawer>
+        )}
+        <MainBox component="main">
           <Toolbar />
-          <AlertMessages />
-          <TransactionStatus />
-          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Routes>
-              <Route path="/" element={<DashboardContent />} />
-              <Route path="/swap" element={<StableSwap />} />
-              <Route path="/proposals" element={<AllProposalsView />} />
-              <Route path="/proposal/make-proposal" element={<MakePropose />} />
-              <Route path="/proposal/:_proposalId" element={<ProposalView />} />
-              <Route path="/staking" element={<StakingView />} />
-            </Routes>
-          </Container>
-          <Copyright/>
-        </Box>
+          <AlertMessages scroll={scroll} />
+          <TransactionStatus scroll={scroll} />
+          <Routes>
+            <Route path="/" element={<DashboardContent />} />
+            <Route path="/swap" element={<StableSwap />} />
+            <Route
+              path="/proposal/:_proposalId"
+              element={
+                <ProposalProvider>
+                  <ProposalView />
+                </ProposalProvider>
+              }
+            />
+            <Route path="/dao" element={<DaoView />}>
+              <Route path="governance" element={<AllProposalsView />} />
+              <Route
+                path="staking"
+                element={
+                  <StakingProvider>
+                    <StakingView />
+                  </StakingProvider>
+                }
+              />
+            </Route>
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+          <Copyright />
+        </MainBox>
       </Box>
+      {isMobile && openMobile && <MobileMenu setOpenMobile={setOpenMobile} />}
+      {isMobile && openConnector && (
+        <MobileConnector setOpenMobileConnector={setOpenConnector} />
+      )}
+      {!isMobile && openConnector && (
+        <DesktopConnector onClose={() => setOpenConnector(false)} />
+      )}
     </ThemeProvider>
   );
-});
+};
 
 export default MainLayout;

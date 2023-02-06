@@ -1,10 +1,41 @@
-import ActiveWeb3Transactions from "../../stores/transaction.store";
+import Xdc3 from "xdc3";
+import { TransactionReceipt } from "web3-eth";
 
-export default interface IStableSwapService{
-    swapTokenToStablecoin(address:string, tokenIn:number,transactionStore:ActiveWeb3Transactions): Promise<void>;
-    swapStablecoinToToken(address:string, stablecoinIn:number,transactionStore:ActiveWeb3Transactions): Promise<void>;
-    approveStablecoin(address:string,transactionStore:ActiveWeb3Transactions): Promise<void>;
-    approveUsdt(address:string,tokenIn:number,transactionStore:ActiveWeb3Transactions): Promise<void>;
-    approvalStatusStablecoin(address:string,tokenIn:number): Promise<Boolean>;
-    approvalStatusUsdt(address:string,tokenIn:number): Promise<Boolean>;
+export default interface IStableSwapService {
+  swapTokenToStableCoin(
+    address: string,
+    tokenIn: number,
+    tokenName: string,
+    library: Xdc3
+  ): Promise<TransactionReceipt | undefined>;
+  swapStableCoinToToken(
+    address: string,
+    stableCoinIn: number,
+    tokenName: string,
+    library: Xdc3
+  ): Promise<TransactionReceipt | undefined>;
+  approveStableCoin(
+    address: string,
+    library: Xdc3
+  ): Promise<TransactionReceipt | undefined>;
+  approveUsdt(
+    address: string,
+    library: Xdc3
+  ): Promise<TransactionReceipt | undefined>;
+  approvalStatusStableCoin(
+    address: string,
+    tokenIn: number,
+    library: Xdc3
+  ): Promise<Boolean>;
+  approvalStatusUsdt(
+    address: string,
+    tokenIn: number,
+    library: Xdc3
+  ): Promise<boolean>;
+
+  getFeeIn(library: Xdc3): Promise<number>;
+  getFeeOut(library: Xdc3): Promise<number>;
+  getLastUpdate(library: Xdc3): Promise<number>;
+  getDailySwapLimit(library: Xdc3): Promise<number>;
+  getTokenBalance(tokenAddress: string, library: Xdc3): Promise<number>;
 }

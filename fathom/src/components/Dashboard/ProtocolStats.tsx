@@ -1,97 +1,86 @@
-import { Box, Grid } from "@mui/material";
-import Typography from "@mui/material/Typography";
-import { useWeb3React } from "@web3-react/core";
-import { useEffect } from "react";
-import logo from "../../assets/images/fxd-logo.png";
-import { useStores } from "stores";
-import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
-import { observer } from "mobx-react";
+import { Grid, Box, Typography } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import useProtocolStats from "hooks/useProtocolStats";
+import { formatCurrency, formatNumber } from "utils/format";
+import usePricesContext from "context/prices";
 
-const StatsStyles = {
-  boxShadow: 2,
-  width: "15rem",
-  height: "5rem",
-  background: "linear-gradient(180deg, #071126 0%, #050C1A 100%)",
-  p: 1.5,
-  m: 1,
-  borderRadius: 2,
-  textAlign: "center",
-};
+const StatsItem = styled(Grid)`
+  text-align: left;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: calc(33.33% - 8px);
+  background: #131f35;
+  border-radius: 8px;
 
-const ProtocolStats = observer(() => {
-  const { chainId } = useWeb3React();
-  const rootStore = useStores();
-  const { fxdProtocolStatsStore } = rootStore;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    width: 100%;
+    padding: 16px 20px;
+    justify-content: start;
+  }
+`;
 
-  useEffect(() => {
-    // Update the document title using the browser API
-    if (chainId) {
-      setTimeout(() => fxdProtocolStatsStore.fetchProtocolStats());
-    }
-  }, [fxdProtocolStatsStore, rootStore.alertStore, chainId]);
+const ProtocolStatsContainer = styled(Grid)`
+  height: 92px;
+  margin-bottom: 30px;
+  display: flex;
+  gap: 8px;
+  height: 100%;
+`;
+
+const StatsTitle = styled(
+  Typography,
+  {}
+)(({ theme }) => ({
+  color: theme.palette.secondary.main,
+  fontSize: "13px",
+  lineHeight: "16px",
+  letterSpacing: "0.02em",
+  textTransform: "uppercase",
+  fontWeight: "bold",
+}));
+
+const StatsDescription = styled(Typography)`
+  font-style: normal;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 28px;
+  margin: 0;
+  padding: 0;
+  padding-top: 7px;
+`;
+
+const ProtocolStats = () => {
+  const { totalSupply, tvl, loading } = useProtocolStats();
+  const { fxdPrice } = usePricesContext();
 
   return (
-    <AppPaper
-      sx={{
-        p: 2,
-        display: "flex",
-        flexDirection: "column",
-        height: 360,
-      }}
-    >
-      <img
-        src={logo}
-        alt="Fathom Stablecoin"
-        height="40"
-        width="80"
-        color="black"
-      ></img>
-      <Typography variant="subtitle1" gutterBottom>
-        The reliable stablecoin that earns you extra passive income
-      </Typography>
-      <Typography variant="body2" gutterBottom>
-        FXD is an auto-farming stablecoin that earns passive yields for you in
-        the background. Now, instead of paying for loans,you can get loans while
-        earning on your collateral.
-      </Typography>
-      <Grid container>
-        <Box sx={StatsStyles}>
-          <Typography variant="subtitle1" color="text.secondary">
-            Total Supply
-          </Typography>
-          <Typography variant="h6" color="primary" gutterBottom>
-            {fxdProtocolStatsStore.commarize(
-              fxdProtocolStatsStore.protocolStats.fathomSupplyCap
-            )}
-          </Typography>
+    <ProtocolStatsContainer container>
+      <StatsItem item>
+        <Box>
+          <StatsTitle>Total Supply</StatsTitle>
+          <StatsDescription variant="body2">
+            {!loading && formatNumber(totalSupply)}
+          </StatsDescription>
         </Box>
-        <Box sx={StatsStyles}>
-          <Typography variant="subtitle1" color="text.secondary">
-            TVL
-          </Typography>
-          <Typography variant="h6" color="primary" gutterBottom>
-            {fxdProtocolStatsStore.getFormattedTVL()}
-          </Typography>
+      </StatsItem>
+      <StatsItem item>
+        <Box>
+          <StatsTitle>TVL</StatsTitle>
+          <StatsDescription>{!loading && formatCurrency(tvl)}</StatsDescription>
         </Box>
-        <Box sx={StatsStyles}>
-          <Typography variant="subtitle1" color="text.secondary">
-            FXD Price
-          </Typography>
-          <Typography variant="h6" color="primary" gutterBottom>
-            {fxdProtocolStatsStore.getFormattedFXDPriceRatio()}
-          </Typography>
+      </StatsItem>
+      <StatsItem item>
+        <Box>
+          <StatsTitle>FXD Price</StatsTitle>
+          <StatsDescription>
+            {formatCurrency(fxdPrice / 10 ** 18)}
+          </StatsDescription>
         </Box>
-        <Box sx={StatsStyles}>
-          <Typography variant="subtitle1" color="text.secondary">
-            Liq. Ratio
-          </Typography>
-          <Typography variant="h6" color="primary" gutterBottom>
-            {fxdProtocolStatsStore.getFormattedLiquidationRatio()}
-          </Typography>
-        </Box>
-      </Grid>
-    </AppPaper>
+      </StatsItem>
+    </ProtocolStatsContainer>
   );
-});
+};
 
 export default ProtocolStats;

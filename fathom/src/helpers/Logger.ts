@@ -1,17 +1,15 @@
 import React from "react";
 
-export enum LogLevel{
-    info,
-    error,
-    debug
+export enum LogLevel {
+  info,
+  error,
+  debug,
 }
 
 export class Logger {
-
-    log =  (level:LogLevel, msg:string)=>{
-        console.log(`${msg}`)
-        
-    }
+  log = (level: LogLevel, msg: string) => {
+    console.log(`${msg}`);
+  };
 }
 
 const LoggerContext = React.createContext(new Logger());

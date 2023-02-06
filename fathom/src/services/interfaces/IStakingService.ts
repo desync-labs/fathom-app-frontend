@@ -1,69 +1,66 @@
-import ILockPosition from "../../stores/interfaces/ILockPosition";
-import ActiveWeb3Transactions from "../../stores/transaction.store";
+import ActiveWeb3Transactions from "stores/transaction.store";
+import Xdc3 from "xdc3";
 
 export default interface IStakingService {
   createLock(
-    address: string,
+    account: string,
     stakePosition: number,
     unlockPeriod: number,
-    chainId: number,
-    transactionStore: ActiveWeb3Transactions
+    transactionStore: ActiveWeb3Transactions,
+    library: Xdc3
   ): Promise<void>;
-
-  getLockPositions(account: string, chainId: number): Promise<ILockPosition[]>;
 
   handleUnlock(
     account: string,
     lockId: number,
-    chainId: number,
-    transactionStore: ActiveWeb3Transactions
+    amount: number,
+    transactionStore: ActiveWeb3Transactions,
+    library: Xdc3
   ): Promise<void>;
 
   handleEarlyWithdrawal(
     account: string,
     lockId: number,
-    chainId: number,
-    transactionStore: ActiveWeb3Transactions
+    transactionStore: ActiveWeb3Transactions,
+    library: Xdc3
   ): Promise<void>;
 
   handleClaimRewards(
     account: string,
     streamId: number,
-    chainId: number,
-    transactionStore: ActiveWeb3Transactions
+    transactionStore: ActiveWeb3Transactions,
+    library: Xdc3
   ): Promise<void>;
-  handleWithdrawRewards(
+
+  handleWithdrawAll(
     account: string,
     streamId: number,
-    chainId: number,
-    transactionStore: ActiveWeb3Transactions
+    transactionStore: ActiveWeb3Transactions,
+    library: Xdc3
   ): Promise<void>;
-  getAPR(chainId: number): Promise<number>;
-  getWalletBalance(account: string, chainId: number): Promise<number>;
-  getVOTEBalance(account: string, chainId: number): Promise<number>;
-  handleClaimRewardsSingle(
-    account: string,
-    lockId: number,
-    chainId: number,
-    transactionStore: ActiveWeb3Transactions
-  ): Promise<void>;
-
-  getLockInfo(
-    lockId: number,
-    account: string,
-    chainId: number
-  ): Promise<ILockPosition>;
-
-  getLockPositionsLength(account: string, chainId: number): Promise<number>;
 
   approvalStatusStakingFTHM(
     address: string,
     stakingPosition: number,
-    chainId: number
-  ): Promise<Boolean>;
+    fthmTokenAddress: string,
+    library: Xdc3
+  ): Promise<boolean>;
+
+  getStreamClaimableAmountPerLock(
+    streamId: number,
+    account: string,
+    lockId: number,
+    library: Xdc3
+  ): Promise<number>;
+
+  getPairPrice(token0: string, token1: string, library: Xdc3): Promise<number>;
+
+  getStreamClaimableAmount(account: string, library: Xdc3): Promise<number>;
+
   approveStakingFTHM(
     address: string,
-    chainId: number,
-    transactionStore: ActiveWeb3Transactions
+    fthmTokenAddress: string,
+    transactionStore: ActiveWeb3Transactions,
+    library: Xdc3
   ): Promise<void>;
 }

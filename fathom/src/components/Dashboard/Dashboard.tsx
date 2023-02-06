@@ -1,50 +1,47 @@
-import React, { useCallback, useEffect } from "react";
-import Grid from "@mui/material/Grid";
-import OpenPositionsList from "../PositionList/OpenPositionsList";
-import { useStores } from "../../stores";
-import { LogLevel, useLogger } from "../../helpers/Logger";
-import { observer } from "mobx-react";
-import ProtocolStats from "./ProtocolStats";
-import { useWeb3React } from "@web3-react/core";
-import PoolsListView from "../Pools/PoolsListView";
-import debounce from "lodash.debounce";
+import React from "react";
+import { Grid, Container } from "@mui/material";
+import PositionsList from "components/PositionList/PositionsList";
+import ProtocolStats from "components/Dashboard/ProtocolStats";
+import PoolsListView from "components/Pools/PoolsListView";
+import { PageHeader } from "components/Dashboard/PageHeader";
+import useDashboard from "hooks/useDashboard";
 
-const DashboardContent = observer(() => {
-  const { chainId, account } = useWeb3React();
-  const rootStore = useStores();
-  const { poolStore, positionStore } = rootStore;
-  const logger = useLogger();
-
-  const fetchData = useCallback(
-    debounce(async () => {
-      await poolStore.fetchPools();
-      await positionStore.fetchPositions(account!);
-    }, 100),
-    [poolStore, positionStore, account]
-  );
-
-  useEffect(() => {
-    if (chainId && account) {
-      logger.log(LogLevel.info, "fetching pool information.");
-      fetchData();
-    } else {
-      poolStore.setPool([]);
-    }
-  }, [poolStore, logger, chainId, account, fetchData]);
+const DashboardContent = () => {
+  const {
+    isMobile,
+    proxyWallet,
+    positionCurrentPage,
+    positionsItemsCount,
+    setPositionCurrentPage,
+  } = useDashboard();
 
   return (
-    <Grid container spacing={3}>
-      <Grid item xs={12} md={8} lg={6}>
-        <ProtocolStats />
+    <Container
+      maxWidth="lg"
+      sx={{ mt: isMobile ? 2 : 4, mb: isMobile ? 2 : 4 }}
+    >
+      <Grid container spacing={isMobile ? 1 : 3}>
+        <PageHeader
+          title={"FXD"}
+          description={`FXD is a yield-earning, overcollateralized, decentralized, and softly pegged stablecoin that earns passive yields for you in the background.`}
+        />
+        <Grid item xs={12}>
+          <ProtocolStats />
+        </Grid>
+        <Grid item xs={12}>
+          <PoolsListView />
+        </Grid>
+        <Grid item xs={12} sx={{ marginTop: isMobile ? "5px" : "30px" }}>
+          <PositionsList
+            positionCurrentPage={positionCurrentPage}
+            positionsItemsCount={positionsItemsCount}
+            proxyWallet={proxyWallet}
+            setPositionCurrentPage={setPositionCurrentPage}
+          />
+        </Grid>
       </Grid>
-      <Grid item xs={12} md={8} lg={6}>
-        <PoolsListView />
-      </Grid>
-      <Grid item xs={12}>
-        <OpenPositionsList />
-      </Grid>
-    </Grid>
+    </Container>
   );
-});
+};
 
 export default DashboardContent;

@@ -1,134 +1,157 @@
-import { makeAutoObservable } from "mobx";
 import { RootStore } from ".";
-import IStableSwapService from "../services/interfaces/IStableSwapService";
+import IStableSwapService from "services/interfaces/IStableSwapService";
+import Xdc3 from "xdc3";
 
 export default class StableSwapStore {
   service: IStableSwapService;
   rootStore: RootStore;
 
   constructor(rootStore: RootStore, service: IStableSwapService) {
-    makeAutoObservable(this);
     this.service = service;
     this.rootStore = rootStore;
   }
 
-  swapToken = async (index: number, address: string, token: number) => {
-    switch (index) {
-      case 0: {
-        try {
-          console.log(
-            `swapTokenToStablecoin for address : ${address} token: ${token}`
-          );
-          await this.service.swapTokenToStablecoin(
-            address,
-            token,
-            this.rootStore.transactionStore
-          );
-          this.rootStore.alertStore.setShowSuccessAlert(
-            true,
-            "USDT token swapped with FXD!"
-          );
-        } catch (error) {
-          this.rootStore.alertStore.setShowErrorAlert(true);
-        }
-        break;
+  async swapToken(
+    inputCurrency: string,
+    address: string,
+    inputValue: number,
+    outputValue: number,
+    tokenName: string,
+    library: Xdc3
+  ): Promise<any> {
+    if (inputCurrency === tokenName) {
+      try {
+        return await this.service
+          .swapTokenToStableCoin(address, inputValue, tokenName, library)
+          .then((receipt) => {
+            this.rootStore.alertStore.setShowSuccessAlert(
+              true,
+              `${tokenName} token swapped with FXD!`
+            );
+            return receipt;
+          });
+      } catch (e: any) {
+        this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+        throw e;
       }
-      case 1: {
-        try {
-          console.log(
-            `swapStablecoinToToken for address : ${address} token: ${token}`
-          );
-          await this.service.swapStablecoinToToken(
-            address,
-            token,
-            this.rootStore.transactionStore
-          );
-          this.rootStore.alertStore.setShowSuccessAlert(
-            true,
-            "FXD token swapped with USDT!"
-          );
-        } catch (error) {
-          this.rootStore.alertStore.setShowErrorAlert(true);
-        }
-        break;
-      }
-      default: {
-        console.log("Invalid option from stableswap module.");
-        break;
+    } else {
+      try {
+        return await this.service
+          .swapStableCoinToToken(address, outputValue, tokenName, library)
+          .then((receipt) => {
+            this.rootStore.alertStore.setShowSuccessAlert(
+              true,
+              `FXD token swapped with ${tokenName}!`
+            );
+            return receipt;
+          });
+      } catch (e: any) {
+        this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+        throw e;
       }
     }
-  };
+  }
 
-  approveStablecoin = async (address: string) => {
-    console.log(`Open position token approval clicked for address ${address}`);
+  async approveStableCoin(address: string, library: Xdc3) {
     try {
-      if (!address) return;
+      return await this.service
+        .approveStableCoin(address, library)
+        .then((receipt) => {
+          this.rootStore.alertStore.setShowSuccessAlert(
+            true,
+            "FXD approval was successful!"
+          );
 
-      await this.service.approveStablecoin(
-        address,
-        this.rootStore.transactionStore
-      );
-      this.rootStore.alertStore.setShowSuccessAlert(
-        true,
-        "FXD approval was successful!"
-      );
-    } catch (e) {
-      this.rootStore.alertStore.setShowErrorAlert(
-        true,
-        "There is some error approving the token!"
-      );
+          return receipt;
+        });
+    } catch (e: any) {
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
       throw e;
     }
-  };
+  }
 
-  approveUsdt = async (address: string, tokenIn: number) => {
-    console.log(`Approved USDT clicked for address ${address}`);
+  async approveUsdt(address: string, tokenName: string, library: Xdc3) {
     try {
-      if (address === undefined || address === null) return;
+      return await this.service
+        .approveUsdt(address, library)
+        .then((receipt) => {
+          this.rootStore.alertStore.setShowSuccessAlert(
+            true,
+            `${tokenName} approval was successful!`
+          );
 
-      await this.service.approveUsdt(
+          return receipt;
+        });
+    } catch (e: any) {
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+      throw e;
+    }
+  }
+
+  async approvalStatusStableCoin(
+    address: string,
+    tokenIn: number,
+    library: Xdc3
+  ) {
+    try {
+      return await this.service.approvalStatusStableCoin(
         address,
         tokenIn,
-        this.rootStore.transactionStore
+        library
       );
-      this.rootStore.alertStore.setShowSuccessAlert(
-        true,
-        "USDT approval was successful!"
-      );
-    } catch (e) {
-      this.rootStore.alertStore.setShowErrorAlert(
-        true,
-        "There is some error approving the token!"
-      );
-      throw e;
+    } catch (e: any) {
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
     }
-  };
+  }
 
-  approvalStatusStablecoin = async (address: string, tokenIn: number) => {
-    console.log(`Checking stablecoin approval status for address ${address}`);
+  async approvalStatusUsdt(address: string, tokenIn: number, library: Xdc3) {
     try {
-      if (address === undefined || address === null) return;
-
-      return await this.service.approvalStatusStablecoin(address, tokenIn);
-    } catch (e) {
-      this.rootStore.alertStore.setShowErrorAlert(
-        true,
-        "There is some error approving the token!"
-      );
+      return await this.service.approvalStatusUsdt(address, tokenIn, library);
+    } catch (e: any) {
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
     }
-  };
+  }
 
-  approvalStatusUsdt = async (address: string, tokenIn: number) => {
-    console.log(`Checking usdt approval status for address ${address}`);
+  async getFeeIn(library: Xdc3): Promise<number | undefined> {
     try {
-      if (address === undefined || address === null) return;
-
-      return await this.service.approvalStatusUsdt(address, tokenIn);
-    } catch (e) {
-      this.rootStore.alertStore.setShowErrorAlert(
-        true,
-        "There is some error approving the token!"
-      );
+      return await this.service.getFeeIn(library);
+    } catch (e: any) {
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
     }
-  };
+  }
+
+  async getFeeOut(library: Xdc3): Promise<number | undefined> {
+    try {
+      return await this.service.getFeeOut(library);
+    } catch (e: any) {
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+    }
+  }
+
+  async getLastUpdate(library: Xdc3): Promise<number | undefined> {
+    try {
+      return await this.service.getLastUpdate(library);
+    } catch (e: any) {
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+    }
+  }
+
+  async getDailySwapLimit(library: Xdc3): Promise<number | undefined> {
+    try {
+      return await this.service.getDailySwapLimit(library);
+    } catch (e: any) {
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+    }
+  }
+
+  async getTokenBalance(
+    tokenAddress: string,
+    library: Xdc3
+  ): Promise<number | undefined> {
+    try {
+      return await this.service.getTokenBalance(tokenAddress, library);
+    } catch (e: any) {
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+    }
+  }
 }

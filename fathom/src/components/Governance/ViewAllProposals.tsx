@@ -1,94 +1,131 @@
+import React, { useMemo } from "react";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
   Typography,
+  Grid,
+  CircularProgress,
+  Pagination,
+  Box,
 } from "@mui/material";
-import { Link } from "react-router-dom";
-import { useStores } from "stores";
-import useMetaMask from "hooks/metamask";
-import { LogLevel, useLogger } from "helpers/Logger";
 import IProposal from "stores/interfaces/IProposal";
-import { useEffect } from "react";
-import { observer } from "mobx-react";
-import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
-import {
-  AppTableHeaderRow,
-  AppTableRow
-} from "../AppComponents/AppTable/AppTable";
+import { PageHeader } from "components/Dashboard/PageHeader";
+import { useAllProposals } from "hooks/useAllProposals";
+import ViewAllProposalItem from "components/Governance/ViewAllProposalItem";
+import Propose from "components/Governance/Propose";
+import ProposalFilters from "components/Governance/ProposalFilters";
+import { NoResults } from "components/AppComponents/AppBox/AppBox";
 
-const AllProposalsView = observer(() => {
-  const { account, chainId } = useMetaMask()!;
-  const logger = useLogger();
-  const proposeStore = useStores().proposalStore;
+import { Constants } from "helpers/Constants";
+import { styled } from "@mui/material/styles";
 
-  useEffect(() => {
-    if (chainId) {
-      setTimeout(() => {
-        logger.log(LogLevel.info, "fetching proposal information.");
-        proposeStore.fetchProposals(account);
-      });
-    } else {
-      proposeStore.setProposals([]);
-    }
-  }, [account, logger, proposeStore, chainId]);
+const PaginationWrapper = styled(Box)`
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+`;
+
+const AllProposalsTypography = styled("h2")`
+  font-size: 24px;
+  line-height: 28px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    font-size: 16px;
+  }
+`;
+
+const AllProposalsView = () => {
+  const {
+    fetchProposalsPending,
+    search,
+    setSearch,
+    time,
+    setTime,
+    fetchedProposals,
+    proposals,
+    setProposals,
+    createProposal,
+    setCreateProposal,
+
+    itemsCount,
+    currentPage,
+    handlePageChange,
+    isMobile,
+  } = useAllProposals();
 
   return (
     <>
-      <AppPaper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-        <Typography component="h2" variant="h6" color="primary" gutterBottom>
-          Proposals
-        </Typography>
-        {proposeStore.fetchedProposals.length === 0 ? (
-          <Typography variant="h6">Loading all proposals</Typography>
-        ) : (
-          <TableContainer>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-              <TableHead>
-                <AppTableHeaderRow>
-                  <TableCell>Proposal Id Hash:</TableCell>
-                  <TableCell>Title:</TableCell>
-                  <TableCell>Status:</TableCell>
-                  <TableCell align="right"></TableCell>
-                </AppTableHeaderRow>
-              </TableHead>
-              <TableBody>
-                {proposeStore.fetchedProposals.map((proposal: IProposal) => (
-                  <AppTableRow
-                    key={proposal.proposalId}
-                    sx={{ "&:last-child td, &:last-child td": { border: 0 }, td: { textAlign: 'center' } }}
-                  >
-                    <TableCell component="td" scope="row" color="primary">
-                      <Link
-                        style={{ color: "#fff" }}
-                        to={`/proposal/${proposal.proposalId}`}
-                      >
-                        {proposal.proposalId.substring(0, 4) +
-                          " ... " +
-                          proposal.proposalId.slice(-4)}
-                      </Link>
-                    </TableCell>
-
-                    <TableCell component="td" scope="row">
-                      {proposal.description
-                        .split("----------------")[0]
-                        .substring(0, 50) + " ... "}
-                    </TableCell>
-
-                    <TableCell component="td" scope="row">
-                      {proposal.status}
-                    </TableCell>
-                  </AppTableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+      <Grid container spacing={isMobile ? 1 : 3}>
+        {useMemo(
+          () =>
+            !isMobile ? (
+              <PageHeader
+                title="Governance"
+                description={
+                  "Participate in Fathom Governance to determine the future of the protocol. All actions require voting power (vFTHM). Voting power can be accrued by staking your FTHM tokens in DAO Staking."
+                }
+              />
+            ) : null,
+          [isMobile]
         )}
-      </AppPaper>
+        <ProposalFilters
+          search={search}
+          setSearch={setSearch}
+          time={time}
+          setTime={setTime}
+          proposals={proposals}
+          setProposals={setProposals}
+          setCreateProposal={setCreateProposal}
+        />
+        <Grid item xs={12}>
+          <AllProposalsTypography>All proposals</AllProposalsTypography>
+        </Grid>
+        <Grid item xs={12} sm={8}>
+          <Grid container spacing={1}>
+            {useMemo(
+              () =>
+                fetchProposalsPending ? (
+                  <Grid item xs={12}>
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "10px",
+                      }}
+                    >
+                      Loading all proposals <CircularProgress size={20} />
+                    </Typography>
+                  </Grid>
+                ) : fetchedProposals.length ? (
+                  fetchedProposals.map((proposal: IProposal, index: number) => (
+                    <ViewAllProposalItem
+                      proposal={proposal}
+                      key={proposal.proposalId}
+                      index={index}
+                    />
+                  ))
+                ) : (
+                  <Grid item xs={12}>
+                    <NoResults>No opened any proposals</NoResults>
+                  </Grid>
+                ),
+              [fetchedProposals, fetchProposalsPending]
+            )}
+            {!fetchProposalsPending && fetchedProposals.length > 0 && (
+              <Grid item xs={12}>
+                <PaginationWrapper>
+                  <Pagination
+                    count={Math.ceil(itemsCount / Constants.COUNT_PER_PAGE)}
+                    page={currentPage}
+                    onChange={handlePageChange}
+                  />
+                </PaginationWrapper>
+              </Grid>
+            )}
+          </Grid>
+        </Grid>
+      </Grid>
+      {createProposal && <Propose onClose={() => setCreateProposal(false)} />}
     </>
   );
-});
+};
 
 export default AllProposalsView;

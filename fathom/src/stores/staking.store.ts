@@ -1,302 +1,179 @@
-import { makeAutoObservable, runInAction } from "mobx";
 import { RootStore } from ".";
-import IStakingService from "../services/interfaces/IStakingService";
-import ILockPosition from "./interfaces/ILockPosition";
+import IStakingService from "services/interfaces/IStakingService";
+import Xdc3 from "xdc3";
 
 export default class StakingStore {
-  lockPositions: ILockPosition[] = [];
   service: IStakingService;
   rootStore: RootStore;
-  totalStakedPosition: number = 0;
-  apr: number = 0;
-  walletBalance: number = 0;
-  voteBalance: number = 0;
 
   constructor(rootStore: RootStore, service: IStakingService) {
-    makeAutoObservable(this);
     this.service = service;
     this.rootStore = rootStore;
   }
 
-  createLock = async (
+  async createLock(
     account: string,
     stakePosition: number,
     unlockPeriod: number,
-    chainId: number
-  ) => {
-    console.log("Running createLock from store");
+    library: Xdc3,
+  ): Promise<any> {
     try {
-      if (!account) return;
-
-      return this.service.createLock(
-        account,
-        stakePosition,
-        unlockPeriod,
-        chainId,
-        this.rootStore.transactionStore
-      );
-
-      //     await this.fetchLatestLock(account, chainId)
-
-      // await this.fetchAll(account,chainId)
-    } catch (e) {
-      this.rootStore.alertStore.setShowErrorAlert(
-        true,
-        "There is some error in Creating Lock postion!"
-      );
+      return await this.service
+        .createLock(
+          account,
+          stakePosition,
+          unlockPeriod,
+          this.rootStore.transactionStore,
+          library,
+        )
+        .then((receipt) => {
+          this.rootStore.alertStore.setShowSuccessAlert(
+            true,
+            "Lock position created successfully!"
+          );
+          return receipt;
+        });
+    } catch (e: any) {
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+      throw e;
     }
-  };
+  }
 
-  handleEarlyWithdrawal = async (
+  async handleEarlyWithdrawal(account: string, lockId: number, library: Xdc3): Promise<any> {
+    try {
+      return await this.service
+        .handleEarlyWithdrawal(account, lockId, this.rootStore.transactionStore, library)
+        .then((receipt) => {
+          this.rootStore.alertStore.setShowSuccessAlert(
+            true,
+            "Early withdrawal created successfully!"
+          );
+          return receipt;
+        });
+    } catch (e: any) {
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+      throw e;
+    }
+  }
+
+  async handleUnlock(
     account: string,
     lockId: number,
-    chainId: number
-  ) => {
-    console.log("Running createLock from store");
+    amount: number,
+    library: Xdc3,
+  ): Promise<any> {
     try {
-      if (!account) return;
+      return await this.service
+        .handleUnlock(account, lockId, amount, this.rootStore.transactionStore, library)
+        .then((receipt) => {
+          this.rootStore.alertStore.setShowSuccessAlert(
+            true,
+            "Position unlock was successful!"
+          );
+          return receipt;
+        });
+    } catch (e: any) {
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+      throw e;
+    }
+  }
 
-      return this.service.handleEarlyWithdrawal(
+  async handleClaimRewards(account: string, library: Xdc3): Promise<any> {
+    try {
+      return await this.service
+        .handleClaimRewards(account, 0, this.rootStore.transactionStore, library)
+        .then((receipt) => {
+          this.rootStore.alertStore.setShowSuccessAlert(
+            true,
+            "Claim Rewards was successful!"
+          );
+          return receipt;
+        });
+    } catch (e: any) {
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+      throw e;
+    }
+  }
+
+  async handleWithdrawAll(account: string, library: Xdc3): Promise<any> {
+    try {
+      return await this.service
+        .handleWithdrawAll(account, 1, this.rootStore.transactionStore, library)
+        .then((receipt) => {
+          this.rootStore.alertStore.setShowSuccessAlert(
+            true,
+            "Withdraw all was successful!"
+          );
+
+          return receipt;
+        });
+    } catch (e: any) {
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+      throw e;
+    }
+  }
+
+  async getStreamClaimableAmountPerLock(account: string, lockId: number, library: Xdc3) {
+    try {
+      return await this.service.getStreamClaimableAmountPerLock(
+        0,
         account,
         lockId,
-        chainId,
-        this.rootStore.transactionStore
+        library,
       );
-
-      // await this.fetchLockPositionAfterUnlock(lockId,account, chainId)
-
-      //   await this.fetchAll(account,chainId)
-    } catch (e) {
-      this.rootStore.alertStore.setShowErrorAlert(
-        true,
-        "There is some error in Early Withdrawal!"
-      );
+    } catch (e: any) {
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+      throw e;
     }
-  };
+  }
 
-  handleUnlock = async (account: string, lockId: number, chainId: number) => {
-    console.log("Running createLock from store");
+  async getStreamClaimableAmount(account: string, library: Xdc3) {
     try {
-      if (!account) return;
-
-      return this.service.handleUnlock(
-        account,
-        lockId,
-        chainId,
-        this.rootStore.transactionStore
-      );
-
-      //    await this.fetchLockPositionAfterUnlock(lockId,account, chainId)
-
-      //    await this.fetchAll(account,chainId)
-    } catch (e) {
-      this.rootStore.alertStore.setShowErrorAlert(
-        true,
-        "There is some error in Unlock!"
-      );
+      return await this.service.getStreamClaimableAmount(account, library);
+    } catch (e: any) {
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
     }
-  };
+  }
 
-  handleClaimRewards = async (account: string, chainId: number) => {
-    console.log("Running createLock from store");
-    try {
-      if (!account) return;
-      return this.service.handleClaimRewards(
-        account,
-        1,
-        chainId,
-        this.rootStore.transactionStore
-      );
-      //TODO: Check This:
-
-      //await this.fetchLocksAfterClaimAllRewards();
-
-      //      await this.fetchAll(account,chainId)
-    } catch (e) {
-      this.rootStore.alertStore.setShowErrorAlert(
-        true,
-        "There is some error in claiming rewards!"
-      );
-    }
-  };
-
-  handleClaimRewardsSingle = async (
-    account: string,
-    lockId: number,
-    chainId: number
-  ) => {
-    console.log("Running createLock from store");
-    try {
-      if (account === undefined || account === null) return;
-
-      await this.service.handleClaimRewardsSingle(
-        account,
-        lockId,
-        chainId,
-        this.rootStore.transactionStore
-      );
-
-
-
-      //      await this.fetchAll(account,chainId)
-    } catch (e) {
-      this.rootStore.alertStore.setShowErrorAlert(
-        true,
-        "There is some error in claiming rewards!"
-      );
-    }
-  };
-
-  handleWithdrawRewards = async (account: string, chainId: number) => {
-    console.log("Running createLock from store");
-    try {
-      if (!account) return;
-
-      return this.service.handleWithdrawRewards(
-        account,
-        1,
-        chainId,
-        this.rootStore.transactionStore
-      );
-    } catch (e) {
-      this.rootStore.alertStore.setShowErrorAlert(
-        true,
-        "There is some error in Withdrawing Rewards!"
-      );
-    }
-  };
-
-  setLocks = (_lockPositions: ILockPosition[]) => {
-    this.lockPositions = _lockPositions;
-  };
-
-  setTotalStakedPosition = (_lockPositions: ILockPosition[]) => {
-    this.totalStakedPosition = 0;
-    for (let i = 0; i < _lockPositions.length; i++) {
-      this.totalStakedPosition += _lockPositions[i].MAINTokenBalance;
-    }
-  };
-
-  fetchAPR = async (chainId: number) => {
-    console.log("fetching... APR");
-    const apr = await this.service.getAPR(chainId);
-    runInAction(() => {
-      this.setAPR(apr);
-    });
-  };
-
-  setAPR = (_apr: number) => {
-    this.apr = _apr;
-  };
-
-  setWalletBalance = (_walletBalance: number) => {
-    this.walletBalance = _walletBalance;
-  };
-
-  fetchWalletBalance = async (account: string, chainId: number) => {
-    const walletBalance = await this.service.getWalletBalance(account, chainId);
-    runInAction(() => {
-      this.setWalletBalance(walletBalance);
-    });
-  };
-
-  setVOTEBalance = (_voteBalance: number) => {
-    this.voteBalance = _voteBalance;
-  };
-
-  fetchVOTEBalance = async (account: string, chainId: number) => {
-    const voteBalance = await this.service.getVOTEBalance(account, chainId);
-    runInAction(() => {
-      this.setVOTEBalance(voteBalance);
-    });
-  };
-
-  fetchLocks = async (account: string, chainId: number) => {
-    const locks = await this.service.getLockPositions(account, chainId);
-    runInAction(() => {
-      this.setLocks(locks);
-      this.setTotalStakedPosition(locks);
-    });
-  };
-
-  fetchLatestLock = async (account: string, chainId: number) => {
-    console.log("......is fetch Latest Lock getting called before,.....");
-    let lockId = await this.service.getLockPositionsLength(account, chainId);
-    if (lockId > 0) {
-      let lockPosition = await this.service.getLockInfo(
-        lockId,
-        account,
-        chainId
-      );
-      if (lockPosition.MAINTokenBalance > 0) {
-        this.lockPositions.push(lockPosition);
-        this.setTotalStakedPosition(this.lockPositions);
-      }
-    }
-  };
-
-  fetchLockPositionAfterUnlock = async (lockId: number) => {
-    let latestLockId = this.lockPositions.length;
-
-    if (latestLockId > 1) {
-      console.log("........", latestLockId);
-
-      let lockPosition = this.lockPositions[latestLockId - 1];
-      lockPosition.lockId = lockId;
-      this.lockPositions[lockId - 1] = lockPosition;
-      this.lockPositions.pop();
-    } else {
-      this.lockPositions.pop();
-    }
-  };
-
-  fetchLocksAfterClaimAllRewards = async () => {
-    for (let i = 0; i < this.lockPositions.length; i++) {
-      this.lockPositions[i].RewardsAvailable = "0";
-    }
-  };
-
-  approvalStatusStakingFTHM = async (
+  async approvalStatusStakingFTHM(
     address: string,
     stakingPosition: number,
-    chainId: number
-  ) => {
-    console.log(`Checking FTHM approval status for address ${address}`);
+    fthmTokenAddress: string,
+    library: Xdc3,
+  ) {
     try {
-      if (!address) return;
-
-      return this.service.approvalStatusStakingFTHM(
+      return await this.service.approvalStatusStakingFTHM(
         address,
         stakingPosition,
-        chainId
+        fthmTokenAddress,
+        library,
       );
-    } catch (e) {
-      this.rootStore.alertStore.setShowErrorAlert(
-        true,
-        "There is some error retreiving approval status"
-      );
+    } catch (e: any) {
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+      throw e;
     }
-  };
+  }
 
-  approveFTHM = async (address: string, chainId: number) => {
-    console.log(`Approving staking position for address ${address}`);
+  async approveFTHM(address: string, fthmTokenAddress: string, library: Xdc3) {
     try {
-      if (!address) return;
-
-      return this.service
-        .approveStakingFTHM(address, chainId, this.rootStore.transactionStore)
-        .then(() => {
+      return await this.service
+        .approveStakingFTHM(
+          address,
+          fthmTokenAddress,
+          this.rootStore.transactionStore,
+          library
+        )
+        .then((receipt) => {
           this.rootStore.alertStore.setShowSuccessAlert(
             true,
             "Token approval was successful"
           );
+
+          return receipt;
         });
-    } catch (e) {
-      this.rootStore.alertStore.setShowErrorAlert(
-        true,
-        "There is some error approving the token!"
-      );
+    } catch (e: any) {
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
       throw e;
     }
-  };
+  }
 }

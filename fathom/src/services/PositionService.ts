@@ -1,75 +1,101 @@
-import { SmartContractFactory } from "../config/SmartContractFactory";
-import IPositionService from "./interfaces/IPositionService";
-import { Constants } from "../helpers/Constants";
-import { Web3Utils } from "../helpers/Web3Utils";
-import OpenPosition from "../stores/interfaces/IOpenPosition";
-import IOpenPosition from "../stores/interfaces/IOpenPosition";
-import BigNumber from "bignumber.js";
-import ICollatralPool from "../stores/interfaces/ICollatralPool";
-import ActiveWeb3Transactions from "../stores/transaction.store";
+import { Constants } from "helpers/Constants";
+import { Web3Utils } from "helpers/Web3Utils";
+import { Strings } from "helpers/Strings";
+
+import { SmartContractFactory } from "config/SmartContractFactory";
+import IPositionService from "services/interfaces/IPositionService";
+
+import ICollateralPool from "stores/interfaces/ICollateralPool";
+import ActiveWeb3Transactions from "stores/transaction.store";
 import {
   TransactionStatus,
   TransactionType,
-} from "../stores/interfaces/ITransaction";
-import { Strings } from "../helpers/Strings";
+} from "stores/interfaces/ITransaction";
 
 import { toWei } from "web3-utils";
+import Xdc3 from "xdc3";
+import AlertStore from "stores/alert.stores";
+import { TransactionReceipt } from "web3-eth";
+import { getEstimateGas } from "utils/getEstimateGas";
+import { addMetamaskToken } from "utils/addMetamaskToken";
+import BigNumber from "bignumber.js";
 
 export default class PositionService implements IPositionService {
-  chainId = Constants.DEFAULT_CHAINID;
+  chainId = Constants.DEFAULT_CHAIN_ID;
+  alertStore: AlertStore;
+  transactionStore: ActiveWeb3Transactions;
+
+  constructor(
+    alertStore: AlertStore,
+    transactionStore: ActiveWeb3Transactions
+  ) {
+    this.alertStore = alertStore;
+    this.transactionStore = transactionStore;
+  }
 
   async openPosition(
     address: string,
-    pool: ICollatralPool,
-    collatral: number,
+    pool: ICollateralPool,
+    collateral: number,
     fathomToken: number,
-    transactionStore: ActiveWeb3Transactions
-  ): Promise<void> {
+    library: Xdc3
+  ): Promise<TransactionReceipt | undefined> {
     try {
-      let proxyWalletaddress = await this.proxyWalletExist(address);
+      let proxyWalletAddress = await this.proxyWalletExist(address, library);
 
-      if (proxyWalletaddress === Constants.ZERO_ADDRESS) {
-        console.log("Proxy wallet not exist...");
-        proxyWalletaddress = await this.createProxyWallet(address);
+      if (proxyWalletAddress === Constants.ZERO_ADDRESS) {
+        proxyWalletAddress = await this.createProxyWallet(address, library);
       }
 
-      console.log(`Open position for proxy wallet ${proxyWalletaddress}...`);
-
+      /**
+       * Get Proxy Wallet
+       */
       const wallet = Web3Utils.getContractInstanceFrom(
         SmartContractFactory.proxyWallet.abi,
-        proxyWalletaddress,
-        this.chainId
+        proxyWalletAddress,
+        library
       );
-      const encodedResult = Web3Utils.getWeb3Instance(
-        this.chainId
-      ).eth.abi.encodeParameters(["address"], [address]);
 
-      let jsonInterface = SmartContractFactory.FathomStablecoinProxyAction(
-        this.chainId
-      ).abi.filter((abi) => abi.name === "openLockTokenAndDraw")[0];
+      const encodedResult = library.eth.abi.encodeParameters(
+        ["address"],
+        [address]
+      );
 
-      let openPositionCall =
-        Web3Utils.getWeb3Instance().eth.abi.encodeFunctionCall(jsonInterface, [
+      const jsonInterface = SmartContractFactory.FathomStablecoinProxyAction(
+        this.chainId
+      ).abi.filter((abi) => abi.name === "openLockXDCAndDraw")[0];
+
+      const openPositionCall = library.eth.abi.encodeFunctionCall(
+        jsonInterface,
+        [
           SmartContractFactory.PositionManager(this.chainId).address,
           SmartContractFactory.StabilityFeeCollector(this.chainId).address,
-          pool.CollateralTokenAdapterAddress,
+          pool.tokenAdapterAddress,
           SmartContractFactory.StablecoinAdapter(this.chainId).address,
           pool.id,
-          toWei(collatral.toString(), "ether"),
           toWei(fathomToken.toString(), "ether"),
-          "1",
           encodedResult,
-        ]);
+        ]
+      );
 
-      await wallet.methods
-        .execute2(
-          SmartContractFactory.FathomStablecoinProxyActions(this.chainId)
-            .address,
-          openPositionCall
-        )
-        .send({ from: address })
+      const options = {
+        from: address,
+        gas: 0,
+        value: toWei(collateral.toString(), "ether"),
+      };
+      const gas = await getEstimateGas(
+        wallet,
+        "execute",
+        [openPositionCall],
+        options
+      );
+      options.gas = gas;
+
+      const receipt = await wallet.methods
+        .execute(openPositionCall)
+        .send(options)
         .on("transactionHash", (hash: any) => {
-          transactionStore.addTransaction({
+          this.transactionStore.addTransaction({
             hash: hash,
             type: TransactionType.OpenPosition,
             active: false,
@@ -77,199 +103,102 @@ export default class PositionService implements IPositionService {
             title: `Opening Position Pending`,
             message: Strings.CheckOnBlockExplorer,
           });
+        })
+        .then((receipt: TransactionReceipt) => {
+          this.alertStore.setShowSuccessAlert(
+            true,
+            "New position opened successfully!"
+          );
+          return receipt;
         });
-    } catch (error) {
-      console.error(`Error in open position: ${error}`);
+
+      return receipt;
+    } catch (error: any) {
+      this.alertStore.setShowErrorAlert(true, error.message);
       throw error;
     }
   }
 
-  //Create a proxy wallet for a user
-  async createProxyWallet(address: string): Promise<string> {
+  async createProxyWallet(address: string, library: Xdc3): Promise<string> {
     try {
-      console.log("Crteating a proxy wallet...");
-      let proxyWalletRegistry = Web3Utils.getContractInstance(
+      const proxyWalletRegistry = Web3Utils.getContractInstance(
         SmartContractFactory.ProxyWalletRegistry(this.chainId),
-        this.chainId
+        library
       );
+
       await proxyWalletRegistry.methods.build(address).send({ from: address });
-      let proxyWallet = await proxyWalletRegistry.methods
+
+      const proxyWallet = await proxyWalletRegistry.methods
         .proxies(address)
         .call();
+
       return proxyWallet;
-    } catch (error) {
-      console.error(`Error in createProxyWallet: ${error}`);
+    } catch (error: any) {
+      this.alertStore.setShowErrorAlert(true, error.message);
       throw error;
     }
   }
 
-  //Check if proxy wallet for a user
-  async proxyWalletExist(address: string): Promise<string> {
-    try {
-      console.log(`Check if proxy wallet exist for address: ${address}`);
-      let proxyWalletRegistry = Web3Utils.getContractInstance(
-        SmartContractFactory.ProxyWalletRegistry(this.chainId),
-        this.chainId
-      );
-      let proxyWallet = await proxyWalletRegistry.methods
-        .proxies(address)
-        .call();
-      return proxyWallet;
-    } catch (error) {
-      console.error(`Error in proxyWalletExist: ${error}`);
-      throw error;
-    }
-  }
+  proxyWalletExist(address: string, library: Xdc3): Promise<string> {
+    const proxyWalletRegistry = Web3Utils.getContractInstance(
+      SmartContractFactory.ProxyWalletRegistry(this.chainId),
+      library
+    );
 
-  async getPositionsForAddress(address: string): Promise<IOpenPosition[]> {
-    try {
-      console.log(`getting Positions For Address ${address}.`);
-      let proxyWallet = await this.proxyWalletExist(address);
-      let getPositionsContract = Web3Utils.getContractInstance(
-        SmartContractFactory.GetPositions(this.chainId),
-        this.chainId
-      );
-      let response = await getPositionsContract.methods
-        .getAllPositionsAsc(
-          SmartContractFactory.PositionManager(this.chainId).address,
-          proxyWallet
-        )
-        .call();
-
-      const {
-        0: positionIds,
-        1: positionAddresses,
-        2: collateralPools,
-      } = response;
-      let fetchedPositions: IOpenPosition[] = [];
-      let index = 0;
-      positionIds.forEach((positionId: string) => {
-        let positionAddress = positionAddresses[index];
-        let collateralPool = collateralPools[index];
-        let position = new OpenPosition(
-          positionId,
-          positionAddress,
-          collateralPool
-        );
-        fetchedPositions.push(position);
-        index++;
-      });
-
-      console.log(`All Open Positions... ${JSON.stringify(fetchedPositions)}`);
-      return fetchedPositions;
-    } catch (error) {
-      console.error(`Error in getting Positions: ${error}`);
-      throw error;
-    }
-  }
-
-  //TODO: Externalize the pagination
-  //TODO: Find better ways to filter out the posistions.
-  async getPositionsWithSafetyBuffer(
-    address: string
-  ): Promise<IOpenPosition[]> {
-    try {
-      console.log(
-        `getting Positions With Safety Buffer For Address ${address}.`
-      );
-      let myPositions = await this.getPositionsForAddress(address);
-      let getPositionsContract = Web3Utils.getContractInstance(
-        SmartContractFactory.GetPositions(this.chainId),
-        this.chainId
-      );
-      let response = await getPositionsContract.methods
-        .getPositionWithSafetyBuffer(
-          SmartContractFactory.PositionManager(this.chainId).address,
-          1,
-          500
-        )
-        .call();
-
-      console.log(
-        `Raw response from getPositionsWithSafetyBuffer: ${JSON.stringify(
-          response
-        )}`
-      );
-
-      const {
-        0: positionAddresses,
-        1: debtShares,
-        2: safetyBuffers,
-        _lockedCollaterals: lockedCollaterals,
-        _lockedValues: lockedValues,
-        _positionLTVs: ltvs,
-      } = response;
-
-      let fetchedPositions: IOpenPosition[] = [];
-      let index = 0;
-      positionAddresses.forEach((positionAddress: string) => {
-        let position = myPositions.filter(
-          (pos) => pos.address === positionAddress
-        )[0] as IOpenPosition;
-
-        if (position && debtShares[index] > 0) {
-          position.setDebtShare(new BigNumber(debtShares[index]));
-          position.setSafetyBuffer(new BigNumber(safetyBuffers[index]));
-          position.setLockedCollateral(new BigNumber(lockedCollaterals[index]));
-          position.setLockedValue(new BigNumber(lockedValues[index]));
-          position.setLtv(new BigNumber(ltvs[index]));
-          fetchedPositions.push(position);
-        }
-        index++;
-      });
-
-      console.log(`All Open Positions... ${JSON.stringify(fetchedPositions)}`);
-      return fetchedPositions;
-    } catch (error) {
-      console.error(`Error in getPositionsWithSafetyBuffer: ${error}`);
-      throw error;
-    }
+    return proxyWalletRegistry.methods.proxies(address).call();
   }
 
   async closePosition(
     positionId: string,
-    pool: ICollatralPool,
+    pool: ICollateralPool,
     address: string,
-    debt: number,
-    transactionStore: ActiveWeb3Transactions
-  ): Promise<void> {
+    collateral: string,
+    library: Xdc3
+  ): Promise<TransactionReceipt | undefined> {
     try {
-      console.log(`Closing position for position id ${positionId}.`);
-      let proxyWalletaddress = await this.proxyWalletExist(address);
+      const proxyWalletAddress = await this.proxyWalletExist(address, library);
+
       const wallet = Web3Utils.getContractInstanceFrom(
         SmartContractFactory.proxyWallet.abi,
-        proxyWalletaddress,
-        this.chainId
+        proxyWalletAddress,
+        library
       );
 
-      const encodedResult =
-        Web3Utils.getWeb3Instance().eth.abi.encodeParameters(
-          ["address"],
-          [address]
-        );
-      let jsonInterface = SmartContractFactory.FathomStablecoinProxyAction(
-        this.chainId
-      ).abi.filter((abi) => abi.name === "wipeAllAndUnlockToken")[0];
+      const encodedResult = library.eth.abi.encodeParameters(
+        ["address"],
+        [address]
+      );
 
-      let wipeAllAndUnlockTokenCall =
-        Web3Utils.getWeb3Instance().eth.abi.encodeFunctionCall(jsonInterface, [
+      const jsonInterface = SmartContractFactory.FathomStablecoinProxyAction(
+        this.chainId
+      ).abi.filter((abi) => abi.name === "wipeAllAndUnlockXDC")[0];
+
+      const wipeAllAndUnlockTokenCall = library.eth.abi.encodeFunctionCall(
+        jsonInterface,
+        [
           SmartContractFactory.PositionManager(this.chainId).address,
-          pool.CollateralTokenAdapterAddress,
+          pool.tokenAdapterAddress,
           SmartContractFactory.StablecoinAdapter(this.chainId).address,
           positionId,
-          toWei(debt.toString(), "ether"),
+          BigNumber(collateral).integerValue(),
           encodedResult,
-        ]);
+        ]
+      );
 
-      await wallet.methods
-        .execute2(
-          SmartContractFactory.FathomStablecoinProxyActions(this.chainId)
-            .address,
-          wipeAllAndUnlockTokenCall
-        )
-        .send({ from: address })
+      const options = { from: address, gas: 0 };
+      const gas = await getEstimateGas(
+        wallet,
+        "execute",
+        [wipeAllAndUnlockTokenCall],
+        options
+      );
+      options.gas = gas;
+
+      const receipt = await wallet.methods
+        .execute(wipeAllAndUnlockTokenCall)
+        .send(options)
         .on("transactionHash", (hash: any) => {
-          transactionStore.addTransaction({
+          this.transactionStore.addTransaction({
             hash: hash,
             type: TransactionType.ClosePosition,
             active: false,
@@ -277,59 +206,86 @@ export default class PositionService implements IPositionService {
             title: "Close Position Pending.",
             message: Strings.CheckOnBlockExplorer,
           });
+        })
+        .then((receipt: TransactionReceipt) => {
+          this.alertStore.setShowSuccessAlert(
+            true,
+            "Position closed successfully!"
+          );
+
+          addMetamaskToken(
+            this.chainId,
+            this.alertStore,
+            this.transactionStore
+          );
+          return receipt;
         });
-      console.log(`Position closed for position id ${positionId}.`);
-    } catch (error) {
-      console.error(`Error in closing position ${error}`);
+
+      return receipt;
+    } catch (error: any) {
+      this.alertStore.setShowErrorAlert(true, error.message);
       throw error;
     }
   }
 
-  async partialyClosePosition(
-    position: IOpenPosition,
-    pool: ICollatralPool,
+  async partiallyClosePosition(
+    positionId: string,
+    pool: ICollateralPool,
     address: string,
-    stablecoint: number,
-    collateral: number,
-    transactionStore: ActiveWeb3Transactions
-  ): Promise<void> {
+    stableCoin: string,
+    collateral: string,
+    library: Xdc3
+  ): Promise<TransactionReceipt | undefined> {
     try {
-      console.log(`Closing position for position id ${position.id}.`);
-      let proxyWalletaddress = await this.proxyWalletExist(address);
+      const proxyWalletAddress = await this.proxyWalletExist(address, library);
+
       const wallet = Web3Utils.getContractInstanceFrom(
         SmartContractFactory.proxyWallet.abi,
-        proxyWalletaddress,
-        this.chainId
+        proxyWalletAddress,
+        library
       );
-      const encodedResult = Web3Utils.getWeb3Instance(
-        this.chainId
-      ).eth.abi.encodeParameters(["address"], [address]);
 
-      let jsonInterface = SmartContractFactory.FathomStablecoinProxyAction(
-        this.chainId
-      ).abi.filter((abi) => abi.name === "wipeAndUnlockToken")[0];
+      const encodedResult = library.eth.abi.encodeParameters(
+        ["address"],
+        [address]
+      );
 
-      let wipeAndUnlockTokenCall = Web3Utils.getWeb3Instance(
+      const jsonInterface = SmartContractFactory.FathomStablecoinProxyAction(
         this.chainId
-      ).eth.abi.encodeFunctionCall(jsonInterface, [
-        SmartContractFactory.PositionManager(this.chainId).address,
-        pool.CollateralTokenAdapterAddress,
-        SmartContractFactory.StablecoinAdapter(this.chainId).address,
-        position.id,
-        toWei(collateral.toString(), "ether"),
-        toWei(stablecoint.toString(), "ether"),
-        encodedResult,
-      ]);
+      ).abi.filter((abi) => abi.name === "wipeAndUnlockXDC")[0];
 
-      await wallet.methods
-        .execute2(
-          SmartContractFactory.FathomStablecoinProxyActions(this.chainId)
-            .address,
-          wipeAndUnlockTokenCall
-        )
+      console.log({
+        collateral: BigNumber(collateral).integerValue().toString(),
+        stableCoin: BigNumber(stableCoin).multipliedBy(10 ** 18).integerValue(BigNumber.ROUND_CEIL).toString()
+      })
+
+      const wipeAndUnlockTokenCall = library.eth.abi.encodeFunctionCall(
+        jsonInterface,
+        [
+          SmartContractFactory.PositionManager(this.chainId).address,
+          pool.tokenAdapterAddress,
+          SmartContractFactory.StablecoinAdapter(this.chainId).address,
+          positionId,
+          BigNumber(collateral).integerValue(),
+          BigNumber(stableCoin).multipliedBy(10 ** 18).integerValue(BigNumber.ROUND_CEIL),
+          encodedResult,
+        ]
+      );
+
+      const options = { from: address, gas: 0 };
+      const gas = await getEstimateGas(
+        wallet,
+        "execute",
+        [wipeAndUnlockTokenCall],
+        options
+      );
+      options.gas = gas;
+
+      const receipt = await wallet.methods
+        .execute(wipeAndUnlockTokenCall)
         .send({ from: address })
         .on("transactionHash", (hash: any) => {
-          transactionStore.addTransaction({
+          this.transactionStore.addTransaction({
             hash: hash,
             type: TransactionType.ClosePosition,
             active: false,
@@ -337,106 +293,135 @@ export default class PositionService implements IPositionService {
             title: "Close Position Pending.",
             message: Strings.CheckOnBlockExplorer,
           });
+        })
+        .then((receipt: TransactionReceipt) => {
+          this.alertStore.setShowSuccessAlert(
+            true,
+            "Position closed successfully!"
+          );
+
+          addMetamaskToken(
+            this.chainId,
+            this.alertStore,
+            this.transactionStore
+          );
+          return receipt;
         });
 
-      console.log(`Collateral was returned.`);
-    } catch (error) {
-      console.error(`Error in closing position ${error}`);
+      return receipt;
+    } catch (error: any) {
+      this.alertStore.setShowErrorAlert(true, error.message);
       throw error;
     }
   }
 
   async approve(
     address: string,
-    pool: ICollatralPool,
-    transactionStore: ActiveWeb3Transactions
-  ): Promise<void> {
+    tokenAddress: string,
+    library: Xdc3
+  ): Promise<TransactionReceipt | undefined> {
     try {
-      let proxyWalletaddress = await this.proxyWalletExist(address);
+      let proxyWalletAddress = await this.proxyWalletExist(address, library);
 
-      if (proxyWalletaddress === Constants.ZERO_ADDRESS) {
-        proxyWalletaddress = await this.createProxyWallet(address);
+      if (proxyWalletAddress === Constants.ZERO_ADDRESS) {
+        proxyWalletAddress = await this.createProxyWallet(address, library);
       }
 
       const BEP20 = Web3Utils.getContractInstance(
-        SmartContractFactory.BEP20(pool.collateralContractAddress),
-        this.chainId
+        SmartContractFactory.BEP20(tokenAddress),
+        library
       );
 
-      await BEP20.methods
-        .approve(proxyWalletaddress, Constants.MAX_UINT256)
-        .send({ from: address })
+      const options = { from: address, gas: 0 };
+      const gas = await getEstimateGas(
+        BEP20,
+        "approve",
+        [proxyWalletAddress, Constants.MAX_UINT256],
+        options
+      );
+      options.gas = gas;
+
+      const receipt = await BEP20.methods
+        .approve(proxyWalletAddress, Constants.MAX_UINT256)
+        .send(options)
         .on("transactionHash", (hash: any) => {
-          transactionStore.addTransaction({
+          this.transactionStore.addTransaction({
             hash: hash,
             type: TransactionType.Approve,
             active: false,
             status: TransactionStatus.None,
-            title: `Approval Pending`,
+            title: "Approval Pending",
             message: Strings.CheckOnBlockExplorer,
           });
+        })
+        .then((receipt: TransactionReceipt) => {
+          this.alertStore.setShowSuccessAlert(true, "Approval was successful!");
+          return receipt;
         });
-    } catch (error) {
-      console.error(`Error in open position approve token: ${error}`);
+
+      return receipt;
+    } catch (error: any) {
+      this.alertStore.setShowErrorAlert(true, error.message);
       throw error;
     }
   }
 
   async approvalStatus(
     address: string,
-    pool: ICollatralPool,
-    collatral: number,
-    transactionStore: ActiveWeb3Transactions
-  ): Promise<Boolean> {
-    try {
-      // set collateral to zero if not defined
-      if (!collatral) {
-        collatral = 0;
-      }
+    tokenAddress: string,
+    collateral: string,
+    library: Xdc3
+  ): Promise<boolean> {
+    const proxyWalletAddress = await this.proxyWalletExist(address, library);
 
-      let proxyWalletaddress = await this.proxyWalletExist(address);
-
-      if (proxyWalletaddress === Constants.ZERO_ADDRESS) {
-        return false;
-      }
-
-      const BEP20 = Web3Utils.getContractInstance(
-        SmartContractFactory.BEP20(pool.collateralContractAddress),
-        this.chainId
-      );
-
-      let allowance = await BEP20.methods
-        .allowance(address, proxyWalletaddress)
-        .call();
-
-      return +allowance > +Constants.WeiPerWad.multipliedBy(collatral);
-    } catch (error) {
-      console.error(`Error in open position approve token: ${error}`);
-      throw error;
+    if (proxyWalletAddress === Constants.ZERO_ADDRESS) {
+      return false;
     }
+
+    const BEP20 = Web3Utils.getContractInstance(
+      SmartContractFactory.BEP20(tokenAddress),
+      library
+    );
+
+    const allowance = await BEP20.methods
+      .allowance(address, proxyWalletAddress)
+      .call();
+
+    return (
+      Number(allowance) > Number(Constants.WeiPerWad.multipliedBy(collateral))
+    );
   }
 
-  async approveStablecoin(
+  async approveStableCoin(
     address: string,
-    transactionStore: ActiveWeb3Transactions
-  ): Promise<void> {
+    library: Xdc3
+  ): Promise<TransactionReceipt | undefined> {
     try {
-      let proxyWalletaddress = await this.proxyWalletExist(address);
+      let proxyWalletAddress = await this.proxyWalletExist(address, library);
 
-      if (proxyWalletaddress === Constants.ZERO_ADDRESS) {
-        proxyWalletaddress = await this.createProxyWallet(address);
+      if (proxyWalletAddress === Constants.ZERO_ADDRESS) {
+        proxyWalletAddress = await this.createProxyWallet(address, library);
       }
 
       const fathomStableCoin = Web3Utils.getContractInstance(
         SmartContractFactory.FathomStableCoin(this.chainId),
-        this.chainId
+        library
       );
 
-      await fathomStableCoin.methods
-        .approve(proxyWalletaddress, Constants.MAX_UINT256)
-        .send({ from: address })
+      const options = { from: address, gas: 0 };
+      const gas = await getEstimateGas(
+        fathomStableCoin,
+        "approve",
+        [proxyWalletAddress, Constants.MAX_UINT256],
+        options
+      );
+      options.gas = gas;
+
+      const receipt = fathomStableCoin.methods
+        .approve(proxyWalletAddress, Constants.MAX_UINT256)
+        .send(options)
         .on("transactionHash", (hash: any) => {
-          transactionStore.addTransaction({
+          this.transactionStore.addTransaction({
             hash: hash,
             type: TransactionType.Approve,
             active: false,
@@ -444,38 +429,53 @@ export default class PositionService implements IPositionService {
             title: `Approval Pending`,
             message: Strings.CheckOnBlockExplorer,
           });
+        })
+        .then((receipt: TransactionReceipt) => {
+          this.alertStore.setShowSuccessAlert(
+            true,
+            "Token approval was successful!"
+          );
+          return receipt;
         });
-    } catch (error) {
-      console.error(`Error in open position approve token: ${error}`);
+      return receipt;
+    } catch (error: any) {
+      this.alertStore.setShowErrorAlert(true, error.message);
       throw error;
     }
   }
 
-  async approvalStatusStablecoin(address: string): Promise<Boolean> {
-    try {
-      let proxyWalletaddress = await this.proxyWalletExist(address);
+  balanceStableCoin(address: string, library: Xdc3): Promise<string> {
+    const fathomStableCoin = Web3Utils.getContractInstance(
+      SmartContractFactory.FathomStableCoin(this.chainId),
+      library
+    );
 
-      if (proxyWalletaddress === Constants.ZERO_ADDRESS) {
-        return false;
-      }
+    return fathomStableCoin.methods.balanceOf(address).call();
+  }
 
-      const fathomStableCoin = Web3Utils.getContractInstance(
-        SmartContractFactory.FathomStableCoin(this.chainId),
-        this.chainId
-      );
+  async approvalStatusStableCoin(
+    address: string,
+    library: Xdc3
+  ): Promise<boolean> {
+    const proxyWalletAddress = await this.proxyWalletExist(address, library);
 
-      let allowance = await fathomStableCoin.methods
-        .allowance(address, proxyWalletaddress)
-        .call();
-
-      return +allowance > 10000000000000000;
-    } catch (error) {
-      console.error(`Error in open position approve token: ${error}`);
-      throw error;
+    if (proxyWalletAddress === Constants.ZERO_ADDRESS) {
+      return false;
     }
+
+    const fathomStableCoin = Web3Utils.getContractInstance(
+      SmartContractFactory.FathomStableCoin(this.chainId),
+      library
+    );
+
+    const allowance = await fathomStableCoin.methods
+      .allowance(address, proxyWalletAddress)
+      .call();
+
+    return Number(allowance) > 10000000000000000;
   }
 
   setChainId(chainId: number) {
-    if (chainId !== undefined) this.chainId = chainId;
+    this.chainId = chainId;
   }
 }

@@ -1,39 +1,52 @@
-import IProposal from "../../stores/interfaces/IProposal";
-import IVoteCounts from "../../stores/interfaces/IVoteCounts";
-import ActiveWeb3Transactions from "../../stores/transaction.store";
+import ActiveWeb3Transactions from "stores/transaction.store";
+import Xdc3 from "xdc3";
 
+export default interface IProposalService {
+  createProposal(
+    targets: string[],
+    values: number[],
+    calldatas: string[],
+    description: string,
+    account: string,
+    transactionStore: ActiveWeb3Transactions,
+    library: Xdc3
+  ): Promise<number>;
 
-export default interface IProposalService{
+  viewProposalState(
+    proposalId: string,
+    account: string,
+    library: Xdc3
+  ): Promise<string>;
 
-    createProposal(targets:string[], values:number[], calldatas:string[], description:string, account:string,transactionStore:ActiveWeb3Transactions, chainId?: number): Promise<number>;
-   
-    viewAllProposals(account:string, chainId?: number): Promise<IProposal[]>
+  castVote(
+    proposalId: string,
+    account: string,
+    support: string,
+    transactionStore: ActiveWeb3Transactions,
+    library: Xdc3
+  ): Promise<number>;
 
-    viewProposal(proposalId:string, account:string, chainId?: number): Promise<IProposal>
+  getVBalance(account: string, library: Xdc3): Promise<number>;
 
-    viewProposalState(proposalId:string, account:string, chainId?: number): Promise<string>
+  hasVoted(proposalId: string, account: string, library: Xdc3): Promise<boolean>
 
-    viewVoteCounts(proposalId:string, account:string, chainId?: number): Promise<IVoteCounts>
+  executeProposal(
+    targets: string[],
+    values: number[],
+    calldatas: string[],
+    description: string,
+    account: string,
+    transactionStore: ActiveWeb3Transactions,
+    library: Xdc3
+  ): Promise<number>;
 
-    castVote(proposalId:string, account:string, support:string,transactionStore:ActiveWeb3Transactions, chainId?: number): Promise<number>
-
-    getVeBalance(account: string, chainId?: number): Promise<number> 
-
-    executeProposal(
-        targets: string[],
-        values: number[],
-        calldatas: string[],
-        description: string,
-        account: string,
-        transactionStore: ActiveWeb3Transactions
-      ): Promise<number>
-
-    queueProposal(
-        targets: string[],
-        values: number[],
-        calldatas: string[],
-        description: string,
-        account: string,
-        transactionStore: ActiveWeb3Transactions
-      ): Promise<number>
+  queueProposal(
+    targets: string[],
+    values: number[],
+    calldatas: string[],
+    description: string,
+    account: string,
+    transactionStore: ActiveWeb3Transactions,
+    library: Xdc3
+  ): Promise<number>;
 }

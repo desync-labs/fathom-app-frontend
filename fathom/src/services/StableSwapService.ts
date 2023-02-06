@@ -1,204 +1,266 @@
-import { SmartContractFactory } from "../config/SmartContractFactory";
-import { Constants } from "../helpers/Constants";
-import { Strings } from "../helpers/Strings";
-import { Web3Utils } from "../helpers/Web3Utils";
+import { SmartContractFactory } from "config/SmartContractFactory";
+import { Constants } from "helpers/Constants";
+import { Strings } from "helpers/Strings";
+import { Web3Utils } from "helpers/Web3Utils";
 import {
   TransactionStatus,
   TransactionType,
-} from "../stores/interfaces/ITransaction";
-import ActiveWeb3Transactions from "../stores/transaction.store";
-import IStableSwapService from "./interfaces/IStableSwapService";
+} from "stores/interfaces/ITransaction";
+import ActiveWeb3Transactions from "stores/transaction.store";
+import IStableSwapService from "services/interfaces/IStableSwapService";
 import { toWei } from "web3-utils";
-
+import Xdc3 from "xdc3";
+import { getEstimateGas } from "utils/getEstimateGas";
+import { TransactionReceipt } from "web3-eth";
 
 export default class StableSwapService implements IStableSwapService {
   readonly tokenBuffer: number = 5;
-  chainId = Constants.DEFAULT_CHAINID;
+  chainId = Constants.DEFAULT_CHAIN_ID;
 
-  async swapTokenToStablecoin(
-    address: string,
+  transactionStore: ActiveWeb3Transactions;
+
+  constructor(transactionStore: ActiveWeb3Transactions) {
+    this.transactionStore = transactionStore;
+  }
+
+  async swapTokenToStableCoin(
+    account: string,
     tokenIn: number,
-    transactionStore: ActiveWeb3Transactions
-  ): Promise<void> {
-    try {
-      console.log(
-        `Performing swapTokenToStablecoin from address: ${address} amount: ${tokenIn}`
-      );
+    tokenName: string,
+    library: Xdc3
+  ): Promise<TransactionReceipt | undefined> {
+    const StableSwapModule = Web3Utils.getContractInstance(
+      SmartContractFactory.StableSwapModule(this.chainId),
+      library
+    );
 
-      const stableSwapModule = Web3Utils.getContractInstance(
-        SmartContractFactory.StableSwapModule(this.chainId),
-        this.chainId
-      );
+    const options = { from: account, gas: 0 };
+    const gas = await getEstimateGas(
+      StableSwapModule,
+      "swapTokenToStablecoin",
+      [account, toWei(tokenIn.toString(), "ether")],
+      options
+    );
+    options.gas = gas;
 
-      await stableSwapModule.methods
-        .swapTokenToStablecoin(address, toWei(tokenIn.toString(), "ether"))
-        .send({ from: address })
-        .on("transactionHash", (hash: any) => {
-          transactionStore.addTransaction({
-            hash: hash,
-            type: TransactionType.ClosePosition,
-            active: false,
-            status: TransactionStatus.None,
-            title: "USDT to FXD Swap Pending.",
-            message: Strings.CheckOnBlockExplorer,
-          });
+    return StableSwapModule.methods
+      .swapTokenToStablecoin(account, toWei(tokenIn.toString(), "ether"))
+      .send(options)
+      .on("transactionHash", (hash: any) => {
+        this.transactionStore.addTransaction({
+          hash: hash,
+          type: TransactionType.ClosePosition,
+          active: false,
+          status: TransactionStatus.None,
+          title: `${tokenName} to FXD Swap Pending.`,
+          message: Strings.CheckOnBlockExplorer,
         });
-    } catch (error) {
-      console.error(`Error in swapTokenToStablecoin ${error}`);
-      throw error;
-    }
+      });
   }
 
-  async swapStablecoinToToken(
-    address: string,
-    stablecoinIn: number,
-    transactionStore: ActiveWeb3Transactions
-  ): Promise<void> {
-    try {
-      console.log(
-        `Performing swapTokenToStablecoin from address: ${address} amount: ${stablecoinIn}`
-      );
+  async swapStableCoinToToken(
+    account: string,
+    stableCoinIn: number,
+    tokenName: string,
+    library: Xdc3
+  ): Promise<TransactionReceipt | undefined> {
+    const StableSwapModule = Web3Utils.getContractInstance(
+      SmartContractFactory.StableSwapModule(this.chainId),
+      library
+    );
 
-      const stableSwapModule = Web3Utils.getContractInstance(
-        SmartContractFactory.StableSwapModule(this.chainId),
-        this.chainId
-      );
+    const options = { from: account, gas: 0 };
+    const gas = await getEstimateGas(
+      StableSwapModule,
+      "swapStablecoinToToken",
+      [account, toWei(stableCoinIn.toString(), "ether")],
+      options
+    );
+    options.gas = gas;
 
-      await stableSwapModule.methods
-        .swapStablecoinToToken(address, toWei(stablecoinIn.toString(), "ether"))
-        .send({ from: address })
-        .on("transactionHash", (hash: any) => {
-          transactionStore.addTransaction({
-            hash: hash,
-            type: TransactionType.ClosePosition,
-            active: false,
-            status: TransactionStatus.None,
-            title: "FXD to USDT Swap Pending.",
-            message: Strings.CheckOnBlockExplorer,
-          });
+    return StableSwapModule.methods
+      .swapStablecoinToToken(account, toWei(stableCoinIn.toString(), "ether"))
+      .send(options)
+      .on("transactionHash", (hash: any) => {
+        this.transactionStore.addTransaction({
+          hash: hash,
+          type: TransactionType.ClosePosition,
+          active: false,
+          status: TransactionStatus.None,
+          title: `FXD to ${tokenName} Swap Pending.`,
+          message: Strings.CheckOnBlockExplorer,
         });
-    } catch (error) {
-      console.error(`Error in swapStablecoinToToken ${error}`);
-      throw error;
-    }
+      });
   }
 
-  async approveStablecoin(
-    address: string,
-    transactionStore: ActiveWeb3Transactions
-  ): Promise<void> {
-    try {
-      const fathomStableCoin = Web3Utils.getContractInstance(
-        SmartContractFactory.FathomStableCoin(this.chainId),
-        this.chainId
-      );
+  async approveStableCoin(
+    account: string,
+    library: Xdc3
+  ): Promise<TransactionReceipt | undefined> {
+    const FathomStableCoin = Web3Utils.getContractInstance(
+      SmartContractFactory.FathomStableCoin(this.chainId),
+      library
+    );
 
-      await fathomStableCoin.methods
-        .approve(
-          SmartContractFactory.StableSwapModule(this.chainId).address,
-          Constants.MAX_UINT256
-        )
-        .send({ from: address })
-        .on("transactionHash", (hash: any) => {
-          transactionStore.addTransaction({
-            hash: hash,
-            type: TransactionType.ClosePosition,
-            active: false,
-            status: TransactionStatus.None,
-            title: "Approval Pending.",
-            message: Strings.CheckOnBlockExplorer,
-          });
+    const options = { from: account, gas: 0 };
+    const gas = await getEstimateGas(
+      FathomStableCoin,
+      "approve",
+      [
+        SmartContractFactory.StableSwapModule(this.chainId).address,
+        Constants.MAX_UINT256,
+      ],
+      options
+    );
+    options.gas = gas;
+
+    return FathomStableCoin.methods
+      .approve(
+        SmartContractFactory.StableSwapModule(this.chainId).address,
+        Constants.MAX_UINT256
+      )
+      .send(options)
+      .on("transactionHash", (hash: any) => {
+        this.transactionStore.addTransaction({
+          hash: hash,
+          type: TransactionType.ClosePosition,
+          active: false,
+          status: TransactionStatus.None,
+          title: "Approval Pending.",
+          message: Strings.CheckOnBlockExplorer,
         });
-    } catch (error) {
-      console.error(`Error in open position approve token: ${error}`);
-      throw error;
-    }
+      });
   }
 
   async approveUsdt(
-    address: string,
-    tokenIn: number,
-    transactionStore: ActiveWeb3Transactions
-  ): Promise<void> {
-    try {
-      const USDT = Web3Utils.getContractInstance(
-        SmartContractFactory.USDT(this.chainId),
-        this.chainId
-      );
+    account: string,
+    library: Xdc3
+  ): Promise<TransactionReceipt | undefined> {
+    const USStable = Web3Utils.getContractInstance(
+      SmartContractFactory.USDT(this.chainId),
+      library
+    );
 
-      await USDT.methods
-        .approve(
-          SmartContractFactory.AuthtokenAdapter(this.chainId).address,
-          Constants.MAX_UINT256
-        )
-        .send({ from: address })
-        .on("transactionHash", (hash: any) => {
-          transactionStore.addTransaction({
-            hash: hash,
-            type: TransactionType.ClosePosition,
-            active: false,
-            status: TransactionStatus.None,
-            title: "Approval Pending",
-            message: Strings.CheckOnBlockExplorer,
-          });
+    const options = { from: account, gas: 0 };
+    const gas = await getEstimateGas(
+      USStable,
+      "approve",
+      [
+        SmartContractFactory.StableSwapModule(this.chainId).address,
+        Constants.MAX_UINT256,
+      ],
+      options
+    );
+    options.gas = gas;
+
+    return USStable.methods
+      .approve(
+        SmartContractFactory.StableSwapModule(this.chainId).address,
+        Constants.MAX_UINT256
+      )
+      .send(options)
+      .on("transactionHash", (hash: any) => {
+        this.transactionStore.addTransaction({
+          hash: hash,
+          type: TransactionType.ClosePosition,
+          active: false,
+          status: TransactionStatus.None,
+          title: "Approval Pending",
+          message: Strings.CheckOnBlockExplorer,
         });
-    } catch (error) {
-      console.error(`Error in open position approve token: ${error}`);
-      throw error;
-    }
+      });
   }
 
-  async approvalStatusStablecoin(
-    address: string,
-    tokenIn: number
+  async approvalStatusStableCoin(
+    account: string,
+    tokenIn: number,
+    library: Xdc3
   ): Promise<Boolean> {
-    try {
-      const fathomStableCoin = Web3Utils.getContractInstance(
-        SmartContractFactory.FathomStableCoin(this.chainId),
-        this.chainId
-      );
+    const FathomStableCoin = Web3Utils.getContractInstance(
+      SmartContractFactory.FathomStableCoin(this.chainId),
+      library
+    );
 
-      let allowance = await fathomStableCoin.methods
-        .allowance(
-          address,
-          SmartContractFactory.StableSwapModule(this.chainId).address
-        )
-        .call();
+    const allowance = await FathomStableCoin.methods
+      .allowance(
+        account,
+        SmartContractFactory.StableSwapModule(this.chainId).address
+      )
+      .call();
 
-      const buffer = Number(tokenIn) + Number((tokenIn * this.tokenBuffer) / 100);
+    const buffer = Number(tokenIn) + Number((tokenIn * this.tokenBuffer) / 100);
 
-      return +allowance > +Constants.WeiPerWad.multipliedBy(buffer);
-    } catch (error) {
-      console.error(`Error in open position approve token: ${error}`);
-      throw error;
-    }
+    return Number(allowance) > Constants.WeiPerWad.multipliedBy(buffer).toNumber();
   }
 
-  async approvalStatusUsdt(address: string, tokenIn: number): Promise<Boolean> {
-    try {
-      const USDT = Web3Utils.getContractInstance(
-        SmartContractFactory.USDT(this.chainId),
-        this.chainId
-      );
+  async approvalStatusUsdt(
+    account: string,
+    tokenIn: number,
+    library: Xdc3
+  ): Promise<boolean> {
+    const USStable = Web3Utils.getContractInstance(
+      SmartContractFactory.USDT(this.chainId),
+      library
+    );
 
-      let allowance = await USDT.methods
-        .allowance(
-          address,
-          SmartContractFactory.AuthtokenAdapter(this.chainId).address
-        )
-        .call();
+    const allowance = await USStable.methods
+      .allowance(
+        account,
+        SmartContractFactory.StableSwapModule(this.chainId).address
+      )
+      .call();
 
-      let buffer = Number(tokenIn) + Number((tokenIn * this.tokenBuffer) / 100);
+    const buffer = Number(tokenIn) + Number((tokenIn * this.tokenBuffer) / 100);
 
-      return +allowance > +Constants.WeiPerWad.multipliedBy(buffer);
-    } catch (error) {
-      console.error(`Error in open position approve token: ${error}`);
-      throw error;
-    }
+    return Number(allowance) > Constants.WeiPerWad.multipliedBy(buffer).toNumber();
+  }
+
+  getFeeIn(library: Xdc3) {
+    const StableSwapModule = Web3Utils.getContractInstance(
+      SmartContractFactory.StableSwapModule(this.chainId),
+      library
+    );
+
+    return StableSwapModule.methods.feeIn().call();
+  }
+
+  getFeeOut(library: Xdc3) {
+    const StableSwapModule = Web3Utils.getContractInstance(
+      SmartContractFactory.StableSwapModule(this.chainId),
+      library
+    );
+
+    return StableSwapModule.methods.feeOut().call();
+  }
+
+  getLastUpdate(library: Xdc3) {
+    const StableSwapModule = Web3Utils.getContractInstance(
+      SmartContractFactory.StableSwapModule(this.chainId),
+      library
+    );
+
+    return StableSwapModule.methods.lastUpdate().call();
+  }
+
+  getDailySwapLimit(library: Xdc3) {
+    const StableSwapModule = Web3Utils.getContractInstance(
+      SmartContractFactory.StableSwapModule(this.chainId),
+      library
+    );
+
+    return StableSwapModule.methods.dailySwapLimit().call();
+  }
+
+  getTokenBalance(tokenAddress:string, library:Xdc3) {
+    const StableSwapModule = Web3Utils.getContractInstance(
+      SmartContractFactory.StableSwapModule(this.chainId),
+      library
+    );
+
+    return StableSwapModule.methods.tokenBalance(tokenAddress).call()
   }
 
   setChainId(chainId: number) {
-    if (chainId !== undefined) this.chainId = chainId;
+    this.chainId = chainId;
   }
 }
-

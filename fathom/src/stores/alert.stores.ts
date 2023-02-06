@@ -1,5 +1,4 @@
-import { makeAutoObservable, runInAction } from "mobx";
-import { RootStore } from ".";
+import { makeAutoObservable } from "mobx";
 
 export default class AlertStore {
   showSuccessAlert: boolean;
@@ -7,7 +6,7 @@ export default class AlertStore {
   successAlertMessage: string;
   errorAlertMessage: string;
 
-  constructor(rootStore: RootStore) {
+  constructor() {
     makeAutoObservable(this);
     this.showSuccessAlert = false;
     this.showErrorAlert = false;
@@ -17,32 +16,26 @@ export default class AlertStore {
 
   setShowSuccessAlert(
     value: boolean,
-    successMessage: string = "Action was sucessfull!"
+    successMessage: string = "Action was successful!"
   ) {
-    console.log(`setShowSuccessAlert value ${value}`);
-    runInAction(() => {
+    this.resetAlerts();
+    this.showSuccessAlert = value;
+    this.successAlertMessage = successMessage;
+    setTimeout(() => {
       this.resetAlerts();
-      this.showSuccessAlert = value;
-      this.successAlertMessage = successMessage;
-      setTimeout(() => {
-        this.resetAlerts();
-      }, 2000);
-    });
+    }, 2000);
   }
 
   setShowErrorAlert(
     value: boolean,
     errorMessage: string = "Something went wrong!"
   ) {
-    console.log(`setShowErrorAlert value ${value}`);
-    runInAction(() => {
+    this.resetAlerts();
+    this.showErrorAlert = value;
+    this.errorAlertMessage = errorMessage;
+    setTimeout(() => {
       this.resetAlerts();
-      this.showErrorAlert = value;
-      this.errorAlertMessage = errorMessage;
-      setTimeout(() => {
-        this.resetAlerts();
-      }, 2000);
-    });
+    }, 2000);
   }
 
   resetAlerts() {
