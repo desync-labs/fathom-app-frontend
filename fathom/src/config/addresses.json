@@ -14,7 +14,7 @@
     "priceOracle": "0xBB61d532294c9490068156139ED29C5184DAee43",
     "proxyWalletRegistry": "0xe16921F8aF45a9860895684b388fb18688A093CE",
     "stabilityFeeCollector": "0x4994e2A1d7322D34a82Aa419f6DD031195f94ccE",
-    "stableSwapModule": "0x33B3cE374Cdd1338120236aD7Bd9254E520Ee23a",
+    "stableSwapModule": "0x5cc9d2878b73ECeAd6fe4358c33F2e76F52cf2a2",
     "stablecoinAdapter": "0xf6357B5482e2B36A70fc56eF8080f50FB9FC7017",
     "staking": "0xB3f8d459076b445E32bf1d4E22768DD9E944Bd35",
     "stakingGetter": "0xc3F60d1039aB9d3abe27F9f828DB6F178d56d32c",
