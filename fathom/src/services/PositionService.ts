@@ -180,7 +180,7 @@ export default class PositionService implements IPositionService {
           pool.tokenAdapterAddress,
           SmartContractFactory.StablecoinAdapter(this.chainId).address,
           positionId,
-          BigNumber(collateral).integerValue(),
+          BigNumber(collateral).integerValue().toFixed(),
           encodedResult,
         ]
       );
@@ -266,8 +266,8 @@ export default class PositionService implements IPositionService {
           pool.tokenAdapterAddress,
           SmartContractFactory.StablecoinAdapter(this.chainId).address,
           positionId,
-          BigNumber(collateral).integerValue(),
-          BigNumber(stableCoin).multipliedBy(10 ** 18).integerValue(BigNumber.ROUND_CEIL),
+          BigNumber(collateral).integerValue().toFixed(),
+          BigNumber(stableCoin).multipliedBy(10 ** 18).integerValue(BigNumber.ROUND_CEIL).toFixed(),
           encodedResult,
         ]
       );
