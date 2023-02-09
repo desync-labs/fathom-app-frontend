@@ -53,7 +53,6 @@ const ClosePositionForm = () => {
   const {
     pool,
     collateral,
-    position,
     balance,
     balanceError,
     disableClosePosition,
@@ -64,6 +63,7 @@ const ClosePositionForm = () => {
     setMax,
     onClose,
     closePosition,
+    debtValue,
   } = useClosePositionContext();
 
   const theme = useTheme();
@@ -99,7 +99,7 @@ const ClosePositionForm = () => {
           Total debt:
         </Box>
         <Box sx={{ fontWeight: "bold", fontSize: "14px" }}>
-          {formatPercentage(position.debtShare)} FXD
+          {formatPercentage(debtValue)} FXD
         </Box>
       </Box>
       <AppFormInputWrapper>

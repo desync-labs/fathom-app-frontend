@@ -8,6 +8,7 @@ import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 import { useWeb3React } from "@web3-react/core";
 import BigNumber from "bignumber.js";
+import { Constants } from "helpers/Constants";
 
 export enum ClosingType {
   Full,
@@ -41,6 +42,9 @@ const useClosePosition = (
   const [disableClosePosition, setDisableClosePosition] =
     useState<boolean>(false);
 
+  const [debtValue, setDebtValue] =
+    useState<string>("");  
+
   const pool = useMemo(
     () =>
       data?.pools?.find(
@@ -53,39 +57,37 @@ const useClosePosition = (
     () => library.utils.toWei(position.lockedCollateral, "ether"),
     [position, library]
   );
-  const debtShare = useMemo(
-    () =>
-      BigNumber(position.debtShare)
-        .multipliedBy(10 ** 18)
-        .toString(),
-    [position]
-  );
 
   const getBalance = useCallback(async () => {
     const balance = await positionService.balanceStableCoin(account, library);
     setBalance(balance);
   }, [positionService, account, library, setBalance]);
 
+  const getDebtValue = useCallback(async () => {
+    const debtValue = await positionService.getDebtValue(position.debtShare,position.collateralPool, library);
+    setDebtValue(debtValue);
+  }, [positionService, position.debtShare, library, setDebtValue, position.collateralPool]);
+
+
   const handleOnOpen = useCallback(async () => {
-    const price = BigNumber(debtShare).dividedBy(lockedCollateral);
+    const price = BigNumber(debtValue).multipliedBy(Constants.WeiPerRad).dividedBy(lockedCollateral);
 
     setPrice(price.toString());
 
     setFathomToken(
-      BigNumber(debtShare)
-        .dividedBy(10 ** 18)
-        .toString()
+      debtValue
     );
     setCollateral(lockedCollateral);
-  }, [lockedCollateral, debtShare, setPrice, setFathomToken, setCollateral]);
+  }, [lockedCollateral, debtValue, setPrice, setFathomToken, setCollateral]);
 
   useEffect(() => {
     getBalance();
+    getDebtValue();
     handleOnOpen();
-  }, [getBalance, handleOnOpen]);
+  }, [getBalance, handleOnOpen, getDebtValue]);
 
   useEffect(() => {
-    balance && BigNumber(balance).isLessThan(fathomToken)
+    balance && BigNumber(balance).dividedBy(Constants.WeiPerWad).isLessThan(fathomToken)
       ? setBalanceError(true)
       : setBalanceError(false);
   }, [fathomToken, balance]);
@@ -137,11 +139,11 @@ const useClosePosition = (
   const handleFathomTokenTextFieldChange = useCallback(
     (e: any) => {
       let { value } = e.target;
-      let bigIntValue = BigNumber(value).multipliedBy(10 ** 18);
+      let bigIntValue = BigNumber(value).multipliedBy(Constants.WeiPerRad);
 
-      if (bigIntValue.isGreaterThan(debtShare)) {
-        bigIntValue = BigNumber(debtShare);
-        value = bigIntValue.dividedBy(10 ** 18).toString();
+      if (bigIntValue.isGreaterThan(BigNumber(debtValue).multipliedBy(Constants.WeiPerRad))) {
+        bigIntValue = BigNumber(debtValue).multipliedBy(Constants.WeiPerRad);
+        value = bigIntValue.dividedBy(Constants.WeiPerRad).toString();
       }
 
       if (!bigIntValue.toString() || bigIntValue.toString() === "NaN") {
@@ -155,27 +157,27 @@ const useClosePosition = (
       setFathomToken(value);
       setCollateral(bigIntValue.dividedBy(price).toString());
     },
-    [price, debtShare, balance, setFathomToken, setCollateral, setBalanceError]
+    [price, debtValue, balance, setFathomToken, setCollateral, setBalanceError]
   );
 
   const handleTypeChange = useCallback(
     (type: ClosingType) => {
       if (type === ClosingType.Full) {
-        setFathomToken(debtShare);
+        setFathomToken(debtValue);
         setCollateral(lockedCollateral);
       }
       setType(type);
     },
-    [debtShare, lockedCollateral, setFathomToken, setType, setCollateral]
+    [debtValue, lockedCollateral, setFathomToken, setType, setCollateral]
   );
 
   const setMax = useCallback(() => {
-    const setBalance = BigNumber(balance).isLessThan(debtShare)
+    const setBalance = BigNumber(balance).isLessThan(BigNumber(debtValue).multipliedBy(Constants.WeiPerRad))
       ? BigNumber(balance)
-      : BigNumber(debtShare);
-    setFathomToken(setBalance.dividedBy(10 ** 18).toString());
+      : BigNumber(debtValue).multipliedBy(Constants.WeiPerRad);
+    setFathomToken(setBalance.dividedBy(Constants.WeiPerWad).toString());
     setCollateral(setBalance.dividedBy(price).toString());
-  }, [price, debtShare, balance, setFathomToken, setCollateral]);
+  }, [price, debtValue, balance, setFathomToken, setCollateral]);
 
   return {
     collateral,
@@ -194,6 +196,7 @@ const useClosePosition = (
     onClose,
     position,
     setType,
+    debtValue,
   };
 };
 
