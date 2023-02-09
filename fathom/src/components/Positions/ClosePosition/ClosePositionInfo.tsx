@@ -17,7 +17,7 @@ const ClosePositionInfo = () => {
             <>
               {BigNumber(lockedCollateral)
                 .multipliedBy(price)
-                .dividedBy(10 ** 18)
+                .dividedBy(10 ** 45)
                 .toFixed(6)}{" "}
               FXD{" "}
               <Box component="span" sx={{ color: "#29C20A" }}>
@@ -25,7 +25,7 @@ const ClosePositionInfo = () => {
                 {BigNumber(lockedCollateral)
                   .multipliedBy(price)
                   .minus(fathomToken)
-                  .dividedBy(10 ** 18)
+                  .dividedBy(10 ** 45)
                   .toFixed(6)}{" "}
                 FXD
               </Box>
