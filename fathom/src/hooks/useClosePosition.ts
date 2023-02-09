@@ -172,11 +172,16 @@ const useClosePosition = (
   );
 
   const setMax = useCallback(() => {
+    
     const setBalance = BigNumber(balance).isLessThan(BigNumber(debtValue).multipliedBy(Constants.WeiPerRad))
       ? BigNumber(balance)
       : BigNumber(debtValue).multipliedBy(Constants.WeiPerRad);
+
     setFathomToken(setBalance.dividedBy(Constants.WeiPerWad).toString());
-    setCollateral(setBalance.dividedBy(price).toString());
+
+    let bal = setBalance.dividedBy(Constants.WeiPerWad).multipliedBy(Constants.WeiPerRad);
+    setCollateral(bal.dividedBy(price).toString());
+    
   }, [price, debtValue, balance, setFathomToken, setCollateral]);
 
   return {
