@@ -19,7 +19,6 @@ import { TransactionReceipt } from "web3-eth";
 import { getEstimateGas } from "utils/getEstimateGas";
 import { addMetamaskToken } from "utils/addMetamaskToken";
 import BigNumber from "bignumber.js";
-import { PollOutlined } from "@mui/icons-material";
 
 export default class PositionService implements IPositionService {
   chainId = Constants.DEFAULT_CHAIN_ID;
@@ -181,7 +180,7 @@ export default class PositionService implements IPositionService {
           pool.tokenAdapterAddress,
           SmartContractFactory.StablecoinAdapter(this.chainId).address,
           positionId,
-          BigNumber(collateral).integerValue().toFixed(),
+          collateral,
           encodedResult,
         ]
       );
@@ -256,8 +255,8 @@ export default class PositionService implements IPositionService {
       ).abi.filter((abi) => abi.name === "wipeAndUnlockXDC")[0];
 
       console.log({
-        collateral: BigNumber(collateral).integerValue().toString(),
-        stableCoin: BigNumber(stableCoin).multipliedBy(10 ** 18).integerValue(BigNumber.ROUND_CEIL).toString()
+        collateral: collateral,
+        stableCoin: stableCoin
       })
 
       const wipeAndUnlockTokenCall = library.eth.abi.encodeFunctionCall(
@@ -267,8 +266,8 @@ export default class PositionService implements IPositionService {
           pool.tokenAdapterAddress,
           SmartContractFactory.StablecoinAdapter(this.chainId).address,
           positionId,
-          BigNumber(collateral).integerValue().toFixed(),
-          BigNumber(stableCoin).multipliedBy(10 ** 18).integerValue(BigNumber.ROUND_CEIL).toFixed(),
+          collateral,
+          stableCoin,
           encodedResult,
         ]
       );
@@ -494,7 +493,7 @@ export default class PositionService implements IPositionService {
     let debtShare = BigNumber(borrowed).multipliedBy(Constants.WeiPerWad).integerValue(BigNumber.ROUND_CEIL) 
     let debtValue = BigNumber(debtAccumulatedRate).multipliedBy(debtShare)
 
-    return debtValue.dividedBy(Constants.WeiPerRad).toString();
+    return debtValue.dividedBy(Constants.WeiPerRad).precision(18).toFixed()
   }
 
   setChainId(chainId: number) {

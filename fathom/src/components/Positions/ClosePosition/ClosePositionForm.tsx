@@ -37,7 +37,6 @@ import { formatPercentage } from "utils/format";
 
 import useClosePositionContext from "context/closePosition";
 import { styled } from "@mui/material/styles";
-import BigNumber from "bignumber.js";
 
 const ClosePositionWrapper = styled(Grid)`
   padding-left: 20px;
@@ -107,9 +106,7 @@ const ClosePositionForm = () => {
         {balance && (
           <WalletBalance>
             Wallet Available:{" "}
-            {BigNumber(balance)
-              .dividedBy(10 ** 18)
-              .toString()}{" "}
+            {balance} {" "}
             FXD
           </WalletBalance>
         )}
@@ -144,16 +141,13 @@ const ClosePositionForm = () => {
         <AppTextField
           disabled={true}
           id="outlined-helperText"
-          value={BigNumber(collateral)
-            .dividedBy(10 ** 18)
-            .toString()}
+          value = {collateral}
         />
         <AppFormInputLogo
           src={getTokenLogoURL(
             pool?.poolName === "XDC" ? "WXDC" : pool?.poolName
           )}
         />
-        {/*<MaxButton disabled>Safe Max</MaxButton>*/}
       </AppFormInputWrapper>
       {fathomToken ? (
         <InfoWrapper>
@@ -168,9 +162,7 @@ const ClosePositionForm = () => {
         <InfoWrapper>
           <InfoLabel>Receive</InfoLabel>
           <InfoValue>
-            {BigNumber(collateral)
-              .dividedBy(10 ** 18)
-              .toString()}{" "}
+            {collateral} {" "}
             {pool.poolName}
           </InfoValue>
         </InfoWrapper>
