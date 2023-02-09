@@ -134,7 +134,7 @@ const PositionListItemMobile: FC<PositionListItemProps> = ({
       </ListItemWrapper>
       <ListItemWrapper>
         <ListLabel>Borrowed</ListLabel>
-        <ListValue>{formatNumber(Number(position.debtShare))} FXD</ListValue>
+        <ListValue>{formatNumber(Number(position.debtValue))} FXD</ListValue>
       </ListItemWrapper>
       <ListItemWrapper>
         <ListLabel>Collateral</ListLabel>

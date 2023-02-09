@@ -43,6 +43,7 @@ export const FXD_POSITIONS = gql`
       collateralPool
       collateralPoolName
       debtShare
+      debtValue
       id
       liquidationPrice
       lockedCollateral

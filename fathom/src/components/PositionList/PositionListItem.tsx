@@ -28,6 +28,8 @@ import TokenLogo from "components/Common/TokenLogo";
 import { getTokenLogoURL } from "utils/tokenLogo";
 
 import { formatCurrency, formatNumber } from "utils/format";
+import usePositionDebtValue from "hooks/usePositionDebtValue";
+
 
 export type PositionListItemProps = {
   position: IOpenPosition;
@@ -77,6 +79,8 @@ const PositionListItem: FC<PositionListItemProps> = ({
   const anchorRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState<boolean>(false);
 
+  const {debtValue} = usePositionDebtValue(position.debtShare,position.collateralPool);
+
   return (
     <AppTableRow
       key={position.id}
@@ -105,7 +109,7 @@ const PositionListItem: FC<PositionListItemProps> = ({
         </Stack>
       </TableCell>
       <TableCell>{formatCurrency(Number(position.liquidationPrice))}</TableCell>
-      <TableCell>{formatNumber(Number(position.debtShare))} FXD</TableCell>
+      <TableCell>{formatNumber(Number(debtValue))} FXD</TableCell>
       <TableCell>
         {position.lockedCollateral} {position.collateralPoolName}
       </TableCell>
