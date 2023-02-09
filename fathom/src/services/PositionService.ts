@@ -19,6 +19,7 @@ import { TransactionReceipt } from "web3-eth";
 import { getEstimateGas } from "utils/getEstimateGas";
 import { addMetamaskToken } from "utils/addMetamaskToken";
 import BigNumber from "bignumber.js";
+import { PollOutlined } from "@mui/icons-material";
 
 export default class PositionService implements IPositionService {
   chainId = Constants.DEFAULT_CHAIN_ID;
@@ -473,6 +474,27 @@ export default class PositionService implements IPositionService {
       .call();
 
     return Number(allowance) > 10000000000000000;
+  }
+
+  async getDebtValue(
+    borrowed: string,
+    poolId: string,
+    library: Xdc3
+  ): Promise<string> {
+
+    const poolConfigContract = Web3Utils.getContractInstance(
+      SmartContractFactory.PoolConfig(this.chainId),
+      library
+    );
+
+    const debtAccumulatedRate = await poolConfigContract.methods
+      .getDebtAccumulatedRate(poolId)
+      .call();
+
+    let debtShare = BigNumber(borrowed).multipliedBy(Constants.WeiPerWad).integerValue(BigNumber.ROUND_CEIL) 
+    let debtValue = BigNumber(debtAccumulatedRate).multipliedBy(debtShare)
+
+    return debtValue.dividedBy(Constants.WeiPerRad).toString();
   }
 
   setChainId(chainId: number) {
