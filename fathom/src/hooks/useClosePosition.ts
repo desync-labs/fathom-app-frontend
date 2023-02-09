@@ -54,13 +54,14 @@ const useClosePosition = (
   );
 
   const lockedCollateral = useMemo(
-    () => library.utils.toWei(position.lockedCollateral, "ether"),
-    [position, library]
+    () => position.lockedCollateral,
+    [position]
   );
 
   const getBalance = useCallback(async () => {
     const balance = await positionService.balanceStableCoin(account, library);
-    setBalance(balance);
+    const balanceInDecimal = BigNumber(balance).dividedBy(Constants.WeiPerWad).toFixed()
+    setBalance(balanceInDecimal);
   }, [positionService, account, library, setBalance]);
 
   const getDebtValue = useCallback(async () => {
@@ -70,7 +71,7 @@ const useClosePosition = (
 
 
   const handleOnOpen = useCallback(async () => {
-    const price = BigNumber(debtValue).multipliedBy(Constants.WeiPerRad).dividedBy(lockedCollateral);
+    const price = BigNumber(debtValue).dividedBy(BigNumber(lockedCollateral));
 
     setPrice(price.toString());
 
@@ -87,7 +88,7 @@ const useClosePosition = (
   }, [getBalance, handleOnOpen, getDebtValue]);
 
   useEffect(() => {
-    balance && BigNumber(balance).dividedBy(Constants.WeiPerWad).isLessThan(fathomToken)
+    balance && BigNumber(balance).isLessThan(fathomToken)
       ? setBalanceError(true)
       : setBalanceError(false);
   }, [fathomToken, balance]);
@@ -96,21 +97,24 @@ const useClosePosition = (
     setDisableClosePosition(true);
     try {
       let receipt;
-      if (closingType === ClosingType.Full || BigNumber(collateral).isEqualTo(lockedCollateral)) {
+      if (closingType === ClosingType.Full || 
+        BigNumber(collateral).isEqualTo(BigNumber(lockedCollateral))) {
+
         receipt = await positionService.closePosition(
           position.positionId,
           pool,
           account,
-          collateral,
+          BigNumber(collateral).multipliedBy(Constants.WeiPerWad).toFixed(),
           library
         );
+
       } else {
         receipt = await positionService.partiallyClosePosition(
           position.positionId,
           pool,
           account,
-          fathomToken,
-          collateral,
+          BigNumber(fathomToken).multipliedBy(Constants.WeiPerWad).toFixed(),
+          BigNumber(collateral).multipliedBy(Constants.WeiPerWad).toFixed(),
           library
         );
       }
@@ -139,11 +143,11 @@ const useClosePosition = (
   const handleFathomTokenTextFieldChange = useCallback(
     (e: any) => {
       let { value } = e.target;
-      let bigIntValue = BigNumber(value).multipliedBy(Constants.WeiPerRad);
+      let bigIntValue = BigNumber(value) 
 
-      if (bigIntValue.isGreaterThan(BigNumber(debtValue).multipliedBy(Constants.WeiPerRad))) {
-        bigIntValue = BigNumber(debtValue).multipliedBy(Constants.WeiPerRad);
-        value = bigIntValue.dividedBy(Constants.WeiPerRad).toString();
+      if (bigIntValue.isGreaterThan(BigNumber(debtValue))) {
+        bigIntValue = BigNumber(debtValue);
+        value = bigIntValue.toString();
       }
 
       if (!bigIntValue.toString() || bigIntValue.toString() === "NaN") {
@@ -155,7 +159,7 @@ const useClosePosition = (
         : setBalanceError(false);
 
       setFathomToken(value);
-      setCollateral(bigIntValue.dividedBy(price).toString());
+      setCollateral(bigIntValue.dividedBy(price).precision(18).toFixed());
     },
     [price, debtValue, balance, setFathomToken, setCollateral, setBalanceError]
   );
@@ -173,14 +177,13 @@ const useClosePosition = (
 
   const setMax = useCallback(() => {
     
-    const setBalance = BigNumber(balance).isLessThan(BigNumber(debtValue).multipliedBy(Constants.WeiPerRad))
+    const setBalance = BigNumber(balance).isLessThan(BigNumber(debtValue))
       ? BigNumber(balance)
-      : BigNumber(debtValue).multipliedBy(Constants.WeiPerRad);
+      : BigNumber(debtValue);
 
-    setFathomToken(setBalance.dividedBy(Constants.WeiPerWad).toString());
+    setFathomToken(setBalance.toString());
 
-    let bal = setBalance.dividedBy(Constants.WeiPerWad).multipliedBy(Constants.WeiPerRad);
-    setCollateral(bal.dividedBy(price).toString());
+    setCollateral(setBalance.dividedBy(price).precision(18).toFixed());
     
   }, [price, debtValue, balance, setFathomToken, setCollateral]);
 
