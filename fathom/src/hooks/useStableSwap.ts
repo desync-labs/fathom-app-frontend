@@ -430,7 +430,7 @@ const useStableSwap = (options: string[]) => {
         .toNumber();
     } else {
       formattedBalance =
-        new BigNumber(Xdc3.utils.fromWei(inputBalance.toString())).toNumber() ||
+        new BigNumber(Xdc3.utils.fromWei(inputBalance.toString())).toFixed() ||
         0;
     }
 
