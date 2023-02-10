@@ -95,6 +95,7 @@ const OpenPositionForm = () => {
             required: true,
             min: 10,
             max: +balance / 10 ** 18,
+            pattern: /^[1-9][0-9]*0$/,
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <AppFormInputWrapper>
@@ -110,6 +111,18 @@ const OpenPositionForm = () => {
                 placeholder={"0"}
                 helperText={
                   <>
+                    {error && error.type === "pattern" && (
+                      <>
+                        <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
+                        <Box
+                          component={"span"}
+                          sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                        >
+                          Allowed staked collateral should be multiple of 10
+                        </Box>
+                      </>
+                    )}
+
                     {error && error.type === "max" && (
                       <>
                         <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
