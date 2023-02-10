@@ -134,7 +134,10 @@ const ClosePositionForm = () => {
           onChange={handleFathomTokenTextFieldChange}
         />
         <AppFormInputLogo src={getTokenLogoURL("FXD")} />
-        <MaxButton onClick={() => setMax()}>Max</MaxButton>
+        <MaxButton onClick={() => setMax()} 
+            disabled={closingType === ClosingType.Full ? true : false}>
+          Max
+        </MaxButton>
       </AppFormInputWrapper>
       <AppFormInputWrapper>
         <AppFormLabel>Receive</AppFormLabel>
