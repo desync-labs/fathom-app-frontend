@@ -17,7 +17,6 @@ const ClosePositionInfo = () => {
             <>
               {BigNumber(lockedCollateral)
                 .multipliedBy(price)
-                .dividedBy(10 ** 18)
                 .toFixed(6)}{" "}
               FXD{" "}
               <Box component="span" sx={{ color: "#29C20A" }}>
@@ -25,7 +24,6 @@ const ClosePositionInfo = () => {
                 {BigNumber(lockedCollateral)
                   .multipliedBy(price)
                   .minus(fathomToken)
-                  .dividedBy(10 ** 18)
                   .toFixed(6)}{" "}
                 FXD
               </Box>
@@ -38,9 +36,9 @@ const ClosePositionInfo = () => {
           alignItems="flex-start"
           secondaryAction={
             <>
-              {(lockedCollateral / 10 ** 18).toFixed(6)} {pool.poolName}{" "}
+              {BigNumber(lockedCollateral).toFixed(6)} {pool.poolName}{" "}
               <Box component="span" sx={{ color: "#29C20A" }}>
-                → { BigNumber(lockedCollateral).minus( BigNumber(collateral) ).dividedBy(10 ** 18).toFixed(6)}{" "}
+                → { BigNumber(lockedCollateral).minus( BigNumber(collateral) ).toFixed(6)}{" "}
                 {pool.poolName}
               </Box>
             </>
