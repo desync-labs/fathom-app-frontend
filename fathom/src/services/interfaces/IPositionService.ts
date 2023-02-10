@@ -43,4 +43,10 @@ export default interface IPositionService {
     collateralValue: string,
     library: Xdc3
   ): Promise<TransactionReceipt | undefined>;
+
+  getDebtValue(
+    borrowed: string,
+    poolId: string,
+    library: Xdc3
+  ): Promise<string>
 }
