@@ -180,7 +180,7 @@ export default class PositionService implements IPositionService {
           pool.tokenAdapterAddress,
           SmartContractFactory.StablecoinAdapter(this.chainId).address,
           positionId,
-          BigNumber(collateral).integerValue().toFixed(),
+          collateral,
           encodedResult,
         ]
       );
@@ -255,8 +255,8 @@ export default class PositionService implements IPositionService {
       ).abi.filter((abi) => abi.name === "wipeAndUnlockXDC")[0];
 
       console.log({
-        collateral: BigNumber(collateral).integerValue().toString(),
-        stableCoin: BigNumber(stableCoin).multipliedBy(10 ** 18).integerValue(BigNumber.ROUND_CEIL).toString()
+        collateral: collateral,
+        stableCoin: stableCoin
       })
 
       const wipeAndUnlockTokenCall = library.eth.abi.encodeFunctionCall(
@@ -266,8 +266,8 @@ export default class PositionService implements IPositionService {
           pool.tokenAdapterAddress,
           SmartContractFactory.StablecoinAdapter(this.chainId).address,
           positionId,
-          BigNumber(collateral).integerValue().toFixed(),
-          BigNumber(stableCoin).multipliedBy(10 ** 18).integerValue(BigNumber.ROUND_CEIL).toFixed(),
+          collateral,
+          stableCoin,
           encodedResult,
         ]
       );
@@ -473,6 +473,27 @@ export default class PositionService implements IPositionService {
       .call();
 
     return Number(allowance) > 10000000000000000;
+  }
+
+  async getDebtValue(
+    borrowed: string,
+    poolId: string,
+    library: Xdc3
+  ): Promise<string> {
+
+    const poolConfigContract = Web3Utils.getContractInstance(
+      SmartContractFactory.PoolConfig(this.chainId),
+      library
+    );
+
+    const debtAccumulatedRate = await poolConfigContract.methods
+      .getDebtAccumulatedRate(poolId)
+      .call();
+
+    let debtShare = BigNumber(borrowed).multipliedBy(Constants.WeiPerWad).integerValue(BigNumber.ROUND_CEIL) 
+    let debtValue = BigNumber(debtAccumulatedRate).multipliedBy(debtShare)
+
+    return debtValue.dividedBy(Constants.WeiPerRad).precision(18).toFixed()
   }
 
   setChainId(chainId: number) {

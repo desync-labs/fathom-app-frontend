@@ -18,6 +18,7 @@ import MenuList from "@mui/material/MenuList";
 import MenuItem from "@mui/material/MenuItem";
 import { ClosingType } from "../../hooks/useClosePosition";
 import { AppPaper } from "../AppComponents/AppPaper/AppPaper";
+import usePositionDebtValue from "hooks/usePositionDebtValue";
 
 const PositionListItemMobileContainer = styled(Box)`
   width: 100%;
@@ -103,6 +104,9 @@ const PositionListItemMobile: FC<PositionListItemProps> = ({
   const anchorRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState<boolean>(false);
 
+  const {debtValue} = usePositionDebtValue(position.debtShare,position.collateralPool);
+
+
   return (
     <PositionListItemMobileContainer>
       <ListItemWrapper>
@@ -134,7 +138,7 @@ const PositionListItemMobile: FC<PositionListItemProps> = ({
       </ListItemWrapper>
       <ListItemWrapper>
         <ListLabel>Borrowed</ListLabel>
-        <ListValue>{formatNumber(Number(position.debtShare))} FXD</ListValue>
+        <ListValue>{formatNumber(Number(debtValue))} FXD</ListValue>
       </ListItemWrapper>
       <ListItemWrapper>
         <ListLabel>Collateral</ListLabel>
