@@ -78,7 +78,7 @@ const useDashboard = () => {
         walletAddress: proxyWallet,
       },
     }).then(({ data: { users } }) => {
-      if(users.length>0){
+      if(users!== undefined && users.length>0){
           const itemsCount = users[0].activePositionsCount;
           setPositionsItemsCount(itemsCount);
       }
