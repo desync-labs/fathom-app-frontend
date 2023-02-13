@@ -60,7 +60,7 @@ export default class StableSwapService implements IStableSwapService {
 
   async swapStableCoinToToken(
     account: string,
-    stableCoinIn: number,
+    tokenOut: number,
     tokenName: string,
     library: Xdc3
   ): Promise<TransactionReceipt | undefined> {
@@ -73,13 +73,13 @@ export default class StableSwapService implements IStableSwapService {
     const gas = await getEstimateGas(
       StableSwapModule,
       "swapStablecoinToToken",
-      [account, toWei(stableCoinIn.toString(), "ether")],
+      [account, toWei(tokenOut.toString(), "ether")],
       options
     );
     options.gas = gas;
 
     return StableSwapModule.methods
-      .swapStablecoinToToken(account, toWei(stableCoinIn.toString(), "ether"))
+      .swapStablecoinToToken(account, toWei(tokenOut.toString(), "ether"))
       .send(options)
       .on("transactionHash", (hash: any) => {
         this.transactionStore.addTransaction({
