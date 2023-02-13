@@ -7,20 +7,20 @@ import { useLazyQuery } from "@apollo/client";
 import { FXD_POSITIONS } from "apollo/queries";
 import { Constants } from "helpers/Constants";
 import useConnector from "context/connector";
+import { ConnectorEvent } from "@web3-react/types";
 
 const useOpenPositionList = (
   setPositionCurrentPage: Dispatch<number>,
   proxyWallet: string
 ) => {
   const { positionService } = useStores();
-  const { account, chainId, library } = useConnector()!;
-  /**
-   * @todo Change walletAddress
-   */
-  const [loadPositions, { loading, data, fetchMore, called }] =
-    useLazyQuery(FXD_POSITIONS, {
+  const { account, chainId, library, connector } = useConnector()!;
+  const [loadPositions, { loading, data, fetchMore, called }] = useLazyQuery(
+    FXD_POSITIONS,
+    {
       context: { clientName: "stable" },
-    });
+    }
+  );
 
   const [selectedPosition, setSelectedPosition] = useState<IOpenPosition>();
   const [closingType, setType] = useState(ClosingType.Full);
@@ -29,7 +29,10 @@ const useOpenPositionList = (
   const [approvalPending, setApprovalPending] = useState<boolean>(false);
 
   const approvalStatus = useCallback(async () => {
-    const approved = await positionService.approvalStatusStableCoin(account, library);
+    const approved = await positionService.approvalStatusStableCoin(
+      account,
+      library
+    );
     approved ? setApproveBtn(false) : setApproveBtn(true);
   }, [positionService, account, library]);
 
@@ -38,16 +41,14 @@ const useOpenPositionList = (
   }, [account, approvalStatus]);
 
   useEffect(() => {
-    if (chainId && proxyWallet) {
-      loadPositions({
-        variables: {
-          first: Constants.COUNT_PER_PAGE,
-          skip: 0,
-          walletAddress: proxyWallet,
-        },
-        fetchPolicy: "network-only",
-      });
-    }
+    loadPositions({
+      variables: {
+        first: Constants.COUNT_PER_PAGE,
+        skip: 0,
+        walletAddress: proxyWallet,
+      },
+      fetchPolicy: "network-only",
+    });
   }, [chainId, proxyWallet, called, loadPositions]);
 
   const approve = useCallback(async () => {

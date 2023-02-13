@@ -254,11 +254,6 @@ export default class PositionService implements IPositionService {
         this.chainId
       ).abi.filter((abi) => abi.name === "wipeAndUnlockXDC")[0];
 
-      console.log({
-        collateral: collateral,
-        stableCoin: stableCoin
-      })
-
       const wipeAndUnlockTokenCall = library.eth.abi.encodeFunctionCall(
         jsonInterface,
         [
@@ -305,6 +300,7 @@ export default class PositionService implements IPositionService {
             this.alertStore,
             this.transactionStore
           );
+
           return receipt;
         });
 

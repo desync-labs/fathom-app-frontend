@@ -4,7 +4,7 @@ import { useStores } from "stores";
 import truncateEthAddress from "truncate-eth-address";
 import { styled } from "@mui/material/styles";
 import { useWeb3React } from "@web3-react/core";
-import { getTxUrl } from "utils/exporer";
+import { getTxUrl } from "utils/explorer";
 import { ChainId } from "connectors/networks";
 import { FC } from "react";
 

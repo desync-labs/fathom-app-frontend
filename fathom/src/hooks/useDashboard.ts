@@ -78,9 +78,9 @@ const useDashboard = () => {
         walletAddress: proxyWallet,
       },
     }).then(({ data: { users } }) => {
-      if(users!== undefined && users.length>0){
-          const itemsCount = users[0].activePositionsCount;
-          setPositionsItemsCount(itemsCount);
+      if (users !== undefined && users.length > 0) {
+        const itemsCount = users[0].activePositionsCount;
+        setPositionsItemsCount(itemsCount);
       }
     });
   }, [
@@ -94,8 +94,16 @@ const useDashboard = () => {
   useEffect(() => {
     if (account) {
       fetchUserStatsAndProxyWallet();
+    } else {
+      setProxyWallet("");
+      setPositionsItemsCount(0);
     }
-  }, [account, fetchUserStatsAndProxyWallet]);
+  }, [
+    account,
+    fetchUserStatsAndProxyWallet,
+    setPositionsItemsCount,
+    setProxyWallet,
+  ]);
 
   useEffect(() => {
     if (syncFXD && !prevSyncFxd) {
