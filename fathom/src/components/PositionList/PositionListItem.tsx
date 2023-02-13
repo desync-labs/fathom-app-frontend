@@ -30,7 +30,6 @@ import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatCurrency, formatNumber } from "utils/format";
 import usePositionDebtValue from "hooks/usePositionDebtValue";
 
-
 export type PositionListItemProps = {
   position: IOpenPosition;
   setSelectedPosition: Dispatch<SetStateAction<IOpenPosition | undefined>>;
@@ -79,7 +78,10 @@ const PositionListItem: FC<PositionListItemProps> = ({
   const anchorRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState<boolean>(false);
 
-  const {debtValue} = usePositionDebtValue(position.debtShare,position.collateralPool);
+  const { debtValue } = usePositionDebtValue(
+    position.debtShare,
+    position.collateralPool
+  );
 
   return (
     <AppTableRow

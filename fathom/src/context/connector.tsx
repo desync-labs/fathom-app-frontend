@@ -127,12 +127,13 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
       setIsMetamask(false);
       setIsWalletConnect(false);
     } catch (error) {
-      console.log("Error on disconnnect: ", error);
+      console.log(`Error on disconnnect: ${error}`);
     }
   }, [deactivate, setIsMetamask, setIsWalletConnect]);
 
   const values = useMemo(
     () => ({
+      connector,
       isActive,
       account,
       isLoading,
@@ -147,6 +148,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
       isWalletConnect,
     }),
     [
+      connector,
       isActive,
       isLoading,
       shouldDisable,

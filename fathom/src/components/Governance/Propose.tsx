@@ -31,6 +31,7 @@ import MuiInfoIcon from "@mui/icons-material/Info";
 import { styled } from "@mui/material/styles";
 
 import requiredSrc from "assets/svg/required.svg";
+import { WarningBox } from "components/AppComponents/AppBox/AppBox";
 
 const ProposeLabel = styled(AppFormLabel)`
   float: none;
@@ -53,24 +54,6 @@ const BalanceBox = styled(Box)`
   font-weight: bold;
   font-size: 20px;
   line-height: 24px;
-`;
-
-const WarningBox = styled(Box)`
-  background: #452508;
-  border: 1px solid #5c310a;
-  border-radius: 8px;
-  padding: 8px 16px;
-  gap: 8px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-
-  margin: 10px 0 20px;
-
-  p {
-    color: #f7b06e;
-    font-size: 14px;
-  }
 `;
 
 const ProposeButtonPrimary = styled(ButtonPrimary)`
