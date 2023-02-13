@@ -15,10 +15,7 @@ const ClosePositionInfo = () => {
           alignItems="flex-start"
           secondaryAction={
             <>
-              {BigNumber(lockedCollateral)
-                .multipliedBy(price)
-                .toFixed(6)}{" "}
-              FXD{" "}
+              {BigNumber(lockedCollateral).multipliedBy(price).toFixed(6)} FXD{" "}
               <Box component="span" sx={{ color: "#29C20A" }}>
                 →{" "}
                 {BigNumber(lockedCollateral)
@@ -38,7 +35,10 @@ const ClosePositionInfo = () => {
             <>
               {BigNumber(lockedCollateral).toFixed(6)} {pool.poolName}{" "}
               <Box component="span" sx={{ color: "#29C20A" }}>
-                → { BigNumber(lockedCollateral).minus( BigNumber(collateral) ).toFixed(6)}{" "}
+                →{" "}
+                {BigNumber(lockedCollateral)
+                  .minus(BigNumber(collateral))
+                  .toFixed(6)}{" "}
                 {pool.poolName}
               </Box>
             </>
@@ -54,7 +54,9 @@ const ClosePositionInfo = () => {
         </ListItem>
         <ListItem
           alignItems="flex-start"
-          secondaryAction={`1 FXD = ${1 / price} ${pool.poolName}`}
+          secondaryAction={`1 ${pool.poolName} = ${BigNumber(position.liquidationPrice).toFixed(
+            6
+          )} FXD`}
         >
           <ListItemText primary="Liquidation Price" />
         </ListItem>
