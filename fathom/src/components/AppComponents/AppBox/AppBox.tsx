@@ -1,7 +1,11 @@
 import { styled } from "@mui/material/styles";
-import { Typography, Box as MuiBox } from "@mui/material";
+import {
+  Typography,
+  Box as MuiBox,
+  Box
+} from "@mui/material";
 
-import RemoveCircle from 'assets/svg/remove-circle.svg';
+import RemoveCircle from "assets/svg/remove-circle.svg";
 
 export const TitleSecondary = styled(Typography)`
   font-size: 16px;
@@ -9,7 +13,6 @@ export const TitleSecondary = styled(Typography)`
   font-weight: bold;
   line-height: 24px;
   margin-bottom: 10px;
-  
 `;
 
 export const NoResults = styled(Typography)`
@@ -120,13 +123,13 @@ export const WrongNetworkMobile = styled(MuiBox)`
   display: flex;
   justify-content: center;
   align-items: center;
-`
+`;
 
 export const WrongNetworkMobileIcon = styled(MuiBox)`
   background: url("${RemoveCircle}") no-repeat center;
   width: 20px;
   height: 20px;
-`
+`;
 
 export const RightNetwork = styled(MuiBox)`
   background: #253656;
@@ -155,4 +158,21 @@ export const MainBox = styled(MuiBox)`
   display: flex;
   flex-direction: column;
   width: 100%;
+`;
+
+export const WarningBox = styled(Box)`
+  background: #452508;
+  border: 1px solid #5c310a;
+  border-radius: 8px;
+  padding: 8px 16px;
+  gap: 8px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 10px 0 20px;
+
+  p {
+    color: #f7b06e;
+    font-size: 14px;
+  }
 `;
