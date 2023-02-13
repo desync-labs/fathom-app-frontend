@@ -13,6 +13,7 @@ import { useStores } from "stores";
 import { useWeb3React } from "@web3-react/core";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
+import BigNumber from "bignumber.js";
 
 type PricesProviderType = {
   children: ReactElement;
@@ -31,9 +32,9 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
   const { stakingService } = useStores();
   const { chainId } = useWeb3React();
   const { library } = useConnector()
-  const [fxdPrice, setFxdPrice] = useState(0);
-  const [wxdcPrice, setWxdcPrice] = useState(0);
-  const [fthmPrice, setFthmPrice] = useState(0);
+  const [fxdPrice, setFxdPrice] = useState<number>(0);
+  const [wxdcPrice, setWxdcPrice] = useState<number>(0);
+  const [fthmPrice, setFthmPrice] = useState<number>(0);
 
   const { syncDao, prevSyncDao, syncFXD, prevSyncFxd } = useSyncContext();
 
@@ -56,13 +57,8 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
   const fetchPairPrices = useCallback(async () => {
     if (library) {
       // @ts-ignore
-      const [{ 0: fxdPrice }, { 0: fthmPrice }, { 0: wxdcPrice }] =
+      const [{ 0: fthmPrice }, { 0: wxdcPriceInUsPlus }, { 0: wxdcPriceInFXD }] =
         await Promise.all([
-          stakingService.getPairPrice(
-            usdtTokenAddress,
-            fxdTokenAddress,
-            library
-          ),
           stakingService.getPairPrice(
             usdtTokenAddress,
             fthmTokenAddress,
@@ -73,11 +69,18 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
             wxdcTokenAddress,
             library
           ),
+          stakingService.getPairPrice(
+            fxdTokenAddress,
+            wxdcTokenAddress,
+            library,
+          )
         ]);
+
+      const fxdPrice = BigNumber(wxdcPriceInUsPlus).dividedBy(wxdcPriceInFXD).multipliedBy(10 ** 18).toNumber();
 
       setFxdPrice(fxdPrice);
       setFthmPrice(fthmPrice);
-      setWxdcPrice(wxdcPrice);
+      setWxdcPrice(wxdcPriceInUsPlus);
     }
   }, [
     stakingService,

@@ -199,7 +199,7 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
                           error={!!error}
                           id="outlined-textarea"
                           multiline
-                          rows={2}
+                          rows={3}
                           placeholder={
                             "Ex: Describe how you propose new way in details..."
                           }
