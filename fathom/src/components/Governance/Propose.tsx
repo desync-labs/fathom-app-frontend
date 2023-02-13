@@ -199,7 +199,7 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
                           error={!!error}
                           id="outlined-textarea"
                           multiline
-                          rows={2}
+                          rows={3}
                           placeholder={
                             "Ex: Describe how you propose new way in details..."
                           }
@@ -248,25 +248,25 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
                     )}
                   />
                 </Grid>
-                <Grid item xs={12}>
-                  <FormGroup sx={{ margin: "10px 0 0" }}>
-                    <Controller
-                      control={control}
-                      name="withAction"
-                      render={({
-                        field: { onChange, value },
-                        fieldState: { error },
-                      }) => (
-                        <FormControlLabel
-                          control={
-                            <Switch onChange={onChange} checked={!!value} />
-                          }
-                          label="Actionable Proposal"
-                        />
-                      )}
-                    />
-                  </FormGroup>
-                </Grid>
+                {/*<Grid item xs={12}>*/}
+                {/*  <FormGroup sx={{ margin: "10px 0 0" }}>*/}
+                {/*    <Controller*/}
+                {/*      control={control}*/}
+                {/*      name="withAction"*/}
+                {/*      render={({*/}
+                {/*        field: { onChange, value },*/}
+                {/*        fieldState: { error },*/}
+                {/*      }) => (*/}
+                {/*        <FormControlLabel*/}
+                {/*          control={*/}
+                {/*            <Switch onChange={onChange} checked={!!value} />*/}
+                {/*          }*/}
+                {/*          label="Actionable Proposal"*/}
+                {/*        />*/}
+                {/*      )}*/}
+                {/*    />*/}
+                {/*  </FormGroup>*/}
+                {/*</Grid>*/}
                 {withAction && (
                   <>
                     <Grid item xs={12}>
@@ -370,9 +370,8 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
                   </>
                 )}
               </Grid>
-              {vBalance !== null &&
-              (vBalance as number) / 10 ** 18 < MINIMUM_V_BALANCE ? (
-                <WarningBox>
+              {vBalance !== null && vBalance / 10 ** 18 < MINIMUM_V_BALANCE ? (
+                <WarningBox sx={{ my: 3 }}>
                   <InfoIcon
                     sx={{ width: "16px", color: "#F5953D", height: "16px" }}
                   />
@@ -384,7 +383,7 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
                   </Typography>
                 </WarningBox>
               ) : (
-                <WarningBox>
+                <WarningBox sx={{ my: 3 }}>
                   <InfoIcon
                     sx={{ width: "16px", color: "#F5953D", height: "16px" }}
                   />

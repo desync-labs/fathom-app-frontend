@@ -14,11 +14,8 @@ const AlertMessage = styled(Alert, {
   position: fixed;
   width: 100%;
   margin-bottom: 2px;
-  z-index: 1000;
   top: ${({ scroll }) => (scroll > 65 ? "0" : `${65 - scroll}px`)};
-  ${({ theme }) => theme.breakpoints.down("sm")} {
-    z-index: 1301;
-  }
+  z-index: 1301;
 `;
 
 type TransactionStatusPropsType = {
