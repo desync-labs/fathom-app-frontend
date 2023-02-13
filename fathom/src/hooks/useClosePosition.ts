@@ -192,7 +192,9 @@ const useClosePosition = (
 
     setFathomToken(setBalance.toString());
 
-    setCollateral(setBalance.dividedBy(price).precision(18).toString());
+    console.log(price);
+
+    setCollateral(setBalance.dividedBy(price).toString());
   }, [price, debtValue, balance, setFathomToken, setCollateral]);
 
   return {

@@ -7,14 +7,13 @@ import { useLazyQuery } from "@apollo/client";
 import { FXD_POSITIONS } from "apollo/queries";
 import { Constants } from "helpers/Constants";
 import useConnector from "context/connector";
-import { ConnectorEvent } from "@web3-react/types";
 
 const useOpenPositionList = (
   setPositionCurrentPage: Dispatch<number>,
   proxyWallet: string
 ) => {
   const { positionService } = useStores();
-  const { account, chainId, library, connector } = useConnector()!;
+  const { account, chainId, library } = useConnector()!;
   const [loadPositions, { loading, data, fetchMore, called }] = useLazyQuery(
     FXD_POSITIONS,
     {
