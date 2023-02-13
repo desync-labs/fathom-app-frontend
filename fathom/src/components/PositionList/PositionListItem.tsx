@@ -83,8 +83,6 @@ const PositionListItem: FC<PositionListItemProps> = ({
     position.collateralPool
   );
 
-  console.log(debtValue);
-
   return (
     <AppTableRow
       key={position.id}
