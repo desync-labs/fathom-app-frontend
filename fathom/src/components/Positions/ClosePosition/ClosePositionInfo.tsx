@@ -3,10 +3,18 @@ import { Box, Grid, ListItem, ListItemText } from "@mui/material";
 import React from "react";
 import useClosePositionContext from "context/closePosition";
 import BigNumber from "bignumber.js";
+import { formatPercentage } from "../../../utils/format";
 
 const ClosePositionInfo = () => {
-  const { lockedCollateral, price, fathomToken, pool, position, collateral } =
-    useClosePositionContext();
+  const {
+    lockedCollateral,
+    price,
+    fathomToken,
+    pool,
+    collateral,
+    liquidationPrice,
+    ltv,
+  } = useClosePositionContext();
 
   return (
     <Grid item xs={12} sm={6}>
@@ -46,15 +54,12 @@ const ClosePositionInfo = () => {
         >
           <ListItemText primary="Collateral Locked" />
         </ListItem>
-        <ListItem
-          alignItems="flex-start"
-          secondaryAction={`${Number(position.tvl) / 10}%`}
-        >
+        <ListItem alignItems="flex-start" secondaryAction={`${formatPercentage(ltv * 100)}%`}>
           <ListItemText primary="LTV (Loan-to-Value)" />
         </ListItem>
         <ListItem
           alignItems="flex-start"
-          secondaryAction={`1 ${pool.poolName} = ${''} FXD`}
+          secondaryAction={`1 ${pool.poolName} = ${liquidationPrice} FXD`}
         >
           <ListItemText primary="Liquidation Price" />
         </ListItem>
