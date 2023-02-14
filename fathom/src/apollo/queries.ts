@@ -12,7 +12,7 @@ export const FXD_STATS = gql`
 
 export const FXD_POOLS = gql`
   query FXDPools {
-    pools {
+    pools {     
       collateralLastPrice
       collateralPrice
       debtAccumulatedRate
