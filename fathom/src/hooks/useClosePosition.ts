@@ -123,8 +123,8 @@ const useClosePosition = (
           position.positionId,
           pool,
           account,
-          BigNumber(fathomToken).multipliedBy(Constants.WeiPerWad).toFixed(),
-          BigNumber(collateral).multipliedBy(Constants.WeiPerWad).toFixed(),
+          BigNumber(fathomToken).multipliedBy(Constants.WeiPerWad).toFixed(0, BigNumber.ROUND_UP),
+          BigNumber(collateral).multipliedBy(Constants.WeiPerWad).toFixed(0, BigNumber.ROUND_UP),
           library
         );
       }

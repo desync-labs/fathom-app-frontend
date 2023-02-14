@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 import { Controller } from "react-hook-form";
 import {
   Box,
-  FormControlLabel,
-  Switch,
+  // FormControlLabel,
+  // Switch,
   DialogContent,
   Grid,
   Stack,
@@ -31,7 +31,11 @@ import MuiInfoIcon from "@mui/icons-material/Info";
 import { styled } from "@mui/material/styles";
 
 import requiredSrc from "assets/svg/required.svg";
-import { WarningBox } from "components/AppComponents/AppBox/AppBox";
+import {
+  ErrorBox,
+  ErrorMessage,
+  WarningBox,
+} from "components/AppComponents/AppBox/AppBox";
 
 const ProposeLabel = styled(AppFormLabel)`
   float: none;
@@ -116,6 +120,7 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
     saveForLater,
     validateAddressesArray,
     formatNumber,
+    notAllowTimestamp,
   } = useCreateProposal(onClose);
 
   return (
@@ -393,6 +398,15 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
                   </Typography>
                 </WarningBox>
               )}
+              {notAllowTimestamp > 0 ? (
+                <ErrorBox sx={{ my: 3 }}>
+                  <InfoIcon />
+                  <ErrorMessage>
+                    You can't create new proposal until{" "}
+                    {new Date(notAllowTimestamp! * 1000).toLocaleString()}
+                  </ErrorMessage>
+                </ErrorBox>
+              ) : null}
             </Grid>
             <Grid item xs={12}>
               <Grid container spacing={1}>
