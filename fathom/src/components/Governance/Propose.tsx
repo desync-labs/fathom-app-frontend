@@ -37,6 +37,8 @@ import {
   WarningBox,
 } from "components/AppComponents/AppBox/AppBox";
 
+import { formatNumber } from "utils/format";
+
 const ProposeLabel = styled(AppFormLabel)`
   float: none;
   width: 100%;
@@ -119,7 +121,6 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
     vBalance,
     saveForLater,
     validateAddressesArray,
-    formatNumber,
     notAllowTimestamp,
   } = useCreateProposal(onClose);
 

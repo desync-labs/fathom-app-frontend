@@ -4,7 +4,6 @@ export default interface IOpenPosition {
   debtShare: string;
   debtValue: string;
   id: string;
-  liquidationPrice: string;
   lockedCollateral: string;
   positionAddress: string;
   positionId: string

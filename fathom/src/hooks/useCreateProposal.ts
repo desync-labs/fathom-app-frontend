@@ -1,11 +1,11 @@
+import Xdc3 from "xdc3";
+import Web3 from "web3";
 import { useStores } from "stores";
 import { useForm } from "react-hook-form";
 import { useCallback, useEffect, useState } from "react";
 import { Constants } from "helpers/Constants";
 import { ProposeProps } from "components/Governance/Propose";
 import { XDC_CHAIN_IDS } from "connectors/networks";
-import Xdc3 from "xdc3";
-import Web3 from "web3";
 import useSyncContext from "context/sync";
 import { useMediaQuery, useTheme } from "@mui/material";
 import useConnector from "context/connector";
@@ -20,13 +20,6 @@ const defaultValues = {
   link: "",
   agreement: false,
 };
-
-const formatter = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-  minimumFractionDigits: 0,
-  maximumFractionDigits: 3,
-});
 
 const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
   const { proposalStore } = useStores();
@@ -171,15 +164,6 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
     }
   }, []);
 
-  const formatNumber = useCallback((number: number) => {
-    return formatter
-      .formatToParts(number)
-      .map((p) =>
-        p.type !== "literal" && p.type !== "currency" ? p.value : ""
-      )
-      .join("");
-  }, []);
-
   return {
     isMobile,
     isLoading,
@@ -194,7 +178,6 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
     vBalance,
     saveForLater,
     validateAddressesArray,
-    formatNumber,
     notAllowTimestamp,
   };
 };
