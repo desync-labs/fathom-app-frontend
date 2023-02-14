@@ -54,9 +54,7 @@ const ClosePositionInfo = () => {
         </ListItem>
         <ListItem
           alignItems="flex-start"
-          secondaryAction={`1 ${pool.poolName} = ${BigNumber(position.liquidationPrice).toFixed(
-            6
-          )} FXD`}
+          secondaryAction={`1 ${pool.poolName} = ${''} FXD`}
         >
           <ListItemText primary="Liquidation Price" />
         </ListItem>

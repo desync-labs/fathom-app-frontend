@@ -110,7 +110,7 @@ const PositionListItem: FC<PositionListItemProps> = ({
           </Box>
         </Stack>
       </TableCell>
-      <TableCell>{formatCurrency(Number(position.liquidationPrice))}</TableCell>
+      <TableCell>{'liquidationPrice'}</TableCell>
       <TableCell>{formatNumber(Number(debtValue))} FXD</TableCell>
       <TableCell>
         {position.lockedCollateral} {position.collateralPoolName}
