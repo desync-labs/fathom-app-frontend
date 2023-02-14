@@ -12,7 +12,8 @@ export const FXD_STATS = gql`
 
 export const FXD_POOLS = gql`
   query FXDPools {
-    pools {     
+    pools {
+      rawPrice     
       collateralLastPrice
       collateralPrice
       debtAccumulatedRate
@@ -40,12 +41,11 @@ export const FXD_POSITIONS = gql`
       orderDirection: desc
       where: { walletAddress: $walletAddress, positionStatus_in: [safe, unsafe] }
     ) {
+      id
       collateralPool
       collateralPoolName
       debtShare
-      debtValue
-      id
-      liquidationPrice
+      debtValue           
       lockedCollateral
       positionAddress
       positionId
