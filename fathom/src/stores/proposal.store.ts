@@ -12,10 +12,7 @@ export default class ProposalStore {
   }
 
   showErrorMessage(msg: string) {
-    this.rootStore.alertStore.setShowErrorAlert(
-      true,
-      msg
-    );
+    this.rootStore.alertStore.setShowErrorAlert(true, msg);
   }
 
   async createProposal(
@@ -24,24 +21,26 @@ export default class ProposalStore {
     callData: string[],
     description: string,
     account: string,
-    library: Xdc3,
+    library: Xdc3
   ): Promise<any> {
     try {
-      return await this.service.createProposal(
-        targets,
-        values,
-        callData,
-        description,
-        account,
-        this.rootStore.transactionStore,
-        library,
-      ).then((receipt) => {
-        this.rootStore.alertStore.setShowSuccessAlert(
-          true,
-          "Proposal created successfully!"
-        );
-        return receipt;
-      });
+      return await this.service
+        .createProposal(
+          targets,
+          values,
+          callData,
+          description,
+          account,
+          this.rootStore.transactionStore,
+          library
+        )
+        .then((receipt) => {
+          this.rootStore.alertStore.setShowSuccessAlert(
+            true,
+            "Proposal created successfully!"
+          );
+          return receipt;
+        });
     } catch (e: any) {
       this.showErrorMessage(e.message);
       throw e;
@@ -54,58 +53,77 @@ export default class ProposalStore {
     callData: string[],
     description: string,
     account: string,
-    library: Xdc3,
+    library: Xdc3
   ) {
     try {
-      return await this.service.executeProposal(
-        targets,
-        values,
-        callData,
-        description,
-        account,
-        this.rootStore.transactionStore,
-        library,
-      ).then((receipt) => {
-        this.rootStore.alertStore.setShowSuccessAlert(
-          true,
-          "Proposal executed created successfully!"
-        );
-        return receipt;
-      });
+      return await this.service
+        .executeProposal(
+          targets,
+          values,
+          callData,
+          description,
+          account,
+          this.rootStore.transactionStore,
+          library
+        )
+        .then((receipt) => {
+          this.rootStore.alertStore.setShowSuccessAlert(
+            true,
+            "Proposal executed created successfully!"
+          );
+          return receipt;
+        });
     } catch (e: any) {
       this.showErrorMessage(e.message);
     }
   }
-
 
   async castVote(
     proposalId: string,
     account: string,
     support: string,
-    library: Xdc3,
+    library: Xdc3
   ): Promise<any> {
     try {
-      return await this.service.castVote(
-        proposalId,
-        account,
-        support,
-        this.rootStore.transactionStore,
-        library,
-      ).then((receipt) => {
-        this.rootStore.alertStore.setShowSuccessAlert(
-          true,
-          "You have successfully voted!"
-        );
-        return receipt;
-      });
+      return await this.service
+        .castVote(
+          proposalId,
+          account,
+          support,
+          this.rootStore.transactionStore,
+          library
+        )
+        .then((receipt) => {
+          this.rootStore.alertStore.setShowSuccessAlert(
+            true,
+            "You have successfully voted!"
+          );
+          return receipt;
+        });
     } catch (e: any) {
       this.showErrorMessage(e.message);
     }
   }
 
-  async hasVoted(proposalId: string, account: string, library: Xdc3): Promise<boolean | undefined> {
+  async nextAcceptableProposalTimestamp(account: string, library: Xdc3): Promise<any> {
     try {
-      return await this.service.hasVoted(proposalId, account, library)
+      const data = await this.service.nextAcceptableProposalTimestamp(
+        account,
+        library
+      );
+      return data;
+    } catch (e: any) {
+      this.showErrorMessage(e.message);
+    }
+  }
+
+  async hasVoted(
+    proposalId: string,
+    account: string,
+    library: Xdc3
+  ): Promise<boolean | undefined> {
+    try {
+      return await this.service.hasVoted(proposalId, account, library);
     } catch (e: any) {
       this.showErrorMessage(e.message);
     }
@@ -119,17 +137,9 @@ export default class ProposalStore {
     }
   }
 
-  async fetchProposalState(
-    proposal: string,
-    account: string,
-    library: Xdc3,
-  ) {
+  async fetchProposalState(proposal: string, account: string, library: Xdc3) {
     try {
-      return await this.service.viewProposalState(
-        proposal,
-        account,
-        library,
-      );
+      return await this.service.viewProposalState(proposal, account, library);
     } catch (e: any) {
       this.showErrorMessage(e.message);
     }
