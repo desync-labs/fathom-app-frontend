@@ -133,7 +133,7 @@ const PositionListItemMobile: FC<PositionListItemProps> = ({
       <ListItemWrapper>
         <ListLabel>Liquidation price</ListLabel>
         <ListValue>
-          {formatCurrency(Number(position.liquidationPrice))}
+          {'liquidationPrice'}
         </ListValue>
       </ListItemWrapper>
       <ListItemWrapper>
