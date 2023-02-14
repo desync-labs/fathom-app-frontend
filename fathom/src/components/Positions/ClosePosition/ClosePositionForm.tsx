@@ -90,7 +90,7 @@ const ClosePositionForm = () => {
           Repay partially
         </RepayTypeButton>
       </ClosePositionRepayTypeWrapper>
-      <Box sx={{ marginBottom: "20px" }}>
+      <Box sx={{ mb: "20px" }}>
         <Box
           sx={{
             fontWeight: "bold",

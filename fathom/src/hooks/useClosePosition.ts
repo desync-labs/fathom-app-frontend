@@ -44,6 +44,8 @@ const useClosePosition = (
     useState<boolean>(false);
 
   const [debtValue, setDebtValue] = useState<string>("");
+  const [liquidationPrice, setLiquidationPrice] = useState<number>(0);
+  const [ltv, setLtv] = useState<number>(0);
 
   const aXDCcTokenAddress = useMemo(() => {
     return SmartContractFactory.aXDCcTokenAddress(chainId!);
@@ -64,6 +66,7 @@ const useClosePosition = (
     const balanceInDecimal = BigNumber(balance)
       .dividedBy(Constants.WeiPerWad)
       .toFixed();
+
     setBalance(balanceInDecimal);
   }, [positionService, account, library, setBalance]);
 
@@ -73,13 +76,33 @@ const useClosePosition = (
       position.collateralPool,
       library
     );
+
+    const liquidationPrice = BigNumber(pool.rawPrice)
+      .minus(
+        BigNumber(pool.priceWithSafetyMargin)
+          .multipliedBy(position.lockedCollateral)
+          .minus(position.debtValue)
+          .dividedBy(position.lockedCollateral)
+      )
+      .toNumber();
+
+    const ltv = BigNumber(position.debtValue)
+      .dividedBy(
+        BigNumber(pool.rawPrice).multipliedBy(position.lockedCollateral)
+      )
+      .toNumber();
+
+
+    setLtv(ltv);
+    setLiquidationPrice(liquidationPrice);
     setDebtValue(debtValue);
   }, [
+    position,
     positionService,
-    position.debtShare,
     library,
     setDebtValue,
-    position.collateralPool,
+    setLiquidationPrice,
+    setLtv
   ]);
 
   const handleOnOpen = useCallback(async () => {
@@ -123,8 +146,12 @@ const useClosePosition = (
           position.positionId,
           pool,
           account,
-          BigNumber(fathomToken).multipliedBy(Constants.WeiPerWad).toFixed(0, BigNumber.ROUND_UP),
-          BigNumber(collateral).multipliedBy(Constants.WeiPerWad).toFixed(0, BigNumber.ROUND_UP),
+          BigNumber(fathomToken)
+            .multipliedBy(Constants.WeiPerWad)
+            .toFixed(0, BigNumber.ROUND_UP),
+          BigNumber(collateral)
+            .multipliedBy(Constants.WeiPerWad)
+            .toFixed(0, BigNumber.ROUND_UP),
           library
         );
       }
@@ -195,6 +222,8 @@ const useClosePosition = (
   }, [price, debtValue, balance, setFathomToken, setCollateral]);
 
   return {
+    liquidationPrice,
+    ltv,
     chainId,
     collateral,
     lockedCollateral,
