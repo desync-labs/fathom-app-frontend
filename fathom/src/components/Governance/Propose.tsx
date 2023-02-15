@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 import { Controller } from "react-hook-form";
 import {
   Box,
-  FormControlLabel,
-  Switch,
+  // FormControlLabel,
+  // Switch,
   DialogContent,
   Grid,
   Stack,
@@ -31,6 +31,13 @@ import MuiInfoIcon from "@mui/icons-material/Info";
 import { styled } from "@mui/material/styles";
 
 import requiredSrc from "assets/svg/required.svg";
+import {
+  ErrorBox,
+  ErrorMessage,
+  WarningBox,
+} from "components/AppComponents/AppBox/AppBox";
+
+import { formatNumber } from "utils/format";
 
 const ProposeLabel = styled(AppFormLabel)`
   float: none;
@@ -53,24 +60,6 @@ const BalanceBox = styled(Box)`
   font-weight: bold;
   font-size: 20px;
   line-height: 24px;
-`;
-
-const WarningBox = styled(Box)`
-  background: #452508;
-  border: 1px solid #5c310a;
-  border-radius: 8px;
-  padding: 8px 16px;
-  gap: 8px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-
-  margin: 10px 0 20px;
-
-  p {
-    color: #f7b06e;
-    font-size: 14px;
-  }
 `;
 
 const ProposeButtonPrimary = styled(ButtonPrimary)`
@@ -132,7 +121,7 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
     vBalance,
     saveForLater,
     validateAddressesArray,
-    formatNumber,
+    notAllowTimestamp,
   } = useCreateProposal(onClose);
 
   return (
@@ -216,7 +205,7 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
                           error={!!error}
                           id="outlined-textarea"
                           multiline
-                          rows={2}
+                          rows={3}
                           placeholder={
                             "Ex: Describe how you propose new way in details..."
                           }
@@ -265,25 +254,25 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
                     )}
                   />
                 </Grid>
-                <Grid item xs={12}>
-                  <FormGroup sx={{ margin: "10px 0 0" }}>
-                    <Controller
-                      control={control}
-                      name="withAction"
-                      render={({
-                        field: { onChange, value },
-                        fieldState: { error },
-                      }) => (
-                        <FormControlLabel
-                          control={
-                            <Switch onChange={onChange} checked={!!value} />
-                          }
-                          label="Actionable Proposal"
-                        />
-                      )}
-                    />
-                  </FormGroup>
-                </Grid>
+                {/*<Grid item xs={12}>*/}
+                {/*  <FormGroup sx={{ margin: "10px 0 0" }}>*/}
+                {/*    <Controller*/}
+                {/*      control={control}*/}
+                {/*      name="withAction"*/}
+                {/*      render={({*/}
+                {/*        field: { onChange, value },*/}
+                {/*        fieldState: { error },*/}
+                {/*      }) => (*/}
+                {/*        <FormControlLabel*/}
+                {/*          control={*/}
+                {/*            <Switch onChange={onChange} checked={!!value} />*/}
+                {/*          }*/}
+                {/*          label="Actionable Proposal"*/}
+                {/*        />*/}
+                {/*      )}*/}
+                {/*    />*/}
+                {/*  </FormGroup>*/}
+                {/*</Grid>*/}
                 {withAction && (
                   <>
                     <Grid item xs={12}>
@@ -387,9 +376,8 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
                   </>
                 )}
               </Grid>
-              {vBalance !== null &&
-              (vBalance as number) / 10 ** 18 < MINIMUM_V_BALANCE ? (
-                <WarningBox>
+              {vBalance !== null && vBalance / 10 ** 18 < MINIMUM_V_BALANCE ? (
+                <WarningBox sx={{ my: 3 }}>
                   <InfoIcon
                     sx={{ width: "16px", color: "#F5953D", height: "16px" }}
                   />
@@ -401,7 +389,7 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
                   </Typography>
                 </WarningBox>
               ) : (
-                <WarningBox>
+                <WarningBox sx={{ my: 3 }}>
                   <InfoIcon
                     sx={{ width: "16px", color: "#F5953D", height: "16px" }}
                   />
@@ -411,6 +399,15 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
                   </Typography>
                 </WarningBox>
               )}
+              {notAllowTimestamp > 0 ? (
+                <ErrorBox sx={{ my: 3 }}>
+                  <InfoIcon />
+                  <ErrorMessage>
+                    You can't create new proposal until{" "}
+                    {new Date(notAllowTimestamp! * 1000).toLocaleString()}
+                  </ErrorMessage>
+                </ErrorBox>
+              ) : null}
             </Grid>
             <Grid item xs={12}>
               <Grid container spacing={1}>

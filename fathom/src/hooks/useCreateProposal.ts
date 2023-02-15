@@ -1,16 +1,13 @@
+import Xdc3 from "xdc3";
+import Web3 from "web3";
 import { useStores } from "stores";
 import { useForm } from "react-hook-form";
 import { useCallback, useEffect, useState } from "react";
 import { Constants } from "helpers/Constants";
 import { ProposeProps } from "components/Governance/Propose";
 import { XDC_CHAIN_IDS } from "connectors/networks";
-import Xdc3 from "xdc3";
-import Web3 from "web3";
 import useSyncContext from "context/sync";
-import {
-  useMediaQuery,
-  useTheme
-} from "@mui/material";
+import { useMediaQuery, useTheme } from "@mui/material";
 import useConnector from "context/connector";
 
 const defaultValues = {
@@ -24,20 +21,17 @@ const defaultValues = {
   agreement: false,
 };
 
-const formatter = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-  minimumFractionDigits: 0,
-  maximumFractionDigits: 3,
-});
-
 const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
   const { proposalStore } = useStores();
   const { account, chainId, library } = useConnector()!;
+
   const [vBalance, setVBalance] = useState<null | number>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [notAllowTimestamp, setNotAllowTimestamp] = useState<number>(0);
+
   const theme = useTheme();
+
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const { handleSubmit, watch, control, reset, getValues } = useForm({
     defaultValues,
@@ -54,8 +48,17 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
       proposalStore.getVBalance(account, library).then((balance) => {
         setVBalance(balance!);
       });
+      proposalStore
+        .nextAcceptableProposalTimestamp(account, library)
+        .then((nextAcceptableTimestamp: number) => {
+          if (nextAcceptableTimestamp > Date.now() / 1000) {
+            setNotAllowTimestamp(nextAcceptableTimestamp);
+          } else {
+            setNotAllowTimestamp(0);
+          }
+        });
     }
-  }, [account, library, proposalStore, setVBalance]);
+  }, [account, library, proposalStore, setVBalance, setNotAllowTimestamp]);
 
   useEffect(() => {
     let values = localStorage.getItem("createProposal");
@@ -67,7 +70,11 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
 
   const onSubmit = useCallback(
     async (values: Record<string, any>) => {
-      setIsLoading(true)
+      if (notAllowTimestamp > Date.now() / 1000) {
+        return;
+      }
+
+      setIsLoading(true);
       try {
         const {
           descriptionTitle,
@@ -94,7 +101,7 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
             callDataArray,
             combinedText,
             account,
-            library,
+            library
           );
         } else {
           receipt = await proposalStore.createProposal(
@@ -103,7 +110,7 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
             [Constants.ZERO_ADDRESS],
             combinedText,
             account,
-            library,
+            library
           );
         }
 
@@ -114,10 +121,18 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
       } catch (err) {
         console.log(err);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
     },
-    [reset, account, library, proposalStore, onClose, setLastTransactionBlock]
+    [
+      notAllowTimestamp,
+      reset,
+      account,
+      library,
+      proposalStore,
+      onClose,
+      setLastTransactionBlock,
+    ]
   );
 
   const saveForLater = useCallback(() => {
@@ -149,15 +164,6 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
     }
   }, []);
 
-  const formatNumber = useCallback((number: number) => {
-    return formatter
-      .formatToParts(number)
-      .map((p) =>
-        p.type !== "literal" && p.type !== "currency" ? p.value : ""
-      )
-      .join("");
-  }, []);
-
   return {
     isMobile,
     isLoading,
@@ -172,7 +178,7 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
     vBalance,
     saveForLater,
     validateAddressesArray,
-    formatNumber,
+    notAllowTimestamp,
   };
 };
 

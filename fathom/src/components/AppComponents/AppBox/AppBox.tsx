@@ -1,7 +1,7 @@
 import { styled } from "@mui/material/styles";
-import { Typography, Box as MuiBox } from "@mui/material";
+import { Typography, Box as MuiBox, Box } from "@mui/material";
 
-import RemoveCircle from 'assets/svg/remove-circle.svg';
+import RemoveCircle from "assets/svg/remove-circle.svg";
 
 export const TitleSecondary = styled(Typography)`
   font-size: 16px;
@@ -9,7 +9,6 @@ export const TitleSecondary = styled(Typography)`
   font-weight: bold;
   line-height: 24px;
   margin-bottom: 10px;
-  
 `;
 
 export const NoResults = styled(Typography)`
@@ -86,18 +85,26 @@ export const TVL = styled(Typography)`
   line-height: 16px;
 `;
 
-export const ClosePositionError = styled(MuiBox)`
+export const ErrorBox = styled(MuiBox)`
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
+  align-items: center;
   background: rgba(51, 13, 13, 0.9);
   border: 1px solid #5a0000;
   border-radius: 8px;
-  padding: 12px 16px 20px;
+  padding: 12px 16px;
   margin: 20px 0;
+
+  svg {
+    width: 16px;
+    height: 16px;
+    color: #ce0000;
+    float: left;
+    margin-right: 10px;
+  }
 `;
 
-export const ClosePositionErrorMessage = styled(Typography)`
+export const ErrorMessage = styled(Typography)`
   font-size: 14px;
   line-height: 20px;
   color: #ff8585;
@@ -120,13 +127,13 @@ export const WrongNetworkMobile = styled(MuiBox)`
   display: flex;
   justify-content: center;
   align-items: center;
-`
+`;
 
 export const WrongNetworkMobileIcon = styled(MuiBox)`
   background: url("${RemoveCircle}") no-repeat center;
   width: 20px;
   height: 20px;
-`
+`;
 
 export const RightNetwork = styled(MuiBox)`
   background: #253656;
@@ -155,4 +162,21 @@ export const MainBox = styled(MuiBox)`
   display: flex;
   flex-direction: column;
   width: 100%;
+`;
+
+export const WarningBox = styled(Box)`
+  background: #452508;
+  border: 1px solid #5c310a;
+  border-radius: 8px;
+  padding: 8px 16px;
+  gap: 8px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 10px 0 20px;
+
+  p {
+    color: #f7b06e;
+    font-size: 14px;
+  }
 `;

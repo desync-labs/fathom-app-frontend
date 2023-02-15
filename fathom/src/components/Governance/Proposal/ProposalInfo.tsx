@@ -3,7 +3,7 @@ import Xdc3 from 'xdc3';
 import { useWeb3React } from "@web3-react/core";
 import { Box, Grid, Typography } from "@mui/material";
 import { secondsToTime } from "utils/secondsToTime";
-import { getAccountUrl } from "utils/exporer";
+import { getAccountUrl } from "utils/explorer";
 import useProposalContext from "context/proposal";
 import { ChainId } from "connectors/networks";
 import { styled } from "@mui/material/styles";

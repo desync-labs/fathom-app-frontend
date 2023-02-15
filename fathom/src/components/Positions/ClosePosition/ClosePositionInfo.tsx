@@ -3,10 +3,18 @@ import { Box, Grid, ListItem, ListItemText } from "@mui/material";
 import React from "react";
 import useClosePositionContext from "context/closePosition";
 import BigNumber from "bignumber.js";
+import { formatPercentage } from "../../../utils/format";
 
 const ClosePositionInfo = () => {
-  const { lockedCollateral, price, fathomToken, pool, position, collateral } =
-    useClosePositionContext();
+  const {
+    lockedCollateral,
+    price,
+    fathomToken,
+    pool,
+    collateral,
+    liquidationPrice,
+    ltv,
+  } = useClosePositionContext();
 
   return (
     <Grid item xs={12} sm={6}>
@@ -15,10 +23,7 @@ const ClosePositionInfo = () => {
           alignItems="flex-start"
           secondaryAction={
             <>
-              {BigNumber(lockedCollateral)
-                .multipliedBy(price)
-                .toFixed(6)}{" "}
-              FXD{" "}
+              {BigNumber(lockedCollateral).multipliedBy(price).toFixed(6)} FXD{" "}
               <Box component="span" sx={{ color: "#29C20A" }}>
                 →{" "}
                 {BigNumber(lockedCollateral)
@@ -38,7 +43,10 @@ const ClosePositionInfo = () => {
             <>
               {BigNumber(lockedCollateral).toFixed(6)} {pool.poolName}{" "}
               <Box component="span" sx={{ color: "#29C20A" }}>
-                → { BigNumber(lockedCollateral).minus( BigNumber(collateral) ).toFixed(6)}{" "}
+                →{" "}
+                {BigNumber(lockedCollateral)
+                  .minus(BigNumber(collateral))
+                  .toFixed(6)}{" "}
                 {pool.poolName}
               </Box>
             </>
@@ -46,15 +54,12 @@ const ClosePositionInfo = () => {
         >
           <ListItemText primary="Collateral Locked" />
         </ListItem>
-        <ListItem
-          alignItems="flex-start"
-          secondaryAction={`${Number(position.tvl) / 10}%`}
-        >
+        <ListItem alignItems="flex-start" secondaryAction={`${formatPercentage(ltv * 100)}%`}>
           <ListItemText primary="LTV (Loan-to-Value)" />
         </ListItem>
         <ListItem
           alignItems="flex-start"
-          secondaryAction={`1 FXD = ${1 / price} ${pool.poolName}`}
+          secondaryAction={`1 ${pool.poolName} = ${liquidationPrice} FXD`}
         >
           <ListItemText primary="Liquidation Price" />
         </ListItem>
