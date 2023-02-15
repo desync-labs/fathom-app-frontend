@@ -1,0 +1,10 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;400&display=swap");
+
+.MuiList-padding.MuiMenu-list {
+  background: #253656;
+}
+
+a {
+  color: #5a81ff;
+  text-decoration: none;
+}
