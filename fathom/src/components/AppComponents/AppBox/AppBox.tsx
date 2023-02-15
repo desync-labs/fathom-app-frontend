@@ -1,9 +1,5 @@
 import { styled } from "@mui/material/styles";
-import {
-  Typography,
-  Box as MuiBox,
-  Box
-} from "@mui/material";
+import { Typography, Box as MuiBox, Box } from "@mui/material";
 
 import RemoveCircle from "assets/svg/remove-circle.svg";
 
@@ -89,18 +85,26 @@ export const TVL = styled(Typography)`
   line-height: 16px;
 `;
 
-export const ClosePositionError = styled(MuiBox)`
+export const ErrorBox = styled(MuiBox)`
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
+  align-items: center;
   background: rgba(51, 13, 13, 0.9);
   border: 1px solid #5a0000;
   border-radius: 8px;
-  padding: 12px 16px 20px;
+  padding: 12px 16px;
   margin: 20px 0;
+
+  svg {
+    width: 16px;
+    height: 16px;
+    color: #ce0000;
+    float: left;
+    margin-right: 10px;
+  }
 `;
 
-export const ClosePositionErrorMessage = styled(Typography)`
+export const ErrorMessage = styled(Typography)`
   font-size: 14px;
   line-height: 20px;
   color: #ff8585;
