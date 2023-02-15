@@ -8,7 +8,7 @@ import {
 //TODO: Use the environment dev/prod/staging to fetch the url.. 
 //Break down the url into base url (env specific) and graph name into constats.
 const STABLE_COIN_DEV =
-  "http://159.223.112.169:8000/subgraphs/name/stablecoin-subgraph";
+  "https://dev.composer.live/subgraphs/name/stablecoin-subgraph";
 const STABLE_COIN_STAGING =
   "";
 
