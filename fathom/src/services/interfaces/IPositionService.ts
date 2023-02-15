@@ -2,7 +2,6 @@ import Xdc3 from "xdc3";
 import { TransactionReceipt } from "web3-eth";
 import ICollateralPool from "stores/interfaces/ICollateralPool";
 
-
 export default interface IPositionService {
   openPosition(
     address: string,
@@ -22,7 +21,11 @@ export default interface IPositionService {
     collateral: string,
     library: Xdc3
   ): Promise<TransactionReceipt | undefined>;
-  approve(address: string, tokenAddress: string, library: Xdc3): Promise<TransactionReceipt | undefined>;
+  approve(
+    address: string,
+    tokenAddress: string,
+    library: Xdc3
+  ): Promise<TransactionReceipt | undefined>;
   approvalStatus(
     address: string,
     tokenAddress: string,
@@ -45,8 +48,8 @@ export default interface IPositionService {
   ): Promise<TransactionReceipt | undefined>;
 
   getDebtValue(
-    borrowed: string,
+    debtShare: string,
     poolId: string,
     library: Xdc3
-  ): Promise<string>
+  ): Promise<string>;
 }
