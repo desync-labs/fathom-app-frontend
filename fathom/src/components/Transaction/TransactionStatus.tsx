@@ -4,7 +4,7 @@ import { useStores } from "stores";
 import truncateEthAddress from "truncate-eth-address";
 import { styled } from "@mui/material/styles";
 import { useWeb3React } from "@web3-react/core";
-import { getTxUrl } from "utils/exporer";
+import { getTxUrl } from "utils/explorer";
 import { ChainId } from "connectors/networks";
 import { FC } from "react";
 
@@ -14,11 +14,8 @@ const AlertMessage = styled(Alert, {
   position: fixed;
   width: 100%;
   margin-bottom: 2px;
-  z-index: 1000;
   top: ${({ scroll }) => (scroll > 65 ? "0" : `${65 - scroll}px`)};
-  ${({ theme }) => theme.breakpoints.down("sm")} {
-    z-index: 1301;
-  }
+  z-index: 1301;
 `;
 
 type TransactionStatusPropsType = {

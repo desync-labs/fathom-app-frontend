@@ -9,6 +9,7 @@ import useConnector from "context/connector";
 import { useWeb3React } from "@web3-react/core";
 import BigNumber from "bignumber.js";
 import { Constants } from "helpers/Constants";
+import { SmartContractFactory } from "../config/SmartContractFactory";
 
 export enum ClosingType {
   Full,
@@ -23,7 +24,7 @@ const useClosePosition = (
 ) => {
   const { positionService } = useStores();
   const { account } = useConnector()!;
-  const { library } = useWeb3React();
+  const { library, chainId } = useWeb3React();
 
   const { data } = useQuery(FXD_POOLS, {
     context: { clientName: "stable" },
@@ -42,8 +43,13 @@ const useClosePosition = (
   const [disableClosePosition, setDisableClosePosition] =
     useState<boolean>(false);
 
-  const [debtValue, setDebtValue] =
-    useState<string>("");  
+  const [debtValue, setDebtValue] = useState<string>("");
+  const [liquidationPrice, setLiquidationPrice] = useState<number>(0);
+  const [ltv, setLtv] = useState<number>(0);
+
+  const aXDCcTokenAddress = useMemo(() => {
+    return SmartContractFactory.aXDCcTokenAddress(chainId!);
+  }, [chainId]);
 
   const pool = useMemo(
     () =>
@@ -53,31 +59,58 @@ const useClosePosition = (
     [data, position]
   );
 
-  const lockedCollateral = useMemo(
-    () => position.lockedCollateral,
-    [position]
-  );
+  const lockedCollateral = useMemo(() => position.lockedCollateral, [position]);
 
   const getBalance = useCallback(async () => {
     const balance = await positionService.balanceStableCoin(account, library);
-    const balanceInDecimal = BigNumber(balance).dividedBy(Constants.WeiPerWad).toFixed()
+    const balanceInDecimal = BigNumber(balance)
+      .dividedBy(Constants.WeiPerWad)
+      .toFixed();
+
     setBalance(balanceInDecimal);
   }, [positionService, account, library, setBalance]);
 
   const getDebtValue = useCallback(async () => {
-    const debtValue = await positionService.getDebtValue(position.debtShare,position.collateralPool, library);
-    setDebtValue(debtValue);
-  }, [positionService, position.debtShare, library, setDebtValue, position.collateralPool]);
+    const debtValue = await positionService.getDebtValue(
+      position.debtShare,
+      position.collateralPool,
+      library
+    );
 
+    const liquidationPrice = BigNumber(pool.rawPrice)
+      .minus(
+        BigNumber(pool.priceWithSafetyMargin)
+          .multipliedBy(position.lockedCollateral)
+          .minus(position.debtValue)
+          .dividedBy(position.lockedCollateral)
+      )
+      .toNumber();
+
+    const ltv = BigNumber(position.debtValue)
+      .dividedBy(
+        BigNumber(pool.rawPrice).multipliedBy(position.lockedCollateral)
+      )
+      .toNumber();
+
+
+    setLtv(ltv);
+    setLiquidationPrice(liquidationPrice);
+    setDebtValue(debtValue);
+  }, [
+    position,
+    positionService,
+    library,
+    setDebtValue,
+    setLiquidationPrice,
+    setLtv
+  ]);
 
   const handleOnOpen = useCallback(async () => {
     const price = BigNumber(debtValue).dividedBy(BigNumber(lockedCollateral));
 
     setPrice(price.toString());
 
-    setFathomToken(
-      debtValue
-    );
+    setFathomToken(debtValue);
     setCollateral(lockedCollateral);
   }, [lockedCollateral, debtValue, setPrice, setFathomToken, setCollateral]);
 
@@ -97,9 +130,10 @@ const useClosePosition = (
     setDisableClosePosition(true);
     try {
       let receipt;
-      if (closingType === ClosingType.Full || 
-        BigNumber(collateral).isEqualTo(BigNumber(lockedCollateral))) {
-
+      if (
+        closingType === ClosingType.Full ||
+        BigNumber(collateral).isEqualTo(BigNumber(lockedCollateral))
+      ) {
         receipt = await positionService.closePosition(
           position.positionId,
           pool,
@@ -107,14 +141,17 @@ const useClosePosition = (
           BigNumber(collateral).multipliedBy(Constants.WeiPerWad).toFixed(),
           library
         );
-
       } else {
         receipt = await positionService.partiallyClosePosition(
           position.positionId,
           pool,
           account,
-          BigNumber(fathomToken).multipliedBy(Constants.WeiPerWad).toFixed(),
-          BigNumber(collateral).multipliedBy(Constants.WeiPerWad).toFixed(),
+          BigNumber(fathomToken)
+            .multipliedBy(Constants.WeiPerWad)
+            .toFixed(0, BigNumber.ROUND_UP),
+          BigNumber(collateral)
+            .multipliedBy(Constants.WeiPerWad)
+            .toFixed(0, BigNumber.ROUND_UP),
           library
         );
       }
@@ -143,7 +180,7 @@ const useClosePosition = (
   const handleFathomTokenTextFieldChange = useCallback(
     (e: any) => {
       let { value } = e.target;
-      let bigIntValue = BigNumber(value) 
+      let bigIntValue = BigNumber(value);
 
       if (bigIntValue.isGreaterThan(BigNumber(debtValue))) {
         bigIntValue = BigNumber(debtValue);
@@ -176,18 +213,18 @@ const useClosePosition = (
   );
 
   const setMax = useCallback(() => {
-    
     const setBalance = BigNumber(balance).isLessThan(BigNumber(debtValue))
       ? BigNumber(balance)
       : BigNumber(debtValue);
 
     setFathomToken(setBalance.toString());
-
-    setCollateral(setBalance.dividedBy(price).precision(18).toFixed());
-    
+    setCollateral(setBalance.dividedBy(price).toString());
   }, [price, debtValue, balance, setFathomToken, setCollateral]);
 
   return {
+    liquidationPrice,
+    ltv,
+    chainId,
     collateral,
     lockedCollateral,
     price,
@@ -205,6 +242,7 @@ const useClosePosition = (
     position,
     setType,
     debtValue,
+    aXDCcTokenAddress,
   };
 };
 

@@ -8,13 +8,14 @@ import {
   useTheme,
 } from "@mui/material";
 import {
-  ClosePositionError,
-  ClosePositionErrorMessage,
+  ErrorBox,
+  ErrorMessage,
   InfoLabel,
   InfoValue,
   InfoWrapper,
   Summary,
   WalletBalance,
+  WarningBox,
 } from "components/AppComponents/AppBox/AppBox";
 import {
   ButtonPrimary,
@@ -34,6 +35,7 @@ import {
 import InfoIcon from "@mui/icons-material/Info";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatPercentage } from "utils/format";
+import { getToken } from "utils/explorer";
 
 import useClosePositionContext from "context/closePosition";
 import { styled } from "@mui/material/styles";
@@ -50,6 +52,7 @@ const ClosePositionWrapper = styled(Grid)`
 
 const ClosePositionForm = () => {
   const {
+    chainId,
     pool,
     collateral,
     balance,
@@ -63,6 +66,7 @@ const ClosePositionForm = () => {
     onClose,
     closePosition,
     debtValue,
+    aXDCcTokenAddress,
   } = useClosePositionContext();
 
   const theme = useTheme();
@@ -86,7 +90,7 @@ const ClosePositionForm = () => {
           Repay partially
         </RepayTypeButton>
       </ClosePositionRepayTypeWrapper>
-      <Box sx={{ marginBottom: "20px" }}>
+      <Box sx={{ mb: "20px" }}>
         <Box
           sx={{
             fontWeight: "bold",
@@ -104,11 +108,7 @@ const ClosePositionForm = () => {
       <AppFormInputWrapper>
         <AppFormLabel>Repaying</AppFormLabel>
         {balance && (
-          <WalletBalance>
-            Wallet Available:{" "}
-            {balance} {" "}
-            FXD
-          </WalletBalance>
+          <WalletBalance>Wallet Available: {balance} FXD</WalletBalance>
         )}
         <AppTextField
           error={balanceError}
@@ -134,8 +134,10 @@ const ClosePositionForm = () => {
           onChange={handleFathomTokenTextFieldChange}
         />
         <AppFormInputLogo src={getTokenLogoURL("FXD")} />
-        <MaxButton onClick={() => setMax()} 
-            disabled={closingType === ClosingType.Full ? true : false}>
+        <MaxButton
+          onClick={() => setMax()}
+          disabled={closingType === ClosingType.Full ? true : false}
+        >
           Max
         </MaxButton>
       </AppFormInputWrapper>
@@ -144,7 +146,7 @@ const ClosePositionForm = () => {
         <AppTextField
           disabled={true}
           id="outlined-helperText"
-          value = {collateral}
+          value={collateral}
         />
         <AppFormInputLogo
           src={getTokenLogoURL(
@@ -155,36 +157,41 @@ const ClosePositionForm = () => {
       {fathomToken ? (
         <InfoWrapper>
           <InfoLabel>Repaying</InfoLabel>
-          <InfoValue>
-            {fathomToken}{" "}
-            FXD
-          </InfoValue>
+          <InfoValue>{fathomToken} FXD</InfoValue>
         </InfoWrapper>
       ) : null}
       {fathomToken ? (
         <InfoWrapper>
           <InfoLabel>Receive</InfoLabel>
           <InfoValue>
-            {collateral} {" "}
-            {pool.poolName}
+            {collateral} {pool.poolName}
           </InfoValue>
         </InfoWrapper>
       ) : null}
       {closingType === ClosingType.Full && balanceError && (
-        <ClosePositionError>
-          <InfoIcon
-            sx={{
-              color: "#CE0000",
-              float: "left",
-              marginRight: "10px",
-            }}
-          />
-          <ClosePositionErrorMessage>
+        <ErrorBox>
+          <InfoIcon />
+          <ErrorMessage>
             Wallet balance is not enough to close this position entirely (repay
             in full).
-          </ClosePositionErrorMessage>
-        </ClosePositionError>
+          </ErrorMessage>
+        </ErrorBox>
       )}
+
+      <WarningBox sx={{ mt: 3 }}>
+        <InfoIcon sx={{ width: "16px", color: "#F5953D", height: "16px" }} />
+        <Typography>
+          After Close Position you will receive{" "}
+          <a
+            target="_blank"
+            href={getToken(aXDCcTokenAddress, chainId)}
+            rel="noreferrer"
+          >
+            aXDCc
+          </a>{" "}
+          token
+        </Typography>
+      </WarningBox>
       <ButtonsWrapper
         sx={{ position: "static", float: "right", marginTop: "20px" }}
       >

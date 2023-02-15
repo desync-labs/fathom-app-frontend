@@ -26,9 +26,18 @@ export default interface IProposalService {
     library: Xdc3
   ): Promise<number>;
 
+  nextAcceptableProposalTimestamp(
+    account: string,
+    library: Xdc3
+  ): Promise<number>;
+
   getVBalance(account: string, library: Xdc3): Promise<number>;
 
-  hasVoted(proposalId: string, account: string, library: Xdc3): Promise<boolean>
+  hasVoted(
+    proposalId: string,
+    account: string,
+    library: Xdc3
+  ): Promise<boolean>;
 
   executeProposal(
     targets: string[],

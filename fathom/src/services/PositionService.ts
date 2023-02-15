@@ -254,11 +254,6 @@ export default class PositionService implements IPositionService {
         this.chainId
       ).abi.filter((abi) => abi.name === "wipeAndUnlockXDC")[0];
 
-      console.log({
-        collateral: collateral,
-        stableCoin: stableCoin
-      })
-
       const wipeAndUnlockTokenCall = library.eth.abi.encodeFunctionCall(
         jsonInterface,
         [
@@ -305,6 +300,7 @@ export default class PositionService implements IPositionService {
             this.alertStore,
             this.transactionStore
           );
+
           return receipt;
         });
 
@@ -476,7 +472,7 @@ export default class PositionService implements IPositionService {
   }
 
   async getDebtValue(
-    borrowed: string,
+    debtShare: string,
     poolId: string,
     library: Xdc3
   ): Promise<string> {
@@ -490,10 +486,10 @@ export default class PositionService implements IPositionService {
       .getDebtAccumulatedRate(poolId)
       .call();
 
-    let debtShare = BigNumber(borrowed).multipliedBy(Constants.WeiPerWad).integerValue(BigNumber.ROUND_CEIL) 
-    let debtValue = BigNumber(debtAccumulatedRate).multipliedBy(debtShare)
+    const debtShareValue = BigNumber(debtShare).multipliedBy(Constants.WeiPerWad).integerValue(BigNumber.ROUND_CEIL)
+    const debtValue = BigNumber(debtAccumulatedRate).multipliedBy(debtShareValue)
 
-    return debtValue.dividedBy(Constants.WeiPerRad).precision(18).toFixed()
+    return debtValue.dividedBy(Constants.WeiPerRad).toFixed()
   }
 
   setChainId(chainId: number) {
