@@ -8,8 +8,8 @@ import {
   useTheme,
 } from "@mui/material";
 import {
-  ClosePositionError,
-  ClosePositionErrorMessage,
+  ErrorBox,
+  ErrorMessage,
   InfoLabel,
   InfoValue,
   InfoWrapper,
@@ -90,7 +90,7 @@ const ClosePositionForm = () => {
           Repay partially
         </RepayTypeButton>
       </ClosePositionRepayTypeWrapper>
-      <Box sx={{ marginBottom: "20px" }}>
+      <Box sx={{ mb: "20px" }}>
         <Box
           sx={{
             fontWeight: "bold",
@@ -169,19 +169,13 @@ const ClosePositionForm = () => {
         </InfoWrapper>
       ) : null}
       {closingType === ClosingType.Full && balanceError && (
-        <ClosePositionError>
-          <InfoIcon
-            sx={{
-              color: "#CE0000",
-              float: "left",
-              marginRight: "10px",
-            }}
-          />
-          <ClosePositionErrorMessage>
+        <ErrorBox>
+          <InfoIcon />
+          <ErrorMessage>
             Wallet balance is not enough to close this position entirely (repay
             in full).
-          </ClosePositionErrorMessage>
-        </ClosePositionError>
+          </ErrorMessage>
+        </ErrorBox>
       )}
 
       <WarningBox sx={{ mt: 3 }}>

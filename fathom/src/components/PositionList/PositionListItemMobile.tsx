@@ -16,9 +16,8 @@ import Grow from "@mui/material/Grow";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import MenuList from "@mui/material/MenuList";
 import MenuItem from "@mui/material/MenuItem";
-import { ClosingType } from "../../hooks/useClosePosition";
-import { AppPaper } from "../AppComponents/AppPaper/AppPaper";
-import usePositionDebtValue from "hooks/usePositionDebtValue";
+import { ClosingType } from "hooks/useClosePosition";
+import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
 
 const PositionListItemMobileContainer = styled(Box)`
   width: 100%;
@@ -104,9 +103,6 @@ const PositionListItemMobile: FC<PositionListItemProps> = ({
   const anchorRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState<boolean>(false);
 
-  const {debtValue} = usePositionDebtValue(position.debtShare,position.collateralPool);
-
-
   return (
     <PositionListItemMobileContainer>
       <ListItemWrapper>
@@ -132,13 +128,11 @@ const PositionListItemMobile: FC<PositionListItemProps> = ({
       </ListItemWrapper>
       <ListItemWrapper>
         <ListLabel>Liquidation price</ListLabel>
-        <ListValue>
-          {formatCurrency(Number(position.liquidationPrice))}
-        </ListValue>
+        <ListValue>{formatNumber(Number(position.liquidationPrice))}</ListValue>
       </ListItemWrapper>
       <ListItemWrapper>
         <ListLabel>Borrowed</ListLabel>
-        <ListValue>{formatNumber(Number(debtValue))} FXD</ListValue>
+        <ListValue>{formatNumber(Number(position.debtValue))} FXD</ListValue>
       </ListItemWrapper>
       <ListItemWrapper>
         <ListLabel>Collateral</ListLabel>

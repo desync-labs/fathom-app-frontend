@@ -202,7 +202,7 @@ const StableSwap = () => {
             "Buy and sell FXD for US+ at a rate of 1:1 with low fees."
           }
         />
-        <Grid item xs={12} sm={6} sx={{ margin: "0 auto" }}>
+        <Grid item xs={12} sm={10} md={8} lg={6} sx={{ margin: "0 auto" }}>
           <StableSwapPaper>
             <StableSwapInputWrapper>
               <StableSwapFormLabel>From</StableSwapFormLabel>
@@ -263,7 +263,7 @@ const StableSwap = () => {
               {approveInputBtn ? (
                 <ButtonSecondary
                   onClick={approveInput}
-                  sx={{ float: "right", marginTop: "10px" }}
+                  sx={{ float: "right", mt: "10px" }}
                 >
                   {approvalPending === "input" ? (
                     <CircularProgress size={30} />

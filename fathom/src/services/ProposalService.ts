@@ -114,7 +114,7 @@ export default class ProposalService implements IProposalService {
       .send(options);
   }
 
-  async hasVoted(
+  hasVoted(
     proposalId: string,
     account: string,
     library: Xdc3
@@ -127,7 +127,7 @@ export default class ProposalService implements IProposalService {
     return FathomGovernor.methods.hasVoted(proposalId, account).call();
   }
 
-  async viewProposalState(
+  viewProposalState(
     proposalId: string,
     account: string,
     library: Xdc3
@@ -138,6 +138,20 @@ export default class ProposalService implements IProposalService {
     );
 
     return FathomGovernor.methods.state(proposalId).call({ from: account });
+  }
+
+  nextAcceptableProposalTimestamp(
+    account: string,
+    library: Xdc3
+  ): Promise<number> {
+    const FathomGovernor = Web3Utils.getContractInstance(
+      SmartContractFactory.FathomGovernor(this.chainId),
+      library
+    );
+
+    return FathomGovernor.methods
+      .nextAcceptableProposalTimestamp(account)
+      .call()
   }
 
   async castVote(
@@ -176,7 +190,7 @@ export default class ProposalService implements IProposalService {
       });
   }
 
-  async getVBalance(account: string, library: Xdc3): Promise<number> {
+  getVBalance(account: string, library: Xdc3): Promise<number> {
     const VeFathom = Web3Utils.getContractInstance(
       SmartContractFactory.vFathom(this.chainId),
       library
