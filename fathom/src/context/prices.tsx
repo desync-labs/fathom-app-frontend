@@ -77,7 +77,7 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
         ]);
 
       const fxdPrice = BigNumber(wxdcPriceInUsPlus).multipliedBy(10 ** 18).dividedBy(wxdcPriceInFXD).toNumber();
-      const formattedFthmPrice = BigNumber( fthmPrice ).multipliedBy(fxdPrice).dividedBy(10 ** 18);
+      const formattedFthmPrice = BigNumber(fthmPrice).multipliedBy(fxdPrice).dividedBy(10 ** 18);
 
       setFxdPrice(fxdPrice);
       setFthmPrice(formattedFthmPrice.toNumber());

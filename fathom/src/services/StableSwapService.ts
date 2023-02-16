@@ -251,7 +251,7 @@ export default class StableSwapService implements IStableSwapService {
     return StableSwapModule.methods.dailySwapLimit().call();
   }
 
-  getTokenBalance(tokenAddress:string, library:Xdc3) {
+  getPoolTokenBalance(tokenAddress:string, library:Xdc3) {
     const StableSwapModule = Web3Utils.getContractInstance(
       SmartContractFactory.StableSwapModule(this.chainId),
       library
