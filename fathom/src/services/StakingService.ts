@@ -1,3 +1,4 @@
+import Xdc3 from "xdc3";
 import { SmartContractFactory } from "config/SmartContractFactory";
 import IStakingService from "services/interfaces/IStakingService";
 import { Web3Utils } from "helpers/Web3Utils";
@@ -9,10 +10,9 @@ import {
 } from "stores/interfaces/ITransaction";
 import { Constants } from "helpers/Constants";
 import { Strings } from "helpers/Strings";
-import Xdc3 from "xdc3";
 import { getEstimateGas } from "utils/getEstimateGas";
 
-const DAY_SECONDS = 24 * 60 * 60;
+export const DAY_SECONDS = 24 * 60 * 60;
 
 export default class StakingService implements IStakingService {
   chainId = Constants.DEFAULT_CHAIN_ID;
@@ -289,6 +289,15 @@ export default class StakingService implements IStakingService {
           message: Strings.CheckOnBlockExplorer,
         });
       });
+  }
+
+  getMinLockPeriod(library: Xdc3) {
+    const Staking = Web3Utils.getContractInstance(
+      SmartContractFactory.Staking(this.chainId),
+      library
+    );
+
+    return Staking.methods.minLockPeriod().call();
   }
 
   getPairPrice(token0: string, token1: string, library: Xdc3) {
