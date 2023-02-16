@@ -97,6 +97,7 @@ const useClosePosition = (
     setLiquidationPrice(liquidationPrice);
     setDebtValue(debtValue);
   }, [
+    pool,
     position,
     positionService,
     library,

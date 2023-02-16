@@ -57,6 +57,8 @@ export default interface IStakingService {
 
   getStreamClaimableAmount(account: string, library: Xdc3): Promise<number>;
 
+  getMinLockPeriod(library: Xdc3): Promise<number>;
+
   approveStakingFTHM(
     address: string,
     fthmTokenAddress: string,
