@@ -144,12 +144,12 @@ export default class StableSwapStore {
     }
   }
 
-  async getPoolTokenBalance(
+  async getPoolBalance(
     tokenAddress: string,
     library: Xdc3
   ): Promise<number | undefined> {
     try {
-      return await this.service.getPoolTokenBalance(tokenAddress, library);
+      return await this.service.getPoolBalance(tokenAddress, library);
     } catch (e: any) {
       this.rootStore.alertStore.setShowErrorAlert(true, e.message);
     }
