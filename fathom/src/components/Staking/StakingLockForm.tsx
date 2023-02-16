@@ -18,11 +18,7 @@ import useStakingLockForm from "hooks/useStakingLockForm";
 import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
 import Period from "components/Staking/Components/Period";
 import { getTokenLogoURL } from "utils/tokenLogo";
-import {
-  formatCurrency,
-  formatNumber,
-  formatPercentage
-} from "utils/format";
+import { formatCurrency, formatNumber, formatPercentage } from "utils/format";
 
 import usePricesContext from "context/prices";
 
@@ -94,6 +90,7 @@ const StakingLockForm: FC = () => {
   const {
     balanceError,
     lockDays,
+    minLockPeriod,
     isLoading,
     approvedBtn,
     approvalPending,
@@ -123,7 +120,9 @@ const StakingLockForm: FC = () => {
             <>
               <AppFormLabel>Staking amount</AppFormLabel>
               {fthmBalance ? (
-                <WalletBalance>Available: {formatPercentage(fthmBalance)} FTHM</WalletBalance>
+                <WalletBalance>
+                  Available: {formatPercentage(fthmBalance)} FTHM
+                </WalletBalance>
               ) : null}
               <AppFormInputWrapper>
                 <AppTextField
@@ -160,7 +159,7 @@ const StakingLockForm: FC = () => {
         <Controller
           control={control}
           name="lockDays"
-          rules={{ required: true, min: 1, max: 365 }}
+          rules={{ required: true, min: minLockPeriod, max: 365 }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <>
               <AppFormInputWrapper>
@@ -176,7 +175,7 @@ const StakingLockForm: FC = () => {
                     <>
                       {error && error.type === "min" && (
                         <Box component="span" sx={{ fontSize: "12px" }}>
-                          Minimum period is 1 day
+                          Minimum period is { minLockPeriod } days
                         </Box>
                       )}
                       {error && error.type === "max" && (
@@ -205,7 +204,7 @@ const StakingLockForm: FC = () => {
                 <Slider
                   valueLabelDisplay="auto"
                   step={1}
-                  min={0}
+                  min={minLockPeriod}
                   max={365}
                   value={value}
                   onChange={onChange}
