@@ -60,7 +60,7 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
       const [{ 0: fthmPrice }, { 0: wxdcPriceInUsPlus }, { 0: wxdcPriceInFXD }] =
         await Promise.all([
           stakingService.getPairPrice(
-            usdtTokenAddress,
+            fxdTokenAddress,
             fthmTokenAddress,
             library
           ),
@@ -77,9 +77,10 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
         ]);
 
       const fxdPrice = BigNumber(wxdcPriceInUsPlus).multipliedBy(10 ** 18).dividedBy(wxdcPriceInFXD).toNumber();
+      const formattedFthmPrice = BigNumber( fthmPrice ).multipliedBy(fxdPrice).dividedBy(10 ** 18);
 
       setFxdPrice(fxdPrice);
-      setFthmPrice(fthmPrice);
+      setFthmPrice(formattedFthmPrice.toNumber());
       setWxdcPrice(wxdcPriceInUsPlus);
     }
   }, [
