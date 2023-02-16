@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useStores } from "stores";
-
 import debounce from "lodash.debounce";
-import useSyncContext from "context/sync";
-import { SmartContractFactory } from "config/SmartContractFactory";
-import useConnector from "context/connector";
 import BigNumber from "bignumber.js";
-import { DAY_SECONDS } from "../services/StakingService";
+
+import { useStores } from "stores";
+import useSyncContext from "context/sync";
+import useConnector from "context/connector";
+import { SmartContractFactory } from "config/SmartContractFactory";
+import { DAY_SECONDS } from "services/StakingService";
 
 const useStakingLockForm = () => {
   const [balanceError, setBalanceError] = useState<boolean>(false);

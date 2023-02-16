@@ -31,7 +31,7 @@ export const PricesContext = createContext<UseStakingViewType>(null);
 export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
   const { stakingService } = useStores();
   const { chainId } = useWeb3React();
-  const { library } = useConnector();
+  const { library } = useConnector()
   const [fxdPrice, setFxdPrice] = useState<number>(0);
   const [wxdcPrice, setWxdcPrice] = useState<number>(0);
   const [fthmPrice, setFthmPrice] = useState<number>(0);
@@ -57,27 +57,27 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
   const fetchPairPrices = useCallback(async () => {
     if (library) {
       // @ts-ignore
-      const [
-        { 0: fthmPrice },
-        { 0: wxdcPriceInUsPlus },
-        { 0: wxdcPriceInFXD },
-      ] = await Promise.all([
-        stakingService.getPairPrice(fxdTokenAddress, fthmTokenAddress, library),
-        stakingService.getPairPrice(
-          usdtTokenAddress,
-          wxdcTokenAddress,
-          library
-        ),
-        stakingService.getPairPrice(fxdTokenAddress, wxdcTokenAddress, library),
-      ]);
+      const [{ 0: fthmPrice }, { 0: wxdcPriceInUsPlus }, { 0: wxdcPriceInFXD }] =
+        await Promise.all([
+          stakingService.getPairPrice(
+            fxdTokenAddress,
+            fthmTokenAddress,
+            library
+          ),
+          stakingService.getPairPrice(
+            usdtTokenAddress,
+            wxdcTokenAddress,
+            library
+          ),
+          stakingService.getPairPrice(
+            fxdTokenAddress,
+            wxdcTokenAddress,
+            library,
+          )
+        ]);
 
-      const fxdPrice = BigNumber(wxdcPriceInUsPlus)
-        .multipliedBy(10 ** 18)
-        .dividedBy(wxdcPriceInFXD)
-        .toNumber();
-      const formattedFthmPrice = BigNumber(fthmPrice)
-        .multipliedBy(fxdPrice)
-        .dividedBy(10 ** 18);
+      const fxdPrice = BigNumber(wxdcPriceInUsPlus).multipliedBy(10 ** 18).dividedBy(wxdcPriceInFXD).toNumber();
+      const formattedFthmPrice = BigNumber( fthmPrice ).multipliedBy(fxdPrice).dividedBy(10 ** 18);
 
       setFxdPrice(fxdPrice);
       setFthmPrice(formattedFthmPrice.toNumber());
