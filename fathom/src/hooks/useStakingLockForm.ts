@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useStores } from "stores";
-
 import debounce from "lodash.debounce";
-import useSyncContext from "context/sync";
-import { SmartContractFactory } from "config/SmartContractFactory";
-import useConnector from "context/connector";
 import BigNumber from "bignumber.js";
+
+import { useStores } from "stores";
+import useSyncContext from "context/sync";
+import useConnector from "context/connector";
+import { SmartContractFactory } from "config/SmartContractFactory";
+import { DAY_SECONDS } from "services/StakingService";
 
 const useStakingLockForm = () => {
   const [balanceError, setBalanceError] = useState<boolean>(false);
@@ -38,21 +39,27 @@ const useStakingLockForm = () => {
   const [xdcBalance, setXdcBalance] = useState<number>(0);
   const [fxdBalance, setFxdBalance] = useState<number>(0);
 
+  const [minLockPeriod, setMinLockPeriod] = useState<number>(1);
+
   const fthmTokenAddress = useMemo(() => {
     return SmartContractFactory.FthmToken(chainId).address;
   }, [chainId]);
 
   const getFTHMTokenBalance = useCallback(async () => {
-    if (account) {
-      const balance = await poolService.getUserTokenBalance(
-        account,
-        fthmTokenAddress,
-        library
-      );
+    const balance = await poolService.getUserTokenBalance(
+      account,
+      fthmTokenAddress,
+      library
+    );
 
-      setFthmBalance(balance / 10 ** 18);
-    }
+    setFthmBalance(balance / 10 ** 18);
   }, [account, poolService, fthmTokenAddress, library, setFthmBalance]);
+
+  const getMinLockPeriod = useCallback(async () => {
+    const lockPeriod = await stakingStore.getMinLockPeriod(library);
+    const minDays = BigNumber(lockPeriod!).dividedBy(DAY_SECONDS);
+    setMinLockPeriod(minDays.toNumber());
+  }, [stakingStore, library, setMinLockPeriod]);
 
   const approvalStatus = useMemo(
     () =>
@@ -76,14 +83,15 @@ const useStakingLockForm = () => {
   useEffect(() => {
     if (account) {
       getFTHMTokenBalance();
+      getMinLockPeriod();
     }
-  }, [account, getFTHMTokenBalance]);
+  }, [account, getFTHMTokenBalance, getMinLockPeriod]);
 
   useEffect(() => {
-    if (syncDao && !prevSyncDao) {
+    if (account && syncDao && !prevSyncDao) {
       getFTHMTokenBalance();
     }
-  }, [syncDao, prevSyncDao, getFTHMTokenBalance]);
+  }, [account, syncDao, prevSyncDao, getFTHMTokenBalance]);
 
   useEffect(() => {
     if (chainId && stakePosition && fthmTokenAddress) {
@@ -99,7 +107,11 @@ const useStakingLockForm = () => {
       ]);
 
       setXdcBalance(xdcBalance / 10 ** 18);
-      setFxdBalance(BigNumber(fxdBalance).dividedBy( 10 ** 18).toNumber());
+      setFxdBalance(
+        BigNumber(fxdBalance)
+          .dividedBy(10 ** 18)
+          .toNumber()
+      );
     };
 
     if (account && chainId) getBalance();
@@ -191,6 +203,7 @@ const useStakingLockForm = () => {
     balanceError,
     unlockDate,
     lockDays,
+    minLockPeriod,
     isLoading,
     approvedBtn,
     approvalPending,

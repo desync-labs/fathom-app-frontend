@@ -135,6 +135,14 @@ export default class StakingStore {
     }
   }
 
+  async getMinLockPeriod(library: Xdc3) {
+    try {
+      return await this.service.getMinLockPeriod(library);
+    } catch (e: any) {
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+    }
+  }
+
   async approvalStatusStakingFTHM(
     address: string,
     stakingPosition: number,
