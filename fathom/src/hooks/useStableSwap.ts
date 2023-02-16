@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { useStores } from "stores";
 import debounce from "lodash.debounce";
 import { SmartContractFactory } from "config/SmartContractFactory";
@@ -10,7 +10,8 @@ import useConnector from "context/connector";
 import { useQuery } from "@apollo/client";
 import { STABLE_SWAP_STATS } from "apollo/queries";
 import { DAY_IN_SECONDS } from "helpers/Constants";
-import { formatNumber } from "../utils/format";
+import { formatNumber } from "utils/format";
+import { PricesContext } from "context/prices";
 
 const useStableSwap = (options: string[]) => {
   const [inputBalance, setInputBalance] = useState<number>(0);
@@ -38,7 +39,7 @@ const useStableSwap = (options: string[]) => {
   const [feeIn, setFeeIn] = useState<number>(0);
   const [feeOut, setFeeOut] = useState<number>(0);
 
-  const [fxdPrice, setFxdPrice] = useState<number>(0);
+  const { fxdPrice: fxdPriceInWei } = useContext(PricesContext);
 
   const { stableSwapStore, poolService } = useStores();
 
@@ -51,6 +52,12 @@ const useStableSwap = (options: string[]) => {
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const fxdPrice = useMemo(() => {
+    return BigNumber(fxdPriceInWei)
+      .dividedBy(10 ** 18)
+      .toNumber();
+  }, [fxdPriceInWei]);
 
   const setOppositeCurrency = useCallback(
     (amount: number, currency: string, type: string) => {
@@ -165,18 +172,19 @@ const useStableSwap = (options: string[]) => {
                 library
               )
             );
-            promises.push(poolService.getDexPrice(FXDContractAddress, library));
             promises.push(
-              stableSwapStore.getTokenBalance(FXDContractAddress, library)
+              stableSwapStore.getPoolBalance(FXDContractAddress, library)
             );
             promises.push(
-              stableSwapStore.getTokenBalance(UsStableContractAddress, library)
+              stableSwapStore.getPoolBalance(
+                UsStableContractAddress,
+                library
+              )
             );
 
             const [
               inputBalance,
               outputBalance,
-              fxdPrice,
               fxdAvailable,
               usStableAvailable,
             ] = await Promise.all(promises);
@@ -186,7 +194,7 @@ const useStableSwap = (options: string[]) => {
 
             setInputBalance(inputBalance!);
             setOutputBalance(outputBalance!);
-            setFxdPrice(fxdPrice! / 10 ** 18);
+            // setFxdPrice(fxdPrice! / 10 ** 18);
           } catch (e) {}
         }
       }, 100),

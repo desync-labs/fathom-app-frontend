@@ -39,6 +39,7 @@ import {
 
 import ComboShareSrc from "assets/svg/combo-shape.svg";
 import QuestionMarkSrc from "assets/svg/question-mark.svg";
+import BigNumber from "bignumber.js";
 
 const StableSwapInputWrapper = styled(MuiBox)`
   position: relative;
@@ -89,7 +90,7 @@ const StableSwapTextField = styled(AppTextField)`
         font-size: 12px;
         padding-left: 22px;
       }
-    }  
+    }
   }
 `;
 
@@ -207,13 +208,15 @@ const StableSwap = () => {
             <StableSwapInputWrapper>
               <StableSwapFormLabel>From</StableSwapFormLabel>
               {useMemo(
-                () =>
-                  inputBalance ? (
-                    <StableSwapWalletBalance>
-                      Balance: {(+inputBalance / 10 ** 18).toFixed(2)}{" "}
-                      {inputCurrency}
-                    </StableSwapWalletBalance>
-                  ) : null,
+                () => (
+                  <StableSwapWalletBalance>
+                    Balance:{" "}
+                    {BigNumber(inputBalance)
+                      .dividedBy(10 ** 18)
+                      .toFixed(2)}{" "}
+                    {inputCurrency}
+                  </StableSwapWalletBalance>
+                ),
                 [inputBalance, inputCurrency]
               )}
               <StableSwapCurrencySelect
@@ -252,9 +255,7 @@ const StableSwap = () => {
                   inputError ? (
                     <>
                       <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
-                      <Typography>
-                        {inputError}
-                      </Typography>
+                      <Typography>{inputError}</Typography>
                     </>
                   ) : null
                 }
@@ -289,12 +290,10 @@ const StableSwap = () => {
               <StableSwapFormLabel>To</StableSwapFormLabel>
               {useMemo(
                 () =>
-                  outputBalance ? (
-                    <StableSwapWalletBalance>
-                      Balance: {(+outputBalance / 10 ** 18).toFixed(2)}{" "}
-                      {outputCurrency}
-                    </StableSwapWalletBalance>
-                  ) : null,
+                  <StableSwapWalletBalance>
+                    Balance: {BigNumber(outputBalance).dividedBy(10 ** 18).toFixed(2)}{" "}
+                    {outputCurrency}
+                  </StableSwapWalletBalance>,
                 [outputBalance, outputCurrency]
               )}
               <StableSwapCurrencySelect
