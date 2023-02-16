@@ -173,10 +173,10 @@ const useStableSwap = (options: string[]) => {
               )
             );
             promises.push(
-              stableSwapStore.getPoolTokenBalance(FXDContractAddress, library)
+              stableSwapStore.getPoolBalance(FXDContractAddress, library)
             );
             promises.push(
-              stableSwapStore.getPoolTokenBalance(
+              stableSwapStore.getPoolBalance(
                 UsStableContractAddress,
                 library
               )
