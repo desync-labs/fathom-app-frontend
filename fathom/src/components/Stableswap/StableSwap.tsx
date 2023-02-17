@@ -40,7 +40,6 @@ import {
 
 import ComboShareSrc from "assets/svg/combo-shape.svg";
 import QuestionMarkSrc from "assets/svg/question-mark.svg";
-import BigNumber from "bignumber.js";
 
 const StableSwapInputWrapper = styled(MuiBox)`
   position: relative;
