@@ -47,7 +47,7 @@ const BottomLinks: FC = () => {
         Twitter
       </a>
       <a
-        href={"https://twitter.com/Fathom_fi"}
+        href={"https://www.linkedin.com/company/fathom-protocol/"}
         rel="noreferrer"
         target={"_blank"}
       >
