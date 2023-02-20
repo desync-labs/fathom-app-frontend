@@ -3,7 +3,7 @@ import { Divider, Grid, ListItem, ListItemText } from "@mui/material";
 import React from "react";
 import useOpenPositionContext from "context/openPosition";
 import { styled } from "@mui/material/styles";
-import { formatNumberPrice } from "../../../utils/format";
+import { formatNumberPrice } from "utils/format";
 
 const ListDivider = styled(Divider)`
   margin: 20px 20px 20px 5px;

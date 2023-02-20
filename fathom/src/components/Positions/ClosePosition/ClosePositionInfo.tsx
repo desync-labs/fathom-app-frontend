@@ -6,7 +6,7 @@ import BigNumber from "bignumber.js";
 import {
   formatNumberPrice,
   formatPercentage
-} from "../../../utils/format";
+} from "utils/format";
 
 const ClosePositionInfo = () => {
   const {
