@@ -5,6 +5,7 @@ import { OpenPositionContextType } from "context/openPosition";
 import { useForm } from "react-hook-form";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
+import BigNumber from "bignumber.js";
 
 const defaultValues = {
   collateral: "",
@@ -103,70 +104,94 @@ const useOpenPosition = (
 
   const handleUpdates = useCallback(
     async (collateralInput: number, fathomTokenInput: number) => {
-      setCollateralToBeLocked(Number(collateralInput) || 0);
-      setFxdToBeBorrowed(Number(fathomTokenInput) || 0);
+      setCollateralToBeLocked(collateralInput || 0);
+      setFxdToBeBorrowed(fathomTokenInput || 0);
 
       // GET PRICE WITH SAFETY MARGIN
       const priceWithSafetyMargin = Number(pool.priceWithSafetyMargin);
 
       // SAFE MAX
-      const safeMax = Math.floor(
-        Number(collateralInput) *
-          ((priceWithSafetyMargin * (100 - Number(pool.stabilityFeeRate))) /
-            100)
+      const safeMax = Number(
+        BigNumber(collateralInput)
+          .multipliedBy(
+            BigNumber(priceWithSafetyMargin)
+              .multipliedBy(BigNumber(100).minus(pool.stabilityFeeRate))
+              .dividedBy(100)
+          )
+          .toFixed(0, BigNumber.ROUND_DOWN)
       );
 
       setFxdToBeBorrowed(safeMax);
-
       setValue("safeMax", safeMax);
 
       const collateralAvailableToWithdraw =
         Number(priceWithSafetyMargin) === 0
-          ? Number(collateralInput) - Number(fathomTokenInput)
-          : (Number(collateralInput) * Number(priceWithSafetyMargin) -
-              Number(fathomTokenInput)) /
-            Number(priceWithSafetyMargin);
+          ? BigNumber(collateralInput).minus(fathomTokenInput).toNumber()
+          : BigNumber(collateralInput)
+              .multipliedBy(priceWithSafetyMargin)
+              .minus(fathomTokenInput)
+              .dividedBy(priceWithSafetyMargin)
+              .toNumber();
 
       setCollateralAvailableToWithdraw(collateralAvailableToWithdraw);
 
       // PRICE OF COLLATERAL FROM DEX
       const priceOfCollateralFromDex =
         pool.poolName.toUpperCase() === "XDC"
-          ? Number(pool.collateralLastPrice) * 10 ** 18
+          ? BigNumber(pool.collateralLastPrice)
+              .multipliedBy(10 ** 18)
+              .toNumber()
           : await poolService.getDexPrice(collateralTokenAddress!, library);
 
       // DEBT RATIO
       const debtRatio =
-        Number(fathomTokenInput) === 0
+        fathomTokenInput === 0
           ? 0
-          : (fathomTokenInput /
-              ((collateralInput * priceOfCollateralFromDex) / 10 ** 18)) *
-            100;
+          : BigNumber(fathomTokenInput)
+              .dividedBy(
+                BigNumber(collateralInput)
+                  .multipliedBy(priceOfCollateralFromDex)
+                  .dividedBy(10 ** 18)
+              )
+              .multipliedBy(100)
+              .toNumber();
+
       setDebtRatio(+debtRatio);
 
       // FXD AVAILABLE TO BORROW
-      const fxdAvailableToBorrow = safeMax - Number(fathomTokenInput);
+      const fxdAvailableToBorrow = BigNumber(safeMax)
+        .minus(fathomTokenInput)
+        .toNumber();
       setFxdAvailableToBorrow(fxdAvailableToBorrow);
 
       // SAFETY BUFFER
-      const safetyBuffer = collateralAvailableToWithdraw / +collateralInput;
-      setSafetyBuffer(+safetyBuffer);
+      const safetyBuffer = BigNumber(collateralAvailableToWithdraw)
+        .dividedBy(collateralInput)
+        .toNumber();
+
+      setSafetyBuffer(safetyBuffer);
 
       // LIQUIDATION PRICE
       let liquidationPrice;
       if (priceWithSafetyMargin === 0) {
-        liquidationPrice =
-          priceOfCollateralFromDex / 10 ** 18 -
-          collateralAvailableToWithdraw / collateralInput;
+        liquidationPrice = BigNumber(priceOfCollateralFromDex)
+          .dividedBy(10 ** 18)
+          .minus(
+            BigNumber(collateralAvailableToWithdraw).dividedBy(collateralInput)
+          )
+          .toNumber();
       } else {
-        liquidationPrice =
-          priceOfCollateralFromDex / 10 ** 18 -
-          (collateralAvailableToWithdraw * priceWithSafetyMargin) /
-            collateralInput;
+        liquidationPrice = BigNumber(priceOfCollateralFromDex)
+          .dividedBy(10 ** 18)
+          .minus(
+            BigNumber(collateralAvailableToWithdraw)
+              .multipliedBy(priceWithSafetyMargin)
+              .dividedBy(collateralInput)
+          )
+          .toNumber();
       }
 
       setLiquidationPrice(liquidationPrice);
-
       /**
        * Revalidate form
        */
