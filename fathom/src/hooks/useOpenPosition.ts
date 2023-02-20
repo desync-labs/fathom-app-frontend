@@ -139,9 +139,8 @@ const useOpenPosition = (
       const debtRatio =
         Number(fathomTokenInput) === 0
           ? 0
-          : (Number(fathomTokenInput) /
-              ((Number(collateralInput) * Number(priceOfCollateralFromDex)) /
-                10 ** 18)) *
+          : (fathomTokenInput /
+              ((collateralInput * priceOfCollateralFromDex) / 10 ** 18)) *
             100;
       setDebtRatio(+debtRatio);
 
@@ -158,15 +157,15 @@ const useOpenPosition = (
       if (priceWithSafetyMargin === 0) {
         liquidationPrice =
           priceOfCollateralFromDex / 10 ** 18 -
-          collateralAvailableToWithdraw / Number(collateralInput);
+          collateralAvailableToWithdraw / collateralInput;
       } else {
         liquidationPrice =
           priceOfCollateralFromDex / 10 ** 18 -
           (collateralAvailableToWithdraw * priceWithSafetyMargin) /
-            Number(collateralInput);
+            collateralInput;
       }
 
-      setLiquidationPrice(+liquidationPrice);
+      setLiquidationPrice(liquidationPrice);
 
       /**
        * Revalidate form

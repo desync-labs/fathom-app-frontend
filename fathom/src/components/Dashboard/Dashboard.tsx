@@ -23,7 +23,9 @@ const DashboardContent = () => {
       <Grid container spacing={isMobile ? 1 : 3}>
         <PageHeader
           title={"FXD"}
-          description={`FXD is a yield-earning, overcollateralized, decentralized, and softly pegged stablecoin that earns passive yields for you in the background.`}
+          description={`FXD is overcollateralized, decentralized, and softly pegged stablecoin. <br />
+          You can gain borrowing power for FXD by staking your XDC in the Liquid Staking module. <br />
+          However, you are not forced to borrow FXD after staking your XDC.`}
         />
         <Grid item xs={12}>
           <ProtocolStats />
