@@ -27,7 +27,11 @@ import { ClosingType } from "hooks/useClosePosition";
 import TokenLogo from "components/Common/TokenLogo";
 import { getTokenLogoURL } from "utils/tokenLogo";
 
-import { formatCurrency, formatNumber } from "utils/format";
+import {
+  formatCurrency,
+  formatNumber,
+  formatNumberPrice
+} from "utils/format";
 
 export type PositionListItemProps = {
   position: IOpenPosition;
@@ -104,7 +108,7 @@ const PositionListItem: FC<PositionListItemProps> = ({
           </Box>
         </Stack>
       </TableCell>
-      <TableCell>{formatNumber(Number(position.liquidationPrice))}</TableCell>
+      <TableCell>{formatNumberPrice(Number(position.liquidationPrice))}</TableCell>
       <TableCell>{formatNumber(Number(position.debtValue))} FXD</TableCell>
       <TableCell>
         {position.lockedCollateral} {position.collateralPoolName}

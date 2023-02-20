@@ -3,13 +3,14 @@ import { Divider, Grid, ListItem, ListItemText } from "@mui/material";
 import React from "react";
 import useOpenPositionContext from "context/openPosition";
 import { styled } from "@mui/material/styles";
+import { formatNumberPrice } from "utils/format";
 
 const ListDivider = styled(Divider)`
   margin: 20px 20px 20px 5px;
   ${({ theme }) => theme.breakpoints.down("sm")} {
     margin: 20px 0 20px 0;
   }
-`
+`;
 
 const OpenPositionInfo = () => {
   const {
@@ -20,7 +21,7 @@ const OpenPositionInfo = () => {
     fxdAvailableToBorrow,
     debtRatio,
     safetyBuffer,
-    liquidationPrice
+    liquidationPrice,
   } = useOpenPositionContext();
 
   return (
@@ -68,11 +69,11 @@ const OpenPositionInfo = () => {
         </ListItem>
         <ListItem
           alignItems="flex-start"
-          secondaryAction={`$${liquidationPrice.toFixed(2)}`}
+          secondaryAction={`$${formatNumberPrice(liquidationPrice)}`}
         >
           <ListItemText primary={`Liquidation Price of ${pool.poolName}`} />
         </ListItem>
-        <ListDivider/>
+        <ListDivider />
         <ListItem alignItems="flex-start" secondaryAction={`1.73%`}>
           <ListItemText primary={`Lending APR`} />
         </ListItem>
