@@ -16,11 +16,8 @@ const StakingView = () => {
           !isMobile && (
             <PageHeader
               title="Staking"
-              description={
-                "Stake FTHM to get more FTHM rewards and voting power (vFTHM).\n" +
-                "\n" +
-                "The longer the lock period - the more rewards."
-              }
+              description={`Stake FTHM to get more FTHM rewards and voting power (vFTHM). <br />
+               The longer the lock period - the more rewards.`}
             />
           ),
         [isMobile]

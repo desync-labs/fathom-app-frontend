@@ -200,7 +200,7 @@ const StableSwap = () => {
           addPadding={true}
           title={"Stable Swap"}
           description={
-            "Buy and sell FXD for US+ at a rate of 1:1 with low fees."
+            "Buy and sell FXD for US+ at a rate of 1:1 with low fees. (only for allowed addresses on mainnet)"
           }
         />
         <Grid item xs={12} sm={10} md={8} lg={6} sx={{ margin: "0 auto" }}>
