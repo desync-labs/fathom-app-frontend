@@ -6,6 +6,7 @@ import BigNumber from "bignumber.js";
 import { OpenPositionContextType } from "context/openPosition";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
+import BigNumber from "bignumber.js";
 
 const defaultValues = {
   collateral: "",
