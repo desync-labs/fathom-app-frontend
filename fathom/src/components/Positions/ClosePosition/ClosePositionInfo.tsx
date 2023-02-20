@@ -3,7 +3,10 @@ import { Box, Grid, ListItem, ListItemText } from "@mui/material";
 import React from "react";
 import useClosePositionContext from "context/closePosition";
 import BigNumber from "bignumber.js";
-import { formatPercentage } from "../../../utils/format";
+import {
+  formatNumberPrice,
+  formatPercentage
+} from "../../../utils/format";
 
 const ClosePositionInfo = () => {
   const {
@@ -59,7 +62,7 @@ const ClosePositionInfo = () => {
         </ListItem>
         <ListItem
           alignItems="flex-start"
-          secondaryAction={`1 ${pool.poolName} = ${liquidationPrice} FXD`}
+          secondaryAction={`1 ${pool.poolName} = ${formatNumberPrice(liquidationPrice)} FXD`}
         >
           <ListItemText primary="Liquidation Price" />
         </ListItem>
