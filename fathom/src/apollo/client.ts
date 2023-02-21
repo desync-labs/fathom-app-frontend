@@ -5,13 +5,6 @@ import {
   InMemoryCache,
 } from "@apollo/client";
 
-//TODO: Use the environment dev/prod/staging to fetch the url.. 
-//Break down the url into base url (env specific) and graph name into constats.
-const STABLE_COIN_DEV =
-  "https://dev.composer.live/subgraphs/name/stablecoin-subgraph";
-const STABLE_COIN_STAGING =
-  "";
-
 /***
  * For Query we have pagination, So we need to return incoming items
  */
@@ -47,15 +40,15 @@ const cache = new InMemoryCache({
 });
 
 const stableCoinLink = new HttpLink({
-  uri: STABLE_COIN_DEV,
+  uri: `${process.env.REACT_APP_API_URL}/subgraphs/name/stablecoin-subgraph`,
 });
 
 const governanceLink = new HttpLink({
-  uri: "https://dev.composer.live/subgraphs/name/dao-subgraph",
+  uri: `${process.env.REACT_APP_API_URL}/subgraphs/name/dao-subgraph`,
 });
 
 const defaultLink = new HttpLink({
-  uri: "https://dev.composer.live/graphql",
+  uri: `${process.env.REACT_APP_API_URL}/graphql`,
 });
 
 export const client = new ApolloClient({
