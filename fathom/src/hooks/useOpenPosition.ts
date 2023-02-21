@@ -1,11 +1,11 @@
-import { useStores } from "stores";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import debounce from "lodash.debounce";
-import { OpenPositionContextType } from "context/openPosition";
 import { useForm } from "react-hook-form";
+import { useStores } from "stores";
+import debounce from "lodash.debounce";
+import BigNumber from "bignumber.js";
+import { OpenPositionContextType } from "context/openPosition";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
-import BigNumber from "bignumber.js";
 
 const defaultValues = {
   collateral: "",
@@ -18,7 +18,6 @@ const useOpenPosition = (
   onClose: OpenPositionContextType["onClose"]
 ) => {
   const { poolService, positionService } = useStores();
-
   const { account, chainId, library } = useConnector()!;
 
   const { handleSubmit, watch, control, setValue, trigger } = useForm({
@@ -118,7 +117,7 @@ const useOpenPosition = (
               .multipliedBy(BigNumber(100).minus(pool.stabilityFeeRate))
               .dividedBy(100)
           )
-          .toFixed(0, BigNumber.ROUND_DOWN)
+          .toNumber()
       );
 
       setFxdToBeBorrowed(safeMax);
