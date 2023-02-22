@@ -1,4 +1,11 @@
-import { useCallback, useEffect, useState, ChangeEvent, Dispatch } from "react";
+import {
+  useCallback,
+  useEffect,
+  useState,
+  ChangeEvent,
+  Dispatch,
+  useMemo,
+} from "react";
 
 import { useStores } from "stores";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
@@ -35,7 +42,9 @@ const useOpenPositionList = (
     fetchPolicy: "cache-first",
   });
 
-  const [selectedPosition, setSelectedPosition] = useState<IOpenPosition>();
+  const [closePosition, setClosePosition] = useState<IOpenPosition>();
+  const [adjustPosition, setAdjustPosition] = useState<IOpenPosition>();
+
   const [closingType, setType] = useState(ClosingType.Full);
 
   const [approveBtn, setApproveBtn] = useState<boolean>(true);
@@ -54,6 +63,16 @@ const useOpenPositionList = (
       approvalStatus();
     }
   }, [account, approvalStatus]);
+
+  const adjustPositionPool = useMemo(() => {
+    if (adjustPosition && poolsData) {
+      return poolsData.pools.find(
+        (pool: ICollateralPool) => pool.id === adjustPosition.collateralPool
+      );
+    }
+
+    return null;
+  }, [adjustPosition, poolsData]);
 
   useEffect(() => {
     loadPositions({
@@ -157,15 +176,17 @@ const useOpenPositionList = (
   ]);
 
   return {
+    adjustPositionPool,
     approveBtn,
     approvalPending,
     closingType,
     positions: formattedPositions,
     approve,
-    selectedPosition,
+    closePosition,
+    adjustPosition,
     loading: isLoading,
-
-    setSelectedPosition,
+    setAdjustPosition,
+    setClosePosition,
     setType,
     handlePageChange,
   };

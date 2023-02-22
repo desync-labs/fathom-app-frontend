@@ -94,7 +94,8 @@ const ClosePositionButtonMobile = styled(ClosePositionButton)`
 
 const PositionListItemMobile: FC<PositionListItemProps> = ({
   position,
-  setSelectedPosition,
+  setClosePosition,
+  setAdjustPosition,
   approvalPending,
   approveBtn,
   approve,
@@ -199,7 +200,7 @@ const PositionListItemMobile: FC<PositionListItemProps> = ({
                         <MenuItem
                           onClick={() => {
                             setType(ClosingType.Full);
-                            setSelectedPosition(position);
+                            setClosePosition(position);
                           }}
                         >
                           Repay entirely
@@ -207,10 +208,17 @@ const PositionListItemMobile: FC<PositionListItemProps> = ({
                         <MenuItem
                           onClick={() => {
                             setType(ClosingType.Partial);
-                            setSelectedPosition(position);
+                            setClosePosition(position);
                           }}
                         >
                           Repay partially
+                        </MenuItem>
+                        <MenuItem
+                          onClick={() => {
+                            setAdjustPosition(position);
+                          }}
+                        >
+                          Adjust position
                         </MenuItem>
                       </MenuList>
                     </ClickAwayListener>

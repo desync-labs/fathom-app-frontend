@@ -19,11 +19,14 @@ import {
   NoResults,
 } from "components/AppComponents/AppBox/AppBox";
 import PositionListItem from "components/PositionList/PositionListItem";
+import PositionListItemMobile from "components/PositionList/PositionListItemMobile";
 import useOpenPositionList from "hooks/useOpenPositionList";
 import { styled } from "@mui/material/styles";
 import { Constants } from "helpers/Constants";
-import PositionListItemMobile from "components/PositionList/PositionListItemMobile";
+
 import { ClosePositionProvider } from "context/closePosition";
+import { AdjustPositionProvider } from "context/adjustPosition";
+import AdjustPositionDialog from "../Positions/AdjustPositionDialog";
 
 const CircleWrapper = styled(Box)`
   width: 100%;
@@ -53,14 +56,17 @@ const PositionsList: FC<PositionsListProps> = ({
   setPositionCurrentPage,
 }) => {
   const {
+    adjustPositionPool,
     closingType,
     setType,
     approveBtn,
     approvalPending,
     positions,
     approve,
-    selectedPosition,
-    setSelectedPosition,
+    closePosition,
+    adjustPosition,
+    setClosePosition,
+    setAdjustPosition,
     loading,
     handlePageChange,
   } = useOpenPositionList(setPositionCurrentPage, proxyWallet);
@@ -113,7 +119,8 @@ const PositionsList: FC<PositionsListProps> = ({
                           approveBtn={approveBtn}
                           key={position.id}
                           position={position}
-                          setSelectedPosition={setSelectedPosition}
+                          setClosePosition={setClosePosition}
+                          setAdjustPosition={setAdjustPosition}
                           setType={setType}
                         />
                       ))}
@@ -140,7 +147,8 @@ const PositionsList: FC<PositionsListProps> = ({
                     approveBtn={approveBtn}
                     key={position.id}
                     position={position}
-                    setSelectedPosition={setSelectedPosition}
+                    setClosePosition={setClosePosition}
+                    setAdjustPosition={setAdjustPosition}
                     setType={setType}
                   />
                 ))}
@@ -163,7 +171,7 @@ const PositionsList: FC<PositionsListProps> = ({
           approve,
           approvalPending,
           approveBtn,
-          setSelectedPosition,
+          setClosePosition,
           setType,
           handlePageChange,
           positionCurrentPage,
@@ -171,15 +179,24 @@ const PositionsList: FC<PositionsListProps> = ({
           isMobile,
         ]
       )}
-      {selectedPosition && (
+      {closePosition && (
         <ClosePositionProvider
-          position={selectedPosition}
-          onClose={() => setSelectedPosition(undefined)}
+          position={closePosition}
+          onClose={() => setClosePosition(undefined)}
           closingType={closingType}
           setType={setType}
         >
           <ClosePositionDialog />
         </ClosePositionProvider>
+      )}
+      {adjustPosition && adjustPositionPool && (
+        <AdjustPositionProvider
+          position={adjustPosition}
+          pool={adjustPositionPool}
+          onClose={() => setAdjustPosition(undefined)}
+        >
+          <AdjustPositionDialog />
+        </AdjustPositionProvider>
       )}
     </>
   );
