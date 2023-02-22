@@ -27,15 +27,12 @@ import { ClosingType } from "hooks/useClosePosition";
 import TokenLogo from "components/Common/TokenLogo";
 import { getTokenLogoURL } from "utils/tokenLogo";
 
-import {
-  formatCurrency,
-  formatNumber,
-  formatNumberPrice
-} from "utils/format";
+import { formatCurrency, formatNumber, formatNumberPrice } from "utils/format";
 
 export type PositionListItemProps = {
   position: IOpenPosition;
-  setSelectedPosition: Dispatch<SetStateAction<IOpenPosition | undefined>>;
+  setClosePosition: Dispatch<SetStateAction<IOpenPosition | undefined>>;
+  setAdjustPosition: Dispatch<SetStateAction<IOpenPosition | undefined>>
   approve: () => void;
   approvalPending: boolean;
   approveBtn: boolean;
@@ -72,7 +69,8 @@ const ButtonsWrapper = styled(Box)`
 
 const PositionListItem: FC<PositionListItemProps> = ({
   position,
-  setSelectedPosition,
+  setClosePosition,
+  setAdjustPosition,
   approvalPending,
   approveBtn,
   approve,
@@ -108,7 +106,9 @@ const PositionListItem: FC<PositionListItemProps> = ({
           </Box>
         </Stack>
       </TableCell>
-      <TableCell>{formatNumberPrice(Number(position.liquidationPrice))}</TableCell>
+      <TableCell>
+        {formatNumberPrice(Number(position.liquidationPrice))}
+      </TableCell>
       <TableCell>{formatNumber(Number(position.debtValue))} FXD</TableCell>
       <TableCell>
         {position.lockedCollateral} {position.collateralPoolName}
@@ -141,7 +141,7 @@ const PositionListItem: FC<PositionListItemProps> = ({
                   aria-haspopup="menu"
                   onClick={() => setOpen(!open)}
                 >
-                  Close position
+                  Change position
                   <ArrowDropDownIcon />
                 </ClosePositionButton>
               </ButtonGroup>
@@ -168,7 +168,7 @@ const PositionListItem: FC<PositionListItemProps> = ({
                           <MenuItem
                             onClick={() => {
                               setType(ClosingType.Full);
-                              setSelectedPosition(position);
+                              setClosePosition(position);
                             }}
                           >
                             Repay entirely
@@ -176,10 +176,17 @@ const PositionListItem: FC<PositionListItemProps> = ({
                           <MenuItem
                             onClick={() => {
                               setType(ClosingType.Partial);
-                              setSelectedPosition(position);
+                              setClosePosition(position);
                             }}
                           >
                             Repay partially
+                          </MenuItem>
+                          <MenuItem
+                            onClick={() => {
+                              setAdjustPosition(position);
+                            }}
+                          >
+                            Adjust position
                           </MenuItem>
                         </MenuList>
                       </ClickAwayListener>

@@ -6,6 +6,7 @@ import BigNumber from "bignumber.js";
 import { OpenPositionContextType } from "context/openPosition";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
+import IOpenPosition from "stores/interfaces/IOpenPosition";
 
 const defaultValues = {
   collateral: "",
@@ -15,7 +16,8 @@ const defaultValues = {
 
 const useOpenPosition = (
   pool: OpenPositionContextType["pool"],
-  onClose: OpenPositionContextType["onClose"]
+  onClose: OpenPositionContextType["onClose"],
+  position?: IOpenPosition,
 ) => {
   const { poolService, positionService } = useStores();
   const { account, chainId, library } = useConnector()!;
@@ -100,6 +102,12 @@ const useOpenPosition = (
   useEffect(() => {
     account && chainId && getCollateralTokenAndBalance();
   }, [chainId, account, getCollateralTokenAndBalance]);
+
+  useEffect(() => {
+    if (position) {
+      setValue('collateral', position.lockedCollateral)
+    }
+  }, [position, setValue])
 
   const handleUpdates = useCallback(
     async (collateralInput: number, fathomTokenInput: number) => {
