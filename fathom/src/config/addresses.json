@@ -10,7 +10,7 @@
       "collateralPoolConfig": "0x279750eb5799010A295119f38A32A67723a9e10F",
       "dexPriceOracle": "0x23Bb26c4a59B28ad496bD3140AC7C95869F35830",
       "fathomStablecoinProxyActions": "0x233380A9C66CCB6d2aC2BaEEAde5a509De2bb649",
-      "fthmGovernor": "0x38A5267cEcFB661D0C3Fef2a5f1892f66eb8068E",
+      "fthmGovernor": "0x951C06C555014282e842Fc0be7C75811B525588E",
       "positionManager": "0xe485eDc3D5aba4dbEcD76a78e6c71c8F5E114F3b",
       "priceOracle": "0xbCB7f95718d2eB899bB16B861c1e5416EAD36264",
       "proxyWalletRegistry": "0xF11994FBAa365070ce4a1505f9Ce5Ea960d0d904",
