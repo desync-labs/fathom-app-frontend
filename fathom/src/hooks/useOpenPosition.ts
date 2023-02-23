@@ -17,7 +17,7 @@ const defaultValues = {
 const useOpenPosition = (
   pool: OpenPositionContextType["pool"],
   onClose: OpenPositionContextType["onClose"],
-  position?: IOpenPosition,
+  position?: IOpenPosition
 ) => {
   const { poolService, positionService } = useStores();
   const { account, chainId, library } = useConnector()!;
@@ -105,9 +105,10 @@ const useOpenPosition = (
 
   useEffect(() => {
     if (position) {
-      setValue('collateral', position.lockedCollateral)
+      setValue("collateral", position.lockedCollateral);
+      setValue("fathomToken", position.debtShare);
     }
-  }, [position, setValue])
+  }, [position, setValue]);
 
   const handleUpdates = useCallback(
     async (collateralInput: number, fathomTokenInput: number) => {
