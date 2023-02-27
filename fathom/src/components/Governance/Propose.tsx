@@ -148,7 +148,7 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
             >
               <img src={getTokenLogoURL("FTHM")} alt="vFTHM-Token" width={28} />
               <BalanceBox component="span">
-                {formatNumber((vBalance as number) / 10 ** 18)}
+                {formatNumber((vBalance!) / 10 ** 18)}
               </BalanceBox>
               <CurrencyBox component="span">vFHTM</CurrencyBox>
             </Stack>
@@ -395,7 +395,7 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
                   />
                   <Typography>
                     To create a proposal, you need to have 1000 vFTHM. <br />
-                    Now you have {vBalance! / 10 ** 18} vFTHM
+                    Now you have {formatNumber((vBalance!) / 10 ** 18)} vFTHM
                   </Typography>
                 </WarningBox>
               )}
