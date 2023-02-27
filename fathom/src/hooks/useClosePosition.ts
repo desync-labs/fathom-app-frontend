@@ -92,7 +92,6 @@ const useClosePosition = (
       )
       .toNumber();
 
-
     setLtv(ltv);
     setLiquidationPrice(liquidationPrice);
     setDebtValue(debtValue);
@@ -103,12 +102,11 @@ const useClosePosition = (
     library,
     setDebtValue,
     setLiquidationPrice,
-    setLtv
+    setLtv,
   ]);
 
   const handleOnOpen = useCallback(async () => {
-    const price = BigNumber(debtValue).dividedBy(BigNumber(lockedCollateral));
-
+    const price = BigNumber(debtValue).dividedBy(lockedCollateral);
     setPrice(price.toString());
 
     setFathomToken(debtValue);
@@ -214,13 +212,18 @@ const useClosePosition = (
   );
 
   const setMax = useCallback(() => {
-    const setBalance = BigNumber(balance).isLessThan(BigNumber(debtValue))
+    const setBalance = BigNumber(balance).isLessThan(debtValue)
       ? BigNumber(balance)
       : BigNumber(debtValue);
 
+    let collateral = setBalance.dividedBy(price);
+    if (collateral.isGreaterThan(lockedCollateral)) {
+      collateral = BigNumber(lockedCollateral)
+    }
+
     setFathomToken(setBalance.toString());
-    setCollateral(setBalance.dividedBy(price).toString());
-  }, [price, debtValue, balance, setFathomToken, setCollateral]);
+    setCollateral(collateral.toString());
+  }, [position, price, debtValue, balance, lockedCollateral, setFathomToken, setCollateral]);
 
   return {
     liquidationPrice,
