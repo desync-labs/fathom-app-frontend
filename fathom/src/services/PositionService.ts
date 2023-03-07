@@ -17,7 +17,6 @@ import Xdc3 from "xdc3";
 import AlertStore from "stores/alert.stores";
 import { TransactionReceipt } from "web3-eth";
 import { getEstimateGas } from "utils/getEstimateGas";
-import { addMetamaskToken } from "utils/addMetamaskToken";
 import BigNumber from "bignumber.js";
 
 export default class PositionService implements IPositionService {
@@ -212,12 +211,6 @@ export default class PositionService implements IPositionService {
             true,
             "Position closed successfully!"
           );
-
-          addMetamaskToken(
-            this.chainId,
-            this.alertStore,
-            this.transactionStore
-          );
           return receipt;
         });
 
@@ -294,13 +287,6 @@ export default class PositionService implements IPositionService {
             true,
             "Position closed successfully!"
           );
-
-          addMetamaskToken(
-            this.chainId,
-            this.alertStore,
-            this.transactionStore
-          );
-
           return receipt;
         });
 
