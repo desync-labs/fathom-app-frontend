@@ -218,12 +218,20 @@ const useClosePosition = (
 
     let collateral = setBalance.dividedBy(price);
     if (collateral.isGreaterThan(lockedCollateral)) {
-      collateral = BigNumber(lockedCollateral)
+      collateral = BigNumber(lockedCollateral);
     }
 
     setFathomToken(setBalance.toString());
     setCollateral(collateral.toString());
-  }, [position, price, debtValue, balance, lockedCollateral, setFathomToken, setCollateral]);
+  }, [
+    position,
+    price,
+    debtValue,
+    balance,
+    lockedCollateral,
+    setFathomToken,
+    setCollateral,
+  ]);
 
   return {
     liquidationPrice,
