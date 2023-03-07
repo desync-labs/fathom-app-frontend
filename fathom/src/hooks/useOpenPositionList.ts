@@ -148,7 +148,7 @@ const useOpenPositionList = (
                 .minus(position.debtValue)
                 .dividedBy(position.lockedCollateral)
             )
-            .toString();
+            .toNumber();
 
           position.ltv = BigNumber(position.debtValue)
             .dividedBy(
@@ -156,7 +156,7 @@ const useOpenPositionList = (
                 position.lockedCollateral
               )
             )
-            .toString();
+            .toNumber();
 
           return position;
         }
