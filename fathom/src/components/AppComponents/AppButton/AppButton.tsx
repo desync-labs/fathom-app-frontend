@@ -232,15 +232,6 @@ export const FathomSwapChangeCurrencyButton = styled(MuiButton)`
   position: absolute;
 `;
 
-export const QuestionMarkButton = styled(MuiButton)`
-  background: #061023;
-  border: 2px solid #061023;
-  border-radius: 8px;
-  cursor: pointer;
-  width: 20px;
-  height: 20px;
-`;
-
 export const BackToProposalsButton = styled(MuiButton)`
   font-size: 15px;
   line-height: 20px;
