@@ -458,7 +458,7 @@ export default class PositionService implements IPositionService {
   }
 
   async getDebtValue(
-    debtShare: string,
+    debtShare: number,
     poolId: string,
     library: Xdc3
   ): Promise<string> {

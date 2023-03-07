@@ -108,13 +108,13 @@ const PositionListItem: FC<PositionListItemProps> = ({
           </Box>
         </Stack>
       </TableCell>
-      <TableCell>{formatNumberPrice(Number(position.liquidationPrice))}</TableCell>
-      <TableCell>{formatNumber(Number(position.debtValue))} FXD</TableCell>
+      <TableCell>{formatNumberPrice(position.liquidationPrice)}</TableCell>
+      <TableCell>{formatNumber(position.debtValue)} FXD</TableCell>
       <TableCell>
-        {position.lockedCollateral} {position.collateralPoolName}
+        {formatNumberPrice(position.lockedCollateral)} {position.collateralPoolName}
       </TableCell>
       <TableCell>
-        {formatNumber(Number(position.safetyBufferInPercent) * 100)}%
+        {formatNumber(position.safetyBufferInPercent * 100)}%
       </TableCell>
       <TableCell>
         <ButtonsWrapper>
@@ -137,7 +137,6 @@ const PositionListItem: FC<PositionListItemProps> = ({
                   size="small"
                   aria-controls={open ? "split-button-menu" : undefined}
                   aria-expanded={open ? "true" : undefined}
-                  aria-label="select merge strategy"
                   aria-haspopup="menu"
                   onClick={() => setOpen(!open)}
                 >
