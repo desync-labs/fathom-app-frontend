@@ -123,30 +123,30 @@ const PositionListItemMobile: FC<PositionListItemProps> = ({
             <PoolName>{position?.collateralPoolName}</PoolName>
           </PoolWrapper>
           <TVL sx={{ textAlign: "right" }}>
-            TVL: {formatCurrency(Number(position.tvl))}
+            TVL: {formatCurrency(position.tvl)}
           </TVL>
         </ListValue>
       </ListItemWrapper>
       <ListItemWrapper>
         <ListLabel>Liquidation price</ListLabel>
         <ListValue>
-          {formatNumberPrice(Number(position.liquidationPrice))}
+          {formatNumberPrice(position.liquidationPrice)}
         </ListValue>
       </ListItemWrapper>
       <ListItemWrapper>
         <ListLabel>Borrowed</ListLabel>
-        <ListValue>{formatNumber(Number(position.debtValue))} FXD</ListValue>
+        <ListValue>{formatNumber(position.debtValue)} FXD</ListValue>
       </ListItemWrapper>
       <ListItemWrapper>
         <ListLabel>Collateral</ListLabel>
         <ListValue>
-          {position.lockedCollateral} {position.collateralPoolName}
+          {formatNumberPrice(position.lockedCollateral)} {position.collateralPoolName}
         </ListValue>
       </ListItemWrapper>
       <ListItemWrapper>
         <ListLabel>Safety buffer</ListLabel>
         <ListValue>
-          {formatNumber(Number(position.safetyBufferInPercent) * 100)}%
+          {formatNumber(position.safetyBufferInPercent * 100)}%
         </ListValue>
       </ListItemWrapper>
       <ButtonsWrapper>

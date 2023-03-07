@@ -139,9 +139,7 @@ const ProposalVoting = () => {
     forVotes,
     abstainVotes,
     againstVotes,
-
     vote,
-
     fetchedTotalVotes,
     status,
   } = useProposalContext();

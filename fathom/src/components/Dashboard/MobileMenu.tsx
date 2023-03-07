@@ -46,6 +46,11 @@ const MobileMenu: FC<MobileMenuPropsType> = ({ setOpenMobile }) => {
     [location.pathname]
   );
 
+  const dexUrl = useMemo(
+    () => process.env.REACT_APP_SWAP_APP_URL!,
+    []
+  );
+
   const appMenuItems = [
     {
       name: "FXD",
@@ -70,7 +75,7 @@ const MobileMenu: FC<MobileMenuPropsType> = ({ setOpenMobile }) => {
     },
     {
       name: "DEX",
-      link: "https://swap.fathom.fi",
+      link: dexUrl,
       Icon: <DexIcon />,
       target: "_blank",
       showText: true,

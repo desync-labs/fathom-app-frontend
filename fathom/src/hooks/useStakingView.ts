@@ -1,4 +1,11 @@
-import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
+import {
+  ChangeEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { LogLevel, useLogger } from "helpers/Logger";
 import { useStores } from "stores";
 import ILockPosition from "stores/interfaces/ILockPosition";
@@ -6,11 +13,9 @@ import { useLazyQuery, useQuery } from "@apollo/client";
 import { STAKING_PROTOCOL_STATS, STAKING_STAKER } from "apollo/queries";
 import { Constants } from "helpers/Constants";
 import useSyncContext from "context/sync";
-import {
-  useMediaQuery,
-  useTheme
-} from "@mui/material";
+import { useMediaQuery, useTheme } from "@mui/material";
 import useConnector from "context/connector";
+import debounce from "lodash.debounce";
 
 export type ActionType = { type: string; id: number | null };
 
@@ -40,6 +45,8 @@ const useStakingView = () => {
 
   const [totalRewards, setTotalRewards] = useState(0);
   const previousTotalRewardsRef = useRef<number>(0);
+
+  const [fetchPositionsLoading, setFetchPositionLoading] = useState<boolean>(false)
 
   const [currentPage, setCurrentPage] = useState<number>(1);
 
@@ -71,15 +78,15 @@ const useStakingView = () => {
   });
 
   const fetchAllClaimRewards = useCallback(() => {
-   if (account) {
-     stakingStore.getStreamClaimableAmount(account, library).then((amount) => {
-       setTotalRewards(Number(amount));
+    if (account) {
+      stakingStore.getStreamClaimableAmount(account, library).then((amount) => {
+        setTotalRewards(Number(amount));
 
-       setTimeout(() => {
-         previousTotalRewardsRef.current = amount!;
-       }, 1000);
-     });
-   }
+        setTimeout(() => {
+          previousTotalRewardsRef.current = amount!;
+        }, 1000);
+      });
+    }
   }, [stakingStore, account, library, setTotalRewards]);
 
   useEffect(() => {
@@ -110,42 +117,54 @@ const useStakingView = () => {
     }
   }, [account, stakersData, fetchAllClaimRewards]);
 
-  const fetchPositions = useCallback(async () => {
-    if (stakersData?.stakers?.length) {
-      const promises: Promise<number>[] = [];
-      stakersData?.stakers[0].lockPositions.forEach(
-        (lockPosition: ILockPosition) => {
-          promises.push(
-            stakingStore.getStreamClaimableAmountPerLock(
-              account,
-              lockPosition.lockId,
-              library
-            )
+  const fetchPositions = useMemo(
+    () =>
+      debounce((stakersData, account, stakersLoading) => {
+        if (
+          stakersData?.stakers?.length &&
+          stakersData?.stakers[0].lockPositions.length &&
+          !stakersLoading
+        ) {
+          const promises: Promise<number>[] = [];
+          stakersData?.stakers[0].lockPositions.forEach(
+            (lockPosition: ILockPosition) => {
+              promises.push(
+                stakingStore.getStreamClaimableAmountPerLock(
+                  account,
+                  lockPosition.lockId,
+                  library
+                )
+              );
+            }
           );
+
+          setFetchPositionLoading(true)
+
+          Promise.all(promises).then((result) => {
+            const newLockPositions = stakersData?.stakers[0].lockPositions.map(
+              (lockPosition: ILockPosition, index: number) => {
+                const newLockPosition: ILockPosition = { ...lockPosition };
+                newLockPosition.rewardsAvailable = Number(result[index]);
+                return newLockPosition;
+              }
+            );
+
+            setLockPositions(newLockPositions);
+            setFetchPositionLoading(false)
+          });
+        } else {
+          setLockPositions([]);
+          setFetchPositionLoading(false)
         }
-      );
-
-      Promise.all(promises).then((result) => {
-        const newLockPositions = stakersData?.stakers[0].lockPositions.map(
-          (lockPosition: ILockPosition, index: number) => {
-            const newLockPosition: ILockPosition = { ...lockPosition };
-            newLockPosition.rewardsAvailable = Number(result[index]);
-            return newLockPosition;
-          }
-        );
-
-        setLockPositions(newLockPositions);
-      });
-    } else {
-      setLockPositions([]);
-    }
-  }, [stakingStore, stakersData, account, library, setLockPositions]);
+      }, 300),
+    [stakingStore, library, setLockPositions, setFetchPositionLoading]
+  );
 
   useEffect(() => {
-    if (stakersData?.stakers?.length && account) {
-      fetchPositions();
+    if (account) {
+      fetchPositions(stakersData, account, stakersLoading);
     }
-  }, [stakersData, account, fetchPositions]);
+  }, [stakersData, account, stakersLoading, fetchPositions]);
 
   /**
    * Get All claimed rewards
@@ -153,7 +172,7 @@ const useStakingView = () => {
   useEffect(() => {
     setTimeout(() => {
       fetchAllClaimRewards();
-    }, 30 * 1000)
+    }, 30 * 1000);
   }, [totalRewards, fetchAllClaimRewards]);
 
   const processFlow = useCallback(
@@ -205,7 +224,7 @@ const useStakingView = () => {
           first: Constants.COUNT_PER_PAGE,
           address: account,
         },
-        fetchPolicy: "network-only"
+        fetchPolicy: "network-only",
       });
 
       setCurrentPage(1);
@@ -254,7 +273,7 @@ const useStakingView = () => {
         const receipt = await stakingStore.handleEarlyWithdrawal(
           account,
           lockId,
-          library,
+          library
         );
         setLastTransactionBlock(receipt.blockNumber);
         return receipt;
@@ -323,7 +342,7 @@ const useStakingView = () => {
     account,
     chainId,
     action,
-    isLoading: stakersLoading,
+    isLoading: stakersLoading || fetchPositionsLoading,
     isUnlockable,
     withdrawAll,
     claimRewards,
@@ -350,7 +369,9 @@ const useStakingView = () => {
       !stakersLoading && stakersData?.stakers?.length
         ? stakersData.stakers[0]
         : null,
-    previousStaker: stakerPreviousData?.stakers?.length ? stakerPreviousData.stakers[0] : null,
+    previousStaker: stakerPreviousData?.stakers?.length
+      ? stakerPreviousData.stakers[0]
+      : null,
     lockPositions,
     protocolStatsInfo:
       !protocolStatsLoading && protocolStatsInfo.protocolStats.length
