@@ -14,7 +14,7 @@ const defaultValues = {
   safeMax: 0,
 };
 
-const useAdjustPosition = (
+const useTopUpPosition = (
   pool: OpenPositionContextType["pool"],
   onClose: OpenPositionContextType["onClose"],
   position: IOpenPosition
@@ -342,4 +342,4 @@ const useAdjustPosition = (
   };
 };
 
-export default useAdjustPosition;
+export default useTopUpPosition;

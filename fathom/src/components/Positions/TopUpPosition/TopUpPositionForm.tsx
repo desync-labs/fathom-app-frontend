@@ -31,7 +31,7 @@ import {
   MaxButton,
 } from "components/AppComponents/AppButton/AppButton";
 import React from "react";
-import useAdjustPositionContext from "context/adjustPosition";
+import useAdjustPositionContext from "context/topUpPosition";
 import { styled } from "@mui/material/styles";
 
 const AdjustPositionFormWrapper = styled(Grid)`
@@ -51,7 +51,7 @@ const InfoBox = styled(Box)`
   }
 `;
 
-const AdjustPositionForm = () => {
+const TopUpPositionForm = () => {
   const {
     approveBtn,
     approve,
@@ -283,7 +283,7 @@ const AdjustPositionForm = () => {
             {openPositionLoading ? (
               <CircularProgress sx={{ color: "#0D1526" }} size={20} />
             ) : (
-              "Adjust this position"
+              "Top Up this position"
             )}
           </ButtonPrimary>
           {isMobile && (
@@ -295,4 +295,4 @@ const AdjustPositionForm = () => {
   );
 };
 
-export default AdjustPositionForm;
+export default TopUpPositionForm;

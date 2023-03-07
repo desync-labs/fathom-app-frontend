@@ -1,9 +1,9 @@
 import { AppList } from "components/AppComponents/AppList/AppList";
 import { Divider, Grid, ListItem, ListItemText } from "@mui/material";
 import React from "react";
-import useAdjustPositionContext from "context/adjustPosition";
 import { styled } from "@mui/material/styles";
 import { formatNumberPrice } from "utils/format";
+import useTopUpPositionContext from "context/topUpPosition";
 
 const ListDivider = styled(Divider)`
   margin: 20px 20px 20px 5px;
@@ -12,7 +12,7 @@ const ListDivider = styled(Divider)`
   }
 `;
 
-const AdjustPositionInfo = () => {
+const TopUpPositionInfo = () => {
   const {
     pool,
     collateralToBeLocked,
@@ -22,7 +22,7 @@ const AdjustPositionInfo = () => {
     debtRatio,
     safetyBuffer,
     liquidationPrice,
-  } = useAdjustPositionContext();
+  } = useTopUpPositionContext();
 
   return (
     <Grid item xs={12} sm={6}>
@@ -97,4 +97,4 @@ const AdjustPositionInfo = () => {
   );
 };
 
-export default AdjustPositionInfo;
+export default TopUpPositionInfo;
