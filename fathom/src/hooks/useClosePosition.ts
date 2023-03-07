@@ -54,7 +54,7 @@ const useClosePosition = (
     [data, position]
   );
 
-  const lockedCollateral = useMemo(() => position.lockedCollateral, [position]);
+  const lockedCollateral = useMemo(() => position.lockedCollateral.toString(), [position]);
 
   const getBalance = useCallback(async () => {
     const balance = await positionService.balanceStableCoin(account, library);
