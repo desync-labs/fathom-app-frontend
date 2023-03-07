@@ -237,8 +237,6 @@ export default class PositionService implements IPositionService {
         this.chainId
       ).abi.filter((abi) => abi.name === "lockXDC")[0];
 
-      console.log(jsonInterface)
-
       const topUpPositionCall = library.eth.abi.encodeFunctionCall(
         jsonInterface,
         [
