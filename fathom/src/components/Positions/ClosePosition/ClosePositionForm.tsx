@@ -35,7 +35,6 @@ import {
 import InfoIcon from "@mui/icons-material/Info";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatPercentage } from "utils/format";
-import { getToken } from "utils/explorer";
 
 import useClosePositionContext from "context/closePosition";
 import { styled } from "@mui/material/styles";
@@ -52,7 +51,6 @@ const ClosePositionWrapper = styled(Grid)`
 
 const ClosePositionForm = () => {
   const {
-    chainId,
     pool,
     collateral,
     balance,
@@ -66,7 +64,6 @@ const ClosePositionForm = () => {
     onClose,
     closePosition,
     debtValue,
-    aXDCcTokenAddress,
   } = useClosePositionContext();
 
   const theme = useTheme();
@@ -117,7 +114,7 @@ const ClosePositionForm = () => {
           placeholder={"0"}
           helperText={
             balanceError ? (
-              <>
+              <Box sx={{ mt: "5px" }}>
                 <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
                 <Typography
                   component={"div"}
@@ -125,7 +122,7 @@ const ClosePositionForm = () => {
                 >
                   You don't have enough to repay that amount
                 </Typography>
-              </>
+              </Box>
             ) : (
               "Enter the Repaying."
             )
@@ -180,17 +177,7 @@ const ClosePositionForm = () => {
 
       <WarningBox sx={{ mt: 3 }}>
         <InfoIcon sx={{ width: "16px", color: "#F5953D", height: "16px" }} />
-        <Typography>
-          After Close Position you will receive{" "}
-          <a
-            target="_blank"
-            href={getToken(aXDCcTokenAddress, chainId)}
-            rel="noreferrer"
-          >
-            aXDCc
-          </a>{" "}
-          token
-        </Typography>
+        <Typography>After Close Position you will receive XDC token</Typography>
       </WarningBox>
       <ButtonsWrapper
         sx={{ position: "static", float: "right", marginTop: "20px" }}

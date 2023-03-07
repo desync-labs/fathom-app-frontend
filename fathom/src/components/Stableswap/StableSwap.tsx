@@ -35,11 +35,9 @@ import {
   ButtonSecondary,
   FathomSwapChangeCurrencyButton,
   MaxButton,
-  QuestionMarkButton,
 } from "components/AppComponents/AppButton/AppButton";
 
 import ComboShareSrc from "assets/svg/combo-shape.svg";
-import QuestionMarkSrc from "assets/svg/question-mark.svg";
 
 const StableSwapInputWrapper = styled(MuiBox)`
   position: relative;
@@ -358,9 +356,6 @@ const StableSwap = () => {
                         : null}{" "}
                       {outputCurrency}
                     </Box>
-                    <QuestionMarkButton>
-                      <img src={QuestionMarkSrc} alt="question" width={20} />
-                    </QuestionMarkButton>
                   </StableSwapPriceInfo>
                 </StableSwapPriceInfoWrapper>
               );

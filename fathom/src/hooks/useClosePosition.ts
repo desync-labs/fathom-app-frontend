@@ -9,7 +9,6 @@ import useConnector from "context/connector";
 import { useWeb3React } from "@web3-react/core";
 import BigNumber from "bignumber.js";
 import { Constants } from "helpers/Constants";
-import { SmartContractFactory } from "../config/SmartContractFactory";
 
 export enum ClosingType {
   Full,
@@ -46,10 +45,6 @@ const useClosePosition = (
   const [debtValue, setDebtValue] = useState<string>("");
   const [liquidationPrice, setLiquidationPrice] = useState<number>(0);
   const [ltv, setLtv] = useState<number>(0);
-
-  const aXDCcTokenAddress = useMemo(() => {
-    return SmartContractFactory.aXDCcTokenAddress(chainId!);
-  }, [chainId]);
 
   const pool = useMemo(
     () =>
@@ -131,7 +126,7 @@ const useClosePosition = (
       let receipt;
       if (
         closingType === ClosingType.Full ||
-        BigNumber(collateral).isEqualTo(BigNumber(lockedCollateral))
+        BigNumber(collateral).isEqualTo(lockedCollateral)
       ) {
         receipt = await positionService.closePosition(
           position.positionId,
@@ -224,7 +219,6 @@ const useClosePosition = (
     setFathomToken(setBalance.toString());
     setCollateral(collateral.toString());
   }, [
-    position,
     price,
     debtValue,
     balance,
@@ -254,7 +248,6 @@ const useClosePosition = (
     position,
     setType,
     debtValue,
-    aXDCcTokenAddress,
   };
 };
 

@@ -46,7 +46,6 @@ const useStakingItemView = (lockPosition: ILockPosition) => {
 
   useEffect(() => {
     if (seconds > 0 && Math.floor(seconds % 30) === 0) {
-      console.log("Fetch rewards");
       fetchRewards();
     }
   }, [seconds, fetchRewards]);
