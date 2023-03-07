@@ -118,6 +118,178 @@ export default class PositionService implements IPositionService {
     }
   }
 
+  async topUpPositionAndBorrow(
+    address: string,
+    pool: ICollateralPool,
+    collateral: number,
+    fathomToken: number,
+    positionId: string,
+    library: Xdc3
+  ): Promise<TransactionReceipt | undefined> {
+    try {
+      let proxyWalletAddress = await this.proxyWalletExist(address, library);
+
+      if (proxyWalletAddress === Constants.ZERO_ADDRESS) {
+        proxyWalletAddress = await this.createProxyWallet(address, library);
+      }
+
+      /**
+       * Get Proxy Wallet
+       */
+      const wallet = Web3Utils.getContractInstanceFrom(
+        SmartContractFactory.proxyWallet.abi,
+        proxyWalletAddress,
+        library
+      );
+
+      const encodedResult = library.eth.abi.encodeParameters(
+        ["address"],
+        [address]
+      );
+
+      const jsonInterface = SmartContractFactory.FathomStablecoinProxyAction(
+        this.chainId
+      ).abi.filter((abi) => abi.name === "lockXDCAndDraw")[0];
+
+      const topUpPositionCall = library.eth.abi.encodeFunctionCall(
+        jsonInterface,
+        [
+          SmartContractFactory.PositionManager(this.chainId).address,
+          SmartContractFactory.StabilityFeeCollector(this.chainId).address,
+          pool.tokenAdapterAddress,
+          SmartContractFactory.StablecoinAdapter(this.chainId).address,
+          positionId,
+          toWei(fathomToken.toString(), "ether"),
+          encodedResult,
+        ]
+      );
+
+      const options = {
+        from: address,
+        gas: 0,
+        value: toWei(collateral.toString(), "ether"),
+      };
+      const gas = await getEstimateGas(
+        wallet,
+        "execute",
+        [topUpPositionCall],
+        options
+      );
+      options.gas = gas;
+
+      const receipt = await wallet.methods
+        .execute(topUpPositionCall)
+        .send(options)
+        .on("transactionHash", (hash: any) => {
+          this.transactionStore.addTransaction({
+            hash: hash,
+            type: TransactionType.OpenPosition,
+            active: false,
+            status: TransactionStatus.None,
+            title: `Top Up Position Pending`,
+            message: Strings.CheckOnBlockExplorer,
+          });
+        })
+        .then((receipt: TransactionReceipt) => {
+          this.alertStore.setShowSuccessAlert(
+            true,
+            "Top Up position successfully!"
+          );
+          return receipt;
+        });
+
+      return receipt;
+    } catch (error: any) {
+      this.alertStore.setShowErrorAlert(true, error.message);
+      throw error;
+    }
+  }
+
+  async topUpPosition(
+    address: string,
+    pool: ICollateralPool,
+    collateral: number,
+    positionId: string,
+    library: Xdc3
+  ) {
+    try {
+      let proxyWalletAddress = await this.proxyWalletExist(address, library);
+
+      if (proxyWalletAddress === Constants.ZERO_ADDRESS) {
+        proxyWalletAddress = await this.createProxyWallet(address, library);
+      }
+
+      /**
+       * Get Proxy Wallet
+       */
+      const wallet = Web3Utils.getContractInstanceFrom(
+        SmartContractFactory.proxyWallet.abi,
+        proxyWalletAddress,
+        library
+      );
+
+      const encodedResult = library.eth.abi.encodeParameters(
+        ["address"],
+        [address]
+      );
+
+      const jsonInterface = SmartContractFactory.FathomStablecoinProxyAction(
+        this.chainId
+      ).abi.filter((abi) => abi.name === "lockXDC")[0];
+
+      console.log(jsonInterface)
+
+      const topUpPositionCall = library.eth.abi.encodeFunctionCall(
+        jsonInterface,
+        [
+          SmartContractFactory.PositionManager(this.chainId).address,
+          pool.tokenAdapterAddress,
+          positionId,
+          encodedResult,
+        ]
+      );
+
+      const options = {
+        from: address,
+        gas: 0,
+        value: toWei(collateral.toString(), "ether"),
+      };
+      const gas = await getEstimateGas(
+        wallet,
+        "execute",
+        [topUpPositionCall],
+        options
+      );
+      options.gas = gas;
+
+      const receipt = await wallet.methods
+        .execute(topUpPositionCall)
+        .send(options)
+        .on("transactionHash", (hash: any) => {
+          this.transactionStore.addTransaction({
+            hash: hash,
+            type: TransactionType.OpenPosition,
+            active: false,
+            status: TransactionStatus.None,
+            title: `Top Up Position Pending`,
+            message: Strings.CheckOnBlockExplorer,
+          });
+        })
+        .then((receipt: TransactionReceipt) => {
+          this.alertStore.setShowSuccessAlert(
+            true,
+            "Top Up position successfully!"
+          );
+          return receipt;
+        });
+
+      return receipt;
+    } catch (error: any) {
+      this.alertStore.setShowErrorAlert(true, error.message);
+      throw error;
+    }
+  }
+
   async createProxyWallet(address: string, library: Xdc3): Promise<string> {
     try {
       const proxyWalletRegistry = Web3Utils.getContractInstance(

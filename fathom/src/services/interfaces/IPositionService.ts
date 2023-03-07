@@ -11,6 +11,23 @@ export default interface IPositionService {
     library: Xdc3
   ): Promise<TransactionReceipt | undefined>;
 
+  topUpPositionAndBorrow(
+    address: string,
+    pool: ICollateralPool,
+    collateral: number,
+    fathomToken: number,
+    positionId: string,
+    library: Xdc3
+  ): Promise<TransactionReceipt | undefined>;
+
+  topUpPosition(
+    address: string,
+    pool: ICollateralPool,
+    collateral: number,
+    positionId: string,
+    library: Xdc3
+  ): Promise<TransactionReceipt | undefined>;
+
   createProxyWallet(address: string, library: Xdc3): Promise<string>;
   proxyWalletExist(address: string, library: Xdc3): Promise<string>;
 
