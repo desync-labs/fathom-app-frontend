@@ -32,7 +32,7 @@ import { formatCurrency, formatNumber, formatNumberPrice } from "utils/format";
 export type PositionListItemProps = {
   position: IOpenPosition;
   setClosePosition: Dispatch<SetStateAction<IOpenPosition | undefined>>;
-  setAdjustPosition: Dispatch<SetStateAction<IOpenPosition | undefined>>
+  setTopUpPosition: Dispatch<SetStateAction<IOpenPosition | undefined>>
   approve: () => void;
   approvalPending: boolean;
   approveBtn: boolean;
@@ -70,7 +70,7 @@ const ButtonsWrapper = styled(Box)`
 const PositionListItem: FC<PositionListItemProps> = ({
   position,
   setClosePosition,
-  setAdjustPosition,
+  setTopUpPosition,
   approvalPending,
   approveBtn,
   approve,
@@ -180,7 +180,7 @@ const PositionListItem: FC<PositionListItemProps> = ({
                           </MenuItem>
                           <MenuItem
                             onClick={() => {
-                              setAdjustPosition(position);
+                              setTopUpPosition(position);
                             }}
                           >
                             Top Up position

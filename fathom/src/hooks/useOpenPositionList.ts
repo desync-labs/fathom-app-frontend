@@ -43,7 +43,7 @@ const useOpenPositionList = (
   });
 
   const [closePosition, setClosePosition] = useState<IOpenPosition>();
-  const [adjustPosition, setAdjustPosition] = useState<IOpenPosition>();
+  const [topUpPosition, setTopUpPosition] = useState<IOpenPosition>();
 
   const [closingType, setType] = useState(ClosingType.Full);
 
@@ -64,15 +64,15 @@ const useOpenPositionList = (
     }
   }, [account, approvalStatus]);
 
-  const adjustPositionPool = useMemo(() => {
-    if (adjustPosition && poolsData) {
+  const topUpPositionPool = useMemo(() => {
+    if (topUpPosition && poolsData) {
       return poolsData.pools.find(
-        (pool: ICollateralPool) => pool.id === adjustPosition.collateralPool
+        (pool: ICollateralPool) => pool.id === topUpPosition.collateralPool
       );
     }
 
     return null;
-  }, [adjustPosition, poolsData]);
+  }, [topUpPosition, poolsData]);
 
   useEffect(() => {
     loadPositions({
@@ -176,19 +176,20 @@ const useOpenPositionList = (
   ]);
 
   return {
-    adjustPositionPool,
+    topUpPositionPool,
     approveBtn,
     approvalPending,
     closingType,
     positions: formattedPositions,
     approve,
     closePosition,
-    adjustPosition,
+    topUpPosition,
     loading: isLoading,
-    setAdjustPosition,
+    handlePageChange,
+    setTopUpPosition,
     setClosePosition,
     setType,
-    handlePageChange,
+
   };
 };
 

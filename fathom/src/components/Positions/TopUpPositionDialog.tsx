@@ -8,9 +8,9 @@ import {
 } from "@mui/material";
 import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
-import useAdjustPositionContext from "context/adjustPosition";
-import AdjustPositionInfo from "components/Positions/AdjustPosition/AdjustPositionInfo";
-import AdjustPositionForm from "components/Positions/AdjustPosition/AdjustPositionForm";
+import useAdjustPositionContext from "context/topUpPosition";
+import TopUpPositionInfo from "components/Positions/TopUpPosition/TopUpPositionInfo";
+import TopUpPositionForm from "components/Positions/TopUpPosition/TopUpPositionForm";
 import { styled } from "@mui/material/styles";
 
 export const DividerMobile = styled(Divider)`
@@ -24,7 +24,7 @@ export const DividerDefault = styled(Divider)`
   margin: 10px 0 0 0;
 `;
 
-const AdjustPositionDialog: FC = () => {
+const TopUpPositionDialog: FC = () => {
   const { onClose } = useAdjustPositionContext();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -44,16 +44,16 @@ const AdjustPositionDialog: FC = () => {
         <Grid container>
           {!isMobile && (
             <>
-              <AdjustPositionInfo />
+              <TopUpPositionInfo />
               <DividerDefault orientation="vertical" flexItem></DividerDefault>
-              <AdjustPositionForm />
+              <TopUpPositionForm />
             </>
           )}
           {isMobile && (
             <>
-              <AdjustPositionForm />
+              <TopUpPositionForm />
               <DividerMobile></DividerMobile>
-              <AdjustPositionInfo />
+              <TopUpPositionInfo />
             </>
           )}
         </Grid>
@@ -62,4 +62,4 @@ const AdjustPositionDialog: FC = () => {
   );
 };
 
-export default memo(AdjustPositionDialog);
+export default memo(TopUpPositionDialog);

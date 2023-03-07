@@ -25,8 +25,8 @@ import { styled } from "@mui/material/styles";
 import { Constants } from "helpers/Constants";
 
 import { ClosePositionProvider } from "context/closePosition";
-import { AdjustPositionProvider } from "context/adjustPosition";
-import AdjustPositionDialog from "../Positions/AdjustPositionDialog";
+import { TopUpPositionProvider } from "context/topUpPosition";
+import TopUpPositionDialog from "components/Positions/TopUpPositionDialog";
 
 const CircleWrapper = styled(Box)`
   width: 100%;
@@ -56,7 +56,7 @@ const PositionsList: FC<PositionsListProps> = ({
   setPositionCurrentPage,
 }) => {
   const {
-    adjustPositionPool,
+    topUpPositionPool,
     closingType,
     setType,
     approveBtn,
@@ -64,9 +64,9 @@ const PositionsList: FC<PositionsListProps> = ({
     positions,
     approve,
     closePosition,
-    adjustPosition,
+    topUpPosition,
     setClosePosition,
-    setAdjustPosition,
+    setTopUpPosition,
     loading,
     handlePageChange,
   } = useOpenPositionList(setPositionCurrentPage, proxyWallet);
@@ -120,7 +120,7 @@ const PositionsList: FC<PositionsListProps> = ({
                           key={position.id}
                           position={position}
                           setClosePosition={setClosePosition}
-                          setAdjustPosition={setAdjustPosition}
+                          setTopUpPosition={setTopUpPosition}
                           setType={setType}
                         />
                       ))}
@@ -148,7 +148,7 @@ const PositionsList: FC<PositionsListProps> = ({
                     key={position.id}
                     position={position}
                     setClosePosition={setClosePosition}
-                    setAdjustPosition={setAdjustPosition}
+                    setTopUpPosition={setTopUpPosition}
                     setType={setType}
                   />
                 ))}
@@ -176,7 +176,7 @@ const PositionsList: FC<PositionsListProps> = ({
           positionsItemsCount,
           isMobile,
           setClosePosition,
-          setAdjustPosition,
+          setTopUpPosition,
           setType,
         ]
       )}
@@ -190,14 +190,14 @@ const PositionsList: FC<PositionsListProps> = ({
           <ClosePositionDialog />
         </ClosePositionProvider>
       )}
-      {adjustPosition && adjustPositionPool && (
-        <AdjustPositionProvider
-          position={adjustPosition}
-          pool={adjustPositionPool}
-          onClose={() => setAdjustPosition(undefined)}
+      {topUpPosition && topUpPositionPool && (
+        <TopUpPositionProvider
+          position={topUpPosition}
+          pool={topUpPositionPool}
+          onClose={() => setTopUpPosition(undefined)}
         >
-          <AdjustPositionDialog />
-        </AdjustPositionProvider>
+          <TopUpPositionDialog />
+        </TopUpPositionProvider>
       )}
     </>
   );

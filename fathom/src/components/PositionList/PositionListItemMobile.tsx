@@ -95,7 +95,7 @@ const ClosePositionButtonMobile = styled(ClosePositionButton)`
 const PositionListItemMobile: FC<PositionListItemProps> = ({
   position,
   setClosePosition,
-  setAdjustPosition,
+  setTopUpPosition,
   approvalPending,
   approveBtn,
   approve,
@@ -215,7 +215,7 @@ const PositionListItemMobile: FC<PositionListItemProps> = ({
                         </MenuItem>
                         <MenuItem
                           onClick={() => {
-                            setAdjustPosition(position);
+                            setTopUpPosition(position);
                           }}
                         >
                           Top Up position

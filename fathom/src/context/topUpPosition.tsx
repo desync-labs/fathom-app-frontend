@@ -1,9 +1,9 @@
 import { createContext, FC, ReactElement, useContext } from "react";
-import useAdjustPosition from "hooks/useAdjustPosition";
+import useTopUpPosition from "hooks/useTopUpPosition";
 import ICollateralPool from "stores/interfaces/ICollateralPool";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
 
-export type AdjustPositionContextType = {
+export type TopUpPositionContextType = {
   children: ReactElement;
   position: IOpenPosition;
   pool: ICollateralPool;
@@ -11,25 +11,25 @@ export type AdjustPositionContextType = {
 };
 
 // @ts-ignore
-export const AdjustPositionContext = createContext<UseStakingViewType>(null);
+export const TopUpPositionContext = createContext<UseStakingViewType>(null);
 
-export const AdjustPositionProvider: FC<AdjustPositionContextType> = ({
+export const TopUpPositionProvider: FC<TopUpPositionContextType> = ({
   children,
   position,
   pool,
   onClose,
 }) => {
-  const values = useAdjustPosition(pool, onClose, position);
+  const values = useTopUpPosition(pool, onClose, position);
 
   return (
-    <AdjustPositionContext.Provider value={values}>
+    <TopUpPositionContext.Provider value={values}>
       {children}
-    </AdjustPositionContext.Provider>
+    </TopUpPositionContext.Provider>
   );
 };
 
-const useAdjustPositionContext = () => {
-  const context = useContext(AdjustPositionContext);
+const useTopUpPositionContext = () => {
+  const context = useContext(TopUpPositionContext);
 
   if (context === undefined) {
     throw new Error(
@@ -40,4 +40,4 @@ const useAdjustPositionContext = () => {
   return context;
 };
 
-export default useAdjustPositionContext;
+export default useTopUpPositionContext;
