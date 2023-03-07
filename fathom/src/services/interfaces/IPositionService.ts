@@ -48,7 +48,7 @@ export default interface IPositionService {
   ): Promise<TransactionReceipt | undefined>;
 
   getDebtValue(
-    debtShare: string,
+    debtShare: number,
     poolId: string,
     library: Xdc3
   ): Promise<string>;
