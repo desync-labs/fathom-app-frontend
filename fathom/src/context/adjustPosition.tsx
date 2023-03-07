@@ -1,5 +1,5 @@
 import { createContext, FC, ReactElement, useContext } from "react";
-import useOpenPosition from "hooks/useOpenPosition";
+import useAdjustPosition from "hooks/useAdjustPosition";
 import ICollateralPool from "stores/interfaces/ICollateralPool";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
 
@@ -19,7 +19,7 @@ export const AdjustPositionProvider: FC<AdjustPositionContextType> = ({
   pool,
   onClose,
 }) => {
-  const values = useOpenPosition(pool, onClose, position);
+  const values = useAdjustPosition(pool, onClose, position);
 
   return (
     <AdjustPositionContext.Provider value={values}>

@@ -14,10 +14,10 @@ const defaultValues = {
   safeMax: 0,
 };
 
-const useOpenPosition = (
+const useAdjustPosition = (
   pool: OpenPositionContextType["pool"],
   onClose: OpenPositionContextType["onClose"],
-  position?: IOpenPosition
+  position: IOpenPosition
 ) => {
   const { poolService, positionService } = useStores();
   const { account, chainId, library } = useConnector()!;
@@ -247,13 +247,25 @@ const useOpenPosition = (
       const { collateral, fathomToken } = values;
 
       try {
-        const receipt = await positionService.openPosition(
-          account,
-          pool,
-          Number(collateral),
-          Number(fathomToken),
-          library
-        );
+        let receipt;
+        if (fathomToken > 0) {
+          receipt = await positionService.topUpPositionAndBorrow(
+            account,
+            pool,
+            Number(collateral),
+            Number(fathomToken),
+            position.positionId,
+            library
+          );
+        } else {
+          receipt = await positionService.topUpPosition(
+            account,
+            pool,
+            Number(collateral),
+            position.positionId,
+            library
+          );
+        }
         setLastTransactionBlock(receipt!.blockNumber);
         onClose();
       } catch (e) {
@@ -265,6 +277,7 @@ const useOpenPosition = (
       account,
       library,
       pool,
+      position,
       positionService,
       setOpenPositionLoading,
       setLastTransactionBlock,
@@ -329,4 +342,4 @@ const useOpenPosition = (
   };
 };
 
-export default useOpenPosition;
+export default useAdjustPosition;

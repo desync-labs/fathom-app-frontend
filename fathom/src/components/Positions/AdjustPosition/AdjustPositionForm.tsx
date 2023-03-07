@@ -177,7 +177,7 @@ const AdjustPositionForm = () => {
           control={control}
           name="fathomToken"
           rules={{
-            required: true,
+            required: false,
             validate: (value) => {
               if (Number(value) > availableFathomInPool) {
                 return "Not enough FXD in pool";

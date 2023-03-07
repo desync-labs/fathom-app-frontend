@@ -183,7 +183,7 @@ const PositionListItem: FC<PositionListItemProps> = ({
                               setAdjustPosition(position);
                             }}
                           >
-                            Adjust position
+                            Top Up position
                           </MenuItem>
                         </MenuList>
                       </ClickAwayListener>

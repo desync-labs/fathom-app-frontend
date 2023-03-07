@@ -171,12 +171,13 @@ const PositionsList: FC<PositionsListProps> = ({
           approve,
           approvalPending,
           approveBtn,
-          setClosePosition,
-          setType,
           handlePageChange,
           positionCurrentPage,
           positionsItemsCount,
           isMobile,
+          setClosePosition,
+          setAdjustPosition,
+          setType,
         ]
       )}
       {closePosition && (

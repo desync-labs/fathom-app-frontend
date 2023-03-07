@@ -38,7 +38,7 @@ const AdjustPositionDialog: FC = () => {
       color="primary"
     >
       <AppDialogTitle id="customized-dialog-title" onClose={onClose}>
-        Adjust Position
+        Top Up Position
       </AppDialogTitle>
       <DialogContent>
         <Grid container>
