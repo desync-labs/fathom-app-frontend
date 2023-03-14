@@ -8,9 +8,6 @@ import {
 import {
   ApproveBox,
   ApproveBoxTypography,
-  InfoLabel,
-  InfoValue,
-  InfoWrapper,
   Summary,
   WalletBalance,
 } from "components/AppComponents/AppBox/AppBox";
@@ -28,13 +25,17 @@ import {
   ButtonPrimary,
   ButtonSecondary,
   ButtonsWrapper,
+  ManagePositionRepayTypeWrapper,
+  ManageTypeButton,
   MaxButton,
 } from "components/AppComponents/AppButton/AppButton";
-import React from "react";
-import useAdjustPositionContext from "context/topUpPosition";
+import React, { FC } from "react";
+import useTopUpPositionContext from "context/topUpPosition";
 import { styled } from "@mui/material/styles";
+import { ClosePositionDialogPropsType } from "../ClosePositionDialog";
+import BigNumber from "bignumber.js";
 
-const AdjustPositionFormWrapper = styled(Grid)`
+const TopUpPositionFormWrapper = styled(Grid)`
   padding-left: 20px;
   width: calc(50% - 1px);
   position: relative;
@@ -44,57 +45,65 @@ const AdjustPositionFormWrapper = styled(Grid)`
   }
 `;
 
-const InfoBox = styled(Box)`
-  ${({ theme }) => theme.breakpoints.down("sm")} {
-    margin-bottom: 10px;
-    overflow: hidden;
-  }
-`;
+const TopUpForm = styled('form')`
+  padding-bottom: 45px;
+`
 
-const TopUpPositionForm = () => {
+const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
+  topUpPosition,
+  closePosition,
+  setClosePosition,
+  setTopUpPosition,
+}) => {
   const {
+    pool,
     approveBtn,
     approve,
     approvalPending,
-    fxdToBeBorrowed,
     balance,
-    collateral,
-    fathomToken,
     safeMax,
     openPositionLoading,
-
     setMax,
     setSafeMax,
     onSubmit,
-
     control,
     handleSubmit,
-
-    availableFathomInPool,
     onClose,
-    pool,
-  } = useAdjustPositionContext();
+    switchPosition,
+  } = useTopUpPositionContext();
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
-    <AdjustPositionFormWrapper item>
-      <Box
-        component="form"
+    <TopUpPositionFormWrapper item>
+      <TopUpForm
         onSubmit={handleSubmit(onSubmit)}
         noValidate
         autoComplete="off"
       >
         <Summary>Summary</Summary>
-
+        <ManagePositionRepayTypeWrapper>
+          <ManageTypeButton
+            sx={{ marginRight: "5px" }}
+            className={`${!!topUpPosition ? "active" : null}`}
+            onClick={() => !topUpPosition && switchPosition(setTopUpPosition)}
+          >
+            Top Up Position
+          </ManageTypeButton>
+          <ManageTypeButton
+            className={`${!!closePosition ? "active" : null}`}
+            onClick={() => !closePosition && switchPosition(setClosePosition)}
+          >
+            Repay Position
+          </ManageTypeButton>
+        </ManagePositionRepayTypeWrapper>
         <Controller
           control={control}
           name="collateral"
           rules={{
-            required: true,
-            min: 10,
-            max: +balance / 10 ** 18,
+            min: 0,
+            max: BigNumber(balance).dividedBy(10 ** 18).toNumber(),
             pattern: /^[1-9][0-9]*0$/,
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
@@ -102,7 +111,7 @@ const TopUpPositionForm = () => {
               <AppFormLabel>Collateral</AppFormLabel>
               {balance ? (
                 <WalletBalance>
-                  Wallet Available: {+balance / 10 ** 18} {pool.poolName}
+                  Wallet Available: {BigNumber(balance).dividedBy(10 ** 18).toNumber()} {pool.poolName}
                 </WalletBalance>
               ) : null}
               <AppTextField
@@ -131,17 +140,6 @@ const TopUpPositionForm = () => {
                           sx={{ fontSize: "12px", paddingLeft: "6px" }}
                         >
                           You do not have enough {pool.poolName}
-                        </Box>
-                      </>
-                    )}
-                    {error && error.type === "required" && (
-                      <>
-                        <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
-                        <Box
-                          component={"span"}
-                          sx={{ fontSize: "12px", paddingLeft: "6px" }}
-                        >
-                          Collateral amount is required
                         </Box>
                       </>
                     )}
@@ -179,12 +177,12 @@ const TopUpPositionForm = () => {
           rules={{
             required: false,
             validate: (value) => {
-              if (Number(value) > availableFathomInPool) {
+              if (BigNumber(value).isGreaterThan(pool.availableFathomInPool)) {
                 return "Not enough FXD in pool";
               }
 
               if (Number(value) > safeMax) {
-                return `You can't borrow more then ${fxdToBeBorrowed}`;
+                return `You can't borrow more then ${safeMax}`;
               }
 
               return true;
@@ -232,23 +230,6 @@ const TopUpPositionForm = () => {
             );
           }}
         />
-
-        <InfoBox>
-          {collateral ? (
-            <InfoWrapper>
-              <InfoLabel>Depositing</InfoLabel>
-              <InfoValue>
-                {collateral} {pool.poolName}
-              </InfoValue>
-            </InfoWrapper>
-          ) : null}
-          {fathomToken ? (
-            <InfoWrapper>
-              <InfoLabel>Receive</InfoLabel>
-              <InfoValue>{fathomToken} FXD</InfoValue>
-            </InfoWrapper>
-          ) : null}
-        </InfoBox>
         {approveBtn && !!parseInt(balance) && (
           <ApproveBox>
             <InfoIcon
@@ -290,8 +271,8 @@ const TopUpPositionForm = () => {
             <ButtonSecondary onClick={onClose}>Close</ButtonSecondary>
           )}
         </ButtonsWrapper>
-      </Box>
-    </AdjustPositionFormWrapper>
+      </TopUpForm>
+    </TopUpPositionFormWrapper>
   );
 };
 

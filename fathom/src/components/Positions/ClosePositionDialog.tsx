@@ -1,55 +1,67 @@
-import React, { FC, memo } from "react";
+import React, { Dispatch, FC, memo } from "react";
 import { DialogContent, Grid, useMediaQuery, useTheme } from "@mui/material";
-import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
 import useClosePositionContext from "context/closePosition";
-import ClosePositionInfo from "components/Positions/ClosePosition/ClosePositionInfo";
-import ClosePositionForm from "components/Positions/ClosePosition/ClosePositionForm";
+import RepayPositionInfo from "components/Positions/RepayPosition/RepayPositionInfo";
+import RepayPositionForm from "components/Positions/RepayPosition/RepayPositionForm";
 import {
   DividerDefault,
   DividerMobile,
 } from "components/Positions/OpenNewPositionDialog";
+import IOpenPosition from "stores/interfaces/IOpenPosition";
 
-const ClosePositionDialog: FC = () => {
+export type ClosePositionDialogPropsType = {
+  topUpPosition: IOpenPosition | undefined;
+  closePosition: IOpenPosition | undefined;
+  setTopUpPosition: Dispatch<IOpenPosition | undefined>;
+  setClosePosition: Dispatch<IOpenPosition | undefined>;
+};
+
+const ClosePositionDialog: FC<ClosePositionDialogPropsType> = ({
+  topUpPosition,
+  closePosition,
+  setTopUpPosition,
+  setClosePosition,
+}) => {
   const { onClose } = useClosePositionContext();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
-    <AppDialog
-      onClose={onClose}
-      aria-labelledby="customized-dialog-title"
-      open={true}
-      fullWidth
-      maxWidth="md"
-      color="primary"
-    >
+    <>
       <AppDialogTitle id="customized-dialog-title" onClose={onClose}>
-        Close Position
+        Repay Position
       </AppDialogTitle>
 
       <DialogContent>
         <Grid container>
           {!isMobile && (
             <>
-              <ClosePositionInfo />
-              <DividerDefault
-                orientation="vertical"
-                flexItem
-              ></DividerDefault>
-              <ClosePositionForm />
+              <RepayPositionInfo />
+              <DividerDefault orientation="vertical" flexItem></DividerDefault>
+              <RepayPositionForm
+                topUpPosition={topUpPosition}
+                closePosition={closePosition}
+                setTopUpPosition={setTopUpPosition}
+                setClosePosition={setClosePosition}
+              />
             </>
           )}
           {isMobile && (
             <>
-              <ClosePositionForm />
+              <RepayPositionForm
+                topUpPosition={topUpPosition}
+                closePosition={closePosition}
+                setTopUpPosition={setTopUpPosition}
+                setClosePosition={setClosePosition}
+              />
               <DividerMobile></DividerMobile>
-              <ClosePositionInfo />
+              <RepayPositionInfo />
             </>
           )}
         </Grid>
       </DialogContent>
-    </AppDialog>
+    </>
   );
 };
 

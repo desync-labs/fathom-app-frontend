@@ -6,7 +6,6 @@ import BigNumber from "bignumber.js";
 import { OpenPositionContextType } from "context/openPosition";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
-import IOpenPosition from "stores/interfaces/IOpenPosition";
 
 const defaultValues = {
   collateral: "",
@@ -16,8 +15,7 @@ const defaultValues = {
 
 const useOpenPosition = (
   pool: OpenPositionContextType["pool"],
-  onClose: OpenPositionContextType["onClose"],
-  position?: IOpenPosition
+  onClose: OpenPositionContextType["onClose"]
 ) => {
   const { poolService, positionService } = useStores();
   const { account, chainId, library } = useConnector()!;
@@ -80,8 +78,8 @@ const useOpenPosition = (
         library
       );
 
-      console.log("Token adapter address", pool.tokenAdapterAddress);
-      console.log("Collateral token address", tokenAddress);
+      console.log("Token Adapter Address", pool.tokenAdapterAddress);
+      console.log("Collateral Token Address", tokenAddress);
 
       const balance = await poolService.getUserTokenBalance(
         account,
@@ -109,7 +107,7 @@ const useOpenPosition = (
       setFxdToBeBorrowed(fathomTokenInput || 0);
 
       // GET PRICE WITH SAFETY MARGIN
-      const priceWithSafetyMargin = Number(pool.priceWithSafetyMargin);
+      const { priceWithSafetyMargin } = pool;
 
       // SAFE MAX
       const safeMax = Number(
@@ -157,7 +155,7 @@ const useOpenPosition = (
               .multipliedBy(100)
               .toNumber();
 
-      setDebtRatio(+debtRatio);
+      setDebtRatio(debtRatio);
 
       // FXD AVAILABLE TO BORROW
       const fxdAvailableToBorrow = BigNumber(safeMax)
@@ -250,8 +248,8 @@ const useOpenPosition = (
         const receipt = await positionService.openPosition(
           account,
           pool,
-          Number(collateral),
-          Number(fathomToken),
+          collateral,
+          fathomToken,
           library
         );
         setLastTransactionBlock(receipt!.blockNumber);

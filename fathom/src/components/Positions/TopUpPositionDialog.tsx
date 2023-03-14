@@ -1,4 +1,7 @@
-import React, { FC, memo } from "react";
+import React, {
+  FC,
+  memo
+} from "react";
 import {
   Grid,
   DialogContent,
@@ -6,12 +9,12 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
 import useAdjustPositionContext from "context/topUpPosition";
 import TopUpPositionInfo from "components/Positions/TopUpPosition/TopUpPositionInfo";
 import TopUpPositionForm from "components/Positions/TopUpPosition/TopUpPositionForm";
 import { styled } from "@mui/material/styles";
+import { ClosePositionDialogPropsType } from "components/Positions/ClosePositionDialog";
 
 export const DividerMobile = styled(Divider)`
   width: 100%;
@@ -24,19 +27,18 @@ export const DividerDefault = styled(Divider)`
   margin: 10px 0 0 0;
 `;
 
-const TopUpPositionDialog: FC = () => {
+const TopUpPositionDialog: FC<ClosePositionDialogPropsType> = ({
+  topUpPosition,
+  closePosition,
+  setTopUpPosition,
+  setClosePosition,
+}) => {
   const { onClose } = useAdjustPositionContext();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
-    <AppDialog
-      onClose={onClose}
-      aria-labelledby="customized-dialog-title"
-      maxWidth="md"
-      open={true}
-      color="primary"
-    >
+    <>
       <AppDialogTitle id="customized-dialog-title" onClose={onClose}>
         Top Up Position
       </AppDialogTitle>
@@ -46,19 +48,29 @@ const TopUpPositionDialog: FC = () => {
             <>
               <TopUpPositionInfo />
               <DividerDefault orientation="vertical" flexItem></DividerDefault>
-              <TopUpPositionForm />
+              <TopUpPositionForm
+                topUpPosition={topUpPosition}
+                closePosition={closePosition}
+                setTopUpPosition={setTopUpPosition}
+                setClosePosition={setClosePosition}
+              />
             </>
           )}
           {isMobile && (
             <>
-              <TopUpPositionForm />
+              <TopUpPositionForm
+                topUpPosition={topUpPosition}
+                closePosition={closePosition}
+                setTopUpPosition={setTopUpPosition}
+                setClosePosition={setClosePosition}
+              />
               <DividerMobile></DividerMobile>
               <TopUpPositionInfo />
             </>
           )}
         </Grid>
       </DialogContent>
-    </AppDialog>
+    </>
   );
 };
 
