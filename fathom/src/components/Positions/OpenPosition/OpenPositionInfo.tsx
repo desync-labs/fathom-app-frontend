@@ -77,9 +77,6 @@ const OpenPositionInfo = () => {
         <ListItem alignItems="flex-start" secondaryAction={`1.73%`}>
           <ListItemText primary={`Lending APR`} />
         </ListItem>
-        <ListItem alignItems="flex-start" secondaryAction={`0.22%`}>
-          <ListItemText primary={`Fathom Rewards APR`} />
-        </ListItem>
         <ListItem
           alignItems="flex-start"
           secondaryAction={`${pool.stabilityFeeRate}%`}

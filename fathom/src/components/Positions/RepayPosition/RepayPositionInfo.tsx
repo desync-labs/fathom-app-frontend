@@ -8,7 +8,7 @@ import {
   formatPercentage
 } from "utils/format";
 
-const ClosePositionInfo = () => {
+const RepayPositionInfo = () => {
   const {
     lockedCollateral,
     price,
@@ -71,4 +71,4 @@ const ClosePositionInfo = () => {
   );
 };
 
-export default ClosePositionInfo;
+export default RepayPositionInfo;

@@ -27,6 +27,7 @@ import { Constants } from "helpers/Constants";
 import { ClosePositionProvider } from "context/closePosition";
 import { TopUpPositionProvider } from "context/topUpPosition";
 import TopUpPositionDialog from "components/Positions/TopUpPositionDialog";
+import { AppDialog } from "../AppComponents/AppDialog/AppDialog";
 
 const CircleWrapper = styled(Box)`
   width: 100%;
@@ -57,8 +58,6 @@ const PositionsList: FC<PositionsListProps> = ({
 }) => {
   const {
     topUpPositionPool,
-    closingType,
-    setType,
     approveBtn,
     approvalPending,
     positions,
@@ -69,6 +68,7 @@ const PositionsList: FC<PositionsListProps> = ({
     setTopUpPosition,
     loading,
     handlePageChange,
+    onClose,
   } = useOpenPositionList(setPositionCurrentPage, proxyWallet);
 
   const theme = useTheme();
@@ -121,7 +121,6 @@ const PositionsList: FC<PositionsListProps> = ({
                           position={position}
                           setClosePosition={setClosePosition}
                           setTopUpPosition={setTopUpPosition}
-                          setType={setType}
                         />
                       ))}
                     </TableBody>
@@ -149,7 +148,6 @@ const PositionsList: FC<PositionsListProps> = ({
                     position={position}
                     setClosePosition={setClosePosition}
                     setTopUpPosition={setTopUpPosition}
-                    setType={setType}
                   />
                 ))}
                 <PaginationWrapper>
@@ -177,28 +175,43 @@ const PositionsList: FC<PositionsListProps> = ({
           isMobile,
           setClosePosition,
           setTopUpPosition,
-          setType,
         ]
       )}
-      {closePosition && (
-        <ClosePositionProvider
-          position={closePosition}
-          onClose={() => setClosePosition(undefined)}
-          closingType={closingType}
-          setType={setType}
+      {closePosition || topUpPosition ? (
+        <AppDialog
+          onClose={onClose}
+          aria-labelledby="customized-dialog-title"
+          open={true}
+          fullWidth
+          maxWidth="md"
+          color="primary"
         >
-          <ClosePositionDialog />
-        </ClosePositionProvider>
-      )}
-      {topUpPosition && topUpPositionPool && (
-        <TopUpPositionProvider
-          position={topUpPosition}
-          pool={topUpPositionPool}
-          onClose={() => setTopUpPosition(undefined)}
-        >
-          <TopUpPositionDialog />
-        </TopUpPositionProvider>
-      )}
+          {closePosition && (
+            <ClosePositionProvider position={closePosition} onClose={onClose}>
+              <ClosePositionDialog
+                topUpPosition={topUpPosition}
+                closePosition={closePosition}
+                setTopUpPosition={setTopUpPosition}
+                setClosePosition={setClosePosition}
+              />
+            </ClosePositionProvider>
+          )}
+          {topUpPosition && (
+            <TopUpPositionProvider
+              position={topUpPosition}
+              pool={topUpPositionPool}
+              onClose={onClose}
+            >
+              <TopUpPositionDialog
+                topUpPosition={topUpPosition}
+                closePosition={closePosition}
+                setTopUpPosition={setTopUpPosition}
+                setClosePosition={setClosePosition}
+              />
+            </TopUpPositionProvider>
+          )}
+        </AppDialog>
+      ) : null}
     </>
   );
 };

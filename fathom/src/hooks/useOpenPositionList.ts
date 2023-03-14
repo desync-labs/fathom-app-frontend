@@ -14,7 +14,6 @@ import ICollateralPool from "stores/interfaces/ICollateralPool";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import { FXD_POOLS, FXD_POSITIONS } from "apollo/queries";
 
-import { ClosingType } from "hooks/useClosePosition";
 import { Constants } from "helpers/Constants";
 import useConnector from "context/connector";
 import BigNumber from "bignumber.js";
@@ -44,8 +43,6 @@ const useOpenPositionList = (
 
   const [closePosition, setClosePosition] = useState<IOpenPosition>();
   const [topUpPosition, setTopUpPosition] = useState<IOpenPosition>();
-
-  const [closingType, setType] = useState(ClosingType.Full);
 
   const [approveBtn, setApproveBtn] = useState<boolean>(true);
   const [approvalPending, setApprovalPending] = useState<boolean>(false);
@@ -175,11 +172,15 @@ const useOpenPositionList = (
     setIsLoading,
   ]);
 
+  const onClose = useCallback(() => {
+    setClosePosition(undefined);
+    setTopUpPosition(undefined);
+  }, [setClosePosition, setTopUpPosition]);
+
   return {
     topUpPositionPool,
     approveBtn,
     approvalPending,
-    closingType,
     positions: formattedPositions,
     approve,
     closePosition,
@@ -188,8 +189,7 @@ const useOpenPositionList = (
     handlePageChange,
     setTopUpPosition,
     setClosePosition,
-    setType,
-
+    onClose,
   };
 };
 

@@ -1,3 +1,8 @@
+import { TransactionReceipt } from "web3-eth";
+import { toWei } from "web3-utils";
+import Xdc3 from "xdc3";
+import BigNumber from "bignumber.js";
+
 import { Constants } from "helpers/Constants";
 import { Web3Utils } from "helpers/Web3Utils";
 import { Strings } from "helpers/Strings";
@@ -7,17 +12,14 @@ import IPositionService from "services/interfaces/IPositionService";
 
 import ICollateralPool from "stores/interfaces/ICollateralPool";
 import ActiveWeb3Transactions from "stores/transaction.store";
+import AlertStore from "stores/alert.stores";
+
 import {
   TransactionStatus,
   TransactionType,
 } from "stores/interfaces/ITransaction";
 
-import { toWei } from "web3-utils";
-import Xdc3 from "xdc3";
-import AlertStore from "stores/alert.stores";
-import { TransactionReceipt } from "web3-eth";
 import { getEstimateGas } from "utils/getEstimateGas";
-import BigNumber from "bignumber.js";
 
 export default class PositionService implements IPositionService {
   chainId = Constants.DEFAULT_CHAIN_ID;
@@ -35,8 +37,8 @@ export default class PositionService implements IPositionService {
   async openPosition(
     address: string,
     pool: ICollateralPool,
-    collateral: number,
-    fathomToken: number,
+    collateral: string,
+    fathomToken: string,
     library: Xdc3
   ): Promise<TransactionReceipt | undefined> {
     try {
@@ -121,8 +123,8 @@ export default class PositionService implements IPositionService {
   async topUpPositionAndBorrow(
     address: string,
     pool: ICollateralPool,
-    collateral: number,
-    fathomToken: number,
+    collateral: string,
+    fathomToken: string,
     positionId: string,
     library: Xdc3
   ): Promise<TransactionReceipt | undefined> {
@@ -208,7 +210,7 @@ export default class PositionService implements IPositionService {
   async topUpPosition(
     address: string,
     pool: ICollateralPool,
-    collateral: number,
+    collateral: string,
     positionId: string,
     library: Xdc3
   ) {

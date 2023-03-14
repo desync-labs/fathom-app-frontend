@@ -8,9 +8,6 @@ import {
 import {
   ApproveBox,
   ApproveBoxTypography,
-  InfoLabel,
-  InfoValue,
-  InfoWrapper,
   Summary,
   WalletBalance,
 } from "components/AppComponents/AppBox/AppBox";
@@ -44,13 +41,6 @@ const OpenPositionFormWrapper = styled(Grid)`
   }
 `;
 
-const InfoBox = styled(Box)`
-  ${({ theme }) => theme.breakpoints.down("sm")} {
-    margin-bottom: 10px;
-    overflow: hidden;
-  }
-`;
-
 const OpenPositionForm = () => {
   const {
     approveBtn,
@@ -58,8 +48,6 @@ const OpenPositionForm = () => {
     approvalPending,
     fxdToBeBorrowed,
     balance,
-    collateral,
-    fathomToken,
     safeMax,
     openPositionLoading,
 
@@ -232,23 +220,6 @@ const OpenPositionForm = () => {
             );
           }}
         />
-
-        <InfoBox>
-          {collateral ? (
-            <InfoWrapper>
-              <InfoLabel>Depositing</InfoLabel>
-              <InfoValue>
-                {collateral} {pool.poolName}
-              </InfoValue>
-            </InfoWrapper>
-          ) : null}
-          {fathomToken ? (
-            <InfoWrapper>
-              <InfoLabel>Receive</InfoLabel>
-              <InfoValue>{fathomToken} FXD</InfoValue>
-            </InfoWrapper>
-          ) : null}
-        </InfoBox>
         {approveBtn && !!parseInt(balance) && (
           <ApproveBox>
             <InfoIcon
