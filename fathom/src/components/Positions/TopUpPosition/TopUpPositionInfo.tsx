@@ -1,8 +1,8 @@
-import { AppList } from "components/AppComponents/AppList/AppList";
-import { Box, Divider, Grid, ListItem, ListItemText } from "@mui/material";
 import React from "react";
+import { Box, Divider, Grid, ListItem, ListItemText } from "@mui/material";
+import { AppList } from "components/AppComponents/AppList/AppList";
 import { styled } from "@mui/material/styles";
-import { formatNumberPrice, formatPercentage } from "utils/format";
+import { formatNumberPrice, formatPercentage, formatNumber } from "utils/format";
 import useTopUpPositionContext from "context/topUpPosition";
 import BigNumber from "bignumber.js";
 
@@ -16,6 +16,8 @@ const ListDivider = styled(Divider)`
 const TopUpPositionInfo = () => {
   const {
     ltv,
+    safetyBuffer,
+    debtValue,
     pool,
     position,
     liquidationPrice,
@@ -30,7 +32,7 @@ const TopUpPositionInfo = () => {
           alignItems="flex-start"
           secondaryAction={
             <>
-              {BigNumber(position.debtShare).toFixed(6)} FXD{" "}
+              {BigNumber(debtValue).toFixed(6)} FXD{" "}
               <Box component="span" sx={{ color: "#29C20A" }}>
                 → {BigNumber(totalFathomToken).toFixed(6)} FXD
               </Box>
@@ -66,7 +68,7 @@ const TopUpPositionInfo = () => {
         </ListItem>
         <ListItem
           alignItems="flex-start"
-          secondaryAction={`${formatPercentage(position.safetyBufferInPercent * 100)} %`}
+          secondaryAction={`${formatNumber(safetyBuffer * 100)} %`}
         >
           <ListItemText primary="Safety Buffer" />
         </ListItem>

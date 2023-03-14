@@ -194,7 +194,9 @@ const useOpenPosition = (
       /**
        * Revalidate form
        */
-      trigger();
+      setTimeout(() => {
+        trigger();
+      }, 100)
     },
     [
       collateralTokenAddress,

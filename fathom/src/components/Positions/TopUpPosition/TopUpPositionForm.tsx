@@ -1,3 +1,8 @@
+import React, {
+  FC,
+  useMemo
+} from "react";
+import { Controller } from "react-hook-form";
 import {
   Box,
   CircularProgress,
@@ -11,7 +16,7 @@ import {
   Summary,
   WalletBalance,
 } from "components/AppComponents/AppBox/AppBox";
-import { Controller } from "react-hook-form";
+
 import {
   AppFormInputLogo,
   AppFormInputWrapper,
@@ -29,7 +34,7 @@ import {
   ManageTypeButton,
   MaxButton,
 } from "components/AppComponents/AppButton/AppButton";
-import React, { FC } from "react";
+
 import useTopUpPositionContext from "context/topUpPosition";
 import { styled } from "@mui/material/styles";
 import { ClosePositionDialogPropsType } from "../ClosePositionDialog";
@@ -75,6 +80,10 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const availableFathomInPool = useMemo(() => {
+    return pool.availableFathomInPool
+  }, [pool])
+
   return (
     <TopUpPositionFormWrapper item>
       <TopUpForm
@@ -102,6 +111,7 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
           control={control}
           name="collateral"
           rules={{
+            required: false,
             min: 0,
             max: BigNumber(balance).dividedBy(10 ** 18).toNumber(),
             pattern: /^[1-9][0-9]*0$/,
@@ -172,16 +182,17 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
           )}
         />
         <Controller
+          key={safeMax}
           control={control}
           name="fathomToken"
           rules={{
-            required: false,
-            validate: (value) => {
-              if (BigNumber(value).isGreaterThan(pool.availableFathomInPool)) {
+            validate: (value, ...rest) => {
+              console.log(rest)
+              if (BigNumber(value).isGreaterThan(availableFathomInPool)) {
                 return "Not enough FXD in pool";
               }
 
-              if (Number(value) > safeMax) {
+              if (BigNumber(value).isGreaterThan(safeMax)) {
                 return `You can't borrow more then ${safeMax}`;
               }
 
