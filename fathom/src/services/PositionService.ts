@@ -161,7 +161,7 @@ export default class PositionService implements IPositionService {
           pool.tokenAdapterAddress,
           SmartContractFactory.StablecoinAdapter(this.chainId).address,
           positionId,
-          toWei(fathomToken.toString(), "ether"),
+          fathomToken ? toWei(fathomToken.toString(), "ether") : 0,
           encodedResult,
         ]
       );
@@ -169,7 +169,7 @@ export default class PositionService implements IPositionService {
       const options = {
         from: address,
         gas: 0,
-        value: toWei(collateral.toString(), "ether"),
+        value: collateral ? toWei(collateral, "ether") : 0,
       };
       const gas = await getEstimateGas(
         wallet,
@@ -252,7 +252,7 @@ export default class PositionService implements IPositionService {
       const options = {
         from: address,
         gas: 0,
-        value: toWei(collateral.toString(), "ether"),
+        value: collateral ? toWei(collateral.toString(), "ether") : 0,
       };
       const gas = await getEstimateGas(
         wallet,
@@ -634,7 +634,6 @@ export default class PositionService implements IPositionService {
     poolId: string,
     library: Xdc3
   ): Promise<string> {
-
     const poolConfigContract = Web3Utils.getContractInstance(
       SmartContractFactory.PoolConfig(this.chainId),
       library
@@ -644,10 +643,14 @@ export default class PositionService implements IPositionService {
       .getDebtAccumulatedRate(poolId)
       .call();
 
-    const debtShareValue = BigNumber(debtShare).multipliedBy(Constants.WeiPerWad).integerValue(BigNumber.ROUND_CEIL)
-    const debtValue = BigNumber(debtAccumulatedRate).multipliedBy(debtShareValue)
+    const debtShareValue = BigNumber(debtShare)
+      .multipliedBy(Constants.WeiPerWad)
+      .integerValue(BigNumber.ROUND_CEIL);
 
-    return debtValue.dividedBy(Constants.WeiPerRad).toFixed()
+    const debtValue =
+      BigNumber(debtAccumulatedRate).multipliedBy(debtShareValue);
+
+    return debtValue.dividedBy(Constants.WeiPerRad).toFixed();
   }
 
   setChainId(chainId: number) {

@@ -35,11 +35,12 @@ const useTopUpPosition = (
   const [debtValue, setDebtValue] = useState<string>("");
   const [liquidationPrice, setLiquidationPrice] = useState<string>("");
   const [ltv, setLtv] = useState<string>("");
+  const [safetyBuffer, setSafetyBuffer] = useState<string>("");
 
   const [balance, setBalance] = useState<number>(0);
   const [collateralTokenAddress, setCollateralTokenAddress] = useState<
     string | null
-    >();
+  >();
   const { setLastTransactionBlock } = useSyncContext();
 
   const [openPositionLoading, setOpenPositionLoading] =
@@ -58,9 +59,7 @@ const useTopUpPosition = (
 
   const totalFathomToken = useMemo(() => {
     return (
-      fathomToken
-        ? BigNumber(debtValue).plus(fathomToken)
-        : debtValue
+      fathomToken ? BigNumber(debtValue).plus(fathomToken) : debtValue
     ).toString();
   }, [fathomToken, debtValue]);
 
@@ -140,63 +139,78 @@ const useTopUpPosition = (
 
   useEffect(() => {
     if (account && chainId) {
-      getDebtValue()
+      getDebtValue();
       getCollateralTokenAndBalance();
     }
   }, [chainId, account, getCollateralTokenAndBalance, getDebtValue]);
 
-
   const handleUpdates = useCallback(
-    async (collateralInput: string, fathomInput: string) => {
+    async (totalCollateralAmount: string, totalFathomAmount: string) => {
       // GET PRICE WITH SAFETY MARGIN
       const { priceWithSafetyMargin } = pool;
 
       // SAFE MAX
-      const safeMax = Number(
-        BigNumber(collateralInput)
+      let safeMax = Number(
+        BigNumber(totalCollateralAmount)
           .multipliedBy(
             BigNumber(priceWithSafetyMargin)
               .multipliedBy(BigNumber(100).minus(pool.stabilityFeeRate))
               .dividedBy(100)
           )
-          .minus(position.debtShare)
+          .minus(debtValue)
           .toNumber()
       );
+
+      safeMax = safeMax > 0 ? safeMax : 0;
+
+      const collateralAvailableToWithdraw =
+        Number(priceWithSafetyMargin) === 0
+          ? BigNumber(totalCollateralAmount).minus(totalFathomAmount).toNumber()
+          : BigNumber(totalCollateralAmount)
+              .multipliedBy(priceWithSafetyMargin)
+              .minus(totalFathomAmount)
+              .dividedBy(priceWithSafetyMargin)
+              .toNumber();
+
+      const safetyBuffer = BigNumber(collateralAvailableToWithdraw)
+        .dividedBy(totalCollateralAmount)
+        .toString();
+
+      setSafetyBuffer(safetyBuffer);
 
       setValue("safeMax", safeMax);
 
       const liquidationPrice = BigNumber(pool.rawPrice)
         .minus(
           BigNumber(pool.priceWithSafetyMargin)
-            .multipliedBy(collateralInput)
-            .minus(fathomInput)
-            .dividedBy(collateralInput)
+            .multipliedBy(totalCollateralAmount)
+            .minus(totalFathomAmount)
+            .dividedBy(totalCollateralAmount)
         )
         .toString();
 
-      const ltv = BigNumber(fathomInput)
-        .dividedBy(
-          BigNumber(pool.rawPrice).multipliedBy(
-            collateralInput
-          )
-        )
+      const ltv = BigNumber(totalFathomAmount)
+        .dividedBy(BigNumber(pool.rawPrice).multipliedBy(totalCollateralAmount))
         .toString();
 
       setLiquidationPrice(liquidationPrice);
       setLtv(ltv);
+
       /**
        * Revalidate form
        */
-      trigger();
+      setTimeout(() => {
+        trigger();
+      }, 100);
     },
     [
       pool,
-      position,
       debtValue,
       setValue,
       trigger,
       setLiquidationPrice,
       setLtv,
+      setSafetyBuffer,
     ]
   );
 
@@ -233,7 +247,7 @@ const useTopUpPosition = (
 
       try {
         let receipt;
-        if (fathomToken > 0) {
+        if (BigNumber(fathomToken).isGreaterThan(0)) {
           receipt = await positionService.topUpPositionAndBorrow(
             account,
             pool,
@@ -308,12 +322,14 @@ const useTopUpPosition = (
   return {
     position,
     safeMax,
+    debtValue,
     approveBtn,
     approve,
     approvalPending,
     balance,
     liquidationPrice,
     ltv,
+    safetyBuffer,
     collateral,
     fathomToken,
     openPositionLoading,
