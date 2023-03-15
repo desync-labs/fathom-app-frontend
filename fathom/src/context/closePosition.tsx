@@ -1,6 +1,6 @@
 import { createContext, FC, ReactElement, useContext } from "react";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
-import useClosePosition from "hooks/useClosePosition";
+import useClosePosition from "hooks/useRepayPosition";
 
 export type ClosePositionContextType = {
   children: ReactElement;

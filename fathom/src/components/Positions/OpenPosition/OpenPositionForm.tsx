@@ -1,3 +1,5 @@
+import React from "react";
+import { Controller } from "react-hook-form";
 import {
   Box,
   CircularProgress,
@@ -5,20 +7,20 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
+import InfoIcon from "@mui/icons-material/Info";
+import { styled } from "@mui/material/styles";
 import {
   ApproveBox,
   ApproveBoxTypography,
   Summary,
   WalletBalance,
 } from "components/AppComponents/AppBox/AppBox";
-import { Controller } from "react-hook-form";
 import {
   AppFormInputLogo,
   AppFormInputWrapper,
   AppFormLabel,
   AppTextField,
 } from "components/AppComponents/AppForm/AppForm";
-import InfoIcon from "@mui/icons-material/Info";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import {
   ApproveButton,
@@ -27,9 +29,7 @@ import {
   ButtonsWrapper,
   MaxButton,
 } from "components/AppComponents/AppButton/AppButton";
-import React from "react";
 import useOpenPositionContext from "context/openPosition";
-import { styled } from "@mui/material/styles";
 
 const OpenPositionFormWrapper = styled(Grid)`
   padding-left: 20px;
@@ -50,14 +50,11 @@ const OpenPositionForm = () => {
     balance,
     safeMax,
     openPositionLoading,
-
     setMax,
     setSafeMax,
     onSubmit,
-
     control,
     handleSubmit,
-
     availableFathomInPool,
     onClose,
     pool,
