@@ -137,13 +137,6 @@ const useTopUpPosition = (
     }
   }, [poolService, account, pool, library, setCollateralTokenAddress]);
 
-  useEffect(() => {
-    if (account && chainId) {
-      getDebtValue();
-      getCollateralTokenAndBalance();
-    }
-  }, [chainId, account, getCollateralTokenAndBalance, getDebtValue]);
-
   const handleUpdates = useCallback(
     async (totalCollateralAmount: string, totalFathomAmount: string) => {
       // GET PRICE WITH SAFETY MARGIN
@@ -213,28 +206,6 @@ const useTopUpPosition = (
       setSafetyBuffer,
     ]
   );
-
-  useEffect(() => {
-    if (
-      pool?.poolName?.toUpperCase() === "XDC" &&
-      (totalCollateral || totalFathomToken)
-    ) {
-      handleUpdates(totalCollateral, totalFathomToken);
-    } else if (
-      collateralTokenAddress &&
-      (totalCollateral || totalFathomToken)
-    ) {
-      handleUpdates(totalCollateral, totalFathomToken);
-      approvalStatus(totalCollateral);
-    }
-  }, [
-    pool,
-    totalCollateral,
-    totalFathomToken,
-    collateralTokenAddress,
-    handleUpdates,
-    approvalStatus,
-  ]);
 
   const setSafeMax = useCallback(() => {
     setValue("fathomToken", safeMax.toString(), { shouldValidate: true });
@@ -319,6 +290,35 @@ const useTopUpPosition = (
     [setValue]
   );
 
+  useEffect(() => {
+    if (account && chainId) {
+      getDebtValue();
+      getCollateralTokenAndBalance();
+    }
+  }, [chainId, account, getCollateralTokenAndBalance, getDebtValue]);
+
+  useEffect(() => {
+    if (
+      pool?.poolName?.toUpperCase() === "XDC" &&
+      (totalCollateral || totalFathomToken)
+    ) {
+      handleUpdates(totalCollateral, totalFathomToken);
+    } else if (
+      collateralTokenAddress &&
+      (totalCollateral || totalFathomToken)
+    ) {
+      handleUpdates(totalCollateral, totalFathomToken);
+      approvalStatus(totalCollateral);
+    }
+  }, [
+    pool,
+    totalCollateral,
+    totalFathomToken,
+    collateralTokenAddress,
+    handleUpdates,
+    approvalStatus,
+  ]);
+
   return {
     position,
     safeMax,
@@ -333,14 +333,11 @@ const useTopUpPosition = (
     collateral,
     fathomToken,
     openPositionLoading,
-
     setMax,
     setSafeMax,
     onSubmit,
-
     control,
     handleSubmit,
-
     pool,
     onClose,
     switchPosition,

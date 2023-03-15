@@ -1,24 +1,21 @@
-import {
-  Dispatch,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState
-} from "react";
+import { Dispatch, useCallback, useEffect, useMemo, useState } from "react";
 import { useStores } from "stores";
+import BigNumber from "bignumber.js";
+import { useQuery } from "@apollo/client";
+import { FXD_POOLS } from "apollo/queries";
+
 import { ClosePositionContextType } from "context/closePosition";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
-import { useQuery } from "@apollo/client";
-import { FXD_POOLS } from "apollo/queries";
+
 import { useWeb3React } from "@web3-react/core";
-import BigNumber from "bignumber.js";
+
 import { Constants } from "helpers/Constants";
 
 import ICollateralPool from "stores/interfaces/ICollateralPool";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
 
-const useClosePosition = (
+const useRepayPosition = (
   position: ClosePositionContextType["position"],
   onClose: ClosePositionContextType["onClose"]
 ) => {
@@ -39,7 +36,9 @@ const useClosePosition = (
   const [price, setPrice] = useState<string>("");
 
   const [balance, setBalance] = useState<string>("");
+
   const [balanceError, setBalanceError] = useState<boolean>(false);
+
   const [disableClosePosition, setDisableClosePosition] =
     useState<boolean>(false);
 
@@ -176,7 +175,7 @@ const useClosePosition = (
       let { value } = e.target;
       let bigIntValue = BigNumber(value);
 
-      if (bigIntValue.isGreaterThan(BigNumber(debtValue))) {
+      if (bigIntValue.isGreaterThan(debtValue)) {
         bigIntValue = BigNumber(debtValue);
         value = bigIntValue.toString();
       }
@@ -195,16 +194,25 @@ const useClosePosition = (
     [price, debtValue, balance, setFathomToken, setCollateral, setBalanceError]
   );
 
-  const handleCollateralTextFieldChange = useCallback((e: any) => {
-    const { value } = e.target;
-    const bigIntValue = BigNumber(value);
+  const handleCollateralTextFieldChange = useCallback(
+    (e: any) => {
+      const { value } = e.target;
+      let bigIntValue = BigNumber(value);
 
-    if (bigIntValue.isGreaterThan(lockedCollateral)) {
-      setCollateral(lockedCollateral)
-    } else {
-      setCollateral(value);
-    }
-  }, [lockedCollateral]);
+      if (bigIntValue.isGreaterThan(lockedCollateral)) {
+        bigIntValue = BigNumber(lockedCollateral);
+        setCollateral(lockedCollateral);
+      } else {
+        setCollateral(value);
+      }
+
+      const repay = bigIntValue.multipliedBy(price);
+      if (BigNumber(fathomToken).isLessThan(repay)) {
+        setFathomToken(repay.toString());
+      }
+    },
+    [lockedCollateral, fathomToken, price, setCollateral, setFathomToken]
+  );
 
   const setMax = useCallback(() => {
     const setBalance = BigNumber(balance).isLessThan(debtValue)
@@ -227,10 +235,13 @@ const useClosePosition = (
     setCollateral,
   ]);
 
-  const switchPosition = useCallback((callback: Dispatch<IOpenPosition>) => {
-    onClose()
-    callback(position)
-  }, [onClose, position])
+  const switchPosition = useCallback(
+    (callback: Dispatch<IOpenPosition>) => {
+      onClose();
+      callback(position);
+    },
+    [onClose, position]
+  );
 
   return {
     liquidationPrice,
@@ -255,4 +266,4 @@ const useClosePosition = (
   };
 };
 
-export default useClosePosition;
+export default useRepayPosition;

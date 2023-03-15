@@ -1,10 +1,10 @@
 import React from "react";
+import BigNumber from "bignumber.js";
 import { Box, Divider, Grid, ListItem, ListItemText } from "@mui/material";
-import { AppList } from "components/AppComponents/AppList/AppList";
 import { styled } from "@mui/material/styles";
+import { AppList } from "components/AppComponents/AppList/AppList";
 import { formatNumberPrice, formatPercentage, formatNumber } from "utils/format";
 import useTopUpPositionContext from "context/topUpPosition";
-import BigNumber from "bignumber.js";
 
 const ListDivider = styled(Divider)`
   margin: 20px 20px 20px 5px;

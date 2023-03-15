@@ -6,12 +6,15 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
+import { styled } from "@mui/material/styles";
+
 import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
-import useOpenPositionContext from "context/openPosition";
+
 import OpenPositionInfo from "components/Positions/OpenPosition/OpenPositionInfo";
 import OpenPositionForm from "components/Positions/OpenPosition/OpenPositionForm";
-import { styled } from "@mui/material/styles";
+
+import useOpenPositionContext from "context/openPosition";
 
 export const DividerMobile = styled(Divider)`
   width: 100%;

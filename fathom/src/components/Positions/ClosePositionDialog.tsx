@@ -1,13 +1,15 @@
 import React, { Dispatch, FC, memo } from "react";
 import { DialogContent, Grid, useMediaQuery, useTheme } from "@mui/material";
+
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
-import useClosePositionContext from "context/closePosition";
 import RepayPositionInfo from "components/Positions/RepayPosition/RepayPositionInfo";
 import RepayPositionForm from "components/Positions/RepayPosition/RepayPositionForm";
 import {
   DividerDefault,
   DividerMobile,
 } from "components/Positions/OpenNewPositionDialog";
+
+import useClosePositionContext from "context/closePosition";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
 
 export type ClosePositionDialogPropsType = {

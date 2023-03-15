@@ -9,12 +9,14 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
+import { styled } from "@mui/material/styles";
+
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
-import useAdjustPositionContext from "context/topUpPosition";
+import { ClosePositionDialogPropsType } from "components/Positions/ClosePositionDialog";
 import TopUpPositionInfo from "components/Positions/TopUpPosition/TopUpPositionInfo";
 import TopUpPositionForm from "components/Positions/TopUpPosition/TopUpPositionForm";
-import { styled } from "@mui/material/styles";
-import { ClosePositionDialogPropsType } from "components/Positions/ClosePositionDialog";
+
+import useAdjustPositionContext from "context/topUpPosition";
 
 export const DividerMobile = styled(Divider)`
   width: 100%;

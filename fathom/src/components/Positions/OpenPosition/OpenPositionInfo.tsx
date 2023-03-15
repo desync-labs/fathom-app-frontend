@@ -1,6 +1,8 @@
-import { AppList } from "components/AppComponents/AppList/AppList";
-import { Divider, Grid, ListItem, ListItemText } from "@mui/material";
 import React from "react";
+import { Divider, Grid, ListItem, ListItemText } from "@mui/material";
+
+import { AppList } from "components/AppComponents/AppList/AppList";
+
 import useOpenPositionContext from "context/openPosition";
 import { styled } from "@mui/material/styles";
 import { formatNumberPrice } from "utils/format";
