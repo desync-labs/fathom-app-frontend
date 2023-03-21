@@ -5,7 +5,7 @@ import { AppList } from "components/AppComponents/AppList/AppList";
 
 import useOpenPositionContext from "context/openPosition";
 import { styled } from "@mui/material/styles";
-import { formatNumber, formatNumberPrice } from "utils/format";
+import { formatNumber, formatNumberPrice, formatPercentage } from "utils/format";
 import BigNumber from "bignumber.js";
 
 const ListDivider = styled(Divider)`
@@ -48,13 +48,13 @@ const OpenPositionInfo = () => {
         </ListItem>
         <ListItem
           alignItems="flex-start"
-          secondaryAction={`${BigNumber(fxdToBeBorrowed).toFixed(2)} FXD`}
+          secondaryAction={`${formatPercentage(fxdToBeBorrowed)} FXD`}
         >
           <ListItemText primary="FXD to be Borrowed" />
         </ListItem>
         <ListItem
           alignItems="flex-start"
-          secondaryAction={`${formatNumber(fxdAvailableToBorrow)} FXD`}
+          secondaryAction={`${formatPercentage(fxdAvailableToBorrow)} FXD`}
         >
           <ListItemText primary="FXD Available to Borrow" />
         </ListItem>

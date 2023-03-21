@@ -39,6 +39,7 @@ import useTopUpPositionContext from "context/topUpPosition";
 import { styled } from "@mui/material/styles";
 import { ClosePositionDialogPropsType } from "../ClosePositionDialog";
 import BigNumber from "bignumber.js";
+import { FXD_MINIMUM_BORROW_AMOUNT } from "../../../helpers/Constants";
 
 const TopUpPositionFormWrapper = styled(Grid)`
   padding-left: 20px;
@@ -114,7 +115,6 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
             required: false,
             min: 0,
             max: BigNumber(balance).dividedBy(10 ** 18).toNumber(),
-            pattern: /^[1-9][0-9]*0$/,
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <AppFormInputWrapper>
@@ -130,18 +130,6 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
                 placeholder={"0"}
                 helperText={
                   <>
-                    {error && error.type === "pattern" && (
-                      <>
-                        <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
-                        <Box
-                          component={"span"}
-                          sx={{ fontSize: "12px", paddingLeft: "6px" }}
-                        >
-                          Allowed staked collateral should be multiple of 10
-                        </Box>
-                      </>
-                    )}
-
                     {error && error.type === "max" && (
                       <>
                         <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
@@ -150,17 +138,6 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
                           sx={{ fontSize: "12px", paddingLeft: "6px" }}
                         >
                           You do not have enough {pool.poolName}
-                        </Box>
-                      </>
-                    )}
-                    {error && error.type === "min" && (
-                      <>
-                        <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
-                        <Box
-                          component={"span"}
-                          sx={{ fontSize: "12px", paddingLeft: "6px" }}
-                        >
-                          Minimum collateral amount is 10.
                         </Box>
                       </>
                     )}
@@ -186,8 +163,7 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
           control={control}
           name="fathomToken"
           rules={{
-            validate: (value, ...rest) => {
-              console.log(rest)
+            validate: (value) => {
               if (BigNumber(value).isGreaterThan(availableFathomInPool)) {
                 return "Not enough FXD in pool";
               }
@@ -198,6 +174,7 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
 
               return true;
             },
+            min: FXD_MINIMUM_BORROW_AMOUNT,
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => {
             return (
@@ -221,6 +198,17 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
                             component={"span"}
                           >
                             {error?.message}
+                          </Box>
+                        </>
+                      )}
+                      {error && error.type === "min" && (
+                        <>
+                          <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
+                          <Box
+                            component={"span"}
+                            sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                          >
+                            Minimum borrow amount is {FXD_MINIMUM_BORROW_AMOUNT}.
                           </Box>
                         </>
                       )}

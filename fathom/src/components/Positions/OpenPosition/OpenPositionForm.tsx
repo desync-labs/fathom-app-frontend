@@ -33,8 +33,7 @@ import {
 import useOpenPositionContext from "context/openPosition";
 import { FXD_MINIMUM_BORROW_AMOUNT } from "helpers/Constants";
 
-const OpenPositionFormWrapper = 
-(Grid)`
+const OpenPositionFormWrapper = styled(Grid)`
   padding-left: 20px;
   width: calc(50% - 1px);
   position: relative;
@@ -153,8 +152,7 @@ const OpenPositionForm = () => {
           name="fathomToken"
           rules={{
             required: true,
-            min: 
-            ,
+            min: FXD_MINIMUM_BORROW_AMOUNT,
             validate: (value) => {
               if (Number(value) > availableFathomInPool) {
                 return "Not enough FXD in pool";
@@ -189,6 +187,17 @@ const OpenPositionForm = () => {
                             component={"span"}
                           >
                             {error?.message}
+                          </Box>
+                        </>
+                      )}
+                      {error && error.type === "min" && (
+                        <>
+                          <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
+                          <Box
+                            component={"span"}
+                            sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                          >
+                            Minimum borrow amount is {FXD_MINIMUM_BORROW_AMOUNT}.
                           </Box>
                         </>
                       )}

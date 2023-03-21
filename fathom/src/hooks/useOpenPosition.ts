@@ -10,7 +10,7 @@ import useConnector from "context/connector";
 const defaultValues = {
   collateral: "",
   fathomToken: "",
-  safeMax: "0",
+  safeMax: 0,
 };
 
 const useOpenPosition = (
@@ -32,8 +32,8 @@ const useOpenPosition = (
 
   const [balance, setBalance] = useState<number>(0);
 
-  const [collateralToBeLocked, setCollateralToBeLocked] = useState<string>("");
-  const [fxdToBeBorrowed, setFxdToBeBorrowed] = useState<string>("");
+  const [collateralToBeLocked, setCollateralToBeLocked] = useState<number>(0);
+  const [fxdToBeBorrowed, setFxdToBeBorrowed] = useState<number>(0);
   const [collateralTokenAddress, setCollateralTokenAddress] = useState<
     string | null
   >();
@@ -41,11 +41,11 @@ const useOpenPosition = (
   const { setLastTransactionBlock } = useSyncContext();
 
   const [collateralAvailableToWithdraw, setCollateralAvailableToWithdraw] =
-    useState<string>("");
-  const [safetyBuffer, setSafetyBuffer] = useState<string>("");
-  const [debtRatio, setDebtRatio] = useState<string>("");
-  const [liquidationPrice, setLiquidationPrice] = useState<string>("");
-  const [fxdAvailableToBorrow, setFxdAvailableToBorrow] = useState<string>("");
+    useState<number>(0);
+  const [safetyBuffer, setSafetyBuffer] = useState<number>(0);
+  const [debtRatio, setDebtRatio] = useState<number>(0);
+  const [liquidationPrice, setLiquidationPrice] = useState<number>(0);
+  const [fxdAvailableToBorrow, setFxdAvailableToBorrow] = useState<number>(0);
 
   const [openPositionLoading, setOpenPositionLoading] =
     useState<boolean>(false);
@@ -98,9 +98,9 @@ const useOpenPosition = (
   );
 
   const handleUpdates = useCallback(
-    async (collateralInput: string, fathomTokenInput: string) => {
-      setCollateralToBeLocked(collateralInput || "");
-      setFxdToBeBorrowed(fathomTokenInput || "");
+    async (collateralInput: number, fathomTokenInput: number) => {
+      setCollateralToBeLocked(collateralInput || 0);
+      setFxdToBeBorrowed(fathomTokenInput || 0);
 
       // GET PRICE WITH SAFETY MARGIN
       const { priceWithSafetyMargin } = pool;
@@ -112,7 +112,7 @@ const useOpenPosition = (
             .multipliedBy(BigNumber(100).minus(pool.stabilityFeeRate))
             .dividedBy(100)
         )
-        .toString();
+        .toNumber();
 
       setFxdToBeBorrowed(safeMax);
       setValue("safeMax", safeMax);
@@ -121,10 +121,10 @@ const useOpenPosition = (
         BigNumber(priceWithSafetyMargin).isGreaterThan(0)
           ? BigNumber(collateralInput)
               .multipliedBy(priceWithSafetyMargin)
-              .minus(fathomTokenInput)
+              .minus(fathomTokenInput || 0)
               .dividedBy(priceWithSafetyMargin)
           : BigNumber(collateralInput).minus(fathomTokenInput)
-      ).toString();
+      ).toNumber();
 
       setCollateralAvailableToWithdraw(collateralAvailableToWithdraw);
 
@@ -145,23 +145,23 @@ const useOpenPosition = (
                 .dividedBy(10 ** 18)
             )
             .multipliedBy(100)
-            .toString()
-        : '0';
+            .toNumber()
+        : 0;
 
       setDebtRatio(debtRatio);
 
       // FXD AVAILABLE TO BORROW
       const fxdAvailableToBorrow = BigNumber(safeMax)
         .minus(fathomTokenInput)
-        .toString();
+        .toNumber();
       setFxdAvailableToBorrow(fxdAvailableToBorrow);
 
       // SAFETY BUFFER
       const safetyBuffer = BigNumber(collateralAvailableToWithdraw)
         .dividedBy(collateralInput)
-        .toString();
+        .toNumber();
 
-      setSafetyBuffer(safetyBuffer);
+      setSafetyBuffer(isNaN(safetyBuffer) ? 0 : safetyBuffer);
 
       // LIQUIDATION PRICE
       let liquidationPrice;
@@ -174,17 +174,17 @@ const useOpenPosition = (
               .multipliedBy(priceWithSafetyMargin)
               .dividedBy(collateralInput)
           )
-          .toString();
+          .toNumber();
       } else {
         liquidationPrice = BigNumber(priceOfCollateralFromDex)
           .dividedBy(10 ** 18)
           .minus(
             BigNumber(collateralAvailableToWithdraw).dividedBy(collateralInput)
           )
-          .toString();
+          .toNumber();
       }
 
-      setLiquidationPrice(liquidationPrice);
+      setLiquidationPrice(isNaN(liquidationPrice) ? 0 : liquidationPrice);
 
       /**
        * Revalidate form
@@ -273,13 +273,10 @@ const useOpenPosition = (
   );
 
   useEffect(() => {
-    if (
-      pool?.poolName?.toUpperCase() === "XDC" &&
-      (collateral || fathomToken)
-    ) {
-      handleUpdates(collateral, fathomToken);
-    } else if (collateralTokenAddress && (collateral || fathomToken)) {
-      handleUpdates(collateral, fathomToken);
+    if (pool?.poolName?.toUpperCase() === "XDC") {
+      handleUpdates(Number(collateral), Number(fathomToken));
+    } else if (collateralTokenAddress) {
+      handleUpdates(Number(collateral), Number(fathomToken));
       approvalStatus(collateral);
     }
   }, [
