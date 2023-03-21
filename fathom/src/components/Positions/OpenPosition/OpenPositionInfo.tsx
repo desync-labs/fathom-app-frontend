@@ -5,7 +5,8 @@ import { AppList } from "components/AppComponents/AppList/AppList";
 
 import useOpenPositionContext from "context/openPosition";
 import { styled } from "@mui/material/styles";
-import { formatNumberPrice } from "utils/format";
+import { formatNumber, formatNumberPrice } from "utils/format";
+import BigNumber from "bignumber.js";
 
 const ListDivider = styled(Divider)`
   margin: 20px 20px 20px 5px;
@@ -31,7 +32,7 @@ const OpenPositionInfo = () => {
       <AppList>
         <ListItem
           alignItems="flex-start"
-          secondaryAction={`${collateralToBeLocked.toFixed(2)} ${
+          secondaryAction={`${formatNumber(collateralToBeLocked)} ${
             pool.poolName
           }`}
         >
@@ -39,7 +40,7 @@ const OpenPositionInfo = () => {
         </ListItem>
         <ListItem
           alignItems="flex-start"
-          secondaryAction={`${collateralAvailableToWithdraw.toFixed(2)} ${
+          secondaryAction={`${formatNumber(collateralAvailableToWithdraw)} ${
             pool.poolName
           }`}
         >
@@ -47,25 +48,27 @@ const OpenPositionInfo = () => {
         </ListItem>
         <ListItem
           alignItems="flex-start"
-          secondaryAction={`${fxdToBeBorrowed.toFixed(2)} FXD`}
+          secondaryAction={`${BigNumber(fxdToBeBorrowed).toFixed(2)} FXD`}
         >
           <ListItemText primary="FXD to be Borrowed" />
         </ListItem>
         <ListItem
           alignItems="flex-start"
-          secondaryAction={`${fxdAvailableToBorrow.toFixed(2)} FXD`}
+          secondaryAction={`${formatNumber(fxdAvailableToBorrow)} FXD`}
         >
           <ListItemText primary="FXD Available to Borrow" />
         </ListItem>
         <ListItem
           alignItems="flex-start"
-          secondaryAction={`${debtRatio.toFixed(2)} %`}
+          secondaryAction={`${formatNumber(debtRatio)} %`}
         >
           <ListItemText primary="LTV" />
         </ListItem>
         <ListItem
           alignItems="flex-start"
-          secondaryAction={`${(safetyBuffer * 100).toFixed(2)} %`}
+          secondaryAction={`${BigNumber(safetyBuffer)
+            .multipliedBy(100)
+            .toFixed(2)} %`}
         >
           <ListItemText primary="Safety Buffer" />
         </ListItem>
