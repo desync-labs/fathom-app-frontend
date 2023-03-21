@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import {
   Box,
   CircularProgress,
@@ -8,24 +8,21 @@ import {
   useTheme,
 } from "@mui/material";
 import {
-  ErrorBox,
-  ErrorMessage,
   InfoLabel,
   InfoValue,
   InfoWrapper,
   Summary,
   WalletBalance,
-  WarningBox,
+  WarningBox
 } from "components/AppComponents/AppBox/AppBox";
 import {
   ButtonPrimary,
   ButtonSecondary,
-  ClosePositionRepayTypeWrapper,
+  ManagePositionRepayTypeWrapper,
   MaxButton,
   ButtonsWrapper,
-  RepayTypeButton,
+  ManageTypeButton,
 } from "components/AppComponents/AppButton/AppButton";
-import { ClosingType } from "hooks/useClosePosition";
 import {
   AppFormInputLogo,
   AppFormInputWrapper,
@@ -38,6 +35,7 @@ import { formatPercentage } from "utils/format";
 
 import useClosePositionContext from "context/closePosition";
 import { styled } from "@mui/material/styles";
+import { ClosePositionDialogPropsType } from "components/Positions/ClosePositionDialog";
 
 const ClosePositionWrapper = styled(Grid)`
   padding-left: 20px;
@@ -49,21 +47,26 @@ const ClosePositionWrapper = styled(Grid)`
   }
 `;
 
-const ClosePositionForm = () => {
+const RepayPositionForm: FC<ClosePositionDialogPropsType> = ({
+  topUpPosition,
+  closePosition,
+  setClosePosition,
+  setTopUpPosition
+}) => {
   const {
     pool,
     collateral,
     balance,
     balanceError,
     disableClosePosition,
-    closingType,
     fathomToken,
     handleFathomTokenTextFieldChange,
-    handleTypeChange,
+    handleCollateralTextFieldChange,
     setMax,
     onClose,
-    closePosition,
+    closePositionHandler,
     debtValue,
+    switchPosition,
   } = useClosePositionContext();
 
   const theme = useTheme();
@@ -72,21 +75,21 @@ const ClosePositionForm = () => {
   return (
     <ClosePositionWrapper item>
       <Summary>Summary</Summary>
-      <ClosePositionRepayTypeWrapper>
-        <RepayTypeButton
+      <ManagePositionRepayTypeWrapper>
+        <ManageTypeButton
           sx={{ marginRight: "5px" }}
-          className={`${closingType === ClosingType.Full ? "active" : null}`}
-          onClick={() => handleTypeChange(ClosingType.Full)}
+          className={`${!!topUpPosition ? "active" : null}`}
+          onClick={() => !topUpPosition && switchPosition(setTopUpPosition)}
         >
-          Repay entirely
-        </RepayTypeButton>
-        <RepayTypeButton
-          className={`${closingType === ClosingType.Partial ? "active" : null}`}
-          onClick={() => handleTypeChange(ClosingType.Partial)}
+          Top Up Position
+        </ManageTypeButton>
+        <ManageTypeButton
+          className={`${!!closePosition ? "active" : null}`}
+          onClick={() => !closePosition && switchPosition(setClosePosition)}
         >
-          Repay partially
-        </RepayTypeButton>
-      </ClosePositionRepayTypeWrapper>
+          Repay Position
+        </ManageTypeButton>
+      </ManagePositionRepayTypeWrapper>
       <Box sx={{ mb: "20px" }}>
         <Box
           sx={{
@@ -110,7 +113,6 @@ const ClosePositionForm = () => {
         <AppTextField
           error={balanceError}
           id="outlined-helperText"
-          disabled={closingType === ClosingType.Full}
           placeholder={"0"}
           helperText={
             balanceError ? (
@@ -133,7 +135,6 @@ const ClosePositionForm = () => {
         <AppFormInputLogo src={getTokenLogoURL("FXD")} />
         <MaxButton
           onClick={() => setMax()}
-          disabled={closingType === ClosingType.Full ? true : false}
         >
           Max
         </MaxButton>
@@ -141,9 +142,9 @@ const ClosePositionForm = () => {
       <AppFormInputWrapper>
         <AppFormLabel>Receive</AppFormLabel>
         <AppTextField
-          disabled={true}
           id="outlined-helperText"
           value={collateral}
+          onChange={handleCollateralTextFieldChange}
         />
         <AppFormInputLogo
           src={getTokenLogoURL(
@@ -165,20 +166,15 @@ const ClosePositionForm = () => {
           </InfoValue>
         </InfoWrapper>
       ) : null}
-      {closingType === ClosingType.Full && balanceError && (
-        <ErrorBox>
+      {balanceError && (
+        <WarningBox>
           <InfoIcon />
-          <ErrorMessage>
+          <Typography>
             Wallet balance is not enough to close this position entirely (repay
             in full).
-          </ErrorMessage>
-        </ErrorBox>
+          </Typography>
+        </WarningBox>
       )}
-
-      <WarningBox sx={{ mt: 3 }}>
-        <InfoIcon sx={{ width: "16px", color: "#F5953D", height: "16px" }} />
-        <Typography>After Close Position you will receive XDC token</Typography>
-      </WarningBox>
       <ButtonsWrapper
         sx={{ position: "static", float: "right", marginTop: "20px" }}
       >
@@ -186,14 +182,14 @@ const ClosePositionForm = () => {
           <ButtonSecondary onClick={onClose}>Close</ButtonSecondary>
         )}
         <ButtonPrimary
-          onClick={closePosition}
+          onClick={closePositionHandler}
           disabled={balanceError || disableClosePosition}
           isLoading={disableClosePosition}
         >
           {disableClosePosition ? (
             <CircularProgress size={20} />
           ) : (
-            "Close this position"
+            "Repay this position"
           )}
         </ButtonPrimary>
         {isMobile && <ButtonSecondary onClick={onClose}>Close</ButtonSecondary>}
@@ -202,4 +198,4 @@ const ClosePositionForm = () => {
   );
 };
 
-export default ClosePositionForm;
+export default RepayPositionForm;

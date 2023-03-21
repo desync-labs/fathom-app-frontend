@@ -1,47 +1,56 @@
-import React, { Dispatch, FC, memo } from "react";
-import { DialogContent, Grid, useMediaQuery, useTheme } from "@mui/material";
+import React, {
+  FC,
+  memo
+} from "react";
+import {
+  Grid,
+  DialogContent,
+  Divider,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
 
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
-import RepayPositionInfo from "components/Positions/RepayPosition/RepayPositionInfo";
-import RepayPositionForm from "components/Positions/RepayPosition/RepayPositionForm";
-import {
-  DividerDefault,
-  DividerMobile,
-} from "components/Positions/OpenNewPositionDialog";
+import { ClosePositionDialogPropsType } from "components/Positions/ClosePositionDialog";
+import TopUpPositionInfo from "components/Positions/TopUpPosition/TopUpPositionInfo";
+import TopUpPositionForm from "components/Positions/TopUpPosition/TopUpPositionForm";
 
-import useClosePositionContext from "context/closePosition";
-import IOpenPosition from "stores/interfaces/IOpenPosition";
+import useAdjustPositionContext from "context/topUpPosition";
 
-export type ClosePositionDialogPropsType = {
-  topUpPosition: IOpenPosition | undefined;
-  closePosition: IOpenPosition | undefined;
-  setTopUpPosition: Dispatch<IOpenPosition | undefined>;
-  setClosePosition: Dispatch<IOpenPosition | undefined>;
-};
+export const DividerMobile = styled(Divider)`
+  width: 100%;
+  height: 1px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+`;
 
-const ClosePositionDialog: FC<ClosePositionDialogPropsType> = ({
+export const DividerDefault = styled(Divider)`
+  margin: 10px 0 0 0;
+`;
+
+const TopUpPositionDialog: FC<ClosePositionDialogPropsType> = ({
   topUpPosition,
   closePosition,
   setTopUpPosition,
   setClosePosition,
 }) => {
-  const { onClose } = useClosePositionContext();
+  const { onClose } = useAdjustPositionContext();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
     <>
       <AppDialogTitle id="customized-dialog-title" onClose={onClose}>
-        Repay Position
+        Top Up Position
       </AppDialogTitle>
-
       <DialogContent>
         <Grid container>
           {!isMobile && (
             <>
-              <RepayPositionInfo />
+              <TopUpPositionInfo />
               <DividerDefault orientation="vertical" flexItem></DividerDefault>
-              <RepayPositionForm
+              <TopUpPositionForm
                 topUpPosition={topUpPosition}
                 closePosition={closePosition}
                 setTopUpPosition={setTopUpPosition}
@@ -51,14 +60,14 @@ const ClosePositionDialog: FC<ClosePositionDialogPropsType> = ({
           )}
           {isMobile && (
             <>
-              <RepayPositionForm
+              <TopUpPositionForm
                 topUpPosition={topUpPosition}
                 closePosition={closePosition}
                 setTopUpPosition={setTopUpPosition}
                 setClosePosition={setClosePosition}
               />
               <DividerMobile></DividerMobile>
-              <RepayPositionInfo />
+              <TopUpPositionInfo />
             </>
           )}
         </Grid>
@@ -67,4 +76,4 @@ const ClosePositionDialog: FC<ClosePositionDialogPropsType> = ({
   );
 };
 
-export default memo(ClosePositionDialog);
+export default memo(TopUpPositionDialog);

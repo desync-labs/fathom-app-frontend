@@ -1,5 +1,6 @@
 export default interface ICollateralPool {
   id: string;
+  rawPrice: number;
   collateralLastPrice: number;
   collateralPrice: number;
   debtAccumulatedRate: number;
