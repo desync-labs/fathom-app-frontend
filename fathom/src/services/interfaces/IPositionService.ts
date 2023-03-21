@@ -6,8 +6,25 @@ export default interface IPositionService {
   openPosition(
     address: string,
     pool: ICollateralPool,
-    collateral: number,
-    fathomToken: number,
+    collateral: string,
+    fathomToken: string,
+    library: Xdc3
+  ): Promise<TransactionReceipt | undefined>;
+
+  topUpPositionAndBorrow(
+    address: string,
+    pool: ICollateralPool,
+    collateral: string,
+    fathomToken: string,
+    positionId: string,
+    library: Xdc3
+  ): Promise<TransactionReceipt | undefined>;
+
+  topUpPosition(
+    address: string,
+    pool: ICollateralPool,
+    collateral: string,
+    positionId: string,
     library: Xdc3
   ): Promise<TransactionReceipt | undefined>;
 
