@@ -1,4 +1,11 @@
-import { useCallback, useEffect, useState, ChangeEvent, Dispatch } from "react";
+import {
+  useCallback,
+  useEffect,
+  useState,
+  ChangeEvent,
+  Dispatch,
+  useMemo,
+} from "react";
 
 import { useStores } from "stores";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
@@ -7,7 +14,6 @@ import ICollateralPool from "stores/interfaces/ICollateralPool";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import { FXD_POOLS, FXD_POSITIONS } from "apollo/queries";
 
-import { ClosingType } from "hooks/useClosePosition";
 import { Constants } from "helpers/Constants";
 import useConnector from "context/connector";
 import BigNumber from "bignumber.js";
@@ -35,8 +41,8 @@ const useOpenPositionList = (
     fetchPolicy: "cache-first",
   });
 
-  const [selectedPosition, setSelectedPosition] = useState<IOpenPosition>();
-  const [closingType, setType] = useState(ClosingType.Full);
+  const [closePosition, setClosePosition] = useState<IOpenPosition>();
+  const [topUpPosition, setTopUpPosition] = useState<IOpenPosition>();
 
   const [approveBtn, setApproveBtn] = useState<boolean>(true);
   const [approvalPending, setApprovalPending] = useState<boolean>(false);
@@ -54,6 +60,16 @@ const useOpenPositionList = (
       approvalStatus();
     }
   }, [account, approvalStatus]);
+
+  const topUpPositionPool = useMemo(() => {
+    if (topUpPosition && poolsData) {
+      return poolsData.pools.find(
+        (pool: ICollateralPool) => pool.id === topUpPosition.collateralPool
+      );
+    }
+
+    return null;
+  }, [topUpPosition, poolsData]);
 
   useEffect(() => {
     loadPositions({
@@ -156,18 +172,24 @@ const useOpenPositionList = (
     setIsLoading,
   ]);
 
+  const onClose = useCallback(() => {
+    setClosePosition(undefined);
+    setTopUpPosition(undefined);
+  }, [setClosePosition, setTopUpPosition]);
+
   return {
+    topUpPositionPool,
     approveBtn,
     approvalPending,
-    closingType,
     positions: formattedPositions,
     approve,
-    selectedPosition,
+    closePosition,
+    topUpPosition,
     loading: isLoading,
-
-    setSelectedPosition,
-    setType,
     handlePageChange,
+    setTopUpPosition,
+    setClosePosition,
+    onClose,
   };
 };
 

@@ -13,7 +13,6 @@ import { useStores } from "stores";
 import { useWeb3React } from "@web3-react/core";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
-import BigNumber from "bignumber.js";
 
 type PricesProviderType = {
   children: ReactElement;
