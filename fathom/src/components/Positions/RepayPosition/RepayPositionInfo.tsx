@@ -1,14 +1,16 @@
-import { AppList } from "components/AppComponents/AppList/AppList";
-import { Box, Grid, ListItem, ListItemText } from "@mui/material";
 import React from "react";
-import useClosePositionContext from "context/closePosition";
+import { Box, Grid, ListItem, ListItemText } from "@mui/material";
 import BigNumber from "bignumber.js";
+
+import useClosePositionContext from "context/closePosition";
+import { AppList } from "components/AppComponents/AppList/AppList";
+
 import {
   formatNumberPrice,
   formatPercentage
 } from "utils/format";
 
-const ClosePositionInfo = () => {
+const RepayPositionInfo = () => {
   const {
     lockedCollateral,
     price,
@@ -71,4 +73,4 @@ const ClosePositionInfo = () => {
   );
 };
 
-export default ClosePositionInfo;
+export default RepayPositionInfo;

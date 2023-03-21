@@ -174,6 +174,10 @@ export const WarningBox = styled(Box)`
   flex-direction: row;
   align-items: center;
   margin: 10px 0 20px;
+  
+  svg {
+    color: #f7b06e;
+  }
 
   p {
     color: #f7b06e;
