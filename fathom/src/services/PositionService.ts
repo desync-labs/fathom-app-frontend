@@ -115,6 +115,7 @@ export default class PositionService implements IPositionService {
 
       return receipt;
     } catch (error: any) {
+      console.log(error);
       this.alertStore.setShowErrorAlert(true, error.message);
       throw error;
     }

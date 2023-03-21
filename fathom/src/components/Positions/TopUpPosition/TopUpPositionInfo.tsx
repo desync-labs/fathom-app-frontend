@@ -83,7 +83,7 @@ const TopUpPositionInfo = () => {
           alignItems="flex-start"
           secondaryAction={`${pool.stabilityFeeRate}%`}
         >
-          <ListItemText primary={`Stability Fee`} />
+          <ListItemText primary={`Interest Rate`} />
         </ListItem>
       </AppList>
     </Grid>

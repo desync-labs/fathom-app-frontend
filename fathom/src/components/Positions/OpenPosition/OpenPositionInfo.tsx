@@ -79,20 +79,11 @@ const OpenPositionInfo = () => {
           <ListItemText primary={`Liquidation Price of ${pool.poolName}`} />
         </ListItem>
         <ListDivider />
-        <ListItem alignItems="flex-start" secondaryAction={`1.73%`}>
-          <ListItemText primary={`Lending APR`} />
-        </ListItem>
         <ListItem
           alignItems="flex-start"
           secondaryAction={`${pool.stabilityFeeRate}%`}
         >
-          <ListItemText primary={`Stability Fee`} />
-        </ListItem>
-        <ListItem alignItems="flex-start" secondaryAction={`1.96%`}>
-          <ListItemText primary={`Total APR`} />
-        </ListItem>
-        <ListItem alignItems="flex-start" secondaryAction={`1.98%`}>
-          <ListItemText primary={`Total APY`} />
+          <ListItemText primary={`Interest Rate`} />
         </ListItem>
       </AppList>
     </Grid>
