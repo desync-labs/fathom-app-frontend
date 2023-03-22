@@ -78,7 +78,7 @@ export const ProposalItemStatus = styled(Box)`
   gap: 4px;
   font-size: 14px;
   font-weight: 400;
-  max-width: 110px;
+  max-width: 252px;
   margin-top: 10px;
 
   background: rgba(99, 121, 161, 0.2);
@@ -100,7 +100,7 @@ export const ImageSrc: { [key: string]: string } = {
 };
 
 const ViewAllProposalItem: FC<ViewAllProposalItemProps> = ({ proposal }) => {
-  const { proposalTitle, timestamp, seconds, status } =
+  const { proposalTitle, timestamp, seconds, status, quorumError } =
     useViewProposalItem(proposal);
 
   return (
@@ -130,12 +130,14 @@ const ViewAllProposalItem: FC<ViewAllProposalItemProps> = ({ proposal }) => {
             ),
           [seconds, timestamp]
         )}
-        <ProposalItemStatus className={status?.toLowerCase()}>
-          {["Defeated", "Succeeded"].includes(status!) ? (
-            <img src={ImageSrc[status!]} alt={status} />
-          ) : null}
-          {status}
-        </ProposalItemStatus>
+        {status && (
+          <ProposalItemStatus className={status?.toLowerCase()}>
+            {["Defeated", "Succeeded"].includes(status!) ? (
+              <img src={ImageSrc[status!]} alt={status} />
+            ) : null}
+            {quorumError ? "Voting quorum was not reached" : status}
+          </ProposalItemStatus>
+        )}
       </ProposalItemWrapper>
     </Grid>
   );

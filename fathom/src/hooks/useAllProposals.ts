@@ -79,7 +79,6 @@ export const useAllProposals = () => {
     createProposal,
     setCreateProposal,
     fetchedProposals: loading ? [] : data.proposals,
-
     currentPage,
     itemsCount:
       statsLoading || !stats || !stats.governanceStats.length ? 0 : stats.governanceStats[0].totalProposalsCount,

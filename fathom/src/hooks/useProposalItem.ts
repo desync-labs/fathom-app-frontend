@@ -8,6 +8,7 @@ import IProposal from "stores/interfaces/IProposal";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 import { useMediaQuery, useTheme } from "@mui/material";
+import BigNumber from "bignumber.js";
 
 const useProposalItem = () => {
   const { account, chainId, library } = useConnector()!;
@@ -18,6 +19,7 @@ const useProposalItem = () => {
 
   const [votePending, setVotePending] = useState<string | null>(null);
   const [hasVoted, setHasVoted] = useState<boolean>(false);
+  const [quorumError, setQuorumError] = useState<boolean>(false);
 
   const [seconds, setSeconds] = useState<number>(0);
 
@@ -132,6 +134,21 @@ const useProposalItem = () => {
     setStatus,
   ]);
 
+  const checkProposalVotesAndQuorum = useCallback(async () => {
+    const [totalVotes, quorum] = await Promise.all([
+      proposalStore.proposalVotes(data.proposal.proposalId, library),
+      proposalStore.voteQuorum(data.proposal.startBlock, library),
+    ]);
+
+    const { abstainVotes, forVotes } = totalVotes;
+
+    if (BigNumber(quorum!).isLessThan(BigNumber(abstainVotes).plus(forVotes))) {
+      setQuorumError(false);
+    } else {
+      setQuorumError(true);
+    }
+  }, [proposalStore, data?.proposal, library]);
+
   useEffect(() => {
     if (data && data.proposal && account) {
       fetchHasVoted();
@@ -165,6 +182,12 @@ const useProposalItem = () => {
       }, 3000);
     }
   }, [seconds, setSeconds, getVotingEndTime, fetchStatus]);
+
+  useEffect(() => {
+    if (data?.proposal && status && status === ProposalStatus.Defeated) {
+      checkProposalVotesAndQuorum();
+    }
+  }, [status, data?.proposal, checkProposalVotesAndQuorum]);
 
   const getTitleDescription = useCallback((title: string, index: number) => {
     if (title) {
@@ -232,25 +255,19 @@ const useProposalItem = () => {
     account,
     chainId,
     _proposalId,
-
     vote,
-
     getTitleDescription,
     status,
-
     forVotes: loading ? 0 : Number(data.proposal.forVotes),
     abstainVotes: loading ? 0 : Number(data.proposal.abstainVotes),
     againstVotes: loading ? 0 : Number(data.proposal.againstVotes),
-
     fetchedTotalVotes,
-
     fetchedProposal: loading ? ({} as IProposal) : data.proposal,
     back,
-
     submitTime,
     votingStartsTime,
     votingEndTime,
-
+    quorumError,
     secondsLeft: seconds,
   };
 };
