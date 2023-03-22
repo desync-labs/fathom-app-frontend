@@ -8,8 +8,6 @@ import { ClosePositionContextType } from "context/closePosition";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 
-import { useWeb3React } from "@web3-react/core";
-
 import { Constants } from "helpers/Constants";
 
 import ICollateralPool from "stores/interfaces/ICollateralPool";
@@ -21,7 +19,7 @@ const useRepayPosition = (
 ) => {
   const { positionService } = useStores();
   const { account } = useConnector()!;
-  const { library, chainId } = useWeb3React();
+  const { library, chainId } = useConnector();
 
   const { data } = useQuery(FXD_POOLS, {
     context: { clientName: "stable" },
