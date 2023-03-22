@@ -104,7 +104,7 @@ const InfoIcon: FC<{ sx?: Record<string, any> }> = ({ sx }) => (
   />
 );
 
-const MINIMUM_V_BALANCE = 1000;
+export const MINIMUM_V_BALANCE = 1000;
 
 export type ProposeProps = {
   onClose: () => void;
@@ -119,6 +119,7 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
     control,
     onSubmit,
     vBalance,
+    vBalanceError,
     saveForLater,
     validateAddressesArray,
     notAllowTimestamp,
@@ -148,7 +149,7 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
             >
               <img src={getTokenLogoURL("FTHM")} alt="vFTHM-Token" width={28} />
               <BalanceBox component="span">
-                {formatNumber((vBalance!) / 10 ** 18)}
+                {formatNumber(vBalance! / 10 ** 18)}
               </BalanceBox>
               <CurrencyBox component="span">vFHTM</CurrencyBox>
             </Stack>
@@ -377,25 +378,50 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
                 )}
               </Grid>
               {vBalance !== null && vBalance / 10 ** 18 < MINIMUM_V_BALANCE ? (
-                <WarningBox sx={{ my: 3 }}>
+                vBalanceError ? (
+                  <ErrorBox sx={{ my: 3 }}>
+                    <InfoIcon
+                      sx={{ width: "16px", color: "#F5953D", height: "16px" }}
+                    />
+                    <ErrorMessage>
+                      You have less than {MINIMUM_V_BALANCE} vFTHM, and you can
+                      not create a new proposal. So please, stake your FTHM
+                      tokens in <Link to={"/dao/staking"}>Staking</Link> to get
+                      voting power and awesome rewards.
+                    </ErrorMessage>
+                  </ErrorBox>
+                ) : (
+                  <WarningBox sx={{ my: 3 }}>
+                    <InfoIcon
+                      sx={{ width: "16px", color: "#F5953D", height: "16px" }}
+                    />
+                    <Typography>
+                      You have less than {MINIMUM_V_BALANCE} vFTHM, and you can
+                      not create a new proposal. So please, stake your FTHM
+                      tokens in <Link to={"/dao/staking"}>Staking</Link> to get
+                      voting power and awesome rewards.
+                    </Typography>
+                  </WarningBox>
+                )
+              ) : vBalanceError ? (
+                <ErrorBox sx={{ my: 3 }}>
                   <InfoIcon
                     sx={{ width: "16px", color: "#F5953D", height: "16px" }}
                   />
-                  <Typography>
-                    You have less than {MINIMUM_V_BALANCE} vFTHM, and you can
-                    not create a new proposal. So please, stake your FTHM tokens
-                    in <Link to={"/dao/staking"}>Staking</Link> to get voting
-                    power and awesome rewards.
-                  </Typography>
-                </WarningBox>
+                  <ErrorMessage>
+                    To create a proposal, you need to have {MINIMUM_V_BALANCE}{" "}vFTHM. <br />
+                    Now you have {formatNumber(vBalance! / 10 ** 18)} vFTHM
+                  </ErrorMessage>
+                </ErrorBox>
               ) : (
                 <WarningBox sx={{ my: 3 }}>
                   <InfoIcon
                     sx={{ width: "16px", color: "#F5953D", height: "16px" }}
                   />
                   <Typography>
-                    To create a proposal, you need to have 1000 vFTHM. <br />
-                    Now you have {formatNumber((vBalance!) / 10 ** 18)} vFTHM
+                    To create a proposal, you need to have {MINIMUM_V_BALANCE}{" "}
+                    vFTHM. <br />
+                    Now you have {formatNumber(vBalance! / 10 ** 18)} vFTHM
                   </Typography>
                 </WarningBox>
               )}

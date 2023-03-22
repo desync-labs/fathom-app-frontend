@@ -6,9 +6,9 @@ import {
   Pagination,
   Box,
 } from "@mui/material";
+import { useAllProposals } from "hooks/useAllProposals";
 import IProposal from "stores/interfaces/IProposal";
 import { PageHeader } from "components/Dashboard/PageHeader";
-import { useAllProposals } from "hooks/useAllProposals";
 import ViewAllProposalItem from "components/Governance/ViewAllProposalItem";
 import Propose from "components/Governance/Propose";
 import ProposalFilters from "components/Governance/ProposalFilters";
@@ -43,7 +43,6 @@ const AllProposalsView = () => {
     setProposals,
     createProposal,
     setCreateProposal,
-
     itemsCount,
     currentPage,
     handlePageChange,
