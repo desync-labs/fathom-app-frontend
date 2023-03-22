@@ -1,16 +1,19 @@
-import { useWeb3React } from "@web3-react/core";
+import useConnector from "context/connector";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ProposalStatus, XDC_BLOCK_TIME } from "helpers/Constants";
 import { useStores } from "stores";
 import IProposal from "stores/interfaces/IProposal";
+import BigNumber from "bignumber.js";
 
 const useViewProposalItem = (proposal: IProposal) => {
-  const { chainId, account, library } = useWeb3React();
+  const { chainId, account, library } = useConnector();
   const [status, setStatus] = useState<ProposalStatus>();
   const { proposalStore } = useStores();
 
   const [timestamp, setTimestamp] = useState<number>(0);
   const [seconds, setSeconds] = useState<number>(0);
+
+  const [quorumError, setQuorumError] = useState<boolean>(false);
 
   const getTimestamp = useCallback(async () => {
     const currentBlock = await library.eth.getBlockNumber();
@@ -19,10 +22,11 @@ const useViewProposalItem = (proposal: IProposal) => {
     if (Number(currentBlock) < Number(proposal.startBlock)) {
       const blockData = await library.eth.getBlock(currentBlock);
       timestamp = blockData.timestamp;
-      timestamp += (Number(proposal.startBlock) - Number(currentBlock)) * XDC_BLOCK_TIME
+      timestamp +=
+        (Number(proposal.startBlock) - Number(currentBlock)) * XDC_BLOCK_TIME;
     } else {
-       const blockData = await library.eth.getBlock(proposal.startBlock);
-       timestamp = blockData.timestamp;
+      const blockData = await library.eth.getBlock(proposal.startBlock);
+      timestamp = blockData.timestamp;
     }
 
     const endTimestamp =
@@ -40,11 +44,26 @@ const useViewProposalItem = (proposal: IProposal) => {
     }
   }, [proposal, library, setSeconds, setTimestamp]);
 
+  const checkProposalVotesAndQuorum = useCallback(async () => {
+    const [totalVotes, quorum] = await Promise.all([
+      proposalStore.proposalVotes(proposal.proposalId, library),
+      proposalStore.voteQuorum(proposal.startBlock, library),
+    ]);
+
+    const { abstainVotes, forVotes } = totalVotes;
+
+    if (BigNumber(quorum!).isLessThan(BigNumber(abstainVotes).plus(forVotes))) {
+      setQuorumError(false);
+    } else {
+      setQuorumError(true);
+    }
+  }, [proposalStore, proposal, library]);
+
   const fetchProposalState = useCallback(async () => {
     const status = await proposalStore.fetchProposalState(
       proposal.proposalId,
       account!,
-      library,
+      library
     );
     // @ts-ignore
     setStatus(Object.values(ProposalStatus)[status]);
@@ -56,6 +75,12 @@ const useViewProposalItem = (proposal: IProposal) => {
       fetchProposalState();
     }
   }, [proposal, chainId, account, getTimestamp, fetchProposalState]);
+
+  useEffect(() => {
+    if (status && status === ProposalStatus.Defeated) {
+      checkProposalVotesAndQuorum();
+    }
+  }, [status, proposal, checkProposalVotesAndQuorum]);
 
   useEffect(() => {
     if (chainId) {
@@ -77,6 +102,7 @@ const useViewProposalItem = (proposal: IProposal) => {
   }, [proposal.description]);
 
   return {
+    quorumError,
     proposalTitle,
     timestamp,
     seconds,

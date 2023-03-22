@@ -199,6 +199,24 @@ export default class ProposalService implements IProposalService {
     return VeFathom.methods.balanceOf(account).call();
   }
 
+  quorum(blockNumber: string, library: Xdc3): Promise<number> {
+    const FathomGovernor = Web3Utils.getContractInstance(
+      SmartContractFactory.MainFathomGovernor(this.chainId),
+      library
+    );
+
+    return FathomGovernor.methods.quorum(blockNumber).call()
+  }
+
+  proposalVotes(proposalId: string, library: Xdc3): Promise<any> {
+    const FathomGovernor = Web3Utils.getContractInstance(
+      SmartContractFactory.MainFathomGovernor(this.chainId),
+      library
+    );
+
+    return FathomGovernor.methods.proposalVotes(proposalId).call()
+  }
+
   setChainId(chainId: number) {
     this.chainId = chainId;
   }

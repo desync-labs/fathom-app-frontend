@@ -84,6 +84,10 @@ const VotingWrapperBox = styled(Box)`
   }
 `;
 
+const ProposalDetailsStatus = styled(ProposalItemStatus)`
+  max-width: 100%;
+`;
+
 type ButtonsProps = {
   hasVoted: boolean;
   fetchedProposalState: string;
@@ -142,6 +146,7 @@ const ProposalVoting = () => {
     vote,
     fetchedTotalVotes,
     status,
+    quorumError,
   } = useProposalContext();
 
   return (
@@ -149,15 +154,15 @@ const ProposalVoting = () => {
       <AppPaper sx={{ padding: "24px" }}>
         <Box sx={{ width: "100%" }}>
           <ProposalStatusBox>Proposal Status</ProposalStatusBox>
-          <ProposalItemStatus
+          <ProposalDetailsStatus
             className={status?.toLowerCase()}
             sx={{ margin: "10px 0" }}
           >
             {["Defeated", "Succeeded"].includes(status!) ? (
               <img src={ImageSrc[status!]} alt={status} />
             ) : null}
-            {status}
-          </ProposalItemStatus>
+            {quorumError ? "Voting quorum was not reached" : status}
+          </ProposalDetailsStatus>
           <Box sx={{ margin: "30px 0" }}>
             <VotingWrapperBox>
               <Box>

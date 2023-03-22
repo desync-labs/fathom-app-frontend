@@ -58,4 +58,7 @@ export default interface IProposalService {
     transactionStore: ActiveWeb3Transactions,
     library: Xdc3
   ): Promise<number>;
+
+  quorum(blockNumber: string, library: Xdc3): Promise<number>
+  proposalVotes(proposalId: string, library: Xdc3): Promise<any>
 }

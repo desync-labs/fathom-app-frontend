@@ -10,7 +10,6 @@ import {
 } from "react";
 import { SmartContractFactory } from "config/SmartContractFactory";
 import { useStores } from "stores";
-import { useWeb3React } from "@web3-react/core";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 
@@ -29,7 +28,7 @@ export const PricesContext = createContext<UseStakingViewType>(null);
 
 export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
   const { stakingService } = useStores();
-  const { chainId } = useWeb3React();
+  const { chainId } = useConnector();
   const { library } = useConnector()
   const [fxdPrice, setFxdPrice] = useState<number>(0);
   const [wxdcPrice, setWxdcPrice] = useState<number>(0);
