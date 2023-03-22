@@ -3,14 +3,14 @@ import useStakingContext from "context/staking";
 import { formatNumber } from "utils/format";
 import { YEAR_IN_SECONDS } from "helpers/Constants";
 import ILockPosition from "stores/interfaces/ILockPosition";
-import { useWeb3React } from "@web3-react/core";
 import { useStores } from "stores";
+import useConnector from "context/connector";
 
 const useStakingItemView = (lockPosition: ILockPosition) => {
   const [seconds, setSeconds] = useState(lockPosition.end - Date.now() / 1000);
   const { processFlow, isUnlockable } = useStakingContext();
   const [timer, setTimer] = useState<ReturnType<typeof setTimeout> | null>();
-  const { account, library } = useWeb3React();
+  const { account, library } = useConnector();
   const { stakingStore } = useStores();
   const [rewardsAvailable, setRewardsAvailable] = useState<number>(
     lockPosition.rewardsAvailable

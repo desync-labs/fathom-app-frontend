@@ -1,11 +1,13 @@
+import { useCallback, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import Xdc3 from "xdc3";
 import Web3 from "web3";
 import { useStores } from "stores";
-import { useForm } from "react-hook-form";
-import { useCallback, useEffect, useState } from "react";
 import { Constants } from "helpers/Constants";
-import { ProposeProps } from "components/Governance/Propose";
-import { XDC_CHAIN_IDS } from "connectors/networks";
+import {
+  MINIMUM_V_BALANCE,
+  ProposeProps
+} from "components/Governance/Propose";
 import useSyncContext from "context/sync";
 import { useMediaQuery, useTheme } from "@mui/material";
 import useConnector from "context/connector";
@@ -26,6 +28,8 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
   const { account, chainId, library } = useConnector()!;
 
   const [vBalance, setVBalance] = useState<null | number>(null);
+  const [vBalanceError, setVBalanceError] = useState<boolean>(false);
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [notAllowTimestamp, setNotAllowTimestamp] = useState<number>(0);
 
@@ -72,6 +76,12 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
     async (values: Record<string, any>) => {
       if (notAllowTimestamp > Date.now() / 1000) {
         return;
+      }
+
+      if (vBalance! < MINIMUM_V_BALANCE) {
+        return setVBalanceError(true);
+      } else {
+        setVBalanceError(false);
       }
 
       setIsLoading(true);
@@ -125,6 +135,7 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
       }
     },
     [
+      vBalance,
       notAllowTimestamp,
       reset,
       account,
@@ -132,6 +143,7 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
       proposalStore,
       onClose,
       setLastTransactionBlock,
+      setVBalanceError,
     ]
   );
 
@@ -158,9 +170,7 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
     }
 
     if (!valid) {
-      return `Please provide valid ${
-        XDC_CHAIN_IDS ? "XDC" : "Ethereum"
-      } address`;
+      return `Please provide valid XDC address`;
     }
   }, []);
 
@@ -176,6 +186,7 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
     chainId,
     onSubmit,
     vBalance,
+    vBalanceError,
     saveForLater,
     validateAddressesArray,
     notAllowTimestamp,
