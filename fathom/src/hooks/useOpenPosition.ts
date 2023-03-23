@@ -20,17 +20,25 @@ const useOpenPosition = (
   const { poolService, positionService } = useStores();
   const { account, chainId, library } = useConnector()!;
 
-  const { handleSubmit, watch, control, setValue, trigger } = useForm({
+  const {
+    handleSubmit,
+    watch,
+    control,
+    setValue,
+    trigger,
+  } = useForm({
     defaultValues,
     reValidateMode: "onChange",
     mode: "onChange",
   });
+
 
   const collateral = watch("collateral");
   const fathomToken = watch("fathomToken");
   const safeMax = watch("safeMax");
 
   const [balance, setBalance] = useState<number>(0);
+  const [isTouched, setIsTouched] = useState<boolean>(false)
 
   const [collateralToBeLocked, setCollateralToBeLocked] = useState<number>(0);
   const [fxdToBeBorrowed, setFxdToBeBorrowed] = useState<number>(0);
@@ -273,9 +281,9 @@ const useOpenPosition = (
   );
 
   useEffect(() => {
-    if (pool?.poolName?.toUpperCase() === "XDC") {
+    if (pool?.poolName?.toUpperCase() === "XDC" && isTouched) {
       handleUpdates(Number(collateral), Number(fathomToken));
-    } else if (collateralTokenAddress) {
+    } else if (collateralTokenAddress && isTouched) {
       handleUpdates(Number(collateral), Number(fathomToken));
       approvalStatus(collateral);
     }
@@ -284,9 +292,19 @@ const useOpenPosition = (
     collateral,
     collateralTokenAddress,
     fathomToken,
+    isTouched,
     handleUpdates,
     approvalStatus,
   ]);
+
+  useEffect(() => {
+    if (collateral || fathomToken) {
+      setIsTouched(true)
+    }
+  }, [
+    collateral,
+    fathomToken
+  ])
 
   useEffect(() => {
     account && chainId && getCollateralTokenAndBalance();
@@ -308,14 +326,11 @@ const useOpenPosition = (
     collateral,
     fathomToken,
     openPositionLoading,
-
     setMax,
     setSafeMax,
     onSubmit,
-
     control,
     handleSubmit,
-
     availableFathomInPool,
     pool,
     onClose,
