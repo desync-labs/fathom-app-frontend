@@ -151,7 +151,7 @@ export default class ProposalService implements IProposalService {
 
     return FathomGovernor.methods
       .nextAcceptableProposalTimestamp(account)
-      .call()
+      .call();
   }
 
   async castVote(
@@ -205,7 +205,7 @@ export default class ProposalService implements IProposalService {
       library
     );
 
-    return FathomGovernor.methods.quorum(blockNumber).call()
+    return FathomGovernor.methods.quorum(blockNumber).call();
   }
 
   proposalVotes(proposalId: string, library: Xdc3): Promise<any> {
@@ -214,7 +214,7 @@ export default class ProposalService implements IProposalService {
       library
     );
 
-    return FathomGovernor.methods.proposalVotes(proposalId).call()
+    return FathomGovernor.methods.proposalVotes(proposalId).call();
   }
 
   setChainId(chainId: number) {

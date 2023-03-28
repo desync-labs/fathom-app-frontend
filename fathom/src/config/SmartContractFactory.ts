@@ -166,10 +166,6 @@ export class SmartContractFactory {
     };
   }
 
-  public static aXDCcTokenAddress(chainId: number) {
-    return SmartContractFactory.Addresses(chainId).aXDCc;
-  }
-
   public static StakingGetter(chainId: number) {
     return {
       abi: StakingGetter.abi as AbiItem[],
