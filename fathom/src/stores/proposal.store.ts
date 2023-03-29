@@ -32,7 +32,7 @@ export default class ProposalStore {
           description,
           account,
           this.rootStore.transactionStore,
-          library
+          library,
         )
         .then((receipt) => {
           this.rootStore.alertStore.setShowSuccessAlert(
