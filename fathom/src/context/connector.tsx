@@ -10,9 +10,10 @@ import {
 } from "react";
 import Xdc3 from "xdc3";
 import { injected, WalletConnect } from "connectors/networks";
-import { useWeb3React } from "@web3-react/core";
-import WalletConnectProvider from "@walletconnect/ethereum-provider";
 import { useStores } from "stores";
+import { useWeb3React } from "@web3-react/core";
+import { injected, WalletConnect } from "connectors/networks";
+import WalletConnectProvider from "@walletconnect/ethereum-provider";
 import { ConnectorEvent } from "@web3-react/types";
 import { getDefaultProvider } from "utils/defaultProvider";
 import { providerOptions } from "xdcpay-connect";

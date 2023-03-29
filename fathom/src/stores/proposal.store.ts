@@ -32,7 +32,7 @@ export default class ProposalStore {
           description,
           account,
           this.rootStore.transactionStore,
-          library
+          library,
         )
         .then((receipt) => {
           this.rootStore.alertStore.setShowSuccessAlert(
@@ -105,7 +105,10 @@ export default class ProposalStore {
     }
   }
 
-  async nextAcceptableProposalTimestamp(account: string, library: Xdc3): Promise<any> {
+  async nextAcceptableProposalTimestamp(
+    account: string,
+    library: Xdc3
+  ): Promise<any> {
     try {
       const data = await this.service.nextAcceptableProposalTimestamp(
         account,
@@ -140,6 +143,22 @@ export default class ProposalStore {
   async fetchProposalState(proposal: string, account: string, library: Xdc3) {
     try {
       return await this.service.viewProposalState(proposal, account, library);
+    } catch (e: any) {
+      this.showErrorMessage(e.message);
+    }
+  }
+
+  async voteQuorum(blockNumber: string, library: Xdc3) {
+    try {
+      return await this.service.quorum(blockNumber, library);
+    } catch (e: any) {
+      this.showErrorMessage(e.message);
+    }
+  }
+
+  async proposalVotes(proposalId: string, library: Xdc3) {
+    try {
+      return await this.service.proposalVotes(proposalId, library);
     } catch (e: any) {
       this.showErrorMessage(e.message);
     }

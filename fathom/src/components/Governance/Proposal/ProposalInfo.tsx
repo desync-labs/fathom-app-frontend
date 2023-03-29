@@ -1,6 +1,5 @@
 import React from "react";
 import Xdc3 from 'xdc3';
-import { useWeb3React } from "@web3-react/core";
 import { Box, Grid, Typography } from "@mui/material";
 import { secondsToTime } from "utils/secondsToTime";
 import { getAccountUrl } from "utils/explorer";
@@ -9,6 +8,7 @@ import { ChainId } from "connectors/networks";
 import { styled } from "@mui/material/styles";
 import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
 import StakingCountdown from "components/Staking/StakingCountdown";
+import useConnector from "context/connector";
 
 const ProposalTitle = styled(Typography)`
   font-weight: bold;
@@ -92,7 +92,7 @@ const ProposalInfo = () => {
     secondsLeft,
   } = useProposalContext();
 
-  const { chainId } = useWeb3React();
+  const { chainId } = useConnector();
 
   return (
     <Grid item xs={12} md={8} lg={8}>

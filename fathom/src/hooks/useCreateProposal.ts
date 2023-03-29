@@ -1,24 +1,38 @@
-import Xdc3 from "xdc3";
-import Web3 from "web3";
-import { useStores } from "stores";
-import { useForm } from "react-hook-form";
 import { useCallback, useEffect, useState } from "react";
-import { Constants } from "helpers/Constants";
-import { ProposeProps } from "components/Governance/Propose";
-import { XDC_CHAIN_IDS } from "connectors/networks";
-import useSyncContext from "context/sync";
+import {
+  useFieldArray,
+  useForm
+} from "react-hook-form";
 import { useMediaQuery, useTheme } from "@mui/material";
+import { useStores } from "stores";
+import { Constants } from "helpers/Constants";
+import { MINIMUM_V_BALANCE, ProposeProps } from "components/Governance/Propose";
+import useSyncContext from "context/sync";
 import useConnector from "context/connector";
+
+type ActionType = {
+  target: string;
+  callData: string;
+  functionSignature: string;
+  functionArguments: string;
+  value: string;
+}
+
+const EMPTY_ACTION = {
+  target: "",
+  callData: "",
+  functionSignature: "",
+  functionArguments: "",
+  value: "",
+}
 
 const defaultValues = {
   withAction: false,
   descriptionTitle: "",
   description: "",
-  inputValues: "",
-  callData: "",
-  targets: "",
   link: "",
   agreement: false,
+  actions: [EMPTY_ACTION]
 };
 
 const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
@@ -26,6 +40,8 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
   const { account, chainId, library } = useConnector()!;
 
   const [vBalance, setVBalance] = useState<null | number>(null);
+  const [vBalanceError, setVBalanceError] = useState<boolean>(false);
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [notAllowTimestamp, setNotAllowTimestamp] = useState<number>(0);
 
@@ -33,10 +49,17 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
 
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const { handleSubmit, watch, control, reset, getValues } = useForm({
+
+  const methods = useForm({
     defaultValues,
     reValidateMode: "onChange",
     mode: "onChange",
+  });
+  const { handleSubmit, watch, control, reset, getValues } = methods;
+
+  const { fields, remove: removeAction, append } = useFieldArray({
+    control,
+    name: 'actions'
   });
 
   const { setLastTransactionBlock } = useSyncContext();
@@ -60,6 +83,7 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
     }
   }, [account, library, proposalStore, setVBalance, setNotAllowTimestamp]);
 
+
   useEffect(() => {
     let values = localStorage.getItem("createProposal");
     if (values) {
@@ -74,31 +98,38 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
         return;
       }
 
+      if (vBalance! < MINIMUM_V_BALANCE) {
+        return setVBalanceError(true);
+      } else {
+        setVBalanceError(false);
+      }
+
       setIsLoading(true);
       try {
         const {
           descriptionTitle,
           description,
-          inputValues,
-          callData,
-          targets,
           withAction,
+          actions,
         } = values;
 
         const combinedText = `${descriptionTitle}----------------${description}`;
         let receipt;
         if (withAction) {
-          const values = inputValues.trim().split(",").map(Number);
-          const callDataArray = callData.trim().split(",");
-          const targetsArray = targets
-            .trim()
-            .split(",")
-            .map((address: string) => String.prototype.trim.call(address));
+          const targets: string[] = [];
+          const callDatas: string[] = [];
+          const values: number[] = [];
+
+          actions.forEach((action: ActionType) => {
+            targets.push(action.target);
+            callDatas.push(action.callData);
+            values.push( action.value ? Number(action.value) : 0 );
+          })
 
           receipt = await proposalStore.createProposal(
-            targetsArray,
+            targets,
             values,
-            callDataArray,
+            callDatas,
             combinedText,
             account,
             library
@@ -125,6 +156,7 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
       }
     },
     [
+      vBalance,
       notAllowTimestamp,
       reset,
       account,
@@ -132,6 +164,7 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
       proposalStore,
       onClose,
       setLastTransactionBlock,
+      setVBalanceError,
     ]
   );
 
@@ -140,29 +173,9 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
     localStorage.setItem("createProposal", JSON.stringify(values));
   }, [getValues]);
 
-  const validateAddressesArray = useCallback((address: string) => {
-    let valid = true;
-    const trimmedAddresses = address
-      .trim()
-      .split(",")
-      .map((address: string) => address.trim());
-
-    for (let i = 0; i < trimmedAddresses.length; i++) {
-      if (
-        !Xdc3.utils.isAddress(trimmedAddresses[i]) &&
-        !Web3.utils.isAddress(trimmedAddresses[i])
-      ) {
-        valid = false;
-        break;
-      }
-    }
-
-    if (!valid) {
-      return `Please provide valid ${
-        XDC_CHAIN_IDS ? "XDC" : "Ethereum"
-      } address`;
-    }
-  }, []);
+  const appendAction = useCallback(() => {
+    append(EMPTY_ACTION);
+  }, [append])
 
   return {
     isMobile,
@@ -176,9 +189,13 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
     chainId,
     onSubmit,
     vBalance,
+    vBalanceError,
     saveForLater,
-    validateAddressesArray,
     notAllowTimestamp,
+    fields,
+    methods,
+    removeAction,
+    appendAction,
   };
 };
 

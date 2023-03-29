@@ -10,6 +10,7 @@ import Staking from "config/ABI/Staking.json";
 import StakingGetter from "config/ABI/StakingGetter.json";
 import MainToken from "config/ABI/MainToken.json";
 import Governor from "config/ABI/Governor.json";
+import MainTokenGovernor from "config/ABI/MainTokenGovernor.json";
 import VeFathomAbi from "config/ABI/vFathom.json";
 import DexPriceOracle from "config/ABI/DexPriceOracle.json";
 import CollateralTokenAdapterAbi from "config/ABI/CollateralTokenAdapter.json";
@@ -17,7 +18,7 @@ import CollateralTokenAdapterAbi from "config/ABI/CollateralTokenAdapter.json";
 export class SmartContractFactory {
   public static Addresses(chainId: number) {
     try {
-      let environment = process.env.REACT_APP_ENV as string ?? "dev"
+      let environment = (process.env.REACT_APP_ENV as string) ?? "dev";
       let address: any;
       switch (chainId) {
         case 1337:
@@ -136,6 +137,14 @@ export class SmartContractFactory {
       address: SmartContractFactory.Addresses(chainId).fthmGovernor,
     };
   }
+
+  public static MainFathomGovernor(chainId: number) {
+    return {
+      abi: MainTokenGovernor.abi as AbiItem[],
+      address: SmartContractFactory.Addresses(chainId).fthmGovernor,
+    };
+  }
+
   public static Staking(chainId: number) {
     return {
       abi: Staking.abi as AbiItem[],
@@ -155,10 +164,6 @@ export class SmartContractFactory {
       abi: MainToken.abi as AbiItem[],
       address: SmartContractFactory.Addresses(chainId).fthmToken,
     };
-  }
-
-  public static aXDCcTokenAddress(chainId: number) {
-    return SmartContractFactory.Addresses(chainId).aXDCc;
   }
 
   public static StakingGetter(chainId: number) {
