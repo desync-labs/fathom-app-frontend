@@ -15,6 +15,7 @@ const useMainLayout = () => {
     chainId,
     error,
     isMetamask,
+    isXdcPay,
     isWalletConnect,
   } = useConnector()!;
 
@@ -99,6 +100,7 @@ const useMainLayout = () => {
     open,
     disconnect,
     isMetamask,
+    isXdcPay,
     isWalletConnect,
     toggleDrawer,
     openMobile,

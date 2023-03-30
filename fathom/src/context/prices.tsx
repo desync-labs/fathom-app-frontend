@@ -27,7 +27,7 @@ type UsePricesContextReturn = {
 export const PricesContext = createContext<UseStakingViewType>(null);
 
 export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
-  const { stakingService } = useStores();
+  const { stakingService, centralizedOracleService } = useStores();
   const { chainId } = useConnector();
   const { library } = useConnector()
   const [fxdPrice, setFxdPrice] = useState<number>(0);
@@ -55,7 +55,7 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
   const fetchPairPrices = useCallback(async () => {
     if (library) {
       // @ts-ignore
-      const [{ 0: fthmPrice }, { 0: wxdcPrice }, { 0: fxdPrice }] =
+      const [{ 0: fthmPrice }, { 0: wxdcPrice }, { 0: fxdPrice }, centralizedPrice] =
         await Promise.all([
           stakingService.getPairPrice(
             fxdTokenAddress,
@@ -71,15 +71,18 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
             usdtTokenAddress,
             fxdTokenAddress,
             library,
-          )
+          ),
+          centralizedOracleService.cryptocompareConvertXdcUsdt(),
         ]);
 
       setFxdPrice(fxdPrice);
       setFthmPrice(fthmPrice);
       setWxdcPrice(wxdcPrice);
+      console.log(centralizedPrice)
     }
   }, [
     stakingService,
+    centralizedOracleService,
     usdtTokenAddress,
     fthmTokenAddress,
     fxdTokenAddress,

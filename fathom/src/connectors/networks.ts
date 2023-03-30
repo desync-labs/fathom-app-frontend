@@ -1,6 +1,7 @@
 import { InjectedConnector } from "@web3-react/injected-connector";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import Xdc3 from "xdc3";
+import { XdcInjectedConnector } from "connectors/xdc-connector/xdc-connector";
 
 export const supportedChainIds = [1337, 50, 51];
 export const XDC_CHAIN_IDS = [50, 51];
@@ -44,6 +45,7 @@ export const XDC_NETWORK_SETTINGS = {
 };
 
 export const injected = new InjectedConnector({ supportedChainIds });
+export const xdcInjected = new XdcInjectedConnector({ supportedChainIds })
 
 export const WalletConnect = new WalletConnectConnector({
   rpc: {
