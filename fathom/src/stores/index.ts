@@ -16,6 +16,8 @@ import StakingStore from "stores/staking.store";
 import StakingService from "services/StakingService";
 import IStakingService from "services/interfaces/IStakingService";
 import { Constants } from "helpers/Constants";
+import ICentralizedPriceFeedService from "../services/interfaces/ICentralizedPriceFeedService";
+import CentralizedPriceFeedService from "../services/CentralizedPriceFeedService";
 
 export class RootStore {
   /**
@@ -37,6 +39,9 @@ export class RootStore {
 
   stakingService: IStakingService;
 
+
+  centralizedOracleService: ICentralizedPriceFeedService;
+
   chainId: number = Constants.DEFAULT_CHAIN_ID;
 
   constructor() {
@@ -47,13 +52,14 @@ export class RootStore {
       this,
     );
 
-
     this.poolService = new PoolService(this.alertStore);
     this.positionService = new PositionService(this.alertStore, this.transactionStore);
 
     this.stableSwapService = new StableSwapService(this.transactionStore);
     this.proposalService = new ProposalService(this.transactionStore);
     this.stakingService = new StakingService(this.transactionStore);
+
+    this.centralizedOracleService = new CentralizedPriceFeedService();
 
     this.stableSwapStore = new StableSwapStore(this, this.stableSwapService);
     this.proposalStore = new ProposalStore(this, this.proposalService);
