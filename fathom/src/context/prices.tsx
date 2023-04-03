@@ -54,31 +54,35 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
 
   const fetchPairPrices = useCallback(async () => {
     if (library) {
-      // @ts-ignore
-      const [/*{ 0: fthmPrice },*/ { 0: wxdcPrice }, { 0: fxdPrice }, centralizedPrice] =
-        await Promise.all([
-          // stakingService.getPairPrice(
-          //   fxdTokenAddress,
-          //   fthmTokenAddress,
-          //   library
-          // ),
-          stakingService.getPairPrice(
-            usdtTokenAddress,
-            wxdcTokenAddress,
-            library
-          ),
-          stakingService.getPairPrice(
-            usdtTokenAddress,
-            fxdTokenAddress,
-            library,
-          ),
-          centralizedOracleService.cryptocompareConvertXdcUsdt(),
-        ]);
+      try {
+        // @ts-ignore
+        const [{ 0: fthmPrice }, { 0: wxdcPrice }, { 0: fxdPrice }, centralizedPrice] =
+          await Promise.all([
+            stakingService.getPairPrice(
+              fxdTokenAddress,
+              fthmTokenAddress,
+              library
+            ),
+            stakingService.getPairPrice(
+              usdtTokenAddress,
+              wxdcTokenAddress,
+              library
+            ),
+            stakingService.getPairPrice(
+              usdtTokenAddress,
+              fxdTokenAddress,
+              library,
+            ),
+            centralizedOracleService.cryptocompareConvertXdcUsdt(),
+          ]);
 
-      setFxdPrice(fxdPrice);
-      // setFthmPrice(fthmPrice);
-      setWxdcPrice(wxdcPrice);
-      console.log(centralizedPrice)
+        setFxdPrice(fxdPrice);
+        setFthmPrice(fthmPrice);
+        setWxdcPrice(wxdcPrice);
+        console.log(centralizedPrice)
+      } catch (e: any) {
+        console.log(e);
+      }
     }
   }, [
     stakingService,
