@@ -193,6 +193,7 @@ export default class PositionService implements IPositionService {
           options
         );
         options.gas = gas;
+
         /**
          * Block for XDC Pay.
          */
@@ -370,6 +371,7 @@ export default class PositionService implements IPositionService {
           address,
           library
         );
+        const MESSAGE = 'Position repay successfully!';
 
         const wallet = Web3Utils.getContractInstanceFrom(
           SmartContractFactory.proxyWallet.abi,
@@ -414,7 +416,7 @@ export default class PositionService implements IPositionService {
           (_: any, transactionReceipt: TransactionReceipt) => {
             this.alertStore.setShowSuccessAlert(
               true,
-              "Position closed successfully!"
+              MESSAGE,
             );
             resolve(transactionReceipt.blockNumber);
           }
@@ -429,14 +431,14 @@ export default class PositionService implements IPositionService {
               type: TransactionType.ClosePosition,
               active: false,
               status: TransactionStatus.None,
-              title: "Close Position Pending.",
+              title: "Repay Position Pending.",
               message: Strings.CheckOnBlockExplorer,
             });
           })
           .then((receipt: TransactionReceipt) => {
             this.alertStore.setShowSuccessAlert(
               true,
-              "Position closed successfully!"
+              MESSAGE,
             );
             resolve(receipt.blockNumber);
           });
@@ -461,6 +463,7 @@ export default class PositionService implements IPositionService {
           address,
           library
         );
+        const MESSAGE = "Position repay successfully!"
 
         const wallet = Web3Utils.getContractInstanceFrom(
           SmartContractFactory.proxyWallet.abi,
@@ -506,7 +509,7 @@ export default class PositionService implements IPositionService {
           (_: any, transactionReceipt: TransactionReceipt) => {
             this.alertStore.setShowSuccessAlert(
               true,
-              "Position closed successfully!"
+              MESSAGE,
             );
             resolve(transactionReceipt.blockNumber);
           }
@@ -521,14 +524,14 @@ export default class PositionService implements IPositionService {
               type: TransactionType.ClosePosition,
               active: false,
               status: TransactionStatus.None,
-              title: "Close Position Pending.",
+              title: "Repay Position Pending.",
               message: Strings.CheckOnBlockExplorer,
             });
           })
           .then((receipt: TransactionReceipt) => {
             this.alertStore.setShowSuccessAlert(
               true,
-              "Position closed successfully!"
+              MESSAGE,
             );
             resolve(receipt.blockNumber);
           });
