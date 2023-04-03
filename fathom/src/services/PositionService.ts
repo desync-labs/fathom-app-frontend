@@ -23,6 +23,7 @@ import { getEstimateGas } from "utils/getEstimateGas";
 
 export default class PositionService implements IPositionService {
   chainId = Constants.DEFAULT_CHAIN_ID;
+
   alertStore: AlertStore;
   transactionStore: ActiveWeb3Transactions;
 
@@ -34,7 +35,7 @@ export default class PositionService implements IPositionService {
     this.transactionStore = transactionStore;
   }
 
-  async openPosition(
+  openPosition(
     address: string,
     pool: ICollateralPool,
     collateral: string,
@@ -133,7 +134,7 @@ export default class PositionService implements IPositionService {
     });
   }
 
-  async topUpPositionAndBorrow(
+  topUpPositionAndBorrow(
     address: string,
     pool: ICollateralPool,
     collateral: string,
@@ -232,7 +233,7 @@ export default class PositionService implements IPositionService {
     });
   }
 
-  async topUpPosition(
+  topUpPosition(
     address: string,
     pool: ICollateralPool,
     collateral: string,
@@ -356,7 +357,7 @@ export default class PositionService implements IPositionService {
     return proxyWalletRegistry.methods.proxies(address).call();
   }
 
-  async closePosition(
+  closePosition(
     positionId: string,
     pool: ICollateralPool,
     address: string,
@@ -446,7 +447,7 @@ export default class PositionService implements IPositionService {
     });
   }
 
-  async partiallyClosePosition(
+  partiallyClosePosition(
     positionId: string,
     pool: ICollateralPool,
     address: string,
@@ -538,7 +539,7 @@ export default class PositionService implements IPositionService {
     });
   }
 
-  async approve(
+  approve(
     address: string,
     tokenAddress: string,
     library: Xdc3
@@ -631,7 +632,7 @@ export default class PositionService implements IPositionService {
     );
   }
 
-  async approveStableCoin(
+  approveStableCoin(
     address: string,
     library: Xdc3
   ): Promise<number | undefined> {

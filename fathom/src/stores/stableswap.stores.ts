@@ -73,13 +73,12 @@ export default class StableSwapStore {
   async approveUsdt(address: string, tokenName: string, library: Xdc3) {
     try {
       return await this.service
-        .approveUsdt(address, library)
+        .approveUsdt(address,tokenName, library)
         .then((receipt) => {
           this.rootStore.alertStore.setShowSuccessAlert(
             true,
             `${tokenName} approval was successful!`
           );
-
           return receipt;
         });
     } catch (e: any) {

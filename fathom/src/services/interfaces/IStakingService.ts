@@ -1,4 +1,3 @@
-import ActiveWeb3Transactions from "stores/transaction.store";
 import Xdc3 from "xdc3";
 
 export default interface IStakingService {
@@ -6,45 +5,40 @@ export default interface IStakingService {
     account: string,
     stakePosition: number,
     unlockPeriod: number,
-    transactionStore: ActiveWeb3Transactions,
     library: Xdc3
-  ): Promise<void>;
+  ): Promise<number>;
 
   handleUnlock(
     account: string,
     lockId: number,
     amount: number,
-    transactionStore: ActiveWeb3Transactions,
     library: Xdc3
-  ): Promise<void>;
+  ): Promise<number>;
 
   handleEarlyWithdrawal(
     account: string,
     lockId: number,
-    transactionStore: ActiveWeb3Transactions,
     library: Xdc3
-  ): Promise<void>;
+  ): Promise<number>;
 
   handleClaimRewards(
     account: string,
     streamId: number,
-    transactionStore: ActiveWeb3Transactions,
     library: Xdc3
-  ): Promise<void>;
+  ): Promise<number>;
 
   handleWithdrawAll(
     account: string,
     streamId: number,
-    transactionStore: ActiveWeb3Transactions,
     library: Xdc3
-  ): Promise<void>;
+  ): Promise<number>;
 
   approvalStatusStakingFTHM(
     address: string,
     stakingPosition: number,
     fthmTokenAddress: string,
     library: Xdc3
-  ): Promise<boolean>;
+  ): Promise<boolean | undefined>;
 
   getStreamClaimableAmountPerLock(
     streamId: number,
@@ -62,7 +56,6 @@ export default interface IStakingService {
   approveStakingFTHM(
     address: string,
     fthmTokenAddress: string,
-    transactionStore: ActiveWeb3Transactions,
     library: Xdc3
-  ): Promise<void>;
+  ): Promise<number>;
 }
