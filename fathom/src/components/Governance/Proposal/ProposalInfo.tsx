@@ -47,7 +47,15 @@ const ActionWrapper = styled(Box)`
   align-items: center;
   gap: 7px;
   justify-content: start;
+  margin-bottom: 10px;
 `;
+
+const CallDataWrapper = styled('div')`
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  -ms-word-break: break-word;
+  word-break: break-word;
+`
 
 const TimeslotInProgress = styled(Box, {
   shouldForwardProp: (prop) => prop !== "lessTimeLeft" && prop !== "isDone",
@@ -158,7 +166,9 @@ const ProposalInfo = () => {
                   </ActionWrapper>
                   <ActionWrapper>
                     <ActionLabel>Call Data:</ActionLabel>{" "}
-                    {fetchedProposal.calldatas.join(", ")}
+                    <CallDataWrapper>
+                      {fetchedProposal.calldatas.join(", ")}
+                    </CallDataWrapper>
                   </ActionWrapper>
                 </ProposalDescription>
               </Grid>

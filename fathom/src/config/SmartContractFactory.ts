@@ -1,19 +1,21 @@
 import { AbiItem } from "web3-utils";
-import CollateralPoolConfigAbi from "config/ABI/CollateralPoolConfig.json";
-import ProxyWalletRegistryAbi from "config/ABI/ProxyWalletRegistry.json";
-import ProxyWalletAbi from "config/ABI/ProxyWallet.json";
-import FathomStablecoinProxyActionAbi from "config/ABI/FathomStablecoinProxyActions.json";
 import BEP20Abi from "config/ABI/BEP20.json";
+import CollateralPoolConfigAbi from "config/ABI/CollateralPoolConfig.json";
+import CollateralTokenAdapterAbi from "config/ABI/CollateralTokenAdapter.json";
+import DexPriceOracle from "config/ABI/DexPriceOracle.json";
+import FathomStablecoinProxyActionAbi from "config/ABI/FathomStablecoinProxyActions.json";
+import Governor from "config/ABI/Governor.json";
+import MainToken from "config/ABI/MainToken.json";
+import MainTokenGovernor from "config/ABI/MainTokenGovernor.json";
+import ProxyWalletAbi from "config/ABI/ProxyWallet.json";
+import ProxyWalletRegistryAbi from "config/ABI/ProxyWalletRegistry.json";
 import StableSwapModule from "config/ABI/StableSwapModule.json";
-import Addresses from "config/addresses.json";
 import Staking from "config/ABI/Staking.json";
 import StakingGetter from "config/ABI/StakingGetter.json";
-import MainToken from "config/ABI/MainToken.json";
-import Governor from "config/ABI/Governor.json";
-import MainTokenGovernor from "config/ABI/MainTokenGovernor.json";
 import VeFathomAbi from "config/ABI/vFathom.json";
-import DexPriceOracle from "config/ABI/DexPriceOracle.json";
-import CollateralTokenAdapterAbi from "config/ABI/CollateralTokenAdapter.json";
+
+import Addresses from "config/addresses.json";
+
 
 export class SmartContractFactory {
   public static Addresses(chainId: number) {
@@ -97,7 +99,6 @@ export class SmartContractFactory {
 
   public static PositionManager(chainId: number) {
     return {
-      abi: [],
       address: SmartContractFactory.Addresses(chainId).positionManager,
     };
   }
