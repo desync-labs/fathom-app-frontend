@@ -34,7 +34,7 @@ const useStakingView = () => {
   const [action, setAction] = useState<ActionType>();
   const { account, chainId, library } = useConnector()!;
   const logger = useLogger();
-  const { stakingStore } = useStores();
+  const { stakingService } = useStores();
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -46,7 +46,8 @@ const useStakingView = () => {
   const [totalRewards, setTotalRewards] = useState(0);
   const previousTotalRewardsRef = useRef<number>(0);
 
-  const [fetchPositionsLoading, setFetchPositionLoading] = useState<boolean>(false)
+  const [fetchPositionsLoading, setFetchPositionLoading] =
+    useState<boolean>(false);
 
   const [currentPage, setCurrentPage] = useState<number>(1);
 
@@ -79,15 +80,17 @@ const useStakingView = () => {
 
   const fetchAllClaimRewards = useCallback(() => {
     if (account) {
-      stakingStore.getStreamClaimableAmount(account, library).then((amount) => {
-        setTotalRewards(Number(amount));
+      stakingService
+        .getStreamClaimableAmount(account, library)
+        .then((amount) => {
+          setTotalRewards(Number(amount));
 
-        setTimeout(() => {
-          previousTotalRewardsRef.current = amount!;
-        }, 1000);
-      });
+          setTimeout(() => {
+            previousTotalRewardsRef.current = amount!;
+          }, 1000);
+        });
     }
-  }, [stakingStore, account, library, setTotalRewards]);
+  }, [stakingService, account, library, setTotalRewards]);
 
   useEffect(() => {
     if (syncDao && !prevSyncDao) {
@@ -129,7 +132,8 @@ const useStakingView = () => {
           stakersData?.stakers[0].lockPositions.forEach(
             (lockPosition: ILockPosition) => {
               promises.push(
-                stakingStore.getStreamClaimableAmountPerLock(
+                stakingService.getStreamClaimableAmountPerLock(
+                  0,
                   account,
                   lockPosition.lockId,
                   library
@@ -138,7 +142,7 @@ const useStakingView = () => {
             }
           );
 
-          setFetchPositionLoading(true)
+          setFetchPositionLoading(true);
 
           Promise.all(promises).then((result) => {
             const newLockPositions = stakersData?.stakers[0].lockPositions.map(
@@ -150,14 +154,14 @@ const useStakingView = () => {
             );
 
             setLockPositions(newLockPositions);
-            setFetchPositionLoading(false)
+            setFetchPositionLoading(false);
           });
         } else {
           setLockPositions([]);
-          setFetchPositionLoading(false)
+          setFetchPositionLoading(false);
         }
       }, 300),
-    [stakingStore, library, setLockPositions, setFetchPositionLoading]
+    [stakingService, library, setLockPositions, setFetchPositionLoading]
   );
 
   useEffect(() => {
@@ -235,32 +239,54 @@ const useStakingView = () => {
     async (callback: Function) => {
       setAction({ type: "claim", id: null });
       try {
-        const receipt = await stakingStore.handleClaimRewards(account, library);
+        const blockNumber = await stakingService.handleClaimRewards(
+          account,
+          0,
+          library
+        );
         callback();
-        setLastTransactionBlock(receipt.blockNumber);
+        setLastTransactionBlock(blockNumber);
       } catch (e) {
         logger.log(LogLevel.error, "Claim error");
       } finally {
         setAction(undefined);
       }
     },
-    [stakingStore, account, library, logger, setAction, setLastTransactionBlock]
+    [
+      stakingService,
+      account,
+      library,
+      logger,
+      setAction,
+      setLastTransactionBlock,
+    ]
   );
 
   const withdrawAll = useCallback(
     async (callback: Function) => {
       setAction({ type: "withdrawAll", id: null });
       try {
-        const receipt = await stakingStore.handleWithdrawAll(account, library);
+        const blockNumber = await stakingService.handleWithdrawAll(
+          account,
+          0,
+          library
+        );
         callback();
-        setLastTransactionBlock(receipt.blockNumber);
+        setLastTransactionBlock(blockNumber);
       } catch (e) {
         logger.log(LogLevel.error, "Withdraw error");
       } finally {
         setAction(undefined);
       }
     },
-    [stakingStore, account, library, logger, setAction, setLastTransactionBlock]
+    [
+      stakingService,
+      account,
+      library,
+      logger,
+      setAction,
+      setLastTransactionBlock,
+    ]
   );
 
   const handleEarlyUnstake = useCallback(
@@ -270,13 +296,13 @@ const useStakingView = () => {
         id: lockId,
       });
       try {
-        const receipt = await stakingStore.handleEarlyWithdrawal(
+        const blockNumber = await stakingService.handleEarlyWithdrawal(
           account,
           lockId,
           library
         );
-        setLastTransactionBlock(receipt.blockNumber);
-        return receipt;
+        setLastTransactionBlock(blockNumber);
+        return blockNumber;
       } catch (e) {
         logger.log(LogLevel.error, "Handle early withdrawal");
         throw e;
@@ -284,7 +310,7 @@ const useStakingView = () => {
         setAction(undefined);
       }
     },
-    [stakingStore, account, library, logger, setAction, setLastTransactionBlock]
+    [stakingService, account, library, logger, setAction, setLastTransactionBlock]
   );
 
   const handleUnlock = useCallback(
@@ -294,15 +320,15 @@ const useStakingView = () => {
         id: lockId,
       });
       try {
-        const receipt = await stakingStore.handleUnlock(
+        const blockNumber = await stakingService.handleUnlock(
           account,
           lockId,
           amount,
           library
         );
-        setLastTransactionBlock(receipt.blockNumber);
+        setLastTransactionBlock(blockNumber);
 
-        return receipt;
+        return blockNumber;
       } catch (e: any) {
         logger.log(LogLevel.error, "Handle early withdrawal");
         throw e;
@@ -310,7 +336,7 @@ const useStakingView = () => {
         setAction(undefined);
       }
     },
-    [stakingStore, account, library, setAction, setLastTransactionBlock, logger]
+    [stakingService, account, library, setAction, setLastTransactionBlock, logger]
   );
 
   const isUnlockable = useCallback((remainingTime: number) => {

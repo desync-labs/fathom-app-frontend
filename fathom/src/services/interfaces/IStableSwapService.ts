@@ -7,31 +7,32 @@ export default interface IStableSwapService {
     tokenIn: number,
     tokenName: string,
     library: Xdc3
-  ): Promise<TransactionReceipt | undefined>;
+  ): Promise<number>;
   swapStableCoinToToken(
     address: string,
     stableCoinIn: number,
     tokenName: string,
     library: Xdc3
-  ): Promise<TransactionReceipt | undefined>;
+  ): Promise<number>;
   approveStableCoin(
     address: string,
     library: Xdc3
-  ): Promise<TransactionReceipt | undefined>;
+  ): Promise<number>;
   approveUsdt(
     address: string,
+    tokenName: string,
     library: Xdc3
-  ): Promise<TransactionReceipt | undefined>;
+  ): Promise<number>;
   approvalStatusStableCoin(
     address: string,
     tokenIn: number,
     library: Xdc3
-  ): Promise<Boolean>;
+  ): Promise<boolean | undefined>;
   approvalStatusUsdt(
     address: string,
     tokenIn: number,
     library: Xdc3
-  ): Promise<boolean>;
+  ): Promise<boolean | undefined>;
 
   getFeeIn(library: Xdc3): Promise<number>;
   getFeeOut(library: Xdc3): Promise<number>;

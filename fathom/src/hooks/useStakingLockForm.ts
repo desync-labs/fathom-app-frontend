@@ -26,7 +26,7 @@ const useStakingLockForm = () => {
     mode: "onChange",
   });
   const { account, chainId, library } = useConnector()!;
-  const { stakingStore, positionService } = useStores();
+  const { stakingService, positionService } = useStores();
 
   const { setLastTransactionBlock, syncDao, prevSyncDao } = useSyncContext();
 
@@ -56,16 +56,16 @@ const useStakingLockForm = () => {
   }, [account, poolService, fthmTokenAddress, library, setFthmBalance]);
 
   const getMinLockPeriod = useCallback(async () => {
-    const lockPeriod = await stakingStore.getMinLockPeriod(library);
+    const lockPeriod = await stakingService.getMinLockPeriod(library);
     const minDays = BigNumber(lockPeriod!).dividedBy(DAY_SECONDS);
     setMinLockPeriod(minDays.toNumber());
-  }, [stakingStore, library, setMinLockPeriod]);
+  }, [stakingService, library, setMinLockPeriod]);
 
   const approvalStatus = useMemo(
     () =>
       debounce(
         async (account: string, chainId: number, stakePosition: number) => {
-          const approved = await stakingStore.approvalStatusStakingFTHM(
+          const approved = await stakingService.approvalStatusStakingFTHM(
             account,
             stakePosition,
             fthmTokenAddress,
@@ -77,7 +77,7 @@ const useStakingLockForm = () => {
         },
         1000
       ),
-    [stakingStore, library, setApprovedBtn, fthmTokenAddress]
+    [stakingService, library, setApprovedBtn, fthmTokenAddress]
   );
 
   useEffect(() => {
@@ -120,7 +120,6 @@ const useStakingLockForm = () => {
     library,
     chainId,
     positionService,
-    stakingStore,
     setXdcBalance,
     setFxdBalance,
   ]);
@@ -139,19 +138,19 @@ const useStakingLockForm = () => {
       setIsLoading(true);
 
       try {
-        const receipt = await stakingStore.createLock(
+        const blockNumber = await stakingService.createLock(
           account,
           stakePosition,
           lockDays,
           library
         );
-        setLastTransactionBlock(receipt.blockNumber);
+        setLastTransactionBlock(blockNumber);
         reset();
       } catch (e) {}
       setIsLoading(false);
     },
     [
-      stakingStore,
+      stakingService,
       account,
       library,
       reset,
@@ -163,7 +162,7 @@ const useStakingLockForm = () => {
   const approveFTHM = useCallback(async () => {
     setApprovalPending(true);
     try {
-      await stakingStore.approveFTHM(account, fthmTokenAddress, library);
+      await stakingService.approveStakingFTHM(account, fthmTokenAddress, library);
       setApprovedBtn(false);
     } catch (e) {
       setApprovedBtn(true);
@@ -173,7 +172,7 @@ const useStakingLockForm = () => {
   }, [
     account,
     library,
-    stakingStore,
+    stakingService,
     fthmTokenAddress,
     setApprovalPending,
     setApprovedBtn,

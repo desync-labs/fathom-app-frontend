@@ -15,7 +15,7 @@ const useProposalItem = () => {
   const navigate = useNavigate();
 
   const { _proposalId } = useParams();
-  const { proposalStore } = useStores();
+  const { proposalService } = useStores();
 
   const [votePending, setVotePending] = useState<string | null>(null);
   const [hasVoted, setHasVoted] = useState<boolean>(false);
@@ -47,17 +47,17 @@ const useProposalItem = () => {
   }, [syncDao, prevSyncDao, refetch]);
 
   const fetchHasVoted = useCallback(async () => {
-    const hasVoted = await proposalStore.hasVoted(
+    const hasVoted = await proposalService.hasVoted(
       data.proposal.proposalId,
       account,
       library
     );
     setHasVoted(hasVoted!);
-  }, [proposalStore, data, account, library, setHasVoted]);
+  }, [proposalService, data, account, library, setHasVoted]);
 
   const fetchStatus = useCallback(async () => {
     if (data && data.proposal && account) {
-      const status = await proposalStore.fetchProposalState(
+      const status = await proposalService.viewProposalState(
         data.proposal.proposalId,
         account,
         library
@@ -65,7 +65,7 @@ const useProposalItem = () => {
       // @ts-ignore
       setStatus(Object.values(ProposalStatus)[status]);
     }
-  }, [proposalStore, data, account, library, setStatus]);
+  }, [proposalService, data, account, library, setStatus]);
 
   const getVotingStartsTime = useCallback(async () => {
     if (data && data.proposal) {
@@ -112,7 +112,7 @@ const useProposalItem = () => {
 
       if (endTimestamp - now <= 0) {
         setVotingEndTime(new Date(endTimestamp * 1000).toLocaleString());
-        const status = await proposalStore.fetchProposalState(
+        const status = await proposalService.viewProposalState(
           data.proposal.proposalId,
           account,
           library
@@ -125,7 +125,7 @@ const useProposalItem = () => {
       }
     }
   }, [
-    proposalStore,
+    proposalService,
     data,
     chainId,
     account,
@@ -136,8 +136,8 @@ const useProposalItem = () => {
 
   const checkProposalVotesAndQuorum = useCallback(async () => {
     const [totalVotes, quorum] = await Promise.all([
-      proposalStore.proposalVotes(data.proposal.proposalId, library),
-      proposalStore.voteQuorum(data.proposal.startBlock, library),
+      proposalService.proposalVotes(data.proposal.proposalId, library),
+      proposalService.quorum(data.proposal.startBlock, library),
     ]);
 
     const { abstainVotes, forVotes } = totalVotes;
@@ -147,7 +147,7 @@ const useProposalItem = () => {
     } else {
       setQuorumError(true);
     }
-  }, [proposalStore, data?.proposal, library]);
+  }, [proposalService, data?.proposal, library]);
 
   useEffect(() => {
     if (data && data.proposal && account) {
@@ -201,13 +201,13 @@ const useProposalItem = () => {
     async (support: string) => {
       try {
         setVotePending(support);
-        const receipt = await proposalStore.castVote(
+        const blockNumber = await proposalService.castVote(
           _proposalId!,
           account,
           support,
           library
         );
-        setLastTransactionBlock(receipt.blockNumber);
+        setLastTransactionBlock(blockNumber);
         setHasVoted(true);
       } catch (err) {
         console.log(err);
@@ -216,7 +216,7 @@ const useProposalItem = () => {
     },
     [
       _proposalId,
-      proposalStore,
+      proposalService,
       account,
       library,
       setVotePending,
