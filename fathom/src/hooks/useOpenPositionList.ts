@@ -17,6 +17,7 @@ import { FXD_POOLS, FXD_POSITIONS } from "apollo/queries";
 import { Constants } from "helpers/Constants";
 import useConnector from "context/connector";
 import BigNumber from "bignumber.js";
+import debounce from "lodash.debounce";
 
 const useOpenPositionList = (
   setPositionCurrentPage: Dispatch<number>,
@@ -108,6 +109,60 @@ const useOpenPositionList = (
     [proxyWallet, setPositionCurrentPage, fetchMore]
   );
 
+  const fetchPositions = useMemo(
+    () =>
+      debounce((loading, data, poolsData) => {
+        setIsLoading(true);
+        const filteredPosition = data.positions.filter(
+          (position: IOpenPosition) => position.positionStatus !== "closed"
+        );
+
+        const promises = filteredPosition.map((position: IOpenPosition) =>
+          positionService.getDebtValue(
+            position.debtShare,
+            position.collateralPool,
+            library
+          )
+        );
+
+        Promise.all(promises).then((debtValues) => {
+          const positions = filteredPosition.map(
+            (position: IOpenPosition, index: number) => {
+              const findPool = poolsData.pools.find(
+                (pool: ICollateralPool) => pool.id === position.collateralPool
+              );
+
+              position.debtValue = debtValues[index];
+              position.liquidationPrice = BigNumber(findPool.rawPrice)
+                .minus(
+                  BigNumber(findPool.priceWithSafetyMargin)
+                    .multipliedBy(position.lockedCollateral)
+                    .minus(position.debtValue)
+                    .dividedBy(position.lockedCollateral)
+                )
+                .toNumber();
+
+              position.ltv = BigNumber(position.debtValue)
+                .dividedBy(
+                  BigNumber(findPool.rawPrice).multipliedBy(
+                    position.lockedCollateral
+                  )
+                )
+                .toNumber();
+
+              return position;
+            }
+          );
+
+          console.log("setPositions", positions);
+
+          setFormattedPositions(positions);
+          setIsLoading(false);
+        });
+      }, 300),
+    [library, positionService, setFormattedPositions, setIsLoading]
+  );
+
   useEffect(() => {
     setIsLoading(loading);
   }, [loading, setIsLoading]);
@@ -117,60 +172,8 @@ const useOpenPositionList = (
       return setFormattedPositions([]);
     }
 
-    setIsLoading(true);
-    const filteredPosition = data.positions.filter(
-      (position: IOpenPosition) => position.positionStatus !== "closed"
-    );
-
-    const promises = filteredPosition.map((position: IOpenPosition) =>
-      positionService.getDebtValue(
-        position.debtShare,
-        position.collateralPool,
-        library
-      )
-    );
-
-    Promise.all(promises).then((debtValues) => {
-      const positions = filteredPosition.map(
-        (position: IOpenPosition, index: number) => {
-          const findPool = poolsData.pools.find(
-            (pool: ICollateralPool) => pool.id === position.collateralPool
-          );
-
-          position.debtValue = debtValues[index];
-          position.liquidationPrice = BigNumber(findPool.rawPrice)
-            .minus(
-              BigNumber(findPool.priceWithSafetyMargin)
-                .multipliedBy(position.lockedCollateral)
-                .minus(position.debtValue)
-                .dividedBy(position.lockedCollateral)
-            )
-            .toNumber();
-
-          position.ltv = BigNumber(position.debtValue)
-            .dividedBy(
-              BigNumber(findPool.rawPrice).multipliedBy(
-                position.lockedCollateral
-              )
-            )
-            .toNumber();
-
-          return position;
-        }
-      );
-
-      setFormattedPositions(positions);
-      setIsLoading(false);
-    });
-  }, [
-    loading,
-    data,
-    poolsData,
-    library,
-    positionService,
-    setFormattedPositions,
-    setIsLoading,
-  ]);
+    fetchPositions(loading, data, poolsData);
+  }, [loading, data, poolsData]);
 
   const onClose = useCallback(() => {
     setClosePosition(undefined);

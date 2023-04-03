@@ -246,7 +246,7 @@ export default class StakingService implements IStakingService {
               type: TransactionType.Approve,
               active: false,
               status: TransactionStatus.None,
-              title: "Handling claim rewards",
+              title: "Handling Claim Rewards",
               message: Strings.CheckOnBlockExplorer,
             });
           })
@@ -365,7 +365,7 @@ export default class StakingService implements IStakingService {
               type: TransactionType.Approve,
               active: false,
               status: TransactionStatus.None,
-              title: "Approving the token",
+              title: "Approving the Token",
               message: Strings.CheckOnBlockExplorer,
             });
           })
