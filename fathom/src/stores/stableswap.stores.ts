@@ -154,4 +154,20 @@ export default class StableSwapStore {
       this.rootStore.alertStore.setShowErrorAlert(true, e.message);
     }
   }
+
+  async isDecentralizedState(library: Xdc3) {
+    try {
+      return await this.service.isDecentralizedState(library);
+    } catch (e: any) {
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+    }
+  }
+
+  async isUserWhitelisted(address: string, library: Xdc3) {
+    try {
+      return await this.service.isUserWhitelisted(address, library);
+    } catch (e: any) {
+      this.rootStore.alertStore.setShowErrorAlert(true, e.message);
+    }
+  }
 }
