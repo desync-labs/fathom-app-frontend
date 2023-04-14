@@ -173,7 +173,7 @@ const useOpenPositionList = (
     }
 
     fetchPositions(loading, data, poolsData);
-  }, [loading, data, poolsData]);
+  }, [loading, data, poolsData, fetchPositions]);
 
   const onClose = useCallback(() => {
     setClosePosition(undefined);
