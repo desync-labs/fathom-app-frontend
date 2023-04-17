@@ -23,7 +23,6 @@ export default class StakingStore {
           account,
           stakePosition,
           unlockPeriod,
-          this.rootStore.transactionStore,
           library,
         )
         .then((receipt) => {
@@ -42,7 +41,7 @@ export default class StakingStore {
   async handleEarlyWithdrawal(account: string, lockId: number, library: Xdc3): Promise<any> {
     try {
       return await this.service
-        .handleEarlyWithdrawal(account, lockId, this.rootStore.transactionStore, library)
+        .handleEarlyWithdrawal(account, lockId, library)
         .then((receipt) => {
           this.rootStore.alertStore.setShowSuccessAlert(
             true,
@@ -64,7 +63,7 @@ export default class StakingStore {
   ): Promise<any> {
     try {
       return await this.service
-        .handleUnlock(account, lockId, amount, this.rootStore.transactionStore, library)
+        .handleUnlock(account, lockId, amount, library)
         .then((receipt) => {
           this.rootStore.alertStore.setShowSuccessAlert(
             true,
@@ -81,7 +80,7 @@ export default class StakingStore {
   async handleClaimRewards(account: string, library: Xdc3): Promise<any> {
     try {
       return await this.service
-        .handleClaimRewards(account, 0, this.rootStore.transactionStore, library)
+        .handleClaimRewards(account, 0, library)
         .then((receipt) => {
           this.rootStore.alertStore.setShowSuccessAlert(
             true,
@@ -98,7 +97,7 @@ export default class StakingStore {
   async handleWithdrawAll(account: string, library: Xdc3): Promise<any> {
     try {
       return await this.service
-        .handleWithdrawAll(account, 1, this.rootStore.transactionStore, library)
+        .handleWithdrawAll(account, 1, library)
         .then((receipt) => {
           this.rootStore.alertStore.setShowSuccessAlert(
             true,
@@ -168,7 +167,6 @@ export default class StakingStore {
         .approveStakingFTHM(
           address,
           fthmTokenAddress,
-          this.rootStore.transactionStore,
           library
         )
         .then((receipt) => {

@@ -217,9 +217,9 @@ const useTopUpPosition = (
       const { collateral, fathomToken } = values;
 
       try {
-        let receipt;
+        let blockNumber;
         if (BigNumber(fathomToken).isGreaterThan(0)) {
-          receipt = await positionService.topUpPositionAndBorrow(
+          blockNumber = await positionService.topUpPositionAndBorrow(
             account,
             pool,
             collateral,
@@ -228,7 +228,7 @@ const useTopUpPosition = (
             library
           );
         } else {
-          receipt = await positionService.topUpPosition(
+          blockNumber = await positionService.topUpPosition(
             account,
             pool,
             collateral,
@@ -236,7 +236,7 @@ const useTopUpPosition = (
             library
           );
         }
-        setLastTransactionBlock(receipt!.blockNumber);
+        setLastTransactionBlock(blockNumber!);
         onClose();
       } catch (e) {
         console.log(e);

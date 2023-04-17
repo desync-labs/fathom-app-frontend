@@ -228,14 +228,15 @@ const useOpenPosition = (
       const { collateral, fathomToken } = values;
 
       try {
-        const receipt = await positionService.openPosition(
+        const blockNumber = await positionService.openPosition(
           account,
           pool,
           collateral,
           fathomToken,
           library
         );
-        setLastTransactionBlock(receipt!.blockNumber);
+        console.log(blockNumber)
+        setLastTransactionBlock(blockNumber!);
         onClose();
       } catch (e) {
         console.log(e);

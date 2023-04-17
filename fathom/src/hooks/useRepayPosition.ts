@@ -124,9 +124,9 @@ const useRepayPosition = (
   const closePositionHandler = useCallback(async () => {
     setDisableClosePosition(true);
     try {
-      let receipt;
+      let blockNumber;
       if (BigNumber(collateral).isEqualTo(lockedCollateral)) {
-        receipt = await positionService.closePosition(
+        blockNumber = await positionService.closePosition(
           position.positionId,
           pool,
           account,
@@ -134,7 +134,7 @@ const useRepayPosition = (
           library
         );
       } else {
-        receipt = await positionService.partiallyClosePosition(
+        blockNumber = await positionService.partiallyClosePosition(
           position.positionId,
           pool,
           account,
@@ -148,7 +148,7 @@ const useRepayPosition = (
         );
       }
 
-      setLastTransactionBlock(receipt!.blockNumber);
+      setLastTransactionBlock(blockNumber!);
       onClose();
     } catch (e) {
       console.error(e);
