@@ -36,7 +36,7 @@ const defaultValues = {
 };
 
 const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
-  const { proposalStore } = useStores();
+  const { proposalService } = useStores();
   const { account, chainId, library } = useConnector()!;
 
   const [vBalance, setVBalance] = useState<null | number>(null);
@@ -68,11 +68,11 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
 
   useEffect(() => {
     if (account) {
-      proposalStore.getVBalance(account, library).then((balance) => {
+      proposalService.getVBalance(account, library)!.then((balance) => {
         setVBalance(balance!);
       });
-      proposalStore
-        .nextAcceptableProposalTimestamp(account, library)
+      proposalService
+        .nextAcceptableProposalTimestamp(account, library)!
         .then((nextAcceptableTimestamp: number) => {
           if (nextAcceptableTimestamp > Date.now() / 1000) {
             setNotAllowTimestamp(nextAcceptableTimestamp);
@@ -81,7 +81,7 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
           }
         });
     }
-  }, [account, library, proposalStore, setVBalance, setNotAllowTimestamp]);
+  }, [account, library, proposalService, setVBalance, setNotAllowTimestamp]);
 
 
   useEffect(() => {
@@ -114,7 +114,7 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
         } = values;
 
         const combinedText = `${descriptionTitle}----------------${description}`;
-        let receipt;
+        let blockNumber;
         if (withAction) {
           const targets: string[] = [];
           const callDatas: string[] = [];
@@ -126,7 +126,7 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
             values.push( action.value ? Number(action.value) : 0 );
           })
 
-          receipt = await proposalStore.createProposal(
+          blockNumber = await proposalService.createProposal(
             targets,
             values,
             callDatas,
@@ -135,7 +135,7 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
             library
           );
         } else {
-          receipt = await proposalStore.createProposal(
+          blockNumber = await proposalService.createProposal(
             [Constants.ZERO_ADDRESS],
             [0],
             [Constants.ZERO_ADDRESS],
@@ -145,7 +145,7 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
           );
         }
 
-        setLastTransactionBlock(receipt.blockNumber);
+        setLastTransactionBlock(blockNumber);
         reset();
         localStorage.removeItem("createProposal");
         onClose();
@@ -161,7 +161,7 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
       reset,
       account,
       library,
-      proposalStore,
+      proposalService,
       onClose,
       setLastTransactionBlock,
       setVBalanceError,
