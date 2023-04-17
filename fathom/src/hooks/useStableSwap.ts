@@ -36,6 +36,13 @@ const useStableSwap = (options: string[]) => {
   const [dailyLimit, setDailyLimit] = useState<number>(0);
   const [displayDailyLimit, setDisplayDailyLimit] = useState<number>(0);
 
+  const [isDecentralizedState, setIsDecentralizedState] = useState<
+    boolean | undefined
+  >(undefined);
+  const [isUserWhiteListed, setIsUserWhitelisted] = useState<
+    boolean | undefined
+  >(undefined);
+
   const [feeIn, setFeeIn] = useState<number>(0);
   const [feeOut, setFeeOut] = useState<number>(0);
 
@@ -180,6 +187,7 @@ const useStableSwap = (options: string[]) => {
                 UsStableContractAddress,
                 library
               )
+              stableSwapStore.getPoolBalance(UsStableContractAddress, library)
             );
 
             const [
@@ -240,11 +248,28 @@ const useStableSwap = (options: string[]) => {
         stableSwapService.getLastUpdate(library),
         stableSwapService.getDailySwapLimit(library),
       ]).then(([lastUpdate, dailySwapLimit]) => {
+        stableSwapStore.getLastUpdate(library),
+        stableSwapStore.isDecentralizedState(library),
+      ]).then(([lastUpdate, isDecentralizedState]) => {
+        setIsDecentralizedState(isDecentralizedState);
         setLastUpdate(Number(lastUpdate));
-        setDailyLimit(Number(dailySwapLimit) / 10 ** 18);
+
+        if (isDecentralizedState) {
+          stableSwapStore.getDailySwapLimit(library).then((dailyLimit) => {
+            setDailyLimit(dailyLimit!);
+          });
+        }
       });
     }
   }, [chainId, stableSwapService, library, setLastUpdate, setDailyLimit]);
+  }, [
+    chainId,
+    stableSwapStore,
+    library,
+    setLastUpdate,
+    setDailyLimit,
+    setIsDecentralizedState,
+  ]);
 
   useEffect(() => {
     if (chainId) {
@@ -287,6 +312,22 @@ const useStableSwap = (options: string[]) => {
       setInputCurrency(options[index]);
     }
   }, [outputCurrency, options]);
+
+  useEffect(() => {
+    if (account && isDecentralizedState === false) {
+      stableSwapStore
+        .isUserWhitelisted(account, library)
+        .then((isWhitelisted) => {
+          setIsUserWhitelisted(isWhitelisted);
+        });
+    }
+  }, [
+    stableSwapStore,
+    isDecentralizedState,
+    account,
+    library,
+    setIsUserWhitelisted,
+  ]);
 
   const swapFee = useMemo(() => {
     /**
@@ -456,7 +497,8 @@ const useStableSwap = (options: string[]) => {
 
   return {
     dailyLimit: displayDailyLimit,
-
+    isDecentralizedState,
+    isUserWhiteListed,
     inputValue,
     outputValue,
 

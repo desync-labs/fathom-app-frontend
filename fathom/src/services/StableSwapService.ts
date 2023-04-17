@@ -375,6 +375,24 @@ export default class StableSwapService implements IStableSwapService {
     }
   }
 
+  isDecentralizedState(library: Xdc3) {
+    const StableSwapModule = Web3Utils.getContractInstance(
+      SmartContractFactory.StableSwapModule(this.chainId),
+      library
+    );
+
+    return StableSwapModule.methods.isDecentralizedState().call();
+  }
+
+  isUserWhitelisted(address: string, library: Xdc3) {
+    const StableSwapModule = Web3Utils.getContractInstance(
+      SmartContractFactory.StableSwapModule(this.chainId),
+      library
+    );
+
+    return StableSwapModule.methods.isUserWhitelisted(address).call();
+  }
+
   setChainId(chainId: number) {
     this.chainId = chainId;
   }

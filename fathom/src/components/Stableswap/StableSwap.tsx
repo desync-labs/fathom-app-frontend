@@ -25,10 +25,13 @@ import { formatNumber, formatPercentage } from "utils/format";
 import { getTokenLogoURL } from "utils/tokenLogo";
 
 import {
+  ErrorBox,
+  ErrorMessage,
   InfoLabel,
   InfoValue,
   InfoWrapper,
   WalletBalance,
+  SuccessBox,
 } from "components/AppComponents/AppBox/AppBox";
 import {
   ButtonPrimary,
@@ -144,12 +147,29 @@ const SwapButton = styled(ButtonPrimary)`
   margin: 20px 0 5px 0;
 `;
 
+const StableSwapSuccessBox = styled(SuccessBox)`
+  width: 100%;
+  margin: 0;
+`;
+
+const StableSwapErrorBox = styled(ErrorBox)`
+  width: 100%;
+  margin: 0;
+`;
+
+const ErrorInfoIcon = styled(InfoIcon)`
+  width: 16px;
+  color: #f5953d;
+  height: 16px;
+`;
+
 const StableSwap = () => {
   const [options /*setOptions*/] = useState<string[]>(["US+", "FXD"]);
 
   const {
     dailyLimit,
-
+    isDecentralizedState,
+    isUserWhiteListed,
     fxdPrice,
 
     inputValue,
@@ -287,11 +307,15 @@ const StableSwap = () => {
             <StableSwapInputWrapper>
               <StableSwapFormLabel>To</StableSwapFormLabel>
               {useMemo(
-                () =>
+                () => (
                   <StableSwapWalletBalance>
-                    Balance: {BigNumber(outputBalance).dividedBy(10 ** 18).toFixed(2)}{" "}
+                    Balance:{" "}
+                    {BigNumber(outputBalance)
+                      .dividedBy(10 ** 18)
+                      .toFixed(2)}{" "}
                     {outputCurrency}
-                  </StableSwapWalletBalance>,
+                  </StableSwapWalletBalance>
+                ),
                 [outputBalance, outputCurrency]
               )}
               <StableSwapCurrencySelect
@@ -343,6 +367,20 @@ const StableSwap = () => {
               ) : null}
             </StableSwapInputWrapper>
 
+            {isDecentralizedState === false && (
+              <StableSwapSuccessBox>
+                <InfoIcon />
+                <Typography>Whitelist Activated.</Typography>
+              </StableSwapSuccessBox>
+            )}
+
+            {isUserWhiteListed === false && (
+              <StableSwapErrorBox>
+                <ErrorInfoIcon />
+                <ErrorMessage>Wallet Address Not Whitelisted.</ErrorMessage>
+              </StableSwapErrorBox>
+            )}
+
             {useMemo(() => {
               return (
                 <StableSwapPriceInfoWrapper>
@@ -350,7 +388,7 @@ const StableSwap = () => {
                     <Box component="span">
                       1 {inputCurrency} ={" "}
                       {outputCurrency === options[0]
-                        ? 1 * fxdPrice
+                        ? fxdPrice
                         : fxdPrice
                         ? 1 / fxdPrice
                         : null}{" "}
@@ -393,7 +431,7 @@ const StableSwap = () => {
 
             <SwapButton
               isLoading={swapPending}
-              disabled={!inputValue || !outputValue || swapPending}
+              disabled={!inputValue || !outputValue || swapPending || isUserWhiteListed === false}
               onClick={handleSwap}
             >
               {swapPending ? <CircularProgress size={30} /> : "Swap"}
