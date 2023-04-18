@@ -64,11 +64,11 @@ const PositionsList: FC<PositionsListProps> = ({
     approve,
     closePosition,
     topUpPosition,
-    setClosePosition,
-    setTopUpPosition,
     loading,
     handlePageChange,
     onClose,
+    setClosePosition,
+    setTopUpPosition,
   } = useOpenPositionList(setPositionCurrentPage, proxyWallet);
 
   const theme = useTheme();

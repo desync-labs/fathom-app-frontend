@@ -11,19 +11,19 @@ const useStakingItemView = (lockPosition: ILockPosition) => {
   const { processFlow, isUnlockable } = useStakingContext();
   const [timer, setTimer] = useState<ReturnType<typeof setTimeout> | null>();
   const { account, library } = useConnector();
-  const { stakingStore } = useStores();
+  const { stakingService } = useStores();
   const [rewardsAvailable, setRewardsAvailable] = useState<number>(
     lockPosition.rewardsAvailable
   );
 
   const fetchRewards = useCallback(() => {
     !!account &&
-      stakingStore
-        .getStreamClaimableAmountPerLock(account, lockPosition.lockId, library)
+    stakingService
+        .getStreamClaimableAmountPerLock(0, account, lockPosition.lockId, library)
         .then((claimRewards) => {
           setRewardsAvailable(claimRewards);
         });
-  }, [stakingStore, lockPosition, account, library, setRewardsAvailable]);
+  }, [stakingService, lockPosition, account, library, setRewardsAvailable]);
 
   useEffect(() => {
     const diff = lockPosition.end - Date.now() / 1000;
