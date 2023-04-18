@@ -412,11 +412,10 @@ const StableSwap = () => {
                   )}
                 </InfoValue>
               </StableSwapInfoWrapper>
-
-              <StableSwapInfoWrapper>
+              { isDecentralizedState && <StableSwapInfoWrapper>
                 <InfoLabel>Daily Limit</InfoLabel>
                 <InfoValue>{formatNumber(dailyLimit!)} FXD </InfoValue>
-              </StableSwapInfoWrapper>
+              </StableSwapInfoWrapper> }
 
               <StableSwapInfoWrapper>
                 <InfoLabel>FXD Pool Token Available</InfoLabel>

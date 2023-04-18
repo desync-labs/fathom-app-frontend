@@ -8,7 +8,7 @@ import BigNumber from "bignumber.js";
 const useViewProposalItem = (proposal: IProposal) => {
   const { chainId, account, library } = useConnector();
   const [status, setStatus] = useState<ProposalStatus>();
-  const { proposalStore } = useStores();
+  const { proposalService } = useStores();
 
   const [timestamp, setTimestamp] = useState<number>(0);
   const [seconds, setSeconds] = useState<number>(0);
@@ -46,8 +46,8 @@ const useViewProposalItem = (proposal: IProposal) => {
 
   const checkProposalVotesAndQuorum = useCallback(async () => {
     const [totalVotes, quorum] = await Promise.all([
-      proposalStore.proposalVotes(proposal.proposalId, library),
-      proposalStore.voteQuorum(proposal.startBlock, library),
+      proposalService.proposalVotes(proposal.proposalId, library),
+      proposalService.quorum(proposal.startBlock, library),
     ]);
 
     const { abstainVotes, forVotes } = totalVotes;
@@ -57,17 +57,17 @@ const useViewProposalItem = (proposal: IProposal) => {
     } else {
       setQuorumError(true);
     }
-  }, [proposalStore, proposal, library]);
+  }, [proposalService, proposal, library]);
 
   const fetchProposalState = useCallback(async () => {
-    const status = await proposalStore.fetchProposalState(
+    const status = await proposalService.viewProposalState(
       proposal.proposalId,
       account!,
       library
     );
     // @ts-ignore
     setStatus(Object.values(ProposalStatus)[status]);
-  }, [proposalStore, proposal, account, library]);
+  }, [proposalService, proposal, account, library]);
 
   useEffect(() => {
     if (proposal && chainId && account) {
