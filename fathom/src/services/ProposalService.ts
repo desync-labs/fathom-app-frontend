@@ -83,6 +83,9 @@ export default class ProposalService implements IProposalService {
               "Proposal created successfully!"
             );
             resolve(transactionReceipt.blockNumber);
+          })
+          .catch((e: any) => {
+            reject(e);
           });
       } catch (e: any) {
         this.alertStore.setShowErrorAlert(true, e.message);
@@ -147,6 +150,9 @@ export default class ProposalService implements IProposalService {
               "Proposal executed successfully!"
             );
             resolve(receipt.blockNumber);
+          })
+          .catch((e: any) => {
+            reject(e);
           });
       } catch (e: any) {
         this.alertStore.setShowErrorAlert(true, e.message);
@@ -211,6 +217,9 @@ export default class ProposalService implements IProposalService {
               "Queue Proposal executed successfully!"
             );
             resolve(receipt.blockNumber);
+          })
+          .catch((e: any) => {
+            reject(e);
           });
       } catch (e: any) {
         this.alertStore.setShowErrorAlert(true, e.message);
@@ -273,12 +282,15 @@ export default class ProposalService implements IProposalService {
               "You have successfully voted!"
             );
             resolve(receipt.blockNumber);
+          })
+          .catch((e: any) => {
+            reject(e);
           });
       } catch (e: any) {
         this.alertStore.setShowErrorAlert(true, e.message);
         reject(e);
       }
-    })
+    });
   }
 
   hasVoted(
@@ -365,6 +377,19 @@ export default class ProposalService implements IProposalService {
       );
 
       return FathomGovernor.methods.proposalVotes(proposalId).call();
+    } catch (e: any) {
+      this.alertStore.setShowErrorAlert(true, e.message);
+    }
+  }
+
+  proposalThreshold(library: Xdc3) {
+    try {
+      const FathomGovernor = Web3Utils.getContractInstance(
+        SmartContractFactory.MainFathomGovernor(this.chainId),
+        library
+      );
+
+      return FathomGovernor.methods.proposalThreshold().call();
     } catch (e: any) {
       this.alertStore.setShowErrorAlert(true, e.message);
     }

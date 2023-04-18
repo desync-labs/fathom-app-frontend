@@ -126,6 +126,9 @@ export default class PositionService implements IPositionService {
             );
 
             resolve(receipt.blockNumber);
+          })
+          .catch((e: any) => {
+            reject(e);
           });
       } catch (error: any) {
         this.alertStore.setShowErrorAlert(true, error.message);
@@ -226,6 +229,9 @@ export default class PositionService implements IPositionService {
               "Top Up position successfully!"
             );
             resolve(receipt.blockNumber);
+          })
+          .catch((e: any) => {
+            reject(e);
           });
       } catch (error: any) {
         this.alertStore.setShowErrorAlert(true, error.message);
@@ -321,6 +327,9 @@ export default class PositionService implements IPositionService {
               "Top Up position successfully!"
             );
             resolve(receipt.blockNumber);
+          })
+          .catch((e: any) => {
+            reject(e);
           });
       } catch (error: any) {
         this.alertStore.setShowErrorAlert(true, error.message);
@@ -534,6 +543,9 @@ export default class PositionService implements IPositionService {
               MESSAGE,
             );
             resolve(receipt.blockNumber);
+          })
+          .catch((e: any) => {
+            reject(e);
           });
       } catch (error: any) {
         this.alertStore.setShowErrorAlert(true, error.message);
@@ -601,6 +613,9 @@ export default class PositionService implements IPositionService {
               "Approval was successful!"
             );
             resolve(receipt.blockNumber);
+          })
+          .catch((e: any) => {
+            reject(e);
           });
       } catch (error: any) {
         this.alertStore.setShowErrorAlert(true, error.message);
@@ -693,6 +708,9 @@ export default class PositionService implements IPositionService {
               "Token approval was successful!"
             );
             resolve(receipt.blockNumber);
+          })
+          .catch((e: any) => {
+            reject(e);
           });
       } catch (error: any) {
         this.alertStore.setShowErrorAlert(true, error.message);

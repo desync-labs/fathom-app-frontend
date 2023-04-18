@@ -84,6 +84,9 @@ export default class StakingService implements IStakingService {
           .then((receipt: TransactionReceipt) => {
             this.alertStore.setShowSuccessAlert(true, MESSAGE);
             resolve(receipt.blockNumber);
+          })
+          .catch((e: any) => {
+            reject(e);
           });
       } catch (e: any) {
         this.alertStore.setShowErrorAlert(true, e.message);
@@ -141,6 +144,9 @@ export default class StakingService implements IStakingService {
           .then((receipt: TransactionReceipt) => {
             this.alertStore.setShowSuccessAlert(true, MESSAGE);
             resolve(receipt.blockNumber);
+          })
+          .catch((e: any) => {
+            reject(e);
           });
       } catch (e: any) {
         this.alertStore.setShowErrorAlert(true, e.message);
@@ -197,6 +203,9 @@ export default class StakingService implements IStakingService {
           .then((receipt: TransactionReceipt) => {
             this.alertStore.setShowSuccessAlert(true, MESSAGE);
             resolve(receipt.blockNumber);
+          })
+          .catch((e: any) => {
+            reject(e);
           });
       } catch (e: any) {
         this.alertStore.setShowErrorAlert(true, e.message);
