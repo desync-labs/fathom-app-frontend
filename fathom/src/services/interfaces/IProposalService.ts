@@ -56,4 +56,5 @@ export default interface IProposalService {
 
   quorum(blockNumber: string, library: Xdc3): Promise<number> | undefined;
   proposalVotes(proposalId: string, library: Xdc3): Promise<any> | undefined;
+  proposalThreshold(library: Xdc3): Promise<any | undefined>;
 }

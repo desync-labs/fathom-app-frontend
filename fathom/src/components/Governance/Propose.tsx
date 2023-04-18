@@ -3,15 +3,15 @@ import { Link } from "react-router-dom";
 import { Controller, FormProvider } from "react-hook-form";
 import {
   Box,
-  FormControlLabel,
-  Switch,
-  DialogContent,
-  Grid,
-  Stack,
-  Icon,
-  FormGroup,
-  Typography,
   CircularProgress,
+  DialogContent,
+  FormControlLabel,
+  FormGroup,
+  Grid,
+  Icon,
+  Stack,
+  Switch,
+  Typography,
 } from "@mui/material";
 
 import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
@@ -39,6 +39,7 @@ import {
 
 import { formatNumber } from "utils/format";
 import ProposeActionFields from "./Propose/ProposeActionFields";
+import BigNumber from "bignumber.js";
 
 export const ProposeLabel = styled(AppFormLabel)`
   float: none;
@@ -92,6 +93,7 @@ const OptionalBox = styled(Box)`
 
 const GridContainer = styled(Grid)`
   padding: 0 8px;
+
   ${({ theme }) => theme.breakpoints.down("sm")} {
     padding: 0;
   }
@@ -101,7 +103,7 @@ const AddMoreActionButtonGrid = styled(Grid)`
   display: flex;
   justify-content: right;
   margin-top: 10px;
-`
+`;
 
 const AddMoreActionButton = styled(ButtonPrimary)``;
 
@@ -113,14 +115,13 @@ export const InfoIcon: FC<{ sx?: Record<string, any> }> = ({ sx }) => (
   />
 );
 
-export const MINIMUM_V_BALANCE = 1000;
-
 export type ProposeProps = {
   onClose: () => void;
 };
 
 const Propose: FC<ProposeProps> = ({ onClose }) => {
   const {
+    minimumVBalance,
     isMobile,
     isLoading,
     withAction,
@@ -265,7 +266,8 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
                                 component={"span"}
                               >
                                 <InfoIcon />
-                                Forum discussion will be auto-created if this is left empty
+                                Forum discussion will be auto-created if this is
+                                left empty
                               </Stack>
                             }
                           />
@@ -297,7 +299,13 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
                       <Grid item xs={12}>
                         <Box sx={{ marginTop: "10px" }}>
                           {fields.map((field, index) => {
-                            return <ProposeActionFields index={index} removeAction={removeAction} key={field.id} />;
+                            return (
+                              <ProposeActionFields
+                                index={index}
+                                removeAction={removeAction}
+                                key={field.id}
+                              />
+                            );
                           })}
                         </Box>
                       </Grid>
@@ -310,14 +318,16 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
                   )}
                 </Grid>
                 {vBalance !== null &&
-                vBalance / 10 ** 18 < MINIMUM_V_BALANCE ? (
+                BigNumber(vBalance)
+                  .dividedBy(10 ** 18)
+                  .isLessThan(minimumVBalance!) ? (
                   vBalanceError ? (
                     <ErrorBox sx={{ my: 3 }}>
                       <InfoIcon
                         sx={{ width: "16px", color: "#F5953D", height: "16px" }}
                       />
                       <ErrorMessage>
-                        You have less than {MINIMUM_V_BALANCE} vFTHM, and you
+                        You have less than {minimumVBalance} vFTHM, and you
                         can not create a new proposal. So please, stake your
                         FTHM tokens in <Link to={"/dao/staking"}>Staking</Link>{" "}
                         to get voting power and awesome rewards.
@@ -329,7 +339,7 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
                         sx={{ width: "16px", color: "#F5953D", height: "16px" }}
                       />
                       <Typography>
-                        You have less than {MINIMUM_V_BALANCE} vFTHM, and you
+                        You have less than {minimumVBalance} vFTHM, and you
                         can not create a new proposal. So please, stake your
                         FTHM tokens in <Link to={"/dao/staking"}>Staking</Link>{" "}
                         to get voting power and awesome rewards.
@@ -342,7 +352,7 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
                       sx={{ width: "16px", color: "#F5953D", height: "16px" }}
                     />
                     <ErrorMessage>
-                      To create a proposal, you need to have {MINIMUM_V_BALANCE}{" "}
+                      To create a proposal, you need to have {minimumVBalance}{" "}
                       vFTHM. <br />
                       Now you have {formatNumber(vBalance! / 10 ** 18)} vFTHM
                     </ErrorMessage>
@@ -353,7 +363,7 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
                       sx={{ width: "16px", color: "#F5953D", height: "16px" }}
                     />
                     <Typography>
-                      To create a proposal, you need to have {MINIMUM_V_BALANCE}{" "}
+                      To create a proposal, you need to have {minimumVBalance}{" "}
                       vFTHM. <br />
                       Now you have {formatNumber(vBalance! / 10 ** 18)} vFTHM
                     </Typography>
