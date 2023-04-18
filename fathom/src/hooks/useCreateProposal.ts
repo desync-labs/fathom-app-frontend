@@ -1,14 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
-import {
-  useFieldArray,
-  useForm
-} from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { useMediaQuery, useTheme } from "@mui/material";
 import { useStores } from "stores";
 import { Constants } from "helpers/Constants";
-import { MINIMUM_V_BALANCE, ProposeProps } from "components/Governance/Propose";
+import { ProposeProps } from "components/Governance/Propose";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
+import BigNumber from "bignumber.js";
 
 type ActionType = {
   target: string;
@@ -16,7 +14,7 @@ type ActionType = {
   functionSignature: string;
   functionArguments: string;
   value: string;
-}
+};
 
 const EMPTY_ACTION = {
   target: "",
@@ -24,7 +22,7 @@ const EMPTY_ACTION = {
   functionSignature: "",
   functionArguments: "",
   value: "",
-}
+};
 
 const defaultValues = {
   withAction: false,
@@ -32,7 +30,7 @@ const defaultValues = {
   description: "",
   link: "",
   agreement: false,
-  actions: [EMPTY_ACTION]
+  actions: [EMPTY_ACTION],
 };
 
 const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
@@ -44,11 +42,11 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [notAllowTimestamp, setNotAllowTimestamp] = useState<number>(0);
+  const [minimumVBalance, setMinimumVBalance] = useState<string>();
 
   const theme = useTheme();
 
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-
 
   const methods = useForm({
     defaultValues,
@@ -57,9 +55,13 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
   });
   const { handleSubmit, watch, control, reset, getValues } = methods;
 
-  const { fields, remove: removeAction, append } = useFieldArray({
+  const {
+    fields,
+    remove: removeAction,
+    append,
+  } = useFieldArray({
     control,
-    name: 'actions'
+    name: "actions",
   });
 
   const { setLastTransactionBlock } = useSyncContext();
@@ -83,6 +85,14 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
     }
   }, [account, library, proposalService, setVBalance, setNotAllowTimestamp]);
 
+  useEffect(() => {
+    proposalService.proposalThreshold(library).then((minVBalance) => {
+      const formattedVBalance = BigNumber(minVBalance)
+        .dividedBy(10 ** 18)
+        .toString();
+      setMinimumVBalance(formattedVBalance);
+    });
+  }, [proposalService, library, setMinimumVBalance]);
 
   useEffect(() => {
     let values = localStorage.getItem("createProposal");
@@ -98,7 +108,7 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
         return;
       }
 
-      if (vBalance! < MINIMUM_V_BALANCE) {
+      if (BigNumber(vBalance!).isLessThan(minimumVBalance!)) {
         return setVBalanceError(true);
       } else {
         setVBalanceError(false);
@@ -106,12 +116,7 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
 
       setIsLoading(true);
       try {
-        const {
-          descriptionTitle,
-          description,
-          withAction,
-          actions,
-        } = values;
+        const { descriptionTitle, description, withAction, actions } = values;
 
         const combinedText = `${descriptionTitle}----------------${description}`;
         let blockNumber;
@@ -123,8 +128,8 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
           actions.forEach((action: ActionType) => {
             targets.push(action.target);
             callDatas.push(action.callData);
-            values.push( action.value ? Number(action.value) : 0 );
-          })
+            values.push(action.value ? Number(action.value) : 0);
+          });
 
           blockNumber = await proposalService.createProposal(
             targets,
@@ -149,14 +154,13 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
         reset();
         localStorage.removeItem("createProposal");
         onClose();
-      } catch (err) {
-        console.log(err);
-      } finally {
+      } catch (err) {} finally {
         setIsLoading(false);
       }
     },
     [
       vBalance,
+      minimumVBalance,
       notAllowTimestamp,
       reset,
       account,
@@ -175,9 +179,10 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
 
   const appendAction = useCallback(() => {
     append(EMPTY_ACTION);
-  }, [append])
+  }, [append]);
 
   return {
+    minimumVBalance,
     isMobile,
     isLoading,
     withAction,

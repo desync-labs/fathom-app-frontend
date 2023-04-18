@@ -79,6 +79,9 @@ export default class StableSwapService implements IStableSwapService {
           .then((receipt: TransactionReceipt) => {
             this.alertStore.setShowSuccessAlert(true, MESSAGE);
             resolve(receipt.blockNumber);
+          })
+          .catch((e: any) => {
+            reject(e);
           });
       } catch (e: any) {
         this.alertStore.setShowErrorAlert(true, e.message);
@@ -136,6 +139,9 @@ export default class StableSwapService implements IStableSwapService {
           .then((receipt: TransactionReceipt) => {
             this.alertStore.setShowSuccessAlert(true, MESSAGE);
             resolve(receipt.blockNumber);
+          })
+          .catch((e: any) => {
+            reject(e);
           });
       } catch (e: any) {
         this.alertStore.setShowErrorAlert(true, e.message);
@@ -194,6 +200,9 @@ export default class StableSwapService implements IStableSwapService {
           .then((receipt: TransactionReceipt) => {
             this.alertStore.setShowSuccessAlert(true, MESSAGE);
             resolve(receipt.blockNumber);
+          })
+          .catch((e: any) => {
+            reject(e);
           });
       } catch (e: any) {
         this.alertStore.setShowErrorAlert(true, e.message);
@@ -246,6 +255,9 @@ export default class StableSwapService implements IStableSwapService {
           .then((receipt: TransactionReceipt) => {
             this.alertStore.setShowSuccessAlert(true, MESSAGE);
             resolve(receipt.blockNumber);
+          })
+          .catch((e: any) => {
+            reject(e);
           });
       } catch (e: any) {
         this.alertStore.setShowErrorAlert(true, e.message);
@@ -393,7 +405,6 @@ export default class StableSwapService implements IStableSwapService {
         SmartContractFactory.StableSwapModule(this.chainId),
         library
       );
-
       return StableSwapModule.methods.isUserWhitelisted(address).call();
     } catch (e: any) {
       this.alertStore.setShowErrorAlert(true, e.message);
