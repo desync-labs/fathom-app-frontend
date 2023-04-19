@@ -20,7 +20,6 @@ import Addresses from "config/addresses.json";
 export class SmartContractFactory {
   public static Addresses(chainId: number) {
     try {
-      let environment = (process.env.REACT_APP_ENV as string) ?? "dev";
       let address: any;
       switch (chainId) {
         case 1337:
@@ -36,7 +35,7 @@ export class SmartContractFactory {
           address = Addresses["51"];
           break;
       }
-      return address[environment];
+      return address;
     } catch (e) {
       console.error("Error in fetching address");
       return {};
