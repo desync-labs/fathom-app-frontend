@@ -7,6 +7,10 @@ export const DEFAULT_CHAIN_ID = 51;
 export const YEAR_IN_SECONDS = 365 * 24 * 60 * 60
 export const DAY_IN_SECONDS = 24 * 60 * 60
 
+export const FXD_MINIMUM_BORROW_AMOUNT = 100;
+
+export const CRYPTOCOMPARE_ENDPOINT = 'https://min-api.cryptocompare.com/data/price';
+
 export enum ProposalStatus {
   Pending = "Pending",
   OpenToVote = "Open-to-Vote",

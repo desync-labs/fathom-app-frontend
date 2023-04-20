@@ -1,5 +1,5 @@
+import React, { FC } from "react";
 import { PositionListItemProps } from "components/PositionList/PositionListItem";
-import React, { FC, useRef, useState } from "react";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { PoolName, TVL } from "components/AppComponents/AppBox/AppBox";
 import { formatCurrency, formatNumber, formatNumberPrice } from "utils/format";
@@ -7,17 +7,8 @@ import { styled } from "@mui/material/styles";
 import { Box, CircularProgress } from "@mui/material";
 import {
   ButtonPrimary,
-  ClosePositionButton,
+  ManagePositionButton
 } from "components/AppComponents/AppButton/AppButton";
-import ButtonGroup from "@mui/material/ButtonGroup";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import Popper from "@mui/material/Popper";
-import Grow from "@mui/material/Grow";
-import ClickAwayListener from "@mui/material/ClickAwayListener";
-import MenuList from "@mui/material/MenuList";
-import MenuItem from "@mui/material/MenuItem";
-import { ClosingType } from "hooks/useClosePosition";
-import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
 
 const PositionListItemMobileContainer = styled(Box)`
   width: 100%;
@@ -59,25 +50,6 @@ const PoolWrapper = styled(Box)`
   margin-bottom: 4px;
 `;
 
-const ClosePositionPaper = styled(AppPaper)`
-  background: #253656;
-  border: 1px solid #4f658c;
-  box-shadow: 0px 12px 32px #000715;
-  border-radius: 8px;
-  padding: 4px;
-
-  ul {
-    padding: 0;
-    li {
-      padding: 10px 16px;
-      &:hover {
-        background: #324567;
-        border-radius: 6px;
-      }
-    }
-  }
-`;
-
 const ButtonsWrapper = styled(Box)`
   width: 100%;
   height: 100%;
@@ -87,22 +59,14 @@ const ButtonsWrapper = styled(Box)`
   margin-top: 20px;
 `;
 
-const ClosePositionButtonMobile = styled(ClosePositionButton)`
-  height: 40px;
-  width: 100%;
-`;
-
 const PositionListItemMobile: FC<PositionListItemProps> = ({
   position,
-  setSelectedPosition,
+  setClosePosition,
+  setTopUpPosition,
   approvalPending,
   approveBtn,
   approve,
-  setType,
 }) => {
-  const anchorRef = useRef<HTMLDivElement>(null);
-  const [open, setOpen] = useState<boolean>(false);
-
   return (
     <PositionListItemMobileContainer>
       <ListItemWrapper>
@@ -122,30 +86,30 @@ const PositionListItemMobile: FC<PositionListItemProps> = ({
             <PoolName>{position?.collateralPoolName}</PoolName>
           </PoolWrapper>
           <TVL sx={{ textAlign: "right" }}>
-            TVL: {formatCurrency(Number(position.tvl))}
+            TVL: {formatCurrency(position.tvl)}
           </TVL>
         </ListValue>
       </ListItemWrapper>
       <ListItemWrapper>
         <ListLabel>Liquidation price</ListLabel>
         <ListValue>
-          {formatNumberPrice(Number(position.liquidationPrice))}
+          {formatNumberPrice(position.liquidationPrice)}
         </ListValue>
       </ListItemWrapper>
       <ListItemWrapper>
         <ListLabel>Borrowed</ListLabel>
-        <ListValue>{formatNumber(Number(position.debtValue))} FXD</ListValue>
+        <ListValue>{formatNumber(position.debtValue)} FXD</ListValue>
       </ListItemWrapper>
       <ListItemWrapper>
         <ListLabel>Collateral</ListLabel>
         <ListValue>
-          {position.lockedCollateral} {position.collateralPoolName}
+          {formatNumberPrice(position.lockedCollateral)} {position.collateralPoolName}
         </ListValue>
       </ListItemWrapper>
       <ListItemWrapper>
         <ListLabel>Safety buffer</ListLabel>
         <ListValue>
-          {formatNumber(Number(position.safetyBufferInPercent) * 100)}%
+          {formatNumber(position.safetyBufferInPercent * 100)}%
         </ListValue>
       </ListItemWrapper>
       <ButtonsWrapper>
@@ -158,67 +122,9 @@ const PositionListItemMobile: FC<PositionListItemProps> = ({
             )}
           </ButtonPrimary>
         ) : (
-          <>
-            <ButtonGroup
-              sx={{ width: "100%" }}
-              variant="contained"
-              ref={anchorRef}
-              aria-label="split button"
-            >
-              <ClosePositionButtonMobile
-                aria-controls={open ? "split-button-menu" : undefined}
-                aria-expanded={open ? "true" : undefined}
-                aria-label="select merge strategy"
-                aria-haspopup="menu"
-                onClick={() => setOpen(!open)}
-              >
-                Close position
-                <ArrowDropDownIcon />
-              </ClosePositionButtonMobile>
-            </ButtonGroup>
-            <Popper
-              sx={{
-                zIndex: 1,
-              }}
-              open={open}
-              anchorEl={anchorRef.current}
-              role={undefined}
-              transition
-              disablePortal
-            >
-              {({ TransitionProps, placement }) => (
-                <Grow
-                  {...TransitionProps}
-                  style={{
-                    transformOrigin: "center bottom",
-                  }}
-                >
-                  <ClosePositionPaper>
-                    <ClickAwayListener onClickAway={() => setOpen(false)}>
-                      <MenuList id="split-button-menu" autoFocusItem>
-                        <MenuItem
-                          onClick={() => {
-                            setType(ClosingType.Full);
-                            setSelectedPosition(position);
-                          }}
-                        >
-                          Repay entirely
-                        </MenuItem>
-                        <MenuItem
-                          onClick={() => {
-                            setType(ClosingType.Partial);
-                            setSelectedPosition(position);
-                          }}
-                        >
-                          Repay partially
-                        </MenuItem>
-                      </MenuList>
-                    </ClickAwayListener>
-                  </ClosePositionPaper>
-                </Grow>
-              )}
-            </Popper>
-          </>
+          <ManagePositionButton size="small" onClick={() => setTopUpPosition(position)}>
+            Manage position
+          </ManagePositionButton>
         )}
       </ButtonsWrapper>
     </PositionListItemMobileContainer>

@@ -1,6 +1,7 @@
 import React, { FC, useMemo } from "react";
 import { Box, Icon } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { formatPercentage } from "utils/format";
 
 import ArrowUpSrc from "assets/svg/arrow-up.svg";
 import ArrowDownSrc from "assets/svg/arrow-down.svg";
@@ -58,7 +59,7 @@ const PriceChanged: FC<PriceChangeProps> = ({ current, previous }) => {
   return (
     <PriceChangedBox className={isNegative ? "decrease" : "increase"}>
       {isNegative ? <DecreaseIcon /> : <IncreaseIcon />}
-      {percentage} %
+      {formatPercentage(percentage)} %
     </PriceChangedBox>
   );
 };

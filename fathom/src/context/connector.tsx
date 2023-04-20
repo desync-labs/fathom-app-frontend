@@ -8,12 +8,16 @@ import {
   ReactElement,
   FC,
 } from "react";
-import { injected, WalletConnect } from "connectors/networks";
-import { useWeb3React } from "@web3-react/core";
-import WalletConnectProvider from "@walletconnect/ethereum-provider";
 import { useStores } from "stores";
+import { useWeb3React } from "@web3-react/core";
+import {
+  injected,
+  WalletConnect,
+  xdcInjected
+} from "connectors/networks";
+import WalletConnectProvider from "@walletconnect/ethereum-provider";
 import { ConnectorEvent } from "@web3-react/types";
-import { getDefaultProvider } from "../utils/defaultProvider";
+import { getDefaultProvider } from "utils/defaultProvider";
 
 export const ConnectorContext = createContext(null);
 
@@ -35,6 +39,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
 
   const [isMetamask, setIsMetamask] = useState(false);
   const [isWalletConnect, setIsWalletConnect] = useState(false);
+  const [isXdcPay, setIsXdcPay] = useState(false);
 
   const [isActive, setIsActive] = useState(false);
   const [shouldDisable, setShouldDisable] = useState(false); // Should disable connect button while connecting to MetaMask
@@ -49,9 +54,15 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
 
   useEffect(() => {
     if (library) {
-      // @ts-ignore
-      const { isMetaMask } = library.currentProvider;
-      setIsMetamask(!!isMetaMask);
+      const { isMetaMask, isXDCPay } = (library as any).currentProvider;
+      if (isXDCPay) {
+        setIsXdcPay(true)
+      } else if (isMetaMask) {
+        setIsMetamask(true);
+      } else {
+        setIsXdcPay(false)
+        setIsMetamask(false)
+      }
 
       setIsWalletConnect(
         library.currentProvider instanceof WalletConnectProvider
@@ -89,6 +100,15 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
     });
   }, [activate, setShouldDisable]);
 
+  const connectXdcPay = useCallback(() => {
+    setShouldDisable(true);
+    return activate(xdcInjected).then(() => {
+      setShouldDisable(false);
+      sessionStorage.setItem("isConnected", "xdc-pay");
+      setIsXdcPay(true);
+    });
+  }, [activate, setShouldDisable, setIsXdcPay])
+
   const connectWalletConnect = useCallback(() => {
     setShouldDisable(true);
     return activate(WalletConnect).then(() => {
@@ -108,8 +128,12 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
       connectWalletConnect()!.then(() => {
         setIsLoading(false);
       });
+    } else if (isConnected === 'xdc-pay') {
+      connectXdcPay()!.then(() => {
+        setIsLoading(false);
+      });
     }
-  }, [connectMetamask, connectWalletConnect]);
+  }, [connectMetamask, connectWalletConnect, connectXdcPay]);
 
   // Check when App is Connected or Disconnected to MetaMask
   const handleIsActive = useCallback(() => {
@@ -126,6 +150,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
       sessionStorage.removeItem("isConnected");
       setIsMetamask(false);
       setIsWalletConnect(false);
+      setIsXdcPay(false);
     } catch (error) {
       console.log(`Error on disconnnect: ${error}`);
     }
@@ -138,6 +163,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
       account,
       isLoading,
       connectMetamask,
+      connectXdcPay,
       connectWalletConnect,
       disconnect,
       shouldDisable,
@@ -146,6 +172,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
       library: web3Library,
       isMetamask,
       isWalletConnect,
+      isXdcPay,
     }),
     [
       connector,
@@ -155,12 +182,14 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
       account,
       connectMetamask,
       connectWalletConnect,
+      connectXdcPay,
       disconnect,
       chainId,
       error,
       web3Library,
       isMetamask,
       isWalletConnect,
+      isXdcPay,
     ]
   );
 

@@ -1,11 +1,11 @@
-import { useStores } from "stores";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import debounce from "lodash.debounce";
-import { OpenPositionContextType } from "context/openPosition";
 import { useForm } from "react-hook-form";
+import { useStores } from "stores";
+import debounce from "lodash.debounce";
+import BigNumber from "bignumber.js";
+import { OpenPositionContextType } from "context/openPosition";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
-import BigNumber from "bignumber.js";
 
 const defaultValues = {
   collateral: "",
@@ -18,20 +18,27 @@ const useOpenPosition = (
   onClose: OpenPositionContextType["onClose"]
 ) => {
   const { poolService, positionService } = useStores();
-
   const { account, chainId, library } = useConnector()!;
 
-  const { handleSubmit, watch, control, setValue, trigger } = useForm({
+  const {
+    handleSubmit,
+    watch,
+    control,
+    setValue,
+    trigger,
+  } = useForm({
     defaultValues,
     reValidateMode: "onChange",
     mode: "onChange",
   });
+
 
   const collateral = watch("collateral");
   const fathomToken = watch("fathomToken");
   const safeMax = watch("safeMax");
 
   const [balance, setBalance] = useState<number>(0);
+  const [isTouched, setIsTouched] = useState<boolean>(false)
 
   const [collateralToBeLocked, setCollateralToBeLocked] = useState<number>(0);
   const [fxdToBeBorrowed, setFxdToBeBorrowed] = useState<number>(0);
@@ -79,8 +86,8 @@ const useOpenPosition = (
         library
       );
 
-      console.log("Token adapter address", pool.tokenAdapterAddress);
-      console.log("Collateral token address", tokenAddress);
+      console.log("Token Adapter Address", pool.tokenAdapterAddress);
+      console.log("Collateral Token Address", tokenAddress);
 
       const balance = await poolService.getUserTokenBalance(
         account,
@@ -98,40 +105,34 @@ const useOpenPosition = (
     [pool]
   );
 
-  useEffect(() => {
-    account && chainId && getCollateralTokenAndBalance();
-  }, [chainId, account, getCollateralTokenAndBalance]);
-
   const handleUpdates = useCallback(
     async (collateralInput: number, fathomTokenInput: number) => {
       setCollateralToBeLocked(collateralInput || 0);
       setFxdToBeBorrowed(fathomTokenInput || 0);
 
       // GET PRICE WITH SAFETY MARGIN
-      const priceWithSafetyMargin = Number(pool.priceWithSafetyMargin);
+      const { priceWithSafetyMargin } = pool;
 
       // SAFE MAX
-      const safeMax = Number(
-        BigNumber(collateralInput)
-          .multipliedBy(
-            BigNumber(priceWithSafetyMargin)
-              .multipliedBy(BigNumber(100).minus(pool.stabilityFeeRate))
-              .dividedBy(100)
-          )
-          .toFixed(0, BigNumber.ROUND_DOWN)
-      );
+      const safeMax = BigNumber(collateralInput)
+        .multipliedBy(
+          BigNumber(priceWithSafetyMargin)
+            .multipliedBy(BigNumber(100).minus(pool.stabilityFeeRate))
+            .dividedBy(100)
+        )
+        .toNumber();
 
       setFxdToBeBorrowed(safeMax);
       setValue("safeMax", safeMax);
 
-      const collateralAvailableToWithdraw =
-        Number(priceWithSafetyMargin) === 0
-          ? BigNumber(collateralInput).minus(fathomTokenInput).toNumber()
-          : BigNumber(collateralInput)
+      const collateralAvailableToWithdraw = (
+        BigNumber(priceWithSafetyMargin).isGreaterThan(0)
+          ? BigNumber(collateralInput)
               .multipliedBy(priceWithSafetyMargin)
-              .minus(fathomTokenInput)
+              .minus(fathomTokenInput || 0)
               .dividedBy(priceWithSafetyMargin)
-              .toNumber();
+          : BigNumber(collateralInput).minus(fathomTokenInput)
+      ).toNumber();
 
       setCollateralAvailableToWithdraw(collateralAvailableToWithdraw);
 
@@ -144,19 +145,18 @@ const useOpenPosition = (
           : await poolService.getDexPrice(collateralTokenAddress!, library);
 
       // DEBT RATIO
-      const debtRatio =
-        fathomTokenInput === 0
-          ? 0
-          : BigNumber(fathomTokenInput)
-              .dividedBy(
-                BigNumber(collateralInput)
-                  .multipliedBy(priceOfCollateralFromDex)
-                  .dividedBy(10 ** 18)
-              )
-              .multipliedBy(100)
-              .toNumber();
+      const debtRatio = BigNumber(fathomTokenInput).isGreaterThan(0)
+        ? BigNumber(fathomTokenInput)
+            .dividedBy(
+              BigNumber(collateralInput)
+                .multipliedBy(priceOfCollateralFromDex)
+                .dividedBy(10 ** 18)
+            )
+            .multipliedBy(100)
+            .toNumber()
+        : 0;
 
-      setDebtRatio(+debtRatio);
+      setDebtRatio(debtRatio);
 
       // FXD AVAILABLE TO BORROW
       const fxdAvailableToBorrow = BigNumber(safeMax)
@@ -169,18 +169,12 @@ const useOpenPosition = (
         .dividedBy(collateralInput)
         .toNumber();
 
-      setSafetyBuffer(safetyBuffer);
+      setSafetyBuffer(isNaN(safetyBuffer) ? 0 : safetyBuffer);
 
       // LIQUIDATION PRICE
       let liquidationPrice;
-      if (priceWithSafetyMargin === 0) {
-        liquidationPrice = BigNumber(priceOfCollateralFromDex)
-          .dividedBy(10 ** 18)
-          .minus(
-            BigNumber(collateralAvailableToWithdraw).dividedBy(collateralInput)
-          )
-          .toNumber();
-      } else {
+
+      if (BigNumber(priceWithSafetyMargin).isGreaterThan(0)) {
         liquidationPrice = BigNumber(priceOfCollateralFromDex)
           .dividedBy(10 ** 18)
           .minus(
@@ -189,13 +183,23 @@ const useOpenPosition = (
               .dividedBy(collateralInput)
           )
           .toNumber();
+      } else {
+        liquidationPrice = BigNumber(priceOfCollateralFromDex)
+          .dividedBy(10 ** 18)
+          .minus(
+            BigNumber(collateralAvailableToWithdraw).dividedBy(collateralInput)
+          )
+          .toNumber();
       }
 
-      setLiquidationPrice(liquidationPrice);
+      setLiquidationPrice(isNaN(liquidationPrice) ? 0 : liquidationPrice);
+
       /**
        * Revalidate form
        */
-      trigger();
+      setTimeout(() => {
+        trigger();
+      }, 100);
     },
     [
       collateralTokenAddress,
@@ -214,28 +218,6 @@ const useOpenPosition = (
     ]
   );
 
-  useEffect(() => {
-    const collateralVal = Number(collateral);
-    const fathomTokenVal = Number(fathomToken);
-
-    if (
-      pool?.poolName?.toUpperCase() === "XDC" &&
-      (collateralVal || fathomTokenVal)
-    ) {
-      handleUpdates(collateralVal, fathomTokenVal);
-    } else if (collateralTokenAddress && (collateralVal || fathomTokenVal)) {
-      handleUpdates(collateralVal, fathomTokenVal);
-      approvalStatus(collateral);
-    }
-  }, [
-    pool,
-    collateral,
-    collateralTokenAddress,
-    fathomToken,
-    handleUpdates,
-    approvalStatus,
-  ]);
-
   const setSafeMax = useCallback(() => {
     setValue("fathomToken", safeMax.toString(), { shouldValidate: true });
   }, [safeMax, setValue]);
@@ -246,14 +228,15 @@ const useOpenPosition = (
       const { collateral, fathomToken } = values;
 
       try {
-        const receipt = await positionService.openPosition(
+        const blockNumber = await positionService.openPosition(
           account,
           pool,
-          Number(collateral),
-          Number(fathomToken),
+          collateral,
+          fathomToken,
           library
         );
-        setLastTransactionBlock(receipt!.blockNumber);
+        console.log(blockNumber)
+        setLastTransactionBlock(blockNumber!);
         onClose();
       } catch (e) {
         console.log(e);
@@ -298,6 +281,36 @@ const useOpenPosition = (
     [setValue]
   );
 
+  useEffect(() => {
+    if (pool?.poolName?.toUpperCase() === "XDC" && isTouched) {
+      handleUpdates(Number(collateral), Number(fathomToken));
+    } else if (collateralTokenAddress && isTouched) {
+      handleUpdates(Number(collateral), Number(fathomToken));
+      approvalStatus(collateral);
+    }
+  }, [
+    pool,
+    collateral,
+    collateralTokenAddress,
+    fathomToken,
+    isTouched,
+    handleUpdates,
+    approvalStatus,
+  ]);
+
+  useEffect(() => {
+    if (collateral || fathomToken) {
+      setIsTouched(true)
+    }
+  }, [
+    collateral,
+    fathomToken
+  ])
+
+  useEffect(() => {
+    account && chainId && getCollateralTokenAndBalance();
+  }, [chainId, account, getCollateralTokenAndBalance]);
+
   return {
     safeMax,
     approveBtn,
@@ -314,14 +327,11 @@ const useOpenPosition = (
     collateral,
     fathomToken,
     openPositionLoading,
-
     setMax,
     setSafeMax,
     onSubmit,
-
     control,
     handleSubmit,
-
     availableFathomInPool,
     pool,
     onClose,

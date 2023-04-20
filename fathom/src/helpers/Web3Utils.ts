@@ -15,9 +15,9 @@ interface XdcContractMetaData {
 export class Web3Utils {
   public static getContractInstance(
     contractMetaData: ContractMetaData | XdcContractMetaData,
-    library: Xdc3,
+    library: Xdc3
   ): any {
-    return  new library.eth.Contract(
+    return new library.eth.Contract(
       contractMetaData.abi as XdcContractMetaData["abi"],
       contractMetaData.address
     );
@@ -26,7 +26,7 @@ export class Web3Utils {
   public static getContractInstanceFrom(
     abi: AbiItem[] | XdcAbiItem[],
     address: string,
-    library: Xdc3,
+    library: Xdc3
   ): any {
     return new library.eth.Contract(abi as XdcAbiItem[], address);
   }

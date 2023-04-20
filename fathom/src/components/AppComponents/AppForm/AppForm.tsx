@@ -10,8 +10,7 @@ export const AppTextField = styled(MuiTextField)`
   margin: 0;
   input,
   textarea {
-    background: #0d1526;
-    border: 1px solid #1d2d49;
+    background: #071028;
     border-radius: 8px;
     height: 40px;
     width: 100%;
@@ -19,6 +18,11 @@ export const AppTextField = styled(MuiTextField)`
     font-size: 14px;
     line-height: 20px;
     color: #4f658c;
+    border: 1px solid #253656;
+    &:hover, &:focus {
+      border: 1px solid #5A81FF;
+      box-shadow: 0px 0px 8px #003CFF;
+    }
   }
 
   textarea {
