@@ -1,17 +1,17 @@
 import React, { FC } from "react";
 import { Link } from "react-router-dom";
-import { Controller } from "react-hook-form";
+import { Controller, FormProvider } from "react-hook-form";
 import {
   Box,
-  // FormControlLabel,
-  // Switch,
-  DialogContent,
-  Grid,
-  Stack,
-  Icon,
-  FormGroup,
-  Typography,
   CircularProgress,
+  DialogContent,
+  FormControlLabel,
+  FormGroup,
+  Grid,
+  Icon,
+  Stack,
+  Switch,
+  Typography,
 } from "@mui/material";
 
 import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
@@ -38,8 +38,10 @@ import {
 } from "components/AppComponents/AppBox/AppBox";
 
 import { formatNumber } from "utils/format";
+import ProposeActionFields from "./Propose/ProposeActionFields";
+import BigNumber from "bignumber.js";
 
-const ProposeLabel = styled(AppFormLabel)`
+export const ProposeLabel = styled(AppFormLabel)`
   float: none;
   width: 100%;
   font-size: 11px;
@@ -91,20 +93,27 @@ const OptionalBox = styled(Box)`
 
 const GridContainer = styled(Grid)`
   padding: 0 8px;
+
   ${({ theme }) => theme.breakpoints.down("sm")} {
     padding: 0;
   }
 `;
 
+const AddMoreActionButtonGrid = styled(Grid)`
+  display: flex;
+  justify-content: right;
+  margin-top: 10px;
+`;
+
+const AddMoreActionButton = styled(ButtonPrimary)``;
+
 const Optional = () => <OptionalBox>(Optional)</OptionalBox>;
 
-const InfoIcon: FC<{ sx?: Record<string, any> }> = ({ sx }) => (
+export const InfoIcon: FC<{ sx?: Record<string, any> }> = ({ sx }) => (
   <MuiInfoIcon
     sx={{ width: "11px", height: "11px", marginRight: "5px", ...sx }}
   />
 );
-
-const MINIMUM_V_BALANCE = 1000;
 
 export type ProposeProps = {
   onClose: () => void;
@@ -112,6 +121,7 @@ export type ProposeProps = {
 
 const Propose: FC<ProposeProps> = ({ onClose }) => {
   const {
+    minimumVBalance,
     isMobile,
     isLoading,
     withAction,
@@ -119,331 +129,298 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
     control,
     onSubmit,
     vBalance,
+    vBalanceError,
     saveForLater,
-    validateAddressesArray,
     notAllowTimestamp,
+    fields,
+    methods,
+    appendAction,
+    removeAction,
   } = useCreateProposal(onClose);
 
   return (
-    <AppDialog
-      aria-labelledby="customized-dialog-title"
-      open={true}
-      fullWidth
-      maxWidth="md"
-      color="primary"
-      sx={{ "& .MuiPaper-root": { width: "700px" } }}
-    >
-      <AppDialogTitle id="customized-dialog-title" onClose={onClose}>
-        New Proposal
-      </AppDialogTitle>
-      <DialogContent sx={{ marginTop: "20px" }}>
-        <GridContainer container gap={2}>
-          <Grid item xs={12}>
-            <ProposeLabel>Wallet balance</ProposeLabel>
-            <Stack
-              direction="row"
-              justifyContent="start"
-              alignItems="end"
-              spacing={1}
+    <FormProvider {...methods}>
+      <AppDialog
+        aria-labelledby="customized-dialog-title"
+        open={true}
+        fullWidth
+        maxWidth="md"
+        color="primary"
+        sx={{ "> .MuiDialog-container > .MuiPaper-root": { width: "700px" } }}
+      >
+        <AppDialogTitle id="customized-dialog-title" onClose={onClose}>
+          New Proposal
+        </AppDialogTitle>
+        <DialogContent sx={{ marginTop: "20px" }}>
+          <GridContainer container gap={2}>
+            <Grid item xs={12}>
+              <ProposeLabel>Wallet balance</ProposeLabel>
+              <Stack
+                direction="row"
+                justifyContent="start"
+                alignItems="end"
+                spacing={1}
+              >
+                <img
+                  src={getTokenLogoURL("FTHM")}
+                  alt="vFTHM-Token"
+                  width={28}
+                />
+                <BalanceBox component="span">
+                  {formatNumber(vBalance! / 10 ** 18)}
+                </BalanceBox>
+                <CurrencyBox component="span">vFHTM</CurrencyBox>
+              </Stack>
+            </Grid>
+            <Box
+              component="form"
+              onSubmit={handleSubmit(onSubmit)}
+              noValidate
+              autoComplete="off"
             >
-              <img src={getTokenLogoURL("FTHM")} alt="vFTHM-Token" width={28} />
-              <BalanceBox component="span">
-                {formatNumber((vBalance as number) / 10 ** 18)}
-              </BalanceBox>
-              <CurrencyBox component="span">vFHTM</CurrencyBox>
-            </Stack>
-          </Grid>
-          <Box
-            component="form"
-            onSubmit={handleSubmit(onSubmit)}
-            noValidate
-            autoComplete="off"
-          >
-            <Grid item xs={12}>
-              <Grid container spacing={1}>
-                <Grid item xs={12}>
-                  <Controller
-                    control={control}
-                    name="descriptionTitle"
-                    rules={{ required: true }}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error },
-                    }) => (
-                      <FormGroup>
-                        <ProposeLabel>
-                          Title <Required />
-                        </ProposeLabel>
-                        <AppTextField
-                          error={!!error}
-                          id="outlined-textarea"
-                          multiline
-                          rows={1}
-                          placeholder={"Ex: More stream staking rewards"}
-                          value={value}
-                          onChange={onChange}
-                          helperText={error ? "Field Title is required" : ""}
-                        />
-                      </FormGroup>
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <Controller
-                    control={control}
-                    name="description"
-                    rules={{ required: true }}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error },
-                    }) => (
-                      <FormGroup>
-                        <ProposeLabel>
-                          Description <Required />
-                        </ProposeLabel>
-                        <AppTextField
-                          error={!!error}
-                          id="outlined-textarea"
-                          multiline
-                          rows={3}
-                          placeholder={
-                            "Ex: Describe how you propose new way in details..."
-                          }
-                          value={value}
-                          onChange={onChange}
-                          helperText={error && "Field Description is required"}
-                        />
-                      </FormGroup>
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <Controller
-                    control={control}
-                    name="link"
-                    rules={{ required: false }}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error },
-                    }) => (
-                      <FormGroup>
-                        <ProposeLabel>
-                          Discussion / Detail / Forum link <Optional />
-                        </ProposeLabel>
-                        <AppTextField
-                          error={!!error}
-                          id="outlined-textarea"
-                          multiline
-                          rows={1}
-                          placeholder={"Ex: Discord / Twitter / Medium ..."}
-                          value={value}
-                          onChange={onChange}
-                          helperText={
-                            <Stack
-                              direction={"row"}
-                              alignItems={"center"}
-                              component={"span"}
-                            >
-                              <InfoIcon />
-                              Forum discussion will be auto-created if this is
-                              left empty
-                            </Stack>
-                          }
-                        />
-                      </FormGroup>
-                    )}
-                  />
-                </Grid>
-                {/*<Grid item xs={12}>*/}
-                {/*  <FormGroup sx={{ margin: "10px 0 0" }}>*/}
-                {/*    <Controller*/}
-                {/*      control={control}*/}
-                {/*      name="withAction"*/}
-                {/*      render={({*/}
-                {/*        field: { onChange, value },*/}
-                {/*        fieldState: { error },*/}
-                {/*      }) => (*/}
-                {/*        <FormControlLabel*/}
-                {/*          control={*/}
-                {/*            <Switch onChange={onChange} checked={!!value} />*/}
-                {/*          }*/}
-                {/*          label="Actionable Proposal"*/}
-                {/*        />*/}
-                {/*      )}*/}
-                {/*    />*/}
-                {/*  </FormGroup>*/}
-                {/*</Grid>*/}
-                {withAction && (
-                  <>
-                    <Grid item xs={12}>
-                      <Controller
-                        control={control}
-                        name="targets"
-                        rules={{
-                          required: true,
-                          validate: validateAddressesArray,
-                        }}
-                        render={({
-                          field: { onChange, value },
-                          fieldState: { error },
-                        }) => (
-                          <FormGroup>
-                            <ProposeLabel>Target addresses</ProposeLabel>
-                            <AppTextField
-                              error={!!error}
-                              placeholder={"Ex: ..."}
-                              id="outlined-multiline-flexible"
-                              multiline
-                              value={value}
-                              maxRows={1}
-                              helperText={
-                                error && error.type === "required" ? (
-                                  "Field Target addresses is required"
-                                ) : error && error.type === "validate" ? (
-                                  error.message
-                                ) : (
-                                  <Stack
-                                    direction={"row"}
-                                    alignItems={"center"}
-                                  >
-                                    <InfoIcon />
-                                    Once this proposal is accepted, it will
-                                    automatically call for this smart contract
-                                    to execute.
-                                  </Stack>
-                                )
-                              }
-                              onChange={onChange}
-                            />
-                          </FormGroup>
-                        )}
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Controller
-                        control={control}
-                        name="callData"
-                        rules={{ required: true }}
-                        render={({
-                          field: { onChange, value },
-                          fieldState: { error },
-                        }) => (
-                          <FormGroup>
-                            <ProposeLabel>Calldata</ProposeLabel>
-                            <AppTextField
-                              placeholder={"Ex: ..."}
-                              error={!!error}
-                              id="outlined-multiline-static"
-                              multiline
-                              value={value}
-                              maxRows={1}
-                              helperText={
-                                error ? "Field Calldata is required" : ""
-                              }
-                              onChange={onChange}
-                            />
-                          </FormGroup>
-                        )}
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Controller
-                        control={control}
-                        name="inputValues"
-                        rules={{ required: true }}
-                        render={({
-                          field: { onChange, value },
-                          fieldState: { error },
-                        }) => (
-                          <FormGroup sx={{ marginBottom: "15px" }}>
-                            <ProposeLabel>Values</ProposeLabel>
-                            <AppTextField
-                              error={!!error}
-                              placeholder={"Ex: ..."}
-                              id="outlined-textarea2"
-                              multiline
-                              value={value}
-                              maxRows={1}
-                              helperText={
-                                error ? "Field Values is required" : ""
-                              }
-                              onChange={onChange}
-                            />
-                          </FormGroup>
-                        )}
-                      />
-                    </Grid>
-                  </>
-                )}
-              </Grid>
-              {vBalance !== null && vBalance / 10 ** 18 < MINIMUM_V_BALANCE ? (
-                <WarningBox sx={{ my: 3 }}>
-                  <InfoIcon
-                    sx={{ width: "16px", color: "#F5953D", height: "16px" }}
-                  />
-                  <Typography>
-                    You have less than {MINIMUM_V_BALANCE} vFTHM, and you can
-                    not create a new proposal. So please, stake your FTHM tokens
-                    in <Link to={"/dao/staking"}>Staking</Link> to get voting
-                    power and awesome rewards.
-                  </Typography>
-                </WarningBox>
-              ) : (
-                <WarningBox sx={{ my: 3 }}>
-                  <InfoIcon
-                    sx={{ width: "16px", color: "#F5953D", height: "16px" }}
-                  />
-                  <Typography>
-                    To create a proposal, you need to have 1000 vFTHM. <br />
-                    Now you have {vBalance! / 10 ** 18} vFTHM
-                  </Typography>
-                </WarningBox>
-              )}
-              {notAllowTimestamp > 0 ? (
-                <ErrorBox sx={{ my: 3 }}>
-                  <InfoIcon />
-                  <ErrorMessage>
-                    You can't create new proposal until{" "}
-                    {new Date(notAllowTimestamp! * 1000).toLocaleString()}
-                  </ErrorMessage>
-                </ErrorBox>
-              ) : null}
-            </Grid>
-            <Grid item xs={12}>
-              <Grid container spacing={1}>
-                {isMobile && (
+              <Grid item xs={12}>
+                <Grid container spacing={1}>
                   <Grid item xs={12}>
-                    <ProposeButtonPrimary type="submit" sx={{ width: "100%" }}>
-                      Submit proposal
-                    </ProposeButtonPrimary>
-                  </Grid>
-                )}
-                <Grid item xs={12} sm={4}>
-                  <ProposeButtonSecondary
-                    type="button"
-                    sx={{ width: "100%" }}
-                    onClick={saveForLater}
-                  >
-                    Save for later
-                  </ProposeButtonSecondary>
-                </Grid>
-                {!isMobile && (
-                  <Grid item sm={8}>
-                    <ProposeButtonPrimary type="submit" sx={{ width: "100%" }}>
-                      {isLoading ? (
-                        <CircularProgress size={30} />
-                      ) : (
-                        "Submit proposal"
+                    <Controller
+                      control={control}
+                      name="descriptionTitle"
+                      rules={{ required: true }}
+                      render={({
+                        field: { onChange, value },
+                        fieldState: { error },
+                      }) => (
+                        <FormGroup>
+                          <ProposeLabel>
+                            Title <Required />
+                          </ProposeLabel>
+                          <AppTextField
+                            error={!!error}
+                            id="outlined-textarea"
+                            multiline
+                            rows={1}
+                            placeholder={"Ex: More stream staking rewards"}
+                            value={value}
+                            onChange={onChange}
+                            helperText={error ? "Field Title is required" : ""}
+                          />
+                        </FormGroup>
                       )}
-                    </ProposeButtonPrimary>
+                    />
                   </Grid>
+                  <Grid item xs={12}>
+                    <Controller
+                      control={control}
+                      name="description"
+                      rules={{ required: true }}
+                      render={({
+                        field: { onChange, value },
+                        fieldState: { error },
+                      }) => (
+                        <FormGroup>
+                          <ProposeLabel>
+                            Description <Required />
+                          </ProposeLabel>
+                          <AppTextField
+                            error={!!error}
+                            id="outlined-textarea"
+                            multiline
+                            rows={3}
+                            placeholder={
+                              "Ex: Describe how you propose new way in details..."
+                            }
+                            value={value}
+                            onChange={onChange}
+                            helperText={
+                              error && "Field Description is required"
+                            }
+                          />
+                        </FormGroup>
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Controller
+                      control={control}
+                      name="link"
+                      rules={{ required: false }}
+                      render={({
+                        field: { onChange, value },
+                        fieldState: { error },
+                      }) => (
+                        <FormGroup>
+                          <ProposeLabel>
+                            Discussion / Detail / Forum link <Optional />
+                          </ProposeLabel>
+                          <AppTextField
+                            error={!!error}
+                            id="outlined-textarea"
+                            multiline
+                            rows={1}
+                            placeholder={"Ex: Discord / Twitter / Medium ..."}
+                            value={value}
+                            onChange={onChange}
+                            helperText={
+                              <Stack
+                                direction={"row"}
+                                alignItems={"center"}
+                                component={"span"}
+                              >
+                                <InfoIcon />
+                                Forum discussion will be auto-created if this is
+                                left empty
+                              </Stack>
+                            }
+                          />
+                        </FormGroup>
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <FormGroup sx={{ margin: "10px 0 0" }}>
+                      <Controller
+                        control={control}
+                        name="withAction"
+                        render={({
+                          field: { onChange, value },
+                          fieldState: { error },
+                        }) => (
+                          <FormControlLabel
+                            control={
+                              <Switch onChange={onChange} checked={!!value} />
+                            }
+                            label="Actionable Proposal"
+                          />
+                        )}
+                      />
+                    </FormGroup>
+                  </Grid>
+                  {withAction && (
+                    <>
+                      <Grid item xs={12}>
+                        <Box sx={{ marginTop: "10px" }}>
+                          {fields.map((field, index) => {
+                            return (
+                              <ProposeActionFields
+                                index={index}
+                                removeAction={removeAction}
+                                key={field.id}
+                              />
+                            );
+                          })}
+                        </Box>
+                      </Grid>
+                      <AddMoreActionButtonGrid item xs={12}>
+                        <AddMoreActionButton onClick={appendAction}>
+                          Add More Action
+                        </AddMoreActionButton>
+                      </AddMoreActionButtonGrid>
+                    </>
+                  )}
+                </Grid>
+                {vBalance !== null &&
+                BigNumber(vBalance)
+                  .dividedBy(10 ** 18)
+                  .isLessThan(minimumVBalance!) ? (
+                  vBalanceError ? (
+                    <ErrorBox sx={{ my: 3 }}>
+                      <InfoIcon
+                        sx={{ width: "16px", color: "#F5953D", height: "16px" }}
+                      />
+                      <ErrorMessage>
+                        You have less than {minimumVBalance} vFTHM, and you
+                        can not create a new proposal. So please, stake your
+                        FTHM tokens in <Link to={"/dao/staking"}>Staking</Link>{" "}
+                        to get voting power and awesome rewards.
+                      </ErrorMessage>
+                    </ErrorBox>
+                  ) : (
+                    <WarningBox sx={{ my: 3 }}>
+                      <InfoIcon
+                        sx={{ width: "16px", color: "#F5953D", height: "16px" }}
+                      />
+                      <Typography>
+                        You have less than {minimumVBalance} vFTHM, and you
+                        can not create a new proposal. So please, stake your
+                        FTHM tokens in <Link to={"/dao/staking"}>Staking</Link>{" "}
+                        to get voting power and awesome rewards.
+                      </Typography>
+                    </WarningBox>
+                  )
+                ) : vBalanceError ? (
+                  <ErrorBox sx={{ my: 3 }}>
+                    <InfoIcon
+                      sx={{ width: "16px", color: "#F5953D", height: "16px" }}
+                    />
+                    <ErrorMessage>
+                      To create a proposal, you need to have {minimumVBalance}{" "}
+                      vFTHM. <br />
+                      Now you have {formatNumber(vBalance! / 10 ** 18)} vFTHM
+                    </ErrorMessage>
+                  </ErrorBox>
+                ) : (
+                  <WarningBox sx={{ my: 3 }}>
+                    <InfoIcon
+                      sx={{ width: "16px", color: "#F5953D", height: "16px" }}
+                    />
+                    <Typography>
+                      To create a proposal, you need to have {minimumVBalance}{" "}
+                      vFTHM. <br />
+                      Now you have {formatNumber(vBalance! / 10 ** 18)} vFTHM
+                    </Typography>
+                  </WarningBox>
                 )}
+                {notAllowTimestamp > 0 ? (
+                  <ErrorBox sx={{ my: 3 }}>
+                    <InfoIcon />
+                    <ErrorMessage>
+                      You can't create new proposal until{" "}
+                      {new Date(notAllowTimestamp! * 1000).toLocaleString()}
+                    </ErrorMessage>
+                  </ErrorBox>
+                ) : null}
               </Grid>
-            </Grid>
-          </Box>
-        </GridContainer>
-      </DialogContent>
-    </AppDialog>
+              <Grid item xs={12}>
+                <Grid container spacing={1}>
+                  {isMobile && (
+                    <Grid item xs={12}>
+                      <ProposeButtonPrimary
+                        type="submit"
+                        sx={{ width: "100%" }}
+                      >
+                        Submit proposal
+                      </ProposeButtonPrimary>
+                    </Grid>
+                  )}
+                  <Grid item xs={12} sm={4}>
+                    <ProposeButtonSecondary
+                      type="button"
+                      sx={{ width: "100%" }}
+                      onClick={saveForLater}
+                    >
+                      Save for later
+                    </ProposeButtonSecondary>
+                  </Grid>
+                  {!isMobile && (
+                    <Grid item sm={8}>
+                      <ProposeButtonPrimary
+                        type="submit"
+                        sx={{ width: "100%" }}
+                      >
+                        {isLoading ? (
+                          <CircularProgress size={30} />
+                        ) : (
+                          "Submit proposal"
+                        )}
+                      </ProposeButtonPrimary>
+                    </Grid>
+                  )}
+                </Grid>
+              </Grid>
+            </Box>
+          </GridContainer>
+        </DialogContent>
+      </AppDialog>
+    </FormProvider>
   );
 };
 

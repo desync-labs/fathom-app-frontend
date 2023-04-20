@@ -1,11 +1,20 @@
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState
+} from "react";
 import { useStores } from "stores";
 import debounce from "lodash.debounce";
 import { SmartContractFactory } from "config/SmartContractFactory";
 import useSyncContext from "context/sync";
 import BigNumber from "bignumber.js";
 import Xdc3 from "xdc3";
-import { useMediaQuery, useTheme } from "@mui/material";
+import {
+  useMediaQuery,
+  useTheme
+} from "@mui/material";
 import useConnector from "context/connector";
 import { useQuery } from "@apollo/client";
 import { STABLE_SWAP_STATS } from "apollo/queries";
@@ -23,31 +32,34 @@ const useStableSwap = (options: string[]) => {
   const [inputCurrency, setInputCurrency] = useState<string>(options[0]);
   const [outputCurrency, setOutputCurrency] = useState<string>(options[1]);
 
-  const [inputValue, setInputValue] = useState<number | string>("");
-  const [outputValue, setOutputValue] = useState<number | string>("");
+  const [inputValue, setInputValue] = useState<number|string>("");
+  const [outputValue, setOutputValue] = useState<number|string>("");
 
   const [approveInputBtn, setApproveInputBtn] = useState<boolean>(false);
   const [approveOutputBtn, setApproveOutputBtn] = useState<boolean>(false);
 
-  const [approvalPending, setApprovalPending] = useState<string | null>(null);
+  const [approvalPending, setApprovalPending] = useState<string|null>(null);
   const [swapPending, setSwapPending] = useState<boolean>(false);
 
   const [lastUpdate, setLastUpdate] = useState<number>();
   const [dailyLimit, setDailyLimit] = useState<number>(0);
   const [displayDailyLimit, setDisplayDailyLimit] = useState<number>(0);
 
+  const [isDecentralizedState, setIsDecentralizedState] = useState<boolean|undefined>(undefined);
+  const [isUserWhiteListed, setIsUserWhitelisted] = useState<boolean|undefined>(undefined);
+
   const [feeIn, setFeeIn] = useState<number>(0);
   const [feeOut, setFeeOut] = useState<number>(0);
 
   const { fxdPrice: fxdPriceInWei } = useContext(PricesContext);
 
-  const { stableSwapStore, poolService } = useStores();
+  const { stableSwapService, poolService } = useStores();
 
   const { account, chainId, library } = useConnector()!;
   const { setLastTransactionBlock } = useSyncContext();
 
   const { data, loading, refetch } = useQuery(STABLE_SWAP_STATS, {
-    context: { clientName: "stable", chainId },
+    context: { clientName: "stable", chainId }
   });
 
   const theme = useTheme();
@@ -84,33 +96,33 @@ const useStableSwap = (options: string[]) => {
           let approved;
           approved =
             currency === options[0]
-              ? await stableSwapStore.approvalStatusUsdt(
-                  account,
-                  input,
-                  library
-                )
-              : await stableSwapStore.approvalStatusStableCoin(
-                  account,
-                  input,
-                  library
-                );
+              ? await stableSwapService.approvalStatusUsdt(
+                account,
+                input,
+                library
+              )
+              : await stableSwapService.approvalStatusStableCoin(
+                account,
+                input,
+                library
+              );
 
           type === "input"
             ? approved
               ? setApproveInputBtn(false)
               : setApproveInputBtn(true)
             : approved
-            ? setApproveOutputBtn(false)
-            : setApproveOutputBtn(true);
+              ? setApproveOutputBtn(false)
+              : setApproveOutputBtn(true);
         }
       }, 1000),
     [
       account,
-      stableSwapStore,
+      stableSwapService,
       library,
       options,
       setApproveInputBtn,
-      setApproveOutputBtn,
+      setApproveOutputBtn
     ]
   );
 
@@ -121,14 +133,14 @@ const useStableSwap = (options: string[]) => {
       return `You do not have enough ${inputCurrency}`;
     }
 
-    if (displayDailyLimit < inputValue) {
+    if (isDecentralizedState && displayDailyLimit < inputValue) {
       return `You can't swap more then remaining daily limit ${formatNumber(
         displayDailyLimit
       )} FXD`;
     }
 
     return false;
-  }, [inputValue, inputCurrency, inputBalance, displayDailyLimit]);
+  }, [inputValue, inputCurrency, inputBalance, displayDailyLimit, isDecentralizedState]);
 
   const handleCurrencyChange = useMemo(
     () =>
@@ -173,10 +185,10 @@ const useStableSwap = (options: string[]) => {
               )
             );
             promises.push(
-              stableSwapStore.getPoolBalance(FXDContractAddress, library)
+              stableSwapService.getPoolBalance(FXDContractAddress, library)
             );
             promises.push(
-              stableSwapStore.getPoolBalance(
+              stableSwapService.getPoolBalance(
                 UsStableContractAddress,
                 library
               )
@@ -186,7 +198,7 @@ const useStableSwap = (options: string[]) => {
               inputBalance,
               outputBalance,
               fxdAvailable,
-              usStableAvailable,
+              usStableAvailable
             ] = await Promise.all(promises);
 
             setFxdAvailable(fxdAvailable! / 10 ** 18);
@@ -203,9 +215,9 @@ const useStableSwap = (options: string[]) => {
       chainId,
       poolService,
       library,
-      stableSwapStore,
+      stableSwapService,
       setInputBalance,
-      setOutputBalance,
+      setOutputBalance
     ]
   );
 
@@ -226,7 +238,7 @@ const useStableSwap = (options: string[]) => {
       setOutputCurrency,
       approvalStatus,
       setInputValue,
-      setOutputValue,
+      setOutputValue
     ]
   );
 
@@ -237,26 +249,40 @@ const useStableSwap = (options: string[]) => {
   useEffect(() => {
     if (chainId) {
       Promise.all([
-        stableSwapStore.getLastUpdate(library),
-        stableSwapStore.getDailySwapLimit(library),
-      ]).then(([lastUpdate, dailySwapLimit]) => {
+        stableSwapService.getLastUpdate(library),
+        stableSwapService.isDecentralizedState(library)
+      ]).then(([lastUpdate, isDecentralizedState]) => {
+        setIsDecentralizedState(isDecentralizedState);
         setLastUpdate(Number(lastUpdate));
-        setDailyLimit(Number(dailySwapLimit) / 10 ** 18);
+
+        if (isDecentralizedState) {
+          stableSwapService.getDailySwapLimit(library).then((dailyLimit) => {
+            console.log(dailyLimit);
+            setDailyLimit(dailyLimit!);
+          });
+        }
       });
     }
-  }, [chainId, stableSwapStore, library, setLastUpdate, setDailyLimit]);
+  }, [
+    chainId,
+    stableSwapService,
+    library,
+    setLastUpdate,
+    setDailyLimit,
+    setIsDecentralizedState
+  ]);
 
   useEffect(() => {
     if (chainId) {
       Promise.all([
-        stableSwapStore.getFeeIn(library),
-        stableSwapStore.getFeeOut(library),
+        stableSwapService.getFeeIn(library),
+        stableSwapService.getFeeOut(library)
       ]).then(([feeIn, feeOut]) => {
         setFeeIn(feeIn!);
         setFeeOut(feeOut!);
       });
     }
-  }, [stableSwapStore, chainId, library, setFeeIn, setFeeOut]);
+  }, [stableSwapService, chainId, library, setFeeIn, setFeeOut]);
 
   useEffect(() => {
     if (data?.stableSwapStats.length && lastUpdate && dailyLimit && !loading) {
@@ -288,6 +314,22 @@ const useStableSwap = (options: string[]) => {
     }
   }, [outputCurrency, options]);
 
+  useEffect(() => {
+    if (account && isDecentralizedState === false) {
+      stableSwapService
+        .isUserWhitelisted(account, library)
+        .then((isWhitelisted) => {
+          setIsUserWhitelisted(isWhitelisted);
+        });
+    }
+  }, [
+    stableSwapService,
+    isDecentralizedState,
+    account,
+    library,
+    setIsUserWhitelisted
+  ]);
+
   const swapFee = useMemo(() => {
     /**
      * US+ to FXD
@@ -302,14 +344,15 @@ const useStableSwap = (options: string[]) => {
   const handleSwap = useCallback(async () => {
     setSwapPending(true);
     try {
-      const receipt = await stableSwapStore.swapToken(
-        inputCurrency,
-        account,
-        inputValue as number,
-        outputValue as number,
-        options[0],
-        library
-      );
+      const tokenName = options[0];
+      let blockNumber;
+      if (inputCurrency === tokenName) {
+        blockNumber = await stableSwapService
+          .swapTokenToStableCoin(account, inputValue as number, tokenName, library);
+      } else {
+        blockNumber = await stableSwapService
+          .swapStableCoinToToken(account, outputValue as number, tokenName, library);
+      }
 
       setInputValue("");
       setOutputValue("");
@@ -321,7 +364,7 @@ const useStableSwap = (options: string[]) => {
 
       setLastUpdate(Date.now() / 1000);
 
-      setLastTransactionBlock(receipt.blockNumber);
+      setLastTransactionBlock(blockNumber);
       handleCurrencyChange(inputCurrency, outputCurrency);
     } finally {
       setSwapPending(false);
@@ -334,20 +377,20 @@ const useStableSwap = (options: string[]) => {
     outputValue,
     account,
     library,
-    stableSwapStore,
+    stableSwapService,
     handleCurrencyChange,
     setLastTransactionBlock,
     setSwapPending,
     refetch,
-    setLastUpdate,
+    setLastUpdate
   ]);
 
   const approveInput = useCallback(async () => {
     setApprovalPending("input");
     try {
       inputCurrency === options[0]
-        ? await stableSwapStore.approveUsdt(account, options[0], library)
-        : await stableSwapStore.approveStableCoin(account, library);
+        ? await stableSwapService.approveUsdt(account, options[0], library)
+        : await stableSwapService.approveStableCoin(account, library);
       setApproveInputBtn(false);
     } catch (e) {
       setApproveInputBtn(true);
@@ -357,18 +400,18 @@ const useStableSwap = (options: string[]) => {
     account,
     options,
     inputCurrency,
-    stableSwapStore,
+    stableSwapService,
     library,
     setApprovalPending,
-    setApproveInputBtn,
+    setApproveInputBtn
   ]);
 
   const approveOutput = useCallback(async () => {
     setApprovalPending("output");
     try {
       outputCurrency === options[0]
-        ? await stableSwapStore.approveUsdt(account, options[0], library)
-        : await stableSwapStore.approveStableCoin(account, library);
+        ? await stableSwapService.approveUsdt(account, options[0], library)
+        : await stableSwapService.approveStableCoin(account, library);
 
       setApproveOutputBtn(false);
     } catch (e) {
@@ -380,10 +423,10 @@ const useStableSwap = (options: string[]) => {
     account,
     options,
     outputCurrency,
-    stableSwapStore,
+    stableSwapService,
     library,
     setApprovalPending,
-    setApproveOutputBtn,
+    setApproveOutputBtn
   ]);
 
   const handleInputValueTextFieldChange = useCallback(
@@ -450,12 +493,13 @@ const useStableSwap = (options: string[]) => {
     inputCurrency,
     feeOut,
     setOppositeCurrency,
-    setInputValue,
+    setInputValue
   ]);
 
   return {
     dailyLimit: displayDailyLimit,
-
+    isDecentralizedState,
+    isUserWhiteListed,
     inputValue,
     outputValue,
 
@@ -491,7 +535,7 @@ const useStableSwap = (options: string[]) => {
 
     isMobile,
     fxdAvailable,
-    usStableAvailable,
+    usStableAvailable
   };
 };
 

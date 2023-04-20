@@ -1,6 +1,5 @@
 import React from "react";
 import Xdc3 from 'xdc3';
-import { useWeb3React } from "@web3-react/core";
 import { Box, Grid, Typography } from "@mui/material";
 import { secondsToTime } from "utils/secondsToTime";
 import { getAccountUrl } from "utils/explorer";
@@ -9,6 +8,7 @@ import { ChainId } from "connectors/networks";
 import { styled } from "@mui/material/styles";
 import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
 import StakingCountdown from "components/Staking/StakingCountdown";
+import useConnector from "context/connector";
 
 const ProposalTitle = styled(Typography)`
   font-weight: bold;
@@ -47,7 +47,15 @@ const ActionWrapper = styled(Box)`
   align-items: center;
   gap: 7px;
   justify-content: start;
+  margin-bottom: 10px;
 `;
+
+const CallDataWrapper = styled('div')`
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  -ms-word-break: break-word;
+  word-break: break-word;
+`
 
 const TimeslotInProgress = styled(Box, {
   shouldForwardProp: (prop) => prop !== "lessTimeLeft" && prop !== "isDone",
@@ -92,7 +100,7 @@ const ProposalInfo = () => {
     secondsLeft,
   } = useProposalContext();
 
-  const { chainId } = useWeb3React();
+  const { chainId } = useConnector();
 
   return (
     <Grid item xs={12} md={8} lg={8}>
@@ -158,7 +166,9 @@ const ProposalInfo = () => {
                   </ActionWrapper>
                   <ActionWrapper>
                     <ActionLabel>Call Data:</ActionLabel>{" "}
-                    {fetchedProposal.calldatas.join(", ")}
+                    <CallDataWrapper>
+                      {fetchedProposal.calldatas.join(", ")}
+                    </CallDataWrapper>
                   </ActionWrapper>
                 </ProposalDescription>
               </Grid>

@@ -10,7 +10,7 @@ import {
   useState,
 } from "react";
 import { useQuery } from "@apollo/client";
-import { HEALTH } from "../apollo/queries";
+import { HEALTH } from "apollo/queries";
 
 type StakingProviderType = {
   children: ReactElement;
@@ -80,6 +80,9 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
       );
     }
 
+    /***
+     * Check if transaction block from transaction receipt has block number higher than latestBlock from Graph, if so our Graph state is not up-to-date.
+     */
     if (
       Number(lastTransactionBlock) >
       Number(
@@ -116,6 +119,9 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
       );
     }
 
+    /***
+     * Check if transaction block from transaction receipt has block number higher than latestBlock from Graph, if so our Graph state is not up-to-date.
+     */
     if (
       Number(lastTransactionBlock) >
       Number(

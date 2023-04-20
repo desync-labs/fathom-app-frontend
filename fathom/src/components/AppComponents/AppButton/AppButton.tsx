@@ -133,7 +133,7 @@ export const OpenPositionButton = styled(MuiButton)`
   }
 `;
 
-export const ClosePositionButton = styled(MuiButton)`
+export const ManagePositionButton = styled(MuiButton)`
   border: 0.7px solid #43FFF1;
   border-radius: 8px;
   background: transparent;
@@ -200,11 +200,11 @@ export const ButtonsWrapper = styled(Box)`
   }
 `;
 
-export const ClosePositionRepayTypeWrapper = styled(Box)`
+export const ManagePositionRepayTypeWrapper = styled(Box)`
   margin-bottom: 20px;
 `;
 
-export const RepayTypeButton = styled(MuiButton)`
+export const ManageTypeButton = styled(MuiButton)`
   border: 1px solid #6987b8;
   border-radius: 8px;
   align-items: center;
@@ -230,15 +230,6 @@ export const FathomSwapChangeCurrencyButton = styled(MuiButton)`
   top: calc(100% - 40px / 2 + 6px);
   z-index: 1;
   position: absolute;
-`;
-
-export const QuestionMarkButton = styled(MuiButton)`
-  background: #061023;
-  border: 2px solid #061023;
-  border-radius: 8px;
-  cursor: pointer;
-  width: 20px;
-  height: 20px;
 `;
 
 export const BackToProposalsButton = styled(MuiButton)`

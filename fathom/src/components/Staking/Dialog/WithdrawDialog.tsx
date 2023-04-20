@@ -19,6 +19,10 @@ import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatNumber } from "utils/format";
 import useStakingContext from "context/staking";
 
+const ConfirmButton = styled(ButtonPrimary)`
+  font-size: 17px;
+`
+
 export const InfoMessageWrapper = styled(Box)`
   display: flex;
   align-items: start;
@@ -103,9 +107,9 @@ const WithdrawDialog: FC<WithdrawDialogProps> = ({ token, onClose }) => {
         </DialogContentWrapper>
         <ButtonsWrapper>
           {!isMobile && <CancelButton onClick={onClose}>Cancel</CancelButton>}
-          <ButtonPrimary onClick={() => withdrawAll(onClose)}>
+          <ConfirmButton onClick={() => withdrawAll(onClose)}>
             {isLoading ? <CircularProgress size={30} /> : "Confirm Withdraw"}
-          </ButtonPrimary>
+          </ConfirmButton>
           {isMobile && <CancelButton onClick={onClose}>Cancel</CancelButton>}
         </ButtonsWrapper>
       </DialogContent>

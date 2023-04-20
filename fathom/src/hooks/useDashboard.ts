@@ -4,12 +4,12 @@ import { FXD_POOLS, FXD_POSITIONS, FXD_STATS, FXD_USER } from "apollo/queries";
 import { useCallback, useEffect, useState } from "react";
 import { Constants } from "helpers/Constants";
 import useSyncContext from "context/sync";
-import { useWeb3React } from "@web3-react/core";
 import { useMediaQuery, useTheme } from "@mui/material";
+import useConnector from "context/connector";
 
 const useDashboard = () => {
   const { positionService } = useStores();
-  const { account, library } = useWeb3React();
+  const { account, library } = useConnector();
   const { syncFXD, prevSyncFxd } = useSyncContext();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));

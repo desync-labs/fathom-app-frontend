@@ -174,9 +174,34 @@ export const WarningBox = styled(Box)`
   flex-direction: row;
   align-items: center;
   margin: 10px 0 20px;
+  
+  svg {
+    color: #f7b06e;
+  }
 
   p {
     color: #f7b06e;
     font-size: 14px;
   }
 `;
+
+export const SuccessBox = styled(Box)`
+  background: #173D0F;
+  border: 1px solid #1F5214;
+  border-radius: 8px;
+  padding: 8px 16px;
+  gap: 8px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 10px 0 20px;
+
+  svg {
+    color: #8AF075;
+  }
+
+  p {
+    color: #8AF075;
+    font-size: 14px;
+  }
+`

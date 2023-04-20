@@ -1,9 +1,9 @@
 import { useQuery } from "@apollo/client";
 import { FXD_STATS } from "apollo/queries";
-import { useWeb3React } from "@web3-react/core";
+import useConnector from "context/connector";
 
 const useProtocolStats = () => {
-  const { chainId } = useWeb3React();
+  const { chainId } = useConnector();
   const { data, loading, refetch } = useQuery(FXD_STATS, {
     context: { clientName: "stable", chainId },
   });
