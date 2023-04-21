@@ -11,7 +11,7 @@ import { TVL, PoolName } from "components/AppComponents/AppBox/AppBox";
 import TokenLogo from "components/Common/TokenLogo";
 
 import { getTokenLogoURL } from "utils/tokenLogo";
-import { formatCurrency, formatNumber } from "utils/format";
+import { formatCurrency, formatNumber, formatNumberPrice } from "utils/format";
 
 import PriceChanged from "components/Common/PriceChange";
 
@@ -69,7 +69,7 @@ const PoolsListItem: FC<PoolsListItemPropsType> = ({
       </TableCell>
       <TableCell>
         <PriceWrapper>
-          {formatCurrency(pool.collateralPrice)}
+          {formatNumberPrice(pool.collateralPrice)}
           <PriceChanged
             current={pool.collateralPrice}
             previous={pool.collateralLastPrice}
