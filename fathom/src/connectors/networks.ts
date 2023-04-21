@@ -49,7 +49,7 @@ export const xdcInjected = new XdcInjectedConnector({ supportedChainIds })
 
 export const WalletConnect = new WalletConnectConnector({
   rpc: {
-    1: APOTHEM_RPC,
+    50: XDC_RPC,
     51: APOTHEM_RPC,
   },
   qrcode: true,
