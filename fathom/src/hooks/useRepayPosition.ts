@@ -4,7 +4,7 @@ import BigNumber from "bignumber.js";
 import { useQuery } from "@apollo/client";
 import { FXD_POOLS } from "apollo/queries";
 
-import { ClosePositionContextType } from "context/closePosition";
+import { ClosePositionContextType } from "context/repayPosition";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 
@@ -12,6 +12,8 @@ import { Constants } from "helpers/Constants";
 
 import ICollateralPool from "stores/interfaces/ICollateralPool";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
+import debounce from "lodash.debounce";
+import { SmartContractFactory } from "../config/SmartContractFactory";
 
 const useRepayPosition = (
   position: ClosePositionContextType["position"],
@@ -30,12 +32,14 @@ const useRepayPosition = (
 
   const [collateral, setCollateral] = useState<string>("");
   const [fathomToken, setFathomToken] = useState<string>("");
+  const [fathomTokenIsDirty, setFathomTokenIsDirty] = useState<boolean>(false);
 
   const [price, setPrice] = useState<string>("");
 
   const [balance, setBalance] = useState<string>("");
-
   const [balanceError, setBalanceError] = useState<boolean>(false);
+  const [balanceErrorNotFilled, setBalanceErrorNotFilled] =
+    useState<boolean>(false);
 
   const [disableClosePosition, setDisableClosePosition] =
     useState<boolean>(false);
@@ -43,6 +47,9 @@ const useRepayPosition = (
   const [debtValue, setDebtValue] = useState<string>("");
   const [liquidationPrice, setLiquidationPrice] = useState<number>(0);
   const [ltv, setLtv] = useState<number>(0);
+
+  const [approveBtn, setApproveBtn] = useState<boolean>(false);
+  const [approvalPending, setApprovalPending] = useState<boolean>(false);
 
   const pool = useMemo(
     () =>
@@ -55,6 +62,67 @@ const useRepayPosition = (
   const lockedCollateral = useMemo(
     () => position.lockedCollateral.toString(),
     [position]
+  );
+
+  const totalCollateral = useMemo(() => {
+    return (
+      collateral
+        ? BigNumber(position.lockedCollateral).minus(collateral)
+        : position.lockedCollateral
+    ).toString();
+  }, [collateral, position]);
+
+  const totalFathomToken = useMemo(() => {
+    return (
+      fathomToken ? BigNumber(debtValue).minus(fathomToken) : debtValue
+    ).toString();
+  }, [fathomToken, debtValue]);
+
+  const fxdTokenAddress = useMemo(() => {
+    return SmartContractFactory.FathomStableCoin(chainId!).address;
+  }, [chainId]);
+
+  const handleUpdates = useMemo(
+    () =>
+      debounce(
+        async (totalCollateralAmount: string, totalFathomAmount: string) => {
+          if (BigNumber(totalFathomAmount).isGreaterThan(0)) {
+            const liquidationPrice = BigNumber(pool.rawPrice)
+              .minus(
+                BigNumber(pool.priceWithSafetyMargin)
+                  .multipliedBy(totalCollateralAmount)
+                  .minus(totalFathomAmount)
+                  .dividedBy(totalCollateralAmount)
+              )
+              .toNumber();
+
+            const ltv = BigNumber(totalFathomAmount)
+              .dividedBy(
+                BigNumber(pool.rawPrice).multipliedBy(totalCollateralAmount)
+              )
+              .toNumber();
+
+            setLiquidationPrice(liquidationPrice);
+            setLtv(ltv);
+          }
+        },
+        500
+      ),
+    [pool, setLiquidationPrice, setLtv]
+  );
+
+  const checkFXDAllowance = useMemo(
+    () =>
+      debounce(async (fathomToken: string) => {
+        let approved = await positionService.approvalStatus(
+          account,
+          fxdTokenAddress!,
+          fathomToken,
+          library
+        );
+        approved ? setApproveBtn(false) : setApproveBtn(true);
+      }, 1000),
+    [positionService, fxdTokenAddress, account, library]
   );
 
   const getBalance = useCallback(async () => {
@@ -119,7 +187,23 @@ const useRepayPosition = (
     balance && BigNumber(balance).isLessThan(fathomToken)
       ? setBalanceError(true)
       : setBalanceError(false);
+
+    !fathomToken
+      ? setBalanceErrorNotFilled(true)
+      : setBalanceErrorNotFilled(false);
   }, [fathomToken, balance]);
+
+  useEffect(() => {
+    if (fathomToken) {
+      checkFXDAllowance(fathomToken);
+    }
+  }, [fathomToken, checkFXDAllowance]);
+
+  useEffect(() => {
+    if (totalCollateral || totalFathomToken) {
+      handleUpdates(totalCollateral, totalFathomToken);
+    }
+  }, [pool, totalCollateral, totalFathomToken, handleUpdates]);
 
   const closePositionHandler = useCallback(async () => {
     setDisableClosePosition(true);
@@ -138,9 +222,11 @@ const useRepayPosition = (
           position.positionId,
           pool,
           account,
-          BigNumber(fathomToken)
-            .multipliedBy(Constants.WeiPerWad)
-            .toFixed(0, BigNumber.ROUND_UP),
+          fathomToken
+            ? BigNumber(fathomToken)
+                .multipliedBy(Constants.WeiPerWad)
+                .toFixed(0, BigNumber.ROUND_UP)
+            : "0",
           BigNumber(collateral)
             .multipliedBy(Constants.WeiPerWad)
             .toFixed(0, BigNumber.ROUND_UP),
@@ -188,8 +274,17 @@ const useRepayPosition = (
 
       setFathomToken(value);
       setCollateral(bigIntValue.dividedBy(price).precision(18).toFixed());
+      setFathomTokenIsDirty(true);
     },
-    [price, debtValue, balance, setFathomToken, setCollateral, setBalanceError]
+    [
+      price,
+      debtValue,
+      balance,
+      setFathomToken,
+      setCollateral,
+      setBalanceError,
+      setFathomTokenIsDirty,
+    ]
   );
 
   const handleCollateralTextFieldChange = useCallback(
@@ -241,6 +336,25 @@ const useRepayPosition = (
     [onClose, position]
   );
 
+  const approve = useCallback(async () => {
+    setApprovalPending(true);
+    try {
+      await positionService.approve(account, fxdTokenAddress!, library);
+      setApproveBtn(false);
+    } catch (e) {
+      setApproveBtn(true);
+    }
+
+    setApprovalPending(false);
+  }, [
+    account,
+    fxdTokenAddress,
+    positionService,
+    library,
+    setApprovalPending,
+    setApproveBtn,
+  ]);
+
   return {
     liquidationPrice,
     ltv,
@@ -252,6 +366,8 @@ const useRepayPosition = (
     pool,
     balance,
     balanceError,
+    balanceErrorNotFilled,
+    fathomTokenIsDirty,
     closePositionHandler,
     disableClosePosition,
     handleFathomTokenTextFieldChange,
@@ -261,6 +377,9 @@ const useRepayPosition = (
     position,
     debtValue,
     switchPosition,
+    approveBtn,
+    approvalPending,
+    approve,
   };
 };
 
