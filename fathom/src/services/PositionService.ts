@@ -645,7 +645,7 @@ export default class PositionService implements IPositionService {
       .allowance(address, proxyWalletAddress)
       .call();
 
-    return BigNumber(allowance).isGreaterThan(
+    return BigNumber(allowance).isGreaterThanOrEqualTo(
       Constants.WeiPerWad.multipliedBy(collateral)
     );
   }

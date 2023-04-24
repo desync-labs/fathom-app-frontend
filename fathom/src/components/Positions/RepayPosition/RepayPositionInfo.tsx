@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Grid, ListItem, ListItemText } from "@mui/material";
 import BigNumber from "bignumber.js";
 
-import useClosePositionContext from "context/closePosition";
+import useClosePositionContext from "context/repayPosition";
 import { AppList } from "components/AppComponents/AppList/AppList";
 
 import {

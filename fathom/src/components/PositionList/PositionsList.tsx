@@ -12,7 +12,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
-import ClosePositionDialog from "components/Positions/ClosePositionDialog";
+import ClosePositionDialog from "components/Positions/RepayPositionDialog";
 import { AppTableHeaderRow } from "components/AppComponents/AppTable/AppTable";
 import {
   TitleSecondary,
@@ -24,7 +24,7 @@ import useOpenPositionList from "hooks/useOpenPositionList";
 import { styled } from "@mui/material/styles";
 import { Constants } from "helpers/Constants";
 
-import { ClosePositionProvider } from "context/closePosition";
+import { ClosePositionProvider } from "context/repayPosition";
 import { TopUpPositionProvider } from "context/topUpPosition";
 import TopUpPositionDialog from "components/Positions/TopUpPositionDialog";
 import { AppDialog } from "../AppComponents/AppDialog/AppDialog";
