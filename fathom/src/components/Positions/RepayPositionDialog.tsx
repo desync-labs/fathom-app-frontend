@@ -9,7 +9,7 @@ import {
   DividerMobile,
 } from "components/Positions/OpenNewPositionDialog";
 
-import useClosePositionContext from "context/closePosition";
+import useRepayPositionContext from "context/repayPosition";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
 
 export type ClosePositionDialogPropsType = {
@@ -19,13 +19,13 @@ export type ClosePositionDialogPropsType = {
   setClosePosition: Dispatch<IOpenPosition | undefined>;
 };
 
-const ClosePositionDialog: FC<ClosePositionDialogPropsType> = ({
+const RepayPositionDialog: FC<ClosePositionDialogPropsType> = ({
   topUpPosition,
   closePosition,
   setTopUpPosition,
   setClosePosition,
 }) => {
-  const { onClose } = useClosePositionContext();
+  const { onClose } = useRepayPositionContext();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -67,4 +67,4 @@ const ClosePositionDialog: FC<ClosePositionDialogPropsType> = ({
   );
 };
 
-export default memo(ClosePositionDialog);
+export default memo(RepayPositionDialog);
