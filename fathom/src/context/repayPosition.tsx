@@ -1,6 +1,6 @@
 import { createContext, FC, ReactElement, useContext } from "react";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
-import useClosePosition from "hooks/useRepayPosition";
+import useRepayPosition from "hooks/useRepayPosition";
 
 export type ClosePositionContextType = {
   children: ReactElement;
@@ -9,24 +9,24 @@ export type ClosePositionContextType = {
 };
 
 // @ts-ignore
-export const ClosePositionContext = createContext<UseStakingViewType>(null);
+export const RepayPositionContext = createContext<UseStakingViewType>(null);
 
 export const ClosePositionProvider: FC<ClosePositionContextType> = ({
   children,
   position,
   onClose,
 }) => {
-  const values = useClosePosition(position, onClose);
+  const values = useRepayPosition(position, onClose);
 
   return (
-    <ClosePositionContext.Provider value={values}>
+    <RepayPositionContext.Provider value={values}>
       {children}
-    </ClosePositionContext.Provider>
+    </RepayPositionContext.Provider>
   );
 };
 
-const useClosePositionContext = () => {
-  const context = useContext(ClosePositionContext);
+const useRepayPositionContext = () => {
+  const context = useContext(RepayPositionContext);
 
   if (context === undefined) {
     throw new Error(
@@ -37,4 +37,4 @@ const useClosePositionContext = () => {
   return context;
 };
 
-export default useClosePositionContext;
+export default useRepayPositionContext;

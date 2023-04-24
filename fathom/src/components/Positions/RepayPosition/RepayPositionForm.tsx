@@ -8,12 +8,14 @@ import {
   useTheme,
 } from "@mui/material";
 import {
+  ApproveBox,
+  ApproveBoxTypography,
   InfoLabel,
   InfoValue,
   InfoWrapper,
   Summary,
   WalletBalance,
-  WarningBox
+  WarningBox,
 } from "components/AppComponents/AppBox/AppBox";
 import {
   ButtonPrimary,
@@ -22,6 +24,7 @@ import {
   MaxButton,
   ButtonsWrapper,
   ManageTypeButton,
+  ApproveButton,
 } from "components/AppComponents/AppButton/AppButton";
 import {
   AppFormInputLogo,
@@ -33,9 +36,9 @@ import InfoIcon from "@mui/icons-material/Info";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatPercentage } from "utils/format";
 
-import useClosePositionContext from "context/closePosition";
+import useRepayPositionContext from "context/repayPosition";
 import { styled } from "@mui/material/styles";
-import { ClosePositionDialogPropsType } from "components/Positions/ClosePositionDialog";
+import { ClosePositionDialogPropsType } from "components/Positions/RepayPositionDialog";
 
 const ClosePositionWrapper = styled(Grid)`
   padding-left: 20px;
@@ -47,17 +50,27 @@ const ClosePositionWrapper = styled(Grid)`
   }
 `;
 
+const RepayApproveBox = styled(ApproveBox)`
+  margin-bottom: 20px;
+`;
+
+const RepayApproveButton = styled(ApproveButton)`
+  margin-left: 0;
+`;
+
 const RepayPositionForm: FC<ClosePositionDialogPropsType> = ({
   topUpPosition,
   closePosition,
   setClosePosition,
-  setTopUpPosition
+  setTopUpPosition,
 }) => {
   const {
     pool,
     collateral,
     balance,
     balanceError,
+    balanceErrorNotFilled,
+    fathomTokenIsDirty,
     disableClosePosition,
     fathomToken,
     handleFathomTokenTextFieldChange,
@@ -67,7 +80,10 @@ const RepayPositionForm: FC<ClosePositionDialogPropsType> = ({
     closePositionHandler,
     debtValue,
     switchPosition,
-  } = useClosePositionContext();
+    approveBtn,
+    approvalPending,
+    approve,
+  } = useRepayPositionContext();
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -111,34 +127,70 @@ const RepayPositionForm: FC<ClosePositionDialogPropsType> = ({
           <WalletBalance>Wallet Available: {balance} FXD</WalletBalance>
         )}
         <AppTextField
-          error={balanceError}
+          error={balanceError || balanceErrorNotFilled}
           id="outlined-helperText"
           placeholder={"0"}
           helperText={
-            balanceError ? (
-              <Box sx={{ mt: "5px" }}>
-                <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
-                <Typography
-                  component={"div"}
-                  sx={{ fontSize: "12px", paddingLeft: "22px" }}
+            <>
+              {balanceError ? (
+                <Box
+                  sx={{ mt: "5px", display: "inline-block" }}
+                  component={"span"}
                 >
-                  You don't have enough to repay that amount
-                </Typography>
-              </Box>
-            ) : (
-              "Enter the Repaying."
-            )
+                  <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
+                  <Typography
+                    component={"span"}
+                    sx={{ fontSize: "12px", paddingLeft: "10px" }}
+                  >
+                    You don't have enough to repay that amount
+                  </Typography>
+                </Box>
+              ) : balanceErrorNotFilled && fathomTokenIsDirty ? (
+                <Box
+                  sx={{ mt: "5px", display: "inline-block" }}
+                  component={"span"}
+                >
+                  <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
+                  <Typography
+                    component={"span"}
+                    sx={{ fontSize: "12px", paddingLeft: "10px" }}
+                  >
+                    Please fill repaying amount
+                  </Typography>
+                </Box>
+              ) : (
+                "Enter the Repaying."
+              )}
+            </>
           }
           value={fathomToken}
           onChange={handleFathomTokenTextFieldChange}
         />
         <AppFormInputLogo src={getTokenLogoURL("FXD")} />
-        <MaxButton
-          onClick={() => setMax()}
-        >
-          Max
-        </MaxButton>
+        <MaxButton onClick={() => setMax()}>Max</MaxButton>
       </AppFormInputWrapper>
+      {approveBtn && (
+        <RepayApproveBox>
+          <InfoIcon
+            sx={{
+              color: "#7D91B5",
+              float: "left",
+              marginRight: "10px",
+            }}
+          />
+          <ApproveBoxTypography>
+            Please allow token approval in your MetaMask
+          </ApproveBoxTypography>
+          <RepayApproveButton onClick={approve}>
+            {" "}
+            {approvalPending ? (
+              <CircularProgress size={20} sx={{ color: "#0D1526" }} />
+            ) : (
+              "Approve"
+            )}{" "}
+          </RepayApproveButton>
+        </RepayApproveBox>
+      )}
       <AppFormInputWrapper>
         <AppFormLabel>Receive</AppFormLabel>
         <AppTextField
@@ -183,7 +235,7 @@ const RepayPositionForm: FC<ClosePositionDialogPropsType> = ({
         )}
         <ButtonPrimary
           onClick={closePositionHandler}
-          disabled={balanceError || disableClosePosition}
+          disabled={balanceError || balanceErrorNotFilled || disableClosePosition}
           isLoading={disableClosePosition}
         >
           {disableClosePosition ? (
