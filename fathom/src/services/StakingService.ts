@@ -407,7 +407,7 @@ export default class StakingService implements IStakingService {
         .allowance(address, StakingAddress)
         .call();
 
-      return BigNumber(allowance).isGreaterThan(
+      return BigNumber(allowance).isGreaterThanOrEqualTo(
         this.toWei(stakingPosition, library)
       );
     } catch (e: any) {
