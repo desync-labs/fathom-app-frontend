@@ -137,65 +137,72 @@ const useTopUpPosition = (
     }
   }, [poolService, account, pool, library, setCollateralTokenAddress]);
 
-  const handleUpdates = useCallback(
-    async (totalCollateralAmount: string, totalFathomAmount: string) => {
-      // GET PRICE WITH SAFETY MARGIN
-      const { priceWithSafetyMargin } = pool;
+  const handleUpdates = useMemo(
+    () =>
+      debounce(
+        async (totalCollateralAmount: string, totalFathomAmount: string) => {
+          // GET PRICE WITH SAFETY MARGIN
+          const { priceWithSafetyMargin } = pool;
+          // SAFE MAX
+          let safeMax = Number(
+            BigNumber(totalCollateralAmount)
+              .multipliedBy(
+                BigNumber(priceWithSafetyMargin)
+                  .multipliedBy(BigNumber(100).minus(pool.stabilityFeeRate))
+                  .dividedBy(100)
+              )
+              .minus(debtValue)
+              .toNumber()
+          );
 
-      // SAFE MAX
-      let safeMax = Number(
-        BigNumber(totalCollateralAmount)
-          .multipliedBy(
-            BigNumber(priceWithSafetyMargin)
-              .multipliedBy(BigNumber(100).minus(pool.stabilityFeeRate))
-              .dividedBy(100)
-          )
-          .minus(debtValue)
-          .toNumber()
-      );
+          safeMax = safeMax > 0 ? safeMax : 0;
 
-      safeMax = safeMax > 0 ? safeMax : 0;
+          const collateralAvailableToWithdraw =
+            Number(priceWithSafetyMargin) === 0
+              ? BigNumber(totalCollateralAmount)
+                  .minus(totalFathomAmount)
+                  .toNumber()
+              : BigNumber(totalCollateralAmount)
+                  .multipliedBy(priceWithSafetyMargin)
+                  .minus(totalFathomAmount)
+                  .dividedBy(priceWithSafetyMargin)
+                  .toNumber();
 
-      const collateralAvailableToWithdraw =
-        Number(priceWithSafetyMargin) === 0
-          ? BigNumber(totalCollateralAmount).minus(totalFathomAmount).toNumber()
-          : BigNumber(totalCollateralAmount)
-              .multipliedBy(priceWithSafetyMargin)
-              .minus(totalFathomAmount)
-              .dividedBy(priceWithSafetyMargin)
-              .toNumber();
-
-      const safetyBuffer = BigNumber(collateralAvailableToWithdraw)
-        .dividedBy(totalCollateralAmount)
-        .toString();
-
-      setSafetyBuffer(safetyBuffer);
-
-      setValue("safeMax", safeMax);
-
-      const liquidationPrice = BigNumber(pool.rawPrice)
-        .minus(
-          BigNumber(pool.priceWithSafetyMargin)
-            .multipliedBy(totalCollateralAmount)
-            .minus(totalFathomAmount)
+          const safetyBuffer = BigNumber(collateralAvailableToWithdraw)
             .dividedBy(totalCollateralAmount)
-        )
-        .toString();
+            .toString();
 
-      const ltv = BigNumber(totalFathomAmount)
-        .dividedBy(BigNumber(pool.rawPrice).multipliedBy(totalCollateralAmount))
-        .toString();
+          setSafetyBuffer(safetyBuffer);
 
-      setLiquidationPrice(liquidationPrice);
-      setLtv(ltv);
+          setValue("safeMax", safeMax);
 
-      /**
-       * Revalidate form
-       */
-      setTimeout(() => {
-        trigger();
-      }, 100);
-    },
+          const liquidationPrice = BigNumber(pool.rawPrice)
+            .minus(
+              BigNumber(pool.priceWithSafetyMargin)
+                .multipliedBy(totalCollateralAmount)
+                .minus(totalFathomAmount)
+                .dividedBy(totalCollateralAmount)
+            )
+            .toString();
+
+          const ltv = BigNumber(totalFathomAmount)
+            .dividedBy(
+              BigNumber(pool.rawPrice).multipliedBy(totalCollateralAmount)
+            )
+            .toString();
+
+          setLiquidationPrice(liquidationPrice);
+          setLtv(ltv);
+
+          /**
+           * Revalidate form
+           */
+          setTimeout(() => {
+            trigger();
+          }, 100);
+        },
+        500
+      ),
     [
       pool,
       debtValue,

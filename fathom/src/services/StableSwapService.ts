@@ -287,7 +287,7 @@ export default class StableSwapService implements IStableSwapService {
       const buffer = BigNumber(tokenIn).plus(
         BigNumber(tokenIn).multipliedBy(this.tokenBuffer).dividedBy(100)
       );
-      return BigNumber(allowance).isGreaterThan(
+      return BigNumber(allowance).isGreaterThanOrEqualTo(
         Constants.WeiPerWad.multipliedBy(buffer)
       );
     } catch (e: any) {
@@ -316,7 +316,7 @@ export default class StableSwapService implements IStableSwapService {
       const buffer = BigNumber(tokenIn).plus(
         BigNumber(tokenIn).multipliedBy(this.tokenBuffer).dividedBy(100)
       );
-      return BigNumber(allowance).isGreaterThan(
+      return BigNumber(allowance).isGreaterThanOrEqualTo(
         Constants.WeiPerWad.multipliedBy(buffer)
       );
     } catch (e: any) {

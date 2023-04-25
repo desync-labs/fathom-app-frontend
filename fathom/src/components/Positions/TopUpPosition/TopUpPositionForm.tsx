@@ -37,7 +37,7 @@ import {
 
 import useTopUpPositionContext from "context/topUpPosition";
 import { styled } from "@mui/material/styles";
-import { ClosePositionDialogPropsType } from "../ClosePositionDialog";
+import { ClosePositionDialogPropsType } from "../RepayPositionDialog";
 import BigNumber from "bignumber.js";
 import { FXD_MINIMUM_BORROW_AMOUNT } from "../../../helpers/Constants";
 
