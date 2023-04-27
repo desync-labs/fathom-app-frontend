@@ -55,14 +55,15 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
     if (library) {
       try {
         // @ts-ignore
-        const [ { 0: fthmPrice }, { 0: wxdcPrice }, { 0: fxdPrice },
+        // const [ { 0: fthmPrice }, { 0: wxdcPrice }, { 0: fxdPrice },
+        const [ { 0: wxdcPrice }, { 0: fxdPrice },
           centralizedPrice,
         ] = await Promise.all([
-          stakingService.getPairPrice(
-            fxdTokenAddress,
-            fthmTokenAddress,
-            library
-          ),
+          // stakingService.getPairPrice(
+          //   fxdTokenAddress,
+          //   fthmTokenAddress,
+          //   library
+          // ),
           stakingService.getPairPrice(
             usdtTokenAddress,
             wxdcTokenAddress,
@@ -77,7 +78,7 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
         ]);
 
         setFxdPrice(fxdPrice);
-        setFthmPrice(fthmPrice);
+        setFthmPrice(0);
         setWxdcPrice(wxdcPrice);
         console.log(centralizedPrice);
       } catch (e: any) {
