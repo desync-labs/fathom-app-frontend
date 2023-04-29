@@ -7,7 +7,7 @@ export const supportedChainIds = [1337, 50, 51];
 export const XDC_CHAIN_IDS = [50, 51];
 
 export const APOTHEM_RPC = "https://erpc.apothem.network/";
-export const XDC_RPC = "https://eRPC.BlocksScan.io";
+export const XDC_RPC = "https://erpc.xinfin.network/";
 
 export const DEFAULT_RPC = {
   50: XDC_RPC,
