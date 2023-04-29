@@ -8,17 +8,17 @@
       "collateralPoolConfig": "0x4F5Ea639600A01931B1370CDe99a7B1e7b6b8f6C",
       "dexPriceOracle": "0x113cAfC378E070fAbccec36Ad54B642842eb37f5",
       "fathomStablecoinProxyActions": "0x022DD1E6FCB7F1ec706D4612CABC712Ef8d127C8",
-      "fthmGovernor": "0xE41c6fa1015D2a71C7197065685c099fb927bE03",
-      "fthmToken": "0x5fb8Ae050A8C313EE442f8F3A37B7340ad4D12cd",
+      "fthmGovernor": "0x81F50223c851DE9A6068c1B7A37aA253227952B0",
+      "fthmToken": "0x3279dBEfABF3C6ac29d7ff24A6c46645f3F4403c",
       "positionManager": "0x2fE84707e907eaB4C4E6a91CCe458E648be390Ae",
       "priceOracle": "0xF557fBf34B785b157344167fE0D9bAb95da06843",
       "proxyWalletRegistry": "0x3b92595cbe2fC6063e696460990e69Ae4172c707",
       "stabilityFeeCollector": "0x00f093e0E188dA1711a18fd5BF7468aea706888C",
       "stableSwapModule": "0x42c06188B8C03769A1F73B3f31b259271ee3B981",
       "stablecoinAdapter": "0xE3b248A97E9eb778c9B08f20a74c9165E22ef40E",
-      "staking": "0x510611DC66255955dDea733200CBed640BF3fA86",
-      "stakingGetter": "0x3F3A82B1e31c566c497700589de5C31019bE2227",
-      "vFTHM": "0x3BF72172406d89BBE1A2c94A2d74E5ab4df7e7E0"
+      "staking": "0xCEb16f0de63c006470ED2De9beb7c7dBd47D7437",
+      "stakingGetter": "0xfB2eECe8aFC1fc4C0a5809F97c20c26838C5115f",
+      "vFTHM": "0xB27c3FD774B1a1FbBc17b9E2b62846499Db08A05"
     }
   },
   "51": {
