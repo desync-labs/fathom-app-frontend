@@ -8,16 +8,18 @@ import IProposal from "stores/interfaces/IProposal";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 import { useMediaQuery, useTheme } from "@mui/material";
+import BigNumber from "bignumber.js";
 
 const useProposalItem = () => {
   const { account, chainId, library } = useConnector()!;
   const navigate = useNavigate();
 
   const { _proposalId } = useParams();
-  const { proposalStore } = useStores();
+  const { proposalService } = useStores();
 
   const [votePending, setVotePending] = useState<string | null>(null);
   const [hasVoted, setHasVoted] = useState<boolean>(false);
+  const [quorumError, setQuorumError] = useState<boolean>(false);
 
   const [seconds, setSeconds] = useState<number>(0);
 
@@ -45,17 +47,17 @@ const useProposalItem = () => {
   }, [syncDao, prevSyncDao, refetch]);
 
   const fetchHasVoted = useCallback(async () => {
-    const hasVoted = await proposalStore.hasVoted(
+    const hasVoted = await proposalService.hasVoted(
       data.proposal.proposalId,
       account,
       library
     );
     setHasVoted(hasVoted!);
-  }, [proposalStore, data, account, library, setHasVoted]);
+  }, [proposalService, data, account, library, setHasVoted]);
 
   const fetchStatus = useCallback(async () => {
     if (data && data.proposal && account) {
-      const status = await proposalStore.fetchProposalState(
+      const status = await proposalService.viewProposalState(
         data.proposal.proposalId,
         account,
         library
@@ -63,7 +65,7 @@ const useProposalItem = () => {
       // @ts-ignore
       setStatus(Object.values(ProposalStatus)[status]);
     }
-  }, [proposalStore, data, account, library, setStatus]);
+  }, [proposalService, data, account, library, setStatus]);
 
   const getVotingStartsTime = useCallback(async () => {
     if (data && data.proposal) {
@@ -110,7 +112,7 @@ const useProposalItem = () => {
 
       if (endTimestamp - now <= 0) {
         setVotingEndTime(new Date(endTimestamp * 1000).toLocaleString());
-        const status = await proposalStore.fetchProposalState(
+        const status = await proposalService.viewProposalState(
           data.proposal.proposalId,
           account,
           library
@@ -123,7 +125,7 @@ const useProposalItem = () => {
       }
     }
   }, [
-    proposalStore,
+    proposalService,
     data,
     chainId,
     account,
@@ -131,6 +133,21 @@ const useProposalItem = () => {
     setVotingEndTime,
     setStatus,
   ]);
+
+  const checkProposalVotesAndQuorum = useCallback(async () => {
+    const [totalVotes, quorum] = await Promise.all([
+      proposalService.proposalVotes(data.proposal.proposalId, library),
+      proposalService.quorum(data.proposal.startBlock, library),
+    ]);
+
+    const { abstainVotes, forVotes } = totalVotes;
+
+    if (BigNumber(quorum!).isLessThan(BigNumber(abstainVotes).plus(forVotes))) {
+      setQuorumError(false);
+    } else {
+      setQuorumError(true);
+    }
+  }, [proposalService, data?.proposal, library]);
 
   useEffect(() => {
     if (data && data.proposal && account) {
@@ -166,6 +183,12 @@ const useProposalItem = () => {
     }
   }, [seconds, setSeconds, getVotingEndTime, fetchStatus]);
 
+  useEffect(() => {
+    if (data?.proposal && status && status === ProposalStatus.Defeated) {
+      checkProposalVotesAndQuorum();
+    }
+  }, [status, data?.proposal, checkProposalVotesAndQuorum]);
+
   const getTitleDescription = useCallback((title: string, index: number) => {
     if (title) {
       return title.split("----------------")[index];
@@ -178,13 +201,13 @@ const useProposalItem = () => {
     async (support: string) => {
       try {
         setVotePending(support);
-        const receipt = await proposalStore.castVote(
+        const blockNumber = await proposalService.castVote(
           _proposalId!,
           account,
           support,
           library
         );
-        setLastTransactionBlock(receipt.blockNumber);
+        setLastTransactionBlock(blockNumber);
         setHasVoted(true);
       } catch (err) {
         console.log(err);
@@ -193,7 +216,7 @@ const useProposalItem = () => {
     },
     [
       _proposalId,
-      proposalStore,
+      proposalService,
       account,
       library,
       setVotePending,
@@ -232,25 +255,19 @@ const useProposalItem = () => {
     account,
     chainId,
     _proposalId,
-
     vote,
-
     getTitleDescription,
     status,
-
     forVotes: loading ? 0 : Number(data.proposal.forVotes),
     abstainVotes: loading ? 0 : Number(data.proposal.abstainVotes),
     againstVotes: loading ? 0 : Number(data.proposal.againstVotes),
-
     fetchedTotalVotes,
-
     fetchedProposal: loading ? ({} as IProposal) : data.proposal,
     back,
-
     submitTime,
     votingStartsTime,
     votingEndTime,
-
+    quorumError,
     secondsLeft: seconds,
   };
 };

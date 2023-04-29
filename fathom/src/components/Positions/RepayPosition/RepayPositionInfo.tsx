@@ -1,12 +1,25 @@
-import { AppList } from "components/AppComponents/AppList/AppList";
-import { Box, Grid, ListItem, ListItemText } from "@mui/material";
 import React from "react";
-import useClosePositionContext from "context/closePosition";
+import { Box, Grid, ListItem, ListItemText } from "@mui/material";
 import BigNumber from "bignumber.js";
 
-const ClosePositionInfo = () => {
-  const { lockedCollateral, price, fathomToken, pool, position, collateral } =
-    useClosePositionContext();
+import useClosePositionContext from "context/repayPosition";
+import { AppList } from "components/AppComponents/AppList/AppList";
+
+import {
+  formatNumberPrice,
+  formatPercentage
+} from "utils/format";
+
+const RepayPositionInfo = () => {
+  const {
+    lockedCollateral,
+    price,
+    fathomToken,
+    pool,
+    collateral,
+    liquidationPrice,
+    ltv,
+  } = useClosePositionContext();
 
   return (
     <Grid item xs={12} sm={6}>
@@ -46,17 +59,12 @@ const ClosePositionInfo = () => {
         >
           <ListItemText primary="Collateral Locked" />
         </ListItem>
-        <ListItem
-          alignItems="flex-start"
-          secondaryAction={`${Number(position.tvl) / 10}%`}
-        >
+        <ListItem alignItems="flex-start" secondaryAction={`${formatPercentage(ltv * 100)}%`}>
           <ListItemText primary="LTV (Loan-to-Value)" />
         </ListItem>
         <ListItem
           alignItems="flex-start"
-          secondaryAction={`1 ${pool.poolName} = ${BigNumber(position.liquidationPrice).toFixed(
-            6
-          )} FXD`}
+          secondaryAction={`1 ${pool.poolName} = ${formatNumberPrice(liquidationPrice)} FXD`}
         >
           <ListItemText primary="Liquidation Price" />
         </ListItem>
@@ -65,4 +73,4 @@ const ClosePositionInfo = () => {
   );
 };
 
-export default ClosePositionInfo;
+export default RepayPositionInfo;

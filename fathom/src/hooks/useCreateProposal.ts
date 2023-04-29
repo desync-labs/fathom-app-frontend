@@ -1,48 +1,67 @@
-import { useStores } from "stores";
-import { useForm } from "react-hook-form";
 import { useCallback, useEffect, useState } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
+import { useMediaQuery, useTheme } from "@mui/material";
+import { useStores } from "stores";
 import { Constants } from "helpers/Constants";
 import { ProposeProps } from "components/Governance/Propose";
-import { XDC_CHAIN_IDS } from "connectors/networks";
-import Xdc3 from "xdc3";
-import Web3 from "web3";
 import useSyncContext from "context/sync";
-import {
-  useMediaQuery,
-  useTheme
-} from "@mui/material";
 import useConnector from "context/connector";
+import BigNumber from "bignumber.js";
+
+type ActionType = {
+  target: string;
+  callData: string;
+  functionSignature: string;
+  functionArguments: string;
+  value: string;
+};
+
+const EMPTY_ACTION = {
+  target: "",
+  callData: "",
+  functionSignature: "",
+  functionArguments: "",
+  value: "",
+};
 
 const defaultValues = {
   withAction: false,
   descriptionTitle: "",
   description: "",
-  inputValues: "",
-  callData: "",
-  targets: "",
   link: "",
   agreement: false,
+  actions: [EMPTY_ACTION],
 };
 
-const formatter = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-  minimumFractionDigits: 0,
-  maximumFractionDigits: 3,
-});
-
 const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
-  const { proposalStore } = useStores();
+  const { proposalService } = useStores();
   const { account, chainId, library } = useConnector()!;
-  const [vBalance, setVBalance] = useState<null | number>(null);
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const [isLoading, setIsLoading] = useState<boolean>(false)
 
-  const { handleSubmit, watch, control, reset, getValues } = useForm({
+  const [vBalance, setVBalance] = useState<null | number>(null);
+  const [vBalanceError, setVBalanceError] = useState<boolean>(false);
+
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [notAllowTimestamp, setNotAllowTimestamp] = useState<number>(0);
+  const [minimumVBalance, setMinimumVBalance] = useState<string>();
+
+  const theme = useTheme();
+
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const methods = useForm({
     defaultValues,
     reValidateMode: "onChange",
     mode: "onChange",
+  });
+  const { handleSubmit, watch, control, reset, getValues } = methods;
+
+  const {
+    fields,
+    remove: removeAction,
+    append,
+  } = useFieldArray({
+    control,
+    name: "actions",
   });
 
   const { setLastTransactionBlock } = useSyncContext();
@@ -51,11 +70,29 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
 
   useEffect(() => {
     if (account) {
-      proposalStore.getVBalance(account, library).then((balance) => {
+      proposalService.getVBalance(account, library)!.then((balance) => {
         setVBalance(balance!);
       });
+      proposalService
+        .nextAcceptableProposalTimestamp(account, library)!
+        .then((nextAcceptableTimestamp: number) => {
+          if (nextAcceptableTimestamp > Date.now() / 1000) {
+            setNotAllowTimestamp(nextAcceptableTimestamp);
+          } else {
+            setNotAllowTimestamp(0);
+          }
+        });
     }
-  }, [account, library, proposalStore, setVBalance]);
+  }, [account, library, proposalService, setVBalance, setNotAllowTimestamp]);
+
+  useEffect(() => {
+    proposalService.proposalThreshold(library).then((minVBalance) => {
+      const formattedVBalance = BigNumber(minVBalance)
+        .dividedBy(10 ** 18)
+        .toString();
+      setMinimumVBalance(formattedVBalance);
+    });
+  }, [proposalService, library, setMinimumVBalance]);
 
   useEffect(() => {
     let values = localStorage.getItem("createProposal");
@@ -67,57 +104,72 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
 
   const onSubmit = useCallback(
     async (values: Record<string, any>) => {
-      setIsLoading(true)
+      if (notAllowTimestamp > Date.now() / 1000) {
+        return;
+      }
+
+      if (BigNumber(vBalance!).isLessThan(minimumVBalance!)) {
+        return setVBalanceError(true);
+      } else {
+        setVBalanceError(false);
+      }
+
+      setIsLoading(true);
       try {
-        const {
-          descriptionTitle,
-          description,
-          inputValues,
-          callData,
-          targets,
-          withAction,
-        } = values;
+        const { descriptionTitle, description, withAction, actions } = values;
 
         const combinedText = `${descriptionTitle}----------------${description}`;
-        let receipt;
+        let blockNumber;
         if (withAction) {
-          const values = inputValues.trim().split(",").map(Number);
-          const callDataArray = callData.trim().split(",");
-          const targetsArray = targets
-            .trim()
-            .split(",")
-            .map((address: string) => String.prototype.trim.call(address));
+          const targets: string[] = [];
+          const callDatas: string[] = [];
+          const values: number[] = [];
 
-          receipt = await proposalStore.createProposal(
-            targetsArray,
+          actions.forEach((action: ActionType) => {
+            targets.push(action.target);
+            callDatas.push(action.callData);
+            values.push(action.value ? Number(action.value) : 0);
+          });
+
+          blockNumber = await proposalService.createProposal(
+            targets,
             values,
-            callDataArray,
+            callDatas,
             combinedText,
             account,
-            library,
+            library
           );
         } else {
-          receipt = await proposalStore.createProposal(
+          blockNumber = await proposalService.createProposal(
             [Constants.ZERO_ADDRESS],
             [0],
             [Constants.ZERO_ADDRESS],
             combinedText,
             account,
-            library,
+            library
           );
         }
 
-        setLastTransactionBlock(receipt.blockNumber);
+        setLastTransactionBlock(blockNumber);
         reset();
         localStorage.removeItem("createProposal");
         onClose();
-      } catch (err) {
-        console.log(err);
-      } finally {
-        setIsLoading(false)
+      } catch (err) {} finally {
+        setIsLoading(false);
       }
     },
-    [reset, account, library, proposalStore, onClose, setLastTransactionBlock]
+    [
+      vBalance,
+      minimumVBalance,
+      notAllowTimestamp,
+      reset,
+      account,
+      library,
+      proposalService,
+      onClose,
+      setLastTransactionBlock,
+      setVBalanceError,
+    ]
   );
 
   const saveForLater = useCallback(() => {
@@ -125,40 +177,12 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
     localStorage.setItem("createProposal", JSON.stringify(values));
   }, [getValues]);
 
-  const validateAddressesArray = useCallback((address: string) => {
-    let valid = true;
-    const trimmedAddresses = address
-      .trim()
-      .split(",")
-      .map((address: string) => address.trim());
-
-    for (let i = 0; i < trimmedAddresses.length; i++) {
-      if (
-        !Xdc3.utils.isAddress(trimmedAddresses[i]) &&
-        !Web3.utils.isAddress(trimmedAddresses[i])
-      ) {
-        valid = false;
-        break;
-      }
-    }
-
-    if (!valid) {
-      return `Please provide valid ${
-        XDC_CHAIN_IDS ? "XDC" : "Ethereum"
-      } address`;
-    }
-  }, []);
-
-  const formatNumber = useCallback((number: number) => {
-    return formatter
-      .formatToParts(number)
-      .map((p) =>
-        p.type !== "literal" && p.type !== "currency" ? p.value : ""
-      )
-      .join("");
-  }, []);
+  const appendAction = useCallback(() => {
+    append(EMPTY_ACTION);
+  }, [append]);
 
   return {
+    minimumVBalance,
     isMobile,
     isLoading,
     withAction,
@@ -170,9 +194,13 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
     chainId,
     onSubmit,
     vBalance,
+    vBalanceError,
     saveForLater,
-    validateAddressesArray,
-    formatNumber,
+    notAllowTimestamp,
+    fields,
+    methods,
+    removeAction,
+    appendAction,
   };
 };
 

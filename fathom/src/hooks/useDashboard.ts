@@ -4,12 +4,12 @@ import { FXD_POOLS, FXD_POSITIONS, FXD_STATS, FXD_USER } from "apollo/queries";
 import { useCallback, useEffect, useState } from "react";
 import { Constants } from "helpers/Constants";
 import useSyncContext from "context/sync";
-import { useWeb3React } from "@web3-react/core";
 import { useMediaQuery, useTheme } from "@mui/material";
+import useConnector from "context/connector";
 
 const useDashboard = () => {
   const { positionService } = useStores();
-  const { account, library } = useWeb3React();
+  const { account, library } = useConnector();
   const { syncFXD, prevSyncFxd } = useSyncContext();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -43,7 +43,7 @@ const useDashboard = () => {
     );
     setProxyWallet(proxyWallet!);
 
-    loadUserStats({
+    return loadUserStats({
       variables: {
         walletAddress: proxyWallet,
       },
@@ -65,25 +65,57 @@ const useDashboard = () => {
   const refetchData = useCallback(async () => {
     refetchStats();
     refetchPools();
-    refetchPositions({
-      walletAddress: proxyWallet,
-      first: Constants.COUNT_PER_PAGE,
-      skip: 0,
-    }).then(() => {
-      setPositionCurrentPage(1);
-    });
 
-    refetchUserStats({
-      variables: {
+    if (/^0x0+$/.test(proxyWallet)) {
+      const newProxyWallet = await positionService.proxyWalletExist(
+        account!,
+        library
+      );
+
+      setProxyWallet(newProxyWallet)
+
+      refetchPositions({
+        walletAddress: newProxyWallet,
+        first: Constants.COUNT_PER_PAGE,
+        skip: 0,
+      }).then(() => {
+        setPositionCurrentPage(1);
+      });
+
+      refetchUserStats({
+        variables: {
+          walletAddress: newProxyWallet,
+        },
+      }).then(({ data: { users } }) => {
+        if (users !== undefined && users.length > 0) {
+          const itemsCount = users[0].activePositionsCount;
+          setPositionsItemsCount(itemsCount);
+        }
+      });
+    } else {
+      refetchPositions({
         walletAddress: proxyWallet,
-      },
-    }).then(({ data: { users } }) => {
-      if (users !== undefined && users.length > 0) {
-        const itemsCount = users[0].activePositionsCount;
-        setPositionsItemsCount(itemsCount);
-      }
-    });
+        first: Constants.COUNT_PER_PAGE,
+        skip: 0,
+      }).then(() => {
+        setPositionCurrentPage(1);
+      });
+
+      refetchUserStats({
+        variables: {
+          walletAddress: proxyWallet,
+        },
+      }).then(({ data: { users } }) => {
+        if (users !== undefined && users.length > 0) {
+          const itemsCount = users[0].activePositionsCount;
+          setPositionsItemsCount(itemsCount);
+        }
+      });
+    }
   }, [
+    account,
+    library,
+    positionService,
     proxyWallet,
     refetchStats,
     refetchPools,

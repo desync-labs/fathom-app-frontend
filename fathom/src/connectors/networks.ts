@@ -1,12 +1,13 @@
 import { InjectedConnector } from "@web3-react/injected-connector";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import Xdc3 from "xdc3";
+import { XdcInjectedConnector } from "connectors/xdc-connector/xdc-connector";
 
 export const supportedChainIds = [1337, 50, 51];
 export const XDC_CHAIN_IDS = [50, 51];
 
 export const APOTHEM_RPC = "https://erpc.apothem.network/";
-export const XDC_RPC = "https://eRPC.BlocksScan.io";
+export const XDC_RPC = "https://erpc.xinfin.network/";
 
 export const DEFAULT_RPC = {
   50: XDC_RPC,
@@ -44,10 +45,11 @@ export const XDC_NETWORK_SETTINGS = {
 };
 
 export const injected = new InjectedConnector({ supportedChainIds });
+export const xdcInjected = new XdcInjectedConnector({ supportedChainIds })
 
 export const WalletConnect = new WalletConnectConnector({
   rpc: {
-    1: APOTHEM_RPC,
+    50: XDC_RPC,
     51: APOTHEM_RPC,
   },
   qrcode: true,

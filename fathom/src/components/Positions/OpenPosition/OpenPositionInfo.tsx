@@ -1,15 +1,19 @@
-import { AppList } from "components/AppComponents/AppList/AppList";
-import { Divider, Grid, ListItem, ListItemText } from "@mui/material";
 import React from "react";
+import { Divider, Grid, ListItem, ListItemText } from "@mui/material";
+
+import { AppList } from "components/AppComponents/AppList/AppList";
+
 import useOpenPositionContext from "context/openPosition";
 import { styled } from "@mui/material/styles";
+import { formatNumber, formatNumberPrice, formatPercentage } from "utils/format";
+import BigNumber from "bignumber.js";
 
 const ListDivider = styled(Divider)`
   margin: 20px 20px 20px 5px;
   ${({ theme }) => theme.breakpoints.down("sm")} {
     margin: 20px 0 20px 0;
   }
-`
+`;
 
 const OpenPositionInfo = () => {
   const {
@@ -20,7 +24,7 @@ const OpenPositionInfo = () => {
     fxdAvailableToBorrow,
     debtRatio,
     safetyBuffer,
-    liquidationPrice
+    liquidationPrice,
   } = useOpenPositionContext();
 
   return (
@@ -28,7 +32,7 @@ const OpenPositionInfo = () => {
       <AppList>
         <ListItem
           alignItems="flex-start"
-          secondaryAction={`${collateralToBeLocked.toFixed(2)} ${
+          secondaryAction={`${formatNumber(collateralToBeLocked)} ${
             pool.poolName
           }`}
         >
@@ -36,7 +40,7 @@ const OpenPositionInfo = () => {
         </ListItem>
         <ListItem
           alignItems="flex-start"
-          secondaryAction={`${collateralAvailableToWithdraw.toFixed(2)} ${
+          secondaryAction={`${formatNumber(collateralAvailableToWithdraw)} ${
             pool.poolName
           }`}
         >
@@ -44,40 +48,39 @@ const OpenPositionInfo = () => {
         </ListItem>
         <ListItem
           alignItems="flex-start"
-          secondaryAction={`${fxdToBeBorrowed.toFixed(2)} FXD`}
+          secondaryAction={`${formatPercentage(fxdToBeBorrowed)} FXD`}
         >
           <ListItemText primary="FXD to be Borrowed" />
         </ListItem>
         <ListItem
           alignItems="flex-start"
-          secondaryAction={`${fxdAvailableToBorrow.toFixed(2)} FXD`}
+          secondaryAction={`${formatPercentage(fxdAvailableToBorrow)} FXD`}
         >
           <ListItemText primary="FXD Available to Borrow" />
         </ListItem>
         <ListItem
           alignItems="flex-start"
-          secondaryAction={`${debtRatio.toFixed(2)} %`}
+          secondaryAction={`${formatNumber(debtRatio)} %`}
         >
           <ListItemText primary="LTV" />
         </ListItem>
         <ListItem
           alignItems="flex-start"
-          secondaryAction={`${(safetyBuffer * 100).toFixed(2)} %`}
+          secondaryAction={`${BigNumber(safetyBuffer)
+            .multipliedBy(100)
+            .toFixed(2)} %`}
         >
           <ListItemText primary="Safety Buffer" />
         </ListItem>
         <ListItem
           alignItems="flex-start"
-          secondaryAction={`$${liquidationPrice.toFixed(2)}`}
+          secondaryAction={`$${formatNumberPrice(liquidationPrice)}`}
         >
           <ListItemText primary={`Liquidation Price of ${pool.poolName}`} />
         </ListItem>
-        <ListDivider/>
+        <ListDivider />
         <ListItem alignItems="flex-start" secondaryAction={`1.73%`}>
           <ListItemText primary={`Lending APR`} />
-        </ListItem>
-        <ListItem alignItems="flex-start" secondaryAction={`0.22%`}>
-          <ListItemText primary={`Fathom Rewards APR`} />
         </ListItem>
         <ListItem
           alignItems="flex-start"

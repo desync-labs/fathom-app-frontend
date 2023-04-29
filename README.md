@@ -1,4 +1,4 @@
-# Fathom Stablecoin Frontend
+# Fathom App Frontend
 to start the frontend locallcaly use 
 ```sh
 npm run start:<network-name> where network-name can be ganache,goerli or aphothem 

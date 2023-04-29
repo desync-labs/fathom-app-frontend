@@ -1,4 +1,5 @@
-import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
+import { UnsupportedChainIdError } from "@web3-react/core";
+import Xdc3 from "xdc3";
 import {
   RightNetwork,
   WrongNetwork,
@@ -28,8 +29,8 @@ import React, {
 } from "react";
 import { styled } from "@mui/material/styles";
 import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
-import Xdc3 from "xdc3";
 import { useMediaQuery, useTheme } from "@mui/material";
+import useConnector from "context/connector";
 
 const NetworkPaper = styled(AppPaper)`
   background: #253656;
@@ -56,8 +57,7 @@ const NetworkPaper = styled(AppPaper)`
 `;
 
 const Web3Status = () => {
-  const web3Data = useWeb3React();
-  const { error, account, chainId } = web3Data;
+  const { error, account, chainId } = useConnector();
   const anchorRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState<boolean>(false);
 
