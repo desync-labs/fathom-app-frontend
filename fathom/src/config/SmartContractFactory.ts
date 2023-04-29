@@ -33,7 +33,7 @@ export class SmartContractFactory {
           address = Addresses["50"];
           break;
         default:
-          address = Addresses["51"];
+          address = Addresses["50"];
           break;
       }
       return address[environment];
