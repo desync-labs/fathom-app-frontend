@@ -5,6 +5,13 @@ const formatter = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 2,
 });
 
+const formatterPrice = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 4,
+});
+
 const formatterCompact = new Intl.NumberFormat("en", { notation: "compact" });
 
 const formatterPercentage = new Intl.NumberFormat("en-US", {
@@ -16,6 +23,13 @@ const formatterPercentage = new Intl.NumberFormat("en-US", {
 
 export const formatNumber = (number: number) => {
   return formatter
+    .formatToParts(number)
+    .map((p) => (p.type !== "literal" && p.type !== "currency" ? p.value : ""))
+    .join("");
+};
+
+export const formatNumberPrice = (number: number) => {
+  return formatterPrice
     .formatToParts(number)
     .map((p) => (p.type !== "literal" && p.type !== "currency" ? p.value : ""))
     .join("");

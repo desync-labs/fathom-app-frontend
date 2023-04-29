@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import BigNumber from "bignumber.js";
 import {
   Select,
   MenuItem,
@@ -24,21 +25,22 @@ import { formatNumber, formatPercentage } from "utils/format";
 import { getTokenLogoURL } from "utils/tokenLogo";
 
 import {
+  ErrorBox,
+  ErrorMessage,
   InfoLabel,
   InfoValue,
   InfoWrapper,
   WalletBalance,
+  SuccessBox,
 } from "components/AppComponents/AppBox/AppBox";
 import {
   ButtonPrimary,
   ButtonSecondary,
   FathomSwapChangeCurrencyButton,
   MaxButton,
-  QuestionMarkButton,
 } from "components/AppComponents/AppButton/AppButton";
 
 import ComboShareSrc from "assets/svg/combo-shape.svg";
-import QuestionMarkSrc from "assets/svg/question-mark.svg";
 
 const StableSwapInputWrapper = styled(MuiBox)`
   position: relative;
@@ -57,7 +59,7 @@ const StableSwapCurrencySelect = styled(Select)`
   font-size: 13px;
   line-height: 16px;
   height: 32px;
-  width: 108px;
+  width: 118px;
   position: absolute;
   left: 32px;
   top: 41px;
@@ -72,7 +74,7 @@ const StableSwapTextField = styled(AppTextField)`
   input {
     font-size: 20px;
     color: #4f658c;
-    padding: 0 50px 0 122px;
+    padding: 0 50px 0 130px;
     &::-webkit-inner-spin-button,
     &::-webkit-outer-spin-button {
       -webkit-appearance: none;
@@ -89,7 +91,7 @@ const StableSwapTextField = styled(AppTextField)`
         font-size: 12px;
         padding-left: 22px;
       }
-    }  
+    }
   }
 `;
 
@@ -145,12 +147,29 @@ const SwapButton = styled(ButtonPrimary)`
   margin: 20px 0 5px 0;
 `;
 
+const StableSwapSuccessBox = styled(SuccessBox)`
+  width: 100%;
+  margin: 0;
+`;
+
+const StableSwapErrorBox = styled(ErrorBox)`
+  width: 100%;
+  margin: 0;
+`;
+
+const ErrorInfoIcon = styled(InfoIcon)`
+  width: 16px;
+  color: #f5953d;
+  height: 16px;
+`;
+
 const StableSwap = () => {
-  const [options /*setOptions*/] = useState<string[]>(["US+", "FXD"]);
+  const [options /*setOptions*/] = useState<string[]>(["xUSDT", "FXD"]);
 
   const {
     dailyLimit,
-
+    isDecentralizedState,
+    isUserWhiteListed,
     fxdPrice,
 
     inputValue,
@@ -199,21 +218,23 @@ const StableSwap = () => {
           addPadding={true}
           title={"Stable Swap"}
           description={
-            "Buy and sell FXD for US+ at a rate of 1:1 with low fees."
+            "Buy and sell FXD for xUSDT at a rate of 1:1 with low fees. (only for allowed addresses on mainnet)"
           }
         />
-        <Grid item xs={12} sm={6} sx={{ margin: "0 auto" }}>
+        <Grid item xs={12} sm={10} md={8} lg={6} sx={{ margin: "0 auto" }}>
           <StableSwapPaper>
             <StableSwapInputWrapper>
               <StableSwapFormLabel>From</StableSwapFormLabel>
               {useMemo(
-                () =>
-                  inputBalance ? (
-                    <StableSwapWalletBalance>
-                      Balance: {(+inputBalance / 10 ** 18).toFixed(2)}{" "}
-                      {inputCurrency}
-                    </StableSwapWalletBalance>
-                  ) : null,
+                () => (
+                  <StableSwapWalletBalance>
+                    Balance:{" "}
+                    {BigNumber(inputBalance)
+                      .dividedBy(10 ** 18)
+                      .toFixed(2)}{" "}
+                    {inputCurrency}
+                  </StableSwapWalletBalance>
+                ),
                 [inputBalance, inputCurrency]
               )}
               <StableSwapCurrencySelect
@@ -252,9 +273,7 @@ const StableSwap = () => {
                   inputError ? (
                     <>
                       <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
-                      <Typography>
-                        {inputError}
-                      </Typography>
+                      <Typography>{inputError}</Typography>
                     </>
                   ) : null
                 }
@@ -263,7 +282,7 @@ const StableSwap = () => {
               {approveInputBtn ? (
                 <ButtonSecondary
                   onClick={approveInput}
-                  sx={{ float: "right", marginTop: "10px" }}
+                  sx={{ float: "right", mt: "10px" }}
                 >
                   {approvalPending === "input" ? (
                     <CircularProgress size={30} />
@@ -288,13 +307,15 @@ const StableSwap = () => {
             <StableSwapInputWrapper>
               <StableSwapFormLabel>To</StableSwapFormLabel>
               {useMemo(
-                () =>
-                  outputBalance ? (
-                    <StableSwapWalletBalance>
-                      Balance: {(+outputBalance / 10 ** 18).toFixed(2)}{" "}
-                      {outputCurrency}
-                    </StableSwapWalletBalance>
-                  ) : null,
+                () => (
+                  <StableSwapWalletBalance>
+                    Balance:{" "}
+                    {BigNumber(outputBalance)
+                      .dividedBy(10 ** 18)
+                      .toFixed(2)}{" "}
+                    {outputCurrency}
+                  </StableSwapWalletBalance>
+                ),
                 [outputBalance, outputCurrency]
               )}
               <StableSwapCurrencySelect
@@ -346,6 +367,20 @@ const StableSwap = () => {
               ) : null}
             </StableSwapInputWrapper>
 
+            {isDecentralizedState === false && (
+              <StableSwapSuccessBox>
+                <InfoIcon />
+                <Typography>Whitelist Activated.</Typography>
+              </StableSwapSuccessBox>
+            )}
+
+            {isUserWhiteListed === false && (
+              <StableSwapErrorBox>
+                <ErrorInfoIcon />
+                <ErrorMessage>Wallet Address Not Whitelisted.</ErrorMessage>
+              </StableSwapErrorBox>
+            )}
+
             {useMemo(() => {
               return (
                 <StableSwapPriceInfoWrapper>
@@ -353,15 +388,12 @@ const StableSwap = () => {
                     <Box component="span">
                       1 {inputCurrency} ={" "}
                       {outputCurrency === options[0]
-                        ? 1 * fxdPrice
+                        ? fxdPrice
                         : fxdPrice
                         ? 1 / fxdPrice
                         : null}{" "}
                       {outputCurrency}
                     </Box>
-                    <QuestionMarkButton>
-                      <img src={QuestionMarkSrc} alt="question" width={20} />
-                    </QuestionMarkButton>
                   </StableSwapPriceInfo>
                 </StableSwapPriceInfoWrapper>
               );
@@ -380,11 +412,10 @@ const StableSwap = () => {
                   )}
                 </InfoValue>
               </StableSwapInfoWrapper>
-
-              <StableSwapInfoWrapper>
+              { isDecentralizedState && <StableSwapInfoWrapper>
                 <InfoLabel>Daily Limit</InfoLabel>
                 <InfoValue>{formatNumber(dailyLimit!)} FXD </InfoValue>
-              </StableSwapInfoWrapper>
+              </StableSwapInfoWrapper> }
 
               <StableSwapInfoWrapper>
                 <InfoLabel>FXD Pool Token Available</InfoLabel>
@@ -392,14 +423,14 @@ const StableSwap = () => {
               </StableSwapInfoWrapper>
 
               <StableSwapInfoWrapper>
-                <InfoLabel>US+ Pool Token Available</InfoLabel>
-                <InfoValue>{formatNumber(usStableAvailable!)} US+ </InfoValue>
+                <InfoLabel>xUSDT Pool Token Available</InfoLabel>
+                <InfoValue>{formatNumber(usStableAvailable!)} xUSDT </InfoValue>
               </StableSwapInfoWrapper>
             </StableSwapInfoContainer>
 
             <SwapButton
               isLoading={swapPending}
-              disabled={!inputValue || !outputValue || swapPending}
+              disabled={!inputValue || !outputValue || swapPending || isUserWhiteListed === false}
               onClick={handleSwap}
             >
               {swapPending ? <CircularProgress size={30} /> : "Swap"}

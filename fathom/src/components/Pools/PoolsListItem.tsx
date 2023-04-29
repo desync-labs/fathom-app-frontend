@@ -11,7 +11,7 @@ import { TVL, PoolName } from "components/AppComponents/AppBox/AppBox";
 import TokenLogo from "components/Common/TokenLogo";
 
 import { getTokenLogoURL } from "utils/tokenLogo";
-import { formatCurrency, formatNumber } from "utils/format";
+import { formatCurrency, formatNumber, formatNumberPrice } from "utils/format";
 
 import PriceChanged from "components/Common/PriceChange";
 
@@ -63,21 +63,21 @@ const PoolsListItem: FC<PoolsListItemPropsType> = ({
           />
           <Box>
             <PoolName>{pool.poolName}</PoolName>
-            <TVL>TVL: {formatCurrency(Number(pool.tvl))}</TVL>
+            <TVL>TVL: {formatCurrency(pool.tvl)}</TVL>
           </Box>
         </Stack>
       </TableCell>
       <TableCell>
         <PriceWrapper>
-          {formatCurrency(Number(pool.collateralPrice))}
+          {formatNumberPrice(pool.collateralPrice)}
           <PriceChanged
-            current={Number(pool.collateralPrice)}
-            previous={Number(pool.collateralLastPrice)}
+            current={pool.collateralPrice}
+            previous={pool.collateralLastPrice}
           />
         </PriceWrapper>
       </TableCell>
-      <TableCell>{formatNumber(Number(pool.totalBorrowed))} FXD</TableCell>
-      <TableCell>{formatNumber(Number(pool.totalAvailable))} FXD</TableCell>
+      <TableCell>{formatNumber(pool.totalBorrowed)} FXD</TableCell>
+      <TableCell>{formatNumber(pool.totalAvailable)} FXD</TableCell>
       <TableCell align="right">
         <OpenPositionButton onClick={() => setSelectedPool(pool)}>
           <AddCircleIcon sx={{ fontSize: "16px", marginRight: "7px" }} />

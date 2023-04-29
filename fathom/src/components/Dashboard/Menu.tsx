@@ -34,6 +34,11 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
 
   const { showText } = useShowText(open);
 
+  const dexUrl = useMemo(
+    () => process.env.REACT_APP_SWAP_APP_URL!,
+    []
+  );
+
   const appMenuItems = [
     {
       name: "FXD",
@@ -58,7 +63,7 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
     },
     {
       name: 'DEX',
-      link: 'https://swap.fathom.fi',
+      link: dexUrl,
       Icon: <DexIcon />,
       target: '_blank',
       showText: showText,

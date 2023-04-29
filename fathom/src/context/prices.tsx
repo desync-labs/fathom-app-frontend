@@ -10,10 +10,8 @@ import {
 } from "react";
 import { SmartContractFactory } from "config/SmartContractFactory";
 import { useStores } from "stores";
-import { useWeb3React } from "@web3-react/core";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
-import BigNumber from "bignumber.js";
 
 type PricesProviderType = {
   children: ReactElement;
@@ -29,9 +27,8 @@ type UsePricesContextReturn = {
 export const PricesContext = createContext<UseStakingViewType>(null);
 
 export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
-  const { stakingService } = useStores();
-  const { chainId } = useWeb3React();
-  const { library } = useConnector()
+  const { stakingService, centralizedOracleService } = useStores();
+  const { chainId, library } = useConnector();
   const [fxdPrice, setFxdPrice] = useState<number>(0);
   const [wxdcPrice, setWxdcPrice] = useState<number>(0);
   const [fthmPrice, setFthmPrice] = useState<number>(0);
@@ -56,34 +53,41 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
 
   const fetchPairPrices = useCallback(async () => {
     if (library) {
-      // @ts-ignore
-      const [{ 0: fthmPrice }, { 0: wxdcPriceInUsPlus }, { 0: wxdcPriceInFXD }] =
-        await Promise.all([
-          stakingService.getPairPrice(
-            usdtTokenAddress,
-            fthmTokenAddress,
-            library
-          ),
+      try {
+        // @ts-ignore
+        // const [ { 0: fthmPrice }, { 0: wxdcPrice }, { 0: fxdPrice },
+        const [ { 0: wxdcPrice }, { 0: fxdPrice },
+          centralizedPrice,
+        ] = await Promise.all([
+          // stakingService.getPairPrice(
+          //   fxdTokenAddress,
+          //   fthmTokenAddress,
+          //   library
+          // ),
           stakingService.getPairPrice(
             usdtTokenAddress,
             wxdcTokenAddress,
             library
           ),
           stakingService.getPairPrice(
+            usdtTokenAddress,
             fxdTokenAddress,
-            wxdcTokenAddress,
-            library,
-          )
+            library
+          ),
+          centralizedOracleService.cryptocompareConvertXdcUsdt(),
         ]);
 
-      const fxdPrice = BigNumber(wxdcPriceInUsPlus).dividedBy(wxdcPriceInFXD).multipliedBy(10 ** 18).toNumber();
-
-      setFxdPrice(fxdPrice);
-      setFthmPrice(fthmPrice);
-      setWxdcPrice(wxdcPriceInUsPlus);
+        setFxdPrice(fxdPrice);
+        setFthmPrice(0);
+        setWxdcPrice(wxdcPrice);
+        console.log(centralizedPrice);
+      } catch (e: any) {
+        console.log(e);
+      }
     }
   }, [
     stakingService,
+    centralizedOracleService,
     usdtTokenAddress,
     fthmTokenAddress,
     fxdTokenAddress,

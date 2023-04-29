@@ -1,3 +1,6 @@
+import React from "react";
+import { Controller } from "react-hook-form";
+import BigNumber from "bignumber.js";
 import {
   Box,
   CircularProgress,
@@ -5,23 +8,20 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
+import InfoIcon from "@mui/icons-material/Info";
+import { styled } from "@mui/material/styles";
 import {
   ApproveBox,
   ApproveBoxTypography,
-  InfoLabel,
-  InfoValue,
-  InfoWrapper,
   Summary,
   WalletBalance,
 } from "components/AppComponents/AppBox/AppBox";
-import { Controller } from "react-hook-form";
 import {
   AppFormInputLogo,
   AppFormInputWrapper,
   AppFormLabel,
   AppTextField,
 } from "components/AppComponents/AppForm/AppForm";
-import InfoIcon from "@mui/icons-material/Info";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import {
   ApproveButton,
@@ -30,9 +30,8 @@ import {
   ButtonsWrapper,
   MaxButton,
 } from "components/AppComponents/AppButton/AppButton";
-import React from "react";
 import useOpenPositionContext from "context/openPosition";
-import { styled } from "@mui/material/styles";
+import { FXD_MINIMUM_BORROW_AMOUNT } from "helpers/Constants";
 
 const OpenPositionFormWrapper = styled(Grid)`
   padding-left: 20px;
@@ -44,13 +43,6 @@ const OpenPositionFormWrapper = styled(Grid)`
   }
 `;
 
-const InfoBox = styled(Box)`
-  ${({ theme }) => theme.breakpoints.down("sm")} {
-    margin-bottom: 10px;
-    overflow: hidden;
-  }
-`;
-
 const OpenPositionForm = () => {
   const {
     approveBtn,
@@ -58,18 +50,13 @@ const OpenPositionForm = () => {
     approvalPending,
     fxdToBeBorrowed,
     balance,
-    collateral,
-    fathomToken,
     safeMax,
     openPositionLoading,
-
     setMax,
     setSafeMax,
     onSubmit,
-
     control,
     handleSubmit,
-
     availableFathomInPool,
     onClose,
     pool,
@@ -93,16 +80,15 @@ const OpenPositionForm = () => {
           name="collateral"
           rules={{
             required: true,
-            min: 10,
-            max: +balance / 10 ** 18,
-            pattern: /^[1-9][0-9]*0$/,
+            min: 1,
+            max: BigNumber(balance).dividedBy(10 ** 18).toString(),
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <AppFormInputWrapper>
               <AppFormLabel>Collateral</AppFormLabel>
               {balance ? (
                 <WalletBalance>
-                  Wallet Available: {+balance / 10 ** 18} {pool.poolName}
+                  Wallet Available: {BigNumber(balance).dividedBy(10 ** 18).toString()} {pool.poolName}
                 </WalletBalance>
               ) : null}
               <AppTextField
@@ -111,18 +97,6 @@ const OpenPositionForm = () => {
                 placeholder={"0"}
                 helperText={
                   <>
-                    {error && error.type === "pattern" && (
-                      <>
-                        <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
-                        <Box
-                          component={"span"}
-                          sx={{ fontSize: "12px", paddingLeft: "6px" }}
-                        >
-                          Allowed staked collateral should be multiple of 10
-                        </Box>
-                      </>
-                    )}
-
                     {error && error.type === "max" && (
                       <>
                         <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
@@ -152,7 +126,7 @@ const OpenPositionForm = () => {
                           component={"span"}
                           sx={{ fontSize: "12px", paddingLeft: "6px" }}
                         >
-                          Minimum collateral amount is 10.
+                          Minimum collateral amount is 1.
                         </Box>
                       </>
                     )}
@@ -178,6 +152,7 @@ const OpenPositionForm = () => {
           name="fathomToken"
           rules={{
             required: true,
+            min: FXD_MINIMUM_BORROW_AMOUNT,
             validate: (value) => {
               if (Number(value) > availableFathomInPool) {
                 return "Not enough FXD in pool";
@@ -215,6 +190,17 @@ const OpenPositionForm = () => {
                           </Box>
                         </>
                       )}
+                      {error && error.type === "min" && (
+                        <>
+                          <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
+                          <Box
+                            component={"span"}
+                            sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                          >
+                            Minimum borrow amount is {FXD_MINIMUM_BORROW_AMOUNT}.
+                          </Box>
+                        </>
+                      )}
                       {(!error || error.type === "required") &&
                         "Enter the desired FXD."}
                     </>
@@ -232,23 +218,6 @@ const OpenPositionForm = () => {
             );
           }}
         />
-
-        <InfoBox>
-          {collateral ? (
-            <InfoWrapper>
-              <InfoLabel>Depositing</InfoLabel>
-              <InfoValue>
-                {collateral} {pool.poolName}
-              </InfoValue>
-            </InfoWrapper>
-          ) : null}
-          {fathomToken ? (
-            <InfoWrapper>
-              <InfoLabel>Receive</InfoLabel>
-              <InfoValue>{fathomToken} FXD</InfoValue>
-            </InfoWrapper>
-          ) : null}
-        </InfoBox>
         {approveBtn && !!parseInt(balance) && (
           <ApproveBox>
             <InfoIcon

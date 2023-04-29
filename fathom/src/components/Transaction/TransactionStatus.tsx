@@ -1,12 +1,12 @@
+import { FC } from "react";
 import { observer } from "mobx-react";
 import { Alert, AlertTitle, LinearProgress, Typography } from "@mui/material";
 import { useStores } from "stores";
 import truncateEthAddress from "truncate-eth-address";
 import { styled } from "@mui/material/styles";
-import { useWeb3React } from "@web3-react/core";
 import { getTxUrl } from "utils/explorer";
 import { ChainId } from "connectors/networks";
-import { FC } from "react";
+import useConnector from "context/connector";
 
 const AlertMessage = styled(Alert, {
   shouldForwardProp: (prop) => prop !== "scroll",
@@ -25,7 +25,7 @@ type TransactionStatusPropsType = {
 const TransactionStatus: FC<TransactionStatusPropsType> = observer(
   ({ scroll }) => {
     const { transactionStore } = useStores();
-    const { chainId } = useWeb3React();
+    const { chainId } = useConnector();
 
     return (
       <>

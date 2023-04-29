@@ -30,7 +30,7 @@ const BottomLinks: FC = () => {
         Fathom.fi
       </a>
       <a
-        href={"https://hackmd.io/@fathomlite/BkIabl5fs"}
+        href={"https://gist.github.com/BaldyAsh/3676a18b003758057f634c9af2cfe49a"}
         rel="noreferrer"
         target={"_blank"}
       >
@@ -47,7 +47,7 @@ const BottomLinks: FC = () => {
         Twitter
       </a>
       <a
-        href={"https://twitter.com/Fathom_fi"}
+        href={"https://www.linkedin.com/company/fathom-protocol/"}
         rel="noreferrer"
         target={"_blank"}
       >
