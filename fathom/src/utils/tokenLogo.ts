@@ -1,4 +1,4 @@
-import DEFAULT_TOKEN_LIST from "fathom-swap-standard-token-list";
+import DEFAULT_TOKEN_LIST from "fathom-swap-default-token-list";
 
 export const getTokenLogoURL = (address: string) => {
   let logo;
