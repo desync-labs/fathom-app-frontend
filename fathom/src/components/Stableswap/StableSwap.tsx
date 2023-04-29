@@ -59,7 +59,7 @@ const StableSwapCurrencySelect = styled(Select)`
   font-size: 13px;
   line-height: 16px;
   height: 32px;
-  width: 108px;
+  width: 118px;
   position: absolute;
   left: 32px;
   top: 41px;
@@ -74,7 +74,7 @@ const StableSwapTextField = styled(AppTextField)`
   input {
     font-size: 20px;
     color: #4f658c;
-    padding: 0 50px 0 122px;
+    padding: 0 50px 0 130px;
     &::-webkit-inner-spin-button,
     &::-webkit-outer-spin-button {
       -webkit-appearance: none;
@@ -164,7 +164,7 @@ const ErrorInfoIcon = styled(InfoIcon)`
 `;
 
 const StableSwap = () => {
-  const [options /*setOptions*/] = useState<string[]>(["US+", "FXD"]);
+  const [options /*setOptions*/] = useState<string[]>(["xUSDT", "FXD"]);
 
   const {
     dailyLimit,
@@ -218,7 +218,7 @@ const StableSwap = () => {
           addPadding={true}
           title={"Stable Swap"}
           description={
-            "Buy and sell FXD for US+ at a rate of 1:1 with low fees. (only for allowed addresses on mainnet)"
+            "Buy and sell FXD for xUSDT at a rate of 1:1 with low fees. (only for allowed addresses on mainnet)"
           }
         />
         <Grid item xs={12} sm={10} md={8} lg={6} sx={{ margin: "0 auto" }}>
@@ -423,8 +423,8 @@ const StableSwap = () => {
               </StableSwapInfoWrapper>
 
               <StableSwapInfoWrapper>
-                <InfoLabel>US+ Pool Token Available</InfoLabel>
-                <InfoValue>{formatNumber(usStableAvailable!)} US+ </InfoValue>
+                <InfoLabel>xUSDT Pool Token Available</InfoLabel>
+                <InfoValue>{formatNumber(usStableAvailable!)} xUSDT </InfoValue>
               </StableSwapInfoWrapper>
             </StableSwapInfoContainer>
 
