@@ -26,7 +26,7 @@ const LinksWrapper = styled(Box)`
 const BottomLinks: FC = () => {
   return (
     <LinksWrapper>
-      <a href={"https://fathom.fi/"} rel="noreferrer" target={"_blank"}>
+      <a href={"https://fathom-labs.app/"} rel="noreferrer" target={"_blank"}>
         Fathom.fi
       </a>
       <a
