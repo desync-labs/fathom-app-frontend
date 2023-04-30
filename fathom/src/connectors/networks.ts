@@ -3,7 +3,8 @@ import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import Xdc3 from "xdc3";
 import { XdcInjectedConnector } from "connectors/xdc-connector/xdc-connector";
 
-export const supportedChainIds = [1337, 50, 51];
+// export const supportedChainIds = [1337, 50, 51];
+export const supportedChainIds = [1337, 50];
 export const XDC_CHAIN_IDS = [50, 51];
 
 export const APOTHEM_RPC = "https://erpc.apothem.network/";
@@ -16,12 +17,12 @@ export const DEFAULT_RPC = {
 
 export declare enum ChainId {
   XDC = 50,
-  AXDC = 51,
+  // AXDC = 51,
 }
 
 export const NETWORK_LABELS = {
   50: "XDC",
-  51: "Apothem",
+  // 51: "Apothem",
 };
 
 export const EXPLORERS = {
@@ -36,12 +37,12 @@ export const XDC_NETWORK_SETTINGS = {
     nativeCurrency: { name: "XDC", decimals: 18, symbol: "XDC" },
     rpcUrls: [XDC_RPC],
   },
-  51: {
-    chainName: "Apothem",
-    chainId: Xdc3.utils.toHex(51),
-    nativeCurrency: { name: "Apothem", decimals: 18, symbol: "AXDC" },
-    rpcUrls: [APOTHEM_RPC],
-  },
+  // 51: {
+  //   chainName: "Apothem",
+  //   chainId: Xdc3.utils.toHex(51),
+  //   nativeCurrency: { name: "Apothem", decimals: 18, symbol: "AXDC" },
+  //   rpcUrls: [APOTHEM_RPC],
+  // },
 };
 
 export const injected = new InjectedConnector({ supportedChainIds });
