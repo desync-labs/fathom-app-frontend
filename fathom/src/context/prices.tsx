@@ -65,13 +65,13 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
           //   library
           // ),
           stakingService.getPairPrice(
-            usdtTokenAddress,
             wxdcTokenAddress,
+            usdtTokenAddress,
             library
           ),
           stakingService.getPairPrice(
-            usdtTokenAddress,
             fxdTokenAddress,
+            usdtTokenAddress,
             library
           ),
           centralizedOracleService.cryptocompareConvertXdcUsdt(),
