@@ -65,18 +65,18 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
           //   library
           // ),
           stakingService.getPairPrice(
-            usdtTokenAddress,
             wxdcTokenAddress,
+            usdtTokenAddress,
             library
           ),
           stakingService.getPairPrice(
-            usdtTokenAddress,
             fxdTokenAddress,
+            usdtTokenAddress,
             library
           ),
           centralizedOracleService.cryptocompareConvertXdcUsdt(),
         ]);
-
+        console.log("prices: ", wxdcPrice)
         setFxdPrice(fxdPrice);
         setFthmPrice(0);
         setWxdcPrice(wxdcPrice);
