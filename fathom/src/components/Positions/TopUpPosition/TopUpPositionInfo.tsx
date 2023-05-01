@@ -81,7 +81,9 @@ const TopUpPositionInfo = () => {
         <ListDivider />
         <ListItem
           alignItems="flex-start"
-          secondaryAction={`${pool.stabilityFeeRate}%`}
+          // TODO: replace with actual stability fee when ready
+          // secondaryAction={`${pool.stabilityFeeRate}%`}
+          secondaryAction={`2%`}
         >
           <ListItemText primary={`Stability Fee`} />
         </ListItem>
