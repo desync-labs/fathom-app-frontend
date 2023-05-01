@@ -39,7 +39,7 @@ import useTopUpPositionContext from "context/topUpPosition";
 import { styled } from "@mui/material/styles";
 import { ClosePositionDialogPropsType } from "../RepayPositionDialog";
 import BigNumber from "bignumber.js";
-import { FXD_MINIMUM_BORROW_AMOUNT } from "../../../helpers/Constants";
+import { FXD_MAXIMUM_BORROW_AMOUNT, FXD_MINIMUM_BORROW_AMOUNT } from "../../../helpers/Constants";
 
 const TopUpPositionFormWrapper = styled(Grid)`
   padding-left: 20px;
@@ -175,6 +175,7 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
               return true;
             },
             min: FXD_MINIMUM_BORROW_AMOUNT,
+            max: FXD_MAXIMUM_BORROW_AMOUNT,
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => {
             return (
@@ -209,6 +210,17 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
                             sx={{ fontSize: "12px", paddingLeft: "6px" }}
                           >
                             Minimum borrow amount is {FXD_MINIMUM_BORROW_AMOUNT}.
+                          </Box>
+                        </>
+                      )}
+                      {error && error.type === "max" && (
+                        <>
+                          <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
+                          <Box
+                            component={"span"}
+                            sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                          >
+                            Maximum borrow amount is {FXD_MAXIMUM_BORROW_AMOUNT}.
                           </Box>
                         </>
                       )}
