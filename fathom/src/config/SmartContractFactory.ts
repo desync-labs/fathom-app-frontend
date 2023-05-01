@@ -11,7 +11,7 @@ import ProxyWalletAbi from "config/ABI/ProxyWallet.json";
 import ProxyWalletRegistryAbi from "config/ABI/ProxyWalletRegistry.json";
 import StableSwapModule from "config/ABI/StableSwapModule.json";
 import Staking from "config/ABI/Staking.json";
-import StakingGetter from "config/ABI/StakingGetters.json";
+import StakingGetter from "config/ABI/StakingGetter.json";
 import VeFathomAbi from "config/ABI/vFathom.json";
 
 import Addresses from "config/addresses.json";
