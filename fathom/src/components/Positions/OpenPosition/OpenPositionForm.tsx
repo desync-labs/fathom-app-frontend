@@ -31,7 +31,7 @@ import {
   MaxButton,
 } from "components/AppComponents/AppButton/AppButton";
 import useOpenPositionContext from "context/openPosition";
-import { FXD_MINIMUM_BORROW_AMOUNT } from "helpers/Constants";
+import { FXD_MINIMUM_BORROW_AMOUNT, FXD_MAXIMUM_BORROW_AMOUNT } from "helpers/Constants";
 
 const OpenPositionFormWrapper = styled(Grid)`
   padding-left: 20px;
@@ -153,6 +153,7 @@ const OpenPositionForm = () => {
           rules={{
             required: true,
             min: FXD_MINIMUM_BORROW_AMOUNT,
+            max: FXD_MAXIMUM_BORROW_AMOUNT,
             validate: (value) => {
               if (Number(value) > availableFathomInPool) {
                 return "Not enough FXD in pool";
@@ -198,6 +199,17 @@ const OpenPositionForm = () => {
                             sx={{ fontSize: "12px", paddingLeft: "6px" }}
                           >
                             Minimum borrow amount is {FXD_MINIMUM_BORROW_AMOUNT}.
+                          </Box>
+                        </>
+                      )}
+                      {error && error.type === "max" && (
+                        <>
+                          <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
+                          <Box
+                            component={"span"}
+                            sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                          >
+                            Maximum borrow amount is {FXD_MAXIMUM_BORROW_AMOUNT}.
                           </Box>
                         </>
                       )}
