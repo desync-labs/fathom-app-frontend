@@ -159,7 +159,7 @@ const OpenPositionForm = () => {
               }
 
               if (Number(value) > safeMax) {
-                return `You can't borrow more then ${fxdToBeBorrowed}`;
+                return `You can't borrow more than ${fxdToBeBorrowed}`;
               }
 
               return true;
