@@ -169,7 +169,7 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
               }
 
               if (BigNumber(value).isGreaterThan(safeMax)) {
-                return `You can't borrow more then ${safeMax}`;
+                return `You can't borrow more than ${safeMax}`;
               }
 
               return true;
