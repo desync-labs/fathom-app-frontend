@@ -148,6 +148,10 @@ const MobileMenuWrapper = styled(Box)`
   gap: 7px;
 `;
 
+const XdcPayImage = styled('img')`
+  margin-left: 10px;
+`
+
 const WalletBox = styled(Box)`
   font-weight: 400;
   font-size: 12px;
@@ -155,10 +159,6 @@ const WalletBox = styled(Box)`
   color: #fff;
   padding: 0 0 0 10px;
 `;
-
-const XdcPayImage = styled('img')`
-  margin-left: 10px;
-`
 
 const MainLayout = () => {
   const {

@@ -11,6 +11,7 @@ const defaultValues = {
   collateral: "",
   fathomToken: "",
   safeMax: 0,
+  dangerSafeMax: 0,
 };
 
 const useOpenPosition = (
@@ -20,25 +21,19 @@ const useOpenPosition = (
   const { poolService, positionService } = useStores();
   const { account, chainId, library } = useConnector()!;
 
-  const {
-    handleSubmit,
-    watch,
-    control,
-    setValue,
-    trigger,
-  } = useForm({
+  const { handleSubmit, watch, control, setValue, trigger } = useForm({
     defaultValues,
     reValidateMode: "onChange",
     mode: "onChange",
   });
 
-
   const collateral = watch("collateral");
   const fathomToken = watch("fathomToken");
   const safeMax = watch("safeMax");
+  const dangerSafeMax = watch("dangerSafeMax");
 
   const [balance, setBalance] = useState<number>(0);
-  const [isTouched, setIsTouched] = useState<boolean>(false)
+  const [isTouched, setIsTouched] = useState<boolean>(false);
 
   const [collateralToBeLocked, setCollateralToBeLocked] = useState<number>(0);
   const [fxdToBeBorrowed, setFxdToBeBorrowed] = useState<number>(0);
@@ -122,8 +117,17 @@ const useOpenPosition = (
         )
         .toNumber();
 
+      const dangerSafeMax = BigNumber(collateralInput)
+        .multipliedBy(
+          BigNumber(priceWithSafetyMargin)
+            .multipliedBy(BigNumber(100).minus(25))
+            .dividedBy(100)
+        )
+        .toNumber();
+
       setFxdToBeBorrowed(safeMax);
       setValue("safeMax", safeMax);
+      setValue("dangerSafeMax", dangerSafeMax);
 
       const collateralAvailableToWithdraw = (
         BigNumber(priceWithSafetyMargin).isGreaterThan(0)
@@ -219,8 +223,8 @@ const useOpenPosition = (
   );
 
   const setSafeMax = useCallback(() => {
-    setValue("fathomToken", safeMax.toString(), { shouldValidate: true });
-  }, [safeMax, setValue]);
+    setValue("fathomToken", dangerSafeMax.toString(), { shouldValidate: true });
+  }, [dangerSafeMax, setValue]);
 
   const onSubmit = useCallback(
     async (values: any) => {
@@ -235,7 +239,7 @@ const useOpenPosition = (
           fathomToken,
           library
         );
-        console.log(blockNumber)
+        console.log(blockNumber);
         setLastTransactionBlock(blockNumber!);
         onClose();
       } catch (e) {
@@ -300,12 +304,9 @@ const useOpenPosition = (
 
   useEffect(() => {
     if (collateral || fathomToken) {
-      setIsTouched(true)
+      setIsTouched(true);
     }
-  }, [
-    collateral,
-    fathomToken
-  ])
+  }, [collateral, fathomToken]);
 
   useEffect(() => {
     account && chainId && getCollateralTokenAndBalance();
@@ -335,6 +336,7 @@ const useOpenPosition = (
     availableFathomInPool,
     pool,
     onClose,
+    isTouched,
   };
 };
 
