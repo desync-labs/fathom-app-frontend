@@ -35,7 +35,7 @@ import {
   DANGER_SAFETY_BUFFER,
   FXD_MINIMUM_BORROW_AMOUNT,
 } from "helpers/Constants";
-import { ErrorBox, ErrorMessage } from "../../AppComponents/AppBox/AppBox";
+import { ErrorBox, ErrorMessage } from "components/AppComponents/AppBox/AppBox";
 
 const OpenPositionFormWrapper = styled(Grid)`
   padding-left: 20px;
