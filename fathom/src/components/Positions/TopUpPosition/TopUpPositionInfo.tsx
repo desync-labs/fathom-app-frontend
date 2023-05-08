@@ -1,8 +1,11 @@
 import React from "react";
 import BigNumber from "bignumber.js";
-import { Box, Divider, Grid, ListItem, ListItemText } from "@mui/material";
+import { Box, Divider, Grid, ListItemText } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { AppList } from "components/AppComponents/AppList/AppList";
+import {
+  AppList,
+  AppListItem
+} from "components/AppComponents/AppList/AppList";
 import { formatNumberPrice, formatPercentage, formatNumber } from "utils/format";
 import useTopUpPositionContext from "context/topUpPosition";
 
@@ -28,7 +31,7 @@ const TopUpPositionInfo = () => {
   return (
     <Grid item xs={12} sm={6}>
       <AppList>
-        <ListItem
+        <AppListItem
           alignItems="flex-start"
           secondaryAction={
             <>
@@ -40,8 +43,8 @@ const TopUpPositionInfo = () => {
           }
         >
           <ListItemText primary="FXD Borrowed" />
-        </ListItem>
-        <ListItem
+        </AppListItem>
+        <AppListItem
           alignItems="flex-start"
           secondaryAction={
             <>
@@ -57,34 +60,34 @@ const TopUpPositionInfo = () => {
           }
         >
           <ListItemText primary="Collateral Locked" />
-        </ListItem>
-        <ListItem
+        </AppListItem>
+        <AppListItem
           alignItems="flex-start"
           secondaryAction={`${formatPercentage(
             BigNumber(ltv).multipliedBy(100).toNumber()
           )} %`}
         >
           <ListItemText primary="LTV" />
-        </ListItem>
-        <ListItem
+        </AppListItem>
+        <AppListItem
           alignItems="flex-start"
           secondaryAction={`${formatNumber(safetyBuffer * 100)} %`}
         >
           <ListItemText primary="Safety Buffer" />
-        </ListItem>
-        <ListItem
+        </AppListItem>
+        <AppListItem
           alignItems="flex-start"
           secondaryAction={`$${formatNumberPrice(liquidationPrice)}`}
         >
           <ListItemText primary={`Liquidation Price of ${pool.poolName}`} />
-        </ListItem>
+        </AppListItem>
         <ListDivider />
-        <ListItem
+        <AppListItem
           alignItems="flex-start"
           secondaryAction={`${pool.stabilityFeeRate}%`}
         >
           <ListItemText primary={`Stability Fee`} />
-        </ListItem>
+        </AppListItem>
       </AppList>
     </Grid>
   );
