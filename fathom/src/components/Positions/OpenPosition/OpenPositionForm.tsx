@@ -66,6 +66,7 @@ const OpenPositionForm = () => {
     pool,
     safetyBuffer,
     isTouched,
+    isDirty,
   } = useOpenPositionContext();
 
   const theme = useTheme();
@@ -231,7 +232,7 @@ const OpenPositionForm = () => {
             );
           }}
         />
-        { isTouched && safetyBuffer < DANGER_SAFETY_BUFFER ? (
+        { isTouched && isDirty && safetyBuffer < DANGER_SAFETY_BUFFER ? (
           <ErrorBox sx={{ my: 3 }}>
             <InfoIcon
               sx={{ width: "16px", color: "#F5953D", height: "16px" }}

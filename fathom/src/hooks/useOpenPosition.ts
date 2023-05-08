@@ -34,6 +34,7 @@ const useOpenPosition = (
 
   const [balance, setBalance] = useState<number>(0);
   const [isTouched, setIsTouched] = useState<boolean>(false);
+  const [isDirty, setIsDirty] = useState<boolean>(false);
 
   const [collateralToBeLocked, setCollateralToBeLocked] = useState<number>(0);
   const [fxdToBeBorrowed, setFxdToBeBorrowed] = useState<number>(0);
@@ -305,6 +306,9 @@ const useOpenPosition = (
   useEffect(() => {
     if (collateral || fathomToken) {
       setIsTouched(true);
+      setIsDirty(true);
+    } else {
+      setIsDirty(false);
     }
   }, [collateral, fathomToken]);
 
@@ -337,6 +341,7 @@ const useOpenPosition = (
     pool,
     onClose,
     isTouched,
+    isDirty,
   };
 };
 
