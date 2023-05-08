@@ -32,7 +32,6 @@ import {
 } from "components/AppComponents/AppButton/AppButton";
 import useOpenPositionContext from "context/openPosition";
 import {
-  DANGER_SAFETY_BUFFER,
   FXD_MINIMUM_BORROW_AMOUNT,
 } from "helpers/Constants";
 import { ErrorBox, ErrorMessage } from "components/AppComponents/AppBox/AppBox";
@@ -64,9 +63,7 @@ const OpenPositionForm = () => {
     availableFathomInPool,
     onClose,
     pool,
-    safetyBuffer,
-    isTouched,
-    isDirty,
+    dangerSafetyBuffer
   } = useOpenPositionContext();
 
   const theme = useTheme();
@@ -183,7 +180,7 @@ const OpenPositionForm = () => {
               <AppFormInputWrapper>
                 <AppFormLabel>Borrow Amount</AppFormLabel>
                 <AppTextField
-                  error={!!error}
+                  error={!!error || dangerSafetyBuffer}
                   id="outlined-helperText"
                   helperText={
                     <>
@@ -232,7 +229,7 @@ const OpenPositionForm = () => {
             );
           }}
         />
-        { isTouched && isDirty && safetyBuffer < DANGER_SAFETY_BUFFER ? (
+        { dangerSafetyBuffer ? (
           <ErrorBox sx={{ my: 3 }}>
             <InfoIcon
               sx={{ width: "16px", color: "#F5953D", height: "16px" }}

@@ -6,6 +6,7 @@ import BigNumber from "bignumber.js";
 import { OpenPositionContextType } from "context/openPosition";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
+import { DANGER_SAFETY_BUFFER } from "../helpers/Constants";
 
 const defaultValues = {
   collateral: "",
@@ -100,6 +101,10 @@ const useOpenPosition = (
     () => Number(pool.totalAvailable),
     [pool]
   );
+
+  const dangerSafetyBuffer = useMemo(() => {
+    return isTouched && isDirty && safetyBuffer < DANGER_SAFETY_BUFFER
+  }, [isTouched, isDirty, safetyBuffer])
 
   const handleUpdates = useCallback(
     async (collateralInput: number, fathomTokenInput: number) => {
@@ -340,8 +345,7 @@ const useOpenPosition = (
     availableFathomInPool,
     pool,
     onClose,
-    isTouched,
-    isDirty,
+    dangerSafetyBuffer,
   };
 };
 
