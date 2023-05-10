@@ -52,6 +52,7 @@ import MobileMenuIcon from "assets/svg/mobile-menu.svg";
 import MobileMenuIconActive from "assets/svg/mobile-menu-active.svg";
 
 import { getTokenLogoURL } from "utils/tokenLogo";
+import useConnector from "../../context/connector";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -148,9 +149,9 @@ const MobileMenuWrapper = styled(Box)`
   gap: 7px;
 `;
 
-const XdcPayImage = styled('img')`
+const XdcPayImage = styled("img")`
   margin-left: 10px;
-`
+`;
 
 const WalletBox = styled(Box)`
   font-weight: 400;
@@ -181,6 +182,11 @@ const MainLayout = () => {
     setOpenMobile,
     setOpenConnector,
   } = useMainLayout();
+
+  const { allowStableSwap, allowStableSwapInProgress } = useConnector();
+
+  console.log(allowStableSwap)
+  console.log(allowStableSwapInProgress)
 
   return (
     <ThemeProvider theme={mdTheme}>
@@ -249,7 +255,13 @@ const MainLayout = () => {
             <Web3Status />
 
             {isMetamask && <img src={MetamaskSrc} alt={"metamask"} />}
-            {isXdcPay && <XdcPayImage src={getTokenLogoURL("WXDC")} alt={"xdc-pay"} width={'28px'} />}
+            {isXdcPay && (
+              <XdcPayImage
+                src={getTokenLogoURL("WXDC")}
+                alt={"xdc-pay"}
+                width={"28px"}
+              />
+            )}
             {isWalletConnect && (
               <img src={WalletConnectSrc} alt={"wallet-connect"} />
             )}
@@ -303,7 +315,9 @@ const MainLayout = () => {
           <TransactionStatus scroll={scroll} />
           <Routes>
             <Route path="/" element={<DashboardContent />} />
-            <Route path="/swap" element={<StableSwap />} />
+            {allowStableSwap || allowStableSwapInProgress || allowStableSwapInProgress === undefined ? (
+              <Route path="/swap" element={<StableSwap />} />
+            ) : null}
             <Route
               path="/proposal/:_proposalId"
               element={
