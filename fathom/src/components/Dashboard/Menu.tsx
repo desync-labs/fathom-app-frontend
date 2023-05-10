@@ -3,14 +3,14 @@ import { FC } from "react";
 import { useLocation } from "react-router-dom";
 import AppMenuItem from "components/MenuItem/AppMenuItem";
 
-
 import useShowText from "hooks/useShowText";
 import {
   FxdIcon,
   GovernanceIcon,
   SwapIcon,
-  DexIcon
+  DexIcon,
 } from "components/Common/MenuIcons";
+import useConnector from "context/connector";
 
 type ItemPropsType = {
   open: boolean;
@@ -18,6 +18,7 @@ type ItemPropsType = {
 
 export const Menu: FC<ItemPropsType> = ({ open }) => {
   const location = useLocation();
+  const { allowStableSwap } = useConnector();
 
   const isDashboardActive = useMemo(
     () => location.pathname === "/",
@@ -34,10 +35,7 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
 
   const { showText } = useShowText(open);
 
-  const dexUrl = useMemo(
-    () => process.env.REACT_APP_SWAP_APP_URL!,
-    []
-  );
+  const dexUrl = useMemo(() => process.env.REACT_APP_SWAP_APP_URL!, []);
 
   const appMenuItems = [
     {
@@ -62,13 +60,17 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
       showText: showText,
     },
     {
-      name: 'DEX',
+      name: "DEX",
       link: dexUrl,
       Icon: <DexIcon />,
-      target: '_blank',
+      target: "_blank",
       showText: showText,
-    }
+    },
   ];
+
+  if (!allowStableSwap) {
+    appMenuItems.splice(1, 1);
+  }
 
   return (
     <>
