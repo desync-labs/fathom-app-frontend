@@ -36,12 +36,13 @@ import DaoView from "components/Dashboard/DaoView";
 import MobileConnector from "components/Dashboard/MobileConnector";
 import DesktopConnector from "components/Dashboard/DesktopConnector";
 import BottomLinks from "components/Dashboard/BottomLinks";
+import MobileMenu from "components/Dashboard/MobileMenu";
 import { drawerWidth } from "components/AppComponents/AppBar/AppBar";
 
 import useMainLayout from "hooks/useMainLayout";
 import { StakingProvider } from "context/staking";
-import MobileMenu from "components/Dashboard/MobileMenu";
 import { ProposalProvider } from "context/proposal";
+import useConnector from "context/connector";
 
 import FathomAppLogoSrc from "assets/svg/Fathom-app-logo.svg";
 import ExitSrc from "assets/svg/exit.svg";
@@ -52,7 +53,6 @@ import MobileMenuIcon from "assets/svg/mobile-menu.svg";
 import MobileMenuIconActive from "assets/svg/mobile-menu-active.svg";
 
 import { getTokenLogoURL } from "utils/tokenLogo";
-import useConnector from "../../context/connector";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -184,9 +184,6 @@ const MainLayout = () => {
   } = useMainLayout();
 
   const { allowStableSwap, allowStableSwapInProgress } = useConnector();
-
-  console.log(allowStableSwap)
-  console.log(allowStableSwapInProgress)
 
   return (
     <ThemeProvider theme={mdTheme}>
