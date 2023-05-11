@@ -13,7 +13,7 @@ import { Constants } from "helpers/Constants";
 import ICollateralPool from "stores/interfaces/ICollateralPool";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
 import debounce from "lodash.debounce";
-import { SmartContractFactory } from "../config/SmartContractFactory";
+import { SmartContractFactory } from "config/SmartContractFactory";
 
 const useRepayPosition = (
   position: ClosePositionContextType["position"],
@@ -173,14 +173,17 @@ const useRepayPosition = (
     const price = BigNumber(debtValue).dividedBy(lockedCollateral);
     setPrice(price.toString());
 
-    setFathomToken(debtValue);
-    setCollateral(lockedCollateral);
-  }, [lockedCollateral, debtValue, setPrice, setFathomToken, setCollateral]);
+    const fathomValue = BigNumber(balance).isGreaterThan(debtValue) ? debtValue : balance
+
+    setFathomToken(fathomValue);
+    setCollateral(BigNumber(fathomValue).dividedBy(price).precision(18).toFixed());
+  }, [lockedCollateral, balance, debtValue, setPrice, setFathomToken, setCollateral]);
 
   useEffect(() => {
-    getBalance();
+    getBalance().then(() => {
+      handleOnOpen();
+    });
     getDebtValue();
-    handleOnOpen();
   }, [getBalance, handleOnOpen, getDebtValue]);
 
   useEffect(() => {

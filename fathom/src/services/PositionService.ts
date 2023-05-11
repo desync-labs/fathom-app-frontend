@@ -127,8 +127,9 @@ export default class PositionService implements IPositionService {
 
             resolve(receipt.blockNumber);
           })
-          .catch((e: any) => {
-            reject(e);
+          .catch((error: any) => {
+            this.alertStore.setShowErrorAlert(true, error.message);
+            reject(error);
           });
       } catch (error: any) {
         this.alertStore.setShowErrorAlert(true, error.message);
@@ -230,8 +231,9 @@ export default class PositionService implements IPositionService {
             );
             resolve(receipt.blockNumber);
           })
-          .catch((e: any) => {
-            reject(e);
+          .catch((error: any) => {
+            this.alertStore.setShowErrorAlert(true, error.message);
+            reject(error);
           });
       } catch (error: any) {
         this.alertStore.setShowErrorAlert(true, error.message);
@@ -328,8 +330,9 @@ export default class PositionService implements IPositionService {
             );
             resolve(receipt.blockNumber);
           })
-          .catch((e: any) => {
-            reject(e);
+          .catch((error: any) => {
+            this.alertStore.setShowErrorAlert(true, error.message);
+            reject(error);
           });
       } catch (error: any) {
         this.alertStore.setShowErrorAlert(true, error.message);
@@ -450,6 +453,9 @@ export default class PositionService implements IPositionService {
               MESSAGE,
             );
             resolve(receipt.blockNumber);
+          }).catch((error: any) => {
+            this.alertStore.setShowErrorAlert(true, error.message);
+            reject(error);
           });
       } catch (error: any) {
         this.alertStore.setShowErrorAlert(true, error.message);
@@ -544,8 +550,9 @@ export default class PositionService implements IPositionService {
             );
             resolve(receipt.blockNumber);
           })
-          .catch((e: any) => {
-            reject(e);
+          .catch((error: any) => {
+            this.alertStore.setShowErrorAlert(true, error.message);
+            reject(error);
           });
       } catch (error: any) {
         this.alertStore.setShowErrorAlert(true, error.message);
@@ -614,8 +621,9 @@ export default class PositionService implements IPositionService {
             );
             resolve(receipt.blockNumber);
           })
-          .catch((e: any) => {
-            reject(e);
+          .catch((error: any) => {
+            this.alertStore.setShowErrorAlert(true, error.message);
+            reject(error);
           });
       } catch (error: any) {
         this.alertStore.setShowErrorAlert(true, error.message);
@@ -709,8 +717,9 @@ export default class PositionService implements IPositionService {
             );
             resolve(receipt.blockNumber);
           })
-          .catch((e: any) => {
-            reject(e);
+          .catch((error: any) => {
+            this.alertStore.setShowErrorAlert(true, error.message);
+            reject(error);
           });
       } catch (error: any) {
         this.alertStore.setShowErrorAlert(true, error.message);
