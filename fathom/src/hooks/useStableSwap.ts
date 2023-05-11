@@ -240,7 +240,7 @@ const useStableSwap = (options: string[]) => {
 
   useEffect(() => {
     if (chainId) {
-      stableSwapService.getLastUpdate(library).then(() => {
+      stableSwapService.getLastUpdate(library).then((lastUpdate) => {
         setLastUpdate(Number(lastUpdate));
       });
     }
@@ -252,7 +252,7 @@ const useStableSwap = (options: string[]) => {
         setDailyLimit(dailyLimit!);
       });
     }
-  }, [isDecentralizedState]);
+  }, [stableSwapService, isDecentralizedState, library]);
 
   useEffect(() => {
     if (chainId) {
