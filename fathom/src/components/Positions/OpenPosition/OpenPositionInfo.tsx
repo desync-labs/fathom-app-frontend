@@ -23,7 +23,7 @@ const OpenPositionInfo = () => {
     collateralAvailableToWithdraw,
     fxdToBeBorrowed,
     fxdAvailableToBorrow,
-    debtRatio,
+    overCollateral,
     safetyBuffer,
     liquidationPrice,
   } = useOpenPositionContext();
@@ -61,10 +61,10 @@ const OpenPositionInfo = () => {
           <ListItemText primary="FXD Available to Borrow" />
         </AppListItem>
         <AppListItem
-          alignItems="flex-start"
-          secondaryAction={`${formatNumber(debtRatio)} %`}
+          alignItems={'flex-start'}
+          secondaryAction={`${formatNumber(overCollateral)} %`}
         >
-          <ListItemText primary="LTV" />
+          <ListItemText primary="Collateralization Ratio" />
         </AppListItem>
         <AppListItem
           alignItems="flex-start"
@@ -81,20 +81,11 @@ const OpenPositionInfo = () => {
           <ListItemText primary={`Liquidation Price of ${pool.poolName}`} />
         </AppListItem>
         <ListDivider />
-        <AppListItem alignItems="flex-start" secondaryAction={`1.73%`}>
-          <ListItemText primary={`Lending APR`} />
-        </AppListItem>
         <AppListItem
           alignItems="flex-start"
           secondaryAction={`${pool.stabilityFeeRate}%`}
         >
           <ListItemText primary={`Stability Fee`} />
-        </AppListItem>
-        <AppListItem alignItems="flex-start" secondaryAction={`1.96%`}>
-          <ListItemText primary={`Total APR`} />
-        </AppListItem>
-        <AppListItem alignItems="flex-start" secondaryAction={`1.98%`}>
-          <ListItemText primary={`Total APY`} />
         </AppListItem>
       </AppList>
     </Grid>
