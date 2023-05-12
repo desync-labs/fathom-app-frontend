@@ -46,6 +46,11 @@ const OpenPositionFormWrapper = styled(Grid)`
   }
 `;
 
+const DangerErrorBox = styled(ErrorBox)`
+  margin-bottom: 60px;
+  margin-top: 24px;
+`
+
 const OpenPositionForm = () => {
   const {
     approveBtn,
@@ -229,18 +234,6 @@ const OpenPositionForm = () => {
             );
           }}
         />
-        { dangerSafetyBuffer ? (
-          <ErrorBox sx={{ my: 3 }}>
-            <InfoIcon
-              sx={{ width: "16px", color: "#F5953D", height: "16px" }}
-            />
-            <ErrorMessage>
-              Safety Buffer is moved into the danger zone. We recommend
-              borrowing a lesser amount of FXD. Otherwise, your position may be
-              at risk of liquidation if the price of collateral will drop.
-            </ErrorMessage>
-          </ErrorBox>
-        ) : null}
         {approveBtn && !!parseInt(balance) && (
           <ApproveBox>
             <InfoIcon
@@ -263,6 +256,18 @@ const OpenPositionForm = () => {
             </ApproveButton>
           </ApproveBox>
         )}
+        { dangerSafetyBuffer ? (
+          <DangerErrorBox>
+            <InfoIcon
+              sx={{ width: "16px", color: "#F5953D", height: "16px" }}
+            />
+            <ErrorMessage>
+              Safety Buffer is moved into the danger zone. We recommend
+              borrowing a lesser amount of FXD. Otherwise, your position may be
+              at risk of liquidation if the price of collateral will drop.
+            </ErrorMessage>
+          </DangerErrorBox>
+        ) : null}
         <ButtonsWrapper>
           {!isMobile && (
             <ButtonSecondary onClick={onClose}>Close</ButtonSecondary>

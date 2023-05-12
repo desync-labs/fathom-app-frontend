@@ -110,7 +110,7 @@ const useOpenPosition = (
   );
 
   const dangerSafetyBuffer = useMemo(() => {
-    return isTouched && isDirty && safetyBuffer < DANGER_SAFETY_BUFFER;
+    return isTouched && isDirty && BigNumber(safetyBuffer).isGreaterThanOrEqualTo(0) && safetyBuffer < DANGER_SAFETY_BUFFER;
   }, [isTouched, isDirty, safetyBuffer]);
 
   const handleUpdates = useCallback(
@@ -298,17 +298,17 @@ const useOpenPosition = (
 
   const setMax = useCallback(
     (balance: number) => {
-      const max = balance / 10 ** 18;
+      const max = BigNumber(balance).dividedBy(10 ** 18);
       setValue("collateral", max.toString(), { shouldValidate: true });
     },
     [setValue]
   );
 
   useEffect(() => {
-    if (pool?.poolName?.toUpperCase() === "XDC" && isTouched) {
+    if (isTouched) {
       handleUpdates(Number(collateral), Number(fathomToken));
-    } else if (collateralTokenAddress && isTouched) {
-      handleUpdates(Number(collateral), Number(fathomToken));
+    }
+    if (collateralTokenAddress) {
       approvalStatus(collateral);
     }
   }, [
