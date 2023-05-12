@@ -60,7 +60,7 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
             fthmTokenAddress,
             library
           ).then((fthmPrice) => {
-            setFthmPrice(fthmPrice);
+            setFthmPrice((fthmPrice as any)[0]);
           });
         }
 
@@ -73,7 +73,7 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
           wxdcTokenAddress,
           library
         )).then((wxdcPrice) => {
-          setWxdcPrice(wxdcPrice);
+          setWxdcPrice((wxdcPrice as any)[0]);
         });
 
 
@@ -86,7 +86,7 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
           fxdTokenAddress,
           library
         )).then((fxdPrice) => {
-          setFxdPrice(fxdPrice);
+          setFxdPrice((fxdPrice as any)[0]);
         });
 
         centralizedOracleService.cryptocompareConvertXdcUsdt().then((centralizedPrice) => {
