@@ -44,7 +44,7 @@ if (process.env.REACT_APP_ENV === "prod") {
 
 export declare enum ChainId {
   XDC = 50,
-  AXDC = 51,
+  // AXDC = 51,
 }
 
 export const EXPLORERS = {
