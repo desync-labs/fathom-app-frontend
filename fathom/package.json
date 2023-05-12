@@ -53,8 +53,10 @@
     "eject": "react-scripts eject",
     "start:dev": "env-cmd -f .env.development react-scripts start",
     "start:demo": "env-cmd -f .env.demo react-scripts start",
+    "start:prod": "env-cmd -f .env.prod react-scripts start",
     "build:dev": "env-cmd -f .env.development react-scripts build",
-    "build:demo": "env-cmd -f .env.demo react-scripts build"
+    "build:demo": "env-cmd -f .env.demo react-scripts build",
+    "build:prod": "env-cmd -f .env.prod react-scripts build"
   },
   "browserslist": {
     "production": [

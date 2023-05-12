@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useMediaQuery, useTheme } from "@mui/material";
 import { useStores } from "stores";
-import { Constants } from "helpers/Constants";
+import { ZERO_ADDRESS } from "helpers/Constants";
 import { ProposeProps } from "components/Governance/Propose";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
@@ -141,9 +141,9 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
           );
         } else {
           blockNumber = await proposalService.createProposal(
-            [Constants.ZERO_ADDRESS],
+            [ZERO_ADDRESS],
             [0],
-            [Constants.ZERO_ADDRESS],
+            [ZERO_ADDRESS],
             combinedText,
             account,
             library
