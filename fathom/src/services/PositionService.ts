@@ -3,7 +3,13 @@ import { toWei } from "web3-utils";
 import Xdc3 from "xdc3";
 import BigNumber from "bignumber.js";
 
-import { Constants } from "helpers/Constants";
+import {
+  DEFAULT_CHAIN_ID,
+  ZERO_ADDRESS,
+  MAX_UINT256,
+  WeiPerWad,
+  WeiPerRad
+} from "helpers/Constants";
 import { Web3Utils } from "helpers/Web3Utils";
 import { Strings } from "helpers/Strings";
 
@@ -16,13 +22,13 @@ import AlertStore from "stores/alert.stores";
 
 import {
   TransactionStatus,
-  TransactionType,
+  TransactionType
 } from "stores/interfaces/ITransaction";
 
 import { getEstimateGas } from "utils/getEstimateGas";
 
 export default class PositionService implements IPositionService {
-  chainId = Constants.DEFAULT_CHAIN_ID;
+  chainId = DEFAULT_CHAIN_ID;
 
   alertStore: AlertStore;
   transactionStore: ActiveWeb3Transactions;
@@ -41,12 +47,12 @@ export default class PositionService implements IPositionService {
     collateral: string,
     fathomToken: string,
     library: Xdc3
-  ): Promise<number | undefined> {
+  ): Promise<number|undefined> {
     return new Promise(async (resolve, reject) => {
       try {
         let proxyWalletAddress = await this.proxyWalletExist(address, library);
 
-        if (proxyWalletAddress === Constants.ZERO_ADDRESS) {
+        if (proxyWalletAddress === ZERO_ADDRESS) {
           proxyWalletAddress = await this.createProxyWallet(address, library);
         }
 
@@ -77,14 +83,14 @@ export default class PositionService implements IPositionService {
             SmartContractFactory.StablecoinAdapter(this.chainId).address,
             pool.id,
             toWei(fathomToken.toString(), "ether"),
-            encodedResult,
+            encodedResult
           ]
         );
 
         const options = {
           from: address,
           gas: 0,
-          value: toWei(collateral.toString(), "ether"),
+          value: toWei(collateral.toString(), "ether")
         };
         const gas = await getEstimateGas(
           wallet,
@@ -116,7 +122,7 @@ export default class PositionService implements IPositionService {
               active: false,
               status: TransactionStatus.None,
               title: `Opening Position Pending`,
-              message: Strings.CheckOnBlockExplorer,
+              message: Strings.CheckOnBlockExplorer
             });
           })
           .then((receipt: TransactionReceipt) => {
@@ -145,12 +151,12 @@ export default class PositionService implements IPositionService {
     fathomToken: string,
     positionId: string,
     library: Xdc3
-  ): Promise<number | undefined> {
+  ): Promise<number|undefined> {
     return new Promise(async (resolve, reject) => {
       try {
         let proxyWalletAddress = await this.proxyWalletExist(address, library);
 
-        if (proxyWalletAddress === Constants.ZERO_ADDRESS) {
+        if (proxyWalletAddress === ZERO_ADDRESS) {
           proxyWalletAddress = await this.createProxyWallet(address, library);
         }
 
@@ -181,14 +187,14 @@ export default class PositionService implements IPositionService {
             SmartContractFactory.StablecoinAdapter(this.chainId).address,
             positionId,
             fathomToken ? toWei(fathomToken.toString(), "ether") : 0,
-            encodedResult,
+            encodedResult
           ]
         );
 
         const options = {
           from: address,
           gas: 0,
-          value: collateral ? toWei(collateral, "ether") : 0,
+          value: collateral ? toWei(collateral, "ether") : 0
         };
         const gas = await getEstimateGas(
           wallet,
@@ -221,7 +227,7 @@ export default class PositionService implements IPositionService {
               active: false,
               status: TransactionStatus.None,
               title: `Top Up Position Pending`,
-              message: Strings.CheckOnBlockExplorer,
+              message: Strings.CheckOnBlockExplorer
             });
           })
           .then((receipt: TransactionReceipt) => {
@@ -248,12 +254,12 @@ export default class PositionService implements IPositionService {
     collateral: string,
     positionId: string,
     library: Xdc3
-  ): Promise<number | undefined> {
+  ): Promise<number|undefined> {
     return new Promise(async (resolve, reject) => {
       try {
         let proxyWalletAddress = await this.proxyWalletExist(address, library);
 
-        if (proxyWalletAddress === Constants.ZERO_ADDRESS) {
+        if (proxyWalletAddress === ZERO_ADDRESS) {
           proxyWalletAddress = await this.createProxyWallet(address, library);
         }
 
@@ -281,14 +287,14 @@ export default class PositionService implements IPositionService {
             SmartContractFactory.PositionManager(this.chainId).address,
             pool.tokenAdapterAddress,
             positionId,
-            encodedResult,
+            encodedResult
           ]
         );
 
         const options = {
           from: address,
           gas: 0,
-          value: collateral ? toWei(collateral.toString(), "ether") : 0,
+          value: collateral ? toWei(collateral.toString(), "ether") : 0
         };
         const gas = await getEstimateGas(
           wallet,
@@ -320,7 +326,7 @@ export default class PositionService implements IPositionService {
               active: false,
               status: TransactionStatus.None,
               title: `Top Up Position Pending`,
-              message: Strings.CheckOnBlockExplorer,
+              message: Strings.CheckOnBlockExplorer
             });
           })
           .then((receipt: TransactionReceipt) => {
@@ -376,14 +382,14 @@ export default class PositionService implements IPositionService {
     address: string,
     collateral: string,
     library: Xdc3
-  ): Promise<number | undefined> {
+  ): Promise<number|undefined> {
     return new Promise(async (resolve, reject) => {
       try {
         const proxyWalletAddress = await this.proxyWalletExist(
           address,
           library
         );
-        const MESSAGE = 'Position repay successfully!';
+        const MESSAGE = "Position repay successfully!";
 
         const wallet = Web3Utils.getContractInstanceFrom(
           SmartContractFactory.proxyWallet.abi,
@@ -408,7 +414,7 @@ export default class PositionService implements IPositionService {
             SmartContractFactory.StablecoinAdapter(this.chainId).address,
             positionId,
             collateral,
-            encodedResult,
+            encodedResult
           ]
         );
 
@@ -428,7 +434,7 @@ export default class PositionService implements IPositionService {
           (_: any, transactionReceipt: TransactionReceipt) => {
             this.alertStore.setShowSuccessAlert(
               true,
-              MESSAGE,
+              MESSAGE
             );
             resolve(transactionReceipt.blockNumber);
           }
@@ -444,19 +450,19 @@ export default class PositionService implements IPositionService {
               active: false,
               status: TransactionStatus.None,
               title: "Repay Position Pending.",
-              message: Strings.CheckOnBlockExplorer,
+              message: Strings.CheckOnBlockExplorer
             });
           })
           .then((receipt: TransactionReceipt) => {
             this.alertStore.setShowSuccessAlert(
               true,
-              MESSAGE,
+              MESSAGE
             );
             resolve(receipt.blockNumber);
           }).catch((error: any) => {
-            this.alertStore.setShowErrorAlert(true, error.message);
-            reject(error);
-          });
+          this.alertStore.setShowErrorAlert(true, error.message);
+          reject(error);
+        });
       } catch (error: any) {
         this.alertStore.setShowErrorAlert(true, error.message);
         reject(error);
@@ -471,14 +477,14 @@ export default class PositionService implements IPositionService {
     stableCoin: string,
     collateral: string,
     library: Xdc3
-  ): Promise<number | undefined> {
+  ): Promise<number|undefined> {
     return new Promise(async (resolve, reject) => {
       try {
         const proxyWalletAddress = await this.proxyWalletExist(
           address,
           library
         );
-        const MESSAGE = "Position repay successfully!"
+        const MESSAGE = "Position repay successfully!";
 
         const wallet = Web3Utils.getContractInstanceFrom(
           SmartContractFactory.proxyWallet.abi,
@@ -504,7 +510,7 @@ export default class PositionService implements IPositionService {
             positionId,
             collateral,
             stableCoin,
-            encodedResult,
+            encodedResult
           ]
         );
 
@@ -524,7 +530,7 @@ export default class PositionService implements IPositionService {
           (_: any, transactionReceipt: TransactionReceipt) => {
             this.alertStore.setShowSuccessAlert(
               true,
-              MESSAGE,
+              MESSAGE
             );
             resolve(transactionReceipt.blockNumber);
           }
@@ -540,13 +546,13 @@ export default class PositionService implements IPositionService {
               active: false,
               status: TransactionStatus.None,
               title: "Repay Position Pending.",
-              message: Strings.CheckOnBlockExplorer,
+              message: Strings.CheckOnBlockExplorer
             });
           })
           .then((receipt: TransactionReceipt) => {
             this.alertStore.setShowSuccessAlert(
               true,
-              MESSAGE,
+              MESSAGE
             );
             resolve(receipt.blockNumber);
           })
@@ -565,12 +571,12 @@ export default class PositionService implements IPositionService {
     address: string,
     tokenAddress: string,
     library: Xdc3
-  ): Promise<number | undefined> {
+  ): Promise<number|undefined> {
     return new Promise(async (resolve, reject) => {
       try {
         let proxyWalletAddress = await this.proxyWalletExist(address, library);
 
-        if (proxyWalletAddress === Constants.ZERO_ADDRESS) {
+        if (proxyWalletAddress === ZERO_ADDRESS) {
           proxyWalletAddress = await this.createProxyWallet(address, library);
         }
 
@@ -583,7 +589,7 @@ export default class PositionService implements IPositionService {
         const gas = await getEstimateGas(
           BEP20,
           "approve",
-          [proxyWalletAddress, Constants.MAX_UINT256],
+          [proxyWalletAddress, MAX_UINT256],
           options
         );
         options.gas = gas;
@@ -602,7 +608,7 @@ export default class PositionService implements IPositionService {
         );
 
         BEP20.methods
-          .approve(proxyWalletAddress, Constants.MAX_UINT256)
+          .approve(proxyWalletAddress, MAX_UINT256)
           .send(options)
           .on("transactionHash", (hash: any) => {
             this.transactionStore.addTransaction({
@@ -611,7 +617,7 @@ export default class PositionService implements IPositionService {
               active: false,
               status: TransactionStatus.None,
               title: "Approval Pending",
-              message: Strings.CheckOnBlockExplorer,
+              message: Strings.CheckOnBlockExplorer
             });
           })
           .then((receipt: TransactionReceipt) => {
@@ -640,7 +646,7 @@ export default class PositionService implements IPositionService {
   ): Promise<boolean> {
     const proxyWalletAddress = await this.proxyWalletExist(address, library);
 
-    if (proxyWalletAddress === Constants.ZERO_ADDRESS) {
+    if (proxyWalletAddress === ZERO_ADDRESS) {
       return false;
     }
 
@@ -654,19 +660,19 @@ export default class PositionService implements IPositionService {
       .call();
 
     return BigNumber(allowance).isGreaterThanOrEqualTo(
-      Constants.WeiPerWad.multipliedBy(collateral)
+      WeiPerWad.multipliedBy(collateral)
     );
   }
 
   approveStableCoin(
     address: string,
     library: Xdc3
-  ): Promise<number | undefined> {
+  ): Promise<number|undefined> {
     return new Promise(async (resolve, reject) => {
       try {
         let proxyWalletAddress = await this.proxyWalletExist(address, library);
 
-        if (proxyWalletAddress === Constants.ZERO_ADDRESS) {
+        if (proxyWalletAddress === ZERO_ADDRESS) {
           proxyWalletAddress = await this.createProxyWallet(address, library);
         }
 
@@ -679,7 +685,7 @@ export default class PositionService implements IPositionService {
         const gas = await getEstimateGas(
           fathomStableCoin,
           "approve",
-          [proxyWalletAddress, Constants.MAX_UINT256],
+          [proxyWalletAddress, MAX_UINT256],
           options
         );
         options.gas = gas;
@@ -698,7 +704,7 @@ export default class PositionService implements IPositionService {
         );
 
         fathomStableCoin.methods
-          .approve(proxyWalletAddress, Constants.MAX_UINT256)
+          .approve(proxyWalletAddress, MAX_UINT256)
           .send(options)
           .on("transactionHash", (hash: any) => {
             this.transactionStore.addTransaction({
@@ -707,7 +713,7 @@ export default class PositionService implements IPositionService {
               active: false,
               status: TransactionStatus.None,
               title: `Approval Pending`,
-              message: Strings.CheckOnBlockExplorer,
+              message: Strings.CheckOnBlockExplorer
             });
           })
           .then((receipt: TransactionReceipt) => {
@@ -743,7 +749,7 @@ export default class PositionService implements IPositionService {
   ): Promise<boolean> {
     const proxyWalletAddress = await this.proxyWalletExist(address, library);
 
-    if (proxyWalletAddress === Constants.ZERO_ADDRESS) {
+    if (proxyWalletAddress === ZERO_ADDRESS) {
       return false;
     }
 
@@ -774,13 +780,13 @@ export default class PositionService implements IPositionService {
       .call();
 
     const debtShareValue = BigNumber(debtShare)
-      .multipliedBy(Constants.WeiPerWad)
+      .multipliedBy(WeiPerWad)
       .integerValue(BigNumber.ROUND_CEIL);
 
     const debtValue =
       BigNumber(debtAccumulatedRate).multipliedBy(debtShareValue);
 
-    return debtValue.dividedBy(Constants.WeiPerRad).toFixed();
+    return debtValue.dividedBy(WeiPerRad).toFixed();
   }
 
   setChainId(chainId: number) {

@@ -14,7 +14,7 @@ import Propose from "components/Governance/Propose";
 import ProposalFilters from "components/Governance/ProposalFilters";
 import { NoResults } from "components/AppComponents/AppBox/AppBox";
 
-import { Constants } from "helpers/Constants";
+import { COUNT_PER_PAGE } from "helpers/Constants";
 import { styled } from "@mui/material/styles";
 
 const PaginationWrapper = styled(Box)`
@@ -112,7 +112,7 @@ const AllProposalsView = () => {
               <Grid item xs={12}>
                 <PaginationWrapper>
                   <Pagination
-                    count={Math.ceil(itemsCount / Constants.COUNT_PER_PAGE)}
+                    count={Math.ceil(itemsCount / COUNT_PER_PAGE)}
                     page={currentPage}
                     onChange={handlePageChange}
                   />

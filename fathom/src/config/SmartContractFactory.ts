@@ -15,6 +15,7 @@ import StakingGetter from "config/ABI/StakingGetter.json";
 import VeFathomAbi from "config/ABI/vFathom.json";
 
 import Addresses from "config/addresses.json";
+import { DEFAULT_CHAIN_ID } from "helpers/Constants";
 
 
 export class SmartContractFactory {
@@ -22,6 +23,7 @@ export class SmartContractFactory {
     try {
       let environment = (process.env.REACT_APP_ENV as string) ?? "dev";
       let address: any;
+
       switch (chainId) {
         case 1337:
           address = Addresses["1337"];
@@ -33,9 +35,10 @@ export class SmartContractFactory {
           address = Addresses["50"];
           break;
         default:
-          address = Addresses["51"];
+          address = Addresses[DEFAULT_CHAIN_ID];
           break;
       }
+
       return address[environment];
     } catch (e) {
       console.error("Error in fetching address");
@@ -46,74 +49,74 @@ export class SmartContractFactory {
   public static PoolConfig(chainId: number) {
     return {
       abi: CollateralPoolConfigAbi.abi as AbiItem[],
-      address: SmartContractFactory.Addresses(chainId).collateralPoolConfig,
+      address: SmartContractFactory.Addresses(chainId).collateralPoolConfig
     };
   }
 
   public static ProxyWalletRegistry(chainId: number) {
     return {
       abi: ProxyWalletRegistryAbi.abi as AbiItem[],
-      address: SmartContractFactory.Addresses(chainId).proxyWalletRegistry,
+      address: SmartContractFactory.Addresses(chainId).proxyWalletRegistry
     };
   }
 
   public static proxyWallet = {
-    abi: ProxyWalletAbi.abi as AbiItem[],
+    abi: ProxyWalletAbi.abi as AbiItem[]
   };
 
   public static FathomStablecoinProxyAction(chainId: number) {
     return {
       abi: FathomStablecoinProxyActionAbi.abi as AbiItem[],
       address:
-        SmartContractFactory.Addresses(chainId).fathomStablecoinProxyActions,
+      SmartContractFactory.Addresses(chainId).fathomStablecoinProxyActions
     };
   }
 
   public static WXDC(chainId: number) {
     return {
       abi: BEP20Abi.abi as AbiItem[],
-      address: SmartContractFactory.Addresses(chainId).WXDC,
+      address: SmartContractFactory.Addresses(chainId).WXDC
     };
   }
 
   public static USDT(chainId: number) {
     return {
       abi: BEP20Abi.abi as AbiItem[],
-      address: SmartContractFactory.Addresses(chainId)["US+"],
+      address: SmartContractFactory.Addresses(chainId)["US+"]
     };
   }
 
   public static BEP20(_address: string) {
     return {
       abi: BEP20Abi.abi as AbiItem[],
-      address: _address,
+      address: _address
     };
   }
 
   public static FathomStableCoin(chainId: number) {
     return {
       abi: BEP20Abi.abi as AbiItem[],
-      address: SmartContractFactory.Addresses(chainId).FXD,
+      address: SmartContractFactory.Addresses(chainId).FXD
     };
   }
 
   public static PositionManager(chainId: number) {
     return {
-      address: SmartContractFactory.Addresses(chainId).positionManager,
+      address: SmartContractFactory.Addresses(chainId).positionManager
     };
   }
 
   public static StabilityFeeCollector(chainId: number) {
     return {
       abi: [],
-      address: SmartContractFactory.Addresses(chainId).stabilityFeeCollector,
+      address: SmartContractFactory.Addresses(chainId).stabilityFeeCollector
     };
   }
 
   public static StablecoinAdapter(chainId: number) {
     return {
       abi: [],
-      address: SmartContractFactory.Addresses(chainId).stablecoinAdapter,
+      address: SmartContractFactory.Addresses(chainId).stablecoinAdapter
     };
   }
 
@@ -121,70 +124,70 @@ export class SmartContractFactory {
     return {
       abi: [],
       address:
-        SmartContractFactory.Addresses(chainId).fathomStablecoinProxyActions,
+      SmartContractFactory.Addresses(chainId).fathomStablecoinProxyActions
     };
   }
 
   public static StableSwapModule(chainId: number) {
     return {
       abi: StableSwapModule.abi as AbiItem[],
-      address: SmartContractFactory.Addresses(chainId).stableSwapModule,
+      address: SmartContractFactory.Addresses(chainId).stableSwapModule
     };
   }
 
   public static FathomGovernor(chainId: number) {
     return {
       abi: Governor.abi as AbiItem[],
-      address: SmartContractFactory.Addresses(chainId).fthmGovernor,
+      address: SmartContractFactory.Addresses(chainId).fthmGovernor
     };
   }
 
   public static MainFathomGovernor(chainId: number) {
     return {
       abi: MainTokenGovernor.abi as AbiItem[],
-      address: SmartContractFactory.Addresses(chainId).fthmGovernor,
+      address: SmartContractFactory.Addresses(chainId).fthmGovernor
     };
   }
 
   public static Staking(chainId: number) {
     return {
       abi: Staking.abi as AbiItem[],
-      address: SmartContractFactory.Addresses(chainId).staking,
+      address: SmartContractFactory.Addresses(chainId).staking
     };
   }
 
   public static MainToken(fthmTokenAddress: string) {
     return {
       abi: MainToken.abi as AbiItem[],
-      address: fthmTokenAddress,
+      address: fthmTokenAddress
     };
   }
 
   public static FthmToken(chainId: number) {
     return {
       abi: MainToken.abi as AbiItem[],
-      address: SmartContractFactory.Addresses(chainId).fthmToken,
+      address: SmartContractFactory.Addresses(chainId).fthmToken
     };
   }
 
   public static StakingGetter(chainId: number) {
     return {
       abi: StakingGetter.abi as AbiItem[],
-      address: SmartContractFactory.Addresses(chainId).stakingGetter, // '0x62f3d571A7DAcC00C047e58fE500ee99A98E3f63'
+      address: SmartContractFactory.Addresses(chainId).stakingGetter // '0x62f3d571A7DAcC00C047e58fE500ee99A98E3f63'
     };
   }
 
   public static vFathom(chainId: number) {
     return {
       abi: VeFathomAbi.abi as AbiItem[],
-      address: SmartContractFactory.Addresses(chainId).vFTHM,
+      address: SmartContractFactory.Addresses(chainId).vFTHM
     };
   }
 
   public static DexPriceOracle(chainId: number) {
     return {
       abi: DexPriceOracle.abi as AbiItem[],
-      address: SmartContractFactory.Addresses(chainId).dexPriceOracle,
+      address: SmartContractFactory.Addresses(chainId).dexPriceOracle
     };
   }
 
