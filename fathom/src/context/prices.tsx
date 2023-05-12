@@ -6,7 +6,7 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useState,
+  useState
 } from "react";
 import { SmartContractFactory } from "config/SmartContractFactory";
 import { useStores } from "stores";
@@ -61,28 +61,37 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
             library
           ).then((fthmPrice) => {
             setFthmPrice(fthmPrice);
-          })
+          });
         }
 
-        stakingService.getPairPrice(
+        (process.env.REACT_APP_ENV === "prod" ? stakingService.getPairPrice(
+          wxdcTokenAddress,
+          usdtTokenAddress,
+          library
+        ) : stakingService.getPairPrice(
           usdtTokenAddress,
           wxdcTokenAddress,
           library
-        ).then((wxdcPrice) => {
+        )).then((wxdcPrice) => {
           setWxdcPrice(wxdcPrice);
-        })
+        });
 
-        stakingService.getPairPrice(
+
+        (process.env.REACT_APP_ENV === "prod" ? stakingService.getPairPrice(
+          fxdTokenAddress,
+          usdtTokenAddress,
+          library
+        ) : stakingService.getPairPrice(
           usdtTokenAddress,
           fxdTokenAddress,
           library
-        ).then((fxdPrice) => {
+        )).then((fxdPrice) => {
           setFxdPrice(fxdPrice);
-        })
+        });
 
         centralizedOracleService.cryptocompareConvertXdcUsdt().then((centralizedPrice) => {
           console.log(centralizedPrice);
-        })
+        });
       } catch (e: any) {
         console.log(e);
       }
@@ -97,7 +106,7 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
     library,
     setFxdPrice,
     setFthmPrice,
-    setWxdcPrice,
+    setWxdcPrice
   ]);
 
   useEffect(() => {
@@ -114,7 +123,7 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
     return {
       fxdPrice,
       wxdcPrice,
-      fthmPrice,
+      fthmPrice
     };
   }, [fxdPrice, wxdcPrice, fthmPrice]);
 
