@@ -6,7 +6,7 @@ import { XdcInjectedConnector } from "connectors/xdc-connector/xdc-connector";
 console.log(process.env.REACT_APP_ENV);
 
 export const APOTHEM_RPC = "https://erpc.apothem.network/";
-export const XDC_RPC = "https://eRPC.BlocksScan.io";
+export const XDC_RPC = "https://erpc.xinfin.network/";
 
 let XDC_CHAIN_IDS: number[] = [51];
 

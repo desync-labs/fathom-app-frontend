@@ -13,7 +13,7 @@
     "@web3-react/injected-connector": "^6.0.7",
     "@web3-react/walletconnect-connector": "^6.2.13",
     "bignumber.js": "^9.1.0",
-    "fathom-swap-standard-token-list": "^1.6.0",
+    "fathom-swap-standard-token-list": "1.7.0",
     "fontsource-roboto": "^4.0.0",
     "graphql": "^16.6.0",
     "lodash.debounce": "^4.0.8",

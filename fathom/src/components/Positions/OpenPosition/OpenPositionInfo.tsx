@@ -83,7 +83,7 @@ const OpenPositionInfo = () => {
         <ListDivider />
         <AppListItem
           alignItems="flex-start"
-          secondaryAction={`${pool.stabilityFeeRate}%`}
+          secondaryAction={`2%`}
         >
           <ListItemText primary={`Stability Fee`} />
         </AppListItem>
