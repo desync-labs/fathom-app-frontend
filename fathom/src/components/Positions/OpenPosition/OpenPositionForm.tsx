@@ -230,6 +230,17 @@ const OpenPositionForm = () => {
                           </Box>
                         </>
                       )}
+                      {error && error.type === "max" && (
+                        <>
+                          <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
+                          <Box
+                            component={"span"}
+                            sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                          >
+                            Maximum borrow amount is {FXD_MAXIMUM_BORROW_AMOUNT}.
+                          </Box>
+                        </>
+                      )}
                       {(!error || error.type === "required") &&
                         "Enter the desired FXD."}
                     </>
