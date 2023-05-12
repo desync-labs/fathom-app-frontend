@@ -15,7 +15,9 @@ import IStakingService from "services/interfaces/IStakingService";
 import ICentralizedPriceFeedService from "services/interfaces/ICentralizedPriceFeedService";
 import CentralizedPriceFeedService from "services/CentralizedPriceFeedService";
 
-import { Constants } from "helpers/Constants";
+import {
+  DEFAULT_CHAIN_ID
+} from "helpers/Constants";
 
 export class RootStore {
   /**
@@ -34,7 +36,7 @@ export class RootStore {
   stakingService: IStakingService;
   centralizedOracleService: ICentralizedPriceFeedService;
 
-  chainId: number = Constants.DEFAULT_CHAIN_ID;
+  chainId: number = DEFAULT_CHAIN_ID;
 
   constructor() {
 

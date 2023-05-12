@@ -8,20 +8,20 @@ import {
   CircularProgress,
   Grid,
   useMediaQuery,
-  useTheme,
+  useTheme
 } from "@mui/material";
 import {
   ApproveBox,
   ApproveBoxTypography,
   Summary,
-  WalletBalance,
+  WalletBalance
 } from "components/AppComponents/AppBox/AppBox";
 
 import {
   AppFormInputLogo,
   AppFormInputWrapper,
   AppFormLabel,
-  AppTextField,
+  AppTextField
 } from "components/AppComponents/AppForm/AppForm";
 import InfoIcon from "@mui/icons-material/Info";
 import { getTokenLogoURL } from "utils/tokenLogo";
@@ -32,34 +32,38 @@ import {
   ButtonsWrapper,
   ManagePositionRepayTypeWrapper,
   ManageTypeButton,
-  MaxButton,
+  MaxButton
 } from "components/AppComponents/AppButton/AppButton";
 
 import useTopUpPositionContext from "context/topUpPosition";
 import { styled } from "@mui/material/styles";
-import { ClosePositionDialogPropsType } from "../RepayPositionDialog";
+import { ClosePositionDialogPropsType } from "components/Positions/RepayPositionDialog";
 import BigNumber from "bignumber.js";
-import { FXD_MINIMUM_BORROW_AMOUNT } from "../../../helpers/Constants";
+import {
+  FXD_MINIMUM_BORROW_AMOUNT,
+  FXD_MAXIMUM_BORROW_AMOUNT
+} from "helpers/Constants";
 
 const TopUpPositionFormWrapper = styled(Grid)`
   padding-left: 20px;
   width: calc(50% - 1px);
   position: relative;
+
   ${({ theme }) => theme.breakpoints.down("sm")} {
     width: 100%;
     padding: 0;
   }
 `;
 
-const TopUpForm = styled('form')`
+const TopUpForm = styled("form")`
   padding-bottom: 45px;
-`
+`;
 
 const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
   topUpPosition,
   closePosition,
   setClosePosition,
-  setTopUpPosition,
+  setTopUpPosition
 }) => {
   const {
     pool,
@@ -75,15 +79,15 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
     control,
     handleSubmit,
     onClose,
-    switchPosition,
+    switchPosition
   } = useTopUpPositionContext();
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const availableFathomInPool = useMemo(() => {
-    return pool.availableFathomInPool
-  }, [pool])
+    return pool.availableFathomInPool;
+  }, [pool]);
 
   return (
     <TopUpPositionFormWrapper item>
@@ -114,7 +118,7 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
           rules={{
             required: false,
             min: 0,
-            max: BigNumber(balance).dividedBy(10 ** 18).toNumber(),
+            max: BigNumber(balance).dividedBy(10 ** 18).toNumber()
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <AppFormInputWrapper>
@@ -175,6 +179,7 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
               return true;
             },
             min: FXD_MINIMUM_BORROW_AMOUNT,
+            max: FXD_MAXIMUM_BORROW_AMOUNT
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => {
             return (
@@ -190,7 +195,7 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
                           <InfoIcon
                             sx={{
                               float: "left",
-                              fontSize: "18px",
+                              fontSize: "18px"
                             }}
                           />
                           <Box
@@ -209,6 +214,17 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
                             sx={{ fontSize: "12px", paddingLeft: "6px" }}
                           >
                             Minimum borrow amount is {FXD_MINIMUM_BORROW_AMOUNT}.
+                          </Box>
+                        </>
+                      )}
+                      {error && error.type === "max" && (
+                        <>
+                          <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
+                          <Box
+                            component={"span"}
+                            sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                          >
+                            Maximum borrow amount is {FXD_MAXIMUM_BORROW_AMOUNT}.
                           </Box>
                         </>
                       )}
@@ -235,7 +251,7 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
               sx={{
                 color: "#7D91B5",
                 float: "left",
-                marginRight: "10px",
+                marginRight: "10px"
               }}
             />
             <ApproveBoxTypography>

@@ -64,10 +64,10 @@ const useStableSwap = (options: string[]) => {
     (amount: number, currency: string, type: string) => {
       let oppositeValue;
       if (currency === options[0]) {
-        console.log("US+ -> FXD", 1 - feeIn / 10 ** 18);
+        console.log("xUSDT -> FXD", 1 - feeIn / 10 ** 18);
         oppositeValue = amount * (1 - feeIn / 10 ** 18);
       } else {
-        console.log("FXD -> US+", feeOut / 10 ** 18 + 1);
+        console.log("FXD -> xUSDT", feeOut / 10 ** 18 + 1);
         oppositeValue = amount / (feeOut / 10 ** 18 + 1);
       }
 
@@ -161,7 +161,7 @@ const useStableSwap = (options: string[]) => {
             SmartContractFactory.getAddressByContractName(chainId, "FXD");
 
           const UsStableContractAddress =
-            SmartContractFactory.getAddressByContractName(chainId, "US+");
+            SmartContractFactory.getAddressByContractName(chainId, "xUSDT");
 
           try {
             const promises = [];
@@ -298,7 +298,7 @@ const useStableSwap = (options: string[]) => {
 
   const swapFee = useMemo(() => {
     /**
-     * US+ to FXD
+     * xUSDT to FXD
      */
     if (inputCurrency === options[0]) {
       return (Number(inputValue) * feeIn) / 10 ** 18;
@@ -442,7 +442,7 @@ const useStableSwap = (options: string[]) => {
 
   const setMax = useCallback(() => {
     /**
-     * FXD to US+
+     * FXD to xUSDT
      */
     let formattedBalance;
     if (inputCurrency === options[1]) {

@@ -6,7 +6,7 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useState,
+  useState
 } from "react";
 import { SmartContractFactory } from "config/SmartContractFactory";
 import { useStores } from "stores";
@@ -54,32 +54,44 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
   const fetchPairPrices = useCallback(async () => {
     if (library) {
       try {
-        // @ts-ignore
-        const [ { 0: fthmPrice }, { 0: wxdcPrice }, { 0: fxdPrice },
-          centralizedPrice,
-        ] = await Promise.all([
+        if (process.env.REACT_APP_ENV !== "prod") {
           stakingService.getPairPrice(
             fxdTokenAddress,
             fthmTokenAddress,
             library
-          ),
-          stakingService.getPairPrice(
-            usdtTokenAddress,
-            wxdcTokenAddress,
-            library
-          ),
-          stakingService.getPairPrice(
-            usdtTokenAddress,
-            fxdTokenAddress,
-            library
-          ),
-          centralizedOracleService.cryptocompareConvertXdcUsdt(),
-        ]);
+          ).then((fthmPrice) => {
+            setFthmPrice((fthmPrice as any)[0]);
+          });
+        }
 
-        setFxdPrice(fxdPrice);
-        setFthmPrice(fthmPrice);
-        setWxdcPrice(wxdcPrice);
-        console.log(centralizedPrice);
+        (process.env.REACT_APP_ENV === "prod" ? stakingService.getPairPrice(
+          wxdcTokenAddress,
+          usdtTokenAddress,
+          library
+        ) : stakingService.getPairPrice(
+          usdtTokenAddress,
+          wxdcTokenAddress,
+          library
+        )).then((wxdcPrice) => {
+          setWxdcPrice((wxdcPrice as any)[0]);
+        });
+
+
+        (process.env.REACT_APP_ENV === "prod" ? stakingService.getPairPrice(
+          fxdTokenAddress,
+          usdtTokenAddress,
+          library
+        ) : stakingService.getPairPrice(
+          usdtTokenAddress,
+          fxdTokenAddress,
+          library
+        )).then((fxdPrice) => {
+          setFxdPrice((fxdPrice as any)[0]);
+        });
+
+        centralizedOracleService.cryptocompareConvertXdcUsdt().then((centralizedPrice) => {
+          console.log(centralizedPrice);
+        });
       } catch (e: any) {
         console.log(e);
       }
@@ -94,7 +106,7 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
     library,
     setFxdPrice,
     setFthmPrice,
-    setWxdcPrice,
+    setWxdcPrice
   ]);
 
   useEffect(() => {
@@ -111,7 +123,7 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
     return {
       fxdPrice,
       wxdcPrice,
-      fthmPrice,
+      fthmPrice
     };
   }, [fxdPrice, wxdcPrice, fthmPrice]);
 
