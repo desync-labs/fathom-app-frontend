@@ -15,11 +15,11 @@ export const getTokenLogoURL = (address: string) => {
       break;
     }
   }
+
   if (findToken) {
     logo = findToken.logoURI;
   } else {
-    logo = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`;
+    logo = `https://raw.githubusercontent.com/Into-the-Fathom/assets/master/blockchains/xinfin/${address}/logo.png`;
   }
-
   return logo;
 };

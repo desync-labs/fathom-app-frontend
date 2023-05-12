@@ -8,7 +8,7 @@ import { ClosePositionContextType } from "context/repayPosition";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 
-import { Constants } from "helpers/Constants";
+import { WeiPerWad } from "helpers/Constants";
 
 import ICollateralPool from "stores/interfaces/ICollateralPool";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
@@ -128,7 +128,7 @@ const useRepayPosition = (
   const getBalance = useCallback(async () => {
     const balance = await positionService.balanceStableCoin(account, library);
     const balanceInDecimal = BigNumber(balance)
-      .dividedBy(Constants.WeiPerWad)
+      .dividedBy(WeiPerWad)
       .toFixed();
 
     setBalance(balanceInDecimal);
@@ -217,7 +217,7 @@ const useRepayPosition = (
           position.positionId,
           pool,
           account,
-          BigNumber(collateral).multipliedBy(Constants.WeiPerWad).toFixed(),
+          BigNumber(collateral).multipliedBy(WeiPerWad).toFixed(),
           library
         );
       } else {
@@ -227,11 +227,11 @@ const useRepayPosition = (
           account,
           fathomToken
             ? BigNumber(fathomToken)
-                .multipliedBy(Constants.WeiPerWad)
+                .multipliedBy(WeiPerWad)
                 .toFixed(0, BigNumber.ROUND_UP)
             : "0",
           BigNumber(collateral)
-            .multipliedBy(Constants.WeiPerWad)
+            .multipliedBy(WeiPerWad)
             .toFixed(0, BigNumber.ROUND_UP),
           library
         );

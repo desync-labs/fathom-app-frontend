@@ -22,7 +22,7 @@ import PositionListItem from "components/PositionList/PositionListItem";
 import PositionListItemMobile from "components/PositionList/PositionListItemMobile";
 import useOpenPositionList from "hooks/useOpenPositionList";
 import { styled } from "@mui/material/styles";
-import { Constants } from "helpers/Constants";
+import { COUNT_PER_PAGE } from "helpers/Constants";
 
 import { ClosePositionProvider } from "context/repayPosition";
 import { TopUpPositionProvider } from "context/topUpPosition";
@@ -129,7 +129,7 @@ const PositionsList: FC<PositionsListProps> = ({
                 <PaginationWrapper>
                   <Pagination
                     count={Math.ceil(
-                      positionsItemsCount / Constants.COUNT_PER_PAGE
+                      positionsItemsCount / COUNT_PER_PAGE
                     )}
                     page={positionCurrentPage}
                     onChange={handlePageChange}
@@ -153,7 +153,7 @@ const PositionsList: FC<PositionsListProps> = ({
                 <PaginationWrapper>
                   <Pagination
                     count={Math.ceil(
-                      positionsItemsCount / Constants.COUNT_PER_PAGE
+                      positionsItemsCount / COUNT_PER_PAGE
                     )}
                     page={positionCurrentPage}
                     onChange={handlePageChange}

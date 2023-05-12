@@ -14,14 +14,17 @@ import IStakingService from "services/interfaces/IStakingService";
 
 import { getEstimateGas } from "utils/getEstimateGas";
 
-import { Constants } from "helpers/Constants";
+import {
+  MAX_UINT256,
+  DEFAULT_CHAIN_ID
+} from "helpers/Constants";
 import { Strings } from "helpers/Strings";
 import { Web3Utils } from "helpers/Web3Utils";
 
 export const DAY_SECONDS = 24 * 60 * 60;
 
 export default class StakingService implements IStakingService {
-  chainId = Constants.DEFAULT_CHAIN_ID;
+  chainId = DEFAULT_CHAIN_ID;
 
   alertStore: AlertStore;
   transactionStore: ActiveWeb3Transactions;
@@ -350,7 +353,7 @@ export default class StakingService implements IStakingService {
         const gas = await getEstimateGas(
           FTHMToken,
           "approve",
-          [StakingAddress, Constants.MAX_UINT256],
+          [StakingAddress, MAX_UINT256],
           options
         );
         options.gas = gas;
@@ -366,7 +369,7 @@ export default class StakingService implements IStakingService {
         );
 
         FTHMToken.methods
-          .approve(StakingAddress, Constants.MAX_UINT256)
+          .approve(StakingAddress, MAX_UINT256)
           .send(options)
           .on("transactionHash", (hash: any) => {
             this.transactionStore.addTransaction({

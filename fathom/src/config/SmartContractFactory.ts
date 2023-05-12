@@ -15,6 +15,7 @@ import StakingGetter from "config/ABI/StakingGetter.json";
 import VeFathomAbi from "config/ABI/vFathom.json";
 
 import Addresses from "config/addresses.json";
+import { DEFAULT_CHAIN_ID } from "../helpers/Constants";
 
 
 export class SmartContractFactory {
@@ -22,6 +23,7 @@ export class SmartContractFactory {
     try {
       let environment = (process.env.REACT_APP_ENV as string) ?? "dev";
       let address: any;
+
       switch (chainId) {
         case 1337:
           address = Addresses["1337"];
@@ -33,9 +35,10 @@ export class SmartContractFactory {
           address = Addresses["50"];
           break;
         default:
-          address = Addresses["51"];
+          address = Addresses[DEFAULT_CHAIN_ID];
           break;
       }
+
       return address[environment];
     } catch (e) {
       console.error("Error in fetching address");
@@ -79,7 +82,7 @@ export class SmartContractFactory {
   public static USDT(chainId: number) {
     return {
       abi: BEP20Abi.abi as AbiItem[],
-      address: SmartContractFactory.Addresses(chainId)["US+"],
+      address: SmartContractFactory.Addresses(chainId)["xUSDT"],
     };
   }
 
