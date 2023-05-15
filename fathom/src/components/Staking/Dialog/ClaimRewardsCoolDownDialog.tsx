@@ -12,7 +12,7 @@ import React, { FC } from "react";
 import { styled } from "@mui/material/styles";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatNumber } from "utils/format";
-import useStakingContext from "../../../context/staking";
+import useStakingContext from "context/staking";
 
 export const InfoMessageWrapper = styled(Box)`
   display: flex;
