@@ -26,7 +26,7 @@ const LinksWrapper = styled(Box)`
 const BottomLinks: FC = () => {
   return (
     <LinksWrapper>
-      <a href={"https://fathom-labs.app/"} rel="noreferrer" target={"_blank"}>
+      <a href={"https://fathom.fi/"} rel="noreferrer" target={"_blank"}>
         Fathom.fi
       </a>
       <a
@@ -52,6 +52,20 @@ const BottomLinks: FC = () => {
         target={"_blank"}
       >
         LinkedIn
+      </a>
+      <a
+        href={"https://gist.github.com/BaldyAsh/47a33c5e8005c05315cc8dfc9baa4c0e"}
+        rel="noreferrer"
+        target={"_blank"}
+      >
+        Privacy Policy
+      </a>
+      <a
+        href={"https://gist.github.com/BaldyAsh/9e1efbfd87fa87fd67091b5d45c481b3"}
+        rel="noreferrer"
+        target={"_blank"}
+      >
+        Terms of Service
       </a>
     </LinksWrapper>
   );

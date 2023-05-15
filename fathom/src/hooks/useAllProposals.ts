@@ -1,7 +1,7 @@
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 import { GOVERNANCE_PROPOSALS, GOVERNANCE_STATS } from "apollo/queries";
-import { Constants } from "helpers/Constants";
+import { COUNT_PER_PAGE } from "helpers/Constants";
 import useSyncContext from "context/sync";
 import {
   useMediaQuery,
@@ -25,7 +25,7 @@ export const useAllProposals = () => {
 
   const { data, loading, refetch, fetchMore } = useQuery(GOVERNANCE_PROPOSALS, {
     variables: {
-      first: Constants.COUNT_PER_PAGE,
+      first: COUNT_PER_PAGE,
       skip: 0,
     },
     context: { clientName: "governance", chainId },
@@ -41,7 +41,7 @@ export const useAllProposals = () => {
 
   const refetchProposals = useCallback(() => {
     refetch({
-      first: Constants.COUNT_PER_PAGE,
+      first: COUNT_PER_PAGE,
       skip: 0,
     });
 
@@ -59,8 +59,8 @@ export const useAllProposals = () => {
     (event: ChangeEvent<unknown>, page: number) => {
       fetchMore({
         variables: {
-          first: Constants.COUNT_PER_PAGE,
-          skip: (page - 1) * Constants.COUNT_PER_PAGE,
+          first: COUNT_PER_PAGE,
+          skip: (page - 1) * COUNT_PER_PAGE,
         },
       });
       setCurrentPage(page);

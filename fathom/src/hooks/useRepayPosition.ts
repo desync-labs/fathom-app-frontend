@@ -8,12 +8,12 @@ import { ClosePositionContextType } from "context/repayPosition";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 
-import { Constants } from "helpers/Constants";
+import { WeiPerWad } from "helpers/Constants";
 
 import ICollateralPool from "stores/interfaces/ICollateralPool";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
 import debounce from "lodash.debounce";
-import { SmartContractFactory } from "../config/SmartContractFactory";
+import { SmartContractFactory } from "config/SmartContractFactory";
 
 const useRepayPosition = (
   position: ClosePositionContextType["position"],
@@ -128,7 +128,7 @@ const useRepayPosition = (
   const getBalance = useCallback(async () => {
     const balance = await positionService.balanceStableCoin(account, library);
     const balanceInDecimal = BigNumber(balance)
-      .dividedBy(Constants.WeiPerWad)
+      .dividedBy(WeiPerWad)
       .toFixed();
 
     setBalance(balanceInDecimal);
@@ -173,14 +173,17 @@ const useRepayPosition = (
     const price = BigNumber(debtValue).dividedBy(lockedCollateral);
     setPrice(price.toString());
 
-    setFathomToken(debtValue);
-    setCollateral(lockedCollateral);
-  }, [lockedCollateral, debtValue, setPrice, setFathomToken, setCollateral]);
+    const fathomValue = BigNumber(balance).isGreaterThan(debtValue) ? debtValue : balance
+
+    setFathomToken(fathomValue);
+    setCollateral(BigNumber(fathomValue).dividedBy(price).precision(18).toFixed());
+  }, [lockedCollateral, balance, debtValue, setPrice, setFathomToken, setCollateral]);
 
   useEffect(() => {
-    getBalance();
+    getBalance().then(() => {
+      handleOnOpen();
+    });
     getDebtValue();
-    handleOnOpen();
   }, [getBalance, handleOnOpen, getDebtValue]);
 
   useEffect(() => {
@@ -214,7 +217,7 @@ const useRepayPosition = (
           position.positionId,
           pool,
           account,
-          BigNumber(collateral).multipliedBy(Constants.WeiPerWad).toFixed(),
+          BigNumber(collateral).multipliedBy(WeiPerWad).toFixed(),
           library
         );
       } else {
@@ -224,11 +227,11 @@ const useRepayPosition = (
           account,
           fathomToken
             ? BigNumber(fathomToken)
-                .multipliedBy(Constants.WeiPerWad)
+                .multipliedBy(WeiPerWad)
                 .toFixed(0, BigNumber.ROUND_UP)
             : "0",
           BigNumber(collateral)
-            .multipliedBy(Constants.WeiPerWad)
+            .multipliedBy(WeiPerWad)
             .toFixed(0, BigNumber.ROUND_UP),
           library
         );
