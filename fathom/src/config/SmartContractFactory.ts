@@ -15,7 +15,7 @@ import StakingGetter from "config/ABI/StakingGetter.json";
 import VeFathomAbi from "config/ABI/vFathom.json";
 
 import Addresses from "config/addresses.json";
-import { DEFAULT_CHAIN_ID } from "../helpers/Constants";
+import { DEFAULT_CHAIN_ID } from "helpers/Constants";
 
 
 export class SmartContractFactory {
