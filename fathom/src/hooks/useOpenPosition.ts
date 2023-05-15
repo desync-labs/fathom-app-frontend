@@ -27,7 +27,10 @@ const useOpenPosition = (
   const { poolService, positionService } = useStores();
   const { account, chainId, library } = useConnector()!;
 
-  const { handleSubmit, watch, control, setValue, trigger } = useForm({
+  const {
+    handleSubmit, watch, control, setValue, trigger,
+    formState: { errors },
+  } = useForm({
     defaultValues,
     reValidateMode: "onChange",
     mode: "onChange"
@@ -149,7 +152,7 @@ const useOpenPosition = (
             .minus(fathomTokenInput || 0)
             .dividedBy(priceWithSafetyMargin)
           : BigNumber(collateralInput).minus(fathomTokenInput)
-      ).toNumber();
+      ).precision(10).toNumber();
 
       setCollateralAvailableToWithdraw(collateralAvailableToWithdraw);
 
@@ -359,7 +362,8 @@ const useOpenPosition = (
     availableFathomInPool,
     pool,
     onClose,
-    dangerSafetyBuffer
+    dangerSafetyBuffer,
+    errors,
   };
 };
 
