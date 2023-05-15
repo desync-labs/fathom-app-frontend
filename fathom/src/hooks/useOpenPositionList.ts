@@ -14,7 +14,7 @@ import ICollateralPool from "stores/interfaces/ICollateralPool";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import { FXD_POOLS, FXD_POSITIONS } from "apollo/queries";
 
-import { Constants } from "helpers/Constants";
+import { COUNT_PER_PAGE } from "helpers/Constants";
 import useConnector from "context/connector";
 import BigNumber from "bignumber.js";
 import debounce from "lodash.debounce";
@@ -75,7 +75,7 @@ const useOpenPositionList = (
   useEffect(() => {
     loadPositions({
       variables: {
-        first: Constants.COUNT_PER_PAGE,
+        first: COUNT_PER_PAGE,
         skip: 0,
         walletAddress: proxyWallet,
       },
@@ -99,8 +99,8 @@ const useOpenPositionList = (
     (event: ChangeEvent<unknown>, page: number) => {
       fetchMore({
         variables: {
-          first: Constants.COUNT_PER_PAGE,
-          skip: (page - 1) * Constants.COUNT_PER_PAGE,
+          first: COUNT_PER_PAGE,
+          skip: (page - 1) * COUNT_PER_PAGE,
           walletAddress: proxyWallet,
         },
       });

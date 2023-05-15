@@ -1,9 +1,12 @@
 import React from "react";
-import { Box, Grid, ListItem, ListItemText } from "@mui/material";
+import { Box, Grid, ListItemText } from "@mui/material";
 import BigNumber from "bignumber.js";
 
 import useClosePositionContext from "context/repayPosition";
-import { AppList } from "components/AppComponents/AppList/AppList";
+import {
+  AppList,
+  AppListItem
+} from "components/AppComponents/AppList/AppList";
 
 import {
   formatNumberPrice,
@@ -24,7 +27,7 @@ const RepayPositionInfo = () => {
   return (
     <Grid item xs={12} sm={6}>
       <AppList sx={{ width: "100%" }}>
-        <ListItem
+        <AppListItem
           alignItems="flex-start"
           secondaryAction={
             <>
@@ -41,8 +44,8 @@ const RepayPositionInfo = () => {
           }
         >
           <ListItemText primary="FXD Borrowed" />
-        </ListItem>
-        <ListItem
+        </AppListItem>
+        <AppListItem
           alignItems="flex-start"
           secondaryAction={
             <>
@@ -58,16 +61,16 @@ const RepayPositionInfo = () => {
           }
         >
           <ListItemText primary="Collateral Locked" />
-        </ListItem>
-        <ListItem alignItems="flex-start" secondaryAction={`${formatPercentage(ltv * 100)}%`}>
+        </AppListItem>
+        <AppListItem alignItems="flex-start" secondaryAction={`${formatPercentage(ltv * 100)}%`}>
           <ListItemText primary="LTV (Loan-to-Value)" />
-        </ListItem>
-        <ListItem
+        </AppListItem>
+        <AppListItem
           alignItems="flex-start"
           secondaryAction={`1 ${pool.poolName} = ${formatNumberPrice(liquidationPrice)} FXD`}
         >
           <ListItemText primary="Liquidation Price" />
-        </ListItem>
+        </AppListItem>
       </AppList>
     </Grid>
   );

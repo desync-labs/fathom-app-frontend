@@ -1,6 +1,10 @@
 import Xdc3 from "xdc3";
 import { SmartContractFactory } from "config/SmartContractFactory";
-import { Constants } from "helpers/Constants";
+import {
+  MAX_UINT256,
+  DEFAULT_CHAIN_ID,
+  WeiPerWad
+} from "helpers/Constants";
 import { Strings } from "helpers/Strings";
 import { Web3Utils } from "helpers/Web3Utils";
 import {
@@ -17,7 +21,7 @@ import BigNumber from "bignumber.js";
 
 export default class StableSwapService implements IStableSwapService {
   readonly tokenBuffer: number = 5;
-  chainId = Constants.DEFAULT_CHAIN_ID;
+  chainId = DEFAULT_CHAIN_ID;
 
   transactionStore: ActiveWeb3Transactions;
   alertStore: AlertStore;
@@ -165,7 +169,7 @@ export default class StableSwapService implements IStableSwapService {
           "approve",
           [
             SmartContractFactory.StableSwapModule(this.chainId).address,
-            Constants.MAX_UINT256,
+            MAX_UINT256,
           ],
           options
         );
@@ -184,7 +188,7 @@ export default class StableSwapService implements IStableSwapService {
         return FathomStableCoin.methods
           .approve(
             SmartContractFactory.StableSwapModule(this.chainId).address,
-            Constants.MAX_UINT256
+            MAX_UINT256
           )
           .send(options)
           .on("transactionHash", (hash: any) => {
@@ -230,7 +234,7 @@ export default class StableSwapService implements IStableSwapService {
           "approve",
           [
             SmartContractFactory.StableSwapModule(this.chainId).address,
-            Constants.MAX_UINT256,
+            MAX_UINT256,
           ],
           options
         );
@@ -239,7 +243,7 @@ export default class StableSwapService implements IStableSwapService {
         return USStable.methods
           .approve(
             SmartContractFactory.StableSwapModule(this.chainId).address,
-            Constants.MAX_UINT256
+            MAX_UINT256
           )
           .send(options)
           .on("transactionHash", (hash: any) => {
@@ -288,7 +292,7 @@ export default class StableSwapService implements IStableSwapService {
         BigNumber(tokenIn).multipliedBy(this.tokenBuffer).dividedBy(100)
       );
       return BigNumber(allowance).isGreaterThanOrEqualTo(
-        Constants.WeiPerWad.multipliedBy(buffer)
+        WeiPerWad.multipliedBy(buffer)
       );
     } catch (e: any) {
       this.alertStore.setShowErrorAlert(true, e.message);
@@ -317,7 +321,7 @@ export default class StableSwapService implements IStableSwapService {
         BigNumber(tokenIn).multipliedBy(this.tokenBuffer).dividedBy(100)
       );
       return BigNumber(allowance).isGreaterThanOrEqualTo(
-        Constants.WeiPerWad.multipliedBy(buffer)
+        WeiPerWad.multipliedBy(buffer)
       );
     } catch (e: any) {
       this.alertStore.setShowErrorAlert(true, e.message);

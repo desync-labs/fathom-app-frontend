@@ -1,5 +1,8 @@
 import { styled } from "@mui/material/styles";
-import { List as MuiList } from "@mui/material";
+import {
+  List as MuiList,
+  ListItem
+} from "@mui/material";
 
 export const AppList = styled(MuiList)`
   width: 100%;
@@ -26,3 +29,21 @@ export const AppList = styled(MuiList)`
     }
   }
 `;
+
+export const AppListItem = styled(ListItem)`
+  &.MuiListItem-root{
+    align-items: center;  
+  }
+  .MuiListItemSecondaryAction-root {
+    max-width: 200px;
+    word-break: break-all;
+    text-align: right;
+    position: static;
+    transform: none;
+  }
+  &.short {
+    .MuiListItemSecondaryAction-root {
+      max-width: 120px;
+    } 
+  }
+`

@@ -14,7 +14,7 @@ import { styled } from "@mui/material/styles";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import InfoIcon from "@mui/icons-material/Info";
 import { formatNumber } from "utils/format";
-import useStakingContext from "../../../context/staking";
+import useStakingContext from "context/staking";
 
 const WarningBlock = styled(Box)`
   background: #452508;

@@ -5,16 +5,18 @@ import ActiveWeb3Transactions from "stores/transaction.store";
 import { keccak256 } from "web3-utils";
 import {
   TransactionStatus,
-  TransactionType,
+  TransactionType
 } from "stores/interfaces/ITransaction";
-import { Constants } from "helpers/Constants";
+import {
+  DEFAULT_CHAIN_ID
+} from "helpers/Constants";
 import Xdc3 from "xdc3";
 import { getEstimateGas } from "utils/getEstimateGas";
 import AlertStore from "stores/alert.stores";
 import { TransactionReceipt } from "xdc3-eth";
 
 export default class ProposalService implements IProposalService {
-  chainId = Constants.DEFAULT_CHAIN_ID;
+  chainId = DEFAULT_CHAIN_ID;
 
   transactionStore: ActiveWeb3Transactions;
   alertStore: AlertStore;
@@ -74,7 +76,7 @@ export default class ProposalService implements IProposalService {
               active: false,
               status: TransactionStatus.None,
               title: "Proposal Creation Pending",
-              message: "Click on transaction to view on block Explorer.",
+              message: "Click on transaction to view on block Explorer."
             });
           })
           .then((transactionReceipt: TransactionReceipt) => {
@@ -141,7 +143,7 @@ export default class ProposalService implements IProposalService {
               active: false,
               status: TransactionStatus.None,
               title: "Execute Proposal Pending",
-              message: "Click on transaction to view on block Explorer.",
+              message: "Click on transaction to view on block Explorer."
             });
           })
           .then((receipt: TransactionReceipt) => {
@@ -208,7 +210,7 @@ export default class ProposalService implements IProposalService {
               active: false,
               status: TransactionStatus.None,
               title: "Queue Proposal Pending",
-              message: "Click on transaction to view on block Explorer.",
+              message: "Click on transaction to view on block Explorer."
             });
           })
           .then((receipt: TransactionReceipt) => {
@@ -273,7 +275,7 @@ export default class ProposalService implements IProposalService {
               active: false,
               status: TransactionStatus.None,
               title: `Vote Pending`,
-              message: "Click on transaction to view on block Explorer.",
+              message: "Click on transaction to view on block Explorer."
             });
           })
           .then((receipt: TransactionReceipt) => {
@@ -297,7 +299,7 @@ export default class ProposalService implements IProposalService {
     proposalId: string,
     account: string,
     library: Xdc3
-  ): Promise<boolean> | undefined {
+  ): Promise<boolean>|undefined {
     try {
       const FathomGovernor = Web3Utils.getContractInstance(
         SmartContractFactory.FathomGovernor(this.chainId),
@@ -313,7 +315,7 @@ export default class ProposalService implements IProposalService {
     proposalId: string,
     account: string,
     library: Xdc3
-  ): Promise<string> | undefined {
+  ): Promise<string>|undefined {
     try {
       const FathomGovernor = Web3Utils.getContractInstance(
         SmartContractFactory.FathomGovernor(this.chainId),
@@ -328,7 +330,7 @@ export default class ProposalService implements IProposalService {
   nextAcceptableProposalTimestamp(
     account: string,
     library: Xdc3
-  ): Promise<number> | undefined {
+  ): Promise<number>|undefined {
     try {
       const FathomGovernor = Web3Utils.getContractInstance(
         SmartContractFactory.FathomGovernor(this.chainId),
@@ -343,7 +345,7 @@ export default class ProposalService implements IProposalService {
     }
   }
 
-  getVBalance(account: string, library: Xdc3): Promise<number> | undefined {
+  getVBalance(account: string, library: Xdc3): Promise<number>|undefined {
     try {
       const VeFathom = Web3Utils.getContractInstance(
         SmartContractFactory.vFathom(this.chainId),
@@ -356,7 +358,7 @@ export default class ProposalService implements IProposalService {
     }
   }
 
-  quorum(blockNumber: string, library: Xdc3): Promise<number> | undefined {
+  quorum(blockNumber: string, library: Xdc3): Promise<number>|undefined {
     try {
       const FathomGovernor = Web3Utils.getContractInstance(
         SmartContractFactory.MainFathomGovernor(this.chainId),
@@ -369,7 +371,7 @@ export default class ProposalService implements IProposalService {
     }
   }
 
-  proposalVotes(proposalId: string, library: Xdc3): Promise<any> | undefined {
+  proposalVotes(proposalId: string, library: Xdc3): Promise<any>|undefined {
     try {
       const FathomGovernor = Web3Utils.getContractInstance(
         SmartContractFactory.MainFathomGovernor(this.chainId),
