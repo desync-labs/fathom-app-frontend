@@ -1,12 +1,14 @@
 import { SmartContractFactory } from "config/SmartContractFactory";
 import IPoolService from "services/interfaces/IPoolService";
-import { Constants } from "helpers/Constants";
+import {
+  DEFAULT_CHAIN_ID
+} from "helpers/Constants";
 import { Web3Utils } from "helpers/Web3Utils";
 import Xdc3 from "xdc3";
 import AlertStore from "stores/alert.stores";
 
 export default class PoolService implements IPoolService {
-  chainId = Constants.DEFAULT_CHAIN_ID;
+  chainId = DEFAULT_CHAIN_ID;
   alertStore: AlertStore;
 
   constructor(alertStore: AlertStore) {

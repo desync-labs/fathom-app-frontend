@@ -27,7 +27,7 @@ import useEarlyUnstake from "hooks/useEarlyUnstake";
 import { InfoMessageWrapper } from "components/Staking/Dialog/ClaimRewardsDialog";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatNumber } from "utils/format";
-import useStakingContext from "../../../context/staking";
+import useStakingContext from "context/staking";
 
 const UnstakeDialogWrapper = styled(AppDialog)`
   .MuiPaper-root {

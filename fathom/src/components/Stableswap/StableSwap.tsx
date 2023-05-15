@@ -424,7 +424,7 @@ const StableSwap = () => {
 
               <StableSwapInfoWrapper>
                 <InfoLabel>xUSDT Pool Token Available</InfoLabel>
-                <InfoValue>{formatNumber(usStableAvailable!)} xUSDT </InfoValue>
+                <InfoValue>{formatNumber(usStableAvailable!)} xUSDT</InfoValue>
               </StableSwapInfoWrapper>
             </StableSwapInfoContainer>
 
