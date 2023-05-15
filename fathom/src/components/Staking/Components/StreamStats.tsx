@@ -176,7 +176,6 @@ const StreamStats: FC = () => {
                 <strong>
                   {formatNumber(protocolStatsInfo.stakingAPR / 10 ** 18)}%
                 </strong>
-                <RiseLabel>3.45%</RiseLabel>
               </StatsValue>
             )}
           </Box>
