@@ -31,7 +31,11 @@ import {
   MaxButton,
 } from "components/AppComponents/AppButton/AppButton";
 import useOpenPositionContext from "context/openPosition";
-import { FXD_MINIMUM_BORROW_AMOUNT, FXD_MAXIMUM_BORROW_AMOUNT } from "helpers/Constants";
+import {
+  FXD_MAXIMUM_BORROW_AMOUNT,
+  FXD_MINIMUM_BORROW_AMOUNT
+} from "helpers/Constants";
+import { ErrorBox, ErrorMessage } from "components/AppComponents/AppBox/AppBox";
 
 const OpenPositionFormWrapper = styled(Grid)`
   padding-left: 20px;
@@ -42,6 +46,11 @@ const OpenPositionFormWrapper = styled(Grid)`
     padding: 0;
   }
 `;
+
+const DangerErrorBox = styled(ErrorBox)`
+  margin-bottom: 60px;
+  margin-top: 24px;
+`
 
 const OpenPositionForm = () => {
   const {
@@ -60,6 +69,7 @@ const OpenPositionForm = () => {
     availableFathomInPool,
     onClose,
     pool,
+    dangerSafetyBuffer
   } = useOpenPositionContext();
 
   const theme = useTheme();
@@ -81,14 +91,20 @@ const OpenPositionForm = () => {
           rules={{
             required: true,
             min: 1,
-            max: BigNumber(balance).dividedBy(10 ** 18).toString(),
+            max: BigNumber(balance)
+              .dividedBy(10 ** 18)
+              .toString(),
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <AppFormInputWrapper>
               <AppFormLabel>Collateral</AppFormLabel>
               {balance ? (
                 <WalletBalance>
-                  Wallet Available: {BigNumber(balance).dividedBy(10 ** 18).toString()} {pool.poolName}
+                  Wallet Available:{" "}
+                  {BigNumber(balance)
+                    .dividedBy(10 ** 18)
+                    .toString()}{" "}
+                  {pool.poolName}
                 </WalletBalance>
               ) : null}
               <AppTextField
@@ -160,7 +176,7 @@ const OpenPositionForm = () => {
               }
 
               if (Number(value) > safeMax) {
-                return `You can't borrow more then ${fxdToBeBorrowed}`;
+                return `You can't borrow more than ${fxdToBeBorrowed}`;
               }
 
               return true;
@@ -171,7 +187,7 @@ const OpenPositionForm = () => {
               <AppFormInputWrapper>
                 <AppFormLabel>Borrow Amount</AppFormLabel>
                 <AppTextField
-                  error={!!error}
+                  error={!!error || dangerSafetyBuffer}
                   id="outlined-helperText"
                   helperText={
                     <>
@@ -198,7 +214,8 @@ const OpenPositionForm = () => {
                             component={"span"}
                             sx={{ fontSize: "12px", paddingLeft: "6px" }}
                           >
-                            Minimum borrow amount is {FXD_MINIMUM_BORROW_AMOUNT}.
+                            Minimum borrow amount is {FXD_MINIMUM_BORROW_AMOUNT}
+                            .
                           </Box>
                         </>
                       )}
@@ -252,6 +269,18 @@ const OpenPositionForm = () => {
             </ApproveButton>
           </ApproveBox>
         )}
+        { dangerSafetyBuffer ? (
+          <DangerErrorBox>
+            <InfoIcon
+              sx={{ width: "16px", color: "#F5953D", height: "16px" }}
+            />
+            <ErrorMessage>
+              Safety Buffer is moved into the danger zone. We recommend
+              borrowing a lesser amount of FXD. Otherwise, your position may be
+              at risk of liquidation if the price of collateral will drop.
+            </ErrorMessage>
+          </DangerErrorBox>
+        ) : null}
         <ButtonsWrapper>
           {!isMobile && (
             <ButtonSecondary onClick={onClose}>Close</ButtonSecondary>

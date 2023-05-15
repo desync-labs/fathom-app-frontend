@@ -29,7 +29,11 @@ import React, {
 } from "react";
 import { styled } from "@mui/material/styles";
 import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
-import { useMediaQuery, useTheme } from "@mui/material";
+import {
+  Box,
+  useMediaQuery,
+  useTheme
+} from "@mui/material";
 import useConnector from "context/connector";
 
 const NetworkPaper = styled(AppPaper)`
@@ -55,6 +59,14 @@ const NetworkPaper = styled(AppPaper)`
     }
   }
 `;
+
+const EmptyButtonWrapper = styled(Box)`
+  padding: 3px;
+  background: #253656;
+  border-radius: 8px;
+  margin-right: 10px;
+  cursor: auto;
+`
 
 const Web3Status = () => {
   const { error, account, chainId } = useConnector();
@@ -99,7 +111,7 @@ const Web3Status = () => {
   );
 
   const showNetworkSelector =
-    chainId || error instanceof UnsupportedChainIdError;
+    (chainId || error instanceof UnsupportedChainIdError) && options.length;
 
   if (XDC_CHAIN_IDS.includes(chainId!)) {
     button = (
@@ -107,7 +119,7 @@ const Web3Status = () => {
         <>
           <img src={getTokenLogoURL("WXDC")} alt={"xdc"} width={16} />
           {!isMobile && NETWORK_LABELS[chainId as ChainId]}
-          {showNetworkSelector && <ArrowDropDownIcon />}
+          {showNetworkSelector ? <ArrowDropDownIcon /> : null}
         </>
       </RightNetwork>
     );
@@ -115,7 +127,7 @@ const Web3Status = () => {
     button = isMobile ? (
       <WrongNetworkMobile onClick={() => setOpen(!open)}>
         <WrongNetworkMobileIcon />
-        {showNetworkSelector && <ArrowDropDownIcon />}
+        {showNetworkSelector ? <ArrowDropDownIcon /> : null}
       </WrongNetworkMobile>
     ) : (
       <WrongNetwork onClick={() => setOpen(!open)}>
@@ -131,7 +143,8 @@ const Web3Status = () => {
     );
   }
 
-  return chainId || error instanceof UnsupportedChainIdError ? (
+  return (chainId || error instanceof UnsupportedChainIdError) &&
+    options.length ? (
     <>
       <ButtonGroup
         variant="contained"
@@ -176,7 +189,9 @@ const Web3Status = () => {
       </Popper>
     </>
   ) : (
-    button
+    <EmptyButtonWrapper>
+      { button }
+    </EmptyButtonWrapper>
   );
 };
 

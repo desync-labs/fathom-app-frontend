@@ -1,7 +1,7 @@
 import { makeAutoObservable } from "mobx";
 import { RootStore } from ".";
 import { ITransaction, TransactionStatus } from "stores/interfaces/ITransaction";
-import { Constants } from "helpers/Constants";
+import { TransactionCheckUpdateInterval } from "helpers/Constants";
 import Xdc3 from "xdc3";
 
 export default class ActiveWeb3Transactions {
@@ -18,7 +18,7 @@ export default class ActiveWeb3Transactions {
     if (this.fetchHandle !== null) clearInterval(this.fetchHandle);
     this.fetchHandle = setInterval(
       () => this.checkTransactionStatus(this.library!),
-      Constants.TransactionCheckUpdateInterval
+      TransactionCheckUpdateInterval
     );
   }
 

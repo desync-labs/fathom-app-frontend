@@ -2,7 +2,7 @@ import { useStores } from "stores";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import { FXD_POOLS, FXD_POSITIONS, FXD_STATS, FXD_USER } from "apollo/queries";
 import { useCallback, useEffect, useState } from "react";
-import { Constants } from "helpers/Constants";
+import { COUNT_PER_PAGE } from "helpers/Constants";
 import useSyncContext from "context/sync";
 import { useMediaQuery, useTheme } from "@mui/material";
 import useConnector from "context/connector";
@@ -76,7 +76,7 @@ const useDashboard = () => {
 
       refetchPositions({
         walletAddress: newProxyWallet,
-        first: Constants.COUNT_PER_PAGE,
+        first: COUNT_PER_PAGE,
         skip: 0,
       }).then(() => {
         setPositionCurrentPage(1);
@@ -95,7 +95,7 @@ const useDashboard = () => {
     } else {
       refetchPositions({
         walletAddress: proxyWallet,
-        first: Constants.COUNT_PER_PAGE,
+        first: COUNT_PER_PAGE,
         skip: 0,
       }).then(() => {
         setPositionCurrentPage(1);

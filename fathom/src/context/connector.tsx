@@ -10,11 +10,7 @@ import {
 } from "react";
 import { useStores } from "stores";
 import { useWeb3React } from "@web3-react/core";
-import {
-  injected,
-  WalletConnect,
-  xdcInjected
-} from "connectors/networks";
+import { injected, WalletConnect, xdcInjected } from "connectors/networks";
 import WalletConnectProvider from "@walletconnect/ethereum-provider";
 import { ConnectorEvent } from "@web3-react/types";
 import { getDefaultProvider } from "utils/defaultProvider";
@@ -37,6 +33,8 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
     library,
   } = useWeb3React();
 
+  const { stableSwapService } = useStores();
+
   const [isMetamask, setIsMetamask] = useState(false);
   const [isWalletConnect, setIsWalletConnect] = useState(false);
   const [isXdcPay, setIsXdcPay] = useState(false);
@@ -45,6 +43,15 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
   const [shouldDisable, setShouldDisable] = useState(false); // Should disable connect button while connecting to MetaMask
   const [isLoading, setIsLoading] = useState(true);
   const [web3Library, setWeb3Library] = useState(library);
+
+  const [isDecentralizedState, setIsDecentralizedState] = useState<
+    boolean | undefined
+  >(undefined);
+  const [isUserWhiteListed, setIsUserWhitelisted] = useState<
+    boolean | undefined
+  >(undefined);
+  const [allowStableSwapInProgress, setAllowStableSwapInProgress] =
+    useState<boolean | undefined>(undefined);
 
   const { transactionStore } = useStores();
 
@@ -56,12 +63,12 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
     if (library) {
       const { isMetaMask, isXDCPay } = (library as any).currentProvider;
       if (isXDCPay) {
-        setIsXdcPay(true)
+        setIsXdcPay(true);
       } else if (isMetaMask) {
         setIsMetamask(true);
       } else {
-        setIsXdcPay(false)
-        setIsMetamask(false)
+        setIsXdcPay(false);
+        setIsMetamask(false);
       }
 
       setIsWalletConnect(
@@ -74,6 +81,35 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
       setIsWalletConnect(false);
     }
   }, [library, transactionStore, setIsMetamask, setIsWalletConnect]);
+
+  useEffect(() => {
+    if (account) {
+      setAllowStableSwapInProgress(true);
+      stableSwapService
+        .isDecentralizedState(library)
+        .then((isDecentralizedState) => {
+          setIsDecentralizedState(isDecentralizedState);
+
+          if (isDecentralizedState === false) {
+            stableSwapService
+              .isUserWhitelisted(account, library)
+              .then((isWhitelisted) => {
+                setAllowStableSwapInProgress(false);
+                setIsUserWhitelisted(isWhitelisted);
+              });
+          } else {
+            setAllowStableSwapInProgress(false);
+          }
+        });
+    }
+  }, [
+    account,
+    library,
+    stableSwapService,
+    setIsDecentralizedState,
+    setIsUserWhitelisted,
+    setAllowStableSwapInProgress,
+  ]);
 
   const deactivateEvent = useCallback(() => {
     sessionStorage.removeItem("isConnected");
@@ -107,7 +143,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
       sessionStorage.setItem("isConnected", "xdc-pay");
       setIsXdcPay(true);
     });
-  }, [activate, setShouldDisable, setIsXdcPay])
+  }, [activate, setShouldDisable, setIsXdcPay]);
 
   const connectWalletConnect = useCallback(() => {
     setShouldDisable(true);
@@ -128,12 +164,19 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
       connectWalletConnect()!.then(() => {
         setIsLoading(false);
       });
-    } else if (isConnected === 'xdc-pay') {
+    } else if (isConnected === "xdc-pay") {
       connectXdcPay()!.then(() => {
         setIsLoading(false);
       });
     }
   }, [connectMetamask, connectWalletConnect, connectXdcPay]);
+
+  const allowStableSwap = useMemo(() => {
+    return (
+      isDecentralizedState ||
+      (isDecentralizedState === false && isUserWhiteListed === true)
+    );
+  }, [isDecentralizedState, isUserWhiteListed]);
 
   // Check when App is Connected or Disconnected to MetaMask
   const handleIsActive = useCallback(() => {
@@ -173,6 +216,10 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
       isMetamask,
       isWalletConnect,
       isXdcPay,
+      isDecentralizedState,
+      isUserWhiteListed,
+      allowStableSwap,
+      allowStableSwapInProgress,
     }),
     [
       connector,
@@ -190,6 +237,10 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
       isMetamask,
       isWalletConnect,
       isXdcPay,
+      isDecentralizedState,
+      isUserWhiteListed,
+      allowStableSwap,
+      allowStableSwapInProgress,
     ]
   );
 
