@@ -69,4 +69,9 @@ export default interface IPositionService {
     poolId: string,
     library: Xdc3
   ): Promise<string>;
+
+  getPositionDebtCeiling(
+    poolId: string,
+    library: Xdc3,
+  ): Promise<string>
 }

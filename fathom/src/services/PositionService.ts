@@ -789,6 +789,19 @@ export default class PositionService implements IPositionService {
     return debtValue.dividedBy(WeiPerRad).toFixed();
   }
 
+  async getPositionDebtCeiling(poolId: string, library: Xdc3) {
+    const poolConfigContract = Web3Utils.getContractInstance(
+      SmartContractFactory.PoolConfig(this.chainId),
+      library
+    );
+
+    const debtCeiling = await poolConfigContract.methods
+      .getPositionDebtCeiling(poolId)
+      .call();
+
+    return BigNumber(debtCeiling).dividedBy(WeiPerRad).integerValue().toString();
+  }
+
   setChainId(chainId: number) {
     this.chainId = chainId;
   }
