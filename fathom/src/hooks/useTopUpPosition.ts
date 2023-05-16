@@ -41,6 +41,8 @@ const useTopUpPosition = (
   const [collateralTokenAddress, setCollateralTokenAddress] = useState<
     string | null
   >();
+  const [maxBorrowAmount, setMaxBorrowAmount] = useState<string>('');
+
   const { setLastTransactionBlock } = useSyncContext();
 
   const [openPositionLoading, setOpenPositionLoading] =
@@ -111,6 +113,12 @@ const useTopUpPosition = (
     setLiquidationPrice,
     setLtv,
   ]);
+
+  const getPositionDebtCeiling = useCallback(() => {
+    positionService.getPositionDebtCeiling(pool.id, library).then((debtCeiling) => {
+      setMaxBorrowAmount(debtCeiling);
+    })
+  }, [positionService, pool, library, setMaxBorrowAmount])
 
   const getCollateralTokenAndBalance = useCallback(async () => {
     if (pool.poolName.toUpperCase() === "XDC") {
@@ -301,8 +309,9 @@ const useTopUpPosition = (
     if (account && chainId) {
       getDebtValue();
       getCollateralTokenAndBalance();
+      getPositionDebtCeiling();
     }
-  }, [chainId, account, getCollateralTokenAndBalance, getDebtValue]);
+  }, [chainId, account, getCollateralTokenAndBalance, getDebtValue, getPositionDebtCeiling]);
 
   useEffect(() => {
     if (
@@ -350,6 +359,7 @@ const useTopUpPosition = (
     switchPosition,
     totalCollateral,
     totalFathomToken,
+    maxBorrowAmount,
   };
 };
 
