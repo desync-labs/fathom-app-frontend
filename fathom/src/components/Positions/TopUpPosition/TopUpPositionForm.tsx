@@ -83,11 +83,9 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
     handleSubmit,
     onClose,
     switchPosition,
-    safetyBuffer
+    safetyBuffer,
     maxBorrowAmount,
   } = useTopUpPositionContext();
-
-  console.log(safetyBuffer)
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -295,7 +293,7 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
           <WarningBox>
             <InfoIcon />
             <Typography>
-              Resulting in lowering safety buffer - consider provide more collateral or borrow less FXD
+              Providing 0 collateral you are making your position unsafer.
             </Typography>
           </WarningBox>}
         <ButtonsWrapper>

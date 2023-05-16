@@ -78,7 +78,7 @@ const OpenPositionForm = () => {
     onClose,
     pool,
     dangerSafetyBuffer,
-    errors
+    errors,
     maxBorrowAmount
   } = useOpenPositionContext();
 
@@ -297,7 +297,7 @@ const OpenPositionForm = () => {
           )}
           <ButtonPrimary
             type="submit"
-            disabled={approveBtn || Object.keys(errors).length}
+            disabled={approveBtn || !!Object.keys(errors).length}
             isLoading={openPositionLoading}
           >
             {openPositionLoading ? (
