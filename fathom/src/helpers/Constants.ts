@@ -10,7 +10,6 @@ export const DAY_IN_SECONDS = 24 * 60 * 60
 export const DANGER_SAFETY_BUFFER = 0.25;
 
 export const FXD_MINIMUM_BORROW_AMOUNT = 1;
-export const FXD_MAXIMUM_BORROW_AMOUNT = 45;
 
 export const CRYPTOCOMPARE_ENDPOINT = 'https://min-api.cryptocompare.com/data/price';
 
