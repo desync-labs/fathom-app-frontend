@@ -72,8 +72,6 @@ const OpenPositionForm = () => {
     maxBorrowAmount
   } = useOpenPositionContext();
 
-  console.log(maxBorrowAmount)
-
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
