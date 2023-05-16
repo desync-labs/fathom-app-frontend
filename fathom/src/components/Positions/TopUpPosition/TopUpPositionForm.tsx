@@ -43,8 +43,7 @@ import { ClosePositionDialogPropsType } from "components/Positions/RepayPosition
 import BigNumber from "bignumber.js";
 import {
   FXD_MINIMUM_BORROW_AMOUNT,
-  FXD_MAXIMUM_BORROW_AMOUNT,
-  DANGER_SAFETY_BUFFER
+  DANGER_SAFETY_BUFFER,
 } from "helpers/Constants";
 
 const TopUpPositionFormWrapper = styled(Grid)`
@@ -85,6 +84,7 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
     onClose,
     switchPosition,
     safetyBuffer
+    maxBorrowAmount,
   } = useTopUpPositionContext();
 
   console.log(safetyBuffer)
@@ -197,7 +197,7 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
               return true;
             },
             min: FXD_MINIMUM_BORROW_AMOUNT,
-            max: FXD_MAXIMUM_BORROW_AMOUNT
+            max: maxBorrowAmount
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => {
             return (
@@ -242,7 +242,7 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
                             component={"span"}
                             sx={{ fontSize: "12px", paddingLeft: "6px" }}
                           >
-                            Maximum borrow amount is {FXD_MAXIMUM_BORROW_AMOUNT}.
+                            Maximum borrow amount is {maxBorrowAmount}.
                           </Box>
                         </>
                       )}

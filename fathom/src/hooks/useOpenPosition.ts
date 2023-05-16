@@ -52,6 +52,8 @@ const useOpenPosition = (
     string|null
   >();
 
+  const [maxBorrowAmount, setMaxBorrowAmount] = useState<string>('');
+
   const { setLastTransactionBlock } = useSyncContext();
 
   const [collateralAvailableToWithdraw, setCollateralAvailableToWithdraw] =
@@ -106,6 +108,12 @@ const useOpenPosition = (
       setBalance(balance);
     }
   }, [poolService, account, pool, library, setCollateralTokenAddress]);
+
+  const getPositionDebtCeiling = useCallback(() => {
+    positionService.getPositionDebtCeiling(pool.id, library).then((debtCeiling) => {
+      setMaxBorrowAmount(debtCeiling);
+    })
+  }, [positionService, pool, library, setMaxBorrowAmount])
 
   const availableFathomInPool = useMemo(
     () => Number(pool.totalAvailable),
@@ -334,8 +342,11 @@ const useOpenPosition = (
   }, [collateral, fathomToken]);
 
   useEffect(() => {
-    account && chainId && getCollateralTokenAndBalance();
-  }, [chainId, account, getCollateralTokenAndBalance]);
+    if (account && chainId) {
+      getCollateralTokenAndBalance();
+      getPositionDebtCeiling()
+    }
+  }, [chainId, account, getCollateralTokenAndBalance, getPositionDebtCeiling]);
 
   return {
     safeMax,
@@ -364,6 +375,7 @@ const useOpenPosition = (
     onClose,
     dangerSafetyBuffer,
     errors,
+    maxBorrowAmount,
   };
 };
 
