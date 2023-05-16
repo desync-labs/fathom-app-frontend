@@ -4,7 +4,6 @@ import { Box, Typography, Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import InfoIcon from "@mui/icons-material/Info";
 
-import RiseLabel from "components/AppComponents/AppLabel/RiseLabel";
 import { ButtonSecondary } from "components/AppComponents/AppButton/AppButton";
 import StakingCountdown from "components/Staking/StakingCountdown";
 

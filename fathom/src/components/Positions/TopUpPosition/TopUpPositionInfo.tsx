@@ -18,7 +18,7 @@ const ListDivider = styled(Divider)`
 
 const TopUpPositionInfo = () => {
   const {
-    ltv,
+    overCollateral,
     safetyBuffer,
     debtValue,
     pool,
@@ -62,12 +62,10 @@ const TopUpPositionInfo = () => {
           <ListItemText primary="Collateral Locked" />
         </AppListItem>
         <AppListItem
-          alignItems="flex-start"
-          secondaryAction={`${formatPercentage(
-            BigNumber(ltv).multipliedBy(100).toNumber()
-          )} %`}
+          alignItems={'flex-start'}
+          secondaryAction={`${formatNumber(overCollateral)} %`}
         >
-          <ListItemText primary="LTV" />
+          <ListItemText primary="Collateralization Ratio" />
         </AppListItem>
         <AppListItem
           alignItems="flex-start"

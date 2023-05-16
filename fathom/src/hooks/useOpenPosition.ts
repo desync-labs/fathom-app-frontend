@@ -136,7 +136,7 @@ const useOpenPosition = (
       const dangerSafeMax = BigNumber(collateralInput)
         .multipliedBy(
           BigNumber(priceWithSafetyMargin)
-            .multipliedBy(BigNumber(100).minus(25))
+            .multipliedBy(BigNumber(100).minus(DANGER_SAFETY_BUFFER * 100))
             .dividedBy(100)
         )
         .toNumber();

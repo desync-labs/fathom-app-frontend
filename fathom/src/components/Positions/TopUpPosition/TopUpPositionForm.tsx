@@ -7,6 +7,7 @@ import {
   Box,
   CircularProgress,
   Grid,
+  Typography,
   useMediaQuery,
   useTheme
 } from "@mui/material";
@@ -14,7 +15,8 @@ import {
   ApproveBox,
   ApproveBoxTypography,
   Summary,
-  WalletBalance
+  WalletBalance,
+  WarningBox
 } from "components/AppComponents/AppBox/AppBox";
 
 import {
@@ -41,7 +43,8 @@ import { ClosePositionDialogPropsType } from "components/Positions/RepayPosition
 import BigNumber from "bignumber.js";
 import {
   FXD_MINIMUM_BORROW_AMOUNT,
-  FXD_MAXIMUM_BORROW_AMOUNT
+  FXD_MAXIMUM_BORROW_AMOUNT,
+  DANGER_SAFETY_BUFFER
 } from "helpers/Constants";
 
 const TopUpPositionFormWrapper = styled(Grid)`
@@ -66,6 +69,7 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
   setTopUpPosition
 }) => {
   const {
+    collateral,
     pool,
     approveBtn,
     approve,
@@ -79,8 +83,11 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
     control,
     handleSubmit,
     onClose,
-    switchPosition
+    switchPosition,
+    safetyBuffer
   } = useTopUpPositionContext();
+
+  console.log(safetyBuffer)
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -142,6 +149,17 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
                           sx={{ fontSize: "12px", paddingLeft: "6px" }}
                         >
                           You do not have enough {pool.poolName}
+                        </Box>
+                      </>
+                    )}
+                    {error && error.type === "min" && (
+                      <>
+                        <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
+                        <Box
+                          component={"span"}
+                          sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                        >
+                          Collateral amount should be positive.
                         </Box>
                       </>
                     )}
@@ -267,6 +285,19 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
             </ApproveButton>
           </ApproveBox>
         )}
+        {BigNumber(safetyBuffer).isLessThan(DANGER_SAFETY_BUFFER) && <WarningBox>
+          <InfoIcon />
+          <Typography>
+            Resulting in lowering safety buffer - consider provide more collateral or borrow less FXD.
+          </Typography>
+        </WarningBox>}
+        {BigNumber(collateral).isLessThanOrEqualTo(0) &&
+          <WarningBox>
+            <InfoIcon />
+            <Typography>
+              Resulting in lowering safety buffer - consider provide more collateral or borrow less FXD
+            </Typography>
+          </WarningBox>}
         <ButtonsWrapper>
           {!isMobile && (
             <ButtonSecondary onClick={onClose}>Close</ButtonSecondary>

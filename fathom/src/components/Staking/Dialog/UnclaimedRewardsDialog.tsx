@@ -28,6 +28,7 @@ const WarningBlock = styled(Box)`
   font-size: 14px;
   margin: 0 15px 40px 15px;
 `;
+
 export const InfoMessageWrapper = styled(Box)`
   display: flex;
   align-items: start;
