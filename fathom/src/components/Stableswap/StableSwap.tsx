@@ -175,6 +175,9 @@ const StableSwap = () => {
     inputValue,
     outputValue,
 
+    inputDecimals,
+    outputDecimals,
+
     handleInputValueTextFieldChange,
     handleOutputValueTextFieldChange,
 
@@ -230,12 +233,12 @@ const StableSwap = () => {
                   <StableSwapWalletBalance>
                     Balance:{" "}
                     {BigNumber(inputBalance)
-                      .dividedBy(10 ** 18)
+                      .dividedBy(10 ** inputDecimals)
                       .toFixed(2)}{" "}
                     {inputCurrency}
                   </StableSwapWalletBalance>
                 ),
-                [inputBalance, inputCurrency]
+                [inputBalance, inputCurrency, inputDecimals]
               )}
               <StableSwapCurrencySelect
                 value={inputCurrency}
@@ -311,12 +314,12 @@ const StableSwap = () => {
                   <StableSwapWalletBalance>
                     Balance:{" "}
                     {BigNumber(outputBalance)
-                      .dividedBy(10 ** 18)
+                      .dividedBy(10 ** outputDecimals)
                       .toFixed(2)}{" "}
                     {outputCurrency}
                   </StableSwapWalletBalance>
                 ),
-                [outputBalance, outputCurrency]
+                [outputBalance, outputCurrency, outputDecimals]
               )}
               <StableSwapCurrencySelect
                 value={outputCurrency}
