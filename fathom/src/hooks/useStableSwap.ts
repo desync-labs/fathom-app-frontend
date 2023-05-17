@@ -335,13 +335,17 @@ const useStableSwap = (options: string[]) => {
   }, [outputCurrency, options]);
 
   const swapFee = useMemo(() => {
-    /**
-     * xUSDT to FXD
-     */
-    if (inputCurrency === options[0]) {
-      return BigNumber(inputValue).multipliedBy(feeIn).dividedBy(10 ** 18).toNumber();
+    if (inputValue) {
+      /**
+       * xUSDT to FXD
+       */
+      if (inputCurrency === options[0]) {
+        return BigNumber(inputValue).multipliedBy(feeIn).dividedBy(10 ** 18).toNumber();
+      } else {
+        return BigNumber(inputValue).multipliedBy(feeOut).dividedBy(10 ** 18).toNumber();
+      }
     } else {
-      return BigNumber(inputValue).multipliedBy(feeOut).dividedBy(10 ** 18).toNumber();
+      return 0;
     }
   }, [options, inputCurrency, inputValue, feeIn, feeOut]);
 

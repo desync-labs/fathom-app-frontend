@@ -24,7 +24,6 @@ export enum ProposalStatus {
   Executed= "Executed",
 }
 
-
 export const WeiPerWad = new BigNumber("1e18");
 export const  WeiPerRay = new BigNumber("1e27");
 export const WeiPerRad = new BigNumber("1e45");
