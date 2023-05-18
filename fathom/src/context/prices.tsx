@@ -61,6 +61,8 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
             library
           ).then((fthmPrice) => {
             setFthmPrice((fthmPrice as any)[0]);
+          }).catch((e) => {
+            console.log('Pair FTHM/FXD not exists on DEX')
           });
         }
 
