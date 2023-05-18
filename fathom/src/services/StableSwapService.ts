@@ -3,7 +3,6 @@ import { SmartContractFactory } from "config/SmartContractFactory";
 import {
   MAX_UINT256,
   DEFAULT_CHAIN_ID,
-  WeiPerWad
 } from "helpers/Constants";
 import { Strings } from "helpers/Strings";
 import { Web3Utils } from "helpers/Web3Utils";
