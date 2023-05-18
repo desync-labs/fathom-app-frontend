@@ -60,6 +60,7 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
             fthmTokenAddress,
             library
           ).then((fthmPrice) => {
+            console.log('Price for pair FTHM/FXD', (fthmPrice as any)[0])
             setFthmPrice((fthmPrice as any)[0]);
           }).catch((e) => {
             console.log('Pair FTHM/FXD not exists on DEX')
@@ -75,7 +76,10 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
           wxdcTokenAddress,
           library
         )).then((wxdcPrice) => {
+          console.log('Price for pair USDT/WXDC', (wxdcPrice as any)[0])
           setWxdcPrice((wxdcPrice as any)[0]);
+        }).catch((e) => {
+          console.log('Pair USDT/WXDC not exists on DEX')
         });
 
 
@@ -88,7 +92,10 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
           fxdTokenAddress,
           library
         )).then((fxdPrice) => {
+          console.log('Price for pair USDT/FXD', (fxdPrice as any)[0])
           setFxdPrice((fxdPrice as any)[0]);
+        }).catch((e) => {
+          console.log('Pair USDT/FXD not exists on DEX')
         });
 
         centralizedOracleService.cryptocompareConvertXdcUsdt().then((centralizedPrice) => {

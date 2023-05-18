@@ -29,7 +29,7 @@ const useOpenPosition = (
 
   const {
     handleSubmit, watch, control, setValue, trigger,
-    formState: { errors },
+    formState: { errors }
   } = useForm({
     defaultValues,
     reValidateMode: "onChange",
@@ -52,7 +52,7 @@ const useOpenPosition = (
     string|null
   >();
 
-  const [maxBorrowAmount, setMaxBorrowAmount] = useState<string>('');
+  const [maxBorrowAmount, setMaxBorrowAmount] = useState<string>("");
 
   const { setLastTransactionBlock } = useSyncContext();
 
@@ -113,9 +113,9 @@ const useOpenPosition = (
     positionService.getPositionDebtCeiling(pool.id, library).then((debtCeiling) => {
       setMaxBorrowAmount(debtCeiling);
     }).catch((e) => {
-      console.log('Can`t get MAX_BORROW_AMOUNT')
-    })
-  }, [positionService, pool, library, setMaxBorrowAmount])
+      console.log("Can`t get MAX_BORROW_AMOUNT");
+    });
+  }, [positionService, pool, library, setMaxBorrowAmount]);
 
   const availableFathomInPool = useMemo(
     () => Number(pool.totalAvailable),
@@ -166,7 +166,9 @@ const useOpenPosition = (
 
       setCollateralAvailableToWithdraw(collateralAvailableToWithdraw);
 
-      // PRICE OF COLLATERAL FROM DEX
+      /***
+       * PRICE OF COLLATERAL FROM DEX
+       */
       const priceOfCollateralFromDex =
         pool.poolName.toUpperCase() === "XDC"
           ? BigNumber(pool.collateralLastPrice)
@@ -174,7 +176,9 @@ const useOpenPosition = (
             .toNumber()
           : await poolService.getDexPrice(collateralTokenAddress!, library);
 
-      // DEBT RATIO
+      /**
+       * DEBT RATIO
+       */
       const debtRatio = BigNumber(fathomTokenInput).isGreaterThan(0)
         ? BigNumber(fathomTokenInput)
           .dividedBy(
@@ -346,7 +350,7 @@ const useOpenPosition = (
   useEffect(() => {
     if (account && chainId) {
       getCollateralTokenAndBalance();
-      getPositionDebtCeiling()
+      getPositionDebtCeiling();
     }
   }, [chainId, account, getCollateralTokenAndBalance, getPositionDebtCeiling]);
 
@@ -377,7 +381,7 @@ const useOpenPosition = (
     onClose,
     dangerSafetyBuffer,
     errors,
-    maxBorrowAmount,
+    maxBorrowAmount
   };
 };
 
