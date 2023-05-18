@@ -154,8 +154,6 @@ const useOpenPositionList = (
             }
           );
 
-          console.log("setPositions", positions);
-
           setFormattedPositions(positions);
           setIsLoading(false);
         });

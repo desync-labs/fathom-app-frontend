@@ -27,7 +27,10 @@ const useOpenPosition = (
   const { poolService, positionService } = useStores();
   const { account, chainId, library } = useConnector()!;
 
-  const { handleSubmit, watch, control, setValue, trigger } = useForm({
+  const {
+    handleSubmit, watch, control, setValue, trigger,
+    formState: { errors },
+  } = useForm({
     defaultValues,
     reValidateMode: "onChange",
     mode: "onChange"
@@ -109,6 +112,8 @@ const useOpenPosition = (
   const getPositionDebtCeiling = useCallback(() => {
     positionService.getPositionDebtCeiling(pool.id, library).then((debtCeiling) => {
       setMaxBorrowAmount(debtCeiling);
+    }).catch((e) => {
+      console.log('Can`t get MAX_BORROW_AMOUNT')
     })
   }, [positionService, pool, library, setMaxBorrowAmount])
 
@@ -141,7 +146,7 @@ const useOpenPosition = (
       const dangerSafeMax = BigNumber(collateralInput)
         .multipliedBy(
           BigNumber(priceWithSafetyMargin)
-            .multipliedBy(BigNumber(100).minus(25))
+            .multipliedBy(BigNumber(100).minus(DANGER_SAFETY_BUFFER * 100))
             .dividedBy(100)
         )
         .toNumber();
@@ -157,7 +162,7 @@ const useOpenPosition = (
             .minus(fathomTokenInput || 0)
             .dividedBy(priceWithSafetyMargin)
           : BigNumber(collateralInput).minus(fathomTokenInput)
-      ).toNumber();
+      ).precision(10).toNumber();
 
       setCollateralAvailableToWithdraw(collateralAvailableToWithdraw);
 
@@ -371,6 +376,7 @@ const useOpenPosition = (
     pool,
     onClose,
     dangerSafetyBuffer,
+    errors,
     maxBorrowAmount,
   };
 };

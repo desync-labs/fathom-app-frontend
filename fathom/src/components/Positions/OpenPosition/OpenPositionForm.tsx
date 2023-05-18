@@ -6,7 +6,7 @@ import {
   CircularProgress,
   Grid,
   useMediaQuery,
-  useTheme,
+  useTheme
 } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 import { styled } from "@mui/material/styles";
@@ -14,13 +14,13 @@ import {
   ApproveBox,
   ApproveBoxTypography,
   Summary,
-  WalletBalance,
+  WalletBalance
 } from "components/AppComponents/AppBox/AppBox";
 import {
   AppFormInputLogo,
   AppFormInputWrapper,
   AppFormLabel,
-  AppTextField,
+  AppTextField
 } from "components/AppComponents/AppForm/AppForm";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import {
@@ -28,18 +28,23 @@ import {
   ButtonPrimary,
   ButtonSecondary,
   ButtonsWrapper,
-  MaxButton,
+  MaxButton
 } from "components/AppComponents/AppButton/AppButton";
 import useOpenPositionContext from "context/openPosition";
 import {
   FXD_MINIMUM_BORROW_AMOUNT
 } from "helpers/Constants";
-import { ErrorBox, ErrorMessage } from "components/AppComponents/AppBox/AppBox";
+import {
+  ErrorBox,
+  ErrorMessage
+} from "components/AppComponents/AppBox/AppBox";
 
 const OpenPositionFormWrapper = styled(Grid)`
   padding-left: 20px;
   width: calc(50% - 1px);
   position: relative;
+  padding-bottom: 40px;
+
   ${({ theme }) => theme.breakpoints.down("sm")} {
     width: 100%;
     padding: 0;
@@ -47,8 +52,12 @@ const OpenPositionFormWrapper = styled(Grid)`
 `;
 
 const DangerErrorBox = styled(ErrorBox)`
-  margin-bottom: 60px;
-  margin-top: 24px;
+  margin-bottom: 10px;
+  margin-top: 0px;
+`;
+
+const OpenPositionApproveBox = styled(ApproveBox)`
+  margin-bottom: 10px;
 `
 
 const OpenPositionForm = () => {
@@ -69,6 +78,7 @@ const OpenPositionForm = () => {
     onClose,
     pool,
     dangerSafetyBuffer,
+    errors,
     maxBorrowAmount
   } = useOpenPositionContext();
 
@@ -93,7 +103,7 @@ const OpenPositionForm = () => {
             min: 1,
             max: BigNumber(balance)
               .dividedBy(10 ** 18)
-              .toString(),
+              .toString()
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <AppFormInputWrapper>
@@ -180,7 +190,7 @@ const OpenPositionForm = () => {
               }
 
               return true;
-            },
+            }
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => {
             return (
@@ -196,7 +206,7 @@ const OpenPositionForm = () => {
                           <InfoIcon
                             sx={{
                               float: "left",
-                              fontSize: "18px",
+                              fontSize: "18px"
                             }}
                           />
                           <Box
@@ -248,12 +258,12 @@ const OpenPositionForm = () => {
           }}
         />
         {approveBtn && !!parseInt(balance) && (
-          <ApproveBox>
+          <OpenPositionApproveBox>
             <InfoIcon
               sx={{
                 color: "#7D91B5",
                 float: "left",
-                marginRight: "10px",
+                marginRight: "10px"
               }}
             />
             <ApproveBoxTypography>
@@ -267,7 +277,7 @@ const OpenPositionForm = () => {
                 "Approve"
               )}{" "}
             </ApproveButton>
-          </ApproveBox>
+          </OpenPositionApproveBox>
         )}
         { dangerSafetyBuffer ? (
           <DangerErrorBox>
@@ -287,7 +297,7 @@ const OpenPositionForm = () => {
           )}
           <ButtonPrimary
             type="submit"
-            disabled={approveBtn}
+            disabled={approveBtn || !!Object.keys(errors).length}
             isLoading={openPositionLoading}
           >
             {openPositionLoading ? (

@@ -47,5 +47,5 @@ export const formatPercentage = (number: number) => {
 };
 
 export const formatCurrency = (number: number) => {
-  return formatter.format(number);
+  return formatterPrice.format(number);
 };
