@@ -52,9 +52,6 @@ export default class StableSwapService implements IStableSwapService {
 
         const formattedTokenAmount = BigNumber(tokenIn).multipliedBy(10 ** tokenInDecimals).toString();
 
-        console.log(tokenIn)
-        console.log(tokenInDecimals)
-
         const gas = await getEstimateGas(
           StableSwapModule,
           "swapTokenToStablecoin",
