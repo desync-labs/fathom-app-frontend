@@ -131,7 +131,9 @@ const useOpenPosition = (
       setCollateralToBeLocked(collateralInput || 0);
       setFxdToBeBorrowed(fathomTokenInput || 0);
 
-      // GET PRICE WITH SAFETY MARGIN
+      /**
+       * GET PRICE WITH SAFETY MARGIN
+       */
       const { priceWithSafetyMargin } = pool;
 
       // SAFE MAX
@@ -166,7 +168,7 @@ const useOpenPosition = (
 
       setCollateralAvailableToWithdraw(collateralAvailableToWithdraw);
 
-      /***
+      /**
        * PRICE OF COLLATERAL FROM DEX
        */
       const priceOfCollateralFromDex =
@@ -197,39 +199,32 @@ const useOpenPosition = (
       setOverCollateral(overCollateral);
       setDebtRatio(debtRatio);
 
-      // FXD AVAILABLE TO BORROW
+      /**
+       * FXD AVAILABLE TO BORROW
+       */
       const fxdAvailableToBorrow = BigNumber(safeMax)
         .minus(fathomTokenInput)
         .toNumber();
       setFxdAvailableToBorrow(fxdAvailableToBorrow);
 
-      // SAFETY BUFFER
+      /**
+       * SAFETY BUFFER
+       */
       const safetyBuffer = BigNumber(collateralAvailableToWithdraw)
         .dividedBy(collateralInput)
+        .precision(10, BigNumber.ROUND_UP)
         .toNumber();
 
       setSafetyBuffer(isNaN(safetyBuffer) ? 0 : safetyBuffer);
 
-      // LIQUIDATION PRICE
-      let liquidationPrice;
-
-      if (BigNumber(priceWithSafetyMargin).isGreaterThan(0)) {
-        liquidationPrice = BigNumber(priceOfCollateralFromDex)
-          .dividedBy(10 ** 18)
-          .minus(
-            BigNumber(collateralAvailableToWithdraw)
-              .multipliedBy(priceWithSafetyMargin)
-              .dividedBy(collateralInput)
-          )
+      /**
+       * LIQUIDATION PRICE
+       */
+      const liquidationPrice =
+        BigNumber(fathomTokenInput)
+          .div(collateralInput)
+          .multipliedBy(pool.liquidationRatio)
           .toNumber();
-      } else {
-        liquidationPrice = BigNumber(priceOfCollateralFromDex)
-          .dividedBy(10 ** 18)
-          .minus(
-            BigNumber(collateralAvailableToWithdraw).dividedBy(collateralInput)
-          )
-          .toNumber();
-      }
 
       setLiquidationPrice(isNaN(liquidationPrice) ? 0 : liquidationPrice);
 

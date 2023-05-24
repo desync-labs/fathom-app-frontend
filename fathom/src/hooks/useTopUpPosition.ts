@@ -43,6 +43,7 @@ const useTopUpPosition = (
 
   const [debtValue, setDebtValue] = useState<string>("");
   const [liquidationPrice, setLiquidationPrice] = useState<string>("");
+
   const [ltv, setLtv] = useState<string>("");
   const [overCollateral, setOverCollateral] = useState<number>(0);
   const [safetyBuffer, setSafetyBuffer] = useState<string>("");
@@ -51,7 +52,7 @@ const useTopUpPosition = (
   const [collateralTokenAddress, setCollateralTokenAddress] = useState<
     string|null
   >();
-  const [maxBorrowAmount, setMaxBorrowAmount] = useState<string>('');
+  const [maxBorrowAmount, setMaxBorrowAmount] = useState<string>("");
 
   const { setLastTransactionBlock } = useSyncContext();
 
@@ -96,14 +97,11 @@ const useTopUpPosition = (
       library
     );
 
-    const liquidationPrice = BigNumber(pool.rawPrice)
-      .minus(
-        BigNumber(pool.priceWithSafetyMargin)
-          .multipliedBy(position.lockedCollateral)
-          .minus(debtValue)
-          .dividedBy(position.lockedCollateral)
-      )
-      .toString();
+    const liquidationPrice =
+      BigNumber(debtValue)
+        .dividedBy(position.lockedCollateral)
+        .multipliedBy(pool.liquidationRatio)
+        .toString();
 
     const ltv = BigNumber(debtValue)
       .dividedBy(
@@ -111,7 +109,9 @@ const useTopUpPosition = (
       )
       .toString();
 
-    // PRICE OF COLLATERAL FROM DEX
+    /**
+     * PRICE OF COLLATERAL FROM DEX
+     */
     const priceOfCollateralFromDex =
       pool.poolName.toUpperCase() === "XDC"
         ? BigNumber(pool.collateralLastPrice)
@@ -146,8 +146,8 @@ const useTopUpPosition = (
   const getPositionDebtCeiling = useCallback(() => {
     positionService.getPositionDebtCeiling(pool.id, library).then((debtCeiling) => {
       setMaxBorrowAmount(debtCeiling);
-    })
-  }, [positionService, pool, library, setMaxBorrowAmount])
+    });
+  }, [positionService, pool, library, setMaxBorrowAmount]);
 
   const getCollateralTokenAndBalance = useCallback(async () => {
     if (pool.poolName.toUpperCase() === "XDC") {
@@ -219,7 +219,7 @@ const useTopUpPosition = (
 
           const safetyBuffer = BigNumber(collateralAvailableToWithdraw)
             .dividedBy(totalCollateralAmount)
-            .precision(10)
+            .precision(10, BigNumber.ROUND_UP)
             .toString();
 
           setSafetyBuffer(safetyBuffer);
@@ -227,14 +227,11 @@ const useTopUpPosition = (
           setValue("safeMax", safeMax);
           setValue("dangerSafeMax", dangerSafeMax);
 
-          const liquidationPrice = BigNumber(pool.rawPrice)
-            .minus(
-              BigNumber(pool.priceWithSafetyMargin)
-                .multipliedBy(totalCollateralAmount)
-                .minus(totalFathomAmount)
-                .dividedBy(totalCollateralAmount)
-            )
-            .toString();
+          const liquidationPrice =
+            BigNumber(totalFathomAmount)
+              .dividedBy(totalCollateralAmount)
+              .multipliedBy(pool.liquidationRatio)
+              .toString();
 
           const ltv = BigNumber(totalFathomAmount)
             .dividedBy(
@@ -403,7 +400,7 @@ const useTopUpPosition = (
     totalCollateral,
     totalFathomToken,
     overCollateral,
-    maxBorrowAmount,
+    maxBorrowAmount
   };
 };
 
