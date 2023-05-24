@@ -9,8 +9,8 @@ import {
 } from "components/AppComponents/AppList/AppList";
 
 import {
+  formatNumber,
   formatNumberPrice,
-  formatPercentage
 } from "utils/format";
 
 const RepayPositionInfo = () => {
@@ -21,7 +21,7 @@ const RepayPositionInfo = () => {
     pool,
     collateral,
     liquidationPrice,
-    ltv,
+    overCollateral,
   } = useClosePositionContext();
 
   return (
@@ -62,8 +62,11 @@ const RepayPositionInfo = () => {
         >
           <ListItemText primary="Collateral Locked" />
         </AppListItem>
-        <AppListItem alignItems="flex-start" secondaryAction={`${formatPercentage(ltv * 100)}%`}>
-          <ListItemText primary="LTV (Loan-to-Value)" />
+        <AppListItem
+          alignItems={'flex-start'}
+          secondaryAction={`${formatNumber(overCollateral)} %`}
+        >
+          <ListItemText primary="Collateralization Ratio" />
         </AppListItem>
         <AppListItem
           alignItems="flex-start"

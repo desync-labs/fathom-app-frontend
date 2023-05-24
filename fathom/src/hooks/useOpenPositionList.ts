@@ -4,15 +4,21 @@ import {
   useState,
   ChangeEvent,
   Dispatch,
-  useMemo,
+  useMemo
 } from "react";
 
 import { useStores } from "stores";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
 import ICollateralPool from "stores/interfaces/ICollateralPool";
 
-import { useLazyQuery, useQuery } from "@apollo/client";
-import { FXD_POOLS, FXD_POSITIONS } from "apollo/queries";
+import {
+  useLazyQuery,
+  useQuery
+} from "@apollo/client";
+import {
+  FXD_POOLS,
+  FXD_POSITIONS
+} from "apollo/queries";
 
 import { COUNT_PER_PAGE } from "helpers/Constants";
 import useConnector from "context/connector";
@@ -33,13 +39,13 @@ const useOpenPositionList = (
   const [loadPositions, { loading, data, fetchMore, called }] = useLazyQuery(
     FXD_POSITIONS,
     {
-      context: { clientName: "stable" },
+      context: { clientName: "stable" }
     }
   );
 
   const { data: poolsData } = useQuery(FXD_POOLS, {
     context: { clientName: "stable" },
-    fetchPolicy: "cache-first",
+    fetchPolicy: "cache-first"
   });
 
   const [closePosition, setClosePosition] = useState<IOpenPosition>();
@@ -77,9 +83,9 @@ const useOpenPositionList = (
       variables: {
         first: COUNT_PER_PAGE,
         skip: 0,
-        walletAddress: proxyWallet,
+        walletAddress: proxyWallet
       },
-      fetchPolicy: "network-only",
+      fetchPolicy: "network-only"
     });
   }, [chainId, proxyWallet, called, loadPositions]);
 
@@ -101,8 +107,8 @@ const useOpenPositionList = (
         variables: {
           first: COUNT_PER_PAGE,
           skip: (page - 1) * COUNT_PER_PAGE,
-          walletAddress: proxyWallet,
-        },
+          walletAddress: proxyWallet
+        }
       });
       setPositionCurrentPage(page);
     },
@@ -133,13 +139,10 @@ const useOpenPositionList = (
               );
 
               position.debtValue = debtValues[index];
-              position.liquidationPrice = BigNumber(findPool.rawPrice)
-                .minus(
-                  BigNumber(findPool.priceWithSafetyMargin)
-                    .multipliedBy(position.lockedCollateral)
-                    .minus(position.debtValue)
-                    .dividedBy(position.lockedCollateral)
-                )
+
+              position.liquidationPrice = BigNumber(position.debtValue)
+                .div(position.lockedCollateral)
+                .multipliedBy(findPool.liquidationRatio)
                 .toNumber();
 
               position.ltv = BigNumber(position.debtValue)
@@ -190,7 +193,7 @@ const useOpenPositionList = (
     handlePageChange,
     setTopUpPosition,
     setClosePosition,
-    onClose,
+    onClose
   };
 };
 
