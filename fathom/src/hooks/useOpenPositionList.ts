@@ -141,7 +141,7 @@ const useOpenPositionList = (
               position.debtValue = debtValues[index];
 
               position.liquidationPrice = BigNumber(position.debtValue)
-                .div(position.lockedCollateral)
+                .dividedBy(position.lockedCollateral)
                 .multipliedBy(findPool.liquidationRatio)
                 .toNumber();
 

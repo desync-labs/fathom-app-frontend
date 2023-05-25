@@ -11,7 +11,12 @@ import { styled } from "@mui/material/styles";
 import TokenLogo from "components/Common/TokenLogo";
 import { getTokenLogoURL } from "utils/tokenLogo";
 
-import { formatCurrency, formatNumber, formatNumberPrice } from "utils/format";
+import {
+  formatCurrency,
+  formatNumber,
+  formatNumberPrice,
+  formatPercentage
+} from "utils/format";
 
 export type PositionListItemProps = {
   position: IOpenPosition;
@@ -65,7 +70,7 @@ const PositionListItem: FC<PositionListItemProps> = ({
           </Box>
         </Stack>
       </TableCell>
-      <TableCell>{formatNumberPrice(position.liquidationPrice)}</TableCell>
+      <TableCell>$ {formatPercentage(position.liquidationPrice)}</TableCell>
       <TableCell>{formatNumber(position.debtValue)} FXD</TableCell>
       <TableCell>
         {formatNumberPrice(position.lockedCollateral)}{" "}
