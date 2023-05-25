@@ -493,17 +493,16 @@ const useStableSwap = (options: string[]) => {
      */
     let formattedBalance;
     if (inputCurrency === options[1]) {
-      formattedBalance = new BigNumber(
-        inputBalance
-      )
-        .dividedBy(10 ** inputDecimals)
-        .multipliedBy(
-          1 - new BigNumber(Xdc3.utils.fromWei(feeOut.toString())).toNumber()
-        )
-        .toNumber();
+      formattedBalance =
+        BigNumber(inputBalance)
+          .dividedBy(10 ** inputDecimals)
+          .multipliedBy(
+            BigNumber(1).minus(Xdc3.utils.fromWei(feeOut.toString()))
+          )
+          .toNumber();
     } else {
       formattedBalance =
-        new BigNumber(inputBalance).dividedBy(10 ** inputDecimals).toFixed() ||
+        BigNumber(inputBalance).dividedBy(10 ** inputDecimals).toFixed() ||
         0;
     }
 

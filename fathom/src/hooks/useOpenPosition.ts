@@ -212,7 +212,7 @@ const useOpenPosition = (
        */
       const safetyBuffer = BigNumber(collateralAvailableToWithdraw)
         .dividedBy(collateralInput)
-        .precision(10, BigNumber.ROUND_UP)
+        .precision(10, BigNumber.ROUND_FLOOR)
         .toNumber();
 
       setSafetyBuffer(isNaN(safetyBuffer) ? 0 : safetyBuffer);

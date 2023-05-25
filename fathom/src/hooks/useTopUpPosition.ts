@@ -178,9 +178,14 @@ const useTopUpPosition = (
     () =>
       debounce(
         async (totalCollateralAmount: string, totalFathomAmount: string) => {
-          // GET PRICE WITH SAFETY MARGIN
+          /**
+           * GET PRICE WITH SAFETY MARGIN
+           */
           const { priceWithSafetyMargin } = pool;
-          // SAFE MAX
+
+          /**
+           * SAFE MAX
+           */
           let safeMax = Number(
             BigNumber(totalCollateralAmount)
               .multipliedBy(
@@ -219,8 +224,10 @@ const useTopUpPosition = (
 
           const safetyBuffer = BigNumber(collateralAvailableToWithdraw)
             .dividedBy(totalCollateralAmount)
-            .precision(10, BigNumber.ROUND_UP)
+            .precision(10, BigNumber.ROUND_FLOOR)
             .toString();
+
+          console.log(safetyBuffer);
 
           setSafetyBuffer(safetyBuffer);
 

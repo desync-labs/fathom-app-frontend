@@ -1,16 +1,25 @@
 import React from "react";
 import BigNumber from "bignumber.js";
-import { Box, Divider, Grid, ListItemText } from "@mui/material";
+import {
+  Box,
+  Divider,
+  Grid,
+  ListItemText
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
 import {
   AppList,
   AppListItem
 } from "components/AppComponents/AppList/AppList";
-import { formatNumberPrice, formatPercentage, formatNumber } from "utils/format";
+import {
+  formatPercentage,
+  formatNumber
+} from "utils/format";
 import useTopUpPositionContext from "context/topUpPosition";
 
 const ListDivider = styled(Divider)`
   margin: 20px 20px 20px 5px;
+
   ${({ theme }) => theme.breakpoints.down("sm")} {
     margin: 20px 0 20px 0;
   }
@@ -25,7 +34,7 @@ const TopUpPositionInfo = () => {
     position,
     liquidationPrice,
     totalCollateral,
-    totalFathomToken,
+    totalFathomToken
   } = useTopUpPositionContext();
 
   return (
@@ -62,20 +71,20 @@ const TopUpPositionInfo = () => {
           <ListItemText primary="Collateral Locked" />
         </AppListItem>
         <AppListItem
-          alignItems={'flex-start'}
+          alignItems={"flex-start"}
           secondaryAction={`${formatNumber(overCollateral)} %`}
         >
           <ListItemText primary="Collateralization Ratio" />
         </AppListItem>
         <AppListItem
           alignItems="flex-start"
-          secondaryAction={`${formatNumber(safetyBuffer * 100)} %`}
+          secondaryAction={`${formatPercentage(safetyBuffer * 100)} %`}
         >
           <ListItemText primary="Safety Buffer" />
         </AppListItem>
         <AppListItem
           alignItems="flex-start"
-          secondaryAction={`$${formatNumberPrice(liquidationPrice)}`}
+          secondaryAction={`$${formatPercentage(liquidationPrice)}`}
         >
           <ListItemText primary={`Liquidation Price of ${pool.poolName}`} />
         </AppListItem>

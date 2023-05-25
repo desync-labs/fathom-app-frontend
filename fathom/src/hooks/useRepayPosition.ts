@@ -92,7 +92,6 @@ const useRepayPosition = (
   const handleUpdates = useCallback(
     async (totalCollateralAmount: string, totalFathomAmount: string) => {
       if (BigNumber(totalFathomAmount).isGreaterThan(0)) {
-
         const liquidationPrice =
           BigNumber(totalFathomAmount)
             .dividedBy(totalCollateralAmount)
@@ -157,7 +156,7 @@ const useRepayPosition = (
 
     const liquidationPrice =
       BigNumber(debtValue)
-        .div(position.lockedCollateral)
+        .dividedBy(position.lockedCollateral)
         .multipliedBy(pool.liquidationRatio)
         .toNumber();
 
@@ -185,7 +184,6 @@ const useRepayPosition = (
     setPrice(price.toString());
 
     const fathomValue = BigNumber(balance).isGreaterThan(debtValue) ? debtValue : balance;
-
     setFathomToken(fathomValue);
 
     let collateral = BigNumber(fathomValue).dividedBy(price);
@@ -228,6 +226,7 @@ const useRepayPosition = (
 
   const closePositionHandler = useCallback(async () => {
     setDisableClosePosition(true);
+
     try {
       let blockNumber;
       if (BigNumber(collateral).isEqualTo(lockedCollateral)) {
@@ -321,6 +320,7 @@ const useRepayPosition = (
       }
 
       const repay = bigIntValue.multipliedBy(price);
+
       if (BigNumber(fathomToken).isLessThan(repay)) {
         setFathomToken(repay.toString());
       }
