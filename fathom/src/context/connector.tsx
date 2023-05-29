@@ -6,11 +6,15 @@ import {
   useState,
   useContext,
   ReactElement,
-  FC,
+  FC
 } from "react";
 import { useStores } from "stores";
 import { useWeb3React } from "@web3-react/core";
-import { injected, WalletConnect, xdcInjected } from "connectors/networks";
+import {
+  injected,
+  WalletConnect,
+  xdcInjected
+} from "connectors/networks";
 import WalletConnectProvider from "@walletconnect/ethereum-provider";
 import { ConnectorEvent } from "@web3-react/types";
 import { getDefaultProvider } from "utils/defaultProvider";
@@ -30,7 +34,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
     deactivate,
     chainId,
     error,
-    library,
+    library
   } = useWeb3React();
 
   const { stableSwapService } = useStores();
@@ -45,13 +49,13 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
   const [web3Library, setWeb3Library] = useState(library);
 
   const [isDecentralizedState, setIsDecentralizedState] = useState<
-    boolean | undefined
+    boolean|undefined
   >(undefined);
   const [isUserWhiteListed, setIsUserWhitelisted] = useState<
-    boolean | undefined
+    boolean|undefined
   >(undefined);
   const [allowStableSwapInProgress, setAllowStableSwapInProgress] =
-    useState<boolean | undefined>(undefined);
+    useState<boolean|undefined>(undefined);
 
   const { transactionStore } = useStores();
 
@@ -108,7 +112,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
     stableSwapService,
     setIsDecentralizedState,
     setIsUserWhitelisted,
-    setAllowStableSwapInProgress,
+    setAllowStableSwapInProgress
   ]);
 
   const deactivateEvent = useCallback(() => {
@@ -219,7 +223,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
       isDecentralizedState,
       isUserWhiteListed,
       allowStableSwap,
-      allowStableSwapInProgress,
+      allowStableSwapInProgress
     }),
     [
       connector,
@@ -240,7 +244,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
       isDecentralizedState,
       isUserWhiteListed,
       allowStableSwap,
-      allowStableSwapInProgress,
+      allowStableSwapInProgress
     ]
   );
 

@@ -325,7 +325,7 @@ const StableSwap = () => {
                     Balance:{" "}
                     {BigNumber(outputBalance)
                       .dividedBy(10 ** outputDecimals)
-                      .toFixed(2)}{" "}
+                      .toString()}{" "}
                     {outputCurrency}
                   </StableSwapWalletBalance>
                 ),
