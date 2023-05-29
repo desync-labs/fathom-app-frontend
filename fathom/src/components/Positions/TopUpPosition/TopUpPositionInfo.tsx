@@ -1,13 +1,25 @@
 import React from "react";
 import BigNumber from "bignumber.js";
-import { Box, Divider, Grid, ListItem, ListItemText } from "@mui/material";
+import {
+  Box,
+  Divider,
+  Grid,
+  ListItemText
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { AppList } from "components/AppComponents/AppList/AppList";
-import { formatNumberPrice, formatPercentage, formatNumber } from "utils/format";
+import {
+  AppList,
+  AppListItem
+} from "components/AppComponents/AppList/AppList";
+import {
+  formatPercentage,
+  formatNumber
+} from "utils/format";
 import useTopUpPositionContext from "context/topUpPosition";
 
 const ListDivider = styled(Divider)`
   margin: 20px 20px 20px 5px;
+
   ${({ theme }) => theme.breakpoints.down("sm")} {
     margin: 20px 0 20px 0;
   }
@@ -15,20 +27,20 @@ const ListDivider = styled(Divider)`
 
 const TopUpPositionInfo = () => {
   const {
-    ltv,
+    overCollateral,
     safetyBuffer,
     debtValue,
     pool,
     position,
     liquidationPrice,
     totalCollateral,
-    totalFathomToken,
+    totalFathomToken
   } = useTopUpPositionContext();
 
   return (
     <Grid item xs={12} sm={6}>
       <AppList>
-        <ListItem
+        <AppListItem
           alignItems="flex-start"
           secondaryAction={
             <>
@@ -40,8 +52,8 @@ const TopUpPositionInfo = () => {
           }
         >
           <ListItemText primary="FXD Borrowed" />
-        </ListItem>
-        <ListItem
+        </AppListItem>
+        <AppListItem
           alignItems="flex-start"
           secondaryAction={
             <>
@@ -57,34 +69,32 @@ const TopUpPositionInfo = () => {
           }
         >
           <ListItemText primary="Collateral Locked" />
-        </ListItem>
-        <ListItem
-          alignItems="flex-start"
-          secondaryAction={`${formatPercentage(
-            BigNumber(ltv).multipliedBy(100).toNumber()
-          )} %`}
+        </AppListItem>
+        <AppListItem
+          alignItems={"flex-start"}
+          secondaryAction={`${formatNumber(overCollateral)} %`}
         >
-          <ListItemText primary="LTV" />
-        </ListItem>
-        <ListItem
+          <ListItemText primary="Collateralization Ratio" />
+        </AppListItem>
+        <AppListItem
           alignItems="flex-start"
-          secondaryAction={`${formatNumber(safetyBuffer * 100)} %`}
+          secondaryAction={`${formatPercentage(safetyBuffer * 100)} %`}
         >
           <ListItemText primary="Safety Buffer" />
-        </ListItem>
-        <ListItem
+        </AppListItem>
+        <AppListItem
           alignItems="flex-start"
-          secondaryAction={`$${formatNumberPrice(liquidationPrice)}`}
+          secondaryAction={`$${formatPercentage(liquidationPrice)}`}
         >
           <ListItemText primary={`Liquidation Price of ${pool.poolName}`} />
-        </ListItem>
+        </AppListItem>
         <ListDivider />
-        <ListItem
+        <AppListItem
           alignItems="flex-start"
-          secondaryAction={`${pool.stabilityFeeRate}%`}
+          secondaryAction={`2%`}
         >
           <ListItemText primary={`Stability Fee`} />
-        </ListItem>
+        </AppListItem>
       </AppList>
     </Grid>
   );

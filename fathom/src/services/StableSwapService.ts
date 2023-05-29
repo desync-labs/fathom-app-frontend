@@ -1,6 +1,9 @@
 import Xdc3 from "xdc3";
 import { SmartContractFactory } from "config/SmartContractFactory";
-import { Constants } from "helpers/Constants";
+import {
+  MAX_UINT256,
+  DEFAULT_CHAIN_ID,
+} from "helpers/Constants";
 import { Strings } from "helpers/Strings";
 import { Web3Utils } from "helpers/Web3Utils";
 import {
@@ -16,8 +19,7 @@ import AlertStore from "stores/alert.stores";
 import BigNumber from "bignumber.js";
 
 export default class StableSwapService implements IStableSwapService {
-  readonly tokenBuffer: number = 5;
-  chainId = Constants.DEFAULT_CHAIN_ID;
+  chainId = DEFAULT_CHAIN_ID;
 
   transactionStore: ActiveWeb3Transactions;
   alertStore: AlertStore;
@@ -33,6 +35,7 @@ export default class StableSwapService implements IStableSwapService {
   swapTokenToStableCoin(
     account: string,
     tokenIn: number,
+    tokenInDecimals: number,
     tokenName: string,
     library: Xdc3
   ): Promise<number> {
@@ -45,10 +48,13 @@ export default class StableSwapService implements IStableSwapService {
         const MESSAGE = `${tokenName} token swapped with FXD!`;
 
         const options = { from: account, gas: 0 };
+
+        const formattedTokenAmount = BigNumber(tokenIn).multipliedBy(10 ** tokenInDecimals).toString();
+
         const gas = await getEstimateGas(
           StableSwapModule,
           "swapTokenToStablecoin",
-          [account, toWei(tokenIn.toString(), "ether")],
+          [account, formattedTokenAmount],
           options
         );
         options.gas = gas;
@@ -64,7 +70,7 @@ export default class StableSwapService implements IStableSwapService {
         );
 
         return StableSwapModule.methods
-          .swapTokenToStablecoin(account, toWei(tokenIn.toString(), "ether"))
+          .swapTokenToStablecoin(account, formattedTokenAmount)
           .send(options)
           .on("transactionHash", (hash: any) => {
             this.transactionStore.addTransaction({
@@ -81,6 +87,7 @@ export default class StableSwapService implements IStableSwapService {
             resolve(receipt.blockNumber);
           })
           .catch((e: any) => {
+            this.alertStore.setShowErrorAlert(true, e.message);
             reject(e);
           });
       } catch (e: any) {
@@ -93,6 +100,7 @@ export default class StableSwapService implements IStableSwapService {
   swapStableCoinToToken(
     account: string,
     tokenOut: number,
+    tokenOutDecimals: number,
     tokenName: string,
     library: Xdc3
   ): Promise<number> {
@@ -105,10 +113,13 @@ export default class StableSwapService implements IStableSwapService {
         const MESSAGE = `FXD token swapped with ${tokenName}!`;
 
         const options = { from: account, gas: 0 };
+
+        const formattedTokenAmount = toWei(tokenOut.toString(), 'ether');
+
         const gas = await getEstimateGas(
           StableSwapModule,
           "swapStablecoinToToken",
-          [account, toWei(tokenOut.toString(), "ether")],
+          [account, formattedTokenAmount],
           options
         );
         options.gas = gas;
@@ -124,7 +135,7 @@ export default class StableSwapService implements IStableSwapService {
         );
 
         return StableSwapModule.methods
-          .swapStablecoinToToken(account, toWei(tokenOut.toString(), "ether"))
+          .swapStablecoinToToken(account, formattedTokenAmount)
           .send(options)
           .on("transactionHash", (hash: any) => {
             this.transactionStore.addTransaction({
@@ -141,6 +152,7 @@ export default class StableSwapService implements IStableSwapService {
             resolve(receipt.blockNumber);
           })
           .catch((e: any) => {
+            this.alertStore.setShowErrorAlert(true, e.message);
             reject(e);
           });
       } catch (e: any) {
@@ -165,7 +177,7 @@ export default class StableSwapService implements IStableSwapService {
           "approve",
           [
             SmartContractFactory.StableSwapModule(this.chainId).address,
-            Constants.MAX_UINT256,
+            MAX_UINT256,
           ],
           options
         );
@@ -184,7 +196,7 @@ export default class StableSwapService implements IStableSwapService {
         return FathomStableCoin.methods
           .approve(
             SmartContractFactory.StableSwapModule(this.chainId).address,
-            Constants.MAX_UINT256
+            MAX_UINT256
           )
           .send(options)
           .on("transactionHash", (hash: any) => {
@@ -202,6 +214,7 @@ export default class StableSwapService implements IStableSwapService {
             resolve(receipt.blockNumber);
           })
           .catch((e: any) => {
+            this.alertStore.setShowErrorAlert(true, e.message);
             reject(e);
           });
       } catch (e: any) {
@@ -230,7 +243,7 @@ export default class StableSwapService implements IStableSwapService {
           "approve",
           [
             SmartContractFactory.StableSwapModule(this.chainId).address,
-            Constants.MAX_UINT256,
+            MAX_UINT256,
           ],
           options
         );
@@ -239,7 +252,7 @@ export default class StableSwapService implements IStableSwapService {
         return USStable.methods
           .approve(
             SmartContractFactory.StableSwapModule(this.chainId).address,
-            Constants.MAX_UINT256
+            MAX_UINT256
           )
           .send(options)
           .on("transactionHash", (hash: any) => {
@@ -257,6 +270,7 @@ export default class StableSwapService implements IStableSwapService {
             resolve(receipt.blockNumber);
           })
           .catch((e: any) => {
+            this.alertStore.setShowErrorAlert(true, e.message);
             reject(e);
           });
       } catch (e: any) {
@@ -269,6 +283,7 @@ export default class StableSwapService implements IStableSwapService {
   async approvalStatusStableCoin(
     account: string,
     tokenIn: number,
+    tokenInDecimal: number,
     library: Xdc3
   ) {
     try {
@@ -284,11 +299,8 @@ export default class StableSwapService implements IStableSwapService {
         )
         .call();
 
-      const buffer = BigNumber(tokenIn).plus(
-        BigNumber(tokenIn).multipliedBy(this.tokenBuffer).dividedBy(100)
-      );
-      return BigNumber(allowance).isGreaterThan(
-        Constants.WeiPerWad.multipliedBy(buffer)
+      return BigNumber(allowance).isGreaterThanOrEqualTo(
+        BigNumber(10 ** tokenInDecimal).multipliedBy(tokenIn)
       );
     } catch (e: any) {
       this.alertStore.setShowErrorAlert(true, e.message);
@@ -298,6 +310,7 @@ export default class StableSwapService implements IStableSwapService {
   async approvalStatusUsdt(
     account: string,
     tokenIn: number,
+    tokenInDecimal: number,
     library: Xdc3
   ) {
     try {
@@ -313,11 +326,8 @@ export default class StableSwapService implements IStableSwapService {
         )
         .call();
 
-      const buffer = BigNumber(tokenIn).plus(
-        BigNumber(tokenIn).multipliedBy(this.tokenBuffer).dividedBy(100)
-      );
-      return BigNumber(allowance).isGreaterThan(
-        Constants.WeiPerWad.multipliedBy(buffer)
+      return BigNumber(allowance).isGreaterThanOrEqualTo(
+        BigNumber(10 ** tokenInDecimal).multipliedBy(tokenIn)
       );
     } catch (e: any) {
       this.alertStore.setShowErrorAlert(true, e.message);

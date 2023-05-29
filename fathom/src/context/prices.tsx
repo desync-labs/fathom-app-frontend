@@ -6,7 +6,7 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useState,
+  useState
 } from "react";
 import { SmartContractFactory } from "config/SmartContractFactory";
 import { useStores } from "stores";
@@ -28,8 +28,7 @@ export const PricesContext = createContext<UseStakingViewType>(null);
 
 export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
   const { stakingService, centralizedOracleService } = useStores();
-  const { chainId } = useConnector();
-  const { library } = useConnector()
+  const { chainId, library } = useConnector();
   const [fxdPrice, setFxdPrice] = useState<number>(0);
   const [wxdcPrice, setWxdcPrice] = useState<number>(0);
   const [fthmPrice, setFthmPrice] = useState<number>(0);
@@ -55,31 +54,53 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
   const fetchPairPrices = useCallback(async () => {
     if (library) {
       try {
-        // @ts-ignore
-        const [{ 0: fthmPrice }, { 0: wxdcPrice }, { 0: fxdPrice }, centralizedPrice] =
-          await Promise.all([
-            stakingService.getPairPrice(
-              fxdTokenAddress,
-              fthmTokenAddress,
-              library
-            ),
-            stakingService.getPairPrice(
-              usdtTokenAddress,
-              wxdcTokenAddress,
-              library
-            ),
-            stakingService.getPairPrice(
-              usdtTokenAddress,
-              fxdTokenAddress,
-              library,
-            ),
-            centralizedOracleService.cryptocompareConvertXdcUsdt(),
-          ]);
+        if (process.env.REACT_APP_ENV !== "prod") {
+          stakingService.getPairPrice(
+            fxdTokenAddress,
+            fthmTokenAddress,
+            library
+          ).then((fthmPrice) => {
+            console.log('Price for pair FTHM/FXD', (fthmPrice as any)[0])
+            setFthmPrice((fthmPrice as any)[0]);
+          }).catch((e) => {
+            console.log('Pair FTHM/FXD not exists on DEX')
+          });
+        }
 
-        setFxdPrice(fxdPrice);
-        setFthmPrice(fthmPrice);
-        setWxdcPrice(wxdcPrice);
-        console.log(centralizedPrice)
+        (process.env.REACT_APP_ENV === "prod" ? stakingService.getPairPrice(
+          wxdcTokenAddress,
+          usdtTokenAddress,
+          library
+        ) : stakingService.getPairPrice(
+          usdtTokenAddress,
+          wxdcTokenAddress,
+          library
+        )).then((wxdcPrice) => {
+          console.log('Price for pair USDT/WXDC', (wxdcPrice as any)[0])
+          setWxdcPrice((wxdcPrice as any)[0]);
+        }).catch((e) => {
+          console.log('Pair USDT/WXDC not exists on DEX')
+        });
+
+
+        (process.env.REACT_APP_ENV === "prod" ? stakingService.getPairPrice(
+          fxdTokenAddress,
+          usdtTokenAddress,
+          library
+        ) : stakingService.getPairPrice(
+          usdtTokenAddress,
+          fxdTokenAddress,
+          library
+        )).then((fxdPrice) => {
+          console.log('Price for pair USDT/FXD', (fxdPrice as any)[0])
+          setFxdPrice((fxdPrice as any)[0]);
+        }).catch((e) => {
+          console.log('Pair USDT/FXD not exists on DEX')
+        });
+
+        centralizedOracleService.cryptocompareConvertXdcUsdt().then((centralizedPrice) => {
+          console.log(centralizedPrice);
+        });
       } catch (e: any) {
         console.log(e);
       }
@@ -94,7 +115,7 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
     library,
     setFxdPrice,
     setFthmPrice,
-    setWxdcPrice,
+    setWxdcPrice
   ]);
 
   useEffect(() => {
@@ -111,7 +132,7 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
     return {
       fxdPrice,
       wxdcPrice,
-      fthmPrice,
+      fthmPrice
     };
   }, [fxdPrice, wxdcPrice, fthmPrice]);
 

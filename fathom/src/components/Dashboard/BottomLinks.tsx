@@ -30,7 +30,7 @@ const BottomLinks: FC = () => {
         Fathom.fi
       </a>
       <a
-        href={"https://hackmd.io/@fathomlite/BkIabl5fs"}
+        href={"https://gist.github.com/BaldyAsh/3676a18b003758057f634c9af2cfe49a"}
         rel="noreferrer"
         target={"_blank"}
       >
@@ -52,6 +52,20 @@ const BottomLinks: FC = () => {
         target={"_blank"}
       >
         LinkedIn
+      </a>
+      <a
+        href={"https://gist.github.com/BaldyAsh/47a33c5e8005c05315cc8dfc9baa4c0e"}
+        rel="noreferrer"
+        target={"_blank"}
+      >
+        Privacy Policy
+      </a>
+      <a
+        href={"https://gist.github.com/BaldyAsh/9e1efbfd87fa87fd67091b5d45c481b3"}
+        rel="noreferrer"
+        target={"_blank"}
+      >
+        Terms of Service
       </a>
     </LinksWrapper>
   );

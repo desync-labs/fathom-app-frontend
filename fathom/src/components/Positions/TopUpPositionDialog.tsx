@@ -12,7 +12,7 @@ import {
 import { styled } from "@mui/material/styles";
 
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
-import { ClosePositionDialogPropsType } from "components/Positions/ClosePositionDialog";
+import { ClosePositionDialogPropsType } from "components/Positions/RepayPositionDialog";
 import TopUpPositionInfo from "components/Positions/TopUpPosition/TopUpPositionInfo";
 import TopUpPositionForm from "components/Positions/TopUpPosition/TopUpPositionForm";
 

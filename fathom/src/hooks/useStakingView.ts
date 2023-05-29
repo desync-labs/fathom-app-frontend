@@ -11,7 +11,7 @@ import { useStores } from "stores";
 import ILockPosition from "stores/interfaces/ILockPosition";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import { STAKING_PROTOCOL_STATS, STAKING_STAKER } from "apollo/queries";
-import { Constants } from "helpers/Constants";
+import { COUNT_PER_PAGE } from "helpers/Constants";
 import useSyncContext from "context/sync";
 import { useMediaQuery, useTheme } from "@mui/material";
 import useConnector from "context/connector";
@@ -97,7 +97,7 @@ const useStakingView = () => {
       refetchStakers({
         variables: {
           skip: 0,
-          first: Constants.COUNT_PER_PAGE,
+          first: COUNT_PER_PAGE,
           address: account,
         },
       });
@@ -225,7 +225,7 @@ const useStakingView = () => {
       fetchStakers({
         variables: {
           skip: 0,
-          first: Constants.COUNT_PER_PAGE,
+          first: COUNT_PER_PAGE,
           address: account,
         },
         fetchPolicy: "network-only",
@@ -354,8 +354,8 @@ const useStakingView = () => {
       fetchMoreStakers({
         variables: {
           address: account,
-          first: Constants.COUNT_PER_PAGE,
-          skip: (page - 1) * Constants.COUNT_PER_PAGE,
+          first: COUNT_PER_PAGE,
+          skip: (page - 1) * COUNT_PER_PAGE,
         },
       });
       setCurrentPage(page);

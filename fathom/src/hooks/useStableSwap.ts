@@ -32,6 +32,9 @@ const useStableSwap = (options: string[]) => {
   const [inputCurrency, setInputCurrency] = useState<string>(options[0]);
   const [outputCurrency, setOutputCurrency] = useState<string>(options[1]);
 
+  const [inputDecimals, setInputDecimals] = useState<number>(18);
+  const [outputDecimals, setOutputDecimals] = useState<number>(18);
+
   const [inputValue, setInputValue] = useState<number|string>("");
   const [outputValue, setOutputValue] = useState<number|string>("");
 
@@ -45,9 +48,6 @@ const useStableSwap = (options: string[]) => {
   const [dailyLimit, setDailyLimit] = useState<number>(0);
   const [displayDailyLimit, setDisplayDailyLimit] = useState<number>(0);
 
-  const [isDecentralizedState, setIsDecentralizedState] = useState<boolean|undefined>(undefined);
-  const [isUserWhiteListed, setIsUserWhitelisted] = useState<boolean|undefined>(undefined);
-
   const [feeIn, setFeeIn] = useState<number>(0);
   const [feeOut, setFeeOut] = useState<number>(0);
 
@@ -55,7 +55,8 @@ const useStableSwap = (options: string[]) => {
 
   const { stableSwapService, poolService } = useStores();
 
-  const { account, chainId, library } = useConnector()!;
+  const { account, chainId, library, isDecentralizedState, isUserWhiteListed } =
+    useConnector()!;
   const { setLastTransactionBlock } = useSyncContext();
 
   const { data, loading, refetch } = useQuery(STABLE_SWAP_STATS, {
@@ -75,10 +76,10 @@ const useStableSwap = (options: string[]) => {
     (amount: number, currency: string, type: string) => {
       let oppositeValue;
       if (currency === options[0]) {
-        console.log("US+ -> FXD", 1 - feeIn / 10 ** 18);
+        console.log("xUSDT -> FXD", 1 - feeIn / 10 ** 18);
         oppositeValue = amount * (1 - feeIn / 10 ** 18);
       } else {
-        console.log("FXD -> US+", feeOut / 10 ** 18 + 1);
+        console.log("FXD -> xUSDT", feeOut / 10 ** 18 + 1);
         oppositeValue = amount / (feeOut / 10 ** 18 + 1);
       }
 
@@ -94,16 +95,19 @@ const useStableSwap = (options: string[]) => {
       debounce(async (input: number, currency: string, type: string) => {
         if (account) {
           let approved;
+
           approved =
             currency === options[0]
               ? await stableSwapService.approvalStatusUsdt(
                 account,
                 input,
+                inputDecimals,
                 library
               )
               : await stableSwapService.approvalStatusStableCoin(
                 account,
                 input,
+                inputDecimals,
                 library
               );
 
@@ -121,13 +125,14 @@ const useStableSwap = (options: string[]) => {
       stableSwapService,
       library,
       options,
+      inputDecimals,
       setApproveInputBtn,
       setApproveOutputBtn
     ]
   );
 
   const inputError = useMemo(() => {
-    const formattedBalance = inputBalance / 10 ** 18;
+    const formattedBalance = BigNumber(inputBalance).dividedBy(10 ** inputDecimals).toNumber();
 
     if ((inputValue as number) > formattedBalance) {
       return `You do not have enough ${inputCurrency}`;
@@ -140,7 +145,14 @@ const useStableSwap = (options: string[]) => {
     }
 
     return false;
-  }, [inputValue, inputCurrency, inputBalance, displayDailyLimit, isDecentralizedState]);
+  }, [
+    inputValue,
+    inputCurrency,
+    inputDecimals,
+    inputBalance,
+    displayDailyLimit,
+    isDecentralizedState
+  ]);
 
   const handleCurrencyChange = useMemo(
     () =>
@@ -166,7 +178,7 @@ const useStableSwap = (options: string[]) => {
             SmartContractFactory.getAddressByContractName(chainId, "FXD");
 
           const UsStableContractAddress =
-            SmartContractFactory.getAddressByContractName(chainId, "US+");
+            SmartContractFactory.getAddressByContractName(chainId, "xUSDT");
 
           try {
             const promises = [];
@@ -185,18 +197,29 @@ const useStableSwap = (options: string[]) => {
               )
             );
             promises.push(
+              poolService.getTokenDecimals(
+                inputContractAddress,
+                library
+              )
+            );
+            promises.push(
+              poolService.getTokenDecimals(
+                outputCurrencyAddress,
+                library
+              )
+            );
+            promises.push(
               stableSwapService.getPoolBalance(FXDContractAddress, library)
             );
             promises.push(
-              stableSwapService.getPoolBalance(
-                UsStableContractAddress,
-                library
-              )
+              stableSwapService.getPoolBalance(UsStableContractAddress, library)
             );
 
             const [
               inputBalance,
               outputBalance,
+              inputDecimals,
+              outputDecimals,
               fxdAvailable,
               usStableAvailable
             ] = await Promise.all(promises);
@@ -204,10 +227,14 @@ const useStableSwap = (options: string[]) => {
             setFxdAvailable(fxdAvailable! / 10 ** 18);
             setUsStableAvailable(usStableAvailable! / 10 ** 18);
 
+            setInputDecimals(inputDecimals);
+            setOutputDecimals(outputDecimals);
+
             setInputBalance(inputBalance!);
             setOutputBalance(outputBalance!);
-            // setFxdPrice(fxdPrice! / 10 ** 18);
-          } catch (e) {}
+          } catch (e) {
+
+          }
         }
       }, 100),
     [
@@ -216,6 +243,8 @@ const useStableSwap = (options: string[]) => {
       poolService,
       library,
       stableSwapService,
+      setInputDecimals,
+      setOutputDecimals,
       setInputBalance,
       setOutputBalance
     ]
@@ -225,8 +254,9 @@ const useStableSwap = (options: string[]) => {
     (inputValue: number, outputValue: number) => {
       setInputCurrency(outputCurrency);
       setOutputCurrency(inputCurrency);
-
-      approvalStatus(outputValue, outputCurrency, "input");
+      if (outputValue) {
+        approvalStatus(outputValue, outputCurrency, "input");
+      }
 
       setOutputValue("");
       setInputValue("");
@@ -248,29 +278,19 @@ const useStableSwap = (options: string[]) => {
 
   useEffect(() => {
     if (chainId) {
-      Promise.all([
-        stableSwapService.getLastUpdate(library),
-        stableSwapService.isDecentralizedState(library)
-      ]).then(([lastUpdate, isDecentralizedState]) => {
-        setIsDecentralizedState(isDecentralizedState);
+      stableSwapService.getLastUpdate(library).then((lastUpdate) => {
         setLastUpdate(Number(lastUpdate));
-
-        if (isDecentralizedState) {
-          stableSwapService.getDailySwapLimit(library).then((dailyLimit) => {
-            console.log(dailyLimit);
-            setDailyLimit(dailyLimit!);
-          });
-        }
       });
     }
-  }, [
-    chainId,
-    stableSwapService,
-    library,
-    setLastUpdate,
-    setDailyLimit,
-    setIsDecentralizedState
-  ]);
+  }, [chainId, stableSwapService, library, setLastUpdate]);
+
+  useEffect(() => {
+    if (isDecentralizedState) {
+      stableSwapService.getDailySwapLimit(library).then((dailyLimit) => {
+        setDailyLimit(dailyLimit!);
+      });
+    }
+  }, [stableSwapService, isDecentralizedState, library]);
 
   useEffect(() => {
     if (chainId) {
@@ -314,30 +334,18 @@ const useStableSwap = (options: string[]) => {
     }
   }, [outputCurrency, options]);
 
-  useEffect(() => {
-    if (account && isDecentralizedState === false) {
-      stableSwapService
-        .isUserWhitelisted(account, library)
-        .then((isWhitelisted) => {
-          setIsUserWhitelisted(isWhitelisted);
-        });
-    }
-  }, [
-    stableSwapService,
-    isDecentralizedState,
-    account,
-    library,
-    setIsUserWhitelisted
-  ]);
-
   const swapFee = useMemo(() => {
-    /**
-     * US+ to FXD
-     */
-    if (inputCurrency === options[0]) {
-      return (Number(inputValue) * feeIn) / 10 ** 18;
+    if (inputValue) {
+      /**
+       * xUSDT to FXD
+       */
+      if (inputCurrency === options[0]) {
+        return BigNumber(inputValue).multipliedBy(feeIn).dividedBy(10 ** 18).toNumber();
+      } else {
+        return BigNumber(inputValue).multipliedBy(feeOut).dividedBy(10 ** 18).toNumber();
+      }
     } else {
-      return (Number(inputValue) * feeOut) / 10 ** 18;
+      return 0;
     }
   }, [options, inputCurrency, inputValue, feeIn, feeOut]);
 
@@ -347,11 +355,21 @@ const useStableSwap = (options: string[]) => {
       const tokenName = options[0];
       let blockNumber;
       if (inputCurrency === tokenName) {
-        blockNumber = await stableSwapService
-          .swapTokenToStableCoin(account, inputValue as number, tokenName, library);
+        blockNumber = await stableSwapService.swapTokenToStableCoin(
+          account,
+          inputValue as number,
+          inputDecimals,
+          tokenName,
+          library
+        );
       } else {
-        blockNumber = await stableSwapService
-          .swapStableCoinToToken(account, outputValue as number, tokenName, library);
+        blockNumber = await stableSwapService.swapStableCoinToToken(
+          account,
+          outputValue as number,
+          outputDecimals,
+          tokenName,
+          library
+        );
       }
 
       setInputValue("");
@@ -373,6 +391,8 @@ const useStableSwap = (options: string[]) => {
     options,
     inputCurrency,
     outputCurrency,
+    inputDecimals,
+    outputDecimals,
     inputValue,
     outputValue,
     account,
@@ -433,8 +453,9 @@ const useStableSwap = (options: string[]) => {
     (e: any) => {
       const { value } = e.target;
       setInputValue(value);
-      approvalStatus(value, inputCurrency, "input");
-
+      if (value) {
+        approvalStatus(value, inputCurrency, "input");
+      }
       setOppositeCurrency(value, inputCurrency, "input");
     },
     [inputCurrency, setInputValue, setOppositeCurrency, approvalStatus]
@@ -468,38 +489,47 @@ const useStableSwap = (options: string[]) => {
 
   const setMax = useCallback(() => {
     /**
-     * FXD to US+
+     * FXD to xUSDT
      */
     let formattedBalance;
     if (inputCurrency === options[1]) {
-      formattedBalance = new BigNumber(
-        Xdc3.utils.fromWei(inputBalance.toString())
-      )
-        .multipliedBy(
-          1 - new BigNumber(Xdc3.utils.fromWei(feeOut.toString())).toNumber()
-        )
-        .toNumber();
+      formattedBalance =
+        BigNumber(inputBalance)
+          .dividedBy(10 ** inputDecimals)
+          .multipliedBy(
+            BigNumber(1).minus(Xdc3.utils.fromWei(feeOut.toString()))
+          )
+          .toNumber();
     } else {
       formattedBalance =
-        new BigNumber(Xdc3.utils.fromWei(inputBalance.toString())).toFixed() ||
+        BigNumber(inputBalance).dividedBy(10 ** inputDecimals).toFixed() ||
         0;
     }
 
     setInputValue(formattedBalance);
     setOppositeCurrency(formattedBalance as number, inputCurrency, "input");
+    if (formattedBalance) {
+      approvalStatus(formattedBalance as number, inputCurrency, "input");
+    }
   }, [
     options,
     inputBalance,
     inputCurrency,
     feeOut,
     setOppositeCurrency,
-    setInputValue
+    inputDecimals,
+    setInputValue,
+    approvalStatus
   ]);
 
   return {
     dailyLimit: displayDailyLimit,
     isDecentralizedState,
     isUserWhiteListed,
+
+    inputDecimals,
+    outputDecimals,
+
     inputValue,
     outputValue,
 

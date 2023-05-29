@@ -1,4 +1,8 @@
-import React, { FC, memo, useMemo } from "react";
+import React, {
+  FC,
+  memo,
+  useMemo
+} from "react";
 import ILockPosition from "stores/interfaces/ILockPosition";
 import StakingViewItem from "components/Staking/StakingViewItem";
 import ClaimRewardsDialog from "components/Staking/Dialog/ClaimRewardsDialog";
@@ -6,13 +10,18 @@ import { DialogActions } from "hooks/useStakingView";
 import UnstakeDialog from "components/Staking/Dialog/UnstakeDialog";
 import EarlyUnstakeDialog from "components/Staking/Dialog/EarlyUnstakeDialog";
 import { NoResults } from "components/AppComponents/AppBox/AppBox";
-import { Box, CircularProgress, Grid, Pagination } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Grid,
+  Pagination
+} from "@mui/material";
 import UnclaimedRewardsDialog from "components/Staking/Dialog/UnclaimedRewardsDialog";
 import useStakingContext from "context/staking";
 import UnstakeCoolDownDialog from "components/Staking/Dialog/UnstakeCoolDownDialog";
 import ClaimRewardsCoolDownDialog from "components/Staking/Dialog/ClaimRewardsCoolDownDialog";
 import WithdrawDialog from "components/Staking/Dialog/WithdrawDialog";
-import { Constants } from "helpers/Constants";
+import { COUNT_PER_PAGE } from "helpers/Constants";
 import { styled } from "@mui/material/styles";
 
 const PaginationWrapper = styled(Box)`
@@ -40,7 +49,7 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
     currentPage,
     handlePageChange,
 
-    isLoading,
+    isLoading
   } = useStakingContext();
 
   return (
@@ -67,10 +76,10 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
                 ))}
               </Grid>
             )}
-            {itemCount > Constants.COUNT_PER_PAGE && (
+            {itemCount > COUNT_PER_PAGE && (
               <PaginationWrapper>
                 <Pagination
-                  count={Math.ceil(itemCount / Constants.COUNT_PER_PAGE)}
+                  count={Math.ceil(itemCount / COUNT_PER_PAGE)}
                   page={currentPage}
                   onChange={handlePageChange}
                 />
@@ -84,7 +93,7 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
           currentPage,
           itemCount,
           handlePageChange,
-          isLoading,
+          isLoading
         ]
       )}
 
@@ -109,7 +118,7 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
         token,
         dialogAction,
         onClose,
-        processFlow,
+        processFlow
       ])}
 
       {useMemo(() => {
@@ -132,7 +141,7 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
         onClose,
         processFlow,
         unstake,
-        earlyUnstake,
+        earlyUnstake
       ])}
 
       {useMemo(() => {
@@ -157,7 +166,7 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
               onFinish={(unstakeAmount: number) => {
                 processFlow("unstake-cooldown-unstake", {
                   ...unstake,
-                  amount: unstakeAmount * 10 ** 18,
+                  amount: unstakeAmount * 10 ** 18
                 } as ILockPosition);
               }}
             />
@@ -175,7 +184,7 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
               onFinish={(unstakeAmount: number) => {
                 processFlow("unstake-cooldown-early-unstake", {
                   ...earlyUnstake,
-                  amount: unstakeAmount,
+                  amount: unstakeAmount
                 } as ILockPosition);
               }}
             />

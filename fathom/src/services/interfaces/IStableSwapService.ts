@@ -5,12 +5,14 @@ export default interface IStableSwapService {
   swapTokenToStableCoin(
     address: string,
     tokenIn: number,
+    tokenInDecimals: number,
     tokenName: string,
     library: Xdc3
   ): Promise<number>;
   swapStableCoinToToken(
     address: string,
     stableCoinIn: number,
+    stableCoinInDecimals: number,
     tokenName: string,
     library: Xdc3
   ): Promise<number>;
@@ -26,11 +28,13 @@ export default interface IStableSwapService {
   approvalStatusStableCoin(
     address: string,
     tokenIn: number,
+    inputDecimal: number,
     library: Xdc3
   ): Promise<boolean | undefined>;
   approvalStatusUsdt(
     address: string,
     tokenIn: number,
+    inputDecimal: number,
     library: Xdc3
   ): Promise<boolean | undefined>;
 

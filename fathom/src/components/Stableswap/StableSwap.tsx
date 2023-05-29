@@ -1,4 +1,7 @@
-import React, { useMemo, useState } from "react";
+import React, {
+  useMemo,
+  useState
+} from "react";
 import BigNumber from "bignumber.js";
 import {
   Select,
@@ -8,7 +11,7 @@ import {
   Box,
   CircularProgress,
   Typography,
-  Container,
+  Container
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import InfoIcon from "@mui/icons-material/Info";
@@ -17,11 +20,14 @@ import { StableSwapPaper } from "components/AppComponents/AppPaper/AppPaper";
 import { PageHeader } from "components/Dashboard/PageHeader";
 import {
   AppFormLabel,
-  AppTextField,
+  AppTextField
 } from "components/AppComponents/AppForm/AppForm";
 import useStableSwap from "hooks/useStableSwap";
 
-import { formatNumber, formatPercentage } from "utils/format";
+import {
+  formatNumber,
+  formatPercentage
+} from "utils/format";
 import { getTokenLogoURL } from "utils/tokenLogo";
 
 import {
@@ -31,13 +37,13 @@ import {
   InfoValue,
   InfoWrapper,
   WalletBalance,
-  SuccessBox,
+  SuccessBox
 } from "components/AppComponents/AppBox/AppBox";
 import {
   ButtonPrimary,
   ButtonSecondary,
   FathomSwapChangeCurrencyButton,
-  MaxButton,
+  MaxButton
 } from "components/AppComponents/AppButton/AppButton";
 
 import ComboShareSrc from "assets/svg/combo-shape.svg";
@@ -59,12 +65,13 @@ const StableSwapCurrencySelect = styled(Select)`
   font-size: 13px;
   line-height: 16px;
   height: 32px;
-  width: 108px;
+  width: 118px;
   position: absolute;
   left: 32px;
   top: 41px;
   z-index: 1;
   padding-top: 4px;
+
   .MuiSelect-select {
     padding-left: 12px;
   }
@@ -74,7 +81,8 @@ const StableSwapTextField = styled(AppTextField)`
   input {
     font-size: 20px;
     color: #4f658c;
-    padding: 0 50px 0 122px;
+    padding: 0 50px 0 130px;
+
     &::-webkit-inner-spin-button,
     &::-webkit-outer-spin-button {
       -webkit-appearance: none;
@@ -84,9 +92,11 @@ const StableSwapTextField = styled(AppTextField)`
       -moz-appearance: textfield;
     }
   }
+
   .MuiFormHelperText-root {
     &.Mui-error {
       padding-top: 5px;
+
       p {
         font-size: 12px;
         padding-left: 22px;
@@ -164,7 +174,7 @@ const ErrorInfoIcon = styled(InfoIcon)`
 `;
 
 const StableSwap = () => {
-  const [options /*setOptions*/] = useState<string[]>(["US+", "FXD"]);
+  const [options /*setOptions*/] = useState<string[]>(["xUSDT", "FXD"]);
 
   const {
     dailyLimit,
@@ -174,6 +184,9 @@ const StableSwap = () => {
 
     inputValue,
     outputValue,
+
+    inputDecimals,
+    outputDecimals,
 
     handleInputValueTextFieldChange,
     handleOutputValueTextFieldChange,
@@ -205,7 +218,7 @@ const StableSwap = () => {
     isMobile,
 
     fxdAvailable,
-    usStableAvailable,
+    usStableAvailable
   } = useStableSwap(options);
 
   return (
@@ -218,7 +231,7 @@ const StableSwap = () => {
           addPadding={true}
           title={"Stable Swap"}
           description={
-            "Buy and sell FXD for US+ at a rate of 1:1 with low fees. (only for allowed addresses on mainnet)"
+            "Buy and sell FXD for xUSDT at a rate of 1:1 with low fees. (only for allowed addresses on mainnet)"
           }
         />
         <Grid item xs={12} sm={10} md={8} lg={6} sx={{ margin: "0 auto" }}>
@@ -230,12 +243,12 @@ const StableSwap = () => {
                   <StableSwapWalletBalance>
                     Balance:{" "}
                     {BigNumber(inputBalance)
-                      .dividedBy(10 ** 18)
+                      .dividedBy(10 ** inputDecimals)
                       .toFixed(2)}{" "}
                     {inputCurrency}
                   </StableSwapWalletBalance>
                 ),
-                [inputBalance, inputCurrency]
+                [inputBalance, inputCurrency, inputDecimals]
               )}
               <StableSwapCurrencySelect
                 value={inputCurrency}
@@ -311,12 +324,12 @@ const StableSwap = () => {
                   <StableSwapWalletBalance>
                     Balance:{" "}
                     {BigNumber(outputBalance)
-                      .dividedBy(10 ** 18)
+                      .dividedBy(10 ** outputDecimals)
                       .toFixed(2)}{" "}
                     {outputCurrency}
                   </StableSwapWalletBalance>
                 ),
-                [outputBalance, outputCurrency]
+                [outputBalance, outputCurrency, outputDecimals]
               )}
               <StableSwapCurrencySelect
                 value={outputCurrency}
@@ -390,8 +403,8 @@ const StableSwap = () => {
                       {outputCurrency === options[0]
                         ? fxdPrice
                         : fxdPrice
-                        ? 1 / fxdPrice
-                        : null}{" "}
+                          ? 1 / fxdPrice
+                          : null}{" "}
                       {outputCurrency}
                     </Box>
                   </StableSwapPriceInfo>
@@ -406,16 +419,16 @@ const StableSwap = () => {
                   {formatPercentage(swapFee)} FXD{" "}
                   {inputValue && (
                     <>
-                      ({formatPercentage((swapFee / Number(inputValue)) * 100)}
+                      ({formatPercentage(BigNumber(swapFee).dividedBy(inputValue).multipliedBy(100).toNumber())}
                       %)
                     </>
                   )}
                 </InfoValue>
               </StableSwapInfoWrapper>
-              { isDecentralizedState && <StableSwapInfoWrapper>
+              {isDecentralizedState && <StableSwapInfoWrapper>
                 <InfoLabel>Daily Limit</InfoLabel>
                 <InfoValue>{formatNumber(dailyLimit!)} FXD </InfoValue>
-              </StableSwapInfoWrapper> }
+              </StableSwapInfoWrapper>}
 
               <StableSwapInfoWrapper>
                 <InfoLabel>FXD Pool Token Available</InfoLabel>
@@ -423,8 +436,8 @@ const StableSwap = () => {
               </StableSwapInfoWrapper>
 
               <StableSwapInfoWrapper>
-                <InfoLabel>US+ Pool Token Available</InfoLabel>
-                <InfoValue>{formatNumber(usStableAvailable!)} US+ </InfoValue>
+                <InfoLabel>xUSDT Pool Token Available</InfoLabel>
+                <InfoValue>{formatNumber(usStableAvailable!)} xUSDT</InfoValue>
               </StableSwapInfoWrapper>
             </StableSwapInfoContainer>
 

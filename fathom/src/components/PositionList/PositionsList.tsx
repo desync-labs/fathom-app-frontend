@@ -12,7 +12,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
-import ClosePositionDialog from "components/Positions/ClosePositionDialog";
+import ClosePositionDialog from "components/Positions/RepayPositionDialog";
 import { AppTableHeaderRow } from "components/AppComponents/AppTable/AppTable";
 import {
   TitleSecondary,
@@ -22,9 +22,9 @@ import PositionListItem from "components/PositionList/PositionListItem";
 import PositionListItemMobile from "components/PositionList/PositionListItemMobile";
 import useOpenPositionList from "hooks/useOpenPositionList";
 import { styled } from "@mui/material/styles";
-import { Constants } from "helpers/Constants";
+import { COUNT_PER_PAGE } from "helpers/Constants";
 
-import { ClosePositionProvider } from "context/closePosition";
+import { ClosePositionProvider } from "context/repayPosition";
 import { TopUpPositionProvider } from "context/topUpPosition";
 import TopUpPositionDialog from "components/Positions/TopUpPositionDialog";
 import { AppDialog } from "../AppComponents/AppDialog/AppDialog";
@@ -129,7 +129,7 @@ const PositionsList: FC<PositionsListProps> = ({
                 <PaginationWrapper>
                   <Pagination
                     count={Math.ceil(
-                      positionsItemsCount / Constants.COUNT_PER_PAGE
+                      positionsItemsCount / COUNT_PER_PAGE
                     )}
                     page={positionCurrentPage}
                     onChange={handlePageChange}
@@ -153,7 +153,7 @@ const PositionsList: FC<PositionsListProps> = ({
                 <PaginationWrapper>
                   <Pagination
                     count={Math.ceil(
-                      positionsItemsCount / Constants.COUNT_PER_PAGE
+                      positionsItemsCount / COUNT_PER_PAGE
                     )}
                     page={positionCurrentPage}
                     onChange={handlePageChange}
