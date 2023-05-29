@@ -224,8 +224,8 @@ const useStableSwap = (options: string[]) => {
               usStableAvailable
             ] = await Promise.all(promises);
 
-            setFxdAvailable(fxdAvailable! / 10 ** 18);
-            setUsStableAvailable(usStableAvailable! / 10 ** 18);
+            setFxdAvailable(fxdAvailable! / 10 ** (inputCurrency === options[1] ? inputDecimals : outputDecimals));
+            setUsStableAvailable(usStableAvailable! / 10 ** (inputCurrency === options[0] ? inputDecimals : outputDecimals));
 
             setInputDecimals(inputDecimals);
             setOutputDecimals(outputDecimals);
@@ -243,6 +243,7 @@ const useStableSwap = (options: string[]) => {
       poolService,
       library,
       stableSwapService,
+      options,
       setInputDecimals,
       setOutputDecimals,
       setInputBalance,
