@@ -9,6 +9,7 @@ import {
 import AppMenuItem from "components/MenuItem/AppMenuItem";
 import { styled } from "@mui/material/styles";
 import { Box } from "@mui/material";
+import useConnector from "../../context/connector";
 
 const MobileMenuWrapper = styled(Box)`
   position: fixed;
@@ -32,6 +33,7 @@ type MobileMenuPropsType = {
 
 const MobileMenu: FC<MobileMenuPropsType> = ({ setOpenMobile }) => {
   const location = useLocation();
+  const { allowStableSwap } = useConnector();
 
   const isDashboardActive = useMemo(
     () => location.pathname === "/",
@@ -81,6 +83,10 @@ const MobileMenu: FC<MobileMenuPropsType> = ({ setOpenMobile }) => {
       showText: true,
     },
   ];
+
+  if (!allowStableSwap) {
+    appMenuItems.splice(1, 1);
+  }
 
   return (
     <MobileMenuWrapper onClick={() => setOpenMobile(false)}>
