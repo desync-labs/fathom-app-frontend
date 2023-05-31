@@ -2,13 +2,13 @@ import Xdc3 from "xdc3";
 import { SmartContractFactory } from "config/SmartContractFactory";
 import {
   MAX_UINT256,
-  DEFAULT_CHAIN_ID,
+  DEFAULT_CHAIN_ID
 } from "helpers/Constants";
 import { Strings } from "helpers/Strings";
 import { Web3Utils } from "helpers/Web3Utils";
 import {
   TransactionStatus,
-  TransactionType,
+  TransactionType
 } from "stores/interfaces/ITransaction";
 import ActiveWeb3Transactions from "stores/transaction.store";
 import IStableSwapService from "services/interfaces/IStableSwapService";
@@ -79,7 +79,7 @@ export default class StableSwapService implements IStableSwapService {
               active: false,
               status: TransactionStatus.None,
               title: `${tokenName} to FXD Swap Pending.`,
-              message: Strings.CheckOnBlockExplorer,
+              message: Strings.CheckOnBlockExplorer
             });
           })
           .then((receipt: TransactionReceipt) => {
@@ -114,7 +114,7 @@ export default class StableSwapService implements IStableSwapService {
 
         const options = { from: account, gas: 0 };
 
-        const formattedTokenAmount = toWei(tokenOut.toString(), 'ether');
+        const formattedTokenAmount = toWei(tokenOut.toString(), "ether");
 
         const gas = await getEstimateGas(
           StableSwapModule,
@@ -144,7 +144,7 @@ export default class StableSwapService implements IStableSwapService {
               active: false,
               status: TransactionStatus.None,
               title: `FXD to ${tokenName} Swap Pending.`,
-              message: Strings.CheckOnBlockExplorer,
+              message: Strings.CheckOnBlockExplorer
             });
           })
           .then((receipt: TransactionReceipt) => {
@@ -162,7 +162,125 @@ export default class StableSwapService implements IStableSwapService {
     });
   }
 
-  approveStableCoin(account: string, library: Xdc3): Promise<number> {
+  addLiquidity(amount: number, account: string, library: Xdc3) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const StableSwapModuleWrapper = Web3Utils.getContractInstance(
+          SmartContractFactory.StableSwapModuleWrapper(this.chainId),
+          library
+        );
+        const MESSAGE = "Add Liquidity to Stable Swap";
+
+        const options = { from: account, gas: 0 };
+
+        const formattedTokenAmount = toWei(amount.toString(), "ether");
+
+        const gas = await getEstimateGas(
+          StableSwapModuleWrapper,
+          "depositTokens",
+          [formattedTokenAmount],
+          options
+        );
+        options.gas = gas;
+
+        /**
+         * Block for XDC Pay.
+         */
+        StableSwapModuleWrapper.events.allEvents(
+          (_: any, transactionReceipt: TransactionReceipt) => {
+            this.alertStore.setShowSuccessAlert(true, MESSAGE);
+            resolve(transactionReceipt.blockNumber);
+          }
+        );
+
+        return StableSwapModuleWrapper.methods
+          .depositTokens(formattedTokenAmount)
+          .send(options)
+          .on("transactionHash", (hash: any) => {
+            this.transactionStore.addTransaction({
+              hash: hash,
+              type: TransactionType.ClosePosition,
+              active: false,
+              status: TransactionStatus.None,
+              title: "Add Liquidity to Stable Swap.",
+              message: Strings.CheckOnBlockExplorer
+            });
+          })
+          .then((receipt: TransactionReceipt) => {
+            this.alertStore.setShowSuccessAlert(true, MESSAGE);
+            resolve(receipt.blockNumber);
+          })
+          .catch((e: any) => {
+            this.alertStore.setShowErrorAlert(true, e.message);
+            reject(e);
+          });
+      } catch (e: any) {
+        this.alertStore.setShowErrorAlert(true, e.message);
+        reject(e);
+      }
+    });
+  }
+
+  removeLiquidity(amount: number, account: string, library: Xdc3) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const StableSwapModuleWrapper = Web3Utils.getContractInstance(
+          SmartContractFactory.StableSwapModuleWrapper(this.chainId),
+          library
+        );
+        const MESSAGE = "Remove Liquidity from Stable Swap";
+
+        const options = { from: account, gas: 0 };
+
+        const formattedTokenAmount = toWei(amount.toString(), "ether");
+
+        const gas = await getEstimateGas(
+          StableSwapModuleWrapper,
+          "withdrawTokens",
+          [formattedTokenAmount],
+          options
+        );
+        options.gas = gas;
+
+        /**
+         * Block for XDC Pay.
+         */
+        StableSwapModuleWrapper.events.allEvents(
+          (_: any, transactionReceipt: TransactionReceipt) => {
+            this.alertStore.setShowSuccessAlert(true, MESSAGE);
+            resolve(transactionReceipt.blockNumber);
+          }
+        );
+
+        return StableSwapModuleWrapper.methods
+          .withdrawTokens(formattedTokenAmount)
+          .send(options)
+          .on("transactionHash", (hash: any) => {
+            this.transactionStore.addTransaction({
+              hash: hash,
+              type: TransactionType.ClosePosition,
+              active: false,
+              status: TransactionStatus.None,
+              title: "Remove Liquidity from Stable Swap.",
+              message: Strings.CheckOnBlockExplorer
+            });
+          })
+          .then((receipt: TransactionReceipt) => {
+            this.alertStore.setShowSuccessAlert(true, MESSAGE);
+            resolve(receipt.blockNumber);
+          })
+          .catch((e: any) => {
+            this.alertStore.setShowErrorAlert(true, e.message);
+            reject(e);
+          });
+      } catch (e: any) {
+        this.alertStore.setShowErrorAlert(true, e.message);
+        reject(e);
+      }
+    });
+  }
+
+  approveStableCoin(account: string, library: Xdc3, isStableSwapWrapper: boolean = false): Promise<number> {
     return new Promise(async (resolve, reject) => {
       try {
         const FathomStableCoin = Web3Utils.getContractInstance(
@@ -172,12 +290,16 @@ export default class StableSwapService implements IStableSwapService {
         const MESSAGE = "FXD approval was successful!";
 
         const options = { from: account, gas: 0 };
+        const approvalAddress = isStableSwapWrapper ?
+          SmartContractFactory.StableSwapModuleWrapper(this.chainId).address :
+          SmartContractFactory.StableSwapModule(this.chainId).address;
+
         const gas = await getEstimateGas(
           FathomStableCoin,
           "approve",
           [
-            SmartContractFactory.StableSwapModule(this.chainId).address,
-            MAX_UINT256,
+            approvalAddress,
+            MAX_UINT256
           ],
           options
         );
@@ -195,7 +317,7 @@ export default class StableSwapService implements IStableSwapService {
 
         return FathomStableCoin.methods
           .approve(
-            SmartContractFactory.StableSwapModule(this.chainId).address,
+            approvalAddress,
             MAX_UINT256
           )
           .send(options)
@@ -206,7 +328,7 @@ export default class StableSwapService implements IStableSwapService {
               active: false,
               status: TransactionStatus.None,
               title: "Approval Pending.",
-              message: Strings.CheckOnBlockExplorer,
+              message: Strings.CheckOnBlockExplorer
             });
           })
           .then((receipt: TransactionReceipt) => {
@@ -227,7 +349,8 @@ export default class StableSwapService implements IStableSwapService {
   async approveUsdt(
     account: string,
     tokenName: string,
-    library: Xdc3
+    library: Xdc3,
+    isStableSwapWrapper: boolean = false
   ): Promise<number> {
     return new Promise(async (resolve, reject) => {
       try {
@@ -238,12 +361,16 @@ export default class StableSwapService implements IStableSwapService {
         const MESSAGE = `${tokenName} approval was successful!`;
 
         const options = { from: account, gas: 0 };
+        const approvalAddress = isStableSwapWrapper ?
+          SmartContractFactory.StableSwapModuleWrapper(this.chainId).address :
+          SmartContractFactory.StableSwapModule(this.chainId).address;
+
         const gas = await getEstimateGas(
           USStable,
           "approve",
           [
-            SmartContractFactory.StableSwapModule(this.chainId).address,
-            MAX_UINT256,
+            approvalAddress,
+            MAX_UINT256
           ],
           options
         );
@@ -251,7 +378,7 @@ export default class StableSwapService implements IStableSwapService {
 
         return USStable.methods
           .approve(
-            SmartContractFactory.StableSwapModule(this.chainId).address,
+            approvalAddress,
             MAX_UINT256
           )
           .send(options)
@@ -262,7 +389,7 @@ export default class StableSwapService implements IStableSwapService {
               active: false,
               status: TransactionStatus.None,
               title: "Approval Pending",
-              message: Strings.CheckOnBlockExplorer,
+              message: Strings.CheckOnBlockExplorer
             });
           })
           .then((receipt: TransactionReceipt) => {
@@ -284,7 +411,8 @@ export default class StableSwapService implements IStableSwapService {
     account: string,
     tokenIn: number,
     tokenInDecimal: number,
-    library: Xdc3
+    library: Xdc3,
+    isStableSwapWrapper: boolean = false
   ) {
     try {
       const FathomStableCoin = Web3Utils.getContractInstance(
@@ -295,7 +423,9 @@ export default class StableSwapService implements IStableSwapService {
       const allowance = await FathomStableCoin.methods
         .allowance(
           account,
-          SmartContractFactory.StableSwapModule(this.chainId).address
+          isStableSwapWrapper ?
+            SmartContractFactory.StableSwapModuleWrapper(this.chainId).address :
+            SmartContractFactory.StableSwapModule(this.chainId).address
         )
         .call();
 
@@ -311,7 +441,8 @@ export default class StableSwapService implements IStableSwapService {
     account: string,
     tokenIn: number,
     tokenInDecimal: number,
-    library: Xdc3
+    library: Xdc3,
+    isStableSwapWrapper: boolean = false
   ) {
     try {
       const USStable = Web3Utils.getContractInstance(
@@ -322,7 +453,9 @@ export default class StableSwapService implements IStableSwapService {
       const allowance = await USStable.methods
         .allowance(
           account,
-          SmartContractFactory.StableSwapModule(this.chainId).address
+          isStableSwapWrapper ?
+            SmartContractFactory.StableSwapModuleWrapper(this.chainId).address :
+            SmartContractFactory.StableSwapModule(this.chainId).address
         )
         .call();
 
@@ -416,6 +549,57 @@ export default class StableSwapService implements IStableSwapService {
         library
       );
       return StableSwapModule.methods.isUserWhitelisted(address).call();
+    } catch (e: any) {
+      this.alertStore.setShowErrorAlert(true, e.message);
+    }
+  }
+
+  getAmounts(amount: number, account: string, library: Xdc3) {
+    try {
+      const StableSwapModuleWrapper = Web3Utils.getContractInstance(
+        SmartContractFactory.StableSwapModuleWrapper(this.chainId),
+        library
+      );
+      const formattedTokenAmount = toWei(amount.toString(), "ether");
+      return StableSwapModuleWrapper.methods.getAmounts(formattedTokenAmount).call({
+        from: account
+      });
+    } catch (e: any) {
+      this.alertStore.setShowErrorAlert(true, e.message);
+    }
+  }
+
+  getTotalValueLocked(library: Xdc3) {
+    try {
+      const StableSwapModule = Web3Utils.getContractInstance(
+        SmartContractFactory.StableSwapModule(this.chainId),
+        library
+      );
+      return StableSwapModule.methods.totalValueLocked().call();
+    } catch (e: any) {
+      this.alertStore.setShowErrorAlert(true, e.message);
+    }
+  }
+
+  getDepositTracker(account: string, library: Xdc3) {
+    try {
+      const StableSwapModuleWrapper = Web3Utils.getContractInstance(
+        SmartContractFactory.StableSwapModuleWrapper(this.chainId),
+        library
+      );
+      return StableSwapModuleWrapper.methods.depositTracker(account).call();
+    } catch (e: any) {
+      this.alertStore.setShowErrorAlert(true, e.message);
+    }
+  }
+
+  getActualLiquidityAvailablePerUser(account: string, library: Xdc3) {
+    try {
+      const StableSwapModuleWrapper = Web3Utils.getContractInstance(
+        SmartContractFactory.StableSwapModuleWrapper(this.chainId),
+        library
+      );
+      return StableSwapModuleWrapper.methods.getActualLiquidityAvailablePerUser(account).call();
     } catch (e: any) {
       this.alertStore.setShowErrorAlert(true, e.message);
     }
