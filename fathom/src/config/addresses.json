@@ -36,6 +36,7 @@
       "proxyWalletRegistry": "0x9F13f5E11d847bfC9733DfC39979d0C88F886afc",
       "stabilityFeeCollector": "0x4539a9ac9BA1581dc7004821bC73Ffa9310E48BF",
       "stableSwapModule": "0x31A188FfEd12c7E2E6141E18a3b8A0e78E60249e",
+      "stableSwapModuleWrapper": "0x43c158A1119e7fbb9F2B2d13883c2744B494B496",
       "stablecoinAdapter": "0x35b11adc3E9A872969799dBf818f6EabC026861D",
       "staking": "0x87259Df72488D271352d8743d83Cfa8F35882494",
       "stakingGetter": "0x1F3577B9854C1b97aD1589c6c8391D81DDC0bfE2",

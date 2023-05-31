@@ -21,7 +21,9 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import Copyright from "components/Footer/Footer";
 import AppBar from "components/AppComponents/AppBar/AppBar";
 import DashboardContent from "components/Dashboard/Dashboard";
+
 import StableSwap from "components/Stableswap/StableSwap";
+import StableSwapAddLiquidity from "components/Stableswap/StableSwapAddLiquidity";
 
 import Web3Status from "components/Web3Status/Web3Status";
 import AllProposalsView from "components/Governance/ViewAllProposals";
@@ -53,6 +55,7 @@ import MobileMenuIcon from "assets/svg/mobile-menu.svg";
 import MobileMenuIconActive from "assets/svg/mobile-menu-active.svg";
 
 import { getTokenLogoURL } from "utils/tokenLogo";
+import StableSwapRemoveLiquidity from "../Stableswap/StableSwapRemoveLiquidity";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -313,7 +316,11 @@ const MainLayout = () => {
           <Routes>
             <Route path="/" element={<DashboardContent />} />
             {allowStableSwap || allowStableSwapInProgress || allowStableSwapInProgress === undefined ? (
-              <Route path="/swap" element={<StableSwap />} />
+              <>
+                <Route path="/swap" element={<StableSwap />} />
+                <Route path="/swap/add-liquidity" element={<StableSwapAddLiquidity />} />
+                <Route path="/swap/remove-liquidity" element={<StableSwapRemoveLiquidity />} />
+              </>
             ) : null}
             <Route
               path="/proposal/:_proposalId"
