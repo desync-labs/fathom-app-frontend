@@ -77,10 +77,16 @@ const useStableSwap = (options: string[]) => {
       let oppositeValue;
       if (currency === options[0]) {
         console.log("xUSDT -> FXD", 1 - feeIn / 10 ** 18);
-        oppositeValue = amount * (1 - feeIn / 10 ** 18);
+        oppositeValue = BigNumber(amount).multipliedBy(
+          BigNumber(1).minus(
+            BigNumber(feeIn).dividedBy(10 ** 18)
+          )
+        ).toNumber();
       } else {
         console.log("FXD -> xUSDT", feeOut / 10 ** 18 + 1);
-        oppositeValue = amount / (feeOut / 10 ** 18 + 1);
+        oppositeValue = BigNumber(amount).dividedBy(
+          BigNumber(feeOut).dividedBy(10 ** 18).plus(1)
+        ).toNumber();
       }
 
       type === "input"
