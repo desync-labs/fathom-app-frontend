@@ -25,7 +25,7 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
     [location.pathname]
   );
   const isStableSwapActive = useMemo(
-    () => location.pathname === "/swap",
+    () => location.pathname.includes("swap"),
     [location.pathname]
   );
   const isDAOActive = useMemo(

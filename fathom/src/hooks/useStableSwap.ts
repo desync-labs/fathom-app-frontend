@@ -21,6 +21,7 @@ import { STABLE_SWAP_STATS } from "apollo/queries";
 import { DAY_IN_SECONDS } from "helpers/Constants";
 import { formatNumber } from "utils/format";
 import { PricesContext } from "context/prices";
+import { useNavigate } from "react-router-dom";
 
 const useStableSwap = (options: string[]) => {
   const [inputBalance, setInputBalance] = useState<number>(0);
@@ -65,6 +66,8 @@ const useStableSwap = (options: string[]) => {
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const navigate = useNavigate();
+
 
   const fxdPrice = useMemo(() => {
     return BigNumber(fxdPriceInWei)
@@ -572,7 +575,8 @@ const useStableSwap = (options: string[]) => {
 
     isMobile,
     fxdAvailable,
-    usStableAvailable
+    usStableAvailable,
+    navigate,
   };
 };
 

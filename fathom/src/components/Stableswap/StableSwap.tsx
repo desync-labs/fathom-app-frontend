@@ -48,7 +48,7 @@ import {
 
 import ComboShareSrc from "assets/svg/combo-shape.svg";
 
-const StableSwapInputWrapper = styled(MuiBox)`
+export const StableSwapInputWrapper = styled(MuiBox)`
   position: relative;
   padding: 20px 24px 44px;
   background: #1d2d49;
@@ -77,7 +77,7 @@ const StableSwapCurrencySelect = styled(Select)`
   }
 `;
 
-const StableSwapTextField = styled(AppTextField)`
+export const StableSwapTextField = styled(AppTextField)`
   input {
     font-size: 20px;
     color: #4f658c;
@@ -105,21 +105,21 @@ const StableSwapTextField = styled(AppTextField)`
   }
 `;
 
-const StableSwapFormLabel = styled(AppFormLabel)`
+export const StableSwapFormLabel = styled(AppFormLabel)`
   color: #9fadc6;
 `;
 
-const StableSwapWalletBalance = styled(WalletBalance)`
+export const StableSwapWalletBalance = styled(WalletBalance)`
   color: #5a81ff;
 `;
 
-const StableSwapMaxButton = styled(MaxButton)`
+export const StableSwapMaxButton = styled(MaxButton)`
   top: 43px;
   right: 32px;
   color: #a5baff;
 `;
 
-const StableSwapPriceInfoWrapper = styled(InfoWrapper)`
+export const StableSwapPriceInfoWrapper = styled(InfoWrapper)`
   width: 100%;
   padding: 0 0 10px;
   border-bottom: 1px solid #253656;
@@ -128,16 +128,16 @@ const StableSwapPriceInfoWrapper = styled(InfoWrapper)`
   align-items: center;
 `;
 
-const StableSwapInfoWrapper = styled(InfoWrapper)`
+export const StableSwapInfoWrapper = styled(InfoWrapper)`
   width: 100%;
 `;
 
-const StableSwapInfoContainer = styled(Box)`
+export const StableSwapInfoContainer = styled(Box)`
   padding-top: 15px;
   width: 100%;
 `;
 
-const StableSwapPriceInfo = styled(InfoLabel)`
+export const StableSwapPriceInfo = styled(InfoLabel)`
   font-size: 16px;
   line-height: 24px;
   color: #fff;
@@ -149,7 +149,7 @@ const StableSwapPriceInfo = styled(InfoLabel)`
   padding: 10px 0;
 `;
 
-const SwapButton = styled(ButtonPrimary)`
+export const SwapButton = styled(ButtonPrimary)`
   height: 48px;
   width: 100%;
   font-size: 17px;
@@ -172,6 +172,15 @@ const ErrorInfoIcon = styled(InfoIcon)`
   color: #f5953d;
   height: 16px;
 `;
+
+const AddRemoveLiquidity = styled(Box)`
+  border-bottom: 1px solid #253656;
+  display: flex;
+  width: 100%;
+  padding-bottom: 10px;
+  justify-content: right;
+  gap: 7px;
+`
 
 const StableSwap = () => {
   const [options /*setOptions*/] = useState<string[]>(["xUSDT", "FXD"]);
@@ -218,7 +227,8 @@ const StableSwap = () => {
     isMobile,
 
     fxdAvailable,
-    usStableAvailable
+    usStableAvailable,
+    navigate,
   } = useStableSwap(options);
 
   return (
@@ -411,6 +421,11 @@ const StableSwap = () => {
                 </StableSwapPriceInfoWrapper>
               );
             }, [inputCurrency, outputCurrency, fxdPrice, options])}
+
+            <AddRemoveLiquidity>
+              <ButtonSecondary onClick={() => navigate('/swap/add-liquidity')}>Add Liquidity</ButtonSecondary>
+              <ButtonSecondary onClick={() => navigate('/swap/remove-liquidity')}>Remove Liquidity</ButtonSecondary>
+            </AddRemoveLiquidity>
 
             <StableSwapInfoContainer>
               <StableSwapInfoWrapper>
