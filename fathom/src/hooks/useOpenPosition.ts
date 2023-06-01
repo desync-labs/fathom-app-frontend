@@ -112,7 +112,7 @@ const useOpenPosition = (
   const getPositionDebtCeiling = useCallback(() => {
     positionService.getPositionDebtCeiling(pool.id, library).then((debtCeiling) => {
       setMaxBorrowAmount(debtCeiling);
-    }).catch((e) => {
+    }).catch(() => {
       console.log("Can`t get MAX_BORROW_AMOUNT");
     });
   }, [positionService, pool, library, setMaxBorrowAmount]);
