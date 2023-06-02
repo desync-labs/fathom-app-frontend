@@ -164,6 +164,7 @@ export const MainBox = styled(MuiBox)`
   width: 100%;
 `;
 
+
 export const WarningBox = styled(Box)`
   background: #452508;
   border: 1px solid #5c310a;

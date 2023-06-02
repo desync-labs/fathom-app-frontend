@@ -2,9 +2,6 @@ import { InjectedConnector } from "@web3-react/injected-connector";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import Xdc3 from "xdc3";
 import { XdcInjectedConnector } from "connectors/xdc-connector/xdc-connector";
-
-console.log(process.env.REACT_APP_ENV);
-
 export const APOTHEM_RPC = "https://erpc.apothem.network/";
 export const XDC_RPC = "https://erpc.xinfin.network/";
 

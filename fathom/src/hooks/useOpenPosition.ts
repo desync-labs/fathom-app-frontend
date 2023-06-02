@@ -27,7 +27,10 @@ const useOpenPosition = (
   const { poolService, positionService } = useStores();
   const { account, chainId, library } = useConnector()!;
 
-  const { handleSubmit, watch, control, setValue, trigger } = useForm({
+  const {
+    handleSubmit, watch, control, setValue, trigger,
+    formState: { errors }
+  } = useForm({
     defaultValues,
     reValidateMode: "onChange",
     mode: "onChange"
@@ -49,7 +52,7 @@ const useOpenPosition = (
     string|null
   >();
 
-  const [maxBorrowAmount, setMaxBorrowAmount] = useState<string>('');
+  const [maxBorrowAmount, setMaxBorrowAmount] = useState<string>("");
 
   const { setLastTransactionBlock } = useSyncContext();
 
@@ -109,8 +112,10 @@ const useOpenPosition = (
   const getPositionDebtCeiling = useCallback(() => {
     positionService.getPositionDebtCeiling(pool.id, library).then((debtCeiling) => {
       setMaxBorrowAmount(debtCeiling);
-    })
-  }, [positionService, pool, library, setMaxBorrowAmount])
+    }).catch(() => {
+      console.log("Can`t get MAX_BORROW_AMOUNT");
+    });
+  }, [positionService, pool, library, setMaxBorrowAmount]);
 
   const availableFathomInPool = useMemo(
     () => Number(pool.totalAvailable),
@@ -126,7 +131,9 @@ const useOpenPosition = (
       setCollateralToBeLocked(collateralInput || 0);
       setFxdToBeBorrowed(fathomTokenInput || 0);
 
-      // GET PRICE WITH SAFETY MARGIN
+      /**
+       * GET PRICE WITH SAFETY MARGIN
+       */
       const { priceWithSafetyMargin } = pool;
 
       // SAFE MAX
@@ -141,7 +148,7 @@ const useOpenPosition = (
       const dangerSafeMax = BigNumber(collateralInput)
         .multipliedBy(
           BigNumber(priceWithSafetyMargin)
-            .multipliedBy(BigNumber(100).minus(25))
+            .multipliedBy(BigNumber(100).minus(DANGER_SAFETY_BUFFER * 100))
             .dividedBy(100)
         )
         .toNumber();
@@ -157,11 +164,13 @@ const useOpenPosition = (
             .minus(fathomTokenInput || 0)
             .dividedBy(priceWithSafetyMargin)
           : BigNumber(collateralInput).minus(fathomTokenInput)
-      ).toNumber();
+      ).precision(10).toNumber();
 
       setCollateralAvailableToWithdraw(collateralAvailableToWithdraw);
 
-      // PRICE OF COLLATERAL FROM DEX
+      /**
+       * PRICE OF COLLATERAL FROM DEX
+       */
       const priceOfCollateralFromDex =
         pool.poolName.toUpperCase() === "XDC"
           ? BigNumber(pool.collateralLastPrice)
@@ -169,7 +178,9 @@ const useOpenPosition = (
             .toNumber()
           : await poolService.getDexPrice(collateralTokenAddress!, library);
 
-      // DEBT RATIO
+      /**
+       * DEBT RATIO
+       */
       const debtRatio = BigNumber(fathomTokenInput).isGreaterThan(0)
         ? BigNumber(fathomTokenInput)
           .dividedBy(
@@ -188,39 +199,32 @@ const useOpenPosition = (
       setOverCollateral(overCollateral);
       setDebtRatio(debtRatio);
 
-      // FXD AVAILABLE TO BORROW
+      /**
+       * FXD AVAILABLE TO BORROW
+       */
       const fxdAvailableToBorrow = BigNumber(safeMax)
         .minus(fathomTokenInput)
         .toNumber();
       setFxdAvailableToBorrow(fxdAvailableToBorrow);
 
-      // SAFETY BUFFER
+      /**
+       * SAFETY BUFFER
+       */
       const safetyBuffer = BigNumber(collateralAvailableToWithdraw)
         .dividedBy(collateralInput)
+        .precision(10, BigNumber.ROUND_FLOOR)
         .toNumber();
 
       setSafetyBuffer(isNaN(safetyBuffer) ? 0 : safetyBuffer);
 
-      // LIQUIDATION PRICE
-      let liquidationPrice;
-
-      if (BigNumber(priceWithSafetyMargin).isGreaterThan(0)) {
-        liquidationPrice = BigNumber(priceOfCollateralFromDex)
-          .dividedBy(10 ** 18)
-          .minus(
-            BigNumber(collateralAvailableToWithdraw)
-              .multipliedBy(priceWithSafetyMargin)
-              .dividedBy(collateralInput)
-          )
+      /**
+       * LIQUIDATION PRICE
+       */
+      const liquidationPrice =
+        BigNumber(fathomTokenInput)
+          .div(collateralInput)
+          .multipliedBy(pool.liquidationRatio)
           .toNumber();
-      } else {
-        liquidationPrice = BigNumber(priceOfCollateralFromDex)
-          .dividedBy(10 ** 18)
-          .minus(
-            BigNumber(collateralAvailableToWithdraw).dividedBy(collateralInput)
-          )
-          .toNumber();
-      }
 
       setLiquidationPrice(isNaN(liquidationPrice) ? 0 : liquidationPrice);
 
@@ -341,7 +345,7 @@ const useOpenPosition = (
   useEffect(() => {
     if (account && chainId) {
       getCollateralTokenAndBalance();
-      getPositionDebtCeiling()
+      getPositionDebtCeiling();
     }
   }, [chainId, account, getCollateralTokenAndBalance, getPositionDebtCeiling]);
 
@@ -371,7 +375,8 @@ const useOpenPosition = (
     pool,
     onClose,
     dangerSafetyBuffer,
-    maxBorrowAmount,
+    errors,
+    maxBorrowAmount
   };
 };
 

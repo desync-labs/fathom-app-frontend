@@ -2,7 +2,12 @@ import React, { FC } from "react";
 import { PositionListItemProps } from "components/PositionList/PositionListItem";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { PoolName, TVL } from "components/AppComponents/AppBox/AppBox";
-import { formatCurrency, formatNumber, formatNumberPrice } from "utils/format";
+import {
+  formatCurrency,
+  formatNumber,
+  formatNumberPrice,
+  formatPercentage
+} from "utils/format";
 import { styled } from "@mui/material/styles";
 import { Box, CircularProgress } from "@mui/material";
 import {
@@ -93,7 +98,7 @@ const PositionListItemMobile: FC<PositionListItemProps> = ({
       <ListItemWrapper>
         <ListLabel>Liquidation price</ListLabel>
         <ListValue>
-          {formatNumberPrice(position.liquidationPrice)}
+          $ {formatPercentage(position.liquidationPrice)}
         </ListValue>
       </ListItemWrapper>
       <ListItemWrapper>

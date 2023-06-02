@@ -1,4 +1,10 @@
-import { Dispatch, useCallback, useEffect, useMemo, useState } from "react";
+import {
+  Dispatch,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState
+} from "react";
 import { useForm } from "react-hook-form";
 import { useStores } from "stores";
 import debounce from "lodash.debounce";
@@ -7,11 +13,13 @@ import { OpenPositionContextType } from "context/openPosition";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
+import { DANGER_SAFETY_BUFFER } from "../helpers/Constants";
 
 const defaultValues = {
   collateral: "",
   fathomToken: "",
   safeMax: 0,
+  dangerSafeMax: 0
 };
 
 const useTopUpPosition = (
@@ -25,23 +33,26 @@ const useTopUpPosition = (
   const { handleSubmit, watch, control, setValue, trigger } = useForm({
     defaultValues,
     reValidateMode: "onChange",
-    mode: "onChange",
+    mode: "onChange"
   });
 
   const collateral = watch("collateral");
   const fathomToken = watch("fathomToken");
   const safeMax = watch("safeMax");
+  const dangerSafeMax = watch("dangerSafeMax");
 
   const [debtValue, setDebtValue] = useState<string>("");
   const [liquidationPrice, setLiquidationPrice] = useState<string>("");
+
   const [ltv, setLtv] = useState<string>("");
+  const [overCollateral, setOverCollateral] = useState<number>(0);
   const [safetyBuffer, setSafetyBuffer] = useState<string>("");
 
   const [balance, setBalance] = useState<number>(0);
   const [collateralTokenAddress, setCollateralTokenAddress] = useState<
-    string | null
+    string|null
   >();
-  const [maxBorrowAmount, setMaxBorrowAmount] = useState<string>('');
+  const [maxBorrowAmount, setMaxBorrowAmount] = useState<string>("");
 
   const { setLastTransactionBlock } = useSyncContext();
 
@@ -86,14 +97,11 @@ const useTopUpPosition = (
       library
     );
 
-    const liquidationPrice = BigNumber(pool.rawPrice)
-      .minus(
-        BigNumber(pool.priceWithSafetyMargin)
-          .multipliedBy(position.lockedCollateral)
-          .minus(debtValue)
-          .dividedBy(position.lockedCollateral)
-      )
-      .toString();
+    const liquidationPrice =
+      BigNumber(debtValue)
+        .dividedBy(position.lockedCollateral)
+        .multipliedBy(pool.liquidationRatio)
+        .toString();
 
     const ltv = BigNumber(debtValue)
       .dividedBy(
@@ -101,10 +109,30 @@ const useTopUpPosition = (
       )
       .toString();
 
+    /**
+     * PRICE OF COLLATERAL FROM DEX
+     */
+    const priceOfCollateralFromDex =
+      pool.poolName.toUpperCase() === "XDC"
+        ? BigNumber(pool.collateralLastPrice)
+          .multipliedBy(10 ** 18)
+          .toNumber()
+        : await poolService.getDexPrice(collateralTokenAddress!, library);
+
+    const overCollateral = BigNumber(totalCollateral)
+      .multipliedBy(priceOfCollateralFromDex)
+      .dividedBy(10 ** 18).dividedBy(totalFathomToken).multipliedBy(100).toNumber();
+
+    setOverCollateral(overCollateral);
+
     setLtv(ltv);
     setLiquidationPrice(liquidationPrice);
     setDebtValue(debtValue);
   }, [
+    totalFathomToken,
+    totalCollateral,
+    collateralTokenAddress,
+    poolService,
     pool,
     position,
     positionService,
@@ -112,13 +140,14 @@ const useTopUpPosition = (
     setDebtValue,
     setLiquidationPrice,
     setLtv,
+    setOverCollateral
   ]);
 
   const getPositionDebtCeiling = useCallback(() => {
     positionService.getPositionDebtCeiling(pool.id, library).then((debtCeiling) => {
       setMaxBorrowAmount(debtCeiling);
-    })
-  }, [positionService, pool, library, setMaxBorrowAmount])
+    });
+  }, [positionService, pool, library, setMaxBorrowAmount]);
 
   const getCollateralTokenAndBalance = useCallback(async () => {
     if (pool.poolName.toUpperCase() === "XDC") {
@@ -149,9 +178,14 @@ const useTopUpPosition = (
     () =>
       debounce(
         async (totalCollateralAmount: string, totalFathomAmount: string) => {
-          // GET PRICE WITH SAFETY MARGIN
+          /**
+           * GET PRICE WITH SAFETY MARGIN
+           */
           const { priceWithSafetyMargin } = pool;
-          // SAFE MAX
+
+          /**
+           * SAFE MAX
+           */
           let safeMax = Number(
             BigNumber(totalCollateralAmount)
               .multipliedBy(
@@ -163,35 +197,48 @@ const useTopUpPosition = (
               .toNumber()
           );
 
+          let dangerSafeMax = Number(
+            BigNumber(totalCollateralAmount)
+              .multipliedBy(
+                BigNumber(priceWithSafetyMargin)
+                  .multipliedBy(BigNumber(100).minus(DANGER_SAFETY_BUFFER * 100))
+                  .dividedBy(100)
+              )
+              .minus(debtValue)
+              .toNumber()
+          );
+
           safeMax = safeMax > 0 ? safeMax : 0;
+          dangerSafeMax = dangerSafeMax > 0 ? dangerSafeMax : 0;
 
           const collateralAvailableToWithdraw =
             Number(priceWithSafetyMargin) === 0
               ? BigNumber(totalCollateralAmount)
-                  .minus(totalFathomAmount)
-                  .toNumber()
+                .minus(totalFathomAmount)
+                .toNumber()
               : BigNumber(totalCollateralAmount)
-                  .multipliedBy(priceWithSafetyMargin)
-                  .minus(totalFathomAmount)
-                  .dividedBy(priceWithSafetyMargin)
-                  .toNumber();
+                .multipliedBy(priceWithSafetyMargin)
+                .minus(totalFathomAmount)
+                .dividedBy(priceWithSafetyMargin)
+                .toNumber();
 
           const safetyBuffer = BigNumber(collateralAvailableToWithdraw)
             .dividedBy(totalCollateralAmount)
+            .precision(10, BigNumber.ROUND_FLOOR)
             .toString();
+
+          console.log(safetyBuffer);
 
           setSafetyBuffer(safetyBuffer);
 
           setValue("safeMax", safeMax);
+          setValue("dangerSafeMax", dangerSafeMax);
 
-          const liquidationPrice = BigNumber(pool.rawPrice)
-            .minus(
-              BigNumber(pool.priceWithSafetyMargin)
-                .multipliedBy(totalCollateralAmount)
-                .minus(totalFathomAmount)
-                .dividedBy(totalCollateralAmount)
-            )
-            .toString();
+          const liquidationPrice =
+            BigNumber(totalFathomAmount)
+              .dividedBy(totalCollateralAmount)
+              .multipliedBy(pool.liquidationRatio)
+              .toString();
 
           const ltv = BigNumber(totalFathomAmount)
             .dividedBy(
@@ -218,13 +265,13 @@ const useTopUpPosition = (
       trigger,
       setLiquidationPrice,
       setLtv,
-      setSafetyBuffer,
+      setSafetyBuffer
     ]
   );
 
   const setSafeMax = useCallback(() => {
-    setValue("fathomToken", safeMax.toString(), { shouldValidate: true });
-  }, [safeMax, setValue]);
+    setValue("fathomToken", dangerSafeMax.toString(), { shouldValidate: true });
+  }, [dangerSafeMax, setValue]);
 
   const onSubmit = useCallback(
     async (values: any) => {
@@ -266,7 +313,7 @@ const useTopUpPosition = (
       positionService,
       setOpenPositionLoading,
       setLastTransactionBlock,
-      onClose,
+      onClose
     ]
   );
 
@@ -294,7 +341,7 @@ const useTopUpPosition = (
     positionService,
     library,
     setApprovalPending,
-    setApproveBtn,
+    setApproveBtn
   ]);
 
   const setMax = useCallback(
@@ -332,7 +379,7 @@ const useTopUpPosition = (
     totalFathomToken,
     collateralTokenAddress,
     handleUpdates,
-    approvalStatus,
+    approvalStatus
   ]);
 
   return {
@@ -346,7 +393,7 @@ const useTopUpPosition = (
     liquidationPrice,
     ltv,
     safetyBuffer,
-    collateral,
+    collateral: Number(collateral),
     fathomToken,
     openPositionLoading,
     setMax,
@@ -359,7 +406,8 @@ const useTopUpPosition = (
     switchPosition,
     totalCollateral,
     totalFathomToken,
-    maxBorrowAmount,
+    overCollateral,
+    maxBorrowAmount
   };
 };
 
