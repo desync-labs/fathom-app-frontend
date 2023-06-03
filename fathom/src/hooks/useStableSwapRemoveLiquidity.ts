@@ -182,23 +182,14 @@ const useStableSwapRemoveLiquidity = () => {
   ]);
 
   const inputError = useMemo(() => {
-    const formattedFxdBalance = BigNumber(fxdBalance).dividedBy(10 ** fxdDecimals).toNumber();
-    const formattedUsStableBalance = BigNumber(stableBalance).dividedBy(10 ** stableDecimals).toNumber();
+    const maxForWithdraw = BigNumber(depositTracker).dividedBy(10 ** 18);
 
-    if ((inputValue as number) > formattedFxdBalance) {
-      return "You do not have enough FXD for add liquidity";
+    if (BigNumber(inputValue).isGreaterThan(maxForWithdraw)) {
+      return `You can't withdraw more then provided. Your provided amount is ${maxForWithdraw}.`;
     }
-
-    if ((inputValue) > formattedUsStableBalance) {
-      return "You do not have enough xUSDT for add liquidity";
-    }
-
     return false;
   }, [
-    stableBalance,
-    fxdBalance,
-    fxdDecimals,
-    stableDecimals,
+    depositTracker,
     inputValue
   ]);
 

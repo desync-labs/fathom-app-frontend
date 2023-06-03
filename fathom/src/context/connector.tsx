@@ -176,11 +176,18 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
   }, [connectMetamask, connectWalletConnect, connectXdcPay]);
 
   const allowStableSwap = useMemo(() => {
+    /**
+     * Hardcode access for account
+     */
+    if (account?.toLowerCase() === '0xf28746F0830ecd6838fAc6f4F6F06ae4D40DB1d9'.toLowerCase()) {
+      return true;
+    }
+
     return (
       isDecentralizedState ||
       (isDecentralizedState === false && isUserWhiteListed === true)
     );
-  }, [isDecentralizedState, isUserWhiteListed]);
+  }, [account, isDecentralizedState, isUserWhiteListed]);
 
   // Check when App is Connected or Disconnected to MetaMask
   const handleIsActive = useCallback(() => {
