@@ -1,5 +1,9 @@
 import React from "react";
-import { createTheme, styled, ThemeProvider } from "@mui/material/styles";
+import {
+  createTheme,
+  styled,
+  ThemeProvider
+} from "@mui/material/styles";
 import {
   CssBaseline,
   Drawer as MuiDrawer,
@@ -7,16 +11,20 @@ import {
   Toolbar,
   Typography,
   Divider,
-  IconButton,
+  IconButton
 } from "@mui/material";
 import {
   ArrowBack,
   ArrowForward,
   Menu as MenuIcon,
-  AccountBalanceWallet as AccountBalanceWalletIcon,
+  AccountBalanceWallet as AccountBalanceWalletIcon
 } from "@mui/icons-material";
 import truncateEthAddress from "truncate-eth-address";
-import { Navigate, Route, Routes } from "react-router-dom";
+import {
+  Navigate,
+  Route,
+  Routes
+} from "react-router-dom";
 
 import Copyright from "components/Footer/Footer";
 import AppBar from "components/AppComponents/AppBar/AppBar";
@@ -58,7 +66,7 @@ import { getTokenLogoURL } from "utils/tokenLogo";
 import StableSwapRemoveLiquidity from "../Stableswap/StableSwapRemoveLiquidity";
 
 const Drawer = styled(MuiDrawer, {
-  shouldForwardProp: (prop) => prop !== "open",
+  shouldForwardProp: (prop) => prop !== "open"
 })(({ theme, open }) => ({
   "& .MuiDrawer-paper": {
     position: "sticky",
@@ -70,21 +78,21 @@ const Drawer = styled(MuiDrawer, {
     width: drawerWidth,
     transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
+      duration: theme.transitions.duration.enteringScreen
     }),
     boxSizing: "border-box",
     ...(!open && {
       overflowX: "visible",
       transition: theme.transitions.create("width", {
         easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
+        duration: theme.transitions.duration.leavingScreen
       }),
       width: theme.spacing(7),
       [theme.breakpoints.up("sm")]: {
-        width: theme.spacing(9),
-      },
-    }),
-  },
+        width: theme.spacing(9)
+      }
+    })
+  }
 }));
 
 const MenuWrapper = styled("nav")<{ open: boolean }>`
@@ -102,24 +110,24 @@ const mdTheme = createTheme({
   palette: {
     mode: "dark",
     primary: {
-      main: "#00FFF6",
+      main: "#00FFF6"
     },
     secondary: {
-      main: "#7D91B5",
+      main: "#7D91B5"
     },
     info: {
-      main: "#5A81FF",
+      main: "#5A81FF"
     },
     success: {
-      main: "#3DA329",
+      main: "#3DA329"
     },
     error: {
-      main: "#DD3C3C",
-    },
+      main: "#DD3C3C"
+    }
   },
   typography: {
-    fontFamily: ["Inter, sans-serif"].join(","),
-  },
+    fontFamily: ["Inter, sans-serif"].join(",")
+  }
 });
 
 const MainToolbar = styled(Toolbar)`
@@ -128,6 +136,7 @@ const MainToolbar = styled(Toolbar)`
   justify-content: flex-start;
   padding: 0 1px;
   background: linear-gradient(180deg, #071126 0%, #050c1a 100%);
+
   ${({ theme }) => theme.breakpoints.down("sm")} {
     display: flex;
     justify-content: center;
@@ -183,10 +192,10 @@ const MainLayout = () => {
     openMobileMenu,
     openConnectorMenu,
     setOpenMobile,
-    setOpenConnector,
+    setOpenConnector
   } = useMainLayout();
 
-  const { allowStableSwap, allowStableSwapInProgress } = useConnector();
+  const { allowStableSwap, allowStableSwapInProgress, isUserWrapperWhiteListed } = useConnector();
 
   return (
     <ThemeProvider theme={mdTheme}>
@@ -195,7 +204,7 @@ const MainLayout = () => {
         <AppBar position="absolute" open={open}>
           <Toolbar
             sx={{
-              pr: "24px", // keep right padding when drawer closed
+              pr: "24px" // keep right padding when drawer closed
             }}
           >
             {isMobile && (
@@ -208,7 +217,7 @@ const MainLayout = () => {
                     background: "#80FFF6",
                     height: "24px",
                     borderRadius: "6px",
-                    padding: "4px",
+                    padding: "4px"
                   }}
                 />
                 <MobileMenuWrapper onClick={openMobileMenu}>
@@ -238,7 +247,7 @@ const MainLayout = () => {
                 onClick={toggleDrawer}
                 sx={{
                   marginRight: "36px",
-                  ...(open && { display: "none" }),
+                  ...(open && { display: "none" })
                 }}
               >
                 <MenuIcon />
@@ -290,7 +299,7 @@ const MainLayout = () => {
                   alt={"logo"}
                   style={{
                     height: "none",
-                    maxWidth: "140px",
+                    maxWidth: "140px"
                   }}
                 />
               )}
@@ -315,13 +324,13 @@ const MainLayout = () => {
           <TransactionStatus scroll={scroll} />
           <Routes>
             <Route path="/" element={<DashboardContent />} />
-            {allowStableSwap || allowStableSwapInProgress || allowStableSwapInProgress === undefined ? (
-              <>
-                <Route path="/swap" element={<StableSwap />} />
-                <Route path="/swap/add-liquidity" element={<StableSwapAddLiquidity />} />
-                <Route path="/swap/remove-liquidity" element={<StableSwapRemoveLiquidity />} />
-              </>
+            {allowStableSwap || isUserWrapperWhiteListed ||  allowStableSwapInProgress ? (
+              <Route path="/swap" element={<StableSwap />} />
             ) : null}
+            {isUserWrapperWhiteListed ? <>
+              <Route path="/swap/add-liquidity" element={<StableSwapAddLiquidity />} />
+              <Route path="/swap/remove-liquidity" element={<StableSwapRemoveLiquidity />} />
+            </> : null}
             <Route
               path="/proposal/:_proposalId"
               element={
