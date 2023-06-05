@@ -554,6 +554,17 @@ export default class StableSwapService implements IStableSwapService {
     }
   }
 
+  usersWrapperWhitelist(address: string, library: Xdc3) {
+    try {
+      const StableSwapModuleWrapper = Web3Utils.getContractInstance(
+        SmartContractFactory.StableSwapModuleWrapper(this.chainId),
+        library
+      );
+      return StableSwapModuleWrapper.methods.usersWhitelist(address).call();
+    } catch (e: any) {
+      this.alertStore.setShowErrorAlert(true, e.message);
+    }
+  }
   getAmounts(amount: number, account: string, library: Xdc3) {
     try {
       const StableSwapModuleWrapper = Web3Utils.getContractInstance(
