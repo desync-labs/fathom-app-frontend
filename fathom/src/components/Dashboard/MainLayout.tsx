@@ -186,7 +186,7 @@ const MainLayout = () => {
     setOpenConnector,
   } = useMainLayout();
 
-  const { allowStableSwap, allowStableSwapInProgress } = useConnector();
+  const { allowStableSwap, allowStableSwapInProgress, isUserWrapperWhiteListed } = useConnector();
 
   return (
     <ThemeProvider theme={mdTheme}>
@@ -315,7 +315,7 @@ const MainLayout = () => {
           <TransactionStatus scroll={scroll} />
           <Routes>
             <Route path="/" element={<DashboardContent />} />
-            {allowStableSwap || allowStableSwapInProgress || allowStableSwapInProgress === undefined ? (
+            {allowStableSwap || isUserWrapperWhiteListed || allowStableSwapInProgress ? (
               <>
                 <Route path="/swap" element={<StableSwap />} />
                 <Route path="/swap/add-liquidity" element={<StableSwapAddLiquidity />} />

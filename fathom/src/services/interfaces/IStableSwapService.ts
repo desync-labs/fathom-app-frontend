@@ -64,4 +64,5 @@ export default interface IStableSwapService {
 
   isDecentralizedState(library: Xdc3) : Promise<boolean>;
   isUserWhitelisted(address: string, library: Xdc3) : Promise<boolean>
+  usersWrapperWhitelist(address: string, library: Xdc3): Promise<boolean>;
 }
