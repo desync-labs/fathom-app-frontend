@@ -18,7 +18,7 @@ type ItemPropsType = {
 
 export const Menu: FC<ItemPropsType> = ({ open }) => {
   const location = useLocation();
-  const { allowStableSwap } = useConnector();
+  const { allowStableSwap, isUserWrapperWhiteListed } = useConnector();
 
   const isDashboardActive = useMemo(
     () => location.pathname === "/",
@@ -68,7 +68,7 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
     },
   ];
 
-  if (!allowStableSwap) {
+  if (!allowStableSwap && !isUserWrapperWhiteListed) {
     appMenuItems.splice(1, 1);
   }
 
