@@ -52,6 +52,9 @@ const useStableSwap = (options: string[]) => {
   const [feeIn, setFeeIn] = useState<number>(0);
   const [feeOut, setFeeOut] = useState<number>(0);
 
+  const [depositTracker, setDepositTracker] = useState<number>(0);
+  const [totalLocked, setTotalLocked] = useState<number>(0);
+
   const { fxdPrice: fxdPriceInWei } = useContext(PricesContext);
 
   const { stableSwapService, poolService } = useStores();
@@ -224,15 +227,27 @@ const useStableSwap = (options: string[]) => {
               stableSwapService.getPoolBalance(UsStableContractAddress, library)
             );
 
+            promises.push(
+              stableSwapService.getTotalValueLocked(library)
+            );
+
+            promises.push(
+              stableSwapService.getDepositTracker(account, library)
+            );
+
             const [
               inputBalance,
               outputBalance,
               inputDecimals,
               outputDecimals,
               fxdAvailable,
-              usStableAvailable
+              usStableAvailable,
+              totalLocked,
+              depositTracker
             ] = await Promise.all(promises);
 
+            setTotalLocked(totalLocked);
+            setDepositTracker(depositTracker);
             setFxdAvailable(fxdAvailable! / 10 ** (inputCurrency === options[1] ? inputDecimals : outputDecimals));
             setUsStableAvailable(usStableAvailable! / 10 ** (inputCurrency === options[0] ? inputDecimals : outputDecimals));
 
@@ -256,7 +271,9 @@ const useStableSwap = (options: string[]) => {
       setInputDecimals,
       setOutputDecimals,
       setInputBalance,
-      setOutputBalance
+      setOutputBalance,
+      setTotalLocked,
+      setDepositTracker
     ]
   );
 
@@ -533,6 +550,9 @@ const useStableSwap = (options: string[]) => {
   ]);
 
   return {
+    depositTracker,
+    totalLocked,
+
     dailyLimit: displayDailyLimit,
     isDecentralizedState,
     isUserWhiteListed,
@@ -576,7 +596,7 @@ const useStableSwap = (options: string[]) => {
     isMobile,
     fxdAvailable,
     usStableAvailable,
-    navigate,
+    navigate
   };
 };
 
