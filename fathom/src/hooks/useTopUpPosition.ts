@@ -13,7 +13,7 @@ import { OpenPositionContextType } from "context/openPosition";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
-import { DANGER_SAFETY_BUFFER } from "../helpers/Constants";
+import { DANGER_SAFETY_BUFFER } from "helpers/Constants";
 
 const defaultValues = {
   collateral: "",
@@ -226,8 +226,6 @@ const useTopUpPosition = (
             .dividedBy(totalCollateralAmount)
             .precision(10, BigNumber.ROUND_FLOOR)
             .toString();
-
-          console.log(safetyBuffer);
 
           setSafetyBuffer(safetyBuffer);
 
