@@ -1,3 +1,5 @@
+import React from "react";
+import BigNumber from "bignumber.js";
 import {
   CircularProgress,
   Container,
@@ -27,8 +29,6 @@ import InfoIcon from "@mui/icons-material/Info";
 import {
   formatPercentage
 } from "utils/format";
-import BigNumber from "bignumber.js";
-import React from "react";
 
 
 const StableSwapAddLiquidity = () => {

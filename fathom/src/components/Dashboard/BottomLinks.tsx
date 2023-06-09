@@ -9,6 +9,7 @@ const LinksWrapper = styled(Box)`
   padding-left: 14px;
   position: absolute;
   bottom: 50px;
+
   a {
     font-size: 0.825rem;
     font-weight: 500;
@@ -16,7 +17,7 @@ const LinksWrapper = styled(Box)`
     opacity: 0.8;
     display: flex;
     justify-content: start;
-    
+
     &:hover {
       opacity: 1;
     }
@@ -66,6 +67,14 @@ const BottomLinks: FC = () => {
         target={"_blank"}
       >
         Terms of Service
+      </a>
+      <a href={"https://explorer.xinfin.network/address/xdc49d3f7543335cf38Fa10889CCFF10207e22110B5"} target={"_blank"}
+         rel="noreferrer">
+        FXD
+      </a>
+      <a href={"https://explorer.xinfin.network/address/xdc3279dBEfABF3C6ac29d7ff24A6c46645f3F4403c"} target={"_blank"}
+         rel="noreferrer">
+        FTHM
       </a>
     </LinksWrapper>
   );

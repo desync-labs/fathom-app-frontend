@@ -91,7 +91,7 @@ const useRepayPosition = (
 
   const handleUpdates = useCallback(
     async (totalCollateralAmount: string, totalFathomAmount: string) => {
-      if (BigNumber(totalFathomAmount).isGreaterThan(0)) {
+      if (BigNumber(totalFathomAmount).isGreaterThan(0) && !isNaN(Number(totalFathomAmount))) {
         const liquidationPrice =
           BigNumber(totalFathomAmount)
             .dividedBy(totalCollateralAmount)
@@ -119,6 +119,8 @@ const useRepayPosition = (
         setLiquidationPrice(liquidationPrice);
         setLtv(ltv);
         setOverCollateral(overCollateral);
+      } else {
+        setOverCollateral(0);
       }
     },
     [pool, setLiquidationPrice, setLtv, setOverCollateral]
