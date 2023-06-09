@@ -1,10 +1,10 @@
+import React from "react";
 import {
   CircularProgress,
   Container,
   Grid,
 } from "@mui/material";
 import { PageHeader } from "components/Dashboard/PageHeader";
-
 import { StableSwapPaper } from "components/AppComponents/AppPaper/AppPaper";
 import {
   StableSwapFormLabel,
@@ -24,7 +24,6 @@ import {
   formatPercentage
 } from "utils/format";
 import BigNumber from "bignumber.js";
-import React from "react";
 import useStableSwapRemoveLiquidity from "hooks/useStableSwapRemoveLiquidity";
 import { styled } from "@mui/material/styles";
 
