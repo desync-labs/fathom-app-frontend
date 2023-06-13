@@ -57,12 +57,14 @@ export default class ProposalService implements IProposalService {
          * Block for XDC Pay.
          */
         FathomGovernor.events.allEvents(
-          (_: any, transactionReceipt: TransactionReceipt) => {
-            this.alertStore.setShowSuccessAlert(
-              true,
-              "Proposal created successfully!"
-            );
-            resolve(transactionReceipt.blockNumber);
+          (eventData: any, transactionReceipt: TransactionReceipt) => {
+            if (eventData?.code !== -32000) {
+              this.alertStore.setShowSuccessAlert(
+                true,
+                "Proposal created successfully!"
+              );
+              resolve(transactionReceipt.blockNumber);
+            }
           }
         );
 
@@ -124,12 +126,14 @@ export default class ProposalService implements IProposalService {
          * Block for XDC Pay.
          */
         FathomGovernor.events.allEvents(
-          (_: any, transactionReceipt: TransactionReceipt) => {
-            this.alertStore.setShowSuccessAlert(
-              true,
-              "Proposal executed successfully!"
-            );
-            resolve(transactionReceipt.blockNumber);
+          (eventData: any, transactionReceipt: TransactionReceipt) => {
+            if (eventData?.code !== -32000) {
+              this.alertStore.setShowSuccessAlert(
+                true,
+                "Proposal executed successfully!"
+              );
+              resolve(transactionReceipt.blockNumber);
+            }
           }
         );
 
@@ -191,12 +195,14 @@ export default class ProposalService implements IProposalService {
          * Block for XDC Pay.
          */
         FathomGovernor.events.allEvents(
-          (_: any, transactionReceipt: TransactionReceipt) => {
-            this.alertStore.setShowSuccessAlert(
-              true,
-              "Queue Proposal executed successfully!"
-            );
-            resolve(transactionReceipt.blockNumber);
+          (eventData: any, transactionReceipt: TransactionReceipt) => {
+            if (eventData?.code !== -32000) {
+              this.alertStore.setShowSuccessAlert(
+                true,
+                "Queue Proposal executed successfully!"
+              );
+              resolve(transactionReceipt.blockNumber);
+            }
           }
         );
 
@@ -256,12 +262,14 @@ export default class ProposalService implements IProposalService {
          * Block for XDC Pay.
          */
         FathomGovernor.events.allEvents(
-          (_: any, transactionReceipt: TransactionReceipt) => {
-            this.alertStore.setShowSuccessAlert(
-              true,
-              "You have successfully voted!"
-            );
-            resolve(transactionReceipt.blockNumber);
+          (eventData: any, transactionReceipt: TransactionReceipt) => {
+            if (eventData?.code !== -32000) {
+              this.alertStore.setShowSuccessAlert(
+                true,
+                "You have successfully voted!"
+              );
+              resolve(transactionReceipt.blockNumber);
+            }
           }
         );
 

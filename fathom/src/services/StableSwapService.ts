@@ -63,9 +63,11 @@ export default class StableSwapService implements IStableSwapService {
          * Block for XDC Pay.
          */
         StableSwapModule.events.allEvents(
-          (_: any, transactionReceipt: TransactionReceipt) => {
-            this.alertStore.setShowSuccessAlert(true, MESSAGE);
-            resolve(transactionReceipt.blockNumber);
+          (eventData: any, transactionReceipt: TransactionReceipt) => {
+            if (eventData?.code !== -32000) {
+              this.alertStore.setShowSuccessAlert(true, MESSAGE);
+              resolve(transactionReceipt.blockNumber);
+            }
           }
         );
 
@@ -128,9 +130,11 @@ export default class StableSwapService implements IStableSwapService {
          * Block for XDC Pay.
          */
         StableSwapModule.events.allEvents(
-          (_: any, transactionReceipt: TransactionReceipt) => {
-            this.alertStore.setShowSuccessAlert(true, MESSAGE);
-            resolve(transactionReceipt.blockNumber);
+          (eventData: any, transactionReceipt: TransactionReceipt) => {
+            if (eventData?.code !== -32000) {
+              this.alertStore.setShowSuccessAlert(true, MESSAGE);
+              resolve(transactionReceipt.blockNumber);
+            }
           }
         );
 
@@ -187,9 +191,11 @@ export default class StableSwapService implements IStableSwapService {
          * Block for XDC Pay.
          */
         StableSwapModuleWrapper.events.allEvents(
-          (_: any, transactionReceipt: TransactionReceipt) => {
-            this.alertStore.setShowSuccessAlert(true, MESSAGE);
-            resolve(transactionReceipt.blockNumber);
+          (eventData: any, transactionReceipt: TransactionReceipt) => {
+            if (eventData?.code !== -32000) {
+              this.alertStore.setShowSuccessAlert(true, MESSAGE);
+              resolve(transactionReceipt.blockNumber);
+            }
           }
         );
 
@@ -246,9 +252,11 @@ export default class StableSwapService implements IStableSwapService {
          * Block for XDC Pay.
          */
         StableSwapModuleWrapper.events.allEvents(
-          (_: any, transactionReceipt: TransactionReceipt) => {
-            this.alertStore.setShowSuccessAlert(true, MESSAGE);
-            resolve(transactionReceipt.blockNumber);
+          (eventData: any, transactionReceipt: TransactionReceipt) => {
+            if (eventData?.code !== -32000) {
+              this.alertStore.setShowSuccessAlert(true, MESSAGE);
+              resolve(transactionReceipt.blockNumber);
+            }
           }
         );
 
@@ -309,9 +317,11 @@ export default class StableSwapService implements IStableSwapService {
          * Block for XDC Pay.
          */
         FathomStableCoin.events.allEvents(
-          (_: any, transactionReceipt: TransactionReceipt) => {
-            this.alertStore.setShowSuccessAlert(true, MESSAGE);
-            resolve(transactionReceipt.blockNumber);
+          (eventData: any, transactionReceipt: TransactionReceipt) => {
+            if (eventData?.code !== -32000) {
+              this.alertStore.setShowSuccessAlert(true, MESSAGE);
+              resolve(transactionReceipt.blockNumber);
+            }
           }
         );
 

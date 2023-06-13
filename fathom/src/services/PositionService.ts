@@ -103,12 +103,14 @@ export default class PositionService implements IPositionService {
          * Block for XDC Pay.
          */
         wallet.events.allEvents(
-          (_: any, transactionReceipt: TransactionReceipt) => {
-            this.alertStore.setShowSuccessAlert(
-              true,
-              "New position opened successfully!"
-            );
-            resolve(transactionReceipt.blockNumber);
+          (eventData: any, transactionReceipt: TransactionReceipt) => {
+            if (eventData?.code !== -32000) {
+              this.alertStore.setShowSuccessAlert(
+                true,
+                "New position opened successfully!"
+              );
+              resolve(transactionReceipt.blockNumber);
+            }
           }
         );
 
@@ -152,6 +154,7 @@ export default class PositionService implements IPositionService {
     positionId: string,
     library: Xdc3
   ): Promise<number|undefined> {
+    console.log('HERE1')
     return new Promise(async (resolve, reject) => {
       try {
         let proxyWalletAddress = await this.proxyWalletExist(address, library);
@@ -208,12 +211,14 @@ export default class PositionService implements IPositionService {
          * Block for XDC Pay.
          */
         wallet.events.allEvents(
-          (_: any, transactionReceipt: TransactionReceipt) => {
-            this.alertStore.setShowSuccessAlert(
-              true,
-              "Top Up position successfully!"
-            );
-            resolve(transactionReceipt.blockNumber);
+          (eventData: any, transactionReceipt: TransactionReceipt) => {
+            if (eventData?.code !== -32000) {
+              this.alertStore.setShowSuccessAlert(
+                true,
+                "Top Up position successfully!"
+              );
+              resolve(transactionReceipt.blockNumber);
+            }
           }
         );
 
@@ -307,12 +312,14 @@ export default class PositionService implements IPositionService {
          * Block for XDC Pay.
          */
         wallet.events.allEvents(
-          (_: any, transactionReceipt: TransactionReceipt) => {
-            this.alertStore.setShowSuccessAlert(
-              true,
-              "Top Up position successfully!"
-            );
-            resolve(transactionReceipt.blockNumber);
+          (eventData: any, transactionReceipt: TransactionReceipt) => {
+            if (eventData?.code !== -32000) {
+              this.alertStore.setShowSuccessAlert(
+                true,
+                "Top Up position successfully!"
+              );
+              resolve(transactionReceipt.blockNumber);
+            }
           }
         );
 
@@ -334,6 +341,7 @@ export default class PositionService implements IPositionService {
               true,
               "Top Up position successfully!"
             );
+            console.log("Event Fire here 2");
             resolve(receipt.blockNumber);
           })
           .catch((error: any) => {
@@ -431,12 +439,14 @@ export default class PositionService implements IPositionService {
          * Block for XDC Pay.
          */
         wallet.events.allEvents(
-          (_: any, transactionReceipt: TransactionReceipt) => {
-            this.alertStore.setShowSuccessAlert(
-              true,
-              MESSAGE
-            );
-            resolve(transactionReceipt.blockNumber);
+          (eventData: any, transactionReceipt: TransactionReceipt) => {
+            if (eventData?.code !== -32000) {
+              this.alertStore.setShowSuccessAlert(
+                true,
+                MESSAGE
+              );
+              resolve(transactionReceipt.blockNumber);
+            }
           }
         );
 
@@ -527,12 +537,14 @@ export default class PositionService implements IPositionService {
          * Block for XDC Pay.
          */
         wallet.events.allEvents(
-          (_: any, transactionReceipt: TransactionReceipt) => {
-            this.alertStore.setShowSuccessAlert(
-              true,
-              MESSAGE
-            );
-            resolve(transactionReceipt.blockNumber);
+          (eventData: any, transactionReceipt: TransactionReceipt) => {
+            if (eventData?.code !== -32000) {
+              this.alertStore.setShowSuccessAlert(
+                true,
+                MESSAGE
+              );
+              resolve(transactionReceipt.blockNumber);
+            }
           }
         );
 
@@ -598,12 +610,14 @@ export default class PositionService implements IPositionService {
          * Block for XDC Pay.
          */
         BEP20.events.allEvents(
-          (_: any, transactionReceipt: TransactionReceipt) => {
-            this.alertStore.setShowSuccessAlert(
-              true,
-              "Approval was successful!"
-            );
-            resolve(transactionReceipt.blockNumber);
+          (eventData: any, transactionReceipt: TransactionReceipt) => {
+            if (eventData?.code !== -32000) {
+              this.alertStore.setShowSuccessAlert(
+                true,
+                "Approval was successful!"
+              );
+              resolve(transactionReceipt.blockNumber);
+            }
           }
         );
 
@@ -694,12 +708,14 @@ export default class PositionService implements IPositionService {
          * Block for XDC Pay.
          */
         fathomStableCoin.events.allEvents(
-          (_: any, transactionReceipt: TransactionReceipt) => {
-            this.alertStore.setShowSuccessAlert(
-              true,
-              "Token approval was successful!"
-            );
-            resolve(transactionReceipt.blockNumber);
+          (eventData: any, transactionReceipt: TransactionReceipt) => {
+            if (eventData?.code !== -32000) {
+              this.alertStore.setShowSuccessAlert(
+                true,
+                "Token approval was successful!"
+              );
+              resolve(transactionReceipt.blockNumber);
+            }
           }
         );
 
