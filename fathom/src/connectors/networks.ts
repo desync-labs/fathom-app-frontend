@@ -68,8 +68,12 @@ export const injected = new InjectedConnector({ supportedChainIds });
 export const xdcInjected = new XdcInjectedConnector({ supportedChainIds });
 
 export const WalletConnect = new WalletConnectConnector({
+  infuraId: 'e43581adc3b547e5b8de03abdcebedfd',
+  supportedChainIds,
   rpc,
-  qrcode: true
+  qrcode: true,
+  // @ts-ignore
+  pollingInterval: 15000,
 });
 
 export {
@@ -78,3 +82,6 @@ export {
   supportedChainIds,
   NETWORK_LABELS
 };
+
+export const NOT_SUPPORTED_NOTIFICATION_ERROR = -32000;
+export const SKIP_ERRORS = [NOT_SUPPORTED_NOTIFICATION_ERROR];
