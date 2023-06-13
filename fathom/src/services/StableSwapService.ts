@@ -17,6 +17,7 @@ import { getEstimateGas } from "utils/getEstimateGas";
 import { TransactionReceipt } from "web3-eth";
 import AlertStore from "stores/alert.stores";
 import BigNumber from "bignumber.js";
+import { SKIP_ERRORS } from "../connectors/networks";
 
 export default class StableSwapService implements IStableSwapService {
   chainId = DEFAULT_CHAIN_ID;
@@ -64,10 +65,12 @@ export default class StableSwapService implements IStableSwapService {
          */
         StableSwapModule.events.allEvents(
           (eventData: any, transactionReceipt: TransactionReceipt) => {
-            if (eventData?.code !== -32000) {
-              this.alertStore.setShowSuccessAlert(true, MESSAGE);
-              resolve(transactionReceipt.blockNumber);
+            if (SKIP_ERRORS.includes(eventData?.code)) {
+              return;
             }
+            this.alertStore.setShowSuccessAlert(true, MESSAGE);
+            resolve(transactionReceipt.blockNumber);
+
           }
         );
 
@@ -131,10 +134,12 @@ export default class StableSwapService implements IStableSwapService {
          */
         StableSwapModule.events.allEvents(
           (eventData: any, transactionReceipt: TransactionReceipt) => {
-            if (eventData?.code !== -32000) {
-              this.alertStore.setShowSuccessAlert(true, MESSAGE);
-              resolve(transactionReceipt.blockNumber);
+            if (SKIP_ERRORS.includes(eventData?.code)) {
+              return;
             }
+            this.alertStore.setShowSuccessAlert(true, MESSAGE);
+            resolve(transactionReceipt.blockNumber);
+
           }
         );
 
@@ -192,10 +197,11 @@ export default class StableSwapService implements IStableSwapService {
          */
         StableSwapModuleWrapper.events.allEvents(
           (eventData: any, transactionReceipt: TransactionReceipt) => {
-            if (eventData?.code !== -32000) {
-              this.alertStore.setShowSuccessAlert(true, MESSAGE);
-              resolve(transactionReceipt.blockNumber);
+            if (SKIP_ERRORS.includes(eventData?.code)) {
+              return;
             }
+            this.alertStore.setShowSuccessAlert(true, MESSAGE);
+            resolve(transactionReceipt.blockNumber);
           }
         );
 
@@ -253,10 +259,11 @@ export default class StableSwapService implements IStableSwapService {
          */
         StableSwapModuleWrapper.events.allEvents(
           (eventData: any, transactionReceipt: TransactionReceipt) => {
-            if (eventData?.code !== -32000) {
-              this.alertStore.setShowSuccessAlert(true, MESSAGE);
-              resolve(transactionReceipt.blockNumber);
+            if (SKIP_ERRORS.includes(eventData?.code)) {
+              return;
             }
+            this.alertStore.setShowSuccessAlert(true, MESSAGE);
+            resolve(transactionReceipt.blockNumber);
           }
         );
 
@@ -318,10 +325,11 @@ export default class StableSwapService implements IStableSwapService {
          */
         FathomStableCoin.events.allEvents(
           (eventData: any, transactionReceipt: TransactionReceipt) => {
-            if (eventData?.code !== -32000) {
-              this.alertStore.setShowSuccessAlert(true, MESSAGE);
-              resolve(transactionReceipt.blockNumber);
+            if (SKIP_ERRORS.includes(eventData?.code)) {
+              return;
             }
+            this.alertStore.setShowSuccessAlert(true, MESSAGE);
+            resolve(transactionReceipt.blockNumber);
           }
         );
 
@@ -575,6 +583,7 @@ export default class StableSwapService implements IStableSwapService {
       this.alertStore.setShowErrorAlert(true, e.message);
     }
   }
+
   getAmounts(amount: number, account: string, library: Xdc3) {
     try {
       const StableSwapModuleWrapper = Web3Utils.getContractInstance(

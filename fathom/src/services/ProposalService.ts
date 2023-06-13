@@ -14,6 +14,7 @@ import Xdc3 from "xdc3";
 import { getEstimateGas } from "utils/getEstimateGas";
 import AlertStore from "stores/alert.stores";
 import { TransactionReceipt } from "xdc3-eth";
+import { SKIP_ERRORS } from "../connectors/networks";
 
 export default class ProposalService implements IProposalService {
   chainId = DEFAULT_CHAIN_ID;
@@ -58,13 +59,14 @@ export default class ProposalService implements IProposalService {
          */
         FathomGovernor.events.allEvents(
           (eventData: any, transactionReceipt: TransactionReceipt) => {
-            if (eventData?.code !== -32000) {
-              this.alertStore.setShowSuccessAlert(
-                true,
-                "Proposal created successfully!"
-              );
-              resolve(transactionReceipt.blockNumber);
+            if (SKIP_ERRORS.includes(eventData?.code)) {
+              return;
             }
+            this.alertStore.setShowSuccessAlert(
+              true,
+              "Proposal created successfully!"
+            );
+            resolve(transactionReceipt.blockNumber);
           }
         );
 
@@ -127,13 +129,14 @@ export default class ProposalService implements IProposalService {
          */
         FathomGovernor.events.allEvents(
           (eventData: any, transactionReceipt: TransactionReceipt) => {
-            if (eventData?.code !== -32000) {
-              this.alertStore.setShowSuccessAlert(
-                true,
-                "Proposal executed successfully!"
-              );
-              resolve(transactionReceipt.blockNumber);
+            if (SKIP_ERRORS.includes(eventData?.code)) {
+              return;
             }
+            this.alertStore.setShowSuccessAlert(
+              true,
+              "Proposal executed successfully!"
+            );
+            resolve(transactionReceipt.blockNumber);
           }
         );
 
@@ -196,13 +199,14 @@ export default class ProposalService implements IProposalService {
          */
         FathomGovernor.events.allEvents(
           (eventData: any, transactionReceipt: TransactionReceipt) => {
-            if (eventData?.code !== -32000) {
-              this.alertStore.setShowSuccessAlert(
-                true,
-                "Queue Proposal executed successfully!"
-              );
-              resolve(transactionReceipt.blockNumber);
+            if (SKIP_ERRORS.includes(eventData?.code)) {
+              return;
             }
+            this.alertStore.setShowSuccessAlert(
+              true,
+              "Queue Proposal executed successfully!"
+            );
+            resolve(transactionReceipt.blockNumber);
           }
         );
 
@@ -263,13 +267,14 @@ export default class ProposalService implements IProposalService {
          */
         FathomGovernor.events.allEvents(
           (eventData: any, transactionReceipt: TransactionReceipt) => {
-            if (eventData?.code !== -32000) {
-              this.alertStore.setShowSuccessAlert(
-                true,
-                "You have successfully voted!"
-              );
-              resolve(transactionReceipt.blockNumber);
+            if (SKIP_ERRORS.includes(eventData?.code)) {
+              return;
             }
+            this.alertStore.setShowSuccessAlert(
+              true,
+              "You have successfully voted!"
+            );
+            resolve(transactionReceipt.blockNumber);
           }
         );
 
