@@ -8,7 +8,7 @@ import ActiveWeb3Transactions from "stores/transaction.store";
 import AlertStore from "stores/alert.stores";
 import {
   TransactionStatus,
-  TransactionType,
+  TransactionType
 } from "stores/interfaces/ITransaction";
 import IStakingService from "services/interfaces/IStakingService";
 
@@ -65,9 +65,11 @@ export default class StakingService implements IStakingService {
          * Block for XDC Pay.
          */
         Staking.events.allEvents(
-          (_: any, transactionReceipt: TransactionReceipt) => {
-            this.alertStore.setShowSuccessAlert(true, MESSAGE);
-            resolve(transactionReceipt.blockNumber);
+          (eventData: any, transactionReceipt: TransactionReceipt) => {
+            if (eventData?.code !== -32000) {
+              this.alertStore.setShowSuccessAlert(true, MESSAGE);
+              resolve(transactionReceipt.blockNumber);
+            }
           }
         );
 
@@ -81,7 +83,7 @@ export default class StakingService implements IStakingService {
               active: false,
               status: TransactionStatus.None,
               title: "Creating Lock",
-              message: Strings.CheckOnBlockExplorer,
+              message: Strings.CheckOnBlockExplorer
             });
           })
           .then((receipt: TransactionReceipt) => {
@@ -125,9 +127,11 @@ export default class StakingService implements IStakingService {
          * Block for XDC Pay.
          */
         Staking.events.allEvents(
-          (_: any, transactionReceipt: TransactionReceipt) => {
-            this.alertStore.setShowSuccessAlert(true, MESSAGE);
-            resolve(transactionReceipt.blockNumber);
+          (eventData: any, transactionReceipt: TransactionReceipt) => {
+            if (eventData?.code !== -32000) {
+              this.alertStore.setShowSuccessAlert(true, MESSAGE);
+              resolve(transactionReceipt.blockNumber);
+            }
           }
         );
 
@@ -141,7 +145,7 @@ export default class StakingService implements IStakingService {
               active: false,
               status: TransactionStatus.None,
               title: "Handling Unlock",
-              message: Strings.CheckOnBlockExplorer,
+              message: Strings.CheckOnBlockExplorer
             });
           })
           .then((receipt: TransactionReceipt) => {
@@ -184,9 +188,11 @@ export default class StakingService implements IStakingService {
          * Block for XDC Pay.
          */
         Staking.events.allEvents(
-          (_: any, transactionReceipt: TransactionReceipt) => {
-            this.alertStore.setShowSuccessAlert(true, MESSAGE);
-            resolve(transactionReceipt.blockNumber);
+          (eventData: any, transactionReceipt: TransactionReceipt) => {
+            if (eventData?.code !== -32000) {
+              this.alertStore.setShowSuccessAlert(true, MESSAGE);
+              resolve(transactionReceipt.blockNumber);
+            }
           }
         );
 
@@ -200,7 +206,7 @@ export default class StakingService implements IStakingService {
               active: false,
               status: TransactionStatus.None,
               title: "Handling Early Unlock",
-              message: Strings.CheckOnBlockExplorer,
+              message: Strings.CheckOnBlockExplorer
             });
           })
           .then((receipt: TransactionReceipt) => {
@@ -243,9 +249,11 @@ export default class StakingService implements IStakingService {
          * Block for XDC Pay.
          */
         Staking.events.allEvents(
-          (_: any, transactionReceipt: TransactionReceipt) => {
-            this.alertStore.setShowSuccessAlert(true, MESSAGE);
-            resolve(transactionReceipt.blockNumber);
+          (eventData: any, transactionReceipt: TransactionReceipt) => {
+            if (eventData?.code !== -32000) {
+              this.alertStore.setShowSuccessAlert(true, MESSAGE);
+              resolve(transactionReceipt.blockNumber);
+            }
           }
         );
 
@@ -259,7 +267,7 @@ export default class StakingService implements IStakingService {
               active: false,
               status: TransactionStatus.None,
               title: "Handling Claim Rewards",
-              message: Strings.CheckOnBlockExplorer,
+              message: Strings.CheckOnBlockExplorer
             });
           })
           .then((receipt: TransactionReceipt) => {
@@ -302,9 +310,11 @@ export default class StakingService implements IStakingService {
          * Block for XDC Pay.
          */
         Staking.events.allEvents(
-          (_: any, transactionReceipt: TransactionReceipt) => {
-            this.alertStore.setShowSuccessAlert(true, MESSAGE);
-            resolve(transactionReceipt.blockNumber);
+          (eventData: any, transactionReceipt: TransactionReceipt) => {
+            if (eventData?.code !== -32000) {
+              this.alertStore.setShowSuccessAlert(true, MESSAGE);
+              resolve(transactionReceipt.blockNumber);
+            }
           }
         );
 
@@ -318,7 +328,7 @@ export default class StakingService implements IStakingService {
               active: false,
               status: TransactionStatus.None,
               title: "Handling Withdraw Rewards",
-              message: Strings.CheckOnBlockExplorer,
+              message: Strings.CheckOnBlockExplorer
             });
           })
           .then((receipt: TransactionReceipt) => {
@@ -362,9 +372,11 @@ export default class StakingService implements IStakingService {
          * Block for XDC Pay.
          */
         FTHMToken.events.allEvents(
-          (_: any, transactionReceipt: TransactionReceipt) => {
-            this.alertStore.setShowSuccessAlert(true, MESSAGE);
-            resolve(transactionReceipt.blockNumber);
+          (eventData: any, transactionReceipt: TransactionReceipt) => {
+            if (eventData?.code !== -32000) {
+              this.alertStore.setShowSuccessAlert(true, MESSAGE);
+              resolve(transactionReceipt.blockNumber);
+            }
           }
         );
 
@@ -378,7 +390,7 @@ export default class StakingService implements IStakingService {
               active: false,
               status: TransactionStatus.None,
               title: "Approving the Token",
-              message: Strings.CheckOnBlockExplorer,
+              message: Strings.CheckOnBlockExplorer
             });
           })
           .then((receipt: TransactionReceipt) => {
