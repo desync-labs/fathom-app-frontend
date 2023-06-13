@@ -154,7 +154,6 @@ export default class PositionService implements IPositionService {
     positionId: string,
     library: Xdc3
   ): Promise<number|undefined> {
-    console.log('HERE1')
     return new Promise(async (resolve, reject) => {
       try {
         let proxyWalletAddress = await this.proxyWalletExist(address, library);
@@ -341,7 +340,6 @@ export default class PositionService implements IPositionService {
               true,
               "Top Up position successfully!"
             );
-            console.log("Event Fire here 2");
             resolve(receipt.blockNumber);
           })
           .catch((error: any) => {
