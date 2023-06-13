@@ -26,6 +26,7 @@ import {
 } from "stores/interfaces/ITransaction";
 
 import { getEstimateGas } from "utils/getEstimateGas";
+import { SKIP_ERRORS } from "connectors/networks";
 
 export default class PositionService implements IPositionService {
   chainId = DEFAULT_CHAIN_ID;
@@ -104,13 +105,14 @@ export default class PositionService implements IPositionService {
          */
         wallet.events.allEvents(
           (eventData: any, transactionReceipt: TransactionReceipt) => {
-            if (eventData?.code !== -32000) {
-              this.alertStore.setShowSuccessAlert(
-                true,
-                "New position opened successfully!"
-              );
-              resolve(transactionReceipt.blockNumber);
+            if (SKIP_ERRORS.includes(eventData?.code)) {
+              return;
             }
+            this.alertStore.setShowSuccessAlert(
+              true,
+              "New position opened successfully!"
+            );
+            resolve(transactionReceipt.blockNumber);
           }
         );
 
@@ -211,13 +213,14 @@ export default class PositionService implements IPositionService {
          */
         wallet.events.allEvents(
           (eventData: any, transactionReceipt: TransactionReceipt) => {
-            if (eventData?.code !== -32000) {
-              this.alertStore.setShowSuccessAlert(
-                true,
-                "Top Up position successfully!"
-              );
-              resolve(transactionReceipt.blockNumber);
+            if (SKIP_ERRORS.includes(eventData?.code)) {
+              return;
             }
+            this.alertStore.setShowSuccessAlert(
+              true,
+              "Top Up position successfully!"
+            );
+            resolve(transactionReceipt.blockNumber);
           }
         );
 
@@ -312,13 +315,14 @@ export default class PositionService implements IPositionService {
          */
         wallet.events.allEvents(
           (eventData: any, transactionReceipt: TransactionReceipt) => {
-            if (eventData?.code !== -32000) {
-              this.alertStore.setShowSuccessAlert(
-                true,
-                "Top Up position successfully!"
-              );
-              resolve(transactionReceipt.blockNumber);
+            if (SKIP_ERRORS.includes(eventData?.code)) {
+              return;
             }
+            this.alertStore.setShowSuccessAlert(
+              true,
+              "Top Up position successfully!"
+            );
+            resolve(transactionReceipt.blockNumber);
           }
         );
 
@@ -438,13 +442,14 @@ export default class PositionService implements IPositionService {
          */
         wallet.events.allEvents(
           (eventData: any, transactionReceipt: TransactionReceipt) => {
-            if (eventData?.code !== -32000) {
-              this.alertStore.setShowSuccessAlert(
-                true,
-                MESSAGE
-              );
-              resolve(transactionReceipt.blockNumber);
+            if (SKIP_ERRORS.includes(eventData?.code)) {
+              return;
             }
+            this.alertStore.setShowSuccessAlert(
+              true,
+              MESSAGE
+            );
+            resolve(transactionReceipt.blockNumber);
           }
         );
 
@@ -536,13 +541,14 @@ export default class PositionService implements IPositionService {
          */
         wallet.events.allEvents(
           (eventData: any, transactionReceipt: TransactionReceipt) => {
-            if (eventData?.code !== -32000) {
-              this.alertStore.setShowSuccessAlert(
-                true,
-                MESSAGE
-              );
-              resolve(transactionReceipt.blockNumber);
+            if (SKIP_ERRORS.includes(eventData?.code)) {
+              return;
             }
+            this.alertStore.setShowSuccessAlert(
+              true,
+              MESSAGE
+            );
+            resolve(transactionReceipt.blockNumber);
           }
         );
 
@@ -609,13 +615,14 @@ export default class PositionService implements IPositionService {
          */
         BEP20.events.allEvents(
           (eventData: any, transactionReceipt: TransactionReceipt) => {
-            if (eventData?.code !== -32000) {
-              this.alertStore.setShowSuccessAlert(
-                true,
-                "Approval was successful!"
-              );
-              resolve(transactionReceipt.blockNumber);
+            if (SKIP_ERRORS.includes(eventData?.code)) {
+              return;
             }
+            this.alertStore.setShowSuccessAlert(
+              true,
+              "Approval was successful!"
+            );
+            resolve(transactionReceipt.blockNumber);
           }
         );
 
@@ -707,13 +714,14 @@ export default class PositionService implements IPositionService {
          */
         fathomStableCoin.events.allEvents(
           (eventData: any, transactionReceipt: TransactionReceipt) => {
-            if (eventData?.code !== -32000) {
-              this.alertStore.setShowSuccessAlert(
-                true,
-                "Token approval was successful!"
-              );
-              resolve(transactionReceipt.blockNumber);
+            if (SKIP_ERRORS.includes(eventData?.code)) {
+              return;
             }
+            this.alertStore.setShowSuccessAlert(
+              true,
+              "Token approval was successful!"
+            );
+            resolve(transactionReceipt.blockNumber);
           }
         );
 

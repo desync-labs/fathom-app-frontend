@@ -82,3 +82,6 @@ export {
   supportedChainIds,
   NETWORK_LABELS
 };
+
+export const NOT_SUPPORTED_NOTIFICATION_ERROR = -32000;
+export const SKIP_ERRORS = [NOT_SUPPORTED_NOTIFICATION_ERROR];

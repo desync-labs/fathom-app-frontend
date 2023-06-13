@@ -20,6 +20,7 @@ import {
 } from "helpers/Constants";
 import { Strings } from "helpers/Strings";
 import { Web3Utils } from "helpers/Web3Utils";
+import { SKIP_ERRORS } from "../connectors/networks";
 
 export const DAY_SECONDS = 24 * 60 * 60;
 
@@ -66,10 +67,11 @@ export default class StakingService implements IStakingService {
          */
         Staking.events.allEvents(
           (eventData: any, transactionReceipt: TransactionReceipt) => {
-            if (eventData?.code !== -32000) {
-              this.alertStore.setShowSuccessAlert(true, MESSAGE);
-              resolve(transactionReceipt.blockNumber);
+            if (SKIP_ERRORS.includes(eventData?.code)) {
+              return;
             }
+            this.alertStore.setShowSuccessAlert(true, MESSAGE);
+            resolve(transactionReceipt.blockNumber);
           }
         );
 
@@ -128,10 +130,11 @@ export default class StakingService implements IStakingService {
          */
         Staking.events.allEvents(
           (eventData: any, transactionReceipt: TransactionReceipt) => {
-            if (eventData?.code !== -32000) {
-              this.alertStore.setShowSuccessAlert(true, MESSAGE);
-              resolve(transactionReceipt.blockNumber);
+            if (SKIP_ERRORS.includes(eventData?.code)) {
+              return;
             }
+            this.alertStore.setShowSuccessAlert(true, MESSAGE);
+            resolve(transactionReceipt.blockNumber);
           }
         );
 
@@ -189,10 +192,11 @@ export default class StakingService implements IStakingService {
          */
         Staking.events.allEvents(
           (eventData: any, transactionReceipt: TransactionReceipt) => {
-            if (eventData?.code !== -32000) {
-              this.alertStore.setShowSuccessAlert(true, MESSAGE);
-              resolve(transactionReceipt.blockNumber);
+            if (SKIP_ERRORS.includes(eventData?.code)) {
+              return;
             }
+            this.alertStore.setShowSuccessAlert(true, MESSAGE);
+            resolve(transactionReceipt.blockNumber);
           }
         );
 
@@ -250,10 +254,11 @@ export default class StakingService implements IStakingService {
          */
         Staking.events.allEvents(
           (eventData: any, transactionReceipt: TransactionReceipt) => {
-            if (eventData?.code !== -32000) {
-              this.alertStore.setShowSuccessAlert(true, MESSAGE);
-              resolve(transactionReceipt.blockNumber);
+            if (SKIP_ERRORS.includes(eventData?.code)) {
+              return;
             }
+            this.alertStore.setShowSuccessAlert(true, MESSAGE);
+            resolve(transactionReceipt.blockNumber);
           }
         );
 
@@ -311,10 +316,11 @@ export default class StakingService implements IStakingService {
          */
         Staking.events.allEvents(
           (eventData: any, transactionReceipt: TransactionReceipt) => {
-            if (eventData?.code !== -32000) {
-              this.alertStore.setShowSuccessAlert(true, MESSAGE);
-              resolve(transactionReceipt.blockNumber);
+            if (SKIP_ERRORS.includes(eventData?.code)) {
+              return;
             }
+            this.alertStore.setShowSuccessAlert(true, MESSAGE);
+            resolve(transactionReceipt.blockNumber);
           }
         );
 
@@ -373,10 +379,11 @@ export default class StakingService implements IStakingService {
          */
         FTHMToken.events.allEvents(
           (eventData: any, transactionReceipt: TransactionReceipt) => {
-            if (eventData?.code !== -32000) {
-              this.alertStore.setShowSuccessAlert(true, MESSAGE);
-              resolve(transactionReceipt.blockNumber);
+            if (SKIP_ERRORS.includes(eventData?.code)) {
+              return;
             }
+            this.alertStore.setShowSuccessAlert(true, MESSAGE);
+            resolve(transactionReceipt.blockNumber);
           }
         );
 
