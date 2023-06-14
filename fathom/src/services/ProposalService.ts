@@ -14,7 +14,7 @@ import Xdc3 from "xdc3";
 import { getEstimateGas } from "utils/getEstimateGas";
 import AlertStore from "stores/alert.stores";
 import { TransactionReceipt } from "xdc3-eth";
-import { SKIP_ERRORS } from "../connectors/networks";
+import { SKIP_ERRORS } from "connectors/networks";
 
 export default class ProposalService implements IProposalService {
   chainId = DEFAULT_CHAIN_ID;
