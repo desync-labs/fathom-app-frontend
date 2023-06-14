@@ -17,7 +17,7 @@ import { getEstimateGas } from "utils/getEstimateGas";
 import { TransactionReceipt } from "web3-eth";
 import AlertStore from "stores/alert.stores";
 import BigNumber from "bignumber.js";
-import { SKIP_ERRORS } from "../connectors/networks";
+import { SKIP_ERRORS } from "connectors/networks";
 
 export default class StableSwapService implements IStableSwapService {
   chainId = DEFAULT_CHAIN_ID;

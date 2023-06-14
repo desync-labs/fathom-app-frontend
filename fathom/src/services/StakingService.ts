@@ -20,7 +20,7 @@ import {
 } from "helpers/Constants";
 import { Strings } from "helpers/Strings";
 import { Web3Utils } from "helpers/Web3Utils";
-import { SKIP_ERRORS } from "../connectors/networks";
+import { SKIP_ERRORS } from "connectors/networks";
 
 export const DAY_SECONDS = 24 * 60 * 60;
 
