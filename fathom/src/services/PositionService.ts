@@ -26,6 +26,7 @@ import {
 } from "stores/interfaces/ITransaction";
 
 import { getEstimateGas } from "utils/getEstimateGas";
+import { SKIP_ERRORS } from "connectors/networks";
 
 export default class PositionService implements IPositionService {
   chainId = DEFAULT_CHAIN_ID;
@@ -103,7 +104,10 @@ export default class PositionService implements IPositionService {
          * Block for XDC Pay.
          */
         wallet.events.allEvents(
-          (_: any, transactionReceipt: TransactionReceipt) => {
+          (eventData: any, transactionReceipt: TransactionReceipt) => {
+            if (SKIP_ERRORS.includes(eventData?.code)) {
+              return;
+            }
             this.alertStore.setShowSuccessAlert(
               true,
               "New position opened successfully!"
@@ -208,7 +212,10 @@ export default class PositionService implements IPositionService {
          * Block for XDC Pay.
          */
         wallet.events.allEvents(
-          (_: any, transactionReceipt: TransactionReceipt) => {
+          (eventData: any, transactionReceipt: TransactionReceipt) => {
+            if (SKIP_ERRORS.includes(eventData?.code)) {
+              return;
+            }
             this.alertStore.setShowSuccessAlert(
               true,
               "Top Up position successfully!"
@@ -307,7 +314,10 @@ export default class PositionService implements IPositionService {
          * Block for XDC Pay.
          */
         wallet.events.allEvents(
-          (_: any, transactionReceipt: TransactionReceipt) => {
+          (eventData: any, transactionReceipt: TransactionReceipt) => {
+            if (SKIP_ERRORS.includes(eventData?.code)) {
+              return;
+            }
             this.alertStore.setShowSuccessAlert(
               true,
               "Top Up position successfully!"
@@ -431,7 +441,10 @@ export default class PositionService implements IPositionService {
          * Block for XDC Pay.
          */
         wallet.events.allEvents(
-          (_: any, transactionReceipt: TransactionReceipt) => {
+          (eventData: any, transactionReceipt: TransactionReceipt) => {
+            if (SKIP_ERRORS.includes(eventData?.code)) {
+              return;
+            }
             this.alertStore.setShowSuccessAlert(
               true,
               MESSAGE
@@ -527,7 +540,10 @@ export default class PositionService implements IPositionService {
          * Block for XDC Pay.
          */
         wallet.events.allEvents(
-          (_: any, transactionReceipt: TransactionReceipt) => {
+          (eventData: any, transactionReceipt: TransactionReceipt) => {
+            if (SKIP_ERRORS.includes(eventData?.code)) {
+              return;
+            }
             this.alertStore.setShowSuccessAlert(
               true,
               MESSAGE
@@ -598,7 +614,10 @@ export default class PositionService implements IPositionService {
          * Block for XDC Pay.
          */
         BEP20.events.allEvents(
-          (_: any, transactionReceipt: TransactionReceipt) => {
+          (eventData: any, transactionReceipt: TransactionReceipt) => {
+            if (SKIP_ERRORS.includes(eventData?.code)) {
+              return;
+            }
             this.alertStore.setShowSuccessAlert(
               true,
               "Approval was successful!"
@@ -694,7 +713,10 @@ export default class PositionService implements IPositionService {
          * Block for XDC Pay.
          */
         fathomStableCoin.events.allEvents(
-          (_: any, transactionReceipt: TransactionReceipt) => {
+          (eventData: any, transactionReceipt: TransactionReceipt) => {
+            if (SKIP_ERRORS.includes(eventData?.code)) {
+              return;
+            }
             this.alertStore.setShowSuccessAlert(
               true,
               "Token approval was successful!"
