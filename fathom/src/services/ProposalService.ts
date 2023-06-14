@@ -14,6 +14,7 @@ import Xdc3 from "xdc3";
 import { getEstimateGas } from "utils/getEstimateGas";
 import AlertStore from "stores/alert.stores";
 import { TransactionReceipt } from "xdc3-eth";
+import { SKIP_ERRORS } from "connectors/networks";
 
 export default class ProposalService implements IProposalService {
   chainId = DEFAULT_CHAIN_ID;
@@ -57,7 +58,10 @@ export default class ProposalService implements IProposalService {
          * Block for XDC Pay.
          */
         FathomGovernor.events.allEvents(
-          (_: any, transactionReceipt: TransactionReceipt) => {
+          (eventData: any, transactionReceipt: TransactionReceipt) => {
+            if (SKIP_ERRORS.includes(eventData?.code)) {
+              return;
+            }
             this.alertStore.setShowSuccessAlert(
               true,
               "Proposal created successfully!"
@@ -124,7 +128,10 @@ export default class ProposalService implements IProposalService {
          * Block for XDC Pay.
          */
         FathomGovernor.events.allEvents(
-          (_: any, transactionReceipt: TransactionReceipt) => {
+          (eventData: any, transactionReceipt: TransactionReceipt) => {
+            if (SKIP_ERRORS.includes(eventData?.code)) {
+              return;
+            }
             this.alertStore.setShowSuccessAlert(
               true,
               "Proposal executed successfully!"
@@ -191,7 +198,10 @@ export default class ProposalService implements IProposalService {
          * Block for XDC Pay.
          */
         FathomGovernor.events.allEvents(
-          (_: any, transactionReceipt: TransactionReceipt) => {
+          (eventData: any, transactionReceipt: TransactionReceipt) => {
+            if (SKIP_ERRORS.includes(eventData?.code)) {
+              return;
+            }
             this.alertStore.setShowSuccessAlert(
               true,
               "Queue Proposal executed successfully!"
@@ -256,7 +266,10 @@ export default class ProposalService implements IProposalService {
          * Block for XDC Pay.
          */
         FathomGovernor.events.allEvents(
-          (_: any, transactionReceipt: TransactionReceipt) => {
+          (eventData: any, transactionReceipt: TransactionReceipt) => {
+            if (SKIP_ERRORS.includes(eventData?.code)) {
+              return;
+            }
             this.alertStore.setShowSuccessAlert(
               true,
               "You have successfully voted!"
