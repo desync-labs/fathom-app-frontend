@@ -23,6 +23,15 @@ const AppPopoverWrapper = styled(Popover)`
       line-height: 16px;
     }
   }
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    .MuiPaper-root {
+      max-width: 350px;
+      p {
+        font-size: 12px;
+        line-height: 15px;
+      }
+    }
+  }
 `;
 
 

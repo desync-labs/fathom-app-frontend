@@ -49,8 +49,11 @@ const StatsTitle = styled(
   textTransform: "uppercase",
   fontWeight: "bold",
   display: "flex",
-  justifyContent: 'center',
-  gap: '7px'
+  justifyContent: "center",
+  gap: "7px",
+  [theme.breakpoints.down("sm")]: {
+    justifyContent: "left",
+  }
 }));
 
 const StatsDescription = styled(Typography)`
