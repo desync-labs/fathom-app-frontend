@@ -1,5 +1,8 @@
 import { styled } from "@mui/material/styles";
-import { TableRow as MuiTableRow } from "@mui/material";
+import {
+  TableCell,
+  TableRow as MuiTableRow
+} from "@mui/material";
 
 export const AppTableHeaderRow = styled(MuiTableRow)`
   height: 32px;
@@ -44,3 +47,10 @@ export const AppTableRow = styled(MuiTableRow)`
     border-bottom-right-radius: 8px;
   }
 `;
+
+export const AppTableCellWithPopover = styled(TableCell)`
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  padding-top: 4px !important;
+`

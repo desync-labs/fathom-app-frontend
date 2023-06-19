@@ -191,6 +191,8 @@ const MainLayout = () => {
     mainBlockClickHandler,
     openMobileMenu,
     openConnectorMenu,
+    drawerRef,
+    showToggleDrawerBtn,
     setOpenMobile,
     setOpenConnector
   } = useMainLayout();
@@ -291,7 +293,7 @@ const MainLayout = () => {
           </Toolbar>
         </AppBar>
         {!isMobile && (
-          <Drawer variant="permanent" open={open}>
+          <Drawer variant="permanent" open={open} ref={drawerRef}>
             <MainToolbar>
               {open && (
                 <img
@@ -303,13 +305,13 @@ const MainLayout = () => {
                   }}
                 />
               )}
-              <ToggleDrawerButton open={open} onClick={toggleDrawer}>
+              { showToggleDrawerBtn && <ToggleDrawerButton open={open} onClick={toggleDrawer}>
                 {open ? (
                   <ArrowBack sx={{ fontSize: "0.9rem" }} />
                 ) : (
                   <ArrowForward sx={{ fontSize: "0.9rem", color: "#fff" }} />
                 )}
-              </ToggleDrawerButton>
+              </ToggleDrawerButton> }
             </MainToolbar>
             <Divider />
             <MenuWrapper open={open}>

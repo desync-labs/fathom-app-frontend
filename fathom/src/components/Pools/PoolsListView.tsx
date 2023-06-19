@@ -1,4 +1,7 @@
-import React, { FC, useMemo } from "react";
+import React, {
+  FC,
+  useMemo
+} from "react";
 import {
   CircularProgress,
   Table,
@@ -6,9 +9,7 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  Box,
-  useTheme,
-  useMediaQuery,
+  Box
 } from "@mui/material";
 import ICollateralPool from "stores/interfaces/ICollateralPool";
 import PoolsListItem from "components/Pools/PoolsListItem";
@@ -17,7 +18,7 @@ import { styled } from "@mui/material/styles";
 import { AppTableHeaderRow } from "components/AppComponents/AppTable/AppTable";
 import {
   NoResults,
-  TitleSecondary,
+  TitleSecondary
 } from "components/AppComponents/AppBox/AppBox";
 import usePoolsList from "hooks/usePoolsList";
 import PoolsListItemMobile from "components/Pools/PoolsListItemMobile";
@@ -25,6 +26,7 @@ import { OpenPositionProvider } from "context/openPosition";
 
 const PoolsListHeaderRow = styled(AppTableHeaderRow)`
   background: transparent;
+
   th {
     text-align: left;
   }
@@ -46,11 +48,14 @@ const PoolsTitle = styled(TitleSecondary)`
 `;
 
 const PoolsListView: FC = () => {
-  const { pools, selectedPool, onCloseNewPosition, setSelectedPool, loading } =
-    usePoolsList();
-
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.up("sm"));
+  const {
+    isMobile,
+    pools,
+    selectedPool,
+    onCloseNewPosition,
+    setSelectedPool,
+    loading
+  } = usePoolsList();
 
   return (
     <>
@@ -67,7 +72,7 @@ const PoolsListView: FC = () => {
         </NoResults>
       ) : (
         <>
-          {isMobile && (
+          {!isMobile && (
             <TableContainer>
               <Table
                 sx={{ minWidth: 500, "& td": { padding: "9px" } }}
@@ -95,7 +100,7 @@ const PoolsListView: FC = () => {
               </Table>
             </TableContainer>
           )}
-          {!isMobile &&
+          {isMobile &&
             pools.map((pool: ICollateralPool) => (
               <PoolsListItemMobile
                 pool={pool}
