@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useState, MouseEvent } from "react";
+import {
+  useCallback,
+  useEffect,
+  useState,
+  MouseEvent,
+  useRef
+} from "react";
 import useConnector from "context/connector";
 import { useStores } from "stores";
 import { useMediaQuery, useTheme } from "@mui/material";
@@ -7,7 +13,9 @@ import { useLocation } from "react-router-dom";
 const useMainLayout = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.down("md"));
   const [open, setOpen] = useState<boolean>(!isMobile);
+  const [showToggleDrawerBtn, setShowToggleDrawerBtn] = useState<boolean>(true);
   const {
     disconnect,
     isActive,
@@ -24,6 +32,8 @@ const useMainLayout = () => {
   const currentPath = useLocation();
   const [scroll, setScroll] = useState<number>(0);
 
+  const drawerRef = useRef<HTMLDivElement | null>(null);
+
   const toggleDrawer = useCallback(() => {
     setOpen(!open);
   }, [open, setOpen]);
@@ -39,6 +49,16 @@ const useMainLayout = () => {
       rootStore.setChainId(chainId!);
     }
   }, [chainId, rootStore]);
+
+  useEffect(() => {
+    // 580
+    if (drawerRef.current?.querySelector('.MuiPaper-root')!.clientHeight! < 580 || isTablet) {
+      setOpen(false);
+      setShowToggleDrawerBtn(false)
+    } else {
+      setShowToggleDrawerBtn(true)
+    }
+  }, [isTablet, setOpen, setShowToggleDrawerBtn])
 
   useEffect(() => {
     document.addEventListener("scroll", scrollHandler);
@@ -110,6 +130,8 @@ const useMainLayout = () => {
     mainBlockClickHandler,
     openMobileMenu,
     openConnectorMenu,
+    drawerRef,
+    showToggleDrawerBtn,
   };
 };
 
