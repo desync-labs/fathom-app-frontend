@@ -8,7 +8,8 @@ import {
   FxdIcon,
   GovernanceIcon,
   SwapIcon,
-  DexIcon,
+  FarmIcon,
+  DexIcon
 } from "components/Common/MenuIcons";
 import useConnector from "context/connector";
 
@@ -33,6 +34,8 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
     [location.pathname]
   );
 
+  const isFarmActive = useMemo(
+    () => location.pathname.includes("farm") , [location.pathname]);
   const { showText } = useShowText(open);
 
   const dexUrl = useMemo(() => process.env.REACT_APP_SWAP_APP_URL!, []);
@@ -43,29 +46,36 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
       link: "/",
       Icon: <FxdIcon isDashboardActive={isDashboardActive} />,
       isActive: isDashboardActive,
-      showText: showText,
+      showText: showText
     },
     {
       name: "Stable Swap",
       link: "/swap",
       Icon: <SwapIcon isStableSwapActive={isStableSwapActive} />,
       isActive: isStableSwapActive,
-      showText: showText,
+      showText: showText
     },
     {
       name: "DAO",
       link: "/dao/staking",
       Icon: <GovernanceIcon isDAOActive={isDAOActive} />,
       isActive: isDAOActive,
-      showText: showText,
+      showText: showText
+    },
+    {
+      name: "Farm",
+      link: "/farm",
+      Icon: <FarmIcon isFarmActive={isFarmActive} />,
+      isActive: isDAOActive,
+      showText: showText
     },
     {
       name: "DEX",
       link: dexUrl,
       Icon: <DexIcon />,
       target: "_blank",
-      showText: showText,
-    },
+      showText: showText
+    }
   ];
 
   if (!allowStableSwap && !isUserWrapperWhiteListed) {
