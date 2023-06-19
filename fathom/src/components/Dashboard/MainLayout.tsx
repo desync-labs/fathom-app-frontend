@@ -63,7 +63,8 @@ import MobileMenuIcon from "assets/svg/mobile-menu.svg";
 import MobileMenuIconActive from "assets/svg/mobile-menu-active.svg";
 
 import { getTokenLogoURL } from "utils/tokenLogo";
-import StableSwapRemoveLiquidity from "../Stableswap/StableSwapRemoveLiquidity";
+import StableSwapRemoveLiquidity from "components/Stableswap/StableSwapRemoveLiquidity";
+import AllFarmView from "components/Farms/AllFarmView";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open"
@@ -351,6 +352,12 @@ const MainLayout = () => {
                   </StakingProvider>
                 }
               />
+            </Route>
+            <Route
+              path="/farm"
+              element={<AllFarmView />}
+            >
+
             </Route>
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
