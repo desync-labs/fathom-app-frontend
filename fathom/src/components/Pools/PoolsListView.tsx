@@ -9,9 +9,7 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  Box,
-  useTheme,
-  useMediaQuery
+  Box
 } from "@mui/material";
 import ICollateralPool from "stores/interfaces/ICollateralPool";
 import PoolsListItem from "components/Pools/PoolsListItem";
@@ -50,11 +48,14 @@ const PoolsTitle = styled(TitleSecondary)`
 `;
 
 const PoolsListView: FC = () => {
-  const { pools, selectedPool, onCloseNewPosition, setSelectedPool, loading } =
-    usePoolsList();
-
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.up("sm"));
+  const {
+    isMobile,
+    pools,
+    selectedPool,
+    onCloseNewPosition,
+    setSelectedPool,
+    loading
+  } = usePoolsList();
 
   return (
     <>
@@ -71,7 +72,7 @@ const PoolsListView: FC = () => {
         </NoResults>
       ) : (
         <>
-          {isMobile && (
+          {!isMobile && (
             <TableContainer>
               <Table
                 sx={{ minWidth: 500, "& td": { padding: "9px" } }}
@@ -99,7 +100,7 @@ const PoolsListView: FC = () => {
               </Table>
             </TableContainer>
           )}
-          {!isMobile &&
+          {isMobile &&
             pools.map((pool: ICollateralPool) => (
               <PoolsListItemMobile
                 pool={pool}
