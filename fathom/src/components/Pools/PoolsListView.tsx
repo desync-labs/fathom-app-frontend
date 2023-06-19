@@ -1,4 +1,7 @@
-import React, { FC, useMemo } from "react";
+import React, {
+  FC,
+  useMemo
+} from "react";
 import {
   CircularProgress,
   Table,
@@ -8,7 +11,7 @@ import {
   TableHead,
   Box,
   useTheme,
-  useMediaQuery,
+  useMediaQuery
 } from "@mui/material";
 import ICollateralPool from "stores/interfaces/ICollateralPool";
 import PoolsListItem from "components/Pools/PoolsListItem";
@@ -17,7 +20,7 @@ import { styled } from "@mui/material/styles";
 import { AppTableHeaderRow } from "components/AppComponents/AppTable/AppTable";
 import {
   NoResults,
-  TitleSecondary,
+  TitleSecondary
 } from "components/AppComponents/AppBox/AppBox";
 import usePoolsList from "hooks/usePoolsList";
 import PoolsListItemMobile from "components/Pools/PoolsListItemMobile";
@@ -25,6 +28,7 @@ import { OpenPositionProvider } from "context/openPosition";
 
 const PoolsListHeaderRow = styled(AppTableHeaderRow)`
   background: transparent;
+
   th {
     text-align: left;
   }
