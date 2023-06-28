@@ -20,7 +20,7 @@ import {
   ButtonPrimary,
   ManagePositionButton
 } from "components/AppComponents/AppButton/AppButton";
-import AppPopover from "../AppComponents/AppPopover/AppPopover";
+import AppPopover from "components/AppComponents/AppPopover/AppPopover";
 
 const PositionListItemMobileContainer = styled(Box)`
   width: 100%;
