@@ -45,6 +45,7 @@ const PositionListItem: FC<PositionListItemProps> = ({
 }) => {
   return (
     <AppTableRow
+      className={'border single'}
       key={position.id}
       sx={{
         "&:last-child td, &:last-child th": { border: 0 },

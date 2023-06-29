@@ -66,7 +66,7 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
       name: "Farm",
       link: "/farm",
       Icon: <FarmIcon isFarmActive={isFarmActive} />,
-      isActive: isDAOActive,
+      isActive: isFarmActive,
       showText: showText
     },
     {

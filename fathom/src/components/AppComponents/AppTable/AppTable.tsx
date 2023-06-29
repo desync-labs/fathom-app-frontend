@@ -26,25 +26,51 @@ export const AppTableHeaderRow = styled(MuiTableRow)`
 `;
 
 export const AppTableRow = styled(MuiTableRow)`
-  background: #131F35;
   td {
     color: #c5d7f2;
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
     line-height: 20px;
-    border-bottom: 2px solid #121212;  
+    border-bottom: none;  
     height: 72px;
     padding: 0;
+    background: #131F35;
+    
+    &:first-of-type {
+      border-top-left-radius: 8px;
+      border-bottom-left-radius: 0;
+      padding-left: 20px;
+    }
+    &:last-of-type {
+      border-top-right-radius: 8px;
+      border-bottom-right-radius: 0;
+    }
   }
-  td:first-of-type {
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
-    padding-left: 20px;
-  }
-  td:last-of-type {
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
+  &.border {
+    border-bottom: 2px solid #121212;
+    td {
+      &:first-of-type {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 8px;
+      }
+      &:last-of-type {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 8px;
+        padding-right: 20px;
+      }
+    }
+    &.single {
+      td {
+        &:first-of-type {
+          border-top-left-radius: 8px;
+        }
+        &:last-of-type {
+          border-top-right-radius: 8px;
+          padding-right: 0;
+        }
+      } 
+    }
   }
 `;
 

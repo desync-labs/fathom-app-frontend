@@ -258,3 +258,31 @@ export const VotingEndedButton = styled(MuiButton)`
     border-radius: 8px;
   }
 `;
+
+export const FarmNowBtn = styled(MuiButton)`
+  border-radius: 8px;
+  background: rgba(0, 128, 118, 0.15);
+  color: #43FFF1;
+  font-size: 15px;
+  font-weight: 600;
+  gap: 8px;
+  padding: 8px 12px;
+  margin-left: 10px;
+  line-height: 20px;
+`
+
+
+export const AddLiquidityBtn = styled(MuiButton)`
+  padding: 8px 20px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #80FFF6 0%, #00DBCB 100%);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 20px;
+  color: #00332F;
+  height: 40px;
+  width: 500px;
+`
