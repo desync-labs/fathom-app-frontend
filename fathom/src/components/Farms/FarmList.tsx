@@ -21,6 +21,7 @@ import { styled } from "@mui/material/styles";
 import { COUNT_PER_PAGE } from "helpers/Constants";
 import useFarmsList from "hooks/useFarmsList";
 import FarmListItem from "components/Farms/FarmListItem";
+import FarmFilters from "./FarmFilters";
 
 const CircleWrapper = styled(Box)`
   width: 100%;
@@ -35,6 +36,10 @@ const PaginationWrapper = styled(Box)`
   justify-content: center;
   margin-top: 10px;
 `;
+
+const FarmListTableCell = styled(TableCell)`
+  padding: 0 !important;
+`
 
 type FarmsListProps = {
   positionsItemsCount: number;
@@ -66,6 +71,7 @@ const FarmList: FC<FarmsListProps> = ({
         )}
       </NoResults>}
       <TableContainer>
+        <FarmFilters />
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <AppTableHeaderRow
@@ -73,16 +79,18 @@ const FarmList: FC<FarmsListProps> = ({
                 th: { textAlign: "left", paddingLeft: "10px" }
               }}
             >
-              <TableCell>Pool</TableCell>
-              <TableCell>Fee</TableCell>
-              <TableCell>Earned</TableCell>
-              <TableCell>Apr</TableCell>
-              <TableCell>Staked Liquidity</TableCell>
-              <TableCell>Available</TableCell>
+              <FarmListTableCell>Pool</FarmListTableCell>
+              <FarmListTableCell>Fee</FarmListTableCell>
+              <FarmListTableCell>Earned</FarmListTableCell>
+              <FarmListTableCell>Apr</FarmListTableCell>
+              <FarmListTableCell>Staked Liquidity</FarmListTableCell>
+              <FarmListTableCell>Available</FarmListTableCell>
+              <FarmListTableCell>Stacked</FarmListTableCell>
               <TableCell></TableCell>
             </AppTableHeaderRow>
           </TableHead>
           <TableBody>
+            <FarmListItem />
             <FarmListItem />
           </TableBody>
         </Table>

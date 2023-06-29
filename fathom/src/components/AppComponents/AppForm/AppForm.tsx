@@ -2,6 +2,7 @@ import { styled } from "@mui/material/styles";
 import {
   TextField as MuiTextField,
   FormLabel as MuiFormLabel,
+  Select,
 } from "@mui/material";
 
 export const AppTextField = styled(MuiTextField)`
@@ -99,4 +100,14 @@ export const AppFormInputLogo = styled("img")`
   position: absolute;
   top: 27px;
   left: 9px;
+`;
+
+export const AppSelect = styled(Select)`
+  padding: 8px 12px;
+  gap: 8px;
+  height: 40px;
+  background: #253656;
+  border: 1px solid #324567;
+  border-radius: 8px;
+  width: 100%;
 `;

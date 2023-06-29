@@ -64,7 +64,7 @@ export const GovernanceIcon: FC<{ isDAOActive: boolean }> = ({
 export const FarmIcon: FC<{ isFarmActive: boolean }> = ({
   isFarmActive,
 }) => (
-  <MenuIcon sx={{ marginTop: "-9px" }}>
+  <MenuIcon>
     <img
       alt="farms-icon"
       src={isFarmActive ? FarmActiveSrc : FarmSrc}
