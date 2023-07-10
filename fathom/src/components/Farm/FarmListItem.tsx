@@ -163,7 +163,7 @@ export const FarmItemInfoWrapper = styled("div")`
   }
 `;
 
-const FarmingLabel = styled("div")`
+export const FarmingLabel = styled("div")`
   background: rgba(0, 128, 118, 0.15);
   font-size: 12px;
   font-weight: 600;

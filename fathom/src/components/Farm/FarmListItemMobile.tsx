@@ -11,6 +11,7 @@ import {
   ExtendedBtn,
   FarmDescription,
   FarmInfo,
+  FarmingLabel,
   FarmItemInfoWrapper,
   FarmListItemImageWrapper,
   FarmPercent,
@@ -19,6 +20,9 @@ import {
 } from "components/Farm/FarmListItem";
 import FarmListItemPairInfo from "components/Farm/FarmListItem/FarmListItemPairInfo";
 import FarmListItemFarmInfo from "components/Farm/FarmListItem/FarmListItemFarmInfo";
+import FarmListItemFarmingDetails from "components/Farm/FarmListItem/FarmListItemFarmingDetails";
+import FarmListItemEarned from "components/Farm/FarmListItem/FarmListItemEarned";
+import FarmListItemManageModal from "components/Farm/FarmListItem/FarmListItemManageModal";
 
 import { getTokenLogoURL } from "utils/tokenLogo";
 import useFarmListItem from "hooks/useFarmListItem";
@@ -26,10 +30,14 @@ import useFarmListItem from "hooks/useFarmListItem";
 import DirectionUp from "assets/svg/direction-up.svg";
 import DirectionDown from "assets/svg/direction-down.svg";
 import LockSrc from "assets/svg/lock.svg";
-import FarmListItemFarmingDetails from "./FarmListItem/FarmListItemFarmingDetails";
-import FarmListItemEarned from "./FarmListItem/FarmListItemEarned";
-import FarmListItemManageModal from "./FarmListItem/FarmListItemManageModal";
 
+const FarmPoolName = styled('div')`
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 10px;
+`
 
 const FarmListItemMobileContainer = styled(Box)`
   width: 100%;
@@ -104,21 +112,19 @@ const FarmListItemMobile = () => {
 
   return (
     <FarmListItemMobileContainer>
-      <ListItemWrapper>
-        <FarmListLabel>Pool</FarmListLabel>
-        <FarmListValue>
-          <FarmInfo>
-            <FarmTitle>
-              XDC - FXD
-              <FarmDescription>LP</FarmDescription>
-            </FarmTitle>
-          </FarmInfo>
-          <FarmListItemImageWrapper>
-            <img className={"smaller"} src={getTokenLogoURL("WXDC")} alt={"WXDC"} />
-            <img className={"bigger"} src={getTokenLogoURL("FXD")} alt={"FXD"} />
-          </FarmListItemImageWrapper>
-        </FarmListValue>
-      </ListItemWrapper>
+      <FarmingLabel>Farming</FarmingLabel>
+      <FarmPoolName>
+        <FarmListItemImageWrapper>
+          <img className={"smaller"} src={getTokenLogoURL("WXDC")} alt={"WXDC"} />
+          <img className={"bigger"} src={getTokenLogoURL("FXD")} alt={"FXD"} />
+        </FarmListItemImageWrapper>
+        <FarmInfo>
+          <FarmTitle>
+            XDC - FXD
+            <FarmDescription>LP</FarmDescription>
+          </FarmTitle>
+        </FarmInfo>
+      </FarmPoolName>
       <ListItemWrapper>
         <FarmListLabel>
           Fee
