@@ -64,7 +64,7 @@ import MobileMenuIconActive from "assets/svg/mobile-menu-active.svg";
 
 import { getTokenLogoURL } from "utils/tokenLogo";
 import StableSwapRemoveLiquidity from "components/Stableswap/StableSwapRemoveLiquidity";
-import AllFarmView from "components/Farms/AllFarmView";
+import AllFarmView from "components/Farm/AllFarmView";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open"
