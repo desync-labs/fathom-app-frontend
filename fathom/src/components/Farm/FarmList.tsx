@@ -1,7 +1,7 @@
 import React, {
   Dispatch,
   FC,
-  memo
+  memo,
 } from "react";
 import {
   Box,
@@ -20,8 +20,9 @@ import {
 import { styled } from "@mui/material/styles";
 import { COUNT_PER_PAGE } from "helpers/Constants";
 import useFarmsList from "hooks/useFarmsList";
-import FarmListItem from "components/Farms/FarmListItem";
-import FarmFilters from "./FarmFilters";
+import FarmListItem from "components/Farm/FarmListItem";
+import FarmFilters from "components/Farm/FarmFilters";
+import FarmListItemMobile from "./FarmListItemMobile";
 
 const CircleWrapper = styled(Box)`
   width: 100%;
@@ -53,6 +54,7 @@ const FarmList: FC<FarmsListProps> = ({
   setPositionCurrentPage
 }) => {
   const {
+    isMobile,
     loading,
     noResults,
     handlePageChange
@@ -70,7 +72,10 @@ const FarmList: FC<FarmsListProps> = ({
           "You have not opened farms"
         )}
       </NoResults>}
-      <TableContainer>
+      { isMobile ? <>
+        <FarmListItemMobile />
+        <FarmListItemMobile />
+      </> : <TableContainer>
         <FarmFilters />
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -94,7 +99,7 @@ const FarmList: FC<FarmsListProps> = ({
             <FarmListItem />
           </TableBody>
         </Table>
-      </TableContainer>
+      </TableContainer> }
       <PaginationWrapper>
         <Pagination
           count={Math.ceil(

@@ -274,9 +274,8 @@ export const FarmNowBtn = styled(MuiButton)`
 
 export const AddLiquidityBtn = styled(MuiButton)`
   padding: 8px 20px;
-  justify-content: center;
-  align-items: center;
   gap: 8px;
+  display: flex;
   border-radius: 8px;
   background: linear-gradient(135deg, #80FFF6 0%, #00DBCB 100%);
   font-size: 15px;
@@ -285,4 +284,25 @@ export const AddLiquidityBtn = styled(MuiButton)`
   color: #00332F;
   height: 40px;
   width: 500px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    width: 100%;
+    margin-top: 16px;
+  }
+`
+
+export const FarmInfoFarmNowBtn = styled(MuiButton)`
+  border-radius: 8px;
+  background: linear-gradient(135deg, #80FFF6 0%, #00DBCB 100%);
+  padding: 8px 20px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 20px;
+  color: #00332F;
+  height: 40px;
+  width: 500px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    width: 100%;
+    margin-top: 12px;
+  }
 `

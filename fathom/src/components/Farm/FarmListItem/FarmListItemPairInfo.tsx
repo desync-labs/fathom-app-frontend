@@ -4,16 +4,25 @@ import { AddLiquidityBtn } from "components/AppComponents/AppButton/AppButton";
 import rightUpAquaSrc from 'assets/svg/right-up-aqua.svg';
 import contractSrc from 'assets/svg/contract.svg';
 import plusSrc from 'assets/svg/plus.svg'
-import { Box } from "@mui/material";
 
-const InfoWrapper = styled('div')`
+export const InfoWrapper = styled('div')`
   display: flex;
   justify-content: space-between;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    display: block;
+  }
 `
 
 const LeftColumn = styled('div')`
   a:last-of-type {
     padding-bottom: 0;
+  }
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin-bottom: 20px;
   }
 `
 
@@ -34,7 +43,7 @@ const InfoLink = styled('a')`
   padding-bottom: 8px;
 `
 
-const NoPosition = styled('div')`
+export const NoPosition = styled('div')`
   text-align: center;
 `
 

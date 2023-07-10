@@ -5,7 +5,7 @@ import {
 import { PageHeader } from "components/Dashboard/PageHeader";
 import React from "react";
 import useAllFarmsView from "hooks/useAllFarmsView";
-import FarmsList from "components/Farms/FarmList";
+import FarmsList from "components/Farm/FarmList";
 
 
 const AllFarmView = () => {
