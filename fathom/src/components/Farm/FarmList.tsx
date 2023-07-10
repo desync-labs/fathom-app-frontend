@@ -23,6 +23,7 @@ import useFarmsList from "hooks/useFarmsList";
 import FarmListItem from "components/Farm/FarmListItem";
 import FarmFilters from "components/Farm/FarmFilters";
 import FarmListItemMobile from "./FarmListItemMobile";
+import FarmFiltersMobile from "./FarmFiltersMobile";
 
 const CircleWrapper = styled(Box)`
   width: 100%;
@@ -72,43 +73,46 @@ const FarmList: FC<FarmsListProps> = ({
           "You have not opened farms"
         )}
       </NoResults>}
-      { isMobile ? <>
-        <FarmListItemMobile />
-        <FarmListItemMobile />
-      </> : <TableContainer>
-        <FarmFilters />
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <AppTableHeaderRow
-              sx={{
-                th: { textAlign: "left", paddingLeft: "10px" }
-              }}
-            >
-              <FarmListTableCell>Pool</FarmListTableCell>
-              <FarmListTableCell>Fee</FarmListTableCell>
-              <FarmListTableCell>Earned</FarmListTableCell>
-              <FarmListTableCell>Apr</FarmListTableCell>
-              <FarmListTableCell>Staked Liquidity</FarmListTableCell>
-              <FarmListTableCell>Available</FarmListTableCell>
-              <FarmListTableCell>Stacked</FarmListTableCell>
-              <TableCell></TableCell>
-            </AppTableHeaderRow>
-          </TableHead>
-          <TableBody>
-            <FarmListItem />
-            <FarmListItem />
-          </TableBody>
-        </Table>
-      </TableContainer> }
-      <PaginationWrapper>
-        <Pagination
-          count={Math.ceil(
-            positionsItemsCount / COUNT_PER_PAGE
-          )}
-          page={positionCurrentPage}
-          onChange={handlePageChange}
-        />
-      </PaginationWrapper>
+      { isMobile ?
+        <>
+          <FarmFiltersMobile />
+          <FarmListItemMobile />
+          <FarmListItemMobile />
+        </> :
+        <TableContainer>
+          <FarmFilters />
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <AppTableHeaderRow
+                sx={{
+                  th: { textAlign: "left", paddingLeft: "10px" }
+                }}
+              >
+                <FarmListTableCell>Pool</FarmListTableCell>
+                <FarmListTableCell>Fee</FarmListTableCell>
+                <FarmListTableCell>Earned</FarmListTableCell>
+                <FarmListTableCell>Apr</FarmListTableCell>
+                <FarmListTableCell>Staked Liquidity</FarmListTableCell>
+                <FarmListTableCell>Available</FarmListTableCell>
+                <FarmListTableCell>Stacked</FarmListTableCell>
+                <TableCell></TableCell>
+              </AppTableHeaderRow>
+            </TableHead>
+            <TableBody>
+              <FarmListItem />
+              <FarmListItem />
+            </TableBody>
+          </Table>
+        </TableContainer> }
+        <PaginationWrapper>
+          <Pagination
+            count={Math.ceil(
+              positionsItemsCount / COUNT_PER_PAGE
+            )}
+            page={positionCurrentPage}
+            onChange={handlePageChange}
+          />
+        </PaginationWrapper>
     </>
   );
 };

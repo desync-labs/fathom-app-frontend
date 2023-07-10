@@ -306,3 +306,10 @@ export const FarmInfoFarmNowBtn = styled(MuiButton)`
     margin-top: 12px;
   }
 `
+
+export const FarmFilterMobileBtn = styled(MuiButton)`
+  width: 44px;
+  height: 44px;
+  background: rgba(79, 101, 140, 0.20);
+  border-radius: 8px;
+`
