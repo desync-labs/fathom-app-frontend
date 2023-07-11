@@ -12,6 +12,10 @@ import { OpenPositionContextType } from "context/openPosition";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 import { DANGER_SAFETY_BUFFER } from "helpers/Constants";
+import {
+  useMediaQuery,
+  useTheme
+} from "@mui/material";
 
 const defaultValues = {
   collateral: "",
@@ -26,6 +30,9 @@ const useOpenPosition = (
 ) => {
   const { poolService, positionService } = useStores();
   const { account, chainId, library } = useConnector()!;
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const {
     handleSubmit, watch, control, setValue, trigger,
@@ -350,6 +357,7 @@ const useOpenPosition = (
   }, [chainId, account, getCollateralTokenAndBalance, getPositionDebtCeiling]);
 
   return {
+    isMobile,
     safeMax,
     approveBtn,
     approve,
