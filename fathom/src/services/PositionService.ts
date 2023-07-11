@@ -99,6 +99,7 @@ export default class PositionService implements IPositionService {
           [openPositionCall],
           options
         );
+        console.log('Estimated gas is', gas);
         options.gas = gas;
         /**
          * Block for XDC Pay.
@@ -822,6 +823,15 @@ export default class PositionService implements IPositionService {
       .call();
 
     return BigNumber(debtCeiling).dividedBy(WeiPerRad).integerValue().toString();
+  }
+
+  async isWhitelisted(address: string, library: Xdc3) {
+    const proxyWalletRegistry = Web3Utils.getContractInstance(
+      SmartContractFactory.ProxyWalletRegistry(this.chainId),
+      library
+    );
+
+    return await proxyWalletRegistry.methods.whitelisted(address).call()
   }
 
   setChainId(chainId: number) {
