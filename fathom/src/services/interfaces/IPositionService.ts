@@ -74,4 +74,6 @@ export default interface IPositionService {
     poolId: string,
     library: Xdc3,
   ): Promise<string>
+
+  isWhitelisted(address: string, library: Xdc3): Promise<boolean>;
 }
