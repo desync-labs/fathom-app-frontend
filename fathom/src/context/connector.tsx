@@ -51,11 +51,12 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
   const [isDecentralizedState, setIsDecentralizedState] = useState<
     boolean|undefined
   >(undefined);
+  const [isDecentralizedMode, setIsDecentralizedMode] = useState<boolean|undefined>(undefined)
   const [isUserWhiteListed, setIsUserWhitelisted] = useState<
     boolean|undefined
   >(undefined);
   const [isUserWrapperWhiteListed, setIsUserWrapperWhiteListed] = useState<boolean>(false);
-  const [isOpenPositionWhitelisted, setIsOpenPositionWhitelisted] = useState<boolean>(false);
+  const [isOpenPositionWhitelisted, setIsOpenPositionWhitelisted] = useState<boolean>(true);
 
   const [allowStableSwapInProgress, setAllowStableSwapInProgress] =
     useState<boolean>(true);
@@ -96,7 +97,6 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
         .isDecentralizedState(web3Library)
         .then((isDecentralizedState) => {
           setIsDecentralizedState(isDecentralizedState);
-
           if (isDecentralizedState === false && account) {
             stableSwapService
               .isUserWhitelisted(account, web3Library)
@@ -108,22 +108,24 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
             setAllowStableSwapInProgress(false);
           }
         });
+      positionService.isDecentralizedMode(web3Library)
+        .then((isDecentralizedMode) => {
+          setIsDecentralizedMode(isDecentralizedMode);
+          if (isDecentralizedMode === false && account) {
+            positionService
+              .isWhitelisted(account, web3Library)
+              .then((isOpenPositionWhitelisted) => {
+                setIsOpenPositionWhitelisted(isOpenPositionWhitelisted);
+              })
+          }
+      })
     }
-
 
     if (account) {
       stableSwapService.usersWrapperWhitelist(account, web3Library)
         .then((isWhitelisted) => {
           setIsUserWrapperWhiteListed(isWhitelisted);
         });
-
-      positionService.isWhitelisted(account, web3Library).then((isOpenPositionWhitelisted) => {
-        if (process.env.REACT_APP_ENV === 'prod') {
-          setIsOpenPositionWhitelisted(isOpenPositionWhitelisted);
-        } else {
-          setIsOpenPositionWhitelisted(true);
-        }
-      })
     }
   }, [
     chainId,
@@ -243,6 +245,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
       isWalletConnect,
       isXdcPay,
       isDecentralizedState,
+      isDecentralizedMode,
       isUserWhiteListed,
       isUserWrapperWhiteListed,
       isOpenPositionWhitelisted,
@@ -266,6 +269,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
       isWalletConnect,
       isXdcPay,
       isDecentralizedState,
+      isDecentralizedMode,
       isUserWhiteListed,
       isUserWrapperWhiteListed,
       isOpenPositionWhitelisted,
