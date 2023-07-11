@@ -5,8 +5,7 @@ import {
   Box,
   CircularProgress,
   Grid,
-  useMediaQuery,
-  useTheme
+  Typography
 } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 import { styled } from "@mui/material/styles";
@@ -38,6 +37,10 @@ import {
   ErrorBox,
   ErrorMessage
 } from "components/AppComponents/AppBox/AppBox";
+import {
+  WarningBox
+} from "components/AppComponents/AppBox/AppBox";
+import useConnector from "context/connector";
 
 const OpenPositionFormWrapper = styled(Grid)`
   padding-left: 20px;
@@ -62,6 +65,7 @@ const OpenPositionApproveBox = styled(ApproveBox)`
 
 const OpenPositionForm = () => {
   const {
+    isMobile,
     approveBtn,
     approve,
     approvalPending,
@@ -82,8 +86,7 @@ const OpenPositionForm = () => {
     maxBorrowAmount
   } = useOpenPositionContext();
 
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const { isOpenPositionWhitelisted } = useConnector();
 
   return (
     <OpenPositionFormWrapper item>
@@ -257,6 +260,13 @@ const OpenPositionForm = () => {
             );
           }}
         />
+        {!isOpenPositionWhitelisted &&
+          <WarningBox>
+            <InfoIcon />
+            <Typography>
+              Your wallet address is not whitelisted for open position.
+            </Typography>
+          </WarningBox>}
         {approveBtn && !!parseInt(balance) && (
           <OpenPositionApproveBox>
             <InfoIcon
@@ -297,7 +307,7 @@ const OpenPositionForm = () => {
           )}
           <ButtonPrimary
             type="submit"
-            disabled={approveBtn || !!Object.keys(errors).length}
+            disabled={approveBtn || !!Object.keys(errors).length  || !isOpenPositionWhitelisted}
             isLoading={openPositionLoading}
           >
             {openPositionLoading ? (
