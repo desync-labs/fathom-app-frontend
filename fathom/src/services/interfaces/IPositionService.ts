@@ -76,4 +76,5 @@ export default interface IPositionService {
   ): Promise<string>
 
   isWhitelisted(address: string, library: Xdc3): Promise<boolean>;
+  isDecentralizedMode(library: Xdc3): Promise<boolean>;
 }
