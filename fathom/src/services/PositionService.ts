@@ -99,7 +99,6 @@ export default class PositionService implements IPositionService {
           [openPositionCall],
           options
         );
-        console.log('Estimated gas is', gas);
         options.gas = gas;
         /**
          * Block for XDC Pay.

@@ -8,17 +8,16 @@ import {
   ReactElement,
   FC
 } from "react";
-import { useStores } from "stores";
 import { useWeb3React } from "@web3-react/core";
+import WalletConnectProvider from "@walletconnect/ethereum-provider";
+import { ConnectorEvent } from "@web3-react/types";
+import { useStores } from "stores";
 import {
   injected,
   WalletConnect,
   xdcInjected
 } from "connectors/networks";
-import WalletConnectProvider from "@walletconnect/ethereum-provider";
-import { ConnectorEvent } from "@web3-react/types";
 import { getDefaultProvider } from "utils/defaultProvider";
-import * as process from "process";
 
 export const ConnectorContext = createContext(null);
 
