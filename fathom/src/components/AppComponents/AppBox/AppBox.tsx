@@ -183,6 +183,13 @@ export const WarningBox = styled(Box)`
   p {
     color: #f7b06e;
     font-size: 14px;
+    width: 100%;
+    white-space: break-spaces;
+  }
+  a {
+    &:hover {
+      text-decoration: underline;
+    }
   }
 `;
 
