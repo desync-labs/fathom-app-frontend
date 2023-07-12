@@ -8,15 +8,15 @@ import {
   ReactElement,
   FC
 } from "react";
-import { useStores } from "stores";
 import { useWeb3React } from "@web3-react/core";
+import WalletConnectProvider from "@walletconnect/ethereum-provider";
+import { ConnectorEvent } from "@web3-react/types";
+import { useStores } from "stores";
 import {
   injected,
   WalletConnect,
   xdcInjected
 } from "connectors/networks";
-import WalletConnectProvider from "@walletconnect/ethereum-provider";
-import { ConnectorEvent } from "@web3-react/types";
 import { getDefaultProvider } from "utils/defaultProvider";
 
 export const ConnectorContext = createContext(null);
@@ -37,7 +37,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
     library
   } = useWeb3React();
 
-  const { stableSwapService } = useStores();
+  const { stableSwapService, positionService } = useStores();
 
   const [isMetamask, setIsMetamask] = useState(false);
   const [isWalletConnect, setIsWalletConnect] = useState(false);
@@ -51,10 +51,12 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
   const [isDecentralizedState, setIsDecentralizedState] = useState<
     boolean|undefined
   >(undefined);
+  const [isDecentralizedMode, setIsDecentralizedMode] = useState<boolean|undefined>(undefined)
   const [isUserWhiteListed, setIsUserWhitelisted] = useState<
     boolean|undefined
   >(undefined);
   const [isUserWrapperWhiteListed, setIsUserWrapperWhiteListed] = useState<boolean>(false);
+  const [isOpenPositionWhitelisted, setIsOpenPositionWhitelisted] = useState<boolean>(true);
 
   const [allowStableSwapInProgress, setAllowStableSwapInProgress] =
     useState<boolean>(true);
@@ -95,7 +97,6 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
         .isDecentralizedState(web3Library)
         .then((isDecentralizedState) => {
           setIsDecentralizedState(isDecentralizedState);
-
           if (isDecentralizedState === false && account) {
             stableSwapService
               .isUserWhitelisted(account, web3Library)
@@ -107,8 +108,18 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
             setAllowStableSwapInProgress(false);
           }
         });
+      positionService.isDecentralizedMode(web3Library)
+        .then((isDecentralizedMode) => {
+          setIsDecentralizedMode(isDecentralizedMode);
+          if (isDecentralizedMode === false && account) {
+            positionService
+              .isWhitelisted(account, web3Library)
+              .then((isOpenPositionWhitelisted) => {
+                setIsOpenPositionWhitelisted(isOpenPositionWhitelisted);
+              })
+          }
+      })
     }
-
 
     if (account) {
       stableSwapService.usersWrapperWhitelist(account, web3Library)
@@ -121,6 +132,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
     account,
     web3Library,
     stableSwapService,
+    positionService,
     setIsUserWrapperWhiteListed,
     setIsDecentralizedState,
     setIsUserWhitelisted,
@@ -233,8 +245,10 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
       isWalletConnect,
       isXdcPay,
       isDecentralizedState,
+      isDecentralizedMode,
       isUserWhiteListed,
       isUserWrapperWhiteListed,
+      isOpenPositionWhitelisted,
       allowStableSwap,
       allowStableSwapInProgress
     }),
@@ -255,8 +269,10 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
       isWalletConnect,
       isXdcPay,
       isDecentralizedState,
+      isDecentralizedMode,
       isUserWhiteListed,
       isUserWrapperWhiteListed,
+      isOpenPositionWhitelisted,
       allowStableSwap,
       allowStableSwapInProgress
     ]
