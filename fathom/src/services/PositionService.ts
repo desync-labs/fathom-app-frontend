@@ -824,6 +824,31 @@ export default class PositionService implements IPositionService {
     return BigNumber(debtCeiling).dividedBy(WeiPerRad).integerValue().toString();
   }
 
+  async isDecentralizedMode(library: Xdc3) {
+    try {
+      const proxyWalletRegistry = Web3Utils.getContractInstance(
+        SmartContractFactory.ProxyWalletRegistry(this.chainId),
+        library
+      );
+      return await proxyWalletRegistry.methods.isDecentralizedMode().call()
+    } catch (e: any) {
+      this.alertStore.setShowErrorAlert(true, e.message);
+    }
+  }
+
+  async isWhitelisted(address: string, library: Xdc3) {
+    try {
+      const proxyWalletRegistry = Web3Utils.getContractInstance(
+        SmartContractFactory.ProxyWalletRegistry(this.chainId),
+        library
+      );
+
+      return await proxyWalletRegistry.methods.whitelisted(address).call()
+    } catch (e: any) {
+      this.alertStore.setShowErrorAlert(true, e.message);
+    }
+  }
+
   setChainId(chainId: number) {
     this.chainId = chainId;
   }
