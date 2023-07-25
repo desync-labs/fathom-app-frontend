@@ -46,4 +46,7 @@ export const AppListItem = styled(ListItem)`
       max-width: 120px;
     } 
   }
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    justify-content: space-between;
+  }
 `
