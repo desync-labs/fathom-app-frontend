@@ -424,7 +424,6 @@ export default class PositionService implements IPositionService {
             SmartContractFactory.StablecoinAdapter(this.chainId).address,
             positionId,
             collateral,
-            SmartContractFactory.StabilityFeeCollector(this.chainId).address,
             encodedResult
           ]
         );
@@ -524,7 +523,6 @@ export default class PositionService implements IPositionService {
             positionId,
             collateral,
             stableCoin,
-            SmartContractFactory.StabilityFeeCollector(this.chainId).address,
             encodedResult
           ]
         );
