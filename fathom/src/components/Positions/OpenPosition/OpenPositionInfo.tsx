@@ -14,7 +14,7 @@ import {
   formatNumber,
   formatPercentage
 } from "utils/format";
-import AppPopover from "../../AppComponents/AppPopover/AppPopover";
+import AppPopover from "components/AppComponents/AppPopover/AppPopover";
 
 const ListDivider = styled(Divider)`
   margin: 20px 20px 20px 5px;
