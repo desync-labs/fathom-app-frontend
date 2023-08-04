@@ -63,14 +63,18 @@ const NetworkPaper = styled(AppPaper)`
 
 const EmptyButtonWrapper = styled(Box)`
   padding: 3px;
-  background: #253656;
   border-radius: 8px;
   margin-right: 10px;
   cursor: auto;
+  background: #253656;
+  &.error {
+    background: transparent;
+    margin-right: 0;
+  }
 `;
 
 const Web3Status = () => {
-  const { error, account, chainId } = useConnector();
+  const { error, account, chainId, library, isMetamask } = useConnector();
   const anchorRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState<boolean>(false);
 
@@ -88,7 +92,6 @@ const Web3Status = () => {
   const requestChangeNetwork = useCallback(
     async (chainId: string) => {
       setOpen(false);
-
       if (window.ethereum) {
         try {
           // @ts-ignore
@@ -108,11 +111,13 @@ const Web3Status = () => {
         }
       }
     },
-    [setOpen]
+    [setOpen, library]
   );
 
   const showNetworkSelector =
-    (chainId || error instanceof UnsupportedChainIdError) && options.length;
+    (chainId || error instanceof UnsupportedChainIdError) && options.length && isMetamask;
+
+  const isError = error || (chainId && !XDC_CHAIN_IDS.includes(chainId))
 
   if (XDC_CHAIN_IDS.includes(chainId!)) {
     button = (
@@ -124,7 +129,7 @@ const Web3Status = () => {
         </>
       </RightNetwork>
     );
-  } else if (error) {
+  } else if (isError) {
     button = isMobile ? (
       <WrongNetworkMobile onClick={() => setOpen(!open)}>
         <WrongNetworkMobileIcon />
@@ -133,19 +138,18 @@ const Web3Status = () => {
     ) : (
       <WrongNetwork onClick={() => setOpen(!open)}>
         <>
-          {error instanceof UnsupportedChainIdError
+          {error instanceof UnsupportedChainIdError || !XDC_CHAIN_IDS.includes(chainId)
             ? "Wrong Network"
             : !account
               ? "Wallet Request Permissions Error"
               : "Error"}
-          <ArrowDropDownIcon />
+          {showNetworkSelector ? <ArrowDropDownIcon /> : null}
         </>
       </WrongNetwork>
     );
   }
 
-  return (chainId || error instanceof UnsupportedChainIdError) &&
-  options.length ? (
+  return (chainId || error instanceof UnsupportedChainIdError || !XDC_CHAIN_IDS.includes(chainId)) && options.length && isMetamask ? (
     <>
       <ButtonGroup
         variant="contained"
@@ -190,7 +194,7 @@ const Web3Status = () => {
       </Popper>
     </>
   ) : (
-    button ? <EmptyButtonWrapper className={"empty-box"}>
+    button ? <EmptyButtonWrapper className={`empty-box ${ isError ? 'error' : '' }`}>
       {button}
     </EmptyButtonWrapper> : null
   );

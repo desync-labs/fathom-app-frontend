@@ -1,9 +1,11 @@
 import { InjectedConnector } from "@web3-react/injected-connector";
-import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
+import { WalletConnectConnector } from "connectors/wallet-connect-connector/wallet-connect-connector";
 import Xdc3 from "xdc3";
 import { XdcInjectedConnector } from "connectors/xdc-connector/xdc-connector";
 export const APOTHEM_RPC = "https://erpc.apothem.network/";
 export const XDC_RPC = "https://erpc.xinfin.network/";
+
+export const DEFAULT_CHAIN_ID = [1];
 
 let XDC_CHAIN_IDS: number[] = [51];
 
@@ -11,7 +13,7 @@ let DEFAULT_RPC: any = {
   51: APOTHEM_RPC
 };
 
-let supportedChainIds: number[] = [1337, 51];
+let supportedChainIds: number[] = [51];
 
 let rpc: any = {
   51: APOTHEM_RPC
@@ -68,12 +70,24 @@ export const injected = new InjectedConnector({ supportedChainIds });
 export const xdcInjected = new XdcInjectedConnector({ supportedChainIds });
 
 export const WalletConnect = new WalletConnectConnector({
-  infuraId: 'e43581adc3b547e5b8de03abdcebedfd',
-  supportedChainIds,
-  rpc,
-  qrcode: true,
   // @ts-ignore
-  pollingInterval: 15000,
+  chains: DEFAULT_CHAIN_ID,
+  optionalChains: supportedChainIds,
+  rpcMap: rpc,
+  showQrModal: true,
+  projectId: '5da328ee81006c5aa59662d6cadfd5fe',
+  methods: [
+    'eth_sendTransaction',
+    'eth_signTransaction',
+    'eth_estimateGas',
+    'eth_sign',
+    'personal_sign',
+    'eth_signTypedData',
+  ],
+  optionalEvents: [
+    "wallet_switchEthereumChain",
+    "wallet_addEthereumChain"
+  ],
 });
 
 export {
