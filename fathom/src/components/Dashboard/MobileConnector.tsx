@@ -49,9 +49,8 @@ const MobileConnector: FC<MobileConnectorPropsType> = ({
   const { connectWalletConnect } = useConnector();
 
   const walletConnectConnect = useCallback(() => {
-    connectWalletConnect().then(() => {
-      setOpenMobileConnector(false);
-    });
+    connectWalletConnect()
+    setOpenMobileConnector(false);
   }, [setOpenMobileConnector, connectWalletConnect]);
 
 

@@ -266,7 +266,7 @@ const OpenPositionForm = () => {
             <Typography>
               Your wallet address is not whitelisted for open position.
               <br />
-              <a href={'https://docs.google.com/forms/d/e/1FAIpQLSdyQkwpYPAAUc5llJxk09ymMdjSSSjjiY3spwvRvCwfV08h2A/viewform'} target={'_blank'}>
+              <a href={'https://docs.google.com/forms/d/e/1FAIpQLSdyQkwpYPAAUc5llJxk09ymMdjSSSjjiY3spwvRvCwfV08h2A/viewform'} target={'_blank'} rel="noreferrer">
                 Apply for being added to the whitelist to borrow FXD.
               </a>
             </Typography>
