@@ -13,7 +13,9 @@ import WalletConnectProvider from "@walletconnect/ethereum-provider";
 import { ConnectorEvent } from "@web3-react/types";
 import { useStores } from "stores";
 import {
+  DEFAULT_CHAIN_ID,
   injected,
+  supportedChainIds,
   WalletConnect,
   xdcInjected
 } from "connectors/networks";
@@ -64,8 +66,12 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
   const { transactionStore } = useStores();
 
   useEffect(() => {
-    !!library ? setWeb3Library(library) : setWeb3Library(getDefaultProvider());
-  }, [library, setWeb3Library]);
+    if (library && account && chainId && supportedChainIds.includes(chainId!)) {
+      setWeb3Library(library)
+    } else {
+      setWeb3Library(getDefaultProvider());
+    }
+  }, [library, account, chainId, setWeb3Library]);
 
   useEffect(() => {
     if (web3Library) {
