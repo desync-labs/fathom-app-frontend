@@ -182,26 +182,31 @@ const useRepayPosition = (
   ]);
 
   const handleOnOpen = useCallback(async () => {
-    const price = BigNumber(debtValue).dividedBy(lockedCollateral);
-    setPrice(price.toString());
+    if (debtValue) {
+      const price = BigNumber(debtValue).dividedBy(lockedCollateral);
+      setPrice(price.toString());
 
-    const fathomValue = BigNumber(balance).isGreaterThan(debtValue) ? debtValue : balance;
-    setFathomToken(fathomValue);
+      const fathomValue = BigNumber(balance).isGreaterThan(debtValue) ? debtValue : balance;
+      setFathomToken(fathomValue);
 
-    let collateral = BigNumber(fathomValue).dividedBy(price).decimalPlaces(12, BigNumber.ROUND_UP);
+      let collateral = BigNumber(fathomValue).dividedBy(price).decimalPlaces(12, BigNumber.ROUND_UP);
 
-    if (collateral.isGreaterThan(lockedCollateral)) {
-      collateral = BigNumber(lockedCollateral);
+      if (collateral.isGreaterThan(lockedCollateral)) {
+        collateral = BigNumber(lockedCollateral);
+      }
+
+      setCollateral(collateral.toString());
     }
-
-    setCollateral(collateral.toString());
   }, [lockedCollateral, balance, debtValue, setPrice, setFathomToken, setCollateral]);
 
   useEffect(() => {
-    getBalance().then(() => {
+    Promise.all([
+      getBalance(),
+      getDebtValue()
+    ])
+    .then(() => {
       handleOnOpen();
     });
-    getDebtValue();
   }, [getBalance, handleOnOpen, getDebtValue]);
 
   useEffect(() => {
