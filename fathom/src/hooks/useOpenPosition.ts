@@ -277,7 +277,7 @@ const useOpenPosition = (
           fathomToken,
           library
         );
-        console.log(blockNumber);
+
         setLastTransactionBlock(blockNumber!);
         onClose();
       } catch (e) {
