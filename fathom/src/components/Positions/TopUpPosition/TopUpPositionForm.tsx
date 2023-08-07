@@ -1,6 +1,5 @@
 import React, {
   FC,
-  useMemo
 } from "react";
 import BigNumber from "bignumber.js";
 import { Controller } from "react-hook-form";
@@ -9,8 +8,6 @@ import {
   CircularProgress,
   Grid,
   Typography,
-  useMediaQuery,
-  useTheme
 } from "@mui/material";
 import {
   ApproveBox,
@@ -87,14 +84,9 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
     switchPosition,
     safetyBuffer,
     maxBorrowAmount,
+    availableFathomInPool,
+    isMobile,
   } = useTopUpPositionContext();
-
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-
-  const availableFathomInPool = useMemo(() => {
-    return pool.availableFathomInPool;
-  }, [pool]);
 
   return (
     <TopUpPositionFormWrapper item>

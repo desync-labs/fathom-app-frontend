@@ -2,6 +2,7 @@ import { InjectedConnector } from "@web3-react/injected-connector";
 import { WalletConnectConnector } from "connectors/wallet-connect-connector/wallet-connect-connector";
 import Xdc3 from "xdc3";
 import { XdcInjectedConnector } from "connectors/xdc-connector/xdc-connector";
+import { EthereumProviderOptions } from "@walletconnect/ethereum-provider/dist/types/EthereumProvider";
 export const APOTHEM_RPC = "https://erpc.apothem.network/";
 export const XDC_RPC = "https://erpc.xinfin.network/";
 
@@ -69,7 +70,6 @@ export const injected = new InjectedConnector({ supportedChainIds });
 export const xdcInjected = new XdcInjectedConnector({ supportedChainIds });
 
 export const WalletConnect = new WalletConnectConnector({
-  // @ts-ignore
   chains: supportedChainIds,
   rpcMap: rpc,
   showQrModal: true,
@@ -82,7 +82,7 @@ export const WalletConnect = new WalletConnectConnector({
     'personal_sign',
     'eth_signTypedData',
   ],
-});
+} as EthereumProviderOptions);
 
 export {
   XDC_CHAIN_IDS,
