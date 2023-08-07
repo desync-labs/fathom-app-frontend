@@ -74,7 +74,7 @@ const EmptyButtonWrapper = styled(Box)`
 `;
 
 const Web3Status = () => {
-  const { error, account, chainId, library, isMetamask } = useConnector();
+  const { error, account, chainId, isMetamask } = useConnector();
   const anchorRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState<boolean>(false);
 
