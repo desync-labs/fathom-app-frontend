@@ -14,4 +14,5 @@ export default interface ICollateralPool {
   totalBorrowed: number;
   tvl: number;
   tokenAdapterAddress: string;
+  availableFathomInPool: number;
 }

@@ -14,6 +14,10 @@ import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
 import { DANGER_SAFETY_BUFFER } from "helpers/Constants";
+import {
+  useMediaQuery,
+  useTheme
+} from "@mui/material";
 
 const defaultValues = {
   collateral: "",
@@ -61,6 +65,13 @@ const useTopUpPosition = (
 
   const [approveBtn, setApproveBtn] = useState<boolean>(false);
   const [approvalPending, setApprovalPending] = useState<boolean>(false);
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const availableFathomInPool = useMemo(() => {
+    return pool.availableFathomInPool;
+  }, [pool]);
 
   const totalCollateral = useMemo(() => {
     return (
@@ -224,7 +235,7 @@ const useTopUpPosition = (
 
           const safetyBuffer = BigNumber(collateralAvailableToWithdraw)
             .dividedBy(totalCollateralAmount)
-            .precision(10, BigNumber.ROUND_FLOOR)
+            .decimalPlaces(4, BigNumber.ROUND_UP)
             .toString();
 
           setSafetyBuffer(safetyBuffer);
@@ -405,7 +416,9 @@ const useTopUpPosition = (
     totalCollateral,
     totalFathomToken,
     overCollateral,
-    maxBorrowAmount
+    maxBorrowAmount,
+    availableFathomInPool,
+    isMobile,
   };
 };
 
