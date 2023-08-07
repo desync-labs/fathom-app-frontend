@@ -10,7 +10,7 @@ import {
   XDC_CHAIN_IDS,
   NETWORK_LABELS,
   ChainId,
-  XDC_NETWORK_SETTINGS
+  XDC_NETWORK_SETTINGS,
 } from "connectors/networks";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import ButtonGroup from "@mui/material/ButtonGroup";
@@ -111,7 +111,7 @@ const Web3Status = () => {
         }
       }
     },
-    [setOpen, library]
+    [setOpen]
   );
 
   const showNetworkSelector =

@@ -13,7 +13,6 @@ import WalletConnectProvider from "@walletconnect/ethereum-provider";
 import { ConnectorEvent } from "@web3-react/types";
 import { useStores } from "stores";
 import {
-  DEFAULT_CHAIN_ID,
   injected,
   supportedChainIds,
   WalletConnect,
