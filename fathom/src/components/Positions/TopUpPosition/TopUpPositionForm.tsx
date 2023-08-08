@@ -1,15 +1,13 @@
 import React, {
   FC,
-  useMemo
 } from "react";
+import BigNumber from "bignumber.js";
 import { Controller } from "react-hook-form";
 import {
   Box,
   CircularProgress,
   Grid,
   Typography,
-  useMediaQuery,
-  useTheme
 } from "@mui/material";
 import {
   ApproveBox,
@@ -40,11 +38,12 @@ import {
 import useTopUpPositionContext from "context/topUpPosition";
 import { styled } from "@mui/material/styles";
 import { ClosePositionDialogPropsType } from "components/Positions/RepayPositionDialog";
-import BigNumber from "bignumber.js";
+
 import {
   FXD_MINIMUM_BORROW_AMOUNT,
   DANGER_SAFETY_BUFFER,
 } from "helpers/Constants";
+import { formatPercentage } from "utils/format";
 
 const TopUpPositionFormWrapper = styled(Grid)`
   padding-left: 20px;
@@ -85,14 +84,9 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
     switchPosition,
     safetyBuffer,
     maxBorrowAmount,
+    availableFathomInPool,
+    isMobile,
   } = useTopUpPositionContext();
-
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-
-  const availableFathomInPool = useMemo(() => {
-    return pool.availableFathomInPool;
-  }, [pool]);
 
   return (
     <TopUpPositionFormWrapper item>
@@ -130,7 +124,7 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
               <AppFormLabel>Collateral</AppFormLabel>
               {balance ? (
                 <WalletBalance>
-                  Wallet Available: {BigNumber(balance).dividedBy(10 ** 18).toNumber()} {pool.poolName}
+                  Wallet Available: {formatPercentage(BigNumber(balance).dividedBy(10 ** 18).toNumber())} {pool.poolName}
                 </WalletBalance>
               ) : null}
               <AppTextField
