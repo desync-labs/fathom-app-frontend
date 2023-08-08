@@ -19,7 +19,7 @@ export class WalletConnectConnector extends AbstractConnector {
   private readonly config: EthereumProviderOptions
 
   constructor(config: EthereumProviderOptions) {
-    super()
+    super({ supportedChainIds: config.chains })
     this.config = config
 
     this.handleChainChanged = this.handleChainChanged.bind(this)
