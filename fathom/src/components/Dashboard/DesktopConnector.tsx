@@ -1,5 +1,8 @@
 import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
-import React, { FC, useCallback } from "react";
+import React, {
+  FC,
+  useCallback
+} from "react";
 import { DialogContent } from "@mui/material";
 import MetamaskSrc from "assets/svg/metamask.svg";
 import WalletConnect from "assets/svg/wallet-connect.svg";
@@ -43,9 +46,8 @@ const DesktopConnector: FC<DesktopConnectorPropsType> = ({ onClose }) => {
     useConnector();
 
   const walletConnectConnect = useCallback(() => {
-    connectWalletConnect().then(() => {
-      onClose();
-    });
+    connectWalletConnect();
+    onClose();
   }, [onClose, connectWalletConnect]);
 
   const metamaskConnect = useCallback(() => {

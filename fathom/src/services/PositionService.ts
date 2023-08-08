@@ -93,6 +93,7 @@ export default class PositionService implements IPositionService {
           gas: 0,
           value: toWei(collateral.toString(), "ether")
         };
+
         const gas = await getEstimateGas(
           wallet,
           "execute",
@@ -138,6 +139,7 @@ export default class PositionService implements IPositionService {
             resolve(receipt.blockNumber);
           })
           .catch((error: any) => {
+            console.log(error);
             this.alertStore.setShowErrorAlert(true, error.message);
             reject(error);
           });
