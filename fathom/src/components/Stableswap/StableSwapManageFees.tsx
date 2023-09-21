@@ -60,7 +60,7 @@ const StableSwapManageFees = () => {
                 <InfoLabel>Fees xUSDT Rewards</InfoLabel>
                 <InfoValue>{
                   formatPercentage(
-                    BigNumber(feesRewardsForUSDTx).dividedBy(10 ** 18).toNumber()
+                    BigNumber(feesRewardsForUSDTx).dividedBy(10 ** 6).toNumber()
                   )} xUSDT</InfoValue>
               </StableSwapInfoWrapper>
             </StableSwapInfoContainer>
@@ -81,10 +81,10 @@ const StableSwapManageFees = () => {
                   )} FXD</InfoValue>
               </StableSwapInfoWrapper>
               <StableSwapInfoWrapper>
-                <InfoLabel>Claimed USDT Fee Reward</InfoLabel>
+                <InfoLabel>Claimed xUSDT Fee Reward</InfoLabel>
                 <InfoValue>{
                   formatPercentage(
-                    BigNumber(claimedUSDTFeeReward).dividedBy(10 ** 18).toNumber()
+                    BigNumber(claimedUSDTFeeReward).dividedBy(10 ** 6).toNumber()
                   )} xUSDT</InfoValue>
               </StableSwapInfoWrapper>
             </StableSwapInfoContainer>
