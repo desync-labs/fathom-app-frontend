@@ -32,6 +32,8 @@ import DashboardContent from "components/Dashboard/Dashboard";
 
 import StableSwap from "components/Stableswap/StableSwap";
 import StableSwapAddLiquidity from "components/Stableswap/StableSwapAddLiquidity";
+import StableSwapRemoveLiquidity from "components/Stableswap/StableSwapRemoveLiquidity";
+import StableSwapManageFees from "components/Stableswap/StableSwapManageFees";
 
 import Web3Status from "components/Web3Status/Web3Status";
 import AllProposalsView from "components/Governance/ViewAllProposals";
@@ -49,6 +51,7 @@ import BottomLinks from "components/Dashboard/BottomLinks";
 import MobileMenu from "components/Dashboard/MobileMenu";
 import { drawerWidth } from "components/AppComponents/AppBar/AppBar";
 
+
 import useMainLayout from "hooks/useMainLayout";
 import { StakingProvider } from "context/staking";
 import { ProposalProvider } from "context/proposal";
@@ -63,8 +66,6 @@ import MobileMenuIcon from "assets/svg/mobile-menu.svg";
 import MobileMenuIconActive from "assets/svg/mobile-menu-active.svg";
 
 import { getTokenLogoURL } from "utils/tokenLogo";
-import StableSwapRemoveLiquidity from "../Stableswap/StableSwapRemoveLiquidity";
-import StableSwapManageFees from "../Stableswap/StableSwapManageFees";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open"
