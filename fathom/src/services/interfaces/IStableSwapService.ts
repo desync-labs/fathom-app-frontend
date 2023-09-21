@@ -1,7 +1,4 @@
 import Xdc3 from "xdc3";
-import { TransactionReceipt } from "web3-eth";
-import { Web3Utils } from "../../helpers/Web3Utils";
-import { SmartContractFactory } from "../../config/SmartContractFactory";
 
 export default interface IStableSwapService {
   swapTokenToStableCoin(
