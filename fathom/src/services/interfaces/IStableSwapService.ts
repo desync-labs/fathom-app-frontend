@@ -1,5 +1,7 @@
 import Xdc3 from "xdc3";
 import { TransactionReceipt } from "web3-eth";
+import { Web3Utils } from "../../helpers/Web3Utils";
+import { SmartContractFactory } from "../../config/SmartContractFactory";
 
 export default interface IStableSwapService {
   swapTokenToStableCoin(
@@ -37,6 +39,14 @@ export default interface IStableSwapService {
     library: Xdc3,
     isStableSwapWrapper?: boolean,
   ): Promise<number>;
+  claimFeesRewards(
+    account: string,
+    library: Xdc3
+  ): Promise<number>;
+  withdrawClaimedFees(
+    account: string,
+    library: Xdc3
+  ): Promise<number>;
   approvalStatusStableCoin(
     address: string,
     tokenIn: number,
@@ -61,6 +71,10 @@ export default interface IStableSwapService {
   getTotalValueLocked(library: Xdc3): Promise<number>;
   getActualLiquidityAvailablePerUser(account: string, library: Xdc3): Promise<number>;
   getDepositTracker(account: string, library: Xdc3): Promise<number>;
+  getClaimableFeesPerUser(account: string, library: Xdc3): Promise<any>;
+
+  getClaimedFXDFeeRewards(account: string, library: Xdc3): Promise<number>;
+  getClaimedTokenFeeRewards(account: string, library: Xdc3): Promise<number>;
 
   isDecentralizedState(library: Xdc3) : Promise<boolean>;
   isUserWhitelisted(address: string, library: Xdc3) : Promise<boolean>

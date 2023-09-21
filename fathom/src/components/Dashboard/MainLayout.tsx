@@ -64,6 +64,7 @@ import MobileMenuIconActive from "assets/svg/mobile-menu-active.svg";
 
 import { getTokenLogoURL } from "utils/tokenLogo";
 import StableSwapRemoveLiquidity from "../Stableswap/StableSwapRemoveLiquidity";
+import StableSwapManageFees from "../Stableswap/StableSwapManageFees";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open"
@@ -332,6 +333,7 @@ const MainLayout = () => {
             {isUserWrapperWhiteListed ? <>
               <Route path="/swap/add-liquidity" element={<StableSwapAddLiquidity />} />
               <Route path="/swap/remove-liquidity" element={<StableSwapRemoveLiquidity />} />
+              <Route path="/swap/manage-fees" element={<StableSwapManageFees />} />
             </> : null}
             <Route
               path="/proposal/:_proposalId"
