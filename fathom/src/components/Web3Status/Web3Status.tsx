@@ -74,7 +74,7 @@ const EmptyButtonWrapper = styled(Box)`
 `;
 
 const Web3Status = () => {
-  const { error, account, chainId, isMetamask } = useConnector();
+  const { error, account, chainId } = useConnector();
   const anchorRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState<boolean>(false);
 
@@ -115,7 +115,7 @@ const Web3Status = () => {
   );
 
   const showNetworkSelector =
-    (chainId || error instanceof UnsupportedChainIdError) && options.length && isMetamask;
+    (chainId || error instanceof UnsupportedChainIdError) && options.length;
 
   const isError = error || (chainId && !XDC_CHAIN_IDS.includes(chainId))
 
@@ -149,7 +149,7 @@ const Web3Status = () => {
     );
   }
 
-  return (chainId || error instanceof UnsupportedChainIdError || !XDC_CHAIN_IDS.includes(chainId)) && options.length && isMetamask ? (
+  return (chainId || error instanceof UnsupportedChainIdError || !XDC_CHAIN_IDS.includes(chainId)) && options.length ? (
     <>
       <ButtonGroup
         variant="contained"
