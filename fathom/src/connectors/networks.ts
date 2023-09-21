@@ -1,6 +1,6 @@
+import Xdc3 from "xdc3";
 import { InjectedConnector } from "@web3-react/injected-connector";
 import { WalletConnectConnector } from "connectors/wallet-connect-connector/wallet-connect-connector";
-import Xdc3 from "xdc3";
 import { XdcInjectedConnector } from "connectors/xdc-connector/xdc-connector";
 import { EthereumProviderOptions } from "@walletconnect/ethereum-provider/dist/types/EthereumProvider";
 export const APOTHEM_RPC = "https://erpc.apothem.network/";
