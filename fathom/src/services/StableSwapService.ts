@@ -295,7 +295,7 @@ export default class StableSwapService implements IStableSwapService {
     });
   }
 
-  approveStableCoin(account: string, library: Xdc3, isStableSwapWrapper: boolean = false): Promise<number> {
+  approveStableCoin(account: string, library: Xdc3, isStableSwapWrapper = false): Promise<number> {
     return new Promise(async (resolve, reject) => {
       try {
         const FathomStableCoin = Web3Utils.getContractInstance(
@@ -368,7 +368,7 @@ export default class StableSwapService implements IStableSwapService {
     account: string,
     tokenName: string,
     library: Xdc3,
-    isStableSwapWrapper: boolean = false
+    isStableSwapWrapper = false
   ): Promise<number> {
     return new Promise(async (resolve, reject) => {
       try {
@@ -483,6 +483,100 @@ export default class StableSwapService implements IStableSwapService {
     } catch (e: any) {
       this.alertStore.setShowErrorAlert(true, e.message);
     }
+  }
+
+  claimFeesRewards(account: string, library: Xdc3): Promise<number> {
+   return new Promise( async (resolve, reject) => {
+     const MESSAGE = "Claim rewards was successful!";
+
+     try {
+       const StableSwapModuleWrapper = Web3Utils.getContractInstance(
+         SmartContractFactory.StableSwapModuleWrapper(this.chainId),
+         library
+       );
+       const options = { from: account, gas: 0 };
+
+       const gas = await getEstimateGas(
+         StableSwapModuleWrapper,
+         "claimFeesRewards",
+         [],
+         options
+       );
+       options.gas = gas;
+
+       return StableSwapModuleWrapper.methods
+         .claimFeesRewards()
+         .send(options)
+         .on("transactionHash", (hash: any) => {
+           this.transactionStore.addTransaction({
+             hash: hash,
+             type: TransactionType.StableSwap,
+             active: false,
+             status: TransactionStatus.None,
+             title: "Claim Fees Rewards",
+             message: Strings.CheckOnBlockExplorer
+           });
+         })
+         .then((receipt: TransactionReceipt) => {
+           this.alertStore.setShowSuccessAlert(true, MESSAGE);
+           resolve(receipt.blockNumber);
+         })
+         .catch((e: any) => {
+           this.alertStore.setShowErrorAlert(true, e.message);
+           reject(e);
+         });
+     } catch (e: any) {
+       this.alertStore.setShowErrorAlert(true, e.message);
+       reject(e);
+     }
+   })
+  }
+
+  withdrawClaimedFees(account: string, library: Xdc3): Promise<number> {
+    return new Promise( async (resolve, reject) => {
+      const MESSAGE = "Withdraw claimed fees was successful!";
+
+      try {
+        const StableSwapModuleWrapper = Web3Utils.getContractInstance(
+          SmartContractFactory.StableSwapModuleWrapper(this.chainId),
+          library
+        );
+        const options = { from: account, gas: 0 };
+
+        const gas = await getEstimateGas(
+          StableSwapModuleWrapper,
+          "withdrawClaimedFees",
+          [],
+          options
+        );
+        options.gas = gas;
+
+        return StableSwapModuleWrapper.methods
+          .withdrawClaimedFees()
+          .send(options)
+          .on("transactionHash", (hash: any) => {
+            this.transactionStore.addTransaction({
+              hash: hash,
+              type: TransactionType.StableSwap,
+              active: false,
+              status: TransactionStatus.None,
+              title: "Withdraw Claimed Fees",
+              message: Strings.CheckOnBlockExplorer
+            });
+          })
+          .then((receipt: TransactionReceipt) => {
+            this.alertStore.setShowSuccessAlert(true, MESSAGE);
+            resolve(receipt.blockNumber);
+          })
+          .catch((e: any) => {
+            this.alertStore.setShowErrorAlert(true, e.message);
+            reject(e);
+          });
+      } catch (e: any) {
+        this.alertStore.setShowErrorAlert(true, e.message);
+        reject(e);
+      }
+    })
   }
 
   getFeeIn(library: Xdc3) {
@@ -630,6 +724,42 @@ export default class StableSwapService implements IStableSwapService {
         library
       );
       return StableSwapModuleWrapper.methods.getActualLiquidityAvailablePerUser(account).call();
+    } catch (e: any) {
+      this.alertStore.setShowErrorAlert(true, e.message);
+    }
+  }
+
+  getClaimableFeesPerUser(account: string, library: Xdc3) {
+    try {
+      const StableSwapModuleWrapper = Web3Utils.getContractInstance(
+        SmartContractFactory.StableSwapModuleWrapper(this.chainId),
+        library
+      );
+      return StableSwapModuleWrapper.methods.getClaimableFeesPerUser(account).call();
+    } catch (e: any) {
+      this.alertStore.setShowErrorAlert(true, e.message);
+    }
+  }
+
+  getClaimedFXDFeeRewards(account: string, library: Xdc3) {
+    try {
+      const StableSwapModuleWrapper = Web3Utils.getContractInstance(
+        SmartContractFactory.StableSwapModuleWrapper(this.chainId),
+        library
+      );
+      return StableSwapModuleWrapper.methods.claimedFXDFeeRewards(account).call();
+    } catch (e: any) {
+      this.alertStore.setShowErrorAlert(true, e.message);
+    }
+  }
+
+  getClaimedTokenFeeRewards(account: string, library: Xdc3) {
+    try {
+      const StableSwapModuleWrapper = Web3Utils.getContractInstance(
+        SmartContractFactory.StableSwapModuleWrapper(this.chainId),
+        library
+      );
+      return StableSwapModuleWrapper.methods.claimedTokenFeeRewards(account).call();
     } catch (e: any) {
       this.alertStore.setShowErrorAlert(true, e.message);
     }

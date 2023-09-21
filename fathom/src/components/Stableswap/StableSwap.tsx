@@ -178,6 +178,7 @@ const StableSwap = () => {
             {isUserWrapperWhiteListed && <AddRemoveLiquidity>
               <ButtonSecondary onClick={() => navigate("/swap/add-liquidity")}>Add Liquidity</ButtonSecondary>
               <ButtonSecondary onClick={() => navigate("/swap/remove-liquidity")}>Remove Liquidity</ButtonSecondary>
+              <ButtonSecondary onClick={() => navigate("/swap/manage-fees")}>Manage Fees</ButtonSecondary>
             </AddRemoveLiquidity>}
 
             <StableSwapInfoContainer>
