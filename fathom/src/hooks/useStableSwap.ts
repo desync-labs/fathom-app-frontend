@@ -107,7 +107,7 @@ const useStableSwap = (options: string[]) => {
 
   const approvalStatus = useMemo(
     () =>
-      debounce(async (input: number, currency: string, type: string) => {
+      debounce(async (input: string, currency: string, type: string) => {
         if (account) {
           let approved;
 
@@ -279,7 +279,7 @@ const useStableSwap = (options: string[]) => {
   );
 
   const changeCurrenciesPosition = useCallback(
-    (inputValue: number, outputValue: number) => {
+    (inputValue: string, outputValue: string) => {
       setInputCurrency(outputCurrency);
       setOutputCurrency(inputCurrency);
       if (outputValue) {
@@ -546,11 +546,7 @@ const useStableSwap = (options: string[]) => {
     setInputValue(formattedBalance);
     setOppositeCurrency(formattedBalanceWithFee, inputCurrency, "input");
     if (formattedBalance) {
-<<<<<<< Updated upstream
-      approvalStatus(formattedBalance as number, inputCurrency, "input");
-=======
       approvalStatus(formattedBalance, inputCurrency, "input");
->>>>>>> Stashed changes
     }
   }, [
     fxdAvailable,

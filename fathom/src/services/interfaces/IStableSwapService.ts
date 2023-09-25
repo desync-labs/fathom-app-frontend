@@ -46,14 +46,14 @@ export default interface IStableSwapService {
   ): Promise<number>;
   approvalStatusStableCoin(
     address: string,
-    tokenIn: number,
+    tokenIn: string,
     inputDecimal: number,
     library: Xdc3,
     isStableSwapWrapper?: boolean,
   ): Promise<boolean | undefined>;
   approvalStatusUsdt(
     address: string,
-    tokenIn: number,
+    tokenIn: string,
     inputDecimal: number,
     library: Xdc3,
     isStableSwapWrapper?: boolean,

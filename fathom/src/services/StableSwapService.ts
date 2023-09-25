@@ -427,7 +427,7 @@ export default class StableSwapService implements IStableSwapService {
 
   async approvalStatusStableCoin(
     account: string,
-    tokenIn: number,
+    tokenIn: string,
     tokenInDecimal: number,
     library: Xdc3,
     isStableSwapWrapper: boolean = false
@@ -457,7 +457,7 @@ export default class StableSwapService implements IStableSwapService {
 
   async approvalStatusUsdt(
     account: string,
-    tokenIn: number,
+    tokenIn: string,
     tokenInDecimal: number,
     library: Xdc3,
     isStableSwapWrapper: boolean = false
