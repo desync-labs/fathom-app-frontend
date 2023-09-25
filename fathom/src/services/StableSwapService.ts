@@ -178,7 +178,7 @@ export default class StableSwapService implements IStableSwapService {
           SmartContractFactory.StableSwapModuleWrapper(this.chainId),
           library
         );
-        const MESSAGE = "Add Liquidity to Stable Swap";
+        const MESSAGE = "Added Liquidity to Stable Swap";
 
         const options = { from: account, gas: 0 };
 
@@ -240,7 +240,7 @@ export default class StableSwapService implements IStableSwapService {
           SmartContractFactory.StableSwapModuleWrapper(this.chainId),
           library
         );
-        const MESSAGE = "Remove Liquidity from Stable Swap";
+        const MESSAGE = "Removed Liquidity from Stable Swap";
 
         const options = { from: account, gas: 0 };
 
@@ -610,7 +610,7 @@ export default class StableSwapService implements IStableSwapService {
         SmartContractFactory.StableSwapModule(this.chainId),
         library
       );
-      return StableSwapModule.methods.lastUpdate().call();
+      return StableSwapModule.methods.lastUpdate().call()
     } catch (e: any) {
       this.alertStore.setShowErrorAlert(true, e.message);
     }
