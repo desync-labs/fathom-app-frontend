@@ -36,8 +36,8 @@ const useStableSwap = (options: string[]) => {
   const [inputDecimals, setInputDecimals] = useState<number>(18);
   const [outputDecimals, setOutputDecimals] = useState<number>(18);
 
-  const [inputValue, setInputValue] = useState<number|string>("");
-  const [outputValue, setOutputValue] = useState<number|string>("");
+  const [inputValue, setInputValue] = useState<string>("");
+  const [outputValue, setOutputValue] = useState<string>("");
 
   const [approveInputBtn, setApproveInputBtn] = useState<boolean>(false);
   const [approveOutputBtn, setApproveOutputBtn] = useState<boolean>(false);
@@ -49,8 +49,8 @@ const useStableSwap = (options: string[]) => {
   const [dailyLimit, setDailyLimit] = useState<number>(0);
   const [displayDailyLimit, setDisplayDailyLimit] = useState<number>(0);
 
-  const [feeIn, setFeeIn] = useState<number>(0);
-  const [feeOut, setFeeOut] = useState<number>(0);
+  const [feeIn, setFeeIn] = useState<string>("0");
+  const [feeOut, setFeeOut] = useState<string>("0");
 
   const [depositTracker, setDepositTracker] = useState<number>(0);
   const [totalLocked, setTotalLocked] = useState<number>(0);
@@ -75,25 +75,28 @@ const useStableSwap = (options: string[]) => {
   const fxdPrice = useMemo(() => {
     return BigNumber(fxdPriceInWei)
       .dividedBy(10 ** 18)
-      .toNumber();
+      .toString();
   }, [fxdPriceInWei]);
 
   const setOppositeCurrency = useCallback(
-    (amount: number, currency: string, type: string) => {
+    (amount: string, currency: string, type: string) => {
       let oppositeValue;
       if (currency === options[0]) {
-        console.log("xUSDT -> FXD", 1 - feeIn / 10 ** 18);
+        console.log("xUSDT -> FXD", BigNumber(1).minus(BigNumber(feeIn).dividedBy(10 ** 18)).toString());
         oppositeValue = BigNumber(amount).multipliedBy(
           BigNumber(1).minus(
             BigNumber(feeIn).dividedBy(10 ** 18)
           )
-        ).toNumber();
+        );
       } else {
-        console.log("FXD -> xUSDT", feeOut / 10 ** 18 + 1);
+        console.log("FXD -> xUSDT", BigNumber(feeOut).dividedBy(10 ** 18).plus(1).toString());
         oppositeValue = BigNumber(amount).dividedBy(
           BigNumber(feeOut).dividedBy(10 ** 18).plus(1)
-        ).toNumber();
+        );
       }
+
+
+      oppositeValue = oppositeValue.isGreaterThan(0.0001) ? oppositeValue.decimalPlaces(18).toString() : "0";
 
       type === "input"
         ? setOutputValue(oppositeValue)
@@ -144,13 +147,13 @@ const useStableSwap = (options: string[]) => {
   );
 
   const inputError = useMemo(() => {
-    const formattedBalance = BigNumber(inputBalance).dividedBy(10 ** inputDecimals).toNumber();
+    const formattedBalance = BigNumber(inputBalance).dividedBy(10 ** inputDecimals);
 
-    if ((inputValue as number) > formattedBalance) {
+    if (BigNumber(inputValue).isGreaterThan(formattedBalance)) {
       return `You do not have enough ${inputCurrency}`;
     }
 
-    if (isDecentralizedState && displayDailyLimit < inputValue) {
+    if (isDecentralizedState && BigNumber(inputValue).isGreaterThan(displayDailyLimit)) {
       return `You can't swap more then remaining daily limit ${formatNumber(
         displayDailyLimit
       )} FXD`;
@@ -256,9 +259,7 @@ const useStableSwap = (options: string[]) => {
 
             setInputBalance(inputBalance!);
             setOutputBalance(outputBalance!);
-          } catch (e) {
-
-          }
+          } catch (e) {}
         }
       }, 100),
     [
@@ -325,8 +326,8 @@ const useStableSwap = (options: string[]) => {
         stableSwapService.getFeeIn(library),
         stableSwapService.getFeeOut(library)
       ]).then(([feeIn, feeOut]) => {
-        setFeeIn(feeIn!);
-        setFeeOut(feeOut!);
+        setFeeIn(feeIn);
+        setFeeOut(feeOut);
       });
     }
   }, [stableSwapService, chainId, library, setFeeIn, setFeeOut]);
@@ -384,7 +385,7 @@ const useStableSwap = (options: string[]) => {
       if (inputCurrency === tokenName) {
         blockNumber = await stableSwapService.swapTokenToStableCoin(
           account,
-          inputValue as number,
+          inputValue,
           inputDecimals,
           tokenName,
           library
@@ -392,7 +393,7 @@ const useStableSwap = (options: string[]) => {
       } else {
         blockNumber = await stableSwapService.swapStableCoinToToken(
           account,
-          outputValue as number,
+          outputValue,
           outputDecimals,
           tokenName,
           library
@@ -501,7 +502,7 @@ const useStableSwap = (options: string[]) => {
   const setInputCurrencyHandler = useCallback(
     (currency: string) => {
       setInputCurrency(currency);
-      setOppositeCurrency(inputValue as number, currency, "input");
+      setOppositeCurrency(inputValue, currency, "input");
     },
     [inputValue, setInputCurrency, setOppositeCurrency]
   );
@@ -509,7 +510,7 @@ const useStableSwap = (options: string[]) => {
   const setOutputCurrencyHandler = useCallback(
     (currency: string) => {
       setOutputCurrency(currency);
-      setOppositeCurrency(outputValue as number, currency, "output");
+      setOppositeCurrency(outputValue, currency, "output");
     },
     [outputValue, setOutputCurrency, setOppositeCurrency]
   );
@@ -519,26 +520,41 @@ const useStableSwap = (options: string[]) => {
      * FXD to xUSDT
      */
     let formattedBalance;
+    let formattedBalanceWithFee;
     if (inputCurrency === options[1]) {
       formattedBalance =
         BigNumber(inputBalance)
-          .dividedBy(10 ** inputDecimals)
-          .multipliedBy(
-            BigNumber(1).minus(Xdc3.utils.fromWei(feeOut.toString()))
-          )
-          .toNumber();
+          .dividedBy(10 ** inputDecimals);
+
+      formattedBalance = formattedBalance.isGreaterThan(usStableAvailable) ? usStableAvailable.toString() : formattedBalance.decimalPlaces(18).toString();
+      formattedBalanceWithFee = BigNumber(formattedBalance).multipliedBy(BigNumber(1).plus(Xdc3.utils.fromWei(feeOut))).toString();
     } else {
+      /**
+       * xUSDT to FXD
+       */
       formattedBalance =
-        BigNumber(inputBalance).dividedBy(10 ** inputDecimals).toFixed() ||
-        0;
+        BigNumber(inputBalance).dividedBy(10 ** inputDecimals);
+      formattedBalance = formattedBalance.isGreaterThan(fxdAvailable) ? fxdAvailable.toString() : formattedBalance.decimalPlaces(18).toString();
+      formattedBalanceWithFee = formattedBalance;
+    }
+
+    if (BigNumber(formattedBalance).isLessThan(0.001)) {
+      formattedBalance = "0";
+      formattedBalanceWithFee = "0";
     }
 
     setInputValue(formattedBalance);
-    setOppositeCurrency(formattedBalance as number, inputCurrency, "input");
+    setOppositeCurrency(formattedBalanceWithFee, inputCurrency, "input");
     if (formattedBalance) {
+<<<<<<< Updated upstream
       approvalStatus(formattedBalance as number, inputCurrency, "input");
+=======
+      approvalStatus(formattedBalance, inputCurrency, "input");
+>>>>>>> Stashed changes
     }
   }, [
+    fxdAvailable,
+    usStableAvailable,
     options,
     inputBalance,
     inputCurrency,

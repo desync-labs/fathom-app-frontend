@@ -241,7 +241,7 @@ const useRepayPosition = (
           position.positionId,
           pool,
           account,
-          BigNumber(collateral).multipliedBy(WeiPerWad).toFixed(),
+          BigNumber(collateral).multipliedBy(WeiPerWad).decimalPlaces(18).toString(),
           library
         );
       } else {
@@ -300,7 +300,7 @@ const useRepayPosition = (
         : setBalanceError(false);
 
       setFathomToken(value);
-      setCollateral(bigIntValue.dividedBy(price).precision(18).toFixed());
+      setCollateral(bigIntValue.dividedBy(price).decimalPlaces(18).toString());
       setFathomTokenIsDirty(true);
     },
     [

@@ -140,6 +140,7 @@ const StableSwap = () => {
 
   const data = useStableSwap(options);
   const {
+    inputCurrency,
     depositTracker,
     totalLocked,
     dailyLimit,
@@ -185,11 +186,10 @@ const StableSwap = () => {
               {allowStableSwap && <StableSwapInfoWrapper>
                 <InfoLabel>Fee</InfoLabel>
                 <InfoValue>
-                  {formatPercentage(swapFee)} FXD{" "}
+                  {formatPercentage(swapFee)} { inputCurrency }{" "}
                   {inputValue && (
                     <>
-                      ({formatPercentage(BigNumber(swapFee).dividedBy(inputValue).multipliedBy(100).toNumber())}
-                      %)
+                      ({formatPercentage(BigNumber(swapFee).dividedBy(inputValue).multipliedBy(100).toNumber())}%)
                     </>
                   )}
                 </InfoValue>

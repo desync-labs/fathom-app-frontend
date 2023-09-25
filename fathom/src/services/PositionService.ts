@@ -810,7 +810,7 @@ export default class PositionService implements IPositionService {
     const debtValue =
       BigNumber(debtAccumulatedRate).multipliedBy(debtShareValue);
 
-    return debtValue.dividedBy(WeiPerRad).toFixed();
+    return debtValue.dividedBy(WeiPerRad).decimalPlaces(18).toString();
   }
 
   async getPositionDebtCeiling(poolId: string, library: Xdc3) {

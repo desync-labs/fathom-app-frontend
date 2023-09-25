@@ -35,7 +35,7 @@ export default class StableSwapService implements IStableSwapService {
 
   swapTokenToStableCoin(
     account: string,
-    tokenIn: number,
+    tokenIn: string,
     tokenInDecimals: number,
     tokenName: string,
     library: Xdc3
@@ -50,7 +50,7 @@ export default class StableSwapService implements IStableSwapService {
 
         const options = { from: account, gas: 0 };
 
-        const formattedTokenAmount = BigNumber(tokenIn).multipliedBy(10 ** tokenInDecimals).toString();
+        const formattedTokenAmount = BigNumber(tokenIn).multipliedBy(10 ** tokenInDecimals).integerValue(BigNumber.ROUND_DOWN);
 
         const gas = await getEstimateGas(
           StableSwapModule,
@@ -104,7 +104,7 @@ export default class StableSwapService implements IStableSwapService {
 
   swapStableCoinToToken(
     account: string,
-    tokenOut: number,
+    tokenOut: string,
     tokenOutDecimals: number,
     tokenName: string,
     library: Xdc3
@@ -119,7 +119,7 @@ export default class StableSwapService implements IStableSwapService {
 
         const options = { from: account, gas: 0 };
 
-        const formattedTokenAmount = toWei(tokenOut.toString(), "ether");
+        const formattedTokenAmount = toWei(tokenOut, "ether");
 
         const gas = await getEstimateGas(
           StableSwapModule,
