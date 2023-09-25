@@ -3,14 +3,14 @@ import Xdc3 from "xdc3";
 export default interface IStableSwapService {
   swapTokenToStableCoin(
     address: string,
-    tokenIn: number,
+    tokenIn: string,
     tokenInDecimals: number,
     tokenName: string,
     library: Xdc3
   ): Promise<number>;
   swapStableCoinToToken(
     address: string,
-    stableCoinIn: number,
+    stableCoinIn: string,
     stableCoinInDecimals: number,
     tokenName: string,
     library: Xdc3
@@ -59,8 +59,8 @@ export default interface IStableSwapService {
     isStableSwapWrapper?: boolean,
   ): Promise<boolean | undefined>;
 
-  getFeeIn(library: Xdc3): Promise<number>;
-  getFeeOut(library: Xdc3): Promise<number>;
+  getFeeIn(library: Xdc3): Promise<string>;
+  getFeeOut(library: Xdc3): Promise<string>;
   getLastUpdate(library: Xdc3): Promise<number>;
   getDailySwapLimit(library: Xdc3): Promise<number>;
   getPoolBalance(tokenAddress: string, library: Xdc3): Promise<number>;
