@@ -45,7 +45,7 @@ const useStableSwap = (options: string[]) => {
   const [approvalPending, setApprovalPending] = useState<string|null>(null);
   const [swapPending, setSwapPending] = useState<boolean>(false);
 
-  const [lastUpdate, setLastUpdate] = useState<number>();
+  const [lastUpdate, setLastUpdate] = useState<string>();
   const [dailyLimit, setDailyLimit] = useState<number>(0);
   const [displayDailyLimit, setDisplayDailyLimit] = useState<number>(0);
 
@@ -307,7 +307,7 @@ const useStableSwap = (options: string[]) => {
   useEffect(() => {
     if (chainId) {
       stableSwapService.getLastUpdate(library).then((lastUpdate) => {
-        setLastUpdate(Number(lastUpdate));
+        setLastUpdate(lastUpdate);
       });
     }
   }, [chainId, stableSwapService, library, setLastUpdate]);
@@ -334,7 +334,7 @@ const useStableSwap = (options: string[]) => {
 
   useEffect(() => {
     if (data?.stableSwapStats.length && lastUpdate && dailyLimit && !loading) {
-      if (lastUpdate! + DAY_IN_SECONDS > Date.now() / 1000) {
+      if ( BigNumber(lastUpdate).plus(DAY_IN_SECONDS).isGreaterThan(BigNumber(Date.now()).dividedBy(1000))) {
         return setDisplayDailyLimit(
           Number(data.stableSwapStats[0].remainingDailySwapAmount) / 10 ** 18
         );
@@ -408,7 +408,7 @@ const useStableSwap = (options: string[]) => {
        */
       refetch();
 
-      setLastUpdate(Date.now() / 1000);
+      setLastUpdate((Date.now() / 1000).toString());
 
       setLastTransactionBlock(blockNumber);
       handleCurrencyChange(inputCurrency, outputCurrency);

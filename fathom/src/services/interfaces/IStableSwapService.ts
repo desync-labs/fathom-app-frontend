@@ -61,7 +61,7 @@ export default interface IStableSwapService {
 
   getFeeIn(library: Xdc3): Promise<string>;
   getFeeOut(library: Xdc3): Promise<string>;
-  getLastUpdate(library: Xdc3): Promise<number>;
+  getLastUpdate(library: Xdc3): Promise<string>;
   getDailySwapLimit(library: Xdc3): Promise<number>;
   getPoolBalance(tokenAddress: string, library: Xdc3): Promise<number>;
   getAmounts(amount: number, account: string, library: Xdc3): Promise<any>;
