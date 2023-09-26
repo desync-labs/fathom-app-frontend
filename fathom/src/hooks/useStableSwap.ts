@@ -75,7 +75,7 @@ const useStableSwap = (options: string[]) => {
   const fxdPrice = useMemo(() => {
     return BigNumber(fxdPriceInWei)
       .dividedBy(10 ** 18)
-      .toString();
+      .toNumber();
   }, [fxdPriceInWei]);
 
   const setOppositeCurrency = useCallback(

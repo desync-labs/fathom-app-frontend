@@ -394,7 +394,7 @@ export default class PositionService implements IPositionService {
     address: string,
     collateral: string,
     library: Xdc3
-  ): Promise<number|undefined> {
+  ): Promise<number | undefined> {
     return new Promise(async (resolve, reject) => {
       try {
         const proxyWalletAddress = await this.proxyWalletExist(
@@ -493,6 +493,8 @@ export default class PositionService implements IPositionService {
     collateral: string,
     library: Xdc3
   ): Promise<number|undefined> {
+    console.log(stableCoin)
+    console.log(collateral);
     return new Promise(async (resolve, reject) => {
       try {
         const proxyWalletAddress = await this.proxyWalletExist(
