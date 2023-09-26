@@ -241,7 +241,7 @@ const useRepayPosition = (
           position.positionId,
           pool,
           account,
-          BigNumber(collateral).multipliedBy(WeiPerWad).decimalPlaces(18).toString(),
+          BigNumber(collateral).multipliedBy(WeiPerWad).toFixed(0),
           library
         );
       } else {
