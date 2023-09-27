@@ -37,7 +37,7 @@ const useStableSwapRemoveLiquidity = () => {
   const [fxdDecimals, setFxdDecimals] = useState<number>(0);
   const [stableDecimals, setStableDecimals] = useState<number>(0);
 
-  const [inputValue, setInputValue] = useState<number|string>("");
+  const [inputValue, setInputValue] = useState<string>("");
 
   const [liquidityPerUserFxd, setLiquidityPerUserFxd] = useState<number>(0);
   const [liquidityPerUserStable, setLiquidityPerUserStable] = useState<number>(0);
@@ -134,7 +134,7 @@ const useStableSwapRemoveLiquidity = () => {
 
   const getRemoveAmounts = useMemo(
     () =>
-      debounce(async (amount: number) => {
+      debounce(async (amount: string) => {
         stableSwapService.getAmounts(amount, account, library).then((response) => {
           const fxdAmount = response[0];
           const stableAmount = response[1];
@@ -153,7 +153,7 @@ const useStableSwapRemoveLiquidity = () => {
   }, [setInputValue, getRemoveAmounts]);
 
   const setMax = useCallback(() => {
-    const amount = BigNumber(depositTracker).dividedBy(10 ** 18).toNumber();
+    const amount = BigNumber(depositTracker).dividedBy(10 ** 18).toString();
     setInputValue(amount);
     getRemoveAmounts(amount);
   }, [depositTracker, setInputValue, getRemoveAmounts]);
