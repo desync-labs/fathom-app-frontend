@@ -189,7 +189,7 @@ const useRepayPosition = (
       const fathomValue = BigNumber(balance).isGreaterThan(debtValue) ? debtValue : balance;
       setFathomToken(fathomValue);
 
-      let collateral = BigNumber(fathomValue).dividedBy(price).decimalPlaces(12, BigNumber.ROUND_UP);
+      let collateral = BigNumber(fathomValue).dividedBy(price);
 
       if (collateral.isGreaterThan(lockedCollateral)) {
         collateral = BigNumber(lockedCollateral);
