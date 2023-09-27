@@ -64,7 +64,7 @@ export default interface IStableSwapService {
   getLastUpdate(library: Xdc3): Promise<string>;
   getDailySwapLimit(library: Xdc3): Promise<number>;
   getPoolBalance(tokenAddress: string, library: Xdc3): Promise<number>;
-  getAmounts(amount: number, account: string, library: Xdc3): Promise<any>;
+  getAmounts(amount: string, account: string, library: Xdc3): Promise<any>;
   getTotalValueLocked(library: Xdc3): Promise<number>;
   getActualLiquidityAvailablePerUser(account: string, library: Xdc3): Promise<number>;
   getDepositTracker(account: string, library: Xdc3): Promise<number>;

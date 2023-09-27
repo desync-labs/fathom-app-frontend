@@ -678,7 +678,7 @@ export default class StableSwapService implements IStableSwapService {
     }
   }
 
-  getAmounts(amount: number, account: string, library: Xdc3) {
+  getAmounts(amount: string, account: string, library: Xdc3) {
     try {
       const StableSwapModuleWrapper = Web3Utils.getContractInstance(
         SmartContractFactory.StableSwapModuleWrapper(this.chainId),
