@@ -30,7 +30,7 @@ const useStableSwapAddLiquidity = () => {
   const [fxdDecimals, setFxdDecimals] = useState<number>(0);
   const [stableDecimals, setStableDecimals] = useState<number>(0);
 
-  const [inputValue, setInputValue] = useState<number|string>("");
+  const [inputValue, setInputValue] = useState<string>("");
 
   const [approveInputBtn, setApproveInputBtn] = useState<boolean>(false);
 
@@ -111,7 +111,7 @@ const useStableSwapAddLiquidity = () => {
 
   const approvalStatus = useMemo(
     () =>
-      debounce(async (value: number) => {
+      debounce(async (value: string) => {
         let approvedUsdt = await stableSwapService.approvalStatusUsdt(
           account,
           value,
@@ -179,8 +179,8 @@ const useStableSwapAddLiquidity = () => {
       maxBalance = formattedFxdBalance;
     }
 
-    setInputValue(maxBalance.toNumber());
-    approvalStatus(maxBalance.toNumber());
+    setInputValue(maxBalance.toString());
+    approvalStatus(maxBalance.toString());
   }, [stableBalance, stableDecimals, fxdBalance, fxdDecimals, setInputValue, approvalStatus]);
 
   const handleAddLiquidity = useCallback(async () => {
@@ -205,14 +205,14 @@ const useStableSwapAddLiquidity = () => {
   ]);
 
   const inputError = useMemo(() => {
-    const formattedFxdBalance = BigNumber(fxdBalance).dividedBy(10 ** fxdDecimals).toNumber();
-    const formattedUsStableBalance = BigNumber(stableBalance).dividedBy(10 ** stableDecimals).toNumber();
+    const formattedFxdBalance = BigNumber(fxdBalance).dividedBy(10 ** fxdDecimals);
+    const formattedUsStableBalance = BigNumber(stableBalance).dividedBy(10 ** stableDecimals);
 
-    if ((inputValue as number) > formattedFxdBalance) {
+    if (BigNumber(inputValue).isGreaterThan(formattedFxdBalance)) {
       return "You do not have enough FXD for add liquidity";
     }
 
-    if ((inputValue) > formattedUsStableBalance) {
+    if ( BigNumber(inputValue).isGreaterThan(formattedUsStableBalance)) {
       return "You do not have enough xUSDT for add liquidity";
     }
 
