@@ -35,7 +35,7 @@ export default class StableSwapService implements IStableSwapService {
 
   swapTokenToStableCoin(
     account: string,
-    tokenIn: number,
+    tokenIn: string,
     tokenInDecimals: number,
     tokenName: string,
     library: Xdc3
@@ -50,7 +50,7 @@ export default class StableSwapService implements IStableSwapService {
 
         const options = { from: account, gas: 0 };
 
-        const formattedTokenAmount = BigNumber(tokenIn).multipliedBy(10 ** tokenInDecimals).toString();
+        const formattedTokenAmount = BigNumber(tokenIn).multipliedBy(10 ** tokenInDecimals).integerValue(BigNumber.ROUND_DOWN);
 
         const gas = await getEstimateGas(
           StableSwapModule,
@@ -104,7 +104,7 @@ export default class StableSwapService implements IStableSwapService {
 
   swapStableCoinToToken(
     account: string,
-    tokenOut: number,
+    tokenOut: string,
     tokenOutDecimals: number,
     tokenName: string,
     library: Xdc3
@@ -119,7 +119,7 @@ export default class StableSwapService implements IStableSwapService {
 
         const options = { from: account, gas: 0 };
 
-        const formattedTokenAmount = toWei(tokenOut.toString(), "ether");
+        const formattedTokenAmount = toWei(tokenOut, "ether");
 
         const gas = await getEstimateGas(
           StableSwapModule,
@@ -178,7 +178,7 @@ export default class StableSwapService implements IStableSwapService {
           SmartContractFactory.StableSwapModuleWrapper(this.chainId),
           library
         );
-        const MESSAGE = "Add Liquidity to Stable Swap";
+        const MESSAGE = "Added Liquidity to Stable Swap";
 
         const options = { from: account, gas: 0 };
 
@@ -240,7 +240,7 @@ export default class StableSwapService implements IStableSwapService {
           SmartContractFactory.StableSwapModuleWrapper(this.chainId),
           library
         );
-        const MESSAGE = "Remove Liquidity from Stable Swap";
+        const MESSAGE = "Removed Liquidity from Stable Swap";
 
         const options = { from: account, gas: 0 };
 
@@ -427,7 +427,7 @@ export default class StableSwapService implements IStableSwapService {
 
   async approvalStatusStableCoin(
     account: string,
-    tokenIn: number,
+    tokenIn: string,
     tokenInDecimal: number,
     library: Xdc3,
     isStableSwapWrapper: boolean = false
@@ -457,7 +457,7 @@ export default class StableSwapService implements IStableSwapService {
 
   async approvalStatusUsdt(
     account: string,
-    tokenIn: number,
+    tokenIn: string,
     tokenInDecimal: number,
     library: Xdc3,
     isStableSwapWrapper: boolean = false
@@ -610,7 +610,7 @@ export default class StableSwapService implements IStableSwapService {
         SmartContractFactory.StableSwapModule(this.chainId),
         library
       );
-      return StableSwapModule.methods.lastUpdate().call();
+      return StableSwapModule.methods.lastUpdate().call()
     } catch (e: any) {
       this.alertStore.setShowErrorAlert(true, e.message);
     }
@@ -678,7 +678,7 @@ export default class StableSwapService implements IStableSwapService {
     }
   }
 
-  getAmounts(amount: number, account: string, library: Xdc3) {
+  getAmounts(amount: string, account: string, library: Xdc3) {
     try {
       const StableSwapModuleWrapper = Web3Utils.getContractInstance(
         SmartContractFactory.StableSwapModuleWrapper(this.chainId),
