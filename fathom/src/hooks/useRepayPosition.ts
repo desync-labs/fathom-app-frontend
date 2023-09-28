@@ -189,7 +189,7 @@ const useRepayPosition = (
       const fathomValue = BigNumber(balance).isGreaterThan(debtValue) ? debtValue : balance;
       setFathomToken(fathomValue);
 
-      let collateral = BigNumber(fathomValue).dividedBy(price).decimalPlaces(12, BigNumber.ROUND_UP);
+      let collateral = BigNumber(fathomValue).dividedBy(price);
 
       if (collateral.isGreaterThan(lockedCollateral)) {
         collateral = BigNumber(lockedCollateral);
@@ -241,7 +241,7 @@ const useRepayPosition = (
           position.positionId,
           pool,
           account,
-          BigNumber(collateral).multipliedBy(WeiPerWad).toFixed(),
+          BigNumber(collateral).multipliedBy(WeiPerWad).toFixed(0),
           library
         );
       } else {
@@ -300,7 +300,7 @@ const useRepayPosition = (
         : setBalanceError(false);
 
       setFathomToken(value);
-      setCollateral(bigIntValue.dividedBy(price).precision(18).toFixed());
+      setCollateral(bigIntValue.dividedBy(price).decimalPlaces(18).toString());
       setFathomTokenIsDirty(true);
     },
     [

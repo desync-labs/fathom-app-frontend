@@ -208,14 +208,14 @@ const RepayPositionForm: FC<ClosePositionDialogPropsType> = ({
       {fathomToken ? (
         <InfoWrapper>
           <InfoLabel>Repaying</InfoLabel>
-          <InfoValue>{fathomToken} FXD</InfoValue>
+          <InfoValue>{formatPercentage(fathomToken)} FXD</InfoValue>
         </InfoWrapper>
       ) : null}
       {fathomToken ? (
         <InfoWrapper>
           <InfoLabel>Receive</InfoLabel>
           <InfoValue>
-            {collateral} {pool.poolName}
+            {formatPercentage(collateral)} {pool.poolName}
           </InfoValue>
         </InfoWrapper>
       ) : null}
