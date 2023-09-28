@@ -128,9 +128,11 @@ export const SwapButton = styled(ButtonPrimary)`
 
 const AddRemoveLiquidity = styled(Box)`
   border-bottom: 1px solid #253656;
+  border-top: 1px solid #253656;
   display: flex;
   width: 100%;
   padding-bottom: 10px;
+  padding-top: 10px;
   justify-content: right;
   gap: 7px;
 `;
@@ -140,6 +142,7 @@ const StableSwap = () => {
 
   const data = useStableSwap(options);
   const {
+    inputCurrency,
     depositTracker,
     totalLocked,
     dailyLimit,
@@ -153,7 +156,9 @@ const StableSwap = () => {
     isMobile,
     fxdAvailable,
     usStableAvailable,
-    navigate
+    navigate,
+    outputCurrency,
+    fxdPrice
   } = data;
 
   const { allowStableSwap, isUserWrapperWhiteListed } = useConnector();
@@ -175,20 +180,28 @@ const StableSwap = () => {
           <StableSwapPaper>
             {allowStableSwap && <StableSwapForm {...{ ...data, options }} />}
 
+            {allowStableSwap && <SwapButton
+              isLoading={swapPending}
+              disabled={!inputValue || !outputValue || swapPending || isUserWhiteListed === false}
+              onClick={handleSwap}
+            >
+              {swapPending ? <CircularProgress size={30} /> : "Swap"}
+            </SwapButton>}
+
             {isUserWrapperWhiteListed && <AddRemoveLiquidity>
               <ButtonSecondary onClick={() => navigate("/swap/add-liquidity")}>Add Liquidity</ButtonSecondary>
               <ButtonSecondary onClick={() => navigate("/swap/remove-liquidity")}>Remove Liquidity</ButtonSecondary>
+              <ButtonSecondary onClick={() => navigate("/swap/manage-fees")}>Manage Fees</ButtonSecondary>
             </AddRemoveLiquidity>}
 
             <StableSwapInfoContainer>
               {allowStableSwap && <StableSwapInfoWrapper>
                 <InfoLabel>Fee</InfoLabel>
                 <InfoValue>
-                  {formatPercentage(swapFee)} FXD{" "}
+                  {formatPercentage(swapFee)} {inputCurrency}{" "}
                   {inputValue && (
                     <>
-                      ({formatPercentage(BigNumber(swapFee).dividedBy(inputValue).multipliedBy(100).toNumber())}
-                      %)
+                      ({formatPercentage(BigNumber(swapFee).dividedBy(inputValue).multipliedBy(100).toNumber())}%)
                     </>
                   )}
                 </InfoValue>
@@ -207,6 +220,15 @@ const StableSwap = () => {
                 <InfoLabel>xUSDT Pool Token Available</InfoLabel>
                 <InfoValue>{formatNumber(usStableAvailable!)} xUSDT</InfoValue>
               </StableSwapInfoWrapper>
+
+              <StableSwapInfoWrapper>
+                <InfoLabel>Current DEX exchange rate</InfoLabel>
+                <InfoValue>
+                  1 {inputCurrency} ={" "}
+                  {outputCurrency === options[0] ? formatPercentage(fxdPrice) : fxdPrice ? formatPercentage(1 / fxdPrice)  : null}{" "}
+                  {outputCurrency}
+                </InfoValue>
+              </StableSwapInfoWrapper>
             </StableSwapInfoContainer>
 
             {isUserWrapperWhiteListed && <StableSwapInfoContainer>
@@ -217,14 +239,6 @@ const StableSwap = () => {
                 )} %</InfoValue>
               </StableSwapInfoWrapper>
             </StableSwapInfoContainer>}
-
-            {allowStableSwap && <SwapButton
-              isLoading={swapPending}
-              disabled={!inputValue || !outputValue || swapPending || isUserWhiteListed === false}
-              onClick={handleSwap}
-            >
-              {swapPending ? <CircularProgress size={30} /> : "Swap"}
-            </SwapButton>}
           </StableSwapPaper>
         </Grid>
       </Grid>
