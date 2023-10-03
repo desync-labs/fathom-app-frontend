@@ -339,9 +339,9 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
                         sx={{ width: "16px", color: "#F5953D", height: "16px" }}
                       />
                       <Typography>
-                        You have less than {minimumVBalance} vFTHM, and you
-                        can not create a new proposal. So please, stake your
-                        FTHM tokens in <Link to={"/dao/staking"}>Staking</Link>{" "}
+                        You have less than {formatNumber(Number(minimumVBalance))} vFTHM, and you
+                        can not create a new proposal. <br />
+                        So please, stake your FTHM tokens in <Link to={"/dao/staking"}>Staking</Link>{" "}
                         to get voting power and awesome rewards.
                       </Typography>
                     </WarningBox>
@@ -352,7 +352,7 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
                       sx={{ width: "16px", color: "#F5953D", height: "16px" }}
                     />
                     <ErrorMessage>
-                      To create a proposal, you need to have {minimumVBalance}{" "}
+                      To create a proposal, you need to have {formatNumber(Number(minimumVBalance))}{" "}
                       vFTHM. <br />
                       Now you have {formatNumber(vBalance! / 10 ** 18)} vFTHM
                     </ErrorMessage>
@@ -363,7 +363,7 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
                       sx={{ width: "16px", color: "#F5953D", height: "16px" }}
                     />
                     <Typography>
-                      To create a proposal, you need to have {minimumVBalance}{" "}
+                      To create a proposal, you need to have {formatNumber(Number(minimumVBalance))}{" "}
                       vFTHM. <br />
                       Now you have {formatNumber(vBalance! / 10 ** 18)} vFTHM
                     </Typography>
