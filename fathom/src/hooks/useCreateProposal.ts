@@ -42,7 +42,7 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [notAllowTimestamp, setNotAllowTimestamp] = useState<number>(0);
-  const [minimumVBalance, setMinimumVBalance] = useState<string>();
+  const [minimumVBalance, setMinimumVBalance] = useState<number>();
 
   const theme = useTheme();
 
@@ -89,7 +89,7 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
     proposalService.proposalThreshold(library).then((minVBalance) => {
       const formattedVBalance = BigNumber(minVBalance)
         .dividedBy(10 ** 18)
-        .toString();
+        .toNumber();
       setMinimumVBalance(formattedVBalance);
     });
   }, [proposalService, library, setMinimumVBalance]);
