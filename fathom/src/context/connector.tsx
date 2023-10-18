@@ -75,9 +75,11 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
   useEffect(() => {
     if (web3Library) {
       const { isMetaMask, isXDCPay } = (web3Library as any).currentProvider;
-      if (isXDCPay) {
+      const connected = sessionStorage.getItem("isConnected");
+
+      if (isXDCPay || connected === 'xdc-pay') {
         setIsXdcPay(true);
-      } else if (isMetaMask) {
+      } else if (isMetaMask || connected === 'metamask') {
         setIsMetamask(true);
       } else {
         setIsXdcPay(false);
@@ -96,7 +98,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
   }, [web3Library, transactionStore, setIsMetamask, setIsWalletConnect]);
 
   useEffect(() => {
-    if (web3Library) {
+    if (chainId) {
       setAllowStableSwapInProgress(true);
       stableSwapService
         .isDecentralizedState(web3Library)
@@ -166,8 +168,9 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
     return activate(injected).then(() => {
       setShouldDisable(false);
       sessionStorage.setItem("isConnected", "metamask");
+      setIsMetamask(true);
     });
-  }, [activate, setShouldDisable]);
+  }, [activate, setShouldDisable, setIsMetamask]);
 
   const connectXdcPay = useCallback(() => {
     setShouldDisable(true);
@@ -183,8 +186,9 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
     return activate(WalletConnect).then(() => {
       setShouldDisable(false);
       sessionStorage.setItem("isConnected", "walletConnect");
+      setIsWalletConnect(true)
     });
-  }, [activate]);
+  }, [activate, setShouldDisable, setIsWalletConnect]);
 
   // Init Loading
   useEffect(() => {
