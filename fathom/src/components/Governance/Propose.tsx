@@ -1,5 +1,4 @@
-import React, { FC } from "react";
-import { Link } from "react-router-dom";
+import React, { FC, useMemo } from "react";
 import { Controller, FormProvider } from "react-hook-form";
 import {
   Box,
@@ -11,7 +10,6 @@ import {
   Icon,
   Stack,
   Switch,
-  Typography,
 } from "@mui/material";
 
 import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
@@ -34,12 +32,11 @@ import requiredSrc from "assets/svg/required.svg";
 import {
   ErrorBox,
   ErrorMessage,
-  WarningBox,
 } from "components/AppComponents/AppBox/AppBox";
 
 import { formatNumber } from "utils/format";
 import ProposeActionFields from "./Propose/ProposeActionFields";
-import BigNumber from "bignumber.js";
+import ProposeNotices from "./Propose/ProposeNotices";
 
 export const ProposeLabel = styled(AppFormLabel)`
   float: none;
@@ -317,67 +314,15 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
                     </>
                   )}
                 </Grid>
-                {vBalance !== null &&
-                BigNumber(vBalance)
-                  .dividedBy(10 ** 18)
-                  .isLessThan(minimumVBalance!) ? (
-                  vBalanceError ? (
-                    <ErrorBox sx={{ my: 3 }}>
-                      <InfoIcon
-                        sx={{ width: "16px", color: "#F5953D", height: "16px" }}
-                      />
-                      <ErrorMessage>
-                        You have less than {minimumVBalance} vFTHM, and you
-                        can not create a new proposal. So please, stake your
-                        FTHM tokens in <Link to={"/dao/staking"}>Staking</Link>{" "}
-                        to get voting power and awesome rewards.
-                      </ErrorMessage>
-                    </ErrorBox>
-                  ) : (
-                    <WarningBox sx={{ my: 3 }}>
-                      <InfoIcon
-                        sx={{ width: "16px", color: "#F5953D", height: "16px" }}
-                      />
-                      <Typography>
-                        You have less than {minimumVBalance} vFTHM, and you
-                        can not create a new proposal. So please, stake your
-                        FTHM tokens in <Link to={"/dao/staking"}>Staking</Link>{" "}
-                        to get voting power and awesome rewards.
-                      </Typography>
-                    </WarningBox>
-                  )
-                ) : vBalanceError ? (
-                  <ErrorBox sx={{ my: 3 }}>
-                    <InfoIcon
-                      sx={{ width: "16px", color: "#F5953D", height: "16px" }}
-                    />
-                    <ErrorMessage>
-                      To create a proposal, you need to have {minimumVBalance}{" "}
-                      vFTHM. <br />
-                      Now you have {formatNumber(vBalance! / 10 ** 18)} vFTHM
-                    </ErrorMessage>
-                  </ErrorBox>
-                ) : (
-                  <WarningBox sx={{ my: 3 }}>
-                    <InfoIcon
-                      sx={{ width: "16px", color: "#F5953D", height: "16px" }}
-                    />
-                    <Typography>
-                      To create a proposal, you need to have {minimumVBalance}{" "}
-                      vFTHM. <br />
-                      Now you have {formatNumber(vBalance! / 10 ** 18)} vFTHM
-                    </Typography>
-                  </WarningBox>
-                )}
-                {notAllowTimestamp > 0 ? (
+                <ProposeNotices vBalance={vBalance} vBalanceError={vBalanceError} minimumVBalance={minimumVBalance!} />
+                { useMemo(() => notAllowTimestamp > 0 ? (
                   <ErrorBox sx={{ my: 3 }}>
                     <InfoIcon />
                     <ErrorMessage>
-                      You can't create new proposal until{" "}
-                      {new Date(notAllowTimestamp! * 1000).toLocaleString()}
+                      You can't create new proposal until {new Date(notAllowTimestamp! * 1000).toLocaleString()}
                     </ErrorMessage>
                   </ErrorBox>
-                ) : null}
+                ) : null, [notAllowTimestamp]) }
               </Grid>
               <Grid item xs={12}>
                 <Grid container spacing={1}>
