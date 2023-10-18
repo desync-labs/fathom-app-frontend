@@ -74,7 +74,7 @@ const EmptyButtonWrapper = styled(Box)`
 `;
 
 const Web3Status = () => {
-  const { error, account, chainId } = useConnector();
+  const { error, account, chainId, isMetamask } = useConnector();
   const anchorRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState<boolean>(false);
 
@@ -83,11 +83,9 @@ const Web3Status = () => {
 
   let button: null|ReactElement = null;
 
-  const options = useMemo(() => {
-    return Object.entries(NETWORK_LABELS).filter(([filterChainId]) => {
-      return Number(filterChainId) !== chainId;
-    });
-  }, [chainId]);
+  const options = useMemo(() => Object.entries(NETWORK_LABELS).filter(([filterChainId]) => {
+    return Number(filterChainId) !== chainId;
+  }), [chainId]);
 
   const requestChangeNetwork = useCallback(
     async (chainId: string) => {
@@ -115,7 +113,9 @@ const Web3Status = () => {
   );
 
   const showNetworkSelector =
-    (chainId || error instanceof UnsupportedChainIdError) && options.length;
+    (chainId || error instanceof UnsupportedChainIdError) && options.length && isMetamask;
+
+  console.log(isMetamask)
 
   const isError = error || (chainId && !XDC_CHAIN_IDS.includes(chainId))
 
@@ -136,7 +136,7 @@ const Web3Status = () => {
         {showNetworkSelector ? <ArrowDropDownIcon /> : null}
       </WrongNetworkMobile>
     ) : (
-      <WrongNetwork onClick={() => setOpen(!open)}>
+      <WrongNetwork onClick={() => setOpen(!open)} sx={{ padding: showNetworkSelector ? '4px 12px' : '6px 16px' }}>
         <>
           {error instanceof UnsupportedChainIdError || !XDC_CHAIN_IDS.includes(chainId)
             ? "Wrong Network"
@@ -149,7 +149,7 @@ const Web3Status = () => {
     );
   }
 
-  return (chainId || error instanceof UnsupportedChainIdError || !XDC_CHAIN_IDS.includes(chainId)) && options.length ? (
+  return (chainId || error instanceof UnsupportedChainIdError || !XDC_CHAIN_IDS.includes(chainId)) && options.length && isMetamask ? (
     <>
       <ButtonGroup
         variant="contained"
