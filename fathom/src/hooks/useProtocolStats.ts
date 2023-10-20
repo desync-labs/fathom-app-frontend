@@ -18,7 +18,7 @@ const useProtocolStats = () => {
   const totalBorrowed = useMemo(() => {
     if (pools.length) {
       return pools.reduce((accumulator: number, currentPool: ICollateralPool) => {
-        return accumulator + Number(currentPool.totalBorrowed);
+        return accumulator + currentPool.totalBorrowed;
       }, 0);
     } else {
       return 0;
