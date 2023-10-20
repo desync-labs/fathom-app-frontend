@@ -4,24 +4,24 @@ import { getTokenLogoURL } from "utils/tokenLogo";
 import {
   Approx,
   Apr,
-  FarmInfoStats,
+  VaultInfoStats,
   Tokens,
   Token
-} from "components/Farm/FarmListItem/FarmListItemFarmInfo";
+} from "components/Vault/VaultListItem/VaultListItemVaultInfo";
 import {
   ButtonSecondary
 } from "components/AppComponents/AppButton/AppButton";
 import { FC } from "react";
 
 
-const FarmTitle = styled("div")`
+const VaultTitle = styled("div")`
   color: #5A81FF;
   font-size: 15px;
   font-weight: 600;
   line-height: 20px;
 `;
 
-const FarmInfo = styled("div")`
+const VaultInfo = styled("div")`
   display: flex;
   gap: 40px;
   align-items: center;
@@ -72,7 +72,7 @@ const PoolShare = styled("div")`
   }
 `;
 
-const ManageFarmBtnWrapper = styled("div")`
+const ManageVaultBtnWrapper = styled("div")`
   width: 100%;
   height: 100%;
   display: flex;
@@ -83,24 +83,24 @@ const ManageFarmBtnWrapper = styled("div")`
   }
 `;
 
-const ManageFarmBtn = styled(ButtonSecondary)`
+const ManageVaultBtn = styled(ButtonSecondary)`
   width: 100%;
   height: 40px;
 `;
 
-type FarmListItemFarmingDetailsProps = {
+type VaultListItemFarmingDetailsProps = {
   isMobile: boolean;
   onOpen: () => void;
 }
 
-const FarmListItemFarmingDetails: FC<FarmListItemFarmingDetailsProps> = ({ isMobile, onOpen }) => {
+const VaultListItemEarningDetails: FC<VaultListItemFarmingDetailsProps> = ({ isMobile, onOpen }) => {
   return (
     <Grid container>
       <Grid item xs={isMobile ? 12 : 10}>
-        <FarmTitle>USDT - XDC LP #1245655</FarmTitle>
-        <FarmInfo>
+        <VaultTitle>USDT</VaultTitle>
+        <VaultInfo>
           <TotalTokens>
-            Your total pool tokens: <span>8.69507</span>
+            Your total share tokens: <span>8.69507</span>
           </TotalTokens>
           <Pooled>
             Pooled USDT:
@@ -109,24 +109,17 @@ const FarmListItemFarmingDetails: FC<FarmListItemFarmingDetailsProps> = ({ isMob
               12.00
             </Token>
           </Pooled>
-          <Pooled>
-            Pooled XDC:
-            <Token>
-              <img src={getTokenLogoURL("WXDC")} width={20} height={20} alt={'token img'} />
-              12.00
-            </Token>
-          </Pooled>
           <PoolShare>
             Your pool share: <span>29%</span>
           </PoolShare>
-        </FarmInfo>
+        </VaultInfo>
         { isMobile && <Apr>
           Apr
           <span>
               9.40%
             </span>
         </Apr> }
-        <FarmInfoStats>
+        <VaultInfoStats>
           { !isMobile && <Apr>
             Apr
             <span>
@@ -141,22 +134,18 @@ const FarmListItemFarmingDetails: FC<FarmListItemFarmingDetailsProps> = ({ isMob
               <img src={getTokenLogoURL("xUSDT")} width={20} height={20} alt={'token img'} />
               12.00
             </Token>
-            <Token>
-              <img src={getTokenLogoURL("WXDC")} width={20} height={20} alt={'token img'} />
-              12.00
-            </Token>
           </Tokens>
-        </FarmInfoStats>
+        </VaultInfoStats>
       </Grid>
       <Grid item xs={ isMobile ? 12 : 2}>
-        <ManageFarmBtnWrapper>
-          <ManageFarmBtn onClick={onOpen}>
-            Manage Farm
-          </ManageFarmBtn>
-        </ManageFarmBtnWrapper>
+        <ManageVaultBtnWrapper>
+          <ManageVaultBtn onClick={onOpen}>
+            Manage Vault
+          </ManageVaultBtn>
+        </ManageVaultBtnWrapper>
       </Grid>
     </Grid>
   );
 };
 
-export default FarmListItemFarmingDetails;
+export default VaultListItemEarningDetails;

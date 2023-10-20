@@ -5,10 +5,10 @@ import {
 import { PageHeader } from "components/Dashboard/PageHeader";
 import React from "react";
 import useAllFarmsView from "hooks/useAllFarmsView";
-import FarmsList from "components/Farm/FarmList";
+import VaultList from "components/Vault/VaultList";
 
 
-const AllFarmView = () => {
+const AllVaultView = () => {
   const {
     farmsCurrentPage,
     farmsItemsCount,
@@ -24,11 +24,11 @@ const AllFarmView = () => {
     >
       <Grid container spacing={isMobile ? 1 : 3}>
         <PageHeader
-          title={"Farm"}
+          title={"Vault"}
           description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit. Eget tristique malesuada pulvinar commodo. Euismod massa. If this is the first-time you’re here, please visit our Whitepaper.`}
         />
         <Grid item xs={12} sx={{ marginTop: isMobile ? "5px" : "30px" }}>
-          <FarmsList
+          <VaultList
             positionCurrentPage={farmsCurrentPage}
             positionsItemsCount={farmsItemsCount}
             setPositionCurrentPage={setFarmsCurrentPage}
@@ -39,4 +39,4 @@ const AllFarmView = () => {
   )
 }
 
-export default AllFarmView
+export default AllVaultView

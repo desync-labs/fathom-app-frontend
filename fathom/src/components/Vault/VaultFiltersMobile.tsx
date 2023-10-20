@@ -3,20 +3,20 @@ import { styled } from "@mui/material/styles";
 import { AppTextField } from "components/AppComponents/AppForm/AppForm";
 import { FarmFilterMobileBtn } from "components/AppComponents/AppButton/AppButton";
 
-import FarmFilterSrc from 'assets/svg/Filter.svg';
+import VaultFilterSrc from 'assets/svg/Filter.svg';
 
-const FarmFilterMobileContainer = styled('div')`
+const VaultFilterMobileContainer = styled('div')`
   display: flex;
   align-items: center;
   gap: 12px;
   margin-bottom: 32px;
 `
 
-const FarmFiltersMobile = () => {
+const VaultFiltersMobile = () => {
   const [search, setSearch] = useState<string>("");
 
   return (
-    <FarmFilterMobileContainer>
+    <VaultFilterMobileContainer>
       <AppTextField
         id="outlined-helperText"
         placeholder="Search LP"
@@ -24,10 +24,10 @@ const FarmFiltersMobile = () => {
         onChange={(e) => setSearch(e.target.value)}
       />
       <FarmFilterMobileBtn>
-        <img src={FarmFilterSrc} alt={'filter icon'} />
+        <img src={VaultFilterSrc} alt={'filter icon'} />
       </FarmFilterMobileBtn>
-    </FarmFilterMobileContainer>
+    </VaultFilterMobileContainer>
   )
 }
 
-export default FarmFiltersMobile;
+export default VaultFiltersMobile;

@@ -5,20 +5,20 @@ import {
 } from "@mui/material";
 
 
-const useFarmListItem = () => {
+const useVaultListItem = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [extended, setExtended] = useState<boolean>(true);
-  const [manageFarm, setManageFarm] = useState<boolean>(false);
+  const [manageVault, setManageVault] = useState<boolean>(false);
 
   return {
     isMobile,
-    manageFarm,
+    manageVault,
     extended,
     setExtended,
-    setManageFarm,
+    setManageVault,
   }
 }
 
-export default useFarmListItem;
+export default useVaultListItem;

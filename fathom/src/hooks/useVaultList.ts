@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 
 
-const useFarmsList = () => {
+const useVaultList = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -28,4 +28,4 @@ const useFarmsList = () => {
   }
 }
 
-export default useFarmsList;
+export default useVaultList;

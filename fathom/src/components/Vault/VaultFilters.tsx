@@ -15,7 +15,7 @@ import {
 } from "components/AppComponents/AppForm/AppForm";
 import SearchSrc from "assets/svg/search.svg";
 
-const FarmToggleButtonGroup = styled(ToggleButtonGroup)`
+const VaultToggleButtonGroup = styled(ToggleButtonGroup)`
   border-radius: 12px;
   padding: 4px;
   background: #132340;
@@ -66,21 +66,21 @@ const StackedLabel = styled("span")`
   color: #fff;
 `;
 
-const FarmFilterContainer = styled(Grid)`
+const VaultFilterContainer = styled(Grid)`
   padding-bottom: 55px;
 `
 
-const FarmFilters = () => {
+const VaultFilters = () => {
   const [farmType, setFarmType] = useState<string>("live");
   const [showStacked, setShowStacked] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
   const [sortBy, setSortBy] = useState<string>("");
 
   return (
-    <FarmFilterContainer container spacing={2}>
+    <VaultFilterContainer container spacing={2}>
       <Grid item xs={2}>
         <FilterLabel>Filter by</FilterLabel>
-        <FarmToggleButtonGroup
+        <VaultToggleButtonGroup
           color="primary"
           value={farmType}
           exclusive
@@ -89,7 +89,7 @@ const FarmFilters = () => {
         >
           <ToggleButton value="live">Live Now</ToggleButton>
           <ToggleButton value="finished">Finished</ToggleButton>
-        </FarmToggleButtonGroup>
+        </VaultToggleButtonGroup>
       </Grid>
       <GridSwitcher item xs={2}>
         <div>
@@ -129,8 +129,8 @@ const FarmFilters = () => {
           />
         </AppFormInputWrapper>
       </Grid>
-    </FarmFilterContainer>
+    </VaultFilterContainer>
   );
 };
 
-export default FarmFilters;
+export default VaultFilters;

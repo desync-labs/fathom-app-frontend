@@ -1,4 +1,4 @@
-import { InfoWrapper } from "components/Farm/FarmListItem/FarmListItemPairInfo";
+import { InfoWrapper } from "components/Vault/VaultListItem/VaultListItemPairInfo";
 import { styled } from "@mui/material/styles";
 import {
   FarmInfoFarmNowBtn
@@ -28,25 +28,23 @@ export const FoundPosition = styled("div")`
   font-size: 14px;
   color: #fff;
   text-align: center;
-
   ${({ theme }) => theme.breakpoints.down("sm")} {
     margin-top: 40px;
   }
 `;
 
-const FarmInfoTitle = styled("div")`
+const VaultInfoTitle = styled("div")`
   font-size: 15px;
   font-weight: 600;
   line-height: 20px;
   color: #5A81FF;
-
   ${({ theme }) => theme.breakpoints.down("sm")} {
     width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
   }
 `;
 
-export const FarmInfoStats = styled("div")`
+export const VaultInfoStats = styled("div")`
   display: flex;
   gap: 20px;
   align-items: center;
@@ -95,20 +93,20 @@ type FarmListItemFarmInfoProps = {
   isMobile: boolean
 }
 
-const FarmListItemFarmInfo: FC<FarmListItemFarmInfoProps> = ({ isMobile }) => {
+const VaultListItemVaultInfo: FC<FarmListItemFarmInfoProps> = ({ isMobile }) => {
   return (
     <InfoWrapper>
       <LeftColumn>
-        <FarmInfoTitle>
-          USDT - XDC LP #1245655
-        </FarmInfoTitle>
+        <VaultInfoTitle>
+          USDT
+        </VaultInfoTitle>
         {isMobile && <Apr>
           Apr
           <span>
               9.40%
             </span>
         </Apr>}
-        <FarmInfoStats>
+        <VaultInfoStats>
           {!isMobile && <Apr>
             Apr
             <span>
@@ -123,23 +121,19 @@ const FarmListItemFarmInfo: FC<FarmListItemFarmInfoProps> = ({ isMobile }) => {
               <img src={getTokenLogoURL("xUSDT")} width={20} height={20} alt={"token img"} />
               12.00
             </Token>
-            <Token>
-              <img src={getTokenLogoURL("WXDC")} width={20} height={20} alt={"token img"} />
-              12.00
-            </Token>
           </Tokens>
-        </FarmInfoStats>
+        </VaultInfoStats>
       </LeftColumn>
       <RightColumn>
         <FoundPosition>
-          Found 1 LP Position Ready for Farming
+          Deposit 12 USDT
         </FoundPosition>
         <FarmInfoFarmNowBtn>
-          Farm Now
+          Lock Now
         </FarmInfoFarmNowBtn>
       </RightColumn>
     </InfoWrapper>
   );
 };
 
-export default FarmListItemFarmInfo;
+export default VaultListItemVaultInfo;

@@ -85,7 +85,7 @@ const PositionsList: FC<PositionsListProps> = ({
       {useMemo(
         () => (
           <>
-            {positions.length === 0 && (
+            {!positions.length && (
               <NoResults variant="h6">
                 {loading ? (
                   <CircleWrapper>
@@ -96,7 +96,6 @@ const PositionsList: FC<PositionsListProps> = ({
                 )}
               </NoResults>
             )}
-
             {!!positions.length && !isMobile && (
               <>
                 <TableContainer>
@@ -109,21 +108,25 @@ const PositionsList: FC<PositionsListProps> = ({
                       >
                         <TableCell>Id</TableCell>
                         <TableCell>Asset</TableCell>
-                        <AppTableCellWithPopover>Liquidation price
-                          <AppPopover id={"liquidation-price"}
-                                      text={"Liquidation Price is the price of the collateral token when your collateral will be automatically sold to partially or fully repay the loan if your collateral value drops. It's a safety mechanism to ensure that loans are always sufficiently collateralized. Monitoring this price helps prevent the unwanted liquidation of your assets."} />
-                        </AppTableCellWithPopover>
+                        <TableCell>
+                          <AppTableCellWithPopover>Liquidation price
+                            <AppPopover id={"liquidation-price"}
+                                        text={"Liquidation Price is the price of the collateral token when your collateral will be automatically sold to partially or fully repay the loan if your collateral value drops. It's a safety mechanism to ensure that loans are always sufficiently collateralized. Monitoring this price helps prevent the unwanted liquidation of your assets."} />
+                          </AppTableCellWithPopover>
+                        </TableCell>
                         <TableCell>Borrowed</TableCell>
                         <TableCell>Collateral</TableCell>
-                        <AppTableCellWithPopover>
-                          Safety buffer
-                          <AppPopover id={"safety-buffer"}
-                                      text={<>
-                                        Safety Buffer represents the extra collateral value above your borrowed amount. This is maintained to protect against market volatility and prevent the automatic liquidation of your assets. The larger your safety buffer, the lower your risk of reaching the liquidation price. <br /><br />
-                                        Safety buffer is calculated from LTV. When you multiply your collateral value with LTV - you will get how much you can borrow maximum with a 0% safety buffer. For example, if your collateral value is $100, with 25% LTV, you can maximum borrow 75 FXD, which gives you 0% Safety Buffer, and your position becomes very risky for liquidation.<br /><br/>
-                                        We recommend at least 50% Safety Buffer. Using the example above, the recommended amount to borrow is 75 FXD * 50% = 37.5 FXD.
-                                      </>} />
-                        </AppTableCellWithPopover>
+                        <TableCell>
+                          <AppTableCellWithPopover>
+                            Safety buffer
+                            <AppPopover id={"safety-buffer"}
+                                        text={<>
+                                          Safety Buffer represents the extra collateral value above your borrowed amount. This is maintained to protect against market volatility and prevent the automatic liquidation of your assets. The larger your safety buffer, the lower your risk of reaching the liquidation price. <br /><br />
+                                          Safety buffer is calculated from LTV. When you multiply your collateral value with LTV - you will get how much you can borrow maximum with a 0% safety buffer. For example, if your collateral value is $100, with 25% LTV, you can maximum borrow 75 FXD, which gives you 0% Safety Buffer, and your position becomes very risky for liquidation.<br /><br/>
+                                          We recommend at least 50% Safety Buffer. Using the example above, the recommended amount to borrow is 75 FXD * 50% = 37.5 FXD.
+                                        </>} />
+                          </AppTableCellWithPopover>
+                        </TableCell>
                         <TableCell></TableCell>
                       </AppTableHeaderRow>
                     </TableHead>

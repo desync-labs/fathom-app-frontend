@@ -74,7 +74,7 @@ export const AppTableRow = styled(MuiTableRow)`
   }
 `;
 
-export const AppTableCellWithPopover = styled(TableCell)`
+export const AppTableCellWithPopover = styled('div')`
   display: flex;
   justify-content: center;
   gap: 7px;

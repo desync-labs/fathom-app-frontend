@@ -64,7 +64,7 @@ import MobileMenuIconActive from "assets/svg/mobile-menu-active.svg";
 
 import { getTokenLogoURL } from "utils/tokenLogo";
 import StableSwapRemoveLiquidity from "components/Stableswap/StableSwapRemoveLiquidity";
-import AllFarmView from "components/Farm/AllFarmView";
+import AllVaultView from "components/Vault/AllVaultView";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open"
@@ -223,7 +223,7 @@ const MainLayout = () => {
                     padding: "4px"
                   }}
                 />
-                <MobileMenuWrapper onClick={openMobileMenu}>
+                <MobileMenuWrapper onClick={ openMobile ? mainBlockClickHandler : openMobileMenu}>
                   <img
                     style={{ display: openMobile ? "none" : "block" }}
                     src={MobileMenuIcon}
@@ -354,8 +354,8 @@ const MainLayout = () => {
               />
             </Route>
             <Route
-              path="/farm"
-              element={<AllFarmView />}
+              path="/vault"
+              element={<AllVaultView />}
             >
 
             </Route>

@@ -7,8 +7,8 @@ import StakingIconSrc from "assets/svg/staking.svg";
 import StakingIconActiveSrc from "assets/svg/staking-active.svg";
 import GovernanceSrc from "assets/svg/governance.svg";
 import GovernanceActiveSrc from "assets/svg/governance-active.svg";
-import FarmActiveSrc from 'assets/svg/farms-active.svg';
-import FarmSrc from 'assets/svg/farms.svg';
+import VaultActiveSrc from 'assets/svg/vault-active.svg';
+import VaultSrc from 'assets/svg/vault.svg';
 import DexSrc from 'assets/svg/dex.svg';
 
 import { styled } from "@mui/material/styles";
@@ -61,13 +61,13 @@ export const GovernanceIcon: FC<{ isDAOActive: boolean }> = ({
   </MenuIcon>
 );
 
-export const FarmIcon: FC<{ isFarmActive: boolean }> = ({
-  isFarmActive,
+export const VaultIcon: FC<{ isVaultActive: boolean }> = ({
+  isVaultActive,
 }) => (
   <MenuIcon>
     <img
       alt="farms-icon"
-      src={isFarmActive ? FarmActiveSrc : FarmSrc}
+      src={isVaultActive ? VaultActiveSrc : VaultSrc}
     />
   </MenuIcon>
 );
