@@ -47,7 +47,7 @@ export const NoPosition = styled('div')`
   text-align: center;
 `
 
-const FarmListItemPairInfo = () => {
+const VaultListItemPairInfo = () => {
   return (
     <InfoWrapper>
       <LeftColumn>
@@ -68,4 +68,4 @@ const FarmListItemPairInfo = () => {
   );
 };
 
-export default FarmListItemPairInfo;
+export default VaultListItemPairInfo;

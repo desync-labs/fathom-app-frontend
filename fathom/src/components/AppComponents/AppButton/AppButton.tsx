@@ -259,7 +259,7 @@ export const VotingEndedButton = styled(MuiButton)`
   }
 `;
 
-export const FarmNowBtn = styled(MuiButton)`
+export const VaultNowBtn = styled(MuiButton)`
   border-radius: 8px;
   background: rgba(0, 128, 118, 0.15);
   color: #43FFF1;
@@ -303,7 +303,6 @@ export const FarmInfoFarmNowBtn = styled(MuiButton)`
   width: 500px;
   ${({ theme }) => theme.breakpoints.down("sm")} {
     width: 100%;
-    margin-top: 12px;
   }
 `
 

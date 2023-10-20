@@ -46,6 +46,7 @@ const CollectBtnWrapper = styled("div")`
   height: 100%;
   display: flex;
   align-items: center;
+
   ${({ theme }) => theme.breakpoints.down("sm")} {
     margin-top: 40px;
     height: 40px;
@@ -61,22 +62,19 @@ type FarmListItemEarnedProps = {
   isMobile: boolean
 }
 
-const FarmListItemEarned: FC<FarmListItemEarnedProps> = ({ isMobile }) => {
+const VaultListItemEarned: FC<FarmListItemEarnedProps> = ({ isMobile }) => {
   return (
     <Grid container>
       <Grid item xs={isMobile ? 12 : 3}>
         <TokenName>
           USDT <span>Earned</span>
-          <AppPopover id={"earned"}
-                      text={<>
-                        Earned
-                      </>} />
+          <AppPopover id={"earned"} text={<>Earned</>} />
         </TokenName>
         <TokenValue>
           0.012 <span>$0.0123456</span>
         </TokenValue>
       </Grid>
-      { !isMobile && <Grid item xs={7}></Grid> }
+      {!isMobile && <Grid item xs={7}></Grid>}
       <Grid item xs={isMobile ? 12 : 2}>
         <CollectBtnWrapper>
           <CollectBtn>
@@ -88,4 +86,4 @@ const FarmListItemEarned: FC<FarmListItemEarnedProps> = ({ isMobile }) => {
   );
 };
 
-export default FarmListItemEarned;
+export default VaultListItemEarned;

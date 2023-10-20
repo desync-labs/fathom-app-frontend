@@ -22,11 +22,11 @@ import {
   Apr,
   Token,
   Tokens
-} from "components/Farm/FarmListItem/FarmListItemFarmInfo";
+} from "components/Vault/VaultListItem/VaultListItemVaultInfo";
 
 import plusWhiteSrc from "assets/svg/plus-white.svg";
 
-const FarmManageGridDialogWrapper = styled(AppDialog)`
+const VaultManageGridDialogWrapper = styled(AppDialog)`
   .MuiPaper-root {
     maxwidth: 600px;
   }
@@ -138,7 +138,7 @@ const AddLiquidityBtn = styled(ButtonSecondary)`
   }
 `;
 
-const FarmNotice = styled("div")`
+const VaultNotice = styled("div")`
   background: #3D5580;
   gap: 16px;
   padding: 12px 16px;
@@ -158,19 +158,19 @@ const FarmNotice = styled("div")`
   }
 `;
 
-export type FarmManageProps = {
+export type VaultManageProps = {
   onClose: () => void;
   onFinish: () => void;
   isMobile: boolean;
 };
 
-const FarmListItemManageModal: FC<FarmManageProps> = ({
+const VaultListItemManageModal: FC<VaultManageProps> = ({
   onClose,
   onFinish,
   isMobile
 }) => {
   return (
-    <FarmManageGridDialogWrapper
+    <VaultManageGridDialogWrapper
       onClose={onClose}
       aria-labelledby="customized-dialog-title"
       open={true}
@@ -178,12 +178,12 @@ const FarmListItemManageModal: FC<FarmManageProps> = ({
       maxWidth="sm"
     >
       <AppDialogTitle id="customized-dialog-title" onClose={onClose}>
-        Manage Farm
+        Manage Vault
       </AppDialogTitle>
 
       <DialogContent>
         <DialogContentWrapper>
-          <ManagePair>USDT - XDC LP #1245655</ManagePair>
+          <ManagePair>USDT</ManagePair>
           <ManageItem>
             <ManageLabel>Your total pool tokens:</ManageLabel>
             <ManageValue>8.69507</ManageValue>
@@ -193,15 +193,6 @@ const FarmListItemManageModal: FC<FarmManageProps> = ({
             <ManageValue>
               <Token>
                 <img src={getTokenLogoURL("xUSDT")} width={20} height={20} alt={"token img"} />
-                12.00
-              </Token>
-            </ManageValue>
-          </ManageItem>
-          <ManageItem>
-            <ManageLabel>Pooled XDC:</ManageLabel>
-            <ManageValue>
-              <Token>
-                <img src={getTokenLogoURL("WXDC")} width={20} height={20} alt={"token img"} />
                 12.00
               </Token>
             </ManageValue>
@@ -248,16 +239,16 @@ const FarmListItemManageModal: FC<FarmManageProps> = ({
             Unstake
           </ConfirmButton>
         </ButtonsWrapper>
-        <FarmNotice>
+        <VaultNotice>
           <InfoIcon sx={{ fontSize: "20px", color: "#B7C8E5", marginTop: "2px" }} />
           <Typography>
             Unstake will also automatically collect (withdraw) any earnings that you haven't got yet, and send them to
             your wallet.
           </Typography>
-        </FarmNotice>
+        </VaultNotice>
       </DialogContent>
-    </FarmManageGridDialogWrapper>
+    </VaultManageGridDialogWrapper>
   );
 };
 
-export default FarmListItemManageModal;
+export default VaultListItemManageModal;
