@@ -29,6 +29,7 @@ export const PricesContext = createContext<UseStakingViewType>(null);
 export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
   const { stakingService, centralizedOracleService } = useStores();
   const { chainId, library } = useConnector();
+
   const [fxdPrice, setFxdPrice] = useState<number>(0);
   const [wxdcPrice, setWxdcPrice] = useState<number>(0);
   const [fthmPrice, setFthmPrice] = useState<number>(0);

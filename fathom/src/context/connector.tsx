@@ -44,7 +44,6 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
   const [isWalletConnect, setIsWalletConnect] = useState(false);
   const [isXdcPay, setIsXdcPay] = useState(false);
 
-  const [isActive, setIsActive] = useState(false);
   const [shouldDisable, setShouldDisable] = useState(false); // Should disable connect button while connecting to MetaMask
   const [isLoading, setIsLoading] = useState(true);
   const [web3Library, setWeb3Library] = useState(library);
@@ -215,15 +214,6 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
     );
   }, [isDecentralizedState, isUserWhiteListed]);
 
-  // Check when App is Connected or Disconnected to MetaMask
-  const handleIsActive = useCallback(() => {
-    setIsActive(active);
-  }, [active]);
-
-  useEffect(() => {
-    handleIsActive();
-  }, [handleIsActive]);
-
   const disconnect = useCallback(async () => {
     try {
       await deactivate();
@@ -239,7 +229,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
   const values = useMemo(
     () => ({
       connector,
-      isActive,
+      isActive: active,
       account,
       isLoading,
       connectMetamask,
@@ -263,7 +253,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
     }),
     [
       connector,
-      isActive,
+      active,
       isLoading,
       shouldDisable,
       account,

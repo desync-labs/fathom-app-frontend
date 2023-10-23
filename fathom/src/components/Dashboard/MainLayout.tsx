@@ -224,7 +224,7 @@ const MainLayout = () => {
                     padding: "4px"
                   }}
                 />
-                <MobileMenuWrapper onClick={openMobileMenu}>
+                <MobileMenuWrapper onClick={ openMobile ? mainBlockClickHandler : openMobileMenu}>
                   <img
                     style={{ display: openMobile ? "none" : "block" }}
                     src={MobileMenuIcon}
