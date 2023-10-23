@@ -12,8 +12,6 @@ import IProposalService from "services/interfaces/IProposalService";
 import ProposalService from "services/ProposalService";
 import StakingService from "services/StakingService";
 import IStakingService from "services/interfaces/IStakingService";
-import ICentralizedPriceFeedService from "services/interfaces/ICentralizedPriceFeedService";
-import CentralizedPriceFeedService from "services/CentralizedPriceFeedService";
 
 import {
   DEFAULT_CHAIN_ID
@@ -34,7 +32,6 @@ export class RootStore {
   stableSwapService: IStableSwapService;
   proposalService: IProposalService;
   stakingService: IStakingService;
-  centralizedOracleService: ICentralizedPriceFeedService;
 
   chainId: number = DEFAULT_CHAIN_ID;
 
@@ -53,8 +50,6 @@ export class RootStore {
     this.stakingService = new StakingService(this.alertStore, this.transactionStore);
 
     this.stableSwapService = new StableSwapService(this.alertStore, this.transactionStore);
-
-    this.centralizedOracleService = new CentralizedPriceFeedService();
   }
 
   setChainId(chainId: number) {
