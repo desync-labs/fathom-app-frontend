@@ -27,8 +27,9 @@ type UsePricesContextReturn = {
 export const PricesContext = createContext<UseStakingViewType>(null);
 
 export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
-  const { stakingService, centralizedOracleService } = useStores();
+  const { stakingService } = useStores();
   const { chainId, library } = useConnector();
+
   const [fxdPrice, setFxdPrice] = useState<number>(0);
   const [wxdcPrice, setWxdcPrice] = useState<number>(0);
   const [fthmPrice, setFthmPrice] = useState<number>(0);
@@ -97,17 +98,12 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
         }).catch((e) => {
           console.log('Pair USDT/FXD not exists on DEX')
         });
-
-        centralizedOracleService.cryptocompareConvertXdcUsdt().then((centralizedPrice) => {
-          console.log(centralizedPrice);
-        });
       } catch (e: any) {
         console.log(e);
       }
     }
   }, [
     stakingService,
-    centralizedOracleService,
     usdtTokenAddress,
     fthmTokenAddress,
     fxdTokenAddress,
