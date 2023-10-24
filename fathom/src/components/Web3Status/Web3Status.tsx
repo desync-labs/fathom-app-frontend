@@ -115,8 +115,6 @@ const Web3Status = () => {
   const showNetworkSelector =
     (chainId || error instanceof UnsupportedChainIdError) && options.length && isMetamask;
 
-  console.log(isMetamask)
-
   const isError = error || (chainId && !XDC_CHAIN_IDS.includes(chainId))
 
   if (XDC_CHAIN_IDS.includes(chainId!)) {
