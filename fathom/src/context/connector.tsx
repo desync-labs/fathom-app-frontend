@@ -19,12 +19,17 @@ import {
   xdcInjected
 } from "connectors/networks";
 import { getDefaultProvider } from "utils/defaultProvider";
+import Xdc3 from "xdc3";
 
-export const ConnectorContext = createContext(null);
-
-type ConnectorProviderType = {
+export type ConnectorProviderType = {
   children: ReactElement;
 };
+
+export type UseConnectorReturnType = {}
+
+export const ConnectorContext = createContext(
+  {} as UseConnectorReturnType
+);
 
 export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
   const {
@@ -40,13 +45,13 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
 
   const { stableSwapService, positionService } = useStores();
 
-  const [isMetamask, setIsMetamask] = useState(false);
-  const [isWalletConnect, setIsWalletConnect] = useState(false);
-  const [isXdcPay, setIsXdcPay] = useState(false);
+  const [isMetamask, setIsMetamask] = useState<boolean>(false);
+  const [isWalletConnect, setIsWalletConnect] = useState<boolean>(false);
+  const [isXdcPay, setIsXdcPay] = useState<boolean>(false);
 
-  const [shouldDisable, setShouldDisable] = useState(false); // Should disable connect button while connecting to MetaMask
-  const [isLoading, setIsLoading] = useState(true);
-  const [web3Library, setWeb3Library] = useState(library);
+  const [shouldDisable, setShouldDisable] = useState<boolean>(false); // Should disable connect button while connecting to MetaMask
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [web3Library, setWeb3Library] = useState<Xdc3>(library);
 
   const [isDecentralizedState, setIsDecentralizedState] = useState<
     boolean|undefined
@@ -285,10 +290,10 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
   );
 };
 
-const useConnector = (): any => {
+const useConnector = (): UseConnectorReturnType => {
   const context = useContext(ConnectorContext);
 
-  if (context === undefined) {
+  if (!context) {
     throw new Error(
       "useConnector hook must be used with a ConnectorProvider component"
     );

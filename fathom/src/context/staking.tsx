@@ -5,8 +5,12 @@ type StakingProviderType = {
   children: ReactElement;
 };
 
+type UseStakingContextReturnType = {}
+
 // @ts-ignore
-export const StakingContext = createContext<UseStakingViewType>(null);
+export const StakingContext = createContext<UseStakingContextReturnType>(
+  {} as UseStakingContextReturnType
+);
 
 export const StakingProvider: FC<StakingProviderType> = ({ children }) => {
   const values = useStakingView();
@@ -19,7 +23,7 @@ export const StakingProvider: FC<StakingProviderType> = ({ children }) => {
 const useStakingContext = () => {
   const context = useContext(StakingContext);
 
-  if (context === undefined) {
+  if (!context) {
     throw new Error(
       "useStakingContext hook must be used with a StakingContext component"
     );

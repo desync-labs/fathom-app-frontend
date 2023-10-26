@@ -8,8 +8,12 @@ export type OpenPositionContextType = {
   onClose: () => void;
 };
 
+export type UseOpenPositionContextReturnType = {}
+
 // @ts-ignore
-export const OpenPositionContext = createContext<UseStakingViewType>(null);
+export const OpenPositionContext = createContext<UseOpenPositionContextReturnType>(
+  {} as UseOpenPositionContextReturnType
+);
 
 export const OpenPositionProvider: FC<OpenPositionContextType> = ({ children, pool, onClose }) => {
   const values = useOpenPosition(pool, onClose);
@@ -22,7 +26,7 @@ export const OpenPositionProvider: FC<OpenPositionContextType> = ({ children, po
 const useOpenPositionContext = () => {
   const context = useContext(OpenPositionContext);
 
-  if (context === undefined) {
+  if (!context) {
     throw new Error(
       "useOpenPositionContext hook must be used with a OpenPositionContext component"
     );

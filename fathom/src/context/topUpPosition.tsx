@@ -3,15 +3,19 @@ import useTopUpPosition from "hooks/useTopUpPosition";
 import ICollateralPool from "stores/interfaces/ICollateralPool";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
 
-export type TopUpPositionContextType = {
+type TopUpPositionContextType = {
   children: ReactElement;
   position: IOpenPosition;
   pool: ICollateralPool;
   onClose: () => void;
 };
 
+type UseTopUpPositionReturnType = {}
+
 // @ts-ignore
-export const TopUpPositionContext = createContext<UseStakingViewType>(null);
+export const TopUpPositionContext = createContext<UseTopUpPositionReturnType>(
+  {} as UseTopUpPositionReturnType
+);
 
 export const TopUpPositionProvider: FC<TopUpPositionContextType> = ({
   children,
@@ -28,10 +32,10 @@ export const TopUpPositionProvider: FC<TopUpPositionContextType> = ({
   );
 };
 
-const useTopUpPositionContext = () => {
+const useTopUpPositionContext = (): UseTopUpPositionReturnType => {
   const context = useContext(TopUpPositionContext);
 
-  if (context === undefined) {
+  if (!context) {
     throw new Error(
       "useOpenPositionContext hook must be used with a OpenPositionContext component"
     );

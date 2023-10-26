@@ -8,8 +8,12 @@ export type ClosePositionContextType = {
   onClose: () => void;
 };
 
+type UseRepayPositionContextReturnType = {}
+
 // @ts-ignore
-export const RepayPositionContext = createContext<UseStakingViewType>(null);
+export const RepayPositionContext = createContext<UseRepayPositionContextReturnType>(
+  {} as UseRepayPositionContextReturnType
+);
 
 export const ClosePositionProvider: FC<ClosePositionContextType> = ({
   children,

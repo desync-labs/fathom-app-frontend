@@ -24,7 +24,9 @@ type UsePricesContextReturn = {
 };
 
 // @ts-ignore
-export const PricesContext = createContext<UseStakingViewType>(null);
+export const PricesContext = createContext<UsePricesContextReturn>(
+  {} as UsePricesContextReturn
+);
 
 export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
   const { stakingService } = useStores();
@@ -140,7 +142,7 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
 const usePricesContext = (): UsePricesContextReturn => {
   const context = useContext(PricesContext);
 
-  if (context === undefined) {
+  if (!context) {
     throw new Error(
       "usePricesContext hook must be used with a PricesContext component"
     );

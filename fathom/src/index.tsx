@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import { ConnectorProvider } from "context/connector";
 import { Web3ReactProvider } from "@web3-react/core";
 import Xdc3 from "xdc3";
+import { TransactionAndAlertContext } from "context/transactionAndAlertProvider";
 
 dotenv.config();
 
@@ -19,7 +20,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <Web3ReactProvider getLibrary={getLibrary}>
     <ConnectorProvider>
-      <App />
+      <TransactionAndAlertContext>
+        <App />
+      </TransactionAndAlertContext>
     </ConnectorProvider>
   </Web3ReactProvider>
 );

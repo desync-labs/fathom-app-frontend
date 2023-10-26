@@ -1,15 +1,19 @@
 import { createContext, FC, ReactElement, useContext } from "react";
 import useProposalItem from "hooks/useProposalItem";
 
-export type ProposalContextType = {
+type ProposalContextType = {
   children: ReactElement;
 };
 
+type UseProposalContextReturnType = {}
+
 // @ts-ignore
-export const ProposalContext = createContext<UseStakingViewType>(null);
+export const ProposalContext = createContext<UseProposalContextReturnType>(
+  {} as UseProposalContextReturnType
+);
 
 export const ProposalProvider: FC<ProposalContextType> = ({ children }) => {
-  const values = useProposalItem();
+  const values= useProposalItem();
 
   return (
     <ProposalContext.Provider value={values}>{children}</ProposalContext.Provider>
@@ -19,7 +23,7 @@ export const ProposalProvider: FC<ProposalContextType> = ({ children }) => {
 const useProposalContext = () => {
   const context = useContext(ProposalContext);
 
-  if (context === undefined) {
+  if (!context) {
     throw new Error(
       "useProposalContext hook must be used with a ProposalContext component"
     );
