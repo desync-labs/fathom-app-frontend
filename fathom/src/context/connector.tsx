@@ -19,12 +19,41 @@ import {
   xdcInjected
 } from "connectors/networks";
 import { getDefaultProvider } from "utils/defaultProvider";
-
-export const ConnectorContext = createContext(null);
+import { AbstractConnector } from "@web3-react/abstract-connector";
+import Xdc3 from "xdc3";
 
 type ConnectorProviderType = {
   children: ReactElement;
 };
+
+export type UseConnectorReturnType = {
+  connector: AbstractConnector | undefined,
+  isActive: boolean,
+  account: string | null | undefined,
+  isLoading: boolean,
+  connectMetamask: () => void,
+  connectXdcPay: () => void,
+  connectWalletConnect: () => void,
+  disconnect: () => void,
+  shouldDisable: boolean,
+  chainId: number | undefined,
+  error: Error | undefined,
+  library: Xdc3,
+  isMetamask: boolean,
+  isWalletConnect: boolean,
+  isXdcPay: boolean,
+  isDecentralizedState: boolean,
+  isDecentralizedMode: boolean,
+  isUserWhiteListed: boolean,
+  isUserWrapperWhiteListed: boolean,
+  isOpenPositionWhitelisted: boolean,
+  allowStableSwap: boolean,
+  allowStableSwapInProgress: boolean
+}
+
+export const ConnectorContext = createContext<UseConnectorReturnType>(
+  {} as UseConnectorReturnType
+);
 
 export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
   const {
@@ -40,13 +69,13 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
 
   const { stableSwapService, positionService } = useStores();
 
-  const [isMetamask, setIsMetamask] = useState(false);
-  const [isWalletConnect, setIsWalletConnect] = useState(false);
-  const [isXdcPay, setIsXdcPay] = useState(false);
+  const [isMetamask, setIsMetamask] = useState<boolean>(false);
+  const [isWalletConnect, setIsWalletConnect] = useState<boolean>(false);
+  const [isXdcPay, setIsXdcPay] = useState<boolean>(false);
 
-  const [shouldDisable, setShouldDisable] = useState(false); // Should disable connect button while connecting to MetaMask
-  const [isLoading, setIsLoading] = useState(true);
-  const [web3Library, setWeb3Library] = useState(library);
+  const [shouldDisable, setShouldDisable] = useState<boolean>(false); // Should disable connect button while connecting to MetaMask
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [web3Library, setWeb3Library] = useState<Xdc3>(library);
 
   const [isDecentralizedState, setIsDecentralizedState] = useState<
     boolean|undefined
@@ -288,7 +317,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
 const useConnector = (): any => {
   const context = useContext(ConnectorContext);
 
-  if (context === undefined) {
+  if (!context) {
     throw new Error(
       "useConnector hook must be used with a ConnectorProvider component"
     );

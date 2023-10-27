@@ -274,7 +274,7 @@ const OpenPositionForm = () => {
               </a>
             </Typography>
           </WarningBox>}
-        {approveBtn && !!parseInt(balance) && (
+        {approveBtn && balance && (
           <OpenPositionApproveBox>
             <InfoIcon
               sx={{

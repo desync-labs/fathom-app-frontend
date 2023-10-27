@@ -17,7 +17,7 @@ import {
   useTheme
 } from "@mui/material";
 
-const defaultValues = {
+export const defaultValues = {
   collateral: "",
   fathomToken: "",
   safeMax: 0,
@@ -265,7 +265,7 @@ const useOpenPosition = (
   }, [dangerSafeMax, setValue]);
 
   const onSubmit = useCallback(
-    async (values: any) => {
+    async (values: Record<string, any>) => {
       setOpenPositionLoading(true);
       const { collateral, fathomToken } = values;
 
