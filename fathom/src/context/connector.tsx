@@ -13,6 +13,7 @@ import WalletConnectProvider from "@walletconnect/ethereum-provider";
 import { ConnectorEvent } from "@web3-react/types";
 import { useStores } from "stores";
 import {
+  ChainId,
   injected,
   supportedChainIds,
   WalletConnect,
@@ -29,14 +30,14 @@ type ConnectorProviderType = {
 export type UseConnectorReturnType = {
   connector: AbstractConnector | undefined,
   isActive: boolean,
-  account: string | null | undefined,
+  account: string,
   isLoading: boolean,
-  connectMetamask: () => void,
-  connectXdcPay: () => void,
-  connectWalletConnect: () => void,
-  disconnect: () => void,
+  connectMetamask: () => Promise<void>,
+  connectXdcPay: () => Promise<void>,
+  connectWalletConnect: () => Promise<void>,
+  disconnect: () => Promise<void>,
   shouldDisable: boolean,
-  chainId: number | undefined,
+  chainId: ChainId,
   error: Error | undefined,
   library: Xdc3,
   isMetamask: boolean,
@@ -78,11 +79,11 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
   const [web3Library, setWeb3Library] = useState<Xdc3>(library);
 
   const [isDecentralizedState, setIsDecentralizedState] = useState<
-    boolean|undefined
+    boolean | undefined
   >(undefined);
-  const [isDecentralizedMode, setIsDecentralizedMode] = useState<boolean|undefined>(undefined)
+  const [isDecentralizedMode, setIsDecentralizedMode] = useState<boolean | undefined>(undefined)
   const [isUserWhiteListed, setIsUserWhitelisted] = useState<
-    boolean|undefined
+    boolean | undefined
   >(undefined);
   const [isUserWrapperWhiteListed, setIsUserWrapperWhiteListed] = useState<boolean>(false);
   const [isOpenPositionWhitelisted, setIsOpenPositionWhitelisted] = useState<boolean>(true);
@@ -153,7 +154,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
                 setIsOpenPositionWhitelisted(isOpenPositionWhitelisted);
               })
           }
-      })
+        })
     }
 
     if (account) {
@@ -314,7 +315,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
   );
 };
 
-const useConnector = (): any => {
+const useConnector = () => {
   const context = useContext(ConnectorContext);
 
   if (!context) {

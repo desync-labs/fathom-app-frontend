@@ -164,7 +164,7 @@ const useTopUpPosition = (
     if (pool.poolName.toUpperCase() === "XDC") {
       const balance = await library.eth.getBalance(account);
       setCollateralTokenAddress(null);
-      setBalance(balance);
+      setBalance(Number(balance));
     } else {
       const tokenAddress = await poolService.getCollateralTokenAddress(
         pool.tokenAdapterAddress,

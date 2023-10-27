@@ -1,6 +1,7 @@
-import { createContext, FC, ReactElement, useContext } from "react";
+import { createContext, Dispatch, FC, ReactElement, useContext } from "react";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
 import useRepayPosition from "hooks/useRepayPosition";
+import { ChainId } from "connectors/networks";
 
 export type ClosePositionContextType = {
   children: ReactElement;
@@ -8,8 +9,38 @@ export type ClosePositionContextType = {
   onClose: () => void;
 };
 
+export type UseRepayPositionContextReturnType = {
+  liquidationPrice: number,
+  ltv: number,
+  overCollateral: number,
+  chainId: ChainId,
+  collateral: string,
+  lockedCollateral: string,
+  price: string,
+  fathomToken: string,
+  pool: any,
+  balance: string,
+  balanceError: boolean,
+  balanceErrorNotFilled: boolean,
+  fathomTokenIsDirty: boolean,
+  closePositionHandler: () => Promise<void>,
+  disableClosePosition: boolean,
+  handleFathomTokenTextFieldChange: (e: any) => void,
+  handleCollateralTextFieldChange: (e: any) => void,
+  setMax: () => void,
+  onClose: () => void,
+  position: IOpenPosition,
+  debtValue: string,
+  switchPosition: (callback: Dispatch<IOpenPosition>) => void,
+  approveBtn: boolean,
+  approvalPending: boolean,
+  approve: () => Promise<void>
+};
+
 // @ts-ignore
-export const RepayPositionContext = createContext<UseStakingViewType>(null);
+export const RepayPositionContext = createContext<UseRepayPositionContextReturnType>(
+  {} as UseRepayPositionContextReturnType
+);
 
 export const ClosePositionProvider: FC<ClosePositionContextType> = ({
   children,
@@ -25,7 +56,7 @@ export const ClosePositionProvider: FC<ClosePositionContextType> = ({
   );
 };
 
-const useRepayPositionContext = () => {
+const useRepayPositionContext = (): any => {
   const context = useContext(RepayPositionContext);
 
   if (context === undefined) {
