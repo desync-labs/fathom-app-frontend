@@ -21,18 +21,17 @@ const useViewProposalItem = (proposal: IProposal) => {
 
     if (Number(currentBlock) < Number(proposal.startBlock)) {
       const blockData = await library.eth.getBlock(currentBlock);
-      timestamp = blockData.timestamp;
-      timestamp +=
-        (Number(proposal.startBlock) - Number(currentBlock)) * XDC_BLOCK_TIME;
+      timestamp = BigNumber(blockData.timestamp)
+        .plus(BigNumber(proposal.startBlock).minus(currentBlock).multipliedBy(XDC_BLOCK_TIME));
     } else {
       const blockData = await library.eth.getBlock(proposal.startBlock);
-      timestamp = blockData.timestamp;
+      timestamp = BigNumber(blockData.timestamp);
     }
 
-    const endTimestamp =
-      timestamp +
-      (Number(proposal.endBlock) - Number(proposal.startBlock)) *
-        XDC_BLOCK_TIME;
+    const endTimestamp = timestamp
+      .plus(Number(proposal.endBlock) - Number(proposal.startBlock))
+      .multipliedBy(XDC_BLOCK_TIME)
+      .toNumber();
 
     const now = Date.now() / 1000;
     setTimestamp(endTimestamp);

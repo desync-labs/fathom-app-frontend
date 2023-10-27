@@ -17,14 +17,16 @@ type PricesProviderType = {
   children: ReactElement;
 };
 
-type UsePricesContextReturn = {
+export type UsePricesContextReturn = {
   fxdPrice: number;
   wxdcPrice: number;
   fthmPrice: number;
 };
 
 // @ts-ignore
-export const PricesContext = createContext<UseStakingViewType>(null);
+export const PricesContext = createContext<UsePricesContextReturn>(
+  {} as UsePricesContextReturn
+);
 
 export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
   const { stakingService } = useStores();

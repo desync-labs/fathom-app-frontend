@@ -72,10 +72,12 @@ const useProposalItem = () => {
       const currentBlock = await library.eth.getBlockNumber();
       let timestamp;
 
-      if (Number(currentBlock) < Number(data.proposal.startBlock)) {
+      if (BigNumber(currentBlock).isLessThan(data.proposal.startBlock)) {
         const blockData = await library.eth.getBlock(currentBlock);
-        timestamp = blockData.timestamp;
-        timestamp += (Number(data.proposal.startBlock) - Number(currentBlock)) * XDC_BLOCK_TIME
+        timestamp = BigNumber(blockData.timestamp)
+          .plus(BigNumber(data.proposal.startBlock)
+            .minus(currentBlock)
+            .multipliedBy(XDC_BLOCK_TIME))
       } else {
         const blockData = await library.eth.getBlock(
           data.proposal.startBlock
@@ -83,7 +85,7 @@ const useProposalItem = () => {
         timestamp = blockData.timestamp;
       }
 
-      return setVotingStartsTime(new Date(timestamp * 1000).toLocaleString());
+      return setVotingStartsTime(new Date(Number(timestamp) * 1000).toLocaleString());
     }
   }, [data, library, setVotingStartsTime]);
 
@@ -94,19 +96,21 @@ const useProposalItem = () => {
 
       if (Number(currentBlock) < Number(data.proposal.startBlock)) {
         const blockData = await library.eth.getBlock(currentBlock);
-        timestamp = blockData.timestamp;
-        timestamp += (Number(data.proposal.startBlock) - Number(currentBlock)) * XDC_BLOCK_TIME
+        timestamp = BigNumber(blockData.timestamp)
+          .plus(BigNumber(data.proposal.startBlock)
+            .minus(currentBlock)
+            .multipliedBy(XDC_BLOCK_TIME));
       } else {
         const blockData = await library.eth.getBlock(
           data.proposal.startBlock
         );
-        timestamp = blockData.timestamp;
+        timestamp = BigNumber(blockData.timestamp);
       }
 
-      const endTimestamp =
-        timestamp +
-        (Number(data.proposal.endBlock) - Number(data.proposal.startBlock)) *
-          XDC_BLOCK_TIME;
+      const endTimestamp = timestamp
+        .plus(Number(data.proposal.endBlock) - Number(data.proposal.startBlock))
+        .multipliedBy(XDC_BLOCK_TIME)
+        .toNumber();
 
       const now = Date.now() / 1000;
 

@@ -106,7 +106,7 @@ const useStakingLockForm = () => {
         positionService.balanceStableCoin(account, library),
       ]);
 
-      setXdcBalance(xdcBalance / 10 ** 18);
+      setXdcBalance(Number(xdcBalance) / 10 ** 18);
       setFxdBalance(
         BigNumber(fxdBalance)
           .dividedBy(10 ** 18)
