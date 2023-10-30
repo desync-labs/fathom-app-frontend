@@ -5,7 +5,7 @@ import {
   useState
 } from "react";
 import { useForm } from "react-hook-form";
-import { useStores } from "stores";
+import { useStores } from "context/services";
 import debounce from "lodash.debounce";
 import BigNumber from "bignumber.js";
 import { OpenPositionContextType } from "context/openPosition";

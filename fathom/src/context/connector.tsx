@@ -11,7 +11,7 @@ import {
 import { useWeb3React } from "@web3-react/core";
 import WalletConnectProvider from "@walletconnect/ethereum-provider";
 import { ConnectorEvent } from "@web3-react/types";
-import { useStores } from "stores";
+import { useStores } from "context/services";
 import {
   ChainId,
   injected,
@@ -91,8 +91,6 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
   const [allowStableSwapInProgress, setAllowStableSwapInProgress] =
     useState<boolean>(true);
 
-  const { transactionStore } = useStores();
-
   useEffect(() => {
     if (library && account && chainId && supportedChainIds.includes(chainId!)) {
       setWeb3Library(library)
@@ -118,13 +116,11 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
       setIsWalletConnect(
         web3Library.currentProvider instanceof WalletConnectProvider
       );
-
-      transactionStore.setLibrary(web3Library);
     } else {
       setIsMetamask(false);
       setIsWalletConnect(false);
     }
-  }, [web3Library, transactionStore, setIsMetamask, setIsWalletConnect]);
+  }, [web3Library, setIsMetamask, setIsWalletConnect]);
 
   useEffect(() => {
     if (chainId) {

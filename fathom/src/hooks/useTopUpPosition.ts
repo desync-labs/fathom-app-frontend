@@ -6,13 +6,13 @@ import {
   useState
 } from "react";
 import { useForm } from "react-hook-form";
-import { useStores } from "stores";
+import { useStores } from "context/services";
 import debounce from "lodash.debounce";
 import BigNumber from "bignumber.js";
 import { OpenPositionContextType } from "context/openPosition";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
-import IOpenPosition from "stores/interfaces/IOpenPosition";
+import IOpenPosition from "services/interfaces/IOpenPosition";
 import { DANGER_SAFETY_BUFFER } from "helpers/Constants";
 import {
   useMediaQuery,

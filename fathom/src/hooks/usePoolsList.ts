@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import ICollateralPool from "stores/interfaces/ICollateralPool";
+import ICollateralPool from "services/interfaces/ICollateralPool";
 import { useQuery } from "@apollo/client";
 import { FXD_POOLS } from "apollo/queries";
 import {

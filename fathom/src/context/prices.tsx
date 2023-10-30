@@ -9,7 +9,7 @@ import {
   useState
 } from "react";
 import { SmartContractFactory } from "config/SmartContractFactory";
-import { useStores } from "stores";
+import { useStores } from "context/services";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 
