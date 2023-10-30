@@ -106,7 +106,7 @@ const useStakingLockForm = () => {
         positionService.balanceStableCoin(account, library),
       ]);
 
-      setXdcBalance(Number(xdcBalance) / 10 ** 18);
+      setXdcBalance(BigNumber(xdcBalance).dividedBy(10 ** 18).toNumber());
       setFxdBalance(
         BigNumber(fxdBalance)
           .dividedBy(10 ** 18)
@@ -125,7 +125,7 @@ const useStakingLockForm = () => {
   ]);
 
   useEffect(() => {
-    if (Number(stakePosition) > fthmBalance) {
+    if (BigNumber(stakePosition).isGreaterThan(fthmBalance)) {
       setBalanceError(true);
     } else {
       setBalanceError(false);
@@ -146,7 +146,7 @@ const useStakingLockForm = () => {
         );
         setLastTransactionBlock(blockNumber);
         reset();
-      } catch (e) {}
+      } catch (e) { }
       setIsLoading(false);
     },
     [

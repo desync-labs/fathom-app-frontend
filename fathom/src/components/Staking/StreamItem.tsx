@@ -148,7 +148,7 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
         return (
           dialogAction === DialogActions.UNSTAKE_COOLDOWN && (
             <UnstakeCoolDownDialog
-              position={unstake || earlyUnstake}
+              position={unstake! || earlyUnstake!}
               token={token}
               onClose={onClose}
             />
