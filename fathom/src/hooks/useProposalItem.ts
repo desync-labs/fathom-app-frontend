@@ -82,10 +82,10 @@ const useProposalItem = () => {
         const blockData = await library.eth.getBlock(
           data.proposal.startBlock
         );
-        timestamp = blockData.timestamp;
+        timestamp = BigNumber(blockData.timestamp);
       }
 
-      return setVotingStartsTime(new Date(Number(timestamp) * 1000).toLocaleString());
+      return setVotingStartsTime(new Date(timestamp.toNumber() * 1000).toLocaleString());
     }
   }, [data, library, setVotingStartsTime]);
 
@@ -108,7 +108,7 @@ const useProposalItem = () => {
       }
 
       const endTimestamp = timestamp
-        .plus(Number(data.proposal.endBlock) - Number(data.proposal.startBlock))
+        .plus(BigNumber(data.proposal.endBlock).minus(data.proposal.startBlock))
         .multipliedBy(XDC_BLOCK_TIME)
         .toNumber();
 

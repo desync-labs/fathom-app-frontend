@@ -2,6 +2,7 @@ import { createContext, Dispatch, FC, ReactElement, useContext } from "react";
 import IOpenPosition from "stores/interfaces/IOpenPosition";
 import useRepayPosition from "hooks/useRepayPosition";
 import { ChainId } from "connectors/networks";
+import ICollateralPool from "stores/interfaces/ICollateralPool";
 
 export type ClosePositionContextType = {
   children: ReactElement;
@@ -18,7 +19,7 @@ export type UseRepayPositionContextReturnType = {
   lockedCollateral: string,
   price: string,
   fathomToken: string,
-  pool: any,
+  pool: ICollateralPool,
   balance: string,
   balanceError: boolean,
   balanceErrorNotFilled: boolean,
