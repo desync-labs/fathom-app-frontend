@@ -74,7 +74,7 @@ export const TopUpPositionProvider: FC<TopUpPositionContextType> = ({
 const useTopUpPositionContext = () => {
   const context = useContext(TopUpPositionContext);
 
-  if (context === undefined) {
+  if (!context) {
     throw new Error(
       "useOpenPositionContext hook must be used with a OpenPositionContext component"
     );

@@ -53,7 +53,7 @@ export const StakingProvider: FC<StakingProviderType> = ({ children }) => {
 const useStakingContext = () => {
   const context = useContext(StakingContext);
 
-  if (context === undefined) {
+  if (!context) {
     throw new Error(
       "useStakingContext hook must be used with a StakingContext component"
     );

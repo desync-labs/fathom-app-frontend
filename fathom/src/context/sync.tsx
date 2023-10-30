@@ -24,8 +24,8 @@ type UseSyncContextReturn = {
   prevSyncDao: boolean;
 };
 
-export const SyncContext = createContext<UseSyncContextReturn | undefined>(
-  undefined
+export const SyncContext = createContext<UseSyncContextReturn>(
+  {} as UseSyncContextReturn
 );
 
 export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
@@ -150,10 +150,10 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
   );
 };
 
-const useSyncContext = (): UseSyncContextReturn => {
+const useSyncContext = () => {
   const context = useContext(SyncContext);
 
-  if (context === undefined) {
+  if (!context) {
     throw new Error(
       "useSyncContext hook must be used with a SyncContext component"
     );

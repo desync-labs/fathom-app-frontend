@@ -45,7 +45,7 @@ export const ProposalProvider: FC<ProposalContextType> = ({ children }) => {
 const useProposalContext = () => {
   const context = useContext(ProposalContext);
 
-  if (context === undefined) {
+  if (!context) {
     throw new Error(
       "useProposalContext hook must be used with a ProposalContext component"
     );
