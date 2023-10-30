@@ -52,7 +52,9 @@ export type UseTopUpPositionContextReturnType = {
 };
 
 // @ts-ignore
-export const TopUpPositionContext = createContext<UseTopUpPositionContextReturnType>(null);
+export const TopUpPositionContext = createContext<UseTopUpPositionContextReturnType>(
+  {} as UseTopUpPositionContextReturnType
+);
 
 export const TopUpPositionProvider: FC<TopUpPositionContextType> = ({
   children,

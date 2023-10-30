@@ -58,7 +58,7 @@ const TopUpPositionInfo = () => {
           secondaryAction={
             <>
               {formatPercentage(
-                BigNumber(position.lockedCollateral).toNumber()
+                position.lockedCollateral
               )}{" "}
               {pool.poolName}{" "}
               <Box component="span" sx={{ color: "#29C20A" }}>

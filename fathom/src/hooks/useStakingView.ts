@@ -43,7 +43,7 @@ const useStakingView = () => {
   const [earlyUnstake, setEarlyUnstake] = useState<null | ILockPosition>(null);
   const [lockPositions, setLockPositions] = useState<ILockPosition[]>([]);
 
-  const [totalRewards, setTotalRewards] = useState(0);
+  const [totalRewards, setTotalRewards] = useState<number>(0);
   const previousTotalRewardsRef = useRef<number>(0);
 
   const [fetchPositionsLoading, setFetchPositionLoading] =
