@@ -13,7 +13,7 @@ const useStakingLockForm = () => {
   const [balanceError, setBalanceError] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const [fthmBalance, setFthmBalance] = useState(0);
+  const [fthmBalance, setFthmBalance] = useState<number>(0);
 
   const { poolService } = useStores();
 
@@ -33,8 +33,8 @@ const useStakingLockForm = () => {
   const lockDays = watch("lockDays");
   const stakePosition = watch("stakePosition");
 
-  const [approvedBtn, setApprovedBtn] = useState(false);
-  const [approvalPending, setApprovalPending] = useState(false);
+  const [approvedBtn, setApprovedBtn] = useState<boolean>(false);
+  const [approvalPending, setApprovalPending] = useState<boolean>(false);
 
   const [xdcBalance, setXdcBalance] = useState<number>(0);
   const [fxdBalance, setFxdBalance] = useState<number>(0);
@@ -64,7 +64,7 @@ const useStakingLockForm = () => {
   const approvalStatus = useMemo(
     () =>
       debounce(
-        async (account: string, chainId: number, stakePosition: number) => {
+        async (account: string, stakePosition: number) => {
           const approved = await stakingService.approvalStatusStakingFTHM(
             account,
             stakePosition,
@@ -95,7 +95,7 @@ const useStakingLockForm = () => {
 
   useEffect(() => {
     if (chainId && stakePosition && fthmTokenAddress) {
-      approvalStatus(account, chainId, Number(stakePosition)!);
+      approvalStatus(account, Number(stakePosition)!);
     }
   }, [account, chainId, fthmTokenAddress, approvalStatus, stakePosition]);
 

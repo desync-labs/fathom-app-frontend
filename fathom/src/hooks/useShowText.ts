@@ -4,7 +4,7 @@ import {
 } from "react";
 
 const useShowText = (open: boolean) => {
-  const [showText, setShowText] = useState(true);
+  const [showText, setShowText] = useState<boolean>(true);
 
   useEffect(() => {
     if (open) {
