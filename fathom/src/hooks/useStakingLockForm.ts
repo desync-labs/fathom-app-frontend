@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import debounce from "lodash.debounce";
 import BigNumber from "bignumber.js";
 
-import { useStores } from "stores";
+import { useStores } from "context/services";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 import { SmartContractFactory } from "config/SmartContractFactory";

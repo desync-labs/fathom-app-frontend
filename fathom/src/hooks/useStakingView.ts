@@ -7,8 +7,8 @@ import {
   useState,
 } from "react";
 import { LogLevel, useLogger } from "helpers/Logger";
-import { useStores } from "stores";
-import ILockPosition from "stores/interfaces/ILockPosition";
+import { useStores } from "context/services";
+import ILockPosition from "services/interfaces/ILockPosition";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import { STAKING_PROTOCOL_STATS, STAKING_STAKER } from "apollo/queries";
 import { COUNT_PER_PAGE } from "helpers/Constants";

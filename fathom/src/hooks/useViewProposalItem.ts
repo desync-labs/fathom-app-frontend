@@ -1,8 +1,8 @@
 import useConnector from "context/connector";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ProposalStatus, XDC_BLOCK_TIME } from "helpers/Constants";
-import { useStores } from "stores";
-import IProposal from "stores/interfaces/IProposal";
+import { useStores } from "context/services";
+import IProposal from "services/interfaces/IProposal";
 import BigNumber from "bignumber.js";
 
 const useViewProposalItem = (proposal: IProposal) => {

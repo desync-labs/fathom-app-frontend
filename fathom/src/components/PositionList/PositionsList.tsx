@@ -14,7 +14,7 @@ import {
   TableHead,
   Pagination
 } from "@mui/material";
-import IOpenPosition from "stores/interfaces/IOpenPosition";
+import IOpenPosition from "services/interfaces/IOpenPosition";
 import ClosePositionDialog from "components/Positions/RepayPositionDialog";
 import {
   AppTableHeaderRow,

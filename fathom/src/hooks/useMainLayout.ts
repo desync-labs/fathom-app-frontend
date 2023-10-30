@@ -6,7 +6,7 @@ import {
   useRef
 } from "react";
 import useConnector from "context/connector";
-import { useStores } from "stores";
+import { useStores } from "context/services";
 import {
   useMediaQuery,
   useTheme

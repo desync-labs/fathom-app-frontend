@@ -1,7 +1,7 @@
 import { ChangeEvent, createContext, FC, ReactElement, useContext } from "react";
 import useStakingView, { ActionType, DialogActions } from "hooks/useStakingView";
 import { ChainId } from "connectors/networks";
-import ILockPosition from "stores/interfaces/ILockPosition";
+import ILockPosition from "services/interfaces/ILockPosition";
 
 type StakingProviderType = {
   children: ReactElement;

@@ -1,7 +1,7 @@
 import { createContext, Dispatch, FC, ReactElement, useContext } from "react";
 import useTopUpPosition from "hooks/useTopUpPosition";
-import ICollateralPool from "stores/interfaces/ICollateralPool";
-import IOpenPosition from "stores/interfaces/IOpenPosition";
+import ICollateralPool from "services/interfaces/ICollateralPool";
+import IOpenPosition from "services/interfaces/IOpenPosition";
 import { Control, UseFormHandleSubmit } from "react-hook-form/dist/types";
 
 export type TopUpPositionContextType = {

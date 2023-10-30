@@ -1,4 +1,4 @@
-import { useStores } from "stores";
+import { useStores } from "context/services";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import { FXD_POOLS, FXD_POSITIONS, FXD_STATS, FXD_USER } from "apollo/queries";
 import { useCallback, useEffect, useState } from "react";

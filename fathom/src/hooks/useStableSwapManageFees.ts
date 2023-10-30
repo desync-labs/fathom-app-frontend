@@ -2,7 +2,7 @@ import {
   useMediaQuery,
   useTheme
 } from "@mui/material";
-import { useStores } from "stores";
+import { useStores } from "context/services";
 import useSyncContext from "context/sync";
 import {
   useCallback,
