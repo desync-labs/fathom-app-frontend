@@ -82,7 +82,7 @@ const PositionListItem: FC<PositionListItemProps> = ({
       <TableCell>
         <ButtonsWrapper>
           {approveBtn ? (
-            <ButtonPrimary onClick={approve} sx={{ height: "32px" }}>
+            <ButtonPrimary onClick={approve} sx={{ height: "32px" }} disabled={approvalPending} isLoading={approvalPending}>
               {approvalPending ? (
                 <CircularProgress size={20} sx={{ color: "#0D1526" }} />
               ) : (
