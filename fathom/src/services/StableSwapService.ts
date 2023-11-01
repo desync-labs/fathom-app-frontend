@@ -11,9 +11,9 @@ import {
   TransactionType
 } from "services/interfaces/ITransaction";
 import IStableSwapService from "services/interfaces/IStableSwapService";
-import { toWei } from "web3-utils";
+import { toWei } from "xdc3-utils";
 import { getEstimateGas } from "utils/getEstimateGas";
-import { TransactionReceipt } from "web3-eth";
+import { TransactionReceipt } from "xdc3-eth";
 import BigNumber from "bignumber.js";
 import { SKIP_ERRORS } from "connectors/networks";
 import {

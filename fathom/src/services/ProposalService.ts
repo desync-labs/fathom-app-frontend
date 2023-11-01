@@ -1,7 +1,7 @@
 import { SmartContractFactory } from "config/SmartContractFactory";
 import IProposalService from "services/interfaces/IProposalService";
 import { Web3Utils } from "helpers/Web3Utils";
-import { keccak256 } from "web3-utils";
+import { keccak256 } from "xdc3-utils";
 import {
   TransactionStatus,
   TransactionType

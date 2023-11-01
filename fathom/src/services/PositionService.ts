@@ -1,5 +1,5 @@
-import { TransactionReceipt } from "web3-eth";
-import { toWei } from "web3-utils";
+import { TransactionReceipt } from "xdc3-eth";
+import { toWei } from "xdc3-utils";
 import Xdc3 from "xdc3";
 import BigNumber from "bignumber.js";
 
