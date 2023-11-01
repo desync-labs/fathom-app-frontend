@@ -19,11 +19,10 @@ import {
 
 export default class ProposalService implements IProposalService {
   chainId = DEFAULT_CHAIN_ID;
-  alertAndTransactionProvider: UseAlertAndTransactionServiceType;
-  constructor(alertAndTransactionProvider: UseAlertAndTransactionServiceType) {
-    this.alertAndTransactionProvider = alertAndTransactionProvider
+  alertAndTransactionContext: UseAlertAndTransactionServiceType;
+  constructor(alertAndTransactionContext: UseAlertAndTransactionServiceType) {
+    this.alertAndTransactionContext = alertAndTransactionContext
   }
-
   createProposal(
     targets: string[],
     values: number[],
@@ -31,7 +30,7 @@ export default class ProposalService implements IProposalService {
     description: string,
     account: string,
     library: Xdc3
-  ): Promise<number> {
+  ): Promise<number | Error> {
     return new Promise(async (resolve, reject) => {
       try {
         const FathomGovernor = Web3Utils.getContractInstance(
@@ -56,7 +55,7 @@ export default class ProposalService implements IProposalService {
             if (SKIP_ERRORS.includes(eventData?.code)) {
               return;
             }
-            this.alertAndTransactionProvider.setShowSuccessAlertHandler(
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
               true,
               "Proposal created successfully!"
             );
@@ -68,7 +67,7 @@ export default class ProposalService implements IProposalService {
           .propose(targets, values, callData, description)
           .send(options)
           .on("transactionHash", (hash: any) => {
-            this.alertAndTransactionProvider.addTransaction({
+            this.alertAndTransactionContext.addTransaction({
               hash: hash,
               type: TransactionType.Approve,
               active: false,
@@ -78,17 +77,17 @@ export default class ProposalService implements IProposalService {
             });
           })
           .then((transactionReceipt: TransactionReceipt) => {
-            this.alertAndTransactionProvider.setShowSuccessAlertHandler(
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
               true,
               "Proposal created successfully!"
             );
             resolve(transactionReceipt.blockNumber);
           })
-          .catch((e: any) => {
+          .catch((e: Error) => {
             reject(e);
           });
       } catch (e: any) {
-        this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+        this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
         reject(e);
       }
     });
@@ -101,7 +100,7 @@ export default class ProposalService implements IProposalService {
     description: string,
     account: string,
     library: Xdc3
-  ): Promise<number> {
+  ): Promise<number | Error> {
     return new Promise(async (resolve, reject) => {
       try {
         const FathomGovernor = Web3Utils.getContractInstance(
@@ -126,7 +125,7 @@ export default class ProposalService implements IProposalService {
             if (SKIP_ERRORS.includes(eventData?.code)) {
               return;
             }
-            this.alertAndTransactionProvider.setShowSuccessAlertHandler(
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
               true,
               "Proposal executed successfully!"
             );
@@ -138,7 +137,7 @@ export default class ProposalService implements IProposalService {
           .execute(targets, values, callData, keccak256(description))
           .send(options)
           .on("transactionHash", (hash: any) => {
-            this.alertAndTransactionProvider.addTransaction({
+            this.alertAndTransactionContext.addTransaction({
               hash: hash,
               type: TransactionType.Approve,
               active: false,
@@ -148,17 +147,17 @@ export default class ProposalService implements IProposalService {
             });
           })
           .then((receipt: TransactionReceipt) => {
-            this.alertAndTransactionProvider.setShowSuccessAlertHandler(
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
               true,
               "Proposal executed successfully!"
             );
             resolve(receipt.blockNumber);
           })
-          .catch((e: any) => {
+          .catch((e: Error) => {
             reject(e);
           });
       } catch (e: any) {
-        this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+        this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
         reject(e);
       }
     });
@@ -171,7 +170,7 @@ export default class ProposalService implements IProposalService {
     description: string,
     account: string,
     library: Xdc3
-  ): Promise<number> {
+  ): Promise<number | Error> {
     return new Promise(async (resolve, reject) => {
       try {
         const FathomGovernor = Web3Utils.getContractInstance(
@@ -196,7 +195,7 @@ export default class ProposalService implements IProposalService {
             if (SKIP_ERRORS.includes(eventData?.code)) {
               return;
             }
-            this.alertAndTransactionProvider.setShowSuccessAlertHandler(
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
               true,
               "Queue Proposal executed successfully!"
             );
@@ -208,7 +207,7 @@ export default class ProposalService implements IProposalService {
           .queue(targets, values, callData, keccak256(description))
           .send(options)
           .on("transactionHash", (hash: any) => {
-            this.alertAndTransactionProvider.addTransaction({
+            this.alertAndTransactionContext.addTransaction({
               hash: hash,
               type: TransactionType.Approve,
               active: false,
@@ -218,17 +217,17 @@ export default class ProposalService implements IProposalService {
             });
           })
           .then((receipt: TransactionReceipt) => {
-            this.alertAndTransactionProvider.setShowSuccessAlertHandler(
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
               true,
               "Queue Proposal executed successfully!"
             );
             resolve(receipt.blockNumber);
           })
-          .catch((e: any) => {
+          .catch((e: Error) => {
             reject(e);
           });
       } catch (e: any) {
-        this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+        this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
         reject(e);
       }
     });
@@ -264,7 +263,7 @@ export default class ProposalService implements IProposalService {
             if (SKIP_ERRORS.includes(eventData?.code)) {
               return;
             }
-            this.alertAndTransactionProvider.setShowSuccessAlertHandler(
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
               true,
               "You have successfully voted!"
             );
@@ -276,7 +275,7 @@ export default class ProposalService implements IProposalService {
           .castVote(proposalId, support)
           .send(options)
           .on("transactionHash", (hash: string) => {
-            this.alertAndTransactionProvider.addTransaction({
+            this.alertAndTransactionContext.addTransaction({
               hash: hash,
               type: TransactionType.Approve,
               active: false,
@@ -286,17 +285,18 @@ export default class ProposalService implements IProposalService {
             });
           })
           .then((receipt: TransactionReceipt) => {
-            this.alertAndTransactionProvider.setShowSuccessAlertHandler(
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
               true,
               "You have successfully voted!"
             );
             resolve(receipt.blockNumber);
           })
-          .catch((e: any) => {
+          .catch((e: Error) => {
+            this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
             reject(e);
           });
       } catch (e: any) {
-        this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+        this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
         reject(e);
       }
     });
@@ -314,7 +314,7 @@ export default class ProposalService implements IProposalService {
       );
       return FathomGovernor.methods.hasVoted(proposalId, account).call();
     } catch (e: any) {
-      this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+      this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
     }
   }
 
@@ -330,7 +330,7 @@ export default class ProposalService implements IProposalService {
       );
       return FathomGovernor.methods.state(proposalId).call({ from: account });
     } catch (e: any) {
-      this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+      this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
     }
   }
 
@@ -348,7 +348,7 @@ export default class ProposalService implements IProposalService {
         .nextAcceptableProposalTimestamp(account)
         .call();
     } catch (e: any) {
-      this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+      this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
     }
   }
 
@@ -361,7 +361,7 @@ export default class ProposalService implements IProposalService {
 
       return VeFathom.methods.balanceOf(account).call();
     } catch (e: any) {
-      this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+      this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
     }
   }
 
@@ -374,7 +374,7 @@ export default class ProposalService implements IProposalService {
 
       return FathomGovernor.methods.quorum(blockNumber).call();
     } catch (e: any) {
-      this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+      this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
     }
   }
 
@@ -387,7 +387,7 @@ export default class ProposalService implements IProposalService {
 
       return FathomGovernor.methods.proposalVotes(proposalId).call();
     } catch (e: any) {
-      this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+      this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
     }
   }
 
@@ -400,7 +400,7 @@ export default class ProposalService implements IProposalService {
 
       return FathomGovernor.methods.proposalThreshold().call();
     } catch (e: any) {
-      this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+      this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
     }
   }
 

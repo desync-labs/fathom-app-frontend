@@ -31,7 +31,7 @@ import {
 
 export default class PositionService implements IPositionService {
   chainId = DEFAULT_CHAIN_ID;
-  alertAndTransactionContext: UseAlertAndTransactionServiceType
+  alertAndTransactionContext: UseAlertAndTransactionServiceType;
 
   constructor(alertAndTransactionContext: UseAlertAndTransactionServiceType) {
     this.alertAndTransactionContext = alertAndTransactionContext;
@@ -43,7 +43,7 @@ export default class PositionService implements IPositionService {
     collateral: string,
     fathomToken: string,
     library: Xdc3
-  ): Promise<number|undefined> {
+  ): Promise<number|Error> {
     return new Promise(async (resolve, reject) => {
       try {
         let proxyWalletAddress = await this.proxyWalletExist(address, library);
@@ -134,7 +134,6 @@ export default class PositionService implements IPositionService {
             resolve(receipt.blockNumber);
           })
           .catch((error: any) => {
-            console.log(error);
             this.alertAndTransactionContext.setShowErrorAlertHandler(true, error.message);
             reject(error);
           });
@@ -152,7 +151,7 @@ export default class PositionService implements IPositionService {
     fathomToken: string,
     positionId: string,
     library: Xdc3
-  ): Promise<number|undefined> {
+  ): Promise<number|Error> {
     return new Promise(async (resolve, reject) => {
       try {
         let proxyWalletAddress = await this.proxyWalletExist(address, library);
@@ -241,7 +240,7 @@ export default class PositionService implements IPositionService {
             );
             resolve(receipt.blockNumber);
           })
-          .catch((error: any) => {
+          .catch((error: Error) => {
             this.alertAndTransactionContext.setShowErrorAlertHandler(true, error.message);
             reject(error);
           });
@@ -258,7 +257,7 @@ export default class PositionService implements IPositionService {
     collateral: string,
     positionId: string,
     library: Xdc3
-  ): Promise<number|undefined> {
+  ): Promise<number|Error> {
     return new Promise(async (resolve, reject) => {
       try {
         let proxyWalletAddress = await this.proxyWalletExist(address, library);
@@ -343,7 +342,7 @@ export default class PositionService implements IPositionService {
             );
             resolve(receipt.blockNumber);
           })
-          .catch((error: any) => {
+          .catch((error: Error) => {
             this.alertAndTransactionContext.setShowErrorAlertHandler(true, error.message);
             reject(error);
           });
@@ -389,7 +388,7 @@ export default class PositionService implements IPositionService {
     address: string,
     collateral: string,
     library: Xdc3
-  ): Promise<number | undefined> {
+  ): Promise<number|Error> {
     return new Promise(async (resolve, reject) => {
       try {
         const proxyWalletAddress = await this.proxyWalletExist(
@@ -469,7 +468,7 @@ export default class PositionService implements IPositionService {
               MESSAGE
             );
             resolve(receipt.blockNumber);
-          }).catch((error: any) => {
+          }).catch((error: Error) => {
           this.alertAndTransactionContext.setShowErrorAlertHandler(true, error.message);
           reject(error);
         });
@@ -487,7 +486,7 @@ export default class PositionService implements IPositionService {
     stableCoin: string,
     collateral: string,
     library: Xdc3
-  ): Promise<number|undefined> {
+  ): Promise<number|Error> {
     return new Promise(async (resolve, reject) => {
       try {
         const proxyWalletAddress = await this.proxyWalletExist(
@@ -569,7 +568,7 @@ export default class PositionService implements IPositionService {
             );
             resolve(receipt.blockNumber);
           })
-          .catch((error: any) => {
+          .catch((error: Error) => {
             this.alertAndTransactionContext.setShowErrorAlertHandler(true, error.message);
             reject(error);
           });
@@ -584,7 +583,7 @@ export default class PositionService implements IPositionService {
     address: string,
     tokenAddress: string,
     library: Xdc3
-  ): Promise<number|undefined> {
+  ): Promise<number|Error> {
     return new Promise(async (resolve, reject) => {
       try {
         let proxyWalletAddress = await this.proxyWalletExist(address, library);
@@ -643,7 +642,7 @@ export default class PositionService implements IPositionService {
             );
             resolve(receipt.blockNumber);
           })
-          .catch((error: any) => {
+          .catch((error: Error) => {
             this.alertAndTransactionContext.setShowErrorAlertHandler(true, error.message);
             reject(error);
           });
@@ -683,7 +682,7 @@ export default class PositionService implements IPositionService {
   approveStableCoin(
     address: string,
     library: Xdc3
-  ): Promise<number|undefined> {
+  ): Promise<number|Error> {
     return new Promise(async (resolve, reject) => {
       try {
         let proxyWalletAddress = await this.proxyWalletExist(address, library);
@@ -742,7 +741,7 @@ export default class PositionService implements IPositionService {
             );
             resolve(receipt.blockNumber);
           })
-          .catch((error: any) => {
+          .catch((error: Error) => {
             this.alertAndTransactionContext.setShowErrorAlertHandler(true, error.message);
             reject(error);
           });
@@ -763,6 +762,7 @@ export default class PositionService implements IPositionService {
   }
 
   async approvalStatusStableCoin(
+    maxPositionDebtValue: number,
     address: string,
     library: Xdc3
   ): Promise<boolean> {
@@ -777,11 +777,14 @@ export default class PositionService implements IPositionService {
       library
     );
 
-    const allowance = await fathomStableCoin.methods
-      .allowance(address, proxyWalletAddress)
-      .call();
+    const [allowance, decimals] = await Promise.all([
+      fathomStableCoin.methods
+        .allowance(address, proxyWalletAddress)
+        .call(),
+      fathomStableCoin.methods.decimals().call()
+    ])
 
-    return Number(allowance) > 10000000000000000;
+    return BigNumber(allowance).dividedBy(decimals).isGreaterThan(maxPositionDebtValue);
   }
 
   async getDebtValue(
@@ -827,7 +830,7 @@ export default class PositionService implements IPositionService {
         SmartContractFactory.ProxyWalletRegistry(this.chainId),
         library
       );
-      return await proxyWalletRegistry.methods.isDecentralizedMode().call()
+      return await proxyWalletRegistry.methods.isDecentralizedMode().call();
     } catch (e: any) {
       this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
     }
@@ -840,7 +843,7 @@ export default class PositionService implements IPositionService {
         library
       );
 
-      return await proxyWalletRegistry.methods.whitelisted(address).call()
+      return await proxyWalletRegistry.methods.whitelisted(address).call();
     } catch (e: any) {
       this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
     }

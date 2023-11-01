@@ -8,14 +8,14 @@ export default interface IProposalService {
     description: string,
     account: string,
     library: Xdc3
-  ): Promise<number>;
+  ): Promise<number | Error>;
 
   castVote(
     proposalId: string,
     account: string,
     support: string,
     library: Xdc3
-  ): Promise<number>;
+  ): Promise<number | Error>;
 
   executeProposal(
     targets: string[],
@@ -24,7 +24,7 @@ export default interface IProposalService {
     description: string,
     account: string,
     library: Xdc3
-  ): Promise<number>;
+  ): Promise<number | Error>;
 
   queueProposal(
     targets: string[],
@@ -33,7 +33,7 @@ export default interface IProposalService {
     description: string,
     account: string,
     library: Xdc3
-  ): Promise<number>;
+  ): Promise<number | Error>;
 
   viewProposalState(
     proposalId: string,
