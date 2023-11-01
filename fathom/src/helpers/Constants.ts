@@ -11,8 +11,6 @@ export const DANGER_SAFETY_BUFFER = 0.25;
 
 export const FXD_MINIMUM_BORROW_AMOUNT = 1;
 
-export const CRYPTOCOMPARE_ENDPOINT = 'https://min-api.cryptocompare.com/data/price';
-
 export enum ProposalStatus {
   Pending = "Pending",
   OpenToVote = "Open-to-Vote",
@@ -25,7 +23,6 @@ export enum ProposalStatus {
 }
 
 export const WeiPerWad = new BigNumber("1e18");
-export const  WeiPerRay = new BigNumber("1e27");
 export const WeiPerRad = new BigNumber("1e45");
 export const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
 export const TransactionCheckUpdateInterval = 2000;

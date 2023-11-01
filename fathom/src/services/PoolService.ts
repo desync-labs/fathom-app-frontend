@@ -24,7 +24,7 @@ export default class PoolService implements IPoolService {
     address: string,
     forAddress: string,
     library: Xdc3
-  ): Promise<number> {
+  ) {
     const BEP20 = Web3Utils.getContractInstance(
       SmartContractFactory.BEP20(forAddress),
       library
@@ -45,7 +45,7 @@ export default class PoolService implements IPoolService {
     return BEP20.methods.decimals().call();
   }
 
-  async getDexPrice(forAddress: string, library: Xdc3): Promise<number> {
+  async getDexPrice(forAddress: string, library: Xdc3) {
     const USStable = SmartContractFactory.USDT(this.chainId).address;
 
     const dexPriceOracle = Web3Utils.getContractInstance(

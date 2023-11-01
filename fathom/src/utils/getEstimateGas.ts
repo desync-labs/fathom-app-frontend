@@ -1,4 +1,4 @@
-import { Contract } from "web3-eth-contract";
+import { Contract } from "xdc3-eth-contract";
 import { ESTIMATE_GAS_MULTIPLIER } from "helpers/Constants";
 
 export const getEstimateGas = async (
