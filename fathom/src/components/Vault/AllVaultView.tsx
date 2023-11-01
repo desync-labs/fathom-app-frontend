@@ -4,18 +4,18 @@ import {
 } from "@mui/material";
 import { PageHeader } from "components/Dashboard/PageHeader";
 import React from "react";
-import useAllFarmsView from "hooks/useAllFarmsView";
+import useAllVaultView from "hooks/useAllVaultView";
 import VaultList from "components/Vault/VaultList";
 
 
 const AllVaultView = () => {
   const {
-    farmsCurrentPage,
-    farmsItemsCount,
+    vaultCurrentPage,
+    vaultItemsCount,
     isMobile,
-    setFarmsCurrentPage,
-    setFarmsItemsCount,
-  } = useAllFarmsView()
+    setVaultCurrentPage,
+    setVaultItemsCount,
+  } = useAllVaultView()
 
   return (
     <Container
@@ -29,9 +29,9 @@ const AllVaultView = () => {
         />
         <Grid item xs={12} sx={{ marginTop: isMobile ? "5px" : "30px" }}>
           <VaultList
-            positionCurrentPage={farmsCurrentPage}
-            positionsItemsCount={farmsItemsCount}
-            setPositionCurrentPage={setFarmsCurrentPage}
+            vaultCurrentPage={vaultCurrentPage}
+            vaultItemsCount={vaultItemsCount}
+            setVaultCurrentPage={setVaultCurrentPage}
           />
         </Grid>
       </Grid>

@@ -48,15 +48,15 @@ const VaultListTableCell = styled(TableCell)`
 `
 
 type VaultListProps = {
-  positionsItemsCount: number;
-  positionCurrentPage: number;
-  setPositionCurrentPage: Dispatch<number>;
+  vaultItemsCount: number;
+  vaultCurrentPage: number;
+  setVaultCurrentPage: Dispatch<number>;
 };
 
 const VaultList: FC<VaultListProps> = ({
-  positionsItemsCount,
-  positionCurrentPage,
-  setPositionCurrentPage
+  vaultItemsCount,
+  vaultCurrentPage,
+  setVaultCurrentPage
 }) => {
   const {
     isMobile,
@@ -74,7 +74,7 @@ const VaultList: FC<VaultListProps> = ({
             <CircularProgress size={30} />
           </CircleWrapper>
         ) : (
-          "You have not opened farms"
+          "You have not opened vaults"
         )}
       </NoResults>}
       { isMobile ?
@@ -143,9 +143,9 @@ const VaultList: FC<VaultListProps> = ({
         <PaginationWrapper>
           <Pagination
             count={Math.ceil(
-              positionsItemsCount / COUNT_PER_PAGE
+              vaultItemsCount / COUNT_PER_PAGE
             )}
-            page={positionCurrentPage}
+            page={vaultCurrentPage}
             onChange={handlePageChange}
           />
         </PaginationWrapper>

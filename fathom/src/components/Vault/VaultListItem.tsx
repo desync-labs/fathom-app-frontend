@@ -245,12 +245,12 @@ const VaultListItem = () => {
         <TableCell colSpan={8} sx={{ paddingBottom: "15px !important" }}>
           <VaultItemInfoWrapper>
             {/*<VaultListItemPairInfo />*/}
-            <VaultListItemVaultInfo isMobile={isMobile} />
-            {/*<VaultListItemEarningDetails isMobile={isMobile} onOpen={() => setManageVault(true)} />*/}
+            {/*<VaultListItemVaultInfo isMobile={isMobile} />*/}
+            <VaultListItemEarningDetails isMobile={isMobile} onOpen={() => setManageVault(true)} />
           </VaultItemInfoWrapper>
-          {/*<VaultItemInfoWrapper>*/}
-          {/*  <VaultListItemEarned isMobile={isMobile} />*/}
-          {/*</VaultItemInfoWrapper>*/}
+          <VaultItemInfoWrapper>
+            <VaultListItemEarned isMobile={isMobile} />
+          </VaultItemInfoWrapper>
         </TableCell>
       </AppTableRow>}
       {manageVault && <VaultListItemManageModal

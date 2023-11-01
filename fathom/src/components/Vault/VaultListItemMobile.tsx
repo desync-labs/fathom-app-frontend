@@ -168,21 +168,21 @@ const VaultListItemMobile = () => {
           20%
         </VaultListValue>
       </ListItemWrapper>
-      { extended && <VaultItemInfoWrapper>
-        <VaultListItemVaultInfo isMobile={isMobile} />
-      </VaultItemInfoWrapper> }
+      {/*{ extended && <VaultItemInfoWrapper>*/}
+      {/*  <VaultListItemVaultInfo isMobile={isMobile} />*/}
+      {/*</VaultItemInfoWrapper> }*/}
 
-      {/*{*/}
-      {/*  extended && <>*/}
-      {/*    <VaultItemInfoWrapper className={"mb-0"}>*/}
-      {/*      <VaultListItemEarned isMobile={isMobile} />*/}
-      {/*    </VaultItemInfoWrapper>*/}
+      {
+        extended && <>
+          <VaultItemInfoWrapper className={"mb-0"}>
+            <VaultListItemEarned isMobile={isMobile} />
+          </VaultItemInfoWrapper>
 
-      {/*    <VaultItemInfoWrapper className={"mt-3"}>*/}
-      {/*      <VaultListItemEarningDetails isMobile={isMobile} onOpen={() => setManageVault(true)} />*/}
-      {/*    </VaultItemInfoWrapper>*/}
-      {/*  </>*/}
-      {/*}*/}
+          <VaultItemInfoWrapper className={"mt-3"}>
+            <VaultListItemEarningDetails isMobile={isMobile} onOpen={() => setManageVault(true)} />
+          </VaultItemInfoWrapper>
+        </>
+      }
 
       <VaultListItemMobileAdditionalData />
       <ExtendedBtnWrapper>
