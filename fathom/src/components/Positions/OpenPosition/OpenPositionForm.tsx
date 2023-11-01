@@ -314,7 +314,7 @@ const OpenPositionForm = () => {
           )}
           <ButtonPrimary
             type="submit"
-            disabled={approveBtn || !!Object.keys(errors).length || !isOpenPositionWhitelisted}
+            disabled={openPositionLoading || approveBtn || !!Object.keys(errors).length || !isOpenPositionWhitelisted}
             isLoading={openPositionLoading}
           >
             {openPositionLoading ? (
