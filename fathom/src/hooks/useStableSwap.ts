@@ -5,7 +5,7 @@ import {
   useMemo,
   useState
 } from "react";
-import { useStores } from "stores";
+import { useStores } from "context/services";
 import debounce from "lodash.debounce";
 import { SmartContractFactory } from "config/SmartContractFactory";
 import useSyncContext from "context/sync";

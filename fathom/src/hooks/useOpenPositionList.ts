@@ -7,9 +7,9 @@ import {
   useMemo
 } from "react";
 
-import { useStores } from "stores";
-import IOpenPosition from "stores/interfaces/IOpenPosition";
-import ICollateralPool from "stores/interfaces/ICollateralPool";
+import { useStores } from "context/services";
+import IOpenPosition from "services/interfaces/IOpenPosition";
+import ICollateralPool from "services/interfaces/ICollateralPool";
 
 import {
   useLazyQuery,

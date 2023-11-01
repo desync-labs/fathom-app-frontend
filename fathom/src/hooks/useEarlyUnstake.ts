@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import ILockPosition from "stores/interfaces/ILockPosition";
+import ILockPosition from "services/interfaces/ILockPosition";
 import useStakingContext from "context/staking";
 import { EarlyUnstakeDialogProps } from "components/Staking/Dialog/EarlyUnstakeDialog";
 

@@ -13,7 +13,7 @@ import {
 import { SmartContractFactory } from "config/SmartContractFactory";
 import useConnector from "context/connector";
 import useSyncContext from "context/sync";
-import { useStores } from "stores";
+import { useStores } from "context/services";
 
 
 const useStableSwapAddLiquidity = () => {

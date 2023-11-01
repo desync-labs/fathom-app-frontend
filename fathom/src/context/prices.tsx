@@ -9,7 +9,7 @@ import {
   useState
 } from "react";
 import { SmartContractFactory } from "config/SmartContractFactory";
-import { useStores } from "stores";
+import { useStores } from "context/services";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 
@@ -17,14 +17,16 @@ type PricesProviderType = {
   children: ReactElement;
 };
 
-type UsePricesContextReturn = {
+export type UsePricesContextReturn = {
   fxdPrice: number;
   wxdcPrice: number;
   fthmPrice: number;
 };
 
 // @ts-ignore
-export const PricesContext = createContext<UseStakingViewType>(null);
+export const PricesContext = createContext<UsePricesContextReturn>(
+  {} as UsePricesContextReturn
+);
 
 export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
   const { stakingService } = useStores();
@@ -137,10 +139,10 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
   );
 };
 
-const usePricesContext = (): UsePricesContextReturn => {
+const usePricesContext = () => {
   const context = useContext(PricesContext);
 
-  if (context === undefined) {
+  if (!context) {
     throw new Error(
       "usePricesContext hook must be used with a PricesContext component"
     );
