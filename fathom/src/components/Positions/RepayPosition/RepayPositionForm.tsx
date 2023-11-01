@@ -182,7 +182,7 @@ const RepayPositionForm: FC<ClosePositionDialogPropsType> = ({
           <ApproveBoxTypography>
             Please allow token approval in your MetaMask
           </ApproveBoxTypography>
-          <RepayApproveButton onClick={approve}>
+          <RepayApproveButton onClick={approve} disabled={approvalPending}>
             {" "}
             {approvalPending ? (
               <CircularProgress size={20} sx={{ color: "#0D1526" }} />
