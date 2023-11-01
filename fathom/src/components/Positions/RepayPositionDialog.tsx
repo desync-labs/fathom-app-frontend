@@ -10,7 +10,7 @@ import {
 } from "components/Positions/OpenNewPositionDialog";
 
 import useRepayPositionContext from "context/repayPosition";
-import IOpenPosition from "stores/interfaces/IOpenPosition";
+import IOpenPosition from "services/interfaces/IOpenPosition";
 
 export type ClosePositionDialogPropsType = {
   topUpPosition: IOpenPosition | undefined;

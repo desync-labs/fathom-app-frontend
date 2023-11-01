@@ -6,7 +6,7 @@ import {
   useRef
 } from "react";
 import useConnector from "context/connector";
-import { useStores } from "stores";
+import { useStores } from "context/services";
 import {
   useMediaQuery,
   useTheme
@@ -31,8 +31,8 @@ const useMainLayout = () => {
     isWalletConnect
   } = useConnector()!;
 
-  const [openMobile, setOpenMobile] = useState(false);
-  const [openConnector, setOpenConnector] = useState(false);
+  const [openMobile, setOpenMobile] = useState<boolean>(false);
+  const [openConnector, setOpenConnector] = useState<boolean>(false);
   const currentPath = useLocation();
   const [scroll, setScroll] = useState<number>(0);
   const  [width, height] = useWindowSize();

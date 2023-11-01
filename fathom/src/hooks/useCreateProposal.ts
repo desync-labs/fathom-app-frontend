@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useMediaQuery, useTheme } from "@mui/material";
-import { useStores } from "stores";
+import { useStores } from "context/services";
 import { ZERO_ADDRESS } from "helpers/Constants";
 import { ProposeProps } from "components/Governance/Propose";
 import useSyncContext from "context/sync";

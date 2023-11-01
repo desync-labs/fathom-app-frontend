@@ -2,16 +2,16 @@ import {
   useMediaQuery,
   useTheme
 } from "@mui/material";
-import useConnector from "../context/connector";
-import { useStores } from "../stores";
-import useSyncContext from "../context/sync";
+import useConnector from "context/connector";
+import { useStores } from "context/services";
+import useSyncContext from "context/sync";
 import {
   useCallback,
   useEffect,
   useMemo,
   useState
 } from "react";
-import { SmartContractFactory } from "../config/SmartContractFactory";
+import { SmartContractFactory } from "config/SmartContractFactory";
 import BigNumber from "bignumber.js";
 import debounce from "lodash.debounce";
 
