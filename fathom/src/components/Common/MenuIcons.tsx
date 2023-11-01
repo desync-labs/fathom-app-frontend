@@ -66,7 +66,7 @@ export const VaultIcon: FC<{ isVaultActive: boolean }> = ({
 }) => (
   <MenuIcon>
     <img
-      alt="farms-icon"
+      alt="vault-icon"
       src={isVaultActive ? VaultActiveSrc : VaultSrc}
     />
   </MenuIcon>
