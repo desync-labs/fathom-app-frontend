@@ -255,7 +255,7 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
             );
           }}
         />
-        {approveBtn && !!parseInt(balance) && (
+        {approveBtn && !!balance && (
           <ApproveBox>
             <InfoIcon
               sx={{

@@ -100,9 +100,8 @@ const Drawer = styled(MuiDrawer, {
 const MenuWrapper = styled("nav")<{ open: boolean }>`
   padding: ${({ open }) => (open ? "20px 12px" : "20px 8px")};
   height: 100vh;
-  position: sticky;
   position: relative;
-  margintop: 1rem;
+  marginTop: 1rem;
   display: flex;
   flex-direction: column;
   gap: 14px;

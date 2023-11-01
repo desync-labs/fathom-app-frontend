@@ -3,13 +3,10 @@ import { TransactionReceipt } from "xdc3-eth";
 import BigNumber from "bignumber.js";
 
 import { SmartContractFactory } from "config/SmartContractFactory";
-
-import ActiveWeb3Transactions from "stores/transaction.store";
-import AlertStore from "stores/alert.stores";
 import {
   TransactionStatus,
   TransactionType
-} from "stores/interfaces/ITransaction";
+} from "services/interfaces/ITransaction";
 import IStakingService from "services/interfaces/IStakingService";
 
 import { getEstimateGas } from "utils/getEstimateGas";
@@ -22,20 +19,18 @@ import { Strings } from "helpers/Strings";
 import { Web3Utils } from "helpers/Web3Utils";
 import { SKIP_ERRORS } from "connectors/networks";
 
+import {
+  UseAlertAndTransactionServiceType
+} from "context/alertAndTransaction";
+
 export const DAY_SECONDS = 24 * 60 * 60;
 
 export default class StakingService implements IStakingService {
   chainId = DEFAULT_CHAIN_ID;
 
-  alertStore: AlertStore;
-  transactionStore: ActiveWeb3Transactions;
-
-  constructor(
-    alertStore: AlertStore,
-    transactionStore: ActiveWeb3Transactions
-  ) {
-    this.alertStore = alertStore;
-    this.transactionStore = transactionStore;
+  alertAndTransactionProvider: UseAlertAndTransactionServiceType;
+  constructor(alertAndTransactionProvider: UseAlertAndTransactionServiceType) {
+    this.alertAndTransactionProvider = alertAndTransactionProvider
   }
 
   createLock(
@@ -70,7 +65,7 @@ export default class StakingService implements IStakingService {
             if (SKIP_ERRORS.includes(eventData?.code)) {
               return;
             }
-            this.alertStore.setShowSuccessAlert(true, MESSAGE);
+            this.alertAndTransactionProvider.setShowSuccessAlertHandler(true, MESSAGE);
             resolve(transactionReceipt.blockNumber);
           }
         );
@@ -79,7 +74,7 @@ export default class StakingService implements IStakingService {
           .createLock(this.toWei(stakePosition, library), endTime)
           .send(options)
           .on("transactionHash", (hash: any) => {
-            this.transactionStore.addTransaction({
+            this.alertAndTransactionProvider.addTransaction({
               hash: hash,
               type: TransactionType.Approve,
               active: false,
@@ -89,14 +84,14 @@ export default class StakingService implements IStakingService {
             });
           })
           .then((receipt: TransactionReceipt) => {
-            this.alertStore.setShowSuccessAlert(true, MESSAGE);
+            this.alertAndTransactionProvider.setShowSuccessAlertHandler(true, MESSAGE);
             resolve(receipt.blockNumber);
           })
           .catch((e: any) => {
             reject(e);
           });
       } catch (e: any) {
-        this.alertStore.setShowErrorAlert(true, e.message);
+        this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
         reject(e);
       }
     });
@@ -133,7 +128,7 @@ export default class StakingService implements IStakingService {
             if (SKIP_ERRORS.includes(eventData?.code)) {
               return;
             }
-            this.alertStore.setShowSuccessAlert(true, MESSAGE);
+            this.alertAndTransactionProvider.setShowSuccessAlertHandler(true, MESSAGE);
             resolve(transactionReceipt.blockNumber);
           }
         );
@@ -142,7 +137,7 @@ export default class StakingService implements IStakingService {
           .unlockPartially(lockId, this.toWei(amount, library))
           .send(options)
           .on("transactionHash", (hash: any) => {
-            this.transactionStore.addTransaction({
+            this.alertAndTransactionProvider.addTransaction({
               hash: hash,
               type: TransactionType.Approve,
               active: false,
@@ -152,14 +147,14 @@ export default class StakingService implements IStakingService {
             });
           })
           .then((receipt: TransactionReceipt) => {
-            this.alertStore.setShowSuccessAlert(true, MESSAGE);
+            this.alertAndTransactionProvider.setShowSuccessAlertHandler(true, MESSAGE);
             resolve(receipt.blockNumber);
           })
           .catch((e: any) => {
             reject(e);
           });
       } catch (e: any) {
-        this.alertStore.setShowErrorAlert(true, e.message);
+        this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
         reject(e);
       }
     });
@@ -195,7 +190,7 @@ export default class StakingService implements IStakingService {
             if (SKIP_ERRORS.includes(eventData?.code)) {
               return;
             }
-            this.alertStore.setShowSuccessAlert(true, MESSAGE);
+            this.alertAndTransactionProvider.setShowSuccessAlertHandler(true, MESSAGE);
             resolve(transactionReceipt.blockNumber);
           }
         );
@@ -204,7 +199,7 @@ export default class StakingService implements IStakingService {
           .earlyUnlock(lockId)
           .send(options)
           .on("transactionHash", (hash: any) => {
-            this.transactionStore.addTransaction({
+            this.alertAndTransactionProvider.addTransaction({
               hash: hash,
               type: TransactionType.Approve,
               active: false,
@@ -214,14 +209,14 @@ export default class StakingService implements IStakingService {
             });
           })
           .then((receipt: TransactionReceipt) => {
-            this.alertStore.setShowSuccessAlert(true, MESSAGE);
+            this.alertAndTransactionProvider.setShowSuccessAlertHandler(true, MESSAGE);
             resolve(receipt.blockNumber);
           })
           .catch((e: any) => {
             reject(e);
           });
       } catch (e: any) {
-        this.alertStore.setShowErrorAlert(true, e.message);
+        this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
         reject(e);
       }
     });
@@ -257,7 +252,7 @@ export default class StakingService implements IStakingService {
             if (SKIP_ERRORS.includes(eventData?.code)) {
               return;
             }
-            this.alertStore.setShowSuccessAlert(true, MESSAGE);
+            this.alertAndTransactionProvider.setShowSuccessAlertHandler(true, MESSAGE);
             resolve(transactionReceipt.blockNumber);
           }
         );
@@ -266,7 +261,7 @@ export default class StakingService implements IStakingService {
           .claimAllLockRewardsForStream(streamId)
           .send(options)
           .on("transactionHash", (hash: any) => {
-            this.transactionStore.addTransaction({
+            this.alertAndTransactionProvider.addTransaction({
               hash: hash,
               type: TransactionType.Approve,
               active: false,
@@ -276,11 +271,11 @@ export default class StakingService implements IStakingService {
             });
           })
           .then((receipt: TransactionReceipt) => {
-            this.alertStore.setShowSuccessAlert(true, MESSAGE);
+            this.alertAndTransactionProvider.setShowSuccessAlertHandler(true, MESSAGE);
             resolve(receipt.blockNumber);
           });
       } catch (e: any) {
-        this.alertStore.setShowErrorAlert(true, e.message);
+        this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
         reject(e);
       }
     });
@@ -319,7 +314,7 @@ export default class StakingService implements IStakingService {
             if (SKIP_ERRORS.includes(eventData?.code)) {
               return;
             }
-            this.alertStore.setShowSuccessAlert(true, MESSAGE);
+            this.alertAndTransactionProvider.setShowSuccessAlertHandler(true, MESSAGE);
             resolve(transactionReceipt.blockNumber);
           }
         );
@@ -328,7 +323,7 @@ export default class StakingService implements IStakingService {
           .withdrawStream(0)
           .send(options)
           .on("transactionHash", (hash: any) => {
-            this.transactionStore.addTransaction({
+            this.alertAndTransactionProvider.addTransaction({
               hash: hash,
               type: TransactionType.Approve,
               active: false,
@@ -338,11 +333,11 @@ export default class StakingService implements IStakingService {
             });
           })
           .then((receipt: TransactionReceipt) => {
-            this.alertStore.setShowSuccessAlert(true, MESSAGE);
+            this.alertAndTransactionProvider.setShowSuccessAlertHandler(true, MESSAGE);
             resolve(receipt.blockNumber);
           });
       } catch (e: any) {
-        this.alertStore.setShowErrorAlert(true, e.message);
+        this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
         reject(e);
       }
     });
@@ -382,7 +377,7 @@ export default class StakingService implements IStakingService {
             if (SKIP_ERRORS.includes(eventData?.code)) {
               return;
             }
-            this.alertStore.setShowSuccessAlert(true, MESSAGE);
+            this.alertAndTransactionProvider.setShowSuccessAlertHandler(true, MESSAGE);
             resolve(transactionReceipt.blockNumber);
           }
         );
@@ -391,7 +386,7 @@ export default class StakingService implements IStakingService {
           .approve(StakingAddress, MAX_UINT256)
           .send(options)
           .on("transactionHash", (hash: any) => {
-            this.transactionStore.addTransaction({
+            this.alertAndTransactionProvider.addTransaction({
               hash: hash,
               type: TransactionType.Approve,
               active: false,
@@ -401,11 +396,11 @@ export default class StakingService implements IStakingService {
             });
           })
           .then((receipt: TransactionReceipt) => {
-            this.alertStore.setShowSuccessAlert(true, MESSAGE);
+            this.alertAndTransactionProvider.setShowSuccessAlertHandler(true, MESSAGE);
             resolve(receipt.blockNumber);
           });
       } catch (e: any) {
-        this.alertStore.setShowErrorAlert(true, e.message);
+        this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
         reject(e);
       }
     });
@@ -433,7 +428,7 @@ export default class StakingService implements IStakingService {
         this.toWei(stakingPosition, library)
       );
     } catch (e: any) {
-      this.alertStore.setShowErrorAlert(true, e.message);
+      this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
     }
   }
 
@@ -452,7 +447,7 @@ export default class StakingService implements IStakingService {
         .getStreamClaimableAmountPerLock(streamId, account, lockId)
         .call();
     } catch (e: any) {
-      this.alertStore.setShowErrorAlert(true, e.message);
+      this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
     }
   }
 
@@ -464,7 +459,7 @@ export default class StakingService implements IStakingService {
       );
       return StakingGetter.methods.getStreamClaimableAmount(0, account).call();
     } catch (e: any) {
-      this.alertStore.setShowErrorAlert(true, e.message);
+      this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
     }
   }
 
@@ -476,7 +471,7 @@ export default class StakingService implements IStakingService {
       );
       return Staking.methods.minLockPeriod().call();
     } catch (e: any) {
-      this.alertStore.setShowErrorAlert(true, e.message);
+      this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
     }
   }
 
@@ -488,7 +483,7 @@ export default class StakingService implements IStakingService {
       );
       return DexPriceOracle.methods.getPrice(token0, token1).call();
     } catch (e: any) {
-      this.alertStore.setShowErrorAlert(true, e.message);
+      this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
     }
   }
 

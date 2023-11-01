@@ -1,10 +1,6 @@
-// src/stores/index.js
-import React from "react";
 import PoolService from "services/PoolService";
 import PositionService from "services/PositionService";
 import StableSwapService from "services/StableSwapService";
-import AlertStore from "stores/alert.stores";
-import ActiveWeb3Transactions from "stores/transaction.store";
 import IPoolService from "services/interfaces/IPoolService";
 import IPositionService from "services/interfaces/IPositionService";
 import IStableSwapService from "services/interfaces/IStableSwapService";
@@ -16,15 +12,12 @@ import IStakingService from "services/interfaces/IStakingService";
 import {
   DEFAULT_CHAIN_ID
 } from "helpers/Constants";
+import {
+  UseAlertAndTransactionServiceType
+} from "context/alertAndTransaction";
 
 export class RootStore {
-  /**
-   * Stores
-   */
-  alertStore: AlertStore;
-  transactionStore: ActiveWeb3Transactions;
-
-  /**
+  /*
    * Services
    */
   poolService: IPoolService;
@@ -35,21 +28,12 @@ export class RootStore {
 
   chainId: number = DEFAULT_CHAIN_ID;
 
-  constructor() {
-
-    this.alertStore = new AlertStore();
-
-    this.transactionStore = new ActiveWeb3Transactions(
-      this,
-    );
-
-    this.poolService = new PoolService(this.alertStore);
-
-    this.positionService = new PositionService(this.alertStore, this.transactionStore);
-    this.proposalService = new ProposalService(this.alertStore, this.transactionStore);
-    this.stakingService = new StakingService(this.alertStore, this.transactionStore);
-
-    this.stableSwapService = new StableSwapService(this.alertStore, this.transactionStore);
+  constructor(alertAndTransactionProvider:  UseAlertAndTransactionServiceType) {
+    this.poolService = new PoolService(alertAndTransactionProvider);
+    this.positionService = new PositionService(alertAndTransactionProvider);
+    this.proposalService = new ProposalService(alertAndTransactionProvider);
+    this.stakingService = new StakingService(alertAndTransactionProvider);
+    this.stableSwapService = new StableSwapService(alertAndTransactionProvider);
   }
 
   setChainId(chainId: number) {
@@ -68,8 +52,3 @@ export class RootStore {
     });
   }
 }
-
-const StoresContext = React.createContext(new RootStore());
-
-// this will be the function available for the app to connect to the stores
-export const useStores = () => React.useContext(StoresContext);

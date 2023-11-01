@@ -1,15 +1,19 @@
 import { FC } from "react";
-import { observer } from "mobx-react";
-import { Alert, AlertTitle, LinearProgress, Typography } from "@mui/material";
-import { useStores } from "stores";
+import {
+  Alert,
+  AlertTitle,
+  LinearProgress,
+  Typography
+} from "@mui/material";
 import truncateEthAddress from "truncate-eth-address";
 import { styled } from "@mui/material/styles";
 import { getTxUrl } from "utils/explorer";
 import { ChainId } from "connectors/networks";
 import useConnector from "context/connector";
+import useAlertAndTransactionContext from "context/alertAndTransaction";
 
 const AlertMessage = styled(Alert, {
-  shouldForwardProp: (prop) => prop !== "scroll",
+  shouldForwardProp: (prop) => prop !== "scroll"
 })<{ scroll: number }>`
   position: fixed;
   width: 100%;
@@ -22,14 +26,14 @@ type TransactionStatusPropsType = {
   scroll: number;
 };
 
-const TransactionStatus: FC<TransactionStatusPropsType> = observer(
+const TransactionStatus: FC<TransactionStatusPropsType> =
   ({ scroll }) => {
-    const { transactionStore } = useStores();
+    const { transactions } = useAlertAndTransactionContext();
     const { chainId } = useConnector();
 
     return (
       <>
-        {transactionStore.transactions.map((transaction, idx) => (
+        {transactions.map((transaction, idx) => (
           <AlertMessage
             scroll={scroll}
             severity="info"
@@ -54,7 +58,6 @@ const TransactionStatus: FC<TransactionStatusPropsType> = observer(
         ))}
       </>
     );
-  }
-);
+  };
 
 export default TransactionStatus;

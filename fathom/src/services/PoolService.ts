@@ -5,14 +5,15 @@ import {
 } from "helpers/Constants";
 import { Web3Utils } from "helpers/Web3Utils";
 import Xdc3 from "xdc3";
-import AlertStore from "stores/alert.stores";
+import {
+  UseAlertAndTransactionServiceType
+} from "context/alertAndTransaction";
 
 export default class PoolService implements IPoolService {
   chainId = DEFAULT_CHAIN_ID;
-  alertStore: AlertStore;
-
-  constructor(alertStore: AlertStore) {
-    this.alertStore = alertStore;
+  alertAndTransactionContext: UseAlertAndTransactionServiceType;
+  constructor(alertAndTransactionContext: UseAlertAndTransactionServiceType) {
+    this.alertAndTransactionContext = alertAndTransactionContext;
   }
 
   setChainId(chainId: number) {
@@ -23,7 +24,7 @@ export default class PoolService implements IPoolService {
     address: string,
     forAddress: string,
     library: Xdc3
-  ): Promise<number> {
+  ) {
     const BEP20 = Web3Utils.getContractInstance(
       SmartContractFactory.BEP20(forAddress),
       library
@@ -44,7 +45,7 @@ export default class PoolService implements IPoolService {
     return BEP20.methods.decimals().call();
   }
 
-  async getDexPrice(forAddress: string, library: Xdc3): Promise<number> {
+  async getDexPrice(forAddress: string, library: Xdc3) {
     const USStable = SmartContractFactory.USDT(this.chainId).address;
 
     const dexPriceOracle = Web3Utils.getContractInstance(
@@ -73,7 +74,7 @@ export default class PoolService implements IPoolService {
 
       return collateralTokenAdapter.methods.collateralToken().call();
     } catch (e: any) {
-      this.alertStore.setShowErrorAlert(true, e.message);
+      this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
     }
   }
 }
