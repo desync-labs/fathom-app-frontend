@@ -1,4 +1,4 @@
-import { useStores } from "stores";
+import { useStores } from "context/services";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import { FXD_POOLS, FXD_POSITIONS, FXD_STATS, FXD_USER } from "apollo/queries";
 import { useCallback, useEffect, useState } from "react";
@@ -105,9 +105,9 @@ const useDashboard = () => {
         variables: {
           walletAddress: proxyWallet,
         },
-      }).then(({ data: { users } }) => {
-        if (users !== undefined && users.length > 0) {
-          const itemsCount = users[0].activePositionsCount;
+      }).then(({ data }) => {
+        if (data?.users !== undefined && data?.users.length > 0) {
+          const itemsCount = data?.users[0].activePositionsCount;
           setPositionsItemsCount(itemsCount);
         }
       });

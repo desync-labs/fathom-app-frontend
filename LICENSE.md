@@ -13,7 +13,7 @@ Licensed Work: Fathom Stablecoin Frontend. The Licensed Work is (c) 2022 Fathom
 
 Additional Use Grant: Any uses listed and defined at this [LICENSE](./LICENSE.md)
 
-Change Date: The earlier of 31 November 2023
+Change Date: The earlier of 1 January 2025
 
 Change License: AGPL-3.0
 

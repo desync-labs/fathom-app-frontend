@@ -1,6 +1,5 @@
 import Xdc3 from "xdc3";
-import { TransactionReceipt } from "web3-eth";
-import ICollateralPool from "stores/interfaces/ICollateralPool";
+import ICollateralPool from "services/interfaces/ICollateralPool";
 
 export default interface IPositionService {
   openPosition(
@@ -74,4 +73,7 @@ export default interface IPositionService {
     poolId: string,
     library: Xdc3,
   ): Promise<string>
+
+  isWhitelisted(address: string, library: Xdc3): Promise<boolean>;
+  isDecentralizedMode(library: Xdc3): Promise<boolean>;
 }

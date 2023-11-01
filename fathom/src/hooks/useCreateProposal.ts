@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useMediaQuery, useTheme } from "@mui/material";
-import { useStores } from "stores";
+import { useStores } from "context/services";
 import { ZERO_ADDRESS } from "helpers/Constants";
 import { ProposeProps } from "components/Governance/Propose";
 import useSyncContext from "context/sync";
@@ -42,7 +42,7 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [notAllowTimestamp, setNotAllowTimestamp] = useState<number>(0);
-  const [minimumVBalance, setMinimumVBalance] = useState<string>();
+  const [minimumVBalance, setMinimumVBalance] = useState<number>();
 
   const theme = useTheme();
 
@@ -89,7 +89,7 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
     proposalService.proposalThreshold(library).then((minVBalance) => {
       const formattedVBalance = BigNumber(minVBalance)
         .dividedBy(10 ** 18)
-        .toString();
+        .toNumber();
       setMinimumVBalance(formattedVBalance);
     });
   }, [proposalService, library, setMinimumVBalance]);

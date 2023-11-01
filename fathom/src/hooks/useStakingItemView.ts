@@ -2,8 +2,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import useStakingContext from "context/staking";
 import { formatNumber } from "utils/format";
 import { YEAR_IN_SECONDS } from "helpers/Constants";
-import ILockPosition from "stores/interfaces/ILockPosition";
-import { useStores } from "stores";
+import ILockPosition from "services/interfaces/ILockPosition";
+import { useStores } from "context/services";
 import useConnector from "context/connector";
 
 const useStakingItemView = (lockPosition: ILockPosition) => {

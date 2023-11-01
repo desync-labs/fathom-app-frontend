@@ -5,15 +5,19 @@ import {
   useState
 } from "react";
 import { useForm } from "react-hook-form";
-import { useStores } from "stores";
+import { useStores } from "context/services";
 import debounce from "lodash.debounce";
 import BigNumber from "bignumber.js";
 import { OpenPositionContextType } from "context/openPosition";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 import { DANGER_SAFETY_BUFFER } from "helpers/Constants";
+import {
+  useMediaQuery,
+  useTheme
+} from "@mui/material";
 
-const defaultValues = {
+export const defaultValues = {
   collateral: "",
   fathomToken: "",
   safeMax: 0,
@@ -26,6 +30,9 @@ const useOpenPosition = (
 ) => {
   const { poolService, positionService } = useStores();
   const { account, chainId, library } = useConnector()!;
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const {
     handleSubmit, watch, control, setValue, trigger,
@@ -88,7 +95,7 @@ const useOpenPosition = (
     if (pool.poolName.toUpperCase() === "XDC") {
       const balance = await library.eth.getBalance(account);
       setCollateralTokenAddress(null);
-      setBalance(balance);
+      setBalance(Number(balance));
     } else {
       const tokenAddress = await poolService.getCollateralTokenAddress(
         pool.tokenAdapterAddress,
@@ -258,7 +265,7 @@ const useOpenPosition = (
   }, [dangerSafeMax, setValue]);
 
   const onSubmit = useCallback(
-    async (values: any) => {
+    async (values: Record<string, any>) => {
       setOpenPositionLoading(true);
       const { collateral, fathomToken } = values;
 
@@ -270,7 +277,7 @@ const useOpenPosition = (
           fathomToken,
           library
         );
-        console.log(blockNumber);
+
         setLastTransactionBlock(blockNumber!);
         onClose();
       } catch (e) {
@@ -350,6 +357,7 @@ const useOpenPosition = (
   }, [chainId, account, getCollateralTokenAndBalance, getPositionDebtCeiling]);
 
   return {
+    isMobile,
     safeMax,
     approveBtn,
     approve,

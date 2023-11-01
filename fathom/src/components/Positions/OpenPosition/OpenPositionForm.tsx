@@ -5,8 +5,7 @@ import {
   Box,
   CircularProgress,
   Grid,
-  useMediaQuery,
-  useTheme
+  Typography
 } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 import { styled } from "@mui/material/styles";
@@ -22,7 +21,6 @@ import {
   AppFormLabel,
   AppTextField
 } from "components/AppComponents/AppForm/AppForm";
-import { getTokenLogoURL } from "utils/tokenLogo";
 import {
   ApproveButton,
   ButtonPrimary,
@@ -38,6 +36,13 @@ import {
   ErrorBox,
   ErrorMessage
 } from "components/AppComponents/AppBox/AppBox";
+import {
+  WarningBox
+} from "components/AppComponents/AppBox/AppBox";
+import useConnector from "context/connector";
+
+import { formatPercentage } from "utils/format";
+import { getTokenLogoURL } from "utils/tokenLogo";
 
 const OpenPositionFormWrapper = styled(Grid)`
   padding-left: 20px;
@@ -58,10 +63,11 @@ const DangerErrorBox = styled(ErrorBox)`
 
 const OpenPositionApproveBox = styled(ApproveBox)`
   margin-bottom: 10px;
-`
+`;
 
 const OpenPositionForm = () => {
   const {
+    isMobile,
     approveBtn,
     approve,
     approvalPending,
@@ -82,8 +88,7 @@ const OpenPositionForm = () => {
     maxBorrowAmount
   } = useOpenPositionContext();
 
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const { isOpenPositionWhitelisted } = useConnector();
 
   return (
     <OpenPositionFormWrapper item>
@@ -111,9 +116,8 @@ const OpenPositionForm = () => {
               {balance ? (
                 <WalletBalance>
                   Wallet Available:{" "}
-                  {BigNumber(balance)
-                    .dividedBy(10 ** 18)
-                    .toString()}{" "}
+                  {formatPercentage(BigNumber(balance)
+                    .dividedBy(10 ** 18).toNumber())}{" "}
                   {pool.poolName}
                 </WalletBalance>
               ) : null}
@@ -257,7 +261,20 @@ const OpenPositionForm = () => {
             );
           }}
         />
-        {approveBtn && !!parseInt(balance) && (
+        {!isOpenPositionWhitelisted &&
+          <WarningBox>
+            <InfoIcon />
+            <Typography>
+              Your wallet address is not whitelisted for open position.
+              <br />
+              <a
+                href={"https://docs.google.com/forms/d/e/1FAIpQLSdyQkwpYPAAUc5llJxk09ymMdjSSSjjiY3spwvRvCwfV08h2A/viewform"}
+                target={"_blank"} rel="noreferrer">
+                Apply for being added to the whitelist to borrow FXD.
+              </a>
+            </Typography>
+          </WarningBox>}
+        {approveBtn && !!balance && (
           <OpenPositionApproveBox>
             <InfoIcon
               sx={{
@@ -279,7 +296,7 @@ const OpenPositionForm = () => {
             </ApproveButton>
           </OpenPositionApproveBox>
         )}
-        { dangerSafetyBuffer ? (
+        {dangerSafetyBuffer ? (
           <DangerErrorBox>
             <InfoIcon
               sx={{ width: "16px", color: "#F5953D", height: "16px" }}
@@ -297,7 +314,7 @@ const OpenPositionForm = () => {
           )}
           <ButtonPrimary
             type="submit"
-            disabled={approveBtn || !!Object.keys(errors).length}
+            disabled={openPositionLoading || approveBtn || !!Object.keys(errors).length || !isOpenPositionWhitelisted}
             isLoading={openPositionLoading}
           >
             {openPositionLoading ? (

@@ -22,8 +22,6 @@ import {
   StableSwapFormLabel,
   StableSwapInputWrapper,
   StableSwapMaxButton,
-  StableSwapPriceInfo,
-  StableSwapPriceInfoWrapper,
   StableSwapTextField,
   StableSwapWalletBalance
 } from "components/Stableswap/StableSwap";
@@ -34,6 +32,7 @@ import {
   ErrorBox,
   ErrorMessage,
 } from "components/AppComponents/AppBox/AppBox";
+import { formatPercentage } from "utils/format";
 
 
 const StableSwapErrorBox = styled(ErrorBox)`
@@ -77,7 +76,6 @@ const StableSwapSuccessBox = styled(SuccessBox)`
 const StableSwapForm: FC<any> = ({
   isDecentralizedState,
   isUserWhiteListed,
-  fxdPrice,
   inputValue,
   outputValue,
   inputDecimals,
@@ -108,9 +106,8 @@ const StableSwapForm: FC<any> = ({
           () => (
             <StableSwapWalletBalance>
               Balance:{" "}
-              {BigNumber(inputBalance)
-                .dividedBy(10 ** inputDecimals)
-                .toFixed(2)}{" "}
+              {formatPercentage(BigNumber(inputBalance).dividedBy(10 ** inputDecimals).toNumber())}
+              {" "}
               {inputCurrency}
             </StableSwapWalletBalance>
           ),
@@ -174,8 +171,8 @@ const StableSwapForm: FC<any> = ({
         <FathomSwapChangeCurrencyButton
           onClick={() =>
             changeCurrenciesPosition(
-              inputValue as number,
-              outputValue as number
+              inputValue,
+              outputValue
             )
           }
         >
@@ -189,9 +186,8 @@ const StableSwapForm: FC<any> = ({
           () => (
             <StableSwapWalletBalance>
               Balance:{" "}
-              {BigNumber(outputBalance)
-                .dividedBy(10 ** outputDecimals)
-                .toString()}{" "}
+              {formatPercentage(BigNumber(outputBalance).dividedBy(10 ** outputDecimals).toNumber())}
+              {" "}
               {outputCurrency}
             </StableSwapWalletBalance>
           ),
@@ -259,24 +255,6 @@ const StableSwapForm: FC<any> = ({
           <ErrorMessage>Wallet Address Not Whitelisted.</ErrorMessage>
         </StableSwapErrorBox>
       )}
-
-      {useMemo(() => {
-        return (
-          <StableSwapPriceInfoWrapper>
-            <StableSwapPriceInfo>
-              <Box component="span">
-                1 {inputCurrency} ={" "}
-                {outputCurrency === options[0]
-                  ? fxdPrice
-                  : fxdPrice
-                    ? 1 / fxdPrice
-                    : null}{" "}
-                {outputCurrency}
-              </Box>
-            </StableSwapPriceInfo>
-          </StableSwapPriceInfoWrapper>
-        );
-      }, [inputCurrency, outputCurrency, fxdPrice, options])}
     </>
   );
 };

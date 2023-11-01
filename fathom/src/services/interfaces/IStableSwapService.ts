@@ -1,17 +1,16 @@
 import Xdc3 from "xdc3";
-import { TransactionReceipt } from "web3-eth";
 
 export default interface IStableSwapService {
   swapTokenToStableCoin(
     address: string,
-    tokenIn: number,
+    tokenIn: string,
     tokenInDecimals: number,
     tokenName: string,
     library: Xdc3
   ): Promise<number>;
   swapStableCoinToToken(
     address: string,
-    stableCoinIn: number,
+    stableCoinIn: string,
     stableCoinInDecimals: number,
     tokenName: string,
     library: Xdc3
@@ -37,30 +36,42 @@ export default interface IStableSwapService {
     library: Xdc3,
     isStableSwapWrapper?: boolean,
   ): Promise<number>;
+  claimFeesRewards(
+    account: string,
+    library: Xdc3
+  ): Promise<number>;
+  withdrawClaimedFees(
+    account: string,
+    library: Xdc3
+  ): Promise<number>;
   approvalStatusStableCoin(
     address: string,
-    tokenIn: number,
+    tokenIn: string,
     inputDecimal: number,
     library: Xdc3,
     isStableSwapWrapper?: boolean,
   ): Promise<boolean | undefined>;
   approvalStatusUsdt(
     address: string,
-    tokenIn: number,
+    tokenIn: string,
     inputDecimal: number,
     library: Xdc3,
     isStableSwapWrapper?: boolean,
   ): Promise<boolean | undefined>;
 
-  getFeeIn(library: Xdc3): Promise<number>;
-  getFeeOut(library: Xdc3): Promise<number>;
-  getLastUpdate(library: Xdc3): Promise<number>;
+  getFeeIn(library: Xdc3): Promise<string>;
+  getFeeOut(library: Xdc3): Promise<string>;
+  getLastUpdate(library: Xdc3): Promise<string>;
   getDailySwapLimit(library: Xdc3): Promise<number>;
   getPoolBalance(tokenAddress: string, library: Xdc3): Promise<number>;
-  getAmounts(amount: number, account: string, library: Xdc3): Promise<any>;
+  getAmounts(amount: string, account: string, library: Xdc3): Promise<any>;
   getTotalValueLocked(library: Xdc3): Promise<number>;
   getActualLiquidityAvailablePerUser(account: string, library: Xdc3): Promise<number>;
   getDepositTracker(account: string, library: Xdc3): Promise<number>;
+  getClaimableFeesPerUser(account: string, library: Xdc3): Promise<any>;
+
+  getClaimedFXDFeeRewards(account: string, library: Xdc3): Promise<number>;
+  getClaimedTokenFeeRewards(account: string, library: Xdc3): Promise<number>;
 
   isDecentralizedState(library: Xdc3) : Promise<boolean>;
   isUserWhitelisted(address: string, library: Xdc3) : Promise<boolean>

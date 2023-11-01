@@ -121,6 +121,7 @@ export const WrongNetwork = styled(MuiBox)`
   font-size: 13px;
   cursor: pointer;
   padding: 4px 12px;
+  margin-right: 10px;
 `;
 
 export const WrongNetworkMobile = styled(MuiBox)`
@@ -183,6 +184,13 @@ export const WarningBox = styled(Box)`
   p {
     color: #f7b06e;
     font-size: 14px;
+    width: 100%;
+    white-space: break-spaces;
+  }
+  a {
+    &:hover {
+      text-decoration: underline;
+    }
   }
 `;
 
