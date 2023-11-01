@@ -3,7 +3,7 @@ import React, {
   memo,
   useMemo
 } from "react";
-import ILockPosition from "stores/interfaces/ILockPosition";
+import ILockPosition from "services/interfaces/ILockPosition";
 import StakingViewItem from "components/Staking/StakingViewItem";
 import ClaimRewardsDialog from "components/Staking/Dialog/ClaimRewardsDialog";
 import { DialogActions } from "hooks/useStakingView";
@@ -148,7 +148,7 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
         return (
           dialogAction === DialogActions.UNSTAKE_COOLDOWN && (
             <UnstakeCoolDownDialog
-              position={unstake || earlyUnstake}
+              position={unstake! || earlyUnstake!}
               token={token}
               onClose={onClose}
             />

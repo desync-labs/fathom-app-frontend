@@ -1,5 +1,5 @@
-import { TransactionReceipt } from "web3-eth";
-import { toWei } from "web3-utils";
+import { TransactionReceipt } from "xdc3-eth";
+import { toWei } from "xdc3-utils";
 import Xdc3 from "xdc3";
 import BigNumber from "bignumber.js";
 
@@ -16,30 +16,25 @@ import { Strings } from "helpers/Strings";
 import { SmartContractFactory } from "config/SmartContractFactory";
 import IPositionService from "services/interfaces/IPositionService";
 
-import ICollateralPool from "stores/interfaces/ICollateralPool";
-import ActiveWeb3Transactions from "stores/transaction.store";
-import AlertStore from "stores/alert.stores";
+import ICollateralPool from "services/interfaces/ICollateralPool";
 
 import {
   TransactionStatus,
   TransactionType
-} from "stores/interfaces/ITransaction";
+} from "services/interfaces/ITransaction";
 
 import { getEstimateGas } from "utils/getEstimateGas";
 import { SKIP_ERRORS } from "connectors/networks";
+import {
+  UseAlertAndTransactionServiceType
+} from "context/alertAndTransaction";
 
 export default class PositionService implements IPositionService {
   chainId = DEFAULT_CHAIN_ID;
+  alertAndTransactionContext: UseAlertAndTransactionServiceType
 
-  alertStore: AlertStore;
-  transactionStore: ActiveWeb3Transactions;
-
-  constructor(
-    alertStore: AlertStore,
-    transactionStore: ActiveWeb3Transactions
-  ) {
-    this.alertStore = alertStore;
-    this.transactionStore = transactionStore;
+  constructor(alertAndTransactionContext: UseAlertAndTransactionServiceType) {
+    this.alertAndTransactionContext = alertAndTransactionContext;
   }
 
   openPosition(
@@ -93,6 +88,7 @@ export default class PositionService implements IPositionService {
           gas: 0,
           value: toWei(collateral.toString(), "ether")
         };
+
         const gas = await getEstimateGas(
           wallet,
           "execute",
@@ -108,7 +104,7 @@ export default class PositionService implements IPositionService {
             if (SKIP_ERRORS.includes(eventData?.code)) {
               return;
             }
-            this.alertStore.setShowSuccessAlert(
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
               true,
               "New position opened successfully!"
             );
@@ -120,7 +116,7 @@ export default class PositionService implements IPositionService {
           .execute(openPositionCall)
           .send(options)
           .on("transactionHash", (hash: any) => {
-            this.transactionStore.addTransaction({
+            this.alertAndTransactionContext.addTransaction({
               hash: hash,
               type: TransactionType.OpenPosition,
               active: false,
@@ -130,7 +126,7 @@ export default class PositionService implements IPositionService {
             });
           })
           .then((receipt: TransactionReceipt) => {
-            this.alertStore.setShowSuccessAlert(
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
               true,
               "New position opened successfully!"
             );
@@ -138,11 +134,12 @@ export default class PositionService implements IPositionService {
             resolve(receipt.blockNumber);
           })
           .catch((error: any) => {
-            this.alertStore.setShowErrorAlert(true, error.message);
+            console.log(error);
+            this.alertAndTransactionContext.setShowErrorAlertHandler(true, error.message);
             reject(error);
           });
       } catch (error: any) {
-        this.alertStore.setShowErrorAlert(true, error.message);
+        this.alertAndTransactionContext.setShowErrorAlertHandler(true, error.message);
         reject(error);
       }
     });
@@ -216,7 +213,7 @@ export default class PositionService implements IPositionService {
             if (SKIP_ERRORS.includes(eventData?.code)) {
               return;
             }
-            this.alertStore.setShowSuccessAlert(
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
               true,
               "Top Up position successfully!"
             );
@@ -228,7 +225,7 @@ export default class PositionService implements IPositionService {
           .execute(topUpPositionCall)
           .send(options)
           .on("transactionHash", (hash: any) => {
-            this.transactionStore.addTransaction({
+            this.alertAndTransactionContext.addTransaction({
               hash: hash,
               type: TransactionType.OpenPosition,
               active: false,
@@ -238,18 +235,18 @@ export default class PositionService implements IPositionService {
             });
           })
           .then((receipt: TransactionReceipt) => {
-            this.alertStore.setShowSuccessAlert(
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
               true,
               "Top Up position successfully!"
             );
             resolve(receipt.blockNumber);
           })
           .catch((error: any) => {
-            this.alertStore.setShowErrorAlert(true, error.message);
+            this.alertAndTransactionContext.setShowErrorAlertHandler(true, error.message);
             reject(error);
           });
       } catch (error: any) {
-        this.alertStore.setShowErrorAlert(true, error.message);
+        this.alertAndTransactionContext.setShowErrorAlertHandler(true, error.message);
         reject(error);
       }
     });
@@ -318,7 +315,7 @@ export default class PositionService implements IPositionService {
             if (SKIP_ERRORS.includes(eventData?.code)) {
               return;
             }
-            this.alertStore.setShowSuccessAlert(
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
               true,
               "Top Up position successfully!"
             );
@@ -330,7 +327,7 @@ export default class PositionService implements IPositionService {
           .execute(topUpPositionCall)
           .send(options)
           .on("transactionHash", (hash: any) => {
-            this.transactionStore.addTransaction({
+            this.alertAndTransactionContext.addTransaction({
               hash: hash,
               type: TransactionType.OpenPosition,
               active: false,
@@ -340,18 +337,18 @@ export default class PositionService implements IPositionService {
             });
           })
           .then((receipt: TransactionReceipt) => {
-            this.alertStore.setShowSuccessAlert(
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
               true,
               "Top Up position successfully!"
             );
             resolve(receipt.blockNumber);
           })
           .catch((error: any) => {
-            this.alertStore.setShowErrorAlert(true, error.message);
+            this.alertAndTransactionContext.setShowErrorAlertHandler(true, error.message);
             reject(error);
           });
       } catch (error: any) {
-        this.alertStore.setShowErrorAlert(true, error.message);
+        this.alertAndTransactionContext.setShowErrorAlertHandler(true, error.message);
         reject(error);
       }
     });
@@ -372,7 +369,7 @@ export default class PositionService implements IPositionService {
 
       return proxyWallet;
     } catch (error: any) {
-      this.alertStore.setShowErrorAlert(true, error.message);
+      this.alertAndTransactionContext.setShowErrorAlertHandler(true, error.message);
       throw error;
     }
   }
@@ -392,7 +389,7 @@ export default class PositionService implements IPositionService {
     address: string,
     collateral: string,
     library: Xdc3
-  ): Promise<number|undefined> {
+  ): Promise<number | undefined> {
     return new Promise(async (resolve, reject) => {
       try {
         const proxyWalletAddress = await this.proxyWalletExist(
@@ -445,7 +442,7 @@ export default class PositionService implements IPositionService {
             if (SKIP_ERRORS.includes(eventData?.code)) {
               return;
             }
-            this.alertStore.setShowSuccessAlert(
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
               true,
               MESSAGE
             );
@@ -457,7 +454,7 @@ export default class PositionService implements IPositionService {
           .execute(wipeAllAndUnlockTokenCall)
           .send(options)
           .on("transactionHash", (hash: any) => {
-            this.transactionStore.addTransaction({
+            this.alertAndTransactionContext.addTransaction({
               hash: hash,
               type: TransactionType.ClosePosition,
               active: false,
@@ -467,17 +464,17 @@ export default class PositionService implements IPositionService {
             });
           })
           .then((receipt: TransactionReceipt) => {
-            this.alertStore.setShowSuccessAlert(
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
               true,
               MESSAGE
             );
             resolve(receipt.blockNumber);
           }).catch((error: any) => {
-          this.alertStore.setShowErrorAlert(true, error.message);
+          this.alertAndTransactionContext.setShowErrorAlertHandler(true, error.message);
           reject(error);
         });
       } catch (error: any) {
-        this.alertStore.setShowErrorAlert(true, error.message);
+        this.alertAndTransactionContext.setShowErrorAlertHandler(true, error.message);
         reject(error);
       }
     });
@@ -544,7 +541,7 @@ export default class PositionService implements IPositionService {
             if (SKIP_ERRORS.includes(eventData?.code)) {
               return;
             }
-            this.alertStore.setShowSuccessAlert(
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
               true,
               MESSAGE
             );
@@ -556,7 +553,7 @@ export default class PositionService implements IPositionService {
           .execute(wipeAndUnlockTokenCall)
           .send({ from: address })
           .on("transactionHash", (hash: any) => {
-            this.transactionStore.addTransaction({
+            this.alertAndTransactionContext.addTransaction({
               hash: hash,
               type: TransactionType.ClosePosition,
               active: false,
@@ -566,18 +563,18 @@ export default class PositionService implements IPositionService {
             });
           })
           .then((receipt: TransactionReceipt) => {
-            this.alertStore.setShowSuccessAlert(
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
               true,
               MESSAGE
             );
             resolve(receipt.blockNumber);
           })
           .catch((error: any) => {
-            this.alertStore.setShowErrorAlert(true, error.message);
+            this.alertAndTransactionContext.setShowErrorAlertHandler(true, error.message);
             reject(error);
           });
       } catch (error: any) {
-        this.alertStore.setShowErrorAlert(true, error.message);
+        this.alertAndTransactionContext.setShowErrorAlertHandler(true, error.message);
         reject(error);
       }
     });
@@ -618,7 +615,7 @@ export default class PositionService implements IPositionService {
             if (SKIP_ERRORS.includes(eventData?.code)) {
               return;
             }
-            this.alertStore.setShowSuccessAlert(
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
               true,
               "Approval was successful!"
             );
@@ -630,7 +627,7 @@ export default class PositionService implements IPositionService {
           .approve(proxyWalletAddress, MAX_UINT256)
           .send(options)
           .on("transactionHash", (hash: any) => {
-            this.transactionStore.addTransaction({
+            this.alertAndTransactionContext.addTransaction({
               hash: hash,
               type: TransactionType.Approve,
               active: false,
@@ -640,18 +637,18 @@ export default class PositionService implements IPositionService {
             });
           })
           .then((receipt: TransactionReceipt) => {
-            this.alertStore.setShowSuccessAlert(
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
               true,
               "Approval was successful!"
             );
             resolve(receipt.blockNumber);
           })
           .catch((error: any) => {
-            this.alertStore.setShowErrorAlert(true, error.message);
+            this.alertAndTransactionContext.setShowErrorAlertHandler(true, error.message);
             reject(error);
           });
       } catch (error: any) {
-        this.alertStore.setShowErrorAlert(true, error.message);
+        this.alertAndTransactionContext.setShowErrorAlertHandler(true, error.message);
         reject(error);
       }
     });
@@ -717,7 +714,7 @@ export default class PositionService implements IPositionService {
             if (SKIP_ERRORS.includes(eventData?.code)) {
               return;
             }
-            this.alertStore.setShowSuccessAlert(
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
               true,
               "Token approval was successful!"
             );
@@ -729,7 +726,7 @@ export default class PositionService implements IPositionService {
           .approve(proxyWalletAddress, MAX_UINT256)
           .send(options)
           .on("transactionHash", (hash: any) => {
-            this.transactionStore.addTransaction({
+            this.alertAndTransactionContext.addTransaction({
               hash: hash,
               type: TransactionType.Approve,
               active: false,
@@ -739,18 +736,18 @@ export default class PositionService implements IPositionService {
             });
           })
           .then((receipt: TransactionReceipt) => {
-            this.alertStore.setShowSuccessAlert(
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
               true,
               "Token approval was successful!"
             );
             resolve(receipt.blockNumber);
           })
           .catch((error: any) => {
-            this.alertStore.setShowErrorAlert(true, error.message);
+            this.alertAndTransactionContext.setShowErrorAlertHandler(true, error.message);
             reject(error);
           });
       } catch (error: any) {
-        this.alertStore.setShowErrorAlert(true, error.message);
+        this.alertAndTransactionContext.setShowErrorAlertHandler(true, error.message);
         reject(error);
       }
     });
@@ -808,7 +805,7 @@ export default class PositionService implements IPositionService {
     const debtValue =
       BigNumber(debtAccumulatedRate).multipliedBy(debtShareValue);
 
-    return debtValue.dividedBy(WeiPerRad).toFixed();
+    return debtValue.dividedBy(WeiPerRad).decimalPlaces(18).toString();
   }
 
   async getPositionDebtCeiling(poolId: string, library: Xdc3) {
@@ -822,6 +819,31 @@ export default class PositionService implements IPositionService {
       .call();
 
     return BigNumber(debtCeiling).dividedBy(WeiPerRad).integerValue().toString();
+  }
+
+  async isDecentralizedMode(library: Xdc3) {
+    try {
+      const proxyWalletRegistry = Web3Utils.getContractInstance(
+        SmartContractFactory.ProxyWalletRegistry(this.chainId),
+        library
+      );
+      return await proxyWalletRegistry.methods.isDecentralizedMode().call()
+    } catch (e: any) {
+      this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+    }
+  }
+
+  async isWhitelisted(address: string, library: Xdc3) {
+    try {
+      const proxyWalletRegistry = Web3Utils.getContractInstance(
+        SmartContractFactory.ProxyWalletRegistry(this.chainId),
+        library
+      );
+
+      return await proxyWalletRegistry.methods.whitelisted(address).call()
+    } catch (e: any) {
+      this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+    }
   }
 
   setChainId(chainId: number) {

@@ -33,12 +33,13 @@ import {
   AppTextField,
 } from "components/AppComponents/AppForm/AppForm";
 import InfoIcon from "@mui/icons-material/Info";
-import { getTokenLogoURL } from "utils/tokenLogo";
-import { formatPercentage } from "utils/format";
 
 import useRepayPositionContext from "context/repayPosition";
 import { styled } from "@mui/material/styles";
 import { ClosePositionDialogPropsType } from "components/Positions/RepayPositionDialog";
+
+import { getTokenLogoURL } from "utils/tokenLogo";
+import { formatPercentage } from "utils/format";
 
 const ClosePositionWrapper = styled(Grid)`
   padding-left: 20px;
@@ -124,7 +125,7 @@ const RepayPositionForm: FC<ClosePositionDialogPropsType> = ({
       <AppFormInputWrapper>
         <AppFormLabel>Repaying</AppFormLabel>
         {balance && (
-          <WalletBalance>Wallet Available: {balance} FXD</WalletBalance>
+          <WalletBalance>Wallet Available: {formatPercentage(balance)} FXD</WalletBalance>
         )}
         <AppTextField
           error={balanceError || balanceErrorNotFilled}
@@ -181,7 +182,7 @@ const RepayPositionForm: FC<ClosePositionDialogPropsType> = ({
           <ApproveBoxTypography>
             Please allow token approval in your MetaMask
           </ApproveBoxTypography>
-          <RepayApproveButton onClick={approve}>
+          <RepayApproveButton onClick={approve} disabled={approvalPending}>
             {" "}
             {approvalPending ? (
               <CircularProgress size={20} sx={{ color: "#0D1526" }} />
@@ -207,14 +208,14 @@ const RepayPositionForm: FC<ClosePositionDialogPropsType> = ({
       {fathomToken ? (
         <InfoWrapper>
           <InfoLabel>Repaying</InfoLabel>
-          <InfoValue>{fathomToken} FXD</InfoValue>
+          <InfoValue>{formatPercentage(fathomToken)} FXD</InfoValue>
         </InfoWrapper>
       ) : null}
       {fathomToken ? (
         <InfoWrapper>
           <InfoLabel>Receive</InfoLabel>
           <InfoValue>
-            {collateral} {pool.poolName}
+            {formatPercentage(collateral)} {pool.poolName}
           </InfoValue>
         </InfoWrapper>
       ) : null}

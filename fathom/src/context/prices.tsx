@@ -9,7 +9,7 @@ import {
   useState
 } from "react";
 import { SmartContractFactory } from "config/SmartContractFactory";
-import { useStores } from "stores";
+import { useStores } from "context/services";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 
@@ -17,18 +17,21 @@ type PricesProviderType = {
   children: ReactElement;
 };
 
-type UsePricesContextReturn = {
+export type UsePricesContextReturn = {
   fxdPrice: number;
   wxdcPrice: number;
   fthmPrice: number;
 };
 
 // @ts-ignore
-export const PricesContext = createContext<UseStakingViewType>(null);
+export const PricesContext = createContext<UsePricesContextReturn>(
+  {} as UsePricesContextReturn
+);
 
 export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
-  const { stakingService, centralizedOracleService } = useStores();
+  const { stakingService } = useStores();
   const { chainId, library } = useConnector();
+
   const [fxdPrice, setFxdPrice] = useState<number>(0);
   const [wxdcPrice, setWxdcPrice] = useState<number>(0);
   const [fthmPrice, setFthmPrice] = useState<number>(0);
@@ -97,17 +100,12 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
         }).catch((e) => {
           console.log('Pair USDT/FXD not exists on DEX')
         });
-
-        centralizedOracleService.cryptocompareConvertXdcUsdt().then((centralizedPrice) => {
-          console.log(centralizedPrice);
-        });
       } catch (e: any) {
         console.log(e);
       }
     }
   }, [
     stakingService,
-    centralizedOracleService,
     usdtTokenAddress,
     fthmTokenAddress,
     fxdTokenAddress,
@@ -141,10 +139,10 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
   );
 };
 
-const usePricesContext = (): UsePricesContextReturn => {
+const usePricesContext = () => {
   const context = useContext(PricesContext);
 
-  if (context === undefined) {
+  if (!context) {
     throw new Error(
       "usePricesContext hook must be used with a PricesContext component"
     );

@@ -1,4 +1,4 @@
-import { AbiItem } from "web3-utils";
+import { AbiItem } from "xdc3-utils";
 import BEP20Abi from "config/ABI/BEP20.json";
 import CollateralPoolConfigAbi from "config/ABI/CollateralPoolConfig.json";
 import CollateralTokenAdapterAbi from "config/ABI/CollateralTokenAdapter.json";

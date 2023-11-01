@@ -58,7 +58,7 @@ const TopUpPositionInfo = () => {
           secondaryAction={
             <>
               {formatPercentage(
-                BigNumber(position.lockedCollateral).toNumber()
+                position.lockedCollateral
               )}{" "}
               {pool.poolName}{" "}
               <Box component="span" sx={{ color: "#29C20A" }}>
@@ -78,13 +78,13 @@ const TopUpPositionInfo = () => {
         </AppListItem>
         <AppListItem
           alignItems="flex-start"
-          secondaryAction={`${formatPercentage(safetyBuffer * 100)} %`}
+          secondaryAction={`${formatPercentage(BigNumber(safetyBuffer).multipliedBy(100).toNumber())} %`}
         >
           <ListItemText primary="Safety Buffer" />
         </AppListItem>
         <AppListItem
           alignItems="flex-start"
-          secondaryAction={`$${formatPercentage(liquidationPrice)}`}
+          secondaryAction={`$${formatPercentage(BigNumber(liquidationPrice).toNumber())}`}
         >
           <ListItemText primary={`Liquidation Price of ${pool.poolName}`} />
         </AppListItem>

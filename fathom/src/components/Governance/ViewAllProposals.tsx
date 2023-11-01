@@ -7,7 +7,7 @@ import {
   Box,
 } from "@mui/material";
 import { useAllProposals } from "hooks/useAllProposals";
-import IProposal from "stores/interfaces/IProposal";
+import IProposal from "services/interfaces/IProposal";
 import { PageHeader } from "components/Dashboard/PageHeader";
 import ViewAllProposalItem from "components/Governance/ViewAllProposalItem";
 import Propose from "components/Governance/Propose";

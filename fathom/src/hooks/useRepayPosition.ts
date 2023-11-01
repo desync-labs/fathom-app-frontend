@@ -5,7 +5,7 @@ import {
   useMemo,
   useState
 } from "react";
-import { useStores } from "stores";
+import { useStores } from "context/services";
 import BigNumber from "bignumber.js";
 import { useQuery } from "@apollo/client";
 import { FXD_POOLS } from "apollo/queries";
@@ -16,8 +16,8 @@ import useConnector from "context/connector";
 
 import { WeiPerWad } from "helpers/Constants";
 
-import ICollateralPool from "stores/interfaces/ICollateralPool";
-import IOpenPosition from "stores/interfaces/IOpenPosition";
+import ICollateralPool from "services/interfaces/ICollateralPool";
+import IOpenPosition from "services/interfaces/IOpenPosition";
 import debounce from "lodash.debounce";
 import { SmartContractFactory } from "config/SmartContractFactory";
 
@@ -182,26 +182,31 @@ const useRepayPosition = (
   ]);
 
   const handleOnOpen = useCallback(async () => {
-    const price = BigNumber(debtValue).dividedBy(lockedCollateral);
-    setPrice(price.toString());
+    if (debtValue) {
+      const price = BigNumber(debtValue).dividedBy(lockedCollateral);
+      setPrice(price.toString());
 
-    const fathomValue = BigNumber(balance).isGreaterThan(debtValue) ? debtValue : balance;
-    setFathomToken(fathomValue);
+      const fathomValue = BigNumber(balance).isGreaterThan(debtValue) ? debtValue : balance;
+      setFathomToken(fathomValue);
 
-    let collateral = BigNumber(fathomValue).dividedBy(price);
+      let collateral = BigNumber(fathomValue).dividedBy(price);
 
-    if (collateral.isGreaterThan(lockedCollateral)) {
-      collateral = BigNumber(lockedCollateral);
+      if (collateral.isGreaterThan(lockedCollateral)) {
+        collateral = BigNumber(lockedCollateral);
+      }
+
+      setCollateral(collateral.toString());
     }
-
-    setCollateral(collateral.toString());
   }, [lockedCollateral, balance, debtValue, setPrice, setFathomToken, setCollateral]);
 
   useEffect(() => {
-    getBalance().then(() => {
+    Promise.all([
+      getBalance(),
+      getDebtValue()
+    ])
+    .then(() => {
       handleOnOpen();
     });
-    getDebtValue();
   }, [getBalance, handleOnOpen, getDebtValue]);
 
   useEffect(() => {
@@ -236,7 +241,7 @@ const useRepayPosition = (
           position.positionId,
           pool,
           account,
-          BigNumber(collateral).multipliedBy(WeiPerWad).toFixed(),
+          BigNumber(collateral).multipliedBy(WeiPerWad).toFixed(0),
           library
         );
       } else {
@@ -295,7 +300,7 @@ const useRepayPosition = (
         : setBalanceError(false);
 
       setFathomToken(value);
-      setCollateral(bigIntValue.dividedBy(price).precision(18).toFixed());
+      setCollateral(bigIntValue.dividedBy(price).decimalPlaces(18).toString());
       setFathomTokenIsDirty(true);
     },
     [

@@ -6,7 +6,7 @@ import {
   ManagePositionButton
 } from "components/AppComponents/AppButton/AppButton";
 import { AppTableRow } from "components/AppComponents/AppTable/AppTable";
-import IOpenPosition from "stores/interfaces/IOpenPosition";
+import IOpenPosition from "services/interfaces/IOpenPosition";
 import { styled } from "@mui/material/styles";
 import TokenLogo from "components/Common/TokenLogo";
 import { getTokenLogoURL } from "utils/tokenLogo";
@@ -83,7 +83,7 @@ const PositionListItem: FC<PositionListItemProps> = ({
       <TableCell>
         <ButtonsWrapper>
           {approveBtn ? (
-            <ButtonPrimary onClick={approve} sx={{ height: "32px" }}>
+            <ButtonPrimary onClick={approve} sx={{ height: "32px" }} disabled={approvalPending} isLoading={approvalPending}>
               {approvalPending ? (
                 <CircularProgress size={20} sx={{ color: "#0D1526" }} />
               ) : (

@@ -1,13 +1,14 @@
-import ICollateralPool from "stores/interfaces/ICollateralPool";
 import React, { Dispatch, FC, SetStateAction } from "react";
+import ICollateralPool from "services/interfaces/ICollateralPool";
+
 import { styled } from "@mui/material/styles";
 import { Box } from "@mui/material";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatCurrency, formatNumber } from "utils/format";
 import { TVL, PoolName } from "components/AppComponents/AppBox/AppBox";
-import PriceChanged from "../Common/PriceChange";
+import PriceChanged from "components/Common/PriceChange";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import { OpenPositionButton } from "../AppComponents/AppButton/AppButton";
+import { OpenPositionButton } from "components/AppComponents/AppButton/AppButton";
 
 type PoolsListItemMobilePropsType = {
   pool: ICollateralPool;
@@ -43,7 +44,18 @@ const ListLabel = styled(Box)`
 const ListValue = styled(Box)`
   display: flex;
   justify-content: right;
-  flex-direction: column;
+  align-items: center;
+  flex-direction: row;
+  gap: 7px;
+  span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  &.column {
+    flex-direction: column;
+    align-items: end;
+  }
 `;
 
 const PoolWrapper = styled(Box)`
@@ -68,7 +80,7 @@ const PoolsListItemMobile: FC<PoolsListItemMobilePropsType> = ({
     <PoolsListItemMobileContainer>
       <ListItemWrapper>
         <ListLabel>Pool</ListLabel>
-        <ListValue>
+        <ListValue className={'column'}>
           <PoolWrapper>
             <img
               src={getTokenLogoURL(
