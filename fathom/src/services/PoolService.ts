@@ -16,10 +16,6 @@ export default class PoolService implements IPoolService {
     this.alertAndTransactionContext = alertAndTransactionContext;
   }
 
-  setChainId(chainId: number) {
-    this.chainId = chainId;
-  }
-
   async getUserTokenBalance(
     address: string,
     forAddress: string,
@@ -76,5 +72,9 @@ export default class PoolService implements IPoolService {
     } catch (e: any) {
       this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
     }
+  }
+
+  setChainId(chainId: number) {
+    this.chainId = chainId;
   }
 }

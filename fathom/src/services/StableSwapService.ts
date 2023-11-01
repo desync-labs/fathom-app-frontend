@@ -22,10 +22,10 @@ import {
 
 export default class StableSwapService implements IStableSwapService {
   chainId = DEFAULT_CHAIN_ID;
-  alertAndTransactionProvider: UseAlertAndTransactionServiceType;
+  alertAndTransactionContext: UseAlertAndTransactionServiceType;
 
-  constructor(alertAndTransactionProvider: UseAlertAndTransactionServiceType) {
-    this.alertAndTransactionProvider = alertAndTransactionProvider
+  constructor(alertAndTransactionContext: UseAlertAndTransactionServiceType) {
+    this.alertAndTransactionContext = alertAndTransactionContext
   }
 
   swapTokenToStableCoin(
@@ -63,7 +63,7 @@ export default class StableSwapService implements IStableSwapService {
             if (SKIP_ERRORS.includes(eventData?.code)) {
               return;
             }
-            this.alertAndTransactionProvider.setShowSuccessAlertHandler(true, MESSAGE);
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(true, MESSAGE);
             resolve(transactionReceipt.blockNumber);
           }
         );
@@ -72,7 +72,7 @@ export default class StableSwapService implements IStableSwapService {
           .swapTokenToStablecoin(account, formattedTokenAmount)
           .send(options)
           .on("transactionHash", (hash: any) => {
-            this.alertAndTransactionProvider.addTransaction({
+            this.alertAndTransactionContext.addTransaction({
               hash: hash,
               type: TransactionType.ClosePosition,
               active: false,
@@ -82,15 +82,15 @@ export default class StableSwapService implements IStableSwapService {
             });
           })
           .then((receipt: TransactionReceipt) => {
-            this.alertAndTransactionProvider.setShowSuccessAlertHandler(true, MESSAGE);
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(true, MESSAGE);
             resolve(receipt.blockNumber);
           })
           .catch((e: any) => {
-            this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+            this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
             reject(e);
           });
       } catch (e: any) {
-        this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+        this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
         reject(e);
       }
     });
@@ -131,7 +131,7 @@ export default class StableSwapService implements IStableSwapService {
             if (SKIP_ERRORS.includes(eventData?.code)) {
               return;
             }
-            this.alertAndTransactionProvider.setShowSuccessAlertHandler(true, MESSAGE);
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(true, MESSAGE);
             resolve(transactionReceipt.blockNumber);
 
           }
@@ -141,7 +141,7 @@ export default class StableSwapService implements IStableSwapService {
           .swapStablecoinToToken(account, formattedTokenAmount)
           .send(options)
           .on("transactionHash", (hash: any) => {
-            this.alertAndTransactionProvider.addTransaction({
+            this.alertAndTransactionContext.addTransaction({
               hash: hash,
               type: TransactionType.ClosePosition,
               active: false,
@@ -151,15 +151,15 @@ export default class StableSwapService implements IStableSwapService {
             });
           })
           .then((receipt: TransactionReceipt) => {
-            this.alertAndTransactionProvider.setShowSuccessAlertHandler(true, MESSAGE);
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(true, MESSAGE);
             resolve(receipt.blockNumber);
           })
           .catch((e: any) => {
-            this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+            this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
             reject(e);
           });
       } catch (e: any) {
-        this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+        this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
         reject(e);
       }
     });
@@ -194,7 +194,7 @@ export default class StableSwapService implements IStableSwapService {
             if (SKIP_ERRORS.includes(eventData?.code)) {
               return;
             }
-            this.alertAndTransactionProvider.setShowSuccessAlertHandler(true, MESSAGE);
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(true, MESSAGE);
             resolve(transactionReceipt.blockNumber);
           }
         );
@@ -203,7 +203,7 @@ export default class StableSwapService implements IStableSwapService {
           .depositTokens(formattedTokenAmount)
           .send(options)
           .on("transactionHash", (hash: any) => {
-            this.alertAndTransactionProvider.addTransaction({
+            this.alertAndTransactionContext.addTransaction({
               hash: hash,
               type: TransactionType.ClosePosition,
               active: false,
@@ -213,15 +213,15 @@ export default class StableSwapService implements IStableSwapService {
             });
           })
           .then((receipt: TransactionReceipt) => {
-            this.alertAndTransactionProvider.setShowSuccessAlertHandler(true, MESSAGE);
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(true, MESSAGE);
             resolve(receipt.blockNumber);
           })
           .catch((e: any) => {
-            this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+            this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
             reject(e);
           });
       } catch (e: any) {
-        this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+        this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
         reject(e);
       }
     });
@@ -256,7 +256,7 @@ export default class StableSwapService implements IStableSwapService {
             if (SKIP_ERRORS.includes(eventData?.code)) {
               return;
             }
-            this.alertAndTransactionProvider.setShowSuccessAlertHandler(true, MESSAGE);
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(true, MESSAGE);
             resolve(transactionReceipt.blockNumber);
           }
         );
@@ -265,7 +265,7 @@ export default class StableSwapService implements IStableSwapService {
           .withdrawTokens(formattedTokenAmount)
           .send(options)
           .on("transactionHash", (hash: any) => {
-            this.alertAndTransactionProvider.addTransaction({
+            this.alertAndTransactionContext.addTransaction({
               hash: hash,
               type: TransactionType.ClosePosition,
               active: false,
@@ -275,15 +275,15 @@ export default class StableSwapService implements IStableSwapService {
             });
           })
           .then((receipt: TransactionReceipt) => {
-            this.alertAndTransactionProvider.setShowSuccessAlertHandler(true, MESSAGE);
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(true, MESSAGE);
             resolve(receipt.blockNumber);
           })
           .catch((e: any) => {
-            this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+            this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
             reject(e);
           });
       } catch (e: any) {
-        this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+        this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
         reject(e);
       }
     });
@@ -322,7 +322,7 @@ export default class StableSwapService implements IStableSwapService {
             if (SKIP_ERRORS.includes(eventData?.code)) {
               return;
             }
-            this.alertAndTransactionProvider.setShowSuccessAlertHandler(true, MESSAGE);
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(true, MESSAGE);
             resolve(transactionReceipt.blockNumber);
           }
         );
@@ -334,7 +334,7 @@ export default class StableSwapService implements IStableSwapService {
           )
           .send(options)
           .on("transactionHash", (hash: any) => {
-            this.alertAndTransactionProvider.addTransaction({
+            this.alertAndTransactionContext.addTransaction({
               hash: hash,
               type: TransactionType.ClosePosition,
               active: false,
@@ -344,15 +344,15 @@ export default class StableSwapService implements IStableSwapService {
             });
           })
           .then((receipt: TransactionReceipt) => {
-            this.alertAndTransactionProvider.setShowSuccessAlertHandler(true, MESSAGE);
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(true, MESSAGE);
             resolve(receipt.blockNumber);
           })
           .catch((e: any) => {
-            this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+            this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
             reject(e);
           });
       } catch (e: any) {
-        this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+        this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
         reject(e);
       }
     });
@@ -395,7 +395,7 @@ export default class StableSwapService implements IStableSwapService {
           )
           .send(options)
           .on("transactionHash", (hash: any) => {
-            this.alertAndTransactionProvider.addTransaction({
+            this.alertAndTransactionContext.addTransaction({
               hash: hash,
               type: TransactionType.ClosePosition,
               active: false,
@@ -405,15 +405,15 @@ export default class StableSwapService implements IStableSwapService {
             });
           })
           .then((receipt: TransactionReceipt) => {
-            this.alertAndTransactionProvider.setShowSuccessAlertHandler(true, MESSAGE);
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(true, MESSAGE);
             resolve(receipt.blockNumber);
           })
           .catch((e: any) => {
-            this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+            this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
             reject(e);
           });
       } catch (e: any) {
-        this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+        this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
         reject(e);
       }
     });
@@ -445,7 +445,7 @@ export default class StableSwapService implements IStableSwapService {
         BigNumber(10 ** tokenInDecimal).multipliedBy(tokenIn)
       );
     } catch (e: any) {
-      this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+      this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
     }
   }
 
@@ -475,7 +475,7 @@ export default class StableSwapService implements IStableSwapService {
         BigNumber(10 ** tokenInDecimal).multipliedBy(tokenIn)
       );
     } catch (e: any) {
-      this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+      this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
     }
   }
 
@@ -502,7 +502,7 @@ export default class StableSwapService implements IStableSwapService {
          .claimFeesRewards()
          .send(options)
          .on("transactionHash", (hash: any) => {
-           this.alertAndTransactionProvider.addTransaction({
+           this.alertAndTransactionContext.addTransaction({
              hash: hash,
              type: TransactionType.StableSwap,
              active: false,
@@ -512,15 +512,15 @@ export default class StableSwapService implements IStableSwapService {
            });
          })
          .then((receipt: TransactionReceipt) => {
-           this.alertAndTransactionProvider.setShowSuccessAlertHandler(true, MESSAGE);
+           this.alertAndTransactionContext.setShowSuccessAlertHandler(true, MESSAGE);
            resolve(receipt.blockNumber);
          })
          .catch((e: any) => {
-           this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+           this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
            reject(e);
          });
      } catch (e: any) {
-       this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+       this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
        reject(e);
      }
    })
@@ -549,7 +549,7 @@ export default class StableSwapService implements IStableSwapService {
           .withdrawClaimedFees()
           .send(options)
           .on("transactionHash", (hash: any) => {
-            this.alertAndTransactionProvider.addTransaction({
+            this.alertAndTransactionContext.addTransaction({
               hash: hash,
               type: TransactionType.StableSwap,
               active: false,
@@ -559,15 +559,15 @@ export default class StableSwapService implements IStableSwapService {
             });
           })
           .then((receipt: TransactionReceipt) => {
-            this.alertAndTransactionProvider.setShowSuccessAlertHandler(true, MESSAGE);
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(true, MESSAGE);
             resolve(receipt.blockNumber);
           })
           .catch((e: any) => {
-            this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+            this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
             reject(e);
           });
       } catch (e: any) {
-        this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+        this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
         reject(e);
       }
     })
@@ -582,7 +582,7 @@ export default class StableSwapService implements IStableSwapService {
 
       return StableSwapModule.methods.feeIn().call();
     } catch (e: any) {
-      this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+      this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
     }
   }
 
@@ -594,7 +594,7 @@ export default class StableSwapService implements IStableSwapService {
       );
       return StableSwapModule.methods.feeOut().call();
     } catch (e: any) {
-      this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+      this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
     }
   }
 
@@ -606,7 +606,7 @@ export default class StableSwapService implements IStableSwapService {
       );
       return StableSwapModule.methods.lastUpdate().call()
     } catch (e: any) {
-      this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+      this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
     }
   }
 
@@ -619,7 +619,7 @@ export default class StableSwapService implements IStableSwapService {
 
       return StableSwapModule.methods.dailySwapLimit().call();
     } catch (e: any) {
-      this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+      this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
     }
   }
 
@@ -632,7 +632,7 @@ export default class StableSwapService implements IStableSwapService {
 
       return StableSwapModule.methods.tokenBalance(tokenAddress).call();
     } catch (e: any) {
-      this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+      this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
     }
   }
 
@@ -644,7 +644,7 @@ export default class StableSwapService implements IStableSwapService {
       );
       return StableSwapModule.methods.isDecentralizedState().call();
     } catch (e: any) {
-      this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+      this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
     }
   }
 
@@ -656,7 +656,7 @@ export default class StableSwapService implements IStableSwapService {
       );
       return StableSwapModule.methods.isUserWhitelisted(address).call();
     } catch (e: any) {
-      this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+      this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
     }
   }
 
@@ -668,7 +668,7 @@ export default class StableSwapService implements IStableSwapService {
       );
       return StableSwapModuleWrapper.methods.usersWhitelist(address).call();
     } catch (e: any) {
-      this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+      this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
     }
   }
 
@@ -683,7 +683,7 @@ export default class StableSwapService implements IStableSwapService {
         from: account
       });
     } catch (e: any) {
-      this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+      this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
     }
   }
 
@@ -695,7 +695,7 @@ export default class StableSwapService implements IStableSwapService {
       );
       return StableSwapModule.methods.totalValueLocked().call();
     } catch (e: any) {
-      this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+      this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
     }
   }
 
@@ -707,7 +707,7 @@ export default class StableSwapService implements IStableSwapService {
       );
       return StableSwapModuleWrapper.methods.depositTracker(account).call();
     } catch (e: any) {
-      this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+      this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
     }
   }
 
@@ -719,7 +719,7 @@ export default class StableSwapService implements IStableSwapService {
       );
       return StableSwapModuleWrapper.methods.getActualLiquidityAvailablePerUser(account).call();
     } catch (e: any) {
-      this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+      this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
     }
   }
 
@@ -731,7 +731,7 @@ export default class StableSwapService implements IStableSwapService {
       );
       return StableSwapModuleWrapper.methods.getClaimableFeesPerUser(account).call();
     } catch (e: any) {
-      this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+      this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
     }
   }
 
@@ -743,7 +743,7 @@ export default class StableSwapService implements IStableSwapService {
       );
       return StableSwapModuleWrapper.methods.claimedFXDFeeRewards(account).call();
     } catch (e: any) {
-      this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+      this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
     }
   }
 
@@ -755,7 +755,7 @@ export default class StableSwapService implements IStableSwapService {
       );
       return StableSwapModuleWrapper.methods.claimedTokenFeeRewards(account).call();
     } catch (e: any) {
-      this.alertAndTransactionProvider.setShowErrorAlertHandler(true, e.message);
+      this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
     }
   }
 

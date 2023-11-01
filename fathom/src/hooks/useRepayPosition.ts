@@ -261,7 +261,7 @@ const useRepayPosition = (
         );
       }
 
-      setLastTransactionBlock(blockNumber!);
+      setLastTransactionBlock(blockNumber as number);
       onClose();
     } catch (e) {
       console.error(e);
