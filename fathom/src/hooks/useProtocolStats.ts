@@ -5,7 +5,7 @@ import usePoolsList from "hooks/usePoolsList";
 import {
   useMemo
 } from "react";
-import ICollateralPool from "stores/interfaces/ICollateralPool";
+import ICollateralPool from "services/interfaces/ICollateralPool";
 
 const useProtocolStats = () => {
   const { chainId } = useConnector();

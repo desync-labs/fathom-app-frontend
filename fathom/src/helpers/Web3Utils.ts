@@ -1,12 +1,5 @@
 import Xdc3 from "xdc3";
-import { AbiItem } from "web3-utils";
 import { AbiItem as XdcAbiItem } from "xdc3-utils";
-
-interface ContractMetaData {
-  address: string;
-  abi: AbiItem[];
-}
-
 interface XdcContractMetaData {
   address: string;
   abi: XdcAbiItem[];
@@ -14,7 +7,7 @@ interface XdcContractMetaData {
 
 export class Web3Utils {
   public static getContractInstance(
-    contractMetaData: ContractMetaData | XdcContractMetaData,
+    contractMetaData: XdcContractMetaData,
     library: Xdc3
   ): any {
     return new library.eth.Contract(
@@ -24,7 +17,7 @@ export class Web3Utils {
   }
 
   public static getContractInstanceFrom(
-    abi: AbiItem[] | XdcAbiItem[],
+    abi: XdcAbiItem[],
     address: string,
     library: Xdc3
   ): any {

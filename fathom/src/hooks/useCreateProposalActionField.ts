@@ -6,7 +6,6 @@ import {
 import { useFormContext } from "react-hook-form";
 import useConnector from "context/connector";
 import Xdc3 from "xdc3";
-import Web3 from "web3";
 import debounce from "lodash.debounce";
 
 const useCreateProposalActionField = (index: number) => {
@@ -20,7 +19,7 @@ const useCreateProposalActionField = (index: number) => {
     () =>
       debounce(
         (functionSignature: string, functionArguments: string) => {
-          console.log('generateCallData')
+          console.log("generateCallData");
 
           if (functionSignature) {
             const trimmedFunctionSignature = functionSignature.replace(/\s/g, "");
@@ -44,8 +43,8 @@ const useCreateProposalActionField = (index: number) => {
               );
 
               if (argumentTypes && argumentTypes[1]) {
-                argumentTypes = argumentTypes[1].split(",");
-                if (argumentTypes.length === argumentValues.length) {
+                let argumentTypesSplit = argumentTypes[1].split(",");
+                if (argumentTypesSplit.length === argumentValues.length) {
                   callData += library.eth.abi
                     .encodeParameters(argumentTypes, argumentValues)
                     .replace("0x", "")
@@ -69,19 +68,16 @@ const useCreateProposalActionField = (index: number) => {
     generateCallData(functionSignature, functionArguments);
   }, [functionSignature, functionArguments, generateCallData]);
 
-  const validateAddress= useCallback((address: string) => {
+  const validateAddress = useCallback((address: string) => {
     let valid = true;
     const trimmedAddresses = address.trim();
 
-    if (
-      !Xdc3.utils.isAddress(trimmedAddresses) &&
-      !Web3.utils.isAddress(trimmedAddresses)
-    ) {
+    if (!Xdc3.utils.isAddress(trimmedAddresses)) {
       valid = false;
     }
 
     if (!valid) {
-      return `Please provide valid XDC address`;
+      return "Please provide valid XDC address";
     }
 
     return valid;
@@ -89,7 +85,7 @@ const useCreateProposalActionField = (index: number) => {
 
   return {
     control,
-    validateAddress,
+    validateAddress
   };
 };
 

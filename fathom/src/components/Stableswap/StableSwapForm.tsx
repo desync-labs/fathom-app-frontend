@@ -32,7 +32,7 @@ import {
   ErrorBox,
   ErrorMessage,
 } from "components/AppComponents/AppBox/AppBox";
-import { formatPercentage } from "../../utils/format";
+import { formatPercentage } from "utils/format";
 
 
 const StableSwapErrorBox = styled(ErrorBox)`

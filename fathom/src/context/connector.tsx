@@ -11,20 +11,50 @@ import {
 import { useWeb3React } from "@web3-react/core";
 import WalletConnectProvider from "@walletconnect/ethereum-provider";
 import { ConnectorEvent } from "@web3-react/types";
-import { useStores } from "stores";
+import { useStores } from "context/services";
 import {
+  ChainId,
   injected,
   supportedChainIds,
   WalletConnect,
   xdcInjected
 } from "connectors/networks";
 import { getDefaultProvider } from "utils/defaultProvider";
-
-export const ConnectorContext = createContext(null);
+import { AbstractConnector } from "@web3-react/abstract-connector";
+import Xdc3 from "xdc3";
 
 type ConnectorProviderType = {
   children: ReactElement;
 };
+
+export type UseConnectorReturnType = {
+  connector: AbstractConnector | undefined,
+  isActive: boolean,
+  account: string,
+  isLoading: boolean,
+  connectMetamask: () => Promise<void>,
+  connectXdcPay: () => Promise<void>,
+  connectWalletConnect: () => Promise<void>,
+  disconnect: () => Promise<void>,
+  shouldDisable: boolean,
+  chainId: ChainId,
+  error: Error | undefined,
+  library: Xdc3,
+  isMetamask: boolean,
+  isWalletConnect: boolean,
+  isXdcPay: boolean,
+  isDecentralizedState: boolean,
+  isDecentralizedMode: boolean,
+  isUserWhiteListed: boolean,
+  isUserWrapperWhiteListed: boolean,
+  isOpenPositionWhitelisted: boolean,
+  allowStableSwap: boolean,
+  allowStableSwapInProgress: boolean
+}
+
+export const ConnectorContext = createContext<UseConnectorReturnType>(
+  {} as UseConnectorReturnType
+);
 
 export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
   const {
@@ -40,28 +70,26 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
 
   const { stableSwapService, positionService } = useStores();
 
-  const [isMetamask, setIsMetamask] = useState(false);
-  const [isWalletConnect, setIsWalletConnect] = useState(false);
-  const [isXdcPay, setIsXdcPay] = useState(false);
+  const [isMetamask, setIsMetamask] = useState<boolean>(false);
+  const [isWalletConnect, setIsWalletConnect] = useState<boolean>(false);
+  const [isXdcPay, setIsXdcPay] = useState<boolean>(false);
 
-  const [shouldDisable, setShouldDisable] = useState(false); // Should disable connect button while connecting to MetaMask
-  const [isLoading, setIsLoading] = useState(true);
-  const [web3Library, setWeb3Library] = useState(library);
+  const [shouldDisable, setShouldDisable] = useState<boolean>(false); // Should disable connect button while connecting to MetaMask
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [web3Library, setWeb3Library] = useState<Xdc3>(library);
 
   const [isDecentralizedState, setIsDecentralizedState] = useState<
-    boolean|undefined
+    boolean | undefined
   >(undefined);
-  const [isDecentralizedMode, setIsDecentralizedMode] = useState<boolean|undefined>(undefined)
+  const [isDecentralizedMode, setIsDecentralizedMode] = useState<boolean | undefined>(undefined)
   const [isUserWhiteListed, setIsUserWhitelisted] = useState<
-    boolean|undefined
+    boolean | undefined
   >(undefined);
   const [isUserWrapperWhiteListed, setIsUserWrapperWhiteListed] = useState<boolean>(false);
   const [isOpenPositionWhitelisted, setIsOpenPositionWhitelisted] = useState<boolean>(true);
 
   const [allowStableSwapInProgress, setAllowStableSwapInProgress] =
     useState<boolean>(true);
-
-  const { transactionStore } = useStores();
 
   useEffect(() => {
     if (library && account && chainId && supportedChainIds.includes(chainId!)) {
@@ -88,13 +116,11 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
       setIsWalletConnect(
         web3Library.currentProvider instanceof WalletConnectProvider
       );
-
-      transactionStore.setLibrary(web3Library);
     } else {
       setIsMetamask(false);
       setIsWalletConnect(false);
     }
-  }, [web3Library, transactionStore, setIsMetamask, setIsWalletConnect]);
+  }, [web3Library, setIsMetamask, setIsWalletConnect]);
 
   useEffect(() => {
     if (chainId) {
@@ -124,7 +150,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
                 setIsOpenPositionWhitelisted(isOpenPositionWhitelisted);
               })
           }
-      })
+        })
     }
 
     if (account) {
@@ -285,10 +311,10 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
   );
 };
 
-const useConnector = (): any => {
+const useConnector = () => {
   const context = useContext(ConnectorContext);
 
-  if (context === undefined) {
+  if (!context) {
     throw new Error(
       "useConnector hook must be used with a ConnectorProvider component"
     );

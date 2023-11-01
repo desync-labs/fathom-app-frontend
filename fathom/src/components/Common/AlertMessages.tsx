@@ -1,10 +1,9 @@
 import * as React from "react";
-import { observer } from "mobx-react";
-import { useStores } from "stores";
 import { Alert, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { styled } from "@mui/material/styles";
 import { FC } from "react";
+import useAlertAndTransactionContext from "context/alertAndTransaction";
 
 const AlertMessage = styled(Alert, {
   shouldForwardProp: (prop) => prop !== "scroll",
@@ -23,12 +22,19 @@ type AlertMessagesPropsType = {
   scroll: number
 }
 
-const AlertMessages: FC<AlertMessagesPropsType> = observer(({ scroll }) => {
-  const { alertStore } = useStores();
+const AlertMessages: FC<AlertMessagesPropsType> = ({ scroll }) => {
+  const {
+    showErrorAlert,
+    showSuccessAlert,
+    successAlertMessage,
+    errorAlertMessage,
+    setShowSuccessAlert,
+    setShowErrorAlert,
+  } = useAlertAndTransactionContext();
 
   return (
     <>
-      {alertStore.showErrorAlert && (
+      {showErrorAlert && (
         <AlertMessage
           severity="error"
           variant="filled"
@@ -39,17 +45,17 @@ const AlertMessages: FC<AlertMessagesPropsType> = observer(({ scroll }) => {
               color="inherit"
               size="small"
               onClick={() => {
-                alertStore.setShowErrorAlert(false);
+                setShowErrorAlert(false);
               }}
             >
               <CloseIcon fontSize="inherit" />
             </IconButton>
           }
         >
-          {alertStore.errorAlertMessage}
+          {errorAlertMessage}
         </AlertMessage>
       )}
-      {alertStore.showSuccessAlert && (
+      {showSuccessAlert && (
         <AlertMessage
           severity="success"
           scroll={scroll}
@@ -60,18 +66,18 @@ const AlertMessages: FC<AlertMessagesPropsType> = observer(({ scroll }) => {
               color="inherit"
               size="small"
               onClick={() => {
-                alertStore.setShowSuccessAlert(false);
+                setShowSuccessAlert(false);
               }}
             >
               <CloseIcon fontSize="inherit" />
             </IconButton>
           }
         >
-          {alertStore.successAlertMessage}
+          {successAlertMessage}
         </AlertMessage>
       )}
     </>
   );
-});
+};
 
 export default AlertMessages;
