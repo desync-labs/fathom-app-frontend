@@ -12,7 +12,7 @@ import BigNumber from "bignumber.js";
 import { OpenPositionContextType } from "context/openPosition";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
-import IOpenPosition from "services/interfaces/IOpenPosition";
+import IOpenPosition from "services/interfaces/models/IOpenPosition";
 import { DANGER_SAFETY_BUFFER } from "helpers/Constants";
 import {
   useMediaQuery,
@@ -307,7 +307,7 @@ const useTopUpPosition = (
             library
           );
         }
-        setLastTransactionBlock(blockNumber!);
+        setLastTransactionBlock(blockNumber as number);
         onClose();
       } catch (e) {
         console.log(e);

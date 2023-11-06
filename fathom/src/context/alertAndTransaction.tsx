@@ -12,7 +12,7 @@ import {
 import {
   ITransaction,
   TransactionStatus
-} from "services/interfaces/ITransaction";
+} from "services/interfaces/models/ITransaction";
 import { TransactionCheckUpdateInterval } from "helpers/Constants";
 import { useWeb3React } from "@web3-react/core";
 

@@ -4,7 +4,7 @@ import { useQuery } from "@apollo/client";
 import { GOVERNANCE_PROPOSAL_ITEM } from "apollo/queries";
 import { useStores } from "context/services";
 import { ProposalStatus, XDC_BLOCK_TIME } from "helpers/Constants";
-import IProposal from "services/interfaces/IProposal";
+import IProposal from "services/interfaces/models/IProposal";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 import { useMediaQuery, useTheme } from "@mui/material";
@@ -211,7 +211,7 @@ const useProposalItem = () => {
           support,
           library
         );
-        setLastTransactionBlock(blockNumber);
+        setLastTransactionBlock(blockNumber as number);
         setHasVoted(true);
       } catch (err) {
         console.log(err);

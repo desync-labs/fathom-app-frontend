@@ -8,7 +8,7 @@ import {
 } from "react";
 import { LogLevel, useLogger } from "helpers/Logger";
 import { useStores } from "context/services";
-import ILockPosition from "services/interfaces/ILockPosition";
+import ILockPosition from "services/interfaces/models/ILockPosition";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import { STAKING_PROTOCOL_STATS, STAKING_STAKER } from "apollo/queries";
 import { COUNT_PER_PAGE } from "helpers/Constants";
@@ -245,7 +245,7 @@ const useStakingView = () => {
           library
         );
         callback();
-        setLastTransactionBlock(blockNumber);
+        setLastTransactionBlock(blockNumber as number);
       } catch (e) {
         logger.log(LogLevel.error, "Claim error");
       } finally {
@@ -272,7 +272,7 @@ const useStakingView = () => {
           library
         );
         callback();
-        setLastTransactionBlock(blockNumber);
+        setLastTransactionBlock(blockNumber as number);
       } catch (e) {
         logger.log(LogLevel.error, "Withdraw error");
       } finally {
@@ -301,7 +301,7 @@ const useStakingView = () => {
           lockId,
           library
         );
-        setLastTransactionBlock(blockNumber);
+        setLastTransactionBlock(blockNumber as number);
         return blockNumber;
       } catch (e) {
         logger.log(LogLevel.error, "Handle early withdrawal");
@@ -326,7 +326,7 @@ const useStakingView = () => {
           amount,
           library
         );
-        setLastTransactionBlock(blockNumber);
+        setLastTransactionBlock(blockNumber as number);
 
         return blockNumber;
       } catch (e: any) {
