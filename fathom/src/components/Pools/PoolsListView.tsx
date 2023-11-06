@@ -11,7 +11,7 @@ import {
   TableHead,
   Box
 } from "@mui/material";
-import ICollateralPool from "services/interfaces/ICollateralPool";
+import ICollateralPool from "services/interfaces/models/ICollateralPool";
 import PoolsListItem from "components/Pools/PoolsListItem";
 import OpenNewPositionDialog from "components/Positions/OpenNewPositionDialog";
 import { styled } from "@mui/material/styles";

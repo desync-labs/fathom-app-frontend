@@ -1,5 +1,5 @@
 import React, { Dispatch, FC, SetStateAction } from "react";
-import ICollateralPool from "services/interfaces/ICollateralPool";
+import ICollateralPool from "services/interfaces/models/ICollateralPool";
 
 import { styled } from "@mui/material/styles";
 import { Box } from "@mui/material";

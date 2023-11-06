@@ -8,8 +8,8 @@ import {
 } from "react";
 
 import { useStores } from "context/services";
-import IOpenPosition from "services/interfaces/IOpenPosition";
-import ICollateralPool from "services/interfaces/ICollateralPool";
+import IOpenPosition from "services/interfaces/models/IOpenPosition";
+import ICollateralPool from "services/interfaces/models/ICollateralPool";
 
 import {
   useLazyQuery,
@@ -60,19 +60,21 @@ const useOpenPositionList = (
   const [approveBtn, setApproveBtn] = useState<boolean>(true);
   const [approvalPending, setApprovalPending] = useState<boolean>(false);
 
-  const approvalStatus = useCallback(async () => {
+  const approvalStatus = useCallback(async (formattedPositions: IOpenPosition[]) => {
+    const maxPositionDebtValue = Math.max(...formattedPositions.map((position: IOpenPosition)  => position.debtValue))
     const approved = await positionService.approvalStatusStableCoin(
+      maxPositionDebtValue,
       account,
-      library
+      library,
     );
     approved ? setApproveBtn(false) : setApproveBtn(true);
   }, [positionService, account, library]);
 
   useEffect(() => {
-    if (account) {
-      approvalStatus();
+    if (account && formattedPositions.length) {
+      approvalStatus(formattedPositions);
     }
-  }, [account, approvalStatus]);
+  }, [account, approvalStatus, formattedPositions]);
 
   const topUpPositionPool = useMemo(() => {
     if (topUpPosition && poolsData) {
