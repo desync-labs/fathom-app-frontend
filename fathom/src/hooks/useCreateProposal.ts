@@ -150,7 +150,7 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
           );
         }
 
-        setLastTransactionBlock(blockNumber);
+        setLastTransactionBlock(blockNumber as number);
         reset();
         localStorage.removeItem("createProposal");
         onClose();

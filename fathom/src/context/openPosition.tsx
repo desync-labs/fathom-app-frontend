@@ -1,6 +1,6 @@
 import { createContext, FC, ReactElement, useContext } from "react";
 import useOpenPosition, { defaultValues } from "hooks/useOpenPosition";
-import ICollateralPool from "services/interfaces/ICollateralPool";
+import ICollateralPool from "services/interfaces/models/ICollateralPool";
 import {
   Control,
   FieldErrorsImpl,

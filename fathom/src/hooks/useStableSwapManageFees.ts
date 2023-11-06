@@ -54,7 +54,7 @@ const useStableSwapManageFees = () => {
     if (account && library) {
       setClaimRewardsInProgress(true);
       stableSwapService.claimFeesRewards(account, library).then((blockNumber) => {
-        setLastTransactionBlock(blockNumber);
+        setLastTransactionBlock(blockNumber as number);
       }).finally(() => {
         setClaimRewardsInProgress(false);
         fetchData();
@@ -66,7 +66,7 @@ const useStableSwapManageFees = () => {
     if (account && library) {
       setWithdrawClaimedFeesInProgress(true);
       stableSwapService.withdrawClaimedFees(account, library).then((blockNumber) => {
-        setLastTransactionBlock(blockNumber);
+        setLastTransactionBlock(blockNumber as number);
       }).finally(() => {
         setWithdrawClaimedFeesInProgress(false);
         fetchData();

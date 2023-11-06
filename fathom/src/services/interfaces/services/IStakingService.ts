@@ -6,39 +6,45 @@ export default interface IStakingService {
     stakePosition: number,
     unlockPeriod: number,
     library: Xdc3
-  ): Promise<number>;
+  ): Promise<number | Error>;
 
   handleUnlock(
     account: string,
     lockId: number,
     amount: number,
     library: Xdc3
-  ): Promise<number>;
+  ): Promise<number | Error>;
 
   handleEarlyWithdrawal(
     account: string,
     lockId: number,
     library: Xdc3
-  ): Promise<number>;
+  ): Promise<number | Error>;
 
   handleClaimRewards(
     account: string,
     streamId: number,
     library: Xdc3
-  ): Promise<number>;
+  ): Promise<number | Error>;
 
   handleWithdrawAll(
     account: string,
     streamId: number,
     library: Xdc3
-  ): Promise<number>;
+  ): Promise<number | Error>;
+
+  approveStakingFTHM(
+    address: string,
+    fthmTokenAddress: string,
+    library: Xdc3
+  ): Promise<number | Error>;
 
   approvalStatusStakingFTHM(
     address: string,
     stakingPosition: number,
     fthmTokenAddress: string,
     library: Xdc3
-  ): Promise<boolean | undefined>;
+  ): Promise<boolean>;
 
   getStreamClaimableAmountPerLock(
     streamId: number,
@@ -52,10 +58,4 @@ export default interface IStakingService {
   getStreamClaimableAmount(account: string, library: Xdc3): Promise<number>;
 
   getMinLockPeriod(library: Xdc3): Promise<number>;
-
-  approveStakingFTHM(
-    address: string,
-    fthmTokenAddress: string,
-    library: Xdc3
-  ): Promise<number>;
 }

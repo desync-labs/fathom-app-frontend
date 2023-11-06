@@ -1,5 +1,5 @@
 import Xdc3 from "xdc3";
-import ICollateralPool from "services/interfaces/ICollateralPool";
+import ICollateralPool from "services/interfaces/models/ICollateralPool";
 
 export default interface IPositionService {
   openPosition(
@@ -28,6 +28,7 @@ export default interface IPositionService {
   ): Promise<number | Error>;
 
   createProxyWallet(address: string, library: Xdc3): Promise<string>;
+
   proxyWalletExist(address: string, library: Xdc3): Promise<string>;
 
   closePosition(
@@ -37,23 +38,29 @@ export default interface IPositionService {
     collateral: string,
     library: Xdc3
   ): Promise<number | Error>;
+
   approve(
     address: string,
     tokenAddress: string,
     library: Xdc3
   ): Promise<number | Error>;
+
   approvalStatus(
     address: string,
     tokenAddress: string,
     collateral: string,
     library: Xdc3
   ): Promise<boolean>;
+
   balanceStableCoin(address: string, library: Xdc3): Promise<string>;
+
   approveStableCoin(
     address: string,
     library: Xdc3
   ): Promise<number | Error>;
+
   approvalStatusStableCoin(maxPositionDebtValue: number, address: string, library: Xdc3): Promise<boolean>;
+
   partiallyClosePosition(
     positionId: string,
     pool: ICollateralPool,
@@ -62,15 +69,19 @@ export default interface IPositionService {
     collateralValue: string,
     library: Xdc3
   ): Promise<number | Error>;
+
   getDebtValue(
     debtShare: number,
     poolId: string,
     library: Xdc3
   ): Promise<string>;
+
   getPositionDebtCeiling(
     poolId: string,
     library: Xdc3,
   ): Promise<string>
+
   isWhitelisted(address: string, library: Xdc3): Promise<boolean>;
+
   isDecentralizedMode(library: Xdc3): Promise<boolean>;
 }

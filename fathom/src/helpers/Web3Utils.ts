@@ -1,9 +1,9 @@
 import Xdc3 from "xdc3";
-import { AbiItem as XdcAbiItem } from "xdc3-utils";
+import { AbiItem } from "xdc3-utils";
 import { Contract } from "xdc3-eth-contract";
-interface XdcContractMetaData {
+export interface XdcContractMetaData {
   address: string;
-  abi: XdcAbiItem[];
+  abi: AbiItem[];
 }
 
 export class Web3Utils {
@@ -27,7 +27,7 @@ export class Web3Utils {
   }
 
   public static getContractInstanceFrom(
-    abi: XdcAbiItem[],
+    abi: AbiItem[],
     address: string,
     library: Xdc3
   ): any {
@@ -35,7 +35,7 @@ export class Web3Utils {
       return Web3Utils.contracts.get(address) as Contract;
     }
 
-    const contract = new library.eth.Contract(abi as XdcAbiItem[], address);
+    const contract = new library.eth.Contract(abi as AbiItem[], address);
 
     Web3Utils.contracts.set(address, contract);
 

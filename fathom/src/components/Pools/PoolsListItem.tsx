@@ -1,5 +1,5 @@
 import { TableCell, Box, Stack } from "@mui/material";
-import ICollateralPool from "services/interfaces/ICollateralPool";
+import ICollateralPool from "services/interfaces/models/ICollateralPool";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 import React, { Dispatch, FC, SetStateAction } from "react";
