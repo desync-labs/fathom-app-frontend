@@ -15,3 +15,9 @@ export default interface IProposal {
   values: string;
   targets: string;
 }
+
+export interface ProposalVotes {
+  againstVotes: number;
+  forVotes: number;
+  abstainVotes: number;
+}

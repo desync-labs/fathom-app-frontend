@@ -410,7 +410,7 @@ const useStableSwap = (options: string[]) => {
 
       setLastUpdate((Date.now() / 1000).toString());
 
-      setLastTransactionBlock(blockNumber);
+      setLastTransactionBlock(blockNumber as number);
       handleCurrencyChange(inputCurrency, outputCurrency);
     } finally {
       setSwapPending(false);

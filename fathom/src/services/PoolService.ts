@@ -1,5 +1,5 @@
 import { SmartContractFactory } from "config/SmartContractFactory";
-import IPoolService from "services/interfaces/IPoolService";
+import IPoolService from "services/interfaces/services/IPoolService";
 import {
   DEFAULT_CHAIN_ID
 } from "helpers/Constants";
@@ -16,7 +16,7 @@ export default class PoolService implements IPoolService {
     this.alertAndTransactionContext = alertAndTransactionContext;
   }
 
-  async getUserTokenBalance(
+  getUserTokenBalance(
     address: string,
     forAddress: string,
     library: Xdc3
@@ -29,7 +29,7 @@ export default class PoolService implements IPoolService {
     return BEP20.methods.balanceOf(address).call();
   }
 
-  async getTokenDecimals(
+  getTokenDecimals(
     forAddress: string,
     library: Xdc3
   ) {
@@ -57,21 +57,17 @@ export default class PoolService implements IPoolService {
   }
 
   getCollateralTokenAddress(forAddress: string, library: Xdc3) {
-    try {
-      const abi = SmartContractFactory.CollateralTokenAdapterAbi();
+    const abi = SmartContractFactory.CollateralTokenAdapterAbi();
 
-      const collateralTokenAdapter = Web3Utils.getContractInstance(
-        {
-          address: forAddress,
-          abi,
-        },
-        library
-      );
+    const collateralTokenAdapter = Web3Utils.getContractInstance(
+      {
+        address: forAddress,
+        abi,
+      },
+      library
+    );
 
-      return collateralTokenAdapter.methods.collateralToken().call();
-    } catch (e: any) {
-      this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
-    }
+    return collateralTokenAdapter.methods.collateralToken().call();
   }
 
   setChainId(chainId: number) {

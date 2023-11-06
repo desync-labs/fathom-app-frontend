@@ -1,11 +1,11 @@
 import { SmartContractFactory } from "config/SmartContractFactory";
-import IProposalService from "services/interfaces/IProposalService";
+import IProposalService from "services/interfaces/services/IProposalService";
 import { Web3Utils } from "helpers/Web3Utils";
 import { keccak256 } from "xdc3-utils";
 import {
   TransactionStatus,
   TransactionType
-} from "services/interfaces/ITransaction";
+} from "services/interfaces/models/ITransaction";
 import {
   DEFAULT_CHAIN_ID
 } from "helpers/Constants";
@@ -84,6 +84,7 @@ export default class ProposalService implements IProposalService {
             resolve(transactionReceipt.blockNumber);
           })
           .catch((e: Error) => {
+            this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
             reject(e);
           });
       } catch (e: any) {
@@ -154,6 +155,7 @@ export default class ProposalService implements IProposalService {
             resolve(receipt.blockNumber);
           })
           .catch((e: Error) => {
+            this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
             reject(e);
           });
       } catch (e: any) {
@@ -224,6 +226,7 @@ export default class ProposalService implements IProposalService {
             resolve(receipt.blockNumber);
           })
           .catch((e: Error) => {
+            this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
             reject(e);
           });
       } catch (e: any) {
@@ -238,7 +241,7 @@ export default class ProposalService implements IProposalService {
     account: string,
     support: string,
     library: Xdc3
-  ): Promise<number> {
+  ): Promise<number | Error> {
     return new Promise(async (resolve, reject) => {
       try {
         const FathomGovernor = Web3Utils.getContractInstance(
@@ -306,102 +309,74 @@ export default class ProposalService implements IProposalService {
     proposalId: string,
     account: string,
     library: Xdc3
-  ): Promise<boolean>|undefined {
-    try {
-      const FathomGovernor = Web3Utils.getContractInstance(
-        SmartContractFactory.FathomGovernor(this.chainId),
-        library
-      );
-      return FathomGovernor.methods.hasVoted(proposalId, account).call();
-    } catch (e: any) {
-      this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
-    }
+  ) {
+    const FathomGovernor = Web3Utils.getContractInstance(
+      SmartContractFactory.FathomGovernor(this.chainId),
+      library
+    );
+    return FathomGovernor.methods.hasVoted(proposalId, account).call();
   }
 
   viewProposalState(
     proposalId: string,
     account: string,
     library: Xdc3
-  ): Promise<string>|undefined {
-    try {
-      const FathomGovernor = Web3Utils.getContractInstance(
-        SmartContractFactory.FathomGovernor(this.chainId),
-        library
-      );
-      return FathomGovernor.methods.state(proposalId).call({ from: account });
-    } catch (e: any) {
-      this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
-    }
+  ) {
+    const FathomGovernor = Web3Utils.getContractInstance(
+      SmartContractFactory.FathomGovernor(this.chainId),
+      library
+    );
+    return FathomGovernor.methods.state(proposalId).call({ from: account });
   }
 
   nextAcceptableProposalTimestamp(
     account: string,
     library: Xdc3
-  ): Promise<number>|undefined {
-    try {
-      const FathomGovernor = Web3Utils.getContractInstance(
-        SmartContractFactory.FathomGovernor(this.chainId),
-        library
-      );
+  ) {
+    const FathomGovernor = Web3Utils.getContractInstance(
+      SmartContractFactory.FathomGovernor(this.chainId),
+      library
+    );
 
-      return FathomGovernor.methods
-        .nextAcceptableProposalTimestamp(account)
-        .call();
-    } catch (e: any) {
-      this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
-    }
+    return FathomGovernor.methods
+      .nextAcceptableProposalTimestamp(account)
+      .call();
   }
 
-  getVBalance(account: string, library: Xdc3): Promise<number>|undefined {
-    try {
-      const VeFathom = Web3Utils.getContractInstance(
-        SmartContractFactory.vFathom(this.chainId),
-        library
-      );
+  getVBalance(account: string, library: Xdc3) {
+    const VeFathom = Web3Utils.getContractInstance(
+      SmartContractFactory.vFathom(this.chainId),
+      library
+    );
 
-      return VeFathom.methods.balanceOf(account).call();
-    } catch (e: any) {
-      this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
-    }
+    return VeFathom.methods.balanceOf(account).call();
   }
 
-  quorum(blockNumber: string, library: Xdc3): Promise<number>|undefined {
-    try {
-      const FathomGovernor = Web3Utils.getContractInstance(
-        SmartContractFactory.MainFathomGovernor(this.chainId),
-        library
-      );
+  quorum(blockNumber: string, library: Xdc3) {
+    const FathomGovernor = Web3Utils.getContractInstance(
+      SmartContractFactory.MainFathomGovernor(this.chainId),
+      library
+    );
 
-      return FathomGovernor.methods.quorum(blockNumber).call();
-    } catch (e: any) {
-      this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
-    }
+    return FathomGovernor.methods.quorum(blockNumber).call();
   }
 
-  proposalVotes(proposalId: string, library: Xdc3): Promise<any>|undefined {
-    try {
-      const FathomGovernor = Web3Utils.getContractInstance(
-        SmartContractFactory.MainFathomGovernor(this.chainId),
-        library
-      );
+  proposalVotes(proposalId: string, library: Xdc3) {
+    const FathomGovernor = Web3Utils.getContractInstance(
+      SmartContractFactory.MainFathomGovernor(this.chainId),
+      library
+    );
 
-      return FathomGovernor.methods.proposalVotes(proposalId).call();
-    } catch (e: any) {
-      this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
-    }
+    return FathomGovernor.methods.proposalVotes(proposalId).call();
   }
 
   proposalThreshold(library: Xdc3) {
-    try {
-      const FathomGovernor = Web3Utils.getContractInstance(
-        SmartContractFactory.MainFathomGovernor(this.chainId),
-        library
-      );
+    const FathomGovernor = Web3Utils.getContractInstance(
+      SmartContractFactory.MainFathomGovernor(this.chainId),
+      library
+    );
 
-      return FathomGovernor.methods.proposalThreshold().call();
-    } catch (e: any) {
-      this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
-    }
+    return FathomGovernor.methods.proposalThreshold().call();
   }
 
   setChainId(chainId: number) {

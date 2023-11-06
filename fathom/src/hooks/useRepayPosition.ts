@@ -16,8 +16,8 @@ import useConnector from "context/connector";
 
 import { WeiPerWad } from "helpers/Constants";
 
-import ICollateralPool from "services/interfaces/ICollateralPool";
-import IOpenPosition from "services/interfaces/IOpenPosition";
+import ICollateralPool from "services/interfaces/models/ICollateralPool";
+import IOpenPosition from "services/interfaces/models/IOpenPosition";
 import debounce from "lodash.debounce";
 import { SmartContractFactory } from "config/SmartContractFactory";
 
