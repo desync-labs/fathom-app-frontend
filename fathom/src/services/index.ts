@@ -28,7 +28,7 @@ export class RootStore {
 
   chainId: number = DEFAULT_CHAIN_ID;
 
-  constructor(alertAndTransactionProvider:  UseAlertAndTransactionServiceType) {
+  constructor(alertAndTransactionProvider: UseAlertAndTransactionServiceType) {
     this.poolService = new PoolService(alertAndTransactionProvider);
     this.positionService = new PositionService(alertAndTransactionProvider);
     this.proposalService = new ProposalService(alertAndTransactionProvider);
@@ -44,7 +44,7 @@ export class RootStore {
       "positionService",
       "stableSwapService",
       "proposalService",
-      "stakingService",
+      "stakingService"
     ].forEach((serviceName) => {
       console.log(`Setting chain ID ${chainId} for ${serviceName}`);
       // @ts-ignore

@@ -29,8 +29,9 @@ export default class StakingService implements IStakingService {
   chainId = DEFAULT_CHAIN_ID;
 
   alertAndTransactionContext: UseAlertAndTransactionServiceType;
+
   constructor(alertAndTransactionContext: UseAlertAndTransactionServiceType) {
-    this.alertAndTransactionContext = alertAndTransactionContext
+    this.alertAndTransactionContext = alertAndTransactionContext;
   }
 
   createLock(
@@ -38,7 +39,7 @@ export default class StakingService implements IStakingService {
     stakePosition: number,
     unlockPeriod: number,
     library: Xdc3
-  ): Promise<number | Error> {
+  ): Promise<number|Error> {
     return new Promise(async (resolve, reject) => {
       try {
         const Staking = Web3Utils.getContractInstance(
@@ -52,7 +53,7 @@ export default class StakingService implements IStakingService {
         const gas = await getEstimateGas(
           Staking,
           "createLock",
-          [library.utils.toWei(stakePosition.toString(), 'ether'), endTime],
+          [library.utils.toWei(stakePosition.toString(), "ether"), endTime],
           options
         );
         options.gas = gas;
@@ -71,7 +72,7 @@ export default class StakingService implements IStakingService {
         );
 
         Staking.methods
-          .createLock(library.utils.toWei(stakePosition.toString(), 'ether'), endTime)
+          .createLock(library.utils.toWei(stakePosition.toString(), "ether"), endTime)
           .send(options)
           .on("transactionHash", (hash: any) => {
             this.alertAndTransactionContext.addTransaction({
@@ -103,7 +104,7 @@ export default class StakingService implements IStakingService {
     lockId: number,
     amount: number,
     library: Xdc3
-  ): Promise<number | Error> {
+  ): Promise<number|Error> {
     return new Promise(async (resolve, reject) => {
       try {
         const Staking = Web3Utils.getContractInstance(
@@ -116,7 +117,7 @@ export default class StakingService implements IStakingService {
         const gas = await getEstimateGas(
           Staking,
           "unlockPartially",
-          [lockId, library.utils.toWei(amount.toString(), 'ether')],
+          [lockId, library.utils.toWei(amount.toString(), "ether")],
           options
         );
         options.gas = gas;
@@ -135,7 +136,7 @@ export default class StakingService implements IStakingService {
         );
 
         Staking.methods
-          .unlockPartially(lockId, library.utils.toWei(amount.toString(), 'ether'))
+          .unlockPartially(lockId, library.utils.toWei(amount.toString(), "ether"))
           .send(options)
           .on("transactionHash", (hash: any) => {
             this.alertAndTransactionContext.addTransaction({
@@ -166,7 +167,7 @@ export default class StakingService implements IStakingService {
     account: string,
     lockId: number,
     library: Xdc3
-  ): Promise<number | Error> {
+  ): Promise<number|Error> {
     return new Promise(async (resolve, reject) => {
       try {
         const Staking = Web3Utils.getContractInstance(
@@ -279,7 +280,7 @@ export default class StakingService implements IStakingService {
           })
           .catch((e: Error) => {
             this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
-            reject(e)
+            reject(e);
           });
       } catch (e: any) {
         this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
@@ -292,7 +293,7 @@ export default class StakingService implements IStakingService {
     account: string,
     streamId: number,
     library: Xdc3
-  ): Promise<number | Error> {
+  ): Promise<number|Error> {
     return new Promise(async (resolve, reject) => {
       try {
         const Staking = Web3Utils.getContractInstance(
@@ -345,7 +346,7 @@ export default class StakingService implements IStakingService {
           })
           .catch((e: Error) => {
             this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
-            reject(e)
+            reject(e);
           });
       } catch (e: any) {
         this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
@@ -412,7 +413,7 @@ export default class StakingService implements IStakingService {
           })
           .catch((e: Error) => {
             this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
-            reject(e)
+            reject(e);
           });
       } catch (e: any) {
         this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
@@ -439,7 +440,7 @@ export default class StakingService implements IStakingService {
       .call();
 
     return BigNumber(allowance).isGreaterThanOrEqualTo(
-      library.utils.toWei(stakingPosition.toString(), 'ether')
+      library.utils.toWei(stakingPosition.toString(), "ether")
     );
   }
 
