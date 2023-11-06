@@ -1,10 +1,12 @@
+import Xdc3 from "xdc3";
+
 import { SmartContractFactory } from "config/SmartContractFactory";
 import IPoolService from "services/interfaces/services/IPoolService";
 import {
   DEFAULT_CHAIN_ID
 } from "helpers/Constants";
 import { Web3Utils } from "helpers/Web3Utils";
-import Xdc3 from "xdc3";
+
 import {
   UseAlertAndTransactionServiceType
 } from "context/alertAndTransaction";
@@ -12,6 +14,7 @@ import {
 export default class PoolService implements IPoolService {
   chainId = DEFAULT_CHAIN_ID;
   alertAndTransactionContext: UseAlertAndTransactionServiceType;
+
   constructor(alertAndTransactionContext: UseAlertAndTransactionServiceType) {
     this.alertAndTransactionContext = alertAndTransactionContext;
   }
@@ -62,7 +65,7 @@ export default class PoolService implements IPoolService {
     const collateralTokenAdapter = Web3Utils.getContractInstance(
       {
         address: forAddress,
-        abi,
+        abi
       },
       library
     );

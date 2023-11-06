@@ -1,5 +1,5 @@
-import { TransactionReceipt } from "xdc3-eth";
 import Xdc3 from "xdc3";
+import { TransactionReceipt } from "xdc3-eth";
 import BigNumber from "bignumber.js";
 
 import {

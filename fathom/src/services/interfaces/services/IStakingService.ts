@@ -6,38 +6,38 @@ export default interface IStakingService {
     stakePosition: number,
     unlockPeriod: number,
     library: Xdc3
-  ): Promise<number | Error>;
+  ): Promise<number|Error>;
 
   handleUnlock(
     account: string,
     lockId: number,
     amount: number,
     library: Xdc3
-  ): Promise<number | Error>;
+  ): Promise<number|Error>;
 
   handleEarlyWithdrawal(
     account: string,
     lockId: number,
     library: Xdc3
-  ): Promise<number | Error>;
+  ): Promise<number|Error>;
 
   handleClaimRewards(
     account: string,
     streamId: number,
     library: Xdc3
-  ): Promise<number | Error>;
+  ): Promise<number|Error>;
 
   handleWithdrawAll(
     account: string,
     streamId: number,
     library: Xdc3
-  ): Promise<number | Error>;
+  ): Promise<number|Error>;
 
   approveStakingFTHM(
     address: string,
     fthmTokenAddress: string,
     library: Xdc3
-  ): Promise<number | Error>;
+  ): Promise<number|Error>;
 
   approvalStatusStakingFTHM(
     address: string,

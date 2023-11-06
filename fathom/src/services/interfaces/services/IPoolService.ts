@@ -1,4 +1,4 @@
-import Xdc3 from 'xdc3'
+import Xdc3 from "xdc3";
 
 export default interface IPoolService {
   getUserTokenBalance(address: string, forAddress: string, library: Xdc3): Promise<number>;

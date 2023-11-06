@@ -1,4 +1,7 @@
 import Xdc3 from "xdc3";
+import { TransactionReceipt } from "xdc3-eth";
+import BigNumber from "bignumber.js";
+
 import { SmartContractFactory } from "config/SmartContractFactory";
 import {
   MAX_UINT256,
@@ -12,8 +15,8 @@ import {
 } from "services/interfaces/models/ITransaction";
 import IStableSwapService from "services/interfaces/services/IStableSwapService";
 import { getEstimateGas } from "utils/getEstimateGas";
-import { TransactionReceipt } from "xdc3-eth";
-import BigNumber from "bignumber.js";
+
+
 import { SKIP_ERRORS } from "connectors/networks";
 import {
   UseAlertAndTransactionServiceType

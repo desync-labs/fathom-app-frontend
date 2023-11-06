@@ -8,7 +8,7 @@ export default interface IPositionService {
     collateral: string,
     fathomToken: string,
     library: Xdc3
-  ): Promise<number | Error>;
+  ): Promise<number|Error>;
 
   topUpPositionAndBorrow(
     address: string,
@@ -17,7 +17,7 @@ export default interface IPositionService {
     fathomToken: string,
     positionId: string,
     library: Xdc3
-  ): Promise<number | Error>;
+  ): Promise<number|Error>;
 
   topUpPosition(
     address: string,
@@ -25,7 +25,7 @@ export default interface IPositionService {
     collateral: string,
     positionId: string,
     library: Xdc3
-  ): Promise<number | Error>;
+  ): Promise<number|Error>;
 
   createProxyWallet(address: string, library: Xdc3): Promise<string>;
 
@@ -37,13 +37,13 @@ export default interface IPositionService {
     address: string,
     collateral: string,
     library: Xdc3
-  ): Promise<number | Error>;
+  ): Promise<number|Error>;
 
   approve(
     address: string,
     tokenAddress: string,
     library: Xdc3
-  ): Promise<number | Error>;
+  ): Promise<number|Error>;
 
   approvalStatus(
     address: string,
@@ -57,7 +57,7 @@ export default interface IPositionService {
   approveStableCoin(
     address: string,
     library: Xdc3
-  ): Promise<number | Error>;
+  ): Promise<number|Error>;
 
   approvalStatusStableCoin(maxPositionDebtValue: number, address: string, library: Xdc3): Promise<boolean>;
 
@@ -68,7 +68,7 @@ export default interface IPositionService {
     debt: string,
     collateralValue: string,
     library: Xdc3
-  ): Promise<number | Error>;
+  ): Promise<number|Error>;
 
   getDebtValue(
     debtShare: number,
@@ -78,8 +78,8 @@ export default interface IPositionService {
 
   getPositionDebtCeiling(
     poolId: string,
-    library: Xdc3,
-  ): Promise<string>
+    library: Xdc3
+  ): Promise<string>;
 
   isWhitelisted(address: string, library: Xdc3): Promise<boolean>;
 

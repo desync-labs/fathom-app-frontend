@@ -1,7 +1,11 @@
+import Xdc3 from "xdc3";
+import { TransactionReceipt } from "xdc3-eth";
+import { keccak256 } from "xdc3-utils";
+
 import { SmartContractFactory } from "config/SmartContractFactory";
 import IProposalService from "services/interfaces/services/IProposalService";
 import { Web3Utils } from "helpers/Web3Utils";
-import { keccak256 } from "xdc3-utils";
+
 import {
   TransactionStatus,
   TransactionType
@@ -9,9 +13,9 @@ import {
 import {
   DEFAULT_CHAIN_ID
 } from "helpers/Constants";
-import Xdc3 from "xdc3";
+
 import { getEstimateGas } from "utils/getEstimateGas";
-import { TransactionReceipt } from "xdc3-eth";
+
 import { SKIP_ERRORS } from "connectors/networks";
 import {
   UseAlertAndTransactionServiceType
@@ -20,9 +24,11 @@ import {
 export default class ProposalService implements IProposalService {
   chainId = DEFAULT_CHAIN_ID;
   alertAndTransactionContext: UseAlertAndTransactionServiceType;
+
   constructor(alertAndTransactionContext: UseAlertAndTransactionServiceType) {
-    this.alertAndTransactionContext = alertAndTransactionContext
+    this.alertAndTransactionContext = alertAndTransactionContext;
   }
+
   createProposal(
     targets: string[],
     values: number[],
@@ -30,7 +36,7 @@ export default class ProposalService implements IProposalService {
     description: string,
     account: string,
     library: Xdc3
-  ): Promise<number | Error> {
+  ): Promise<number|Error> {
     return new Promise(async (resolve, reject) => {
       try {
         const FathomGovernor = Web3Utils.getContractInstance(
@@ -101,7 +107,7 @@ export default class ProposalService implements IProposalService {
     description: string,
     account: string,
     library: Xdc3
-  ): Promise<number | Error> {
+  ): Promise<number|Error> {
     return new Promise(async (resolve, reject) => {
       try {
         const FathomGovernor = Web3Utils.getContractInstance(
@@ -172,7 +178,7 @@ export default class ProposalService implements IProposalService {
     description: string,
     account: string,
     library: Xdc3
-  ): Promise<number | Error> {
+  ): Promise<number|Error> {
     return new Promise(async (resolve, reject) => {
       try {
         const FathomGovernor = Web3Utils.getContractInstance(
@@ -241,7 +247,7 @@ export default class ProposalService implements IProposalService {
     account: string,
     support: string,
     library: Xdc3
-  ): Promise<number | Error> {
+  ): Promise<number|Error> {
     return new Promise(async (resolve, reject) => {
       try {
         const FathomGovernor = Web3Utils.getContractInstance(

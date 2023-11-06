@@ -7,7 +7,7 @@ export default interface IStableSwapService {
     tokenInDecimals: number,
     tokenName: string,
     library: Xdc3
-  ): Promise<number | Error>;
+  ): Promise<number|Error>;
 
   swapStableCoinToToken(
     address: string,
@@ -15,49 +15,49 @@ export default interface IStableSwapService {
     stableCoinInDecimals: number,
     tokenName: string,
     library: Xdc3
-  ): Promise<number | Error>;
+  ): Promise<number|Error>;
 
   addLiquidity(
     amount: number,
     account: string,
-    library: Xdc3,
-  ): Promise<number | Error>;
+    library: Xdc3
+  ): Promise<number|Error>;
 
   removeLiquidity(
     amount: number,
     account: string,
-    library: Xdc3,
-  ): Promise<number | Error>;
+    library: Xdc3
+  ): Promise<number|Error>;
 
   approveStableCoin(
     address: string,
     library: Xdc3,
-    isStableSwapWrapper?: boolean,
-  ): Promise<number | Error>;
+    isStableSwapWrapper?: boolean
+  ): Promise<number|Error>;
 
   approveUsdt(
     address: string,
     tokenName: string,
     library: Xdc3,
-    isStableSwapWrapper?: boolean,
-  ): Promise<number | Error>;
+    isStableSwapWrapper?: boolean
+  ): Promise<number|Error>;
 
   claimFeesRewards(
     account: string,
     library: Xdc3
-  ): Promise<number | Error>;
+  ): Promise<number|Error>;
 
   withdrawClaimedFees(
     account: string,
     library: Xdc3
-  ): Promise<number | Error>;
+  ): Promise<number|Error>;
 
   approvalStatusStableCoin(
     address: string,
     tokenIn: string,
     inputDecimal: number,
     library: Xdc3,
-    isStableSwapWrapper?: boolean,
+    isStableSwapWrapper?: boolean
   ): Promise<boolean>;
 
   approvalStatusUsdt(
@@ -65,7 +65,7 @@ export default interface IStableSwapService {
     tokenIn: string,
     inputDecimal: number,
     library: Xdc3,
-    isStableSwapWrapper?: boolean,
+    isStableSwapWrapper?: boolean
   ): Promise<boolean>;
 
   getFeeIn(library: Xdc3): Promise<string>;
@@ -92,9 +92,9 @@ export default interface IStableSwapService {
 
   getClaimedTokenFeeRewards(account: string, library: Xdc3): Promise<number>;
 
-  isDecentralizedState(library: Xdc3) : Promise<boolean>;
+  isDecentralizedState(library: Xdc3): Promise<boolean>;
 
-  isUserWhitelisted(address: string, library: Xdc3) : Promise<boolean>
+  isUserWhitelisted(address: string, library: Xdc3): Promise<boolean>;
 
   usersWrapperWhitelist(address: string, library: Xdc3): Promise<boolean>;
 }

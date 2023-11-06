@@ -9,5 +9,5 @@ export default interface ILockPosition {
   end: number;
   blockNumber: number;
   blockTimestamp: number;
-  transaction: string
+  transaction: string;
 }
