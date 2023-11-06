@@ -278,7 +278,7 @@ const useOpenPosition = (
           library
         );
 
-        setLastTransactionBlock(blockNumber!);
+        setLastTransactionBlock(blockNumber as number);
         onClose();
       } catch (e) {
         console.log(e);

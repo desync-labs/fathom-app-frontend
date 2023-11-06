@@ -9,7 +9,7 @@ import {
   ButtonPrimary,
   SkipButton,
 } from "components/AppComponents/AppButton/AppButton";
-import ILockPosition from "services/interfaces/ILockPosition";
+import ILockPosition from "services/interfaces/models/ILockPosition";
 import { styled } from "@mui/material/styles";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import InfoIcon from "@mui/icons-material/Info";

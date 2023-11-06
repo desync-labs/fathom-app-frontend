@@ -187,7 +187,7 @@ const useStableSwapAddLiquidity = () => {
     try {
       setAddLiquidityPending(true);
       const blockNumber = await stableSwapService.addLiquidity(Number(inputValue), account, library);
-      setLastTransactionBlock(blockNumber);
+      setLastTransactionBlock(blockNumber as number);
       setInputValue("");
       getBalances();
     } finally {

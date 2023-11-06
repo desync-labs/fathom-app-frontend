@@ -144,7 +144,7 @@ const useStakingLockForm = () => {
           lockDays,
           library
         );
-        setLastTransactionBlock(blockNumber);
+        setLastTransactionBlock(blockNumber as number);
         reset();
       } catch (e) { }
       setIsLoading(false);

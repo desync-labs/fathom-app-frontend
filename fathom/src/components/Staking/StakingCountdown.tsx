@@ -1,5 +1,5 @@
 import { FC } from "react";
-import ILockPosition from "services/interfaces/ITimeObject";
+import ILockPosition from "services/interfaces/models/ITimeObject";
 
 const StakingCountdown: FC<{ timeObject: ILockPosition }> = ({
   timeObject,

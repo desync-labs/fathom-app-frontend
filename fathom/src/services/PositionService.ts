@@ -1,6 +1,5 @@
-import { TransactionReceipt } from "xdc3-eth";
-import { toWei } from "xdc3-utils";
 import Xdc3 from "xdc3";
+import { TransactionReceipt } from "xdc3-eth";
 import BigNumber from "bignumber.js";
 
 import {
@@ -12,16 +11,15 @@ import {
 } from "helpers/Constants";
 import { Web3Utils } from "helpers/Web3Utils";
 import { Strings } from "helpers/Strings";
-
 import { SmartContractFactory } from "config/SmartContractFactory";
-import IPositionService from "services/interfaces/IPositionService";
 
-import ICollateralPool from "services/interfaces/ICollateralPool";
+import IPositionService from "services/interfaces/services/IPositionService";
+import ICollateralPool from "services/interfaces/models/ICollateralPool";
 
 import {
   TransactionStatus,
   TransactionType
-} from "services/interfaces/ITransaction";
+} from "services/interfaces/models/ITransaction";
 
 import { getEstimateGas } from "utils/getEstimateGas";
 import { SKIP_ERRORS } from "connectors/networks";
@@ -31,7 +29,7 @@ import {
 
 export default class PositionService implements IPositionService {
   chainId = DEFAULT_CHAIN_ID;
-  alertAndTransactionContext: UseAlertAndTransactionServiceType
+  alertAndTransactionContext: UseAlertAndTransactionServiceType;
 
   constructor(alertAndTransactionContext: UseAlertAndTransactionServiceType) {
     this.alertAndTransactionContext = alertAndTransactionContext;
@@ -43,7 +41,7 @@ export default class PositionService implements IPositionService {
     collateral: string,
     fathomToken: string,
     library: Xdc3
-  ): Promise<number|undefined> {
+  ): Promise<number|Error> {
     return new Promise(async (resolve, reject) => {
       try {
         let proxyWalletAddress = await this.proxyWalletExist(address, library);
@@ -78,7 +76,7 @@ export default class PositionService implements IPositionService {
             pool.tokenAdapterAddress,
             SmartContractFactory.StablecoinAdapter(this.chainId).address,
             pool.id,
-            toWei(fathomToken.toString(), "ether"),
+            library.utils.toWei(fathomToken.toString(), "ether"),
             encodedResult
           ]
         );
@@ -86,7 +84,7 @@ export default class PositionService implements IPositionService {
         const options = {
           from: address,
           gas: 0,
-          value: toWei(collateral.toString(), "ether")
+          value: library.utils.toWei(collateral.toString(), "ether")
         };
 
         const gas = await getEstimateGas(
@@ -133,10 +131,9 @@ export default class PositionService implements IPositionService {
 
             resolve(receipt.blockNumber);
           })
-          .catch((error: any) => {
-            console.log(error);
-            this.alertAndTransactionContext.setShowErrorAlertHandler(true, error.message);
-            reject(error);
+          .catch((e: Error) => {
+            this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+            reject(e);
           });
       } catch (error: any) {
         this.alertAndTransactionContext.setShowErrorAlertHandler(true, error.message);
@@ -152,7 +149,7 @@ export default class PositionService implements IPositionService {
     fathomToken: string,
     positionId: string,
     library: Xdc3
-  ): Promise<number|undefined> {
+  ): Promise<number|Error> {
     return new Promise(async (resolve, reject) => {
       try {
         let proxyWalletAddress = await this.proxyWalletExist(address, library);
@@ -187,7 +184,7 @@ export default class PositionService implements IPositionService {
             pool.tokenAdapterAddress,
             SmartContractFactory.StablecoinAdapter(this.chainId).address,
             positionId,
-            fathomToken ? toWei(fathomToken.toString(), "ether") : 0,
+            fathomToken ? library.utils.toWei(fathomToken.toString(), "ether") : 0,
             encodedResult
           ]
         );
@@ -195,7 +192,7 @@ export default class PositionService implements IPositionService {
         const options = {
           from: address,
           gas: 0,
-          value: collateral ? toWei(collateral, "ether") : 0
+          value: collateral ? library.utils.toWei(collateral, "ether") : 0
         };
         const gas = await getEstimateGas(
           wallet,
@@ -241,9 +238,9 @@ export default class PositionService implements IPositionService {
             );
             resolve(receipt.blockNumber);
           })
-          .catch((error: any) => {
-            this.alertAndTransactionContext.setShowErrorAlertHandler(true, error.message);
-            reject(error);
+          .catch((e: Error) => {
+            this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+            reject(e);
           });
       } catch (error: any) {
         this.alertAndTransactionContext.setShowErrorAlertHandler(true, error.message);
@@ -258,7 +255,7 @@ export default class PositionService implements IPositionService {
     collateral: string,
     positionId: string,
     library: Xdc3
-  ): Promise<number|undefined> {
+  ): Promise<number|Error> {
     return new Promise(async (resolve, reject) => {
       try {
         let proxyWalletAddress = await this.proxyWalletExist(address, library);
@@ -298,7 +295,7 @@ export default class PositionService implements IPositionService {
         const options = {
           from: address,
           gas: 0,
-          value: collateral ? toWei(collateral.toString(), "ether") : 0
+          value: collateral ? library.utils.toWei(collateral.toString(), "ether") : 0
         };
         const gas = await getEstimateGas(
           wallet,
@@ -343,9 +340,9 @@ export default class PositionService implements IPositionService {
             );
             resolve(receipt.blockNumber);
           })
-          .catch((error: any) => {
-            this.alertAndTransactionContext.setShowErrorAlertHandler(true, error.message);
-            reject(error);
+          .catch((e: Error) => {
+            this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+            reject(e);
           });
       } catch (error: any) {
         this.alertAndTransactionContext.setShowErrorAlertHandler(true, error.message);
@@ -354,33 +351,19 @@ export default class PositionService implements IPositionService {
     });
   }
 
-  async createProxyWallet(address: string, library: Xdc3): Promise<string> {
-    try {
-      const proxyWalletRegistry = Web3Utils.getContractInstance(
-        SmartContractFactory.ProxyWalletRegistry(this.chainId),
-        library
-      );
-
-      await proxyWalletRegistry.methods.build(address).send({ from: address });
-
-      const proxyWallet = await proxyWalletRegistry.methods
-        .proxies(address)
-        .call();
-
-      return proxyWallet;
-    } catch (error: any) {
-      this.alertAndTransactionContext.setShowErrorAlertHandler(true, error.message);
-      throw error;
-    }
-  }
-
-  proxyWalletExist(address: string, library: Xdc3): Promise<string> {
+  async createProxyWallet(address: string, library: Xdc3) {
     const proxyWalletRegistry = Web3Utils.getContractInstance(
       SmartContractFactory.ProxyWalletRegistry(this.chainId),
       library
     );
 
-    return proxyWalletRegistry.methods.proxies(address).call();
+    await proxyWalletRegistry.methods.build(address).send({ from: address });
+
+    const proxyWallet = await proxyWalletRegistry.methods
+      .proxies(address)
+      .call();
+
+    return proxyWallet;
   }
 
   closePosition(
@@ -389,7 +372,7 @@ export default class PositionService implements IPositionService {
     address: string,
     collateral: string,
     library: Xdc3
-  ): Promise<number | undefined> {
+  ): Promise<number|Error> {
     return new Promise(async (resolve, reject) => {
       try {
         const proxyWalletAddress = await this.proxyWalletExist(
@@ -469,9 +452,9 @@ export default class PositionService implements IPositionService {
               MESSAGE
             );
             resolve(receipt.blockNumber);
-          }).catch((error: any) => {
-          this.alertAndTransactionContext.setShowErrorAlertHandler(true, error.message);
-          reject(error);
+          }).catch((e: Error) => {
+          this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+          reject(e);
         });
       } catch (error: any) {
         this.alertAndTransactionContext.setShowErrorAlertHandler(true, error.message);
@@ -487,7 +470,7 @@ export default class PositionService implements IPositionService {
     stableCoin: string,
     collateral: string,
     library: Xdc3
-  ): Promise<number|undefined> {
+  ): Promise<number|Error> {
     return new Promise(async (resolve, reject) => {
       try {
         const proxyWalletAddress = await this.proxyWalletExist(
@@ -569,9 +552,9 @@ export default class PositionService implements IPositionService {
             );
             resolve(receipt.blockNumber);
           })
-          .catch((error: any) => {
-            this.alertAndTransactionContext.setShowErrorAlertHandler(true, error.message);
-            reject(error);
+          .catch((e: Error) => {
+            this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+            reject(e);
           });
       } catch (error: any) {
         this.alertAndTransactionContext.setShowErrorAlertHandler(true, error.message);
@@ -584,7 +567,7 @@ export default class PositionService implements IPositionService {
     address: string,
     tokenAddress: string,
     library: Xdc3
-  ): Promise<number|undefined> {
+  ): Promise<number|Error> {
     return new Promise(async (resolve, reject) => {
       try {
         let proxyWalletAddress = await this.proxyWalletExist(address, library);
@@ -643,9 +626,9 @@ export default class PositionService implements IPositionService {
             );
             resolve(receipt.blockNumber);
           })
-          .catch((error: any) => {
-            this.alertAndTransactionContext.setShowErrorAlertHandler(true, error.message);
-            reject(error);
+          .catch((e: Error) => {
+            this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+            reject(e);
           });
       } catch (error: any) {
         this.alertAndTransactionContext.setShowErrorAlertHandler(true, error.message);
@@ -659,7 +642,7 @@ export default class PositionService implements IPositionService {
     tokenAddress: string,
     collateral: string,
     library: Xdc3
-  ): Promise<boolean> {
+  ) {
     const proxyWalletAddress = await this.proxyWalletExist(address, library);
 
     if (proxyWalletAddress === ZERO_ADDRESS) {
@@ -683,7 +666,7 @@ export default class PositionService implements IPositionService {
   approveStableCoin(
     address: string,
     library: Xdc3
-  ): Promise<number|undefined> {
+  ): Promise<number|Error> {
     return new Promise(async (resolve, reject) => {
       try {
         let proxyWalletAddress = await this.proxyWalletExist(address, library);
@@ -742,9 +725,9 @@ export default class PositionService implements IPositionService {
             );
             resolve(receipt.blockNumber);
           })
-          .catch((error: any) => {
-            this.alertAndTransactionContext.setShowErrorAlertHandler(true, error.message);
-            reject(error);
+          .catch((e: Error) => {
+            this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+            reject(e);
           });
       } catch (error: any) {
         this.alertAndTransactionContext.setShowErrorAlertHandler(true, error.message);
@@ -753,7 +736,16 @@ export default class PositionService implements IPositionService {
     });
   }
 
-  balanceStableCoin(address: string, library: Xdc3): Promise<string> {
+  proxyWalletExist(address: string, library: Xdc3) {
+    const proxyWalletRegistry = Web3Utils.getContractInstance(
+      SmartContractFactory.ProxyWalletRegistry(this.chainId),
+      library
+    );
+
+    return proxyWalletRegistry.methods.proxies(address).call();
+  }
+
+  balanceStableCoin(address: string, library: Xdc3) {
     const fathomStableCoin = Web3Utils.getContractInstance(
       SmartContractFactory.FathomStableCoin(this.chainId),
       library
@@ -763,9 +755,10 @@ export default class PositionService implements IPositionService {
   }
 
   async approvalStatusStableCoin(
+    maxPositionDebtValue: number,
     address: string,
     library: Xdc3
-  ): Promise<boolean> {
+  ) {
     const proxyWalletAddress = await this.proxyWalletExist(address, library);
 
     if (proxyWalletAddress === ZERO_ADDRESS) {
@@ -777,18 +770,21 @@ export default class PositionService implements IPositionService {
       library
     );
 
-    const allowance = await fathomStableCoin.methods
-      .allowance(address, proxyWalletAddress)
-      .call();
+    const [allowance, decimals] = await Promise.all([
+      fathomStableCoin.methods
+        .allowance(address, proxyWalletAddress)
+        .call(),
+      fathomStableCoin.methods.decimals().call()
+    ]);
 
-    return Number(allowance) > 10000000000000000;
+    return BigNumber(allowance).dividedBy(10 ** decimals).isGreaterThan(maxPositionDebtValue);
   }
 
   async getDebtValue(
     debtShare: number,
     poolId: string,
     library: Xdc3
-  ): Promise<string> {
+  ) {
     const poolConfigContract = Web3Utils.getContractInstance(
       SmartContractFactory.PoolConfig(this.chainId),
       library
@@ -821,29 +817,21 @@ export default class PositionService implements IPositionService {
     return BigNumber(debtCeiling).dividedBy(WeiPerRad).integerValue().toString();
   }
 
-  async isDecentralizedMode(library: Xdc3) {
-    try {
-      const proxyWalletRegistry = Web3Utils.getContractInstance(
-        SmartContractFactory.ProxyWalletRegistry(this.chainId),
-        library
-      );
-      return await proxyWalletRegistry.methods.isDecentralizedMode().call()
-    } catch (e: any) {
-      this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
-    }
+  isDecentralizedMode(library: Xdc3) {
+    const proxyWalletRegistry = Web3Utils.getContractInstance(
+      SmartContractFactory.ProxyWalletRegistry(this.chainId),
+      library
+    );
+    return proxyWalletRegistry.methods.isDecentralizedMode().call();
   }
 
-  async isWhitelisted(address: string, library: Xdc3) {
-    try {
-      const proxyWalletRegistry = Web3Utils.getContractInstance(
-        SmartContractFactory.ProxyWalletRegistry(this.chainId),
-        library
-      );
+  isWhitelisted(address: string, library: Xdc3) {
+    const proxyWalletRegistry = Web3Utils.getContractInstance(
+      SmartContractFactory.ProxyWalletRegistry(this.chainId),
+      library
+    );
 
-      return await proxyWalletRegistry.methods.whitelisted(address).call()
-    } catch (e: any) {
-      this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
-    }
+    return proxyWalletRegistry.methods.whitelisted(address).call();
   }
 
   setChainId(chainId: number) {
