@@ -1,10 +1,12 @@
+import Xdc3 from "xdc3";
+
 import { SmartContractFactory } from "config/SmartContractFactory";
-import IPoolService from "services/interfaces/IPoolService";
+import IPoolService from "services/interfaces/services/IPoolService";
 import {
   DEFAULT_CHAIN_ID
 } from "helpers/Constants";
 import { Web3Utils } from "helpers/Web3Utils";
-import Xdc3 from "xdc3";
+
 import {
   UseAlertAndTransactionServiceType
 } from "context/alertAndTransaction";
@@ -12,15 +14,12 @@ import {
 export default class PoolService implements IPoolService {
   chainId = DEFAULT_CHAIN_ID;
   alertAndTransactionContext: UseAlertAndTransactionServiceType;
+
   constructor(alertAndTransactionContext: UseAlertAndTransactionServiceType) {
     this.alertAndTransactionContext = alertAndTransactionContext;
   }
 
-  setChainId(chainId: number) {
-    this.chainId = chainId;
-  }
-
-  async getUserTokenBalance(
+  getUserTokenBalance(
     address: string,
     forAddress: string,
     library: Xdc3
@@ -33,7 +32,7 @@ export default class PoolService implements IPoolService {
     return BEP20.methods.balanceOf(address).call();
   }
 
-  async getTokenDecimals(
+  getTokenDecimals(
     forAddress: string,
     library: Xdc3
   ) {
@@ -61,20 +60,20 @@ export default class PoolService implements IPoolService {
   }
 
   getCollateralTokenAddress(forAddress: string, library: Xdc3) {
-    try {
-      const abi = SmartContractFactory.CollateralTokenAdapterAbi();
+    const abi = SmartContractFactory.CollateralTokenAdapterAbi();
 
-      const collateralTokenAdapter = Web3Utils.getContractInstance(
-        {
-          address: forAddress,
-          abi,
-        },
-        library
-      );
+    const collateralTokenAdapter = Web3Utils.getContractInstance(
+      {
+        address: forAddress,
+        abi
+      },
+      library
+    );
 
-      return collateralTokenAdapter.methods.collateralToken().call();
-    } catch (e: any) {
-      this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
-    }
+    return collateralTokenAdapter.methods.collateralToken().call();
+  }
+
+  setChainId(chainId: number) {
+    this.chainId = chainId;
   }
 }

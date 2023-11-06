@@ -1,13 +1,13 @@
 import PoolService from "services/PoolService";
 import PositionService from "services/PositionService";
 import StableSwapService from "services/StableSwapService";
-import IPoolService from "services/interfaces/IPoolService";
-import IPositionService from "services/interfaces/IPositionService";
-import IStableSwapService from "services/interfaces/IStableSwapService";
-import IProposalService from "services/interfaces/IProposalService";
+import IPoolService from "services/interfaces/services/IPoolService";
+import IPositionService from "services/interfaces/services/IPositionService";
+import IStableSwapService from "services/interfaces/services/IStableSwapService";
+import IProposalService from "services/interfaces/services/IProposalService";
 import ProposalService from "services/ProposalService";
 import StakingService from "services/StakingService";
-import IStakingService from "services/interfaces/IStakingService";
+import IStakingService from "services/interfaces/services/IStakingService";
 
 import {
   DEFAULT_CHAIN_ID
@@ -28,7 +28,7 @@ export class RootStore {
 
   chainId: number = DEFAULT_CHAIN_ID;
 
-  constructor(alertAndTransactionProvider:  UseAlertAndTransactionServiceType) {
+  constructor(alertAndTransactionProvider: UseAlertAndTransactionServiceType) {
     this.poolService = new PoolService(alertAndTransactionProvider);
     this.positionService = new PositionService(alertAndTransactionProvider);
     this.proposalService = new ProposalService(alertAndTransactionProvider);
@@ -44,7 +44,7 @@ export class RootStore {
       "positionService",
       "stableSwapService",
       "proposalService",
-      "stakingService",
+      "stakingService"
     ].forEach((serviceName) => {
       console.log(`Setting chain ID ${chainId} for ${serviceName}`);
       // @ts-ignore

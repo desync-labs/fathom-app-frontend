@@ -1,7 +1,7 @@
-import { ChangeEvent, createContext, FC, ReactElement, useContext } from "react";
+import { ChangeEvent, createContext, FC, ReactElement, useContext, Dispatch, SetStateAction } from "react";
 import useStakingView, { ActionType, DialogActions } from "hooks/useStakingView";
 import { ChainId } from "connectors/networks";
-import ILockPosition from "services/interfaces/ILockPosition";
+import ILockPosition from "services/interfaces/models/ILockPosition";
 
 type StakingProviderType = {
   children: ReactElement;
@@ -16,16 +16,16 @@ type UseStakingReturnType = {
   isUnlockable: (remainingTime: number) => boolean,
   withdrawAll: (callback: Function) => Promise<void>,
   claimRewards: (callback: Function) => Promise<void>,
-  handleEarlyUnstake: (lockId: number) => Promise<number>,
-  handleUnlock: (lockId: number, amount: number) => Promise<number>,
+  handleEarlyUnstake: (lockId: number) => Promise<number | Error>,
+  handleUnlock: (lockId: number, amount: number) => Promise<number | Error>,
   unstake: ILockPosition | null,
   earlyUnstake: ILockPosition | null,
   dialogAction: DialogActions,
-  setDialogAction: React.Dispatch<React.SetStateAction<DialogActions>>,
+  setDialogAction: Dispatch<SetStateAction<DialogActions>>,
   totalRewards: number,
   previousTotalRewards: number,
-  setUnstake: React.Dispatch<React.SetStateAction<ILockPosition | null>>,
-  setEarlyUnstake: React.Dispatch<React.SetStateAction<ILockPosition | null>>,
+  setUnstake: Dispatch<SetStateAction<ILockPosition | null>>,
+  setEarlyUnstake: Dispatch<SetStateAction<ILockPosition | null>>,
   onClose: () => void,
   processFlow: (action: string, position?: ILockPosition) => void,
   staker: any,

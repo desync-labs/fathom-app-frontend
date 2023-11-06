@@ -9,7 +9,7 @@ export default interface ICollateralPool {
   lockedCollateral: number;
   poolName: string;
   priceWithSafetyMargin: number;
-  stabilityFeeRate: number
+  stabilityFeeRate: number;
   totalAvailable: number;
   totalBorrowed: number;
   tvl: number;

@@ -162,7 +162,7 @@ const useStableSwapRemoveLiquidity = () => {
     try {
       setRemoveLiquidityPending(true);
       const blockNumber = await stableSwapService.removeLiquidity(Number(inputValue), account, library);
-      setLastTransactionBlock(blockNumber);
+      setLastTransactionBlock(blockNumber as number);
       getBalances();
       setRemoveAmountStable(0);
       setRemoveAmountFxd(0);
