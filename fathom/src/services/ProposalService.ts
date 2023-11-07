@@ -8,18 +8,14 @@ import { Web3Utils } from "helpers/Web3Utils";
 
 import {
   TransactionStatus,
-  TransactionType
+  TransactionType,
 } from "services/interfaces/models/ITransaction";
-import {
-  DEFAULT_CHAIN_ID
-} from "helpers/Constants";
+import { DEFAULT_CHAIN_ID } from "helpers/Constants";
 
 import { getEstimateGas } from "utils/getEstimateGas";
 
 import { SKIP_ERRORS } from "connectors/networks";
-import {
-  UseAlertAndTransactionServiceType
-} from "context/alertAndTransaction";
+import { UseAlertAndTransactionServiceType } from "context/alertAndTransaction";
 
 export default class ProposalService implements IProposalService {
   chainId = DEFAULT_CHAIN_ID;
@@ -36,7 +32,7 @@ export default class ProposalService implements IProposalService {
     description: string,
     account: string,
     library: Xdc3
-  ): Promise<number|Error> {
+  ): Promise<number | Error> {
     return new Promise(async (resolve, reject) => {
       try {
         const FathomGovernor = Web3Utils.getContractInstance(
@@ -79,7 +75,7 @@ export default class ProposalService implements IProposalService {
               active: false,
               status: TransactionStatus.None,
               title: "Proposal Creation Pending",
-              message: "Click on transaction to view on block Explorer."
+              message: "Click on transaction to view on block Explorer.",
             });
           })
           .then((transactionReceipt: TransactionReceipt) => {
@@ -90,11 +86,17 @@ export default class ProposalService implements IProposalService {
             resolve(transactionReceipt.blockNumber);
           })
           .catch((e: Error) => {
-            this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+            this.alertAndTransactionContext.setShowErrorAlertHandler(
+              true,
+              e.message
+            );
             reject(e);
           });
       } catch (e: any) {
-        this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+        this.alertAndTransactionContext.setShowErrorAlertHandler(
+          true,
+          e.message
+        );
         reject(e);
       }
     });
@@ -107,7 +109,7 @@ export default class ProposalService implements IProposalService {
     description: string,
     account: string,
     library: Xdc3
-  ): Promise<number|Error> {
+  ): Promise<number | Error> {
     return new Promise(async (resolve, reject) => {
       try {
         const FathomGovernor = Web3Utils.getContractInstance(
@@ -150,7 +152,7 @@ export default class ProposalService implements IProposalService {
               active: false,
               status: TransactionStatus.None,
               title: "Execute Proposal Pending",
-              message: "Click on transaction to view on block Explorer."
+              message: "Click on transaction to view on block Explorer.",
             });
           })
           .then((receipt: TransactionReceipt) => {
@@ -161,11 +163,17 @@ export default class ProposalService implements IProposalService {
             resolve(receipt.blockNumber);
           })
           .catch((e: Error) => {
-            this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+            this.alertAndTransactionContext.setShowErrorAlertHandler(
+              true,
+              e.message
+            );
             reject(e);
           });
       } catch (e: any) {
-        this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+        this.alertAndTransactionContext.setShowErrorAlertHandler(
+          true,
+          e.message
+        );
         reject(e);
       }
     });
@@ -178,7 +186,7 @@ export default class ProposalService implements IProposalService {
     description: string,
     account: string,
     library: Xdc3
-  ): Promise<number|Error> {
+  ): Promise<number | Error> {
     return new Promise(async (resolve, reject) => {
       try {
         const FathomGovernor = Web3Utils.getContractInstance(
@@ -221,7 +229,7 @@ export default class ProposalService implements IProposalService {
               active: false,
               status: TransactionStatus.None,
               title: "Queue Proposal Pending",
-              message: "Click on transaction to view on block Explorer."
+              message: "Click on transaction to view on block Explorer.",
             });
           })
           .then((receipt: TransactionReceipt) => {
@@ -232,11 +240,17 @@ export default class ProposalService implements IProposalService {
             resolve(receipt.blockNumber);
           })
           .catch((e: Error) => {
-            this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+            this.alertAndTransactionContext.setShowErrorAlertHandler(
+              true,
+              e.message
+            );
             reject(e);
           });
       } catch (e: any) {
-        this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+        this.alertAndTransactionContext.setShowErrorAlertHandler(
+          true,
+          e.message
+        );
         reject(e);
       }
     });
@@ -247,7 +261,7 @@ export default class ProposalService implements IProposalService {
     account: string,
     support: string,
     library: Xdc3
-  ): Promise<number|Error> {
+  ): Promise<number | Error> {
     return new Promise(async (resolve, reject) => {
       try {
         const FathomGovernor = Web3Utils.getContractInstance(
@@ -290,7 +304,7 @@ export default class ProposalService implements IProposalService {
               active: false,
               status: TransactionStatus.None,
               title: `Vote Pending`,
-              message: "Click on transaction to view on block Explorer."
+              message: "Click on transaction to view on block Explorer.",
             });
           })
           .then((receipt: TransactionReceipt) => {
@@ -301,21 +315,23 @@ export default class ProposalService implements IProposalService {
             resolve(receipt.blockNumber);
           })
           .catch((e: Error) => {
-            this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+            this.alertAndTransactionContext.setShowErrorAlertHandler(
+              true,
+              e.message
+            );
             reject(e);
           });
       } catch (e: any) {
-        this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+        this.alertAndTransactionContext.setShowErrorAlertHandler(
+          true,
+          e.message
+        );
         reject(e);
       }
     });
   }
 
-  hasVoted(
-    proposalId: string,
-    account: string,
-    library: Xdc3
-  ) {
+  hasVoted(proposalId: string, account: string, library: Xdc3) {
     const FathomGovernor = Web3Utils.getContractInstance(
       SmartContractFactory.FathomGovernor(this.chainId),
       library
@@ -323,11 +339,7 @@ export default class ProposalService implements IProposalService {
     return FathomGovernor.methods.hasVoted(proposalId, account).call();
   }
 
-  viewProposalState(
-    proposalId: string,
-    account: string,
-    library: Xdc3
-  ) {
+  viewProposalState(proposalId: string, account: string, library: Xdc3) {
     const FathomGovernor = Web3Utils.getContractInstance(
       SmartContractFactory.FathomGovernor(this.chainId),
       library
@@ -335,10 +347,7 @@ export default class ProposalService implements IProposalService {
     return FathomGovernor.methods.state(proposalId).call({ from: account });
   }
 
-  nextAcceptableProposalTimestamp(
-    account: string,
-    library: Xdc3
-  ) {
+  nextAcceptableProposalTimestamp(account: string, library: Xdc3) {
     const FathomGovernor = Web3Utils.getContractInstance(
       SmartContractFactory.FathomGovernor(this.chainId),
       library

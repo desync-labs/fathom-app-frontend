@@ -19,9 +19,10 @@ export const AppTextField = styled(MuiTextField)`
     line-height: 20px;
     color: #4f658c;
     border: 1px solid #253656;
-    &:hover, &:focus {
-      border: 1px solid #5A81FF;
-      box-shadow: 0px 0px 8px #003CFF;
+    &:hover,
+    &:focus {
+      border: 1px solid #5a81ff;
+      box-shadow: 0px 0px 8px #003cff;
     }
   }
 
@@ -70,7 +71,7 @@ export const AppTextField = styled(MuiTextField)`
     margin-top: 0;
     color: #6379a1;
     &.Mui-error {
-      color: #DD3C3C;
+      color: #dd3c3c;
     }
     p {
       padding-left: 0;
@@ -88,7 +89,7 @@ export const AppFormLabel = styled(MuiFormLabel)`
   padding-bottom: 0;
 `;
 
-export const AppFormInputWrapper = styled('div')`
+export const AppFormInputWrapper = styled("div")`
   position: relative;
   margin-bottom: 15px;
 `;

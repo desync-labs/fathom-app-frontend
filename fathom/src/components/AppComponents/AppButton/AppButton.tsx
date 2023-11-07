@@ -8,7 +8,7 @@ interface ToggleDrawerButtonProps extends MuiIconButtonProps {
 
 export const ToggleDrawerButton = styled(MuiButton, {
   shouldForwardProp: (prop) => prop !== "open",
-})<ToggleDrawerButtonProps>(({ theme, open }) => ({
+})<ToggleDrawerButtonProps>(({ open }) => ({
   color: "#000",
   width: "20px",
   height: "20px",
@@ -22,7 +22,7 @@ export const ToggleDrawerButton = styled(MuiButton, {
 
 export const ButtonPrimary = styled(MuiButton, {
   shouldForwardProp: (prop) => prop !== "isLoading",
-})<{ isLoading?: boolean }>(({ theme, isLoading = false }) => {
+})<{ isLoading?: boolean }>(({ isLoading = false }) => {
   const styles = {
     borderRadius: "8px",
     background: "linear-gradient(104.04deg, #B3FFF9 0%, #00DBCB 100%)",

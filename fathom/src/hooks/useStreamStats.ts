@@ -1,10 +1,6 @@
 import useStakingContext from "context/staking";
 import usePricesContext from "context/prices";
-import {
-  useEffect,
-  useMemo,
-  useState
-} from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const useStreamStats = () => {
   const {
@@ -65,7 +61,7 @@ const useStreamStats = () => {
     totalRewards,
     fthmPriceFormatted,
     processFlow,
-  }
-}
+  };
+};
 
-export default useStreamStats
+export default useStreamStats;

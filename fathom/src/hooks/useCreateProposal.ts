@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useMediaQuery, useTheme } from "@mui/material";
-import { useStores } from "context/services";
+import { useServices } from "context/services";
 import { ZERO_ADDRESS } from "helpers/Constants";
 import { ProposeProps } from "components/Governance/Propose";
 import useSyncContext from "context/sync";
@@ -34,8 +34,8 @@ const defaultValues = {
 };
 
 const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
-  const { proposalService } = useStores();
-  const { account, chainId, library } = useConnector()!;
+  const { proposalService } = useServices();
+  const { account, chainId, library } = useConnector();
 
   const [vBalance, setVBalance] = useState<null | number>(null);
   const [vBalanceError, setVBalanceError] = useState<boolean>(false);
@@ -70,12 +70,12 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
 
   useEffect(() => {
     if (account) {
-      proposalService.getVBalance(account, library)!.then((balance) => {
-        setVBalance(balance!);
+      proposalService.getVBalance(account).then((balance) => {
+        setVBalance(balance);
       });
       proposalService
-        .nextAcceptableProposalTimestamp(account, library)!
-        .then((nextAcceptableTimestamp: number) => {
+        .nextAcceptableProposalTimestamp(account)
+        .then((nextAcceptableTimestamp) => {
           if (nextAcceptableTimestamp > Date.now() / 1000) {
             setNotAllowTimestamp(nextAcceptableTimestamp);
           } else {
@@ -83,10 +83,10 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
           }
         });
     }
-  }, [account, library, proposalService, setVBalance, setNotAllowTimestamp]);
+  }, [account, proposalService, setVBalance, setNotAllowTimestamp]);
 
   useEffect(() => {
-    proposalService.proposalThreshold(library).then((minVBalance) => {
+    proposalService.proposalThreshold().then((minVBalance: number) => {
       const formattedVBalance = BigNumber(minVBalance)
         .dividedBy(10 ** 18)
         .toNumber();
@@ -108,7 +108,7 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
         return;
       }
 
-      if (BigNumber(vBalance!).isLessThan(minimumVBalance!)) {
+      if (BigNumber(vBalance as number).isLessThan(minimumVBalance as number)) {
         return setVBalanceError(true);
       } else {
         setVBalanceError(false);
@@ -136,8 +136,7 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
             values,
             callDatas,
             combinedText,
-            account,
-            library
+            account
           );
         } else {
           blockNumber = await proposalService.createProposal(
@@ -145,8 +144,7 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
             [0],
             [ZERO_ADDRESS],
             combinedText,
-            account,
-            library
+            account
           );
         }
 
@@ -154,7 +152,7 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
         reset();
         localStorage.removeItem("createProposal");
         onClose();
-      } catch (err) {} finally {
+      } finally {
         setIsLoading(false);
       }
     },
@@ -164,7 +162,6 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
       notAllowTimestamp,
       reset,
       account,
-      library,
       proposalService,
       onClose,
       setLastTransactionBlock,

@@ -1,44 +1,32 @@
 import React from "react";
 import { Controller } from "react-hook-form";
 import BigNumber from "bignumber.js";
-import {
-  Box,
-  CircularProgress,
-  Grid,
-  Typography
-} from "@mui/material";
+import { Box, CircularProgress, Grid, Typography } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 import { styled } from "@mui/material/styles";
 import {
   ApproveBox,
   ApproveBoxTypography,
   Summary,
-  WalletBalance
+  WalletBalance,
 } from "components/AppComponents/AppBox/AppBox";
 import {
   AppFormInputLogo,
   AppFormInputWrapper,
   AppFormLabel,
-  AppTextField
+  AppTextField,
 } from "components/AppComponents/AppForm/AppForm";
 import {
   ApproveButton,
   ButtonPrimary,
   ButtonSecondary,
   ButtonsWrapper,
-  MaxButton
+  MaxButton,
 } from "components/AppComponents/AppButton/AppButton";
 import useOpenPositionContext from "context/openPosition";
-import {
-  FXD_MINIMUM_BORROW_AMOUNT
-} from "helpers/Constants";
-import {
-  ErrorBox,
-  ErrorMessage
-} from "components/AppComponents/AppBox/AppBox";
-import {
-  WarningBox
-} from "components/AppComponents/AppBox/AppBox";
+import { FXD_MINIMUM_BORROW_AMOUNT } from "helpers/Constants";
+import { ErrorBox, ErrorMessage } from "components/AppComponents/AppBox/AppBox";
+import { WarningBox } from "components/AppComponents/AppBox/AppBox";
 import useConnector from "context/connector";
 
 import { formatPercentage } from "utils/format";
@@ -85,7 +73,7 @@ const OpenPositionForm = () => {
     pool,
     dangerSafetyBuffer,
     errors,
-    maxBorrowAmount
+    maxBorrowAmount,
   } = useOpenPositionContext();
 
   const { isOpenPositionWhitelisted } = useConnector();
@@ -108,7 +96,7 @@ const OpenPositionForm = () => {
             min: 1,
             max: BigNumber(balance)
               .dividedBy(10 ** 18)
-              .toString()
+              .toString(),
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <AppFormInputWrapper>
@@ -116,8 +104,11 @@ const OpenPositionForm = () => {
               {balance ? (
                 <WalletBalance>
                   Wallet Available:{" "}
-                  {formatPercentage(BigNumber(balance)
-                    .dividedBy(10 ** 18).toNumber())}{" "}
+                  {formatPercentage(
+                    BigNumber(balance)
+                      .dividedBy(10 ** 18)
+                      .toNumber()
+                  )}{" "}
                   {pool.poolName}
                 </WalletBalance>
               ) : null}
@@ -194,7 +185,7 @@ const OpenPositionForm = () => {
               }
 
               return true;
-            }
+            },
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => {
             return (
@@ -210,7 +201,7 @@ const OpenPositionForm = () => {
                           <InfoIcon
                             sx={{
                               float: "left",
-                              fontSize: "18px"
+                              fontSize: "18px",
                             }}
                           />
                           <Box
@@ -261,26 +252,31 @@ const OpenPositionForm = () => {
             );
           }}
         />
-        {!isOpenPositionWhitelisted &&
+        {!isOpenPositionWhitelisted && (
           <WarningBox>
             <InfoIcon />
             <Typography>
               Your wallet address is not whitelisted for open position.
               <br />
               <a
-                href={"https://docs.google.com/forms/d/e/1FAIpQLSdyQkwpYPAAUc5llJxk09ymMdjSSSjjiY3spwvRvCwfV08h2A/viewform"}
-                target={"_blank"} rel="noreferrer">
+                href={
+                  "https://docs.google.com/forms/d/e/1FAIpQLSdyQkwpYPAAUc5llJxk09ymMdjSSSjjiY3spwvRvCwfV08h2A/viewform"
+                }
+                target={"_blank"}
+                rel="noreferrer"
+              >
                 Apply for being added to the whitelist to borrow FXD.
               </a>
             </Typography>
-          </WarningBox>}
+          </WarningBox>
+        )}
         {approveBtn && !!balance && (
           <OpenPositionApproveBox>
             <InfoIcon
               sx={{
                 color: "#7D91B5",
                 float: "left",
-                marginRight: "10px"
+                marginRight: "10px",
               }}
             />
             <ApproveBoxTypography>
@@ -314,7 +310,12 @@ const OpenPositionForm = () => {
           )}
           <ButtonPrimary
             type="submit"
-            disabled={openPositionLoading || approveBtn || !!Object.keys(errors).length || !isOpenPositionWhitelisted}
+            disabled={
+              openPositionLoading ||
+              approveBtn ||
+              !!Object.keys(errors).length ||
+              !isOpenPositionWhitelisted
+            }
             isLoading={openPositionLoading}
           >
             {openPositionLoading ? (

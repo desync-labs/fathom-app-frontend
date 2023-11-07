@@ -1,7 +1,4 @@
-import React, {
-  FC,
-  ReactNode
-} from "react";
+import React, { FC, ReactNode } from "react";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import { styled } from "@mui/material/styles";
@@ -17,14 +14,14 @@ export const AppDialogTitleWrapper = styled(MuiDialogTitle)`
   ${({ theme }) => theme.breakpoints.down("sm")} {
     padding-left: 15px;
   }
-`
+`;
 
 export const AppDialogCloseIcon = styled(IconButton)`
   position: absolute;
   right: 8px;
   top: 8px;,
   color: ${({ theme }) => theme.palette.grey[500]};
-`
+`;
 
 export interface DialogTitleProps {
   id: string;

@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  CircularProgress,
-  Container,
-  Grid,
-} from "@mui/material";
+import { CircularProgress, Container, Grid } from "@mui/material";
 import { PageHeader } from "components/Dashboard/PageHeader";
 import { StableSwapPaper } from "components/AppComponents/AppPaper/AppPaper";
 import {
@@ -13,24 +9,18 @@ import {
   StableSwapInputWrapper,
   StableSwapMaxButton,
   StableSwapTextField,
-  SwapButton
+  SwapButton,
 } from "components/Stableswap/StableSwap";
-import {
-  InfoLabel,
-  InfoValue
-} from "components/AppComponents/AppBox/AppBox";
+import { InfoLabel, InfoValue } from "components/AppComponents/AppBox/AppBox";
 import InfoIcon from "@mui/icons-material/Info";
-import {
-  formatPercentage
-} from "utils/format";
+import { formatPercentage } from "utils/format";
 import BigNumber from "bignumber.js";
 import useStableSwapRemoveLiquidity from "hooks/useStableSwapRemoveLiquidity";
 import { styled } from "@mui/material/styles";
 
-
 const StableSwapInfoRemoveLiquidityContainer = styled(StableSwapInfoContainer)`
   padding: 0;
-`
+`;
 
 const StableSwapRemoveLiquidity = () => {
   const {
@@ -49,7 +39,7 @@ const StableSwapRemoveLiquidity = () => {
     liquidityPerUserStable,
     totalLiquidity,
     removeAmountFxd,
-    removeAmountStable
+    removeAmountStable,
   } = useStableSwapRemoveLiquidity();
 
   return (
@@ -61,9 +51,7 @@ const StableSwapRemoveLiquidity = () => {
         <PageHeader
           addPadding={true}
           title={"Remove Liquidity"}
-          description={
-            "Remove Liquidity from Stable Swap."
-          }
+          description={"Remove Liquidity from Stable Swap."}
         />
         <Grid item xs={12} sm={10} md={8} lg={6} sx={{ margin: "0 auto" }}>
           <StableSwapPaper>
@@ -88,63 +76,90 @@ const StableSwapRemoveLiquidity = () => {
               <StableSwapMaxButton onClick={setMax}>Max</StableSwapMaxButton>
             </StableSwapInputWrapper>
 
-            <StableSwapInfoRemoveLiquidityContainer sx={{ marginTop: '20px' }}>
+            <StableSwapInfoRemoveLiquidityContainer sx={{ marginTop: "20px" }}>
               <StableSwapInfoWrapper>
                 <InfoLabel>Receive FXD</InfoLabel>
-                <InfoValue>{
-                  formatPercentage(
-                    BigNumber(removeAmountFxd).dividedBy(10 ** 18).toNumber()
-                  )} FXD</InfoValue>
+                <InfoValue>
+                  {formatPercentage(
+                    BigNumber(removeAmountFxd)
+                      .dividedBy(10 ** 18)
+                      .toNumber()
+                  )}{" "}
+                  FXD
+                </InfoValue>
               </StableSwapInfoWrapper>
               <StableSwapInfoWrapper>
                 <InfoLabel>Receive xUSDT</InfoLabel>
-                <InfoValue>{
-                  formatPercentage(
-                    BigNumber(removeAmountStable).dividedBy(10 ** 18).toNumber()
-                  )} xUSDT</InfoValue>
+                <InfoValue>
+                  {formatPercentage(
+                    BigNumber(removeAmountStable)
+                      .dividedBy(10 ** 18)
+                      .toNumber()
+                  )}{" "}
+                  xUSDT
+                </InfoValue>
               </StableSwapInfoWrapper>
             </StableSwapInfoRemoveLiquidityContainer>
 
             <StableSwapInfoRemoveLiquidityContainer>
               <StableSwapInfoWrapper>
                 <InfoLabel>FXD Wallet Balance</InfoLabel>
-                <InfoValue>{
-                  formatPercentage(
-                    BigNumber(fxdBalance).dividedBy(10 ** fxdDecimals).toNumber()
-                  )} FXD</InfoValue>
+                <InfoValue>
+                  {formatPercentage(
+                    BigNumber(fxdBalance)
+                      .dividedBy(10 ** fxdDecimals)
+                      .toNumber()
+                  )}{" "}
+                  FXD
+                </InfoValue>
               </StableSwapInfoWrapper>
               <StableSwapInfoWrapper>
                 <InfoLabel>xUSDT Wallet Balance</InfoLabel>
-                <InfoValue>{
-                  formatPercentage(
-                    BigNumber(stableBalance).dividedBy(10 ** stableDecimals).toNumber()
-                  )} xUSDT</InfoValue>
+                <InfoValue>
+                  {formatPercentage(
+                    BigNumber(stableBalance)
+                      .dividedBy(10 ** stableDecimals)
+                      .toNumber()
+                  )}{" "}
+                  xUSDT
+                </InfoValue>
               </StableSwapInfoWrapper>
             </StableSwapInfoRemoveLiquidityContainer>
 
             <StableSwapInfoRemoveLiquidityContainer>
               <StableSwapInfoWrapper>
                 <InfoLabel>User Liquidity FXD</InfoLabel>
-                <InfoValue>{
-                  formatPercentage(
-                    BigNumber(liquidityPerUserFxd).dividedBy(10 ** 18).toNumber()
-                  )} FXD</InfoValue>
+                <InfoValue>
+                  {formatPercentage(
+                    BigNumber(liquidityPerUserFxd)
+                      .dividedBy(10 ** 18)
+                      .toNumber()
+                  )}{" "}
+                  FXD
+                </InfoValue>
               </StableSwapInfoWrapper>
               <StableSwapInfoWrapper>
                 <InfoLabel>User Liquidity xUSDT</InfoLabel>
-                <InfoValue>{
-                  formatPercentage(
-                    BigNumber(liquidityPerUserStable).dividedBy(10 ** 18).toNumber()
-                  )} xUSDT</InfoValue>
+                <InfoValue>
+                  {formatPercentage(
+                    BigNumber(liquidityPerUserStable)
+                      .dividedBy(10 ** 18)
+                      .toNumber()
+                  )}{" "}
+                  xUSDT
+                </InfoValue>
               </StableSwapInfoWrapper>
             </StableSwapInfoRemoveLiquidityContainer>
             <StableSwapInfoRemoveLiquidityContainer>
               <StableSwapInfoWrapper>
                 <InfoLabel>Total Liquidity</InfoLabel>
-                <InfoValue>{
-                  formatPercentage(
-                    BigNumber(totalLiquidity).dividedBy(10 ** 18).toNumber()
-                  )}</InfoValue>
+                <InfoValue>
+                  {formatPercentage(
+                    BigNumber(totalLiquidity)
+                      .dividedBy(10 ** 18)
+                      .toNumber()
+                  )}
+                </InfoValue>
               </StableSwapInfoWrapper>
             </StableSwapInfoRemoveLiquidityContainer>
 
@@ -153,7 +168,11 @@ const StableSwapRemoveLiquidity = () => {
               disabled={removeLiquidityPending || !inputValue}
               onClick={handleRemoveLiquidity}
             >
-              {removeLiquidityPending ? <CircularProgress size={30} /> : "Remove Liquidity"}
+              {removeLiquidityPending ? (
+                <CircularProgress size={30} />
+              ) : (
+                "Remove Liquidity"
+              )}
             </SwapButton>
           </StableSwapPaper>
         </Grid>

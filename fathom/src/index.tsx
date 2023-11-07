@@ -10,7 +10,7 @@ import { ServicesProvider } from "./context/services";
 
 dotenv.config();
 
-function getLibrary(provider: any) {
+function getLibrary(provider: any): Xdc3 {
   console.log("getLibrary", provider);
   return new Xdc3(provider);
 }

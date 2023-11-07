@@ -1,14 +1,14 @@
 import useConnector from "context/connector";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ProposalStatus, XDC_BLOCK_TIME } from "helpers/Constants";
-import { useStores } from "context/services";
+import { useServices } from "context/services";
 import IProposal from "services/interfaces/models/IProposal";
 import BigNumber from "bignumber.js";
 
 const useViewProposalItem = (proposal: IProposal) => {
   const { chainId, account, library } = useConnector();
   const [status, setStatus] = useState<ProposalStatus>();
-  const { proposalService } = useStores();
+  const { proposalService } = useServices();
 
   const [timestamp, setTimestamp] = useState<number>(0);
   const [seconds, setSeconds] = useState<number>(0);
@@ -21,8 +21,11 @@ const useViewProposalItem = (proposal: IProposal) => {
 
     if (Number(currentBlock) < Number(proposal.startBlock)) {
       const blockData = await library.eth.getBlock(currentBlock);
-      timestamp = BigNumber(blockData.timestamp)
-        .plus(BigNumber(proposal.startBlock).minus(currentBlock).multipliedBy(XDC_BLOCK_TIME));
+      timestamp = BigNumber(blockData.timestamp).plus(
+        BigNumber(proposal.startBlock)
+          .minus(currentBlock)
+          .multipliedBy(XDC_BLOCK_TIME)
+      );
     } else {
       const blockData = await library.eth.getBlock(proposal.startBlock);
       timestamp = BigNumber(blockData.timestamp);
@@ -45,28 +48,27 @@ const useViewProposalItem = (proposal: IProposal) => {
 
   const checkProposalVotesAndQuorum = useCallback(async () => {
     const [totalVotes, quorum] = await Promise.all([
-      proposalService.proposalVotes(proposal.proposalId, library),
-      proposalService.quorum(proposal.startBlock, library),
+      proposalService.proposalVotes(proposal.proposalId),
+      proposalService.quorum(proposal.startBlock),
     ]);
 
     const { abstainVotes, forVotes } = totalVotes;
 
-    if (BigNumber(quorum!).isLessThan(BigNumber(abstainVotes).plus(forVotes))) {
+    if (BigNumber(quorum).isLessThan(BigNumber(abstainVotes).plus(forVotes))) {
       setQuorumError(false);
     } else {
       setQuorumError(true);
     }
-  }, [proposalService, proposal, library]);
+  }, [proposalService, proposal]);
 
   const fetchProposalState = useCallback(async () => {
     const status = await proposalService.viewProposalState(
       proposal.proposalId,
-      account!,
-      library
+      account
     );
     // @ts-ignore
     setStatus(Object.values(ProposalStatus)[status]);
-  }, [proposalService, proposal, account, library]);
+  }, [proposalService, proposal, account]);
 
   useEffect(() => {
     if (proposal && chainId && account) {

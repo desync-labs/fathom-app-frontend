@@ -80,7 +80,7 @@ const PoolsListItemMobile: FC<PoolsListItemMobilePropsType> = ({
     <PoolsListItemMobileContainer>
       <ListItemWrapper>
         <ListLabel>Pool</ListLabel>
-        <ListValue className={'column'}>
+        <ListValue className={"column"}>
           <PoolWrapper>
             <img
               src={getTokenLogoURL(

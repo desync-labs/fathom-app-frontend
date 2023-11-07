@@ -14,13 +14,13 @@ const cache = new InMemoryCache({
       fields: {
         positions: {
           keyArgs: false,
-          merge(existing = [], incoming, other) {
+          merge(_, incoming) {
             return incoming;
           },
         },
         proposals: {
           keyArgs: false,
-          merge(existing = [], incoming) {
+          merge(_, incoming) {
             return incoming;
           },
         },
@@ -30,7 +30,7 @@ const cache = new InMemoryCache({
       fields: {
         lockPositions: {
           keyArgs: false,
-          merge(existing = [], incoming) {
+          merge(_, incoming) {
             return incoming;
           },
         },

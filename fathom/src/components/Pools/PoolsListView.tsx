@@ -1,7 +1,4 @@
-import React, {
-  FC,
-  useMemo
-} from "react";
+import React, { FC, useMemo } from "react";
 import {
   CircularProgress,
   Table,
@@ -9,7 +6,7 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  Box
+  Box,
 } from "@mui/material";
 import ICollateralPool from "services/interfaces/models/ICollateralPool";
 import PoolsListItem from "components/Pools/PoolsListItem";
@@ -18,7 +15,7 @@ import { styled } from "@mui/material/styles";
 import { AppTableHeaderRow } from "components/AppComponents/AppTable/AppTable";
 import {
   NoResults,
-  TitleSecondary
+  TitleSecondary,
 } from "components/AppComponents/AppBox/AppBox";
 import usePoolsList from "hooks/usePoolsList";
 import PoolsListItemMobile from "components/Pools/PoolsListItemMobile";
@@ -54,7 +51,7 @@ const PoolsListView: FC = () => {
     selectedPool,
     onCloseNewPosition,
     setSelectedPool,
-    loading
+    loading,
   } = usePoolsList();
 
   return (
@@ -93,7 +90,7 @@ const PoolsListView: FC = () => {
                     <PoolsListItem
                       pool={pool}
                       key={pool.id}
-                      setSelectedPool={setSelectedPool!}
+                      setSelectedPool={setSelectedPool}
                     />
                   ))}
                 </TableBody>
@@ -105,7 +102,7 @@ const PoolsListView: FC = () => {
               <PoolsListItemMobile
                 pool={pool}
                 key={pool.id}
-                setSelectedPool={setSelectedPool!}
+                setSelectedPool={setSelectedPool}
               />
             ))}
         </>
@@ -115,7 +112,7 @@ const PoolsListView: FC = () => {
           selectedPool && (
             <OpenPositionProvider
               onClose={onCloseNewPosition}
-              pool={selectedPool!}
+              pool={selectedPool}
             >
               <OpenNewPositionDialog />
             </OpenPositionProvider>

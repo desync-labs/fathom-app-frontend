@@ -5,23 +5,18 @@ import BigNumber from "bignumber.js";
 import { SmartContractFactory } from "config/SmartContractFactory";
 import {
   TransactionStatus,
-  TransactionType
+  TransactionType,
 } from "services/interfaces/models/ITransaction";
 import IStakingService from "services/interfaces/services/IStakingService";
 
 import { getEstimateGas } from "utils/getEstimateGas";
 
-import {
-  MAX_UINT256,
-  DEFAULT_CHAIN_ID
-} from "helpers/Constants";
+import { MAX_UINT256, DEFAULT_CHAIN_ID } from "helpers/Constants";
 import { Strings } from "helpers/Strings";
 import { Web3Utils } from "helpers/Web3Utils";
 import { SKIP_ERRORS } from "connectors/networks";
 
-import {
-  UseAlertAndTransactionServiceType
-} from "context/alertAndTransaction";
+import { UseAlertAndTransactionServiceType } from "context/alertAndTransaction";
 
 export const DAY_SECONDS = 24 * 60 * 60;
 
@@ -39,7 +34,7 @@ export default class StakingService implements IStakingService {
     stakePosition: number,
     unlockPeriod: number,
     library: Xdc3
-  ): Promise<number|Error> {
+  ): Promise<number | Error> {
     return new Promise(async (resolve, reject) => {
       try {
         const Staking = Web3Utils.getContractInstance(
@@ -66,13 +61,19 @@ export default class StakingService implements IStakingService {
             if (SKIP_ERRORS.includes(eventData?.code)) {
               return;
             }
-            this.alertAndTransactionContext.setShowSuccessAlertHandler(true, MESSAGE);
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
+              true,
+              MESSAGE
+            );
             resolve(transactionReceipt.blockNumber);
           }
         );
 
         Staking.methods
-          .createLock(library.utils.toWei(stakePosition.toString(), "ether"), endTime)
+          .createLock(
+            library.utils.toWei(stakePosition.toString(), "ether"),
+            endTime
+          )
           .send(options)
           .on("transactionHash", (hash: any) => {
             this.alertAndTransactionContext.addTransaction({
@@ -81,19 +82,28 @@ export default class StakingService implements IStakingService {
               active: false,
               status: TransactionStatus.None,
               title: "Creating Lock",
-              message: Strings.CheckOnBlockExplorer
+              message: Strings.CheckOnBlockExplorer,
             });
           })
           .then((receipt: TransactionReceipt) => {
-            this.alertAndTransactionContext.setShowSuccessAlertHandler(true, MESSAGE);
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
+              true,
+              MESSAGE
+            );
             resolve(receipt.blockNumber);
           })
           .catch((e: Error) => {
-            this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+            this.alertAndTransactionContext.setShowErrorAlertHandler(
+              true,
+              e.message
+            );
             reject(e);
           });
       } catch (e: any) {
-        this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+        this.alertAndTransactionContext.setShowErrorAlertHandler(
+          true,
+          e.message
+        );
         reject(e);
       }
     });
@@ -104,7 +114,7 @@ export default class StakingService implements IStakingService {
     lockId: number,
     amount: number,
     library: Xdc3
-  ): Promise<number|Error> {
+  ): Promise<number | Error> {
     return new Promise(async (resolve, reject) => {
       try {
         const Staking = Web3Utils.getContractInstance(
@@ -130,13 +140,19 @@ export default class StakingService implements IStakingService {
             if (SKIP_ERRORS.includes(eventData?.code)) {
               return;
             }
-            this.alertAndTransactionContext.setShowSuccessAlertHandler(true, MESSAGE);
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
+              true,
+              MESSAGE
+            );
             resolve(transactionReceipt.blockNumber);
           }
         );
 
         Staking.methods
-          .unlockPartially(lockId, library.utils.toWei(amount.toString(), "ether"))
+          .unlockPartially(
+            lockId,
+            library.utils.toWei(amount.toString(), "ether")
+          )
           .send(options)
           .on("transactionHash", (hash: any) => {
             this.alertAndTransactionContext.addTransaction({
@@ -145,19 +161,28 @@ export default class StakingService implements IStakingService {
               active: false,
               status: TransactionStatus.None,
               title: "Handling Unlock",
-              message: Strings.CheckOnBlockExplorer
+              message: Strings.CheckOnBlockExplorer,
             });
           })
           .then((receipt: TransactionReceipt) => {
-            this.alertAndTransactionContext.setShowSuccessAlertHandler(true, MESSAGE);
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
+              true,
+              MESSAGE
+            );
             resolve(receipt.blockNumber);
           })
           .catch((e: Error) => {
-            this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+            this.alertAndTransactionContext.setShowErrorAlertHandler(
+              true,
+              e.message
+            );
             reject(e);
           });
       } catch (e: any) {
-        this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+        this.alertAndTransactionContext.setShowErrorAlertHandler(
+          true,
+          e.message
+        );
         reject(e);
       }
     });
@@ -167,7 +192,7 @@ export default class StakingService implements IStakingService {
     account: string,
     lockId: number,
     library: Xdc3
-  ): Promise<number|Error> {
+  ): Promise<number | Error> {
     return new Promise(async (resolve, reject) => {
       try {
         const Staking = Web3Utils.getContractInstance(
@@ -193,7 +218,10 @@ export default class StakingService implements IStakingService {
             if (SKIP_ERRORS.includes(eventData?.code)) {
               return;
             }
-            this.alertAndTransactionContext.setShowSuccessAlertHandler(true, MESSAGE);
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
+              true,
+              MESSAGE
+            );
             resolve(transactionReceipt.blockNumber);
           }
         );
@@ -208,19 +236,28 @@ export default class StakingService implements IStakingService {
               active: false,
               status: TransactionStatus.None,
               title: "Handling Early Unlock",
-              message: Strings.CheckOnBlockExplorer
+              message: Strings.CheckOnBlockExplorer,
             });
           })
           .then((receipt: TransactionReceipt) => {
-            this.alertAndTransactionContext.setShowSuccessAlertHandler(true, MESSAGE);
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
+              true,
+              MESSAGE
+            );
             resolve(receipt.blockNumber);
           })
           .catch((e: Error) => {
-            this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+            this.alertAndTransactionContext.setShowErrorAlertHandler(
+              true,
+              e.message
+            );
             reject(e);
           });
       } catch (e: any) {
-        this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+        this.alertAndTransactionContext.setShowErrorAlertHandler(
+          true,
+          e.message
+        );
         reject(e);
       }
     });
@@ -256,7 +293,10 @@ export default class StakingService implements IStakingService {
             if (SKIP_ERRORS.includes(eventData?.code)) {
               return;
             }
-            this.alertAndTransactionContext.setShowSuccessAlertHandler(true, MESSAGE);
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
+              true,
+              MESSAGE
+            );
             resolve(transactionReceipt.blockNumber);
           }
         );
@@ -271,19 +311,28 @@ export default class StakingService implements IStakingService {
               active: false,
               status: TransactionStatus.None,
               title: "Handling Claim Rewards",
-              message: Strings.CheckOnBlockExplorer
+              message: Strings.CheckOnBlockExplorer,
             });
           })
           .then((receipt: TransactionReceipt) => {
-            this.alertAndTransactionContext.setShowSuccessAlertHandler(true, MESSAGE);
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
+              true,
+              MESSAGE
+            );
             resolve(receipt.blockNumber);
           })
           .catch((e: Error) => {
-            this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+            this.alertAndTransactionContext.setShowErrorAlertHandler(
+              true,
+              e.message
+            );
             reject(e);
           });
       } catch (e: any) {
-        this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+        this.alertAndTransactionContext.setShowErrorAlertHandler(
+          true,
+          e.message
+        );
         reject(e);
       }
     });
@@ -293,7 +342,7 @@ export default class StakingService implements IStakingService {
     account: string,
     streamId: number,
     library: Xdc3
-  ): Promise<number|Error> {
+  ): Promise<number | Error> {
     return new Promise(async (resolve, reject) => {
       try {
         const Staking = Web3Utils.getContractInstance(
@@ -322,7 +371,10 @@ export default class StakingService implements IStakingService {
             if (SKIP_ERRORS.includes(eventData?.code)) {
               return;
             }
-            this.alertAndTransactionContext.setShowSuccessAlertHandler(true, MESSAGE);
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
+              true,
+              MESSAGE
+            );
             resolve(transactionReceipt.blockNumber);
           }
         );
@@ -337,19 +389,28 @@ export default class StakingService implements IStakingService {
               active: false,
               status: TransactionStatus.None,
               title: "Handling Withdraw Rewards",
-              message: Strings.CheckOnBlockExplorer
+              message: Strings.CheckOnBlockExplorer,
             });
           })
           .then((receipt: TransactionReceipt) => {
-            this.alertAndTransactionContext.setShowSuccessAlertHandler(true, MESSAGE);
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
+              true,
+              MESSAGE
+            );
             resolve(receipt.blockNumber);
           })
           .catch((e: Error) => {
-            this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+            this.alertAndTransactionContext.setShowErrorAlertHandler(
+              true,
+              e.message
+            );
             reject(e);
           });
       } catch (e: any) {
-        this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+        this.alertAndTransactionContext.setShowErrorAlertHandler(
+          true,
+          e.message
+        );
         reject(e);
       }
     });
@@ -389,7 +450,10 @@ export default class StakingService implements IStakingService {
             if (SKIP_ERRORS.includes(eventData?.code)) {
               return;
             }
-            this.alertAndTransactionContext.setShowSuccessAlertHandler(true, MESSAGE);
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
+              true,
+              MESSAGE
+            );
             resolve(transactionReceipt.blockNumber);
           }
         );
@@ -404,19 +468,28 @@ export default class StakingService implements IStakingService {
               active: false,
               status: TransactionStatus.None,
               title: "Approving the Token",
-              message: Strings.CheckOnBlockExplorer
+              message: Strings.CheckOnBlockExplorer,
             });
           })
           .then((receipt: TransactionReceipt) => {
-            this.alertAndTransactionContext.setShowSuccessAlertHandler(true, MESSAGE);
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
+              true,
+              MESSAGE
+            );
             resolve(receipt.blockNumber);
           })
           .catch((e: Error) => {
-            this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+            this.alertAndTransactionContext.setShowErrorAlertHandler(
+              true,
+              e.message
+            );
             reject(e);
           });
       } catch (e: any) {
-        this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+        this.alertAndTransactionContext.setShowErrorAlertHandler(
+          true,
+          e.message
+        );
         reject(e);
       }
     });

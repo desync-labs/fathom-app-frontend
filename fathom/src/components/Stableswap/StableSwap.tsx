@@ -1,38 +1,33 @@
-import React, {
-  useState
-} from "react";
+import React, { useState } from "react";
 import BigNumber from "bignumber.js";
 import {
   Grid,
   Box as MuiBox,
   Box,
   CircularProgress,
-  Container
+  Container,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { StableSwapPaper } from "components/AppComponents/AppPaper/AppPaper";
 import { PageHeader } from "components/Dashboard/PageHeader";
 import {
   AppFormLabel,
-  AppTextField
+  AppTextField,
 } from "components/AppComponents/AppForm/AppForm";
 import useStableSwap from "hooks/useStableSwap";
 
-import {
-  formatNumber,
-  formatPercentage
-} from "utils/format";
+import { formatNumber, formatPercentage } from "utils/format";
 
 import {
   InfoLabel,
   InfoValue,
   InfoWrapper,
-  WalletBalance
+  WalletBalance,
 } from "components/AppComponents/AppBox/AppBox";
 import {
   ButtonPrimary,
   ButtonSecondary,
-  MaxButton
+  MaxButton,
 } from "components/AppComponents/AppButton/AppButton";
 
 import useConnector from "context/connector";
@@ -158,7 +153,7 @@ const StableSwap = () => {
     usStableAvailable,
     navigate,
     outputCurrency,
-    fxdPrice
+    fxdPrice,
   } = data;
 
   const { allowStableSwap, isUserWrapperWhiteListed } = useConnector();
@@ -180,65 +175,107 @@ const StableSwap = () => {
           <StableSwapPaper>
             {allowStableSwap && <StableSwapForm {...{ ...data, options }} />}
 
-            {allowStableSwap && <SwapButton
-              isLoading={swapPending}
-              disabled={!inputValue || !outputValue || swapPending || isUserWhiteListed === false}
-              onClick={handleSwap}
-            >
-              {swapPending ? <CircularProgress size={30} /> : "Swap"}
-            </SwapButton>}
+            {allowStableSwap && (
+              <SwapButton
+                isLoading={swapPending}
+                disabled={
+                  !inputValue ||
+                  !outputValue ||
+                  swapPending ||
+                  isUserWhiteListed === false
+                }
+                onClick={handleSwap}
+              >
+                {swapPending ? <CircularProgress size={30} /> : "Swap"}
+              </SwapButton>
+            )}
 
-            {isUserWrapperWhiteListed && <AddRemoveLiquidity>
-              <ButtonSecondary onClick={() => navigate("/swap/add-liquidity")}>Add Liquidity</ButtonSecondary>
-              <ButtonSecondary onClick={() => navigate("/swap/remove-liquidity")}>Remove Liquidity</ButtonSecondary>
-              <ButtonSecondary onClick={() => navigate("/swap/manage-fees")}>Manage Fees</ButtonSecondary>
-            </AddRemoveLiquidity>}
+            {isUserWrapperWhiteListed && (
+              <AddRemoveLiquidity>
+                <ButtonSecondary
+                  onClick={() => navigate("/swap/add-liquidity")}
+                >
+                  Add Liquidity
+                </ButtonSecondary>
+                <ButtonSecondary
+                  onClick={() => navigate("/swap/remove-liquidity")}
+                >
+                  Remove Liquidity
+                </ButtonSecondary>
+                <ButtonSecondary onClick={() => navigate("/swap/manage-fees")}>
+                  Manage Fees
+                </ButtonSecondary>
+              </AddRemoveLiquidity>
+            )}
 
             <StableSwapInfoContainer>
-              {allowStableSwap && <StableSwapInfoWrapper>
-                <InfoLabel>Fee</InfoLabel>
-                <InfoValue>
-                  {formatPercentage(swapFee)} {inputCurrency}{" "}
-                  {inputValue && (
-                    <>
-                      ({formatPercentage(BigNumber(swapFee).dividedBy(inputValue).multipliedBy(100).toNumber())}%)
-                    </>
-                  )}
-                </InfoValue>
-              </StableSwapInfoWrapper>}
-              {isDecentralizedState && allowStableSwap && <StableSwapInfoWrapper>
-                <InfoLabel>Daily Limit</InfoLabel>
-                <InfoValue>{formatNumber(dailyLimit!)} FXD </InfoValue>
-              </StableSwapInfoWrapper>}
+              {allowStableSwap && (
+                <StableSwapInfoWrapper>
+                  <InfoLabel>Fee</InfoLabel>
+                  <InfoValue>
+                    {formatPercentage(swapFee)} {inputCurrency}{" "}
+                    {inputValue && (
+                      <>
+                        (
+                        {formatPercentage(
+                          BigNumber(swapFee)
+                            .dividedBy(inputValue)
+                            .multipliedBy(100)
+                            .toNumber()
+                        )}
+                        %)
+                      </>
+                    )}
+                  </InfoValue>
+                </StableSwapInfoWrapper>
+              )}
+              {isDecentralizedState && allowStableSwap && (
+                <StableSwapInfoWrapper>
+                  <InfoLabel>Daily Limit</InfoLabel>
+                  <InfoValue>{formatNumber(dailyLimit)} FXD </InfoValue>
+                </StableSwapInfoWrapper>
+              )}
 
               <StableSwapInfoWrapper>
                 <InfoLabel>FXD Pool Token Available</InfoLabel>
-                <InfoValue>{formatNumber(fxdAvailable!)} FXD </InfoValue>
+                <InfoValue>{formatNumber(fxdAvailable)} FXD </InfoValue>
               </StableSwapInfoWrapper>
 
               <StableSwapInfoWrapper>
                 <InfoLabel>xUSDT Pool Token Available</InfoLabel>
-                <InfoValue>{formatNumber(usStableAvailable!)} xUSDT</InfoValue>
+                <InfoValue>{formatNumber(usStableAvailable)} xUSDT</InfoValue>
               </StableSwapInfoWrapper>
 
               <StableSwapInfoWrapper>
                 <InfoLabel>Current DEX exchange rate</InfoLabel>
                 <InfoValue>
                   1 {inputCurrency} ={" "}
-                  {outputCurrency === options[0] ? formatPercentage(fxdPrice) : fxdPrice ? formatPercentage(1 / fxdPrice)  : null}{" "}
+                  {outputCurrency === options[0]
+                    ? formatPercentage(fxdPrice)
+                    : fxdPrice
+                    ? formatPercentage(1 / fxdPrice)
+                    : null}{" "}
                   {outputCurrency}
                 </InfoValue>
               </StableSwapInfoWrapper>
             </StableSwapInfoContainer>
 
-            {isUserWrapperWhiteListed && <StableSwapInfoContainer>
-              <StableSwapInfoWrapper>
-                <InfoLabel>Provided Liquidity</InfoLabel>
-                <InfoValue>{formatNumber(
-                  BigNumber(depositTracker).dividedBy(totalLocked).multipliedBy(100).toNumber()
-                )} %</InfoValue>
-              </StableSwapInfoWrapper>
-            </StableSwapInfoContainer>}
+            {isUserWrapperWhiteListed && (
+              <StableSwapInfoContainer>
+                <StableSwapInfoWrapper>
+                  <InfoLabel>Provided Liquidity</InfoLabel>
+                  <InfoValue>
+                    {formatNumber(
+                      BigNumber(depositTracker)
+                        .dividedBy(totalLocked)
+                        .multipliedBy(100)
+                        .toNumber()
+                    )}{" "}
+                    %
+                  </InfoValue>
+                </StableSwapInfoWrapper>
+              </StableSwapInfoContainer>
+            )}
           </StableSwapPaper>
         </Grid>
       </Grid>

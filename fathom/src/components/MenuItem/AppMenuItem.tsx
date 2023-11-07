@@ -23,7 +23,9 @@ export const AppMenuItemPropTypes = {
 
 // TypeScript compile-time props type, infered from propTypes
 // https://dev.to/busypeoples/notes-on-typescript-inferring-react-proptypes-1g88
-type AppMenuItemPropTypesType = PropTypes.InferProps<typeof AppMenuItemPropTypes>;
+type AppMenuItemPropTypesType = PropTypes.InferProps<
+  typeof AppMenuItemPropTypes
+>;
 type AppMenuItemPropsWithoutItems = Omit<AppMenuItemPropTypesType, "items">;
 
 // Improve child items declaration
@@ -31,13 +33,12 @@ export type AppMenuItemProps = AppMenuItemPropsWithoutItems & {
   items?: AppMenuItemProps[];
 };
 
-
 const useStyles = makeStyles<{ isActive: boolean; showText: boolean }>()(
   (theme, { isActive, showText }) => ({
     menuItem: {
-      margin: '0 auto',
+      margin: "0 auto",
       padding: "8px 9px 9px 8px",
-      width: showText ?  "100%" : "40px",
+      width: showText ? "100%" : "40px",
       borderRadius: isActive ? "8px" : "0",
       "&.active": {
         background: isActive ? "#2A3E5A" : "transparent",
@@ -80,8 +81,8 @@ const AppMenuItem: React.FC<AppMenuItemProps> = (props) => {
   const isExpandable = items && items.length > 0 && showText;
 
   const { classes } = useStyles({
-    isActive: isActive!,
-    showText: showText!,
+    isActive: isActive as boolean,
+    showText: showText as boolean,
   });
   const [open, setOpen] = React.useState(false);
 
@@ -98,9 +99,7 @@ const AppMenuItem: React.FC<AppMenuItemProps> = (props) => {
     >
       {/* Display an icon if any */}
       {!!Icon && (
-        <ListItemIcon className={classes.menuItemIcon}>
-          {Icon}
-        </ListItemIcon>
+        <ListItemIcon className={classes.menuItemIcon}>{Icon}</ListItemIcon>
       )}
       {showText && (
         <ListItemText
@@ -117,7 +116,7 @@ const AppMenuItem: React.FC<AppMenuItemProps> = (props) => {
 
   const MenuItemChildren =
     isExpandable || !showText ? (
-      <Collapse in={open || !showText!} timeout="auto" unmountOnExit>
+      <Collapse in={open || !showText} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
           {items.map((item, index) => (
             <AppMenuItem {...item} key={index} />

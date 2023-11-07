@@ -7,15 +7,14 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useState
+  useState,
 } from "react";
 import {
   ITransaction,
-  TransactionStatus
+  TransactionStatus,
 } from "services/interfaces/models/ITransaction";
 import { TransactionCheckUpdateInterval } from "helpers/Constants";
 import { useWeb3React } from "@web3-react/core";
-
 
 type TransactionAndAlertContextType = {
   children: ReactElement;
@@ -33,16 +32,21 @@ export type UseAlertAndTransactionReturnType = {
   transactions: ITransaction[];
   addTransaction: (_transaction: ITransaction) => void;
   removeTransaction: () => void;
-}
+};
 
-export type UseAlertAndTransactionServiceType =  Pick<UseAlertAndTransactionReturnType, "setShowSuccessAlertHandler" | "setShowErrorAlertHandler" | "addTransaction">
+export type UseAlertAndTransactionServiceType = Pick<
+  UseAlertAndTransactionReturnType,
+  "setShowSuccessAlertHandler" | "setShowErrorAlertHandler" | "addTransaction"
+>;
 
-export const AlertAndTransactionContext = createContext<UseAlertAndTransactionReturnType>(
-  {} as UseAlertAndTransactionReturnType
-);
+export const AlertAndTransactionContext =
+  createContext<UseAlertAndTransactionReturnType>(
+    {} as UseAlertAndTransactionReturnType
+  );
 
-
-export const AlertAndTransactionProvider: FC<TransactionAndAlertContextType> = ({ children }) => {
+export const AlertAndTransactionProvider: FC<
+  TransactionAndAlertContextType
+> = ({ children }) => {
   const { library } = useWeb3React();
 
   const [showSuccessAlert, setShowSuccessAlert] = useState<boolean>(false);
@@ -55,53 +59,70 @@ export const AlertAndTransactionProvider: FC<TransactionAndAlertContextType> = (
   const resetAlerts = useCallback(() => {
     setShowSuccessAlert(false);
     setShowErrorAlert(false);
-    setSuccessAlertMessage('');
-    setErrorAlertMessage('');
-  }, [setShowSuccessAlert, setShowErrorAlert, setSuccessAlertMessage, setErrorAlertMessage])
+    setSuccessAlertMessage("");
+    setErrorAlertMessage("");
+  }, [
+    setShowSuccessAlert,
+    setShowErrorAlert,
+    setSuccessAlertMessage,
+    setErrorAlertMessage,
+  ]);
 
-  const setShowSuccessAlertHandler = useCallback((state: boolean, successMessage = "Action was successful!") => {
-    resetAlerts();
-    setShowSuccessAlert(state);
-    setSuccessAlertMessage(successMessage);
-
-    setTimeout(() => {
+  const setShowSuccessAlertHandler = useCallback(
+    (state: boolean, successMessage = "Action was successful!") => {
       resetAlerts();
-    }, 2000);
-  }, [resetAlerts, setShowSuccessAlert, setSuccessAlertMessage]);
+      setShowSuccessAlert(state);
+      setSuccessAlertMessage(successMessage);
 
-  const setShowErrorAlertHandler = useCallback((state: boolean, errorMessage = "Something went wrong!") => {
-    resetAlerts();
-    setShowErrorAlert(state);
-    setErrorAlertMessage(errorMessage);
+      setTimeout(() => {
+        resetAlerts();
+      }, 2000);
+    },
+    [resetAlerts, setShowSuccessAlert, setSuccessAlertMessage]
+  );
 
-    setTimeout(() => {
+  const setShowErrorAlertHandler = useCallback(
+    (state: boolean, errorMessage = "Something went wrong!") => {
       resetAlerts();
-    }, 2000);
-  }, [resetAlerts, setShowErrorAlert, setErrorAlertMessage])
+      setShowErrorAlert(state);
+      setErrorAlertMessage(errorMessage);
 
-  const addTransaction = useCallback((_transaction: ITransaction) => {
-    setTransactions((prevState) => [...prevState, _transaction]);
-    resetAlerts();
-  }, [setTransactions, resetAlerts])
+      setTimeout(() => {
+        resetAlerts();
+      }, 2000);
+    },
+    [resetAlerts, setShowErrorAlert, setErrorAlertMessage]
+  );
+
+  const addTransaction = useCallback(
+    (_transaction: ITransaction) => {
+      setTransactions((prevState) => [...prevState, _transaction]);
+      resetAlerts();
+    },
+    [setTransactions, resetAlerts]
+  );
 
   const removeTransaction = useCallback(() => {
     const newTransactions = [...transactions];
     newTransactions.splice(-1);
     setTransactions(newTransactions);
-  }, [transactions, setTransactions])
+  }, [transactions, setTransactions]);
 
-  const checkStatus = useCallback(async (pendingTransaction: ITransaction) => {
-    const response = await library.eth.getTransactionReceipt(
-      pendingTransaction.hash
-    );
-    if (response) {
-      pendingTransaction.status = response.status
-        ? TransactionStatus.Success
-        : TransactionStatus.Error;
-    }
+  const checkStatus = useCallback(
+    async (pendingTransaction: ITransaction) => {
+      const response = await library.eth.getTransactionReceipt(
+        pendingTransaction.hash
+      );
+      if (response) {
+        pendingTransaction.status = response.status
+          ? TransactionStatus.Success
+          : TransactionStatus.Error;
+      }
 
-    return pendingTransaction;
-  }, [library])
+      return pendingTransaction;
+    },
+    [library]
+  );
 
   const checkTransactionStatus = useCallback(async () => {
     if (library) {
@@ -115,7 +136,7 @@ export const AlertAndTransactionProvider: FC<TransactionAndAlertContextType> = (
         }
       }
     }
-  }, [library, transactions, removeTransaction, checkStatus])
+  }, [library, transactions, removeTransaction, checkStatus]);
 
   useEffect(() => {
     const fetchHandleInterval = setInterval(
@@ -174,5 +195,3 @@ const useAlertAndTransactionContext = () => {
 };
 
 export default useAlertAndTransactionContext;
-
-

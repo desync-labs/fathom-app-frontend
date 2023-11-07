@@ -35,7 +35,7 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
 
   const { showText } = useShowText(open);
 
-  const dexUrl = useMemo(() => process.env.REACT_APP_SWAP_APP_URL!, []);
+  const dexUrl = useMemo(() => process.env.REACT_APP_SWAP_APP_URL, []);
 
   const appMenuItems = [
     {
@@ -74,7 +74,7 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
 
   return (
     <>
-      {appMenuItems.map((item, index) => (
+      {appMenuItems.map((item) => (
         <AppMenuItem {...item} key={item.name} />
       ))}
     </>

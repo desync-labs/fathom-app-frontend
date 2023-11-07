@@ -1338,45 +1338,19 @@
   "ast": {
     "absolutePath": "project:/contracts/dao/governance/Governor.sol",
     "exportedSymbols": {
-      "Address": [
-        5164
-      ],
-      "Context": [
-        5186
-      ],
-      "DoubleEndedQueue": [
-        10599
-      ],
-      "ECDSA": [
-        6634
-      ],
-      "EIP712": [
-        6800
-      ],
-      "ERC165": [
-        6824
-      ],
-      "Governor": [
-        13169
-      ],
-      "IERC165": [
-        6836
-      ],
-      "IGovernor": [
-        16222
-      ],
-      "ProposalCore": [
-        13185
-      ],
-      "SafeCast": [
-        9570
-      ],
-      "Strings": [
-        5834
-      ],
-      "Timers": [
-        10813
-      ]
+      "Address": [5164],
+      "Context": [5186],
+      "DoubleEndedQueue": [10599],
+      "ECDSA": [6634],
+      "EIP712": [6800],
+      "ERC165": [6824],
+      "Governor": [13169],
+      "IERC165": [6836],
+      "IGovernor": [16222],
+      "ProposalCore": [13185],
+      "SafeCast": [9570],
+      "Strings": [5834],
+      "Timers": [10813]
     },
     "id": 13170,
     "license": "MIT",
@@ -1384,11 +1358,7 @@
     "nodes": [
       {
         "id": 10815,
-        "literals": [
-          "solidity",
-          "0.8",
-          ".16"
-        ],
+        "literals": ["solidity", "0.8", ".16"],
         "nodeType": "PragmaDirective",
         "src": "151:23:49"
       },
@@ -1519,9 +1489,7 @@
             "baseName": {
               "id": 10826,
               "name": "Context",
-              "nameLocations": [
-                "651:7:49"
-              ],
+              "nameLocations": ["651:7:49"],
               "nodeType": "IdentifierPath",
               "referencedDeclaration": 5186,
               "src": "651:7:49"
@@ -1534,9 +1502,7 @@
             "baseName": {
               "id": 10828,
               "name": "ERC165",
-              "nameLocations": [
-                "660:6:49"
-              ],
+              "nameLocations": ["660:6:49"],
               "nodeType": "IdentifierPath",
               "referencedDeclaration": 6824,
               "src": "660:6:49"
@@ -1549,9 +1515,7 @@
             "baseName": {
               "id": 10830,
               "name": "EIP712",
-              "nameLocations": [
-                "668:6:49"
-              ],
+              "nameLocations": ["668:6:49"],
               "nodeType": "IdentifierPath",
               "referencedDeclaration": 6800,
               "src": "668:6:49"
@@ -1564,9 +1528,7 @@
             "baseName": {
               "id": 10832,
               "name": "IGovernor",
-              "nameLocations": [
-                "676:9:49"
-              ],
+              "nameLocations": ["676:9:49"],
               "nodeType": "IdentifierPath",
               "referencedDeclaration": 16222,
               "src": "676:9:49"
@@ -1581,14 +1543,7 @@
         "contractKind": "contract",
         "fullyImplemented": false,
         "id": 13169,
-        "linearizedBaseContracts": [
-          13169,
-          16222,
-          6800,
-          6824,
-          6836,
-          5186
-        ],
+        "linearizedBaseContracts": [13169, 16222, 6800, 6824, 6836, 5186],
         "name": "Governor",
         "nameLocation": "639:8:49",
         "nodeType": "ContractDefinition",
@@ -1599,9 +1554,7 @@
             "libraryName": {
               "id": 10834,
               "name": "DoubleEndedQueue",
-              "nameLocations": [
-                "698:16:49"
-              ],
+              "nameLocations": ["698:16:49"],
               "nodeType": "IdentifierPath",
               "referencedDeclaration": 10599,
               "src": "698:16:49"
@@ -1614,10 +1567,7 @@
               "pathNode": {
                 "id": 10835,
                 "name": "DoubleEndedQueue.Bytes32Deque",
-                "nameLocations": [
-                  "719:16:49",
-                  "736:12:49"
-                ],
+                "nameLocations": ["719:16:49", "736:12:49"],
                 "nodeType": "IdentifierPath",
                 "referencedDeclaration": 10277,
                 "src": "719:29:49"
@@ -1636,9 +1586,7 @@
             "libraryName": {
               "id": 10838,
               "name": "SafeCast",
-              "nameLocations": [
-                "760:8:49"
-              ],
+              "nameLocations": ["760:8:49"],
               "nodeType": "IdentifierPath",
               "referencedDeclaration": 9570,
               "src": "760:8:49"
@@ -1662,9 +1610,7 @@
             "libraryName": {
               "id": 10841,
               "name": "Strings",
-              "nameLocations": [
-                "792:7:49"
-              ],
+              "nameLocations": ["792:7:49"],
               "nodeType": "IdentifierPath",
               "referencedDeclaration": 5834,
               "src": "792:7:49"
@@ -1678,9 +1624,7 @@
             "libraryName": {
               "id": 10843,
               "name": "Timers",
-              "nameLocations": [
-                "817:6:49"
-              ],
+              "nameLocations": ["817:6:49"],
               "nodeType": "IdentifierPath",
               "referencedDeclaration": 10813,
               "src": "817:6:49"
@@ -1693,10 +1637,7 @@
               "pathNode": {
                 "id": 10844,
                 "name": "Timers.BlockNumber",
-                "nameLocations": [
-                  "828:6:49",
-                  "835:11:49"
-                ],
+                "nameLocations": ["828:6:49", "835:11:49"],
                 "nodeType": "IdentifierPath",
                 "referencedDeclaration": 10608,
                 "src": "828:18:49"
@@ -2001,9 +1942,7 @@
                 "pathNode": {
                   "id": 10868,
                   "name": "ProposalCore",
-                  "nameLocations": [
-                    "1176:12:49"
-                  ],
+                  "nameLocations": ["1176:12:49"],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 13185,
                   "src": "1176:12:49"
@@ -2176,10 +2115,7 @@
               "pathNode": {
                 "id": 10883,
                 "name": "DoubleEndedQueue.Bytes32Deque",
-                "nameLocations": [
-                  "1363:16:49",
-                  "1380:12:49"
-                ],
+                "nameLocations": ["1363:16:49", "1380:12:49"],
                 "nodeType": "IdentifierPath",
                 "referencedDeclaration": 10277,
                 "src": "1363:29:49"
@@ -3652,9 +3588,7 @@
                     "src": "3381:243:49",
                     "statements": [
                       {
-                        "assignments": [
-                          11024
-                        ],
+                        "assignments": [11024],
                         "declarations": [
                           {
                             "constant": false,
@@ -6126,9 +6060,7 @@
                 "modifierName": {
                   "id": 11184,
                   "name": "EIP712",
-                  "nameLocations": [
-                    "5238:6:49"
-                  ],
+                  "nameLocations": ["5238:6:49"],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 6800,
                   "src": "5238:6:49"
@@ -6483,9 +6415,7 @@
             "visibility": "external"
           },
           {
-            "baseFunctions": [
-              16032
-            ],
+            "baseFunctions": [16032],
             "body": {
               "id": 11420,
               "nodeType": "Block",
@@ -6586,9 +6516,7 @@
                   }
                 },
                 {
-                  "assignments": [
-                    11292
-                  ],
+                  "assignments": [11292],
                   "declarations": [
                     {
                       "constant": false,
@@ -6828,9 +6756,7 @@
                   "src": "6358:29:49"
                 },
                 {
-                  "assignments": [
-                    11310
-                  ],
+                  "assignments": [11310],
                   "declarations": [
                     {
                       "constant": false,
@@ -6853,9 +6779,7 @@
                         "pathNode": {
                           "id": 11308,
                           "name": "ProposalState",
-                          "nameLocations": [
-                            "6398:13:49"
-                          ],
+                          "nameLocations": ["6398:13:49"],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 15926,
                           "src": "6398:13:49"
@@ -7030,9 +6954,7 @@
                   }
                 },
                 {
-                  "assignments": [
-                    11325
-                  ],
+                  "assignments": [11325],
                   "declarations": [
                     {
                       "constant": false,
@@ -7217,9 +7139,7 @@
                   },
                   "id": 11346,
                   "initializationExpression": {
-                    "assignments": [
-                      11329
-                    ],
+                    "assignments": [11329],
                     "declarations": [
                       {
                         "constant": false,
@@ -7972,10 +7892,7 @@
                     "src": "7122:178:49",
                     "statements": [
                       {
-                        "assignments": [
-                          11396,
-                          null
-                        ],
+                        "assignments": [11396, null],
                         "declarations": [
                           {
                             "constant": false,
@@ -8086,9 +8003,7 @@
                             "isLValue": false,
                             "isPure": false,
                             "lValueRequested": false,
-                            "names": [
-                              "value"
-                            ],
+                            "names": ["value"],
                             "nodeType": "FunctionCallOptions",
                             "options": [
                               {
@@ -8486,9 +8401,7 @@
             "visibility": "public"
           },
           {
-            "baseFunctions": [
-              16041
-            ],
+            "baseFunctions": [16041],
             "body": {
               "id": 11451,
               "nodeType": "Block",
@@ -8589,9 +8502,7 @@
                   }
                 },
                 {
-                  "assignments": [
-                    11440
-                  ],
+                  "assignments": [11440],
                   "declarations": [
                     {
                       "constant": false,
@@ -8735,10 +8646,7 @@
                       "id": 11444,
                       "name": "_castVote",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        12617,
-                        12696
-                      ],
+                      "overloadedDeclarations": [12617, 12696],
                       "referencedDeclaration": 12617,
                       "src": "7554:9:49",
                       "typeDescriptions": {
@@ -8885,9 +8793,7 @@
             "visibility": "public"
           },
           {
-            "baseFunctions": [
-              16052
-            ],
+            "baseFunctions": [16052],
             "body": {
               "id": 11484,
               "nodeType": "Block",
@@ -8988,9 +8894,7 @@
                   }
                 },
                 {
-                  "assignments": [
-                    11473
-                  ],
+                  "assignments": [11473],
                   "declarations": [
                     {
                       "constant": false,
@@ -9130,10 +9034,7 @@
                       "id": 11477,
                       "name": "_castVote",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        12617,
-                        12696
-                      ],
+                      "overloadedDeclarations": [12617, 12696],
                       "referencedDeclaration": 12617,
                       "src": "7855:9:49",
                       "typeDescriptions": {
@@ -9307,9 +9208,7 @@
             "visibility": "public"
           },
           {
-            "baseFunctions": [
-              16065
-            ],
+            "baseFunctions": [16065],
             "body": {
               "id": 11520,
               "nodeType": "Block",
@@ -9410,9 +9309,7 @@
                   }
                 },
                 {
-                  "assignments": [
-                    11508
-                  ],
+                  "assignments": [11508],
                   "declarations": [
                     {
                       "constant": false,
@@ -9568,10 +9465,7 @@
                       "id": 11512,
                       "name": "_castVote",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        12617,
-                        12696
-                      ],
+                      "overloadedDeclarations": [12617, 12696],
                       "referencedDeclaration": 12696,
                       "src": "8228:9:49",
                       "typeDescriptions": {
@@ -9772,9 +9666,7 @@
             "visibility": "public"
           },
           {
-            "baseFunctions": [
-              16080
-            ],
+            "baseFunctions": [16080],
             "body": {
               "id": 11571,
               "nodeType": "Block",
@@ -9875,9 +9767,7 @@
                   }
                 },
                 {
-                  "assignments": [
-                    11546
-                  ],
+                  "assignments": [11546],
                   "declarations": [
                     {
                       "constant": false,
@@ -10261,10 +10151,7 @@
                       "id": 11564,
                       "name": "_castVote",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        12617,
-                        12696
-                      ],
+                      "overloadedDeclarations": [12617, 12696],
                       "referencedDeclaration": 12617,
                       "src": "8634:9:49",
                       "typeDescriptions": {
@@ -10492,9 +10379,7 @@
             "visibility": "public"
           },
           {
-            "baseFunctions": [
-              16099
-            ],
+            "baseFunctions": [16099],
             "body": {
               "id": 11636,
               "nodeType": "Block",
@@ -10595,9 +10480,7 @@
                   }
                 },
                 {
-                  "assignments": [
-                    11601
-                  ],
+                  "assignments": [11601],
                   "declarations": [
                     {
                       "constant": false,
@@ -11144,10 +11027,7 @@
                       "id": 11628,
                       "name": "_castVote",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        12617,
-                        12696
-                      ],
+                      "overloadedDeclarations": [12617, 12696],
                       "referencedDeclaration": 12696,
                       "src": "9265:9:49",
                       "typeDescriptions": {
@@ -11429,18 +11309,14 @@
             "visibility": "public"
           },
           {
-            "baseFunctions": [
-              16000
-            ],
+            "baseFunctions": [16000],
             "body": {
               "id": 11698,
               "nodeType": "Block",
               "src": "9575:363:49",
               "statements": [
                 {
-                  "assignments": [
-                    11660
-                  ],
+                  "assignments": [11660],
                   "declarations": [
                     {
                       "constant": false,
@@ -11654,9 +11530,7 @@
                   "src": "9585:92:49"
                 },
                 {
-                  "assignments": [
-                    11675
-                  ],
+                  "assignments": [11675],
                   "declarations": [
                     {
                       "constant": false,
@@ -11679,9 +11553,7 @@
                         "pathNode": {
                           "id": 11673,
                           "name": "ProposalCore",
-                          "nameLocations": [
-                            "9688:12:49"
-                          ],
+                          "nameLocations": ["9688:12:49"],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 13185,
                           "src": "9688:12:49"
@@ -12034,9 +11906,7 @@
                 "modifierName": {
                   "id": 11651,
                   "name": "verifyProposal",
-                  "nameLocations": [
-                    "9514:14:49"
-                  ],
+                  "nameLocations": ["9514:14:49"],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 11172,
                   "src": "9514:14:49"
@@ -12370,9 +12240,7 @@
                   "src": "10184:31:49"
                 },
                 {
-                  "assignments": [
-                    11725
-                  ],
+                  "assignments": [11725],
                   "declarations": [
                     {
                       "constant": false,
@@ -12395,9 +12263,7 @@
                         "pathNode": {
                           "id": 11723,
                           "name": "ProposalState",
-                          "nameLocations": [
-                            "10225:13:49"
-                          ],
+                          "nameLocations": ["10225:13:49"],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 15926,
                           "src": "10225:13:49"
@@ -12751,9 +12617,7 @@
                 "modifierName": {
                   "id": 11704,
                   "name": "onlyMultiSig",
-                  "nameLocations": [
-                    "10069:12:49"
-                  ],
+                  "nameLocations": ["10069:12:49"],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 11054,
                   "src": "10069:12:49"
@@ -12781,9 +12645,7 @@
                 "modifierName": {
                   "id": 11706,
                   "name": "notExecuted",
-                  "nameLocations": [
-                    "10082:11:49"
-                  ],
+                  "nameLocations": ["10082:11:49"],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 11069,
                   "src": "10082:11:49"
@@ -12811,9 +12673,7 @@
                 "modifierName": {
                   "id": 11709,
                   "name": "notConfirmed",
-                  "nameLocations": [
-                    "10107:12:49"
-                  ],
+                  "nameLocations": ["10107:12:49"],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 11083,
                   "src": "10107:12:49"
@@ -13107,9 +12967,7 @@
                 "modifierName": {
                   "id": 11756,
                   "name": "onlyMultiSig",
-                  "nameLocations": [
-                    "10611:12:49"
-                  ],
+                  "nameLocations": ["10611:12:49"],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 11054,
                   "src": "10611:12:49"
@@ -13137,9 +12995,7 @@
                 "modifierName": {
                   "id": 11758,
                   "name": "notExecuted",
-                  "nameLocations": [
-                    "10624:11:49"
-                  ],
+                  "nameLocations": ["10624:11:49"],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 11069,
                   "src": "10624:11:49"
@@ -13474,9 +13330,7 @@
                 "modifierName": {
                   "id": 11784,
                   "name": "onlyMultiSig",
-                  "nameLocations": [
-                    "10907:12:49"
-                  ],
+                  "nameLocations": ["10907:12:49"],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 11054,
                   "src": "10907:12:49"
@@ -13767,9 +13621,7 @@
                 "modifierName": {
                   "id": 11813,
                   "name": "onlyMultiSig",
-                  "nameLocations": [
-                    "11212:12:49"
-                  ],
+                  "nameLocations": ["11212:12:49"],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 11054,
                   "src": "11212:12:49"
@@ -14059,9 +13911,7 @@
                 "modifierName": {
                   "id": 11839,
                   "name": "onlyMultiSig",
-                  "nameLocations": [
-                    "11531:12:49"
-                  ],
+                  "nameLocations": ["11531:12:49"],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 11054,
                   "src": "11531:12:49"
@@ -14347,9 +14197,7 @@
                 "modifierName": {
                   "id": 11865,
                   "name": "onlyMultiSig",
-                  "nameLocations": [
-                    "11891:12:49"
-                  ],
+                  "nameLocations": ["11891:12:49"],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 11054,
                   "src": "11891:12:49"
@@ -14570,9 +14418,7 @@
                 "modifierName": {
                   "id": 11893,
                   "name": "onlyMultiSig",
-                  "nameLocations": [
-                    "12327:12:49"
-                  ],
+                  "nameLocations": ["12327:12:49"],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 11054,
                   "src": "12327:12:49"
@@ -14659,18 +14505,14 @@
             "visibility": "public"
           },
           {
-            "baseFunctions": [
-              16113
-            ],
+            "baseFunctions": [16113],
             "body": {
               "id": 11969,
               "nodeType": "Block",
               "src": "12590:324:49",
               "statements": [
                 {
-                  "assignments": [
-                    11924
-                  ],
+                  "assignments": [11924],
                   "declarations": [
                     {
                       "constant": false,
@@ -14884,9 +14726,7 @@
                     "src": "12658:134:49",
                     "statements": [
                       {
-                        "assignments": [
-                          11935
-                        ],
+                        "assignments": [11935],
                         "declarations": [
                           {
                             "constant": false,
@@ -14930,9 +14770,7 @@
                         "src": "12672:17:49"
                       },
                       {
-                        "assignments": [
-                          11941
-                        ],
+                        "assignments": [11941],
                         "declarations": [
                           {
                             "constant": false,
@@ -14976,9 +14814,7 @@
                         "src": "12703:17:49"
                       },
                       {
-                        "assignments": [
-                          11947
-                        ],
+                        "assignments": [11947],
                         "declarations": [
                           {
                             "constant": false,
@@ -15309,9 +15145,7 @@
             "visibility": "public"
           },
           {
-            "baseFunctions": [
-              16126
-            ],
+            "baseFunctions": [16126],
             "body": {
               "id": 11979,
               "nodeType": "Block",
@@ -15407,9 +15241,7 @@
             "visibility": "public"
           },
           {
-            "baseFunctions": [
-              16120
-            ],
+            "baseFunctions": [16120],
             "body": {
               "id": 11992,
               "nodeType": "Block",
@@ -15549,9 +15381,7 @@
             "visibility": "public"
           },
           {
-            "baseFunctions": [
-              16167
-            ],
+            "baseFunctions": [16167],
             "body": {
               "id": 12010,
               "nodeType": "Block",
@@ -15782,9 +15612,7 @@
             "visibility": "public"
           },
           {
-            "baseFunctions": [
-              16178
-            ],
+            "baseFunctions": [16178],
             "body": {
               "id": 12029,
               "nodeType": "Block",
@@ -16023,10 +15851,7 @@
             "visibility": "public"
           },
           {
-            "baseFunctions": [
-              6823,
-              6835
-            ],
+            "baseFunctions": [6823, 6835],
             "body": {
               "id": 12072,
               "nodeType": "Block",
@@ -16543,9 +16368,7 @@
                 {
                   "id": 12034,
                   "name": "IERC165",
-                  "nameLocations": [
-                    "13643:7:49"
-                  ],
+                  "nameLocations": ["13643:7:49"],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 6836,
                   "src": "13643:7:49"
@@ -16553,9 +16376,7 @@
                 {
                   "id": 12035,
                   "name": "ERC165",
-                  "nameLocations": [
-                    "13652:6:49"
-                  ],
+                  "nameLocations": ["13652:6:49"],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 6824,
                   "src": "13652:6:49"
@@ -16638,9 +16459,7 @@
             "visibility": "public"
           },
           {
-            "baseFunctions": [
-              16131
-            ],
+            "baseFunctions": [16131],
             "body": {
               "id": 12081,
               "nodeType": "Block",
@@ -16727,9 +16546,7 @@
             "visibility": "public"
           },
           {
-            "baseFunctions": [
-              16136
-            ],
+            "baseFunctions": [16136],
             "body": {
               "id": 12090,
               "nodeType": "Block",
@@ -16820,18 +16637,14 @@
             "visibility": "public"
           },
           {
-            "baseFunctions": [
-              16144
-            ],
+            "baseFunctions": [16144],
             "body": {
               "id": 12175,
               "nodeType": "Block",
               "src": "14356:811:49",
               "statements": [
                 {
-                  "assignments": [
-                    12102
-                  ],
+                  "assignments": [12102],
                   "declarations": [
                     {
                       "constant": false,
@@ -16854,9 +16667,7 @@
                         "pathNode": {
                           "id": 12100,
                           "name": "ProposalCore",
-                          "nameLocations": [
-                            "14366:12:49"
-                          ],
+                          "nameLocations": ["14366:12:49"],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 13185,
                           "src": "14366:12:49"
@@ -17061,9 +16872,7 @@
                   }
                 },
                 {
-                  "assignments": [
-                    12122
-                  ],
+                  "assignments": [12122],
                   "declarations": [
                     {
                       "constant": false,
@@ -17344,9 +17153,7 @@
                   }
                 },
                 {
-                  "assignments": [
-                    12145
-                  ],
+                  "assignments": [12145],
                   "declarations": [
                     {
                       "constant": false,
@@ -17810,9 +17617,7 @@
                     "pathNode": {
                       "id": 12096,
                       "name": "ProposalState",
-                      "nameLocations": [
-                        "14341:13:49"
-                      ],
+                      "nameLocations": ["14341:13:49"],
                       "nodeType": "IdentifierPath",
                       "referencedDeclaration": 15926,
                       "src": "14341:13:49"
@@ -17836,9 +17641,7 @@
             "visibility": "public"
           },
           {
-            "baseFunctions": [
-              16151
-            ],
+            "baseFunctions": [16151],
             "body": {
               "id": 12191,
               "nodeType": "Block",
@@ -18029,9 +17832,7 @@
             "visibility": "public"
           },
           {
-            "baseFunctions": [
-              16158
-            ],
+            "baseFunctions": [16158],
             "body": {
               "id": 12207,
               "nodeType": "Block",
@@ -18306,9 +18107,7 @@
             "visibility": "public"
           },
           {
-            "baseFunctions": [
-              16204
-            ],
+            "baseFunctions": [16204],
             "body": {
               "id": 12246,
               "nodeType": "Block",
@@ -18720,9 +18519,7 @@
               "src": "16183:583:49",
               "statements": [
                 {
-                  "assignments": [
-                    12269
-                  ],
+                  "assignments": [12269],
                   "declarations": [
                     {
                       "constant": false,
@@ -18903,9 +18700,7 @@
                   "src": "16193:68:49"
                 },
                 {
-                  "assignments": [
-                    12281
-                  ],
+                  "assignments": [12281],
                   "declarations": [
                     {
                       "constant": false,
@@ -19800,9 +19595,7 @@
                     "pathNode": {
                       "id": 12250,
                       "name": "ProposalCore",
-                      "nameLocations": [
-                        "15976:12:49"
-                      ],
+                      "nameLocations": ["15976:12:49"],
                       "nodeType": "IdentifierPath",
                       "referencedDeclaration": 13185,
                       "src": "15976:12:49"
@@ -20381,10 +20174,7 @@
                     "src": "17331:183:49",
                     "statements": [
                       {
-                        "assignments": [
-                          12407,
-                          12409
-                        ],
+                        "assignments": [12407, 12409],
                         "declarations": [
                           {
                             "constant": false,
@@ -20552,9 +20342,7 @@
                             "isLValue": false,
                             "isPure": false,
                             "lValueRequested": false,
-                            "names": [
-                              "value"
-                            ],
+                            "names": ["value"],
                             "nodeType": "FunctionCallOptions",
                             "options": [
                               {
@@ -20782,9 +20570,7 @@
                   },
                   "id": 12431,
                   "initializationExpression": {
-                    "assignments": [
-                      12396
-                    ],
+                    "assignments": [12396],
                     "declarations": [
                       {
                         "constant": false,
@@ -21504,9 +21290,7 @@
                         },
                         "id": 12488,
                         "initializationExpression": {
-                          "assignments": [
-                            12457
-                          ],
+                          "assignments": [12457],
                           "declarations": [
                             {
                               "constant": false,
@@ -22233,9 +22017,7 @@
               "src": "18625:435:49",
               "statements": [
                 {
-                  "assignments": [
-                    12546
-                  ],
+                  "assignments": [12546],
                   "declarations": [
                     {
                       "constant": false,
@@ -22367,9 +22149,7 @@
                   "src": "18635:78:49"
                 },
                 {
-                  "assignments": [
-                    12556
-                  ],
+                  "assignments": [12556],
                   "declarations": [
                     {
                       "constant": false,
@@ -22392,9 +22172,7 @@
                         "pathNode": {
                           "id": 12554,
                           "name": "ProposalState",
-                          "nameLocations": [
-                            "18723:13:49"
-                          ],
+                          "nameLocations": ["18723:13:49"],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 15926,
                           "src": "18723:13:49"
@@ -23187,10 +22965,7 @@
                       "id": 12607,
                       "name": "_castVote",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        12617,
-                        12696
-                      ],
+                      "overloadedDeclarations": [12617, 12696],
                       "referencedDeclaration": 12696,
                       "src": "19211:9:49",
                       "typeDescriptions": {
@@ -23391,9 +23166,7 @@
               "src": "19484:582:49",
               "statements": [
                 {
-                  "assignments": [
-                    12634
-                  ],
+                  "assignments": [12634],
                   "declarations": [
                     {
                       "constant": false,
@@ -23416,9 +23189,7 @@
                         "pathNode": {
                           "id": 12632,
                           "name": "ProposalCore",
-                          "nameLocations": [
-                            "19494:12:49"
-                          ],
+                          "nameLocations": ["19494:12:49"],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 13185,
                           "src": "19494:12:49"
@@ -23618,9 +23389,7 @@
                   }
                 },
                 {
-                  "assignments": [
-                    12651
-                  ],
+                  "assignments": [12651],
                   "declarations": [
                     {
                       "constant": false,
@@ -24758,9 +24527,7 @@
               "src": "20487:994:49",
               "statements": [
                 {
-                  "assignments": [
-                    12740
-                  ],
+                  "assignments": [12740],
                   "declarations": [
                     {
                       "constant": false,
@@ -24873,9 +24640,7 @@
                   "src": "20497:52:49"
                 },
                 {
-                  "assignments": [
-                    12751
-                  ],
+                  "assignments": [12751],
                   "declarations": [
                     {
                       "constant": false,
@@ -24988,9 +24753,7 @@
                   "src": "20559:61:49"
                 },
                 {
-                  "assignments": [
-                    12762
-                  ],
+                  "assignments": [12762],
                   "declarations": [
                     {
                       "constant": false,
@@ -25103,9 +24866,7 @@
                   "src": "20630:55:49"
                 },
                 {
-                  "assignments": [
-                    12770
-                  ],
+                  "assignments": [12770],
                   "declarations": [
                     {
                       "constant": false,
@@ -25167,9 +24928,7 @@
                   "src": "20696:37:49"
                 },
                 {
-                  "assignments": [
-                    12775
-                  ],
+                  "assignments": [12775],
                   "declarations": [
                     {
                       "constant": false,
@@ -25387,9 +25146,7 @@
                     "src": "20908:507:49",
                     "statements": [
                       {
-                        "assignments": [
-                          12795
-                        ],
+                        "assignments": [12795],
                         "declarations": [
                           {
                             "constant": false,
@@ -26441,9 +26198,7 @@
               "src": "21600:620:49",
               "statements": [
                 {
-                  "assignments": [
-                    12881
-                  ],
+                  "assignments": [12881],
                   "declarations": [
                     {
                       "constant": false,
@@ -26556,9 +26311,7 @@
                   "src": "21610:44:49"
                 },
                 {
-                  "assignments": [
-                    12892
-                  ],
+                  "assignments": [12892],
                   "declarations": [
                     {
                       "constant": false,
@@ -26671,9 +26424,7 @@
                   "src": "21664:53:49"
                 },
                 {
-                  "assignments": [
-                    12903
-                  ],
+                  "assignments": [12903],
                   "declarations": [
                     {
                       "constant": false,
@@ -26786,9 +26537,7 @@
                   "src": "21727:47:49"
                 },
                 {
-                  "assignments": [
-                    12911
-                  ],
+                  "assignments": [12911],
                   "declarations": [
                     {
                       "constant": false,
@@ -26875,9 +26624,7 @@
                     "src": "21829:325:49",
                     "statements": [
                       {
-                        "assignments": [
-                          12920
-                        ],
+                        "assignments": [12920],
                         "declarations": [
                           {
                             "constant": false,
@@ -27721,9 +27468,7 @@
               "src": "22357:711:49",
               "statements": [
                 {
-                  "assignments": [
-                    12992
-                  ],
+                  "assignments": [12992],
                   "declarations": [
                     {
                       "constant": false,
@@ -27836,9 +27581,7 @@
                   "src": "22367:52:49"
                 },
                 {
-                  "assignments": [
-                    13003
-                  ],
+                  "assignments": [13003],
                   "declarations": [
                     {
                       "constant": false,
@@ -27951,9 +27694,7 @@
                   "src": "22429:61:49"
                 },
                 {
-                  "assignments": [
-                    13014
-                  ],
+                  "assignments": [13014],
                   "declarations": [
                     {
                       "constant": false,
@@ -28066,9 +27807,7 @@
                   "src": "22500:55:49"
                 },
                 {
-                  "assignments": [
-                    13022
-                  ],
+                  "assignments": [13022],
                   "declarations": [
                     {
                       "constant": false,
@@ -28121,9 +27860,7 @@
                     "src": "22655:347:49",
                     "statements": [
                       {
-                        "assignments": [
-                          13029
-                        ],
+                        "assignments": [13029],
                         "declarations": [
                           {
                             "constant": false,
@@ -30034,33 +29771,9 @@
         "scope": 13170,
         "src": "621:23320:49",
         "usedErrors": [
-          10952,
-          10954,
-          10956,
-          10958,
-          10960,
-          10962,
-          10964,
-          10966,
-          10968,
-          10970,
-          10972,
-          10974,
-          10976,
-          10978,
-          10980,
-          10982,
-          10984,
-          10986,
-          10988,
-          10990,
-          10992,
-          10994,
-          10996,
-          10998,
-          11000,
-          11002,
-          11004
+          10952, 10954, 10956, 10958, 10960, 10962, 10964, 10966, 10968, 10970,
+          10972, 10974, 10976, 10978, 10980, 10982, 10984, 10986, 10988, 10990,
+          10992, 10994, 10996, 10998, 11000, 11002, 11004
         ]
       }
     ],
