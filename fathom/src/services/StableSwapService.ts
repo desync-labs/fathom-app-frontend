@@ -3,31 +3,25 @@ import { TransactionReceipt } from "xdc3-eth";
 import BigNumber from "bignumber.js";
 
 import { SmartContractFactory } from "config/SmartContractFactory";
-import {
-  MAX_UINT256,
-  DEFAULT_CHAIN_ID
-} from "helpers/Constants";
+import { MAX_UINT256, DEFAULT_CHAIN_ID } from "helpers/Constants";
 import { Strings } from "helpers/Strings";
 import { Web3Utils } from "helpers/Web3Utils";
 import {
   TransactionStatus,
-  TransactionType
+  TransactionType,
 } from "services/interfaces/models/ITransaction";
 import IStableSwapService from "services/interfaces/services/IStableSwapService";
 import { getEstimateGas } from "utils/getEstimateGas";
 
-
 import { SKIP_ERRORS } from "connectors/networks";
-import {
-  UseAlertAndTransactionServiceType
-} from "context/alertAndTransaction";
+import { UseAlertAndTransactionServiceType } from "context/alertAndTransaction";
 
 export default class StableSwapService implements IStableSwapService {
   chainId = DEFAULT_CHAIN_ID;
   alertAndTransactionContext: UseAlertAndTransactionServiceType;
 
   constructor(alertAndTransactionContext: UseAlertAndTransactionServiceType) {
-    this.alertAndTransactionContext = alertAndTransactionContext
+    this.alertAndTransactionContext = alertAndTransactionContext;
   }
 
   swapTokenToStableCoin(
@@ -47,7 +41,9 @@ export default class StableSwapService implements IStableSwapService {
 
         const options = { from: account, gas: 0 };
 
-        const formattedTokenAmount = BigNumber(tokenIn).multipliedBy(10 ** tokenInDecimals).integerValue(BigNumber.ROUND_DOWN);
+        const formattedTokenAmount = BigNumber(tokenIn)
+          .multipliedBy(10 ** tokenInDecimals)
+          .integerValue(BigNumber.ROUND_DOWN);
 
         const gas = await getEstimateGas(
           StableSwapModule,
@@ -65,7 +61,10 @@ export default class StableSwapService implements IStableSwapService {
             if (SKIP_ERRORS.includes(eventData?.code)) {
               return;
             }
-            this.alertAndTransactionContext.setShowSuccessAlertHandler(true, MESSAGE);
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
+              true,
+              MESSAGE
+            );
             resolve(transactionReceipt.blockNumber);
           }
         );
@@ -80,19 +79,28 @@ export default class StableSwapService implements IStableSwapService {
               active: false,
               status: TransactionStatus.None,
               title: `${tokenName} to FXD Swap Pending.`,
-              message: Strings.CheckOnBlockExplorer
+              message: Strings.CheckOnBlockExplorer,
             });
           })
           .then((receipt: TransactionReceipt) => {
-            this.alertAndTransactionContext.setShowSuccessAlertHandler(true, MESSAGE);
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
+              true,
+              MESSAGE
+            );
             resolve(receipt.blockNumber);
           })
           .catch((e: Error) => {
-            this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+            this.alertAndTransactionContext.setShowErrorAlertHandler(
+              true,
+              e.message
+            );
             reject(e);
           });
       } catch (e: any) {
-        this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+        this.alertAndTransactionContext.setShowErrorAlertHandler(
+          true,
+          e.message
+        );
         reject(e);
       }
     });
@@ -133,9 +141,11 @@ export default class StableSwapService implements IStableSwapService {
             if (SKIP_ERRORS.includes(eventData?.code)) {
               return;
             }
-            this.alertAndTransactionContext.setShowSuccessAlertHandler(true, MESSAGE);
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
+              true,
+              MESSAGE
+            );
             resolve(transactionReceipt.blockNumber);
-
           }
         );
 
@@ -149,25 +159,38 @@ export default class StableSwapService implements IStableSwapService {
               active: false,
               status: TransactionStatus.None,
               title: `FXD to ${tokenName} Swap Pending.`,
-              message: Strings.CheckOnBlockExplorer
+              message: Strings.CheckOnBlockExplorer,
             });
           })
           .then((receipt: TransactionReceipt) => {
-            this.alertAndTransactionContext.setShowSuccessAlertHandler(true, MESSAGE);
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
+              true,
+              MESSAGE
+            );
             resolve(receipt.blockNumber);
           })
           .catch((e: Error) => {
-            this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+            this.alertAndTransactionContext.setShowErrorAlertHandler(
+              true,
+              e.message
+            );
             reject(e);
           });
       } catch (e: any) {
-        this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+        this.alertAndTransactionContext.setShowErrorAlertHandler(
+          true,
+          e.message
+        );
         reject(e);
       }
     });
   }
 
-  addLiquidity(amount: number, account: string, library: Xdc3): Promise<number | Error> {
+  addLiquidity(
+    amount: number,
+    account: string,
+    library: Xdc3
+  ): Promise<number | Error> {
     return new Promise(async (resolve, reject) => {
       try {
         const StableSwapModuleWrapper = Web3Utils.getContractInstance(
@@ -178,7 +201,10 @@ export default class StableSwapService implements IStableSwapService {
 
         const options = { from: account, gas: 0 };
 
-        const formattedTokenAmount = library.utils.toWei(amount.toString(), "ether");
+        const formattedTokenAmount = library.utils.toWei(
+          amount.toString(),
+          "ether"
+        );
 
         const gas = await getEstimateGas(
           StableSwapModuleWrapper,
@@ -196,7 +222,10 @@ export default class StableSwapService implements IStableSwapService {
             if (SKIP_ERRORS.includes(eventData?.code)) {
               return;
             }
-            this.alertAndTransactionContext.setShowSuccessAlertHandler(true, MESSAGE);
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
+              true,
+              MESSAGE
+            );
             resolve(transactionReceipt.blockNumber);
           }
         );
@@ -211,25 +240,38 @@ export default class StableSwapService implements IStableSwapService {
               active: false,
               status: TransactionStatus.None,
               title: "Add Liquidity to Stable Swap.",
-              message: Strings.CheckOnBlockExplorer
+              message: Strings.CheckOnBlockExplorer,
             });
           })
           .then((receipt: TransactionReceipt) => {
-            this.alertAndTransactionContext.setShowSuccessAlertHandler(true, MESSAGE);
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
+              true,
+              MESSAGE
+            );
             resolve(receipt.blockNumber);
           })
           .catch((e: Error) => {
-            this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+            this.alertAndTransactionContext.setShowErrorAlertHandler(
+              true,
+              e.message
+            );
             reject(e);
           });
       } catch (e: any) {
-        this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+        this.alertAndTransactionContext.setShowErrorAlertHandler(
+          true,
+          e.message
+        );
         reject(e);
       }
     });
   }
 
-  removeLiquidity(amount: number, account: string, library: Xdc3): Promise<number | Error> {
+  removeLiquidity(
+    amount: number,
+    account: string,
+    library: Xdc3
+  ): Promise<number | Error> {
     return new Promise(async (resolve, reject) => {
       try {
         const StableSwapModuleWrapper = Web3Utils.getContractInstance(
@@ -240,7 +282,10 @@ export default class StableSwapService implements IStableSwapService {
 
         const options = { from: account, gas: 0 };
 
-        const formattedTokenAmount = library.utils.toWei(amount.toString(), "ether");
+        const formattedTokenAmount = library.utils.toWei(
+          amount.toString(),
+          "ether"
+        );
 
         const gas = await getEstimateGas(
           StableSwapModuleWrapper,
@@ -258,7 +303,10 @@ export default class StableSwapService implements IStableSwapService {
             if (SKIP_ERRORS.includes(eventData?.code)) {
               return;
             }
-            this.alertAndTransactionContext.setShowSuccessAlertHandler(true, MESSAGE);
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
+              true,
+              MESSAGE
+            );
             resolve(transactionReceipt.blockNumber);
           }
         );
@@ -273,25 +321,38 @@ export default class StableSwapService implements IStableSwapService {
               active: false,
               status: TransactionStatus.None,
               title: "Remove Liquidity from Stable Swap.",
-              message: Strings.CheckOnBlockExplorer
+              message: Strings.CheckOnBlockExplorer,
             });
           })
           .then((receipt: TransactionReceipt) => {
-            this.alertAndTransactionContext.setShowSuccessAlertHandler(true, MESSAGE);
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
+              true,
+              MESSAGE
+            );
             resolve(receipt.blockNumber);
           })
           .catch((e: Error) => {
-            this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+            this.alertAndTransactionContext.setShowErrorAlertHandler(
+              true,
+              e.message
+            );
             reject(e);
           });
       } catch (e: any) {
-        this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+        this.alertAndTransactionContext.setShowErrorAlertHandler(
+          true,
+          e.message
+        );
         reject(e);
       }
     });
   }
 
-  approveStableCoin(account: string, library: Xdc3, isStableSwapWrapper = false): Promise<number | Error> {
+  approveStableCoin(
+    account: string,
+    library: Xdc3,
+    isStableSwapWrapper = false
+  ): Promise<number | Error> {
     return new Promise(async (resolve, reject) => {
       try {
         const FathomStableCoin = Web3Utils.getContractInstance(
@@ -301,17 +362,14 @@ export default class StableSwapService implements IStableSwapService {
         const MESSAGE = "FXD approval was successful!";
 
         const options = { from: account, gas: 0 };
-        const approvalAddress = isStableSwapWrapper ?
-          SmartContractFactory.StableSwapModuleWrapper(this.chainId).address :
-          SmartContractFactory.StableSwapModule(this.chainId).address;
+        const approvalAddress = isStableSwapWrapper
+          ? SmartContractFactory.StableSwapModuleWrapper(this.chainId).address
+          : SmartContractFactory.StableSwapModule(this.chainId).address;
 
         const gas = await getEstimateGas(
           FathomStableCoin,
           "approve",
-          [
-            approvalAddress,
-            MAX_UINT256
-          ],
+          [approvalAddress, MAX_UINT256],
           options
         );
         options.gas = gas;
@@ -324,16 +382,16 @@ export default class StableSwapService implements IStableSwapService {
             if (SKIP_ERRORS.includes(eventData?.code)) {
               return;
             }
-            this.alertAndTransactionContext.setShowSuccessAlertHandler(true, MESSAGE);
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
+              true,
+              MESSAGE
+            );
             resolve(transactionReceipt.blockNumber);
           }
         );
 
         return FathomStableCoin.methods
-          .approve(
-            approvalAddress,
-            MAX_UINT256
-          )
+          .approve(approvalAddress, MAX_UINT256)
           .send(options)
           .on("transactionHash", (hash: any) => {
             this.alertAndTransactionContext.addTransaction({
@@ -342,19 +400,28 @@ export default class StableSwapService implements IStableSwapService {
               active: false,
               status: TransactionStatus.None,
               title: "Approval Pending.",
-              message: Strings.CheckOnBlockExplorer
+              message: Strings.CheckOnBlockExplorer,
             });
           })
           .then((receipt: TransactionReceipt) => {
-            this.alertAndTransactionContext.setShowSuccessAlertHandler(true, MESSAGE);
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
+              true,
+              MESSAGE
+            );
             resolve(receipt.blockNumber);
           })
           .catch((e: Error) => {
-            this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+            this.alertAndTransactionContext.setShowErrorAlertHandler(
+              true,
+              e.message
+            );
             reject(e);
           });
       } catch (e: any) {
-        this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+        this.alertAndTransactionContext.setShowErrorAlertHandler(
+          true,
+          e.message
+        );
         reject(e);
       }
     });
@@ -375,26 +442,20 @@ export default class StableSwapService implements IStableSwapService {
         const MESSAGE = `${tokenName} approval was successful!`;
 
         const options = { from: account, gas: 0 };
-        const approvalAddress = isStableSwapWrapper ?
-          SmartContractFactory.StableSwapModuleWrapper(this.chainId).address :
-          SmartContractFactory.StableSwapModule(this.chainId).address;
+        const approvalAddress = isStableSwapWrapper
+          ? SmartContractFactory.StableSwapModuleWrapper(this.chainId).address
+          : SmartContractFactory.StableSwapModule(this.chainId).address;
 
         const gas = await getEstimateGas(
           USStable,
           "approve",
-          [
-            approvalAddress,
-            MAX_UINT256
-          ],
+          [approvalAddress, MAX_UINT256],
           options
         );
         options.gas = gas;
 
         return USStable.methods
-          .approve(
-            approvalAddress,
-            MAX_UINT256
-          )
+          .approve(approvalAddress, MAX_UINT256)
           .send(options)
           .on("transactionHash", (hash: any) => {
             this.alertAndTransactionContext.addTransaction({
@@ -403,26 +464,35 @@ export default class StableSwapService implements IStableSwapService {
               active: false,
               status: TransactionStatus.None,
               title: "Approval Pending",
-              message: Strings.CheckOnBlockExplorer
+              message: Strings.CheckOnBlockExplorer,
             });
           })
           .then((receipt: TransactionReceipt) => {
-            this.alertAndTransactionContext.setShowSuccessAlertHandler(true, MESSAGE);
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
+              true,
+              MESSAGE
+            );
             resolve(receipt.blockNumber);
           })
           .catch((e: Error) => {
-            this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+            this.alertAndTransactionContext.setShowErrorAlertHandler(
+              true,
+              e.message
+            );
             reject(e);
           });
       } catch (e: any) {
-        this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+        this.alertAndTransactionContext.setShowErrorAlertHandler(
+          true,
+          e.message
+        );
         reject(e);
       }
     });
   }
 
   claimFeesRewards(account: string, library: Xdc3): Promise<number | Error> {
-    return new Promise( async (resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       const MESSAGE = "Claim rewards was successful!";
 
       try {
@@ -450,26 +520,35 @@ export default class StableSwapService implements IStableSwapService {
               active: false,
               status: TransactionStatus.None,
               title: "Claim Fees Rewards",
-              message: Strings.CheckOnBlockExplorer
+              message: Strings.CheckOnBlockExplorer,
             });
           })
           .then((receipt: TransactionReceipt) => {
-            this.alertAndTransactionContext.setShowSuccessAlertHandler(true, MESSAGE);
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
+              true,
+              MESSAGE
+            );
             resolve(receipt.blockNumber);
           })
           .catch((e: Error) => {
-            this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+            this.alertAndTransactionContext.setShowErrorAlertHandler(
+              true,
+              e.message
+            );
             reject(e);
           });
       } catch (e: any) {
-        this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+        this.alertAndTransactionContext.setShowErrorAlertHandler(
+          true,
+          e.message
+        );
         reject(e);
       }
-    })
+    });
   }
 
   withdrawClaimedFees(account: string, library: Xdc3): Promise<number | Error> {
-    return new Promise( async (resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       const MESSAGE = "Withdraw claimed fees was successful!";
 
       try {
@@ -497,22 +576,31 @@ export default class StableSwapService implements IStableSwapService {
               active: false,
               status: TransactionStatus.None,
               title: "Withdraw Claimed Fees",
-              message: Strings.CheckOnBlockExplorer
+              message: Strings.CheckOnBlockExplorer,
             });
           })
           .then((receipt: TransactionReceipt) => {
-            this.alertAndTransactionContext.setShowSuccessAlertHandler(true, MESSAGE);
+            this.alertAndTransactionContext.setShowSuccessAlertHandler(
+              true,
+              MESSAGE
+            );
             resolve(receipt.blockNumber);
           })
           .catch((e: Error) => {
-            this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+            this.alertAndTransactionContext.setShowErrorAlertHandler(
+              true,
+              e.message
+            );
             reject(e);
           });
       } catch (e: any) {
-        this.alertAndTransactionContext.setShowErrorAlertHandler(true, e.message);
+        this.alertAndTransactionContext.setShowErrorAlertHandler(
+          true,
+          e.message
+        );
         reject(e);
       }
-    })
+    });
   }
 
   async approvalStatusStableCoin(
@@ -520,7 +608,7 @@ export default class StableSwapService implements IStableSwapService {
     tokenIn: string,
     tokenInDecimal: number,
     library: Xdc3,
-    isStableSwapWrapper: boolean = false
+    isStableSwapWrapper = false
   ) {
     const FathomStableCoin = Web3Utils.getContractInstance(
       SmartContractFactory.FathomStableCoin(this.chainId),
@@ -530,9 +618,9 @@ export default class StableSwapService implements IStableSwapService {
     const allowance = await FathomStableCoin.methods
       .allowance(
         account,
-        isStableSwapWrapper ?
-          SmartContractFactory.StableSwapModuleWrapper(this.chainId).address :
-          SmartContractFactory.StableSwapModule(this.chainId).address
+        isStableSwapWrapper
+          ? SmartContractFactory.StableSwapModuleWrapper(this.chainId).address
+          : SmartContractFactory.StableSwapModule(this.chainId).address
       )
       .call();
 
@@ -546,7 +634,7 @@ export default class StableSwapService implements IStableSwapService {
     tokenIn: string,
     tokenInDecimal: number,
     library: Xdc3,
-    isStableSwapWrapper: boolean = false
+    isStableSwapWrapper = false
   ) {
     const USStable = Web3Utils.getContractInstance(
       SmartContractFactory.USDT(this.chainId),
@@ -556,9 +644,9 @@ export default class StableSwapService implements IStableSwapService {
     const allowance = await USStable.methods
       .allowance(
         account,
-        isStableSwapWrapper ?
-          SmartContractFactory.StableSwapModuleWrapper(this.chainId).address :
-          SmartContractFactory.StableSwapModule(this.chainId).address
+        isStableSwapWrapper
+          ? SmartContractFactory.StableSwapModuleWrapper(this.chainId).address
+          : SmartContractFactory.StableSwapModule(this.chainId).address
       )
       .call();
 
@@ -589,7 +677,7 @@ export default class StableSwapService implements IStableSwapService {
       SmartContractFactory.StableSwapModule(this.chainId),
       library
     );
-    return StableSwapModule.methods.lastUpdate().call()
+    return StableSwapModule.methods.lastUpdate().call();
   }
 
   getDailySwapLimit(library: Xdc3) {
@@ -637,10 +725,15 @@ export default class StableSwapService implements IStableSwapService {
       SmartContractFactory.StableSwapModuleWrapper(this.chainId),
       library
     );
-    const formattedTokenAmount = library.utils.toWei(amount.toString(), "ether");
-    return StableSwapModuleWrapper.methods.getAmounts(formattedTokenAmount).call({
-      from: account
-    });
+    const formattedTokenAmount = library.utils.toWei(
+      amount.toString(),
+      "ether"
+    );
+    return StableSwapModuleWrapper.methods
+      .getAmounts(formattedTokenAmount)
+      .call({
+        from: account,
+      });
   }
 
   getTotalValueLocked(library: Xdc3) {
@@ -664,7 +757,9 @@ export default class StableSwapService implements IStableSwapService {
       SmartContractFactory.StableSwapModuleWrapper(this.chainId),
       library
     );
-    return StableSwapModuleWrapper.methods.getActualLiquidityAvailablePerUser(account).call();
+    return StableSwapModuleWrapper.methods
+      .getActualLiquidityAvailablePerUser(account)
+      .call();
   }
 
   getClaimableFeesPerUser(account: string, library: Xdc3) {
@@ -672,7 +767,9 @@ export default class StableSwapService implements IStableSwapService {
       SmartContractFactory.StableSwapModuleWrapper(this.chainId),
       library
     );
-    return StableSwapModuleWrapper.methods.getClaimableFeesPerUser(account).call();
+    return StableSwapModuleWrapper.methods
+      .getClaimableFeesPerUser(account)
+      .call();
   }
 
   getClaimedFXDFeeRewards(account: string, library: Xdc3) {
@@ -688,7 +785,9 @@ export default class StableSwapService implements IStableSwapService {
       SmartContractFactory.StableSwapModuleWrapper(this.chainId),
       library
     );
-    return StableSwapModuleWrapper.methods.claimedTokenFeeRewards(account).call();
+    return StableSwapModuleWrapper.methods
+      .claimedTokenFeeRewards(account)
+      .call();
   }
 
   setChainId(chainId: number) {

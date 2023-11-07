@@ -7,26 +7,26 @@ export type ProposalContextType = {
 };
 
 export type UseProposalContextReturnType = {
-  isMobile: boolean,
-  hasVoted: boolean,
-  votePending: string | null,
-  account: string | null | undefined,
-  chainId: ChainId,
-  _proposalId: string | undefined,
-  vote: (support: string) => Promise<void>,
-  getTitleDescription: (title: string, index: number) => string,
-  status: string | undefined,
-  forVotes: number,
-  abstainVotes: number,
-  againstVotes: number,
-  fetchedTotalVotes: number,
-  fetchedProposal: any,
-  back: () => void,
-  submitTime: string | null,
-  votingStartsTime: string | null,
-  votingEndTime: string | null,
-  quorumError: boolean,
-  secondsLeft: number,
+  isMobile: boolean;
+  hasVoted: boolean;
+  votePending: string | null;
+  account: string | null | undefined;
+  chainId: ChainId;
+  _proposalId: string | undefined;
+  vote: (support: string) => Promise<void>;
+  getTitleDescription: (title: string, index: number) => string;
+  status: string | undefined;
+  forVotes: number;
+  abstainVotes: number;
+  againstVotes: number;
+  fetchedTotalVotes: number;
+  fetchedProposal: any;
+  back: () => void;
+  submitTime: string | null;
+  votingStartsTime: string | null;
+  votingEndTime: string | null;
+  quorumError: boolean;
+  secondsLeft: number;
 };
 
 // @ts-ignore
@@ -38,7 +38,9 @@ export const ProposalProvider: FC<ProposalContextType> = ({ children }) => {
   const values = useProposalItem();
 
   return (
-    <ProposalContext.Provider value={values}>{children}</ProposalContext.Provider>
+    <ProposalContext.Provider value={values}>
+      {children}
+    </ProposalContext.Provider>
   );
 };
 

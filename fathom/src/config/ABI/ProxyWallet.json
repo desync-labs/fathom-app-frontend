@@ -4894,42 +4894,18 @@
   "ast": {
     "absolutePath": "project:/contracts/main/proxy-wallet/ProxyWallet.sol",
     "exportedSymbols": {
-      "AddressUpgradeable": [
-        1193
-      ],
-      "FathomAuth": [
-        13217
-      ],
-      "FathomAuthEvents": [
-        13071
-      ],
-      "FathomNote": [
-        13260
-      ],
-      "IAccessControlConfig": [
-        6863
-      ],
-      "IAccessControlUpgradeable": [
-        408
-      ],
-      "IAuthority": [
-        6877
-      ],
-      "IBookKeeper": [
-        7052
-      ],
-      "ICollateralPoolConfig": [
-        7322
-      ],
-      "Initializable": [
-        709
-      ],
-      "ProxyActionsStorage": [
-        13380
-      ],
-      "ProxyWallet": [
-        13437
-      ]
+      "AddressUpgradeable": [1193],
+      "FathomAuth": [13217],
+      "FathomAuthEvents": [13071],
+      "FathomNote": [13260],
+      "IAccessControlConfig": [6863],
+      "IAccessControlUpgradeable": [408],
+      "IAuthority": [6877],
+      "IBookKeeper": [7052],
+      "ICollateralPoolConfig": [7322],
+      "Initializable": [709],
+      "ProxyActionsStorage": [13380],
+      "ProxyWallet": [13437]
     },
     "id": 13438,
     "license": "AGPL-3.0-or-later",
@@ -4937,11 +4913,7 @@
     "nodes": [
       {
         "id": 13382,
-        "literals": [
-          "solidity",
-          "0.8",
-          ".17"
-        ],
+        "literals": ["solidity", "0.8", ".17"],
         "nodeType": "PragmaDirective",
         "src": "46:23:88"
       },
@@ -4988,9 +4960,7 @@
             "baseName": {
               "id": 13387,
               "name": "FathomAuth",
-              "nameLocations": [
-                "415:10:88"
-              ],
+              "nameLocations": ["415:10:88"],
               "nodeType": "IdentifierPath",
               "referencedDeclaration": 13217,
               "src": "415:10:88"
@@ -5003,9 +4973,7 @@
             "baseName": {
               "id": 13389,
               "name": "FathomNote",
-              "nameLocations": [
-                "427:10:88"
-              ],
+              "nameLocations": ["427:10:88"],
               "nodeType": "IdentifierPath",
               "referencedDeclaration": 13260,
               "src": "427:10:88"
@@ -5026,12 +4994,7 @@
         },
         "fullyImplemented": true,
         "id": 13437,
-        "linearizedBaseContracts": [
-          13437,
-          13260,
-          13217,
-          13071
-        ],
+        "linearizedBaseContracts": [13437, 13260, 13217, 13071],
         "name": "ProxyWallet",
         "nameLocation": "400:11:88",
         "nodeType": "ContractDefinition",
@@ -5058,9 +5021,7 @@
               "pathNode": {
                 "id": 13391,
                 "name": "ProxyActionsStorage",
-                "nameLocations": [
-                  "444:19:88"
-                ],
+                "nameLocations": ["444:19:88"],
                 "nodeType": "IdentifierPath",
                 "referencedDeclaration": 13380,
                 "src": "444:19:88"
@@ -5255,9 +5216,7 @@
               "src": "731:657:88",
               "statements": [
                 {
-                  "assignments": [
-                    13421
-                  ],
+                  "assignments": [13421],
                   "declarations": [
                     {
                       "constant": false,
@@ -5434,10 +5393,7 @@
                       "id": 13426,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        4294967278,
-                        4294967278
-                      ],
+                      "overloadedDeclarations": [4294967278, 4294967278],
                       "referencedDeclaration": 4294967278,
                       "src": "801:7:88",
                       "typeDescriptions": {
@@ -5973,9 +5929,7 @@
                 "modifierName": {
                   "id": 13413,
                   "name": "auth",
-                  "nameLocations": [
-                    "688:4:88"
-                  ],
+                  "nameLocations": ["688:4:88"],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 13092,
                   "src": "688:4:88"
@@ -5989,9 +5943,7 @@
                 "modifierName": {
                   "id": 13415,
                   "name": "note",
-                  "nameLocations": [
-                    "693:4:88"
-                  ],
+                  "nameLocations": ["693:4:88"],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 13259,
                   "src": "693:4:88"

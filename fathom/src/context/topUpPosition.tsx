@@ -12,49 +12,53 @@ export type TopUpPositionContextType = {
 };
 
 export type UseTopUpPositionContextReturnType = {
-  position: IOpenPosition,
-  safeMax: number,
-  debtValue: string,
-  approveBtn: boolean,
-  approve: () => Promise<void>,
-  approvalPending: boolean,
-  balance: number,
-  liquidationPrice: string,
-  ltv: string,
-  safetyBuffer: string,
-  collateral: number,
-  fathomToken: string,
-  openPositionLoading: boolean,
-  setMax: (balance: number) => void,
-  setSafeMax: () => void,
-  onSubmit: (values: any) => Promise<void>,
-  control: Control<{
-    collateral: string;
-    fathomToken: string;
-    safeMax: number;
-    dangerSafeMax: number;
-  }, any>,
+  position: IOpenPosition;
+  safeMax: number;
+  debtValue: string;
+  approveBtn: boolean;
+  approve: () => Promise<void>;
+  approvalPending: boolean;
+  balance: number;
+  liquidationPrice: string;
+  ltv: string;
+  safetyBuffer: string;
+  collateral: number;
+  fathomToken: string;
+  openPositionLoading: boolean;
+  setMax: (balance: number) => void;
+  setSafeMax: () => void;
+  onSubmit: (values: any) => Promise<void>;
+  control: Control<
+    {
+      collateral: string;
+      fathomToken: string;
+      safeMax: number;
+      dangerSafeMax: number;
+    },
+    any
+  >;
   handleSubmit: UseFormHandleSubmit<{
     collateral: string;
     fathomToken: string;
     safeMax: number;
     dangerSafeMax: number;
-  }>,
-  pool: ICollateralPool,
-  onClose: () => void,
-  switchPosition: (callback: Dispatch<IOpenPosition>) => void,
-  totalCollateral: string,
-  totalFathomToken: string,
-  overCollateral: number,
-  maxBorrowAmount: string,
-  availableFathomInPool: number,
-  isMobile: boolean,
+  }>;
+  pool: ICollateralPool;
+  onClose: () => void;
+  switchPosition: (callback: Dispatch<IOpenPosition>) => void;
+  totalCollateral: string;
+  totalFathomToken: string;
+  overCollateral: number;
+  maxBorrowAmount: string;
+  availableFathomInPool: number;
+  isMobile: boolean;
 };
 
 // @ts-ignore
-export const TopUpPositionContext = createContext<UseTopUpPositionContextReturnType>(
-  {} as UseTopUpPositionContextReturnType
-);
+export const TopUpPositionContext =
+  createContext<UseTopUpPositionContextReturnType>(
+    {} as UseTopUpPositionContextReturnType
+  );
 
 export const TopUpPositionProvider: FC<TopUpPositionContextType> = ({
   children,

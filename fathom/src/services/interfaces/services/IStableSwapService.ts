@@ -7,7 +7,7 @@ export default interface IStableSwapService {
     tokenInDecimals: number,
     tokenName: string,
     library: Xdc3
-  ): Promise<number|Error>;
+  ): Promise<number | Error>;
 
   swapStableCoinToToken(
     address: string,
@@ -15,42 +15,36 @@ export default interface IStableSwapService {
     stableCoinInDecimals: number,
     tokenName: string,
     library: Xdc3
-  ): Promise<number|Error>;
+  ): Promise<number | Error>;
 
   addLiquidity(
     amount: number,
     account: string,
     library: Xdc3
-  ): Promise<number|Error>;
+  ): Promise<number | Error>;
 
   removeLiquidity(
     amount: number,
     account: string,
     library: Xdc3
-  ): Promise<number|Error>;
+  ): Promise<number | Error>;
 
   approveStableCoin(
     address: string,
     library: Xdc3,
     isStableSwapWrapper?: boolean
-  ): Promise<number|Error>;
+  ): Promise<number | Error>;
 
   approveUsdt(
     address: string,
     tokenName: string,
     library: Xdc3,
     isStableSwapWrapper?: boolean
-  ): Promise<number|Error>;
+  ): Promise<number | Error>;
 
-  claimFeesRewards(
-    account: string,
-    library: Xdc3
-  ): Promise<number|Error>;
+  claimFeesRewards(account: string, library: Xdc3): Promise<number | Error>;
 
-  withdrawClaimedFees(
-    account: string,
-    library: Xdc3
-  ): Promise<number|Error>;
+  withdrawClaimedFees(account: string, library: Xdc3): Promise<number | Error>;
 
   approvalStatusStableCoin(
     address: string,
@@ -82,11 +76,17 @@ export default interface IStableSwapService {
 
   getTotalValueLocked(library: Xdc3): Promise<number>;
 
-  getActualLiquidityAvailablePerUser(account: string, library: Xdc3): Promise<number>;
+  getActualLiquidityAvailablePerUser(
+    account: string,
+    library: Xdc3
+  ): Promise<number>;
 
   getDepositTracker(account: string, library: Xdc3): Promise<number>;
 
-  getClaimableFeesPerUser(account: string, library: Xdc3): Promise<{ 0: number, 1: number }>;
+  getClaimableFeesPerUser(
+    account: string,
+    library: Xdc3
+  ): Promise<{ 0: number; 1: number }>;
 
   getClaimedFXDFeeRewards(account: string, library: Xdc3): Promise<number>;
 

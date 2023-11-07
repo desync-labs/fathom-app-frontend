@@ -1,27 +1,20 @@
-import React, {
-  FC,
-} from "react";
+import React, { FC } from "react";
 import BigNumber from "bignumber.js";
 import { Controller } from "react-hook-form";
-import {
-  Box,
-  CircularProgress,
-  Grid,
-  Typography,
-} from "@mui/material";
+import { Box, CircularProgress, Grid, Typography } from "@mui/material";
 import {
   ApproveBox,
   ApproveBoxTypography,
   Summary,
   WalletBalance,
-  WarningBox
+  WarningBox,
 } from "components/AppComponents/AppBox/AppBox";
 
 import {
   AppFormInputLogo,
   AppFormInputWrapper,
   AppFormLabel,
-  AppTextField
+  AppTextField,
 } from "components/AppComponents/AppForm/AppForm";
 import InfoIcon from "@mui/icons-material/Info";
 import { getTokenLogoURL } from "utils/tokenLogo";
@@ -32,7 +25,7 @@ import {
   ButtonsWrapper,
   ManagePositionRepayTypeWrapper,
   ManageTypeButton,
-  MaxButton
+  MaxButton,
 } from "components/AppComponents/AppButton/AppButton";
 
 import useTopUpPositionContext from "context/topUpPosition";
@@ -64,7 +57,7 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
   topUpPosition,
   closePosition,
   setClosePosition,
-  setTopUpPosition
+  setTopUpPosition,
 }) => {
   const {
     collateral,
@@ -99,13 +92,13 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
         <ManagePositionRepayTypeWrapper>
           <ManageTypeButton
             sx={{ marginRight: "5px" }}
-            className={`${!!topUpPosition ? "active" : null}`}
+            className={`${topUpPosition ? "active" : null}`}
             onClick={() => !topUpPosition && switchPosition(setTopUpPosition)}
           >
             Top Up Position
           </ManageTypeButton>
           <ManageTypeButton
-            className={`${!!closePosition ? "active" : null}`}
+            className={`${closePosition ? "active" : null}`}
             onClick={() => !closePosition && switchPosition(setClosePosition)}
           >
             Repay Position
@@ -117,14 +110,22 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
           rules={{
             required: false,
             min: 0,
-            max: BigNumber(balance).dividedBy(10 ** 18).toNumber()
+            max: BigNumber(balance)
+              .dividedBy(10 ** 18)
+              .toNumber(),
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <AppFormInputWrapper>
               <AppFormLabel>Collateral</AppFormLabel>
               {balance ? (
                 <WalletBalance>
-                  Wallet Available: {formatPercentage(BigNumber(balance).dividedBy(10 ** 18).toNumber())} {pool.poolName}
+                  Wallet Available:{" "}
+                  {formatPercentage(
+                    BigNumber(balance)
+                      .dividedBy(10 ** 18)
+                      .toNumber()
+                  )}{" "}
+                  {pool.poolName}
                 </WalletBalance>
               ) : null}
               <AppTextField
@@ -189,7 +190,7 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
               return true;
             },
             min: FXD_MINIMUM_BORROW_AMOUNT,
-            max: maxBorrowAmount
+            max: maxBorrowAmount,
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => {
             return (
@@ -205,7 +206,7 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
                           <InfoIcon
                             sx={{
                               float: "left",
-                              fontSize: "18px"
+                              fontSize: "18px",
                             }}
                           />
                           <Box
@@ -223,7 +224,8 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
                             component={"span"}
                             sx={{ fontSize: "12px", paddingLeft: "6px" }}
                           >
-                            Minimum borrow amount is {FXD_MINIMUM_BORROW_AMOUNT}.
+                            Minimum borrow amount is {FXD_MINIMUM_BORROW_AMOUNT}
+                            .
                           </Box>
                         </>
                       )}
@@ -261,7 +263,7 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
               sx={{
                 color: "#7D91B5",
                 float: "left",
-                marginRight: "10px"
+                marginRight: "10px",
               }}
             />
             <ApproveBoxTypography>
@@ -277,19 +279,23 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
             </ApproveButton>
           </ApproveBox>
         )}
-        {BigNumber(safetyBuffer).isLessThan(DANGER_SAFETY_BUFFER) && <WarningBox>
-          <InfoIcon />
-          <Typography>
-            Resulting in lowering safety buffer - consider provide more collateral or borrow less FXD.
-          </Typography>
-        </WarningBox>}
-        {BigNumber(collateral).isLessThanOrEqualTo(0) &&
+        {BigNumber(safetyBuffer).isLessThan(DANGER_SAFETY_BUFFER) && (
+          <WarningBox>
+            <InfoIcon />
+            <Typography>
+              Resulting in lowering safety buffer - consider provide more
+              collateral or borrow less FXD.
+            </Typography>
+          </WarningBox>
+        )}
+        {BigNumber(collateral).isLessThanOrEqualTo(0) && (
           <WarningBox>
             <InfoIcon />
             <Typography>
               Providing 0 collateral you are making your position unsafer.
             </Typography>
-          </WarningBox>}
+          </WarningBox>
+        )}
         <ButtonsWrapper>
           {!isMobile && (
             <ButtonSecondary onClick={onClose}>Close</ButtonSecondary>

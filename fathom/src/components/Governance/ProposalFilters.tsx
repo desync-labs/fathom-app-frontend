@@ -34,12 +34,12 @@ const AddProposalButton = styled(ButtonPrimary)`
 `;
 
 const ProposalFilters: FC<ProposalFiltersType> = ({
-  search,
-  setSearch,
-  time,
-  setTime,
-  proposals,
-  setProposals,
+  // search,
+  // setSearch,
+  // time,
+  // setTime,
+  // proposals,
+  // setProposals,
   setCreateProposal,
 }) => {
   return (

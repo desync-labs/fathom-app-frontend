@@ -175,7 +175,7 @@ const StakingLockForm: FC = () => {
                     <>
                       {error && error.type === "min" && (
                         <Box component="span" sx={{ fontSize: "12px" }}>
-                          Minimum period is { minLockPeriod } days
+                          Minimum period is {minLockPeriod} days
                         </Box>
                       )}
                       {error && error.type === "max" && (

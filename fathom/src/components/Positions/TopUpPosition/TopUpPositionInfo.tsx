@@ -1,20 +1,9 @@
 import React from "react";
 import BigNumber from "bignumber.js";
-import {
-  Box,
-  Divider,
-  Grid,
-  ListItemText
-} from "@mui/material";
+import { Box, Divider, Grid, ListItemText } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import {
-  AppList,
-  AppListItem
-} from "components/AppComponents/AppList/AppList";
-import {
-  formatPercentage,
-  formatNumber
-} from "utils/format";
+import { AppList, AppListItem } from "components/AppComponents/AppList/AppList";
+import { formatPercentage, formatNumber } from "utils/format";
 import useTopUpPositionContext from "context/topUpPosition";
 
 const ListDivider = styled(Divider)`
@@ -34,7 +23,7 @@ const TopUpPositionInfo = () => {
     position,
     liquidationPrice,
     totalCollateral,
-    totalFathomToken
+    totalFathomToken,
   } = useTopUpPositionContext();
 
   return (
@@ -57,10 +46,7 @@ const TopUpPositionInfo = () => {
           alignItems="flex-start"
           secondaryAction={
             <>
-              {formatPercentage(
-                position.lockedCollateral
-              )}{" "}
-              {pool.poolName}{" "}
+              {formatPercentage(position.lockedCollateral)} {pool.poolName}{" "}
               <Box component="span" sx={{ color: "#29C20A" }}>
                 → {formatPercentage(BigNumber(totalCollateral).toNumber())}{" "}
                 {pool.poolName}
@@ -78,21 +64,22 @@ const TopUpPositionInfo = () => {
         </AppListItem>
         <AppListItem
           alignItems="flex-start"
-          secondaryAction={`${formatPercentage(BigNumber(safetyBuffer).multipliedBy(100).toNumber())} %`}
+          secondaryAction={`${formatPercentage(
+            BigNumber(safetyBuffer).multipliedBy(100).toNumber()
+          )} %`}
         >
           <ListItemText primary="Safety Buffer" />
         </AppListItem>
         <AppListItem
           alignItems="flex-start"
-          secondaryAction={`$${formatPercentage(BigNumber(liquidationPrice).toNumber())}`}
+          secondaryAction={`$${formatPercentage(
+            BigNumber(liquidationPrice).toNumber()
+          )}`}
         >
           <ListItemText primary={`Liquidation Price of ${pool.poolName}`} />
         </AppListItem>
         <ListDivider />
-        <AppListItem
-          alignItems="flex-start"
-          secondaryAction={`2%`}
-        >
+        <AppListItem alignItems="flex-start" secondaryAction={`2%`}>
           <ListItemText primary={`Stability Fee`} />
         </AppListItem>
       </AppList>

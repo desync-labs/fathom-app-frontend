@@ -1,20 +1,19 @@
-import PoolService from "services/PoolService";
-import PositionService from "services/PositionService";
-import StableSwapService from "services/StableSwapService";
-import IPoolService from "services/interfaces/services/IPoolService";
-import IPositionService from "services/interfaces/services/IPositionService";
-import IStableSwapService from "services/interfaces/services/IStableSwapService";
-import IProposalService from "services/interfaces/services/IProposalService";
-import ProposalService from "services/ProposalService";
-import StakingService from "services/StakingService";
-import IStakingService from "services/interfaces/services/IStakingService";
+import IPoolService from "fathom-contracts-helper/src/interfaces/services/IPoolService";
+import IPositionService from "fathom-contracts-helper/src/interfaces/services/IPositionService";
+import IProposalService from "fathom-contracts-helper/src/interfaces/services/IProposalService";
+import IStableSwapService from "fathom-contracts-helper/src/interfaces/services/IStableSwapService";
+import IStakingService from "fathom-contracts-helper/src/interfaces/services/IStakingService";
 
 import {
-  DEFAULT_CHAIN_ID
-} from "helpers/Constants";
-import {
-  UseAlertAndTransactionServiceType
-} from "context/alertAndTransaction";
+  PoolService,
+  PositionService,
+  ProposalService,
+  StableSwapService,
+  StakingService,
+} from "fathom-contracts-helper";
+
+import { DEFAULT_CHAIN_ID } from "helpers/Constants";
+import Xdc3 from "xdc3";
 
 export class RootStore {
   /*
@@ -26,29 +25,42 @@ export class RootStore {
   proposalService: IProposalService;
   stakingService: IStakingService;
 
-  chainId: number = DEFAULT_CHAIN_ID;
+  chainId = DEFAULT_CHAIN_ID;
 
-  constructor(alertAndTransactionProvider: UseAlertAndTransactionServiceType) {
-    this.poolService = new PoolService(alertAndTransactionProvider);
-    this.positionService = new PositionService(alertAndTransactionProvider);
-    this.proposalService = new ProposalService(alertAndTransactionProvider);
-    this.stakingService = new StakingService(alertAndTransactionProvider);
-    this.stableSwapService = new StableSwapService(alertAndTransactionProvider);
+  provider: Xdc3;
+
+  serviceList = [
+    "poolService",
+    "positionService",
+    "proposalService",
+    "stableSwapService",
+    "stakingService",
+  ];
+
+  constructor(provider: Xdc3) {
+    this.poolService = new PoolService(provider, this.chainId);
+    this.positionService = new PositionService(provider, this.chainId);
+    this.proposalService = new ProposalService(provider, this.chainId);
+    this.stakingService = new StakingService(provider, this.chainId);
+    this.stableSwapService = new StableSwapService(provider, this.chainId);
+
+    this.provider = provider;
   }
 
   setChainId(chainId: number) {
     this.chainId = chainId;
-
-    [
-      "poolService",
-      "positionService",
-      "stableSwapService",
-      "proposalService",
-      "stakingService"
-    ].forEach((serviceName) => {
+    this.serviceList.forEach((serviceName) => {
       console.log(`Setting chain ID ${chainId} for ${serviceName}`);
       // @ts-ignore
       this[serviceName].setChainId(chainId);
+    });
+  }
+
+  setProvider(provider: Xdc3) {
+    this.provider = provider;
+    this.serviceList.forEach((serviceName) => {
+      // @ts-ignore
+      this[serviceName].setProvider(provider);
     });
   }
 }

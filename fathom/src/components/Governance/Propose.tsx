@@ -29,10 +29,7 @@ import MuiInfoIcon from "@mui/icons-material/Info";
 import { styled } from "@mui/material/styles";
 
 import requiredSrc from "assets/svg/required.svg";
-import {
-  ErrorBox,
-  ErrorMessage,
-} from "components/AppComponents/AppBox/AppBox";
+import { ErrorBox, ErrorMessage } from "components/AppComponents/AppBox/AppBox";
 
 import { formatNumber } from "utils/format";
 import ProposeActionFields from "./Propose/ProposeActionFields";
@@ -164,7 +161,7 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
                   width={28}
                 />
                 <BalanceBox component="span">
-                  {formatNumber(vBalance! / 10 ** 18)}
+                  {formatNumber((vBalance as number) / 10 ** 18)}
                 </BalanceBox>
                 <CurrencyBox component="span">vFHTM</CurrencyBox>
               </Stack>
@@ -277,10 +274,7 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
                       <Controller
                         control={control}
                         name="withAction"
-                        render={({
-                          field: { onChange, value },
-                          fieldState: { error },
-                        }) => (
+                        render={({ field: { onChange, value } }) => (
                           <FormControlLabel
                             control={
                               <Switch onChange={onChange} checked={!!value} />
@@ -314,15 +308,24 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
                     </>
                   )}
                 </Grid>
-                <ProposeNotices vBalance={vBalance} vBalanceError={vBalanceError} minimumVBalance={minimumVBalance!} />
-                { useMemo(() => notAllowTimestamp > 0 ? (
-                  <ErrorBox sx={{ my: 3 }}>
-                    <InfoIcon />
-                    <ErrorMessage>
-                      You can't create new proposal until {new Date(notAllowTimestamp! * 1000).toLocaleString()}
-                    </ErrorMessage>
-                  </ErrorBox>
-                ) : null, [notAllowTimestamp]) }
+                <ProposeNotices
+                  vBalance={vBalance}
+                  vBalanceError={vBalanceError}
+                  minimumVBalance={minimumVBalance as number}
+                />
+                {useMemo(
+                  () =>
+                    notAllowTimestamp > 0 ? (
+                      <ErrorBox sx={{ my: 3 }}>
+                        <InfoIcon />
+                        <ErrorMessage>
+                          You can't create new proposal until{" "}
+                          {new Date(notAllowTimestamp * 1000).toLocaleString()}
+                        </ErrorMessage>
+                      </ErrorBox>
+                    ) : null,
+                  [notAllowTimestamp]
+                )}
               </Grid>
               <Grid item xs={12}>
                 <Grid container spacing={1}>

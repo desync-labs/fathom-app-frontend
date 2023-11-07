@@ -9132,93 +9132,35 @@
   "ast": {
     "absolutePath": "project:/contracts/dao/staking/packages/StakingGetters.sol",
     "exportedSymbols": {
-      "BoringMath": [
-        7143
-      ],
-      "BoringMath128": [
-        7281
-      ],
-      "BoringMath16": [
-        7465
-      ],
-      "BoringMath208": [
-        7235
-      ],
-      "BoringMath224": [
-        7189
-      ],
-      "BoringMath32": [
-        7419
-      ],
-      "BoringMath48": [
-        7373
-      ],
-      "BoringMath64": [
-        7327
-      ],
-      "BoringMath8": [
-        7511
-      ],
-      "CreateLockParams": [
-        16614
-      ],
-      "FullMath": [
-        7644
-      ],
-      "IERC20": [
-        25636
-      ],
-      "IRewardsHandler": [
-        17218
-      ],
-      "IStakingEvents": [
-        17319
-      ],
-      "IStakingGetter": [
-        17377
-      ],
-      "IStakingStorage": [
-        17577
-      ],
-      "IVMainToken": [
-        26561
-      ],
-      "IVault": [
-        21633
-      ],
-      "LockedBalance": [
-        16579
-      ],
-      "RewardsInternals": [
-        18674
-      ],
-      "Schedule": [
-        16535
-      ],
-      "StakingGetters": [
-        18865
-      ],
-      "StakingInternals": [
-        21553
-      ],
-      "StakingStorage": [
-        16522
-      ],
-      "Stream": [
-        16607
-      ],
-      "StreamStatus": [
-        16528
-      ],
-      "User": [
-        16552
-      ],
-      "VoteCoefficient": [
-        16568
-      ],
-      "Weight": [
-        16563
-      ]
+      "BoringMath": [7143],
+      "BoringMath128": [7281],
+      "BoringMath16": [7465],
+      "BoringMath208": [7235],
+      "BoringMath224": [7189],
+      "BoringMath32": [7419],
+      "BoringMath48": [7373],
+      "BoringMath64": [7327],
+      "BoringMath8": [7511],
+      "CreateLockParams": [16614],
+      "FullMath": [7644],
+      "IERC20": [25636],
+      "IRewardsHandler": [17218],
+      "IStakingEvents": [17319],
+      "IStakingGetter": [17377],
+      "IStakingStorage": [17577],
+      "IVMainToken": [26561],
+      "IVault": [21633],
+      "LockedBalance": [16579],
+      "RewardsInternals": [18674],
+      "Schedule": [16535],
+      "StakingGetters": [18865],
+      "StakingInternals": [21553],
+      "StakingStorage": [16522],
+      "Stream": [16607],
+      "StreamStatus": [16528],
+      "User": [16552],
+      "VoteCoefficient": [16568],
+      "Weight": [16563]
     },
     "id": 18866,
     "license": "AGPL 3.0",
@@ -9226,11 +9168,7 @@
     "nodes": [
       {
         "id": 18676,
-        "literals": [
-          "solidity",
-          "0.8",
-          ".16"
-        ],
+        "literals": ["solidity", "0.8", ".16"],
         "nodeType": "PragmaDirective",
         "src": "92:23:78"
       },
@@ -9277,9 +9215,7 @@
             "baseName": {
               "id": 18680,
               "name": "StakingStorage",
-              "nameLocations": [
-                "253:14:78"
-              ],
+              "nameLocations": ["253:14:78"],
               "nodeType": "IdentifierPath",
               "referencedDeclaration": 16522,
               "src": "253:14:78"
@@ -9292,9 +9228,7 @@
             "baseName": {
               "id": 18682,
               "name": "IStakingGetter",
-              "nameLocations": [
-                "269:14:78"
-              ],
+              "nameLocations": ["269:14:78"],
               "nodeType": "IdentifierPath",
               "referencedDeclaration": 17377,
               "src": "269:14:78"
@@ -9307,9 +9241,7 @@
             "baseName": {
               "id": 18684,
               "name": "StakingInternals",
-              "nameLocations": [
-                "285:16:78"
-              ],
+              "nameLocations": ["285:16:78"],
               "nodeType": "IdentifierPath",
               "referencedDeclaration": 21553,
               "src": "285:16:78"
@@ -9324,14 +9256,7 @@
         "contractKind": "contract",
         "fullyImplemented": true,
         "id": 18865,
-        "linearizedBaseContracts": [
-          18865,
-          21553,
-          18674,
-          17319,
-          17377,
-          16522
-        ],
+        "linearizedBaseContracts": [18865, 21553, 18674, 17319, 17377, 16522],
         "name": "StakingGetters",
         "nameLocation": "235:14:78",
         "nodeType": "ContractDefinition",
@@ -9365,9 +9290,7 @@
             "src": "341:22:78"
           },
           {
-            "baseFunctions": [
-              17340
-            ],
+            "baseFunctions": [17340],
             "body": {
               "id": 18706,
               "nodeType": "Block",
@@ -9576,9 +9499,7 @@
             "visibility": "external"
           },
           {
-            "baseFunctions": [
-              17351
-            ],
+            "baseFunctions": [17351],
             "body": {
               "id": 18790,
               "nodeType": "Block",
@@ -9862,9 +9783,7 @@
                   }
                 },
                 {
-                  "assignments": [
-                    18743
-                  ],
+                  "assignments": [18743],
                   "declarations": [
                     {
                       "constant": false,
@@ -9948,9 +9867,7 @@
                   "src": "890:55:78"
                 },
                 {
-                  "assignments": [
-                    18750
-                  ],
+                  "assignments": [18750],
                   "declarations": [
                     {
                       "constant": false,
@@ -9973,9 +9890,7 @@
                         "pathNode": {
                           "id": 18748,
                           "name": "User",
-                          "nameLocations": [
-                            "955:4:78"
-                          ],
+                          "nameLocations": ["955:4:78"],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 16552,
                           "src": "955:4:78"
@@ -10032,9 +9947,7 @@
                   "src": "955:41:78"
                 },
                 {
-                  "assignments": [
-                    18757
-                  ],
+                  "assignments": [18757],
                   "declarations": [
                     {
                       "constant": false,
@@ -10057,9 +9970,7 @@
                         "pathNode": {
                           "id": 18755,
                           "name": "LockedBalance",
-                          "nameLocations": [
-                            "1006:13:78"
-                          ],
+                          "nameLocations": ["1006:13:78"],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 16579,
                           "src": "1006:13:78"
@@ -10175,9 +10086,7 @@
                   "src": "1006:55:78"
                 },
                 {
-                  "assignments": [
-                    18767
-                  ],
+                  "assignments": [18767],
                   "declarations": [
                     {
                       "constant": false,
@@ -10290,9 +10199,7 @@
                   "src": "1071:80:78"
                 },
                 {
-                  "assignments": [
-                    18776
-                  ],
+                  "assignments": [18776],
                   "declarations": [
                     {
                       "constant": false,
@@ -10640,9 +10547,7 @@
             "visibility": "external"
           },
           {
-            "baseFunctions": [
-              17331
-            ],
+            "baseFunctions": [17331],
             "body": {
               "id": 18805,
               "nodeType": "Block",
@@ -10768,9 +10673,7 @@
                       "pathNode": {
                         "id": 18796,
                         "name": "LockedBalance",
-                        "nameLocations": [
-                          "1379:13:78"
-                        ],
+                        "nameLocations": ["1379:13:78"],
                         "nodeType": "IdentifierPath",
                         "referencedDeclaration": 16579,
                         "src": "1379:13:78"
@@ -10802,9 +10705,7 @@
             "visibility": "external"
           },
           {
-            "baseFunctions": [
-              17362
-            ],
+            "baseFunctions": [17362],
             "body": {
               "id": 18830,
               "nodeType": "Block",
@@ -11106,18 +11007,14 @@
             "visibility": "external"
           },
           {
-            "baseFunctions": [
-              17376
-            ],
+            "baseFunctions": [17376],
             "body": {
               "id": 18863,
               "nodeType": "Block",
               "src": "1863:158:78",
               "statements": [
                 {
-                  "assignments": [
-                    18848
-                  ],
+                  "assignments": [18848],
                   "declarations": [
                     {
                       "constant": false,
@@ -11140,9 +11037,7 @@
                         "pathNode": {
                           "id": 18846,
                           "name": "Stream",
-                          "nameLocations": [
-                            "1873:6:78"
-                          ],
+                          "nameLocations": ["1873:6:78"],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 16607,
                           "src": "1873:6:78"
@@ -11488,9 +11383,7 @@
                     "pathNode": {
                       "id": 18842,
                       "name": "StreamStatus",
-                      "nameLocations": [
-                        "1842:12:78"
-                      ],
+                      "nameLocations": ["1842:12:78"],
                       "nodeType": "IdentifierPath",
                       "referencedDeclaration": 16528,
                       "src": "1842:12:78"
@@ -11517,20 +11410,8 @@
         "scope": 18866,
         "src": "226:1797:78",
         "usedErrors": [
-          18229,
-          18231,
-          18233,
-          18235,
-          18237,
-          18687,
-          18689,
-          20463,
-          20467,
-          20469,
-          20471,
-          20473,
-          20475,
-          20477
+          18229, 18231, 18233, 18235, 18237, 18687, 18689, 20463, 20467, 20469,
+          20471, 20473, 20475, 20477
         ]
       }
     ],

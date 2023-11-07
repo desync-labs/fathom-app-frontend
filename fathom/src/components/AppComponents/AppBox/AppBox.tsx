@@ -165,7 +165,6 @@ export const MainBox = styled(MuiBox)`
   width: 100%;
 `;
 
-
 export const WarningBox = styled(Box)`
   background: #452508;
   border: 1px solid #5c310a;
@@ -176,7 +175,7 @@ export const WarningBox = styled(Box)`
   flex-direction: row;
   align-items: center;
   margin: 10px 0 20px;
-  
+
   svg {
     color: #f7b06e;
   }
@@ -195,8 +194,8 @@ export const WarningBox = styled(Box)`
 `;
 
 export const SuccessBox = styled(Box)`
-  background: #173D0F;
-  border: 1px solid #1F5214;
+  background: #173d0f;
+  border: 1px solid #1f5214;
   border-radius: 8px;
   padding: 8px 16px;
   gap: 8px;
@@ -206,11 +205,11 @@ export const SuccessBox = styled(Box)`
   margin: 10px 0 20px;
 
   svg {
-    color: #8AF075;
+    color: #8af075;
   }
 
   p {
-    color: #8AF075;
+    color: #8af075;
     font-size: 14px;
   }
-`
+`;

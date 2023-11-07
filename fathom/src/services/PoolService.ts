@@ -2,14 +2,10 @@ import Xdc3 from "xdc3";
 
 import { SmartContractFactory } from "config/SmartContractFactory";
 import IPoolService from "services/interfaces/services/IPoolService";
-import {
-  DEFAULT_CHAIN_ID
-} from "helpers/Constants";
+import { DEFAULT_CHAIN_ID } from "helpers/Constants";
 import { Web3Utils } from "helpers/Web3Utils";
 
-import {
-  UseAlertAndTransactionServiceType
-} from "context/alertAndTransaction";
+import { UseAlertAndTransactionServiceType } from "context/alertAndTransaction";
 
 export default class PoolService implements IPoolService {
   chainId = DEFAULT_CHAIN_ID;
@@ -19,11 +15,7 @@ export default class PoolService implements IPoolService {
     this.alertAndTransactionContext = alertAndTransactionContext;
   }
 
-  getUserTokenBalance(
-    address: string,
-    forAddress: string,
-    library: Xdc3
-  ) {
+  getUserTokenBalance(address: string, forAddress: string, library: Xdc3) {
     const BEP20 = Web3Utils.getContractInstance(
       SmartContractFactory.BEP20(forAddress),
       library
@@ -32,10 +24,7 @@ export default class PoolService implements IPoolService {
     return BEP20.methods.balanceOf(address).call();
   }
 
-  getTokenDecimals(
-    forAddress: string,
-    library: Xdc3
-  ) {
+  getTokenDecimals(forAddress: string, library: Xdc3) {
     const BEP20 = Web3Utils.getContractInstance(
       SmartContractFactory.BEP20(forAddress),
       library
@@ -65,7 +54,7 @@ export default class PoolService implements IPoolService {
     const collateralTokenAdapter = Web3Utils.getContractInstance(
       {
         address: forAddress,
-        abi
+        abi,
       },
       library
     );

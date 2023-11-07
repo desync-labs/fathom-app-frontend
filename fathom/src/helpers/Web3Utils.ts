@@ -16,7 +16,7 @@ export class Web3Utils {
       return Web3Utils.contracts.get(contractMetaData.address) as Contract;
     }
 
-    const contract =  new library.eth.Contract(
+    const contract = new library.eth.Contract(
       contractMetaData.abi as XdcContractMetaData["abi"],
       contractMetaData.address
     );

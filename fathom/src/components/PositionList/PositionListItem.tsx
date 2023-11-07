@@ -3,7 +3,7 @@ import { Box, CircularProgress, TableCell, Stack } from "@mui/material";
 import { PoolName, TVL } from "components/AppComponents/AppBox/AppBox";
 import {
   ButtonPrimary,
-  ManagePositionButton
+  ManagePositionButton,
 } from "components/AppComponents/AppButton/AppButton";
 import { AppTableRow } from "components/AppComponents/AppTable/AppTable";
 import IOpenPosition from "services/interfaces/models/IOpenPosition";
@@ -15,7 +15,7 @@ import {
   formatCurrency,
   formatNumber,
   formatNumberPrice,
-  formatPercentage
+  formatPercentage,
 } from "utils/format";
 
 export type PositionListItemProps = {
@@ -82,7 +82,12 @@ const PositionListItem: FC<PositionListItemProps> = ({
       <TableCell>
         <ButtonsWrapper>
           {approveBtn ? (
-            <ButtonPrimary onClick={approve} sx={{ height: "32px" }} disabled={approvalPending} isLoading={approvalPending}>
+            <ButtonPrimary
+              onClick={approve}
+              sx={{ height: "32px" }}
+              disabled={approvalPending}
+              isLoading={approvalPending}
+            >
               {approvalPending ? (
                 <CircularProgress size={20} sx={{ color: "#0D1526" }} />
               ) : (
@@ -90,7 +95,10 @@ const PositionListItem: FC<PositionListItemProps> = ({
               )}
             </ButtonPrimary>
           ) : (
-            <ManagePositionButton size="small" onClick={() => setTopUpPosition(position)}>
+            <ManagePositionButton
+              size="small"
+              onClick={() => setTopUpPosition(position)}
+            >
               Manage position
             </ManagePositionButton>
           )}

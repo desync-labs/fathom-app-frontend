@@ -1,12 +1,5 @@
-import React, {
-  FC,
-  ReactNode,
-  useState
-} from "react";
-import {
-  Popover,
-  Typography
-} from "@mui/material";
+import React, { FC, ReactNode, useState } from "react";
+import { Popover, Typography } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 import { styled } from "@mui/material/styles";
 
@@ -15,7 +8,7 @@ const AppPopoverWrapper = styled(Popover)`
     background: rgba(255, 255, 255, 0.9);
     border-radius: 8px;
     padding: 8px 12px;
-    color: #000C24;
+    color: #000c24;
     max-width: 400px;
 
     p {
@@ -34,17 +27,13 @@ const AppPopoverWrapper = styled(Popover)`
   }
 `;
 
-
 type AppPopoverProps = {
-  id: string,
-  text: ReactNode
-}
+  id: string;
+  text: ReactNode;
+};
 
-const AppPopover: FC<AppPopoverProps> = ({
-  id,
-  text
-}) => {
-  const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
+const AppPopover: FC<AppPopoverProps> = ({ id, text }) => {
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -70,17 +59,17 @@ const AppPopover: FC<AppPopoverProps> = ({
       <AppPopoverWrapper
         id={id}
         sx={{
-          pointerEvents: "none"
+          pointerEvents: "none",
         }}
         open={open}
         anchorEl={anchorEl}
         anchorOrigin={{
           vertical: "top",
-          horizontal: "right"
+          horizontal: "right",
         }}
         transformOrigin={{
           vertical: "top",
-          horizontal: "left"
+          horizontal: "left",
         }}
         onClose={handlePopoverClose}
         disableRestoreFocus

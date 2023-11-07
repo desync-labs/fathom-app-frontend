@@ -79,7 +79,11 @@ const ProposeActionFields: FC<ProposeActionFieldsProps> = ({
                     ) : error && error.type === "validate" ? (
                       error.message
                     ) : (
-                      <Stack direction={"row"} alignItems={"center"} component={'span'}>
+                      <Stack
+                        direction={"row"}
+                        alignItems={"center"}
+                        component={"span"}
+                      >
                         <InfoIcon />
                         Once this proposal is accepted, it will automatically
                         call for this smart contract to execute.

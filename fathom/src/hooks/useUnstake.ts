@@ -51,10 +51,8 @@ const useUnstake = (
   }, [totalBalance, setUnStakeAmount]);
 
   const unStakeHandler = useCallback(async () => {
-    try {
-      await handleUnlock(lockPosition!.lockId, unStakeAmount);
-      onFinish(unStakeAmount);
-    } catch (e) {}
+    await handleUnlock(lockPosition?.lockId as number, unStakeAmount);
+    onFinish(unStakeAmount);
   }, [lockPosition, handleUnlock, onFinish, unStakeAmount]);
 
   return {

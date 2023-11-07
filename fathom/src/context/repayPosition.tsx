@@ -11,37 +11,38 @@ export type ClosePositionContextType = {
 };
 
 export type UseRepayPositionContextReturnType = {
-  liquidationPrice: number,
-  ltv: number,
-  overCollateral: number,
-  chainId: ChainId,
-  collateral: string,
-  lockedCollateral: string,
-  price: string,
-  fathomToken: string,
-  pool: ICollateralPool,
-  balance: string,
-  balanceError: boolean,
-  balanceErrorNotFilled: boolean,
-  fathomTokenIsDirty: boolean,
-  closePositionHandler: () => Promise<void>,
-  disableClosePosition: boolean,
-  handleFathomTokenTextFieldChange: (e: any) => void,
-  handleCollateralTextFieldChange: (e: any) => void,
-  setMax: () => void,
-  onClose: () => void,
-  position: IOpenPosition,
-  debtValue: string,
-  switchPosition: (callback: Dispatch<IOpenPosition>) => void,
-  approveBtn: boolean,
-  approvalPending: boolean,
-  approve: () => Promise<void>
+  liquidationPrice: number;
+  ltv: number;
+  overCollateral: number;
+  chainId: ChainId;
+  collateral: string;
+  lockedCollateral: string;
+  price: string;
+  fathomToken: string;
+  pool: ICollateralPool;
+  balance: string;
+  balanceError: boolean;
+  balanceErrorNotFilled: boolean;
+  fathomTokenIsDirty: boolean;
+  closePositionHandler: () => Promise<void>;
+  disableClosePosition: boolean;
+  handleFathomTokenTextFieldChange: (e: any) => void;
+  handleCollateralTextFieldChange: (e: any) => void;
+  setMax: () => void;
+  onClose: () => void;
+  position: IOpenPosition;
+  debtValue: string;
+  switchPosition: (callback: Dispatch<IOpenPosition>) => void;
+  approveBtn: boolean;
+  approvalPending: boolean;
+  approve: () => Promise<void>;
 };
 
 // @ts-ignore
-export const RepayPositionContext = createContext<UseRepayPositionContextReturnType>(
-  {} as UseRepayPositionContextReturnType
-);
+export const RepayPositionContext =
+  createContext<UseRepayPositionContextReturnType>(
+    {} as UseRepayPositionContextReturnType
+  );
 
 export const ClosePositionProvider: FC<ClosePositionContextType> = ({
   children,

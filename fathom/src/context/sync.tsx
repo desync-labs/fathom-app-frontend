@@ -45,8 +45,8 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
   const { data: daoData, refetch: refetchDao } = useQuery(HEALTH, {
     variables: {
       name: "dao-subgraph",
-    }
-  })
+    },
+  });
 
   const values = useMemo(() => {
     return {

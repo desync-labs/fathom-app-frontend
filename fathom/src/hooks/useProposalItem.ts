@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 import { GOVERNANCE_PROPOSAL_ITEM } from "apollo/queries";
-import { useStores } from "context/services";
+import { useServices } from "context/services";
 import { ProposalStatus, XDC_BLOCK_TIME } from "helpers/Constants";
 import IProposal from "services/interfaces/models/IProposal";
 import useSyncContext from "context/sync";
@@ -11,11 +11,11 @@ import { useMediaQuery, useTheme } from "@mui/material";
 import BigNumber from "bignumber.js";
 
 const useProposalItem = () => {
-  const { account, chainId, library } = useConnector()!;
+  const { account, chainId, library } = useConnector();
   const navigate = useNavigate();
 
   const { _proposalId } = useParams();
-  const { proposalService } = useStores();
+  const { proposalService } = useServices();
 
   const [votePending, setVotePending] = useState<string | null>(null);
   const [hasVoted, setHasVoted] = useState<boolean>(false);
@@ -49,23 +49,21 @@ const useProposalItem = () => {
   const fetchHasVoted = useCallback(async () => {
     const hasVoted = await proposalService.hasVoted(
       data.proposal.proposalId,
-      account,
-      library
+      account
     );
-    setHasVoted(hasVoted!);
-  }, [proposalService, data, account, library, setHasVoted]);
+    setHasVoted(hasVoted);
+  }, [proposalService, data, account, setHasVoted]);
 
   const fetchStatus = useCallback(async () => {
     if (data && data.proposal && account) {
       const status = await proposalService.viewProposalState(
         data.proposal.proposalId,
-        account,
-        library
+        account
       );
       // @ts-ignore
       setStatus(Object.values(ProposalStatus)[status]);
     }
-  }, [proposalService, data, account, library, setStatus]);
+  }, [proposalService, data, account, setStatus]);
 
   const getVotingStartsTime = useCallback(async () => {
     if (data && data.proposal) {
@@ -74,18 +72,19 @@ const useProposalItem = () => {
 
       if (BigNumber(currentBlock).isLessThan(data.proposal.startBlock)) {
         const blockData = await library.eth.getBlock(currentBlock);
-        timestamp = BigNumber(blockData.timestamp)
-          .plus(BigNumber(data.proposal.startBlock)
+        timestamp = BigNumber(blockData.timestamp).plus(
+          BigNumber(data.proposal.startBlock)
             .minus(currentBlock)
-            .multipliedBy(XDC_BLOCK_TIME))
-      } else {
-        const blockData = await library.eth.getBlock(
-          data.proposal.startBlock
+            .multipliedBy(XDC_BLOCK_TIME)
         );
+      } else {
+        const blockData = await library.eth.getBlock(data.proposal.startBlock);
         timestamp = BigNumber(blockData.timestamp);
       }
 
-      return setVotingStartsTime(new Date(timestamp.toNumber() * 1000).toLocaleString());
+      return setVotingStartsTime(
+        new Date(timestamp.toNumber() * 1000).toLocaleString()
+      );
     }
   }, [data, library, setVotingStartsTime]);
 
@@ -96,14 +95,13 @@ const useProposalItem = () => {
 
       if (Number(currentBlock) < Number(data.proposal.startBlock)) {
         const blockData = await library.eth.getBlock(currentBlock);
-        timestamp = BigNumber(blockData.timestamp)
-          .plus(BigNumber(data.proposal.startBlock)
+        timestamp = BigNumber(blockData.timestamp).plus(
+          BigNumber(data.proposal.startBlock)
             .minus(currentBlock)
-            .multipliedBy(XDC_BLOCK_TIME));
-      } else {
-        const blockData = await library.eth.getBlock(
-          data.proposal.startBlock
+            .multipliedBy(XDC_BLOCK_TIME)
         );
+      } else {
+        const blockData = await library.eth.getBlock(data.proposal.startBlock);
         timestamp = BigNumber(blockData.timestamp);
       }
 
@@ -118,8 +116,7 @@ const useProposalItem = () => {
         setVotingEndTime(new Date(endTimestamp * 1000).toLocaleString());
         const status = await proposalService.viewProposalState(
           data.proposal.proposalId,
-          account,
-          library
+          account
         );
         // @ts-ignore
         setStatus(Object.values(ProposalStatus)[status]);
@@ -140,18 +137,18 @@ const useProposalItem = () => {
 
   const checkProposalVotesAndQuorum = useCallback(async () => {
     const [totalVotes, quorum] = await Promise.all([
-      proposalService.proposalVotes(data.proposal.proposalId, library),
-      proposalService.quorum(data.proposal.startBlock, library),
+      proposalService.proposalVotes(data.proposal.proposalId),
+      proposalService.quorum(data.proposal.startBlock),
     ]);
 
     const { abstainVotes, forVotes } = totalVotes;
 
-    if (BigNumber(quorum!).isLessThan(BigNumber(abstainVotes).plus(forVotes))) {
+    if (BigNumber(quorum).isLessThan(BigNumber(abstainVotes).plus(forVotes))) {
       setQuorumError(false);
     } else {
       setQuorumError(true);
     }
-  }, [proposalService, data?.proposal, library]);
+  }, [proposalService, data?.proposal]);
 
   useEffect(() => {
     if (data && data.proposal && account) {
@@ -206,10 +203,9 @@ const useProposalItem = () => {
       try {
         setVotePending(support);
         const blockNumber = await proposalService.castVote(
-          _proposalId!,
+          _proposalId as string,
           account,
-          support,
-          library
+          support
         );
         setLastTransactionBlock(blockNumber as number);
         setHasVoted(true);
@@ -222,7 +218,6 @@ const useProposalItem = () => {
       _proposalId,
       proposalService,
       account,
-      library,
       setVotePending,
       setHasVoted,
       setLastTransactionBlock,

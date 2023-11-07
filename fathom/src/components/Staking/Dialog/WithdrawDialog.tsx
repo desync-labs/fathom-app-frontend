@@ -21,7 +21,7 @@ import useStakingContext from "context/staking";
 
 const ConfirmButton = styled(ButtonPrimary)`
   font-size: 17px;
-`
+`;
 
 export const InfoMessageWrapper = styled(Box)`
   display: flex;
