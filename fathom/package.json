@@ -16,7 +16,7 @@
     "bignumber.js": "^9.1.0",
     "fathom-swap-standard-token-list": "1.7.0",
     "fontsource-roboto": "^4.0.0",
-    "graphql": "^16.6.0",
+    "graphql": "^16.8.1",
     "lodash.debounce": "^4.0.8",
     "mobx": "^6.6.2",
     "mobx-react": "^7.5.3",
