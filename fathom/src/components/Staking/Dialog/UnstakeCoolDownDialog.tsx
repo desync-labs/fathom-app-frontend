@@ -9,7 +9,7 @@ import { CancelButton } from "components/AppComponents/AppButton/AppButton";
 import { styled } from "@mui/material/styles";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatNumber } from "utils/format";
-import ILockPosition from "services/interfaces/models/ILockPosition";
+import { ILockPosition } from "fathom-contracts-helper";
 
 export const InfoMessageWrapper = styled(Box)`
   display: flex;

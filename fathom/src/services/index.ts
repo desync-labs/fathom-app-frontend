@@ -1,19 +1,20 @@
-import IPoolService from "fathom-contracts-helper/src/interfaces/services/IPoolService";
-import IPositionService from "fathom-contracts-helper/src/interfaces/services/IPositionService";
-import IProposalService from "fathom-contracts-helper/src/interfaces/services/IProposalService";
-import IStableSwapService from "fathom-contracts-helper/src/interfaces/services/IStableSwapService";
-import IStakingService from "fathom-contracts-helper/src/interfaces/services/IStakingService";
-
 import {
   PoolService,
   PositionService,
   ProposalService,
   StableSwapService,
   StakingService,
+  IPoolService,
+  IPositionService,
+  IProposalService,
+  IStableSwapService,
+  IStakingService,
 } from "fathom-contracts-helper";
 
 import { DEFAULT_CHAIN_ID } from "helpers/Constants";
 import Xdc3 from "xdc3";
+import { getDefaultProvider } from "utils/defaultProvider";
+import { Web3Utils } from "fathom-contracts-helper";
 
 export class RootStore {
   /*
@@ -37,7 +38,8 @@ export class RootStore {
     "stakingService",
   ];
 
-  constructor(provider: Xdc3) {
+  constructor() {
+    const provider = getDefaultProvider();
     this.poolService = new PoolService(provider, this.chainId);
     this.positionService = new PositionService(provider, this.chainId);
     this.proposalService = new ProposalService(provider, this.chainId);
@@ -58,6 +60,10 @@ export class RootStore {
 
   setProvider(provider: Xdc3) {
     this.provider = provider;
+    /**
+     * When change provider need to reset contracts cache.
+     */
+    Web3Utils.clearContracts();
     this.serviceList.forEach((serviceName) => {
       // @ts-ignore
       this[serviceName].setProvider(provider);

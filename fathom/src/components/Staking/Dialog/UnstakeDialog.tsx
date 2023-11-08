@@ -12,7 +12,7 @@ import {
   DialogContentWrapper,
 } from "components/AppComponents/AppDialog/AppDialog";
 
-import ILockPosition from "services/interfaces/models/ILockPosition";
+import { ILockPosition } from "fathom-contracts-helper";
 import { styled } from "@mui/material/styles";
 import {
   AppFormInputLogo,

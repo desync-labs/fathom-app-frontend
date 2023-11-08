@@ -9,7 +9,7 @@ import useConnector from "context/connector";
 
 const useDashboard = () => {
   const { positionService } = useServices();
-  const { account, library } = useConnector();
+  const { account } = useConnector();
   const { syncFXD, prevSyncFxd } = useSyncContext();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -53,7 +53,6 @@ const useDashboard = () => {
   }, [
     positionService,
     account,
-    library,
     loadUserStats,
     setPositionsItemsCount,
     setProxyWallet,
@@ -108,7 +107,6 @@ const useDashboard = () => {
     }
   }, [
     account,
-    library,
     positionService,
     proxyWallet,
     refetchStats,

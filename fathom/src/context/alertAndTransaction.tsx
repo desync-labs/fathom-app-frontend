@@ -9,10 +9,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import {
-  ITransaction,
-  TransactionStatus,
-} from "services/interfaces/models/ITransaction";
+import { ITransaction, TransactionStatus } from "fathom-contracts-helper";
 import { TransactionCheckUpdateInterval } from "helpers/Constants";
 import { useWeb3React } from "@web3-react/core";
 

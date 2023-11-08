@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { useServices } from "context/services";
 import debounce from "lodash.debounce";
-import { SmartContractFactory } from "config/SmartContractFactory";
+import { SmartContractFactory } from "fathom-contracts-helper";
 import useSyncContext from "context/sync";
 import BigNumber from "bignumber.js";
 import Xdc3 from "xdc3";
@@ -291,7 +291,7 @@ const useStableSwap = (options: string[]) => {
 
   useEffect(() => {
     if (chainId) {
-      stableSwapService.getLastUpdate().then((lastUpdate) => {
+      stableSwapService.getLastUpdate().then((lastUpdate: string) => {
         setLastUpdate(lastUpdate);
       });
     }
@@ -299,7 +299,7 @@ const useStableSwap = (options: string[]) => {
 
   useEffect(() => {
     if (isDecentralizedState) {
-      stableSwapService.getDailySwapLimit().then((dailyLimit) => {
+      stableSwapService.getDailySwapLimit().then((dailyLimit: number) => {
         setDailyLimit(dailyLimit);
       });
     }

@@ -50,7 +50,7 @@ const AppMenuItemComponent: React.FC<AppMenuItemComponentProps> = (props) => {
       button
       className={className}
       children={children}
-      component={forwardRef((props: NavLinkProps) => {
+      component={forwardRef((props: NavLinkProps, ref: any) => {
         const className =
           // @ts-ignore
           !props.className.includes("active") &&
@@ -58,7 +58,7 @@ const AppMenuItemComponent: React.FC<AppMenuItemComponentProps> = (props) => {
             ? `${props.className} active`
             : props.className;
 
-        return <NavLink {...{ ...props, className }} />;
+        return <NavLink ref={ref} {...{ ...props, className }} />;
       })}
       to={link}
     />

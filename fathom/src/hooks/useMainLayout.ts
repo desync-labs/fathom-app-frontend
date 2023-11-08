@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState, MouseEvent, useRef } from "react";
 import BigNumber from "bignumber.js";
 import useConnector from "context/connector";
-import { useServices } from "context/services";
 import { useMediaQuery, useTheme } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import useWindowSize from "./useWindowResize";
@@ -16,7 +15,6 @@ const useMainLayout = () => {
     disconnect,
     isActive,
     account,
-    chainId,
     error,
     isMetamask,
     isXdcPay,
@@ -35,23 +33,15 @@ const useMainLayout = () => {
     setOpen(!open);
   }, [open, setOpen]);
 
-  const rootStore = useServices();
-
   const scrollHandler = useCallback(() => {
     setScroll(window.scrollY);
   }, [setScroll]);
 
   useEffect(() => {
-    if (chainId) {
-      rootStore.setChainId(chainId);
-    }
-  }, [chainId, rootStore]);
-
-  useEffect(() => {
     const clientHeight =
       drawerRef?.current?.querySelector(".MuiPaper-root")?.clientHeight;
     if (
-      BigNumber(clientHeight as number).isGreaterThan(580) ||
+      BigNumber(clientHeight as number).isLessThan(580) ||
       isTablet ||
       isMobile
     ) {

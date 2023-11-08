@@ -8,7 +8,7 @@ import {
 } from "react";
 import { LogLevel, useLogger } from "helpers/Logger";
 import { useServices } from "context/services";
-import ILockPosition from "services/interfaces/models/ILockPosition";
+import { ILockPosition } from "fathom-contracts-helper";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import { STAKING_PROTOCOL_STATS, STAKING_STAKER } from "apollo/queries";
 import { COUNT_PER_PAGE } from "helpers/Constants";

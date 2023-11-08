@@ -12,7 +12,7 @@ import useStakingView, {
   DialogActions,
 } from "hooks/useStakingView";
 import { ChainId } from "connectors/networks";
-import ILockPosition from "services/interfaces/models/ILockPosition";
+import { ILockPosition } from "fathom-contracts-helper";
 
 type StakingProviderType = {
   children: ReactElement;

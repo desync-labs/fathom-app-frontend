@@ -1,5 +1,5 @@
 import React, { FC, memo, useMemo } from "react";
-import ILockPosition from "services/interfaces/models/ILockPosition";
+import { ILockPosition } from "fathom-contracts-helper";
 import StakingViewItem from "components/Staking/StakingViewItem";
 import ClaimRewardsDialog from "components/Staking/Dialog/ClaimRewardsDialog";
 import { DialogActions } from "hooks/useStakingView";

@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import ICollateralPool from "services/interfaces/models/ICollateralPool";
+import { ICollateralPool } from "fathom-contracts-helper";
 import { useQuery } from "@apollo/client";
 import { FXD_POOLS } from "apollo/queries";
 import { useMediaQuery, useTheme } from "@mui/material";
