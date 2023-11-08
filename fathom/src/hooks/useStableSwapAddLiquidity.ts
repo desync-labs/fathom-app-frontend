@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import BigNumber from "bignumber.js";
 import debounce from "lodash.debounce";
 import { useMediaQuery, useTheme } from "@mui/material";
-import { SmartContractFactory } from "config/SmartContractFactory";
+import { SmartContractFactory } from "fathom-contracts-helper";
 import useConnector from "context/connector";
 import useSyncContext from "context/sync";
 import { useServices } from "context/services";

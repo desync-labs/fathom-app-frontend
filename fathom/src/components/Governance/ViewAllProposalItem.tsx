@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import StakingCountdown from "components/Staking/StakingCountdown";
 import { secondsToTime } from "utils/secondsToTime";
 import useViewProposalItem from "hooks/useViewProposalItem";
-import IProposal from "services/interfaces/models/IProposal";
+import { IProposal } from "fathom-contracts-helper";
 
 import DefeatedSrc from "assets/svg/rejected.svg";
 import SucceededSrc from "assets/svg/succeeded.svg";

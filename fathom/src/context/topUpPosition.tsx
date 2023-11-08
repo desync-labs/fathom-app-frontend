@@ -1,7 +1,6 @@
 import { createContext, Dispatch, FC, ReactElement, useContext } from "react";
 import useTopUpPosition from "hooks/useTopUpPosition";
-import ICollateralPool from "services/interfaces/models/ICollateralPool";
-import IOpenPosition from "services/interfaces/models/IOpenPosition";
+import { ICollateralPool, IOpenPosition } from "fathom-contracts-helper";
 import { Control, UseFormHandleSubmit } from "react-hook-form/dist/types";
 
 export type TopUpPositionContextType = {

@@ -9,7 +9,7 @@ import {
   TableHead,
   Pagination,
 } from "@mui/material";
-import IOpenPosition from "services/interfaces/models/IOpenPosition";
+import { IOpenPosition } from "fathom-contracts-helper";
 import ClosePositionDialog from "components/Positions/RepayPositionDialog";
 import {
   AppTableHeaderRow,

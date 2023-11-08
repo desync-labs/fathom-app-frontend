@@ -1,5 +1,5 @@
 import React, { Dispatch, FC, SetStateAction } from "react";
-import ICollateralPool from "services/interfaces/models/ICollateralPool";
+import { ICollateralPool } from "fathom-contracts-helper";
 
 import { styled } from "@mui/material/styles";
 import { Box } from "@mui/material";

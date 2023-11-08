@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import useStakingContext from "context/staking";
 import { formatNumber } from "utils/format";
 import { YEAR_IN_SECONDS } from "helpers/Constants";
-import ILockPosition from "services/interfaces/models/ILockPosition";
+import { ILockPosition } from "fathom-contracts-helper";
 import { useServices } from "context/services";
 import useConnector from "context/connector";
 

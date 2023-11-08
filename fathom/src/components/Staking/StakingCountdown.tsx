@@ -1,9 +1,7 @@
 import { FC } from "react";
-import ILockPosition from "services/interfaces/models/ITimeObject";
+import { ITimeObject } from "fathom-contracts-helper";
 
-const StakingCountdown: FC<{ timeObject: ILockPosition }> = ({
-  timeObject,
-}) => {
+const StakingCountdown: FC<{ timeObject: ITimeObject }> = ({ timeObject }) => {
   return (
     <>
       {timeObject.days} days {timeObject.hour} hrs {timeObject.min} min{" "}

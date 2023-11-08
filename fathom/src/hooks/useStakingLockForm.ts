@@ -6,8 +6,8 @@ import BigNumber from "bignumber.js";
 import { useServices } from "context/services";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
-import { SmartContractFactory } from "config/SmartContractFactory";
-import { DAY_SECONDS } from "services/StakingService";
+import { SmartContractFactory } from "fathom-contracts-helper";
+import { DAY_IN_SECONDS } from "helpers/Constants";
 
 const useStakingLockForm = () => {
   const [balanceError, setBalanceError] = useState<boolean>(false);
@@ -56,7 +56,7 @@ const useStakingLockForm = () => {
 
   const getMinLockPeriod = useCallback(async () => {
     const lockPeriod = await stakingService.getMinLockPeriod();
-    const minDays = BigNumber(lockPeriod).dividedBy(DAY_SECONDS);
+    const minDays = BigNumber(lockPeriod).dividedBy(DAY_IN_SECONDS);
     setMinLockPeriod(minDays.toNumber());
   }, [stakingService, setMinLockPeriod]);
 
