@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import { styled } from "@mui/material/styles";
 import { Box } from "@mui/material";
 import {
@@ -15,13 +15,17 @@ import {
   VaultListItemImageWrapper,
   VaultPercent,
   VaultStacked,
-  VaultTitle
+  VaultTitle,
+  VaultListItemPropsType
 } from "components/Vault/VaultListItem";
 import VaultListItemPairInfo from "components/Vault/VaultListItem/VaultListItemPairInfo";
 import VaultListItemVaultInfo from "components/Vault/VaultListItem/VaultListItemVaultInfo";
 import VaultListItemEarningDetails from "components/Vault/VaultListItem/VaultListItemEarningDetails";
 import VaultListItemEarned from "components/Vault/VaultListItem/VaultListItemEarned";
 import VaultListItemManageModal from "components/Vault/VaultListItem/VaultListItemManageModal";
+import AppPopover from "components/AppComponents/AppPopover/AppPopover";
+import VaultListItemDepositModal from "components/Vault/VaultListItem/VaultListItemDepositModal";
+import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
 
 import { getTokenLogoURL } from "utils/tokenLogo";
 import useVaultListItem from "hooks/useVaultListItem";
@@ -29,7 +33,8 @@ import useVaultListItem from "hooks/useVaultListItem";
 import DirectionUp from "assets/svg/direction-up.svg";
 import DirectionDown from "assets/svg/direction-down.svg";
 import LockSrc from "assets/svg/lock.svg";
-import AppPopover from "../AppComponents/AppPopover/AppPopover";
+import LockAquaSrc from "assets/svg/lock-aqua.svg";
+
 
 const VaultPoolName = styled("div")`
   display: flex;
@@ -79,16 +84,20 @@ const ExtendedBtnWrapper = styled("div")`
   justify-content: center;
 `;
 
-export const VaultListItemMobileAdditionalData = () => {
+type VaultListItemMobileAdditionalDataProps = {
+  hasDeposite: boolean | undefined
+}
+
+export const VaultListItemMobileAdditionalData = ({ hasDeposite }: VaultListItemMobileAdditionalDataProps) => {
   return (
     <>
       <ListItemWrapper>
         <VaultListLabel>
           TVL
           <AppPopover id={"tvl"}
-                      text={<>
-                        Tvl Test Text
-                      </>} />
+            text={<>
+              Tvl Test Text
+            </>} />
         </VaultListLabel>
         <VaultListValue>
           $494.498
@@ -107,7 +116,10 @@ export const VaultListItemMobileAdditionalData = () => {
         <VaultListValue className={"neutral"}>
           <VaultStacked>
             <div className={"img-wrapper"}>
-              <img src={LockSrc} alt={"locked"} width={20} height={20} />
+              {hasDeposite
+                ? <img src={LockAquaSrc} alt={"locked"} width={20} height={20} />
+                : <img src={LockSrc} alt={"locked"} width={20} height={20} />
+              }
             </div>
             0
           </VaultStacked>
@@ -118,8 +130,16 @@ export const VaultListItemMobileAdditionalData = () => {
 };
 
 
-const VaultListItemMobile = () => {
-  const { manageVault, setManageVault, extended, setExtended, isMobile } = useVaultListItem();
+const VaultListItemMobile: FC<VaultListItemPropsType> = ({ hasDeposite }) => {
+  const {
+    manageVault,
+    newVaultDeposit,
+    extended,
+    isMobile,
+    setNewVaultDeposit,
+    setExtended,
+    setManageVault,
+  } = useVaultListItem();
 
   return (
     <VaultListItemMobileContainer>
@@ -138,9 +158,9 @@ const VaultListItemMobile = () => {
         <VaultListLabel>
           Fee
           <AppPopover id={"fee"}
-                      text={<>
-                        Fee Test Text
-                      </>} />
+            text={<>
+              Fee Test Text
+            </>} />
         </VaultListLabel>
         <VaultListValue>
           <VaultPercent>2.4%</VaultPercent>
@@ -150,9 +170,9 @@ const VaultListItemMobile = () => {
         <VaultListLabel>
           Earned
           <AppPopover id={"earned"}
-                      text={<>
-                        Earned Test Text
-                      </>} />
+            text={<>
+              Earned Test Text
+            </>} />
         </VaultListLabel>
         <VaultListValue>0</VaultListValue>
       </ListItemWrapper>
@@ -160,9 +180,9 @@ const VaultListItemMobile = () => {
         <VaultListLabel>
           Apr
           <AppPopover id={"apr"}
-                      text={<>
-                        Apr Test Text
-                      </>} />
+            text={<>
+              Apr Test Text
+            </>} />
         </VaultListLabel>
         <VaultListValue>
           20%
@@ -173,7 +193,7 @@ const VaultListItemMobile = () => {
       {/*</VaultItemInfoWrapper> }*/}
 
       {
-        extended && <>
+        (extended && hasDeposite) && <>
           <VaultItemInfoWrapper className={"mb-0"}>
             <VaultListItemEarned isMobile={isMobile} />
           </VaultItemInfoWrapper>
@@ -184,19 +204,29 @@ const VaultListItemMobile = () => {
         </>
       }
 
-      <VaultListItemMobileAdditionalData />
-      <ExtendedBtnWrapper>
-        <ExtendedBtn className={extended ? "visible" : "hidden"} onClick={() => setExtended(!extended)}>
-          <img src={DirectionUp} alt={"direction-up"} />
-        </ExtendedBtn>
-        <ExtendedBtn className={!extended ? "visible" : "hidden"} onClick={() => setExtended(!extended)}>
-          <img src={DirectionDown} alt={"direction-down"} />
-        </ExtendedBtn>
-      </ExtendedBtnWrapper>
+      <VaultListItemMobileAdditionalData hasDeposite={hasDeposite} />
+      {hasDeposite
+        ? <ExtendedBtnWrapper>
+          <ExtendedBtn className={extended ? "visible" : "hidden"} onClick={() => setExtended(!extended)}>
+            <img src={DirectionUp} alt={"direction-up"} />
+          </ExtendedBtn>
+          <ExtendedBtn className={!extended ? "visible" : "hidden"} onClick={() => setExtended(!extended)}>
+            <img src={DirectionDown} alt={"direction-down"} />
+          </ExtendedBtn>
+        </ExtendedBtnWrapper>
+        : <ButtonPrimary onClick={() => setNewVaultDeposit(true)} sx={{ width: '100%' }}>
+          Deposit
+        </ButtonPrimary>
+      }
       {manageVault && <VaultListItemManageModal
         isMobile={isMobile}
         onClose={() => setManageVault(false)}
-        onFinish={() => {}}
+        onFinish={() => { }}
+      />}
+      {newVaultDeposit && <VaultListItemDepositModal
+        isMobile={isMobile}
+        onClose={() => setNewVaultDeposit(false)}
+        onFinish={() => { }}
       />}
     </VaultListItemMobileContainer>
   );

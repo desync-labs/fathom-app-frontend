@@ -7,9 +7,8 @@ import {
 import { styled } from "@mui/material/styles";
 import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
 import { DividerDefault } from "components/Positions/TopUpPositionDialog";
-import ManageVaultForm from "components/Vault/VaultListItem/ManageVaultModal/ManageVaultForm";
-import ManageVaultInfo from "components/Vault/VaultListItem/ManageVaultModal/ManageVaultInfo";
-
+import DepositVaultInfo from "components/Vault/VaultListItem/DepositVaultModal/DepositVaultInfo";
+import DepositVaultForm from "components/Vault/VaultListItem/DepositVaultModal/DepositVaultForm";
 
 
 const VaultManageGridDialogWrapper = styled(AppDialog)`
@@ -22,13 +21,13 @@ const VaultManageGridDialogWrapper = styled(AppDialog)`
   }
 `;
 
-export type VaultManageProps = {
+export type VaultDepositProps = {
   onClose: () => void;
   onFinish: () => void;
   isMobile: boolean;
 };
 
-const VaultListItemManageModal: FC<VaultManageProps> = ({
+const VaultListItemDepositModal: FC<VaultDepositProps> = ({
   onClose,
   onFinish,
   isMobile
@@ -42,18 +41,18 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
       maxWidth="md"
     >
       <AppDialogTitle id="customized-dialog-title" onClose={onClose}>
-        Manage Vault
+        Deposit To Vault
       </AppDialogTitle>
 
       <DialogContent>
         <Grid container>
-          <ManageVaultInfo />
+          <DepositVaultInfo />
           <DividerDefault orientation="vertical" flexItem></DividerDefault>
-          <ManageVaultForm onClose={onClose} isMobile={isMobile} />
+          <DepositVaultForm onClose={onClose} isMobile={isMobile} />
         </Grid>
       </DialogContent>
     </VaultManageGridDialogWrapper>
   );
 };
 
-export default VaultListItemManageModal;
+export default VaultListItemDepositModal;
