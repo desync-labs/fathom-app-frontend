@@ -194,6 +194,35 @@ export const WarningBox = styled(Box)`
   }
 `;
 
+export const InfoBox = styled(Box)`
+  background: #132340;
+  border-radius: 8px;
+  padding: 8px 16px;
+  gap: 8px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 10px 0 20px;
+  
+  svg {
+    height: 20px;
+    width: 20px;
+    color: #6379A1;
+  }
+
+  p {
+    color: #B7C8E5;
+    font-size: 14px;
+    width: 100%;
+    white-space: break-spaces;
+  }
+  a {
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+`;
+
 export const SuccessBox = styled(Box)`
   background: #173D0F;
   border: 1px solid #1F5214;

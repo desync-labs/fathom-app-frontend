@@ -77,11 +77,11 @@ const VaultList: FC<VaultListProps> = ({
           "You have not opened vaults"
         )}
       </NoResults>}
-      { isMobile ?
+      {isMobile ?
         <>
           <VaultFiltersMobile />
           <VaultListItemMobile />
-          <VaultListItemMobile />
+          <VaultListItemMobile hasDeposite />
         </> :
         <TableContainer>
           <VaultFilters />
@@ -97,36 +97,36 @@ const VaultList: FC<VaultListProps> = ({
                   <AppTableCellWithPopover>
                     Fee
                     <AppPopover id={"fee"}
-                                text={<>
-                                  Fee Test Text
-                                </>} />
+                      text={<>
+                        Fee Test Text
+                      </>} />
                   </AppTableCellWithPopover>
                 </VaultListTableCell>
                 <VaultListTableCell>
                   <AppTableCellWithPopover>
                     Earned
                     <AppPopover id={"earned"}
-                                text={<>
-                                  Earned Test Text
-                                </>} />
+                      text={<>
+                        Earned Test Text
+                      </>} />
                   </AppTableCellWithPopover>
                 </VaultListTableCell>
                 <VaultListTableCell>
                   <AppTableCellWithPopover>
                     Apr
                     <AppPopover id={"apr"}
-                                text={<>
-                                  Apr Test Text
-                                </>} />
+                      text={<>
+                        Apr Test Text
+                      </>} />
                   </AppTableCellWithPopover>
                 </VaultListTableCell>
                 <VaultListTableCell>
                   <AppTableCellWithPopover>
                     Tvl
                     <AppPopover id={"tvl"}
-                                text={<>
-                                  Tvl Test Text
-                                </>} />
+                      text={<>
+                        Tvl Test Text
+                      </>} />
                   </AppTableCellWithPopover>
                 </VaultListTableCell>
                 <VaultListTableCell>Available</VaultListTableCell>
@@ -136,19 +136,19 @@ const VaultList: FC<VaultListProps> = ({
             </TableHead>
             <TableBody>
               <VaultListItem />
-              <VaultListItem />
+              <VaultListItem hasDeposite />
             </TableBody>
           </Table>
-        </TableContainer> }
-        <PaginationWrapper>
-          <Pagination
-            count={Math.ceil(
-              vaultItemsCount / COUNT_PER_PAGE
-            )}
-            page={vaultCurrentPage}
-            onChange={handlePageChange}
-          />
-        </PaginationWrapper>
+        </TableContainer>}
+      <PaginationWrapper>
+        <Pagination
+          count={Math.ceil(
+            vaultItemsCount / COUNT_PER_PAGE
+          )}
+          page={vaultCurrentPage}
+          onChange={handlePageChange}
+        />
+      </PaginationWrapper>
     </>
   );
 };

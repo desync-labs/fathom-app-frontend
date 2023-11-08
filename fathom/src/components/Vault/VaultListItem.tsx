@@ -1,3 +1,4 @@
+import { FC } from "react";
 import { AppTableRow } from "components/AppComponents/AppTable/AppTable";
 import {
   IconButton,
@@ -9,7 +10,7 @@ import { styled } from "@mui/material/styles";
 
 import useVaultListItem from "hooks/useVaultListItem";
 
-import { VaultNowBtn } from "components/AppComponents/AppButton/AppButton";
+import { ButtonPrimary, VaultNowBtn } from "components/AppComponents/AppButton/AppButton";
 
 import VaultListItemPairInfo from "components/Vault/VaultListItem/VaultListItemPairInfo";
 import VaultListItemVaultInfo from "components/Vault/VaultListItem/VaultListItemVaultInfo";
@@ -17,12 +18,12 @@ import VaultListItemVaultInfo from "components/Vault/VaultListItem/VaultListItem
 import VaultListItemEarningDetails from "components/Vault/VaultListItem/VaultListItemEarningDetails";
 import VaultListItemEarned from "components/Vault/VaultListItem/VaultListItemEarned";
 import VaultListItemManageModal from "components/Vault/VaultListItem/VaultListItemManageModal";
+import VaultListItemDepositModal from "components/Vault/VaultListItem/VaultListItemDepositModal";
 
 import LockSrc from "assets/svg/lock.svg";
 import LockAquaSrc from "assets/svg/lock-aqua.svg";
 import DirectionDown from "assets/svg/direction-down.svg";
 import DirectionUp from "assets/svg/direction-up.svg";
-import lockAquaSrc from "assets/svg/lock-aqua.svg";
 
 const VaultListItemPoolCell = styled(TableCell)`
   display: flex;
@@ -177,18 +178,24 @@ export const EarningLabel = styled("div")`
   }
 `;
 
-const VaultListItem = () => {
+export type VaultListItemPropsType = {
+  hasDeposite?: boolean
+}
+
+const VaultListItem: FC<VaultListItemPropsType> = ({ hasDeposite }) => {
   const {
     isMobile,
     extended,
     manageVault,
+    newVaultDeposit,
     setExtended,
-    setManageVault
+    setManageVault,
+    setNewVaultDeposit
   } = useVaultListItem();
 
   return (
     <>
-      <AppTableRow className={!extended ? "border single" : undefined}>
+      <AppTableRow className={!extended || !hasDeposite ? "border single" : undefined}>
         <VaultListItemPoolCell>
           <VaultListItemImageWrapper>
             <img src={getTokenLogoURL("xUSDT")} alt={"xUSDT"} />
@@ -226,22 +233,30 @@ const VaultListItem = () => {
         <TableCell>
           <VaultStacked>
             <Box className={"img-wrapper"}>
-              {/*<img src={LockSrc} alt={"locked"} width={20} height={20} />*/}
-              <img src={LockAquaSrc} alt={"locked-active"} width={20} height={20} />
+              {hasDeposite
+                ? <img src={LockAquaSrc} alt={"locked-active"} width={20} height={20} />
+                : <img src={LockSrc} alt={"locked"} width={20} height={20} />
+              }
             </Box>
             <Box className={"value"}>0 USDT</Box>
           </VaultStacked>
         </TableCell>
-        <TableCell>
-          <ExtendedBtn className={extended ? "visible" : "hidden"} onClick={() => setExtended(!extended)}>
-            <img src={DirectionUp} alt={"direction-up"} />
-          </ExtendedBtn>
-          <ExtendedBtn className={!extended ? "visible" : "hidden"} onClick={() => setExtended(!extended)}>
-            <img src={DirectionDown} alt={"direction-down"} />
-          </ExtendedBtn>
-        </TableCell>
+        {hasDeposite
+          ? <TableCell>
+            <ExtendedBtn className={extended ? "visible" : "hidden"} onClick={() => setExtended(!extended)}>
+              <img src={DirectionUp} alt={"direction-up"} />
+            </ExtendedBtn>
+            <ExtendedBtn className={!extended ? "visible" : "hidden"} onClick={() => setExtended(!extended)}>
+              <img src={DirectionDown} alt={"direction-down"} />
+            </ExtendedBtn>
+          </TableCell>
+          : <TableCell>
+            <ButtonPrimary onClick={() => setNewVaultDeposit(true)}>
+              Deposit
+            </ButtonPrimary>
+          </TableCell>}
       </AppTableRow>
-      {extended && <AppTableRow className={"border"}>
+      {(hasDeposite && extended) && <AppTableRow className={"border"}>
         <TableCell colSpan={8} sx={{ paddingBottom: "15px !important" }}>
           <VaultItemInfoWrapper>
             {/*<VaultListItemPairInfo />*/}
@@ -256,7 +271,12 @@ const VaultListItem = () => {
       {manageVault && <VaultListItemManageModal
         isMobile={isMobile}
         onClose={() => setManageVault(false)}
-        onFinish={() => {}}
+        onFinish={() => { }}
+      />}
+      {newVaultDeposit && <VaultListItemDepositModal
+        isMobile={isMobile}
+        onClose={() => setNewVaultDeposit(false)}
+        onFinish={() => { }}
       />}
     </>
   );
