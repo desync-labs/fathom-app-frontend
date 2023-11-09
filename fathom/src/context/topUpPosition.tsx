@@ -49,6 +49,7 @@ export type UseTopUpPositionContextReturnType = {
   maxBorrowAmount: string,
   availableFathomInPool: number,
   isMobile: boolean,
+  errorAtLeastOneField: boolean,
 };
 
 // @ts-ignore
