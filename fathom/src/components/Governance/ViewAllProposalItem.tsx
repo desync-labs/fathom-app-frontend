@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import StakingCountdown from "components/Staking/StakingCountdown";
 import { secondsToTime } from "utils/secondsToTime";
 import useViewProposalItem from "hooks/useViewProposalItem";
-import IProposal from "services/interfaces/models/IProposal";
+import { IProposal } from "fathom-contracts-helper";
 
 import DefeatedSrc from "assets/svg/rejected.svg";
 import SucceededSrc from "assets/svg/succeeded.svg";
@@ -32,7 +32,7 @@ const ProposalItemWrapper = styled(Link)`
 
 const ProposalIdTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} arrow classes={{ popper: className }} />
-))(({ theme }) => ({
+))(() => ({
   [`& .${tooltipClasses.arrow}`]: {
     color: "#0D1526",
   },
@@ -132,8 +132,8 @@ const ViewAllProposalItem: FC<ViewAllProposalItemProps> = ({ proposal }) => {
         )}
         {status && (
           <ProposalItemStatus className={status?.toLowerCase()}>
-            {["Defeated", "Succeeded"].includes(status!) ? (
-              <img src={ImageSrc[status!]} alt={status} />
+            {["Defeated", "Succeeded"].includes(status) ? (
+              <img src={ImageSrc[status]} alt={status} />
             ) : null}
             {quorumError ? "Voting quorum was not reached" : status}
           </ProposalItemStatus>

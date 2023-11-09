@@ -3,10 +3,10 @@ import { NavLink, NavLinkProps, useLocation } from "react-router-dom";
 import { ListItem } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-const ExternalLink = styled('a')`
+const ExternalLink = styled("a")`
   display: flex;
   align-items: center;
-`
+`;
 
 export interface AppMenuItemComponentProps {
   className?: string;
@@ -34,7 +34,11 @@ const AppMenuItemComponent: React.FC<AppMenuItemComponentProps> = (props) => {
 
   if (props.target) {
     return (
-      <ExternalLink target={props.target!} href={props.link!} className={props.className}>
+      <ExternalLink
+        target={props.target}
+        href={props.link as string}
+        className={props.className}
+      >
         {props.children}
       </ExternalLink>
     );
@@ -54,7 +58,7 @@ const AppMenuItemComponent: React.FC<AppMenuItemComponentProps> = (props) => {
             ? `${props.className} active`
             : props.className;
 
-        return <NavLink {...{ ...props, className }} />;
+        return <NavLink ref={ref} {...{ ...props, className }} />;
       })}
       to={link}
     />

@@ -1,19 +1,17 @@
-import Link from '@mui/material/Link';
-import Typography from '@mui/material/Typography';
+import Link from "@mui/material/Link";
+import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
-import {
-  Divider
-} from "@mui/material";
+import { Divider } from "@mui/material";
 
-const Footer = styled(Typography) `
+const Footer = styled(Typography)`
   display: flex;
   align-items: start;
   justify-content: center;
   gap: 4px;
   padding-bottom: 10px;
-`
+`;
 
-const TokensWrapper = styled('div')`
+const TokensWrapper = styled("div")`
   display: flex;
   justify-content: center;
   gap: 10px;
@@ -25,34 +23,45 @@ const TokensWrapper = styled('div')`
       text-decoration: underline;
     }
   }
-`
+`;
 
 export const FooterDivider = styled(Divider)`
-  border: 1px solid #9FADC6;
-`
+  border: 1px solid #9fadc6;
+`;
 
 const Copyright = function Copyright(props: any) {
   return (
     <>
       <TokensWrapper>
-        <a href={"https://explorer.xinfin.network/address/xdc49d3f7543335cf38Fa10889CCFF10207e22110B5"} target={"_blank"}
-           rel="noreferrer">
+        <a
+          href={
+            "https://explorer.xinfin.network/address/xdc49d3f7543335cf38Fa10889CCFF10207e22110B5"
+          }
+          target={"_blank"}
+          rel="noreferrer"
+        >
           FXD
         </a>
-        <FooterDivider orientation="vertical" flexItem/>
-        <a href={"https://explorer.xinfin.network/address/xdc3279dBEfABF3C6ac29d7ff24A6c46645f3F4403c"} target={"_blank"}
-           rel="noreferrer">
+        <FooterDivider orientation="vertical" flexItem />
+        <a
+          href={
+            "https://explorer.xinfin.network/address/xdc3279dBEfABF3C6ac29d7ff24A6c46645f3F4403c"
+          }
+          target={"_blank"}
+          rel="noreferrer"
+        >
           FTHM
         </a>
       </TokensWrapper>
       <Footer color="text.secondary" {...props}>
-        {'Copyright©'}
+        {"Copyright©"}
         <Link color="inherit" href="https://fathom.fi/">
           Fathom App
-        </Link>{new Date().getFullYear()}.
+        </Link>
+        {new Date().getFullYear()}.
       </Footer>
     </>
   );
-}
+};
 
 export default Copyright;

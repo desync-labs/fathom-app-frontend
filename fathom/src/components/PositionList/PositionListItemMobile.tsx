@@ -1,24 +1,18 @@
 import React, { FC } from "react";
 import { PositionListItemProps } from "components/PositionList/PositionListItem";
 import { getTokenLogoURL } from "utils/tokenLogo";
-import {
-  PoolName,
-  TVL
-} from "components/AppComponents/AppBox/AppBox";
+import { PoolName, TVL } from "components/AppComponents/AppBox/AppBox";
 import {
   formatCurrency,
   formatNumber,
   formatNumberPrice,
-  formatPercentage
+  formatPercentage,
 } from "utils/format";
 import { styled } from "@mui/material/styles";
-import {
-  Box,
-  CircularProgress
-} from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import {
   ButtonPrimary,
-  ManagePositionButton
+  ManagePositionButton,
 } from "components/AppComponents/AppButton/AppButton";
 import AppPopover from "components/AppComponents/AppPopover/AppPopover";
 
@@ -77,11 +71,10 @@ const ButtonsWrapper = styled(Box)`
 
 const PositionListItemMobile: FC<PositionListItemProps> = ({
   position,
-  setClosePosition,
   setTopUpPosition,
   approvalPending,
   approveBtn,
-  approve
+  approve,
 }) => {
   return (
     <PositionListItemMobileContainer>
@@ -107,12 +100,16 @@ const PositionListItemMobile: FC<PositionListItemProps> = ({
         </ListValue>
       </ListItemWrapper>
       <ListItemWrapper>
-        <ListLabelWithPopover>Liquidation price
-          <AppPopover id={`liquidation-price-${position.positionId}`}
-                      text={"Liquidation Price is the price of the collateral token when your collateral will be automatically sold to partially or fully repay the loan if your collateral value drops. It's a safety mechanism to ensure that loans are always sufficiently collateralized. Monitoring this price helps prevent the unwanted liquidation of your assets."} /></ListLabelWithPopover>
-        <ListValue>
-          $ {formatPercentage(position.liquidationPrice)}
-        </ListValue>
+        <ListLabelWithPopover>
+          Liquidation price
+          <AppPopover
+            id={`liquidation-price-${position.positionId}`}
+            text={
+              "Liquidation Price is the price of the collateral token when your collateral will be automatically sold to partially or fully repay the loan if your collateral value drops. It's a safety mechanism to ensure that loans are always sufficiently collateralized. Monitoring this price helps prevent the unwanted liquidation of your assets."
+            }
+          />
+        </ListLabelWithPopover>
+        <ListValue>$ {formatPercentage(position.liquidationPrice)}</ListValue>
       </ListItemWrapper>
       <ListItemWrapper>
         <ListLabel>Borrowed</ListLabel>
@@ -121,25 +118,37 @@ const PositionListItemMobile: FC<PositionListItemProps> = ({
       <ListItemWrapper>
         <ListLabel>Collateral</ListLabel>
         <ListValue>
-          {formatNumberPrice(position.lockedCollateral)} {position.collateralPoolName}
+          {formatNumberPrice(position.lockedCollateral)}{" "}
+          {position.collateralPoolName}
         </ListValue>
       </ListItemWrapper>
       <ListItemWrapper>
         <ListLabelWithPopover>
           Safety buffer
-          <AppPopover id={`safety-buffer-${position.positionId}`}
-                      text={<>
-                        Safety Buffer represents the extra collateral value above your borrowed amount. This is
-                        maintained to protect against market volatility and prevent the automatic liquidation of your
-                        assets. The larger your safety buffer, the lower your risk of reaching the liquidation
-                        price. <br /><br />
-                        Safety buffer is calculated from LTV. When you multiply your collateral value with LTV - you
-                        will get how much you can borrow maximum with a 0% safety buffer. For example, if your
-                        collateral value is $100, with 25% LTV, you can maximum borrow 75 FXD, which gives you 0% Safety
-                        Buffer, and your position becomes very risky for liquidation.<br /><br />
-                        We recommend at least 50% Safety Buffer. Using the example above, the recommended amount to
-                        borrow is 75 FXD * 50% = 37.5 FXD.
-                      </>} />
+          <AppPopover
+            id={`safety-buffer-${position.positionId}`}
+            text={
+              <>
+                Safety Buffer represents the extra collateral value above your
+                borrowed amount. This is maintained to protect against market
+                volatility and prevent the automatic liquidation of your assets.
+                The larger your safety buffer, the lower your risk of reaching
+                the liquidation price. <br />
+                <br />
+                Safety buffer is calculated from LTV. When you multiply your
+                collateral value with LTV - you will get how much you can borrow
+                maximum with a 0% safety buffer. For example, if your collateral
+                value is $100, with 25% LTV, you can maximum borrow 75 FXD,
+                which gives you 0% Safety Buffer, and your position becomes very
+                risky for liquidation.
+                <br />
+                <br />
+                We recommend at least 50% Safety Buffer. Using the example
+                above, the recommended amount to borrow is 75 FXD * 50% = 37.5
+                FXD.
+              </>
+            }
+          />
         </ListLabelWithPopover>
         <ListValue>
           {formatNumber(position.safetyBufferInPercent * 100)}%
@@ -155,7 +164,10 @@ const PositionListItemMobile: FC<PositionListItemProps> = ({
             )}
           </ButtonPrimary>
         ) : (
-          <ManagePositionButton size="small" onClick={() => setTopUpPosition(position)}>
+          <ManagePositionButton
+            size="small"
+            onClick={() => setTopUpPosition(position)}
+          >
             Manage position
           </ManagePositionButton>
         )}

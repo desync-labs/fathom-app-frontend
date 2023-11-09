@@ -1,4 +1,4 @@
-import { useStores } from "context/services";
+import { useServices } from "context/services";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import { FXD_POOLS, FXD_POSITIONS, FXD_STATS, FXD_USER } from "apollo/queries";
 import { useCallback, useEffect, useState } from "react";
@@ -8,8 +8,8 @@ import { useMediaQuery, useTheme } from "@mui/material";
 import useConnector from "context/connector";
 
 const useDashboard = () => {
-  const { positionService } = useStores();
-  const { account, library } = useConnector();
+  const { positionService } = useServices();
+  const { account } = useConnector();
   const { syncFXD, prevSyncFxd } = useSyncContext();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -37,11 +37,8 @@ const useDashboard = () => {
   );
 
   const fetchUserStatsAndProxyWallet = useCallback(async () => {
-    const proxyWallet = await positionService.proxyWalletExist(
-      account!,
-      library
-    );
-    setProxyWallet(proxyWallet!);
+    const proxyWallet = await positionService.proxyWalletExist(account);
+    setProxyWallet(proxyWallet);
 
     return loadUserStats({
       variables: {
@@ -56,7 +53,6 @@ const useDashboard = () => {
   }, [
     positionService,
     account,
-    library,
     loadUserStats,
     setPositionsItemsCount,
     setProxyWallet,
@@ -67,12 +63,9 @@ const useDashboard = () => {
     refetchPools();
 
     if (/^0x0+$/.test(proxyWallet)) {
-      const newProxyWallet = await positionService.proxyWalletExist(
-        account!,
-        library
-      );
+      const newProxyWallet = await positionService.proxyWalletExist(account);
 
-      setProxyWallet(newProxyWallet)
+      setProxyWallet(newProxyWallet);
 
       refetchPositions({
         walletAddress: newProxyWallet,
@@ -114,7 +107,6 @@ const useDashboard = () => {
     }
   }, [
     account,
-    library,
     positionService,
     proxyWallet,
     refetchStats,

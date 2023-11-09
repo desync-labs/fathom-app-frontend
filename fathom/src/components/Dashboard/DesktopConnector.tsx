@@ -1,8 +1,5 @@
 import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
-import React, {
-  FC,
-  useCallback
-} from "react";
+import React, { FC, useCallback } from "react";
 import { DialogContent } from "@mui/material";
 import MetamaskSrc from "assets/svg/metamask.svg";
 import WalletConnect from "assets/svg/wallet-connect.svg";

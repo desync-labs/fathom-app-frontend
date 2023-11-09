@@ -95,13 +95,13 @@ const RepayPositionForm: FC<ClosePositionDialogPropsType> = ({
       <ManagePositionRepayTypeWrapper>
         <ManageTypeButton
           sx={{ marginRight: "5px" }}
-          className={`${!!topUpPosition ? "active" : null}`}
+          className={`${topUpPosition ? "active" : null}`}
           onClick={() => !topUpPosition && switchPosition(setTopUpPosition)}
         >
           Top Up Position
         </ManageTypeButton>
         <ManageTypeButton
-          className={`${!!closePosition ? "active" : null}`}
+          className={`${closePosition ? "active" : null}`}
           onClick={() => !closePosition && switchPosition(setClosePosition)}
         >
           Repay Position
@@ -125,7 +125,9 @@ const RepayPositionForm: FC<ClosePositionDialogPropsType> = ({
       <AppFormInputWrapper>
         <AppFormLabel>Repaying</AppFormLabel>
         {balance && (
-          <WalletBalance>Wallet Available: {formatPercentage(balance)} FXD</WalletBalance>
+          <WalletBalance>
+            Wallet Available: {formatPercentage(balance)} FXD
+          </WalletBalance>
         )}
         <AppTextField
           error={balanceError || balanceErrorNotFilled}
@@ -236,7 +238,9 @@ const RepayPositionForm: FC<ClosePositionDialogPropsType> = ({
         )}
         <ButtonPrimary
           onClick={closePositionHandler}
-          disabled={balanceError || balanceErrorNotFilled || disableClosePosition}
+          disabled={
+            balanceError || balanceErrorNotFilled || disableClosePosition
+          }
           isLoading={disableClosePosition}
         >
           {disableClosePosition ? (

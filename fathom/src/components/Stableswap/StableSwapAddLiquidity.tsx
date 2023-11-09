@@ -1,17 +1,11 @@
 import React from "react";
 import BigNumber from "bignumber.js";
-import {
-  CircularProgress,
-  Container,
-  Grid,
-} from "@mui/material";
+import { CircularProgress, Container, Grid } from "@mui/material";
 import useStableSwapAddLiquidity from "hooks/useStableSwapAddLiquidity";
 import { PageHeader } from "components/Dashboard/PageHeader";
 
 import { StableSwapPaper } from "components/AppComponents/AppPaper/AppPaper";
-import {
-  ButtonPrimary
-} from "components/AppComponents/AppButton/AppButton";
+import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
 import {
   StableSwapFormLabel,
   StableSwapInfoContainer,
@@ -19,17 +13,11 @@ import {
   StableSwapInputWrapper,
   StableSwapMaxButton,
   StableSwapTextField,
-  SwapButton
+  SwapButton,
 } from "components/Stableswap/StableSwap";
-import {
-  InfoLabel,
-  InfoValue
-} from "components/AppComponents/AppBox/AppBox";
+import { InfoLabel, InfoValue } from "components/AppComponents/AppBox/AppBox";
 import InfoIcon from "@mui/icons-material/Info";
-import {
-  formatPercentage
-} from "utils/format";
-
+import { formatPercentage } from "utils/format";
 
 const StableSwapAddLiquidity = () => {
   const {
@@ -59,9 +47,7 @@ const StableSwapAddLiquidity = () => {
         <PageHeader
           addPadding={true}
           title={"Add Liquidity"}
-          description={
-            "Add Liquidity to Stable Swap."
-          }
+          description={"Add Liquidity to Stable Swap."}
         />
         <Grid item xs={12} sm={10} md={8} lg={6} sx={{ margin: "0 auto" }}>
           <StableSwapPaper>
@@ -101,24 +87,35 @@ const StableSwapAddLiquidity = () => {
             <StableSwapInfoContainer>
               <StableSwapInfoWrapper>
                 <InfoLabel>xUSDT Wallet Balance</InfoLabel>
-                <InfoValue>{
-                  formatPercentage(
-                    BigNumber(stableBalance).dividedBy(10 ** stableDecimals).toNumber()
-                  )} xUSDT</InfoValue>
+                <InfoValue>
+                  {formatPercentage(
+                    BigNumber(stableBalance)
+                      .dividedBy(10 ** stableDecimals)
+                      .toNumber()
+                  )}{" "}
+                  xUSDT
+                </InfoValue>
               </StableSwapInfoWrapper>
               <StableSwapInfoWrapper>
                 <InfoLabel>FXD Wallet Balance</InfoLabel>
-                <InfoValue>{
-                  formatPercentage(
-                    BigNumber(fxdBalance).dividedBy(10 ** fxdDecimals).toNumber()
-                  )} FXD</InfoValue>
+                <InfoValue>
+                  {formatPercentage(
+                    BigNumber(fxdBalance)
+                      .dividedBy(10 ** fxdDecimals)
+                      .toNumber()
+                  )}{" "}
+                  FXD
+                </InfoValue>
               </StableSwapInfoWrapper>
               <StableSwapInfoWrapper>
                 <InfoLabel>Total Liquidity</InfoLabel>
-                <InfoValue>{
-                  formatPercentage(
-                    BigNumber(totalLiquidity).dividedBy(10 ** 18).toNumber()
-                  )}</InfoValue>
+                <InfoValue>
+                  {formatPercentage(
+                    BigNumber(totalLiquidity)
+                      .dividedBy(10 ** 18)
+                      .toNumber()
+                  )}
+                </InfoValue>
               </StableSwapInfoWrapper>
             </StableSwapInfoContainer>
 
@@ -127,7 +124,11 @@ const StableSwapAddLiquidity = () => {
               disabled={addLiquidityPending || !inputValue}
               onClick={handleAddLiquidity}
             >
-              {addLiquidityPending ? <CircularProgress size={30} /> : "Add Liquidity"}
+              {addLiquidityPending ? (
+                <CircularProgress size={30} />
+              ) : (
+                "Add Liquidity"
+              )}
             </SwapButton>
           </StableSwapPaper>
         </Grid>

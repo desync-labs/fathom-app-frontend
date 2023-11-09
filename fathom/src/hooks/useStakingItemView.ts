@@ -2,8 +2,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import useStakingContext from "context/staking";
 import { formatNumber } from "utils/format";
 import { YEAR_IN_SECONDS } from "helpers/Constants";
-import ILockPosition from "services/interfaces/models/ILockPosition";
-import { useStores } from "context/services";
+import { ILockPosition } from "fathom-contracts-helper";
+import { useServices } from "context/services";
 import useConnector from "context/connector";
 
 const useStakingItemView = (lockPosition: ILockPosition) => {
@@ -11,15 +11,15 @@ const useStakingItemView = (lockPosition: ILockPosition) => {
   const { processFlow, isUnlockable } = useStakingContext();
   const [timer, setTimer] = useState<ReturnType<typeof setTimeout> | null>();
   const { account, library } = useConnector();
-  const { stakingService } = useStores();
+  const { stakingService } = useServices();
   const [rewardsAvailable, setRewardsAvailable] = useState<number>(
     lockPosition.rewardsAvailable
   );
 
   const fetchRewards = useCallback(() => {
     !!account &&
-    stakingService
-        .getStreamClaimableAmountPerLock(0, account, lockPosition.lockId, library)
+      stakingService
+        .getStreamClaimableAmountPerLock(0, account, lockPosition.lockId)
         .then((claimRewards) => {
           setRewardsAvailable(claimRewards);
         });

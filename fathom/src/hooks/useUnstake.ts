@@ -1,5 +1,5 @@
 import { ChangeEvent, useCallback, useEffect, useMemo, useState } from "react";
-import ILockPosition from "services/interfaces/models/ILockPosition";
+import { ILockPosition } from "fathom-contracts-helper";
 import useStakingContext from "context/staking";
 import { UnStakeDialogProps } from "components/Staking/Dialog/UnstakeDialog";
 
@@ -51,10 +51,8 @@ const useUnstake = (
   }, [totalBalance, setUnStakeAmount]);
 
   const unStakeHandler = useCallback(async () => {
-    try {
-      await handleUnlock(lockPosition!.lockId, unStakeAmount);
-      onFinish(unStakeAmount);
-    } catch (e) {}
+    await handleUnlock(lockPosition?.lockId as number, unStakeAmount);
+    onFinish(unStakeAmount);
   }, [lockPosition, handleUnlock, onFinish, unStakeAmount]);
 
   return {

@@ -4,7 +4,7 @@ import {
   RightNetwork,
   WrongNetwork,
   WrongNetworkMobile,
-  WrongNetworkMobileIcon
+  WrongNetworkMobileIcon,
 } from "components/AppComponents/AppBox/AppBox";
 import {
   XDC_CHAIN_IDS,
@@ -25,15 +25,11 @@ import React, {
   useCallback,
   useMemo,
   useRef,
-  useState
+  useState,
 } from "react";
 import { styled } from "@mui/material/styles";
 import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
-import {
-  Box,
-  useMediaQuery,
-  useTheme
-} from "@mui/material";
+import { Box, useMediaQuery, useTheme } from "@mui/material";
 import useConnector from "context/connector";
 
 const NetworkPaper = styled(AppPaper)`
@@ -81,11 +77,15 @@ const Web3Status = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  let button: null|ReactElement = null;
+  let button: null | ReactElement = null;
 
-  const options = useMemo(() => Object.entries(NETWORK_LABELS).filter(([filterChainId]) => {
-    return Number(filterChainId) !== chainId;
-  }), [chainId]);
+  const options = useMemo(
+    () =>
+      Object.entries(NETWORK_LABELS).filter(([filterChainId]) => {
+        return Number(filterChainId) !== chainId;
+      }),
+    [chainId]
+  );
 
   const requestChangeNetwork = useCallback(
     async (chainId: string) => {
@@ -93,9 +93,9 @@ const Web3Status = () => {
       if (window.ethereum) {
         try {
           // @ts-ignore
-          await window!.ethereum?.request({
+          await window.ethereum?.request({
             method: "wallet_switchEthereumChain",
-            params: [{ chainId: Xdc3.utils.toHex(chainId) }]
+            params: [{ chainId: Xdc3.utils.toHex(chainId) }],
           });
         } catch (err: any) {
           if (err.code === 4902) {
@@ -103,7 +103,7 @@ const Web3Status = () => {
             await window.ethereum.request({
               method: "wallet_addEthereumChain",
               // @ts-ignore
-              params: [XDC_NETWORK_SETTINGS[chainId]]
+              params: [XDC_NETWORK_SETTINGS[chainId]],
             });
           }
         }
@@ -113,11 +113,13 @@ const Web3Status = () => {
   );
 
   const showNetworkSelector =
-    (chainId || error instanceof UnsupportedChainIdError) && options.length && isMetamask;
+    (chainId || error instanceof UnsupportedChainIdError) &&
+    options.length &&
+    isMetamask;
 
-  const isError = error || (chainId && !XDC_CHAIN_IDS.includes(chainId))
+  const isError = error || (chainId && !XDC_CHAIN_IDS.includes(chainId));
 
-  if (XDC_CHAIN_IDS.includes(chainId!)) {
+  if (XDC_CHAIN_IDS.includes(chainId)) {
     button = (
       <RightNetwork onClick={() => setOpen(!open)}>
         <>
@@ -134,20 +136,28 @@ const Web3Status = () => {
         {showNetworkSelector ? <ArrowDropDownIcon /> : null}
       </WrongNetworkMobile>
     ) : (
-      <WrongNetwork onClick={() => setOpen(!open)} sx={{ padding: showNetworkSelector ? '4px 12px' : '6px 16px' }}>
+      <WrongNetwork
+        onClick={() => setOpen(!open)}
+        sx={{ padding: showNetworkSelector ? "4px 12px" : "6px 16px" }}
+      >
         <>
-          {error instanceof UnsupportedChainIdError || !XDC_CHAIN_IDS.includes(chainId)
+          {error instanceof UnsupportedChainIdError ||
+          !XDC_CHAIN_IDS.includes(chainId)
             ? "Wrong Network"
             : !account
-              ? "Wallet Request Permissions Error"
-              : "Error"}
+            ? "Wallet Request Permissions Error"
+            : "Error"}
           {showNetworkSelector ? <ArrowDropDownIcon /> : null}
         </>
       </WrongNetwork>
     );
   }
 
-  return (chainId || error instanceof UnsupportedChainIdError || !XDC_CHAIN_IDS.includes(chainId)) && options.length && isMetamask ? (
+  return (chainId ||
+    error instanceof UnsupportedChainIdError ||
+    !XDC_CHAIN_IDS.includes(chainId)) &&
+    options.length &&
+    isMetamask ? (
     <>
       <ButtonGroup
         variant="contained"
@@ -158,7 +168,7 @@ const Web3Status = () => {
       </ButtonGroup>
       <Popper
         sx={{
-          zIndex: 1
+          zIndex: 1,
         }}
         open={open}
         anchorEl={anchorRef.current}
@@ -166,11 +176,11 @@ const Web3Status = () => {
         transition
         disablePortal
       >
-        {({ TransitionProps, placement }) => (
+        {({ TransitionProps }) => (
           <Grow
             {...TransitionProps}
             style={{
-              transformOrigin: "center bottom"
+              transformOrigin: "center bottom",
             }}
           >
             <NetworkPaper>
@@ -191,11 +201,11 @@ const Web3Status = () => {
         )}
       </Popper>
     </>
-  ) : (
-    button ? <EmptyButtonWrapper className={`empty-box ${ isError ? 'error' : '' }`}>
+  ) : button ? (
+    <EmptyButtonWrapper className={`empty-box ${isError ? "error" : ""}`}>
       {button}
-    </EmptyButtonWrapper> : null
-  );
+    </EmptyButtonWrapper>
+  ) : null;
 };
 
 export default Web3Status;

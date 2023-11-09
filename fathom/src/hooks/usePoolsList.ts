@@ -1,11 +1,8 @@
 import { useCallback, useState } from "react";
-import ICollateralPool from "services/interfaces/models/ICollateralPool";
+import { ICollateralPool } from "fathom-contracts-helper";
 import { useQuery } from "@apollo/client";
 import { FXD_POOLS } from "apollo/queries";
-import {
-  useMediaQuery,
-  useTheme
-} from "@mui/material";
+import { useMediaQuery, useTheme } from "@mui/material";
 
 const usePoolsList = () => {
   const [selectedPool, setSelectedPool] = useState<ICollateralPool>();
@@ -26,8 +23,7 @@ const usePoolsList = () => {
     pools:
       !loading && data && data.pools
         ? data.pools.filter(
-            (pool: ICollateralPool) =>
-              pool.poolName.toUpperCase() === "XDC"
+            (pool: ICollateralPool) => pool.poolName.toUpperCase() === "XDC"
           )
         : [],
     selectedPool,

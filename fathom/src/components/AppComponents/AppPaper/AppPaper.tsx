@@ -2,7 +2,7 @@ import { Paper as MuiPaper } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 export const AppPaper = styled(MuiPaper)`
-  background: #1D2D49;
+  background: #1d2d49;
   border: 1px solid #101d32;
   border-radius: 8px;
 `;

@@ -1,7 +1,4 @@
-import {
-  useEffect,
-  useState
-} from "react";
+import { useEffect, useState } from "react";
 
 const useShowText = (open: boolean) => {
   const [showText, setShowText] = useState<boolean>(true);

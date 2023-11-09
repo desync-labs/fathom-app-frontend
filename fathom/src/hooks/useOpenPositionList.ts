@@ -4,37 +4,26 @@ import {
   useState,
   ChangeEvent,
   Dispatch,
-  useMemo
+  useMemo,
 } from "react";
 
-import { useStores } from "context/services";
-import IOpenPosition from "services/interfaces/models/IOpenPosition";
-import ICollateralPool from "services/interfaces/models/ICollateralPool";
-
-import {
-  useLazyQuery,
-  useQuery
-} from "@apollo/client";
-import {
-  FXD_POOLS,
-  FXD_POSITIONS
-} from "apollo/queries";
+import { useServices } from "context/services";
+import { IOpenPosition, ICollateralPool } from "fathom-contracts-helper";
+import { useLazyQuery, useQuery } from "@apollo/client";
+import { FXD_POOLS, FXD_POSITIONS } from "apollo/queries";
 
 import { COUNT_PER_PAGE } from "helpers/Constants";
 import useConnector from "context/connector";
 import BigNumber from "bignumber.js";
 import debounce from "lodash.debounce";
-import {
-  useMediaQuery,
-  useTheme
-} from "@mui/material";
+import { useMediaQuery, useTheme } from "@mui/material";
 
 const useOpenPositionList = (
   setPositionCurrentPage: Dispatch<number>,
   proxyWallet: string
 ) => {
-  const { positionService } = useStores();
-  const { account, chainId, library } = useConnector()!;
+  const { positionService } = useServices();
+  const { account, chainId } = useConnector();
   const [formattedPositions, setFormattedPositions] = useState<IOpenPosition[]>(
     []
   );
@@ -45,13 +34,13 @@ const useOpenPositionList = (
   const [loadPositions, { loading, data, fetchMore, called }] = useLazyQuery(
     FXD_POSITIONS,
     {
-      context: { clientName: "stable" }
+      context: { clientName: "stable" },
     }
   );
 
   const { data: poolsData } = useQuery(FXD_POOLS, {
     context: { clientName: "stable" },
-    fetchPolicy: "cache-first"
+    fetchPolicy: "cache-first",
   });
 
   const [closePosition, setClosePosition] = useState<IOpenPosition>();
@@ -60,15 +49,21 @@ const useOpenPositionList = (
   const [approveBtn, setApproveBtn] = useState<boolean>(true);
   const [approvalPending, setApprovalPending] = useState<boolean>(false);
 
-  const approvalStatus = useCallback(async (formattedPositions: IOpenPosition[]) => {
-    const maxPositionDebtValue = Math.max(...formattedPositions.map((position: IOpenPosition)  => position.debtValue))
-    const approved = await positionService.approvalStatusStableCoin(
-      maxPositionDebtValue,
-      account,
-      library,
-    );
-    approved ? setApproveBtn(false) : setApproveBtn(true);
-  }, [positionService, account, library]);
+  const approvalStatus = useCallback(
+    async (formattedPositions: IOpenPosition[]) => {
+      const maxPositionDebtValue = Math.max(
+        ...formattedPositions.map(
+          (position: IOpenPosition) => position.debtValue
+        )
+      );
+      const approved = await positionService.approvalStatusStableCoin(
+        maxPositionDebtValue,
+        account
+      );
+      approved ? setApproveBtn(false) : setApproveBtn(true);
+    },
+    [positionService, account]
+  );
 
   useEffect(() => {
     if (account && formattedPositions.length) {
@@ -91,23 +86,23 @@ const useOpenPositionList = (
       variables: {
         first: COUNT_PER_PAGE,
         skip: 0,
-        walletAddress: proxyWallet
+        walletAddress: proxyWallet,
       },
-      fetchPolicy: "network-only"
+      fetchPolicy: "network-only",
     });
   }, [chainId, proxyWallet, called, loadPositions]);
 
   const approve = useCallback(async () => {
     setApprovalPending(true);
     try {
-      await positionService.approveStableCoin(account, library);
+      await positionService.approveStableCoin(account);
       setApproveBtn(false);
     } catch (e) {
       setApproveBtn(true);
     }
 
     setApprovalPending(false);
-  }, [positionService, account, library, setApprovalPending, setApproveBtn]);
+  }, [positionService, account, setApprovalPending, setApproveBtn]);
 
   const handlePageChange = useCallback(
     (event: ChangeEvent<unknown>, page: number) => {
@@ -115,8 +110,8 @@ const useOpenPositionList = (
         variables: {
           first: COUNT_PER_PAGE,
           skip: (page - 1) * COUNT_PER_PAGE,
-          walletAddress: proxyWallet
-        }
+          walletAddress: proxyWallet,
+        },
       });
       setPositionCurrentPage(page);
     },
@@ -134,8 +129,7 @@ const useOpenPositionList = (
         const promises = filteredPosition.map((position: IOpenPosition) =>
           positionService.getDebtValue(
             position.debtShare,
-            position.collateralPool,
-            library
+            position.collateralPool
           )
         );
 
@@ -146,14 +140,14 @@ const useOpenPositionList = (
                 (pool: ICollateralPool) => pool.id === position.collateralPool
               );
 
-              position.debtValue = debtValues[index];
+              const debtValue = debtValues[index];
 
-              position.liquidationPrice = BigNumber(position.debtValue)
+              const liquidationPrice = BigNumber(position.debtValue)
                 .dividedBy(position.lockedCollateral)
                 .multipliedBy(findPool.liquidationRatio)
                 .toNumber();
 
-              position.ltv = BigNumber(position.debtValue)
+              const ltv = BigNumber(position.debtValue)
                 .dividedBy(
                   BigNumber(findPool.rawPrice).multipliedBy(
                     position.lockedCollateral
@@ -161,7 +155,12 @@ const useOpenPositionList = (
                 )
                 .toNumber();
 
-              return position;
+              return {
+                ...position,
+                debtValue,
+                liquidationPrice,
+                ltv,
+              };
             }
           );
 
@@ -169,7 +168,7 @@ const useOpenPositionList = (
           setIsLoading(false);
         });
       }, 300),
-    [library, positionService, setFormattedPositions, setIsLoading]
+    [positionService, setFormattedPositions, setIsLoading]
   );
 
   useEffect(() => {
@@ -202,7 +201,7 @@ const useOpenPositionList = (
     handlePageChange,
     setTopUpPosition,
     setClosePosition,
-    onClose
+    onClose,
   };
 };
 

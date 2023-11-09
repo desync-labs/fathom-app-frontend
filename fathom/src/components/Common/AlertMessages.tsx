@@ -19,8 +19,8 @@ const AlertMessage = styled(Alert, {
 `;
 
 type AlertMessagesPropsType = {
-  scroll: number
-}
+  scroll: number;
+};
 
 const AlertMessages: FC<AlertMessagesPropsType> = ({ scroll }) => {
   const {

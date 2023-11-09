@@ -1,40 +1,51 @@
-import { ChangeEvent, createContext, FC, ReactElement, useContext, Dispatch, SetStateAction } from "react";
-import useStakingView, { ActionType, DialogActions } from "hooks/useStakingView";
+import {
+  ChangeEvent,
+  createContext,
+  FC,
+  ReactElement,
+  useContext,
+  Dispatch,
+  SetStateAction,
+} from "react";
+import useStakingView, {
+  ActionType,
+  DialogActions,
+} from "hooks/useStakingView";
 import { ChainId } from "connectors/networks";
-import ILockPosition from "services/interfaces/models/ILockPosition";
+import { ILockPosition } from "fathom-contracts-helper";
 
 type StakingProviderType = {
   children: ReactElement;
 };
 
 type UseStakingReturnType = {
-  isMobile: boolean,
-  account: string | null | undefined,
-  chainId: ChainId,
-  action: ActionType | undefined,
-  isLoading: boolean,
-  isUnlockable: (remainingTime: number) => boolean,
-  withdrawAll: (callback: Function) => Promise<void>,
-  claimRewards: (callback: Function) => Promise<void>,
-  handleEarlyUnstake: (lockId: number) => Promise<number | Error>,
-  handleUnlock: (lockId: number, amount: number) => Promise<number | Error>,
-  unstake: ILockPosition | null,
-  earlyUnstake: ILockPosition | null,
-  dialogAction: DialogActions,
-  setDialogAction: Dispatch<SetStateAction<DialogActions>>,
-  totalRewards: number,
-  previousTotalRewards: number,
-  setUnstake: Dispatch<SetStateAction<ILockPosition | null>>,
-  setEarlyUnstake: Dispatch<SetStateAction<ILockPosition | null>>,
-  onClose: () => void,
-  processFlow: (action: string, position?: ILockPosition) => void,
-  staker: any,
-  previousStaker: any,
-  lockPositions: ILockPosition[],
-  protocolStatsInfo: any,
-  itemCount: number,
-  currentPage: number,
-  handlePageChange: (event: ChangeEvent<unknown>, page: number) => void,
+  isMobile: boolean;
+  account: string | null | undefined;
+  chainId: ChainId;
+  action: ActionType | undefined;
+  isLoading: boolean;
+  isUnlockable: (remainingTime: number) => boolean;
+  withdrawAll: (callback: Function) => Promise<void>;
+  claimRewards: (callback: Function) => Promise<void>;
+  handleEarlyUnstake: (lockId: number) => Promise<number | Error>;
+  handleUnlock: (lockId: number, amount: number) => Promise<number | Error>;
+  unstake: ILockPosition | null;
+  earlyUnstake: ILockPosition | null;
+  dialogAction: DialogActions;
+  setDialogAction: Dispatch<SetStateAction<DialogActions>>;
+  totalRewards: number;
+  previousTotalRewards: number;
+  setUnstake: Dispatch<SetStateAction<ILockPosition | null>>;
+  setEarlyUnstake: Dispatch<SetStateAction<ILockPosition | null>>;
+  onClose: () => void;
+  processFlow: (action: string, position?: ILockPosition) => void;
+  staker: any;
+  previousStaker: any;
+  lockPositions: ILockPosition[];
+  protocolStatsInfo: any;
+  itemCount: number;
+  currentPage: number;
+  handlePageChange: (event: ChangeEvent<unknown>, page: number) => void;
 };
 
 // @ts-ignore
