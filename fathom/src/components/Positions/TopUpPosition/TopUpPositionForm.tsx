@@ -296,14 +296,14 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
             <Typography>
               Providing 0 collateral you are making your position unsafer.
             </Typography>
-          </WarningBox>)}
-        {errorAtLeastOneField &&
+          </WarningBox>
+        )}
+        {errorAtLeastOneField && (
           <ErrorBox>
             <InfoIcon />
-            <Typography>
-              Please fill at least one field
-            </Typography>
-          </ErrorBox>}
+            <Typography>Please fill at least one field</Typography>
+          </ErrorBox>
+        )}
         <ButtonsWrapper>
           {!isMobile && (
             <ButtonSecondary onClick={onClose}>Close</ButtonSecondary>
