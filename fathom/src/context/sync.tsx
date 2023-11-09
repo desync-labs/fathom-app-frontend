@@ -45,8 +45,8 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
   const { data: daoData, refetch: refetchDao } = useQuery(HEALTH, {
     variables: {
       name: "dao-subgraph",
-    }
-  })
+    },
+  });
 
   const values = useMemo(() => {
     return {
@@ -101,7 +101,7 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
 
     return () => {
       clearInterval(interval);
-    }
+    };
   }, [
     lastTransactionBlock,
     fxdData,
@@ -145,7 +145,7 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
 
     return () => {
       clearInterval(interval);
-    }
+    };
   }, [
     lastTransactionBlock,
     daoData,

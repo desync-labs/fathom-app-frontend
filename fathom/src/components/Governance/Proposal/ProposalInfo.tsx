@@ -1,5 +1,5 @@
 import React from "react";
-import Xdc3 from 'xdc3';
+import Xdc3 from "xdc3";
 import { Box, Grid, Typography } from "@mui/material";
 import { secondsToTime } from "utils/secondsToTime";
 import { getAccountUrl } from "utils/explorer";
@@ -50,12 +50,12 @@ const ActionWrapper = styled(Box)`
   margin-bottom: 10px;
 `;
 
-const CallDataWrapper = styled('div')`
+const CallDataWrapper = styled("div")`
   overflow-wrap: break-word;
   word-wrap: break-word;
   -ms-word-break: break-word;
   word-break: break-word;
-`
+`;
 
 const TimeslotInProgress = styled(Box, {
   shouldForwardProp: (prop) => prop !== "lessTimeLeft" && prop !== "isDone",

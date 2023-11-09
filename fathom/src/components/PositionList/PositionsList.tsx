@@ -1,9 +1,4 @@
-import React, {
-  Dispatch,
-  FC,
-  useMemo,
-  memo
-} from "react";
+import React, { Dispatch, FC, useMemo, memo } from "react";
 import {
   Box,
   CircularProgress,
@@ -12,17 +7,17 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  Pagination
+  Pagination,
 } from "@mui/material";
-import IOpenPosition from "services/interfaces/models/IOpenPosition";
+import { IOpenPosition } from "fathom-contracts-helper";
 import ClosePositionDialog from "components/Positions/RepayPositionDialog";
 import {
   AppTableHeaderRow,
-  AppTableCellWithPopover
+  AppTableCellWithPopover,
 } from "components/AppComponents/AppTable/AppTable";
 import {
   TitleSecondary,
-  NoResults
+  NoResults,
 } from "components/AppComponents/AppBox/AppBox";
 import PositionListItem from "components/PositionList/PositionListItem";
 import PositionListItemMobile from "components/PositionList/PositionListItemMobile";
@@ -61,7 +56,7 @@ const PositionsList: FC<PositionsListProps> = ({
   proxyWallet,
   positionsItemsCount,
   positionCurrentPage,
-  setPositionCurrentPage
+  setPositionCurrentPage,
 }) => {
   const {
     isMobile,
@@ -76,7 +71,7 @@ const PositionsList: FC<PositionsListProps> = ({
     handlePageChange,
     onClose,
     setClosePosition,
-    setTopUpPosition
+    setTopUpPosition,
   } = useOpenPositionList(setPositionCurrentPage, proxyWallet);
 
   return (
@@ -104,25 +99,52 @@ const PositionsList: FC<PositionsListProps> = ({
                     <TableHead>
                       <AppTableHeaderRow
                         sx={{
-                          th: { textAlign: "left", paddingLeft: "10px" }
+                          th: { textAlign: "left", paddingLeft: "10px" },
                         }}
                       >
                         <TableCell>Id</TableCell>
                         <TableCell>Asset</TableCell>
-                        <AppTableCellWithPopover>Liquidation price
-                          <AppPopover id={"liquidation-price"}
-                                      text={"Liquidation Price is the price of the collateral token when your collateral will be automatically sold to partially or fully repay the loan if your collateral value drops. It's a safety mechanism to ensure that loans are always sufficiently collateralized. Monitoring this price helps prevent the unwanted liquidation of your assets."} />
+                        <AppTableCellWithPopover>
+                          Liquidation price
+                          <AppPopover
+                            id={"liquidation-price"}
+                            text={
+                              "Liquidation Price is the price of the collateral token when your collateral will be automatically sold to partially or fully repay the loan if your collateral value drops. It's a safety mechanism to ensure that loans are always sufficiently collateralized. Monitoring this price helps prevent the unwanted liquidation of your assets."
+                            }
+                          />
                         </AppTableCellWithPopover>
                         <TableCell>Borrowed</TableCell>
                         <TableCell>Collateral</TableCell>
                         <AppTableCellWithPopover>
                           Safety buffer
-                          <AppPopover id={"safety-buffer"}
-                                      text={<>
-                                        Safety Buffer represents the extra collateral value above your borrowed amount. This is maintained to protect against market volatility and prevent the automatic liquidation of your assets. The larger your safety buffer, the lower your risk of reaching the liquidation price. <br /><br />
-                                        Safety buffer is calculated from LTV. When you multiply your collateral value with LTV - you will get how much you can borrow maximum with a 0% safety buffer. For example, if your collateral value is $100, with 25% LTV, you can maximum borrow 75 FXD, which gives you 0% Safety Buffer, and your position becomes very risky for liquidation.<br /><br/>
-                                        We recommend at least 50% Safety Buffer. Using the example above, the recommended amount to borrow is 75 FXD * 50% = 37.5 FXD.
-                                      </>} />
+                          <AppPopover
+                            id={"safety-buffer"}
+                            text={
+                              <>
+                                Safety Buffer represents the extra collateral
+                                value above your borrowed amount. This is
+                                maintained to protect against market volatility
+                                and prevent the automatic liquidation of your
+                                assets. The larger your safety buffer, the lower
+                                your risk of reaching the liquidation price.{" "}
+                                <br />
+                                <br />
+                                Safety buffer is calculated from LTV. When you
+                                multiply your collateral value with LTV - you
+                                will get how much you can borrow maximum with a
+                                0% safety buffer. For example, if your
+                                collateral value is $100, with 25% LTV, you can
+                                maximum borrow 75 FXD, which gives you 0% Safety
+                                Buffer, and your position becomes very risky for
+                                liquidation.
+                                <br />
+                                <br />
+                                We recommend at least 50% Safety Buffer. Using
+                                the example above, the recommended amount to
+                                borrow is 75 FXD * 50% = 37.5 FXD.
+                              </>
+                            }
+                          />
                         </AppTableCellWithPopover>
                         <TableCell></TableCell>
                       </AppTableHeaderRow>
@@ -144,9 +166,7 @@ const PositionsList: FC<PositionsListProps> = ({
                 </TableContainer>
                 <PaginationWrapper>
                   <Pagination
-                    count={Math.ceil(
-                      positionsItemsCount / COUNT_PER_PAGE
-                    )}
+                    count={Math.ceil(positionsItemsCount / COUNT_PER_PAGE)}
                     page={positionCurrentPage}
                     onChange={handlePageChange}
                   />
@@ -168,9 +188,7 @@ const PositionsList: FC<PositionsListProps> = ({
                 ))}
                 <PaginationWrapper>
                   <Pagination
-                    count={Math.ceil(
-                      positionsItemsCount / COUNT_PER_PAGE
-                    )}
+                    count={Math.ceil(positionsItemsCount / COUNT_PER_PAGE)}
                     page={positionCurrentPage}
                     onChange={handlePageChange}
                   />
@@ -190,7 +208,7 @@ const PositionsList: FC<PositionsListProps> = ({
           positionsItemsCount,
           isMobile,
           setClosePosition,
-          setTopUpPosition
+          setTopUpPosition,
         ]
       )}
       {closePosition || topUpPosition ? (

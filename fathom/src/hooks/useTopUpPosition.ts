@@ -1,29 +1,20 @@
-import {
-  Dispatch,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState
-} from "react";
+import { Dispatch, useCallback, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useStores } from "context/services";
+import { useServices } from "context/services";
 import debounce from "lodash.debounce";
 import BigNumber from "bignumber.js";
 import { OpenPositionContextType } from "context/openPosition";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
-import IOpenPosition from "services/interfaces/models/IOpenPosition";
+import { IOpenPosition } from "fathom-contracts-helper";
 import { DANGER_SAFETY_BUFFER } from "helpers/Constants";
-import {
-  useMediaQuery,
-  useTheme
-} from "@mui/material";
+import { useMediaQuery, useTheme } from "@mui/material";
 
 const defaultValues = {
   collateral: "",
   fathomToken: "",
   safeMax: 0,
-  dangerSafeMax: 0
+  dangerSafeMax: 0,
 };
 
 const useTopUpPosition = (
@@ -31,13 +22,13 @@ const useTopUpPosition = (
   onClose: OpenPositionContextType["onClose"],
   position: IOpenPosition
 ) => {
-  const { poolService, positionService } = useStores();
-  const { account, chainId, library } = useConnector()!;
+  const { poolService, positionService } = useServices();
+  const { account, chainId, library } = useConnector();
 
   const { handleSubmit, watch, control, setValue, trigger } = useForm({
     defaultValues,
     reValidateMode: "onChange",
-    mode: "onChange"
+    mode: "onChange",
   });
 
   const collateral = watch("collateral");
@@ -57,7 +48,8 @@ const useTopUpPosition = (
     string | null
   >();
   const [maxBorrowAmount, setMaxBorrowAmount] = useState<string>("");
-  const [errorAtLeastOneField, setErrorAtLeastOneField] = useState<boolean>(false);
+  const [errorAtLeastOneField, setErrorAtLeastOneField] =
+    useState<boolean>(false);
 
   const { setLastTransactionBlock } = useSyncContext();
 
@@ -91,29 +83,26 @@ const useTopUpPosition = (
   const approvalStatus = useMemo(
     () =>
       debounce(async (collateral: string) => {
-        let approved = await positionService.approvalStatus(
+        const approved = await positionService.approvalStatus(
           account,
-          collateralTokenAddress!,
-          collateral,
-          library
+          collateralTokenAddress as string,
+          collateral
         );
         approved ? setApproveBtn(false) : setApproveBtn(true);
       }, 1000),
-    [positionService, collateralTokenAddress, account, library]
+    [positionService, collateralTokenAddress, account]
   );
 
   const getDebtValue = useCallback(async () => {
     const debtValue = await positionService.getDebtValue(
       position.debtShare,
-      position.collateralPool,
-      library
+      position.collateralPool
     );
 
-    const liquidationPrice =
-      BigNumber(debtValue)
-        .dividedBy(position.lockedCollateral)
-        .multipliedBy(pool.liquidationRatio)
-        .toString();
+    const liquidationPrice = BigNumber(debtValue)
+      .dividedBy(position.lockedCollateral)
+      .multipliedBy(pool.liquidationRatio)
+      .toString();
 
     const ltv = BigNumber(debtValue)
       .dividedBy(
@@ -127,13 +116,16 @@ const useTopUpPosition = (
     const priceOfCollateralFromDex =
       pool.poolName.toUpperCase() === "XDC"
         ? BigNumber(pool.collateralLastPrice)
-          .multipliedBy(10 ** 18)
-          .toNumber()
-        : await poolService.getDexPrice(collateralTokenAddress!, library);
+            .multipliedBy(10 ** 18)
+            .toNumber()
+        : await poolService.getDexPrice(collateralTokenAddress as string);
 
     const overCollateral = BigNumber(totalCollateral)
       .multipliedBy(priceOfCollateralFromDex)
-      .dividedBy(10 ** 18).dividedBy(totalFathomToken).multipliedBy(100).toNumber();
+      .dividedBy(10 ** 18)
+      .dividedBy(totalFathomToken)
+      .multipliedBy(100)
+      .toNumber();
 
     setOverCollateral(overCollateral);
 
@@ -148,18 +140,17 @@ const useTopUpPosition = (
     pool,
     position,
     positionService,
-    library,
     setDebtValue,
     setLiquidationPrice,
     setLtv,
-    setOverCollateral
+    setOverCollateral,
   ]);
 
   const getPositionDebtCeiling = useCallback(() => {
-    positionService.getPositionDebtCeiling(pool.id, library).then((debtCeiling) => {
+    positionService.getPositionDebtCeiling(pool.id).then((debtCeiling) => {
       setMaxBorrowAmount(debtCeiling);
     });
-  }, [positionService, pool, library, setMaxBorrowAmount]);
+  }, [positionService, pool, setMaxBorrowAmount]);
 
   const getCollateralTokenAndBalance = useCallback(async () => {
     if (pool.poolName.toUpperCase() === "XDC") {
@@ -168,8 +159,7 @@ const useTopUpPosition = (
       setBalance(Number(balance));
     } else {
       const tokenAddress = await poolService.getCollateralTokenAddress(
-        pool.tokenAdapterAddress,
-        library
+        pool.tokenAdapterAddress
       );
 
       console.log("Token Adapter Address", pool.tokenAdapterAddress);
@@ -177,14 +167,13 @@ const useTopUpPosition = (
 
       const balance = await poolService.getUserTokenBalance(
         account,
-        tokenAddress!,
-        library
+        tokenAddress
       );
 
       setCollateralTokenAddress(tokenAddress);
       setBalance(balance);
     }
-  }, [poolService, account, pool, library, setCollateralTokenAddress]);
+  }, [poolService, account, pool, setCollateralTokenAddress]);
 
   const handleUpdates = useMemo(
     () =>
@@ -213,7 +202,9 @@ const useTopUpPosition = (
             BigNumber(totalCollateralAmount)
               .multipliedBy(
                 BigNumber(priceWithSafetyMargin)
-                  .multipliedBy(BigNumber(100).minus(DANGER_SAFETY_BUFFER * 100))
+                  .multipliedBy(
+                    BigNumber(100).minus(DANGER_SAFETY_BUFFER * 100)
+                  )
                   .dividedBy(100)
               )
               .minus(debtValue)
@@ -226,13 +217,13 @@ const useTopUpPosition = (
           const collateralAvailableToWithdraw =
             Number(priceWithSafetyMargin) === 0
               ? BigNumber(totalCollateralAmount)
-                .minus(totalFathomAmount)
-                .toNumber()
+                  .minus(totalFathomAmount)
+                  .toNumber()
               : BigNumber(totalCollateralAmount)
-                .multipliedBy(priceWithSafetyMargin)
-                .minus(totalFathomAmount)
-                .dividedBy(priceWithSafetyMargin)
-                .toNumber();
+                  .multipliedBy(priceWithSafetyMargin)
+                  .minus(totalFathomAmount)
+                  .dividedBy(priceWithSafetyMargin)
+                  .toNumber();
 
           const safetyBuffer = BigNumber(collateralAvailableToWithdraw)
             .dividedBy(totalCollateralAmount)
@@ -244,11 +235,10 @@ const useTopUpPosition = (
           setValue("safeMax", safeMax);
           setValue("dangerSafeMax", dangerSafeMax);
 
-          const liquidationPrice =
-            BigNumber(totalFathomAmount)
-              .dividedBy(totalCollateralAmount)
-              .multipliedBy(pool.liquidationRatio)
-              .toString();
+          const liquidationPrice = BigNumber(totalFathomAmount)
+            .dividedBy(totalCollateralAmount)
+            .multipliedBy(pool.liquidationRatio)
+            .toString();
 
           const ltv = BigNumber(totalFathomAmount)
             .dividedBy(
@@ -275,7 +265,7 @@ const useTopUpPosition = (
       trigger,
       setLiquidationPrice,
       setLtv,
-      setSafetyBuffer
+      setSafetyBuffer,
     ]
   );
 
@@ -302,16 +292,14 @@ const useTopUpPosition = (
             pool,
             collateral,
             fathomToken,
-            position.positionId,
-            library
+            position.positionId
           );
         } else {
           blockNumber = await positionService.topUpPosition(
             account,
             pool,
             collateral,
-            position.positionId,
-            library
+            position.positionId
           );
         }
         setLastTransactionBlock(blockNumber as number);
@@ -323,13 +311,12 @@ const useTopUpPosition = (
     },
     [
       account,
-      library,
       pool,
       position,
       positionService,
       setOpenPositionLoading,
       setLastTransactionBlock,
-      onClose
+      onClose,
     ]
   );
 
@@ -344,7 +331,7 @@ const useTopUpPosition = (
   const approve = useCallback(async () => {
     setApprovalPending(true);
     try {
-      await positionService.approve(account, collateralTokenAddress!, library);
+      await positionService.approve(account, collateralTokenAddress as string);
       setApproveBtn(false);
     } catch (e) {
       setApproveBtn(true);
@@ -355,9 +342,8 @@ const useTopUpPosition = (
     account,
     collateralTokenAddress,
     positionService,
-    library,
     setApprovalPending,
-    setApproveBtn
+    setApproveBtn,
   ]);
 
   const setMax = useCallback(
@@ -374,7 +360,13 @@ const useTopUpPosition = (
       getCollateralTokenAndBalance();
       getPositionDebtCeiling();
     }
-  }, [chainId, account, getCollateralTokenAndBalance, getDebtValue, getPositionDebtCeiling]);
+  }, [
+    chainId,
+    account,
+    getCollateralTokenAndBalance,
+    getDebtValue,
+    getPositionDebtCeiling,
+  ]);
 
   useEffect(() => {
     if (
@@ -395,7 +387,7 @@ const useTopUpPosition = (
     totalFathomToken,
     collateralTokenAddress,
     handleUpdates,
-    approvalStatus
+    approvalStatus,
   ]);
 
   useEffect(() => {

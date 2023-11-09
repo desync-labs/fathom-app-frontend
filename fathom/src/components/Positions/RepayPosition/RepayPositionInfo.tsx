@@ -3,15 +3,9 @@ import { Box, Grid, ListItemText } from "@mui/material";
 import BigNumber from "bignumber.js";
 
 import useClosePositionContext from "context/repayPosition";
-import {
-  AppList,
-  AppListItem
-} from "components/AppComponents/AppList/AppList";
+import { AppList, AppListItem } from "components/AppComponents/AppList/AppList";
 
-import {
-  formatNumber,
-  formatNumberPrice,
-} from "utils/format";
+import { formatNumber, formatNumberPrice } from "utils/format";
 
 const RepayPositionInfo = () => {
   const {
@@ -63,14 +57,16 @@ const RepayPositionInfo = () => {
           <ListItemText primary="Collateral Locked" />
         </AppListItem>
         <AppListItem
-          alignItems={'flex-start'}
+          alignItems={"flex-start"}
           secondaryAction={`${formatNumber(overCollateral)} %`}
         >
           <ListItemText primary="Collateralization Ratio" />
         </AppListItem>
         <AppListItem
           alignItems="flex-start"
-          secondaryAction={`1 ${pool.poolName} = ${formatNumberPrice(liquidationPrice)} FXD`}
+          secondaryAction={`1 ${pool.poolName} = ${formatNumberPrice(
+            liquidationPrice
+          )} FXD`}
         >
           <ListItemText primary="Liquidation Price" />
         </AppListItem>

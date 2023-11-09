@@ -1,11 +1,14 @@
 import { useCallback, useMemo, useState } from "react";
-import ILockPosition from "services/interfaces/models/ILockPosition";
+import { ILockPosition } from "fathom-contracts-helper";
 import useStakingContext from "context/staking";
 import { EarlyUnstakeDialogProps } from "components/Staking/Dialog/EarlyUnstakeDialog";
 
-const YEAR_IN_SECONDS = 365 * 24 * 60 * 60
+const YEAR_IN_SECONDS = 365 * 24 * 60 * 60;
 
-const useEarlyUnstake = (lockPosition: ILockPosition, onFinish: EarlyUnstakeDialogProps['onFinish']) => {
+const useEarlyUnstake = (
+  lockPosition: ILockPosition,
+  onFinish: EarlyUnstakeDialogProps["onFinish"]
+) => {
   const { action, handleEarlyUnstake } = useStakingContext();
   const [penaltyFeePercent, setPenaltyFeePercent] = useState(0);
 
@@ -15,18 +18,16 @@ const useEarlyUnstake = (lockPosition: ILockPosition, onFinish: EarlyUnstakeDial
 
   const penaltyFee = useMemo(() => {
     const secondsLeft = Number(lockPosition.end) - Date.now() / 1000;
-    const penaltyPercent =  30 * secondsLeft / YEAR_IN_SECONDS;
+    const penaltyPercent = (30 * secondsLeft) / YEAR_IN_SECONDS;
 
-    setPenaltyFeePercent(penaltyPercent)
+    setPenaltyFeePercent(penaltyPercent);
 
     return Number(lockPosition.amount) * (penaltyPercent / 100);
   }, [lockPosition, setPenaltyFeePercent]);
 
   const earlyUnstakeHandler = useCallback(async () => {
-    try {
-      await handleEarlyUnstake(lockPosition.lockId);
-      onFinish(lockPosition.amount - penaltyFee);
-    } catch (e) {}
+    await handleEarlyUnstake(lockPosition.lockId);
+    onFinish(lockPosition.amount - penaltyFee);
   }, [lockPosition, penaltyFee, handleEarlyUnstake, onFinish]);
 
   return {

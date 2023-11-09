@@ -1,16 +1,7 @@
-import {
-  useCallback,
-  useEffect,
-  useState,
-  MouseEvent,
-  useRef
-} from "react";
+import { useCallback, useEffect, useState, MouseEvent, useRef } from "react";
+import BigNumber from "bignumber.js";
 import useConnector from "context/connector";
-import { useStores } from "context/services";
-import {
-  useMediaQuery,
-  useTheme
-} from "@mui/material";
+import { useMediaQuery, useTheme } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import useWindowSize from "./useWindowResize";
 
@@ -24,41 +15,36 @@ const useMainLayout = () => {
     disconnect,
     isActive,
     account,
-    chainId,
     error,
     isMetamask,
     isXdcPay,
-    isWalletConnect
-  } = useConnector()!;
+    isWalletConnect,
+  } = useConnector();
 
   const [openMobile, setOpenMobile] = useState<boolean>(false);
   const [openConnector, setOpenConnector] = useState<boolean>(false);
   const currentPath = useLocation();
   const [scroll, setScroll] = useState<number>(0);
-  const  [width, height] = useWindowSize();
+  const [width, height] = useWindowSize();
 
-  const drawerRef = useRef<HTMLDivElement|null>(null);
+  const drawerRef = useRef<HTMLDivElement | null>(null);
 
   const toggleDrawer = useCallback(() => {
-    console.log('toggleDrawer')
     setOpen(!open);
   }, [open, setOpen]);
 
-  const rootStore = useStores();
-
-  const scrollHandler = useCallback((event: Event) => {
+  const scrollHandler = useCallback(() => {
     setScroll(window.scrollY);
   }, [setScroll]);
 
-
   useEffect(() => {
-    if (chainId) {
-      rootStore.setChainId(chainId!);
-    }
-  }, [chainId, rootStore]);
-
-  useEffect(() => {
-    if (drawerRef.current?.querySelector(".MuiPaper-root")!.clientHeight! < 580 || isTablet || isMobile) {
+    const clientHeight =
+      drawerRef?.current?.querySelector(".MuiPaper-root")?.clientHeight;
+    if (
+      BigNumber(clientHeight as number).isLessThan(580) ||
+      isTablet ||
+      isMobile
+    ) {
       setOpen(false);
       setShowToggleDrawerBtn(false);
     } else {
@@ -66,7 +52,6 @@ const useMainLayout = () => {
       setOpen(true);
     }
   }, [isTablet, isMobile, width, height, setOpen, setShowToggleDrawerBtn]);
-
 
   useEffect(() => {
     document.addEventListener("scroll", scrollHandler);
@@ -77,8 +62,8 @@ const useMainLayout = () => {
 
   useEffect(() => {
     if (isMobile) {
-      const inputs = document.querySelectorAll("input[type=\"number\"]");
-      for (let i = inputs.length; i--;) {
+      const inputs = document.querySelectorAll('input[type="number"]');
+      for (let i = inputs.length; i--; ) {
         inputs[i].setAttribute("pattern", "\\d*");
       }
     }
@@ -131,7 +116,7 @@ const useMainLayout = () => {
     openMobileMenu,
     openConnectorMenu,
     drawerRef,
-    showToggleDrawerBtn
+    showToggleDrawerBtn,
   };
 };
 

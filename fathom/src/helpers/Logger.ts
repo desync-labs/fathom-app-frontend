@@ -1,10 +1,10 @@
 import React from "react";
 
 export enum LogLevel {
-  log = 'log',
-  info = 'info',
-  error = 'error',
-  debug = 'debug',
+  log = "log",
+  info = "info",
+  error = "error",
+  debug = "debug",
 }
 
 export class Logger {

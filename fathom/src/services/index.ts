@@ -1,20 +1,20 @@
-import PoolService from "services/PoolService";
-import PositionService from "services/PositionService";
-import StableSwapService from "services/StableSwapService";
-import IPoolService from "services/interfaces/services/IPoolService";
-import IPositionService from "services/interfaces/services/IPositionService";
-import IStableSwapService from "services/interfaces/services/IStableSwapService";
-import IProposalService from "services/interfaces/services/IProposalService";
-import ProposalService from "services/ProposalService";
-import StakingService from "services/StakingService";
-import IStakingService from "services/interfaces/services/IStakingService";
+import {
+  PoolService,
+  PositionService,
+  ProposalService,
+  StableSwapService,
+  StakingService,
+  IPoolService,
+  IPositionService,
+  IProposalService,
+  IStableSwapService,
+  IStakingService,
+} from "fathom-contracts-helper";
 
-import {
-  DEFAULT_CHAIN_ID
-} from "helpers/Constants";
-import {
-  UseAlertAndTransactionServiceType
-} from "context/alertAndTransaction";
+import { DEFAULT_CHAIN_ID } from "helpers/Constants";
+import Xdc3 from "xdc3";
+import { getDefaultProvider } from "utils/defaultProvider";
+import { Web3Utils } from "fathom-contracts-helper";
 
 export class RootStore {
   /*
@@ -26,29 +26,47 @@ export class RootStore {
   proposalService: IProposalService;
   stakingService: IStakingService;
 
-  chainId: number = DEFAULT_CHAIN_ID;
+  chainId = DEFAULT_CHAIN_ID;
 
-  constructor(alertAndTransactionProvider: UseAlertAndTransactionServiceType) {
-    this.poolService = new PoolService(alertAndTransactionProvider);
-    this.positionService = new PositionService(alertAndTransactionProvider);
-    this.proposalService = new ProposalService(alertAndTransactionProvider);
-    this.stakingService = new StakingService(alertAndTransactionProvider);
-    this.stableSwapService = new StableSwapService(alertAndTransactionProvider);
+  provider: Xdc3;
+
+  serviceList = [
+    "poolService",
+    "positionService",
+    "proposalService",
+    "stableSwapService",
+    "stakingService",
+  ];
+
+  constructor() {
+    const provider = getDefaultProvider();
+    this.poolService = new PoolService(provider, this.chainId);
+    this.positionService = new PositionService(provider, this.chainId);
+    this.proposalService = new ProposalService(provider, this.chainId);
+    this.stakingService = new StakingService(provider, this.chainId);
+    this.stableSwapService = new StableSwapService(provider, this.chainId);
+
+    this.provider = provider;
   }
 
   setChainId(chainId: number) {
     this.chainId = chainId;
-
-    [
-      "poolService",
-      "positionService",
-      "stableSwapService",
-      "proposalService",
-      "stakingService"
-    ].forEach((serviceName) => {
+    this.serviceList.forEach((serviceName) => {
       console.log(`Setting chain ID ${chainId} for ${serviceName}`);
       // @ts-ignore
       this[serviceName].setChainId(chainId);
+    });
+  }
+
+  setProvider(provider: Xdc3) {
+    this.provider = provider;
+    /**
+     * When change provider need to reset contracts cache.
+     */
+    Web3Utils.clearContracts();
+    this.serviceList.forEach((serviceName) => {
+      // @ts-ignore
+      this[serviceName].setProvider(provider);
     });
   }
 }

@@ -13,7 +13,7 @@ export const FXD_STATS = gql`
 export const FXD_POOLS = gql`
   query FXDPools {
     pools {
-      rawPrice     
+      rawPrice
       collateralLastPrice
       collateralPrice
       debtAccumulatedRate
@@ -39,13 +39,16 @@ export const FXD_POSITIONS = gql`
       skip: $skip
       orderBy: positionId
       orderDirection: desc
-      where: { walletAddress: $walletAddress, positionStatus_in: [safe, unsafe] }
+      where: {
+        walletAddress: $walletAddress
+        positionStatus_in: [safe, unsafe]
+      }
     ) {
       id
       collateralPool
       collateralPoolName
       debtShare
-      debtValue           
+      debtValue
       lockedCollateral
       positionAddress
       positionId
@@ -156,9 +159,7 @@ export const STAKING_PROTOCOL_STATS = gql`
 
 export const STAKING_STAKER = gql`
   query Stakers($address: Bytes, $skip: Int, $first: Int) {
-    stakers(where: {
-      address: $address
-    }) {
+    stakers(where: { address: $address }) {
       id
       address
       totalStaked
@@ -171,7 +172,7 @@ export const STAKING_STAKER = gql`
       lockPositions(
         skip: $skip
         first: $first
-        orderBy: lockId,
+        orderBy: lockId
         orderDirection: desc
       ) {
         id
@@ -179,7 +180,7 @@ export const STAKING_STAKER = gql`
         streamShares
         nVoteToken
         amount
-        lockId      
+        lockId
         end
         blockNumber
         blockTimestamp
@@ -187,7 +188,7 @@ export const STAKING_STAKER = gql`
       }
     }
   }
-`
+`;
 
 export const STABLE_SWAP_STATS = gql`
   query StableSwapStats {
@@ -195,4 +196,4 @@ export const STABLE_SWAP_STATS = gql`
       remainingDailySwapAmount
     }
   }
-`
+`;

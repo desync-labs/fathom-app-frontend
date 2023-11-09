@@ -1,7 +1,4 @@
-import React, {
-  FC,
-  useMemo
-} from "react";
+import React, { FC, useMemo } from "react";
 import BigNumber from "bignumber.js";
 import { SelectChangeEvent } from "@mui/material/Select";
 import {
@@ -9,13 +6,13 @@ import {
   CircularProgress,
   MenuItem,
   Select,
-  Typography
+  Typography,
 } from "@mui/material";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import InfoIcon from "@mui/icons-material/Info";
 import {
   ButtonSecondary,
-  FathomSwapChangeCurrencyButton
+  FathomSwapChangeCurrencyButton,
 } from "components/AppComponents/AppButton/AppButton";
 import ComboShareSrc from "assets/svg/combo-shape.svg";
 import {
@@ -23,7 +20,7 @@ import {
   StableSwapInputWrapper,
   StableSwapMaxButton,
   StableSwapTextField,
-  StableSwapWalletBalance
+  StableSwapWalletBalance,
 } from "components/Stableswap/StableSwap";
 import { styled } from "@mui/material/styles";
 
@@ -33,7 +30,6 @@ import {
   ErrorMessage,
 } from "components/AppComponents/AppBox/AppBox";
 import { formatPercentage } from "utils/format";
-
 
 const StableSwapErrorBox = styled(ErrorBox)`
   width: 100%;
@@ -66,7 +62,6 @@ const StableSwapCurrencySelect = styled(Select)`
     padding-left: 12px;
   }
 `;
-
 
 const StableSwapSuccessBox = styled(SuccessBox)`
   width: 100%;
@@ -106,8 +101,11 @@ const StableSwapForm: FC<any> = ({
           () => (
             <StableSwapWalletBalance>
               Balance:{" "}
-              {formatPercentage(BigNumber(inputBalance).dividedBy(10 ** inputDecimals).toNumber())}
-              {" "}
+              {formatPercentage(
+                BigNumber(inputBalance)
+                  .dividedBy(10 ** inputDecimals)
+                  .toNumber()
+              )}{" "}
               {inputCurrency}
             </StableSwapWalletBalance>
           ),
@@ -125,11 +123,7 @@ const StableSwapForm: FC<any> = ({
               options.map((option: string) => (
                 <MenuItem key={option} value={option}>
                   <Box sx={{ float: "left", paddingRight: "10px" }}>
-                    <img
-                      width={16}
-                      src={getTokenLogoURL(option)}
-                      alt={""}
-                    />
+                    <img width={16} src={getTokenLogoURL(option)} alt={""} />
                   </Box>
                   {option}
                 </MenuItem>
@@ -169,12 +163,7 @@ const StableSwapForm: FC<any> = ({
         ) : null}
 
         <FathomSwapChangeCurrencyButton
-          onClick={() =>
-            changeCurrenciesPosition(
-              inputValue,
-              outputValue
-            )
-          }
+          onClick={() => changeCurrenciesPosition(inputValue, outputValue)}
         >
           <img src={ComboShareSrc} alt="combo-share" />
         </FathomSwapChangeCurrencyButton>
@@ -186,8 +175,11 @@ const StableSwapForm: FC<any> = ({
           () => (
             <StableSwapWalletBalance>
               Balance:{" "}
-              {formatPercentage(BigNumber(outputBalance).dividedBy(10 ** outputDecimals).toNumber())}
-              {" "}
+              {formatPercentage(
+                BigNumber(outputBalance)
+                  .dividedBy(10 ** outputDecimals)
+                  .toNumber()
+              )}{" "}
               {outputCurrency}
             </StableSwapWalletBalance>
           ),
@@ -206,11 +198,7 @@ const StableSwapForm: FC<any> = ({
               options.map((option: string) => (
                 <MenuItem key={option} value={option}>
                   <Box sx={{ float: "left", paddingRight: "10px" }}>
-                    <img
-                      width={16}
-                      src={getTokenLogoURL(option)}
-                      alt={""}
-                    />
+                    <img width={16} src={getTokenLogoURL(option)} alt={""} />
                   </Box>
                   {option}
                 </MenuItem>

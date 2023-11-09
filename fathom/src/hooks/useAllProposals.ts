@@ -3,10 +3,7 @@ import { useQuery } from "@apollo/client";
 import { GOVERNANCE_PROPOSALS, GOVERNANCE_STATS } from "apollo/queries";
 import { COUNT_PER_PAGE } from "helpers/Constants";
 import useSyncContext from "context/sync";
-import {
-  useMediaQuery,
-  useTheme
-} from "@mui/material";
+import { useMediaQuery, useTheme } from "@mui/material";
 import useConnector from "context/connector";
 
 export const useAllProposals = () => {
@@ -53,7 +50,7 @@ export const useAllProposals = () => {
     if (syncDao && !prevSyncDao) {
       refetchProposals();
     }
-  }, [syncDao, prevSyncDao, refetchProposals])
+  }, [syncDao, prevSyncDao, refetchProposals]);
 
   const handlePageChange = useCallback(
     (event: ChangeEvent<unknown>, page: number) => {
@@ -81,7 +78,9 @@ export const useAllProposals = () => {
     fetchedProposals: loading ? [] : data.proposals,
     currentPage,
     itemsCount:
-      statsLoading || !stats || !stats.governanceStats.length ? 0 : stats.governanceStats[0].totalProposalsCount,
+      statsLoading || !stats || !stats.governanceStats.length
+        ? 0
+        : stats.governanceStats[0].totalProposalsCount,
     handlePageChange,
 
     isMobile,

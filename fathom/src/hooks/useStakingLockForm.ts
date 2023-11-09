@@ -3,11 +3,11 @@ import { useForm } from "react-hook-form";
 import debounce from "lodash.debounce";
 import BigNumber from "bignumber.js";
 
-import { useStores } from "context/services";
+import { useServices } from "context/services";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
-import { SmartContractFactory } from "config/SmartContractFactory";
-import { DAY_SECONDS } from "services/StakingService";
+import { SmartContractFactory } from "fathom-contracts-helper";
+import { DAY_IN_SECONDS } from "helpers/Constants";
 
 const useStakingLockForm = () => {
   const [balanceError, setBalanceError] = useState<boolean>(false);
@@ -15,7 +15,7 @@ const useStakingLockForm = () => {
 
   const [fthmBalance, setFthmBalance] = useState<number>(0);
 
-  const { poolService } = useStores();
+  const { poolService } = useServices();
 
   const { handleSubmit, watch, control, reset, setValue } = useForm({
     defaultValues: {
@@ -25,8 +25,8 @@ const useStakingLockForm = () => {
     reValidateMode: "onChange",
     mode: "onChange",
   });
-  const { account, chainId, library } = useConnector()!;
-  const { stakingService, positionService } = useStores();
+  const { account, chainId, library } = useConnector();
+  const { stakingService, positionService } = useServices();
 
   const { setLastTransactionBlock, syncDao, prevSyncDao } = useSyncContext();
 
@@ -48,36 +48,31 @@ const useStakingLockForm = () => {
   const getFTHMTokenBalance = useCallback(async () => {
     const balance = await poolService.getUserTokenBalance(
       account,
-      fthmTokenAddress,
-      library
+      fthmTokenAddress
     );
 
     setFthmBalance(balance / 10 ** 18);
-  }, [account, poolService, fthmTokenAddress, library, setFthmBalance]);
+  }, [account, poolService, fthmTokenAddress, setFthmBalance]);
 
   const getMinLockPeriod = useCallback(async () => {
-    const lockPeriod = await stakingService.getMinLockPeriod(library);
-    const minDays = BigNumber(lockPeriod!).dividedBy(DAY_SECONDS);
+    const lockPeriod = await stakingService.getMinLockPeriod();
+    const minDays = BigNumber(lockPeriod).dividedBy(DAY_IN_SECONDS);
     setMinLockPeriod(minDays.toNumber());
-  }, [stakingService, library, setMinLockPeriod]);
+  }, [stakingService, setMinLockPeriod]);
 
   const approvalStatus = useMemo(
     () =>
-      debounce(
-        async (account: string, stakePosition: number) => {
-          const approved = await stakingService.approvalStatusStakingFTHM(
-            account,
-            stakePosition,
-            fthmTokenAddress,
-            library
-          );
+      debounce(async (account: string, stakePosition: number) => {
+        const approved = await stakingService.approvalStatusStakingFTHM(
+          account,
+          stakePosition,
+          fthmTokenAddress
+        );
 
-          console.log("Approve", approved);
-          approved ? setApprovedBtn(false) : setApprovedBtn(true);
-        },
-        1000
-      ),
-    [stakingService, library, setApprovedBtn, fthmTokenAddress]
+        console.log("Approve", approved);
+        approved ? setApprovedBtn(false) : setApprovedBtn(true);
+      }, 1000),
+    [stakingService, setApprovedBtn, fthmTokenAddress]
   );
 
   useEffect(() => {
@@ -95,7 +90,7 @@ const useStakingLockForm = () => {
 
   useEffect(() => {
     if (chainId && stakePosition && fthmTokenAddress) {
-      approvalStatus(account, Number(stakePosition)!);
+      approvalStatus(account, Number(stakePosition));
     }
   }, [account, chainId, fthmTokenAddress, approvalStatus, stakePosition]);
 
@@ -103,10 +98,14 @@ const useStakingLockForm = () => {
     const getBalance = async () => {
       const [xdcBalance, fxdBalance] = await Promise.all([
         library.eth.getBalance(account),
-        positionService.balanceStableCoin(account, library),
+        positionService.balanceStableCoin(account),
       ]);
 
-      setXdcBalance(BigNumber(xdcBalance).dividedBy(10 ** 18).toNumber());
+      setXdcBalance(
+        BigNumber(xdcBalance)
+          .dividedBy(10 ** 18)
+          .toNumber()
+      );
       setFxdBalance(
         BigNumber(fxdBalance)
           .dividedBy(10 ** 18)
@@ -136,33 +135,22 @@ const useStakingLockForm = () => {
     async (values: Record<string, any>) => {
       const { stakePosition, lockDays } = values;
       setIsLoading(true);
-
-      try {
-        const blockNumber = await stakingService.createLock(
-          account,
-          stakePosition,
-          lockDays,
-          library
-        );
-        setLastTransactionBlock(blockNumber as number);
-        reset();
-      } catch (e) { }
+      const blockNumber = await stakingService.createLock(
+        account,
+        stakePosition,
+        lockDays
+      );
+      setLastTransactionBlock(blockNumber as number);
+      reset();
       setIsLoading(false);
     },
-    [
-      stakingService,
-      account,
-      library,
-      reset,
-      setIsLoading,
-      setLastTransactionBlock,
-    ]
+    [stakingService, account, reset, setIsLoading, setLastTransactionBlock]
   );
 
   const approveFTHM = useCallback(async () => {
     setApprovalPending(true);
     try {
-      await stakingService.approveStakingFTHM(account, fthmTokenAddress, library);
+      await stakingService.approveStakingFTHM(account, fthmTokenAddress);
       setApprovedBtn(false);
     } catch (e) {
       setApprovedBtn(true);
@@ -171,7 +159,6 @@ const useStakingLockForm = () => {
     setApprovalPending(false);
   }, [
     account,
-    library,
     stakingService,
     fthmTokenAddress,
     setApprovalPending,

@@ -28,13 +28,13 @@ const DaoLink = styled(Link)`
   padding: 0 52px;
   font-weight: 600;
   font-size: 17px;
-  
+
   &.active {
     color: #fff;
-    border-bottom: 1px solid #00FFF6;
-    background: #131F35;
+    border-bottom: 1px solid #00fff6;
+    background: #131f35;
   }
-  
+
   span {
     margin-bottom: 5px;
   }
@@ -44,7 +44,7 @@ const DaoContainer = styled(Container)`
   ${({ theme }) => theme.breakpoints.down("sm")} {
     margin-top: 15px;
   }
-`
+`;
 
 const DaoView = () => {
   const location = useLocation();

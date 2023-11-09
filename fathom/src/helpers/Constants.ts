@@ -4,8 +4,8 @@ export const XDC_BLOCK_TIME = 2; // 2 seconds
 export const ESTIMATE_GAS_MULTIPLIER = 1.2;
 export const DEFAULT_CHAIN_ID = process.env.REACT_APP_ENV === "prod" ? 50 : 51;
 
-export const YEAR_IN_SECONDS = 365 * 24 * 60 * 60
-export const DAY_IN_SECONDS = 24 * 60 * 60
+export const YEAR_IN_SECONDS = 365 * 24 * 60 * 60;
+export const DAY_IN_SECONDS = 24 * 60 * 60;
 
 export const DANGER_SAFETY_BUFFER = 0.25;
 
@@ -19,7 +19,7 @@ export enum ProposalStatus {
   Succeeded = "Succeeded",
   Queued = "Queued",
   Expired = "Expired",
-  Executed= "Executed",
+  Executed = "Executed",
 }
 
 export const WeiPerWad = new BigNumber("1e18");

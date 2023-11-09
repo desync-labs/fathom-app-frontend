@@ -158,8 +158,8 @@ const ProposalVoting = () => {
             className={status?.toLowerCase()}
             sx={{ margin: "10px 0" }}
           >
-            {["Defeated", "Succeeded"].includes(status!) ? (
-              <img src={ImageSrc[status!]} alt={status} />
+            {["Defeated", "Succeeded"].includes(status as string) ? (
+              <img src={ImageSrc[status as string]} alt={status} />
             ) : null}
             {quorumError ? "Voting quorum was not reached" : status}
           </ProposalDetailsStatus>
@@ -212,9 +212,9 @@ const ProposalVoting = () => {
         </Box>
         <Buttons
           hasVoted={hasVoted}
-          fetchedProposalState={status!}
+          fetchedProposalState={status as string}
           vote={vote}
-          votePending={votePending!}
+          votePending={votePending as string}
         />
       </AppPaper>
     </Grid>

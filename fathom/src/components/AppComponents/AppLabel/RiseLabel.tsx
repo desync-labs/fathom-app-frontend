@@ -29,7 +29,7 @@ const RiseWrapper = styled(Box)`
 
   &.down {
     background: rgba(221, 60, 60, 0.15);
-    color: #DD3C3C;
+    color: #dd3c3c;
   }
 `;
 
@@ -39,7 +39,11 @@ const RiseLabel: FC<RiseLabelProps> = ({
 }) => {
   return (
     <RiseWrapper className={type}>
-      <img src={type === RiseLabelType.UP ? UpSrc : DownSrc} alt="rise-label" width={8} />
+      <img
+        src={type === RiseLabelType.UP ? UpSrc : DownSrc}
+        alt="rise-label"
+        width={8}
+      />
       {children}
     </RiseWrapper>
   );

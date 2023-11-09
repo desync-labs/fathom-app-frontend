@@ -1,15 +1,8 @@
 import React from "react";
-import {
-  Grid,
-  Box,
-  Typography
-} from "@mui/material";
+import { Grid, Box, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import useProtocolStats from "hooks/useProtocolStats";
-import {
-  formatCurrency,
-  formatNumber
-} from "utils/format";
+import { formatCurrency, formatNumber } from "utils/format";
 import usePricesContext from "context/prices";
 import AppPopover from "components/AppComponents/AppPopover/AppPopover";
 
@@ -53,7 +46,7 @@ const StatsTitle = styled(
   gap: "7px",
   [theme.breakpoints.down("sm")]: {
     justifyContent: "left",
-  }
+  },
 }));
 
 const StatsDescription = styled(Typography)`
@@ -76,8 +69,12 @@ const ProtocolStats = () => {
         <Box>
           <StatsTitle>
             Total Issued
-            <AppPopover id={"total-issued"}
-                        text={"The total amount of FXD has been issued through borrowing from protocol and is currently in circulation."} />
+            <AppPopover
+              id={"total-issued"}
+              text={
+                "The total amount of FXD has been issued through borrowing from protocol and is currently in circulation."
+              }
+            />
           </StatsTitle>
           <StatsDescription variant="body2">
             {!loading && formatNumber(totalBorrowed) + " FXD"}
@@ -88,8 +85,12 @@ const ProtocolStats = () => {
         <Box>
           <StatsTitle>
             TVL
-            <AppPopover id={"tvl"}
-                        text={"TVL, or Total Value Locked, signifies the total amount of assets currently deposited in the platform and used to borrow FXD."} />
+            <AppPopover
+              id={"tvl"}
+              text={
+                "TVL, or Total Value Locked, signifies the total amount of assets currently deposited in the platform and used to borrow FXD."
+              }
+            />
           </StatsTitle>
           <StatsDescription>{!loading && formatCurrency(tvl)}</StatsDescription>
         </Box>

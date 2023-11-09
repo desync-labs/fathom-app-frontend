@@ -3,9 +3,8 @@ import { Box, Grid, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import InfoIcon from "@mui/icons-material/Info";
 
-import ILockPosition from "services/interfaces/models/ILockPosition";
+import { ILockPosition } from "fathom-contracts-helper";
 import useStakingItemView from "hooks/useStakingItemView";
-
 
 import StakingCountdown from "components/Staking/StakingCountdown";
 import { ButtonSecondary } from "components/AppComponents/AppButton/AppButton";
@@ -167,7 +166,7 @@ const StakingViewItemButton = styled(ButtonSecondary)`
   ${({ theme }) => theme.breakpoints.down("sm")} {
     width: 100%;
   }
-`
+`;
 
 type StakingViewItemPropsType = {
   lockPosition: ILockPosition;
