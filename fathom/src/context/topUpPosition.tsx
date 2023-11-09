@@ -41,17 +41,17 @@ export type UseTopUpPositionContextReturnType = {
     fathomToken: string;
     safeMax: number;
     dangerSafeMax: number;
-  }>,
-  pool: ICollateralPool,
-  onClose: () => void,
-  switchPosition: (callback: Dispatch<IOpenPosition>) => void,
-  totalCollateral: string,
-  totalFathomToken: string,
-  overCollateral: number,
-  maxBorrowAmount: string,
-  availableFathomInPool: number,
-  isMobile: boolean,
-  errorAtLeastOneField: boolean,
+  }>;
+  pool: ICollateralPool;
+  onClose: () => void;
+  switchPosition: (callback: Dispatch<IOpenPosition>) => void;
+  totalCollateral: string;
+  totalFathomToken: string;
+  overCollateral: number;
+  maxBorrowAmount: string;
+  availableFathomInPool: number;
+  isMobile: boolean;
+  errorAtLeastOneField: boolean;
 };
 
 // @ts-ignore

@@ -101,7 +101,7 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
 
     return () => {
       clearInterval(interval);
-    }
+    };
   }, [
     lastTransactionBlock,
     fxdData,
@@ -145,7 +145,7 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
 
     return () => {
       clearInterval(interval);
-    }
+    };
   }, [
     lastTransactionBlock,
     daoData,

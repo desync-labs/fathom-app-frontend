@@ -98,12 +98,12 @@ export const ErrorBox = styled(MuiBox)`
   svg {
     width: 20px;
     height: 20px;
-    color: #F04242;
+    color: #f04242;
     float: left;
     margin-right: 10px;
   }
   p {
-    color: #F76E6E;
+    color: #f76e6e;
     font-size: 14px;
     width: 100%;
     white-space: break-spaces;

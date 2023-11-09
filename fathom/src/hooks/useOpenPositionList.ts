@@ -140,14 +140,14 @@ const useOpenPositionList = (
                 (pool: ICollateralPool) => pool.id === position.collateralPool
               );
 
-              position.debtValue = debtValues[index];
+              const debtValue = debtValues[index];
 
-              position.liquidationPrice = BigNumber(position.debtValue)
+              const liquidationPrice = BigNumber(position.debtValue)
                 .dividedBy(position.lockedCollateral)
                 .multipliedBy(findPool.liquidationRatio)
                 .toNumber();
 
-              position.ltv = BigNumber(position.debtValue)
+              const ltv = BigNumber(position.debtValue)
                 .dividedBy(
                   BigNumber(findPool.rawPrice).multipliedBy(
                     position.lockedCollateral
@@ -155,7 +155,12 @@ const useOpenPositionList = (
                 )
                 .toNumber();
 
-              return position;
+              return {
+                ...position,
+                debtValue,
+                liquidationPrice,
+                ltv,
+              };
             }
           );
 

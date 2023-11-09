@@ -48,7 +48,8 @@ const useTopUpPosition = (
     string | null
   >();
   const [maxBorrowAmount, setMaxBorrowAmount] = useState<string>("");
-  const [errorAtLeastOneField, setErrorAtLeastOneField] = useState<boolean>(false);
+  const [errorAtLeastOneField, setErrorAtLeastOneField] =
+    useState<boolean>(false);
 
   const { setLastTransactionBlock } = useSyncContext();
 
