@@ -96,11 +96,22 @@ export const ErrorBox = styled(MuiBox)`
   margin: 20px 0;
 
   svg {
-    width: 16px;
-    height: 16px;
-    color: #ce0000;
+    width: 20px;
+    height: 20px;
+    color: #F04242;
     float: left;
     margin-right: 10px;
+  }
+  p {
+    color: #F76E6E;
+    font-size: 14px;
+    width: 100%;
+    white-space: break-spaces;
+  }
+  a {
+    &:hover {
+      text-decoration: underline;
+    }
   }
 `;
 

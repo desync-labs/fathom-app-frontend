@@ -5,6 +5,7 @@ import { Box, CircularProgress, Grid, Typography } from "@mui/material";
 import {
   ApproveBox,
   ApproveBoxTypography,
+  ErrorBox,
   Summary,
   WalletBalance,
   WarningBox,
@@ -79,6 +80,7 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
     maxBorrowAmount,
     availableFathomInPool,
     isMobile,
+    errorAtLeastOneField,
   } = useTopUpPositionContext();
 
   return (
@@ -294,8 +296,14 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
             <Typography>
               Providing 0 collateral you are making your position unsafer.
             </Typography>
-          </WarningBox>
-        )}
+          </WarningBox>)}
+        {errorAtLeastOneField &&
+          <ErrorBox>
+            <InfoIcon />
+            <Typography>
+              Please fill at least one field
+            </Typography>
+          </ErrorBox>}
         <ButtonsWrapper>
           {!isMobile && (
             <ButtonSecondary onClick={onClose}>Close</ButtonSecondary>

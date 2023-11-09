@@ -83,19 +83,24 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
     /***
      * Check if transaction block from transaction receipt has block number higher than latestBlock from Graph, if so our Graph state is not up-to-date.
      */
+    let interval: ReturnType<typeof setInterval>;
     if (
       Number(lastTransactionBlock) >
       Number(
         fxdData?.indexingStatusForCurrentVersion?.chains[0]?.latestBlock?.number
       )
     ) {
-      setTimeout(() => {
+      interval = setInterval(() => {
         refetchFxd();
       }, 500);
 
       setSyncFXD(false);
     } else {
       setSyncFXD(true);
+    }
+
+    return () => {
+      clearInterval(interval);
     }
   }, [
     lastTransactionBlock,
@@ -122,19 +127,24 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
     /***
      * Check if transaction block from transaction receipt has block number higher than latestBlock from Graph, if so our Graph state is not up-to-date.
      */
+    let interval: ReturnType<typeof setInterval>;
     if (
       Number(lastTransactionBlock) >
       Number(
         daoData?.indexingStatusForCurrentVersion?.chains[0]?.latestBlock?.number
       )
     ) {
-      setTimeout(() => {
+      interval = setInterval(() => {
         refetchDao();
-      }, 400);
+      }, 500);
 
       setSyncDao(false);
     } else {
       setSyncDao(true);
+    }
+
+    return () => {
+      clearInterval(interval);
     }
   }, [
     lastTransactionBlock,
