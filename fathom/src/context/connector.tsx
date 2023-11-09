@@ -50,6 +50,14 @@ export type UseConnectorReturnType = {
   allowStableSwapInProgress: boolean;
 };
 
+export type ERC20TokenType = {
+  address: string;
+  symbol: string;
+  decimals: number;
+  image?: string;
+  aToken?: boolean;
+};
+
 export const ConnectorContext = createContext<UseConnectorReturnType>(
   {} as UseConnectorReturnType
 );
@@ -239,8 +247,36 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
     }
   }, [deactivate, setIsMetamask, setIsWalletConnect]);
 
+  const addERC20Token = useCallback(
+    async ({
+      address,
+      symbol,
+      decimals,
+      image,
+    }: ERC20TokenType): Promise<boolean> => {
+      const injectedProvider = (window as any).ethereum;
+      if (provider && account && window && injectedProvider) {
+        await injectedProvider.request({
+          method: "wallet_watchAsset",
+          params: {
+            type: "ERC20",
+            options: {
+              address,
+              symbol,
+              decimals,
+              image,
+            },
+          },
+        });
+      }
+      return false;
+    },
+    [provider, account]
+  );
+
   const values = useMemo(
     () => ({
+      addERC20Token,
       connector,
       isActive: active,
       account,
@@ -265,6 +301,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
       allowStableSwapInProgress,
     }),
     [
+      addERC20Token,
       provider,
       connector,
       active,
