@@ -287,7 +287,7 @@ const useTopUpPosition = (
     async (values: any) => {
       const { collateral, fathomToken } = values;
 
-      if (!collateral.length && !fathomToken.length) {
+      if (!collateral.trim().length && !fathomToken.trim().length) {
         setErrorAtLeastOneField(true);
         return;
       }
@@ -399,7 +399,7 @@ const useTopUpPosition = (
   ]);
 
   useEffect(() => {
-    if (collateral.length || fathomToken.length) {
+    if (collateral.trim().length || fathomToken.trim().length) {
       setErrorAtLeastOneField(false);
     }
   }, [collateral, fathomToken]);
