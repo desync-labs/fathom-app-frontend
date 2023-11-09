@@ -48,6 +48,7 @@ const useTopUpPosition = (
     string | null
   >();
   const [maxBorrowAmount, setMaxBorrowAmount] = useState<string>("");
+  const [errorAtLeastOneField, setErrorAtLeastOneField] = useState<boolean>(false);
 
   const { setLastTransactionBlock } = useSyncContext();
 
@@ -273,8 +274,14 @@ const useTopUpPosition = (
 
   const onSubmit = useCallback(
     async (values: any) => {
-      setOpenPositionLoading(true);
       const { collateral, fathomToken } = values;
+
+      if (!collateral.trim().length && !fathomToken.trim().length) {
+        setErrorAtLeastOneField(true);
+        return;
+      }
+
+      setOpenPositionLoading(true);
 
       try {
         let blockNumber;
@@ -382,6 +389,12 @@ const useTopUpPosition = (
     approvalStatus,
   ]);
 
+  useEffect(() => {
+    if (collateral.trim().length || fathomToken.trim().length) {
+      setErrorAtLeastOneField(false);
+    }
+  }, [collateral, fathomToken]);
+
   return {
     position,
     safeMax,
@@ -410,6 +423,7 @@ const useTopUpPosition = (
     maxBorrowAmount,
     availableFathomInPool,
     isMobile,
+    errorAtLeastOneField,
   };
 };
 
