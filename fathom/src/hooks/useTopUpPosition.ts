@@ -277,7 +277,10 @@ const useTopUpPosition = (
     async (values: any) => {
       const { collateral, fathomToken } = values;
 
-      if (!collateral.trim().length && !fathomToken.trim().length) {
+      if (
+        !BigNumber(collateral).isGreaterThan(0) &&
+        !BigNumber(fathomToken).isGreaterThan(0)
+      ) {
         setErrorAtLeastOneField(true);
         return;
       }
