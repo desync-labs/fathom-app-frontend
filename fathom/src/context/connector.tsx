@@ -34,6 +34,7 @@ export type UseConnectorReturnType = {
   connectXdcPay: () => Promise<void>;
   connectWalletConnect: () => Promise<void>;
   disconnect: () => Promise<void>;
+  addERC20Token: (tokenData: ERC20TokenType) => Promise<boolean>;
   shouldDisable: boolean;
   chainId: ChainId;
   error: Error | undefined;
@@ -55,7 +56,6 @@ export type ERC20TokenType = {
   symbol: string;
   decimals: number;
   image?: string;
-  aToken?: boolean;
 };
 
 export const ConnectorContext = createContext<UseConnectorReturnType>(
