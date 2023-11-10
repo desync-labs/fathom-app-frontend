@@ -12,6 +12,7 @@ import { SmartContractFactory } from "fathom-contracts-helper";
 import { useServices } from "context/services";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
+import { DEFAULT_CHAIN_ID } from "../helpers/Constants";
 
 type PricesProviderType = {
   children: ReactElement;
@@ -30,7 +31,8 @@ export const PricesContext = createContext<UsePricesContextReturn>(
 
 export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
   const { stakingService } = useServices();
-  const { chainId, library } = useConnector();
+  const { chainId } = useConnector();
+  const { provider } = useServices();
 
   const [fxdPrice, setFxdPrice] = useState<number>(0);
   const [wxdcPrice, setWxdcPrice] = useState<number>(0);
@@ -39,23 +41,28 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
   const { syncDao, prevSyncDao, syncFXD, prevSyncFxd } = useSyncContext();
 
   const fthmTokenAddress = useMemo(() => {
-    return SmartContractFactory.FthmToken(chainId).address;
+    return SmartContractFactory.FthmToken(chainId ? chainId : DEFAULT_CHAIN_ID)
+      .address;
   }, [chainId]);
 
   const usdtTokenAddress = useMemo(() => {
-    return SmartContractFactory.USDT(chainId).address;
+    return SmartContractFactory.USDT(chainId ? chainId : DEFAULT_CHAIN_ID)
+      .address;
   }, [chainId]);
 
   const fxdTokenAddress = useMemo(() => {
-    return SmartContractFactory.FathomStableCoin(chainId).address;
+    return SmartContractFactory.FathomStableCoin(
+      chainId ? chainId : DEFAULT_CHAIN_ID
+    ).address;
   }, [chainId]);
 
   const wxdcTokenAddress = useMemo(() => {
-    return SmartContractFactory.WXDC(chainId).address;
+    return SmartContractFactory.WXDC(chainId ? chainId : DEFAULT_CHAIN_ID)
+      .address;
   }, [chainId]);
 
   const fetchPairPrices = useCallback(async () => {
-    if (library) {
+    if (provider) {
       try {
         if (process.env.REACT_APP_ENV !== "prod") {
           stakingService
@@ -97,6 +104,7 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
       }
     }
   }, [
+    provider,
     stakingService,
     usdtTokenAddress,
     fthmTokenAddress,
