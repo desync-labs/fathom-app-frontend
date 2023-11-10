@@ -42,11 +42,13 @@ import DesktopConnector from "components/Dashboard/DesktopConnector";
 import BottomLinks from "components/Dashboard/BottomLinks";
 import MobileMenu from "components/Dashboard/MobileMenu";
 import { drawerWidth } from "components/AppComponents/AppBar/AppBar";
+import TransactionErc20TokenModal from "components/Transaction/TransactionErc20TokenModal";
 
 import useMainLayout from "hooks/useMainLayout";
 import { StakingProvider } from "context/staking";
 import { ProposalProvider } from "context/proposal";
 import useConnector from "context/connector";
+import useAlertAndTransactionContext from "context/alertAndTransaction";
 
 import FathomAppLogoSrc from "assets/svg/Fathom-app-logo.svg";
 import ExitSrc from "assets/svg/exit.svg";
@@ -195,6 +197,8 @@ const MainLayout = () => {
     isUserWrapperWhiteListed,
   } = useConnector();
 
+  const { erc20TokenModalData } = useAlertAndTransactionContext();
+
   return (
     <ThemeProvider theme={mdTheme}>
       <Box sx={{ display: "flex" }} onClick={mainBlockClickHandler}>
@@ -323,6 +327,7 @@ const MainLayout = () => {
         <MainBox component="main">
           <Toolbar />
           <AlertMessages scroll={scroll} />
+          {erc20TokenModalData && <TransactionErc20TokenModal />}
           <TransactionStatus scroll={scroll} />
           <Routes>
             <Route path="/" element={<DashboardContent />} />
