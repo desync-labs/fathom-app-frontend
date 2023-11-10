@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useCallback } from "react";
 import { Box, Typography, styled } from "@mui/material";
 import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
 import {
@@ -36,13 +36,12 @@ const TransactionErc20TokenModal: FC = () => {
 
   const { addERC20Token } = useConnector();
 
-  const { address, symbol, decimals, image } =
-    erc20TokenModalData as ERC20TokenType;
+  const { image } = erc20TokenModalData as ERC20TokenType;
 
-  const addTokenToMetamaskWalletHandler = () => {
-    addERC20Token({ address, symbol, decimals, image });
+  const addTokenToMetamaskWalletHandler = useCallback(() => {
+    addERC20Token(erc20TokenModalData as ERC20TokenType);
     resetErc20TokenModal();
-  };
+  }, [addERC20Token, resetErc20TokenModal]);
 
   return (
     <AppDialog

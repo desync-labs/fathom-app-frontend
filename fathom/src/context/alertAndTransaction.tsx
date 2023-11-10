@@ -12,6 +12,7 @@ import {
 import { ITransaction, TransactionStatus } from "fathom-contracts-helper";
 import { TransactionCheckUpdateInterval } from "helpers/Constants";
 import { useWeb3React } from "@web3-react/core";
+import { ERC20TokenType } from "context/connector";
 
 type TransactionAndAlertContextType = {
   children: ReactElement;
@@ -20,15 +21,21 @@ type TransactionAndAlertContextType = {
 export type UseAlertAndTransactionReturnType = {
   showSuccessAlert: boolean;
   showErrorAlert: boolean;
+  erc20TokenModalData: ERC20TokenType | undefined;
   setShowSuccessAlert: Dispatch<boolean>;
   setShowErrorAlert: Dispatch<boolean>;
   successAlertMessage: string;
   errorAlertMessage: string;
   setShowSuccessAlertHandler: (state: boolean, successMessage: string) => void;
+  setShowErc20TokenModalHandler: (
+    successMessage: string,
+    erc20token: ERC20TokenType | undefined
+  ) => void;
   setShowErrorAlertHandler: (state: boolean, errorMessage: string) => void;
   transactions: ITransaction[];
   addTransaction: (_transaction: ITransaction) => void;
   removeTransaction: () => void;
+  resetErc20TokenModal: () => void;
 };
 
 export type UseAlertAndTransactionServiceType = Pick<
@@ -50,6 +57,9 @@ export const AlertAndTransactionProvider: FC<
   const [showErrorAlert, setShowErrorAlert] = useState<boolean>(false);
   const [successAlertMessage, setSuccessAlertMessage] = useState<string>("");
   const [errorAlertMessage, setErrorAlertMessage] = useState<string>("");
+  const [erc20TokenModalData, setErc20TokenModalData] = useState<
+    ERC20TokenType | undefined
+  >(undefined);
 
   const [transactions, setTransactions] = useState<ITransaction[]>([]);
 
@@ -65,6 +75,11 @@ export const AlertAndTransactionProvider: FC<
     setErrorAlertMessage,
   ]);
 
+  const resetErc20TokenModal = useCallback(() => {
+    setSuccessAlertMessage("");
+    setErc20TokenModalData(undefined);
+  }, [setSuccessAlertMessage, setErc20TokenModalData]);
+
   const setShowSuccessAlertHandler = useCallback(
     (state: boolean, successMessage = "Action was successful!") => {
       resetAlerts();
@@ -76,6 +91,18 @@ export const AlertAndTransactionProvider: FC<
       }, 2000);
     },
     [resetAlerts, setShowSuccessAlert, setSuccessAlertMessage]
+  );
+
+  const setShowErc20TokenModalHandler = useCallback(
+    (
+      successMessage = "Action was successful!",
+      erc20Token: ERC20TokenType | undefined
+    ) => {
+      resetErc20TokenModal();
+      setErc20TokenModalData(erc20Token);
+      setSuccessAlertMessage(successMessage);
+    },
+    [resetErc20TokenModal, setErc20TokenModalData, setSuccessAlertMessage]
   );
 
   const setShowErrorAlertHandler = useCallback(
@@ -149,27 +176,33 @@ export const AlertAndTransactionProvider: FC<
       transactions,
       showSuccessAlert,
       showErrorAlert,
+      erc20TokenModalData,
       setShowSuccessAlert,
       setShowErrorAlert,
       successAlertMessage,
       errorAlertMessage,
       setShowSuccessAlertHandler,
+      setShowErc20TokenModalHandler,
       setShowErrorAlertHandler,
       addTransaction,
       removeTransaction,
+      resetErc20TokenModal,
     };
   }, [
     transactions,
     showSuccessAlert,
     showErrorAlert,
+    erc20TokenModalData,
     setShowSuccessAlert,
     setShowErrorAlert,
     successAlertMessage,
     errorAlertMessage,
     setShowSuccessAlertHandler,
+    setShowErc20TokenModalHandler,
     setShowErrorAlertHandler,
     addTransaction,
     removeTransaction,
+    resetErc20TokenModal,
   ]);
 
   return (
