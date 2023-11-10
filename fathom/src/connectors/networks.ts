@@ -84,6 +84,3 @@ export const WalletConnect = new WalletConnectConnector({
 } as EthereumProviderOptions);
 
 export { XDC_CHAIN_IDS, DEFAULT_RPC, supportedChainIds, NETWORK_LABELS };
-
-export const NOT_SUPPORTED_NOTIFICATION_ERROR = -32000;
-export const SKIP_ERRORS = [NOT_SUPPORTED_NOTIFICATION_ERROR];
