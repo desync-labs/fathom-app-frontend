@@ -12,7 +12,7 @@ import { SmartContractFactory } from "fathom-contracts-helper";
 import { useServices } from "context/services";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
-import { DEFAULT_CHAIN_ID } from "../helpers/Constants";
+import { DEFAULT_CHAIN_ID } from "helpers/Constants";
 
 type PricesProviderType = {
   children: ReactElement;
