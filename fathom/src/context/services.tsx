@@ -11,7 +11,9 @@ import {
 } from "fathom-contracts-helper";
 import { TransactionReceipt } from "xdc3-eth";
 import { useWeb3React } from "@web3-react/core";
+import { SmartContractFactory, Web3Utils } from "fathom-contracts-helper";
 import useAlertAndTransactionContext from "context/alertAndTransaction";
+import { getTokenLogoURL } from "utils/tokenLogo";
 
 const StoresContext = React.createContext<RootStore>({} as RootStore);
 
@@ -22,6 +24,7 @@ export const ServicesProvider: FC<{ children: ReactElement }> = ({
     setShowSuccessAlertHandler,
     setShowErrorAlertHandler,
     addTransaction,
+    setShowErc20TokenModalHandler,
   } = useAlertAndTransactionContext();
 
   const { library, chainId } = useWeb3React();
@@ -62,7 +65,7 @@ export const ServicesProvider: FC<{ children: ReactElement }> = ({
       setShowErrorAlertHandler(true, error.message);
     };
 
-    const successTransactionHandler = ({
+    const successTransactionHandler = async ({
       type,
       receipt,
       tokenName,
@@ -76,7 +79,28 @@ export const ServicesProvider: FC<{ children: ReactElement }> = ({
       message = tokenName
         ? message.replace("${tokenName}", tokenName)
         : message;
-      setShowSuccessAlertHandler(true, message);
+
+      if (type === "OpenPosition") {
+        const { provider, chainId } = rootStore;
+        const contractData = SmartContractFactory.FathomStableCoin(chainId);
+        const { address } = contractData;
+        const contract = Web3Utils.getContractInstance(contractData, provider);
+
+        const [decimals, symbol] = await Promise.all([
+          contract.methods.decimals().call(),
+          contract.methods.symbol().call(),
+        ]);
+        const image = getTokenLogoURL(symbol);
+
+        setShowErc20TokenModalHandler(message, {
+          address,
+          symbol,
+          decimals,
+          image,
+        });
+      } else {
+        setShowSuccessAlertHandler(true, message);
+      }
     };
 
     if (rootStore) {
