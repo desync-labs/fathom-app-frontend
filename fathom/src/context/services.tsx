@@ -1,5 +1,5 @@
 import React, { FC, ReactElement, useEffect, useMemo } from "react";
-import { RootStore } from "services";
+import { RootService } from "services";
 import { supportedChainIds } from "connectors/networks";
 import { getDefaultProvider } from "utils/defaultProvider";
 import {
@@ -15,7 +15,7 @@ import { SmartContractFactory, Web3Utils } from "fathom-contracts-helper";
 import useAlertAndTransactionContext from "context/alertAndTransaction";
 import { getTokenLogoURL } from "utils/tokenLogo";
 
-const StoresContext = React.createContext<RootStore>({} as RootStore);
+const StoresContext = React.createContext<RootService>({} as RootService);
 
 export const ServicesProvider: FC<{ children: ReactElement }> = ({
   children,
@@ -29,7 +29,7 @@ export const ServicesProvider: FC<{ children: ReactElement }> = ({
 
   const { library, chainId } = useWeb3React();
 
-  const rootStore = useMemo(() => new RootStore(), []);
+  const rootStore = useMemo(() => new RootService(), []);
 
   useEffect(() => {
     if (library && chainId && supportedChainIds.includes(chainId)) {

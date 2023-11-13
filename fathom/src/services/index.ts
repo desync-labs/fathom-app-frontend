@@ -16,7 +16,7 @@ import Xdc3 from "xdc3";
 import { getDefaultProvider } from "utils/defaultProvider";
 import { Web3Utils } from "fathom-contracts-helper";
 
-export class RootStore {
+export class RootService {
   /*
    * Services
    */

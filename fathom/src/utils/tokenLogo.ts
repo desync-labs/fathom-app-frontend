@@ -3,9 +3,9 @@ import DEFAULT_TOKEN_LIST from "fathom-swap-standard-token-list";
 export const getTokenLogoURL = (address: string) => {
   let logo;
   let findToken;
+  const addressLowerCase = address?.toLowerCase();
   for (let i = 0; i < DEFAULT_TOKEN_LIST.tokens.length; i++) {
     const tokenListItem = DEFAULT_TOKEN_LIST.tokens[i];
-    const addressLowerCase = address?.toLowerCase();
     if (
       tokenListItem.address.toLowerCase() === addressLowerCase ||
       tokenListItem.name.toLowerCase() === addressLowerCase ||
