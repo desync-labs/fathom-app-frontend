@@ -65,11 +65,9 @@ const useRepayPosition = (
   );
 
   const totalCollateral = useMemo(() => {
-    return (
-      collateral
-        ? BigNumber(position.lockedCollateral).minus(collateral).toString()
-        : position.lockedCollateral
-    ).toString();
+    return collateral
+      ? BigNumber(position.lockedCollateral).minus(collateral).toString()
+      : position.lockedCollateral.toString();
   }, [collateral, position]);
 
   const totalFathomToken = useMemo(() => {
@@ -140,7 +138,7 @@ const useRepayPosition = (
 
   const getBalance = useCallback(async () => {
     const balance = await positionService.balanceStableCoin(account);
-    const balanceInDecimal = BigNumber(balance).dividedBy(WeiPerWad).toFixed();
+    const balanceInDecimal = BigNumber(balance).dividedBy(WeiPerWad).toString();
 
     setBalance(balanceInDecimal);
   }, [positionService, account, setBalance]);
@@ -234,7 +232,7 @@ const useRepayPosition = (
 
     try {
       let blockNumber;
-      if (BigNumber(collateral).isEqualTo(lockedCollateral)) {
+      if (BigNumber(fathomToken).isEqualTo(position.debtValue)) {
         blockNumber = await positionService.closePosition(
           position.positionId,
           pool,
