@@ -9,12 +9,12 @@ import {
   IProposalService,
   IStableSwapService,
   IStakingService,
-} from "fathom-contracts-helper";
+} from "fathom-sdk";
 
 import { DEFAULT_CHAIN_ID } from "helpers/Constants";
 import Xdc3 from "xdc3";
 import { getDefaultProvider } from "utils/defaultProvider";
-import { Web3Utils } from "fathom-contracts-helper";
+import { Web3Utils } from "fathom-sdk";
 
 export class RootService {
   /*

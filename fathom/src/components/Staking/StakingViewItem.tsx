@@ -3,7 +3,7 @@ import { Box, Grid, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import InfoIcon from "@mui/icons-material/Info";
 
-import { ILockPosition } from "fathom-contracts-helper";
+import { ILockPosition } from "fathom-sdk";
 import useStakingItemView from "hooks/useStakingItemView";
 
 import StakingCountdown from "components/Staking/StakingCountdown";

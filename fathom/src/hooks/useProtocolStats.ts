@@ -3,7 +3,7 @@ import { FXD_STATS } from "apollo/queries";
 import useConnector from "context/connector";
 import usePoolsList from "hooks/usePoolsList";
 import { useMemo } from "react";
-import { ICollateralPool } from "fathom-contracts-helper";
+import { ICollateralPool } from "fathom-sdk";
 
 const useProtocolStats = () => {
   const { chainId } = useConnector();

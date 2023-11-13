@@ -9,7 +9,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import { ITransaction, TransactionStatus } from "fathom-contracts-helper";
+import { ITransaction, TransactionStatus } from "fathom-sdk";
 import { TransactionCheckUpdateInterval } from "helpers/Constants";
 import { useWeb3React } from "@web3-react/core";
 import { ERC20TokenType } from "context/connector";

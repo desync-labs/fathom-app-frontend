@@ -8,10 +8,10 @@ import {
   TRANSACTION_SUCCESS_MESSAGES,
   CHECK_ON_BLOCK_EXPLORER,
   TransactionType,
-} from "fathom-contracts-helper";
+} from "fathom-sdk";
 import { TransactionReceipt } from "xdc3-eth";
 import { useWeb3React } from "@web3-react/core";
-import { SmartContractFactory, Web3Utils } from "fathom-contracts-helper";
+import { SmartContractFactory, Web3Utils } from "fathom-sdk";
 import useAlertAndTransactionContext from "context/alertAndTransaction";
 import { getTokenLogoURL } from "utils/tokenLogo";
 

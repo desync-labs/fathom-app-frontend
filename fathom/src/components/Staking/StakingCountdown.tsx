@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { ITimeObject } from "fathom-contracts-helper";
+import { ITimeObject } from "fathom-sdk";
 
 const StakingCountdown: FC<{ timeObject: ITimeObject }> = ({ timeObject }) => {
   return (

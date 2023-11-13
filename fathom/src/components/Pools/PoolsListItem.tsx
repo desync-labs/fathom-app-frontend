@@ -1,5 +1,5 @@
 import { TableCell, Box, Stack } from "@mui/material";
-import { ICollateralPool } from "fathom-contracts-helper";
+import { ICollateralPool } from "fathom-sdk";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 import React, { Dispatch, FC, SetStateAction } from "react";
