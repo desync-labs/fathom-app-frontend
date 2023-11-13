@@ -7,7 +7,7 @@ import {
   Box,
 } from "@mui/material";
 import { useAllProposals } from "hooks/useAllProposals";
-import { IProposal } from "fathom-contracts-helper";
+import { IProposal } from "fathom-sdk";
 import { PageHeader } from "components/Dashboard/PageHeader";
 import ViewAllProposalItem from "components/Governance/ViewAllProposalItem";
 import Propose from "components/Governance/Propose";

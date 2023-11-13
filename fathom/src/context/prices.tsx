@@ -8,7 +8,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import { SmartContractFactory } from "fathom-contracts-helper";
+import { SmartContractFactory } from "fathom-sdk";
 import { useServices } from "context/services";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";

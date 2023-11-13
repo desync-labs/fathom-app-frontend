@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import { ILockPosition } from "fathom-contracts-helper";
+import { ILockPosition } from "fathom-sdk";
 import useStakingContext from "context/staking";
 import { EarlyUnstakeDialogProps } from "components/Staking/Dialog/EarlyUnstakeDialog";
 

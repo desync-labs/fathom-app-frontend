@@ -10,7 +10,7 @@ import {
 } from "components/Positions/OpenNewPositionDialog";
 
 import useRepayPositionContext from "context/repayPosition";
-import { IOpenPosition } from "fathom-contracts-helper";
+import { IOpenPosition } from "fathom-sdk";
 
 export type ClosePositionDialogPropsType = {
   topUpPosition: IOpenPosition | undefined;

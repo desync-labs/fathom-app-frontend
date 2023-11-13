@@ -9,7 +9,7 @@ import {
   ButtonPrimary,
   SkipButton,
 } from "components/AppComponents/AppButton/AppButton";
-import { ILockPosition } from "fathom-contracts-helper";
+import { ILockPosition } from "fathom-sdk";
 import { styled } from "@mui/material/styles";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import InfoIcon from "@mui/icons-material/Info";
