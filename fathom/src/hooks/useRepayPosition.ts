@@ -10,9 +10,9 @@ import useConnector from "context/connector";
 
 import { WeiPerWad } from "helpers/Constants";
 
-import { ICollateralPool, IOpenPosition } from "fathom-contracts-helper";
+import { ICollateralPool, IOpenPosition } from "fathom-sdk";
 import debounce from "lodash.debounce";
-import { SmartContractFactory } from "fathom-contracts-helper";
+import { SmartContractFactory } from "fathom-sdk";
 
 const useRepayPosition = (
   position: ClosePositionContextType["position"],

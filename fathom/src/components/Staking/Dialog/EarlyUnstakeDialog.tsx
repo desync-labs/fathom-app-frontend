@@ -11,7 +11,7 @@ import {
   AppDialog,
   DialogContentWrapper,
 } from "components/AppComponents/AppDialog/AppDialog";
-import { ILockPosition } from "fathom-contracts-helper";
+import { ILockPosition } from "fathom-sdk";
 import { styled } from "@mui/material/styles";
 import {
   InfoLabel,

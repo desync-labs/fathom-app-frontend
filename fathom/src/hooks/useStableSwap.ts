@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { useServices } from "context/services";
 import debounce from "lodash.debounce";
-import { SmartContractFactory } from "fathom-contracts-helper";
+import { SmartContractFactory } from "fathom-sdk";
 import useSyncContext from "context/sync";
 import BigNumber from "bignumber.js";
 import Xdc3 from "xdc3";

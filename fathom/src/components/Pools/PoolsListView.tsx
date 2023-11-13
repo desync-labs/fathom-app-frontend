@@ -8,7 +8,7 @@ import {
   TableHead,
   Box,
 } from "@mui/material";
-import { ICollateralPool } from "fathom-contracts-helper";
+import { ICollateralPool } from "fathom-sdk";
 import PoolsListItem from "components/Pools/PoolsListItem";
 import OpenNewPositionDialog from "components/Positions/OpenNewPositionDialog";
 import { styled } from "@mui/material/styles";

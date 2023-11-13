@@ -1,6 +1,6 @@
 import { createContext, FC, ReactElement, useContext } from "react";
 import useOpenPosition, { defaultValues } from "hooks/useOpenPosition";
-import { ICollateralPool } from "fathom-contracts-helper";
+import { ICollateralPool } from "fathom-sdk";
 import { Control, FieldErrorsImpl, UseFormHandleSubmit } from "react-hook-form";
 
 export type OpenPositionContextType = {

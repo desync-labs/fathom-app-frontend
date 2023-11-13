@@ -6,7 +6,7 @@ import BigNumber from "bignumber.js";
 import { OpenPositionContextType } from "context/openPosition";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
-import { IOpenPosition } from "fathom-contracts-helper";
+import { IOpenPosition } from "fathom-sdk";
 import { DANGER_SAFETY_BUFFER } from "helpers/Constants";
 import { useMediaQuery, useTheme } from "@mui/material";
 

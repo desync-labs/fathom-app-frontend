@@ -8,7 +8,7 @@ import {
 } from "react";
 
 import { useServices } from "context/services";
-import { IOpenPosition, ICollateralPool } from "fathom-contracts-helper";
+import { IOpenPosition, ICollateralPool } from "fathom-sdk";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import { FXD_POOLS, FXD_POSITIONS } from "apollo/queries";
 

@@ -6,7 +6,7 @@ import {
   ManagePositionButton,
 } from "components/AppComponents/AppButton/AppButton";
 import { AppTableRow } from "components/AppComponents/AppTable/AppTable";
-import { IOpenPosition } from "fathom-contracts-helper";
+import { IOpenPosition } from "fathom-sdk";
 import { styled } from "@mui/material/styles";
 import TokenLogo from "components/Common/TokenLogo";
 import { getTokenLogoURL } from "utils/tokenLogo";
