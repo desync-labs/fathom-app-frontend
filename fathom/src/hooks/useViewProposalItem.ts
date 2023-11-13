@@ -2,7 +2,7 @@ import useConnector from "context/connector";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ProposalStatus, XDC_BLOCK_TIME } from "helpers/Constants";
 import { useServices } from "context/services";
-import { IProposal } from "fathom-contracts-helper";
+import { IProposal } from "fathom-sdk";
 import BigNumber from "bignumber.js";
 
 const useViewProposalItem = (proposal: IProposal) => {

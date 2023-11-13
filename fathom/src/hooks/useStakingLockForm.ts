@@ -6,7 +6,7 @@ import BigNumber from "bignumber.js";
 import { useServices } from "context/services";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
-import { SmartContractFactory } from "fathom-contracts-helper";
+import { SmartContractFactory } from "fathom-sdk";
 import { DAY_IN_SECONDS } from "helpers/Constants";
 
 const useStakingLockForm = () => {

@@ -5,7 +5,7 @@ import { useMediaQuery, useTheme } from "@mui/material";
 import useConnector from "context/connector";
 import { useServices } from "context/services";
 import useSyncContext from "context/sync";
-import { SmartContractFactory } from "fathom-contracts-helper";
+import { SmartContractFactory } from "fathom-sdk";
 
 const useStableSwapRemoveLiquidity = () => {
   const theme = useTheme();

@@ -4,7 +4,7 @@ import { useQuery } from "@apollo/client";
 import { GOVERNANCE_PROPOSAL_ITEM } from "apollo/queries";
 import { useServices } from "context/services";
 import { ProposalStatus, XDC_BLOCK_TIME } from "helpers/Constants";
-import { IProposal } from "fathom-contracts-helper";
+import { IProposal } from "fathom-sdk";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 import { useMediaQuery, useTheme } from "@mui/material";
