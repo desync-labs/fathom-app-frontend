@@ -1,6 +1,5 @@
 import { styled } from "@mui/material/styles";
 import {
-  TableCell,
   TableRow as MuiTableRow
 } from "@mui/material";
 

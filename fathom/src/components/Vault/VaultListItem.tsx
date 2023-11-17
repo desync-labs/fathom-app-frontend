@@ -179,10 +179,10 @@ export const EarningLabel = styled("div")`
 `;
 
 export type VaultListItemPropsType = {
-  hasDeposite?: boolean
+  hasDeposit?: boolean
 }
 
-const VaultListItem: FC<VaultListItemPropsType> = ({ hasDeposite }) => {
+const VaultListItem: FC<VaultListItemPropsType> = ({ hasDeposit }) => {
   const {
     isMobile,
     extended,
@@ -195,7 +195,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({ hasDeposite }) => {
 
   return (
     <>
-      <AppTableRow className={!extended || !hasDeposite ? "border single" : undefined}>
+      <AppTableRow className={!extended || !hasDeposit ? "border single" : undefined}>
         <VaultListItemPoolCell>
           <VaultListItemImageWrapper>
             <img src={getTokenLogoURL("xUSDT")} alt={"xUSDT"} />
@@ -233,7 +233,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({ hasDeposite }) => {
         <TableCell>
           <VaultStacked>
             <Box className={"img-wrapper"}>
-              {hasDeposite
+              {hasDeposit
                 ? <img src={LockAquaSrc} alt={"locked-active"} width={20} height={20} />
                 : <img src={LockSrc} alt={"locked"} width={20} height={20} />
               }
@@ -241,7 +241,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({ hasDeposite }) => {
             <Box className={"value"}>0 USDT</Box>
           </VaultStacked>
         </TableCell>
-        {hasDeposite
+        {hasDeposit
           ? <TableCell>
             <ExtendedBtn className={extended ? "visible" : "hidden"} onClick={() => setExtended(!extended)}>
               <img src={DirectionUp} alt={"direction-up"} />
@@ -256,7 +256,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({ hasDeposite }) => {
             </ButtonPrimary>
           </TableCell>}
       </AppTableRow>
-      {(hasDeposite && extended) && <AppTableRow className={"border"}>
+      {(hasDeposit && extended) && <AppTableRow className={"border"}>
         <TableCell colSpan={8} sx={{ paddingBottom: "15px !important" }}>
           <VaultItemInfoWrapper>
             {/*<VaultListItemPairInfo />*/}
