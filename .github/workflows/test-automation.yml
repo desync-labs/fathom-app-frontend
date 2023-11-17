@@ -1,0 +1,25 @@
+name: Trigger All Tests in Test Automation Repo
+
+on:
+  pull_request:
+    branches:
+      - dev
+  workflow_dispatch:
+
+jobs:
+  run-automation-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run Automation Tests in fathom-automation-tests repo
+        uses: convictional/trigger-workflow-and-wait@v1.6.1
+        with:
+          owner: Into-the-Fathom
+          repo: fathom-automation-tests
+          github_token: ${{ secrets.TESTS_GITHUB_TOKEN }}
+          github_user: DavitMkhitaryan
+          workflow_file_name: all-tests.yml
+          ref: master
+          propagate_failure: true
+          trigger_workflow: true
+          wait_workflow: true
