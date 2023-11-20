@@ -30,6 +30,7 @@ export class RootService {
 
   provider: Xdc3;
 
+<<<<<<< Updated upstream
   serviceList = [
     "poolService",
     "positionService",
@@ -37,6 +38,16 @@ export class RootService {
     "stableSwapService",
     "stakingService",
   ];
+=======
+  serviceList: {
+    [key: string]:
+      | IPoolService
+      | IPositionService
+      | IStableSwapService
+      | IProposalService
+      | IStakingService;
+  };
+>>>>>>> Stashed changes
 
   constructor() {
     const provider = getDefaultProvider();

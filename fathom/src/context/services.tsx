@@ -104,6 +104,7 @@ export const ServicesProvider: FC<{ children: ReactElement }> = ({
     };
 
     if (rootStore) {
+<<<<<<< Updated upstream
       rootStore.serviceList.forEach((serviceName) => {
         // @ts-ignore
         if (rootStore[serviceName].emitter) {
@@ -122,11 +123,19 @@ export const ServicesProvider: FC<{ children: ReactElement }> = ({
             "successTransaction",
             successTransactionHandler
           );
+=======
+      Object.values(rootStore.serviceList).forEach((service) => {
+        if ("emitter" in service) {
+          service.emitter.on("pendingTransaction", pendingTransactionHandler);
+          service.emitter.on("errorTransaction", errorTransactionHandler);
+          service.emitter.on("successTransaction", successTransactionHandler);
+>>>>>>> Stashed changes
         }
       });
     }
 
     return () => {
+<<<<<<< Updated upstream
       rootStore.serviceList.forEach((serviceName) => {
         // @ts-ignore
         if (rootStore[serviceName].emitter) {
@@ -145,6 +154,13 @@ export const ServicesProvider: FC<{ children: ReactElement }> = ({
             "successTransaction",
             successTransactionHandler
           );
+=======
+      Object.values(rootStore.serviceList).forEach((service) => {
+        if ("emitter" in service) {
+          service.emitter.off("pendingTransaction", pendingTransactionHandler);
+          service.emitter.off("errorTransaction", errorTransactionHandler);
+          service.emitter.off("successTransaction", successTransactionHandler);
+>>>>>>> Stashed changes
         }
       });
     };

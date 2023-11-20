@@ -29,7 +29,7 @@ const DashboardContent = () => {
           <ProtocolStats />
         </Grid>
         <Grid item xs={12}>
-          <PoolsListView />
+          <PoolsListView proxyWallet={proxyWallet} />
         </Grid>
         <Grid item xs={12} sx={{ marginTop: isMobile ? "5px" : "30px" }}>
           <PositionsList
