@@ -8,6 +8,7 @@ import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 import { DANGER_SAFETY_BUFFER } from "helpers/Constants";
 import { useMediaQuery, useTheme } from "@mui/material";
+import { ZERO_ADDRESS } from "fathom-sdk";
 
 export const defaultValues = {
   collateral: "",
@@ -18,7 +19,8 @@ export const defaultValues = {
 
 const useOpenPosition = (
   pool: OpenPositionContextType["pool"],
-  onClose: OpenPositionContextType["onClose"]
+  onClose: OpenPositionContextType["onClose"],
+  proxyWallet: OpenPositionContextType["proxyWallet"]
 ) => {
   const { poolService, positionService } = useServices();
   const { account, chainId, library } = useConnector();
@@ -73,6 +75,11 @@ const useOpenPosition = (
   const [approveBtn, setApproveBtn] = useState<boolean>(false);
   const [approvalPending, setApprovalPending] = useState<boolean>(false);
 
+  const proxyWalletExists = useMemo(
+    () => proxyWallet !== ZERO_ADDRESS,
+    [proxyWallet]
+  );
+
   const approvalStatus = useMemo(
     () =>
       debounce(async (collateral: string) => {
@@ -112,7 +119,7 @@ const useOpenPosition = (
   const getPositionDebtCeiling = useCallback(() => {
     positionService
       .getPositionDebtCeiling(pool.id)
-      .then((debtCeiling) => {
+      .then((debtCeiling: string) => {
         setMaxBorrowAmount(debtCeiling);
       })
       .catch(() => {
@@ -130,7 +137,7 @@ const useOpenPosition = (
       isTouched &&
       isDirty &&
       BigNumber(safetyBuffer).isGreaterThanOrEqualTo(0) &&
-      safetyBuffer < DANGER_SAFETY_BUFFER
+      BigNumber(safetyBuffer).isLessThan(DANGER_SAFETY_BUFFER)
     );
   }, [isTouched, isDirty, safetyBuffer]);
 
@@ -358,6 +365,7 @@ const useOpenPosition = (
   }, [chainId, account, getCollateralTokenAndBalance, getPositionDebtCeiling]);
 
   return {
+    proxyWalletExists,
     isMobile,
     safeMax,
     approveBtn,

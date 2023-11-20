@@ -6,6 +6,7 @@ import { COUNT_PER_PAGE } from "helpers/Constants";
 import useSyncContext from "context/sync";
 import { useMediaQuery, useTheme } from "@mui/material";
 import useConnector from "context/connector";
+import { ZERO_ADDRESS } from "fathom-sdk";
 
 const useDashboard = () => {
   const { positionService } = useServices();
@@ -37,7 +38,7 @@ const useDashboard = () => {
   );
 
   const fetchUserStatsAndProxyWallet = useCallback(async () => {
-    const proxyWallet = await positionService.proxyWalletExist(account);
+    const proxyWallet = await positionService.getProxyWallet(account);
     setProxyWallet(proxyWallet);
 
     return loadUserStats({
@@ -62,8 +63,8 @@ const useDashboard = () => {
     refetchStats();
     refetchPools();
 
-    if (/^0x0+$/.test(proxyWallet)) {
-      const newProxyWallet = await positionService.proxyWalletExist(account);
+    if (proxyWallet === ZERO_ADDRESS) {
+      const newProxyWallet = await positionService.getProxyWallet(account);
 
       setProxyWallet(newProxyWallet);
 

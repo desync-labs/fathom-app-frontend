@@ -7,6 +7,7 @@ export type OpenPositionContextType = {
   children: ReactElement;
   pool: ICollateralPool;
   onClose: () => void;
+  proxyWallet: string;
 };
 
 export type UseOpenPositionContextReturnType = {
@@ -38,6 +39,7 @@ export type UseOpenPositionContextReturnType = {
   dangerSafetyBuffer: boolean;
   errors: Partial<FieldErrorsImpl<typeof defaultValues>>;
   maxBorrowAmount: string;
+  proxyWalletExists: boolean;
 };
 
 // @ts-ignore
@@ -50,8 +52,9 @@ export const OpenPositionProvider: FC<OpenPositionContextType> = ({
   children,
   pool,
   onClose,
+  proxyWallet,
 }) => {
-  const values = useOpenPosition(pool, onClose);
+  const values = useOpenPosition(pool, onClose, proxyWallet);
 
   return (
     <OpenPositionContext.Provider value={values}>
