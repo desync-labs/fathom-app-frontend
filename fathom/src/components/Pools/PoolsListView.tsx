@@ -44,7 +44,11 @@ const PoolsTitle = styled(TitleSecondary)`
   }
 `;
 
-const PoolsListView: FC = () => {
+type PoolsListViewProps = {
+  proxyWallet: string;
+};
+
+const PoolsListView: FC<PoolsListViewProps> = ({ proxyWallet }) => {
   const {
     isMobile,
     pools,
@@ -113,6 +117,7 @@ const PoolsListView: FC = () => {
             <OpenPositionProvider
               onClose={onCloseNewPosition}
               pool={selectedPool}
+              proxyWallet={proxyWallet}
             >
               <OpenNewPositionDialog />
             </OpenPositionProvider>
