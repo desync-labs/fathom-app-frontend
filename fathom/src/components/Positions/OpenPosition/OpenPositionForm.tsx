@@ -74,6 +74,7 @@ const OpenPositionForm = () => {
     dangerSafetyBuffer,
     errors,
     maxBorrowAmount,
+    proxyWalletExists,
   } = useOpenPositionContext();
 
   const { isOpenPositionWhitelisted } = useConnector();
@@ -267,6 +268,15 @@ const OpenPositionForm = () => {
               >
                 Apply for being added to the whitelist to borrow FXD.
               </a>
+            </Typography>
+          </WarningBox>
+        )}
+        {!proxyWalletExists && (
+          <WarningBox>
+            <InfoIcon />
+            <Typography>
+              Your wallet address has no proxy wallet. <br />
+              First transaction will be creation of proxy wallet.
             </Typography>
           </WarningBox>
         )}

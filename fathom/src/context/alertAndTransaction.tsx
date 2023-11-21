@@ -98,7 +98,6 @@ export const AlertAndTransactionProvider: FC<
       successMessage = "Action was successful!",
       erc20Token: ERC20TokenType | undefined
     ) => {
-      resetErc20TokenModal();
       setErc20TokenModalData(erc20Token);
       setSuccessAlertMessage(successMessage);
     },

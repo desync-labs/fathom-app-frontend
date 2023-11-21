@@ -104,47 +104,21 @@ export const ServicesProvider: FC<{ children: ReactElement }> = ({
     };
 
     if (rootStore) {
-      rootStore.serviceList.forEach((serviceName) => {
-        // @ts-ignore
-        if (rootStore[serviceName].emitter) {
-          // @ts-ignore
-          rootStore[serviceName].emitter.on(
-            "pendingTransaction",
-            pendingTransactionHandler
-          );
-          // @ts-ignore
-          rootStore[serviceName].emitter.on(
-            "errorTransaction",
-            errorTransactionHandler
-          );
-          // @ts-ignore
-          rootStore[serviceName].emitter.on(
-            "successTransaction",
-            successTransactionHandler
-          );
+      Object.values(rootStore.serviceList).forEach((service) => {
+        if ("emitter" in service) {
+          service.emitter.on("pendingTransaction", pendingTransactionHandler);
+          service.emitter.on("errorTransaction", errorTransactionHandler);
+          service.emitter.on("successTransaction", successTransactionHandler);
         }
       });
     }
 
     return () => {
-      rootStore.serviceList.forEach((serviceName) => {
-        // @ts-ignore
-        if (rootStore[serviceName].emitter) {
-          // @ts-ignore
-          rootStore[serviceName].emitter.off(
-            "pendingTransaction",
-            pendingTransactionHandler
-          );
-          // @ts-ignore
-          rootStore[serviceName].emitter.off(
-            "errorTransaction",
-            errorTransactionHandler
-          );
-          // @ts-ignore
-          rootStore[serviceName].emitter.off(
-            "successTransaction",
-            successTransactionHandler
-          );
+      Object.values(rootStore.serviceList).forEach((service) => {
+        if ("emitter" in service) {
+          service.emitter.off("pendingTransaction", pendingTransactionHandler);
+          service.emitter.off("errorTransaction", errorTransactionHandler);
+          service.emitter.off("successTransaction", successTransactionHandler);
         }
       });
     };
