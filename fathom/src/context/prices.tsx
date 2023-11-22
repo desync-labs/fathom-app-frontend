@@ -19,9 +19,9 @@ type PricesProviderType = {
 };
 
 export type UsePricesContextReturn = {
-  fxdPrice: number;
-  wxdcPrice: number;
-  fthmPrice: number;
+  fxdPrice: string;
+  wxdcPrice: string;
+  fthmPrice: string;
 };
 
 // @ts-ignore
@@ -34,9 +34,9 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
   const { chainId } = useConnector();
   const { provider } = useServices();
 
-  const [fxdPrice, setFxdPrice] = useState<number>(0);
-  const [wxdcPrice, setWxdcPrice] = useState<number>(0);
-  const [fthmPrice, setFthmPrice] = useState<number>(0);
+  const [fxdPrice, setFxdPrice] = useState<string>("0");
+  const [wxdcPrice, setWxdcPrice] = useState<string>("0");
+  const [fthmPrice, setFthmPrice] = useState<string>("0");
 
   const { syncDao, prevSyncDao, syncFXD, prevSyncFxd } = useSyncContext();
 
@@ -68,10 +68,11 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
           stakingService
             .getPairPrice(fxdTokenAddress, fthmTokenAddress)
             .then((fthmPrice) => {
-              console.log("Price for pair FTHM/FXD", (fthmPrice as any)[0]);
-              setFthmPrice((fthmPrice as any)[0]);
+              console.log("Price for pair FTHM/FXD", fthmPrice[0].toString());
+              setFthmPrice(fthmPrice[0].toString());
             })
-            .catch(() => {
+            .catch((e) => {
+              console.log(e);
               console.log("Pair FTHM/FXD not exists on DEX");
             });
         }
@@ -81,8 +82,8 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
           : stakingService.getPairPrice(usdtTokenAddress, wxdcTokenAddress)
         )
           .then((wxdcPrice) => {
-            console.log("Price for pair USDT/WXDC", (wxdcPrice as any)[0]);
-            setWxdcPrice((wxdcPrice as any)[0]);
+            console.log("Price for pair USDT/WXDC", wxdcPrice[0].toString());
+            setWxdcPrice(wxdcPrice[0].toString());
           })
           .catch(() => {
             console.log("Pair USDT/WXDC not exists on DEX");
@@ -93,8 +94,8 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
           : stakingService.getPairPrice(usdtTokenAddress, fxdTokenAddress)
         )
           .then((fxdPrice) => {
-            console.log("Price for pair USDT/FXD", (fxdPrice as any)[0]);
-            setFxdPrice((fxdPrice as any)[0]);
+            console.log("Price for pair USDT/FXD", fxdPrice[0].toString());
+            setFxdPrice(fxdPrice[0].toString());
           })
           .catch(() => {
             console.log("Pair USDT/FXD not exists on DEX");

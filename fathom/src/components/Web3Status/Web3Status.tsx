@@ -1,5 +1,4 @@
 import { UnsupportedChainIdError } from "@web3-react/core";
-import Xdc3 from "xdc3";
 import {
   RightNetwork,
   WrongNetwork,
@@ -88,16 +87,17 @@ const Web3Status = () => {
   );
 
   const requestChangeNetwork = useCallback(
-    async (chainId: string) => {
+    async (chainId: number) => {
       setOpen(false);
       if (window.ethereum) {
         try {
           // @ts-ignore
           await window.ethereum?.request({
             method: "wallet_switchEthereumChain",
-            params: [{ chainId: Xdc3.utils.toHex(chainId) }],
+            params: [{ chainId: `0x${chainId.toString(16)}` }],
           });
         } catch (err: any) {
+          console.log(err);
           if (err.code === 4902) {
             // @ts-ignore
             await window.ethereum.request({
@@ -188,7 +188,7 @@ const Web3Status = () => {
                 <MenuList id="split-button-menu" autoFocusItem>
                   {options.map(([chainId, chainName]) => (
                     <MenuItem
-                      onClick={() => requestChangeNetwork(chainId)}
+                      onClick={() => requestChangeNetwork(Number(chainId))}
                       key={chainId}
                     >
                       {chainName}

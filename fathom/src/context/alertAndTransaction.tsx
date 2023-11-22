@@ -38,11 +38,6 @@ export type UseAlertAndTransactionReturnType = {
   resetErc20TokenModal: () => void;
 };
 
-export type UseAlertAndTransactionServiceType = Pick<
-  UseAlertAndTransactionReturnType,
-  "setShowSuccessAlertHandler" | "setShowErrorAlertHandler" | "addTransaction"
->;
-
 export const AlertAndTransactionContext =
   createContext<UseAlertAndTransactionReturnType>(
     {} as UseAlertAndTransactionReturnType
@@ -88,7 +83,7 @@ export const AlertAndTransactionProvider: FC<
 
       setTimeout(() => {
         resetAlerts();
-      }, 2000);
+      }, TransactionCheckUpdateInterval);
     },
     [resetAlerts, setShowSuccessAlert, setSuccessAlertMessage]
   );
@@ -112,7 +107,7 @@ export const AlertAndTransactionProvider: FC<
 
       setTimeout(() => {
         resetAlerts();
-      }, 2000);
+      }, TransactionCheckUpdateInterval);
     },
     [resetAlerts, setShowErrorAlert, setErrorAlertMessage]
   );
@@ -133,11 +128,11 @@ export const AlertAndTransactionProvider: FC<
 
   const checkStatus = useCallback(
     async (pendingTransaction: ITransaction) => {
-      const response = await library.eth.getTransactionReceipt(
+      const receipt = await library.getTransactionReceipt(
         pendingTransaction.hash
       );
-      if (response) {
-        pendingTransaction.status = response.status
+      if (receipt) {
+        pendingTransaction.status = receipt.status
           ? TransactionStatus.Success
           : TransactionStatus.Error;
       }

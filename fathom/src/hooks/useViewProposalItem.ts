@@ -16,18 +16,18 @@ const useViewProposalItem = (proposal: IProposal) => {
   const [quorumError, setQuorumError] = useState<boolean>(false);
 
   const getTimestamp = useCallback(async () => {
-    const currentBlock = await library.eth.getBlockNumber();
+    const currentBlock = await library.getBlockNumber();
     let timestamp;
 
     if (Number(currentBlock) < Number(proposal.startBlock)) {
-      const blockData = await library.eth.getBlock(currentBlock);
+      const blockData = await library.getBlock(currentBlock);
       timestamp = BigNumber(blockData.timestamp).plus(
         BigNumber(proposal.startBlock)
           .minus(currentBlock)
           .multipliedBy(XDC_BLOCK_TIME)
       );
     } else {
-      const blockData = await library.eth.getBlock(proposal.startBlock);
+      const blockData = await library.getBlock(proposal.startBlock);
       timestamp = BigNumber(blockData.timestamp);
     }
 
