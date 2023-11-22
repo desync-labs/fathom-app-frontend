@@ -70,8 +70,7 @@
     "lint": "eslint src/**/*.ts",
     "lint:fix": "npm run lint -- --fix",
     "prettier": "npx prettier --write .",
-    "playwright:test:local-dev": "ENVIRONMENT_URL=http://127.0.0.1:3000 npx playwright test",
-    "playwright:test:dev": "ENVIRONMENT_URL=https://dev-app-frontend-wpa8a.ondigitalocean.app npx playwright test"
+    "playwright:test": "npx playwright test"
   },
   "browserslist": [
     ">0.2%",
