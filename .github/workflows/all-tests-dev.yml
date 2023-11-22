@@ -18,7 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: dev
+          ref: test-automation-migration-and-github-workflows
       - uses: actions/setup-node@v3
         with:
           node-version: 16
