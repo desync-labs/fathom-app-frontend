@@ -21,8 +21,10 @@ jobs:
         run: cd fathom && npm install
       - name: Install Playwright Browsers
         run: cd fathom && npx playwright install --with-deps chromium
-      - name: Start Frontend on Dev environment
-        run: cd fathom && npm run start:dev
+      - name: Start Frontend on Dev environment in background
+        run: cd fathom && npm run start:dev &
+      - name: Wait for server to start
+        run: sleep 40
       - name: Run Playwright tests
         run: cd fathom && xvfb-run --auto-servernum -- npm run playwright:test
         env:
