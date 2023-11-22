@@ -17,16 +17,14 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-      - name: Change Directory to main project
-        run: cd ..
       - name: Install dependencies
-        run: npm install
+        run: cd fathom && npm install
       - name: Install Playwright Browsers
-        run: npx playwright install --with-deps chromium
+        run: cd fathom && npx playwright install --with-deps chromium
       - name: Start Frontend on Dev environment
-        run: npm run start:dev
+        run: cd fathom && npm run start:dev
       - name: Run Playwright tests
-        run: xvfb-run --auto-servernum -- npm run playwright:test
+        run: cd fathom && xvfb-run --auto-servernum -- npm run playwright:test
         env:
           ENVIRONMENT_URL: http://127.0.0.1:3000
           HEADLESS_MODE: ${{ vars.HEADLESS_MODE}}
