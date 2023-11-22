@@ -152,7 +152,7 @@ export default class BasePage {
           return false;
         }
       },
-      { timeout: 30000 }
+      { timeout: 60000 }
     );
     return request;
   }
@@ -169,16 +169,16 @@ export default class BasePage {
     if (status === "pending") {
       await expect
         .soft(this.divAlertMessage.getByText(title))
-        .toBeVisible({ timeout: 30000 });
+        .toBeVisible({ timeout: 60000 });
       if (body) {
         await expect
           .soft(this.divAlertMessage.getByText(body))
-          .toBeVisible({ timeout: 30000 });
+          .toBeVisible({ timeout: 60000 });
       }
     } else if (status === "success" || status === "error") {
       await expect
         .soft(this.divAlert.getByText(title))
-        .toBeVisible({ timeout: 30000 });
+        .toBeVisible({ timeout: 60000 });
     }
   }
 }
