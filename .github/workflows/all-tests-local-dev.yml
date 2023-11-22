@@ -1,16 +1,12 @@
 name: all-tests
 
 on:
-  workflow_dispatch:
-  schedule:
-    - cron: '0 0 * * *'
   pull_request:
     branches:
-    - dev
+      - dev
   push:
     branches:
-    - test-automation-migration-and-github-workflows
-
+      - test-automation-migration-and-github-workflows
 
 concurrency:
   group: ${{ github.workflow }}
@@ -35,7 +31,7 @@ jobs:
       - name: Run Playwright tests
         run: xvfb-run --auto-servernum -- npm run playwright:test
         env:
-          ENVIRONMENT: ${{ vars.ENVIRONMENT_URL }}
+          ENVIRONMENT_URL: http://127.0.0.1:3000
           HEADLESS_MODE: ${{ vars.HEADLESS_MODE}}
           METAMASK_SETUP_PRIVATE_KEY: ${{secrets.METAMASK_SETUP_PRIVATE_KEY}}
           METAMASK_TEST_ONE_PRIVATE_KEY: ${{secrets.METAMASK_TEST_ONE_PRIVATE_KEY}}
