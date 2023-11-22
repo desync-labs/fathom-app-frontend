@@ -23,7 +23,7 @@ jobs:
         with:
           node-version: 16
       - name: Change Directory to main project
-        run: cd .. && pwd
+        run: cd fathom && pwd
       - name: Install dependencies
         run: pwd && npm install
       - name: Install Playwright Browsers
