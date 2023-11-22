@@ -26,15 +26,16 @@ export default class BasePage {
   readonly divAlertMessage: Locator;
   readonly divAlertTitle: Locator;
   readonly paragraphAlertBody: Locator;
+  readonly timeoutTransactionPending = process.env.CI ? 60000 : 30000
 
   constructor(page: Page) {
     this.page = page;
 
-    switch (process.env.ENVIRONMENT) {
-      case "prod":
+    switch (process.env.ENVIRONMENT_URL) {
+      case "https://dapp.fathom.fi":
         this.graphAPIBaseUrl = "https://xinfin-graph.fathom.fi";
         break;
-      case "dev":
+      case "https://dev-app-frontend-wpa8a.ondigitalocean.app" || "http://127.0.0.1:3000":
         this.graphAPIBaseUrl = "https://dev.fathom.fi";
         break;
       default:
@@ -152,7 +153,7 @@ export default class BasePage {
           return false;
         }
       },
-      { timeout: 60000 }
+      { timeout: this.timeoutTransactionPending }
     );
     return request;
   }
@@ -169,16 +170,16 @@ export default class BasePage {
     if (status === "pending") {
       await expect
         .soft(this.divAlertMessage.getByText(title))
-        .toBeVisible({ timeout: 60000 });
+        .toBeVisible({ timeout: this.timeoutTransactionPending });
       if (body) {
         await expect
           .soft(this.divAlertMessage.getByText(body))
-          .toBeVisible({ timeout: 60000 });
+          .toBeVisible({ timeout: this.timeoutTransactionPending });
       }
     } else if (status === "success" || status === "error") {
       await expect
         .soft(this.divAlert.getByText(title))
-        .toBeVisible({ timeout: 60000 });
+        .toBeVisible({ timeout: this.timeoutTransactionPending });
     }
   }
 }
