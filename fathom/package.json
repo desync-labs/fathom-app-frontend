@@ -50,7 +50,9 @@
     "prettier": "^2.4.1",
     "react-scripts": "4.0.3",
     "typescript": "^4.8.3",
-    "@babel/plugin-proposal-private-property-in-object": "7.21.11"
+    "@babel/plugin-proposal-private-property-in-object": "7.21.11",
+    "@playwright/test": "^1.39.0",
+    "@synthetixio/synpress": "^3.7.2-beta.9"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -67,7 +69,9 @@
     "build:qa": "env-cmd -f .env.qa react-scripts build",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "npm run lint -- --fix",
-    "prettier": "npx prettier --write ."
+    "prettier": "npx prettier --write .",
+    "playwright:test:local-dev": "ENVIRONMENT_URL=http://127.0.0.1:3000 npx playwright test",
+    "playwright:test:dev": "ENVIRONMENT_URL=https://dev-app-frontend-wpa8a.ondigitalocean.app npx playwright test"
   },
   "browserslist": [
     ">0.2%",
