@@ -25,11 +25,11 @@ jobs:
       - name: Change Directory to main project
         run: cd fathom && pwd
       - name: Install dependencies
-        run: pwd && npm install
+        run: cd fathom && npm install
       - name: Install Playwright Browsers
-        run: npx playwright install --with-deps chromium
+        run: cd fathom && npx playwright install --with-deps chromium
       - name: Run Playwright tests
-        run: xvfb-run --auto-servernum -- npm run playwright:test
+        run: cd fathom && xvfb-run --auto-servernum -- npm run playwright:test
         env:
           ENVIRONMENT_URL: https://dev-app-frontend-wpa8a.ondigitalocean.app
           HEADLESS_MODE: ${{ vars.HEADLESS_MODE}}
