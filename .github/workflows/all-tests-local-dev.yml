@@ -1,9 +1,9 @@
 name: all-tests-local-dev
 
 on:
-  pull_request:
+  push:
     branches:
-      - dev
+      - test-automation-migration-and-github-workflows
 
 concurrency:
   group: ${{ github.workflow }}
