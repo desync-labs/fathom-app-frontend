@@ -82,14 +82,16 @@ const useOpenPositionList = (
   }, [topUpPosition, poolsData]);
 
   useEffect(() => {
-    loadPositions({
-      variables: {
-        first: COUNT_PER_PAGE,
-        skip: 0,
-        walletAddress: proxyWallet,
-      },
-      fetchPolicy: "network-only",
-    });
+    if (proxyWallet) {
+      loadPositions({
+        variables: {
+          first: COUNT_PER_PAGE,
+          skip: 0,
+          walletAddress: proxyWallet,
+        },
+        fetchPolicy: "network-only",
+      });
+    }
   }, [chainId, proxyWallet, called, loadPositions]);
 
   const approve = useCallback(async () => {

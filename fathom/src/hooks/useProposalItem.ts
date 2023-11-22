@@ -67,18 +67,18 @@ const useProposalItem = () => {
 
   const getVotingStartsTime = useCallback(async () => {
     if (data && data.proposal) {
-      const currentBlock = await library.eth.getBlockNumber();
+      const currentBlock = await library.getBlockNumber();
       let timestamp;
 
       if (BigNumber(currentBlock).isLessThan(data.proposal.startBlock)) {
-        const blockData = await library.eth.getBlock(currentBlock);
+        const blockData = await library.getBlock(currentBlock);
         timestamp = BigNumber(blockData.timestamp).plus(
           BigNumber(data.proposal.startBlock)
             .minus(currentBlock)
             .multipliedBy(XDC_BLOCK_TIME)
         );
       } else {
-        const blockData = await library.eth.getBlock(data.proposal.startBlock);
+        const blockData = await library.getBlock(data.proposal.startBlock);
         timestamp = BigNumber(blockData.timestamp);
       }
 
@@ -90,18 +90,18 @@ const useProposalItem = () => {
 
   const getVotingEndTime = useCallback(async () => {
     if (data && data.proposal && chainId) {
-      const currentBlock = await library.eth.getBlockNumber();
+      const currentBlock = await library.getBlockNumber();
       let timestamp;
 
       if (Number(currentBlock) < Number(data.proposal.startBlock)) {
-        const blockData = await library.eth.getBlock(currentBlock);
+        const blockData = await library.getBlock(currentBlock);
         timestamp = BigNumber(blockData.timestamp).plus(
           BigNumber(data.proposal.startBlock)
             .minus(currentBlock)
             .multipliedBy(XDC_BLOCK_TIME)
         );
       } else {
-        const blockData = await library.eth.getBlock(data.proposal.startBlock);
+        const blockData = await library.getBlock(data.proposal.startBlock);
         timestamp = BigNumber(blockData.timestamp);
       }
 

@@ -1,5 +1,4 @@
 import React from "react";
-import Xdc3 from "xdc3";
 import { Box, Grid, Typography } from "@mui/material";
 import { secondsToTime } from "utils/secondsToTime";
 import { getAccountUrl } from "utils/explorer";
@@ -9,6 +8,7 @@ import { styled } from "@mui/material/styles";
 import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
 import StakingCountdown from "components/Staking/StakingCountdown";
 import useConnector from "context/connector";
+import { ZERO_ADDRESS } from "helpers/Constants";
 
 const ProposalTitle = styled(Typography)`
   font-weight: bold;
@@ -152,7 +152,7 @@ const ProposalInfo = () => {
           )}
           {fetchedProposal.targets &&
             fetchedProposal.targets.length &&
-            !Xdc3.utils.toBN(fetchedProposal.targets[0]).isZero() && (
+            fetchedProposal.targets[0] !== ZERO_ADDRESS && (
               <Grid item xs={12} sx={{ padding: "12px 24px" }}>
                 <ProposalLabel>Action</ProposalLabel>
                 <ProposalDescription>

@@ -95,7 +95,7 @@ const useOpenPosition = (
 
   const getCollateralTokenAndBalance = useCallback(async () => {
     if (pool.poolName.toUpperCase() === "XDC") {
-      const balance = await library.eth.getBalance(account);
+      const balance = await library.getBalance(account);
       setCollateralTokenAddress(null);
       setBalance(Number(balance));
     } else {

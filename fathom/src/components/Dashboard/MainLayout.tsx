@@ -58,8 +58,6 @@ import FathomLogoMobileSrc from "assets/svg/Fathom-app-logo-mobile.svg";
 import MobileMenuIcon from "assets/svg/mobile-menu.svg";
 import MobileMenuIconActive from "assets/svg/mobile-menu-active.svg";
 
-import { getTokenLogoURL } from "utils/tokenLogo";
-
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
@@ -94,7 +92,7 @@ const MenuWrapper = styled("nav")<{ open: boolean }>`
   padding: ${({ open }) => (open ? "20px 12px" : "20px 8px")};
   height: 100vh;
   position: relative;
-  margintop: 1rem;
+  margin-top: 1rem;
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -155,10 +153,6 @@ const MobileMenuWrapper = styled(Box)`
   gap: 7px;
 `;
 
-const XdcPayImage = styled("img")`
-  margin-left: 10px;
-`;
-
 const WalletBox = styled(Box)`
   font-weight: 400;
   font-size: 12px;
@@ -179,7 +173,6 @@ const MainLayout = () => {
     isActive,
     open,
     isMetamask,
-    isXdcPay,
     isWalletConnect,
     toggleDrawer,
     mainBlockClickHandler,
@@ -268,13 +261,6 @@ const MainLayout = () => {
             <Web3Status />
 
             {isMetamask && <img src={MetamaskSrc} alt={"metamask"} />}
-            {isXdcPay && (
-              <XdcPayImage
-                src={getTokenLogoURL("WXDC")}
-                alt={"xdc-pay"}
-                width={"28px"}
-              />
-            )}
             {isWalletConnect && (
               <img src={WalletConnectSrc} alt={"wallet-connect"} />
             )}

@@ -1,6 +1,7 @@
 import useStakingContext from "context/staking";
 import usePricesContext from "context/prices";
 import { useEffect, useMemo, useState } from "react";
+import BigNumber from "bignumber.js";
 
 const useStreamStats = () => {
   const {
@@ -12,7 +13,13 @@ const useStreamStats = () => {
   } = useStakingContext();
 
   const { fthmPrice } = usePricesContext();
-  const fthmPriceFormatted = useMemo(() => fthmPrice / 10 ** 18, [fthmPrice]);
+  const fthmPriceFormatted = useMemo(
+    () =>
+      BigNumber(fthmPrice)
+        .dividedBy(10 ** 18)
+        .toNumber(),
+    [fthmPrice]
+  );
 
   const [previousStakerState, setPreviousStakerState] = useState<any>();
 

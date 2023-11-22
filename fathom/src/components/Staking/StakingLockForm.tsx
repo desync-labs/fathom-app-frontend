@@ -21,6 +21,7 @@ import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatCurrency, formatNumber, formatPercentage } from "utils/format";
 
 import usePricesContext from "context/prices";
+import BigNumber from "bignumber.js";
 
 const StakingLockPaper = styled(AppPaper)`
   display: flex;
@@ -276,7 +277,12 @@ const StakingLockForm: FC = () => {
                       <strong>{formatNumber(fthmBalance)}</strong> FTHM
                     </FTHMBalance>
                     <USDBalance>
-                      {formatCurrency((fthmBalance * fthmPrice) / 10 ** 18)}
+                      {formatCurrency(
+                        BigNumber(fthmBalance)
+                          .multipliedBy(fthmPrice)
+                          .dividedBy(10 ** 18)
+                          .toNumber()
+                      )}
                     </USDBalance>
                   </Box>
                 </WalletBalanceWrapper>
@@ -293,7 +299,12 @@ const StakingLockForm: FC = () => {
                       <strong>{formatNumber(fxdBalance)}</strong> FXD
                     </FTHMBalance>
                     <USDBalance>
-                      {formatCurrency((fxdBalance * fxdPrice) / 10 ** 18)}
+                      {formatCurrency(
+                        BigNumber(fxdBalance)
+                          .multipliedBy(fxdPrice)
+                          .dividedBy(10 ** 18)
+                          .toNumber()
+                      )}
                     </USDBalance>
                   </Box>
                 </WalletBalanceWrapper>
@@ -310,7 +321,12 @@ const StakingLockForm: FC = () => {
                       <strong>{formatNumber(xdcBalance)}</strong> XDC
                     </FTHMBalance>
                     <USDBalance>
-                      {formatCurrency((xdcBalance * wxdcPrice) / 10 ** 18)}
+                      {formatCurrency(
+                        BigNumber(xdcBalance)
+                          .multipliedBy(wxdcPrice)
+                          .dividedBy(10 ** 18)
+                          .toNumber()
+                      )}
                     </USDBalance>
                   </Box>
                 </WalletBalanceWrapper>

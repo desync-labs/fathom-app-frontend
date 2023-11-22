@@ -56,7 +56,7 @@ const useStakingLockForm = () => {
 
   const getMinLockPeriod = useCallback(async () => {
     const lockPeriod = await stakingService.getMinLockPeriod();
-    const minDays = BigNumber(lockPeriod).dividedBy(DAY_IN_SECONDS);
+    const minDays = lockPeriod.div(DAY_IN_SECONDS);
     setMinLockPeriod(minDays.toNumber());
   }, [stakingService, setMinLockPeriod]);
 
@@ -97,15 +97,11 @@ const useStakingLockForm = () => {
   useEffect(() => {
     const getBalance = async () => {
       const [xdcBalance, fxdBalance] = await Promise.all([
-        library.eth.getBalance(account),
+        library.getBalance(account),
         positionService.balanceStableCoin(account),
       ]);
 
-      setXdcBalance(
-        BigNumber(xdcBalance)
-          .dividedBy(10 ** 18)
-          .toNumber()
-      );
+      setXdcBalance(xdcBalance.div(10 ** 18).toNumber());
       setFxdBalance(
         BigNumber(fxdBalance)
           .dividedBy(10 ** 18)

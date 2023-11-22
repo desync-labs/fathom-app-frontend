@@ -5,6 +5,7 @@ import useProtocolStats from "hooks/useProtocolStats";
 import { formatCurrency, formatNumber } from "utils/format";
 import usePricesContext from "context/prices";
 import AppPopover from "components/AppComponents/AppPopover/AppPopover";
+import BigNumber from "bignumber.js";
 
 const StatsItem = styled(Grid)`
   text-align: left;
@@ -99,7 +100,11 @@ const ProtocolStats = () => {
         <Box>
           <StatsTitle>FXD Price</StatsTitle>
           <StatsDescription>
-            {formatCurrency(fxdPrice / 10 ** 18)}
+            {formatCurrency(
+              BigNumber(fxdPrice)
+                .dividedBy(10 ** 18)
+                .toNumber()
+            )}
           </StatsDescription>
         </Box>
       </StatsItem>

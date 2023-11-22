@@ -11,15 +11,8 @@ const useMainLayout = () => {
   const isTablet = useMediaQuery(theme.breakpoints.down("md"));
   const [open, setOpen] = useState<boolean>(!isMobile);
   const [showToggleDrawerBtn, setShowToggleDrawerBtn] = useState<boolean>(true);
-  const {
-    disconnect,
-    isActive,
-    account,
-    error,
-    isMetamask,
-    isXdcPay,
-    isWalletConnect,
-  } = useConnector();
+  const { disconnect, isActive, account, error, isMetamask, isWalletConnect } =
+    useConnector();
 
   const [openMobile, setOpenMobile] = useState<boolean>(false);
   const [openConnector, setOpenConnector] = useState<boolean>(false);
@@ -105,7 +98,6 @@ const useMainLayout = () => {
     open,
     disconnect,
     isMetamask,
-    isXdcPay,
     isWalletConnect,
     toggleDrawer,
     openMobile,

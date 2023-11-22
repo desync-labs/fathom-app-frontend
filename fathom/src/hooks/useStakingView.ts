@@ -16,6 +16,7 @@ import useSyncContext from "context/sync";
 import { useMediaQuery, useTheme } from "@mui/material";
 import useConnector from "context/connector";
 import debounce from "lodash.debounce";
+import { BigNumber } from "ethers";
 
 export type ActionType = { type: string; id: number | null };
 
@@ -81,10 +82,9 @@ const useStakingView = () => {
   const fetchAllClaimRewards = useCallback(() => {
     if (account) {
       stakingService.getStreamClaimableAmount(account).then((amount) => {
-        setTotalRewards(Number(amount));
-
+        setTotalRewards(amount.toNumber());
         setTimeout(() => {
-          previousTotalRewardsRef.current = amount;
+          previousTotalRewardsRef.current = amount.toNumber();
         }, 1000);
       });
     }
@@ -126,7 +126,7 @@ const useStakingView = () => {
           stakersData?.stakers[0].lockPositions.length &&
           !stakersLoading
         ) {
-          const promises: Promise<number>[] = [];
+          const promises: Promise<BigNumber>[] = [];
           stakersData?.stakers[0].lockPositions.forEach(
             (lockPosition: ILockPosition) => {
               promises.push(
@@ -145,7 +145,7 @@ const useStakingView = () => {
             const newLockPositions = stakersData?.stakers[0].lockPositions.map(
               (lockPosition: ILockPosition, index: number) => {
                 const newLockPosition: ILockPosition = { ...lockPosition };
-                newLockPosition.rewardsAvailable = Number(result[index]);
+                newLockPosition.rewardsAvailable = result[index].toNumber();
                 return newLockPosition;
               }
             );

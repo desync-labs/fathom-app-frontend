@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useMemo } from "react";
 import { useFormContext } from "react-hook-form";
 import useConnector from "context/connector";
-import Xdc3 from "xdc3";
 import debounce from "lodash.debounce";
+import { utils } from "ethers";
 
 const useCreateProposalActionField = (index: number) => {
   const { control, watch, setValue } = useFormContext();
   const { library } = useConnector();
+  const abiCoder = new utils.AbiCoder();
 
   const functionSignature = watch(`actions.${index}.functionSignature`);
   const functionArguments = watch(`actions.${index}.functionArguments`);
@@ -36,15 +37,13 @@ const useCreateProposalActionField = (index: number) => {
           const argumentTypes = trimmedFunctionSignature.match(/\((.+)\)/);
 
           try {
-            let callData = library.eth.abi.encodeFunctionSignature(
-              trimmedFunctionSignature
-            );
+            let callData = utils.id(trimmedFunctionSignature).substring(0, 10);
 
             if (argumentTypes && argumentTypes[1]) {
               const argumentTypesSplit = argumentTypes[1].split(",");
               if (argumentTypesSplit.length === argumentValues.length) {
-                callData += library.eth.abi
-                  .encodeParameters(argumentTypes, argumentValues)
+                callData += abiCoder
+                  .encode(argumentTypes, argumentValues)
                   .replace("0x", "")
                   .replace("xdc", "");
               }
@@ -68,7 +67,7 @@ const useCreateProposalActionField = (index: number) => {
     let valid = true;
     const trimmedAddresses = address.trim();
 
-    if (!Xdc3.utils.isAddress(trimmedAddresses)) {
+    if (!utils.isAddress(trimmedAddresses)) {
       valid = false;
     }
 

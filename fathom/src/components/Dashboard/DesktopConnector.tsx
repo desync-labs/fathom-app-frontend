@@ -5,7 +5,6 @@ import MetamaskSrc from "assets/svg/metamask.svg";
 import WalletConnect from "assets/svg/wallet-connect.svg";
 import { styled } from "@mui/material/styles";
 import useConnector from "context/connector";
-import { getTokenLogoURL } from "utils/tokenLogo";
 
 type DesktopConnectorPropsType = {
   onClose: () => void;
@@ -39,8 +38,7 @@ const ConnectorDialogContent = styled(DialogContent)`
 `;
 
 const DesktopConnector: FC<DesktopConnectorPropsType> = ({ onClose }) => {
-  const { connectWalletConnect, connectMetamask, connectXdcPay } =
-    useConnector();
+  const { connectWalletConnect, connectMetamask } = useConnector();
 
   const walletConnectConnect = useCallback(() => {
     connectWalletConnect();
@@ -53,12 +51,6 @@ const DesktopConnector: FC<DesktopConnectorPropsType> = ({ onClose }) => {
     });
   }, [onClose, connectMetamask]);
 
-  const xdcPayConnect = useCallback(() => {
-    connectXdcPay().then(() => {
-      onClose();
-    });
-  }, [onClose, connectXdcPay]);
-
   return (
     <AppDialog
       onClose={onClose}
@@ -66,10 +58,6 @@ const DesktopConnector: FC<DesktopConnectorPropsType> = ({ onClose }) => {
       sx={{ "& .MuiPaper-root": { width: "500px" } }}
     >
       <ConnectorDialogContent>
-        <Connector onClick={xdcPayConnect}>
-          <img src={getTokenLogoURL("WXDC")} alt={"xdc-pay"} />
-          XDC Pay
-        </Connector>
         <Connector onClick={metamaskConnect}>
           <img src={MetamaskSrc} alt={"metamask"} />
           Metamask

@@ -9,7 +9,7 @@ import {
   CHECK_ON_BLOCK_EXPLORER,
   TransactionType,
 } from "fathom-sdk";
-import { TransactionReceipt } from "xdc3-eth";
+import { TransactionReceipt } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import { SmartContractFactory, Web3Utils } from "fathom-sdk";
 import useAlertAndTransactionContext from "context/alertAndTransaction";
@@ -87,8 +87,8 @@ export const ServicesProvider: FC<{ children: ReactElement }> = ({
         const contract = Web3Utils.getContractInstance(contractData, provider);
 
         const [decimals, symbol] = await Promise.all([
-          contract.methods.decimals().call(),
-          contract.methods.symbol().call(),
+          contract.decimals(),
+          contract.symbol(),
         ]);
         const image = getTokenLogoURL(symbol);
 

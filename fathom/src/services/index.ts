@@ -13,8 +13,9 @@ import {
 } from "fathom-sdk";
 
 import { DEFAULT_CHAIN_ID } from "helpers/Constants";
-import Xdc3 from "xdc3";
 import { getDefaultProvider } from "utils/defaultProvider";
+import { ProviderOrSigner } from "connectors/networks";
+import { JsonRpcProvider } from "@ethersproject/providers";
 
 export class RootService {
   /*
@@ -28,7 +29,7 @@ export class RootService {
 
   chainId = DEFAULT_CHAIN_ID;
 
-  provider: Xdc3;
+  provider: ProviderOrSigner;
 
   serviceList: {
     [key: string]:
@@ -64,7 +65,18 @@ export class RootService {
     });
   }
 
-  setProvider(provider: Xdc3) {
+  setProvider(provider: ProviderOrSigner) {
+    if (
+      provider instanceof JsonRpcProvider &&
+      this.provider instanceof JsonRpcProvider
+    ) {
+      const url = provider.connection.url;
+      const currentUrl = this.provider.connection.url;
+
+      if (url === currentUrl) {
+        return;
+      }
+    }
     this.provider = provider;
     /**
      * When change provider need to reset contracts cache.

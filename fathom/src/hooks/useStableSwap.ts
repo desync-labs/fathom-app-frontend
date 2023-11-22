@@ -3,8 +3,6 @@ import { useServices } from "context/services";
 import debounce from "lodash.debounce";
 import { SmartContractFactory } from "fathom-sdk";
 import useSyncContext from "context/sync";
-import BigNumber from "bignumber.js";
-import Xdc3 from "xdc3";
 import { useMediaQuery, useTheme } from "@mui/material";
 import useConnector from "context/connector";
 import { useQuery } from "@apollo/client";
@@ -13,6 +11,8 @@ import { DAY_IN_SECONDS } from "helpers/Constants";
 import { formatNumber } from "utils/format";
 import { PricesContext } from "context/prices";
 import { useNavigate } from "react-router-dom";
+import { utils } from "ethers";
+import BigNumber from "bignumber.js";
 
 const useStableSwap = (options: string[]) => {
   const [inputBalance, setInputBalance] = useState<number>(0);
@@ -520,7 +520,7 @@ const useStableSwap = (options: string[]) => {
         ? usStableAvailable.toString()
         : formattedBalance.decimalPlaces(18).toString();
       formattedBalanceWithFee = BigNumber(formattedBalance)
-        .multipliedBy(BigNumber(1).plus(Xdc3.utils.fromWei(feeOut)))
+        .multipliedBy(BigNumber(1).plus(utils.parseEther(feeOut).toString()))
         .toString();
     } else {
       /**
