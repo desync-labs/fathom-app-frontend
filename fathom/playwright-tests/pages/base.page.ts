@@ -26,7 +26,7 @@ export default class BasePage {
   readonly divAlertMessage: Locator;
   readonly divAlertTitle: Locator;
   readonly paragraphAlertBody: Locator;
-  readonly timeoutTransactionPending = process.env.CI ? 60000 : 30000
+  readonly timeoutTransactionPending = process.env.CI ? 60000 : 30000;
 
   constructor(page: Page) {
     this.page = page;
@@ -35,7 +35,8 @@ export default class BasePage {
       case "https://dapp.fathom.fi":
         this.graphAPIBaseUrl = "https://xinfin-graph.fathom.fi";
         break;
-      case "https://dev-app-frontend-wpa8a.ondigitalocean.app" || "http://127.0.0.1:3000":
+      case "https://dev-app-frontend-wpa8a.ondigitalocean.app" ||
+        "http://127.0.0.1:3000":
         this.graphAPIBaseUrl = "https://dev.fathom.fi";
         break;
       default:
