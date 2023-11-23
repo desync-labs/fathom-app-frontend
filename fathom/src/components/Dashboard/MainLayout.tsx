@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { createTheme, styled, ThemeProvider } from "@mui/material/styles";
 import {
   CssBaseline,
@@ -15,6 +15,7 @@ import {
   Menu as MenuIcon,
   AccountBalanceWallet as AccountBalanceWalletIcon,
 } from "@mui/icons-material";
+import { deepmerge } from "@mui/utils";
 import truncateEthAddress from "truncate-eth-address";
 import { Navigate, Route, Routes } from "react-router-dom";
 
@@ -59,6 +60,7 @@ import MobileMenuIcon from "assets/svg/mobile-menu.svg";
 import MobileMenuIconActive from "assets/svg/mobile-menu-active.svg";
 
 import { getTokenLogoURL } from "utils/tokenLogo";
+import { getDesignTokens, getThemedComponents } from "utils/theme";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -100,7 +102,7 @@ const MenuWrapper = styled("nav")<{ open: boolean }>`
   gap: 14px;
 `;
 
-const mdTheme = createTheme({
+/* const mdTheme = createTheme({
   palette: {
     mode: "dark",
     primary: {
@@ -122,7 +124,7 @@ const mdTheme = createTheme({
   typography: {
     fontFamily: ["Inter, sans-serif"].join(","),
   },
-});
+}); */
 
 const MainToolbar = styled(Toolbar)`
   display: flex;
@@ -199,8 +201,13 @@ const MainLayout = () => {
 
   const { erc20TokenModalData } = useAlertAndTransactionContext();
 
+  const theme = useMemo(() => {
+    const themeCreate = createTheme(getDesignTokens());
+    return deepmerge(themeCreate, getThemedComponents(themeCreate));
+  }, []);
+
   return (
-    <ThemeProvider theme={mdTheme}>
+    <ThemeProvider theme={theme}>
       <Box sx={{ display: "flex" }} onClick={mainBlockClickHandler}>
         <CssBaseline />
         <AppBar position="absolute" open={open}>
