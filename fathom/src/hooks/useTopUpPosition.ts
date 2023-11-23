@@ -227,7 +227,7 @@ const useTopUpPosition = (
 
           const safetyBuffer = BigNumber(collateralAvailableToWithdraw)
             .dividedBy(totalCollateralAmount)
-            .decimalPlaces(4, BigNumber.ROUND_UP)
+            .decimalPlaces(4)
             .toString();
 
           setSafetyBuffer(safetyBuffer);
