@@ -23,7 +23,7 @@ const useOpenPositionList = (
   proxyWallet: string
 ) => {
   const { positionService } = useServices();
-  const { account, chainId } = useConnector();
+  const { chainId } = useConnector();
   const [formattedPositions, setFormattedPositions] = useState<IOpenPosition[]>(
     []
   );
@@ -45,31 +45,6 @@ const useOpenPositionList = (
 
   const [closePosition, setClosePosition] = useState<IOpenPosition>();
   const [topUpPosition, setTopUpPosition] = useState<IOpenPosition>();
-
-  const [approveBtn, setApproveBtn] = useState<boolean>(true);
-  const [approvalPending, setApprovalPending] = useState<boolean>(false);
-
-  const approvalStatus = useCallback(
-    async (formattedPositions: IOpenPosition[]) => {
-      const maxPositionDebtValue = Math.max(
-        ...formattedPositions.map(
-          (position: IOpenPosition) => position.debtValue
-        )
-      );
-      const approved = await positionService.approvalStatusStableCoin(
-        maxPositionDebtValue,
-        account
-      );
-      approved ? setApproveBtn(false) : setApproveBtn(true);
-    },
-    [positionService, account]
-  );
-
-  useEffect(() => {
-    if (account && formattedPositions.length) {
-      approvalStatus(formattedPositions);
-    }
-  }, [account, approvalStatus, formattedPositions]);
 
   const topUpPositionPool = useMemo(() => {
     if (topUpPosition && poolsData) {
@@ -93,18 +68,6 @@ const useOpenPositionList = (
       });
     }
   }, [chainId, proxyWallet, called, loadPositions]);
-
-  const approve = useCallback(async () => {
-    setApprovalPending(true);
-    try {
-      await positionService.approveStableCoin(account);
-      setApproveBtn(false);
-    } catch (e) {
-      setApproveBtn(true);
-    }
-
-    setApprovalPending(false);
-  }, [positionService, account, setApprovalPending, setApproveBtn]);
 
   const handlePageChange = useCallback(
     (event: ChangeEvent<unknown>, page: number) => {
@@ -193,10 +156,7 @@ const useOpenPositionList = (
   return {
     isMobile,
     topUpPositionPool,
-    approveBtn,
-    approvalPending,
     positions: formattedPositions,
-    approve,
     closePosition,
     topUpPosition,
     loading: isLoading,

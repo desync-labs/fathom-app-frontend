@@ -90,7 +90,7 @@ const StableSwapAddLiquidity = () => {
                 <InfoValue>
                   {formatPercentage(
                     BigNumber(stableBalance)
-                      .dividedBy(10 ** stableDecimals)
+                      .dividedBy(BigNumber(10).exponentiatedBy(stableDecimals))
                       .toNumber()
                   )}{" "}
                   xUSDT
@@ -101,7 +101,7 @@ const StableSwapAddLiquidity = () => {
                 <InfoValue>
                   {formatPercentage(
                     BigNumber(fxdBalance)
-                      .dividedBy(10 ** fxdDecimals)
+                      .dividedBy(BigNumber(10).exponentiatedBy(fxdDecimals))
                       .toNumber()
                   )}{" "}
                   FXD

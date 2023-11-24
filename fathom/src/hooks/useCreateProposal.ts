@@ -37,11 +37,11 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
   const { proposalService } = useServices();
   const { account, chainId, library } = useConnector();
 
-  const [vBalance, setVBalance] = useState<null | number>(null);
+  const [vBalance, setVBalance] = useState<null | string>(null);
   const [vBalanceError, setVBalanceError] = useState<boolean>(false);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [notAllowTimestamp, setNotAllowTimestamp] = useState<number>(0);
+  const [notAllowTimestamp, setNotAllowTimestamp] = useState<string>("0");
   const [minimumVBalance, setMinimumVBalance] = useState<number>();
 
   const theme = useTheme();
@@ -71,23 +71,27 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
   useEffect(() => {
     if (account) {
       proposalService.getVBalance(account).then((balance) => {
-        setVBalance(balance);
+        setVBalance(balance.toString());
       });
       proposalService
         .nextAcceptableProposalTimestamp(account)
         .then((nextAcceptableTimestamp) => {
-          if (nextAcceptableTimestamp > Date.now() / 1000) {
-            setNotAllowTimestamp(nextAcceptableTimestamp);
+          if (
+            BigNumber(nextAcceptableTimestamp.toString()).isGreaterThan(
+              Date.now() / 1000
+            )
+          ) {
+            setNotAllowTimestamp(nextAcceptableTimestamp.toString());
           } else {
-            setNotAllowTimestamp(0);
+            setNotAllowTimestamp("0");
           }
         });
     }
   }, [account, proposalService, setVBalance, setNotAllowTimestamp]);
 
   useEffect(() => {
-    proposalService.proposalThreshold().then((minVBalance: number) => {
-      const formattedVBalance = BigNumber(minVBalance)
+    proposalService.proposalThreshold().then((minVBalance) => {
+      const formattedVBalance = BigNumber(minVBalance.toString())
         .dividedBy(10 ** 18)
         .toNumber();
       setMinimumVBalance(formattedVBalance);
@@ -104,11 +108,11 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
 
   const onSubmit = useCallback(
     async (values: Record<string, any>) => {
-      if (notAllowTimestamp > Date.now() / 1000) {
+      if (BigNumber(notAllowTimestamp).isGreaterThan(Date.now() / 1000)) {
         return;
       }
 
-      if (BigNumber(vBalance as number).isLessThan(minimumVBalance as number)) {
+      if (BigNumber(vBalance as string).isLessThan(minimumVBalance as number)) {
         return setVBalanceError(true);
       } else {
         setVBalanceError(false);

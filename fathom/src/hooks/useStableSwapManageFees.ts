@@ -9,10 +9,10 @@ const useStableSwapManageFees = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { account, library } = useConnector();
 
-  const [feesRewardsForFXD, setFeesRewardsForFXD] = useState<number>(0);
-  const [feesRewardsForUSDTx, setFeesRewardsForUSDTx] = useState<number>(0);
-  const [claimedFXDFeeReward, setClaimedFXDFeeReward] = useState<number>(0);
-  const [claimedUSDTFeeReward, setClaimedUSDTFeeReward] = useState<number>(0);
+  const [feesRewardsForFXD, setFeesRewardsForFXD] = useState<string>("0");
+  const [feesRewardsForUSDTx, setFeesRewardsForUSDTx] = useState<string>("0");
+  const [claimedFXDFeeReward, setClaimedFXDFeeReward] = useState<string>("0");
+  const [claimedUSDTFeeReward, setClaimedUSDTFeeReward] = useState<string>("0");
 
   const [claimRewardsInProgress, setClaimRewardsInProgress] =
     useState<boolean>(false);
@@ -26,19 +26,19 @@ const useStableSwapManageFees = () => {
     if (account && library) {
       stableSwapService.getClaimableFeesPerUser(account).then((response) => {
         const { 0: feesRewardsForFXD, 1: feesRewardsForUSDTx } = response;
-        setFeesRewardsForFXD(feesRewardsForFXD);
-        setFeesRewardsForUSDTx(feesRewardsForUSDTx);
+        setFeesRewardsForFXD(feesRewardsForFXD.toString());
+        setFeesRewardsForUSDTx(feesRewardsForUSDTx.toString());
       });
 
       stableSwapService
         .getClaimedFXDFeeRewards(account)
         .then((claimedFXDFeeReward) => {
-          setClaimedFXDFeeReward(claimedFXDFeeReward);
+          setClaimedFXDFeeReward(claimedFXDFeeReward.toString());
         });
       stableSwapService
         .getClaimedTokenFeeRewards(account)
         .then((claimedUSDTFeeReward) => {
-          setClaimedUSDTFeeReward(claimedUSDTFeeReward);
+          setClaimedUSDTFeeReward(claimedUSDTFeeReward.toString());
         });
     }
   }, [

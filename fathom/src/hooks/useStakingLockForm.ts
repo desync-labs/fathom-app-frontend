@@ -13,7 +13,7 @@ const useStakingLockForm = () => {
   const [balanceError, setBalanceError] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const [fthmBalance, setFthmBalance] = useState<number>(0);
+  const [fthmBalance, setFthmBalance] = useState<string>("0");
 
   const { poolService } = useServices();
 
@@ -51,7 +51,11 @@ const useStakingLockForm = () => {
       fthmTokenAddress
     );
 
-    setFthmBalance(balance / 10 ** 18);
+    setFthmBalance(
+      BigNumber(balance.toString())
+        .dividedBy(10 ** 18)
+        .toString()
+    );
   }, [account, poolService, fthmTokenAddress, setFthmBalance]);
 
   const getMinLockPeriod = useCallback(async () => {
@@ -103,7 +107,7 @@ const useStakingLockForm = () => {
 
       setXdcBalance(xdcBalance.div(10 ** 18).toNumber());
       setFxdBalance(
-        BigNumber(fxdBalance)
+        BigNumber(fxdBalance.toString())
           .dividedBy(10 ** 18)
           .toNumber()
       );
@@ -162,8 +166,8 @@ const useStakingLockForm = () => {
   ]);
 
   const setMax = useCallback(
-    (balance: number) => {
-      setValue("stakePosition", balance.toString());
+    (balance: string) => {
+      setValue("stakePosition", balance);
     },
     [setValue]
   );

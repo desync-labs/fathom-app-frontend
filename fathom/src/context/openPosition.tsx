@@ -22,13 +22,13 @@ export type UseOpenPositionContextReturnType = {
   debtRatio: number;
   overCollateral: number;
   fxdToBeBorrowed: number;
-  balance: number;
+  balance: string;
   safetyBuffer: number;
   liquidationPrice: number;
   collateral: string;
   fathomToken: string;
   openPositionLoading: boolean;
-  setMax: (balance: number) => void;
+  setMax: (balance: string) => void;
   setSafeMax: () => void;
   onSubmit: (values: Record<string, any>) => void;
   control: Control<typeof defaultValues>;

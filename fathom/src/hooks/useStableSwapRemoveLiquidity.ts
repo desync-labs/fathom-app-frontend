@@ -15,18 +15,18 @@ const useStableSwapRemoveLiquidity = () => {
   const { stableSwapService, poolService } = useServices();
   const { setLastTransactionBlock } = useSyncContext();
 
-  const [fxdBalance, setFxdBalance] = useState<number>(0);
-  const [stableBalance, setStableBalance] = useState<number>(0);
+  const [fxdBalance, setFxdBalance] = useState<string>("0");
+  const [stableBalance, setStableBalance] = useState<string>("0");
 
-  const [totalLiquidity, setTotalLiquidity] = useState<number>(0);
+  const [totalLiquidity, setTotalLiquidity] = useState<string>("0");
 
-  const [removeAmountFxd, setRemoveAmountFxd] = useState<number>(0);
-  const [removeAmountStable, setRemoveAmountStable] = useState<number>(0);
+  const [removeAmountFxd, setRemoveAmountFxd] = useState<string>("0");
+  const [removeAmountStable, setRemoveAmountStable] = useState<string>("0");
 
-  const [depositTracker, setDepositTracker] = useState<number>(0);
+  const [depositTracker, setDepositTracker] = useState<string>("0");
 
-  const [fxdDecimals, setFxdDecimals] = useState<number>(0);
-  const [stableDecimals, setStableDecimals] = useState<number>(0);
+  const [fxdDecimals, setFxdDecimals] = useState<string>("0");
+  const [stableDecimals, setStableDecimals] = useState<string>("0");
 
   const [inputValue, setInputValue] = useState<string>("");
 
@@ -75,14 +75,14 @@ const useStableSwapRemoveLiquidity = () => {
     // @ts-ignore
     const { "0": fxdLiquidity, "1": stableLiquidity } = liquidityPerUser;
 
-    setFxdDecimals(fxdDecimals);
-    setStableDecimals(stableDecimals);
-    setFxdBalance(fxdBalance);
-    setStableBalance(usStableBalance);
-    setTotalLiquidity(totalValueLocked);
-    setLiquidityPerUserFxd(fxdLiquidity);
-    setLiquidityPerUserStable(stableLiquidity);
-    setDepositTracker(depositTracker);
+    setFxdDecimals(fxdDecimals.toString());
+    setStableDecimals(stableDecimals.toString());
+    setFxdBalance(fxdBalance.toString());
+    setStableBalance(usStableBalance.toString());
+    setTotalLiquidity(totalValueLocked.toString());
+    setLiquidityPerUserFxd(fxdLiquidity.toString());
+    setLiquidityPerUserStable(stableLiquidity.toString());
+    setDepositTracker(depositTracker.toString());
   }, [
     poolService,
     stableSwapService,
@@ -106,8 +106,8 @@ const useStableSwapRemoveLiquidity = () => {
           const fxdAmount = response[0];
           const stableAmount = response[1];
 
-          setRemoveAmountFxd(fxdAmount);
-          setRemoveAmountStable(stableAmount);
+          setRemoveAmountFxd(fxdAmount.toString());
+          setRemoveAmountStable(stableAmount.toString());
         });
       }, 1000),
     [
@@ -145,8 +145,8 @@ const useStableSwapRemoveLiquidity = () => {
       );
       setLastTransactionBlock(blockNumber as number);
       getBalances();
-      setRemoveAmountStable(0);
-      setRemoveAmountFxd(0);
+      setRemoveAmountStable("0");
+      setRemoveAmountFxd("0");
       setInputValue("");
     } finally {
       setRemoveLiquidityPending(false);

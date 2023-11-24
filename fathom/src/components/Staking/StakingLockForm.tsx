@@ -122,7 +122,7 @@ const StakingLockForm: FC = () => {
               <AppFormLabel>Staking amount</AppFormLabel>
               {fthmBalance ? (
                 <WalletBalance>
-                  Available: {formatPercentage(fthmBalance)} FTHM
+                  Available: {formatPercentage(Number(fthmBalance))} FTHM
                 </WalletBalance>
               ) : null}
               <AppFormInputWrapper>
@@ -274,7 +274,7 @@ const StakingLockForm: FC = () => {
                   />
                   <Box>
                     <FTHMBalance>
-                      <strong>{formatNumber(fthmBalance)}</strong> FTHM
+                      <strong>{formatNumber(Number(fthmBalance))}</strong> FTHM
                     </FTHMBalance>
                     <USDBalance>
                       {formatCurrency(

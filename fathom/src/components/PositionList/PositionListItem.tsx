@@ -1,10 +1,7 @@
 import React, { memo, Dispatch, FC, SetStateAction } from "react";
-import { Box, CircularProgress, TableCell, Stack } from "@mui/material";
+import { Box, TableCell, Stack } from "@mui/material";
 import { PoolName, TVL } from "components/AppComponents/AppBox/AppBox";
-import {
-  ButtonPrimary,
-  ManagePositionButton,
-} from "components/AppComponents/AppButton/AppButton";
+import { ManagePositionButton } from "components/AppComponents/AppButton/AppButton";
 import { AppTableRow } from "components/AppComponents/AppTable/AppTable";
 import { IOpenPosition } from "fathom-sdk";
 import { styled } from "@mui/material/styles";
@@ -22,9 +19,6 @@ export type PositionListItemProps = {
   position: IOpenPosition;
   setClosePosition: Dispatch<SetStateAction<IOpenPosition | undefined>>;
   setTopUpPosition: Dispatch<SetStateAction<IOpenPosition | undefined>>;
-  approve: () => void;
-  approvalPending: boolean;
-  approveBtn: boolean;
 };
 
 const ButtonsWrapper = styled(Box)`
@@ -39,9 +33,6 @@ const ButtonsWrapper = styled(Box)`
 const PositionListItem: FC<PositionListItemProps> = ({
   position,
   setTopUpPosition,
-  approvalPending,
-  approveBtn,
-  approve,
 }) => {
   return (
     <AppTableRow
@@ -81,27 +72,12 @@ const PositionListItem: FC<PositionListItemProps> = ({
       </TableCell>
       <TableCell>
         <ButtonsWrapper>
-          {approveBtn ? (
-            <ButtonPrimary
-              onClick={approve}
-              sx={{ height: "32px" }}
-              disabled={approvalPending}
-              isLoading={approvalPending}
-            >
-              {approvalPending ? (
-                <CircularProgress size={20} sx={{ color: "#0D1526" }} />
-              ) : (
-                `Approve FXD`
-              )}
-            </ButtonPrimary>
-          ) : (
-            <ManagePositionButton
-              size="small"
-              onClick={() => setTopUpPosition(position)}
-            >
-              Manage position
-            </ManagePositionButton>
-          )}
+          <ManagePositionButton
+            size="small"
+            onClick={() => setTopUpPosition(position)}
+          >
+            Manage position
+          </ManagePositionButton>
         </ButtonsWrapper>
       </TableCell>
     </AppTableRow>

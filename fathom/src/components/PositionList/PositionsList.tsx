@@ -61,10 +61,7 @@ const PositionsList: FC<PositionsListProps> = ({
   const {
     isMobile,
     topUpPositionPool,
-    approveBtn,
-    approvalPending,
     positions,
-    approve,
     closePosition,
     topUpPosition,
     loading,
@@ -152,9 +149,6 @@ const PositionsList: FC<PositionsListProps> = ({
                     <TableBody>
                       {positions.map((position: IOpenPosition) => (
                         <PositionListItem
-                          approve={approve}
-                          approvalPending={approvalPending}
-                          approveBtn={approveBtn}
                           key={position.id}
                           position={position}
                           setClosePosition={setClosePosition}
@@ -177,9 +171,6 @@ const PositionsList: FC<PositionsListProps> = ({
               <>
                 {positions.map((position: IOpenPosition) => (
                   <PositionListItemMobile
-                    approve={approve}
-                    approvalPending={approvalPending}
-                    approveBtn={approveBtn}
                     key={position.id}
                     position={position}
                     setClosePosition={setClosePosition}
@@ -200,9 +191,6 @@ const PositionsList: FC<PositionsListProps> = ({
         [
           loading,
           positions,
-          approve,
-          approvalPending,
-          approveBtn,
           handlePageChange,
           positionCurrentPage,
           positionsItemsCount,

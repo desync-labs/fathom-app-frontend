@@ -34,6 +34,7 @@ import { ErrorBox, ErrorMessage } from "components/AppComponents/AppBox/AppBox";
 import { formatNumber } from "utils/format";
 import ProposeActionFields from "./Propose/ProposeActionFields";
 import ProposeNotices from "./Propose/ProposeNotices";
+import BigNumber from "bignumber.js";
 
 export const ProposeLabel = styled(AppFormLabel)`
   float: none;
@@ -161,7 +162,11 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
                   width={28}
                 />
                 <BalanceBox component="span">
-                  {formatNumber((vBalance as number) / 10 ** 18)}
+                  {formatNumber(
+                    BigNumber(vBalance as string)
+                      .dividedBy(10 ** 18)
+                      .toNumber()
+                  )}
                 </BalanceBox>
                 <CurrencyBox component="span">vFHTM</CurrencyBox>
               </Stack>
@@ -315,12 +320,16 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
                 />
                 {useMemo(
                   () =>
-                    notAllowTimestamp > 0 ? (
+                    BigNumber(notAllowTimestamp).isGreaterThan(0) ? (
                       <ErrorBox sx={{ my: 3 }}>
                         <InfoIcon />
                         <ErrorMessage>
                           You can't create new proposal until{" "}
-                          {new Date(notAllowTimestamp * 1000).toLocaleString()}
+                          {new Date(
+                            BigNumber(notAllowTimestamp)
+                              .multipliedBy(1000)
+                              .toNumber()
+                          ).toLocaleString()}
                         </ErrorMessage>
                       </ErrorBox>
                     ) : null,

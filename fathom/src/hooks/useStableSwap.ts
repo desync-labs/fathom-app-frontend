@@ -15,17 +15,17 @@ import { utils } from "ethers";
 import BigNumber from "bignumber.js";
 
 const useStableSwap = (options: string[]) => {
-  const [inputBalance, setInputBalance] = useState<number>(0);
-  const [outputBalance, setOutputBalance] = useState<number>(0);
+  const [inputBalance, setInputBalance] = useState<string>("0");
+  const [outputBalance, setOutputBalance] = useState<string>("0");
 
-  const [fxdAvailable, setFxdAvailable] = useState<number>(0);
-  const [usStableAvailable, setUsStableAvailable] = useState<number>(0);
+  const [fxdAvailable, setFxdAvailable] = useState<string>("0");
+  const [usStableAvailable, setUsStableAvailable] = useState<string>("0");
 
   const [inputCurrency, setInputCurrency] = useState<string>(options[0]);
   const [outputCurrency, setOutputCurrency] = useState<string>(options[1]);
 
-  const [inputDecimals, setInputDecimals] = useState<number>(18);
-  const [outputDecimals, setOutputDecimals] = useState<number>(18);
+  const [inputDecimals, setInputDecimals] = useState<string>("18");
+  const [outputDecimals, setOutputDecimals] = useState<string>("18");
 
   const [inputValue, setInputValue] = useState<string>("");
   const [outputValue, setOutputValue] = useState<string>("");
@@ -37,14 +37,14 @@ const useStableSwap = (options: string[]) => {
   const [swapPending, setSwapPending] = useState<boolean>(false);
 
   const [lastUpdate, setLastUpdate] = useState<string>();
-  const [dailyLimit, setDailyLimit] = useState<number>(0);
-  const [displayDailyLimit, setDisplayDailyLimit] = useState<number>(0);
+  const [dailyLimit, setDailyLimit] = useState<string>("0");
+  const [displayDailyLimit, setDisplayDailyLimit] = useState<string>("0");
 
   const [feeIn, setFeeIn] = useState<string>("0");
   const [feeOut, setFeeOut] = useState<string>("0");
 
-  const [depositTracker, setDepositTracker] = useState<number>(0);
-  const [totalLocked, setTotalLocked] = useState<number>(0);
+  const [depositTracker, setDepositTracker] = useState<string>("0");
+  const [totalLocked, setTotalLocked] = useState<string>("0");
 
   const { fxdPrice: fxdPriceInWei } = useContext(PricesContext);
 
@@ -146,7 +146,7 @@ const useStableSwap = (options: string[]) => {
 
   const inputError = useMemo(() => {
     const formattedBalance = BigNumber(inputBalance).dividedBy(
-      10 ** inputDecimals
+      BigNumber(10).exponentiatedBy(inputDecimals)
     );
 
     if (BigNumber(inputValue).isGreaterThan(formattedBalance)) {
@@ -158,7 +158,7 @@ const useStableSwap = (options: string[]) => {
       BigNumber(inputValue).isGreaterThan(displayDailyLimit)
     ) {
       return `You can't swap more then remaining daily limit ${formatNumber(
-        displayDailyLimit
+        Number(displayDailyLimit)
       )} FXD`;
     }
 
@@ -227,24 +227,38 @@ const useStableSwap = (options: string[]) => {
             depositTracker,
           ] = await Promise.all(promises);
 
-          setTotalLocked(totalLocked);
-          setDepositTracker(depositTracker);
+          setTotalLocked(totalLocked.toString());
+          setDepositTracker(depositTracker.toString());
           setFxdAvailable(
-            fxdAvailable /
-              10 **
-                (inputCurrency === options[1] ? inputDecimals : outputDecimals)
+            BigNumber(fxdAvailable.toString())
+              .dividedBy(
+                BigNumber(10).exponentiatedBy(
+                  (inputCurrency === options[1]
+                    ? inputDecimals
+                    : outputDecimals
+                  ).toString()
+                )
+              )
+              .toString()
           );
           setUsStableAvailable(
-            usStableAvailable /
-              10 **
-                (inputCurrency === options[0] ? inputDecimals : outputDecimals)
+            BigNumber(usStableAvailable.toString())
+              .dividedBy(
+                BigNumber(10).exponentiatedBy(
+                  (inputCurrency === options[0]
+                    ? inputDecimals
+                    : outputDecimals
+                  ).toString()
+                )
+              )
+              .toString()
           );
 
-          setInputDecimals(inputDecimals);
-          setOutputDecimals(outputDecimals);
+          setInputDecimals(inputDecimals.toString());
+          setOutputDecimals(outputDecimals.toString());
 
-          setInputBalance(inputBalance);
-          setOutputBalance(outputBalance);
+          setInputBalance(inputBalance.toString());
+          setOutputBalance(outputBalance.toString());
         }
       }, 100),
     [
@@ -291,16 +305,16 @@ const useStableSwap = (options: string[]) => {
 
   useEffect(() => {
     if (chainId) {
-      stableSwapService.getLastUpdate().then((lastUpdate: string) => {
-        setLastUpdate(lastUpdate);
+      stableSwapService.getLastUpdate().then((lastUpdate) => {
+        setLastUpdate(lastUpdate.toString());
       });
     }
   }, [chainId, stableSwapService, library, setLastUpdate]);
 
   useEffect(() => {
     if (isDecentralizedState) {
-      stableSwapService.getDailySwapLimit().then((dailyLimit: number) => {
-        setDailyLimit(dailyLimit);
+      stableSwapService.getDailySwapLimit().then((dailyLimit) => {
+        setDailyLimit(dailyLimit.toString());
       });
     }
   }, [stableSwapService, isDecentralizedState]);
@@ -311,8 +325,8 @@ const useStableSwap = (options: string[]) => {
         stableSwapService.getFeeIn(),
         stableSwapService.getFeeOut(),
       ]).then(([feeIn, feeOut]) => {
-        setFeeIn(feeIn);
-        setFeeOut(feeOut);
+        setFeeIn(feeIn.toString());
+        setFeeOut(feeOut.toString());
       });
     }
   }, [stableSwapService, chainId, setFeeIn, setFeeOut]);
@@ -325,12 +339,14 @@ const useStableSwap = (options: string[]) => {
           .isGreaterThan(BigNumber(Date.now()).dividedBy(1000))
       ) {
         return setDisplayDailyLimit(
-          Number(data.stableSwapStats[0].remainingDailySwapAmount) / 10 ** 18
+          BigNumber(data.stableSwapStats[0].remainingDailySwapAmount)
+            .dividedBy(10 ** 18)
+            .toString()
         );
       }
     }
 
-    setDisplayDailyLimit(dailyLimit);
+    setDisplayDailyLimit(dailyLimit.toString());
   }, [data, loading, lastUpdate, dailyLimit, setDisplayDailyLimit]);
 
   useEffect(() => {
@@ -514,7 +530,9 @@ const useStableSwap = (options: string[]) => {
     let formattedBalance;
     let formattedBalanceWithFee;
     if (inputCurrency === options[1]) {
-      formattedBalance = BigNumber(inputBalance).dividedBy(10 ** inputDecimals);
+      formattedBalance = BigNumber(inputBalance).dividedBy(
+        BigNumber(10).exponentiatedBy(inputDecimals)
+      );
 
       formattedBalance = formattedBalance.isGreaterThan(usStableAvailable)
         ? usStableAvailable.toString()
@@ -526,7 +544,9 @@ const useStableSwap = (options: string[]) => {
       /**
        * xUSDT to FXD
        */
-      formattedBalance = BigNumber(inputBalance).dividedBy(10 ** inputDecimals);
+      formattedBalance = BigNumber(inputBalance).dividedBy(
+        BigNumber(10).exponentiatedBy(inputDecimals)
+      );
       formattedBalance = formattedBalance.isGreaterThan(fxdAvailable)
         ? fxdAvailable.toString()
         : formattedBalance.decimalPlaces(18).toString();
