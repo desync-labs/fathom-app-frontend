@@ -17,14 +17,14 @@ export type UseTopUpPositionContextReturnType = {
   approveBtn: boolean;
   approve: () => Promise<void>;
   approvalPending: boolean;
-  balance: number;
+  balance: string;
   liquidationPrice: string;
   ltv: string;
   safetyBuffer: string;
   collateral: number;
   fathomToken: string;
   openPositionLoading: boolean;
-  setMax: (balance: number) => void;
+  setMax: (balance: string) => void;
   setSafeMax: () => void;
   onSubmit: (values: any) => Promise<void>;
   control: Control<

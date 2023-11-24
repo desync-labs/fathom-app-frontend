@@ -138,7 +138,9 @@ const useRepayPosition = (
 
   const getBalance = useCallback(async () => {
     const balance = await positionService.balanceStableCoin(account);
-    const balanceInDecimal = BigNumber(balance).dividedBy(WeiPerWad).toString();
+    const balanceInDecimal = BigNumber(balance.toString())
+      .dividedBy(WeiPerWad)
+      .toString();
 
     setBalance(balanceInDecimal);
   }, [positionService, account, setBalance]);

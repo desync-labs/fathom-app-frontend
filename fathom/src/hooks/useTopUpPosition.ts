@@ -43,7 +43,7 @@ const useTopUpPosition = (
   const [overCollateral, setOverCollateral] = useState<number>(0);
   const [safetyBuffer, setSafetyBuffer] = useState<string>("");
 
-  const [balance, setBalance] = useState<number>(0);
+  const [balance, setBalance] = useState<string>("0");
   const [collateralTokenAddress, setCollateralTokenAddress] = useState<
     string | null
   >();
@@ -121,7 +121,7 @@ const useTopUpPosition = (
         : await poolService.getDexPrice(collateralTokenAddress as string);
 
     const overCollateral = BigNumber(totalCollateral)
-      .multipliedBy(priceOfCollateralFromDex)
+      .multipliedBy(priceOfCollateralFromDex.toString())
       .dividedBy(10 ** 18)
       .dividedBy(totalFathomToken)
       .multipliedBy(100)
@@ -156,7 +156,7 @@ const useTopUpPosition = (
     if (pool.poolName.toUpperCase() === "XDC") {
       const balance = await library.getBalance(account);
       setCollateralTokenAddress(null);
-      setBalance(balance.toNumber());
+      setBalance(balance.toString());
     } else {
       const tokenAddress = await poolService.getCollateralTokenAddress(
         pool.tokenAdapterAddress
@@ -171,7 +171,7 @@ const useTopUpPosition = (
       );
 
       setCollateralTokenAddress(tokenAddress);
-      setBalance(balance);
+      setBalance(balance.toString());
     }
   }, [poolService, account, pool, setCollateralTokenAddress]);
 
@@ -350,7 +350,7 @@ const useTopUpPosition = (
   ]);
 
   const setMax = useCallback(
-    (balance: number) => {
+    (balance: string) => {
       const max = BigNumber(balance).dividedBy(10 ** 18);
       setValue("collateral", max.toString(), { shouldValidate: true });
     },

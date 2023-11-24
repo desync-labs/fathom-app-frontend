@@ -15,11 +15,11 @@ const useStableSwapAddLiquidity = () => {
   const { stableSwapService, poolService } = useServices();
   const { setLastTransactionBlock } = useSyncContext();
 
-  const [fxdBalance, setFxdBalance] = useState<number>(0);
-  const [stableBalance, setStableBalance] = useState<number>(0);
+  const [fxdBalance, setFxdBalance] = useState<string>("0");
+  const [stableBalance, setStableBalance] = useState<string>("0");
 
-  const [fxdDecimals, setFxdDecimals] = useState<number>(0);
-  const [stableDecimals, setStableDecimals] = useState<number>(0);
+  const [fxdDecimals, setFxdDecimals] = useState<string>("0");
+  const [stableDecimals, setStableDecimals] = useState<string>("0");
 
   const [inputValue, setInputValue] = useState<string>("");
 
@@ -31,7 +31,7 @@ const useStableSwapAddLiquidity = () => {
   const [approvalPending, setApprovalPending] = useState<boolean>(false);
   const [addLiquidityPending, setAddLiquidityPending] =
     useState<boolean>(false);
-  const [totalLiquidity, setTotalLiquidity] = useState<number>(0);
+  const [totalLiquidity, setTotalLiquidity] = useState<string>("0");
 
   const getBalances = useCallback(async () => {
     const FXDContractAddress = SmartContractFactory.getAddressByContractName(
@@ -60,11 +60,11 @@ const useStableSwapAddLiquidity = () => {
       totalLiquidity,
     ] = await Promise.all(promises);
 
-    setFxdDecimals(fxdDecimals);
-    setStableDecimals(stableDecimals);
-    setFxdBalance(fxdBalance);
-    setStableBalance(usStableBalance);
-    setTotalLiquidity(totalLiquidity);
+    setFxdDecimals(fxdDecimals.toString());
+    setStableDecimals(stableDecimals.toString());
+    setFxdBalance(fxdBalance.toString());
+    setStableBalance(usStableBalance.toString());
+    setTotalLiquidity(totalLiquidity.toString());
   }, [
     poolService,
     stableSwapService,
@@ -152,10 +152,10 @@ const useStableSwapAddLiquidity = () => {
 
   const setMax = useCallback(() => {
     const formattedFxdBalance = BigNumber(fxdBalance).dividedBy(
-      10 ** fxdDecimals
+      BigNumber(10).exponentiatedBy(fxdDecimals)
     );
     const formattedUsStableBalance = BigNumber(stableBalance).dividedBy(
-      10 ** stableDecimals
+      BigNumber(10).exponentiatedBy(stableDecimals)
     );
 
     let maxBalance;
@@ -203,10 +203,10 @@ const useStableSwapAddLiquidity = () => {
 
   const inputError = useMemo(() => {
     const formattedFxdBalance = BigNumber(fxdBalance).dividedBy(
-      10 ** fxdDecimals
+      BigNumber(10).exponentiatedBy(fxdDecimals)
     );
     const formattedUsStableBalance = BigNumber(stableBalance).dividedBy(
-      10 ** stableDecimals
+      BigNumber(10).exponentiatedBy(stableDecimals)
     );
 
     if (BigNumber(inputValue).isGreaterThan(formattedFxdBalance)) {

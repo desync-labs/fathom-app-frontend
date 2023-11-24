@@ -54,7 +54,11 @@ const useViewProposalItem = (proposal: IProposal) => {
 
     const { abstainVotes, forVotes } = totalVotes;
 
-    if (BigNumber(quorum).isLessThan(BigNumber(abstainVotes).plus(forVotes))) {
+    if (
+      BigNumber(quorum.toString()).isLessThan(
+        BigNumber(abstainVotes.toString()).plus(forVotes.toString())
+      )
+    ) {
       setQuorumError(false);
     } else {
       setQuorumError(true);

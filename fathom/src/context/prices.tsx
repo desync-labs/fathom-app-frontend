@@ -13,6 +13,7 @@ import { useServices } from "context/services";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 import { DEFAULT_CHAIN_ID } from "helpers/Constants";
+import { BigNumber } from "ethers";
 
 type PricesProviderType = {
   children: ReactElement;
@@ -64,41 +65,44 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
   const fetchPairPrices = useCallback(async () => {
     if (provider) {
       try {
+        let fthmPromise;
+
         if (process.env.REACT_APP_ENV !== "prod") {
-          stakingService
-            .getPairPrice(fxdTokenAddress, fthmTokenAddress)
-            .then((fthmPrice) => {
-              console.log("Price for pair FTHM/FXD", fthmPrice[0].toString());
-              setFthmPrice(fthmPrice[0].toString());
-            })
-            .catch((e) => {
-              console.log(e);
-              console.log("Pair FTHM/FXD not exists on DEX");
-            });
+          fthmPromise = stakingService.getPairPrice(
+            fxdTokenAddress,
+            fthmTokenAddress
+          );
+        } else {
+          fthmPromise = Promise.resolve([BigNumber.from(0)]);
         }
 
-        (process.env.REACT_APP_ENV === "prod"
-          ? stakingService.getPairPrice(wxdcTokenAddress, usdtTokenAddress)
-          : stakingService.getPairPrice(usdtTokenAddress, wxdcTokenAddress)
-        )
-          .then((wxdcPrice) => {
-            console.log("Price for pair USDT/WXDC", wxdcPrice[0].toString());
-            setWxdcPrice(wxdcPrice[0].toString());
-          })
-          .catch(() => {
-            console.log("Pair USDT/WXDC not exists on DEX");
-          });
+        const xdcPromise =
+          process.env.REACT_APP_ENV === "prod"
+            ? stakingService.getPairPrice(wxdcTokenAddress, usdtTokenAddress)
+            : stakingService.getPairPrice(usdtTokenAddress, wxdcTokenAddress);
 
-        (process.env.REACT_APP_ENV === "prod"
-          ? stakingService.getPairPrice(fxdTokenAddress, usdtTokenAddress)
-          : stakingService.getPairPrice(usdtTokenAddress, fxdTokenAddress)
-        )
-          .then((fxdPrice) => {
-            console.log("Price for pair USDT/FXD", fxdPrice[0].toString());
+        const fxdPromise =
+          process.env.REACT_APP_ENV === "prod"
+            ? stakingService.getPairPrice(fxdTokenAddress, usdtTokenAddress)
+            : stakingService.getPairPrice(usdtTokenAddress, fxdTokenAddress);
+
+        Promise.all([fthmPromise, xdcPromise, fxdPromise])
+          .then(([fthmPrice, xdcPrice, fxdPrice]) => {
+            if (process.env.REACT_APP_ENV !== "prod") {
+              setFthmPrice(fthmPrice[0].toString());
+            }
+
+            setWxdcPrice(xdcPrice[0].toString());
             setFxdPrice(fxdPrice[0].toString());
+
+            console.log({
+              "fthm/fxd": fthmPrice[0].toString(),
+              "fxd/usdt": fxdPrice[0].toString(),
+              "wxdc/usdt": xdcPrice[0].toString(),
+            });
           })
-          .catch(() => {
-            console.log("Pair USDT/FXD not exists on DEX");
+          .catch((e) => {
+            console.log("Pairs not exists on DEX", e);
           });
       } catch (e: any) {
         console.log(e);
@@ -124,7 +128,7 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
     if ((syncFXD && !prevSyncFxd) || (syncDao && !prevSyncDao)) {
       fetchPairPrices();
     }
-  }, [syncFXD, prevSyncFxd, syncDao, prevSyncDao, fetchPairPrices]);
+  }, [syncFXD, prevSyncFxd, syncDao, prevSyncDao]);
 
   const values = useMemo(() => {
     return {

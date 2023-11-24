@@ -62,7 +62,8 @@ const StableSwapManageFees = () => {
                 </InfoValue>
               </StableSwapInfoWrapper>
             </StableSwapInfoContainer>
-            {feesRewardsForFXD > 0 || feesRewardsForUSDTx > 0 ? (
+            {BigNumber(feesRewardsForFXD).isGreaterThan(0) ||
+            BigNumber(feesRewardsForUSDTx).isGreaterThan(0) ? (
               <SwapButton
                 isLoading={claimRewardsInProgress}
                 disabled={claimRewardsInProgress}
@@ -101,7 +102,8 @@ const StableSwapManageFees = () => {
               </StableSwapInfoWrapper>
             </StableSwapInfoContainer>
 
-            {claimedFXDFeeReward > 0 || claimedUSDTFeeReward > 0 ? (
+            {BigNumber(claimedFXDFeeReward).isGreaterThan(0) ||
+            BigNumber(claimedUSDTFeeReward).isGreaterThan(0) ? (
               <SwapButton
                 isLoading={withdrawClaimedFeesInProgress}
                 disabled={withdrawClaimedFeesInProgress}

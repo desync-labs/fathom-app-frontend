@@ -232,18 +232,20 @@ const StableSwap = () => {
               {isDecentralizedState && allowStableSwap && (
                 <StableSwapInfoWrapper>
                   <InfoLabel>Daily Limit</InfoLabel>
-                  <InfoValue>{formatNumber(dailyLimit)} FXD </InfoValue>
+                  <InfoValue>{formatNumber(Number(dailyLimit))} FXD </InfoValue>
                 </StableSwapInfoWrapper>
               )}
 
               <StableSwapInfoWrapper>
                 <InfoLabel>FXD Pool Token Available</InfoLabel>
-                <InfoValue>{formatNumber(fxdAvailable)} FXD </InfoValue>
+                <InfoValue>{formatNumber(Number(fxdAvailable))} FXD </InfoValue>
               </StableSwapInfoWrapper>
 
               <StableSwapInfoWrapper>
                 <InfoLabel>xUSDT Pool Token Available</InfoLabel>
-                <InfoValue>{formatNumber(usStableAvailable)} xUSDT</InfoValue>
+                <InfoValue>
+                  {formatNumber(Number(usStableAvailable))} xUSDT
+                </InfoValue>
               </StableSwapInfoWrapper>
 
               <StableSwapInfoWrapper>

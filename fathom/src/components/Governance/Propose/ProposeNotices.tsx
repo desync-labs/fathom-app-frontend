@@ -11,7 +11,7 @@ import {
 } from "components/AppComponents/AppBox/AppBox";
 
 type ProposeNoticesProps = {
-  vBalance: null | number;
+  vBalance: null | string;
   minimumVBalance: number;
   vBalanceError: boolean;
 };
@@ -58,7 +58,13 @@ const ProposeNotices: FC<ProposeNoticesProps> = ({
           To create a proposal, you need to have {formatNumber(minimumVBalance)}{" "}
           vFTHM.
           <br />
-          Now you have {formatNumber((vBalance as number) / 10 ** 18)} vFTHM
+          Now you have{" "}
+          {formatNumber(
+            BigNumber(vBalance as string)
+              .dividedBy(10 ** 18)
+              .toNumber()
+          )}{" "}
+          vFTHM
         </ErrorMessage>
       </ErrorBox>
     ) : (
@@ -68,7 +74,13 @@ const ProposeNotices: FC<ProposeNoticesProps> = ({
           To create a proposal, you need to have {formatNumber(minimumVBalance)}{" "}
           vFTHM.
           <br />
-          Now you have {formatNumber((vBalance as number) / 10 ** 18)} vFTHM
+          Now you have{" "}
+          {formatNumber(
+            BigNumber(vBalance as string)
+              .dividedBy(10 ** 18)
+              .toNumber()
+          )}{" "}
+          vFTHM
         </Typography>
       </WarningBox>
     );

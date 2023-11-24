@@ -46,7 +46,7 @@ const useOpenPosition = (
   const safeMax = watch("safeMax");
   const dangerSafeMax = watch("dangerSafeMax");
 
-  const [balance, setBalance] = useState<number>(0);
+  const [balance, setBalance] = useState<string>("0");
 
   const [isTouched, setIsTouched] = useState<boolean>(false);
   const [isDirty, setIsDirty] = useState<boolean>(false);
@@ -97,7 +97,7 @@ const useOpenPosition = (
     if (pool.poolName.toUpperCase() === "XDC") {
       const balance = await library.getBalance(account);
       setCollateralTokenAddress(null);
-      setBalance(Number(balance));
+      setBalance(balance.toString());
     } else {
       const tokenAddress = await poolService.getCollateralTokenAddress(
         pool.tokenAdapterAddress
@@ -112,7 +112,7 @@ const useOpenPosition = (
       );
 
       setCollateralTokenAddress(tokenAddress);
-      setBalance(balance);
+      setBalance(balance.toString());
     }
   }, [poolService, account, pool, library, setCollateralTokenAddress]);
 
@@ -202,7 +202,7 @@ const useOpenPosition = (
         ? BigNumber(fathomTokenInput)
             .dividedBy(
               BigNumber(collateralInput)
-                .multipliedBy(priceOfCollateralFromDex)
+                .multipliedBy(priceOfCollateralFromDex.toString())
                 .dividedBy(10 ** 18)
             )
             .multipliedBy(100)
@@ -210,7 +210,7 @@ const useOpenPosition = (
         : 0;
 
       const overCollateral = BigNumber(collateralInput)
-        .multipliedBy(priceOfCollateralFromDex)
+        .multipliedBy(priceOfCollateralFromDex.toString())
         .dividedBy(10 ** 18)
         .dividedBy(fathomTokenInput)
         .multipliedBy(100)
@@ -324,7 +324,7 @@ const useOpenPosition = (
   ]);
 
   const setMax = useCallback(
-    (balance: number) => {
+    (balance: string) => {
       const max = BigNumber(balance).dividedBy(10 ** 18);
       setValue("collateral", max.toString(), { shouldValidate: true });
     },

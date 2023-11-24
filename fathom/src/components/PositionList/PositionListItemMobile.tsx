@@ -9,11 +9,8 @@ import {
   formatPercentage,
 } from "utils/format";
 import { styled } from "@mui/material/styles";
-import { Box, CircularProgress } from "@mui/material";
-import {
-  ButtonPrimary,
-  ManagePositionButton,
-} from "components/AppComponents/AppButton/AppButton";
+import { Box } from "@mui/material";
+import { ManagePositionButton } from "components/AppComponents/AppButton/AppButton";
 import AppPopover from "components/AppComponents/AppPopover/AppPopover";
 
 const PositionListItemMobileContainer = styled(Box)`
@@ -72,9 +69,6 @@ const ButtonsWrapper = styled(Box)`
 const PositionListItemMobile: FC<PositionListItemProps> = ({
   position,
   setTopUpPosition,
-  approvalPending,
-  approveBtn,
-  approve,
 }) => {
   return (
     <PositionListItemMobileContainer>
@@ -155,22 +149,12 @@ const PositionListItemMobile: FC<PositionListItemProps> = ({
         </ListValue>
       </ListItemWrapper>
       <ButtonsWrapper>
-        {approveBtn ? (
-          <ButtonPrimary onClick={approve} sx={{ height: "32px" }}>
-            {approvalPending ? (
-              <CircularProgress size={20} sx={{ color: "#0D1526" }} />
-            ) : (
-              `Approve FXD`
-            )}
-          </ButtonPrimary>
-        ) : (
-          <ManagePositionButton
-            size="small"
-            onClick={() => setTopUpPosition(position)}
-          >
-            Manage position
-          </ManagePositionButton>
-        )}
+        <ManagePositionButton
+          size="small"
+          onClick={() => setTopUpPosition(position)}
+        >
+          Manage position
+        </ManagePositionButton>
       </ButtonsWrapper>
     </PositionListItemMobileContainer>
   );
