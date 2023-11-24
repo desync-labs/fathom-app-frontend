@@ -8,6 +8,7 @@ import useOpenPositionContext from "context/openPosition";
 import { styled } from "@mui/material/styles";
 import { formatNumber, formatPercentage } from "utils/format";
 import AppPopover from "components/AppComponents/AppPopover/AppPopover";
+import BigNumber from "bignumber.js";
 
 const ListDivider = styled(Divider)`
   margin: 20px 20px 20px 5px;
@@ -39,7 +40,7 @@ const OpenPositionInfo = () => {
       <AppList>
         <AppListItem
           alignItems="flex-start"
-          secondaryAction={`${formatNumber(collateralToBeLocked)} ${
+          secondaryAction={`${formatNumber(Number(collateralToBeLocked))} ${
             pool.poolName
           }`}
         >
@@ -60,9 +61,9 @@ const OpenPositionInfo = () => {
         <AppListItem
           className={"short"}
           alignItems="flex-start"
-          secondaryAction={`${formatNumber(collateralAvailableToWithdraw)} ${
-            pool.poolName
-          }`}
+          secondaryAction={`${formatNumber(
+            Number(collateralAvailableToWithdraw)
+          )} ${pool.poolName}`}
         >
           <ListItemText
             primary={
@@ -99,7 +100,7 @@ const OpenPositionInfo = () => {
         </AppListItem>
         <AppListItem
           alignItems="flex-start"
-          secondaryAction={`${formatPercentage(fxdToBeBorrowed)} FXD`}
+          secondaryAction={`${formatPercentage(Number(fxdToBeBorrowed))} FXD`}
         >
           <ListItemText
             primary={
@@ -120,13 +121,15 @@ const OpenPositionInfo = () => {
         </AppListItem>
         <AppListItem
           alignItems="flex-start"
-          secondaryAction={`${formatPercentage(fxdAvailableToBorrow)} FXD`}
+          secondaryAction={`${formatPercentage(
+            Number(fxdAvailableToBorrow)
+          )} FXD`}
         >
           <ListItemText primary="Safety Buffer (FXD)" />
         </AppListItem>
         <AppListItem
           alignItems={"flex-start"}
-          secondaryAction={`${formatNumber(overCollateral)} %`}
+          secondaryAction={`${formatNumber(Number(overCollateral))} %`}
         >
           <ListItemText
             primary={
@@ -144,13 +147,15 @@ const OpenPositionInfo = () => {
         </AppListItem>
         <AppListItem
           alignItems="flex-start"
-          secondaryAction={`${formatPercentage(safetyBuffer * 100)} %`}
+          secondaryAction={`${formatPercentage(
+            BigNumber(safetyBuffer).multipliedBy(100).toNumber()
+          )} %`}
         >
           <ListItemText primary="Safety Buffer (%)" />
         </AppListItem>
         <AppListItem
           alignItems="flex-start"
-          secondaryAction={`$${formatPercentage(liquidationPrice)}`}
+          secondaryAction={`$${formatPercentage(Number(liquidationPrice))}`}
         >
           <ListItemText
             primary={

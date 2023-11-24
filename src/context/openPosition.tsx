@@ -12,19 +12,19 @@ export type OpenPositionContextType = {
 
 export type UseOpenPositionContextReturnType = {
   isMobile: boolean;
-  safeMax: number;
+  safeMax: string;
   approveBtn: boolean;
   approve: () => void;
   approvalPending: boolean;
-  collateralToBeLocked: number;
-  collateralAvailableToWithdraw: number;
-  fxdAvailableToBorrow: number;
-  debtRatio: number;
-  overCollateral: number;
-  fxdToBeBorrowed: number;
+  collateralToBeLocked: string;
+  collateralAvailableToWithdraw: string;
+  fxdAvailableToBorrow: string;
+  debtRatio: string;
+  overCollateral: string;
+  fxdToBeBorrowed: string;
   balance: string;
-  safetyBuffer: number;
-  liquidationPrice: number;
+  safetyBuffer: string;
+  liquidationPrice: string;
   collateral: string;
   fathomToken: string;
   openPositionLoading: boolean;
