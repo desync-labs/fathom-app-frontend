@@ -1,0 +1,531 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="8e4d1923-ab0a-467a-a4c3-23b75c1fc153" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.github/workflows/all-tests-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/all-tests-dev.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/all-tests-local-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/all-tests-local-dev.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/.env.demo" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/.env.development" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/.env.prod" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/.env.qa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/.eslintrc.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/Dockerfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/package-lock.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/playwright-tests/fixtures/api.data.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/playwright-tests/fixtures/pomSynpressFixture.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/playwright-tests/pages/base.page.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/playwright-tests/pages/fxd.page.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/playwright-tests/tests/fxd-positions.spec.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/playwright-tests/tests/wallet.spec.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/playwright-tests/types.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/playwright.config.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/public/favicon.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/public/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/public/manifest.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/public/robots.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/.vsconfig/settings.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/App.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/App.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/apollo/client.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/apollo/queries.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/images/fxd-logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/FXD-1.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/Fathom-app-logo-mobile.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/Fathom-app-logo.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/Metamask-Fox.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/arrow-down.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/arrow-transfer-1.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/arrow-transfer-rectangle-1.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/arrow-transfer-rectangle.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/arrow-transfer.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/arrow-up.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/back.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/borrow-active.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/borrow.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/check-mark.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/clock-circle.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/combo-shape.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/dex.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/direction-right 01.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/exit.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/gas-fee.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/governance-active.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/governance.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/hart-arrow-up.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/locked.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/logout.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/metamask.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/mobile-menu-active.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/mobile-menu.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/percent.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/price-settings.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/question-mark.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/rejected.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/remove-circle.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/required.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/rewards.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/search.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/stable-swap-active.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/stable-swap.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/staking-active.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/staking.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/succeeded.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/usdt-1.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/users 02-1.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/users 02.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/assets/svg/wallet-connect.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/AppComponents/AppBar/AppBar.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/AppComponents/AppBox/AppBox.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/AppComponents/AppButton/AppButton.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/AppComponents/AppDialog/AppDialog.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/AppComponents/AppDialog/AppDialogTitle.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/AppComponents/AppForm/AppForm.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/AppComponents/AppLabel/RiseLabel.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/AppComponents/AppList/AppList.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/AppComponents/AppPaper/AppPaper.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/AppComponents/AppPopover/AppPopover.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/AppComponents/AppStack/AppStack.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/AppComponents/AppTable/AppTable.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Common/AlertMessages.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Common/MenuIcons.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Common/PriceChange.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Common/TokenLogo.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Dashboard/BottomLinks.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Dashboard/DaoView.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Dashboard/Dashboard.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Dashboard/DesktopConnector.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Dashboard/MainLayout.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Dashboard/Menu.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Dashboard/MobileConnector.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Dashboard/MobileMenu.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Dashboard/PageHeader.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Dashboard/ProtocolStats.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Footer/Footer.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Governance/Proposal.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Governance/Proposal/ProposalInfo.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Governance/Proposal/ProposalVoting.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Governance/ProposalFilters.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Governance/Propose.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Governance/Propose/ProposeActionFields.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Governance/Propose/ProposeNotices.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Governance/ViewAllProposalItem.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Governance/ViewAllProposals.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/MenuItem/AppMenuItem.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/MenuItem/AppMenuItemComponent.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Pools/PoolsListItem.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Pools/PoolsListItemMobile.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Pools/PoolsListView.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/PositionList/PositionListItem.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/PositionList/PositionListItemMobile.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/PositionList/PositionsList.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Positions/OpenNewPositionDialog.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Positions/OpenPosition/OpenPositionForm.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Positions/OpenPosition/OpenPositionInfo.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Positions/RepayPosition/RepayPositionForm.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Positions/RepayPosition/RepayPositionInfo.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Positions/RepayPositionDialog.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Positions/TopUpPosition/TopUpPositionForm.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Positions/TopUpPosition/TopUpPositionInfo.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Positions/TopUpPositionDialog.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Stableswap/StableSwap.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Stableswap/StableSwapAddLiquidity.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Stableswap/StableSwapForm.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Stableswap/StableSwapManageFees.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Stableswap/StableSwapRemoveLiquidity.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Staking/Components/Period.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Staking/Components/StreamStats.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Staking/Dialog/ClaimRewardsCoolDownDialog.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Staking/Dialog/ClaimRewardsDialog.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Staking/Dialog/EarlyUnstakeDialog.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Staking/Dialog/UnclaimedRewardsDialog.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Staking/Dialog/UnstakeCoolDownDialog.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Staking/Dialog/UnstakeDialog.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Staking/Dialog/WithdrawDialog.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Staking/StakingCountdown.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Staking/StakingLockForm.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Staking/StakingPositions.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Staking/StakingView.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Staking/StakingViewItem.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Staking/StreamItem.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Transaction/TransactionErc20TokenModal.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Transaction/TransactionStatus.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/components/Web3Status/Web3Status.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/connectors/networks.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/connectors/wallet-connect-connector/wallet-connect-connector.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/context/alertAndTransaction.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/context/connector.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/context/openPosition.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/context/prices.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/context/proposal.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/context/repayPosition.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/context/services.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/context/staking.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/context/sync.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/context/topUpPosition.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/helpers/Constants.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/helpers/Logger.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/hooks/useAllProposals.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/hooks/useCreateProposal.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/hooks/useCreateProposalActionField.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/hooks/useDashboard.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/hooks/useEarlyUnstake.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/hooks/useMainLayout.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/hooks/useOpenPosition.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/hooks/useOpenPositionList.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/hooks/usePoolsList.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/hooks/useProposalItem.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/hooks/useProtocolStats.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/hooks/useRepayPosition.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/hooks/useShowText.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/hooks/useStableSwap.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/hooks/useStableSwapAddLiquidity.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/hooks/useStableSwapManageFees.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/hooks/useStableSwapRemoveLiquidity.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/hooks/useStakingItemView.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/hooks/useStakingLockForm.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/hooks/useStakingView.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/hooks/useStreamStats.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/hooks/useTopUpPosition.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/hooks/useUnstake.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/hooks/useViewProposalItem.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/hooks/useWindowResize.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/index.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/react-app-env.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/services/index.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/utils/debounce.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/utils/defaultProvider.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/utils/explorer.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/utils/format.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/utils/secondsToTime.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/src/utils/tokenLogo.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/tsconfig.eslint.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fathom/tsconfig.json" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="TypeScript JSX File" />
+        <option value="TypeScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <excluded-from-favorite>
+      <branch-storage>
+        <map>
+          <entry type="LOCAL">
+            <value>
+              <list>
+                <branch-info repo="$PROJECT_DIR$" source="master" />
+              </list>
+            </value>
+          </entry>
+        </map>
+      </branch-storage>
+    </excluded-from-favorite>
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="dev" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="SWAP_SIDES_IN_COMPARE_BRANCHES" value="true" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/fathom/node_modules/@mui/material/Accordion/package.json" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/fathom/package.json" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/fathom/src/components/AppComponents/AppButton/AppButton.tsx" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/fathom/src/components/AppComponents/AppTable/AppTable.tsx" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/fathom/src/components/Dashboard/Dashboard.tsx" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/fathom/src/components/Dashboard/Menu.tsx" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/fathom/src/components/Governance/Proposal.tsx" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/fathom/src/components/Governance/Propose.tsx" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/fathom/src/components/Governance/ViewAllProposals.tsx" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/fathom/src/components/Pools/PoolsListItem.tsx" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/fathom/src/components/Pools/PoolsListView.tsx" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/fathom/src/components/Positions/OpenPosition/OpenPositionForm.tsx" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/fathom/src/components/Staking/StakingLockForm.tsx" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/fathom/src/config/SmartContractFactory.ts" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/fathom/src/config/addresses.json" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/fathom/src/context/openPosition.tsx" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/fathom/src/context/repayPosition.tsx" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/fathom/src/helpers/Constants.ts" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/fathom/src/hooks/useOpenPosition.ts" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/fathom/src/hooks/useStakingLockForm.ts" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/fathom/src/hooks/useStakingView.ts" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/fathom/src/services/PoolService.ts" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/fathom/src/services/PositionService.ts" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/fathom/src/services/interfaces/IPositionService.ts" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
+  <component name="ProjectId" id="2FIMMTb9qThgQhMJl6yqakbHd5q" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "ethers-v5-integration",
+    "ignore_missing_gitignore": "true",
+    "js.linters.configure.manually.selectedtslint": "true",
+    "last_opened_file_path": "/Users/vetalion/sites/Fathom/fathom-stablecoin-frontend",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.standard": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.standard": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "prettierjs.PrettierConfiguration.Package": "/Users/vetalion/sites/Fathom/fathom-stablecoin-frontend/fathom/node_modules/prettier",
+    "settings.editor.selected.configurable": "settings.javascript.prettier",
+    "ts.external.directory.path": "/Users/vetalion/sites/Fathom/fathom-stablecoin-frontend/fathom/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/fathom" />
+      <recent name="$PROJECT_DIR$/fathom/src/assets/svg" />
+      <recent name="$PROJECT_DIR$/fathom/src/config/ABI" />
+      <recent name="$PROJECT_DIR$/fathom/src/components/Positions" />
+      <recent name="$PROJECT_DIR$/fathom/src/components/Positions/AdjustPosition" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/fathom/src/utils" />
+      <recent name="$PROJECT_DIR$/fathom/src/services/interfaces/models" />
+      <recent name="$PROJECT_DIR$/fathom/src/services/interfaces/services" />
+      <recent name="$PROJECT_DIR$/fathom/src/services" />
+      <recent name="$PROJECT_DIR$/fathom/src/services/interfaces" />
+    </key>
+  </component>
+  <component name="RunManager" selected="npm.start:dev">
+    <configuration name="start" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/fathom/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="start" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="start:demo" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/fathom/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="start:demo" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="start:dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/fathom/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="start:dev" />
+      </scripts>
+      <node-interpreter value="$USER_HOME$/.nvm/versions/node/v16.20.2/bin/node" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="start:prod" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/fathom/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="start:prod" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="start:qa" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/fathom/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="start:qa" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="npm.start:qa" />
+        <item itemvalue="npm.start:prod" />
+        <item itemvalue="npm.start:dev" />
+        <item itemvalue="npm.start:demo" />
+        <item itemvalue="npm.start" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="8e4d1923-ab0a-467a-a4c3-23b75c1fc153" name="Changes" comment="" />
+      <created>1664175096303</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1664175096303</updated>
+      <workItem from="1664175097486" duration="35836000" />
+      <workItem from="1664284678669" duration="583000" />
+      <workItem from="1664285586775" duration="79517000" />
+      <workItem from="1665069157960" duration="39269000" />
+      <workItem from="1666168232271" duration="167125000" />
+      <workItem from="1667480839031" duration="3887000" />
+      <workItem from="1667506138876" duration="252000" />
+      <workItem from="1667506483814" duration="98131000" />
+      <workItem from="1669017462996" duration="37797000" />
+      <workItem from="1669125609892" duration="477000" />
+      <workItem from="1669126159877" duration="33833000" />
+      <workItem from="1669285024066" duration="142068000" />
+      <workItem from="1670530426234" duration="137073000" />
+      <workItem from="1671621586047" duration="60339000" />
+      <workItem from="1672410862922" duration="152000" />
+      <workItem from="1672411056118" duration="3077000" />
+      <workItem from="1672827508591" duration="2843000" />
+      <workItem from="1672830915513" duration="58349000" />
+      <workItem from="1673434230364" duration="124794000" />
+      <workItem from="1675246168319" duration="31922000" />
+      <workItem from="1676210759973" duration="57712000" />
+      <workItem from="1677056007339" duration="57640000" />
+      <workItem from="1678805491929" duration="42684000" />
+      <workItem from="1679557783273" duration="70593000" />
+      <workItem from="1680505380900" duration="31628000" />
+      <workItem from="1681735394074" duration="27054000" />
+      <workItem from="1682259899616" duration="30126000" />
+      <workItem from="1682454078630" duration="1199000" />
+      <workItem from="1683294891772" duration="23032000" />
+      <workItem from="1683726737372" duration="4063000" />
+      <workItem from="1683791237470" duration="68468000" />
+      <workItem from="1684829208216" duration="1170000" />
+      <workItem from="1684916242775" duration="44662000" />
+      <workItem from="1685719905351" duration="33360000" />
+      <workItem from="1686671273927" duration="28121000" />
+      <workItem from="1687703562420" duration="571000" />
+      <workItem from="1687870449686" duration="80000" />
+      <workItem from="1687870586855" duration="586000" />
+      <workItem from="1687946283175" duration="34678000" />
+      <workItem from="1688478682110" duration="32215000" />
+      <workItem from="1690207819102" duration="2513000" />
+      <workItem from="1690215234342" duration="591000" />
+      <workItem from="1690223398828" duration="64000" />
+      <workItem from="1690289727242" duration="2973000" />
+      <workItem from="1690361384332" duration="1029000" />
+      <workItem from="1690455697883" duration="599000" />
+      <workItem from="1690799853703" duration="598000" />
+      <workItem from="1690823564224" duration="599000" />
+      <workItem from="1690825262839" duration="4652000" />
+      <workItem from="1691057883577" duration="45734000" />
+      <workItem from="1691583811443" duration="1233000" />
+      <workItem from="1692173138542" duration="1198000" />
+      <workItem from="1694448199867" duration="2620000" />
+      <workItem from="1695044458556" duration="3114000" />
+      <workItem from="1695127991727" duration="95000" />
+      <workItem from="1695128120764" duration="594000" />
+      <workItem from="1695132688204" duration="27722000" />
+      <workItem from="1695718835329" duration="5821000" />
+      <workItem from="1695744438906" duration="10827000" />
+      <workItem from="1696703233129" duration="1103000" />
+      <workItem from="1697445696818" duration="4000" />
+      <workItem from="1697573518457" duration="1819000" />
+      <workItem from="1697579351235" duration="201000" />
+      <workItem from="1697645423877" duration="20174000" />
+      <workItem from="1698064003326" duration="8898000" />
+      <workItem from="1698245827479" duration="5686000" />
+      <workItem from="1698326430035" duration="9727000" />
+      <workItem from="1698411850338" duration="89734000" />
+      <workItem from="1699376591757" duration="991000" />
+      <workItem from="1699377729426" duration="37845000" />
+      <workItem from="1699551749936" duration="18293000" />
+      <workItem from="1699974088458" duration="7976000" />
+      <workItem from="1700229269387" duration="12110000" />
+      <workItem from="1700253083246" duration="1176000" />
+      <workItem from="1700256469554" duration="3965000" />
+      <workItem from="1700320169967" duration="1387000" />
+      <workItem from="1700362264621" duration="40000" />
+      <workItem from="1700474808517" duration="5254000" />
+      <workItem from="1700563834201" duration="447000" />
+      <workItem from="1700564377037" duration="37235000" />
+      <workItem from="1700753364384" duration="360000" />
+      <workItem from="1700753846398" duration="17356000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="OPEN_GENERIC_TABS">
+      <map>
+        <entry key="47585e90-90dd-40ac-999b-f4ddc5f9cb6f" value="TOOL_WINDOW" />
+      </map>
+    </option>
+    <option name="TAB_STATES">
+      <map>
+        <entry key="47585e90-90dd-40ac-999b-f4ddc5f9cb6f">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="HEAD" />
+                      </list>
+                    </value>
+                  </entry>
+                  <entry key="structure">
+                    <value>
+                      <list>
+                        <option value="dir:/Users/vetalion/sites/Fathom/fathom-stablecoin-frontend/fathom/src/assets" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+              <option name="SHOW_ONLY_AFFECTED_CHANGES" value="true" />
+            </State>
+          </value>
+        </entry>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
