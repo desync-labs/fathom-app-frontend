@@ -33,8 +33,6 @@ declare module "@mui/material/styles/createPalette" {
 
   interface Palette {
     gradients: {
-      aaveGradient: string;
-      newGradient: string;
       fathomGradient: string;
       fathomlightGradient: string;
     };
@@ -49,8 +47,6 @@ declare module "@mui/material/styles/createPalette" {
 
   interface PaletteOptions {
     gradients: {
-      aaveGradient: string;
-      newGradient: string;
       fathomGradient: string;
       fathomlightGradient: string;
     };
@@ -135,10 +131,10 @@ export const getDesignTokens = () => {
       keys: ["xs", "xsm", "sm", "md", "lg", "xl", "xxl"],
       values: {
         xs: 0,
-        xsm: 640,
+        xsm: 600,
         sm: 760,
-        md: 960,
-        lg: 1280,
+        md: 900,
+        lg: 1200,
         xl: 1575,
         xxl: 1800,
       },
@@ -146,17 +142,17 @@ export const getDesignTokens = () => {
     palette: {
       mode,
       primary: {
-        main: "#fff",
+        main: "#00FFF6",
         light: "#b0c5e7",
         dark: "#D2D4DC",
       },
       secondary: {
-        main: "#F48FB1",
+        main: "#7D91B5",
         light: "#F6A5C0",
         dark: "#AA647B",
       },
       error: {
-        main: "#F44336",
+        main: "#DD3C3C",
         light: "#E57373",
         dark: "#D32F2F",
         "100": "#FBB4AF", // for alert text
@@ -171,21 +167,21 @@ export const getDesignTokens = () => {
         "300": "#5c310a", // for alert border
       },
       info: {
-        main: "#29B6F6",
+        main: "#5A81FF",
         light: "#4FC3F7",
         dark: "#0288D1",
         "100": "#A9E2FB", // for alert text
         "200": "#071F2E", // for alert background
       },
       success: {
-        main: "#4dcc33",
+        main: "#3DA329",
         light: "#90FF95",
         dark: "#388E3C",
         "100": "#C2E4C3", // for alert text
         "200": "#0A130B", // for alert background
       },
       text: {
-        primary: "#c5d7f2",
+        primary: "#fff",
         secondary: "#6379a1",
         disabled: "#62677B",
         muted: "#5977a0",
@@ -216,16 +212,13 @@ export const getDesignTokens = () => {
         fathomLink: "#5a81ff",
       },
       gradients: {
-        aaveGradient:
-          "linear-gradient(104.04deg, rgb(179, 255, 249) 0%, rgb(0, 219, 203) 100%)",
-        newGradient: "linear-gradient(79.67deg, #8C3EBC 0%, #007782 95.82%)",
         fathomGradient:
           "linear-gradient(rgb(7, 17, 38) 0%, rgb(5, 12, 26) 100%)",
         fathomlightGradient:
           "linear-gradient(104.04deg, rgb(179, 255, 249) 0%, rgb(0, 219, 203) 100%)",
       },
     },
-    spacing: 4,
+    spacing: 8,
     typography: {
       fontFamily: FONT,
       h5: undefined,
@@ -603,8 +596,6 @@ export function getThemedComponents(theme: Theme) {
         styleOverrides: {
           root: {
             color: theme.palette.primary.light,
-            minWidth: "unset !important",
-            marginRight: "12px",
           },
         },
       },
@@ -617,27 +608,12 @@ export function getThemedComponents(theme: Theme) {
         },
       },
       MuiPaper: {
-        styleOverrides: {
-          root: {
-            borderRadius: "8px",
-          },
-        },
         variants: [
           {
             props: { variant: "outlined" },
             style: {
               border: `1px solid ${theme.palette.divider}`,
               background: theme.palette.background.paper,
-            },
-          },
-          {
-            props: { variant: "elevation" },
-            style: {
-              boxShadow:
-                "0px 2px 1px rgba(0, 0, 0, 0.05), 0px 0px 1px rgba(0, 0, 0, 0.25)",
-              ...(theme.palette.mode === "dark"
-                ? { backgroundImage: "none" }
-                : {}),
             },
           },
         ],
@@ -648,36 +624,11 @@ export function getThemedComponents(theme: Theme) {
             display: "flex",
             flexDirection: "column",
             flex: 1,
-            paddingBottom: "39px",
-            [theme.breakpoints.up("xs")]: {
-              paddingLeft: "8px",
-              paddingRight: "8px",
-            },
+            margin: "16px auto",
             [theme.breakpoints.up("xsm")]: {
-              paddingLeft: "20px",
-              paddingRight: "20px",
-            },
-            [theme.breakpoints.up("sm")]: {
-              paddingLeft: "48px",
-              paddingRight: "48px",
-            },
-            [theme.breakpoints.up("md")]: {
-              paddingLeft: "96px",
-              paddingRight: "96px",
-            },
-            [theme.breakpoints.up("lg")]: {
-              paddingLeft: "20px",
-              paddingRight: "20px",
-            },
-            [theme.breakpoints.up("xl")]: {
-              maxWidth: "unset",
-              paddingLeft: "96px",
-              paddingRight: "96px",
-            },
-            [theme.breakpoints.up("xxl")]: {
-              paddingLeft: 0,
-              paddingRight: 0,
-              maxWidth: "1440px",
+              margin: "32px auto",
+              paddingLeft: "24px",
+              paddingRight: "24px",
             },
           },
         },
@@ -704,6 +655,7 @@ export function getThemedComponents(theme: Theme) {
             props: { fontSize: "large" },
             style: {
               fontSize: pxToRem(32),
+              marginTop: 0,
             },
           },
         ],
@@ -889,10 +841,10 @@ export function getThemedComponents(theme: Theme) {
       MuiLinearProgress: {
         styleOverrides: {
           bar1Indeterminate: {
-            background: theme.palette.gradients.aaveGradient,
+            background: theme.palette.gradients.fathomGradient,
           },
           bar2Indeterminate: {
-            background: theme.palette.gradients.aaveGradient,
+            background: theme.palette.gradients.fathomGradient,
           },
         },
       },

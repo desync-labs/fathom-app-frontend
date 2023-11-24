@@ -16,10 +16,7 @@ const DashboardContent = () => {
   } = useDashboard();
 
   return (
-    <Container
-      maxWidth="lg"
-      sx={{ mt: isMobile ? 2 : 4, mb: isMobile ? 2 : 4 }}
-    >
+    <Container maxWidth="lg">
       <Grid container spacing={isMobile ? 1 : 3}>
         <PageHeader
           title={"FXD"}
