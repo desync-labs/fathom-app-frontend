@@ -28,3 +28,6 @@ yarn-error.log*
 /playwright-tests/test-report/
 /playwright/.cache/
 .env
+
+# ide
+.idea

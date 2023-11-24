@@ -177,11 +177,11 @@ const OpenPositionForm = () => {
             min: FXD_MINIMUM_BORROW_AMOUNT,
             max: maxBorrowAmount,
             validate: (value) => {
-              if (Number(value) > availableFathomInPool) {
+              if (BigNumber(value).isGreaterThan(availableFathomInPool)) {
                 return "Not enough FXD in pool";
               }
 
-              if (Number(value) > safeMax) {
+              if (BigNumber(value).isGreaterThan(safeMax)) {
                 return `You can't borrow more than ${fxdToBeBorrowed}`;
               }
 
@@ -246,7 +246,7 @@ const OpenPositionForm = () => {
                   onChange={onChange}
                 />
                 <AppFormInputLogo src={getTokenLogoURL("FXD")} />
-                {safeMax > 0 ? (
+                {BigNumber(safeMax).isGreaterThan(0) ? (
                   <MaxButton onClick={setSafeMax}>Safe Max</MaxButton>
                 ) : null}
               </AppFormInputWrapper>
