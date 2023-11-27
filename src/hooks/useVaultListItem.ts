@@ -1,9 +1,5 @@
 import { useState } from "react";
-import {
-  useMediaQuery,
-  useTheme
-} from "@mui/material";
-
+import { useMediaQuery, useTheme } from "@mui/material";
 
 const useVaultListItem = () => {
   const theme = useTheme();
@@ -21,7 +17,7 @@ const useVaultListItem = () => {
     setExtended,
     setManageVault,
     setNewVaultDeposit,
-  }
-}
+  };
+};
 
 export default useVaultListItem;

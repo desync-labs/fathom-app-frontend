@@ -22,7 +22,7 @@ const useVaultList = () => {
     }
   }, [vaultsData]);
 
-  const handlePageChange = useCallback(() => {}, []);
+  const handlePageChange = useCallback(() => void 0, []);
 
   return {
     isMobile,

@@ -3,7 +3,7 @@ import {
   ToggleButtonGroup,
   ToggleButton,
   Switch,
-  MenuItem
+  MenuItem,
 } from "@mui/material";
 import React, { useState } from "react";
 import { styled } from "@mui/material/styles";
@@ -11,7 +11,7 @@ import {
   AppFormInputLogo,
   AppFormInputWrapper,
   AppSelect,
-  AppTextField
+  AppTextField,
 } from "components/AppComponents/AppForm/AppForm";
 import SearchSrc from "assets/svg/search.svg";
 
@@ -36,12 +36,12 @@ const VaultToggleButtonGroup = styled(ToggleButtonGroup)`
     }
 
     &.Mui-selected {
-      background: #3D5580;
+      background: #3d5580;
       border-radius: 8px !important;
       color: #fff;
 
       &:hover {
-        background: #3D5580;
+        background: #3d5580;
       }
     }
   }
@@ -51,7 +51,7 @@ const FilterLabel = styled("div")`
   font-size: 11px;
   font-weight: 600;
   line-height: 16px;
-  color: #6D86B2;
+  color: #6d86b2;
   text-transform: uppercase;
   padding-bottom: 5px;
 `;
@@ -68,7 +68,7 @@ const StackedLabel = styled("span")`
 
 const VaultFilterContainer = styled(Grid)`
   padding-bottom: 55px;
-`
+`;
 
 const VaultFilters = () => {
   const [farmType, setFarmType] = useState<string>("live");
@@ -94,7 +94,10 @@ const VaultFilters = () => {
       <GridSwitcher item xs={2}>
         <div>
           <FilterLabel>Show only</FilterLabel>
-          <Switch onChange={() => setShowStacked(!showStacked)} checked={showStacked} />
+          <Switch
+            onChange={() => setShowStacked(!showStacked)}
+            checked={showStacked}
+          />
           <StackedLabel>Available</StackedLabel>
         </div>
       </GridSwitcher>

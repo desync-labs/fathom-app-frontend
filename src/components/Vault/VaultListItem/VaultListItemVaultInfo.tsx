@@ -1,8 +1,6 @@
 import { InfoWrapper } from "components/Vault/VaultListItem/VaultListItemPairInfo";
 import { styled } from "@mui/material/styles";
-import {
-  FarmInfoFarmNowBtn
-} from "components/AppComponents/AppButton/AppButton";
+import { FarmInfoFarmNowBtn } from "components/AppComponents/AppButton/AppButton";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { FC } from "react";
 
@@ -37,7 +35,7 @@ const VaultInfoTitle = styled("div")`
   font-size: 15px;
   font-weight: 600;
   line-height: 20px;
-  color: #5A81FF;
+  color: #5a81ff;
   ${({ theme }) => theme.breakpoints.down("sm")} {
     width: 100%;
     margin-bottom: 15px;
@@ -75,7 +73,7 @@ export const Apr = styled("div")`
 export const Approx = styled("div")`
   font-size: 14px;
   line-height: 20px;
-  color: #8EA4CC;
+  color: #8ea4cc;
 `;
 
 export const Tokens = styled("div")`
@@ -90,47 +88,46 @@ export const Token = styled("div")`
 `;
 
 type FarmListItemFarmInfoProps = {
-  isMobile: boolean
-}
+  isMobile: boolean;
+};
 
-const VaultListItemVaultInfo: FC<FarmListItemFarmInfoProps> = ({ isMobile }) => {
+const VaultListItemVaultInfo: FC<FarmListItemFarmInfoProps> = ({
+  isMobile,
+}) => {
   return (
     <InfoWrapper>
       <LeftColumn>
-        <VaultInfoTitle>
-          USDT
-        </VaultInfoTitle>
-        {isMobile && <Apr>
-          Apr
-          <span>
-              9.40%
-            </span>
-        </Apr>}
-        <VaultInfoStats>
-          {!isMobile && <Apr>
+        <VaultInfoTitle>USDT</VaultInfoTitle>
+        {isMobile && (
+          <Apr>
             Apr
-            <span>
-              9.40%
-            </span>
-          </Apr>}
-          <Approx>
-            ~295.95 USDs
-          </Approx>
+            <span>9.40%</span>
+          </Apr>
+        )}
+        <VaultInfoStats>
+          {!isMobile && (
+            <Apr>
+              Apr
+              <span>9.40%</span>
+            </Apr>
+          )}
+          <Approx>~295.95 USDs</Approx>
           <Tokens>
             <Token>
-              <img src={getTokenLogoURL("xUSDT")} width={20} height={20} alt={"token img"} />
+              <img
+                src={getTokenLogoURL("xUSDT")}
+                width={20}
+                height={20}
+                alt={"token img"}
+              />
               12.00
             </Token>
           </Tokens>
         </VaultInfoStats>
       </LeftColumn>
       <RightColumn>
-        <FoundPosition>
-          Deposit 12 USDT
-        </FoundPosition>
-        <FarmInfoFarmNowBtn>
-          Lock Now
-        </FarmInfoFarmNowBtn>
+        <FoundPosition>Deposit 12 USDT</FoundPosition>
+        <FarmInfoFarmNowBtn>Lock Now</FarmInfoFarmNowBtn>
       </RightColumn>
     </InfoWrapper>
   );

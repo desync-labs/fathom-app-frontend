@@ -8,6 +8,7 @@ import {
   FxdIcon,
   GovernanceIcon,
   SwapIcon,
+  VaultIcon,
   DexIcon,
 } from "components/Common/MenuIcons";
 import useConnector from "context/connector";
@@ -30,6 +31,11 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
   );
   const isDAOActive = useMemo(
     () => location.pathname.includes("dao"),
+    [location.pathname]
+  );
+
+  const isVaultActive = useMemo(
+    () => location.pathname.includes("vault"),
     [location.pathname]
   );
 
@@ -57,6 +63,13 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
       link: "/dao/staking",
       Icon: <GovernanceIcon isDAOActive={isDAOActive} />,
       isActive: isDAOActive,
+      showText: showText,
+    },
+    {
+      name: "Vault",
+      link: "/vault",
+      Icon: <VaultIcon isVaultActive={isVaultActive} />,
+      isActive: isVaultActive,
       showText: showText,
     },
     {

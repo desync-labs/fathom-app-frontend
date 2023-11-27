@@ -295,7 +295,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
         <VaultListItemManageModal
           isMobile={isMobile}
           onClose={() => setManageVault(false)}
-          onFinish={() => {}}
+          onFinish={() => void 0}
         />
       )}
       {useMemo(() => {
@@ -305,7 +305,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
               isMobile={isMobile}
               vaultItemData={vaultItemData}
               onClose={() => setNewVaultDeposit(false)}
-              onFinish={() => {}}
+              onFinish={() => void 0}
             />
           )
         );

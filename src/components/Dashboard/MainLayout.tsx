@@ -26,6 +26,7 @@ import StableSwap from "components/Stableswap/StableSwap";
 import StableSwapAddLiquidity from "components/Stableswap/StableSwapAddLiquidity";
 import StableSwapRemoveLiquidity from "components/Stableswap/StableSwapRemoveLiquidity";
 import StableSwapManageFees from "components/Stableswap/StableSwapManageFees";
+import AllVaultView from "components/Vault/AllVaultView";
 
 import Web3Status from "components/Web3Status/Web3Status";
 import AllProposalsView from "components/Governance/ViewAllProposals";
@@ -357,6 +358,7 @@ const MainLayout = () => {
                 }
               />
             </Route>
+            <Route path="/vault" element={<AllVaultView />}></Route>
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
           <Copyright />

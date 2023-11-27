@@ -46,7 +46,7 @@ const DepositVaultForm = ({ isMobile, onClose, token, walletBalance }: any) => {
 
   return (
     <DepositVaultItemFormWrapper item>
-      <ManageVaultForm onSubmit={() => {}} noValidate autoComplete="off">
+      <ManageVaultForm onSubmit={() => void 0} noValidate autoComplete="off">
         <Summary>Summary</Summary>
         <Controller
           control={control}
@@ -100,7 +100,7 @@ const DepositVaultForm = ({ isMobile, onClose, token, walletBalance }: any) => {
                 onChange={onChange}
               />
               <AppFormInputLogo src={getTokenLogoURL("WXDC")} />
-              <MaxButton onClick={() => {}}>Max</MaxButton>
+              <MaxButton onClick={() => void 0}>Max</MaxButton>
             </AppFormInputWrapper>
           )}
         />
@@ -178,7 +178,7 @@ const DepositVaultForm = ({ isMobile, onClose, token, walletBalance }: any) => {
                   onChange={onChange}
                 />
                 <AppFormInputLogo src={getTokenLogoURL("WXDC")} />
-                <MaxButton onClick={() => {}}>Max</MaxButton>
+                <MaxButton onClick={() => void 0}>Max</MaxButton>
               </AppFormInputWrapper>
             );
           }}
