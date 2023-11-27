@@ -1,4 +1,4 @@
-import React from "react";
+import { useContext, createContext } from "react";
 
 export enum LogLevel {
   log = "log",
@@ -13,7 +13,7 @@ export class Logger {
   };
 }
 
-const LoggerContext = React.createContext(new Logger());
+const LoggerContext = createContext(new Logger());
 
 // this will be the function available for the app to connect to the stores
-export const useLogger = () => React.useContext(LoggerContext);
+export const useLogger = () => useContext(LoggerContext);

@@ -4,15 +4,15 @@ import { EthereumProviderOptions } from "@walletconnect/ethereum-provider/dist/t
 import { JsonRpcProvider } from "@ethersproject/providers";
 
 export const APOTHEM_RPC = "https://erpc.apothem.network/";
-export const XDC_RPC = "https://erpc.xinfin.network/";
+export const XDC_RPC = "https://erpc.xdcrpc.com/";
 
-let XDC_CHAIN_IDS: number[] = [51];
+let XDC_CHAIN_IDS = [51];
 
 let DEFAULT_RPC: any = {
   51: APOTHEM_RPC,
 };
 
-let supportedChainIds: number[] = [51];
+let supportedChainIds = [51];
 
 let rpc: any = {
   51: APOTHEM_RPC,
