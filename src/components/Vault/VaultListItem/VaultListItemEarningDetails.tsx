@@ -6,16 +6,13 @@ import {
   Apr,
   VaultInfoStats,
   Tokens,
-  Token
+  Token,
 } from "components/Vault/VaultListItem/VaultListItemVaultInfo";
-import {
-  ButtonSecondary
-} from "components/AppComponents/AppButton/AppButton";
+import { ButtonSecondary } from "components/AppComponents/AppButton/AppButton";
 import { FC } from "react";
 
-
 const VaultTitle = styled("div")`
-  color: #5A81FF;
+  color: #5a81ff;
   font-size: 15px;
   font-weight: 600;
   line-height: 20px;
@@ -91,9 +88,12 @@ const ManageVaultBtn = styled(ButtonSecondary)`
 type VaultListItemFarmingDetailsProps = {
   isMobile: boolean;
   onOpen: () => void;
-}
+};
 
-const VaultListItemEarningDetails: FC<VaultListItemFarmingDetailsProps> = ({ isMobile, onOpen }) => {
+const VaultListItemEarningDetails: FC<VaultListItemFarmingDetailsProps> = ({
+  isMobile,
+  onOpen,
+}) => {
   return (
     <Grid container>
       <Grid item xs={isMobile ? 12 : 10}>
@@ -105,7 +105,12 @@ const VaultListItemEarningDetails: FC<VaultListItemFarmingDetailsProps> = ({ isM
           <Pooled>
             Pooled USDT:
             <Token>
-              <img src={getTokenLogoURL("xUSDT")} width={20} height={20} alt={'token img'} />
+              <img
+                src={getTokenLogoURL("xUSDT")}
+                width={20}
+                height={20}
+                alt={"token img"}
+              />
               12.00
             </Token>
           </Pooled>
@@ -113,35 +118,36 @@ const VaultListItemEarningDetails: FC<VaultListItemFarmingDetailsProps> = ({ isM
             Your pool share: <span>29%</span>
           </PoolShare>
         </VaultInfo>
-        { isMobile && <Apr>
-          Apr
-          <span>
-              9.40%
-            </span>
-        </Apr> }
-        <VaultInfoStats>
-          { !isMobile && <Apr>
+        {isMobile && (
+          <Apr>
             Apr
-            <span>
-              9.40%
-            </span>
-          </Apr> }
-          <Approx>
-            ~295.95 USDs
-          </Approx>
+            <span>9.40%</span>
+          </Apr>
+        )}
+        <VaultInfoStats>
+          {!isMobile && (
+            <Apr>
+              Apr
+              <span>9.40%</span>
+            </Apr>
+          )}
+          <Approx>~295.95 USDs</Approx>
           <Tokens>
             <Token>
-              <img src={getTokenLogoURL("xUSDT")} width={20} height={20} alt={'token img'} />
+              <img
+                src={getTokenLogoURL("xUSDT")}
+                width={20}
+                height={20}
+                alt={"token img"}
+              />
               12.00
             </Token>
           </Tokens>
         </VaultInfoStats>
       </Grid>
-      <Grid item xs={ isMobile ? 12 : 2}>
+      <Grid item xs={isMobile ? 12 : 2}>
         <ManageVaultBtnWrapper>
-          <ManageVaultBtn onClick={onOpen}>
-            Manage Vault
-          </ManageVaultBtn>
+          <ManageVaultBtn onClick={onOpen}>Manage Vault</ManageVaultBtn>
         </ManageVaultBtnWrapper>
       </Grid>
     </Grid>

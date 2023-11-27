@@ -4,7 +4,6 @@ import { DialogContent, Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 import useConnector from "context/connector";
-import { useStores } from "context/services";
 
 import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
 import { DividerDefault } from "components/Positions/TopUpPositionDialog";
@@ -34,12 +33,11 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
   onFinish,
   isMobile,
 }) => {
-  const { poolService } = useStores();
   const { account, chainId, library } = useConnector()!;
   const { sharesSupply, shareToken, token } = vaultItemData;
   const [walletBalance, setWalletBalance] = useState(0);
 
-  useEffect(() => {
+  /*  useEffect(() => {
     getVaultTokenAndBalance();
   }, [account, token]);
 
@@ -56,7 +54,7 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
 
       setWalletBalance(Number(balance));
     }
-  }, [account, library]);
+  }, [account, library]); */
 
   return (
     <VaultManageGridDialogWrapper

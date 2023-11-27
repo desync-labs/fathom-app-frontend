@@ -213,15 +213,15 @@ export const InfoBox = styled(Box)`
   flex-direction: row;
   align-items: center;
   margin: 10px 0 20px;
-  
+
   svg {
     height: 20px;
     width: 20px;
-    color: #6379A1;
+    color: #6379a1;
   }
 
   p {
-    color: #B7C8E5;
+    color: #b7c8e5;
     font-size: 14px;
     width: 100%;
     white-space: break-spaces;

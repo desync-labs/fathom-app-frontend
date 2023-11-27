@@ -2,9 +2,7 @@ import React, { FC } from "react";
 import { Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import AppPopover from "components/AppComponents/AppPopover/AppPopover";
-import {
-  ButtonPrimary
-} from "components/AppComponents/AppButton/AppButton";
+import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
 
 const TokenName = styled("div")`
   display: flex;
@@ -16,7 +14,7 @@ const TokenName = styled("div")`
 
   span {
     font-weight: normal;
-    color: #8EA4CC;
+    color: #8ea4cc;
     font-size: 14px;
     line-height: 20px;
   }
@@ -34,7 +32,7 @@ const TokenValue = styled("div")`
 
   span {
     font-weight: normal;
-    color: #8EA4CC;
+    color: #8ea4cc;
     font-size: 14px;
     line-height: 20px;
     letter-spacing: 0.14px;
@@ -59,8 +57,8 @@ const CollectBtn = styled(ButtonPrimary)`
 `;
 
 type FarmListItemEarnedProps = {
-  isMobile: boolean
-}
+  isMobile: boolean;
+};
 
 const VaultListItemEarned: FC<FarmListItemEarnedProps> = ({ isMobile }) => {
   return (
@@ -77,9 +75,7 @@ const VaultListItemEarned: FC<FarmListItemEarnedProps> = ({ isMobile }) => {
       {!isMobile && <Grid item xs={7}></Grid>}
       <Grid item xs={isMobile ? 12 : 2}>
         <CollectBtnWrapper>
-          <CollectBtn>
-            Collect
-          </CollectBtn>
+          <CollectBtn>Collect</CollectBtn>
         </CollectBtnWrapper>
       </Grid>
     </Grid>

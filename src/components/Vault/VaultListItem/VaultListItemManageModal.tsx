@@ -1,16 +1,11 @@
 import React, { FC } from "react";
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
-import {
-  DialogContent,
-  Grid,
-} from "@mui/material";
+import { DialogContent, Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
 import { DividerDefault } from "components/Positions/TopUpPositionDialog";
 import ManageVaultForm from "components/Vault/VaultListItem/ManageVaultModal/ManageVaultForm";
 import ManageVaultInfo from "components/Vault/VaultListItem/ManageVaultModal/ManageVaultInfo";
-
-
 
 const VaultManageGridDialogWrapper = styled(AppDialog)`
   .MuiPaper-root {
@@ -31,7 +26,7 @@ export type VaultManageProps = {
 const VaultListItemManageModal: FC<VaultManageProps> = ({
   onClose,
   onFinish,
-  isMobile
+  isMobile,
 }) => {
   return (
     <VaultManageGridDialogWrapper

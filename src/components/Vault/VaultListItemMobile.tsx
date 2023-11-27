@@ -222,7 +222,7 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
         <VaultListItemManageModal
           isMobile={isMobile}
           onClose={() => setManageVault(false)}
-          onFinish={() => {}}
+          onFinish={() => void 0}
         />
       )}
       {newVaultDeposit && (
@@ -230,7 +230,7 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
           isMobile={isMobile}
           vaultItemData={vaultItemData}
           onClose={() => setNewVaultDeposit(false)}
-          onFinish={() => {}}
+          onFinish={() => void 0}
         />
       )}
     </VaultListItemMobileContainer>

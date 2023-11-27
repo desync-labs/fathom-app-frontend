@@ -15,7 +15,7 @@ import {
 } from "components/AppComponents/AppTable/AppTable";
 import { NoResults } from "components/AppComponents/AppBox/AppBox";
 import { styled } from "@mui/material/styles";
-import { COUNT_PER_PAGE } from "helpers/Constants";
+import { COUNT_PER_PAGE } from "utils/Constants";
 import useVaultList from "hooks/useVaultList";
 import VaultListItem from "components/Vault/VaultListItem";
 import VaultFilters from "components/Vault/VaultFilters";
