@@ -95,7 +95,7 @@ const VaultFilters = () => {
         <div>
           <FilterLabel>Show only</FilterLabel>
           <Switch onChange={() => setShowStacked(!showStacked)} checked={showStacked} />
-          <StackedLabel>Stacked</StackedLabel>
+          <StackedLabel>Available</StackedLabel>
         </div>
       </GridSwitcher>
       <Grid item xs={2}></Grid>

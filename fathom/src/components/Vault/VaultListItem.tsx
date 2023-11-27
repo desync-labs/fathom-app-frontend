@@ -1,16 +1,15 @@
-import { FC } from "react";
+import { FC, useMemo } from "react";
 import { AppTableRow } from "components/AppComponents/AppTable/AppTable";
-import {
-  IconButton,
-  TableCell,
-  Box
-} from "@mui/material";
+import { IconButton, TableCell, Box } from "@mui/material";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { styled } from "@mui/material/styles";
 
 import useVaultListItem from "hooks/useVaultListItem";
 
-import { ButtonPrimary, VaultNowBtn } from "components/AppComponents/AppButton/AppButton";
+import {
+  ButtonPrimary,
+  VaultNowBtn,
+} from "components/AppComponents/AppButton/AppButton";
 
 import VaultListItemPairInfo from "components/Vault/VaultListItem/VaultListItemPairInfo";
 import VaultListItemVaultInfo from "components/Vault/VaultListItem/VaultListItemVaultInfo";
@@ -24,6 +23,7 @@ import LockSrc from "assets/svg/lock.svg";
 import LockAquaSrc from "assets/svg/lock-aqua.svg";
 import DirectionDown from "assets/svg/direction-down.svg";
 import DirectionUp from "assets/svg/direction-up.svg";
+import { formatNumber } from "utils/format";
 
 const VaultListItemPoolCell = styled(TableCell)`
   display: flex;
@@ -69,7 +69,7 @@ export const VaultPercent = styled("div")`
   border-radius: 6px;
   width: 32px;
   height: 20px;
-  background: #3665FF;
+  background: #3665ff;
   align-items: center;
   font-weight: bold;
 
@@ -94,7 +94,7 @@ export const VaultStackedLiquidity = styled("div")`
 
 export const VaultAvailable = styled("div")`
   &.blue {
-    color: #6D86B2;
+    color: #6d86b2;
   }
 
   color: #fff;
@@ -106,11 +106,11 @@ export const VaultStacked = styled("div")`
   font-size: 14px;
   font-weight: 600;
   line-height: 20px;
-  color: #6D86B2;
+  color: #6d86b2;
   gap: 12px;
 
   .img-wrapper {
-    background: #4F658C33;
+    background: #4f658c33;
     border-radius: 8px;
     width: 28px;
     height: 28px;
@@ -118,9 +118,9 @@ export const VaultStacked = styled("div")`
     align-items: center;
     justify-content: center;
   }
-  
+
   .value {
-    color: #fff;  
+    color: #fff;
   }
 `;
 
@@ -165,7 +165,7 @@ export const EarningLabel = styled("div")`
   font-size: 12px;
   font-weight: 600;
   line-height: 16px;
-  color: #43FFF1;
+  color: #43fff1;
   border-radius: 6px;
   height: 20px;
   width: 64px;
@@ -179,10 +179,17 @@ export const EarningLabel = styled("div")`
 `;
 
 export type VaultListItemPropsType = {
-  hasDeposit?: boolean
-}
+  vaultItemData: any;
+  hasDeposit?: boolean;
+};
 
-const VaultListItem: FC<VaultListItemPropsType> = ({ hasDeposit }) => {
+const VaultListItem: FC<VaultListItemPropsType> = ({
+  vaultItemData,
+  hasDeposit,
+}) => {
+  const { token, totalDebtAmount, balanceTokens, balanceTokensIdle } =
+    vaultItemData;
+
   const {
     isMobile,
     extended,
@@ -190,21 +197,22 @@ const VaultListItem: FC<VaultListItemPropsType> = ({ hasDeposit }) => {
     newVaultDeposit,
     setExtended,
     setManageVault,
-    setNewVaultDeposit
+    setNewVaultDeposit,
   } = useVaultListItem();
 
   return (
     <>
-      <AppTableRow className={!extended || !hasDeposit ? "border single" : undefined}>
+      <AppTableRow
+        className={!extended || !hasDeposit ? "border single" : undefined}
+      >
         <VaultListItemPoolCell>
           <VaultListItemImageWrapper>
-            <img src={getTokenLogoURL("xUSDT")} alt={"xUSDT"} />
+            {/* <img src={getTokenLogoURL(token.symbol)} alt={token.name} /> */}
+            <img src={getTokenLogoURL("FTHM")} alt={token.name} />
           </VaultListItemImageWrapper>
           <VaultInfo>
             <EarningLabel>Earning</EarningLabel>
-            <VaultTitle>
-              USDT
-            </VaultTitle>
+            <VaultTitle>{token.name}</VaultTitle>
           </VaultInfo>
         </VaultListItemPoolCell>
         <TableCell>
@@ -214,70 +222,94 @@ const VaultListItem: FC<VaultListItemPropsType> = ({ hasDeposit }) => {
           <VaultEarned>0</VaultEarned>
         </TableCell>
         <TableCell>
-          <VaultApr>100%</VaultApr>
+          <VaultApr>10%</VaultApr>
         </TableCell>
         <TableCell>
           <VaultStackedLiquidity>
-            $103,048
+            ${formatNumber(totalDebtAmount)}
           </VaultStackedLiquidity>
         </TableCell>
         <TableCell>
           <VaultAvailable className={"blue"}>
-            0
-            {/*<VaultNowBtn>*/}
-            {/*  <img src={lockAquaSrc} alt={"Aqua"} />*/}
-            {/*  Vault Now*/}
-            {/*</VaultNowBtn>*/}
+            {formatNumber(balanceTokensIdle)} {token.symbol}
           </VaultAvailable>
         </TableCell>
         <TableCell>
           <VaultStacked>
             <Box className={"img-wrapper"}>
-              {hasDeposit
-                ? <img src={LockAquaSrc} alt={"locked-active"} width={20} height={20} />
-                : <img src={LockSrc} alt={"locked"} width={20} height={20} />
-              }
+              {hasDeposit ? (
+                <img
+                  src={LockAquaSrc}
+                  alt={"locked-active"}
+                  width={20}
+                  height={20}
+                />
+              ) : (
+                <img src={LockSrc} alt={"locked"} width={20} height={20} />
+              )}
             </Box>
-            <Box className={"value"}>0 USDT</Box>
+            <Box className={"value"}>0 {token.symbol}</Box>
           </VaultStacked>
         </TableCell>
-        {hasDeposit
-          ? <TableCell>
-            <ExtendedBtn className={extended ? "visible" : "hidden"} onClick={() => setExtended(!extended)}>
+        {hasDeposit ? (
+          <TableCell>
+            <ExtendedBtn
+              className={extended ? "visible" : "hidden"}
+              onClick={() => setExtended(!extended)}
+            >
               <img src={DirectionUp} alt={"direction-up"} />
             </ExtendedBtn>
-            <ExtendedBtn className={!extended ? "visible" : "hidden"} onClick={() => setExtended(!extended)}>
+            <ExtendedBtn
+              className={!extended ? "visible" : "hidden"}
+              onClick={() => setExtended(!extended)}
+            >
               <img src={DirectionDown} alt={"direction-down"} />
             </ExtendedBtn>
           </TableCell>
-          : <TableCell>
+        ) : (
+          <TableCell>
             <ButtonPrimary onClick={() => setNewVaultDeposit(true)}>
               Deposit
             </ButtonPrimary>
-          </TableCell>}
+          </TableCell>
+        )}
       </AppTableRow>
-      {(hasDeposit && extended) && <AppTableRow className={"border"}>
-        <TableCell colSpan={8} sx={{ paddingBottom: "15px !important" }}>
-          <VaultItemInfoWrapper>
-            {/*<VaultListItemPairInfo />*/}
-            {/*<VaultListItemVaultInfo isMobile={isMobile} />*/}
-            <VaultListItemEarningDetails isMobile={isMobile} onOpen={() => setManageVault(true)} />
-          </VaultItemInfoWrapper>
-          <VaultItemInfoWrapper>
-            <VaultListItemEarned isMobile={isMobile} />
-          </VaultItemInfoWrapper>
-        </TableCell>
-      </AppTableRow>}
-      {manageVault && <VaultListItemManageModal
-        isMobile={isMobile}
-        onClose={() => setManageVault(false)}
-        onFinish={() => { }}
-      />}
-      {newVaultDeposit && <VaultListItemDepositModal
-        isMobile={isMobile}
-        onClose={() => setNewVaultDeposit(false)}
-        onFinish={() => { }}
-      />}
+      {hasDeposit && extended && (
+        <AppTableRow className={"border"}>
+          <TableCell colSpan={8} sx={{ paddingBottom: "15px !important" }}>
+            <VaultItemInfoWrapper>
+              {/*<VaultListItemPairInfo />*/}
+              {/*<VaultListItemVaultInfo isMobile={isMobile} />*/}
+              <VaultListItemEarningDetails
+                isMobile={isMobile}
+                onOpen={() => setManageVault(true)}
+              />
+            </VaultItemInfoWrapper>
+            <VaultItemInfoWrapper>
+              <VaultListItemEarned isMobile={isMobile} />
+            </VaultItemInfoWrapper>
+          </TableCell>
+        </AppTableRow>
+      )}
+      {manageVault && (
+        <VaultListItemManageModal
+          isMobile={isMobile}
+          onClose={() => setManageVault(false)}
+          onFinish={() => {}}
+        />
+      )}
+      {useMemo(() => {
+        return (
+          newVaultDeposit && (
+            <VaultListItemDepositModal
+              isMobile={isMobile}
+              vaultItemData={vaultItemData}
+              onClose={() => setNewVaultDeposit(false)}
+              onFinish={() => {}}
+            />
+          )
+        );
+      }, [newVaultDeposit, setNewVaultDeposit])}
     </>
   );
 };
