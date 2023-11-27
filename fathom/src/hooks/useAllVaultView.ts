@@ -1,9 +1,5 @@
-import {
-  useMediaQuery,
-  useTheme
-} from "@mui/material";
 import { useState } from "react";
-
+import { useMediaQuery, useTheme } from "@mui/material";
 
 const useAllVaultView = () => {
   const theme = useTheme();
@@ -17,8 +13,8 @@ const useAllVaultView = () => {
     vaultItemsCount,
     isMobile,
     setVaultCurrentPage,
-    setVaultItemsCount
-  }
-}
+    setVaultItemsCount,
+  };
+};
 
 export default useAllVaultView;

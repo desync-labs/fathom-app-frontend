@@ -1,15 +1,15 @@
-import React, { FC } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
-import {
-  DialogContent,
-  Grid,
-} from "@mui/material";
+import { DialogContent, Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
+
+import useConnector from "context/connector";
+import { useStores } from "context/services";
+
 import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
 import { DividerDefault } from "components/Positions/TopUpPositionDialog";
 import DepositVaultInfo from "components/Vault/VaultListItem/DepositVaultModal/DepositVaultInfo";
 import DepositVaultForm from "components/Vault/VaultListItem/DepositVaultModal/DepositVaultForm";
-
 
 const VaultManageGridDialogWrapper = styled(AppDialog)`
   .MuiPaper-root {
@@ -22,16 +22,42 @@ const VaultManageGridDialogWrapper = styled(AppDialog)`
 `;
 
 export type VaultDepositProps = {
+  vaultItemData: any;
   onClose: () => void;
   onFinish: () => void;
   isMobile: boolean;
 };
 
 const VaultListItemDepositModal: FC<VaultDepositProps> = ({
+  vaultItemData,
   onClose,
   onFinish,
-  isMobile
+  isMobile,
 }) => {
+  const { poolService } = useStores();
+  const { account, chainId, library } = useConnector()!;
+  const { sharesSupply, shareToken, token } = vaultItemData;
+  const [walletBalance, setWalletBalance] = useState(0);
+
+  useEffect(() => {
+    getVaultTokenAndBalance();
+  }, [account, token]);
+
+  const getVaultTokenAndBalance = useCallback(async () => {
+    if (token.name.toUpperCase() === "XDC") {
+      const balance = await library.eth.getBalance(account);
+      console.log("balance XDC: ", balance);
+    } else {
+      const balance = await poolService.getUserTokenBalance(
+        account,
+        token.id,
+        library
+      );
+
+      setWalletBalance(Number(balance));
+    }
+  }, [account, library]);
+
   return (
     <VaultManageGridDialogWrapper
       onClose={onClose}
@@ -46,9 +72,14 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
 
       <DialogContent>
         <Grid container>
-          <DepositVaultInfo />
+          <DepositVaultInfo vaultItemData={vaultItemData} />
           <DividerDefault orientation="vertical" flexItem></DividerDefault>
-          <DepositVaultForm onClose={onClose} isMobile={isMobile} />
+          <DepositVaultForm
+            onClose={onClose}
+            isMobile={isMobile}
+            token={token}
+            walletBalance={walletBalance}
+          />
         </Grid>
       </DialogContent>
     </VaultManageGridDialogWrapper>
