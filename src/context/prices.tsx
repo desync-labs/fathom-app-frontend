@@ -13,7 +13,8 @@ import { useServices } from "context/services";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 import { DEFAULT_CHAIN_ID } from "utils/Constants";
-import { BigNumber } from "ethers";
+import { BigNumber as eBigNumber } from "ethers";
+import BigNumber from "bignumber.js";
 
 type PricesProviderType = {
   children: ReactElement;
@@ -73,32 +74,37 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
             fthmTokenAddress
           );
         } else {
-          fthmPromise = Promise.resolve([BigNumber.from(0)]);
+          fthmPromise = Promise.resolve([eBigNumber.from(0)]);
         }
 
-        const xdcPromise =
+        const xdcUsdtPromise =
           process.env.REACT_APP_ENV === "prod"
             ? stakingService.getPairPrice(wxdcTokenAddress, usdtTokenAddress)
             : stakingService.getPairPrice(usdtTokenAddress, wxdcTokenAddress);
 
-        const fxdPromise =
-          process.env.REACT_APP_ENV === "prod"
-            ? stakingService.getPairPrice(fxdTokenAddress, usdtTokenAddress)
-            : stakingService.getPairPrice(usdtTokenAddress, fxdTokenAddress);
+        const xdcFxdPromise = stakingService.getPairPrice(
+          fxdTokenAddress,
+          wxdcTokenAddress
+        );
 
-        Promise.all([fthmPromise, xdcPromise, fxdPromise])
-          .then(([fthmPrice, xdcPrice, fxdPrice]) => {
+        Promise.all([fthmPromise, xdcUsdtPromise, xdcFxdPromise])
+          .then(([fthmPrice, xdcUsdtPrice, xdcFxdPrice]) => {
             if (process.env.REACT_APP_ENV !== "prod") {
               setFthmPrice(fthmPrice[0].toString());
             }
 
-            setWxdcPrice(xdcPrice[0].toString());
-            setFxdPrice(fxdPrice[0].toString());
+            const fxdPrice = BigNumber(xdcFxdPrice[1].toString())
+              .dividedBy(xdcUsdtPrice[1].toString())
+              .multipliedBy(10 ** 18)
+              .toString();
+
+            setWxdcPrice(xdcUsdtPrice[0].toString());
+            setFxdPrice(fxdPrice);
 
             console.log({
               "fthm/fxd": fthmPrice[0].toString(),
-              "fxd/usdt": fxdPrice[0].toString(),
-              "wxdc/usdt": xdcPrice[0].toString(),
+              "fxd/usdt": fxdPrice,
+              "wxdc/usdt": xdcUsdtPrice[0].toString(),
             });
           })
           .catch((e) => {

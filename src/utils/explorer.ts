@@ -1,22 +1,19 @@
 import { ChainId, EXPLORERS } from "connectors/networks";
 
 export const getTxUrl = (txHash: string, chainId: ChainId) => {
-  if (chainId in EXPLORERS) {
-    return `${EXPLORERS[chainId as ChainId]}txs/${txHash}`;
-  }
-  return "";
+  return chainId in EXPLORERS
+    ? `${EXPLORERS[chainId as ChainId]}txs/${txHash}`
+    : "";
 };
 
 export const getAccountUrl = (account: string, chainId: ChainId) => {
-  if (chainId in EXPLORERS) {
-    return `${EXPLORERS[chainId as ChainId]}address/${account}`;
-  }
-  return "";
+  return chainId in EXPLORERS
+    ? `${EXPLORERS[chainId as ChainId]}address/${account}`
+    : "";
 };
 
 export const getToken = (tokenAddress: string, chainId: ChainId) => {
-  if (chainId in EXPLORERS) {
-    return `${EXPLORERS[chainId as ChainId]}tokens/${tokenAddress}`;
-  }
-  return "";
+  return chainId in EXPLORERS
+    ? `${EXPLORERS[chainId as ChainId]}tokens/${tokenAddress}`
+    : "";
 };
