@@ -102,6 +102,7 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
             setFxdPrice(fxdPrice);
 
             console.log({
+              "fxd/fthm": fthmPrice[1].toString(),
               "fthm/fxd": fthmPrice[0].toString(),
               "fxd/usdt": fxdPrice,
               "wxdc/usdt": xdcUsdtPrice[0].toString(),

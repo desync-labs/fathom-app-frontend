@@ -33,8 +33,8 @@ type UseStakingReturnType = {
   earlyUnstake: ILockPosition | null;
   dialogAction: DialogActions;
   setDialogAction: Dispatch<SetStateAction<DialogActions>>;
-  totalRewards: number;
-  previousTotalRewards: number;
+  totalRewards: string;
+  previousTotalRewards: string;
   setUnstake: Dispatch<SetStateAction<ILockPosition | null>>;
   setEarlyUnstake: Dispatch<SetStateAction<ILockPosition | null>>;
   onClose: () => void;
