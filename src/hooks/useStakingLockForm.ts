@@ -138,15 +138,18 @@ const useStakingLockForm = () => {
   const onSubmit = useCallback(
     async (values: Record<string, any>) => {
       const { stakePosition, lockDays } = values;
-      setIsLoading(true);
-      const blockNumber = await stakingService.createLock(
-        account,
-        stakePosition,
-        lockDays
-      );
-      setLastTransactionBlock(blockNumber as number);
-      reset();
-      setIsLoading(false);
+      try {
+        setIsLoading(true);
+        const blockNumber = await stakingService.createLock(
+          account,
+          stakePosition,
+          lockDays
+        );
+        setLastTransactionBlock(blockNumber as number);
+        reset();
+      } finally {
+        setIsLoading(false);
+      }
     },
     [stakingService, account, reset, setIsLoading, setLastTransactionBlock]
   );
