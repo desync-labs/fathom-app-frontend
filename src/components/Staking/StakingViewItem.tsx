@@ -14,6 +14,7 @@ import { secondsToTime } from "utils/secondsToTime";
 import { getTokenLogoURL } from "utils/tokenLogo";
 
 import clockSrc from "assets/svg/clock-circle.svg";
+import BigNumber from "bignumber.js";
 
 const StakingViewItemWrapper = styled(Grid)`
   &.MuiGrid-item {
@@ -217,7 +218,12 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
             <Grid item xs={5} sm={4}>
               <Label>Rewards Accrued</Label>
               <Value className={"green"}>
-                {formatNumber(rewardsAvailable / 10 ** 18)} {token}
+                {formatNumber(
+                  BigNumber(rewardsAvailable)
+                    .dividedBy(10 ** 18)
+                    .toNumber()
+                )}{" "}
+                {token}
               </Value>
             </Grid>
           </Grid>
@@ -235,7 +241,12 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
                   Locked: {formatNumber(lockPosition.amount / 10 ** 18)} {token}
                 </TotalLocked>
                 <TotalLocked>
-                  Accrued Rewards: {formatNumber(rewardsAvailable / 10 ** 18)}{" "}
+                  Accrued Rewards:{" "}
+                  {formatNumber(
+                    BigNumber(rewardsAvailable)
+                      .dividedBy(10 ** 18)
+                      .toNumber()
+                  )}{" "}
                   {token}
                 </TotalLocked>
                 <Penalty className={isUnlockable(seconds) ? "" : "penalty"}>
