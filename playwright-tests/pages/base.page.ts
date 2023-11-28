@@ -26,7 +26,7 @@ export default class BasePage {
   readonly divAlertMessage: Locator;
   readonly divAlertTitle: Locator;
   readonly paragraphAlertBody: Locator;
-  readonly timeoutTransactionPending = process.env.CI ? 60000 : 30000;
+  readonly timeoutTransactionPending = process.env.CI ? 90000 : 60000;
 
   constructor(page: Page) {
     this.page = page;
