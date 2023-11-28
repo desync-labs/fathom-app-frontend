@@ -16,6 +16,7 @@ import RewardsSrc from "assets/svg/rewards.svg";
 import { secondsToTime } from "utils/secondsToTime";
 import useStreamStats from "hooks/useStreamStats";
 import useStakingContext from "context/staking";
+import BigNumber from "bignumber.js";
 
 const FTHMStreamHeader = styled("h3")`
   font-weight: 600;
@@ -325,17 +326,25 @@ const StreamStats: FC = () => {
                   {staker && (
                     <MyStatsValue className={"blue"}>
                       <strong>
-                        {formatNumber(totalRewards / 10 ** 18)} FTHM
+                        {formatNumber(
+                          BigNumber(totalRewards)
+                            .dividedBy(10 ** 18)
+                            .toNumber()
+                        )}{" "}
+                        FTHM
                       </strong>
                       <span>
                         {formatCurrency(
-                          (totalRewards / 10 ** 18) * fthmPriceFormatted
+                          BigNumber(totalRewards)
+                            .dividedBy(10 ** 18)
+                            .multipliedBy(fthmPriceFormatted)
+                            .toNumber()
                         )}{" "}
                       </span>
                     </MyStatsValue>
                   )}
                 </Grid>
-                {totalRewards > 0 && (
+                {BigNumber(totalRewards).isGreaterThan(0) && (
                   <ButtonGrid item xs={4}>
                     <StatsButton onClick={() => processFlow("claim")}>
                       Claim

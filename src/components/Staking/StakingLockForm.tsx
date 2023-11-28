@@ -160,7 +160,15 @@ const StakingLockForm: FC = () => {
         <Controller
           control={control}
           name="lockDays"
-          rules={{ required: true, min: minLockPeriod, max: 365 }}
+          rules={{
+            required: true,
+            min: minLockPeriod,
+            max: 365,
+            pattern: {
+              value: /^[0-9]+$/,
+              message: "Value can't be decimal",
+            },
+          }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <>
               <AppFormInputWrapper>
@@ -182,6 +190,11 @@ const StakingLockForm: FC = () => {
                       {error && error.type === "max" && (
                         <Box component="span" sx={{ fontSize: "12px" }}>
                           Maximum period is 365 days
+                        </Box>
+                      )}
+                      {error && error.type === "pattern" && (
+                        <Box component="span" sx={{ fontSize: "12px" }}>
+                          {error.message}
                         </Box>
                       )}
                       {error && error.type === "required" && (
@@ -296,7 +309,7 @@ const StakingLockForm: FC = () => {
                   />
                   <Box>
                     <FTHMBalance>
-                      <strong>{formatNumber(fxdBalance)}</strong> FXD
+                      <strong>{formatNumber(Number(fxdBalance))}</strong> FXD
                     </FTHMBalance>
                     <USDBalance>
                       {formatCurrency(
@@ -318,7 +331,7 @@ const StakingLockForm: FC = () => {
                   />
                   <Box>
                     <FTHMBalance>
-                      <strong>{formatNumber(xdcBalance)}</strong> XDC
+                      <strong>{formatNumber(Number(xdcBalance))}</strong> XDC
                     </FTHMBalance>
                     <USDBalance>
                       {formatCurrency(
