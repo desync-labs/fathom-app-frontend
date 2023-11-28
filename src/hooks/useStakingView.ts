@@ -44,8 +44,8 @@ const useStakingView = () => {
   const [earlyUnstake, setEarlyUnstake] = useState<null | ILockPosition>(null);
   const [lockPositions, setLockPositions] = useState<ILockPosition[]>([]);
 
-  const [totalRewards, setTotalRewards] = useState<number>(0);
-  const previousTotalRewardsRef = useRef<number>(0);
+  const [totalRewards, setTotalRewards] = useState<string>("0");
+  const previousTotalRewardsRef = useRef<string>("0");
 
   const [fetchPositionsLoading, setFetchPositionLoading] =
     useState<boolean>(false);
@@ -82,9 +82,9 @@ const useStakingView = () => {
   const fetchAllClaimRewards = useCallback(() => {
     if (account) {
       stakingService.getStreamClaimableAmount(account).then((amount) => {
-        setTotalRewards(amount.toNumber());
+        setTotalRewards(amount.toString());
         setTimeout(() => {
-          previousTotalRewardsRef.current = amount.toNumber();
+          previousTotalRewardsRef.current = amount.toString();
         }, 1000);
       });
     }
