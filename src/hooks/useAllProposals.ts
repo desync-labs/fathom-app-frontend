@@ -82,7 +82,6 @@ export const useAllProposals = () => {
         ? 0
         : stats.governanceStats[0].totalProposalsCount,
     handlePageChange,
-
     isMobile,
   };
 };

@@ -78,7 +78,9 @@ const useProposalItem = () => {
             .multipliedBy(XDC_BLOCK_TIME)
         );
       } else {
-        const blockData = await library.getBlock(data.proposal.startBlock);
+        const blockData = await library.getBlock(
+          Number(data.proposal.startBlock)
+        );
         timestamp = BigNumber(blockData.timestamp);
       }
 
@@ -93,7 +95,7 @@ const useProposalItem = () => {
       const currentBlock = await library.getBlockNumber();
       let timestamp;
 
-      if (Number(currentBlock) < Number(data.proposal.startBlock)) {
+      if (BigNumber(currentBlock).isLessThan(data.proposal.startBlock)) {
         const blockData = await library.getBlock(currentBlock);
         timestamp = BigNumber(blockData.timestamp).plus(
           BigNumber(data.proposal.startBlock)
@@ -101,13 +103,18 @@ const useProposalItem = () => {
             .multipliedBy(XDC_BLOCK_TIME)
         );
       } else {
-        const blockData = await library.getBlock(data.proposal.startBlock);
+        const blockData = await library.getBlock(
+          Number(data.proposal.startBlock)
+        );
         timestamp = BigNumber(blockData.timestamp);
       }
 
       const endTimestamp = timestamp
-        .plus(BigNumber(data.proposal.endBlock).minus(data.proposal.startBlock))
-        .multipliedBy(XDC_BLOCK_TIME)
+        .plus(
+          BigNumber(data.proposal.endBlock)
+            .minus(data.proposal.startBlock)
+            .multipliedBy(XDC_BLOCK_TIME)
+        )
         .toNumber();
 
       const now = Date.now() / 1000;
