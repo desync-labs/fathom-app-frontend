@@ -8,15 +8,13 @@ import debounce from "lodash.debounce";
 import useSyncContext from "context/sync";
 
 export const defaultValues = {
-  deposit: "0",
-  sharedToken: "0",
-  safeMax: "0",
-  dangerSafeMax: "0",
+  deposit: "",
+  sharedToken: "",
 };
 
 const useOpenVaultDeposit = (vault: IVault, onClose: () => void) => {
-  const { account, chainId, library } = useConnector()!;
-  const { poolService, positionService, vaultService } = useServices();
+  const { account, library } = useConnector();
+  const { poolService, vaultService } = useServices();
   const { setLastTransactionBlock } = useSyncContext();
 
   const {
@@ -24,7 +22,6 @@ const useOpenVaultDeposit = (vault: IVault, onClose: () => void) => {
     watch,
     control,
     setValue,
-    trigger,
     formState: { errors },
   } = useForm({
     defaultValues,
@@ -32,22 +29,28 @@ const useOpenVaultDeposit = (vault: IVault, onClose: () => void) => {
     mode: "onChange",
   });
 
-  const { sharesSupply, shareToken, token } = vault;
+  const { sharesSupply, shareToken, token, depositLimit } = vault;
   const [walletBalance, setWalletBalance] = useState<string>("0");
   const [openDepositLoading, setOpenDepositLoading] = useState<boolean>(false);
 
   const [approveBtn, setApproveBtn] = useState<boolean>(false);
   const [approvalPending, setApprovalPending] = useState<boolean>(false);
 
+  console.log(
+    BigNumber(depositLimit)
+      .dividedBy(10 ** vault.shareToken.decimals)
+      .toNumber()
+  );
+
   const deposit = watch("deposit");
   const sharedToken = watch("sharedToken");
-  const dangerSafeMax = watch("dangerSafeMax");
 
   const approvalStatus = useMemo(
     () =>
       debounce(async (deposit: string) => {
         const approved = await vaultService.approvalStatus(
           account,
+          vault.token.id,
           vault.id,
           deposit
         );
@@ -59,7 +62,7 @@ const useOpenVaultDeposit = (vault: IVault, onClose: () => void) => {
   const approve = useCallback(async () => {
     setApprovalPending(true);
     try {
-      await vaultService.approve(account, vault.id);
+      await vaultService.approve(account, vault.token.id, vault.id);
       setApproveBtn(false);
     } catch (e) {
       setApproveBtn(true);
@@ -82,51 +85,36 @@ const useOpenVaultDeposit = (vault: IVault, onClose: () => void) => {
   }, [deposit]);
 
   const getVaultTokenBalance = useCallback(async () => {
-    if (token.name.toUpperCase() === "XDC") {
-      const balance = await library.getBalance(account);
-      console.log("Balance XDC: ", balance);
-    } else {
-      const balance = await poolService.getUserTokenBalance(account, token.id);
-      console.log(
-        "Balance ",
-        token.name,
-        ": ",
-        BigNumber(balance.toString())
-          .dividedBy(10 ** 18)
-          .toNumber()
-      );
-
-      setWalletBalance(balance.toString());
-    }
+    const balance = await poolService.getUserTokenBalance(account, token.id);
+    setWalletBalance(balance.toString());
   }, [account, library]);
-
-  const setSafeMax = useCallback(() => {
-    setValue("sharedToken", dangerSafeMax.toString(), { shouldValidate: true });
-  }, [dangerSafeMax, setValue]);
 
   const setMax = useCallback(
     (walletBalance: string) => {
       const max = BigNumber(walletBalance).dividedBy(10 ** 18);
       setValue("deposit", max.toString(), { shouldValidate: true });
     },
-    [setValue]
+    [setValue, walletBalance]
   );
 
   const onSubmit = useCallback(async () => {
     setOpenDepositLoading(true);
 
-    console.log("Submit: ", deposit, account);
-
     try {
-      const blockNumber = await vaultService.deposit(deposit, account);
+      const blockNumber = await vaultService.deposit(
+        deposit,
+        account,
+        vault.id
+      );
 
       setLastTransactionBlock(blockNumber as number);
       onClose();
     } catch (e) {
       console.log(e);
+    } finally {
+      setOpenDepositLoading(false);
     }
-    setOpenDepositLoading(false);
-  }, [account, deposit]);
+  }, [account, deposit, vault]);
 
   return {
     walletBalance,
