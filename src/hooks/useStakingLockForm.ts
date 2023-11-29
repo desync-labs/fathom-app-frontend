@@ -61,7 +61,7 @@ const useStakingLockForm = () => {
   const getMinLockPeriod = useCallback(async () => {
     const lockPeriod = await stakingService.getMinLockPeriod();
     const minDays = BigNumber(lockPeriod.toString()).dividedBy(DAY_IN_SECONDS);
-    setMinLockPeriod(minDays.toNumber());
+    setMinLockPeriod(minDays.isLessThan(1) ? 1 : minDays.toNumber());
   }, [stakingService, setMinLockPeriod]);
 
   const approvalStatus = useMemo(

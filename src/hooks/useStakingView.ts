@@ -16,7 +16,8 @@ import useSyncContext from "context/sync";
 import { useMediaQuery, useTheme } from "@mui/material";
 import useConnector from "context/connector";
 import debounce from "lodash.debounce";
-import { BigNumber } from "ethers";
+import { BigNumber as eBigNumber } from "ethers";
+import BigNumber from "bignumber.js";
 
 export type ActionType = { type: string; id: number | null };
 
@@ -67,13 +68,13 @@ const useStakingView = () => {
   });
 
   const [
-    fetchStakers,
+    fetchStakes,
     {
-      data: stakersData,
-      previousData: stakerPreviousData,
-      loading: stakersLoading,
-      refetch: refetchStakers,
-      fetchMore: fetchMoreStakers,
+      data: stakesData,
+      previousData: stakesPreviousData,
+      loading: stakesLoading,
+      refetch: refetchStakes,
+      fetchMore: fetchMoreStakes,
     },
   ] = useLazyQuery(STAKING_STAKER, {
     context: { clientName: "governance", chainId },
@@ -92,7 +93,7 @@ const useStakingView = () => {
 
   useEffect(() => {
     if (syncDao && !prevSyncDao) {
-      refetchStakers({
+      refetchStakes({
         variables: {
           skip: 0,
           first: COUNT_PER_PAGE,
@@ -107,27 +108,27 @@ const useStakingView = () => {
     syncDao,
     account,
     prevSyncDao,
-    refetchStakers,
+    refetchStakes,
     refetchProtocolStats,
     setCurrentPage,
   ]);
 
   useEffect(() => {
-    if (account && stakersData?.stakers?.length) {
+    if (account && stakesData?.stakers?.length) {
       fetchAllClaimRewards();
     }
-  }, [account, stakersData, fetchAllClaimRewards]);
+  }, [account, stakesData, fetchAllClaimRewards]);
 
   const fetchPositions = useMemo(
     () =>
-      debounce((stakersData, account, stakersLoading) => {
+      debounce((stakesData, account, stakesLoading) => {
         if (
-          stakersData?.stakers?.length &&
-          stakersData?.stakers[0].lockPositions.length &&
-          !stakersLoading
+          stakesData?.stakers?.length &&
+          stakesData?.stakers[0].lockPositions.length &&
+          !stakesLoading
         ) {
-          const promises: Promise<BigNumber>[] = [];
-          stakersData?.stakers[0].lockPositions.forEach(
+          const promises: Promise<eBigNumber>[] = [];
+          stakesData?.stakers[0].lockPositions.forEach(
             (lockPosition: ILockPosition) => {
               promises.push(
                 stakingService.getStreamClaimableAmountPerLock(
@@ -142,13 +143,17 @@ const useStakingView = () => {
           setFetchPositionLoading(true);
 
           Promise.all(promises).then((result) => {
-            const newLockPositions = stakersData?.stakers[0].lockPositions.map(
-              (lockPosition: ILockPosition, index: number) => {
+            const newLockPositions = stakesData?.stakers[0].lockPositions
+              .map((lockPosition: ILockPosition, index: number) => {
                 const newLockPosition: ILockPosition = { ...lockPosition };
                 newLockPosition.rewardsAvailable = result[index].toNumber();
                 return newLockPosition;
-              }
-            );
+              })
+              .sort((stake1: ILockPosition, stake2: ILockPosition) => {
+                return BigNumber(stake2.blockNumber)
+                  .minus(stake1.blockNumber)
+                  .toNumber();
+              });
 
             setLockPositions(newLockPositions);
             setFetchPositionLoading(false);
@@ -163,9 +168,9 @@ const useStakingView = () => {
 
   useEffect(() => {
     if (account) {
-      fetchPositions(stakersData, account, stakersLoading);
+      fetchPositions(stakesData, account, stakesLoading);
     }
-  }, [stakersData, account, stakersLoading, fetchPositions]);
+  }, [stakesData, account, stakesLoading, fetchPositions]);
 
   /**
    * Get All claimed rewards
@@ -219,7 +224,7 @@ const useStakingView = () => {
 
   useEffect(() => {
     if (account) {
-      fetchStakers({
+      fetchStakes({
         variables: {
           skip: 0,
           first: COUNT_PER_PAGE,
@@ -230,7 +235,7 @@ const useStakingView = () => {
 
       setCurrentPage(1);
     }
-  }, [account, fetchStakers, setCurrentPage]);
+  }, [account, fetchStakes, setCurrentPage]);
 
   const claimRewards = useCallback(
     async (callback: Function) => {
@@ -352,7 +357,7 @@ const useStakingView = () => {
 
   const handlePageChange = useCallback(
     (event: ChangeEvent<unknown>, page: number) => {
-      fetchMoreStakers({
+      fetchMoreStakes({
         variables: {
           address: account,
           first: COUNT_PER_PAGE,
@@ -361,7 +366,7 @@ const useStakingView = () => {
       });
       setCurrentPage(page);
     },
-    [setCurrentPage, fetchMoreStakers, account]
+    [setCurrentPage, fetchMoreStakes, account]
   );
 
   return {
@@ -369,7 +374,7 @@ const useStakingView = () => {
     account,
     chainId,
     action,
-    isLoading: stakersLoading || fetchPositionsLoading,
+    isLoading: stakesLoading || fetchPositionsLoading,
     isUnlockable,
     withdrawAll,
     claimRewards,
@@ -392,12 +397,12 @@ const useStakingView = () => {
     onClose,
     processFlow,
 
-    staker:
-      !stakersLoading && stakersData?.stakers?.length
-        ? stakersData.stakers[0]
+    stake:
+      !stakesLoading && stakesData?.stakers?.length
+        ? stakesData.stakers[0]
         : null,
-    previousStaker: stakerPreviousData?.stakers?.length
-      ? stakerPreviousData.stakers[0]
+    previousStake: stakesPreviousData?.stakers?.length
+      ? stakesPreviousData.stakers[0]
       : null,
     lockPositions,
     protocolStatsInfo:
@@ -405,8 +410,8 @@ const useStakingView = () => {
         ? protocolStatsInfo.protocolStats[0]
         : null,
 
-    itemCount: stakersData?.stakers?.length
-      ? stakersData.stakers[0].lockPositionCount
+    itemCount: stakesData?.stakers?.length
+      ? stakesData.stakers[0].lockPositionCount
       : 0,
     currentPage,
     handlePageChange,

@@ -73,7 +73,7 @@ type WithdrawDialogProps = {
 };
 
 const WithdrawDialog: FC<WithdrawDialogProps> = ({ token, onClose }) => {
-  const { withdrawAll, staker, action, isMobile } = useStakingContext();
+  const { withdrawAll, stake, action, isMobile } = useStakingContext();
 
   const isLoading = useMemo(() => {
     return action?.type === "withdrawAll";
@@ -101,7 +101,7 @@ const WithdrawDialog: FC<WithdrawDialogProps> = ({ token, onClose }) => {
           <img src={getTokenLogoURL(token)} alt={"token-logo"} width={58} />
           <Box sx={{ fontSize: "18px" }}>You're withdrawing...</Box>
           <Box className={"amount"}>
-            <Box>{formatNumber(staker.claimedAmount / 10 ** 18)}</Box>
+            <Box>{formatNumber(stake.claimedAmount / 10 ** 18)}</Box>
             <span>{token}</span>
           </Box>
         </DialogContentWrapper>

@@ -35,11 +35,9 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
     earlyUnstake,
     onClose,
     processFlow,
-
     itemCount,
     currentPage,
     handlePageChange,
-
     isLoading,
   } = useStakingContext();
 
@@ -48,7 +46,7 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
       {useMemo(
         () => (
           <>
-            {!isLoading && lockPositions.length === 0 ? (
+            {!isLoading && !lockPositions.length ? (
               <NoResults variant="h6">You have no open positions!</NoResults>
             ) : isLoading ? (
               <Grid container>
