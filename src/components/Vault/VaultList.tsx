@@ -22,6 +22,7 @@ import VaultFilters from "components/Vault/VaultFilters";
 import VaultListItemMobile from "components/Vault/VaultListItemMobile";
 import VaultFiltersMobile from "components/Vault/VaultFiltersMobile";
 import AppPopover from "../AppComponents/AppPopover/AppPopover";
+import { IVault } from "fathom-sdk";
 
 const CircleWrapper = styled(Box)`
   width: 100%;
@@ -42,17 +43,21 @@ const VaultListTableCell = styled(TableCell)`
 `;
 
 type VaultListProps = {
+  vaultList: IVault[];
+  vaultsLoading: boolean;
   vaultItemsCount: number;
   vaultCurrentPage: number;
-  setVaultCurrentPage: Dispatch<number>;
+  handlePageChange: (event: React.ChangeEvent<unknown>, page: number) => void;
 };
 
 const VaultList: FC<VaultListProps> = ({
+  vaultList,
+  vaultsLoading,
   vaultItemsCount,
   vaultCurrentPage,
-  setVaultCurrentPage,
+  handlePageChange,
 }) => {
-  const { isMobile, vaultList, loading, handlePageChange } = useVaultList();
+  const { isMobile } = useVaultList();
 
   return (
     <>
@@ -61,7 +66,7 @@ const VaultList: FC<VaultListProps> = ({
           <>
             {!vaultList.length && (
               <NoResults variant="h6">
-                {loading ? (
+                {vaultsLoading ? (
                   <CircleWrapper>
                     <CircularProgress size={30} />
                   </CircleWrapper>
@@ -73,8 +78,8 @@ const VaultList: FC<VaultListProps> = ({
             {isMobile ? (
               <>
                 <VaultFiltersMobile />
-                <VaultListItemMobile vaultItemData={vaultList} />
-                <VaultListItemMobile vaultItemData={vaultList} hasDeposit />
+                <VaultListItemMobile vaultItemData={vaultList[0]} />
+                <VaultListItemMobile vaultItemData={vaultList[0]} hasDeposit />
               </>
             ) : (
               <TableContainer>
@@ -120,23 +125,25 @@ const VaultList: FC<VaultListProps> = ({
                     </AppTableHeaderRow>
                   </TableHead>
                   <TableBody>
-                    {vaultList.map((vault: any) => (
+                    {vaultList.map((vault) => (
                       <VaultListItem key={vault.id} vaultItemData={vault} />
                     ))}
                   </TableBody>
                 </Table>
               </TableContainer>
             )}
-            <PaginationWrapper>
-              <Pagination
-                count={Math.ceil(vaultItemsCount / COUNT_PER_PAGE)}
-                page={vaultCurrentPage}
-                onChange={handlePageChange}
-              />
-            </PaginationWrapper>
+            {!vaultsLoading && vaultList.length > 0 && (
+              <PaginationWrapper>
+                <Pagination
+                  count={Math.ceil(vaultItemsCount / COUNT_PER_PAGE)}
+                  page={vaultCurrentPage}
+                  onChange={handlePageChange}
+                />
+              </PaginationWrapper>
+            )}
           </>
         ),
-        [loading, vaultList, isMobile]
+        [vaultsLoading, vaultList, isMobile]
       )}
     </>
   );

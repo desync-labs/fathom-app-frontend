@@ -6,6 +6,7 @@ import {
   ListLabel,
   ListValue,
 } from "components/AppComponents/AppList/AppList";
+import { IVault } from "fathom-sdk";
 
 import {
   ExtendedBtn,
@@ -85,7 +86,7 @@ const ExtendedBtnWrapper = styled("div")`
 
 type VaultListItemMobileAdditionalDataProps = {
   hasDeposit: boolean | undefined;
-  vaultItemData: any;
+  vaultItemData: IVault;
 };
 
 export const VaultListItemMobileAdditionalData = ({

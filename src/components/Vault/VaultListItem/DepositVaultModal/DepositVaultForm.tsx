@@ -1,5 +1,12 @@
-import React from "react";
-import { Box, Grid, ListItemText, Typography, styled } from "@mui/material";
+import React, { useEffect } from "react";
+import {
+  Box,
+  CircularProgress,
+  Grid,
+  ListItemText,
+  Typography,
+  styled,
+} from "@mui/material";
 import {
   InfoBox,
   Summary,
@@ -41,27 +48,51 @@ const ManageVaultForm = styled("form")`
   padding-bottom: 45px;
 `;
 
-const DepositVaultForm = ({ isMobile, onClose, token, walletBalance }: any) => {
-  const { control } = useForm();
+const DepositVaultForm = ({
+  isMobile,
+  onClose,
+  vaultItemData,
+  walletBalance,
+  control,
+  deposit,
+  sharedToken,
+  approveBtn,
+  approvalPending,
+  approve,
+  setMax,
+  handleSubmit,
+  onSubmit,
+}: any) => {
+  const { token, shareToken } = vaultItemData;
 
   return (
     <DepositVaultItemFormWrapper item>
-      <ManageVaultForm onSubmit={() => void 0} noValidate autoComplete="off">
+      <ManageVaultForm
+        onSubmit={handleSubmit(onSubmit)}
+        noValidate
+        autoComplete="off"
+      >
         <Summary>Summary</Summary>
         <Controller
           control={control}
-          name="collateral"
+          name="deposit"
           rules={{
             required: false,
-            min: 0,
-            max: 100,
+            min: 1,
+            max: BigNumber(walletBalance)
+              .dividedBy(10 ** 18)
+              .toNumber(),
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <AppFormInputWrapper>
-              <AppFormLabel>Deposit USDT</AppFormLabel>
+              <AppFormLabel>Deposit {token.name}</AppFormLabel>
               <WalletBalance>
                 Wallet Available:{" "}
-                {BigNumber(walletBalance).dividedBy(10 ** 18) +
+                {formatNumber(
+                  BigNumber(walletBalance)
+                    .dividedBy(10 ** 18)
+                    .toNumber()
+                ) +
                   " " +
                   token.name}
               </WalletBalance>
@@ -78,7 +109,7 @@ const DepositVaultForm = ({ isMobile, onClose, token, walletBalance }: any) => {
                           component={"span"}
                           sx={{ fontSize: "12px", paddingLeft: "6px" }}
                         >
-                          You don't have enough to repay that amount
+                          You do not have enough money in your wallet
                         </Box>
                       </>
                     )}
@@ -89,7 +120,7 @@ const DepositVaultForm = ({ isMobile, onClose, token, walletBalance }: any) => {
                           component={"span"}
                           sx={{ fontSize: "12px", paddingLeft: "6px" }}
                         >
-                          Collateral amount should be positive.
+                          Deposit amount should be positive.
                         </Box>
                       </>
                     )}
@@ -99,30 +130,30 @@ const DepositVaultForm = ({ isMobile, onClose, token, walletBalance }: any) => {
                 type="number"
                 onChange={onChange}
               />
-              <AppFormInputLogo src={getTokenLogoURL("WXDC")} />
-              <MaxButton onClick={() => void 0}>Max</MaxButton>
+              <AppFormInputLogo src={getTokenLogoURL("FTHM")} />
+              <MaxButton onClick={() => setMax(walletBalance)}>Max</MaxButton>
             </AppFormInputWrapper>
           )}
         />
         <Controller
           //key={safeMax}
           control={control}
-          name="fathomToken"
-          /* rules={{
-                        validate: (value) => {
-                            if (BigNumber(value).isGreaterThan(availableFathomInPool)) {
-                                return "Not enough FXD in pool";
-                            }
+          name="sharedToken"
+          /*   rules={{
+            validate: (value) => {
+              if (BigNumber(value).isGreaterThan(availableFathomInPool)) {
+                return "Not enough FXD in pool";
+              }
 
-                            if (BigNumber(value).isGreaterThan(safeMax)) {
-                                return `You can't borrow more than ${safeMax}`;
-                            }
+              if (BigNumber(value).isGreaterThan(safeMax)) {
+                return `You can't borrow more than ${safeMax}`;
+              }
 
-                            return true;
-                        },
-                        min: FXD_MINIMUM_BORROW_AMOUNT,
-                        max: maxBorrowAmount
-                    }} */
+              return true;
+            },
+            min: FXD_MINIMUM_BORROW_AMOUNT,
+            max: maxBorrowAmount,
+          }} */
           render={({ field: { onChange, value }, fieldState: { error } }) => {
             return (
               <AppFormInputWrapper>
@@ -176,32 +207,45 @@ const DepositVaultForm = ({ isMobile, onClose, token, walletBalance }: any) => {
                   type="number"
                   placeholder={"0"}
                   onChange={onChange}
+                  disabled
                 />
-                <AppFormInputLogo src={getTokenLogoURL("WXDC")} />
-                <MaxButton onClick={() => void 0}>Max</MaxButton>
+                <AppFormInputLogo src={getTokenLogoURL("FTHM")} />
               </AppFormInputWrapper>
             );
           }}
         />
         <AppList>
-          <AppListItem alignItems="flex-start" secondaryAction={<>15 USDT</>}>
+          <AppListItem
+            alignItems="flex-start"
+            secondaryAction={<>{deposit + " " + token.name}</>}
+          >
             <ListItemText primary="Depositing" />
           </AppListItem>
-          <AppListItem alignItems="flex-start" secondaryAction={<>15 fmUSDT</>}>
+          <AppListItem
+            alignItems="flex-start"
+            secondaryAction={<>{sharedToken + " " + shareToken.name}</>}
+          >
             <ListItemText primary="Receiving" />
           </AppListItem>
         </AppList>
-        <InfoBox sx={{ alignItems: "flex-start" }}>
-          <InfoIcon />
-          <Box flexDirection="column">
-            <Typography width="100%">
-              First-time connect? Please allow token approval in your MetaMask
-            </Typography>
-            <ButtonPrimary style={{ margin: "16px 0" }}>
-              Approve Token
-            </ButtonPrimary>
-          </Box>
-        </InfoBox>
+        {approveBtn && !!walletBalance && (
+          <InfoBox sx={{ alignItems: "flex-start" }}>
+            <InfoIcon />
+            <Box flexDirection="column">
+              <Typography width="100%">
+                First-time connect? Please allow token approval in your MetaMask
+              </Typography>
+              <ButtonPrimary onClick={approve} style={{ margin: "16px 0" }}>
+                {" "}
+                {approvalPending ? (
+                  <CircularProgress size={20} sx={{ color: "#0D1526" }} />
+                ) : (
+                  "Approve token"
+                )}{" "}
+              </ButtonPrimary>
+            </Box>
+          </InfoBox>
+        )}
         <ButtonsWrapper>
           {!isMobile && (
             <ButtonSecondary onClick={onClose}>Close</ButtonSecondary>

@@ -1,7 +1,8 @@
 import { Box, Divider, Grid, ListItemText } from "@mui/material";
 import { AppList, AppListItem } from "components/AppComponents/AppList/AppList";
 
-const DepositVaultInfo = ({ vaultItemData }: any) => {
+const DepositVaultInfo = ({ vaultItemData, deposit, sharedToken }: any) => {
+  const { token, shareToken } = vaultItemData;
   return (
     <Grid item xs={12} sm={6} pr={2.5}>
       <AppList>
@@ -9,14 +10,14 @@ const DepositVaultInfo = ({ vaultItemData }: any) => {
           alignItems="flex-start"
           secondaryAction={
             <>
-              0 FXD{" "}
+              0 {token.name + " "}
               <Box component="span" sx={{ color: "#29C20A" }}>
-                → 14 USDT
+                → {deposit + " " + token.name}
               </Box>
             </>
           }
         >
-          <ListItemText primary="USDT Deposited" />
+          <ListItemText primary={token.name + " Deposited"} />
         </AppListItem>
         <AppListItem
           alignItems="flex-start"
@@ -35,9 +36,9 @@ const DepositVaultInfo = ({ vaultItemData }: any) => {
           alignItems="flex-start"
           secondaryAction={
             <>
-              0 FXD{" "}
+              0 {shareToken.name + " "}
               <Box component="span" sx={{ color: "#29C20A" }}>
-                → 15 fmUSDT
+                → {deposit + " " + shareToken.name}
               </Box>
             </>
           }

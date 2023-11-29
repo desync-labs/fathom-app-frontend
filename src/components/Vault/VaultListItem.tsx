@@ -1,4 +1,5 @@
 import { FC, useMemo } from "react";
+import { IVault } from "fathom-sdk";
 import { AppTableRow } from "components/AppComponents/AppTable/AppTable";
 import { IconButton, TableCell, Box } from "@mui/material";
 import { getTokenLogoURL } from "utils/tokenLogo";
@@ -24,6 +25,7 @@ import LockAquaSrc from "assets/svg/lock-aqua.svg";
 import DirectionDown from "assets/svg/direction-down.svg";
 import DirectionUp from "assets/svg/direction-up.svg";
 import { formatNumber } from "utils/format";
+import BigNumber from "bignumber.js";
 
 const VaultListItemPoolCell = styled(TableCell)`
   display: flex;
@@ -179,7 +181,7 @@ export const EarningLabel = styled("div")`
 `;
 
 export type VaultListItemPropsType = {
-  vaultItemData: any;
+  vaultItemData: IVault;
   hasDeposit?: boolean;
 };
 
@@ -226,12 +228,22 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
         </TableCell>
         <TableCell>
           <VaultStackedLiquidity>
-            ${formatNumber(totalDebtAmount)}
+            $
+            {formatNumber(
+              BigNumber(totalDebtAmount)
+                .dividedBy(10 ** 18)
+                .toNumber()
+            )}
           </VaultStackedLiquidity>
         </TableCell>
         <TableCell>
           <VaultAvailable className={"blue"}>
-            {formatNumber(balanceTokensIdle)} {token.symbol}
+            {formatNumber(
+              BigNumber(balanceTokensIdle)
+                .dividedBy(10 ** 18)
+                .toNumber()
+            )}{" "}
+            {token.symbol}
           </VaultAvailable>
         </TableCell>
         <TableCell>
