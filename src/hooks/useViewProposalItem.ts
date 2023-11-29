@@ -69,20 +69,27 @@ const useViewProposalItem = (proposal: IProposal) => {
   }, [proposalService, proposal]);
 
   const fetchProposalState = useCallback(async () => {
-    const status = await proposalService.viewProposalState(
-      proposal.proposalId,
-      account
-    );
-    // @ts-ignore
-    setStatus(Object.values(ProposalStatus)[status]);
-  }, [proposalService, proposal, account]);
+    const [status, currentBlock] = await Promise.all([
+      proposalService.viewProposalState(proposal.proposalId, account),
+      library.getBlockNumber(),
+    ]);
+    /**
+     * If proposal expired but state is not updated on chain
+     */
+    if (
+      BigNumber(currentBlock).isGreaterThan(proposal.endBlock) &&
+      [0, 1].includes(status)
+    ) {
+      setStatus((Object.values(ProposalStatus) as any)["6"]);
+    } else {
+      setStatus((Object.values(ProposalStatus) as any)[status]);
+    }
+  }, [proposalService, proposal, account, library]);
 
   useEffect(() => {
-    if (proposal && chainId && account) {
-      getTimestamp();
-      fetchProposalState();
-    }
-  }, [proposal, chainId, account, getTimestamp, fetchProposalState]);
+    library && getTimestamp();
+    account && chainId && fetchProposalState();
+  }, [proposal, chainId, account, library, getTimestamp, fetchProposalState]);
 
   useEffect(() => {
     if (status && status === ProposalStatus.Defeated) {
@@ -91,17 +98,18 @@ const useViewProposalItem = (proposal: IProposal) => {
   }, [status, proposal, checkProposalVotesAndQuorum]);
 
   useEffect(() => {
-    if (chainId) {
-      if (seconds > 0) {
-        setTimeout(() => {
-          setSeconds(seconds - 1);
-        }, 1000);
-      } else {
-        setTimeout(() => {
-          fetchProposalState();
-        }, 2000);
-      }
+    let timeout: ReturnType<typeof setTimeout>;
+    if (seconds > 0) {
+      timeout = setTimeout(() => {
+        setSeconds(seconds - 1);
+      }, 1000);
+    } else if (seconds <= 0 && chainId) {
+      timeout = setTimeout(() => {
+        fetchProposalState();
+      }, 2000);
     }
+
+    return () => timeout && clearTimeout(timeout);
   }, [seconds, chainId, setSeconds, fetchProposalState]);
 
   const proposalTitle = useMemo(() => {
