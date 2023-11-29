@@ -39,8 +39,8 @@ type UseStakingReturnType = {
   setEarlyUnstake: Dispatch<SetStateAction<ILockPosition | null>>;
   onClose: () => void;
   processFlow: (action: string, position?: ILockPosition) => void;
-  staker: any;
-  previousStaker: any;
+  stake: any;
+  previousStake: any;
   lockPositions: ILockPosition[];
   protocolStatsInfo: any;
   itemCount: number;

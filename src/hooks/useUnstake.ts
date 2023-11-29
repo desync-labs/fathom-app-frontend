@@ -2,6 +2,7 @@ import { ChangeEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { ILockPosition } from "fathom-sdk";
 import useStakingContext from "context/staking";
 import { UnStakeDialogProps } from "components/Staking/Dialog/UnstakeDialog";
+import BigNumber from "bignumber.js";
 
 const useUnstake = (
   lockPosition: ILockPosition | null,
@@ -18,12 +19,16 @@ const useUnstake = (
   }, [action, lockPosition]);
 
   const totalBalance = useMemo(
-    () => Number(lockPosition?.amount),
+    () => (lockPosition ? lockPosition.amount.toString() : "0"),
     [lockPosition]
   );
 
   useEffect(() => {
-    if (unStakeAmount > totalBalance / 10 ** 18) {
+    if (
+      BigNumber(unStakeAmount).isGreaterThan(
+        BigNumber(totalBalance).dividedBy(10 ** 18)
+      )
+    ) {
       setBalanceError(true);
     } else {
       setBalanceError(false);
@@ -31,7 +36,7 @@ const useUnstake = (
   }, [unStakeAmount, totalBalance]);
 
   useEffect(() => {
-    if (!unStakeAmount) {
+    if (!unStakeAmount || !BigNumber(unStakeAmount).isGreaterThan(0)) {
       setRequiredError(true);
     } else {
       setRequiredError(false);
@@ -47,7 +52,11 @@ const useUnstake = (
   );
 
   const setMax = useCallback(() => {
-    setUnStakeAmount(totalBalance / 10 ** 18);
+    setUnStakeAmount(
+      BigNumber(totalBalance)
+        .dividedBy(10 ** 18)
+        .toNumber()
+    );
   }, [totalBalance, setUnStakeAmount]);
 
   const unStakeHandler = useCallback(async () => {
