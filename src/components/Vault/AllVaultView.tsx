@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Container, Grid } from "@mui/material";
 import { PageHeader } from "components/Dashboard/PageHeader";
 import useAllVaultView from "hooks/useAllVaultView";
@@ -6,11 +6,12 @@ import VaultList from "components/Vault/VaultList";
 
 const AllVaultView = () => {
   const {
+    vaultList,
+    vaultsLoading,
     vaultCurrentPage,
     vaultItemsCount,
     isMobile,
-    setVaultCurrentPage,
-    setVaultItemsCount,
+    handlePageChange,
   } = useAllVaultView();
 
   return (
@@ -25,9 +26,11 @@ const AllVaultView = () => {
         />
         <Grid item xs={12} sx={{ marginTop: isMobile ? "5px" : "30px" }}>
           <VaultList
+            vaultList={vaultList}
+            vaultsLoading={vaultsLoading}
             vaultCurrentPage={vaultCurrentPage}
             vaultItemsCount={vaultItemsCount}
-            setVaultCurrentPage={setVaultCurrentPage}
+            handlePageChange={handlePageChange}
           />
         </Grid>
       </Grid>

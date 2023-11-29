@@ -1,9 +1,10 @@
-import React, { FC, useCallback, useEffect, useState } from "react";
+import React, { FC } from "react";
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
 import { DialogContent, Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { IVault } from "fathom-sdk";
 
-import useConnector from "context/connector";
+import useOpenVaultDeposit from "hooks/useOpenVaultDeposit";
 
 import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
 import { DividerDefault } from "components/Positions/TopUpPositionDialog";
@@ -21,7 +22,7 @@ const VaultManageGridDialogWrapper = styled(AppDialog)`
 `;
 
 export type VaultDepositProps = {
-  vaultItemData: any;
+  vaultItemData: IVault;
   onClose: () => void;
   onFinish: () => void;
   isMobile: boolean;
@@ -33,28 +34,18 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
   onFinish,
   isMobile,
 }) => {
-  const { account, chainId, library } = useConnector()!;
-  const { sharesSupply, shareToken, token } = vaultItemData;
-  const [walletBalance, setWalletBalance] = useState(0);
-
-  /*  useEffect(() => {
-    getVaultTokenAndBalance();
-  }, [account, token]);
-
-  const getVaultTokenAndBalance = useCallback(async () => {
-    if (token.name.toUpperCase() === "XDC") {
-      const balance = await library.eth.getBalance(account);
-      console.log("balance XDC: ", balance);
-    } else {
-      const balance = await poolService.getUserTokenBalance(
-        account,
-        token.id,
-        library
-      );
-
-      setWalletBalance(Number(balance));
-    }
-  }, [account, library]); */
+  const {
+    walletBalance,
+    control,
+    deposit,
+    sharedToken,
+    approveBtn,
+    approvalPending,
+    approve,
+    setMax,
+    handleSubmit,
+    onSubmit,
+  } = useOpenVaultDeposit(vaultItemData, onClose);
 
   return (
     <VaultManageGridDialogWrapper
@@ -70,13 +61,26 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
 
       <DialogContent>
         <Grid container>
-          <DepositVaultInfo vaultItemData={vaultItemData} />
+          <DepositVaultInfo
+            vaultItemData={vaultItemData}
+            deposit={deposit}
+            sharedToken={sharedToken}
+          />
           <DividerDefault orientation="vertical" flexItem></DividerDefault>
           <DepositVaultForm
-            onClose={onClose}
             isMobile={isMobile}
-            token={token}
+            vaultItemData={vaultItemData}
             walletBalance={walletBalance}
+            control={control}
+            deposit={deposit}
+            sharedToken={sharedToken}
+            approveBtn={approveBtn}
+            approvalPending={approvalPending}
+            approve={approve}
+            onClose={onClose}
+            setMax={setMax}
+            handleSubmit={handleSubmit}
+            onSubmit={onSubmit}
           />
         </Grid>
       </DialogContent>
