@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import { useMediaQuery, useTheme } from "@mui/material";
 
 const useVaultList = () => {

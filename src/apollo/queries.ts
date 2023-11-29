@@ -218,6 +218,18 @@ export const VAULTS = gql`
       balanceTokens
       balanceTokensIdle
       totalDebtAmount
+      depositLimit
+      deposits {
+        id
+        timestamp
+        blockNumber
+        account
+        vault
+        tokenAmount
+        sharesMinted
+        transaction
+        vaultUpdate
+      }
     }
   }
 `;
