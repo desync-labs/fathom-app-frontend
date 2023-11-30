@@ -10,7 +10,7 @@ const useUnstake = (
 ) => {
   const [balanceError, setBalanceError] = useState<boolean>(false);
   const [requiredError, setRequiredError] = useState<boolean>(false);
-  const [unStakeAmount, setUnStakeAmount] = useState<number>(0);
+  const [unStakeAmount, setUnStakeAmount] = useState<string>("");
 
   const { action, handleUnlock } = useStakingContext();
 
@@ -23,29 +23,46 @@ const useUnstake = (
     [lockPosition]
   );
 
-  useEffect(() => {
-    if (
-      BigNumber(unStakeAmount).isGreaterThan(
-        BigNumber(totalBalance).dividedBy(10 ** 18)
-      )
-    ) {
-      setBalanceError(true);
-    } else {
-      setBalanceError(false);
-    }
-  }, [unStakeAmount, totalBalance]);
+  const isBalanceError = useCallback(
+    (unStakeAmount: string, totalBalance: string) => {
+      if (
+        BigNumber(unStakeAmount).isGreaterThan(
+          BigNumber(totalBalance).dividedBy(10 ** 18)
+        )
+      ) {
+        setBalanceError(true);
+        return true;
+      } else {
+        setBalanceError(false);
+        return false;
+      }
+    },
+    [setBalanceError]
+  );
+
+  const isRequiredError = useCallback(
+    (unStakeAmount: string) => {
+      if (
+        !unStakeAmount ||
+        !BigNumber(unStakeAmount).isGreaterThanOrEqualTo(0)
+      ) {
+        setRequiredError(true);
+        return true;
+      } else {
+        setRequiredError(false);
+        return false;
+      }
+    },
+    [setRequiredError]
+  );
 
   useEffect(() => {
-    if (!unStakeAmount || !BigNumber(unStakeAmount).isGreaterThan(0)) {
-      setRequiredError(true);
-    } else {
-      setRequiredError(false);
-    }
-  }, [unStakeAmount, setRequiredError]);
+    unStakeAmount && isBalanceError(unStakeAmount, totalBalance);
+  }, [unStakeAmount, totalBalance, isBalanceError]);
 
   const handleUnStakeAmountChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      const value = Number(e.target.value);
+      const value = e.target.value;
       setUnStakeAmount(value);
     },
     [setUnStakeAmount]
@@ -55,21 +72,27 @@ const useUnstake = (
     setUnStakeAmount(
       BigNumber(totalBalance)
         .dividedBy(10 ** 18)
-        .toNumber()
+        .toString()
     );
   }, [totalBalance, setUnStakeAmount]);
 
   const unStakeHandler = useCallback(async () => {
-    await handleUnlock(lockPosition?.lockId as number, unStakeAmount);
-    onFinish(unStakeAmount);
-  }, [lockPosition, handleUnlock, onFinish, unStakeAmount]);
+    if (
+      isRequiredError(unStakeAmount) ||
+      isBalanceError(unStakeAmount, totalBalance)
+    ) {
+      return;
+    }
+
+    await handleUnlock(lockPosition?.lockId as number, Number(unStakeAmount));
+    onFinish(Number(unStakeAmount));
+  }, [lockPosition, handleUnlock, onFinish, unStakeAmount, totalBalance]);
 
   return {
     balanceError,
     requiredError,
     unStakeAmount,
     totalBalance,
-
     handleUnStakeAmountChange,
     setMax,
     unStakeHandler,
