@@ -42,10 +42,7 @@ const useUnstake = (
 
   const isRequiredError = useCallback(
     (unStakeAmount: string) => {
-      if (
-        !unStakeAmount ||
-        !BigNumber(unStakeAmount).isGreaterThanOrEqualTo(0)
-      ) {
+      if (!unStakeAmount || !BigNumber(unStakeAmount).isGreaterThan(0)) {
         setRequiredError(true);
         return true;
       } else {
