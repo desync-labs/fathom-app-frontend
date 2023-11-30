@@ -146,7 +146,9 @@ const useStakingView = () => {
             const newLockPositions = stakesData?.stakers[0].lockPositions
               .map((lockPosition: ILockPosition, index: number) => {
                 const newLockPosition: ILockPosition = { ...lockPosition };
-                newLockPosition.rewardsAvailable = result[index].toNumber();
+                newLockPosition.rewardsAvailable = Number(
+                  result[index].toString()
+                );
                 return newLockPosition;
               })
               .sort((stake1: ILockPosition, stake2: ILockPosition) => {

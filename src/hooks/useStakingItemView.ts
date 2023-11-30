@@ -22,7 +22,6 @@ const useStakingItemView = (lockPosition: ILockPosition) => {
       stakingService
         .getStreamClaimableAmountPerLock(0, account, lockPosition.lockId)
         .then((claimRewards) => {
-          console.log(claimRewards);
           setRewardsAvailable(claimRewards.toString());
         });
   }, [stakingService, lockPosition, account, library, setRewardsAvailable]);
