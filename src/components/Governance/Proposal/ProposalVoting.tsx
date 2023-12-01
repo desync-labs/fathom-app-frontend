@@ -144,7 +144,6 @@ const ProposalVoting = () => {
     abstainVotes,
     againstVotes,
     vote,
-    fetchedTotalVotes,
     status,
     quorumError,
   } = useProposalContext();
@@ -167,30 +166,28 @@ const ProposalVoting = () => {
             <VotingWrapperBox>
               <Box>
                 <Typography gutterBottom>For</Typography>
-                <Typography>
-                  {Math.round((100 * forVotes) / fetchedTotalVotes || 0)}%
-                </Typography>
+                <Typography>{Math.round(forVotes)}%</Typography>
               </Box>
 
               <LinearProgress
                 variant="determinate"
                 color={"success"}
-                value={(100 * forVotes) / fetchedTotalVotes || 0}
+                value={forVotes}
               />
             </VotingWrapperBox>
 
             <VotingWrapperBox>
               <Box>
                 <Typography gutterBottom>Against</Typography>
-                <Typography variant="body2" color="">
-                  {Math.round((100 * againstVotes) / fetchedTotalVotes || 0)}%
+                <Typography variant="body2">
+                  {Math.round(againstVotes)}%
                 </Typography>
               </Box>
 
               <LinearProgress
                 variant="determinate"
                 color={"error"}
-                value={(100 * againstVotes) / fetchedTotalVotes || 0}
+                value={againstVotes}
               />
             </VotingWrapperBox>
 
@@ -198,14 +195,14 @@ const ProposalVoting = () => {
               <Box>
                 <Typography gutterBottom>Abstains</Typography>
                 <Typography variant="body2" color="text.secondary">
-                  {Math.round((100 * abstainVotes) / fetchedTotalVotes || 0)}%
+                  {Math.round(abstainVotes)}%
                 </Typography>
               </Box>
 
               <LinearProgress
                 variant="determinate"
                 color={"info"}
-                value={(100 * abstainVotes) / fetchedTotalVotes || 0}
+                value={abstainVotes}
               />
             </VotingWrapperBox>
           </Box>

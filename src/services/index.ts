@@ -18,7 +18,7 @@ import { DefaultProvider } from "connectors/networks";
 import { Web3Provider } from "@ethersproject/providers";
 
 export class RootService {
-  /*
+  /**
    * Services
    */
   poolService: IPoolService;
