@@ -4,13 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import BigNumber from "bignumber.js";
 
 const useStreamStats = () => {
-  const {
-    processFlow,
-    protocolStatsInfo,
-    staker,
-    previousStaker,
-    totalRewards,
-  } = useStakingContext();
+  const { processFlow, protocolStatsInfo, stake, previousStake, totalRewards } =
+    useStakingContext();
 
   const { fthmPrice } = usePricesContext();
   const fthmPriceFormatted = useMemo(
@@ -28,28 +23,28 @@ const useStreamStats = () => {
 
   useEffect(() => {
     const now = Date.now() / 1000;
-    if (Number(staker?.cooldown) > now) {
-      setSeconds(Number(staker.cooldown) - now);
+    if (Number(stake?.cooldown) > now) {
+      setSeconds(Number(stake.cooldown) - now);
     } else {
       setSeconds(0);
     }
-  }, [staker, setSeconds]);
+  }, [stake, setSeconds]);
 
   useEffect(() => {
-    setPreviousStakerState(previousStaker);
-  }, [previousStaker, setPreviousStakerState]);
+    setPreviousStakerState(previousStake);
+  }, [previousStake, setPreviousStakerState]);
 
   useEffect(() => {
     if (
       timer &&
       previousStakerState &&
-      previousStakerState?.cooldown !== staker?.cooldown
+      previousStakerState?.cooldown !== stake?.cooldown
     ) {
       clearTimeout(timer);
       setTimer(null);
-      setPreviousStakerState(staker);
+      setPreviousStakerState(stake);
     }
-  }, [timer, staker, previousStakerState, setTimer, setPreviousStakerState]);
+  }, [timer, stake, previousStakerState, setTimer, setPreviousStakerState]);
 
   useEffect(() => {
     if (seconds > 0 && !timer) {
@@ -62,7 +57,7 @@ const useStreamStats = () => {
   }, [seconds, timer, setSeconds, setTimer]);
 
   return {
-    staker,
+    stake,
     seconds,
     protocolStatsInfo,
     totalRewards,

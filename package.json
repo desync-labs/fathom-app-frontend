@@ -26,7 +26,7 @@
     "truncate-eth-address": "^1.0.2",
     "tss-react": "^4.1.4",
     "web-vitals": "^2.1.4",
-    "fathom-sdk": "^0.1.21",
+    "fathom-sdk": "^0.1.24",
     "ethers": "5.7.2"
   },
   "devDependencies": {
