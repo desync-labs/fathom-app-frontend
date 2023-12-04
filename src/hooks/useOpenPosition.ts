@@ -94,11 +94,17 @@ const useOpenPosition = (
   );
 
   const getCollateralTokenAndBalance = useCallback(async () => {
+    /**
+     * Native token collateral.
+     */
     if (pool.poolName.toUpperCase() === "XDC") {
       const balance = await library.getBalance(account);
       setCollateralTokenAddress(null);
       setBalance(balance.toString());
     } else {
+      /**
+       * ERC20 token collateral.
+       */
       const tokenAddress = await poolService.getCollateralTokenAddress(
         pool.tokenAdapterAddress
       );
@@ -134,12 +140,13 @@ const useOpenPosition = (
 
   const dangerSafetyBuffer = useMemo(() => {
     return (
+      !Object.keys(errors).length &&
       isTouched &&
       isDirty &&
       BigNumber(safetyBuffer).isGreaterThanOrEqualTo(0) &&
       BigNumber(safetyBuffer).isLessThan(DANGER_SAFETY_BUFFER)
     );
-  }, [isTouched, isDirty, safetyBuffer]);
+  }, [isTouched, isDirty, safetyBuffer, errors]);
 
   const handleUpdates = useCallback(
     async (collateralInput: string, fathomTokenInput: string) => {
@@ -210,8 +217,6 @@ const useOpenPosition = (
             .multipliedBy(100)
             .toString()
         : "0";
-
-      console.log(fathomTokenInput);
 
       const overCollateralDiv = BigNumber(10 ** 18).multipliedBy(
         fathomTokenInput
