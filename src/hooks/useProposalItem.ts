@@ -298,7 +298,7 @@ const useProposalItem = () => {
       : BigNumber(data?.proposal.abstainVotes)
           .multipliedBy(100)
           .dividedBy(fetchedTotalVotes)
-          .toNumber();
+          .toNumber() || 0;
   }, [data?.proposal, loading]);
 
   return {
