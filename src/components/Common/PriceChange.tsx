@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from "react";
+import { FC, useMemo } from "react";
 import { Box, Icon } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { formatPercentage } from "utils/format";

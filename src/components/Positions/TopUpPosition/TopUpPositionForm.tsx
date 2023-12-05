@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import { FC } from "react";
 import BigNumber from "bignumber.js";
 import { Controller } from "react-hook-form";
 import { Box, CircularProgress, Grid, Typography } from "@mui/material";

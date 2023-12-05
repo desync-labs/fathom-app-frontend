@@ -1,4 +1,4 @@
-import React, { memo, FC } from "react";
+import { memo, FC } from "react";
 import { Box, Grid, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import InfoIcon from "@mui/icons-material/Info";

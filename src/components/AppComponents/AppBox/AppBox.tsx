@@ -1,7 +1,8 @@
 import { styled } from "@mui/material/styles";
-import { Typography, Box as MuiBox, Box } from "@mui/material";
+import { Typography, Box as MuiBox, Box, Container } from "@mui/material";
 
 import RemoveCircle from "assets/svg/remove-circle.svg";
+import { Link } from "react-router-dom";
 
 export const TitleSecondary = styled(Typography)`
   font-size: 16px;
@@ -222,5 +223,47 @@ export const SuccessBox = styled(Box)`
   p {
     color: #8af075;
     font-size: 14px;
+  }
+`;
+
+export const NestedRouteNav = styled("nav")`
+  height: 65px;
+  width: 100%;
+  border-bottom: 1.5px solid #1d2d49;
+  display: flex;
+  align-items: center;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    width: 100%;
+    a {
+      width: 50%;
+    }
+  }
+`;
+
+export const NestedRouteLink = styled(Link)`
+  color: #9fadc6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 100%;
+  padding: 0 52px;
+  font-weight: 600;
+  font-size: 17px;
+
+  &.active {
+    color: #fff;
+    border-bottom: 1px solid #00fff6;
+    background: #131f35;
+  }
+
+  span {
+    margin-bottom: 5px;
+  }
+`;
+
+export const NestedRouteContainer = styled(Container)`
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    margin-top: 15px;
   }
 `;

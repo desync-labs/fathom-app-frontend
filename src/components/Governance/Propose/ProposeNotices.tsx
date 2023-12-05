@@ -1,4 +1,4 @@
-import React, { FC, memo } from "react";
+import { FC, memo } from "react";
 import BigNumber from "bignumber.js";
 import { Link } from "react-router-dom";
 import { formatNumber } from "utils/format";

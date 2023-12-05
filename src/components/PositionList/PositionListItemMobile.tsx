@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import { FC } from "react";
 import { PositionListItemProps } from "components/PositionList/PositionListItem";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { PoolName, TVL } from "components/AppComponents/AppBox/AppBox";

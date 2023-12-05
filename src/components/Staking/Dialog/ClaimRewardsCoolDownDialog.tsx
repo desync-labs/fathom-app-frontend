@@ -8,7 +8,7 @@ import {
   ButtonPrimary,
   CancelButton,
 } from "components/AppComponents/AppButton/AppButton";
-import React, { FC } from "react";
+import { FC } from "react";
 import { styled } from "@mui/material/styles";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatNumber } from "utils/format";

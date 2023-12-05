@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import { FC } from "react";
 import BorrowIconSrc from "assets/svg/borrow.svg";
 import BorrowIconActiveSrc from "assets/svg/borrow-active.svg";
 import SwapIconSrc from "assets/svg/stable-swap.svg";
@@ -60,8 +60,8 @@ export const GovernanceIcon: FC<{ isDAOActive: boolean }> = ({
   </MenuIcon>
 );
 
-export const DexIcon: FC = () => (
+export const DexIcon: FC<{ isDexActive: boolean }> = ({ isDexActive }) => (
   <Icon sx={{ height: "1.2em" }}>
-    <img alt="dex-icon" src={DexSrc} />
+    <img alt="dex-icon" src={isDexActive ? DexSrc : DexSrc} />
   </Icon>
 );
