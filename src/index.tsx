@@ -1,5 +1,4 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
+import ReactDOM from "react-dom";
 import App from "./App";
 import dotenv from "dotenv";
 import { ConnectorProvider } from "context/connector";
@@ -10,15 +9,12 @@ import { Web3Provider } from "@ethersproject/providers";
 
 dotenv.config();
 
-function getLibrary(provider: any): Web3Provider {
+export function getLibrary(provider: any): Web3Provider {
   console.log("getLibrary", provider);
   return new Web3Provider(provider);
 }
 
-const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement
-);
-root.render(
+ReactDOM.render(
   <Web3ReactProvider getLibrary={getLibrary}>
     <AlertAndTransactionProvider>
       <ServicesProvider>
@@ -27,5 +23,6 @@ root.render(
         </ConnectorProvider>
       </ServicesProvider>
     </AlertAndTransactionProvider>
-  </Web3ReactProvider>
+  </Web3ReactProvider>,
+  document.getElementById("root")
 );

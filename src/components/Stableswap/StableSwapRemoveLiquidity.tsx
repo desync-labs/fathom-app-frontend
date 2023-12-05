@@ -1,4 +1,3 @@
-import React from "react";
 import { CircularProgress, Container, Grid } from "@mui/material";
 import { PageHeader } from "components/Dashboard/PageHeader";
 import { StableSwapPaper } from "components/AppComponents/AppPaper/AppPaper";

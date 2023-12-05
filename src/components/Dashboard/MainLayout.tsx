@@ -1,4 +1,3 @@
-import React from "react";
 import { createTheme, styled, ThemeProvider } from "@mui/material/styles";
 import {
   CssBaseline,
@@ -41,8 +40,27 @@ import MobileConnector from "components/Dashboard/MobileConnector";
 import DesktopConnector from "components/Dashboard/DesktopConnector";
 import BottomLinks from "components/Dashboard/BottomLinks";
 import MobileMenu from "components/Dashboard/MobileMenu";
+import DexView from "components/Dashboard/DexView";
 import { drawerWidth } from "components/AppComponents/AppBar/AppBar";
 import TransactionErc20TokenModal from "components/Transaction/TransactionErc20TokenModal";
+
+/**
+ * DEX
+ */
+import Swap from "apps/dex/pages/Swap";
+import {
+  RedirectPathToSwapOnly,
+  RedirectToSwap,
+} from "apps/dex/pages/Swap/redirects";
+import PoolFinder from "apps/dex/pages/PoolFinder";
+import Pool from "apps/dex/pages/Pool";
+import {
+  RedirectOldAddLiquidityPathStructure,
+  RedirectDuplicateTokenIds,
+} from "apps/dex/pages/AddLiquidity/redirects";
+import AddLiquidity from "apps/dex/pages/AddLiquidity";
+import { RedirectOldRemoveLiquidityPathStructure } from "apps/dex/pages/RemoveLiquidity/redirects";
+import RemoveLiquidity from "apps/dex/pages/RemoveLiquidity";
 
 import useMainLayout from "hooks/useMainLayout";
 import { StakingProvider } from "context/staking";
@@ -356,6 +374,40 @@ const MainLayout = () => {
                   </StakingProvider>
                 }
               />
+            </Route>
+            <Route path="/swap" element={<DexView />}>
+              <Route index element={<Swap />} />
+              <Route path=":outputCurrency" element={<RedirectToSwap />} />
+              <Route path="send" element={<RedirectPathToSwapOnly />} />
+              <Route path="find" element={<PoolFinder />} />
+              <Route path="pool" element={<Pool />} />
+              <Route path="add" element={<AddLiquidity />} />
+              <Route
+                path="add/:currencyIdA"
+                element={<RedirectOldAddLiquidityPathStructure />}
+              />
+              <Route
+                path="add/:currencyIdA/:currencyIdB"
+                element={<RedirectDuplicateTokenIds />}
+              />
+              <Route path="create" element={<AddLiquidity />} />
+              <Route
+                path="create/:currencyIdA"
+                element={<RedirectOldAddLiquidityPathStructure />}
+              />
+              <Route
+                path="create/:currencyIdA/:currencyIdB"
+                element={<RedirectDuplicateTokenIds />}
+              />
+              <Route
+                path="remove/:tokens"
+                element={<RedirectOldRemoveLiquidityPathStructure />}
+              />
+              <Route
+                path="remove/:currencyIdA/:currencyIdB"
+                element={<RemoveLiquidity />}
+              />
+              <Route element={<RedirectPathToSwapOnly />} />
             </Route>
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

@@ -1,4 +1,4 @@
-import React, { Dispatch, FC, SetStateAction } from "react";
+import { Dispatch, FC, SetStateAction } from "react";
 import { ICollateralPool } from "fathom-sdk";
 
 import { styled } from "@mui/material/styles";

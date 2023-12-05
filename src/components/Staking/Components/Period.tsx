@@ -1,5 +1,5 @@
 import { Chip, Stack } from "@mui/material";
-import React, { FC, memo } from "react";
+import { FC, memo } from "react";
 import { styled } from "@mui/material/styles";
 import useStakingContext from "context/staking";
 

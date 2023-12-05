@@ -1,4 +1,11 @@
-import React, { FC, ReactElement, useEffect, useMemo } from "react";
+import {
+  createContext,
+  FC,
+  ReactElement,
+  useContext,
+  useEffect,
+  useMemo,
+} from "react";
 import { RootService } from "services";
 import { supportedChainIds } from "connectors/networks";
 import { getDefaultProvider } from "utils/defaultProvider";
@@ -15,7 +22,7 @@ import { SmartContractFactory, Web3Utils } from "fathom-sdk";
 import useAlertAndTransactionContext from "context/alertAndTransaction";
 import { getTokenLogoURL } from "utils/tokenLogo";
 
-const StoresContext = React.createContext<RootService>({} as RootService);
+const StoresContext = createContext<RootService>({} as RootService);
 
 export const ServicesProvider: FC<{ children: ReactElement }> = ({
   children,
@@ -137,4 +144,4 @@ export const ServicesProvider: FC<{ children: ReactElement }> = ({
 };
 
 // this will be the function available for the app to connect to the stores
-export const useServices = () => React.useContext(StoresContext);
+export const useServices = () => useContext(StoresContext);

@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { FC } from "react";
 import { useLocation } from "react-router-dom";
 import AppMenuItem from "components/MenuItem/AppMenuItem";
@@ -32,10 +32,12 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
     () => location.pathname.includes("dao"),
     [location.pathname]
   );
+  const isDexActive = useMemo(
+    () => location.pathname.includes("swap"),
+    [location.pathname]
+  );
 
   const { showText } = useShowText(open);
-
-  const dexUrl = useMemo(() => process.env.REACT_APP_SWAP_APP_URL, []);
 
   const appMenuItems = [
     {
@@ -61,9 +63,9 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
     },
     {
       name: "DEX",
-      link: dexUrl,
-      Icon: <DexIcon />,
-      target: "_blank",
+      link: "/swap",
+      Icon: <DexIcon isDexActive={isDexActive} />,
+      isActive: isDexActive,
       showText: showText,
     },
   ];

@@ -1,4 +1,3 @@
-import React from "react";
 import { Divider, Grid, ListItemText } from "@mui/material";
 
 import { AppListItem } from "components/AppComponents/AppList/AppList";
