@@ -21,7 +21,25 @@ const ProposeNotices: FC<ProposeNoticesProps> = ({
   minimumVBalance,
   vBalanceError,
 }) => {
-  if (
+  if (vBalance === null) {
+    return vBalanceError ? (
+      <ErrorBox sx={{ my: 3 }}>
+        <InfoIcon sx={{ width: "16px", color: "#F5953D", height: "16px" }} />
+        <ErrorMessage>
+          Accout not connected. Please, connect your account to be able to
+          create proposals.
+        </ErrorMessage>
+      </ErrorBox>
+    ) : (
+      <WarningBox sx={{ my: 3 }}>
+        <InfoIcon sx={{ width: "16px", color: "#F5953D", height: "16px" }} />
+        <Typography>
+          Accout not connected. Please, connect your account to be able to
+          create proposals.
+        </Typography>
+      </WarningBox>
+    );
+  } else if (
     vBalance !== null &&
     BigNumber(vBalance)
       .dividedBy(10 ** 18)
