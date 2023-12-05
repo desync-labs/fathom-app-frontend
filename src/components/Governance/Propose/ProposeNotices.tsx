@@ -40,7 +40,6 @@ const ProposeNotices: FC<ProposeNoticesProps> = ({
       </WarningBox>
     );
   } else if (
-    vBalance !== null &&
     BigNumber(vBalance)
       .dividedBy(10 ** 18)
       .isLessThan(minimumVBalance)
