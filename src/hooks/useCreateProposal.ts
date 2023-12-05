@@ -86,6 +86,8 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
             setNotAllowTimestamp("0");
           }
         });
+    } else {
+      setVBalance("0");
     }
   }, [account, proposalService, setVBalance, setNotAllowTimestamp]);
 
