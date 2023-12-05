@@ -138,9 +138,9 @@ const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({
 
       <DialogContent>
         <Description>
-          Claim Rewards only is available for all positions at the moment. You
-          will lose the rewards of the position you proceed to unstake without
-          claiming it here first. <a href={"/"}>Learn more.</a>
+          Position lock time has not yet passed - by requesting Early Unstake -
+          you will pay the penalty. Ensure you Claim Rewards before Unstaking so
+          as not to lose your rewards.
         </Description>
         <DialogContentWrapper>
           <img src={getTokenLogoURL(token)} alt={"token-logo"} width={58} />
