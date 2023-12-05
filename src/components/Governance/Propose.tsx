@@ -161,13 +161,15 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
                   alt="vFTHM-Token"
                   width={28}
                 />
-                <BalanceBox component="span">
-                  {formatNumber(
-                    BigNumber(vBalance as string)
-                      .dividedBy(10 ** 18)
-                      .toNumber()
-                  )}
-                </BalanceBox>
+                {vBalance && (
+                  <BalanceBox component="span">
+                    {formatNumber(
+                      BigNumber(vBalance as string)
+                        .dividedBy(10 ** 18)
+                        .toNumber()
+                    )}
+                  </BalanceBox>
+                )}
                 <CurrencyBox component="span">vFHTM</CurrencyBox>
               </Stack>
             </Grid>
