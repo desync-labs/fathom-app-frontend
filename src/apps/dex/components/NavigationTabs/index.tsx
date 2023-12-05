@@ -55,10 +55,10 @@ export function SwapPoolTabs() {
   return (
     <Tabs style={{ marginBottom: "20px", display: "none" }}>
       <StyledNavLink id={`swap-nav-link`} to={"/swap"}>
-        {t("swap")}
+        <>{t("swap")}</>
       </StyledNavLink>
       <StyledNavLink id={`pool-nav-link`} to={"/pool"}>
-        {t("pool")}
+        <>{t("pool")}</>
       </StyledNavLink>
     </Tabs>
   );

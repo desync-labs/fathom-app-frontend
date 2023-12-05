@@ -1,10 +1,9 @@
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import Header from "apps/dex/components/Header";
 import Polling from "apps/dex/components/Header/Polling";
 import Popups from "apps/dex/components/Popups";
-import Web3ReactManager from "apps/dex/components/Web3ReactManager";
 import ReactGA from "react-ga";
 
 const AppWrapper = styled.div`
@@ -50,18 +49,18 @@ export default function App() {
   }, [pathname, search]);
 
   return (
-    <AppWrapper>
-      <HeaderWrapper>
-        <Header />
-      </HeaderWrapper>
-      <BodyWrapper>
-        <Popups />
-        <Polling />
-        <Web3ReactManager>
+    <Suspense fallback={null}>
+      <AppWrapper>
+        <HeaderWrapper>
+          <Header />
+        </HeaderWrapper>
+        <BodyWrapper>
+          <Popups />
+          <Polling />
           <Outlet />
-        </Web3ReactManager>
-        <Marginer />
-      </BodyWrapper>
-    </AppWrapper>
+          <Marginer />
+        </BodyWrapper>
+      </AppWrapper>
+    </Suspense>
   );
 }

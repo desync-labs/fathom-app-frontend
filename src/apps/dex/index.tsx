@@ -18,7 +18,7 @@ import ThemeProvider, {
   ThemedGlobalStyle,
 } from "apps/dex/theme";
 import { getLibrary } from "../../index";
-import { memo, Suspense } from "react";
+import { memo } from "react";
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName);
 
@@ -47,13 +47,6 @@ if (typeof GOOGLE_ANALYTICS_ID === "string") {
   ReactGA.initialize("test", { testMode: true, debug: true });
 }
 
-window.addEventListener("error", (error) => {
-  ReactGA.exception({
-    description: `${error.message} @ ${error.filename}:${error.lineno}:${error.colno}`,
-    fatal: true,
-  });
-});
-
 function Updaters() {
   return (
     <>
@@ -67,20 +60,22 @@ function Updaters() {
 
 const DexIndexComponent = () => {
   return (
-    <Suspense fallback={null}>
+    <>
       <FixedGlobalStyle />
       <Web3ProviderNetwork getLibrary={getLibrary}>
         <Blocklist>
           <Provider store={store}>
             <Updaters />
             <ThemeProvider>
-              <ThemedGlobalStyle />
-              <App />
+              <>
+                <ThemedGlobalStyle />
+                <App />
+              </>
             </ThemeProvider>
           </Provider>
         </Blocklist>
       </Web3ProviderNetwork>
-    </Suspense>
+    </>
   );
 };
 

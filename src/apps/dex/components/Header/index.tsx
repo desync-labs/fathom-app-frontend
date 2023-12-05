@@ -30,7 +30,6 @@ const HeaderFrame = styled.div`
   grid-template-columns: 1fr 120px;
   align-items: center;
   justify-content: space-between;
-  align-items: center;
   flex-direction: row;
   width: 100%;
   top: 0;
@@ -339,10 +338,10 @@ export default function Header() {
         </Title>
         <HeaderLinks>
           <StyledNavLink id={`swap-nav-link`} to={"/swap"}>
-            {t("swap")}
+            <>{t("swap")}</>
           </StyledNavLink>
           <StyledNavLink id={`pool-nav-link`} to={"/swap/pool"}>
-            {t("pool")}
+            <>{t("pool")}</>
           </StyledNavLink>
           <StyledExternalLink
             id={`stake-nav-link`}

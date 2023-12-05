@@ -1,7 +1,4 @@
-import {
-  DEFAULT_ACTIVE_LIST_URLS,
-  SUPPORTED_LIST_URLS,
-} from "apps/dex/constants/lists";
+import { DEFAULT_ACTIVE_LIST_URLS } from "apps/dex/constants/lists";
 import { createReducer } from "@reduxjs/toolkit";
 import { getVersionUpgrade, VersionUpgrade } from "@uniswap/token-lists";
 import { TokenList } from "@uniswap/token-lists/dist/types";
@@ -48,12 +45,13 @@ type Mutable<T> = {
 const initialState: ListsState = {
   lastInitializedDefaultListOfLists: DEFAULT_LIST_OF_LISTS,
   byUrl: {
-    ...DEFAULT_LIST_OF_LISTS.concat(...SUPPORTED_LIST_URLS).reduce<
-      Mutable<ListsState["byUrl"]>
-    >((memo, listUrl) => {
-      memo[listUrl] = NEW_LIST_STATE;
-      return memo;
-    }, {}),
+    ...DEFAULT_LIST_OF_LISTS.reduce<Mutable<ListsState["byUrl"]>>(
+      (memo, listUrl) => {
+        memo[listUrl] = NEW_LIST_STATE;
+        return memo;
+      },
+      {}
+    ),
   },
   activeListUrls: DEFAULT_ACTIVE_LIST_URLS,
 };
