@@ -21,9 +21,14 @@ const StyledDialogOverlay = styled(AnimatedDialogOverlay)`
 
 const AnimatedDialogContent = animated(DialogContent);
 // destructure to not pass custom props to Dialog DOM element
-const StyledDialogContent = styled(({ ...rest }) => (
-  <AnimatedDialogContent {...rest} />
-)).attrs({
+const StyledDialogContent = styled(({ ...rest }) => {
+  const restKeys = Object.keys(rest).filter(
+    (key) => !["minHeight", "maxHeight", "mobile", "isOpen"].includes(key)
+  );
+  const restProps = {} as any;
+  restKeys.forEach((key) => (restProps[key] = rest[key]));
+  return <AnimatedDialogContent {...restProps} />;
+}).attrs({
   "aria-label": "dialog",
 })`
   overflow-y: ${({ mobile }) => (mobile ? "scroll" : "hidden")};

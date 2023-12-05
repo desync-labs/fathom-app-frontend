@@ -12,23 +12,26 @@ const DexView = () => {
   const location = useLocation();
 
   const isSwapActive = useMemo(
-    () => location.pathname.includes("swap"),
+    () => ["/swap/", "/swap"].includes(location.pathname),
     [location.pathname]
   );
 
   const isPoolActive = useMemo(
-    () => location.pathname.includes("pool"),
+    () => location.pathname.includes("/swap/pool"),
     [location.pathname]
   );
 
   return (
     <>
       <NestedRouteNav>
-        <NestedRouteLink className={isSwapActive ? "active" : ""} to="/">
+        <NestedRouteLink className={isSwapActive ? "active" : ""} to="/swap/">
           <StakingIcon isStakingActive={isSwapActive} />
           Swap
         </NestedRouteLink>
-        <NestedRouteLink className={isSwapActive ? "active" : ""} to="pool">
+        <NestedRouteLink
+          className={isPoolActive ? "active" : ""}
+          to="/swap/pool"
+        >
           <GovernanceIcon isDAOActive={isPoolActive} />
           Pool
         </NestedRouteLink>

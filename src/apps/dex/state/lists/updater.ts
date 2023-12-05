@@ -25,6 +25,9 @@ export default function Updater(): null {
   const lists = useAllLists();
   const activeListUrls = useActiveListUrls();
 
+  console.log({ lists });
+  return null;
+
   // initiate loading
   useAllInactiveTokens();
 
@@ -46,6 +49,9 @@ export default function Updater(): null {
     Object.keys(lists).forEach((listUrl) => {
       const list = lists[listUrl];
       if (!list.current && !list.loadingRequestId && !list.error) {
+        console.log({
+          listUrl,
+        });
         fetchList(listUrl).catch((error) =>
           console.debug("list added fetching error", error)
         );

@@ -4,7 +4,7 @@ import { ChainId, Token } from "into-the-fathom-swap-sdk";
 import { Tags, TokenInfo, TokenList } from "@uniswap/token-lists";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
-import { AppState } from "apps/dex/state/index";
+import { AppState } from "apps/dex/state";
 import sortByListPriority from "apps/dex/utils/listSort";
 
 type TagDetails = Tags[keyof Tags];

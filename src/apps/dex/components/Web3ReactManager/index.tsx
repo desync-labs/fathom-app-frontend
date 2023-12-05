@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 
 import { useEagerConnect, useInactiveListener } from "apps/dex/hooks";
-import { NetworkContextName } from "apps/dex/constants/index";
+import { NetworkContextName } from "apps/dex/constants";
 import Loader from "apps/dex/components/Loader";
 
 const MessageWrapper = styled.div`
@@ -55,7 +55,9 @@ export default function Web3ReactManager({
   if (!active && networkError) {
     return (
       <MessageWrapper>
-        <Message>{t("unknownError")}</Message>
+        <Message>
+          <>{t("unknownError")}</>
+        </Message>
       </MessageWrapper>
     );
   }
