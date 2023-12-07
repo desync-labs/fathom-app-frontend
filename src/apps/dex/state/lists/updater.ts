@@ -30,9 +30,6 @@ export default function Updater(): null {
 
   const fetchList = useFetchListCallback();
   const fetchAllListsCallback = useCallback(() => {
-    console.log({
-      isWindowVisible,
-    });
     if (!isWindowVisible) return;
     Object.keys(lists).forEach((url) =>
       fetchList(url).catch((error) =>
