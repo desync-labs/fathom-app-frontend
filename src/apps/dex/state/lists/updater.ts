@@ -25,14 +25,14 @@ export default function Updater(): null {
   const lists = useAllLists();
   const activeListUrls = useActiveListUrls();
 
-  console.log({ lists });
-  return null;
-
   // initiate loading
   useAllInactiveTokens();
 
   const fetchList = useFetchListCallback();
   const fetchAllListsCallback = useCallback(() => {
+    console.log({
+      isWindowVisible,
+    });
     if (!isWindowVisible) return;
     Object.keys(lists).forEach((url) =>
       fetchList(url).catch((error) =>

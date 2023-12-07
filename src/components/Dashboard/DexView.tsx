@@ -24,7 +24,9 @@ const DexView: FC<DexViewProps> = ({ openConnectorMenu }) => {
     () =>
       location.pathname.includes("/swap/pool") ||
       location.pathname.includes("/swap/create") ||
-      location.pathname.includes("/swap/add"),
+      location.pathname.includes("/swap/add") ||
+      location.pathname.includes("/swap/find") ||
+      location.pathname.includes("/swap/remove"),
     [location.pathname]
   );
 
