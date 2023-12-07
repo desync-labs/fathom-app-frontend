@@ -1,5 +1,6 @@
 import { ChainId, JSBI, Percent, Token, WETH } from "into-the-fathom-swap-sdk";
 import { AbstractConnector } from "@web3-react/abstract-connector";
+import { APOTHEM_ADDRESSES, XDC_ADDRESSES } from "fathom-sdk";
 
 // a list of tokens by chain
 type RouterAddressesList = {
@@ -28,7 +29,7 @@ export const TIMELOCK_ADDRESS = "0x0000000000000000000000000000000000000000";
  */
 export const US_PLUS_AXDC = new Token(
   ChainId.AXDC,
-  "0x82b4334F5CD8385f55969BAE0A863a0C6eA9F63f",
+  APOTHEM_ADDRESSES.xUSDT,
   6,
   "xUSDT",
   "xUSDT"
@@ -36,21 +37,21 @@ export const US_PLUS_AXDC = new Token(
 
 export const FXD_AXDC = new Token(
   ChainId.AXDC,
-  "0xa585BF9418C6Aca0a46d308Cea3b2EC85046C88F",
+  APOTHEM_ADDRESSES.FXD,
   18,
   "FXD",
   "Fathom USD"
 );
 export const FTHM_AXDC = new Token(
   ChainId.AXDC,
-  "0x764687eA66dCaf68Fb5246C29739221cfef3Bb46",
+  APOTHEM_ADDRESSES.FTHM_TOKEN,
   18,
   "FTHM",
   "Fathom"
 );
 export const WXDC_AXDC = new Token(
   ChainId.AXDC,
-  "0xE99500AB4A413164DA49Af83B9824749059b46ce",
+  APOTHEM_ADDRESSES.WXDC,
   18,
   "WXDC",
   "Wrapped XDC"
@@ -58,21 +59,21 @@ export const WXDC_AXDC = new Token(
 
 export const US_PLUS_XDC = new Token(
   ChainId.XDC,
-  "0xD4B5f10D61916Bd6E0860144a91Ac658dE8a1437",
+  XDC_ADDRESSES.xUSDT,
   6,
   "xUSDT",
   "xUSDT"
 );
 export const FXD_XDC = new Token(
   ChainId.XDC,
-  "0x45B3adfBEc2ce6D5D407420B4eAEE9e80Ab447e2",
+  XDC_ADDRESSES.FXD,
   18,
   "FXD",
   "Fathom USD"
 );
 export const WXDC_XDC = new Token(
   ChainId.XDC,
-  "0x951857744785e80e2de051c32ee7b25f9c458c42",
+  XDC_ADDRESSES.WXDC,
   18,
   "WXDC",
   "Wrapped XDC"
@@ -81,7 +82,7 @@ export const WXDC_XDC = new Token(
 /**
  * XDC Mainnet Tokens
  */
-const FTHM_ADDRESS_XDC = "0x3279dBEfABF3C6ac29d7ff24A6c46645f3F4403c";
+const FTHM_ADDRESS_XDC = XDC_ADDRESSES.FTHM_TOKEN;
 
 export const FTHM_XDC = new Token(
   ChainId.XDC,

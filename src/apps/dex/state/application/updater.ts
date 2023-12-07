@@ -65,8 +65,10 @@ export default function Updater(): null {
       !debouncedState.chainId ||
       !debouncedState.blockNumber ||
       !windowVisible
-    )
+    ) {
       return;
+    }
+
     dispatch(
       updateBlockNumber({
         chainId: debouncedState.chainId,
