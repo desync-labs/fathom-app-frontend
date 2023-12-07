@@ -169,7 +169,7 @@ export default function Pool() {
                 <ResponsiveButtonSecondary
                   as={Link}
                   padding="6px 8px"
-                  to={"/create/XDC"}
+                  to={"/swap/create/XDC"}
                 >
                   Create a pair
                 </ResponsiveButtonSecondary>
@@ -178,7 +178,7 @@ export default function Pool() {
                   as={Link}
                   padding="6px 8px"
                   borderRadius="12px"
-                  to={"/add/XDC"}
+                  to={"/swap/add/XDC"}
                 >
                   <Text fontWeight={500} fontSize={16}>
                     Add Liquidity
@@ -226,7 +226,7 @@ export default function Pool() {
 
             <AutoColumn justify={"center"} gap="md">
               {"Don't see a pool you joined?"}{" "}
-              <StyledInternalLink id="import-pool-link" to={"/find"}>
+              <StyledInternalLink id="import-pool-link" to={"/swap/find"}>
                 {"Import it."}
               </StyledInternalLink>
             </AutoColumn>

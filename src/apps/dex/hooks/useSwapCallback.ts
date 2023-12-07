@@ -1,5 +1,5 @@
-import { BigNumber } from "@into-the-fathom/bignumber";
-import { Contract } from "@into-the-fathom/contracts";
+import { BigNumber } from "@ethersproject/bignumber";
+import { Contract } from "@ethersproject/contracts";
 import {
   JSBI,
   Percent,

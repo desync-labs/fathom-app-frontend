@@ -61,7 +61,6 @@ export default function FathomBalanceContent({
     account ?? undefined,
     fthm
   );
-  // const uniToClaim: TokenAmount | undefined = useTotalUniEarned()
 
   const totalSupply: TokenAmount | undefined = useTotalSupply(fthm);
   const fthmPrice = usePrice(fthm);
@@ -81,9 +80,9 @@ export default function FathomBalanceContent({
         <CardNoise />
         <CardSection gap="md">
           <RowBetween>
-            <TYPE.black color="black">Your FTHM Breakdown</TYPE.black>
+            <TYPE.white>Your FTHM Breakdown</TYPE.white>
             <StyledClose
-              stroke="black"
+              stroke="white"
               onClick={() => setShowUniBalanceModal(false)}
             />
           </RowBetween>
@@ -94,16 +93,16 @@ export default function FathomBalanceContent({
             <CardSection gap="sm">
               <AutoColumn gap="md" justify="center">
                 <FthmTokenAnimated width="48px" src={tokenLogo} />{" "}
-                <TYPE.black fontSize={48} fontWeight={600} color="black">
+                <TYPE.white fontSize={48} fontWeight={600}>
                   {total?.toFixed(2, { groupSeparator: "," })}
-                </TYPE.black>
+                </TYPE.white>
               </AutoColumn>
               <AutoColumn gap="md">
                 <RowBetween>
-                  <TYPE.black color="black">Balance:</TYPE.black>
-                  <TYPE.black color="black">
+                  <TYPE.white>Balance:</TYPE.white>
+                  <TYPE.white>
                     {fthmBalance?.toFixed(2, { groupSeparator: "," })}
-                  </TYPE.black>
+                  </TYPE.white>
                 </RowBetween>
               </AutoColumn>
             </CardSection>
@@ -113,24 +112,24 @@ export default function FathomBalanceContent({
         <CardSection gap="sm">
           <AutoColumn gap="md">
             <RowBetween>
-              <TYPE.black color="black">FTHM price:</TYPE.black>
-              <TYPE.black color="black">
+              <TYPE.white>FTHM price:</TYPE.white>
+              <TYPE.white>
                 <>
                   {fthmPrice ?? "$"} {fthmPrice?.toFixed(2) ?? "-"}
                 </>
-              </TYPE.black>
+              </TYPE.white>
             </RowBetween>
             <RowBetween>
-              <TYPE.black color="black">FTHM in circulation:</TYPE.black>
-              <TYPE.black color="black">
+              <TYPE.white>FTHM in circulation:</TYPE.white>
+              <TYPE.white>
                 {circulation?.toFixed(0, { groupSeparator: "," })}
-              </TYPE.black>
+              </TYPE.white>
             </RowBetween>
             <RowBetween>
-              <TYPE.black color="black">Total Supply</TYPE.black>
-              <TYPE.black color="black">
+              <TYPE.white>Total Supply</TYPE.white>
+              <TYPE.white>
                 {totalSupply?.toFixed(0, { groupSeparator: "," })}
-              </TYPE.black>
+              </TYPE.white>
             </RowBetween>
             {fthm && fthm.chainId === ChainId.XDC ? (
               <ExternalLink

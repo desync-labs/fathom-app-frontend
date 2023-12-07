@@ -18,7 +18,7 @@ const MEDIA_WIDTHS = {
   upToExtraLarge: 1500,
 };
 
-const mediaWidthTemplates: {
+export const mediaWidthTemplates: {
   [width in keyof typeof MEDIA_WIDTHS]: typeof css;
 } = Object.keys(MEDIA_WIDTHS).reduce((accumulator, size) => {
   (accumulator as any)[size] = (a: any, b: any, c: any) => css`

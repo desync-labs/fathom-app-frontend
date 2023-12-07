@@ -6,6 +6,8 @@ import { Web3ReactProvider } from "@web3-react/core";
 import { AlertAndTransactionProvider } from "context/alertAndTransaction";
 import { ServicesProvider } from "./context/services";
 import { Web3Provider } from "@ethersproject/providers";
+import { Provider } from "react-redux";
+import store from "apps/dex/state";
 
 dotenv.config();
 
@@ -19,7 +21,9 @@ ReactDOM.render(
     <AlertAndTransactionProvider>
       <ServicesProvider>
         <ConnectorProvider>
-          <App />
+          <Provider store={store}>
+            <App />
+          </Provider>
         </ConnectorProvider>
       </ServicesProvider>
     </AlertAndTransactionProvider>

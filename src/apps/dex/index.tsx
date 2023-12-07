@@ -1,14 +1,11 @@
-import { createWeb3ReactRoot } from "@web3-react/core";
+import { FC, memo } from "react";
 import "inter-ui";
 
 import { isMobile } from "react-device-detect";
 import ReactGA from "react-ga";
-import { Provider } from "react-redux";
 import Blocklist from "apps/dex/components/Blocklist";
-import { NetworkContextName } from "apps/dex/constants";
 import "apps/dex/i18n";
 import App from "apps/dex/pages/App";
-import store from "apps/dex/state";
 import ApplicationUpdater from "apps/dex/state/application/updater";
 import ListsUpdater from "apps/dex/state/lists/updater";
 import MulticallUpdater from "apps/dex/state/multicall/updater";
@@ -17,10 +14,8 @@ import ThemeProvider, {
   FixedGlobalStyle,
   ThemedGlobalStyle,
 } from "apps/dex/theme";
-import { getLibrary } from "../../index";
-import { memo } from "react";
-
-const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName);
+import { DexViewProps } from "components/Dashboard/DexView";
+import { DexSharedProvider } from "context/dexShared";
 
 if (window.ethereum) {
   window.ethereum.autoRefreshOnNetworkChange = false;
@@ -58,23 +53,21 @@ function Updaters() {
   );
 }
 
-const DexIndexComponent = () => {
+const DexIndexComponent: FC<DexViewProps> = ({ openConnectorMenu }) => {
   return (
     <>
       <FixedGlobalStyle />
-      <Web3ProviderNetwork getLibrary={getLibrary}>
-        <Blocklist>
-          <Provider store={store}>
-            <Updaters />
-            <ThemeProvider>
-              <>
-                <ThemedGlobalStyle />
-                <App />
-              </>
-            </ThemeProvider>
-          </Provider>
-        </Blocklist>
-      </Web3ProviderNetwork>
+      <Blocklist>
+        <Updaters />
+        <ThemeProvider>
+          <>
+            <ThemedGlobalStyle />
+            <DexSharedProvider openConnectorMenu={openConnectorMenu}>
+              <App />
+            </DexSharedProvider>
+          </>
+        </ThemeProvider>
+      </Blocklist>
     </>
   );
 };

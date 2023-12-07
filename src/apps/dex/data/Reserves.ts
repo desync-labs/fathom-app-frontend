@@ -1,13 +1,13 @@
 import { TokenAmount, Pair, Currency } from "into-the-fathom-swap-sdk";
 import { useMemo } from "react";
 import { abi as IUniswapV2PairABI } from "into-the-fathom-swap-smart-contracts/artifacts/contracts/core/interfaces/IUniswapV2Pair.sol/IUniswapV2Pair.json";
-import { Interface } from "@into-the-fathom/abi";
+import { utils } from "ethers";
 import { useActiveWeb3React } from "apps/dex/hooks";
 
 import { useMultipleContractSingleData } from "apps/dex/state/multicall/hooks";
 import { wrappedCurrency } from "apps/dex/utils/wrappedCurrency";
 
-const PAIR_INTERFACE = new Interface(IUniswapV2PairABI);
+const PAIR_INTERFACE = new utils.Interface(IUniswapV2PairABI);
 
 export enum PairState {
   LOADING,

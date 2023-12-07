@@ -24,7 +24,6 @@ import CurrencyInputPanel from "apps/dex/components/CurrencyInputPanel";
 import { SwapPoolTabs } from "apps/dex/components/NavigationTabs";
 import { AutoRow, RowBetween } from "apps/dex/components/Row";
 import AdvancedSwapDetailsDropdown from "apps/dex/components/swap/AdvancedSwapDetailsDropdown";
-import { DefaultVersionLink } from "apps/dex/components/swap/BetterTradeLink";
 import confirmPriceImpactWithoutFee from "apps/dex/components/swap/confirmPriceImpactWithoutFee";
 import {
   ArrowDownWrapped,
@@ -47,15 +46,9 @@ import {
 } from "apps/dex/hooks/useApproveCallback";
 import useENSAddress from "apps/dex/hooks/useENSAddress";
 import { useSwapCallback } from "apps/dex/hooks/useSwapCallback";
-import useToggledVersion, {
-  DEFAULT_VERSION,
-  Version,
-} from "apps/dex/hooks/useToggledVersion";
+import useToggledVersion, { Version } from "apps/dex/hooks/useToggledVersion";
 import useWrapCallback, { WrapType } from "apps/dex/hooks/useWrapCallback";
-import {
-  useToggleSettingsMenu,
-  useWalletModalToggle,
-} from "apps/dex/state/application/hooks";
+import { useToggleSettingsMenu } from "apps/dex/state/application/hooks";
 import { Field } from "apps/dex/state/swap/actions";
 import {
   useDefaultsFromURLSearch,
@@ -83,6 +76,7 @@ import UnsupportedCurrencyFooter from "apps/dex/components/swap/UnsupportedCurre
 import walletSrc from "apps/dex/assets/svg/wallet.svg";
 import walletHover from "apps/dex/assets/svg/wallet-hover.svg";
 import { useNavigate } from "react-router-dom";
+import useDexShared from "context/dexShared";
 
 export const WalletIcon = styled.div`
   background: url("${walletSrc}") no-repeat center;
@@ -133,8 +127,7 @@ export default function Swap() {
   const { account } = useActiveWeb3React();
   const theme = useContext(ThemeContext);
 
-  // toggle wallet when disconnected
-  const toggleWalletModal = useWalletModalToggle();
+  const { openConnectorMenu } = useDexShared();
 
   // for expert mode
   const toggleSettings = useToggleSettingsMenu();
@@ -169,7 +162,6 @@ export default function Swap() {
     [Version.v2]: v2Trade,
   };
   const trade = showWrap ? undefined : tradesByVersion[toggledVersion];
-  const defaultTrade = showWrap ? undefined : tradesByVersion[DEFAULT_VERSION];
 
   const parsedAmounts = showWrap
     ? {
@@ -568,7 +560,7 @@ export default function Swap() {
                 <TYPE.main mb="4px">Unsupported Asset</TYPE.main>
               </ButtonPrimary>
             ) : !account ? (
-              <ConnectWalletButton onClick={toggleWalletModal}>
+              <ConnectWalletButton onClick={openConnectorMenu}>
                 <WalletIcon></WalletIcon>
                 Connect Wallet
               </ConnectWalletButton>
@@ -684,9 +676,6 @@ export default function Swap() {
             )}
             {isExpertMode && swapErrorMessage ? (
               <SwapCallbackError error={swapErrorMessage} />
-            ) : null}
-            {toggledVersion !== DEFAULT_VERSION && defaultTrade ? (
-              <DefaultVersionLink />
             ) : null}
           </BottomGrouping>
         </Wrapper>
