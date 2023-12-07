@@ -154,11 +154,6 @@ export default function Updater(): null {
   );
 
   useEffect(() => {
-    console.log({
-      latestBlockNumber,
-      chainId,
-      multicallContract,
-    });
     if (!latestBlockNumber || !chainId || !multicallContract) return;
 
     const outdatedCallKeys: string[] = JSON.parse(serializedOutdatedCallKeys);
