@@ -1,5 +1,5 @@
-import { BigNumber } from "@into-the-fathom/bignumber";
-import { TransactionResponse } from "@into-the-fathom/providers";
+import { BigNumber } from "@ethersproject/bignumber";
+import { TransactionResponse } from "@ethersproject/providers";
 import {
   ChainId,
   Currency,
@@ -34,7 +34,6 @@ import {
   useApproveCallback,
 } from "apps/dex/hooks/useApproveCallback";
 import useTransactionDeadline from "apps/dex/hooks/useTransactionDeadline";
-import { useWalletModalToggle } from "apps/dex/state/application/hooks";
 import { Field } from "apps/dex/state/mint/actions";
 import {
   useDerivedMintInfo,
@@ -64,6 +63,7 @@ import { useIsTransactionUnsupported } from "apps/dex/hooks/Trades";
 import UnsupportedCurrencyFooter from "apps/dex/components/swap/UnsupportedCurrencyFooter";
 import { ConnectWalletButton, WalletIcon } from "apps/dex/pages/Swap";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import useDexShared from "../../../../context/dexShared";
 
 const PlusWrapper = styled.div`
   display: flex;
@@ -98,7 +98,7 @@ export default function AddLiquidity() {
         (currencyB && currencyEquals(currencyB, (WETH as any)[chainId])))
   );
 
-  const toggleWalletModal = useWalletModalToggle(); // toggle wallet when disconnected
+  const { openConnectorMenu } = useDexShared(); // toggle wallet when disconnected
 
   const expertMode = useIsExpertMode();
 
@@ -402,7 +402,7 @@ export default function AddLiquidity() {
     setTxHash("");
   }, [onFieldAInput, txHash]);
 
-  const isCreate = location.pathname.includes("/create");
+  const isCreate = location.pathname.includes("/swap/create");
 
   const addIsUnsupported = useIsTransactionUnsupported(
     currencies?.CURRENCY_A,
@@ -524,7 +524,7 @@ export default function AddLiquidity() {
                 <TYPE.main mb="4px">Unsupported Asset</TYPE.main>
               </ButtonPrimary>
             ) : !account ? (
-              <ConnectWalletButton onClick={toggleWalletModal}>
+              <ConnectWalletButton onClick={openConnectorMenu}>
                 <WalletIcon></WalletIcon>
                 Connect Wallet
               </ConnectWalletButton>

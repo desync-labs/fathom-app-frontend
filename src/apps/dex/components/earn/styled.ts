@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { AutoColumn } from "apps/dex/components/Column";
 
 import uImage from "apps/dex/assets/images/big_unicorn.png";
-import xlUnicorn from "apps/dex/assets/images/xl_uni.png";
+// import xlUnicorn from "apps/dex/assets/images/xl_uni.png";
 import noise from "apps/dex/assets/images/noise.png";
 
 export const TextBox = styled.div`
@@ -34,20 +34,6 @@ export const CardBGImage = styled.span<{ desaturate?: boolean }>`
   top: -100px;
   left: -100px;
   transform: rotate(-15deg);
-  user-select: none;
-
-  ${({ desaturate }) => desaturate && `filter: saturate(0)`}
-`;
-
-export const CardBGImageSmaller = styled.span<{ desaturate?: boolean }>`
-  background: url(${xlUnicorn});
-  width: 1200px;
-  height: 1200px;
-  position: absolute;
-  border-radius: 12px;
-  top: -300px;
-  left: -300px;
-  opacity: 0.4;
   user-select: none;
 
   ${({ desaturate }) => desaturate && `filter: saturate(0)`}

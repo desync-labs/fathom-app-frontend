@@ -59,7 +59,7 @@ export const ConnectorContext = createContext<UseConnectorReturnType>(
 );
 
 export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
-  const { connector, activate, account, active, deactivate, chainId, error } =
+  const { connector, activate, account, active, deactivate, error, chainId } =
     useWeb3React();
 
   const { stableSwapService, positionService, provider } = useServices();

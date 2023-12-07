@@ -1,4 +1,4 @@
-import { Contract } from "@into-the-fathom/contracts";
+import { Contract } from "@ethersproject/contracts";
 import { useEffect, useMemo, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useActiveWeb3React } from "apps/dex/hooks";

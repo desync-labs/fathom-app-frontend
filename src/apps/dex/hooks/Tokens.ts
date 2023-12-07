@@ -3,7 +3,7 @@ import {
   useDefaultTokenList,
   useSupportedTokenList,
 } from "apps/dex/state/lists/hooks";
-import { parseBytes32String } from "@into-the-fathom/strings";
+import { parseBytes32String } from "@ethersproject/strings";
 import { Currency, currencyEquals, Token, XDC } from "into-the-fathom-swap-sdk";
 import { useMemo } from "react";
 import {
@@ -24,6 +24,7 @@ import {
 } from "apps/dex/hooks/useContract";
 import { filterTokens } from "apps/dex/components/SearchModal/filtering";
 import { utils } from "ethers";
+import { useServices } from "context/services";
 
 // reduce token map into standard address <-> Token mapping, optionally include user added tokens
 function useTokensFromMap(
@@ -32,15 +33,15 @@ function useTokensFromMap(
 ): { [address: string]: Token } {
   const { chainId } = useActiveWeb3React();
   const userAddedTokens = useUserAddedTokens();
+  const { chainId: servicesChainId } = useServices();
 
   return useMemo(() => {
-    if (!chainId) return {};
-
+    const checkedChainId = chainId || servicesChainId;
     // reduce to just tokens
-    const mapWithoutUrls = Object.keys(tokenMap[chainId]).reduce<{
+    const mapWithoutUrls = Object.keys(tokenMap[checkedChainId]).reduce<{
       [address: string]: Token;
     }>((newMap, address) => {
-      newMap[address] = tokenMap[chainId][address].token;
+      newMap[address] = tokenMap[checkedChainId][address].token;
       return newMap;
     }, {});
 
@@ -61,7 +62,7 @@ function useTokensFromMap(
     }
 
     return mapWithoutUrls;
-  }, [chainId, userAddedTokens, tokenMap, includeUserAdded]);
+  }, [chainId, servicesChainId, userAddedTokens, tokenMap, includeUserAdded]);
 }
 
 export function useDefaultTokens(): { [address: string]: Token } {
@@ -97,8 +98,8 @@ export function useAllInactiveTokens(): { [address: string]: Token } {
 }
 
 export function useSupportedTokens(): { [address: string]: Token } {
-  const unsupportedTokensMap = useSupportedTokenList();
-  return useTokensFromMap(unsupportedTokensMap, false);
+  const supportedTokensMap = useSupportedTokenList();
+  return useTokensFromMap(supportedTokensMap, false);
 }
 
 export function useIsTokenActive(token: Token | undefined | null): boolean {

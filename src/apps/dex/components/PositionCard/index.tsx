@@ -379,7 +379,7 @@ export default function FullPositionCard({
                     padding="8px"
                     borderRadius="8px"
                     as={Link}
-                    to={`/add/${currencyId(currency0)}/${currencyId(
+                    to={`/swap/add/${currencyId(currency0)}/${currencyId(
                       currency1
                     )}`}
                     width="48%"

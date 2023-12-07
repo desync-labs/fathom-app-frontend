@@ -228,8 +228,9 @@ export function useIsTransactionUnsupported(
   const tokenIn = wrappedCurrency(currencyIn, chainId);
   const tokenOut = wrappedCurrency(currencyOut, chainId);
 
-  // if unsupported list loaded & either token on list, mark as unsupported
-  if (supportedTokens) {
+  if (!Object.keys(supportedTokens).length) {
+    return false;
+  } else if (supportedTokens) {
     if (tokenIn && Object.keys(supportedTokens).includes(tokenIn.address)) {
       return false;
     }

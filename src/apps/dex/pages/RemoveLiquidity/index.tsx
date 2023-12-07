@@ -1,6 +1,6 @@
-import { splitSignature } from "@into-the-fathom/bytes";
-import { Contract } from "@into-the-fathom/contracts";
-import { TransactionResponse } from "@into-the-fathom/providers";
+import { splitSignature } from "@ethersproject/bytes";
+import { Contract } from "@ethersproject/contracts";
+import { TransactionResponse } from "@ethersproject/providers";
 import {
   ChainId,
   Currency,
@@ -63,11 +63,11 @@ import {
 import { useBurnActionHandlers } from "apps/dex/state/burn/hooks";
 import { useDerivedBurnInfo, useBurnState } from "apps/dex/state/burn/hooks";
 import { Field } from "apps/dex/state/burn/actions";
-import { useWalletModalToggle } from "apps/dex/state/application/hooks";
 import { useUserSlippageTolerance } from "apps/dex/state/user/hooks";
 import { BigNumber } from "ethers";
 import { ConnectWalletButton, WalletIcon } from "apps/dex/pages/Swap";
 import { useNavigate, useParams } from "react-router-dom";
+import useDexShared from "context/dexShared";
 
 const PlusWrapper = styled.div`
   display: flex;
@@ -106,7 +106,7 @@ export default function RemoveLiquidity() {
   const theme = useContext(ThemeContext);
 
   // toggle wallet when disconnected
-  const toggleWalletModal = useWalletModalToggle();
+  const { openConnectorMenu } = useDexShared();
 
   // burn state
   const { independentField, typedValue } = useBurnState();
@@ -740,7 +740,7 @@ export default function RemoveLiquidity() {
                       <RowBetween style={{ justifyContent: "flex-end" }}>
                         {oneCurrencyIsXDC ? (
                           <StyledInternalLink
-                            to={`/remove/${
+                            to={`/swap/remove/${
                               currencyA === XDC
                                 ? WETH[chainId].address
                                 : currencyIdA
@@ -754,7 +754,7 @@ export default function RemoveLiquidity() {
                           </StyledInternalLink>
                         ) : oneCurrencyIsWETH ? (
                           <StyledInternalLink
-                            to={`/remove/${
+                            to={`/swap/remove/${
                               currencyA &&
                               currencyEquals(currencyA, WETH[chainId])
                                 ? "XDC"
@@ -850,7 +850,7 @@ export default function RemoveLiquidity() {
             )}
             <div style={{ position: "relative" }}>
               {!account ? (
-                <ConnectWalletButton onClick={toggleWalletModal}>
+                <ConnectWalletButton onClick={openConnectorMenu}>
                   <WalletIcon></WalletIcon>
                   Connect Wallet
                 </ConnectWalletButton>

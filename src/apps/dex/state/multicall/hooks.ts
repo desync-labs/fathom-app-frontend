@@ -1,6 +1,6 @@
-import { Interface, FunctionFragment } from "@into-the-fathom/abi";
-import { BigNumber } from "@into-the-fathom/bignumber";
-import { Contract } from "@into-the-fathom/contracts";
+import { utils } from "ethers";
+import { BigNumber } from "@ethersproject/bignumber";
+import { Contract } from "@ethersproject/contracts";
 import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useActiveWeb3React } from "apps/dex/hooks";
@@ -150,8 +150,8 @@ const LOADING_CALL_STATE: CallState = {
 
 function toCallState(
   callResult: CallResult | undefined,
-  contractInterface: Interface | undefined,
-  fragment: FunctionFragment | undefined,
+  contractInterface: utils.Interface | undefined,
+  fragment: utils.FunctionFragment | undefined,
   latestBlockNumber: number | undefined
 ): CallState {
   if (!callResult) return INVALID_CALL_STATE;
@@ -223,7 +223,7 @@ export function useSingleContractMultipleData(
 
 export function useMultipleContractSingleData(
   addresses: (string | undefined)[],
-  contractInterface: Interface,
+  contractInterface: utils.Interface,
   methodName: string,
   callInputs?: OptionalMethodInputs,
   options?: ListenerOptions

@@ -1,8 +1,6 @@
 import { ChainId, JSBI, Percent, Token, WETH } from "into-the-fathom-swap-sdk";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 
-import { injected } from "apps/dex/connectors";
-
 // a list of tokens by chain
 type RouterAddressesList = {
   readonly [chainId in ChainId]: string;
@@ -20,10 +18,6 @@ export const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
 type ChainTokenList = {
   readonly [chainId in ChainId]: Token[];
 };
-
-// Block time here is slightly higher (~1s) than average in order to avoid ongoing proposals past the displayed time
-export const AVERAGE_BLOCK_TIME_IN_SECS = 13;
-export const PROPOSAL_LENGTH_IN_BLOCKS = 40_320;
 
 export const GOVERNANCE_ADDRESS = "0x0000000000000000000000000000000000000000";
 
@@ -172,19 +166,6 @@ export interface WalletInfo {
   mobile?: true;
   mobileOnly?: true;
 }
-
-export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
-  METAMASK: {
-    connector: injected,
-    name: "MetaMask",
-    iconName: "metamask.png",
-    description: "Easy-to-use browser extension.",
-    href: null,
-    color: "#E8831D",
-  },
-};
-
-export const NetworkContextName = "NETWORK";
 
 // default allowed slippage, in bips
 export const INITIAL_ALLOWED_SLIPPAGE = 50;

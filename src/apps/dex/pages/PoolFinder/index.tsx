@@ -179,7 +179,7 @@ export default function PoolFinder() {
             <Text textAlign="center" fontWeight={500}>
               Pool Found!
             </Text>
-            <StyledInternalLink to={`/pool`}>
+            <StyledInternalLink to={`/swap/pool`}>
               <Text textAlign="center">Manage this pool.</Text>
             </StyledInternalLink>
           </ColumnCenter>
@@ -196,7 +196,7 @@ export default function PoolFinder() {
                     You don’t have liquidity in this pool yet.
                   </Text>
                   <StyledInternalLink
-                    to={`/add/${currencyId(currency0)}/${currencyId(
+                    to={`/swap/add/${currencyId(currency0)}/${currencyId(
                       currency1
                     )}`}
                   >
@@ -210,7 +210,9 @@ export default function PoolFinder() {
               <AutoColumn gap="sm" justify="center">
                 <Text textAlign="center">No pool found.</Text>
                 <StyledInternalLink
-                  to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`}
+                  to={`/swap/add/${currencyId(currency0)}/${currencyId(
+                    currency1
+                  )}`}
                 >
                   Create pool.
                 </StyledInternalLink>

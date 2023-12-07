@@ -1,5 +1,5 @@
-import { Contract } from "@into-the-fathom/contracts";
-import { Provider } from "@into-the-fathom/abstract-provider";
+import { Contract } from "@ethersproject/contracts";
+import { Provider } from "@ethersproject/abstract-provider";
 import { utils } from "ethers";
 
 const REGISTRAR_ABI = [
