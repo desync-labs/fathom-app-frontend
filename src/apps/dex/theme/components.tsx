@@ -206,7 +206,7 @@ const rotateImg = keyframes`
 
 export const FthmTokenAnimated = styled.img`
   animation: ${rotateImg} 5s cubic-bezier(0.83, 0, 0.17, 1) infinite;
-  padding: 2rem 0 0 0;
+  padding: 0.5rem 0 1rem 0;
   filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.15));
 `;
 

@@ -39,6 +39,8 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
 
   const { showText } = useShowText(open);
 
+  const chartsLink = useMemo(() => process.env.REACT_APP_CHARTS_APP_URL, []);
+
   const appMenuItems = [
     {
       name: "FXD",
@@ -66,6 +68,13 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
       link: "/swap",
       Icon: <DexIcon isDexActive={isDexActive} />,
       isActive: isDexActive,
+      showText: showText,
+    },
+    {
+      name: "Charts",
+      link: chartsLink,
+      Icon: <DexIcon isDexActive={false} />,
+      target: "_blank",
       showText: showText,
     },
   ];

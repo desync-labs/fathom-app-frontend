@@ -55,6 +55,7 @@ const useUnstake = (
 
   useEffect(() => {
     unStakeAmount && isBalanceError(unStakeAmount, totalBalance);
+    unStakeAmount && isRequiredError(unStakeAmount);
   }, [unStakeAmount, totalBalance, isBalanceError]);
 
   const handleUnStakeAmountChange = useCallback(
