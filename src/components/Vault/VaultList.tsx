@@ -1,4 +1,4 @@
-import React, { Dispatch, FC, memo, useMemo } from "react";
+import React, { memo, useMemo } from "react";
 import {
   Box,
   CircularProgress,
@@ -9,20 +9,18 @@ import {
   TableHead,
   Pagination,
 } from "@mui/material";
-import {
-  AppTableCellWithPopover,
-  AppTableHeaderRow,
-} from "components/AppComponents/AppTable/AppTable";
-import { NoResults } from "components/AppComponents/AppBox/AppBox";
 import { styled } from "@mui/material/styles";
+
 import { COUNT_PER_PAGE } from "utils/Constants";
 import useVaultList from "hooks/useVaultList";
+
+import { AppTableHeaderRow } from "components/AppComponents/AppTable/AppTable";
+import { NoResults } from "components/AppComponents/AppBox/AppBox";
 import VaultListItem from "components/Vault/VaultListItem";
 import VaultFilters from "components/Vault/VaultFilters";
 import VaultListItemMobile from "components/Vault/VaultListItemMobile";
 import VaultFiltersMobile from "components/Vault/VaultFiltersMobile";
 import AppPopover from "../AppComponents/AppPopover/AppPopover";
-import { IVault } from "fathom-sdk";
 
 const CircleWrapper = styled(Box)`
   width: 100%;
@@ -42,22 +40,35 @@ const VaultListTableCell = styled(TableCell)`
   padding: 0 !important;
 `;
 
-type VaultListProps = {
-  vaultList: IVault[];
-  vaultsLoading: boolean;
-  vaultItemsCount: number;
-  vaultCurrentPage: number;
-  handlePageChange: (event: React.ChangeEvent<unknown>, page: number) => void;
-};
+const VaultListTableCellPopover = styled(Box)`
+  display: flex;
+  justify-content: left;
+  gap: 7px;
+  line-height: 1.2rem;
+  padding-top: 4px !important;
+`;
 
-const VaultList: FC<VaultListProps> = ({
-  vaultList,
-  vaultsLoading,
-  vaultItemsCount,
-  vaultCurrentPage,
-  handlePageChange,
-}) => {
-  const { isMobile } = useVaultList();
+const VaultList = () => {
+  const {
+    isMobile,
+    isMobileFiltersOpen,
+    vaultSortedList,
+    vaultsLoading,
+    vaultPositionsLoading,
+    vaultPositionsList,
+    vaultCurrentPage,
+    vaultItemsCount,
+    isShutdown,
+    search,
+    sortBy,
+    setIsMobileFiltersOpen,
+    setIsShutdown,
+    setSearch,
+    setSortBy,
+    handlePageChange,
+    filterCurrentPosition,
+    mainBlockClickHandler,
+  } = useVaultList();
 
   return (
     <>
@@ -65,22 +76,55 @@ const VaultList: FC<VaultListProps> = ({
         () => (
           <>
             {isMobile ? (
-              <>
-                <VaultFiltersMobile />
-                <VaultListItemMobile vaultItemData={vaultList[0]} />
-                <VaultListItemMobile vaultItemData={vaultList[0]} hasDeposit />
-              </>
-            ) : (
-              <TableContainer>
-                <VaultFilters />
-                {!vaultList.length ? (
+              <Box onClick={mainBlockClickHandler}>
+                <VaultFiltersMobile
+                  isShutdown={isShutdown}
+                  isMobileFiltersOpen={isMobileFiltersOpen}
+                  search={search}
+                  sortBy={sortBy}
+                  setIsShutdown={setIsShutdown}
+                  setSearch={setSearch}
+                  setSortBy={setSortBy}
+                  setIsMobileFiltersOpen={setIsMobileFiltersOpen}
+                />
+                {vaultPositionsLoading || !vaultSortedList.length ? (
                   <NoResults variant="h6">
-                    {vaultsLoading ? (
+                    {vaultsLoading || vaultPositionsLoading ? (
                       <CircleWrapper>
                         <CircularProgress size={30} />
                       </CircleWrapper>
                     ) : (
-                      "You have not opened vaults"
+                      "There are no Vaults for this query"
+                    )}
+                  </NoResults>
+                ) : (
+                  vaultSortedList.map((vault) => (
+                    <VaultListItemMobile
+                      key={vault.id}
+                      vaultItemData={vault}
+                      vaultPosition={filterCurrentPosition(vault.id)}
+                    />
+                  ))
+                )}
+              </Box>
+            ) : (
+              <TableContainer>
+                <VaultFilters
+                  isShutdown={isShutdown}
+                  search={search}
+                  sortBy={sortBy}
+                  setIsShutdown={setIsShutdown}
+                  setSearch={setSearch}
+                  setSortBy={setSortBy}
+                />
+                {vaultPositionsLoading || !vaultSortedList.length ? (
+                  <NoResults variant="h6">
+                    {vaultsLoading || vaultPositionsLoading ? (
+                      <CircleWrapper>
+                        <CircularProgress size={30} />
+                      </CircleWrapper>
+                    ) : (
+                      "There are no Vaults for this query"
                     )}
                   </NoResults>
                 ) : (
@@ -88,52 +132,91 @@ const VaultList: FC<VaultListProps> = ({
                     <TableHead>
                       <AppTableHeaderRow
                         sx={{
-                          th: { textAlign: "left", paddingLeft: "10px" },
+                          th: {
+                            textAlign: "left",
+                            "&:first-of-type": { paddingLeft: "0" },
+                          },
                         }}
                       >
-                        <VaultListTableCell>Token</VaultListTableCell>
-                        <VaultListTableCell>
-                          <AppTableCellWithPopover>
-                            Fee
-                            <AppPopover id={"fee"} text={<>Fee Test Text</>} />
-                          </AppTableCellWithPopover>
+                        <VaultListTableCell
+                          sx={{ paddingLeft: "20px !important" }}
+                        >
+                          Token
                         </VaultListTableCell>
                         <VaultListTableCell>
-                          <AppTableCellWithPopover>
+                          <VaultListTableCellPopover>
+                            Fee
+                            <AppPopover
+                              id={"fee"}
+                              text={
+                                <>The amount of fee that this Vault takes</>
+                              }
+                            />
+                          </VaultListTableCellPopover>
+                        </VaultListTableCell>
+                        <VaultListTableCell>
+                          <VaultListTableCellPopover>
                             Earned
                             <AppPopover
                               id={"earned"}
-                              text={<>Earned Test Text</>}
+                              text={
+                                <>
+                                  How much have you earned on this Vault so far
+                                </>
+                              }
                             />
-                          </AppTableCellWithPopover>
+                          </VaultListTableCellPopover>
                         </VaultListTableCell>
                         <VaultListTableCell>
-                          <AppTableCellWithPopover>
+                          <VaultListTableCellPopover>
                             Apr
-                            <AppPopover id={"apr"} text={<>Apr Test Text</>} />
-                          </AppTableCellWithPopover>
+                            <AppPopover
+                              id={"apr"}
+                              text={
+                                <>
+                                  Annual Percentage Rate – refers to the total
+                                  cost of your borrowing for a year.
+                                  Importantly, it includes the standard fees and
+                                  interest you'll have to pay.
+                                </>
+                              }
+                            />
+                          </VaultListTableCellPopover>
                         </VaultListTableCell>
                         <VaultListTableCell>
-                          <AppTableCellWithPopover>
+                          <VaultListTableCellPopover>
                             Tvl
-                            <AppPopover id={"tvl"} text={<>Tvl Test Text</>} />
-                          </AppTableCellWithPopover>
+                            <AppPopover
+                              id={"tvl"}
+                              text={
+                                <>
+                                  Total value locked (TVL) is a metric that
+                                  refers to the sum of assets that are staked in
+                                  the Vault.
+                                </>
+                              }
+                            />
+                          </VaultListTableCellPopover>
                         </VaultListTableCell>
                         <VaultListTableCell>Available</VaultListTableCell>
-                        <VaultListTableCell>Deposited</VaultListTableCell>
+                        <VaultListTableCell>Staked</VaultListTableCell>
                         <TableCell></TableCell>
                       </AppTableHeaderRow>
                     </TableHead>
                     <TableBody>
-                      {vaultList.map((vault) => (
-                        <VaultListItem key={vault.id} vaultItemData={vault} />
+                      {vaultSortedList.map((vault) => (
+                        <VaultListItem
+                          key={vault.id}
+                          vaultItemData={vault}
+                          vaultPosition={filterCurrentPosition(vault.id)}
+                        />
                       ))}
                     </TableBody>
                   </Table>
                 )}
               </TableContainer>
             )}
-            {!vaultsLoading && vaultList.length > 0 && (
+            {!vaultsLoading && vaultSortedList.length > COUNT_PER_PAGE && (
               <PaginationWrapper>
                 <Pagination
                   count={Math.ceil(vaultItemsCount / COUNT_PER_PAGE)}
@@ -144,7 +227,17 @@ const VaultList: FC<VaultListProps> = ({
             )}
           </>
         ),
-        [vaultsLoading, vaultList, isMobile]
+        [
+          search,
+          sortBy,
+          isShutdown,
+          isMobile,
+          isMobileFiltersOpen,
+          vaultSortedList,
+          vaultsLoading,
+          vaultPositionsList,
+          vaultPositionsLoading,
+        ]
       )}
     </>
   );

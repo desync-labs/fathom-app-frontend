@@ -1,7 +1,11 @@
 import React, { FC } from "react";
-import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
 import { DialogContent, Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
+
+import { IVault, IVaultPosition } from "hooks/useVaultList";
+import useVaultManageDeposit from "hooks/useVaultManageDeposit";
+
+import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
 import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
 import { DividerDefault } from "components/Positions/TopUpPositionDialog";
 import ManageVaultForm from "components/Vault/VaultListItem/ManageVaultModal/ManageVaultForm";
@@ -18,16 +22,36 @@ const VaultManageGridDialogWrapper = styled(AppDialog)`
 `;
 
 export type VaultManageProps = {
-  onClose: () => void;
-  onFinish: () => void;
   isMobile: boolean;
+  vaultItemData: IVault;
+  vaultPosition: IVaultPosition;
+  onClose: () => void;
 };
 
 const VaultListItemManageModal: FC<VaultManageProps> = ({
-  onClose,
-  onFinish,
   isMobile,
+  vaultItemData,
+  vaultPosition,
+  onClose,
 }) => {
+  const {
+    walletBalance,
+    isWalletFetching,
+    control,
+    formToken,
+    formSharedToken,
+    approveBtn,
+    approvalPending,
+    formType,
+    openDepositLoading,
+    errors,
+    setFormType,
+    approve,
+    setMax,
+    handleSubmit,
+    onSubmit,
+  } = useVaultManageDeposit(vaultItemData, onClose);
+
   return (
     <VaultManageGridDialogWrapper
       onClose={onClose}
@@ -42,9 +66,35 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
 
       <DialogContent>
         <Grid container>
-          <ManageVaultInfo />
+          <ManageVaultInfo
+            formType={formType}
+            vaultItemData={vaultItemData}
+            vaultPosition={vaultPosition}
+            formToken={formToken}
+            formSharedToken={formSharedToken}
+          />
           <DividerDefault orientation="vertical" flexItem></DividerDefault>
-          <ManageVaultForm onClose={onClose} isMobile={isMobile} />
+          <ManageVaultForm
+            vaultItemData={vaultItemData}
+            vaultPosition={vaultPosition}
+            onClose={onClose}
+            isMobile={isMobile}
+            walletBalance={walletBalance}
+            isWalletFetching={isWalletFetching}
+            control={control}
+            formToken={formToken}
+            formSharedToken={formSharedToken}
+            approveBtn={approveBtn}
+            approvalPending={approvalPending}
+            formType={formType}
+            openDepositLoading={openDepositLoading}
+            errors={errors}
+            setFormType={setFormType}
+            approve={approve}
+            setMax={setMax}
+            handleSubmit={handleSubmit}
+            onSubmit={onSubmit}
+          />
         </Grid>
       </DialogContent>
     </VaultManageGridDialogWrapper>

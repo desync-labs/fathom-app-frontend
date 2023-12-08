@@ -1,18 +1,18 @@
-import useConnector from "context/connector";
-import { useServices } from "context/services";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { IVault } from "fathom-sdk";
 import { useForm } from "react-hook-form";
 import BigNumber from "bignumber.js";
 import debounce from "lodash.debounce";
 import useSyncContext from "context/sync";
+import useConnector from "context/connector";
+import { useServices } from "context/services";
+import { IVault } from "hooks/useVaultList";
 
 export const defaultValues = {
   deposit: "",
   sharedToken: "",
 };
 
-const useOpenVaultDeposit = (vault: IVault, onClose: () => void) => {
+const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
   const { account, library } = useConnector();
   const { poolService, vaultService } = useServices();
   const { setLastTransactionBlock } = useSyncContext();
@@ -29,18 +29,13 @@ const useOpenVaultDeposit = (vault: IVault, onClose: () => void) => {
     mode: "onChange",
   });
 
-  const { sharesSupply, shareToken, token, depositLimit } = vault;
+  const { token } = vault;
   const [walletBalance, setWalletBalance] = useState<string>("0");
+  const [isWalletFetching, setIsWalletFetching] = useState<boolean>(false);
   const [openDepositLoading, setOpenDepositLoading] = useState<boolean>(false);
 
   const [approveBtn, setApproveBtn] = useState<boolean>(false);
   const [approvalPending, setApprovalPending] = useState<boolean>(false);
-
-  console.log(
-    BigNumber(depositLimit)
-      .dividedBy(10 ** vault.shareToken.decimals)
-      .toNumber()
-  );
 
   const deposit = watch("deposit");
   const sharedToken = watch("sharedToken");
@@ -51,7 +46,7 @@ const useOpenVaultDeposit = (vault: IVault, onClose: () => void) => {
         const approved = await vaultService.approvalStatus(
           account,
           vault.token.id,
-          vault.id,
+          vault.shareToken.id,
           deposit
         );
         approved ? setApproveBtn(false) : setApproveBtn(true);
@@ -59,10 +54,27 @@ const useOpenVaultDeposit = (vault: IVault, onClose: () => void) => {
     [vaultService, vault, account, deposit]
   );
 
+  const updateSharedAmount = useMemo(
+    () =>
+      debounce(async (deposit: string) => {
+        const sharedAmount = await vaultService.previewDeposit(
+          deposit,
+          vault.id
+        );
+
+        const sharedConverted = BigNumber(sharedAmount)
+          .dividedBy(10 ** 18)
+          .toFixed();
+
+        setValue("sharedToken", sharedConverted);
+      }, 500),
+    [vaultService, vault, deposit]
+  );
+
   const approve = useCallback(async () => {
     setApprovalPending(true);
     try {
-      await vaultService.approve(account, vault.token.id, vault.id);
+      await vaultService.approve(account, vault.token.id, vault.shareToken.id);
       setApproveBtn(false);
     } catch (e) {
       setApproveBtn(true);
@@ -73,7 +85,6 @@ const useOpenVaultDeposit = (vault: IVault, onClose: () => void) => {
 
   useEffect(() => {
     approvalStatus(deposit);
-    console.log("ApprovalStatusForToken: ", vault);
   }, [vault, deposit]);
 
   useEffect(() => {
@@ -81,12 +92,19 @@ const useOpenVaultDeposit = (vault: IVault, onClose: () => void) => {
   }, [account, token]);
 
   useEffect(() => {
-    setValue("sharedToken", deposit);
+    if (deposit && Number(deposit) > 0) {
+      updateSharedAmount(deposit);
+    } else {
+      setTimeout(() => {
+        setValue("sharedToken", "0");
+      }, 600);
+    }
   }, [deposit]);
 
   const getVaultTokenBalance = useCallback(async () => {
     const balance = await poolService.getUserTokenBalance(account, token.id);
     setWalletBalance(balance.toString());
+    setIsWalletFetching(true);
   }, [account, library]);
 
   const setMax = useCallback(
@@ -104,7 +122,7 @@ const useOpenVaultDeposit = (vault: IVault, onClose: () => void) => {
       const blockNumber = await vaultService.deposit(
         deposit,
         account,
-        vault.id
+        vault.shareToken.id
       );
 
       setLastTransactionBlock(blockNumber as number);
@@ -118,12 +136,15 @@ const useOpenVaultDeposit = (vault: IVault, onClose: () => void) => {
 
   return {
     walletBalance,
+    isWalletFetching,
     token,
     control,
     deposit,
     sharedToken,
     approveBtn,
     approvalPending,
+    openDepositLoading,
+    errors,
     approve,
     setMax,
     handleSubmit,
@@ -131,4 +152,4 @@ const useOpenVaultDeposit = (vault: IVault, onClose: () => void) => {
   };
 };
 
-export default useOpenVaultDeposit;
+export default useVaultOpenDeposit;

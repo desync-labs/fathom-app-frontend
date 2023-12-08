@@ -1,18 +1,11 @@
 import React from "react";
-import { Container, Grid } from "@mui/material";
+import { Container, Grid, useMediaQuery, useTheme } from "@mui/material";
 import { PageHeader } from "components/Dashboard/PageHeader";
-import useAllVaultView from "hooks/useAllVaultView";
 import VaultList from "components/Vault/VaultList";
 
 const AllVaultView = () => {
-  const {
-    vaultList,
-    vaultsLoading,
-    vaultCurrentPage,
-    vaultItemsCount,
-    isMobile,
-    handlePageChange,
-  } = useAllVaultView();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
     <Container
@@ -22,16 +15,10 @@ const AllVaultView = () => {
       <Grid container spacing={isMobile ? 1 : 3}>
         <PageHeader
           title={"Vault"}
-          description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit. Eget tristique malesuada pulvinar commodo. Euismod massa. If this is the first-time you’re here, please visit our Whitepaper.`}
+          description={`Explore existing Vaults, and deposit your assets for a sustainable yield.`}
         />
         <Grid item xs={12} sx={{ marginTop: isMobile ? "5px" : "30px" }}>
-          <VaultList
-            vaultList={vaultList}
-            vaultsLoading={vaultsLoading}
-            vaultCurrentPage={vaultCurrentPage}
-            vaultItemsCount={vaultItemsCount}
-            handlePageChange={handlePageChange}
-          />
+          <VaultList />
         </Grid>
       </Grid>
     </Container>

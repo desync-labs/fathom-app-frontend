@@ -1,8 +1,11 @@
 import React, { FC } from "react";
+import BigNumber from "bignumber.js";
 import { Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { IVault, IVaultPosition } from "hooks/useVaultList";
 import AppPopover from "components/AppComponents/AppPopover/AppPopover";
-import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
+import usePricesContext from "context/prices";
+import { formatPercentage } from "utils/format";
 
 const TokenName = styled("div")`
   display: flex;
@@ -39,44 +42,52 @@ const TokenValue = styled("div")`
   }
 `;
 
-const CollectBtnWrapper = styled("div")`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-
-  ${({ theme }) => theme.breakpoints.down("sm")} {
-    margin-top: 40px;
-    height: 40px;
-  }
-`;
-
-const CollectBtn = styled(ButtonPrimary)`
-  width: 100%;
-  height: 40px;
-`;
-
 type FarmListItemEarnedProps = {
   isMobile: boolean;
+  vaultItemData: IVault;
+  vaultPosition: IVaultPosition;
 };
 
-const VaultListItemEarned: FC<FarmListItemEarnedProps> = ({ isMobile }) => {
+const VaultListItemEarned: FC<FarmListItemEarnedProps> = ({
+  isMobile,
+  vaultItemData,
+  vaultPosition,
+}) => {
+  const { token } = vaultItemData;
+  const { balanceProfit } = vaultPosition;
+  const { fxdPrice } = usePricesContext();
+
   return (
     <Grid container>
       <Grid item xs={isMobile ? 12 : 3}>
         <TokenName>
-          USDT <span>Earned</span>
-          <AppPopover id={"earned"} text={<>Earned</>} />
+          {token.name} <span>Earned</span>
+          <AppPopover
+            id={"earned"}
+            text={
+              <>
+                The accumulated profit for the account/vault. It is only updated
+                when the user withdraws all the shares.
+              </>
+            }
+          />
         </TokenName>
         <TokenValue>
-          0.012 <span>$0.0123456</span>
+          {formatPercentage(
+            BigNumber(balanceProfit || "0")
+              .dividedBy(10 ** 18)
+              .toNumber()
+          )}{" "}
+          <span>
+            $
+            {formatPercentage(
+              BigNumber(balanceProfit || "0")
+                .multipliedBy(fxdPrice)
+                .dividedBy(10 ** 36)
+                .toNumber()
+            )}
+          </span>
         </TokenValue>
-      </Grid>
-      {!isMobile && <Grid item xs={7}></Grid>}
-      <Grid item xs={isMobile ? 12 : 2}>
-        <CollectBtnWrapper>
-          <CollectBtn>Collect</CollectBtn>
-        </CollectBtnWrapper>
       </Grid>
     </Grid>
   );

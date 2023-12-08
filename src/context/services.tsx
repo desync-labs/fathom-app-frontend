@@ -80,6 +80,9 @@ export const ServicesProvider: FC<{ children: ReactElement }> = ({
         ? message.replace("${tokenName}", tokenName)
         : message;
 
+      let addTokenToWalletText =
+        "Add ${tokenName} to wallet to track your balance.";
+
       if (type === "OpenPosition") {
         const { provider, chainId } = rootStore;
         const contractData = SmartContractFactory.FathomStableCoin(chainId);
@@ -92,12 +95,52 @@ export const ServicesProvider: FC<{ children: ReactElement }> = ({
         ]);
         const image = getTokenLogoURL(symbol);
 
-        setShowErc20TokenModalHandler(message, {
-          address,
-          symbol,
-          decimals,
-          image,
-        });
+        addTokenToWalletText = addTokenToWalletText.replace(
+          "${tokenName}",
+          "FXD"
+        );
+
+        setShowErc20TokenModalHandler(
+          message,
+          {
+            address,
+            symbol,
+            decimals,
+            image,
+          },
+          addTokenToWalletText
+        );
+      } else if (type === "OpenVaultDeposit") {
+        const { provider } = rootStore;
+        const address = receipt.to;
+
+        const contract = Web3Utils.getContractInstance(
+          SmartContractFactory.FathomVault(address),
+          provider
+        );
+
+        const [decimals, symbol, name] = await Promise.all([
+          contract.decimals(),
+          contract.symbol(),
+          contract.name(),
+        ]);
+        const image = getTokenLogoURL("FXD");
+
+        addTokenToWalletText = addTokenToWalletText.replace(
+          "${tokenName}",
+          name
+        );
+
+        setShowErc20TokenModalHandler(
+          message,
+          {
+            address,
+            symbol,
+            decimals,
+            image,
+          },
+          addTokenToWalletText
+        );
       } else {
         setShowSuccessAlertHandler(true, message);
       }

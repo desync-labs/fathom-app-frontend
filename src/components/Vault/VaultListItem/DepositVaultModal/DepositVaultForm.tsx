@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { FC } from "react";
 import {
   Box,
   CircularProgress,
@@ -8,6 +8,19 @@ import {
   styled,
 } from "@mui/material";
 import {
+  Control,
+  Controller,
+  FieldErrors,
+  UseFormHandleSubmit,
+} from "react-hook-form";
+import BigNumber from "bignumber.js";
+
+import { IVault } from "hooks/useVaultList";
+import { getTokenLogoURL } from "utils/tokenLogo";
+import { formatNumber } from "utils/format";
+
+import {
+  ErrorBox,
   InfoBox,
   Summary,
   WalletBalance,
@@ -16,22 +29,17 @@ import {
   ButtonPrimary,
   ButtonSecondary,
   ButtonsWrapper,
-  ManagePositionRepayTypeWrapper,
-  ManageTypeButton,
   MaxButton,
 } from "components/AppComponents/AppButton/AppButton";
-import { Controller, useForm } from "react-hook-form";
 import {
+  AppFormInputErrorWrapper,
   AppFormInputLogo,
   AppFormInputWrapper,
   AppFormLabel,
   AppTextField,
 } from "components/AppComponents/AppForm/AppForm";
 import { InfoIcon } from "components/Governance/Propose";
-import { getTokenLogoURL } from "utils/tokenLogo";
 import { AppList, AppListItem } from "components/AppComponents/AppList/AppList";
-import { formatNumber } from "utils/format";
-import BigNumber from "bignumber.js";
 
 const DepositVaultItemFormWrapper = styled(Grid)`
   padding-left: 20px;
@@ -48,23 +56,59 @@ const ManageVaultForm = styled("form")`
   padding-bottom: 45px;
 `;
 
-const DepositVaultForm = ({
+type VaultDepositFormProps = {
+  isMobile: boolean;
+  onClose: () => void;
+  vaultItemData: IVault;
+  walletBalance: string;
+  isWalletFetching: boolean;
+  control: Control<
+    {
+      deposit: string;
+      sharedToken: string;
+    },
+    any
+  >;
+  deposit: string;
+  sharedToken: string;
+  approveBtn: boolean;
+  approvalPending: boolean;
+  openDepositLoading: boolean;
+  errors: FieldErrors<{
+    deposit: string;
+    sharedToken: string;
+  }>;
+  approve: () => Promise<void>;
+  setMax: (walletBalance: string) => void;
+  handleSubmit: UseFormHandleSubmit<
+    {
+      deposit: string;
+      sharedToken: string;
+    },
+    undefined
+  >;
+  onSubmit: () => Promise<void>;
+};
+
+const DepositVaultForm: FC<VaultDepositFormProps> = ({
   isMobile,
   onClose,
   vaultItemData,
   walletBalance,
+  isWalletFetching,
   control,
   deposit,
   sharedToken,
   approveBtn,
   approvalPending,
+  openDepositLoading,
+  errors,
   approve,
   setMax,
   handleSubmit,
   onSubmit,
-}: any) => {
-  const { token, shareToken } = vaultItemData;
-
+}) => {
+  const { token, shareToken, depositLimit, balanceTokens } = vaultItemData;
   return (
     <DepositVaultItemFormWrapper item>
       <ManageVaultForm
@@ -103,26 +147,40 @@ const DepositVaultForm = ({
                 helperText={
                   <>
                     {error && error.type === "max" && (
-                      <>
-                        <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
+                      <AppFormInputErrorWrapper>
+                        <InfoIcon
+                          sx={{
+                            float: "left",
+                            width: "14px",
+                            height: "14px",
+                            marginRight: "0",
+                          }}
+                        />
                         <Box
                           component={"span"}
                           sx={{ fontSize: "12px", paddingLeft: "6px" }}
                         >
                           You do not have enough money in your wallet
                         </Box>
-                      </>
+                      </AppFormInputErrorWrapper>
                     )}
                     {error && error.type === "min" && (
-                      <>
-                        <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
+                      <AppFormInputErrorWrapper>
+                        <InfoIcon
+                          sx={{
+                            float: "left",
+                            width: "14px",
+                            height: "14px",
+                            marginRight: "0",
+                          }}
+                        />
                         <Box
                           component={"span"}
                           sx={{ fontSize: "12px", paddingLeft: "6px" }}
                         >
                           Deposit amount should be positive.
                         </Box>
-                      </>
+                      </AppFormInputErrorWrapper>
                     )}
                   </>
                 }
@@ -130,30 +188,23 @@ const DepositVaultForm = ({
                 type="number"
                 onChange={onChange}
               />
-              <AppFormInputLogo src={getTokenLogoURL("FTHM")} />
+              <AppFormInputLogo
+                src={getTokenLogoURL(token.symbol)}
+                alt={token.name}
+              />
               <MaxButton onClick={() => setMax(walletBalance)}>Max</MaxButton>
             </AppFormInputWrapper>
           )}
         />
         <Controller
-          //key={safeMax}
           control={control}
           name="sharedToken"
-          /*   rules={{
-            validate: (value) => {
-              if (BigNumber(value).isGreaterThan(availableFathomInPool)) {
-                return "Not enough FXD in pool";
-              }
-
-              if (BigNumber(value).isGreaterThan(safeMax)) {
-                return `You can't borrow more than ${safeMax}`;
-              }
-
-              return true;
-            },
-            min: FXD_MINIMUM_BORROW_AMOUNT,
-            max: maxBorrowAmount,
-          }} */
+          rules={{
+            max: BigNumber(depositLimit)
+              .minus(BigNumber(balanceTokens))
+              .dividedBy(10 ** 18)
+              .toNumber(),
+          }}
           render={({ field: { onChange, value }, fieldState: { error } }) => {
             return (
               <AppFormInputWrapper>
@@ -163,44 +214,31 @@ const DepositVaultForm = ({
                   id="outlined-helperText"
                   helperText={
                     <>
-                      {/* {error && error.type === "validate" && (
-                                                <>
-                                                    <InfoIcon
-                                                        sx={{
-                                                            float: "left",
-                                                            fontSize: "18px"
-                                                        }}
-                                                    />
-                                                    <Box
-                                                        sx={{ fontSize: "12px", paddingLeft: "6px" }}
-                                                        component={"span"}
-                                                    >
-                                                        {error?.message}
-                                                    </Box>
-                                                </>
-                                            )}
-                                            {error && error.type === "min" && (
-                                                <>
-                                                    <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
-                                                    <Box
-                                                        component={"span"}
-                                                        sx={{ fontSize: "12px", paddingLeft: "6px" }}
-                                                    >
-                                                        Minimum borrow amount is {FXD_MINIMUM_BORROW_AMOUNT}.
-                                                    </Box>
-                                                </>
-                                            )}
-                                            {error && error.type === "max" && (
-                                                <>
-                                                    <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
-                                                    <Box
-                                                        component={"span"}
-                                                        sx={{ fontSize: "12px", paddingLeft: "6px" }}
-                                                    >
-                                                        Maximum borrow amount is {100}.
-                                                    </Box>
-                                                </>
-                                            )} */}
+                      {error && error.type === "max" && (
+                        <AppFormInputErrorWrapper>
+                          <InfoIcon
+                            sx={{
+                              float: "left",
+                              width: "14px",
+                              height: "14px",
+                              marginRight: "0",
+                            }}
+                          />
+                          <Box
+                            component={"span"}
+                            sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                          >
+                            Maximum available share token is{" "}
+                            {formatNumber(
+                              BigNumber(depositLimit)
+                                .minus(BigNumber(balanceTokens))
+                                .dividedBy(10 ** 18)
+                                .toNumber()
+                            )}
+                            .
+                          </Box>
+                        </AppFormInputErrorWrapper>
+                      )}
                     </>
                   }
                   value={value}
@@ -209,7 +247,7 @@ const DepositVaultForm = ({
                   onChange={onChange}
                   disabled
                 />
-                <AppFormInputLogo src={getTokenLogoURL("FTHM")} />
+                <AppFormInputLogo src={getTokenLogoURL("FXD")} />
               </AppFormInputWrapper>
             );
           }}
@@ -217,18 +255,24 @@ const DepositVaultForm = ({
         <AppList>
           <AppListItem
             alignItems="flex-start"
-            secondaryAction={<>{deposit + " " + token.name}</>}
+            secondaryAction={<>{(deposit || "0") + " " + token.name}</>}
           >
             <ListItemText primary="Depositing" />
           </AppListItem>
           <AppListItem
             alignItems="flex-start"
-            secondaryAction={<>{sharedToken + " " + shareToken.name}</>}
+            secondaryAction={
+              <>
+                {BigNumber(sharedToken || "0").toFormat(6) +
+                  " " +
+                  shareToken.name}
+              </>
+            }
           >
             <ListItemText primary="Receiving" />
           </AppListItem>
         </AppList>
-        {approveBtn && !!walletBalance && (
+        {approveBtn && walletBalance !== "0" && (
           <InfoBox sx={{ alignItems: "flex-start" }}>
             <InfoIcon />
             <Box flexDirection="column">
@@ -246,11 +290,33 @@ const DepositVaultForm = ({
             </Box>
           </InfoBox>
         )}
+        {isWalletFetching &&
+          (BigNumber(walletBalance)
+            .dividedBy(10 ** 18)
+            .isLessThan(BigNumber(deposit)) ||
+            walletBalance == "0") && (
+            <ErrorBox>
+              <InfoIcon />
+              <Typography>Wallet balance is not enough to deposit.</Typography>
+            </ErrorBox>
+          )}
         <ButtonsWrapper>
           {!isMobile && (
             <ButtonSecondary onClick={onClose}>Close</ButtonSecondary>
           )}
-          <ButtonPrimary type="submit">Deposit</ButtonPrimary>
+          <ButtonPrimary
+            type="submit"
+            disabled={
+              openDepositLoading || approveBtn || !!Object.keys(errors).length
+            }
+            isLoading={openDepositLoading}
+          >
+            {openDepositLoading ? (
+              <CircularProgress sx={{ color: "#0D1526" }} size={20} />
+            ) : (
+              "Deposit"
+            )}
+          </ButtonPrimary>
           {isMobile && (
             <ButtonSecondary onClick={onClose}>Close</ButtonSecondary>
           )}

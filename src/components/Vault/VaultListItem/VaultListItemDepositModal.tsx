@@ -1,15 +1,15 @@
 import React, { FC } from "react";
-import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
 import { DialogContent, Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { IVault } from "fathom-sdk";
 
-import useOpenVaultDeposit from "hooks/useOpenVaultDeposit";
+import { IVault } from "hooks/useVaultList";
+import useVaultOpenDeposit from "hooks/useVaultOpenDeposit";
 
 import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
 import { DividerDefault } from "components/Positions/TopUpPositionDialog";
 import DepositVaultInfo from "components/Vault/VaultListItem/DepositVaultModal/DepositVaultInfo";
 import DepositVaultForm from "components/Vault/VaultListItem/DepositVaultModal/DepositVaultForm";
+import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
 
 const VaultManageGridDialogWrapper = styled(AppDialog)`
   .MuiPaper-root {
@@ -22,30 +22,31 @@ const VaultManageGridDialogWrapper = styled(AppDialog)`
 `;
 
 export type VaultDepositProps = {
+  isMobile: boolean;
   vaultItemData: IVault;
   onClose: () => void;
-  onFinish: () => void;
-  isMobile: boolean;
 };
 
 const VaultListItemDepositModal: FC<VaultDepositProps> = ({
+  isMobile,
   vaultItemData,
   onClose,
-  onFinish,
-  isMobile,
 }) => {
   const {
     walletBalance,
+    isWalletFetching,
     control,
     deposit,
     sharedToken,
     approveBtn,
     approvalPending,
+    openDepositLoading,
+    errors,
     approve,
     setMax,
     handleSubmit,
     onSubmit,
-  } = useOpenVaultDeposit(vaultItemData, onClose);
+  } = useVaultOpenDeposit(vaultItemData, onClose);
 
   return (
     <VaultManageGridDialogWrapper
@@ -71,11 +72,14 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
             isMobile={isMobile}
             vaultItemData={vaultItemData}
             walletBalance={walletBalance}
+            isWalletFetching={isWalletFetching}
             control={control}
             deposit={deposit}
             sharedToken={sharedToken}
             approveBtn={approveBtn}
             approvalPending={approvalPending}
+            openDepositLoading={openDepositLoading}
+            errors={errors}
             approve={approve}
             onClose={onClose}
             setMax={setMax}

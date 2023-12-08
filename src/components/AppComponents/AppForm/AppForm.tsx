@@ -59,8 +59,15 @@ export const AppTextField = styled(MuiTextField)`
 
   & input:disabled,
   textarea:disabled {
+    background: unset !important;
+    border: 1px solid #3d5580 !important;
+    color: #3d5580 !important;
     cursor: not-allowed !important;
     pointer-events: all !important;
+    &:hover,
+    &:focus {
+      box-shadow: unset !important;
+    }
   }
 
   & fieldset {
@@ -111,4 +118,10 @@ export const AppSelect = styled(Select)`
   border: 1px solid #324567;
   border-radius: 8px;
   width: 100%;
+`;
+
+export const AppFormInputErrorWrapper = styled("span")`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 `;

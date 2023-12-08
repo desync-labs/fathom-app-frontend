@@ -1,15 +1,18 @@
+import { FC } from "react";
+import BigNumber from "bignumber.js";
 import { Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { IVault } from "hooks/useVaultList";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import {
   Approx,
   Apr,
   VaultInfoStats,
-  Tokens,
   Token,
 } from "components/Vault/VaultListItem/VaultListItemVaultInfo";
 import { ButtonSecondary } from "components/AppComponents/AppButton/AppButton";
-import { FC } from "react";
+import usePricesContext from "context/prices";
+import { formatNumber } from "utils/format";
 
 const VaultTitle = styled("div")`
   color: #5a81ff;
@@ -87,62 +90,94 @@ const ManageVaultBtn = styled(ButtonSecondary)`
 
 type VaultListItemFarmingDetailsProps = {
   isMobile: boolean;
+  vaultItemData: IVault;
+  vaultPosition?: any;
   onOpen: () => void;
 };
 
 const VaultListItemEarningDetails: FC<VaultListItemFarmingDetailsProps> = ({
   isMobile,
   onOpen,
+  vaultItemData,
+  vaultPosition,
 }) => {
+  const { token, shareToken, balanceTokens, strategies } = vaultItemData;
+  const { balancePosition, balanceShares } = vaultPosition;
+  const { fxdPrice } = usePricesContext();
+
   return (
     <Grid container>
       <Grid item xs={isMobile ? 12 : 10}>
-        <VaultTitle>USDT</VaultTitle>
+        <VaultTitle>{token.name}</VaultTitle>
         <VaultInfo>
-          <TotalTokens>
-            Your total share tokens: <span>8.69507</span>
-          </TotalTokens>
           <Pooled>
-            Pooled USDT:
+            Pooled {token.name}:
             <Token>
               <img
-                src={getTokenLogoURL("xUSDT")}
+                src={getTokenLogoURL(token.symbol)}
                 width={20}
                 height={20}
                 alt={"token img"}
               />
-              12.00
+              {BigNumber(balancePosition)
+                .dividedBy(10 ** 18)
+                .toFormat(0)}
             </Token>
           </Pooled>
           <PoolShare>
-            Your pool share: <span>29%</span>
+            Your share:{" "}
+            <span>
+              {`${BigNumber(balancePosition)
+                .dividedBy(BigNumber(balanceTokens))
+                .times(100)
+                .toFormat(2)}%`}
+            </span>
           </PoolShare>
+          <TotalTokens>
+            Share token:{" "}
+            <span>
+              {BigNumber(balanceShares)
+                .dividedBy(10 ** 18)
+                .toFormat(2)}
+            </span>{" "}
+            {shareToken.name}
+          </TotalTokens>
         </VaultInfo>
         {isMobile && (
           <Apr>
             Apr
-            <span>9.40%</span>
+            <span>
+              {formatNumber(
+                BigNumber(strategies[0].reports[0].results[0].apr).toNumber()
+              )}
+              %
+            </span>
           </Apr>
         )}
         <VaultInfoStats>
           {!isMobile && (
             <Apr>
               Apr
-              <span>9.40%</span>
+              <span>
+                {formatNumber(
+                  BigNumber(strategies[0].reports[0].results[0].apr).toNumber()
+                )}
+                %
+              </span>
             </Apr>
           )}
-          <Approx>~295.95 USDs</Approx>
-          <Tokens>
-            <Token>
-              <img
-                src={getTokenLogoURL("xUSDT")}
-                width={20}
-                height={20}
-                alt={"token img"}
-              />
-              12.00
-            </Token>
-          </Tokens>
+          <Approx>
+            ~
+            {formatNumber(
+              BigNumber(balancePosition)
+                .multipliedBy(strategies[0].reports[0].results[0].apr)
+                .dividedBy(100)
+                .dividedBy(10 ** 36)
+                .multipliedBy(fxdPrice)
+                .toNumber()
+            )}{" "}
+            USD
+          </Approx>
         </VaultInfoStats>
       </Grid>
       <Grid item xs={isMobile ? 12 : 2}>
