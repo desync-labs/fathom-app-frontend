@@ -258,3 +258,56 @@ export const VotingEndedButton = styled(MuiButton)`
     border-radius: 8px;
   }
 `;
+
+export const VaultNowBtn = styled(MuiButton)`
+  border-radius: 8px;
+  background: rgba(0, 128, 118, 0.15);
+  color: #43fff1;
+  font-size: 15px;
+  font-weight: 600;
+  gap: 8px;
+  padding: 8px 12px;
+  margin-left: 10px;
+  line-height: 20px;
+`;
+
+export const AddLiquidityBtn = styled(MuiButton)`
+  padding: 8px 20px;
+  gap: 8px;
+  display: flex;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #80fff6 0%, #00dbcb 100%);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 20px;
+  color: #00332f;
+  height: 40px;
+  width: 500px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    width: 100%;
+    margin-top: 16px;
+  }
+`;
+
+export const FarmInfoFarmNowBtn = styled(MuiButton)`
+  border-radius: 8px;
+  background: linear-gradient(135deg, #80fff6 0%, #00dbcb 100%);
+  padding: 8px 20px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 20px;
+  color: #00332f;
+  height: 40px;
+  width: 500px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    width: 100%;
+  }
+`;
+
+export const FarmFilterMobileBtn = styled(MuiButton)`
+  width: 44px;
+  height: 44px;
+  background: rgba(79, 101, 140, 0.2);
+  border-radius: 8px;
+`;

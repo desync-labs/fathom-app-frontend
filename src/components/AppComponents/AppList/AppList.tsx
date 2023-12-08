@@ -1,5 +1,5 @@
 import { styled } from "@mui/material/styles";
-import { List as MuiList, ListItem } from "@mui/material";
+import { List as MuiList, ListItem, Box } from "@mui/material";
 
 export const AppList = styled(MuiList)`
   width: 100%;
@@ -32,7 +32,7 @@ export const AppListItem = styled(ListItem)`
     align-items: center;
   }
   .MuiListItemSecondaryAction-root {
-    max-width: 200px;
+    max-width: 250px;
     word-break: break-all;
     text-align: right;
     position: static;
@@ -46,4 +46,31 @@ export const AppListItem = styled(ListItem)`
   ${({ theme }) => theme.breakpoints.down("sm")} {
     justify-content: space-between;
   }
+`;
+
+export const ListItemWrapper = styled(Box)`
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+`;
+
+export const ListLabel = styled(Box)`
+  color: #6379a1;
+  font-weight: 600;
+  font-size: 11px;
+  line-height: 16px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+`;
+
+export const ListLabelWithPopover = styled(ListLabel)`
+  gap: 7px;
+`;
+
+export const ListValue = styled(Box)`
+  display: flex;
+  justify-content: right;
+  flex-direction: column;
 `;
