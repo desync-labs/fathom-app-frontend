@@ -126,7 +126,7 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
   const formattedBalanceToken = useMemo(
     () =>
       BigNumber(balanceToken)
-        .dividedBy(10 ** 36)
+        .dividedBy(10 ** 18)
         .toString(),
     [balanceToken]
   );
@@ -246,16 +246,7 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
                 onChange={onChange}
               />
               <AppFormInputLogo src={getTokenLogoURL(token.symbol)} />
-              <MaxButton
-                onClick={() =>
-                  setMax(
-                    walletBalance,
-                    BigNumber(balanceToken)
-                      .dividedBy(10 ** 18)
-                      .toString()
-                  )
-                }
-              >
+              <MaxButton onClick={() => setMax(walletBalance, balanceToken)}>
                 Max
               </MaxButton>
             </AppFormInputWrapper>
