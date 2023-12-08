@@ -1,4 +1,4 @@
-import React, { FC, memo, useMemo } from "react";
+import { FC, memo, useMemo } from "react";
 import { ILockPosition } from "fathom-sdk";
 import StakingViewItem from "components/Staking/StakingViewItem";
 import ClaimRewardsDialog from "components/Staking/Dialog/ClaimRewardsDialog";
@@ -35,11 +35,9 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
     earlyUnstake,
     onClose,
     processFlow,
-
     itemCount,
     currentPage,
     handlePageChange,
-
     isLoading,
   } = useStakingContext();
 
@@ -48,7 +46,7 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
       {useMemo(
         () => (
           <>
-            {!isLoading && lockPositions.length === 0 ? (
+            {!isLoading && !lockPositions.length ? (
               <NoResults variant="h6">You have no open positions!</NoResults>
             ) : isLoading ? (
               <Grid container>

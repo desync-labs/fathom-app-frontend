@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Grid } from "@mui/material";
 import { useMemo } from "react";
 import StakingLockForm from "components/Staking/StakingLockForm";

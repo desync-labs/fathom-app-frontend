@@ -1,4 +1,3 @@
-import React from "react";
 import { Grid, Container } from "@mui/material";
 import PositionsList from "components/PositionList/PositionsList";
 import ProtocolStats from "components/Dashboard/ProtocolStats";

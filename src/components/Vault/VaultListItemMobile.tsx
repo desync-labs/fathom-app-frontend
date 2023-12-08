@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from "react";
+import { FC, useMemo } from "react";
 import { styled } from "@mui/material/styles";
 import { Box } from "@mui/material";
 import BigNumber from "bignumber.js";

@@ -1,6 +1,6 @@
-import React from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "tss-react/mui";
+import { useState } from "react";
 
 import {
   ExpandLess as IconExpandLess,
@@ -84,7 +84,7 @@ const AppMenuItem: React.FC<AppMenuItemProps> = (props) => {
     isActive: isActive as boolean,
     showText: showText as boolean,
   });
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   function handleClick() {
     setOpen(!open);

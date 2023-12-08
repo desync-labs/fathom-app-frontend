@@ -36,8 +36,8 @@ const useStakingLockForm = () => {
   const [approvedBtn, setApprovedBtn] = useState<boolean>(false);
   const [approvalPending, setApprovalPending] = useState<boolean>(false);
 
-  const [xdcBalance, setXdcBalance] = useState<number>(0);
-  const [fxdBalance, setFxdBalance] = useState<number>(0);
+  const [xdcBalance, setXdcBalance] = useState<string>("0");
+  const [fxdBalance, setFxdBalance] = useState<string>("0");
 
   const [minLockPeriod, setMinLockPeriod] = useState<number>(1);
 
@@ -60,13 +60,13 @@ const useStakingLockForm = () => {
 
   const getMinLockPeriod = useCallback(async () => {
     const lockPeriod = await stakingService.getMinLockPeriod();
-    const minDays = lockPeriod.div(DAY_IN_SECONDS);
-    setMinLockPeriod(minDays.toNumber());
+    const minDays = BigNumber(lockPeriod.toString()).dividedBy(DAY_IN_SECONDS);
+    setMinLockPeriod(minDays.isLessThan(1) ? 1 : minDays.toNumber());
   }, [stakingService, setMinLockPeriod]);
 
   const approvalStatus = useMemo(
     () =>
-      debounce(async (account: string, stakePosition: number) => {
+      debounce(async (account: string, stakePosition: string) => {
         const approved = await stakingService.approvalStatusStakingFTHM(
           account,
           stakePosition,
@@ -94,7 +94,7 @@ const useStakingLockForm = () => {
 
   useEffect(() => {
     if (chainId && stakePosition && fthmTokenAddress) {
-      approvalStatus(account, Number(stakePosition));
+      approvalStatus(account, stakePosition);
     }
   }, [account, chainId, fthmTokenAddress, approvalStatus, stakePosition]);
 
@@ -105,11 +105,15 @@ const useStakingLockForm = () => {
         positionService.balanceStableCoin(account),
       ]);
 
-      setXdcBalance(xdcBalance.div(10 ** 18).toNumber());
+      setXdcBalance(
+        BigNumber(xdcBalance.toString())
+          .dividedBy(10 ** 18)
+          .toString()
+      );
       setFxdBalance(
         BigNumber(fxdBalance.toString())
           .dividedBy(10 ** 18)
-          .toNumber()
+          .toString()
       );
     };
 
@@ -134,15 +138,18 @@ const useStakingLockForm = () => {
   const onSubmit = useCallback(
     async (values: Record<string, any>) => {
       const { stakePosition, lockDays } = values;
-      setIsLoading(true);
-      const blockNumber = await stakingService.createLock(
-        account,
-        stakePosition,
-        lockDays
-      );
-      setLastTransactionBlock(blockNumber as number);
-      reset();
-      setIsLoading(false);
+      try {
+        setIsLoading(true);
+        const blockNumber = await stakingService.createLock(
+          account,
+          stakePosition,
+          lockDays
+        );
+        setLastTransactionBlock(blockNumber as number);
+        reset();
+      } finally {
+        setIsLoading(false);
+      }
     },
     [stakingService, account, reset, setIsLoading, setLastTransactionBlock]
   );

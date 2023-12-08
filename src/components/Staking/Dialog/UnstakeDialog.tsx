@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import { FC } from "react";
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
 import {
   Box,
@@ -37,6 +37,7 @@ import useUnstake from "hooks/useUnstake";
 import { InfoMessageWrapper } from "components/Staking/Dialog/ClaimRewardsDialog";
 import { formatNumber } from "utils/format";
 import useStakingContext from "context/staking";
+import BigNumber from "bignumber.js";
 
 const UnStakeDialogWrapper = styled(AppDialog)`
   .MuiPaper-root {
@@ -81,6 +82,17 @@ const ButtonsWrapper = styled(Box)`
   }
 `;
 
+const ErrorWrapper = styled("div")`
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  gap: 7px;
+  padding-top: 2px;
+  & > * {
+    font-size: 13px;
+  }
+`;
+
 export type UnStakeDialogProps = {
   lockPosition: ILockPosition | null;
   token: string;
@@ -96,11 +108,10 @@ const UnStakeDialog: FC<UnStakeDialogProps> = ({
 }) => {
   const {
     balanceError,
+    requiredError,
     unStakeAmount,
     totalBalance,
-
     isLoading,
-
     handleUnStakeAmountChange,
     setMax,
     unStakeHandler,
@@ -125,24 +136,35 @@ const UnStakeDialog: FC<UnStakeDialogProps> = ({
             <AppFormInputWrapper>
               <AppFormLabel>Unstake amount</AppFormLabel>
               <WalletBalance>
-                Available: {formatNumber(totalBalance / 10 ** 18)} {token}
+                Available:{" "}
+                {formatNumber(
+                  BigNumber(totalBalance)
+                    .dividedBy(10 ** 18)
+                    .toNumber()
+                )}{" "}
+                {token}
               </WalletBalance>
               <AppTextField
-                error={balanceError}
+                error={balanceError || requiredError}
                 id="outlined-helperText"
                 helperText={
-                  balanceError ? (
-                    <>
-                      <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
-                      <Typography
-                        sx={{ fontSize: "12px", paddingLeft: "22px" }}
-                      >
-                        You do not have enough {token}
-                      </Typography>
-                    </>
-                  ) : null
+                  <>
+                    {balanceError && (
+                      <ErrorWrapper>
+                        <InfoIcon />
+                        <Typography>You do not have enough {token}</Typography>
+                      </ErrorWrapper>
+                    )}
+                    {requiredError && (
+                      <ErrorWrapper>
+                        <InfoIcon />
+                        <Typography>Unstake amount is required</Typography>
+                      </ErrorWrapper>
+                    )}
+                  </>
                 }
                 value={unStakeAmount}
+                placeholder="0"
                 onChange={handleUnStakeAmountChange}
               />
               <AppFormInputLogo src={getTokenLogoURL(token)} />
@@ -172,7 +194,12 @@ const UnStakeDialog: FC<UnStakeDialogProps> = ({
                 <InfoIcon sx={{ fontSize: "18px", color: "#6379A1" }} />
               </InfoLabel>
               <InfoValue>
-                {formatNumber(totalBalance / 10 ** 18)} {token}
+                {formatNumber(
+                  BigNumber(totalBalance)
+                    .dividedBy(10 ** 18)
+                    .toNumber()
+                )}{" "}
+                {token}
               </InfoValue>
             </InfoWrapper>
             <InfoWrapper>
