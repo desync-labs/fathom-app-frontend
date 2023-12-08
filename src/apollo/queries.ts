@@ -199,8 +199,17 @@ export const STABLE_SWAP_STATS = gql`
 `;
 
 export const VAULTS = gql`
-  query Vaults {
-    vaults(first: 5) {
+  query Vaults(
+    $first: Int!
+    $skip: Int!
+    $search: String!
+    $shutdown: Boolean
+  ) {
+    vaults(
+      first: $first
+      skip: $skip
+      where: { token_: { name_contains_nocase: $search }, shutdown: $shutdown }
+    ) {
       id
       token {
         id
@@ -219,16 +228,37 @@ export const VAULTS = gql`
       balanceTokensIdle
       totalDebtAmount
       depositLimit
-      deposits {
+      strategies {
+        reports(orderBy: timestamp, orderDirection: desc) {
+          totalFees
+          protocolFees
+          results {
+            apr
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const ACCOUNT_VAULT_POSITIONS = gql`
+  query AccountVaultPositions($account: String!) {
+    accountVaultPositions(where: { account: $account }) {
+      id
+      balancePosition
+      balanceProfit
+      balanceShares
+      balanceTokens
+      vault {
         id
-        timestamp
-        blockNumber
-        account
-        vault
-        tokenAmount
-        sharesMinted
-        transaction
-        vaultUpdate
+      }
+      token {
+        symbol
+        name
+      }
+      shareToken {
+        symbol
+        name
       }
     }
   }

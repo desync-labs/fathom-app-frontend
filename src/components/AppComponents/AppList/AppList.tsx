@@ -32,7 +32,7 @@ export const AppListItem = styled(ListItem)`
     align-items: center;
   }
   .MuiListItemSecondaryAction-root {
-    max-width: 200px;
+    max-width: 250px;
     word-break: break-all;
     text-align: right;
     position: static;

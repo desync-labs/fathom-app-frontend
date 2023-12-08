@@ -1,11 +1,5 @@
-import {
-  Grid,
-  ToggleButtonGroup,
-  ToggleButton,
-  Switch,
-  MenuItem,
-} from "@mui/material";
-import React, { useState } from "react";
+import React, { Dispatch, FC } from "react";
+import { Grid, ToggleButtonGroup, ToggleButton, MenuItem } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import {
   AppFormInputLogo,
@@ -15,7 +9,7 @@ import {
 } from "components/AppComponents/AppForm/AppForm";
 import SearchSrc from "assets/svg/search.svg";
 
-const VaultToggleButtonGroup = styled(ToggleButtonGroup)`
+export const VaultToggleButtonGroup = styled(ToggleButtonGroup)`
   border-radius: 12px;
   padding: 4px;
   background: #132340;
@@ -47,7 +41,7 @@ const VaultToggleButtonGroup = styled(ToggleButtonGroup)`
   }
 `;
 
-const FilterLabel = styled("div")`
+export const FilterLabel = styled("div")`
   font-size: 11px;
   font-weight: 600;
   line-height: 16px;
@@ -58,50 +52,56 @@ const FilterLabel = styled("div")`
 
 const GridSwitcher = styled(Grid)`
   display: flex;
-  justify-content: right;
+  justify-content: flex-start;
 `;
 
-const StackedLabel = styled("span")`
+export const StackedLabel = styled("span")`
   font-size: 14px;
   color: #fff;
 `;
 
 const VaultFilterContainer = styled(Grid)`
+  justify-content: space-between;
   padding-bottom: 55px;
 `;
 
-const VaultFilters = () => {
-  const [farmType, setFarmType] = useState<string>("live");
-  const [showStacked, setShowStacked] = useState<boolean>(false);
-  const [search, setSearch] = useState<string>("");
-  const [sortBy, setSortBy] = useState<string>("");
+export type VaultFiltersPropsType = {
+  isShutdown: boolean;
+  search: string;
+  sortBy: string;
+  setIsShutdown: Dispatch<React.SetStateAction<boolean>>;
+  setSearch: Dispatch<React.SetStateAction<string>>;
+  setSortBy: Dispatch<
+    React.SetStateAction<"fee" | "earned" | "tvl" | "staked">
+  >;
+};
 
+const VaultFilters: FC<VaultFiltersPropsType> = ({
+  isShutdown,
+  search,
+  sortBy,
+  setIsShutdown,
+  setSearch,
+  setSortBy,
+}) => {
   return (
     <VaultFilterContainer container spacing={2}>
-      <Grid item xs={2}>
+      <Grid item>
         <FilterLabel>Filter by</FilterLabel>
         <VaultToggleButtonGroup
           color="primary"
-          value={farmType}
+          value={isShutdown}
           exclusive
-          onChange={(event, farmType: string) => setFarmType(farmType)}
+          onChange={(event, isShutdown: boolean) => setIsShutdown(isShutdown)}
           aria-label="Platform"
         >
-          <ToggleButton value="live">Live Now</ToggleButton>
-          <ToggleButton value="finished">Finished</ToggleButton>
+          <ToggleButton value={false}>Live Now</ToggleButton>
+          <ToggleButton value={true}>Finished</ToggleButton>
         </VaultToggleButtonGroup>
       </Grid>
-      <GridSwitcher item xs={2}>
-        <div>
-          <FilterLabel>Show only</FilterLabel>
-          <Switch
-            onChange={() => setShowStacked(!showStacked)}
-            checked={showStacked}
-          />
-          <StackedLabel>Available</StackedLabel>
-        </div>
+      <GridSwitcher item xs={3}>
+        <div></div>
       </GridSwitcher>
-      <Grid item xs={2}></Grid>
       <Grid item xs={3}>
         <FilterLabel>Sort by</FilterLabel>
         <AppSelect
@@ -110,10 +110,12 @@ const VaultFilters = () => {
           onChange={(event: SelectChangeEvent) => {
             setSortBy(event.target.value);
           }}
+          sx={{ border: "none", fieldset: { borderColor: "transparent" } }}
         >
-          <MenuItem value="all">All time</MenuItem>
-          <MenuItem value={1}>1</MenuItem>
-          <MenuItem value={2}>2</MenuItem>
+          <MenuItem value="tvl">TVL</MenuItem>
+          <MenuItem value="fee">Fee</MenuItem>
+          <MenuItem value="earned">Earned</MenuItem>
+          <MenuItem value="staked">Staked</MenuItem>
         </AppSelect>
       </Grid>
       <Grid item xs={3}>
@@ -121,9 +123,10 @@ const VaultFilters = () => {
         <AppFormInputWrapper sx={{ margin: 0 }}>
           <AppTextField
             id="outlined-helperText"
-            placeholder="Search LP"
+            placeholder="Search token"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+            sx={{ color: "#566E99" }}
           />
           <AppFormInputLogo
             sx={{ top: "10px", left: "9px" }}

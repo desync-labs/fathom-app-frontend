@@ -3,7 +3,7 @@ import { styled } from "@mui/material/styles";
 import { Box } from "@mui/material";
 import { Menu } from "components/Dashboard/Menu";
 
-const MobileMenuWrapper = styled(Box)`
+export const MobileMenuWrapper = styled(Box)`
   position: fixed;
   bottom: 0;
   width: 100%;
