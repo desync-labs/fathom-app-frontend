@@ -74,10 +74,6 @@ const useVaultManageDeposit = (
           sharedAmount = await vaultService.previewWithdraw(deposit, vault.id);
         }
 
-        console.log({
-          sharedAmount,
-        });
-
         const sharedConverted = BigNumber(sharedAmount)
           .dividedBy(10 ** 18)
           .toString();
@@ -102,12 +98,13 @@ const useVaultManageDeposit = (
   const getBalancePosition = useCallback(
     (vaultPosition: IVaultPosition, vault: IVault) => {
       vaultService
-        .previewRedeem(vaultPosition.balanceShares, vault.id)
+        .previewRedeem(
+          BigNumber(vaultPosition.balanceShares)
+            .dividedBy(10 ** 18)
+            .toString(),
+          vault.id
+        )
         .then((balanceToken) => {
-          console.log({
-            balanceToken,
-            vaultPosition,
-          });
           setBalanceToken(balanceToken);
         });
     },
