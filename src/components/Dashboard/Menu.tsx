@@ -8,6 +8,7 @@ import {
   FxdIcon,
   GovernanceIcon,
   SwapIcon,
+  VaultIcon,
   DexIcon,
 } from "components/Common/MenuIcons";
 import useConnector from "context/connector";
@@ -37,6 +38,11 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
     [location.pathname]
   );
 
+  const isVaultActive = useMemo(
+    () => location.pathname.includes("vault"),
+    [location.pathname]
+  );
+
   const { showText } = useShowText(open);
 
   const chartsLink = useMemo(() => process.env.REACT_APP_CHARTS_APP_URL, []);
@@ -61,6 +67,13 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
       link: "/dao/staking",
       Icon: <GovernanceIcon isDAOActive={isDAOActive} />,
       isActive: isDAOActive,
+      showText: showText,
+    },
+    {
+      name: "Vault",
+      link: "/vault",
+      Icon: <VaultIcon isVaultActive={isVaultActive} />,
+      isActive: isVaultActive,
       showText: showText,
     },
     {

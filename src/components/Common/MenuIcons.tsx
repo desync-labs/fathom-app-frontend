@@ -7,6 +7,8 @@ import StakingIconSrc from "assets/svg/staking.svg";
 import StakingIconActiveSrc from "assets/svg/staking-active.svg";
 import GovernanceSrc from "assets/svg/governance.svg";
 import GovernanceActiveSrc from "assets/svg/governance-active.svg";
+import VaultActiveSrc from "assets/svg/vault-active.svg";
+import VaultSrc from "assets/svg/vault.svg";
 import DexSrc from "assets/svg/dex.svg";
 import DexSrcActive from "assets/svg/dex-active.svg";
 
@@ -58,6 +60,14 @@ export const GovernanceIcon: FC<{ isDAOActive: boolean }> = ({
       alt="governance-icon"
       src={isDAOActive ? GovernanceActiveSrc : GovernanceSrc}
     />
+  </MenuIcon>
+);
+
+export const VaultIcon: FC<{ isVaultActive: boolean }> = ({
+  isVaultActive,
+}) => (
+  <MenuIcon>
+    <img alt="vault-icon" src={isVaultActive ? VaultActiveSrc : VaultSrc} />
   </MenuIcon>
 );
 

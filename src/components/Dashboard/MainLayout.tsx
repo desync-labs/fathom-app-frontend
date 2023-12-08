@@ -25,6 +25,7 @@ import StableSwap from "components/Stableswap/StableSwap";
 import StableSwapAddLiquidity from "components/Stableswap/StableSwapAddLiquidity";
 import StableSwapRemoveLiquidity from "components/Stableswap/StableSwapRemoveLiquidity";
 import StableSwapManageFees from "components/Stableswap/StableSwapManageFees";
+import AllVaultView from "components/Vault/AllVaultView";
 
 import Web3Status from "components/Web3Status/Web3Status";
 import AllProposalsView from "components/Governance/ViewAllProposals";
@@ -43,6 +44,8 @@ import MobileMenu from "components/Dashboard/MobileMenu";
 import DexView from "components/Dashboard/DexView";
 import { drawerWidth } from "components/AppComponents/AppBar/AppBar";
 import TransactionErc20TokenModal from "components/Transaction/TransactionErc20TokenModal";
+import { themeObject } from "theme";
+import FthmInfoModal from "components/FthmInfo/FthmInfoModal";
 
 /**
  * DEX
@@ -79,8 +82,6 @@ import WalletConnectSrc from "assets/svg/wallet-connect.svg";
 import FathomLogoMobileSrc from "assets/svg/Fathom-app-logo-mobile.svg";
 import MobileMenuIcon from "assets/svg/mobile-menu.svg";
 import MobileMenuIconActive from "assets/svg/mobile-menu-active.svg";
-import { themeObject } from "../../theme";
-import FthmInfoModal from "../FthmInfo/FthmInfoModal";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -480,6 +481,7 @@ const MainLayout = () => {
               />
               <Route element={<RedirectPathToSwapOnly />} />
             </Route>
+            <Route path="/vault" element={<AllVaultView />}></Route>
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
           <Copyright />
