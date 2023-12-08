@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { X } from "react-feather";
 import styled from "styled-components";
 import tokenLogo from "apps/dex/assets/images/token-logo.svg";
-import { FTHM } from "apps/dex/constants/index";
+import { FTHM } from "apps/dex/constants";
 import { useTotalSupply } from "apps/dex/data/TotalSupply";
 import { useActiveWeb3React } from "apps/dex/hooks";
 import useCurrentBlockTimestamp from "apps/dex/hooks/useCurrentBlockTimestamp";
@@ -13,7 +13,6 @@ import {
 } from "apps/dex/state/wallet/hooks";
 import { ExternalLink, TYPE, FthmTokenAnimated } from "apps/dex/theme";
 import { computeUniCirculation } from "apps/dex/utils/computeUniCirculation";
-import usePrice from "apps/dex/utils/usePrice";
 import { AutoColumn } from "apps/dex/components/Column";
 import { RowBetween } from "apps/dex/components/Row";
 import {
@@ -23,6 +22,9 @@ import {
   CardSection,
   DataCard,
 } from "apps/dex/components/earn/styled";
+import usePricesContext from "context/prices";
+import { formatPercentage } from "utils/format";
+import BigNumber from "bignumber.js";
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -49,12 +51,14 @@ const StyledClose = styled(X)`
  * Content for balance stats modal
  */
 export default function FathomBalanceContent({
-  setShowUniBalanceModal,
+  setShowFthmBalanceModal,
 }: {
-  setShowUniBalanceModal: any;
+  setShowFthmBalanceModal: any;
 }) {
   const { account, chainId } = useActiveWeb3React();
   const fthm = chainId ? FTHM[chainId] : undefined;
+
+  const { fthmPrice } = usePricesContext();
 
   const total = useAggregateUniBalance();
   const fthmBalance: TokenAmount | undefined = useTokenBalance(
@@ -63,7 +67,6 @@ export default function FathomBalanceContent({
   );
 
   const totalSupply: TokenAmount | undefined = useTotalSupply(fthm);
-  const fthmPrice = usePrice(fthm);
   const blockTimestamp = useCurrentBlockTimestamp();
   const circulation: TokenAmount | undefined = useMemo(
     () =>
@@ -83,7 +86,7 @@ export default function FathomBalanceContent({
             <TYPE.white>Your FTHM Breakdown</TYPE.white>
             <StyledClose
               stroke="white"
-              onClick={() => setShowUniBalanceModal(false)}
+              onClick={() => setShowFthmBalanceModal(false)}
             />
           </RowBetween>
         </CardSection>
@@ -91,7 +94,11 @@ export default function FathomBalanceContent({
         {account && (
           <>
             <CardSection gap="sm">
-              <AutoColumn gap="md" justify="center">
+              <AutoColumn
+                gap="md"
+                justify="center"
+                style={{ marginBottom: "15px" }}
+              >
                 <FthmTokenAnimated width="48px" src={tokenLogo} />{" "}
                 <TYPE.white fontSize={48} fontWeight={600}>
                   {total?.toFixed(2, { groupSeparator: "," })}
@@ -115,7 +122,14 @@ export default function FathomBalanceContent({
               <TYPE.white>FTHM price:</TYPE.white>
               <TYPE.white>
                 <>
-                  {fthmPrice ?? "$"} {fthmPrice?.toFixed(2) ?? "-"}
+                  {fthmPrice ? "$" : ""}{" "}
+                  {fthmPrice
+                    ? formatPercentage(
+                        BigNumber(fthmPrice)
+                          .dividedBy(10 ** 18)
+                          .toNumber()
+                      )
+                    : "-"}
                 </>
               </TYPE.white>
             </RowBetween>

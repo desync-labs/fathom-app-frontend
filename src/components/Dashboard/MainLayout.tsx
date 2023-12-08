@@ -1,4 +1,4 @@
-import { createTheme, styled, ThemeProvider } from "@mui/material/styles";
+import { styled, ThemeProvider } from "@mui/material/styles";
 import {
   CssBaseline,
   Drawer as MuiDrawer,
@@ -35,7 +35,6 @@ import TransactionStatus from "components/Transaction/TransactionStatus";
 import { Menu } from "components/Dashboard/Menu";
 import { ToggleDrawerButton } from "components/AppComponents/AppButton/AppButton";
 import { MainBox } from "components/AppComponents/AppBox/AppBox";
-import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
 import DaoView from "components/Dashboard/DaoView";
 import MobileConnector from "components/Dashboard/MobileConnector";
 import DesktopConnector from "components/Dashboard/DesktopConnector";
@@ -80,6 +79,8 @@ import WalletConnectSrc from "assets/svg/wallet-connect.svg";
 import FathomLogoMobileSrc from "assets/svg/Fathom-app-logo-mobile.svg";
 import MobileMenuIcon from "assets/svg/mobile-menu.svg";
 import MobileMenuIconActive from "assets/svg/mobile-menu-active.svg";
+import { themeObject } from "../../theme";
+import FthmInfoModal from "../FthmInfo/FthmInfoModal";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -135,12 +136,14 @@ export const AccountElement = styled("div")<{ active: boolean }>`
   :focus {
     border: 1px solid blue;
   }
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    display: none;
+  }
 `;
 
 export const FTHMAmount = styled(AccountElement)`
   color: white;
-  padding: 4px 8px;
-  height: 36px;
+  padding: 0.5rem 0.5rem 0.5rem 0.5rem;
   font-weight: 500;
   background-color: #131f35;
 `;
@@ -158,30 +161,6 @@ export const FTHMWrapper = styled("span")`
     opacity: 0.9;
   }
 `;
-
-const mdTheme = createTheme({
-  palette: {
-    mode: "dark",
-    primary: {
-      main: "#00FFF6",
-    },
-    secondary: {
-      main: "#7D91B5",
-    },
-    info: {
-      main: "#5A81FF",
-    },
-    success: {
-      main: "#3DA329",
-    },
-    error: {
-      main: "#DD3C3C",
-    },
-  },
-  typography: {
-    fontFamily: ["Inter, sans-serif"].join(","),
-  },
-});
 
 const MainToolbar = styled(Toolbar)`
   display: flex;
@@ -246,7 +225,6 @@ const MainLayout = () => {
     userXDCBalance,
     showFthmBalanceModal,
     setShowFthmBalanceModal,
-
     aggregateBalance,
     countUpValue,
     countUpValuePrevious,
@@ -261,7 +239,7 @@ const MainLayout = () => {
   const { erc20TokenModalData } = useAlertAndTransactionContext();
 
   return (
-    <ThemeProvider theme={mdTheme}>
+    <ThemeProvider theme={themeObject}>
       <Box sx={{ display: "flex" }} onClick={mainBlockClickHandler}>
         <CssBaseline />
         <AppBar position="absolute" open={open}>
@@ -366,10 +344,7 @@ const MainLayout = () => {
               {account && userXDCBalance ? (
                 <Box
                   sx={{ flexShrink: 0 }}
-                  pl="0.75rem"
-                  pr="0.5rem"
-                  pt="0.5rem"
-                  pb="0.5rem"
+                  p="0.5rem 0.5rem 0.5rem 0.5rem"
                   fontWeight={500}
                 >
                   {userXDCBalance?.toSignificant(8)} {"XDC"}
@@ -425,7 +400,6 @@ const MainLayout = () => {
         <MainBox component="main">
           <Toolbar />
           <AlertMessages scroll={scroll} />
-          {erc20TokenModalData && <TransactionErc20TokenModal />}
           <TransactionStatus scroll={scroll} />
           <Routes>
             <Route path="/" element={<DashboardContent />} />
@@ -519,15 +493,15 @@ const MainLayout = () => {
         <DesktopConnector onClose={() => setOpenConnector(false)} />
       )}
 
-      <AppDialog
+      <FthmInfoModal
         onClose={() => setShowFthmBalanceModal(false)}
         open={showFthmBalanceModal}
-        sx={{ "& .MuiPaper-root": { width: "500px" } }}
       >
         <FathomBalanceContent
-          setShowUniBalanceModal={setShowFthmBalanceModal}
+          setShowFthmBalanceModal={setShowFthmBalanceModal}
         />
-      </AppDialog>
+      </FthmInfoModal>
+      {erc20TokenModalData && <TransactionErc20TokenModal />}
     </ThemeProvider>
   );
 };
