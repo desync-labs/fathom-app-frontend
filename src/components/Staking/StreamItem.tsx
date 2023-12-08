@@ -1,4 +1,4 @@
-import React, { FC, memo, useMemo } from "react";
+import { FC, memo, useMemo } from "react";
 import { ILockPosition } from "fathom-sdk";
 import StakingViewItem from "components/Staking/StakingViewItem";
 import ClaimRewardsDialog from "components/Staking/Dialog/ClaimRewardsDialog";

@@ -1,4 +1,4 @@
-import React, { Dispatch, FC, memo } from "react";
+import { Dispatch, FC, memo } from "react";
 import { DialogContent, Grid, useMediaQuery, useTheme } from "@mui/material";
 
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";

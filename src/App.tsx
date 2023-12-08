@@ -6,6 +6,7 @@ import { ApolloProvider } from "@apollo/client";
 import { client } from "apollo/client";
 import { SyncProvider } from "context/sync";
 import { PricesProvider } from "context/prices";
+import { Updaters } from "apps/dex";
 
 function App() {
   return (
@@ -13,7 +14,10 @@ function App() {
       <ApolloProvider client={client}>
         <SyncProvider>
           <PricesProvider>
-            <MainLayout />
+            <>
+              <Updaters />
+              <MainLayout />
+            </>
           </PricesProvider>
         </SyncProvider>
       </ApolloProvider>

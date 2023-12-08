@@ -1,5 +1,4 @@
 import { TitleSecondary } from "components/AppComponents/AppBox/AppBox";
-import * as React from "react";
 import { FC } from "react";
 import StreamItem from "components/Staking/StreamItem";
 

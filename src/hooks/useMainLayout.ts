@@ -4,6 +4,12 @@ import useConnector from "context/connector";
 import { useMediaQuery, useTheme } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import useWindowSize from "./useWindowResize";
+import {
+  useAggregateUniBalance,
+  useXDCBalances,
+} from "apps/dex/state/wallet/hooks";
+import { TokenAmount } from "into-the-fathom-swap-sdk";
+import usePrevious from "apps/dex/hooks/usePrevious";
 
 const useMainLayout = () => {
   const theme = useTheme();
@@ -19,6 +25,17 @@ const useMainLayout = () => {
   const currentPath = useLocation();
   const [scroll, setScroll] = useState<number>(0);
   const [width, height] = useWindowSize();
+  const [showFthmBalanceModal, setShowFthmBalanceModal] =
+    useState<boolean>(false);
+
+  const aggregateBalance: TokenAmount | undefined = useAggregateUniBalance();
+
+  const countUpValue = aggregateBalance?.toFixed(0) ?? "0";
+  const countUpValuePrevious = usePrevious(countUpValue) ?? "0";
+
+  const userXDCBalance = useXDCBalances(account ? [account] : [])?.[
+    account ?? ""
+  ];
 
   const drawerRef = useRef<HTMLDivElement | null>(null);
 
@@ -109,6 +126,13 @@ const useMainLayout = () => {
     openConnectorMenu,
     drawerRef,
     showToggleDrawerBtn,
+    userXDCBalance,
+    showFthmBalanceModal,
+    setShowFthmBalanceModal,
+
+    aggregateBalance,
+    countUpValue,
+    countUpValuePrevious,
   };
 };
 
