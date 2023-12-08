@@ -37,7 +37,7 @@
     "polished": "^4.2.2",
     "queue-fifo": "^0.2.6",
     "react": "^17.0.2",
-    "react-confetti": "^6.1.0",
+    "@confetti": "^6.1.0",
     "react-device-detect": "^2.2.3",
     "react-dom": "^17.0.2",
     "react-feather": "^2.0.10",

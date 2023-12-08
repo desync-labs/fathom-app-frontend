@@ -16,9 +16,6 @@ export default async function getTokenList(
   listUrl: string,
   resolveENSContentHash: (ensName: string) => Promise<string>
 ): Promise<TokenList> {
-  console.log({
-    listUrl,
-  });
   const parsedENS = parseENSAddress(listUrl);
   let urls: string[];
   if (parsedENS) {
