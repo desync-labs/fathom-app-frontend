@@ -1,4 +1,3 @@
-import React from "react";
 import BigNumber from "bignumber.js";
 import { Box, Divider, Grid, ListItemText } from "@mui/material";
 import { styled } from "@mui/material/styles";

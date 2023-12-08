@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import { FC } from "react";
 import BorrowIconSrc from "assets/svg/borrow.svg";
 import BorrowIconActiveSrc from "assets/svg/borrow-active.svg";
 import SwapIconSrc from "assets/svg/stable-swap.svg";
@@ -8,6 +8,7 @@ import StakingIconActiveSrc from "assets/svg/staking-active.svg";
 import GovernanceSrc from "assets/svg/governance.svg";
 import GovernanceActiveSrc from "assets/svg/governance-active.svg";
 import DexSrc from "assets/svg/dex.svg";
+import DexSrcActive from "assets/svg/dex-active.svg";
 
 import { styled } from "@mui/material/styles";
 import { Icon } from "@mui/material";
@@ -60,8 +61,8 @@ export const GovernanceIcon: FC<{ isDAOActive: boolean }> = ({
   </MenuIcon>
 );
 
-export const DexIcon: FC = () => (
+export const DexIcon: FC<{ isDexActive: boolean }> = ({ isDexActive }) => (
   <Icon sx={{ height: "1.2em" }}>
-    <img alt="dex-icon" src={DexSrc} />
+    <img alt="dex-icon" src={isDexActive ? DexSrcActive : DexSrc} />
   </Icon>
 );

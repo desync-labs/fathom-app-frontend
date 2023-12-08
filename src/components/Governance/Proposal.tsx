@@ -1,4 +1,3 @@
-import React from "react";
 import { Grid, Icon, Container } from "@mui/material";
 import { BackToProposalsButton } from "components/AppComponents/AppButton/AppButton";
 import ProposalInfo from "components/Governance/Proposal/ProposalInfo";

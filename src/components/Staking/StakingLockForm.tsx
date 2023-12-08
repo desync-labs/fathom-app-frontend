@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from "react";
+import { FC, useMemo } from "react";
 import { Controller } from "react-hook-form";
 import { Box, Slider, Grid, Typography, CircularProgress } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";

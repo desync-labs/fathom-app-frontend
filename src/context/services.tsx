@@ -1,4 +1,11 @@
-import React, { FC, ReactElement, useEffect, useMemo } from "react";
+import {
+  createContext,
+  FC,
+  ReactElement,
+  useContext,
+  useEffect,
+  useMemo,
+} from "react";
 import { RootService } from "services";
 import { supportedChainIds } from "connectors/networks";
 import { getDefaultProvider } from "utils/defaultProvider";
@@ -15,7 +22,7 @@ import { SmartContractFactory, Web3Utils } from "fathom-sdk";
 import useAlertAndTransactionContext from "context/alertAndTransaction";
 import { getTokenLogoURL } from "utils/tokenLogo";
 
-const StoresContext = React.createContext<RootService>({} as RootService);
+const ServicesContext = createContext<RootService>({} as RootService);
 
 export const ServicesProvider: FC<{ children: ReactElement }> = ({
   children,
@@ -29,21 +36,21 @@ export const ServicesProvider: FC<{ children: ReactElement }> = ({
 
   const { library, chainId } = useWeb3React();
 
-  const rootStore = useMemo(() => new RootService(), []);
+  const rootService = useMemo(() => new RootService(), []);
 
   useEffect(() => {
     if (library && chainId && supportedChainIds.includes(chainId)) {
-      rootStore.setProvider(library);
+      rootService.setProvider(library);
     } else {
-      rootStore.setProvider(getDefaultProvider());
+      rootService.setProvider(getDefaultProvider());
     }
-  }, [library, chainId, rootStore]);
+  }, [library, chainId, rootService]);
 
   useEffect(() => {
     if (chainId) {
-      rootStore.setChainId(chainId);
+      rootService.setChainId(chainId);
     }
-  }, [chainId, rootStore]);
+  }, [chainId, rootService]);
 
   useEffect(() => {
     const pendingTransactionHandler = (transactionObject: ITransaction) => {
@@ -81,7 +88,7 @@ export const ServicesProvider: FC<{ children: ReactElement }> = ({
         : message;
 
       if (type === "OpenPosition") {
-        const { provider, chainId } = rootStore;
+        const { provider, chainId } = rootService;
         const contractData = SmartContractFactory.FathomStableCoin(chainId);
         const { address } = contractData;
         const contract = Web3Utils.getContractInstance(contractData, provider);
@@ -103,8 +110,8 @@ export const ServicesProvider: FC<{ children: ReactElement }> = ({
       }
     };
 
-    if (rootStore) {
-      Object.values(rootStore.serviceList).forEach((service) => {
+    if (rootService) {
+      Object.values(rootService.serviceList).forEach((service) => {
         if ("emitter" in service) {
           service.emitter.on("pendingTransaction", pendingTransactionHandler);
           service.emitter.on("errorTransaction", errorTransactionHandler);
@@ -114,7 +121,7 @@ export const ServicesProvider: FC<{ children: ReactElement }> = ({
     }
 
     return () => {
-      Object.values(rootStore.serviceList).forEach((service) => {
+      Object.values(rootService.serviceList).forEach((service) => {
         if ("emitter" in service) {
           service.emitter.off("pendingTransaction", pendingTransactionHandler);
           service.emitter.off("errorTransaction", errorTransactionHandler);
@@ -123,18 +130,18 @@ export const ServicesProvider: FC<{ children: ReactElement }> = ({
       });
     };
   }, [
-    rootStore,
+    rootService,
     addTransaction,
     setShowSuccessAlertHandler,
     setShowErrorAlertHandler,
   ]);
 
   return (
-    <StoresContext.Provider value={rootStore}>
+    <ServicesContext.Provider value={rootService}>
       {children}
-    </StoresContext.Provider>
+    </ServicesContext.Provider>
   );
 };
 
 // this will be the function available for the app to connect to the stores
-export const useServices = () => React.useContext(StoresContext);
+export const useServices = () => useContext(ServicesContext);
