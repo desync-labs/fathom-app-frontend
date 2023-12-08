@@ -1,4 +1,3 @@
-import React from "react";
 import { Container, Grid, useMediaQuery, useTheme } from "@mui/material";
 import { PageHeader } from "components/Dashboard/PageHeader";
 import VaultList from "components/Vault/VaultList";

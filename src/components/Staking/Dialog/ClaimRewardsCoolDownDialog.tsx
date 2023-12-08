@@ -8,11 +8,12 @@ import {
   ButtonPrimary,
   CancelButton,
 } from "components/AppComponents/AppButton/AppButton";
-import React, { FC } from "react";
+import { FC } from "react";
 import { styled } from "@mui/material/styles";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatNumber } from "utils/format";
 import useStakingContext from "context/staking";
+import BigNumber from "bignumber.js";
 
 export const InfoMessageWrapper = styled(Box)`
   display: flex;
@@ -71,7 +72,7 @@ const ConfirmButton = styled(ButtonPrimary)`
 `;
 
 type ClaimRewardsDialogProps = {
-  totalRewards: number;
+  totalRewards: string;
   token: string;
   onClose: () => void;
   onContinue: (() => void) | null;
@@ -107,7 +108,13 @@ const ClaimRewardsCoolDownDialog: FC<ClaimRewardsDialogProps> = ({
           <img src={getTokenLogoURL(token)} alt={"token-logo"} width={58} />
           <Box sx={{ fontSize: "18px" }}>You’re requesting to claim</Box>
           <Box className={"amount"}>
-            <Box>{formatNumber(totalRewards / 10 ** 18)}</Box>
+            <Box>
+              {formatNumber(
+                BigNumber(totalRewards)
+                  .dividedBy(10 ** 18)
+                  .toNumber()
+              )}
+            </Box>
             <span>{token}</span>
           </Box>
         </DialogContentWrapper>

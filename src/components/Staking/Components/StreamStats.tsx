@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import { FC } from "react";
 
 import { Box, Typography, Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -16,6 +16,7 @@ import RewardsSrc from "assets/svg/rewards.svg";
 import { secondsToTime } from "utils/secondsToTime";
 import useStreamStats from "hooks/useStreamStats";
 import useStakingContext from "context/staking";
+import BigNumber from "bignumber.js";
 
 const FTHMStreamHeader = styled("h3")`
   font-weight: 600;
@@ -147,7 +148,7 @@ const CooldownCountDown = styled(Box)`
 
 const StreamStats: FC = () => {
   const {
-    staker,
+    stake,
     seconds,
     protocolStatsInfo,
     totalRewards,
@@ -226,20 +227,20 @@ const StreamStats: FC = () => {
         </StatsBlock>
       </StatsBlocks>
 
-      {staker && (
+      {stake && (
         <>
           <StatsTypography sx={{ padding: "30px 0" }}>My Stats</StatsTypography>
           <MyStatsBlocks>
             <MyStatsBlock>
               <StatsLabel>Staked Balance</StatsLabel>
-              {staker && (
+              {stake && (
                 <MyStatsValue>
                   <strong>
-                    {formatNumber(staker.totalStaked / 10 ** 18)} FTHM
+                    {formatNumber(stake.totalStaked / 10 ** 18)} FTHM
                   </strong>
                   <span>
                     {formatCurrency(
-                      (staker.totalStaked / 10 ** 18) * fthmPriceFormatted
+                      (stake.totalStaked / 10 ** 18) * fthmPriceFormatted
                     )}
                   </span>
                 </MyStatsValue>
@@ -251,10 +252,10 @@ const StreamStats: FC = () => {
                 <StatsLabel>
                   Voting power <InfoIcon sx={{ fontSize: "18px" }} />
                 </StatsLabel>
-                {staker && (
+                {stake && (
                   <MyStatsValue>
                     <strong>
-                      {formatNumber(staker.accruedVotes / 10 ** 18)} vFTHM
+                      {formatNumber(stake.accruedVotes / 10 ** 18)} vFTHM
                     </strong>
                   </MyStatsValue>
                 )}
@@ -274,17 +275,17 @@ const StreamStats: FC = () => {
                     </CooldownCountDown>
                     <MyStatsValue>
                       <strong>
-                        {formatNumber(staker.claimedAmount / 10 ** 18)} FTHM
+                        {formatNumber(stake.claimedAmount / 10 ** 18)} FTHM
                       </strong>
                       <span>
                         {formatCurrency(
-                          (staker.claimedAmount / 10 ** 18) * fthmPriceFormatted
+                          (stake.claimedAmount / 10 ** 18) * fthmPriceFormatted
                         )}
                       </span>
                     </MyStatsValue>
                   </>
                 )}
-                {seconds <= 0 && staker && Number(staker.claimedAmount) > 0 && (
+                {seconds <= 0 && stake && Number(stake.claimedAmount) > 0 && (
                   <Grid container>
                     <Grid item xs={6}>
                       <StatsLabel>
@@ -293,14 +294,12 @@ const StreamStats: FC = () => {
                       </StatsLabel>
                       <MyStatsValue className={"green"}>
                         <strong>
-                          {formatNumber(
-                            Number(staker.claimedAmount) / 10 ** 18
-                          )}{" "}
+                          {formatNumber(Number(stake.claimedAmount) / 10 ** 18)}{" "}
                           FTHM
                         </strong>
                         <span>
                           {formatCurrency(
-                            (staker.claimedAmount / 10 ** 18) *
+                            (stake.claimedAmount / 10 ** 18) *
                               fthmPriceFormatted
                           )}
                         </span>
@@ -322,20 +321,28 @@ const StreamStats: FC = () => {
                   <StatsLabel>
                     Claimable rewards <InfoIcon sx={{ fontSize: "18px" }} />
                   </StatsLabel>
-                  {staker && (
+                  {stake && (
                     <MyStatsValue className={"blue"}>
                       <strong>
-                        {formatNumber(totalRewards / 10 ** 18)} FTHM
+                        {formatNumber(
+                          BigNumber(totalRewards)
+                            .dividedBy(10 ** 18)
+                            .toNumber()
+                        )}{" "}
+                        FTHM
                       </strong>
                       <span>
                         {formatCurrency(
-                          (totalRewards / 10 ** 18) * fthmPriceFormatted
+                          BigNumber(totalRewards)
+                            .dividedBy(10 ** 18)
+                            .multipliedBy(fthmPriceFormatted)
+                            .toNumber()
                         )}{" "}
                       </span>
                     </MyStatsValue>
                   )}
                 </Grid>
-                {totalRewards > 0 && (
+                {BigNumber(totalRewards).isGreaterThan(0) && (
                   <ButtonGrid item xs={4}>
                     <StatsButton onClick={() => processFlow("claim")}>
                       Claim
@@ -350,10 +357,10 @@ const StreamStats: FC = () => {
                 <StatsLabel>
                   Voting power <InfoIcon sx={{ fontSize: "18px" }} />
                 </StatsLabel>
-                {staker && (
+                {stake && (
                   <MyStatsValue>
                     <strong>
-                      {formatNumber(staker.accruedVotes / 10 ** 18)} vFTHM
+                      {formatNumber(stake.accruedVotes / 10 ** 18)} vFTHM
                     </strong>
                   </MyStatsValue>
                 )}
@@ -373,17 +380,17 @@ const StreamStats: FC = () => {
                     </CooldownCountDown>
                     <MyStatsValue>
                       <strong>
-                        {formatNumber(staker.claimedAmount / 10 ** 18)} FTHM
+                        {formatNumber(stake.claimedAmount / 10 ** 18)} FTHM
                       </strong>
                       <span>
                         {formatCurrency(
-                          (staker.claimedAmount / 10 ** 18) * fthmPriceFormatted
+                          (stake.claimedAmount / 10 ** 18) * fthmPriceFormatted
                         )}
                       </span>
                     </MyStatsValue>
                   </>
                 )}
-                {seconds <= 0 && staker && Number(staker.claimedAmount) > 0 && (
+                {seconds <= 0 && stake && Number(stake.claimedAmount) > 0 && (
                   <Grid container>
                     <Grid item xs={6}>
                       <StatsLabel>
@@ -392,14 +399,12 @@ const StreamStats: FC = () => {
                       </StatsLabel>
                       <MyStatsValue className={"green"}>
                         <strong>
-                          {formatNumber(
-                            Number(staker.claimedAmount) / 10 ** 18
-                          )}{" "}
+                          {formatNumber(Number(stake.claimedAmount) / 10 ** 18)}{" "}
                           FTHM
                         </strong>
                         <span>
                           {formatCurrency(
-                            (staker.claimedAmount / 10 ** 18) *
+                            (stake.claimedAmount / 10 ** 18) *
                               fthmPriceFormatted
                           )}
                         </span>

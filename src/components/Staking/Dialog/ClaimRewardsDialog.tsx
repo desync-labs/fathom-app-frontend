@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from "react";
+import { FC, useMemo } from "react";
 import {
   AppDialog,
   DialogContentWrapper,
@@ -20,6 +20,7 @@ import { getTokenLogoURL } from "utils/tokenLogo";
 import InfoIcon from "@mui/icons-material/Info";
 import { formatNumber } from "utils/format";
 import useStakingContext from "context/staking";
+import BigNumber from "bignumber.js";
 
 export const InfoMessageWrapper = styled(Box)`
   display: flex;
@@ -75,7 +76,7 @@ const ButtonsWrapper = styled(Box)`
 `;
 
 type ClaimRewardsDialogProps = {
-  totalRewards: number;
+  totalRewards: string;
   token: string;
   onClose: () => void;
   onSkip: (() => any) | null;
@@ -116,7 +117,13 @@ const ClaimRewardsDialog: FC<ClaimRewardsDialogProps> = ({
           <img src={getTokenLogoURL(token)} alt={"token-logo"} width={58} />
           <Box sx={{ fontSize: "18px" }}>You’re requesting to claim</Box>
           <Box className={"amount"}>
-            <Box>{formatNumber(totalRewards / 10 ** 18)}</Box>
+            <Box>
+              {formatNumber(
+                BigNumber(totalRewards)
+                  .dividedBy(10 ** 18)
+                  .toNumber()
+              )}
+            </Box>
             <span>{token}</span>
           </Box>
         </DialogContentWrapper>

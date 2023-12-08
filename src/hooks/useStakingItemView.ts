@@ -5,6 +5,7 @@ import { YEAR_IN_SECONDS } from "utils/Constants";
 import { ILockPosition } from "fathom-sdk";
 import { useServices } from "context/services";
 import useConnector from "context/connector";
+import BigNumber from "bignumber.js";
 
 const useStakingItemView = (lockPosition: ILockPosition) => {
   const [seconds, setSeconds] = useState(lockPosition.end - Date.now() / 1000);
@@ -12,8 +13,8 @@ const useStakingItemView = (lockPosition: ILockPosition) => {
   const [timer, setTimer] = useState<ReturnType<typeof setTimeout> | null>();
   const { account, library } = useConnector();
   const { stakingService } = useServices();
-  const [rewardsAvailable, setRewardsAvailable] = useState<number>(
-    lockPosition.rewardsAvailable
+  const [rewardsAvailable, setRewardsAvailable] = useState<string>(
+    lockPosition.rewardsAvailable.toString()
   );
 
   const fetchRewards = useCallback(() => {
@@ -21,8 +22,7 @@ const useStakingItemView = (lockPosition: ILockPosition) => {
       stakingService
         .getStreamClaimableAmountPerLock(0, account, lockPosition.lockId)
         .then((claimRewards) => {
-          console.log(claimRewards);
-          setRewardsAvailable(claimRewards.toNumber());
+          setRewardsAvailable(claimRewards.toString());
         });
   }, [stakingService, lockPosition, account, library, setRewardsAvailable]);
 
@@ -52,9 +52,8 @@ const useStakingItemView = (lockPosition: ILockPosition) => {
   }, [seconds, fetchRewards]);
 
   useEffect(() => {
-    if (lockPosition.rewardsAvailable > 0) {
-      setRewardsAvailable(lockPosition.rewardsAvailable);
-    }
+    BigNumber(lockPosition.rewardsAvailable).isGreaterThan(0) &&
+      setRewardsAvailable(lockPosition.rewardsAvailable.toString());
   }, [lockPosition, setRewardsAvailable]);
 
   const penaltyFee = useMemo(() => {

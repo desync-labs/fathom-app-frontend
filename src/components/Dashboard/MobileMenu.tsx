@@ -1,4 +1,4 @@
-import React, { Dispatch, FC } from "react";
+import { Dispatch, FC } from "react";
 import { styled } from "@mui/material/styles";
 import { Box } from "@mui/material";
 import { Menu } from "components/Dashboard/Menu";

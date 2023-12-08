@@ -55,18 +55,49 @@ const useProposalItem = () => {
   }, [proposalService, data, account, setHasVoted]);
 
   const fetchStatus = useCallback(async () => {
-    if (data && data.proposal && account) {
-      const status = await proposalService.viewProposalState(
-        data.proposal.proposalId,
-        account
-      );
-      // @ts-ignore
-      setStatus(Object.values(ProposalStatus)[status]);
+    if (data?.proposal && account) {
+      const [status, currentBlock] = await Promise.all([
+        proposalService.viewProposalState(data.proposal.proposalId, account),
+        library.getBlockNumber(),
+      ]);
+      if (
+        BigNumber(currentBlock).isGreaterThan(data?.proposal.endBlock) &&
+        [0, 1].includes(status)
+      ) {
+        setStatus((Object.values(ProposalStatus) as any)["6"]);
+      } else {
+        setStatus((Object.values(ProposalStatus) as any)[status]);
+      }
     }
   }, [proposalService, data, account, setStatus]);
 
   const getVotingStartsTime = useCallback(async () => {
-    if (data && data.proposal) {
+    if (data?.proposal) {
+      const currentBlock = await library.getBlockNumber();
+
+      let timestamp;
+      if (BigNumber(currentBlock).isLessThan(data.proposal.startBlock)) {
+        const blockData = await library.getBlock(currentBlock);
+        timestamp = BigNumber(blockData.timestamp).plus(
+          BigNumber(data.proposal.startBlock)
+            .minus(currentBlock)
+            .multipliedBy(XDC_BLOCK_TIME)
+        );
+      } else {
+        const blockData = await library.getBlock(
+          Number(data.proposal.startBlock)
+        );
+        timestamp = BigNumber(blockData.timestamp);
+      }
+
+      return setVotingStartsTime(
+        new Date(timestamp.toNumber() * 1000).toLocaleString()
+      );
+    }
+  }, [data, library, setVotingStartsTime]);
+
+  const getVotingEndTime = useCallback(async () => {
+    if (data?.proposal && library) {
       const currentBlock = await library.getBlockNumber();
       let timestamp;
 
@@ -78,48 +109,31 @@ const useProposalItem = () => {
             .multipliedBy(XDC_BLOCK_TIME)
         );
       } else {
-        const blockData = await library.getBlock(data.proposal.startBlock);
-        timestamp = BigNumber(blockData.timestamp);
-      }
-
-      return setVotingStartsTime(
-        new Date(timestamp.toNumber() * 1000).toLocaleString()
-      );
-    }
-  }, [data, library, setVotingStartsTime]);
-
-  const getVotingEndTime = useCallback(async () => {
-    if (data && data.proposal && chainId) {
-      const currentBlock = await library.getBlockNumber();
-      let timestamp;
-
-      if (Number(currentBlock) < Number(data.proposal.startBlock)) {
-        const blockData = await library.getBlock(currentBlock);
-        timestamp = BigNumber(blockData.timestamp).plus(
-          BigNumber(data.proposal.startBlock)
-            .minus(currentBlock)
-            .multipliedBy(XDC_BLOCK_TIME)
+        const blockData = await library.getBlock(
+          Number(data.proposal.startBlock)
         );
-      } else {
-        const blockData = await library.getBlock(data.proposal.startBlock);
         timestamp = BigNumber(blockData.timestamp);
       }
 
       const endTimestamp = timestamp
-        .plus(BigNumber(data.proposal.endBlock).minus(data.proposal.startBlock))
-        .multipliedBy(XDC_BLOCK_TIME)
+        .plus(
+          BigNumber(data.proposal.endBlock)
+            .minus(data.proposal.startBlock)
+            .multipliedBy(XDC_BLOCK_TIME)
+        )
         .toNumber();
 
       const now = Date.now() / 1000;
 
-      if (endTimestamp - now <= 0) {
-        setVotingEndTime(new Date(endTimestamp * 1000).toLocaleString());
-        const status = await proposalService.viewProposalState(
-          data.proposal.proposalId,
-          account
-        );
-        // @ts-ignore
-        setStatus(Object.values(ProposalStatus)[status]);
+      setVotingEndTime(new Date(endTimestamp * 1000).toLocaleString());
+      if (BigNumber(endTimestamp).minus(now).isLessThanOrEqualTo(0)) {
+        if (account) {
+          const status = await proposalService.viewProposalState(
+            data.proposal.proposalId,
+            account
+          );
+          setStatus((Object.values(ProposalStatus) as any)[status]);
+        }
         return setSeconds(0);
       } else {
         setSeconds(endTimestamp - now);
@@ -155,22 +169,25 @@ const useProposalItem = () => {
   }, [proposalService, data?.proposal]);
 
   useEffect(() => {
-    if (data && data.proposal && account) {
+    if (data?.proposal && account) {
       fetchHasVoted();
       fetchStatus();
     }
   }, [data, account, fetchHasVoted, fetchStatus]);
 
   useEffect(() => {
-    if (chainId && data && data.proposal) {
+    if (library) {
       getVotingStartsTime();
       getVotingEndTime();
     }
-  }, [data, chainId, getVotingStartsTime, getVotingEndTime]);
+  }, [library, getVotingStartsTime, getVotingEndTime]);
 
   useEffect(() => {
+    let timeout1: ReturnType<typeof setTimeout>;
+    let timeout2: ReturnType<typeof setTimeout>;
+
     if (seconds > 0) {
-      setTimeout(() => {
+      timeout1 = setTimeout(() => {
         setSeconds(seconds - 1);
       }, 1000);
 
@@ -178,14 +195,19 @@ const useProposalItem = () => {
         fetchStatus();
       }
     } else {
-      setTimeout(() => {
+      timeout1 = setTimeout(() => {
         getVotingEndTime();
       }, 1500);
 
-      setTimeout(() => {
+      timeout2 = setTimeout(() => {
         fetchStatus();
       }, 3000);
     }
+
+    return () => {
+      timeout1 && clearTimeout(timeout1);
+      timeout2 && clearTimeout(timeout2);
+    };
   }, [seconds, setSeconds, getVotingEndTime, fetchStatus]);
 
   useEffect(() => {
@@ -215,8 +237,9 @@ const useProposalItem = () => {
         setHasVoted(true);
       } catch (err) {
         console.log(err);
+      } finally {
+        setVotePending(null);
       }
-      setVotePending(null);
     },
     [
       _proposalId,
@@ -251,6 +274,33 @@ const useProposalItem = () => {
     return null;
   }, [data?.proposal]);
 
+  const forVotes = useMemo(() => {
+    return loading
+      ? 0
+      : BigNumber(data?.proposal.forVotes)
+          .multipliedBy(100)
+          .dividedBy(fetchedTotalVotes)
+          .toNumber() || 0;
+  }, [data?.proposal, loading]);
+
+  const againstVotes = useMemo(() => {
+    return loading
+      ? 0
+      : BigNumber(data?.proposal.againstVotes)
+          .multipliedBy(100)
+          .dividedBy(fetchedTotalVotes)
+          .toNumber() || 0;
+  }, [data?.proposal, loading]);
+
+  const abstainVotes = useMemo(() => {
+    return loading
+      ? 0
+      : BigNumber(data?.proposal.abstainVotes)
+          .multipliedBy(100)
+          .dividedBy(fetchedTotalVotes)
+          .toNumber() || 0;
+  }, [data?.proposal, loading]);
+
   return {
     isMobile,
     hasVoted,
@@ -261,9 +311,9 @@ const useProposalItem = () => {
     vote,
     getTitleDescription,
     status,
-    forVotes: loading ? 0 : Number(data.proposal.forVotes),
-    abstainVotes: loading ? 0 : Number(data.proposal.abstainVotes),
-    againstVotes: loading ? 0 : Number(data.proposal.againstVotes),
+    forVotes,
+    abstainVotes,
+    againstVotes,
     fetchedTotalVotes,
     fetchedProposal: loading ? ({} as IProposal) : data.proposal,
     back,

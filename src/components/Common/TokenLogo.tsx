@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import { FC } from "react";
 import { styled } from "@mui/material/styles";
 import { Box } from "@mui/material";
 

@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import { FC } from "react";
 import BigNumber from "bignumber.js";
 import { Box, Divider, Grid, ListItemText } from "@mui/material";
 import { IVault, IVaultPosition } from "hooks/useVaultList";
