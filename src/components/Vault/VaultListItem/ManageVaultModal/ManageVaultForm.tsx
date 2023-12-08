@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useMemo } from "react";
 import {
   Box,
   CircularProgress,
@@ -15,10 +15,10 @@ import {
   UseFormHandleSubmit,
 } from "react-hook-form";
 
-import { IVault } from "hooks/useVaultList";
+import { IVault, IVaultPosition } from "hooks/useVaultList";
 import { FormType } from "hooks/useVaultManageDeposit";
 import { getTokenLogoURL } from "utils/tokenLogo";
-import { formatNumber } from "utils/format";
+import { formatNumber, formatPercentage } from "utils/format";
 
 import {
   ErrorBox,
@@ -65,7 +65,8 @@ const ManageVaultFormStyled = styled("form")`
 
 type VaultManageFormProps = {
   vaultItemData: IVault;
-  vaultPosition: any;
+  vaultPosition: IVaultPosition;
+  balanceToken: string;
   isMobile: boolean;
   onClose: () => void;
   walletBalance: string;
@@ -97,12 +98,12 @@ type VaultManageFormProps = {
     },
     undefined
   >;
-  onSubmit: () => Promise<void>;
+  onSubmit: (values: Record<string, any>) => Promise<void>;
 };
 
 const ManageVaultForm: FC<VaultManageFormProps> = ({
   vaultItemData,
-  vaultPosition,
+  balanceToken,
   isMobile,
   onClose,
   walletBalance,
@@ -122,7 +123,13 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
   onSubmit,
 }) => {
   const { token, shareToken, balanceTokens, depositLimit } = vaultItemData;
-  const { balancePosition } = vaultPosition;
+  const formattedBalanceToken = useMemo(
+    () =>
+      BigNumber(balanceToken)
+        .dividedBy(10 ** 36)
+        .toString(),
+    [balanceToken]
+  );
 
   return (
     <ManageVaultItemFormWrapper item>
@@ -152,11 +159,7 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
             {token.name} Deposited:
           </Typography>
           <Typography component="span">
-            {BigNumber(balancePosition)
-              .dividedBy(10 ** 18)
-              .toFormat(0) +
-              " " +
-              token.name}
+            {formatPercentage(Number(formattedBalanceToken)) + " " + token.name}
           </Typography>
         </ManageVaultItemDepositedBox>
         <Controller
@@ -170,9 +173,7 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
                 ? BigNumber(walletBalance)
                     .dividedBy(10 ** 18)
                     .toNumber()
-                : BigNumber(balancePosition)
-                    .dividedBy(10 ** 18)
-                    .toNumber(),
+                : Number(formattedBalanceToken),
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <AppFormInputWrapper>
@@ -192,11 +193,7 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
                     " " +
                     token.name
                   : "Vault Available: " +
-                    formatNumber(
-                      BigNumber(balancePosition)
-                        .dividedBy(10 ** 18)
-                        .toNumber()
-                    ) +
+                    formatNumber(Number(formattedBalanceToken)) +
                     " " +
                     token.name}
               </WalletBalance>
@@ -249,7 +246,16 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
                 onChange={onChange}
               />
               <AppFormInputLogo src={getTokenLogoURL(token.symbol)} />
-              <MaxButton onClick={() => setMax(walletBalance, balancePosition)}>
+              <MaxButton
+                onClick={() =>
+                  setMax(
+                    walletBalance,
+                    BigNumber(balanceToken)
+                      .dividedBy(10 ** 18)
+                      .toString()
+                  )
+                }
+              >
                 Max
               </MaxButton>
             </AppFormInputWrapper>

@@ -5,7 +5,7 @@ import debounce from "lodash.debounce";
 import useConnector from "context/connector";
 import { useServices } from "context/services";
 import useSyncContext from "context/sync";
-import { IVault } from "hooks/useVaultList";
+import { IVault, IVaultPosition } from "hooks/useVaultList";
 
 export const defaultValues = {
   formToken: "",
@@ -16,7 +16,11 @@ export enum FormType {
   DEPOSIT,
   WITHDRAW,
 }
-const useVaultManageDeposit = (vault: IVault, onClose: () => void) => {
+const useVaultManageDeposit = (
+  vault: IVault,
+  vaultPosition: IVaultPosition,
+  onClose: () => void
+) => {
   const { account, library } = useConnector();
   const { poolService, vaultService } = useServices();
   const { setLastTransactionBlock } = useSyncContext();
@@ -38,6 +42,7 @@ const useVaultManageDeposit = (vault: IVault, onClose: () => void) => {
   const [walletBalance, setWalletBalance] = useState<string>("0");
   const [isWalletFetching, setIsWalletFetching] = useState<boolean>(false);
   const [openDepositLoading, setOpenDepositLoading] = useState<boolean>(false);
+  const [balanceToken, setBalanceToken] = useState<string>("0");
 
   const [approveBtn, setApproveBtn] = useState<boolean>(false);
   const [approvalPending, setApprovalPending] = useState<boolean>(false);
@@ -56,7 +61,7 @@ const useVaultManageDeposit = (vault: IVault, onClose: () => void) => {
         );
         approved ? setApproveBtn(false) : setApproveBtn(true);
       }, 1000),
-    [vaultService, vault, account, formToken]
+    [vaultService, vault, account]
   );
 
   const updateSharedAmount = useMemo(
@@ -69,9 +74,13 @@ const useVaultManageDeposit = (vault: IVault, onClose: () => void) => {
           sharedAmount = await vaultService.previewWithdraw(deposit, vault.id);
         }
 
+        console.log({
+          sharedAmount,
+        });
+
         const sharedConverted = BigNumber(sharedAmount)
           .dividedBy(10 ** 18)
-          .toFixed();
+          .toString();
 
         setValue("formSharedToken", sharedConverted);
       }, 500),
@@ -90,27 +99,52 @@ const useVaultManageDeposit = (vault: IVault, onClose: () => void) => {
     setApprovalPending(false);
   }, [account, vault, vaultService, setApprovalPending, setApproveBtn]);
 
+  const getBalancePosition = useCallback(
+    (vaultPosition: IVaultPosition, vault: IVault) => {
+      vaultService
+        .previewRedeem(vaultPosition.balanceShares, vault.id)
+        .then((balanceToken) => {
+          console.log({
+            balanceToken,
+            vaultPosition,
+          });
+          setBalanceToken(balanceToken);
+        });
+    },
+    [vaultService, setBalanceToken]
+  );
+
   useEffect(() => {
-    setValue("formToken", "0");
-    setValue("formSharedToken", "0");
+    setValue("formToken", "");
+    setValue("formSharedToken", "");
   }, [formType]);
 
   useEffect(() => {
-    approvalStatus(formToken);
+    formToken.trim() && approvalStatus(formToken);
   }, [vault, formToken]);
+
+  useEffect(() => {
+    getBalancePosition(vaultPosition, vault);
+  }, [vaultPosition, vault]);
 
   useEffect(() => {
     getVaultTokenBalance();
   }, [account, token]);
 
   useEffect(() => {
-    if (formToken && Number(formToken) > 0) {
+    let timeout: ReturnType<typeof setTimeout>;
+
+    if (formToken.trim() && BigNumber(formToken).isGreaterThan(0)) {
       updateSharedAmount(formToken);
     } else {
-      setTimeout(() => {
-        setValue("formSharedToken", "0");
+      timeout = setTimeout(() => {
+        setValue("formSharedToken", "");
       }, 600);
     }
+
+    return () => {
+      timeout && clearTimeout(timeout);
+    };
   }, [formToken]);
 
   const getVaultTokenBalance = useCallback(async () => {
@@ -136,44 +170,49 @@ const useVaultManageDeposit = (vault: IVault, onClose: () => void) => {
     [setValue, walletBalance, formType]
   );
 
-  const onSubmit = useCallback(async () => {
-    setOpenDepositLoading(true);
+  const onSubmit = useCallback(
+    async (values: Record<string, any>) => {
+      const { formToken, formSharedToken } = values;
 
-    if (formType === FormType.DEPOSIT) {
-      try {
-        const blockNumber = await vaultService.deposit(
-          formToken,
-          account,
-          vault.shareToken.id
-        );
+      setOpenDepositLoading(true);
 
-        setLastTransactionBlock(blockNumber as number);
+      if (formType === FormType.DEPOSIT) {
+        try {
+          const blockNumber = await vaultService.deposit(
+            formToken,
+            account,
+            vault.shareToken.id
+          );
 
-        onClose();
-      } catch (e) {
-        console.log(e);
-      } finally {
-        setOpenDepositLoading(false);
+          setLastTransactionBlock(blockNumber as number);
+
+          onClose();
+        } catch (e) {
+          console.log(e);
+        } finally {
+          setOpenDepositLoading(false);
+        }
+      } else {
+        try {
+          const blockNumber = await vaultService.redeem(
+            formSharedToken,
+            account,
+            account,
+            vault.shareToken.id
+          );
+
+          setLastTransactionBlock(blockNumber as number);
+
+          onClose();
+        } catch (e) {
+          console.log(e);
+        } finally {
+          setOpenDepositLoading(false);
+        }
       }
-    } else {
-      try {
-        const blockNumber = await vaultService.withdraw(
-          formToken,
-          account,
-          account,
-          vault.shareToken.id
-        );
-
-        setLastTransactionBlock(blockNumber as number);
-
-        onClose();
-      } catch (e) {
-        console.log(e);
-      } finally {
-        setOpenDepositLoading(false);
-      }
-    }
-  }, [account, formToken, formType, vault]);
+    },
+    [account, formType, vault]
+  );
 
   return {
     walletBalance,
@@ -182,6 +221,7 @@ const useVaultManageDeposit = (vault: IVault, onClose: () => void) => {
     control,
     formToken,
     formSharedToken,
+    balanceToken,
     approveBtn,
     approvalPending,
     formType,
