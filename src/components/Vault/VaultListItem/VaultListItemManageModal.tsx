@@ -43,6 +43,7 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
     approveBtn,
     approvalPending,
     formType,
+    balanceToken,
     openDepositLoading,
     errors,
     setFormType,
@@ -50,7 +51,7 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
     setMax,
     handleSubmit,
     onSubmit,
-  } = useVaultManageDeposit(vaultItemData, onClose);
+  } = useVaultManageDeposit(vaultItemData, vaultPosition, onClose);
 
   return (
     <VaultManageGridDialogWrapper
@@ -75,6 +76,7 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
           />
           <DividerDefault orientation="vertical" flexItem></DividerDefault>
           <ManageVaultForm
+            balanceToken={balanceToken}
             vaultItemData={vaultItemData}
             vaultPosition={vaultPosition}
             onClose={onClose}
