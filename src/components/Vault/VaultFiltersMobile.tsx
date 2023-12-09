@@ -1,4 +1,4 @@
-import React, { FC, MouseEvent, Dispatch, useCallback } from "react";
+import { FC, MouseEvent } from "react";
 import { Box, MenuItem, ToggleButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import {
@@ -23,7 +23,7 @@ const VaultFilterMobileContainer = styled("div")`
 
 type VaultMobileFiltersPropsType = VaultFiltersPropsType & {
   isMobileFiltersOpen: boolean;
-  setIsMobileFiltersOpen: Dispatch<React.SetStateAction<boolean>>;
+  openMobileFilterMenu: (event: MouseEvent<HTMLElement>) => void;
 };
 
 const VaultFiltersMobile: FC<VaultMobileFiltersPropsType> = ({
@@ -34,18 +34,8 @@ const VaultFiltersMobile: FC<VaultMobileFiltersPropsType> = ({
   setIsShutdown,
   setSearch,
   setSortBy,
-  setIsMobileFiltersOpen,
+  openMobileFilterMenu,
 }) => {
-  const openMobileFilter = useCallback(
-    (event: MouseEvent<HTMLElement>) => {
-      event.stopPropagation();
-      event.preventDefault();
-
-      setIsMobileFiltersOpen(!isMobileFiltersOpen);
-    },
-    [setIsMobileFiltersOpen, isMobileFiltersOpen]
-  );
-
   return (
     <VaultFilterMobileContainer>
       <AppTextField
@@ -54,13 +44,13 @@ const VaultFiltersMobile: FC<VaultMobileFiltersPropsType> = ({
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
-      <FarmFilterMobileBtn onClick={(e) => openMobileFilter(e)}>
+      <FarmFilterMobileBtn onClick={openMobileFilterMenu}>
         <img src={VaultFilterSrc} alt={"filter icon"} />
       </FarmFilterMobileBtn>
       {isMobileFiltersOpen && (
         <MobileMenuWrapper
           onClick={(e) => e.stopPropagation()}
-          sx={{ left: "0" }}
+          sx={{ left: "0", height: "220px" }}
         >
           <Box py={1}>
             <FilterLabel>Filter by</FilterLabel>

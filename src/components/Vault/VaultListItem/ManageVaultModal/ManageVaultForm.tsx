@@ -166,7 +166,7 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
           control={control}
           name="formToken"
           rules={{
-            required: false,
+            required: true,
             min: 0.00000000000000001,
             max:
               formType === FormType.DEPOSIT
@@ -203,6 +203,24 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
                 placeholder={"0"}
                 helperText={
                   <>
+                    {error && error.type === "required" && (
+                      <AppFormInputErrorWrapper>
+                        <InfoIcon
+                          sx={{
+                            float: "left",
+                            width: "14px",
+                            height: "14px",
+                            marginRight: "0",
+                          }}
+                        />
+                        <Box
+                          component={"span"}
+                          sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                        >
+                          This field is required
+                        </Box>
+                      </AppFormInputErrorWrapper>
+                    )}
                     {error && error.type === "max" && (
                       <AppFormInputErrorWrapper>
                         <InfoIcon
@@ -343,24 +361,27 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
             />
           </AppListItem>
         </AppList>
-        {approveBtn && walletBalance !== "0" && (
-          <InfoBox sx={{ alignItems: "flex-start" }}>
-            <InfoIcon />
-            <Box flexDirection="column">
-              <Typography width="100%">
-                First-time connect? Please allow token approval in your MetaMask
-              </Typography>
-              <ButtonPrimary onClick={approve} style={{ margin: "16px 0" }}>
-                {" "}
-                {approvalPending ? (
-                  <CircularProgress size={20} sx={{ color: "#0D1526" }} />
-                ) : (
-                  "Approve token"
-                )}{" "}
-              </ButtonPrimary>
-            </Box>
-          </InfoBox>
-        )}
+        {approveBtn &&
+          formType === FormType.DEPOSIT &&
+          walletBalance !== "0" && (
+            <InfoBox sx={{ alignItems: "flex-start" }}>
+              <InfoIcon />
+              <Box flexDirection="column">
+                <Typography width="100%">
+                  First-time connect? Please allow token approval in your
+                  MetaMask
+                </Typography>
+                <ButtonPrimary onClick={approve} style={{ margin: "16px 0" }}>
+                  {" "}
+                  {approvalPending ? (
+                    <CircularProgress size={20} sx={{ color: "#0D1526" }} />
+                  ) : (
+                    "Approve token"
+                  )}{" "}
+                </ButtonPrimary>
+              </Box>
+            </InfoBox>
+          )}
         {isWalletFetching &&
           formType === FormType.DEPOSIT &&
           (BigNumber(walletBalance)
@@ -379,7 +400,9 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
           <ButtonPrimary
             type="submit"
             disabled={
-              openDepositLoading || approveBtn || !!Object.keys(errors).length
+              openDepositLoading ||
+              (formType === FormType.DEPOSIT && approveBtn) ||
+              !!Object.keys(errors).length
             }
             isLoading={openDepositLoading}
           >

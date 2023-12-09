@@ -27,6 +27,8 @@ const useMainLayout = () => {
   const [width, height] = useWindowSize();
   const [showFthmBalanceModal, setShowFthmBalanceModal] =
     useState<boolean>(false);
+  const [isMobileFiltersOpen, setIsMobileFiltersOpen] =
+    useState<boolean>(false);
 
   const aggregateBalance: TokenAmount | undefined = useAggregateUniBalance();
 
@@ -84,7 +86,18 @@ const useMainLayout = () => {
       setOpenMobile(false);
       setOpenConnector(false);
     }
-  }, [isMobile, openMobile, openConnector, setOpenMobile, setOpenConnector]);
+    if (isMobile && isMobileFiltersOpen) {
+      setIsMobileFiltersOpen(false);
+    }
+  }, [
+    isMobile,
+    openMobile,
+    openConnector,
+    isMobileFiltersOpen,
+    setOpenMobile,
+    setOpenConnector,
+    setIsMobileFiltersOpen,
+  ]);
 
   const openMobileMenu = useCallback(
     (event: MouseEvent<HTMLElement>) => {
@@ -106,6 +119,16 @@ const useMainLayout = () => {
     [setOpenConnector]
   );
 
+  const openMobileFilterMenu = useCallback(
+    (event: MouseEvent<HTMLElement>) => {
+      event.stopPropagation();
+      event.preventDefault();
+
+      setIsMobileFiltersOpen(!isMobileFiltersOpen);
+    },
+    [setIsMobileFiltersOpen, isMobileFiltersOpen]
+  );
+
   return {
     scroll,
     account,
@@ -116,6 +139,7 @@ const useMainLayout = () => {
     disconnect,
     isMetamask,
     isWalletConnect,
+    isMobileFiltersOpen,
     toggleDrawer,
     openMobile,
     setOpenMobile,
@@ -124,6 +148,7 @@ const useMainLayout = () => {
     mainBlockClickHandler,
     openMobileMenu,
     openConnectorMenu,
+    openMobileFilterMenu,
     drawerRef,
     showToggleDrawerBtn,
     userXDCBalance,

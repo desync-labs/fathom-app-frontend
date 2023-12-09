@@ -215,10 +215,12 @@ const MainLayout = () => {
     open,
     isMetamask,
     isWalletConnect,
+    isMobileFiltersOpen,
     toggleDrawer,
     mainBlockClickHandler,
     openMobileMenu,
     openConnectorMenu,
+    openMobileFilterMenu,
     drawerRef,
     showToggleDrawerBtn,
     setOpenMobile,
@@ -481,7 +483,15 @@ const MainLayout = () => {
               />
               <Route element={<RedirectPathToSwapOnly />} />
             </Route>
-            <Route path="/vault" element={<AllVaultView />}></Route>
+            <Route
+              path="/vault"
+              element={
+                <AllVaultView
+                  isMobileFiltersOpen={isMobileFiltersOpen}
+                  openMobileFilterMenu={openMobileFilterMenu}
+                />
+              }
+            ></Route>
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
           <Copyright />
