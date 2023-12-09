@@ -79,8 +79,6 @@ const useVaultList = () => {
     "tvl"
   );
   const [isShutdown, setIsShutdown] = useState<boolean>(false);
-  const [isMobileFiltersOpen, setIsMobileFiltersOpen] =
-    useState<boolean>(false);
 
   const {
     data: vaultItemsData,
@@ -186,15 +184,8 @@ const useVaultList = () => {
     [vaultPositionsList, vaultPositionsLoading]
   );
 
-  const mainBlockClickHandler = useCallback(() => {
-    if (isMobile && isMobileFiltersOpen) {
-      setIsMobileFiltersOpen(false);
-    }
-  }, [isMobile, isMobileFiltersOpen, setIsMobileFiltersOpen]);
-
   return {
     isMobile,
-    isMobileFiltersOpen,
     vaultSortedList,
     vaultsLoading,
     vaultPositionsLoading,
@@ -205,12 +196,10 @@ const useVaultList = () => {
     search,
     sortBy,
     setIsShutdown,
-    setIsMobileFiltersOpen,
     setSearch,
     setSortBy,
     handlePageChange,
     filterCurrentPosition,
-    mainBlockClickHandler,
   };
 };
 

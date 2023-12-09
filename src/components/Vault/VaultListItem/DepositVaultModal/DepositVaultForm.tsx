@@ -121,8 +121,8 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
           control={control}
           name="deposit"
           rules={{
-            required: false,
-            min: 1,
+            required: true,
+            min: 0.1,
             max: BigNumber(walletBalance)
               .dividedBy(10 ** 18)
               .toNumber(),
@@ -146,6 +146,24 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
                 placeholder={"0"}
                 helperText={
                   <>
+                    {error && error.type === "required" && (
+                      <AppFormInputErrorWrapper>
+                        <InfoIcon
+                          sx={{
+                            float: "left",
+                            width: "14px",
+                            height: "14px",
+                            marginRight: "0",
+                          }}
+                        />
+                        <Box
+                          component={"span"}
+                          sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                        >
+                          This field is required
+                        </Box>
+                      </AppFormInputErrorWrapper>
+                    )}
                     {error && error.type === "max" && (
                       <AppFormInputErrorWrapper>
                         <InfoIcon
