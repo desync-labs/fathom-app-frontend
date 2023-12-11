@@ -207,9 +207,9 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
               <img src={getTokenLogoURL(token.symbol)} alt={token.name} />
             </VaultListItemImageWrapper>
             <VaultInfo>
-              {vaultPosition?.balancePosition && (
-                <EarningLabel>Earning</EarningLabel>
-              )}
+              {BigNumber(vaultPosition?.balancePosition || "0").isGreaterThan(
+                0
+              ) && <EarningLabel>Earning</EarningLabel>}
               <VaultTitle>{token.name}</VaultTitle>
             </VaultInfo>
           </FlexBox>
@@ -258,7 +258,9 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
         <TableCell>
           <VaultStacked>
             <Box className={"img-wrapper"}>
-              {vaultPosition ? (
+              {BigNumber(vaultPosition?.balancePosition || "0").isGreaterThan(
+                0
+              ) ? (
                 <img
                   src={LockAquaSrc}
                   alt={"locked-active"}
