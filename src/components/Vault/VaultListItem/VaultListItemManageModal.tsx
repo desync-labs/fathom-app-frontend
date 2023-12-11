@@ -55,7 +55,7 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
       aria-labelledby="customized-dialog-title"
       open={true}
       fullWidth
-      maxWidth="sm"
+      maxWidth="md"
     >
       <AppDialogTitle id="customized-dialog-title" onClose={onClose}>
         Manage Vault
