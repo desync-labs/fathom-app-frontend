@@ -167,7 +167,9 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
           name="formToken"
           rules={{
             required: true,
-            min: 0.00000000000000001,
+            min: BigNumber(1)
+              .dividedBy(10 ** 18)
+              .toNumber(),
             max:
               formType === FormType.DEPOSIT
                 ? BigNumber(walletBalance)

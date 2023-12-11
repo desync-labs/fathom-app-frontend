@@ -49,8 +49,7 @@ export const ButtonPrimary = styled(MuiButton, {
   };
 
   if (!isLoading) {
-    // @ts-ignore
-    styles["&:disabled"] = {
+    (styles as any)["&:disabled"] = {
       color: "gray",
       background: "transparent",
       borderColor: "gray",

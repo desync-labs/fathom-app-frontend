@@ -42,7 +42,6 @@ export type UseOpenPositionContextReturnType = {
   proxyWalletExists: boolean;
 };
 
-// @ts-ignore
 export const OpenPositionContext =
   createContext<UseOpenPositionContextReturnType>(
     {} as UseOpenPositionContextReturnType

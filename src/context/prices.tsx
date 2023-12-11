@@ -26,7 +26,6 @@ export type UsePricesContextReturn = {
   fthmPrice: string;
 };
 
-// @ts-ignore
 export const PricesContext = createContext<UsePricesContextReturn>(
   {} as UsePricesContextReturn
 );

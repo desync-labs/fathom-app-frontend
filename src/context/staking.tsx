@@ -48,7 +48,6 @@ type UseStakingReturnType = {
   handlePageChange: (event: ChangeEvent<unknown>, page: number) => void;
 };
 
-// @ts-ignore
 export const StakingContext = createContext<UseStakingReturnType>(
   {} as UseStakingReturnType
 );

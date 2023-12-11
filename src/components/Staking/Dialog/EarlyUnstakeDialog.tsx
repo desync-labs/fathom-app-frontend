@@ -30,9 +30,6 @@ import { formatNumber } from "utils/format";
 import useStakingContext from "context/staking";
 
 const UnstakeDialogWrapper = styled(AppDialog)`
-  .MuiPaper-root {
-    maxwidth: 600px;
-  }
   .MuiGrid-container {
     margin: 0 17px 15px 17px;
     padding: 10px 0 30px 0;

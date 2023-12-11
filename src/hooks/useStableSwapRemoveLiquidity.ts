@@ -72,8 +72,7 @@ const useStableSwapRemoveLiquidity = () => {
       depositTracker,
     ] = await Promise.all(promises);
 
-    // @ts-ignore
-    const { "0": fxdLiquidity, "1": stableLiquidity } = liquidityPerUser;
+    const { "0": fxdLiquidity, "1": stableLiquidity } = liquidityPerUser as any;
 
     setFxdDecimals(fxdDecimals.toString());
     setStableDecimals(stableDecimals.toString());

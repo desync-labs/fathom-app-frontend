@@ -215,10 +215,7 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
     setSyncVault,
   ]);
 
-  return (
-    // @ts-ignore
-    <SyncContext.Provider value={values}>{children}</SyncContext.Provider>
-  );
+  return <SyncContext.Provider value={values}>{children}</SyncContext.Provider>;
 };
 
 const useSyncContext = () => {

@@ -20,7 +20,7 @@ import VaultListItem from "components/Vault/VaultListItem";
 import VaultFilters from "components/Vault/VaultFilters";
 import VaultListItemMobile from "components/Vault/VaultListItemMobile";
 import VaultFiltersMobile from "components/Vault/VaultFiltersMobile";
-import AppPopover from "../AppComponents/AppPopover/AppPopover";
+import AppPopover from "components/AppComponents/AppPopover/AppPopover";
 
 const CircleWrapper = styled(Box)`
   width: 100%;

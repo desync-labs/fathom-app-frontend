@@ -12,10 +12,6 @@ import DepositVaultForm from "components/Vault/VaultListItem/DepositVaultModal/D
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
 
 const VaultManageGridDialogWrapper = styled(AppDialog)`
-  .MuiPaper-root {
-    maxwidth: 600px;
-  }
-
   .MuiGrid-container {
     padding: 10px 0 30px 0;
   }
@@ -54,7 +50,7 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
       aria-labelledby="customized-dialog-title"
       open={true}
       fullWidth
-      maxWidth="md"
+      maxWidth="sm"
     >
       <AppDialogTitle id="customized-dialog-title" onClose={onClose}>
         Deposit To Vault

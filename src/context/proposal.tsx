@@ -29,7 +29,6 @@ export type UseProposalContextReturnType = {
   secondsLeft: number;
 };
 
-// @ts-ignore
 export const ProposalContext = createContext<UseProposalContextReturnType>(
   {} as UseProposalContextReturnType
 );

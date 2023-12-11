@@ -61,6 +61,13 @@ export interface IVault {
   ];
 }
 
+export enum SortType {
+  FEE,
+  EARNED,
+  TVL,
+  STAKED,
+}
+
 const useVaultList = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -75,9 +82,7 @@ const useVaultList = () => {
   const [vaultItemsCount, setVaultItemsCount] = useState(0);
 
   const [search, setSearch] = useState<string>("");
-  const [sortBy, setSortBy] = useState<"fee" | "earned" | "tvl" | "staked">(
-    "tvl"
-  );
+  const [sortBy, setSortBy] = useState<SortType>(SortType.TVL);
   const [isShutdown, setIsShutdown] = useState<boolean>(false);
 
   const {
@@ -137,7 +142,7 @@ const useVaultList = () => {
     (vaultData: IVault[]) => {
       let sortedVaults = vaultData;
       if (vaultData.length) {
-        if (sortBy === "fee") {
+        if (sortBy === SortType.FEE) {
           sortedVaults = vaultData.sort((a, b) => {
             const totalFeesA = Number(a.strategies[0].reports[0].totalFees);
             const totalFeesB = Number(b.strategies[0].reports[0].totalFees);
@@ -145,7 +150,7 @@ const useVaultList = () => {
             return totalFeesB - totalFeesA;
           });
         }
-        if (sortBy === "tvl") {
+        if (sortBy === SortType.TVL) {
           sortedVaults = vaultData.sort((a, b) => {
             const tvlA = Number(a.balanceTokens);
             const tvlB = Number(b.balanceTokens);
