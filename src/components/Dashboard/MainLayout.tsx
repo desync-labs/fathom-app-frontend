@@ -82,7 +82,7 @@ import WalletConnectSrc from "assets/svg/wallet-connect.svg";
 import FathomLogoMobileSrc from "assets/svg/Fathom-app-logo-mobile.svg";
 import MobileMenuIcon from "assets/svg/mobile-menu.svg";
 import MobileMenuIconActive from "assets/svg/mobile-menu-active.svg";
-import { formatNumber } from "../../utils/format";
+import { formatNumber } from "utils/format";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
