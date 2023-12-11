@@ -15,7 +15,7 @@ import {
 } from "react-hook-form";
 import BigNumber from "bignumber.js";
 
-import { IVault } from "hooks/useVaultList";
+import { IVault } from "fathom-sdk";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatNumber } from "utils/format";
 
@@ -122,7 +122,7 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
           name="deposit"
           rules={{
             required: true,
-            min: 0.1,
+            min: 1,
             max: BigNumber(walletBalance)
               .dividedBy(10 ** 18)
               .toNumber(),

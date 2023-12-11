@@ -1,7 +1,7 @@
 import { FC } from "react";
 import BigNumber from "bignumber.js";
 import { Box, Divider, Grid, ListItemText } from "@mui/material";
-import { IVault, IVaultPosition } from "hooks/useVaultList";
+import { IVault, IVaultPosition } from "fathom-sdk";
 import { FormType } from "hooks/useVaultManageDeposit";
 import { AppList, AppListItem } from "components/AppComponents/AppList/AppList";
 

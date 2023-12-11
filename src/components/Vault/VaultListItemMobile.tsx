@@ -29,7 +29,7 @@ import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatNumber, formatPercentage } from "utils/format";
 import useVaultListItem from "hooks/useVaultListItem";
-import { IVault, IVaultPosition } from "hooks/useVaultList";
+import { IVault, IVaultPosition } from "fathom-sdk";
 
 import DirectionUp from "assets/svg/direction-up.svg";
 import DirectionDown from "assets/svg/direction-down.svg";

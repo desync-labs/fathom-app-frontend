@@ -5,67 +5,13 @@ import { ACCOUNT_VAULT_POSITIONS, VAULTS } from "apollo/queries";
 import { COUNT_PER_PAGE } from "utils/Constants";
 import useConnector from "context/connector";
 import useSyncContext from "context/sync";
-
-export interface IVaultPosition {
-  id: string;
-  balancePosition: string;
-  balanceProfit: string;
-  balanceShares: string;
-  balanceTokens: string;
-  vault: {
-    id: string;
-  };
-  token: {
-    symbol: string;
-    name: string;
-  };
-  shareToken: {
-    symbol: string;
-    name: string;
-  };
-}
-
-export interface IVault {
-  id: string;
-  token: {
-    id: string;
-    decimals: number;
-    name: string;
-    symbol: string;
-  };
-  shareToken: {
-    id: string;
-    decimals: number;
-    name: string;
-    symbol: string;
-  };
-  sharesSupply: string;
-  balanceTokens: string;
-  balanceTokensIdle: string;
-  totalDebtAmount: string;
-  depositLimit: string;
-  strategies: [
-    {
-      reports: [
-        {
-          totalFees: string;
-          protocolFees: string;
-          results: [
-            {
-              apr: string;
-            }
-          ];
-        }
-      ];
-    }
-  ];
-}
+import { IVault, IVaultPosition } from "fathom-sdk";
 
 export enum SortType {
-  FEE,
-  EARNED,
-  TVL,
-  STAKED,
+  FEE = "fee",
+  EARNED = "earned",
+  TVL = "tvl",
+  STAKED = "staked",
 }
 
 const useVaultList = () => {

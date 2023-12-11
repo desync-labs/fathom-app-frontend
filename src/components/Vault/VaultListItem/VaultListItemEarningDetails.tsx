@@ -2,7 +2,7 @@ import { FC } from "react";
 import BigNumber from "bignumber.js";
 import { Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { IVault } from "hooks/useVaultList";
+import { IVault } from "fathom-sdk";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import {
   Approx,
