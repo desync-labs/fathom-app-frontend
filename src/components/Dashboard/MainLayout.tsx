@@ -411,20 +411,20 @@ const MainLayout = () => {
             {allowStableSwap ||
             isUserWrapperWhiteListed ||
             allowStableSwapInProgress ? (
-              <Route path="/swap" element={<StableSwap />} />
+              <Route path="/stable-swap" element={<StableSwap />} />
             ) : null}
             {isUserWrapperWhiteListed ? (
               <>
                 <Route
-                  path="/swap/add-liquidity"
+                  path="/stable-swap/add-liquidity"
                   element={<StableSwapAddLiquidity />}
                 />
                 <Route
-                  path="/swap/remove-liquidity"
+                  path="/stable-swap/remove-liquidity"
                   element={<StableSwapRemoveLiquidity />}
                 />
                 <Route
-                  path="/swap/manage-fees"
+                  path="/stable-swap/manage-fees"
                   element={<StableSwapManageFees />}
                 />
               </>
