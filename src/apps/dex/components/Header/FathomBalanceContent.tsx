@@ -97,7 +97,7 @@ export default function FathomBalanceContent({
               <AutoColumn
                 gap="md"
                 justify="center"
-                style={{ marginBottom: "15px" }}
+                style={{ marginBottom: "20px" }}
               >
                 <FthmTokenAnimated width="48px" src={tokenLogo} />{" "}
                 <TYPE.white fontSize={48} fontWeight={600}>

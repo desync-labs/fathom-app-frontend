@@ -5,60 +5,13 @@ import { ACCOUNT_VAULT_POSITIONS, VAULTS } from "apollo/queries";
 import { COUNT_PER_PAGE } from "utils/Constants";
 import useConnector from "context/connector";
 import useSyncContext from "context/sync";
+import { IVault, IVaultPosition } from "fathom-sdk";
 
-export interface IVaultPosition {
-  id: string;
-  balancePosition: string;
-  balanceProfit: string;
-  balanceShares: string;
-  balanceTokens: string;
-  vault: {
-    id: string;
-  };
-  token: {
-    symbol: string;
-    name: string;
-  };
-  shareToken: {
-    symbol: string;
-    name: string;
-  };
-}
-
-export interface IVault {
-  id: string;
-  token: {
-    id: string;
-    decimals: number;
-    name: string;
-    symbol: string;
-  };
-  shareToken: {
-    id: string;
-    decimals: number;
-    name: string;
-    symbol: string;
-  };
-  sharesSupply: string;
-  balanceTokens: string;
-  balanceTokensIdle: string;
-  totalDebtAmount: string;
-  depositLimit: string;
-  strategies: [
-    {
-      reports: [
-        {
-          totalFees: string;
-          protocolFees: string;
-          results: [
-            {
-              apr: string;
-            }
-          ];
-        }
-      ];
-    }
-  ];
+export enum SortType {
+  FEE = "fee",
+  EARNED = "earned",
+  TVL = "tvl",
+  STAKED = "staked",
 }
 
 const useVaultList = () => {
@@ -75,9 +28,7 @@ const useVaultList = () => {
   const [vaultItemsCount, setVaultItemsCount] = useState(0);
 
   const [search, setSearch] = useState<string>("");
-  const [sortBy, setSortBy] = useState<"fee" | "earned" | "tvl" | "staked">(
-    "tvl"
-  );
+  const [sortBy, setSortBy] = useState<SortType>(SortType.TVL);
   const [isShutdown, setIsShutdown] = useState<boolean>(false);
 
   const {
@@ -137,7 +88,7 @@ const useVaultList = () => {
     (vaultData: IVault[]) => {
       let sortedVaults = vaultData;
       if (vaultData.length) {
-        if (sortBy === "fee") {
+        if (sortBy === SortType.FEE) {
           sortedVaults = vaultData.sort((a, b) => {
             const totalFeesA = Number(a.strategies[0].reports[0].totalFees);
             const totalFeesB = Number(b.strategies[0].reports[0].totalFees);
@@ -145,7 +96,7 @@ const useVaultList = () => {
             return totalFeesB - totalFeesA;
           });
         }
-        if (sortBy === "tvl") {
+        if (sortBy === SortType.TVL) {
           sortedVaults = vaultData.sort((a, b) => {
             const tvlA = Number(a.balanceTokens);
             const tvlB = Number(b.balanceTokens);

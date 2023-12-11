@@ -2,7 +2,7 @@ import { FC } from "react";
 import { DialogContent, Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-import { IVault } from "hooks/useVaultList";
+import { IVault } from "fathom-sdk";
 import useVaultOpenDeposit from "hooks/useVaultOpenDeposit";
 
 import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
@@ -12,10 +12,6 @@ import DepositVaultForm from "components/Vault/VaultListItem/DepositVaultModal/D
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
 
 const VaultManageGridDialogWrapper = styled(AppDialog)`
-  .MuiPaper-root {
-    maxwidth: 600px;
-  }
-
   .MuiGrid-container {
     padding: 10px 0 30px 0;
   }

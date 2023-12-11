@@ -4,38 +4,13 @@ import {
   DialogContentWrapper,
 } from "components/AppComponents/AppDialog/AppDialog";
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
-import { Box, DialogContent, Typography } from "@mui/material";
+import { Box, DialogContent } from "@mui/material";
 import { CancelButton } from "components/AppComponents/AppButton/AppButton";
+import { ModalDescription } from "components/AppComponents/AppBox/AppBox";
 import { styled } from "@mui/material/styles";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatNumber } from "utils/format";
 import { ILockPosition } from "fathom-sdk";
-
-export const InfoMessageWrapper = styled(Box)`
-  display: flex;
-  align-items: start;
-  gap: 5px;
-  padding: 0 12px;
-  p {
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 20px;
-    color: #9fadc6;
-    margin-bottom: 20px;
-  }
-
-  svg {
-    margin-top: 2px;
-  }
-`;
-
-const Description = styled(Typography)`
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 20px;
-  color: #ffffff;
-  padding: 0 15px;
-`;
 
 const ButtonsWrapper = styled(Box)`
   width: auto;
@@ -75,11 +50,11 @@ const UnstakeCoolDownDialog: FC<UnstakeCoolDownDialogProps> = ({
       </AppDialogTitle>
 
       <DialogContent>
-        <Description>
+        <ModalDescription>
           You successfully requested to unstake. Now it's going to a “Cooldown"
           period for 2 days. After this period, you'll be able to Withdraw it at
           My Stats &gt; Ready-to-Withdraw. Learn more
-        </Description>
+        </ModalDescription>
         <DialogContentWrapper>
           <img src={getTokenLogoURL(token)} alt={"token-logo"} width={58} />
           <Box sx={{ fontSize: "18px" }}>Cooling down ...</Box>

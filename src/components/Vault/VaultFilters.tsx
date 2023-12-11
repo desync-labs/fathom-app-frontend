@@ -1,4 +1,4 @@
-import React, { Dispatch, FC } from "react";
+import { Dispatch, FC, SetStateAction } from "react";
 import { Grid, ToggleButtonGroup, ToggleButton, MenuItem } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import {
@@ -8,6 +8,8 @@ import {
   AppTextField,
 } from "components/AppComponents/AppForm/AppForm";
 import SearchSrc from "assets/svg/search.svg";
+import { SortType } from "hooks/useVaultList";
+import { SelectChangeEvent } from "@mui/material/Select";
 
 export const VaultToggleButtonGroup = styled(ToggleButtonGroup)`
   border-radius: 12px;
@@ -68,12 +70,10 @@ const VaultFilterContainer = styled(Grid)`
 export type VaultFiltersPropsType = {
   isShutdown: boolean;
   search: string;
-  sortBy: string;
-  setIsShutdown: Dispatch<React.SetStateAction<boolean>>;
-  setSearch: Dispatch<React.SetStateAction<string>>;
-  setSortBy: Dispatch<
-    React.SetStateAction<"fee" | "earned" | "tvl" | "staked">
-  >;
+  sortBy: SortType;
+  setIsShutdown: Dispatch<SetStateAction<boolean>>;
+  setSearch: Dispatch<SetStateAction<string>>;
+  setSortBy: Dispatch<SetStateAction<SortType>>;
 };
 
 const VaultFilters: FC<VaultFiltersPropsType> = ({
@@ -106,9 +106,8 @@ const VaultFilters: FC<VaultFiltersPropsType> = ({
         <FilterLabel>Sort by</FilterLabel>
         <AppSelect
           value={sortBy}
-          // @ts-ignore
-          onChange={(event: SelectChangeEvent) => {
-            setSortBy(event.target.value);
+          onChange={(event: SelectChangeEvent<unknown>) => {
+            setSortBy(event.target.value as SortType);
           }}
           sx={{ border: "none", fieldset: { borderColor: "transparent" } }}
         >
