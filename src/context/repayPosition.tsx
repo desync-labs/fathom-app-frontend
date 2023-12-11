@@ -37,7 +37,6 @@ export type UseRepayPositionContextReturnType = {
   approve: () => Promise<void>;
 };
 
-// @ts-ignore
 export const RepayPositionContext =
   createContext<UseRepayPositionContextReturnType>(
     {} as UseRepayPositionContextReturnType

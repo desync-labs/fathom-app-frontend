@@ -29,19 +29,20 @@ import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatNumber, formatPercentage } from "utils/format";
 import useVaultListItem from "hooks/useVaultListItem";
-import { IVault, IVaultPosition } from "hooks/useVaultList";
+import { IVault, IVaultPosition } from "fathom-sdk";
 
 import DirectionUp from "assets/svg/direction-up.svg";
 import DirectionDown from "assets/svg/direction-down.svg";
 import LockSrc from "assets/svg/lock.svg";
 import LockAquaSrc from "assets/svg/lock-aqua.svg";
+import usePricesContext from "../../context/prices";
 
 const VaultPoolName = styled("div")`
   display: flex;
   justify-content: left;
   align-items: center;
   gap: 7px;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 `;
 
 const VaultListItemMobileContainer = styled(Box)`
@@ -171,9 +172,14 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
     setManageVault,
   } = useVaultListItem();
 
+  const { fxdPrice } = usePricesContext();
+
   return (
     <VaultListItemMobileContainer>
-      {vaultPosition?.balancePosition && <EarningLabel>Earning</EarningLabel>}
+      {vaultPosition?.balancePosition &&
+        BigNumber(vaultPosition?.balancePosition).isGreaterThan(0) && (
+          <EarningLabel>Earning</EarningLabel>
+        )}
       <VaultPoolName>
         <VaultListItemImageWrapper>
           <img src={getTokenLogoURL(token.symbol)} alt={token.name} />
@@ -203,11 +209,16 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
           />
         </VaultListLabel>
         <VaultListValue>
-          {formatPercentage(
-            BigNumber(vaultPosition?.balanceProfit || "0")
-              .dividedBy(10 ** 18)
-              .toNumber()
-          )}
+          {vaultPosition?.balanceProfit &&
+          BigNumber(vaultPosition?.balanceProfit).isGreaterThan(0)
+            ? "$" +
+              formatPercentage(
+                BigNumber(vaultPosition.balanceProfit)
+                  .multipliedBy(fxdPrice)
+                  .dividedBy(10 ** 36)
+                  .toNumber()
+              )
+            : "0"}
         </VaultListValue>
       </ListItemWrapper>
       <ListItemWrapper>

@@ -228,7 +228,7 @@ export function useIsTransactionUnsupported(
   const tokenIn = wrappedCurrency(currencyIn, chainId);
   const tokenOut = wrappedCurrency(currencyOut, chainId);
 
-  if (!Object.keys(supportedTokens).length) {
+  if (!Object.keys(supportedTokens).length || !currencyIn || !currencyOut) {
     return false;
   } else if (supportedTokens) {
     if (tokenIn && Object.keys(supportedTokens).includes(tokenIn.address)) {

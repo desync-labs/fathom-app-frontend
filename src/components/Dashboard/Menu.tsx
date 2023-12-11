@@ -26,7 +26,7 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
     [location.pathname]
   );
   const isStableSwapActive = useMemo(
-    () => location.pathname.includes("swap"),
+    () => location.pathname.includes("/stable-swap"),
     [location.pathname]
   );
   const isDAOActive = useMemo(
@@ -34,7 +34,7 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
     [location.pathname]
   );
   const isDexActive = useMemo(
-    () => location.pathname.includes("swap"),
+    () => location.pathname.includes("/swap"),
     [location.pathname]
   );
 
@@ -57,7 +57,7 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
     },
     {
       name: "Stable Swap",
-      link: "/swap",
+      link: "/stable-swap",
       Icon: <SwapIcon isStableSwapActive={isStableSwapActive} />,
       isActive: isStableSwapActive,
       showText: showText,

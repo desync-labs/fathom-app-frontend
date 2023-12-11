@@ -15,7 +15,7 @@ import {
   UseFormHandleSubmit,
 } from "react-hook-form";
 
-import { IVault, IVaultPosition } from "hooks/useVaultList";
+import { IVault, IVaultPosition } from "fathom-sdk";
 import { FormType } from "hooks/useVaultManageDeposit";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatNumber, formatPercentage } from "utils/format";
@@ -167,7 +167,7 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
           name="formToken"
           rules={{
             required: true,
-            min: 0.00000000000000001,
+            min: 1,
             max:
               formType === FormType.DEPOSIT
                 ? BigNumber(walletBalance)

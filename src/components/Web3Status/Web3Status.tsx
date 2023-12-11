@@ -83,21 +83,18 @@ const Web3Status = () => {
   const requestChangeNetwork = useCallback(
     async (chainId: number) => {
       setOpen(false);
-      if (window.ethereum) {
+      if (window && window.ethereum) {
         try {
-          // @ts-ignore
-          await window.ethereum?.request({
+          window.ethereum.request?.({
             method: "wallet_switchEthereumChain",
             params: [{ chainId: `0x${chainId.toString(16)}` }],
           });
         } catch (err: any) {
           console.log(err);
           if (err.code === 4902) {
-            // @ts-ignore
-            await window.ethereum.request({
+            window.ethereum.request?.({
               method: "wallet_addEthereumChain",
-              // @ts-ignore
-              params: [XDC_NETWORK_SETTINGS[chainId]],
+              params: [(XDC_NETWORK_SETTINGS as any)[chainId]],
             });
           }
         }

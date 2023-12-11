@@ -2,7 +2,7 @@ import { FC } from "react";
 import BigNumber from "bignumber.js";
 import { Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { IVault, IVaultPosition } from "hooks/useVaultList";
+import { IVault, IVaultPosition } from "fathom-sdk";
 import AppPopover from "components/AppComponents/AppPopover/AppPopover";
 import usePricesContext from "context/prices";
 import { formatPercentage } from "utils/format";
@@ -66,8 +66,9 @@ const VaultListItemEarned: FC<FarmListItemEarnedProps> = ({
             id={"earned"}
             text={
               <>
-                The accumulated profit for the account/vault. It is only updated
-                when the user withdraws all the shares.
+                The accumulated profit for the account/vault.
+                <br />
+                It is only updated when the user withdraws all the shares.
               </>
             }
           />

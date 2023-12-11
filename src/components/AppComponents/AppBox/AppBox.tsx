@@ -296,3 +296,12 @@ export const NestedRouteContainer = styled(Container)`
     margin-top: 15px;
   }
 `;
+
+export const ModalDescription = styled(Typography)`
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: #ffffff;
+  padding: 0 15px;
+  margin-bottom: 20px;
+`;

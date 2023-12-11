@@ -15,37 +15,8 @@ import { getTokenLogoURL } from "utils/tokenLogo";
 import InfoIcon from "@mui/icons-material/Info";
 import { formatNumber } from "utils/format";
 import useStakingContext from "context/staking";
-
-const WarningBlock = styled(Box)`
-  background: #452508;
-  border: 1px solid #5c310a;
-  border-radius: 8px;
-  color: #f7b06e;
-  display: flex;
-  align-items: center;
-  padding: 8px 16px;
-  gap: 12px;
-  font-size: 14px;
-  margin: 0 15px 40px 15px;
-`;
-
-export const InfoMessageWrapper = styled(Box)`
-  display: flex;
-  align-items: start;
-  gap: 5px;
-  padding: 0 12px;
-  p {
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 20px;
-    color: #9fadc6;
-    margin-bottom: 20px;
-  }
-
-  svg {
-    margin-top: 2px;
-  }
-`;
+import { ModalDescription } from "components/AppComponents/AppBox/AppBox";
+import { WarningBlock } from "components/Staking/Dialog/EarlyUnstakeDialog";
 
 const ConfirmButton = styled(ButtonPrimary)`
   width: 100%;
@@ -53,14 +24,6 @@ const ConfirmButton = styled(ButtonPrimary)`
   font-weight: 600;
   font-size: 17px;
   line-height: 24px;
-`;
-
-const Description = styled(Typography)`
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 20px;
-  color: #ffffff;
-  padding: 0 15px;
 `;
 
 const ButtonsWrapper = styled(Box)`
@@ -112,10 +75,10 @@ const UnclaimedRewardsDialog: FC<ClaimRewardsDialogProps> = ({
       </AppDialogTitle>
 
       <DialogContent>
-        <Description>
-          If you unstake before claiming rewards, you will lose them. Claim
-          rewards first in My Stats, then Unstake later.
-        </Description>
+        <ModalDescription>
+          If you unstake before claiming rewards, you will lose them. <br />
+          Claim rewards first in My Stats, then Unstake later.
+        </ModalDescription>
         <DialogContentWrapper>
           <img src={getTokenLogoURL(token)} alt={"token-logo"} width={58} />
           <Box sx={{ fontSize: "18px" }}>You’re having unclaimed rewards</Box>

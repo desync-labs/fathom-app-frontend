@@ -17,6 +17,7 @@ import {
   InfoLabel,
   InfoValue,
   InfoWrapper,
+  ModalDescription,
 } from "components/AppComponents/AppBox/AppBox";
 import InfoIcon from "@mui/icons-material/Info";
 import {
@@ -30,9 +31,6 @@ import { formatNumber } from "utils/format";
 import useStakingContext from "context/staking";
 
 const UnstakeDialogWrapper = styled(AppDialog)`
-  .MuiPaper-root {
-    maxwidth: 600px;
-  }
   .MuiGrid-container {
     margin: 0 17px 15px 17px;
     padding: 10px 0 30px 0;
@@ -55,7 +53,7 @@ const ConfirmButton = styled(ButtonPrimary)`
   line-height: 24px;
 `;
 
-const WarningBlock = styled(Box)`
+export const WarningBlock = styled(Box)`
   background: #452508;
   border: 1px solid #5c310a;
   border-radius: 8px;
@@ -65,7 +63,7 @@ const WarningBlock = styled(Box)`
   padding: 8px 16px;
   gap: 12px;
   font-size: 14px;
-  margin: 0 15px 40px 15px;
+  margin: 20px 15px 25px 15px;
 `;
 
 const InfoLabelError = styled(InfoLabel)`
@@ -91,14 +89,6 @@ const ButtonsWrapper = styled(Box)`
       width: 100%;
     }
   }
-`;
-
-const Description = styled(Typography)`
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 20px;
-  color: #ffffff;
-  padding: 0 15px;
 `;
 
 export type EarlyUnstakeDialogProps = {
@@ -137,11 +127,12 @@ const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({
       </AppDialogTitle>
 
       <DialogContent>
-        <Description>
-          Claim Rewards only is available for all positions at the moment. You
-          will lose the rewards of the position you proceed to unstake without
-          claiming it here first. <a href={"/"}>Learn more.</a>
-        </Description>
+        <ModalDescription>
+          Claim Rewards only is available for all positions at the moment.{" "}
+          <br />
+          You will lose the rewards of the position you proceed to unstake
+          without claiming it here first. <a href={"/"}>Learn more.</a>
+        </ModalDescription>
         <DialogContentWrapper>
           <img src={getTokenLogoURL(token)} alt={"token-logo"} width={58} />
           <Box>You’re requesting to unstake</Box>

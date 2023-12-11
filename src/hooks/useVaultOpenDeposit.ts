@@ -5,7 +5,7 @@ import debounce from "lodash.debounce";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 import { useServices } from "context/services";
-import { IVault } from "hooks/useVaultList";
+import { IVault } from "fathom-sdk";
 
 export const defaultValues = {
   deposit: "",

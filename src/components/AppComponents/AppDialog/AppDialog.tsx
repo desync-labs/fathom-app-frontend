@@ -34,7 +34,7 @@ export const AppDialog = styled(
 export const DialogContentWrapper = styled(Box)`
   display: flex;
   flex-direction: column;
-  align-items: start;
+  align-items: center;
   gap: 10px;
   margin: 0 15px;
   background: #131f35;

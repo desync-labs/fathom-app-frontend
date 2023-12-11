@@ -5,7 +5,7 @@ import BigNumber from "bignumber.js";
 
 import usePricesContext from "context/prices";
 import useVaultListItem from "hooks/useVaultListItem";
-import { IVaultPosition, IVault } from "hooks/useVaultList";
+import { IVault, IVaultPosition } from "fathom-sdk";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatCurrency, formatNumber, formatPercentage } from "utils/format";
 
@@ -207,9 +207,10 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
               <img src={getTokenLogoURL(token.symbol)} alt={token.name} />
             </VaultListItemImageWrapper>
             <VaultInfo>
-              {BigNumber(vaultPosition?.balancePosition || "0").isGreaterThan(
-                0
-              ) && <EarningLabel>Earning</EarningLabel>}
+              {vaultPosition?.balancePosition &&
+                BigNumber(vaultPosition?.balancePosition).isGreaterThan(0) && (
+                  <EarningLabel>Earning</EarningLabel>
+                )}
               <VaultTitle>{token.name}</VaultTitle>
             </VaultInfo>
           </FlexBox>
@@ -219,11 +220,16 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
         </TableCell>
         <TableCell>
           <VaultEarned>
-            {formatPercentage(
-              BigNumber(vaultPosition?.balanceProfit || "0")
-                .dividedBy(10 ** 18)
-                .toNumber()
-            )}
+            {vaultPosition?.balanceProfit &&
+            BigNumber(vaultPosition?.balanceProfit).isGreaterThan(0)
+              ? "$" +
+                formatPercentage(
+                  BigNumber(vaultPosition.balanceProfit)
+                    .multipliedBy(fxdPrice)
+                    .dividedBy(10 ** 36)
+                    .toNumber()
+                )
+              : "0"}
           </VaultEarned>
         </TableCell>
         <TableCell>
@@ -258,9 +264,8 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
         <TableCell>
           <VaultStacked>
             <Box className={"img-wrapper"}>
-              {BigNumber(vaultPosition?.balancePosition || "0").isGreaterThan(
-                0
-              ) ? (
+              {vaultPosition?.balancePosition &&
+              BigNumber(vaultPosition?.balancePosition).isGreaterThan(0) ? (
                 <img
                   src={LockAquaSrc}
                   alt={"locked-active"}

@@ -113,8 +113,7 @@ const StableSwapForm: FC<any> = ({
         )}
         <StableSwapCurrencySelect
           value={inputCurrency}
-          // @ts-ignore
-          onChange={(event: SelectChangeEvent) => {
+          onChange={(event: SelectChangeEvent<unknown>) => {
             setInputCurrencyHandler(event.target.value);
           }}
         >
@@ -187,8 +186,7 @@ const StableSwapForm: FC<any> = ({
         )}
         <StableSwapCurrencySelect
           value={outputCurrency}
-          // @ts-ignore
-          onChange={(event: SelectChangeEvent) => {
+          onChange={(event: SelectChangeEvent<unknown>) => {
             setOutputCurrencyHandler(event.target.value);
           }}
           disabled={true}
