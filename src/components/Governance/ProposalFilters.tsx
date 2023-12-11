@@ -64,7 +64,6 @@ const ProposalFilters: FC<ProposalFiltersType> = ({
         <Grid item xs={2}>
           <ProposalSelect
             value={time}
-            // @ts-ignore
             onChange={(event: SelectChangeEvent) => {
               setTime(event.target.value);
             }}

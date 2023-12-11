@@ -13,6 +13,8 @@ import {
 } from "components/Vault/VaultFilters";
 import { MobileMenuWrapper } from "components/Dashboard/MobileMenu";
 import VaultFilterSrc from "assets/svg/Filter.svg";
+import { SelectChangeEvent } from "@mui/material/Select";
+import { SortType } from "../../hooks/useVaultList";
 
 const VaultFilterMobileContainer = styled("div")`
   display: flex;
@@ -72,9 +74,8 @@ const VaultFiltersMobile: FC<VaultMobileFiltersPropsType> = ({
             <FilterLabel>Sort by</FilterLabel>
             <AppSelect
               value={sortBy}
-              // @ts-ignore
-              onChange={(event: SelectChangeEvent) => {
-                setSortBy(event.target.value);
+              onChange={(event: SelectChangeEvent<unknown>) => {
+                setSortBy(event.target.value as SortType);
               }}
               sx={{ border: "none", fieldset: { borderColor: "transparent" } }}
             >

@@ -14,7 +14,6 @@ type InjectProviderType = {
 
 interface Window {
   ethereum?: InjectProviderType;
-  xdc?: InjectProviderType;
   web3?: {};
 }
 

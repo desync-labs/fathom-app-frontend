@@ -12,10 +12,6 @@ import ManageVaultForm from "components/Vault/VaultListItem/ManageVaultModal/Man
 import ManageVaultInfo from "components/Vault/VaultListItem/ManageVaultModal/ManageVaultInfo";
 
 const VaultManageGridDialogWrapper = styled(AppDialog)`
-  .MuiPaper-root {
-    maxwidth: 600px;
-  }
-
   .MuiGrid-container {
     padding: 10px 0 30px 0;
   }
@@ -59,7 +55,7 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
       aria-labelledby="customized-dialog-title"
       open={true}
       fullWidth
-      maxWidth="md"
+      maxWidth="sm"
     >
       <AppDialogTitle id="customized-dialog-title" onClose={onClose}>
         Manage Vault

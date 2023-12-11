@@ -52,7 +52,7 @@ const AppMenuItemComponent: React.FC<AppMenuItemComponentProps> = (props) => {
       children={children}
       component={forwardRef((props: NavLinkProps, ref: any) => {
         const className =
-          // @ts-ignore
+          typeof props.className === "string" &&
           !props.className.includes("active") &&
           (location.pathname.includes("dao") ||
             location.pathname.includes("swap"))
