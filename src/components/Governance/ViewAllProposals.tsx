@@ -57,9 +57,7 @@ const AllProposalsView = () => {
             !isMobile ? (
               <PageHeader
                 title="Governance"
-                description={
-                  "Participate in Fathom Governance to determine the future of the protocol. All actions require voting power (vFTHM). Voting power can be accrued by staking your FTHM tokens in DAO Staking."
-                }
+                description={`Participate in Fathom Governance to determine the future of the protocol. <br /> All actions require voting power (vFTHM). <br /> Voting power can be accrued by staking your FTHM tokens in DAO Staking.`}
               />
             ) : null,
           [isMobile]

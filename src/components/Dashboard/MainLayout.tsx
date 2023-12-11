@@ -82,6 +82,7 @@ import WalletConnectSrc from "assets/svg/wallet-connect.svg";
 import FathomLogoMobileSrc from "assets/svg/Fathom-app-logo-mobile.svg";
 import MobileMenuIcon from "assets/svg/mobile-menu.svg";
 import MobileMenuIconActive from "assets/svg/mobile-menu-active.svg";
+import { formatNumber } from "../../utils/format";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -350,7 +351,8 @@ const MainLayout = () => {
                   p="0.5rem 0.5rem 0.5rem 0.5rem"
                   fontWeight={500}
                 >
-                  {userXDCBalance?.toSignificant(8)} {"XDC"}
+                  {formatNumber(Number(userXDCBalance?.toSignificant(8)))}{" "}
+                  {"XDC"}
                 </Box>
               ) : null}
             </AccountElement>
