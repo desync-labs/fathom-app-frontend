@@ -5,7 +5,7 @@ import debounce from "lodash.debounce";
 import useConnector from "context/connector";
 import { useServices } from "context/services";
 import useSyncContext from "context/sync";
-import { IVault, IVaultPosition } from "hooks/useVaultList";
+import { IVault, IVaultPosition } from "fathom-sdk";
 
 export const defaultValues = {
   formToken: "",

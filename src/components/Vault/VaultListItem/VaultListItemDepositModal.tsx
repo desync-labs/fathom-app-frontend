@@ -2,7 +2,7 @@ import { FC } from "react";
 import { DialogContent, Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-import { IVault } from "hooks/useVaultList";
+import { IVault } from "fathom-sdk";
 import useVaultOpenDeposit from "hooks/useVaultOpenDeposit";
 
 import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";

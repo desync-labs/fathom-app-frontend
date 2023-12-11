@@ -2,7 +2,7 @@ import { FC } from "react";
 import BigNumber from "bignumber.js";
 import { Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { IVault, IVaultPosition } from "hooks/useVaultList";
+import { IVault, IVaultPosition } from "fathom-sdk";
 import AppPopover from "components/AppComponents/AppPopover/AppPopover";
 import usePricesContext from "context/prices";
 import { formatPercentage } from "utils/format";
