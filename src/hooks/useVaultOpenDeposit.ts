@@ -84,7 +84,7 @@ const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
   }, [account, vault, vaultService, setApprovalPending, setApproveBtn]);
 
   useEffect(() => {
-    approvalStatus(deposit);
+    deposit.trim() && approvalStatus(deposit);
   }, [vault, deposit]);
 
   useEffect(() => {

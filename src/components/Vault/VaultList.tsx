@@ -1,4 +1,4 @@
-import { memo, useMemo } from "react";
+import { FC, memo, useMemo, MouseEvent } from "react";
 import {
   Box,
   CircularProgress,
@@ -48,10 +48,17 @@ const VaultListTableCellPopover = styled(Box)`
   padding-top: 4px !important;
 `;
 
-const VaultList = () => {
+type VaultListPropsType = {
+  isMobileFiltersOpen: boolean;
+  openMobileFilterMenu: (event: MouseEvent<HTMLElement>) => void;
+};
+
+const VaultList: FC<VaultListPropsType> = ({
+  isMobileFiltersOpen,
+  openMobileFilterMenu,
+}) => {
   const {
     isMobile,
-    isMobileFiltersOpen,
     vaultSortedList,
     vaultsLoading,
     vaultPositionsLoading,
@@ -61,13 +68,11 @@ const VaultList = () => {
     isShutdown,
     search,
     sortBy,
-    setIsMobileFiltersOpen,
     setIsShutdown,
     setSearch,
     setSortBy,
     handlePageChange,
     filterCurrentPosition,
-    mainBlockClickHandler,
   } = useVaultList();
 
   return (
@@ -76,7 +81,7 @@ const VaultList = () => {
         () => (
           <>
             {isMobile ? (
-              <Box onClick={mainBlockClickHandler}>
+              <>
                 <VaultFiltersMobile
                   isShutdown={isShutdown}
                   isMobileFiltersOpen={isMobileFiltersOpen}
@@ -85,7 +90,7 @@ const VaultList = () => {
                   setIsShutdown={setIsShutdown}
                   setSearch={setSearch}
                   setSortBy={setSortBy}
-                  setIsMobileFiltersOpen={setIsMobileFiltersOpen}
+                  openMobileFilterMenu={openMobileFilterMenu}
                 />
                 {vaultPositionsLoading || !vaultSortedList.length ? (
                   <NoResults variant="h6">
@@ -106,7 +111,7 @@ const VaultList = () => {
                     />
                   ))
                 )}
-              </Box>
+              </>
             ) : (
               <TableContainer>
                 <VaultFilters
