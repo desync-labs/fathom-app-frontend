@@ -220,11 +220,16 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
         </TableCell>
         <TableCell>
           <VaultEarned>
-            {formatPercentage(
-              BigNumber(vaultPosition?.balanceProfit || "0")
-                .dividedBy(10 ** 18)
-                .toNumber()
-            )}
+            {vaultPosition?.balanceProfit &&
+            BigNumber(vaultPosition?.balanceProfit).isGreaterThan(0)
+              ? "$" +
+                formatPercentage(
+                  BigNumber(vaultPosition.balanceProfit)
+                    .multipliedBy(fxdPrice)
+                    .dividedBy(10 ** 36)
+                    .toNumber()
+                )
+              : "0"}
           </VaultEarned>
         </TableCell>
         <TableCell>

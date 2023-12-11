@@ -37,6 +37,10 @@ const TotalTokens = styled("div")`
     width: 100%;
     justify-content: space-between;
     margin-bottom: 5px;
+
+    span {
+      align-items: end;
+    }
   }
 `;
 
@@ -178,9 +182,9 @@ const VaultListItemEarningDetails: FC<VaultListItemFarmingDetailsProps> = ({
                 BigNumber(balanceShares)
                   .dividedBy(10 ** 18)
                   .toNumber()
-              )}
-            </span>{" "}
-            {shareToken.name}
+              )}{" "}
+              {shareToken.name}
+            </span>
           </TotalTokens>
         </VaultInfo>
         {isMobile && (
