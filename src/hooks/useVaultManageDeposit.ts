@@ -25,6 +25,11 @@ const useVaultManageDeposit = (
   const { poolService, vaultService } = useServices();
   const { setLastTransactionBlock } = useSyncContext();
 
+  console.log({
+    vault,
+    vaultPosition,
+  });
+
   const {
     handleSubmit,
     watch,

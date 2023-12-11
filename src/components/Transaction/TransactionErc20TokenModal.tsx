@@ -51,7 +51,7 @@ const TransactionErc20TokenModal: FC = () => {
     <AppDialog
       onClose={resetErc20TokenModal}
       aria-labelledby="customized-dialog-title"
-      maxWidth="md"
+      maxWidth="sm"
       open={true}
       color="primary"
     >

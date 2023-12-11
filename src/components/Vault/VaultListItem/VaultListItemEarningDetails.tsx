@@ -4,15 +4,9 @@ import { Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { IVault } from "fathom-sdk";
 import { getTokenLogoURL } from "utils/tokenLogo";
-import {
-  Approx,
-  Apr,
-  VaultInfoStats,
-  Token,
-} from "components/Vault/VaultListItem/VaultListItemVaultInfo";
 import { ButtonSecondary } from "components/AppComponents/AppButton/AppButton";
 import usePricesContext from "context/prices";
-import { formatNumber } from "utils/format";
+import { formatNumber, formatPercentage } from "utils/format";
 
 const VaultTitle = styled("div")`
   color: #5a81ff;
@@ -88,6 +82,46 @@ const ManageVaultBtn = styled(ButtonSecondary)`
   height: 40px;
 `;
 
+const VaultInfoStats = styled("div")`
+  display: flex;
+  gap: 20px;
+  align-items: center;
+`;
+
+const Apr = styled("div")`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+  text-transform: uppercase;
+  color: #fff;
+
+  span {
+    font-weight: normal;
+    text-transform: none;
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    width: 100%;
+  }
+`;
+
+const Approx = styled("div")`
+  font-size: 14px;
+  line-height: 20px;
+  color: #8ea4cc;
+`;
+
+const Token = styled("div")`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
 type VaultListItemFarmingDetailsProps = {
   isMobile: boolean;
   vaultItemData: IVault;
@@ -119,26 +153,32 @@ const VaultListItemEarningDetails: FC<VaultListItemFarmingDetailsProps> = ({
                 height={20}
                 alt={"token img"}
               />
-              {BigNumber(balancePosition)
-                .dividedBy(10 ** 18)
-                .toFormat(0)}
+              {formatPercentage(
+                BigNumber(balancePosition)
+                  .dividedBy(10 ** 18)
+                  .toNumber()
+              )}
             </Token>
           </Pooled>
           <PoolShare>
             Your share:{" "}
             <span>
-              {`${BigNumber(balancePosition)
-                .dividedBy(BigNumber(balanceTokens))
-                .times(100)
-                .toFormat(2)}%`}
+              {`${formatPercentage(
+                BigNumber(balancePosition)
+                  .dividedBy(balanceTokens)
+                  .multipliedBy(100)
+                  .toNumber()
+              )}%`}
             </span>
           </PoolShare>
           <TotalTokens>
             Share token:{" "}
             <span>
-              {BigNumber(balanceShares)
-                .dividedBy(10 ** 18)
-                .toFormat(2)}
+              {formatPercentage(
+                BigNumber(balanceShares)
+                  .dividedBy(10 ** 18)
+                  .toNumber()
+              )}
             </span>{" "}
             {shareToken.name}
           </TotalTokens>
@@ -147,10 +187,7 @@ const VaultListItemEarningDetails: FC<VaultListItemFarmingDetailsProps> = ({
           <Apr>
             Apr
             <span>
-              {formatNumber(
-                BigNumber(strategies[0].reports[0].results[0].apr).toNumber()
-              )}
-              %
+              {formatNumber(Number(strategies[0].reports[0].results[0].apr))}%
             </span>
           </Apr>
         )}
@@ -159,10 +196,7 @@ const VaultListItemEarningDetails: FC<VaultListItemFarmingDetailsProps> = ({
             <Apr>
               Apr
               <span>
-                {formatNumber(
-                  BigNumber(strategies[0].reports[0].results[0].apr).toNumber()
-                )}
-                %
+                {formatNumber(Number(strategies[0].reports[0].results[0].apr))}%
               </span>
             </Apr>
           )}
