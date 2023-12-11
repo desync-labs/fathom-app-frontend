@@ -121,7 +121,7 @@ const UnStakeDialog: FC<UnStakeDialogProps> = ({
       aria-labelledby="customized-dialog-title"
       open={true}
       fullWidth
-      maxWidth="md"
+      maxWidth="sm"
     >
       <AppDialogTitle id="customized-dialog-title" onClose={onClose}>
         Unstake

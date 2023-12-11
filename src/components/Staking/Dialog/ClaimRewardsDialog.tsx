@@ -15,6 +15,7 @@ import {
   CancelButton,
   SkipButton,
 } from "components/AppComponents/AppButton/AppButton";
+import { ModalDescription } from "components/AppComponents/AppBox/AppBox";
 import { styled } from "@mui/material/styles";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import InfoIcon from "@mui/icons-material/Info";
@@ -46,14 +47,6 @@ const ConfirmButton = styled(ButtonPrimary)`
   font-weight: 600;
   font-size: 17px;
   line-height: 24px;
-`;
-
-const Description = styled(Typography)`
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 20px;
-  color: #ffffff;
-  padding: 0 15px;
 `;
 
 const ButtonsWrapper = styled(Box)`
@@ -100,7 +93,7 @@ const ClaimRewardsDialog: FC<ClaimRewardsDialogProps> = ({
       aria-labelledby="customized-dialog-title"
       open={true}
       fullWidth
-      maxWidth="md"
+      maxWidth="sm"
       color="primary"
     >
       <AppDialogTitle id="customized-dialog-title" onClose={onClose}>
@@ -108,11 +101,12 @@ const ClaimRewardsDialog: FC<ClaimRewardsDialogProps> = ({
       </AppDialogTitle>
 
       <DialogContent>
-        <Description>
-          Claim Rewards only is available for all positions at the moment. You
-          will lose the rewards of the position you proceed to unstake without
-          claiming it here first. <a href={"/"}>Learn more.</a>
-        </Description>
+        <ModalDescription>
+          Claim Rewards only is available for all positions at the moment.{" "}
+          <br />
+          You will lose the rewards of the position you proceed to unstake
+          without claiming it here first. <a href={"/"}>Learn more.</a>
+        </ModalDescription>
         <DialogContentWrapper>
           <img src={getTokenLogoURL(token)} alt={"token-logo"} width={58} />
           <Box sx={{ fontSize: "18px" }}>You’re requesting to claim</Box>
