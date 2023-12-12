@@ -4,15 +4,13 @@ import { styled } from "@mui/material/styles";
 import BigNumber from "bignumber.js";
 
 import usePricesContext from "context/prices";
-import useVaultListItem from "hooks/useVaultListItem";
+import useVaultListItem, { VaultInfoTabs } from "hooks/useVaultListItem";
 import { IVault, IVaultPosition } from "fathom-sdk";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatCurrency, formatNumber, formatPercentage } from "utils/format";
 
 import { AppTableRow } from "components/AppComponents/AppTable/AppTable";
 import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
-import VaultListItemEarningDetails from "components/Vault/VaultListItem/VaultListItemEarningDetails";
-import VaultListItemEarned from "components/Vault/VaultListItem/VaultListItemEarned";
 import VaultListItemManageModal from "components/Vault/VaultListItem/VaultListItemManageModal";
 import VaultListItemDepositModal from "components/Vault/VaultListItem/VaultListItemDepositModal";
 
@@ -20,6 +18,9 @@ import LockSrc from "assets/svg/lock.svg";
 import LockAquaSrc from "assets/svg/lock-aqua.svg";
 import DirectionDown from "assets/svg/direction-down.svg";
 import DirectionUp from "assets/svg/direction-up.svg";
+import VaultListItemNav from "./VaultListItem/VaultListItemNav";
+import VaultItemPositionInfo from "./VaultListItem/AdditionalInfoTabs/VaultItemPositionInfo";
+import VaultItemAbout from "./VaultListItem/AdditionalInfoTabs/VaultItemAbout";
 
 const FlexBox = styled(Box)`
   display: flex;
@@ -191,6 +192,8 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
     extended,
     manageVault,
     newVaultDeposit,
+    activeVaultInfoTab,
+    setActiveVaultInfoTab,
     setExtended,
     setManageVault,
     setNewVaultDeposit,
@@ -311,22 +314,27 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
       </AppTableRow>
       {vaultPosition && extended && (
         <AppTableRow className={"border"}>
-          <TableCell colSpan={8} sx={{ padding: "20px !important" }}>
-            <VaultItemInfoWrapper>
-              <VaultListItemEarningDetails
-                vaultItemData={vaultItemData}
-                vaultPosition={vaultPosition}
-                isMobile={isMobile}
-                onOpen={() => setManageVault(true)}
-              />
-            </VaultItemInfoWrapper>
-            <VaultItemInfoWrapper>
-              <VaultListItemEarned
-                isMobile={isMobile}
-                vaultItemData={vaultItemData}
-                vaultPosition={vaultPosition}
-              />
-            </VaultItemInfoWrapper>
+          <TableCell colSpan={8} sx={{ padding: "0 !important" }}>
+            <VaultListItemNav
+              activeVaultInfoTab={activeVaultInfoTab}
+              setActiveVaultInfoTab={setActiveVaultInfoTab}
+            />
+            <Box sx={{ padding: "20px" }}>
+              {activeVaultInfoTab === VaultInfoTabs.POSITION && (
+                <VaultItemPositionInfo
+                  isMobile={isMobile}
+                  vaultItemData={vaultItemData}
+                  vaultPosition={vaultPosition}
+                  setManageVault={setManageVault}
+                />
+              )}
+              {activeVaultInfoTab === VaultInfoTabs.ABOUT && (
+                <VaultItemAbout
+                  vaultItemData={vaultItemData}
+                  isMobile={isMobile}
+                />
+              )}
+            </Box>
           </TableCell>
         </AppTableRow>
       )}

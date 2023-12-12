@@ -232,6 +232,9 @@ export const VAULTS = gql`
         reports(orderBy: timestamp, orderDirection: desc) {
           totalFees
           protocolFees
+          timestamp
+          gain
+          loss
           results {
             apr
           }
