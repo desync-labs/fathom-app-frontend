@@ -10,6 +10,7 @@ import {
 } from "components/Stableswap/StableSwap";
 import { InfoLabel, InfoValue } from "components/AppComponents/AppBox/AppBox";
 import { formatPercentage } from "utils/format";
+import useSharedContext from "context/shared";
 
 const StableSwapManageFees = () => {
   const {
@@ -19,10 +20,10 @@ const StableSwapManageFees = () => {
     claimedUSDTFeeReward,
     claimRewardsInProgress,
     withdrawClaimedFeesInProgress,
-    isMobile,
     claimFeesRewards,
     withdrawClaimedFees,
   } = useStableSwapManageFees();
+  const { isMobile } = useSharedContext();
 
   return (
     <Container

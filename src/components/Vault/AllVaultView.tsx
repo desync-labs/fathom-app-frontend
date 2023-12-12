@@ -1,7 +1,8 @@
 import { FC, MouseEvent } from "react";
-import { Container, Grid, useMediaQuery, useTheme } from "@mui/material";
+import { Container, Grid } from "@mui/material";
 import { PageHeader } from "components/Dashboard/PageHeader";
 import VaultList from "components/Vault/VaultList";
+import useSharedContext from "context/shared";
 
 type AllVaultViewPropsType = {
   isMobileFiltersOpen: boolean;
@@ -12,8 +13,7 @@ const AllVaultView: FC<AllVaultViewPropsType> = ({
   isMobileFiltersOpen,
   openMobileFilterMenu,
 }) => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const { isMobile } = useSharedContext();
 
   return (
     <Container

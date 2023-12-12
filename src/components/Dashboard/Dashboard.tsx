@@ -4,15 +4,16 @@ import ProtocolStats from "components/Dashboard/ProtocolStats";
 import PoolsListView from "components/Pools/PoolsListView";
 import { PageHeader } from "components/Dashboard/PageHeader";
 import useDashboard from "hooks/useDashboard";
+import useSharedContext from "context/shared";
 
 const DashboardContent = () => {
   const {
-    isMobile,
     proxyWallet,
     positionCurrentPage,
     positionsItemsCount,
     setPositionCurrentPage,
   } = useDashboard();
+  const { isMobile } = useSharedContext();
 
   return (
     <Container

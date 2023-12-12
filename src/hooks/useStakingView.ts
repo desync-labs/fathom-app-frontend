@@ -13,7 +13,6 @@ import { useLazyQuery, useQuery } from "@apollo/client";
 import { STAKING_PROTOCOL_STATS, STAKING_STAKER } from "apollo/queries";
 import { COUNT_PER_PAGE } from "utils/Constants";
 import useSyncContext from "context/sync";
-import { useMediaQuery, useTheme } from "@mui/material";
 import useConnector from "context/connector";
 import debounce from "lodash.debounce";
 import { BigNumber as eBigNumber } from "ethers";
@@ -37,9 +36,6 @@ const useStakingView = () => {
   const { account, chainId, library } = useConnector();
   const logger = useLogger();
   const { stakingService } = useServices();
-
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [unstake, setUnstake] = useState<null | ILockPosition>(null);
   const [earlyUnstake, setEarlyUnstake] = useState<null | ILockPosition>(null);
@@ -372,7 +368,6 @@ const useStakingView = () => {
   );
 
   return {
-    isMobile,
     account,
     chainId,
     action,
@@ -380,25 +375,18 @@ const useStakingView = () => {
     isUnlockable,
     withdrawAll,
     claimRewards,
-
     handleEarlyUnstake,
     handleUnlock,
-
     unstake,
     earlyUnstake,
-
     dialogAction,
     setDialogAction,
-
     totalRewards,
     previousTotalRewards: previousTotalRewardsRef.current,
-
     setUnstake,
     setEarlyUnstake,
-
     onClose,
     processFlow,
-
     stake:
       !stakesLoading && stakesData?.stakers?.length
         ? stakesData.stakers[0]
@@ -411,7 +399,6 @@ const useStakingView = () => {
       !protocolStatsLoading && protocolStatsInfo.protocolStats.length
         ? protocolStatsInfo.protocolStats[0]
         : null,
-
     itemCount: stakesData?.stakers?.length
       ? stakesData.stakers[0].lockPositionCount
       : 0,

@@ -224,16 +224,7 @@ export const AlertAndTransactionProvider: FC<
   );
 };
 
-const useAlertAndTransactionContext = () => {
-  const context = useContext(AlertAndTransactionContext);
-
-  if (!context) {
-    throw new Error(
-      "useAlertAndTransactionContext hook must be used with a OpenPositionContext component"
-    );
-  }
-
-  return context;
-};
+const useAlertAndTransactionContext = () =>
+  useContext(AlertAndTransactionContext);
 
 export default useAlertAndTransactionContext;
