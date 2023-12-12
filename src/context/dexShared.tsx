@@ -22,16 +22,6 @@ export const DexSharedProvider: FC<DexSharedProviderType> = ({
   );
 };
 
-const useDexShared = () => {
-  const context = useContext(DexSharedContext);
-
-  if (!context) {
-    throw new Error(
-      "useConnector hook must be used with a ConnectorProvider component"
-    );
-  }
-
-  return context;
-};
+const useDexShared = () => useContext(DexSharedContext);
 
 export default useDexShared;

@@ -30,6 +30,7 @@ import useConnector from "context/connector";
 
 import { formatPercentage } from "utils/format";
 import { getTokenLogoURL } from "utils/tokenLogo";
+import useSharedContext from "context/shared";
 
 const OpenPositionFormWrapper = styled(Grid)`
   padding-left: 20px;
@@ -54,7 +55,6 @@ const OpenPositionApproveBox = styled(ApproveBox)`
 
 const OpenPositionForm = () => {
   const {
-    isMobile,
     approveBtn,
     approve,
     approvalPending,
@@ -75,6 +75,7 @@ const OpenPositionForm = () => {
     maxBorrowAmount,
     proxyWalletExists,
   } = useOpenPositionContext();
+  const { isMobile } = useSharedContext();
 
   const { isOpenPositionWhitelisted } = useConnector();
 

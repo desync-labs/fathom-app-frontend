@@ -28,7 +28,7 @@ import useEarlyUnstake from "hooks/useEarlyUnstake";
 import { InfoMessageWrapper } from "components/Staking/Dialog/ClaimRewardsDialog";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatNumber } from "utils/format";
-import useStakingContext from "context/staking";
+import useSharedContext from "context/shared";
 
 const UnstakeDialogWrapper = styled(AppDialog)`
   .MuiGrid-container {
@@ -112,7 +112,7 @@ const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({
     earlyUnstakeHandler,
     penaltyFeePercent,
   } = useEarlyUnstake(lockPosition, onFinish);
-  const { isMobile } = useStakingContext();
+  const { isMobile } = useSharedContext();
 
   return (
     <UnstakeDialogWrapper

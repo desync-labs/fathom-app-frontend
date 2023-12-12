@@ -36,6 +36,7 @@ import DirectionDown from "assets/svg/direction-down.svg";
 import LockSrc from "assets/svg/lock.svg";
 import LockAquaSrc from "assets/svg/lock-aqua.svg";
 import usePricesContext from "../../context/prices";
+import useSharedContext from "context/shared";
 
 const VaultPoolName = styled("div")`
   display: flex;
@@ -166,11 +167,11 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
     manageVault,
     newVaultDeposit,
     extended,
-    isMobile,
     setNewVaultDeposit,
     setExtended,
     setManageVault,
   } = useVaultListItem();
+  const { isMobile } = useSharedContext();
 
   const { fxdPrice } = usePricesContext();
 

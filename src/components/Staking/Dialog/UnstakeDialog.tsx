@@ -36,8 +36,8 @@ import {
 import useUnstake from "hooks/useUnstake";
 import { InfoMessageWrapper } from "components/Staking/Dialog/ClaimRewardsDialog";
 import { formatNumber } from "utils/format";
-import useStakingContext from "context/staking";
 import BigNumber from "bignumber.js";
+import useSharedContext from "context/shared";
 
 const UnStakeDialogWrapper = styled(AppDialog)`
   .MuiGrid-container {
@@ -113,7 +113,7 @@ const UnStakeDialog: FC<UnStakeDialogProps> = ({
     setMax,
     unStakeHandler,
   } = useUnstake(lockPosition, onFinish);
-  const { isMobile } = useStakingContext();
+  const { isMobile } = useSharedContext();
 
   return (
     <UnStakeDialogWrapper

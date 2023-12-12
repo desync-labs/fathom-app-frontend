@@ -7,7 +7,6 @@ import { ProposalStatus, XDC_BLOCK_TIME } from "utils/Constants";
 import { IProposal } from "fathom-sdk";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
-import { useMediaQuery, useTheme } from "@mui/material";
 import BigNumber from "bignumber.js";
 
 const useProposalItem = () => {
@@ -29,9 +28,6 @@ const useProposalItem = () => {
   const [votingEndTime, setVotingEndTime] = useState<string | null>(null);
 
   const { syncDao, prevSyncDao, setLastTransactionBlock } = useSyncContext();
-
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const { data, loading, refetch } = useQuery(GOVERNANCE_PROPOSAL_ITEM, {
     variables: {
@@ -302,7 +298,6 @@ const useProposalItem = () => {
   }, [data?.proposal, loading]);
 
   return {
-    isMobile,
     hasVoted,
     votePending,
     account,

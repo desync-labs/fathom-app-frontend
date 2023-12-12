@@ -1,11 +1,5 @@
 import { FC, memo } from "react";
-import {
-  Grid,
-  DialogContent,
-  Divider,
-  useMediaQuery,
-  useTheme,
-} from "@mui/material";
+import { Grid, DialogContent, Divider } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
@@ -13,7 +7,8 @@ import { ClosePositionDialogPropsType } from "components/Positions/RepayPosition
 import TopUpPositionInfo from "components/Positions/TopUpPosition/TopUpPositionInfo";
 import TopUpPositionForm from "components/Positions/TopUpPosition/TopUpPositionForm";
 
-import useAdjustPositionContext from "context/topUpPosition";
+import useTopUpPositionContext from "context/topUpPosition";
+import useSharedContext from "context/shared";
 
 export const DividerMobile = styled(Divider)`
   width: 100%;
@@ -32,9 +27,8 @@ const TopUpPositionDialog: FC<ClosePositionDialogPropsType> = ({
   setTopUpPosition,
   setClosePosition,
 }) => {
-  const { onClose } = useAdjustPositionContext();
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const { onClose } = useTopUpPositionContext();
+  const { isMobile } = useSharedContext();
 
   return (
     <>

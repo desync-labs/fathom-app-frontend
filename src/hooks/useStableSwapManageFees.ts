@@ -1,12 +1,9 @@
-import { useMediaQuery, useTheme } from "@mui/material";
 import { useServices } from "context/services";
 import useSyncContext from "context/sync";
 import { useCallback, useEffect, useState } from "react";
 import useConnector from "context/connector";
 
 const useStableSwapManageFees = () => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { account, library } = useConnector();
 
   const [feesRewardsForFXD, setFeesRewardsForFXD] = useState<string>("0");
@@ -88,7 +85,6 @@ const useStableSwapManageFees = () => {
     feesRewardsForUSDTx,
     claimedFXDFeeReward,
     claimedUSDTFeeReward,
-    isMobile,
     claimRewardsInProgress,
     withdrawClaimedFeesInProgress,
     claimFeesRewards,

@@ -8,6 +8,7 @@ import useVaultListItem from "hooks/useVaultListItem";
 import { IVault, IVaultPosition } from "fathom-sdk";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatCurrency, formatNumber, formatPercentage } from "utils/format";
+import useSharedContext from "context/shared";
 
 import { AppTableRow } from "components/AppComponents/AppTable/AppTable";
 import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
@@ -187,7 +188,6 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
   const { fxdPrice } = usePricesContext();
 
   const {
-    isMobile,
     extended,
     manageVault,
     newVaultDeposit,
@@ -195,6 +195,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
     setManageVault,
     setNewVaultDeposit,
   } = useVaultListItem();
+  const { isMobile } = useSharedContext();
 
   return (
     <>

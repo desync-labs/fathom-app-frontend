@@ -30,6 +30,7 @@ import { TopUpPositionProvider } from "context/topUpPosition";
 import TopUpPositionDialog from "components/Positions/TopUpPositionDialog";
 import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
 import AppPopover from "components/AppComponents/AppPopover/AppPopover";
+import useSharedContext from "context/shared";
 
 const CircleWrapper = styled(Box)`
   width: 100%;
@@ -59,7 +60,6 @@ const PositionsList: FC<PositionsListProps> = ({
   setPositionCurrentPage,
 }) => {
   const {
-    isMobile,
     topUpPositionPool,
     positions,
     closePosition,
@@ -70,6 +70,7 @@ const PositionsList: FC<PositionsListProps> = ({
     setClosePosition,
     setTopUpPosition,
   } = useOpenPositionList(setPositionCurrentPage, proxyWallet);
+  const { isMobile } = useSharedContext();
 
   return (
     <>

@@ -1,12 +1,5 @@
 import { FC } from "react";
-import {
-  Box,
-  CircularProgress,
-  Grid,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from "@mui/material";
+import { Box, CircularProgress, Grid, Typography } from "@mui/material";
 import {
   ApproveBox,
   ApproveBoxTypography,
@@ -40,6 +33,7 @@ import { ClosePositionDialogPropsType } from "components/Positions/RepayPosition
 
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatPercentage } from "utils/format";
+import useSharedContext from "context/shared";
 
 const ClosePositionWrapper = styled(Grid)`
   padding-left: 20px;
@@ -85,9 +79,7 @@ const RepayPositionForm: FC<ClosePositionDialogPropsType> = ({
     approvalPending,
     approve,
   } = useRepayPositionContext();
-
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const { isMobile } = useSharedContext();
 
   return (
     <ClosePositionWrapper item>
@@ -119,14 +111,14 @@ const RepayPositionForm: FC<ClosePositionDialogPropsType> = ({
           Total debt:
         </Box>
         <Box sx={{ fontWeight: "bold", fontSize: "14px" }}>
-          {formatPercentage(debtValue)} FXD
+          {formatPercentage(Number(debtValue))} FXD
         </Box>
       </Box>
       <AppFormInputWrapper>
         <AppFormLabel>Repaying</AppFormLabel>
         {balance && (
           <WalletBalance>
-            Wallet Available: {formatPercentage(balance)} FXD
+            Wallet Available: {formatPercentage(Number(balance))} FXD
           </WalletBalance>
         )}
         <AppTextField
@@ -210,14 +202,14 @@ const RepayPositionForm: FC<ClosePositionDialogPropsType> = ({
       {fathomToken ? (
         <InfoWrapper>
           <InfoLabel>Repaying</InfoLabel>
-          <InfoValue>{formatPercentage(fathomToken)} FXD</InfoValue>
+          <InfoValue>{formatPercentage(Number(fathomToken))} FXD</InfoValue>
         </InfoWrapper>
       ) : null}
       {fathomToken ? (
         <InfoWrapper>
           <InfoLabel>Receive</InfoLabel>
           <InfoValue>
-            {formatPercentage(collateral)} {pool.poolName}
+            {formatPercentage(Number(collateral))} {pool.poolName}
           </InfoValue>
         </InfoWrapper>
       ) : null}
