@@ -112,7 +112,12 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
         return;
       }
 
-      if (BigNumber(vBalance as string).isLessThan(minimumVBalance as number)) {
+      if (
+        vBalance === null ||
+        BigNumber(vBalance as string)
+          .dividedBy(10 ** 18)
+          .isLessThan(minimumVBalance as number)
+      ) {
         return setVBalanceError(true);
       } else {
         setVBalanceError(false);
