@@ -7,7 +7,6 @@ import { OpenPositionContextType } from "context/openPosition";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 import { DANGER_SAFETY_BUFFER } from "utils/Constants";
-import { useMediaQuery, useTheme } from "@mui/material";
 import { ZERO_ADDRESS } from "fathom-sdk";
 
 export const defaultValues = {
@@ -24,9 +23,6 @@ const useOpenPosition = (
 ) => {
   const { poolService, positionService } = useServices();
   const { account, chainId, library } = useConnector();
-
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const {
     handleSubmit,
@@ -384,7 +380,6 @@ const useOpenPosition = (
 
   return {
     proxyWalletExists,
-    isMobile,
     safeMax,
     approveBtn,
     approve,

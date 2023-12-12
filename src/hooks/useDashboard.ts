@@ -4,7 +4,6 @@ import { FXD_POOLS, FXD_POSITIONS, FXD_STATS, FXD_USER } from "apollo/queries";
 import { useCallback, useEffect, useState } from "react";
 import { COUNT_PER_PAGE } from "utils/Constants";
 import useSyncContext from "context/sync";
-import { useMediaQuery, useTheme } from "@mui/material";
 import useConnector from "context/connector";
 import { ZERO_ADDRESS } from "fathom-sdk";
 
@@ -12,8 +11,6 @@ const useDashboard = () => {
   const { positionService } = useServices();
   const { account } = useConnector();
   const { syncFXD, prevSyncFxd } = useSyncContext();
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const { refetch: refetchStats } = useQuery(FXD_STATS, {
     context: { clientName: "stable" },
@@ -137,7 +134,6 @@ const useDashboard = () => {
   }, [syncFXD, prevSyncFxd, refetchData]);
 
   return {
-    isMobile,
     proxyWallet,
     positionCurrentPage,
     positionsItemsCount,

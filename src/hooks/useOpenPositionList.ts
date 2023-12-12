@@ -16,7 +16,6 @@ import { COUNT_PER_PAGE } from "utils/Constants";
 import useConnector from "context/connector";
 import BigNumber from "bignumber.js";
 import debounce from "lodash.debounce";
-import { useMediaQuery, useTheme } from "@mui/material";
 
 const useOpenPositionList = (
   setPositionCurrentPage: Dispatch<number>,
@@ -28,8 +27,6 @@ const useOpenPositionList = (
     []
   );
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [loadPositions, { loading, data, fetchMore, called }] = useLazyQuery(
     FXD_POSITIONS,
@@ -154,7 +151,6 @@ const useOpenPositionList = (
   }, [setClosePosition, setTopUpPosition]);
 
   return {
-    isMobile,
     topUpPositionPool,
     positions: formattedPositions,
     closePosition,

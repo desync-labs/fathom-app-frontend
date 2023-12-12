@@ -1,7 +1,7 @@
 import { Chip, Stack } from "@mui/material";
 import { FC, memo } from "react";
 import { styled } from "@mui/material/styles";
-import useStakingContext from "context/staking";
+import useSharedContext from "context/shared";
 
 const StakingChip = styled(Chip, {
   shouldForwardProp: (prop) => prop !== "isActive",
@@ -32,7 +32,7 @@ type PeriodProps = {
 };
 
 const Period: FC<PeriodProps> = ({ lockDays, setPeriod }) => {
-  const { isMobile } = useStakingContext();
+  const { isMobile } = useSharedContext();
 
   return (
     <Stack direction="row" spacing={isMobile ? 0 : 1} flexWrap={"wrap"}>

@@ -149,16 +149,6 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
   );
 };
 
-const usePricesContext = () => {
-  const context = useContext(PricesContext);
-
-  if (!context) {
-    throw new Error(
-      "usePricesContext hook must be used with a PricesContext component"
-    );
-  }
-
-  return context;
-};
+const usePricesContext = () => useContext(PricesContext);
 
 export default usePricesContext;
