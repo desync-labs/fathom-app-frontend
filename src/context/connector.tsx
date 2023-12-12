@@ -288,16 +288,6 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
   );
 };
 
-const useConnector = () => {
-  const context = useContext(ConnectorContext);
-
-  if (!context) {
-    throw new Error(
-      "useConnector hook must be used with a ConnectorProvider component"
-    );
-  }
-
-  return context;
-};
+const useConnector = () => useContext(ConnectorContext);
 
 export default useConnector;

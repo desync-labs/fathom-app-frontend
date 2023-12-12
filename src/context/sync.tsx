@@ -218,16 +218,6 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
   return <SyncContext.Provider value={values}>{children}</SyncContext.Provider>;
 };
 
-const useSyncContext = () => {
-  const context = useContext(SyncContext);
-
-  if (!context) {
-    throw new Error(
-      "useSyncContext hook must be used with a SyncContext component"
-    );
-  }
-
-  return context;
-};
+const useSyncContext = () => useContext(SyncContext);
 
 export default useSyncContext;

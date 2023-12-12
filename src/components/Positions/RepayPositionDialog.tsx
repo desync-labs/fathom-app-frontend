@@ -1,5 +1,5 @@
 import { Dispatch, FC, memo } from "react";
-import { DialogContent, Grid, useMediaQuery, useTheme } from "@mui/material";
+import { DialogContent, Grid } from "@mui/material";
 
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
 import RepayPositionInfo from "components/Positions/RepayPosition/RepayPositionInfo";
@@ -11,6 +11,7 @@ import {
 
 import useRepayPositionContext from "context/repayPosition";
 import { IOpenPosition } from "fathom-sdk";
+import useSharedContext from "context/shared";
 
 export type ClosePositionDialogPropsType = {
   topUpPosition: IOpenPosition | undefined;
@@ -26,8 +27,7 @@ const RepayPositionDialog: FC<ClosePositionDialogPropsType> = ({
   setClosePosition,
 }) => {
   const { onClose } = useRepayPositionContext();
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const { isMobile } = useSharedContext();
 
   return (
     <>

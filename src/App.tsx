@@ -7,6 +7,7 @@ import { client } from "apollo/client";
 import { SyncProvider } from "context/sync";
 import { PricesProvider } from "context/prices";
 import { Updaters } from "apps/dex";
+import { SharedProvider } from "context/shared";
 
 function App() {
   return (
@@ -14,10 +15,12 @@ function App() {
       <ApolloProvider client={client}>
         <SyncProvider>
           <PricesProvider>
-            <>
-              <Updaters />
-              <MainLayout />
-            </>
+            <SharedProvider>
+              <>
+                <Updaters />
+                <MainLayout />
+              </>
+            </SharedProvider>
           </PricesProvider>
         </SyncProvider>
       </ApolloProvider>

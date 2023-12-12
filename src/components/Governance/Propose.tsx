@@ -35,6 +35,7 @@ import { formatNumber } from "utils/format";
 import ProposeActionFields from "./Propose/ProposeActionFields";
 import ProposeNotices from "./Propose/ProposeNotices";
 import BigNumber from "bignumber.js";
+import useSharedContext from "context/shared";
 
 export const ProposeLabel = styled(AppFormLabel)`
   float: none;
@@ -117,7 +118,6 @@ export type ProposeProps = {
 const Propose: FC<ProposeProps> = ({ onClose }) => {
   const {
     minimumVBalance,
-    isMobile,
     isLoading,
     withAction,
     handleSubmit,
@@ -132,6 +132,7 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
     appendAction,
     removeAction,
   } = useCreateProposal(onClose);
+  const { isMobile } = useSharedContext();
 
   return (
     <FormProvider {...methods}>
