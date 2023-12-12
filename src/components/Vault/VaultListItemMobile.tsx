@@ -12,15 +12,13 @@ import {
   ExtendedBtn,
   VaultInfo,
   EarningLabel,
-  VaultItemInfoWrapper,
   VaultListItemImageWrapper,
   VaultPercent,
   VaultStacked,
   VaultTitle,
   VaultListItemPropsType,
 } from "components/Vault/VaultListItem";
-import VaultListItemEarningDetails from "components/Vault/VaultListItem/VaultListItemEarningDetails";
-import VaultListItemEarned from "components/Vault/VaultListItem/VaultListItemEarned";
+import VaultItemPositionInfo from "components/Vault/VaultListItem/AdditionalInfoTabs/VaultItemPositionInfo";
 import VaultListItemManageModal from "components/Vault/VaultListItem/VaultListItemManageModal";
 import AppPopover from "components/AppComponents/AppPopover/AppPopover";
 import VaultListItemDepositModal from "components/Vault/VaultListItem/VaultListItemDepositModal";
@@ -244,24 +242,12 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
       </ListItemWrapper>
 
       {vaultPosition && extended && (
-        <>
-          <VaultItemInfoWrapper className={"mb-0"}>
-            <VaultListItemEarned
-              isMobile={isMobile}
-              vaultItemData={vaultItemData}
-              vaultPosition={vaultPosition}
-            />
-          </VaultItemInfoWrapper>
-
-          <VaultItemInfoWrapper className={"mt-3"}>
-            <VaultListItemEarningDetails
-              isMobile={isMobile}
-              vaultItemData={vaultItemData}
-              vaultPosition={vaultPosition}
-              onOpen={() => setManageVault(true)}
-            />
-          </VaultItemInfoWrapper>
-        </>
+        <VaultItemPositionInfo
+          isMobile={isMobile}
+          vaultItemData={vaultItemData}
+          vaultPosition={vaultPosition}
+          setManageVault={setManageVault}
+        />
       )}
 
       <VaultListItemMobileAdditionalData
