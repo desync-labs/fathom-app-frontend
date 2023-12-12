@@ -9,6 +9,7 @@ import { setExpectInstance } from "@synthetixio/synpress/commands/playwright";
 import { resetState } from "@synthetixio/synpress/commands/synpress";
 import dotenv from "dotenv";
 import FxdPage from "../pages/fxd.page";
+import VaultPage from "../pages/vault.page";
 dotenv.config();
 
 let networkName: string;
@@ -43,6 +44,7 @@ switch (process.env.ENVIRONMENT_URL) {
 interface pagesAndContext {
   context: BrowserContext;
   fxdPage: FxdPage;
+  vaultPage: VaultPage;
 }
 
 export const test = base.extend<pagesAndContext>({
@@ -93,6 +95,9 @@ export const test = base.extend<pagesAndContext>({
   },
   fxdPage: async ({ page }, use) => {
     await use(new FxdPage(page));
+  },
+  vaultPage: async ({ page }, use) => {
+    await use(new VaultPage(page));
   },
 });
 
