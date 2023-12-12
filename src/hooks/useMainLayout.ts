@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState, MouseEvent, useRef } from "react";
 import BigNumber from "bignumber.js";
 import useConnector from "context/connector";
-import { useMediaQuery, useTheme } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import useWindowSize from "./useWindowResize";
 import {
@@ -10,11 +9,10 @@ import {
 } from "apps/dex/state/wallet/hooks";
 import { TokenAmount } from "into-the-fathom-swap-sdk";
 import usePrevious from "apps/dex/hooks/usePrevious";
+import useSharedContext from "context/shared";
 
 const useMainLayout = () => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const isTablet = useMediaQuery(theme.breakpoints.down("md"));
+  const { isMobile, isTablet } = useSharedContext();
   const [open, setOpen] = useState<boolean>(!isMobile);
   const [showToggleDrawerBtn, setShowToggleDrawerBtn] = useState<boolean>(true);
   const { disconnect, isActive, account, error, isMetamask, isWalletConnect } =
@@ -154,7 +152,6 @@ const useMainLayout = () => {
     userXDCBalance,
     showFthmBalanceModal,
     setShowFthmBalanceModal,
-
     aggregateBalance,
     countUpValue,
     countUpValuePrevious,

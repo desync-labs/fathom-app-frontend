@@ -50,7 +50,6 @@ export type UseTopUpPositionContextReturnType = {
   overCollateral: number;
   maxBorrowAmount: string;
   availableFathomInPool: number;
-  isMobile: boolean;
   errorAtLeastOneField: boolean;
 };
 
@@ -74,16 +73,6 @@ export const TopUpPositionProvider: FC<TopUpPositionContextType> = ({
   );
 };
 
-const useTopUpPositionContext = () => {
-  const context = useContext(TopUpPositionContext);
-
-  if (!context) {
-    throw new Error(
-      "useOpenPositionContext hook must be used with a OpenPositionContext component"
-    );
-  }
-
-  return context;
-};
+const useTopUpPositionContext = () => useContext(TopUpPositionContext);
 
 export default useTopUpPositionContext;

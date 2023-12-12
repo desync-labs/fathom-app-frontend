@@ -15,8 +15,8 @@ import RewardsSrc from "assets/svg/rewards.svg";
 
 import { secondsToTime } from "utils/secondsToTime";
 import useStreamStats from "hooks/useStreamStats";
-import useStakingContext from "context/staking";
 import BigNumber from "bignumber.js";
+import useSharedContext from "context/shared";
 
 const FTHMStreamHeader = styled("h3")`
   font-weight: 600;
@@ -156,7 +156,7 @@ const StreamStats: FC = () => {
     processFlow,
   } = useStreamStats();
 
-  const { isMobile } = useStakingContext();
+  const { isMobile } = useSharedContext();
 
   return (
     <Box sx={{ padding: "0 10px" }}>

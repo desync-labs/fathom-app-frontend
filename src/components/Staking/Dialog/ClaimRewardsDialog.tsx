@@ -22,6 +22,7 @@ import InfoIcon from "@mui/icons-material/Info";
 import { formatNumber } from "utils/format";
 import useStakingContext from "context/staking";
 import BigNumber from "bignumber.js";
+import useSharedContext from "context/shared";
 
 export const InfoMessageWrapper = styled(Box)`
   display: flex;
@@ -83,7 +84,8 @@ const ClaimRewardsDialog: FC<ClaimRewardsDialogProps> = ({
   onSkip,
   onClaim,
 }) => {
-  const { claimRewards, action, isMobile } = useStakingContext();
+  const { claimRewards, action } = useStakingContext();
+  const { isMobile } = useSharedContext();
 
   const isLoading = useMemo(() => action?.type === "claim", [action]);
 
