@@ -20,6 +20,7 @@ import {
 import usePoolsList from "hooks/usePoolsList";
 import PoolsListItemMobile from "components/Pools/PoolsListItemMobile";
 import { OpenPositionProvider } from "context/openPosition";
+import useSharedContext from "context/shared";
 
 const PoolsListHeaderRow = styled(AppTableHeaderRow)`
   background: transparent;
@@ -49,14 +50,9 @@ type PoolsListViewProps = {
 };
 
 const PoolsListView: FC<PoolsListViewProps> = ({ proxyWallet }) => {
-  const {
-    isMobile,
-    pools,
-    selectedPool,
-    onCloseNewPosition,
-    setSelectedPool,
-    loading,
-  } = usePoolsList();
+  const { pools, selectedPool, onCloseNewPosition, setSelectedPool, loading } =
+    usePoolsList();
+  const { isMobile } = useSharedContext();
 
   return (
     <>

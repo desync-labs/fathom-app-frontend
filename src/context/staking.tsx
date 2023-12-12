@@ -19,7 +19,6 @@ type StakingProviderType = {
 };
 
 type UseStakingReturnType = {
-  isMobile: boolean;
   account: string | null | undefined;
   chainId: ChainId;
   action: ActionType | undefined;
@@ -60,16 +59,6 @@ export const StakingProvider: FC<StakingProviderType> = ({ children }) => {
   );
 };
 
-const useStakingContext = () => {
-  const context = useContext(StakingContext);
-
-  if (!context) {
-    throw new Error(
-      "useStakingContext hook must be used with a StakingContext component"
-    );
-  }
-
-  return context;
-};
+const useStakingContext = () => useContext(StakingContext);
 
 export default useStakingContext;

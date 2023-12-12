@@ -4,10 +4,10 @@ import StakingLockForm from "components/Staking/StakingLockForm";
 import { PageHeader } from "components/Dashboard/PageHeader";
 import StreamStats from "components/Staking/Components/StreamStats";
 import StakingPositions from "components/Staking/StakingPositions";
-import useStakingContext from "context/staking";
+import useSharedContext from "context/shared";
 
 const StakingView = () => {
-  const { isMobile } = useStakingContext();
+  const { isMobile } = useSharedContext();
   return (
     <Grid container spacing={3}>
       {useMemo(

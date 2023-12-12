@@ -14,6 +14,7 @@ import { styled } from "@mui/material/styles";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatNumber } from "utils/format";
 import useStakingContext from "context/staking";
+import useSharedContext from "context/shared";
 
 const ConfirmButton = styled(ButtonPrimary)`
   font-size: 17px;
@@ -43,7 +44,8 @@ type WithdrawDialogProps = {
 };
 
 const WithdrawDialog: FC<WithdrawDialogProps> = ({ token, onClose }) => {
-  const { withdrawAll, stake, action, isMobile } = useStakingContext();
+  const { withdrawAll, stake, action } = useStakingContext();
+  const { isMobile } = useSharedContext();
 
   const isLoading = useMemo(() => {
     return action?.type === "withdrawAll";

@@ -5,6 +5,7 @@ import { isMobile } from "react-device-detect";
 import "@reach/dialog/styles.css";
 import { transparentize } from "polished";
 import { useGesture } from "react-use-gesture";
+import { ReactNode, RefObject } from "react";
 
 const AnimatedDialogOverlay = animated(DialogOverlay);
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -82,8 +83,8 @@ interface ModalProps {
   onDismiss: () => void;
   minHeight?: number | false;
   maxHeight?: number;
-  initialFocusRef?: React.RefObject<any>;
-  children?: React.ReactNode;
+  initialFocusRef?: RefObject<any>;
+  children?: ReactNode;
 }
 
 export default function Modal({

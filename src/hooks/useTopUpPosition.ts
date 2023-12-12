@@ -8,7 +8,6 @@ import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 import { IOpenPosition } from "fathom-sdk";
 import { DANGER_SAFETY_BUFFER } from "utils/Constants";
-import { useMediaQuery, useTheme } from "@mui/material";
 
 const defaultValues = {
   collateral: "",
@@ -58,9 +57,6 @@ const useTopUpPosition = (
 
   const [approveBtn, setApproveBtn] = useState<boolean>(false);
   const [approvalPending, setApprovalPending] = useState<boolean>(false);
-
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const availableFathomInPool = useMemo(() => {
     return pool.availableFathomInPool;
@@ -426,7 +422,6 @@ const useTopUpPosition = (
     overCollateral,
     maxBorrowAmount,
     availableFathomInPool,
-    isMobile,
     errorAtLeastOneField,
   };
 };

@@ -16,6 +16,7 @@ import { NoResults } from "components/AppComponents/AppBox/AppBox";
 
 import { COUNT_PER_PAGE } from "utils/Constants";
 import { styled } from "@mui/material/styles";
+import useSharedContext from "context/shared";
 
 const PaginationWrapper = styled(Box)`
   display: flex;
@@ -46,8 +47,8 @@ const AllProposalsView = () => {
     itemsCount,
     currentPage,
     handlePageChange,
-    isMobile,
   } = useAllProposals();
+  const { isMobile } = useSharedContext();
 
   return (
     <>

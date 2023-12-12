@@ -3,7 +3,6 @@ import { useQuery } from "@apollo/client";
 import { GOVERNANCE_PROPOSALS, GOVERNANCE_STATS } from "apollo/queries";
 import { COUNT_PER_PAGE } from "utils/Constants";
 import useSyncContext from "context/sync";
-import { useMediaQuery, useTheme } from "@mui/material";
 import useConnector from "context/connector";
 
 export const useAllProposals = () => {
@@ -14,9 +13,6 @@ export const useAllProposals = () => {
 
   const [createProposal, setCreateProposal] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
-
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const { syncDao, prevSyncDao } = useSyncContext();
 
@@ -82,6 +78,5 @@ export const useAllProposals = () => {
         ? 0
         : stats.governanceStats[0].totalProposalsCount,
     handlePageChange,
-    isMobile,
   };
 };

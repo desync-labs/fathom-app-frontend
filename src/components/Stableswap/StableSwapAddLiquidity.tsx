@@ -17,6 +17,7 @@ import {
 import { InfoLabel, InfoValue } from "components/AppComponents/AppBox/AppBox";
 import InfoIcon from "@mui/icons-material/Info";
 import { formatPercentage } from "utils/format";
+import useSharedContext from "context/shared";
 
 const StableSwapAddLiquidity = () => {
   const {
@@ -25,7 +26,6 @@ const StableSwapAddLiquidity = () => {
     stableDecimals,
     fxdBalance,
     stableBalance,
-    isMobile,
     inputError,
     inputValue,
     handleInputValueTextFieldChange,
@@ -36,6 +36,7 @@ const StableSwapAddLiquidity = () => {
     approve,
     handleAddLiquidity,
   } = useStableSwapAddLiquidity();
+  const { isMobile } = useSharedContext();
 
   return (
     <Container

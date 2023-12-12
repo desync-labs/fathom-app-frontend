@@ -38,6 +38,7 @@ import {
   DANGER_SAFETY_BUFFER,
 } from "utils/Constants";
 import { formatPercentage } from "utils/format";
+import useSharedContext from "context/shared";
 
 const TopUpPositionFormWrapper = styled(Grid)`
   padding-left: 20px;
@@ -79,9 +80,9 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
     safetyBuffer,
     maxBorrowAmount,
     availableFathomInPool,
-    isMobile,
     errorAtLeastOneField,
   } = useTopUpPositionContext();
+  const { isMobile } = useSharedContext();
 
   return (
     <TopUpPositionFormWrapper item>

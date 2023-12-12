@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import { useMediaQuery, useTheme } from "@mui/material";
 import { useServices } from "context/services";
 import { ZERO_ADDRESS } from "utils/Constants";
 import { ProposeProps } from "components/Governance/Propose";
@@ -43,10 +42,6 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [notAllowTimestamp, setNotAllowTimestamp] = useState<string>("0");
   const [minimumVBalance, setMinimumVBalance] = useState<number>();
-
-  const theme = useTheme();
-
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const methods = useForm({
     defaultValues,
@@ -189,7 +184,6 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
 
   return {
     minimumVBalance,
-    isMobile,
     isLoading,
     withAction,
     handleSubmit,
