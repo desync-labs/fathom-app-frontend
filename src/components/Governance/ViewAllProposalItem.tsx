@@ -1,4 +1,4 @@
-import React, { FC, memo, useMemo } from "react";
+import { FC, memo, useMemo } from "react";
 import { Box, Grid, Tooltip } from "@mui/material";
 
 import { styled } from "@mui/material/styles";

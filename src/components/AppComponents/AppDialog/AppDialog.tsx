@@ -36,10 +36,14 @@ export const DialogContentWrapper = styled(Box)`
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  margin: 20px 15px 30px 15px;
+  margin: 0 15px;
   background: #131f35;
   border-radius: 8px;
-  padding: 20px 0;
+  padding: 24px;
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    margin: 0;
+  }
 
   > div {
     font-size: 18px;

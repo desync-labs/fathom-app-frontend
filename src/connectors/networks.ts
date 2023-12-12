@@ -1,7 +1,7 @@
 import { InjectedConnector } from "@web3-react/injected-connector";
 import { WalletConnectConnector } from "connectors/wallet-connect-connector/wallet-connect-connector";
 import { EthereumProviderOptions } from "@walletconnect/ethereum-provider/dist/types/EthereumProvider";
-import { JsonRpcProvider } from "@ethersproject/providers";
+import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers";
 
 export const APOTHEM_RPC = "https://erpc.apothem.network/";
 export const XDC_RPC = "https://erpc.xdcrpc.com/";
@@ -45,7 +45,7 @@ export declare enum ChainId {
   AXDC = 51,
 }
 
-export type DefaultProvider = JsonRpcProvider;
+export type DefaultProvider = Web3Provider | JsonRpcProvider;
 
 export const EXPLORERS = {
   51: "https://explorer.apothem.network/",

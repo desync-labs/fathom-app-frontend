@@ -47,6 +47,10 @@ const governanceLink = new HttpLink({
   uri: `${process.env.REACT_APP_API_URL}/subgraphs/name/dao-subgraph`,
 });
 
+const vaultsLink = new HttpLink({
+  uri: `${process.env.REACT_APP_API_URL}/subgraphs/name/vaults-subgraph`,
+});
+
 const defaultLink = new HttpLink({
   uri: `${process.env.REACT_APP_API_URL}/graphql`,
 });
@@ -58,7 +62,11 @@ export const client = new ApolloClient({
     ApolloLink.split(
       (operation) => operation.getContext().clientName === "governance", // Routes the query to the proper client
       governanceLink,
-      defaultLink
+      ApolloLink.split(
+        (operation) => operation.getContext().clientName === "vaults", // Routes the query to the vaultsLink
+        vaultsLink,
+        defaultLink
+      )
     )
   ),
   cache,

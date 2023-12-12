@@ -197,3 +197,69 @@ export const STABLE_SWAP_STATS = gql`
     }
   }
 `;
+
+export const VAULTS = gql`
+  query Vaults(
+    $first: Int!
+    $skip: Int!
+    $search: String!
+    $shutdown: Boolean
+  ) {
+    vaults(
+      first: $first
+      skip: $skip
+      where: { token_: { name_contains_nocase: $search }, shutdown: $shutdown }
+    ) {
+      id
+      token {
+        id
+        decimals
+        name
+        symbol
+      }
+      shareToken {
+        id
+        decimals
+        name
+        symbol
+      }
+      sharesSupply
+      balanceTokens
+      balanceTokensIdle
+      totalDebtAmount
+      depositLimit
+      strategies {
+        reports(orderBy: timestamp, orderDirection: desc) {
+          totalFees
+          protocolFees
+          results {
+            apr
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const ACCOUNT_VAULT_POSITIONS = gql`
+  query AccountVaultPositions($account: String!) {
+    accountVaultPositions(where: { account: $account }) {
+      id
+      balancePosition
+      balanceProfit
+      balanceShares
+      balanceTokens
+      vault {
+        id
+      }
+      token {
+        symbol
+        name
+      }
+      shareToken {
+        symbol
+        name
+      }
+    }
+  }
+`;

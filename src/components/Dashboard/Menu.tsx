@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { FC } from "react";
 import { useLocation } from "react-router-dom";
 import AppMenuItem from "components/MenuItem/AppMenuItem";
@@ -8,6 +8,7 @@ import {
   FxdIcon,
   GovernanceIcon,
   SwapIcon,
+  VaultIcon,
   DexIcon,
 } from "components/Common/MenuIcons";
 import useConnector from "context/connector";
@@ -25,17 +26,26 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
     [location.pathname]
   );
   const isStableSwapActive = useMemo(
-    () => location.pathname.includes("swap"),
+    () => location.pathname.includes("/stable-swap"),
     [location.pathname]
   );
   const isDAOActive = useMemo(
     () => location.pathname.includes("dao"),
     [location.pathname]
   );
+  const isDexActive = useMemo(
+    () => location.pathname.includes("/swap"),
+    [location.pathname]
+  );
+
+  const isVaultActive = useMemo(
+    () => location.pathname.includes("vault"),
+    [location.pathname]
+  );
 
   const { showText } = useShowText(open);
 
-  const dexUrl = useMemo(() => process.env.REACT_APP_SWAP_APP_URL, []);
+  const chartsLink = useMemo(() => process.env.REACT_APP_CHARTS_APP_URL, []);
 
   const appMenuItems = [
     {
@@ -47,7 +57,7 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
     },
     {
       name: "Stable Swap",
-      link: "/swap",
+      link: "/stable-swap",
       Icon: <SwapIcon isStableSwapActive={isStableSwapActive} />,
       isActive: isStableSwapActive,
       showText: showText,
@@ -60,9 +70,23 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
       showText: showText,
     },
     {
+      name: "Vault",
+      link: "/vault",
+      Icon: <VaultIcon isVaultActive={isVaultActive} />,
+      isActive: isVaultActive,
+      showText: showText,
+    },
+    {
       name: "DEX",
-      link: dexUrl,
-      Icon: <DexIcon />,
+      link: "/swap",
+      Icon: <DexIcon isDexActive={isDexActive} />,
+      isActive: isDexActive,
+      showText: showText,
+    },
+    {
+      name: "Charts",
+      link: chartsLink,
+      Icon: <DexIcon isDexActive={false} />,
       target: "_blank",
       showText: showText,
     },

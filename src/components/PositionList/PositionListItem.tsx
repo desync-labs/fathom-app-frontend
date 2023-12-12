@@ -1,4 +1,4 @@
-import React, { memo, Dispatch, FC, SetStateAction } from "react";
+import { memo, Dispatch, FC, SetStateAction } from "react";
 import { Box, TableCell, Stack } from "@mui/material";
 import { PoolName, TVL } from "components/AppComponents/AppBox/AppBox";
 import { ManagePositionButton } from "components/AppComponents/AppButton/AppButton";
@@ -36,6 +36,7 @@ const PositionListItem: FC<PositionListItemProps> = ({
 }) => {
   return (
     <AppTableRow
+      className={"border single"}
       key={position.id}
       sx={{
         "&:last-child td, &:last-child th": { border: 0 },

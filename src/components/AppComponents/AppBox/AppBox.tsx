@@ -1,7 +1,8 @@
 import { styled } from "@mui/material/styles";
-import { Typography, Box as MuiBox, Box } from "@mui/material";
+import { Typography, Box as MuiBox, Box, Container } from "@mui/material";
 
 import RemoveCircle from "assets/svg/remove-circle.svg";
+import { Link } from "react-router-dom";
 
 export const TitleSecondary = styled(Typography)`
   font-size: 16px;
@@ -204,6 +205,35 @@ export const WarningBox = styled(Box)`
   }
 `;
 
+export const InfoBox = styled(Box)`
+  background: #132340;
+  border-radius: 8px;
+  padding: 8px 16px;
+  gap: 8px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 10px 0 20px;
+
+  svg {
+    height: 20px;
+    width: 20px;
+    color: #6379a1;
+  }
+
+  p {
+    color: #b7c8e5;
+    font-size: 14px;
+    width: 100%;
+    white-space: break-spaces;
+  }
+  a {
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+`;
+
 export const SuccessBox = styled(Box)`
   background: #173d0f;
   border: 1px solid #1f5214;
@@ -223,4 +253,55 @@ export const SuccessBox = styled(Box)`
     color: #8af075;
     font-size: 14px;
   }
+`;
+
+export const NestedRouteNav = styled("nav")`
+  height: 65px;
+  width: 100%;
+  border-bottom: 1.5px solid #1d2d49;
+  display: flex;
+  align-items: center;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    width: 100%;
+    a {
+      width: 50%;
+    }
+  }
+`;
+
+export const NestedRouteLink = styled(Link)`
+  color: #9fadc6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 100%;
+  padding: 0 52px;
+  font-weight: 600;
+  font-size: 17px;
+
+  &.active {
+    color: #fff;
+    border-bottom: 1px solid #00fff6;
+    background: #131f35;
+  }
+
+  span {
+    margin-bottom: 5px;
+  }
+`;
+
+export const NestedRouteContainer = styled(Container)`
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    margin-top: 15px;
+  }
+`;
+
+export const ModalDescription = styled(Typography)`
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: #ffffff;
+  padding: 0 15px;
+  margin-bottom: 20px;
 `;

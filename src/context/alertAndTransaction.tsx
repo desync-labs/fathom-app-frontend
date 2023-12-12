@@ -22,6 +22,7 @@ export type UseAlertAndTransactionReturnType = {
   showSuccessAlert: boolean;
   showErrorAlert: boolean;
   erc20TokenModalData: ERC20TokenType | undefined;
+  erc20TokenModalDescription: string;
   setShowSuccessAlert: Dispatch<boolean>;
   setShowErrorAlert: Dispatch<boolean>;
   successAlertMessage: string;
@@ -29,7 +30,8 @@ export type UseAlertAndTransactionReturnType = {
   setShowSuccessAlertHandler: (state: boolean, successMessage: string) => void;
   setShowErc20TokenModalHandler: (
     successMessage: string,
-    erc20token: ERC20TokenType | undefined
+    erc20token: ERC20TokenType | undefined,
+    successDescription: string
   ) => void;
   setShowErrorAlertHandler: (state: boolean, errorMessage: string) => void;
   transactions: ITransaction[];
@@ -55,6 +57,8 @@ export const AlertAndTransactionProvider: FC<
   const [erc20TokenModalData, setErc20TokenModalData] = useState<
     ERC20TokenType | undefined
   >(undefined);
+  const [erc20TokenModalDescription, setErc20TokenModalDescription] =
+    useState<string>("");
 
   const [transactions, setTransactions] = useState<ITransaction[]>([]);
 
@@ -73,7 +77,12 @@ export const AlertAndTransactionProvider: FC<
   const resetErc20TokenModal = useCallback(() => {
     setSuccessAlertMessage("");
     setErc20TokenModalData(undefined);
-  }, [setSuccessAlertMessage, setErc20TokenModalData]);
+    setErc20TokenModalDescription("");
+  }, [
+    setSuccessAlertMessage,
+    setErc20TokenModalData,
+    setErc20TokenModalDescription,
+  ]);
 
   const setShowSuccessAlertHandler = useCallback(
     (state: boolean, successMessage = "Action was successful!") => {
@@ -91,12 +100,19 @@ export const AlertAndTransactionProvider: FC<
   const setShowErc20TokenModalHandler = useCallback(
     (
       successMessage = "Action was successful!",
-      erc20Token: ERC20TokenType | undefined
+      erc20Token: ERC20TokenType | undefined,
+      successDescription = ""
     ) => {
       setErc20TokenModalData(erc20Token);
       setSuccessAlertMessage(successMessage);
+      setErc20TokenModalDescription(successDescription);
     },
-    [resetErc20TokenModal, setErc20TokenModalData, setSuccessAlertMessage]
+    [
+      resetErc20TokenModal,
+      setErc20TokenModalData,
+      setSuccessAlertMessage,
+      setErc20TokenModalDescription,
+    ]
   );
 
   const setShowErrorAlertHandler = useCallback(
@@ -171,6 +187,7 @@ export const AlertAndTransactionProvider: FC<
       showSuccessAlert,
       showErrorAlert,
       erc20TokenModalData,
+      erc20TokenModalDescription,
       setShowSuccessAlert,
       setShowErrorAlert,
       successAlertMessage,
@@ -187,6 +204,7 @@ export const AlertAndTransactionProvider: FC<
     showSuccessAlert,
     showErrorAlert,
     erc20TokenModalData,
+    erc20TokenModalDescription,
     setShowSuccessAlert,
     setShowErrorAlert,
     successAlertMessage,

@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import { FC } from "react";
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
 import {
   Box,
@@ -40,9 +40,6 @@ import useStakingContext from "context/staking";
 import BigNumber from "bignumber.js";
 
 const UnStakeDialogWrapper = styled(AppDialog)`
-  .MuiPaper-root {
-    maxwidth: 600px;
-  }
   .MuiGrid-container {
     margin: 0 17px 15px 17px;
     padding: 10px 0 30px 0;
