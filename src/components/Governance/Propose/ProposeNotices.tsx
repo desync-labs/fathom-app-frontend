@@ -1,4 +1,4 @@
-import React, { FC, memo } from "react";
+import { FC, memo, useCallback } from "react";
 import BigNumber from "bignumber.js";
 import { Link } from "react-router-dom";
 import { formatNumber } from "utils/format";
@@ -21,87 +21,57 @@ const ProposeNotices: FC<ProposeNoticesProps> = ({
   minimumVBalance,
   vBalanceError,
 }) => {
-  if (vBalance === null) {
-    return vBalanceError ? (
-      <ErrorBox sx={{ my: 3 }}>
-        <InfoIcon sx={{ width: "16px", color: "#F5953D", height: "16px" }} />
-        <ErrorMessage>
-          Accout not connected. Please, connect your account to be able to
+  const getInfo = useCallback(() => {
+    if (vBalance === null) {
+      return (
+        <>
+          Account not connected. Please, connect your account to be able to
           create proposals.
-        </ErrorMessage>
-      </ErrorBox>
-    ) : (
-      <WarningBox sx={{ my: 3 }}>
-        <InfoIcon sx={{ width: "16px", color: "#F5953D", height: "16px" }} />
-        <Typography>
-          Accout not connected. Please, connect your account to be able to
-          create proposals.
-        </Typography>
-      </WarningBox>
-    );
-  } else if (
-    BigNumber(vBalance)
-      .dividedBy(10 ** 18)
-      .isLessThan(minimumVBalance)
-  ) {
-    return vBalanceError ? (
-      <ErrorBox sx={{ my: 3 }}>
-        <InfoIcon sx={{ width: "16px", color: "#F5953D", height: "16px" }} />
-        <ErrorMessage>
+        </>
+      );
+    } else if (
+      BigNumber(vBalance)
+        .dividedBy(10 ** 18)
+        .isLessThan(minimumVBalance)
+    ) {
+      return (
+        <>
           You have less than {formatNumber(minimumVBalance)} vFTHM, and you can
           not create a new proposal. <br />
           So please, stake your FTHM tokens in{" "}
           <Link to={"/dao/staking"}>Staking</Link> to get voting power and
           awesome rewards.
-        </ErrorMessage>
-      </ErrorBox>
-    ) : (
-      <WarningBox sx={{ my: 3 }}>
-        <InfoIcon sx={{ width: "16px", color: "#F5953D", height: "16px" }} />
-        <Typography>
-          You have less than {formatNumber(minimumVBalance)} vFTHM, and you can
-          not create a new proposal. <br />
-          So please, stake your FTHM tokens in{" "}
-          <Link to={"/dao/staking"}>Staking</Link> to get voting power and
-          awesome rewards.
-        </Typography>
-      </WarningBox>
-    );
-  } else {
-    return vBalanceError ? (
-      <ErrorBox sx={{ my: 3 }}>
-        <InfoIcon sx={{ width: "16px", color: "#F5953D", height: "16px" }} />
-        <ErrorMessage>
-          To create a proposal, you need to have {formatNumber(minimumVBalance)}{" "}
-          vFTHM.
+        </>
+      );
+    } else {
+      return (
+        <>
+          To create a proposal, you need to have $
+          {formatNumber(minimumVBalance)} vFTHM.
           <br />
-          Now you have{" "}
+          Now you have $
           {formatNumber(
             BigNumber(vBalance as string)
               .dividedBy(10 ** 18)
               .toNumber()
           )}{" "}
           vFTHM
-        </ErrorMessage>
-      </ErrorBox>
-    ) : (
-      <WarningBox sx={{ my: 3 }}>
-        <InfoIcon sx={{ width: "16px", color: "#F5953D", height: "16px" }} />
-        <Typography>
-          To create a proposal, you need to have {formatNumber(minimumVBalance)}{" "}
-          vFTHM.
-          <br />
-          Now you have{" "}
-          {formatNumber(
-            BigNumber(vBalance as string)
-              .dividedBy(10 ** 18)
-              .toNumber()
-          )}{" "}
-          vFTHM
-        </Typography>
-      </WarningBox>
-    );
-  }
+        </>
+      );
+    }
+  }, [minimumVBalance, vBalance]);
+
+  return vBalanceError ? (
+    <ErrorBox sx={{ my: 3 }}>
+      <InfoIcon sx={{ width: "16px", color: "#F5953D", height: "16px" }} />
+      <ErrorMessage>{getInfo()}</ErrorMessage>
+    </ErrorBox>
+  ) : (
+    <WarningBox sx={{ my: 3 }}>
+      <InfoIcon sx={{ width: "16px", color: "#F5953D", height: "16px" }} />
+      <Typography>{getInfo()}</Typography>
+    </WarningBox>
+  );
 };
 
 export default memo(ProposeNotices);

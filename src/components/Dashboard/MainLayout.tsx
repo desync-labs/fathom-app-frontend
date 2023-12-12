@@ -1,5 +1,4 @@
-import React from "react";
-import { createTheme, styled, ThemeProvider } from "@mui/material/styles";
+import { styled, ThemeProvider } from "@mui/material/styles";
 import {
   CssBaseline,
   Drawer as MuiDrawer,
@@ -26,6 +25,7 @@ import StableSwap from "components/Stableswap/StableSwap";
 import StableSwapAddLiquidity from "components/Stableswap/StableSwapAddLiquidity";
 import StableSwapRemoveLiquidity from "components/Stableswap/StableSwapRemoveLiquidity";
 import StableSwapManageFees from "components/Stableswap/StableSwapManageFees";
+import AllVaultView from "components/Vault/AllVaultView";
 
 import Web3Status from "components/Web3Status/Web3Status";
 import AllProposalsView from "components/Governance/ViewAllProposals";
@@ -41,8 +41,33 @@ import MobileConnector from "components/Dashboard/MobileConnector";
 import DesktopConnector from "components/Dashboard/DesktopConnector";
 import BottomLinks from "components/Dashboard/BottomLinks";
 import MobileMenu from "components/Dashboard/MobileMenu";
+import DexView from "components/Dashboard/DexView";
 import { drawerWidth } from "components/AppComponents/AppBar/AppBar";
 import TransactionErc20TokenModal from "components/Transaction/TransactionErc20TokenModal";
+import { themeObject } from "theme";
+import FthmInfoModal from "components/FthmInfo/FthmInfoModal";
+
+/**
+ * DEX
+ */
+import Swap from "apps/dex/pages/Swap";
+import {
+  RedirectPathToSwapOnly,
+  RedirectToSwap,
+} from "apps/dex/pages/Swap/redirects";
+import PoolFinder from "apps/dex/pages/PoolFinder";
+import Pool from "apps/dex/pages/Pool";
+import {
+  RedirectOldAddLiquidityPathStructure,
+  RedirectDuplicateTokenIds,
+} from "apps/dex/pages/AddLiquidity/redirects";
+import AddLiquidity from "apps/dex/pages/AddLiquidity";
+import { RedirectOldRemoveLiquidityPathStructure } from "apps/dex/pages/RemoveLiquidity/redirects";
+import RemoveLiquidity from "apps/dex/pages/RemoveLiquidity";
+import FathomBalanceContent from "apps/dex/components/Header/FathomBalanceContent";
+import { TYPE } from "apps/dex/theme";
+import { CountUp } from "use-count-up";
+import { CardNoise } from "apps/dex/components/earn/styled";
 
 import useMainLayout from "hooks/useMainLayout";
 import { StakingProvider } from "context/staking";
@@ -57,6 +82,7 @@ import WalletConnectSrc from "assets/svg/wallet-connect.svg";
 import FathomLogoMobileSrc from "assets/svg/Fathom-app-logo-mobile.svg";
 import MobileMenuIcon from "assets/svg/mobile-menu.svg";
 import MobileMenuIconActive from "assets/svg/mobile-menu-active.svg";
+import { formatNumber } from "utils/format";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -98,29 +124,45 @@ const MenuWrapper = styled("nav")<{ open: boolean }>`
   gap: 14px;
 `;
 
-const mdTheme = createTheme({
-  palette: {
-    mode: "dark",
-    primary: {
-      main: "#00FFF6",
-    },
-    secondary: {
-      main: "#7D91B5",
-    },
-    info: {
-      main: "#5A81FF",
-    },
-    success: {
-      main: "#3DA329",
-    },
-    error: {
-      main: "#DD3C3C",
-    },
-  },
-  typography: {
-    fontFamily: ["Inter, sans-serif"].join(","),
-  },
-});
+export const AccountElement = styled("div")<{ active: boolean }>`
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  background-color: #131f35;
+  border-radius: 12px;
+  white-space: nowrap;
+  cursor: pointer;
+  color: #fff;
+  margin-left: 10px;
+
+  :focus {
+    border: 1px solid blue;
+  }
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    display: none;
+  }
+`;
+
+export const FTHMAmount = styled(AccountElement)`
+  color: white;
+  padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+  font-weight: 500;
+  background-color: #131f35;
+`;
+
+export const FTHMWrapper = styled("span")`
+  width: fit-content;
+  position: relative;
+  cursor: pointer;
+
+  :hover {
+    opacity: 0.8;
+  }
+
+  :active {
+    opacity: 0.9;
+  }
+`;
 
 const MainToolbar = styled(Toolbar)`
   display: flex;
@@ -174,14 +216,22 @@ const MainLayout = () => {
     open,
     isMetamask,
     isWalletConnect,
+    isMobileFiltersOpen,
     toggleDrawer,
     mainBlockClickHandler,
     openMobileMenu,
     openConnectorMenu,
+    openMobileFilterMenu,
     drawerRef,
     showToggleDrawerBtn,
     setOpenMobile,
     setOpenConnector,
+    userXDCBalance,
+    showFthmBalanceModal,
+    setShowFthmBalanceModal,
+    aggregateBalance,
+    countUpValue,
+    countUpValuePrevious,
   } = useMainLayout();
 
   const {
@@ -193,7 +243,7 @@ const MainLayout = () => {
   const { erc20TokenModalData } = useAlertAndTransactionContext();
 
   return (
-    <ThemeProvider theme={mdTheme}>
+    <ThemeProvider theme={themeObject}>
       <Box sx={{ display: "flex" }} onClick={mainBlockClickHandler}>
         <CssBaseline />
         <AppBar position="absolute" open={open}>
@@ -264,6 +314,48 @@ const MainLayout = () => {
             {isWalletConnect && (
               <img src={WalletConnectSrc} alt={"wallet-connect"} />
             )}
+            {aggregateBalance && (
+              <FTHMWrapper onClick={() => setShowFthmBalanceModal(true)}>
+                <FTHMAmount
+                  active={!!account}
+                  style={{ pointerEvents: "auto" }}
+                >
+                  {account && (
+                    <TYPE.white
+                      style={{
+                        paddingRight: ".4rem",
+                      }}
+                    >
+                      <CountUp
+                        key={countUpValue}
+                        isCounting
+                        start={parseFloat(countUpValuePrevious)}
+                        end={parseFloat(countUpValue)}
+                        thousandsSeparator={","}
+                        duration={1}
+                      />
+                    </TYPE.white>
+                  )}
+                  FTHM
+                </FTHMAmount>
+                <CardNoise />
+              </FTHMWrapper>
+            )}
+            <AccountElement
+              active={!!account}
+              style={{ pointerEvents: "auto" }}
+            >
+              {account && userXDCBalance ? (
+                <Box
+                  sx={{ flexShrink: 0 }}
+                  p="0.5rem 0.5rem 0.5rem 0.5rem"
+                  fontWeight={500}
+                >
+                  {formatNumber(Number(userXDCBalance?.toSignificant(8)))}{" "}
+                  {"XDC"}
+                </Box>
+              ) : null}
+            </AccountElement>
             {account && !error && (
               <WalletBox>{truncateEthAddress(account)}</WalletBox>
             )}
@@ -313,27 +405,26 @@ const MainLayout = () => {
         <MainBox component="main">
           <Toolbar />
           <AlertMessages scroll={scroll} />
-          {erc20TokenModalData && <TransactionErc20TokenModal />}
           <TransactionStatus scroll={scroll} />
           <Routes>
             <Route path="/" element={<DashboardContent />} />
             {allowStableSwap ||
             isUserWrapperWhiteListed ||
             allowStableSwapInProgress ? (
-              <Route path="/swap" element={<StableSwap />} />
+              <Route path="/stable-swap" element={<StableSwap />} />
             ) : null}
             {isUserWrapperWhiteListed ? (
               <>
                 <Route
-                  path="/swap/add-liquidity"
+                  path="/stable-swap/add-liquidity"
                   element={<StableSwapAddLiquidity />}
                 />
                 <Route
-                  path="/swap/remove-liquidity"
+                  path="/stable-swap/remove-liquidity"
                   element={<StableSwapRemoveLiquidity />}
                 />
                 <Route
-                  path="/swap/manage-fees"
+                  path="/stable-swap/manage-fees"
                   element={<StableSwapManageFees />}
                 />
               </>
@@ -357,6 +448,52 @@ const MainLayout = () => {
                 }
               />
             </Route>
+            <Route
+              path="/swap"
+              element={<DexView openConnectorMenu={openConnectorMenu} />}
+            >
+              <Route index element={<Swap />} />
+              <Route path=":outputCurrency" element={<RedirectToSwap />} />
+              <Route path="send" element={<RedirectPathToSwapOnly />} />
+              <Route path="find" element={<PoolFinder />} />
+              <Route path="pool" element={<Pool />} />
+              <Route path="add" element={<AddLiquidity />} />
+              <Route
+                path="add/:currencyIdA"
+                element={<RedirectOldAddLiquidityPathStructure />}
+              />
+              <Route
+                path="add/:currencyIdA/:currencyIdB"
+                element={<RedirectDuplicateTokenIds />}
+              />
+              <Route path="create" element={<AddLiquidity />} />
+              <Route
+                path="create/:currencyIdA"
+                element={<RedirectOldAddLiquidityPathStructure />}
+              />
+              <Route
+                path="create/:currencyIdA/:currencyIdB"
+                element={<RedirectDuplicateTokenIds />}
+              />
+              <Route
+                path="remove/:tokens"
+                element={<RedirectOldRemoveLiquidityPathStructure />}
+              />
+              <Route
+                path="remove/:currencyIdA/:currencyIdB"
+                element={<RemoveLiquidity />}
+              />
+              <Route element={<RedirectPathToSwapOnly />} />
+            </Route>
+            <Route
+              path="/vault"
+              element={
+                <AllVaultView
+                  isMobileFiltersOpen={isMobileFiltersOpen}
+                  openMobileFilterMenu={openMobileFilterMenu}
+                />
+              }
+            ></Route>
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
           <Copyright />
@@ -369,6 +506,16 @@ const MainLayout = () => {
       {!isMobile && openConnector && (
         <DesktopConnector onClose={() => setOpenConnector(false)} />
       )}
+
+      <FthmInfoModal
+        onClose={() => setShowFthmBalanceModal(false)}
+        open={showFthmBalanceModal}
+      >
+        <FathomBalanceContent
+          setShowFthmBalanceModal={setShowFthmBalanceModal}
+        />
+      </FthmInfoModal>
+      {erc20TokenModalData && <TransactionErc20TokenModal />}
     </ThemeProvider>
   );
 };

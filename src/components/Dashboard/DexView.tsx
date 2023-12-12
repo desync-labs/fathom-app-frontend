@@ -1,0 +1,55 @@
+import { useLocation } from "react-router-dom";
+import { FC, MouseEvent, useMemo } from "react";
+import { GovernanceIcon, StakingIcon } from "components/Common/MenuIcons";
+import {
+  NestedRouteContainer,
+  NestedRouteLink,
+  NestedRouteNav,
+} from "components/AppComponents/AppBox/AppBox";
+import DexIndexComponent from "apps/dex";
+
+export type DexViewProps = {
+  openConnectorMenu: (event: MouseEvent<HTMLElement>) => void;
+};
+
+const DexView: FC<DexViewProps> = ({ openConnectorMenu }) => {
+  const location = useLocation();
+
+  const isSwapActive = useMemo(
+    () => ["/swap/", "/swap"].includes(location.pathname),
+    [location.pathname]
+  );
+
+  const isPoolActive = useMemo(
+    () =>
+      location.pathname.includes("/swap/pool") ||
+      location.pathname.includes("/swap/create") ||
+      location.pathname.includes("/swap/add") ||
+      location.pathname.includes("/swap/find") ||
+      location.pathname.includes("/swap/remove"),
+    [location.pathname]
+  );
+
+  return (
+    <>
+      <NestedRouteNav>
+        <NestedRouteLink className={isSwapActive ? "active" : ""} to="/swap/">
+          <StakingIcon isStakingActive={isSwapActive} />
+          Swap
+        </NestedRouteLink>
+        <NestedRouteLink
+          className={isPoolActive ? "active" : ""}
+          to="/swap/pool"
+        >
+          <GovernanceIcon isDAOActive={isPoolActive} />
+          Pool
+        </NestedRouteLink>
+      </NestedRouteNav>
+      <NestedRouteContainer maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+        <DexIndexComponent openConnectorMenu={openConnectorMenu} />
+      </NestedRouteContainer>
+    </>
+  );
+};
+
+export default DexView;

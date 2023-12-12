@@ -54,7 +54,6 @@ export type UseTopUpPositionContextReturnType = {
   errorAtLeastOneField: boolean;
 };
 
-// @ts-ignore
 export const TopUpPositionContext =
   createContext<UseTopUpPositionContextReturnType>(
     {} as UseTopUpPositionContextReturnType

@@ -1,7 +1,7 @@
 import { Grid } from "@mui/material";
 import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import React, { Dispatch, FC, memo } from "react";
+import { Dispatch, FC, memo } from "react";
 import { styled } from "@mui/material/styles";
 
 // const ProposalSelect = styled(Select)`
@@ -64,7 +64,6 @@ const ProposalFilters: FC<ProposalFiltersType> = ({
         <Grid item xs={2}>
           <ProposalSelect
             value={time}
-            // @ts-ignore
             onChange={(event: SelectChangeEvent) => {
               setTime(event.target.value);
             }}

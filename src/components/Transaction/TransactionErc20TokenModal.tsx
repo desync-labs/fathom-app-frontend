@@ -31,8 +31,12 @@ export const SuccessIconWrapper = styled(Box)`
 `;
 
 const TransactionErc20TokenModal: FC = () => {
-  const { erc20TokenModalData, successAlertMessage, resetErc20TokenModal } =
-    useAlertAndTransactionContext();
+  const {
+    erc20TokenModalData,
+    successAlertMessage,
+    erc20TokenModalDescription,
+    resetErc20TokenModal,
+  } = useAlertAndTransactionContext();
 
   const { addERC20Token } = useConnector();
 
@@ -63,10 +67,13 @@ const TransactionErc20TokenModal: FC = () => {
         <Typography component="span" variant="subtitle1">
           {successAlertMessage}
         </Typography>
-        <DialogContentWrapper width={"80%"}>
+        <DialogContentWrapper
+          width={"80%"}
+          sx={{ alignItems: "center", margin: "30px 15px" }}
+        >
           {image && <img src={image} alt={"fxd"} width={28} height={28} />}
           <Typography component="span" variant="body2">
-            Add FXD to wallet to track your balance.
+            {erc20TokenModalDescription}
           </Typography>
           <ButtonPrimary onClick={addTokenToMetamaskWalletHandler}>
             <WalletIcon sx={{ fontSize: "16px", marginRight: "7px" }} />

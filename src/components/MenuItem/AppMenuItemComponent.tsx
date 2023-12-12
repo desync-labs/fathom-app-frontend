@@ -1,4 +1,4 @@
-import React, { forwardRef, ReactNode } from "react";
+import { forwardRef, ReactNode } from "react";
 import { NavLink, NavLinkProps, useLocation } from "react-router-dom";
 import { ListItem } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -52,9 +52,10 @@ const AppMenuItemComponent: React.FC<AppMenuItemComponentProps> = (props) => {
       children={children}
       component={forwardRef((props: NavLinkProps, ref: any) => {
         const className =
-          // @ts-ignore
+          typeof props.className === "string" &&
           !props.className.includes("active") &&
-          location.pathname.includes("dao")
+          (location.pathname.includes("dao") ||
+            location.pathname.includes("swap"))
             ? `${props.className} active`
             : props.className;
 

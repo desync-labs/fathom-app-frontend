@@ -2,7 +2,7 @@ import { TableCell, Box, Stack } from "@mui/material";
 import { ICollateralPool } from "fathom-sdk";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
-import React, { Dispatch, FC, SetStateAction } from "react";
+import { Dispatch, FC, SetStateAction } from "react";
 import { AppTableRow } from "components/AppComponents/AppTable/AppTable";
 import { styled } from "@mui/material/styles";
 import { OpenPositionButton } from "components/AppComponents/AppButton/AppButton";

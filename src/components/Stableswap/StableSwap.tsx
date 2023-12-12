@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import BigNumber from "bignumber.js";
 import {
   Grid,
@@ -193,16 +193,18 @@ const StableSwap = () => {
             {isUserWrapperWhiteListed && (
               <AddRemoveLiquidity>
                 <ButtonSecondary
-                  onClick={() => navigate("/swap/add-liquidity")}
+                  onClick={() => navigate("/stable-swap/add-liquidity")}
                 >
                   Add Liquidity
                 </ButtonSecondary>
                 <ButtonSecondary
-                  onClick={() => navigate("/swap/remove-liquidity")}
+                  onClick={() => navigate("/stable-swap/remove-liquidity")}
                 >
                   Remove Liquidity
                 </ButtonSecondary>
-                <ButtonSecondary onClick={() => navigate("/swap/manage-fees")}>
+                <ButtonSecondary
+                  onClick={() => navigate("/stable-swap/manage-fees")}
+                >
                   Manage Fees
                 </ButtonSecondary>
               </AddRemoveLiquidity>

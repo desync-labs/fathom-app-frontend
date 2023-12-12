@@ -1,4 +1,3 @@
-import React from "react";
 import { Box, Grid, Typography } from "@mui/material";
 import { secondsToTime } from "utils/secondsToTime";
 import { getAccountUrl } from "utils/explorer";
