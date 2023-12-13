@@ -1,16 +1,15 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import "feather-icons";
-import { withRouter } from "react-router-dom";
-import { TYPE } from "Theme";
-import { PageWrapper, FullWrapper } from "components/index";
-import LPList from "components/LPList";
+import { TYPE } from "apps/charts/Theme";
+import { PageWrapper, FullWrapper } from "apps/charts/components";
+import LPList from "apps/charts/components/LPList";
 import styled from "styled-components";
-import AccountSearch from "components/AccountSearch";
-import { useTopLps } from "contexts/GlobalData";
-import LocalLoader from "components/LocalLoader";
-import { RowBetween } from "components/Row";
+import AccountSearch from "apps/charts/components/AccountSearch";
+import { useTopLps } from "apps/charts/contexts/GlobalData";
+import LocalLoader from "apps/charts/components/LocalLoader";
+import { RowBetween } from "apps/charts/components/Row";
 import { useMedia } from "react-use";
-import Search from "components/Search";
+import Search from "apps/charts/components/Search";
 
 const AccountWrapper = styled.div`
   @media screen and (max-width: 600px) {
@@ -53,4 +52,4 @@ function AccountLookup() {
   );
 }
 
-export default withRouter(AccountLookup);
+export default AccountLookup;

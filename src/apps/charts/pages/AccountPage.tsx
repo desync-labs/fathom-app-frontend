@@ -1,26 +1,34 @@
-import React, { useState, useMemo, useEffect, useCallback } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import styled from "styled-components";
-import { useUserTransactions, useUserPositions } from "contexts/User";
-import TxnList from "components/TxnList";
-import Panel from "components/Panel";
-import { formattedNum } from "utils";
-import Row, { AutoRow, RowFixed, RowBetween } from "components/Row";
-import { AutoColumn } from "components/Column";
-import UserChart from "components/UserChart";
-import PairReturnsChart from "components/PairReturnsChart";
-import PositionList from "components/PositionList";
-import { TYPE } from "Theme";
-import { ButtonDropdown } from "components/ButtonStyled";
-import { PageWrapper, ContentWrapper, StyledIcon } from "components";
-import DoubleTokenLogo from "components/DoubleLogo";
+import {
+  useUserTransactions,
+  useUserPositions,
+} from "apps/charts/contexts/User";
+import TxnList from "apps/charts/components/TxnList";
+import Panel from "apps/charts/components/Panel";
+import { formattedNum } from "apps/charts/utils";
+import Row, { AutoRow, RowFixed, RowBetween } from "apps/charts/components/Row";
+import { AutoColumn } from "apps/charts/components/Column";
+import UserChart from "apps/charts/components/UserChart";
+import PairReturnsChart from "apps/charts/components/PairReturnsChart";
+import PositionList from "apps/charts/components/PositionList";
+import { TYPE } from "apps/charts/Theme";
+import { ButtonDropdown } from "apps/charts/components/ButtonStyled";
+import {
+  PageWrapper,
+  ContentWrapper,
+  StyledIcon,
+} from "apps/charts/components";
+import DoubleTokenLogo from "apps/charts/components/DoubleLogo";
 import { Bookmark, Activity } from "react-feather";
-import Link from "components/Link";
-import { FEE_WARNING_TOKENS } from "constants/index";
-import { BasicLink } from "components/Link";
+import Link from "apps/charts/components/Link";
+import { FEE_WARNING_TOKENS } from "apps/charts/constants";
+import { BasicLink } from "apps/charts/components/Link";
 import { useMedia } from "react-use";
-import Search from "components/Search";
-import { useSavedAccounts } from "contexts/LocalStorage";
-import { TableHeaderBox } from "components/Row";
+import Search from "apps/charts/components/Search";
+import { useSavedAccounts } from "apps/charts/contexts/LocalStorage";
+import { TableHeaderBox } from "apps/charts/components/Row";
+import { Position } from "apps/charts/utils/returns";
 
 const AccountWrapper = styled.div`
   background-color: transparent;
@@ -124,7 +132,8 @@ const AccountDetailsLayout = styled.div`
   }
 `;
 
-function AccountPage({ account }) {
+function AccountPage(props: { account: string }) {
+  const { account } = props;
   // get data for this account
   const transactions = useUserTransactions(account);
   const positions = useUserPositions(account);
@@ -136,11 +145,14 @@ function AccountPage({ account }) {
     transactions?.mints?.length;
 
   // get derived totals
-  let totalSwappedUSD = useMemo(() => {
+  const totalSwappedUSD = useMemo(() => {
     return transactions?.swaps
-      ? transactions?.swaps.reduce((total, swap) => {
-          return total + parseFloat(swap.amountUSD);
-        }, 0)
+      ? transactions?.swaps.reduce(
+          (total: number, swap: { amountUSD: string }) => {
+            return total + parseFloat(swap.amountUSD);
+          },
+          0
+        )
       : 0;
   }, [transactions]);
 
@@ -161,25 +173,38 @@ function AccountPage({ account }) {
 
   // settings for list view and dropdowns
   const hideLPContent = positions && positions.length === 0;
-  const [showDropdown, setShowDropdown] = useState(false);
-  const [activePosition, setActivePosition] = useState();
+  const [showDropdown, setShowDropdown] = useState<boolean>(false);
+  const [activePosition, setActivePosition] = useState<Position>();
 
   const dynamicPositions = activePosition ? [activePosition] : positions;
 
-  const aggregateFees = dynamicPositions?.reduce(function (total, position) {
+  const aggregateFees = dynamicPositions?.reduce(function (
+    total: any,
+    position: { fees: { sum: any } }
+  ) {
     return total + position.fees.sum;
-  }, 0);
+  },
+  0);
 
   const positionValue = useMemo(() => {
     return dynamicPositions
-      ? dynamicPositions.reduce((total, position) => {
-          return (
-            total +
-            (parseFloat(position?.liquidityTokenBalance) /
-              parseFloat(position?.pair?.totalSupply)) *
-              position?.pair?.reserveUSD
-          );
-        }, 0)
+      ? dynamicPositions.reduce(
+          (
+            total: number,
+            position: {
+              liquidityTokenBalance: string;
+              pair: { totalSupply: string; reserveUSD: number };
+            }
+          ) => {
+            return (
+              total +
+              (parseFloat(position?.liquidityTokenBalance) /
+                parseFloat(position?.pair?.totalSupply)) *
+                position?.pair?.reserveUSD
+            );
+          },
+          0
+        )
       : null;
   }, [dynamicPositions]);
 
@@ -287,7 +312,7 @@ function AccountPage({ account }) {
               {showDropdown && (
                 <Flyout>
                   <AutoColumn gap="0px">
-                    {positions?.map((p, i) => {
+                    {positions?.map((p: any, i: any) => {
                       if (p.pair.token1.symbol === "WXDC") {
                         p.pair.token1.symbol = "XDC";
                       }
@@ -319,7 +344,7 @@ function AccountPage({ account }) {
                     {activePosition && (
                       <MenuRow
                         onClick={() => {
-                          setActivePosition();
+                          setActivePosition({} as Position);
                           setShowDropdown(false);
                         }}
                       >

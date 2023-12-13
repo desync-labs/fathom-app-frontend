@@ -1,19 +1,18 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useMedia } from "react-use";
 import dayjs from "dayjs";
-import LocalLoader from "components/LocalLoader";
+import LocalLoader from "apps/charts/components/LocalLoader";
 import utc from "dayjs/plugin/utc";
 import { Box, Flex } from "rebass";
 import styled from "styled-components";
 
-import { CustomLink } from "components/Link";
-import { Divider } from "components";
-import { withRouter } from "react-router-dom";
-import { formattedNum } from "utils";
-import { TYPE } from "Theme";
-import DoubleTokenLogo from "components/DoubleLogo";
-import { RowFixed } from "components/Row";
-import { TableHeaderBox } from "components/Row";
+import { CustomLink } from "apps/charts/components/Link";
+import { Divider } from "apps/charts/components";
+import { formattedNum } from "apps/charts/utils";
+import { TYPE } from "apps/charts/Theme";
+import DoubleTokenLogo from "apps/charts/components/DoubleLogo";
+import { RowFixed } from "apps/charts/components/Row";
+import { TableHeaderBox } from "apps/charts/components/Row";
 
 dayjs.extend(utc);
 
@@ -25,7 +24,7 @@ const PageButtons = styled.div`
   margin-bottom: 0.5em;
 `;
 
-const Arrow = styled.div`
+const Arrow = styled.div<{ faded: boolean }>`
   color: ${({ theme }) => theme.white};
   opacity: ${(props) => (props.faded ? 0.3 : 1)};
   padding: 0 20px;
@@ -83,7 +82,12 @@ const DataText = styled(Flex)`
   }
 `;
 
-function LPList({ lps, disbaleLinks, maxItems = 10 }) {
+function LPList(props: {
+  lps: any;
+  disbaleLinks: any;
+  maxItems?: 10 | undefined;
+}) {
+  const { lps, disbaleLinks, maxItems = 10 } = props;
   const below600 = useMedia("(max-width: 600px)");
   const below800 = useMedia("(max-width: 800px)");
 
@@ -109,19 +113,16 @@ function LPList({ lps, disbaleLinks, maxItems = 10 }) {
     }
   }, [ITEMS_PER_PAGE, lps]);
 
-  const ListItem = ({ lp, index }) => {
+  const ListItem = (listItem: { lp: any; index: any }) => {
+    const { lp, index } = listItem;
     return (
       <DashGrid
         style={{ height: "48px", padding: "0 1.125rem" }}
         disbaleLinks={disbaleLinks}
         focus={true}
       >
-        {!below600 && (
-          <DataText area="number" fontWeight="500">
-            {index}
-          </DataText>
-        )}
-        <DataText area="name" fontWeight="500" justifyContent="flex-start">
+        {!below600 && <DataText fontWeight="500">{index}</DataText>}
+        <DataText fontWeight="500" justifyContent="flex-start">
           <CustomLink
             style={{ marginLeft: below600 ? 0 : "1rem", whiteSpace: "nowrap" }}
             to={"/account/" + lp.user.id}
@@ -139,7 +140,7 @@ function LPList({ lps, disbaleLinks, maxItems = 10 }) {
         )} */}
 
         <DataText>
-          <CustomLink area="pair" to={"/pair/" + lp.pairAddress}>
+          <CustomLink to={"/pair/" + lp.pairAddress}>
             <RowFixed>
               {!below600 && (
                 <DoubleTokenLogo
@@ -220,4 +221,4 @@ function LPList({ lps, disbaleLinks, maxItems = 10 }) {
   );
 }
 
-export default withRouter(LPList);
+export default LPList;

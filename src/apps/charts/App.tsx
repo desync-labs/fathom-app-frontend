@@ -1,4 +1,4 @@
-import { FC, ReactNode, SetStateAction, useState } from "react";
+import { Dispatch, FC, ReactNode, SetStateAction, useState } from "react";
 import styled from "styled-components";
 import { ApolloProvider } from "@apollo/client";
 import { client } from "apps/charts/apollo/client";
@@ -88,7 +88,7 @@ const WarningBanner = styled.div`
 type LayoutWrapperProps = {
   children: ReactNode;
   savedOpen: boolean;
-  setSavedOpen: SetStateAction<boolean>;
+  setSavedOpen: Dispatch<SetStateAction<boolean>>;
 };
 
 const LayoutWrapper: FC<LayoutWrapperProps> = ({
@@ -118,9 +118,11 @@ function App() {
   const [latestBlock, headBlock] = useLatestBlocks();
 
   // show warning
+
   const showWarning =
     headBlock && latestBlock
-      ? headBlock - latestBlock > BLOCK_DIFFERENCE_THRESHOLD
+      ? // @ts-ignore
+        headBlock - latestBlock > BLOCK_DIFFERENCE_THRESHOLD
       : false;
 
   return (

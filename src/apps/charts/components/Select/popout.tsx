@@ -1,11 +1,12 @@
-import React, { Component } from "react";
+import { ClassAttributes, Component, HTMLAttributes } from "react";
 import { Button } from "rebass";
 import styled from "styled-components";
 
 import Select from "react-select";
+import { JSX } from "react/jsx-runtime";
 
 const selectStyles = {
-  control: (styles) => ({
+  control: (styles: any) => ({
     ...styles,
     padding: "1rem",
     border: "none",
@@ -17,7 +18,7 @@ const selectStyles = {
       borderColor: "#e1e1e1",
     },
   }),
-  valueContainer: (styles) => ({
+  valueContainer: (styles: any) => ({
     ...styles,
     padding: 0,
   }),
@@ -25,12 +26,12 @@ const selectStyles = {
 };
 
 export default class Popout extends Component {
-  state = { isOpen: false, value: undefined };
+  state: { isOpen: boolean; value: any } = { isOpen: false, value: undefined };
   toggleOpen = () => {
-    this.setState((state) => ({ isOpen: !state.isOpen }));
+    this.setState((state) => ({ isOpen: !(state as any).isOpen }));
   };
 
-  onSelectChange = (value) => {
+  onSelectChange = (value: any) => {
     this.toggleOpen();
     this.setState({ value });
   };
@@ -43,7 +44,6 @@ export default class Popout extends Component {
         onClose={this.toggleOpen}
         target={
           <Button
-            border="text"
             color="text"
             variant="outline"
             onClick={this.toggleOpen}
@@ -66,8 +66,9 @@ export default class Popout extends Component {
           isClearable={false}
           menuIsOpen
           onChange={this.onSelectChange}
-          options={this.props.data}
+          options={(this.props as any).data}
           placeholder="Search..."
+          // @ts-ignore
           styles={selectStyles}
           tabSelectsValue={false}
           value={value}
@@ -105,9 +106,13 @@ const Wrapper = styled.div`
   transition: 0.25s ease-in-out;
 `;
 
-const Menu = (props) => <Wrapper {...props} />;
+const Menu = (props: any) => <Wrapper {...props} />;
 
-const Blanket = (props) => (
+const Blanket = (
+  props: JSX.IntrinsicAttributes &
+    ClassAttributes<HTMLDivElement> &
+    HTMLAttributes<HTMLDivElement>
+) => (
   <div
     style={{
       bottom: 0,
@@ -122,13 +127,21 @@ const Blanket = (props) => (
   />
 );
 
-const Dropdown = ({ children, isOpen, target, onClose }) => (
-  <>
-    {target}
-    {isOpen ? <Menu>{children}</Menu> : null}
-    {isOpen ? <Blanket onClick={onClose} /> : null}
-  </>
-);
+const Dropdown = (props: {
+  children: any;
+  isOpen: any;
+  target: any;
+  onClose: any;
+}) => {
+  const { children, isOpen, target, onClose } = props;
+  return (
+    <>
+      {target}
+      {isOpen ? <Menu>{children}</Menu> : null}
+      {isOpen ? <Blanket onClick={onClose} /> : null}
+    </>
+  );
+};
 
 const DropdownIndicator = () => (
   <span role="img" aria-label="Search">

@@ -143,7 +143,7 @@ const Provider: FC<ProviderProps> = ({ children }) => {
     });
   }, []);
 
-  const updateTransactions = useCallback((transactions) => {
+  const updateTransactions = useCallback((transactions: any) => {
     dispatch({
       type: UPDATE_TXNS,
       payload: {
@@ -349,9 +349,12 @@ async function getGlobalData(ethPrice: number, oldEthPrice: number) {
 
 let checked = false;
 
-const getChartData = async (oldestDateToFetch, offsetData) => {
+const getChartData = async (
+  oldestDateToFetch: number | undefined,
+  offsetData: any[]
+) => {
   let data: any[] = [];
-  let weeklyData: any[] = [];
+  const weeklyData: any[] = [];
   const utcEndTime = dayjs.utc();
   let skip = 0;
   let allFound = false;
@@ -658,7 +661,7 @@ export function useGlobalChartData() {
   useEffect(() => {
     async function fetchData() {
       // historical stuff for chart
-      let [newChartData, newWeeklyData] = await getChartData(
+      const [newChartData, newWeeklyData] = await getChartData(
         oldestDateFetch,
         combinedData
       );

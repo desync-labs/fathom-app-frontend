@@ -712,7 +712,7 @@ export const PAIRS_CURRENT = gql`
   }
 `;
 
-export const PAIR_DATA = (pairAddress: string, block: string) => {
+export const PAIR_DATA = (pairAddress: string, block?: string) => {
   const queryString = `
     ${PairFields}
     query pairs {
@@ -842,7 +842,7 @@ export const TOKENS_BULK = gql`
     }
   }
 `;
-export const TOKENS_HISTORICAL_BULK = (tokens: string[], block: string) => {
+export const TOKENS_HISTORICAL_BULK = (tokens: string[], block?: string) => {
   let tokenString = `[`;
   tokens.map((token) => {
     return (tokenString += `"${token}",`);
@@ -889,7 +889,7 @@ export const TOKENS_DYNAMIC = (block: string) => {
   return gql(queryString);
 };
 
-export const TOKEN_DATA = (tokenAddress: string, block: string) => {
+export const TOKEN_DATA = (tokenAddress: string, block?: string) => {
   const queryString = `
     ${TokenFields}
     query tokens {

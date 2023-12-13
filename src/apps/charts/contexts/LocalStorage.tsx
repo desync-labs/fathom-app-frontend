@@ -128,7 +128,12 @@ export function Updater() {
   return null;
 }
 
-export function useDarkModeManager() {
+type UseDarkModeManagerReturnType = [
+  boolean,
+  (value: boolean | string) => void
+];
+
+export function useDarkModeManager(): UseDarkModeManagerReturnType {
   const [state, { updateKey }] = useLocalStorageContext();
   const isDarkMode = state[DARK_MODE];
   const toggleDarkMode = useCallback(
