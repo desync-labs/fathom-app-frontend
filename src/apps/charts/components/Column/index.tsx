@@ -10,7 +10,7 @@ export const ColumnCenter = styled(Column)`
   align-items: center;
 `;
 
-export const AutoColumn = styled.div`
+export const AutoColumn = styled.div<{ gap?: string; justify?: string }>`
   display: grid;
   grid-auto-rows: auto;
   grid-row-gap: ${({ gap }) =>

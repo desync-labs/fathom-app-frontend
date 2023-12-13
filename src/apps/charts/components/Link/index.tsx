@@ -1,4 +1,3 @@
-import React from "react";
 import { Link as RebassLink } from "rebass";
 import { Link as RouterLink } from "react-router-dom";
 import PropTypes from "prop-types";
@@ -39,7 +38,6 @@ export const CustomLink = styled(RouterLink)`
   &:hover {
     cursor: pointer;
     text-decoration: none;
-    underline: none;
     color: ${({ color, theme }) =>
       color ? darken(0.1, color) : darken(0.1, theme.link)};
   }
@@ -51,6 +49,5 @@ export const BasicLink = styled(RouterLink)`
   &:hover {
     cursor: pointer;
     text-decoration: none;
-    underline: none;
   }
 `;

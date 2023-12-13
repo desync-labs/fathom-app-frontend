@@ -1,16 +1,15 @@
-import React from "react";
 import "feather-icons";
 import styled from "styled-components";
 import { Text } from "rebass";
 import { AlertTriangle } from "react-feather";
-import { RowBetween, RowFixed } from "components/Row";
-import { ButtonDark } from "components/ButtonStyled";
-import { AutoColumn } from "components/Column";
-import { Hover } from "components";
-import Link from "components/Link";
+import { RowBetween, RowFixed } from "apps/charts/components/Row";
+import { ButtonDark } from "apps/charts/components/ButtonStyled";
+import { AutoColumn } from "apps/charts/components/Column";
+import { Hover } from "apps/charts/components";
+import Link from "apps/charts/components/Link";
 import { useMedia } from "react-use";
 
-const WarningWrapper = styled.div`
+const WarningWrapper = styled.div<{ show: boolean }>`
   border-radius: 20px;
   border: 1px solid #f82d3a;
   background: rgba(248, 45, 58, 0.05);
@@ -32,7 +31,13 @@ const StyledWarningIcon = styled(AlertTriangle)`
   stroke: red;
 `;
 
-export default function Warning({ type, show, setShow, address }) {
+export default function Warning(props: {
+  type: any;
+  show: any;
+  setShow: any;
+  address: any;
+}) {
+  const { type, show, setShow, address } = props;
   const below800 = useMedia("(max-width: 800px)");
 
   const textContent = below800 ? (

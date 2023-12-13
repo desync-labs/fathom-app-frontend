@@ -1,9 +1,9 @@
-import React from "react";
 import { Button as RebassButton } from "rebass/styled-components";
 import styled from "styled-components";
 import { ChevronDown, ChevronUp } from "react-feather";
-import { RowBetween } from "components/Row";
-import { StyledIcon } from "components";
+import { RowBetween } from "apps/charts/components/Row";
+import { StyledIcon } from "apps/charts/components";
+import { FC, ReactNode } from "react";
 
 const Base = styled(RebassButton)`
   padding: 8px 12px;
@@ -13,12 +13,16 @@ const Base = styled(RebassButton)`
   cursor: pointer;
   outline: none;
   border: 1px solid transparent;
-  outline: none;
   border-bottom-right-radius: ${({ open }) => open && "0"};
   border-bottom-left-radius: ${({ open }) => open && "0"};
 `;
 
-export default function ButtonStyled({ children, ...rest }) {
+export default function ButtonStyled({
+  children,
+  ...rest
+}: {
+  children: ReactNode;
+}) {
   return <Base {...rest}>{children}</Base>;
 }
 
@@ -45,7 +49,18 @@ export const ButtonLight = styled(Base)`
   }
 `;
 
-export function ButtonDropdown({ disabled = false, children, open, ...rest }) {
+type ButtonDropdownProps = {
+  disabled?: boolean;
+  children: ReactNode;
+  open: boolean;
+};
+
+export const ButtonDropdown: FC<ButtonDropdownProps> = ({
+  disabled = false,
+  children,
+  open,
+  ...rest
+}) => {
   return (
     <ButtonFaded {...rest} disabled={disabled} open={open}>
       <RowBetween>
@@ -62,7 +77,7 @@ export function ButtonDropdown({ disabled = false, children, open, ...rest }) {
       </RowBetween>
     </ButtonFaded>
   );
-}
+};
 
 export const ButtonDark = styled(Base)`
   background-color: ${({ theme }) => theme.bg3};
@@ -88,13 +103,16 @@ export const ButtonFaded = styled(Base)`
   }
 `;
 
-export const OptionButton = styled.div`
+export const OptionButton = styled.div<{
+  active?: boolean;
+  disabled?: boolean;
+}>`
   font-weight: 500;
   width: fit-content;
   white-space: nowrap;
   padding: 6px;
   border-radius: 6px;
-  background-color: ${({ active, theme }) => active && "#324567"};
+  background-color: ${({ active }) => active && "#324567"};
   color: ${({ theme }) => theme.white};
 
   :hover {

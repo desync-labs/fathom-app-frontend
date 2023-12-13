@@ -2,10 +2,10 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import { shade } from "polished";
 import Vibrant from "node-vibrant";
 import { hex } from "wcag-contrast";
-import { isAddress } from "utils";
+import { isAddress } from "apps/charts/utils";
 import copy from "copy-to-clipboard";
 
-export function useColor(tokenAddress, token) {
+export function useColor(tokenAddress: any, token: string) {
   const [color, setColor] = useState("#2172E5");
   if (tokenAddress) {
     const path = `https://raw.githubusercontent.com/Into-the-Fathom/assets/master/blockchains/xinfin/${isAddress(
@@ -56,8 +56,12 @@ export function useCopyClipboard(timeout = 500) {
   return [isCopied, staticCopy];
 }
 
-export const useOutsideClick = (ref, ref2, callback) => {
-  const handleClick = (e) => {
+export const useOutsideClick = (
+  ref: { current: { contains: (arg0: any) => any } },
+  ref2: { current: { contains: (arg0: any) => any } },
+  callback: (arg0: boolean) => void
+) => {
+  const handleClick = (e: { target: any }) => {
     if (ref.current && ref.current && !ref2.current) {
       callback(true);
     } else if (

@@ -1,14 +1,9 @@
-import { USER_MINTS_BUNRS_PER_PAIR } from "apollo/queries";
+import { USER_MINTS_BUNRS_PER_PAIR } from "apps/charts/apollo/queries";
 import { client } from "apollo/client";
 import dayjs from "dayjs";
-import { getShareValueOverTime } from "utils";
+import { getShareValueOverTime } from "apps/charts/utils";
 
-export const priceOverrides = [
-  "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", // USDC
-  "0x6b175474e89094c44da98b954eedeac495271d0f", // DAI
-];
-
-interface ReturnMetrics {
+export interface ReturnMetrics {
   hodleReturn: number; // difference in asset values t0 -> t1 with t0 deposit amounts
   netReturn: number; // net return from t0 -> t1
   uniswapReturn: number; // netReturn - hodlReturn
@@ -17,7 +12,7 @@ interface ReturnMetrics {
 }
 
 // used to calculate returns within a given window bounded by two positions
-interface Position {
+export interface Position {
   pair: any;
   liquidityTokenBalance: number;
   liquidityTokenTotalSupply: number;
@@ -26,18 +21,13 @@ interface Position {
   reserveUSD: number;
   token0PriceUSD: number;
   token1PriceUSD: number;
+  timestamp?: number;
 }
 
 const PRICE_DISCOVERY_START_TIMESTAMP = 1589747086;
 
-function formatPricesForEarlyTimestamps(position): Position {
-  if (position.timestamp < PRICE_DISCOVERY_START_TIMESTAMP) {
-    if (priceOverrides.includes(position?.pair?.token0.id)) {
-      position.token0PriceUSD = 1;
-    }
-    if (priceOverrides.includes(position?.pair?.token1.id)) {
-      position.token1PriceUSD = 1;
-    }
+function formatPricesForEarlyTimestamps(position: Position): Position {
+  if ((position.timestamp as number) < PRICE_DISCOVERY_START_TIMESTAMP) {
     // WETH price
     if (
       position.pair?.token0.id === "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
@@ -67,46 +57,17 @@ async function getPrincipalForUserPerPair(user: string, pairAddress: string) {
   });
   for (const index in results.data.mints) {
     const mint = results.data.mints[index];
-    const mintToken0 = mint.pair.token0.id;
-    const mintToken1 = mint.pair.token1.id;
 
     // if trackign before prices were discovered (pre-launch days), hardcode stablecoins
-    if (
-      priceOverrides.includes(mintToken0) &&
-      mint.timestamp < PRICE_DISCOVERY_START_TIMESTAMP
-    ) {
-      usd += parseFloat(mint.amount0) * 2;
-    } else if (
-      priceOverrides.includes(mintToken1) &&
-      mint.timestamp < PRICE_DISCOVERY_START_TIMESTAMP
-    ) {
-      usd += parseFloat(mint.amount1) * 2;
-    } else {
-      usd += parseFloat(mint.amountUSD);
-    }
+    usd += parseFloat(mint.amountUSD);
     amount0 += parseFloat(mint.amount0);
     amount1 += parseFloat(mint.amount1);
   }
 
   for (const index in results.data.burns) {
     const burn = results.data.burns[index];
-    const burnToken0 = burn.pair.token0.id;
-    const burnToken1 = burn.pair.token1.id;
 
-    // if trackign before prices were discovered (pre-launch days), hardcode stablecoins
-    if (
-      priceOverrides.includes(burnToken0) &&
-      burn.timestamp < PRICE_DISCOVERY_START_TIMESTAMP
-    ) {
-      usd += parseFloat(burn.amount0) * 2;
-    } else if (
-      priceOverrides.includes(burnToken1) &&
-      burn.timestamp < PRICE_DISCOVERY_START_TIMESTAMP
-    ) {
-      usd += parseFloat(burn.amount1) * 2;
-    } else {
-      usd -= parseFloat(burn.amountUSD);
-    }
+    usd -= parseFloat(burn.amountUSD);
 
     amount0 -= parseFloat(burn.amount0);
     amount1 -= parseFloat(burn.amount1);
@@ -199,20 +160,31 @@ export function getMetricsForPositionWindow(
  * @param currentETHPrice // current price of eth used for usd conversions
  */
 export async function getHistoricalPairReturns(
-  startDateTimestamp,
-  currentPairData,
-  pairSnapshots,
-  currentETHPrice
+  startDateTimestamp: number | undefined,
+  currentPairData: {
+    createdAtTimestamp: string;
+    id: any;
+    totalSupply: any;
+    reserve0: any;
+    reserve1: any;
+    reserveUSD: any;
+    token0: { derivedETH: number };
+    token1: { derivedETH: number };
+  },
+  pairSnapshots: any[],
+  currentETHPrice: number
 ) {
   // catch case where data not puplated yet
   if (!currentPairData.createdAtTimestamp) {
     return [];
   }
+  // @ts-ignore
   let dayIndex: number = Math.round(startDateTimestamp / 86400); // get unique day bucket unix
   const currentDayIndex: number = Math.round(dayjs.utc().unix() / 86400);
   const sortedPositions = pairSnapshots.sort((a, b) => {
     return parseInt(a.timestamp) > parseInt(b.timestamp) ? 1 : -1;
   });
+  // @ts-ignore
   if (sortedPositions[0].timestamp > startDateTimestamp) {
     dayIndex = Math.round(sortedPositions[0].timestamp / 86400);
   }
@@ -231,7 +203,8 @@ export async function getHistoricalPairReturns(
     dayTimestamps
   );
   const shareValuesFormatted = {};
-  shareValues.map((share) => {
+  shareValues.map((share: { timestamp: string | number }) => {
+    // @ts-ignore
     return (shareValuesFormatted[share.timestamp] = share);
   });
 
@@ -261,6 +234,7 @@ export async function getHistoricalPairReturns(
     }
 
     // now treat the end of the day as a hypothetical position
+    // @ts-ignore
     let positionT1 = shareValuesFormatted[dayTimestamp + 86400];
     if (!positionT1) {
       positionT1 = {
@@ -301,12 +275,21 @@ export async function getHistoricalPairReturns(
  * @param user
  * @param pair
  * @param ethPrice
+ * @param snapshots
  */
 export async function getLPReturnsOnPair(
   user: string,
-  pair,
+  pair: {
+    id: string;
+    totalSupply: any;
+    reserve0: any;
+    reserve1: any;
+    reserveUSD: any;
+    token0: { derivedETH: number };
+    token1: { derivedETH: number };
+  },
   ethPrice: number,
-  snapshots
+  snapshots: any[]
 ) {
   // initialize values
   const principal = await getPrincipalForUserPerPair(user, pair.id);

@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
-import { createChart, CrosshairMode } from "lightweight-charts";
+import { useState, useEffect, useRef, FC } from "react";
+import { createChart, CrosshairMode, IChartApi } from "lightweight-charts";
 import dayjs from "dayjs";
-import { formattedNum } from "utils";
+import { formattedNum } from "apps/charts/utils";
 import { usePrevious } from "react-use";
 import styled from "styled-components";
 import { Play } from "react-feather";
-import { useDarkModeManager } from "contexts/LocalStorage";
+import { useDarkModeManager } from "apps/charts/contexts/LocalStorage";
 
 const IconWrapper = styled.div`
   position: absolute;
@@ -14,7 +14,7 @@ const IconWrapper = styled.div`
   border-radius: 3px;
   height: 16px;
   width: 16px;
-  padding: 0px;
+  padding: 0;
   bottom: 10px;
   display: flex;
   align-items: center;
@@ -25,18 +25,27 @@ const IconWrapper = styled.div`
   }
 `;
 
-const CandleStickChart = ({
+type CandleStickChartProps = {
+  data: any;
+  width: number;
+  height: number;
+  base: any;
+  margin: boolean;
+  valueFormatter: (val: string) => void;
+};
+
+const CandleStickChart: FC<CandleStickChartProps> = ({
   data,
   width,
   height = 300,
   base,
   margin = true,
-  valueFormatter = (val) => formattedNum(val, true),
+  valueFormatter = (val: string) => formattedNum(val, true),
 }) => {
   // reference for DOM element to create with chart
-  const ref = useRef();
+  const ref = useRef<HTMLDivElement>(null);
 
-  const formattedData = data?.map((entry) => {
+  const formattedData = data?.map((entry: any) => {
     return {
       time: parseFloat(entry.timestamp),
       open: parseFloat(entry.open),
@@ -63,7 +72,7 @@ const CandleStickChart = ({
   }
 
   // pointer to the chart object
-  const [chartCreated, setChartCreated] = useState(false);
+  const [chartCreated, setChartCreated] = useState<IChartApi | null>(null);
   const dataPrev = usePrevious(data);
 
   const [darkMode] = useDarkModeManager();
@@ -74,33 +83,32 @@ const CandleStickChart = ({
   useEffect(() => {
     if (chartCreated && previousTheme !== darkMode) {
       // remove the tooltip element
-      let tooltip = document.getElementById("tooltip-id");
-      let node = document.getElementById("test-id");
-      node.removeChild(tooltip);
-      chartCreated.resize(0, 0);
-      setChartCreated();
+      const tooltip = document.getElementById("tooltip-id");
+      const node = document.getElementById("test-id");
+      node?.removeChild(tooltip as HTMLElement);
+      (chartCreated as any).resize(0, 0);
+      setChartCreated(null);
     }
   }, [chartCreated, darkMode, previousTheme]);
 
   useEffect(() => {
     if (data !== dataPrev && chartCreated) {
       // remove the tooltip element
-      let tooltip = document.getElementById("tooltip-id");
-      let node = document.getElementById("test-id");
-      node.removeChild(tooltip);
+      const tooltip = document.getElementById("tooltip-id");
+      const node = document.getElementById("test-id");
+      node?.removeChild(tooltip as HTMLElement);
       chartCreated.resize(0, 0);
-      setChartCreated();
+      setChartCreated(null);
     }
   }, [chartCreated, data, dataPrev]);
 
   // if no chart created yet, create one with options and add to DOM manually
   useEffect(() => {
     if (!chartCreated) {
-      const chart = createChart(ref.current, {
+      const chart = createChart(ref.current as unknown as HTMLElement, {
         width: width,
         height: height,
         layout: {
-          backgroundColor: "transparent",
           textColor: textColor,
         },
         grid: {
@@ -122,11 +130,11 @@ const CandleStickChart = ({
           borderColor: "rgba(197, 203, 206, 0.8)",
         },
         localization: {
-          priceFormatter: (val) => formattedNum(val),
+          priceFormatter: (val: string) => formattedNum(val),
         },
       });
 
-      var candleSeries = chart.addCandlestickSeries({
+      const candleSeries = chart.addCandlestickSeries({
         upColor: "green",
         downColor: "red",
         borderDownColor: "red",
@@ -137,23 +145,23 @@ const CandleStickChart = ({
 
       candleSeries.setData(formattedData);
 
-      var toolTip = document.createElement("div");
+      const toolTip = document.createElement("div");
       toolTip.setAttribute("id", "tooltip-id");
       toolTip.className = "three-line-legend";
-      ref.current.appendChild(toolTip);
+      (ref.current as unknown as HTMLElement).appendChild(toolTip);
       toolTip.style.display = "block";
       toolTip.style.left = (margin ? 116 : 10) + "px";
       toolTip.style.top = 50 + "px";
       toolTip.style.backgroundColor = "transparent";
 
       // get the title of the chart
-      function setLastBarText() {
+      const setLastBarText = () => {
         toolTip.innerHTML = base
           ? `<div style="font-size: 22px; margin: 4px 0px; color: ${textColor}">` +
             valueFormatter(base) +
             "</div>"
           : "";
-      }
+      };
       setLastBarText();
 
       // update the title when hovering on the chart
@@ -161,15 +169,15 @@ const CandleStickChart = ({
         if (
           param === undefined ||
           param.time === undefined ||
-          param.point.x < 0 ||
-          param.point.x > width ||
-          param.point.y < 0 ||
-          param.point.y > height
+          (param?.point?.x as number) < 0 ||
+          (param?.point?.x as number) > width ||
+          (param?.point?.y as number) < 0 ||
+          (param?.point?.y as number) > height
         ) {
           setLastBarText();
         } else {
-          var price = param.seriesPrices.get(candleSeries).close;
-          const time = dayjs.unix(param.time).format("MM/DD h:mm A");
+          const price = (param as any).seriesPrices.get(candleSeries).close;
+          const time = dayjs.unix(param.time as number).format("MM/DD h:mm A");
           toolTip.innerHTML =
             `<div style="font-size: 22px; margin: 4px 0px; color: ${textColor}">` +
             valueFormatter(price) +
@@ -200,7 +208,7 @@ const CandleStickChart = ({
   useEffect(() => {
     if (width) {
       chartCreated && chartCreated.resize(width, height);
-      chartCreated && chartCreated.timeScale().scrollToPosition(0);
+      chartCreated && chartCreated.timeScale().scrollToPosition(0, false);
     }
   }, [chartCreated, height, width]);
 

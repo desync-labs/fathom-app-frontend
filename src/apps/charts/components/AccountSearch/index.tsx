@@ -1,6 +1,6 @@
 import { FC, useState } from "react";
 import "feather-icons";
-import { withRouter } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { ButtonLight, ButtonFaded } from "apps/charts/components/ButtonStyled";
 import { AutoRow, RowBetween } from "apps/charts/components/Row";
@@ -81,17 +81,17 @@ export const HeaderWrapper = styled(DashGrid)`
 `;
 
 type AccountSearchProps = {
-  history: any;
-  small: any;
+  small?: any;
 };
 
-const AccountSearch: FC<AccountSearchProps> = ({ history, small }) => {
+const AccountSearch: FC<AccountSearchProps> = ({ small }) => {
   const [accountValue, setAccountValue] = useState<string>("");
   const [savedAccounts, addAccount, removeAccount] = useSavedAccounts();
+  const navigate = useNavigate();
 
   function handleAccountSearch() {
     if (isAddress(accountValue)) {
-      history.push("/account/" + accountValue);
+      navigate("/charts/account/" + accountValue);
       if (!savedAccounts.includes(accountValue)) {
         addAccount(accountValue);
       }
@@ -121,10 +121,7 @@ const AccountSearch: FC<AccountSearchProps> = ({ history, small }) => {
       <AutoColumn>
         {!small && (
           <>
-            <HeaderWrapper
-              center={true}
-              style={{ height: "fit-content", marginTop: "2rem" }}
-            >
+            <HeaderWrapper style={{ height: "fit-content", marginTop: "2rem" }}>
               Saved Accounts
             </HeaderWrapper>
             {savedAccounts?.length > 0 ? (
@@ -132,16 +129,14 @@ const AccountSearch: FC<AccountSearchProps> = ({ history, small }) => {
                 return (
                   <DashGrid
                     key={account}
-                    center={true}
                     style={{
                       height: "fit-content",
                       padding: "0.5rem 1.125rem",
                     }}
                   >
                     <Flex
-                      area="account"
                       justifyContent="space-between"
-                      onClick={() => history.push("/account/" + account)}
+                      onClick={() => navigate("/charts/account/" + account)}
                     >
                       <AccountLink>{account?.slice(0, 42)}</AccountLink>
                       <Hover
@@ -174,7 +169,7 @@ const AccountSearch: FC<AccountSearchProps> = ({ history, small }) => {
                 return (
                   <RowBetween key={account}>
                     <ButtonFaded
-                      onClick={() => history.push("/account/" + account)}
+                      onClick={() => navigate("/charts/account/" + account)}
                     >
                       {small ? (
                         <TYPE.header>

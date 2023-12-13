@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, FC } from "react";
 import {
   Area,
   XAxis,
@@ -12,7 +12,7 @@ import {
 } from "recharts";
 import styled from "styled-components";
 import { useMedia } from "react-use";
-import { toK, toNiceDate, toNiceDateYear } from "utils";
+import { toK, toNiceDate, toNiceDateYear } from "apps/charts/utils";
 
 const ChartWrapper = styled.div`
   padding-top: 1em;
@@ -22,7 +22,14 @@ const ChartWrapper = styled.div`
   }
 `;
 
-const Chart = ({ data, chartOption, currencyUnit, symbol }) => {
+type ChartProps = {
+  data: any;
+  chartOption: any;
+  currencyUnit: any;
+  symbol: string;
+};
+
+const Chart: FC<ChartProps> = ({ data, chartOption, currencyUnit, symbol }) => {
   const [chartData, setChartData] = useState([]);
   useEffect(() => {
     setChartData([]);
@@ -105,7 +112,7 @@ const Chart = ({ data, chartOption, currencyUnit, symbol }) => {
             />
             <Tooltip
               cursor={true}
-              formatter={(val) => toK(val, true)}
+              formatter={(val) => toK(val)}
               labelFormatter={(label) => toNiceDateYear(label)}
               labelStyle={{ paddingTop: 4 }}
               contentStyle={{
@@ -165,7 +172,7 @@ const Chart = ({ data, chartOption, currencyUnit, symbol }) => {
             />
             <Tooltip
               cursor={true}
-              formatter={(val) => toK(val, true)}
+              formatter={(val) => toK(val)}
               labelFormatter={(label) => toNiceDateYear(label)}
               labelStyle={{ paddingTop: 4 }}
               contentStyle={{
@@ -243,7 +250,7 @@ const Chart = ({ data, chartOption, currencyUnit, symbol }) => {
             />
             <Tooltip
               cursor={true}
-              formatter={(val) => toK(val, true)}
+              formatter={(val) => toK(val)}
               labelFormatter={(label) => toNiceDateYear(label)}
               labelStyle={{ paddingTop: 4 }}
               contentStyle={{

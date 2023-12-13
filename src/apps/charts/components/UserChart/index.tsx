@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import {
   Area,
@@ -8,22 +8,22 @@ import {
   Tooltip,
   AreaChart,
 } from "recharts";
-import { AutoRow, RowBetween } from "components/Row";
+import { AutoRow, RowBetween } from "apps/charts/components/Row";
 import {
   toK,
   toNiceDate,
   toNiceDateYear,
   formattedNum,
   getTimeframe,
-} from "utils";
-import { OptionButton } from "components/ButtonStyled";
+} from "apps/charts/utils";
+import { OptionButton } from "apps/charts/components/ButtonStyled";
 import { useMedia } from "react-use";
-import { timeframeOptions } from "constants/index";
-import DropdownSelect from "components/DropdownSelect";
-import { useUserLiquidityChart } from "contexts/User";
-import LocalLoader from "components/LocalLoader";
-import { useDarkModeManager } from "contexts/LocalStorage";
-import { TYPE } from "Theme";
+import { timeframeOptions } from "apps/charts/constants";
+import DropdownSelect from "apps/charts/components/DropdownSelect";
+import { useUserLiquidityChart } from "apps/charts/contexts/User";
+import LocalLoader from "apps/charts/components/LocalLoader";
+import { useDarkModeManager } from "apps/charts/contexts/LocalStorage";
+import { TYPE } from "apps/charts/Theme";
 
 const ChartWrapper = styled.div`
   height: 100%;
@@ -34,17 +34,18 @@ const ChartWrapper = styled.div`
   }
 `;
 
-const UserChart = ({ account }) => {
+const UserChart = (props: { account: any }) => {
+  const { account } = props;
   const chartData = useUserLiquidityChart(account);
 
   const [timeWindow, setTimeWindow] = useState(timeframeOptions.ALL_TIME);
-  let utcStartTime = getTimeframe(timeWindow);
+  const utcStartTime = getTimeframe(timeWindow);
 
   const below600 = useMedia("(max-width: 600px)");
   const above1600 = useMedia("(min-width: 1600px)");
 
   const domain = [
-    (dataMin) => (dataMin > utcStartTime ? dataMin : utcStartTime),
+    (dataMin: number) => (dataMin > utcStartTime ? dataMin : utcStartTime),
     "dataMax",
   ];
 

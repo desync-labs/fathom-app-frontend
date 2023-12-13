@@ -1,20 +1,19 @@
-import React, { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import styled from "styled-components";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 
 import { Box, Flex, Text } from "rebass";
-import TokenLogo from "components/TokenLogo";
-import { CustomLink } from "components/Link";
-import Row from "components/Row";
-import { Divider } from "components/index";
+import TokenLogo from "apps/charts/components/TokenLogo";
+import { CustomLink } from "apps/charts/components/Link";
+import Row from "apps/charts/components/Row";
+import { Divider } from "apps/charts/components/index";
 
-import { formattedNum, formattedPercent } from "utils";
+import { formattedNum, formattedPercent } from "apps/charts/utils";
 import { useMedia } from "react-use";
-import { withRouter } from "react-router-dom";
-import FormattedName from "components/FormattedName";
-import { TYPE } from "Theme";
-import { TableHeaderBox } from "components/Row";
+import FormattedName from "apps/charts/components/FormattedName";
+import { TYPE } from "apps/charts/Theme";
+import { TableHeaderBox } from "apps/charts/components/Row";
 
 dayjs.extend(utc);
 
@@ -26,7 +25,7 @@ const PageButtons = styled.div`
   margin-bottom: 2em;
 `;
 
-const Arrow = styled.div`
+const Arrow = styled.div<{ faded: boolean }>`
   color: ${({ theme }) => theme.white};
   opacity: ${(props) => (props.faded ? 0.3 : 1)};
   padding: 0 20px;
@@ -165,7 +164,7 @@ function TopTokenList({ formattedTokens, itemMax = 10, useTracked = false }) {
     return (
       formattedTokens &&
       formattedTokens
-        .sort((a, b) => {
+        .sort((a: { [x: string]: string }, b: { [x: string]: string }) => {
           if (
             sortedColumn === SORT_FIELD.SYMBOL ||
             sortedColumn === SORT_FIELD.NAME
@@ -182,9 +181,10 @@ function TopTokenList({ formattedTokens, itemMax = 10, useTracked = false }) {
     );
   }, [formattedTokens, itemMax, page, sortDirection, sortedColumn]);
 
-  const ListItem = ({ item, index }) => {
+  const ListItem = (listItem: { item: any; index: any }) => {
+    const { item, index } = listItem;
     return (
-      <DashGrid style={{ height: "48px" }} focus={true}>
+      <DashGrid style={{ height: "48px" }}>
         {!below680 && (
           <DataText area="id">
             <div style={{ marginRight: "1rem", width: "10px" }}>{index}</div>
@@ -195,7 +195,7 @@ function TopTokenList({ formattedTokens, itemMax = 10, useTracked = false }) {
             <TokenLogo address={item.id} />
             <CustomLink
               style={{ marginLeft: "16px", whiteSpace: "nowrap" }}
-              to={"/token/" + item.id}
+              to={"/charts/token/" + item.id}
             >
               <FormattedName
                 text={below680 ? item.symbol : item.name}

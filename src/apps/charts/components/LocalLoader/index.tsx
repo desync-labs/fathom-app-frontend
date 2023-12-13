@@ -1,4 +1,4 @@
-import React from "react";
+import { FC } from "react";
 import styled, { css, keyframes } from "styled-components";
 
 const pulse = keyframes`
@@ -7,7 +7,7 @@ const pulse = keyframes`
   100% { transform: scale(1); }
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ fill?: boolean; height?: boolean }>`
   pointer-events: none;
   display: flex;
   align-items: center;
@@ -32,13 +32,19 @@ const AnimatedImg = styled.div`
   }
 `;
 
-const LocalLoader = ({ fill }) => {
+import imgSrc from "../../assets/Fathom-app-logo.svg";
+
+type LocalLoader = {
+  fill?: boolean;
+};
+
+const LocalLoader: FC<LocalLoader> = ({ fill }) => {
   // const [darkMode] = useDarkModeManager()
 
   return (
     <Wrapper fill={fill}>
       <AnimatedImg>
-        <img src={require("assets/Fathom-app-logo.svg")} alt="loading-icon" />
+        <img src={imgSrc} alt="loading-icon" />
       </AnimatedImg>
     </Wrapper>
   );

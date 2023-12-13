@@ -1,16 +1,15 @@
-import React from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import { default as ReactSelect } from "react-select";
 import { isMobile } from "react-device-detect";
 
-import Popout from "components/Select/popout";
+import Popout from "apps/charts/components/Select/popout";
 
 import {
   customStyles,
   customStylesMobile,
   customStylesTime,
-} from "components/Select/styles";
+} from "apps/charts/components/Select/styles";
 
 const MenuLabel = styled.div`
   display: flex;
@@ -58,8 +57,16 @@ const FixedToggle = styled.div`
   }
 `;
 
-let addressStart = new RegExp("^0x");
-function customFilter(option, searchText) {
+const addressStart = new RegExp("^0x");
+function customFilter(
+  option: {
+    data: {
+      tokenAddress: { toString: () => string };
+      label: { toString: () => string };
+    };
+  },
+  searchText: string
+) {
   const isAddress = addressStart.test(searchText);
   if (isAddress) {
     return option.data.tokenAddress
@@ -73,15 +80,25 @@ function customFilter(option, searchText) {
     .includes(searchText.toString().toLowerCase());
 }
 
-const Select = ({
-  options,
-  onChange,
-  setCapEth,
-  capEth,
-  tokenSelect = false,
-  placeholder,
-  ...rest
+const Select = (props: {
+  [x: string]: any;
+  options: any;
+  onChange: any;
+  setCapEth: any;
+  capEth: any;
+  tokenSelect?: false | undefined;
+  placeholder: any;
 }) => {
+  const {
+    options,
+    onChange,
+    setCapEth,
+    capEth,
+    tokenSelect = false,
+    placeholder,
+    ...rest
+  } = props;
+
   return tokenSelect ? (
     <ReactSelect
       placeholder={placeholder}
@@ -90,10 +107,11 @@ const Select = ({
       options={options}
       value={placeholder}
       filterOption={customFilter}
+      // @ts-ignore
       getOptionLabel={(option) => (
         <MenuLabel>
-          <LogoBox>{option.logo}</LogoBox>
-          <LabelBox>{option.label}</LabelBox>
+          <LogoBox>{(option as any).logo}</LogoBox>
+          <LabelBox>{(option as any).label}</LabelBox>
         </MenuLabel>
       )}
       styles={isMobile ? customStylesMobile : customStyles}
@@ -104,7 +122,8 @@ const Select = ({
             🔎
           </span>
         ),
-        Menu: ({ children, innerRef, innerProps }) => {
+        Menu: (props: { children: any; innerRef: any; innerProps: any }) => {
+          const { children, innerRef, innerProps } = props;
           return (
             <CustomMenu ref={innerRef} {...innerProps}>
               <FixedToggle>

@@ -3,7 +3,6 @@ import {
   createGlobalStyle,
   DefaultTheme,
 } from "styled-components";
-import { useDarkModeManager } from "apps/charts/contexts/LocalStorage";
 import styled from "styled-components";
 import { Text, TextProps } from "rebass";
 import { FC, ReactNode } from "react";
@@ -13,9 +12,8 @@ type ThemeProviderProps = {
 };
 
 const ThemeProvider: FC<ThemeProviderProps> = ({ children }) => {
-  const [darkMode] = useDarkModeManager();
   return (
-    <StyledComponentsThemeProvider theme={theme(darkMode)}>
+    <StyledComponentsThemeProvider theme={theme()}>
       {children}
     </StyledComponentsThemeProvider>
   );
@@ -23,58 +21,59 @@ const ThemeProvider: FC<ThemeProviderProps> = ({ children }) => {
 
 export default ThemeProvider;
 
-const theme = (color: string): DefaultTheme => ({
-  textColor: color,
+const theme = (): DefaultTheme =>
+  ({
+    textColor: "white",
 
-  panelColor: "rgba(255, 255, 255, 0)",
-  backgroundColor: "#0E1D34",
+    panelColor: "rgba(255, 255, 255, 0)",
+    backgroundColor: "#0E1D34",
 
-  text1: "#FAFAFA",
-  text2: "#C3C5CB",
-  text3: "#002F2D",
-  text4: "#565A69",
-  text5: "#43FFF6",
+    text1: "#FAFAFA",
+    text2: "#C3C5CB",
+    text3: "#002F2D",
+    text4: "#565A69",
+    text5: "#43FFF6",
 
-  // special case text types
-  white: "#FFFFFF",
+    // special case text types
+    white: "#FFFFFF",
 
-  // backgrounds / greys
-  bg1: "#0E1D34",
-  bg2: "#2C2F36",
-  bg3: "#43FFF6",
-  bg4: "#565A69",
-  bg5: "565A69",
-  bg6: "#000",
+    // backgrounds / greys
+    bg1: "#0E1D34",
+    bg2: "#2C2F36",
+    bg3: "#43FFF6",
+    bg4: "#565A69",
+    bg5: "565A69",
+    bg6: "#000",
 
-  //specialty colors
-  modalBG: "rgba(0,0,0,0.85)",
-  advancedBG: "#192A42",
-  divider: "#131f35",
-  headerBackground: "#131f35",
-  borderBG: "#253656",
-  placeholderColor: "#4F658C",
+    //specialty colors
+    modalBG: "rgba(0,0,0,0.85)",
+    advancedBG: "#192A42",
+    divider: "#131f35",
+    headerBackground: "#131f35",
+    borderBG: "#253656",
+    placeholderColor: "#4F658C",
 
-  //primary colors
-  primary1: "#2172E5",
-  primary4: "#376bad70",
-  primary5: "#153d6f70",
+    //primary colors
+    primary1: "#2172E5",
+    primary4: "#376bad70",
+    primary5: "#153d6f70",
 
-  // color text
-  primaryText1: "#6da8ff",
-  primaryText2: "#5977A0",
+    // color text
+    primaryText1: "#6da8ff",
+    primaryText2: "#5977A0",
 
-  shadow1: "#000",
+    shadow1: "#000",
 
-  // other
-  red1: "#FF6871",
-  green1: "#27AE60",
-  yellow1: "#FFE270",
-  yellow2: "#F3841E",
-  link: "#fff",
-  blue: "2f80ed",
+    // other
+    red1: "#FF6871",
+    green1: "#27AE60",
+    yellow1: "#FFE270",
+    yellow2: "#F3841E",
+    link: "#fff",
+    blue: "2f80ed",
 
-  background: "#0E1D34",
-});
+    background: "#0E1D34",
+  } as DefaultTheme);
 
 const TextWrapper = styled(Text)<{ color: string }>`
   color: ${({ color, theme }) => (theme as any)[color]};

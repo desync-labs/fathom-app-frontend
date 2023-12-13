@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Text, Box } from "rebass";
 
-import Link from "./Link";
+import Link from "apps/charts/components/Link";
 
 import { urls } from "apps/charts/utils";
 
@@ -77,14 +77,13 @@ export const StyledIcon = styled.div`
   color: ${({ theme }) => theme.text5};
 `;
 
-const EmptyCard = styled.div`
+const EmptyCard = styled.div<{ height?: number }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 200px;
   border-radius: 20px;
   color: ${({ theme }) => theme.text1};
-  height: ${({ height }) => height && height};
+  height: ${({ height }) => (height ? height : "200px")};
 `;
 
 export const SideBar = styled.span`
@@ -103,7 +102,7 @@ export const SubNav = styled.ul`
   padding: 0;
   margin-bottom: 2rem;
 `;
-export const SubNavEl = styled.li`
+export const SubNavEl = styled.li<{ isActive: boolean }>`
   list-style: none;
   display: flex;
   padding-bottom: 0.5rem;
