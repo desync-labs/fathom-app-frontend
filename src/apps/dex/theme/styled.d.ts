@@ -39,11 +39,6 @@ export interface Colors {
 
   primaryText1: Color;
 
-  // pinks
-  secondary1: Color;
-  secondary2: Color;
-  secondary3: Color;
-
   // other
   red1: Color;
   red2: Color;

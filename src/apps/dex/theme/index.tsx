@@ -59,9 +59,9 @@ export function colors(): Colors {
     bg6: "#0E0F15",
     bg7: "#00FFF9",
 
+    modalBG: "rgba(0,0,0,.425)",
     modalContentBG: "#1D2D49",
     //specialty colors
-    modalBG: "rgba(0,0,0,.425)",
     advancedBG: "rgba(0,0,0,0.1)",
 
     //primary colors
@@ -73,11 +73,6 @@ export function colors(): Colors {
 
     // color text
     primaryText1: "#43FFF6",
-
-    // secondary colors
-    secondary1: "#2172E5",
-    secondary2: "#17000b26",
-    secondary3: "#17000b26",
 
     // other
     red1: "#FD4040",
