@@ -441,12 +441,14 @@ const MainLayout = () => {
               <Route path="governance" element={<AllProposalsView />} />
               <Route
                 path="staking"
+                index
                 element={
                   <StakingProvider>
                     <StakingView />
                   </StakingProvider>
                 }
               />
+              <Route element={<Navigate to="/dao/staking" replace />} />
             </Route>
             <Route
               path="/swap"
