@@ -17,6 +17,10 @@ export const SuccessContentWrapper = styled(Box)`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    width: 100%;
+    height: 100%;
+  }
 `;
 
 export const SuccessIconWrapper = styled(Box)`
@@ -28,6 +32,12 @@ export const SuccessIconWrapper = styled(Box)`
   width: 60px;
   border-radius: 50%;
   margin-bottom: 20px;
+`;
+
+const SuccessMessage = styled(Typography)`
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    margin-bottom: 25px;
+  }
 `;
 
 const TransactionErc20TokenModal: FC = () => {
@@ -64,9 +74,7 @@ const TransactionErc20TokenModal: FC = () => {
           <DoneIcon color="success" />
         </SuccessIconWrapper>
         <Typography variant="h4">All done!</Typography>
-        <Typography component="span" variant="subtitle1">
-          {successAlertMessage}
-        </Typography>
+        <SuccessMessage>{successAlertMessage}</SuccessMessage>
         <DialogContentWrapper
           width={"80%"}
           sx={{ alignItems: "center", margin: "30px 15px" }}
