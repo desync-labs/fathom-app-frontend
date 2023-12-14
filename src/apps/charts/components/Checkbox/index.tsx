@@ -1,7 +1,6 @@
-import React from "react";
 import styled from "styled-components";
-import { TYPE } from "Theme";
-import { RowFixed } from "components/Row";
+import { TYPE } from "apps/charts/Theme";
+import { RowFixed } from "apps/charts/components/Row";
 
 const StyleCheckbox = styled.input`
   background: ${({ theme }) => theme.bg2};
@@ -22,7 +21,8 @@ const ButtonText = styled(TYPE.main)`
   }
 `;
 
-const CheckBox = ({ checked, setChecked, text }) => {
+const CheckBox = (props: { checked: any; setChecked: any; text: any }) => {
+  const { checked, setChecked, text } = props;
   return (
     <RowFixed>
       <StyleCheckbox

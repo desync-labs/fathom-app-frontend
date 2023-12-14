@@ -1,22 +1,21 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useMedia } from "react-use";
 import dayjs from "dayjs";
-import LocalLoader from "components/LocalLoader";
+import LocalLoader from "apps/charts/components/LocalLoader";
 import utc from "dayjs/plugin/utc";
 import { Box, Flex, Text } from "rebass";
 import styled from "styled-components";
 
-import { CustomLink } from "components/Link";
-import { Divider } from "components";
-import { withRouter } from "react-router-dom";
-import { formattedNum, formattedPercent } from "utils";
-import DoubleTokenLogo from "components/DoubleLogo";
-import FormattedName from "components/FormattedName";
-import QuestionHelper from "components/QuestionHelper";
-import { TYPE } from "Theme";
-import { PAIR_BLACKLIST } from "constants/index";
-import { AutoColumn } from "components/Column";
-import { TableHeaderBox } from "components/Row";
+import { CustomLink } from "apps/charts/components/Link";
+import { Divider } from "apps/charts/components";
+import { formattedNum, formattedPercent } from "apps/charts/utils";
+import DoubleTokenLogo from "apps/charts/components/DoubleLogo";
+import FormattedName from "apps/charts/components/FormattedName";
+import QuestionHelper from "apps/charts/components/QuestionHelper";
+import { TYPE } from "apps/charts/Theme";
+import { PAIR_BLACKLIST } from "apps/charts/constants";
+import { AutoColumn } from "apps/charts/components/Column";
+import { TableHeaderBox } from "apps/charts/components/Row";
 
 dayjs.extend(utc);
 
@@ -28,11 +27,12 @@ const PageButtons = styled.div`
   margin-bottom: 0.5em;
 `;
 
-const Arrow = styled.div`
+const Arrow = styled.div<{ faded?: boolean }>`
   color: ${({ theme }) => theme.white};
   opacity: ${(props) => (props.faded ? 0.3 : 1)};
   padding: 0 20px;
   user-select: none;
+
   :hover {
     cursor: pointer;
   }
@@ -42,7 +42,7 @@ const List = styled(Box)`
   -webkit-overflow-scrolling: touch;
 `;
 
-const DashGrid = styled.div`
+const DashGrid = styled.div<{ fade?: boolean }>`
   display: grid;
   grid-gap: 1em;
   grid-template-columns: 1fr 1fr 1fr;
@@ -90,10 +90,12 @@ const ListWrapper = styled.div``;
 
 const ClickableText = styled(Text)`
   color: ${({ theme }) => theme.text1};
+
   &:hover {
     cursor: pointer;
     opacity: 0.6;
   }
+
   text-align: end;
   user-select: none;
 `;
@@ -125,7 +127,7 @@ const SORT_FIELD = {
   APY: 5,
 };
 
-const FIELD_TO_VALUE = (field, useTracked) => {
+const FIELD_TO_VALUE = (field: number, useTracked: boolean) => {
   switch (field) {
     case SORT_FIELD.LIQ:
       return useTracked ? "trackedReserveUSD" : "reserveUSD";
@@ -140,8 +142,12 @@ const FIELD_TO_VALUE = (field, useTracked) => {
   }
 };
 
-const formatDataText = (value, trackedValue, supressWarning = false) => {
-  const showUntracked = value !== "$0" && !trackedValue & !supressWarning;
+const formatDataText = (
+  value: any,
+  trackedValue: any,
+  supressWarning = false
+) => {
+  const showUntracked = value !== "$0" && !trackedValue && !supressWarning;
   return (
     <AutoColumn gap="2px" style={{ opacity: showUntracked ? "0.7" : "1" }}>
       <div style={{ textAlign: "right" }}>{value}</div>
@@ -152,13 +158,14 @@ const formatDataText = (value, trackedValue, supressWarning = false) => {
   );
 };
 
-function PairList({
-  pairs,
-  color,
-  disbaleLinks,
-  maxItems = 10,
-  useTracked = false,
+function PairList(props: {
+  pairs: any;
+  color: any;
+  disableLinks: any;
+  maxItems?: 10 | undefined;
+  useTracked?: false | undefined;
 }) {
+  const { pairs, color, maxItems = 10, useTracked = false } = props;
   const below600 = useMedia("(max-width: 600px)");
   const below740 = useMedia("(max-width: 740px)");
   const below1080 = useMedia("(max-width: 1080px)");
@@ -190,12 +197,13 @@ function PairList({
     }
   }, [ITEMS_PER_PAGE, pairs]);
 
-  const ListItem = ({ pairAddress, index }) => {
+  const ListItem = (props: { pairAddress: any; index: any }) => {
+    const { pairAddress, index } = props;
     const pairData = pairs[pairAddress];
 
     if (pairData && pairData.token0 && pairData.token1) {
       const liquidity = formattedNum(
-        !!pairData.trackedReserveUSD
+        pairData.trackedReserveUSD
           ? pairData.trackedReserveUSD
           : pairData.reserveUSD,
         true
@@ -235,17 +243,13 @@ function PairList({
       );
 
       return (
-        <DashGrid
-          style={{ height: "48px" }}
-          disbaleLinks={disbaleLinks}
-          focus={true}
-        >
+        <DashGrid style={{ height: "48px" }}>
           {!below600 && (
-            <DataText area="id">
+            <DataText>
               <div>{index}</div>
             </DataText>
           )}
-          <DataText area="name" fontWeight="500">
+          <DataText fontWeight="500">
             <DoubleTokenLogo
               size={below600 ? 16 : 20}
               a0={pairData.token0.id}
@@ -265,24 +269,24 @@ function PairList({
               />
             </CustomLink>
           </DataText>
-          <DataText area="liq" justifyContent="center">
+          <DataText justifyContent="center">
             {formatDataText(liquidity, pairData.trackedReserveUSD)}
           </DataText>
-          <DataText area="vol" justifyContent="center">
+          <DataText justifyContent="center">
             {formatDataText(volume, pairData.oneDayVolumeUSD)}
           </DataText>
           {!below1080 && (
-            <DataText area="volWeek" justifyContent="center">
+            <DataText justifyContent="center">
               {formatDataText(weekVolume, pairData.oneWeekVolumeUSD)}
             </DataText>
           )}
           {!below1080 && (
-            <DataText area="fees" justifyContent="center">
+            <DataText justifyContent="center">
               {formatDataText(fees, pairData.oneDayVolumeUSD)}
             </DataText>
           )}
           {!below1080 && (
-            <DataText area="apy" justifyContent="center">
+            <DataText justifyContent="center">
               {formatDataText(
                 apy,
                 pairData.oneDayVolumeUSD,
@@ -293,7 +297,7 @@ function PairList({
         </DashGrid>
       );
     } else {
-      return "";
+      return null;
     }
   };
 
@@ -310,10 +314,10 @@ function PairList({
         const pairB = pairs[addressB];
         if (sortedColumn === SORT_FIELD.APY) {
           const apy0 =
-            parseFloat(pairA.oneDayVolumeUSD * 0.003 * 356 * 100) /
+            parseFloat(String(pairA.oneDayVolumeUSD * 0.003 * 356 * 100)) /
             parseFloat(pairA.reserveUSD);
           const apy1 =
-            parseFloat(pairB.oneDayVolumeUSD * 0.003 * 356 * 100) /
+            parseFloat(String(pairB.oneDayVolumeUSD * 0.003 * 356 * 100)) /
             parseFloat(pairB.reserveUSD);
           return apy0 > apy1
             ? (sortDirection ? -1 : 1) * 1
@@ -342,22 +346,17 @@ function PairList({
 
   return (
     <ListWrapper>
-      <HeaderWrapper
-        center={true}
-        disbaleLinks={disbaleLinks}
-        style={{ height: "fit-content" }}
-      >
+      <HeaderWrapper style={{ height: "fit-content" }}>
         {!below600 && (
           <Flex alignItems="center" justifyContent="flex-start">
-            <TableHeaderBox area="id">ID</TableHeaderBox>
+            <TableHeaderBox>ID</TableHeaderBox>
           </Flex>
         )}
         <Flex alignItems="center" justifyContent="flex-start">
-          <TableHeaderBox area="name">Name</TableHeaderBox>
+          <TableHeaderBox>Name</TableHeaderBox>
         </Flex>
         <Flex alignItems="center" justifyContent="center">
           <ClickableText
-            area="liq"
             onClick={(e) => {
               setSortedColumn(SORT_FIELD.LIQ);
               setSortDirection(
@@ -377,7 +376,6 @@ function PairList({
         </Flex>
         <Flex alignItems="center" justifyContent="center">
           <ClickableText
-            area="vol"
             onClick={(e) => {
               setSortedColumn(SORT_FIELD.VOL);
               setSortDirection(
@@ -398,7 +396,6 @@ function PairList({
         {!below1080 && (
           <Flex alignItems="center" justifyContent="center">
             <ClickableText
-              area="volWeek"
               onClick={(e) => {
                 setSortedColumn(SORT_FIELD.VOL_7DAYS);
                 setSortDirection(
@@ -420,7 +417,6 @@ function PairList({
         {!below1080 && (
           <Flex alignItems="center" justifyContent="center">
             <ClickableText
-              area="fees"
               onClick={(e) => {
                 setSortedColumn(SORT_FIELD.FEES);
                 setSortDirection(
@@ -442,7 +438,6 @@ function PairList({
         {!below1080 && (
           <Flex alignItems="center" justifyContent="center">
             <ClickableText
-              area="apy"
               onClick={(e) => {
                 setSortedColumn(SORT_FIELD.APY);
                 setSortDirection(
@@ -485,4 +480,4 @@ function PairList({
   );
 }
 
-export default withRouter(PairList);
+export default PairList;

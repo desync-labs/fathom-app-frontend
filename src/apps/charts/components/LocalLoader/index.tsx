@@ -39,8 +39,6 @@ type LocalLoader = {
 };
 
 const LocalLoader: FC<LocalLoader> = ({ fill }) => {
-  // const [darkMode] = useDarkModeManager()
-
   return (
     <Wrapper fill={fill}>
       <AnimatedImg>

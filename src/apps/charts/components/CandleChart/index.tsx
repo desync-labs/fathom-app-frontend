@@ -27,8 +27,8 @@ const IconWrapper = styled.div`
 
 type CandleStickChartProps = {
   data: any;
-  width: number;
-  height: number;
+  width?: number;
+  height?: number;
   base: any;
   margin: boolean;
   valueFormatter: (val: string) => void;
@@ -106,8 +106,8 @@ const CandleStickChart: FC<CandleStickChartProps> = ({
   useEffect(() => {
     if (!chartCreated) {
       const chart = createChart(ref.current as unknown as HTMLElement, {
-        width: width,
-        height: height,
+        width: Number(width),
+        height: Number(height),
         layout: {
           textColor: textColor,
         },
@@ -170,7 +170,7 @@ const CandleStickChart: FC<CandleStickChartProps> = ({
           param === undefined ||
           param.time === undefined ||
           (param?.point?.x as number) < 0 ||
-          (param?.point?.x as number) > width ||
+          (param?.point?.x as number) > Number(width) ||
           (param?.point?.y as number) < 0 ||
           (param?.point?.y as number) > height
         ) {

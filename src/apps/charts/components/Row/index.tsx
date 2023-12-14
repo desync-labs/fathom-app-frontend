@@ -1,13 +1,17 @@
 import styled from "styled-components";
 import { Box } from "rebass/styled-components";
 
-const Row = styled(Box)`
+const Row = styled(Box)<{
+  align?: string;
+  padding?: string;
+  border?: string;
+  borderRadius?: string;
+  justify?: string;
+}>`
   width: 100%;
   display: flex;
-  padding: 0;
-  align-items: center;
-  align-items: ${({ align, active }) => align && align};
-  padding: ${({ padding }) => padding};
+  align-items: ${({ align }) => (align ? align : "center")};
+  padding: ${({ padding }) => (padding ? padding : "0")};
   border: ${({ border }) => border};
   border-radius: ${({ borderRadius }) => borderRadius};
   justify-content: ${({ justify }) => justify};
@@ -22,7 +26,9 @@ export const RowFlat = styled.div`
   align-items: flex-end;
 `;
 
-export const AutoRow = styled(Row)`
+export const AutoRow = styled(Row)<{
+  gap: string;
+}>`
   flex-wrap: ${({ wrap }) => wrap ?? "nowrap"};
   margin: -${({ gap }) => gap};
   & > * {

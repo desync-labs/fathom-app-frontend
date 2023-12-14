@@ -22,7 +22,7 @@
     "jsx": "react-jsx",
     "downlevelIteration": true,
     "allowSyntheticDefaultImports": true,
-    "types": ["react-spring", "jest", "./src/apps/dex/theme/styled.d.ts", "./src/apps/charts/Theme/styled.d.ts"],
+    "types": ["react-spring", "jest"],
     "baseUrl": "src"
   },
   "exclude": ["node_modules", "playwright-tests"],

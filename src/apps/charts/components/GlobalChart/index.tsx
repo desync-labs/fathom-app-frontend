@@ -1,14 +1,19 @@
-import React, { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { ResponsiveContainer } from "recharts";
-import { timeframeOptions } from "constants/index";
-import { useGlobalChartData, useGlobalData } from "contexts/GlobalData";
+import { timeframeOptions } from "apps/charts/constants";
+import {
+  useGlobalChartData,
+  useGlobalData,
+} from "apps/charts/contexts/GlobalData";
 import { useMedia } from "react-use";
-import DropdownSelect from "components/DropdownSelect";
-import TradingViewChart, { CHART_TYPES } from "components/TradingviewChart";
-import { RowFixed } from "components/Row";
-import { OptionButton } from "components/ButtonStyled";
-import { getTimeframe } from "utils";
-import { TYPE } from "Theme";
+import DropdownSelect from "apps/charts/components/DropdownSelect";
+import TradingViewChart, {
+  CHART_TYPES,
+} from "apps/charts/components/TradingviewChart";
+import { RowFixed } from "apps/charts/components/Row";
+import { OptionButton } from "apps/charts/components/ButtonStyled";
+import { getTimeframe } from "apps/charts/utils";
+import { TYPE } from "apps/charts/Theme";
 
 const CHART_VIEW = {
   VOLUME: "Volume",
@@ -19,7 +24,8 @@ const VOLUME_WINDOW = {
   WEEKLY: "WEEKLY",
   DAYS: "DAYS",
 };
-const GlobalChart = ({ display }) => {
+const GlobalChart = (props: { display: any }) => {
+  const { display } = props;
   // chart options
   const [chartView, setChartView] = useState(
     display === "volume" ? CHART_VIEW.VOLUME : CHART_VIEW.LIQUIDITY
@@ -41,16 +47,16 @@ const GlobalChart = ({ display }) => {
   } = useGlobalData();
 
   // based on window, get starttim
-  let utcStartTime = getTimeframe(timeWindow);
+  const utcStartTime = getTimeframe(timeWindow);
 
   const chartDataFiltered = useMemo(() => {
-    let currentData =
+    const currentData =
       volumeWindow === VOLUME_WINDOW.DAYS ? dailyData : weeklyData;
     return (
       currentData &&
       Object.keys(currentData)
         ?.map((key) => {
-          let item = currentData[key];
+          const item = currentData[key];
           if (item.date > utcStartTime) {
             return item;
           } else {
@@ -65,18 +71,20 @@ const GlobalChart = ({ display }) => {
   const below800 = useMedia("(max-width: 800px)");
 
   // update the width on a window resize
-  const ref = useRef();
+  const ref = useRef<HTMLDivElement>(null);
   const isClient = typeof window === "object";
-  const [width, setWidth] = useState(ref?.current?.container?.clientWidth);
+  const [width, setWidth] = useState(ref?.current?.clientWidth);
   useEffect(() => {
     if (!isClient) {
-      return false;
+      return;
     }
-    function handleResize() {
-      setWidth(ref?.current?.container?.clientWidth ?? width);
-    }
+    const handleResize = () => {
+      setWidth(ref?.current?.clientWidth ?? width);
+    };
     window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, [isClient, width]); // Empty array ensures that effect is only run on mount and unmount
 
   return chartDataFiltered ? (
