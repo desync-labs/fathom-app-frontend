@@ -6,6 +6,7 @@ import ProposalVoting from "components/Governance/Proposal/ProposalVoting";
 import useProposalContext from "context/proposal";
 
 import BackSrc from "assets/svg/back.svg";
+import useSharedContext from "context/shared";
 
 const BackIcon = () => (
   <Icon sx={{ height: "21px" }}>
@@ -14,7 +15,8 @@ const BackIcon = () => (
 );
 
 const ProposalView = () => {
-  const { back, isMobile } = useProposalContext();
+  const { back } = useProposalContext();
+  const { isMobile } = useSharedContext();
 
   return (
     <Container

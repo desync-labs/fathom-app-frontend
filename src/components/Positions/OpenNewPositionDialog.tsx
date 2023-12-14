@@ -1,11 +1,5 @@
 import { FC, memo } from "react";
-import {
-  Grid,
-  DialogContent,
-  Divider,
-  useMediaQuery,
-  useTheme,
-} from "@mui/material";
+import { Grid, DialogContent, Divider } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
@@ -15,6 +9,7 @@ import OpenPositionInfo from "components/Positions/OpenPosition/OpenPositionInfo
 import OpenPositionForm from "components/Positions/OpenPosition/OpenPositionForm";
 
 import useOpenPositionContext from "context/openPosition";
+import useSharedContext from "context/shared";
 
 export const DividerMobile = styled(Divider)`
   width: 100%;
@@ -29,8 +24,7 @@ export const DividerDefault = styled(Divider)`
 
 const OpenNewPositionDialog: FC = () => {
   const { onClose } = useOpenPositionContext();
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const { isMobile } = useSharedContext();
 
   return (
     <AppDialog

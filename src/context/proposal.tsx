@@ -7,7 +7,6 @@ export type ProposalContextType = {
 };
 
 export type UseProposalContextReturnType = {
-  isMobile: boolean;
   hasVoted: boolean;
   votePending: string | null;
   account: string | null | undefined;
@@ -43,16 +42,6 @@ export const ProposalProvider: FC<ProposalContextType> = ({ children }) => {
   );
 };
 
-const useProposalContext = () => {
-  const context = useContext(ProposalContext);
-
-  if (!context) {
-    throw new Error(
-      "useProposalContext hook must be used with a ProposalContext component"
-    );
-  }
-
-  return context;
-};
+const useProposalContext = () => useContext(ProposalContext);
 
 export default useProposalContext;

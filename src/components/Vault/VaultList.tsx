@@ -21,6 +21,7 @@ import VaultFilters from "components/Vault/VaultFilters";
 import VaultListItemMobile from "components/Vault/VaultListItemMobile";
 import VaultFiltersMobile from "components/Vault/VaultFiltersMobile";
 import AppPopover from "components/AppComponents/AppPopover/AppPopover";
+import useSharedContext from "context/shared";
 
 const CircleWrapper = styled(Box)`
   width: 100%;
@@ -58,7 +59,6 @@ const VaultList: FC<VaultListPropsType> = ({
   openMobileFilterMenu,
 }) => {
   const {
-    isMobile,
     vaultSortedList,
     vaultsLoading,
     vaultPositionsLoading,
@@ -74,6 +74,7 @@ const VaultList: FC<VaultListPropsType> = ({
     handlePageChange,
     filterCurrentPosition,
   } = useVaultList();
+  const { isMobile } = useSharedContext();
 
   return (
     <>

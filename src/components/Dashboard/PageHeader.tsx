@@ -1,6 +1,7 @@
-import { Grid, Typography, Box, useTheme, useMediaQuery } from "@mui/material";
+import { Grid, Typography, Box } from "@mui/material";
 import { FC } from "react";
 import { styled } from "@mui/material/styles";
+import useSharedContext from "context/shared";
 
 type PageHeaderType = {
   title: string;
@@ -32,9 +33,7 @@ export const PageHeader: FC<PageHeaderType> = ({
   description,
   addPadding,
 }) => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-
+  const { isMobile } = useSharedContext();
   return (
     <Grid item xs={12} md={10} lg={8}>
       <PageHeaderTitle variant="h6" gutterBottom addPadding={addPadding}>

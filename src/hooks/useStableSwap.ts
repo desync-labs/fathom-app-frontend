@@ -3,7 +3,6 @@ import { useServices } from "context/services";
 import debounce from "lodash.debounce";
 import { SmartContractFactory } from "fathom-sdk";
 import useSyncContext from "context/sync";
-import { useMediaQuery, useTheme } from "@mui/material";
 import useConnector from "context/connector";
 import { useQuery } from "@apollo/client";
 import { STABLE_SWAP_STATS } from "apollo/queries";
@@ -58,8 +57,6 @@ const useStableSwap = (options: string[]) => {
     context: { clientName: "stable", chainId },
   });
 
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const navigate = useNavigate();
 
   const fxdPrice = useMemo(() => {
@@ -579,48 +576,35 @@ const useStableSwap = (options: string[]) => {
   return {
     depositTracker,
     totalLocked,
-
     dailyLimit: displayDailyLimit,
     isDecentralizedState,
     isUserWhiteListed,
-
     inputDecimals,
     outputDecimals,
-
     inputValue,
     outputValue,
-
     handleInputValueTextFieldChange,
     handleOutputValueTextFieldChange,
-
     approvalPending,
     swapPending,
-
     approveInputBtn,
     approveOutputBtn,
-
     approveInput,
     approveOutput,
-
     handleSwap,
     inputCurrency,
     setInputCurrency,
     outputCurrency,
     setOutputCurrency,
-
     inputBalance,
     outputBalance,
     fxdPrice,
-
     changeCurrenciesPosition,
     setMax,
-
     setInputCurrencyHandler,
     setOutputCurrencyHandler,
     swapFee,
     inputError,
-
-    isMobile,
     fxdAvailable,
     usStableAvailable,
     navigate,
