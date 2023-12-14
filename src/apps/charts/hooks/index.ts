@@ -32,7 +32,9 @@ export function useColor(tokenAddress: any, token: string) {
   return color;
 }
 
-export function useCopyClipboard(timeout = 500) {
+type UseCopyClipboardReturnType = [boolean, (text: string) => void];
+
+export const useCopyClipboard = (timeout = 500): UseCopyClipboardReturnType => {
   const [isCopied, setIsCopied] = useState<boolean>(false);
 
   const staticCopy = useCallback((text: string) => {
@@ -54,7 +56,7 @@ export function useCopyClipboard(timeout = 500) {
   }, [isCopied, setIsCopied, timeout]);
 
   return [isCopied, staticCopy];
-}
+};
 
 export const useOutsideClick = (
   ref: { current: { contains: (arg0: any) => any } },

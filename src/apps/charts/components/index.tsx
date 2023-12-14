@@ -77,7 +77,7 @@ export const StyledIcon = styled.div`
   color: ${({ theme }) => theme.text5};
 `;
 
-const EmptyCard = styled.div<{ height?: number }>`
+const EmptyCard = styled.div<{ height?: string }>`
   display: flex;
   align-items: center;
   justify-content: center;

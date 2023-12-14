@@ -1,8 +1,13 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
-import { Tooltip } from "components/QuestionHelper";
+import { Tooltip } from "apps/charts/components/QuestionHelper";
 
-const TextWrapper = styled.div`
+const TextWrapper = styled.div<{
+  margin?: boolean;
+  link?: boolean;
+  fontSize?: string;
+  adjustSize?: boolean;
+}>`
   position: relative;
   margin-left: ${({ margin }) => margin && "4px"};
   color: ${({ theme, link }) => (link ? theme.blue : theme.text1)};
@@ -17,20 +22,21 @@ const TextWrapper = styled.div`
   }
 `;
 
-const FormattedName = ({
-  text,
-  maxCharacters,
-  Wrapper,
-  margin = false,
-  adjustSize = false,
-  fontSize,
-  link,
-  ...rest
-}) => {
+const FormattedName = (props: { [x: string]: any }) => {
+  const {
+    text,
+    maxCharacters,
+    Wrapper,
+    margin = false,
+    adjustSize = false,
+    fontSize,
+    link,
+    ...rest
+  } = props;
   const [showHover, setShowHover] = useState(false);
 
   if (!text) {
-    return "";
+    return null;
   }
 
   if (text.length > maxCharacters) {

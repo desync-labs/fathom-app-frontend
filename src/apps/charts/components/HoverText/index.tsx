@@ -1,6 +1,6 @@
-import React, { FC, useCallback, useState } from "react";
+import { FC, useCallback, useState } from "react";
 import styled from "styled-components";
-import Popover, { PopoverProps } from "components/Popover";
+import Popover, { PopoverProps } from "apps/charts/components/Popover";
 
 const Wrapper = styled.span`
   display: flex;

@@ -1,17 +1,16 @@
-import React from "react";
 import styled from "styled-components";
-import { RowBetween } from "components/Row";
+import { RowBetween } from "apps/charts/components/Row";
 import { useMedia } from "react-use";
 import {
   useGlobalData,
   useEthPrice,
   useFxdPrice,
   useFTHMPrice,
-} from "contexts/GlobalData";
-import { formattedNum } from "utils";
+} from "apps/charts/contexts/GlobalData";
+import { formattedNum } from "apps/charts/utils";
 import { Box } from "rebass/styled-components";
 
-import { getTokenLogoURL } from "utils/getTokenLogo";
+import { getTokenLogoURL } from "apps/charts/utils/getTokenLogo";
 
 import transferSrc from "assets/transfer.svg";
 import dollarSrc from "assets/dollar.svg";

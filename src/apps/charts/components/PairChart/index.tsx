@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import {
   Area,
@@ -10,7 +10,7 @@ import {
   BarChart,
   Bar,
 } from "recharts";
-import { RowBetween, AutoRow } from "components/Row";
+import { RowBetween, AutoRow } from "apps/charts/components/Row";
 
 import {
   toK,
@@ -18,21 +18,21 @@ import {
   toNiceDateYear,
   formattedNum,
   getTimeframe,
-} from "utils";
-import { OptionButton } from "components/ButtonStyled";
+} from "apps/charts/utils";
+import { OptionButton } from "apps/charts/components/ButtonStyled";
 import { darken } from "polished";
 import {
   usePairChartData,
   useHourlyRateData,
   usePairData,
-} from "contexts/PairData";
-import { timeframeOptions } from "constants/index";
+} from "apps/charts/contexts/PairData";
+import { timeframeOptions } from "apps/charts/constants";
 import { useMedia } from "react-use";
-import { EmptyCard } from "components";
-import DropdownSelect from "components/DropdownSelect";
-import CandleStickChart from "components/CandleChart";
-import LocalLoader from "components/LocalLoader";
-import { useDarkModeManager } from "contexts/LocalStorage";
+import { EmptyCard } from "apps/charts/components";
+import DropdownSelect from "apps/charts/components/DropdownSelect";
+import CandleStickChart from "apps/charts/components/CandleChart";
+import LocalLoader from "apps/charts/components/LocalLoader";
+import { useDarkModeManager } from "apps/charts/contexts/LocalStorage";
 
 const ChartWrapper = styled.div`
   height: 100%;
@@ -57,7 +57,13 @@ const CHART_VIEW = {
   RATE1: "Rate 1",
 };
 
-const PairChart = ({ address, color, base0, base1 }) => {
+const PairChart = (props: {
+  address: any;
+  color: any;
+  base0: any;
+  base1: any;
+}) => {
+  const { address, color, base0, base1 } = props;
   const [chartFilter, setChartFilter] = useState(CHART_VIEW.LIQUIDITY);
 
   const [timeWindow, setTimeWindow] = useState(timeframeOptions.MONTH);
@@ -66,17 +72,17 @@ const PairChart = ({ address, color, base0, base1 }) => {
   const textColor = darkMode ? "white" : "black";
 
   // update the width on a window resize
-  const ref = useRef();
+  const ref = useRef<HTMLDivElement>(null);
   const isClient = typeof window === "object";
-  const [width, setWidth] = useState(ref?.current?.container?.clientWidth);
-  const [height, setHeight] = useState(ref?.current?.container?.clientHeight);
+  const [width, setWidth] = useState(ref?.current?.clientWidth);
+  const [height, setHeight] = useState(ref?.current?.clientHeight);
   useEffect(() => {
     if (!isClient) {
-      return false;
+      return;
     }
     function handleResize() {
-      setWidth(ref?.current?.container?.clientWidth ?? width);
-      setHeight(ref?.current?.container?.clientHeight ?? height);
+      setWidth(ref?.current?.clientWidth ?? width);
+      setHeight(ref?.current?.clientHeight ?? height);
     }
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -103,8 +109,10 @@ const PairChart = ({ address, color, base0, base1 }) => {
   const below1080 = useMedia("(max-width: 1080px)");
   const below600 = useMedia("(max-width: 600px)");
 
-  let utcStartTime = getTimeframe(timeWindow);
-  chartData = chartData?.filter((entry) => entry.date >= utcStartTime);
+  const utcStartTime = getTimeframe(timeWindow);
+  chartData = chartData?.filter(
+    (entry: { date: number }) => entry.date >= utcStartTime
+  );
 
   if (chartData && chartData.length === 0) {
     return (
@@ -119,7 +127,7 @@ const PairChart = ({ address, color, base0, base1 }) => {
    * Needs to be raw html for chart API to parse styles
    * @param {*} val
    */
-  function valueFormatter(val) {
+  function valueFormatter(val: string | number) {
     if (chartFilter === CHART_VIEW.RATE0) {
       return (
         formattedNum(val) +
@@ -132,6 +140,8 @@ const PairChart = ({ address, color, base0, base1 }) => {
         `<span style="font-size: 12px; margin-left: 4px;">${formattedSymbol0}/${formattedSymbol1}<span>`
       );
     }
+
+    return null;
   }
 
   const aspect = below1080 ? 60 / 20 : below1600 ? 60 / 28 : 60 / 22;
@@ -258,7 +268,7 @@ const PairChart = ({ address, color, base0, base1 }) => {
             />
             <Tooltip
               cursor={true}
-              formatter={(val) => formattedNum(val, true)}
+              formatter={(val) => formattedNum(Number(val), true)}
               labelFormatter={(label) => toNiceDateYear(label)}
               labelStyle={{ paddingTop: 4 }}
               contentStyle={{
@@ -346,7 +356,7 @@ const PairChart = ({ address, color, base0, base1 }) => {
             />
             <Tooltip
               cursor={{ fill: color, opacity: 0.1 }}
-              formatter={(val) => formattedNum(val, true)}
+              formatter={(val) => formattedNum(Number(val), true)}
               labelFormatter={(label) => toNiceDateYear(label)}
               labelStyle={{ paddingTop: 4 }}
               contentStyle={{

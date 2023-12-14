@@ -29,6 +29,7 @@ const Arrow = styled.div<{ faded: boolean }>`
   opacity: ${(props) => (props.faded ? 0.3 : 1)};
   padding: 0 20px;
   user-select: none;
+
   :hover {
     cursor: pointer;
   }
@@ -73,6 +74,7 @@ const DataText = styled(Flex)`
   align-items: center;
   text-align: center;
   color: ${({ theme }) => theme.text1};
+
   & > * {
     font-size: 14px;
   }
@@ -82,12 +84,8 @@ const DataText = styled(Flex)`
   }
 `;
 
-function LPList(props: {
-  lps: any;
-  disbaleLinks: any;
-  maxItems?: 10 | undefined;
-}) {
-  const { lps, disbaleLinks, maxItems = 10 } = props;
+function LPList(props: { lps: any; maxItems?: number }) {
+  const { lps, maxItems = 10 } = props;
   const below600 = useMedia("(max-width: 600px)");
   const below800 = useMedia("(max-width: 800px)");
 
@@ -116,11 +114,7 @@ function LPList(props: {
   const ListItem = (listItem: { lp: any; index: any }) => {
     const { lp, index } = listItem;
     return (
-      <DashGrid
-        style={{ height: "48px", padding: "0 1.125rem" }}
-        disbaleLinks={disbaleLinks}
-        focus={true}
-      >
+      <DashGrid style={{ height: "48px", padding: "0 1.125rem" }}>
         {!below600 && <DataText fontWeight="500">{index}</DataText>}
         <DataText fontWeight="500" justifyContent="flex-start">
           <CustomLink
@@ -154,7 +148,7 @@ function LPList(props: {
             </RowFixed>
           </CustomLink>
         </DataText>
-        <DataText area="value">{formattedNum(lp.usd, true)}</DataText>
+        <DataText>{formattedNum(lp.usd, true)}</DataText>
       </DashGrid>
     );
   };
@@ -163,7 +157,7 @@ function LPList(props: {
     lps &&
     lps
       .slice(ITEMS_PER_PAGE * (page - 1), page * ITEMS_PER_PAGE)
-      .map((lp, index) => {
+      .map((lp: any, index: number) => {
         return (
           <div key={index}>
             <ListItem key={index} index={(page - 1) * 10 + index + 1} lp={lp} />
@@ -175,19 +169,17 @@ function LPList(props: {
   return (
     <ListWrapper>
       <HeaderWrapper
-        center={true}
-        disbaleLinks={disbaleLinks}
         style={{ height: "fit-content", padding: "0px 1.125rem 1rem" }}
       >
         {!below600 && (
           <Flex alignItems="center" justifyContent="flex-start">
-            <TYPE.main area="number">
+            <TYPE.main>
               <TableHeaderBox>#</TableHeaderBox>
             </TYPE.main>
           </Flex>
         )}
         <Flex alignItems="center" justifyContent="flex-start">
-          <TYPE.main area="name">
+          <TYPE.main>
             <TableHeaderBox>Account</TableHeaderBox>
           </TYPE.main>
         </Flex>
@@ -197,12 +189,12 @@ function LPList(props: {
           </Flex>
         )} */}
         <Flex alignItems="center" justifyContent="flexEnd">
-          <TYPE.main area="pair">
+          <TYPE.main>
             <TableHeaderBox>Pair</TableHeaderBox>
           </TYPE.main>
         </Flex>
         <Flex alignItems="center" justifyContent="flexEnd">
-          <TYPE.main area="value">
+          <TYPE.main>
             <TableHeaderBox>Value</TableHeaderBox>
           </TYPE.main>
         </Flex>

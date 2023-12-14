@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 
-import Row, { RowBetween } from "components/Row";
-import { AutoColumn } from "components/Column";
+import Row, { RowBetween } from "apps/charts/components/Row";
+import { AutoColumn } from "apps/charts/components/Column";
 import { ChevronDown as Arrow } from "react-feather";
-import { TYPE } from "Theme";
-import { StyledIcon } from "components";
+import { TYPE } from "apps/charts/Theme";
+import { StyledIcon } from "apps/charts/components";
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ open?: boolean; color: string }>`
   z-index: 20;
   position: relative;
   background-color: ${({ theme }) => theme.panelColor};
@@ -15,7 +15,6 @@ const Wrapper = styled.div`
     open ? color : "rgba(0, 0, 0, 0.15);"} 
   width: 100px;
   padding: 4px 10px;
-  padding-right: 6px;
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -29,11 +28,9 @@ const Wrapper = styled.div`
 const Dropdown = styled.div`
   position: absolute;
   top: 34px;
-  padding-top: 40px;
-  width: calc(100% - 40px);
   background-color: ${({ theme }) => theme.bg1};
   border: 1px solid rgba(0, 0, 0, 0.15);
-  padding: 10px 10px;
+  padding: 40px 10px 10px 10px;
   border-radius: 8px;
   width: calc(100% - 20px);
   font-weight: 500;
@@ -50,7 +47,13 @@ const ArrowStyled = styled(Arrow)`
   margin-left: 6px;
 `;
 
-const DropdownSelect = ({ options, active, setActive, color }) => {
+const DropdownSelect = (props: {
+  options: any;
+  active: any;
+  setActive: any;
+  color: any;
+}) => {
+  const { options, active, setActive, color } = props;
   const [showDropdown, toggleDropdown] = useState(false);
 
   return (

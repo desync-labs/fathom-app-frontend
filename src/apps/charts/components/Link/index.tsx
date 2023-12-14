@@ -4,15 +4,22 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import { lighten, darken } from "polished";
 
-const WrappedLink = ({ external, children, ...rest }) => (
-  <RebassLink
-    target={external ? "_blank" : null}
-    rel={external ? "noopener noreferrer" : null}
-    {...rest}
-  >
-    {children}
-  </RebassLink>
-);
+const WrappedLink = (props: {
+  [x: string]: any;
+  external: any;
+  children: any;
+}) => {
+  const { external, children, ...rest } = props;
+  return (
+    <RebassLink
+      target={external ? "_blank" : undefined}
+      rel={external ? "noopener noreferrer" : undefined}
+      {...rest}
+    >
+      {children}
+    </RebassLink>
+  );
+};
 
 WrappedLink.propTypes = {
   external: PropTypes.bool,
