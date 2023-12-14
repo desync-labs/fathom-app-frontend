@@ -51,7 +51,7 @@ const DropdownSelect = (props: {
   options: any;
   active: any;
   setActive: any;
-  color: any;
+  color?: any;
 }) => {
   const { options, active, setActive, color } = props;
   const [showDropdown, toggleDropdown] = useState(false);

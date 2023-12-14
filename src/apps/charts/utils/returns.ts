@@ -22,6 +22,8 @@ export interface Position {
   token0PriceUSD: number;
   token1PriceUSD: number;
   timestamp?: number;
+  fees?: any;
+  uniswap: any;
 }
 
 const PRICE_DISCOVERY_START_TIMESTAMP = 1589747086;

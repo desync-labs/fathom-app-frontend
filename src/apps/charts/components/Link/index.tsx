@@ -4,11 +4,7 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import { lighten, darken } from "polished";
 
-const WrappedLink = (props: {
-  [x: string]: any;
-  external: any;
-  children: any;
-}) => {
+const WrappedLink = (props: { [x: string]: any }) => {
   const { external, children, ...rest } = props;
   return (
     <RebassLink

@@ -1,22 +1,22 @@
-import React, { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useMedia } from "react-use";
 import dayjs from "dayjs";
-import LocalLoader from "components/LocalLoader";
+import LocalLoader from "apps/charts/components/LocalLoader";
 import utc from "dayjs/plugin/utc";
 import { Box, Flex, Text } from "rebass";
 import styled from "styled-components";
-import Link, { CustomLink } from "components/Link";
-import { Divider } from "components";
-import DoubleTokenLogo from "components/DoubleLogo";
-import { withRouter } from "react-router-dom";
-import { formattedNum, getPoolLink } from "utils";
-import { AutoColumn } from "components/Column";
-import { useEthPrice } from "contexts/GlobalData";
-import { RowFixed } from "components/Row";
-import { ButtonLight } from "components/ButtonStyled";
-import { TYPE } from "Theme";
-import FormattedName from "components/FormattedName";
-import { TableHeaderBox } from "components/Row";
+import Link, { CustomLink } from "apps/charts/components/Link";
+import { Divider } from "apps/charts/components";
+import DoubleTokenLogo from "apps/charts/components/DoubleLogo";
+import { formattedNum, getPoolLink } from "apps/charts/utils";
+import { AutoColumn } from "apps/charts/components/Column";
+import { useEthPrice } from "apps/charts/contexts/GlobalData";
+import { RowFixed } from "apps/charts/components/Row";
+import { ButtonLight } from "apps/charts/components/ButtonStyled";
+import { TYPE } from "apps/charts/Theme";
+import FormattedName from "apps/charts/components/FormattedName";
+import { TableHeaderBox } from "apps/charts/components/Row";
+import { Position } from "apps/charts/utils/returns";
 
 dayjs.extend(utc);
 
@@ -28,11 +28,12 @@ const PageButtons = styled.div`
   margin-bottom: 0.5em;
 `;
 
-const Arrow = styled.div`
+const Arrow = styled.div<{ faded?: boolean }>`
   color: ${({ theme }) => theme.white};
   opacity: ${(props) => (props.faded ? 0.3 : 1)};
   padding: 0 20px;
   user-select: none;
+
   :hover {
     cursor: pointer;
   }
@@ -88,6 +89,7 @@ const ListWrapper = styled.div``;
 
 const ClickableText = styled(Text)`
   color: ${({ theme }) => theme.text1};
+
   &:hover {
     cursor: pointer;
     opacity: 0.6;
@@ -102,6 +104,7 @@ const DataText = styled(Flex)`
   justify-content: flex-start;
   text-align: center;
   color: ${({ theme }) => theme.text1};
+
   & > * {
     font-size: 1em;
   }
@@ -116,7 +119,8 @@ const SORT_FIELD = {
   FATHOMSWAP_RETURN: "FATHOMSWAP_RETURN",
 };
 
-function PositionList({ positions }) {
+function PositionList(props: { positions: Position[] }) {
+  const { positions } = props;
   const below500 = useMedia("(max-width: 500px)");
   const below740 = useMedia("(max-width: 740px)");
 
@@ -148,7 +152,8 @@ function PositionList({ positions }) {
 
   const [ethPrice] = useEthPrice();
 
-  const ListItem = ({ position, index }) => {
+  const ListItem = (props: { position: Position; index: any }) => {
+    const { position, index } = props;
     const poolOwnership =
       position.liquidityTokenBalance / position.pair.totalSupply;
     const valueUSD = poolOwnership * position.pair.reserveUSD;
@@ -159,11 +164,10 @@ function PositionList({ positions }) {
           opacity: poolOwnership > 0 ? 1 : 0.6,
           padding: "0.75rem 1.125rem",
         }}
-        focus={true}
       >
-        {!below740 && <DataText area="number">{index}</DataText>}
-        <DataText area="name" justifyContent="flex-start" alignItems="center">
-          <AutoColumn gap="8px" justify="flex-start" align="center">
+        {!below740 && <DataText>{index}</DataText>}
+        <DataText justifyContent="flex-start" alignItems="center">
+          <AutoColumn gap="8px" justify="flex-start">
             <DoubleTokenLogo
               size={16}
               a0={position.pair.token0.id}
@@ -176,8 +180,8 @@ function PositionList({ positions }) {
             justify="flex-start"
             style={{ marginLeft: "20px" }}
           >
-            <CustomLink to={"/pair/" + position.pair.id}>
-              <TYPE.main style={{ whiteSpace: "nowrap" }} to={"/pair/"}>
+            <CustomLink to={"/charts/pair/" + position.pair.id}>
+              <TYPE.main style={{ whiteSpace: "nowrap" }}>
                 <FormattedName
                   text={
                     position.pair.token0.symbol +
@@ -189,9 +193,8 @@ function PositionList({ positions }) {
               </TYPE.main>
             </CustomLink>
 
-            <RowFixed gap="8px" justify="flex-start">
+            <RowFixed justify="flex-start">
               <Link
-                external
                 href={getPoolLink(
                   position.pair.token0.id,
                   position.pair.token1.id
@@ -223,9 +226,9 @@ function PositionList({ positions }) {
             </RowFixed>
           </AutoColumn>
         </DataText>
-        <DataText area="fathomswap">
+        <DataText>
           <AutoColumn gap="12px" justify="flex-start">
-            <TYPE.main>{formattedNum(valueUSD, true, true)}</TYPE.main>
+            <TYPE.main>{formattedNum(valueUSD, true)}</TYPE.main>
             <AutoColumn gap="4px" justify="flex-start">
               <RowFixed>
                 <TYPE.small fontWeight={400}>
@@ -257,12 +260,10 @@ function PositionList({ positions }) {
           </AutoColumn>
         </DataText>
         {!below500 && (
-          <DataText area="return">
+          <DataText>
             <AutoColumn gap="12px" justify="flex-start">
               <TYPE.main color={"text5"}>
-                <RowFixed>
-                  {formattedNum(position?.fees.sum, true, true)}
-                </RowFixed>
+                <RowFixed>{formattedNum(position?.fees.sum, true)}</RowFixed>
               </TYPE.main>
               <AutoColumn gap="4px" justify="flex-start">
                 <RowFixed>
@@ -273,8 +274,7 @@ function PositionList({ positions }) {
                             (parseFloat(position.pair.token0.derivedETH) *
                               ethPrice) /
                             2,
-                          false,
-                          true
+                          false
                         )
                       : 0}{" "}
                   </TYPE.small>
@@ -293,8 +293,7 @@ function PositionList({ positions }) {
                             (parseFloat(position.pair.token1.derivedETH) *
                               ethPrice) /
                             2,
-                          false,
-                          true
+                          false
                         )
                       : 0}{" "}
                   </TYPE.small>
@@ -345,7 +344,7 @@ function PositionList({ positions }) {
           return 1;
         })
         .slice(ITEMS_PER_PAGE * (page - 1), page * ITEMS_PER_PAGE)
-        .map((position, index) => {
+        .map((position: any, index: number) => {
           return (
             <div key={index}>
               <ListItem
@@ -362,18 +361,17 @@ function PositionList({ positions }) {
 
   return (
     <ListWrapper>
-      <HeaderWrapper center={true} style={{ padding: "0 1.125rem 1rem" }}>
+      <HeaderWrapper style={{ padding: "0 1.125rem 1rem" }}>
         {!below740 && (
           <Flex alignItems="center" justifyContent="flex-start">
             <TableHeaderBox>#</TableHeaderBox>
           </Flex>
         )}
         <Flex alignItems="center" justifyContent="flex-start">
-          <TableHeaderBox area="number">Name</TableHeaderBox>
+          <TableHeaderBox>Name</TableHeaderBox>
         </Flex>
         <Flex alignItems="center" justifyContent="flex-start">
           <ClickableText
-            area="fathomswap"
             onClick={(e) => {
               setSortedColumn(SORT_FIELD.VALUE);
               setSortDirection(
@@ -394,7 +392,6 @@ function PositionList({ positions }) {
         {!below500 && (
           <Flex alignItems="center" justifyContent="flex-start">
             <ClickableText
-              area="return"
               onClick={() => {
                 setSortedColumn(SORT_FIELD.FATHOMSWAP_RETURN);
                 setSortDirection(
@@ -430,4 +427,4 @@ function PositionList({ positions }) {
   );
 }
 
-export default withRouter(PositionList);
+export default PositionList;

@@ -1,10 +1,10 @@
 import { Placement } from "@popperjs/core";
 import { transparentize } from "polished";
-import React, { useState } from "react";
+import { ReactNode, useRef, useState } from "react";
 import { usePopper } from "react-popper";
 import styled from "styled-components";
 import Portal from "@reach/portal";
-import useInterval from "hooks";
+import useInterval from "apps/charts/hooks";
 
 const PopoverContainer = styled.div<{ show: boolean }>`
   z-index: 9999;
@@ -25,9 +25,9 @@ const ReferenceElement = styled.div`
 `;
 
 export interface PopoverProps {
-  content: React.ReactNode;
+  content: ReactNode;
   show: boolean;
-  children: React.ReactNode;
+  children: ReactNode;
   placement?: Placement;
 }
 
@@ -37,13 +37,12 @@ export default function Popover({
   children,
   placement = "auto",
 }: PopoverProps) {
-  const [referenceElement, setReferenceElement] =
-    useState<HTMLDivElement>(null);
-  const [popperElement, setPopperElement] = useState<HTMLDivElement>(null);
-  const [arrowElement] = useState<HTMLDivElement>(null);
+  const referenceElement = useRef<HTMLDivElement>(null);
+  const popperElement = useRef<HTMLDivElement>(null);
+  const [arrowElement] = useState<HTMLDivElement>();
   const { styles, update, attributes } = usePopper(
-    referenceElement,
-    popperElement,
+    referenceElement.current,
+    popperElement.current,
     {
       placement,
       strategy: "fixed",
@@ -54,15 +53,15 @@ export default function Popover({
     }
   );
 
-  useInterval(update, show ? 100 : null);
+  useInterval(update as () => void, show ? 100 : null);
 
   return (
     <>
-      <ReferenceElement ref={setReferenceElement}>{children}</ReferenceElement>
+      <ReferenceElement ref={referenceElement}>{children}</ReferenceElement>
       <Portal>
         <PopoverContainer
           show={show}
-          ref={setPopperElement}
+          ref={popperElement}
           style={styles.popper}
           {...attributes.popper}
         >

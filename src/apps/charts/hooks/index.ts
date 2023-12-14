@@ -5,7 +5,7 @@ import { hex } from "wcag-contrast";
 import { isAddress } from "apps/charts/utils";
 import copy from "copy-to-clipboard";
 
-export function useColor(tokenAddress: any, token: string) {
+export function useColor(tokenAddress: any) {
   const [color, setColor] = useState("#2172E5");
   if (tokenAddress) {
     const path = `https://raw.githubusercontent.com/Into-the-Fathom/assets/master/blockchains/xinfin/${isAddress(
@@ -20,11 +20,7 @@ export function useColor(tokenAddress: any, token: string) {
             detectedHex = shade(0.005, detectedHex);
             AAscore = hex(detectedHex, "#FFF");
           }
-          if (token === "DAI") {
-            setColor("#FAAB14");
-          } else {
-            setColor(detectedHex);
-          }
+          setColor(detectedHex);
         }
       });
     }
