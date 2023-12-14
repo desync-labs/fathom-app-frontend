@@ -6,7 +6,7 @@ import { client, blockClient } from "apps/charts/apollo/client";
 import { GET_BLOCK, GET_BLOCKS, SHARE_VALUE } from "apps/charts/apollo/queries";
 import _Decimal from "decimal.js-light";
 import toFormat from "toformat";
-import { timeframeOptions } from "apps/charts/constants/index";
+import { timeframeOptions } from "apps/charts/constants";
 import Numeral from "numeral";
 import { ApolloClient } from "@apollo/client";
 

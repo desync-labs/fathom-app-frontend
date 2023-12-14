@@ -193,7 +193,19 @@ export function useSavedAccounts(): UseSavedAccountReturnType {
   return [savedAccounts, addAccount, removeAccount];
 }
 
-export function useSavedPairs() {
+type UseSavedPairsReturnType = [
+  any,
+  (
+    address: string,
+    token0Address: string,
+    token1Address: string,
+    token0Symbol: string,
+    token1Symbol: string
+  ) => void,
+  (address: string) => void
+];
+
+export function useSavedPairs(): UseSavedPairsReturnType {
   const [state, { updateKey }] = useLocalStorageContext();
   const savedPairs = state?.[SAVED_PAIRS];
 
@@ -224,7 +236,13 @@ export function useSavedPairs() {
   return [savedPairs, addPair, removePair];
 }
 
-export function useSavedTokens() {
+type UseSavedTokensReturnType = [
+  any,
+  (address: string, symbol: string) => void,
+  (address: string) => void
+];
+
+export function useSavedTokens(): UseSavedTokensReturnType {
   const [state, { updateKey }] = useLocalStorageContext();
   const savedTokens = state?.[SAVED_TOKENS];
 

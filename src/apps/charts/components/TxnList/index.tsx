@@ -1,22 +1,22 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 
-import { formatTime, formattedNum, urls } from "utils";
+import { formatTime, formattedNum, urls } from "apps/charts/utils";
 import { useMedia } from "react-use";
-import { useCurrentCurrency } from "contexts/Application";
-import { RowFixed, RowBetween } from "components/Row";
+import { useCurrentCurrency } from "apps/charts/contexts/Application";
+import { RowFixed, RowBetween } from "apps/charts/components/Row";
 
-import LocalLoader from "components/LocalLoader";
+import LocalLoader from "apps/charts/components/LocalLoader";
 import { Box, Flex, Text } from "rebass";
-import Link from "components/Link";
+import Link from "apps/charts/components/Link";
 import { Divider, EmptyCard } from "..";
-import DropdownSelect from "components/DropdownSelect";
-import FormattedName from "components/FormattedName";
-import { TYPE } from "Theme";
-import { updateNameData } from "utils/data";
-import { TableHeaderBox } from "components/Row";
+import DropdownSelect from "apps/charts/components/DropdownSelect";
+import FormattedName from "apps/charts/components/FormattedName";
+import { TYPE } from "apps/charts/Theme";
+import { updateNameData } from "apps/charts/utils/data";
+import { TableHeaderBox } from "apps/charts/components/Row";
 
 dayjs.extend(utc);
 
@@ -28,7 +28,7 @@ const PageButtons = styled.div`
   margin-bottom: 0.5em;
 `;
 
-const Arrow = styled.div`
+const Arrow = styled.div<{ faded?: boolean }>`
   color: ${({ theme }) => theme.white};
   opacity: ${(props) => (props.faded ? 0.3 : 1)};
   padding: 0 20px;
@@ -122,7 +122,7 @@ const DataText = styled(Flex)`
   }
 `;
 
-const SortText = styled.button`
+const SortText = styled.button<{ active?: boolean }>`
   cursor: pointer;
   font-weight: ${({ active }) => (active ? 500 : 400)};
   margin-right: 0.75rem !important;
@@ -154,7 +154,7 @@ const TXN_TYPE = {
 
 const ITEMS_PER_PAGE = 10;
 
-function getTransactionType(event, symbol0, symbol1) {
+function getTransactionType(event: any, symbol0: string, symbol1: string) {
   const formattedS0 =
     symbol0?.length > 8 ? symbol0.slice(0, 7) + "..." : symbol0;
   const formattedS1 =
@@ -171,8 +171,13 @@ function getTransactionType(event, symbol0, symbol1) {
   }
 }
 
-// @TODO rework into virtualized list
-function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
+function TxnList(props: {
+  transactions: any;
+  symbol0Override: any;
+  symbol1Override: any;
+  color: any;
+}) {
+  const { transactions, symbol0Override, symbol1Override, color } = props;
   // page state
   const [page, setPage] = useState(1);
   const [maxPage, setMaxPage] = useState(1);
@@ -180,7 +185,7 @@ function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
   // sorting
   const [sortDirection, setSortDirection] = useState(true);
   const [sortedColumn, setSortedColumn] = useState(SORT_FIELD.TIMESTAMP);
-  const [filteredItems, setFilteredItems] = useState();
+  const [filteredItems, setFilteredItems] = useState<any[]>([]);
   const [txFilter, setTxFilter] = useState(TXN_TYPE.ALL);
 
   const [currency] = useCurrentCurrency();
@@ -198,64 +203,105 @@ function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
       transactions.burns &&
       transactions.swaps
     ) {
-      const newTxns = [];
+      const newTxns: any[] = [];
       if (transactions.mints.length > 0) {
-        transactions.mints.map((mint) => {
-          let newTxn = {};
-          newTxn.hash = mint.transaction.id;
-          newTxn.timestamp = mint.transaction.timestamp;
-          newTxn.type = TXN_TYPE.ADD;
-          newTxn.token0Amount = mint.amount0;
-          newTxn.token1Amount = mint.amount1;
-          newTxn.account = mint.to;
-          newTxn.token0Symbol = updateNameData(mint.pair).token0.symbol;
-          newTxn.token1Symbol = updateNameData(mint.pair).token1.symbol;
-          newTxn.amountUSD = mint.amountUSD;
-          return newTxns.push(newTxn);
-        });
+        transactions.mints.map(
+          (mint: {
+            transaction: { id: any; timestamp: any };
+            amount0: any;
+            amount1: any;
+            to: any;
+            pair: any;
+            amountUSD: any;
+          }) => {
+            const newTxn = {
+              hash: mint.transaction.id,
+              timestamp: mint.transaction.timestamp,
+              type: TXN_TYPE.ADD,
+              token0Amount: mint.amount0,
+              token1Amount: mint.amount1,
+              account: mint.to,
+              token0Symbol: mint.pair.token0.symbol,
+              token1Symbol: mint.pair.token1.symbol,
+              amountUSD: mint.amountUSD,
+            };
+            return newTxns.push(newTxn);
+          }
+        );
       }
       if (transactions.burns.length > 0) {
-        transactions.burns.map((burn) => {
-          let newTxn = {};
-          newTxn.hash = burn.transaction.id;
-          newTxn.timestamp = burn.transaction.timestamp;
-          newTxn.type = TXN_TYPE.REMOVE;
-          newTxn.token0Amount = burn.amount0;
-          newTxn.token1Amount = burn.amount1;
-          newTxn.account = burn.sender;
-          newTxn.token0Symbol = updateNameData(burn.pair).token0.symbol;
-          newTxn.token1Symbol = updateNameData(burn.pair).token1.symbol;
-          newTxn.amountUSD = burn.amountUSD;
-          return newTxns.push(newTxn);
-        });
+        transactions.burns.map(
+          (burn: {
+            transaction: { id: any; timestamp: any };
+            amount0: any;
+            amount1: any;
+            sender: any;
+            pair: { token0: { symbol: any }; token1: { symbol: any } };
+            amountUSD: any;
+          }) => {
+            const newTxn = {
+              hash: burn.transaction.id,
+              timestamp: burn.transaction.timestamp,
+              type: TXN_TYPE.REMOVE,
+              token0Amount: burn.amount0,
+              token1Amount: burn.amount1,
+              account: burn.sender,
+              token0Symbol: burn.pair.token0.symbol,
+              token1Symbol: burn.pair.token1.symbol,
+              amountUSD: burn.amountUSD,
+            };
+            return newTxns.push(newTxn);
+          }
+        );
       }
       if (transactions.swaps.length > 0) {
-        transactions.swaps.map((swap) => {
-          const netToken0 = swap.amount0In - swap.amount0Out;
-          const netToken1 = swap.amount1In - swap.amount1Out;
+        transactions.swaps.map(
+          (swap: {
+            amount0In: number;
+            amount0Out: number;
+            amount1In: number;
+            amount1Out: number;
+            pair: any;
+            transaction: { id: any; timestamp: any };
+            amountUSD: any;
+            to: any;
+          }) => {
+            const netToken0 = swap.amount0In - swap.amount0Out;
+            const netToken1 = swap.amount1In - swap.amount1Out;
 
-          let newTxn = {};
+            const newTxn = {
+              token0Symbol: "",
+              token1Symbol: "",
+              token0Amount: 0,
+              token1Amount: 0,
+              hash: undefined,
+              timestamp: undefined,
+              type: "",
+              amountUSD: undefined,
+              account: "",
+            };
 
-          if (netToken0 < 0) {
-            newTxn.token0Symbol = updateNameData(swap.pair).token0.symbol;
-            newTxn.token1Symbol = updateNameData(swap.pair).token1.symbol;
-            newTxn.token0Amount = Math.abs(netToken0);
-            newTxn.token1Amount = Math.abs(netToken1);
-          } else if (netToken1 < 0) {
-            newTxn.token0Symbol = updateNameData(swap.pair).token1.symbol;
-            newTxn.token1Symbol = updateNameData(swap.pair).token0.symbol;
-            newTxn.token0Amount = Math.abs(netToken1);
-            newTxn.token1Amount = Math.abs(netToken0);
+            if (netToken0 < 0) {
+              newTxn.token0Symbol = swap.pair.token0.symbol;
+              newTxn.token1Symbol = swap.pair.token1.symbol;
+              newTxn.token0Amount = Math.abs(netToken0);
+              newTxn.token1Amount = Math.abs(netToken1);
+            } else if (netToken1 < 0) {
+              newTxn.token0Symbol = swap.pair.token1.symbol;
+              newTxn.token1Symbol = swap.pair.token0.symbol;
+              newTxn.token0Amount = Math.abs(netToken1);
+              newTxn.token1Amount = Math.abs(netToken0);
+            }
+
+            newTxn.hash = swap.transaction.id;
+            newTxn.timestamp = swap.transaction.timestamp;
+            newTxn.type = TXN_TYPE.SWAP;
+
+            newTxn.amountUSD = swap.amountUSD;
+            newTxn.account = swap.to;
+            return newTxns.push(newTxn);
           }
-
-          newTxn.hash = swap.transaction.id;
-          newTxn.timestamp = swap.transaction.timestamp;
-          newTxn.type = TXN_TYPE.SWAP;
-
-          newTxn.amountUSD = swap.amountUSD;
-          newTxn.account = swap.to;
-          return newTxns.push(newTxn);
-        });
+        );
       }
 
       const filtered = newTxns.filter((item) => {
@@ -264,6 +310,7 @@ function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
         }
         return true;
       });
+      // @ts-ignore
       setFilteredItems(filtered);
       let extraPages = 1;
       if (filtered.length % ITEMS_PER_PAGE === 0) {
@@ -294,10 +341,11 @@ function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
   const below1080 = useMedia("(max-width: 1080px)");
   const below780 = useMedia("(max-width: 780px)");
 
-  const ListItem = ({ item }) => {
+  const ListItem = (props: { item: any }) => {
+    const { item } = props;
     return (
       <DashGrid style={{ height: "48px", padding: "0px 1.125rem" }}>
-        <DataText area="txn" fontWeight="500">
+        <DataText fontWeight="500">
           <Link color={color} external href={urls.showTransaction(item.hash)}>
             {getTransactionType(
               item.type,
@@ -306,14 +354,14 @@ function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
             )}
           </Link>
         </DataText>
-        <DataText area="value">
+        <DataText>
           {currency === "ETH"
             ? "Ξ " + formattedNum(item.valueETH)
             : formattedNum(item.amountUSD, true)}
         </DataText>
         {!below780 && (
           <>
-            <DataText area="amountOther">
+            <DataText>
               {formattedNum(item.token1Amount) + " "}{" "}
               <FormattedName
                 text={item.token1Symbol}
@@ -355,7 +403,7 @@ function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
     <>
       <Box mb={4}>
         {below780 ? (
-          <RowBetween area="txn">
+          <RowBetween>
             <DropdownSelect
               options={TXN_TYPE}
               active={txFilter}
@@ -364,7 +412,7 @@ function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
             />
           </RowBetween>
         ) : (
-          <RowFixed area="txn" gap="10px" pl={4}>
+          <RowFixed gap="10px" pl={4}>
             <SortText
               onClick={() => {
                 setTxFilter(TXN_TYPE.ALL);

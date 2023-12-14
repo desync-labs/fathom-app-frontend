@@ -1,27 +1,27 @@
-import React, { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import styled from "styled-components";
 
-import Row, { RowFixed } from "components/Row";
-import TokenLogo from "components/TokenLogo";
+import Row, { RowFixed } from "apps/charts/components/Row";
+import TokenLogo from "apps/charts/components/TokenLogo";
 import { Search as SearchIcon, X } from "react-feather";
-import { BasicLink } from "components/Link";
+import { BasicLink } from "apps/charts/components/Link";
 
-import { useAllTokenData, useTokenData } from "contexts/TokenData";
-import { useAllPairData, usePairData } from "contexts/PairData";
-import DoubleTokenLogo from "components/DoubleLogo";
+import { useAllTokenData, useTokenData } from "apps/charts/contexts/TokenData";
+import { useAllPairData, usePairData } from "apps/charts/contexts/PairData";
+import DoubleTokenLogo from "apps/charts/components/DoubleLogo";
 import { useMedia } from "react-use";
 import {
   useAllPairsInUniswap,
   useAllTokensInUniswap,
-} from "contexts/GlobalData";
-import { TOKEN_BLACKLIST, PAIR_BLACKLIST } from "constants/index";
+} from "apps/charts/contexts/GlobalData";
+import { TOKEN_BLACKLIST, PAIR_BLACKLIST } from "apps/charts/constants";
 
 import { client } from "apollo/client";
-import { PAIR_SEARCH, TOKEN_SEARCH } from "apollo/queries";
-import FormattedName from "components/FormattedName";
-import { TYPE } from "Theme";
-import { updateNameData } from "utils/data";
-import { useListedTokens } from "contexts/Application";
+import { PAIR_SEARCH, TOKEN_SEARCH } from "apps/charts/apollo/queries";
+import FormattedName from "apps/charts/components/FormattedName";
+import { TYPE } from "apps/charts/Theme";
+import { updateNameData } from "apps/charts/utils/data";
+import { useListedTokens } from "apps/charts/contexts/Application";
 
 const Container = styled.div`
   height: 48px;
@@ -37,7 +37,7 @@ const Container = styled.div`
   }
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ open?: boolean; small: boolean }>`
   display: flex;
   position: relative;
   flex-direction: row;
@@ -63,7 +63,7 @@ const Wrapper = styled.div`
         : "none"};
   }
 `;
-const Input = styled.input`
+const Input = styled.input<{ large: boolean }>`
   position: relative;
   display: flex;
   align-items: center;
@@ -113,8 +113,7 @@ const CloseIcon = styled(X)`
   }
 `;
 
-const Menu = styled.div`
-  display: flex;
+const Menu = styled.div<{ hide?: boolean }>`
   flex-direction: column;
   z-index: 9999;
   width: 100%;
@@ -126,9 +125,9 @@ const Menu = styled.div`
   background: linear-gradient(180deg, #000817 7.88%, #0d1725 113.25%);
   border-bottom-right-radius: 12px;
   border-bottom-left-radius: 12px;
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04),
-    0px 16px 24px rgba(0, 0, 0, 0.04), 0px 24px 32px rgba(0, 0, 0, 0.04);
-  display: ${({ hide }) => hide && "none"};
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.04), 0 4px 8px rgba(0, 0, 0, 0.04),
+    0 16px 24px rgba(0, 0, 0, 0.04), 0 24px 32px rgba(0, 0, 0, 0.04);
+  display: ${({ hide }) => (hide ? "none" : "flex")};
 `;
 
 const MenuItem = styled(Row)`
@@ -143,7 +142,7 @@ const MenuItem = styled(Row)`
   }
 `;
 
-const Heading = styled(Row)`
+const Heading = styled(Row)<{ hide: boolean }>`
   padding: 1rem;
   display: ${({ hide = false }) => hide && "none"};
 `;
@@ -195,7 +194,7 @@ export const Search = ({ small = false }) => {
     async function fetchData() {
       try {
         if (value?.length > 0) {
-          let tokens = await client.query({
+          const tokens = await client.query({
             query: TOKEN_SEARCH,
             variables: {
               value: value ? value.toUpperCase() : "",
@@ -203,7 +202,7 @@ export const Search = ({ small = false }) => {
             },
           });
 
-          let pairs = await client.query({
+          const pairs = await client.query({
             query: PAIR_SEARCH,
             variables: {
               tokens: tokens.data.asSymbol?.map((t) => t.id),
@@ -247,8 +246,8 @@ export const Search = ({ small = false }) => {
     })
   );
 
-  let uniqueTokens = [];
-  let found = {};
+  const uniqueTokens = [];
+  const found = {};
   allTokens &&
     allTokens.map((token) => {
       if (!found[token.id]) {
@@ -271,8 +270,8 @@ export const Search = ({ small = false }) => {
     })
   );
 
-  let uniquePairs = [];
-  let pairsFound = {};
+  const uniquePairs = [];
+  const pairsFound = {};
   allPairs &&
     allPairs.map((pair) => {
       if (!pairsFound[pair.id]) {

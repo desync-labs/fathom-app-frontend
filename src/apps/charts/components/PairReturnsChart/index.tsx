@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import {
   XAxis,
@@ -9,7 +9,7 @@ import {
   Line,
   CartesianGrid,
 } from "recharts";
-import { AutoRow, RowBetween } from "components/Row";
+import { AutoRow, RowBetween } from "apps/charts/components/Row";
 
 import {
   toK,
@@ -17,16 +17,16 @@ import {
   toNiceDateYear,
   formattedNum,
   getTimeframe,
-} from "utils";
-import { OptionButton } from "components/ButtonStyled";
+} from "apps/charts/utils";
+import { OptionButton } from "apps/charts/components/ButtonStyled";
 import { useMedia } from "react-use";
-import { timeframeOptions } from "constants/index";
-import DropdownSelect from "components/DropdownSelect";
-import { useUserPositionChart } from "contexts/User";
-import { useTimeframe } from "contexts/Application";
-import LocalLoader from "components/LocalLoader";
-import { useColor } from "hooks";
-import { useDarkModeManager } from "contexts/LocalStorage";
+import { timeframeOptions } from "apps/charts/constants";
+import DropdownSelect from "apps/charts/components/DropdownSelect";
+import { useUserPositionChart } from "apps/charts/contexts/User";
+import { useTimeframe } from "apps/charts/contexts/Application";
+import LocalLoader from "apps/charts/components/LocalLoader";
+import { useColor } from "apps/charts/hooks";
+import { useDarkModeManager } from "apps/charts/contexts/LocalStorage";
 
 const ChartWrapper = styled.div`
   max-height: 420px;
@@ -48,7 +48,8 @@ const CHART_VIEW = {
   FEES: "Fees",
 };
 
-const PairReturnsChart = ({ account, position }) => {
+const PairReturnsChart = (props: { account: any; position: any }) => {
+  const { account, position } = props;
   let data = useUserPositionChart(position, account);
 
   const [timeWindow, setTimeWindow] = useTimeframe();
@@ -59,9 +60,9 @@ const PairReturnsChart = ({ account, position }) => {
 
   const [chartView, setChartView] = useState(CHART_VIEW.VALUE);
 
-  // based on window, get starttime
-  let utcStartTime = getTimeframe(timeWindow);
-  data = data?.filter((entry) => entry.date >= utcStartTime);
+  // based on window, get start time
+  const utcStartTime = getTimeframe(timeWindow);
+  data = data?.filter((entry: { date: number }) => entry.date >= utcStartTime);
 
   const aspect = below600 ? 60 / 42 : 60 / 16;
 
@@ -155,7 +156,7 @@ const PairReturnsChart = ({ account, position }) => {
             />
             <Tooltip
               cursor={true}
-              formatter={(val) => formattedNum(val, true)}
+              formatter={(val) => formattedNum(Number(val), true)}
               labelFormatter={(label) => toNiceDateYear(label)}
               labelStyle={{ paddingTop: 4 }}
               contentStyle={{

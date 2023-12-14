@@ -1,25 +1,27 @@
-import React from "react";
-import { withRouter } from "react-router-dom";
 import styled from "styled-components";
-import { RowBetween, RowFixed } from "components/Row";
-import { AutoColumn } from "components/Column";
-import { TYPE } from "Theme";
-import { useSavedTokens, useSavedPairs } from "contexts/LocalStorage";
-import { Hover } from "components";
-import TokenLogo from "components/TokenLogo";
-import AccountSearch from "components/AccountSearch";
+import { RowBetween, RowFixed } from "apps/charts/components/Row";
+import { AutoColumn } from "apps/charts/components/Column";
+import { TYPE } from "apps/charts/Theme";
+import {
+  useSavedTokens,
+  useSavedPairs,
+} from "apps/charts/contexts/LocalStorage";
+import { Hover } from "apps/charts/components";
+import TokenLogo from "apps/charts/components/TokenLogo";
+import AccountSearch from "apps/charts/components/AccountSearch";
 import { Bookmark, ChevronRight, X } from "react-feather";
-import { ButtonFaded } from "components/ButtonStyled";
-import FormattedName from "components/FormattedName";
+import { ButtonFaded } from "apps/charts/components/ButtonStyled";
+import FormattedName from "apps/charts/components/FormattedName";
+import { useNavigate } from "react-router-dom";
 
-const RightColumn = styled.div`
+const RightColumn = styled.div<{ open?: boolean }>`
   position: fixed;
   right: 0;
   top: 0px;
   height: 100vh;
   width: ${({ open }) => (open ? "160px" : "23px")};
   padding: 1.25rem;
-  border-left: ${({ theme, open }) => "1px solid" + theme.borderBG};
+  border-left: ${({ theme }) => "1px solid" + theme.borderBG};
   background-color: ${({ theme }) => theme.bg1};
   z-index: 9999;
   overflow: auto;
@@ -47,7 +49,9 @@ const StyledIcon = styled.div`
   color: ${({ theme }) => theme.text5};
 `;
 
-function PinnedData({ history, open, setSavedOpen }) {
+function PinnedData(props: { history: any; open: any; setSavedOpen: any }) {
+  const { open, setSavedOpen } = props;
+  const navigate = useNavigate();
   const [savedPairs, , removePair] = useSavedPairs();
   const [savedTokens, , removeToken] = useSavedTokens();
 
@@ -60,7 +64,7 @@ function PinnedData({ history, open, setSavedOpen }) {
       </SavedButton>
     </RightColumn>
   ) : (
-    <RightColumn gap="1rem" open={open}>
+    <RightColumn open={open}>
       <SavedButton onClick={() => setSavedOpen(false)} open={open}>
         <RowFixed>
           <StyledIcon>
@@ -88,7 +92,7 @@ function PinnedData({ history, open, setSavedOpen }) {
                 return (
                   <RowBetween key={pair.address}>
                     <ButtonFaded
-                      onClick={() => history.push("/pair/" + address)}
+                      onClick={() => navigate("/charts/pair/" + address)}
                     >
                       <RowFixed>
                         <TYPE.header>
@@ -126,7 +130,7 @@ function PinnedData({ history, open, setSavedOpen }) {
                 return (
                   <RowBetween key={address}>
                     <ButtonFaded
-                      onClick={() => history.push("/token/" + address)}
+                      onClick={() => navigate("/charts/token/" + address)}
                     >
                       <RowFixed>
                         <TokenLogo address={address} size={"14px"} />
@@ -156,4 +160,4 @@ function PinnedData({ history, open, setSavedOpen }) {
   );
 }
 
-export default withRouter(PinnedData);
+export default PinnedData;

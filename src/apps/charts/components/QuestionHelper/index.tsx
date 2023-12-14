@@ -1,7 +1,7 @@
-import React, { useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import { HelpCircle as Question } from "react-feather";
 import styled from "styled-components";
-import Popover, { PopoverProps } from "components/Popover";
+import Popover, { PopoverProps } from "apps/charts/components/Popover";
 
 const QuestionWrapper = styled.div`
   display: flex;
@@ -9,7 +9,6 @@ const QuestionWrapper = styled.div`
   justify-content: center;
   padding: 0.2rem;
   border: none;
-  background: none;
   outline: none;
   cursor: default;
   border-radius: 36px;

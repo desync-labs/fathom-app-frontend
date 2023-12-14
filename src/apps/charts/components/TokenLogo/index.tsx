@@ -10,7 +10,7 @@ const Inline = styled.div`
   align-self: center;
 `;
 
-const Image = styled.img<{ size?: string }>`
+const Image = styled.img<{ size: string }>`
   width: ${({ size }) => size};
   height: ${({ size }) => size};
   background-color: white;
@@ -22,7 +22,7 @@ export default function TokenLogo(props: {
   [x: string]: any;
   address: string;
   header?: false | undefined;
-  size?: "24px" | undefined;
+  size?: string;
 }) {
   const { address, size = "24px", ...rest } = props;
   const [error, setError] = useState<boolean>(false);
