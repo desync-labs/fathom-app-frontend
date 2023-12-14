@@ -14,9 +14,9 @@ import { styled } from "@mui/material/styles";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import InfoIcon from "@mui/icons-material/Info";
 import { formatNumber } from "utils/format";
-import useStakingContext from "context/staking";
 import { ModalDescription } from "components/AppComponents/AppBox/AppBox";
 import { WarningBlock } from "components/Staking/Dialog/EarlyUnstakeDialog";
+import useSharedContext from "context/shared";
 
 const ConfirmButton = styled(ButtonPrimary)`
   width: 100%;
@@ -59,7 +59,7 @@ const UnclaimedRewardsDialog: FC<ClaimRewardsDialogProps> = ({
   onSkip,
   onClaim,
 }) => {
-  const { isMobile } = useStakingContext();
+  const { isMobile } = useSharedContext();
 
   return (
     <AppDialog

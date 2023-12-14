@@ -11,7 +11,6 @@ export type OpenPositionContextType = {
 };
 
 export type UseOpenPositionContextReturnType = {
-  isMobile: boolean;
   safeMax: string;
   approveBtn: boolean;
   approve: () => void;
@@ -62,16 +61,6 @@ export const OpenPositionProvider: FC<OpenPositionContextType> = ({
   );
 };
 
-const useOpenPositionContext = () => {
-  const context = useContext(OpenPositionContext);
-
-  if (!context) {
-    throw new Error(
-      "useOpenPositionContext hook must be used with a OpenPositionContext component"
-    );
-  }
-
-  return context;
-};
+const useOpenPositionContext = () => useContext(OpenPositionContext);
 
 export default useOpenPositionContext;

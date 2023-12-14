@@ -16,6 +16,7 @@ import { formatPercentage } from "utils/format";
 import BigNumber from "bignumber.js";
 import useStableSwapRemoveLiquidity from "hooks/useStableSwapRemoveLiquidity";
 import { styled } from "@mui/material/styles";
+import useSharedContext from "context/shared";
 
 const StableSwapInfoRemoveLiquidityContainer = styled(StableSwapInfoContainer)`
   padding: 0;
@@ -27,7 +28,6 @@ const StableSwapRemoveLiquidity = () => {
     stableDecimals,
     fxdBalance,
     stableBalance,
-    isMobile,
     inputError,
     inputValue,
     handleInputValueTextFieldChange,
@@ -40,6 +40,7 @@ const StableSwapRemoveLiquidity = () => {
     removeAmountFxd,
     removeAmountStable,
   } = useStableSwapRemoveLiquidity();
+  const { isMobile } = useSharedContext();
 
   return (
     <Container

@@ -13,8 +13,8 @@ import { FC } from "react";
 import { styled } from "@mui/material/styles";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatNumber } from "utils/format";
-import useStakingContext from "context/staking";
 import BigNumber from "bignumber.js";
+import useSharedContext from "context/shared";
 
 const ButtonsWrapper = styled(Box, {
   shouldForwardProp: (prop) => prop !== "onContinue",
@@ -59,7 +59,7 @@ const ClaimRewardsCoolDownDialog: FC<ClaimRewardsDialogProps> = ({
   onClose,
   onContinue,
 }) => {
-  const { isMobile } = useStakingContext();
+  const { isMobile } = useSharedContext();
   return (
     <AppDialog
       onClose={onClose}

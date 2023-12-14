@@ -56,16 +56,6 @@ export const ClosePositionProvider: FC<ClosePositionContextType> = ({
   );
 };
 
-const useRepayPositionContext = (): any => {
-  const context = useContext(RepayPositionContext);
-
-  if (!context) {
-    throw new Error(
-      "useClosePositionContext hook must be used with a ClosePositionContext component"
-    );
-  }
-
-  return context;
-};
+const useRepayPositionContext = () => useContext(RepayPositionContext);
 
 export default useRepayPositionContext;

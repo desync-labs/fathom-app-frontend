@@ -1,5 +1,4 @@
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
-import { useMediaQuery, useTheme } from "@mui/material";
 import { useQuery } from "@apollo/client";
 import { ACCOUNT_VAULT_POSITIONS, VAULTS } from "apollo/queries";
 import { COUNT_PER_PAGE } from "utils/Constants";
@@ -15,8 +14,6 @@ export enum SortType {
 }
 
 const useVaultList = () => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { account } = useConnector();
   const { syncVault, prevSyncVault } = useSyncContext();
 
@@ -136,7 +133,6 @@ const useVaultList = () => {
   );
 
   return {
-    isMobile,
     vaultSortedList,
     vaultsLoading,
     vaultPositionsLoading,

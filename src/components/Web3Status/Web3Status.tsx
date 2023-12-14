@@ -22,8 +22,9 @@ import MenuItem from "@mui/material/MenuItem";
 import { ReactElement, useCallback, useMemo, useRef, useState } from "react";
 import { styled } from "@mui/material/styles";
 import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
-import { Box, useMediaQuery, useTheme } from "@mui/material";
+import { Box } from "@mui/material";
 import useConnector from "context/connector";
+import useSharedContext from "context/shared";
 
 const NetworkPaper = styled(AppPaper)`
   background: #253656;
@@ -66,9 +67,7 @@ const Web3Status = () => {
   const { error, account, chainId, isMetamask } = useConnector();
   const anchorRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState<boolean>(false);
-
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const { isMobile } = useSharedContext();
 
   let button: null | ReactElement = null;
 

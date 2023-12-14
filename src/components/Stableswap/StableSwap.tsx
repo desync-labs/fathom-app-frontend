@@ -32,6 +32,7 @@ import {
 
 import useConnector from "context/connector";
 import StableSwapForm from "components/Stableswap/StableSwapForm";
+import useSharedContext from "context/shared";
 
 export const StableSwapInputWrapper = styled(MuiBox)`
   position: relative;
@@ -148,7 +149,6 @@ const StableSwap = () => {
     handleSwap,
     swapPending,
     swapFee,
-    isMobile,
     fxdAvailable,
     usStableAvailable,
     navigate,
@@ -157,6 +157,7 @@ const StableSwap = () => {
   } = data;
 
   const { allowStableSwap, isUserWrapperWhiteListed } = useConnector();
+  const { isMobile } = useSharedContext();
 
   return (
     <Container
