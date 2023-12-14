@@ -429,16 +429,15 @@ const MainLayout = () => {
                 />
               </>
             ) : null}
-            <Route
-              path="/proposal/:_proposalId"
-              element={
-                <ProposalProvider>
-                  <ProposalView />
-                </ProposalProvider>
-              }
-            />
             <Route path="/dao" element={<DaoView />}>
-              <Route path="governance" element={<AllProposalsView />} />
+              <Route
+                index
+                element={
+                  <StakingProvider>
+                    <StakingView />
+                  </StakingProvider>
+                }
+              />
               <Route
                 path="staking"
                 index
@@ -448,7 +447,19 @@ const MainLayout = () => {
                   </StakingProvider>
                 }
               />
-              <Route element={<Navigate to="/dao/staking" replace />} />
+              <Route path="governance" element={<AllProposalsView />}></Route>
+              <Route
+                path="governance/proposal/:_proposalId"
+                element={
+                  <ProposalProvider>
+                    <ProposalView />
+                  </ProposalProvider>
+                }
+              />
+              <Route
+                path="*"
+                element={<Navigate to="/dao/staking" replace />}
+              />
             </Route>
             <Route
               path="/swap"

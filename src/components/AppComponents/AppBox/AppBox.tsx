@@ -292,9 +292,9 @@ export const NestedRouteLink = styled(Link)`
 `;
 
 export const NestedRouteContainer = styled(Container)`
+  min-height: calc(100vh - 250px);
   ${({ theme }) => theme.breakpoints.down("sm")} {
     margin-top: 15px;
-    min-height: calc(100vh - 250px);
   }
 `;
 
