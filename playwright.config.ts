@@ -44,6 +44,14 @@ export default defineConfig({
   },
   projects: [
     {
+      name: "wallet-connectivity-tests",
+      use: {
+        ...devices["Desktop Chrome"],
+      },
+      testDir: "./playwright-tests/tests/",
+      testMatch: "wallet.spec.ts",
+    },
+    {
       name: "fxd-tests",
       use: {
         ...devices["Desktop Chrome"],
@@ -52,12 +60,12 @@ export default defineConfig({
       testMatch: "fxd-positions.spec.ts",
     },
     {
-      name: "wallet-connectivity-tests",
+      name: "vault-tests",
       use: {
         ...devices["Desktop Chrome"],
       },
       testDir: "./playwright-tests/tests/",
-      testMatch: "wallet.spec.ts",
+      testMatch: "vaults.spec.ts",
     },
   ],
 
