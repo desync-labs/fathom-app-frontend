@@ -44,19 +44,12 @@ export default class VaultPage extends BasePage {
   }
 
   extractStakedValue(inputString: string): number | null {
-    // Use regular expression to extract the numerical part of the string
     const match = inputString.match(/(\d+(,\d{3})*|\d+)/);
-
     if (match) {
-      // Extracted numeric part of the string
       const numericPart = match[0];
-
-      // Remove commas and convert to a number
       const numericValue = parseInt(numericPart.replace(/,/g, ""), 10);
-
       return numericValue;
     } else {
-      // Return null if no match is found
       return null;
     }
   }
