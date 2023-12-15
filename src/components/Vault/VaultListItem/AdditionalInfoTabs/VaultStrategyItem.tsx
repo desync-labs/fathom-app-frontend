@@ -146,14 +146,20 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
       parseInt(strategyData.reports[0].timestamp, 10)
     ).fromNow();
 
-    const allocation = BigNumber(strategyData.currentDebt)
-      .dividedBy(BigNumber(vaultBalanceTokens).dividedBy(100))
-      .toNumber();
-
-    setAllocationShare(allocation);
     setLastReportDate(lastReport);
     setAprHistoryArr(extractedData);
   }, [strategyData]);
+
+  useEffect(() => {
+    const allocation =
+      vaultBalanceTokens !== "0"
+        ? BigNumber(strategyData.currentDebt)
+            .dividedBy(BigNumber(vaultBalanceTokens).dividedBy(100))
+            .toNumber()
+        : 0;
+
+    setAllocationShare(allocation);
+  }, [strategyData, vaultBalanceTokens]);
 
   const totalGain = strategyData.reports.reduce(
     (acc: string, report: IVaultStrategyReport) => {

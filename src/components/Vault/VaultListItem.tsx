@@ -281,9 +281,11 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
             </Box>
             <Box className={"value"}>
               {vaultPosition
-                ? BigNumber(vaultPosition.balancePosition)
-                    .dividedBy(10 ** 18)
-                    .toFormat(0)
+                ? formatNumber(
+                    BigNumber(vaultPosition.balancePosition)
+                      .dividedBy(10 ** 18)
+                      .toNumber()
+                  )
                 : 0}
               {" " + token.symbol}
             </Box>
