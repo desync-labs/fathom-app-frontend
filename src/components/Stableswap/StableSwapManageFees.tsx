@@ -46,11 +46,7 @@ const StableSwapManageFees = () => {
                 <InfoValue>
                   {formatPercentage(
                     BigNumber(feesRewardsForFXD)
-                      .dividedBy(
-                        BigNumber(10)
-                          .exponentiatedBy(fxdDecimals)
-                          .multipliedBy(10 ** 18)
-                      )
+                      .dividedBy(BigNumber(10).exponentiatedBy(fxdDecimals))
                       .toNumber()
                   )}{" "}
                   FXD
@@ -61,11 +57,7 @@ const StableSwapManageFees = () => {
                 <InfoValue>
                   {formatPercentage(
                     BigNumber(feesRewardsForUSDTx)
-                      .dividedBy(
-                        BigNumber(10)
-                          .exponentiatedBy(stableDecimals)
-                          .multipliedBy(10 ** 18)
-                      )
+                      .dividedBy(BigNumber(10).exponentiatedBy(stableDecimals))
                       .toNumber()
                   )}{" "}
                   xUSDT

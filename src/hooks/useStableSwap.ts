@@ -389,6 +389,9 @@ const useStableSwap = (options: string[]) => {
     try {
       const tokenName = options[0];
       let blockNumber;
+      /**
+       * xUSDT -> FXD swap
+       */
       if (inputCurrency === tokenName) {
         blockNumber = await stableSwapService.swapTokenToStableCoin(
           account,
@@ -401,7 +404,7 @@ const useStableSwap = (options: string[]) => {
         const outputValueWithFee = BigNumber(outputValue)
           .multipliedBy(fee)
           .toString();
-        console.log(outputValueWithFee);
+
         blockNumber = await stableSwapService.swapStableCoinToToken(
           account,
           outputValueWithFee,
@@ -425,6 +428,9 @@ const useStableSwap = (options: string[]) => {
       setSwapPending(false);
     }
   }, [
+    feeOut,
+    usStableAvailable,
+    fxdAvailable,
     options,
     inputCurrency,
     outputCurrency,
