@@ -5,6 +5,7 @@ import { styled } from "@mui/material/styles";
 import { IVault, IVaultPosition } from "fathom-sdk";
 import AppPopover from "components/AppComponents/AppPopover/AppPopover";
 import usePricesContext from "context/prices";
+import useSharedContext from "context/shared";
 import { formatPercentage } from "utils/format";
 
 const TokenName = styled("div")`
@@ -43,19 +44,18 @@ const TokenValue = styled("div")`
 `;
 
 type FarmListItemEarnedProps = {
-  isMobile: boolean;
   vaultItemData: IVault;
   vaultPosition: IVaultPosition;
 };
 
 const VaultListItemEarned: FC<FarmListItemEarnedProps> = ({
-  isMobile,
   vaultItemData,
   vaultPosition,
 }) => {
   const { token } = vaultItemData;
   const { balanceProfit } = vaultPosition;
   const { fxdPrice } = usePricesContext();
+  const { isMobile } = useSharedContext();
 
   return (
     <Grid container>

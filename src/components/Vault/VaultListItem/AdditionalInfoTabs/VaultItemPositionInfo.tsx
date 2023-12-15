@@ -7,14 +7,12 @@ import VaultListItemEarned from "components/Vault/VaultListItem/AdditionalInfoTa
 type VaultItemPositionInfoPropsTypes = {
   vaultItemData: IVault;
   vaultPosition: IVaultPosition;
-  isMobile: boolean;
   setManageVault: Dispatch<SetStateAction<boolean>>;
 };
 
 const VaultItemPositionInfo: FC<VaultItemPositionInfoPropsTypes> = ({
   vaultItemData,
   vaultPosition,
-  isMobile,
   setManageVault,
 }) => {
   return (
@@ -23,13 +21,11 @@ const VaultItemPositionInfo: FC<VaultItemPositionInfoPropsTypes> = ({
         <VaultListItemEarningDetails
           vaultItemData={vaultItemData}
           vaultPosition={vaultPosition}
-          isMobile={isMobile}
           onOpen={() => setManageVault(true)}
         />
       </VaultItemInfoWrapper>
       <VaultItemInfoWrapper>
         <VaultListItemEarned
-          isMobile={isMobile}
           vaultItemData={vaultItemData}
           vaultPosition={vaultPosition}
         />
