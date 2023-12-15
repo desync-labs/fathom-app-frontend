@@ -14,6 +14,8 @@ import useSharedContext from "context/shared";
 
 const StableSwapManageFees = () => {
   const {
+    fxdDecimals,
+    stableDecimals,
     feesRewardsForFXD,
     feesRewardsForUSDTx,
     claimedFXDFeeReward,
@@ -44,7 +46,7 @@ const StableSwapManageFees = () => {
                 <InfoValue>
                   {formatPercentage(
                     BigNumber(feesRewardsForFXD)
-                      .dividedBy(10 ** 18)
+                      .dividedBy(BigNumber(10).exponentiatedBy(fxdDecimals))
                       .toNumber()
                   )}{" "}
                   FXD
@@ -55,7 +57,7 @@ const StableSwapManageFees = () => {
                 <InfoValue>
                   {formatPercentage(
                     BigNumber(feesRewardsForUSDTx)
-                      .dividedBy(10 ** 6)
+                      .dividedBy(BigNumber(10).exponentiatedBy(stableDecimals))
                       .toNumber()
                   )}{" "}
                   xUSDT
