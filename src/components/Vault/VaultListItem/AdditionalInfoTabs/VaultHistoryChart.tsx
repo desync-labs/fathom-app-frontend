@@ -36,11 +36,7 @@ type VaultHistoryChartPropTypes = {
   valueUnits?: string;
 };
 
-const CustomTooltip = ({
-  active,
-  payload,
-  label,
-}: TooltipProps<ValueType, NameType>) => {
+const CustomTooltip = ({ payload }: TooltipProps<ValueType, NameType>) => {
   if (payload && payload.length) {
     const reportTimestamp = parseInt(payload[0]?.payload?.timestamp, 10);
     const reportDateString = moment(reportTimestamp).format(
