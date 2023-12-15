@@ -57,6 +57,11 @@ const useStableSwapAddLiquidity = () => {
       totalLiquidity,
     ] = await Promise.all(promises);
 
+    console.log({
+      fxdBalance: fxdBalance.toString(),
+      usStableBalance: usStableBalance.toString(),
+    });
+
     setFxdDecimals(fxdDecimals.toString());
     setStableDecimals(stableDecimals.toString());
     setFxdBalance(fxdBalance.toString());
@@ -178,7 +183,7 @@ const useStableSwapAddLiquidity = () => {
     try {
       setAddLiquidityPending(true);
       const blockNumber = await stableSwapService.addLiquidity(
-        Number(inputValue),
+        inputValue,
         account
       );
       setLastTransactionBlock(blockNumber as number);

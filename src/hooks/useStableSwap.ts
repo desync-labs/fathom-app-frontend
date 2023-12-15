@@ -10,7 +10,6 @@ import { DAY_IN_SECONDS } from "utils/Constants";
 import { formatNumber } from "utils/format";
 import { PricesContext } from "context/prices";
 import { useNavigate } from "react-router-dom";
-import { utils } from "ethers";
 import BigNumber from "bignumber.js";
 
 const useStableSwap = (options: string[]) => {
@@ -398,9 +397,14 @@ const useStableSwap = (options: string[]) => {
           tokenName
         );
       } else {
+        const fee = BigNumber(1).plus(BigNumber(feeOut).dividedBy(10 ** 18));
+        const outputValueWithFee = BigNumber(outputValue)
+          .multipliedBy(fee)
+          .toString();
+        console.log(outputValueWithFee);
         blockNumber = await stableSwapService.swapStableCoinToToken(
           account,
-          outputValue,
+          outputValueWithFee,
           tokenName
         );
       }
@@ -525,7 +529,6 @@ const useStableSwap = (options: string[]) => {
      * FXD to xUSDT
      */
     let formattedBalance;
-    let formattedBalanceWithFee;
     if (inputCurrency === options[1]) {
       formattedBalance = BigNumber(inputBalance).dividedBy(
         BigNumber(10).exponentiatedBy(inputDecimals)
@@ -534,9 +537,6 @@ const useStableSwap = (options: string[]) => {
       formattedBalance = formattedBalance.isGreaterThan(usStableAvailable)
         ? usStableAvailable.toString()
         : formattedBalance.decimalPlaces(18).toString();
-      formattedBalanceWithFee = BigNumber(formattedBalance)
-        .multipliedBy(BigNumber(1).plus(utils.parseEther(feeOut).toString()))
-        .toString();
     } else {
       /**
        * xUSDT to FXD
@@ -547,17 +547,15 @@ const useStableSwap = (options: string[]) => {
       formattedBalance = formattedBalance.isGreaterThan(fxdAvailable)
         ? fxdAvailable.toString()
         : formattedBalance.decimalPlaces(18).toString();
-      formattedBalanceWithFee = formattedBalance;
     }
 
     if (BigNumber(formattedBalance).isLessThan(0.001)) {
       formattedBalance = "0";
-      formattedBalanceWithFee = "0";
     }
 
     setInputValue(formattedBalance);
-    setOppositeCurrency(formattedBalanceWithFee, inputCurrency, "input");
-    if (formattedBalance) {
+    setOppositeCurrency(formattedBalance, inputCurrency, "input");
+    if (BigNumber(formattedBalance).isGreaterThan(0)) {
       approvalStatus(formattedBalance, inputCurrency, "input");
     }
   }, [
