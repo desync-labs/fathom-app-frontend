@@ -1,23 +1,20 @@
-import React, { useEffect, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import "feather-icons";
 
-import TopTokenList from "components/TokenList";
-import { TYPE } from "Theme";
-import { useAllTokenData } from "contexts/TokenData";
-import { PageWrapper, FullWrapper } from "components";
-import { RowBetween } from "components/Row";
-import Search from "components/Search";
+import TopTokenList from "apps/charts/components/TokenList";
+import { TYPE } from "apps/charts/Theme";
+import { useAllTokenData } from "apps/charts/contexts/TokenData";
+import { PageWrapper, FullWrapper } from "apps/charts/components";
+import { RowBetween } from "apps/charts/components/Row";
+import Search from "apps/charts/components/Search";
 import { useMedia } from "react-use";
-import { TOKEN_BLACKLIST } from "constants/index";
+import { TOKEN_BLACKLIST } from "apps/charts/constants";
 
 import styled from "styled-components";
 
 const NoTopTokens = styled.div`
-  padding: 0 4px;
   background: #131f35;
   border-radius: 8px;
-  padding-top: 7px !important;
-  padding-bottom: 7px !important;
   padding: 0px 1.125rem 1rem;
   color: #5977a0;
   text-transform: uppercase;

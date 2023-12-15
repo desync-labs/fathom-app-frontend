@@ -27,7 +27,7 @@ export const RowFlat = styled.div`
 `;
 
 export const AutoRow = styled(Row)<{
-  gap: string;
+  gap?: string;
 }>`
   flex-wrap: ${({ wrap }) => wrap ?? "nowrap"};
   margin: -${({ gap }) => gap};

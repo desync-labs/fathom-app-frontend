@@ -83,6 +83,7 @@ import FathomLogoMobileSrc from "assets/svg/Fathom-app-logo-mobile.svg";
 import MobileMenuIcon from "assets/svg/mobile-menu.svg";
 import MobileMenuIconActive from "assets/svg/mobile-menu-active.svg";
 import { formatNumber } from "utils/format";
+import ChartsView from "components/Dashboard/ChartsView";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -494,6 +495,7 @@ const MainLayout = () => {
                 />
               }
             ></Route>
+            <Route path="/charts" element={<ChartsView />}></Route>
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
           <Copyright />

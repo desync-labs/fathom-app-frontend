@@ -7,7 +7,7 @@ const pulse = keyframes`
   100% { transform: scale(1); }
 `;
 
-const Wrapper = styled.div<{ fill?: boolean; height?: boolean }>`
+const Wrapper = styled.div<{ fill?: string; height?: boolean }>`
   pointer-events: none;
   display: flex;
   align-items: center;
@@ -35,7 +35,7 @@ const AnimatedImg = styled.div`
 import imgSrc from "../../assets/Fathom-app-logo.svg";
 
 type LocalLoader = {
-  fill?: boolean;
+  fill?: string;
 };
 
 const LocalLoader: FC<LocalLoader> = ({ fill }) => {

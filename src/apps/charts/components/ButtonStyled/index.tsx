@@ -5,7 +5,7 @@ import { RowBetween } from "apps/charts/components/Row";
 import { StyledIcon } from "apps/charts/components";
 import { FC, ReactNode } from "react";
 
-const Base = styled(RebassButton)`
+const Base = styled(RebassButton)<{ open?: boolean }>`
   padding: 8px 12px;
   font-size: 0.825rem;
   font-weight: 600;
@@ -53,7 +53,7 @@ type ButtonDropdownProps = {
   disabled?: boolean;
   children: ReactNode;
   open: boolean;
-};
+} & any;
 
 export const ButtonDropdown: FC<ButtonDropdownProps> = ({
   disabled = false,

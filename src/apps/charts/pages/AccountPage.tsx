@@ -1,4 +1,12 @@
-import { useState, useMemo, useEffect, useCallback } from "react";
+import {
+  useState,
+  useMemo,
+  useEffect,
+  useCallback,
+  Dispatch,
+  SetStateAction,
+  FC,
+} from "react";
 import styled from "styled-components";
 import {
   useUserTransactions,
@@ -6,7 +14,7 @@ import {
 } from "apps/charts/contexts/User";
 import TxnList from "apps/charts/components/TxnList";
 import Panel from "apps/charts/components/Panel";
-import { formattedNum } from "apps/charts/utils";
+import { formattedNum, isAddress } from "apps/charts/utils";
 import Row, { AutoRow, RowFixed, RowBetween } from "apps/charts/components/Row";
 import { AutoColumn } from "apps/charts/components/Column";
 import UserChart from "apps/charts/components/UserChart";
@@ -29,6 +37,8 @@ import Search from "apps/charts/components/Search";
 import { useSavedAccounts } from "apps/charts/contexts/LocalStorage";
 import { TableHeaderBox } from "apps/charts/components/Row";
 import { Position } from "apps/charts/utils/returns";
+import { LayoutWrapper } from "apps/charts/App";
+import { Navigate, useParams } from "react-router-dom";
 
 const AccountWrapper = styled.div`
   background-color: transparent;
@@ -390,9 +400,7 @@ function AccountPage(props: { account: string }) {
                       lineHeight={1}
                       color={aggregateFees && "green"}
                     >
-                      {aggregateFees
-                        ? formattedNum(aggregateFees, true, true)
-                        : "-"}
+                      {aggregateFees ? formattedNum(aggregateFees, true) : "-"}
                     </TYPE.header>
                   </RowFixed>
                 </AutoColumn>
@@ -408,7 +416,7 @@ function AccountPage(props: { account: string }) {
                     position={activePosition}
                   />
                 ) : (
-                  <UserChart account={account} position={activePosition} />
+                  <UserChart account={account} />
                 )}
               </Panel>
             </PanelWrapper>
@@ -457,5 +465,25 @@ function AccountPage(props: { account: string }) {
     </PageWrapper>
   );
 }
+
+type AccountPageRouterComponentProps = {
+  savedOpen: boolean;
+  setSavedOpen: Dispatch<SetStateAction<boolean>>;
+};
+
+export const AccountPageRouterComponent: FC<
+  AccountPageRouterComponentProps
+> = ({ savedOpen, setSavedOpen }) => {
+  const params = useParams() as Record<string, any>;
+  if (isAddress(params.accountAddress.toLowerCase())) {
+    return (
+      <LayoutWrapper savedOpen={savedOpen} setSavedOpen={setSavedOpen}>
+        <AccountPage account={params.accountAddress.toLowerCase()} />
+      </LayoutWrapper>
+    );
+  } else {
+    return <Navigate to={"/charts"} />;
+  }
+};
 
 export default AccountPage;

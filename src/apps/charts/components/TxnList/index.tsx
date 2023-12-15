@@ -172,10 +172,10 @@ function getTransactionType(event: any, symbol0: string, symbol1: string) {
 }
 
 function TxnList(props: {
-  transactions: any;
-  symbol0Override: any;
-  symbol1Override: any;
-  color: any;
+  transactions: any[];
+  symbol0Override?: any;
+  symbol1Override?: any;
+  color?: any;
 }) {
   const { transactions, symbol0Override, symbol1Override, color } = props;
   // page state

@@ -1,14 +1,13 @@
-import React from "react";
-import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 
 import { Flex } from "rebass";
-import Link from "components/Link";
-import { RowFixed } from "components/Row";
-import Logo from "assets/Fathom-app-logo.svg";
+import Link from "apps/charts/components/Link";
+import { RowFixed } from "apps/charts/components/Row";
+import Logo from "apps/charts/assets/Fathom-app-logo.svg";
 
-import { BasicLink } from "components/Link";
+import { BasicLink } from "apps/charts/components/Link";
 import { useMedia } from "react-use";
+import { useNavigate } from "react-router-dom";
 
 const TitleWrapper = styled.div`
   text-decoration: none;
@@ -47,31 +46,29 @@ const Option = styled.div<{ activeText: boolean }>`
 `;
 
 export default function Title() {
-  const history = useHistory();
+  const navigate = useNavigate();
   const below1080 = useMedia("(max-width: 1080px)");
 
   return (
     <TitleWrapper>
       <Flex alignItems="center" style={{ justifyContent: "space-between" }}>
         <RowFixed>
-          <FathomIcon id="link" onClick={() => history.push("/")}>
+          <FathomIcon id="link" onClick={() => navigate("/charts")}>
             <img src={Logo} alt="logo" />
           </FathomIcon>
         </RowFixed>
         {below1080 && (
           <RowFixed style={{ alignItems: "flex-end" }}>
             <BasicLink to="/home">
-              <Option
-                activeText={history.location.pathname === "/home" ?? undefined}
-              >
+              <Option activeText={location.pathname === "/home" ?? undefined}>
                 Overview
               </Option>
             </BasicLink>
             <BasicLink to="/tokens">
               <Option
                 activeText={
-                  (history.location.pathname.split("/")[1] === "tokens" ||
-                    history.location.pathname.split("/")[1] === "token") ??
+                  (location.pathname.split("/")[1] === "tokens" ||
+                    location.pathname.split("/")[1] === "token") ??
                   undefined
                 }
               >
@@ -81,8 +78,8 @@ export default function Title() {
             <BasicLink to="/pairs">
               <Option
                 activeText={
-                  (history.location.pathname.split("/")[1] === "pairs" ||
-                    history.location.pathname.split("/")[1] === "pair") ??
+                  (location.pathname.split("/")[1] === "pairs" ||
+                    location.pathname.split("/")[1] === "pair") ??
                   undefined
                 }
               >

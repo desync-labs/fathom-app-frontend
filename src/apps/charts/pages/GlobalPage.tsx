@@ -1,30 +1,32 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { withRouter } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
 import { Box } from "rebass";
 import styled from "styled-components";
 
-import { AutoRow, RowBetween } from "components/Row";
-import { AutoColumn } from "components/Column";
-import PairList from "components/PairList";
-import TopTokenList from "components/TokenList";
-import TxnList from "components/TxnList";
-import GlobalChart from "components/GlobalChart";
-import Search from "components/Search";
-import GlobalStats from "components/GlobalStats";
+import { AutoRow, RowBetween } from "apps/charts/components/Row";
+import { AutoColumn } from "apps/charts/components/Column";
+import PairList from "apps/charts/components/PairList";
+import TopTokenList from "apps/charts/components/TokenList";
+import TxnList from "apps/charts/components/TxnList";
+import GlobalChart from "apps/charts/components/GlobalChart";
+import Search from "apps/charts/components/Search";
+import GlobalStats from "apps/charts/components/GlobalStats";
 
-import { useGlobalData, useGlobalTransactions } from "contexts/GlobalData";
-import { useAllPairData } from "contexts/PairData";
+import {
+  useGlobalData,
+  useGlobalTransactions,
+} from "apps/charts/contexts/GlobalData";
+import { useAllPairData } from "apps/charts/contexts/PairData";
 import { useMedia } from "react-use";
-import Panel from "components/Panel";
-import { useAllTokenData } from "contexts/TokenData";
-import { formattedNum, formattedPercent } from "utils";
-import { TYPE } from "Theme";
-import { CustomLink } from "components/Link";
+import Panel from "apps/charts/components/Panel";
+import { useAllTokenData } from "apps/charts/contexts/TokenData";
+import { formattedNum, formattedPercent } from "apps/charts/utils";
+import { TYPE } from "apps/charts/Theme";
+import { CustomLink } from "apps/charts/components/Link";
 
-import { PageWrapper, ContentWrapper } from "components";
-import CheckBox from "components/Checkbox";
-import QuestionHelper from "components/QuestionHelper";
-import { TOKEN_BLACKLIST } from "constants/index";
+import { PageWrapper, ContentWrapper } from "apps/charts/components";
+import CheckBox from "apps/charts/components/Checkbox";
+import QuestionHelper from "apps/charts/components/QuestionHelper";
+import { TOKEN_BLACKLIST } from "apps/charts/constants";
 
 const ListOptions = styled(AutoRow)`
   height: 40px;
@@ -63,7 +65,7 @@ function GlobalPage() {
 
   // scrolling refs
   useEffect(() => {
-    document.querySelector("body").scrollTo({
+    (document.querySelector("body") as HTMLBodyElement).scrollTo({
       behavior: "smooth",
       top: 0,
     });
@@ -225,4 +227,4 @@ function GlobalPage() {
   );
 }
 
-export default withRouter(GlobalPage);
+export default GlobalPage;

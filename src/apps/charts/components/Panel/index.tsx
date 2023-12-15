@@ -20,7 +20,7 @@ const panelPseudo = css`
 const Panel = styled(RebassBox)<{
   hover?: boolean;
   background?: boolean;
-  area: string;
+  area?: string;
   grouped?: boolean;
   rounded?: boolean;
   last?: boolean;

@@ -1,16 +1,14 @@
-import React from "react";
 import styled from "styled-components";
-import { AutoColumn } from "components/Column";
-import Title from "components/Title";
-import { BasicLink } from "components/Link";
+import { AutoColumn } from "apps/charts/components/Column";
+import Title from "apps/charts/components/Title";
+import { BasicLink } from "apps/charts/components/Link";
 import { useMedia } from "react-use";
-import { TYPE } from "Theme";
-import { withRouter } from "react-router-dom";
+import { TYPE } from "apps/charts/Theme";
 import { TrendingUp, List, PieChart, Disc } from "react-feather";
-import Link from "components/Link";
-import { useSessionStart } from "contexts/Application";
+import Link from "apps/charts/components/Link";
+import { useSessionStart } from "apps/charts/contexts/Application";
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ isMobile?: boolean }>`
   height: ${({ isMobile }) => (isMobile ? "initial" : "100vh")};
   background-color: ${({ theme }) => theme.bg1};
   color: ${({ theme }) => theme.text1};
@@ -32,13 +30,7 @@ const Wrapper = styled.div`
   }
 `;
 
-// font-weight: 600;
-// color: #FFFFFF;
-// background-color: #22354F;
-// padding: 8px 12px;
-// border-radius: 8px;
-
-const Option = styled.div(({ theme, activeText }) => {
+const Option = styled.div<{ activeText?: boolean }>(({ theme, activeText }) => {
   let styles = {
     fontSize: "14px",
     opacity: activeText ? 1 : 0.6,
@@ -114,7 +106,7 @@ const PollingDot = styled.div`
   background-color: ${({ theme }) => theme.green1};
 `;
 
-function SideNav({ history }) {
+function SideNav() {
   const below1080 = useMedia("(max-width: 1080px)");
 
   const below1180 = useMedia("(max-width: 1180px)");
@@ -165,8 +157,8 @@ function SideNav({ history }) {
                 <BasicLink to="/pairs">
                   <Option
                     activeText={
-                      (history.location.pathname.split("/")[1] === "pairs" ||
-                        history.location.pathname.split("/")[1] === "pair") ??
+                      (location.pathname.split("/")[1] === "pairs" ||
+                        location.pathname.split("/")[1] === "pair") ??
                       undefined
                     }
                   >
@@ -181,9 +173,8 @@ function SideNav({ history }) {
                 <BasicLink to="/accounts">
                   <Option
                     activeText={
-                      (history.location.pathname.split("/")[1] === "accounts" ||
-                        history.location.pathname.split("/")[1] ===
-                          "account") ??
+                      (location.pathname.split("/")[1] === "accounts" ||
+                        location.pathname.split("/")[1] === "account") ??
                       undefined
                     }
                   >
@@ -252,7 +243,7 @@ function SideNav({ history }) {
               <PollingDot />
               <a href="/" style={{ color: "white" }}>
                 <TYPE.small color={"white"}>
-                  Updated {!!seconds ? seconds + "s" : "-"} ago <br />
+                  Updated {seconds ? seconds + "s" : "-"} ago <br />
                 </TYPE.small>
               </a>
             </Polling>
@@ -267,4 +258,4 @@ function SideNav({ history }) {
   );
 }
 
-export default withRouter(SideNav);
+export default SideNav;

@@ -1,40 +1,43 @@
-import React, { useState } from "react";
+import { Dispatch, FC, SetStateAction, useState } from "react";
 import "feather-icons";
-import { withRouter } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { Text } from "rebass";
 import styled from "styled-components";
-import Link from "components/Link";
-import Panel from "components/Panel";
-import TokenLogo from "components/TokenLogo";
-import PairList from "components/PairList";
-import Loader from "components/LocalLoader";
-import { AutoRow, RowBetween, RowFixed } from "components/Row";
-import Column, { AutoColumn } from "components/Column";
-import { ButtonLight, ButtonDark } from "components/ButtonStyled";
-import TxnList from "components/TxnList";
-import TokenChart from "components/TokenChart";
-import { BasicLink } from "components/Link";
-import Search from "components/Search";
+import Link from "apps/charts/components/Link";
+import Panel from "apps/charts/components/Panel";
+import TokenLogo from "apps/charts/components/TokenLogo";
+import PairList from "apps/charts/components/PairList";
+import Loader from "apps/charts/components/LocalLoader";
+import { AutoRow, RowBetween, RowFixed } from "apps/charts/components/Row";
+import Column, { AutoColumn } from "apps/charts/components/Column";
+import { ButtonLight, ButtonDark } from "apps/charts/components/ButtonStyled";
+import TxnList from "apps/charts/components/TxnList";
+import TokenChart from "apps/charts/components/TokenChart";
+import { BasicLink } from "apps/charts/components/Link";
+import Search from "apps/charts/components/Search";
 import {
   formattedNum,
   formattedPercent,
   getPoolLink,
   getSwapLink,
   localNumber,
-} from "utils";
+} from "apps/charts/utils";
 import {
   useTokenData,
   useTokenTransactions,
   useTokenPairs,
-} from "contexts/TokenData";
-import { TYPE } from "Theme";
-import { useColor } from "hooks";
-import CopyHelper from "components/Copy";
+} from "apps/charts/contexts/TokenData";
+import { TYPE } from "apps/charts/Theme";
+import { useColor } from "apps/charts/hooks";
+import CopyHelper from "apps/charts/components/Copy";
 import { useMedia } from "react-use";
-import { useDataForList } from "contexts/PairData";
+import { useDataForList } from "apps/charts/contexts/PairData";
 import { useEffect } from "react";
-import Warning from "components/Warning";
-import { usePathDismissed, useSavedTokens } from "contexts/LocalStorage";
+import Warning from "apps/charts/components/Warning";
+import {
+  usePathDismissed,
+  useSavedTokens,
+} from "apps/charts/contexts/LocalStorage";
 import {
   Hover,
   PageWrapper,
@@ -42,20 +45,22 @@ import {
   StyledIcon,
   BlockedWrapper,
   BlockedMessageWrapper,
-} from "components";
+} from "apps/charts/components";
 import { PlusCircle, Bookmark, AlertCircle } from "react-feather";
-import FormattedName from "components/FormattedName";
-import { useListedTokens } from "contexts/Application";
-import HoverText from "components/HoverText";
+import FormattedName from "apps/charts/components/FormattedName";
+import { useListedTokens } from "apps/charts/contexts/Application";
+import HoverText from "apps/charts/components/HoverText";
 import {
   UNTRACKED_COPY,
   TOKEN_BLACKLIST,
   BLOCKED_WARNINGS,
-} from "constants/index";
-import QuestionHelper from "components/QuestionHelper";
-import Checkbox from "components/Checkbox";
-import { shortenAddress } from "utils";
-import { TableHeaderBox } from "components/Row";
+} from "apps/charts/constants";
+import QuestionHelper from "apps/charts/components/QuestionHelper";
+import Checkbox from "apps/charts/components/Checkbox";
+import { shortenAddress } from "apps/charts/utils";
+import { TableHeaderBox } from "apps/charts/components/Row";
+import { isAddress } from "apps/charts/utils";
+import { LayoutWrapper } from "apps/charts/App";
 
 const DashboardWrapper = styled.div`
   width: 100%;
@@ -117,7 +122,7 @@ const WarningIcon = styled(AlertCircle)`
   opacity: 0.6;
 `;
 
-const WarningGrouping = styled.div`
+const WarningGrouping = styled.div<{ disabled?: boolean }>`
   opacity: ${({ disabled }) => disabled && "0.4"};
   pointer-events: ${({ disabled }) => disabled && "none"};
 `;
@@ -129,7 +134,7 @@ const HeaderWrapper = styled.div`
   padding-bottom: 7px !important;
 `;
 
-function TokenPage({ address, history }) {
+function TokenPage({ address }: { address: string }) {
   const {
     id,
     name,
@@ -147,11 +152,11 @@ function TokenPage({ address, history }) {
   } = useTokenData(address);
 
   useEffect(() => {
-    document.querySelector("body").scrollTo(0, 0);
+    (document.querySelector("body") as HTMLBodyElement).scrollTo(0, 0);
   }, []);
 
   // detect color from token
-  const backgroundColor = useColor(id, symbol);
+  const backgroundColor = useColor(id);
 
   const allPairs = useTokenPairs(address);
 
@@ -167,7 +172,7 @@ function TokenPage({ address, history }) {
 
   // volume
   const volume = formattedNum(
-    !!oneDayVolumeUSD ? oneDayVolumeUSD : oneDayVolumeUT,
+    oneDayVolumeUSD ? oneDayVolumeUSD : oneDayVolumeUT,
     true
   );
 
@@ -193,9 +198,7 @@ function TokenPage({ address, history }) {
   const formattedSymbol =
     symbol?.length > LENGTH ? symbol.slice(0, LENGTH) + "..." : symbol;
 
-  const [dismissed, markAsDismissed] = usePathDismissed(
-    history.location.pathname
-  );
+  const [dismissed, markAsDismissed] = usePathDismissed(location.pathname);
   const [savedTokens, addToken] = useSavedTokens();
   const listedTokens = useListedTokens();
 
@@ -214,7 +217,8 @@ function TokenPage({ address, history }) {
         <BlockedMessageWrapper>
           <AutoColumn gap="1rem" justify="center">
             <TYPE.light style={{ textAlign: "center" }}>
-              {BLOCKED_WARNINGS[address] ?? `This token is not supported.`}
+              {(BLOCKED_WARNINGS as any)[address] ??
+                `This token is not supported.`}
             </TYPE.light>
             <Link
               external={true}
@@ -238,10 +242,10 @@ function TokenPage({ address, history }) {
         address={address}
       />
       <ContentWrapper>
-        <RowBetween style={{ flexWrap: "wrap", alingItems: "start" }}>
+        <RowBetween style={{ flexWrap: "wrap", alignItems: "start" }}>
           <AutoRow align="flex-end" style={{ width: "fit-content" }}>
             <TYPE.body>
-              <BasicLink to="/tokens">{"Tokens "}</BasicLink>→ {symbol}
+              <BasicLink to="/charts/tokens">{"Tokens "}</BasicLink>→ {symbol}
             </TYPE.body>
             <Link
               style={{ width: "fit-content" }}
@@ -316,7 +320,7 @@ function TokenPage({ address, history }) {
                   ml={below500 ? "0" : "2.5rem"}
                   mt={below500 ? "1rem" : "0"}
                 >
-                  {!!!savedTokens[address] && !below800 ? (
+                  {!savedTokens[address] && !below800 ? (
                     <Hover onClick={() => addToken(address, symbol)}>
                       <StyledIcon>
                         <PlusCircle style={{ marginRight: "0.5rem" }} />
@@ -460,11 +464,7 @@ function TokenPage({ address, history }) {
               </AutoRow>
             </RowBetween>
             {address && fetchedPairsList ? (
-              <PairList
-                address={address}
-                pairs={fetchedPairsList}
-                useTracked={useTracked}
-              />
+              <PairList pairs={fetchedPairsList} useTracked={useTracked} />
             ) : (
               <Loader />
             )}
@@ -528,4 +528,28 @@ function TokenPage({ address, history }) {
   );
 }
 
-export default withRouter(TokenPage);
+type TokenPageRouterComponentProps = {
+  savedOpen: boolean;
+  setSavedOpen: Dispatch<SetStateAction<boolean>>;
+};
+
+export const TokenPageRouterComponent: FC<TokenPageRouterComponentProps> = ({
+  savedOpen,
+  setSavedOpen,
+}) => {
+  const params = useParams() as Record<string, any>;
+  if (
+    isAddress(params.tokenAddress?.toLowerCase()) &&
+    !Object.keys(TOKEN_BLACKLIST).includes(params.tokenAddress?.toLowerCase())
+  ) {
+    return (
+      <LayoutWrapper savedOpen={savedOpen} setSavedOpen={setSavedOpen}>
+        <TokenPage address={params.tokenAddress.toLowerCase()} />
+      </LayoutWrapper>
+    );
+  } else {
+    return <Navigate to={"/charts"} />;
+  }
+};
+
+export default TokenPage;

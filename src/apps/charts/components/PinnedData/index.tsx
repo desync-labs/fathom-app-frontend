@@ -49,7 +49,7 @@ const StyledIcon = styled.div`
   color: ${({ theme }) => theme.text5};
 `;
 
-function PinnedData(props: { history: any; open: any; setSavedOpen: any }) {
+function PinnedData(props: { open: any; setSavedOpen: any }) {
   const { open, setSavedOpen } = props;
   const navigate = useNavigate();
   const [savedPairs, , removePair] = useSavedPairs();
