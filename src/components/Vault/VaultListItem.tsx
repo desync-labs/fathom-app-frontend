@@ -2,26 +2,26 @@ import { FC, useMemo } from "react";
 import { IconButton, TableCell, Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import BigNumber from "bignumber.js";
+import { IVault, IVaultPosition } from "fathom-sdk";
 
 import usePricesContext from "context/prices";
 import useVaultListItem, { VaultInfoTabs } from "hooks/useVaultListItem";
-import { IVault, IVaultPosition } from "fathom-sdk";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatCurrency, formatNumber, formatPercentage } from "utils/format";
-import useSharedContext from "context/shared";
 
 import { AppTableRow } from "components/AppComponents/AppTable/AppTable";
 import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
 import VaultListItemManageModal from "components/Vault/VaultListItem/VaultListItemManageModal";
 import VaultListItemDepositModal from "components/Vault/VaultListItem/VaultListItemDepositModal";
+import VaultListItemNav from "components/Vault/VaultListItem/VaultListItemNav";
+import VaultItemPositionInfo from "components/Vault/VaultListItem/AdditionalInfoTabs/VaultItemPositionInfo";
+import VaultItemAbout from "components/Vault/VaultListItem/AdditionalInfoTabs/VaultItemAbout";
+import VaultItemStrategies from "components/Vault/VaultListItem/AdditionalInfoTabs/VaultItemStrategies";
 
 import LockSrc from "assets/svg/lock.svg";
 import LockAquaSrc from "assets/svg/lock-aqua.svg";
 import DirectionDown from "assets/svg/direction-down.svg";
 import DirectionUp from "assets/svg/direction-up.svg";
-import VaultListItemNav from "./VaultListItem/VaultListItemNav";
-import VaultItemPositionInfo from "./VaultListItem/AdditionalInfoTabs/VaultItemPositionInfo";
-import VaultItemAbout from "./VaultListItem/AdditionalInfoTabs/VaultItemAbout";
 
 const FlexBox = styled(Box)`
   display: flex;
@@ -178,7 +178,7 @@ export const EarningLabel = styled("div")`
 
 export type VaultListItemPropsType = {
   vaultItemData: IVault;
-  vaultPosition?: IVaultPosition | null | undefined;
+  vaultPosition: IVaultPosition | null | undefined;
 };
 
 const VaultListItem: FC<VaultListItemPropsType> = ({
@@ -197,8 +197,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
     setExtended,
     setManageVault,
     setNewVaultDeposit,
-  } = useVaultListItem();
-  const { isMobile } = useSharedContext();
+  } = useVaultListItem({ vaultPosition });
 
   return (
     <>
@@ -290,8 +289,13 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
             </Box>
           </VaultStacked>
         </TableCell>
-        {vaultPosition ? (
-          <TableCell>
+        <TableCell>
+          <FlexBox justifyContent={"space-evenly"}>
+            {(!vaultPosition || vaultPosition.balanceTokens === "0") && (
+              <ButtonPrimary onClick={() => setNewVaultDeposit(true)}>
+                Deposit
+              </ButtonPrimary>
+            )}
             <ExtendedBtn
               className={extended ? "visible" : "hidden"}
               onClick={() => setExtended(!extended)}
@@ -304,36 +308,32 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
             >
               <img src={DirectionDown} alt={"direction-down"} />
             </ExtendedBtn>
-          </TableCell>
-        ) : (
-          <TableCell>
-            <ButtonPrimary onClick={() => setNewVaultDeposit(true)}>
-              Deposit
-            </ButtonPrimary>
-          </TableCell>
-        )}
+          </FlexBox>
+        </TableCell>
       </AppTableRow>
-      {vaultPosition && extended && (
+      {extended && (
         <AppTableRow className={"border"}>
           <TableCell colSpan={8} sx={{ padding: "0 !important" }}>
             <VaultListItemNav
+              vaultPosition={vaultPosition}
               activeVaultInfoTab={activeVaultInfoTab}
               setActiveVaultInfoTab={setActiveVaultInfoTab}
             />
             <Box sx={{ padding: "20px" }}>
-              {activeVaultInfoTab === VaultInfoTabs.POSITION && (
-                <VaultItemPositionInfo
-                  isMobile={isMobile}
-                  vaultItemData={vaultItemData}
-                  vaultPosition={vaultPosition}
-                  setManageVault={setManageVault}
-                />
-              )}
+              {vaultPosition &&
+                vaultPosition.balanceShares !== "0" &&
+                activeVaultInfoTab === VaultInfoTabs.POSITION && (
+                  <VaultItemPositionInfo
+                    vaultItemData={vaultItemData}
+                    vaultPosition={vaultPosition}
+                    setManageVault={setManageVault}
+                  />
+                )}
               {activeVaultInfoTab === VaultInfoTabs.ABOUT && (
-                <VaultItemAbout
-                  vaultItemData={vaultItemData}
-                  isMobile={isMobile}
-                />
+                <VaultItemAbout vaultItemData={vaultItemData} />
+              )}
+              {activeVaultInfoTab === VaultInfoTabs.STRATEGIES && (
+                <VaultItemStrategies vaultItemData={vaultItemData} />
               )}
             </Box>
           </TableCell>
@@ -346,7 +346,6 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
             <VaultListItemManageModal
               vaultItemData={vaultItemData}
               vaultPosition={vaultPosition}
-              isMobile={isMobile}
               onClose={() => setManageVault(false)}
             />
           )
@@ -356,7 +355,6 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
         return (
           newVaultDeposit && (
             <VaultListItemDepositModal
-              isMobile={isMobile}
               vaultItemData={vaultItemData}
               onClose={() => setNewVaultDeposit(false)}
             />

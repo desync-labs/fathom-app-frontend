@@ -4,6 +4,7 @@ import { styled } from "@mui/material/styles";
 
 import { IVault, IVaultPosition } from "fathom-sdk";
 import useVaultManageDeposit from "hooks/useVaultManageDeposit";
+import useSharedContext from "context/shared";
 
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
 import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
@@ -18,14 +19,12 @@ const VaultManageGridDialogWrapper = styled(AppDialog)`
 `;
 
 export type VaultManageProps = {
-  isMobile: boolean;
   vaultItemData: IVault;
   vaultPosition: IVaultPosition;
   onClose: () => void;
 };
 
 const VaultListItemManageModal: FC<VaultManageProps> = ({
-  isMobile,
   vaultItemData,
   vaultPosition,
   onClose,
@@ -48,6 +47,7 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
     handleSubmit,
     onSubmit,
   } = useVaultManageDeposit(vaultItemData, vaultPosition, onClose);
+  const { isMobile } = useSharedContext();
 
   return (
     <VaultManageGridDialogWrapper

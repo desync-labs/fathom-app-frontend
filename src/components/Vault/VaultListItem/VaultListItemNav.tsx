@@ -1,5 +1,6 @@
 import { Dispatch, FC, SetStateAction } from "react";
 import { Box, Button, styled } from "@mui/material";
+import { IVaultPosition } from "fathom-sdk";
 import { VaultInfoTabs } from "hooks/useVaultListItem";
 
 export const VaultNavWrapper = styled(Box)`
@@ -11,9 +12,7 @@ export const VaultNavWrapper = styled(Box)`
   padding: 5px 20px 0 20px;
   ${({ theme }) => theme.breakpoints.down("sm")} {
     width: 100%;
-    a {
-      width: 50%;
-    }
+    padding: 0;
   }
 `;
 
@@ -42,24 +41,28 @@ export const VaultNavItem = styled(Button)`
 `;
 
 type VaultListItemNavPropsType = {
+  vaultPosition: IVaultPosition | null | undefined;
   activeVaultInfoTab: VaultInfoTabs;
   setActiveVaultInfoTab: Dispatch<SetStateAction<VaultInfoTabs>>;
 };
 
 const VaultListItemNav: FC<VaultListItemNavPropsType> = ({
+  vaultPosition,
   activeVaultInfoTab,
   setActiveVaultInfoTab,
 }) => {
   return (
     <VaultNavWrapper>
-      <VaultNavItem
-        onClick={() => setActiveVaultInfoTab(VaultInfoTabs.POSITION)}
-        className={
-          activeVaultInfoTab === VaultInfoTabs.POSITION ? "active" : ""
-        }
-      >
-        Your position
-      </VaultNavItem>
+      {vaultPosition && vaultPosition.balanceTokens !== "0" && (
+        <VaultNavItem
+          onClick={() => setActiveVaultInfoTab(VaultInfoTabs.POSITION)}
+          className={
+            activeVaultInfoTab === VaultInfoTabs.POSITION ? "active" : ""
+          }
+        >
+          Your position
+        </VaultNavItem>
+      )}
       <VaultNavItem
         onClick={() => setActiveVaultInfoTab(VaultInfoTabs.ABOUT)}
         className={activeVaultInfoTab === VaultInfoTabs.ABOUT ? "active" : ""}
