@@ -321,7 +321,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
             />
             <Box sx={{ padding: "20px" }}>
               {vaultPosition &&
-                vaultPosition.balanceShares !== "0" &&
+                BigNumber(vaultPosition.balanceShares).isGreaterThan(0) &&
                 activeVaultInfoTab === VaultInfoTabs.POSITION && (
                   <VaultItemPositionInfo
                     vaultItemData={vaultItemData}

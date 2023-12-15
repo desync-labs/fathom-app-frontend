@@ -252,7 +252,7 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
             setActiveVaultInfoTab={setActiveVaultInfoTab}
           />
           {vaultPosition &&
-            vaultPosition.balanceShares !== "0" &&
+            BigNumber(vaultPosition.balanceShares).isGreaterThan(0) &&
             activeVaultInfoTab === VaultInfoTabs.POSITION && (
               <VaultItemPositionInfo
                 vaultItemData={vaultItemData}
