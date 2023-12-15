@@ -201,6 +201,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
     <>
       <AppTableRow
         className={!extended || !vaultPosition ? "border single" : undefined}
+        data-testid={`vaultRow-${vaultItemData.token.name}`}
       >
         <TableCell>
           <FlexBox>
@@ -311,7 +312,10 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
         )}
       </AppTableRow>
       {vaultPosition && extended && (
-        <AppTableRow className={"border"}>
+        <AppTableRow
+          className={"border"}
+          data-testid={`vaultRowDetails-${vaultItemData.token.name}`}
+        >
           <TableCell colSpan={8} sx={{ padding: "20px !important" }}>
             <VaultItemInfoWrapper>
               <VaultListItemEarningDetails

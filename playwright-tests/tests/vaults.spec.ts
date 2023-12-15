@@ -6,8 +6,8 @@ import * as metamask from "@synthetixio/synpress/commands/metamask";
 import dotenv from "dotenv";
 dotenv.config();
 
-test.describe("Fathom App Test Suite: Vaults Operations", () => {
-  test('FXD Vault layout "Deposit" button is visible for a first time user', async ({
+test.describe("Fathom App Test Suite: Vault Operations", () => {
+  test('FXD Vault: "Deposit" button is visible for a first time user', async ({
     vaultPage,
   }) => {
     await vaultPage.navigate();
@@ -17,7 +17,20 @@ test.describe("Fathom App Test Suite: Vaults Operations", () => {
     await vaultPage.connectWallet(WalletConnectOptions.Metamask);
     await vaultPage.validateConnectedWalletAddress();
     await expect
-      .soft(vaultPage.getActionButtonLocatorForVault(fxdVaultData.name))
+      .soft(vaultPage.getActionButtonRowLocatorByName(fxdVaultData.name))
       .toHaveText("Deposit");
+  });
+
+  test("FXD Vault: Depositing 1000 FXD is successful", async ({
+    vaultPage,
+  }) => {
+    await vaultPage.navigate();
+    await vaultPage.connectWallet(WalletConnectOptions.Metamask);
+    await vaultPage.validateConnectedWalletAddress();
+    const stakedAmountBefore = await vaultPage.getStakedVaultRowValue(
+      fxdVaultData.name
+    );
+    console.log(stakedAmountBefore);
+    // TO DO - Continue the test
   });
 });
