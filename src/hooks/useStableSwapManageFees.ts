@@ -42,11 +42,6 @@ const useStableSwapManageFees = () => {
         ([fxdDecimal, stableDecimal, claimableFeesData]) => {
           const { 0: feesRewardsForFXD, 1: feesRewardsForUSDTx } =
             claimableFeesData as any;
-
-          console.log({
-            feesRewardsForFXD: feesRewardsForFXD.toString(),
-            feesRewardsForUSDTx: feesRewardsForUSDTx.toString(),
-          });
           setFeesRewardsForFXD(feesRewardsForFXD.toString());
           setFeesRewardsForUSDTx(feesRewardsForUSDTx.toString());
           setFxdDecimals(fxdDecimal.toString());
