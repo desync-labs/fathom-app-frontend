@@ -1,53 +1,66 @@
-import React, { useEffect } from "react";
-import { withRouter } from "react-router-dom";
+import { Dispatch, FC, SetStateAction, useEffect } from "react";
+import {
+  Navigate,
+  useLocation,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import "feather-icons";
 import styled from "styled-components";
-import Panel from "components/Panel";
+import Panel from "apps/charts/components/Panel";
 import {
   PageWrapper,
   ContentWrapperLarge,
   StyledIcon,
   BlockedWrapper,
   BlockedMessageWrapper,
-} from "components/index";
-import { AutoRow, RowBetween, RowFixed } from "components/Row";
-import Column, { AutoColumn } from "components/Column";
-import { ButtonLight, ButtonDark } from "components/ButtonStyled";
-import PairChart from "components/PairChart";
-import Link from "components/Link";
-import TxnList from "components/TxnList";
-import Loader from "components/LocalLoader";
-import { BasicLink } from "components/Link";
-import Search from "components/Search";
+} from "apps/charts/components";
+import { AutoRow, RowBetween, RowFixed } from "apps/charts/components/Row";
+import Column, { AutoColumn } from "apps/charts/components/Column";
+import { ButtonLight, ButtonDark } from "apps/charts/components/ButtonStyled";
+import PairChart from "apps/charts/components/PairChart";
+import Link from "apps/charts/components/Link";
+import TxnList from "apps/charts/components/TxnList";
+import Loader from "apps/charts/components/LocalLoader";
+import { BasicLink } from "apps/charts/components/Link";
+import Search from "apps/charts/components/Search";
 import {
   formattedNum,
   formattedPercent,
   getPoolLink,
   getSwapLink,
   shortenAddress,
-} from "utils";
-import { usePairData, usePairTransactions } from "contexts/PairData";
-import { TYPE } from "Theme";
-import CopyHelper from "components/Copy";
+} from "apps/charts/utils";
+import {
+  usePairData,
+  usePairTransactions,
+} from "apps/charts/contexts/PairData";
+import { TYPE } from "apps/charts/Theme";
+import CopyHelper from "apps/charts/components/Copy";
 import { useMedia } from "react-use";
-import DoubleTokenLogo from "components/DoubleLogo";
-import TokenLogo from "components/TokenLogo";
-import { Hover } from "components";
-import { useEthPrice } from "contexts/GlobalData";
-import Warning from "components/Warning";
-import { usePathDismissed, useSavedPairs } from "contexts/LocalStorage";
+import DoubleTokenLogo from "apps/charts/components/DoubleLogo";
+import TokenLogo from "apps/charts/components/TokenLogo";
+import { Hover } from "apps/charts/components";
+import { useEthPrice } from "apps/charts/contexts/GlobalData";
+import Warning from "apps/charts/components/Warning";
+import {
+  usePathDismissed,
+  useSavedPairs,
+} from "apps/charts/contexts/LocalStorage";
 
 import { Bookmark, PlusCircle, AlertCircle } from "react-feather";
-import FormattedName from "components/FormattedName";
-import { useListedTokens } from "contexts/Application";
-import HoverText from "components/HoverText";
+import FormattedName from "apps/charts/components/FormattedName";
+import { useListedTokens } from "apps/charts/contexts/Application";
+import HoverText from "apps/charts/components/HoverText";
 import {
   UNTRACKED_COPY,
   PAIR_BLACKLIST,
   BLOCKED_WARNINGS,
-} from "constants/index";
-import { TableHeaderBox } from "components/Row";
-import LocalLoader from "components/LocalLoader";
+} from "apps/charts/constants";
+import { TableHeaderBox } from "apps/charts/components/Row";
+import LocalLoader from "apps/charts/components/LocalLoader";
+import { isAddress } from "apps/charts/utils";
+import { LayoutWrapper } from "apps/charts/App";
 
 const DashboardWrapper = styled.div`
   width: 100%;
@@ -128,7 +141,7 @@ const WarningIcon = styled(AlertCircle)`
   opacity: 0.6;
 `;
 
-const WarningGrouping = styled.div`
+const WarningGrouping = styled.div<{ disabled?: boolean }>`
   opacity: ${({ disabled }) => disabled && "0.4"};
   pointer-events: ${({ disabled }) => disabled && "none"};
 `;
@@ -139,7 +152,7 @@ const HeaderWrapper = styled.div`
   padding-bottom: 7px !important;
 `;
 
-function PairPage({ pairAddress, history }) {
+function PairPage({ pairAddress }: { pairAddress: string }) {
   const {
     token0,
     token1,
@@ -156,13 +169,14 @@ function PairPage({ pairAddress, history }) {
     token1Price,
   } = usePairData(pairAddress);
 
+  const location = useLocation();
+  const navigate = useNavigate();
+
   useEffect(() => {
-    document.querySelector("body").scrollTo(0, 0);
+    (document.querySelector("body") as HTMLBodyElement).scrollTo(0, 0);
   }, []);
 
-  const [dismissed, markAsDismissed] = usePathDismissed(
-    history.location.pathname
-  );
+  const [dismissed, markAsDismissed] = usePathDismissed(location.pathname);
 
   useEffect(() => {
     window.scrollTo({
@@ -188,7 +202,7 @@ function PairPage({ pairAddress, history }) {
   const liquidityChange = formattedPercent(liquidityChangeUSD);
 
   // volume
-  const volume = !!oneDayVolumeUSD
+  const volume = oneDayVolumeUSD
     ? formattedNum(oneDayVolumeUSD, true)
     : formattedNum(oneDayVolumeUntracked, true);
   const usingUtVolume = oneDayVolumeUSD === 0 && !!oneDayVolumeUntracked;
@@ -196,7 +210,7 @@ function PairPage({ pairAddress, history }) {
     !usingUtVolume ? volumeChangeUSD : volumeChangeUntracked
   );
 
-  const showUSDWaning = usingUntrackedLiquidity | usingUtVolume;
+  const showUSDWaning = usingUntrackedLiquidity || usingUtVolume;
 
   // get fees	  // get fees
   const fees =
@@ -256,7 +270,8 @@ function PairPage({ pairAddress, history }) {
         <BlockedMessageWrapper>
           <AutoColumn gap="1rem" justify="center">
             <TYPE.light style={{ textAlign: "center" }}>
-              {BLOCKED_WARNINGS[pairAddress] ?? `This pair is not supported.`}
+              {(BLOCKED_WARNINGS as any)[pairAddress] ??
+                `This pair is not supported.`}
             </TYPE.light>
             <Link
               external={true}
@@ -332,13 +347,17 @@ function PairPage({ pairAddress, history }) {
                       {token0 && token1 ? (
                         <>
                           <HoverSpan
-                            onClick={() => history.push(`/token/${token0?.id}`)}
+                            onClick={() =>
+                              navigate(`/carts/token/${token0?.id}`)
+                            }
                           >
                             {token0.symbol}
                           </HoverSpan>
                           <span>-</span>
                           <HoverSpan
-                            onClick={() => history.push(`/token/${token1?.id}`)}
+                            onClick={() =>
+                              navigate(`/charts/token/${token1?.id}`)
+                            }
                           >
                             {token1.symbol}
                           </HoverSpan>{" "}
@@ -357,7 +376,7 @@ function PairPage({ pairAddress, history }) {
                     flexDirection: below1080 ? "row-reverse" : "initial",
                   }}
                 >
-                  {!!!savedPairs[pairAddress] && !below1080 ? (
+                  {savedPairs[pairAddress] && !below1080 ? (
                     <Hover
                       onClick={() =>
                         addPair(
@@ -406,7 +425,9 @@ function PairPage({ pairAddress, history }) {
                 flexWrap: "wrap",
               }}
             >
-              <FixedPanel onClick={() => history.push(`/token/${token0?.id}`)}>
+              <FixedPanel
+                onClick={() => navigate(`/charts/token/${token0?.id}`)}
+              >
                 <RowFixed>
                   <TokenLogo address={token0?.id} size={"16px"} />
                   <TYPE.main
@@ -425,7 +446,9 @@ function PairPage({ pairAddress, history }) {
                   </TYPE.main>
                 </RowFixed>
               </FixedPanel>
-              <FixedPanel onClick={() => history.push(`/token/${token1?.id}`)}>
+              <FixedPanel
+                onClick={() => navigate(`/charts/token/${token1?.id}`)}
+              >
                 <RowFixed>
                   <TokenLogo address={token1?.id} size={"16px"} />
                   <TYPE.main
@@ -520,7 +543,7 @@ function PairPage({ pairAddress, history }) {
                       <div />
                     </RowBetween>
                     <Hover
-                      onClick={() => history.push(`/token/${token0?.id}`)}
+                      onClick={() => navigate(`/charts/token/${token0?.id}`)}
                       fade={true}
                     >
                       <AutoRow gap="4px">
@@ -542,7 +565,7 @@ function PairPage({ pairAddress, history }) {
                       </AutoRow>
                     </Hover>
                     <Hover
-                      onClick={() => history.push(`/token/${token1?.id}`)}
+                      onClick={() => navigate(`/charts/token/${token1?.id}`)}
                       fade={true}
                     >
                       <AutoRow gap="4px">
@@ -683,4 +706,28 @@ function PairPage({ pairAddress, history }) {
   );
 }
 
-export default withRouter(PairPage);
+type PairPageRouterComponentProps = {
+  savedOpen: boolean;
+  setSavedOpen: Dispatch<SetStateAction<boolean>>;
+};
+
+export const PairPageRouterComponent: FC<PairPageRouterComponentProps> = ({
+  savedOpen,
+  setSavedOpen,
+}) => {
+  const params = useParams() as Record<string, any>;
+  if (
+    isAddress(params.pairAddress.toLowerCase()) &&
+    !Object.keys(PAIR_BLACKLIST).includes(params.pairAddress.toLowerCase())
+  ) {
+    return (
+      <LayoutWrapper savedOpen={savedOpen} setSavedOpen={setSavedOpen}>
+        <PairPage pairAddress={params.pairAddress.toLowerCase()} />
+      </LayoutWrapper>
+    );
+  } else {
+    return <Navigate to={"/charts"} />;
+  }
+};
+
+export default PairPage;

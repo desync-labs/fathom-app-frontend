@@ -66,7 +66,7 @@ const Address = ({ address, token, ...rest }) => (
   </Link>
 );
 
-export const Hover = styled.div`
+export const Hover = styled.div<{ fade?: boolean }>`
   :hover {
     cursor: pointer;
     opacity: ${({ fade }) => fade && "0.7"};

@@ -161,9 +161,8 @@ const formatDataText = (
 function PairList(props: {
   pairs: any;
   color: any;
-  disableLinks: any;
-  maxItems?: 10 | undefined;
-  useTracked?: false | undefined;
+  maxItems?: number;
+  useTracked?: boolean;
 }) {
   const { pairs, color, maxItems = 10, useTracked = false } = props;
   const below600 = useMedia("(max-width: 600px)");
@@ -171,13 +170,13 @@ function PairList(props: {
   const below1080 = useMedia("(max-width: 1080px)");
 
   // pagination
-  const [page, setPage] = useState(1);
-  const [maxPage, setMaxPage] = useState(1);
+  const [page, setPage] = useState<number>(1);
+  const [maxPage, setMaxPage] = useState<number>(1);
   const ITEMS_PER_PAGE = maxItems;
 
   // sorting
-  const [sortDirection, setSortDirection] = useState(true);
-  const [sortedColumn, setSortedColumn] = useState(SORT_FIELD.LIQ);
+  const [sortDirection, setSortDirection] = useState<boolean>(true);
+  const [sortedColumn, setSortedColumn] = useState<number>(SORT_FIELD.LIQ);
 
   useEffect(() => {
     setMaxPage(1); // edit this to do modular

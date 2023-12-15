@@ -12,8 +12,8 @@ import { Box } from "rebass/styled-components";
 
 import { getTokenLogoURL } from "apps/charts/utils/getTokenLogo";
 
-import transferSrc from "assets/transfer.svg";
-import dollarSrc from "assets/dollar.svg";
+import transferSrc from "apps/charts/assets/transfer.svg";
+import dollarSrc from "apps/charts/assets/dollar.svg";
 
 const Header = styled.div`
   width: 100%;

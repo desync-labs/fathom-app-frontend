@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, FC } from "react";
 import styled from "styled-components";
 import {
   Area,
@@ -10,7 +10,7 @@ import {
   BarChart,
   Bar,
 } from "recharts";
-import { AutoRow, RowBetween, RowFixed } from "components/Row";
+import { AutoRow, RowBetween, RowFixed } from "apps/charts/components/Row";
 
 import {
   toK,
@@ -18,17 +18,20 @@ import {
   toNiceDateYear,
   formattedNum,
   getTimeframe,
-} from "utils";
-import { OptionButton } from "components/ButtonStyled";
+} from "apps/charts/utils";
+import { OptionButton } from "apps/charts/components/ButtonStyled";
 import { darken } from "polished";
 import { useMedia, usePrevious } from "react-use";
-import { timeframeOptions } from "constants/index";
-import { useTokenChartData, useTokenPriceData } from "contexts/TokenData";
-import DropdownSelect from "components/DropdownSelect";
-import CandleStickChart from "components/CandleChart";
-import LocalLoader from "components/LocalLoader";
+import { timeframeOptions } from "apps/charts/constants";
+import {
+  useTokenChartData,
+  useTokenPriceData,
+} from "apps/charts/contexts/TokenData";
+import DropdownSelect from "apps/charts/components/DropdownSelect";
+import CandleStickChart from "apps/charts/components/CandleChart";
+import LocalLoader from "apps/charts/components/LocalLoader";
 import { Activity } from "react-feather";
-import { useDarkModeManager } from "contexts/LocalStorage";
+import { useDarkModeManager } from "apps/charts/contexts/LocalStorage";
 
 const ChartWrapper = styled.div`
   height: 100%;
@@ -56,7 +59,10 @@ const DATA_FREQUENCY = {
   LINE: "LINE",
 };
 
-const TokenChart = ({ address, color, base }) => {
+type TokenChartProps = { address: any; color: any; base: any };
+
+const TokenChart: FC<TokenChartProps> = (props) => {
+  const { address, color, base } = props;
   // settings for the window and candle width
   const [chartFilter, setChartFilter] = useState(CHART_VIEW.PRICE);
   const [frequency, setFrequency] = useState(DATA_FREQUENCY.HOUR);

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { FC, useState } from "react";
 import styled from "styled-components";
 import {
   Area,
@@ -34,7 +34,9 @@ const ChartWrapper = styled.div`
   }
 `;
 
-const UserChart = (props: { account: any }) => {
+type UserChartProps = { account: string };
+
+const UserChart: FC<UserChartProps> = (props) => {
   const { account } = props;
   const chartData = useUserLiquidityChart(account);
 
@@ -54,6 +56,7 @@ const UserChart = (props: { account: any }) => {
   const [darkMode] = useDarkModeManager();
   const textColor = darkMode ? "white" : "black";
 
+  // @ts-ignore
   return (
     <ChartWrapper>
       {below600 ? (
@@ -131,7 +134,7 @@ const UserChart = (props: { account: any }) => {
             />
             <Tooltip
               cursor={true}
-              formatter={(val) => formattedNum(val, true)}
+              formatter={(val) => formattedNum(Number(val), true)}
               labelFormatter={(label) => toNiceDateYear(label)}
               labelStyle={{ paddingTop: 4 }}
               contentStyle={{

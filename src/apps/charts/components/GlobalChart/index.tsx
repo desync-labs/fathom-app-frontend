@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect, useRef, FC } from "react";
 import { ResponsiveContainer } from "recharts";
 import { timeframeOptions } from "apps/charts/constants";
 import {
@@ -24,7 +24,7 @@ const VOLUME_WINDOW = {
   WEEKLY: "WEEKLY",
   DAYS: "DAYS",
 };
-const GlobalChart = (props: { display: any }) => {
+const GlobalChart: FC<{ display: any }> = (props) => {
   const { display } = props;
   // chart options
   const [chartView, setChartView] = useState(
@@ -166,9 +166,7 @@ const GlobalChart = (props: { display: any }) => {
         </RowFixed>
       )}
     </>
-  ) : (
-    ""
-  );
+  ) : null;
 };
 
 export default GlobalChart;

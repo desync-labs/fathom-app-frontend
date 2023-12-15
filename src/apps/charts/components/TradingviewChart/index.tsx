@@ -1,15 +1,15 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, FC } from "react";
 import { createChart } from "lightweight-charts";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import { formattedNum } from "utils";
+import { formattedNum } from "apps/charts/utils";
 import styled from "styled-components";
 import { usePrevious } from "react-use";
 import { Play } from "react-feather";
-import { useDarkModeManager } from "contexts/LocalStorage";
-import { IconWrapper } from "components";
-import dropSrc from "assets/drop.svg";
-import riseSrc from "assets/rise.svg";
+import { useDarkModeManager } from "apps/charts/contexts/LocalStorage";
+import { IconWrapper } from "apps/charts/components";
+import dropSrc from "apps/charts/assets/drop.svg";
+import riseSrc from "apps/charts/assets/rise.svg";
 
 dayjs.extend(utc);
 
@@ -25,17 +25,30 @@ const Wrapper = styled.div`
 // constant height for charts
 const HEIGHT = 300;
 
-const TradingViewChart = ({
-  type = CHART_TYPES.BAR,
-  data,
-  base,
-  baseChange,
-  field,
-  title,
-  width,
-  useWeekly = false,
-  below800,
-}) => {
+type TradingViewChartProps = {
+  type?: string | undefined;
+  data: any;
+  base: any;
+  baseChange: any;
+  field: any;
+  title: any;
+  width: any;
+  useWeekly?: false | undefined;
+  below800: any;
+};
+
+const TradingViewChart: FC<TradingViewChartProps> = (props) => {
+  const {
+    type = CHART_TYPES.BAR,
+    data,
+    base,
+    baseChange,
+    field,
+    title,
+    width,
+    useWeekly = false,
+    below800,
+  } = props;
   // reference for DOM element to create with chart
   const ref = useRef();
 

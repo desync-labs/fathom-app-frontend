@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "feather-icons";
 
-import { TYPE } from "Theme";
-import { useAllPairData } from "contexts/PairData";
-import PairList from "components/PairList";
-import { PageWrapper, FullWrapper } from "components";
-import { RowBetween, AutoRow } from "components/Row";
-import Search from "components/Search";
+import { TYPE } from "apps/charts/Theme";
+import { useAllPairData } from "apps/charts/contexts/PairData";
+import PairList from "apps/charts/components/PairList";
+import { PageWrapper, FullWrapper } from "apps/charts/components";
+import { RowBetween, AutoRow } from "apps/charts/components/Row";
+import Search from "apps/charts/components/Search";
 import { useMedia } from "react-use";
-import QuestionHelper from "components/QuestionHelper";
-import CheckBox from "components/Checkbox";
+import QuestionHelper from "apps/charts/components/QuestionHelper";
+import CheckBox from "apps/charts/components/Checkbox";
 
 function AllPairsPage() {
   const allPairs = useAllPairData();
@@ -39,7 +39,6 @@ function AllPairsPage() {
         </AutoRow>
         <PairList
           pairs={allPairs}
-          disbaleLinks={true}
           maxItems={50}
           useTracked={useTracked}
           color={"#fff"}

@@ -76,3 +76,42 @@ export const DexIcon: FC<{ isDexActive: boolean }> = ({ isDexActive }) => (
     <img alt="dex-icon" src={isDexActive ? DexSrcActive : DexSrc} />
   </Icon>
 );
+
+/**
+ * Icons for charts second level menu
+ */
+export const OverviewIcon: FC<{ isActive: boolean }> = ({ isActive }) => (
+  <MenuIcon sx={{ marginTop: "-9px" }}>
+    <img
+      alt="overview-icon"
+      src={isActive ? GovernanceActiveSrc : GovernanceSrc}
+    />
+  </MenuIcon>
+);
+
+export const TokensIcon: FC<{ isActive: boolean }> = ({ isActive }) => (
+  <MenuIcon sx={{ marginTop: "-9px" }}>
+    <img
+      alt="tokens-icon"
+      src={isActive ? GovernanceActiveSrc : GovernanceSrc}
+    />
+  </MenuIcon>
+);
+
+export const PairsIcon: FC<{ isActive: boolean }> = ({ isActive }) => (
+  <MenuIcon sx={{ marginTop: "-9px" }}>
+    <img
+      alt="pairs-icon"
+      src={isActive ? GovernanceActiveSrc : GovernanceSrc}
+    />
+  </MenuIcon>
+);
+
+export const AccountsIcon: FC<{ isActive: boolean }> = ({ isActive }) => (
+  <MenuIcon sx={{ marginTop: "-9px" }}>
+    <img
+      alt="accounts-icon"
+      src={isActive ? GovernanceActiveSrc : GovernanceSrc}
+    />
+  </MenuIcon>
+);
