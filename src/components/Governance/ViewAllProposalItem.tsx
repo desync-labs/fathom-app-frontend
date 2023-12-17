@@ -105,7 +105,10 @@ const ViewAllProposalItem: FC<ViewAllProposalItemProps> = ({ proposal }) => {
 
   return (
     <Grid item xs={12} key={proposal.id}>
-      <ProposalItemWrapper to={`/proposal/${proposal.id}`} key={proposal.id}>
+      <ProposalItemWrapper
+        to={`/dao/governance/proposal/${proposal.id}`}
+        key={proposal.id}
+      >
         <ProposalIdTooltip title={proposal.proposalId} placement="top">
           <ProposalItemProposalId>
             Proposal №{" "}

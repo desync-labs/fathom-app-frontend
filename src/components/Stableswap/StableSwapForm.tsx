@@ -92,7 +92,15 @@ const StableSwapForm: FC<any> = ({
   setMax,
   inputError,
   options,
+  fxdAvailable,
+  usStableAvailable,
 }) => {
+  const outputError = useMemo(() => {
+    return BigNumber(
+      outputCurrency === options[0] ? usStableAvailable : fxdAvailable
+    ).isLessThan(outputValue);
+  }, [outputCurrency, usStableAvailable, fxdAvailable, outputValue]);
+
   return (
     <>
       <StableSwapInputWrapper>
@@ -206,12 +214,15 @@ const StableSwapForm: FC<any> = ({
         </StableSwapCurrencySelect>
 
         <StableSwapTextField
+          error={outputError}
           disabled={true}
           size="small"
           type="number"
           placeholder="0.00"
+          className={outputError ? "error" : ""}
           value={outputValue}
           onChange={handleOutputValueTextFieldChange}
+          helperText={outputError ? "Not enough liquidity in pool" : ""}
         />
 
         {approveOutputBtn ? (
