@@ -54,6 +54,7 @@ const CustomTooltip = ({ payload }: TooltipProps<ValueType, NameType>) => {
             secondaryAction={
               <>{`${formatNumber(payload[0].payload?.chartValue) + units}`}</>
             }
+            sx={{ gap: "10px" }}
           >
             <ListItemText primary={payload[0].name} />
           </AppListItem>
