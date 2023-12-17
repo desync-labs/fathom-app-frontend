@@ -6,6 +6,7 @@ import { IVault } from "fathom-sdk";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { ButtonSecondary } from "components/AppComponents/AppButton/AppButton";
 import usePricesContext from "context/prices";
+import useSharedContext from "context/shared";
 import { formatNumber, formatPercentage } from "utils/format";
 
 const VaultTitle = styled("div")`
@@ -127,14 +128,12 @@ const Token = styled("div")`
 `;
 
 type VaultListItemFarmingDetailsProps = {
-  isMobile: boolean;
   vaultItemData: IVault;
   vaultPosition?: any;
   onOpen: () => void;
 };
 
 const VaultListItemEarningDetails: FC<VaultListItemFarmingDetailsProps> = ({
-  isMobile,
   onOpen,
   vaultItemData,
   vaultPosition,
@@ -142,6 +141,7 @@ const VaultListItemEarningDetails: FC<VaultListItemFarmingDetailsProps> = ({
   const { token, shareToken, balanceTokens, strategies } = vaultItemData;
   const { balancePosition, balanceShares } = vaultPosition;
   const { fxdPrice } = usePricesContext();
+  const { isMobile } = useSharedContext();
 
   return (
     <Grid container>

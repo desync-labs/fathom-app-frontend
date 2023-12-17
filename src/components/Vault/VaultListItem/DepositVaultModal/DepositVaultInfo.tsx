@@ -3,6 +3,7 @@ import BigNumber from "bignumber.js";
 import { Box, Divider, Grid, ListItemText } from "@mui/material";
 import { IVault } from "fathom-sdk";
 import { AppList, AppListItem } from "components/AppComponents/AppList/AppList";
+import { formatNumber, formatPercentage } from "utils/format";
 
 type VaultDepositInfoProps = {
   vaultItemData: IVault;
@@ -41,7 +42,10 @@ const DepositVaultInfo: FC<VaultDepositInfoProps> = ({
             <>
               0 {token.name + " "}
               <Box component="span" sx={{ color: "#29C20A" }}>
-                → {(deposit || "0") + " " + token.name}
+                →{" "}
+                {formatPercentage(BigNumber(deposit || "0").toNumber()) +
+                  " " +
+                  token.name}
               </Box>
             </>
           }
@@ -55,15 +59,20 @@ const DepositVaultInfo: FC<VaultDepositInfoProps> = ({
               0 %{" "}
               <Box component="span" sx={{ color: "#29C20A" }}>
                 →{" "}
-                {BigNumber(deposit || "0")
-                  .multipliedBy(10 ** 18)
-                  .dividedBy(
-                    BigNumber(balanceTokens).plus(
-                      BigNumber(deposit || "0").multipliedBy(10 ** 18)
+                {BigNumber(deposit).isGreaterThan(0) ||
+                BigNumber(balanceTokens).isGreaterThan(0)
+                  ? formatNumber(
+                      BigNumber(deposit || "0")
+                        .multipliedBy(10 ** 18)
+                        .dividedBy(
+                          BigNumber(balanceTokens).plus(
+                            BigNumber(deposit || "0").multipliedBy(10 ** 18)
+                          )
+                        )
+                        .times(100)
+                        .toNumber()
                     )
-                  )
-                  .times(100)
-                  .toFormat(2)}{" "}
+                  : "0"}{" "}
                 %
               </Box>
             </>
@@ -78,7 +87,7 @@ const DepositVaultInfo: FC<VaultDepositInfoProps> = ({
               {`0 ${shareToken.symbol} `}
               <Box component="span" sx={{ color: "#29C20A" }}>
                 →{" "}
-                {BigNumber(sharedToken || "0").toFormat(6) +
+                {formatPercentage(BigNumber(sharedToken || "0").toNumber()) +
                   " " +
                   shareToken.symbol}
               </Box>
@@ -90,7 +99,9 @@ const DepositVaultInfo: FC<VaultDepositInfoProps> = ({
         <Divider />
         <AppListItem
           alignItems="flex-start"
-          secondaryAction={strategies[0].reports[0].totalFees + "%"}
+          secondaryAction={
+            formatNumber(strategies[0].reports[0].totalFees) + "%"
+          }
         >
           <ListItemText primary="Fee" />
         </AppListItem>
@@ -98,14 +109,16 @@ const DepositVaultInfo: FC<VaultDepositInfoProps> = ({
         <AppListItem
           alignItems="flex-start"
           secondaryAction={
-            BigNumber(strategies[0].reports[0].results[0].apr).toFormat(2) + "%"
+            formatNumber(
+              BigNumber(strategies[0].reports[0].results[0].apr).toNumber()
+            ) + "%"
           }
         >
           <ListItemText primary="Estimated APR" />
         </AppListItem>
         <AppListItem
           alignItems="flex-start"
-          secondaryAction={BigNumber(averageApr).toFormat(2) + "%"}
+          secondaryAction={formatNumber(BigNumber(averageApr).toNumber()) + "%"}
         >
           <ListItemText primary="Historical APR" />
         </AppListItem>
