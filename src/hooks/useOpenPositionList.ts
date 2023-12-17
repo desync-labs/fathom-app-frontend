@@ -22,7 +22,7 @@ const useOpenPositionList = (
   proxyWallet: string
 ) => {
   const { positionService } = useServices();
-  const { chainId } = useConnector();
+  const { chainId, account } = useConnector();
   const [formattedPositions, setFormattedPositions] = useState<IOpenPosition[]>(
     []
   );
@@ -54,7 +54,7 @@ const useOpenPositionList = (
   }, [topUpPosition, poolsData]);
 
   useEffect(() => {
-    if (proxyWallet) {
+    if (proxyWallet && account) {
       loadPositions({
         variables: {
           first: COUNT_PER_PAGE,
@@ -63,8 +63,10 @@ const useOpenPositionList = (
         },
         fetchPolicy: "network-only",
       });
+    } else {
+      setFormattedPositions([]);
     }
-  }, [chainId, proxyWallet, called, loadPositions]);
+  }, [chainId, proxyWallet, account, called, loadPositions]);
 
   const handlePageChange = useCallback(
     (event: ChangeEvent<unknown>, page: number) => {
