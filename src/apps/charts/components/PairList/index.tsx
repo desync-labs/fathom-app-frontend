@@ -160,7 +160,7 @@ const formatDataText = (
 
 function PairList(props: {
   pairs: any;
-  color: any;
+  color?: any;
   maxItems?: number;
   useTracked?: boolean;
 }) {
@@ -257,7 +257,7 @@ function PairList(props: {
             />
             <CustomLink
               style={{ marginLeft: "20px", whiteSpace: "nowrap" }}
-              to={"/pair/" + pairAddress}
+              to={"/charts/pair/" + pairAddress}
               color={color}
             >
               <FormattedName
@@ -356,7 +356,7 @@ function PairList(props: {
         </Flex>
         <Flex alignItems="center" justifyContent="center">
           <ClickableText
-            onClick={(e) => {
+            onClick={() => {
               setSortedColumn(SORT_FIELD.LIQ);
               setSortDirection(
                 sortedColumn !== SORT_FIELD.LIQ ? true : !sortDirection
@@ -375,7 +375,7 @@ function PairList(props: {
         </Flex>
         <Flex alignItems="center" justifyContent="center">
           <ClickableText
-            onClick={(e) => {
+            onClick={() => {
               setSortedColumn(SORT_FIELD.VOL);
               setSortDirection(
                 sortedColumn !== SORT_FIELD.VOL ? true : !sortDirection
@@ -395,7 +395,7 @@ function PairList(props: {
         {!below1080 && (
           <Flex alignItems="center" justifyContent="center">
             <ClickableText
-              onClick={(e) => {
+              onClick={() => {
                 setSortedColumn(SORT_FIELD.VOL_7DAYS);
                 setSortDirection(
                   sortedColumn !== SORT_FIELD.VOL_7DAYS ? true : !sortDirection
@@ -416,7 +416,7 @@ function PairList(props: {
         {!below1080 && (
           <Flex alignItems="center" justifyContent="center">
             <ClickableText
-              onClick={(e) => {
+              onClick={() => {
                 setSortedColumn(SORT_FIELD.FEES);
                 setSortDirection(
                   sortedColumn !== SORT_FIELD.FEES ? true : !sortDirection
@@ -437,7 +437,7 @@ function PairList(props: {
         {!below1080 && (
           <Flex alignItems="center" justifyContent="center">
             <ClickableText
-              onClick={(e) => {
+              onClick={() => {
                 setSortedColumn(SORT_FIELD.APY);
                 setSortDirection(
                   sortedColumn !== SORT_FIELD.APY ? true : !sortDirection
@@ -460,7 +460,7 @@ function PairList(props: {
       <List p={0}>{!pairList ? <LocalLoader /> : pairList}</List>
       <PageButtons>
         <div
-          onClick={(e) => {
+          onClick={() => {
             setPage(page === 1 ? page : page - 1);
           }}
         >
@@ -468,7 +468,7 @@ function PairList(props: {
         </div>
         <TYPE.body>{"Page " + page + " of " + maxPage}</TYPE.body>
         <div
-          onClick={(e) => {
+          onClick={() => {
             setPage(page === maxPage ? page : page + 1);
           }}
         >

@@ -1,8 +1,5 @@
-import theme from "Theme/theme";
-const color = theme.colors;
-
 export const customStyles = {
-  control: (styles, state) => ({
+  control: (styles: any) => ({
     ...styles,
     borderRadius: 20,
     backgroundColor: "white",
@@ -13,21 +10,20 @@ export const customStyles = {
     border: "none",
     boxShadow: "none",
     ":hover": {
-      borderColor: color.zircon,
       cursor: "pointer",
       overflow: "hidden",
     },
   }),
-  placeholder: (styles) => ({
+  placeholder: (styles: any) => ({
     ...styles,
     color: "#6C7284",
   }),
-  input: (styles) => ({
+  input: (styles: any) => ({
     ...styles,
     color: "#6C7284",
     overflow: "hidden",
   }),
-  singleValue: (styles) => ({
+  singleValue: (styles: any) => ({
     ...styles,
     color: "#6C7284",
     width: "100%",
@@ -36,21 +32,21 @@ export const customStyles = {
   indicatorSeparator: () => ({
     display: "none",
   }),
-  dropdownIndicator: (styles) => ({
+  dropdownIndicator: (styles: any) => ({
     ...styles,
     color: "#6C7284",
     paddingRight: 0,
   }),
-  valueContainer: (styles) => ({
+  valueContainer: (styles: any) => ({
     ...styles,
     paddingLeft: 16,
     textAlign: "right",
     overflow: "scroll",
   }),
-  menuPlacer: (styles) => ({
+  menuPlacer: (styles: any) => ({
     ...styles,
   }),
-  option: (styles, state) => ({
+  option: (styles: any, state: { isSelected: any }) => ({
     ...styles,
     margin: "0px 0px",
     padding: "calc(12px - 1px) calc(12px - 1px)",
@@ -67,7 +63,7 @@ export const customStyles = {
       cursor: "pointer",
     },
   }),
-  menu: (styles) => ({
+  menu: (styles: any) => ({
     ...styles,
     borderRadius: 16,
     boxShadow:
@@ -75,15 +71,14 @@ export const customStyles = {
     overflow: "hidden",
     padding: 0,
   }),
-  menuList: (styles) => ({
+  menuList: (styles: any) => ({
     ...styles,
-    color: color.text,
     padding: 0,
   }),
 };
 
 export const customStylesMobile = {
-  control: (styles, state) => ({
+  control: (styles: any) => ({
     ...styles,
     borderRadius: 12,
     backgroundColor: "white",
@@ -93,38 +88,37 @@ export const customStylesMobile = {
     padding: 0,
     boxShadow: "none",
     ":hover": {
-      borderColor: color.zircon,
       cursor: "pointer",
     },
   }),
-  placeholder: (styles) => ({
+  placeholder: (styles: any) => ({
     ...styles,
     color: "#6C7284",
   }),
-  input: (styles) => ({
+  input: (styles: any) => ({
     ...styles,
     color: "6C7284",
     overflow: "hidden",
   }),
-  singleValue: (styles) => ({
+  singleValue: (styles: any) => ({
     ...styles,
     color: "#6C7284",
   }),
   indicatorSeparator: () => ({
     display: "none",
   }),
-  dropdownIndicator: (styles) => ({
+  dropdownIndicator: (styles: any) => ({
     ...styles,
     paddingRight: 0,
   }),
-  valueContainer: (styles) => ({
+  valueContainer: (styles: any) => ({
     ...styles,
     paddingLeft: 16,
   }),
-  menuPlacer: (styles) => ({
+  menuPlacer: (styles: any) => ({
     ...styles,
   }),
-  option: (styles, state) => ({
+  option: (styles: any, state: { isSelected: any }) => ({
     ...styles,
     margin: "20px 4px",
     padding: "calc(16px - 1px) 16x",
@@ -139,7 +133,7 @@ export const customStylesMobile = {
       cursor: "pointer",
     },
   }),
-  menu: (styles) => ({
+  menu: (styles: any) => ({
     ...styles,
     borderRadius: 20,
     boxShadow:
@@ -147,15 +141,14 @@ export const customStylesMobile = {
     overflow: "hidden",
     paddingBottom: "12px",
   }),
-  menuList: (styles) => ({
+  menuList: (styles: any) => ({
     ...styles,
-    color: color.text,
     padding: "8px",
   }),
 };
 
 export const customStylesTime = {
-  control: (styles, state) => ({
+  control: (styles: any) => ({
     ...styles,
     borderRadius: 20,
     backgroundColor: "white",
@@ -166,19 +159,18 @@ export const customStylesTime = {
     border: "none",
     boxShadow: "none",
     ":hover": {
-      borderColor: color.zircon,
       cursor: "pointer",
     },
   }),
-  placeholder: (styles) => ({
+  placeholder: (styles: any) => ({
     ...styles,
     color: "#6C7284",
   }),
-  input: (styles) => ({
+  input: (styles: any) => ({
     ...styles,
     color: "transparent",
   }),
-  singleValue: (styles) => ({
+  singleValue: (styles: any) => ({
     ...styles,
     color: "#6C7284",
     width: "100%",
@@ -187,21 +179,21 @@ export const customStylesTime = {
   indicatorSeparator: () => ({
     display: "none",
   }),
-  dropdownIndicator: (styles) => ({
+  dropdownIndicator: (styles: any) => ({
     ...styles,
     color: "#6C7284",
     paddingRight: 0,
   }),
-  valueContainer: (styles) => ({
+  valueContainer: (styles: any) => ({
     ...styles,
     paddingLeft: 16,
     overflow: "visible",
     textAlign: "right",
   }),
-  menuPlacer: (styles) => ({
+  menuPlacer: (styles: any) => ({
     ...styles,
   }),
-  option: (styles, state) => ({
+  option: (styles: any, state: { isSelected: any }) => ({
     ...styles,
     margin: "0px 0px",
     padding: "calc(12px - 1px) calc(24px - 1px)",
@@ -218,7 +210,7 @@ export const customStylesTime = {
       cursor: "pointer",
     },
   }),
-  menu: (styles) => ({
+  menu: (styles: any) => ({
     ...styles,
     borderRadius: 16,
     boxShadow:
@@ -226,9 +218,8 @@ export const customStylesTime = {
     overflow: "hidden",
     padding: 0,
   }),
-  menuList: (styles) => ({
+  menuList: (styles: any) => ({
     ...styles,
-    color: color.text,
     padding: 0,
   }),
 };

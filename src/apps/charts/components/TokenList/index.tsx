@@ -25,11 +25,14 @@ const PageButtons = styled.div`
   margin-bottom: 2em;
 `;
 
-const Arrow = styled.div<{ faded: boolean }>`
+const Arrow = styled.div<{
+  faded: boolean;
+}>`
   color: ${({ theme }) => theme.white};
   opacity: ${(props) => (props.faded ? 0.3 : 1)};
   padding: 0 20px;
   user-select: none;
+
   :hover {
     cursor: pointer;
   }
@@ -84,10 +87,12 @@ const ListWrapper = styled.div``;
 
 const ClickableText = styled(Text)`
   text-align: end;
+
   &:hover {
     cursor: pointer;
     opacity: 0.6;
   }
+
   user-select: none;
   color: ${({ theme }) => theme.text1} !important;
   @media screen and (max-width: 640px) {
@@ -132,7 +137,12 @@ const SORT_FIELD = {
 };
 
 // @TODO rework into virtualized list
-function TopTokenList({ formattedTokens, itemMax = 10, useTracked = false }) {
+function TopTokenList(props: {
+  formattedTokens: any;
+  itemMax?: number;
+  useTracked?: boolean;
+}) {
+  const { formattedTokens, itemMax = 10, useTracked = false } = props;
   // page state
   const [page, setPage] = useState(1);
   const [maxPage, setMaxPage] = useState(1);
@@ -164,19 +174,28 @@ function TopTokenList({ formattedTokens, itemMax = 10, useTracked = false }) {
     return (
       formattedTokens &&
       formattedTokens
-        .sort((a: { [x: string]: string }, b: { [x: string]: string }) => {
-          if (
-            sortedColumn === SORT_FIELD.SYMBOL ||
-            sortedColumn === SORT_FIELD.NAME
-          ) {
-            return a[sortedColumn] > b[sortedColumn]
+        .sort(
+          (
+            a: {
+              [x: string]: string;
+            },
+            b: {
+              [x: string]: string;
+            }
+          ) => {
+            if (
+              sortedColumn === SORT_FIELD.SYMBOL ||
+              sortedColumn === SORT_FIELD.NAME
+            ) {
+              return a[sortedColumn] > b[sortedColumn]
+                ? (sortDirection ? -1 : 1) * 1
+                : (sortDirection ? -1 : 1) * -1;
+            }
+            return parseFloat(a[sortedColumn]) > parseFloat(b[sortedColumn])
               ? (sortDirection ? -1 : 1) * 1
               : (sortDirection ? -1 : 1) * -1;
           }
-          return parseFloat(a[sortedColumn]) > parseFloat(b[sortedColumn])
-            ? (sortDirection ? -1 : 1) * 1
-            : (sortDirection ? -1 : 1) * -1;
-        })
+        )
         .slice(itemMax * (page - 1), page * itemMax)
     );
   }, [formattedTokens, itemMax, page, sortDirection, sortedColumn]);
@@ -186,11 +205,11 @@ function TopTokenList({ formattedTokens, itemMax = 10, useTracked = false }) {
     return (
       <DashGrid style={{ height: "48px" }}>
         {!below680 && (
-          <DataText area="id">
+          <DataText>
             <div style={{ marginRight: "1rem", width: "10px" }}>{index}</div>
           </DataText>
         )}
-        <DataText area="name" fontWeight="500">
+        <DataText fontWeight="500">
           <Row>
             <TokenLogo address={item.id} />
             <CustomLink
@@ -207,28 +226,23 @@ function TopTokenList({ formattedTokens, itemMax = 10, useTracked = false }) {
           </Row>
         </DataText>
         {!below680 && (
-          <DataText area="symbol" color="text" fontWeight="500">
+          <DataText color="text" fontWeight="500">
             <FormattedName text={item.symbol} maxCharacters={5} />
           </DataText>
         )}
-        <DataText area="liq" justifyContent="center">
+        <DataText justifyContent="center">
           {formattedNum(item.totalLiquidityUSD, true)}
         </DataText>
-        <DataText area="vol" justifyContent="center">
+        <DataText justifyContent="center">
           {formattedNum(Math.abs(item.oneDayVolumeUSD), true)}
         </DataText>
         {!below1080 && (
-          <DataText
-            area="price"
-            color="text"
-            fontWeight="500"
-            justifyContent="center"
-          >
+          <DataText color="text" fontWeight="500" justifyContent="center">
             {formattedNum(item.priceUSD, true)}
           </DataText>
         )}
         {!below1080 && (
-          <DataText area="change" justifyContent="center">
+          <DataText justifyContent="center">
             {formattedPercent(item.priceChangeUSD)}
           </DataText>
         )}
@@ -239,7 +253,6 @@ function TopTokenList({ formattedTokens, itemMax = 10, useTracked = false }) {
   return (
     <ListWrapper>
       <HeaderWrapper
-        center={true}
         style={{ height: "fit-content", padding: "0 1.125rem 1rem 1.125rem" }}
       >
         {!below680 && (
@@ -250,9 +263,8 @@ function TopTokenList({ formattedTokens, itemMax = 10, useTracked = false }) {
         <Flex alignItems="center" justifyContent="flex-start">
           <ClickableText
             color="text"
-            area="name"
             fontWeight="500"
-            onClick={(e) => {
+            onClick={() => {
               setSortedColumn(SORT_FIELD.NAME);
               setSortDirection(
                 sortedColumn !== SORT_FIELD.NAME ? true : !sortDirection
@@ -272,7 +284,6 @@ function TopTokenList({ formattedTokens, itemMax = 10, useTracked = false }) {
         {!below680 && (
           <Flex alignItems="center" justifyContent="flex-start">
             <ClickableText
-              area="symbol"
               onClick={() => {
                 setSortedColumn(SORT_FIELD.SYMBOL);
                 setSortDirection(
@@ -294,8 +305,7 @@ function TopTokenList({ formattedTokens, itemMax = 10, useTracked = false }) {
 
         <Flex alignItems="center" justifyContent="center">
           <ClickableText
-            area="liq"
-            onClick={(e) => {
+            onClick={() => {
               setSortedColumn(SORT_FIELD.LIQ);
               setSortDirection(
                 sortedColumn !== SORT_FIELD.LIQ ? true : !sortDirection
@@ -314,7 +324,6 @@ function TopTokenList({ formattedTokens, itemMax = 10, useTracked = false }) {
         </Flex>
         <Flex alignItems="center" justifyContent="center">
           <ClickableText
-            area="vol"
             onClick={() => {
               setSortedColumn(useTracked ? SORT_FIELD.VOL_UT : SORT_FIELD.VOL);
               setSortDirection(
@@ -339,8 +348,7 @@ function TopTokenList({ formattedTokens, itemMax = 10, useTracked = false }) {
         {!below1080 && (
           <Flex alignItems="center" justifyContent="center">
             <ClickableText
-              area="price"
-              onClick={(e) => {
+              onClick={() => {
                 setSortedColumn(SORT_FIELD.PRICE);
                 setSortDirection(
                   sortedColumn !== SORT_FIELD.PRICE ? true : !sortDirection
@@ -361,8 +369,7 @@ function TopTokenList({ formattedTokens, itemMax = 10, useTracked = false }) {
         {!below1080 && (
           <Flex alignItems="center" justifyContent="center">
             <ClickableText
-              area="change"
-              onClick={(e) => {
+              onClick={() => {
                 setSortedColumn(SORT_FIELD.CHANGE);
                 setSortDirection(
                   sortedColumn !== SORT_FIELD.CHANGE ? true : !sortDirection
@@ -383,7 +390,7 @@ function TopTokenList({ formattedTokens, itemMax = 10, useTracked = false }) {
       </HeaderWrapper>
       <List p={0}>
         {filteredList &&
-          filteredList.map((item, index) => {
+          filteredList.map((item: any, index: number) => {
             return (
               <div key={index}>
                 <ListItem
@@ -409,4 +416,4 @@ function TopTokenList({ formattedTokens, itemMax = 10, useTracked = false }) {
   );
 }
 
-export default withRouter(TopTokenList);
+export default TopTokenList;

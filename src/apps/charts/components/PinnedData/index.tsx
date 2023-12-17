@@ -17,9 +17,9 @@ import { useNavigate } from "react-router-dom";
 const RightColumn = styled.div<{ open?: boolean }>`
   position: fixed;
   right: 0;
-  top: 0px;
+  top: 60px;
   height: 100vh;
-  width: ${({ open }) => (open ? "160px" : "23px")};
+  width: ${({ open }) => (open ? "160px" : "64px")};
   padding: 1.25rem;
   border-left: ${({ theme }) => "1px solid" + theme.borderBG};
   background-color: ${({ theme }) => theme.bg1};

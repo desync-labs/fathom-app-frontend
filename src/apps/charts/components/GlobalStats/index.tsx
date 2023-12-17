@@ -35,21 +35,19 @@ const GridStats = styled.div`
 
 const GridStatsItem = styled.div`
   background-color: #131f35;
-  height: 36px;
+  height: auto;
+  max-height: 68px;
   display: flex;
   align-items: center;
   border-radius: 6px;
-  padding: 16px;
+  padding: 12px;
   gap: 20px;
-  width: calc(100%- 32px);
   @media (max-width: 600px) {
     padding: 10px;
     gap: 10px;
-    width: calc(100%- 20px);
   }
   @media (max-width: 400px) {
     padding: 10px;
-    width: calc(100%- 20px);
   }
 `;
 

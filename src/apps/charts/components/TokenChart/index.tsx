@@ -138,25 +138,23 @@ const TokenChart: FC<TokenChartProps> = (props) => {
   const below1080 = useMedia("(max-width: 1080px)");
   const below600 = useMedia("(max-width: 600px)");
 
-  let utcStartTime = getTimeframe(timeWindow);
-  const domain = [
-    (dataMin) => (dataMin > utcStartTime ? dataMin : utcStartTime),
-    "dataMax",
-  ];
+  const utcStartTime = getTimeframe(timeWindow);
   const aspect = below1080 ? 60 / 32 : below600 ? 60 / 42 : 60 / 22;
 
-  chartData = chartData?.filter((entry) => entry.date >= utcStartTime);
+  chartData = chartData?.filter(
+    (entry: { date: number }) => entry.date >= utcStartTime
+  );
 
   // update the width on a window resize
-  const ref = useRef();
+  const ref = useRef<HTMLDivElement>(null);
   const isClient = typeof window === "object";
-  const [width, setWidth] = useState(ref?.current?.container?.clientWidth);
+  const [width, setWidth] = useState(ref?.current?.clientWidth);
   useEffect(() => {
     if (!isClient) {
-      return false;
+      return;
     }
     function handleResize() {
-      setWidth(ref?.current?.container?.clientWidth ?? width);
+      setWidth(ref?.current?.clientWidth ?? width);
     }
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -302,7 +300,7 @@ const TokenChart: FC<TokenChartProps> = (props) => {
             />
             <Tooltip
               cursor={true}
-              formatter={(val) => formattedNum(val, true)}
+              formatter={(val) => formattedNum(Number(val), true)}
               labelFormatter={(label) => toNiceDateYear(label)}
               labelStyle={{ paddingTop: 4 }}
               contentStyle={{
@@ -352,7 +350,7 @@ const TokenChart: FC<TokenChartProps> = (props) => {
                 dataKey="date"
                 tick={{ fill: textColor }}
                 type={"number"}
-                domain={domain}
+                domain={["dataMin", "dataMax"]}
               />
               <YAxis
                 type="number"
@@ -367,7 +365,7 @@ const TokenChart: FC<TokenChartProps> = (props) => {
               />
               <Tooltip
                 cursor={true}
-                formatter={(val) => formattedNum(val, true)}
+                formatter={(val) => formattedNum(Number(val), true)}
                 labelFormatter={(label) => toNiceDateYear(label)}
                 labelStyle={{ paddingTop: 4 }}
                 contentStyle={{
@@ -433,7 +431,7 @@ const TokenChart: FC<TokenChartProps> = (props) => {
             />
             <Tooltip
               cursor={{ fill: color, opacity: 0.1 }}
-              formatter={(val) => formattedNum(val, true)}
+              formatter={(val) => formattedNum(Number(val), true)}
               labelFormatter={(label) => toNiceDateYear(label)}
               labelStyle={{ paddingTop: 4 }}
               contentStyle={{

@@ -30,8 +30,8 @@ type CandleStickChartProps = {
   width?: number;
   height?: number;
   base: any;
-  margin: boolean;
-  valueFormatter: (val: string) => void;
+  margin?: boolean;
+  valueFormatter?: (val: string) => void;
 };
 
 const CandleStickChart: FC<CandleStickChartProps> = ({

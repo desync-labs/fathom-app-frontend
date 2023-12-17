@@ -71,7 +71,7 @@ const DropdownSelect = (props: {
         <Dropdown>
           <AutoColumn gap="20px">
             {Object.keys(options).map((key, index) => {
-              let option = options[key];
+              const option = options[key];
               return (
                 option !== active && (
                   <Row

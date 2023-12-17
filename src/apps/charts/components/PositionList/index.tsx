@@ -372,7 +372,7 @@ function PositionList(props: { positions: Position[] }) {
         </Flex>
         <Flex alignItems="center" justifyContent="flex-start">
           <ClickableText
-            onClick={(e) => {
+            onClick={() => {
               setSortedColumn(SORT_FIELD.VALUE);
               setSortDirection(
                 sortedColumn !== SORT_FIELD.VALUE ? true : !sortDirection

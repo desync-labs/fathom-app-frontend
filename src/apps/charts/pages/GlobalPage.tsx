@@ -183,7 +183,7 @@ function GlobalPage() {
                   >
                     Top Tokens
                   </TYPE.main>
-                  <CustomLink to={"/tokens"}>See All</CustomLink>
+                  <CustomLink to={"/charts/tokens"}>See All</CustomLink>
                 </RowBetween>
               </ListOptions>
               <TopTokenList formattedTokens={formattedTokens} />
@@ -207,7 +207,7 @@ function GlobalPage() {
                   text={"Hide untracked pairs"}
                 />
                 <QuestionHelper text="USD amounts may be inaccurate in low liquiidty pairs or pairs without ETH or stablecoins." />
-                <CustomLink to={"/pairs"}>See All</CustomLink>
+                <CustomLink to={"/charts/pairs"}>See All</CustomLink>
               </AutoRow>
             </RowBetween>
           </ListOptions>

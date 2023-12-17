@@ -4,11 +4,14 @@ import { ethers } from "ethers";
 import utc from "dayjs/plugin/utc";
 import { client, blockClient } from "apps/charts/apollo/client";
 import { GET_BLOCK, GET_BLOCKS, SHARE_VALUE } from "apps/charts/apollo/queries";
+import { Text } from "rebass";
 import _Decimal from "decimal.js-light";
-import toFormat from "toformat";
+import * as toFormatImport from "toformat";
 import { timeframeOptions } from "apps/charts/constants";
 import Numeral from "numeral";
 import { ApolloClient } from "@apollo/client";
+
+const toFormat = toFormatImport as any;
 
 // format libraries
 const Decimal = toFormat(_Decimal);
@@ -418,10 +421,7 @@ export function rawPercent(percentRaw: number) {
   return percent.toFixed(0) + "%";
 }
 
-export function formattedPercent(
-  percent: string | number,
-  useBrackets = false
-) {
+export function formattedPercent(percent: string | number) {
   if (typeof percent === "string") {
     percent = parseFloat(percent);
   }

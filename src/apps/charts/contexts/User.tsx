@@ -536,6 +536,9 @@ export function useUserPositions(account: string) {
               };
             })
           );
+
+          console.log({ formattedPositions });
+
           updatePositions(account, formattedPositions);
         }
       } catch (e) {

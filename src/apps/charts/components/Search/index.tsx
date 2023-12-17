@@ -20,7 +20,6 @@ import { client } from "apollo/client";
 import { PAIR_SEARCH, TOKEN_SEARCH } from "apps/charts/apollo/queries";
 import FormattedName from "apps/charts/components/FormattedName";
 import { TYPE } from "apps/charts/Theme";
-import { updateNameData } from "apps/charts/utils/data";
 import { useListedTokens } from "apps/charts/contexts/Application";
 
 const Container = styled.div`
@@ -142,7 +141,7 @@ const MenuItem = styled(Row)`
   }
 `;
 
-const Heading = styled(Row)<{ hide: boolean }>`
+const Heading = styled(Row)<{ hide?: boolean }>`
   padding: 1rem;
   display: ${({ hide = false }) => hide && "none"};
 `;
@@ -162,7 +161,7 @@ export const Search = ({ small = false }) => {
   let allTokens = useAllTokensInUniswap();
   const allTokenData = useAllTokenData();
 
-  let allPairs = useAllPairsInUniswap();
+  let allPairs = useAllPairsInUniswap() as any[];
   const allPairData = useAllPairData();
   const listedTokens = useListedTokens();
 
@@ -187,8 +186,8 @@ export const Search = ({ small = false }) => {
     }
   }, [value]);
 
-  const [searchedTokens, setSearchedTokens] = useState([]);
-  const [searchedPairs, setSearchedPairs] = useState([]);
+  const [searchedTokens, setSearchedTokens] = useState<any[]>([]);
+  const [searchedPairs, setSearchedPairs] = useState<any[]>([]);
 
   useEffect(() => {
     async function fetchData() {
@@ -205,15 +204,13 @@ export const Search = ({ small = false }) => {
           const pairs = await client.query({
             query: PAIR_SEARCH,
             variables: {
-              tokens: tokens.data.asSymbol?.map((t) => t.id),
+              tokens: tokens.data.asSymbol?.map((t: { id: any }) => t.id),
               id: value,
             },
           });
 
           setSearchedPairs(
-            updateNameData(pairs.data.as0)
-              .concat(updateNameData(pairs.data.as1))
-              .concat(updateNameData(pairs.data.asAddress))
+            pairs.data.as0.concat(pairs.data.as1).concat(pairs.data.asAddress)
           );
           const foundTokens = tokens.data.asSymbol
             .concat(tokens.data.asAddress)
@@ -227,16 +224,15 @@ export const Search = ({ small = false }) => {
     fetchData();
   }, [value]);
 
-  function escapeRegExp(string) {
+  function escapeRegExp(string: string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
   }
 
   // add the searched tokens to the list if not found yet
   allTokens = allTokens.concat(
-    searchedTokens.filter((searchedToken) => {
+    searchedTokens.filter((searchedToken: any) => {
       let included = false;
-      updateNameData();
-      allTokens.map((token) => {
+      allTokens.map((token: any) => {
         if (token.id === searchedToken.id) {
           included = true;
         }
@@ -246,10 +242,10 @@ export const Search = ({ small = false }) => {
     })
   );
 
-  const uniqueTokens = [];
-  const found = {};
+  const uniqueTokens: any[] = [];
+  const found = {} as any;
   allTokens &&
-    allTokens.map((token) => {
+    allTokens.map((token: any) => {
       if (!found[token.id]) {
         found[token.id] = true;
         uniqueTokens.push(token);
@@ -270,8 +266,8 @@ export const Search = ({ small = false }) => {
     })
   );
 
-  const uniquePairs = [];
-  const pairsFound = {};
+  const uniquePairs: any[] = [];
+  const pairsFound = {} as any;
   allPairs &&
     allPairs.map((pair) => {
       if (!pairsFound[pair.id]) {
@@ -302,7 +298,7 @@ export const Search = ({ small = false }) => {
             if (TOKEN_BLACKLIST.includes(token.id)) {
               return false;
             }
-            if (!listedTokens.includes(token.id)) {
+            if (!listedTokens?.includes(token.id)) {
               return false;
             }
             const regexMatches = Object.keys(token).map((tokenEntryKey) => {
@@ -355,8 +351,8 @@ export const Search = ({ small = false }) => {
             }
             if (
               !(
-                listedTokens.includes(pair.token0.id) &&
-                listedTokens.includes(pair.token1.id)
+                listedTokens?.includes(pair.token0.id) &&
+                listedTokens?.includes(pair.token1.id)
               )
             ) {
               return false;
@@ -436,13 +432,16 @@ export const Search = ({ small = false }) => {
   }
 
   // refs to detect clicks outside modal
-  const wrapperRef = useRef();
-  const menuRef = useRef();
+  const wrapperRef = useRef<HTMLInputElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
-  const handleClick = (e) => {
+  const handleClick = (e: MouseEvent) => {
     if (
-      !(menuRef.current && menuRef.current.contains(e.target)) &&
-      !(wrapperRef.current && wrapperRef.current.contains(e.target))
+      !(menuRef.current && menuRef.current.contains(e.target as HTMLElement)) &&
+      !(
+        wrapperRef.current &&
+        wrapperRef.current?.contains(e.target as HTMLElement)
+      )
     ) {
       setPairsShown(3);
       setTokensShown(3);
@@ -458,8 +457,8 @@ export const Search = ({ small = false }) => {
   });
 
   return (
-    <Container small={small}>
-      <Wrapper open={showMenu} shadow={true} small={small}>
+    <Container>
+      <Wrapper open={showMenu} small={small}>
         {!showMenu ? (
           <SearchIconLarge />
         ) : (
@@ -503,11 +502,9 @@ export const Search = ({ small = false }) => {
           )}
           {filteredPairList &&
             filteredPairList.slice(0, pairsShown).map((pair) => {
-              //format incorrect names
-              updateNameData(pair);
               return (
                 <BasicLink
-                  to={"/pair/" + pair.id}
+                  to={"/charts/pair/" + pair.id}
                   key={pair.id}
                   onClick={onDismiss}
                 >
@@ -551,11 +548,9 @@ export const Search = ({ small = false }) => {
             </MenuItem>
           )}
           {filteredTokenList.slice(0, tokensShown).map((token) => {
-            // update displayed names
-            updateNameData({ token0: token });
             return (
               <BasicLink
-                to={"/token/" + token.id}
+                to={"/charts/token/" + token.id}
                 key={token.id}
                 onClick={onDismiss}
               >
