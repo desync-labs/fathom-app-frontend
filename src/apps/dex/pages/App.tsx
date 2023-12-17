@@ -23,7 +23,7 @@ const BodyWrapper = styled.div`
   overflow-x: hidden;
   z-index: 1;
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    padding: 16px;
+    padding: 16px 0;
     padding-top: 2rem;
   `};
 `;

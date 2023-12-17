@@ -7,13 +7,13 @@ import {
   FormGroup,
   Grid,
   Stack,
+  styled,
 } from "@mui/material";
 import { ButtonSecondary } from "components/AppComponents/AppButton/AppButton";
 
 import { AppTextField } from "components/AppComponents/AppForm/AppForm";
 import { ProposeLabel, InfoIcon } from "components/Governance/Propose";
 import useCreateProposalActionField from "hooks/useCreateProposalActionField";
-import styled from "@emotion/styled";
 
 type ProposeActionFieldsProps = {
   index: number;
@@ -26,7 +26,10 @@ const ProposeActionFieldTitle = styled(CardHeader)`
 
 const ProposeActionFieldsCard = styled(Card)`
   width: 650px !important;
-  margin-bottom: 10px;
+  margin-bottom: 10px !important;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    width: 100% !important;
+  }
 `;
 
 const RemoveActionButton = styled(ButtonSecondary)`
