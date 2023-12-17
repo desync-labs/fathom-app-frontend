@@ -17,7 +17,7 @@ import BigNumber from "bignumber.js";
 
 import { IVault } from "fathom-sdk";
 import { getTokenLogoURL } from "utils/tokenLogo";
-import { formatNumber } from "utils/format";
+import { formatNumber, formatPercentage } from "utils/format";
 
 import {
   ErrorBox,
@@ -281,7 +281,7 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
             alignItems="flex-start"
             secondaryAction={
               <>
-                {BigNumber(sharedToken || "0").toFormat(6) +
+                {formatPercentage(BigNumber(sharedToken || "0").toNumber()) +
                   " " +
                   shareToken.name}
               </>
