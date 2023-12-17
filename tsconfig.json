@@ -28,7 +28,6 @@
   "exclude": ["node_modules", "playwright-tests"],
   "include": [
     "./src/**/*.ts",
-    "./src/**/*.tsx",
-    "src/components/Confetti/index.js"
+    "./src/**/*.tsx"
   ]
 }

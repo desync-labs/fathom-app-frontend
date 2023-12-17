@@ -292,7 +292,7 @@ function TokenPage({ address }: { address: string }) {
                     fontWeight={500}
                     style={{ margin: "0 1rem" }}
                   >
-                    <RowFixed gap="6px">
+                    <RowFixed style={{ gap: "6px" }}>
                       <FormattedName
                         text={name ? name + " " : ""}
                         maxCharacters={16}
@@ -339,7 +339,7 @@ function TokenPage({ address }: { address: string }) {
                     <ButtonLight>+ Add Liquidity</ButtonLight>
                   </Link>
                   <Link href={getSwapLink(address)} target="_blank">
-                    <ButtonDark ml={".5rem"} mr={below1080 && ".5rem"}>
+                    <ButtonDark ml={".5rem"} mr={below1080 ? ".5rem" : ""}>
                       Trade
                     </ButtonDark>
                   </Link>

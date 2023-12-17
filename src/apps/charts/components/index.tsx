@@ -1,10 +1,10 @@
-import React from "react";
 import styled from "styled-components";
 import { Text, Box } from "rebass";
 
 import Link from "apps/charts/components/Link";
 
 import { urls } from "apps/charts/utils";
+import { FC } from "react";
 
 const Divider = styled(Box)`
   height: 1px;
@@ -48,13 +48,13 @@ export const IconWrapper = styled.div`
   }
 `;
 
-const Hint = ({ children, ...rest }) => (
+const Hint: FC<any> = ({ children, ...rest }) => (
   <Text fontSize={16} weight={500} {...rest}>
     {children}
   </Text>
 );
 
-const Address = ({ address, token, ...rest }) => (
+const Address: FC<any> = ({ address, token, ...rest }) => (
   <Link
     color="button"
     href={token ? urls.showToken(address) : urls.showAddress(address)}

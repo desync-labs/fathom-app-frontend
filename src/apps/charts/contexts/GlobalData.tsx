@@ -49,17 +49,13 @@ const UPDATE_ALL_PAIRS_IN_UNISWAP =
 const UPDATE_ALL_TOKENS_IN_UNISWAP = "UPDATE_ALL_TOKENS_IN_UNISWAP";
 const UPDATE_TOP_LPS = "UPDATE_TOP_LPS";
 
-const offsetVolumes = [];
+const offsetVolumes: any[] = [];
 
 // format dayjs with the libraries that we need
 dayjs.extend(utc);
 dayjs.extend(weekOfYear);
 
-type State = {
-  globalData: any;
-  chartData: any;
-  transactions: any[];
-};
+type State = any;
 
 const GlobalDataContext = createContext({} as [State, any]);
 
@@ -152,7 +148,7 @@ const Provider: FC<ProviderProps> = ({ children }) => {
     });
   }, []);
 
-  const updateChart = useCallback((daily, weekly) => {
+  const updateChart = useCallback((daily: any, weekly: any) => {
     dispatch({
       type: UPDATE_CHART,
       payload: {
@@ -176,7 +172,7 @@ const Provider: FC<ProviderProps> = ({ children }) => {
     []
   );
 
-  const updateAllPairsInUniswap = useCallback((allPairs) => {
+  const updateAllPairsInUniswap = useCallback((allPairs: any[]) => {
     dispatch({
       type: UPDATE_ALL_PAIRS_IN_UNISWAP,
       payload: {
@@ -185,7 +181,7 @@ const Provider: FC<ProviderProps> = ({ children }) => {
     });
   }, []);
 
-  const updateAllTokensInUniswap = useCallback((allTokens) => {
+  const updateAllTokensInUniswap = useCallback((allTokens: any[]) => {
     dispatch({
       type: UPDATE_ALL_TOKENS_IN_UNISWAP,
       payload: {
@@ -194,7 +190,7 @@ const Provider: FC<ProviderProps> = ({ children }) => {
     });
   }, []);
 
-  const updateTopLps = useCallback((topLps) => {
+  const updateTopLps = useCallback((topLps: any[]) => {
     dispatch({
       type: UPDATE_TOP_LPS,
       payload: {
@@ -692,7 +688,7 @@ export function useGlobalTransactions() {
   useEffect(() => {
     async function fetchData() {
       if (!transactions) {
-        let txns = await getGlobalTransactions();
+        const txns = await getGlobalTransactions();
         updateTransactions(txns);
       }
     }
@@ -709,7 +705,7 @@ export function useEthPrice() {
   useEffect(() => {
     async function checkForEthPrice() {
       if (!ethPrice) {
-        let [newPrice, oneDayPrice, priceChange] = await getEthPrice();
+        const [newPrice, oneDayPrice, priceChange] = await getEthPrice();
         updateEthPrice(newPrice, oneDayPrice, priceChange);
       }
     }
@@ -722,14 +718,14 @@ export function useEthPrice() {
 
 export function useAllPairsInUniswap() {
   const [state] = useGlobalDataContext();
-  let allPairs = state?.allPairs;
+  const allPairs = state?.allPairs;
 
   return allPairs || [];
 }
 
 export function useAllTokensInUniswap() {
   const [state] = useGlobalDataContext();
-  let allTokens = state?.allTokens;
+  const allTokens = state?.allTokens;
 
   return allTokens || [];
 }
@@ -740,57 +736,62 @@ export function useAllTokensInUniswap() {
  */
 export function useTopLps() {
   const [state, { updateTopLps }] = useGlobalDataContext();
-  let topLps = state?.topLps;
+  const topLps = state?.topLps;
 
   const allPairs = useAllPairData();
 
   useEffect(() => {
     async function fetchData() {
       // get top 20 by reserves
-      let topPairs = Object.keys(allPairs)
+      const topPairs = Object.keys(allPairs)
         ?.sort((a, b) =>
-          parseFloat(allPairs[a].reserveUSD > allPairs[b].reserveUSD ? -1 : 1)
+          (allPairs as any)[a].reserveUSD > (allPairs as any)[b].reserveUSD
+            ? -1
+            : 1
         )
         ?.slice(0, 99)
         .map((pair) => pair);
 
-      let topLpLists = await Promise.all(
+      const topLpLists = await Promise.all(
         topPairs.map(async (pair) => {
-          // for each one, fetch top LPs
-          try {
-            const { data: results } = await client.query({
-              query: TOP_LPS_PER_PAIRS,
-              variables: {
-                pair: pair.toString(),
-              },
-              fetchPolicy: "cache-first",
-            });
-            if (results) {
-              return results.liquidityPositions;
-            }
-          } catch (e) {}
+          const { data: results } = await client.query({
+            query: TOP_LPS_PER_PAIRS,
+            variables: {
+              pair: pair.toString(),
+            },
+            fetchPolicy: "cache-first",
+          });
+          if (results) {
+            return results.liquidityPositions;
+          }
         })
       );
 
       // get the top lps from the results formatted
-      const topLps = [];
+      const topLps: any[] = [];
       topLpLists
         .filter((i) => !!i) // check for ones not fetched correctly
         .map((list) => {
-          return list.map((entry) => {
-            const pairData = allPairs[entry.pair.id];
-            return topLps.push({
-              user: entry.user,
-              pairName: pairData.token0.symbol + "-" + pairData.token1.symbol,
-              pairAddress: entry.pair.id,
-              token0: pairData.token0.id,
-              token1: pairData.token1.id,
-              usd:
-                (parseFloat(entry.liquidityTokenBalance) /
-                  parseFloat(pairData.totalSupply)) *
-                parseFloat(pairData.reserveUSD),
-            });
-          });
+          return list.map(
+            (entry: {
+              pair: { id: string | number };
+              user: any;
+              liquidityTokenBalance: string;
+            }) => {
+              const pairData = allPairs[entry.pair.id];
+              return topLps.push({
+                user: entry.user,
+                pairName: pairData.token0.symbol + "-" + pairData.token1.symbol,
+                pairAddress: entry.pair.id,
+                token0: pairData.token0.id,
+                token1: pairData.token1.id,
+                usd:
+                  (parseFloat(entry.liquidityTokenBalance) /
+                    parseFloat(pairData.totalSupply)) *
+                  parseFloat(pairData.reserveUSD),
+              });
+            }
+          );
         });
 
       const sorted = topLps.sort((a, b) => (a.usd > b.usd ? -1 : 1));
@@ -811,12 +812,12 @@ export function useFxdPrice() {
 
   const fxdPrice = useMemo(() => {
     if (Object.keys(allPairs).length) {
-      const wxdcFxdPair = Object.values(allPairs).find((pairItem) => {
+      const wxdcFxdPair = Object.values(allPairs).find((pairItem: any) => {
         return pairItem.id === WXDC_FXD_PAIR_ID;
-      });
-      const wxdcUsdtPair = Object.values(allPairs).find((pairItem) => {
+      }) as any;
+      const wxdcUsdtPair = Object.values(allPairs).find((pairItem: any) => {
         return pairItem.id === WXDC_USDT_PAIR_ID;
-      });
+      }) as any;
       return wxdcFxdPair
         ? BigNumber(wxdcFxdPair.token0Price)
             .dividedBy(wxdcUsdtPair.token1Price)
@@ -838,9 +839,9 @@ export function useFTHMPrice() {
 
   const fthmPrice = useMemo(() => {
     if (Object.keys(allPairs).length) {
-      const findPair = Object.values(allPairs).find((pairItem) => {
+      const findPair = Object.values(allPairs).find((pairItem: any) => {
         return pairItem.id === FTHM_WXDC_PAIR_ID;
-      });
+      }) as any;
 
       const price =
         findPair.token0.symbol === "FTHM"

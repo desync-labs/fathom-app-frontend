@@ -37,13 +37,12 @@ import {
   timeframeOptions,
   TRACKED_OVERRIDES_PAIRS,
   TRACKED_OVERRIDES_TOKENS,
-} from "apps/charts/constants/index";
+} from "apps/charts/constants";
 import {
   ProviderProps,
   useLatestBlocks,
   useListedTokens,
 } from "apps/charts/contexts/Application";
-import { updateNameData } from "apps/charts/utils/data";
 
 const UPDATE = "UPDATE";
 const UPDATE_PAIR_TXNS = "UPDATE_PAIR_TXNS";
@@ -241,8 +240,8 @@ async function getBulkPairData(
     const filteredPairs = current.data.pairs.filter(
       (pair: { token0: { id: any }; token1: { id: any } }) => {
         return (
-          (listedTokens as any).includes(pair.token0.id) &&
-          (listedTokens as any).includes(pair.token1.id)
+          (listedTokens as any)?.includes(pair.token0.id) &&
+          (listedTokens as any)?.includes(pair.token1.id)
         );
       }
     );
@@ -257,7 +256,7 @@ async function getBulkPairData(
     );
 
     const oneDayData = oneDayResult?.data?.pairs.reduce(
-      (obj: any, cur: { id: any }, i: any) => {
+      (obj: any, cur: { id: any }) => {
         return { ...obj, [cur.id]: cur };
       },
       {}
@@ -396,9 +395,6 @@ function parseData(
     data.volumeChangeUSD = volumeChangeUntracked;
     data.trackedReserveUSD = data.reserveUSD;
   }
-
-  // format incorrect names
-  updateNameData(data);
 
   return data;
 }

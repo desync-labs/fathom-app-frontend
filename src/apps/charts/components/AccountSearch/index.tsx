@@ -74,7 +74,7 @@ const DashGrid = styled.div`
 export const HeaderWrapper = styled(DashGrid)`
   background: ${({ theme }) => theme.headerBackground};
   border-radius: 8px;
-  padding: 0 1.125rem 1rem;
+  padding: 0.5rem 1.125rem 0.5rem;
   color: ${({ theme }) => theme.primaryText2};
   text-transform: uppercase;
   font-size: 11px;

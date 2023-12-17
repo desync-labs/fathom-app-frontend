@@ -1,5 +1,5 @@
-import { USER_MINTS_BUNRS_PER_PAIR } from "apps/charts/apollo/queries";
-import { client } from "apollo/client";
+import { USER_MINTS_BURNS_PER_PAIR } from "apps/charts/apollo/queries";
+import { client } from "apps/charts/apollo/client";
 import dayjs from "dayjs";
 import { getShareValueOverTime } from "apps/charts/utils";
 
@@ -23,7 +23,7 @@ export interface Position {
   token1PriceUSD: number;
   timestamp?: number;
   fees?: any;
-  uniswap: any;
+  uniswap?: any;
 }
 
 const PRICE_DISCOVERY_START_TIMESTAMP = 1589747086;
@@ -51,7 +51,7 @@ async function getPrincipalForUserPerPair(user: string, pairAddress: string) {
   let amount1 = 0;
   // get all minst and burns to get principal amounts
   const results = await client.query({
-    query: USER_MINTS_BUNRS_PER_PAIR,
+    query: USER_MINTS_BURNS_PER_PAIR,
     variables: {
       user,
       pair: pairAddress,
@@ -281,15 +281,7 @@ export async function getHistoricalPairReturns(
  */
 export async function getLPReturnsOnPair(
   user: string,
-  pair: {
-    id: string;
-    totalSupply: any;
-    reserve0: any;
-    reserve1: any;
-    reserveUSD: any;
-    token0: { derivedETH: number };
-    token1: { derivedETH: number };
-  },
+  pair: any,
   ethPrice: number,
   snapshots: any[]
 ) {

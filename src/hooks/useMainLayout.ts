@@ -27,6 +27,7 @@ const useMainLayout = () => {
     useState<boolean>(false);
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] =
     useState<boolean>(false);
+  const [savedOpen, setSavedOpen] = useState<boolean>(false);
 
   const aggregateBalance: TokenAmount | undefined = useAggregateUniBalance();
 
@@ -128,6 +129,8 @@ const useMainLayout = () => {
   );
 
   return {
+    savedOpen,
+    setSavedOpen,
     scroll,
     account,
     error,

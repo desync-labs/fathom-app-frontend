@@ -110,7 +110,7 @@ export function theme(): DefaultTheme {
       display: flex;
       flex-flow: row nowrap;
     `,
-  };
+  } as DefaultTheme;
 }
 
 export default function ThemeProvider({

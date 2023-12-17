@@ -1,8 +1,8 @@
 import {
   ThemeProvider as StyledComponentsThemeProvider,
   createGlobalStyle,
-  DefaultTheme,
 } from "styled-components";
+import { DefaultTheme } from "styled-components";
 import styled from "styled-components";
 import { Text, TextProps } from "rebass";
 import { FC, ReactNode } from "react";
@@ -21,7 +21,7 @@ const ThemeProvider: FC<ThemeProviderProps> = ({ children }) => {
 
 export default ThemeProvider;
 
-const theme = (): DefaultTheme =>
+export const theme = (): DefaultTheme =>
   ({
     textColor: "white",
 

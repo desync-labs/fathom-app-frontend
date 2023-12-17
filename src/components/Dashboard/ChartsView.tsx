@@ -2,11 +2,17 @@ import { useLocation } from "react-router-dom";
 import { FC, useMemo } from "react";
 import { GovernanceIcon, StakingIcon } from "components/Common/MenuIcons";
 import {
-  NestedRouteContainer,
   NestedRouteLink,
   NestedRouteNav,
 } from "components/AppComponents/AppBox/AppBox";
 import ChartsIndexComponent from "apps/charts";
+import { styled } from "@mui/material/styles";
+
+const ChartsNestedRouteContainer = styled("div")`
+  width: 100%;
+  margin: 0;
+  padding: 0;
+`;
 
 const ChartsView: FC = () => {
   const location = useLocation();
@@ -69,9 +75,9 @@ const ChartsView: FC = () => {
           Accounts
         </NestedRouteLink>
       </NestedRouteNav>
-      <NestedRouteContainer maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+      <ChartsNestedRouteContainer>
         <ChartsIndexComponent />
-      </NestedRouteContainer>
+      </ChartsNestedRouteContainer>
     </>
   );
 };

@@ -14,7 +14,6 @@ import {
   toNiceDate,
   toNiceDateYear,
   formattedNum,
-  getTimeframe,
 } from "apps/charts/utils";
 import { OptionButton } from "apps/charts/components/ButtonStyled";
 import { useMedia } from "react-use";
@@ -41,15 +40,9 @@ const UserChart: FC<UserChartProps> = (props) => {
   const chartData = useUserLiquidityChart(account);
 
   const [timeWindow, setTimeWindow] = useState(timeframeOptions.ALL_TIME);
-  const utcStartTime = getTimeframe(timeWindow);
 
   const below600 = useMedia("(max-width: 600px)");
   const above1600 = useMedia("(min-width: 1600px)");
-
-  const domain = [
-    (dataMin: number) => (dataMin > utcStartTime ? dataMin : utcStartTime),
-    "dataMax",
-  ];
 
   const aspect = above1600 ? 60 / 12 : below600 ? 60 / 42 : 60 / 16;
 
@@ -97,7 +90,7 @@ const UserChart: FC<UserChartProps> = (props) => {
         </RowBetween>
       )}
       {chartData ? (
-        <ResponsiveContainer aspect={aspect} style={{ height: "inherit" }}>
+        <ResponsiveContainer aspect={aspect}>
           <AreaChart
             margin={{ top: 0, right: 10, bottom: 6, left: 0 }}
             barCategoryGap={1}
@@ -119,7 +112,7 @@ const UserChart: FC<UserChartProps> = (props) => {
               dataKey="date"
               tick={{ fill: textColor }}
               type={"number"}
-              domain={domain}
+              domain={["dataMin", "dataMax"]}
             />
             <YAxis
               type="number"

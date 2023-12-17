@@ -119,7 +119,7 @@ function LPList(props: { lps: any; maxItems?: number }) {
         <DataText fontWeight="500" justifyContent="flex-start">
           <CustomLink
             style={{ marginLeft: below600 ? 0 : "1rem", whiteSpace: "nowrap" }}
-            to={"/account/" + lp.user.id}
+            to={"/charts/account/" + lp.user.id}
           >
             {below800
               ? lp.user.id.slice(0, 4) + "..." + lp.user.id.slice(38, 42)
@@ -134,7 +134,7 @@ function LPList(props: { lps: any; maxItems?: number }) {
         )} */}
 
         <DataText>
-          <CustomLink to={"/pair/" + lp.pairAddress}>
+          <CustomLink to={"/charts/pair/" + lp.pairAddress}>
             <RowFixed>
               {!below600 && (
                 <DoubleTokenLogo

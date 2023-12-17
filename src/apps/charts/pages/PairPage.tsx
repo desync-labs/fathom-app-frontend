@@ -19,7 +19,7 @@ import { AutoRow, RowBetween, RowFixed } from "apps/charts/components/Row";
 import Column, { AutoColumn } from "apps/charts/components/Column";
 import { ButtonLight, ButtonDark } from "apps/charts/components/ButtonStyled";
 import PairChart from "apps/charts/components/PairChart";
-import Link from "apps/charts/components/Link";
+import Link, { CustomLink } from "apps/charts/components/Link";
 import TxnList from "apps/charts/components/TxnList";
 import Loader from "apps/charts/components/LocalLoader";
 import { BasicLink } from "apps/charts/components/Link";
@@ -371,7 +371,7 @@ function PairPage({ pairAddress }: { pairAddress: string }) {
                 </RowFixed>
                 <RowFixed
                   ml={below900 ? "0" : "2.5rem"}
-                  mt={below1080 && "1rem"}
+                  mt={below1080 ? "1rem" : ""}
                   style={{
                     flexDirection: below1080 ? "row-reverse" : "initial",
                   }}
@@ -402,17 +402,17 @@ function PairPage({ pairAddress }: { pairAddress: string }) {
                     <></>
                   )}
 
-                  <Link external href={getPoolLink(token0?.id, token1?.id)}>
+                  <CustomLink to={getPoolLink(token0?.id, token1?.id)}>
                     <ButtonLight>+ Add Liquidity</ButtonLight>
-                  </Link>
-                  <Link external href={getSwapLink(token0?.id, token1?.id)}>
+                  </CustomLink>
+                  <CustomLink to={getSwapLink(token0?.id, token1?.id)}>
                     <ButtonDark
-                      ml={!below1080 && ".5rem"}
-                      mr={below1080 && ".5rem"}
+                      ml={!below1080 ? ".5rem" : ""}
+                      mr={below1080 ? ".5rem" : ""}
                     >
                       Trade
                     </ButtonDark>
-                  </Link>
+                  </CustomLink>
                 </RowFixed>
               </div>
             </AutoColumn>

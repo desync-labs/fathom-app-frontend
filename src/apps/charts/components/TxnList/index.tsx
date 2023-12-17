@@ -15,7 +15,6 @@ import { Divider, EmptyCard } from "..";
 import DropdownSelect from "apps/charts/components/DropdownSelect";
 import FormattedName from "apps/charts/components/FormattedName";
 import { TYPE } from "apps/charts/Theme";
-import { updateNameData } from "apps/charts/utils/data";
 import { TableHeaderBox } from "apps/charts/components/Row";
 
 dayjs.extend(utc);
@@ -172,7 +171,7 @@ function getTransactionType(event: any, symbol0: string, symbol1: string) {
 }
 
 function TxnList(props: {
-  transactions: any[];
+  transactions: any;
   symbol0Override?: any;
   symbol1Override?: any;
   color?: any;
@@ -369,7 +368,7 @@ function TxnList(props: {
                 margin={true}
               />
             </DataText>
-            <DataText area="amountToken">
+            <DataText>
               {formattedNum(item.token0Amount) + " "}{" "}
               <FormattedName
                 text={item.token0Symbol}
@@ -380,7 +379,7 @@ function TxnList(props: {
           </>
         )}
         {!below1080 && (
-          <DataText area="account">
+          <DataText>
             <Link
               color={color}
               external
@@ -394,7 +393,7 @@ function TxnList(props: {
             </Link>
           </DataText>
         )}
-        <DataText area="time">{formatTime(item.timestamp)}</DataText>
+        <DataText>{formatTime(item.timestamp)}</DataText>
       </DashGrid>
     );
   };
@@ -412,7 +411,7 @@ function TxnList(props: {
             />
           </RowBetween>
         ) : (
-          <RowFixed gap="10px" pl={4}>
+          <RowFixed pl={4}>
             <SortText
               onClick={() => {
                 setTxFilter(TXN_TYPE.ALL);
@@ -449,14 +448,12 @@ function TxnList(props: {
         )}
       </Box>
       <HeaderWrapper
-        center={true}
         style={{ height: "fit-content", padding: "0 1.125rem 1rem" }}
       >
         <Flex alignItems="center" justifyContent="flex-start">
           <ClickableText
             color="textDim"
-            area="value"
-            onClick={(e) => {
+            onClick={() => {
               setSortedColumn(SORT_FIELD.VALUE);
               setSortDirection(
                 sortedColumn !== SORT_FIELD.VALUE ? true : !sortDirection
@@ -476,7 +473,6 @@ function TxnList(props: {
         {!below780 && (
           <Flex alignItems="center">
             <ClickableText
-              area="amountToken"
               color="textDim"
               onClick={() => {
                 setSortedColumn(SORT_FIELD.AMOUNT0);
@@ -500,7 +496,6 @@ function TxnList(props: {
           {!below780 && (
             <Flex alignItems="center">
               <ClickableText
-                area="amountOther"
                 color="textDim"
                 onClick={() => {
                   setSortedColumn(SORT_FIELD.AMOUNT1);
@@ -524,15 +519,14 @@ function TxnList(props: {
           )}
           {!below1080 && (
             <Flex alignItems="center">
-              <TableHeaderBox area="account">Account</TableHeaderBox>
+              <TableHeaderBox>Account</TableHeaderBox>
             </Flex>
           )}
           <Flex alignItems="center">
-            <TableHeaderBox area="account">Transaction</TableHeaderBox>
+            <TableHeaderBox>Transaction</TableHeaderBox>
           </Flex>
           <Flex alignItems="center">
             <ClickableText
-              area="time"
               color="textDim"
               onClick={() => {
                 setSortedColumn(SORT_FIELD.TIMESTAMP);
@@ -562,7 +556,7 @@ function TxnList(props: {
           filteredList.map((item, index) => {
             return (
               <div key={index}>
-                <ListItem key={index} index={index + 1} item={item} />
+                <ListItem key={index} item={item} />
                 <Divider />
               </div>
             );
@@ -571,7 +565,7 @@ function TxnList(props: {
       </List>
       <PageButtons>
         <div
-          onClick={(e) => {
+          onClick={() => {
             setPage(page === 1 ? page : page - 1);
           }}
         >
@@ -579,7 +573,7 @@ function TxnList(props: {
         </div>
         <TYPE.body>{"Page " + page + " of " + maxPage}</TYPE.body>
         <div
-          onClick={(e) => {
+          onClick={() => {
             setPage(page === maxPage ? page : page + 1);
           }}
         >

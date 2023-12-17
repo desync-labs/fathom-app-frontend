@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, FC } from "react";
-import { createChart } from "lightweight-charts";
+import { createChart, IChartApi } from "lightweight-charts";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { formattedNum } from "apps/charts/utils";
@@ -26,14 +26,14 @@ const Wrapper = styled.div`
 const HEIGHT = 300;
 
 type TradingViewChartProps = {
-  type?: string | undefined;
+  type?: string;
   data: any;
   base: any;
   baseChange: any;
   field: any;
   title: any;
   width: any;
-  useWeekly?: false | undefined;
+  useWeekly?: boolean;
   below800: any;
 };
 
@@ -50,10 +50,10 @@ const TradingViewChart: FC<TradingViewChartProps> = (props) => {
     below800,
   } = props;
   // reference for DOM element to create with chart
-  const ref = useRef();
+  const ref = useRef<HTMLDivElement>(null);
 
   // pointer to the chart object
-  const [chartCreated, setChartCreated] = useState(false);
+  const [chartCreated, setChartCreated] = useState<IChartApi | null>(null);
   const dataPrev = usePrevious(data);
 
   const [darkMode] = useDarkModeManager();
@@ -63,18 +63,21 @@ const TradingViewChart: FC<TradingViewChartProps> = (props) => {
   useEffect(() => {
     if (data !== dataPrev && chartCreated && type === CHART_TYPES.BAR) {
       // remove the tooltip element
-      let tooltip = document.getElementById("tooltip-id" + type);
-      let node = document.getElementById("test-id" + type);
-      node.removeChild(tooltip);
+      const tooltip = document.getElementById("tooltip-id" + type);
+      const node = document.getElementById("test-id" + type);
+      node?.removeChild(tooltip as HTMLElement);
       chartCreated.resize(0, 0);
-      setChartCreated();
+      setChartCreated(null);
     }
   }, [chartCreated, data, dataPrev, type]);
 
   // parese the data and format for tardingview consumption
-  const formattedData = data?.map((entry) => {
+  const formattedData = data?.map((entry: any) => {
     return {
-      time: dayjs.unix(entry.date).utc().format("YYYY-MM-DD"),
+      time: dayjs
+        .unix(entry.date as number)
+        .utc()
+        .format("YYYY-MM-DD"),
       value: parseFloat(entry[field]),
     };
   });
@@ -86,18 +89,18 @@ const TradingViewChart: FC<TradingViewChartProps> = (props) => {
   useEffect(() => {
     if (chartCreated && previousTheme !== darkMode) {
       // remove the tooltip element
-      let tooltip = document.getElementById("tooltip-id" + type);
-      let node = document.getElementById("test-id" + type);
-      node.removeChild(tooltip);
+      const tooltip = document.getElementById("tooltip-id" + type);
+      const node = document.getElementById("test-id" + type);
+      node?.removeChild(tooltip as HTMLElement);
       chartCreated.resize(0, 0);
-      setChartCreated();
+      setChartCreated(null);
     }
   }, [chartCreated, darkMode, previousTheme, type]);
 
   // if no chart created yet, create one with options and add to DOM manually
   useEffect(() => {
     if (!chartCreated && formattedData) {
-      const chart = createChart(ref.current, {
+      const chart = createChart(ref.current as HTMLDivElement, {
         width: width,
         height: HEIGHT,
         layout: {
@@ -138,7 +141,7 @@ const TradingViewChart: FC<TradingViewChartProps> = (props) => {
           },
         },
         localization: {
-          priceFormatter: (val) => formattedNum(val, true),
+          priceFormatter: (val: any) => formattedNum(val, true),
         },
       });
 
@@ -155,7 +158,7 @@ const TradingViewChart: FC<TradingViewChartProps> = (props) => {
               },
               lineColor: "#003CFF",
               lineWidth: 3,
-            })
+            } as any)
           : chart.addAreaSeries({
               topColor: "#003CFF",
               bottomColor: "#003CFF",
@@ -169,7 +172,7 @@ const TradingViewChart: FC<TradingViewChartProps> = (props) => {
       toolTip.className = darkMode
         ? "three-line-legend-dark"
         : "three-line-legend";
-      ref.current.appendChild(toolTip);
+      (ref.current as HTMLElement).appendChild(toolTip);
       toolTip.style.display = "block";
       toolTip.style.fontWeight = "500";
       toolTip.style.left = -4 + "px";
@@ -177,14 +180,14 @@ const TradingViewChart: FC<TradingViewChartProps> = (props) => {
       toolTip.style.backgroundColor = "transparent";
 
       // format numbers
-      let percentChange = baseChange?.toFixed(2);
-      let formattedPercentChange =
+      const percentChange = baseChange?.toFixed(2);
+      const formattedPercentChange =
         (percentChange > 0 ? "+" : "") + percentChange + "%";
-      let percentageBackgroundColor =
+      const percentageBackgroundColor =
         percentChange >= 0 ? "#173D0F" : "#811717";
 
       // get the title of the chart
-      function setLastBarText() {
+      const setLastBarText = () => {
         toolTip.innerHTML = !below800
           ? `<div style="position: absolute; top: -42px; font-size: 16px; margin: 4px 0px; color: white;">${title} ${
               type === CHART_TYPES.BAR && !useWeekly ? "(24hr)" : ""
@@ -196,8 +199,7 @@ const TradingViewChart: FC<TradingViewChartProps> = (props) => {
                 margin-left: 10px;
                 display: flex;
                 align-items: center;
-                gap: 7px;                          
-                font-size: 16px;
+                gap: 7px;                                         
                 font-size: 12px;
                 border-radius: 6px;
                 background-color: ${percentageBackgroundColor};
@@ -210,11 +212,12 @@ ${formattedPercentChange}
 </span>` +
             "</div>"
           : "";
-      }
+      };
       setLastBarText();
 
       // update the title when hovering on the chart
-      chart.subscribeCrosshairMove(function (param) {
+      chart.subscribeCrosshairMove(function (prop) {
+        const param = prop as any;
         if (
           param === undefined ||
           param.time === undefined ||
@@ -225,7 +228,7 @@ ${formattedPercentChange}
         ) {
           setLastBarText();
         } else {
-          let dateStr = useWeekly
+          const dateStr = useWeekly
             ? dayjs(
                 param.time.year + "-" + param.time.month + "-" + param.time.day
               )
@@ -240,7 +243,8 @@ ${formattedPercentChange}
             : dayjs(
                 param.time.year + "-" + param.time.month + "-" + param.time.day
               ).format("MMMM D, YYYY");
-          var price = param.seriesPrices.get(series);
+
+          const price = param.seriesPrices?.get(series);
 
           toolTip.innerHTML =
             `<div style="font-size: 16px; position: absolute; top: -42px; margin: 4px 0px; color: white;">${title}</div>` +
@@ -277,7 +281,7 @@ ${formattedPercentChange}
   useEffect(() => {
     if (width) {
       chartCreated && chartCreated.resize(width, HEIGHT);
-      chartCreated && chartCreated.timeScale().scrollToPosition(0);
+      chartCreated && chartCreated.timeScale().scrollToPosition(0, false);
     }
   }, [chartCreated, width]);
 

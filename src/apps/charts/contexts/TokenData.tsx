@@ -37,7 +37,6 @@ import {
   useLatestBlocks,
   useListedTokens,
 } from "apps/charts/contexts/Application";
-import { updateNameData } from "apps/charts/utils/data";
 
 const UPDATE = "UPDATE";
 const UPDATE_TOKEN_TXNS = "UPDATE_TOKEN_TXNS";
@@ -372,11 +371,6 @@ const getTopTokens = async (ethPrice, ethPriceOld, fxdPrice, listedTokens) => {
             data.oneDayTxns = data.txCount;
           }
 
-          // update name data for
-          updateNameData({
-            token0: data,
-          });
-
           // used for custom adjustments
           data.oneDayData = oneDayHistory;
           data.twoDayData = twoDayHistory;
@@ -510,11 +504,6 @@ const getTokenData = async (
       data.oneDayVolumeETH = data.tradeVolume * data.derivedETH;
       data.oneDayTxns = data.txCount;
     }
-
-    // update name data for
-    updateNameData({
-      token0: data,
-    });
   } catch (e) {
     console.log(e);
   }
