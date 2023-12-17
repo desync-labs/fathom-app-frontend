@@ -106,9 +106,10 @@ const CandleStickChart: FC<CandleStickChartProps> = ({
   useEffect(() => {
     if (!chartCreated) {
       const chart = createChart(ref.current as unknown as HTMLElement, {
-        width: Number(width),
-        height: Number(height),
+        width: width,
+        height: height,
         layout: {
+          backgroundColor: "transparent",
           textColor: textColor,
         },
         grid: {
@@ -130,7 +131,7 @@ const CandleStickChart: FC<CandleStickChartProps> = ({
           borderColor: "rgba(197, 203, 206, 0.8)",
         },
         localization: {
-          priceFormatter: (val: string) => formattedNum(val),
+          priceFormatter: (val: any) => formattedNum(val),
         },
       });
 

@@ -111,14 +111,7 @@ const DataText = styled(Flex)`
   align-items: center;
   text-align: right;
   color: ${({ theme }) => theme.text1};
-
-  & > * {
-    font-size: 1em;
-  }
-
-  @media screen and (max-width: 40em) {
-    font-size: 0.85rem;
-  }
+  font-size: 0.85rem;
 `;
 
 const SortText = styled.button<{ active?: boolean }>`
