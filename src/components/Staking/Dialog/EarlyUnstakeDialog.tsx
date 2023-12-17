@@ -129,6 +129,7 @@ const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({
       <DialogContent>
         <ModalDescription>
           Position lock time has not yet passed - by requesting Early Unstake -
+          <br />
           you will pay the penalty. <br />
           Ensure you Claim Rewards before Unstaking so as not to lose your
           rewards.
