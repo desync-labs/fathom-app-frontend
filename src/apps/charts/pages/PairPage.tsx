@@ -152,7 +152,7 @@ const HeaderWrapper = styled.div`
   padding-bottom: 7px !important;
 `;
 
-function PairPage({ pairAddress }: { pairAddress: string }) {
+const PairPage: FC<{ pairAddress: string }> = ({ pairAddress }) => {
   const {
     token0,
     token1,
@@ -305,8 +305,8 @@ function PairPage({ pairAddress }: { pairAddress: string }) {
       <ContentWrapperLarge>
         <RowBetween>
           <TYPE.body>
-            <BasicLink to="/pairs">{"Pairs "}</BasicLink>→ {token0?.symbol}-
-            {token1?.symbol}
+            <BasicLink to="/charts/pairs">{"Pairs "}</BasicLink>→{" "}
+            {token0?.symbol}-{token1?.symbol}
           </TYPE.body>
           {!below600 && <Search small={true} />}
         </RowBetween>
@@ -348,7 +348,7 @@ function PairPage({ pairAddress }: { pairAddress: string }) {
                         <>
                           <HoverSpan
                             onClick={() =>
-                              navigate(`/carts/token/${token0?.id}`)
+                              navigate(`/charts/token/${token0?.id}`)
                             }
                           >
                             {token0.symbol}
@@ -376,7 +376,7 @@ function PairPage({ pairAddress }: { pairAddress: string }) {
                     flexDirection: below1080 ? "row-reverse" : "initial",
                   }}
                 >
-                  {savedPairs[pairAddress] && !below1080 ? (
+                  {!savedPairs[pairAddress] && !below1080 ? (
                     <Hover
                       onClick={() =>
                         addPair(
@@ -704,7 +704,7 @@ function PairPage({ pairAddress }: { pairAddress: string }) {
       </ContentWrapperLarge>
     </PageWrapper>
   );
-}
+};
 
 type PairPageRouterComponentProps = {
   savedOpen: boolean;
