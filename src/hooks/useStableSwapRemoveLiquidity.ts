@@ -71,6 +71,8 @@ const useStableSwapRemoveLiquidity = () => {
 
     const { "0": fxdLiquidity, "1": stableLiquidity } = liquidityPerUser as any;
 
+    console.log(depositTracker.toString());
+
     setFxdDecimals(fxdDecimals.toString());
     setStableDecimals(stableDecimals.toString());
     setFxdBalance(fxdBalance.toString());
@@ -136,7 +138,7 @@ const useStableSwapRemoveLiquidity = () => {
     try {
       setRemoveLiquidityPending(true);
       const blockNumber = await stableSwapService.removeLiquidity(
-        Number(inputValue),
+        inputValue,
         account
       );
       setLastTransactionBlock(blockNumber as number);

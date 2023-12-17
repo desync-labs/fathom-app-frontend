@@ -23,7 +23,7 @@ export const AppTextField = styled(MuiTextField)`
     &:hover,
     &:focus {
       border: 1px solid #5a81ff;
-      box-shadow: 0px 0px 8px #003cff;
+      box-shadow: 0 0 8px #003cff;
     }
   }
 
@@ -50,24 +50,24 @@ export const AppTextField = styled(MuiTextField)`
     width: 100%;
   }
 
+  & input:disabled,
+  textarea:disabled {
+    background: unset;
+    border: 1px solid #3d5580;
+    color: #3d5580;
+    cursor: not-allowed;
+    pointer-events: all;
+    &:hover,
+    &:focus {
+      box-shadow: unset;
+    }
+  }
+
   & .Mui-error input,
   & .Mui-error textarea {
     color: #f44336;
     text-fill-color: #f44336;
     border: 1px solid #f44336;
-  }
-
-  & input:disabled,
-  textarea:disabled {
-    background: unset !important;
-    border: 1px solid #3d5580 !important;
-    color: #3d5580 !important;
-    cursor: not-allowed !important;
-    pointer-events: all !important;
-    &:hover,
-    &:focus {
-      box-shadow: unset !important;
-    }
   }
 
   & fieldset {

@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { IVault, IVaultPosition } from "fathom-sdk";
 import { useForm } from "react-hook-form";
 import BigNumber from "bignumber.js";
 import debounce from "lodash.debounce";
 import useConnector from "context/connector";
 import { useServices } from "context/services";
 import useSyncContext from "context/sync";
-import { IVault, IVaultPosition } from "fathom-sdk";
 
 export const defaultValues = {
   formToken: "",
@@ -24,11 +24,6 @@ const useVaultManageDeposit = (
   const { account, library } = useConnector();
   const { poolService, vaultService } = useServices();
   const { setLastTransactionBlock } = useSyncContext();
-
-  console.log({
-    vault,
-    vaultPosition,
-  });
 
   const {
     handleSubmit,
@@ -109,7 +104,7 @@ const useVaultManageDeposit = (
             .toString(),
           vault.id
         )
-        .then((balanceToken) => {
+        .then((balanceToken: string) => {
           setBalanceToken(balanceToken);
         });
     },

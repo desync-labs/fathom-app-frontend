@@ -9,8 +9,8 @@ import BigNumber from "bignumber.js";
 
 const useStakingItemView = (lockPosition: ILockPosition) => {
   const [seconds, setSeconds] = useState(lockPosition.end - Date.now() / 1000);
+  const [timer, setTimer] = useState<ReturnType<typeof setInterval>>();
   const { processFlow, isUnlockable } = useStakingContext();
-  const [timer, setTimer] = useState<ReturnType<typeof setTimeout> | null>();
   const { account, library } = useConnector();
   const { stakingService } = useServices();
   const [rewardsAvailable, setRewardsAvailable] = useState<string>(
@@ -37,13 +37,14 @@ const useStakingItemView = (lockPosition: ILockPosition) => {
 
   useEffect(() => {
     if (seconds > 0 && !timer) {
-      const identifier = setTimeout(() => {
-        setTimer(null);
-        setSeconds(seconds - 1);
+      const interval = setInterval(() => {
+        setSeconds((seconds) => seconds - 1);
       }, 1000);
-      setTimer(identifier);
+      setTimer(interval);
+    } else if (seconds <= 0 && timer) {
+      clearInterval(timer);
     }
-  }, [timer, seconds, setSeconds, setTimer]);
+  }, [seconds, timer, setSeconds, setTimer]);
 
   useEffect(() => {
     if (seconds > 0 && Math.floor(seconds % 30) === 0) {
