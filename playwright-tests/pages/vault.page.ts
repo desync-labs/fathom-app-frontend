@@ -1,6 +1,6 @@
 import { type Page, type Locator } from "@playwright/test";
 import BasePage from "./base.page";
-
+import { extractNumericValue } from "../utils/helpers";
 export default class VaultPage extends BasePage {
   readonly path: string;
   readonly btnManageVault: Locator;
@@ -16,15 +16,15 @@ export default class VaultPage extends BasePage {
   }
 
   getVaultRowLocatorByName(name: string): Locator {
-    return this.page.locator(`tr[data-testid="vaultRow-${name}"]`);
+    return this.page.locator(`[data-testid="vaultRow-${name}"]`);
   }
 
   getVaultRowDetailsLocatorByName(name: string): Locator {
-    return this.page.locator(`tr[data-testid="vaultRowDetails-${name}"]`);
+    return this.page.locator(`[data-testid="vaultRowDetails-${name}"]`);
   }
 
   getActionButtonRowLocatorByName(name: string): Locator {
-    return this.getVaultRowLocatorByName(name).locator("//td[last()]/button");
+    return this.page.locator(`[data-testid="vaultRow-${name}-depositButton"]`);
   }
 
   getActionButtonRowDetailsLocatorByName(name: string): Locator {
@@ -32,26 +32,26 @@ export default class VaultPage extends BasePage {
   }
 
   async getStakedVaultRowValue(name: string): Promise<number | null> {
-    const stakedValue = await this.getVaultRowLocatorByName(name)
-      .locator(`//td[7]//div[contains(@class, "value")]`)
+    const stakedValue = await this.page
+      .locator(
+        `[data-testid="vaultRow-${name}-stakedValueCell"] div[class*="value"]`
+      )
       .textContent();
     if (stakedValue !== null) {
-      return this.extractStakedValue(stakedValue);
+      return extractNumericValue(stakedValue);
     } else {
       return null;
     }
   }
 
-  getStakedValueVaultRowDetails(name: string): Locator {
-    return this.getVaultRowLocatorByName(name).locator("//td[3]");
-  }
-
-  extractStakedValue(inputString: string): number | null {
-    const match = inputString.match(/(\d+(,\d{3})*|\d+)/);
-    if (match) {
-      const numericPart = match[0];
-      const numericValue = parseInt(numericPart.replace(/,/g, ""), 10);
-      return numericValue;
+  async getPooledVaultRowDetailsValue(name: string): Promise<number | null> {
+    const pooledValue = await this.page
+      .locator(
+        `[data-testid="vaultRowDetails-${name}-itemPositionInfo-earningDetails-pooledValue"]`
+      )
+      .textContent();
+    if (pooledValue !== null) {
+      return extractNumericValue(pooledValue);
     } else {
       return null;
     }
