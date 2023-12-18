@@ -62,7 +62,7 @@ export const XDC_NETWORK_SETTINGS = {
   51: {
     chainName: "Apothem",
     chainId: `0x${(51).toString(16)}`,
-    nativeCurrency: { name: "Apothem", decimals: 18, symbol: "AXDC" },
+    nativeCurrency: { name: "Apothem", decimals: 18, symbol: "TXDC" },
     rpcUrls: [APOTHEM_RPC],
   },
 };
