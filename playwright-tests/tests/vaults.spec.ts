@@ -25,14 +25,28 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     await vaultPage.navigate();
     await vaultPage.connectWallet(WalletConnectOptions.Metamask);
     await vaultPage.validateConnectedWalletAddress();
-    const stakedAmountBefore = await vaultPage.getStakedVaultRowValue(
+    const tvlValueBefore = await vaultPage.getTvlVaultRowValue(
       fxdVaultData.name
     );
-    const pooledAmountBefore = await vaultPage.getPooledVaultRowDetailsValue(
+    const availableValueBefore = await vaultPage.getAvailableVaultRowValue(
       fxdVaultData.name
     );
-    console.log(stakedAmountBefore);
-    console.log(pooledAmountBefore);
+    const stakedValueBefore = await vaultPage.getStakedVaultRowValue(
+      fxdVaultData.name
+    );
+    const pooledValueBefore = await vaultPage.getPooledVaultRowDetailsValue(
+      fxdVaultData.name
+    );
+    const yourShareValueBefore =
+      await vaultPage.getYourShareVaultRowDetailsValue(fxdVaultData.name);
+    const shareTokenValueBefore =
+      await vaultPage.getShareTokenVaultRowDetailsValue(fxdVaultData.name);
+    console.log(tvlValueBefore);
+    console.log(availableValueBefore);
+    console.log(stakedValueBefore);
+    console.log(pooledValueBefore);
+    console.log(yourShareValueBefore);
+    console.log(shareTokenValueBefore);
     // TO DO - Continue the test
   });
 });
