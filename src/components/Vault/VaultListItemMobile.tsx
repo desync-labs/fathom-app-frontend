@@ -2,6 +2,7 @@ import { FC, useMemo } from "react";
 import { styled } from "@mui/material/styles";
 import { Box } from "@mui/material";
 import BigNumber from "bignumber.js";
+import { IVault, IVaultPosition } from "fathom-sdk";
 
 import {
   ListItemWrapper,
@@ -12,31 +13,30 @@ import {
   ExtendedBtn,
   VaultInfo,
   EarningLabel,
-  VaultItemInfoWrapper,
   VaultListItemImageWrapper,
   VaultPercent,
   VaultStacked,
   VaultTitle,
   VaultListItemPropsType,
 } from "components/Vault/VaultListItem";
-import VaultListItemEarningDetails from "components/Vault/VaultListItem/VaultListItemEarningDetails";
-import VaultListItemEarned from "components/Vault/VaultListItem/VaultListItemEarned";
+import VaultItemPositionInfo from "components/Vault/VaultListItem/AdditionalInfoTabs/VaultItemPositionInfo";
 import VaultListItemManageModal from "components/Vault/VaultListItem/VaultListItemManageModal";
 import AppPopover from "components/AppComponents/AppPopover/AppPopover";
 import VaultListItemDepositModal from "components/Vault/VaultListItem/VaultListItemDepositModal";
 import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
+import VaultListItemNav from "components/Vault/VaultListItem/VaultListItemNav";
+import VaultItemAbout from "components/Vault/VaultListItem/AdditionalInfoTabs/VaultItemAbout";
+import VaultItemStrategies from "components/Vault/VaultListItem/AdditionalInfoTabs/VaultItemStrategies";
 
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatNumber, formatPercentage } from "utils/format";
-import useVaultListItem from "hooks/useVaultListItem";
-import { IVault, IVaultPosition } from "fathom-sdk";
+import useVaultListItem, { VaultInfoTabs } from "hooks/useVaultListItem";
+import usePricesContext from "context/prices";
 
 import DirectionUp from "assets/svg/direction-up.svg";
 import DirectionDown from "assets/svg/direction-down.svg";
 import LockSrc from "assets/svg/lock.svg";
 import LockAquaSrc from "assets/svg/lock-aqua.svg";
-import usePricesContext from "../../context/prices";
-import useSharedContext from "context/shared";
 
 const VaultPoolName = styled("div")`
   display: flex;
@@ -167,11 +167,12 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
     manageVault,
     newVaultDeposit,
     extended,
+    activeVaultInfoTab,
+    setActiveVaultInfoTab,
     setNewVaultDeposit,
     setExtended,
     setManageVault,
-  } = useVaultListItem();
-  const { isMobile } = useSharedContext();
+  } = useVaultListItem({ vaultPosition });
 
   const { fxdPrice } = usePricesContext();
 
@@ -243,48 +244,35 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
           %
         </VaultListValue>
       </ListItemWrapper>
-
-      {vaultPosition && extended && (
+      {extended && (
         <>
-          <VaultItemInfoWrapper className={"mb-0"}>
-            <VaultListItemEarned
-              isMobile={isMobile}
-              vaultItemData={vaultItemData}
-              vaultPosition={vaultPosition}
-            />
-          </VaultItemInfoWrapper>
-
-          <VaultItemInfoWrapper className={"mt-3"}>
-            <VaultListItemEarningDetails
-              isMobile={isMobile}
-              vaultItemData={vaultItemData}
-              vaultPosition={vaultPosition}
-              onOpen={() => setManageVault(true)}
-            />
-          </VaultItemInfoWrapper>
+          <VaultListItemNav
+            vaultPosition={vaultPosition}
+            activeVaultInfoTab={activeVaultInfoTab}
+            setActiveVaultInfoTab={setActiveVaultInfoTab}
+          />
+          {vaultPosition &&
+            BigNumber(vaultPosition.balanceShares).isGreaterThan(0) &&
+            activeVaultInfoTab === VaultInfoTabs.POSITION && (
+              <VaultItemPositionInfo
+                vaultItemData={vaultItemData}
+                vaultPosition={vaultPosition}
+                setManageVault={setManageVault}
+              />
+            )}
+          {activeVaultInfoTab === VaultInfoTabs.ABOUT && (
+            <VaultItemAbout vaultItemData={vaultItemData} />
+          )}
+          {activeVaultInfoTab === VaultInfoTabs.STRATEGIES && (
+            <VaultItemStrategies vaultItemData={vaultItemData} />
+          )}
         </>
       )}
-
       <VaultListItemMobileAdditionalData
         vaultItemData={vaultItemData}
         vaultPosition={vaultPosition}
       />
-      {vaultPosition ? (
-        <ExtendedBtnWrapper>
-          <ExtendedBtn
-            className={extended ? "visible" : "hidden"}
-            onClick={() => setExtended(!extended)}
-          >
-            <img src={DirectionUp} alt={"direction-up"} />
-          </ExtendedBtn>
-          <ExtendedBtn
-            className={!extended ? "visible" : "hidden"}
-            onClick={() => setExtended(!extended)}
-          >
-            <img src={DirectionDown} alt={"direction-down"} />
-          </ExtendedBtn>
-        </ExtendedBtnWrapper>
-      ) : (
+      {(!vaultPosition || vaultPosition.balanceTokens === "0") && (
         <ButtonPrimary
           onClick={() => setNewVaultDeposit(true)}
           sx={{ width: "100%" }}
@@ -292,12 +280,25 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
           Deposit
         </ButtonPrimary>
       )}
+      <ExtendedBtnWrapper>
+        <ExtendedBtn
+          className={extended ? "visible" : "hidden"}
+          onClick={() => setExtended(!extended)}
+        >
+          <img src={DirectionUp} alt={"direction-up"} />
+        </ExtendedBtn>
+        <ExtendedBtn
+          className={!extended ? "visible" : "hidden"}
+          onClick={() => setExtended(!extended)}
+        >
+          <img src={DirectionDown} alt={"direction-down"} />
+        </ExtendedBtn>
+      </ExtendedBtnWrapper>
       {useMemo(() => {
         return (
           vaultPosition &&
           manageVault && (
             <VaultListItemManageModal
-              isMobile={isMobile}
               vaultItemData={vaultItemData}
               vaultPosition={vaultPosition}
               onClose={() => setManageVault(false)}
@@ -309,7 +310,6 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
         return (
           newVaultDeposit && (
             <VaultListItemDepositModal
-              isMobile={isMobile}
               vaultItemData={vaultItemData}
               onClose={() => setNewVaultDeposit(false)}
             />
