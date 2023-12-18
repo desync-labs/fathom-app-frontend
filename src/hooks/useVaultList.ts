@@ -62,8 +62,14 @@ const useVaultList = () => {
   }, [syncVault, prevSyncVault, positionsRefetch, vaultsRefetch]);
 
   useEffect(() => {
+    positionsRefetch();
+  }, [account]);
+
+  useEffect(() => {
     if (positionsData && positionsData.accountVaultPositions) {
       setVaultPositionsList(positionsData.accountVaultPositions);
+    } else {
+      setVaultPositionsList([]);
     }
   }, [positionsData]);
 
