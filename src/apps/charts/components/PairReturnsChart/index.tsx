@@ -26,7 +26,6 @@ import { useUserPositionChart } from "apps/charts/contexts/User";
 import { useTimeframe } from "apps/charts/contexts/Application";
 import LocalLoader from "apps/charts/components/LocalLoader";
 import { useColor } from "apps/charts/hooks";
-import { useDarkModeManager } from "apps/charts/contexts/LocalStorage";
 
 const ChartWrapper = styled.div`
   max-height: 420px;
@@ -56,7 +55,7 @@ const PairReturnsChart = (props: { account: any; position: any }) => {
 
   const below600 = useMedia("(max-width: 600px)");
 
-  const color = useColor(position?.pair.token0.id);
+  const color = useColor(position.pair?.token0.id);
 
   const [chartView, setChartView] = useState(CHART_VIEW.VALUE);
 
@@ -66,8 +65,7 @@ const PairReturnsChart = (props: { account: any; position: any }) => {
 
   const aspect = below600 ? 60 / 42 : 60 / 16;
 
-  const [darkMode] = useDarkModeManager();
-  const textColor = darkMode ? "white" : "black";
+  const textColor = "white";
 
   return (
     <ChartWrapper>
