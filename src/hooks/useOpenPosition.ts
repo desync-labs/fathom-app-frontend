@@ -156,7 +156,9 @@ const useOpenPosition = (
        */
       const { priceWithSafetyMargin } = pool;
 
-      // SAFE MAX
+      /**
+       * SAFE MAX
+       */
       const safeMax = BigNumber(collateralInput)
         .multipliedBy(
           BigNumber(priceWithSafetyMargin)
@@ -165,6 +167,9 @@ const useOpenPosition = (
         )
         .toString();
 
+      /**
+       * DANGER_SAFE_MAX
+       */
       const dangerSafeMax = BigNumber(collateralInput)
         .multipliedBy(
           BigNumber(priceWithSafetyMargin)
@@ -363,7 +368,7 @@ const useOpenPosition = (
   ]);
 
   useEffect(() => {
-    if (collateral || fathomToken) {
+    if (collateral.trim() || fathomToken.trim()) {
       setIsTouched(true);
       setIsDirty(true);
     } else {

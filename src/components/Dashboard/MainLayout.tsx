@@ -83,6 +83,19 @@ import FathomLogoMobileSrc from "assets/svg/Fathom-app-logo-mobile.svg";
 import MobileMenuIcon from "assets/svg/mobile-menu.svg";
 import MobileMenuIconActive from "assets/svg/mobile-menu-active.svg";
 import { formatNumber } from "utils/format";
+import ChartsView from "components/Dashboard/ChartsView";
+import GlobalPage from "apps/charts/pages/GlobalPage";
+import { TokenPageRouterComponent } from "apps/charts/pages/TokenPage";
+import { PairPageRouterComponent } from "apps/charts/pages/PairPage";
+import { AccountPageRouterComponent } from "apps/charts/pages/AccountPage";
+import AllTokensPage from "apps/charts/pages/AllTokensPage";
+import AllPairsPage from "apps/charts/pages/AllPairsPage";
+import AccountLookup from "apps/charts/pages/AccountLookup";
+import { LayoutWrapper } from "apps/charts/App";
+import {
+  useGlobalChartData,
+  useGlobalData,
+} from "apps/charts/contexts/GlobalData";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -205,6 +218,8 @@ const WalletBox = styled(Box)`
 
 const MainLayout = () => {
   const {
+    savedOpen,
+    setSavedOpen,
     scroll,
     disconnect,
     openMobile,
@@ -239,6 +254,12 @@ const MainLayout = () => {
     allowStableSwapInProgress,
     isUserWrapperWhiteListed,
   } = useConnector();
+
+  /**
+   * Load charts data.
+   */
+  useGlobalData();
+  useGlobalChartData();
 
   const { erc20TokenModalData } = useAlertAndTransactionContext();
 
@@ -507,6 +528,83 @@ const MainLayout = () => {
                 />
               }
             ></Route>
+            <Route path="/charts" element={<ChartsView />}>
+              <Route
+                index
+                element={
+                  <LayoutWrapper
+                    savedOpen={savedOpen}
+                    setSavedOpen={setSavedOpen}
+                  >
+                    <GlobalPage />
+                  </LayoutWrapper>
+                }
+              ></Route>
+
+              <Route
+                path="token/:tokenAddress"
+                element={
+                  <TokenPageRouterComponent
+                    savedOpen={savedOpen}
+                    setSavedOpen={setSavedOpen}
+                  />
+                }
+              />
+              <Route
+                path="pair/:pairAddress"
+                element={
+                  <PairPageRouterComponent
+                    savedOpen={savedOpen}
+                    setSavedOpen={setSavedOpen}
+                  />
+                }
+              />
+              <Route
+                path="account/:accountAddress"
+                element={
+                  <AccountPageRouterComponent
+                    savedOpen={savedOpen}
+                    setSavedOpen={setSavedOpen}
+                  />
+                }
+              />
+
+              <Route
+                path="tokens"
+                element={
+                  <LayoutWrapper
+                    savedOpen={savedOpen}
+                    setSavedOpen={setSavedOpen}
+                  >
+                    <AllTokensPage />
+                  </LayoutWrapper>
+                }
+              ></Route>
+
+              <Route
+                path="pairs"
+                element={
+                  <LayoutWrapper
+                    savedOpen={savedOpen}
+                    setSavedOpen={setSavedOpen}
+                  >
+                    <AllPairsPage />
+                  </LayoutWrapper>
+                }
+              ></Route>
+
+              <Route
+                path="accounts"
+                element={
+                  <LayoutWrapper
+                    savedOpen={savedOpen}
+                    setSavedOpen={setSavedOpen}
+                  >
+                    <AccountLookup />
+                  </LayoutWrapper>
+                }
+              ></Route>
+            </Route>
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
           <Copyright />

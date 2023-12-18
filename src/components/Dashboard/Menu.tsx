@@ -43,9 +43,12 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
     [location.pathname]
   );
 
-  const { showText } = useShowText(open);
+  const isChartsActive = useMemo(
+    () => location.pathname.includes("charts"),
+    [location.pathname]
+  );
 
-  const chartsLink = useMemo(() => process.env.REACT_APP_CHARTS_APP_URL, []);
+  const { showText } = useShowText(open);
 
   const appMenuItems = [
     {
@@ -85,9 +88,9 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
     },
     {
       name: "Charts",
-      link: chartsLink,
-      Icon: <DexIcon isDexActive={false} />,
-      target: "_blank",
+      link: "/charts",
+      Icon: <DexIcon isDexActive={isChartsActive} />,
+      isActive: isChartsActive,
       showText: showText,
     },
   ];
