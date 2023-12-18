@@ -315,20 +315,23 @@ async function getGlobalData(ethPrice: number, oldEthPrice: number) {
       );
 
       // format the total liquidity in USD
-      data.totalLiquidityUSD = data.totalLiquidityETH * ethPrice;
+      const totalLiquidityUSD = data.totalLiquidityETH * ethPrice;
       const liquidityChangeUSD = getPercentChange(
         data.totalLiquidityETH * ethPrice,
         oneDayData.totalLiquidityETH * oldEthPrice
       );
 
-      // add relevant fields with the calculated amounts
-      data.oneDayVolumeUSD = oneDayVolumeUSD;
-      data.oneWeekVolume = oneWeekVolume;
-      data.weeklyVolumeChange = weeklyVolumeChange;
-      data.volumeChangeUSD = volumeChangeUSD;
-      data.liquidityChangeUSD = liquidityChangeUSD;
-      data.oneDayTxns = oneDayTxns;
-      data.txnChange = txnChange;
+      data = {
+        ...data,
+        totalLiquidityUSD: totalLiquidityUSD,
+        oneDayVolumeUSD: oneDayVolumeUSD,
+        oneWeekVolume: oneWeekVolume,
+        weeklyVolumeChange: weeklyVolumeChange,
+        volumeChangeUSD: volumeChangeUSD,
+        liquidityChangeUSD: liquidityChangeUSD,
+        oneDayTxns: oneDayTxns,
+        txnChange: txnChange,
+      };
     }
   } catch (e) {
     console.log(e);
