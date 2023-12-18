@@ -76,7 +76,7 @@ const BottomLinks: FC = () => {
       </a>
       <a
         href={
-          "https://explorer.xinfin.network/address/xdc49d3f7543335cf38Fa10889CCFF10207e22110B5"
+          "https://explorer.xinfin.network/tokens/xdc49d3f7543335cf38Fa10889CCFF10207e22110B5"
         }
         target={"_blank"}
         rel="noreferrer"
@@ -85,7 +85,7 @@ const BottomLinks: FC = () => {
       </a>
       <a
         href={
-          "https://explorer.xinfin.network/address/xdc3279dBEfABF3C6ac29d7ff24A6c46645f3F4403c"
+          "https://explorer.xinfin.network/tokens/xdc3279dBEfABF3C6ac29d7ff24A6c46645f3F4403c"
         }
         target={"_blank"}
         rel="noreferrer"
