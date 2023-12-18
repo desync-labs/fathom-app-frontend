@@ -640,14 +640,14 @@ export function useDataForList(pairList: any) {
   const [ethPrice] = useEthPrice();
 
   const [stale, setStale] = useState<boolean>(false);
-  const [fetched, setFetched] = useState<any[]>([]);
+  const [fetched, setFetched] = useState<any[] | null>(null);
   const listedTokens = useListedTokens();
 
   // reset
   useEffect(() => {
     if (pairList) {
       setStale(false);
-      setFetched([]);
+      setFetched(null);
     }
   }, [pairList]);
 

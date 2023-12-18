@@ -13,11 +13,12 @@ import { Bookmark, ChevronRight, X } from "react-feather";
 import { ButtonFaded } from "apps/charts/components/ButtonStyled";
 import FormattedName from "apps/charts/components/FormattedName";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
-const RightColumn = styled.div<{ open?: boolean }>`
+const RightColumn = styled.div<{ open?: boolean; scrolled: number }>`
   position: fixed;
   right: 0;
-  top: 60px;
+  top: ${({ scrolled }) => (scrolled < 60 ? `${60 - scrolled}px` : "0")};
   height: 100vh;
   width: ${({ open }) => (open ? "160px" : "64px")};
   padding: 1.25rem;
@@ -54,9 +55,26 @@ function PinnedData(props: { open: any; setSavedOpen: any }) {
   const navigate = useNavigate();
   const [savedPairs, , removePair] = useSavedPairs();
   const [savedTokens, , removeToken] = useSavedTokens();
+  const [scrolled, setScrolled] = useState<number>(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [setScrolled]);
 
   return !open ? (
-    <RightColumn open={open} onClick={() => setSavedOpen(true)}>
+    <RightColumn
+      open={open}
+      onClick={() => setSavedOpen(true)}
+      scrolled={scrolled}
+    >
       <SavedButton open={open}>
         <StyledIcon>
           <Bookmark size={20} />
@@ -64,7 +82,7 @@ function PinnedData(props: { open: any; setSavedOpen: any }) {
       </SavedButton>
     </RightColumn>
   ) : (
-    <RightColumn open={open}>
+    <RightColumn open={open} scrolled={scrolled}>
       <SavedButton onClick={() => setSavedOpen(false)} open={open}>
         <RowFixed>
           <StyledIcon>

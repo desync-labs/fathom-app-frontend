@@ -134,7 +134,7 @@ const HeaderWrapper = styled.div`
   padding-bottom: 7px !important;
 `;
 
-function TokenPage({ address }: { address: string }) {
+const TokenPage: FC<{ address: string }> = ({ address }) => {
   const {
     id,
     name,
@@ -237,7 +237,9 @@ function TokenPage({ address }: { address: string }) {
     <PageWrapper>
       <Warning
         type={"token"}
-        show={!dismissed && listedTokens && !listedTokens.includes(address)}
+        show={
+          !dismissed && listedTokens && !(listedTokens as any).includes(address)
+        }
         setShow={markAsDismissed}
         address={address}
       />
@@ -269,7 +271,9 @@ function TokenPage({ address }: { address: string }) {
         </RowBetween>
         <WarningGrouping
           disabled={
-            !dismissed && listedTokens && !listedTokens.includes(address)
+            !dismissed &&
+            listedTokens &&
+            !(listedTokens as any).includes(address)
           }
         >
           <DashboardWrapper style={{ marginTop: below1080 ? "0" : "1rem" }}>
@@ -526,7 +530,7 @@ function TokenPage({ address }: { address: string }) {
       </ContentWrapper>
     </PageWrapper>
   );
-}
+};
 
 type TokenPageRouterComponentProps = {
   savedOpen: boolean;
