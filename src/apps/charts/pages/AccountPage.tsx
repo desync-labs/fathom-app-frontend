@@ -142,7 +142,9 @@ const AccountDetailsLayout = styled.div`
   }
 `;
 
-function AccountPage(props: { account: string }) {
+type AccountPageProps = { account: string };
+
+const AccountPage: FC<AccountPageProps> = (props) => {
   const { account } = props;
   // get data for this account
   const transactions = useUserTransactions(account);
@@ -184,15 +186,15 @@ function AccountPage(props: { account: string }) {
   // settings for list view and dropdowns
   const hideLPContent = positions && positions.length === 0;
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
-  const [activePosition, setActivePosition] = useState<Position>();
+  const [activePosition, setActivePosition] = useState<Position | null>(null);
 
   const dynamicPositions = activePosition ? [activePosition] : positions;
 
   const aggregateFees = dynamicPositions?.reduce(function (
     total: any,
-    position: { fees: { sum: any } }
+    position: Position
   ) {
-    return total + position.fees.sum;
+    return total + position.fees?.sum;
   },
   0);
 
@@ -307,14 +309,16 @@ function AccountPage(props: { account: string }) {
                 )}
                 {activePosition && (
                   <RowFixed>
-                    <DoubleTokenLogo
-                      a0={activePosition.pair.token0.id}
-                      a1={activePosition.pair.token1.id}
-                      size={16}
-                    />
+                    {activePosition && (
+                      <DoubleTokenLogo
+                        a0={activePosition.pair?.token0.id}
+                        a1={activePosition.pair?.token1.id}
+                        size={16}
+                      />
+                    )}
                     <TYPE.body ml={"16px"}>
-                      {activePosition.pair.token0.symbol}-
-                      {activePosition.pair.token1.symbol} Position
+                      {activePosition.pair?.token0.symbol}-
+                      {activePosition.pair?.token1.symbol} Position
                     </TYPE.body>
                   </RowFixed>
                 )}
@@ -323,14 +327,14 @@ function AccountPage(props: { account: string }) {
                 <Flyout>
                   <AutoColumn gap="0px">
                     {positions?.map((p: any, i: any) => {
-                      if (p.pair.token1.symbol === "WXDC") {
+                      if (p.pair?.token1.symbol === "WXDC") {
                         p.pair.token1.symbol = "XDC";
                       }
-                      if (p.pair.token0.symbol === "WXDC") {
+                      if (p.pair?.token0.symbol === "WXDC") {
                         p.pair.token0.symbol = "XDC";
                       }
                       return (
-                        p.pair.id !== activePosition?.pair.id && (
+                        p.pair?.id !== activePosition?.pair.id && (
                           <MenuRow
                             onClick={() => {
                               setActivePosition(p);
@@ -339,12 +343,12 @@ function AccountPage(props: { account: string }) {
                             key={i}
                           >
                             <DoubleTokenLogo
-                              a0={p.pair.token0.id}
-                              a1={p.pair.token1.id}
+                              a0={p.pair?.token0.id}
+                              a1={p.pair?.token1.id}
                               size={16}
                             />
                             <TYPE.body ml={"16px"}>
-                              {p.pair.token0.symbol}-{p.pair.token1.symbol}{" "}
+                              {p.pair?.token0.symbol}-{p.pair?.token1.symbol}{" "}
                               Position
                             </TYPE.body>
                           </MenuRow>
@@ -354,7 +358,7 @@ function AccountPage(props: { account: string }) {
                     {activePosition && (
                       <MenuRow
                         onClick={() => {
-                          setActivePosition({} as Position);
+                          setActivePosition(null);
                           setShowDropdown(false);
                         }}
                       >
@@ -464,7 +468,7 @@ function AccountPage(props: { account: string }) {
       </ContentWrapper>
     </PageWrapper>
   );
-}
+};
 
 type AccountPageRouterComponentProps = {
   savedOpen: boolean;
