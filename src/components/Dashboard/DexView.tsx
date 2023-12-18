@@ -1,12 +1,14 @@
 import { useLocation } from "react-router-dom";
-import { FC, MouseEvent, useMemo } from "react";
+import { FC, lazy, MouseEvent, Suspense, useMemo } from "react";
 import { GovernanceIcon, StakingIcon } from "components/Common/MenuIcons";
 import {
   NestedRouteContainer,
   NestedRouteLink,
   NestedRouteNav,
 } from "components/AppComponents/AppBox/AppBox";
-import DexIndexComponent from "apps/dex";
+import LocalLoader from "apps/charts/components/LocalLoader";
+
+const DexIndexComponent = lazy(() => import("../../apps/dex/index"));
 
 export type DexViewProps = {
   openConnectorMenu: (event: MouseEvent<HTMLElement>) => void;
@@ -16,7 +18,7 @@ const DexView: FC<DexViewProps> = ({ openConnectorMenu }) => {
   const location = useLocation();
 
   const isSwapActive = useMemo(
-    () => ["/swap/", "/swap"].includes(location.pathname),
+    () => ["/swap"].includes(location.pathname),
     [location.pathname]
   );
 
@@ -46,7 +48,9 @@ const DexView: FC<DexViewProps> = ({ openConnectorMenu }) => {
         </NestedRouteLink>
       </NestedRouteNav>
       <NestedRouteContainer maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-        <DexIndexComponent openConnectorMenu={openConnectorMenu} />
+        <Suspense fallback={<LocalLoader />}>
+          <DexIndexComponent openConnectorMenu={openConnectorMenu} />
+        </Suspense>
       </NestedRouteContainer>
     </>
   );
