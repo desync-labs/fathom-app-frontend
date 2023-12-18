@@ -15,7 +15,7 @@ import styled from "styled-components";
 const NoTopTokens = styled.div`
   background: #131f35;
   border-radius: 8px;
-  padding: 0px 1.125rem 1rem;
+  padding: 0.5rem 1.125rem;
   color: #5977a0;
   text-transform: uppercase;
   font-size: 11px;

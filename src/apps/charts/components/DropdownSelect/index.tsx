@@ -54,7 +54,7 @@ const DropdownSelect = (props: {
   color?: any;
 }) => {
   const { options, active, setActive, color } = props;
-  const [showDropdown, toggleDropdown] = useState(false);
+  const [showDropdown, toggleDropdown] = useState<boolean>(false);
 
   return (
     <Wrapper open={showDropdown} color={color}>
@@ -69,7 +69,7 @@ const DropdownSelect = (props: {
       </RowBetween>
       {showDropdown && (
         <Dropdown>
-          <AutoColumn gap="20px">
+          <AutoColumn gap="10px">
             {Object.keys(options).map((key, index) => {
               const option = options[key];
               return (

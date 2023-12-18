@@ -92,6 +92,10 @@ import AllTokensPage from "apps/charts/pages/AllTokensPage";
 import AllPairsPage from "apps/charts/pages/AllPairsPage";
 import AccountLookup from "apps/charts/pages/AccountLookup";
 import { LayoutWrapper } from "apps/charts/App";
+import {
+  useGlobalChartData,
+  useGlobalData,
+} from "apps/charts/contexts/GlobalData";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -250,6 +254,12 @@ const MainLayout = () => {
     allowStableSwapInProgress,
     isUserWrapperWhiteListed,
   } = useConnector();
+
+  /**
+   * Load charts data.
+   */
+  useGlobalData();
+  useGlobalChartData();
 
   const { erc20TokenModalData } = useAlertAndTransactionContext();
 

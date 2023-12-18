@@ -82,8 +82,8 @@ const DashGrid = styled.div<{ fade?: boolean }>`
 export const HeaderWrapper = styled(DashGrid)`
   background: ${({ theme }) => theme.headerBackground};
   border-radius: 8px;
-  padding-top: 7px !important;
-  padding-bottom: 7px !important;
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
 `;
 
 const ListWrapper = styled.div``;

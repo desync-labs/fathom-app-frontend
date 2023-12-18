@@ -133,7 +133,7 @@ function LPList(props: { lps: any; maxItems?: number }) {
           </DataText>
         )} */}
 
-        <DataText>
+        <DataText justifyContent="center">
           <CustomLink to={"/charts/pair/" + lp.pairAddress}>
             <RowFixed>
               {!below600 && (
@@ -188,12 +188,12 @@ function LPList(props: { lps: any; maxItems?: number }) {
             <TYPE.main area="type">Type</TYPE.main>
           </Flex>
         )} */}
-        <Flex alignItems="center" justifyContent="flexEnd">
+        <Flex alignItems="center" justifyContent="center">
           <TYPE.main>
             <TableHeaderBox>Pair</TableHeaderBox>
           </TYPE.main>
         </Flex>
-        <Flex alignItems="center" justifyContent="flexEnd">
+        <Flex alignItems="center" justifyContent="flex-end">
           <TYPE.main>
             <TableHeaderBox>Value</TableHeaderBox>
           </TYPE.main>
