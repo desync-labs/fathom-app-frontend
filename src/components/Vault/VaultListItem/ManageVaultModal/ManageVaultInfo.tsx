@@ -4,6 +4,7 @@ import { Box, Divider, Grid, ListItemText } from "@mui/material";
 import { IVault, IVaultPosition } from "fathom-sdk";
 import { FormType } from "hooks/useVaultManageDeposit";
 import { AppList, AppListItem } from "components/AppComponents/AppList/AppList";
+import { formatNumber, formatPercentage } from "utils/format";
 
 type VaultManageInfoProps = {
   vaultItemData: IVault;
@@ -45,9 +46,11 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
           alignItems="flex-start"
           secondaryAction={
             <>
-              {BigNumber(balancePosition)
-                .dividedBy(10 ** 18)
-                .toFormat(2) +
+              {formatPercentage(
+                BigNumber(balancePosition)
+                  .dividedBy(10 ** 18)
+                  .toNumber()
+              ) +
                 " " +
                 token.name +
                 " "}
@@ -59,17 +62,21 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
               >
                 →{" "}
                 {formType === FormType.DEPOSIT
-                  ? BigNumber(balancePosition)
-                      .dividedBy(10 ** 18)
-                      .plus(BigNumber(formToken || "0"))
-                      .toFormat(2) +
+                  ? formatPercentage(
+                      BigNumber(balancePosition)
+                        .dividedBy(10 ** 18)
+                        .plus(BigNumber(formToken || "0"))
+                        .toNumber()
+                    ) +
                     " " +
                     token.name +
                     " "
-                  : BigNumber(balancePosition)
-                      .dividedBy(10 ** 18)
-                      .minus(BigNumber(formToken || "0"))
-                      .toFormat(2) +
+                  : formatPercentage(
+                      BigNumber(balancePosition)
+                        .dividedBy(10 ** 18)
+                        .minus(BigNumber(formToken || "0"))
+                        .toNumber()
+                    ) +
                     " " +
                     token.name +
                     " "}
@@ -83,10 +90,12 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
           alignItems="flex-start"
           secondaryAction={
             <>
-              {`${BigNumber(balancePosition)
-                .dividedBy(BigNumber(balanceTokens))
-                .multipliedBy(100)
-                .toFormat(2)} %`}
+              {`${formatNumber(
+                BigNumber(balancePosition)
+                  .dividedBy(BigNumber(balanceTokens))
+                  .multipliedBy(100)
+                  .toNumber()
+              )} %`}
               <Box
                 component="span"
                 sx={{
@@ -95,24 +104,36 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
               >
                 →{" "}
                 {formType === FormType.DEPOSIT
-                  ? BigNumber(balancePosition)
-                      .plus(BigNumber(formToken || "0").multipliedBy(10 ** 18))
-                      .dividedBy(
-                        BigNumber(balanceTokens).plus(
+                  ? formatNumber(
+                      BigNumber(balancePosition)
+                        .plus(
                           BigNumber(formToken || "0").multipliedBy(10 ** 18)
                         )
-                      )
-                      .multipliedBy(100)
-                      .toFormat(2)
-                  : BigNumber(balancePosition)
-                      .minus(BigNumber(formToken || "0").multipliedBy(10 ** 18))
-                      .dividedBy(
-                        BigNumber(balanceTokens).minus(
+                        .dividedBy(
+                          BigNumber(balanceTokens).plus(
+                            BigNumber(formToken || "0").multipliedBy(10 ** 18)
+                          )
+                        )
+                        .multipliedBy(100)
+                        .toNumber()
+                    )
+                  : BigNumber(formToken)
+                      .multipliedBy(10 ** 18)
+                      .isEqualTo(BigNumber(balanceTokens))
+                  ? "0"
+                  : formatNumber(
+                      BigNumber(balancePosition)
+                        .minus(
                           BigNumber(formToken || "0").multipliedBy(10 ** 18)
                         )
-                      )
-                      .multipliedBy(100)
-                      .toFormat(2)}{" "}
+                        .dividedBy(
+                          BigNumber(balanceTokens).minus(
+                            BigNumber(formToken || "0").multipliedBy(10 ** 18)
+                          )
+                        )
+                        .multipliedBy(100)
+                        .toNumber()
+                    )}{" "}
                 %
               </Box>
             </>
@@ -124,9 +145,11 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
           alignItems="flex-start"
           secondaryAction={
             <>
-              {BigNumber(balanceShares)
-                .dividedBy(10 ** 18)
-                .toFormat(6) +
+              {formatPercentage(
+                BigNumber(balanceShares)
+                  .dividedBy(10 ** 18)
+                  .toNumber()
+              ) +
                 " " +
                 shareToken.symbol +
                 " "}
@@ -138,16 +161,20 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
               >
                 →{" "}
                 {formType === FormType.DEPOSIT
-                  ? BigNumber(balanceShares)
-                      .dividedBy(10 ** 18)
-                      .plus(BigNumber(formSharedToken || "0"))
-                      .toFormat(6) +
+                  ? formatPercentage(
+                      BigNumber(balanceShares)
+                        .dividedBy(10 ** 18)
+                        .plus(BigNumber(formSharedToken || "0"))
+                        .toNumber()
+                    ) +
                     " " +
                     shareToken.symbol
-                  : BigNumber(balanceShares)
-                      .dividedBy(10 ** 18)
-                      .minus(BigNumber(formSharedToken || "0"))
-                      .toFormat(6) +
+                  : formatPercentage(
+                      BigNumber(balanceShares)
+                        .dividedBy(10 ** 18)
+                        .minus(BigNumber(formSharedToken || "0"))
+                        .toNumber()
+                    ) +
                     " " +
                     shareToken.symbol}{" "}
               </Box>
@@ -167,14 +194,16 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
         <AppListItem
           alignItems="flex-start"
           secondaryAction={
-            BigNumber(strategies[0].reports[0].results[0].apr).toFormat(2) + "%"
+            formatNumber(
+              BigNumber(strategies[0].reports[0].results[0].apr).toNumber()
+            ) + "%"
           }
         >
           <ListItemText primary="Estimated APR" />
         </AppListItem>
         <AppListItem
           alignItems="flex-start"
-          secondaryAction={BigNumber(averageApr).toFormat(2) + "%"}
+          secondaryAction={formatNumber(BigNumber(averageApr).toNumber()) + "%"}
         >
           <ListItemText primary="Historical APR" />
         </AppListItem>

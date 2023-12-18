@@ -337,7 +337,11 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
           <AppListItem
             alignItems="flex-start"
             secondaryAction={
-              <>{BigNumber(formToken || "0").toFormat(2) + " " + token.name}</>
+              <>
+                {formatNumber(BigNumber(formToken || "0").toNumber()) +
+                  " " +
+                  token.name}
+              </>
             }
           >
             <ListItemText
@@ -350,7 +354,7 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
             alignItems="flex-start"
             secondaryAction={
               <>
-                {BigNumber(formSharedToken || "0").toFormat(6) +
+                {formatNumber(BigNumber(formSharedToken || "0").toNumber()) +
                   " " +
                   shareToken.name}
               </>
@@ -364,14 +368,14 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
         {approveBtn &&
           formType === FormType.DEPOSIT &&
           walletBalance !== "0" && (
-            <InfoBox sx={{ alignItems: "flex-start" }}>
+            <InfoBox sx={{ alignItems: "flex-start", padding: "16px" }}>
               <InfoIcon />
               <Box flexDirection="column">
                 <Typography width="100%">
                   First-time connect? Please allow token approval in your
                   MetaMask
                 </Typography>
-                <ButtonPrimary onClick={approve} style={{ margin: "16px 0" }}>
+                <ButtonPrimary onClick={approve} style={{ marginTop: "16px" }}>
                   {" "}
                   {approvalPending ? (
                     <CircularProgress size={20} sx={{ color: "#0D1526" }} />

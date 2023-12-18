@@ -229,9 +229,17 @@ export const VAULTS = gql`
       totalDebtAmount
       depositLimit
       strategies {
+        id
+        delegatedAssets
+        currentDebt
+        maxDebt
         reports(orderBy: timestamp, orderDirection: desc) {
           totalFees
           protocolFees
+          timestamp
+          gain
+          loss
+          currentDebt
           results {
             apr
           }

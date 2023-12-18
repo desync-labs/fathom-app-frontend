@@ -43,7 +43,7 @@ export default class FxdPage extends BasePage {
   readonly btnCloseModal: Locator;
   readonly doneIconModal: Locator;
   readonly headingFourModal: Locator;
-  readonly spanSubtitleOneModal: Locator;
+  readonly spanBodyOneModal: Locator;
   readonly spanBodyTwoModal: Locator;
 
   constructor(page: Page) {
@@ -126,8 +126,8 @@ export default class FxdPage extends BasePage {
     this.btnCloseModal = this.page.locator('button[aria-label="close"]');
     this.doneIconModal = this.page.locator('[data-testid="DoneIcon"]');
     this.headingFourModal = this.page.locator('div[role="dialog"] h4');
-    this.spanSubtitleOneModal = this.page.locator(
-      'div[role="dialog"] span[class*="MuiTypography-subtitle1"]'
+    this.spanBodyOneModal = this.page.locator(
+      'div[role="dialog"] p[class*="MuiTypography-body1"]'
     );
     this.spanBodyTwoModal = this.page.locator(
       'div[role="dialog"] span[class*="MuiTypography-body2"]'
@@ -226,9 +226,9 @@ export default class FxdPage extends BasePage {
     await expect.soft(this.doneIconModal).toBeVisible();
     await expect.soft(this.headingFourModal).toBeVisible();
     await expect.soft(this.headingFourModal).toHaveText("All done!");
-    await expect.soft(this.spanSubtitleOneModal).toBeVisible();
+    await expect.soft(this.spanBodyOneModal).toBeVisible();
     await expect
-      .soft(this.spanSubtitleOneModal)
+      .soft(this.spanBodyOneModal)
       .toHaveText("New position opened successfully!");
     await expect.soft(this.spanBodyTwoModal).toBeVisible();
     await expect

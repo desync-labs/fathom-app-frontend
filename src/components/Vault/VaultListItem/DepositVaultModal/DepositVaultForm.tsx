@@ -17,7 +17,7 @@ import BigNumber from "bignumber.js";
 
 import { IVault } from "fathom-sdk";
 import { getTokenLogoURL } from "utils/tokenLogo";
-import { formatNumber } from "utils/format";
+import { formatNumber, formatPercentage } from "utils/format";
 
 import {
   ErrorBox,
@@ -281,7 +281,7 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
             alignItems="flex-start"
             secondaryAction={
               <>
-                {BigNumber(sharedToken || "0").toFormat(6) +
+                {formatPercentage(BigNumber(sharedToken || "0").toNumber()) +
                   " " +
                   shareToken.name}
               </>
@@ -291,13 +291,13 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
           </AppListItem>
         </AppList>
         {approveBtn && walletBalance !== "0" && (
-          <InfoBox sx={{ alignItems: "flex-start" }}>
+          <InfoBox sx={{ alignItems: "flex-start", padding: "16px" }}>
             <InfoIcon />
             <Box flexDirection="column">
               <Typography width="100%">
                 First-time connect? Please allow token approval in your MetaMask
               </Typography>
-              <ButtonPrimary onClick={approve} style={{ margin: "16px 0" }}>
+              <ButtonPrimary onClick={approve} style={{ marginTop: "16px" }}>
                 {" "}
                 {approvalPending ? (
                   <CircularProgress size={20} sx={{ color: "#0D1526" }} />
