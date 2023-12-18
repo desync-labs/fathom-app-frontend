@@ -262,9 +262,17 @@ export const NestedRouteNav = styled("nav")`
   display: flex;
   align-items: center;
   ${({ theme }) => theme.breakpoints.down("sm")} {
-    width: 100%;
+    display: grid;
+    height: auto;
+    border: none;
+    grid-template-columns: 1fr 1fr;
     a {
-      width: 50%;
+      width: 100%;
+      height: 60px;
+      border-bottom: 1.5px solid #1d2d49;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
   }
 `;
@@ -288,6 +296,9 @@ export const NestedRouteLink = styled(Link)`
 
   span {
     margin-bottom: 5px;
+  }
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    padding: 0;
   }
 `;
 
