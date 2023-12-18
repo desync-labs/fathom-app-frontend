@@ -7,7 +7,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 test.describe("Fathom App Test Suite: Vault Operations", () => {
-  test.skip('FXD Vault: "Deposit" button is visible for a first time user', async ({
+  test('FXD Vault: "Deposit" button is visible for a first time user', async ({
     vaultPage,
   }) => {
     await vaultPage.navigate();
@@ -28,7 +28,11 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     const stakedAmountBefore = await vaultPage.getStakedVaultRowValue(
       fxdVaultData.name
     );
+    const pooledAmountBefore = await vaultPage.getPooledVaultRowDetailsValue(
+      fxdVaultData.name
+    );
     console.log(stakedAmountBefore);
+    console.log(pooledAmountBefore);
     // TO DO - Continue the test
   });
 });

@@ -52,7 +52,11 @@ const VaultListItemNav: FC<VaultListItemNavPropsType> = ({
   setActiveVaultInfoTab,
 }) => {
   return (
-    <VaultNavWrapper>
+    <VaultNavWrapper
+      data-testid={`vaultRowDetails-${vaultPosition?.token.name
+        .split(" ")
+        .join("-")}-navBar`}
+    >
       {vaultPosition && vaultPosition.balanceTokens !== "0" && (
         <VaultNavItem
           onClick={() => setActiveVaultInfoTab(VaultInfoTabs.POSITION)}
