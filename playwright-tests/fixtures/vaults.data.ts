@@ -1,3 +1,3 @@
 export const fxdVaultData = {
-  name: "FXD",
+  name: "Fathom USD",
 };
