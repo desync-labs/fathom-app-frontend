@@ -571,11 +571,7 @@ const getIntervalTokenData = async (
   // once you have all the timestamps, get the blocks for each timestamp in a bulk query
   let blocks;
   try {
-    console.log("before blocks");
     blocks = await getBlocksFromTimestamps(timestamps, 100);
-    console.log({
-      blocks,
-    });
 
     // catch failing case
     if (!blocks || blocks.length === 0) {
