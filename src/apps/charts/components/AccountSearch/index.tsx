@@ -28,8 +28,6 @@ const Input = styled.input`
   align-items: center;
   width: 100%;
   white-space: nowrap;
-  background: none;
-  border: none;
   outline: none;
   padding: 12px 16px;
   border-radius: 12px;
@@ -81,7 +79,7 @@ export const HeaderWrapper = styled(DashGrid)`
 `;
 
 type AccountSearchProps = {
-  small?: any;
+  small?: boolean;
 };
 
 const AccountSearch: FC<AccountSearchProps> = ({ small }) => {

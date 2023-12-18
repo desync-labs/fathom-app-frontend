@@ -45,7 +45,7 @@ const List = styled(Box)`
 const DashGrid = styled.div`
   display: grid;
   grid-gap: 1em;
-  grid-template-columns: 100px 1fr 1fr;
+  grid-template-columns: 100px 1fr 1.25fr;
   grid-template-areas: "name liq vol";
   padding: 0 1.125rem;
 

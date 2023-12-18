@@ -20,6 +20,10 @@ const AppWrapper = styled.div`
 const ContentWrapper = styled.div<{ open: boolean }>`
   display: grid;
   grid-template-columns: ${({ open }) => (open ? "1fr 200px" : "1fr 64px")};
+  @media screen and (max-width: 600px) {
+    grid-template-columns: 1fr;
+    padding: 0 10px;
+  }
 `;
 
 const Right = styled.div<{ open: boolean }>`

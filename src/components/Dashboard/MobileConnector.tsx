@@ -11,7 +11,7 @@ const MobileConnectorWrapper = styled(Box)`
   width: 100%;
   height: 100px;
   background: #131f35;
-  z-index: 1000;
+  z-index: 10000;
   padding-left: 12px;
   padding-right: 12px;
   padding-top: 20px;

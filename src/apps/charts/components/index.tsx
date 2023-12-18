@@ -144,6 +144,9 @@ export const ContentWrapper = styled.div`
     grid-template-columns: 1fr;
     padding: 0 1rem;
   }
+  @media screen and (max-width: 600px) {
+    padding: 0;
+  }
 `;
 
 export const ContentWrapperLarge = styled.div`
@@ -179,6 +182,11 @@ export const FullWrapper = styled.div`
   @media screen and (max-width: 1180px) {
     grid-template-columns: 1fr;
     padding: 0 1rem;
+  }
+
+  @media screen and (max-width: 600px) {
+    grid-template-columns: 1fr;
+    padding: 0;
   }
 `;
 
