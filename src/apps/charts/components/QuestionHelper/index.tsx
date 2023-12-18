@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { FC, useCallback, useState } from "react";
 import { HelpCircle as Question } from "react-feather";
 import styled from "styled-components";
 import Popover, { PopoverProps } from "apps/charts/components/Popover";
@@ -30,21 +30,21 @@ const TooltipContainer = styled.div`
 
 interface TooltipProps extends Omit<PopoverProps, "content"> {
   text: string;
+  [key: string]: any;
 }
 
-export function Tooltip({ text, ...rest }: TooltipProps) {
+export const Tooltip: FC<TooltipProps> = ({ text, ...rest }) => {
   return (
     <Popover content={<TooltipContainer>{text}</TooltipContainer>} {...rest} />
   );
-}
+};
 
-export default function QuestionHelper({
-  text,
-  disabled,
-}: {
+type QuestionHelper = {
   text: string;
   disabled?: boolean;
-}) {
+};
+
+const QuestionHelper: FC<QuestionHelper> = ({ text, disabled }) => {
   const [show, setShow] = useState<boolean>(false);
 
   const open = useCallback(() => setShow(true), [setShow]);
@@ -63,4 +63,6 @@ export default function QuestionHelper({
       </Tooltip>
     </span>
   );
-}
+};
+
+export default QuestionHelper;

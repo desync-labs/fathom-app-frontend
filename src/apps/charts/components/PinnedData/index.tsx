@@ -13,7 +13,7 @@ import { Bookmark, ChevronRight, X } from "react-feather";
 import { ButtonFaded } from "apps/charts/components/ButtonStyled";
 import FormattedName from "apps/charts/components/FormattedName";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 
 const RightColumn = styled.div<{ open?: boolean; scrolled: number }>`
   position: fixed;
@@ -50,7 +50,12 @@ const StyledIcon = styled.div`
   color: ${({ theme }) => theme.text5};
 `;
 
-function PinnedData(props: { open: any; setSavedOpen: any }) {
+type PinnedDataProps = {
+  open: boolean;
+  setSavedOpen: Dispatch<SetStateAction<boolean>>;
+};
+
+const PinnedData: FC<PinnedDataProps> = (props) => {
   const { open, setSavedOpen } = props;
   const navigate = useNavigate();
   const [savedPairs, , removePair] = useSavedPairs();
@@ -176,6 +181,6 @@ function PinnedData(props: { open: any; setSavedOpen: any }) {
       </AutoColumn>
     </RightColumn>
   );
-}
+};
 
 export default PinnedData;

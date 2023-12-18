@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { Sun, Moon } from "react-feather";
+import { FC } from "react";
 
 const IconWrapper = styled.div<{ isActive?: boolean }>`
   opacity: ${({ isActive }) => (isActive ? 0.8 : 0.4)};
@@ -22,7 +23,9 @@ const StyledToggle = styled.div`
   }
 `;
 
-const Toggle = (props: { isActive: any; toggle: any }) => {
+type ToggleProps = { isActive: boolean; toggle: any };
+
+const Toggle: FC<ToggleProps> = (props) => {
   const { isActive, toggle } = props;
   return (
     <StyledToggle onClick={toggle}>

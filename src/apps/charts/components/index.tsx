@@ -1,10 +1,5 @@
 import styled from "styled-components";
-import { Text, Box } from "rebass";
-
-import Link from "apps/charts/components/Link";
-
-import { urls } from "apps/charts/utils";
-import { FC } from "react";
+import { Box } from "rebass";
 
 const Divider = styled(Box)`
   height: 1px;
@@ -48,24 +43,6 @@ export const IconWrapper = styled.div`
   }
 `;
 
-const Hint: FC<any> = ({ children, ...rest }) => (
-  <Text fontSize={16} weight={500} {...rest}>
-    {children}
-  </Text>
-);
-
-const Address: FC<any> = ({ address, token, ...rest }) => (
-  <Link
-    color="button"
-    href={token ? urls.showToken(address) : urls.showAddress(address)}
-    external
-    style={{ wordBreak: "break-all" }}
-    {...rest}
-  >
-    {address}
-  </Link>
-);
-
 export const Hover = styled.div<{ fade?: boolean }>`
   :hover {
     cursor: pointer;
@@ -84,36 +61,6 @@ const EmptyCard = styled.div<{ height?: string }>`
   border-radius: 20px;
   color: ${({ theme }) => theme.text1};
   height: ${({ height }) => (height ? height : "200px")};
-`;
-
-export const SideBar = styled.span`
-  display: grid;
-  grid-gap: 24px;
-  position: sticky;
-  top: 4rem;
-`;
-
-export const SubNav = styled.ul`
-  list-style: none;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: flex-start;
-  padding: 0;
-  margin-bottom: 2rem;
-`;
-export const SubNavEl = styled.li<{ isActive: boolean }>`
-  list-style: none;
-  display: flex;
-  padding-bottom: 0.5rem;
-  margin-right: 1rem;
-  font-weight: ${({ isActive }) => (isActive ? 600 : 500)};
-  border-bottom: 1px solid rgba(0, 0, 0, 0);
-
-  :hover {
-    cursor: pointer;
-    border-bottom: 1px solid ${({ theme }) => theme.bg3};
-  }
 `;
 
 export const PageWrapper = styled.div`
@@ -190,18 +137,4 @@ export const FullWrapper = styled.div`
   }
 `;
 
-export const FixedMenu = styled.div`
-  z-index: 99;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 1rem;
-  box-sizing: border-box;
-  margin-bottom: 2rem;
-  max-width: 100vw;
-
-  @media screen and (max-width: 800px) {
-    margin-bottom: 0;
-  }
-`;
-
-export { Hint, Divider, Address, EmptyCard };
+export { Divider, EmptyCard };

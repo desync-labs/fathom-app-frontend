@@ -8,6 +8,7 @@ import { AutoColumn } from "apps/charts/components/Column";
 import { Hover } from "apps/charts/components";
 import Link from "apps/charts/components/Link";
 import { useMedia } from "react-use";
+import { FC } from "react";
 
 const WarningWrapper = styled.div<{ show: boolean }>`
   border-radius: 20px;
@@ -31,12 +32,12 @@ const StyledWarningIcon = styled(AlertTriangle)`
   stroke: red;
 `;
 
-export default function Warning(props: {
+const Warning: FC<{
   type: any;
   show: any;
   setShow: any;
   address: any;
-}) {
+}> = (props) => {
   const { type, show, setShow, address } = props;
   const below800 = useMedia("(max-width: 800px)");
 
@@ -131,4 +132,6 @@ export default function Warning(props: {
       </AutoColumn>
     </WarningWrapper>
   );
-}
+};
+
+export default Warning;

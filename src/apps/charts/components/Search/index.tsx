@@ -161,14 +161,14 @@ export const Search = ({ small = false }) => {
   let allTokens = useAllTokensInUniswap();
   const allTokenData = useAllTokenData();
 
-  let allPairs = useAllPairsInUniswap() as any[];
+  let allPairs = useAllPairsInUniswap();
   const allPairData = useAllPairData();
   const listedTokens = useListedTokens();
 
-  const [showMenu, toggleMenu] = useState(false);
-  const [value, setValue] = useState("");
-  const [, toggleShadow] = useState(false);
-  const [, toggleBottomShadow] = useState(false);
+  const [showMenu, toggleMenu] = useState<boolean>(false);
+  const [value, setValue] = useState<string>("");
+  const [, toggleShadow] = useState<boolean>(false);
+  const [, toggleBottomShadow] = useState<boolean>(false);
 
   // fetch new data on tokens and pairs if needed
   useTokenData(value);
