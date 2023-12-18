@@ -126,6 +126,7 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
   );
   const [lastReportDate, setLastReportDate] = useState<string>("");
   const [allocationShare, setAllocationShare] = useState<number>(0);
+  const [expanded, setExpanded] = useState<boolean>(true);
   const { isMobile } = useSharedContext();
 
   useEffect(() => {
@@ -169,7 +170,10 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
   );
 
   return (
-    <VaultItemAccordion>
+    <VaultItemAccordion
+      expanded={expanded}
+      onChange={() => setExpanded(!expanded)}
+    >
       <AccordionSummary
         expandIcon={<ExpandMoreIcon sx={{ width: "30px", height: "30px" }} />}
         aria-controls="panel1a-content"
