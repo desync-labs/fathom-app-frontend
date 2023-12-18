@@ -1,4 +1,10 @@
-import { ClassAttributes, Component, HTMLAttributes } from "react";
+import {
+  ClassAttributes,
+  Component,
+  FC,
+  HTMLAttributes,
+  ReactNode,
+} from "react";
 import { Button } from "rebass";
 import styled from "styled-components";
 
@@ -127,12 +133,14 @@ const Blanket = (
   />
 );
 
-const Dropdown = (props: {
-  children: any;
+type DropdownProps = {
+  children: ReactNode;
   isOpen: any;
-  target: any;
-  onClose: any;
-}) => {
+  target: ReactNode;
+  onClose: () => void;
+};
+
+const Dropdown: FC<DropdownProps> = (props) => {
   const { children, isOpen, target, onClose } = props;
   return (
     <>

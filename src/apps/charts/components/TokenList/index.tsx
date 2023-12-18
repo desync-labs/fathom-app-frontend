@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, FC } from "react";
 import styled from "styled-components";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -137,11 +137,13 @@ const SORT_FIELD = {
 };
 
 // @TODO rework into virtualized list
-function TopTokenList(props: {
+type TopTokenListProps = {
   formattedTokens: any;
   itemMax?: number;
   useTracked?: boolean;
-}) {
+};
+
+const TopTokenList: FC<TopTokenListProps> = (props) => {
   const { formattedTokens, itemMax = 10, useTracked = false } = props;
   // page state
   const [page, setPage] = useState(1);
@@ -414,6 +416,6 @@ function TopTokenList(props: {
       </PageButtons>
     </ListWrapper>
   );
-}
+};
 
 export default TopTokenList;

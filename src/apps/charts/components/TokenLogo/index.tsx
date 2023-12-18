@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, FC } from "react";
 import styled from "styled-components";
 import { isAddress } from "apps/charts/utils";
 
@@ -18,12 +18,14 @@ const Image = styled.img<{ size: string }>`
   box-shadow: 0 6px 10px rgba(0, 0, 0, 0.075);
 `;
 
-export default function TokenLogo(props: {
+type TokenLogoProps = {
   [x: string]: any;
   address: string;
-  header?: false | undefined;
+  header?: boolean;
   size?: string;
-}) {
+};
+
+const TokenLogo: FC<TokenLogoProps> = (props) => {
   const { address, size = "24px", ...rest } = props;
   const [error, setError] = useState<boolean>(false);
 
@@ -60,4 +62,6 @@ export default function TokenLogo(props: {
       />
     </Inline>
   );
-}
+};
+
+export default TokenLogo;

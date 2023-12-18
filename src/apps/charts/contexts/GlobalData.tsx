@@ -720,7 +720,7 @@ export function useAllPairsInUniswap() {
   const [state] = useGlobalDataContext();
   const allPairs = state?.allPairs;
 
-  return allPairs || [];
+  return (allPairs || []) as any[];
 }
 
 export function useAllTokensInUniswap() {

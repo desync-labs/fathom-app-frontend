@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, FC } from "react";
 import { useMedia } from "react-use";
 import dayjs from "dayjs";
 import LocalLoader from "apps/charts/components/LocalLoader";
@@ -119,19 +119,22 @@ const SORT_FIELD = {
   FATHOMSWAP_RETURN: "FATHOMSWAP_RETURN",
 };
 
-function PositionList(props: { positions: Position[] }) {
+type PositionList = { positions: Position[] };
+type ListItemProps = { position: Position; index: number };
+
+const PositionList: FC<PositionList> = (props) => {
   const { positions } = props;
   const below500 = useMedia("(max-width: 500px)");
   const below740 = useMedia("(max-width: 740px)");
 
   // pagination
-  const [page, setPage] = useState(1);
-  const [maxPage, setMaxPage] = useState(1);
+  const [page, setPage] = useState<number>(1);
+  const [maxPage, setMaxPage] = useState<number>(1);
   const ITEMS_PER_PAGE = 10;
 
   // sorting
-  const [sortDirection, setSortDirection] = useState(true);
-  const [sortedColumn, setSortedColumn] = useState(SORT_FIELD.VALUE);
+  const [sortDirection, setSortDirection] = useState<boolean>(true);
+  const [sortedColumn, setSortedColumn] = useState<string>(SORT_FIELD.VALUE);
 
   useEffect(() => {
     setMaxPage(1); // edit this to do modular
@@ -152,7 +155,7 @@ function PositionList(props: { positions: Position[] }) {
 
   const [ethPrice] = useEthPrice();
 
-  const ListItem = (props: { position: Position; index: any }) => {
+  const ListItem: FC<ListItemProps> = (props) => {
     const { position, index } = props;
     const poolOwnership =
       position.liquidityTokenBalance / position.pair.totalSupply;
@@ -344,7 +347,7 @@ function PositionList(props: { positions: Position[] }) {
           return 1;
         })
         .slice(ITEMS_PER_PAGE * (page - 1), page * ITEMS_PER_PAGE)
-        .map((position: any, index: number) => {
+        .map((position: Position, index: number) => {
           return (
             <div key={index}>
               <ListItem
@@ -425,6 +428,6 @@ function PositionList(props: { positions: Position[] }) {
       </PageButtons>
     </ListWrapper>
   );
-}
+};
 
 export default PositionList;

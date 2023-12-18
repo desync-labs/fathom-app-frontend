@@ -10,6 +10,7 @@ import {
   customStylesMobile,
   customStylesTime,
 } from "apps/charts/components/Select/styles";
+import { FC } from "react";
 
 const MenuLabel = styled.div`
   display: flex;
@@ -61,8 +62,8 @@ const addressStart = new RegExp("^0x");
 function customFilter(
   option: {
     data: {
-      tokenAddress: { toString: () => string };
-      label: { toString: () => string };
+      tokenAddress: string;
+      label: string;
     };
   },
   searchText: string
@@ -80,15 +81,17 @@ function customFilter(
     .includes(searchText.toString().toLowerCase());
 }
 
-const Select = (props: {
+type SelectProps = {
   [x: string]: any;
   options: any;
   onChange: any;
   setCapEth: any;
   capEth: any;
-  tokenSelect?: false | undefined;
+  tokenSelect?: boolean;
   placeholder: any;
-}) => {
+};
+
+const Select: FC<SelectProps> = (props) => {
   const {
     options,
     onChange,
