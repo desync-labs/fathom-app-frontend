@@ -29,14 +29,14 @@ switch (process.env.ENVIRONMENT_URL) {
   case "https://dev-app-frontend-wpa8a.ondigitalocean.app" ||
     "http://127.0.0.1:3000":
     networkName = "XDC Test";
-    rpcUrl = "https://earpc.apothem.network/";
+    rpcUrl = "https://rpc.apothem.network/";
     chainId = "51";
     symbol = "TXDC";
     blockExplorer = "https://apothem.blocksscan.io/";
     break;
   default:
     networkName = "XDC Test";
-    rpcUrl = "https://earpc.apothem.network/";
+    rpcUrl = "https://rpc.apothem.network/";
     chainId = "51";
     symbol = "TXDC";
     blockExplorer = "https://apothem.blocksscan.io/";
