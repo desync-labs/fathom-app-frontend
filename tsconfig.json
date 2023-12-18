@@ -26,8 +26,5 @@
     "baseUrl": "src"
   },
   "exclude": ["node_modules", "playwright-tests"],
-  "include": [
-    "./src/**/*.ts",
-    "./src/**/*.tsx"
-  ]
+  "include": ["./src/**/*.ts", "./src/**/*.tsx"]
 }
