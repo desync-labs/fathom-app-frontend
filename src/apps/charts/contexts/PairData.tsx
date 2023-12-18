@@ -321,8 +321,7 @@ async function getBulkPairData(
 }
 
 function parseData(
-  // @ts-ignore
-  data,
+  data: any,
   oneDayData: {
     volumeUSD: string;
     untrackedVolumeUSD: string;

@@ -385,7 +385,11 @@ const getChartData = async (
         // add the day index to the set of days
         dayIndexSet.add((data[i].date / oneDay).toFixed(0));
         dayIndexArray.push(data[i]);
-        dayData.dailyVolumeUSD = parseFloat(dayData.dailyVolumeUSD);
+        const dailyVolumeUSD = parseFloat(dayData.dailyVolumeUSD);
+        return {
+          ...dayData,
+          dailyVolumeUSD: dailyVolumeUSD,
+        };
       });
 
       // fill in empty days ( there will be no day datas if no trades made that day )
