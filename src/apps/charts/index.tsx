@@ -5,14 +5,10 @@ import ThemeProvider, { GlobalStyle } from "apps/charts/Theme";
 import LocalStorageContextProvider, {
   Updater as LocalStorageContextUpdater,
 } from "apps/charts/contexts/LocalStorage";
-import TokenDataContextProvider, {
-  Updater as TokenDataContextUpdater,
-} from "apps/charts/contexts/TokenData";
-import GlobalDataContextProvider from "apps/charts/contexts/GlobalData";
+import { Updater as TokenDataContextUpdater } from "apps/charts/contexts/TokenData";
 import PairDataContextProvider, {
   Updater as PairDataContextUpdater,
 } from "apps/charts/contexts/PairData";
-import ApplicationContextProvider from "apps/charts/contexts/Application";
 import UserContextProvider from "apps/charts/contexts/User";
 import App from "apps/charts/App";
 
@@ -45,15 +41,9 @@ type ContextProvidersProps = {
 const ContextProviders: FC<ContextProvidersProps> = ({ children }) => {
   return (
     <LocalStorageContextProvider>
-      <ApplicationContextProvider>
-        <TokenDataContextProvider>
-          <GlobalDataContextProvider>
-            <PairDataContextProvider>
-              <UserContextProvider>{children}</UserContextProvider>
-            </PairDataContextProvider>
-          </GlobalDataContextProvider>
-        </TokenDataContextProvider>
-      </ApplicationContextProvider>
+      <PairDataContextProvider>
+        <UserContextProvider>{children}</UserContextProvider>
+      </PairDataContextProvider>
     </LocalStorageContextProvider>
   );
 };
