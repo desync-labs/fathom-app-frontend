@@ -1,4 +1,4 @@
-import { type Page, type Locator, expect } from "@playwright/test";
+import { type Page, type Locator } from "@playwright/test";
 import BasePage from "./base.page";
 
 export default class VaultPage extends BasePage {
@@ -35,8 +35,11 @@ export default class VaultPage extends BasePage {
     const stakedValue = await this.getVaultRowLocatorByName(name)
       .locator(`//td[7]//div[contains(@class, "value")]`)
       .textContent();
-    const stakedValueFormatted = this.extractStakedValue(stakedValue!);
-    return stakedValueFormatted;
+    if (stakedValue !== null) {
+      return this.extractStakedValue(stakedValue);
+    } else {
+      return null;
+    }
   }
 
   getStakedValueVaultRowDetails(name: string): Locator {
