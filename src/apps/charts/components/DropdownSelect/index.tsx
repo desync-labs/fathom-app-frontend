@@ -30,7 +30,7 @@ const Dropdown = styled.div`
   top: 34px;
   background-color: ${({ theme }) => theme.bg1};
   border: 1px solid rgba(0, 0, 0, 0.15);
-  padding: 40px 10px 10px 10px;
+  padding: 10px;
   border-radius: 8px;
   width: calc(100% - 20px);
   font-weight: 500;

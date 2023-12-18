@@ -43,11 +43,8 @@ const GridStatsItem = styled.div`
   padding: 12px;
   gap: 20px;
   @media (max-width: 600px) {
-    padding: 10px;
+    padding: 4px;
     gap: 10px;
-  }
-  @media (max-width: 400px) {
-    padding: 10px;
   }
 `;
 

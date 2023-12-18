@@ -3,7 +3,7 @@ import "feather-icons";
 import { Navigate, useParams } from "react-router-dom";
 import { Text } from "rebass";
 import styled from "styled-components";
-import Link from "apps/charts/components/Link";
+import Link, { CustomLink } from "apps/charts/components/Link";
 import Panel from "apps/charts/components/Panel";
 import TokenLogo from "apps/charts/components/TokenLogo";
 import PairList from "apps/charts/components/PairList";
@@ -339,14 +339,14 @@ const TokenPage: FC<{ address: string }> = ({ address }) => {
                   ) : (
                     <></>
                   )}
-                  <Link href={getPoolLink(address)} target="_blank">
+                  <CustomLink to={getPoolLink(address)}>
                     <ButtonLight>+ Add Liquidity</ButtonLight>
-                  </Link>
-                  <Link href={getSwapLink(address)} target="_blank">
+                  </CustomLink>
+                  <CustomLink to={getSwapLink(address)}>
                     <ButtonDark ml={".5rem"} mr={below1080 ? ".5rem" : ""}>
                       Trade
                     </ButtonDark>
-                  </Link>
+                  </CustomLink>
                 </RowFixed>
               </span>
             </RowBetween>

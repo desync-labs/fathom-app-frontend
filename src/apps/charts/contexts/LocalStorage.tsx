@@ -216,7 +216,6 @@ export function useSavedPairs(): UseSavedPairsReturnType {
     token0Symbol: string,
     token1Symbol: string
   ) {
-    console.log("Add Pair");
     const newList = state?.[SAVED_PAIRS];
     newList[address] = {
       address,

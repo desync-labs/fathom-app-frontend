@@ -347,7 +347,7 @@ function TxnList(props: {
           </Link>
         </DataText>
         <DataText>
-          {currency === "ETH"
+          {currency === "XDC"
             ? "Ξ " + formattedNum(item.valueETH)
             : formattedNum(item.amountUSD, true)}
         </DataText>
