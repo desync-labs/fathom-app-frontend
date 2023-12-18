@@ -286,7 +286,7 @@ export function useUserPositionChart(position: any, account: string) {
     snapshots &&
     position &&
     snapshots.filter((currentSnapshot: any) => {
-      return currentSnapshot.pair.id === position.pair.id;
+      return currentSnapshot.pair.id === position.pair?.id;
     });
 
   // get data needed for calculations
@@ -328,7 +328,7 @@ export function useUserPositionChart(position: any, account: string) {
     currentPairData,
     currentETHPrice,
     updateUserPairReturns,
-    position.pair.id,
+    position.pair?.id,
   ]);
 
   return formattedHistory;
