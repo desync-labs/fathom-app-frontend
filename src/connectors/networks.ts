@@ -74,6 +74,15 @@ export const WalletConnect = new WalletConnectConnector({
   rpcMap: rpc,
   showQrModal: true,
   projectId: "5da328ee81006c5aa59662d6cadfd5fe",
+  methods: [
+    "eth_sendTransaction",
+    "eth_signTransaction",
+    "eth_estimateGas",
+    "eth_sign",
+    "personal_sign",
+    "eth_signTypedData",
+  ],
+  optionalMethods: ["eth_estimateGas"],
 } as EthereumProviderOptions);
 
 export { XDC_CHAIN_IDS, DEFAULT_RPC, supportedChainIds, NETWORK_LABELS };
