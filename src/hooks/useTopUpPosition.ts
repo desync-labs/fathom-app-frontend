@@ -368,6 +368,15 @@ const useTopUpPosition = (
   ]);
 
   useEffect(() => {
+    let interval: ReturnType<typeof setInterval>;
+    if (account && chainId) {
+      interval = setInterval(getDebtValue, 5000);
+    }
+
+    return () => interval && clearInterval(interval);
+  }, [account, chainId, getDebtValue]);
+
+  useEffect(() => {
     if (
       pool?.poolName?.toUpperCase() === "XDC" &&
       (totalCollateral || totalFathomToken)
