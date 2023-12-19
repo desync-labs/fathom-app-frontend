@@ -359,29 +359,38 @@ function parseData(
   );
 
   // set volume properties
-  data.oneDayVolumeUSD = parseFloat(String(oneDayVolumeUSD));
-  data.oneWeekVolumeUSD = oneWeekVolumeUSD;
-  data.volumeChangeUSD = volumeChangeUSD;
-  data.oneDayVolumeUntracked = oneDayVolumeUntracked;
-  data.oneWeekVolumeUntracked = oneWeekVolumeUntracked;
-  data.volumeChangeUntracked = volumeChangeUntracked;
+  data = {
+    ...data,
+    oneDayVolumeUSD: parseFloat(String(oneDayVolumeUSD)),
+    oneWeekVolumeUSD: oneWeekVolumeUSD,
+    volumeChangeUSD: volumeChangeUSD,
+    oneDayVolumeUntracked: oneDayVolumeUntracked,
+    oneWeekVolumeUntracked: oneWeekVolumeUntracked,
+    volumeChangeUntracked: volumeChangeUntracked,
+  };
 
   // set liquidity properties
-  data.trackedReserveUSD = data.trackedReserveETH * ethPrice;
-  data.liquidityChangeUSD = getPercentChange(
-    data.reserveUSD,
-    oneDayData?.reserveUSD
-  );
+  data = {
+    ...data,
+    trackedReserveUSD: data.trackedReserveETH * ethPrice,
+    liquidityChangeUSD: getPercentChange(
+      data.reserveUSD,
+      oneDayData?.reserveUSD
+    ),
+  };
 
   // format if pair hasnt existed for a day or a week
-  if (!oneDayData && data && data.createdAtBlockNumber > oneDayBlock) {
-    data.oneDayVolumeUSD = parseFloat(data.volumeUSD);
-  }
   if (!oneDayData && data) {
-    data.oneDayVolumeUSD = parseFloat(data.volumeUSD);
+    data = {
+      ...data,
+      oneDayVolumeUSD: parseFloat(data.volumeUSD),
+    };
   }
   if (!oneWeekData && data) {
-    data.oneWeekVolumeUSD = parseFloat(data.volumeUSD);
+    data = {
+      ...data,
+      oneWeekVolumeUSD: parseFloat(data.volumeUSD),
+    };
   }
 
   if (
@@ -389,10 +398,13 @@ function parseData(
     TRACKED_OVERRIDES_TOKENS.includes(data.token0.id) ||
     TRACKED_OVERRIDES_TOKENS.includes(data.token1.id)
   ) {
-    data.oneDayVolumeUSD = oneDayVolumeUntracked;
-    data.oneWeekVolumeUSD = oneWeekVolumeUntracked;
-    data.volumeChangeUSD = volumeChangeUntracked;
-    data.trackedReserveUSD = data.reserveUSD;
+    data = {
+      ...data,
+      oneDayVolumeUSD: oneDayVolumeUntracked,
+      oneWeekVolumeUSD: oneWeekVolumeUntracked,
+      volumeChangeUSD: volumeChangeUntracked,
+      trackedReserveUSD: data.reserveUSD,
+    };
   }
 
   return data;
