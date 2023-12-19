@@ -35,7 +35,7 @@ const DexView: FC<DexViewProps> = ({ openConnectorMenu }) => {
   return (
     <>
       <NestedRouteNav>
-        <NestedRouteLink className={isSwapActive ? "active" : ""} to="/swap/">
+        <NestedRouteLink className={isSwapActive ? "active" : ""} to="/swap">
           <StakingIcon isStakingActive={isSwapActive} />
           Swap
         </NestedRouteLink>

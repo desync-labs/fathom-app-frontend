@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { FC, useState } from "react";
 import styled from "styled-components";
 import {
   XAxis,
@@ -47,7 +47,9 @@ const CHART_VIEW = {
   FEES: "Fees",
 };
 
-const PairReturnsChart = (props: { account: any; position: any }) => {
+type PairReturnChartProps = { account: any; position: any };
+
+const PairReturnsChart: FC<PairReturnChartProps> = (props) => {
   const { account, position } = props;
   let data = useUserPositionChart(position, account);
 
@@ -97,13 +99,17 @@ const PairReturnsChart = (props: { account: any; position: any }) => {
           <AutoRow justify="flex-end" gap="6px">
             <OptionButton
               active={timeWindow === timeframeOptions.WEEK}
-              onClick={() => setTimeWindow(timeframeOptions.WEEK)}
+              onClick={() => {
+                setTimeWindow(timeframeOptions.WEEK);
+              }}
             >
               1W
             </OptionButton>
             <OptionButton
               active={timeWindow === timeframeOptions.MONTH}
-              onClick={() => setTimeWindow(timeframeOptions.MONTH)}
+              onClick={() => {
+                setTimeWindow(timeframeOptions.MONTH);
+              }}
             >
               1M
             </OptionButton>
