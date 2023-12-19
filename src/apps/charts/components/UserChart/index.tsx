@@ -21,7 +21,6 @@ import { timeframeOptions } from "apps/charts/constants";
 import DropdownSelect from "apps/charts/components/DropdownSelect";
 import { useUserLiquidityChart } from "apps/charts/contexts/User";
 import LocalLoader from "apps/charts/components/LocalLoader";
-import { useDarkModeManager } from "apps/charts/contexts/LocalStorage";
 import { TYPE } from "apps/charts/Theme";
 import { FC, useState } from "react";
 
@@ -54,8 +53,7 @@ const UserChart: FC<UserChartsProps> = ({ account }) => {
 
   const aspect = above1600 ? 60 / 12 : below600 ? 60 / 42 : 60 / 16;
 
-  const [darkMode] = useDarkModeManager();
-  const textColor = darkMode ? "white" : "black";
+  const textColor = "white";
 
   return (
     <ChartWrapper>
