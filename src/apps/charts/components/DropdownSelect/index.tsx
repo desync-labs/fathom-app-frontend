@@ -63,7 +63,7 @@ const DropdownSelect = (props: {
         justify="center"
       >
         <TYPE.main>{active}</TYPE.main>
-        <StyledIcon>
+        <StyledIcon style={{ display: "flex", alignItems: "center" }}>
           <ArrowStyled />
         </StyledIcon>
       </RowBetween>

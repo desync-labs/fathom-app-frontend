@@ -1,7 +1,7 @@
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
-import { Divider } from "@mui/material";
+import { Box, Divider } from "@mui/material";
 
 const Footer = styled(Typography)`
   display: flex;
@@ -31,7 +31,7 @@ export const FooterDivider = styled(Divider)`
 
 const Copyright = function Copyright(props: any) {
   return (
-    <>
+    <Box>
       <TokensWrapper>
         <a
           href={
@@ -60,7 +60,7 @@ const Copyright = function Copyright(props: any) {
         </Link>
         {new Date().getFullYear()}.
       </Footer>
-    </>
+    </Box>
   );
 };
 
