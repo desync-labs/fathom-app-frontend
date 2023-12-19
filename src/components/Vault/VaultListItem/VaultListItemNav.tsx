@@ -53,9 +53,7 @@ const VaultListItemNav: FC<VaultListItemNavPropsType> = ({
 }) => {
   return (
     <VaultNavWrapper
-      data-testid={`vaultRowDetails-${vaultPosition?.token.name
-        .split(" ")
-        .join("-")}-navBar`}
+      data-testid={`vaultRowDetails-${vaultPosition?.id}-navBar`}
     >
       {vaultPosition && vaultPosition.balanceTokens !== "0" && (
         <VaultNavItem

@@ -142,7 +142,7 @@ const VaultListItemEarningDetails: FC<VaultListItemFarmingDetailsProps> = ({
   const { balancePosition, balanceShares } = vaultPosition;
   const { fxdPrice } = usePricesContext();
   const { isMobile } = useSharedContext();
-  const vaultTestId = vaultPosition.token.name.split(" ").join("-");
+  const vaultTestId = vaultItemData.id;
 
   return (
     <Grid container>
@@ -229,7 +229,12 @@ const VaultListItemEarningDetails: FC<VaultListItemFarmingDetailsProps> = ({
       </Grid>
       <Grid item xs={isMobile ? 12 : 2}>
         <ManageVaultBtnWrapper>
-          <ManageVaultBtn onClick={onOpen}>Manage Vault</ManageVaultBtn>
+          <ManageVaultBtn
+            onClick={onOpen}
+            data-testid={`vaultRowDetails-${vaultTestId}-managePositionButton`}
+          >
+            Manage Vault
+          </ManageVaultBtn>
         </ManageVaultBtnWrapper>
       </Grid>
     </Grid>
