@@ -1,18 +1,20 @@
 import { useLocation } from "react-router-dom";
-import { FC, useMemo } from "react";
+import { FC, lazy, Suspense, useMemo } from "react";
 import { GovernanceIcon, StakingIcon } from "components/Common/MenuIcons";
 import {
   NestedRouteLink,
   NestedRouteNav,
 } from "components/AppComponents/AppBox/AppBox";
-import ChartsIndexComponent from "apps/charts";
 import { styled } from "@mui/material/styles";
+import LocalLoader from "apps/charts/components/LocalLoader";
 
 const ChartsNestedRouteContainer = styled("div")`
   width: 100%;
   margin: 0;
   padding: 0;
 `;
+
+const ChartsIndexComponent = lazy(() => import("../../apps/charts/index"));
 
 const ChartsView: FC = () => {
   const location = useLocation();
@@ -76,7 +78,9 @@ const ChartsView: FC = () => {
         </NestedRouteLink>
       </NestedRouteNav>
       <ChartsNestedRouteContainer>
-        <ChartsIndexComponent />
+        <Suspense fallback={<LocalLoader />}>
+          <ChartsIndexComponent />
+        </Suspense>
       </ChartsNestedRouteContainer>
     </>
   );
