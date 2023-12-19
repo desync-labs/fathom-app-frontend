@@ -131,6 +131,14 @@ const AddRemoveLiquidity = styled(Box)`
   padding-top: 10px;
   justify-content: right;
   gap: 7px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    button {
+      height: auto;
+      padding: 5px;
+    }
+  }
 `;
 
 const StableSwap = () => {
