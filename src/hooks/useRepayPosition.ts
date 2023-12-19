@@ -202,6 +202,15 @@ const useRepayPosition = (
   }, [getBalance, handleOnOpen, getDebtValue]);
 
   useEffect(() => {
+    let interval: ReturnType<typeof setInterval>;
+    if (account && chainId) {
+      interval = setInterval(getDebtValue, 5000);
+    }
+
+    return () => interval && clearInterval(interval);
+  }, [account, chainId, getDebtValue]);
+
+  useEffect(() => {
     balance && BigNumber(balance).isLessThan(fathomToken)
       ? setBalanceError(true)
       : setBalanceError(false);
