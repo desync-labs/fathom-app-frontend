@@ -47,7 +47,7 @@ const Right = styled.div<{ open: boolean }>`
 
 const Center = styled.div`
   height: 100%;
-  z-index: 9999;
+  z-index: 1;
   transition: width 0.25s ease;
   overflow: hidden;
 `;
