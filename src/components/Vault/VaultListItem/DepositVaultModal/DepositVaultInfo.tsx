@@ -19,8 +19,6 @@ const DepositVaultInfo: FC<VaultDepositInfoProps> = ({
   const { token, shareToken, balanceTokens, strategies, totalFees } =
     vaultItemData;
 
-  console.log(111, totalFees);
-
   const { totalApr, count } = strategies[0].reports.reduce(
     (accumulator: any, strategyReport: any) => {
       strategyReport.results.forEach((result: any) => {
