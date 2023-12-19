@@ -17,6 +17,8 @@ export enum GraphOperationName {
   FathomHealth = "FathomHealth",
   FXDUser = "FXDUser",
   FXDPositions = "FXDPositions",
+  AccountVaultPositions = "AccountVaultPositions",
+  Vaults = "Vaults",
 }
 
 export interface PositionData {
@@ -27,9 +29,13 @@ export interface PositionData {
 }
 
 export interface VaultDepositData {
-  stakedAmount: number;
-  poolShare: number;
-  shareTokens: number;
+  stakedAmount: number | null;
+  poolShare: number | null;
+  shareTokens: number | null;
+}
+
+export interface ValidateVaultDataParams extends VaultDepositData {
+  id: string
 }
 
 export enum VaultFilterName {

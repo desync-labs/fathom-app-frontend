@@ -11,3 +11,19 @@ export function extractNumericValue(inputString: string): number | null {
     return null;
   }
 }
+
+function countDecimals(number: number): number {
+  if (Math.floor(number) === number) return 0;
+  return number.toString().split(".")[1]?.length || 0;
+}
+
+export function transformToSameDecimals(
+  originalNumber: number,
+  targetNumber: number
+): number {
+  const decimalPlaces = countDecimals(originalNumber);
+
+  const transformedNumber = parseFloat(targetNumber.toFixed(decimalPlaces));
+
+  return transformedNumber;
+}
