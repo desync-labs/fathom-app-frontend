@@ -21,7 +21,8 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
   formToken,
   formSharedToken,
 }) => {
-  const { token, shareToken, balanceTokens, strategies } = vaultItemData;
+  const { token, shareToken, balanceTokens, strategies, totalFees } =
+    vaultItemData;
   const { balancePosition, balanceShares } = vaultPosition;
 
   const { totalApr, count } = strategies[0].reports.reduce(
@@ -186,7 +187,9 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
         <Divider />
         <AppListItem
           alignItems="flex-start"
-          secondaryAction={strategies[0].reports[0].totalFees + "%"}
+          secondaryAction={
+            formatPercentage(BigNumber(totalFees).toNumber()) + "%"
+          }
         >
           <ListItemText primary="Fee" />
         </AppListItem>

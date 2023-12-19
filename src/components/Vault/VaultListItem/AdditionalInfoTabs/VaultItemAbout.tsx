@@ -2,7 +2,7 @@ import { FC, useCallback, useEffect, useState } from "react";
 import BigNumber from "bignumber.js";
 import { Box, ListItemText, Typography, styled } from "@mui/material";
 import { IVault, IVaultStrategy, IVaultStrategyReport } from "fathom-sdk";
-import { formatNumber } from "utils/format";
+import { formatNumber, formatPercentage } from "utils/format";
 import useSharedContext from "context/shared";
 import { VaultItemInfoWrapper } from "components/Vault/VaultListItem";
 import { AppList, AppListItem } from "components/AppComponents/AppList/AppList";
@@ -33,7 +33,7 @@ type VaultItemAboutPropsTypes = {
 };
 
 const VaultItemAbout: FC<VaultItemAboutPropsTypes> = ({ vaultItemData }) => {
-  const { strategies, token } = vaultItemData;
+  const { strategies, token, totalFees, protocolFees } = vaultItemData;
   const [earnedHistoryArr, setEarnedHistoryArr] = useState<
     HistoryChartDataType[]
   >([]);
@@ -213,7 +213,9 @@ const VaultItemAbout: FC<VaultItemAboutPropsTypes> = ({ vaultItemData }) => {
               <AppListItem
                 alignItems="flex-start"
                 secondaryAction={
-                  <>{`${strategies[0].reports[0].protocolFees}%`}</>
+                  <>{`${formatPercentage(
+                    BigNumber(protocolFees).toNumber()
+                  )}%`}</>
                 }
                 sx={{ padding: "0 !important" }}
               >
@@ -222,7 +224,7 @@ const VaultItemAbout: FC<VaultItemAboutPropsTypes> = ({ vaultItemData }) => {
               <AppListItem
                 alignItems="flex-start"
                 secondaryAction={
-                  <>{`${strategies[0].reports[0].totalFees}%`}</>
+                  <>{`${formatPercentage(BigNumber(totalFees).toNumber())}%`}</>
                 }
                 sx={{ padding: "0 !important" }}
               >

@@ -10,7 +10,7 @@ type VaultItemStrategiesPropsTypes = {
 const VaultItemStrategies: FC<VaultItemStrategiesPropsTypes> = ({
   vaultItemData,
 }) => {
-  const { strategies, balanceTokens, token } = vaultItemData;
+  const { strategies, balanceTokens, token, totalFees } = vaultItemData;
   return (
     <>
       {!strategies.length ? (
@@ -21,6 +21,7 @@ const VaultItemStrategies: FC<VaultItemStrategiesPropsTypes> = ({
             strategyData={strategy}
             vaultBalanceTokens={balanceTokens}
             tokenName={token.name}
+            totalFees={totalFees}
             key={strategy.id}
           />
         ))
