@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import styled from "styled-components";
 import {
   Area,
@@ -14,7 +14,6 @@ import {
   toNiceDate,
   toNiceDateYear,
   formattedNum,
-  getTimeframe,
 } from "apps/charts/utils";
 import { OptionButton } from "apps/charts/components/ButtonStyled";
 import { useMedia } from "react-use";
@@ -40,7 +39,6 @@ const UserChart: FC<UserChartProps> = (props) => {
   const chartData = useUserLiquidityChart(account);
 
   const [timeWindow, setTimeWindow] = useState(timeframeOptions.ALL_TIME);
-  const [filterdChartData, setFilterdChartData] = useState(chartData);
 
   const below600 = useMedia("(max-width: 600px)");
   const above1600 = useMedia("(min-width: 1600px)");
@@ -48,14 +46,6 @@ const UserChart: FC<UserChartProps> = (props) => {
   const aspect = above1600 ? 60 / 12 : below600 ? 60 / 42 : 60 / 16;
 
   const textColor = "white";
-
-  useEffect(() => {
-    const utcStartTime = getTimeframe(timeWindow);
-    const filterdData = chartData?.filter(
-      (entry: { date: number }) => entry.date >= utcStartTime
-    );
-    setFilterdChartData(filterdData);
-  }, [chartData, timeWindow]);
 
   return (
     <ChartWrapper>
@@ -96,12 +86,12 @@ const UserChart: FC<UserChartProps> = (props) => {
           </AutoRow>
         </RowBetween>
       )}
-      {filterdChartData ? (
+      {chartData ? (
         <ResponsiveContainer aspect={aspect}>
           <AreaChart
             margin={{ top: 0, right: 10, bottom: 6, left: 0 }}
             barCategoryGap={1}
-            data={filterdChartData}
+            data={chartData}
           >
             <defs>
               <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
