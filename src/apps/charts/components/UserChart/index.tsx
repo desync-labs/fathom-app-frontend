@@ -1,4 +1,3 @@
-import { FC, useState } from "react";
 import styled from "styled-components";
 import {
   Area,
@@ -14,6 +13,7 @@ import {
   toNiceDate,
   toNiceDateYear,
   formattedNum,
+  getTimeframe,
 } from "apps/charts/utils";
 import { OptionButton } from "apps/charts/components/ButtonStyled";
 import { useMedia } from "react-use";
@@ -21,7 +21,9 @@ import { timeframeOptions } from "apps/charts/constants";
 import DropdownSelect from "apps/charts/components/DropdownSelect";
 import { useUserLiquidityChart } from "apps/charts/contexts/User";
 import LocalLoader from "apps/charts/components/LocalLoader";
+import { useDarkModeManager } from "apps/charts/contexts/LocalStorage";
 import { TYPE } from "apps/charts/Theme";
+import { FC, useState } from "react";
 
 const ChartWrapper = styled.div`
   height: 100%;
@@ -32,20 +34,28 @@ const ChartWrapper = styled.div`
   }
 `;
 
-type UserChartProps = { account: string };
+type UserChartsProps = { account: string };
 
-const UserChart: FC<UserChartProps> = (props) => {
-  const { account } = props;
+const UserChart: FC<UserChartsProps> = ({ account }) => {
   const chartData = useUserLiquidityChart(account);
 
-  const [timeWindow, setTimeWindow] = useState(timeframeOptions.ALL_TIME);
+  const [timeWindow, setTimeWindow] = useState<string>(
+    timeframeOptions.ALL_TIME
+  );
+  const utcStartTime = getTimeframe(timeWindow);
 
   const below600 = useMedia("(max-width: 600px)");
   const above1600 = useMedia("(min-width: 1600px)");
 
+  const domain = [
+    (dataMin: any) => (dataMin > utcStartTime ? dataMin : utcStartTime),
+    "dataMax",
+  ];
+
   const aspect = above1600 ? 60 / 12 : below600 ? 60 / 42 : 60 / 16;
 
-  const textColor = "white";
+  const [darkMode] = useDarkModeManager();
+  const textColor = darkMode ? "white" : "black";
 
   return (
     <ChartWrapper>
@@ -109,7 +119,7 @@ const UserChart: FC<UserChartProps> = (props) => {
               dataKey="date"
               tick={{ fill: textColor }}
               type={"number"}
-              domain={["dataMin", "dataMax"]}
+              domain={domain as any}
             />
             <YAxis
               type="number"
