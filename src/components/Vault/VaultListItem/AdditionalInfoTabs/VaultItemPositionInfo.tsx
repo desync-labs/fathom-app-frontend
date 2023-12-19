@@ -15,7 +15,7 @@ const VaultItemPositionInfo: FC<VaultItemPositionInfoPropsTypes> = ({
   vaultPosition,
   setManageVault,
 }) => {
-  const vaultTestId = vaultPosition.token.name.split(" ").join("-");
+  const vaultTestId = vaultItemData.id;
 
   return (
     <>

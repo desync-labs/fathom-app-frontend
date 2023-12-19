@@ -17,30 +17,30 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     await vaultPage.connectWallet(WalletConnectOptions.Metamask);
     await vaultPage.validateConnectedWalletAddress();
     await expect
-      .soft(vaultPage.getActionButtonRowLocatorByName(fxdVaultData.name))
+      .soft(vaultPage.getActionButtonRowLocatorById(fxdVaultData.id))
       .toHaveText("Deposit");
   });
 
-  test("FXD Vault: Depositing 100 FXD is successful", async ({ vaultPage }) => {
+  test.only("FXD Vault: Depositing 100 FXD is successful", async ({
+    vaultPage,
+  }) => {
     await vaultPage.navigate();
     await vaultPage.connectWallet(WalletConnectOptions.Metamask);
     await vaultPage.validateConnectedWalletAddress();
-    const tvlValueBefore = await vaultPage.getTvlVaultRowValue(
-      fxdVaultData.name
-    );
+    const tvlValueBefore = await vaultPage.getTvlVaultRowValue(fxdVaultData.id);
     const availableValueBefore = await vaultPage.getAvailableVaultRowValue(
-      fxdVaultData.name
+      fxdVaultData.id
     );
     const stakedValueBefore = await vaultPage.getStakedVaultRowValue(
-      fxdVaultData.name
+      fxdVaultData.id
     );
     const pooledValueBefore = await vaultPage.getPooledVaultRowDetailsValue(
-      fxdVaultData.name
+      fxdVaultData.id
     );
     const yourShareValueBefore =
-      await vaultPage.getYourShareVaultRowDetailsValue(fxdVaultData.name);
+      await vaultPage.getYourShareVaultRowDetailsValue(fxdVaultData.id);
     const shareTokenValueBefore =
-      await vaultPage.getShareTokenVaultRowDetailsValue(fxdVaultData.name);
+      await vaultPage.getShareTokenVaultRowDetailsValue(fxdVaultData.id);
     console.log(tvlValueBefore);
     console.log(availableValueBefore);
     console.log(stakedValueBefore);
@@ -48,5 +48,9 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     console.log(yourShareValueBefore);
     console.log(shareTokenValueBefore);
     // TO DO - Continue the test
+    await vaultPage.depositVault({
+      id: fxdVaultData.id,
+      depositAmount: 100,
+    });
   });
 });

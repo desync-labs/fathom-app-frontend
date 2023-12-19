@@ -187,7 +187,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
 }) => {
   const { token, balanceTokens, depositLimit, strategies } = vaultItemData;
   const { fxdPrice } = usePricesContext();
-  const vaultTestId = vaultItemData.token.name.split(" ").join("-");
+  const vaultTestId = vaultItemData.id;
 
   const {
     extended,
@@ -312,14 +312,14 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
             <ExtendedBtn
               className={extended ? "visible" : "hidden"}
               onClick={() => setExtended(!extended)}
-              data-testid={`vaultRow-${vaultTestId}-extendButton`}
+              data-testid={`vaultRow-${vaultTestId}-hideButton`}
             >
               <img src={DirectionUp} alt={"direction-up"} />
             </ExtendedBtn>
             <ExtendedBtn
               className={!extended ? "visible" : "hidden"}
               onClick={() => setExtended(!extended)}
-              data-testid={`vaultRow-${vaultTestId}-extendedButton`}
+              data-testid={`vaultRow-${vaultTestId}-extendButton`}
             >
               <img src={DirectionDown} alt={"direction-down"} />
             </ExtendedBtn>
@@ -329,7 +329,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
       {extended && (
         <AppTableRow
           className={"border"}
-          data-testid={`vaultRowDetails-${vaultItemData.token.name}`}
+          data-testid={`vaultRowDetails-${vaultTestId}`}
         >
           <TableCell colSpan={8} sx={{ padding: "0 !important" }}>
             <VaultListItemNav

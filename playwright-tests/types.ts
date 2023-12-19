@@ -25,3 +25,14 @@ export interface PositionData {
   borrowAmount: number;
   safetyBufferPercentage: number;
 }
+
+export interface VaultDepositData {
+  stakedAmount: number;
+  poolShare: number;
+  shareTokens: number;
+}
+
+export enum VaultFilterName {
+  LiveNow = "Live Now",
+  Finished = "Finished",
+}
