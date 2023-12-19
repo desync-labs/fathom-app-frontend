@@ -174,6 +174,7 @@ export const MainBox = styled(MuiBox)`
   overflow: auto;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   width: 100%;
 `;
 

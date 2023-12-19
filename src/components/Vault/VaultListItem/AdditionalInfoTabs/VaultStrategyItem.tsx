@@ -186,7 +186,7 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
         <Typography component={"p"} fontSize="12px" pb={2}>
           {strategyData.id}
         </Typography>
-        <Typography component={"span"} fontSize="14px">
+        <Typography fontSize="14px" pb={2}>
           Our strategy involves dynamically allocating our reserves to different
           investment opportunities. This flexibility allows us to capitalize on
           the best market conditions.
