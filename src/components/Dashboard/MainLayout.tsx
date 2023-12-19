@@ -604,6 +604,7 @@ const MainLayout = () => {
                   </LayoutWrapper>
                 }
               ></Route>
+              <Route path="*" element={<Navigate to="/charts" replace />} />
             </Route>
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
