@@ -16,7 +16,10 @@ const DepositVaultInfo: FC<VaultDepositInfoProps> = ({
   deposit,
   sharedToken,
 }) => {
-  const { token, shareToken, balanceTokens, strategies } = vaultItemData;
+  const { token, shareToken, balanceTokens, strategies, totalFees } =
+    vaultItemData;
+
+  console.log(111, totalFees);
 
   const { totalApr, count } = strategies[0].reports.reduce(
     (accumulator: any, strategyReport: any) => {
@@ -100,7 +103,7 @@ const DepositVaultInfo: FC<VaultDepositInfoProps> = ({
         <AppListItem
           alignItems="flex-start"
           secondaryAction={
-            formatNumber(Number(strategies[0].reports[0].totalFees)) + "%"
+            formatPercentage(BigNumber(totalFees).toNumber()) + "%"
           }
         >
           <ListItemText primary="Fee" />

@@ -99,6 +99,7 @@ type VaultStrategyItemPropsType = {
   strategyData: IVaultStrategy;
   vaultBalanceTokens: string;
   tokenName: string;
+  totalFees: string;
 };
 
 const VaultIndicatorItem: FC<VaultIndicatorItemPropsType> = ({
@@ -120,6 +121,7 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
   strategyData,
   vaultBalanceTokens,
   tokenName,
+  totalFees,
 }) => {
   const [aprHistoryArr, setAprHistoryArr] = useState<HistoryChartDataType[]>(
     []
@@ -197,7 +199,11 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
             <VaultIndicatorList>
               <VaultIndicatorItem
                 title="Capital Allocation"
-                value={`${strategyData.currentDebt}`}
+                value={`${formatNumber(
+                  BigNumber(strategyData.currentDebt)
+                    .dividedBy(10 ** 18)
+                    .toNumber()
+                )}`}
                 units={` ${tokenName}`}
               />
               <VaultIndicatorItem
@@ -225,9 +231,7 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
               />
               <VaultIndicatorItem
                 title="Perfomance fee"
-                value={formatNumber(
-                  BigNumber(strategyData.reports[0].totalFees).toNumber()
-                )}
+                value={formatNumber(BigNumber(totalFees).toNumber())}
                 units="%"
               />
             </VaultIndicatorList>
