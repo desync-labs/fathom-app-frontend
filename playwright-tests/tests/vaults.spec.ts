@@ -21,36 +21,21 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
       .toHaveText("Deposit");
   });
 
-  test.only("FXD Vault: Depositing 100 FXD is successful", async ({
+  test("FXD Vault: Manage Vault: Depositing 10 FXD is successful", async ({
     vaultPage,
   }) => {
     await vaultPage.navigate();
     await vaultPage.connectWallet(WalletConnectOptions.Metamask);
     await vaultPage.validateConnectedWalletAddress();
-    const tvlValueBefore = await vaultPage.getTvlVaultRowValue(fxdVaultData.id);
-    const availableValueBefore = await vaultPage.getAvailableVaultRowValue(
-      fxdVaultData.id
-    );
-    const stakedValueBefore = await vaultPage.getStakedVaultRowValue(
-      fxdVaultData.id
-    );
-    const pooledValueBefore = await vaultPage.getPooledVaultRowDetailsValue(
-      fxdVaultData.id
-    );
-    const yourShareValueBefore =
-      await vaultPage.getYourShareVaultRowDetailsValue(fxdVaultData.id);
-    const shareTokenValueBefore =
-      await vaultPage.getShareTokenVaultRowDetailsValue(fxdVaultData.id);
-    console.log(tvlValueBefore);
-    console.log(availableValueBefore);
-    console.log(stakedValueBefore);
-    console.log(pooledValueBefore);
-    console.log(yourShareValueBefore);
-    console.log(shareTokenValueBefore);
-    // TO DO - Continue the test
-    await vaultPage.depositVault({
+    const vaultExpectedData = await vaultPage.depositVault({
       id: fxdVaultData.id,
-      depositAmount: 100,
+      depositAmount: 10,
+    });
+    await vaultPage.validateVaultData({
+      id: fxdVaultData.id,
+      stakedAmount: vaultExpectedData.stakedAmount,
+      poolShare: vaultExpectedData.poolShare,
+      shareTokens: vaultExpectedData.shareTokens,
     });
   });
 });

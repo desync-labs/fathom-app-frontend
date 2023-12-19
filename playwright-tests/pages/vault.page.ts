@@ -1,9 +1,15 @@
 import { type Page, type Locator, expect } from "@playwright/test";
 import BasePage from "./base.page";
-import { extractNumericValue } from "../utils/helpers";
-import { VaultFilterName } from "../types";
+import { extractNumericValue, transformToSameDecimals } from "../utils/helpers";
+import {
+  GraphOperationName,
+  ValidateVaultDataParams,
+  VaultDepositData,
+  VaultFilterName,
+} from "../types";
 // @ts-ignore
 import * as metamask from "@synthetixio/synpress/commands/metamask";
+import { graphAPIEndpoints } from "../fixtures/api.data";
 export default class VaultPage extends BasePage {
   readonly path: string;
   readonly dialogManageVault: Locator;
@@ -21,6 +27,12 @@ export default class VaultPage extends BasePage {
   readonly btnLiveNow: Locator;
   readonly btnFinished: Locator;
   readonly progressBar: Locator;
+  readonly divDialogModalPositionOpenedSuccessfully: Locator;
+  readonly btnCloseModal: Locator;
+  readonly doneIconModal: Locator;
+  readonly headingFourModal: Locator;
+  readonly spanBodyOneModal: Locator;
+  readonly spanBodyTwoModal: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -68,6 +80,18 @@ export default class VaultPage extends BasePage {
       '//button[contains(text(), "Finished")]'
     );
     this.progressBar = this.page.locator('[role="progressbar"]');
+    this.btnCloseModal = this.page.locator('button[aria-label="close"]');
+    this.doneIconModal = this.page.locator('[data-testid="DoneIcon"]');
+    this.headingFourModal = this.page.locator('div[role="dialog"] h4');
+    this.spanBodyOneModal = this.page.locator(
+      'div[role="dialog"] p[class*="MuiTypography-body1"]'
+    );
+    this.spanBodyTwoModal = this.page.locator(
+      'div[role="dialog"] span[class*="MuiTypography-body2"]'
+    );
+    this.divDialogModalPositionOpenedSuccessfully = this.page.locator(
+      '//h4[text()="All done!"]/parent::div'
+    );
   }
 
   async navigate(): Promise<void> {
@@ -216,6 +240,7 @@ export default class VaultPage extends BasePage {
   }
 
   async enterDepositAmount(amount: number): Promise<void> {
+    await this.page.waitForTimeout(1000);
     await this.inputDepositAmount.clear();
     await this.inputDepositAmount.pressSequentially(amount.toString());
   }
@@ -228,19 +253,119 @@ export default class VaultPage extends BasePage {
     await metamask.confirmTransaction();
   }
 
+  async validateManagePositionDialogNotVisible(): Promise<void> {
+    await expect.soft(this.dialogManageVault).not.toBeVisible({
+      timeout: 20000,
+    });
+  }
+
+  async validateDepositSuccessfulModal(): Promise<void> {
+    await expect.soft(this.doneIconModal).toBeVisible();
+    await expect.soft(this.headingFourModal).toBeVisible();
+    await expect.soft(this.headingFourModal).toHaveText("All done!");
+    await expect.soft(this.spanBodyOneModal).toBeVisible();
+    await expect
+      .soft(this.spanBodyOneModal)
+      .toHaveText("Deposit was successful!");
+    await expect.soft(this.spanBodyTwoModal).toBeVisible();
+    await expect
+      .soft(this.spanBodyTwoModal)
+      .toHaveText("Add Vault Shares FXD to wallet to track your balance.");
+  }
+
+  async closeDepositSuccessfuldModal(): Promise<void> {
+    await this.btnCloseModal.click();
+    await expect(
+      this.divDialogModalPositionOpenedSuccessfully
+    ).not.toBeVisible();
+  }
+
   async depositVault({
     id,
     depositAmount,
   }: {
     id: string;
     depositAmount: number;
-  }): Promise<void> {
+  }): Promise<VaultDepositData> {
     await this.toggleFilter(VaultFilterName.LiveNow);
     await this.extendVaultDetails(id);
     await this.getManageVaultButtonRowDetailsLocatorById(id).click();
     await expect(this.dialogManageVault).toBeVisible();
-    await this.page.waitForTimeout(1000);
     await this.enterDepositAmount(depositAmount);
+    await this.page.waitForTimeout(2000);
+    const depositedValueAfterText =
+      await this.spanDepositedValueAfterManageVaultDialog.textContent();
+    const poolShareValueAfterText =
+      await this.spanPoolShareValueAfterManageVaultDialog.textContent();
+    const shareTokensValueAfterText =
+      await this.spanShareTokensValueAfterManageVaultDialog.textContent();
+    let depositedValueAfter: number | null;
+    let poolShareValueAfter: number | null;
+    let shareTokensValueAfter: number | null;
+    if (
+      depositedValueAfterText !== null &&
+      poolShareValueAfterText !== null &&
+      shareTokensValueAfterText !== null
+    ) {
+      depositedValueAfter = extractNumericValue(depositedValueAfterText);
+      poolShareValueAfter = extractNumericValue(poolShareValueAfterText);
+      shareTokensValueAfter = extractNumericValue(shareTokensValueAfterText);
+    } else {
+      depositedValueAfter = null;
+      poolShareValueAfter = null;
+      shareTokensValueAfter = null;
+    }
+    const vaultDepositDataExpected: VaultDepositData = {
+      stakedAmount: depositedValueAfter,
+      poolShare: poolShareValueAfter,
+      shareTokens: shareTokensValueAfter,
+    };
     await this.confirmDeposit();
+    await Promise.all([
+      this.validateAlertMessage({
+        status: "pending",
+        title: "Handling New Deposit Pending",
+        body: "Click on transaction to view on Block Explorer.",
+      }),
+      this.waitForGraphRequestByOperationName(
+        graphAPIEndpoints.vaultsSubgraph,
+        GraphOperationName.Vaults
+      ),
+      this.waitForGraphRequestByOperationName(
+        graphAPIEndpoints.vaultsSubgraph,
+        GraphOperationName.AccountVaultPositions
+      ),
+    ]);
+    await this.validateManagePositionDialogNotVisible();
+    await this.validateDepositSuccessfulModal();
+    await this.closeDepositSuccessfuldModal();
+    await this.page.waitForTimeout(2000);
+    return vaultDepositDataExpected;
+  }
+
+  async validateVaultData({
+    id,
+    stakedAmount,
+    poolShare,
+    shareTokens,
+  }: ValidateVaultDataParams): Promise<void> {
+    const stakedAmountActual = await this.getStakedVaultRowValue(id);
+    const pooledValueActual = await this.getPooledVaultRowDetailsValue(id);
+    const yourShareValueActual = await this.getYourShareVaultRowDetailsValue(
+      id
+    );
+    const shareTokenValueActual = await this.getShareTokenVaultRowDetailsValue(
+      id
+    );
+    expect.soft(stakedAmountActual).toEqual(Number(stakedAmount?.toFixed(2)));
+    expect.soft(pooledValueActual).toEqual(stakedAmount);
+    if (poolShare !== null && yourShareValueActual !== null) {
+      expect
+        .soft(transformToSameDecimals(poolShare, yourShareValueActual))
+        .toEqual(poolShare);
+    } else {
+      throw Error("One of extracted values is null");
+    }
+    expect.soft(shareTokenValueActual).toEqual(shareTokens);
   }
 }
