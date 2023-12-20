@@ -1,6 +1,6 @@
 import { BigNumber } from "bignumber.js";
 import dayjs from "dayjs";
-import { ethers } from "ethers";
+import { ethers } from "fathom-ethers";
 import utc from "dayjs/plugin/utc";
 import { client, blockClient } from "apps/charts/apollo/client";
 import { GET_BLOCK, GET_BLOCKS, SHARE_VALUE } from "apps/charts/apollo/queries";

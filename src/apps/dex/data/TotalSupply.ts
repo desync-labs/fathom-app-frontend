@@ -1,4 +1,4 @@
-import { BigNumber } from "@ethersproject/bignumber";
+import { BigNumber } from "@into-the-fathom/bignumber";
 import { Token, TokenAmount } from "into-the-fathom-swap-sdk";
 import { useTokenContract } from "apps/dex/hooks/useContract";
 import { useSingleCallResult } from "apps/dex/state/multicall/hooks";

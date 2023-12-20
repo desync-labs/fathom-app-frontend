@@ -1,6 +1,6 @@
-import { splitSignature } from "@ethersproject/bytes";
-import { Contract } from "@ethersproject/contracts";
-import { TransactionResponse } from "@ethersproject/providers";
+import { splitSignature } from "@into-the-fathom/bytes";
+import { Contract } from "@into-the-fathom/contracts";
+import { TransactionResponse } from "@into-the-fathom/providers";
 import {
   ChainId,
   Currency,
@@ -64,7 +64,7 @@ import { useBurnActionHandlers } from "apps/dex/state/burn/hooks";
 import { useDerivedBurnInfo, useBurnState } from "apps/dex/state/burn/hooks";
 import { Field } from "apps/dex/state/burn/actions";
 import { useUserSlippageTolerance } from "apps/dex/state/user/hooks";
-import { BigNumber } from "ethers";
+import { BigNumber } from "fathom-ethers";
 import { ConnectWalletButton, WalletIcon } from "apps/dex/pages/Swap";
 import { useNavigate, useParams } from "react-router-dom";
 import useDexShared from "context/dexShared";

@@ -7,7 +7,7 @@ import { fetchTokenList } from "apps/dex/state/lists/actions";
 import getTokenList from "apps/dex/utils/getTokenList";
 import resolveENSContentHash from "apps/dex/utils/resolveENSContentHash";
 import { useActiveWeb3React } from "apps/dex/hooks/index";
-import { Web3Provider } from "@ethersproject/providers";
+import { Web3Provider } from "@into-the-fathom/providers";
 
 export function useFetchListCallback(): (
   listUrl: string,

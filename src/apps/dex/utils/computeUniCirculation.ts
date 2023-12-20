@@ -1,5 +1,5 @@
 import { JSBI, Token, TokenAmount } from "into-the-fathom-swap-sdk";
-import { BigNumber } from "ethers";
+import { BigNumber } from "fathom-ethers";
 
 const STAKING_END = 0 + 60 * 60 * 24 * 60;
 

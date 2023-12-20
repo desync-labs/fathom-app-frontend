@@ -1,5 +1,5 @@
 import useENS from "apps/dex/hooks/useENS";
-import { utils } from "ethers";
+import { utils } from "fathom-ethers";
 import {
   Currency,
   CurrencyAmount,
