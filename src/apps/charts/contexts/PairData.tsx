@@ -309,8 +309,7 @@ async function getBulkPairData(
             oneDayHistory,
             twoDayHistory,
             oneWeekHistory,
-            ethPrice,
-            b1
+            ethPrice
           );
           return data;
         })
@@ -329,8 +328,7 @@ function parseData(
   },
   twoDayData: { volumeUSD: string; untrackedVolumeUSD: string },
   oneWeekData: { volumeUSD: number; untrackedVolumeUSD: number },
-  ethPrice: number,
-  oneDayBlock: number
+  ethPrice: number
 ) {
   const pairAddress = data.id;
 
@@ -460,6 +458,12 @@ const getPairChartData = async (pairAddress: any) => {
       }
     }
 
+    data = data.map((dayData) => ({
+      ...dayData,
+      dailyVolumeUSD: parseFloat(dayData.dailyVolumeUSD),
+      reserveUSD: parseFloat(dayData.reserveUSD),
+    }));
+
     const dayIndexSet = new Set();
     const dayIndexArray: any[] = [];
     const oneDay = 24 * 60 * 60;
@@ -467,8 +471,6 @@ const getPairChartData = async (pairAddress: any) => {
       // add the day index to the set of days
       dayIndexSet.add((data[i].date / oneDay).toFixed(0));
       dayIndexArray.push(data[i]);
-      dayData.dailyVolumeUSD = parseFloat(dayData.dailyVolumeUSD);
-      dayData.reserveUSD = parseFloat(dayData.reserveUSD);
     });
 
     if (data[0]) {
