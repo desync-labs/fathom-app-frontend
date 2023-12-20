@@ -251,7 +251,13 @@ export default class VaultPage extends BasePage {
   async enterDepositAmount(amount: number): Promise<void> {
     await this.page.waitForTimeout(1000);
     await this.inputDepositAmount.clear();
-    await this.inputDepositAmount.pressSequentially(amount.toString());
+    await this.inputDepositAmount.fill(amount.toString());
+  }
+
+  async enterWithdrawAmount(amount: number): Promise<void> {
+    await this.page.waitForTimeout(1000);
+    await this.inputWithdrawAmount.clear();
+    await this.inputWithdrawAmount.fill(amount.toString());
   }
 
   async confirmDeposit(): Promise<void> {
@@ -320,9 +326,7 @@ export default class VaultPage extends BasePage {
     await expect(this.dialogManageVault).toBeVisible();
     await this.btnDepositNavManageDialogModal.click();
     await this.enterDepositAmount(depositAmount);
-    await this.inputDepositAmount.blur();
-    await this.page.waitForLoadState("load");
-    await this.page.waitForTimeout(4000);
+    await this.page.waitForTimeout(2000);
     const depositedValueAfterText =
       await this.spanDepositedValueAfterManageVaultDialog.textContent();
     const poolShareValueAfterText =
@@ -413,10 +417,8 @@ export default class VaultPage extends BasePage {
     await this.getManageVaultButtonRowDetailsLocatorById(id).click();
     await expect(this.dialogManageVault).toBeVisible();
     await this.btnWithdrawNavManageDialogModal.click();
-    await this.enterDepositAmount(withdrawAmount);
-    await this.inputWithdrawAmount.blur();
-    await this.page.waitForLoadState("load");
-    await this.page.waitForTimeout(4000);
+    await this.enterWithdrawAmount(withdrawAmount);
+    await this.page.waitForTimeout(2000);
     const depositedValueAfterText =
       await this.spanDepositedValueAfterManageVaultDialog.textContent();
     const poolShareValueAfterText =
