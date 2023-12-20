@@ -15,7 +15,7 @@ import {
   AccountBalanceWallet as AccountBalanceWalletIcon,
 } from "@mui/icons-material";
 import truncateEthAddress from "truncate-eth-address";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Link, Navigate, Route, Routes } from "react-router-dom";
 
 import Copyright from "components/Footer/Footer";
 import AppBar from "components/AppComponents/AppBar/AppBar";
@@ -216,6 +216,12 @@ const WalletBox = styled(Box)`
   padding: 0 0 0 10px;
 `;
 
+const LogoLink = styled(Link)`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+`;
+
 const MainLayout = () => {
   const {
     savedOpen,
@@ -275,17 +281,20 @@ const MainLayout = () => {
           >
             {isMobile && (
               <MenuLogoWrapper>
-                <img
-                  src={FathomLogoMobileSrc}
-                  alt={"logo"}
-                  style={{
-                    width: "24px",
-                    background: "#80FFF6",
-                    height: "24px",
-                    borderRadius: "6px",
-                    padding: "4px",
-                  }}
-                />
+                <LogoLink to={"/"}>
+                  <img
+                    src={FathomLogoMobileSrc}
+                    alt={"logo"}
+                    style={{
+                      width: "24px",
+                      background: "#80FFF6",
+                      height: "24px",
+                      borderRadius: "6px",
+                      padding: "4px",
+                    }}
+                  />
+                </LogoLink>
+
                 <MobileMenuWrapper
                   onClick={openMobile ? mainBlockClickHandler : openMobileMenu}
                 >
@@ -397,14 +406,16 @@ const MainLayout = () => {
           <Drawer variant="permanent" open={open} ref={drawerRef}>
             <MainToolbar>
               {open && (
-                <img
-                  src={FathomAppLogoSrc}
-                  alt={"logo"}
-                  style={{
-                    height: "none",
-                    maxWidth: "140px",
-                  }}
-                />
+                <LogoLink to={"/"}>
+                  <img
+                    src={FathomAppLogoSrc}
+                    alt={"logo"}
+                    style={{
+                      height: "none",
+                      maxWidth: "140px",
+                    }}
+                  />
+                </LogoLink>
               )}
               {showToggleDrawerBtn && (
                 <ToggleDrawerButton open={open} onClick={toggleDrawer}>
