@@ -138,16 +138,19 @@ export const VaultListItemMobileAdditionalData = ({
         <VaultListValue className={"neutral"}>
           <VaultStacked>
             <div className={"img-wrapper"}>
-              {vaultPosition ? (
+              {vaultPosition?.balancePosition &&
+              BigNumber(vaultPosition?.balancePosition).isGreaterThan(0) ? (
                 <img src={LockAquaSrc} alt={"locked"} width={20} height={20} />
               ) : (
                 <img src={LockSrc} alt={"locked"} width={20} height={20} />
               )}
             </div>
             {vaultPosition
-              ? BigNumber(vaultPosition.balancePosition)
-                  .dividedBy(10 ** 18)
-                  .toNumber()
+              ? formatNumber(
+                  BigNumber(vaultPosition.balancePosition)
+                    .dividedBy(10 ** 18)
+                    .toNumber()
+                )
               : 0}
             {" " + token.symbol}
           </VaultStacked>
@@ -274,7 +277,8 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
         vaultItemData={vaultItemData}
         vaultPosition={vaultPosition}
       />
-      {(!vaultPosition || vaultPosition.balanceTokens === "0") && (
+      {(!vaultPosition ||
+        !BigNumber(vaultPosition.balanceShares).isGreaterThan(0)) && (
         <ButtonPrimary
           onClick={() => setNewVaultDeposit(true)}
           sx={{ width: "100%" }}

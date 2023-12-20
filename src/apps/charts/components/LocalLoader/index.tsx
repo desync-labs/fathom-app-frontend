@@ -18,7 +18,10 @@ const Wrapper = styled.div<{ fill?: string; height?: boolean }>`
   ${(props) =>
     props.fill && !props.height
       ? css`
-          height: 100vh;
+          height: calc(100vh - 191px);
+          @media (max-width: 767px) {
+            height: calc(100vh - 238px);
+          }
         `
       : css`
           height: 180px;
