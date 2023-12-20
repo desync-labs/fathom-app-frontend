@@ -170,7 +170,7 @@ function GlobalPage() {
               </Panel>
             </AutoColumn>
           )}
-          {formattedTokens && formattedTokens.length && (
+          {formattedTokens && formattedTokens.length > 0 && (
             <>
               <ListOptions
                 gap="10px"

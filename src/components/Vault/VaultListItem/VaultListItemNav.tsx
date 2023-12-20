@@ -1,6 +1,7 @@
 import { Dispatch, FC, SetStateAction } from "react";
 import { Box, Button, styled } from "@mui/material";
 import { IVaultPosition } from "fathom-sdk";
+import BigNumber from "bignumber.js";
 import { VaultInfoTabs } from "hooks/useVaultListItem";
 
 export const VaultNavWrapper = styled(Box)`
@@ -53,16 +54,17 @@ const VaultListItemNav: FC<VaultListItemNavPropsType> = ({
 }) => {
   return (
     <VaultNavWrapper>
-      {vaultPosition && vaultPosition.balanceTokens !== "0" && (
-        <VaultNavItem
-          onClick={() => setActiveVaultInfoTab(VaultInfoTabs.POSITION)}
-          className={
-            activeVaultInfoTab === VaultInfoTabs.POSITION ? "active" : ""
-          }
-        >
-          Your position
-        </VaultNavItem>
-      )}
+      {vaultPosition &&
+        BigNumber(vaultPosition.balanceShares).isGreaterThan(0) && (
+          <VaultNavItem
+            onClick={() => setActiveVaultInfoTab(VaultInfoTabs.POSITION)}
+            className={
+              activeVaultInfoTab === VaultInfoTabs.POSITION ? "active" : ""
+            }
+          >
+            Your position
+          </VaultNavItem>
+        )}
       <VaultNavItem
         onClick={() => setActiveVaultInfoTab(VaultInfoTabs.ABOUT)}
         className={activeVaultInfoTab === VaultInfoTabs.ABOUT ? "active" : ""}
