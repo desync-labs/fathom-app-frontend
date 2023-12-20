@@ -301,7 +301,7 @@ const getTopTokens = async (ethPrice, ethPriceOld, fxdPrice, listedTokens) => {
         oneDayData &&
         twoDayData &&
         current?.data?.tokens.map(async (token: { id: string }) => {
-          const data = token as any;
+          let data = token as any;
 
           // let liquidityDataThisToken = liquidityData?.[token.id]
           let oneDayHistory = oneDayData?.[token.id];
@@ -351,29 +351,38 @@ const getTopTokens = async (ethPrice, ethPriceOld, fxdPrice, listedTokens) => {
           );
 
           // set data
-          data.priceUSD =
-            data.symbol === "FXD" ? fxdPrice : data?.derivedETH * ethPrice;
-          data.totalLiquidityUSD = currentLiquidityUSD;
-          data.oneDayVolumeUSD = parseFloat(String(oneDayVolumeUSD));
-          data.volumeChangeUSD = volumeChangeUSD;
-          data.priceChangeUSD = priceChangeUSD;
-          data.liquidityChangeUSD = getPercentChange(
-            currentLiquidityUSD ?? 0,
-            oldLiquidityUSD ?? 0
-          );
-          data.oneDayTxns = oneDayTxns;
-          data.txnChange = txnChange;
+          data = {
+            ...data,
+            priceUSD:
+              data.symbol === "FXD" ? fxdPrice : data?.derivedETH * ethPrice,
+            totalLiquidityUSD: currentLiquidityUSD,
+            oneDayVolumeUSD: parseFloat(String(oneDayVolumeUSD)),
+            volumeChangeUSD: volumeChangeUSD,
+            priceChangeUSD: priceChangeUSD,
+            liquidityChangeUSD: getPercentChange(
+              currentLiquidityUSD ?? 0,
+              oldLiquidityUSD ?? 0
+            ),
+            oneDayTxns: oneDayTxns,
+            txnChange: txnChange,
+          };
 
           // new tokens
           if (!oneDayHistory && data) {
-            data.oneDayVolumeUSD = data.tradeVolumeUSD;
-            data.oneDayVolumeETH = data.tradeVolume * data.derivedETH;
-            data.oneDayTxns = data.txCount;
+            data = {
+              ...data,
+              oneDayVolumeUSD: data.tradeVolumeUSD,
+              oneDayVolumeETH: data.tradeVolume * data.derivedETH,
+              oneDayTxns: data.txCount,
+            };
           }
 
           // used for custom adjustments
-          data.oneDayData = oneDayHistory;
-          data.twoDayData = twoDayHistory;
+          data = {
+            ...data,
+            oneDayData: oneDayHistory,
+            twoDayData: twoDayHistory,
+          };
 
           return data;
         })
@@ -478,31 +487,40 @@ const getTokenData = async (
     const oldLiquidityUSD =
       oneDayData?.totalLiquidity * ethPriceOld * oneDayData?.derivedETH;
 
-    // set data
-    data.priceUSD = data?.derivedETH * ethPrice;
-    data.totalLiquidityUSD = currentLiquidityUSD;
-    data.oneDayVolumeUSD = oneDayVolumeUSD;
-    data.volumeChangeUSD = volumeChangeUSD;
-    data.priceChangeUSD = priceChangeUSD;
-    data.oneDayVolumeUT = oneDayVolumeUT;
-    data.volumeChangeUT = volumeChangeUT;
     const liquidityChangeUSD = getPercentChange(
       currentLiquidityUSD ?? 0,
       oldLiquidityUSD ?? 0
     );
-    data.liquidityChangeUSD = liquidityChangeUSD;
-    data.oneDayTxns = oneDayTxns;
-    data.txnChange = txnChange;
+    // set data
+    data = {
+      ...data,
+      priceUSD: data?.derivedETH * ethPrice,
+      totalLiquidityUSD: currentLiquidityUSD,
+      oneDayVolumeUSD: oneDayVolumeUSD,
+      volumeChangeUSD: volumeChangeUSD,
+      priceChangeUSD: priceChangeUSD,
+      oneDayVolumeUT: oneDayVolumeUT,
+      volumeChangeUT: volumeChangeUT,
+      liquidityChangeUSD: liquidityChangeUSD,
+      oneDayTxns: oneDayTxns,
+      txnChange: txnChange,
+    };
 
     // used for custom adjustments
-    data.oneDayData = oneDayData?.[address];
-    data.twoDayData = twoDayData?.[address];
+    data = {
+      ...data,
+      oneDayData: oneDayData?.[address],
+      twoDayData: twoDayData?.[address],
+    };
 
     // new tokens
     if (!oneDayData && data) {
-      data.oneDayVolumeUSD = data.tradeVolumeUSD;
-      data.oneDayVolumeETH = data.tradeVolume * data.derivedETH;
-      data.oneDayTxns = data.txCount;
+      data = {
+        ...data,
+        oneDayVolumeUSD: data.tradeVolumeUSD,
+        oneDayVolumeETH: data.tradeVolume * data.derivedETH,
+        oneDayTxns: data.txCount,
+      };
     }
   } catch (e) {
     console.log(e);
@@ -663,6 +681,11 @@ const getTokenChartData = async (tokenAddress: string) => {
       data = data.concat(result.data.tokenDayDatas);
     }
 
+    data = data.map((dayData) => ({
+      ...dayData,
+      dailyVolumeUSD: parseFloat(dayData.dailyVolumeUSD),
+    }));
+
     const dayIndexSet = new Set();
     const dayIndexArray: any[] = [];
     const oneDay = 24 * 60 * 60;
@@ -670,7 +693,6 @@ const getTokenChartData = async (tokenAddress: string) => {
       // add the day index to the set of days
       dayIndexSet.add((data[i].date / oneDay).toFixed(0));
       dayIndexArray.push(data[i]);
-      dayData.dailyVolumeUSD = parseFloat(dayData.dailyVolumeUSD);
     });
 
     // fill in empty days
