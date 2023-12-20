@@ -26,7 +26,7 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
       });
     });
 
-    test("FXD Vault: Manage Vault: Partially withdrawing 50 FXD is successful", async ({
+    test("FXD Vault: Manage Vault: Partially withdrawing 100 FXD is successful", async ({
       vaultPage,
     }) => {
       await vaultPage.navigate();
@@ -34,7 +34,7 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
       await vaultPage.validateConnectedWalletAddress();
       const vaultExpectedData = await vaultPage.withdrawVaultPartially({
         id: fxdVaultData.id,
-        withdrawAmount: 50,
+        withdrawAmount: 100,
       });
       await vaultPage.validateVaultData({
         id: fxdVaultData.id,
