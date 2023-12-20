@@ -1,8 +1,8 @@
-import { Contract } from "@ethersproject/contracts";
-import { getAddress } from "@ethersproject/address";
-import { AddressZero } from "@ethersproject/constants";
-import { JsonRpcSigner, Web3Provider } from "@ethersproject/providers";
-import { BigNumber } from "@ethersproject/bignumber";
+import { Contract } from "@into-the-fathom/contracts";
+import { getAddress } from "@into-the-fathom/address";
+import { AddressZero } from "@into-the-fathom/constants";
+import { JsonRpcSigner, Web3Provider } from "@into-the-fathom/providers";
+import { BigNumber } from "@into-the-fathom/bignumber";
 import { abi as IUniswapV2Router02ABI } from "into-the-fathom-swap-smart-contracts/artifacts/contracts/periphery/interfaces/IUniswapV2Router02.sol/IUniswapV2Router02.json";
 
 import { ROUTER_ADDRESSES } from "apps/dex/constants/index";

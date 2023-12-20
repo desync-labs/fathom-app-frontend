@@ -1,6 +1,6 @@
-import { utils } from "ethers";
-import { BigNumber } from "@ethersproject/bignumber";
-import { Contract } from "@ethersproject/contracts";
+import { utils } from "fathom-ethers";
+import { BigNumber } from "@into-the-fathom/bignumber";
+import { Contract } from "@into-the-fathom/contracts";
 import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useActiveWeb3React } from "apps/dex/hooks";

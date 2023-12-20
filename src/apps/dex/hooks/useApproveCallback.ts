@@ -1,5 +1,5 @@
-import { MaxUint256 } from "@ethersproject/constants";
-import { TransactionResponse } from "@ethersproject/providers";
+import { MaxUint256 } from "@into-the-fathom/constants";
+import { TransactionResponse } from "@into-the-fathom/providers";
 import {
   Trade,
   TokenAmount,

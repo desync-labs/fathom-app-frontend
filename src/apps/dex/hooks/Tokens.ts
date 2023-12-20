@@ -3,7 +3,7 @@ import {
   useDefaultTokenList,
   useSupportedTokenList,
 } from "apps/dex/state/lists/hooks";
-import { parseBytes32String } from "@ethersproject/strings";
+import { parseBytes32String } from "@into-the-fathom/strings";
 import { Currency, currencyEquals, Token, XDC } from "into-the-fathom-swap-sdk";
 import { useMemo } from "react";
 import {
@@ -23,7 +23,7 @@ import {
   useTokenContract,
 } from "apps/dex/hooks/useContract";
 import { filterTokens } from "apps/dex/components/SearchModal/filtering";
-import { utils } from "ethers";
+import { utils } from "fathom-ethers";
 import { useServices } from "context/services";
 
 // reduce token map into standard address <-> Token mapping, optionally include user added tokens
