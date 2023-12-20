@@ -170,7 +170,7 @@ export const RightNetwork = styled(MuiBox)`
 
 export const MainBox = styled(MuiBox)`
   background: linear-gradient(180deg, #071126 0%, #050c1a 100%);
-  min-height: 100vh;
+  min-height: -webkit-fill-available;
   overflow: auto;
   display: flex;
   flex-direction: column;
@@ -304,7 +304,6 @@ export const NestedRouteLink = styled(Link)`
 `;
 
 export const NestedRouteContainer = styled(Container)`
-  min-height: calc(100vh - 250px);
   ${({ theme }) => theme.breakpoints.down("sm")} {
     margin-top: 15px;
   }
