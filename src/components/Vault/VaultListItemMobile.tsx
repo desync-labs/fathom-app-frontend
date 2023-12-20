@@ -161,7 +161,7 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
   vaultItemData,
   vaultPosition,
 }) => {
-  const { token, strategies } = vaultItemData;
+  const { token, strategies, totalFees } = vaultItemData;
 
   const {
     manageVault,
@@ -199,7 +199,9 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
           />
         </VaultListLabel>
         <VaultListValue>
-          <VaultPercent>{strategies[0].reports[0].totalFees}%</VaultPercent>
+          <VaultPercent>
+            {formatNumber(BigNumber(totalFees).toNumber())}%
+          </VaultPercent>
         </VaultListValue>
       </ListItemWrapper>
       <ListItemWrapper>
