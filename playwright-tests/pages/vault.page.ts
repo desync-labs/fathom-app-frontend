@@ -312,7 +312,7 @@ export default class VaultPage extends BasePage {
       .click();
   }
 
-  async depositVault({
+  async manageVaultDeposit({
     id,
     depositAmount,
   }: {
@@ -404,7 +404,7 @@ export default class VaultPage extends BasePage {
     expect.soft(shareTokenValueActual).toEqual(shareTokens);
   }
 
-  async withdrawVaultPartially({
+  async manageVaultWithdrawPartially({
     id,
     withdrawAmount,
   }: {

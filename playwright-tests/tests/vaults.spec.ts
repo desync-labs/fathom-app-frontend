@@ -14,7 +14,7 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
       await vaultPage.navigate();
       await vaultPage.connectWallet(WalletConnectOptions.Metamask);
       await vaultPage.validateConnectedWalletAddress();
-      const vaultExpectedData = await vaultPage.depositVault({
+      const vaultExpectedData = await vaultPage.manageVaultDeposit({
         id: fxdVaultData.id,
         depositAmount: 100,
       });
@@ -32,7 +32,7 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
       await vaultPage.navigate();
       await vaultPage.connectWallet(WalletConnectOptions.Metamask);
       await vaultPage.validateConnectedWalletAddress();
-      const vaultExpectedData = await vaultPage.withdrawVaultPartially({
+      const vaultExpectedData = await vaultPage.manageVaultWithdrawPartially({
         id: fxdVaultData.id,
         withdrawAmount: 100,
       });
