@@ -4,6 +4,7 @@ import { Box, Divider, Grid, ListItemText } from "@mui/material";
 import { IVault } from "fathom-sdk";
 import { AppList, AppListItem } from "components/AppComponents/AppList/AppList";
 import { formatNumber, formatPercentage } from "utils/format";
+import useSharedContext from "context/shared";
 
 type VaultDepositInfoProps = {
   vaultItemData: IVault;
@@ -18,6 +19,7 @@ const DepositVaultInfo: FC<VaultDepositInfoProps> = ({
 }) => {
   const { token, shareToken, balanceTokens, strategies, totalFees } =
     vaultItemData;
+  const { isMobile } = useSharedContext();
 
   const { totalApr, count } = strategies[0].reports.reduce(
     (accumulator: any, strategyReport: any) => {
@@ -35,7 +37,7 @@ const DepositVaultInfo: FC<VaultDepositInfoProps> = ({
   const averageApr = count > 0 ? totalApr / count : 0;
 
   return (
-    <Grid item xs={12} sm={6} pr={2.5}>
+    <Grid item xs={12} sm={6} pr={isMobile ? 0 : 2.5}>
       <AppList>
         <AppListItem
           alignItems="flex-start"
