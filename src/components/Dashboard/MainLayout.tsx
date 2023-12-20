@@ -424,189 +424,191 @@ const MainLayout = () => {
           </Drawer>
         )}
         <MainBox component="main">
-          <Toolbar />
-          <AlertMessages scroll={scroll} />
-          <TransactionStatus scroll={scroll} />
-          <Routes>
-            <Route path="/" element={<DashboardContent />} />
-            {allowStableSwap ||
-            isUserWrapperWhiteListed ||
-            allowStableSwapInProgress ? (
-              <Route path="/stable-swap" element={<StableSwap />} />
-            ) : null}
-            {isUserWrapperWhiteListed ? (
-              <>
+          <Box>
+            <Toolbar />
+            <AlertMessages scroll={scroll} />
+            <TransactionStatus scroll={scroll} />
+            <Routes>
+              <Route path="/" element={<DashboardContent />} />
+              {allowStableSwap ||
+              isUserWrapperWhiteListed ||
+              allowStableSwapInProgress ? (
+                <Route path="/stable-swap" element={<StableSwap />} />
+              ) : null}
+              {isUserWrapperWhiteListed ? (
+                <>
+                  <Route
+                    path="/stable-swap/add-liquidity"
+                    element={<StableSwapAddLiquidity />}
+                  />
+                  <Route
+                    path="/stable-swap/remove-liquidity"
+                    element={<StableSwapRemoveLiquidity />}
+                  />
+                  <Route
+                    path="/stable-swap/manage-fees"
+                    element={<StableSwapManageFees />}
+                  />
+                </>
+              ) : null}
+              <Route path="/dao" element={<DaoView />}>
                 <Route
-                  path="/stable-swap/add-liquidity"
-                  element={<StableSwapAddLiquidity />}
+                  index
+                  element={
+                    <StakingProvider>
+                      <StakingView />
+                    </StakingProvider>
+                  }
                 />
                 <Route
-                  path="/stable-swap/remove-liquidity"
-                  element={<StableSwapRemoveLiquidity />}
+                  path="staking"
+                  index
+                  element={
+                    <StakingProvider>
+                      <StakingView />
+                    </StakingProvider>
+                  }
+                />
+                <Route path="governance" element={<AllProposalsView />}></Route>
+                <Route
+                  path="governance/proposal/:_proposalId"
+                  element={
+                    <ProposalProvider>
+                      <ProposalView />
+                    </ProposalProvider>
+                  }
                 />
                 <Route
-                  path="/stable-swap/manage-fees"
-                  element={<StableSwapManageFees />}
+                  path="*"
+                  element={<Navigate to="/dao/staking" replace />}
                 />
-              </>
-            ) : null}
-            <Route path="/dao" element={<DaoView />}>
+              </Route>
               <Route
-                index
-                element={
-                  <StakingProvider>
-                    <StakingView />
-                  </StakingProvider>
-                }
-              />
-              <Route
-                path="staking"
-                index
-                element={
-                  <StakingProvider>
-                    <StakingView />
-                  </StakingProvider>
-                }
-              />
-              <Route path="governance" element={<AllProposalsView />}></Route>
-              <Route
-                path="governance/proposal/:_proposalId"
-                element={
-                  <ProposalProvider>
-                    <ProposalView />
-                  </ProposalProvider>
-                }
-              />
-              <Route
-                path="*"
-                element={<Navigate to="/dao/staking" replace />}
-              />
-            </Route>
-            <Route
-              path="/swap"
-              element={<DexView openConnectorMenu={openConnectorMenu} />}
-            >
-              <Route index element={<Swap />} />
-              <Route path=":outputCurrency" element={<RedirectToSwap />} />
-              <Route path="send" element={<RedirectPathToSwapOnly />} />
-              <Route path="find" element={<PoolFinder />} />
-              <Route path="pool" element={<Pool />} />
-              <Route path="add" element={<AddLiquidity />} />
-              <Route
-                path="add/:currencyIdA"
-                element={<RedirectOldAddLiquidityPathStructure />}
-              />
-              <Route
-                path="add/:currencyIdA/:currencyIdB"
-                element={<RedirectDuplicateTokenIds />}
-              />
-              <Route path="create" element={<AddLiquidity />} />
-              <Route
-                path="create/:currencyIdA"
-                element={<RedirectOldAddLiquidityPathStructure />}
-              />
-              <Route
-                path="create/:currencyIdA/:currencyIdB"
-                element={<RedirectDuplicateTokenIds />}
-              />
-              <Route
-                path="remove/:tokens"
-                element={<RedirectOldRemoveLiquidityPathStructure />}
-              />
-              <Route
-                path="remove/:currencyIdA/:currencyIdB"
-                element={<RemoveLiquidity />}
-              />
-              <Route element={<RedirectPathToSwapOnly />} />
-            </Route>
-            <Route
-              path="/vault"
-              element={
-                <AllVaultView
-                  isMobileFiltersOpen={isMobileFiltersOpen}
-                  openMobileFilterMenu={openMobileFilterMenu}
+                path="/swap"
+                element={<DexView openConnectorMenu={openConnectorMenu} />}
+              >
+                <Route index element={<Swap />} />
+                <Route path=":outputCurrency" element={<RedirectToSwap />} />
+                <Route path="send" element={<RedirectPathToSwapOnly />} />
+                <Route path="find" element={<PoolFinder />} />
+                <Route path="pool" element={<Pool />} />
+                <Route path="add" element={<AddLiquidity />} />
+                <Route
+                  path="add/:currencyIdA"
+                  element={<RedirectOldAddLiquidityPathStructure />}
                 />
-              }
-            ></Route>
-            <Route path="/charts" element={<ChartsView />}>
+                <Route
+                  path="add/:currencyIdA/:currencyIdB"
+                  element={<RedirectDuplicateTokenIds />}
+                />
+                <Route path="create" element={<AddLiquidity />} />
+                <Route
+                  path="create/:currencyIdA"
+                  element={<RedirectOldAddLiquidityPathStructure />}
+                />
+                <Route
+                  path="create/:currencyIdA/:currencyIdB"
+                  element={<RedirectDuplicateTokenIds />}
+                />
+                <Route
+                  path="remove/:tokens"
+                  element={<RedirectOldRemoveLiquidityPathStructure />}
+                />
+                <Route
+                  path="remove/:currencyIdA/:currencyIdB"
+                  element={<RemoveLiquidity />}
+                />
+                <Route element={<RedirectPathToSwapOnly />} />
+              </Route>
               <Route
-                index
+                path="/vault"
                 element={
-                  <LayoutWrapper
-                    savedOpen={savedOpen}
-                    setSavedOpen={setSavedOpen}
-                  >
-                    <GlobalPage />
-                  </LayoutWrapper>
-                }
-              ></Route>
-
-              <Route
-                path="token/:tokenAddress"
-                element={
-                  <TokenPageRouterComponent
-                    savedOpen={savedOpen}
-                    setSavedOpen={setSavedOpen}
+                  <AllVaultView
+                    isMobileFiltersOpen={isMobileFiltersOpen}
+                    openMobileFilterMenu={openMobileFilterMenu}
                   />
                 }
-              />
-              <Route
-                path="pair/:pairAddress"
-                element={
-                  <PairPageRouterComponent
-                    savedOpen={savedOpen}
-                    setSavedOpen={setSavedOpen}
-                  />
-                }
-              />
-              <Route
-                path="account/:accountAddress"
-                element={
-                  <AccountPageRouterComponent
-                    savedOpen={savedOpen}
-                    setSavedOpen={setSavedOpen}
-                  />
-                }
-              />
-
-              <Route
-                path="tokens"
-                element={
-                  <LayoutWrapper
-                    savedOpen={savedOpen}
-                    setSavedOpen={setSavedOpen}
-                  >
-                    <AllTokensPage />
-                  </LayoutWrapper>
-                }
               ></Route>
+              <Route path="/charts" element={<ChartsView />}>
+                <Route
+                  index
+                  element={
+                    <LayoutWrapper
+                      savedOpen={savedOpen}
+                      setSavedOpen={setSavedOpen}
+                    >
+                      <GlobalPage />
+                    </LayoutWrapper>
+                  }
+                ></Route>
 
-              <Route
-                path="pairs"
-                element={
-                  <LayoutWrapper
-                    savedOpen={savedOpen}
-                    setSavedOpen={setSavedOpen}
-                  >
-                    <AllPairsPage />
-                  </LayoutWrapper>
-                }
-              ></Route>
+                <Route
+                  path="token/:tokenAddress"
+                  element={
+                    <TokenPageRouterComponent
+                      savedOpen={savedOpen}
+                      setSavedOpen={setSavedOpen}
+                    />
+                  }
+                />
+                <Route
+                  path="pair/:pairAddress"
+                  element={
+                    <PairPageRouterComponent
+                      savedOpen={savedOpen}
+                      setSavedOpen={setSavedOpen}
+                    />
+                  }
+                />
+                <Route
+                  path="account/:accountAddress"
+                  element={
+                    <AccountPageRouterComponent
+                      savedOpen={savedOpen}
+                      setSavedOpen={setSavedOpen}
+                    />
+                  }
+                />
 
-              <Route
-                path="accounts"
-                element={
-                  <LayoutWrapper
-                    savedOpen={savedOpen}
-                    setSavedOpen={setSavedOpen}
-                  >
-                    <AccountLookup />
-                  </LayoutWrapper>
-                }
-              ></Route>
-            </Route>
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
+                <Route
+                  path="tokens"
+                  element={
+                    <LayoutWrapper
+                      savedOpen={savedOpen}
+                      setSavedOpen={setSavedOpen}
+                    >
+                      <AllTokensPage />
+                    </LayoutWrapper>
+                  }
+                ></Route>
+
+                <Route
+                  path="pairs"
+                  element={
+                    <LayoutWrapper
+                      savedOpen={savedOpen}
+                      setSavedOpen={setSavedOpen}
+                    >
+                      <AllPairsPage />
+                    </LayoutWrapper>
+                  }
+                ></Route>
+
+                <Route
+                  path="accounts"
+                  element={
+                    <LayoutWrapper
+                      savedOpen={savedOpen}
+                      setSavedOpen={setSavedOpen}
+                    >
+                      <AccountLookup />
+                    </LayoutWrapper>
+                  }
+                ></Route>
+              </Route>
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </Box>
           <Copyright />
         </MainBox>
       </Box>

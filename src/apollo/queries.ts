@@ -228,6 +228,9 @@ export const VAULTS = gql`
       balanceTokensIdle
       totalDebtAmount
       depositLimit
+      totalFees
+      protocolFees
+      protocolFeeRecipient
       strategies {
         id
         delegatedAssets

@@ -185,7 +185,8 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
   vaultItemData,
   vaultPosition,
 }) => {
-  const { token, balanceTokens, depositLimit, strategies } = vaultItemData;
+  const { token, balanceTokens, depositLimit, strategies, totalFees } =
+    vaultItemData;
   const { fxdPrice } = usePricesContext();
   const vaultTestId = vaultItemData.id;
 
@@ -227,7 +228,9 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
           </FlexBox>
         </TableCell>
         <TableCell data-testid={`vaultRow-${vaultTestId}-feeValueCell`}>
-          <VaultPercent>{strategies[0].reports[0].totalFees}%</VaultPercent>
+          <VaultPercent>
+            {formatNumber(BigNumber(totalFees).toNumber())}%
+          </VaultPercent>
         </TableCell>
         <TableCell data-testid={`vaultRow-${vaultTestId}-earnedValueCell`}>
           <VaultEarned>

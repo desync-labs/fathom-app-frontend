@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 import { FACTORY_ADDRESS, BUNDLE_ID } from "apps/charts/constants";
-import { Block } from "@ethersproject/providers";
+import { Block } from "@into-the-fathom/providers";
 
 export const SUBGRAPH_HEALTH = gql`
   query health {

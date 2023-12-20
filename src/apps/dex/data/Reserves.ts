@@ -1,7 +1,7 @@
 import { TokenAmount, Pair, Currency } from "into-the-fathom-swap-sdk";
 import { useMemo } from "react";
 import { abi as IUniswapV2PairABI } from "into-the-fathom-swap-smart-contracts/artifacts/contracts/core/interfaces/IUniswapV2Pair.sol/IUniswapV2Pair.json";
-import { utils } from "ethers";
+import { utils } from "fathom-ethers";
 import { useActiveWeb3React } from "apps/dex/hooks";
 
 import { useMultipleContractSingleData } from "apps/dex/state/multicall/hooks";

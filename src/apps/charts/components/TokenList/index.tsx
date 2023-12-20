@@ -143,6 +143,8 @@ type TopTokenListProps = {
   useTracked?: boolean;
 };
 
+type ListItemProps = { item: any; index: number };
+
 const TopTokenList: FC<TopTokenListProps> = (props) => {
   const { formattedTokens, itemMax = 10, useTracked = false } = props;
   // page state
@@ -202,7 +204,7 @@ const TopTokenList: FC<TopTokenListProps> = (props) => {
     );
   }, [formattedTokens, itemMax, page, sortDirection, sortedColumn]);
 
-  const ListItem = (listItem: { item: any; index: any }) => {
+  const ListItem: FC<ListItemProps> = (listItem) => {
     const { item, index } = listItem;
     return (
       <DashGrid style={{ height: "48px" }}>

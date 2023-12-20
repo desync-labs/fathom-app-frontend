@@ -16,7 +16,7 @@ import {
   CHECK_ON_BLOCK_EXPLORER,
   TransactionType,
 } from "fathom-sdk";
-import { TransactionReceipt } from "@ethersproject/providers";
+import { TransactionReceipt } from "@into-the-fathom/providers";
 import { useWeb3React } from "@web3-react/core";
 import { SmartContractFactory, Web3Utils } from "fathom-sdk";
 import useAlertAndTransactionContext from "context/alertAndTransaction";
