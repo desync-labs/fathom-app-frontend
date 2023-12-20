@@ -7,6 +7,44 @@ import dotenv from "dotenv";
 dotenv.config();
 
 test.describe("Fathom App Test Suite: Vault Operations", () => {
+  test.describe.serial("Scenario 1", () => {
+    test("FXD Vault: Manage Vault: Depositing 100 FXD is successful", async ({
+      vaultPage,
+    }) => {
+      await vaultPage.navigate();
+      await vaultPage.connectWallet(WalletConnectOptions.Metamask);
+      await vaultPage.validateConnectedWalletAddress();
+      const vaultExpectedData = await vaultPage.depositVault({
+        id: fxdVaultData.id,
+        depositAmount: 100,
+      });
+      await vaultPage.validateVaultData({
+        id: fxdVaultData.id,
+        stakedAmount: vaultExpectedData.stakedAmount,
+        poolShare: vaultExpectedData.poolShare,
+        shareTokens: vaultExpectedData.shareTokens,
+      });
+    });
+
+    test("FXD Vault: Manage Vault: Partially withdrawing 50 FXD is successful", async ({
+      vaultPage,
+    }) => {
+      await vaultPage.navigate();
+      await vaultPage.connectWallet(WalletConnectOptions.Metamask);
+      await vaultPage.validateConnectedWalletAddress();
+      const vaultExpectedData = await vaultPage.withdrawVaultPartially({
+        id: fxdVaultData.id,
+        withdrawAmount: 50,
+      });
+      await vaultPage.validateVaultData({
+        id: fxdVaultData.id,
+        stakedAmount: vaultExpectedData.stakedAmount,
+        poolShare: vaultExpectedData.poolShare,
+        shareTokens: vaultExpectedData.shareTokens,
+      });
+    });
+  });
+
   test('FXD Vault: "Deposit" button is visible for a first time user', async ({
     vaultPage,
   }) => {
@@ -19,23 +57,5 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     await expect
       .soft(vaultPage.getActionButtonRowLocatorById(fxdVaultData.id))
       .toHaveText("Deposit");
-  });
-
-  test("FXD Vault: Manage Vault: Depositing 10 FXD is successful", async ({
-    vaultPage,
-  }) => {
-    await vaultPage.navigate();
-    await vaultPage.connectWallet(WalletConnectOptions.Metamask);
-    await vaultPage.validateConnectedWalletAddress();
-    const vaultExpectedData = await vaultPage.depositVault({
-      id: fxdVaultData.id,
-      depositAmount: 10,
-    });
-    await vaultPage.validateVaultData({
-      id: fxdVaultData.id,
-      stakedAmount: vaultExpectedData.stakedAmount,
-      poolShare: vaultExpectedData.poolShare,
-      shareTokens: vaultExpectedData.shareTokens,
-    });
   });
 });

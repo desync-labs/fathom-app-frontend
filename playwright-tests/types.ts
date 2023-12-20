@@ -42,3 +42,9 @@ export enum VaultFilterName {
   LiveNow = "Live Now",
   Finished = "Finished",
 }
+
+export enum VaultDetailsTabs {
+  YourPosition = "Your position",
+  About = "About",
+  Strategies = "Strategies",
+}
