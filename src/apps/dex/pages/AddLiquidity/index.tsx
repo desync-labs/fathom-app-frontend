@@ -1,5 +1,5 @@
-import { BigNumber } from "@ethersproject/bignumber";
-import { TransactionResponse } from "@ethersproject/providers";
+import { BigNumber } from "@into-the-fathom/bignumber";
+import { TransactionResponse } from "@into-the-fathom/providers";
 import {
   ChainId,
   Currency,

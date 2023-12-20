@@ -1,4 +1,4 @@
 export const fxdVaultData = {
   name: "Fathom USD",
-  id: "0x15e40f8b24e46032149cd6dc75ebe8766c7f6182",
+  id: "0x06bccadd65e50fc8ffbf16f62891b7d4e26beffb",
 };

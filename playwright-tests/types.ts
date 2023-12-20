@@ -35,7 +35,7 @@ export interface VaultDepositData {
 }
 
 export interface ValidateVaultDataParams extends VaultDepositData {
-  id: string
+  id: string;
 }
 
 export enum VaultFilterName {

@@ -17,7 +17,7 @@ import {
 import { DEFAULT_CHAIN_ID } from "utils/Constants";
 import { getDefaultProvider } from "utils/defaultProvider";
 import { DefaultProvider } from "connectors/networks";
-import { Web3Provider } from "@ethersproject/providers";
+import { Web3Provider } from "@into-the-fathom/providers";
 
 export class RootService {
   /**

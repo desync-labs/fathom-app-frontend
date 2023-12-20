@@ -203,7 +203,7 @@ export default function Swap() {
   // reset if they close warning without tokens in params
   const handleDismissTokenWarning = useCallback(() => {
     setDismissTokenWarning(true);
-    navigate("/swap/");
+    navigate("/swap");
   }, [navigate]);
 
   // modal and loading
