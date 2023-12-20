@@ -304,7 +304,8 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
         </TableCell>
         <TableCell>
           <FlexBox justifyContent={"space-evenly"}>
-            {(!vaultPosition || vaultPosition.balanceTokens === "0") && (
+            {(!vaultPosition ||
+              !BigNumber(vaultPosition.balanceShares).isGreaterThan(0)) && (
               <ButtonPrimary
                 onClick={() => setNewVaultDeposit(true)}
                 data-testid={`vaultRow-${vaultTestId}-depositButton`}
