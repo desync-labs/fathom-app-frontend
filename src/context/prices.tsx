@@ -13,7 +13,6 @@ import { useServices } from "context/services";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 import { DEFAULT_CHAIN_ID } from "utils/Constants";
-import { BigNumber as eBigNumber } from "ethers";
 import BigNumber from "bignumber.js";
 
 type PricesProviderType = {
@@ -73,7 +72,10 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
             fthmTokenAddress
           );
         } else {
-          fthmPromise = Promise.resolve([eBigNumber.from(0)]);
+          fthmPromise = stakingService.getPairPrice(
+            wxdcTokenAddress,
+            fthmTokenAddress
+          );
         }
 
         const xdcUsdtPromise =

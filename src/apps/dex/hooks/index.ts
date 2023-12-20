@@ -1,4 +1,4 @@
-import { Web3Provider } from "@ethersproject/providers";
+import { Web3Provider } from "@into-the-fathom/providers";
 import useConnector from "context/connector";
 
 export function useActiveWeb3React() {

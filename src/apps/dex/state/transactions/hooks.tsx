@@ -1,4 +1,4 @@
-import { TransactionResponse } from "@ethersproject/providers";
+import { TransactionResponse } from "@into-the-fathom/providers";
 import { useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -7,7 +7,7 @@ import { AppDispatch, AppState } from "apps/dex/state";
 import { addTransaction } from "apps/dex/state/transactions/actions";
 import { TransactionDetails } from "apps/dex/state/transactions/reducer";
 
-// helper that can take a ethers library transaction response and add it to the list of transactions
+// helper that can take a fathom-ethers library transaction response and add it to the list of transactions
 export function useTransactionAdder(): (
   response: TransactionResponse,
   customData?: {

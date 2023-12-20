@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo } from "react";
 import { useFormContext } from "react-hook-form";
 import useConnector from "context/connector";
 import debounce from "lodash.debounce";
-import { utils } from "ethers";
+import { utils } from "fathom-ethers";
 
 const useCreateProposalActionField = (index: number) => {
   const { control, watch, setValue } = useFormContext();

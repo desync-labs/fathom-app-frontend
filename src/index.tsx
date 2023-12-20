@@ -5,7 +5,7 @@ import { ConnectorProvider } from "context/connector";
 import { Web3ReactProvider } from "@web3-react/core";
 import { AlertAndTransactionProvider } from "context/alertAndTransaction";
 import { ServicesProvider } from "context/services";
-import { Web3Provider } from "@ethersproject/providers";
+import { Web3Provider } from "@into-the-fathom/providers";
 
 dotenv.config();
 
