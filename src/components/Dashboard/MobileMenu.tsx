@@ -7,7 +7,7 @@ export const MobileMenuWrapper = styled(Box)`
   position: fixed;
   bottom: 0;
   width: 100%;
-  height: 300px;
+  height: fit-content;
   background: #131f35;
   z-index: 1000;
   padding-left: 12px;
