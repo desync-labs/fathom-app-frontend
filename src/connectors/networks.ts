@@ -1,7 +1,7 @@
 import { InjectedConnector } from "@web3-react/injected-connector";
 import { WalletConnectConnector } from "connectors/wallet-connect-connector/WalletConnectConnector";
 import { EthereumProviderOptions } from "@walletconnect/ethereum-provider/dist/types/EthereumProvider";
-import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers";
+import { JsonRpcProvider, Web3Provider } from "@into-the-fathom/providers";
 
 export const APOTHEM_RPC = "https://earpc.apothem.network/";
 export const XDC_RPC = "https://erpc.xdcrpc.com/";
@@ -77,7 +77,6 @@ export const WalletConnect = new WalletConnectConnector({
   methods: [
     "eth_sendTransaction",
     "eth_signTransaction",
-    "eth_estimateGas",
     "eth_sign",
     "personal_sign",
     "eth_signTypedData",

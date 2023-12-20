@@ -1,4 +1,4 @@
-import { utils } from "ethers";
+import { utils } from "fathom-ethers";
 import { useMemo } from "react";
 import { useSingleCallResult } from "apps/dex/state/multicall/hooks";
 import isZero from "apps/dex/utils/isZero";

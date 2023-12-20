@@ -1,4 +1,4 @@
-import { BigNumber } from "ethers";
+import { BigNumber } from "fathom-ethers";
 import { useSingleCallResult } from "apps/dex/state/multicall/hooks";
 import { useMulticallContract } from "apps/dex/hooks/useContract";
 

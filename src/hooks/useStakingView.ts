@@ -15,7 +15,7 @@ import { COUNT_PER_PAGE } from "utils/Constants";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 import debounce from "lodash.debounce";
-import { BigNumber as eBigNumber } from "ethers";
+import { BigNumber as eBigNumber } from "fathom-ethers";
 import BigNumber from "bignumber.js";
 
 export type ActionType = { type: string; id: number | null };
