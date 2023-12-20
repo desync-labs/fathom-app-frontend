@@ -67,6 +67,7 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
   }, [syncDao]);
 
   useEffect(() => {
+    let interval: ReturnType<typeof setInterval>;
     if (
       !lastTransactionBlock &&
       fxdData?.indexingStatusForCurrentVersion?.chains[0]?.latestBlock?.number
@@ -89,13 +90,17 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
         fxdData?.indexingStatusForCurrentVersion?.chains[0]?.latestBlock?.number
       )
     ) {
-      setTimeout(() => {
+      interval = setInterval(() => {
         refetchFxd();
       }, 500);
 
       setSyncFXD(false);
     } else {
       setSyncFXD(true);
+    }
+
+    return () => {
+      interval && clearInterval(interval)
     }
   }, [
     lastTransactionBlock,
@@ -106,6 +111,7 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
   ]);
 
   useEffect(() => {
+    let interval: ReturnType<typeof setInterval>;
     if (
       !lastTransactionBlock &&
       daoData?.indexingStatusForCurrentVersion?.chains[0]?.latestBlock?.number
@@ -128,13 +134,17 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
         daoData?.indexingStatusForCurrentVersion?.chains[0]?.latestBlock?.number
       )
     ) {
-      setTimeout(() => {
+      interval = setInterval(() => {
         refetchDao();
-      }, 400);
+      }, 500);
 
       setSyncDao(false);
     } else {
       setSyncDao(true);
+    }
+
+    return () => {
+      interval && clearInterval(interval);
     }
   }, [
     lastTransactionBlock,
