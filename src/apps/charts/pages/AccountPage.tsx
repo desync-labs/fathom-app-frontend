@@ -241,7 +241,7 @@ const AccountPage: FC<AccountPageProps> = (props) => {
       <ContentWrapper>
         <RowBetween>
           <TYPE.body>
-            <BasicLink to="/accounts">{"Accounts "}</BasicLink>→{" "}
+            <BasicLink to="/charts/accounts">{"Accounts "}</BasicLink>→{" "}
             <Link
               lineHeight={"145.23%"}
               href={
