@@ -402,7 +402,7 @@ const TxnList: FC<TxnListProps> = (props) => {
               options={TXN_TYPE}
               active={txFilter}
               setActive={setTxFilter}
-              color={color}
+              color={"#00fff6"}
             />
           </RowBetween>
         ) : (
