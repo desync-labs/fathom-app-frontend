@@ -22,7 +22,7 @@ export default class VaultPage extends BasePage {
   readonly inputWithdrawAmount: Locator;
   readonly inputBurnSharesTokenAmount: Locator;
   readonly btnMax: Locator;
-  readonly btnConfirmDepositManageDialogModal: Locator;
+  readonly btnConfirmDepositDialogModal: Locator;
   readonly btnCloseManageDialogModal: Locator;
   readonly btnConfirmWithdrawManageDialogModal: Locator;
   readonly btnLiveNow: Locator;
@@ -36,6 +36,8 @@ export default class VaultPage extends BasePage {
   readonly spanBodyTwoModal: Locator;
   readonly btnDepositNavManageDialogModal: Locator;
   readonly btnWithdrawNavManageDialogModal: Locator;
+  readonly diaologDepositToVaultModal: Locator;
+  readonly btnConfirmDepositDepositToVaultModal: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -67,7 +69,7 @@ export default class VaultPage extends BasePage {
       '//label[contains(text(), "Burn Shares")]/parent::div//input'
     );
     this.btnMax = this.page.getByText("Max");
-    this.btnConfirmDepositManageDialogModal = this.dialogManageVault.locator(
+    this.btnConfirmDepositDialogModal = this.page.locator(
       '//button[text()="Deposit"][@type="submit"]'
     );
     this.btnConfirmWithdrawManageDialogModal = this.dialogManageVault.locator(
@@ -101,6 +103,13 @@ export default class VaultPage extends BasePage {
     this.btnWithdrawNavManageDialogModal = this.dialogManageVault.locator(
       '//button[text()="Withdraw"]'
     );
+    this.diaologDepositToVaultModal = this.page.locator(
+      '//h2[text()="Deposit To Vault"]/parent::div'
+    );
+    this.btnConfirmDepositDepositToVaultModal =
+      this.diaologDepositToVaultModal.locator(
+        '//button[text()="Deposit"][@type="submit"]'
+      );
   }
 
   async navigate(): Promise<void> {
@@ -261,7 +270,7 @@ export default class VaultPage extends BasePage {
   }
 
   async confirmDeposit(): Promise<void> {
-    await this.btnConfirmDepositManageDialogModal.click();
+    await this.btnConfirmDepositDialogModal.click();
     await expect.soft(this.progressBar).toBeVisible();
     await this.page.waitForTimeout(1000);
     await expect(this.divAlert).toBeHidden({ timeout: 100 });
@@ -303,13 +312,17 @@ export default class VaultPage extends BasePage {
     ).not.toBeVisible();
   }
 
+  getVaultDetailsTabLocator(id: string, tabName: VaultDetailsTabs): Locator {
+    return this.getVaultRowDetailsLocatorById(id).locator(
+      `//button[text()="${tabName}"]`
+    );
+  }
+
   async clickVaultDetailsTab(
     id: string,
     tabName: VaultDetailsTabs
   ): Promise<void> {
-    await this.getVaultRowDetailsLocatorById(id)
-      .locator(`//button[text()="${tabName}"]`)
-      .click();
+    await this.getVaultDetailsTabLocator(id, tabName).click();
   }
 
   async manageVaultDeposit({
@@ -468,6 +481,78 @@ export default class VaultPage extends BasePage {
     ]);
     await this.page.waitForLoadState("load");
     await this.page.waitForTimeout(2000);
+    return vaultDepositDataExpected;
+  }
+
+  async depositFirstTime({
+    id,
+    depositAmount,
+  }: {
+    id: string;
+    depositAmount: number;
+  }): Promise<VaultDepositData> {
+    await this.toggleFilter(VaultFilterName.LiveNow);
+    await expect
+      .soft(this.getActionButtonRowLocatorById(id))
+      .toHaveText("Deposit");
+    await expect
+      .soft(this.getVaultDetailsTabLocator(id, VaultDetailsTabs.YourPosition))
+      .not.toBeVisible();
+    await this.getActionButtonRowLocatorById(id).click();
+    await expect(this.diaologDepositToVaultModal).toBeVisible();
+    await this.enterDepositAmount(depositAmount);
+    await this.page.waitForTimeout(2000);
+    const depositedValueAfterText =
+      await this.spanDepositedValueAfterManageVaultDialog.textContent();
+    const poolShareValueAfterText =
+      await this.spanPoolShareValueAfterManageVaultDialog.textContent();
+    const shareTokensValueAfterText =
+      await this.spanShareTokensValueAfterManageVaultDialog.textContent();
+    let depositedValueAfter: number | null;
+    let poolShareValueAfter: number | null;
+    let shareTokensValueAfter: number | null;
+    if (
+      depositedValueAfterText !== null &&
+      poolShareValueAfterText !== null &&
+      shareTokensValueAfterText !== null
+    ) {
+      depositedValueAfter = extractNumericValue(depositedValueAfterText);
+      poolShareValueAfter = extractNumericValue(poolShareValueAfterText);
+      shareTokensValueAfter = extractNumericValue(shareTokensValueAfterText);
+    } else {
+      depositedValueAfter = null;
+      poolShareValueAfter = null;
+      shareTokensValueAfter = null;
+    }
+    const vaultDepositDataExpected: VaultDepositData = {
+      stakedAmount: depositedValueAfter,
+      poolShare: poolShareValueAfter,
+      shareTokens: shareTokensValueAfter,
+    };
+    await this.confirmDeposit();
+    await Promise.all([
+      this.validateAlertMessage({
+        status: "pending",
+        title: "Handling New Deposit Pending",
+        body: "Click on transaction to view on Block Explorer.",
+      }),
+      this.waitForGraphRequestByOperationName(
+        graphAPIEndpoints.vaultsSubgraph,
+        GraphOperationName.Vaults
+      ),
+      this.waitForGraphRequestByOperationName(
+        graphAPIEndpoints.vaultsSubgraph,
+        GraphOperationName.AccountVaultPositions
+      ),
+    ]);
+    await this.validateManagePositionDialogNotVisible();
+    await this.validateDepositSuccessfulModal();
+    await this.closeDepositSuccessfuldModal();
+    await this.page.waitForLoadState("load");
+    await this.page.waitForTimeout(2000);
+    await expect
+      .soft(this.getVaultDetailsTabLocator(id, VaultDetailsTabs.YourPosition))
+      .toBeVisible();
     return vaultDepositDataExpected;
   }
 }

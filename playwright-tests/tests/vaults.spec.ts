@@ -1,6 +1,6 @@
 import { test, expect } from "../fixtures/pomSynpressFixture";
 import { fxdVaultData } from "../fixtures/vaults.data";
-import { WalletConnectOptions } from "../types";
+import { VaultDetailsTabs, WalletConnectOptions } from "../types";
 // @ts-ignore
 import * as metamask from "@synthetixio/synpress/commands/metamask";
 import dotenv from "dotenv";
@@ -43,6 +43,7 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     });
   });
 
+  // Need to research how to correctly implement
   test.skip("FXD Vault: Deposit: Depositing first 100 FXD is successful", async ({
     vaultPage,
   }) => {
@@ -50,7 +51,7 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     await metamask.switchAccount("Account 1");
     await vaultPage.connectWallet(WalletConnectOptions.Metamask);
     await vaultPage.validateConnectedWalletAddress();
-    const vaultExpectedData = await vaultPage.manageVaultDeposit({
+    const vaultExpectedData = await vaultPage.depositFirstTime({
       id: fxdVaultData.id,
       depositAmount: 100,
     });
@@ -62,6 +63,7 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     });
   });
 
+  // Need to research how to correctly implement
   test.skip("FXD Vault: Manage Vault: Fully withdrawing all FXD is successful", async ({
     vaultPage,
   }) => {
@@ -69,19 +71,10 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     await metamask.switchAccount("Account 1");
     await vaultPage.connectWallet(WalletConnectOptions.Metamask);
     await vaultPage.validateConnectedWalletAddress();
-    const vaultExpectedData = await vaultPage.manageVaultWithdrawPartially({
-      id: fxdVaultData.id,
-      withdrawAmount: 100,
-    });
-    await vaultPage.validateVaultData({
-      id: fxdVaultData.id,
-      stakedAmount: vaultExpectedData.stakedAmount,
-      poolShare: vaultExpectedData.poolShare,
-      shareTokens: vaultExpectedData.shareTokens,
-    });
+    // ...
   });
 
-  test.skip('FXD Vault: "Deposit" button is visible for a first time user', async ({
+  test('FXD Vault: "Deposit" button is visible and "Your positions" is hidden for a first time user', async ({
     vaultPage,
   }) => {
     await vaultPage.navigate();
@@ -93,5 +86,13 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     await expect
       .soft(vaultPage.getActionButtonRowLocatorById(fxdVaultData.id))
       .toHaveText("Deposit");
+    await expect
+      .soft(
+        vaultPage.getVaultDetailsTabLocator(
+          fxdVaultData.id,
+          VaultDetailsTabs.YourPosition
+        )
+      )
+      .not.toBeVisible();
   });
 });
