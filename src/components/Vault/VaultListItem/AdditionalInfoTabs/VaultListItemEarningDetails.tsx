@@ -142,6 +142,7 @@ const VaultListItemEarningDetails: FC<VaultListItemFarmingDetailsProps> = ({
   const { balancePosition, balanceShares } = vaultPosition;
   const { fxdPrice } = usePricesContext();
   const { isMobile } = useSharedContext();
+  const vaultTestId = vaultItemData.id;
 
   return (
     <Grid container>
@@ -150,7 +151,9 @@ const VaultListItemEarningDetails: FC<VaultListItemFarmingDetailsProps> = ({
         <VaultInfo>
           <Pooled>
             Pooled {token.name}:
-            <Token>
+            <Token
+              data-testid={`vaultRowDetails-${vaultTestId}-itemPositionInfo-earningDetails-pooledValue`}
+            >
               <img
                 src={getTokenLogoURL(token.symbol)}
                 width={20}
@@ -166,7 +169,9 @@ const VaultListItemEarningDetails: FC<VaultListItemFarmingDetailsProps> = ({
           </Pooled>
           <PoolShare>
             Your share:{" "}
-            <span>
+            <span
+              data-testid={`vaultRowDetails-${vaultTestId}-itemPositionInfo-earningDetails-yourShareValue`}
+            >
               {`${formatPercentage(
                 BigNumber(balancePosition)
                   .dividedBy(balanceTokens)
@@ -177,7 +182,9 @@ const VaultListItemEarningDetails: FC<VaultListItemFarmingDetailsProps> = ({
           </PoolShare>
           <TotalTokens>
             Share token:{" "}
-            <span>
+            <span
+              data-testid={`vaultRowDetails-${vaultTestId}-itemPositionInfo-earningDetails-shareTokenValue`}
+            >
               {formatPercentage(
                 BigNumber(balanceShares)
                   .dividedBy(10 ** 18)
@@ -190,7 +197,9 @@ const VaultListItemEarningDetails: FC<VaultListItemFarmingDetailsProps> = ({
         {isMobile && (
           <Apr>
             Apr
-            <span>
+            <span
+              data-testid={`vaultRowDetails-${vaultTestId}-itemPositionInfo-earningDetails-aprValue`}
+            >
               {formatNumber(Number(strategies[0].reports[0].results[0].apr))}%
             </span>
           </Apr>
@@ -220,7 +229,12 @@ const VaultListItemEarningDetails: FC<VaultListItemFarmingDetailsProps> = ({
       </Grid>
       <Grid item xs={isMobile ? 12 : 2}>
         <ManageVaultBtnWrapper>
-          <ManageVaultBtn onClick={onOpen}>Manage Vault</ManageVaultBtn>
+          <ManageVaultBtn
+            onClick={onOpen}
+            data-testid={`vaultRowDetails-${vaultTestId}-managePositionButton`}
+          >
+            Manage Vault
+          </ManageVaultBtn>
         </ManageVaultBtnWrapper>
       </Grid>
     </Grid>

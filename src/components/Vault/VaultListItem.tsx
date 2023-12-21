@@ -188,6 +188,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
   const { token, balanceTokens, depositLimit, strategies, totalFees } =
     vaultItemData;
   const { fxdPrice } = usePricesContext();
+  const vaultTestId = vaultItemData.id;
 
   const {
     extended,
@@ -204,27 +205,34 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
     <>
       <AppTableRow
         className={!extended || !vaultPosition ? "border single" : undefined}
+        data-testid={`vaultRow-${vaultTestId}`}
       >
         <TableCell>
           <FlexBox>
             <VaultListItemImageWrapper>
-              <img src={getTokenLogoURL(token.symbol)} alt={token.name} />
+              <img
+                src={getTokenLogoURL(token.symbol)}
+                alt={token.name}
+                data-testid={`vaultRow-${vaultTestId}-tokenImg`}
+              />
             </VaultListItemImageWrapper>
             <VaultInfo>
               {vaultPosition?.balancePosition &&
                 BigNumber(vaultPosition?.balancePosition).isGreaterThan(0) && (
                   <EarningLabel>Earning</EarningLabel>
                 )}
-              <VaultTitle>{token.name}</VaultTitle>
+              <VaultTitle data-testid={`vaultRow-${vaultTestId}-tokenTitle`}>
+                {token.name}
+              </VaultTitle>
             </VaultInfo>
           </FlexBox>
         </TableCell>
-        <TableCell>
+        <TableCell data-testid={`vaultRow-${vaultTestId}-feeValueCell`}>
           <VaultPercent>
             {formatNumber(BigNumber(totalFees).toNumber())}%
           </VaultPercent>
         </TableCell>
-        <TableCell>
+        <TableCell data-testid={`vaultRow-${vaultTestId}-earnedValueCell`}>
           <VaultEarned>
             {vaultPosition?.balanceProfit &&
             BigNumber(vaultPosition?.balanceProfit).isGreaterThan(0)
@@ -238,7 +246,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
               : "0"}
           </VaultEarned>
         </TableCell>
-        <TableCell>
+        <TableCell data-testid={`vaultRow-${vaultTestId}-aprValueCell`}>
           <VaultApr>
             {formatNumber(
               BigNumber(strategies[0].reports[0].results[0].apr).toNumber()
@@ -246,7 +254,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
             %
           </VaultApr>
         </TableCell>
-        <TableCell>
+        <TableCell data-testid={`vaultRow-${vaultTestId}-tvlValueCell`}>
           <VaultStackedLiquidity>
             {formatCurrency(
               BigNumber(fxdPrice)
@@ -256,7 +264,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
             )}
           </VaultStackedLiquidity>
         </TableCell>
-        <TableCell>
+        <TableCell data-testid={`vaultRow-${vaultTestId}-availableValueCell`}>
           <VaultAvailable className={"blue"}>
             {formatNumber(
               BigNumber(depositLimit)
@@ -267,7 +275,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
             {token.symbol}
           </VaultAvailable>
         </TableCell>
-        <TableCell>
+        <TableCell data-testid={`vaultRow-${vaultTestId}-stakedValueCell`}>
           <VaultStacked>
             <Box className={"img-wrapper"}>
               {vaultPosition?.balancePosition &&
@@ -298,19 +306,24 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
           <FlexBox justifyContent={"space-evenly"}>
             {(!vaultPosition ||
               !BigNumber(vaultPosition.balanceShares).isGreaterThan(0)) && (
-              <ButtonPrimary onClick={() => setNewVaultDeposit(true)}>
+              <ButtonPrimary
+                onClick={() => setNewVaultDeposit(true)}
+                data-testid={`vaultRow-${vaultTestId}-depositButton`}
+              >
                 Deposit
               </ButtonPrimary>
             )}
             <ExtendedBtn
               className={extended ? "visible" : "hidden"}
               onClick={() => setExtended(!extended)}
+              data-testid={`vaultRow-${vaultTestId}-hideButton`}
             >
               <img src={DirectionUp} alt={"direction-up"} />
             </ExtendedBtn>
             <ExtendedBtn
               className={!extended ? "visible" : "hidden"}
               onClick={() => setExtended(!extended)}
+              data-testid={`vaultRow-${vaultTestId}-extendButton`}
             >
               <img src={DirectionDown} alt={"direction-down"} />
             </ExtendedBtn>
@@ -318,7 +331,10 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
         </TableCell>
       </AppTableRow>
       {extended && (
-        <AppTableRow className={"border"}>
+        <AppTableRow
+          className={"border"}
+          data-testid={`vaultRowDetails-${vaultTestId}`}
+        >
           <TableCell colSpan={8} sx={{ padding: "0 !important" }}>
             <VaultListItemNav
               vaultPosition={vaultPosition}
