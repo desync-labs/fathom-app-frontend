@@ -1,4 +1,4 @@
-import { useState, useRef, useContext } from "react";
+import { useState, useRef, useContext, FC } from "react";
 import styled, { ThemeContext } from "styled-components";
 
 import QuestionHelper from "apps/dex/components/QuestionHelper";
@@ -80,7 +80,7 @@ const OptionCustom = styled(FancyButton)<{
   input {
     width: 100%;
     height: 100%;
-    border: 0px;
+    border: 0;
     border-radius: 2rem;
   }
 `;
@@ -99,12 +99,12 @@ export interface SlippageTabsProps {
   setDeadline: (deadline: number) => void;
 }
 
-export default function SlippageTabs({
+const SlippageTabs: FC<SlippageTabsProps> = ({
   rawSlippage,
   setRawSlippage,
   deadline,
   setDeadline,
-}: SlippageTabsProps) {
+}) => {
   const theme = useContext(ThemeContext);
 
   const inputRef = useRef<HTMLInputElement>();
@@ -273,4 +273,6 @@ export default function SlippageTabs({
       </AutoColumn>
     </AutoColumn>
   );
-}
+};
+
+export default SlippageTabs;

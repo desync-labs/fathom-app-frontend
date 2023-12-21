@@ -3,7 +3,7 @@ import {
   ALLOWED_PRICE_IMPACT_HIGH,
   ALLOWED_PRICE_IMPACT_LOW,
   ALLOWED_PRICE_IMPACT_MEDIUM,
-} from "apps/dex/constants/index";
+} from "apps/dex/constants";
 import {
   CurrencyAmount,
   Fraction,

@@ -1,4 +1,4 @@
-import { useRef, RefObject, useCallback, useState, useMemo } from "react";
+import { useRef, RefObject, useCallback, useState, useMemo, FC } from "react";
 import Column from "apps/dex/components/Column";
 import {
   PaddedColumn,
@@ -48,13 +48,15 @@ const Footer = styled.div`
   text-align: center;
 `;
 
-export default function ManageTokens({
-  setModalView,
-  setImportToken,
-}: {
+type ManageTokensProps = {
   setModalView: (view: CurrencyModalView) => void;
   setImportToken: (token: Token) => void;
-}) {
+};
+
+const ManageTokens: FC<ManageTokensProps> = ({
+  setModalView,
+  setImportToken,
+}) => {
   const { chainId } = useActiveWeb3React();
 
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -164,4 +166,6 @@ export default function ManageTokens({
       </Footer>
     </Wrapper>
   );
-}
+};
+
+export default ManageTokens;

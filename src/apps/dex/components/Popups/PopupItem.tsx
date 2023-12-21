@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect } from "react";
+import { FC, useCallback, useContext, useEffect } from "react";
 import { X } from "react-feather";
 import { useSpring } from "react-spring/web";
 import styled, { ThemeContext } from "styled-components";
@@ -44,15 +44,13 @@ const Fader = styled.div`
 
 const AnimatedFader = animated(Fader);
 
-export default function PopupItem({
-  removeAfterMs,
-  content,
-  popKey,
-}: {
+type PopupItemProps = {
   removeAfterMs: number | null;
   content: PopupContent;
   popKey: string;
-}) {
+};
+
+const PopupItem: FC<PopupItemProps> = ({ removeAfterMs, content, popKey }) => {
   const removePopup = useRemovePopup();
   const removeThisPopup = useCallback(
     () => removePopup(popKey),
@@ -108,4 +106,6 @@ export default function PopupItem({
       {removeAfterMs !== null ? <AnimatedFader style={faderStyle} /> : null}
     </Popup>
   );
-}
+};
+
+export default PopupItem;

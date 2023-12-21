@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { FC, useState } from "react";
 import {
   PaddedColumn,
   Separator,
@@ -49,19 +49,21 @@ const ToggleOption = styled.div<{ active?: boolean }>`
   }
 `;
 
-export default function Manage({
-  onDismiss,
-  setModalView,
-  setImportList,
-  setImportToken,
-  setListUrl,
-}: {
+type ManageProps = {
   onDismiss: () => void;
   setModalView: (view: CurrencyModalView) => void;
   setImportToken: (token: Token) => void;
   setImportList: (list: TokenList) => void;
   setListUrl: (url: string) => void;
-}) {
+};
+
+const Manage: FC<ManageProps> = ({
+  onDismiss,
+  setModalView,
+  setImportList,
+  setImportToken,
+  setListUrl,
+}) => {
   // toggle between tokens and lists
   const [showLists, setShowLists] = useState(true);
 
@@ -110,4 +112,6 @@ export default function Manage({
       )}
     </Wrapper>
   );
-}
+};
+
+export default Manage;

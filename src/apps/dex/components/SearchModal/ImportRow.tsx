@@ -1,4 +1,4 @@
-import { CSSProperties } from "react";
+import { CSSProperties, FC } from "react";
 import { Token } from "into-the-fathom-swap-sdk";
 import { AutoRow, RowFixed } from "apps/dex/components/Row";
 import { AutoColumn } from "apps/dex/components/Column";
@@ -35,24 +35,25 @@ const NameOverflow = styled.div`
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
-  text-overflow: ellipsis;
   max-width: 140px;
   font-size: 12px;
 `;
 
-export default function ImportRow({
-  token,
-  style,
-  dim,
-  showImportView,
-  setImportToken,
-}: {
+type ImportRowProps = {
   token: Token;
   style?: CSSProperties;
   dim?: boolean;
   showImportView: () => void;
   setImportToken: (token: Token) => void;
-}) {
+};
+
+const ImportRow: FC<ImportRowProps> = ({
+  token,
+  style,
+  dim,
+  showImportView,
+  setImportToken,
+}) => {
   // gloabls
   const { chainId } = useActiveWeb3React();
   const theme = useTheme();
@@ -107,4 +108,6 @@ export default function ImportRow({
       )}
     </TokenSection>
   );
-}
+};
+
+export default ImportRow;

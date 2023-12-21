@@ -42,7 +42,7 @@ const FixedPopupColumn = styled(AutoColumn)<{ extraPadding: boolean }>`
   `};
 `;
 
-export default function Popups() {
+const Popups = () => {
   // get all popups
   const activePopups = useActivePopups();
 
@@ -77,4 +77,6 @@ export default function Popups() {
       </MobilePopupWrapper>
     </>
   );
-}
+};
+
+export default Popups;

@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { FC } from "react";
 
 const ToggleElement = styled.span<{ isActive?: boolean; isOnSwitch?: boolean }>`
   background: ${({ theme, isActive, isOnSwitch }) =>
@@ -39,7 +40,7 @@ export interface ToggleProps {
   toggle: () => void;
 }
 
-export default function Toggle({ id, isActive, toggle }: ToggleProps) {
+const Toggle: FC<ToggleProps> = ({ id, isActive, toggle }) => {
   return (
     <StyledToggle id={id} isActive={isActive} onClick={toggle}>
       <ToggleElement isActive={isActive} isOnSwitch={true}>
@@ -50,4 +51,6 @@ export default function Toggle({ id, isActive, toggle }: ToggleProps) {
       </ToggleElement>
     </StyledToggle>
   );
-}
+};
+
+export default Toggle;

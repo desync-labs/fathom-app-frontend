@@ -32,7 +32,7 @@ const Marginer = styled.div`
   margin-top: 5rem;
 `;
 
-export default function App() {
+const App = () => {
   const { pathname, search } = useLocation();
   useEffect(() => {
     ReactGA.pageview(`${pathname}${search}`);
@@ -50,4 +50,6 @@ export default function App() {
       </AppWrapper>
     </Suspense>
   );
-}
+};
+
+export default App;

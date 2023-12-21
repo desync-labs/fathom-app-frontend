@@ -1,5 +1,5 @@
 import { currencyEquals, Trade } from "into-the-fathom-swap-sdk";
-import { useCallback, useMemo } from "react";
+import { FC, useCallback, useMemo } from "react";
 import TransactionConfirmationModal, {
   ConfirmationModalContent,
   TransactionErrorContent,
@@ -25,19 +25,7 @@ function tradeMeaningfullyDiffers(tradeA: Trade, tradeB: Trade): boolean {
   );
 }
 
-export default function ConfirmSwapModal({
-  trade,
-  originalTrade,
-  onAcceptChanges,
-  allowedSlippage,
-  onConfirm,
-  onDismiss,
-  recipient,
-  swapErrorMessage,
-  isOpen,
-  attemptingTxn,
-  txHash,
-}: {
+type ConfirmSwapModalProps = {
   isOpen: boolean;
   trade: Trade | undefined;
   originalTrade: Trade | undefined;
@@ -49,7 +37,21 @@ export default function ConfirmSwapModal({
   onConfirm: () => void;
   swapErrorMessage: string | undefined;
   onDismiss: () => void;
-}) {
+};
+
+const ConfirmSwapModal: FC<ConfirmSwapModalProps> = ({
+  trade,
+  originalTrade,
+  onAcceptChanges,
+  allowedSlippage,
+  onConfirm,
+  onDismiss,
+  recipient,
+  swapErrorMessage,
+  isOpen,
+  attemptingTxn,
+  txHash,
+}) => {
   const showAcceptChanges = useMemo(
     () =>
       Boolean(
@@ -118,4 +120,6 @@ export default function ConfirmSwapModal({
       currencyToAdd={trade?.outputAmount.currency}
     />
   );
-}
+};
+
+export default ConfirmSwapModal;

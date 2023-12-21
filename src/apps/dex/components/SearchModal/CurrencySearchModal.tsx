@@ -1,5 +1,5 @@
 import { Currency, Token } from "into-the-fathom-swap-sdk";
-import { useCallback, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import useLast from "apps/dex/hooks/useLast";
 import Modal from "apps/dex/components/Modal";
 import { CurrencySearch } from "apps/dex/components/SearchModal/CurrencySearch";
@@ -25,14 +25,14 @@ export enum CurrencyModalView {
   importList,
 }
 
-export default function CurrencySearchModal({
+const CurrencySearchModal: FC<CurrencySearchModalProps> = ({
   isOpen,
   onDismiss,
   onCurrencySelect,
   selectedCurrency,
   otherSelectedCurrency,
   showCommonBases = false,
-}: CurrencySearchModalProps) {
+}) => {
   const [modalView, setModalView] = useState<CurrencyModalView>(
     CurrencyModalView.manage
   );
@@ -123,4 +123,6 @@ export default function CurrencySearchModal({
       )}
     </Modal>
   );
-}
+};
+
+export default CurrencySearchModal;

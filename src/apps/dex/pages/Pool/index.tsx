@@ -84,7 +84,7 @@ const EmptyProposals = styled.div`
   align-items: center;
 `;
 
-export default function Pool() {
+const Pool = () => {
   const { account } = useActiveWeb3React();
 
   // fetch the user's balances of all tracked V2 LP tokens
@@ -235,4 +235,6 @@ export default function Pool() {
       </PageWrapper>
     </>
   );
-}
+};
+
+export default Pool;

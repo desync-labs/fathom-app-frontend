@@ -3,12 +3,7 @@ import ReactGA from "react-ga";
 import { Link } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import { darken } from "polished";
-import {
-  ArrowLeft,
-  X,
-  ExternalLink as LinkIconFeather,
-  Trash,
-} from "react-feather";
+import { X, ExternalLink as LinkIconFeather, Trash } from "react-feather";
 
 export const ButtonText = styled.button`
   outline: none;
@@ -302,17 +297,6 @@ export const Spinner = styled.img`
   height: 16px;
 `;
 
-const BackArrowLink = styled(StyledInternalLink)`
-  color: ${({ theme }) => theme.text1};
-`;
-export function BackArrow({ to }: { to: string }) {
-  return (
-    <BackArrowLink to={to}>
-      <ArrowLeft />
-    </BackArrowLink>
-  );
-}
-
 export const CustomLightSpinner = styled(Spinner)<{ size: string }>`
   height: ${({ size }) => size};
   width: ${({ size }) => size};
@@ -321,18 +305,5 @@ export const CustomLightSpinner = styled(Spinner)<{ size: string }>`
 export const HideSmall = styled.span`
   ${({ theme }) => theme.mediaWidth.upToSmall`
     display: none;
-  `};
-`;
-
-export const HideExtraSmall = styled.span`
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    display: none;
-  `};
-`;
-
-export const ExtraSmallOnly = styled.span`
-  display: none;
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    display: block;
   `};
 `;

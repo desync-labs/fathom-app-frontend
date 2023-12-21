@@ -4,6 +4,7 @@ import {
   AdvancedSwapDetails,
   AdvancedSwapDetailsProps,
 } from "apps/dex/components/swap/AdvancedSwapDetails";
+import { FC } from "react";
 
 const AdvancedDetailsFooter = styled.div<{ show: boolean }>`
   padding-top: calc(16px + 2rem);
@@ -20,10 +21,10 @@ const AdvancedDetailsFooter = styled.div<{ show: boolean }>`
   transition: transform 300ms ease-in-out;
 `;
 
-export default function AdvancedSwapDetailsDropdown({
+const AdvancedSwapDetailsDropdown: FC<AdvancedSwapDetailsProps> = ({
   trade,
   ...rest
-}: AdvancedSwapDetailsProps) {
+}) => {
   const lastTrade = useLastTruthy(trade);
 
   return (
@@ -31,4 +32,6 @@ export default function AdvancedSwapDetailsDropdown({
       <AdvancedSwapDetails {...rest} trade={trade ?? lastTrade ?? undefined} />
     </AdvancedDetailsFooter>
   );
-}
+};
+
+export default AdvancedSwapDetailsDropdown;
