@@ -2,15 +2,18 @@ import { Percent } from "into-the-fathom-swap-sdk";
 import { ONE_BIPS } from "apps/dex/constants";
 import { warningSeverity } from "apps/dex/utils/prices";
 import { ErrorText } from "apps/dex/components/swap/styleds";
+import { FC } from "react";
 
 /**
  * Formatted version of price impact text with warning colors
  */
-export default function FormattedPriceImpact({
-  priceImpact,
-}: {
+type FormattedPriceImpactProps = {
   priceImpact?: Percent;
-}) {
+};
+
+const FormattedPriceImpact: FC<FormattedPriceImpactProps> = ({
+  priceImpact,
+}) => {
   return (
     <ErrorText
       fontWeight={500}
@@ -24,4 +27,6 @@ export default function FormattedPriceImpact({
         : "-"}
     </ErrorText>
   );
-}
+};
+
+export default FormattedPriceImpact;

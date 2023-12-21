@@ -4,6 +4,7 @@ import { darken } from "polished";
 import { RowBetween } from "apps/dex/components/Row";
 import { ChevronDown } from "react-feather";
 import { Button as RebassButton, ButtonProps } from "rebass/styled-components";
+import { FC } from "react";
 
 const Base = styled(RebassButton)<{
   padding?: string;
@@ -136,52 +137,6 @@ export const ButtonSecondary = styled(Base)<{ padding?: string }>`
   }
 `;
 
-export const ButtonPink = styled(Base)`
-  background-color: ${({ theme }) => theme.primary1};
-  color: white;
-
-  &:focus {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.primary1)};
-    background-color: ${({ theme }) => darken(0.05, theme.primary1)};
-  }
-  &:hover {
-    background-color: ${({ theme }) => darken(0.05, theme.primary1)};
-  }
-  &:active {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, theme.primary1)};
-    background-color: ${({ theme }) => darken(0.1, theme.primary1)};
-  }
-  &:disabled {
-    background-color: ${({ theme }) => theme.primary1};
-    opacity: 50%;
-  }
-`;
-
-export const ButtonUNIGradient = styled(ButtonPrimary)`
-  color: white;
-  padding: 4px 8px;
-  height: 36px;
-  font-weight: 500;
-  background-color: ${({ theme }) => theme.bg3};
-  background: radial-gradient(
-      174.47% 188.91% at 1.84% 0%,
-      #ff007a 0%,
-      #2172e5 100%
-    ),
-    #edeef2;
-  width: fit-content;
-  position: relative;
-  cursor: pointer;
-  border: none;
-  white-space: no-wrap;
-  :hover {
-    opacity: 0.8;
-  }
-  :active {
-    opacity: 0.9;
-  }
-`;
-
 export const ButtonOutlined = styled(Base)`
   border: 1px solid ${({ theme }) => theme.bg2};
   background-color: transparent;
@@ -222,26 +177,6 @@ export const ButtonEmpty = styled(Base)`
   }
 `;
 
-export const ButtonWhite = styled(Base)`
-  border: 1px solid #edeef2;
-  background-color: ${({ theme }) => theme.bg1};
-  color: black;
-
-  &:focus {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    box-shadow: 0 0 0 1pt ${darken(0.05, "#edeef2")};
-  }
-  &:hover {
-    box-shadow: 0 0 0 1pt ${darken(0.1, "#edeef2")};
-  }
-  &:active {
-    box-shadow: 0 0 0 1pt ${darken(0.1, "#edeef2")};
-  }
-  &:disabled {
-    opacity: 50%;
-  }
-`;
-
 const ButtonConfirmedStyle = styled(Base)`
   background-color: ${({ theme }) => theme.bg4};
   color: ${({ theme }) => theme.text1};
@@ -274,58 +209,32 @@ const ButtonErrorStyle = styled(Base)`
   }
 `;
 
-export function ButtonConfirmed({
+type ButtonConfirmedProps = {
+  confirmed?: boolean;
+  altDisabledStyle?: boolean;
+} & ButtonProps;
+
+export const ButtonConfirmed: FC<ButtonConfirmedProps> = ({
   confirmed,
   altDisabledStyle,
   ...rest
-}: { confirmed?: boolean; altDisabledStyle?: boolean } & ButtonProps) {
+}) => {
   if (confirmed) {
     return <ButtonConfirmedStyle {...rest} />;
   } else {
     return <ButtonPrimary {...rest} altDisabledStyle={altDisabledStyle} />;
   }
-}
+};
 
-export function ButtonError({
-  error,
-  ...rest
-}: { error?: boolean } & ButtonProps) {
+type ButtonErrorProps = { error?: boolean } & ButtonProps;
+
+export const ButtonError: FC<ButtonErrorProps> = ({ error, ...rest }) => {
   if (error) {
     return <ButtonErrorStyle {...rest} />;
   } else {
     return <ButtonPrimary {...rest} />;
   }
-}
-
-export function ButtonDropdown({
-  disabled = false,
-  children,
-  ...rest
-}: { disabled?: boolean } & ButtonProps) {
-  return (
-    <ButtonPrimary {...rest} disabled={disabled}>
-      <RowBetween>
-        <div style={{ display: "flex", alignItems: "center" }}>{children}</div>
-        <ChevronDown size={24} />
-      </RowBetween>
-    </ButtonPrimary>
-  );
-}
-
-export function ButtonDropdownGrey({
-  disabled = false,
-  children,
-  ...rest
-}: { disabled?: boolean } & ButtonProps) {
-  return (
-    <ButtonGray {...rest} disabled={disabled} style={{ borderRadius: "20px" }}>
-      <RowBetween>
-        <div style={{ display: "flex", alignItems: "center" }}>{children}</div>
-        <ChevronDown size={24} />
-      </RowBetween>
-    </ButtonGray>
-  );
-}
+};
 
 export function ButtonDropdownLight({
   disabled = false,
@@ -340,15 +249,4 @@ export function ButtonDropdownLight({
       </RowBetween>
     </ButtonOutlined>
   );
-}
-
-export function ButtonRadio({
-  active,
-  ...rest
-}: { active?: boolean } & ButtonProps) {
-  if (!active) {
-    return <ButtonWhite {...rest} />;
-  } else {
-    return <ButtonPrimary {...rest} />;
-  }
 }

@@ -1,4 +1,5 @@
 import styled, { keyframes } from "styled-components";
+import { FC } from "react";
 
 const rotate = keyframes`
   from {
@@ -22,15 +23,13 @@ const StyledSVG = styled.svg<{ size: string; stroke?: string }>`
  * Takes in custom size and stroke for circle color, default to primary color as fill,
  * need ...rest for layered styles on top
  */
-export default function Loader({
-  size = "16px",
-  stroke,
-  ...rest
-}: {
+type LoaderProps = {
   size?: string;
   stroke?: string;
   [k: string]: any;
-}) {
+};
+
+const Loader: FC<LoaderProps> = ({ size = "16px", stroke, ...rest }) => {
   return (
     <StyledSVG
       viewBox="0 0 24 24"
@@ -48,4 +47,6 @@ export default function Loader({
       />
     </StyledSVG>
   );
-}
+};
+
+export default Loader;

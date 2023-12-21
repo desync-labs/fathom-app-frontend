@@ -1,6 +1,5 @@
 import {
   TokenAddressMap,
-  useDefaultTokenList,
   useSupportedTokenList,
 } from "apps/dex/state/lists/hooks";
 import { parseBytes32String } from "@into-the-fathom/strings";
@@ -65,11 +64,6 @@ function useTokensFromMap(
   }, [chainId, servicesChainId, userAddedTokens, tokenMap, includeUserAdded]);
 }
 
-export function useDefaultTokens(): { [address: string]: Token } {
-  const defaultList = useDefaultTokenList();
-  return useTokensFromMap(defaultList, false);
-}
-
 export function useAllTokens(): { [address: string]: Token } {
   const allTokens = useCombinedActiveList();
   return useTokensFromMap(allTokens, true);
@@ -82,7 +76,7 @@ export function useAllInactiveTokens(): { [address: string]: Token } {
 
   // filter out any token that are on active list
   const activeTokensAddresses = Object.keys(useAllTokens());
-  const filteredInactive = activeTokensAddresses
+  return activeTokensAddresses
     ? Object.keys(inactiveTokens).reduce<{ [address: string]: Token }>(
         (newMap, address) => {
           if (!activeTokensAddresses.includes(address)) {
@@ -93,8 +87,6 @@ export function useAllInactiveTokens(): { [address: string]: Token } {
         {}
       )
     : inactiveTokens;
-
-  return filteredInactive;
 }
 
 export function useSupportedTokens(): { [address: string]: Token } {
@@ -123,8 +115,7 @@ export function useFoundOnInactiveList(
     if (!chainId || searchQuery === "") {
       return undefined;
     } else {
-      const tokens = filterTokens(Object.values(inactiveTokens), searchQuery);
-      return tokens;
+      return filterTokens(Object.values(inactiveTokens), searchQuery);
     }
   }, [chainId, inactiveTokens, searchQuery]);
 }

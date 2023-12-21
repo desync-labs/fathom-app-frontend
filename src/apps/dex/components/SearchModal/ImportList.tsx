@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, FC } from "react";
 import styled from "styled-components";
 import ReactGA from "react-ga";
 import { TYPE, CloseIcon } from "apps/dex/theme";
@@ -34,12 +34,12 @@ interface ImportProps {
   setModalView: (view: CurrencyModalView) => void;
 }
 
-export function ImportList({
+export const ImportList: FC<ImportProps> = ({
   listURL,
   list,
   setModalView,
   onDismiss,
-}: ImportProps) {
+}) => {
   const theme = useTheme();
   const dispatch = useDispatch<AppDispatch>();
 
@@ -196,4 +196,4 @@ export function ImportList({
       </PaddedColumn>
     </Wrapper>
   );
-}
+};

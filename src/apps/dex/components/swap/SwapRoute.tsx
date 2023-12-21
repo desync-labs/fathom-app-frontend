@@ -6,7 +6,7 @@ import { ThemeContext } from "styled-components";
 import { TYPE } from "apps/dex/theme";
 import { unwrappedToken } from "apps/dex/utils/wrappedCurrency";
 
-export default memo(function SwapRoute({ trade }: { trade: Trade }) {
+export default memo(({ trade }: { trade: Trade }) => {
   const theme = useContext(ThemeContext);
   return (
     <Flex

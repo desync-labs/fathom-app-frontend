@@ -93,7 +93,7 @@ export const ConnectWalletButton = styled(ButtonLight)`
   }
 `;
 
-export default function Swap() {
+const Swap = () => {
   const loadedUrlParams = useDefaultsFromURLSearch();
   const navigate = useNavigate();
 
@@ -690,4 +690,6 @@ export default function Swap() {
       )}
     </>
   );
-}
+};
+
+export default Swap;

@@ -2,19 +2,7 @@ import styled from "styled-components";
 import { AutoColumn } from "apps/dex/components/Column";
 
 import uImage from "apps/dex/assets/images/big_unicorn.png";
-// import xlUnicorn from "apps/dex/assets/images/xl_uni.png";
 import noise from "apps/dex/assets/images/noise.png";
-
-export const TextBox = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 4px 12px;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 20px;
-  width: fit-content;
-  justify-self: flex-end;
-`;
 
 export const DataCard = styled(AutoColumn)<{ disabled?: boolean }>`
   background: ${({ theme }) => theme.bg7};

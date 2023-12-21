@@ -1,5 +1,5 @@
 import { Trade, TradeType } from "into-the-fathom-swap-sdk";
-import { useContext, useMemo } from "react";
+import { FC, useContext, useMemo } from "react";
 import { ArrowDown, AlertTriangle } from "react-feather";
 import { Text } from "rebass";
 import { ThemeContext } from "styled-components";
@@ -21,19 +21,21 @@ import {
   ArrowDownWrapped,
 } from "apps/dex/components/swap/styleds";
 
-export default function SwapModalHeader({
-  trade,
-  allowedSlippage,
-  recipient,
-  showAcceptChanges,
-  onAcceptChanges,
-}: {
+type SwapModalHeaderProps = {
   trade: Trade;
   allowedSlippage: number;
   recipient: string | null;
   showAcceptChanges: boolean;
   onAcceptChanges: () => void;
-}) {
+};
+
+const SwapModalHeader: FC<SwapModalHeaderProps> = ({
+  trade,
+  allowedSlippage,
+  recipient,
+  showAcceptChanges,
+  onAcceptChanges,
+}) => {
   const slippageAdjustedAmounts = useMemo(
     () => computeSlippageAdjustedAmounts(trade, allowedSlippage),
     [trade, allowedSlippage]
@@ -170,4 +172,6 @@ export default function SwapModalHeader({
       ) : null}
     </AutoColumn>
   );
-}
+};
+
+export default SwapModalHeader;

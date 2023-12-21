@@ -1,5 +1,5 @@
 import { ChainId, TokenAmount } from "into-the-fathom-swap-sdk";
-import { useMemo } from "react";
+import { FC, useMemo } from "react";
 import { X } from "react-feather";
 import styled from "styled-components";
 import tokenLogo from "apps/dex/assets/images/token-logo.svg";
@@ -50,11 +50,13 @@ const StyledClose = styled(X)`
 /**
  * Content for balance stats modal
  */
-export default function FathomBalanceContent({
-  setShowFthmBalanceModal,
-}: {
+type FathomBalanceContent = {
   setShowFthmBalanceModal: any;
-}) {
+};
+
+const FathomBalanceContent: FC<FathomBalanceContent> = ({
+  setShowFthmBalanceModal,
+}) => {
   const { account, chainId } = useActiveWeb3React();
   const fthm = chainId ? FTHM[chainId] : undefined;
 
@@ -157,4 +159,6 @@ export default function FathomBalanceContent({
       </ModalUpper>
     </ContentWrapper>
   );
-}
+};
+
+export default FathomBalanceContent;

@@ -8,10 +8,6 @@ import ENS_PUBLIC_RESOLVER_ABI from "apps/dex/constants/abis/ens-public-resolver
 import ENS_ABI from "apps/dex/constants/abis/ens-registrar.json";
 import { ERC20_BYTES32_ABI } from "apps/dex/constants/abis/erc20";
 import ERC20_ABI from "apps/dex/constants/abis/erc20.json";
-import {
-  MIGRATOR_ABI,
-  MIGRATOR_ADDRESS,
-} from "apps/dex/constants/abis/migrator";
 import UNISOCKS_ABI from "apps/dex/constants/abis/unisocks.json";
 import WETH_ABI from "apps/dex/constants/abis/weth.json";
 import {
@@ -43,10 +39,6 @@ function useContract(
       return null;
     }
   }, [address, ABI, library, withSignerIfPossible, account]);
-}
-
-export function useV2MigratorContract(): Contract | null {
-  return useContract(MIGRATOR_ADDRESS, MIGRATOR_ABI, true);
 }
 
 export function useTokenContract(

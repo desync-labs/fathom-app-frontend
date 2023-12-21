@@ -17,7 +17,7 @@ const SwapHeaderRow = styled.div`
   color: ${({ theme }) => theme.white};
 `;
 
-export default function SwapHeader() {
+const SwapHeader = () => {
   return (
     <StyledSwapHeader>
       <RowBetween>
@@ -28,4 +28,6 @@ export default function SwapHeader() {
       </RowBetween>
     </StyledSwapHeader>
   );
-}
+};
+
+export default SwapHeader;

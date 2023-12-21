@@ -8,11 +8,12 @@ import {
 } from "into-the-fathom-swap-sdk";
 import styled from "styled-components";
 
-import { SUGGESTED_BASES } from "apps/dex/constants/index";
+import { SUGGESTED_BASES } from "apps/dex/constants";
 import { AutoColumn } from "apps/dex/components/Column";
 import QuestionHelper from "apps/dex/components/QuestionHelper";
 import { AutoRow } from "apps/dex/components/Row";
 import CurrencyLogo from "apps/dex/components/CurrencyLogo";
+import { FC } from "react";
 
 const BaseWrapper = styled.div<{ disable?: boolean }>`
   border-radius: 10px;
@@ -29,15 +30,17 @@ const BaseWrapper = styled.div<{ disable?: boolean }>`
   opacity: ${({ disable }) => disable && "0.4"};
 `;
 
-export default function CommonBases({
-  chainId,
-  onSelect,
-  selectedCurrency,
-}: {
+type CommonBasesProps = {
   chainId?: ChainId;
   selectedCurrency?: Currency | null;
   onSelect: (currency: Currency) => void;
-}) {
+};
+
+const CommonBases: FC<CommonBasesProps> = ({
+  chainId,
+  onSelect,
+  selectedCurrency,
+}) => {
   const renderBaseToken = () => {
     return (
       <BaseWrapper
@@ -86,4 +89,6 @@ export default function CommonBases({
       </AutoRow>
     </AutoColumn>
   );
-}
+};
+
+export default CommonBases;

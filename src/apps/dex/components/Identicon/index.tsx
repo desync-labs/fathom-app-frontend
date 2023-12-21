@@ -12,7 +12,7 @@ const StyledIdenticonContainer = styled.div`
   background-color: ${({ theme }) => theme.bg4};
 `;
 
-export default function Identicon() {
+const Identicon = () => {
   const ref = useRef<HTMLDivElement>();
 
   const { account } = useActiveWeb3React();
@@ -24,6 +24,7 @@ export default function Identicon() {
     }
   }, [account]);
 
-  // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
   return <StyledIdenticonContainer ref={ref as any} />;
-}
+};
+
+export default Identicon;

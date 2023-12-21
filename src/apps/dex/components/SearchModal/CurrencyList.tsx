@@ -5,7 +5,13 @@ import {
   XDC,
   Token,
 } from "into-the-fathom-swap-sdk";
-import { CSSProperties, MutableRefObject, useCallback, useMemo } from "react";
+import {
+  CSSProperties,
+  FC,
+  MutableRefObject,
+  useCallback,
+  useMemo,
+} from "react";
 import { FixedSizeList } from "react-window";
 import { Text } from "rebass";
 import styled from "styled-components";
@@ -117,19 +123,21 @@ function TokenTags({ currency }: { currency: Currency }) {
   );
 }
 
-function CurrencyRow({
-  currency,
-  onSelect,
-  isSelected,
-  otherSelected,
-  style,
-}: {
+type CurrencyRowProps = {
   currency: Currency;
   onSelect: () => void;
   isSelected: boolean;
   otherSelected: boolean;
   style: CSSProperties;
-}) {
+};
+
+const CurrencyRow: FC<CurrencyRowProps> = ({
+  currency,
+  onSelect,
+  isSelected,
+  otherSelected,
+  style,
+}) => {
   const { account } = useActiveWeb3React();
   const key = currencyKey(currency);
   const selectedTokenList = useCombinedActiveList();
@@ -166,20 +174,9 @@ function CurrencyRow({
       </RowFixed>
     </MenuItem>
   );
-}
+};
 
-export default function CurrencyList({
-  height,
-  currencies,
-  selectedCurrency,
-  onCurrencySelect,
-  otherCurrency,
-  fixedListRef,
-  showXDC,
-  showImportView,
-  setImportToken,
-  breakIndex,
-}: {
+type CurrencyListProps = {
   height: number;
   currencies: Currency[];
   selectedCurrency?: Currency | null;
@@ -190,7 +187,20 @@ export default function CurrencyList({
   showImportView: () => void;
   setImportToken: (token: Token) => void;
   breakIndex: number | undefined;
-}) {
+};
+
+const CurrencyList: FC<CurrencyListProps> = ({
+  height,
+  currencies,
+  selectedCurrency,
+  onCurrencySelect,
+  otherCurrency,
+  fixedListRef,
+  showXDC,
+  showImportView,
+  setImportToken,
+  breakIndex,
+}) => {
   const { chainId } = useActiveWeb3React();
   const itemData: (Currency | undefined)[] = useMemo(() => {
     let formatted: (Currency | undefined)[] = showXDC
@@ -300,4 +310,6 @@ export default function CurrencyList({
       {Row}
     </FixedSizeList>
   );
-}
+};
+
+export default CurrencyList;

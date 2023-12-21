@@ -84,13 +84,10 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
                 !customBasesA.find((base) => tokenB.equals(base))
               )
                 return false;
-              if (
+              return !(
                 customBasesB &&
                 !customBasesB.find((base) => tokenA.equals(base))
-              )
-                return false;
-
-              return true;
+              );
             })
         : [],
     [tokenA, tokenB, bases, basePairs, chainId]

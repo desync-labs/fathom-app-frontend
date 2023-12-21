@@ -86,7 +86,7 @@ const IconWrapper = styled.div`
   border-radius: 15px;
 `;
 
-export default function RemoveLiquidity() {
+const RemoveLiquidity = () => {
   const { currencyIdA, currencyIdB } = useParams();
   const navigate = useNavigate();
 
@@ -919,4 +919,6 @@ export default function RemoveLiquidity() {
       ) : null}
     </>
   );
-}
+};
+
+export default RemoveLiquidity;

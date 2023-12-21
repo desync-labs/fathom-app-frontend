@@ -1,4 +1,12 @@
-import { memo, useCallback, useMemo, useRef, useState, useEffect } from "react";
+import {
+  memo,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+  useEffect,
+  FC,
+} from "react";
 import { Settings, CheckCircle } from "react-feather";
 import ReactGA from "react-ga";
 import { usePopper } from "react-popper";
@@ -66,8 +74,8 @@ const PopoverContainer = styled.div<{ show: boolean }>`
   transition: visibility 150ms linear, opacity 150ms linear;
   background: ${({ theme }) => theme.bg2};
   border: 1px solid ${({ theme }) => theme.bg3};
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04),
-    0px 16px 24px rgba(0, 0, 0, 0.04), 0px 24px 32px rgba(0, 0, 0, 0.01);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.01), 0 4px 8px rgba(0, 0, 0, 0.04),
+    0 16px 24px rgba(0, 0, 0, 0.04), 0 24px 32px rgba(0, 0, 0, 0.01);
   color: ${({ theme }) => theme.text2};
   border-radius: 0.5rem;
   padding: 1rem;
@@ -112,7 +120,7 @@ function listUrlRowHTMLId(listUrl: string) {
   return `list-row-${listUrl.replace(/\./g, "-")}`;
 }
 
-const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
+const ListRow: FC<{ listUrl: string }> = memo(({ listUrl }) => {
   const listsByUrl = useSelector<AppState, AppState["lists"]["byUrl"]>(
     (state) => state.lists.byUrl
   );

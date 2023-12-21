@@ -1,5 +1,5 @@
 import { CurrencyAmount, XDC, JSBI } from "into-the-fathom-swap-sdk";
-import { MIN_XDC } from "apps/dex/constants/index";
+import { MIN_XDC } from "apps/dex/constants";
 
 /**
  * Given some token amount, return the max that can be spent of it

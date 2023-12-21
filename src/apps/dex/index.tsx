@@ -42,7 +42,7 @@ if (typeof GOOGLE_ANALYTICS_ID === "string") {
   ReactGA.initialize("test", { testMode: true, debug: true });
 }
 
-export function Updaters() {
+export const Updaters = () => {
   return (
     <>
       <ListsUpdater />
@@ -51,7 +51,7 @@ export function Updaters() {
       <MulticallUpdater />
     </>
   );
-}
+};
 
 const DexIndexComponent: FC<DexViewProps> = ({ openConnectorMenu }) => {
   return (

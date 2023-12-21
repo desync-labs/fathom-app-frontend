@@ -2,7 +2,7 @@ import { Percent } from "into-the-fathom-swap-sdk";
 import {
   ALLOWED_PRICE_IMPACT_HIGH,
   PRICE_IMPACT_WITHOUT_FEE_CONFIRM_MIN,
-} from "apps/dex/constants/index";
+} from "apps/dex/constants";
 
 /**
  * Given the price impact, get user confirmation.

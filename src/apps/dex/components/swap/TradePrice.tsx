@@ -1,5 +1,5 @@
 import { Price } from "into-the-fathom-swap-sdk";
-import { useContext } from "react";
+import { FC, useContext } from "react";
 import { Repeat } from "react-feather";
 import { Text } from "rebass";
 import { ThemeContext } from "styled-components";
@@ -11,11 +11,11 @@ interface TradePriceProps {
   setShowInverted: (showInverted: boolean) => void;
 }
 
-export default function TradePrice({
+const TradePrice: FC<TradePriceProps> = ({
   price,
   showInverted,
   setShowInverted,
-}: TradePriceProps) {
+}) => {
   const theme = useContext(ThemeContext);
 
   const formattedPrice = showInverted
@@ -50,4 +50,6 @@ export default function TradePrice({
       )}
     </Text>
   );
-}
+};
+
+export default TradePrice;
