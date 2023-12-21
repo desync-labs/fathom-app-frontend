@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { FC, useState } from "react";
 import styled from "styled-components";
 import { TYPE, CloseIcon, ExternalLink } from "apps/dex/theme";
 import { ButtonEmpty } from "apps/dex/components/Button";
@@ -38,13 +38,15 @@ const AddressText = styled(TYPE.blue)`
 `}
 `;
 
-export default function UnsupportedCurrencyFooter({
-  show,
-  currencies,
-}: {
+type UnsupportedCurrencyFooterProps = {
   show: boolean;
   currencies: (Currency | undefined)[];
-}) {
+};
+
+const UnsupportedCurrencyFooter: FC<UnsupportedCurrencyFooterProps> = ({
+  show,
+  currencies,
+}) => {
   const { chainId } = useActiveWeb3React();
   const [showDetails, setShowDetails] = useState(false);
 
@@ -108,4 +110,6 @@ export default function UnsupportedCurrencyFooter({
       </ButtonEmpty>
     </DetailsFooter>
   );
-}
+};
+
+export default UnsupportedCurrencyFooter;

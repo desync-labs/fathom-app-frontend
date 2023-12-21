@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { FC, useState } from "react";
 import { HelpCircle } from "react-feather";
 import { ImageProps } from "rebass";
 
@@ -12,7 +12,8 @@ export interface LogoProps
 /**
  * Renders an image by sequentially trying a list of URIs, and then eventually a fallback triangle alert
  */
-export default function Logo({ srcs, alt, ...rest }: LogoProps) {
+
+const Logo: FC<LogoProps> = ({ srcs, alt, ...rest }) => {
   const [, refresh] = useState<number>(0);
 
   const src: string | undefined = srcs.find((src) => !BAD_SRCS[src]);
@@ -32,4 +33,6 @@ export default function Logo({ srcs, alt, ...rest }: LogoProps) {
   }
 
   return <HelpCircle {...rest} />;
-}
+};
+
+export default Logo;

@@ -5,7 +5,7 @@ import { isMobile } from "react-device-detect";
 import "@reach/dialog/styles.css";
 import { transparentize } from "polished";
 import { useGesture } from "react-use-gesture";
-import { ReactNode, RefObject } from "react";
+import { FC, ReactNode, RefObject } from "react";
 
 const AnimatedDialogOverlay = animated(DialogOverlay);
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -87,14 +87,14 @@ interface ModalProps {
   children?: ReactNode;
 }
 
-export default function Modal({
+const Modal: FC<ModalProps> = ({
   isOpen,
   onDismiss,
   minHeight = false,
   maxHeight = 90,
   initialFocusRef,
   children,
-}: ModalProps) {
+}) => {
   const fadeTransition = useTransition(isOpen, null, {
     config: { duration: 200 },
     from: { opacity: 0 },
@@ -157,4 +157,6 @@ export default function Modal({
       )}
     </>
   );
-}
+};
+
+export default Modal;

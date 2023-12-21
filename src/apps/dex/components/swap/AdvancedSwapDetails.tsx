@@ -1,5 +1,5 @@
 import { Trade, TradeType } from "into-the-fathom-swap-sdk";
-import { useContext } from "react";
+import { FC, useContext } from "react";
 import styled, { ThemeContext } from "styled-components";
 import { Field } from "apps/dex/state/swap/actions";
 import { useUserSlippageTolerance } from "apps/dex/state/user/hooks";
@@ -24,13 +24,12 @@ const InfoLink = styled(ExternalLink)`
   color: ${({ theme }) => theme.text1};
 `;
 
-function TradeSummary({
-  trade,
-  allowedSlippage,
-}: {
+type TradeSummaryProps = {
   trade: Trade;
   allowedSlippage: number;
-}) {
+};
+
+const TradeSummary: FC<TradeSummaryProps> = ({ trade, allowedSlippage }) => {
   const theme = useContext(ThemeContext);
   const { priceImpactWithoutFee, realizedLPFee } =
     computeTradePriceBreakdown(trade);
@@ -90,7 +89,7 @@ function TradeSummary({
       </AutoColumn>
     </>
   );
-}
+};
 
 export interface AdvancedSwapDetailsProps {
   trade?: Trade;

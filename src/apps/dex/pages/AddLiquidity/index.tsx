@@ -82,7 +82,7 @@ const IconWrapper = styled.div`
   border-radius: 15px;
 `;
 
-export default function AddLiquidity() {
+const AddLiquidity = () => {
   const { account, chainId, library } = useActiveWeb3React();
   const theme = useContext(ThemeContext);
   const { currencyIdA, currencyIdB } = useParams();
@@ -621,4 +621,6 @@ export default function AddLiquidity() {
       )}
     </>
   );
-}
+};
+
+export default AddLiquidity;

@@ -1,5 +1,5 @@
 import { JSBI, Pair, Percent, TokenAmount } from "into-the-fathom-swap-sdk";
-import { useState } from "react";
+import { FC, useState } from "react";
 import { ChevronDown, ChevronUp } from "react-feather";
 import { Link } from "react-router-dom";
 import { Text } from "rebass";
@@ -11,11 +11,7 @@ import { useTokenBalance } from "apps/dex/state/wallet/hooks";
 import { ExternalLink, TYPE } from "apps/dex/theme";
 import { currencyId } from "apps/dex/utils/currencyId";
 import { unwrappedToken } from "apps/dex/utils/wrappedCurrency";
-import {
-  ButtonPrimary,
-  ButtonSecondary,
-  ButtonEmpty,
-} from "apps/dex/components/Button";
+import { ButtonSecondary, ButtonEmpty } from "apps/dex/components/Button";
 import { CardNoise } from "apps/dex/components/earn/styled";
 
 import { useColor } from "apps/dex/hooks/useColor";
@@ -26,7 +22,7 @@ import CurrencyLogo from "apps/dex/components/CurrencyLogo";
 import DoubleCurrencyLogo from "apps/dex/components/DoubleLogo";
 import { RowBetween, RowFixed, AutoRow } from "apps/dex/components/Row";
 import { Dots } from "apps/dex/components/swap/styleds";
-import { BIG_INT_ZERO } from "apps/dex/constants/index";
+import { BIG_INT_ZERO } from "apps/dex/constants";
 
 export const FixedHeightRow = styled(RowBetween)`
   height: 24px;
@@ -46,11 +42,11 @@ interface PositionCardProps {
   stakedBalance?: TokenAmount; // optional balance to indicate that liquidity is deposited in mining pool
 }
 
-export function MinimalPositionCard({
+export const MinimalPositionCard: FC<PositionCardProps> = ({
   pair,
   showUnwrapped = false,
   border,
-}: PositionCardProps) {
+}) => {
   const { account } = useActiveWeb3React();
 
   const currency0 = showUnwrapped ? pair.token0 : unwrappedToken(pair.token0);
@@ -181,19 +177,15 @@ export function MinimalPositionCard({
       )}
     </>
   );
-}
+};
 
-export default function FullPositionCard({
-  pair,
-  border,
-  stakedBalance,
-}: PositionCardProps) {
+const FullPositionCard: FC<PositionCardProps> = ({ pair, border }) => {
   const { account } = useActiveWeb3React();
 
   const currency0 = unwrappedToken(pair.token0);
   const currency1 = unwrappedToken(pair.token1);
 
-  const [showMore, setShowMore] = useState(false);
+  const [showMore, setShowMore] = useState<boolean>(false);
 
   const userDefaultPoolBalance = useTokenBalance(
     account ?? undefined,
@@ -202,9 +194,7 @@ export default function FullPositionCard({
   const totalPoolTokens = useTotalSupply(pair.liquidityToken);
 
   // if staked balance balance provided, add to standard liquidity amount
-  const userPoolBalance = stakedBalance
-    ? userDefaultPoolBalance?.add(stakedBalance)
-    : userDefaultPoolBalance;
+  const userPoolBalance = userDefaultPoolBalance;
 
   const poolTokenPercentage =
     !!userPoolBalance &&
@@ -296,16 +286,6 @@ export default function FullPositionCard({
                 {userPoolBalance ? userPoolBalance.toSignificant(4) : "-"}
               </Text>
             </FixedHeightRow>
-            {stakedBalance && (
-              <FixedHeightRow>
-                <Text fontSize={16} fontWeight={500}>
-                  Pool tokens in rewards pool:
-                </Text>
-                <Text fontSize={16} fontWeight={500}>
-                  {stakedBalance.toSignificant(4)}
-                </Text>
-              </FixedHeightRow>
-            )}
             <FixedHeightRow>
               <RowFixed>
                 <Text fontSize={16} fontWeight={500}>
@@ -391,7 +371,7 @@ export default function FullPositionCard({
                     borderRadius="8px"
                     as={Link}
                     width="48%"
-                    to={`/remove/${currencyId(currency0)}/${currencyId(
+                    to={`/swap/remove/${currencyId(currency0)}/${currencyId(
                       currency1
                     )}`}
                   >
@@ -399,21 +379,11 @@ export default function FullPositionCard({
                   </ButtonSecondary>
                 </RowBetween>
               )}
-            {stakedBalance &&
-              JSBI.greaterThan(stakedBalance.raw, BIG_INT_ZERO) && (
-                <ButtonPrimary
-                  padding="8px"
-                  borderRadius="8px"
-                  as={Link}
-                  to={`/uni/${currencyId(currency0)}/${currencyId(currency1)}`}
-                  width="100%"
-                >
-                  Manage Liquidity in Rewards Pool
-                </ButtonPrimary>
-              )}
           </AutoColumn>
         )}
       </AutoColumn>
     </StyledPositionCard>
   );
-}
+};
+
+export default FullPositionCard;

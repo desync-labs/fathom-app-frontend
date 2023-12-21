@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { FC, useCallback, useState } from "react";
 import styled from "styled-components";
 import Popover, { PopoverProps } from "apps/dex/components/Popover";
 
@@ -13,16 +13,18 @@ interface TooltipProps extends Omit<PopoverProps, "content"> {
   text: string;
 }
 
-export default function Tooltip({ text, ...rest }: TooltipProps) {
+const Tooltip: FC<TooltipProps> = ({ text, ...rest }: TooltipProps) => {
   return (
     <Popover content={<TooltipContainer>{text}</TooltipContainer>} {...rest} />
   );
-}
+};
 
-export function MouseoverTooltip({
+export default Tooltip;
+
+export const MouseoverTooltip: FC<Omit<TooltipProps, "show">> = ({
   children,
   ...rest
-}: Omit<TooltipProps, "show">) {
+}) => {
   const [show, setShow] = useState(false);
   const open = useCallback(() => setShow(true), [setShow]);
   const close = useCallback(() => setShow(false), [setShow]);
@@ -33,4 +35,4 @@ export function MouseoverTooltip({
       </div>
     </Tooltip>
   );
-}
+};

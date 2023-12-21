@@ -1,6 +1,7 @@
 import { Currency } from "into-the-fathom-swap-sdk";
 import styled from "styled-components";
 import CurrencyLogo from "apps/dex/components/CurrencyLogo";
+import { FC } from "react";
 
 const Wrapper = styled.div<{ margin: boolean; sizeraw: number }>`
   position: relative;
@@ -25,12 +26,12 @@ const CoveredLogo = styled(CurrencyLogo)<{ sizeraw: number }>`
   left: ${({ sizeraw }) => "-" + (sizeraw / 2).toString() + "px"} !important;
 `;
 
-export default function DoubleCurrencyLogo({
+const DoubleCurrencyLogo: FC<DoubleCurrencyLogoProps> = ({
   currency0,
   currency1,
   size = 16,
   margin = false,
-}: DoubleCurrencyLogoProps) {
+}) => {
   return (
     <Wrapper sizeraw={size} margin={margin}>
       {currency0 && (
@@ -45,4 +46,6 @@ export default function DoubleCurrencyLogo({
       )}
     </Wrapper>
   );
-}
+};
+
+export default DoubleCurrencyLogo;

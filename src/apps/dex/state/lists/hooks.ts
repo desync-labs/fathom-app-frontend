@@ -168,11 +168,6 @@ export function useCombinedInactiveList(): TokenAddressMap {
   return useCombinedTokenMapFromUrls(allInactiveListUrls);
 }
 
-// used to hide warnings on import for default tokens
-export function useDefaultTokenList(): TokenAddressMap {
-  return listToTokenMap(DEFAULT_TOKEN_LIST);
-}
-
 // list of tokens not supported on interface, used to show warnings and prevent swaps and adds
 export function useSupportedTokenList(): TokenAddressMap {
   // get loaded supported tokens

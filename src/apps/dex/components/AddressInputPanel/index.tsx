@@ -1,4 +1,4 @@
-import { useContext, useCallback } from "react";
+import { useContext, useCallback, FC } from "react";
 import styled, { ThemeContext } from "styled-components";
 import useENS from "apps/dex/hooks/useENS";
 import { useActiveWeb3React } from "apps/dex/hooks";
@@ -38,7 +38,6 @@ const Input = styled.input<{ error?: boolean }>`
   outline: none;
   border: none;
   flex: 1 1 auto;
-  width: 0;
   background-color: ${({ theme }) => theme.bg1};
   transition: color 300ms ${({ error }) => (error ? "step-end" : "step-start")};
   color: ${({ error, theme }) => (error ? theme.red1 : theme.white)};
@@ -62,17 +61,17 @@ const Input = styled.input<{ error?: boolean }>`
   }
 `;
 
-export default function AddressInputPanel({
+type AddressInputPanleProps = {
+  id?: string;
+  value: string;
+  onChange: (value: string) => void;
+};
+
+const AddressInputPanel: FC<AddressInputPanleProps> = ({
   id,
   value,
   onChange,
-}: {
-  id?: string;
-  // the typed string value
-  value: string;
-  // triggers whenever the typed value changes
-  onChange: (value: string) => void;
-}) {
+}) => {
   const { chainId } = useActiveWeb3React();
   const theme = useContext(ThemeContext);
 
@@ -125,4 +124,6 @@ export default function AddressInputPanel({
       </ContainerRow>
     </InputPanel>
   );
-}
+};
+
+export default AddressInputPanel;

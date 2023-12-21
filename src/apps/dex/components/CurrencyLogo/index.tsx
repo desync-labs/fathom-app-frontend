@@ -1,5 +1,5 @@
 import { Currency, Token, XDC } from "into-the-fathom-swap-sdk";
-import { useMemo } from "react";
+import { FC, useMemo } from "react";
 import styled from "styled-components";
 
 import XdcLogo from "apps/dex/assets/images/xdc-logo.png";
@@ -37,15 +37,17 @@ const StyledLogo = styled(Logo)<{ size: string }>`
   background-color: ${({ theme }) => theme.white};
 `;
 
-export default function CurrencyLogo({
-  currency,
-  size = "24px",
-  style,
-}: {
+type CurrencyLogoProps = {
   currency?: Currency;
   size?: string;
   style?: React.CSSProperties;
-}) {
+};
+
+const CurrencyLogo: FC<CurrencyLogoProps> = ({
+  currency,
+  size = "24px",
+  style,
+}) => {
   const uriLocations = useHttpLocations(
     currency instanceof WrappedTokenInfo ? currency.logoURI : undefined
   );
@@ -74,4 +76,6 @@ export default function CurrencyLogo({
       style={style}
     />
   );
-}
+};
+
+export default CurrencyLogo;

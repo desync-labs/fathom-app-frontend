@@ -9,6 +9,7 @@ import Settings from "apps/dex/components/Settings";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "apps/dex/state";
 import { resetMintState } from "apps/dex/state/mint/actions";
+import { FC } from "react";
 
 const Tabs = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -50,7 +51,7 @@ const StyledArrowLeft = styled(ArrowLeft)`
   color: ${({ theme }) => theme.text1};
 `;
 
-export function SwapPoolTabs() {
+export const SwapPoolTabs = () => {
   const { t } = useTranslation();
   return (
     <Tabs style={{ marginBottom: "20px", display: "none" }}>
@@ -62,9 +63,9 @@ export function SwapPoolTabs() {
       </StyledNavLink>
     </Tabs>
   );
-}
+};
 
-export function FindPoolTabs() {
+export const FindPoolTabs = () => {
   return (
     <Tabs>
       <RowBetween style={{ padding: "1rem 1rem 0 1rem" }}>
@@ -76,15 +77,14 @@ export function FindPoolTabs() {
       </RowBetween>
     </Tabs>
   );
-}
+};
 
-export function AddRemoveTabs({
-  adding,
-  creating,
-}: {
+type AddRemoveTabsProps = {
   adding: boolean;
   creating: boolean;
-}) {
+};
+
+export const AddRemoveTabs: FC<AddRemoveTabsProps> = ({ adding, creating }) => {
   // reset states on back
   const dispatch = useDispatch<AppDispatch>();
 
@@ -110,4 +110,4 @@ export function AddRemoveTabs({
       </RowBetween>
     </Tabs>
   );
-}
+};

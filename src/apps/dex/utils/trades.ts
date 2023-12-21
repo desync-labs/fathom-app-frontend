@@ -1,4 +1,4 @@
-import { ZERO_PERCENT, ONE_HUNDRED_PERCENT } from "apps/dex/constants/index";
+import { ZERO_PERCENT, ONE_HUNDRED_PERCENT } from "apps/dex/constants";
 import { Trade, Percent, currencyEquals } from "into-the-fathom-swap-sdk";
 
 // returns whether tradeB is better than tradeA by at least a threshold percentage amount

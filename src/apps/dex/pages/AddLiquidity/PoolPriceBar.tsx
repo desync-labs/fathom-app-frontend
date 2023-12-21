@@ -1,5 +1,5 @@
 import { Currency, Percent, Price } from "into-the-fathom-swap-sdk";
-import { useContext } from "react";
+import { FC, useContext } from "react";
 import { Text } from "rebass";
 import { ThemeContext } from "styled-components";
 import { AutoColumn } from "apps/dex/components/Column";
@@ -8,17 +8,19 @@ import { ONE_BIPS } from "apps/dex/constants";
 import { Field } from "apps/dex/state/mint/actions";
 import { TYPE } from "apps/dex/theme";
 
-export function PoolPriceBar({
-  currencies,
-  noLiquidity,
-  poolTokenPercentage,
-  price,
-}: {
+type PoolPriceBarProps = {
   currencies: { [field in Field]?: Currency };
   noLiquidity?: boolean;
   poolTokenPercentage?: Percent;
   price?: Price;
-}) {
+};
+
+export const PoolPriceBar: FC<PoolPriceBarProps> = ({
+  currencies,
+  noLiquidity,
+  poolTokenPercentage,
+  price,
+}) => {
   const theme = useContext(ThemeContext);
   return (
     <AutoColumn gap="md">
@@ -53,4 +55,4 @@ export function PoolPriceBar({
       </AutoRow>
     </AutoColumn>
   );
-}
+};
