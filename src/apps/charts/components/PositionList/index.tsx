@@ -5,7 +5,7 @@ import LocalLoader from "apps/charts/components/LocalLoader";
 import utc from "dayjs/plugin/utc";
 import { Box, Flex, Text } from "rebass";
 import styled from "styled-components";
-import Link, { CustomLink } from "apps/charts/components/Link";
+import { CustomLink } from "apps/charts/components/Link";
 import { Divider } from "apps/charts/components";
 import DoubleTokenLogo from "apps/charts/components/DoubleLogo";
 import { formattedNum, getPoolLink } from "apps/charts/utils";
@@ -197,8 +197,8 @@ const PositionList: FC<PositionList> = (props) => {
             </CustomLink>
 
             <RowFixed justify="flex-start">
-              <Link
-                href={getPoolLink(
+              <CustomLink
+                to={getPoolLink(
                   position.pair.token0.id,
                   position.pair.token1.id
                 )}
@@ -209,11 +209,10 @@ const PositionList: FC<PositionList> = (props) => {
                 >
                   Add
                 </ButtonLight>
-              </Link>
+              </CustomLink>
               {poolOwnership > 0 && (
-                <Link
-                  external
-                  href={getPoolLink(
+                <CustomLink
+                  to={getPoolLink(
                     position.pair.token0.id,
                     position.pair.token1.id,
                     true
@@ -224,7 +223,7 @@ const PositionList: FC<PositionList> = (props) => {
                   >
                     Remove
                   </ButtonLight>
-                </Link>
+                </CustomLink>
               )}
             </RowFixed>
           </AutoColumn>

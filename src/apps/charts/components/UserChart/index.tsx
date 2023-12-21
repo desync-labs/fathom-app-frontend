@@ -64,7 +64,7 @@ const UserChart: FC<UserChartsProps> = ({ account }) => {
             options={timeframeOptions}
             active={timeWindow}
             setActive={setTimeWindow}
-            color={"#ff007a"}
+            color={"#00fff6"}
           />
         </RowBetween>
       ) : (
