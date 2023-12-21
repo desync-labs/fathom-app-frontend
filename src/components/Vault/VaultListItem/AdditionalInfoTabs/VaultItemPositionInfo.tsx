@@ -15,9 +15,13 @@ const VaultItemPositionInfo: FC<VaultItemPositionInfoPropsTypes> = ({
   vaultPosition,
   setManageVault,
 }) => {
+  const vaultTestId = vaultItemData.id;
+
   return (
     <>
-      <VaultItemInfoWrapper>
+      <VaultItemInfoWrapper
+        data-testid={`vaultRowDetails-${vaultTestId}-itemPositionInfo`}
+      >
         <VaultListItemEarningDetails
           vaultItemData={vaultItemData}
           vaultPosition={vaultPosition}

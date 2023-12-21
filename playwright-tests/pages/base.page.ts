@@ -82,7 +82,11 @@ export default class BasePage {
 
   async getConnectedWalletAddressFromHeader(): Promise<string> {
     const walletAddress = await this.divConnectedWalletAddress.textContent();
-    return walletAddress!;
+    if (walletAddress !== null) {
+      return walletAddress;
+    } else {
+      throw Error("Could not get wallet address");
+    }
   }
 
   async validateConnectedWalletAddress(): Promise<void> {
