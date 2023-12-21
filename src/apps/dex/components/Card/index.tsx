@@ -35,18 +35,6 @@ export const OutlineCard = styled(Card)`
   border: 1px solid ${({ theme }) => theme.bg1};
 `;
 
-export const YellowCard = styled(Card)`
-  background-color: rgba(243, 132, 30, 0.05);
-  color: ${({ theme }) => theme.yellow2};
-  font-weight: 500;
-`;
-
-export const PinkCard = styled(Card)`
-  background-color: rgba(255, 0, 122, 0.03);
-  color: ${({ theme }) => theme.primary1};
-  font-weight: 500;
-`;
-
 const BlueCardStyled = styled(Card)`
   background-color: ${({ theme }) => theme.primary5};
   color: ${({ theme }) => theme.primary1};

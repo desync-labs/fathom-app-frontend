@@ -1,5 +1,5 @@
 import { diffTokenLists, TokenList } from "@uniswap/token-lists";
-import { Fragment, useCallback, useMemo } from "react";
+import { FC, Fragment, useCallback, useMemo } from "react";
 import ReactGA from "react-ga";
 import { useDispatch } from "react-redux";
 import { Text } from "rebass";
@@ -18,19 +18,21 @@ export const ChangesList = styled.ul`
   overflow: auto;
 `;
 
-export default function ListUpdatePopup({
-  popKey,
-  listUrl,
-  oldList,
-  newList,
-  auto,
-}: {
+type ListUpdatePopupProps = {
   popKey: string;
   listUrl: string;
   oldList: TokenList;
   newList: TokenList;
   auto: boolean;
-}) {
+};
+
+const ListUpdatePopup: FC<ListUpdatePopupProps> = ({
+  popKey,
+  listUrl,
+  oldList,
+  newList,
+  auto,
+}) => {
   const removePopup = useRemovePopup();
   const removeThisPopup = useCallback(
     () => removePopup(popKey),
@@ -127,4 +129,6 @@ export default function ListUpdatePopup({
       </AutoColumn>
     </AutoRow>
   );
-}
+};
+
+export default ListUpdatePopup;

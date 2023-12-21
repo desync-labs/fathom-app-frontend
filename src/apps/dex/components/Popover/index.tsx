@@ -1,6 +1,6 @@
 import { Placement } from "@popperjs/core";
 import { transparentize } from "polished";
-import { useCallback, useState } from "react";
+import { FC, useCallback, useState } from "react";
 import { usePopper } from "react-popper";
 import styled from "styled-components";
 import useInterval from "apps/dex/hooks/useInterval";
@@ -82,12 +82,12 @@ export interface PopoverProps {
   placement?: Placement;
 }
 
-export default function Popover({
+const Popover: FC<PopoverProps> = ({
   content,
   show,
   children,
   placement = "auto",
-}: PopoverProps) {
+}) => {
   const [referenceElement, setReferenceElement] =
     useState<HTMLDivElement | null>(null);
   const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(
@@ -136,4 +136,6 @@ export default function Popover({
       </Portal>
     </>
   );
-}
+};
+
+export default Popover;

@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { TYPE } from "apps/dex/theme";
+import { FC } from "react";
 
 const Wrapper = styled.button<{ isActive?: boolean; activeElement?: boolean }>`
   border-radius: 20px;
@@ -37,12 +38,7 @@ export interface ToggleProps {
   toggle: () => void;
 }
 
-export default function ListToggle({
-  id,
-  isActive,
-  bgColor,
-  toggle,
-}: ToggleProps) {
+const ListToggle: FC<ToggleProps> = ({ id, isActive, bgColor, toggle }) => {
   return (
     <Wrapper id={id} isActive={isActive} onClick={toggle}>
       {isActive && (
@@ -58,4 +54,6 @@ export default function ListToggle({
       )}
     </Wrapper>
   );
-}
+};
+
+export default ListToggle;

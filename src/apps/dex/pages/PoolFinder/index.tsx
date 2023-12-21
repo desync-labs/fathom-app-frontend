@@ -44,7 +44,7 @@ const IconWrapper = styled.div`
   border-radius: 15px;
 `;
 
-export default function PoolFinder() {
+const PoolFinder = () => {
   const { account } = useActiveWeb3React();
   const theme = useContext(ThemeContext);
 
@@ -252,4 +252,6 @@ export default function PoolFinder() {
       />
     </AppBody>
   );
-}
+};
+
+export default PoolFinder;

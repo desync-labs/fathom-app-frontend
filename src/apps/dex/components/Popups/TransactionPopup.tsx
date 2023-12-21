@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { FC, useContext } from "react";
 import { AlertCircle, CheckCircle } from "react-feather";
 import styled, { ThemeContext } from "styled-components";
 import { useActiveWeb3React } from "apps/dex/hooks";
@@ -12,15 +12,17 @@ const RowNoFlex = styled(AutoRow)`
   flex-wrap: nowrap;
 `;
 
-export default function TransactionPopup({
-  hash,
-  success,
-  summary,
-}: {
+type TransactionPopupProps = {
   hash: string;
   success?: boolean;
   summary?: string;
-}) {
+};
+
+const TransactionPopup: FC<TransactionPopupProps> = ({
+  hash,
+  success,
+  summary,
+}) => {
   const { chainId } = useActiveWeb3React();
 
   const theme = useContext(ThemeContext);
@@ -46,4 +48,6 @@ export default function TransactionPopup({
       </AutoColumn>
     </RowNoFlex>
   );
-}
+};
+
+export default TransactionPopup;

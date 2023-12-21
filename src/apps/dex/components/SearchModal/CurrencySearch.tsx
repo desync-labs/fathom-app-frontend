@@ -1,5 +1,6 @@
 import { Currency, XDC, Token } from "into-the-fathom-swap-sdk";
 import {
+  FC,
   KeyboardEvent,
   RefObject,
   useCallback,
@@ -68,7 +69,7 @@ interface CurrencySearchProps {
   setImportToken: (token: Token) => void;
 }
 
-export function CurrencySearch({
+export const CurrencySearch: FC<CurrencySearchProps> = ({
   selectedCurrency,
   onCurrencySelect,
   otherSelectedCurrency,
@@ -78,7 +79,7 @@ export function CurrencySearch({
   showManageView,
   showImportView,
   setImportToken,
-}: CurrencySearchProps) {
+}) => {
   const { t } = useTranslation();
   const { chainId } = useActiveWeb3React();
   const theme = useTheme();
@@ -273,4 +274,4 @@ export function CurrencySearch({
       </Footer>
     </ContentWrapper>
   );
-}
+};

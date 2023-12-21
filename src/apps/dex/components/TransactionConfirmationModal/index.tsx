@@ -1,5 +1,5 @@
 import { ChainId, Currency } from "into-the-fathom-swap-sdk";
-import { useContext } from "react";
+import { FC, useContext } from "react";
 import styled, { ThemeContext } from "styled-components";
 import Modal from "apps/dex/components/Modal";
 import { ExternalLink } from "apps/dex/theme";
@@ -39,13 +39,15 @@ const StyledLogo = styled.img`
   margin-left: 6px;
 `;
 
-function ConfirmationPendingContent({
-  onDismiss,
-  pendingText,
-}: {
+type ConfirmationPendingContentProps = {
   onDismiss: () => void;
   pendingText: string;
-}) {
+};
+
+const ConfirmationPendingContent: FC<ConfirmationPendingContentProps> = ({
+  onDismiss,
+  pendingText,
+}) => {
   return (
     <Wrapper>
       <Section>
@@ -72,7 +74,7 @@ function ConfirmationPendingContent({
       </Section>
     </Wrapper>
   );
-}
+};
 
 function TransactionSubmittedContent({
   onDismiss,

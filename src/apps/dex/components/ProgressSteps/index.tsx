@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { RowBetween } from "apps/dex/components/Row";
 import { AutoColumn } from "apps/dex/components/Column";
 import { transparentize } from "polished";
+import { FC } from "react";
 
 const Wrapper = styled(AutoColumn)``;
 
@@ -61,11 +62,11 @@ interface ProgressCirclesProps {
  *
  * @param steps  array of booleans where true means step is complete
  */
-export default function ProgressCircles({
+const ProgressCircles: FC<ProgressCirclesProps> = ({
   steps,
   disabled = false,
   ...rest
-}: ProgressCirclesProps) {
+}) => {
   return (
     <Wrapper justify={"center"} {...rest}>
       <Grouping>
@@ -88,4 +89,6 @@ export default function ProgressCircles({
       </Grouping>
     </Wrapper>
   );
-}
+};
+
+export default ProgressCircles;

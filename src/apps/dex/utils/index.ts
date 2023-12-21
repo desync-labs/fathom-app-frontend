@@ -5,7 +5,7 @@ import { JsonRpcSigner, Web3Provider } from "@into-the-fathom/providers";
 import { BigNumber } from "@into-the-fathom/bignumber";
 import { abi as IUniswapV2Router02ABI } from "into-the-fathom-swap-smart-contracts/artifacts/contracts/periphery/interfaces/IUniswapV2Router02.sol/IUniswapV2Router02.json";
 
-import { ROUTER_ADDRESSES } from "apps/dex/constants/index";
+import { ROUTER_ADDRESSES } from "apps/dex/constants";
 import {
   ChainId,
   Currency,

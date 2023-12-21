@@ -1,5 +1,5 @@
 import { Trade, TradeType } from "into-the-fathom-swap-sdk";
-import { useContext, useMemo, useState } from "react";
+import { FC, useContext, useMemo, useState } from "react";
 import { Repeat } from "react-feather";
 import { Text } from "rebass";
 import { ThemeContext } from "styled-components";
@@ -21,19 +21,21 @@ import {
   SwapCallbackError,
 } from "apps/dex/components/swap/styleds";
 
-export default function SwapModalFooter({
-  trade,
-  onConfirm,
-  allowedSlippage,
-  swapErrorMessage,
-  disabledConfirm,
-}: {
+type SwapModalFooterProps = {
   trade: Trade;
   allowedSlippage: number;
   onConfirm: () => void;
   swapErrorMessage: string | undefined;
   disabledConfirm: boolean;
-}) {
+};
+
+const SwapModalFooter: FC<SwapModalFooterProps> = ({
+  trade,
+  onConfirm,
+  allowedSlippage,
+  swapErrorMessage,
+  disabledConfirm,
+}) => {
   const [showInverted, setShowInverted] = useState<boolean>(false);
   const theme = useContext(ThemeContext);
   const slippageAdjustedAmounts = useMemo(
@@ -141,4 +143,6 @@ export default function SwapModalFooter({
       </AutoRow>
     </>
   );
-}
+};
+
+export default SwapModalFooter;

@@ -11,22 +11,25 @@ import { RowBetween, RowFixed } from "apps/dex/components/Row";
 import CurrencyLogo from "apps/dex/components/CurrencyLogo";
 import { Field } from "apps/dex/state/mint/actions";
 import { TYPE } from "apps/dex/theme";
+import { FC } from "react";
 
-export function ConfirmAddModalBottom({
-  noLiquidity,
-  price,
-  currencies,
-  parsedAmounts,
-  poolTokenPercentage,
-  onAdd,
-}: {
+type ConfirmAddModalBottomProps = {
   noLiquidity?: boolean;
   price?: Fraction;
   currencies: { [field in Field]?: Currency };
   parsedAmounts: { [field in Field]?: CurrencyAmount };
   poolTokenPercentage?: Percent;
   onAdd: () => void;
-}) {
+};
+
+export const ConfirmAddModalBottom: FC<ConfirmAddModalBottomProps> = ({
+  noLiquidity,
+  price,
+  currencies,
+  parsedAmounts,
+  poolTokenPercentage,
+  onAdd,
+}) => {
   return (
     <>
       <RowBetween>
@@ -81,4 +84,4 @@ export function ConfirmAddModalBottom({
       </ButtonPrimary>
     </>
   );
-}
+};

@@ -1,5 +1,5 @@
 import { Currency, Pair } from "into-the-fathom-swap-sdk";
-import { useState, useCallback } from "react";
+import { useState, useCallback, FC } from "react";
 import styled from "styled-components";
 import { darken } from "polished";
 import { useCurrencyBalance } from "apps/dex/state/wallet/hooks";
@@ -170,7 +170,7 @@ interface CurrencyInputPanelProps {
   customBalanceText?: string;
 }
 
-export default function CurrencyInputPanel({
+const CurrencyInputPanel: FC<CurrencyInputPanelProps> = ({
   value,
   onUserInput,
   onMax,
@@ -186,7 +186,7 @@ export default function CurrencyInputPanel({
   id,
   showCommonBases,
   customBalanceText,
-}: CurrencyInputPanelProps) {
+}) => {
   const { t } = useTranslation();
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -309,4 +309,6 @@ export default function CurrencyInputPanel({
       )}
     </InputPanel>
   );
-}
+};
+
+export default CurrencyInputPanel;

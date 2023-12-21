@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { FC, useState } from "react";
 import { Token, Currency } from "into-the-fathom-swap-sdk";
 import styled from "styled-components";
 import { TYPE, CloseIcon } from "apps/dex/theme";
@@ -51,12 +51,12 @@ interface ImportProps {
   handleCurrencySelect?: (currency: Currency) => void;
 }
 
-export function ImportToken({
+export const ImportToken: FC<ImportProps> = ({
   tokens,
   onBack,
   onDismiss,
   handleCurrencySelect,
-}: ImportProps) {
+}) => {
   console.log(tokens);
 
   const theme = useTheme();
@@ -228,4 +228,4 @@ export function ImportToken({
       </PaddedColumn>
     </Wrapper>
   );
-}
+};
