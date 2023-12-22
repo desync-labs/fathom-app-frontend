@@ -1,6 +1,11 @@
 import { useLocation } from "react-router-dom";
 import { FC, lazy, Suspense, useMemo } from "react";
-import { GovernanceIcon, StakingIcon } from "components/Common/MenuIcons";
+import {
+  OverviewIcon,
+  TokensIcon,
+  PairsIcon,
+  AccountsIcon,
+} from "components/Common/MenuIcons";
 import {
   NestedRouteLink,
   NestedRouteNav,
@@ -52,28 +57,28 @@ const ChartsView: FC = () => {
           className={isOverviewActive ? "active" : ""}
           to="/charts"
         >
-          <StakingIcon isStakingActive={isOverviewActive} />
+          <OverviewIcon isactive={isOverviewActive ? "true" : ""} />
           Overview
         </NestedRouteLink>
         <NestedRouteLink
           className={isTokenActive ? "active" : ""}
           to="/charts/tokens"
         >
-          <GovernanceIcon isDAOActive={isTokenActive} />
+          <TokensIcon isactive={isTokenActive ? "active" : ""} />
           Tokens
         </NestedRouteLink>
         <NestedRouteLink
           className={isPairActive ? "active" : ""}
           to="/charts/pairs"
         >
-          <GovernanceIcon isDAOActive={isPairActive} />
+          <PairsIcon isactive={isPairActive ? "active" : ""} />
           Pairs
         </NestedRouteLink>
         <NestedRouteLink
           className={isAccountActive ? "active" : ""}
           to="/charts/accounts"
         >
-          <GovernanceIcon isDAOActive={isAccountActive} />
+          <AccountsIcon isactive={isAccountActive ? "active" : ""} />
           Accounts
         </NestedRouteLink>
       </NestedRouteNav>
