@@ -14,83 +14,86 @@ import { ReactComponent as AccountsSrc } from "assets/svg/icons/account.svg";
 
 import { styled } from "@mui/material/styles";
 
+const ACTIVE_HEX = "#43FFF1";
+const INACTIVE_HEX = "#6379A1";
+
 export const FxdIcon = styled(FxdSrc)<{ isactive: string }>`
   & path {
-    fill: ${({ isactive }) => (isactive ? "#43FFF1" : "#6379A1")};
+    fill: ${({ isactive }) => (isactive ? ACTIVE_HEX : INACTIVE_HEX)};
   }
 `;
 
 export const StableSwapIcon = styled(SwapIconSrc)<{ isactive: string }>`
   margin-top: -3px;
   & path {
-    fill: ${({ isactive }) => (isactive ? "#43FFF1" : "#6379A1")};
+    fill: ${({ isactive }) => (isactive ? ACTIVE_HEX : INACTIVE_HEX)};
   }
 `;
 
 export const StakingIcon = styled(StakingIconSrc)<{ isactive: string }>`
   margin-top: -3px;
   & path {
-    fill: ${({ isactive }) => (isactive ? "#43FFF1" : "#6379A1")};
+    fill: ${({ isactive }) => (isactive ? ACTIVE_HEX : INACTIVE_HEX)};
   }
 `;
 
 export const GovernanceIcon = styled(GovernanceSrc)<{ isactive: string }>`
   margin-top: 2px;
   & path {
-    fill: ${({ isactive }) => (isactive ? "#43FFF1" : "#6379A1")};
+    fill: ${({ isactive }) => (isactive ? ACTIVE_HEX : INACTIVE_HEX)};
   }
 `;
 
 export const VaultIcon = styled(VaultSrc)<{ isactive: string }>`
   & path {
-    fill: ${({ isactive }) => (isactive ? "#43FFF1" : "#6379A1")};
+    fill: ${({ isactive }) => (isactive ? ACTIVE_HEX : INACTIVE_HEX)};
   }
 `;
 
 export const DexIcon = styled(DexSrc)<{ isactive: string }>`
   & path {
-    fill: ${({ isactive }) => (isactive ? "#43FFF1" : "#6379A1")};
+    fill: ${({ isactive }) => (isactive ? ACTIVE_HEX : INACTIVE_HEX)};
   }
 `;
 
 export const SwapIcon = styled(SwapSrc)<{ isactive: string }>`
   & path {
-    fill: ${({ isactive }) => (isactive ? "#43FFF1" : "#6379A1")};
+    fill: ${({ isactive }) => (isactive ? ACTIVE_HEX : INACTIVE_HEX)};
   }
 `;
 
 export const PoolIcon = styled(PoolSrc)<{ isactive: string }>`
   & path {
-    fill: ${({ isactive }) => (isactive ? "#43FFF1" : "#6379A1")};
+    fill: ${({ isactive }) => (isactive ? ACTIVE_HEX : INACTIVE_HEX)};
   }
 `;
 
 export const ChartsIcon = styled(ChartsSrc)<{ isactive: string }>`
   & path {
-    fill: ${({ isactive }) => (isactive ? "#43FFF1" : "#6379A1")};
+    fill: ${({ isactive }) => (isactive ? ACTIVE_HEX : INACTIVE_HEX)};
   }
 `;
 
 export const OverviewIcon = styled(OverviewSrc)<{ isactive: string }>`
   & path {
-    fill: ${({ isactive }) => (isactive ? "#43FFF1" : "#6379A1")};
+    fill: ${({ isactive }) => (isactive ? ACTIVE_HEX : INACTIVE_HEX)};
   }
 `;
 
 export const TokensIcon = styled(TokensSrc)<{ isactive: string }>`
   & path {
-    fill: ${({ isactive }) => (isactive ? "#43FFF1" : "#6379A1")};
+    fill: ${({ isactive }) => (isactive ? ACTIVE_HEX : INACTIVE_HEX)};
   }
 `;
 
 export const PairsIcon = styled(PairsSrc)<{ isactive: string }>`
   & path {
-    fill: ${({ isactive }) => (isactive ? "#43FFF1" : "#6379A1")};
+    fill: ${({ isactive }) => (isactive ? ACTIVE_HEX : INACTIVE_HEX)};
   }
 `;
 
 export const AccountsIcon = styled(AccountsSrc)<{ isactive: string }>`
   & path {
-    fill: ${({ isactive }) => (isactive ? "#43FFF1" : "#6379A1")};
+    fill: ${({ isactive }) => (isactive ? ACTIVE_HEX : INACTIVE_HEX)};
   }
 `;
