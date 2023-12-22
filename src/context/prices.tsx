@@ -66,14 +66,14 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
       try {
         let fthmPromise;
 
-        if (process.env.REACT_APP_ENV !== "prod") {
+        if (process.env.REACT_APP_ENV === "prod") {
           fthmPromise = stakingService.getPairPrice(
-            fxdTokenAddress,
-            fthmTokenAddress
+            fthmTokenAddress,
+            wxdcTokenAddress
           );
         } else {
           fthmPromise = stakingService.getPairPrice(
-            wxdcTokenAddress,
+            fxdTokenAddress,
             fthmTokenAddress
           );
         }
@@ -90,10 +90,6 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
 
         Promise.all([fthmPromise, xdcUsdtPromise, xdcFxdPromise])
           .then(([fthmPrice, xdcUsdtPrice, xdcFxdPrice]) => {
-            if (process.env.REACT_APP_ENV !== "prod") {
-              setFthmPrice(fthmPrice[0].toString());
-            }
-
             const fxdPrice = BigNumber(xdcFxdPrice[1].toString())
               .dividedBy(xdcUsdtPrice[1].toString())
               .multipliedBy(10 ** 18)
@@ -102,9 +98,21 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
             setWxdcPrice(xdcUsdtPrice[0].toString());
             setFxdPrice(fxdPrice);
 
+            let fthmPriceValue: string;
+            if (process.env.REACT_APP_ENV === "prod") {
+              fthmPriceValue = BigNumber(xdcUsdtPrice[0].toString())
+                .multipliedBy(
+                  BigNumber(fthmPrice[0].toString()).dividedBy(10 ** 18)
+                )
+                .toString();
+            } else {
+              fthmPriceValue = fthmPrice[0].toString();
+            }
+
+            setFthmPrice(fthmPriceValue);
+
             console.log({
-              "fxd/fthm": fthmPrice[1].toString(),
-              "fthm/fxd": fthmPrice[0].toString(),
+              "fthm/usdt": fthmPriceValue,
               "fxd/usdt": fxdPrice,
               "wxdc/usdt": xdcUsdtPrice[0].toString(),
             });
