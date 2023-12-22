@@ -1,117 +1,99 @@
-import { FC } from "react";
-import BorrowIconSrc from "assets/svg/borrow.svg";
-import BorrowIconActiveSrc from "assets/svg/borrow-active.svg";
-import SwapIconSrc from "assets/svg/stable-swap.svg";
-import SwapIconActiveSrc from "assets/svg/stable-swap-active.svg";
-import StakingIconSrc from "assets/svg/staking.svg";
-import StakingIconActiveSrc from "assets/svg/staking-active.svg";
-import GovernanceSrc from "assets/svg/governance.svg";
-import GovernanceActiveSrc from "assets/svg/governance-active.svg";
-import VaultActiveSrc from "assets/svg/vault-active.svg";
-import VaultSrc from "assets/svg/vault.svg";
-import DexSrc from "assets/svg/dex.svg";
-import DexSrcActive from "assets/svg/dex-active.svg";
+import { ReactComponent as FxdSrc } from "assets/svg/icons/fxd.svg";
+import { ReactComponent as SwapIconSrc } from "assets/svg/icons/stable-swap.svg";
+import { ReactComponent as StakingIconSrc } from "assets/svg/icons/staking.svg";
+import { ReactComponent as GovernanceSrc } from "assets/svg/icons/governance.svg";
+import { ReactComponent as VaultSrc } from "assets/svg/icons/vault.svg";
+import { ReactComponent as DexSrc } from "assets/svg/icons/dex.svg";
+import { ReactComponent as SwapSrc } from "assets/svg/icons/swap.svg";
+import { ReactComponent as PoolSrc } from "assets/svg/icons/pool.svg";
+import { ReactComponent as ChartsSrc } from "assets/svg/icons/charts.svg";
+import { ReactComponent as OverviewSrc } from "assets/svg/icons/overview.svg";
+import { ReactComponent as TokensSrc } from "assets/svg/icons/tokens.svg";
+import { ReactComponent as PairsSrc } from "assets/svg/icons/pairs.svg";
+import { ReactComponent as AccountsSrc } from "assets/svg/icons/account.svg";
 
 import { styled } from "@mui/material/styles";
-import { Icon } from "@mui/material";
 
-const MenuIcon = styled(Icon)`
-  margin-top: -3px;
+const ACTIVE_HEX = "#43FFF1";
+const INACTIVE_HEX = "#6379A1";
+
+export const FxdIcon = styled(FxdSrc)<{ isactive: string }>`
+  & path {
+    fill: ${({ isactive }) => (isactive ? ACTIVE_HEX : INACTIVE_HEX)};
+  }
 `;
 
-export const FxdIcon: FC<{ isDashboardActive: boolean }> = ({
-  isDashboardActive,
-}) => (
-  <MenuIcon>
-    <img
-      src={isDashboardActive ? BorrowIconActiveSrc : BorrowIconSrc}
-      alt="borrow-icon"
-    />
-  </MenuIcon>
-);
+export const StableSwapIcon = styled(SwapIconSrc)<{ isactive: string }>`
+  margin-top: -3px;
+  & path {
+    fill: ${({ isactive }) => (isactive ? ACTIVE_HEX : INACTIVE_HEX)};
+  }
+`;
 
-export const SwapIcon: FC<{ isStableSwapActive: boolean }> = ({
-  isStableSwapActive,
-}) => (
-  <MenuIcon>
-    <img
-      src={isStableSwapActive ? SwapIconActiveSrc : SwapIconSrc}
-      alt="swap-icon"
-    />
-  </MenuIcon>
-);
+export const StakingIcon = styled(StakingIconSrc)<{ isactive: string }>`
+  margin-top: -3px;
+  & path {
+    fill: ${({ isactive }) => (isactive ? ACTIVE_HEX : INACTIVE_HEX)};
+  }
+`;
 
-export const StakingIcon: FC<{ isStakingActive: boolean }> = ({
-  isStakingActive,
-}) => (
-  <MenuIcon>
-    <img
-      alt="staking-icon"
-      src={isStakingActive ? StakingIconActiveSrc : StakingIconSrc}
-    />
-  </MenuIcon>
-);
+export const GovernanceIcon = styled(GovernanceSrc)<{ isactive: string }>`
+  margin-top: 2px;
+  & path {
+    fill: ${({ isactive }) => (isactive ? ACTIVE_HEX : INACTIVE_HEX)};
+  }
+`;
 
-export const GovernanceIcon: FC<{ isDAOActive: boolean }> = ({
-  isDAOActive,
-}) => (
-  <MenuIcon sx={{ marginTop: "-9px" }}>
-    <img
-      alt="governance-icon"
-      src={isDAOActive ? GovernanceActiveSrc : GovernanceSrc}
-    />
-  </MenuIcon>
-);
+export const VaultIcon = styled(VaultSrc)<{ isactive: string }>`
+  & path {
+    fill: ${({ isactive }) => (isactive ? ACTIVE_HEX : INACTIVE_HEX)};
+  }
+`;
 
-export const VaultIcon: FC<{ isVaultActive: boolean }> = ({
-  isVaultActive,
-}) => (
-  <MenuIcon>
-    <img alt="vault-icon" src={isVaultActive ? VaultActiveSrc : VaultSrc} />
-  </MenuIcon>
-);
+export const DexIcon = styled(DexSrc)<{ isactive: string }>`
+  & path {
+    fill: ${({ isactive }) => (isactive ? ACTIVE_HEX : INACTIVE_HEX)};
+  }
+`;
 
-export const DexIcon: FC<{ isDexActive: boolean }> = ({ isDexActive }) => (
-  <Icon sx={{ height: "1.2em" }}>
-    <img alt="dex-icon" src={isDexActive ? DexSrcActive : DexSrc} />
-  </Icon>
-);
+export const SwapIcon = styled(SwapSrc)<{ isactive: string }>`
+  & path {
+    fill: ${({ isactive }) => (isactive ? ACTIVE_HEX : INACTIVE_HEX)};
+  }
+`;
 
-/**
- * Icons for charts second level menu
- */
-export const OverviewIcon: FC<{ isActive: boolean }> = ({ isActive }) => (
-  <MenuIcon sx={{ marginTop: "-9px" }}>
-    <img
-      alt="overview-icon"
-      src={isActive ? GovernanceActiveSrc : GovernanceSrc}
-    />
-  </MenuIcon>
-);
+export const PoolIcon = styled(PoolSrc)<{ isactive: string }>`
+  & path {
+    fill: ${({ isactive }) => (isactive ? ACTIVE_HEX : INACTIVE_HEX)};
+  }
+`;
 
-export const TokensIcon: FC<{ isActive: boolean }> = ({ isActive }) => (
-  <MenuIcon sx={{ marginTop: "-9px" }}>
-    <img
-      alt="tokens-icon"
-      src={isActive ? GovernanceActiveSrc : GovernanceSrc}
-    />
-  </MenuIcon>
-);
+export const ChartsIcon = styled(ChartsSrc)<{ isactive: string }>`
+  & path {
+    fill: ${({ isactive }) => (isactive ? ACTIVE_HEX : INACTIVE_HEX)};
+  }
+`;
 
-export const PairsIcon: FC<{ isActive: boolean }> = ({ isActive }) => (
-  <MenuIcon sx={{ marginTop: "-9px" }}>
-    <img
-      alt="pairs-icon"
-      src={isActive ? GovernanceActiveSrc : GovernanceSrc}
-    />
-  </MenuIcon>
-);
+export const OverviewIcon = styled(OverviewSrc)<{ isactive: string }>`
+  & path {
+    fill: ${({ isactive }) => (isactive ? ACTIVE_HEX : INACTIVE_HEX)};
+  }
+`;
 
-export const AccountsIcon: FC<{ isActive: boolean }> = ({ isActive }) => (
-  <MenuIcon sx={{ marginTop: "-9px" }}>
-    <img
-      alt="accounts-icon"
-      src={isActive ? GovernanceActiveSrc : GovernanceSrc}
-    />
-  </MenuIcon>
-);
+export const TokensIcon = styled(TokensSrc)<{ isactive: string }>`
+  & path {
+    fill: ${({ isactive }) => (isactive ? ACTIVE_HEX : INACTIVE_HEX)};
+  }
+`;
+
+export const PairsIcon = styled(PairsSrc)<{ isactive: string }>`
+  & path {
+    fill: ${({ isactive }) => (isactive ? ACTIVE_HEX : INACTIVE_HEX)};
+  }
+`;
+
+export const AccountsIcon = styled(AccountsSrc)<{ isactive: string }>`
+  & path {
+    fill: ${({ isactive }) => (isactive ? ACTIVE_HEX : INACTIVE_HEX)};
+  }
+`;

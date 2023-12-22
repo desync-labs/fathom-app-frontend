@@ -1,17 +1,18 @@
 import { useMemo } from "react";
 import { FC } from "react";
 import { useLocation } from "react-router-dom";
-import AppMenuItem from "components/MenuItem/AppMenuItem";
 
 import useShowText from "hooks/useShowText";
 import {
   FxdIcon,
   GovernanceIcon,
-  SwapIcon,
+  StableSwapIcon,
   VaultIcon,
   DexIcon,
+  ChartsIcon,
 } from "components/Common/MenuIcons";
 import useConnector from "context/connector";
+import AppMenuItem from "components/MenuItem/AppMenuItem";
 
 type ItemPropsType = {
   open: boolean;
@@ -54,42 +55,42 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
     {
       name: "FXD",
       link: "/",
-      Icon: <FxdIcon isDashboardActive={isDashboardActive} />,
+      Icon: <FxdIcon isactive={isDashboardActive ? "true" : ""} />,
       isActive: isDashboardActive,
       showText: showText,
     },
     {
       name: "Stable Swap",
       link: "/stable-swap",
-      Icon: <SwapIcon isStableSwapActive={isStableSwapActive} />,
+      Icon: <StableSwapIcon isactive={isStableSwapActive ? "true" : ""} />,
       isActive: isStableSwapActive,
       showText: showText,
     },
     {
       name: "DAO",
       link: "/dao/staking",
-      Icon: <GovernanceIcon isDAOActive={isDAOActive} />,
+      Icon: <GovernanceIcon isactive={isDAOActive ? "true" : ""} />,
       isActive: isDAOActive,
       showText: showText,
     },
     {
       name: "Vault",
       link: "/vault",
-      Icon: <VaultIcon isVaultActive={isVaultActive} />,
+      Icon: <VaultIcon isactive={isVaultActive ? "true" : ""} />,
       isActive: isVaultActive,
       showText: showText,
     },
     {
       name: "DEX",
       link: "/swap",
-      Icon: <DexIcon isDexActive={isDexActive} />,
+      Icon: <DexIcon isactive={isDexActive ? "true" : ""} />,
       isActive: isDexActive,
       showText: showText,
     },
     {
       name: "Charts",
       link: "/charts",
-      Icon: <DexIcon isDexActive={isChartsActive} />,
+      Icon: <ChartsIcon isactive={isChartsActive ? "true" : ""} />,
       isActive: isChartsActive,
       showText: showText,
     },

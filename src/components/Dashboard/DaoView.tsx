@@ -27,14 +27,14 @@ const DaoView = () => {
           className={isStakingActive ? "active" : ""}
           to="staking"
         >
-          <StakingIcon isStakingActive={isStakingActive} />
+          <StakingIcon isactive={isStakingActive ? "true" : ""} />
           Staking
         </NestedRouteLink>
         <NestedRouteLink
           className={isGovernmentActive ? "active" : ""}
           to="governance"
         >
-          <GovernanceIcon isDAOActive={isGovernmentActive} />
+          <GovernanceIcon isactive={isGovernmentActive ? "true" : ""} />
           Governance
         </NestedRouteLink>
       </NestedRouteNav>
