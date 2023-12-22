@@ -72,7 +72,9 @@ const useProposalItem = () => {
       const currentBlock = await library.getBlockNumber();
 
       let timestamp;
-      if (BigNumber(currentBlock).isLessThan(data.proposal.startBlock)) {
+      if (
+        BigNumber(currentBlock).isLessThanOrEqualTo(data.proposal.startBlock)
+      ) {
         const blockData = await library.getBlock(currentBlock);
         timestamp = BigNumber(blockData.timestamp).plus(
           BigNumber(data.proposal.startBlock)
@@ -95,33 +97,43 @@ const useProposalItem = () => {
   const getVotingEndTime = useCallback(async () => {
     if (data?.proposal && library) {
       const currentBlock = await library.getBlockNumber();
-      let timestamp;
+      let endTimestamp;
 
-      if (BigNumber(currentBlock).isLessThan(data.proposal.startBlock)) {
+      if (
+        BigNumber(currentBlock).isLessThanOrEqualTo(data.proposal.startBlock)
+      ) {
         const blockData = await library.getBlock(currentBlock);
-        timestamp = BigNumber(blockData.timestamp).plus(
+        const timestamp = BigNumber(blockData.timestamp).plus(
           BigNumber(data.proposal.startBlock)
             .minus(currentBlock)
             .multipliedBy(XDC_BLOCK_TIME)
         );
+        endTimestamp = timestamp
+          .plus(
+            BigNumber(data.proposal.endBlock)
+              .minus(data.proposal.startBlock)
+              .multipliedBy(XDC_BLOCK_TIME)
+          )
+          .toNumber();
+      } else if (BigNumber(currentBlock).isLessThan(data.proposal.endBlock)) {
+        const blockData = await library.getBlock(currentBlock);
+        const timestamp = BigNumber(blockData.timestamp);
+        endTimestamp = timestamp
+          .plus(
+            BigNumber(data.proposal.endBlock)
+              .minus(currentBlock)
+              .multipliedBy(XDC_BLOCK_TIME)
+          )
+          .toNumber();
       } else {
-        const blockData = await library.getBlock(
-          Number(data.proposal.startBlock)
-        );
-        timestamp = BigNumber(blockData.timestamp);
+        const blockData = await library.getBlock(data.proposal.endBlock);
+        endTimestamp = blockData.timestamp;
       }
-
-      const endTimestamp = timestamp
-        .plus(
-          BigNumber(data.proposal.endBlock)
-            .minus(data.proposal.startBlock)
-            .multipliedBy(XDC_BLOCK_TIME)
-        )
-        .toNumber();
 
       const now = Date.now() / 1000;
 
       setVotingEndTime(new Date(endTimestamp * 1000).toLocaleString());
+
       if (BigNumber(endTimestamp).minus(now).isLessThanOrEqualTo(0)) {
         if (account) {
           const status = await proposalService.viewProposalState(

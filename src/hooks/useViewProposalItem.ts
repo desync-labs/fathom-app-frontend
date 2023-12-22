@@ -17,27 +17,36 @@ const useViewProposalItem = (proposal: IProposal) => {
 
   const getTimestamp = useCallback(async () => {
     const currentBlock = await library.getBlockNumber();
-    let timestamp;
+    let endTimestamp;
 
-    if (BigNumber(currentBlock).isLessThan(proposal.startBlock)) {
+    if (BigNumber(currentBlock).isLessThanOrEqualTo(proposal.startBlock)) {
       const blockData = await library.getBlock(currentBlock);
-      timestamp = BigNumber(blockData.timestamp).plus(
+      const timestamp = BigNumber(blockData.timestamp).plus(
         BigNumber(proposal.startBlock)
           .minus(currentBlock)
           .multipliedBy(XDC_BLOCK_TIME)
       );
+      endTimestamp = timestamp
+        .plus(
+          BigNumber(proposal.endBlock)
+            .minus(proposal.startBlock)
+            .multipliedBy(XDC_BLOCK_TIME)
+        )
+        .toNumber();
+    } else if (BigNumber(currentBlock).isLessThan(proposal.endBlock)) {
+      const blockData = await library.getBlock(currentBlock);
+      const timestamp = BigNumber(blockData.timestamp);
+      endTimestamp = timestamp
+        .plus(
+          BigNumber(proposal.endBlock)
+            .minus(currentBlock)
+            .multipliedBy(XDC_BLOCK_TIME)
+        )
+        .toNumber();
     } else {
-      const blockData = await library.getBlock(Number(proposal.startBlock));
-      timestamp = BigNumber(blockData.timestamp);
+      const blockData = await library.getBlock(proposal.endBlock);
+      endTimestamp = blockData.timestamp;
     }
-
-    const endTimestamp = timestamp
-      .plus(
-        BigNumber(proposal.endBlock)
-          .minus(proposal.startBlock)
-          .multipliedBy(XDC_BLOCK_TIME)
-      )
-      .toNumber();
 
     const now = Date.now() / 1000;
     setTimestamp(endTimestamp);
