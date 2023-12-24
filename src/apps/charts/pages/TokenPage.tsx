@@ -92,7 +92,7 @@ const TokenDetailsLayout = styled.div`
   display: inline-grid;
   width: calc(100% - 1.25rem);
   grid-template-columns: auto auto auto 1fr;
-  gap: 75px;
+  column-gap: 75px;
   align-items: start;
   padding-left: 1.25rem;
 
