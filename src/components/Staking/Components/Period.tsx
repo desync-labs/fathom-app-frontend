@@ -16,8 +16,11 @@ const StakingChip = styled(Chip, {
 
   ${({ theme }) => theme.breakpoints.down("sm")} {
     width: 30%;
-    margin-bottom: 5px;
-    margin-right: 5px;
+    margin-bottom: 12px;
+    margin-right: 5%;
+    &:nth-child(3n) {
+      margin-right: 0;
+    }
   }
 
   &:active {

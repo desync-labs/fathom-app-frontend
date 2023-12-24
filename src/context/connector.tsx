@@ -6,7 +6,10 @@ import {
   useState,
   useContext,
   ReactElement,
+  MouseEvent,
   FC,
+  Dispatch,
+  SetStateAction,
 } from "react";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { useWeb3React } from "@web3-react/core";
@@ -32,6 +35,8 @@ export type UseConnectorReturnType = {
   connectWalletConnect: () => Promise<void>;
   disconnect: () => Promise<void>;
   addERC20Token: (tokenData: ERC20TokenType) => Promise<boolean>;
+  setOpenConnector: Dispatch<SetStateAction<boolean>>;
+  openConnectorMenu: (event: MouseEvent<HTMLElement>) => void;
   shouldDisable: boolean;
   chainId: ChainId;
   error: Error | undefined;
@@ -43,6 +48,7 @@ export type UseConnectorReturnType = {
   isUserWhiteListed: boolean;
   isUserWrapperWhiteListed: boolean;
   isOpenPositionWhitelisted: boolean;
+  openConnector: boolean;
   allowStableSwap: boolean;
   allowStableSwapInProgress: boolean;
 };
@@ -66,6 +72,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
 
   const [isMetamask, setIsMetamask] = useState<boolean>(false);
   const [isWalletConnect, setIsWalletConnect] = useState<boolean>(false);
+  const [openConnector, setOpenConnector] = useState<boolean>(false);
 
   const [shouldDisable, setShouldDisable] = useState<boolean>(false); // Should disable connect button while connecting to MetaMask
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -232,6 +239,16 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
     [provider, account]
   );
 
+  const openConnectorMenu = useCallback(
+    (event: MouseEvent<HTMLElement>) => {
+      event.stopPropagation();
+      event.preventDefault();
+
+      setOpenConnector(true);
+    },
+    [setOpenConnector]
+  );
+
   const values = useMemo(
     () => ({
       addERC20Token,
@@ -242,6 +259,8 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
       connectMetamask,
       connectWalletConnect,
       disconnect,
+      setOpenConnector,
+      openConnectorMenu,
       shouldDisable,
       chainId: chainId as number,
       error,
@@ -253,6 +272,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
       isUserWhiteListed: isUserWhiteListed as boolean,
       isUserWrapperWhiteListed,
       isOpenPositionWhitelisted,
+      openConnector,
       allowStableSwap,
       allowStableSwapInProgress,
     }),
@@ -267,6 +287,8 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
       connectMetamask,
       connectWalletConnect,
       disconnect,
+      setOpenConnector,
+      openConnectorMenu,
       chainId,
       error,
       isMetamask,
@@ -276,6 +298,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
       isUserWhiteListed,
       isUserWrapperWhiteListed,
       isOpenPositionWhitelisted,
+      openConnector,
       allowStableSwap,
       allowStableSwapInProgress,
     ]

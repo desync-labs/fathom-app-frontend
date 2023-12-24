@@ -5,6 +5,7 @@ import BigNumber from "bignumber.js";
 import { IVault, IVaultPosition } from "fathom-sdk";
 
 import usePricesContext from "context/prices";
+import useConnector from "context/connector";
 import useVaultListItem, { VaultInfoTabs } from "hooks/useVaultListItem";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatCurrency, formatNumber, formatPercentage } from "utils/format";
@@ -17,6 +18,7 @@ import VaultListItemNav from "components/Vault/VaultListItem/VaultListItemNav";
 import VaultItemPositionInfo from "components/Vault/VaultListItem/AdditionalInfoTabs/VaultItemPositionInfo";
 import VaultItemAbout from "components/Vault/VaultListItem/AdditionalInfoTabs/VaultItemAbout";
 import VaultItemStrategies from "components/Vault/VaultListItem/AdditionalInfoTabs/VaultItemStrategies";
+import WalletConnectBtn from "components/Common/WalletConnectBtn";
 
 import LockSrc from "assets/svg/lock.svg";
 import LockAquaSrc from "assets/svg/lock-aqua.svg";
@@ -200,6 +202,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
     setManageVault,
     setNewVaultDeposit,
   } = useVaultListItem({ vaultPosition });
+  const { account } = useConnector();
 
   return (
     <>
@@ -305,13 +308,16 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
         <TableCell>
           <FlexBox justifyContent={"space-evenly"}>
             {(!vaultPosition ||
-              !BigNumber(vaultPosition.balanceShares).isGreaterThan(0)) && (
+              !BigNumber(vaultPosition.balanceShares).isGreaterThan(0)) &&
+            account ? (
               <ButtonPrimary
                 onClick={() => setNewVaultDeposit(true)}
                 data-testid={`vaultRow-${vaultTestId}-depositButton`}
               >
                 Deposit
               </ButtonPrimary>
+            ) : (
+              <WalletConnectBtn />
             )}
             <ExtendedBtn
               className={extended ? "visible" : "hidden"}

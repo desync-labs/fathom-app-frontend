@@ -15,11 +15,18 @@ const useMainLayout = () => {
   const { isMobile, isTablet } = useSharedContext();
   const [open, setOpen] = useState<boolean>(!isMobile);
   const [showToggleDrawerBtn, setShowToggleDrawerBtn] = useState<boolean>(true);
-  const { disconnect, isActive, account, error, isMetamask, isWalletConnect } =
-    useConnector();
+  const {
+    disconnect,
+    isActive,
+    account,
+    error,
+    isMetamask,
+    isWalletConnect,
+    openConnector,
+    setOpenConnector,
+  } = useConnector();
 
   const [openMobile, setOpenMobile] = useState<boolean>(false);
-  const [openConnector, setOpenConnector] = useState<boolean>(false);
   const currentPath = useLocation();
   const [scroll, setScroll] = useState<number>(0);
   const [width, height] = useWindowSize();
@@ -108,16 +115,6 @@ const useMainLayout = () => {
     [setOpenMobile]
   );
 
-  const openConnectorMenu = useCallback(
-    (event: MouseEvent<HTMLElement>) => {
-      event.stopPropagation();
-      event.preventDefault();
-
-      setOpenConnector(true);
-    },
-    [setOpenConnector]
-  );
-
   const openMobileFilterMenu = useCallback(
     (event: MouseEvent<HTMLElement>) => {
       event.stopPropagation();
@@ -148,7 +145,6 @@ const useMainLayout = () => {
     setOpenConnector,
     mainBlockClickHandler,
     openMobileMenu,
-    openConnectorMenu,
     openMobileFilterMenu,
     drawerRef,
     showToggleDrawerBtn,

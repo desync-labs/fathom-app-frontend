@@ -70,7 +70,7 @@ const useViewProposalItem = (proposal: IProposal) => {
 
   const fetchProposalState = useCallback(async () => {
     const [status, currentBlock] = await Promise.all([
-      proposalService.viewProposalState(proposal.proposalId, account),
+      proposalService.viewProposalState(proposal.proposalId),
       library.getBlockNumber(),
     ]);
     /**
@@ -88,8 +88,11 @@ const useViewProposalItem = (proposal: IProposal) => {
 
   useEffect(() => {
     library && getTimestamp();
-    account && chainId && fetchProposalState();
-  }, [proposal, chainId, account, library, getTimestamp, fetchProposalState]);
+  }, [proposal, chainId, account, library, getTimestamp]);
+
+  useEffect(() => {
+    fetchProposalState();
+  }, [proposal, fetchProposalState]);
 
   useEffect(() => {
     if (status && status === ProposalStatus.Defeated) {

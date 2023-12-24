@@ -51,9 +51,9 @@ const useProposalItem = () => {
   }, [proposalService, data, account, setHasVoted]);
 
   const fetchStatus = useCallback(async () => {
-    if (data?.proposal && account) {
+    if (data?.proposal) {
       const [status, currentBlock] = await Promise.all([
-        proposalService.viewProposalState(data.proposal.proposalId, account),
+        proposalService.viewProposalState(data.proposal.proposalId),
         library.getBlockNumber(),
       ]);
       if (
@@ -123,13 +123,10 @@ const useProposalItem = () => {
 
       setVotingEndTime(new Date(endTimestamp * 1000).toLocaleString());
       if (BigNumber(endTimestamp).minus(now).isLessThanOrEqualTo(0)) {
-        if (account) {
-          const status = await proposalService.viewProposalState(
-            data.proposal.proposalId,
-            account
-          );
-          setStatus((Object.values(ProposalStatus) as any)[status]);
-        }
+        const status = await proposalService.viewProposalState(
+          data.proposal.proposalId
+        );
+        setStatus((Object.values(ProposalStatus) as any)[status]);
         return setSeconds(0);
       } else {
         setSeconds(endTimestamp - now);
