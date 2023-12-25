@@ -45,7 +45,7 @@ export default class BasePage {
 
     // Locators
     this.btnWalletIcon = this.page.locator(
-      '[data-testid="AccountBalanceWalletIcon"]'
+      'header [data-testid="AccountBalanceWalletIcon"]'
     );
     this.divConnectedWalletAddress = this.page.locator(
       '//div[contains(text(), "0x") and contains(text(), "…")]'
