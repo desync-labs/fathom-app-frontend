@@ -85,6 +85,8 @@ const StatsValue = styled(Box)`
 `;
 
 const MyStatsValue = styled(StatsValue)`
+  flex-direction: column;
+  align-items: flex-start;
   strong {
     font-size: 14px;
   }

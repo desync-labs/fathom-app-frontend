@@ -27,11 +27,13 @@ import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
 import VaultListItemNav from "components/Vault/VaultListItem/VaultListItemNav";
 import VaultItemAbout from "components/Vault/VaultListItem/AdditionalInfoTabs/VaultItemAbout";
 import VaultItemStrategies from "components/Vault/VaultListItem/AdditionalInfoTabs/VaultItemStrategies";
+import WalletConnectBtn from "components/Common/WalletConnectBtn";
 
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatNumber, formatPercentage } from "utils/format";
 import useVaultListItem, { VaultInfoTabs } from "hooks/useVaultListItem";
 import usePricesContext from "context/prices";
+import useConnector from "context/connector";
 
 import DirectionUp from "assets/svg/direction-up.svg";
 import DirectionDown from "assets/svg/direction-down.svg";
@@ -179,6 +181,7 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
   } = useVaultListItem({ vaultPosition });
 
   const { fxdPrice } = usePricesContext();
+  const { account } = useConnector();
 
   return (
     <VaultListItemMobileContainer>
@@ -279,13 +282,16 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
         vaultPosition={vaultPosition}
       />
       {(!vaultPosition ||
-        !BigNumber(vaultPosition.balanceShares).isGreaterThan(0)) && (
+        !BigNumber(vaultPosition.balanceShares).isGreaterThan(0)) &&
+      account ? (
         <ButtonPrimary
           onClick={() => setNewVaultDeposit(true)}
           sx={{ width: "100%" }}
         >
           Deposit
         </ButtonPrimary>
+      ) : (
+        <WalletConnectBtn fullwidth />
       )}
       <ExtendedBtnWrapper>
         <ExtendedBtn

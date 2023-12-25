@@ -11,14 +11,16 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
+import { ProposalStatus } from "utils/Constants";
+import useProposalContext from "context/proposal";
+import useSharedContext from "context/shared";
 import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
 import {
   ImageSrc,
   ProposalItemStatus,
 } from "components/Governance/ViewAllProposalItem";
 import { VotingEndedButton } from "components/AppComponents/AppButton/AppButton";
-import { ProposalStatus } from "utils/Constants";
-import useProposalContext from "context/proposal";
+import WalletConnectBtn from "components/Common/WalletConnectBtn";
 
 const ProposalStatusBox = styled(Box)`
   font-weight: 600;
@@ -89,6 +91,7 @@ const ProposalDetailsStatus = styled(ProposalItemStatus)`
 `;
 
 type ButtonsProps = {
+  account: string | null | undefined;
   hasVoted: boolean;
   fetchedProposalState: string;
   vote: (support: string) => void;
@@ -96,11 +99,16 @@ type ButtonsProps = {
 };
 
 const Buttons: FC<ButtonsProps> = ({
+  account,
   hasVoted,
   fetchedProposalState,
   votePending,
   vote,
 }) => {
+  if (fetchedProposalState === ProposalStatus.OpenToVote && !account) {
+    return <WalletConnectBtn fullwidth />;
+  }
+
   if (fetchedProposalState === ProposalStatus.Pending) {
     return (
       <VotingEndedButton disabled={true}>
@@ -138,6 +146,7 @@ const Buttons: FC<ButtonsProps> = ({
 
 const ProposalVoting = () => {
   const {
+    account,
     hasVoted,
     votePending,
     forVotes,
@@ -147,10 +156,11 @@ const ProposalVoting = () => {
     status,
     quorumError,
   } = useProposalContext();
+  const { isMobile } = useSharedContext();
 
   return (
     <Grid item xs={12} md={4} lg={4}>
-      <AppPaper sx={{ padding: "24px" }}>
+      <AppPaper sx={{ padding: isMobile ? "20px 12px 25px" : "24px" }}>
         <Box sx={{ width: "100%" }}>
           <ProposalStatusBox>Proposal Status</ProposalStatusBox>
           <ProposalDetailsStatus
@@ -208,6 +218,7 @@ const ProposalVoting = () => {
           </Box>
         </Box>
         <Buttons
+          account={account}
           hasVoted={hasVoted}
           fetchedProposalState={status as string}
           vote={vote}

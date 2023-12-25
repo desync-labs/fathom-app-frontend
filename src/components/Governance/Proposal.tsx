@@ -21,7 +21,7 @@ const ProposalView = () => {
   return (
     <Container
       maxWidth="lg"
-      sx={{ mt: isMobile ? 2 : 4, mb: isMobile ? 2 : 4 }}
+      sx={{ mt: isMobile ? 2 : 4, mb: isMobile ? 2 : 4, px: isMobile ? 0 : 2 }}
     >
       <Grid container spacing={isMobile ? 1 : 5}>
         <Grid item xs={12}>
