@@ -309,16 +309,15 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
           <FlexBox justifyContent={"space-evenly"}>
             {(!vaultPosition ||
               !BigNumber(vaultPosition.balanceShares).isGreaterThan(0)) &&
-            account ? (
-              <ButtonPrimary
-                onClick={() => setNewVaultDeposit(true)}
-                data-testid={`vaultRow-${vaultTestId}-depositButton`}
-              >
-                Deposit
-              </ButtonPrimary>
-            ) : (
-              <WalletConnectBtn />
-            )}
+              account && (
+                <ButtonPrimary
+                  onClick={() => setNewVaultDeposit(true)}
+                  data-testid={`vaultRow-${vaultTestId}-depositButton`}
+                >
+                  Deposit
+                </ButtonPrimary>
+              )}{" "}
+            {!account && <WalletConnectBtn />}
             <ExtendedBtn
               className={extended ? "visible" : "hidden"}
               onClick={() => setExtended(!extended)}
