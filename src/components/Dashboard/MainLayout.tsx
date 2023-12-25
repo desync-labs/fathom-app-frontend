@@ -229,7 +229,6 @@ const MainLayout = () => {
     scroll,
     disconnect,
     openMobile,
-    openConnector,
     account,
     error,
     isMobile,
@@ -241,12 +240,10 @@ const MainLayout = () => {
     toggleDrawer,
     mainBlockClickHandler,
     openMobileMenu,
-    openConnectorMenu,
     openMobileFilterMenu,
     drawerRef,
     showToggleDrawerBtn,
     setOpenMobile,
-    setOpenConnector,
     userXDCBalance,
     showFthmBalanceModal,
     setShowFthmBalanceModal,
@@ -259,6 +256,9 @@ const MainLayout = () => {
     allowStableSwap,
     allowStableSwapInProgress,
     isUserWrapperWhiteListed,
+    openConnector,
+    setOpenConnector,
+    openConnectorMenu,
   } = useConnector();
 
   /**

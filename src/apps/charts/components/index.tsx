@@ -112,6 +112,10 @@ export const ContentWrapperLarge = styled.div`
     grid-template-columns: 1fr;
     padding: 0 1rem;
   }
+
+  @media screen and (max-width: 767px) {
+    padding: 0;
+  }
 `;
 
 export const FullWrapper = styled.div`

@@ -8,6 +8,7 @@ import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
 import StakingCountdown from "components/Staking/StakingCountdown";
 import useConnector from "context/connector";
 import { ZERO_ADDRESS } from "utils/Constants";
+import useSharedContext from "context/shared";
 
 const ProposalTitle = styled(Typography)`
   font-weight: bold;
@@ -19,6 +20,9 @@ const ProposalTitle = styled(Typography)`
 const TimeslotContainer = styled(Grid)`
   border-bottom: 1px solid #253656;
   padding: 20px 24px 30px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    padding: 12px 12px 20px;
+  }
 `;
 
 const TimeslotTitle = styled(Typography)`
@@ -100,12 +104,17 @@ const ProposalInfo = () => {
   } = useProposalContext();
 
   const { chainId } = useConnector();
+  const { isMobile } = useSharedContext();
 
   return (
     <Grid item xs={12} md={8} lg={8}>
       <AppPaper>
         <Grid container>
-          <Grid item xs={12} sx={{ padding: "24px 24px 0" }}>
+          <Grid
+            item
+            xs={12}
+            sx={{ padding: isMobile ? "20px 12px 0" : "24px 24px 0" }}
+          >
             <ProposalTitle>
               {getTitleDescription(fetchedProposal.description, 0)}
             </ProposalTitle>
@@ -142,7 +151,11 @@ const ProposalInfo = () => {
             </TimeslotContainer>
           </Grid>
           {!!getTitleDescription(fetchedProposal.description, 1) && (
-            <Grid item xs={12} sx={{ padding: "24px 24px 12px 24px" }}>
+            <Grid
+              item
+              xs={12}
+              sx={{ padding: isMobile ? "20px 12px" : "24px 24px 12px 24px" }}
+            >
               <ProposalLabel>Description</ProposalLabel>
               <ProposalDescription>
                 {getTitleDescription(fetchedProposal.description, 1)}
@@ -152,7 +165,11 @@ const ProposalInfo = () => {
           {fetchedProposal.targets &&
             fetchedProposal.targets.length &&
             fetchedProposal.targets[0] !== ZERO_ADDRESS && (
-              <Grid item xs={12} sx={{ padding: "12px 24px" }}>
+              <Grid
+                item
+                xs={12}
+                sx={{ padding: isMobile ? "12px" : "12px 24px" }}
+              >
                 <ProposalLabel>Action</ProposalLabel>
                 <ProposalDescription>
                   <ActionWrapper>
@@ -178,7 +195,13 @@ const ProposalInfo = () => {
           {/*    <a href="/">Discord / Forum / Medium / etc...</a>*/}
           {/*  </ProposalDescription>*/}
           {/*</Grid>*/}
-          <Grid item xs={12} sx={{ padding: "12px 24px 24px 24px" }}>
+          <Grid
+            item
+            xs={12}
+            sx={{
+              padding: isMobile ? "12px 12px 20px" : "12px 24px 24px 24px",
+            }}
+          >
             <ProposalLabel>Proposer</ProposalLabel>
             <ProposalDescription>
               {chainId && (
