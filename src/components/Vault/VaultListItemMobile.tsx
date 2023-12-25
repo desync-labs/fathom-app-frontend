@@ -283,16 +283,15 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
       />
       {(!vaultPosition ||
         !BigNumber(vaultPosition.balanceShares).isGreaterThan(0)) &&
-      account ? (
-        <ButtonPrimary
-          onClick={() => setNewVaultDeposit(true)}
-          sx={{ width: "100%" }}
-        >
-          Deposit
-        </ButtonPrimary>
-      ) : (
-        <WalletConnectBtn fullwidth />
-      )}
+        account && (
+          <ButtonPrimary
+            onClick={() => setNewVaultDeposit(true)}
+            sx={{ width: "100%" }}
+          >
+            Deposit
+          </ButtonPrimary>
+        )}
+      {!account && <WalletConnectBtn fullwidth />}
       <ExtendedBtnWrapper>
         <ExtendedBtn
           className={extended ? "visible" : "hidden"}
