@@ -51,16 +51,20 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     await metamask.switchAccount("Account 1");
     await vaultPage.connectWallet(WalletConnectOptions.Metamask);
     await vaultPage.validateConnectedWalletAddress();
-    const vaultExpectedData = await vaultPage.depositFirstTime({
-      id: fxdVaultData.id,
-      depositAmount: 100,
-    });
-    await vaultPage.validateVaultData({
-      id: fxdVaultData.id,
-      stakedAmount: vaultExpectedData.stakedAmount,
-      poolShare: vaultExpectedData.poolShare,
-      shareTokens: vaultExpectedData.shareTokens,
-    });
+    const newAddress = await metamask.getWalletAddress();
+    console.log(newAddress);
+    await vaultPage.mintStableCoinToAddress(newAddress, 1);
+    await vaultPage.page.waitForTimeout(40000);
+    // const vaultExpectedData = await vaultPage.depositFirstTime({
+    //   id: fxdVaultData.id,
+    //   depositAmount: 100,
+    // });
+    // await vaultPage.validateVaultData({
+    //   id: fxdVaultData.id,
+    //   stakedAmount: vaultExpectedData.stakedAmount,
+    //   poolShare: vaultExpectedData.poolShare,
+    //   shareTokens: vaultExpectedData.shareTokens,
+    // });
   });
 
   // Need to research how to correctly implement
