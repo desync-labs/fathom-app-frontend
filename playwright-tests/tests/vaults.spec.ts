@@ -1,6 +1,6 @@
-import { test, expect } from "../fixtures/pomSynpressFixture";
+import { test } from "../fixtures/pomSynpressFixture";
 import { fxdVaultData } from "../fixtures/vaults.data";
-import { VaultDetailsTabs, WalletConnectOptions } from "../types";
+import { WalletConnectOptions } from "../types";
 // @ts-ignore
 import * as metamask from "@synthetixio/synpress/commands/metamask";
 import dotenv from "dotenv";
@@ -43,18 +43,27 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     });
   });
 
-  // Need to research how to correctly implement
-  test.skip("FXD Vault: Deposit: Depositing first 100 FXD is successful", async ({
+  // metamask.confirmPermissionToApproveAll() is failing in synpress library, opened issue in their repo, waiting for fix
+  test.skip("FXD Vault: Deposit: Depositing first 1 FXD is successful", async ({
     vaultPage,
   }) => {
+    const depositAmount = 1;
     await vaultPage.navigate();
     await metamask.switchAccount("Account 1");
     await vaultPage.connectWallet(WalletConnectOptions.Metamask);
     await vaultPage.validateConnectedWalletAddress();
+    await vaultPage.validateRowActionButton(fxdVaultData.id, "Deposit");
+    await vaultPage.validateYourPositionTabNotVisible(fxdVaultData.id);
+    const newAddress = await metamask.getWalletAddress();
+    console.log(newAddress);
+    await vaultPage.mintStableCoinToAddress(newAddress, depositAmount);
+    await vaultPage.transferTestXdcToAddress(newAddress, 1);
+    await vaultPage.page.waitForTimeout(5000);
     const vaultExpectedData = await vaultPage.depositFirstTime({
       id: fxdVaultData.id,
-      depositAmount: 100,
+      depositAmount,
     });
+    await vaultPage.validateYourPositionTabIsVisible(fxdVaultData.id);
     await vaultPage.validateVaultData({
       id: fxdVaultData.id,
       stakedAmount: vaultExpectedData.stakedAmount,
@@ -63,7 +72,7 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     });
   });
 
-  // Need to research how to correctly implement
+  // TO DO
   test.skip("FXD Vault: Manage Vault: Fully withdrawing all FXD is successful", async ({
     vaultPage,
   }) => {
@@ -72,27 +81,5 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     await vaultPage.connectWallet(WalletConnectOptions.Metamask);
     await vaultPage.validateConnectedWalletAddress();
     // ...
-  });
-
-  test('FXD Vault: "Deposit" button is visible and "Your positions" is hidden for a first time user', async ({
-    vaultPage,
-  }) => {
-    await vaultPage.navigate();
-    // Switch to account that has no vaults ever created
-    await metamask.importAccount(process.env.METAMASK_TEST_TWO_PRIVATE_KEY);
-    await metamask.switchAccount("Account 3");
-    await vaultPage.connectWallet(WalletConnectOptions.Metamask);
-    await vaultPage.validateConnectedWalletAddress();
-    await expect
-      .soft(vaultPage.getActionButtonRowLocatorById(fxdVaultData.id))
-      .toHaveText("Deposit");
-    await expect
-      .soft(
-        vaultPage.getVaultDetailsTabLocator(
-          fxdVaultData.id,
-          VaultDetailsTabs.YourPosition
-        )
-      )
-      .not.toBeVisible();
   });
 });

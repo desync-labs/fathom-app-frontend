@@ -12,6 +12,10 @@ import {
   type GraphOperationName,
   type WalletConnectOptions,
 } from "../types";
+import { ethers } from "fathom-ethers";
+import FathomStablecoin from "../fixtures/abis/FathomStablecoin.json";
+import { contractAddresses } from "../fixtures/global.data";
+import { APOTHEM_RPC } from "../../src/connectors/networks";
 dotenv.config();
 
 export default class BasePage {
@@ -27,6 +31,7 @@ export default class BasePage {
   readonly divAlertTitle: Locator;
   readonly paragraphAlertBody: Locator;
   readonly timeoutTransactionPending = process.env.CI ? 90000 : 60000;
+  readonly privateKeyMainAccount: string;
 
   constructor(page: Page) {
     this.page = page;
@@ -41,6 +46,12 @@ export default class BasePage {
         break;
       default:
         this.graphAPIBaseUrl = "https://dev.fathom.fi";
+    }
+
+    if (process.env.METAMASK_SETUP_PRIVATE_KEY) {
+      this.privateKeyMainAccount = process.env.METAMASK_SETUP_PRIVATE_KEY;
+    } else {
+      throw new Error("METAMASK_SETUP_PRIVATE_KEY env variable is missing");
     }
 
     // Locators
@@ -186,5 +197,50 @@ export default class BasePage {
         .soft(this.divAlert.getByText(title))
         .toBeVisible({ timeout: this.timeoutTransactionPending });
     }
+  }
+
+  async mintStableCoinToAddress(
+    address: string,
+    amount: number
+  ): Promise<void> {
+    const rpcUrl = APOTHEM_RPC;
+    const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
+    const wallet = new ethers.Wallet(this.privateKeyMainAccount, provider);
+    const signer = wallet.connect(provider);
+    const fathomStablecoinContractAddress = contractAddresses.fathomStablecoin;
+    const fathomStablecoinContractAbi = FathomStablecoin.abi;
+    const fathomStablecoinContract = new ethers.Contract(
+      fathomStablecoinContractAddress,
+      fathomStablecoinContractAbi,
+      signer
+    );
+    const amountFormatted = BigInt(amount.toString() + "000000000000000000");
+    const transaction = await fathomStablecoinContract.mint(
+      address,
+      amountFormatted
+    );
+    const receipt = await transaction.wait();
+    expect(receipt.status).toEqual(1);
+  }
+
+  async transferTestXdcToAddress(
+    address: string,
+    amountToSend: number
+  ): Promise<void> {
+    const senderPrivateKey = this.privateKeyMainAccount;
+    const receiverAddress = address;
+    const rpcUrl = APOTHEM_RPC;
+    const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
+    const senderWallet = new ethers.Wallet(senderPrivateKey, provider);
+    const tokenAmount = ethers.utils.parseEther(amountToSend.toString());
+    const gasLimit = 200000;
+    const transactionData = {
+      to: receiverAddress,
+      value: tokenAmount,
+      gasLimit: ethers.BigNumber.from(gasLimit),
+    };
+    const transaction = await senderWallet.sendTransaction(transactionData);
+    const receipt = await transaction.wait();
+    expect(receipt.status).toEqual(1);
   }
 }
