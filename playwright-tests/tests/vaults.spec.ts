@@ -57,7 +57,8 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     console.log(newAddress);
     await vaultPage.mintStableCoinToAddress(newAddress, depositAmount);
     await vaultPage.transferTestXdcToAddress(newAddress, 1);
-    await vaultPage.page.waitForTimeout(5000);
+    await vaultPage.page.waitForTimeout(3000);
+    await vaultPage.page.reload();
     const vaultExpectedData = await vaultPage.depositFirstTime({
       id: fxdVaultData.id,
       depositAmount,
