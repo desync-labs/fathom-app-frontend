@@ -43,7 +43,8 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     });
   });
 
-  test("FXD Vault: Deposit: Depositing first 1 FXD is successful", async ({
+  // metamask.confirmPermissionToApproveAll() is failing in synpress library, opened issue in their repo, waiting for fix
+  test.skip("FXD Vault: Deposit: Depositing first 1 FXD is successful", async ({
     vaultPage,
   }) => {
     const depositAmount = 1;
