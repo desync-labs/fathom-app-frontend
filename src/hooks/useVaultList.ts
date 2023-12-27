@@ -1,10 +1,14 @@
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
+import { IVault, IVaultPosition } from "fathom-sdk";
 import { ACCOUNT_VAULT_POSITIONS, VAULTS } from "apollo/queries";
 import { COUNT_PER_PAGE } from "utils/Constants";
 import useConnector from "context/connector";
 import useSyncContext from "context/sync";
-import { IVault, IVaultPosition } from "fathom-sdk";
+
+interface IdToVaultIdMap {
+  [key: string]: string | undefined;
+}
 
 export enum SortType {
   FEE = "fee",
@@ -75,26 +79,26 @@ const useVaultList = () => {
 
   useEffect(() => {
     if (vaultItemsData && vaultItemsData.vaults) {
-      setVaultSortedList(vaultItemsData.vaults);
+      sortingVaults(vaultItemsData.vaults);
       setVaultItemsCount(vaultItemsData.vaults.length);
     }
   }, [vaultItemsData]);
 
   useEffect(() => {
     if (vaultItemsData && vaultItemsData.vaults) {
-      sortingVaults([...vaultItemsData.vaults]);
+      sortingVaults(vaultItemsData.vaults);
     }
   }, [sortBy]);
 
   // Sort vaults
   const sortingVaults = useCallback(
     (vaultData: IVault[]) => {
-      let sortedVaults = vaultData;
+      let sortedVaults = [...vaultData];
       if (vaultData.length) {
         if (sortBy === SortType.FEE) {
           sortedVaults = vaultData.sort((a, b) => {
-            const totalFeesA = Number(a.strategies[0].reports[0].totalFees);
-            const totalFeesB = Number(b.strategies[0].reports[0].totalFees);
+            const totalFeesA = Number(a.totalFees);
+            const totalFeesB = Number(b.totalFees);
 
             return totalFeesB - totalFeesA;
           });
@@ -107,11 +111,44 @@ const useVaultList = () => {
             return tvlB - tvlA;
           });
         }
+        if (vaultPositionsList.length) {
+          const idToVaultIdMap: IdToVaultIdMap = {};
+
+          const sortVaultsByVaultPositionValue = (a: IVault, b: IVault) => {
+            const keyA = a.id;
+            const keyB = b.id;
+
+            const positionValueA =
+              parseFloat(idToVaultIdMap[keyA] as string) || 0;
+            const positionValueB =
+              parseFloat(idToVaultIdMap[keyB] as string) || 0;
+
+            return positionValueB - positionValueA;
+          };
+
+          if (sortBy === SortType.EARNED) {
+            vaultPositionsList.forEach((position: IVaultPosition) => {
+              const key = position.vault.id;
+              idToVaultIdMap[key] = position.balanceProfit;
+            });
+
+            sortedVaults = vaultData.sort(sortVaultsByVaultPositionValue);
+          }
+
+          if (sortBy === SortType.STAKED) {
+            vaultPositionsList.forEach((position: IVaultPosition) => {
+              const key = position.vault.id;
+              idToVaultIdMap[key] = position.balancePosition;
+            });
+
+            sortedVaults = vaultData.sort(sortVaultsByVaultPositionValue);
+          }
+        }
       }
 
       setVaultSortedList(sortedVaults);
     },
-    [sortBy]
+    [sortBy, vaultPositionsList]
   );
 
   const handlePageChange = useCallback(
