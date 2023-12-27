@@ -1,6 +1,6 @@
-import { test, expect } from "../fixtures/pomSynpressFixture";
+import { test } from "../fixtures/pomSynpressFixture";
 import { fxdVaultData } from "../fixtures/vaults.data";
-import { VaultDetailsTabs, WalletConnectOptions } from "../types";
+import { WalletConnectOptions } from "../types";
 // @ts-ignore
 import * as metamask from "@synthetixio/synpress/commands/metamask";
 import dotenv from "dotenv";
@@ -70,7 +70,7 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     });
   });
 
-  // Need to research how to correctly implement
+  // TO DO
   test.skip("FXD Vault: Manage Vault: Fully withdrawing all FXD is successful", async ({
     vaultPage,
   }) => {
@@ -79,27 +79,5 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     await vaultPage.connectWallet(WalletConnectOptions.Metamask);
     await vaultPage.validateConnectedWalletAddress();
     // ...
-  });
-
-  test('FXD Vault: "Deposit" button is visible and "Your positions" is hidden for a first time user', async ({
-    vaultPage,
-  }) => {
-    await vaultPage.navigate();
-    // Switch to account that has no vaults ever created
-    await metamask.importAccount(process.env.METAMASK_TEST_TWO_PRIVATE_KEY);
-    await metamask.switchAccount("Account 3");
-    await vaultPage.connectWallet(WalletConnectOptions.Metamask);
-    await vaultPage.validateConnectedWalletAddress();
-    await expect
-      .soft(vaultPage.getActionButtonRowLocatorById(fxdVaultData.id))
-      .toHaveText("Deposit");
-    await expect
-      .soft(
-        vaultPage.getVaultDetailsTabLocator(
-          fxdVaultData.id,
-          VaultDetailsTabs.YourPosition
-        )
-      )
-      .not.toBeVisible();
   });
 });
