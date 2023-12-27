@@ -490,7 +490,14 @@ export default class VaultPage extends BasePage {
 
   async approveTokensMaxUint() {
     await this.btnApproveTokens.click();
+    await expect.soft(this.progressBar).toBeVisible();
+    await this.page.waitForTimeout(1000);
+    await expect(this.divAlert).toBeHidden({ timeout: 100 });
     await metamask.confirmPermissionToApproveAll();
+    await this.validateAlertMessage({
+      status: "success",
+      title: "Token approval was successful!",
+    });
   }
 
   async depositFirstTime({
