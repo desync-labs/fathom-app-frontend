@@ -10,6 +10,7 @@ import { resetState } from "@synthetixio/synpress/commands/synpress";
 import dotenv from "dotenv";
 import FxdPage from "../pages/fxd.page";
 import VaultPage from "../pages/vault.page";
+import { APOTHEM_RPC, XDC_RPC } from "../../src/connectors/networks";
 dotenv.config();
 
 let networkName: string;
@@ -21,7 +22,7 @@ let blockExplorer: string;
 switch (process.env.ENVIRONMENT_URL) {
   case "https://dapp.fathom.fi":
     networkName = "XDC";
-    rpcUrl = "https://rpc.xinfin.network";
+    rpcUrl = XDC_RPC;
     chainId = "50";
     symbol = "XDC";
     blockExplorer = "https://explorer.xinfin.network/";
@@ -29,14 +30,14 @@ switch (process.env.ENVIRONMENT_URL) {
   case "https://dev-app-frontend-wpa8a.ondigitalocean.app" ||
     "http://127.0.0.1:3000":
     networkName = "XDC Test";
-    rpcUrl = "https://earpc.apothem.network/";
+    rpcUrl = APOTHEM_RPC;
     chainId = "51";
     symbol = "TXDC";
     blockExplorer = "https://apothem.blocksscan.io/";
     break;
   default:
     networkName = "XDC Test";
-    rpcUrl = "https://earpc.apothem.network/";
+    rpcUrl = APOTHEM_RPC;
     chainId = "51";
     symbol = "TXDC";
     blockExplorer = "https://apothem.blocksscan.io/";
