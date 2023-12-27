@@ -3,6 +3,7 @@ import { ICollateralPool } from "fathom-sdk";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 import { Dispatch, FC, SetStateAction } from "react";
+import BigNumber from "bignumber.js";
 import { AppTableRow } from "components/AppComponents/AppTable/AppTable";
 import { styled } from "@mui/material/styles";
 import { OpenPositionButton } from "components/AppComponents/AppButton/AppButton";
@@ -12,6 +13,7 @@ import TokenLogo from "components/Common/TokenLogo";
 
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatCurrency, formatNumber, formatNumberPrice } from "utils/format";
+import usePricesContext from "context/prices";
 
 import PriceChanged from "components/Common/PriceChange";
 
@@ -49,6 +51,7 @@ const PoolsListItem: FC<PoolsListItemPropsType> = ({
   pool,
   setSelectedPool,
 }) => {
+  const { wxdcPrice } = usePricesContext();
   return (
     <PoolsListItemTableRow
       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -69,7 +72,13 @@ const PoolsListItem: FC<PoolsListItemPropsType> = ({
       </TableCell>
       <TableCell>
         <PriceWrapper>
-          {formatNumberPrice(pool.collateralPrice)}
+          {formatNumberPrice(
+            pool.poolName.toUpperCase() === "XDC"
+              ? BigNumber(wxdcPrice)
+                  .dividedBy(10 ** 18)
+                  .toNumber()
+              : pool.collateralPrice
+          )}
           <PriceChanged
             current={pool.collateralPrice}
             previous={pool.collateralLastPrice}

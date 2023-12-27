@@ -30,7 +30,7 @@ export const PricesContext = createContext<UsePricesContextReturn>(
 );
 
 export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
-  const { stakingService } = useServices();
+  const { stakingService, oracleService } = useServices();
   const { chainId } = useConnector();
   const { provider } = useServices();
 
@@ -78,10 +78,7 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
           );
         }
 
-        const xdcUsdtPromise =
-          process.env.REACT_APP_ENV === "prod"
-            ? stakingService.getPairPrice(wxdcTokenAddress, usdtTokenAddress)
-            : stakingService.getPairPrice(usdtTokenAddress, wxdcTokenAddress);
+        const xdcUsdtPromise = oracleService.getXdcPrice();
 
         const xdcFxdPromise = stakingService.getPairPrice(
           fxdTokenAddress,
