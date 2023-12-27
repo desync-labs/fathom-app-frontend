@@ -28,7 +28,7 @@ export default defineConfig({
     ["list"],
     ["html", { outputFolder: "playwright-tests/test-report", open: "never" }],
   ],
-  timeout: process.env.CI ? 120000 : 90000,
+  timeout: process.env.CI ? 120000 : 100000,
   outputDir: "./playwright-tests/test-results",
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {

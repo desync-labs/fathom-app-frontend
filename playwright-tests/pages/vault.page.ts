@@ -38,6 +38,7 @@ export default class VaultPage extends BasePage {
   readonly btnWithdrawNavManageDialogModal: Locator;
   readonly diaologDepositToVaultModal: Locator;
   readonly btnConfirmDepositDepositToVaultModal: Locator;
+  readonly btnApproveTokens: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -110,6 +111,9 @@ export default class VaultPage extends BasePage {
       this.diaologDepositToVaultModal.locator(
         '//button[text()="Deposit"][@type="submit"]'
       );
+    this.btnApproveTokens = this.page.locator(
+      '//button[text()="Approve token"]'
+    );
   }
 
   async navigate(): Promise<void> {
@@ -484,6 +488,18 @@ export default class VaultPage extends BasePage {
     return vaultDepositDataExpected;
   }
 
+  async approveTokensMaxUint() {
+    await this.btnApproveTokens.click();
+    await expect.soft(this.progressBar).toBeVisible();
+    await this.page.waitForTimeout(1000);
+    await expect(this.divAlert).toBeHidden({ timeout: 100 });
+    await metamask.confirmPermissionToApproveAll();
+    await this.validateAlertMessage({
+      status: "success",
+      title: "Token approval was successful!",
+    });
+  }
+
   async depositFirstTime({
     id,
     depositAmount,
@@ -501,6 +517,8 @@ export default class VaultPage extends BasePage {
     await this.getActionButtonRowLocatorById(id).click();
     await expect(this.diaologDepositToVaultModal).toBeVisible();
     await this.enterDepositAmount(depositAmount);
+    await this.page.waitForTimeout(2000);
+    await this.approveTokensMaxUint();
     await this.page.waitForTimeout(2000);
     const depositedValueAfterText =
       await this.spanDepositedValueAfterManageVaultDialog.textContent();
@@ -554,5 +572,23 @@ export default class VaultPage extends BasePage {
       .soft(this.getVaultDetailsTabLocator(id, VaultDetailsTabs.YourPosition))
       .toBeVisible();
     return vaultDepositDataExpected;
+  }
+
+  async validateRowActionButton(id: string, btnText: string): Promise<void> {
+    await expect
+      .soft(this.getActionButtonRowLocatorById(id))
+      .toHaveText(btnText);
+  }
+
+  async validateYourPositionTabIsVisible(id: string): Promise<void> {
+    await expect
+      .soft(this.getVaultDetailsTabLocator(id, VaultDetailsTabs.YourPosition))
+      .toBeVisible();
+  }
+
+  async validateYourPositionTabNotVisible(id: string): Promise<void> {
+    await expect
+      .soft(this.getVaultDetailsTabLocator(id, VaultDetailsTabs.YourPosition))
+      .not.toBeVisible();
   }
 }
