@@ -203,7 +203,8 @@ export default class BasePage {
     address: string,
     amount: number
   ): Promise<void> {
-    const provider = new ethers.providers.JsonRpcProvider(APOTHEM_RPC);
+    const rpcUrl = APOTHEM_RPC;
+    const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
     const wallet = new ethers.Wallet(this.privateKeyMainAccount, provider);
     const signer = wallet.connect(provider);
     const fathomStablecoinContractAddress = contractAddresses.fathomStablecoin;
@@ -214,6 +215,32 @@ export default class BasePage {
       signer
     );
     const amountFormatted = BigInt(amount.toString() + "000000000000000000");
-    await fathomStablecoinContract.mint(address, amountFormatted);
+    const transaction = await fathomStablecoinContract.mint(
+      address,
+      amountFormatted
+    );
+    const receipt = await transaction.wait();
+    expect(receipt.status).toEqual(1);
+  }
+
+  async transferTestXdcToAddress(
+    address: string,
+    amountToSend: number
+  ): Promise<void> {
+    const senderPrivateKey = this.privateKeyMainAccount;
+    const receiverAddress = address;
+    const rpcUrl = APOTHEM_RPC;
+    const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
+    const senderWallet = new ethers.Wallet(senderPrivateKey, provider);
+    const tokenAmount = ethers.utils.parseEther(amountToSend.toString());
+    const gasLimit = 200000;
+    const transactionData = {
+      to: receiverAddress,
+      value: tokenAmount,
+      gasLimit: ethers.BigNumber.from(gasLimit),
+    };
+    const transaction = await senderWallet.sendTransaction(transactionData);
+    const receipt = await transaction.wait();
+    expect(receipt.status).toEqual(1);
   }
 }
