@@ -493,7 +493,7 @@ export default class VaultPage extends BasePage {
     await expect.soft(this.progressBar).toBeVisible();
     await this.page.waitForTimeout(1000);
     await expect(this.divAlert).toBeHidden({ timeout: 100 });
-    await metamask.confirmPermissionToApproveAll();
+    await metamask.confirmPermissionToSpend();
     await this.validateAlertMessage({
       status: "success",
       title: "Token approval was successful!",

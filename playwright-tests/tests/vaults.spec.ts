@@ -43,8 +43,7 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     });
   });
 
-  // metamask.confirmPermissionToApproveAll() is failing in synpress library, opened issue in their repo, waiting for fix
-  test.skip("FXD Vault: Deposit: Depositing first 1 FXD is successful", async ({
+  test("FXD Vault: Deposit: Depositing first 1 FXD is successful", async ({
     vaultPage,
   }) => {
     const depositAmount = 1;
@@ -58,7 +57,8 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     console.log(newAddress);
     await vaultPage.mintStableCoinToAddress(newAddress, depositAmount);
     await vaultPage.transferTestXdcToAddress(newAddress, 1);
-    await vaultPage.page.waitForTimeout(5000);
+    await vaultPage.page.waitForTimeout(3000);
+    await vaultPage.page.reload();
     const vaultExpectedData = await vaultPage.depositFirstTime({
       id: fxdVaultData.id,
       depositAmount,
