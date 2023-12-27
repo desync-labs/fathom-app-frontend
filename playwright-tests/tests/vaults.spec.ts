@@ -43,7 +43,7 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     });
   });
 
-  test("FXD Vault: Deposit: Depositing first 100 FXD is successful", async ({
+  test("FXD Vault: Deposit: Depositing first 10 FXD is successful", async ({
     vaultPage,
   }) => {
     const depositAmount = 1;
