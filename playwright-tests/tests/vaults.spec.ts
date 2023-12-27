@@ -43,28 +43,33 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     });
   });
 
-  // Need to research how to correctly implement
+  // metamask.confirmPermissionToApproveAll() - needs to be resolved with synpress
   test.skip("FXD Vault: Deposit: Depositing first 100 FXD is successful", async ({
     vaultPage,
   }) => {
+    const depositAmount = 1;
     await vaultPage.navigate();
     await metamask.switchAccount("Account 1");
     await vaultPage.connectWallet(WalletConnectOptions.Metamask);
     await vaultPage.validateConnectedWalletAddress();
+    await vaultPage.validateRowActionButton(fxdVaultData.id, "Deposit");
+    await vaultPage.validateYourPositionTabNotVisible(fxdVaultData.id);
     const newAddress = await metamask.getWalletAddress();
-    console.log(newAddress);
-    await vaultPage.mintStableCoinToAddress(newAddress, 1);
-    await vaultPage.page.waitForTimeout(40000);
-    // const vaultExpectedData = await vaultPage.depositFirstTime({
-    //   id: fxdVaultData.id,
-    //   depositAmount: 100,
-    // });
-    // await vaultPage.validateVaultData({
-    //   id: fxdVaultData.id,
-    //   stakedAmount: vaultExpectedData.stakedAmount,
-    //   poolShare: vaultExpectedData.poolShare,
-    //   shareTokens: vaultExpectedData.shareTokens,
-    // });
+    await vaultPage.mintStableCoinToAddress(newAddress, depositAmount);
+    await vaultPage.transferTestXdcToAddress(newAddress, 1);
+    await vaultPage.page.waitForTimeout(2000);
+    const vaultExpectedData = await vaultPage.depositFirstTime({
+      id: fxdVaultData.id,
+      depositAmount,
+    });
+    await vaultPage.validateRowActionButton(fxdVaultData.id, "Manage Vault");
+    await vaultPage.validateYourPositionTabIsVisible(fxdVaultData.id);
+    await vaultPage.validateVaultData({
+      id: fxdVaultData.id,
+      stakedAmount: vaultExpectedData.stakedAmount,
+      poolShare: vaultExpectedData.poolShare,
+      shareTokens: vaultExpectedData.shareTokens,
+    });
   });
 
   // Need to research how to correctly implement
