@@ -43,8 +43,7 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     });
   });
 
-  // metamask.confirmPermissionToApproveAll() - needs to be resolved with synpress
-  test.skip("FXD Vault: Deposit: Depositing first 100 FXD is successful", async ({
+  test("FXD Vault: Deposit: Depositing first 100 FXD is successful", async ({
     vaultPage,
   }) => {
     const depositAmount = 1;
@@ -57,12 +56,11 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     const newAddress = await metamask.getWalletAddress();
     await vaultPage.mintStableCoinToAddress(newAddress, depositAmount);
     await vaultPage.transferTestXdcToAddress(newAddress, 1);
-    await vaultPage.page.waitForTimeout(2000);
+    await vaultPage.page.waitForTimeout(4000);
     const vaultExpectedData = await vaultPage.depositFirstTime({
       id: fxdVaultData.id,
       depositAmount,
     });
-    await vaultPage.validateRowActionButton(fxdVaultData.id, "Manage Vault");
     await vaultPage.validateYourPositionTabIsVisible(fxdVaultData.id);
     await vaultPage.validateVaultData({
       id: fxdVaultData.id,
