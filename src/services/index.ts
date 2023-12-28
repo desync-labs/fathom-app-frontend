@@ -5,12 +5,14 @@ import {
   StableSwapService,
   StakingService,
   VaultService,
+  OracleService,
   IPoolService,
   IPositionService,
   IProposalService,
   IStableSwapService,
   IStakingService,
   IVaultService,
+  IOracleService,
   Web3Utils,
 } from "fathom-sdk";
 
@@ -29,6 +31,7 @@ export class RootService {
   proposalService: IProposalService;
   stakingService: IStakingService;
   vaultService: IVaultService;
+  oracleService: IOracleService;
 
   chainId = DEFAULT_CHAIN_ID;
 
@@ -41,7 +44,8 @@ export class RootService {
       | IStableSwapService
       | IProposalService
       | IStakingService
-      | IVaultService;
+      | IVaultService
+      | IOracleService;
   };
 
   constructor() {
@@ -53,6 +57,7 @@ export class RootService {
     this.stakingService = new StakingService(this.provider, this.chainId);
     this.stableSwapService = new StableSwapService(this.provider, this.chainId);
     this.vaultService = new VaultService(this.provider, this.chainId);
+    this.oracleService = new OracleService(this.provider, this.chainId);
 
     this.serviceList = {
       poolService: this.poolService,
@@ -61,6 +66,7 @@ export class RootService {
       stakingService: this.stakingService,
       stableSwapService: this.stableSwapService,
       vaultService: this.vaultService,
+      oracleService: this.oracleService,
     };
   }
 
