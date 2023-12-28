@@ -1,4 +1,4 @@
-import { test } from "../fixtures/pomSynpressFixture";
+import { test, expect } from "../fixtures/pomSynpressFixture";
 import { fxdVaultData } from "../fixtures/vaults.data";
 import { WalletConnectOptions } from "../types";
 // @ts-ignore
@@ -57,8 +57,9 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     console.log(newAddress);
     await vaultPage.mintStableCoinToAddress(newAddress, depositAmount);
     await vaultPage.transferTestXdcToAddress(newAddress, 1);
-    await vaultPage.page.waitForTimeout(3000);
+    await vaultPage.page.waitForTimeout(5000);
     await vaultPage.page.reload();
+    await vaultPage.page.waitForLoadState("load");
     const vaultExpectedData = await vaultPage.depositFirstTime({
       id: fxdVaultData.id,
       depositAmount,
@@ -72,14 +73,29 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     });
   });
 
-  // TO DO
-  test.skip("FXD Vault: Manage Vault: Fully withdrawing all FXD is successful", async ({
+  test("FXD Vault: Manage Vault: Fully withdrawing all FXD is successful", async ({
     vaultPage,
   }) => {
+    test.setTimeout(150000);
+    const depositAmount = 1;
     await vaultPage.navigate();
     await metamask.switchAccount("Account 1");
     await vaultPage.connectWallet(WalletConnectOptions.Metamask);
     await vaultPage.validateConnectedWalletAddress();
-    // ...
+    const newAddress = await metamask.getWalletAddress();
+    console.log(newAddress);
+    await vaultPage.mintStableCoinToAddress(newAddress, depositAmount);
+    await vaultPage.transferTestXdcToAddress(newAddress, 1);
+    await vaultPage.page.waitForTimeout(5000);
+    await vaultPage.page.reload();
+    await vaultPage.page.waitForLoadState("load");
+    await vaultPage.depositFirstTime({
+      id: fxdVaultData.id,
+      depositAmount,
+    });
+    await vaultPage.manageVaultWithdrawFully({ id: fxdVaultData.id });
+    await vaultPage.validateRowActionButton(fxdVaultData.id, "Deposit");
+    await vaultPage.validateYourPositionTabNotVisible(fxdVaultData.id);
+    expect(await vaultPage.getStakedVaultRowValue(fxdVaultData.id)).toEqual(0);
   });
 });
