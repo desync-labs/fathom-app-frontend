@@ -3,6 +3,8 @@ import { ICollateralPool } from "fathom-sdk";
 
 import { styled } from "@mui/material/styles";
 import { Box } from "@mui/material";
+import BigNumber from "bignumber.js";
+import usePricesContext from "context/prices";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatCurrency, formatNumber } from "utils/format";
 import { TVL, PoolName } from "components/AppComponents/AppBox/AppBox";
@@ -76,6 +78,7 @@ const PoolsListItemMobile: FC<PoolsListItemMobilePropsType> = ({
   pool,
   setSelectedPool,
 }) => {
+  const { wxdcPrice } = usePricesContext();
   return (
     <PoolsListItemMobileContainer>
       <ListItemWrapper>
@@ -100,7 +103,13 @@ const PoolsListItemMobile: FC<PoolsListItemMobilePropsType> = ({
       <ListItemWrapper>
         <ListLabel>Price</ListLabel>
         <ListValue>
-          {formatCurrency(Number(pool.collateralPrice))}
+          {formatCurrency(
+            pool.poolName.toUpperCase() === "XDC"
+              ? BigNumber(wxdcPrice)
+                  .dividedBy(10 ** 18)
+                  .toNumber()
+              : pool.collateralPrice
+          )}
           <PriceChanged
             current={Number(pool.collateralPrice)}
             previous={Number(pool.collateralLastPrice)}
