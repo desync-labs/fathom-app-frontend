@@ -11,6 +11,7 @@ import {
 // @ts-ignore
 import * as metamask from "@synthetixio/synpress/commands/metamask";
 import { graphAPIEndpoints } from "../fixtures/api.data";
+
 export default class VaultPage extends BasePage {
   readonly path: string;
   readonly dialogManageVault: Locator;
@@ -486,6 +487,65 @@ export default class VaultPage extends BasePage {
     await this.page.waitForLoadState("load");
     await this.page.waitForTimeout(2000);
     return vaultDepositDataExpected;
+  }
+
+  async manageVaultWithdrawFully({ id }: { id: string }): Promise<void> {
+    await this.toggleFilter(VaultFilterName.LiveNow);
+    await this.extendVaultDetails(id);
+    await this.clickVaultDetailsTab(id, VaultDetailsTabs.YourPosition);
+    await this.getManageVaultButtonRowDetailsLocatorById(id).click();
+    await expect(this.dialogManageVault).toBeVisible();
+    await this.btnWithdrawNavManageDialogModal.click();
+    await this.page.waitForTimeout(500);
+    await this.btnMax.click();
+    await this.page.waitForTimeout(2000);
+    const depositedValueAfterText =
+      await this.spanDepositedValueAfterManageVaultDialog.textContent();
+    const poolShareValueAfterText =
+      await this.spanPoolShareValueAfterManageVaultDialog.textContent();
+    const shareTokensValueAfterText =
+      await this.spanShareTokensValueAfterManageVaultDialog.textContent();
+    let depositedValueAfter: number | null;
+    let poolShareValueAfter: number | null;
+    let shareTokensValueAfter: number | null;
+    if (
+      depositedValueAfterText !== null &&
+      poolShareValueAfterText !== null &&
+      shareTokensValueAfterText !== null
+    ) {
+      depositedValueAfter = extractNumericValue(depositedValueAfterText);
+      poolShareValueAfter = extractNumericValue(poolShareValueAfterText);
+      shareTokensValueAfter = extractNumericValue(shareTokensValueAfterText);
+    } else {
+      depositedValueAfter = null;
+      poolShareValueAfter = null;
+      shareTokensValueAfter = null;
+    }
+    expect.soft(depositedValueAfter).toEqual(0);
+    expect.soft(poolShareValueAfter).toEqual(0);
+    expect.soft(shareTokensValueAfter).toEqual(0);
+    await this.confirmWithdraw();
+    await Promise.all([
+      this.validateAlertMessage({
+        status: "pending",
+        title: "Handling Withdraw Rewards Pending",
+        body: "Click on transaction to view on Block Explorer.",
+      }),
+      this.validateAlertMessage({
+        status: "success",
+        title: "Withdraw was successful!",
+      }),
+      this.waitForGraphRequestByOperationName(
+        graphAPIEndpoints.vaultsSubgraph,
+        GraphOperationName.Vaults
+      ),
+      this.waitForGraphRequestByOperationName(
+        graphAPIEndpoints.vaultsSubgraph,
+        GraphOperationName.AccountVaultPositions
+      ),
+    ]);
+    await this.page.waitForLoadState("load");
+    await this.page.waitForTimeout(2000);
   }
 
   async approveTokensMaxUint() {
