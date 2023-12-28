@@ -49,17 +49,14 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     const depositAmount = 1;
     await vaultPage.navigate();
     await metamask.switchAccount("Account 1");
-    await vaultPage.connectWallet(WalletConnectOptions.Metamask);
-    await vaultPage.validateConnectedWalletAddress();
-    await vaultPage.validateRowActionButton(fxdVaultData.id, "Deposit");
-    await vaultPage.validateYourPositionTabNotVisible(fxdVaultData.id);
     const newAddress = await metamask.getWalletAddress();
     console.log(newAddress);
     await vaultPage.mintStableCoinToAddress(newAddress, depositAmount);
     await vaultPage.transferTestXdcToAddress(newAddress, 1);
-    await vaultPage.page.waitForTimeout(5000);
-    await vaultPage.page.reload();
-    await vaultPage.page.waitForLoadState("load");
+    await vaultPage.connectWallet(WalletConnectOptions.Metamask);
+    await vaultPage.validateConnectedWalletAddress();
+    await vaultPage.validateRowActionButton(fxdVaultData.id, "Deposit");
+    await vaultPage.validateYourPositionTabNotVisible(fxdVaultData.id);
     const vaultExpectedData = await vaultPage.depositFirstTime({
       id: fxdVaultData.id,
       depositAmount,
@@ -80,15 +77,12 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     const depositAmount = 1;
     await vaultPage.navigate();
     await metamask.switchAccount("Account 1");
-    await vaultPage.connectWallet(WalletConnectOptions.Metamask);
-    await vaultPage.validateConnectedWalletAddress();
     const newAddress = await metamask.getWalletAddress();
     console.log(newAddress);
     await vaultPage.mintStableCoinToAddress(newAddress, depositAmount);
     await vaultPage.transferTestXdcToAddress(newAddress, 1);
-    await vaultPage.page.waitForTimeout(5000);
-    await vaultPage.page.reload();
-    await vaultPage.page.waitForLoadState("load");
+    await vaultPage.connectWallet(WalletConnectOptions.Metamask);
+    await vaultPage.validateConnectedWalletAddress();
     await vaultPage.depositFirstTime({
       id: fxdVaultData.id,
       depositAmount,
