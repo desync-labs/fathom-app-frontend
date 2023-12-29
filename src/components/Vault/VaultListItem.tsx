@@ -317,7 +317,11 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
                   Deposit
                 </ButtonPrimary>
               )}{" "}
-            {!account && <WalletConnectBtn />}
+            {!account && (
+              <WalletConnectBtn
+                testId={`vaultRow-${vaultTestId}-connectWalletButton`}
+              />
+            )}
             <ExtendedBtn
               className={extended ? "visible" : "hidden"}
               onClick={() => setExtended(!extended)}

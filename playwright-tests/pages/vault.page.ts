@@ -7,6 +7,7 @@ import {
   VaultDepositData,
   VaultDetailsTabs,
   VaultFilterName,
+  WalletConnectOptions,
 } from "../types";
 // @ts-ignore
 import * as metamask from "@synthetixio/synpress/commands/metamask";
@@ -129,8 +130,14 @@ export default class VaultPage extends BasePage {
     return this.page.locator(`[data-testid="vaultRowDetails-${id}"]`);
   }
 
-  getActionButtonRowLocatorById(id: string): Locator {
+  getDepositButtonRowLocatorById(id: string): Locator {
     return this.page.locator(`[data-testid="vaultRow-${id}-depositButton"]`);
+  }
+
+  getConnectWalletButtonRowLocatorById(id: string): Locator {
+    return this.page.locator(
+      `[data-testid="vaultRow-${id}-connectWalletButton"]`
+    );
   }
 
   getManageVaultButtonRowDetailsLocatorById(id: string): Locator {
@@ -569,12 +576,12 @@ export default class VaultPage extends BasePage {
   }): Promise<VaultDepositData> {
     await this.toggleFilter(VaultFilterName.LiveNow);
     await expect
-      .soft(this.getActionButtonRowLocatorById(id))
+      .soft(this.getDepositButtonRowLocatorById(id))
       .toHaveText("Deposit");
     await expect
       .soft(this.getVaultDetailsTabLocator(id, VaultDetailsTabs.YourPosition))
       .not.toBeVisible();
-    await this.getActionButtonRowLocatorById(id).click();
+    await this.getDepositButtonRowLocatorById(id).click();
     await expect(this.diaologDepositToVaultModal).toBeVisible();
     await this.enterDepositAmount(depositAmount);
     await this.page.waitForTimeout(2000);
@@ -634,15 +641,21 @@ export default class VaultPage extends BasePage {
     return vaultDepositDataExpected;
   }
 
-  async validateRowActionButton(id: string, btnText: string): Promise<void> {
-    await expect
-      .soft(this.getActionButtonRowLocatorById(id))
-      .toHaveText(btnText);
-  }
-
   async validateYourPositionTabIsVisible(id: string): Promise<void> {
     await expect
       .soft(this.getVaultDetailsTabLocator(id, VaultDetailsTabs.YourPosition))
+      .toBeVisible();
+  }
+
+  async validateAboutTabIsVisible(id: string): Promise<void> {
+    await expect
+      .soft(this.getVaultDetailsTabLocator(id, VaultDetailsTabs.About))
+      .toBeVisible();
+  }
+
+  async validateStrategiesTabIsVisible(id: string): Promise<void> {
+    await expect
+      .soft(this.getVaultDetailsTabLocator(id, VaultDetailsTabs.Strategies))
       .toBeVisible();
   }
 
@@ -650,5 +663,19 @@ export default class VaultPage extends BasePage {
     await expect
       .soft(this.getVaultDetailsTabLocator(id, VaultDetailsTabs.YourPosition))
       .not.toBeVisible();
+  }
+
+  async connectWalletVault(
+    id: string,
+    wallet: WalletConnectOptions,
+    options?: { allAccounts: boolean }
+  ): Promise<void> {
+    await this.getConnectWalletButtonRowLocatorById(id).click();
+    await this.page.getByText(wallet).click();
+    if (options) {
+      await metamask.acceptAccess(options);
+    } else {
+      await metamask.acceptAccess();
+    }
   }
 }
