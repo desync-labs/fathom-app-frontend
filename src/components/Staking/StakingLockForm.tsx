@@ -22,6 +22,7 @@ import { formatCurrency, formatNumber, formatPercentage } from "utils/format";
 
 import usePricesContext from "context/prices";
 import BigNumber from "bignumber.js";
+import WalletConnectBtn from "components/Common/WalletConnectBtn";
 
 const StakingLockPaper = styled(AppPaper)`
   display: flex;
@@ -30,7 +31,7 @@ const StakingLockPaper = styled(AppPaper)`
   padding: 32px 32px 50px;
   gap: 35px;
   ${({ theme }) => theme.breakpoints.down("sm")} {
-    padding: 20px 12px 25px;
+    padding: 20px 20px 25px;
   }
   form {
     width: 100%;
@@ -89,6 +90,7 @@ const StakingLockFormTitle = styled("h2")`
 
 const StakingLockForm: FC = () => {
   const {
+    account,
     balanceError,
     lockDays,
     minLockPeriod,
@@ -249,104 +251,111 @@ const StakingLockForm: FC = () => {
           );
         }, [lockDays, unlockDate])}
 
-        <Grid container mt={3}>
-          {approvedBtn ? (
-            <ButtonPrimary
-              onClick={approveFTHM}
-              isLoading={approvalPending}
-              disabled={approvalPending}
-              sx={{ width: "100%", height: "48px" }}
-            >
-              {approvalPending ? (
-                <CircularProgress size={20} />
-              ) : (
-                "Approve FTHM"
-              )}
-            </ButtonPrimary>
-          ) : (
-            <ButtonPrimary
-              isLoading={isLoading}
-              disabled={isLoading}
-              type="submit"
-              sx={{ width: "100%", height: "48px" }}
-            >
-              {isLoading ? <CircularProgress size={30} /> : "Stake"}
-            </ButtonPrimary>
-          )}
+        {!account ? (
+          <WalletConnectBtn fullwidth sx={{ marginTop: 3 }} />
+        ) : (
+          <Grid container mt={3}>
+            {approvedBtn ? (
+              <ButtonPrimary
+                onClick={approveFTHM}
+                isLoading={approvalPending}
+                disabled={approvalPending}
+                sx={{ width: "100%", height: "48px" }}
+              >
+                {approvalPending ? (
+                  <CircularProgress size={20} />
+                ) : (
+                  "Approve FTHM"
+                )}
+              </ButtonPrimary>
+            ) : (
+              <ButtonPrimary
+                isLoading={isLoading}
+                disabled={isLoading}
+                type="submit"
+                sx={{ width: "100%", height: "48px" }}
+              >
+                {isLoading ? <CircularProgress size={30} /> : "Stake"}
+              </ButtonPrimary>
+            )}
 
-          <Grid item xs={12}>
-            <WalletBalanceTypography>My Wallet Balance</WalletBalanceTypography>
+            <Grid item xs={12}>
+              <WalletBalanceTypography>
+                My Wallet Balance
+              </WalletBalanceTypography>
 
-            <Grid container spacing={2}>
-              <Grid item xs={7}>
-                <WalletBalanceWrapper>
-                  <BalanceImg
-                    src={getTokenLogoURL("FTHM")}
-                    alt={"fthm"}
-                    width={24}
-                  />
-                  <Box>
-                    <FTHMBalance>
-                      <strong>{formatNumber(Number(fthmBalance))}</strong> FTHM
-                    </FTHMBalance>
-                    <USDBalance>
-                      {formatCurrency(
-                        BigNumber(fthmBalance)
-                          .multipliedBy(fthmPrice)
-                          .dividedBy(10 ** 18)
-                          .toNumber()
-                      )}
-                    </USDBalance>
-                  </Box>
-                </WalletBalanceWrapper>
-              </Grid>
-              <Grid item xs={5}>
-                <WalletBalanceWrapper>
-                  <BalanceImg
-                    src={getTokenLogoURL("FXD")}
-                    alt={"fxd"}
-                    width={24}
-                  />
-                  <Box>
-                    <FTHMBalance>
-                      <strong>{formatNumber(Number(fxdBalance))}</strong> FXD
-                    </FTHMBalance>
-                    <USDBalance>
-                      {formatCurrency(
-                        BigNumber(fxdBalance)
-                          .multipliedBy(fxdPrice)
-                          .dividedBy(10 ** 18)
-                          .toNumber()
-                      )}
-                    </USDBalance>
-                  </Box>
-                </WalletBalanceWrapper>
-              </Grid>
-              <Grid item xs={6}>
-                <WalletBalanceWrapper>
-                  <BalanceImg
-                    src={getTokenLogoURL("WXDC")}
-                    alt={"xdc"}
-                    width={24}
-                  />
-                  <Box>
-                    <FTHMBalance>
-                      <strong>{formatNumber(Number(xdcBalance))}</strong> XDC
-                    </FTHMBalance>
-                    <USDBalance>
-                      {formatCurrency(
-                        BigNumber(xdcBalance)
-                          .multipliedBy(wxdcPrice)
-                          .dividedBy(10 ** 18)
-                          .toNumber()
-                      )}
-                    </USDBalance>
-                  </Box>
-                </WalletBalanceWrapper>
+              <Grid container spacing={2}>
+                <Grid item xs={7}>
+                  <WalletBalanceWrapper>
+                    <BalanceImg
+                      src={getTokenLogoURL("FTHM")}
+                      alt={"fthm"}
+                      width={24}
+                    />
+                    <Box>
+                      <FTHMBalance>
+                        <strong>{formatNumber(Number(fthmBalance))}</strong>{" "}
+                        FTHM
+                      </FTHMBalance>
+                      <USDBalance>
+                        {formatCurrency(
+                          BigNumber(fthmBalance)
+                            .multipliedBy(fthmPrice)
+                            .dividedBy(10 ** 18)
+                            .toNumber()
+                        )}
+                      </USDBalance>
+                    </Box>
+                  </WalletBalanceWrapper>
+                </Grid>
+                <Grid item xs={5}>
+                  <WalletBalanceWrapper>
+                    <BalanceImg
+                      src={getTokenLogoURL("FXD")}
+                      alt={"fxd"}
+                      width={24}
+                    />
+                    <Box>
+                      <FTHMBalance>
+                        <strong>{formatNumber(Number(fxdBalance))}</strong> FXD
+                      </FTHMBalance>
+                      <USDBalance>
+                        {formatCurrency(
+                          BigNumber(fxdBalance)
+                            .multipliedBy(fxdPrice)
+                            .dividedBy(10 ** 18)
+                            .toNumber()
+                        )}
+                      </USDBalance>
+                    </Box>
+                  </WalletBalanceWrapper>
+                </Grid>
+                <Grid item xs={6}>
+                  <WalletBalanceWrapper>
+                    <BalanceImg
+                      src={getTokenLogoURL("WXDC")}
+                      alt={"xdc"}
+                      width={24}
+                    />
+                    <Box>
+                      <FTHMBalance>
+                        <strong>{formatNumber(Number(xdcBalance))}</strong> XDC
+                      </FTHMBalance>
+                      <USDBalance>
+                        {formatCurrency(
+                          BigNumber(xdcBalance)
+                            .multipliedBy(wxdcPrice)
+                            .dividedBy(10 ** 18)
+                            .toNumber()
+                        )}
+                      </USDBalance>
+                    </Box>
+                  </WalletBalanceWrapper>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
-        </Grid>
+        )}
       </form>
     </StakingLockPaper>
   );
