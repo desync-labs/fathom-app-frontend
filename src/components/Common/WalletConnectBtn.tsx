@@ -28,9 +28,14 @@ export const WalletButton = styled(Button)`
 type WalletConnectBtnPropsTypes = {
   fullwidth?: boolean | undefined;
   sx?: SxProps<Theme> | undefined;
+  testId?: string;
 };
 
-const WalletConnectBtn = ({ fullwidth, sx }: WalletConnectBtnPropsTypes) => {
+const WalletConnectBtn = ({
+  fullwidth,
+  sx,
+  testId,
+}: WalletConnectBtnPropsTypes) => {
   const { openConnectorMenu } = useConnector();
   return (
     <WalletButton
@@ -38,6 +43,7 @@ const WalletConnectBtn = ({ fullwidth, sx }: WalletConnectBtnPropsTypes) => {
       startIcon={<AccountBalanceWalletIcon />}
       fullWidth={fullwidth}
       sx={sx}
+      data-testid={testId}
     >
       Connect Wallet
     </WalletButton>
