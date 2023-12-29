@@ -36,6 +36,7 @@ import ProposeActionFields from "./Propose/ProposeActionFields";
 import ProposeNotices from "./Propose/ProposeNotices";
 import BigNumber from "bignumber.js";
 import useSharedContext from "context/shared";
+import WalletConnectBtn from "components/Common/WalletConnectBtn";
 
 export const ProposeLabel = styled(AppFormLabel)`
   float: none;
@@ -123,6 +124,7 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
     handleSubmit,
     control,
     onSubmit,
+    account,
     vBalance,
     vBalanceError,
     saveForLater,
@@ -171,6 +173,7 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
                     )}
                   </BalanceBox>
                 )}
+                {!account && <BalanceBox component="span">0</BalanceBox>}
                 <CurrencyBox component="span">vFHTM</CurrencyBox>
               </Stack>
             </Grid>
@@ -340,17 +343,11 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
                 )}
               </Grid>
               <Grid item xs={12}>
-                <Grid container spacing={1}>
-                  {isMobile && (
-                    <Grid item xs={12}>
-                      <ProposeButtonPrimary
-                        type="submit"
-                        sx={{ width: "100%" }}
-                      >
-                        Submit proposal
-                      </ProposeButtonPrimary>
-                    </Grid>
-                  )}
+                <Grid
+                  container
+                  spacing={1}
+                  flexDirection={isMobile ? "column-reverse" : "row"}
+                >
                   <Grid item xs={12} sm={4}>
                     <ProposeButtonSecondary
                       type="button"
@@ -360,8 +357,8 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
                       Save for later
                     </ProposeButtonSecondary>
                   </Grid>
-                  {!isMobile && (
-                    <Grid item sm={8}>
+                  <Grid item xs={12} sm={8}>
+                    {account ? (
                       <ProposeButtonPrimary
                         type="submit"
                         sx={{ width: "100%" }}
@@ -372,8 +369,10 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
                           "Submit proposal"
                         )}
                       </ProposeButtonPrimary>
-                    </Grid>
-                  )}
+                    ) : (
+                      <WalletConnectBtn fullwidth sx={{ height: "48px" }} />
+                    )}
+                  </Grid>
                 </Grid>
               </Grid>
             </Box>

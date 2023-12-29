@@ -193,6 +193,7 @@ const useStakingLockForm = () => {
   }, [lockDays]);
 
   return {
+    account,
     balanceError,
     unlockDate,
     lockDays,

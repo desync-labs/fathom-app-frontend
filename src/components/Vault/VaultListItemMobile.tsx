@@ -291,7 +291,7 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
             Deposit
           </ButtonPrimary>
         )}
-      {!account && <WalletConnectBtn fullwidth />}
+      {!account && <WalletConnectBtn fullwidth sx={{ marginTop: "16px" }} />}
       <ExtendedBtnWrapper>
         <ExtendedBtn
           className={extended ? "visible" : "hidden"}
