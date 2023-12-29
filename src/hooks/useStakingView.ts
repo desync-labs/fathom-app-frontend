@@ -121,7 +121,8 @@ const useStakingView = () => {
         if (
           stakesData?.stakers?.length &&
           stakesData?.stakers[0].lockPositions.length &&
-          !stakesLoading
+          !stakesLoading &&
+          account
         ) {
           const promises: Promise<eBigNumber>[] = [];
           stakesData?.stakers[0].lockPositions.forEach(
@@ -165,9 +166,7 @@ const useStakingView = () => {
   );
 
   useEffect(() => {
-    if (account) {
-      fetchPositions(stakesData, account, stakesLoading);
-    }
+    fetchPositions(stakesData, account, stakesLoading);
   }, [stakesData, account, stakesLoading, fetchPositions]);
 
   /**
@@ -388,7 +387,7 @@ const useStakingView = () => {
     onClose,
     processFlow,
     stake:
-      !stakesLoading && stakesData?.stakers?.length
+      account && !stakesLoading && stakesData?.stakers?.length
         ? stakesData.stakers[0]
         : null,
     previousStake: stakesPreviousData?.stakers?.length

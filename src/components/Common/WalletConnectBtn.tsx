@@ -1,4 +1,4 @@
-import { Button, styled } from "@mui/material";
+import { Button, SxProps, Theme, styled } from "@mui/material";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import useConnector from "context/connector";
 
@@ -27,11 +27,13 @@ export const WalletButton = styled(Button)`
 
 type WalletConnectBtnPropsTypes = {
   fullwidth?: boolean | undefined;
+  sx?: SxProps<Theme> | undefined;
   testId?: string;
 };
 
 const WalletConnectBtn = ({
   fullwidth,
+  sx,
   testId,
 }: WalletConnectBtnPropsTypes) => {
   const { openConnectorMenu } = useConnector();
@@ -40,6 +42,7 @@ const WalletConnectBtn = ({
       onClick={openConnectorMenu}
       startIcon={<AccountBalanceWalletIcon />}
       fullWidth={fullwidth}
+      sx={sx}
       data-testid={testId}
     >
       Connect Wallet
