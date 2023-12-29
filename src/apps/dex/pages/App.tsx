@@ -23,13 +23,9 @@ const BodyWrapper = styled.div`
   overflow-x: hidden;
   z-index: 1;
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    padding: 16px 0;
+    padding: 0;
     padding-top: 2rem;
   `};
-`;
-
-const Marginer = styled.div`
-  margin-top: 5rem;
 `;
 
 const App = () => {
@@ -45,7 +41,6 @@ const App = () => {
           <Popups />
           <Polling />
           <Outlet />
-          <Marginer />
         </BodyWrapper>
       </AppWrapper>
     </Suspense>
