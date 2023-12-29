@@ -27,15 +27,20 @@ export const WalletButton = styled(Button)`
 
 type WalletConnectBtnPropsTypes = {
   fullwidth?: boolean | undefined;
+  testId?: string;
 };
 
-const WalletConnectBtn = ({ fullwidth }: WalletConnectBtnPropsTypes) => {
+const WalletConnectBtn = ({
+  fullwidth,
+  testId,
+}: WalletConnectBtnPropsTypes) => {
   const { openConnectorMenu } = useConnector();
   return (
     <WalletButton
       onClick={openConnectorMenu}
       startIcon={<AccountBalanceWalletIcon />}
       fullWidth={fullwidth}
+      data-testid={testId}
     >
       Connect Wallet
     </WalletButton>
