@@ -47,12 +47,12 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     vaultPage,
   }) => {
     const depositAmount = 1;
-    await vaultPage.navigate();
     await metamask.switchAccount("Account 1");
     const newAddress = await metamask.getWalletAddress();
     console.log(newAddress);
     await vaultPage.mintStableCoinToAddress(newAddress, depositAmount);
     await vaultPage.transferTestXdcToAddress(newAddress, 1);
+    await vaultPage.navigate();
     await vaultPage.connectWallet(WalletConnectOptions.Metamask);
     await vaultPage.validateConnectedWalletAddress();
     await vaultPage.validateRowActionButton(fxdVaultData.id, "Deposit");
@@ -75,10 +75,10 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
   }) => {
     test.setTimeout(150000);
     const depositAmount = 1;
-    await vaultPage.navigate();
     await metamask.switchAccount("Account 1");
     const newAddress = await metamask.getWalletAddress();
     console.log(newAddress);
+    await vaultPage.navigate();
     await vaultPage.mintStableCoinToAddress(newAddress, depositAmount);
     await vaultPage.transferTestXdcToAddress(newAddress, 1);
     await vaultPage.connectWallet(WalletConnectOptions.Metamask);
