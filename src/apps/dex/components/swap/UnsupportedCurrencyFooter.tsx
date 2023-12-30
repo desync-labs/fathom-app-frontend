@@ -14,9 +14,9 @@ import { wrappedCurrency } from "apps/dex/utils/wrappedCurrency";
 import { useSupportedTokens } from "apps/dex/hooks/Tokens";
 
 const DetailsFooter = styled.div<{ show: boolean }>`
-  padding-top: calc(16px + 2rem);
-  padding-bottom: 20px;
-  margin-top: -2rem;
+  padding-top: ${({ show }) => (show ? "calc(16px + 2rem)" : "0")};
+  padding-bottom: ${({ show }) => (show ? "20px" : "0")};
+  margin-top: ${({ show }) => (show ? "-2rem" : "0")};
   width: 100%;
   max-width: 400px;
   border-bottom-left-radius: 20px;

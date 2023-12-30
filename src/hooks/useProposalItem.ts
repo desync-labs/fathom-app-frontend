@@ -126,7 +126,9 @@ const useProposalItem = () => {
           )
           .toNumber();
       } else {
-        const blockData = await library.getBlock(data.proposal.endBlock);
+        const blockData = await library.getBlock(
+          Number(data.proposal.endBlock)
+        );
         endTimestamp = blockData.timestamp;
       }
 
