@@ -7,9 +7,9 @@ import {
 import { FC } from "react";
 
 const AdvancedDetailsFooter = styled.div<{ show: boolean }>`
-  padding-top: calc(16px + 2rem);
-  padding-bottom: 16px;
-  margin-top: -2rem;
+  padding-top: ${({ show }) => (show ? "calc(16px + 2rem)" : "0")};
+  padding-bottom: ${({ show }) => (show ? "16px" : "0")};
+  margin-top: ${({ show }) => (show ? "-2rem" : "0")};
   width: 100%;
   max-width: 400px;
   border-bottom-left-radius: 20px;

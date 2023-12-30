@@ -44,7 +44,7 @@ const useViewProposalItem = (proposal: IProposal) => {
         )
         .toNumber();
     } else {
-      const blockData = await library.getBlock(proposal.endBlock);
+      const blockData = await library.getBlock(Number(proposal.endBlock));
       endTimestamp = blockData.timestamp;
     }
 
