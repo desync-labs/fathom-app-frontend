@@ -14,6 +14,7 @@ import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 import { DEFAULT_CHAIN_ID } from "utils/Constants";
 import BigNumber from "bignumber.js";
+import moment from "moment";
 
 type PricesProviderType = {
   children: ReactElement;
@@ -21,8 +22,9 @@ type PricesProviderType = {
 
 export type UsePricesContextReturn = {
   fxdPrice: string;
-  wxdcPrice: string;
+  xdcPrice: string;
   fthmPrice: string;
+  prevXdcPrice: string | null;
 };
 
 export const PricesContext = createContext<UsePricesContextReturn>(
@@ -35,7 +37,8 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
   const { provider } = useServices();
 
   const [fxdPrice, setFxdPrice] = useState<string>("0");
-  const [wxdcPrice, setWxdcPrice] = useState<string>("0");
+  const [xdcPrice, setXdcPrice] = useState<string>("0");
+  const [prevXdcPrice, setPrevXdcPrice] = useState<string | null>(null);
   const [fthmPrice, setFthmPrice] = useState<string>("0");
 
   const { syncDao, prevSyncDao, syncFXD, prevSyncFxd } = useSyncContext();
@@ -92,8 +95,39 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
               .multipliedBy(10 ** 18)
               .toString();
 
-            setWxdcPrice(xdcUsdtPrice[0].toString());
+            setXdcPrice(xdcUsdtPrice[0].toString());
             setFxdPrice(fxdPrice);
+
+            const prevPriceData = localStorage.getItem("prevPrice");
+            const startOfDay = moment().startOf("day").utc();
+            const now = Date.now() / 1000;
+
+            if (!prevPriceData) {
+              localStorage.setItem(
+                "prevPrice",
+                JSON.stringify({
+                  value: xdcUsdtPrice[0].toString(),
+                  time: now,
+                })
+              );
+            } else {
+              const parsedData = JSON.parse(prevPriceData) as {
+                value: string;
+                time: string;
+              };
+
+              if (BigNumber(parsedData.time).isLessThan(startOfDay.unix())) {
+                localStorage.setItem(
+                  "prevPrice",
+                  JSON.stringify({
+                    value: xdcUsdtPrice[0].toString(),
+                    time: now,
+                  })
+                );
+              } else {
+                setPrevXdcPrice(parsedData.value);
+              }
+            }
 
             let fthmPriceValue: string;
             if (process.env.REACT_APP_ENV === "prod") {
@@ -111,7 +145,7 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
             console.log({
               "fthm/usdt": fthmPriceValue,
               "fxd/usdt": fxdPrice,
-              "wxdc/usdt": xdcUsdtPrice[0].toString(),
+              "xdc/usdt": xdcUsdtPrice[0].toString(),
             });
           })
           .catch((e) => {
@@ -130,7 +164,7 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
     wxdcTokenAddress,
     setFxdPrice,
     setFthmPrice,
-    setWxdcPrice,
+    setXdcPrice,
   ]);
 
   useEffect(() => {
@@ -146,10 +180,11 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
   const values = useMemo(() => {
     return {
       fxdPrice,
-      wxdcPrice,
+      xdcPrice,
       fthmPrice,
+      prevXdcPrice,
     };
-  }, [fxdPrice, wxdcPrice, fthmPrice]);
+  }, [fxdPrice, xdcPrice, fthmPrice, prevXdcPrice]);
 
   return (
     <PricesContext.Provider value={values}>{children}</PricesContext.Provider>
