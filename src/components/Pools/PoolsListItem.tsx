@@ -51,7 +51,7 @@ const PoolsListItem: FC<PoolsListItemPropsType> = ({
   pool,
   setSelectedPool,
 }) => {
-  const { wxdcPrice, prevXdcPrice } = usePricesContext();
+  const { xdcPrice, prevXdcPrice } = usePricesContext();
   return (
     <PoolsListItemTableRow
       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -74,7 +74,7 @@ const PoolsListItem: FC<PoolsListItemPropsType> = ({
         <PriceWrapper>
           {formatNumberPrice(
             pool.poolName.toUpperCase() === "XDC"
-              ? BigNumber(wxdcPrice)
+              ? BigNumber(xdcPrice)
                   .dividedBy(10 ** 18)
                   .toNumber()
               : pool.collateralPrice
@@ -82,7 +82,7 @@ const PoolsListItem: FC<PoolsListItemPropsType> = ({
           <PriceChanged
             current={
               pool.poolName.toUpperCase() === "XDC"
-                ? BigNumber(wxdcPrice)
+                ? BigNumber(xdcPrice)
                     .dividedBy(10 ** 18)
                     .toNumber()
                 : pool.collateralPrice

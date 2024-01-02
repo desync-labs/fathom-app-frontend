@@ -22,7 +22,7 @@ type PricesProviderType = {
 
 export type UsePricesContextReturn = {
   fxdPrice: string;
-  wxdcPrice: string;
+  xdcPrice: string;
   fthmPrice: string;
   prevXdcPrice: string | null;
 };
@@ -37,7 +37,7 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
   const { provider } = useServices();
 
   const [fxdPrice, setFxdPrice] = useState<string>("0");
-  const [wxdcPrice, setWxdcPrice] = useState<string>("0");
+  const [xdcPrice, setXdcPrice] = useState<string>("0");
   const [prevXdcPrice, setPrevXdcPrice] = useState<string | null>(null);
   const [fthmPrice, setFthmPrice] = useState<string>("0");
 
@@ -95,7 +95,7 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
               .multipliedBy(10 ** 18)
               .toString();
 
-            setWxdcPrice(xdcUsdtPrice[0].toString());
+            setXdcPrice(xdcUsdtPrice[0].toString());
             setFxdPrice(fxdPrice);
 
             const prevPriceData = localStorage.getItem("prevPrice");
@@ -164,7 +164,7 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
     wxdcTokenAddress,
     setFxdPrice,
     setFthmPrice,
-    setWxdcPrice,
+    setXdcPrice,
   ]);
 
   useEffect(() => {
@@ -180,11 +180,11 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
   const values = useMemo(() => {
     return {
       fxdPrice,
-      wxdcPrice,
+      xdcPrice,
       fthmPrice,
       prevXdcPrice,
     };
-  }, [fxdPrice, wxdcPrice, fthmPrice, prevXdcPrice]);
+  }, [fxdPrice, xdcPrice, fthmPrice, prevXdcPrice]);
 
   return (
     <PricesContext.Provider value={values}>{children}</PricesContext.Provider>
