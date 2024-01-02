@@ -137,7 +137,7 @@ const MenuWrapper = styled("nav")<{ open: boolean }>`
   gap: 14px;
 `;
 
-export const AccountElement = styled("div")<{ active: boolean }>`
+export const AccountElement = styled("div")<{ active: string }>`
   display: flex;
   flex-direction: row;
   align-items: end;
@@ -347,7 +347,7 @@ const MainLayout = () => {
             {aggregateBalance && (
               <FTHMWrapper onClick={() => setShowFthmBalanceModal(true)}>
                 <FTHMAmount
-                  active={!!account}
+                  active={account ? "true" : "false"}
                   style={{ pointerEvents: "auto" }}
                 >
                   {account && (
@@ -372,7 +372,7 @@ const MainLayout = () => {
               </FTHMWrapper>
             )}
             <AccountElement
-              active={!!account}
+              active={account ? "true" : "false"}
               style={{ pointerEvents: "auto" }}
             >
               {account && userXDCBalance ? (

@@ -83,6 +83,10 @@ const VaultItemAbout: FC<VaultItemAboutPropsTypes> = ({ vaultItemData }) => {
         }
       );
 
+      if (!reportsWithinPeriod.length) {
+        return strategy.reports[0].results[0].apr;
+      }
+
       const aprValues = reportsWithinPeriod.flatMap(
         (report: IVaultStrategyReport) =>
           report.results.map((result: any) => parseFloat(result.apr))
