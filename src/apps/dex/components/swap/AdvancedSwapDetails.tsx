@@ -1,9 +1,10 @@
 import { Trade, TradeType } from "into-the-fathom-swap-sdk";
 import { FC, useContext } from "react";
+import { Link } from "react-router-dom";
 import styled, { ThemeContext } from "styled-components";
 import { Field } from "apps/dex/state/swap/actions";
 import { useUserSlippageTolerance } from "apps/dex/state/user/hooks";
-import { TYPE, ExternalLink } from "apps/dex/theme";
+import { TYPE } from "apps/dex/theme";
 import {
   computeSlippageAdjustedAmounts,
   computeTradePriceBreakdown,
@@ -14,7 +15,7 @@ import { RowBetween, RowFixed } from "apps/dex/components/Row";
 import FormattedPriceImpact from "apps/dex/components/swap/FormattedPriceImpact";
 import SwapRoute from "apps/dex/components/swap/SwapRoute";
 
-const InfoLink = styled(ExternalLink)`
+const InfoLink = styled(Link)`
   width: 100%;
   border: 1px solid ${({ theme }) => theme.bg3};
   padding: 6px 6px;
@@ -127,9 +128,8 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
           {!showRoute && (
             <AutoColumn style={{ padding: "12px 16px 0 16px" }}>
               <InfoLink
-                href={
-                  "https://charts.fathom.fi/#/pair/" +
-                  trade.route.pairs[0].liquidityToken.address
+                to={
+                  "/charts/pair/" + trade.route.pairs[0].liquidityToken.address
                 }
                 target="_blank"
               >
