@@ -41,7 +41,7 @@ const List = styled(Box)`
   -webkit-overflow-scrolling: touch;
 `;
 
-const DashGrid = styled.div`
+export const DashGrid = styled.div`
   display: grid;
   grid-gap: 1em;
   grid-template-columns: 100px 1fr 1fr;
@@ -107,7 +107,7 @@ const ClickableText = styled(Text)`
   }
 `;
 
-const DataText = styled(Flex)`
+export const DataText = styled(Flex)`
   align-items: center;
   text-align: right;
   color: ${({ theme }) => theme.text1};
@@ -137,7 +137,7 @@ const SORT_FIELD = {
   TIMESTAMP: "timestamp",
 };
 
-const TXN_TYPE = {
+export const TXN_TYPE = {
   ALL: "All",
   SWAP: "Swaps",
   ADD: "Adds",
@@ -146,18 +146,49 @@ const TXN_TYPE = {
 
 const ITEMS_PER_PAGE = 10;
 
-function getTransactionType(event: any, symbol0: string, symbol1: string) {
+export function getTransactionType(
+  event: any,
+  symbol0: string,
+  symbol1: string,
+  amount0 = "",
+  amount1 = "",
+  time = ""
+) {
   const formattedS0 =
     symbol0?.length > 8 ? symbol0.slice(0, 7) + "..." : symbol0;
   const formattedS1 =
     symbol1?.length > 8 ? symbol1.slice(0, 7) + "..." : symbol1;
   switch (event) {
     case TXN_TYPE.ADD:
-      return "Add " + formattedS0 + " and " + formattedS1;
+      return (
+        "Add %amount0 " +
+        formattedS0 +
+        " and %amount1 " +
+        formattedS1 +
+        ` ${time}`
+      )
+        .replace(/%amount0/g, amount0)
+        .replace(/%amount1/g, amount1);
     case TXN_TYPE.REMOVE:
-      return "Remove " + formattedS0 + " and " + formattedS1;
+      return (
+        "Remove %amount0 " +
+        formattedS0 +
+        " and %amount1 " +
+        formattedS1 +
+        ` ${time}`
+      )
+        .replace(/%amount0/g, amount0)
+        .replace(/%amount1/g, amount1);
     case TXN_TYPE.SWAP:
-      return "Swap " + formattedS0 + " for " + formattedS1;
+      return (
+        "Swap %amount0 " +
+        formattedS0 +
+        " for  %amount1 " +
+        formattedS1 +
+        ` ${time}`
+      )
+        .replace(/%amount0/g, amount0)
+        .replace(/%amount1/g, amount1);
     default:
       return "";
   }

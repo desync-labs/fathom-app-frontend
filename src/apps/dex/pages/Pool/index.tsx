@@ -6,12 +6,7 @@ import { SwapPoolTabs } from "apps/dex/components/NavigationTabs";
 
 import FullPositionCard from "apps/dex/components/PositionCard";
 import { useTokenBalancesWithLoadingIndicator } from "apps/dex/state/wallet/hooks";
-import {
-  StyledInternalLink,
-  ExternalLink,
-  TYPE,
-  HideSmall,
-} from "apps/dex/theme";
+import { StyledInternalLink, TYPE, HideSmall } from "apps/dex/theme";
 import { Text } from "rebass";
 import Card from "apps/dex/components/Card";
 import { RowBetween, RowFixed } from "apps/dex/components/Row";
@@ -203,11 +198,9 @@ const Pool = () => {
               <>
                 <ButtonSecondary>
                   <RowBetween>
-                    <ExternalLink
-                      href={"https://charts.fathom.fi/#/account/" + account}
-                    >
+                    <StyledInternalLink to={"/charts/account/" + account}>
                       Account analytics and accrued fees
-                    </ExternalLink>
+                    </StyledInternalLink>
                     <span> ↗</span>
                   </RowBetween>
                 </ButtonSecondary>
