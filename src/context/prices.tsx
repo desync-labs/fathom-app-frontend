@@ -14,7 +14,7 @@ import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 import { DEFAULT_CHAIN_ID } from "utils/Constants";
 import BigNumber from "bignumber.js";
-import moment from "moment";
+import dayjs from "dayjs";
 
 type PricesProviderType = {
   children: ReactElement;
@@ -99,7 +99,7 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
             setFxdPrice(fxdPrice);
 
             const prevPriceData = localStorage.getItem("prevPrice");
-            const startOfDay = moment().startOf("day").utc();
+            const startOfDay = dayjs().startOf("day").unix();
             const now = Date.now() / 1000;
 
             if (!prevPriceData) {
@@ -116,7 +116,7 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
                 time: string;
               };
 
-              if (BigNumber(parsedData.time).isLessThan(startOfDay.unix())) {
+              if (BigNumber(parsedData.time).isLessThan(startOfDay)) {
                 localStorage.setItem(
                   "prevPrice",
                   JSON.stringify({

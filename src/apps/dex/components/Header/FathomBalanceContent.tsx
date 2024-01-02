@@ -11,7 +11,7 @@ import {
   useAggregateUniBalance,
   useTokenBalance,
 } from "apps/dex/state/wallet/hooks";
-import { ExternalLink, TYPE, FthmTokenAnimated } from "apps/dex/theme";
+import { TYPE, FthmTokenAnimated, StyledInternalLink } from "apps/dex/theme";
 import { computeUniCirculation } from "apps/dex/utils/computeUniCirculation";
 import { AutoColumn } from "apps/dex/components/Column";
 import { RowBetween } from "apps/dex/components/Row";
@@ -148,11 +148,9 @@ const FathomBalanceContent: FC<FathomBalanceContent> = ({
               </TYPE.white>
             </RowBetween>
             {fthm && fthm.chainId === ChainId.XDC ? (
-              <ExternalLink
-                href={`https://charts.fathom.fi/token/${fthm.address}`}
-              >
+              <StyledInternalLink to={`/charts/token/${fthm.address}`}>
                 View FTHM Analytics
-              </ExternalLink>
+              </StyledInternalLink>
             ) : null}
           </AutoColumn>
         </CardSection>
