@@ -9,7 +9,7 @@ import {
   useState,
 } from "react";
 
-import { client } from "apps/charts/apollo/client";
+import { dexClient as client } from "apollo/client";
 import {
   FILTERED_TRANSACTIONS,
   HOURLY_PAIR_RATES,

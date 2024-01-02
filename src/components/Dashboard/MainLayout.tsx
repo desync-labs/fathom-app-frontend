@@ -96,6 +96,9 @@ import {
   useGlobalChartData,
   useGlobalData,
 } from "apps/charts/contexts/GlobalData";
+import { ApolloProvider } from "@apollo/client";
+import { dexClient } from "apollo/client";
+import Transactions from "apps/dex/pages/Transactions";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -528,6 +531,14 @@ const MainLayout = () => {
                 <Route
                   path="remove/:currencyIdA/:currencyIdB"
                   element={<RemoveLiquidity />}
+                />
+                <Route
+                  path="transactions"
+                  element={
+                    <ApolloProvider client={dexClient}>
+                      <Transactions />
+                    </ApolloProvider>
+                  }
                 />
                 <Route element={<RedirectPathToSwapOnly />} />
               </Route>
