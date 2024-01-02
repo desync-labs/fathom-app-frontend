@@ -274,7 +274,7 @@ const useStableSwap = (options: string[]) => {
   );
 
   const changeCurrenciesPosition = useCallback(
-    (inputValue: string, outputValue: string) => {
+    (_: string, outputValue: string) => {
       setInputCurrency(outputCurrency);
       setOutputCurrency(inputCurrency);
       if (outputValue) {
