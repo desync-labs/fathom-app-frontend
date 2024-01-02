@@ -35,7 +35,7 @@ const useStakingItemView = (lockPosition: ILockPosition) => {
   }, [lockPosition, setSeconds]);
 
   useEffect(() => {
-    let interval: NodeJS.Timer | undefined;
+    let interval: ReturnType<typeof setInterval> | undefined;
 
     if (seconds > 0 && !interval) {
       interval = setInterval(() => {
