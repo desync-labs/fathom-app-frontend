@@ -78,7 +78,7 @@ const PoolsListItemMobile: FC<PoolsListItemMobilePropsType> = ({
   pool,
   setSelectedPool,
 }) => {
-  const { wxdcPrice } = usePricesContext();
+  const { xdcPrice } = usePricesContext();
   return (
     <PoolsListItemMobileContainer>
       <ListItemWrapper>
@@ -105,7 +105,7 @@ const PoolsListItemMobile: FC<PoolsListItemMobilePropsType> = ({
         <ListValue>
           {formatCurrency(
             pool.poolName.toUpperCase() === "XDC"
-              ? BigNumber(wxdcPrice)
+              ? BigNumber(xdcPrice)
                   .dividedBy(10 ** 18)
                   .toNumber()
               : pool.collateralPrice

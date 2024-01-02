@@ -109,7 +109,7 @@ const StakingLockForm: FC = () => {
     xdcBalance,
   } = useStakingLockForm();
 
-  const { fthmPrice, wxdcPrice, fxdPrice } = usePricesContext();
+  const { fthmPrice, xdcPrice, fxdPrice } = usePricesContext();
 
   return (
     <StakingLockPaper>
@@ -344,7 +344,7 @@ const StakingLockForm: FC = () => {
                       <USDBalance>
                         {formatCurrency(
                           BigNumber(xdcBalance)
-                            .multipliedBy(wxdcPrice)
+                            .multipliedBy(xdcPrice)
                             .dividedBy(10 ** 18)
                             .toNumber()
                         )}
