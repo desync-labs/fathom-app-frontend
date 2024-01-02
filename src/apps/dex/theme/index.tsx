@@ -236,7 +236,7 @@ export const ThemedGlobalStyle = createGlobalStyle`
   }
 
   body {
-    min-height: 100vh;
+    min-height: -webkit-fill-available;
     background-position: 0 -30vh;
     background-repeat: no-repeat;
     background: linear-gradient(180deg, #000817 7.88%, #0D1725 113.25%);
