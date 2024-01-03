@@ -8,7 +8,7 @@ import {
   useState,
   FC,
 } from "react";
-import { client } from "apps/charts/apollo/client";
+import { dexClient as client } from "apollo/client";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { ProviderProps, useTimeframe } from "apps/charts/contexts/Application";

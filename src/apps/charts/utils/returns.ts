@@ -1,5 +1,5 @@
 import { USER_MINTS_BURNS_PER_PAIR } from "apps/charts/apollo/queries";
-import { client } from "apps/charts/apollo/client";
+import { dexClient as client } from "apollo/client";
 import dayjs from "dayjs";
 import { getShareValueOverTime } from "apps/charts/utils";
 

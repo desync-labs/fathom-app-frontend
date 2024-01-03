@@ -1,4 +1,4 @@
-import { useState, useEffect, FC } from "react";
+import { useState, useEffect, FC, useMemo, memo } from "react";
 import styled from "styled-components";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -41,7 +41,7 @@ const List = styled(Box)`
   -webkit-overflow-scrolling: touch;
 `;
 
-const DashGrid = styled.div`
+export const DashGrid = styled.div`
   display: grid;
   grid-gap: 1em;
   grid-template-columns: 100px 1fr 1fr;
@@ -107,7 +107,7 @@ const ClickableText = styled(Text)`
   }
 `;
 
-const DataText = styled(Flex)`
+export const DataText = styled(Flex)`
   align-items: center;
   text-align: right;
   color: ${({ theme }) => theme.text1};
@@ -137,7 +137,7 @@ const SORT_FIELD = {
   TIMESTAMP: "timestamp",
 };
 
-const TXN_TYPE = {
+export const TXN_TYPE = {
   ALL: "All",
   SWAP: "Swaps",
   ADD: "Adds",
@@ -146,18 +146,49 @@ const TXN_TYPE = {
 
 const ITEMS_PER_PAGE = 10;
 
-function getTransactionType(event: any, symbol0: string, symbol1: string) {
+export function getTransactionType(
+  event: any,
+  symbol0: string,
+  symbol1: string,
+  amount0 = "",
+  amount1 = "",
+  time = ""
+) {
   const formattedS0 =
     symbol0?.length > 8 ? symbol0.slice(0, 7) + "..." : symbol0;
   const formattedS1 =
     symbol1?.length > 8 ? symbol1.slice(0, 7) + "..." : symbol1;
   switch (event) {
     case TXN_TYPE.ADD:
-      return "Add " + formattedS0 + " and " + formattedS1;
+      return (
+        "Add %amount0 " +
+        formattedS0 +
+        " and %amount1 " +
+        formattedS1 +
+        ` ${time}`
+      )
+        .replace(/%amount0/g, amount0)
+        .replace(/%amount1/g, amount1);
     case TXN_TYPE.REMOVE:
-      return "Remove " + formattedS0 + " and " + formattedS1;
+      return (
+        "Remove %amount0 " +
+        formattedS0 +
+        " and %amount1 " +
+        formattedS1 +
+        ` ${time}`
+      )
+        .replace(/%amount0/g, amount0)
+        .replace(/%amount1/g, amount1);
     case TXN_TYPE.SWAP:
-      return "Swap " + formattedS0 + " for " + formattedS1;
+      return (
+        "Swap %amount0 " +
+        formattedS0 +
+        " for  %amount1 " +
+        formattedS1 +
+        ` ${time}`
+      )
+        .replace(/%amount0/g, amount0)
+        .replace(/%amount1/g, amount1);
     default:
       return "";
   }
@@ -170,8 +201,67 @@ type TxnListProps = {
   color?: any;
 };
 
+type ListItemProps = { item: any };
+
+const ListItem: FC<ListItemProps> = memo((props) => {
+  const { item } = props;
+  const [currency] = useCurrentCurrency();
+  const below1080 = useMedia("(max-width: 1080px)");
+  const below780 = useMedia("(max-width: 780px)");
+
+  return (
+    <DashGrid style={{ height: "48px", padding: "0px 1.125rem" }}>
+      <DataText fontWeight="500">
+        <Link external href={urls.showTransaction(item.hash)}>
+          {getTransactionType(item.type, item.token1Symbol, item.token0Symbol)}
+        </Link>
+      </DataText>
+      <DataText>
+        {currency === "XDC"
+          ? "Ξ " + formattedNum(item.valueETH)
+          : formattedNum(item.amountUSD, true)}
+      </DataText>
+      {!below780 && (
+        <>
+          <DataText>
+            {formattedNum(item.token1Amount) + " "}{" "}
+            <FormattedName
+              text={item.token1Symbol}
+              maxCharacters={5}
+              margin={true}
+            />
+          </DataText>
+          <DataText>
+            {formattedNum(item.token0Amount) + " "}{" "}
+            <FormattedName
+              text={item.token0Symbol}
+              maxCharacters={5}
+              margin={true}
+            />
+          </DataText>
+        </>
+      )}
+      {!below1080 && (
+        <DataText>
+          <Link
+            external
+            href={
+              "https://xdc.blocksscan.io/address/" +
+              item.account.replace(/^.{2}/g, "xdc")
+            }
+          >
+            {item.account &&
+              item.account.slice(0, 6) + "..." + item.account.slice(38, 42)}
+          </Link>
+        </DataText>
+      )}
+      <DataText>{formatTime(item.timestamp)}</DataText>
+    </DashGrid>
+  );
+});
+
 const TxnList: FC<TxnListProps> = (props) => {
-  const { transactions, symbol0Override, symbol1Override, color } = props;
+  const { transactions, symbol0Override, symbol1Override } = props;
   // page state
   const [page, setPage] = useState(1);
   const [maxPage, setMaxPage] = useState(1);
@@ -181,8 +271,6 @@ const TxnList: FC<TxnListProps> = (props) => {
   const [sortedColumn, setSortedColumn] = useState(SORT_FIELD.TIMESTAMP);
   const [filteredItems, setFilteredItems] = useState<any[]>([]);
   const [txFilter, setTxFilter] = useState(TXN_TYPE.ALL);
-
-  const [currency] = useCurrentCurrency();
 
   useEffect(() => {
     setMaxPage(1); // edit this to do modular
@@ -322,76 +410,21 @@ const TxnList: FC<TxnListProps> = (props) => {
     setPage(1);
   }, [txFilter]);
 
-  const filteredList =
-    filteredItems &&
-    filteredItems
-      .sort((a, b) => {
-        return parseFloat(a[sortedColumn]) > parseFloat(b[sortedColumn])
-          ? (sortDirection ? -1 : 1) * 1
-          : (sortDirection ? -1 : 1) * -1;
-      })
-      .slice(ITEMS_PER_PAGE * (page - 1), page * ITEMS_PER_PAGE);
+  const filteredList = useMemo(
+    () =>
+      filteredItems &&
+      filteredItems
+        .sort((a, b) => {
+          return parseFloat(a[sortedColumn]) > parseFloat(b[sortedColumn])
+            ? (sortDirection ? -1 : 1) * 1
+            : (sortDirection ? -1 : 1) * -1;
+        })
+        .slice(ITEMS_PER_PAGE * (page - 1), page * ITEMS_PER_PAGE),
+    [filteredItems, sortDirection, page, sortedColumn]
+  );
 
   const below1080 = useMedia("(max-width: 1080px)");
   const below780 = useMedia("(max-width: 780px)");
-
-  const ListItem = (props: { item: any }) => {
-    const { item } = props;
-    return (
-      <DashGrid style={{ height: "48px", padding: "0px 1.125rem" }}>
-        <DataText fontWeight="500">
-          <Link color={color} external href={urls.showTransaction(item.hash)}>
-            {getTransactionType(
-              item.type,
-              item.token1Symbol,
-              item.token0Symbol
-            )}
-          </Link>
-        </DataText>
-        <DataText>
-          {currency === "XDC"
-            ? "Ξ " + formattedNum(item.valueETH)
-            : formattedNum(item.amountUSD, true)}
-        </DataText>
-        {!below780 && (
-          <>
-            <DataText>
-              {formattedNum(item.token1Amount) + " "}{" "}
-              <FormattedName
-                text={item.token1Symbol}
-                maxCharacters={5}
-                margin={true}
-              />
-            </DataText>
-            <DataText>
-              {formattedNum(item.token0Amount) + " "}{" "}
-              <FormattedName
-                text={item.token0Symbol}
-                maxCharacters={5}
-                margin={true}
-              />
-            </DataText>
-          </>
-        )}
-        {!below1080 && (
-          <DataText>
-            <Link
-              color={color}
-              external
-              href={
-                "https://xdc.blocksscan.io/address/" +
-                item.account.replace(/^.{2}/g, "xdc")
-              }
-            >
-              {item.account &&
-                item.account.slice(0, 6) + "..." + item.account.slice(38, 42)}
-            </Link>
-          </DataText>
-        )}
-        <DataText>{formatTime(item.timestamp)}</DataText>
-      </DashGrid>
-    );
-  };
 
   return (
     <>

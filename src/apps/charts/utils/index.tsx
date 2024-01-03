@@ -2,7 +2,7 @@ import { BigNumber } from "bignumber.js";
 import dayjs from "dayjs";
 import { ethers } from "fathom-ethers";
 import utc from "dayjs/plugin/utc";
-import { client, blockClient } from "apps/charts/apollo/client";
+import { dexClient as client, blockClient } from "apollo/client";
 import { GET_BLOCK, GET_BLOCKS, SHARE_VALUE } from "apps/charts/apollo/queries";
 import { Text } from "rebass";
 import _Decimal from "decimal.js-light";
@@ -376,9 +376,9 @@ export const toSignificant = (number: any, significantDigits: number) => {
   return updated.toFormat(updated.decimalPlaces(), { groupSeparator: "" });
 };
 
-export const formattedNum = (number: string | number, usd = false) => {
+export const formattedNum = (number: string | number, usd = false): string => {
   if (isNaN(number as number) || number === "" || number === undefined) {
-    return usd ? "$0" : 0;
+    return usd ? "$0" : "0";
   }
   const num = parseFloat(number as string);
 
@@ -390,7 +390,7 @@ export const formattedNum = (number: string | number, usd = false) => {
     if (usd) {
       return "$0";
     }
-    return 0;
+    return "0";
   }
 
   if (num < 0.0001 && num > 0) {

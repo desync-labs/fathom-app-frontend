@@ -19,6 +19,7 @@ export interface TransactionDetails {
   addedTime: number;
   confirmedTime?: number;
   from: string;
+  transactionType?: number;
 }
 
 export interface TransactionState {

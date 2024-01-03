@@ -1,6 +1,5 @@
 import { FC } from "react";
 import { Box, ListItemText, Paper, Typography, styled } from "@mui/material";
-import moment from "moment";
 import {
   Line,
   LineChart,
@@ -15,6 +14,7 @@ import {
 } from "recharts/types/component/DefaultTooltipContent";
 import { formatNumber } from "utils/format";
 import { AppList, AppListItem } from "components/AppComponents/AppList/AppList";
+import dayjs from "dayjs";
 
 export const ChartTitle = styled(Typography)`
   font-size: 16px;
@@ -39,7 +39,7 @@ type VaultHistoryChartPropTypes = {
 const CustomTooltip = ({ payload }: TooltipProps<ValueType, NameType>) => {
   if (payload && payload.length) {
     const reportTimestamp = parseInt(payload[0]?.payload?.timestamp, 10);
-    const reportDateString = moment(reportTimestamp).format(
+    const reportDateString = dayjs(reportTimestamp).format(
       "DD/MM/YYYY HH:mm:ss"
     );
     const units = payload[0].unit || "";

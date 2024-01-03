@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, FC } from "react";
+import { useState, useEffect, useMemo, FC, memo } from "react";
 import styled from "styled-components";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -145,6 +145,60 @@ type TopTokenListProps = {
 
 type ListItemProps = { item: any; index: number };
 
+const ListItem: FC<ListItemProps> = memo((props) => {
+  const below1080 = useMedia("(max-width: 1080px)");
+  const below680 = useMedia("(max-width: 680px)");
+  const below600 = useMedia("(max-width: 600px)");
+
+  const { item, index } = props;
+  return (
+    <DashGrid style={{ height: "48px" }}>
+      {!below680 && (
+        <DataText>
+          <div style={{ marginRight: "1rem", width: "10px" }}>{index}</div>
+        </DataText>
+      )}
+      <DataText fontWeight="500">
+        <Row>
+          <TokenLogo address={item.id} />
+          <CustomLink
+            style={{ marginLeft: "16px", whiteSpace: "nowrap" }}
+            to={"/charts/token/" + item.id}
+          >
+            <FormattedName
+              text={below680 ? item.symbol : item.name}
+              maxCharacters={below600 ? 8 : 16}
+              adjustSize={true}
+              link={true}
+            />
+          </CustomLink>
+        </Row>
+      </DataText>
+      {!below680 && (
+        <DataText color="text" fontWeight="500">
+          <FormattedName text={item.symbol} maxCharacters={5} />
+        </DataText>
+      )}
+      <DataText justifyContent="center">
+        {formattedNum(item.totalLiquidityUSD, true)}
+      </DataText>
+      <DataText justifyContent="center">
+        {formattedNum(Math.abs(item.oneDayVolumeUSD), true)}
+      </DataText>
+      {!below1080 && (
+        <DataText color="text" fontWeight="500" justifyContent="center">
+          {formattedNum(item.priceUSD, true)}
+        </DataText>
+      )}
+      {!below1080 && (
+        <DataText justifyContent="center">
+          {formattedPercent(item.priceChangeUSD)}
+        </DataText>
+      )}
+    </DashGrid>
+  );
+});
+
 const TopTokenList: FC<TopTokenListProps> = (props) => {
   const { formattedTokens, itemMax = 10, useTracked = false } = props;
   // page state
@@ -157,7 +211,6 @@ const TopTokenList: FC<TopTokenListProps> = (props) => {
 
   const below1080 = useMedia("(max-width: 1080px)");
   const below680 = useMedia("(max-width: 680px)");
-  const below600 = useMedia("(max-width: 600px)");
 
   useEffect(() => {
     setMaxPage(1); // edit this to do modular
@@ -203,56 +256,6 @@ const TopTokenList: FC<TopTokenListProps> = (props) => {
         .slice(itemMax * (page - 1), page * itemMax)
     );
   }, [formattedTokens, itemMax, page, sortDirection, sortedColumn]);
-
-  const ListItem: FC<ListItemProps> = (listItem) => {
-    const { item, index } = listItem;
-    return (
-      <DashGrid style={{ height: "48px" }}>
-        {!below680 && (
-          <DataText>
-            <div style={{ marginRight: "1rem", width: "10px" }}>{index}</div>
-          </DataText>
-        )}
-        <DataText fontWeight="500">
-          <Row>
-            <TokenLogo address={item.id} />
-            <CustomLink
-              style={{ marginLeft: "16px", whiteSpace: "nowrap" }}
-              to={"/charts/token/" + item.id}
-            >
-              <FormattedName
-                text={below680 ? item.symbol : item.name}
-                maxCharacters={below600 ? 8 : 16}
-                adjustSize={true}
-                link={true}
-              />
-            </CustomLink>
-          </Row>
-        </DataText>
-        {!below680 && (
-          <DataText color="text" fontWeight="500">
-            <FormattedName text={item.symbol} maxCharacters={5} />
-          </DataText>
-        )}
-        <DataText justifyContent="center">
-          {formattedNum(item.totalLiquidityUSD, true)}
-        </DataText>
-        <DataText justifyContent="center">
-          {formattedNum(Math.abs(item.oneDayVolumeUSD), true)}
-        </DataText>
-        {!below1080 && (
-          <DataText color="text" fontWeight="500" justifyContent="center">
-            {formattedNum(item.priceUSD, true)}
-          </DataText>
-        )}
-        {!below1080 && (
-          <DataText justifyContent="center">
-            {formattedPercent(item.priceChangeUSD)}
-          </DataText>
-        )}
-      </DashGrid>
-    );
-  };
 
   return (
     <ListWrapper>
