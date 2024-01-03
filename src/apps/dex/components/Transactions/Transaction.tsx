@@ -43,7 +43,7 @@ const IconWrapper = styled.div<{ pending: boolean; success?: boolean }>`
 `;
 
 export type TransactionItem = {
-  transaction: { id: any; timestamp: any };
+  transaction: { id: string; timestamp: string };
   amount0: number;
   amount1: number;
   to: string;
@@ -65,10 +65,10 @@ export type FormattedTransaction = {
   type: string;
   token0Amount: number;
   token1Amount: number;
-  account: string;
+  account?: string;
   token0Symbol: string;
   token1Symbol: string;
-  amountUSD: number;
+  amountUSD?: number;
   transactionType: number;
 };
 
