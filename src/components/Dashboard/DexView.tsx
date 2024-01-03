@@ -1,6 +1,10 @@
 import { useLocation } from "react-router-dom";
 import { FC, lazy, MouseEvent, Suspense, useMemo } from "react";
-import { SwapIcon, PoolIcon } from "components/Common/MenuIcons";
+import {
+  SwapIcon,
+  PoolIcon,
+  TransactionsIcon,
+} from "components/Common/MenuIcons";
 import {
   NestedRouteContainer,
   NestedRouteLink,
@@ -57,7 +61,7 @@ const DexView: FC<DexViewProps> = ({ openConnectorMenu }) => {
             className={isTransactionsActive ? "active" : ""}
             to="/swap/transactions"
           >
-            <PoolIcon isactive={isTransactionsActive ? "active" : ""} />
+            <TransactionsIcon isactive={isTransactionsActive ? "active" : ""} />
             Transactions
           </NestedRouteLink>
         )}
