@@ -44,9 +44,9 @@ const UPDATE_TXNS = "UPDATE_TXNS";
 const UPDATE_CHART = "UPDATE_CHART";
 const UPDATE_ETH_PRICE = "UPDATE_ETH_PRICE";
 const ETH_PRICE_KEY = "ETH_PRICE_KEY";
-const UPDATE_ALL_PAIRS_IN_UNISWAP =
-  "UPDAUPDATE_ALL_PAIRS_IN_UNISWAPTE_TOP_PAIRS";
-const UPDATE_ALL_TOKENS_IN_UNISWAP = "UPDATE_ALL_TOKENS_IN_UNISWAP";
+const UPDATE_ALL_PAIRS_IN_FATHOM_SWAP =
+  "UPDATE_ALL_PAIRS_IN_FATHOM_SWAP_TOP_PAIRS";
+const UPDATE_ALL_TOKENS_IN_FATHOM_SWAP = "UPDATE_ALL_TOKENS_IN_FATHOM_SWAP";
 const UPDATE_TOP_LPS = "UPDATE_TOP_LPS";
 
 const offsetVolumes: any[] = [];
@@ -99,7 +99,7 @@ function reducer(
       };
     }
 
-    case UPDATE_ALL_PAIRS_IN_UNISWAP: {
+    case UPDATE_ALL_PAIRS_IN_FATHOM_SWAP: {
       const { allPairs } = payload;
       return {
         ...state,
@@ -107,7 +107,7 @@ function reducer(
       };
     }
 
-    case UPDATE_ALL_TOKENS_IN_UNISWAP: {
+    case UPDATE_ALL_TOKENS_IN_FATHOM_SWAP: {
       const { allTokens } = payload;
       return {
         ...state,
@@ -174,7 +174,7 @@ const Provider: FC<ProviderProps> = ({ children }) => {
 
   const updateAllPairsInUniswap = useCallback((allPairs: any[]) => {
     dispatch({
-      type: UPDATE_ALL_PAIRS_IN_UNISWAP,
+      type: UPDATE_ALL_PAIRS_IN_FATHOM_SWAP,
       payload: {
         allPairs,
       },
@@ -183,7 +183,7 @@ const Provider: FC<ProviderProps> = ({ children }) => {
 
   const updateAllTokensInUniswap = useCallback((allTokens: any[]) => {
     dispatch({
-      type: UPDATE_ALL_TOKENS_IN_UNISWAP,
+      type: UPDATE_ALL_TOKENS_IN_FATHOM_SWAP,
       payload: {
         allTokens,
       },
