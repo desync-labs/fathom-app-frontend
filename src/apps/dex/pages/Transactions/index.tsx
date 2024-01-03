@@ -4,6 +4,7 @@ import { useLazyQuery } from "@apollo/client";
 import { USER_TRANSACTIONS } from "apps/charts/apollo/queries";
 import { useWeb3React } from "@web3-react/core";
 import { useEffect, useState, memo, useMemo, FC } from "react";
+import styled from "styled-components";
 import { TXN_TYPE } from "apps/charts/components/TxnList";
 import {
   isTransactionRecent,
@@ -17,10 +18,27 @@ import {
   TransactionItem,
   SwapTransactionItem,
 } from "apps/dex/components/Transactions/Transaction";
-import styled from "styled-components";
+import { TYPE } from "apps/dex/theme";
 
 const TransactionListWrapper = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap};
+`;
+
+const TransactionsHeaderRow = styled.div`
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 24px;
+  padding: 1rem 0 0.5rem;
+  color: ${({ theme }) => theme.white};
+`;
+
+const EmptyTransactionsRow = styled.div`
+  display: flex;
+  justify-content: center;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 24px;
+  padding: 16px 0;
 `;
 
 function newTransactionsFirst(
@@ -204,24 +222,38 @@ const Transactions: FC = () => {
   return (
     <AppBody>
       <Wrapper id={"transaction-list"}>
-        <TransactionListWrapper>
-          {pending.map((hash, i) => {
-            return <Transaction key={i} tx={allTransactions?.[hash]} />;
-          })}
-        </TransactionListWrapper>
-        <br />
-        <TransactionListWrapper>
-          {sortedFilteredTransactions.map((item) => {
-            return item?.transactionType === TransactionType.STORAGE ? (
-              <PreviousTransaction
-                item={item as FormattedTransaction}
-                key={item.hash}
-              />
-            ) : (
-              <Transaction tx={item as TransactionDetails} key={item.hash} />
-            );
-          })}
-        </TransactionListWrapper>
+        <TransactionsHeaderRow>
+          <TYPE.white>Transactions</TYPE.white>
+        </TransactionsHeaderRow>
+        {pending.length || sortedFilteredTransactions.length ? (
+          <>
+            <TransactionListWrapper>
+              {pending.map((hash, i) => {
+                return <Transaction key={i} tx={allTransactions?.[hash]} />;
+              })}
+            </TransactionListWrapper>
+            <br />
+            <TransactionListWrapper>
+              {sortedFilteredTransactions.map((item) => {
+                return item?.transactionType === TransactionType.STORAGE ? (
+                  <PreviousTransaction
+                    item={item as FormattedTransaction}
+                    key={item.hash}
+                  />
+                ) : (
+                  <Transaction
+                    tx={item as TransactionDetails}
+                    key={item.hash}
+                  />
+                );
+              })}
+            </TransactionListWrapper>
+          </>
+        ) : (
+          <EmptyTransactionsRow>
+            <TYPE.body>There are no transactions yet</TYPE.body>
+          </EmptyTransactionsRow>
+        )}
       </Wrapper>
     </AppBody>
   );
