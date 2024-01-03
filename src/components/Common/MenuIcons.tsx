@@ -6,6 +6,7 @@ import { ReactComponent as VaultSrc } from "assets/svg/icons/vault.svg";
 import { ReactComponent as DexSrc } from "assets/svg/icons/dex.svg";
 import { ReactComponent as SwapSrc } from "assets/svg/icons/swap.svg";
 import { ReactComponent as PoolSrc } from "assets/svg/icons/pool.svg";
+import { ReactComponent as TransactionsSrc } from "assets/svg/icons/bill.svg";
 import { ReactComponent as ChartsSrc } from "assets/svg/icons/charts.svg";
 import { ReactComponent as OverviewSrc } from "assets/svg/icons/overview.svg";
 import { ReactComponent as TokensSrc } from "assets/svg/icons/tokens.svg";
@@ -63,6 +64,12 @@ export const SwapIcon = styled(SwapSrc)<{ isactive: string }>`
 `;
 
 export const PoolIcon = styled(PoolSrc)<{ isactive: string }>`
+  & path {
+    fill: ${({ isactive }) => (isactive ? ACTIVE_HEX : INACTIVE_HEX)};
+  }
+`;
+
+export const TransactionsIcon = styled(TransactionsSrc)<{ isactive: string }>`
   & path {
     fill: ${({ isactive }) => (isactive ? ACTIVE_HEX : INACTIVE_HEX)};
   }
