@@ -18,7 +18,7 @@ const StakingChip = styled(Chip, {
     width: 30%;
     margin-bottom: 12px;
     margin-right: 5%;
-    &:nth-child(3n) {
+    &:nth-of-type(3n) {
       margin-right: 0;
     }
   }
