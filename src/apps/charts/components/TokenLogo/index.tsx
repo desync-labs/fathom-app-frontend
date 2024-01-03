@@ -29,8 +29,6 @@ const TokenLogo: FC<TokenLogoProps> = (props) => {
   const { address, size = "24px", ...rest } = props;
   const [error, setError] = useState<boolean>(false);
 
-  console.log("render");
-
   useEffect(() => {
     setError(false);
   }, [address]);
