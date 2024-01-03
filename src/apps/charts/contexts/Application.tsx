@@ -13,7 +13,7 @@ import { timeframeOptions, SUPPORTED_LIST_URLS } from "apps/charts/constants";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import getTokenList from "apps/charts/utils/tokenLists";
-import { healthClient } from "apps/charts/apollo/client";
+import { healthClient } from "apollo/client";
 import { SUBGRAPH_HEALTH } from "apps/charts/apollo/queries";
 dayjs.extend(utc);
 

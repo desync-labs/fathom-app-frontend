@@ -9,7 +9,7 @@ import {
   FC,
 } from "react";
 import { usePairData } from "apps/charts/contexts/PairData";
-import { client } from "apps/charts/apollo/client";
+import { dexClient as client } from "apollo/client";
 import {
   USER_TRANSACTIONS,
   USER_POSITIONS,

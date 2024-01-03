@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo, FC, useMemo } from "react";
 import { useMedia } from "react-use";
 import dayjs from "dayjs";
 import LocalLoader from "apps/charts/components/LocalLoader";
@@ -84,10 +84,52 @@ const DataText = styled(Flex)`
   }
 `;
 
-function LPList(props: { lps: any; maxItems?: number }) {
-  const { lps, maxItems = 10 } = props;
+type ListItemProps = { lp: any; index: number };
+
+const ListItem: FC<ListItemProps> = memo((props) => {
   const below600 = useMedia("(max-width: 600px)");
   const below800 = useMedia("(max-width: 800px)");
+
+  const { lp, index } = props;
+  return (
+    <DashGrid style={{ height: "48px", padding: "0 1.125rem" }}>
+      {!below600 && <DataText fontWeight="500">{index}</DataText>}
+      <DataText fontWeight="500" justifyContent="flex-start">
+        <CustomLink
+          style={{ marginLeft: below600 ? 0 : "1rem", whiteSpace: "nowrap" }}
+          to={"/charts/account/" + lp.user.id}
+        >
+          {below800
+            ? lp.user.id.slice(0, 4) + "..." + lp.user.id.slice(38, 42)
+            : lp.user.id}
+        </CustomLink>
+      </DataText>
+
+      <DataText justifyContent="center">
+        <CustomLink to={"/charts/pair/" + lp.pairAddress}>
+          <RowFixed>
+            {!below600 && (
+              <DoubleTokenLogo
+                a0={lp.token0}
+                a1={lp.token1}
+                size={16}
+                margin={true}
+              />
+            )}
+            {lp.pairName}
+          </RowFixed>
+        </CustomLink>
+      </DataText>
+      <DataText>{formattedNum(lp.usd, true)}</DataText>
+    </DashGrid>
+  );
+});
+
+type LPListProps = { lps: any; maxItems?: number };
+
+const LPList: FC<LPListProps> = (props) => {
+  const { lps, maxItems = 10 } = props;
+  const below600 = useMedia("(max-width: 600px)");
 
   // pagination
   const [page, setPage] = useState(1);
@@ -111,60 +153,25 @@ function LPList(props: { lps: any; maxItems?: number }) {
     }
   }, [ITEMS_PER_PAGE, lps]);
 
-  const ListItem = (listItem: { lp: any; index: any }) => {
-    const { lp, index } = listItem;
-    return (
-      <DashGrid style={{ height: "48px", padding: "0 1.125rem" }}>
-        {!below600 && <DataText fontWeight="500">{index}</DataText>}
-        <DataText fontWeight="500" justifyContent="flex-start">
-          <CustomLink
-            style={{ marginLeft: below600 ? 0 : "1rem", whiteSpace: "nowrap" }}
-            to={"/charts/account/" + lp.user.id}
-          >
-            {below800
-              ? lp.user.id.slice(0, 4) + "..." + lp.user.id.slice(38, 42)
-              : lp.user.id}
-          </CustomLink>
-        </DataText>
-
-        {/* {!below1080 && (
-          <DataText area="type" justifyContent="flex-end">
-            {lp.type}
-          </DataText>
-        )} */}
-
-        <DataText justifyContent="center">
-          <CustomLink to={"/charts/pair/" + lp.pairAddress}>
-            <RowFixed>
-              {!below600 && (
-                <DoubleTokenLogo
-                  a0={lp.token0}
-                  a1={lp.token1}
-                  size={16}
-                  margin={true}
-                />
-              )}
-              {lp.pairName}
-            </RowFixed>
-          </CustomLink>
-        </DataText>
-        <DataText>{formattedNum(lp.usd, true)}</DataText>
-      </DashGrid>
-    );
-  };
-
-  const lpList =
-    lps &&
-    lps
-      .slice(ITEMS_PER_PAGE * (page - 1), page * ITEMS_PER_PAGE)
-      .map((lp: any, index: number) => {
-        return (
-          <div key={index}>
-            <ListItem key={index} index={(page - 1) * 10 + index + 1} lp={lp} />
-            <Divider />
-          </div>
-        );
-      });
+  const lpList = useMemo(
+    () =>
+      lps &&
+      lps
+        .slice(ITEMS_PER_PAGE * (page - 1), page * ITEMS_PER_PAGE)
+        .map((lp: any, index: number) => {
+          return (
+            <div key={index}>
+              <ListItem
+                key={index}
+                index={(page - 1) * 10 + index + 1}
+                lp={lp}
+              />
+              <Divider />
+            </div>
+          );
+        }),
+    [lps, page]
+  );
 
   return (
     <ListWrapper>
@@ -183,11 +190,6 @@ function LPList(props: { lps: any; maxItems?: number }) {
             <TableHeaderBox>Account</TableHeaderBox>
           </TYPE.main>
         </Flex>
-        {/* {!below1080 && (
-          <Flex alignItems="center" justifyContent="flexEnd">
-            <TYPE.main area="type">Type</TYPE.main>
-          </Flex>
-        )} */}
         <Flex alignItems="center" justifyContent="center">
           <TYPE.main>
             <TableHeaderBox>Pair</TableHeaderBox>
@@ -211,6 +213,6 @@ function LPList(props: { lps: any; maxItems?: number }) {
       </PageButtons>
     </ListWrapper>
   );
-}
+};
 
 export default LPList;

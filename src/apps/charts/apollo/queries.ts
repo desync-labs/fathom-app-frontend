@@ -244,7 +244,7 @@ export const USER_POSITIONS = gql`
 `;
 
 export const USER_TRANSACTIONS = gql`
-  query transactions($user: Bytes!) {
+  query transactions($user: ID!) {
     mints(orderBy: timestamp, orderDirection: desc, where: { to: $user }) {
       id
       transaction {

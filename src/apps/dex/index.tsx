@@ -1,5 +1,4 @@
 import { FC, memo } from "react";
-import "inter-ui";
 
 import { isMobile } from "react-device-detect";
 import ReactGA from "react-ga";
