@@ -58,6 +58,7 @@ const DexView: FC<DexViewProps> = ({ openConnectorMenu }) => {
         </NestedRouteLink>
         {account && (
           <NestedRouteLink
+            span={2}
             className={isTransactionsActive ? "active" : ""}
             to="/swap/transactions"
           >

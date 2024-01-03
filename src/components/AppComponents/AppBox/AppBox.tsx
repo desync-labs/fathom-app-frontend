@@ -278,7 +278,7 @@ export const NestedRouteNav = styled("nav")`
   }
 `;
 
-export const NestedRouteLink = styled(Link)`
+export const NestedRouteLink = styled(Link)<{ span?: number }>`
   color: #9fadc6;
   display: flex;
   align-items: center;
@@ -300,6 +300,7 @@ export const NestedRouteLink = styled(Link)`
   }
   ${({ theme }) => theme.breakpoints.down("sm")} {
     padding: 0;
+    grid-column: span ${({ span }) => (span ? span : 1)};
   }
 `;
 
