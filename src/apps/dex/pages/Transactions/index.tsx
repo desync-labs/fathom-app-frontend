@@ -2,7 +2,6 @@ import AppBody from "apps/dex/pages/AppBody";
 import { Wrapper } from "apps/dex/pages/Pool/styleds";
 import { useLazyQuery } from "@apollo/client";
 import { USER_TRANSACTIONS } from "apps/charts/apollo/queries";
-import { useWeb3React } from "@web3-react/core";
 import { useEffect, useState, memo, useMemo, FC } from "react";
 import styled from "styled-components";
 import { TXN_TYPE } from "apps/charts/components/TxnList";
@@ -19,6 +18,7 @@ import {
   SwapTransactionItem,
 } from "apps/dex/components/Transactions/Transaction";
 import { TYPE } from "apps/dex/theme";
+import { useActiveWeb3React } from "apps/dex/hooks";
 
 const TransactionListWrapper = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap};
@@ -62,7 +62,7 @@ const Transactions: FC = () => {
     (TransactionDetails | FormattedTransaction)[]
   >([]);
 
-  const { account } = useWeb3React();
+  const { account } = useActiveWeb3React();
   const [getTransactions] = useLazyQuery(USER_TRANSACTIONS, {
     fetchPolicy: "cache-first",
     onCompleted: (transactions) => {
@@ -82,10 +82,8 @@ const Transactions: FC = () => {
               type: TXN_TYPE.ADD,
               token0Amount: mint.amount0,
               token1Amount: mint.amount1,
-              account: mint.to,
               token0Symbol: mint.pair.token0.symbol,
               token1Symbol: mint.pair.token1.symbol,
-              amountUSD: mint.amountUSD,
               transactionType: TransactionType.STORAGE,
             };
             return newTxns.push(newTxn);
@@ -99,10 +97,8 @@ const Transactions: FC = () => {
               type: TXN_TYPE.REMOVE,
               token0Amount: burn.amount0,
               token1Amount: burn.amount1,
-              account: burn.sender,
               token0Symbol: burn.pair.token0.symbol,
               token1Symbol: burn.pair.token1.symbol,
-              amountUSD: burn.amountUSD,
               transactionType: TransactionType.STORAGE,
             };
             return newTxns.push(newTxn);
@@ -118,11 +114,9 @@ const Transactions: FC = () => {
               token1Symbol: "",
               token0Amount: 0,
               token1Amount: 0,
-              hash: "",
-              addedTime: 0,
-              type: "",
-              amountUSD: 0,
-              account: "",
+              hash: swap.transaction.id,
+              addedTime: Number(swap.transaction.timestamp) * 1000,
+              type: TXN_TYPE.SWAP,
               transactionType: TransactionType.STORAGE,
             };
 
@@ -138,12 +132,6 @@ const Transactions: FC = () => {
               newTxn.token1Amount = Math.abs(netToken0);
             }
 
-            newTxn.hash = swap.transaction.id;
-            newTxn.addedTime = Number(swap.transaction.timestamp) * 1000;
-            newTxn.type = TXN_TYPE.SWAP;
-
-            newTxn.amountUSD = swap.amountUSD;
-            newTxn.account = swap.to;
             return newTxns.push(newTxn);
           });
         }
@@ -192,11 +180,7 @@ const Transactions: FC = () => {
       return;
     }
 
-    console.log({
-      transactionList,
-      sortedRecentTransactions,
-    });
-    const transactionListHashes = transactionList.map(
+    const transactionListHashCollection = transactionList.map(
       (transaction) => transaction.hash
     );
     const confirmed = sortedRecentTransactions
@@ -204,7 +188,7 @@ const Transactions: FC = () => {
       .map((tx) => tx.hash);
 
     const confirmedCollection = confirmed
-      .filter((hash) => !transactionListHashes.includes(hash))
+      .filter((hash) => !transactionListHashCollection.includes(hash))
       .map((hash: string) => allTransactions?.[hash]);
 
     const sortedArray = [...confirmedCollection, ...transactionList].sort(
@@ -232,7 +216,6 @@ const Transactions: FC = () => {
                 return <Transaction key={i} tx={allTransactions?.[hash]} />;
               })}
             </TransactionListWrapper>
-            <br />
             <TransactionListWrapper>
               {sortedFilteredTransactions.map((item) => {
                 return item?.transactionType === TransactionType.STORAGE ? (

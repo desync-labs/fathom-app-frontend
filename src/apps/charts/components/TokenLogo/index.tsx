@@ -1,4 +1,4 @@
-import { useState, useEffect, FC } from "react";
+import { useState, useEffect, FC, memo } from "react";
 import styled from "styled-components";
 import { isAddress } from "apps/charts/utils";
 
@@ -28,6 +28,8 @@ type TokenLogoProps = {
 const TokenLogo: FC<TokenLogoProps> = (props) => {
   const { address, size = "24px", ...rest } = props;
   const [error, setError] = useState<boolean>(false);
+
+  console.log("render");
 
   useEffect(() => {
     setError(false);
@@ -64,4 +66,4 @@ const TokenLogo: FC<TokenLogoProps> = (props) => {
   );
 };
 
-export default TokenLogo;
+export default memo(TokenLogo);
