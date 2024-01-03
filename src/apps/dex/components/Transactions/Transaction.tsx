@@ -127,8 +127,8 @@ export const PreviousTransaction: FC<{ item: FormattedTransaction }> = ({
           <TransactionStatusText>
             {getTransactionType(
               item.type,
-              item.token1Symbol,
               item.token0Symbol,
+              item.token1Symbol,
               formattedNum(item.token0Amount),
               formattedNum(item.token1Amount),
               formatTime(item.addedTime / 1000)
