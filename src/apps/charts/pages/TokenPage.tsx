@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction, useState } from "react";
+import { Dispatch, FC, memo, SetStateAction, useState } from "react";
 import "feather-icons";
 import { Navigate, useParams } from "react-router-dom";
 import { Text } from "rebass";
@@ -134,7 +134,7 @@ const HeaderWrapper = styled.div`
   padding-bottom: 7px !important;
 `;
 
-const TokenPage: FC<{ address: string }> = ({ address }) => {
+const TokenPage: FC<{ address: string }> = memo(({ address }) => {
   const {
     id,
     name,
@@ -530,7 +530,7 @@ const TokenPage: FC<{ address: string }> = ({ address }) => {
       </ContentWrapper>
     </PageWrapper>
   );
-};
+});
 
 type TokenPageRouterComponentProps = {
   savedOpen: boolean;

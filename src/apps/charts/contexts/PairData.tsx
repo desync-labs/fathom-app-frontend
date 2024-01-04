@@ -671,6 +671,9 @@ export function useDataForList(pairList: any) {
 
       pairList.map(async (pair: { id: string | number }) => {
         const currentData = state?.[pair.id];
+        console.log({
+          currentData,
+        });
         if (!currentData) {
           unfetched.push(pair.id);
         } else {
@@ -685,6 +688,7 @@ export function useDataForList(pairList: any) {
         ethPrice,
         listedTokens
       );
+
       // @ts-ignore
       setFetched(newFetched.concat(newPairData));
     }
@@ -692,7 +696,16 @@ export function useDataForList(pairList: any) {
       setStale(true);
       fetchNewPairData();
     }
-  }, [ethPrice, state, pairList, stale, fetched, listedTokens]);
+  }, [
+    ethPrice,
+    state,
+    pairList,
+    stale,
+    fetched,
+    listedTokens,
+    setStale,
+    setFetched,
+  ]);
 
   const formattedFetch =
     fetched &&
