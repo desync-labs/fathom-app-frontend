@@ -671,9 +671,6 @@ export function useDataForList(pairList: any) {
 
       pairList.map(async (pair: { id: string | number }) => {
         const currentData = state?.[pair.id];
-        console.log({
-          currentData,
-        });
         if (!currentData) {
           unfetched.push(pair.id);
         } else {
