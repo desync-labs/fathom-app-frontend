@@ -31,13 +31,8 @@ import {
 import weekOfYear from "dayjs/plugin/weekOfYear";
 import { useAllPairData } from "apps/charts/contexts/PairData";
 import { useTokenChartDataCombined } from "apps/charts/contexts/TokenData";
-
-import {
-  FTHM_WXDC_PAIR_ID,
-  WXDC_FXD_PAIR_ID,
-  WXDC_USDT_PAIR_ID,
-} from "apps/charts/constants";
 import { BigNumber } from "bignumber.js";
+import usePricesContext from "context/prices";
 
 const UPDATE = "UPDATE";
 const UPDATE_TXNS = "UPDATE_TXNS";
@@ -815,25 +810,10 @@ export function useTopLps() {
 }
 
 export function useFxdPrice() {
-  const allPairs = useAllPairData();
-
-  const fxdPrice = useMemo(() => {
-    if (Object.keys(allPairs).length) {
-      const wxdcFxdPair = Object.values(allPairs).find((pairItem: any) => {
-        return pairItem.id === WXDC_FXD_PAIR_ID;
-      }) as any;
-      const wxdcUsdtPair = Object.values(allPairs).find((pairItem: any) => {
-        return pairItem.id === WXDC_USDT_PAIR_ID;
-      }) as any;
-      return wxdcFxdPair
-        ? BigNumber(wxdcFxdPair.token0Price)
-            .dividedBy(wxdcUsdtPair.token1Price)
-            .toNumber()
-        : 0;
-    } else {
-      return 0;
-    }
-  }, [allPairs]);
+  let { fxdPrice } = usePricesContext();
+  fxdPrice = BigNumber(fxdPrice)
+    .dividedBy(10 ** 18)
+    .toString();
 
   return {
     fxdPrice,
@@ -841,24 +821,10 @@ export function useFxdPrice() {
 }
 
 export function useFTHMPrice() {
-  const allPairs = useAllPairData();
-  const [ethPrice] = useEthPrice();
-
-  const fthmPrice = useMemo(() => {
-    if (Object.keys(allPairs).length) {
-      const findPair = Object.values(allPairs).find((pairItem: any) => {
-        return pairItem.id === FTHM_WXDC_PAIR_ID;
-      }) as any;
-
-      const price =
-        findPair.token0.symbol === "FTHM"
-          ? findPair.token1Price
-          : findPair.token0Price;
-      return price * ethPrice;
-    } else {
-      return 0;
-    }
-  }, [allPairs, ethPrice]);
+  let { fthmPrice } = usePricesContext();
+  fthmPrice = BigNumber(fthmPrice)
+    .dividedBy(10 ** 18)
+    .toString();
 
   return {
     fthmPrice,
