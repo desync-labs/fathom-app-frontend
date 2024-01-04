@@ -20,7 +20,7 @@
     "cids": "^1.1.9",
     "copy-to-clipboard": "^3.3.3",
     "fathom-ethers": "1.1.1",
-    "fathom-sdk": "^0.1.37",
+    "fathom-sdk": "^0.1.38",
     "fathom-swap-standard-token-list": "^1.7.3",
     "feather-icons": "^4.29.1",
     "fontsource-roboto": "^4.0.0",

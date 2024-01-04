@@ -36,6 +36,7 @@ const useStableSwap = (options: string[]) => {
 
   const [lastUpdate, setLastUpdate] = useState<string>();
   const [dailyLimit, setDailyLimit] = useState<string>("0");
+  const [oneTimeSwapLimit, setOneTimeSwapLimit] = useState<string>("0");
   const [displayDailyLimit, setDisplayDailyLimit] = useState<string>("0");
 
   const [feeIn, setFeeIn] = useState<string>("0");
@@ -155,6 +156,12 @@ const useStableSwap = (options: string[]) => {
     ) {
       return `You can't swap more then remaining daily limit ${formatNumber(
         Number(displayDailyLimit)
+      )} FXD`;
+    }
+
+    if (BigNumber(inputValue).isGreaterThan(oneTimeSwapLimit)) {
+      return `You can't swap more then one time limit ${formatNumber(
+        Number(oneTimeSwapLimit)
       )} FXD`;
     }
 
@@ -309,11 +316,44 @@ const useStableSwap = (options: string[]) => {
 
   useEffect(() => {
     if (isDecentralizedState) {
-      stableSwapService.getDailySwapLimit().then((dailyLimit) => {
-        setDailyLimit(dailyLimit.toString());
-      });
+      updateDailySwapLimit();
     }
   }, [stableSwapService, isDecentralizedState]);
+
+  useEffect(() => {
+    const totalValueDepositetPromise =
+      stableSwapService.getTotalValueDeposited();
+    const singleSwapLimitNumeratorPromise =
+      stableSwapService.getSingleSwapLimitNumerator();
+    const singleSwapLimitDenomeratorPromise =
+      stableSwapService.getSingleSwapLimitDenomerator();
+
+    Promise.all([
+      totalValueDepositetPromise,
+      singleSwapLimitNumeratorPromise,
+      singleSwapLimitDenomeratorPromise,
+    ])
+      .then(
+        ([
+          totalValueDepositet,
+          singleSwapLimitNumerator,
+          singleSwapLimitDenomerator,
+        ]) => {
+          const oneTimeSwapLimit = totalValueDepositet
+            .mul(singleSwapLimitNumerator)
+            .div(singleSwapLimitDenomerator);
+
+          setOneTimeSwapLimit(
+            BigNumber(oneTimeSwapLimit.toString())
+              .dividedBy(10 ** 18)
+              .toString()
+          );
+        }
+      )
+      .catch((e) => {
+        console.log("Swap one time limit error", e);
+      });
+  }, [stableSwapService]);
 
   useEffect(() => {
     if (chainId) {
@@ -362,6 +402,16 @@ const useStableSwap = (options: string[]) => {
       setInputCurrency(options[index]);
     }
   }, [outputCurrency, options]);
+
+  const updateDailySwapLimit = useCallback(() => {
+    stableSwapService.getDailySwapLimit().then((dailyLimitRes) => {
+      setDailyLimit(
+        BigNumber(dailyLimitRes.toString())
+          .dividedBy(10 ** 18)
+          .toString()
+      );
+    });
+  }, [stableSwapService]);
 
   const swapFee = useMemo(() => {
     if (inputValue) {
@@ -426,6 +476,7 @@ const useStableSwap = (options: string[]) => {
       handleCurrencyChange(inputCurrency, outputCurrency);
     } finally {
       setSwapPending(false);
+      updateDailySwapLimit();
     }
   }, [
     feeOut,
@@ -555,6 +606,14 @@ const useStableSwap = (options: string[]) => {
         : formattedBalance.decimalPlaces(18).toString();
     }
 
+    if (BigNumber(formattedBalance).isGreaterThan(displayDailyLimit)) {
+      formattedBalance = displayDailyLimit;
+    }
+
+    if (BigNumber(formattedBalance).isGreaterThan(oneTimeSwapLimit)) {
+      formattedBalance = oneTimeSwapLimit;
+    }
+
     if (BigNumber(formattedBalance).isLessThan(0.001)) {
       formattedBalance = "0";
     }
@@ -567,6 +626,8 @@ const useStableSwap = (options: string[]) => {
   }, [
     fxdAvailable,
     usStableAvailable,
+    displayDailyLimit,
+    oneTimeSwapLimit,
     options,
     inputBalance,
     inputCurrency,
@@ -581,6 +642,7 @@ const useStableSwap = (options: string[]) => {
     depositTracker,
     totalLocked,
     dailyLimit: displayDailyLimit,
+    oneTimeSwapLimit,
     isDecentralizedState,
     isUserWhiteListed,
     inputDecimals,

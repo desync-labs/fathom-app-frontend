@@ -145,11 +145,12 @@ const VaultList: FC<VaultListPropsType> = ({
                         }}
                       >
                         <VaultListTableCell
+                          colSpan={2}
                           sx={{ paddingLeft: "20px !important" }}
                         >
                           Token
                         </VaultListTableCell>
-                        <VaultListTableCell>
+                        <VaultListTableCell colSpan={1}>
                           <VaultListTableCellPopover>
                             Fee
                             <AppPopover
@@ -160,7 +161,7 @@ const VaultList: FC<VaultListPropsType> = ({
                             />
                           </VaultListTableCellPopover>
                         </VaultListTableCell>
-                        <VaultListTableCell>
+                        <VaultListTableCell colSpan={1}>
                           <VaultListTableCellPopover>
                             Earned
                             <AppPopover
@@ -173,7 +174,7 @@ const VaultList: FC<VaultListPropsType> = ({
                             />
                           </VaultListTableCellPopover>
                         </VaultListTableCell>
-                        <VaultListTableCell>
+                        <VaultListTableCell colSpan={1}>
                           <VaultListTableCellPopover>
                             Apr
                             <AppPopover
@@ -189,7 +190,7 @@ const VaultList: FC<VaultListPropsType> = ({
                             />
                           </VaultListTableCellPopover>
                         </VaultListTableCell>
-                        <VaultListTableCell>
+                        <VaultListTableCell colSpan={1}>
                           <VaultListTableCellPopover>
                             Tvl
                             <AppPopover
@@ -204,9 +205,13 @@ const VaultList: FC<VaultListPropsType> = ({
                             />
                           </VaultListTableCellPopover>
                         </VaultListTableCell>
-                        <VaultListTableCell>Available</VaultListTableCell>
-                        <VaultListTableCell>Staked</VaultListTableCell>
-                        <TableCell></TableCell>
+                        <VaultListTableCell colSpan={1}>
+                          Available
+                        </VaultListTableCell>
+                        <VaultListTableCell colSpan={1}>
+                          Staked
+                        </VaultListTableCell>
+                        <TableCell colSpan={2}></TableCell>
                       </AppTableHeaderRow>
                     </TableHead>
                     <TableBody>
