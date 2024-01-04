@@ -10,9 +10,7 @@ import { SharedProvider } from "context/shared";
 import { Provider } from "react-redux";
 import store from "apps/dex/state";
 import { HashRouter as Router } from "react-router-dom";
-import GlobalDataContextProvider from "apps/charts/contexts/GlobalData";
-import ApplicationContextProvider from "apps/charts/contexts/Application";
-import TokenDataContextProvider from "apps/charts/contexts/TokenData";
+import { ContextProviders, Updaters as ChartUpdaters } from "apps/charts";
 
 function App() {
   return (
@@ -22,14 +20,13 @@ function App() {
           <SharedProvider>
             <Provider store={store}>
               <Router>
-                <TokenDataContextProvider>
-                  <ApplicationContextProvider>
-                    <GlobalDataContextProvider>
-                      <Updaters />
-                      <MainLayout />
-                    </GlobalDataContextProvider>
-                  </ApplicationContextProvider>
-                </TokenDataContextProvider>
+                <ContextProviders>
+                  <>
+                    <Updaters />
+                    <ChartUpdaters />
+                    <MainLayout />
+                  </>
+                </ContextProviders>
               </Router>
             </Provider>
           </SharedProvider>
