@@ -358,7 +358,16 @@ const PairList: FC<PairListProps> = (props) => {
           );
         })
     );
-  }, [pairs, sortedColumn, sortDirection, page, maxPage]);
+  }, [
+    pairs,
+    color,
+    sortedColumn,
+    maxItems,
+    sortDirection,
+    page,
+    maxPage,
+    useTracked,
+  ]);
 
   return (
     <ListWrapper>
