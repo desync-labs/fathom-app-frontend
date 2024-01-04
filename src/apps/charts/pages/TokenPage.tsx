@@ -254,7 +254,7 @@ const TokenPage: FC<{ address: string }> = ({ address }) => {
               color={backgroundColor}
               external
               href={
-                "https://xdc.blocksscan.io/address/" +
+                "https://xdc.blocksscan.io/tokens/" +
                 address.replace(/^.{2}/g, "xdc")
               }
             >
