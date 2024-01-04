@@ -305,7 +305,7 @@ const useStableSwap = (options: string[]) => {
         setLastUpdate(lastUpdate.toString());
       });
     }
-  }, [chainId, stableSwapService, library, setLastUpdate]);
+  }, [chainId, stableSwapService, setLastUpdate]);
 
   useEffect(() => {
     if (isDecentralizedState) {
