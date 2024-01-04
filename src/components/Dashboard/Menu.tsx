@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 import { FC } from "react";
 import { useLocation } from "react-router-dom";
 
@@ -18,7 +18,7 @@ type ItemPropsType = {
   open: boolean;
 };
 
-export const Menu: FC<ItemPropsType> = ({ open }) => {
+export const Menu: FC<ItemPropsType> = memo(({ open }) => {
   const location = useLocation();
   const { allowStableSwap, isUserWrapperWhiteListed } = useConnector();
 
@@ -107,4 +107,4 @@ export const Menu: FC<ItemPropsType> = ({ open }) => {
       ))}
     </>
   );
-};
+});
