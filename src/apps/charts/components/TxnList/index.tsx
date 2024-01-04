@@ -80,8 +80,8 @@ export const DashGrid = styled.div`
 
   @media screen and (min-width: 1080px) {
     max-width: 1320px;
-    grid-template-columns: 1.2fr 1fr 1fr 1fr 1fr 1fr;
-    grid-template-areas: "txn value amountToken amountOther account time";
+    grid-template-columns: 1fr 1.2fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-areas: "type txn value amountToken amountOther account time";
   }
 `;
 
@@ -216,14 +216,14 @@ const ListItem: FC<ListItemProps> = memo((props) => {
           {getTransactionType(item.type, item.token1Symbol, item.token0Symbol)}
         </Link>
       </DataText>
-      <DataText>
+      <DataText justifyContent={"center"}>
         {currency === "XDC"
           ? "Ξ " + formattedNum(item.valueETH)
           : formattedNum(item.amountUSD, true)}
       </DataText>
       {!below780 && (
         <>
-          <DataText>
+          <DataText justifyContent={"center"}>
             {formattedNum(item.token1Amount) + " "}{" "}
             <FormattedName
               text={item.token1Symbol}
@@ -231,7 +231,7 @@ const ListItem: FC<ListItemProps> = memo((props) => {
               margin={true}
             />
           </DataText>
-          <DataText>
+          <DataText justifyContent={"center"}>
             {formattedNum(item.token0Amount) + " "}{" "}
             <FormattedName
               text={item.token0Symbol}
@@ -242,20 +242,22 @@ const ListItem: FC<ListItemProps> = memo((props) => {
         </>
       )}
       {!below1080 && (
-        <DataText>
+        <DataText justifyContent={"center"}>
           <Link
             external
-            href={
-              "https://xdc.blocksscan.io/address/" +
-              item.account.replace(/^.{2}/g, "xdc")
-            }
+            href={"https://xdc.blocksscan.io/address/" + item.account}
           >
             {item.account &&
               item.account.slice(0, 6) + "..." + item.account.slice(38, 42)}
           </Link>
         </DataText>
       )}
-      <DataText>{formatTime(item.timestamp)}</DataText>
+      <DataText justifyContent={"center"}>
+        <Link external href={"https://xdc.blocksscan.io/txs/" + item.hash}>
+          {item.hash && item.hash.slice(0, 6) + "..." + item.hash.slice(38, 42)}
+        </Link>
+      </DataText>
+      <DataText justifyContent={"end"}>{formatTime(item.timestamp)}</DataText>
     </DashGrid>
   );
 });
@@ -478,7 +480,10 @@ const TxnList: FC<TxnListProps> = (props) => {
       <HeaderWrapper
         style={{ height: "fit-content", padding: "0 1.125rem 1rem" }}
       >
-        <Flex alignItems="center" justifyContent="flex-start">
+        <Flex alignItems="center" justifyContent={"flex-start"}>
+          <TableHeaderBox>Type</TableHeaderBox>
+        </Flex>
+        <Flex alignItems="center" justifyContent="center">
           <ClickableText
             color="textDim"
             onClick={() => {
@@ -499,7 +504,7 @@ const TxnList: FC<TxnListProps> = (props) => {
           </ClickableText>
         </Flex>
         {!below780 && (
-          <Flex alignItems="center">
+          <Flex alignItems="center" justifyContent={"center"}>
             <ClickableText
               color="textDim"
               onClick={() => {
@@ -522,7 +527,7 @@ const TxnList: FC<TxnListProps> = (props) => {
         )}
         <>
           {!below780 && (
-            <Flex alignItems="center">
+            <Flex alignItems="center" justifyContent={"center"}>
               <ClickableText
                 color="textDim"
                 onClick={() => {
@@ -546,14 +551,14 @@ const TxnList: FC<TxnListProps> = (props) => {
             </Flex>
           )}
           {!below1080 && (
-            <Flex alignItems="center">
+            <Flex alignItems="center" justifyContent={"center"}>
               <TableHeaderBox>Account</TableHeaderBox>
             </Flex>
           )}
-          <Flex alignItems="center">
+          <Flex alignItems="center" justifyContent={"center"}>
             <TableHeaderBox>Transaction</TableHeaderBox>
           </Flex>
-          <Flex alignItems="center">
+          <Flex alignItems="center" justifyContent={"flex-end"}>
             <ClickableText
               color="textDim"
               onClick={() => {

@@ -99,6 +99,7 @@ import {
 import { ApolloProvider } from "@apollo/client";
 import { dexClient } from "apollo/client";
 import Transactions from "apps/dex/pages/Transactions";
+import { memo } from "react";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -655,4 +656,4 @@ const MainLayout = () => {
   );
 };
 
-export default MainLayout;
+export default memo(MainLayout);

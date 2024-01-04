@@ -156,9 +156,14 @@ const Transactions: FC = () => {
     }
   }, [storageTransactions, account]);
 
+  /**
+   * Get transactions for last 7 days.
+   */
   const sortedRecentTransactions = useMemo(() => {
     const txs = Object.values(allTransactions);
-    return txs.filter(isTransactionRecent).sort(newTransactionsFirst);
+    return txs
+      .filter((tx) => isTransactionRecent(tx, 7))
+      .sort(newTransactionsFirst);
   }, [allTransactions]);
 
   const pending = useMemo(() => {

@@ -67,20 +67,13 @@ export function useAllTransactions(): {
   return chainId ? state[chainId] ?? {} : {};
 }
 
-export function useIsTransactionPending(transactionHash?: string): boolean {
-  const transactions = useAllTransactions();
-
-  if (!transactionHash || !transactions[transactionHash]) return false;
-
-  return !transactions[transactionHash].receipt;
-}
-
 /**
  * Returns whether a transaction happened in the last day (86400 seconds * 1000 milliseconds / second)
- * @param tx to check for recency
+ * @param tx to check for recency.
+ * @param days - days for retrieve transactions.
  */
-export function isTransactionRecent(tx: TransactionDetails): boolean {
-  return new Date().getTime() - tx.addedTime < 86_400_000;
+export function isTransactionRecent(tx: TransactionDetails, days = 1): boolean {
+  return new Date().getTime() - tx.addedTime < days * 86_400_000;
 }
 
 // returns whether a token has a pending approval transaction
