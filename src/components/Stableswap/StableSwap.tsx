@@ -150,6 +150,7 @@ const StableSwap = () => {
     depositTracker,
     totalLocked,
     dailyLimit,
+    oneTimeSwapLimit,
     isDecentralizedState,
     isUserWhiteListed,
     inputValue,
@@ -162,6 +163,8 @@ const StableSwap = () => {
     navigate,
     outputCurrency,
     fxdPrice,
+    inputError,
+    approveInputBtn,
   } = data;
 
   const { allowStableSwap, isUserWrapperWhiteListed } = useConnector();
@@ -189,8 +192,11 @@ const StableSwap = () => {
                 isLoading={swapPending}
                 disabled={
                   !inputValue ||
+                  BigNumber(inputValue).isLessThanOrEqualTo(0) ||
                   !outputValue ||
                   swapPending ||
+                  !!inputError ||
+                  approveInputBtn ||
                   isUserWhiteListed === false
                 }
                 onClick={handleSwap}
@@ -248,7 +254,12 @@ const StableSwap = () => {
                   </InfoValue>
                 </StableSwapInfoWrapper>
               )}
-
+              <StableSwapInfoWrapper>
+                <InfoLabel>One time Limit</InfoLabel>
+                <InfoValue>
+                  {formatPercentage(Number(oneTimeSwapLimit))} {inputCurrency}{" "}
+                </InfoValue>
+              </StableSwapInfoWrapper>
               <StableSwapInfoWrapper>
                 <InfoLabel>FXD Pool Token Available</InfoLabel>
                 <InfoValue>
