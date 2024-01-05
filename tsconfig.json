@@ -25,6 +25,11 @@
     "types": ["react-spring", "jest"],
     "baseUrl": "src"
   },
-  "exclude": ["node_modules", "playwright-tests"],
-  "include": ["./src/**/*.ts", "./src/**/*.tsx"]
+  "exclude": ["node_modules"],
+  "include": [
+    "./src/**/*.ts",
+    "./src/**/*.tsx",
+    "playwright-tests",
+    "playwright.config.ts"
+  ]
 }
