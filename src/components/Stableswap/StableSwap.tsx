@@ -257,7 +257,7 @@ const StableSwap = () => {
               <StableSwapInfoWrapper>
                 <InfoLabel>One time Limit</InfoLabel>
                 <InfoValue>
-                  {formatPercentage(Number(oneTimeSwapLimit))} FXD{" "}
+                  {formatPercentage(Number(oneTimeSwapLimit))} {inputCurrency}{" "}
                 </InfoValue>
               </StableSwapInfoWrapper>
               <StableSwapInfoWrapper>
