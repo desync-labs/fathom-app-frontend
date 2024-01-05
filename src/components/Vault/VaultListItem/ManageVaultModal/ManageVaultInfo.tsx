@@ -22,7 +22,7 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
   formToken,
   formSharedToken,
 }) => {
-  const { token, shareToken, balanceTokens, strategies, totalFees } =
+  const { token, shareToken, strategies, totalFees, sharesSupply } =
     vaultItemData;
   const { balancePosition, balanceShares } = vaultPosition;
   const { isMobile } = useSharedContext();
@@ -97,8 +97,8 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
           secondaryAction={
             <>
               {`${formatNumber(
-                BigNumber(balancePosition)
-                  .dividedBy(BigNumber(balanceTokens))
+                BigNumber(balanceShares)
+                  .dividedBy(BigNumber(sharesSupply))
                   .multipliedBy(100)
                   .toNumber()
               )} %`}
@@ -111,31 +111,39 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
                 →{" "}
                 {formType === FormType.DEPOSIT
                   ? formatNumber(
-                      BigNumber(balancePosition)
+                      BigNumber(balanceShares)
                         .plus(
-                          BigNumber(formToken || "0").multipliedBy(10 ** 18)
+                          BigNumber(formSharedToken || "0").multipliedBy(
+                            10 ** 18
+                          )
                         )
                         .dividedBy(
-                          BigNumber(balanceTokens).plus(
-                            BigNumber(formToken || "0").multipliedBy(10 ** 18)
+                          BigNumber(sharesSupply).plus(
+                            BigNumber(formSharedToken || "0").multipliedBy(
+                              10 ** 18
+                            )
                           )
                         )
                         .multipliedBy(100)
                         .toNumber()
                     )
-                  : BigNumber(formToken)
+                  : BigNumber(formSharedToken)
                       .multipliedBy(10 ** 18)
-                      .isEqualTo(BigNumber(balanceTokens))
+                      .isEqualTo(BigNumber(sharesSupply))
                   ? "0"
                   : formatNumber(
                       Math.max(
-                        BigNumber(balancePosition)
+                        BigNumber(balanceShares)
                           .minus(
-                            BigNumber(formToken || "0").multipliedBy(10 ** 18)
+                            BigNumber(formSharedToken || "0").multipliedBy(
+                              10 ** 18
+                            )
                           )
                           .dividedBy(
-                            BigNumber(balanceTokens).minus(
-                              BigNumber(formToken || "0").multipliedBy(10 ** 18)
+                            BigNumber(sharesSupply).minus(
+                              BigNumber(formSharedToken || "0").multipliedBy(
+                                10 ** 18
+                              )
                             )
                           )
                           .multipliedBy(100)

@@ -4,9 +4,6 @@ import debounce from "lodash.debounce";
 import { SmartContractFactory } from "fathom-sdk";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
-import { useQuery } from "@apollo/client";
-import { STABLE_SWAP_STATS } from "apollo/queries";
-import { DAY_IN_SECONDS } from "utils/Constants";
 import { formatNumber } from "utils/format";
 import { PricesContext } from "context/prices";
 import { useNavigate } from "react-router-dom";
@@ -34,8 +31,7 @@ const useStableSwap = (options: string[]) => {
   const [approvalPending, setApprovalPending] = useState<string | null>(null);
   const [swapPending, setSwapPending] = useState<boolean>(false);
 
-  const [lastUpdate, setLastUpdate] = useState<string>();
-  const [dailyLimit, setDailyLimit] = useState<string>("0");
+  const [oneTimeSwapLimit, setOneTimeSwapLimit] = useState<string>("0");
   const [displayDailyLimit, setDisplayDailyLimit] = useState<string>("0");
 
   const [feeIn, setFeeIn] = useState<string>("0");
@@ -51,10 +47,6 @@ const useStableSwap = (options: string[]) => {
   const { account, chainId, isDecentralizedState, isUserWhiteListed } =
     useConnector();
   const { setLastTransactionBlock } = useSyncContext();
-
-  const { data, loading, refetch } = useQuery(STABLE_SWAP_STATS, {
-    context: { clientName: "stable", chainId },
-  });
 
   const navigate = useNavigate();
 
@@ -154,6 +146,12 @@ const useStableSwap = (options: string[]) => {
     ) {
       return `You can't swap more then remaining daily limit ${formatNumber(
         Number(displayDailyLimit)
+      )} FXD`;
+    }
+
+    if (BigNumber(inputValue).isGreaterThan(oneTimeSwapLimit)) {
+      return `You can't swap more then one time limit ${formatNumber(
+        Number(oneTimeSwapLimit)
       )} FXD`;
     }
 
@@ -289,19 +287,10 @@ const useStableSwap = (options: string[]) => {
   }, [inputCurrency, outputCurrency, chainId, handleCurrencyChange]);
 
   useEffect(() => {
-    if (chainId) {
-      stableSwapService.getLastUpdate().then((lastUpdate) => {
-        setLastUpdate(lastUpdate.toString());
-      });
-    }
-  }, [chainId, stableSwapService, setLastUpdate]);
-
-  useEffect(() => {
     if (isDecentralizedState) {
-      stableSwapService.getDailySwapLimit().then((dailyLimit) => {
-        setDailyLimit(dailyLimit.toString());
-      });
+      updateDailySwapLimit();
     }
+    updateOneTimeSwapLimit();
   }, [stableSwapService, isDecentralizedState]);
 
   useEffect(() => {
@@ -315,24 +304,6 @@ const useStableSwap = (options: string[]) => {
       });
     }
   }, [stableSwapService, chainId, setFeeIn, setFeeOut]);
-
-  useEffect(() => {
-    if (data?.stableSwapStats.length && lastUpdate && dailyLimit && !loading) {
-      if (
-        BigNumber(lastUpdate)
-          .plus(DAY_IN_SECONDS)
-          .isGreaterThan(BigNumber(Date.now()).dividedBy(1000))
-      ) {
-        return setDisplayDailyLimit(
-          BigNumber(data.stableSwapStats[0].remainingDailySwapAmount)
-            .dividedBy(10 ** 18)
-            .toString()
-        );
-      }
-    }
-
-    setDisplayDailyLimit(dailyLimit.toString());
-  }, [data, loading, lastUpdate, dailyLimit, setDisplayDailyLimit]);
 
   useEffect(() => {
     if (inputCurrency) {
@@ -351,6 +322,40 @@ const useStableSwap = (options: string[]) => {
       setInputCurrency(options[index]);
     }
   }, [outputCurrency, options]);
+
+  const updateDailySwapLimit = useCallback(() => {
+    stableSwapService.getDailySwapLimit().then((dailyLimitRes) => {
+      setDisplayDailyLimit(
+        BigNumber(dailyLimitRes.toString())
+          .dividedBy(10 ** 18)
+          .toString()
+      );
+    });
+  }, [stableSwapService]);
+
+  const updateOneTimeSwapLimit = useCallback(() => {
+    Promise.all([
+      stableSwapService.getTotalValueDeposited(),
+      stableSwapService.getSingleSwapLimitNumerator(),
+      stableSwapService.getSingleSwapLimitDenominator(),
+    ])
+      .then(
+        ([
+          totalValueDeposited,
+          singleSwapLimitNumerator,
+          singleSwapLimitDenominator,
+        ]) => {
+          const oneTimeSwapLimit = BigNumber(totalValueDeposited.toString())
+            .multipliedBy(singleSwapLimitNumerator.toString())
+            .dividedBy(singleSwapLimitDenominator.toString());
+
+          setOneTimeSwapLimit(oneTimeSwapLimit.dividedBy(10 ** 18).toString());
+        }
+      )
+      .catch((e) => {
+        console.log("Swap one time limit error", e);
+      });
+  }, [stableSwapService]);
 
   const swapFee = useMemo(() => {
     if (inputValue) {
@@ -404,17 +409,12 @@ const useStableSwap = (options: string[]) => {
       setInputValue("");
       setOutputValue("");
 
-      /**
-       * Refetch data from Graph.
-       */
-      refetch();
-
-      setLastUpdate((Date.now() / 1000).toString());
-
       setLastTransactionBlock(blockNumber as number);
       handleCurrencyChange(inputCurrency, outputCurrency);
     } finally {
       setSwapPending(false);
+      updateDailySwapLimit();
+      updateOneTimeSwapLimit();
     }
   }, [
     feeOut,
@@ -430,8 +430,6 @@ const useStableSwap = (options: string[]) => {
     handleCurrencyChange,
     setLastTransactionBlock,
     setSwapPending,
-    refetch,
-    setLastUpdate,
     updateDailySwapLimit,
     updateOneTimeSwapLimit,
   ]);
@@ -541,6 +539,14 @@ const useStableSwap = (options: string[]) => {
         : formattedBalance.decimalPlaces(18).toString();
     }
 
+    if (BigNumber(formattedBalance).isGreaterThan(displayDailyLimit)) {
+      formattedBalance = displayDailyLimit;
+    }
+
+    if (BigNumber(formattedBalance).isGreaterThan(oneTimeSwapLimit)) {
+      formattedBalance = oneTimeSwapLimit;
+    }
+
     if (BigNumber(formattedBalance).isLessThan(0.001)) {
       formattedBalance = "0";
     }
@@ -553,6 +559,8 @@ const useStableSwap = (options: string[]) => {
   }, [
     fxdAvailable,
     usStableAvailable,
+    displayDailyLimit,
+    oneTimeSwapLimit,
     options,
     inputBalance,
     inputCurrency,
@@ -567,6 +575,7 @@ const useStableSwap = (options: string[]) => {
     depositTracker,
     totalLocked,
     dailyLimit: displayDailyLimit,
+    oneTimeSwapLimit,
     isDecentralizedState,
     isUserWhiteListed,
     inputDecimals,
