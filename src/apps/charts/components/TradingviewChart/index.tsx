@@ -247,8 +247,8 @@ ${formattedPercentChange}
           const price = param.seriesPrices?.get(series);
 
           toolTip.innerHTML =
-            `<div style="font-size: 16px; position: absolute; top: -42px; margin: 4px 0px; color: white;">${title}</div>` +
-            `<div style="font-size: 22px; position: absolute; top: -20px; margin: 4px 0px; color: white">` +
+            `<div style="font-size: 16px; position: absolute; top: -42px; margin: 4px 0; color: white;">${title}</div>` +
+            `<div style="font-size: 22px; position: absolute; top: -20px; margin: 4px 0; color: white">` +
             formattedNum(price, true) +
             "</div>" +
             "<div>" +
@@ -287,7 +287,7 @@ ${formattedPercentChange}
 
   return (
     <Wrapper>
-      <div ref={ref} id={"test-id" + type} />
+      <div style={{ marginTop: "25px" }} ref={ref} id={"test-id" + type} />
       <IconWrapper>
         <Play
           onClick={() => {

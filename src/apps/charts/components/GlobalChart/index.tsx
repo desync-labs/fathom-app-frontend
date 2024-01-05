@@ -14,6 +14,7 @@ import { RowFixed } from "apps/charts/components/Row";
 import { OptionButton } from "apps/charts/components/ButtonStyled";
 import { getTimeframe } from "apps/charts/utils";
 import { TYPE } from "apps/charts/Theme";
+import useSharedContext from "context/shared";
 
 const CHART_VIEW = {
   VOLUME: "Volume",
@@ -30,6 +31,7 @@ const GlobalChart: FC<{ display: any }> = (props) => {
   const [chartView, setChartView] = useState(
     display === "volume" ? CHART_VIEW.VOLUME : CHART_VIEW.LIQUIDITY
   );
+  const { isMobile } = useSharedContext();
 
   // time window and window size for chart
   const timeWindow = timeframeOptions.ALL_TIME;
@@ -104,7 +106,7 @@ const GlobalChart: FC<{ display: any }> = (props) => {
             data={dailyData}
             base={totalLiquidityUSD}
             baseChange={liquidityChangeUSD}
-            title="Liquidity"
+            title={isMobile ? "" : "Liquidity"}
             field="totalLiquidityUSD"
             width={width}
             type={CHART_TYPES.AREA}
@@ -127,7 +129,11 @@ const GlobalChart: FC<{ display: any }> = (props) => {
                 : volumeChangeUSD
             }
             title={
-              volumeWindow === VOLUME_WINDOW.WEEKLY ? "Volume (7d)" : "Volume"
+              isMobile
+                ? ""
+                : volumeWindow === VOLUME_WINDOW.WEEKLY
+                ? "Volume (7d)"
+                : "Volume"
             }
             field={
               volumeWindow === VOLUME_WINDOW.WEEKLY

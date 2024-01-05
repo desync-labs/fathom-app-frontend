@@ -81,14 +81,15 @@ const PoolsListItem: FC<PoolsListItemPropsType> = ({
           )}
           <PriceChanged
             current={
-              pool.poolName.toUpperCase() === "XDC"
+              pool.poolName.toUpperCase() === "XDC" &&
+              BigNumber(xdcPrice).isGreaterThan(0)
                 ? BigNumber(xdcPrice)
                     .dividedBy(10 ** 18)
                     .toNumber()
                 : pool.collateralPrice
             }
             previous={
-              prevXdcPrice
+              prevXdcPrice && BigNumber(prevXdcPrice).isGreaterThan(0)
                 ? BigNumber(prevXdcPrice)
                     .dividedBy(10 ** 18)
                     .toNumber()
