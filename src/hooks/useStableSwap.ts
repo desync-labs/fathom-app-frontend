@@ -345,17 +345,10 @@ const useStableSwap = (options: string[]) => {
   }, [stableSwapService]);
 
   const updateOneTimeSwapLimit = useCallback(() => {
-    const totalValueDepositetPromise =
-      stableSwapService.getTotalValueDeposited();
-    const singleSwapLimitNumeratorPromise =
-      stableSwapService.getSingleSwapLimitNumerator();
-    const singleSwapLimitDenomeratorPromise =
-      stableSwapService.getSingleSwapLimitDenomerator();
-
     Promise.all([
-      totalValueDepositetPromise,
-      singleSwapLimitNumeratorPromise,
-      singleSwapLimitDenomeratorPromise,
+      stableSwapService.getTotalValueDeposited(),
+      stableSwapService.getSingleSwapLimitNumerator(),
+      stableSwapService.getSingleSwapLimitDenomerator(),
     ])
       .then(
         ([
