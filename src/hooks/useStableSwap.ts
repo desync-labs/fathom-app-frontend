@@ -430,13 +430,10 @@ const useStableSwap = (options: string[]) => {
     handleCurrencyChange,
     setLastTransactionBlock,
     setSwapPending,
-<<<<<<< Updated upstream
     refetch,
     setLastUpdate,
-=======
     updateDailySwapLimit,
     updateOneTimeSwapLimit,
->>>>>>> Stashed changes
   ]);
 
   const approveInput = useCallback(async () => {
