@@ -1,7 +1,7 @@
 import { Dispatch, FC, ReactNode, SetStateAction, useEffect } from "react";
 import styled from "styled-components";
 import { ApolloProvider } from "@apollo/client";
-import { client } from "apps/charts/apollo/client";
+import { dexClient as client } from "apollo/client";
 import {
   useGlobalData,
   useGlobalChartData,

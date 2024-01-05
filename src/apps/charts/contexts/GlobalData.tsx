@@ -8,7 +8,7 @@ import {
   useState,
   FC,
 } from "react";
-import { client } from "apps/charts/apollo/client";
+import { dexClient as client } from "apollo/client";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { ProviderProps, useTimeframe } from "apps/charts/contexts/Application";
@@ -31,22 +31,17 @@ import {
 import weekOfYear from "dayjs/plugin/weekOfYear";
 import { useAllPairData } from "apps/charts/contexts/PairData";
 import { useTokenChartDataCombined } from "apps/charts/contexts/TokenData";
-
-import {
-  FTHM_WXDC_PAIR_ID,
-  WXDC_FXD_PAIR_ID,
-  WXDC_USDT_PAIR_ID,
-} from "apps/charts/constants";
 import { BigNumber } from "bignumber.js";
+import usePricesContext from "context/prices";
 
 const UPDATE = "UPDATE";
 const UPDATE_TXNS = "UPDATE_TXNS";
 const UPDATE_CHART = "UPDATE_CHART";
 const UPDATE_ETH_PRICE = "UPDATE_ETH_PRICE";
 const ETH_PRICE_KEY = "ETH_PRICE_KEY";
-const UPDATE_ALL_PAIRS_IN_UNISWAP =
-  "UPDAUPDATE_ALL_PAIRS_IN_UNISWAPTE_TOP_PAIRS";
-const UPDATE_ALL_TOKENS_IN_UNISWAP = "UPDATE_ALL_TOKENS_IN_UNISWAP";
+const UPDATE_ALL_PAIRS_IN_FATHOM_SWAP =
+  "UPDATE_ALL_PAIRS_IN_FATHOM_SWAP_TOP_PAIRS";
+const UPDATE_ALL_TOKENS_IN_FATHOM_SWAP = "UPDATE_ALL_TOKENS_IN_FATHOM_SWAP";
 const UPDATE_TOP_LPS = "UPDATE_TOP_LPS";
 
 const offsetVolumes: any[] = [];
@@ -99,7 +94,7 @@ function reducer(
       };
     }
 
-    case UPDATE_ALL_PAIRS_IN_UNISWAP: {
+    case UPDATE_ALL_PAIRS_IN_FATHOM_SWAP: {
       const { allPairs } = payload;
       return {
         ...state,
@@ -107,7 +102,7 @@ function reducer(
       };
     }
 
-    case UPDATE_ALL_TOKENS_IN_UNISWAP: {
+    case UPDATE_ALL_TOKENS_IN_FATHOM_SWAP: {
       const { allTokens } = payload;
       return {
         ...state,
@@ -174,7 +169,7 @@ const Provider: FC<ProviderProps> = ({ children }) => {
 
   const updateAllPairsInUniswap = useCallback((allPairs: any[]) => {
     dispatch({
-      type: UPDATE_ALL_PAIRS_IN_UNISWAP,
+      type: UPDATE_ALL_PAIRS_IN_FATHOM_SWAP,
       payload: {
         allPairs,
       },
@@ -183,7 +178,7 @@ const Provider: FC<ProviderProps> = ({ children }) => {
 
   const updateAllTokensInUniswap = useCallback((allTokens: any[]) => {
     dispatch({
-      type: UPDATE_ALL_TOKENS_IN_UNISWAP,
+      type: UPDATE_ALL_TOKENS_IN_FATHOM_SWAP,
       payload: {
         allTokens,
       },
@@ -815,25 +810,10 @@ export function useTopLps() {
 }
 
 export function useFxdPrice() {
-  const allPairs = useAllPairData();
-
-  const fxdPrice = useMemo(() => {
-    if (Object.keys(allPairs).length) {
-      const wxdcFxdPair = Object.values(allPairs).find((pairItem: any) => {
-        return pairItem.id === WXDC_FXD_PAIR_ID;
-      }) as any;
-      const wxdcUsdtPair = Object.values(allPairs).find((pairItem: any) => {
-        return pairItem.id === WXDC_USDT_PAIR_ID;
-      }) as any;
-      return wxdcFxdPair
-        ? BigNumber(wxdcFxdPair.token0Price)
-            .dividedBy(wxdcUsdtPair.token1Price)
-            .toNumber()
-        : 0;
-    } else {
-      return 0;
-    }
-  }, [allPairs]);
+  let { fxdPrice } = usePricesContext();
+  fxdPrice = BigNumber(fxdPrice)
+    .dividedBy(10 ** 18)
+    .toString();
 
   return {
     fxdPrice,
@@ -841,24 +821,10 @@ export function useFxdPrice() {
 }
 
 export function useFTHMPrice() {
-  const allPairs = useAllPairData();
-  const [ethPrice] = useEthPrice();
-
-  const fthmPrice = useMemo(() => {
-    if (Object.keys(allPairs).length) {
-      const findPair = Object.values(allPairs).find((pairItem: any) => {
-        return pairItem.id === FTHM_WXDC_PAIR_ID;
-      }) as any;
-
-      const price =
-        findPair.token0.symbol === "FTHM"
-          ? findPair.token1Price
-          : findPair.token0Price;
-      return price * ethPrice;
-    } else {
-      return 0;
-    }
-  }, [allPairs, ethPrice]);
+  let { fthmPrice } = usePricesContext();
+  fthmPrice = BigNumber(fthmPrice)
+    .dividedBy(10 ** 18)
+    .toString();
 
   return {
     fthmPrice,

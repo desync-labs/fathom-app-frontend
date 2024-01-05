@@ -9,7 +9,7 @@ import {
   useState,
 } from "react";
 
-import { client } from "apps/charts/apollo/client";
+import { dexClient as client } from "apollo/client";
 import {
   FILTERED_TRANSACTIONS,
   HOURLY_PAIR_RATES,
@@ -685,6 +685,7 @@ export function useDataForList(pairList: any) {
         ethPrice,
         listedTokens
       );
+
       // @ts-ignore
       setFetched(newFetched.concat(newPairData));
     }
@@ -692,7 +693,16 @@ export function useDataForList(pairList: any) {
       setStale(true);
       fetchNewPairData();
     }
-  }, [ethPrice, state, pairList, stale, fetched, listedTokens]);
+  }, [
+    ethPrice,
+    state,
+    pairList,
+    stale,
+    fetched,
+    listedTokens,
+    setStale,
+    setFetched,
+  ]);
 
   const formattedFetch =
     fetched &&

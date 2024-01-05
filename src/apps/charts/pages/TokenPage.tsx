@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction, useState } from "react";
+import { Dispatch, FC, memo, SetStateAction, useState } from "react";
 import "feather-icons";
 import { Navigate, useParams } from "react-router-dom";
 import { Text } from "rebass";
@@ -134,7 +134,7 @@ const HeaderWrapper = styled.div`
   padding-bottom: 7px !important;
 `;
 
-const TokenPage: FC<{ address: string }> = ({ address }) => {
+const TokenPage: FC<{ address: string }> = memo(({ address }) => {
   const {
     id,
     name,
@@ -254,7 +254,7 @@ const TokenPage: FC<{ address: string }> = ({ address }) => {
               color={backgroundColor}
               external
               href={
-                "https://xdc.blocksscan.io/address/" +
+                "https://xdc.blocksscan.io/tokens/" +
                 address.replace(/^.{2}/g, "xdc")
               }
             >
@@ -516,7 +516,7 @@ const TokenPage: FC<{ address: string }> = ({ address }) => {
                   <Link
                     external
                     href={
-                      "https://xdc.blocksscan.io/address/" +
+                      "https://xdc.blocksscan.io/tokens/" +
                       address.replace(/^.{2}/g, "xdc")
                     }
                   >
@@ -530,7 +530,7 @@ const TokenPage: FC<{ address: string }> = ({ address }) => {
       </ContentWrapper>
     </PageWrapper>
   );
-};
+});
 
 type TokenPageRouterComponentProps = {
   savedOpen: boolean;

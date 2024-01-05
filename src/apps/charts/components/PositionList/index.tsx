@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, FC } from "react";
+import { useState, useEffect, useMemo, FC, memo } from "react";
 import { useMedia } from "react-use";
 import dayjs from "dayjs";
 import LocalLoader from "apps/charts/components/LocalLoader";
@@ -122,6 +122,165 @@ const SORT_FIELD = {
 type PositionList = { positions: Position[] };
 type ListItemProps = { position: Position; index: number };
 
+const ListItem: FC<ListItemProps> = memo((props) => {
+  const { position, index } = props;
+  const poolOwnership =
+    position.liquidityTokenBalance / position.pair.totalSupply;
+  const valueUSD = poolOwnership * position.pair.reserveUSD;
+
+  const below500 = useMedia("(max-width: 500px)");
+  const below740 = useMedia("(max-width: 740px)");
+
+  const [ethPrice] = useEthPrice();
+
+  return (
+    <DashGrid
+      style={{
+        opacity: poolOwnership > 0 ? 1 : 0.6,
+        padding: "0.75rem 1.125rem",
+      }}
+    >
+      {!below740 && <DataText>{index}</DataText>}
+      <DataText justifyContent="flex-start" alignItems="center">
+        <AutoColumn gap="8px" justify="flex-start">
+          <DoubleTokenLogo
+            size={16}
+            a0={position.pair.token0.id}
+            a1={position.pair.token1.id}
+            margin={!below740}
+          />
+        </AutoColumn>
+        <AutoColumn
+          gap="8px"
+          justify="flex-start"
+          style={{ marginLeft: "20px" }}
+        >
+          <CustomLink to={"/charts/pair/" + position.pair.id}>
+            <TYPE.main style={{ whiteSpace: "nowrap" }}>
+              <FormattedName
+                text={
+                  position.pair.token0.symbol +
+                  "-" +
+                  position.pair.token1.symbol
+                }
+                maxCharacters={below740 ? 10 : 18}
+              />
+            </TYPE.main>
+          </CustomLink>
+
+          <RowFixed justify="flex-start">
+            <CustomLink
+              to={getPoolLink(position.pair.token0.id, position.pair.token1.id)}
+              style={{ marginRight: ".5rem" }}
+            >
+              <ButtonLight style={{ padding: "4px 6px", borderRadius: "4px" }}>
+                Add
+              </ButtonLight>
+            </CustomLink>
+            {poolOwnership > 0 && (
+              <CustomLink
+                to={getPoolLink(
+                  position.pair.token0.id,
+                  position.pair.token1.id,
+                  true
+                )}
+              >
+                <ButtonLight
+                  style={{ padding: "4px 6px", borderRadius: "4px" }}
+                >
+                  Remove
+                </ButtonLight>
+              </CustomLink>
+            )}
+          </RowFixed>
+        </AutoColumn>
+      </DataText>
+      <DataText>
+        <AutoColumn gap="12px" justify="flex-start">
+          <TYPE.main>{formattedNum(valueUSD, true)}</TYPE.main>
+          <AutoColumn gap="4px" justify="flex-start">
+            <RowFixed>
+              <TYPE.small fontWeight={400}>
+                {formattedNum(
+                  poolOwnership * parseFloat(position.pair.reserve0)
+                )}{" "}
+              </TYPE.small>
+              <FormattedName
+                text={position.pair.token0.symbol}
+                maxCharacters={below740 ? 10 : 18}
+                margin={true}
+                fontSize={"11px"}
+              />
+            </RowFixed>
+            <RowFixed>
+              <TYPE.small fontWeight={400}>
+                {formattedNum(
+                  poolOwnership * parseFloat(position.pair.reserve1)
+                )}{" "}
+              </TYPE.small>
+              <FormattedName
+                text={position.pair.token1.symbol}
+                maxCharacters={below740 ? 10 : 18}
+                margin={true}
+                fontSize={"11px"}
+              />
+            </RowFixed>
+          </AutoColumn>
+        </AutoColumn>
+      </DataText>
+      {!below500 && (
+        <DataText>
+          <AutoColumn gap="12px" justify="flex-start">
+            <TYPE.main color={"text5"}>
+              <RowFixed>{formattedNum(position?.fees.sum, true)}</RowFixed>
+            </TYPE.main>
+            <AutoColumn gap="4px" justify="flex-start">
+              <RowFixed>
+                <TYPE.small fontWeight={400}>
+                  {parseFloat(position.pair.token0.derivedETH)
+                    ? formattedNum(
+                        position?.fees.sum /
+                          (parseFloat(position.pair.token0.derivedETH) *
+                            ethPrice) /
+                          2,
+                        false
+                      )
+                    : 0}{" "}
+                </TYPE.small>
+                <FormattedName
+                  text={position.pair.token0.symbol}
+                  maxCharacters={below740 ? 10 : 18}
+                  margin={true}
+                  fontSize={"11px"}
+                />
+              </RowFixed>
+              <RowFixed>
+                <TYPE.small fontWeight={400}>
+                  {parseFloat(position.pair.token1.derivedETH)
+                    ? formattedNum(
+                        position?.fees.sum /
+                          (parseFloat(position.pair.token1.derivedETH) *
+                            ethPrice) /
+                          2,
+                        false
+                      )
+                    : 0}{" "}
+                </TYPE.small>
+                <FormattedName
+                  text={position.pair.token1.symbol}
+                  maxCharacters={below740 ? 10 : 18}
+                  margin={true}
+                  fontSize={"11px"}
+                />
+              </RowFixed>
+            </AutoColumn>
+          </AutoColumn>
+        </DataText>
+      )}
+    </DashGrid>
+  );
+});
+
 const PositionList: FC<PositionList> = (props) => {
   const { positions } = props;
   const below500 = useMedia("(max-width: 500px)");
@@ -152,167 +311,6 @@ const PositionList: FC<PositionList> = (props) => {
       );
     }
   }, [positions]);
-
-  const [ethPrice] = useEthPrice();
-
-  const ListItem: FC<ListItemProps> = (props) => {
-    const { position, index } = props;
-    const poolOwnership =
-      position.liquidityTokenBalance / position.pair.totalSupply;
-    const valueUSD = poolOwnership * position.pair.reserveUSD;
-
-    return (
-      <DashGrid
-        style={{
-          opacity: poolOwnership > 0 ? 1 : 0.6,
-          padding: "0.75rem 1.125rem",
-        }}
-      >
-        {!below740 && <DataText>{index}</DataText>}
-        <DataText justifyContent="flex-start" alignItems="center">
-          <AutoColumn gap="8px" justify="flex-start">
-            <DoubleTokenLogo
-              size={16}
-              a0={position.pair.token0.id}
-              a1={position.pair.token1.id}
-              margin={!below740}
-            />
-          </AutoColumn>
-          <AutoColumn
-            gap="8px"
-            justify="flex-start"
-            style={{ marginLeft: "20px" }}
-          >
-            <CustomLink to={"/charts/pair/" + position.pair.id}>
-              <TYPE.main style={{ whiteSpace: "nowrap" }}>
-                <FormattedName
-                  text={
-                    position.pair.token0.symbol +
-                    "-" +
-                    position.pair.token1.symbol
-                  }
-                  maxCharacters={below740 ? 10 : 18}
-                />
-              </TYPE.main>
-            </CustomLink>
-
-            <RowFixed justify="flex-start">
-              <CustomLink
-                to={getPoolLink(
-                  position.pair.token0.id,
-                  position.pair.token1.id
-                )}
-                style={{ marginRight: ".5rem" }}
-              >
-                <ButtonLight
-                  style={{ padding: "4px 6px", borderRadius: "4px" }}
-                >
-                  Add
-                </ButtonLight>
-              </CustomLink>
-              {poolOwnership > 0 && (
-                <CustomLink
-                  to={getPoolLink(
-                    position.pair.token0.id,
-                    position.pair.token1.id,
-                    true
-                  )}
-                >
-                  <ButtonLight
-                    style={{ padding: "4px 6px", borderRadius: "4px" }}
-                  >
-                    Remove
-                  </ButtonLight>
-                </CustomLink>
-              )}
-            </RowFixed>
-          </AutoColumn>
-        </DataText>
-        <DataText>
-          <AutoColumn gap="12px" justify="flex-start">
-            <TYPE.main>{formattedNum(valueUSD, true)}</TYPE.main>
-            <AutoColumn gap="4px" justify="flex-start">
-              <RowFixed>
-                <TYPE.small fontWeight={400}>
-                  {formattedNum(
-                    poolOwnership * parseFloat(position.pair.reserve0)
-                  )}{" "}
-                </TYPE.small>
-                <FormattedName
-                  text={position.pair.token0.symbol}
-                  maxCharacters={below740 ? 10 : 18}
-                  margin={true}
-                  fontSize={"11px"}
-                />
-              </RowFixed>
-              <RowFixed>
-                <TYPE.small fontWeight={400}>
-                  {formattedNum(
-                    poolOwnership * parseFloat(position.pair.reserve1)
-                  )}{" "}
-                </TYPE.small>
-                <FormattedName
-                  text={position.pair.token1.symbol}
-                  maxCharacters={below740 ? 10 : 18}
-                  margin={true}
-                  fontSize={"11px"}
-                />
-              </RowFixed>
-            </AutoColumn>
-          </AutoColumn>
-        </DataText>
-        {!below500 && (
-          <DataText>
-            <AutoColumn gap="12px" justify="flex-start">
-              <TYPE.main color={"text5"}>
-                <RowFixed>{formattedNum(position?.fees.sum, true)}</RowFixed>
-              </TYPE.main>
-              <AutoColumn gap="4px" justify="flex-start">
-                <RowFixed>
-                  <TYPE.small fontWeight={400}>
-                    {parseFloat(position.pair.token0.derivedETH)
-                      ? formattedNum(
-                          position?.fees.sum /
-                            (parseFloat(position.pair.token0.derivedETH) *
-                              ethPrice) /
-                            2,
-                          false
-                        )
-                      : 0}{" "}
-                  </TYPE.small>
-                  <FormattedName
-                    text={position.pair.token0.symbol}
-                    maxCharacters={below740 ? 10 : 18}
-                    margin={true}
-                    fontSize={"11px"}
-                  />
-                </RowFixed>
-                <RowFixed>
-                  <TYPE.small fontWeight={400}>
-                    {parseFloat(position.pair.token1.derivedETH)
-                      ? formattedNum(
-                          position?.fees.sum /
-                            (parseFloat(position.pair.token1.derivedETH) *
-                              ethPrice) /
-                            2,
-                          false
-                        )
-                      : 0}{" "}
-                  </TYPE.small>
-                  <FormattedName
-                    text={position.pair.token1.symbol}
-                    maxCharacters={below740 ? 10 : 18}
-                    margin={true}
-                    fontSize={"11px"}
-                  />
-                </RowFixed>
-              </AutoColumn>
-            </AutoColumn>
-          </DataText>
-        )}
-      </DashGrid>
-    );
-  };
 
   const positionsSorted = useMemo(
     () =>

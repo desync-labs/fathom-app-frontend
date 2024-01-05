@@ -11,7 +11,7 @@ import {
   useAggregateUniBalance,
   useTokenBalance,
 } from "apps/dex/state/wallet/hooks";
-import { ExternalLink, TYPE, FthmTokenAnimated } from "apps/dex/theme";
+import { TYPE, FthmTokenAnimated } from "apps/dex/theme";
 import { computeUniCirculation } from "apps/dex/utils/computeUniCirculation";
 import { AutoColumn } from "apps/dex/components/Column";
 import { RowBetween } from "apps/dex/components/Row";
@@ -25,6 +25,7 @@ import {
 import usePricesContext from "context/prices";
 import { formatPercentage } from "utils/format";
 import BigNumber from "bignumber.js";
+import { NavLink } from "react-router-dom";
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -148,11 +149,9 @@ const FathomBalanceContent: FC<FathomBalanceContent> = ({
               </TYPE.white>
             </RowBetween>
             {fthm && fthm.chainId === ChainId.XDC ? (
-              <ExternalLink
-                href={`https://charts.fathom.fi/token/${fthm.address}`}
-              >
+              <NavLink to={`/charts/token/${fthm.address}`}>
                 View FTHM Analytics
-              </ExternalLink>
+              </NavLink>
             ) : null}
           </AutoColumn>
         </CardSection>

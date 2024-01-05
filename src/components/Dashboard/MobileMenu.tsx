@@ -1,4 +1,4 @@
-import { Dispatch, FC } from "react";
+import { Dispatch, FC, memo } from "react";
 import { styled } from "@mui/material/styles";
 import { Box } from "@mui/material";
 import { Menu } from "components/Dashboard/Menu";
@@ -23,12 +23,12 @@ type MobileMenuPropsType = {
   setOpenMobile: Dispatch<boolean>;
 };
 
-const MobileMenu: FC<MobileMenuPropsType> = ({ setOpenMobile }) => {
+const MobileMenu: FC<MobileMenuPropsType> = memo(({ setOpenMobile }) => {
   return (
     <MobileMenuWrapper onClick={() => setOpenMobile(false)}>
       <Menu open={true} />
     </MobileMenuWrapper>
   );
-};
+});
 
 export default MobileMenu;

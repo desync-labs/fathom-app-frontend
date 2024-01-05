@@ -58,7 +58,7 @@ export const SwapPoolTabs = () => {
       <StyledNavLink id={`swap-nav-link`} to={"/swap"}>
         <>{t("swap")}</>
       </StyledNavLink>
-      <StyledNavLink id={`pool-nav-link`} to={"/pool"}>
+      <StyledNavLink id={`pool-nav-link`} to={"/swap/pool"}>
         <>{t("pool")}</>
       </StyledNavLink>
     </Tabs>
