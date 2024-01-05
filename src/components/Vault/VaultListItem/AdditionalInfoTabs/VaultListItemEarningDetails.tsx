@@ -138,7 +138,7 @@ const VaultListItemEarningDetails: FC<VaultListItemFarmingDetailsProps> = ({
   vaultItemData,
   vaultPosition,
 }) => {
-  const { token, shareToken, balanceTokens, strategies } = vaultItemData;
+  const { token, shareToken, strategies, sharesSupply } = vaultItemData;
   const { balancePosition, balanceShares } = vaultPosition;
   const { fxdPrice } = usePricesContext();
   const { isMobile } = useSharedContext();
@@ -173,8 +173,8 @@ const VaultListItemEarningDetails: FC<VaultListItemFarmingDetailsProps> = ({
               data-testid={`vaultRowDetails-${vaultTestId}-itemPositionInfo-earningDetails-yourShareValue`}
             >
               {`${formatPercentage(
-                BigNumber(balancePosition)
-                  .dividedBy(balanceTokens)
+                BigNumber(balanceShares)
+                  .dividedBy(sharesSupply)
                   .multipliedBy(100)
                   .toNumber()
               )}%`}

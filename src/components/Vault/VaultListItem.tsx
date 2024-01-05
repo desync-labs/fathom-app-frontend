@@ -210,7 +210,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
         className={!extended || !vaultPosition ? "border single" : undefined}
         data-testid={`vaultRow-${vaultTestId}`}
       >
-        <TableCell>
+        <TableCell colSpan={2}>
           <FlexBox>
             <VaultListItemImageWrapper>
               <img
@@ -230,12 +230,18 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
             </VaultInfo>
           </FlexBox>
         </TableCell>
-        <TableCell data-testid={`vaultRow-${vaultTestId}-feeValueCell`}>
+        <TableCell
+          colSpan={1}
+          data-testid={`vaultRow-${vaultTestId}-feeValueCell`}
+        >
           <VaultPercent>
             {formatNumber(BigNumber(totalFees).toNumber())}%
           </VaultPercent>
         </TableCell>
-        <TableCell data-testid={`vaultRow-${vaultTestId}-earnedValueCell`}>
+        <TableCell
+          colSpan={1}
+          data-testid={`vaultRow-${vaultTestId}-earnedValueCell`}
+        >
           <VaultEarned>
             {vaultPosition?.balanceProfit &&
             BigNumber(vaultPosition?.balanceProfit).isGreaterThan(0)
@@ -249,7 +255,10 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
               : "0"}
           </VaultEarned>
         </TableCell>
-        <TableCell data-testid={`vaultRow-${vaultTestId}-aprValueCell`}>
+        <TableCell
+          colSpan={1}
+          data-testid={`vaultRow-${vaultTestId}-aprValueCell`}
+        >
           <VaultApr>
             {formatNumber(
               BigNumber(strategies[0].reports[0].results[0].apr).toNumber()
@@ -257,7 +266,10 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
             %
           </VaultApr>
         </TableCell>
-        <TableCell data-testid={`vaultRow-${vaultTestId}-tvlValueCell`}>
+        <TableCell
+          colSpan={1}
+          data-testid={`vaultRow-${vaultTestId}-tvlValueCell`}
+        >
           <VaultStackedLiquidity>
             {formatCurrency(
               BigNumber(fxdPrice)
@@ -267,7 +279,10 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
             )}
           </VaultStackedLiquidity>
         </TableCell>
-        <TableCell data-testid={`vaultRow-${vaultTestId}-availableValueCell`}>
+        <TableCell
+          colSpan={1}
+          data-testid={`vaultRow-${vaultTestId}-availableValueCell`}
+        >
           <VaultAvailable className={"blue"}>
             {formatNumber(
               BigNumber(depositLimit)
@@ -278,7 +293,10 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
             {token.symbol}
           </VaultAvailable>
         </TableCell>
-        <TableCell data-testid={`vaultRow-${vaultTestId}-stakedValueCell`}>
+        <TableCell
+          colSpan={1}
+          data-testid={`vaultRow-${vaultTestId}-stakedValueCell`}
+        >
           <VaultStacked>
             <Box className={"img-wrapper"}>
               {vaultPosition?.balancePosition &&
@@ -305,7 +323,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
             </Box>
           </VaultStacked>
         </TableCell>
-        <TableCell>
+        <TableCell colSpan={2}>
           <FlexBox justifyContent={"space-evenly"}>
             {(!vaultPosition ||
               !BigNumber(vaultPosition.balanceShares).isGreaterThan(0)) &&
@@ -344,7 +362,10 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
           className={"border"}
           data-testid={`vaultRowDetails-${vaultTestId}`}
         >
-          <TableCell colSpan={8} sx={{ padding: "0 !important" }}>
+          <TableCell
+            colSpan={10}
+            sx={{ width: "100%", padding: "0 !important" }}
+          >
             <VaultListItemNav
               vaultPosition={vaultPosition}
               activeVaultInfoTab={activeVaultInfoTab}

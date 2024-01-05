@@ -17,7 +17,7 @@ const DepositVaultInfo: FC<VaultDepositInfoProps> = ({
   deposit,
   sharedToken,
 }) => {
-  const { token, shareToken, balanceTokens, strategies, totalFees } =
+  const { token, shareToken, strategies, totalFees, sharesSupply } =
     vaultItemData;
   const { isMobile } = useSharedContext();
 
@@ -62,14 +62,14 @@ const DepositVaultInfo: FC<VaultDepositInfoProps> = ({
               0 %{" "}
               <Box component="span" sx={{ color: "#29C20A" }}>
                 →{" "}
-                {BigNumber(deposit).isGreaterThan(0) ||
-                BigNumber(balanceTokens).isGreaterThan(0)
+                {BigNumber(sharedToken).isGreaterThan(0) ||
+                BigNumber(sharesSupply).isGreaterThan(0)
                   ? formatNumber(
-                      BigNumber(deposit || "0")
+                      BigNumber(sharedToken || "0")
                         .multipliedBy(10 ** 18)
                         .dividedBy(
-                          BigNumber(balanceTokens).plus(
-                            BigNumber(deposit || "0").multipliedBy(10 ** 18)
+                          BigNumber(sharesSupply).plus(
+                            BigNumber(sharedToken || "0").multipliedBy(10 ** 18)
                           )
                         )
                         .times(100)
