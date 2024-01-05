@@ -348,23 +348,19 @@ const useStableSwap = (options: string[]) => {
     Promise.all([
       stableSwapService.getTotalValueDeposited(),
       stableSwapService.getSingleSwapLimitNumerator(),
-      stableSwapService.getSingleSwapLimitDenomerator(),
+      stableSwapService.getSingleSwapLimitDenominator(),
     ])
       .then(
         ([
-          totalValueDepositet,
+          totalValueDeposited,
           singleSwapLimitNumerator,
-          singleSwapLimitDenomerator,
+          singleSwapLimitDenominator,
         ]) => {
-          const oneTimeSwapLimit = totalValueDepositet
-            .mul(singleSwapLimitNumerator)
-            .div(singleSwapLimitDenomerator);
+          const oneTimeSwapLimit = BigNumber(totalValueDeposited.toString())
+            .multipliedBy(singleSwapLimitNumerator.toString())
+            .dividedBy(singleSwapLimitDenominator.toString());
 
-          setOneTimeSwapLimit(
-            BigNumber(oneTimeSwapLimit.toString())
-              .dividedBy(10 ** 18)
-              .toString()
-          );
+          setOneTimeSwapLimit(oneTimeSwapLimit.dividedBy(10 ** 18).toString());
         }
       )
       .catch((e) => {
