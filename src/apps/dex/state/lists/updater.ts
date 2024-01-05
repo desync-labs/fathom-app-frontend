@@ -4,7 +4,7 @@ import {
   minVersionBump,
   VersionUpgrade,
 } from "@uniswap/token-lists";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useActiveWeb3React } from "apps/dex/hooks";
 import { useFetchListCallback } from "apps/dex/hooks/useFetchListCallback";
@@ -25,48 +25,68 @@ export default function Updater(): null {
   const lists = useAllLists();
   const activeListUrls = useActiveListUrls();
 
+  const [loading, setLoading] = useState(true);
+
   // initiate loading
   useAllInactiveTokens();
 
   const fetchList = useFetchListCallback();
   const fetchAllListsCallback = useCallback(() => {
     if (!isWindowVisible) return;
+    if (loading) return;
+    const promises: Promise<any>[] = [];
+    setLoading(true);
     Object.keys(lists).forEach((url) =>
-      fetchList(url).catch((error) =>
-        console.debug("interval list fetching error", error)
+      promises.push(
+        fetchList(url).catch((error) =>
+          console.debug("interval list fetching error", error)
+        )
       )
     );
-  }, [fetchList, isWindowVisible, lists]);
+
+    Promise.all(promises).finally(() => setLoading(false));
+  }, [loading, fetchList, isWindowVisible, lists, setLoading]);
 
   // fetch all lists every 10 minutes, but only after we initialize library
   useInterval(fetchAllListsCallback, library ? 1000 * 60 * 10 : null);
 
   // whenever a list is not loaded and not loading, try again to load it
   useEffect(() => {
+    if (loading) return;
+    const promises: Promise<any>[] = [];
+    setLoading(true);
     Object.keys(lists).forEach((listUrl) => {
       const list = lists[listUrl];
       if (!list.current && !list.loadingRequestId && !list.error) {
-        console.log({
-          listUrl,
-        });
-        fetchList(listUrl).catch((error) =>
-          console.debug("list added fetching error", error)
+        promises.push(
+          fetchList(listUrl).catch((error) =>
+            console.debug("list added fetching error", error)
+          )
         );
       }
     });
-  }, [dispatch, fetchList, library, lists]);
+
+    Promise.all(promises).finally(() => setLoading(false));
+  }, [loading, dispatch, fetchList, library, lists, setLoading]);
 
   // if any lists from unsupported lists are loaded, check them too (in case new updates since last visit)
   useEffect(() => {
+    if (loading) return;
+    const promises: Promise<any>[] = [];
+    setLoading(true);
     Object.keys(SUPPORTED_LIST_URLS).forEach((listUrl) => {
       const list = lists[listUrl];
       if (!list || (!list.current && !list.loadingRequestId && !list.error)) {
-        fetchList(listUrl).catch((error) =>
-          console.debug("list added fetching error", error)
+        promises.push(
+          fetchList(listUrl).catch((error) =>
+            console.debug("list added fetching error", error)
+          )
         );
       }
     });
-  }, [dispatch, fetchList, library, lists]);
+
+    Promise.all(promises).finally(() => setLoading(false));
+  }, [loading, dispatch, fetchList, library, lists, setLoading]);
 
   // automatically update lists if versions are minor/patch
   useEffect(() => {

@@ -44,8 +44,8 @@ const List = styled(Box)`
 export const DashGrid = styled.div`
   display: grid;
   grid-gap: 1em;
-  grid-template-columns: 100px 1fr 1fr;
-  grid-template-areas: "txn value time";
+  grid-template-columns: 80px 0.8fr 1.1fr 1.1fr;
+  grid-template-areas: "type value txn  time";
 
   > * {
     justify-content: flex-end;

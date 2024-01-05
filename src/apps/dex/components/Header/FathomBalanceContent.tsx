@@ -1,18 +1,16 @@
 import { ChainId, TokenAmount } from "into-the-fathom-swap-sdk";
-import { FC, useMemo } from "react";
+import { FC } from "react";
 import { X } from "react-feather";
 import styled from "styled-components";
 import tokenLogo from "apps/dex/assets/images/token-logo.svg";
 import { FTHM } from "apps/dex/constants";
 import { useTotalSupply } from "apps/dex/data/TotalSupply";
 import { useActiveWeb3React } from "apps/dex/hooks";
-import useCurrentBlockTimestamp from "apps/dex/hooks/useCurrentBlockTimestamp";
 import {
   useAggregateUniBalance,
   useTokenBalance,
 } from "apps/dex/state/wallet/hooks";
 import { TYPE, FthmTokenAnimated } from "apps/dex/theme";
-import { computeUniCirculation } from "apps/dex/utils/computeUniCirculation";
 import { AutoColumn } from "apps/dex/components/Column";
 import { RowBetween } from "apps/dex/components/Row";
 import {
@@ -70,14 +68,6 @@ const FathomBalanceContent: FC<FathomBalanceContent> = ({
   );
 
   const totalSupply: TokenAmount | undefined = useTotalSupply(fthm);
-  const blockTimestamp = useCurrentBlockTimestamp();
-  const circulation: TokenAmount | undefined = useMemo(
-    () =>
-      blockTimestamp && fthm && chainId === ChainId.XDC
-        ? computeUniCirculation(fthm, blockTimestamp, undefined)
-        : totalSupply,
-    [blockTimestamp, chainId, totalSupply, fthm]
-  );
 
   return (
     <ContentWrapper gap="lg">
@@ -134,12 +124,6 @@ const FathomBalanceContent: FC<FathomBalanceContent> = ({
                       )
                     : "-"}
                 </>
-              </TYPE.white>
-            </RowBetween>
-            <RowBetween>
-              <TYPE.white>FTHM in circulation:</TYPE.white>
-              <TYPE.white>
-                {circulation?.toFixed(0, { groupSeparator: "," })}
               </TYPE.white>
             </RowBetween>
             <RowBetween>
