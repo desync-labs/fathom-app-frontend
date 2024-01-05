@@ -13,7 +13,7 @@ export const defaultValues = {
 };
 
 const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
-  const { account, library } = useConnector();
+  const { account } = useConnector();
   const { poolService, vaultService } = useServices();
   const { setLastTransactionBlock } = useSyncContext();
 
@@ -105,7 +105,7 @@ const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
     const balance = await poolService.getUserTokenBalance(account, token.id);
     setWalletBalance(balance.toString());
     setIsWalletFetching(true);
-  }, [account, library]);
+  }, [account]);
 
   const setMax = useCallback(
     (walletBalance: string) => {

@@ -7,7 +7,7 @@ import useSyncContext from "context/sync";
 import { useServices } from "context/services";
 
 const useStableSwapAddLiquidity = () => {
-  const { account, chainId, library } = useConnector();
+  const { account, chainId } = useConnector();
 
   const { stableSwapService, poolService } = useServices();
   const { setLastTransactionBlock } = useSyncContext();
@@ -72,7 +72,6 @@ const useStableSwapAddLiquidity = () => {
     stableSwapService,
     account,
     chainId,
-    library,
     setFxdDecimals,
     setStableDecimals,
     setFxdBalance,
@@ -105,7 +104,6 @@ const useStableSwapAddLiquidity = () => {
     [
       stableSwapService,
       account,
-      library,
       fxdDecimals,
       stableDecimals,
       setApproveInputBtn,
@@ -148,7 +146,6 @@ const useStableSwapAddLiquidity = () => {
     approvedFxd,
     approvedStableCoin,
     account,
-    library,
     setApproveInputBtn,
   ]);
 
@@ -196,7 +193,6 @@ const useStableSwapAddLiquidity = () => {
     stableSwapService,
     account,
     inputValue,
-    library,
     setAddLiquidityPending,
     setInputValue,
     setLastTransactionBlock,

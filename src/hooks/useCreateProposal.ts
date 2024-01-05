@@ -34,7 +34,7 @@ const defaultValues = {
 
 const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
   const { proposalService } = useServices();
-  const { account, chainId, library } = useConnector();
+  const { account, chainId } = useConnector();
 
   const [vBalance, setVBalance] = useState<null | string>(null);
   const [vBalanceError, setVBalanceError] = useState<boolean>(false);
@@ -91,7 +91,7 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
         .toNumber();
       setMinimumVBalance(formattedVBalance);
     });
-  }, [proposalService, library, setMinimumVBalance]);
+  }, [proposalService, setMinimumVBalance]);
 
   useEffect(() => {
     let values = localStorage.getItem("createProposal");
