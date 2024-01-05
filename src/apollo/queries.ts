@@ -190,14 +190,6 @@ export const STAKING_STAKER = gql`
   }
 `;
 
-export const STABLE_SWAP_STATS = gql`
-  query StableSwapStats {
-    stableSwapStats {
-      remainingDailySwapAmount
-    }
-  }
-`;
-
 export const VAULTS = gql`
   query Vaults(
     $first: Int!

@@ -4,9 +4,6 @@ import debounce from "lodash.debounce";
 import { SmartContractFactory } from "fathom-sdk";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
-import { useQuery } from "@apollo/client";
-import { STABLE_SWAP_STATS } from "apollo/queries";
-import { DAY_IN_SECONDS } from "utils/Constants";
 import { formatNumber } from "utils/format";
 import { PricesContext } from "context/prices";
 import { useNavigate } from "react-router-dom";
@@ -34,8 +31,6 @@ const useStableSwap = (options: string[]) => {
   const [approvalPending, setApprovalPending] = useState<string | null>(null);
   const [swapPending, setSwapPending] = useState<boolean>(false);
 
-  const [lastUpdate, setLastUpdate] = useState<string>();
-  const [dailyLimit, setDailyLimit] = useState<string>("0");
   const [oneTimeSwapLimit, setOneTimeSwapLimit] = useState<string>("0");
   const [displayDailyLimit, setDisplayDailyLimit] = useState<string>("0");
 
@@ -52,10 +47,6 @@ const useStableSwap = (options: string[]) => {
   const { account, chainId, library, isDecentralizedState, isUserWhiteListed } =
     useConnector();
   const { setLastTransactionBlock } = useSyncContext();
-
-  const { data, loading, refetch } = useQuery(STABLE_SWAP_STATS, {
-    context: { clientName: "stable", chainId },
-  });
 
   const navigate = useNavigate();
 
@@ -307,20 +298,53 @@ const useStableSwap = (options: string[]) => {
   }, [inputCurrency, outputCurrency, chainId, handleCurrencyChange]);
 
   useEffect(() => {
-    if (chainId) {
-      stableSwapService.getLastUpdate().then((lastUpdate) => {
-        setLastUpdate(lastUpdate.toString());
-      });
-    }
-  }, [chainId, stableSwapService, library, setLastUpdate]);
-
-  useEffect(() => {
     if (isDecentralizedState) {
       updateDailySwapLimit();
     }
+    updateOneTimeSwapLimit();
   }, [stableSwapService, isDecentralizedState]);
 
   useEffect(() => {
+    if (chainId) {
+      Promise.all([
+        stableSwapService.getFeeIn(),
+        stableSwapService.getFeeOut(),
+      ]).then(([feeIn, feeOut]) => {
+        setFeeIn(feeIn.toString());
+        setFeeOut(feeOut.toString());
+      });
+    }
+  }, [stableSwapService, chainId, setFeeIn, setFeeOut]);
+
+  useEffect(() => {
+    if (inputCurrency) {
+      let index = options.indexOf(inputCurrency);
+      index++;
+      index = index > options.length - 1 ? 0 : index;
+      setOutputCurrency(options[index]);
+    }
+  }, [inputCurrency, options]);
+
+  useEffect(() => {
+    if (outputCurrency) {
+      let index = options.indexOf(outputCurrency);
+      index++;
+      index = index > options.length - 1 ? 0 : index;
+      setInputCurrency(options[index]);
+    }
+  }, [outputCurrency, options]);
+
+  const updateDailySwapLimit = useCallback(() => {
+    stableSwapService.getDailySwapLimit().then((dailyLimitRes) => {
+      setDisplayDailyLimit(
+        BigNumber(dailyLimitRes.toString())
+          .dividedBy(10 ** 18)
+          .toString()
+      );
+    });
+  }, [stableSwapService]);
+
+  const updateOneTimeSwapLimit = useCallback(() => {
     const totalValueDepositetPromise =
       stableSwapService.getTotalValueDeposited();
     const singleSwapLimitNumeratorPromise =
@@ -353,64 +377,6 @@ const useStableSwap = (options: string[]) => {
       .catch((e) => {
         console.log("Swap one time limit error", e);
       });
-  }, [stableSwapService]);
-
-  useEffect(() => {
-    if (chainId) {
-      Promise.all([
-        stableSwapService.getFeeIn(),
-        stableSwapService.getFeeOut(),
-      ]).then(([feeIn, feeOut]) => {
-        setFeeIn(feeIn.toString());
-        setFeeOut(feeOut.toString());
-      });
-    }
-  }, [stableSwapService, chainId, setFeeIn, setFeeOut]);
-
-  useEffect(() => {
-    if (data?.stableSwapStats.length && lastUpdate && dailyLimit && !loading) {
-      if (
-        BigNumber(lastUpdate)
-          .plus(DAY_IN_SECONDS)
-          .isGreaterThan(BigNumber(Date.now()).dividedBy(1000))
-      ) {
-        return setDisplayDailyLimit(
-          BigNumber(data.stableSwapStats[0].remainingDailySwapAmount)
-            .dividedBy(10 ** 18)
-            .toString()
-        );
-      }
-    }
-
-    setDisplayDailyLimit(dailyLimit.toString());
-  }, [data, loading, lastUpdate, dailyLimit, setDisplayDailyLimit]);
-
-  useEffect(() => {
-    if (inputCurrency) {
-      let index = options.indexOf(inputCurrency);
-      index++;
-      index = index > options.length - 1 ? 0 : index;
-      setOutputCurrency(options[index]);
-    }
-  }, [inputCurrency, options]);
-
-  useEffect(() => {
-    if (outputCurrency) {
-      let index = options.indexOf(outputCurrency);
-      index++;
-      index = index > options.length - 1 ? 0 : index;
-      setInputCurrency(options[index]);
-    }
-  }, [outputCurrency, options]);
-
-  const updateDailySwapLimit = useCallback(() => {
-    stableSwapService.getDailySwapLimit().then((dailyLimitRes) => {
-      setDailyLimit(
-        BigNumber(dailyLimitRes.toString())
-          .dividedBy(10 ** 18)
-          .toString()
-      );
-    });
   }, [stableSwapService]);
 
   const swapFee = useMemo(() => {
@@ -465,18 +431,12 @@ const useStableSwap = (options: string[]) => {
       setInputValue("");
       setOutputValue("");
 
-      /**
-       * Refetch data from Graph.
-       */
-      refetch();
-
-      setLastUpdate((Date.now() / 1000).toString());
-
       setLastTransactionBlock(blockNumber as number);
       handleCurrencyChange(inputCurrency, outputCurrency);
     } finally {
       setSwapPending(false);
       updateDailySwapLimit();
+      updateOneTimeSwapLimit();
     }
   }, [
     feeOut,
@@ -495,8 +455,6 @@ const useStableSwap = (options: string[]) => {
     handleCurrencyChange,
     setLastTransactionBlock,
     setSwapPending,
-    refetch,
-    setLastUpdate,
   ]);
 
   const approveInput = useCallback(async () => {
