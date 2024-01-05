@@ -48,7 +48,7 @@ const useStableSwap = (options: string[]) => {
 
   const { stableSwapService, poolService } = useServices();
 
-  const { account, chainId, library, isDecentralizedState, isUserWhiteListed } =
+  const { account, chainId, isDecentralizedState, isUserWhiteListed } =
     useConnector();
   const { setLastTransactionBlock } = useSyncContext();
 
@@ -132,7 +132,6 @@ const useStableSwap = (options: string[]) => {
     [
       account,
       stableSwapService,
-      library,
       options,
       inputDecimals,
       setApproveInputBtn,
@@ -252,7 +251,6 @@ const useStableSwap = (options: string[]) => {
       account,
       chainId,
       poolService,
-      library,
       stableSwapService,
       options,
       setInputDecimals,
@@ -420,8 +418,6 @@ const useStableSwap = (options: string[]) => {
     }
   }, [
     feeOut,
-    usStableAvailable,
-    fxdAvailable,
     options,
     inputCurrency,
     outputCurrency,
@@ -430,13 +426,17 @@ const useStableSwap = (options: string[]) => {
     inputValue,
     outputValue,
     account,
-    library,
     stableSwapService,
     handleCurrencyChange,
     setLastTransactionBlock,
     setSwapPending,
+<<<<<<< Updated upstream
     refetch,
     setLastUpdate,
+=======
+    updateDailySwapLimit,
+    updateOneTimeSwapLimit,
+>>>>>>> Stashed changes
   ]);
 
   const approveInput = useCallback(async () => {
@@ -455,7 +455,6 @@ const useStableSwap = (options: string[]) => {
     options,
     inputCurrency,
     stableSwapService,
-    library,
     setApprovalPending,
     setApproveInputBtn,
   ]);
@@ -478,7 +477,6 @@ const useStableSwap = (options: string[]) => {
     options,
     outputCurrency,
     stableSwapService,
-    library,
     setApprovalPending,
     setApproveOutputBtn,
   ]);
