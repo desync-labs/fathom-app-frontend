@@ -84,7 +84,7 @@ const Transactions: FC = () => {
               token1Amount: mint.amount1,
               token0Symbol: mint.pair.token0.symbol,
               token1Symbol: mint.pair.token1.symbol,
-              transactionType: TransactionType.STORAGE,
+              transactionType: TransactionType.GRAPH,
             };
             return newTxns.push(newTxn);
           });
@@ -99,7 +99,7 @@ const Transactions: FC = () => {
               token1Amount: burn.amount1,
               token0Symbol: burn.pair.token0.symbol,
               token1Symbol: burn.pair.token1.symbol,
-              transactionType: TransactionType.STORAGE,
+              transactionType: TransactionType.GRAPH,
             };
             return newTxns.push(newTxn);
           });
@@ -117,7 +117,7 @@ const Transactions: FC = () => {
               hash: swap.transaction.id,
               addedTime: Number(swap.transaction.timestamp) * 1000,
               type: TXN_TYPE.SWAP,
-              transactionType: TransactionType.STORAGE,
+              transactionType: TransactionType.GRAPH,
             };
 
             if (netToken0 < 0) {
@@ -223,7 +223,7 @@ const Transactions: FC = () => {
             </TransactionListWrapper>
             <TransactionListWrapper>
               {sortedFilteredTransactions.map((item) => {
-                return item?.transactionType === TransactionType.STORAGE ? (
+                return item?.transactionType === TransactionType.GRAPH ? (
                   <PreviousTransaction
                     item={item as FormattedTransaction}
                     key={item.hash}
