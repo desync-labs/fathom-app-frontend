@@ -9,13 +9,16 @@ import {
   styled,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import moment from "moment";
 import { IVaultStrategy, IVaultStrategyReport } from "fathom-sdk";
 import { formatNumber } from "utils/format";
 import useSharedContext from "context/shared";
 import VaultHistoryChart, {
   HistoryChartDataType,
 } from "components/Vault/VaultListItem/AdditionalInfoTabs/VaultHistoryChart";
+import relativeTime from "dayjs/plugin/relativeTime";
+import dayjs from "dayjs";
+
+dayjs.extend(relativeTime);
 
 export const VaultItemAccordion = styled(Accordion)`
   background: #132340;
@@ -145,7 +148,7 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
 
     extractedData.sort((a, b) => parseInt(a.timestamp) - parseInt(b.timestamp));
 
-    const lastReport = moment(
+    const lastReport = dayjs(
       parseInt(strategyData.reports[0].timestamp, 10)
     ).fromNow();
 

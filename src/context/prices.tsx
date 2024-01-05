@@ -14,7 +14,7 @@ import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 import { DEFAULT_CHAIN_ID } from "utils/Constants";
 import BigNumber from "bignumber.js";
-import moment from "moment";
+import dayjs from "dayjs";
 
 type PricesProviderType = {
   children: ReactElement;
@@ -59,6 +59,13 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
     ).address;
   }, [chainId]);
 
+  const coingekoFxdAddress = useMemo(() => {
+    return SmartContractFactory.FathomStableCoin(50).address.replace(
+      "0x",
+      "xdc"
+    );
+  }, []);
+
   const wxdcTokenAddress = useMemo(() => {
     return SmartContractFactory.WXDC(chainId ? chainId : DEFAULT_CHAIN_ID)
       .address;
@@ -67,46 +74,37 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
   const fetchPairPrices = useCallback(async () => {
     if (provider) {
       try {
-        let fthmPromise;
-
-        if (process.env.REACT_APP_ENV === "prod") {
-          fthmPromise = stakingService.getPairPrice(
-            fthmTokenAddress,
-            wxdcTokenAddress
-          );
-        } else {
-          fthmPromise = stakingService.getPairPrice(
-            fxdTokenAddress,
-            fthmTokenAddress
-          );
-        }
-
-        const xdcUsdtPromise = oracleService.getXdcPrice();
-
-        const xdcFxdPromise = stakingService.getPairPrice(
-          fxdTokenAddress,
-          wxdcTokenAddress
+        const fthmPromise = stakingService.getPairPrice(
+          fthmTokenAddress,
+          fxdTokenAddress
         );
 
-        Promise.all([fthmPromise, xdcUsdtPromise, xdcFxdPromise])
-          .then(([fthmPrice, xdcUsdtPrice, xdcFxdPrice]) => {
-            const fxdPrice = BigNumber(xdcFxdPrice[1].toString())
-              .dividedBy(xdcUsdtPrice[1].toString())
-              .multipliedBy(10 ** 18)
-              .toString();
+        const xdcPromise = oracleService.getXdcPrice();
 
-            setXdcPrice(xdcUsdtPrice[0].toString());
+        const fxdPromise = fetch(
+          `https://api.coingecko.com/api/v3/simple/token_price/xdc-network?contract_addresses=${coingekoFxdAddress}&vs_currencies=usd`
+        )
+          .then((data) => data.json())
+          .then((response) =>
+            BigNumber(response[coingekoFxdAddress]["usd"])
+              .multipliedBy(10 ** 18)
+              .toString()
+          );
+
+        Promise.all([fthmPromise, xdcPromise, fxdPromise])
+          .then(([fthmPrice, xdcPrice, fxdPrice]) => {
+            setXdcPrice(xdcPrice[0].toString());
             setFxdPrice(fxdPrice);
 
             const prevPriceData = localStorage.getItem("prevPrice");
-            const startOfDay = moment().startOf("day").utc();
+            const startOfDay = dayjs().startOf("day").unix();
             const now = Date.now() / 1000;
 
             if (!prevPriceData) {
               localStorage.setItem(
                 "prevPrice",
                 JSON.stringify({
-                  value: xdcUsdtPrice[0].toString(),
+                  value: xdcPrice[0].toString(),
                   time: now,
                 })
               );
@@ -116,11 +114,11 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
                 time: string;
               };
 
-              if (BigNumber(parsedData.time).isLessThan(startOfDay.unix())) {
+              if (BigNumber(parsedData.time).isLessThan(startOfDay)) {
                 localStorage.setItem(
                   "prevPrice",
                   JSON.stringify({
-                    value: xdcUsdtPrice[0].toString(),
+                    value: xdcPrice[0].toString(),
                     time: now,
                   })
                 );
@@ -129,23 +127,17 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
               }
             }
 
-            let fthmPriceValue: string;
-            if (process.env.REACT_APP_ENV === "prod") {
-              fthmPriceValue = BigNumber(xdcUsdtPrice[0].toString())
-                .multipliedBy(
-                  BigNumber(fthmPrice[0].toString()).dividedBy(10 ** 18)
-                )
-                .toString();
-            } else {
-              fthmPriceValue = fthmPrice[0].toString();
-            }
+            const fthmPriceValue = BigNumber(fthmPrice[0].toString())
+              .multipliedBy(fxdPrice)
+              .dividedBy(10 ** 18)
+              .toString();
 
             setFthmPrice(fthmPriceValue);
 
             console.log({
               "fthm/usdt": fthmPriceValue,
               "fxd/usdt": fxdPrice,
-              "xdc/usdt": xdcUsdtPrice[0].toString(),
+              "xdc/usdt": xdcPrice[0].toString(),
             });
           })
           .catch((e) => {
@@ -161,6 +153,7 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
     usdtTokenAddress,
     fthmTokenAddress,
     fxdTokenAddress,
+    coingekoFxdAddress,
     wxdcTokenAddress,
     setFxdPrice,
     setFthmPrice,

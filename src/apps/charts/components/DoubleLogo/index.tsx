@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import TokenLogo from "apps/charts/components/TokenLogo";
+import { FC, memo } from "react";
 
 const TokenWrapper = styled.div<{ sizeraw?: number; margin?: any }>`
   position: relative;
@@ -20,12 +21,14 @@ const CoveredLogo = styled(TokenLogo)`
   border-radius: 50%;
 `;
 
-export default function DoubleTokenLogo(props: {
-  a0: any;
-  a1: any;
+type DoubleTokenLogoProps = {
+  a0: string;
+  a1: string;
   size?: number;
   margin?: boolean;
-}) {
+};
+
+const DoubleTokenLogo: FC<DoubleTokenLogoProps> = (props) => {
   const { a0, a1, size = 24, margin = false } = props;
 
   return (
@@ -34,4 +37,6 @@ export default function DoubleTokenLogo(props: {
       <CoveredLogo address={a1} size={size.toString() + "px"} sizeraw={size} />
     </TokenWrapper>
   );
-}
+};
+
+export default memo(DoubleTokenLogo);

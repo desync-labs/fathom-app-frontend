@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, FC, memo, useMemo } from "react";
 import { useMedia } from "react-use";
 import dayjs from "dayjs";
 import LocalLoader from "apps/charts/components/LocalLoader";
@@ -158,15 +158,131 @@ const formatDataText = (
   );
 };
 
-function PairList(props: {
-  pairs: any;
-  color?: any;
-  maxItems?: number;
-  useTracked?: boolean;
-}) {
-  const { pairs, color, maxItems = 10, useTracked = false } = props;
+type ListItemProps = {
+  pairAddress: string;
+  index: number;
+  pairs: any[];
+  color?: string;
+};
+
+const ListItem: FC<ListItemProps> = memo((props) => {
+  const { pairAddress, index, pairs, color } = props;
+  const pairData = (pairs as any)[pairAddress];
+
   const below600 = useMedia("(max-width: 600px)");
   const below740 = useMedia("(max-width: 740px)");
+  const below1080 = useMedia("(max-width: 1080px)");
+
+  if (pairData && pairData.token0 && pairData.token1) {
+    const liquidity = formattedNum(
+      pairData.trackedReserveUSD
+        ? pairData.trackedReserveUSD
+        : pairData.reserveUSD,
+      true
+    );
+
+    const volume = formattedNum(
+      pairData.oneDayVolumeUSD
+        ? pairData.oneDayVolumeUSD
+        : pairData.oneDayVolumeUntracked,
+      true
+    );
+
+    const apy = formattedPercent(
+      ((pairData.oneDayVolumeUSD
+        ? pairData.oneDayVolumeUSD
+        : pairData.oneDayVolumeUntracked) *
+        0.003 *
+        365 *
+        100) /
+        (pairData.oneDayVolumeUSD
+          ? pairData.trackedReserveUSD
+          : pairData.reserveUSD)
+    );
+
+    const weekVolume = formattedNum(
+      pairData.oneWeekVolumeUSD
+        ? pairData.oneWeekVolumeUSD
+        : pairData.oneWeekVolumeUntracked,
+      true
+    );
+
+    const fees = formattedNum(
+      pairData.oneDayVolumeUSD
+        ? pairData.oneDayVolumeUSD * 0.003
+        : pairData.oneDayVolumeUntracked * 0.003,
+      true
+    );
+
+    return (
+      <DashGrid style={{ height: "48px" }}>
+        {!below600 && (
+          <DataText>
+            <div>{index}</div>
+          </DataText>
+        )}
+        <DataText fontWeight="500">
+          <DoubleTokenLogo
+            size={below600 ? 16 : 20}
+            a0={pairData.token0.id}
+            a1={pairData.token1.id}
+            margin={!below740}
+          />
+          <CustomLink
+            style={{ marginLeft: "20px", whiteSpace: "nowrap" }}
+            to={"/charts/pair/" + pairAddress}
+            color={color}
+          >
+            <FormattedName
+              text={pairData.token0.symbol + "-" + pairData.token1.symbol}
+              maxCharacters={below600 ? 8 : 16}
+              adjustSize={true}
+              link={true}
+            />
+          </CustomLink>
+        </DataText>
+        <DataText justifyContent="center">
+          {formatDataText(liquidity, pairData.trackedReserveUSD)}
+        </DataText>
+        <DataText justifyContent="center">
+          {formatDataText(volume, pairData.oneDayVolumeUSD)}
+        </DataText>
+        {!below1080 && (
+          <DataText justifyContent="center">
+            {formatDataText(weekVolume, pairData.oneWeekVolumeUSD)}
+          </DataText>
+        )}
+        {!below1080 && (
+          <DataText justifyContent="center">
+            {formatDataText(fees, pairData.oneDayVolumeUSD)}
+          </DataText>
+        )}
+        {!below1080 && (
+          <DataText justifyContent="center">
+            {formatDataText(
+              apy,
+              pairData.oneDayVolumeUSD,
+              pairData.oneDayVolumeUSD === 0
+            )}
+          </DataText>
+        )}
+      </DashGrid>
+    );
+  } else {
+    return null;
+  }
+});
+
+type PairListProps = {
+  pairs: any;
+  color?: string;
+  maxItems?: number;
+  useTracked?: boolean;
+};
+
+const PairList: FC<PairListProps> = (props) => {
+  const { pairs, color, maxItems = 10, useTracked = false } = props;
+  const below600 = useMedia("(max-width: 600px)");
   const below1080 = useMedia("(max-width: 1080px)");
 
   // pagination
@@ -196,152 +312,62 @@ function PairList(props: {
     }
   }, [ITEMS_PER_PAGE, pairs]);
 
-  const ListItem = (props: { pairAddress: any; index: any }) => {
-    const { pairAddress, index } = props;
-    const pairData = pairs[pairAddress];
-
-    if (pairData && pairData.token0 && pairData.token1) {
-      const liquidity = formattedNum(
-        pairData.trackedReserveUSD
-          ? pairData.trackedReserveUSD
-          : pairData.reserveUSD,
-        true
-      );
-
-      const volume = formattedNum(
-        pairData.oneDayVolumeUSD
-          ? pairData.oneDayVolumeUSD
-          : pairData.oneDayVolumeUntracked,
-        true
-      );
-
-      const apy = formattedPercent(
-        ((pairData.oneDayVolumeUSD
-          ? pairData.oneDayVolumeUSD
-          : pairData.oneDayVolumeUntracked) *
-          0.003 *
-          365 *
-          100) /
-          (pairData.oneDayVolumeUSD
-            ? pairData.trackedReserveUSD
-            : pairData.reserveUSD)
-      );
-
-      const weekVolume = formattedNum(
-        pairData.oneWeekVolumeUSD
-          ? pairData.oneWeekVolumeUSD
-          : pairData.oneWeekVolumeUntracked,
-        true
-      );
-
-      const fees = formattedNum(
-        pairData.oneDayVolumeUSD
-          ? pairData.oneDayVolumeUSD * 0.003
-          : pairData.oneDayVolumeUntracked * 0.003,
-        true
-      );
-
-      return (
-        <DashGrid style={{ height: "48px" }}>
-          {!below600 && (
-            <DataText>
-              <div>{index}</div>
-            </DataText>
-          )}
-          <DataText fontWeight="500">
-            <DoubleTokenLogo
-              size={below600 ? 16 : 20}
-              a0={pairData.token0.id}
-              a1={pairData.token1.id}
-              margin={!below740}
-            />
-            <CustomLink
-              style={{ marginLeft: "20px", whiteSpace: "nowrap" }}
-              to={"/charts/pair/" + pairAddress}
-              color={color}
-            >
-              <FormattedName
-                text={pairData.token0.symbol + "-" + pairData.token1.symbol}
-                maxCharacters={below600 ? 8 : 16}
-                adjustSize={true}
-                link={true}
-              />
-            </CustomLink>
-          </DataText>
-          <DataText justifyContent="center">
-            {formatDataText(liquidity, pairData.trackedReserveUSD)}
-          </DataText>
-          <DataText justifyContent="center">
-            {formatDataText(volume, pairData.oneDayVolumeUSD)}
-          </DataText>
-          {!below1080 && (
-            <DataText justifyContent="center">
-              {formatDataText(weekVolume, pairData.oneWeekVolumeUSD)}
-            </DataText>
-          )}
-          {!below1080 && (
-            <DataText justifyContent="center">
-              {formatDataText(fees, pairData.oneDayVolumeUSD)}
-            </DataText>
-          )}
-          {!below1080 && (
-            <DataText justifyContent="center">
-              {formatDataText(
-                apy,
-                pairData.oneDayVolumeUSD,
-                pairData.oneDayVolumeUSD === 0
-              )}
-            </DataText>
-          )}
-        </DashGrid>
-      );
-    } else {
-      return null;
-    }
-  };
-
-  const pairList =
-    pairs &&
-    Object.keys(pairs)
-      .filter(
-        (address) =>
-          !PAIR_BLACKLIST.includes(address) &&
-          (useTracked ? !!pairs[address].trackedReserveUSD : true)
-      )
-      .sort((addressA, addressB) => {
-        const pairA = pairs[addressA];
-        const pairB = pairs[addressB];
-        if (sortedColumn === SORT_FIELD.APY) {
-          const apy0 =
-            parseFloat(String(pairA.oneDayVolumeUSD * 0.003 * 356 * 100)) /
-            parseFloat(pairA.reserveUSD);
-          const apy1 =
-            parseFloat(String(pairB.oneDayVolumeUSD * 0.003 * 356 * 100)) /
-            parseFloat(pairB.reserveUSD);
-          return apy0 > apy1
+  const pairList = useMemo(() => {
+    return (
+      pairs &&
+      Object.keys(pairs)
+        .filter(
+          (address) =>
+            !PAIR_BLACKLIST.includes(address) &&
+            (useTracked ? !!pairs[address].trackedReserveUSD : true)
+        )
+        .sort((addressA, addressB) => {
+          const pairA = pairs[addressA];
+          const pairB = pairs[addressB];
+          if (sortedColumn === SORT_FIELD.APY) {
+            const apy0 =
+              parseFloat(String(pairA.oneDayVolumeUSD * 0.003 * 356 * 100)) /
+              parseFloat(pairA.reserveUSD);
+            const apy1 =
+              parseFloat(String(pairB.oneDayVolumeUSD * 0.003 * 356 * 100)) /
+              parseFloat(pairB.reserveUSD);
+            return apy0 > apy1
+              ? (sortDirection ? -1 : 1) * 1
+              : (sortDirection ? -1 : 1) * -1;
+          }
+          return parseFloat(pairA[FIELD_TO_VALUE(sortedColumn, useTracked)]) >
+            parseFloat(pairB[FIELD_TO_VALUE(sortedColumn, useTracked)])
             ? (sortDirection ? -1 : 1) * 1
             : (sortDirection ? -1 : 1) * -1;
-        }
-        return parseFloat(pairA[FIELD_TO_VALUE(sortedColumn, useTracked)]) >
-          parseFloat(pairB[FIELD_TO_VALUE(sortedColumn, useTracked)])
-          ? (sortDirection ? -1 : 1) * 1
-          : (sortDirection ? -1 : 1) * -1;
-      })
-      .slice(ITEMS_PER_PAGE * (page - 1), page * ITEMS_PER_PAGE)
-      .map((pairAddress, index) => {
-        return (
-          pairAddress && (
-            <div key={index}>
-              <ListItem
-                key={index}
-                index={(page - 1) * ITEMS_PER_PAGE + index + 1}
-                pairAddress={pairAddress}
-              />
-              <Divider />
-            </div>
-          )
-        );
-      });
+        })
+        .slice(ITEMS_PER_PAGE * (page - 1), page * ITEMS_PER_PAGE)
+        .map((pairAddress, index) => {
+          return (
+            pairAddress && (
+              <div key={index}>
+                <ListItem
+                  pairs={pairs}
+                  color={color}
+                  key={index}
+                  index={(page - 1) * ITEMS_PER_PAGE + index + 1}
+                  pairAddress={pairAddress}
+                />
+                <Divider />
+              </div>
+            )
+          );
+        })
+    );
+  }, [
+    pairs,
+    color,
+    sortedColumn,
+    maxItems,
+    sortDirection,
+    page,
+    maxPage,
+    useTracked,
+  ]);
 
   return (
     <ListWrapper>
@@ -477,6 +503,6 @@ function PairList(props: {
       </PageButtons>
     </ListWrapper>
   );
-}
+};
 
 export default PairList;

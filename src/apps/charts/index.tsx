@@ -10,6 +10,9 @@ import PairDataContextProvider, {
   Updater as PairDataContextUpdater,
 } from "apps/charts/contexts/PairData";
 import UserContextProvider from "apps/charts/contexts/User";
+import GlobalDataContextProvider from "apps/charts/contexts/GlobalData";
+import ApplicationContextProvider from "apps/charts/contexts/Application";
+import TokenDataContextProvider from "apps/charts/contexts/TokenData";
 import App from "apps/charts/App";
 
 // initialize GA
@@ -38,17 +41,23 @@ type ContextProvidersProps = {
   children: ReactElement;
 };
 
-const ContextProviders: FC<ContextProvidersProps> = ({ children }) => {
+export const ContextProviders: FC<ContextProvidersProps> = ({ children }) => {
   return (
     <LocalStorageContextProvider>
-      <PairDataContextProvider>
-        <UserContextProvider>{children}</UserContextProvider>
-      </PairDataContextProvider>
+      <ApplicationContextProvider>
+        <TokenDataContextProvider>
+          <GlobalDataContextProvider>
+            <PairDataContextProvider>
+              <UserContextProvider>{children}</UserContextProvider>
+            </PairDataContextProvider>
+          </GlobalDataContextProvider>
+        </TokenDataContextProvider>
+      </ApplicationContextProvider>
     </LocalStorageContextProvider>
   );
 };
 
-function Updaters() {
+export const Updaters = () => {
   return (
     <>
       <LocalStorageContextUpdater />
@@ -56,20 +65,17 @@ function Updaters() {
       <TokenDataContextUpdater />
     </>
   );
-}
+};
 
 export default function ChartsIndexComponent() {
   return (
-    <ContextProviders>
-      <>
-        <Updaters />
-        <ThemeProvider>
-          <>
-            <GlobalStyle />
-            <App />
-          </>
-        </ThemeProvider>
-      </>
-    </ContextProviders>
+    <>
+      <ThemeProvider>
+        <>
+          <GlobalStyle />
+          <App />
+        </>
+      </ThemeProvider>
+    </>
   );
 }

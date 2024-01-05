@@ -8,7 +8,7 @@ import { useTotalSupply } from "apps/dex/data/TotalSupply";
 
 import { useActiveWeb3React } from "apps/dex/hooks";
 import { useTokenBalance } from "apps/dex/state/wallet/hooks";
-import { ExternalLink, TYPE } from "apps/dex/theme";
+import { StyledInternalLink, TYPE } from "apps/dex/theme";
 import { currencyId } from "apps/dex/utils/currencyId";
 import { unwrappedToken } from "apps/dex/utils/wrappedCurrency";
 import { ButtonSecondary, ButtonEmpty } from "apps/dex/components/Button";
@@ -344,13 +344,13 @@ const FullPositionCard: FC<PositionCardProps> = ({ pair, border }) => {
             </FixedHeightRow>
 
             <ButtonSecondary padding="8px" borderRadius="8px">
-              <ExternalLink
+              <StyledInternalLink
                 style={{ width: "100%", textAlign: "center" }}
-                href={`https://charts.fathom.fi/#/account/${account}`}
+                to={`/charts/account/${account}`}
               >
                 View accrued fees and analytics
                 <span style={{ fontSize: "11px" }}>↗</span>
-              </ExternalLink>
+              </StyledInternalLink>
             </ButtonSecondary>
             {userDefaultPoolBalance &&
               JSBI.greaterThan(userDefaultPoolBalance.raw, BIG_INT_ZERO) && (
