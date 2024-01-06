@@ -4,7 +4,7 @@ import { WalletConnectConnector } from "connectors/wallet-connect-connector/wall
 import { XdcInjectedConnector } from "connectors/xdc-connector/xdc-connector";
 import { EthereumProviderOptions } from "@walletconnect/ethereum-provider/dist/types/EthereumProvider";
 export const APOTHEM_RPC = "https://erpc.apothem.network/";
-export const XDC_RPC = "https://erpc.xinfin.network/";
+export const XDC_RPC = "https://rpc.ankr.com/xdc/";
 
 
 let XDC_CHAIN_IDS: number[] = [51];
