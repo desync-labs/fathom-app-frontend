@@ -146,7 +146,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
   ]);
 
   const deactivateEvent = useCallback(() => {
-    sessionStorage.removeItem("isConnected");
+    localStorage.removeItem("isConnected");
   }, []);
 
   useEffect(() => {
@@ -166,7 +166,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
     setShouldDisable(true);
     return activate(injected).then(() => {
       setShouldDisable(false);
-      sessionStorage.setItem("isConnected", "metamask");
+      localStorage.setItem("isConnected", "metamask");
       setIsMetamask(true);
     });
   }, [activate, setShouldDisable, setIsMetamask]);
@@ -175,14 +175,14 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
     setShouldDisable(true);
     return activate(WalletConnect).then(() => {
       setShouldDisable(false);
-      sessionStorage.setItem("isConnected", "walletConnect");
+      localStorage.setItem("isConnected", "walletConnect");
       setIsWalletConnect(true);
     });
   }, [activate, setShouldDisable, setIsWalletConnect]);
 
   // Init Loading
   useEffect(() => {
-    const isConnected = sessionStorage.getItem("isConnected");
+    const isConnected = localStorage.getItem("isConnected");
     if (isConnected === "metamask") {
       connectMetamask().then(() => {
         setIsLoading(false);
@@ -204,7 +204,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
   const disconnect = useCallback(async () => {
     try {
       await deactivate();
-      sessionStorage.removeItem("isConnected");
+      localStorage.removeItem("isConnected");
       setIsMetamask(false);
       setIsWalletConnect(false);
     } catch (error) {
