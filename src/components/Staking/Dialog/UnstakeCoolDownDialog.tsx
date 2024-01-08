@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, memo } from "react";
 import {
   AppDialog,
   DialogContentWrapper,
@@ -58,4 +58,4 @@ const UnstakeCoolDownDialog: FC<UnstakeCoolDownDialogProps> = ({
   );
 };
 
-export default UnstakeCoolDownDialog;
+export default memo(UnstakeCoolDownDialog);

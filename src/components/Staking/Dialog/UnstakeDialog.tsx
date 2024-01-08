@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, memo } from "react";
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
 import {
   Box,
@@ -222,4 +222,4 @@ const UnStakeDialog: FC<UnStakeDialogProps> = ({
   );
 };
 
-export default UnStakeDialog;
+export default memo(UnStakeDialog);

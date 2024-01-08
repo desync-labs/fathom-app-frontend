@@ -1,4 +1,4 @@
-import { FC, useMemo } from "react";
+import { FC, memo, useMemo } from "react";
 import {
   AppDialog,
   DialogContentWrapper,
@@ -158,4 +158,4 @@ const ClaimRewardsDialog: FC<ClaimRewardsDialogProps> = ({
   );
 };
 
-export default ClaimRewardsDialog;
+export default memo(ClaimRewardsDialog);

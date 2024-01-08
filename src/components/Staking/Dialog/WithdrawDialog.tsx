@@ -1,4 +1,4 @@
-import { FC, useMemo } from "react";
+import { FC, memo, useMemo } from "react";
 import {
   AppDialog,
   DialogContentWrapper,
@@ -71,4 +71,4 @@ const WithdrawDialog: FC<WithdrawDialogProps> = ({ token, onClose }) => {
   );
 };
 
-export default WithdrawDialog;
+export default memo(WithdrawDialog);
