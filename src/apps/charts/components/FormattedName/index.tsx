@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { FC, memo, useState } from "react";
 import styled from "styled-components";
 import { Tooltip } from "apps/charts/components/QuestionHelper";
 
@@ -22,7 +22,17 @@ const TextWrapper = styled.div<{
   }
 `;
 
-const FormattedName = (props: { [x: string]: any }) => {
+type FormattedNameProps = {
+  text: string;
+  maxCharacters: number;
+  Wrapper?: any;
+  margin?: boolean;
+  adjustSize?: boolean;
+  fontSize?: string;
+  link?: boolean;
+} & Record<string, any>;
+
+const FormattedName: FC<FormattedNameProps> = (props) => {
   const {
     text,
     maxCharacters,
@@ -74,4 +84,4 @@ const FormattedName = (props: { [x: string]: any }) => {
   );
 };
 
-export default FormattedName;
+export default memo(FormattedName);

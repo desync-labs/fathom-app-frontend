@@ -505,4 +505,4 @@ const PairList: FC<PairListProps> = (props) => {
   );
 };
 
-export default PairList;
+export default memo(PairList);

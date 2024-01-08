@@ -10,7 +10,7 @@ import {
   customStylesMobile,
   customStylesTime,
 } from "apps/charts/components/Select/styles";
-import { FC } from "react";
+import { FC, memo } from "react";
 
 const MenuLabel = styled.div`
   display: flex;
@@ -163,6 +163,6 @@ Select.propTypes = {
   onChange: PropTypes.func,
 };
 
-export default Select;
+export default memo(Select);
 
 export { Popout };

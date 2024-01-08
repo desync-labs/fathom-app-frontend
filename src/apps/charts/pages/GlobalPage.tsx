@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { Box } from "rebass";
 import styled from "styled-components";
 
@@ -48,7 +48,7 @@ const GridRow = styled.div`
   justify-content: space-between;
 `;
 
-function GlobalPage() {
+const GlobalPage: FC = () => {
   // get data for lists and totals
   const allPairs = useAllPairData();
   const allTokens = useAllTokenData();
@@ -225,6 +225,6 @@ function GlobalPage() {
       </ContentWrapper>
     </PageWrapper>
   );
-}
+};
 
 export default GlobalPage;

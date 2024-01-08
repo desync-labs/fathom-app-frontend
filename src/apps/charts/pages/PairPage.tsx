@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction, useEffect } from "react";
+import { Dispatch, FC, memo, SetStateAction, useEffect } from "react";
 import {
   Navigate,
   useLocation,
@@ -152,7 +152,7 @@ const HeaderWrapper = styled.div`
   padding-bottom: 7px !important;
 `;
 
-const PairPage: FC<{ pairAddress: string }> = ({ pairAddress }) => {
+const PairPage: FC<{ pairAddress: string }> = memo(({ pairAddress }) => {
   const {
     token0,
     token1,
@@ -704,30 +704,29 @@ const PairPage: FC<{ pairAddress: string }> = ({ pairAddress }) => {
       </ContentWrapperLarge>
     </PageWrapper>
   );
-};
+});
 
 type PairPageRouterComponentProps = {
   savedOpen: boolean;
   setSavedOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-export const PairPageRouterComponent: FC<PairPageRouterComponentProps> = ({
-  savedOpen,
-  setSavedOpen,
-}) => {
-  const params = useParams() as Record<string, any>;
-  if (
-    isAddress(params.pairAddress.toLowerCase()) &&
-    !Object.keys(PAIR_BLACKLIST).includes(params.pairAddress.toLowerCase())
-  ) {
-    return (
-      <LayoutWrapper savedOpen={savedOpen} setSavedOpen={setSavedOpen}>
-        <PairPage pairAddress={params.pairAddress.toLowerCase()} />
-      </LayoutWrapper>
-    );
-  } else {
-    return <Navigate to={"/charts"} />;
+export const PairPageRouterComponent: FC<PairPageRouterComponentProps> = memo(
+  ({ savedOpen, setSavedOpen }) => {
+    const params = useParams() as Record<string, any>;
+    if (
+      isAddress(params.pairAddress.toLowerCase()) &&
+      !Object.keys(PAIR_BLACKLIST).includes(params.pairAddress.toLowerCase())
+    ) {
+      return (
+        <LayoutWrapper savedOpen={savedOpen} setSavedOpen={setSavedOpen}>
+          <PairPage pairAddress={params.pairAddress.toLowerCase()} />
+        </LayoutWrapper>
+      );
+    } else {
+      return <Navigate to={"/charts"} />;
+    }
   }
-};
+);
 
 export default PairPage;

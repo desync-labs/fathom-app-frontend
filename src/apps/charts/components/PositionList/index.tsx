@@ -427,4 +427,4 @@ const PositionList: FC<PositionList> = (props) => {
   );
 };
 
-export default PositionList;
+export default memo(PositionList);

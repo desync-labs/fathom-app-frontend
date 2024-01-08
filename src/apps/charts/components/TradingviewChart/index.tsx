@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, FC } from "react";
+import { useState, useEffect, useRef, FC, memo } from "react";
 import { createChart, IChartApi } from "lightweight-charts";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -31,10 +31,10 @@ type TradingViewChartProps = {
   base: any;
   baseChange: any;
   field: any;
-  title: any;
-  width: any;
+  title: string;
+  width?: number;
   useWeekly?: boolean;
-  below800: any;
+  below800: boolean;
 };
 
 const TradingViewChart: FC<TradingViewChartProps> = (props) => {
@@ -222,7 +222,7 @@ ${formattedPercentChange}
           param === undefined ||
           param.time === undefined ||
           param.point.x < 0 ||
-          param.point.x > width ||
+          (width && param.point.x > width) ||
           param.point.y < 0 ||
           param.point.y > HEIGHT
         ) {
@@ -299,4 +299,4 @@ ${formattedPercentChange}
   );
 };
 
-export default TradingViewChart;
+export default memo(TradingViewChart);

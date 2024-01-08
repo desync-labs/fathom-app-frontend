@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { FC, useEffect, useMemo } from "react";
 import "feather-icons";
 
 import TopTokenList from "apps/charts/components/TokenList";
@@ -21,7 +21,7 @@ const NoTopTokens = styled.div`
   font-size: 11px;
 `;
 
-function AllTokensPage() {
+const AllTokensPage: FC = () => {
   const allTokens = useAllTokenData();
 
   const formattedTokens = useMemo(() => {
@@ -58,6 +58,6 @@ function AllTokensPage() {
       </FullWrapper>
     </PageWrapper>
   );
-}
+};
 
 export default AllTokensPage;

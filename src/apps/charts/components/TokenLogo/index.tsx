@@ -19,11 +19,10 @@ const Image = styled.img<{ size: string }>`
 `;
 
 type TokenLogoProps = {
-  [x: string]: any;
   address: string;
   header?: boolean;
   size?: string;
-};
+} & Record<string, any>;
 
 const TokenLogo: FC<TokenLogoProps> = (props) => {
   const { address, size = "24px", ...rest } = props;
