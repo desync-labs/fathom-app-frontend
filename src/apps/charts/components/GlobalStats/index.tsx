@@ -83,10 +83,6 @@ export default function GlobalStats() {
 
   const { oneDayVolumeUSD, oneDayTxns } = useGlobalData();
 
-  console.log({
-    oneDayVolumeUSD,
-    oneDayTxns,
-  });
   const [ethPrice] = useEthPrice();
   const { fxdPrice } = useFxdPrice();
   const { fthmPrice } = useFTHMPrice();
