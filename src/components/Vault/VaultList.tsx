@@ -80,8 +80,6 @@ const VaultList: FC<VaultListPropsType> = ({
     return <NoResults variant="h6">Vaults coming soon.</NoResults>;
   }
 
-  console.log(process.env.REACT_APP_ENV);
-
   return (
     <>
       {useMemo(
