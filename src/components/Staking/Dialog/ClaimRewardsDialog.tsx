@@ -50,7 +50,7 @@ const ConfirmButton = styled(ButtonPrimary)`
   line-height: 24px;
 `;
 
-export const ButtonsWrapper = styled(Box)`
+export const ButtonsWrapper = styled(Box)<{ singleBtn?: boolean }>`
   width: auto;
   margin: 20px 15px;
   display: flex;
@@ -58,7 +58,7 @@ export const ButtonsWrapper = styled(Box)`
   align-items: center;
 
   > button {
-    width: calc(50% - 3px);
+    width: ${({ singleBtn }) => (singleBtn ? "100%" : "calc(50% - 3px)")};
   }
 
   ${({ theme }) => theme.breakpoints.down("sm")} {
