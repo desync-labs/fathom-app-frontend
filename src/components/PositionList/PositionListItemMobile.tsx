@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, memo } from "react";
 import { PositionListItemProps } from "components/PositionList/PositionListItem";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { PoolName, TVL } from "components/AppComponents/AppBox/AppBox";
@@ -160,4 +160,4 @@ const PositionListItemMobile: FC<PositionListItemProps> = ({
   );
 };
 
-export default PositionListItemMobile;
+export default memo(PositionListItemMobile);
