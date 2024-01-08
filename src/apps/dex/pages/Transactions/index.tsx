@@ -217,7 +217,7 @@ const Transactions: FC = () => {
         {pending.length || sortedFilteredTransactions.length ? (
           <>
             <TransactionListWrapper>
-              {pending.map((hash, i) => {
+              {pending.map((hash) => {
                 return <Transaction key={hash} tx={allTransactions?.[hash]} />;
               })}
             </TransactionListWrapper>

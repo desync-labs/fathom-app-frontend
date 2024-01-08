@@ -2,7 +2,7 @@ import { TableCell, Box, Stack } from "@mui/material";
 import { ICollateralPool } from "fathom-sdk";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
-import { Dispatch, FC, SetStateAction } from "react";
+import { Dispatch, FC, SetStateAction, memo } from "react";
 import BigNumber from "bignumber.js";
 import { AppTableRow } from "components/AppComponents/AppTable/AppTable";
 import { styled } from "@mui/material/styles";
@@ -73,7 +73,8 @@ const PoolsListItem: FC<PoolsListItemPropsType> = ({
       <TableCell>
         <PriceWrapper>
           {formatNumberPrice(
-            pool.poolName.toUpperCase() === "XDC"
+            pool.poolName.toUpperCase() === "XDC" &&
+              BigNumber(xdcPrice).isGreaterThan(0)
               ? BigNumber(xdcPrice)
                   .dividedBy(10 ** 18)
                   .toNumber()
@@ -86,14 +87,14 @@ const PoolsListItem: FC<PoolsListItemPropsType> = ({
                 ? BigNumber(xdcPrice)
                     .dividedBy(10 ** 18)
                     .toNumber()
-                : pool.collateralPrice
+                : Number(pool.collateralPrice)
             }
             previous={
               prevXdcPrice && BigNumber(prevXdcPrice).isGreaterThan(0)
                 ? BigNumber(prevXdcPrice)
                     .dividedBy(10 ** 18)
                     .toNumber()
-                : pool.collateralLastPrice
+                : Number(pool.collateralLastPrice)
             }
           />
         </PriceWrapper>
@@ -110,4 +111,4 @@ const PoolsListItem: FC<PoolsListItemPropsType> = ({
   );
 };
 
-export default PoolsListItem;
+export default memo(PoolsListItem);

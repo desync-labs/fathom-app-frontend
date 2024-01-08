@@ -1,19 +1,10 @@
-import { FC, useMemo } from "react";
+import { FC, useMemo, memo } from "react";
 import BigNumber from "bignumber.js";
 import { SelectChangeEvent } from "@mui/material/Select";
-import {
-  Box,
-  CircularProgress,
-  MenuItem,
-  Select,
-  Typography,
-} from "@mui/material";
+import { Box, MenuItem, Select, Typography } from "@mui/material";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import InfoIcon from "@mui/icons-material/Info";
-import {
-  ButtonSecondary,
-  FathomSwapChangeCurrencyButton,
-} from "components/AppComponents/AppButton/AppButton";
+import { FathomSwapChangeCurrencyButton } from "components/AppComponents/AppButton/AppButton";
 import ComboShareSrc from "assets/svg/combo-shape.svg";
 import {
   StableSwapFormLabel,
@@ -77,11 +68,6 @@ const StableSwapForm: FC<any> = ({
   outputDecimals,
   handleInputValueTextFieldChange,
   handleOutputValueTextFieldChange,
-  approvalPending,
-  approveInputBtn,
-  approveOutputBtn,
-  approveInput,
-  approveOutput,
   inputCurrency,
   outputCurrency,
   setInputCurrencyHandler,
@@ -156,18 +142,6 @@ const StableSwapForm: FC<any> = ({
           }
         />
         <StableSwapMaxButton onClick={setMax}>Max</StableSwapMaxButton>
-        {approveInputBtn ? (
-          <ButtonSecondary
-            onClick={approveInput}
-            sx={{ float: "right", mt: "10px" }}
-          >
-            {approvalPending === "input" ? (
-              <CircularProgress size={30} />
-            ) : (
-              `Approve ${inputCurrency}`
-            )}
-          </ButtonSecondary>
-        ) : null}
 
         <FathomSwapChangeCurrencyButton
           onClick={() => changeCurrenciesPosition(inputValue, outputValue)}
@@ -224,19 +198,6 @@ const StableSwapForm: FC<any> = ({
           onChange={handleOutputValueTextFieldChange}
           helperText={outputError ? "Not enough liquidity in pool" : ""}
         />
-
-        {approveOutputBtn ? (
-          <ButtonSecondary
-            onClick={approveOutput}
-            sx={{ float: "right", marginTop: "10px" }}
-          >
-            {approvalPending === "output" ? (
-              <CircularProgress size={30} />
-            ) : (
-              `Approve ${outputCurrency}`
-            )}
-          </ButtonSecondary>
-        ) : null}
       </StableSwapInputWrapper>
 
       {isDecentralizedState === false && (
@@ -256,4 +217,4 @@ const StableSwapForm: FC<any> = ({
   );
 };
 
-export default StableSwapForm;
+export default memo(StableSwapForm);

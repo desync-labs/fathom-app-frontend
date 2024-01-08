@@ -11,6 +11,7 @@ import {
 import { InfoLabel, InfoValue } from "components/AppComponents/AppBox/AppBox";
 import { formatPercentage } from "utils/format";
 import useSharedContext from "context/shared";
+import { memo } from "react";
 
 const StableSwapManageFees = () => {
   const {
@@ -125,4 +126,4 @@ const StableSwapManageFees = () => {
   );
 };
 
-export default StableSwapManageFees;
+export default memo(StableSwapManageFees);

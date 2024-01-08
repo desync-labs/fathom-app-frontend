@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, memo, useMemo } from "react";
 import BigNumber from "bignumber.js";
 import {
   Grid,
@@ -84,15 +84,6 @@ export const StableSwapMaxButton = styled(MaxButton)`
   color: #a5baff;
 `;
 
-export const StableSwapPriceInfoWrapper = styled(InfoWrapper)`
-  width: 100%;
-  padding: 0 0 10px;
-  border-bottom: 1px solid #253656;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
 export const StableSwapInfoWrapper = styled(InfoWrapper)`
   width: 100%;
 `;
@@ -100,18 +91,6 @@ export const StableSwapInfoWrapper = styled(InfoWrapper)`
 export const StableSwapInfoContainer = styled(Box)`
   padding-top: 15px;
   width: 100%;
-`;
-
-export const StableSwapPriceInfo = styled(InfoLabel)`
-  font-size: 16px;
-  line-height: 24px;
-  color: #fff;
-  text-transform: uppercase;
-  display: flex;
-  gap: 7px;
-  justify-content: flex-start;
-  align-items: center;
-  padding: 10px 0;
 `;
 
 export const SwapButton = styled(ButtonPrimary)`
@@ -141,6 +120,14 @@ const AddRemoveLiquidity = styled(Box)`
   }
 `;
 
+const StableSwapApproveBtn = styled(ButtonSecondary)`
+  height: 48px;
+  width: 100%;
+  font-size: 17px;
+  line-height: 24px;
+  margin: 20px 0 5px 0;
+`;
+
 const StableSwap = () => {
   const [options /*setOptions*/] = useState<string[]>(["xUSDT", "FXD"]);
 
@@ -165,6 +152,10 @@ const StableSwap = () => {
     fxdPrice,
     inputError,
     approveInputBtn,
+    approveOutputBtn,
+    approveInput,
+    approveOutput,
+    approvalPending,
   } = data;
 
   const { allowStableSwap, isUserWrapperWhiteListed } = useConnector();
@@ -187,22 +178,59 @@ const StableSwap = () => {
           <StableSwapPaper>
             {allowStableSwap && <StableSwapForm {...{ ...data, options }} />}
 
-            {allowStableSwap && (
-              <SwapButton
-                isLoading={swapPending}
-                disabled={
-                  !inputValue ||
-                  BigNumber(inputValue).isLessThanOrEqualTo(0) ||
-                  !outputValue ||
-                  swapPending ||
-                  !!inputError ||
-                  approveInputBtn ||
-                  isUserWhiteListed === false
-                }
-                onClick={handleSwap}
-              >
-                {swapPending ? <CircularProgress size={30} /> : "Swap"}
-              </SwapButton>
+            {useMemo(
+              () =>
+                approveInputBtn ? (
+                  <StableSwapApproveBtn onClick={approveInput}>
+                    {approvalPending === "input" ? (
+                      <CircularProgress size={30} />
+                    ) : (
+                      `Approve ${inputCurrency}`
+                    )}
+                  </StableSwapApproveBtn>
+                ) : approveOutputBtn ? (
+                  <StableSwapApproveBtn onClick={approveOutput}>
+                    {approvalPending === "output" ? (
+                      <CircularProgress size={30} />
+                    ) : (
+                      `Approve ${outputCurrency}`
+                    )}
+                  </StableSwapApproveBtn>
+                ) : (
+                  allowStableSwap && (
+                    <SwapButton
+                      isLoading={swapPending}
+                      disabled={
+                        !inputValue ||
+                        BigNumber(inputValue).isLessThanOrEqualTo(0) ||
+                        !outputValue ||
+                        swapPending ||
+                        !!inputError ||
+                        approveInputBtn ||
+                        isUserWhiteListed === false
+                      }
+                      onClick={handleSwap}
+                    >
+                      {swapPending ? <CircularProgress size={30} /> : "Swap"}
+                    </SwapButton>
+                  )
+                ),
+              [
+                isUserWhiteListed,
+                inputValue,
+                outputValue,
+                swapPending,
+                inputError,
+                approvalPending,
+                approveInputBtn,
+                approveOutputBtn,
+                allowStableSwap,
+                inputCurrency,
+                outputCurrency,
+                approveInput,
+                approveOutput,
+                handleSwap,
+              ]
             )}
 
             {isUserWrapperWhiteListed && (
@@ -227,7 +255,7 @@ const StableSwap = () => {
 
             <StableSwapInfoContainer>
               {allowStableSwap && (
-                <StableSwapInfoWrapper>
+                <StableSwapInfoWrapper sx={{ mb: 1 }}>
                   <InfoLabel>Fee</InfoLabel>
                   <InfoValue>
                     {formatPercentage(swapFee)} {inputCurrency}{" "}
@@ -247,19 +275,22 @@ const StableSwap = () => {
                 </StableSwapInfoWrapper>
               )}
               {isDecentralizedState && allowStableSwap && (
-                <StableSwapInfoWrapper>
-                  <InfoLabel>Daily Limit</InfoLabel>
-                  <InfoValue>
-                    {formatPercentage(Number(dailyLimit))} FXD{" "}
-                  </InfoValue>
-                </StableSwapInfoWrapper>
+                <>
+                  <StableSwapInfoWrapper>
+                    <InfoLabel>Daily Limit</InfoLabel>
+                    <InfoValue>
+                      {formatPercentage(Number(dailyLimit))}
+                    </InfoValue>
+                  </StableSwapInfoWrapper>
+                  <StableSwapInfoWrapper sx={{ mb: 1 }}>
+                    <InfoLabel>One time Limit</InfoLabel>
+                    <InfoValue>
+                      {formatPercentage(Number(oneTimeSwapLimit))}
+                    </InfoValue>
+                  </StableSwapInfoWrapper>
+                </>
               )}
-              <StableSwapInfoWrapper>
-                <InfoLabel>One time Limit</InfoLabel>
-                <InfoValue>
-                  {formatPercentage(Number(oneTimeSwapLimit))} {inputCurrency}{" "}
-                </InfoValue>
-              </StableSwapInfoWrapper>
+
               <StableSwapInfoWrapper>
                 <InfoLabel>FXD Pool Token Available</InfoLabel>
                 <InfoValue>
@@ -267,7 +298,7 @@ const StableSwap = () => {
                 </InfoValue>
               </StableSwapInfoWrapper>
 
-              <StableSwapInfoWrapper>
+              <StableSwapInfoWrapper sx={{ mb: 1 }}>
                 <InfoLabel>xUSDT Pool Token Available</InfoLabel>
                 <InfoValue>
                   {formatPercentage(Number(usStableAvailable))} xUSDT
@@ -286,10 +317,8 @@ const StableSwap = () => {
                   {outputCurrency}
                 </InfoValue>
               </StableSwapInfoWrapper>
-            </StableSwapInfoContainer>
 
-            {isUserWrapperWhiteListed && (
-              <StableSwapInfoContainer>
+              {isUserWrapperWhiteListed && (
                 <StableSwapInfoWrapper>
                   <InfoLabel>Provided Liquidity</InfoLabel>
                   <InfoValue>
@@ -302,8 +331,8 @@ const StableSwap = () => {
                     %
                   </InfoValue>
                 </StableSwapInfoWrapper>
-              </StableSwapInfoContainer>
-            )}
+              )}
+            </StableSwapInfoContainer>
           </StableSwapPaper>
         </Grid>
       </Grid>
@@ -311,4 +340,4 @@ const StableSwap = () => {
   );
 };
 
-export default StableSwap;
+export default memo(StableSwap);
