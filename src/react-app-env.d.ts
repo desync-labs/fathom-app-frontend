@@ -1,5 +1,4 @@
 /// <reference types="react-scripts" />
-declare module "web3/dist/web3.min.js";
 
 type InjectProviderType = {
   isMetaMask?: true;

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, FC, memo } from "react";
 import styled from "styled-components";
 import {
   Area,
@@ -57,12 +57,14 @@ const CHART_VIEW = {
   RATE1: "Rate 1",
 };
 
-const PairChart = (props: {
-  address: any;
-  color: any;
+type PairChartProps = {
+  address: string;
+  color: string;
   base0: any;
   base1: any;
-}) => {
+};
+
+const PairChart: FC<PairChartProps> = (props) => {
   const { address, color, base0, base1 } = props;
   const [chartFilter, setChartFilter] = useState(CHART_VIEW.LIQUIDITY);
 
@@ -383,4 +385,4 @@ const PairChart = (props: {
   );
 };
 
-export default PairChart;
+export default memo(PairChart);

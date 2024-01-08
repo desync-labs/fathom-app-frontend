@@ -1,4 +1,4 @@
-import { FC, useCallback, useState } from "react";
+import { FC, memo, ReactNode, useCallback, useState } from "react";
 import styled from "styled-components";
 import Popover, { PopoverProps } from "apps/charts/components/Popover";
 
@@ -25,13 +25,12 @@ export const Tooltip: FC<TooltipProps> = ({ text, ...rest }) => {
   );
 };
 
-export default function HoverText({
-  text,
-  children,
-}: {
+type HoverTextProps = {
   text: string;
-  children: any;
-}) {
+  children: ReactNode;
+};
+
+const HoverText: FC<HoverTextProps> = ({ text, children }) => {
   const [show, setShow] = useState<boolean>(false);
   const open = useCallback(() => setShow(true), [setShow]);
   const close = useCallback(() => setShow(false), [setShow]);
@@ -45,4 +44,6 @@ export default function HoverText({
       </Tooltip>
     </Wrapper>
   );
-}
+};
+
+export default memo(HoverText);

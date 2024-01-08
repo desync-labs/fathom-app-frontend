@@ -423,4 +423,4 @@ const TopTokenList: FC<TopTokenListProps> = (props) => {
   );
 };
 
-export default TopTokenList;
+export default memo(TopTokenList);

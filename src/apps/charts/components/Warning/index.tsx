@@ -10,7 +10,7 @@ import Link from "apps/charts/components/Link";
 import { useMedia } from "react-use";
 import { FC } from "react";
 
-const WarningWrapper = styled.div<{ show: boolean }>`
+const WarningWrapper = styled.div<{ show?: boolean }>`
   border-radius: 20px;
   border: 1px solid #f82d3a;
   background: rgba(248, 45, 58, 0.05);
@@ -32,36 +32,38 @@ const StyledWarningIcon = styled(AlertTriangle)`
   stroke: red;
 `;
 
-const Warning: FC<{
-  type: any;
-  show: any;
+type WarningProps = {
+  type: string;
+  show?: boolean;
   setShow: any;
-  address: any;
-}> = (props) => {
+  address: string;
+};
+
+const Warning: FC<WarningProps> = (props) => {
   const { type, show, setShow, address } = props;
   const below800 = useMedia("(max-width: 800px)");
 
   const textContent = below800 ? (
     <div>
       <Text fontWeight={500} lineHeight={"145.23%"} mt={"10px"}>
-        Anyone can create and name any ERC20 token on Ethereum, including
-        creating fake versions of existing tokens and tokens that claim to
-        represent projects that do not have a token.
+        Anyone can create and name any XRC20 token on XDC, including creating
+        fake versions of existing tokens and tokens that claim to represent
+        projects that do not have a token.
       </Text>
       <Text fontWeight={500} lineHeight={"145.23%"} mt={"10px"}>
-        Similar to Etherscan, this site automatically tracks analytics for all
-        ERC20 tokens independent of token integrity. Please do your own research
-        before interacting with any ERC20 token.
+        Similar to BlocksScan, this site automatically tracks analytics for all
+        XRC20 tokens independent of token integrity. Please do your own research
+        before interacting with any XRC20 token.
       </Text>
     </div>
   ) : (
     <Text fontWeight={500} lineHeight={"145.23%"} mt={"10px"}>
-      Anyone can create and name any ERC20 token on Ethereum, including creating
-      fake versions of existing tokens and tokens that claim to represent
-      projects that do not have a token. Similar to Etherscan, this site
-      automatically tracks analytics for all ERC20 tokens independent of token
-      integrity. Please do your own research before interacting with any ERC20
-      token.
+      Anyone can create and name any XRC20 token on BlocksScan, including
+      creating fake versions of existing tokens and tokens that claim to
+      represent projects that do not have a token. Similar to BlocksScan, this
+      site automatically tracks analytics for all XRC20 tokens independent of
+      token integrity. Please do your own research before interacting with any
+      XRC20 token.
     </Text>
   );
 
@@ -83,8 +85,9 @@ const Warning: FC<{
                 lineHeight={"145.23%"}
                 color={"#2172E5"}
                 href={
-                  "https://xdc.blocksscan.io/address/" +
-                  address.replace(/^.{2}/g, "xdc")
+                  `https://xdc.blocksscan.io/${
+                    type === "token" ? "tokens" : "address"
+                  }/` + address
                 }
                 target="_blank"
               >
@@ -111,8 +114,9 @@ const Warning: FC<{
                 lineHeight={"145.23%"}
                 color={"#2172E5"}
                 href={
-                  "https://xdc.blocksscan.io/address/" +
-                  address.replace(/^.{2}/g, "xdc")
+                  `https://xdc.blocksscan.io/${
+                    type === "token" ? "tokens" : "address"
+                  }/` + address
                 }
                 target="_blank"
               >

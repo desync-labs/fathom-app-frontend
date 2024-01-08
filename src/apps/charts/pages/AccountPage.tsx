@@ -6,6 +6,7 @@ import {
   Dispatch,
   SetStateAction,
   FC,
+  memo,
 } from "react";
 import styled from "styled-components";
 import {
@@ -144,7 +145,7 @@ const AccountDetailsLayout = styled.div`
 
 type AccountPageProps = { account: string };
 
-const AccountPage: FC<AccountPageProps> = (props) => {
+const AccountPage: FC<AccountPageProps> = memo((props) => {
   const { account } = props;
   // get data for this account
   const transactions = useUserTransactions(account);
@@ -468,26 +469,25 @@ const AccountPage: FC<AccountPageProps> = (props) => {
       </ContentWrapper>
     </PageWrapper>
   );
-};
+});
 
 type AccountPageRouterComponentProps = {
   savedOpen: boolean;
   setSavedOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-export const AccountPageRouterComponent: FC<
-  AccountPageRouterComponentProps
-> = ({ savedOpen, setSavedOpen }) => {
-  const params = useParams() as Record<string, any>;
-  if (isAddress(params.accountAddress.toLowerCase())) {
-    return (
-      <LayoutWrapper savedOpen={savedOpen} setSavedOpen={setSavedOpen}>
-        <AccountPage account={params.accountAddress.toLowerCase()} />
-      </LayoutWrapper>
-    );
-  } else {
-    return <Navigate to={"/charts"} />;
-  }
-};
+export const AccountPageRouterComponent: FC<AccountPageRouterComponentProps> =
+  memo(({ savedOpen, setSavedOpen }) => {
+    const params = useParams() as Record<string, any>;
+    if (isAddress(params.accountAddress.toLowerCase())) {
+      return (
+        <LayoutWrapper savedOpen={savedOpen} setSavedOpen={setSavedOpen}>
+          <AccountPage account={params.accountAddress.toLowerCase()} />
+        </LayoutWrapper>
+      );
+    } else {
+      return <Navigate to={"/charts"} />;
+    }
+  });
 
 export default AccountPage;

@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, memo, useState } from "react";
 import styled from "styled-components";
 import {
   XAxis,
@@ -26,6 +26,7 @@ import { useUserPositionChart } from "apps/charts/contexts/User";
 import { useTimeframe } from "apps/charts/contexts/Application";
 import LocalLoader from "apps/charts/components/LocalLoader";
 import { useColor } from "apps/charts/hooks";
+import { Position } from "apps/charts/utils/returns";
 
 const ChartWrapper = styled.div`
   max-height: 420px;
@@ -47,7 +48,7 @@ const CHART_VIEW = {
   FEES: "Fees",
 };
 
-type PairReturnChartProps = { account: any; position: any };
+type PairReturnChartProps = { account: string; position: Position };
 
 const PairReturnsChart: FC<PairReturnChartProps> = (props) => {
   const { account, position } = props;
@@ -193,4 +194,4 @@ const PairReturnsChart: FC<PairReturnChartProps> = (props) => {
   );
 };
 
-export default PairReturnsChart;
+export default memo(PairReturnsChart);

@@ -215,4 +215,4 @@ const LPList: FC<LPListProps> = (props) => {
   );
 };
 
-export default LPList;
+export default memo(LPList);

@@ -537,23 +537,22 @@ type TokenPageRouterComponentProps = {
   setSavedOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-export const TokenPageRouterComponent: FC<TokenPageRouterComponentProps> = ({
-  savedOpen,
-  setSavedOpen,
-}) => {
-  const params = useParams() as Record<string, any>;
-  if (
-    isAddress(params.tokenAddress?.toLowerCase()) &&
-    !Object.keys(TOKEN_BLACKLIST).includes(params.tokenAddress?.toLowerCase())
-  ) {
-    return (
-      <LayoutWrapper savedOpen={savedOpen} setSavedOpen={setSavedOpen}>
-        <TokenPage address={params.tokenAddress.toLowerCase()} />
-      </LayoutWrapper>
-    );
-  } else {
-    return <Navigate to={"/charts"} />;
+export const TokenPageRouterComponent: FC<TokenPageRouterComponentProps> = memo(
+  ({ savedOpen, setSavedOpen }) => {
+    const params = useParams() as Record<string, any>;
+    if (
+      isAddress(params.tokenAddress?.toLowerCase()) &&
+      !Object.keys(TOKEN_BLACKLIST).includes(params.tokenAddress?.toLowerCase())
+    ) {
+      return (
+        <LayoutWrapper savedOpen={savedOpen} setSavedOpen={setSavedOpen}>
+          <TokenPage address={params.tokenAddress.toLowerCase()} />
+        </LayoutWrapper>
+      );
+    } else {
+      return <Navigate to={"/charts"} />;
+    }
   }
-};
+);
 
 export default TokenPage;

@@ -205,9 +205,13 @@ export function TransactionErrorContent({
           />
           <Text
             fontWeight={500}
-            fontSize={16}
+            fontSize={14}
             color={theme?.red1}
-            style={{ textAlign: "center", width: "85%" }}
+            style={{
+              textAlign: "center",
+              width: "85%",
+              wordBreak: "break-all",
+            }}
           >
             {message}
           </Text>
