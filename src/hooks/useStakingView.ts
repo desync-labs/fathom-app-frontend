@@ -33,7 +33,7 @@ export enum DialogActions {
 
 const useStakingView = () => {
   const [action, setAction] = useState<ActionType>();
-  const { account, chainId, library } = useConnector();
+  const { account, chainId } = useConnector();
   const logger = useLogger();
   const { stakingService } = useServices();
 
@@ -85,7 +85,7 @@ const useStakingView = () => {
         }, 1000);
       });
     }
-  }, [stakingService, account, library, setTotalRewards]);
+  }, [stakingService, account, setTotalRewards]);
 
   useEffect(() => {
     if (syncDao && !prevSyncDao) {
@@ -162,7 +162,7 @@ const useStakingView = () => {
           setFetchPositionLoading(false);
         }
       }, 300),
-    [stakingService, library, setLockPositions, setFetchPositionLoading]
+    [stakingService, setLockPositions, setFetchPositionLoading]
   );
 
   useEffect(() => {
@@ -247,14 +247,7 @@ const useStakingView = () => {
         setAction(undefined);
       }
     },
-    [
-      stakingService,
-      account,
-      library,
-      logger,
-      setAction,
-      setLastTransactionBlock,
-    ]
+    [stakingService, account, logger, setAction, setLastTransactionBlock]
   );
 
   const withdrawAll = useCallback(
@@ -270,14 +263,7 @@ const useStakingView = () => {
         setAction(undefined);
       }
     },
-    [
-      stakingService,
-      account,
-      library,
-      logger,
-      setAction,
-      setLastTransactionBlock,
-    ]
+    [stakingService, account, logger, setAction, setLastTransactionBlock]
   );
 
   const handleEarlyUnstake = useCallback(
@@ -300,14 +286,7 @@ const useStakingView = () => {
         setAction(undefined);
       }
     },
-    [
-      stakingService,
-      account,
-      library,
-      logger,
-      setAction,
-      setLastTransactionBlock,
-    ]
+    [stakingService, account, logger, setAction, setLastTransactionBlock]
   );
 
   const handleUnlock = useCallback(
@@ -332,14 +311,7 @@ const useStakingView = () => {
         setAction(undefined);
       }
     },
-    [
-      stakingService,
-      account,
-      library,
-      setAction,
-      setLastTransactionBlock,
-      logger,
-    ]
+    [stakingService, account, setAction, setLastTransactionBlock, logger]
   );
 
   const isUnlockable = useCallback((remainingTime: number) => {

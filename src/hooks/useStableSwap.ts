@@ -44,7 +44,7 @@ const useStableSwap = (options: string[]) => {
 
   const { stableSwapService, poolService } = useServices();
 
-  const { account, chainId, library, isDecentralizedState, isUserWhiteListed } =
+  const { account, chainId, isDecentralizedState, isUserWhiteListed } =
     useConnector();
   const { setLastTransactionBlock } = useSyncContext();
 
@@ -124,7 +124,6 @@ const useStableSwap = (options: string[]) => {
     [
       account,
       stableSwapService,
-      library,
       options,
       inputDecimals,
       setApproveInputBtn,
@@ -192,24 +191,6 @@ const useStableSwap = (options: string[]) => {
           const UsStableContractAddress =
             SmartContractFactory.getAddressByContractName(chainId, "xUSDT");
 
-          const promises = [];
-          promises.push(
-            poolService.getUserTokenBalance(account, inputContractAddress)
-          );
-          promises.push(
-            poolService.getUserTokenBalance(account, outputCurrencyAddress)
-          );
-          promises.push(poolService.getTokenDecimals(inputContractAddress));
-          promises.push(poolService.getTokenDecimals(outputCurrencyAddress));
-          promises.push(stableSwapService.getPoolBalance(FXDContractAddress));
-          promises.push(
-            stableSwapService.getPoolBalance(UsStableContractAddress)
-          );
-
-          promises.push(stableSwapService.getTotalValueLocked());
-
-          promises.push(stableSwapService.getDepositTracker(account));
-
           const [
             inputBalance,
             outputBalance,
@@ -219,7 +200,16 @@ const useStableSwap = (options: string[]) => {
             usStableAvailable,
             totalLocked,
             depositTracker,
-          ] = await Promise.all(promises);
+          ] = await Promise.all([
+            poolService.getUserTokenBalance(account, inputContractAddress),
+            poolService.getUserTokenBalance(account, outputCurrencyAddress),
+            poolService.getTokenDecimals(inputContractAddress),
+            poolService.getTokenDecimals(outputCurrencyAddress),
+            stableSwapService.getPoolBalance(FXDContractAddress),
+            stableSwapService.getPoolBalance(UsStableContractAddress),
+            stableSwapService.getTotalValueLocked(),
+            stableSwapService.getDepositTracker(account),
+          ]);
 
           setTotalLocked(totalLocked.toString());
           setDepositTracker(depositTracker.toString());
@@ -259,7 +249,6 @@ const useStableSwap = (options: string[]) => {
       account,
       chainId,
       poolService,
-      library,
       stableSwapService,
       options,
       setInputDecimals,
@@ -429,8 +418,6 @@ const useStableSwap = (options: string[]) => {
     }
   }, [
     feeOut,
-    usStableAvailable,
-    fxdAvailable,
     options,
     inputCurrency,
     outputCurrency,
@@ -439,11 +426,12 @@ const useStableSwap = (options: string[]) => {
     inputValue,
     outputValue,
     account,
-    library,
     stableSwapService,
     handleCurrencyChange,
     setLastTransactionBlock,
     setSwapPending,
+    updateDailySwapLimit,
+    updateOneTimeSwapLimit,
   ]);
 
   const approveInput = useCallback(async () => {
@@ -462,7 +450,6 @@ const useStableSwap = (options: string[]) => {
     options,
     inputCurrency,
     stableSwapService,
-    library,
     setApprovalPending,
     setApproveInputBtn,
   ]);
@@ -485,7 +472,6 @@ const useStableSwap = (options: string[]) => {
     options,
     outputCurrency,
     stableSwapService,
-    library,
     setApprovalPending,
     setApproveOutputBtn,
   ]);

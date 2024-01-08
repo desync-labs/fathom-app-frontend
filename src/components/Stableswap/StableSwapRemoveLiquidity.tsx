@@ -17,6 +17,7 @@ import BigNumber from "bignumber.js";
 import useStableSwapRemoveLiquidity from "hooks/useStableSwapRemoveLiquidity";
 import { styled } from "@mui/material/styles";
 import useSharedContext from "context/shared";
+import { memo } from "react";
 
 const StableSwapInfoRemoveLiquidityContainer = styled(StableSwapInfoContainer)`
   padding: 0;
@@ -181,4 +182,4 @@ const StableSwapRemoveLiquidity = () => {
   );
 };
 
-export default StableSwapRemoveLiquidity;
+export default memo(StableSwapRemoveLiquidity);

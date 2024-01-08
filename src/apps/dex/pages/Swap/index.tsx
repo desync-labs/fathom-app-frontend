@@ -391,7 +391,7 @@ const Swap = () => {
   );
 
   const handleMaxInput = useCallback(() => {
-    maxAmountInput && onUserInput(Field.INPUT, maxAmountInput.toExact());
+    maxAmountInput && onUserInput(Field.INPUT, maxAmountInput.toSignificant(6));
   }, [maxAmountInput, onUserInput]);
 
   const handleOutputSelect = useCallback(
