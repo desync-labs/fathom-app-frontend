@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { TYPE } from "apps/charts/Theme";
 import { RowFixed } from "apps/charts/components/Row";
+import { FC, memo } from "react";
 
 const StyleCheckbox = styled.input`
   background: ${({ theme }) => theme.bg2};
@@ -21,7 +22,9 @@ const ButtonText = styled(TYPE.main)`
   }
 `;
 
-const CheckBox = (props: { checked: any; setChecked: any; text: any }) => {
+type CheckBoxProps = { checked: boolean; setChecked: any; text: string };
+
+const CheckBox: FC<CheckBoxProps> = (props) => {
   const { checked, setChecked, text } = props;
   return (
     <RowFixed>
@@ -38,4 +41,4 @@ const CheckBox = (props: { checked: any; setChecked: any; text: any }) => {
   );
 };
 
-export default CheckBox;
+export default memo(CheckBox);

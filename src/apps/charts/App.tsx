@@ -1,4 +1,11 @@
-import { Dispatch, FC, ReactNode, SetStateAction, useEffect } from "react";
+import {
+  Dispatch,
+  FC,
+  memo,
+  ReactNode,
+  SetStateAction,
+  useEffect,
+} from "react";
 import styled from "styled-components";
 import { ApolloProvider } from "@apollo/client";
 import { dexClient as client } from "apollo/client";
@@ -77,24 +84,22 @@ type LayoutWrapperProps = {
   setSavedOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-export const LayoutWrapper: FC<LayoutWrapperProps> = ({
-  children,
-  savedOpen,
-  setSavedOpen,
-}) => {
-  return (
-    <ContentWrapper open={savedOpen}>
-      <Center id="center">{children}</Center>
-      <Right open={savedOpen}>
-        <PinnedData open={savedOpen} setSavedOpen={setSavedOpen} />
-      </Right>
-    </ContentWrapper>
-  );
-};
+export const LayoutWrapper: FC<LayoutWrapperProps> = memo(
+  ({ children, savedOpen, setSavedOpen }) => {
+    return (
+      <ContentWrapper open={savedOpen}>
+        <Center id="center">{children}</Center>
+        <Right open={savedOpen}>
+          <PinnedData open={savedOpen} setSavedOpen={setSavedOpen} />
+        </Right>
+      </ContentWrapper>
+    );
+  }
+);
 
 const BLOCK_DIFFERENCE_THRESHOLD = 30;
 
-function App() {
+const App = () => {
   const globalData = useGlobalData();
   const globalChartData = useGlobalChartData();
   const [latestBlock, headBlock] = useLatestBlocks();
@@ -134,6 +139,6 @@ function App() {
       </AppWrapper>
     </ApolloProvider>
   );
-}
+};
 
 export default App;

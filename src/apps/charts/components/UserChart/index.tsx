@@ -22,7 +22,7 @@ import DropdownSelect from "apps/charts/components/DropdownSelect";
 import { useUserLiquidityChart } from "apps/charts/contexts/User";
 import LocalLoader from "apps/charts/components/LocalLoader";
 import { TYPE } from "apps/charts/Theme";
-import { FC, useState } from "react";
+import { FC, memo, useState } from "react";
 
 const ChartWrapper = styled.div`
   height: 100%;
@@ -164,4 +164,4 @@ const UserChart: FC<UserChartsProps> = ({ account }) => {
   );
 };
 
-export default UserChart;
+export default memo(UserChart);

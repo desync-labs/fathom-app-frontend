@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, FC } from "react";
+import { useState, useRef, useEffect, FC, memo } from "react";
 import styled from "styled-components";
 import {
   Area,
@@ -385,4 +385,4 @@ const PairChart: FC<PairChartProps> = (props) => {
   );
 };
 
-export default PairChart;
+export default memo(PairChart);

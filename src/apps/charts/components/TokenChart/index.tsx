@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, FC } from "react";
+import { useState, useRef, useEffect, FC, memo } from "react";
 import styled from "styled-components";
 import {
   Area,
@@ -458,4 +458,4 @@ const TokenChart: FC<TokenChartProps> = (props) => {
   );
 };
 
-export default TokenChart;
+export default memo(TokenChart);

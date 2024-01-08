@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { ChevronDown, ChevronUp } from "react-feather";
 import { RowBetween } from "apps/charts/components/Row";
 import { StyledIcon } from "apps/charts/components";
-import { FC, ReactNode } from "react";
+import { FC, memo, ReactNode } from "react";
 
 const Base = styled(RebassButton)<{ open?: boolean }>`
   padding: 8px 12px;
@@ -55,29 +55,28 @@ type ButtonDropdownProps = {
   open: boolean;
 } & any;
 
-export const ButtonDropdown: FC<ButtonDropdownProps> = ({
-  disabled = false,
-  children,
-  open,
-  ...rest
-}) => {
-  return (
-    <ButtonFaded {...rest} disabled={disabled} open={open}>
-      <RowBetween>
-        <div style={{ display: "flex", alignItems: "center" }}>{children}</div>
-        {open ? (
-          <StyledIcon>
-            <ChevronUp size={24} />
-          </StyledIcon>
-        ) : (
-          <StyledIcon>
-            <ChevronDown size={24} />
-          </StyledIcon>
-        )}
-      </RowBetween>
-    </ButtonFaded>
-  );
-};
+export const ButtonDropdown: FC<ButtonDropdownProps> = memo(
+  ({ disabled = false, children, open, ...rest }) => {
+    return (
+      <ButtonFaded {...rest} disabled={disabled} open={open}>
+        <RowBetween>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            {children}
+          </div>
+          {open ? (
+            <StyledIcon>
+              <ChevronUp size={24} />
+            </StyledIcon>
+          ) : (
+            <StyledIcon>
+              <ChevronDown size={24} />
+            </StyledIcon>
+          )}
+        </RowBetween>
+      </ButtonFaded>
+    );
+  }
+);
 
 export const ButtonDark = styled(Base)`
   background-color: ${({ theme }) => theme.bg3};

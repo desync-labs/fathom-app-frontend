@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { Sun, Moon } from "react-feather";
-import { FC } from "react";
+import { FC, memo } from "react";
 
 const IconWrapper = styled.div<{ isActive?: boolean }>`
   opacity: ${({ isActive }) => (isActive ? 0.8 : 0.4)};
@@ -44,4 +44,4 @@ const Toggle: FC<ToggleProps> = (props) => {
   );
 };
 
-export default Toggle;
+export default memo(Toggle);

@@ -1,4 +1,4 @@
-import { FC, useCallback, useState } from "react";
+import { FC, memo, useCallback, useState } from "react";
 import { HelpCircle as Question } from "react-feather";
 import styled from "styled-components";
 import Popover, { PopoverProps } from "apps/charts/components/Popover";
@@ -65,4 +65,4 @@ const QuestionHelper: FC<QuestionHelper> = ({ text, disabled }) => {
   );
 };
 
-export default QuestionHelper;
+export default memo(QuestionHelper);

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import "feather-icons";
 
 import { TYPE } from "apps/charts/Theme";
@@ -11,7 +11,7 @@ import { useMedia } from "react-use";
 import QuestionHelper from "apps/charts/components/QuestionHelper";
 import CheckBox from "apps/charts/components/Checkbox";
 
-function AllPairsPage() {
+const AllPairsPage: FC = () => {
   const allPairs = useAllPairData();
 
   useEffect(() => {
@@ -46,6 +46,6 @@ function AllPairsPage() {
       </FullWrapper>
     </PageWrapper>
   );
-}
+};
 
 export default AllPairsPage;

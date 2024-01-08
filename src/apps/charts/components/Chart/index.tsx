@@ -1,4 +1,4 @@
-import { useState, useEffect, FC } from "react";
+import { useState, useEffect, FC, memo } from "react";
 import {
   Area,
   XAxis,
@@ -276,4 +276,4 @@ const Chart: FC<ChartProps> = ({ data, chartOption, currencyUnit, symbol }) => {
   }
 };
 
-export default Chart;
+export default memo(Chart);
