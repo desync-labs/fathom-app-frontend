@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction } from "react";
+import { Dispatch, FC, SetStateAction, memo } from "react";
 import { ICollateralPool } from "fathom-sdk";
 
 import { styled } from "@mui/material/styles";
@@ -78,7 +78,7 @@ const PoolsListItemMobile: FC<PoolsListItemMobilePropsType> = ({
   pool,
   setSelectedPool,
 }) => {
-  const { xdcPrice } = usePricesContext();
+  const { xdcPrice, prevXdcPrice } = usePricesContext();
   return (
     <PoolsListItemMobileContainer>
       <ListItemWrapper>
@@ -104,15 +104,29 @@ const PoolsListItemMobile: FC<PoolsListItemMobilePropsType> = ({
         <ListLabel>Price</ListLabel>
         <ListValue>
           {formatCurrency(
-            pool.poolName.toUpperCase() === "XDC"
+            pool.poolName.toUpperCase() === "XDC" &&
+              BigNumber(xdcPrice).isGreaterThan(0)
               ? BigNumber(xdcPrice)
                   .dividedBy(10 ** 18)
                   .toNumber()
               : pool.collateralPrice
           )}
           <PriceChanged
-            current={Number(pool.collateralPrice)}
-            previous={Number(pool.collateralLastPrice)}
+            current={
+              pool.poolName.toUpperCase() === "XDC" &&
+              BigNumber(xdcPrice).isGreaterThan(0)
+                ? BigNumber(xdcPrice)
+                    .dividedBy(10 ** 18)
+                    .toNumber()
+                : Number(pool.collateralPrice)
+            }
+            previous={
+              prevXdcPrice && BigNumber(prevXdcPrice).isGreaterThan(0)
+                ? BigNumber(prevXdcPrice)
+                    .dividedBy(10 ** 18)
+                    .toNumber()
+                : Number(pool.collateralLastPrice)
+            }
           />
         </ListValue>
       </ListItemWrapper>
@@ -132,4 +146,4 @@ const PoolsListItemMobile: FC<PoolsListItemMobilePropsType> = ({
   );
 };
 
-export default PoolsListItemMobile;
+export default memo(PoolsListItemMobile);

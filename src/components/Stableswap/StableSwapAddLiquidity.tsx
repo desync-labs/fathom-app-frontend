@@ -18,6 +18,7 @@ import { InfoLabel, InfoValue } from "components/AppComponents/AppBox/AppBox";
 import InfoIcon from "@mui/icons-material/Info";
 import { formatPercentage } from "utils/format";
 import useSharedContext from "context/shared";
+import { memo } from "react";
 
 const StableSwapAddLiquidity = () => {
   const {
@@ -137,4 +138,4 @@ const StableSwapAddLiquidity = () => {
   );
 };
 
-export default StableSwapAddLiquidity;
+export default memo(StableSwapAddLiquidity);

@@ -1,4 +1,4 @@
-import { FC, useMemo } from "react";
+import { FC, useMemo, memo } from "react";
 import {
   CircularProgress,
   Table,
@@ -124,4 +124,4 @@ const PoolsListView: FC<PoolsListViewProps> = ({ proxyWallet }) => {
   );
 };
 
-export default PoolsListView;
+export default memo(PoolsListView);
