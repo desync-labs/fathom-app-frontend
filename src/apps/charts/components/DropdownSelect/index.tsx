@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { FC, memo, useState } from "react";
 import styled from "styled-components";
 
 import Row, { RowBetween } from "apps/charts/components/Row";
@@ -47,12 +47,14 @@ const ArrowStyled = styled(Arrow)`
   margin-left: 6px;
 `;
 
-const DropdownSelect = (props: {
+type DropdownSelectProps = {
   options: any;
   active: any;
   setActive: any;
   color?: any;
-}) => {
+};
+
+const DropdownSelect: FC<DropdownSelectProps> = (props) => {
   const { options, active, setActive, color } = props;
   const [showDropdown, toggleDropdown] = useState<boolean>(false);
 
@@ -93,4 +95,4 @@ const DropdownSelect = (props: {
   );
 };
 
-export default DropdownSelect;
+export default memo(DropdownSelect);

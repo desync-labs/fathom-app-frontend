@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, memo, useState } from "react";
 import "feather-icons";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -197,4 +197,4 @@ const AccountSearch: FC<AccountSearchProps> = ({ small }) => {
   );
 };
 
-export default AccountSearch;
+export default memo(AccountSearch);

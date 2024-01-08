@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useMemo, useRef, memo } from "react";
 import styled from "styled-components";
 
 import Row, { RowFixed } from "apps/charts/components/Row";
@@ -594,4 +594,4 @@ export const Search = ({ small = false }) => {
   );
 };
 
-export default Search;
+export default memo(Search);

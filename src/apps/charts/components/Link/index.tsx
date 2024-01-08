@@ -1,10 +1,15 @@
 import { Link as RebassLink } from "rebass";
 import { Link as RouterLink } from "react-router-dom";
-import PropTypes from "prop-types";
 import styled from "styled-components";
 import { lighten, darken } from "polished";
+import { FC, ReactNode } from "react";
 
-const WrappedLink = (props: { [x: string]: any }) => {
+type WrappedLinkProps = {
+  external: boolean;
+  children: ReactNode;
+} & Record<string, any>;
+
+const WrappedLink: FC<WrappedLinkProps> = (props) => {
   const { external, children, ...rest } = props;
   return (
     <RebassLink
@@ -15,10 +20,6 @@ const WrappedLink = (props: { [x: string]: any }) => {
       {children}
     </RebassLink>
   );
-};
-
-WrappedLink.propTypes = {
-  external: PropTypes.bool,
 };
 
 const Link = styled(WrappedLink)`

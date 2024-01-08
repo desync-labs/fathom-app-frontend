@@ -17,7 +17,7 @@ const AccountWrapper = styled.div`
   }
 `;
 
-function AccountLookup() {
+const AccountLookup = () => {
   // scroll to top
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -50,6 +50,6 @@ function AccountLookup() {
       </FullWrapper>
     </PageWrapper>
   );
-}
+};
 
 export default AccountLookup;

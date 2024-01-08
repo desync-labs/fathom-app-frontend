@@ -617,4 +617,4 @@ const TxnList: FC<TxnListProps> = (props) => {
   );
 };
 
-export default TxnList;
+export default memo(TxnList);

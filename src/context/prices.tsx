@@ -8,11 +8,8 @@ import {
   useMemo,
   useState,
 } from "react";
-import { SmartContractFactory } from "fathom-sdk";
 import { useServices } from "context/services";
 import useSyncContext from "context/sync";
-import useConnector from "context/connector";
-import { DEFAULT_CHAIN_ID } from "utils/Constants";
 import BigNumber from "bignumber.js";
 import dayjs from "dayjs";
 
@@ -32,9 +29,7 @@ export const PricesContext = createContext<UsePricesContextReturn>(
 );
 
 export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
-  const { stakingService, oracleService } = useServices();
-  const { chainId } = useConnector();
-  const { provider } = useServices();
+  const { oracleService, provider } = useServices();
 
   const [fxdPrice, setFxdPrice] = useState<string>("0");
   const [xdcPrice, setXdcPrice] = useState<string>("0");
@@ -43,58 +38,29 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
 
   const { syncDao, prevSyncDao, syncFXD, prevSyncFxd } = useSyncContext();
 
-  const fthmTokenAddress = useMemo(() => {
-    return SmartContractFactory.FthmToken(chainId ? chainId : DEFAULT_CHAIN_ID)
-      .address;
-  }, [chainId]);
-
-  const usdtTokenAddress = useMemo(() => {
-    return SmartContractFactory.USDT(chainId ? chainId : DEFAULT_CHAIN_ID)
-      .address;
-  }, [chainId]);
-
-  const fxdTokenAddress = useMemo(() => {
-    return SmartContractFactory.FathomStableCoin(
-      chainId ? chainId : DEFAULT_CHAIN_ID
-    ).address;
-  }, [chainId]);
-
-  const coingekoFxdAddress = useMemo(() => {
-    return SmartContractFactory.FathomStableCoin(50).address.replace(
-      "0x",
-      "xdc"
-    );
-  }, []);
-
-  const wxdcTokenAddress = useMemo(() => {
-    return SmartContractFactory.WXDC(chainId ? chainId : DEFAULT_CHAIN_ID)
-      .address;
-  }, [chainId]);
-
   const fetchPairPrices = useCallback(async () => {
     if (provider) {
       try {
-        const fthmPromise = stakingService.getPairPrice(
-          fthmTokenAddress,
-          fxdTokenAddress
-        );
-
         const xdcPromise = oracleService.getXdcPrice();
 
-        const fxdPromise = fetch(
-          `https://api.coingecko.com/api/v3/simple/token_price/xdc-network?contract_addresses=${coingekoFxdAddress}&vs_currencies=usd`
+        const pricesPromise = fetch(
+          `https://pro-api.coingecko.com/api/v3/simple/price?ids=fathom-dollar,fathom-protocol&vs_currencies=usd&x_cg_pro_api_key=${process.env.REACT_APP_COINGEKO_API_KEY}`
         )
           .then((data) => data.json())
-          .then((response) =>
-            BigNumber(response[coingekoFxdAddress]["usd"])
+          .then((response) => ({
+            fxd: BigNumber(response["fathom-dollar"]["usd"])
               .multipliedBy(10 ** 18)
-              .toString()
-          );
+              .toString(),
+            fthm: BigNumber(response["fathom-protocol"]["usd"])
+              .multipliedBy(10 ** 18)
+              .toString(),
+          }));
 
-        Promise.all([fthmPromise, xdcPromise, fxdPromise])
-          .then(([fthmPrice, xdcPrice, fxdPrice]) => {
+        Promise.all([pricesPromise, xdcPromise])
+          .then(([prices, xdcPrice]) => {
             setXdcPrice(xdcPrice[0].toString());
-            setFxdPrice(fxdPrice);
+            setFxdPrice(prices.fxd);
+            setFthmPrice(prices.fthm);
 
             const prevPriceData = localStorage.getItem("prevPrice");
             const startOfDay = dayjs().startOf("day").unix();
@@ -127,38 +93,20 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
               }
             }
 
-            const fthmPriceValue = BigNumber(fthmPrice[0].toString())
-              .multipliedBy(fxdPrice)
-              .dividedBy(10 ** 18)
-              .toString();
-
-            setFthmPrice(fthmPriceValue);
-
             console.log({
-              "fthm/usdt": fthmPriceValue,
-              "fxd/usdt": fxdPrice,
+              "fthm/usdt": prices.fthm,
+              "fxd/usdt": prices.fxd,
               "xdc/usdt": xdcPrice[0].toString(),
             });
           })
           .catch((e) => {
-            console.log("Pairs not exists on DEX", e);
+            console.log("Can`t retrieve prices", e);
           });
       } catch (e: any) {
         console.log(e);
       }
     }
-  }, [
-    provider,
-    stakingService,
-    usdtTokenAddress,
-    fthmTokenAddress,
-    fxdTokenAddress,
-    coingekoFxdAddress,
-    wxdcTokenAddress,
-    setFxdPrice,
-    setFthmPrice,
-    setXdcPrice,
-  ]);
+  }, [provider, setFxdPrice, setFthmPrice, setXdcPrice]);
 
   useEffect(() => {
     fetchPairPrices();

@@ -1,6 +1,6 @@
 import { Placement } from "@popperjs/core";
 import { transparentize } from "polished";
-import { FC, ReactNode, useRef, useState } from "react";
+import { FC, memo, ReactNode, useRef, useState } from "react";
 import { usePopper } from "react-popper";
 import styled from "styled-components";
 import Portal from "@reach/portal";
@@ -72,4 +72,4 @@ const Popover: FC<PopoverProps> = ({
   );
 };
 
-export default Popover;
+export default memo(Popover);

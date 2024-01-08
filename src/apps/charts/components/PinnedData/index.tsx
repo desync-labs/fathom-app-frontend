@@ -13,7 +13,7 @@ import { Bookmark, ChevronRight, X } from "react-feather";
 import { ButtonFaded } from "apps/charts/components/ButtonStyled";
 import FormattedName from "apps/charts/components/FormattedName";
 import { useNavigate } from "react-router-dom";
-import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, FC, memo, SetStateAction, useEffect, useState } from "react";
 
 const RightColumn = styled.div<{ open?: boolean; scrolled: number }>`
   position: fixed;
@@ -183,4 +183,4 @@ const PinnedData: FC<PinnedDataProps> = (props) => {
   );
 };
 
-export default PinnedData;
+export default memo(PinnedData);

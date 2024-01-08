@@ -82,6 +82,7 @@ export default function GlobalStats() {
   const below800 = useMedia("(max-width: 800px)");
 
   const { oneDayVolumeUSD, oneDayTxns } = useGlobalData();
+
   const [ethPrice] = useEthPrice();
   const { fxdPrice } = useFxdPrice();
   const { fthmPrice } = useFTHMPrice();

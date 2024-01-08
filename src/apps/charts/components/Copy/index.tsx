@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { useCopyClipboard } from "apps/charts/hooks";
 import { CheckCircle, Copy } from "react-feather";
 import { StyledIcon } from "apps/charts/components";
+import { FC, memo } from "react";
 
 const CopyIcon = styled.div`
   color: #aeaeae;
@@ -23,7 +24,9 @@ const TransactionStatusText = styled.span`
   color: black;
 `;
 
-export default function CopyHelper(props: { toCopy: any }) {
+type CopyHelperProps = { toCopy: any };
+
+const CopyHelper: FC<CopyHelperProps> = (props) => {
   const { toCopy } = props;
   const [isCopied, setCopied] = useCopyClipboard();
 
@@ -44,4 +47,6 @@ export default function CopyHelper(props: { toCopy: any }) {
       )}
     </CopyIcon>
   );
-}
+};
+
+export default memo(CopyHelper);

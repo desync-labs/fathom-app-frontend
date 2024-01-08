@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, memo } from "react";
 import styled, { css, keyframes } from "styled-components";
 
 const pulse = keyframes`
@@ -51,4 +51,4 @@ const LocalLoader: FC<LocalLoader> = ({ fill }) => {
   );
 };
 
-export default LocalLoader;
+export default memo(LocalLoader);
