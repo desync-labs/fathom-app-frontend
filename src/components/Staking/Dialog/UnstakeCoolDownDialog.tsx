@@ -50,7 +50,7 @@ const UnstakeCoolDownDialog: FC<UnstakeCoolDownDialogProps> = ({
             <span>{token}</span>
           </Box>
         </DialogContentWrapper>
-        <ButtonsWrapper>
+        <ButtonsWrapper singleBtn>
           <CancelButton onClick={onClose}>Back to My Positions</CancelButton>
         </ButtonsWrapper>
       </DialogContent>
