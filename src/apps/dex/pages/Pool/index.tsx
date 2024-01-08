@@ -198,7 +198,10 @@ const Pool = () => {
               <>
                 <ButtonSecondary>
                   <RowBetween>
-                    <StyledInternalLink to={"/charts/account/" + account}>
+                    <StyledInternalLink
+                      style={{ width: "100%", textAlign: "start" }}
+                      to={"/charts/account/" + account}
+                    >
                       Account analytics and accrued fees
                     </StyledInternalLink>
                     <span> ↗</span>
