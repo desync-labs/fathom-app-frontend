@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, memo } from "react";
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
 import {
   Box,
@@ -25,7 +25,10 @@ import {
   CancelButton,
 } from "components/AppComponents/AppButton/AppButton";
 import useEarlyUnstake from "hooks/useEarlyUnstake";
-import { InfoMessageWrapper } from "components/Staking/Dialog/ClaimRewardsDialog";
+import {
+  ButtonsWrapper,
+  InfoMessageWrapper,
+} from "components/Staking/Dialog/ClaimRewardsDialog";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatNumber } from "utils/format";
 import useSharedContext from "context/shared";
@@ -42,6 +45,10 @@ const UnstakeGrid = styled(Grid)`
   &.MuiGrid-container {
     margin: 0 17px;
     padding: 10px 0;
+
+    ${({ theme }) => theme.breakpoints.down("sm")} {
+      margin: 0;
+    }
   }
 `;
 
@@ -64,6 +71,9 @@ export const WarningBlock = styled(Box)`
   gap: 12px;
   font-size: 14px;
   margin: 20px 15px 25px 15px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    margin: 20px 0 25px 0;
+  }
 `;
 
 const InfoLabelError = styled(InfoLabel)`
@@ -72,23 +82,6 @@ const InfoLabelError = styled(InfoLabel)`
 
 const InfoValueError = styled(InfoValue)`
   color: #f76e6e;
-`;
-
-const ButtonsWrapper = styled(Box)`
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin: 15px;
-
-  > button {
-    width: calc(50% - 3px);
-  }
-  ${({ theme }) => theme.breakpoints.down("sm")} {
-    flex-direction: column;
-    button {
-      width: 100%;
-    }
-  }
 `;
 
 export type EarlyUnstakeDialogProps = {
@@ -128,9 +121,8 @@ const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({
 
       <DialogContent>
         <ModalDescription>
-          Position lock time has not yet passed - by requesting Early Unstake -
-          <br />
-          you will pay the penalty. <br />
+          Position lock time has not yet passed - by requesting <br />
+          Early Unstake - you will pay the penalty. <br />
           Ensure you Claim Rewards before Unstaking so as not to lose your
           rewards.
         </ModalDescription>
@@ -203,4 +195,4 @@ const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({
   );
 };
 
-export default EarlyUnstakeDialog;
+export default memo(EarlyUnstakeDialog);

@@ -265,7 +265,7 @@ const StreamStats: FC = () => {
               </MyStatsBlock>
             )}
 
-            {isMobile && (
+            {isMobile && typeof seconds === "number" && (
               <MyStatsBlock>
                 {seconds > 0 && (
                   <>
@@ -370,7 +370,7 @@ const StreamStats: FC = () => {
               </MyStatsBlock>
             )}
 
-            {!isMobile && (
+            {!isMobile && typeof seconds === "number" && (
               <MyStatsBlock>
                 {seconds > 0 && (
                   <>

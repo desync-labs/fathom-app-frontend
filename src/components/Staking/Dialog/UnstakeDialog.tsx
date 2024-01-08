@@ -34,7 +34,10 @@ import {
   MaxButton,
 } from "components/AppComponents/AppButton/AppButton";
 import useUnstake from "hooks/useUnstake";
-import { InfoMessageWrapper } from "components/Staking/Dialog/ClaimRewardsDialog";
+import {
+  ButtonsWrapper,
+  InfoMessageWrapper,
+} from "components/Staking/Dialog/ClaimRewardsDialog";
 import { formatNumber } from "utils/format";
 import BigNumber from "bignumber.js";
 import useSharedContext from "context/shared";
@@ -51,6 +54,9 @@ const UnStakeGrid = styled(Grid)`
   &.MuiGrid-container {
     margin: 0 17px;
     padding: 10px 0;
+    ${({ theme }) => theme.breakpoints.down("sm")} {
+      margin: 0;
+    }
   }
 `;
 
@@ -60,23 +66,6 @@ const ConfirmButton = styled(ButtonPrimary)`
   font-weight: 600;
   font-size: 17px;
   line-height: 24px;
-`;
-
-const ButtonsWrapper = styled(Box)`
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin: 15px;
-
-  > button {
-    width: calc(50% - 3px);
-  }
-  ${({ theme }) => theme.breakpoints.down("sm")} {
-    flex-direction: column;
-    button {
-      width: 100%;
-    }
-  }
 `;
 
 const ErrorWrapper = styled("div")`

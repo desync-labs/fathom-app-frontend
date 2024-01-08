@@ -15,27 +15,10 @@ import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatNumber } from "utils/format";
 import useStakingContext from "context/staking";
 import useSharedContext from "context/shared";
+import { ButtonsWrapper } from "components/Staking/Dialog/ClaimRewardsDialog";
 
 const ConfirmButton = styled(ButtonPrimary)`
   font-size: 17px;
-`;
-
-const ButtonsWrapper = styled(Box)`
-  width: auto;
-  margin: 20px 15px;
-  display: flex;
-  gap: 6px;
-  align-items: center;
-  > button {
-    width: calc(50% - 3px);
-    height: 48px;
-  }
-  ${({ theme }) => theme.breakpoints.down("sm")} {
-    flex-direction: column;
-    button {
-      width: 100%;
-    }
-  }
 `;
 
 type WithdrawDialogProps = {

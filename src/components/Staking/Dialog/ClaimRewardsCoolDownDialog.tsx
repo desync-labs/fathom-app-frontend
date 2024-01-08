@@ -37,6 +37,10 @@ const ButtonsWrapper = styled(Box, {
       width: 100%;
     }
   }
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    margin: 20px 0;
+  }
 `;
 
 const ConfirmButton = styled(ButtonPrimary)`
