@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, FC } from "react";
+import { useState, useEffect, useRef, FC, memo } from "react";
 import { createChart, CrosshairMode, IChartApi } from "lightweight-charts";
 import dayjs from "dayjs";
 import { formattedNum } from "apps/charts/utils";
@@ -227,4 +227,4 @@ const CandleStickChart: FC<CandleStickChartProps> = ({
   );
 };
 
-export default CandleStickChart;
+export default memo(CandleStickChart);

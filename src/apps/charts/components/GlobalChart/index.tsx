@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useRef, FC } from "react";
+import { useState, useMemo, useEffect, useRef, FC, memo } from "react";
 import { ResponsiveContainer } from "recharts";
 import { timeframeOptions } from "apps/charts/constants";
 import {
@@ -175,4 +175,4 @@ const GlobalChart: FC<{ display: any }> = (props) => {
   ) : null;
 };
 
-export default GlobalChart;
+export default memo(GlobalChart);
