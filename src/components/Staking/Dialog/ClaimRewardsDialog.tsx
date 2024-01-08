@@ -50,7 +50,7 @@ const ConfirmButton = styled(ButtonPrimary)`
   line-height: 24px;
 `;
 
-const ButtonsWrapper = styled(Box)`
+export const ButtonsWrapper = styled(Box)`
   width: auto;
   margin: 20px 15px;
   display: flex;
@@ -66,6 +66,7 @@ const ButtonsWrapper = styled(Box)`
     button {
       width: 100%;
     }
+    margin: 20px 0;
   }
 `;
 
