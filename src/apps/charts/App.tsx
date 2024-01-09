@@ -1,11 +1,4 @@
-import {
-  Dispatch,
-  FC,
-  memo,
-  ReactNode,
-  SetStateAction,
-  useEffect,
-} from "react";
+import { Dispatch, FC, memo, ReactNode, SetStateAction } from "react";
 import styled from "styled-components";
 import { ApolloProvider } from "@apollo/client";
 import { dexClient as client } from "apollo/client";
@@ -16,8 +9,7 @@ import {
 import PinnedData from "apps/charts/components/PinnedData";
 import LocalLoader from "apps/charts/components/LocalLoader";
 import { useLatestBlocks } from "apps/charts/contexts/Application";
-import { Outlet, useLocation } from "react-router-dom";
-import ReactGA from "react-ga";
+import { Outlet } from "react-router-dom";
 
 const AppWrapper = styled.div`
   position: relative;
@@ -103,12 +95,6 @@ const App = () => {
   const globalData = useGlobalData();
   const globalChartData = useGlobalChartData();
   const [latestBlock, headBlock] = useLatestBlocks();
-
-  const { pathname, search } = useLocation();
-
-  useEffect(() => {
-    ReactGA.pageview(`${pathname}${search}`);
-  }, [pathname, search]);
 
   // show warning
 
