@@ -317,4 +317,7 @@ export const ModalDescription = styled(Typography)`
   color: #ffffff;
   padding: 0 15px;
   margin-bottom: 20px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    padding: 0;
+  }
 `;

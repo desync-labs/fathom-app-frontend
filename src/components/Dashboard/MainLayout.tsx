@@ -16,7 +16,7 @@ import {
   AccountBalanceWallet as AccountBalanceWalletIcon,
 } from "@mui/icons-material";
 import truncateEthAddress from "truncate-eth-address";
-import { Link, Navigate, Route, Routes } from "react-router-dom";
+import { Link, Navigate, Route, Routes, useLocation } from "react-router-dom";
 
 const Copyright = loadable(() => import("../Footer/Footer"));
 const AppBar = loadable(() => import("../AppComponents/AppBar/AppBar"));
@@ -132,7 +132,8 @@ import {
 import { ApolloProvider } from "@apollo/client";
 import { dexClient } from "apollo/client";
 import Transactions from "apps/dex/pages/Transactions";
-import { memo } from "react";
+import { memo, useEffect } from "react";
+import ReactGA from "react-ga4";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -303,6 +304,14 @@ const MainLayout = () => {
    */
   useGlobalData();
   useGlobalChartData();
+
+  /**
+   * Google Analytics
+   */
+  const { pathname, search } = useLocation();
+  useEffect(() => {
+    ReactGA.send({ hitType: "pageview", page: `${pathname}${search}` });
+  }, [pathname, search]);
 
   const { erc20TokenModalData } = useAlertAndTransactionContext();
 

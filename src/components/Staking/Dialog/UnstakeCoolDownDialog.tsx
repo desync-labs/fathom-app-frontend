@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, memo } from "react";
 import {
   AppDialog,
   DialogContentWrapper,
@@ -7,23 +7,10 @@ import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitl
 import { Box, DialogContent } from "@mui/material";
 import { CancelButton } from "components/AppComponents/AppButton/AppButton";
 import { ModalDescription } from "components/AppComponents/AppBox/AppBox";
-import { styled } from "@mui/material/styles";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatNumber } from "utils/format";
 import { ILockPosition } from "fathom-sdk";
-
-const ButtonsWrapper = styled(Box)`
-  width: auto;
-  margin: 20px 15px;
-  display: flex;
-  gap: 6px;
-  align-items: center;
-
-  > button {
-    width: 100%;
-    height: 48px;
-  }
-`;
+import { ButtonsWrapper } from "components/Staking/Dialog/ClaimRewardsDialog";
 
 type UnstakeCoolDownDialogProps = {
   position: ILockPosition;
@@ -63,7 +50,7 @@ const UnstakeCoolDownDialog: FC<UnstakeCoolDownDialogProps> = ({
             <span>{token}</span>
           </Box>
         </DialogContentWrapper>
-        <ButtonsWrapper>
+        <ButtonsWrapper singleBtn>
           <CancelButton onClick={onClose}>Back to My Positions</CancelButton>
         </ButtonsWrapper>
       </DialogContent>
@@ -71,4 +58,4 @@ const UnstakeCoolDownDialog: FC<UnstakeCoolDownDialogProps> = ({
   );
 };
 
-export default UnstakeCoolDownDialog;
+export default memo(UnstakeCoolDownDialog);

@@ -46,10 +46,10 @@ const ProposeNotices: FC<ProposeNoticesProps> = ({
     } else {
       return (
         <>
-          To create a proposal, you need to have $
-          {formatNumber(minimumVBalance)} vFTHM.
+          To create a proposal, you need to have {formatNumber(minimumVBalance)}{" "}
+          vFTHM.
           <br />
-          Now you have $
+          Now you have{" "}
           {formatNumber(
             BigNumber(vBalance as string)
               .dividedBy(10 ** 18)
