@@ -11,7 +11,7 @@ import { Provider } from "react-redux";
 import store from "apps/dex/state";
 import { HashRouter as Router } from "react-router-dom";
 import { ContextProviders, Updaters as ChartUpdaters } from "apps/charts";
-import ReactGA from "react-ga";
+import ReactGA from "react-ga4";
 import { isMobile } from "react-device-detect";
 
 // initialize GA
@@ -33,7 +33,7 @@ if (typeof GOOGLE_ANALYTICS_ID === "string") {
       : "mobileRegular",
   });
 } else {
-  ReactGA.initialize("test", { testMode: true, debug: true });
+  ReactGA.initialize("test", { testMode: true });
 }
 
 function App() {

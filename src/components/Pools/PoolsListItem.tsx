@@ -25,7 +25,7 @@ type PoolsListItemPropsType = {
 const PoolsListItemTableRow = styled(AppTableRow)`
   td {
     background: #1d2d49;
-    bordercolor: #121212;
+    border-color: #121212;
     padding: 9px 0;
   }
 
