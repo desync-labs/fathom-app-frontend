@@ -1,4 +1,4 @@
-import { FC, useMemo } from "react";
+import { FC, memo, useMemo } from "react";
 import {
   AppDialog,
   DialogContentWrapper,
@@ -50,7 +50,7 @@ const ConfirmButton = styled(ButtonPrimary)`
   line-height: 24px;
 `;
 
-const ButtonsWrapper = styled(Box)`
+export const ButtonsWrapper = styled(Box)<{ singleBtn?: boolean }>`
   width: auto;
   margin: 20px 15px;
   display: flex;
@@ -58,7 +58,7 @@ const ButtonsWrapper = styled(Box)`
   align-items: center;
 
   > button {
-    width: calc(50% - 3px);
+    width: ${({ singleBtn }) => (singleBtn ? "100%" : "calc(50% - 3px)")};
   }
 
   ${({ theme }) => theme.breakpoints.down("sm")} {
@@ -66,6 +66,7 @@ const ButtonsWrapper = styled(Box)`
     button {
       width: 100%;
     }
+    margin: 20px 0;
   }
 `;
 
@@ -157,4 +158,4 @@ const ClaimRewardsDialog: FC<ClaimRewardsDialogProps> = ({
   );
 };
 
-export default ClaimRewardsDialog;
+export default memo(ClaimRewardsDialog);

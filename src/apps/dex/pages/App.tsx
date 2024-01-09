@@ -1,9 +1,8 @@
-import { Suspense, useEffect } from "react";
-import { Outlet, useLocation } from "react-router-dom";
+import { Suspense } from "react";
+import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 import Polling from "apps/dex/components/Header/Polling";
 import Popups from "apps/dex/components/Popups";
-import ReactGA from "react-ga";
 
 const AppWrapper = styled.div`
   display: flex;
@@ -29,11 +28,6 @@ const BodyWrapper = styled.div`
 `;
 
 const App = () => {
-  const { pathname, search } = useLocation();
-  useEffect(() => {
-    ReactGA.pageview(`${pathname}${search}`);
-  }, [pathname, search]);
-
   return (
     <Suspense fallback={null}>
       <AppWrapper>

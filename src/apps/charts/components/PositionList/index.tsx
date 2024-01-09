@@ -46,7 +46,7 @@ const List = styled(Box)`
 const DashGrid = styled.div`
   display: grid;
   grid-gap: 1em;
-  grid-template-columns: 5px 0.5fr 1fr 1fr;
+  grid-template-columns: 20px 1.5fr 1fr 1fr;
   grid-template-areas: "number name fathomswap return";
   align-items: flex-start;
   padding: 20px 0;
@@ -72,7 +72,7 @@ const DashGrid = styled.div`
     grid-template-areas: "name fathomswap return";
   }
 
-  @media screen and (max-width: 500px) {
+  @media screen and (max-width: 600px) {
     grid-template-columns: 2.5fr 1fr;
     grid-template-areas: "name fathomswap";
   }
@@ -128,7 +128,7 @@ const ListItem: FC<ListItemProps> = memo((props) => {
     position.liquidityTokenBalance / position.pair.totalSupply;
   const valueUSD = poolOwnership * position.pair.reserveUSD;
 
-  const below500 = useMedia("(max-width: 500px)");
+  const below600 = useMedia("(max-width: 600px)");
   const below740 = useMedia("(max-width: 740px)");
 
   const [ethPrice] = useEthPrice();
@@ -140,7 +140,11 @@ const ListItem: FC<ListItemProps> = memo((props) => {
         padding: "0.75rem 1.125rem",
       }}
     >
-      {!below740 && <DataText>{index}</DataText>}
+      {!below740 && (
+        <DataText alignItems={"center"} sx={{ height: "100%" }}>
+          {index}
+        </DataText>
+      )}
       <DataText justifyContent="flex-start" alignItems="center">
         <AutoColumn gap="8px" justify="flex-start">
           <DoubleTokenLogo
@@ -228,7 +232,7 @@ const ListItem: FC<ListItemProps> = memo((props) => {
           </AutoColumn>
         </AutoColumn>
       </DataText>
-      {!below500 && (
+      {!below600 && (
         <DataText>
           <AutoColumn gap="12px" justify="flex-start">
             <TYPE.main color={"text5"}>
@@ -283,7 +287,7 @@ const ListItem: FC<ListItemProps> = memo((props) => {
 
 const PositionList: FC<PositionList> = (props) => {
   const { positions } = props;
-  const below500 = useMedia("(max-width: 500px)");
+  const below600 = useMedia("(max-width: 600px)");
   const below740 = useMedia("(max-width: 740px)");
 
   // pagination
@@ -389,7 +393,7 @@ const PositionList: FC<PositionList> = (props) => {
             </TableHeaderBox>
           </ClickableText>
         </Flex>
-        {!below500 && (
+        {!below600 && (
           <Flex alignItems="center" justifyContent="flex-start">
             <ClickableText
               onClick={() => {
