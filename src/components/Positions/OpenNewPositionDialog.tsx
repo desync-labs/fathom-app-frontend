@@ -1,3 +1,4 @@
+import loadable from "@loadable/component";
 import { FC, memo } from "react";
 import { Grid, DialogContent, Divider } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -5,8 +6,12 @@ import { styled } from "@mui/material/styles";
 import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
 
-import OpenPositionInfo from "components/Positions/OpenPosition/OpenPositionInfo";
-import OpenPositionForm from "components/Positions/OpenPosition/OpenPositionForm";
+const OpenPositionInfo = loadable(
+  () => import("../Positions/OpenPosition/OpenPositionInfo")
+);
+const OpenPositionForm = loadable(
+  () => import("../Positions/OpenPosition/OpenPositionForm")
+);
 
 import useOpenPositionContext from "context/openPosition";
 import useSharedContext from "context/shared";

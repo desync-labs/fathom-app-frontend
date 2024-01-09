@@ -1,3 +1,4 @@
+import loadable from "@loadable/component";
 import { FC, useMemo, memo } from "react";
 import {
   CircularProgress,
@@ -9,8 +10,10 @@ import {
   Box,
 } from "@mui/material";
 import { ICollateralPool } from "fathom-sdk";
-import PoolsListItem from "components/Pools/PoolsListItem";
-import OpenNewPositionDialog from "components/Positions/OpenNewPositionDialog";
+const PoolsListItem = loadable(() => import("../Pools/PoolsListItem"));
+const OpenNewPositionDialog = loadable(
+  () => import("../Positions/OpenNewPositionDialog")
+);
 import { styled } from "@mui/material/styles";
 import { AppTableHeaderRow } from "components/AppComponents/AppTable/AppTable";
 import {
@@ -18,7 +21,9 @@ import {
   TitleSecondary,
 } from "components/AppComponents/AppBox/AppBox";
 import usePoolsList from "hooks/usePoolsList";
-import PoolsListItemMobile from "components/Pools/PoolsListItemMobile";
+const PoolsListItemMobile = loadable(
+  () => import("../Pools/PoolsListItemMobile")
+);
 import { OpenPositionProvider } from "context/openPosition";
 import useSharedContext from "context/shared";
 
