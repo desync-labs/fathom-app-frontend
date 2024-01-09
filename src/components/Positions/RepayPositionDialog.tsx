@@ -1,9 +1,14 @@
+import loadable from "@loadable/component";
 import { Dispatch, FC, memo } from "react";
 import { DialogContent, Grid } from "@mui/material";
 
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
-import RepayPositionInfo from "components/Positions/RepayPosition/RepayPositionInfo";
-import RepayPositionForm from "components/Positions/RepayPosition/RepayPositionForm";
+const RepayPositionInfo = loadable(
+  () => import("../Positions/RepayPosition/RepayPositionInfo")
+);
+const RepayPositionForm = loadable(
+  () => import("../Positions/RepayPosition/RepayPositionForm")
+);
 import {
   DividerDefault,
   DividerMobile,
