@@ -1,3 +1,4 @@
+import loadable from "@loadable/component";
 import { FC, useMemo } from "react";
 import { Controller, FormProvider } from "react-hook-form";
 import {
@@ -32,8 +33,10 @@ import requiredSrc from "assets/svg/required.svg";
 import { ErrorBox, ErrorMessage } from "components/AppComponents/AppBox/AppBox";
 
 import { formatNumber } from "utils/format";
-import ProposeActionFields from "./Propose/ProposeActionFields";
-import ProposeNotices from "./Propose/ProposeNotices";
+const ProposeActionFields = loadable(
+  () => import("./Propose/ProposeActionFields")
+);
+const ProposeNotices = loadable(() => import("./Propose/ProposeNotices"));
 import BigNumber from "bignumber.js";
 import useSharedContext from "context/shared";
 import WalletConnectBtn from "components/Common/WalletConnectBtn";
@@ -156,13 +159,13 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
               <Stack
                 direction="row"
                 justifyContent="start"
-                alignItems="end"
+                alignItems="center"
                 spacing={1}
               >
                 <img
                   src={getTokenLogoURL("FTHM")}
                   alt="vFTHM-Token"
-                  width={28}
+                  width={20}
                 />
                 {vBalance && (
                   <BalanceBox component="span">

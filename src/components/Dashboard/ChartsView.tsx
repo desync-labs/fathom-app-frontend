@@ -1,5 +1,6 @@
+import loadable from "@loadable/component";
 import { useLocation } from "react-router-dom";
-import { FC, lazy, Suspense, useMemo } from "react";
+import { FC, Suspense, useMemo } from "react";
 import {
   OverviewIcon,
   TokensIcon,
@@ -19,7 +20,7 @@ const ChartsNestedRouteContainer = styled("div")`
   padding: 0;
 `;
 
-const ChartsIndexComponent = lazy(() => import("../../apps/charts/index"));
+const ChartsIndexComponent = loadable(() => import("../../apps/charts/index"));
 
 const ChartsView: FC = () => {
   const location = useLocation();
