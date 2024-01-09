@@ -141,6 +141,9 @@ const AccountDetailsLayout = styled.div`
       justify-items: start;
     }
   }
+  @media screen and (max-width: 1000px) {
+    gap: 0;
+  }
 `;
 
 type AccountPageProps = { account: string };

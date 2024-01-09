@@ -42,7 +42,7 @@ const List = styled(Box)`
 const DashGrid = styled.div`
   display: grid;
   grid-gap: 1em;
-  grid-template-columns: 10px 1.5fr 1fr 1fr;
+  grid-template-columns: 10px 2fr 1fr 1fr;
   grid-template-areas: "number name pair value";
   padding: 0 4px;
 
@@ -51,7 +51,7 @@ const DashGrid = styled.div`
   }
 
   @media screen and (max-width: 1080px) {
-    grid-template-columns: 10px 1.5fr 1fr 1fr;
+    grid-template-columns: 10px 3fr 1fr 1fr;
     grid-template-areas: "number name pair value";
   }
 
@@ -94,7 +94,7 @@ const ListItem: FC<ListItemProps> = memo((props) => {
   return (
     <DashGrid style={{ height: "48px", padding: "0 1.125rem" }}>
       {!below600 && <DataText fontWeight="500">{index}</DataText>}
-      <DataText fontWeight="500" justifyContent="flex-start">
+      <DataText fontWeight="500" justifyContent="center">
         <CustomLink
           style={{ marginLeft: below600 ? 0 : "1rem", whiteSpace: "nowrap" }}
           to={"/charts/account/" + lp.user.id}
@@ -185,7 +185,7 @@ const LPList: FC<LPListProps> = (props) => {
             </TYPE.main>
           </Flex>
         )}
-        <Flex alignItems="center" justifyContent="flex-start">
+        <Flex alignItems="center" justifyContent="center">
           <TYPE.main>
             <TableHeaderBox>Account</TableHeaderBox>
           </TYPE.main>
