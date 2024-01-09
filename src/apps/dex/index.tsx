@@ -1,7 +1,4 @@
 import { FC, memo } from "react";
-
-import { isMobile } from "react-device-detect";
-import ReactGA from "react-ga";
 import Blocklist from "apps/dex/components/Blocklist";
 import "apps/dex/i18n";
 import App from "apps/dex/pages/App";
@@ -18,27 +15,6 @@ import { DexSharedProvider } from "context/dexShared";
 
 if (window.ethereum) {
   window.ethereum.autoRefreshOnNetworkChange = false;
-}
-
-const GOOGLE_ANALYTICS_ID: string | undefined =
-  process.env.REACT_APP_GOOGLE_ANALYTICS_ID;
-if (typeof GOOGLE_ANALYTICS_ID === "string") {
-  ReactGA.initialize(GOOGLE_ANALYTICS_ID, {
-    gaOptions: {
-      storage: "none",
-      storeGac: false,
-    },
-  });
-  ReactGA.set({
-    anonymizeIp: true,
-    customBrowserType: !isMobile
-      ? "desktop"
-      : "web3" in window || "ethereum" in window
-      ? "mobileWeb3"
-      : "mobileRegular",
-  });
-} else {
-  ReactGA.initialize("test", { testMode: true, debug: true });
 }
 
 export const Updaters = () => {
