@@ -1,6 +1,6 @@
 import { useState, useCallback, FC } from "react";
 import styled from "styled-components";
-import ReactGA from "react-ga";
+import ReactGA from "react-ga4";
 import { TYPE, CloseIcon } from "apps/dex/theme";
 import Card from "apps/dex/components/Card";
 import { AutoColumn } from "apps/dex/components/Column";

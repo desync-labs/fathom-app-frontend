@@ -1,6 +1,4 @@
 import { FC, ReactElement } from "react";
-import ReactGA from "react-ga";
-import { isMobile } from "react-device-detect";
 import ThemeProvider, { GlobalStyle } from "apps/charts/Theme";
 import LocalStorageContextProvider, {
   Updater as LocalStorageContextUpdater,
@@ -14,28 +12,6 @@ import GlobalDataContextProvider from "apps/charts/contexts/GlobalData";
 import ApplicationContextProvider from "apps/charts/contexts/Application";
 import TokenDataContextProvider from "apps/charts/contexts/TokenData";
 import App from "apps/charts/App";
-
-// initialize GA
-const GOOGLE_ANALYTICS_ID = process.env.REACT_APP_GOOGLE_ANALYTICS_ID;
-
-if (typeof GOOGLE_ANALYTICS_ID === "string") {
-  ReactGA.initialize(GOOGLE_ANALYTICS_ID, {
-    gaOptions: {
-      storage: "none",
-      storeGac: false,
-    },
-  });
-  ReactGA.set({
-    anonymizeIp: true,
-    customBrowserType: !isMobile
-      ? "desktop"
-      : "web3" in window || "ethereum" in window
-      ? "mobileWeb3"
-      : "mobileRegular",
-  });
-} else {
-  ReactGA.initialize("test", { testMode: true, debug: true });
-}
 
 type ContextProvidersProps = {
   children: ReactElement;

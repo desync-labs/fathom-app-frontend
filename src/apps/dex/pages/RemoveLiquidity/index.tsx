@@ -11,7 +11,7 @@ import {
 } from "into-the-fathom-swap-sdk";
 import { useCallback, useContext, useMemo, useState } from "react";
 import { ArrowDown, Plus } from "react-feather";
-import ReactGA from "react-ga";
+import ReactGA from "react-ga4";
 import { Text } from "rebass";
 import styled, { ThemeContext } from "styled-components";
 import {

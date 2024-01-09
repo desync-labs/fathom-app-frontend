@@ -18,15 +18,15 @@ const useStreamStats = () => {
 
   const [previousStakerState, setPreviousStakerState] = useState<any>();
 
-  const [seconds, setSeconds] = useState<number>(0);
-  const [timer, setTimer] = useState<ReturnType<typeof setTimeout> | null>();
+  const [seconds, setSeconds] = useState<number | null>(null);
+  const [timer, setTimer] = useState<ReturnType<typeof setInterval> | null>();
 
   useEffect(() => {
     const now = Date.now() / 1000;
     if (Number(stake?.cooldown) > now) {
       setSeconds(Number(stake.cooldown) - now);
     } else {
-      setSeconds(0);
+      setSeconds(null);
     }
   }, [stake, setSeconds]);
 
@@ -40,19 +40,23 @@ const useStreamStats = () => {
       previousStakerState &&
       previousStakerState?.cooldown !== stake?.cooldown
     ) {
-      clearTimeout(timer);
+      clearInterval(timer);
       setTimer(null);
       setPreviousStakerState(stake);
     }
   }, [timer, stake, previousStakerState, setTimer, setPreviousStakerState]);
 
   useEffect(() => {
-    if (seconds > 0 && !timer) {
-      const identifier = setTimeout(() => {
-        setSeconds(seconds - 1);
-        setTimer(null);
+    let interval: ReturnType<typeof setInterval>;
+    if (Number(seconds) > 0 && !timer) {
+      interval = setInterval(() => {
+        setSeconds((val) => Number(val) - 1);
       }, 1000);
-      setTimer(identifier);
+
+      setTimer(interval);
+    } else if (Number(seconds) <= 0 && timer) {
+      clearInterval(timer);
+      setTimer(null);
     }
   }, [seconds, timer, setSeconds, setTimer]);
 
