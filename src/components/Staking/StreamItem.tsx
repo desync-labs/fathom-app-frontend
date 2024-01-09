@@ -47,7 +47,7 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
         () => (
           <>
             {!isLoading && !lockPositions.length ? (
-              <NoResults variant="h6">You have no open positions!</NoResults>
+              <NoResults variant="h6">You have no open positions.</NoResults>
             ) : isLoading ? (
               <Grid container>
                 <Grid item xs={12} sx={{ textAlign: "center" }}>

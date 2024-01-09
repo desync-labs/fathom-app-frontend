@@ -9,7 +9,7 @@ import {
   CancelButton,
 } from "components/AppComponents/AppButton/AppButton";
 import { ModalDescription } from "components/AppComponents/AppBox/AppBox";
-import { FC } from "react";
+import { FC, memo } from "react";
 import { styled } from "@mui/material/styles";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatNumber } from "utils/format";
@@ -36,6 +36,10 @@ const ButtonsWrapper = styled(Box, {
     button {
       width: 100%;
     }
+  }
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    margin: 20px 0;
   }
 `;
 
@@ -111,4 +115,4 @@ const ClaimRewardsCoolDownDialog: FC<ClaimRewardsDialogProps> = ({
   );
 };
 
-export default ClaimRewardsCoolDownDialog;
+export default memo(ClaimRewardsCoolDownDialog);

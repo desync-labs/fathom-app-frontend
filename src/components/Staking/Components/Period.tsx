@@ -45,24 +45,24 @@ const Period: FC<PeriodProps> = ({ lockDays, setPeriod }) => {
         onClick={() => setPeriod(30)}
       />
       <StakingChip
-        isActive={lockDays === 60}
+        isActive={lockDays === 61}
         label="2-Month"
-        onClick={() => setPeriod(60)}
+        onClick={() => setPeriod(61)}
       />
       <StakingChip
-        isActive={lockDays === 90}
+        isActive={lockDays === 92}
         label="3-Month"
-        onClick={() => setPeriod(90)}
+        onClick={() => setPeriod(92)}
       />
       <StakingChip
-        isActive={lockDays === 180}
+        isActive={lockDays === 183}
         label="Half-Year"
-        onClick={() => setPeriod(180)}
+        onClick={() => setPeriod(183)}
       />
       <StakingChip
-        isActive={lockDays === 360}
+        isActive={lockDays === 365}
         label="1-Year"
-        onClick={() => setPeriod(360)}
+        onClick={() => setPeriod(365)}
       />
     </Stack>
   );
