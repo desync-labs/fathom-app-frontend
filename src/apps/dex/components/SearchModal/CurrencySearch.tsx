@@ -9,7 +9,7 @@ import {
   useRef,
   useState,
 } from "react";
-import ReactGA from "react-ga";
+import ReactGA from "react-ga4";
 import { useTranslation } from "react-i18next";
 import { FixedSizeList } from "react-window";
 import { Text } from "rebass";

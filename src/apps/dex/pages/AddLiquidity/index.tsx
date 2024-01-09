@@ -10,7 +10,7 @@ import {
 } from "into-the-fathom-swap-sdk";
 import { useCallback, useContext, useState } from "react";
 import { Plus } from "react-feather";
-import ReactGA from "react-ga";
+import ReactGA from "react-ga4";
 import { Text } from "rebass";
 import styled, { ThemeContext } from "styled-components";
 import { ButtonError, ButtonPrimary } from "apps/dex/components/Button";
