@@ -7,12 +7,7 @@ import InfoIcon from "@mui/icons-material/Info";
 import { ButtonSecondary } from "components/AppComponents/AppButton/AppButton";
 import StakingCountdown from "components/Staking/StakingCountdown";
 
-import {
-  formatCompact,
-  formatNumber,
-  formatNumberPrice,
-  formatPercentage,
-} from "utils/format";
+import { formatCompact, formatNumber, formatPercentage } from "utils/format";
 
 import PercentSrc from "assets/svg/percent.svg";
 import LockedSrc from "assets/svg/locked.svg";
@@ -296,7 +291,7 @@ const StreamStats: FC = () => {
                     </CooldownCountDown>
                     <MyStatsValue>
                       <strong>
-                        {formatNumberPrice(stake.claimedAmount / 10 ** 18)} FTHM
+                        {formatPercentage(stake.claimedAmount / 10 ** 18)} FTHM
                       </strong>
                       {BigNumber(cooldownInUsd).isGreaterThan(1 / 10 ** 6) ? (
                         <span>{formatPercentage(cooldownInUsd)}</span>
@@ -304,30 +299,36 @@ const StreamStats: FC = () => {
                     </MyStatsValue>
                   </>
                 )}
-                {seconds <= 0 && stake && Number(stake.claimedAmount) > 0 && (
-                  <Grid container>
-                    <Grid item xs={6}>
-                      <StatsLabel>
-                        Ready to withdraw
-                        <InfoIcon sx={{ fontSize: "18px" }} />
-                      </StatsLabel>
-                      <MyStatsValue className={"green"}>
-                        <strong>
-                          {formatNumber(Number(stake.claimedAmount) / 10 ** 18)}{" "}
-                          FTHM
-                        </strong>
-                        {BigNumber(cooldownInUsd).isGreaterThan(1 / 10 ** 6) ? (
-                          <span>{formatPercentage(cooldownInUsd)}</span>
-                        ) : null}
-                      </MyStatsValue>
+                {seconds <= 0 &&
+                  stake &&
+                  BigNumber(stake.claimedAmount).isGreaterThan(0) && (
+                    <Grid container>
+                      <Grid item xs={6}>
+                        <StatsLabel>
+                          Ready to withdraw
+                          <InfoIcon sx={{ fontSize: "18px" }} />
+                        </StatsLabel>
+                        <MyStatsValue className={"green"}>
+                          <strong>
+                            {formatPercentage(
+                              Number(stake.claimedAmount) / 10 ** 18
+                            )}{" "}
+                            FTHM
+                          </strong>
+                          {BigNumber(cooldownInUsd).isGreaterThan(
+                            1 / 10 ** 6
+                          ) ? (
+                            <span>{formatPercentage(cooldownInUsd)}</span>
+                          ) : null}
+                        </MyStatsValue>
+                      </Grid>
+                      <ButtonGrid item xs={6}>
+                        <StatsButton onClick={() => processFlow("withdraw")}>
+                          Withdraw
+                        </StatsButton>
+                      </ButtonGrid>
                     </Grid>
-                    <ButtonGrid item xs={6}>
-                      <StatsButton onClick={() => processFlow("withdraw")}>
-                        Withdraw
-                      </StatsButton>
-                    </ButtonGrid>
-                  </Grid>
-                )}
+                  )}
               </MyStatsBlock>
             )}
 
@@ -340,7 +341,7 @@ const StreamStats: FC = () => {
                   {stake && (
                     <MyStatsValue className={"blue"}>
                       <strong>
-                        {formatNumberPrice(
+                        {formatPercentage(
                           BigNumber(totalRewards)
                             .dividedBy(10 ** 18)
                             .toNumber()
