@@ -1,9 +1,8 @@
-import loadable from "@loadable/component";
 import { Grid } from "@mui/material";
 import { useMemo } from "react";
-const StakingLockForm = loadable(() => import("../Staking/StakingLockForm"));
-const StreamStats = loadable(() => import("../Staking/Components/StreamStats"));
-const StakingPositions = loadable(() => import("../Staking/StakingPositions"));
+import StakingLockForm from "components/Staking/StakingLockForm";
+import StreamStats from "components/Staking/Components/StreamStats";
+import StakingPositions from "components/Staking/StakingPositions";
 import { PageHeader } from "components/Dashboard/PageHeader";
 import useSharedContext from "context/shared";
 
