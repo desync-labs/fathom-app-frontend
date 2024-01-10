@@ -1,4 +1,3 @@
-import loadable from "@loadable/component";
 import { Dispatch, FC, useMemo, memo } from "react";
 import {
   Box,
@@ -11,9 +10,7 @@ import {
   Pagination,
 } from "@mui/material";
 import { IOpenPosition } from "fathom-sdk";
-const ClosePositionDialog = loadable(
-  () => import("../Positions/RepayPositionDialog")
-);
+import ClosePositionDialog from "components/Positions/RepayPositionDialog";
 import {
   AppTableHeaderRow,
   AppTableCellWithPopover,
@@ -22,25 +19,17 @@ import {
   TitleSecondary,
   NoResults,
 } from "components/AppComponents/AppBox/AppBox";
-const PositionListItem = loadable(
-  () => import("../PositionList/PositionListItem")
-);
-const PositionListItemMobile = loadable(
-  () => import("../PositionList/PositionListItemMobile")
-);
+import PositionListItem from "components/PositionList/PositionListItem";
+import PositionListItemMobile from "components/PositionList/PositionListItemMobile";
 import useOpenPositionList from "hooks/useOpenPositionList";
 import { styled } from "@mui/material/styles";
 import { COUNT_PER_PAGE } from "utils/Constants";
 
 import { ClosePositionProvider } from "context/repayPosition";
 import { TopUpPositionProvider } from "context/topUpPosition";
-const TopUpPositionDialog = loadable(
-  () => import("../Positions/TopUpPositionDialog")
-);
+import TopUpPositionDialog from "components/Positions/TopUpPositionDialog";
 import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
-const AppPopover = loadable(
-  () => import("../AppComponents/AppPopover/AppPopover")
-);
+import AppPopover from "components/AppComponents/AppPopover/AppPopover";
 import useSharedContext from "context/shared";
 
 const CircleWrapper = styled(Box)`

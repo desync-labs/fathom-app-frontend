@@ -1,4 +1,3 @@
-import loadable from "@loadable/component";
 import { FC, useMemo } from "react";
 import { Controller, FormProvider } from "react-hook-form";
 import {
@@ -33,10 +32,8 @@ import requiredSrc from "assets/svg/required.svg";
 import { ErrorBox, ErrorMessage } from "components/AppComponents/AppBox/AppBox";
 
 import { formatNumber } from "utils/format";
-const ProposeActionFields = loadable(
-  () => import("./Propose/ProposeActionFields")
-);
-const ProposeNotices = loadable(() => import("./Propose/ProposeNotices"));
+import ProposeActionFields from "components/Governance/Propose/ProposeActionFields";
+import ProposeNotices from "components/Governance/Propose/ProposeNotices";
 import BigNumber from "bignumber.js";
 import useSharedContext from "context/shared";
 import WalletConnectBtn from "components/Common/WalletConnectBtn";
