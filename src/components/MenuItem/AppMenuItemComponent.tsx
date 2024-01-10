@@ -1,4 +1,4 @@
-import { forwardRef, ReactNode } from "react";
+import { FC, forwardRef, ReactNode, MouseEvent, memo } from "react";
 import { NavLink, NavLinkProps, useLocation } from "react-router-dom";
 import { ListItem } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -11,12 +11,12 @@ const ExternalLink = styled("a")`
 export interface AppMenuItemComponentProps {
   className?: string;
   link?: string | null; // because the InferProps props allows null value
-  onClick?: (event: React.MouseEvent<HTMLElement>) => void;
+  onClick?: (event: MouseEvent<HTMLElement>) => void;
   children: ReactNode;
   target?: string | null; // because the InferProps props allows null value
 }
 
-const AppMenuItemComponent: React.FC<AppMenuItemComponentProps> = (props) => {
+const AppMenuItemComponent: FC<AppMenuItemComponentProps> = (props) => {
   const { className, onClick, link, children } = props;
   const location = useLocation();
 
@@ -66,4 +66,4 @@ const AppMenuItemComponent: React.FC<AppMenuItemComponentProps> = (props) => {
   );
 };
 
-export default AppMenuItemComponent;
+export default memo(AppMenuItemComponent);
