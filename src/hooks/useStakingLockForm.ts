@@ -11,6 +11,8 @@ import { DAY_IN_SECONDS } from "utils/Constants";
 
 const useStakingLockForm = () => {
   const [balanceError, setBalanceError] = useState<boolean>(false);
+  const [lowInputAmountError, setLowInputAmountError] =
+    useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [fthmBalance, setFthmBalance] = useState<string>("0");
@@ -135,6 +137,14 @@ const useStakingLockForm = () => {
     }
   }, [stakePosition, fthmBalance]);
 
+  useEffect(() => {
+    if (BigNumber(stakePosition).isLessThan(1)) {
+      setLowInputAmountError(true);
+    } else {
+      setLowInputAmountError(false);
+    }
+  }, [stakePosition, fthmBalance]);
+
   const onSubmit = useCallback(
     async (values: Record<string, any>) => {
       const { stakePosition, lockDays } = values;
@@ -195,6 +205,7 @@ const useStakingLockForm = () => {
   return {
     account,
     balanceError,
+    lowInputAmountError,
     unlockDate,
     lockDays,
     minLockPeriod,
