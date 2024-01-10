@@ -1,11 +1,11 @@
 import { Trans } from "@lingui/macro";
 import { GitHub, Twitter } from "@mui/icons-material";
 import { Box, styled, SvgIcon, Typography } from "@mui/material";
-import { Link } from "src/components/primitives/Link";
-import { useRootStore } from "src/store/root";
+import { Link } from "apps/lending/components/primitives/Link";
+import { useRootStore } from "apps/lending/store/root";
 
-import DiscordIcon from "/public/icons/discord.svg";
-import LensLogoIcon from "/public/icons/lens-logo.svg";
+import DiscordIcon from "apps/lending/assets/icons/discord.svg";
+import LensLogoIcon from "apps/lending/assets/icons/lens-logo.svg";
 
 interface StyledLinkProps {
   onClick?: React.MouseEventHandler<HTMLAnchorElement>;

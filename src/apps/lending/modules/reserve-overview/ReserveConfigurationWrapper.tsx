@@ -1,19 +1,18 @@
 import { Trans } from "@lingui/macro";
 import { Box, Paper, Typography, useMediaQuery, useTheme } from "@mui/material";
-import dynamic from "next/dynamic";
-import { ComputedReserveData } from "src/hooks/app-data-provider/useAppDataProvider";
+import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
+import loadable from "@loadable/component";
+import { FC } from "react";
 
 type ReserveConfigurationProps = {
   reserve: ComputedReserveData;
 };
 
-const ReserveConfiguration = dynamic(() =>
-  import("./ReserveConfiguration").then((module) => module.ReserveConfiguration)
-);
+const ReserveConfiguration = loadable(() => import("./ReserveConfiguration"));
 
-export const ReserveConfigurationWrapper: React.FC<
-  ReserveConfigurationProps
-> = ({ reserve }) => {
+export const ReserveConfigurationWrapper: FC<ReserveConfigurationProps> = ({
+  reserve,
+}) => {
   const { breakpoints } = useTheme();
   const downToXsm = useMediaQuery(breakpoints.down("xsm"));
 

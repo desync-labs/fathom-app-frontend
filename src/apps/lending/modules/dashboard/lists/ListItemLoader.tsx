@@ -1,8 +1,8 @@
 import { Box, Skeleton } from "@mui/material";
 
-import { ListColumn } from "../../../components/lists/ListColumn";
-import { ListItem } from "../../../components/lists/ListItem";
-import { ListButtonsColumn } from "./ListButtonsColumn";
+import { ListColumn } from "apps/lending/components/lists/ListColumn";
+import { ListItem } from "apps/lending/components/lists/ListItem";
+import { ListButtonsColumn } from "apps/lending/modules/dashboard/lists/ListButtonsColumn";
 
 export const ListItemLoader = () => {
   return (

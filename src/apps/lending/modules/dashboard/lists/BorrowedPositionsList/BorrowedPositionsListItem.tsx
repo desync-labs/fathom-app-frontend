@@ -2,23 +2,23 @@ import { InterestRate } from "@aave/contract-helpers";
 import { ReserveIncentiveResponse } from "@aave/math-utils/dist/esm/formatters/incentive/calculate-reserve-incentives";
 import { Trans } from "@lingui/macro";
 import { Box, Button, useMediaQuery, useTheme } from "@mui/material";
-import { IncentivesCard } from "src/components/incentives/IncentivesCard";
-import { APYTypeTooltip } from "src/components/infoTooltips/APYTypeTooltip";
-import { Row } from "src/components/primitives/Row";
-import { useAssetCaps } from "src/hooks/useAssetCaps";
-import { useModalContext } from "src/hooks/useModal";
-import { useProtocolDataContext } from "src/hooks/useProtocolDataContext";
-import { DashboardReserve } from "src/utils/dashboardSortUtils";
-import { isFeatureEnabled } from "src/utils/marketsAndNetworksConfig";
+import { IncentivesCard } from "apps/lending/components/incentives/IncentivesCard";
+import { APYTypeTooltip } from "apps/lending/components/infoTooltips/APYTypeTooltip";
+import { Row } from "apps/lending/components/primitives/Row";
+import { useAssetCaps } from "apps/lending/hooks/useAssetCaps";
+import { useModalContext } from "apps/lending/hooks/useModal";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
+import { DashboardReserve } from "apps/lending/utils/dashboardSortUtils";
+import { isFeatureEnabled } from "apps/lending/utils/marketsAndNetworksConfig";
 
-import { ListColumn } from "../../../../components/lists/ListColumn";
-import { ListAPRColumn } from "../ListAPRColumn";
-import { ListButtonsColumn } from "../ListButtonsColumn";
-import { ListItemAPYButton } from "../ListItemAPYButton";
-import { ListItemWrapper } from "../ListItemWrapper";
-import { ListMobileItemWrapper } from "../ListMobileItemWrapper";
-import { ListValueColumn } from "../ListValueColumn";
-import { ListValueRow } from "../ListValueRow";
+import { ListColumn } from "apps/lending/components/lists/ListColumn";
+import { ListAPRColumn } from "apps/lending/modules/dashboard/lists/ListAPRColumn";
+import { ListButtonsColumn } from "apps/lending/modules/dashboard/lists/ListButtonsColumn";
+import { ListItemAPYButton } from "apps/lending/modules/dashboard/lists/ListItemAPYButton";
+import { ListItemWrapper } from "apps/lending/modules/dashboard/lists/ListItemWrapper";
+import { ListMobileItemWrapper } from "apps/lending/modules/dashboard/lists/ListMobileItemWrapper";
+import { ListValueColumn } from "apps/lending/modules/dashboard/lists/ListValueColumn";
+import { ListValueRow } from "apps/lending/modules/dashboard/lists/ListValueRow";
 
 export const BorrowedPositionsListItem = ({
   item,

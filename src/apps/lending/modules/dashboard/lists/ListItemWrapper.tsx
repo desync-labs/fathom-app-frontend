@@ -1,21 +1,21 @@
 import { Tooltip, Typography } from "@mui/material";
 import { ReactNode } from "react";
-import { BorrowDisabledToolTip } from "src/components/infoTooltips/BorrowDisabledToolTip";
-import { BUSDOffBoardingTooltip } from "src/components/infoTooltips/BUSDOffboardingToolTip";
-import { StETHCollateralToolTip } from "src/components/infoTooltips/StETHCollateralToolTip";
-import { useAssetCaps } from "src/hooks/useAssetCaps";
-import { useRootStore } from "src/store/root";
-import { CustomMarket } from "src/ui-config/marketsConfig";
-import { DASHBOARD_LIST_COLUMN_WIDTHS } from "src/utils/dashboardSortUtils";
-import { DASHBOARD } from "src/utils/mixPanelEvents";
+import { BorrowDisabledToolTip } from "apps/lending/components/infoTooltips/BorrowDisabledToolTip";
+import { BUSDOffBoardingTooltip } from "apps/lending/components/infoTooltips/BUSDOffboardingToolTip";
+import { StETHCollateralToolTip } from "apps/lending/components/infoTooltips/StETHCollateralToolTip";
+import { useAssetCaps } from "apps/lending/hooks/useAssetCaps";
+import { useRootStore } from "apps/lending/store/root";
+import { CustomMarket } from "apps/lending/ui-config/marketsConfig";
+import { DASHBOARD_LIST_COLUMN_WIDTHS } from "apps/lending/utils/dashboardSortUtils";
+import { DASHBOARD } from "apps/lending/utils/mixPanelEvents";
 
-import { AMPLToolTip } from "../../../components/infoTooltips/AMPLToolTip";
-import { FrozenTooltip } from "../../../components/infoTooltips/FrozenTooltip";
-import { RenFILToolTip } from "../../../components/infoTooltips/RenFILToolTip";
-import { ListColumn } from "../../../components/lists/ListColumn";
-import { ListItem } from "../../../components/lists/ListItem";
-import { Link, ROUTES } from "../../../components/primitives/Link";
-import { TokenIcon } from "../../../components/primitives/TokenIcon";
+import { AMPLToolTip } from "apps/lending/components/infoTooltips/AMPLToolTip";
+import { FrozenTooltip } from "apps/lending/components/infoTooltips/FrozenTooltip";
+import { RenFILToolTip } from "apps/lending/components/infoTooltips/RenFILToolTip";
+import { ListColumn } from "apps/lending/components/lists/ListColumn";
+import { ListItem } from "apps/lending/components/lists/ListItem";
+import { Link, ROUTES } from "apps/lending/components/primitives/Link";
+import { TokenIcon } from "apps/lending/components/primitives/TokenIcon";
 
 interface ListItemWrapperProps {
   symbol: string;

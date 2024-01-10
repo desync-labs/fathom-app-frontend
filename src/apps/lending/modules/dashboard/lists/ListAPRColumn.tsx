@@ -2,8 +2,8 @@ import { ReserveIncentiveResponse } from "@aave/math-utils/dist/esm/formatters/i
 import { Box } from "@mui/material";
 import { ReactNode } from "react";
 
-import { IncentivesCard } from "../../../components/incentives/IncentivesCard";
-import { ListColumn } from "../../../components/lists/ListColumn";
+import { IncentivesCard } from "apps/lending/components/incentives/IncentivesCard";
+import { ListColumn } from "apps/lending/components/lists/ListColumn";
 
 interface ListAPRColumnProps {
   value: number;

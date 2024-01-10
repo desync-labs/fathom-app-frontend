@@ -1,13 +1,13 @@
-import { ReactNode } from "react";
-import { BorrowDisabledToolTip } from "src/components/infoTooltips/BorrowDisabledToolTip";
-import { BUSDOffBoardingTooltip } from "src/components/infoTooltips/BUSDOffboardingToolTip";
-import { StETHCollateralToolTip } from "src/components/infoTooltips/StETHCollateralToolTip";
-import { CustomMarket } from "src/ui-config/marketsConfig";
+import { FC, ReactNode } from "react";
+import { BorrowDisabledToolTip } from "apps/lending/components/infoTooltips/BorrowDisabledToolTip";
+import { BUSDOffBoardingTooltip } from "apps/lending/components/infoTooltips/BUSDOffboardingToolTip";
+import { StETHCollateralToolTip } from "apps/lending/components/infoTooltips/StETHCollateralToolTip";
+import { CustomMarket } from "apps/lending/ui-config/marketsConfig";
 
-import { AMPLToolTip } from "../../../components/infoTooltips/AMPLToolTip";
-import { FrozenTooltip } from "../../../components/infoTooltips/FrozenTooltip";
-import { RenFILToolTip } from "../../../components/infoTooltips/RenFILToolTip";
-import { ListMobileItem } from "../../../components/lists/ListMobileItem";
+import { AMPLToolTip } from "apps/lending/components/infoTooltips/AMPLToolTip";
+import { FrozenTooltip } from "apps/lending/components/infoTooltips/FrozenTooltip";
+import { RenFILToolTip } from "apps/lending/components/infoTooltips/RenFILToolTip";
+import { ListMobileItem } from "apps/lending/components/lists/ListMobileItem";
 
 // These are all optional due to MobileListItemLoader
 interface ListMobileItemWrapperProps {
@@ -41,7 +41,7 @@ export const ListMobileItemWrapper = ({
   showDebtCeilingTooltips = false,
   isIsolated = false,
 }: ListMobileItemWrapperProps) => {
-  const WarningComponent: React.FC = () => {
+  const WarningComponent: FC = () => {
     const showFrozenTooltip = frozen && symbol !== "renFIL";
     const showRenFilTooltip = frozen && symbol === "renFIL";
     const showAmplTooltip = !frozen && symbol === "AMPL";

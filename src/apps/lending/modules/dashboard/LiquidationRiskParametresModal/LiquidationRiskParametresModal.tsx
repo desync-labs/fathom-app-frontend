@@ -1,15 +1,15 @@
 import { Trans } from "@lingui/macro";
 import { AlertColor, Typography } from "@mui/material";
-import { useRootStore } from "src/store/root";
-import { GENERAL } from "src/utils/mixPanelEvents";
+import { useRootStore } from "apps/lending/store/root";
+import { GENERAL } from "apps/lending/utils/mixPanelEvents";
 
-import { HealthFactorNumber } from "../../../components/HealthFactorNumber";
-import { BasicModal } from "../../../components/primitives/BasicModal";
-import { FormattedNumber } from "../../../components/primitives/FormattedNumber";
-import { Link } from "../../../components/primitives/Link";
-import { HFContent } from "./components/HFContent";
-import { InfoWrapper } from "./components/InfoWrapper";
-import { LTVContent } from "./components/LTVContent";
+import { HealthFactorNumber } from "apps/lending/components/HealthFactorNumber";
+import { BasicModal } from "apps/lending/components/primitives/BasicModal";
+import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
+import { Link } from "apps/lending/components/primitives/Link";
+import { HFContent } from "apps/lending/modules/dashboard/LiquidationRiskParametresModal/components/HFContent";
+import { InfoWrapper } from "apps/lending/modules/dashboard/LiquidationRiskParametresModal/components/InfoWrapper";
+import { LTVContent } from "apps/lending/modules/dashboard/LiquidationRiskParametresModal/components/LTVContent";
 
 interface LiquidationRiskParametresInfoModalProps {
   open: boolean;

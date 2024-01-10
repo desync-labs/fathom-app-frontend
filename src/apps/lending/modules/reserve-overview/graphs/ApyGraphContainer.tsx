@@ -2,17 +2,17 @@ import { Trans } from "@lingui/macro";
 import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import { ParentSize } from "@visx/responsive";
 import { useState } from "react";
-import type { ComputedReserveData } from "src/hooks/app-data-provider/useAppDataProvider";
+import type { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 import {
   ReserveRateTimeRange,
   useReserveRatesHistory,
-} from "src/hooks/useReservesHistory";
-import { MarketDataType } from "src/utils/marketsAndNetworksConfig";
+} from "apps/lending/hooks/useReservesHistory";
+import { MarketDataType } from "apps/lending/utils/marketsAndNetworksConfig";
 
-import { ESupportedTimeRanges } from "../TimeRangeSelector";
-import { ApyGraph } from "./ApyGraph";
-import { GraphLegend } from "./GraphLegend";
-import { GraphTimeRangeSelector } from "./GraphTimeRangeSelector";
+import { ESupportedTimeRanges } from "apps/lending/modules/reserve-overview/TimeRangeSelector";
+import { ApyGraph } from "apps/lending/modules/reserve-overview/graphs/ApyGraph";
+import { GraphLegend } from "apps/lending/modules/reserve-overview/graphs/GraphLegend";
+import { GraphTimeRangeSelector } from "apps/lending/modules/reserve-overview/graphs/GraphTimeRangeSelector";
 
 type Field = "liquidityRate" | "stableBorrowRate" | "variableBorrowRate";
 

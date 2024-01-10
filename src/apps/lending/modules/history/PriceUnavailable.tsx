@@ -1,6 +1,6 @@
 import { Trans } from "@lingui/macro";
 import { Box } from "@mui/material";
-import { FormattedNumber } from "src/components/primitives/FormattedNumber";
+import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
 
 export const PriceUnavailable = ({ value }: { value: number }) => {
   if (value > 0) {

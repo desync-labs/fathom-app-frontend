@@ -1,13 +1,12 @@
 import { valueToBigNumber } from "@aave/math-utils";
 import { Trans } from "@lingui/macro";
 import { useMediaQuery, useTheme } from "@mui/material";
-import { marketContainerProps } from "pages/markets.page";
-import * as React from "react";
+import { marketContainerProps } from "apps/lending/pages/markets.page";
 
-import { FormattedNumber } from "../../components/primitives/FormattedNumber";
-import { TopInfoPanel } from "../../components/TopInfoPanel/TopInfoPanel";
-import { TopInfoPanelItem } from "../../components/TopInfoPanel/TopInfoPanelItem";
-import { useAppDataContext } from "../../hooks/app-data-provider/useAppDataProvider";
+import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
+import { TopInfoPanel } from "apps/lending/components/TopInfoPanel/TopInfoPanel";
+import { TopInfoPanelItem } from "apps/lending/components/TopInfoPanel/TopInfoPanelItem";
+import { useAppDataContext } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 
 export const MarketsTopPanel = () => {
   const { reserves, loading } = useAppDataContext();

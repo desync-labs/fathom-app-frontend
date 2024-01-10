@@ -16,33 +16,33 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import React, { ReactNode, useState } from "react";
-import { WalletIcon } from "src/components/icons/WalletIcon";
-import { getMarketInfoById } from "src/components/MarketSwitcher";
-import { FormattedNumber } from "src/components/primitives/FormattedNumber";
-import { Warning } from "src/components/primitives/Warning";
-import { StyledTxModalToggleButton } from "src/components/StyledToggleButton";
-import { StyledTxModalToggleGroup } from "src/components/StyledToggleButtonGroup";
-import { ConnectWalletButton } from "src/components/WalletConnection/ConnectWalletButton";
+import { ReactNode, useState } from "react";
+import { WalletIcon } from "apps/lending/components/icons/WalletIcon";
+import { getMarketInfoById } from "apps/lending/components/MarketSwitcher";
+import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
+import { Warning } from "apps/lending/components/primitives/Warning";
+import { StyledTxModalToggleButton } from "apps/lending/components/StyledToggleButton";
+import { StyledTxModalToggleGroup } from "apps/lending/components/StyledToggleButtonGroup";
+import { ConnectWalletButton } from "apps/lending/components/WalletConnection/ConnectWalletButton";
 import {
   ComputedReserveData,
   useAppDataContext,
-} from "src/hooks/app-data-provider/useAppDataProvider";
-import { useWalletBalances } from "src/hooks/app-data-provider/useWalletBalances";
-import { useModalContext } from "src/hooks/useModal";
-import { usePermissions } from "src/hooks/usePermissions";
-import { useProtocolDataContext } from "src/hooks/useProtocolDataContext";
-import { useWeb3Context } from "src/libs/hooks/useWeb3Context";
-import { useRootStore } from "src/store/root";
-import { getMaxAmountAvailableToBorrow } from "src/utils/getMaxAmountAvailableToBorrow";
-import { getMaxAmountAvailableToSupply } from "src/utils/getMaxAmountAvailableToSupply";
-import { GENERAL } from "src/utils/mixPanelEvents";
-import { amountToUsd } from "src/utils/utils";
+} from "apps/lending/hooks/app-data-provider/useAppDataProvider";
+import { useWalletBalances } from "apps/lending/hooks/app-data-provider/useWalletBalances";
+import { useModalContext } from "apps/lending/hooks/useModal";
+import { usePermissions } from "apps/lending/hooks/usePermissions";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
+import { useWeb3Context } from "apps/lending/libs/hooks/useWeb3Context";
+import { useRootStore } from "apps/lending/store/root";
+import { getMaxAmountAvailableToBorrow } from "apps/lending/utils/getMaxAmountAvailableToBorrow";
+import { getMaxAmountAvailableToSupply } from "apps/lending/utils/getMaxAmountAvailableToSupply";
+import { GENERAL } from "apps/lending/utils/mixPanelEvents";
+import { amountToUsd } from "apps/lending/utils/utils";
 
-import { CapType } from "../../components/caps/helper";
-import { AvailableTooltip } from "../../components/infoTooltips/AvailableTooltip";
-import { Link, ROUTES } from "../../components/primitives/Link";
-import { useReserveActionState } from "../../hooks/useReserveActionState";
+import { CapType } from "apps/lending/components/caps/helper";
+import { AvailableTooltip } from "apps/lending/components/infoTooltips/AvailableTooltip";
+import { Link, ROUTES } from "apps/lending/components/primitives/Link";
+import { useReserveActionState } from "apps/lending/hooks/useReserveActionState";
 
 const amountToUSD = (
   amount: BigNumberValue,

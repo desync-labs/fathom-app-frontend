@@ -3,32 +3,32 @@ import { valueToBigNumber } from "@aave/math-utils";
 import { Trans } from "@lingui/macro";
 import { Typography, useMediaQuery, useTheme } from "@mui/material";
 import { useState } from "react";
-import { ListColumn } from "src/components/lists/ListColumn";
-import { ListHeaderTitle } from "src/components/lists/ListHeaderTitle";
-import { ListHeaderWrapper } from "src/components/lists/ListHeaderWrapper";
-import { useProtocolDataContext } from "src/hooks/useProtocolDataContext";
-import { fetchIconSymbolAndName } from "src/ui-config/reservePatches";
-import { GENERAL } from "src/utils/mixPanelEvents";
+import { ListColumn } from "apps/lending/components/lists/ListColumn";
+import { ListHeaderTitle } from "apps/lending/components/lists/ListHeaderTitle";
+import { ListHeaderWrapper } from "apps/lending/components/lists/ListHeaderWrapper";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
+import { fetchIconSymbolAndName } from "apps/lending/ui-config/reservePatches";
+import { GENERAL } from "apps/lending/utils/mixPanelEvents";
 
-import { APYTypeTooltip } from "../../../../components/infoTooltips/APYTypeTooltip";
-import { BorrowPowerTooltip } from "../../../../components/infoTooltips/BorrowPowerTooltip";
-import { TotalBorrowAPYTooltip } from "../../../../components/infoTooltips/TotalBorrowAPYTooltip";
-import { ListWrapper } from "../../../../components/lists/ListWrapper";
+import { APYTypeTooltip } from "apps/lending/components/infoTooltips/APYTypeTooltip";
+import { BorrowPowerTooltip } from "apps/lending/components/infoTooltips/BorrowPowerTooltip";
+import { TotalBorrowAPYTooltip } from "apps/lending/components/infoTooltips/TotalBorrowAPYTooltip";
+import { ListWrapper } from "apps/lending/components/lists/ListWrapper";
 import {
   ComputedUserReserveData,
   useAppDataContext,
-} from "../../../../hooks/app-data-provider/useAppDataProvider";
+} from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 import {
   DASHBOARD_LIST_COLUMN_WIDTHS,
   DashboardReserve,
   handleSortDashboardReserves,
-} from "../../../../utils/dashboardSortUtils";
-import { DashboardContentNoData } from "../../DashboardContentNoData";
-import { DashboardEModeButton } from "../../DashboardEModeButton";
-import { ListButtonsColumn } from "../ListButtonsColumn";
-import { ListLoader } from "../ListLoader";
-import { ListTopInfoItem } from "../ListTopInfoItem";
-import { BorrowedPositionsListItemWrapper } from "./BorrowedPositionsListItemWrapper";
+} from "apps/lending/utils/dashboardSortUtils";
+import { DashboardContentNoData } from "apps/lending/modules/dashboard/DashboardContentNoData";
+import { DashboardEModeButton } from "apps/lending/modules/dashboard/DashboardEModeButton";
+import { ListButtonsColumn } from "apps/lending/modules/dashboard/lists/ListButtonsColumn";
+import { ListLoader } from "apps/lending/modules/dashboard/lists/ListLoader";
+import { ListTopInfoItem } from "apps/lending/modules/dashboard/lists/ListTopInfoItem";
+import { BorrowedPositionsListItemWrapper } from "apps/lending/modules/dashboard/lists/BorrowedPositionsList/BorrowedPositionsListItemWrapper";
 
 const head = [
   {

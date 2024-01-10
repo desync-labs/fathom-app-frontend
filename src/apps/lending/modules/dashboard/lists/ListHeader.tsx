@@ -1,9 +1,9 @@
 import { ReactNode } from "react";
 
-import { ListColumn } from "../../../components/lists/ListColumn";
-import { ListHeaderTitle } from "../../../components/lists/ListHeaderTitle";
-import { ListHeaderWrapper } from "../../../components/lists/ListHeaderWrapper";
-import { ListButtonsColumn } from "./ListButtonsColumn";
+import { ListColumn } from "apps/lending/components/lists/ListColumn";
+import { ListHeaderTitle } from "apps/lending/components/lists/ListHeaderTitle";
+import { ListHeaderWrapper } from "apps/lending/components/lists/ListHeaderWrapper";
+import { ListButtonsColumn } from "apps/lending/modules/dashboard/lists/ListButtonsColumn";
 
 interface ListHeaderProps {
   head: ReactNode[];

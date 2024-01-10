@@ -3,18 +3,18 @@ import { Trans } from "@lingui/macro";
 import { Box, Button, SvgIcon, Typography } from "@mui/material";
 import Menu from "@mui/material/Menu";
 import React, { useState } from "react";
-import { EmodeModalType } from "src/components/transactions/Emode/EmodeModalContent";
-import { useAppDataContext } from "src/hooks/app-data-provider/useAppDataProvider";
-import { useModalContext } from "src/hooks/useModal";
-import { useRootStore } from "src/store/root";
-import { DASHBOARD, GENERAL } from "src/utils/mixPanelEvents";
+import { EmodeModalType } from "apps/lending/components/transactions/Emode/EmodeModalContent";
+import { useAppDataContext } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
+import { useModalContext } from "apps/lending/hooks/useModal";
+import { useRootStore } from "apps/lending/store/root";
+import { DASHBOARD, GENERAL } from "apps/lending/utils/mixPanelEvents";
 
-import LightningBoltGradient from "/public/lightningBoltGradient.svg";
+import LightningBoltGradient from "apps/lending/assets/lightningBoltGradient.svg";
 
-import { Link } from "../../components/primitives/Link";
-import { Row } from "../../components/primitives/Row";
-import { TypographyGradient } from "../../components/primitives/TypographyGradient";
-import { getEmodeMessage } from "../../components/transactions/Emode/EmodeNaming";
+import { Link } from "apps/lending/components/primitives/Link";
+import { Row } from "apps/lending/components/primitives/Row";
+import { TypographyGradient } from "apps/lending/components/primitives/TypographyGradient";
+import { getEmodeMessage } from "apps/lending/components/transactions/Emode/EmodeNaming";
 
 interface DashboardEModeButtonProps {
   userEmodeCategoryId: number;

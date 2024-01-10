@@ -1,20 +1,19 @@
 import { Trans } from "@lingui/macro";
 import { Box, Button, Divider } from "@mui/material";
-import { StableAPYTooltip } from "src/components/infoTooltips/StableAPYTooltip";
-import { VariableAPYTooltip } from "src/components/infoTooltips/VariableAPYTooltip";
-import { NoData } from "src/components/primitives/NoData";
-import { ReserveSubheader } from "src/components/ReserveSubheader";
-import { useProtocolDataContext } from "src/hooks/useProtocolDataContext";
-import { useRootStore } from "src/store/root";
-import { CustomMarket } from "src/ui-config/marketsConfig";
-import { MARKETS } from "src/utils/mixPanelEvents";
+import { StableAPYTooltip } from "apps/lending/components/infoTooltips/StableAPYTooltip";
+import { VariableAPYTooltip } from "apps/lending/components/infoTooltips/VariableAPYTooltip";
+import { NoData } from "apps/lending/components/primitives/NoData";
+import { ReserveSubheader } from "apps/lending/components/ReserveSubheader";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
+import { useRootStore } from "apps/lending/store/root";
+import { MARKETS } from "apps/lending/utils/mixPanelEvents";
 
-import { IncentivesCard } from "../../components/incentives/IncentivesCard";
-import { FormattedNumber } from "../../components/primitives/FormattedNumber";
-import { Link, ROUTES } from "../../components/primitives/Link";
-import { Row } from "../../components/primitives/Row";
-import { ComputedReserveData } from "../../hooks/app-data-provider/useAppDataProvider";
-import { ListMobileItemWrapper } from "../dashboard/lists/ListMobileItemWrapper";
+import { IncentivesCard } from "apps/lending/components/incentives/IncentivesCard";
+import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
+import { Link, ROUTES } from "apps/lending/components/primitives/Link";
+import { Row } from "apps/lending/components/primitives/Row";
+import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
+import { ListMobileItemWrapper } from "apps/lending/modules/dashboard/lists/ListMobileItemWrapper";
 
 export const MarketAssetsListMobileItem = ({
   ...reserve
@@ -23,12 +22,6 @@ export const MarketAssetsListMobileItem = ({
   const trackEvent = useRootStore((store) => store.trackEvent);
 
   let showStableBorrowRate = Number(reserve.totalStableDebtUSD) > 0;
-  if (
-    currentMarket === CustomMarket.proto_mainnet &&
-    reserve.symbol === "TUSD"
-  ) {
-    showStableBorrowRate = false;
-  }
 
   return (
     <ListMobileItemWrapper

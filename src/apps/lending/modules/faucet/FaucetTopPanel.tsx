@@ -1,11 +1,10 @@
 import { Trans } from "@lingui/macro";
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
-import * as React from "react";
-import { Link } from "src/components/primitives/Link";
-import { PageTitle } from "src/components/TopInfoPanel/PageTitle";
-import { useProtocolDataContext } from "src/hooks/useProtocolDataContext";
+import { Link } from "apps/lending/components/primitives/Link";
+import { PageTitle } from "apps/lending/components/TopInfoPanel/PageTitle";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
 
-import { TopInfoPanel } from "../../components/TopInfoPanel/TopInfoPanel";
+import { TopInfoPanel } from "apps/lending/components/TopInfoPanel/TopInfoPanel";
 
 export const FaucetTopPanel = () => {
   const { breakpoints } = useTheme();

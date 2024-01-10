@@ -2,30 +2,30 @@ import { API_ETH_MOCK_ADDRESS } from "@aave/contract-helpers";
 import { Trans } from "@lingui/macro";
 import { Typography, useMediaQuery, useTheme } from "@mui/material";
 import { Fragment, useState } from "react";
-import { ListColumn } from "src/components/lists/ListColumn";
-import { ListHeaderTitle } from "src/components/lists/ListHeaderTitle";
-import { ListHeaderWrapper } from "src/components/lists/ListHeaderWrapper";
-import { AssetCapsProvider } from "src/hooks/useAssetCaps";
-import { useProtocolDataContext } from "src/hooks/useProtocolDataContext";
-import { fetchIconSymbolAndName } from "src/ui-config/reservePatches";
-import { GENERAL } from "src/utils/mixPanelEvents";
+import { ListColumn } from "apps/lending/components/lists/ListColumn";
+import { ListHeaderTitle } from "apps/lending/components/lists/ListHeaderTitle";
+import { ListHeaderWrapper } from "apps/lending/components/lists/ListHeaderWrapper";
+import { AssetCapsProvider } from "apps/lending/hooks/useAssetCaps";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
+import { fetchIconSymbolAndName } from "apps/lending/ui-config/reservePatches";
+import { GENERAL } from "apps/lending/utils/mixPanelEvents";
 
-import { CollateralSwitchTooltip } from "../../../../components/infoTooltips/CollateralSwitchTooltip";
-import { CollateralTooltip } from "../../../../components/infoTooltips/CollateralTooltip";
-import { TotalSupplyAPYTooltip } from "../../../../components/infoTooltips/TotalSupplyAPYTooltip";
-import { ListWrapper } from "../../../../components/lists/ListWrapper";
-import { useAppDataContext } from "../../../../hooks/app-data-provider/useAppDataProvider";
+import { CollateralSwitchTooltip } from "apps/lending/components/infoTooltips/CollateralSwitchTooltip";
+import { CollateralTooltip } from "apps/lending/components/infoTooltips/CollateralTooltip";
+import { TotalSupplyAPYTooltip } from "apps/lending/components/infoTooltips/TotalSupplyAPYTooltip";
+import { ListWrapper } from "apps/lending/components/lists/ListWrapper";
+import { useAppDataContext } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 import {
   DASHBOARD_LIST_COLUMN_WIDTHS,
   DashboardReserve,
   handleSortDashboardReserves,
-} from "../../../../utils/dashboardSortUtils";
-import { ListTopInfoItem } from "../../../dashboard/lists/ListTopInfoItem";
-import { DashboardContentNoData } from "../../DashboardContentNoData";
+} from "apps/lending/utils/dashboardSortUtils";
+import { ListTopInfoItem } from "apps/lending/modules/dashboard/lists/ListTopInfoItem";
+import { DashboardContentNoData } from "apps/lending/modules/dashboard/DashboardContentNoData";
 import { ListButtonsColumn } from "../ListButtonsColumn";
-import { ListLoader } from "../ListLoader";
-import { SuppliedPositionsListItem } from "./SuppliedPositionsListItem";
-import { SuppliedPositionsListMobileItem } from "./SuppliedPositionsListMobileItem";
+import { ListLoader } from "apps/lending/modules/dashboard/lists/ListLoader";
+import { SuppliedPositionsListItem } from "apps/lending/modules/dashboard/lists/SuppliedPositionsList/SuppliedPositionsListItem";
+import { SuppliedPositionsListMobileItem } from "apps/lending/modules/dashboard/lists/SuppliedPositionsList/SuppliedPositionsListMobileItem";
 
 const head = [
   {

@@ -10,20 +10,23 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { useRouter } from "next/router";
-import { getMarketInfoById, MarketLogo } from "src/components/MarketSwitcher";
-import { useProtocolDataContext } from "src/hooks/useProtocolDataContext";
-import { useWeb3Context } from "src/libs/hooks/useWeb3Context";
+import {
+  getMarketInfoById,
+  MarketLogo,
+} from "apps/lending/components/MarketSwitcher";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
+import { useWeb3Context } from "apps/lending/libs/hooks/useWeb3Context";
 
-import { TopInfoPanel } from "../../components/TopInfoPanel/TopInfoPanel";
-import { TopInfoPanelItem } from "../../components/TopInfoPanel/TopInfoPanelItem";
+import { TopInfoPanel } from "apps/lending/components/TopInfoPanel/TopInfoPanel";
+import { TopInfoPanelItem } from "apps/lending/components/TopInfoPanel/TopInfoPanelItem";
 import {
   ComputedReserveData,
   useAppDataContext,
-} from "../../hooks/app-data-provider/useAppDataProvider";
-import { AddTokenDropdown } from "./AddTokenDropdown";
-import { ReserveTopDetails } from "./ReserveTopDetails";
-import { TokenLinkDropdown } from "./TokenLinkDropdown";
+} from "apps/lending/hooks/app-data-provider/useAppDataProvider";
+import { AddTokenDropdown } from "apps/lending/modules/reserve-overview/AddTokenDropdown";
+import { ReserveTopDetails } from "apps/lending/modules/reserve-overview/ReserveTopDetails";
+import { TokenLinkDropdown } from "apps/lending/modules/reserve-overview/TokenLinkDropdown";
+import { useNavigate } from "react-router-dom";
 
 interface ReserveTopDetailsProps {
   underlyingAsset: string;
@@ -32,7 +35,7 @@ interface ReserveTopDetailsProps {
 export const ReserveTopDetailsWrapper = ({
   underlyingAsset,
 }: ReserveTopDetailsProps) => {
-  const router = useRouter();
+  const navigate = useNavigate();
   const { reserves, loading } = useAppDataContext();
   const { currentMarket, currentChainId } = useProtocolDataContext();
   const { market, network } = getMarketInfoById(currentMarket);
@@ -117,8 +120,8 @@ export const ReserveTopDetailsWrapper = ({
               }
               onClick={() => {
                 // https://github.com/vercel/next.js/discussions/34980
-                if (history.state.idx !== 0) router.back();
-                else router.push("/markets");
+                if (history.state.idx !== 0) navigate(-1);
+                else navigate("/markets");
               }}
               sx={{ mr: 3, mb: downToSM ? "24px" : "0" }}
             >

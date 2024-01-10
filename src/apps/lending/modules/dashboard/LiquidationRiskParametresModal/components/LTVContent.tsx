@@ -2,9 +2,8 @@ import { valueToBigNumber } from "@aave/math-utils";
 import { Trans } from "@lingui/macro";
 import { AlertColor, Box, Typography, useTheme } from "@mui/material";
 import BigNumber from "bignumber.js";
-import React from "react";
 
-import { FormattedNumber } from "../../../../components/primitives/FormattedNumber";
+import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
 
 interface LTVContentProps {
   loanToValue: string;

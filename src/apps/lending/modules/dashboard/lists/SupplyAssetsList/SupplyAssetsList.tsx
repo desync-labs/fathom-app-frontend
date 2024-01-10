@@ -4,33 +4,33 @@ import { Trans } from "@lingui/macro";
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import BigNumber from "bignumber.js";
 import { Fragment, useState } from "react";
-import { ListColumn } from "src/components/lists/ListColumn";
-import { ListHeaderTitle } from "src/components/lists/ListHeaderTitle";
-import { ListHeaderWrapper } from "src/components/lists/ListHeaderWrapper";
-import { Warning } from "src/components/primitives/Warning";
-import { MarketWarning } from "src/components/transactions/Warnings/MarketWarning";
-import { AssetCapsProvider } from "src/hooks/useAssetCaps";
-import { fetchIconSymbolAndName } from "src/ui-config/reservePatches";
+import { ListColumn } from "apps/lending/components/lists/ListColumn";
+import { ListHeaderTitle } from "apps/lending/components/lists/ListHeaderTitle";
+import { ListHeaderWrapper } from "apps/lending/components/lists/ListHeaderWrapper";
+import { Warning } from "apps/lending/components/primitives/Warning";
+import { MarketWarning } from "apps/lending/components/transactions/Warnings/MarketWarning";
+import { AssetCapsProvider } from "apps/lending/hooks/useAssetCaps";
+import { fetchIconSymbolAndName } from "apps/lending/ui-config/reservePatches";
 
-import { ListWrapper } from "../../../../components/lists/ListWrapper";
-import { Link, ROUTES } from "../../../../components/primitives/Link";
+import { ListWrapper } from "apps/lending/components/lists/ListWrapper";
+import { Link, ROUTES } from "apps/lending/components/primitives/Link";
 import {
   ComputedReserveData,
   useAppDataContext,
-} from "../../../../hooks/app-data-provider/useAppDataProvider";
-import { useWalletBalances } from "../../../../hooks/app-data-provider/useWalletBalances";
-import { useProtocolDataContext } from "../../../../hooks/useProtocolDataContext";
+} from "apps/lending/hooks/app-data-provider/useAppDataProvider";
+import { useWalletBalances } from "apps/lending/hooks/app-data-provider/useWalletBalances";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
 import {
   DASHBOARD_LIST_COLUMN_WIDTHS,
   DashboardReserve,
   handleSortDashboardReserves,
-} from "../../../../utils/dashboardSortUtils";
-import { DashboardListTopPanel } from "../../DashboardListTopPanel";
-import { ListButtonsColumn } from "../ListButtonsColumn";
-import { ListLoader } from "../ListLoader";
-import { SupplyAssetsListItem } from "./SupplyAssetsListItem";
-import { SupplyAssetsListMobileItem } from "./SupplyAssetsListMobileItem";
-import { WalletEmptyInfo } from "./WalletEmptyInfo";
+} from "apps/lending/utils/dashboardSortUtils";
+import { DashboardListTopPanel } from "apps/lending/modules/dashboard/DashboardListTopPanel";
+import { ListButtonsColumn } from "apps/lending/modules/dashboard/lists/ListButtonsColumn";
+import { ListLoader } from "apps/lending/modules/dashboard/lists/ListLoader";
+import { SupplyAssetsListItem } from "apps/lending/modules/dashboard/lists/SupplyAssetsList/SupplyAssetsListItem";
+import { SupplyAssetsListMobileItem } from "apps/lending/modules/dashboard/lists/SupplyAssetsList/SupplyAssetsListMobileItem";
+import { WalletEmptyInfo } from "apps/lending/modules/dashboard/lists/SupplyAssetsList/WalletEmptyInfo";
 
 const head = [
   { title: <Trans key="assets">Assets</Trans>, sortKey: "symbol" },

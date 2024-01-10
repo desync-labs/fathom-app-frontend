@@ -5,24 +5,23 @@ import {
 } from "@aave/math-utils";
 import { Trans } from "@lingui/macro";
 import { Box, Button, useMediaQuery, useTheme } from "@mui/material";
-import * as React from "react";
 import { useState } from "react";
-import { NetAPYTooltip } from "src/components/infoTooltips/NetAPYTooltip";
-import { PageTitle } from "src/components/TopInfoPanel/PageTitle";
-import { useModalContext } from "src/hooks/useModal";
-import { useProtocolDataContext } from "src/hooks/useProtocolDataContext";
-import { useWeb3Context } from "src/libs/hooks/useWeb3Context";
-import { useRootStore } from "src/store/root";
-import { DASHBOARD, GENERAL } from "src/utils/mixPanelEvents";
+import { NetAPYTooltip } from "apps/lending/components/infoTooltips/NetAPYTooltip";
+import { PageTitle } from "apps/lending/components/TopInfoPanel/PageTitle";
+import { useModalContext } from "apps/lending/hooks/useModal";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
+import { useWeb3Context } from "apps/lending/libs/hooks/useWeb3Context";
+import { useRootStore } from "apps/lending/store/root";
+import { DASHBOARD, GENERAL } from "apps/lending/utils/mixPanelEvents";
 
-import HALLink from "../../components/HALLink";
-import { HealthFactorNumber } from "../../components/HealthFactorNumber";
-import { FormattedNumber } from "../../components/primitives/FormattedNumber";
-import { NoData } from "../../components/primitives/NoData";
-import { TopInfoPanel } from "../../components/TopInfoPanel/TopInfoPanel";
-import { TopInfoPanelItem } from "../../components/TopInfoPanel/TopInfoPanelItem";
-import { useAppDataContext } from "../../hooks/app-data-provider/useAppDataProvider";
-import { LiquidationRiskParametresInfoModal } from "./LiquidationRiskParametresModal/LiquidationRiskParametresModal";
+import HALLink from "apps/lending/components/HALLink";
+import { HealthFactorNumber } from "apps/lending/components/HealthFactorNumber";
+import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
+import { NoData } from "apps/lending/components/primitives/NoData";
+import { TopInfoPanel } from "apps/lending/components/TopInfoPanel/TopInfoPanel";
+import { TopInfoPanelItem } from "apps/lending/components/TopInfoPanel/TopInfoPanelItem";
+import { useAppDataContext } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
+import { LiquidationRiskParametresInfoModal } from "apps/lending/modules/dashboard/LiquidationRiskParametresModal/LiquidationRiskParametresModal";
 
 export const DashboardTopPanel = () => {
   const { currentNetworkConfig, currentMarketData } = useProtocolDataContext();

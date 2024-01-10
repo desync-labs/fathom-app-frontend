@@ -1,6 +1,6 @@
 import { ReserveIncentiveResponse } from "@aave/math-utils/dist/esm/formatters/incentive/calculate-reserve-incentives";
 
-import { ComputedReserveData } from "../../../../hooks/app-data-provider/useAppDataProvider";
+import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 
 export type BorrowedPositionsItem = {
   isActive: boolean;

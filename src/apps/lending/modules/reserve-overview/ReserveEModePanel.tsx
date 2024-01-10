@@ -1,27 +1,29 @@
 import { Trans } from "@lingui/macro";
 import { Box, SvgIcon, Typography } from "@mui/material";
-import { LiquidationPenaltyTooltip } from "src/components/infoTooltips/LiquidationPenaltyTooltip";
-import { LiquidationThresholdTooltip } from "src/components/infoTooltips/LiquidationThresholdTooltip";
-import { MaxLTVTooltip } from "src/components/infoTooltips/MaxLTVTooltip";
-import { FormattedNumber } from "src/components/primitives/FormattedNumber";
-import { Link, ROUTES } from "src/components/primitives/Link";
-import { ReserveOverviewBox } from "src/components/ReserveOverviewBox";
-import { getEmodeMessage } from "src/components/transactions/Emode/EmodeNaming";
-import { ComputedReserveData } from "src/hooks/app-data-provider/useAppDataProvider";
-import { useRootStore } from "src/store/root";
-import { GENERAL, RESERVE_DETAILS } from "src/utils/mixPanelEvents";
+import { LiquidationPenaltyTooltip } from "apps/lending/components/infoTooltips/LiquidationPenaltyTooltip";
+import { LiquidationThresholdTooltip } from "apps/lending/components/infoTooltips/LiquidationThresholdTooltip";
+import { MaxLTVTooltip } from "apps/lending/components/infoTooltips/MaxLTVTooltip";
+import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
+import { Link, ROUTES } from "apps/lending/components/primitives/Link";
+import { ReserveOverviewBox } from "apps/lending/components/ReserveOverviewBox";
+import { getEmodeMessage } from "apps/lending/components/transactions/Emode/EmodeNaming";
+import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
+import { useRootStore } from "apps/lending/store/root";
+import { GENERAL, RESERVE_DETAILS } from "apps/lending/utils/mixPanelEvents";
 
-import LightningBoltGradient from "/public/lightningBoltGradient.svg";
+import LightningBoltGradient from "apps/lending/assets/lightningBoltGradient.svg";
 
-import { PanelRow, PanelTitle } from "./ReservePanels";
+import {
+  PanelRow,
+  PanelTitle,
+} from "apps/lending/modules/reserve-overview/ReservePanels";
+import { FC } from "react";
 
 type ReserverEModePanelProps = {
   reserve: ComputedReserveData;
 };
 
-export const ReserveEModePanel: React.FC<ReserverEModePanelProps> = ({
-  reserve,
-}) => {
+export const ReserveEModePanel: FC<ReserverEModePanelProps> = ({ reserve }) => {
   const trackEvent = useRootStore((store) => store.trackEvent);
 
   return (

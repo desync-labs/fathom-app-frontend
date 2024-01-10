@@ -18,18 +18,21 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { ListWrapper } from "src/components/lists/ListWrapper";
-import { SearchInput } from "src/components/SearchInput";
+import { ListWrapper } from "apps/lending/components/lists/ListWrapper";
+import { SearchInput } from "apps/lending/components/SearchInput";
 import {
   applyTxHistoryFilters,
   useTransactionHistory,
-} from "src/hooks/useTransactionHistory";
+} from "apps/lending/hooks/useTransactionHistory";
 
 import { downloadData, formatTransactionData, groupByDate } from "./helpers";
-import { HistoryFilterMenu } from "./HistoryFilterMenu";
-import { HistoryMobileItemLoader } from "./HistoryMobileItemLoader";
-import TransactionMobileRowItem from "./TransactionMobileRowItem";
-import { FilterOptions, TransactionHistoryItemUnion } from "./types";
+import { HistoryFilterMenu } from "apps/lending/modules/history/HistoryFilterMenu";
+import { HistoryMobileItemLoader } from "apps/lending/modules/history/HistoryMobileItemLoader";
+import TransactionMobileRowItem from "apps/lending/modules/history/TransactionMobileRowItem";
+import {
+  FilterOptions,
+  TransactionHistoryItemUnion,
+} from "apps/lending/modules/history/types";
 
 export const HistoryWrapperMobile = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -75,7 +78,6 @@ export const HistoryWrapperMobile = () => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery, showSearchBar]);
 
   const isFilterActive = searchQuery.length > 0 || filterQuery.length > 0;
@@ -131,7 +133,7 @@ export const HistoryWrapperMobile = () => {
 
   const observer = useRef<IntersectionObserver | null>(null);
   const lastElementRef = useCallback(
-    (node) => {
+    (node: Element) => {
       if (isLoading) return;
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver((entries) => {
@@ -293,6 +295,7 @@ export const HistoryWrapperMobile = () => {
                 (transaction: TransactionHistoryItemUnion, index: number) => {
                   const isLastItem = index === txns.length - 1;
                   return (
+                    // @ts-ignore
                     <div ref={isLastItem ? lastElementRef : null} key={index}>
                       <TransactionMobileRowItem
                         transaction={transaction as TransactionHistoryItemUnion}

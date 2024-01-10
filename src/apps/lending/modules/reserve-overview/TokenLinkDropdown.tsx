@@ -3,13 +3,13 @@ import { Trans } from "@lingui/macro";
 import { Box, Menu, MenuItem, SvgIcon, Typography } from "@mui/material";
 import * as React from "react";
 import { useState } from "react";
-import { CircleIcon } from "src/components/CircleIcon";
-import { TokenIcon } from "src/components/primitives/TokenIcon";
-import { ComputedReserveData } from "src/hooks/app-data-provider/useAppDataProvider";
-import { useProtocolDataContext } from "src/hooks/useProtocolDataContext";
-import { useRootStore } from "src/store/root";
+import { CircleIcon } from "apps/lending/components/CircleIcon";
+import { TokenIcon } from "apps/lending/components/primitives/TokenIcon";
+import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
+import { useRootStore } from "apps/lending/store/root";
 
-import { RESERVE_DETAILS } from "../../utils/mixPanelEvents";
+import { RESERVE_DETAILS } from "apps/lending/utils/mixPanelEvents";
 
 interface TokenLinkDropdownProps {
   poolReserve: ComputedReserveData;

@@ -1,7 +1,7 @@
 import { Box, Skeleton } from "@mui/material";
 
-import { Row } from "../../../components/primitives/Row";
-import { ListMobileItemWrapper } from "./ListMobileItemWrapper";
+import { Row } from "apps/lending/components/primitives/Row";
+import { ListMobileItemWrapper } from "apps/lending/modules/dashboard/lists/ListMobileItemWrapper";
 
 export const MobileListItemLoader = () => {
   return (

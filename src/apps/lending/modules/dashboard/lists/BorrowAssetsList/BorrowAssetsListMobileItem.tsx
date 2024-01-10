@@ -1,18 +1,18 @@
 import { Trans } from "@lingui/macro";
 import { Box, Button } from "@mui/material";
-import { StableAPYTooltip } from "src/components/infoTooltips/StableAPYTooltip";
-import { VariableAPYTooltip } from "src/components/infoTooltips/VariableAPYTooltip";
-import { useProtocolDataContext } from "src/hooks/useProtocolDataContext";
-import { DashboardReserve } from "src/utils/dashboardSortUtils";
+import { StableAPYTooltip } from "apps/lending/components/infoTooltips/StableAPYTooltip";
+import { VariableAPYTooltip } from "apps/lending/components/infoTooltips/VariableAPYTooltip";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
+import { DashboardReserve } from "apps/lending/utils/dashboardSortUtils";
 
-import { CapsHint } from "../../../../components/caps/CapsHint";
-import { CapType } from "../../../../components/caps/helper";
-import { IncentivesCard } from "../../../../components/incentives/IncentivesCard";
-import { Link, ROUTES } from "../../../../components/primitives/Link";
-import { Row } from "../../../../components/primitives/Row";
-import { useModalContext } from "../../../../hooks/useModal";
-import { ListMobileItemWrapper } from "../ListMobileItemWrapper";
-import { ListValueRow } from "../ListValueRow";
+import { CapsHint } from "apps/lending/components/caps/CapsHint";
+import { CapType } from "apps/lending/components/caps/helper";
+import { IncentivesCard } from "apps/lending/components/incentives/IncentivesCard";
+import { Link, ROUTES } from "apps/lending/components/primitives/Link";
+import { Row } from "apps/lending/components/primitives/Row";
+import { useModalContext } from "apps/lending/hooks/useModal";
+import { ListMobileItemWrapper } from "apps/lending/modules/dashboard/lists/ListMobileItemWrapper";
+import { ListValueRow } from "apps/lending/modules/dashboard/lists/ListValueRow";
 
 export const BorrowAssetsListMobileItem = ({
   symbol,

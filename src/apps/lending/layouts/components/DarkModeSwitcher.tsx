@@ -8,11 +8,11 @@ import {
   Switch,
   useTheme,
 } from "@mui/material";
-import React from "react";
-import { useRootStore } from "src/store/root";
-import { SETTINGS } from "src/utils/mixPanelEvents";
+import { useRootStore } from "apps/lending/store/root";
+import { SETTINGS } from "apps/lending/utils/mixPanelEvents";
 
-import { ColorModeContext } from "../AppGlobalStyles";
+import { ColorModeContext } from "apps/lending/layouts/AppGlobalStyles";
+import { useContext } from "react";
 
 interface DarkModeSwitcherProps {
   component?: typeof MenuItem | typeof ListItem;
@@ -22,7 +22,7 @@ export const DarkModeSwitcher = ({
   component = ListItem,
 }: DarkModeSwitcherProps) => {
   const theme = useTheme();
-  const colorMode = React.useContext(ColorModeContext);
+  const colorMode = useContext(ColorModeContext);
   const trackEvent = useRootStore((store) => store.trackEvent);
 
   return (

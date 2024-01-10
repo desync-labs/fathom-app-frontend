@@ -10,26 +10,33 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import React, { useCallback, useMemo, useRef, useState } from "react";
-import { ConnectWalletPaper } from "src/components/ConnectWalletPaper";
-import { ListWrapper } from "src/components/lists/ListWrapper";
-import { SearchInput } from "src/components/SearchInput";
+import { Fragment, useCallback, useMemo, useRef, useState } from "react";
+import { ConnectWalletPaper } from "apps/lending/components/ConnectWalletPaper";
+import { ListWrapper } from "apps/lending/components/lists/ListWrapper";
+import { SearchInput } from "apps/lending/components/SearchInput";
 import {
   applyTxHistoryFilters,
   useTransactionHistory,
-} from "src/hooks/useTransactionHistory";
-import { useWeb3Context } from "src/libs/hooks/useWeb3Context";
-import { useRootStore } from "src/store/root";
-import { TRANSACTION_HISTORY } from "src/utils/mixPanelEvents";
+} from "apps/lending/hooks/useTransactionHistory";
+import { useWeb3Context } from "apps/lending/libs/hooks/useWeb3Context";
+import { useRootStore } from "apps/lending/store/root";
+import { TRANSACTION_HISTORY } from "apps/lending/utils/mixPanelEvents";
 
 import LoveGhost from "/public/loveGhost.svg";
 
-import { downloadData, formatTransactionData, groupByDate } from "./helpers";
-import { HistoryFilterMenu } from "./HistoryFilterMenu";
-import { HistoryItemLoader } from "./HistoryItemLoader";
-import { HistoryWrapperMobile } from "./HistoryWrapperMobile";
-import TransactionRowItem from "./TransactionRowItem";
-import { FilterOptions, TransactionHistoryItemUnion } from "./types";
+import {
+  downloadData,
+  formatTransactionData,
+  groupByDate,
+} from "apps/lending/modules/history/helpers";
+import { HistoryFilterMenu } from "apps/lending/modules/history/HistoryFilterMenu";
+import { HistoryItemLoader } from "apps/lending/modules/history/HistoryItemLoader";
+import { HistoryWrapperMobile } from "apps/lending/modules/history/HistoryWrapperMobile";
+import TransactionRowItem from "apps/lending/modules/history/TransactionRowItem";
+import {
+  FilterOptions,
+  TransactionHistoryItemUnion,
+} from "apps/lending/modules/history/types";
 
 export const HistoryWrapper = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -95,7 +102,7 @@ export const HistoryWrapper = () => {
 
   const observer = useRef<IntersectionObserver | null>(null);
   const lastElementRef = useCallback(
-    (node) => {
+    (node: Element) => {
       if (isLoading) return;
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver((entries) => {
@@ -134,7 +141,9 @@ export const HistoryWrapper = () => {
           flex: 1,
         }}
       >
-        <LoveGhost style={{ marginBottom: "16px" }} />
+        <Box sx={{ marginBottom: "16px" }}>
+          <LoveGhost />
+        </Box>
         <Typography variant={downToMD ? "h4" : "h3"}>
           <Trans>
             Transaction history is not currently available for this market
@@ -253,7 +262,7 @@ export const HistoryWrapper = () => {
       ) : !isEmpty ? (
         Object.entries(groupByDate(filteredTxns)).map(
           ([date, txns], groupIndex) => (
-            <React.Fragment key={groupIndex}>
+            <Fragment key={groupIndex}>
               <Typography
                 variant="h4"
                 color="text.primary"
@@ -265,6 +274,7 @@ export const HistoryWrapper = () => {
                 (transaction: TransactionHistoryItemUnion, index: number) => {
                   const isLastItem = index === txns.length - 1;
                   return (
+                    // @ts-ignore
                     <div ref={isLastItem ? lastElementRef : null} key={index}>
                       <TransactionRowItem
                         transaction={transaction as TransactionHistoryItemUnion}
@@ -273,7 +283,7 @@ export const HistoryWrapper = () => {
                   );
                 }
               )}
-            </React.Fragment>
+            </Fragment>
           )
         )
       ) : filterActive ? (

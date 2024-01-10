@@ -2,12 +2,12 @@ import { ChainId } from "@aave/contract-helpers";
 import { Trans } from "@lingui/macro";
 import { Theme } from "@mui/material";
 import { SxProps } from "@mui/system";
-import { Warning } from "src/components/primitives/Warning";
-import { useRootStore } from "src/store/root";
-import { NetworkConfig } from "src/ui-config/networksConfig";
-import { GENERAL } from "src/utils/mixPanelEvents";
+import { Warning } from "apps/lending/components/primitives/Warning";
+import { useRootStore } from "apps/lending/store/root";
+import { NetworkConfig } from "apps/lending/ui-config/networksConfig";
+import { GENERAL } from "apps/lending/utils/mixPanelEvents";
 
-import { Link } from "../../../../components/primitives/Link";
+import { Link } from "apps/lending/components/primitives/Link";
 
 type WalletEmptyInfoProps = Pick<NetworkConfig, "bridge" | "name"> & {
   chainId: number;

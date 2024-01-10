@@ -1,18 +1,18 @@
 import { ExternalLinkIcon } from "@heroicons/react/outline";
 import { Trans } from "@lingui/macro";
 import { Box, Skeleton, SvgIcon, useMediaQuery, useTheme } from "@mui/material";
-import { CircleIcon } from "src/components/CircleIcon";
-import { FormattedNumber } from "src/components/primitives/FormattedNumber";
-import { Link } from "src/components/primitives/Link";
-import { useProtocolDataContext } from "src/hooks/useProtocolDataContext";
-import { useRootStore } from "src/store/root";
-import { GENERAL } from "src/utils/mixPanelEvents";
+import { CircleIcon } from "apps/lending/components/CircleIcon";
+import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
+import { Link } from "apps/lending/components/primitives/Link";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
+import { useRootStore } from "apps/lending/store/root";
+import { GENERAL } from "apps/lending/utils/mixPanelEvents";
 
-import { TopInfoPanelItem } from "../../components/TopInfoPanel/TopInfoPanelItem";
+import { TopInfoPanelItem } from "apps/lending/components/TopInfoPanel/TopInfoPanelItem";
 import {
   ComputedReserveData,
   useAppDataContext,
-} from "../../hooks/app-data-provider/useAppDataProvider";
+} from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 
 interface ReserveTopDetailsProps {
   underlyingAsset: string;

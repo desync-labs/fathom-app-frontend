@@ -1,7 +1,7 @@
 import { Paper, Typography } from "@mui/material";
 import { ReactNode } from "react";
 
-import { FormattedNumber } from "../../../components/primitives/FormattedNumber";
+import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
 
 interface ListTopInfoItemProps {
   title: ReactNode;

@@ -1,20 +1,20 @@
 import { Trans } from "@lingui/macro";
 import { Button } from "@mui/material";
-import { useAppDataContext } from "src/hooks/app-data-provider/useAppDataProvider";
-import { useAssetCaps } from "src/hooks/useAssetCaps";
-import { useModalContext } from "src/hooks/useModal";
-import { useRootStore } from "src/store/root";
-import { DashboardReserve } from "src/utils/dashboardSortUtils";
-import { GENERAL } from "src/utils/mixPanelEvents";
+import { useAppDataContext } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
+import { useAssetCaps } from "apps/lending/hooks/useAssetCaps";
+import { useModalContext } from "apps/lending/hooks/useModal";
+import { useRootStore } from "apps/lending/store/root";
+import { DashboardReserve } from "apps/lending/utils/dashboardSortUtils";
+import { GENERAL } from "apps/lending/utils/mixPanelEvents";
 
-import { ListColumn } from "../../../../components/lists/ListColumn";
-import { useProtocolDataContext } from "../../../../hooks/useProtocolDataContext";
-import { isFeatureEnabled } from "../../../../utils/marketsAndNetworksConfig";
-import { ListAPRColumn } from "../ListAPRColumn";
-import { ListButtonsColumn } from "../ListButtonsColumn";
-import { ListItemUsedAsCollateral } from "../ListItemUsedAsCollateral";
-import { ListItemWrapper } from "../ListItemWrapper";
-import { ListValueColumn } from "../ListValueColumn";
+import { ListColumn } from "apps/lending/components/lists/ListColumn";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
+import { isFeatureEnabled } from "apps/lending/utils/marketsAndNetworksConfig";
+import { ListAPRColumn } from "apps/lending/modules/dashboard/lists/ListAPRColumn";
+import { ListButtonsColumn } from "apps/lending/modules/dashboard/lists/ListButtonsColumn";
+import { ListItemUsedAsCollateral } from "apps/lending/modules/dashboard/lists/ListItemUsedAsCollateral";
+import { ListItemWrapper } from "apps/lending/modules/dashboard/lists/ListItemWrapper";
+import { ListValueColumn } from "apps/lending/modules/dashboard/lists/ListValueColumn";
 
 export const SuppliedPositionsListItem = ({
   reserve,

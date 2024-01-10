@@ -1,7 +1,7 @@
 import { Box, Skeleton } from "@mui/material";
 
-import { ListColumn } from "../../components/lists/ListColumn";
-import { ListItem } from "../../components/lists/ListItem";
+import { ListColumn } from "apps/lending/components/lists/ListColumn";
+import { ListItem } from "apps/lending/components/lists/ListItem";
 
 const HistoryMobileRowItem = () => {
   return (

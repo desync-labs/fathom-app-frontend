@@ -1,7 +1,7 @@
-import { AssetCapsProvider } from "src/hooks/useAssetCaps";
-import { DashboardReserve } from "src/utils/dashboardSortUtils";
+import { AssetCapsProvider } from "apps/lending/hooks/useAssetCaps";
+import { DashboardReserve } from "apps/lending/utils/dashboardSortUtils";
 
-import { BorrowedPositionsListItem } from "./BorrowedPositionsListItem";
+import { BorrowedPositionsListItem } from "apps/lending/modules/dashboard/lists/BorrowedPositionsList/BorrowedPositionsListItem";
 
 export const BorrowedPositionsListItemWrapper = ({
   item,

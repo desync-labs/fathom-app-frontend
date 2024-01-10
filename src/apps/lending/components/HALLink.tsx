@@ -12,13 +12,13 @@ import {
 } from "@mui/material";
 import BigNumber from "bignumber.js";
 import { useMemo } from "react";
-import { useRootStore } from "src/store/root";
-import { DASHBOARD } from "src/utils/mixPanelEvents";
+import { useRootStore } from "apps/lending/store/root";
+import { DASHBOARD } from "apps/lending/utils/mixPanelEvents";
 
-import Hal from "/public/icons/healthFactor/HAL.svg";
-import HalHover from "/public/icons/healthFactor/HALHover.svg";
+import Hal from "apps/lending/assets/icons/healthFactor/HAL.svg";
+import HalHover from "apps/lending/assets/icons/healthFactor/HALHover.svg";
 
-import { useWeb3Context } from "../libs/hooks/useWeb3Context";
+import { useWeb3Context } from "apps/lending/libs/hooks/useWeb3Context";
 
 const PopperComponent = styled(Popper)(({ theme }) =>
   theme.unstable_sx({

@@ -1,22 +1,22 @@
 import { Trans } from "@lingui/macro";
 import { Button } from "@mui/material";
-import { NoData } from "src/components/primitives/NoData";
-import { useAssetCaps } from "src/hooks/useAssetCaps";
-import { useModalContext } from "src/hooks/useModal";
-import { useProtocolDataContext } from "src/hooks/useProtocolDataContext";
-import { useRootStore } from "src/store/root";
-import { DashboardReserve } from "src/utils/dashboardSortUtils";
-import { DASHBOARD } from "src/utils/mixPanelEvents";
+import { NoData } from "apps/lending/components/primitives/NoData";
+import { useAssetCaps } from "apps/lending/hooks/useAssetCaps";
+import { useModalContext } from "apps/lending/hooks/useModal";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
+import { useRootStore } from "apps/lending/store/root";
+import { DashboardReserve } from "apps/lending/utils/dashboardSortUtils";
+import { DASHBOARD } from "apps/lending/utils/mixPanelEvents";
 
-import { CapsHint } from "../../../../components/caps/CapsHint";
-import { CapType } from "../../../../components/caps/helper";
-import { ListColumn } from "../../../../components/lists/ListColumn";
-import { Link, ROUTES } from "../../../../components/primitives/Link";
-import { ListAPRColumn } from "../ListAPRColumn";
-import { ListButtonsColumn } from "../ListButtonsColumn";
-import { ListItemCanBeCollateral } from "../ListItemCanBeCollateral";
-import { ListItemWrapper } from "../ListItemWrapper";
-import { ListValueColumn } from "../ListValueColumn";
+import { CapsHint } from "apps/lending/components/caps/CapsHint";
+import { CapType } from "apps/lending/components/caps/helper";
+import { ListColumn } from "apps/lending/components/lists/ListColumn";
+import { Link, ROUTES } from "apps/lending/components/primitives/Link";
+import { ListAPRColumn } from "apps/lending/modules/dashboard/lists/ListAPRColumn";
+import { ListButtonsColumn } from "apps/lending/modules/dashboard/lists/ListButtonsColumn";
+import { ListItemCanBeCollateral } from "apps/lending/modules/dashboard/lists/ListItemCanBeCollateral";
+import { ListItemWrapper } from "apps/lending/modules/dashboard/lists/ListItemWrapper";
+import { ListValueColumn } from "apps/lending/modules/dashboard/lists/ListValueColumn";
 
 export const SupplyAssetsListItem = ({
   symbol,
