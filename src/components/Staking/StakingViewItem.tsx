@@ -10,7 +10,7 @@ import useStakingItemView from "hooks/useStakingItemView";
 const StakingCountdown = loadable(() => import("../Staking/StakingCountdown"));
 import { ButtonSecondary } from "components/AppComponents/AppButton/AppButton";
 
-import { formatNumber } from "utils/format";
+import { formatPercentage } from "utils/format";
 import { secondsToTime } from "utils/secondsToTime";
 import { getTokenLogoURL } from "utils/tokenLogo";
 
@@ -194,14 +194,16 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
             <Grid item xs={7} sm={8}>
               <Label>Locked Amount</Label>
               <Value>
-                {formatNumber(lockPosition.amount / 10 ** 18)} {token}
+                {formatPercentage(lockPosition.amount / 10 ** 18)} {token}
               </Value>
             </Grid>
             <Grid item xs={5} sm={4}>
               <Label>Voting Power</Label>
               <Value>
                 {lockPosition.nVoteToken
-                  ? `${formatNumber(lockPosition.nVoteToken / 10 ** 18)} vFTHM`
+                  ? `${formatPercentage(
+                      lockPosition.nVoteToken / 10 ** 18
+                    )} vFTHM`
                   : "None"}
               </Value>
             </Grid>
@@ -219,7 +221,7 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
             <Grid item xs={5} sm={4}>
               <Label>Rewards Accrued</Label>
               <Value className={"green"}>
-                {formatNumber(
+                {formatPercentage(
                   BigNumber(rewardsAvailable)
                     .dividedBy(10 ** 18)
                     .toNumber()
@@ -239,11 +241,12 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
             <Grid container>
               <Grid item xs={12}>
                 <TotalLocked>
-                  Locked: {formatNumber(lockPosition.amount / 10 ** 18)} {token}
+                  Locked: {formatPercentage(lockPosition.amount / 10 ** 18)}{" "}
+                  {token}
                 </TotalLocked>
                 <TotalLocked>
                   Accrued Rewards:{" "}
-                  {formatNumber(
+                  {formatPercentage(
                     BigNumber(rewardsAvailable)
                       .dividedBy(10 ** 18)
                       .toNumber()
@@ -259,7 +262,7 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
 
               <Grid item xs={12} sm={6}>
                 <CoolDownInfo>
-                  Cooldown Period: 2 days
+                  Cooldown Period: 5 days
                   <InfoIcon sx={{ fontSize: "18px" }} />
                 </CoolDownInfo>
               </Grid>

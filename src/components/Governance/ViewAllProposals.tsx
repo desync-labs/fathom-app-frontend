@@ -105,7 +105,7 @@ const AllProposalsView = () => {
                   ))
                 ) : (
                   <Grid item xs={12}>
-                    <NoResults>No opened any proposals</NoResults>
+                    <NoResults>No opened any proposals.</NoResults>
                   </Grid>
                 ),
               [fetchedProposals, fetchProposalsPending]

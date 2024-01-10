@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useMemo } from "react";
 
 import { Box, Typography, Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -7,7 +7,12 @@ import InfoIcon from "@mui/icons-material/Info";
 import { ButtonSecondary } from "components/AppComponents/AppButton/AppButton";
 import StakingCountdown from "components/Staking/StakingCountdown";
 
-import { formatCompact, formatCurrency, formatNumber } from "utils/format";
+import {
+  formatCompact,
+  formatNumber,
+  formatNumberPrice,
+  formatPercentage,
+} from "utils/format";
 
 import PercentSrc from "assets/svg/percent.svg";
 import LockedSrc from "assets/svg/locked.svg";
@@ -158,6 +163,19 @@ const StreamStats: FC = () => {
     processFlow,
   } = useStreamStats();
 
+  const cooldownInUsd = useMemo(() => {
+    return stake ? (stake.claimedAmount / 10 ** 18) * fthmPriceFormatted : 0;
+  }, [stake, fthmPriceFormatted]);
+
+  const totalrewardsInUsd = useMemo(() => {
+    return totalRewards
+      ? BigNumber(totalRewards)
+          .dividedBy(10 ** 18)
+          .multipliedBy(fthmPriceFormatted)
+          .toNumber()
+      : 0;
+  }, [totalRewards, fthmPriceFormatted]);
+
   const { isMobile } = useSharedContext();
 
   return (
@@ -238,10 +256,11 @@ const StreamStats: FC = () => {
               {stake && (
                 <MyStatsValue>
                   <strong>
-                    {formatNumber(stake.totalStaked / 10 ** 18)} FTHM
+                    {formatPercentage(stake.totalStaked / 10 ** 18)} FTHM
                   </strong>
                   <span>
-                    {formatCurrency(
+                    $
+                    {formatPercentage(
                       (stake.totalStaked / 10 ** 18) * fthmPriceFormatted
                     )}
                   </span>
@@ -257,7 +276,7 @@ const StreamStats: FC = () => {
                 {stake && (
                   <MyStatsValue>
                     <strong>
-                      {formatNumber(stake.accruedVotes / 10 ** 18)} vFTHM
+                      {formatPercentage(stake.accruedVotes / 10 ** 18)} vFTHM
                     </strong>
                   </MyStatsValue>
                 )}
@@ -277,13 +296,11 @@ const StreamStats: FC = () => {
                     </CooldownCountDown>
                     <MyStatsValue>
                       <strong>
-                        {formatNumber(stake.claimedAmount / 10 ** 18)} FTHM
+                        {formatNumberPrice(stake.claimedAmount / 10 ** 18)} FTHM
                       </strong>
-                      <span>
-                        {formatCurrency(
-                          (stake.claimedAmount / 10 ** 18) * fthmPriceFormatted
-                        )}
-                      </span>
+                      {BigNumber(cooldownInUsd).isGreaterThan(1 / 10 ** 6) ? (
+                        <span>{formatPercentage(cooldownInUsd)}</span>
+                      ) : null}
                     </MyStatsValue>
                   </>
                 )}
@@ -299,12 +316,9 @@ const StreamStats: FC = () => {
                           {formatNumber(Number(stake.claimedAmount) / 10 ** 18)}{" "}
                           FTHM
                         </strong>
-                        <span>
-                          {formatCurrency(
-                            (stake.claimedAmount / 10 ** 18) *
-                              fthmPriceFormatted
-                          )}
-                        </span>
+                        {BigNumber(cooldownInUsd).isGreaterThan(1 / 10 ** 6) ? (
+                          <span>{formatPercentage(cooldownInUsd)}</span>
+                        ) : null}
                       </MyStatsValue>
                     </Grid>
                     <ButtonGrid item xs={6}>
@@ -326,31 +340,26 @@ const StreamStats: FC = () => {
                   {stake && (
                     <MyStatsValue className={"blue"}>
                       <strong>
-                        {formatNumber(
+                        {formatNumberPrice(
                           BigNumber(totalRewards)
                             .dividedBy(10 ** 18)
                             .toNumber()
                         )}{" "}
                         FTHM
                       </strong>
-                      <span>
-                        {formatCurrency(
-                          BigNumber(totalRewards)
-                            .dividedBy(10 ** 18)
-                            .multipliedBy(fthmPriceFormatted)
-                            .toNumber()
-                        )}{" "}
-                      </span>
+                      {BigNumber(totalRewards).isGreaterThan(0.0001) ? (
+                        <span>${formatPercentage(totalrewardsInUsd)} </span>
+                      ) : null}
                     </MyStatsValue>
                   )}
                 </Grid>
-                {BigNumber(totalRewards).isGreaterThan(0) && (
+                {BigNumber(totalRewards).isGreaterThan(0) ? (
                   <ButtonGrid item xs={4}>
                     <StatsButton onClick={() => processFlow("claim")}>
                       Claim
                     </StatsButton>
                   </ButtonGrid>
-                )}
+                ) : null}
               </Grid>
             </MyStatsBlock>
 
@@ -382,13 +391,9 @@ const StreamStats: FC = () => {
                     </CooldownCountDown>
                     <MyStatsValue>
                       <strong>
-                        {formatNumber(stake.claimedAmount / 10 ** 18)} FTHM
+                        {formatPercentage(stake.claimedAmount / 10 ** 18)} FTHM
                       </strong>
-                      <span>
-                        {formatCurrency(
-                          (stake.claimedAmount / 10 ** 18) * fthmPriceFormatted
-                        )}
-                      </span>
+                      <span>${formatPercentage(cooldownInUsd)}</span>
                     </MyStatsValue>
                   </>
                 )}
@@ -401,15 +406,12 @@ const StreamStats: FC = () => {
                       </StatsLabel>
                       <MyStatsValue className={"green"}>
                         <strong>
-                          {formatNumber(Number(stake.claimedAmount) / 10 ** 18)}{" "}
+                          {formatPercentage(
+                            Number(stake.claimedAmount) / 10 ** 18
+                          )}{" "}
                           FTHM
                         </strong>
-                        <span>
-                          {formatCurrency(
-                            (stake.claimedAmount / 10 ** 18) *
-                              fthmPriceFormatted
-                          )}
-                        </span>
+                        <span>${formatPercentage(cooldownInUsd)}</span>
                       </MyStatsValue>
                     </Grid>
                     <ButtonGrid item xs={6}>

@@ -19,7 +19,7 @@ import { ModalDescription } from "components/AppComponents/AppBox/AppBox";
 import { styled } from "@mui/material/styles";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import InfoIcon from "@mui/icons-material/Info";
-import { formatNumber } from "utils/format";
+import { formatPercentage } from "utils/format";
 import useStakingContext from "context/staking";
 import BigNumber from "bignumber.js";
 import useSharedContext from "context/shared";
@@ -115,7 +115,7 @@ const ClaimRewardsDialog: FC<ClaimRewardsDialogProps> = ({
           <Box sx={{ fontSize: "18px" }}>You’re requesting to claim</Box>
           <Box className={"amount"}>
             <Box>
-              {formatNumber(
+              {formatPercentage(
                 BigNumber(totalRewards)
                   .dividedBy(10 ** 18)
                   .toNumber()
