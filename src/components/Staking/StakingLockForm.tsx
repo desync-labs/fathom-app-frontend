@@ -92,6 +92,7 @@ const StakingLockForm: FC = () => {
   const {
     account,
     balanceError,
+    lowInputAmountError,
     lockDays,
     minLockPeriod,
     isLoading,
@@ -129,24 +130,29 @@ const StakingLockForm: FC = () => {
               ) : null}
               <AppFormInputWrapper>
                 <AppTextField
-                  error={balanceError || !!error}
+                  error={balanceError || lowInputAmountError || !!error}
                   id="outlined-helperText"
                   placeholder={"0"}
                   type="number"
                   helperText={
                     <>
-                      {error && (
+                      {lowInputAmountError && (
                         <Box component={"span"} sx={{ fontSize: "12px" }}>
-                          Field is required
+                          Staking amount should be at least 1
                         </Box>
                       )}
-                      {balanceError && (
+                      {!lowInputAmountError && balanceError && (
                         <>
                           <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
                           <Box component={"span"} sx={{ fontSize: "12px" }}>
                             You do not have enough FTHM
                           </Box>
                         </>
+                      )}
+                      {!balanceError && !lowInputAmountError && error && (
+                        <Box component={"span"} sx={{ fontSize: "12px" }}>
+                          Field is required
+                        </Box>
                       )}
                     </>
                   }

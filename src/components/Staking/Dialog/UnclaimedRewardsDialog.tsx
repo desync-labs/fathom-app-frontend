@@ -13,7 +13,7 @@ import { ILockPosition } from "fathom-sdk";
 import { styled } from "@mui/material/styles";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import InfoIcon from "@mui/icons-material/Info";
-import { formatNumber } from "utils/format";
+import { formatPercentage } from "utils/format";
 import { ModalDescription } from "components/AppComponents/AppBox/AppBox";
 import { WarningBlock } from "components/Staking/Dialog/EarlyUnstakeDialog";
 import useSharedContext from "context/shared";
@@ -67,7 +67,7 @@ const UnclaimedRewardsDialog: FC<ClaimRewardsDialogProps> = ({
           <Box sx={{ fontSize: "18px" }}>You’re having unclaimed rewards</Box>
           <Box className={"amount"}>
             <Box>
-              {formatNumber(Number(position.rewardsAvailable / 10 ** 18))}
+              {formatPercentage(Number(position.rewardsAvailable / 10 ** 18))}
             </Box>
             <span>{token}</span>
           </Box>

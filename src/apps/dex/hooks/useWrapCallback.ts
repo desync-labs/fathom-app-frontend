@@ -66,7 +66,11 @@ export default function useWrapCallback(
                 }
               }
             : undefined,
-        inputError: sufficientBalance ? undefined : `Insufficient XDC balance`,
+        inputError: !inputAmount
+          ? "Enter an amount"
+          : sufficientBalance
+          ? undefined
+          : "Insufficient XDC balance",
       };
     } else if (
       currencyEquals(WETH[chainId], inputCurrency) &&
@@ -91,7 +95,11 @@ export default function useWrapCallback(
                 }
               }
             : undefined,
-        inputError: sufficientBalance ? undefined : `Insufficient WXDC balance`,
+        inputError: !inputAmount
+          ? "Enter an amount"
+          : sufficientBalance
+          ? undefined
+          : "Insufficient WXDC balance",
       };
     } else {
       return NOT_APPLICABLE;
