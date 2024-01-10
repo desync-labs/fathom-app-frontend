@@ -1,12 +1,7 @@
-import loadable from "@loadable/component";
 import { Grid, Icon, Container } from "@mui/material";
 import { BackToProposalsButton } from "components/AppComponents/AppButton/AppButton";
-const ProposalInfo = loadable(
-  () => import("../Governance/Proposal/ProposalInfo")
-);
-const ProposalVoting = loadable(
-  () => import("../Governance/Proposal/ProposalVoting")
-);
+import ProposalInfo from "components/Governance/Proposal/ProposalInfo";
+import ProposalVoting from "components/Governance/Proposal/ProposalVoting";
 
 import useProposalContext from "context/proposal";
 

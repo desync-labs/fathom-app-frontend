@@ -1,17 +1,16 @@
 import { PERMISSION } from "@aave/contract-helpers";
 import { Trans } from "@lingui/macro";
-import React from "react";
 import {
   ModalContextType,
   ModalType,
   useModalContext,
-} from "src/hooks/useModal";
+} from "apps/lending/hooks/useModal";
 
 import { BasicModal } from "../../primitives/BasicModal";
 import { ModalWrapper } from "../FlowCommons/ModalWrapper";
 import { SupplyModalContent } from "./SupplyModalContent";
 
-export const SupplyModal = () => {
+const SupplyModal = () => {
   const { type, close, args } = useModalContext() as ModalContextType<{
     underlyingAsset: string;
   }>;
@@ -29,3 +28,5 @@ export const SupplyModal = () => {
     </BasicModal>
   );
 };
+
+export default SupplyModal;

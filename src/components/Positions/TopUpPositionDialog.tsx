@@ -1,16 +1,11 @@
-import loadable from "@loadable/component";
 import { FC, memo } from "react";
 import { Grid, DialogContent, Divider } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
 import { ClosePositionDialogPropsType } from "components/Positions/RepayPositionDialog";
-const TopUpPositionInfo = loadable(
-  () => import("../Positions/TopUpPosition/TopUpPositionInfo")
-);
-const TopUpPositionForm = loadable(
-  () => import("../Positions/TopUpPosition/TopUpPositionForm")
-);
+import TopUpPositionInfo from "components/Positions/TopUpPosition/TopUpPositionInfo";
+import TopUpPositionForm from "components/Positions/TopUpPosition/TopUpPositionForm";
 import useTopUpPositionContext from "context/topUpPosition";
 import useSharedContext from "context/shared";
 

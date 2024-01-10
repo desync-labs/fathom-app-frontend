@@ -1,4 +1,3 @@
-import loadable from "@loadable/component";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Web3ReactProvider } from "@web3-react/core";
@@ -20,41 +19,18 @@ import { LanguageProvider } from "apps/lending/libs/LanguageProvider";
 import { MainLayout } from "apps/lending/layouts/MainLayout";
 import { Outlet } from "react-router-dom";
 
-const BorrowModal = loadable(
-  () => import("./components/transactions/Borrow/BorrowModal")
-);
+import BorrowModal from "apps/lending/components/transactions/Borrow/BorrowModal";
 
-const ClaimRewardsModal = loadable(
-  () => import("./components/transactions/ClaimRewards/ClaimRewardsModal")
-);
-const CollateralChangeModal = loadable(
-  () =>
-    import("./components/transactions/CollateralChange/CollateralChangeModal")
-);
-const DebtSwitchModal = loadable(
-  () => import("./components/transactions/DebtSwitch/DebtSwitchModal")
-);
-const EmodeModal = loadable(
-  () => import("./components/transactions/Emode/EmodeModal")
-);
-const FaucetModal = loadable(
-  () => import("./components/transactions/Faucet/FaucetModal")
-);
-const RateSwitchModal = loadable(
-  () => import("./components/transactions/RateSwitch/RateSwitchModal")
-);
-const RepayModal = loadable(
-  () => import("./components/transactions/Repay/RepayModal")
-);
-const SupplyModal = loadable(
-  () => import("./components/transactions/Supply/SupplyModal")
-);
-const SwapModal = loadable(
-  () => import("./components/transactions/Swap/SwapModal")
-);
-const WithdrawModal = loadable(
-  () => import("./components/transactions/Withdraw/WithdrawModal")
-);
+import ClaimRewardsModal from "apps/lending/components/transactions/ClaimRewards/ClaimRewardsModal";
+import CollateralChangeModal from "apps/lending/components/transactions/CollateralChange/CollateralChangeModal";
+import DebtSwitchModal from "apps/lending/components/transactions/DebtSwitch/DebtSwitchModal";
+import EmodeModal from "apps/lending/components/transactions/Emode/EmodeModal";
+import FaucetModal from "apps/lending/components/transactions/Faucet/FaucetModal";
+import RateSwitchModal from "apps/lending/components/transactions/RateSwitch/RateSwitchModal";
+import RepayModal from "apps/lending/components/transactions/Repay/RepayModal";
+import SupplyModal from "apps/lending/components/transactions/Supply/SupplyModal";
+import SwapModal from "apps/lending/components/transactions/Swap/SwapModal";
+import WithdrawModal from "apps/lending/components/transactions/Withdraw/WithdrawModal";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function getWeb3Library(provider: any): providers.Web3Provider {
