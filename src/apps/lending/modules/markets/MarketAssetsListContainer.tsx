@@ -8,19 +8,19 @@ import {
   useTheme,
 } from "@mui/material";
 import { useState } from "react";
-import { ListWrapper } from "src/components/lists/ListWrapper";
-import { NoSearchResults } from "src/components/NoSearchResults";
-import { Link } from "src/components/primitives/Link";
-import { Warning } from "src/components/primitives/Warning";
-import { TitleWithSearchBar } from "src/components/TitleWithSearchBar";
-import { MarketWarning } from "src/components/transactions/Warnings/MarketWarning";
-import { useAppDataContext } from "src/hooks/app-data-provider/useAppDataProvider";
-import { useProtocolDataContext } from "src/hooks/useProtocolDataContext";
-import MarketAssetsList from "src/modules/markets/MarketAssetsList";
-import { useRootStore } from "src/store/root";
-import { fetchIconSymbolAndName } from "src/ui-config/reservePatches";
+import { ListWrapper } from "apps/lending/components/lists/ListWrapper";
+import { NoSearchResults } from "apps/lending/components/NoSearchResults";
+import { Link } from "apps/lending/components/primitives/Link";
+import { Warning } from "apps/lending/components/primitives/Warning";
+import { TitleWithSearchBar } from "apps/lending/components/TitleWithSearchBar";
+import { MarketWarning } from "apps/lending/components/transactions/Warnings/MarketWarning";
+import { useAppDataContext } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
+import MarketAssetsList from "apps/lending/modules/markets/MarketAssetsList";
+import { useRootStore } from "apps/lending/store/root";
+import { fetchIconSymbolAndName } from "apps/lending/ui-config/reservePatches";
 
-import { GENERAL } from "../../utils/mixPanelEvents";
+import { GENERAL } from "apps/lending/utils/mixPanelEvents";
 
 export const MarketAssetsListContainer = () => {
   const { reserves, loading } = useAppDataContext();

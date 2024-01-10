@@ -1,8 +1,8 @@
-import { formatUnits } from "ethers/lib/utils";
+import { formatUnits } from "fathom-ethers/lib/utils";
 import {
   fetchIconSymbolAndName,
   IconSymbolInterface,
-} from "src/ui-config/reservePatches";
+} from "apps/lending/ui-config/reservePatches";
 
 import {
   hasAmountAndReserve,

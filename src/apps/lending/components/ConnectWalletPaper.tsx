@@ -2,9 +2,9 @@ import { Trans } from "@lingui/macro";
 import { CircularProgress, Paper, PaperProps, Typography } from "@mui/material";
 import { ReactNode } from "react";
 
-import LoveGhost from "/public/loveGhost.svg";
+import LoveGhost from "apps/lending/assets/loveGhost.svg";
 
-import { ConnectWalletButton } from "./WalletConnection/ConnectWalletButton";
+import { ConnectWalletButton } from "apps/lending/components/WalletConnection/ConnectWalletButton";
 
 interface ConnectWalletPaperProps extends PaperProps {
   loading?: boolean;

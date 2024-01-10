@@ -4,8 +4,8 @@ import { ReactNode } from "react";
 import {
   ListColumn,
   ListColumnProps,
-} from "../../../components/lists/ListColumn";
-import { FormattedNumber } from "../../../components/primitives/FormattedNumber";
+} from "apps/lending/components/lists/ListColumn";
+import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
 
 interface ListValueColumnProps {
   symbol?: string;

@@ -7,8 +7,8 @@ import Button from "@mui/material/Button";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { ReactNode, useEffect, useState } from "react";
-import { Link } from "src/components/primitives/Link";
-import { useRootStore } from "src/store/root";
+import { Link } from "apps/lending/components/primitives/Link";
+import { useRootStore } from "apps/lending/store/root";
 
 interface TopBarNotifyProps {
   notifyText: ReactNode;

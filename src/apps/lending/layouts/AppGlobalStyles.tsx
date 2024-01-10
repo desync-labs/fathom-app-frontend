@@ -2,11 +2,11 @@ import { useMediaQuery } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { deepmerge } from "@mui/utils";
-import React, { ReactNode, useEffect, useMemo, useState } from "react";
+import { createContext, ReactNode, useEffect, useMemo, useState } from "react";
 
-import { getDesignTokens, getThemedComponents } from "../utils/theme";
+import { getDesignTokens, getThemedComponents } from "apps/lending/utils/theme";
 
-export const ColorModeContext = React.createContext({
+export const ColorModeContext = createContext({
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   toggleColorMode: () => {},
 });

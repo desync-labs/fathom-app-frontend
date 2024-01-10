@@ -1,33 +1,36 @@
 import { ExternalLinkIcon } from "@heroicons/react/solid";
 import { Trans } from "@lingui/macro";
 import { Box, Button, Divider, SvgIcon } from "@mui/material";
-import { getFrozenProposalLink } from "src/components/infoTooltips/FrozenTooltip";
-import { FormattedNumber } from "src/components/primitives/FormattedNumber";
-import { Link } from "src/components/primitives/Link";
-import { Warning } from "src/components/primitives/Warning";
-import { AMPLWarning } from "src/components/Warnings/AMPLWarning";
-import { BorrowDisabledWarning } from "src/components/Warnings/BorrowDisabledWarning";
-import { BUSDOffBoardingWarning } from "src/components/Warnings/BUSDOffBoardingWarning";
-import { ComputedReserveData } from "src/hooks/app-data-provider/useAppDataProvider";
-import { useAssetCaps } from "src/hooks/useAssetCaps";
-import { useProtocolDataContext } from "src/hooks/useProtocolDataContext";
-import { BROKEN_ASSETS } from "src/hooks/useReservesHistory";
-import { useRootStore } from "src/store/root";
-import { GENERAL } from "src/utils/mixPanelEvents";
+import { getFrozenProposalLink } from "apps/lending/components/infoTooltips/FrozenTooltip";
+import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
+import { Link } from "apps/lending/components/primitives/Link";
+import { Warning } from "apps/lending/components/primitives/Warning";
+import { AMPLWarning } from "apps/lending/components/Warnings/AMPLWarning";
+import { BorrowDisabledWarning } from "apps/lending/components/Warnings/BorrowDisabledWarning";
+import { BUSDOffBoardingWarning } from "apps/lending/components/Warnings/BUSDOffBoardingWarning";
+import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
+import { useAssetCaps } from "apps/lending/hooks/useAssetCaps";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
+import { BROKEN_ASSETS } from "apps/lending/hooks/useReservesHistory";
+import { useRootStore } from "apps/lending/store/root";
+import { GENERAL } from "apps/lending/utils/mixPanelEvents";
 
-import { BorrowInfo } from "./BorrowInfo";
-import { InterestRateModelGraphContainer } from "./graphs/InterestRateModelGraphContainer";
-import { ReserveEModePanel } from "./ReserveEModePanel";
-import { PanelItem, PanelRow, PanelTitle } from "./ReservePanels";
-import { SupplyInfo } from "./SupplyInfo";
+import { BorrowInfo } from "apps/lending/modules/reserve-overview/BorrowInfo";
+import { InterestRateModelGraphContainer } from "apps/lending/modules/reserve-overview/graphs/InterestRateModelGraphContainer";
+import { ReserveEModePanel } from "apps/lending/modules/reserve-overview/ReserveEModePanel";
+import {
+  PanelItem,
+  PanelRow,
+  PanelTitle,
+} from "apps/lending/modules/reserve-overview/ReservePanels";
+import { SupplyInfo } from "apps/lending/modules/reserve-overview/SupplyInfo";
+import { FC } from "react";
 
 type ReserveConfigurationProps = {
   reserve: ComputedReserveData;
 };
 
-export const ReserveConfiguration: React.FC<ReserveConfigurationProps> = ({
-  reserve,
-}) => {
+const ReserveConfiguration: FC<ReserveConfigurationProps> = ({ reserve }) => {
   const { currentNetworkConfig, currentMarketData, currentMarket } =
     useProtocolDataContext();
   const reserveId =
@@ -195,3 +198,5 @@ export const ReserveConfiguration: React.FC<ReserveConfigurationProps> = ({
     </>
   );
 };
+
+export default ReserveConfiguration;

@@ -1,8 +1,8 @@
 import { Box } from "@mui/material";
 import { ReactNode } from "react";
 
-import { FormattedNumber } from "../../../components/primitives/FormattedNumber";
-import { Row } from "../../../components/primitives/Row";
+import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
+import { Row } from "apps/lending/components/primitives/Row";
 
 interface ListValueRowProps {
   title: ReactNode;

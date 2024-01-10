@@ -7,13 +7,12 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import * as React from "react";
-import { useRootStore } from "src/store/root";
-import { NAV_BAR } from "src/utils/mixPanelEvents";
+import { useRootStore } from "apps/lending/store/root";
+import { NAV_BAR } from "apps/lending/utils/mixPanelEvents";
 
-import { Link } from "../../components/primitives/Link";
-import { useProtocolDataContext } from "../../hooks/useProtocolDataContext";
-import { navigation } from "../../ui-config/menu-items";
+import { Link } from "apps/lending/components/primitives/Link";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
+import { navigation } from "apps/lending/ui-config/menu-items";
 
 interface NavItemsProps {
   setOpen?: (value: boolean) => void;

@@ -14,7 +14,7 @@ import React, { Fragment, useCallback, useMemo } from "react";
 import {
   FormattedReserveHistoryItem,
   ReserveRateTimeRange,
-} from "src/hooks/useReservesHistory";
+} from "apps/lending/hooks/useReservesHistory";
 
 type TooltipData = FormattedReserveHistoryItem;
 

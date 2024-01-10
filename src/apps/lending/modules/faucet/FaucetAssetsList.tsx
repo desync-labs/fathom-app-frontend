@@ -7,21 +7,20 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import * as React from "react";
-import { ConnectWalletPaper } from "src/components/ConnectWalletPaper";
-import { ListColumn } from "src/components/lists/ListColumn";
-import { ListHeaderTitle } from "src/components/lists/ListHeaderTitle";
-import { ListHeaderWrapper } from "src/components/lists/ListHeaderWrapper";
-import { ListItem } from "src/components/lists/ListItem";
-import { ListWrapper } from "src/components/lists/ListWrapper";
-import { FormattedNumber } from "src/components/primitives/FormattedNumber";
-import { Link, ROUTES } from "src/components/primitives/Link";
-import { TokenIcon } from "src/components/primitives/TokenIcon";
-import { useAppDataContext } from "src/hooks/app-data-provider/useAppDataProvider";
-import { useWalletBalances } from "src/hooks/app-data-provider/useWalletBalances";
-import { useModalContext } from "src/hooks/useModal";
-import { useProtocolDataContext } from "src/hooks/useProtocolDataContext";
-import { useWeb3Context } from "src/libs/hooks/useWeb3Context";
+import { ConnectWalletPaper } from "apps/lending/components/ConnectWalletPaper";
+import { ListColumn } from "apps/lending/components/lists/ListColumn";
+import { ListHeaderTitle } from "apps/lending/components/lists/ListHeaderTitle";
+import { ListHeaderWrapper } from "apps/lending/components/lists/ListHeaderWrapper";
+import { ListItem } from "apps/lending/components/lists/ListItem";
+import { ListWrapper } from "apps/lending/components/lists/ListWrapper";
+import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
+import { Link, ROUTES } from "apps/lending/components/primitives/Link";
+import { TokenIcon } from "apps/lending/components/primitives/TokenIcon";
+import { useAppDataContext } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
+import { useWalletBalances } from "apps/lending/hooks/app-data-provider/useWalletBalances";
+import { useModalContext } from "apps/lending/hooks/useModal";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
+import { useWeb3Context } from "apps/lending/libs/hooks/useWeb3Context";
 
 import { FaucetItemLoader } from "./FaucetItemLoader";
 import { FaucetMobileItemLoader } from "./FaucetMobileItemLoader";

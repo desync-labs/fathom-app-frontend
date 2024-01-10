@@ -1,25 +1,25 @@
 import { valueToBigNumber } from "@aave/math-utils";
 import { Trans } from "@lingui/macro";
 import { Box, Typography } from "@mui/material";
-import { CapsCircularStatus } from "src/components/caps/CapsCircularStatus";
-import { IncentivesButton } from "src/components/incentives/IncentivesButton";
-import { StableAPYTooltip } from "src/components/infoTooltips/StableAPYTooltip";
-import { VariableAPYTooltip } from "src/components/infoTooltips/VariableAPYTooltip";
-import { FormattedNumber } from "src/components/primitives/FormattedNumber";
-import { Link } from "src/components/primitives/Link";
-import { ReserveSubheader } from "src/components/ReserveSubheader";
-import { TextWithTooltip } from "src/components/TextWithTooltip";
-import { ComputedReserveData } from "src/hooks/app-data-provider/useAppDataProvider";
-import { AssetCapHookData } from "src/hooks/useAssetCaps";
+import { CapsCircularStatus } from "apps/lending/components/caps/CapsCircularStatus";
+import { IncentivesButton } from "apps/lending/components/incentives/IncentivesButton";
+import { StableAPYTooltip } from "apps/lending/components/infoTooltips/StableAPYTooltip";
+import { VariableAPYTooltip } from "apps/lending/components/infoTooltips/VariableAPYTooltip";
+import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
+import { Link } from "apps/lending/components/primitives/Link";
+import { ReserveSubheader } from "apps/lending/components/ReserveSubheader";
+import { TextWithTooltip } from "apps/lending/components/TextWithTooltip";
+import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
+import { AssetCapHookData } from "apps/lending/hooks/useAssetCaps";
 import {
   MarketDataType,
   NetworkConfig,
-} from "src/utils/marketsAndNetworksConfig";
-import { GENERAL } from "src/utils/mixPanelEvents";
+} from "apps/lending/utils/marketsAndNetworksConfig";
+import { GENERAL } from "apps/lending/utils/mixPanelEvents";
 
-import { ApyGraphContainer } from "./graphs/ApyGraphContainer";
-import { ReserveFactorOverview } from "./ReserveFactorOverview";
-import { PanelItem } from "./ReservePanels";
+import { ApyGraphContainer } from "apps/lending/modules/reserve-overview/graphs/ApyGraphContainer";
+import { ReserveFactorOverview } from "apps/lending/modules/reserve-overview/ReserveFactorOverview";
+import { PanelItem } from "apps/lending/modules/reserve-overview/ReservePanels";
 
 interface BorrowInfoProps {
   reserve: ComputedReserveData;

@@ -13,9 +13,9 @@ import {
   useTheme,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { DarkTooltip } from "src/components/infoTooltips/DarkTooltip";
-import { useRootStore } from "src/store/root";
-import { TRANSACTION_HISTORY } from "src/utils/mixPanelEvents";
+import { DarkTooltip } from "apps/lending/components/infoTooltips/DarkTooltip";
+import { useRootStore } from "apps/lending/store/root";
+import { TRANSACTION_HISTORY } from "apps/lending/utils/mixPanelEvents";
 
 import { FilterOptions } from "./types";
 

@@ -1,17 +1,17 @@
 import { Trans } from "@lingui/macro";
 import { useMediaQuery } from "@mui/material";
 import { useState } from "react";
-import { StableAPYTooltip } from "src/components/infoTooltips/StableAPYTooltip";
-import { VariableAPYTooltip } from "src/components/infoTooltips/VariableAPYTooltip";
-import { ListColumn } from "src/components/lists/ListColumn";
-import { ListHeaderTitle } from "src/components/lists/ListHeaderTitle";
-import { ListHeaderWrapper } from "src/components/lists/ListHeaderWrapper";
-import { ComputedReserveData } from "src/hooks/app-data-provider/useAppDataProvider";
+import { StableAPYTooltip } from "apps/lending/components/infoTooltips/StableAPYTooltip";
+import { VariableAPYTooltip } from "apps/lending/components/infoTooltips/VariableAPYTooltip";
+import { ListColumn } from "apps/lending/components/lists/ListColumn";
+import { ListHeaderTitle } from "apps/lending/components/lists/ListHeaderTitle";
+import { ListHeaderWrapper } from "apps/lending/components/lists/ListHeaderWrapper";
+import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 
-import { MarketAssetsListItem } from "./MarketAssetsListItem";
-import { MarketAssetsListItemLoader } from "./MarketAssetsListItemLoader";
-import { MarketAssetsListMobileItem } from "./MarketAssetsListMobileItem";
-import { MarketAssetsListMobileItemLoader } from "./MarketAssetsListMobileItemLoader";
+import { MarketAssetsListItem } from "apps/lending/modules/markets/MarketAssetsListItem";
+import { MarketAssetsListItemLoader } from "apps/lending/modules/markets/MarketAssetsListItemLoader";
+import { MarketAssetsListMobileItem } from "apps/lending/modules/markets/MarketAssetsListMobileItem";
+import { MarketAssetsListMobileItemLoader } from "apps/lending/modules/markets/MarketAssetsListMobileItemLoader";
 
 const listHeaders = [
   {

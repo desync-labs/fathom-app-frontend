@@ -2,11 +2,10 @@ import { CogIcon } from "@heroicons/react/solid";
 import { Trans } from "@lingui/macro";
 import { Button, Menu, MenuItem, SvgIcon, Typography } from "@mui/material";
 import React, { useState } from "react";
-//import { useRootStore } from 'src/store/root';
-import { PROD_ENV } from "src/utils/marketsAndNetworksConfig";
+import { PROD_ENV } from "apps/lending/utils/marketsAndNetworksConfig";
 
-import { LanguagesList } from "./components/LanguageSwitcher";
-import { TestNetModeSwitcher } from "./components/TestNetModeSwitcher";
+import { LanguagesList } from "apps/lending/layouts/components/LanguageSwitcher";
+import { TestNetModeSwitcher } from "apps/lending/layouts/components/TestNetModeSwitcher";
 
 export const LANG_MAP = {
   en: "English",

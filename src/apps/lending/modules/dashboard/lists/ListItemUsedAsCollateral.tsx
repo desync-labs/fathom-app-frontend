@@ -1,7 +1,6 @@
 import { Switch } from "@mui/material";
-import React from "react";
 
-import { ListItemIsolationBadge } from "./ListItemIsolationBadge";
+import { ListItemIsolationBadge } from "apps/lending/modules/dashboard/lists/ListItemIsolationBadge";
 
 interface ListItemUsedAsCollateralProps {
   isIsolated: boolean;

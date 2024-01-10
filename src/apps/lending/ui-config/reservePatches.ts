@@ -1,4 +1,4 @@
-import { unPrefixSymbol } from "src/hooks/app-data-provider/useAppDataProvider";
+import { unPrefixSymbol } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 
 /**
  * Maps onchain symbols to different symbols.
@@ -167,6 +167,7 @@ export function fetchIconSymbolAndName({
   };
 
   const lowerUnderlyingAsset = underlyingAsset.toLowerCase();
+  // eslint-disable-next-line no-prototype-builtins
   if (underlyingAssetMap.hasOwnProperty(lowerUnderlyingAsset)) {
     return {
       symbol,

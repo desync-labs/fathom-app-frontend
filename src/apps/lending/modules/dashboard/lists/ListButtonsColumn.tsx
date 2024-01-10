@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { ReactNode } from "react";
-import { DASHBOARD_LIST_COLUMN_WIDTHS } from "src/utils/dashboardSortUtils";
+import { DASHBOARD_LIST_COLUMN_WIDTHS } from "apps/lending/utils/dashboardSortUtils";
 
 interface ListButtonsColumnProps {
   children?: ReactNode;

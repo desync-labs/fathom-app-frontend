@@ -1,16 +1,16 @@
 import { ChainId } from "@aave/contract-helpers";
 import { Trans } from "@lingui/macro";
 import { Box, Button, useMediaQuery, useTheme } from "@mui/material";
-import { useRouter } from "next/router";
-import { ROUTES } from "src/components/primitives/Link";
-import { useWeb3Context } from "src/libs/hooks/useWeb3Context";
-import { useRootStore } from "src/store/root";
-import { AUTH } from "src/utils/mixPanelEvents";
+import { ROUTES } from "apps/lending/components/primitives/Link";
+import { useWeb3Context } from "apps/lending/libs/hooks/useWeb3Context";
+import { useRootStore } from "apps/lending/store/root";
+import { AUTH } from "apps/lending/utils/mixPanelEvents";
 
-import { BorrowAssetsList } from "./lists/BorrowAssetsList/BorrowAssetsList";
-import { BorrowedPositionsList } from "./lists/BorrowedPositionsList/BorrowedPositionsList";
-import { SuppliedPositionsList } from "./lists/SuppliedPositionsList/SuppliedPositionsList";
-import { SupplyAssetsList } from "./lists/SupplyAssetsList/SupplyAssetsList";
+import { BorrowAssetsList } from "apps/lending/modules/dashboard/lists/BorrowAssetsList/BorrowAssetsList";
+import { BorrowedPositionsList } from "apps/lending/modules/dashboard/lists/BorrowedPositionsList/BorrowedPositionsList";
+import { SuppliedPositionsList } from "apps/lending/modules/dashboard/lists/SuppliedPositionsList/SuppliedPositionsList";
+import { SupplyAssetsList } from "apps/lending/modules/dashboard/lists/SupplyAssetsList/SupplyAssetsList";
+import { useNavigate } from "react-router-dom";
 
 interface DashboardContentWrapperProps {
   isBorrow: boolean;
@@ -21,7 +21,7 @@ export const DashboardContentWrapper = ({
 }: DashboardContentWrapperProps) => {
   const { breakpoints } = useTheme();
   const { currentAccount } = useWeb3Context();
-  const router = useRouter();
+  const navigate = useNavigate();
   const trackEvent = useRootStore((store) => store.trackEvent);
 
   const currentMarketData = useRootStore((store) => store.currentMarketData);
@@ -59,7 +59,7 @@ export const DashboardContentWrapper = ({
                   right: "0px",
                 }}
                 onClick={() => {
-                  router.push(ROUTES.history);
+                  navigate(ROUTES.history);
                   trackEvent(AUTH.VIEW_TX_HISTORY);
                 }}
                 component="a"
@@ -95,7 +95,7 @@ export const DashboardContentWrapper = ({
             >
               <Button
                 onClick={() => {
-                  router.push(ROUTES.history);
+                  navigate(ROUTES.history);
                   trackEvent(AUTH.VIEW_TX_HISTORY);
                 }}
                 component="a"

@@ -1,16 +1,18 @@
 import { ArrowNarrowRightIcon } from "@heroicons/react/outline";
 import { Trans } from "@lingui/macro";
 import { Box, SvgIcon, Typography } from "@mui/material";
-import { formatUnits } from "ethers/lib/utils";
-import React from "react";
-import { DarkTooltip } from "src/components/infoTooltips/DarkTooltip";
-import { FormattedNumber } from "src/components/primitives/FormattedNumber";
-import { TokenIcon } from "src/components/primitives/TokenIcon";
+import { formatUnits } from "fathom-ethers/lib/utils";
+import { DarkTooltip } from "apps/lending/components/infoTooltips/DarkTooltip";
+import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
+import { TokenIcon } from "apps/lending/components/primitives/TokenIcon";
 
-import { BorrowRateModeBlock } from "../actions/BorrowRateModeBlock";
-import { fetchIconSymbolAndNameHistorical } from "../helpers";
-import { PriceUnavailable } from "../PriceUnavailable";
-import { ActionFields, TransactionHistoryItem } from "../types";
+import { BorrowRateModeBlock } from "apps/lending/modules/history/actions/BorrowRateModeBlock";
+import { fetchIconSymbolAndNameHistorical } from "apps/lending/modules/history/helpers";
+import { PriceUnavailable } from "apps/lending/modules/history/PriceUnavailable";
+import {
+  ActionFields,
+  TransactionHistoryItem,
+} from "apps/lending/modules/history/types";
 
 export const ActionTextMap = ({ action }: { action: string }) => {
   switch (action) {

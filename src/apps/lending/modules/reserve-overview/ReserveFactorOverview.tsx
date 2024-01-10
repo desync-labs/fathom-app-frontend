@@ -1,13 +1,13 @@
 import { ExternalLinkIcon } from "@heroicons/react/outline";
 import { Trans } from "@lingui/macro";
 import { Box, SvgIcon, Typography } from "@mui/material";
-import { ReserveFactorTooltip } from "src/components/infoTooltips/ReserveFactorTooltip";
-import { FormattedNumber } from "src/components/primitives/FormattedNumber";
-import { Link } from "src/components/primitives/Link";
-import { ReserveOverviewBox } from "src/components/ReserveOverviewBox";
-import { useRootStore } from "src/store/root";
-import { ExplorerLinkBuilderProps } from "src/ui-config/networksConfig";
-import { GENERAL } from "src/utils/mixPanelEvents";
+import { ReserveFactorTooltip } from "apps/lending/components/infoTooltips/ReserveFactorTooltip";
+import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
+import { Link } from "apps/lending/components/primitives/Link";
+import { ReserveOverviewBox } from "apps/lending/components/ReserveOverviewBox";
+import { useRootStore } from "apps/lending/store/root";
+import { ExplorerLinkBuilderProps } from "apps/lending/ui-config/networksConfig";
+import { GENERAL } from "apps/lending/utils/mixPanelEvents";
 
 interface ReserveFactorOverviewProps {
   collectorContract: string;

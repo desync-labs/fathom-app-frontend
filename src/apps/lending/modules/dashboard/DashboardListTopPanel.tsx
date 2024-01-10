@@ -1,16 +1,16 @@
 import { Trans } from "@lingui/macro";
 import { Box, Checkbox, FormControlLabel } from "@mui/material";
-import { FaucetButton } from "src/components/FaucetButton";
-import { useRootStore } from "src/store/root";
+import { FaucetButton } from "apps/lending/components/FaucetButton";
+import { useRootStore } from "apps/lending/store/root";
 import {
   ENABLE_TESTNET,
   STAGING_ENV,
-} from "src/utils/marketsAndNetworksConfig";
-import { DASHBOARD } from "src/utils/mixPanelEvents";
+} from "apps/lending/utils/marketsAndNetworksConfig";
+import { DASHBOARD } from "apps/lending/utils/mixPanelEvents";
 
-import { BridgeButton } from "../../components/BridgeButton";
-import { toggleLocalStorageClick } from "../../helpers/toggle-local-storage-click";
-import { NetworkConfig } from "../../ui-config/networksConfig";
+import { BridgeButton } from "apps/lending/components/BridgeButton";
+import { toggleLocalStorageClick } from "apps/lending/helpers/toggle-local-storage-click";
+import { NetworkConfig } from "apps/lending/ui-config/networksConfig";
 
 interface DashboardListTopPanelProps extends Pick<NetworkConfig, "bridge"> {
   value: boolean;

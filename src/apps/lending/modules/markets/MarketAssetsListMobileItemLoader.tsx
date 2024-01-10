@@ -1,7 +1,7 @@
 import { Divider, Skeleton } from "@mui/material";
 
-import { Row } from "../../components/primitives/Row";
-import { ListMobileItemWrapper } from "../dashboard/lists/ListMobileItemWrapper";
+import { Row } from "apps/lending/components/primitives/Row";
+import { ListMobileItemWrapper } from "apps/lending/modules/dashboard/lists/ListMobileItemWrapper";
 
 export const MarketAssetsListMobileItemLoader = () => {
   return (

@@ -6,7 +6,7 @@ import { PROD_ENV } from "apps/lending/utils/marketsAndNetworksConfig";
 
 import { DrawerWrapper } from "apps/lending/layouts/components/DrawerWrapper";
 import { LanguagesList } from "apps/lending/layouts/components/LanguageSwitcher";
-import { MobileCloseButton } from "./components/MobileCloseButton";
+import { MobileCloseButton } from "apps/lending/layouts/components/MobileCloseButton";
 import { NavItems } from "apps/lending/layouts/components/NavItems";
 import { TestNetModeSwitcher } from "apps/lending/layouts/components/TestNetModeSwitcher";
 

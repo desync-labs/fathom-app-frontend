@@ -8,15 +8,21 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { ListColumn } from "src/components/lists/ListColumn";
-import { ListItem } from "src/components/lists/ListItem";
-import { useRootStore } from "src/store/root";
-import { GENERAL } from "src/utils/mixPanelEvents";
+import { useEffect, useState } from "react";
+import { ListColumn } from "apps/lending/components/lists/ListColumn";
+import { ListItem } from "apps/lending/components/lists/ListItem";
+import { useRootStore } from "apps/lending/store/root";
+import { GENERAL } from "apps/lending/utils/mixPanelEvents";
 
-import { ActionDetails, ActionTextMap } from "./actions/ActionDetails";
-import { unixTimestampToFormattedTime } from "./helpers";
-import { ActionFields, TransactionHistoryItem } from "./types";
+import {
+  ActionDetails,
+  ActionTextMap,
+} from "apps/lending/modules/history/actions/ActionDetails";
+import { unixTimestampToFormattedTime } from "apps/lending/modules/history/helpers";
+import {
+  ActionFields,
+  TransactionHistoryItem,
+} from "apps/lending/modules/history/types";
 
 function ActionTitle({ action }: { action: string }) {
   return (
@@ -41,15 +47,15 @@ function TransactionRowItem({ transaction }: TransactionHistoryItemProps) {
   const downToMD = useMediaQuery(theme.breakpoints.down("md"));
 
   useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>;
     if (copyStatus) {
-      const timer = setTimeout(() => {
+      timer = setTimeout(() => {
         setCopyStatus(false);
       }, 1000);
-
-      return () => {
-        clearTimeout(timer);
-      };
     }
+    return () => {
+      timer && clearTimeout(timer);
+    };
   }, [copyStatus]);
 
   const explorerLink = currentNetworkConfig.explorerLinkBuilder({

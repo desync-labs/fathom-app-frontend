@@ -1,10 +1,10 @@
 import { Typography, useMediaQuery, useTheme } from "@mui/material";
 import { ReactNode } from "react";
 
-import { ListWrapper } from "../../../components/lists/ListWrapper";
-import { ListHeader } from "./ListHeader";
-import { ListItemLoader } from "./ListItemLoader";
-import { MobileListItemLoader } from "./MobileListItemLoader";
+import { ListWrapper } from "apps/lending/components/lists/ListWrapper";
+import { ListHeader } from "apps/lending/modules/dashboard/lists/ListHeader";
+import { ListItemLoader } from "apps/lending/modules/dashboard/lists/ListItemLoader";
+import { MobileListItemLoader } from "apps/lending/modules/dashboard/lists/MobileListItemLoader";
 
 interface ListLoaderProps {
   title: ReactNode;

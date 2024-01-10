@@ -3,39 +3,39 @@ import { USD_DECIMALS, valueToBigNumber } from "@aave/math-utils";
 import { Trans } from "@lingui/macro";
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { Fragment, useState } from "react";
-import { StableAPYTooltip } from "src/components/infoTooltips/StableAPYTooltip";
-import { VariableAPYTooltip } from "src/components/infoTooltips/VariableAPYTooltip";
-import { ListColumn } from "src/components/lists/ListColumn";
-import { ListHeaderTitle } from "src/components/lists/ListHeaderTitle";
-import { ListHeaderWrapper } from "src/components/lists/ListHeaderWrapper";
-import { Warning } from "src/components/primitives/Warning";
-import { MarketWarning } from "src/components/transactions/Warnings/MarketWarning";
-import { AssetCapsProvider } from "src/hooks/useAssetCaps";
-import { fetchIconSymbolAndName } from "src/ui-config/reservePatches";
-import { GENERAL } from "src/utils/mixPanelEvents";
+import { StableAPYTooltip } from "apps/lending/components/infoTooltips/StableAPYTooltip";
+import { VariableAPYTooltip } from "apps/lending/components/infoTooltips/VariableAPYTooltip";
+import { ListColumn } from "apps/lending/components/lists/ListColumn";
+import { ListHeaderTitle } from "apps/lending/components/lists/ListHeaderTitle";
+import { ListHeaderWrapper } from "apps/lending/components/lists/ListHeaderWrapper";
+import { Warning } from "apps/lending/components/primitives/Warning";
+import { MarketWarning } from "apps/lending/components/transactions/Warnings/MarketWarning";
+import { AssetCapsProvider } from "apps/lending/hooks/useAssetCaps";
+import { fetchIconSymbolAndName } from "apps/lending/ui-config/reservePatches";
+import { GENERAL } from "apps/lending/utils/mixPanelEvents";
 
-import { CapType } from "../../../../components/caps/helper";
-import { AvailableTooltip } from "../../../../components/infoTooltips/AvailableTooltip";
-import { ListWrapper } from "../../../../components/lists/ListWrapper";
-import { Link } from "../../../../components/primitives/Link";
+import { CapType } from "apps/lending/components/caps/helper";
+import { AvailableTooltip } from "apps/lending/components/infoTooltips/AvailableTooltip";
+import { ListWrapper } from "apps/lending/components/lists/ListWrapper";
+import { Link } from "apps/lending/components/primitives/Link";
 import {
   ComputedReserveData,
   useAppDataContext,
-} from "../../../../hooks/app-data-provider/useAppDataProvider";
-import { useProtocolDataContext } from "../../../../hooks/useProtocolDataContext";
+} from "apps/lending/hooks/app-data-provider/useAppDataProvider";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
 import {
   DASHBOARD_LIST_COLUMN_WIDTHS,
   DashboardReserve,
   handleSortDashboardReserves,
-} from "../../../../utils/dashboardSortUtils";
+} from "apps/lending/utils/dashboardSortUtils";
 import {
   assetCanBeBorrowedByUser,
   getMaxAmountAvailableToBorrow,
-} from "../../../../utils/getMaxAmountAvailableToBorrow";
-import { ListButtonsColumn } from "../ListButtonsColumn";
-import { ListLoader } from "../ListLoader";
-import { BorrowAssetsListItem } from "./BorrowAssetsListItem";
-import { BorrowAssetsListMobileItem } from "./BorrowAssetsListMobileItem";
+} from "apps/lending/utils/getMaxAmountAvailableToBorrow";
+import { ListButtonsColumn } from "apps/lending/modules/dashboard/lists/ListButtonsColumn";
+import { ListLoader } from "apps/lending/modules/dashboard/lists/ListLoader";
+import { BorrowAssetsListItem } from "apps/lending/modules/dashboard/lists/BorrowAssetsList/BorrowAssetsListItem";
+import { BorrowAssetsListMobileItem } from "apps/lending/modules/dashboard/lists/BorrowAssetsList/BorrowAssetsListMobileItem";
 
 const head = [
   {

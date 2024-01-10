@@ -7,9 +7,9 @@ import {
   MenuItem,
   Switch,
 } from "@mui/material";
-import React, { useState } from "react";
-import { useRootStore } from "src/store/root";
-import { SETTINGS } from "src/utils/mixPanelEvents";
+import { useState } from "react";
+import { useRootStore } from "apps/lending/store/root";
+import { SETTINGS } from "apps/lending/utils/mixPanelEvents";
 
 interface TestNetModeSwitcherProps {
   component?: typeof MenuItem | typeof ListItem;

@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
-import React, { ReactNode } from "react";
-import AnalyticsConsent from "src/components/Analytics/AnalyticsConsent";
-import { FORK_ENABLED } from "src/utils/marketsAndNetworksConfig";
+import { ReactNode } from "react";
+import AnalyticsConsent from "apps/lending/components/Analytics/AnalyticsConsent";
+import { FORK_ENABLED } from "apps/lending/utils/marketsAndNetworksConfig";
 
 import { AppFooter } from "./AppFooter";
 import { AppHeader } from "./AppHeader";

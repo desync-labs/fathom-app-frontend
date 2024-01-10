@@ -1,6 +1,9 @@
-import { reserveRateTimeRangeOptions } from "src/hooks/useReservesHistory";
+import { reserveRateTimeRangeOptions } from "apps/lending/hooks/useReservesHistory";
 
-import { ESupportedTimeRanges, TimeRangeSelector } from "../TimeRangeSelector";
+import {
+  ESupportedTimeRanges,
+  TimeRangeSelector,
+} from "apps/lending/modules/reserve-overview/TimeRangeSelector";
 
 export interface GraphTimeRangeSelectorProps {
   disabled: boolean;

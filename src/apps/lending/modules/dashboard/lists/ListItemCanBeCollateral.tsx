@@ -1,8 +1,8 @@
 import { CheckIcon } from "@heroicons/react/outline";
 import { Box, SvgIcon } from "@mui/material";
 
-import { NoData } from "../../../components/primitives/NoData";
-import { ListItemIsolationBadge } from "./ListItemIsolationBadge";
+import { NoData } from "apps/lending/components/primitives/NoData";
+import { ListItemIsolationBadge } from "apps/lending/modules/dashboard/lists/ListItemIsolationBadge";
 
 interface ListItemCanBeCollateralProps {
   isIsolated: boolean;

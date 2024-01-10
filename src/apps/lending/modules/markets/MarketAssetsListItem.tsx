@@ -1,27 +1,27 @@
 import { Trans } from "@lingui/macro";
 import { Box, Button, Typography, useTheme } from "@mui/material";
-import { useRouter } from "next/router";
-import { BUSDOffBoardingTooltip } from "src/components/infoTooltips/BUSDOffboardingToolTip";
-import { RenFILToolTip } from "src/components/infoTooltips/RenFILToolTip";
-import { IsolatedEnabledBadge } from "src/components/isolationMode/IsolatedBadge";
-import { NoData } from "src/components/primitives/NoData";
-import { ReserveSubheader } from "src/components/ReserveSubheader";
-import { useProtocolDataContext } from "src/hooks/useProtocolDataContext";
-import { useRootStore } from "src/store/root";
-import { CustomMarket } from "src/ui-config/marketsConfig";
+import { BUSDOffBoardingTooltip } from "apps/lending/components/infoTooltips/BUSDOffboardingToolTip";
+import { RenFILToolTip } from "apps/lending/components/infoTooltips/RenFILToolTip";
+import { IsolatedEnabledBadge } from "apps/lending/components/isolationMode/IsolatedBadge";
+import { NoData } from "apps/lending/components/primitives/NoData";
+import { ReserveSubheader } from "apps/lending/components/ReserveSubheader";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
+import { useRootStore } from "apps/lending/store/root";
+import { CustomMarket } from "apps/lending/ui-config/marketsConfig";
 
-import { IncentivesCard } from "../../components/incentives/IncentivesCard";
-import { AMPLToolTip } from "../../components/infoTooltips/AMPLToolTip";
-import { ListColumn } from "../../components/lists/ListColumn";
-import { ListItem } from "../../components/lists/ListItem";
-import { FormattedNumber } from "../../components/primitives/FormattedNumber";
-import { Link, ROUTES } from "../../components/primitives/Link";
-import { TokenIcon } from "../../components/primitives/TokenIcon";
-import { ComputedReserveData } from "../../hooks/app-data-provider/useAppDataProvider";
-import { MARKETS } from "../../utils/mixPanelEvents";
+import { IncentivesCard } from "apps/lending/components/incentives/IncentivesCard";
+import { AMPLToolTip } from "apps/lending/components/infoTooltips/AMPLToolTip";
+import { ListColumn } from "apps/lending/components/lists/ListColumn";
+import { ListItem } from "apps/lending/components/lists/ListItem";
+import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
+import { Link, ROUTES } from "apps/lending/components/primitives/Link";
+import { TokenIcon } from "apps/lending/components/primitives/TokenIcon";
+import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
+import { MARKETS } from "apps/lending/utils/mixPanelEvents";
+import { useNavigate } from "react-router-dom";
 
 export const MarketAssetsListItem = ({ ...reserve }: ComputedReserveData) => {
-  const router = useRouter();
+  const navigate = useNavigate();
   const theme = useTheme();
   const { currentMarket } = useProtocolDataContext();
   const trackEvent = useRootStore((store) => store.trackEvent);
@@ -44,7 +44,7 @@ export const MarketAssetsListItem = ({ ...reserve }: ComputedReserveData) => {
           asset: reserve.underlyingAsset,
           market: currentMarket,
         });
-        router.push(
+        navigate(
           ROUTES.reserveOverview(reserve.underlyingAsset, currentMarket)
         );
       }}

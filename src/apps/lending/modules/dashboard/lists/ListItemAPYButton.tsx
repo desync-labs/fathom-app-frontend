@@ -17,10 +17,10 @@ import {
   SvgIcon,
   Typography,
 } from "@mui/material";
-import * as React from "react";
-import { FormattedNumber } from "src/components/primitives/FormattedNumber";
-import { Link, ROUTES } from "src/components/primitives/Link";
-import { CustomMarket } from "src/ui-config/marketsConfig";
+import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
+import { Link, ROUTES } from "apps/lending/components/primitives/Link";
+import { CustomMarket } from "apps/lending/ui-config/marketsConfig";
+import { MouseEvent, useState } from "react";
 
 interface ListItemAPYButtonProps {
   stableBorrowRateEnabled: boolean;
@@ -43,9 +43,9 @@ export const ListItemAPYButton = ({
   underlyingAsset,
   currentMarket,
 }: ListItemAPYButtonProps) => {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {

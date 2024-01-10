@@ -22,24 +22,24 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import React, { useState } from "react";
-import { AvatarSize } from "src/components/Avatar";
-import { CompactMode } from "src/components/CompactableTypography";
-import { UserDisplay } from "src/components/UserDisplay";
-import { WalletModal } from "src/components/WalletConnection/WalletModal";
-import { useWalletModalContext } from "src/hooks/useWalletModal";
-import { useWeb3Context } from "src/libs/hooks/useWeb3Context";
-import { useRootStore } from "src/store/root";
-import { AUTH, GENERAL } from "src/utils/mixPanelEvents";
+import { useState } from "react";
+import { AvatarSize } from "apps/lending/components/Avatar";
+import { CompactMode } from "apps/lending/components/CompactableTypography";
+import { UserDisplay } from "apps/lending/components/UserDisplay";
+import { WalletModal } from "apps/lending/components/WalletConnection/WalletModal";
+import { useWalletModalContext } from "apps/lending/hooks/useWalletModal";
+import { useWeb3Context } from "apps/lending/libs/hooks/useWeb3Context";
+import { useRootStore } from "apps/lending/store/root";
+import { AUTH, GENERAL } from "apps/lending/utils/mixPanelEvents";
 
-import { Link } from "../components/primitives/Link";
+import { Link } from "apps/lending/components/primitives/Link";
 import {
   ENABLE_TESTNET,
   getNetworkConfig,
   STAGING_ENV,
-} from "../utils/marketsAndNetworksConfig";
-import { DrawerWrapper } from "./components/DrawerWrapper";
-import { MobileCloseButton } from "./components/MobileCloseButton";
+} from "apps/lending/utils/marketsAndNetworksConfig";
+import { DrawerWrapper } from "apps/lending/layouts/components/DrawerWrapper";
+import { MobileCloseButton } from "apps/lending/layouts/components/MobileCloseButton";
 
 interface WalletWidgetProps {
   open: boolean;

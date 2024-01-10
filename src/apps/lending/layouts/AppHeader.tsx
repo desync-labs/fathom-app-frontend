@@ -12,16 +12,16 @@ import {
 import Box from "@mui/material/Box";
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { ContentWithTooltip } from "src/components/ContentWithTooltip";
-import { useRootStore } from "src/store/root";
-import { ENABLE_TESTNET } from "src/utils/marketsAndNetworksConfig";
+import { ContentWithTooltip } from "apps/lending/components/ContentWithTooltip";
+import { useRootStore } from "apps/lending/store/root";
+import { ENABLE_TESTNET } from "apps/lending/utils/marketsAndNetworksConfig";
 
-import { Link } from "../components/primitives/Link";
-import { uiConfig } from "../uiConfig";
-import { NavItems } from "./components/NavItems";
-import { MobileMenu } from "./MobileMenu";
-import { SettingsMenu } from "./SettingsMenu";
-import WalletWidget from "./WalletWidget";
+import { Link } from "apps/lending/components/primitives/Link";
+import { uiConfig } from "apps/lending/uiConfig";
+import { NavItems } from "apps/lending/layouts/components/NavItems";
+import { MobileMenu } from "apps/lending/layouts/MobileMenu";
+import { SettingsMenu } from "apps/lending/layouts/SettingsMenu";
+import WalletWidget from "apps/lending/layouts/WalletWidget";
 
 interface Props {
   children: React.ReactElement;
@@ -59,7 +59,6 @@ export function AppHeader() {
     if (walletWidgetOpen) {
       setWalletWidgetOpen(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [md]);
 
   const headerHeight = 48;

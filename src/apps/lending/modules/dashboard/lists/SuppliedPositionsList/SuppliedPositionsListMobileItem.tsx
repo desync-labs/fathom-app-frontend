@@ -1,17 +1,17 @@
 import { Trans } from "@lingui/macro";
 import { Box, Button } from "@mui/material";
-import { useAppDataContext } from "src/hooks/app-data-provider/useAppDataProvider";
-import { useAssetCaps } from "src/hooks/useAssetCaps";
-import { DashboardReserve } from "src/utils/dashboardSortUtils";
+import { useAppDataContext } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
+import { useAssetCaps } from "apps/lending/hooks/useAssetCaps";
+import { DashboardReserve } from "apps/lending/utils/dashboardSortUtils";
 
-import { IncentivesCard } from "../../../../components/incentives/IncentivesCard";
-import { Row } from "../../../../components/primitives/Row";
-import { useModalContext } from "../../../../hooks/useModal";
-import { useProtocolDataContext } from "../../../../hooks/useProtocolDataContext";
-import { isFeatureEnabled } from "../../../../utils/marketsAndNetworksConfig";
-import { ListItemUsedAsCollateral } from "../ListItemUsedAsCollateral";
-import { ListMobileItemWrapper } from "../ListMobileItemWrapper";
-import { ListValueRow } from "../ListValueRow";
+import { IncentivesCard } from "apps/lending/components/incentives/IncentivesCard";
+import { Row } from "apps/lending/components/primitives/Row";
+import { useModalContext } from "apps/lending/hooks/useModal";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
+import { isFeatureEnabled } from "apps/lending/utils/marketsAndNetworksConfig";
+import { ListItemUsedAsCollateral } from "apps/lending/modules/dashboard/lists/ListItemUsedAsCollateral";
+import { ListMobileItemWrapper } from "apps/lending/modules/dashboard/lists/ListMobileItemWrapper";
+import { ListValueRow } from "apps/lending/modules/dashboard/lists/ListValueRow";
 
 export const SuppliedPositionsListMobileItem = ({
   reserve,

@@ -2,13 +2,16 @@ import { Trans } from "@lingui/macro";
 import { Box, Menu, MenuItem, Typography, useTheme } from "@mui/material";
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { CircleIcon } from "src/components/CircleIcon";
-import { WalletIcon } from "src/components/icons/WalletIcon";
-import { Base64Token, TokenIcon } from "src/components/primitives/TokenIcon";
-import { ComputedReserveData } from "src/hooks/app-data-provider/useAppDataProvider";
-import { ERC20TokenType } from "src/libs/web3-data-provider/Web3Provider";
-import { useRootStore } from "src/store/root";
-import { RESERVE_DETAILS } from "src/utils/mixPanelEvents";
+import { CircleIcon } from "apps/lending/components/CircleIcon";
+import { WalletIcon } from "apps/lending/components/icons/WalletIcon";
+import {
+  Base64Token,
+  TokenIcon,
+} from "apps/lending/components/primitives/TokenIcon";
+import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
+import { ERC20TokenType } from "apps/lending/libs/web3-data-provider/Web3Provider";
+import { useRootStore } from "apps/lending/store/root";
+import { RESERVE_DETAILS } from "apps/lending/utils/mixPanelEvents";
 
 interface AddTokenDropdownProps {
   poolReserve: ComputedReserveData;

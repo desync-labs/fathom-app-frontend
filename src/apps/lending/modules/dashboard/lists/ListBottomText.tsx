@@ -1,7 +1,7 @@
 import { Trans } from "@lingui/macro";
 import { Typography } from "@mui/material";
 
-import { Link } from "../../../components/primitives/Link";
+import { Link } from "apps/lending/components/primitives/Link";
 
 export const ListBottomText = () => {
   return (

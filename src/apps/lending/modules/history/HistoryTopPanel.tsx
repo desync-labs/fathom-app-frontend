@@ -1,9 +1,8 @@
 import { Trans } from "@lingui/macro";
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
-import * as React from "react";
-import { PageTitle } from "src/components/TopInfoPanel/PageTitle";
+import { PageTitle } from "apps/lending/components/TopInfoPanel/PageTitle";
 
-import { TopInfoPanel } from "../../components/TopInfoPanel/TopInfoPanel";
+import { TopInfoPanel } from "apps/lending/components/TopInfoPanel/TopInfoPanel";
 
 export const HistoryTopPanel = () => {
   const { breakpoints } = useTheme();

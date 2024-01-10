@@ -16,9 +16,9 @@ import {
   Typography,
 } from "@mui/material";
 import * as React from "react";
-import { SlippageTooltip } from "src/components/infoTooltips/SlippageTooltip";
-import { useRootStore } from "src/store/root";
-import { GENERAL } from "src/utils/mixPanelEvents";
+import { SlippageTooltip } from "apps/lending/components/infoTooltips/SlippageTooltip";
+import { useRootStore } from "apps/lending/store/root";
+import { GENERAL } from "apps/lending/utils/mixPanelEvents";
 
 import Paraswap from "/public/icons/other/paraswap.svg";
 
