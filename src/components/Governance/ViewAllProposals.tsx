@@ -1,4 +1,3 @@
-import loadable from "@loadable/component";
 import { useMemo } from "react";
 import {
   Typography,
@@ -10,11 +9,9 @@ import {
 import { useAllProposals } from "hooks/useAllProposals";
 import { IProposal } from "fathom-sdk";
 import { PageHeader } from "components/Dashboard/PageHeader";
-const ViewAllProposalItem = loadable(
-  () => import("../Governance/ViewAllProposalItem")
-);
-const Propose = loadable(() => import("../Governance/Propose"));
-const ProposalFilters = loadable(() => import("../Governance/ProposalFilters"));
+import ViewAllProposalItem from "components/Governance/ViewAllProposalItem";
+import Propose from "components/Governance/Propose";
+import ProposalFilters from "components/Governance/ProposalFilters";
 import { NoResults } from "components/AppComponents/AppBox/AppBox";
 
 import { COUNT_PER_PAGE } from "utils/Constants";

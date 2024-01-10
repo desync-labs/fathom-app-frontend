@@ -1,4 +1,3 @@
-import loadable from "@loadable/component";
 import { useLocation } from "react-router-dom";
 import { FC, Suspense, useMemo } from "react";
 import {
@@ -20,7 +19,7 @@ const ChartsNestedRouteContainer = styled("div")`
   padding: 0;
 `;
 
-const ChartsIndexComponent = loadable(() => import("../../apps/charts/index"));
+import ChartsIndexComponent from "apps/charts/index";
 
 const ChartsView: FC = () => {
   const location = useLocation();
