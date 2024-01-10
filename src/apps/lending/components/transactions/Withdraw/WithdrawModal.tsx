@@ -1,21 +1,24 @@
 import { PERMISSION } from "@aave/contract-helpers";
 import { Trans } from "@lingui/macro";
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   ModalContextType,
   ModalType,
   useModalContext,
-} from "src/hooks/useModal";
-import { useProtocolDataContext } from "src/hooks/useProtocolDataContext";
-import { isFeatureEnabled } from "src/utils/marketsAndNetworksConfig";
+} from "apps/lending/hooks/useModal";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
+import { isFeatureEnabled } from "apps/lending/utils/marketsAndNetworksConfig";
 
-import { BasicModal } from "../../primitives/BasicModal";
-import { ModalWrapper } from "../FlowCommons/ModalWrapper";
-import { WithdrawAndSwitchModalContent } from "./WithdrawAndSwitchModalContent";
-import { WithdrawModalContent } from "./WithdrawModalContent";
-import { WithdrawType, WithdrawTypeSelector } from "./WithdrawTypeSelector";
+import { BasicModal } from "apps/lending/components/primitives/BasicModal";
+import { ModalWrapper } from "apps/lending/components/transactions/FlowCommons/ModalWrapper";
+import { WithdrawAndSwitchModalContent } from "apps/lending/components/transactions/Withdraw/WithdrawAndSwitchModalContent";
+import { WithdrawModalContent } from "apps/lending/components/transactions/Withdraw//WithdrawModalContent";
+import {
+  WithdrawType,
+  WithdrawTypeSelector,
+} from "apps/lending/components/transactions/Withdraw//WithdrawTypeSelector";
 
-export const WithdrawModal = () => {
+const WithdrawModal = () => {
   const { type, close, args, mainTxState } =
     useModalContext() as ModalContextType<{
       underlyingAsset: string;
@@ -66,3 +69,5 @@ export const WithdrawModal = () => {
     </BasicModal>
   );
 };
+
+export default WithdrawModal;

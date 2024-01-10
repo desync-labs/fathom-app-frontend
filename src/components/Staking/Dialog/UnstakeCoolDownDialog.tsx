@@ -8,7 +8,7 @@ import { Box, DialogContent } from "@mui/material";
 import { CancelButton } from "components/AppComponents/AppButton/AppButton";
 import { ModalDescription } from "components/AppComponents/AppBox/AppBox";
 import { getTokenLogoURL } from "utils/tokenLogo";
-import { formatNumber } from "utils/format";
+import { formatPercentage } from "utils/format";
 import { ILockPosition } from "fathom-sdk";
 import { ButtonsWrapper } from "components/Staking/Dialog/ClaimRewardsDialog";
 
@@ -46,7 +46,7 @@ const UnstakeCoolDownDialog: FC<UnstakeCoolDownDialogProps> = ({
           <img src={getTokenLogoURL(token)} alt={"token-logo"} width={58} />
           <Box sx={{ fontSize: "18px" }}>Cooling down ...</Box>
           <Box className={"amount"}>
-            <Box>{formatNumber(Number(position.amount) / 10 ** 18)}</Box>
+            <Box>{formatPercentage(Number(position.amount) / 10 ** 18)}</Box>
             <span>{token}</span>
           </Box>
         </DialogContentWrapper>

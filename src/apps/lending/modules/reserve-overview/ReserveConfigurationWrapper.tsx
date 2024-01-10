@@ -1,14 +1,13 @@
 import { Trans } from "@lingui/macro";
 import { Box, Paper, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
-import loadable from "@loadable/component";
 import { FC } from "react";
 
 type ReserveConfigurationProps = {
   reserve: ComputedReserveData;
 };
 
-const ReserveConfiguration = loadable(() => import("./ReserveConfiguration"));
+import ReserveConfiguration from "apps/lending/modules/reserve-overview/ReserveConfiguration";
 
 export const ReserveConfigurationWrapper: FC<ReserveConfigurationProps> = ({
   reserve,

@@ -1,16 +1,15 @@
 import { Trans } from "@lingui/macro";
-import React from "react";
-import { BasicModal } from "src/components/primitives/BasicModal";
+import { BasicModal } from "apps/lending/components/primitives/BasicModal";
 import {
   ModalContextType,
   ModalType,
   useModalContext,
-} from "src/hooks/useModal";
+} from "apps/lending/hooks/useModal";
 
-import { ModalWrapper } from "../FlowCommons/ModalWrapper";
-import { SwapModalContent } from "./SwapModalContent";
+import { ModalWrapper } from "apps/lending/components/transactions/FlowCommons/ModalWrapper";
+import { SwapModalContent } from "apps/lending/components/transactions/Swap/SwapModalContent";
 
-export const SwapModal = () => {
+const SwapModal = () => {
   const { type, close, args } = useModalContext() as ModalContextType<{
     underlyingAsset: string;
   }>;
@@ -25,3 +24,5 @@ export const SwapModal = () => {
     </BasicModal>
   );
 };
+
+export default SwapModal;
