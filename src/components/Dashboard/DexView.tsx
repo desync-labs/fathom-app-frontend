@@ -1,6 +1,5 @@
 import { useLocation } from "react-router-dom";
 import { FC, MouseEvent, Suspense, useMemo } from "react";
-import loadable from "@loadable/component";
 import {
   SwapIcon,
   PoolIcon,
@@ -14,7 +13,7 @@ import {
 import LocalLoader from "apps/charts/components/LocalLoader";
 import useConnector from "context/connector";
 
-const DexIndexComponent = loadable(() => import("../../apps/dex/index"));
+import DexIndexComponent from "apps/dex/index";
 
 export type DexViewProps = {
   openConnectorMenu: (event: MouseEvent<HTMLElement>) => void;

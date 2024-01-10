@@ -1,4 +1,3 @@
-import loadable from "@loadable/component";
 import { styled, ThemeProvider } from "@mui/material/styles";
 import {
   CssBaseline,
@@ -18,78 +17,58 @@ import {
 import truncateEthAddress from "truncate-eth-address";
 import { Link, Navigate, Route, Routes, useLocation } from "react-router-dom";
 
-const Copyright = loadable(() => import("../Footer/Footer"));
-const AppBar = loadable(() => import("../AppComponents/AppBar/AppBar"));
-const DashboardContent = loadable(() => import("../Dashboard/Dashboard"));
+import Copyright from "components/Footer/Footer";
+import AppBar from "components/AppComponents/AppBar/AppBar";
+import DashboardContent from "components/Dashboard/Dashboard";
 
-const StableSwap = loadable(() => import("../Stableswap/StableSwap"));
-const StableSwapAddLiquidity = loadable(
-  () => import("../Stableswap/StableSwapAddLiquidity")
-);
-const StableSwapRemoveLiquidity = loadable(
-  () => import("../Stableswap/StableSwapRemoveLiquidity")
-);
-const StableSwapManageFees = loadable(
-  () => import("../Stableswap/StableSwapManageFees")
-);
+import StableSwap from "components/Stableswap/StableSwap";
+import StableSwapAddLiquidity from "components/Stableswap/StableSwapAddLiquidity";
+import StableSwapRemoveLiquidity from "components/Stableswap/StableSwapRemoveLiquidity";
+import StableSwapManageFees from "components/Stableswap/StableSwapManageFees";
 
-const AllVaultView = loadable(() => import("../Vault/AllVaultView"));
-const Web3Status = loadable(() => import("../Web3Status/Web3Status"));
+import AllVaultView from "components/Vault/AllVaultView";
+import Web3Status from "components/Web3Status/Web3Status";
 
-const AllProposalsView = loadable(
-  () => import("../Governance/ViewAllProposals")
-);
-const ProposalView = loadable(() => import("../Governance/Proposal"));
+import AllProposalsView from "components/Governance/ViewAllProposals";
+import ProposalView from "components/Governance/Proposal";
 
-const StakingView = loadable(() => import("../Staking/StakingView"));
-const AlertMessages = loadable(() => import("../Common/AlertMessages"));
-const TransactionStatus = loadable(
-  () => import("../Transaction/TransactionStatus")
-);
+import StakingView from "components/Staking/StakingView";
+import AlertMessages from "components/Common/AlertMessages";
+import TransactionStatus from "components/Transaction/TransactionStatus";
 
-const DaoView = loadable(() => import("../Dashboard/DaoView"));
+import DaoView from "components/Dashboard/DaoView";
 
 import { Menu } from "components/Dashboard/Menu";
 import { ToggleDrawerButton } from "components/AppComponents/AppButton/AppButton";
 import { MainBox } from "components/AppComponents/AppBox/AppBox";
-const MobileConnector = loadable(() => import("../Dashboard/MobileConnector"));
-const DesktopConnector = loadable(
-  () => import("../Dashboard/DesktopConnector")
-);
-const BottomLinks = loadable(() => import("../Dashboard/BottomLinks"));
-const MobileMenu = loadable(() => import("../Dashboard/MobileMenu"));
-const DexView = loadable(() => import("../Dashboard/DexView"));
+import MobileConnector from "components/Dashboard/MobileConnector";
+import DesktopConnector from "components/Dashboard/DesktopConnector";
+import BottomLinks from "components/Dashboard/BottomLinks";
+import MobileMenu from "components/Dashboard/MobileMenu";
+import DexView from "components/Dashboard/DexView";
 import { drawerWidth } from "components/AppComponents/AppBar/AppBar";
-const TransactionErc20TokenModal = loadable(
-  () => import("../Transaction/TransactionErc20TokenModal")
-);
+import TransactionErc20TokenModal from "components/Transaction/TransactionErc20TokenModal";
 import { themeObject } from "theme";
-const FthmInfoModal = loadable(() => import("../FthmInfo/FthmInfoModal"));
+import FthmInfoModal from "components/FthmInfo/FthmInfoModal";
 
 /**
  * DEX
  */
-const Swap = loadable(() => import("../../apps/dex/pages/Swap"));
+import Swap from "apps/dex/pages/Swap";
 import {
   RedirectPathToSwapOnly,
   RedirectToSwap,
 } from "apps/dex/pages/Swap/redirects";
-const PoolFinder = loadable(() => import("../../apps/dex/pages/PoolFinder"));
-const Pool = loadable(() => import("../../apps/dex/pages/Pool"));
+import PoolFinder from "apps/dex/pages/PoolFinder";
+import Pool from "apps/dex/pages/Pool";
 import {
   RedirectOldAddLiquidityPathStructure,
   RedirectDuplicateTokenIds,
 } from "apps/dex/pages/AddLiquidity/redirects";
-const AddLiquidity = loadable(
-  () => import("../../apps/dex/pages/AddLiquidity")
-);
+import AddLiquidity from "apps/dex/pages/AddLiquidity";
 import { RedirectOldRemoveLiquidityPathStructure } from "apps/dex/pages/RemoveLiquidity/redirects";
-const RemoveLiquidity = loadable(
-  () => import("../../apps/dex/pages/RemoveLiquidity")
-);
-const FathomBalanceContent = loadable(
-  () => import("../../apps/dex/components/Header/FathomBalanceContent")
-);
+import RemoveLiquidity from "apps/dex/pages/RemoveLiquidity";
+import FathomBalanceContent from "apps/dex/components/Header/FathomBalanceContent";
 import { TYPE } from "apps/dex/theme";
 import { CountUp } from "use-count-up";
 import { CardNoise } from "apps/dex/components/earn/styled";
@@ -100,7 +79,7 @@ import { ProposalProvider } from "context/proposal";
 import useConnector from "context/connector";
 import useAlertAndTransactionContext from "context/alertAndTransaction";
 
-const ChartsView = loadable(() => import("../Dashboard/ChartsView"));
+import ChartsView from "components/Dashboard/ChartsView";
 
 import FathomAppLogoSrc from "assets/svg/Fathom-app-logo.svg";
 import ExitSrc from "assets/svg/exit.svg";
@@ -111,19 +90,13 @@ import MobileMenuIcon from "assets/svg/mobile-menu.svg";
 import MobileMenuIconActive from "assets/svg/mobile-menu-active.svg";
 import { formatNumber } from "utils/format";
 
-const GlobalPage = loadable(() => import("../../apps/charts/pages/GlobalPage"));
+import GlobalPage from "apps/charts/pages/GlobalPage";
 import { TokenPageRouterComponent } from "apps/charts/pages/TokenPage";
 import { PairPageRouterComponent } from "apps/charts/pages/PairPage";
 import { AccountPageRouterComponent } from "apps/charts/pages/AccountPage";
-const AllTokensPage = loadable(
-  () => import("../../apps/charts/pages/AllTokensPage")
-);
-const AllPairsPage = loadable(
-  () => import("../../apps/charts/pages/AllPairsPage")
-);
-const AccountLookup = loadable(
-  () => import("../../apps/charts/pages/AccountLookup")
-);
+import AllTokensPage from "apps/charts/pages/AllTokensPage";
+import AllPairsPage from "apps/charts/pages/AllPairsPage";
+import AccountLookup from "apps/charts/pages/AccountLookup";
 import { LayoutWrapper } from "apps/charts/App";
 import {
   useGlobalChartData,
