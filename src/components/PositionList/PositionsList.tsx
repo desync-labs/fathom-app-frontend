@@ -96,7 +96,7 @@ const PositionsList: FC<PositionsListProps> = ({
                     <CircularProgress size={30} />
                   </CircleWrapper>
                 ) : (
-                  "You have not opened any position"
+                  "You have not opened any position."
                 )}
               </NoResults>
             )}

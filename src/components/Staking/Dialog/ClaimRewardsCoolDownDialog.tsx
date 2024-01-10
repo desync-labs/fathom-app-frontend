@@ -12,7 +12,7 @@ import { ModalDescription } from "components/AppComponents/AppBox/AppBox";
 import { FC, memo } from "react";
 import { styled } from "@mui/material/styles";
 import { getTokenLogoURL } from "utils/tokenLogo";
-import { formatNumber } from "utils/format";
+import { formatPercentage } from "utils/format";
 import BigNumber from "bignumber.js";
 import useSharedContext from "context/shared";
 
@@ -88,7 +88,7 @@ const ClaimRewardsCoolDownDialog: FC<ClaimRewardsDialogProps> = ({
           <Box sx={{ fontSize: "18px" }}>You’re requesting to claim</Box>
           <Box className={"amount"}>
             <Box>
-              {formatNumber(
+              {formatPercentage(
                 BigNumber(totalRewards)
                   .dividedBy(10 ** 18)
                   .toNumber()
