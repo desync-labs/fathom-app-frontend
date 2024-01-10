@@ -12,7 +12,7 @@ import {
 import { ModalDescription } from "components/AppComponents/AppBox/AppBox";
 import { styled } from "@mui/material/styles";
 import { getTokenLogoURL } from "utils/tokenLogo";
-import { formatNumber } from "utils/format";
+import { formatPercentage } from "utils/format";
 import useStakingContext from "context/staking";
 import useSharedContext from "context/shared";
 import { ButtonsWrapper } from "components/Staking/Dialog/ClaimRewardsDialog";
@@ -55,7 +55,7 @@ const WithdrawDialog: FC<WithdrawDialogProps> = ({ token, onClose }) => {
           <img src={getTokenLogoURL(token)} alt={"token-logo"} width={58} />
           <Box sx={{ fontSize: "18px" }}>You're withdrawing...</Box>
           <Box className={"amount"}>
-            <Box>{formatNumber(stake.claimedAmount / 10 ** 18)}</Box>
+            <Box>{formatPercentage(stake.claimedAmount / 10 ** 18)}</Box>
             <span>{token}</span>
           </Box>
         </DialogContentWrapper>

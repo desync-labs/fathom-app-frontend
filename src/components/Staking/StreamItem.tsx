@@ -1,30 +1,17 @@
-import loadable from "@loadable/component";
 import { FC, memo, useMemo } from "react";
 import { ILockPosition } from "fathom-sdk";
-const StakingViewItem = loadable(() => import("../Staking/StakingViewItem"));
-const ClaimRewardsDialog = loadable(
-  () => import("../Staking/Dialog/ClaimRewardsDialog")
-);
+import StakingViewItem from "components/Staking/StakingViewItem";
+import ClaimRewardsDialog from "components/Staking/Dialog/ClaimRewardsDialog";
 import { DialogActions } from "hooks/useStakingView";
-const UnstakeDialog = loadable(() => import("../Staking/Dialog/UnstakeDialog"));
-const EarlyUnstakeDialog = loadable(
-  () => import("../Staking/Dialog/EarlyUnstakeDialog")
-);
+import UnstakeDialog from "components/Staking/Dialog/UnstakeDialog";
+import EarlyUnstakeDialog from "components/Staking/Dialog/EarlyUnstakeDialog";
 import { NoResults } from "components/AppComponents/AppBox/AppBox";
 import { Box, CircularProgress, Grid, Pagination } from "@mui/material";
-const UnclaimedRewardsDialog = loadable(
-  () => import("../Staking/Dialog/UnclaimedRewardsDialog")
-);
+import UnclaimedRewardsDialog from "components/Staking/Dialog/UnclaimedRewardsDialog";
 import useStakingContext from "context/staking";
-const UnstakeCoolDownDialog = loadable(
-  () => import("../Staking/Dialog/UnstakeCoolDownDialog")
-);
-const ClaimRewardsCoolDownDialog = loadable(
-  () => import("../Staking/Dialog/ClaimRewardsCoolDownDialog")
-);
-const WithdrawDialog = loadable(
-  () => import("../Staking/Dialog/WithdrawDialog")
-);
+import UnstakeCoolDownDialog from "components/Staking/Dialog/UnstakeCoolDownDialog";
+import ClaimRewardsCoolDownDialog from "components/Staking/Dialog/ClaimRewardsCoolDownDialog";
+import WithdrawDialog from "components/Staking/Dialog/WithdrawDialog";
 import { COUNT_PER_PAGE } from "utils/Constants";
 import { styled } from "@mui/material/styles";
 

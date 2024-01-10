@@ -38,7 +38,7 @@ import {
   ButtonsWrapper,
   InfoMessageWrapper,
 } from "components/Staking/Dialog/ClaimRewardsDialog";
-import { formatNumber } from "utils/format";
+import { formatNumber, formatPercentage } from "utils/format";
 import BigNumber from "bignumber.js";
 import useSharedContext from "context/shared";
 
@@ -123,7 +123,7 @@ const UnStakeDialog: FC<UnStakeDialogProps> = ({
               <AppFormLabel>Unstake amount</AppFormLabel>
               <WalletBalance>
                 Available:{" "}
-                {formatNumber(
+                {formatPercentage(
                   BigNumber(totalBalance)
                     .dividedBy(10 ** 18)
                     .toNumber()
@@ -164,7 +164,7 @@ const UnStakeDialog: FC<UnStakeDialogProps> = ({
           <Box sx={{ fontSize: "18px" }}>You’re requesting to unstake</Box>
           <Box className={"amount"}>
             <Box>
-              {unStakeAmount ? formatNumber(Number(unStakeAmount)) : "--"}
+              {unStakeAmount ? formatPercentage(Number(unStakeAmount)) : "--"}
             </Box>
             <span>{token}</span>
           </Box>
@@ -180,7 +180,7 @@ const UnStakeDialog: FC<UnStakeDialogProps> = ({
                 <InfoIcon sx={{ fontSize: "18px", color: "#6379A1" }} />
               </InfoLabel>
               <InfoValue>
-                {formatNumber(
+                {formatPercentage(
                   BigNumber(totalBalance)
                     .dividedBy(10 ** 18)
                     .toNumber()
