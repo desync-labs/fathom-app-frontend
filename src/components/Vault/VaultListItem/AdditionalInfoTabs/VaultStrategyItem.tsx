@@ -1,5 +1,8 @@
 import { FC, useEffect, useState } from "react";
 import BigNumber from "bignumber.js";
+import { Link } from "react-router-dom";
+import relativeTime from "dayjs/plugin/relativeTime";
+import dayjs from "dayjs";
 import {
   Accordion,
   AccordionDetails,
@@ -11,12 +14,12 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { IVaultStrategy, IVaultStrategyReport } from "fathom-sdk";
 import { formatNumber } from "utils/format";
+import { getAccountUrl } from "utils/explorer";
+import { DEFAULT_CHAIN_ID } from "utils/Constants";
 import useSharedContext from "context/shared";
 import VaultHistoryChart, {
   HistoryChartDataType,
 } from "components/Vault/VaultListItem/AdditionalInfoTabs/VaultHistoryChart";
-import relativeTime from "dayjs/plugin/relativeTime";
-import dayjs from "dayjs";
 
 dayjs.extend(relativeTime);
 
@@ -102,7 +105,7 @@ type VaultStrategyItemPropsType = {
   strategyData: IVaultStrategy;
   vaultBalanceTokens: string;
   tokenName: string;
-  totalFees: string;
+  performanceFee: number;
 };
 
 const VaultIndicatorItem: FC<VaultIndicatorItemPropsType> = ({
@@ -124,7 +127,7 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
   strategyData,
   vaultBalanceTokens,
   tokenName,
-  totalFees,
+  performanceFee,
 }) => {
   const [aprHistoryArr, setAprHistoryArr] = useState<HistoryChartDataType[]>(
     []
@@ -188,9 +191,17 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
         <Typography>Dynamic Market Analysis for Optimal Returns</Typography>
       </AccordionSummary>
       <AccordionDetails sx={{ padding: "0" }}>
-        <Typography component={"p"} fontSize="12px" pb={2}>
+        <Link
+          to={getAccountUrl(strategyData.id, DEFAULT_CHAIN_ID)}
+          target="_blank"
+          style={{
+            display: "inline-flex",
+            fontSize: "12px",
+            marginBottom: "16px",
+          }}
+        >
           {strategyData.id}
-        </Typography>
+        </Link>
         <Typography fontSize="14px" pb={2}>
           Our strategy involves dynamically allocating our reserves to different
           investment opportunities. This flexibility allows us to capitalize on
@@ -234,7 +245,7 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
               />
               <VaultIndicatorItem
                 title="Perfomance fee"
-                value={formatNumber(BigNumber(totalFees).toNumber())}
+                value={formatNumber(performanceFee)}
                 units="%"
               />
             </VaultIndicatorList>

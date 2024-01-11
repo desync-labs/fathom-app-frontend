@@ -166,8 +166,10 @@ export const VaultListItemMobileAdditionalData = ({
 const VaultListItemMobile: FC<VaultListItemPropsType> = ({
   vaultItemData,
   vaultPosition,
+  performanceFee,
+  protocolFee,
 }) => {
-  const { token, strategies, totalFees } = vaultItemData;
+  const { token, strategies } = vaultItemData;
 
   const {
     manageVault,
@@ -207,7 +209,7 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
         </VaultListLabel>
         <VaultListValue>
           <VaultPercent>
-            {formatNumber(BigNumber(totalFees).toNumber())}%
+            {formatNumber(BigNumber(performanceFee).toNumber())}%
           </VaultPercent>
         </VaultListValue>
       </ListItemWrapper>
@@ -270,10 +272,17 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
               />
             )}
           {activeVaultInfoTab === VaultInfoTabs.ABOUT && (
-            <VaultItemAbout vaultItemData={vaultItemData} />
+            <VaultItemAbout
+              vaultItemData={vaultItemData}
+              protocolFee={protocolFee}
+              performanceFee={performanceFee}
+            />
           )}
           {activeVaultInfoTab === VaultInfoTabs.STRATEGIES && (
-            <VaultItemStrategies vaultItemData={vaultItemData} />
+            <VaultItemStrategies
+              vaultItemData={vaultItemData}
+              performanceFee={performanceFee}
+            />
           )}
         </>
       )}
@@ -314,6 +323,7 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
               vaultItemData={vaultItemData}
               vaultPosition={vaultPosition}
               onClose={() => setManageVault(false)}
+              performanceFee={performanceFee}
             />
           )
         );
@@ -324,6 +334,7 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
             <VaultListItemDepositModal
               vaultItemData={vaultItemData}
               onClose={() => setNewVaultDeposit(false)}
+              performanceFee={performanceFee}
             />
           )
         );

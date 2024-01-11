@@ -21,12 +21,14 @@ const VaultManageGridDialogWrapper = styled(AppDialog)`
 export type VaultManageProps = {
   vaultItemData: IVault;
   vaultPosition: IVaultPosition;
+  performanceFee: number;
   onClose: () => void;
 };
 
 const VaultListItemManageModal: FC<VaultManageProps> = ({
   vaultItemData,
   vaultPosition,
+  performanceFee,
   onClose,
 }) => {
   const {
@@ -69,6 +71,7 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
             vaultPosition={vaultPosition}
             formToken={formToken}
             formSharedToken={formSharedToken}
+            performanceFee={performanceFee}
           />
           <DividerDefault orientation="vertical" flexItem></DividerDefault>
           <ManageVaultForm

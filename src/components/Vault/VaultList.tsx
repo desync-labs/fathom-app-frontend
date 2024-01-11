@@ -65,6 +65,8 @@ const VaultList: FC<VaultListPropsType> = ({
     vaultPositionsList,
     vaultCurrentPage,
     vaultItemsCount,
+    protocolFee,
+    performanceFee,
     isShutdown,
     search,
     sortBy,
@@ -113,6 +115,8 @@ const VaultList: FC<VaultListPropsType> = ({
                       key={vault.id}
                       vaultItemData={vault}
                       vaultPosition={filterCurrentPosition(vault.id)}
+                      protocolFee={protocolFee}
+                      performanceFee={performanceFee}
                     />
                   ))
                 )}
@@ -224,6 +228,8 @@ const VaultList: FC<VaultListPropsType> = ({
                           key={vault.id}
                           vaultItemData={vault}
                           vaultPosition={filterCurrentPosition(vault.id)}
+                          protocolFee={protocolFee}
+                          performanceFee={performanceFee}
                         />
                       ))}
                     </TableBody>
