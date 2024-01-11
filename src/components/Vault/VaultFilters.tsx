@@ -112,7 +112,6 @@ const VaultFilters: FC<VaultFiltersPropsType> = ({
           sx={{ border: "none", fieldset: { borderColor: "transparent" } }}
         >
           <MenuItem value="tvl">TVL</MenuItem>
-          <MenuItem value="fee">Fee</MenuItem>
           <MenuItem value="earned">Earned</MenuItem>
           <MenuItem value="staked">Staked</MenuItem>
         </AppSelect>

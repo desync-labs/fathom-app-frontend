@@ -25,21 +25,18 @@ export const FxdIcon = styled(FxdSrc)<{ isactive: string }>`
 `;
 
 export const StableSwapIcon = styled(SwapIconSrc)<{ isactive: string }>`
-  margin-top: -3px;
   & path {
     fill: ${({ isactive }) => (isactive ? ACTIVE_HEX : INACTIVE_HEX)};
   }
 `;
 
 export const StakingIcon = styled(StakingIconSrc)<{ isactive: string }>`
-  margin-top: -3px;
   & path {
     fill: ${({ isactive }) => (isactive ? ACTIVE_HEX : INACTIVE_HEX)};
   }
 `;
 
 export const GovernanceIcon = styled(GovernanceSrc)<{ isactive: string }>`
-  margin-top: 2px;
   & path {
     fill: ${({ isactive }) => (isactive ? ACTIVE_HEX : INACTIVE_HEX)};
   }
