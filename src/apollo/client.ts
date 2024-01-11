@@ -48,7 +48,7 @@ const governanceLink = new HttpLink({
 });
 
 const vaultsLink = new HttpLink({
-  uri: `${process.env.REACT_APP_API_URL}/subgraphs/name/vaults-subgraph`,
+  uri: `${process.env.REACT_APP_API_URL}/subgraphs/name/vaults-subgraph-test`,
 });
 
 const defaultLink = new HttpLink({
