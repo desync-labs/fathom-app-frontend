@@ -10,7 +10,7 @@ export const AppsSharedContext = createContext<UseAppsSharedReturnType>(
 
 type DexSharedProviderType = {
   children: ReactElement;
-} & DexViewProps;
+} & (DexViewProps | LendingViewProps);
 
 export const AppsSharedProvider: FC<DexSharedProviderType> = ({
   children,

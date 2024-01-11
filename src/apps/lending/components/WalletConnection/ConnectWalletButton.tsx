@@ -1,31 +1,29 @@
 import { Button } from "@mui/material";
-import { useWalletModalContext } from "apps/lending/hooks/useWalletModal";
 import { useRootStore } from "apps/lending/store/root";
 import { AUTH } from "apps/lending/utils/mixPanelEvents";
 
-import { WalletModal } from "apps/lending/components/WalletConnection/WalletModal";
 import { FC } from "react";
+import useAppsShared from "context/appsShared";
 
 export interface ConnectWalletProps {
   funnel?: string;
 }
 
 export const ConnectWalletButton: FC<ConnectWalletProps> = ({ funnel }) => {
-  const { setWalletModalOpen } = useWalletModalContext();
   const trackEvent = useRootStore((store) => store.trackEvent);
+  const { openConnectorMenu } = useAppsShared();
 
   return (
     <>
       <Button
         variant="gradient"
-        onClick={() => {
+        onClick={(event) => {
           trackEvent(AUTH.CONNECT_WALLET, { funnel: funnel });
-          setWalletModalOpen(true);
+          openConnectorMenu(event);
         }}
       >
         Connect wallet
       </Button>
-      <WalletModal />
     </>
   );
 };
