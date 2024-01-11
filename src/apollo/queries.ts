@@ -218,11 +218,7 @@ export const VAULTS = gql`
       sharesSupply
       balanceTokens
       balanceTokensIdle
-      totalDebtAmount
       depositLimit
-      totalFees
-      protocolFees
-      protocolFeeRecipient
       strategies {
         id
         delegatedAssets
@@ -263,6 +259,27 @@ export const ACCOUNT_VAULT_POSITIONS = gql`
         symbol
         name
       }
+    }
+  }
+`;
+
+export const VAULT_FACTORIES = gql`
+  query VaultFactories {
+    factories {
+      feeRecipient
+      id
+      protocolFee
+      timestamp
+      vaultPackage
+      vaults {
+        id
+      }
+    }
+    accountants {
+      id
+      feeRecipient
+      performanceFee
+      timestamp
     }
   }
 `;

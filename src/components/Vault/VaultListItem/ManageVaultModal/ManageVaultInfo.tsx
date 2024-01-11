@@ -13,6 +13,7 @@ type VaultManageInfoProps = {
   formToken: string;
   formSharedToken: string;
   formType: FormType;
+  performanceFee: number;
 };
 
 const ManageVaultInfo: FC<VaultManageInfoProps> = ({
@@ -21,9 +22,9 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
   vaultPosition,
   formToken,
   formSharedToken,
+  performanceFee,
 }) => {
-  const { token, shareToken, strategies, totalFees, sharesSupply } =
-    vaultItemData;
+  const { token, shareToken, strategies, sharesSupply } = vaultItemData;
   const { balancePosition, balanceShares } = vaultPosition;
   const { isMobile } = useSharedContext();
 
@@ -207,7 +208,7 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
         <AppListItem
           alignItems="flex-start"
           secondaryAction={
-            formatPercentage(BigNumber(totalFees).toNumber()) + "%"
+            formatPercentage(BigNumber(performanceFee).toNumber()) + "%"
           }
         >
           <ListItemText primary="Fee" />
