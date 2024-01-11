@@ -16,13 +16,11 @@ export const useAddressAllowed = (address: string): AddressAllowedResult => {
 
   const getIsAddressAllowed = async () => {
     if (screeningUrl && address) {
-      try {
-        const response = await fetch(screeningUrl + queryParams);
-        if (response.ok) {
-          const data: { addressAllowed: boolean } = await response.json();
-          setIsAllowed(data.addressAllowed);
-        }
-      } catch (e) {}
+      const response = await fetch(screeningUrl + queryParams);
+      if (response.ok) {
+        const data: { addressAllowed: boolean } = await response.json();
+        setIsAllowed(data.addressAllowed);
+      }
     } else {
       setIsAllowed(true);
     }

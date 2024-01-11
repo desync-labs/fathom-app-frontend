@@ -14,7 +14,7 @@ const SwapModal = () => {
   }>;
   return (
     <BasicModal open={type === ModalType.Swap} setOpen={close}>
-      <ModalWrapper title={"Switch"} underlyingAsset={args.underlyingAsset}>
+      <ModalWrapper title={<>Switch</>} underlyingAsset={args.underlyingAsset}>
         {(params) => <SwapModalContent {...params} />}
       </ModalWrapper>
     </BasicModal>

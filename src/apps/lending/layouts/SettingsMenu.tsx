@@ -29,19 +29,6 @@ export function SettingsMenu() {
     setLanguagesOpen(false);
   };
 
-  /* const handleLanguageClick = () => {
-    const savedLocale = localStorage.getItem('LOCALE') || DEFAULT_LOCALE;
-    const langCode = savedLocale as LanguageCode;
-    setSettingsOpen(false);
-    setLanguagesOpen(true);
-    trackEvent(SETTINGS.LANGUAGE, { language: LANG_MAP[langCode] });
-  }; */
-
-  const handleCloseLanguage = () => {
-    setSettingsOpen(true);
-    setLanguagesOpen(false);
-  };
-
   const handleClose = () => {
     setAnchorEl(null);
     setSettingsOpen(false);

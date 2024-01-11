@@ -45,7 +45,7 @@ export const NoSearchResults: FC<NoSearchResultsProps> = ({
           }}
           variant="h2"
         >
-          {`No search results${searchTerm && ` for \'${searchTerm}\'`}`}
+          No search results for {searchTerm}
         </Typography>
       )}
       {subtitle && (

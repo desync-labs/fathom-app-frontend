@@ -189,9 +189,7 @@ const ProposalVoting = () => {
             <VotingWrapperBox>
               <Box>
                 <Typography gutterBottom>Against</Typography>
-                <Typography variant="body2">
-                  {Math.round(againstVotes)}%
-                </Typography>
+                <Typography>{Math.round(againstVotes)}%</Typography>
               </Box>
 
               <LinearProgress
@@ -204,7 +202,7 @@ const ProposalVoting = () => {
             <VotingWrapperBox>
               <Box>
                 <Typography gutterBottom>Abstains</Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography color="text.secondary">
                   {Math.round(abstainVotes)}%
                 </Typography>
               </Box>

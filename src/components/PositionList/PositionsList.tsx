@@ -79,7 +79,7 @@ const PositionsList: FC<PositionsListProps> = ({
         () => (
           <>
             {positions.length === 0 && (
-              <NoResults variant="h6">
+              <NoResults>
                 {loading ? (
                   <CircleWrapper>
                     <CircularProgress size={30} />

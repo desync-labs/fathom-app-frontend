@@ -57,7 +57,6 @@ export const TxActionsWrapper = ({
   fetchingData = false,
   errorParams,
   tryPermit,
-  event,
   ...rest
 }: TxActionsWrapperProps) => {
   const { txError } = useModalContext();

@@ -81,7 +81,7 @@ export const DashboardEModeButton = ({
             top: -1,
             background: isEModeDisabled
               ? "transparent"
-              : theme.palette.gradients.aaveGradient,
+              : theme.palette.gradients?.aaveGradient,
             borderRadius: "4px",
           },
         })}
