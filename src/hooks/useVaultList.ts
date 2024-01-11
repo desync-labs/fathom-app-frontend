@@ -1,7 +1,11 @@
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 import { IVault, IVaultPosition } from "fathom-sdk";
-import { ACCOUNT_VAULT_POSITIONS, VAULTS } from "apollo/queries";
+import {
+  ACCOUNT_VAULT_POSITIONS,
+  VAULTS,
+  VAULT_FACTORIES,
+} from "apollo/queries";
 import { COUNT_PER_PAGE } from "utils/Constants";
 import useConnector from "context/connector";
 import useSyncContext from "context/sync";
@@ -11,7 +15,6 @@ interface IdToVaultIdMap {
 }
 
 export enum SortType {
-  FEE = "fee",
   EARNED = "earned",
   TVL = "tvl",
   STAKED = "staked",
@@ -27,6 +30,8 @@ const useVaultList = () => {
   >([]);
   const [vaultCurrentPage, setVaultCurrentPage] = useState(1);
   const [vaultItemsCount, setVaultItemsCount] = useState(0);
+  const [protocolFee, setProtocolFee] = useState(0);
+  const [performanceFee, setPerformanceFee] = useState(0);
 
   const [search, setSearch] = useState<string>("");
   const [sortBy, setSortBy] = useState<SortType>(SortType.TVL);
@@ -58,6 +63,13 @@ const useVaultList = () => {
     context: { clientName: "vaults" },
   });
 
+  const { data: vaultsFactories, loading: vaultsFactoriesLoading } = useQuery(
+    VAULT_FACTORIES,
+    {
+      context: { clientName: "vaults" },
+    }
+  );
+
   useEffect(() => {
     if (syncVault && !prevSyncVault) {
       positionsRefetch();
@@ -68,6 +80,21 @@ const useVaultList = () => {
   useEffect(() => {
     positionsRefetch();
   }, [account]);
+
+  useEffect(() => {
+    if (!vaultsFactoriesLoading && vaultsFactories) {
+      const { factories, accountants } = vaultsFactories;
+      const protocolFeeRes = factories[0].protocolFee;
+      const performanceFeeRes = accountants[0].performanceFee;
+
+      if (protocolFeeRes) {
+        setProtocolFee(protocolFeeRes / 100);
+      }
+      if (performanceFeeRes) {
+        setPerformanceFee(performanceFeeRes / 100);
+      }
+    }
+  }, [vaultsFactories]);
 
   useEffect(() => {
     if (positionsData && positionsData.accountVaultPositions) {
@@ -95,14 +122,6 @@ const useVaultList = () => {
     (vaultData: IVault[]) => {
       let sortedVaults = [...vaultData];
       if (vaultData.length) {
-        if (sortBy === SortType.FEE) {
-          sortedVaults = vaultData.sort((a, b) => {
-            const totalFeesA = Number(a.totalFees);
-            const totalFeesB = Number(b.totalFees);
-
-            return totalFeesB - totalFeesA;
-          });
-        }
         if (sortBy === SortType.TVL) {
           sortedVaults = vaultData.sort((a, b) => {
             const tvlA = Number(a.balanceTokens);
@@ -182,6 +201,8 @@ const useVaultList = () => {
     vaultPositionsList,
     vaultCurrentPage,
     vaultItemsCount,
+    protocolFee,
+    performanceFee,
     isShutdown,
     search,
     sortBy,

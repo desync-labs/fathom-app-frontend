@@ -181,14 +181,17 @@ export const EarningLabel = styled("div")`
 export type VaultListItemPropsType = {
   vaultItemData: IVault;
   vaultPosition: IVaultPosition | null | undefined;
+  protocolFee: number;
+  performanceFee: number;
 };
 
 const VaultListItem: FC<VaultListItemPropsType> = ({
   vaultItemData,
   vaultPosition,
+  protocolFee,
+  performanceFee,
 }) => {
-  const { token, balanceTokens, depositLimit, strategies, totalFees } =
-    vaultItemData;
+  const { token, balanceTokens, depositLimit, strategies } = vaultItemData;
   const { fxdPrice } = usePricesContext();
   const vaultTestId = vaultItemData.id;
 
@@ -235,7 +238,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
           data-testid={`vaultRow-${vaultTestId}-feeValueCell`}
         >
           <VaultPercent>
-            {formatNumber(BigNumber(totalFees).toNumber())}%
+            {formatNumber(BigNumber(performanceFee).toNumber())}%
           </VaultPercent>
         </TableCell>
         <TableCell
@@ -382,10 +385,17 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
                   />
                 )}
               {activeVaultInfoTab === VaultInfoTabs.ABOUT && (
-                <VaultItemAbout vaultItemData={vaultItemData} />
+                <VaultItemAbout
+                  vaultItemData={vaultItemData}
+                  protocolFee={protocolFee}
+                  performanceFee={performanceFee}
+                />
               )}
               {activeVaultInfoTab === VaultInfoTabs.STRATEGIES && (
-                <VaultItemStrategies vaultItemData={vaultItemData} />
+                <VaultItemStrategies
+                  vaultItemData={vaultItemData}
+                  performanceFee={performanceFee}
+                />
               )}
             </Box>
           </TableCell>
@@ -398,6 +408,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
             <VaultListItemManageModal
               vaultItemData={vaultItemData}
               vaultPosition={vaultPosition}
+              performanceFee={performanceFee}
               onClose={() => setManageVault(false)}
             />
           )
@@ -408,6 +419,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
           newVaultDeposit && (
             <VaultListItemDepositModal
               vaultItemData={vaultItemData}
+              performanceFee={performanceFee}
               onClose={() => setNewVaultDeposit(false)}
             />
           )
