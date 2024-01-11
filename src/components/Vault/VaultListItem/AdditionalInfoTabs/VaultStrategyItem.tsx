@@ -15,7 +15,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { IVaultStrategy, IVaultStrategyReport } from "fathom-sdk";
 import { formatNumber } from "utils/format";
 import { getAccountUrl } from "utils/explorer";
-import useConnector from "context/connector";
+import { DEFAULT_CHAIN_ID } from "utils/Constants";
 import useSharedContext from "context/shared";
 import VaultHistoryChart, {
   HistoryChartDataType,
@@ -136,7 +136,6 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
   const [allocationShare, setAllocationShare] = useState<number>(0);
   const [expanded, setExpanded] = useState<boolean>(true);
   const { isMobile } = useSharedContext();
-  const { chainId } = useConnector();
 
   useEffect(() => {
     if (!strategyData) return;
@@ -193,7 +192,7 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
       </AccordionSummary>
       <AccordionDetails sx={{ padding: "0" }}>
         <Link
-          to={getAccountUrl(strategyData.id, chainId)}
+          to={getAccountUrl(strategyData.id, DEFAULT_CHAIN_ID)}
           target="_blank"
           style={{
             display: "inline-flex",
