@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import { ParentSize } from "@visx/responsive";
 import { useState } from "react";
@@ -94,7 +93,7 @@ export const ApyGraphContainer = ({
     >
       <CircularProgress size={20} sx={{ mb: 2, opacity: 0.5 }} />
       <Typography variant="subheader1" color="text.muted">
-        <Trans>Loading data...</Trans>
+        Loading data...
       </Typography>
     </Box>
   );
@@ -110,14 +109,12 @@ export const ApyGraphContainer = ({
         justifyContent: "center",
       }}
     >
-      <Typography variant="subheader1">
-        <Trans>Something went wrong</Trans>
-      </Typography>
+      <Typography variant="subheader1">Something went wrong</Typography>
       <Typography variant="caption" sx={{ mb: 3 }}>
-        <Trans>Data couldn&apos;t be fetched, please reload graph.</Trans>
+        Data couldn&apos;t be fetched, please reload graph.
       </Typography>
       <Button variant="outlined" color="primary" onClick={refetch}>
-        <Trans>Reload</Trans>
+        Reload
       </Button>
     </Box>
   );

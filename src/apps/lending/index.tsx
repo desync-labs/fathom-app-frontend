@@ -13,7 +13,6 @@ import { useRootStore } from "apps/lending/store/root";
 import { SharedDependenciesProvider } from "apps/lending/ui-config/SharedDependenciesProvider";
 
 import { AppGlobalStyles } from "apps/lending/layouts/AppGlobalStyles";
-import { LanguageProvider } from "apps/lending/libs/LanguageProvider";
 import { MainLayout } from "apps/lending/layouts/MainLayout";
 import { Outlet } from "react-router-dom";
 
@@ -47,48 +46,46 @@ const LendingIndexComponent: FC<LendingViewProps> = ({ openConnectorMenu }) => {
   }, [MIXPANEL_TOKEN, initializeMixpanel]);
 
   return (
-    <LanguageProvider>
-      <QueryClientProvider client={queryClient}>
-        <Web3ContextProvider>
-          <AppGlobalStyles>
-            <AddressBlocked>
-              <PermissionProvider>
-                <ModalContextProvider>
-                  <BackgroundDataProvider>
-                    <AppDataProvider>
-                      <GasStationProvider>
-                        <SharedDependenciesProvider>
-                          <AppsSharedProvider
-                            openConnectorMenu={openConnectorMenu}
-                          >
-                            <MainLayout>
-                              <Outlet />
-                            </MainLayout>
-                          </AppsSharedProvider>
-                          <SupplyModal />
-                          <WithdrawModal />
-                          <BorrowModal />
-                          <RepayModal />
-                          <CollateralChangeModal />
-                          <RateSwitchModal />
-                          <DebtSwitchModal />
-                          <ClaimRewardsModal />
-                          <EmodeModal />
-                          <SwapModal />
-                          <FaucetModal />
-                          <TransactionEventHandler />
-                        </SharedDependenciesProvider>
-                      </GasStationProvider>
-                    </AppDataProvider>
-                  </BackgroundDataProvider>
-                </ModalContextProvider>
-              </PermissionProvider>
-            </AddressBlocked>
-          </AppGlobalStyles>
-        </Web3ContextProvider>
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
-    </LanguageProvider>
+    <QueryClientProvider client={queryClient}>
+      <Web3ContextProvider>
+        <AppGlobalStyles>
+          <AddressBlocked>
+            <PermissionProvider>
+              <ModalContextProvider>
+                <BackgroundDataProvider>
+                  <AppDataProvider>
+                    <GasStationProvider>
+                      <SharedDependenciesProvider>
+                        <AppsSharedProvider
+                          openConnectorMenu={openConnectorMenu}
+                        >
+                          <MainLayout>
+                            <Outlet />
+                          </MainLayout>
+                        </AppsSharedProvider>
+                        <SupplyModal />
+                        <WithdrawModal />
+                        <BorrowModal />
+                        <RepayModal />
+                        <CollateralChangeModal />
+                        <RateSwitchModal />
+                        <DebtSwitchModal />
+                        <ClaimRewardsModal />
+                        <EmodeModal />
+                        <SwapModal />
+                        <FaucetModal />
+                        <TransactionEventHandler />
+                      </SharedDependenciesProvider>
+                    </GasStationProvider>
+                  </AppDataProvider>
+                </BackgroundDataProvider>
+              </ModalContextProvider>
+            </PermissionProvider>
+          </AddressBlocked>
+        </AppGlobalStyles>
+      </Web3ContextProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   );
 };
 

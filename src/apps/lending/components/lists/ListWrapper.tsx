@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import { Box, BoxProps, Paper, Typography } from "@mui/material";
 import { ReactNode, useState } from "react";
 import { useRootStore } from "apps/lending/store/root";
@@ -169,7 +168,7 @@ export const ListWrapper = ({
             }}
           >
             <Typography variant="buttonM" color="text.secondary">
-              {collapsed ? <Trans>Show</Trans> : <Trans>Hide</Trans>}
+              {collapsed ? "Show" : "Hide"}
             </Typography>
             <span />
           </Box>

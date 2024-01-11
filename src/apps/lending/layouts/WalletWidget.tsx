@@ -4,7 +4,6 @@ import {
   ChevronUpIcon,
   ExternalLinkIcon,
 } from "@heroicons/react/solid";
-import { Trans } from "@lingui/macro";
 import {
   Box,
   Button,
@@ -132,7 +131,7 @@ export default function WalletWidget({
           py: 2,
         }}
       >
-        <Trans>Account</Trans>
+        Account
       </Typography>
 
       <Box component={component} disabled>
@@ -199,7 +198,7 @@ export default function WalletWidget({
               variant="caption"
               color={{ xs: "#FFFFFFB2", md: "text.secondary" }}
             >
-              <Trans>Network</Trans>
+              Network
             </Typography>
           </Box>
           <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -249,9 +248,7 @@ export default function WalletWidget({
             <DuplicateIcon />
           </SvgIcon>
         </ListItemIcon>
-        <ListItemText>
-          <Trans>Copy address</Trans>
-        </ListItemText>
+        <ListItemText>Copy address</ListItemText>
       </Box>
 
       {networkConfig?.explorerLinkBuilder && (
@@ -277,9 +274,7 @@ export default function WalletWidget({
                 <ExternalLinkIcon />
               </SvgIcon>
             </ListItemIcon>
-            <ListItemText>
-              <Trans>View on Explorer</Trans>
-            </ListItemText>
+            <ListItemText>View on Explorer</ListItemText>
           </Box>
         </Link>
       )}
@@ -363,7 +358,7 @@ export default function WalletWidget({
               titleProps={{ variant: "buttonM" }}
             />
           ) : (
-            <Trans>Connect wallet</Trans>
+            "Connect wallet"
           )}
         </Button>
       )}

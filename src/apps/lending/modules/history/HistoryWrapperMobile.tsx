@@ -1,5 +1,4 @@
 import { DocumentDownloadIcon, SearchIcon } from "@heroicons/react/outline";
-import { Trans } from "@lingui/macro";
 import {
   Box,
   Button,
@@ -176,7 +175,7 @@ export const HistoryWrapperMobile = () => {
               variant="h2"
               sx={{ mr: 4, height: "36px" }}
             >
-              <Trans>Transactions</Trans>
+              Transactions
             </Typography>
           )}
           {!showSearchBar && (
@@ -199,7 +198,7 @@ export const HistoryWrapperMobile = () => {
                   color="text.secondary"
                   sx={{ mx: 4, my: 3 }}
                 >
-                  <Trans>Export data to</Trans>
+                  Export data to
                 </Typography>
                 <MenuItem
                   onClick={() => {
@@ -215,7 +214,7 @@ export const HistoryWrapperMobile = () => {
                   <ListItemText
                     primaryTypographyProps={{ variant: "subheader1" }}
                   >
-                    <Trans>.JSON</Trans>
+                    .JSON
                   </ListItemText>
                 </MenuItem>
                 <MenuItem
@@ -232,7 +231,7 @@ export const HistoryWrapperMobile = () => {
                   <ListItemText
                     primaryTypographyProps={{ variant: "subheader1" }}
                   >
-                    <Trans>.CSV</Trans>
+                    .CSV
                   </ListItemText>
                 </MenuItem>
               </Menu>
@@ -261,9 +260,7 @@ export const HistoryWrapperMobile = () => {
                 key={searchResetKey}
               />
               <Button onClick={() => handleCancelClick()}>
-                <Typography variant="buttonM">
-                  <Trans>Cancel</Trans>
-                </Typography>
+                <Typography variant="buttonM">Cancel</Typography>
               </Button>
             </Box>
           )}
@@ -322,17 +319,15 @@ export const HistoryWrapperMobile = () => {
           }}
         >
           <Typography variant="h3" color="text.primary">
-            <Trans>Nothing found</Trans>
+            Nothing found
           </Typography>
           <Typography
             sx={{ mt: 1, mb: 4 }}
             variant="description"
             color="text.secondary"
           >
-            <Trans>
-              We couldn&apos;t find any transactions related to your search. Try
-              again with a different asset name, or reset filters.
-            </Trans>
+            We couldn&apos;t find any transactions related to your search. Try
+            again with a different asset name, or reset filters.
           </Typography>
           <Button
             variant="outlined"
@@ -358,7 +353,7 @@ export const HistoryWrapperMobile = () => {
           }}
         >
           <Typography sx={{ my: 24 }} variant="h3" color="text.primary">
-            <Trans>No transactions yet.</Trans>
+            No transactions yet.
           </Typography>
         </Box>
       ) : (

@@ -1,6 +1,5 @@
 import { API_ETH_MOCK_ADDRESS, InterestRate } from "@aave/contract-helpers";
 import { USD_DECIMALS, valueToBigNumber } from "@aave/math-utils";
-import { Trans } from "@lingui/macro";
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { Fragment, useState } from "react";
 import { StableAPYTooltip } from "apps/lending/components/infoTooltips/StableAPYTooltip";
@@ -39,7 +38,7 @@ import { BorrowAssetsListMobileItem } from "apps/lending/modules/dashboard/lists
 
 const head = [
   {
-    title: <Trans>Asset</Trans>,
+    title: "Asset",
     sortKey: "symbol",
   },
   {
@@ -50,7 +49,7 @@ const head = [
           eventParams: { tooltip: "Available to borrow" },
         }}
         capType={CapType.borrowCap}
-        text={<Trans>Available</Trans>}
+        text={"Available"}
         key="availableBorrows"
         variant="subheader2"
       />
@@ -65,7 +64,7 @@ const head = [
           eventName: GENERAL.TOOL_TIP,
           eventParams: { tooltip: "Variable Borrow APY" },
         }}
-        text={<Trans>APY, variable</Trans>}
+        text={"APY, variable"}
         key="variableBorrowAPY"
         variant="subheader2"
       />
@@ -79,7 +78,7 @@ const head = [
           eventName: GENERAL.TOOL_TIP,
           eventParams: { tooltip: "Stable Borrow APY" },
         }}
-        text={<Trans>APY, stable</Trans>}
+        text={"APY, stable"}
         key="stableBorrowAPY"
         variant="subheader2"
       />
@@ -196,7 +195,7 @@ export const BorrowAssetsList = () => {
   if (loading)
     return (
       <ListLoader
-        title={<Trans>Assets to borrow</Trans>}
+        title={"Assets to borrow"}
         head={head.map((col) => col.title)}
         withTopMargin
       />
@@ -211,7 +210,7 @@ export const BorrowAssetsList = () => {
           sx={{ mr: 4 }}
           color={theme.palette.primary.main}
         >
-          <Trans>Assets to borrow</Trans>
+          Assets to borrow
         </Typography>
       }
       localStorageName="borrowAssetsDashboardTableCollapse"
@@ -234,11 +233,9 @@ export const BorrowAssetsList = () => {
 
             {+collateralUsagePercent >= 0.98 && (
               <Warning severity="error">
-                <Trans>
-                  Be careful - You are very close to liquidation. Consider
-                  depositing more collateral or paying down some of your
-                  borrowed positions
-                </Trans>
+                Be careful - You are very close to liquidation. Consider
+                depositing more collateral or paying down some of your borrowed
+                positions
               </Warning>
             )}
 
@@ -246,10 +243,8 @@ export const BorrowAssetsList = () => {
               <>
                 {user?.isInIsolationMode && (
                   <Warning severity="warning">
-                    <Trans>
-                      Borrowing power and assets are limited due to Isolation
-                      mode.{" "}
-                    </Trans>
+                    Borrowing power and assets are limited due to Isolation
+                    mode.{" "}
                     <Link
                       href="https://docs.aave.com/faq/"
                       target="_blank"
@@ -261,18 +256,14 @@ export const BorrowAssetsList = () => {
                 )}
                 {user?.isInEmode && (
                   <Warning severity="warning">
-                    <Trans>
-                      In E-Mode some assets are not borrowable. Exit E-Mode to
-                      get access to all assets
-                    </Trans>
+                    In E-Mode some assets are not borrowable. Exit E-Mode to get
+                    access to all assets
                   </Warning>
                 )}
                 {user?.totalCollateralMarketReferenceCurrency === "0" && (
                   <Warning severity="info">
-                    <Trans>
-                      To borrow you need to supply any asset to be used as
-                      collateral.
-                    </Trans>
+                    To borrow you need to supply any asset to be used as
+                    collateral.
                   </Warning>
                 )}
               </>

@@ -1,5 +1,3 @@
-import { Trans } from "@lingui/macro";
-
 import { getFrozenProposalLink } from "apps/lending/components/infoTooltips/FrozenTooltip";
 import { Link } from "apps/lending/components/primitives/Link";
 
@@ -12,14 +10,15 @@ export const BorrowDisabledWarning = ({
   currentMarket,
 }: BorrowDisabledWarningProps) => {
   return (
-    <Trans>
+    <>
+      {" "}
       Borrowing is disabled due to an Aave community decision.{" "}
       <Link
         href={getFrozenProposalLink(symbol, currentMarket)}
         sx={{ textDecoration: "underline" }}
       >
-        <Trans>More details</Trans>
+        More details
       </Link>
-    </Trans>
+    </>
   );
 };

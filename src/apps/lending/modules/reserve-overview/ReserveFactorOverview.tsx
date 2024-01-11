@@ -1,5 +1,4 @@
 import { ExternalLinkIcon } from "@heroicons/react/outline";
-import { Trans } from "@lingui/macro";
 import { Box, SvgIcon, Typography } from "@mui/material";
 import { ReserveFactorTooltip } from "apps/lending/components/infoTooltips/ReserveFactorTooltip";
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
@@ -45,7 +44,7 @@ export const ReserveFactorOverview = ({
                 assetName: reserveName,
               },
             }}
-            text={<Trans>Reserve factor</Trans>}
+            text={"Reserve factor"}
             key="res_factor"
             variant="description"
             collectorLink={
@@ -68,9 +67,7 @@ export const ReserveFactorOverview = ({
 
       <ReserveOverviewBox
         title={
-          <Typography variant="description">
-            <Trans>Collector Contract</Trans>
-          </Typography>
+          <Typography variant="description">Collector Contract</Typography>
         }
       >
         <Link
@@ -88,7 +85,7 @@ export const ReserveFactorOverview = ({
         >
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Typography variant="description" color="text.secondary">
-              <Trans>View contract</Trans>
+              View contract
             </Typography>
             <SvgIcon sx={{ ml: 1, fontSize: 14 }}>
               <ExternalLinkIcon />

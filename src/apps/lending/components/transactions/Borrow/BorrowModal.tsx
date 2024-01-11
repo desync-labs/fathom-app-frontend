@@ -1,5 +1,4 @@
 import { PERMISSION } from "@aave/contract-helpers";
-import { Trans } from "@lingui/macro";
 import { useState } from "react";
 import {
   ModalContextType,
@@ -34,7 +33,7 @@ const BorrowModal = () => {
     <BasicModal open={type === ModalType.Borrow} setOpen={close}>
       <ModalWrapper
         action="borrow"
-        title={<Trans>Borrow</Trans>}
+        title={"Borrow"}
         underlyingAsset={args.underlyingAsset}
         keepWrappedSymbol={!borrowUnWrapped}
         requiredPermission={PERMISSION.BORROWER}

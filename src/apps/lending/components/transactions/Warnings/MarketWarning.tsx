@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import { Link, Typography } from "@mui/material";
 
 import { Warning } from "apps/lending/components/primitives/Warning";
@@ -6,18 +5,16 @@ import { Warning } from "apps/lending/components/primitives/Warning";
 const WarningMessage = ({ market }: { market: string }) => {
   if (market === "Harmony") {
     return (
-      <Trans>
+      <>
         Due to the Horizon bridge exploit, certain assets on the Harmony network
         are not at parity with Ethereum, which affects the Aave V3 Harmony
         market.
-      </Trans>
+      </>
     );
   } else if (market === "Fantom") {
-    return <Trans>Per the community, the Fantom market has been frozen.</Trans>;
+    return <>Per the community, the Fantom market has been frozen.</>;
   } else if (market === "Ethereum AMM") {
-    return (
-      <Trans>Per the community, the V2 AMM market has been deprecated.</Trans>
-    );
+    return <>Per the community, the V2 AMM market has been deprecated.</>;
   } else {
     return null;
   }
@@ -52,13 +49,11 @@ export const PolygonWarning = () => {
   return (
     <Warning severity="error">
       <Typography variant="caption">
-        <Trans>
-          Update: Disruptions reported for WETH, WBTC, WMATIC, and USDT. AIP 230
-          will resolve the disruptions and the market will be operating as
-          normal on ~26th May 13h00 UTC.{" "}
-        </Trans>
+        Update: Disruptions reported for WETH, WBTC, WMATIC, and USDT. AIP 230
+        will resolve the disruptions and the market will be operating as normal
+        on ~26th May 13h00 UTC.{" "}
         <Link href={getLink("proto_polygon", true)} target="_blank">
-          <Trans>Read more here.</Trans>
+          Read more here.
         </Link>
       </Typography>
     </Warning>
@@ -71,11 +66,7 @@ export const MarketWarning = ({ marketName, forum }: MarketWarningProps) => {
       <Typography variant="caption">
         <WarningMessage market={marketName} />{" "}
         <Link href={getLink(marketName, forum)} target="_blank">
-          {forum ? (
-            <Trans>Join the community discussion</Trans>
-          ) : (
-            <Trans>Learn more</Trans>
-          )}
+          {forum ? <>Join the community discussion</> : <>Learn more</>}
         </Link>
       </Typography>
     </Warning>

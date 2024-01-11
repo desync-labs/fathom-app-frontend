@@ -1,5 +1,4 @@
 import { SearchIcon } from "@heroicons/react/solid";
-import { Trans } from "@lingui/macro";
 import {
   Box,
   Button,
@@ -97,9 +96,7 @@ export const TitleWithSearchBar = <T extends React.ElementType>({
             />
             {sm && (
               <Button sx={{ ml: 2 }} onClick={() => handleCancelClick()}>
-                <Typography variant="buttonM">
-                  <Trans>Cancel</Trans>
-                </Typography>
+                <Typography variant="buttonM">Cancel</Typography>
               </Button>
             )}
           </Box>

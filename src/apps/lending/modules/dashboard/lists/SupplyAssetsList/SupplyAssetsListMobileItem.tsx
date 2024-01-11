@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import { Box, Button } from "@mui/material";
 import { useAssetCaps } from "apps/lending/hooks/useAssetCaps";
 import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
@@ -51,7 +50,7 @@ export const SupplyAssetsListMobileItem = ({
       showDebtCeilingTooltips
     >
       <ListValueRow
-        title={<Trans>Supply balance</Trans>}
+        title={"Supply balance"}
         value={Number(walletBalance)}
         subValue={walletBalanceUSD}
         disabled={Number(walletBalance) === 0 || isMaxCapReached}
@@ -66,7 +65,7 @@ export const SupplyAssetsListMobileItem = ({
       />
 
       <Row
-        caption={<Trans>Supply APY</Trans>}
+        caption={"Supply APY"}
         align="flex-start"
         captionVariant="description"
         mb={2}
@@ -80,7 +79,7 @@ export const SupplyAssetsListMobileItem = ({
       </Row>
 
       <Row
-        caption={<Trans>Can be collateral</Trans>}
+        caption={"Can be collateral"}
         align="flex-start"
         captionVariant="description"
         mb={2}
@@ -108,7 +107,7 @@ export const SupplyAssetsListMobileItem = ({
           sx={{ mr: 1.5 }}
           fullWidth
         >
-          <Trans>Supply</Trans>
+          Supply
         </Button>
         <Button
           variant="outlined"
@@ -116,7 +115,7 @@ export const SupplyAssetsListMobileItem = ({
           href={ROUTES.reserveOverview(detailsAddress, currentMarket)}
           fullWidth
         >
-          <Trans>Details</Trans>
+          Details
         </Button>
       </Box>
     </ListMobileItemWrapper>

@@ -1,5 +1,4 @@
 import { ChainId } from "@aave/contract-helpers";
-import { Trans } from "@lingui/macro";
 import { Theme } from "@mui/material";
 import { SxProps } from "@mui/system";
 import { Warning } from "apps/lending/components/primitives/Warning";
@@ -31,7 +30,8 @@ export function WalletEmptyInfo({
   return (
     <Warning severity="info" icon={icon} sx={sx}>
       {bridge ? (
-        <Trans>
+        <>
+          {" "}
           Your {name} wallet is empty. Purchase or transfer assets or use{" "}
           {
             <Link
@@ -47,9 +47,9 @@ export function WalletEmptyInfo({
             </Link>
           }{" "}
           to transfer your {network} assets.
-        </Trans>
+        </>
       ) : (
-        <Trans>Your {name} wallet is empty. Purchase or transfer assets.</Trans>
+        <>Your {name} wallet is empty. Purchase or transfer assets.</>
       )}
     </Warning>
   );

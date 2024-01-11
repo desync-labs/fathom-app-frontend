@@ -1,5 +1,4 @@
 import { CogIcon, LightningBoltIcon } from "@heroicons/react/solid";
-import { Trans } from "@lingui/macro";
 import { Box, Button, SvgIcon, Typography } from "@mui/material";
 import Menu from "@mui/material/Menu";
 import React, { useState } from "react";
@@ -45,7 +44,7 @@ export const DashboardEModeButton = ({
   const isEModeDisabled = userEmodeCategoryId === 0;
 
   const EModeLabelMessage = () => (
-    <Trans>{getEmodeMessage(_eModes[userEmodeCategoryId].label)}</Trans>
+    <>{getEmodeMessage(_eModes[userEmodeCategoryId].label)}</>
   );
 
   const eModes = Object.keys(_eModes).length;
@@ -58,7 +57,7 @@ export const DashboardEModeButton = ({
       }}
     >
       <Typography mr={1} variant="description" color="text.secondary">
-        <Trans>E-Mode</Trans>
+        E-Mode
       </Typography>
 
       <Button
@@ -147,13 +146,13 @@ export const DashboardEModeButton = ({
       >
         <Box sx={{ px: 4, pt: 2, pb: 3 }}>
           <Typography variant="subheader1" mb={isEModeDisabled ? 1 : 3}>
-            <Trans>Efficiency mode (E-Mode)</Trans>
+            Efficiency mode (E-Mode)
           </Typography>
 
           {!isEModeDisabled && (
             <Box>
               <Typography mb={1} variant="caption" color="text.secondary">
-                <Trans>Asset category</Trans>
+                Asset category
               </Typography>
 
               <Box
@@ -194,7 +193,7 @@ export const DashboardEModeButton = ({
                       }}
                     />
                     <Typography variant="subheader2" color="success.main">
-                      <Trans>Enabled</Trans>
+                      Enabled
                     </Typography>
                   </Box>
                 </Row>
@@ -203,18 +202,16 @@ export const DashboardEModeButton = ({
           )}
 
           <Typography variant="caption" color="text.secondary" mb={4}>
-            <Trans>
-              E-Mode increases your LTV for a selected category of assets up to
-              97%.{" "}
-              <Link
-                href="https://docs.aave.com/faq/aave-v3-features#high-efficiency-mode-e-mode"
-                sx={{ textDecoration: "underline" }}
-                variant="caption"
-                color="text.secondary"
-              >
-                Learn more
-              </Link>
-            </Trans>
+            E-Mode increases your LTV for a selected category of assets up to
+            97%.{" "}
+            <Link
+              href="https://docs.aave.com/faq/aave-v3-features#high-efficiency-mode-e-mode"
+              sx={{ textDecoration: "underline" }}
+              variant="caption"
+              color="text.secondary"
+            >
+              Learn more
+            </Link>
           </Typography>
 
           {isEModeDisabled ? (
@@ -232,7 +229,7 @@ export const DashboardEModeButton = ({
               }}
               data-cy={"emode-enable"}
             >
-              <Trans>Enable E-Mode</Trans>
+              Enable E-Mode
             </Button>
           ) : (
             <>
@@ -252,7 +249,7 @@ export const DashboardEModeButton = ({
                   }}
                   data-cy={"emode-switch"}
                 >
-                  <Trans>Switch E-Mode category</Trans>
+                  Switch E-Mode category
                 </Button>
               )}
               <Button
@@ -269,7 +266,7 @@ export const DashboardEModeButton = ({
                 }}
                 data-cy={"emode-disable"}
               >
-                <Trans>Disable E-Mode</Trans>
+                Disable E-Mode
               </Button>
             </>
           )}

@@ -1,5 +1,4 @@
 import { SwitchVerticalIcon } from "@heroicons/react/outline";
-import { Trans } from "@lingui/macro";
 import { Box, SvgIcon, Typography } from "@mui/material";
 import BigNumber from "bignumber.js";
 import React, { useRef, useState } from "react";
@@ -155,23 +154,21 @@ export const SwapModalContent = ({
     switch (blockingError) {
       case ErrorType.SUPPLY_CAP_REACHED:
         return (
-          <Trans>
-            Supply cap on target reserve reached. Try lowering the amount.
-          </Trans>
+          <>Supply cap on target reserve reached. Try lowering the amount.</>
         );
       case ErrorType.HF_BELOW_ONE:
         return (
-          <Trans>
+          <>
             The effects on the health factor would cause liquidation. Try
             lowering the amount.
-          </Trans>
+          </>
         );
       case ErrorType.ZERO_LTV_WITHDRAW_BLOCKED:
         return (
-          <Trans>
+          <>
             Assets with zero LTV ({assetsBlockingWithdraw}) must be withdrawn or
             disabled as collateral to perform this action
-          </Trans>
+          </>
         );
       default:
         return null;
@@ -181,7 +178,7 @@ export const SwapModalContent = ({
   if (supplyTxState.success)
     return (
       <TxSuccessView
-        action={<Trans>Switched</Trans>}
+        action={"Switched"}
         amount={amountRef.current}
         symbol={poolReserve.symbol}
       />
@@ -267,8 +264,8 @@ export const SwapModalContent = ({
           },
         ]}
         maxValue={maxAmountToSwap}
-        inputTitle={<Trans>Supplied asset amount</Trans>}
-        balanceText={<Trans>Supply balance</Trans>}
+        inputTitle={"Supplied asset amount"}
+        balanceText={"Supply balance"}
         isMaxSelected={isMaxSelected}
       />
       <Box
@@ -295,8 +292,8 @@ export const SwapModalContent = ({
         usdValue={outputAmountUSD}
         symbol={targetReserve.symbol}
         assets={swapTargets}
-        inputTitle={<Trans>Switch to</Trans>}
-        balanceText={<Trans>Supply balance</Trans>}
+        inputTitle={"Switch to"}
+        balanceText={"Supply balance"}
         disableInput
         loading={loadingSkeleton}
       />

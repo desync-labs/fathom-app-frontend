@@ -1,5 +1,4 @@
 import { valueToBigNumber } from "@aave/math-utils";
-import { Trans } from "@lingui/macro";
 import { AlertColor, Box, Typography, useTheme } from "@mui/material";
 import BigNumber from "bignumber.js";
 
@@ -103,9 +102,7 @@ export const LTVContent = ({
               lineHeight="12px"
               color="error.main"
             >
-              <Trans>
-                Liquidation <br /> threshold
-              </Trans>
+              Liquidation <br /> threshold
             </Typography>
           </Box>
         </Box>
@@ -173,7 +170,7 @@ export const LTVContent = ({
             />
             <Box sx={{ display: "inline-flex", alignItems: "center" }}>
               <Typography variant="helperText" color="text.muted" mr={0.5}>
-                <Trans>MAX</Trans>
+                MAX
               </Typography>
               <FormattedNumber
                 value={currentLoanToValue}

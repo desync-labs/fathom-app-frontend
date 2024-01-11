@@ -1,5 +1,4 @@
 import { InformationCircleIcon } from "@heroicons/react/outline";
-import { Trans } from "@lingui/macro";
 import { Box, Button, IconButton, SvgIcon, Typography } from "@mui/material";
 import { TypographyProps } from "@mui/material/Typography";
 import { FC, ReactNode, useState } from "react";
@@ -70,7 +69,7 @@ export const TextWithModal: FC<TextWithModalProps> = ({
             }}
           >
             <Button variant="gradient" onClick={() => setOpen(false)}>
-              <Trans>Ok, I got it</Trans>
+              Ok, I got it
             </Button>
           </Box>
         )}

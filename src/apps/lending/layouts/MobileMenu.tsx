@@ -1,11 +1,9 @@
 import { MenuIcon } from "@heroicons/react/outline";
-import { Trans } from "@lingui/macro";
 import { Box, Button, Divider, List, SvgIcon, Typography } from "@mui/material";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode } from "react";
 import { PROD_ENV } from "apps/lending/utils/marketsAndNetworksConfig";
 
 import { DrawerWrapper } from "apps/lending/layouts/components/DrawerWrapper";
-import { LanguagesList } from "apps/lending/layouts/components/LanguageSwitcher";
 import { MobileCloseButton } from "apps/lending/layouts/components/MobileCloseButton";
 import { NavItems } from "apps/lending/layouts/components/NavItems";
 import { TestNetModeSwitcher } from "apps/lending/layouts/components/TestNetModeSwitcher";
@@ -49,10 +47,6 @@ export const MobileMenu = ({
   setOpen,
   headerHeight,
 }: MobileMenuProps) => {
-  const [isLanguagesListOpen, setIsLanguagesListOpen] = useState(false);
-
-  useEffect(() => setIsLanguagesListOpen(false), [open]);
-
   return (
     <>
       {open ? (
@@ -71,24 +65,18 @@ export const MobileMenu = ({
       )}
 
       <DrawerWrapper open={open} setOpen={setOpen} headerHeight={headerHeight}>
-        {!isLanguagesListOpen ? (
-          <>
-            <MenuItemsWrapper title={<Trans>Menu</Trans>}>
-              <NavItems setOpen={setOpen} />
-            </MenuItemsWrapper>
-            <MenuItemsWrapper title={<Trans>Global settings</Trans>}>
-              <List>
-                {/* <DarkModeSwitcher /> */}
-                {PROD_ENV && <TestNetModeSwitcher />}
-                {/* <LanguageListItem onClick={() => setIsLanguagesListOpen(true)} /> */}
-              </List>
-            </MenuItemsWrapper>
-          </>
-        ) : (
-          <List sx={{ px: 2 }}>
-            <LanguagesList onClick={() => setIsLanguagesListOpen(false)} />
-          </List>
-        )}
+        <>
+          <MenuItemsWrapper title={"Menu"}>
+            <NavItems setOpen={setOpen} />
+          </MenuItemsWrapper>
+          <MenuItemsWrapper title={"Global settings"}>
+            <List>
+              {/* <DarkModeSwitcher /> */}
+              {PROD_ENV && <TestNetModeSwitcher />}
+              {/* <LanguageListItem onClick={() => setIsLanguagesListOpen(true)} /> */}
+            </List>
+          </MenuItemsWrapper>
+        </>
       </DrawerWrapper>
     </>
   );

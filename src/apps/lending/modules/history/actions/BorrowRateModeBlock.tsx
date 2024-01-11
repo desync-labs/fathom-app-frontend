@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import { Typography } from "@mui/material";
 import { formatUnits } from "fathom-ethers/lib/utils";
 
@@ -15,7 +14,7 @@ export const BorrowRateModeBlock = ({
     return (
       <>
         <Typography variant="description" color="text.primary" pr={0.5}>
-          <Trans>Variable</Trans>
+          Variable
         </Typography>
         <Typography variant="secondary14" color="text.primary" pr={0.5}>
           {Number(formatUnits(swapBorrowRateTx.variableBorrowRate, 25)).toFixed(
@@ -24,7 +23,7 @@ export const BorrowRateModeBlock = ({
           %
         </Typography>
         <Typography variant="description" color="text.primary">
-          <Trans>APY</Trans>
+          APY
         </Typography>
       </>
     );
@@ -32,7 +31,7 @@ export const BorrowRateModeBlock = ({
     return (
       <>
         <Typography variant="description" color="text.primary" pr={0.5}>
-          <Trans>Stable</Trans>
+          Stable
         </Typography>
         <Typography variant="secondary14" color="text.primary" pr={0.5}>
           {Number(formatUnits(swapBorrowRateTx.stableBorrowRate, 25)).toFixed(
@@ -41,7 +40,7 @@ export const BorrowRateModeBlock = ({
           %
         </Typography>
         <Typography variant="description" color="text.primary">
-          <Trans>APY</Trans>
+          APY
         </Typography>
       </>
     );

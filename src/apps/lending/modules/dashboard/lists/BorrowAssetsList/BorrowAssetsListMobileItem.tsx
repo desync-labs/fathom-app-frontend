@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import { Box, Button } from "@mui/material";
 import { StableAPYTooltip } from "apps/lending/components/infoTooltips/StableAPYTooltip";
 import { VariableAPYTooltip } from "apps/lending/components/infoTooltips/VariableAPYTooltip";
@@ -44,7 +43,7 @@ export const BorrowAssetsListMobileItem: FC<DashboardReserve> = ({
       currentMarket={currentMarket}
     >
       <ListValueRow
-        title={<Trans>Available to borrow</Trans>}
+        title={"Available to borrow"}
         value={Number(availableBorrows)}
         subValue={Number(availableBorrowsInUSD)}
         disabled={Number(availableBorrows) === 0}
@@ -61,7 +60,7 @@ export const BorrowAssetsListMobileItem: FC<DashboardReserve> = ({
       <Row
         caption={
           <VariableAPYTooltip
-            text={<Trans>APY, variable</Trans>}
+            text={"APY, variable"}
             key="APY_dash_mob_variable_ type"
             variant="description"
           />
@@ -81,7 +80,7 @@ export const BorrowAssetsListMobileItem: FC<DashboardReserve> = ({
       <Row
         caption={
           <StableAPYTooltip
-            text={<Trans>APY, stable</Trans>}
+            text={"APY, stable"}
             key="APY_dash_mob_stable_ type"
             variant="description"
           />
@@ -115,7 +114,7 @@ export const BorrowAssetsListMobileItem: FC<DashboardReserve> = ({
           sx={{ mr: 1.5 }}
           fullWidth
         >
-          <Trans>Borrow</Trans>
+          Borrow
         </Button>
         <Button
           variant="outlined"
@@ -123,7 +122,7 @@ export const BorrowAssetsListMobileItem: FC<DashboardReserve> = ({
           href={ROUTES.reserveOverview(underlyingAsset, currentMarket)}
           fullWidth
         >
-          <Trans>Details</Trans>
+          Details
         </Button>
       </Box>
     </ListMobileItemWrapper>

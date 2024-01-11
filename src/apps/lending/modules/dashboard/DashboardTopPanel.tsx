@@ -3,7 +3,6 @@ import {
   UserIncentiveData,
   valueToBigNumber,
 } from "@aave/math-utils";
-import { Trans } from "@lingui/macro";
 import { Box, Button, useMediaQuery, useTheme } from "@mui/material";
 import { useState } from "react";
 import { NetAPYTooltip } from "apps/lending/components/infoTooltips/NetAPYTooltip";
@@ -81,18 +80,14 @@ export const DashboardTopPanel = () => {
         titleComponent={
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <PageTitle
-              pageTitle={<Trans>Dashboard</Trans>}
+              pageTitle={"Dashboard"}
               withMarketSwitcher={true}
               bridge={currentNetworkConfig.bridge}
             />
           </Box>
         }
       >
-        <TopInfoPanelItem
-          title={<Trans>Net worth</Trans>}
-          loading={loading}
-          hideIcon
-        >
+        <TopInfoPanelItem title={"Net worth"} loading={loading} hideIcon>
           {currentAccount ? (
             <FormattedNumber
               value={Number(user?.netWorthUSD || 0)}
@@ -110,7 +105,7 @@ export const DashboardTopPanel = () => {
         <TopInfoPanelItem
           title={
             <div style={{ display: "flex" }}>
-              <Trans>Net APY</Trans>
+              Net APY
               <NetAPYTooltip
                 event={{
                   eventName: GENERAL.TOOL_TIP,
@@ -139,7 +134,7 @@ export const DashboardTopPanel = () => {
           <TopInfoPanelItem
             title={
               <Box sx={{ display: "inline-flex", alignItems: "center" }}>
-                <Trans>Health factor</Trans>
+                Health factor
               </Box>
             }
             loading={loading}
@@ -167,7 +162,7 @@ export const DashboardTopPanel = () => {
 
         {currentAccount && claimableRewardsUsd > 0 && (
           <TopInfoPanelItem
-            title={<Trans>Available rewards</Trans>}
+            title={"Available rewards"}
             loading={loading}
             hideIcon
           >
@@ -201,7 +196,7 @@ export const DashboardTopPanel = () => {
                 sx={{ minWidth: "unset", ml: { xs: 0, xsm: 2 } }}
                 data-cy={"Dashboard_Claim_Button"}
               >
-                <Trans>Claim</Trans>
+                Claim
               </Button>
             </Box>
           </TopInfoPanelItem>

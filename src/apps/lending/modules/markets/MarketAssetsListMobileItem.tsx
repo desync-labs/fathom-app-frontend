@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import { Box, Button, Divider } from "@mui/material";
 import { StableAPYTooltip } from "apps/lending/components/infoTooltips/StableAPYTooltip";
 import { VariableAPYTooltip } from "apps/lending/components/infoTooltips/VariableAPYTooltip";
@@ -32,11 +31,7 @@ export const MarketAssetsListMobileItem = ({
       currentMarket={currentMarket}
       isIsolated={reserve.isIsolated}
     >
-      <Row
-        caption={<Trans>Total supplied</Trans>}
-        captionVariant="description"
-        mb={3}
-      >
+      <Row caption={"Total supplied"} captionVariant="description" mb={3}>
         <Box
           sx={{
             display: "flex",
@@ -58,7 +53,7 @@ export const MarketAssetsListMobileItem = ({
         </Box>
       </Row>
       <Row
-        caption={<Trans>Supply APY</Trans>}
+        caption={"Supply APY"}
         captionVariant="description"
         mb={3}
         align="flex-start"
@@ -74,11 +69,7 @@ export const MarketAssetsListMobileItem = ({
 
       <Divider sx={{ mb: 3 }} />
 
-      <Row
-        caption={<Trans>Total borrowed</Trans>}
-        captionVariant="description"
-        mb={3}
-      >
+      <Row caption={"Total borrowed"} captionVariant="description" mb={3}>
         <Box
           sx={{
             display: "flex",
@@ -108,7 +99,7 @@ export const MarketAssetsListMobileItem = ({
       <Row
         caption={
           <VariableAPYTooltip
-            text={<Trans>Borrow APY, variable</Trans>}
+            text={"Borrow APY, variable"}
             key="APY_list_mob_variable_type"
             variant="description"
           />
@@ -137,7 +128,7 @@ export const MarketAssetsListMobileItem = ({
       <Row
         caption={
           <StableAPYTooltip
-            text={<Trans>Borrow APY, stable</Trans>}
+            text={"Borrow APY, stable"}
             key="APY_list_mob_stable_type"
             variant="description"
           />
@@ -174,7 +165,7 @@ export const MarketAssetsListMobileItem = ({
           });
         }}
       >
-        <Trans>View details</Trans>
+        View details
       </Button>
     </ListMobileItemWrapper>
   );

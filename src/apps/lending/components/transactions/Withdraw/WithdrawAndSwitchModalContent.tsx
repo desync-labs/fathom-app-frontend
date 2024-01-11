@@ -1,6 +1,5 @@
 import { valueToBigNumber } from "@aave/math-utils";
 import { ArrowDownIcon } from "@heroicons/react/solid";
-import { Trans } from "@lingui/macro";
 import { Box, Checkbox, SvgIcon, Typography } from "@mui/material";
 import { useRef, useState } from "react";
 import { PriceImpactTooltip } from "apps/lending/components/infoTooltips/PriceImpactTooltip";
@@ -166,7 +165,7 @@ export const WithdrawAndSwitchModalContent = ({
   return (
     <>
       <AssetInput
-        inputTitle={<Trans>Withdraw</Trans>}
+        inputTitle={"Withdraw"}
         value={withdrawAmount}
         onChange={handleChange}
         symbol={symbol}
@@ -184,11 +183,9 @@ export const WithdrawAndSwitchModalContent = ({
         disabled={withdrawTxState.loading}
         maxValue={maxAmountToWithdraw.toString(10)}
         balanceText={
-          unborrowedLiquidity.lt(underlyingBalance) ? (
-            <Trans>Available</Trans>
-          ) : (
-            <Trans>Supply balance</Trans>
-          )
+          unborrowedLiquidity.lt(underlyingBalance)
+            ? "Available"
+            : "Supply balance"
         }
       />
 
@@ -217,8 +214,8 @@ export const WithdrawAndSwitchModalContent = ({
         usdValue={outputAmountUSD}
         symbol={targetReserve.symbol}
         assets={swapTargets}
-        inputTitle={<Trans>Receive (est.)</Trans>}
-        balanceText={<Trans>Supply balance</Trans>}
+        inputTitle={"Receive (est.)"}
+        balanceText={"Supply balance"}
         disableInput
         loading={loadingSkeleton}
       />
@@ -245,7 +242,7 @@ export const WithdrawAndSwitchModalContent = ({
         }
       >
         <DetailsNumberLine
-          description={<Trans>Remaining supply</Trans>}
+          description={"Remaining supply"}
           value={underlyingBalance.minus(withdrawAmount || "0").toString(10)}
           symbol={
             poolReserve.isWrappedBaseAsset
@@ -265,10 +262,8 @@ export const WithdrawAndSwitchModalContent = ({
       {displayRiskCheckbox && (
         <>
           <Warning severity="error" sx={{ my: 6 }}>
-            <Trans>
-              Withdrawing this amount will reduce your health factor and
-              increase risk of liquidation.
-            </Trans>
+            Withdrawing this amount will reduce your health factor and increase
+            risk of liquidation.
           </Warning>
           <Box
             sx={{
@@ -293,7 +288,7 @@ export const WithdrawAndSwitchModalContent = ({
               data-cy={`risk-checkbox`}
             />
             <Typography variant="description">
-              <Trans>I acknowledge the risks involved.</Trans>
+              I acknowledge the risks involved.
             </Typography>
           </Box>
         </>

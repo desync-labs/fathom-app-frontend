@@ -1,5 +1,3 @@
-import { Trans } from "@lingui/macro";
-
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
 import { Link } from "apps/lending/components/primitives/Link";
 import {
@@ -13,7 +11,7 @@ export const EModeTooltip = ({
 }: TextWithTooltipProps & { eModeLtv: number }) => {
   return (
     <TextWithTooltip {...rest}>
-      <Trans>
+      <>
         E-Mode increases your LTV for a selected category of assets up to
         <FormattedNumber
           value={Number(eModeLtv) / 10000}
@@ -30,7 +28,7 @@ export const EModeTooltip = ({
         >
           Learn more
         </Link>
-      </Trans>
+      </>
     </TextWithTooltip>
   );
 };

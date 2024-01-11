@@ -1,4 +1,3 @@
-import { useLingui } from "@lingui/react";
 import {
   Button,
   List,
@@ -19,7 +18,6 @@ interface NavItemsProps {
 }
 
 export const NavItems = ({ setOpen }: NavItemsProps) => {
-  const { i18n } = useLingui();
   const { currentMarketData } = useProtocolDataContext();
 
   const { breakpoints } = useTheme();
@@ -63,7 +61,7 @@ export const NavItems = ({ setOpen }: NavItemsProps) => {
                 sx={{ width: "100%", p: 4 }}
                 onClick={() => handleClick(item.title, true)}
               >
-                {i18n._(item.title)}
+                {item.title}
               </Typography>
             ) : (
               <Button
@@ -92,7 +90,7 @@ export const NavItems = ({ setOpen }: NavItemsProps) => {
                   },
                 }}
               >
-                {i18n._(item.title)}
+                {item.title}
               </Button>
             )}
           </ListItem>

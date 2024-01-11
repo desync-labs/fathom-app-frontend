@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import { Box, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import StyledToggleButton from "apps/lending/components/StyledToggleButton";
@@ -48,14 +47,10 @@ export default function Home() {
               sx={{ width: { xs: "100%", xsm: "359px" }, height: "44px" }}
             >
               <StyledToggleButton value="supply" disabled={mode === "supply"}>
-                <Typography variant="subheader1">
-                  <Trans>Supply</Trans>
-                </Typography>
+                <Typography variant="subheader1">Supply</Typography>
               </StyledToggleButton>
               <StyledToggleButton value="borrow" disabled={mode === "borrow"}>
-                <Typography variant="subheader1">
-                  <Trans>Borrow</Trans>
-                </Typography>
+                <Typography variant="subheader1">Borrow</Typography>
               </StyledToggleButton>
             </StyledToggleButtonGroup>
           </Box>

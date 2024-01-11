@@ -1,5 +1,4 @@
 import { ExternalLinkIcon } from "@heroicons/react/solid";
-import { Trans } from "@lingui/macro";
 import { Box, Button, Divider, SvgIcon } from "@mui/material";
 import { getFrozenProposalLink } from "apps/lending/components/infoTooltips/FrozenTooltip";
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
@@ -50,15 +49,13 @@ const ReserveConfiguration: FC<ReserveConfigurationProps> = ({ reserve }) => {
       <Box>
         {reserve.isFrozen && reserve.symbol != "BUSD" ? (
           <Warning sx={{ mt: "16px", mb: "40px" }} severity="error">
-            <Trans>
-              This asset is frozen due to an Aave community decision.{" "}
-              <Link
-                href={getFrozenProposalLink(reserve.symbol, currentMarket)}
-                sx={{ textDecoration: "underline" }}
-              >
-                <Trans>More details</Trans>
-              </Link>
-            </Trans>
+            This asset is frozen due to an Aave community decision.{" "}
+            <Link
+              href={getFrozenProposalLink(reserve.symbol, currentMarket)}
+              sx={{ textDecoration: "underline" }}
+            >
+              More details
+            </Link>
           </Warning>
         ) : reserve.symbol === "BUSD" ? (
           <Warning sx={{ mt: "16px", mb: "40px" }} severity="error">
@@ -74,18 +71,16 @@ const ReserveConfiguration: FC<ReserveConfigurationProps> = ({ reserve }) => {
 
         {reserve.isPaused ? (
           <Warning sx={{ mt: "16px", mb: "40px" }} severity="error">
-            <Trans>
-              MAI has been paused due to a community decision. Supply, borrows
-              and repays are impacted.{" "}
-              <Link
-                href={
-                  "https://governance.aave.com/t/arfc-add-mai-to-arbitrum-aave-v3-market/12759/8"
-                }
-                sx={{ textDecoration: "underline" }}
-              >
-                <Trans>More details</Trans>
-              </Link>
-            </Trans>
+            MAI has been paused due to a community decision. Supply, borrows and
+            repays are impacted.{" "}
+            <Link
+              href={
+                "https://governance.aave.com/t/arfc-add-mai-to-arbitrum-aave-v3-market/12759/8"
+              }
+              sx={{ textDecoration: "underline" }}
+            >
+              More details
+            </Link>
           </Warning>
         ) : null}
       </Box>
@@ -155,10 +150,7 @@ const ReserveConfiguration: FC<ReserveConfigurationProps> = ({ reserve }) => {
                   justifyContent: "space-between",
                 }}
               >
-                <PanelItem
-                  title={<Trans>Utilization Rate</Trans>}
-                  className="borderless"
-                >
+                <PanelItem title={"Utilization Rate"} className="borderless">
                   <FormattedNumber
                     value={reserve.borrowUsageRatio}
                     percent
@@ -187,7 +179,7 @@ const ReserveConfiguration: FC<ReserveConfigurationProps> = ({ reserve }) => {
                   variant="outlined"
                   sx={{ verticalAlign: "top" }}
                 >
-                  <Trans>Interest rate strategy</Trans>
+                  Interest rate strategy
                 </Button>
               </Box>
               <InterestRateModelGraphContainer reserve={reserve} />

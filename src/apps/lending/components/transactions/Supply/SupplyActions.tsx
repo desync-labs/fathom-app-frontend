@@ -6,7 +6,6 @@ import {
 } from "@aave/contract-helpers";
 import { SignatureLike } from "@into-the-fathom/bytes";
 import { TransactionResponse } from "@into-the-fathom/providers";
-import { Trans } from "@lingui/macro";
 import { BoxProps } from "@mui/material";
 import { parseUnits } from "fathom-ethers/lib/utils";
 import { queryClient } from "apps/lending";
@@ -305,8 +304,8 @@ export const SupplyActions = React.memo(
         amount={amountToSupply}
         symbol={symbol}
         preparingTransactions={loadingTxns}
-        actionText={<Trans>Supply {symbol}</Trans>}
-        actionInProgressText={<Trans>Supplying {symbol}</Trans>}
+        actionText={<>Supply {symbol}</>}
+        actionInProgressText={<>Supplying {symbol}</>}
         handleApproval={() => approval()}
         handleAction={action}
         requiresApproval={requiresApproval}

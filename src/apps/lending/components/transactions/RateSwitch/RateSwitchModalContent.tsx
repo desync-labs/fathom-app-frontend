@@ -1,6 +1,5 @@
 import { InterestRate } from "@aave/contract-helpers";
 import { valueToBigNumber } from "@aave/math-utils";
-import { Trans } from "@lingui/macro";
 import { Warning } from "apps/lending/components/primitives/Warning";
 import { useModalContext } from "apps/lending/hooks/useModal";
 
@@ -75,17 +74,15 @@ export const RateSwitchModalContent = ({
   const handleBlocked = () => {
     switch (blockingError) {
       case ErrorType.NO_BORROWS_YET_USING_THIS_CURRENCY:
-        return <Trans>You have not borrow yet using this currency</Trans>;
+        return <>You have not borrow yet using this currency</>;
       case ErrorType.STABLE_INTEREST_TYPE_IS_DISABLED:
-        return (
-          <Trans>Stable Interest Type is disabled for this currency</Trans>
-        );
+        return <>Stable Interest Type is disabled for this currency</>;
       case ErrorType.YOU_CANT_BORROW_STABLE_NOW:
         return (
-          <Trans>
+          <>
             You can not change Interest Type to stable as your borrowings are
             higher than your collateral
-          </Trans>
+          </>
         );
       default:
         return null;
@@ -104,14 +101,10 @@ export const RateSwitchModalContent = ({
       )}
       <TxModalDetails gasLimit={gasLimit}>
         <DetailsNumberLine
-          description={<Trans>New APY</Trans>}
+          description={"New APY"}
           value={apyAfterSwitch}
           numberPrefix={
-            rateModeAfterSwitch === InterestRate.Stable ? (
-              <Trans>Stable</Trans>
-            ) : (
-              <Trans>Variable</Trans>
-            )
+            rateModeAfterSwitch === InterestRate.Stable ? "Stable" : "Variable"
           }
           percent
         />

@@ -1,5 +1,4 @@
 import { ChainId } from "@aave/contract-helpers";
-import { Trans } from "@lingui/macro";
 import { Box, Button, useMediaQuery, useTheme } from "@mui/material";
 import { ROUTES } from "apps/lending/components/primitives/Link";
 import { useWeb3Context } from "apps/lending/libs/hooks/useWeb3Context";
@@ -66,7 +65,7 @@ export const DashboardContentWrapper = ({
                 variant="surface"
                 size="small"
               >
-                <Trans>View Transactions</Trans>
+                View Transactions
               </Button>
             </Box>
           )}
@@ -102,7 +101,7 @@ export const DashboardContentWrapper = ({
                 variant="surface"
                 size="small"
               >
-                <Trans>View Transactions</Trans>
+                View Transactions
               </Button>
             </Box>
           )}

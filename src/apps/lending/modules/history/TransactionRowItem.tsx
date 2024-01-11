@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import ArrowOutward from "@mui/icons-material/ArrowOutward";
 import {
   Box,
@@ -108,7 +107,7 @@ function TransactionRowItem({ transaction }: TransactionHistoryItemProps) {
                   })
                 }
               >
-                <Trans>View</Trans>{" "}
+                View{" "}
                 <SvgIcon
                   sx={{
                     marginLeft: "5px",

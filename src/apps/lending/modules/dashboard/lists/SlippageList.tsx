@@ -3,7 +3,6 @@ import {
   ChevronDownIcon,
   ChevronUpIcon,
 } from "@heroicons/react/outline";
-import { Trans } from "@lingui/macro";
 import {
   Box,
   Button,
@@ -20,7 +19,7 @@ import { SlippageTooltip } from "apps/lending/components/infoTooltips/SlippageTo
 import { useRootStore } from "apps/lending/store/root";
 import { GENERAL } from "apps/lending/utils/mixPanelEvents";
 
-import Paraswap from "/public/icons/other/paraswap.svg";
+import Paraswap from "apps/lending/assets/icons/other/paraswap.svg";
 
 interface ListSlippageButtonProps {
   setSlippage: (value: string) => void;
@@ -54,21 +53,19 @@ export const ListSlippageButton = ({
           <SlippageTooltip
             text={
               <Box sx={{ display: "flex", alignItems: "center" }}>
-                <Trans>
-                  <Typography color="text.secondary" variant="description">
-                    Slippage tolerance{" "}
-                  </Typography>
-                  <Typography
-                    color="text.main"
-                    variant="secondary14"
-                    sx={{ px: "4px" }}
-                  >
-                    {selectedSlippage}%{" "}
-                  </Typography>
-                  <SvgIcon sx={{ fontSize: "14px !important", mr: "4px" }}>
-                    {open ? <ChevronUpIcon /> : <ChevronDownIcon />}
-                  </SvgIcon>
-                </Trans>
+                <Typography color="text.secondary" variant="description">
+                  Slippage tolerance{" "}
+                </Typography>
+                <Typography
+                  color="text.main"
+                  variant="secondary14"
+                  sx={{ px: "4px" }}
+                >
+                  {selectedSlippage}%{" "}
+                </Typography>
+                <SvgIcon sx={{ fontSize: "14px !important", mr: "4px" }}>
+                  {open ? <ChevronUpIcon /> : <ChevronDownIcon />}
+                </SvgIcon>
               </Box>
             }
             variant="secondary14"
@@ -90,7 +87,7 @@ export const ListSlippageButton = ({
       >
         <Box sx={{ px: "16px", py: "12px" }}>
           <Typography variant="secondary12" color="text.secondary">
-            <Trans>Select slippage tolerance</Trans>
+            Select slippage tolerance
           </Typography>
         </Box>
 
@@ -132,7 +129,7 @@ export const ListSlippageButton = ({
             color="text.secondary"
             sx={{ display: "flex", alignItems: "center" }}
           >
-            <Trans>Powered by</Trans>
+            Powered by
             <SvgIcon
               sx={{
                 fontSize: "20px",

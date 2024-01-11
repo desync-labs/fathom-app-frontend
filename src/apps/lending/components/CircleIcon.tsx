@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import { Box, Typography } from "@mui/material";
 import { ReactNode } from "react";
 
@@ -16,13 +15,7 @@ export const CircleIcon = ({
   children,
 }: CircleIconProps) => {
   return (
-    <DarkTooltip
-      title={
-        <Typography>
-          <Trans>{tooltipText}</Trans>
-        </Typography>
-      }
-    >
+    <DarkTooltip title={<Typography>{tooltipText}</Typography>}>
       <Box
         sx={{
           display: "flex",

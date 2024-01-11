@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import { Button } from "@mui/material";
 import { NoData } from "apps/lending/components/primitives/NoData";
 import { useAssetCaps } from "apps/lending/hooks/useAssetCaps";
@@ -97,7 +96,7 @@ export const SupplyAssetsListItem = ({
             openSupply(underlyingAsset, currentMarket, name, "dashboard");
           }}
         >
-          <Trans>Supply</Trans>
+          Supply
         </Button>
         <Button
           variant="outlined"
@@ -112,7 +111,7 @@ export const SupplyAssetsListItem = ({
             });
           }}
         >
-          <Trans>Details</Trans>
+          Details
         </Button>
       </ListButtonsColumn>
     </ListItemWrapper>

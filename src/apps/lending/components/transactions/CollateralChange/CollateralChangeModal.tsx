@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import {
   ModalContextType,
   ModalType,
@@ -16,7 +15,7 @@ const CollateralChangeModal = () => {
   return (
     <BasicModal open={type === ModalType.CollateralChange} setOpen={close}>
       <ModalWrapper
-        title={<Trans>Review tx</Trans>}
+        title={<>Review tx</>}
         underlyingAsset={args.underlyingAsset}
       >
         {(params) => <CollateralChangeModalContent {...params} />}

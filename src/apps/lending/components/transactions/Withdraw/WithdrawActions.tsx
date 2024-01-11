@@ -1,5 +1,4 @@
 import { ProtocolAction } from "@aave/contract-helpers";
-import { Trans } from "@lingui/macro";
 import { BoxProps } from "@mui/material";
 import { useTransactionHandler } from "apps/lending/helpers/useTransactionHandler";
 import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
@@ -61,8 +60,8 @@ export const WithdrawActions = ({
       amount={amountToWithdraw}
       isWrongNetwork={isWrongNetwork}
       requiresAmount
-      actionInProgressText={<Trans>Withdrawing {symbol}</Trans>}
-      actionText={<Trans>Withdraw {symbol}</Trans>}
+      actionInProgressText={<>Withdrawing {symbol}</>}
+      actionText={<>Withdraw {symbol}</>}
       handleAction={action}
       handleApproval={() =>
         approval([{ amount: amountToWithdraw, underlyingAsset: poolAddress }])

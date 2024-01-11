@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import { Box } from "@mui/material";
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
 
@@ -16,10 +15,8 @@ export const PriceUnavailable = ({ value }: { value: number }) => {
   } else {
     return (
       <Box sx={{ textAlign: "center", mb: 1 }}>
-        <Trans>
-          Price data is not currently available for this reserve on the protocol
-          subgraph
-        </Trans>
+        Price data is not currently available for this reserve on the protocol
+        subgraph
       </Box>
     );
   }

@@ -1,5 +1,4 @@
 import { valueToBigNumber } from "@aave/math-utils";
-import { Trans } from "@lingui/macro";
 import { Box, Button, Typography, useTheme } from "@mui/material";
 import { TypographyProps } from "@mui/material/Typography";
 import BigNumber from "bignumber.js";
@@ -62,7 +61,7 @@ export const HealthFactorNumber = ({
           size="small"
           sx={{ minWidth: "unset", ml: { xs: 0, xsm: 2 } }}
         >
-          <Trans>Risk details</Trans>
+          Risk details
         </Button>
       )}
 

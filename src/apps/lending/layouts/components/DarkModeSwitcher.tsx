@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import {
   Box,
   FormControlLabel,
@@ -34,9 +33,7 @@ export const DarkModeSwitcher = ({
         py: { xs: 1.5, md: 2 },
       }}
     >
-      <ListItemText>
-        <Trans>Dark mode</Trans>
-      </ListItemText>
+      <ListItemText>Dark mode</ListItemText>
       <FormControlLabel
         sx={{ mr: 0 }}
         value="darkmode"

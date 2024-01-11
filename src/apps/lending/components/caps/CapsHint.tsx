@@ -1,5 +1,4 @@
 import { valueToBigNumber } from "@aave/math-utils";
-import { Trans } from "@lingui/macro";
 import { Box, Typography } from "@mui/material";
 
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
@@ -33,11 +32,9 @@ export const CapsHint = ({
     .toNumber();
 
   const title =
-    capType === CapType.supplyCap ? (
-      <Trans>Available to supply</Trans>
-    ) : (
-      <Trans>Available to borrow</Trans>
-    );
+    capType === CapType.supplyCap
+      ? "Available to supply"
+      : "Available to borrow";
 
   if (percentageOfCap < 0.99) return null;
 

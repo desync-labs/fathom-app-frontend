@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import { Button } from "@mui/material";
 import { useWalletModalContext } from "apps/lending/hooks/useWalletModal";
 import { useRootStore } from "apps/lending/store/root";
@@ -24,7 +23,7 @@ export const ConnectWalletButton: FC<ConnectWalletProps> = ({ funnel }) => {
           setWalletModalOpen(true);
         }}
       >
-        <Trans>Connect wallet</Trans>
+        Connect wallet
       </Button>
       <WalletModal />
     </>

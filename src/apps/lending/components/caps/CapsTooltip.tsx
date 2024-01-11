@@ -1,5 +1,4 @@
 import { ExclamationIcon } from "@heroicons/react/outline";
-import { Trans } from "@lingui/macro";
 import { SvgIcon } from "@mui/material";
 
 import { ContentWithTooltip } from "apps/lending/components/ContentWithTooltip";
@@ -22,28 +21,28 @@ export const CapsTooltip = ({
   if (availableValue > 0) {
     message =
       capType === CapType.supplyCap ? (
-        <Trans>
+        <>
           This asset has almost reached its supply cap. There can only be{" "}
           {messageValue} supplied to this market.
-        </Trans>
+        </>
       ) : (
-        <Trans>
+        <>
           This asset has almost reached its borrow cap. There is only{" "}
           {messageValue} available to be borrowed from this market.
-        </Trans>
+        </>
       );
   } else if (availableValue <= 0) {
     message =
       capType === CapType.supplyCap ? (
-        <Trans>
+        <>
           This asset has reached its supply cap. Nothing is available to be
           supplied from this market.
-        </Trans>
+        </>
       ) : (
-        <Trans>
+        <>
           This asset has reached its borrow cap. Nothing is available to be
           borrowed from this market.
-        </Trans>
+        </>
       );
   }
 

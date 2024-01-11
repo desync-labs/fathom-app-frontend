@@ -1,5 +1,4 @@
 import { ArrowNarrowRightIcon } from "@heroicons/react/outline";
-import { Trans } from "@lingui/macro";
 import { Box, SvgIcon, Typography } from "@mui/material";
 import { formatUnits } from "fathom-ethers/lib/utils";
 import { DarkTooltip } from "apps/lending/components/infoTooltips/DarkTooltip";
@@ -18,20 +17,20 @@ export const ActionTextMap = ({ action }: { action: string }) => {
   switch (action) {
     case "Supply":
     case "Deposit":
-      return <Trans>Supply</Trans>;
+      return <>Supply</>;
     case "Borrow":
-      return <Trans>Borrow</Trans>;
+      return <>Borrow</>;
     case "RedeemUnderlying":
-      return <Trans>Withdraw</Trans>;
+      return <>Withdraw</>;
     case "Repay":
-      return <Trans>Repay</Trans>;
+      return <>Repay</>;
     case "UsageAsCollateral":
-      return <Trans>Collateral usage</Trans>;
+      return <>Collateral usage</>;
     case "SwapBorrowRate":
     case "Swap":
-      return <Trans>Borrow rate change</Trans>;
+      return <>Borrow rate change</>;
     case "LiquidationCall":
-      return <Trans>Liquidation</Trans>;
+      return <>Liquidation</>;
     default:
       return <></>;
   }
@@ -402,7 +401,7 @@ export const ActionDetails = <K extends keyof ActionFields>({
       return (
         <Box sx={{ display: "inline-flex", alignItems: "center" }}>
           <Typography variant="description" color="text.primary">
-            <Trans>Collateralization</Trans>
+            Collateralization
           </Typography>
           {collateralUsageTx.toState === true ? (
             <Typography
@@ -410,7 +409,7 @@ export const ActionDetails = <K extends keyof ActionFields>({
               color="success.main"
               sx={{ px: 0.75 }}
             >
-              <Trans>enabled</Trans>
+              enabled
             </Typography>
           ) : (
             <Typography
@@ -418,7 +417,7 @@ export const ActionDetails = <K extends keyof ActionFields>({
               color="error.main"
               sx={{ px: 0.75 }}
             >
-              <Trans>disabled</Trans>
+              disabled
             </Typography>
           )}
           <Typography
@@ -426,7 +425,7 @@ export const ActionDetails = <K extends keyof ActionFields>({
             color="text.primary"
             sx={{ mr: 0.5 }}
           >
-            <Trans>for</Trans>
+            for
           </Typography>
           <TokenIcon
             symbol={formattedCollateralReserve.iconSymbol}
@@ -481,7 +480,7 @@ export const ActionDetails = <K extends keyof ActionFields>({
             swapBorrowRateTx={swapBorrowRateTx}
           />
           <Typography variant="caption" color="text.secondary" px={2}>
-            <Trans>for</Trans>
+            for
           </Typography>
           <TokenIcon
             symbol={formattedSwapReserve.iconSymbol}
@@ -529,9 +528,7 @@ export const ActionDetails = <K extends keyof ActionFields>({
       return (
         <Box sx={{ display: "inline-flex", alignItems: "center" }}>
           <Box sx={{ display: "flex", flexDirection: "column" }} pr={4.5}>
-            <Typography>
-              <Trans>Liquidated collateral</Trans>
-            </Typography>
+            <Typography>Liquidated collateral</Typography>
             <Box sx={{ display: "inline-flex" }}>
               <TokenIcon
                 symbol={formattedLiquidationColatReserve.iconSymbol}
@@ -622,9 +619,7 @@ export const ActionDetails = <K extends keyof ActionFields>({
             <ArrowNarrowRightIcon />
           </SvgIcon>
           <Box sx={{ display: "flex", flexDirection: "column" }} pl={4.5}>
-            <Typography>
-              <Trans>Covered debt</Trans>
-            </Typography>
+            <Typography>Covered debt</Typography>
             <Box sx={{ display: "inline-flex" }}>
               <TokenIcon
                 symbol={formattedLiquidationBorrowReserve.iconSymbol}

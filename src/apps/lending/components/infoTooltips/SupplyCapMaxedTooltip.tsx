@@ -1,5 +1,4 @@
 import { ExclamationIcon } from "@heroicons/react/outline";
-import { Trans } from "@lingui/macro";
 import { Box } from "@mui/material";
 import { AssetCapData } from "apps/lending/hooks/useAssetCaps";
 
@@ -28,15 +27,13 @@ export const SupplyCapMaxedTooltip = ({
         iconSize={18}
       >
         <>
-          <Trans>
-            Protocol supply cap at 100% for this asset. Further supply
-            unavailable.
-          </Trans>{" "}
+          Protocol supply cap at 100% for this asset. Further supply
+          unavailable.{" "}
           <Link
             href="https://docs.aave.com/developers/whats-new/supply-borrow-caps"
             underline="always"
           >
-            <Trans>Learn more</Trans>
+            Learn more
           </Link>
         </>
       </TextWithTooltip>

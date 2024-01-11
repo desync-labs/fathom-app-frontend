@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import { Box, Button, Typography, useTheme } from "@mui/material";
 import { BUSDOffBoardingTooltip } from "apps/lending/components/infoTooltips/BUSDOffboardingToolTip";
 import { RenFILToolTip } from "apps/lending/components/infoTooltips/RenFILToolTip";
@@ -157,7 +156,7 @@ export const MarketAssetsListItem = ({ ...reserve }: ComputedReserveData) => {
             })
           }
         >
-          <Trans>Details</Trans>
+          Details
         </Button>
       </ListColumn>
     </ListItem>

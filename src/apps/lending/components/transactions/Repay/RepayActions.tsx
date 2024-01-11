@@ -1,5 +1,4 @@
 import { InterestRate, ProtocolAction } from "@aave/contract-helpers";
-import { Trans } from "@lingui/macro";
 import { BoxProps } from "@mui/material";
 import { useTransactionHandler } from "apps/lending/helpers/useTransactionHandler";
 import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
@@ -98,8 +97,8 @@ export const RepayActions = ({
       handleApproval={() =>
         approval([{ amount: amountToRepay, underlyingAsset: poolAddress }])
       }
-      actionText={<Trans>Repay {symbol}</Trans>}
-      actionInProgressText={<Trans>Repaying {symbol}</Trans>}
+      actionText={<>Repay {symbol}</>}
+      actionInProgressText={<>Repaying {symbol}</>}
       tryPermit={usingPermit}
     />
   );

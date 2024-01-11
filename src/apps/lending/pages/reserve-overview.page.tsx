@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import { Box, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import StyledToggleButton from "apps/lending/components/StyledToggleButton";
@@ -66,14 +65,10 @@ export default function ReserveOverview() {
             sx={{ width: { xs: "100%", xsm: "359px" }, height: "44px" }}
           >
             <StyledToggleButton value="overview" disabled={mode === "overview"}>
-              <Typography variant="subheader1">
-                <Trans>Overview</Trans>
-              </Typography>
+              <Typography variant="subheader1">Overview</Typography>
             </StyledToggleButton>
             <StyledToggleButton value="actions" disabled={mode === "actions"}>
-              <Typography variant="subheader1">
-                <Trans>Your info</Trans>
-              </Typography>
+              <Typography variant="subheader1">Your info</Typography>
             </StyledToggleButton>
           </StyledToggleButtonGroup>
         </Box>
