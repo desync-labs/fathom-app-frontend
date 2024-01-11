@@ -23,8 +23,8 @@ const useStreamStats = () => {
 
   useEffect(() => {
     const now = Date.now() / 1000;
-    if (Number(stake?.cooldown) > now) {
-      setSeconds(Number(stake.cooldown) - now);
+    if (BigNumber(stake?.cooldown).isGreaterThan(now)) {
+      setSeconds(BigNumber(stake.cooldown).minus(now).toNumber());
     } else {
       setSeconds(null);
     }
@@ -48,7 +48,7 @@ const useStreamStats = () => {
 
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
-    if (Number(seconds) > 0 && !timer) {
+    if (BigNumber(Number(seconds)).isGreaterThan(0) && !timer) {
       interval = setInterval(() => {
         setSeconds((val) => Number(val) - 1);
       }, 1000);
