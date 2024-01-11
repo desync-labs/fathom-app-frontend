@@ -301,7 +301,7 @@ const StreamStats: FC = () => {
                     </MyStatsValue>
                   </>
                 )}
-                {!seconds &&
+                {BigNumber(Number(seconds)).isLessThanOrEqualTo(0) &&
                 stake &&
                 BigNumber(stake.claimedAmount).isGreaterThan(0) ? (
                   <Grid container>
@@ -400,7 +400,7 @@ const StreamStats: FC = () => {
                     </MyStatsValue>
                   </>
                 )}
-                {!seconds &&
+                {BigNumber(Number(seconds)).isLessThanOrEqualTo(0) &&
                 stake &&
                 BigNumber(stake.claimedAmount).isGreaterThan(0) ? (
                   <Grid container>
