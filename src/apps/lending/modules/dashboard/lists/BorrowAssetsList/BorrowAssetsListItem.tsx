@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import { Button } from "@mui/material";
 import { useModalContext } from "apps/lending/hooks/useModal";
 import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
@@ -78,7 +77,7 @@ export const BorrowAssetsListItem = ({
             openBorrow(underlyingAsset, currentMarket, name, "dashboard");
           }}
         >
-          <Trans>Borrow</Trans>
+          Borrow
         </Button>
         <Button
           variant="outlined"
@@ -93,7 +92,7 @@ export const BorrowAssetsListItem = ({
             });
           }}
         >
-          <Trans>Details</Trans>
+          Details
         </Button>
       </ListButtonsColumn>
     </ListItemWrapper>

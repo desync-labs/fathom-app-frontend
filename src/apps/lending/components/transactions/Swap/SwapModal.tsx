@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import { BasicModal } from "apps/lending/components/primitives/BasicModal";
 import {
   ModalContextType,
@@ -15,10 +14,7 @@ const SwapModal = () => {
   }>;
   return (
     <BasicModal open={type === ModalType.Swap} setOpen={close}>
-      <ModalWrapper
-        title={<Trans>Switch</Trans>}
-        underlyingAsset={args.underlyingAsset}
-      >
+      <ModalWrapper title={"Switch"} underlyingAsset={args.underlyingAsset}>
         {(params) => <SwapModalContent {...params} />}
       </ModalWrapper>
     </BasicModal>

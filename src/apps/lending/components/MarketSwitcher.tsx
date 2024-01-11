@@ -1,5 +1,4 @@
 import { ChevronDownIcon } from "@heroicons/react/outline";
-import { Trans } from "@lingui/macro";
 import {
   Box,
   ListItemText,
@@ -186,11 +185,9 @@ export const MarketSwitcher = () => {
           color="text.secondary"
           sx={{ px: 4, pt: 2 }}
         >
-          <Trans>
-            {ENABLE_TESTNET || STAGING_ENV
-              ? "Select Testnet Market"
-              : "Select Market"}
-          </Trans>
+          {ENABLE_TESTNET || STAGING_ENV
+            ? "Select Testnet Market"
+            : "Select Market"}
         </Typography>
       </Box>
       {availableMarkets.map((marketId: CustomMarket) => {

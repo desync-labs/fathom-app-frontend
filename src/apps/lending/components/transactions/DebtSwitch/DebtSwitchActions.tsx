@@ -4,7 +4,6 @@ import {
   ProtocolAction,
 } from "@aave/contract-helpers";
 import { SignatureLike } from "@into-the-fathom/bytes";
-import { Trans } from "@lingui/macro";
 import { BoxProps } from "@mui/material";
 import { parseUnits } from "fathom-ethers/lib/utils";
 import { queryClient } from "apps/lending";
@@ -329,14 +328,14 @@ export const DebtSwitchActions = ({
       amount={amountToSwap}
       handleApproval={() => approval()}
       requiresApproval={requiresApproval}
-      actionText={<Trans>Switch</Trans>}
-      actionInProgressText={<Trans>Switching</Trans>}
+      actionText={"Switch"}
+      actionInProgressText={"Switching"}
       sx={sx}
       fetchingData={loading}
       errorParams={{
         loading: false,
         disabled: blocked || !approvalTxState?.success,
-        content: <Trans>Switch</Trans>,
+        content: "Switch",
         handleClick: action,
       }}
       blocked={blocked}

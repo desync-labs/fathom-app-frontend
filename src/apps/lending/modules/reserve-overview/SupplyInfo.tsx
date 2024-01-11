@@ -1,5 +1,4 @@
 import { valueToBigNumber } from "@aave/math-utils";
-import { Trans } from "@lingui/macro";
 import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
 import { AlertTitle, Box, Typography } from "@mui/material";
 import { CapsCircularStatus } from "apps/lending/components/caps/CapsCircularStatus";
@@ -55,33 +54,31 @@ export const SupplyInfo = ({
               value={supplyCap.percentUsed}
               tooltipContent={
                 <>
-                  <Trans>
-                    Maximum amount available to supply is{" "}
-                    <FormattedNumber
-                      value={
-                        valueToBigNumber(reserve.supplyCap).toNumber() -
-                        valueToBigNumber(reserve.totalLiquidity).toNumber()
-                      }
-                      variant="secondary12"
-                    />{" "}
-                    {reserve.symbol} (
-                    <FormattedNumber
-                      value={
-                        valueToBigNumber(reserve.supplyCapUSD).toNumber() -
-                        valueToBigNumber(reserve.totalLiquidityUSD).toNumber()
-                      }
-                      variant="secondary12"
-                      symbol="USD"
-                    />
-                    ).
-                  </Trans>
+                  Maximum amount available to supply is{" "}
+                  <FormattedNumber
+                    value={
+                      valueToBigNumber(reserve.supplyCap).toNumber() -
+                      valueToBigNumber(reserve.totalLiquidity).toNumber()
+                    }
+                    variant="secondary12"
+                  />{" "}
+                  {reserve.symbol} (
+                  <FormattedNumber
+                    value={
+                      valueToBigNumber(reserve.supplyCapUSD).toNumber() -
+                      valueToBigNumber(reserve.totalLiquidityUSD).toNumber()
+                    }
+                    variant="secondary12"
+                    symbol="USD"
+                  />
+                  ).
                 </>
               }
             />
             <PanelItem
               title={
                 <Box display="flex" alignItems="center">
-                  <Trans>Total supplied</Trans>
+                  Total supplied
                   <TextWithTooltip
                     event={{
                       eventName: GENERAL.TOOL_TIP,
@@ -93,16 +90,14 @@ export const SupplyInfo = ({
                     }}
                   >
                     <>
-                      <Trans>
-                        Asset supply is limited to a certain amount to reduce
-                        protocol exposure to the asset and to help manage risks
-                        involved.
-                      </Trans>{" "}
+                      Asset supply is limited to a certain amount to reduce
+                      protocol exposure to the asset and to help manage risks
+                      involved.{" "}
                       <Link
                         href="https://docs.aave.com/developers/whats-new/supply-borrow-caps"
                         underline="always"
                       >
-                        <Trans>Learn more</Trans>
+                        Learn more
                       </Link>
                     </>
                   </TextWithTooltip>
@@ -121,7 +116,7 @@ export const SupplyInfo = ({
                   variant="secondary16"
                   sx={{ display: "inline-block", mx: 1 }}
                 >
-                  <Trans>of</Trans>
+                  of
                 </Typography>
                 <FormattedNumber value={reserve.supplyCap} variant="main16" />
               </Box>
@@ -133,7 +128,7 @@ export const SupplyInfo = ({
                   variant="secondary12"
                   sx={{ display: "inline-block", mx: 1 }}
                 >
-                  <Trans>of</Trans>
+                  of
                 </Typography>
                 <ReserveSubheader value={reserve.supplyCapUSD} />
               </Box>
@@ -144,7 +139,7 @@ export const SupplyInfo = ({
           <PanelItem
             title={
               <Box display="flex" alignItems="center">
-                <Trans>Total supplied</Trans>
+                Total supplied
               </Box>
             }
           >
@@ -156,7 +151,7 @@ export const SupplyInfo = ({
             <ReserveSubheader value={reserve.totalLiquidityUSD} />
           </PanelItem>
         )}
-        <PanelItem title={<Trans>APY</Trans>}>
+        <PanelItem title={"APY"}>
           <FormattedNumber value={reserve.supplyAPY} percent variant="main16" />
           <IncentivesButton
             symbol={reserve.symbol}
@@ -165,7 +160,7 @@ export const SupplyInfo = ({
           />
         </PanelItem>
         {reserve.unbacked && reserve.unbacked !== "0" && (
-          <PanelItem title={<Trans>Unbacked</Trans>}>
+          <PanelItem title={"Unbacked"}>
             <FormattedNumber
               value={reserve.unbacked}
               variant="main16"
@@ -191,13 +186,11 @@ export const SupplyInfo = ({
               color="text.main"
               paddingBottom={"12px"}
             >
-              <Trans>Collateral usage</Trans>
+              Collateral usage
             </Typography>
             <Warning severity="warning">
               <Typography variant="subheader1">
-                <Trans>
-                  Asset can only be used as collateral in isolation mode only.
-                </Trans>
+                Asset can only be used as collateral in isolation mode only.
               </Typography>
               <Typography variant="caption">
                 In Isolation mode you cannot supply other assets as collateral
@@ -220,20 +213,20 @@ export const SupplyInfo = ({
             paddingTop={"42px"}
           >
             <Typography variant="subheader1" color="text.main">
-              <Trans>Collateral usage</Trans>
+              Collateral usage
             </Typography>
             <CheckRoundedIcon fontSize="small" color="success" sx={{ ml: 2 }} />
             <Typography variant="subheader1" sx={{ color: "#46BC4B" }}>
-              <Trans>Can be collateral</Trans>
+              Can be collateral
             </Typography>
           </Box>
         ) : (
           <Box sx={{ pt: "42px", pb: "12px" }}>
             <Typography variant="subheader1" color="text.main">
-              <Trans>Collateral usage</Trans>
+              Collateral usage
             </Typography>
             <Warning sx={{ my: "12px" }} severity="warning">
-              <Trans>Asset cannot be used as collateral.</Trans>
+              Asset cannot be used as collateral.
             </Warning>
           </Box>
         )}
@@ -258,7 +251,7 @@ export const SupplyInfo = ({
                   },
                 }}
                 variant="description"
-                text={<Trans>Max LTV</Trans>}
+                text={"Max LTV"}
               />
             }
           >
@@ -282,7 +275,7 @@ export const SupplyInfo = ({
                   },
                 }}
                 variant="description"
-                text={<Trans>Liquidation threshold</Trans>}
+                text={"Liquidation threshold"}
               />
             }
           >
@@ -306,7 +299,7 @@ export const SupplyInfo = ({
                   },
                 }}
                 variant="description"
-                text={<Trans>Liquidation penalty</Trans>}
+                text={"Liquidation penalty"}
               />
             }
           >
@@ -332,18 +325,14 @@ export const SupplyInfo = ({
       {reserve.symbol == "stETH" && (
         <Box>
           <Warning severity="info">
-            <AlertTitle>
-              <Trans>Staking Rewards</Trans>
-            </AlertTitle>
-            <Trans>
-              stETH supplied as collateral will continue to accrue staking
-              rewards provided by daily rebases.
-            </Trans>{" "}
+            <AlertTitle>Staking Rewards</AlertTitle>
+            stETH supplied as collateral will continue to accrue staking rewards
+            provided by daily rebases.{" "}
             <Link
               href="https://blog.lido.fi/aave-integrates-lidos-steth-as-collateral/"
               underline="always"
             >
-              <Trans>Learn more</Trans>
+              Learn more
             </Link>
           </Warning>
         </Box>

@@ -1,5 +1,4 @@
 import { ProtocolAction } from "@aave/contract-helpers";
-import { Trans } from "@lingui/macro";
 import { Reward } from "apps/lending/helpers/types";
 import { useTransactionHandler } from "apps/lending/helpers/useTransactionHandler";
 import { useRootStore } from "apps/lending/store/root";
@@ -43,12 +42,12 @@ export const ClaimRewardsActions = ({
       handleAction={action}
       actionText={
         selectedReward.symbol === "all" ? (
-          <Trans>Claim all</Trans>
+          <>Claim all</>
         ) : (
-          <Trans>Claim {selectedReward.symbol}</Trans>
+          <>Claim {selectedReward.symbol}</>
         )
       }
-      actionInProgressText={<Trans>Claiming</Trans>}
+      actionInProgressText={"Claiming"}
       isWrongNetwork={isWrongNetwork}
     />
   );

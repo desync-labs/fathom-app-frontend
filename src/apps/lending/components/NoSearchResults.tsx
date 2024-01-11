@@ -1,4 +1,3 @@
-import { t } from "@lingui/macro";
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { FC, ReactNode } from "react";
 
@@ -28,7 +27,7 @@ export const NoSearchResults: FC<NoSearchResultsProps> = ({
     >
       {sm ? (
         <Box sx={{ textAlign: "center", maxWidth: "300px" }}>
-          <Typography variant="h2">{t`No search results${
+          <Typography variant="h2">{`No search results${
             searchTerm && " for"
           }`}</Typography>
           {searchTerm && (
@@ -46,7 +45,7 @@ export const NoSearchResults: FC<NoSearchResultsProps> = ({
           }}
           variant="h2"
         >
-          {t`No search results${searchTerm && ` for \'${searchTerm}\'`}`}
+          {`No search results${searchTerm && ` for \'${searchTerm}\'`}`}
         </Typography>
       )}
       {subtitle && (

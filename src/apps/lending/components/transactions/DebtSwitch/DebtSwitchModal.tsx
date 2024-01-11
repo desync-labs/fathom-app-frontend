@@ -1,5 +1,4 @@
 import { InterestRate } from "@aave/contract-helpers";
-import { Trans } from "@lingui/macro";
 import { BasicModal } from "apps/lending/components/primitives/BasicModal";
 import {
   ModalContextType,
@@ -18,7 +17,7 @@ const DebtSwitchModal = () => {
   return (
     <BasicModal open={type === ModalType.DebtSwitch} setOpen={close}>
       <ModalWrapper
-        title={<Trans>Switch borrow position</Trans>}
+        title={<>Switch borrow position</>}
         underlyingAsset={args.underlyingAsset}
         hideTitleSymbol
       >

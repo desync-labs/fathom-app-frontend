@@ -1,5 +1,4 @@
 import { ExternalLinkIcon } from "@heroicons/react/outline";
-import { Trans } from "@lingui/macro";
 import { Button, SvgIcon, Typography } from "@mui/material";
 import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
 
@@ -30,7 +29,7 @@ export const FaucetButton = () => {
         size="small"
       >
         <Typography variant="buttonS">
-          <Trans>{currentNetworkConfig.name} Faucet</Trans>
+          {currentNetworkConfig.name} Faucet
         </Typography>
       </Button>
     </DarkTooltip>

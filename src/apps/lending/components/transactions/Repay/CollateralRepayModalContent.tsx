@@ -1,7 +1,6 @@
 import { InterestRate } from "@aave/contract-helpers";
 import { valueToBigNumber } from "@aave/math-utils";
 import { ArrowDownIcon } from "@heroicons/react/outline";
-import { Trans } from "@lingui/macro";
 import { Box, SvgIcon, Typography } from "@mui/material";
 import BigNumber from "bignumber.js";
 import { useRef, useState } from "react";
@@ -215,15 +214,13 @@ export function CollateralRepayModalContent({
   const BlockingError: React.FC = () => {
     switch (blockingError) {
       case ErrorType.NOT_ENOUGH_COLLATERAL_TO_REPAY_WITH:
-        return (
-          <Trans>Not enough collateral to repay this amount of debt with</Trans>
-        );
+        return <>Not enough collateral to repay this amount of debt with</>;
       case ErrorType.ZERO_LTV_WITHDRAW_BLOCKED:
         return (
-          <Trans>
+          <>
             Assets with zero LTV ({assetsBlockingWithdraw}) must be withdrawn or
             disabled as collateral to perform this action
-          </Trans>
+          </>
         );
       default:
         return null;
@@ -233,7 +230,7 @@ export function CollateralRepayModalContent({
   if (mainTxState.success)
     return (
       <TxSuccessView
-        action={<Trans>Repaid</Trans>}
+        action={"Repaid"}
         amount={outputAmount}
         symbol={poolReserve.symbol}
       />
@@ -255,8 +252,8 @@ export function CollateralRepayModalContent({
         ]}
         isMaxSelected={isMaxSelected}
         maxValue={debt}
-        inputTitle={<Trans>Expected amount to repay</Trans>}
-        balanceText={<Trans>Borrow balance</Trans>}
+        inputTitle={"Expected amount to repay"}
+        balanceText={"Borrow balance"}
       />
       <Box
         sx={{
@@ -285,8 +282,8 @@ export function CollateralRepayModalContent({
         assets={repayTokens}
         onSelect={setTokenToRepayWith}
         onChange={handleRepayAmountChange}
-        inputTitle={<Trans>Collateral to repay with</Trans>}
-        balanceText={<Trans>Borrow balance</Trans>}
+        inputTitle={"Collateral to repay with"}
+        balanceText={"Borrow balance"}
         maxValue={tokenToRepayWithBalance}
         loading={loadingSkeleton}
         disableInput
@@ -320,7 +317,7 @@ export function CollateralRepayModalContent({
           loading={loadingSkeleton}
         />
         <DetailsNumberLineWithSub
-          description={<Trans>Borrow balance after repay</Trans>}
+          description={"Borrow balance after repay"}
           futureValue={amountAfterRepay.toString()}
           futureValueUSD={displayAmountAfterRepayInUsd.toString()}
           symbol={symbol}
@@ -329,7 +326,7 @@ export function CollateralRepayModalContent({
           hideSymbolSuffix
         />
         <DetailsNumberLineWithSub
-          description={<Trans>Collateral balance after repay</Trans>}
+          description={"Collateral balance after repay"}
           futureValue={collateralAmountAfterRepay.toString()}
           futureValueUSD={collateralAmountAfterRepayUSD.toString()}
           symbol={tokenToRepayWith.symbol}

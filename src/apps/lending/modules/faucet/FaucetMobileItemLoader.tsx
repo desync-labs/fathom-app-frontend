@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import { Box, Button, Skeleton } from "@mui/material";
 
 import { ListColumn } from "apps/lending/components/lists/ListColumn";
@@ -14,9 +13,7 @@ export const FaucetMobileItemLoader = () => {
         </Box>
       </ListColumn>
       <ListColumn maxWidth={280} align="right">
-        <Button variant="gradient">
-          <Trans>Faucet</Trans>
-        </Button>
+        <Button variant="gradient">Faucet</Button>
       </ListColumn>
     </ListItem>
   );

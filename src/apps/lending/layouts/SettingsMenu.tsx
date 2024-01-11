@@ -1,10 +1,8 @@
 import { CogIcon } from "@heroicons/react/solid";
-import { Trans } from "@lingui/macro";
 import { Button, Menu, MenuItem, SvgIcon, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { PROD_ENV } from "apps/lending/utils/marketsAndNetworksConfig";
 
-import { LanguagesList } from "apps/lending/layouts/components/LanguageSwitcher";
 import { TestNetModeSwitcher } from "apps/lending/layouts/components/TestNetModeSwitcher";
 
 export const LANG_MAP = {
@@ -80,7 +78,7 @@ export function SettingsMenu() {
       >
         <MenuItem disabled sx={{ mb: "4px" }}>
           <Typography variant="subheader2" color="text.secondary">
-            <Trans>Global settings</Trans>
+            Global settings
           </Typography>
         </MenuItem>
 
@@ -98,9 +96,7 @@ export function SettingsMenu() {
         open={languagesOpen}
         onClose={handleClose}
         keepMounted={true}
-      >
-        <LanguagesList onClick={handleCloseLanguage} component={MenuItem} />
-      </Menu>
+      ></Menu>
     </>
   );
 }

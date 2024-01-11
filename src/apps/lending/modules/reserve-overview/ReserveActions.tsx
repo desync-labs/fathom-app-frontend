@@ -4,7 +4,6 @@ import {
   USD_DECIMALS,
   valueToBigNumber,
 } from "@aave/math-utils";
-import { Trans } from "@lingui/macro";
 import {
   Box,
   Button,
@@ -211,10 +210,7 @@ export const ReserveActions = ({ reserve }: ReserveActionsProps) => {
 const PauseWarning = () => {
   return (
     <Warning sx={{ mb: 0 }} severity="error" icon={true}>
-      <Trans>
-        Because this asset is paused, no actions can be taken until further
-        notice
-      </Trans>
+      Because this asset is paused, no actions can be taken until further notice
     </Warning>
   );
 };
@@ -222,11 +218,9 @@ const PauseWarning = () => {
 const FrozenWarning = () => {
   return (
     <Warning sx={{ mb: 0 }} severity="error" icon={true}>
-      <Trans>
-        Since this asset is frozen, the only available actions are withdraw and
-        repay which can be accessed from the{" "}
-        <Link href={ROUTES.dashboard}>Dashboard</Link>
-      </Trans>
+      Since this asset is frozen, the only available actions are withdraw and
+      repay which can be accessed from the{" "}
+      <Link href={ROUTES.dashboard}>Dashboard</Link>
     </Warning>
   );
 };
@@ -281,7 +275,7 @@ const PaperWrapper = ({ children }: { children: ReactNode }) => {
         sx={{ mb: 6 }}
         color={(theme) => theme.palette.primary.main}
       >
-        <Trans>Your info</Trans>
+        Your info
       </Typography>
 
       {children}
@@ -301,12 +295,10 @@ const ConnectWallet = ({ loading }: { loading: boolean }) => {
             sx={{ mb: { xs: 6, xsm: 10 } }}
             color={(theme) => theme.palette.primary.main}
           >
-            <Trans>Your info</Trans>
+            Your info
           </Typography>
           <Typography sx={{ mb: 6 }} color="text.secondary">
-            <Trans>
-              Please connect a wallet to view your personal information here.
-            </Trans>
+            Please connect a wallet to view your personal information here.
           </Typography>
           <ConnectWalletButton />
         </>
@@ -336,7 +328,7 @@ const SupplyAction = ({
     <Stack>
       <AvailableTooltip
         variant="description"
-        text={<Trans>Available to supply</Trans>}
+        text={"Available to supply"}
         capType={CapType.supplyCap}
         event={{
           eventName: GENERAL.TOOL_TIP,
@@ -371,7 +363,7 @@ const SupplyAction = ({
           variant="gradient"
           data-cy="supplyButton"
         >
-          <Trans>Supply</Trans>
+          Supply
         </Button>
       </Stack>
     </Stack>
@@ -390,7 +382,7 @@ const BorrowAction = ({
     <Stack>
       <AvailableTooltip
         variant="description"
-        text={<Trans>Available to borrow</Trans>}
+        text={"Available to borrow"}
         capType={CapType.borrowCap}
         event={{
           eventName: GENERAL.TOOL_TIP,
@@ -425,7 +417,7 @@ const BorrowAction = ({
           variant="gradient"
           data-cy="borrowButton"
         >
-          <Trans>Borrow </Trans>
+          Borrow
         </Button>
       </Stack>
     </Stack>

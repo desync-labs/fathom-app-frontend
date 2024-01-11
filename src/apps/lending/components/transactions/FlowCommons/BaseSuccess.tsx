@@ -1,6 +1,5 @@
 import { ExternalLinkIcon } from "@heroicons/react/outline";
 import { CheckIcon } from "@heroicons/react/solid";
-import { Trans } from "@lingui/macro";
 import { Box, Button, Link, SvgIcon, Typography } from "@mui/material";
 import { ReactNode } from "react";
 import { useModalContext } from "apps/lending/hooks/useModal";
@@ -53,7 +52,7 @@ export const BaseSuccessView = ({
         </Box>
 
         <Typography sx={{ mt: 4 }} variant="h2">
-          <Trans>All done!</Trans>
+          All done!
         </Typography>
 
         {children}
@@ -76,7 +75,7 @@ export const BaseSuccessView = ({
           target="_blank"
           rel="noreferrer noopener"
         >
-          <Trans>Review tx details</Trans>
+          Review tx details
           <ExtLinkIcon />
         </Link>
         <Button
@@ -86,7 +85,7 @@ export const BaseSuccessView = ({
           sx={{ minHeight: "44px" }}
           data-cy="closeButton"
         >
-          <Trans>Ok, Close</Trans>
+          Ok, Close
         </Button>
       </Box>
     </>

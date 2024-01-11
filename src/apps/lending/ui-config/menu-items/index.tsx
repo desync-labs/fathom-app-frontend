@@ -1,4 +1,3 @@
-import { t } from "@lingui/macro";
 import { ROUTES } from "apps/lending/components/primitives/Link";
 import { ENABLE_TESTNET } from "apps/lending/utils/marketsAndNetworksConfig";
 
@@ -14,17 +13,17 @@ interface Navigation {
 export const navigation: Navigation[] = [
   {
     link: ROUTES.dashboard,
-    title: t`Dashboard`,
+    title: "Dashboard",
     dataCy: "menuDashboard",
   },
   {
     link: ROUTES.markets,
-    title: t`Markets`,
+    title: "Markets",
     dataCy: "menuMarkets",
   },
   {
     link: ROUTES.faucet,
-    title: t`Faucet`,
+    title: "Faucet",
     isVisible: () =>
       process.env.NEXT_PUBLIC_ENV === "staging" || ENABLE_TESTNET,
   },

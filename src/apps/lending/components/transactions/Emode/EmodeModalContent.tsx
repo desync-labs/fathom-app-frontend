@@ -1,6 +1,5 @@
 import { formatUserSummary } from "@aave/math-utils";
 import { ArrowNarrowRightIcon } from "@heroicons/react/solid";
-import { Trans } from "@lingui/macro";
 import { Box, Link, SvgIcon, Typography } from "@mui/material";
 import { useState } from "react";
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
@@ -123,12 +122,9 @@ export const EmodeModalContent = ({ mode }: EmodeModalContentProps) => {
         return (
           <Warning severity="info" sx={{ mt: 6, alignItems: "center" }}>
             <Typography variant="caption">
-              <Trans>
-                To enable E-mode for the{" "}
-                {selectedEmode && getEmodeMessage(selectedEmode.label)}{" "}
-                category, all borrow positions outside of this category must be
-                closed.
-              </Trans>
+              To enable E-mode for the{" "}
+              {selectedEmode && getEmodeMessage(selectedEmode.label)} category,
+              all borrow positions outside of this category must be closed.
             </Typography>
           </Warning>
         );
@@ -136,14 +132,12 @@ export const EmodeModalContent = ({ mode }: EmodeModalContentProps) => {
         return (
           <Warning severity="error" sx={{ mt: 6, alignItems: "center" }}>
             <Typography variant="subheader1" color="#4F1919">
-              <Trans>Cannot disable E-Mode</Trans>
+              Cannot disable E-Mode
             </Typography>
             <Typography variant="caption">
-              <Trans>
-                You can not disable E-Mode as your current collateralization
-                level is above 80%, disabling E-Mode can cause liquidation. To
-                exit E-Mode supply or repay borrowed positions.
-              </Trans>
+              You can not disable E-Mode as your current collateralization level
+              is above 80%, disabling E-Mode can cause liquidation. To exit
+              E-Mode supply or repay borrowed positions.
             </Typography>
           </Warning>
         );
@@ -184,8 +178,7 @@ export const EmodeModalContent = ({ mode }: EmodeModalContentProps) => {
   if (txError && txError.blocking) {
     return <TxErrorView txError={txError} />;
   }
-  if (emodeTxState.success)
-    return <TxSuccessView action={<Trans>Emode</Trans>} />;
+  if (emodeTxState.success) return <TxSuccessView action={"Emode"} />;
   return (
     <>
       <TxModalTitle title={`${mode} E-Mode`} />
@@ -199,18 +192,16 @@ export const EmodeModalContent = ({ mode }: EmodeModalContentProps) => {
       {user.userEmodeCategoryId === 0 && (
         <Warning severity="warning">
           <Typography variant="caption">
-            <Trans>
-              Enabling E-Mode only allows you to borrow assets belonging to the
-              selected category. Please visit our{" "}
-              <Link
-                href="https://docs.aave.com/faq/aave-v3-features#high-efficiency-mode-e-mode"
-                target="_blank"
-                rel="noopener"
-              >
-                FAQ guide
-              </Link>{" "}
-              to learn more about how it works and the applied restrictions.
-            </Trans>
+            Enabling E-Mode only allows you to borrow assets belonging to the
+            selected category. Please visit our{" "}
+            <Link
+              href="https://docs.aave.com/faq/aave-v3-features#high-efficiency-mode-e-mode"
+              target="_blank"
+              rel="noopener"
+            >
+              FAQ guide
+            </Link>{" "}
+            to learn more about how it works and the applied restrictions.
           </Typography>
         </Warning>
       )}
@@ -228,24 +219,18 @@ export const EmodeModalContent = ({ mode }: EmodeModalContentProps) => {
       {showLiquidationRiskWarning && (
         <Warning severity="error" sx={{ mt: 6, alignItems: "center" }}>
           <Typography variant="subheader1" color="#4F1919">
-            <Trans>Liquidation risk</Trans>
+            Liquidation risk
           </Typography>
           <Typography variant="caption">
-            <Trans>
-              This action will reduce your health factor. Please be mindful of
-              the increased risk of collateral liquidation.{" "}
-            </Trans>
+            This action will reduce your health factor. Please be mindful of the
+            increased risk of collateral liquidation.{" "}
           </Typography>
         </Warning>
       )}
 
       <TxModalDetails gasLimit={gasLimit}>
         {!showModal && (
-          <Row
-            caption={<Trans>E-Mode category</Trans>}
-            captionVariant="description"
-            mb={4}
-          >
+          <Row caption={"E-Mode category"} captionVariant="description" mb={4}>
             <Box
               sx={{
                 display: "flex",
@@ -264,9 +249,7 @@ export const EmodeModalContent = ({ mode }: EmodeModalContentProps) => {
                     </Typography>
                   </>
                 ) : (
-                  <Typography variant="subheader1">
-                    <Trans>None</Trans>
-                  </Typography>
+                  <Typography variant="subheader1">None</Typography>
                 )}
               </Box>
               {selectedEmode && (
@@ -283,9 +266,7 @@ export const EmodeModalContent = ({ mode }: EmodeModalContentProps) => {
                         </Typography>
                       </>
                     ) : (
-                      <Typography variant="subheader1">
-                        <Trans>None</Trans>
-                      </Typography>
+                      <Typography variant="subheader1">None</Typography>
                     )}
                   </Box>
                 </>
@@ -295,7 +276,7 @@ export const EmodeModalContent = ({ mode }: EmodeModalContentProps) => {
         )}
 
         <Row
-          caption={<Trans>Available assets</Trans>}
+          caption={"Available assets"}
           captionVariant="description"
           mb={4}
           sx={{ alignContent: "flex-end" }}
@@ -320,9 +301,7 @@ export const EmodeModalContent = ({ mode }: EmodeModalContentProps) => {
                     {eModes[user.userEmodeCategoryId].assets.join(", ")}
                   </Typography>
                 ) : (
-                  <Typography>
-                    <Trans>All Assets</Trans>
-                  </Typography>
+                  <Typography>All Assets</Typography>
                 )}
               </Box>
             )}
@@ -341,9 +320,7 @@ export const EmodeModalContent = ({ mode }: EmodeModalContentProps) => {
                       {selectedEmode.assets.join(", ")}
                     </Typography>
                   ) : (
-                    <Typography>
-                      <Trans>All Assets</Trans>
-                    </Typography>
+                    <Typography>All Assets</Typography>
                   )}
                 </Box>
               </>
@@ -358,7 +335,7 @@ export const EmodeModalContent = ({ mode }: EmodeModalContentProps) => {
 
         {showMaxLTVRow && (
           <Row
-            caption={<Trans>Maximum loan to value</Trans>}
+            caption={"Maximum loan to value"}
             captionVariant="description"
             mb={4}
             align="flex-start"

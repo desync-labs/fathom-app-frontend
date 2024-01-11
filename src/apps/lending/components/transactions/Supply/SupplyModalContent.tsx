@@ -4,7 +4,6 @@ import {
   USD_DECIMALS,
   valueToBigNumber,
 } from "@aave/math-utils";
-import { Trans } from "@lingui/macro";
 import BigNumber from "bignumber.js";
 import React, { useMemo, useState } from "react";
 import { Warning } from "apps/lending/components/primitives/Warning";
@@ -212,7 +211,7 @@ export const SupplyModalContent = React.memo(
     if (supplyTxState.success)
       return (
         <TxSuccessView
-          action={<Trans>Supplied</Trans>}
+          action={"Supplied"}
           amount={amount}
           symbol={
             supplyUnWrapped
@@ -265,7 +264,7 @@ export const SupplyModalContent = React.memo(
           isMaxSelected={isMaxSelected}
           disabled={supplyTxState.loading}
           maxValue={maxAmountToSupply}
-          balanceText={<Trans>Wallet balance</Trans>}
+          balanceText={"Wallet balance"}
           event={{
             eventName: GENERAL.MAX_INPUT_SELECTION,
             eventParams: {
@@ -281,7 +280,7 @@ export const SupplyModalContent = React.memo(
           disabled={Number(amount) === 0}
         >
           <DetailsNumberLine
-            description={<Trans>Supply APY</Trans>}
+            description={"Supply APY"}
             value={supplyApy}
             percent
           />

@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import { GitHub, Twitter } from "@mui/icons-material";
 import { Box, styled, SvgIcon, Typography } from "@mui/material";
 import { Link } from "apps/lending/components/primitives/Link";
@@ -50,32 +49,32 @@ export function AppFooter() {
   const FOOTER_LINKS = [
     {
       href: "https://aave.com/term-of-use/",
-      label: <Trans>Terms</Trans>,
+      label: "Terms",
       key: "Terms",
     },
     {
       href: "https://aave.com/privacy-policy/",
-      label: <Trans>Privacy</Trans>,
+      label: "Privacy",
       key: "Privacy",
     },
     {
       href: "https://docs.aave.com/hub/",
-      label: <Trans>Docs</Trans>,
+      label: "Docs",
       key: "Docs",
     },
     {
       href: "https://docs.aave.com/faq/",
-      label: <Trans>FAQS</Trans>,
+      label: "FAQS",
       key: "FAQS",
     },
     {
       href: "https://discord.com/invite/aave",
-      label: <Trans>Send feedback</Trans>,
+      label: "Send feedback",
       key: "Send feedback",
     },
     {
       href: "",
-      label: <Trans>Manage analytics</Trans>,
+      label: "Manage analytics",
       key: "Manage analytics",
       onClick: (event: React.MouseEvent) => {
         event.preventDefault();

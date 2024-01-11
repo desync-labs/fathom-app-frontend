@@ -1,5 +1,4 @@
 import { CheckIcon } from "@heroicons/react/solid";
-import { Trans } from "@lingui/macro";
 import {
   Box,
   BoxProps,
@@ -79,15 +78,12 @@ export const TxActionsWrapper = ({
       if (errorParams) return errorParams;
       return { loading: false, disabled: true, content: actionText };
     }
-    if (isWrongNetwork)
-      return { disabled: true, content: <Trans>Wrong Network</Trans> };
-    if (fetchingData)
-      return { disabled: true, content: <Trans>Fetching data...</Trans> };
-    if (isAmountMissing)
-      return { disabled: true, content: <Trans>Enter an amount</Trans> };
+    if (isWrongNetwork) return { disabled: true, content: "Wrong Network" };
+    if (fetchingData) return { disabled: true, content: "Fetching data..." };
+    if (isAmountMissing) return { disabled: true, content: "Enter an amount" };
     if (preparingTransactions) return { disabled: true, loading: true };
     // if (hasApprovalError && handleRetry)
-    //   return { content: <Trans>Retry with approval</Trans>, handleClick: handleRetry };
+    //   return { content:Retry with approval, handleClick: handleRetry };
     if (mainTxState?.loading)
       return { loading: true, disabled: true, content: actionInProgressText };
     if (requiresApproval && !approvalTxState?.success)
@@ -108,14 +104,14 @@ export const TxActionsWrapper = ({
       return {
         loading: true,
         disabled: true,
-        content: <Trans>Approving {symbol}...</Trans>,
+        content: <>Approving {symbol}...</>,
       };
     if (approvalTxState?.success)
       return {
         disabled: true,
         content: (
           <>
-            <Trans>Approve Confirmed</Trans>
+            Approve Confirmed
             <SvgIcon sx={{ fontSize: 20, ml: 2 }}>
               <CheckIcon />
             </SvgIcon>
@@ -130,7 +126,7 @@ export const TxActionsWrapper = ({
           iconSize={20}
           iconMargin={2}
           color="white"
-          text={<Trans>Approve {symbol} to continue</Trans>}
+          text={"Approve {symbol} to continue"}
         />
       ),
       handleClick: handleApproval,

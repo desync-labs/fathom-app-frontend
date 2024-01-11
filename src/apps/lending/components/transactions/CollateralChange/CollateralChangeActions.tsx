@@ -1,5 +1,4 @@
 import { ProtocolAction } from "@aave/contract-helpers";
-import { Trans } from "@lingui/macro";
 import { useTransactionHandler } from "apps/lending/helpers/useTransactionHandler";
 import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 import { useRootStore } from "apps/lending/store/root";
@@ -54,12 +53,12 @@ export const CollateralChangeActions = ({
       isWrongNetwork={isWrongNetwork}
       actionText={
         usageAsCollateral ? (
-          <Trans>Enable {symbol} as collateral</Trans>
+          <>Enable {symbol} as collateral</>
         ) : (
-          <Trans>Disable {symbol} as collateral</Trans>
+          <>Disable {symbol} as collateral</>
         )
       }
-      actionInProgressText={<Trans>Pending...</Trans>}
+      actionInProgressText={<>Pending...</>}
       handleAction={action}
     />
   );

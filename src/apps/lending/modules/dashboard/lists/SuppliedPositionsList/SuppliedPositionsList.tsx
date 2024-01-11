@@ -1,5 +1,4 @@
 import { API_ETH_MOCK_ADDRESS } from "@aave/contract-helpers";
-import { Trans } from "@lingui/macro";
 import { Typography, useMediaQuery, useTheme } from "@mui/material";
 import { Fragment, useState } from "react";
 import { ListColumn } from "apps/lending/components/lists/ListColumn";
@@ -29,16 +28,16 @@ import { SuppliedPositionsListMobileItem } from "apps/lending/modules/dashboard/
 
 const head = [
   {
-    title: <Trans>Asset</Trans>,
+    title: "Asset",
     sortKey: "symbol",
   },
   {
-    title: <Trans key="Balance">Balance</Trans>,
+    title: "Balance",
     sortKey: "underlyingBalance",
   },
 
   {
-    title: <Trans key="APY">APY</Trans>,
+    title: "APY",
     sortKey: "supplyAPY",
   },
   {
@@ -48,7 +47,7 @@ const head = [
           eventName: GENERAL.TOOL_TIP,
           eventParams: { tooltip: "Collateral Switch" },
         }}
-        text={<Trans>Collateral</Trans>}
+        text={"Collateral"}
         key="Collateral"
         variant="subheader2"
       />
@@ -124,10 +123,7 @@ export const SuppliedPositionsList = () => {
 
   if (loading)
     return (
-      <ListLoader
-        title={<Trans>Your supplies</Trans>}
-        head={head.map((col) => col.title)}
-      />
+      <ListLoader title={"Your supplies"} head={head.map((col) => col.title)} />
     );
 
   return (
@@ -140,7 +136,7 @@ export const SuppliedPositionsList = () => {
           sx={{ mr: 4 }}
           color={theme.palette.primary.main}
         >
-          <Trans>Your supplies</Trans>
+          Your supplies
         </Typography>
       }
       localStorageName="suppliedAssetsDashboardTableCollapse"
@@ -150,11 +146,11 @@ export const SuppliedPositionsList = () => {
           {!!sortedReserves.length && (
             <>
               <ListTopInfoItem
-                title={<Trans>Balance</Trans>}
+                title={"Balance"}
                 value={user?.totalLiquidityUSD || 0}
               />
               <ListTopInfoItem
-                title={<Trans>APY</Trans>}
+                title={"APY"}
                 value={user?.earnedAPY || 0}
                 percent
                 tooltip={
@@ -168,7 +164,7 @@ export const SuppliedPositionsList = () => {
                 }
               />
               <ListTopInfoItem
-                title={<Trans>Collateral</Trans>}
+                title={"Collateral"}
                 value={user?.totalCollateralUSD || 0}
                 tooltip={
                   <CollateralTooltip
@@ -201,7 +197,7 @@ export const SuppliedPositionsList = () => {
           ))}
         </>
       ) : (
-        <DashboardContentNoData text={<Trans>Nothing supplied yet</Trans>} />
+        <DashboardContentNoData text={"Nothing supplied yet"} />
       )}
     </ListWrapper>
   );

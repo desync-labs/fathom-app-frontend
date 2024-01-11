@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import { Button, Typography } from "@mui/material";
 import { Warning } from "apps/lending/components/primitives/Warning";
 import { TxErrorType } from "apps/lending/ui-config/errorMapping";
@@ -19,13 +18,11 @@ export const GasEstimationError = ({ txError }: { txError: TxErrorType }) => {
                 )
               }
             >
-              <Typography variant="description">
-                <Trans>copy the error</Trans>
-              </Typography>
+              <Typography variant="description">copy the error</Typography>
             </Button>
           </>
         ) : (
-          <Trans>
+          <>
             There was some error. Please try changing the parameters or{" "}
             <Button
               sx={{ verticalAlign: "top" }}
@@ -37,7 +34,7 @@ export const GasEstimationError = ({ txError }: { txError: TxErrorType }) => {
             >
               <Typography variant="description">copy the error</Typography>
             </Button>
-          </Trans>
+          </>
         )}
       </Typography>
     </Warning>

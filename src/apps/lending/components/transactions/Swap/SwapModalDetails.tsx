@@ -1,6 +1,5 @@
 import { valueToBigNumber } from "@aave/math-utils";
 import { ArrowNarrowRightIcon } from "@heroicons/react/outline";
-import { Trans } from "@lingui/macro";
 import { Box, Skeleton, SvgIcon } from "@mui/material";
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
 import { Row } from "apps/lending/components/primitives/Row";
@@ -72,17 +71,13 @@ export const SwapModalDetails = ({
         />
       )}
       <DetailsNumberLine
-        description={<Trans>Supply apy</Trans>}
+        description={"Supply apy"}
         value={swapSource.reserve.supplyAPY}
         futureValue={swapTarget.reserve.supplyAPY}
         percent
         loading={loading}
       />
-      <Row
-        caption={<Trans>Collateralization</Trans>}
-        captionVariant="description"
-        mb={4}
-      >
+      <Row caption={"Collateralization"} captionVariant="description" mb={4}>
         <Box
           sx={{
             display: "flex",
@@ -121,7 +116,7 @@ export const SwapModalDetails = ({
         loading={loading}
       />
       <DetailsNumberLine
-        description={<Trans>Liquidation threshold</Trans>}
+        description={"Liquidation threshold"}
         value={swapSource.reserve.formattedReserveLiquidationThreshold}
         futureValue={swapTarget.reserve.formattedReserveLiquidationThreshold}
         percent
@@ -130,7 +125,7 @@ export const SwapModalDetails = ({
       />
 
       <Row
-        caption={<Trans>Supply balance after switch</Trans>}
+        caption={"Supply balance after switch"}
         captionVariant="description"
         mb={4}
         align="flex-start"

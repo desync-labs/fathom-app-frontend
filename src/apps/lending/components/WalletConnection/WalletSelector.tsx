@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import { Box, Button, Typography } from "@mui/material";
 import { UnsupportedChainIdError } from "@web3-react/core";
 import { NoEthereumProviderError } from "@web3-react/injected-connector";
@@ -98,18 +97,14 @@ export const WalletSelector = () => {
   const handleBlocking = () => {
     switch (blockingError) {
       case ErrorType.UNSUPORTED_CHAIN:
-        return <Trans>Network not supported for this wallet</Trans>;
+        return <>Network not supported for this wallet</>;
       case ErrorType.USER_REJECTED_REQUEST:
-        return <Trans>Rejected connection request</Trans>;
+        return <>Rejected connection request</>;
       case ErrorType.NO_WALLET_DETECTED:
-        return (
-          <Trans>
-            Wallet not detected. Connect or install wallet and retry
-          </Trans>
-        );
+        return <>Wallet not detected. Connect or install wallet and retry</>;
       default:
         console.log("Uncatched error: ", error);
-        return <Trans>Error connecting. Try refreshing the page.</Trans>;
+        return <>Error connecting. Try refreshing the page.</>;
     }
   };
 
@@ -128,11 +123,9 @@ export const WalletSelector = () => {
         walletType={WalletType.WALLET_CONNECT}
       />
       <Typography variant="helperText">
-        <Trans>
-          Wallets are provided by External Providers and by selecting you agree
-          to Terms of those Providers. Your access to the wallet might be
-          reliant on the External Provider being operational.
-        </Trans>
+        Wallets are provided by External Providers and by selecting you agree to
+        Terms of those Providers. Your access to the wallet might be reliant on
+        the External Provider being operational.
       </Typography>
     </Box>
   );

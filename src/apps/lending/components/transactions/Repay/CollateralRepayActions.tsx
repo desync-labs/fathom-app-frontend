@@ -5,7 +5,6 @@ import {
   ProtocolAction,
 } from "@aave/contract-helpers";
 import { SignatureLike } from "@into-the-fathom/bytes";
-import { Trans } from "@lingui/macro";
 import { BoxProps } from "@mui/material";
 import { useParaSwapTransactionHandler } from "apps/lending/helpers/useParaSwapTransactionHandler";
 import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
@@ -139,13 +138,13 @@ export const CollateralRepayActions = ({
           underlyingAsset: fromAssetData.aTokenAddress,
         })
       }
-      actionText={<Trans>Repay {symbol}</Trans>}
-      actionInProgressText={<Trans>Repaying {symbol}</Trans>}
+      actionText={<>Repay {symbol}</>}
+      actionInProgressText={<>Repaying {symbol}</>}
       fetchingData={loading}
       errorParams={{
         loading: false,
         disabled: blocked,
-        content: <Trans>Repay {symbol}</Trans>,
+        content: <>Repay {symbol}</>,
         handleClick: action,
       }}
       tryPermit

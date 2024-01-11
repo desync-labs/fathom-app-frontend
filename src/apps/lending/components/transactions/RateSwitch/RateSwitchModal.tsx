@@ -1,5 +1,4 @@
 import { InterestRate } from "@aave/contract-helpers";
-import { Trans } from "@lingui/macro";
 import {
   ModalContextType,
   ModalType,
@@ -20,7 +19,7 @@ const RateSwitchModal = () => {
     <BasicModal open={type === ModalType.RateSwitch} setOpen={close}>
       <ModalWrapper
         hideTitleSymbol
-        title={<Trans>Switch APY type</Trans>}
+        title={<>Switch APY type</>}
         underlyingAsset={args.underlyingAsset}
       >
         {(params) => (

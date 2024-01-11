@@ -4,7 +4,6 @@ import {
   ProtocolAction,
 } from "@aave/contract-helpers";
 import { SignatureLike } from "@ethersproject/bytes";
-import { Trans } from "@lingui/macro";
 import { BoxProps } from "@mui/material";
 import { useParaSwapTransactionHandler } from "apps/lending/helpers/useParaSwapTransactionHandler";
 import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
@@ -124,14 +123,14 @@ export const SwapActions = ({
         })
       }
       requiresApproval={requiresApproval}
-      actionText={<Trans>Switch</Trans>}
-      actionInProgressText={<Trans>Switching</Trans>}
+      actionText={"Switch"}
+      actionInProgressText={"Switching"}
       sx={sx}
       fetchingData={loading}
       errorParams={{
         loading: false,
         disabled: blocked,
-        content: <Trans>Switch</Trans>,
+        content: "Switch",
         handleClick: action,
       }}
       tryPermit

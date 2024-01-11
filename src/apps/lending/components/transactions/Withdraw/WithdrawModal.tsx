@@ -1,5 +1,4 @@
 import { PERMISSION } from "@aave/contract-helpers";
-import { Trans } from "@lingui/macro";
 import { useState } from "react";
 import {
   ModalContextType,
@@ -38,7 +37,7 @@ const WithdrawModal = () => {
   return (
     <BasicModal open={type === ModalType.Withdraw} setOpen={handleClose}>
       <ModalWrapper
-        title={<Trans>Withdraw</Trans>}
+        title={<>Withdraw</>}
         underlyingAsset={args.underlyingAsset}
         keepWrappedSymbol={!withdrawUnWrapped}
         requiredPermission={PERMISSION.DEPOSITOR}

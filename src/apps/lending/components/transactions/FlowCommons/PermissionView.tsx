@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import { Box, Button, Link, Typography } from "@mui/material";
 import { useModalContext } from "apps/lending/hooks/useModal";
 
@@ -17,15 +16,11 @@ export const PermissionView = () => {
         }}
       >
         <Typography sx={{ mt: 14 }} variant="h2">
-          <Trans>Allowance required action</Trans>
+          Allowance required action
         </Typography>
         <Typography sx={{ mt: "10px", textAlign: "center" }}>
-          <Trans>
-            To request access for this permissioned market, please visit:{" "}
-            <Link href={"https://access-provider-url"}>
-              Acces Provider Name
-            </Link>
-          </Trans>
+          To request access for this permissioned market, please visit:{" "}
+          <Link href={"https://access-provider-url"}>Acces Provider Name</Link>
         </Typography>
       </Box>
       <Box sx={{ display: "flex", flexDirection: "column", mt: 12 }}>
@@ -35,7 +30,7 @@ export const PermissionView = () => {
           size="large"
           sx={{ minHeight: "44px" }}
         >
-          <Trans>Close</Trans>
+          Close
         </Button>
       </Box>
     </>

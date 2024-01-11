@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import { Button } from "@mui/material";
 import { useAppDataContext } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 import { useAssetCaps } from "apps/lending/hooks/useAssetCaps";
@@ -109,7 +108,7 @@ export const SuppliedPositionsListItem = ({
             }}
             data-cy={`swapButton`}
           >
-            <Trans>Switch</Trans>
+            Switch
           </Button>
         ) : (
           <Button
@@ -124,7 +123,7 @@ export const SuppliedPositionsListItem = ({
               )
             }
           >
-            <Trans>Supply</Trans>
+            Supply
           </Button>
         )}
         <Button
@@ -139,7 +138,7 @@ export const SuppliedPositionsListItem = ({
             );
           }}
         >
-          <Trans>Withdraw</Trans>
+          Withdraw
         </Button>
       </ListButtonsColumn>
     </ListItemWrapper>

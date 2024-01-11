@@ -1,10 +1,10 @@
 import { InterestRate, ProtocolAction } from "@aave/contract-helpers";
-import { Trans } from "@lingui/macro";
 import { useTransactionHandler } from "apps/lending/helpers/useTransactionHandler";
 import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 import { useRootStore } from "apps/lending/store/root";
 
 import { TxActionsWrapper } from "apps/lending/components/transactions/TxActionsWrapper";
+import { FC } from "react";
 
 export type RateSwitchActionsProps = {
   poolReserve: ComputedReserveData;
@@ -13,12 +13,12 @@ export type RateSwitchActionsProps = {
   blocked: boolean;
 };
 
-export const RateSwitchActions = ({
+export const RateSwitchActions: FC<RateSwitchActionsProps> = ({
   poolReserve,
   isWrongNetwork,
   currentRateMode,
   blocked,
-}: RateSwitchActionsProps) => {
+}) => {
   const swapBorrowRateMode = useRootStore((state) => state.swapBorrowRateMode);
 
   const { action, loadingTxns, mainTxState, requiresApproval } =
@@ -50,8 +50,8 @@ export const RateSwitchActions = ({
       preparingTransactions={loadingTxns}
       mainTxState={mainTxState}
       isWrongNetwork={isWrongNetwork}
-      actionText={<Trans>Switch rate</Trans>}
-      actionInProgressText={<Trans>Switching rate</Trans>}
+      actionText={"Switch rate"}
+      actionInProgressText={"Switching rate"}
       handleAction={action}
     />
   );

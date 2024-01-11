@@ -1,5 +1,4 @@
 import { ExclamationCircleIcon, LogoutIcon } from "@heroicons/react/outline";
-import { Trans } from "@lingui/macro";
 import { Box, Button, SvgIcon, Typography } from "@mui/material";
 
 import { BasicModal } from "apps/lending/components/primitives/BasicModal";
@@ -30,22 +29,18 @@ export const AddressBlockedModal = ({
         <SvgIcon sx={{ fontSize: "24px", color: "warning.main", mb: 2 }}>
           <ExclamationCircleIcon />
         </SvgIcon>
-        <Typography variant="h2">
-          <Trans>Blocked Address</Trans>
-        </Typography>
+        <Typography variant="h2">Blocked Address</Typography>
         <Typography variant="helperText" sx={{ my: 4 }}>
           {address}
         </Typography>
         <Typography variant="description" sx={{ textAlign: "center", mb: 4 }}>
-          <Trans>
-            This address is blocked on app.aave.com because it is associated
-            with one or more
-          </Trans>{" "}
+          This address is blocked on app.aave.com because it is associated with
+          one or more{" "}
           <Link
             href="https://docs.aave.com/faq/#address-screening"
             underline="always"
           >
-            <Trans>blocked activities</Trans>
+            blocked activities
           </Link>
           {"."}
         </Typography>
@@ -53,7 +48,7 @@ export const AddressBlockedModal = ({
           <SvgIcon fontSize="small" sx={{ mx: 1 }}>
             <LogoutIcon />
           </SvgIcon>
-          <Trans>Disconnect Wallet</Trans>
+          Disconnect Wallet
         </Button>
       </Box>
     </BasicModal>

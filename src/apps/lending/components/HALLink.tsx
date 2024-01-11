@@ -1,5 +1,4 @@
 import { valueToBigNumber } from "@aave/math-utils";
-import { Trans } from "@lingui/macro";
 import {
   Button,
   Link,
@@ -87,26 +86,22 @@ export default function HALLink({
       title={
         <Stack sx={{ py: 4, px: 6 }} spacing={1}>
           <Typography variant="tooltip" color="text.secondary" fontWeight={500}>
-            <Trans>
-              Setup notifications about your Health Factor using the Hal app.
-            </Trans>
+            Setup notifications about your Health Factor using the Hal app.
           </Typography>
           <Typography variant="tooltip" color="text.secondary" fontWeight={500}>
-            <Trans>
-              This integration was
-              <Link
-                mx={1}
-                variant="tooltip"
-                color="text.secondary"
-                fontWeight={500}
-                target="_blank"
-                rel="noopener"
-                href="https://snapshot.org/#/aave.eth/proposal/0xa730caeec3c28e014ff456b454186ef41c6c1f382cf0a7caa3d99c4ae16c8318"
-              >
-                proposed and approved
-              </Link>
-              by the community.
-            </Trans>
+            This integration was
+            <Link
+              mx={1}
+              variant="tooltip"
+              color="text.secondary"
+              fontWeight={500}
+              target="_blank"
+              rel="noopener"
+              href="https://snapshot.org/#/aave.eth/proposal/0xa730caeec3c28e014ff456b454186ef41c6c1f382cf0a7caa3d99c4ae16c8318"
+            >
+              proposed and approved
+            </Link>
+            by the community.
           </Typography>
         </Stack>
       }
@@ -145,7 +140,7 @@ export default function HALLink({
         >
           <HalHover />
         </SvgIcon>
-        <Trans>Notify</Trans>
+        Notify
       </Button>
     </Tooltip>
   );

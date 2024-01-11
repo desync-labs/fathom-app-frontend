@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import { Box, Divider, FormLabel, Typography } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
@@ -23,7 +22,7 @@ export const RewardsSelect: FC<RewardsSelectProps> = ({
   return (
     <FormControl sx={{ mb: 1, width: "100%" }}>
       <FormLabel sx={{ mb: 1, color: "text.secondary" }}>
-        <Trans>Reward(s) to claim</Trans>
+        Reward(s) to claim
       </FormLabel>
 
       <Select
@@ -55,9 +54,7 @@ export const RewardsSelect: FC<RewardsSelectProps> = ({
         renderValue={(reward) => {
           if (reward === "all") {
             return (
-              <Typography color="text.primary">
-                <Trans>Claim all rewards</Trans>
-              </Typography>
+              <Typography color="text.primary">Claim all rewards</Typography>
             );
           }
           const selected = rewards.find((r) => r.symbol === reward) as Reward;
@@ -73,9 +70,7 @@ export const RewardsSelect: FC<RewardsSelectProps> = ({
         }}
       >
         <MenuItem value={"all"}>
-          <Typography variant="subheader1">
-            <Trans>Claim all rewards</Trans>
-          </Typography>
+          <Typography variant="subheader1">Claim all rewards</Typography>
         </MenuItem>
         <Divider />
         {rewards.map((reward) => (

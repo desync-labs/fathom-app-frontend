@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import { FormLabel, Typography } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
@@ -26,7 +25,7 @@ export const EmodeSelect = ({
   return (
     <FormControl sx={{ mb: 1, width: "100%" }}>
       <FormLabel sx={{ mb: 1, color: "text.secondary" }}>
-        <Trans>Asset category</Trans>
+        Asset category
       </FormLabel>
 
       <Select
@@ -68,11 +67,7 @@ export const EmodeSelect = ({
               </Typography>
             );
           } else {
-            return (
-              <Typography color="text.muted">
-                <Trans>Select</Trans>
-              </Typography>
-            );
+            return <Typography color="text.muted">Select</Typography>;
           }
         }}
       >

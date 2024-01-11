@@ -9,7 +9,6 @@ import {
   USD_DECIMALS,
   valueToBigNumber,
 } from "@aave/math-utils";
-import { Trans } from "@lingui/macro";
 import Typography from "@mui/material/Typography";
 import BigNumber from "bignumber.js";
 import { useEffect, useRef, useState } from "react";
@@ -239,7 +238,7 @@ export const RepayModalContent = ({
   if (repayTxState.success)
     return (
       <TxSuccessView
-        action={<Trans>repaid</Trans>}
+        action={"Repaid"}
         amount={amountRef.current}
         symbol={tokenToRepayWith.symbol}
       />
@@ -256,22 +255,20 @@ export const RepayModalContent = ({
         onSelect={setTokenToRepayWith}
         isMaxSelected={isMaxSelected}
         maxValue={maxAmountToRepay.toString(10)}
-        balanceText={<Trans>Wallet balance</Trans>}
+        balanceText={"Wallet balance"}
       />
 
       {maxRepayWithDustRemaining && (
         <Typography color="warning.main" variant="helperText">
-          <Trans>
-            You don’t have enough funds in your wallet to repay the full amount.
-            If you proceed to repay with your current amount of funds, you will
-            still have a small borrowing position in your dashboard.
-          </Trans>
+          You don’t have enough funds in your wallet to repay the full amount.
+          If you proceed to repay with your current amount of funds, you will
+          still have a small borrowing position in your dashboard.
         </Typography>
       )}
 
       <TxModalDetails gasLimit={gasLimit}>
         <DetailsNumberLineWithSub
-          description={<Trans>Remaining debt</Trans>}
+          description={"Remaining debt"}
           futureValue={amountAfterRepay}
           futureValueUSD={amountAfterRepayInUsd.toString(10)}
           value={debt}

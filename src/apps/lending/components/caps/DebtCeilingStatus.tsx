@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import type { Theme } from "@mui/material";
 import { Box, Typography } from "@mui/material";
 import LinearProgress, {
@@ -40,20 +39,18 @@ export const DebtCeilingStatus = ({
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Box display="flex" alignItems="center">
           <Typography color="text.secondary" component="span">
-            <Trans>Isolated Debt Ceiling</Trans>
+            Isolated Debt Ceiling
           </Typography>
           <TextWithTooltip>
             <>
-              <Trans>
-                Debt ceiling limits the amount possible to borrow against this
-                asset by protocol users. Debt ceiling is specific to assets in
-                isolation mode and is denoted in USD.
-              </Trans>{" "}
+              Debt ceiling limits the amount possible to borrow against this
+              asset by protocol users. Debt ceiling is specific to assets in
+              isolation mode and is denoted in USD.{" "}
               <Link
                 href="https://docs.aave.com/faq/aave-v3-features#how-does-isolation-mode-affect-my-borrowing-power"
                 underline="always"
               >
-                <Trans>Learn more</Trans>
+                Learn more
               </Link>
             </>
           </TextWithTooltip>
@@ -72,7 +69,7 @@ export const DebtCeilingStatus = ({
             variant="secondary14"
             sx={{ display: "inline-block", mx: 1 }}
           >
-            <Trans>of</Trans>
+            of
           </Typography>
           <FormattedNumber
             value={ceiling}

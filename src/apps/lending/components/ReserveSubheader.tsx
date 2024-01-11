@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import { Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 
@@ -28,7 +27,7 @@ export function ReserveSubheader({ value, rightAlign }: ReserveSubheaderProps) {
           variant="secondary12"
           color="text.muted"
         >
-          (<Trans>Disabled</Trans>)
+          Disabled
         </Typography>
       ) : (
         <FormattedNumber

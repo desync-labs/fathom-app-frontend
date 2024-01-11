@@ -1,5 +1,4 @@
 import { ReserveIncentiveResponse } from "@aave/math-utils/dist/esm/formatters/incentive/calculate-reserve-incentives";
-import { Trans } from "@lingui/macro";
 import { Box, Typography } from "@mui/material";
 
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
@@ -34,14 +33,14 @@ export const IncentivesTooltipContent = ({
               variant={typographyVariant}
             />
             <Typography variant={typographyVariant} sx={{ ml: 1 }}>
-              <Trans>APR</Trans>
+              APR
             </Typography>
           </>
         ) : (
           <>
             <Typography variant={typographyVariant}>∞ %</Typography>
             <Typography variant={typographyVariant} sx={{ ml: 1 }}>
-              <Trans>APR</Trans>
+              APR
             </Typography>
           </>
         )}
@@ -59,9 +58,7 @@ export const IncentivesTooltipContent = ({
       }}
     >
       <Typography variant="caption" color="text.secondary" mb={3}>
-        <Trans>
-          Participating in this {symbol} reserve gives annualized rewards.
-        </Trans>
+        Participating in this {symbol} reserve gives annualized rewards.
       </Typography>
 
       <Box sx={{ width: "100%" }}>
@@ -100,7 +97,7 @@ export const IncentivesTooltipContent = ({
               border: `1px solid ${theme.palette.divider}`,
             })}
           >
-            <Row caption={<Trans>Net APR</Trans>} height={32}>
+            <Row caption={"Net APR"} height={32}>
               <Number incentiveAPR={incentivesNetAPR} />
             </Row>
           </Box>

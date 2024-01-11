@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import { Box, Checkbox, Typography } from "@mui/material";
 import { Warning } from "apps/lending/components/primitives/Warning";
 import { useRootStore } from "apps/lending/store/root";
@@ -18,10 +17,8 @@ export const BorrowAmountWarning = ({
   return (
     <>
       <Warning severity="error" sx={{ my: 6 }}>
-        <Trans>
-          Borrowing this amount will reduce your health factor and increase risk
-          of liquidation.
-        </Trans>
+        Borrowing this amount will reduce your health factor and increase risk
+        of liquidation.
       </Warning>
       <Box
         sx={{
@@ -47,7 +44,7 @@ export const BorrowAmountWarning = ({
           data-cy={"risk-checkbox"}
         />
         <Typography variant="description">
-          <Trans>I acknowledge the risks involved.</Trans>
+          I acknowledge the risks involved.
         </Typography>
       </Box>
     </>

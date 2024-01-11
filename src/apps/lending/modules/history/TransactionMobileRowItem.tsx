@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import ArrowOutward from "@mui/icons-material/ArrowOutward";
 import { Box, Button, SvgIcon, Typography, useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -118,7 +117,7 @@ function TransactionMobileRowItem({
                   })
                 }
               >
-                <Trans>VIEW TX</Trans>{" "}
+                VIEW TX{" "}
                 <SvgIcon
                   sx={{
                     fontSize: "15px",

@@ -1,5 +1,4 @@
 import { valueToBigNumber } from "@aave/math-utils";
-import { Trans } from "@lingui/macro";
 import {
   Box,
   Button,
@@ -56,9 +55,7 @@ export default function FaucetAssetsList() {
     return (
       <ConnectWalletPaper
         loading={web3Loading}
-        description={
-          <Trans>Please connect your wallet to get free testnet assets.</Trans>
-        }
+        description={"Please connect your wallet to get free testnet assets."}
       />
     );
   }
@@ -67,22 +64,18 @@ export default function FaucetAssetsList() {
     <ListWrapper
       titleComponent={
         <Typography component="div" variant="h2" sx={{ mr: 4 }}>
-          <Trans>Test Assets</Trans>
+          Test Assets
         </Typography>
       }
     >
       <ListHeaderWrapper px={downToXSM ? 4 : 6}>
         <ListColumn isRow maxWidth={280}>
-          <ListHeaderTitle>
-            <Trans>Asset</Trans>
-          </ListHeaderTitle>
+          <ListHeaderTitle>Asset</ListHeaderTitle>
         </ListColumn>
 
         {!downToXSM && (
           <ListColumn>
-            <ListHeaderTitle>
-              <Trans>Wallet balance</Trans>
-            </ListHeaderTitle>
+            <ListHeaderTitle>Wallet balance</ListHeaderTitle>
           </ListColumn>
         )}
 
@@ -148,7 +141,7 @@ export default function FaucetAssetsList() {
                 variant="gradient"
                 onClick={() => openFaucet(reserve.underlyingAsset)}
               >
-                <Trans>Faucet</Trans>
+                Faucet
               </Button>
             </ListColumn>
           </ListItem>

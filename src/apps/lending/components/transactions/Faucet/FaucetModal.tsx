@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import {
   ModalContextType,
   ModalType,
@@ -16,10 +15,7 @@ const FaucetModal = () => {
 
   return (
     <BasicModal open={type === ModalType.Faucet} setOpen={close}>
-      <ModalWrapper
-        title={<Trans>Faucet</Trans>}
-        underlyingAsset={args.underlyingAsset}
-      >
+      <ModalWrapper title={<>Faucet</>} underlyingAsset={args.underlyingAsset}>
         {(params) => <FaucetModalContent {...params} />}
       </ModalWrapper>
     </BasicModal>

@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackOutlined";
 import {
   Box,
@@ -125,13 +124,13 @@ export const ReserveTopDetailsWrapper = ({
               }}
               sx={{ mr: 3, mb: downToSM ? "24px" : "0" }}
             >
-              <Trans>Go Back</Trans>
+              Go Back
             </Button>
 
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <MarketLogo size={20} logo={network.networkLogoPath} />
               <Typography variant="subheader1" sx={{ color: "common.white" }}>
-                {market.marketTitle} <Trans>Market</Trans>
+                {market.marketTitle}Market
               </Typography>
             </Box>
           </Box>
@@ -181,7 +180,7 @@ export const ReserveTopDetailsWrapper = ({
       {!downToSM && (
         <>
           <TopInfoPanelItem
-            title={!loading && <Trans>{poolReserve.symbol}</Trans>}
+            title={!loading && <>{poolReserve.symbol}</>}
             withoutIconWrapper
             icon={<ReserveIcon />}
             loading={loading}

@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import { Box, Paper, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 import { FC } from "react";
@@ -32,7 +31,7 @@ export const ReserveConfigurationWrapper: FC<ReserveConfigurationProps> = ({
         }}
       >
         <Typography variant="h3" color={(theme) => theme.palette.primary.main}>
-          <Trans>Reserve status &#38; configuration</Trans>
+          Reserve status &#38; configuration
         </Typography>
       </Box>
       <ReserveConfiguration reserve={reserve} />

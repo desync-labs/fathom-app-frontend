@@ -1,5 +1,4 @@
 import { PERMISSION } from "@aave/contract-helpers";
-import { Trans } from "@lingui/macro";
 import {
   ModalContextType,
   ModalType,
@@ -19,7 +18,7 @@ const SupplyModal = () => {
     <BasicModal open={type === ModalType.Supply} setOpen={close}>
       <ModalWrapper
         action="supply"
-        title={<Trans>Supply</Trans>}
+        title={<>Supply</>}
         underlyingAsset={args.underlyingAsset}
         requiredPermission={PERMISSION.DEPOSITOR}
       >

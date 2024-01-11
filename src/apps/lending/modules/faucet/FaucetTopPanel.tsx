@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { Link } from "apps/lending/components/primitives/Link";
 import { PageTitle } from "apps/lending/components/TopInfoPanel/PageTitle";
@@ -17,25 +16,23 @@ export const FaucetTopPanel = () => {
       titleComponent={
         <Box>
           <PageTitle
-            pageTitle={<Trans>{currentMarketData.marketTitle} Faucet</Trans>}
+            pageTitle={<>{currentMarketData.marketTitle} Faucet</>}
             withMarketSwitcher={true}
           />
           <Box sx={{ width: md ? (xsm ? "320px" : "540px") : "860px" }}>
             <Typography variant="description" color="#A5A8B6">
-              <Trans>
-                With testnet Faucet you can get free assets to test the Aave
-                Protocol. Make sure to switch your wallet provider to the
-                appropriate testnet network, select desired asset, and click
-                ‘Faucet’ to get tokens transferred to your wallet. The assets on
-                a testnet are not “real,” meaning they have no monetary value.{" "}
-                <Link
-                  color="#A5A8B6"
-                  href="https://docs.aave.com/developers/guides/testing-guide"
-                  sx={{ textDecoration: "underline" }}
-                >
-                  Learn more
-                </Link>
-              </Trans>
+              With testnet Faucet you can get free assets to test the Aave
+              Protocol. Make sure to switch your wallet provider to the
+              appropriate testnet network, select desired asset, and click
+              ‘Faucet’ to get tokens transferred to your wallet. The assets on a
+              testnet are not “real,” meaning they have no monetary value.{" "}
+              <Link
+                color="#A5A8B6"
+                href="https://docs.aave.com/developers/guides/testing-guide"
+                sx={{ textDecoration: "underline" }}
+              >
+                Learn more
+              </Link>
             </Typography>
           </Box>
         </Box>

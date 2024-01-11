@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import { Button, Stack, Typography } from "@mui/material";
 import { Link, ROUTES } from "apps/lending/components/primitives/Link";
 import { Warning } from "apps/lending/components/primitives/Warning";
@@ -59,10 +58,8 @@ export const useReserveActionState = ({
           <>
             {currentNetworkConfig.isTestnet ? (
               <Warning sx={{ mb: 0 }} severity="info" icon={false}>
-                <Trans>
-                  Your {networkName} wallet is empty. Get free test{" "}
-                  {reserve.name} at
-                </Trans>{" "}
+                Your {networkName} wallet is empty. Get free test {reserve.name}{" "}
+                at{" "}
                 <Button
                   variant="text"
                   sx={{ verticalAlign: "top" }}
@@ -70,7 +67,7 @@ export const useReserveActionState = ({
                   disableRipple
                 >
                   <Typography variant="caption">
-                    <Trans>{networkName} Faucet</Trans>
+                    {networkName} Faucet
                   </Typography>
                 </Button>
               </Warning>
@@ -89,49 +86,39 @@ export const useReserveActionState = ({
         {balance !== "0" &&
           user?.totalCollateralMarketReferenceCurrency === "0" && (
             <Warning sx={{ mb: 0 }} severity="info" icon={false}>
-              <Trans>
-                To borrow you need to supply any asset to be used as collateral.
-              </Trans>
+              To borrow you need to supply any asset to be used as collateral.
             </Warning>
           )}
 
         {isolationModeBorrowDisabled && (
           <Warning sx={{ mb: 0 }} severity="warning" icon={false}>
-            <Trans>
-              Collateral usage is limited because of Isolation mode.
-            </Trans>
+            Collateral usage is limited because of Isolation mode.
           </Warning>
         )}
 
         {eModeBorrowDisabled && isolationModeBorrowDisabled && (
           <Warning sx={{ mb: 0 }} severity="info" icon={false}>
-            <Trans>
-              Borrowing is unavailable because you’ve enabled Efficiency Mode
-              (E-Mode) and Isolation mode. To manage E-Mode and Isolation mode
-              visit your <Link href={ROUTES.dashboard}>Dashboard</Link>.
-            </Trans>
+            Borrowing is unavailable because you’ve enabled Efficiency Mode
+            (E-Mode) and Isolation mode. To manage E-Mode and Isolation mode
+            visit your <Link href={ROUTES.dashboard}>Dashboard</Link>.
           </Warning>
         )}
 
         {eModeBorrowDisabled && !isolationModeBorrowDisabled && (
           <Warning sx={{ mb: 0 }} severity="info" icon={false}>
-            <Trans>
-              Borrowing is unavailable because you’ve enabled Efficiency Mode
-              (E-Mode) for{" "}
-              {getEmodeMessage(eModes[user.userEmodeCategoryId].label)}{" "}
-              category. To manage E-Mode categories visit your{" "}
-              <Link href={ROUTES.dashboard}>Dashboard</Link>.
-            </Trans>
+            Borrowing is unavailable because you’ve enabled Efficiency Mode
+            (E-Mode) for{" "}
+            {getEmodeMessage(eModes[user.userEmodeCategoryId].label)} category.
+            To manage E-Mode categories visit your{" "}
+            <Link href={ROUTES.dashboard}>Dashboard</Link>.
           </Warning>
         )}
 
         {!eModeBorrowDisabled && isolationModeBorrowDisabled && (
           <Warning sx={{ mb: 0 }} severity="info" icon={false}>
-            <Trans>
-              Borrowing is unavailable because you’re using Isolation mode. To
-              manage Isolation mode visit your{" "}
-              <Link href={ROUTES.dashboard}>Dashboard</Link>.
-            </Trans>
+            Borrowing is unavailable because you’re using Isolation mode. To
+            manage Isolation mode visit your{" "}
+            <Link href={ROUTES.dashboard}>Dashboard</Link>.
           </Warning>
         )}
 

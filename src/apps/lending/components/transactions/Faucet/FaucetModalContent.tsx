@@ -1,6 +1,5 @@
 import { mintAmountsPerToken, valueToWei } from "@aave/contract-helpers";
 import { normalize } from "@aave/math-utils";
-import { Trans } from "@lingui/macro";
 import { useModalContext } from "apps/lending/hooks/useModal";
 
 import { GasEstimationError } from "apps/lending/components/transactions/FlowCommons/GasEstimationError";
@@ -32,7 +31,7 @@ export const FaucetModalContent = ({
   if (faucetTxState.success)
     return (
       <TxSuccessView
-        action={<Trans>Received</Trans>}
+        action={"Received"}
         symbol={poolReserve.symbol}
         amount={normalizedAmount}
       />
@@ -42,7 +41,7 @@ export const FaucetModalContent = ({
     <>
       <TxModalDetails gasLimit={gasLimit}>
         <DetailsNumberLine
-          description={<Trans>Amount</Trans>}
+          description={"Amount"}
           iconSymbol={poolReserve.symbol}
           symbol={poolReserve.symbol}
           value={normalizedAmount}

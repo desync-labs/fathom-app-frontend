@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { PageTitle } from "apps/lending/components/TopInfoPanel/PageTitle";
 
@@ -16,7 +15,7 @@ export const HistoryTopPanel = () => {
         <Box>
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Typography variant="h3" sx={{ color: "#A5A8B6" }}>
-              <Trans>Transaction history</Trans>
+              Transaction history
             </Typography>
           </Box>
           <PageTitle withMarketSwitcher={true} />

@@ -1,5 +1,4 @@
 import { valueToBigNumber } from "@aave/math-utils";
-import { Trans } from "@lingui/macro";
 import { Box, Typography } from "@mui/material";
 import BigNumber from "bignumber.js";
 
@@ -119,7 +118,7 @@ export const HFContent = ({ healthFactor }: HFContentProps) => {
           lineHeight="12px"
           color="error.main"
         >
-          <Trans>Liquidation value</Trans>
+          Liquidation value
         </Typography>
       </Box>
     </Box>

@@ -1,5 +1,4 @@
 import { ExternalLinkIcon } from "@heroicons/react/outline";
-import { Trans } from "@lingui/macro";
 import { Box, Menu, MenuItem, SvgIcon, Typography } from "@mui/material";
 import * as React from "react";
 import { useState } from "react";
@@ -79,7 +78,7 @@ export const TokenLinkDropdown = ({
       >
         <Box sx={{ px: 4, pt: 3, pb: 2 }}>
           <Typography variant="secondary12" color="text.secondary">
-            <Trans>Underlying token</Trans>
+            Underlying token
           </Typography>
         </Box>
 
@@ -119,7 +118,7 @@ export const TokenLinkDropdown = ({
           <Box>
             <Box sx={{ px: 4, pt: 3, pb: 2 }}>
               <Typography variant="secondary12" color="text.secondary">
-                <Trans>Aave aToken</Trans>
+                Aave aToken
               </Typography>
             </Box>
 
@@ -161,7 +160,7 @@ export const TokenLinkDropdown = ({
         {showDebtTokenHeader && (
           <Box sx={{ px: 4, pt: 3, pb: 2 }}>
             <Typography variant="secondary12" color="text.secondary">
-              <Trans>Aave debt token</Trans>
+              Aave debt token
             </Typography>
           </Box>
         )}

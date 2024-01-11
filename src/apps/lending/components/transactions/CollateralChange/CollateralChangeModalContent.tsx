@@ -2,7 +2,6 @@ import {
   calculateHealthFactorFromBalancesBigUnits,
   valueToBigNumber,
 } from "@aave/math-utils";
-import { Trans } from "@lingui/macro";
 import { Typography } from "@mui/material";
 import { Warning } from "apps/lending/components/primitives/Warning";
 import { useAppDataContext } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
@@ -104,22 +103,22 @@ export const CollateralChangeModalContent = ({
   const BlockingError: React.FC = () => {
     switch (blockingError) {
       case ErrorType.DO_NOT_HAVE_SUPPLIES_IN_THIS_CURRENCY:
-        return <Trans>You do not have supplies in this currency</Trans>;
+        return <>You do not have supplies in this currency</>;
       case ErrorType.CAN_NOT_USE_THIS_CURRENCY_AS_COLLATERAL:
-        return <Trans>You can not use this currency as collateral</Trans>;
+        return <>You can not use this currency as collateral</>;
       case ErrorType.CAN_NOT_SWITCH_USAGE_AS_COLLATERAL_MODE:
         return (
-          <Trans>
+          <>
             You can not switch usage as collateral mode for this currency,
             because it will cause collateral call
-          </Trans>
+          </>
         );
       case ErrorType.ZERO_LTV_WITHDRAW_BLOCKED:
         return (
-          <Trans>
+          <>
             Assets with zero LTV ({assetsBlockingWithdraw}) must be withdrawn or
             disabled as collateral to perform this action
-          </Trans>
+          </>
         );
       default:
         return null;
@@ -138,20 +137,16 @@ export const CollateralChangeModalContent = ({
     <>
       {showEnableIsolationModeMsg && (
         <Warning severity="warning" icon={false} sx={{ mb: 3 }}>
-          <Trans>
-            Enabling this asset as collateral increases your borrowing power and
-            Health Factor. However, it can get liquidated if your health factor
-            drops below 1.
-          </Trans>
+          Enabling this asset as collateral increases your borrowing power and
+          Health Factor. However, it can get liquidated if your health factor
+          drops below 1.
         </Warning>
       )}
 
       {showDisableIsolationModeMsg && (
         <Warning severity="warning" icon={false} sx={{ mb: 3 }}>
-          <Trans>
-            Disabling this asset as collateral affects your borrowing power and
-            Health Factor.
-          </Trans>
+          Disabling this asset as collateral affects your borrowing power and
+          Health Factor.
         </Warning>
       )}
 
@@ -161,10 +156,8 @@ export const CollateralChangeModalContent = ({
 
       {showExitIsolationModeMsg && (
         <Warning severity="info" icon={false} sx={{ mb: 3 }}>
-          <Trans>
-            You will exit isolation mode and other tokens can now be used as
-            collateral
-          </Trans>
+          You will exit isolation mode and other tokens can now be used as
+          collateral
         </Warning>
       )}
 
@@ -175,7 +168,7 @@ export const CollateralChangeModalContent = ({
         <DetailsNumberLine
           symbol={poolReserve.symbol}
           iconSymbol={poolReserve.iconSymbol}
-          description={<Trans>Supply balance</Trans>}
+          description={"Supply balance"}
           value={userReserve.underlyingBalance}
         />
         <DetailsHFLine

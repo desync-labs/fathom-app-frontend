@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import { AlertColor, Typography } from "@mui/material";
 import { useRootStore } from "apps/lending/store/root";
 import { GENERAL } from "apps/lending/utils/mixPanelEvents";
@@ -56,14 +55,12 @@ export const LiquidationRiskParametersInfoModal: FC<
   return (
     <BasicModal open={open} setOpen={setOpen}>
       <Typography variant="h2" mb={6} color="primary.main">
-        <Trans>Liquidation risk parameters</Trans>
+        Liquidation risk parameters
       </Typography>
       <Typography mb={6}>
-        <Trans>
-          Your health factor and loan to value determine the assurance of your
-          collateral. To avoid liquidations you can supply more collateral or
-          repay borrow positions.
-        </Trans>{" "}
+        Your health factor and loan to value determine the assurance of your
+        collateral. To avoid liquidations you can supply more collateral or
+        repay borrow positions.{" "}
         <Link
           onClick={() => {
             trackEvent(GENERAL.EXTERNAL_LINK, {
@@ -75,17 +72,17 @@ export const LiquidationRiskParametersInfoModal: FC<
           color="text.primary"
           variant="description"
         >
-          <Trans>Learn more</Trans>
+          Learn more
         </Link>
       </Typography>
 
       <InfoWrapper
-        topTitle={<Trans>Health factor</Trans>}
+        topTitle={"Health factor"}
         topDescription={
-          <Trans>
+          <>
             Safety of your deposited collateral against the borrowed assets and
             its underlying value.
-          </Trans>
+          </>
         }
         topValue={
           <HealthFactorNumber
@@ -95,10 +92,10 @@ export const LiquidationRiskParametersInfoModal: FC<
           />
         }
         bottomText={
-          <Trans>
+          <>
             If the health factor goes below 1, the liquidation of your
             collateral might be triggered.
-          </Trans>
+          </>
         }
         color={healthFactorColor}
       >
@@ -106,11 +103,9 @@ export const LiquidationRiskParametersInfoModal: FC<
       </InfoWrapper>
 
       <InfoWrapper
-        topTitle={<Trans>Current LTV</Trans>}
+        topTitle={"Current LTV"}
         topDescription={
-          <Trans>
-            Your current loan to value based on your collateral supplied.
-          </Trans>
+          <>Your current loan to value based on your collateral supplied.</>
         }
         topValue={
           <FormattedNumber
@@ -122,10 +117,10 @@ export const LiquidationRiskParametersInfoModal: FC<
           />
         }
         bottomText={
-          <Trans>
+          <>
             If your loan to value goes above the liquidation threshold your
             collateral supplied may be liquidated.
-          </Trans>
+          </>
         }
         color={ltvColor}
       >

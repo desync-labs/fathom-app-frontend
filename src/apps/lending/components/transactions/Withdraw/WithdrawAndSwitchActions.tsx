@@ -4,7 +4,6 @@ import {
   ProtocolAction,
 } from "@aave/contract-helpers";
 import { SignatureLike } from "@ethersproject/bytes";
-import { Trans } from "@lingui/macro";
 import { BoxProps } from "@mui/material";
 import { parseUnits } from "fathom-ethers/lib/utils";
 import { queryClient } from "apps/lending";
@@ -309,13 +308,13 @@ export const WithdrawAndSwitchActions = ({
       amount={amountToSwap}
       handleApproval={() => approval()}
       requiresApproval={requiresApproval}
-      actionText={<Trans>Withdraw and Switch</Trans>}
-      actionInProgressText={<Trans>Withdrawing and Switching</Trans>}
+      actionText={"Withdraw and Switch"}
+      actionInProgressText={"Withdrawing and Switching"}
       sx={sx}
       errorParams={{
         loading: false,
         disabled: blocked || !approvalTxState?.success,
-        content: <Trans>Withdraw and Switch</Trans>,
+        content: "Withdraw and Switch",
         handleClick: action,
       }}
       fetchingData={loading}

@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import {
   Box,
   FormControlLabel,
@@ -44,9 +43,7 @@ export const TestNetModeSwitcher = ({
         py: { xs: 1.5, md: 2 },
       }}
     >
-      <ListItemText>
-        <Trans>Testnet mode</Trans>
-      </ListItemText>
+      <ListItemText>Testnet mode</ListItemText>
       <FormControlLabel
         sx={{ mr: 0 }}
         value="testnetsMode"

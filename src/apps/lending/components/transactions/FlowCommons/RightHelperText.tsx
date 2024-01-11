@@ -1,5 +1,4 @@
 import { ExternalLinkIcon } from "@heroicons/react/outline";
-import { Trans } from "@lingui/macro";
 import { Box, Link, SvgIcon, Typography } from "@mui/material";
 import { ApprovalMethodToggleButton } from "apps/lending/components/transactions/FlowCommons/ApprovalMethodToggleButton";
 import { MOCK_SIGNED_HASH } from "apps/lending/helpers/useTransactionHandler";
@@ -32,7 +31,7 @@ export const RightHelperText = ({
     return (
       <Box sx={{ display: "inline-flex", alignItems: "center", mb: 2 }}>
         <Typography variant="subheader2" color="text.secondary">
-          <Trans>Approve with</Trans>&nbsp;
+          Approve with&nbsp;
         </Typography>
         <ApprovalMethodToggleButton
           currentMethod={walletApprovalMethodPreference}
@@ -63,7 +62,7 @@ export const RightHelperText = ({
             target="_blank"
             rel="noreferrer noopener"
           >
-            <Trans>Review approval tx details</Trans>
+            Review approval tx details
             <ExtLinkIcon />
           </Link>
         )}

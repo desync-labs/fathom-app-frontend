@@ -1,5 +1,4 @@
 import { valueToBigNumber } from "@aave/math-utils";
-import { Trans } from "@lingui/macro";
 import BigNumber from "bignumber.js";
 import {
   ComputedReserveData,
@@ -53,21 +52,21 @@ export const useWithdrawError = ({
 
   const errors = {
     [ErrorType.CAN_NOT_WITHDRAW_THIS_AMOUNT]: (
-      <Trans>
+      <>
         You can not withdraw this amount because it will cause collateral call
-      </Trans>
+      </>
     ),
     [ErrorType.POOL_DOES_NOT_HAVE_ENOUGH_LIQUIDITY]: (
-      <Trans>
+      <>
         These funds have been borrowed and are not available for withdrawal at
         this time.
-      </Trans>
+      </>
     ),
     [ErrorType.ZERO_LTV_WITHDRAW_BLOCKED]: (
-      <Trans>
+      <>
         Assets with zero LTV ({assetsBlockingWithdraw}) must be withdrawn or
         disabled as collateral to perform this action
-      </Trans>
+      </>
     ),
   };
 

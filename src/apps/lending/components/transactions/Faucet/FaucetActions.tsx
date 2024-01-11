@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import { useTransactionHandler } from "apps/lending/helpers/useTransactionHandler";
 import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 import { useRootStore } from "apps/lending/store/root";
@@ -36,8 +35,8 @@ export const FaucetActions = ({
       blocked={blocked}
       preparingTransactions={loadingTxns}
       handleAction={action}
-      actionText={<Trans>Faucet {poolReserve.symbol}</Trans>}
-      actionInProgressText={<Trans>Pending...</Trans>}
+      actionText={<>Faucet {poolReserve.symbol}</>}
+      actionInProgressText={<>Pending...</>}
       mainTxState={mainTxState}
       isWrongNetwork={isWrongNetwork}
     />
