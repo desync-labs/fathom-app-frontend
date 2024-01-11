@@ -35,7 +35,7 @@ import { Link } from "apps/lending/components/primitives/Link";
 import {
   ENABLE_TESTNET,
   getNetworkConfig,
-  STAGING_ENV,
+  DEV_ENV,
 } from "apps/lending/utils/marketsAndNetworksConfig";
 import { DrawerWrapper } from "apps/lending/layouts/components/DrawerWrapper";
 import { MobileCloseButton } from "apps/lending/layouts/components/MobileCloseButton";
@@ -114,7 +114,7 @@ export default function WalletWidget({
     handleClose();
   };
 
-  const hideWalletAccountText = xsm && (ENABLE_TESTNET || STAGING_ENV);
+  const hideWalletAccountText = xsm && (ENABLE_TESTNET || DEV_ENV);
 
   const Content = ({
     component = ListItem,

@@ -20,11 +20,10 @@ export const NextLinkComposed = forwardRef<
   HTMLAnchorElement,
   NextLinkComposedProps
 >(function NextLinkComposed(props, ref) {
-  const { to, ...other } = props;
-
+  const { to, children } = props;
   return (
-    <ReactLink to={to}>
-      <Anchor ref={ref} {...other} />
+    <ReactLink to={to} ref={ref}>
+      {children}
     </ReactLink>
   );
 });
@@ -112,10 +111,10 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(function Link(
 });
 
 export const ROUTES = {
-  dashboard: "/",
-  markets: "/markets",
-  faucet: "/faucet",
+  dashboard: "/lending",
+  markets: "/lending/markets",
+  faucet: "/lending/faucet",
   reserveOverview: (underlyingAsset: string, marketName: CustomMarket) =>
-    `/reserve-overview/?underlyingAsset=${underlyingAsset}&marketName=${marketName}`,
-  history: "/history",
+    `/lending/reserve-overview/?underlyingAsset=${underlyingAsset}&marketName=${marketName}`,
+  history: "/lending/transactions",
 };

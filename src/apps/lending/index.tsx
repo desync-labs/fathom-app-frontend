@@ -13,7 +13,6 @@ import { useRootStore } from "apps/lending/store/root";
 import { SharedDependenciesProvider } from "apps/lending/ui-config/SharedDependenciesProvider";
 
 import { AppGlobalStyles } from "apps/lending/layouts/AppGlobalStyles";
-import { MainLayout } from "apps/lending/layouts/MainLayout";
 import { Outlet } from "react-router-dom";
 
 import BorrowModal from "apps/lending/components/transactions/Borrow/BorrowModal";
@@ -59,9 +58,7 @@ const LendingIndexComponent: FC<LendingViewProps> = ({ openConnectorMenu }) => {
                         <AppsSharedProvider
                           openConnectorMenu={openConnectorMenu}
                         >
-                          <MainLayout>
-                            <Outlet />
-                          </MainLayout>
+                          <Outlet />
                         </AppsSharedProvider>
                         <SupplyModal />
                         <WithdrawModal />

@@ -7,7 +7,6 @@ import { ListColumn } from "apps/lending/components/lists/ListColumn";
 import { ListHeaderTitle } from "apps/lending/components/lists/ListHeaderTitle";
 import { ListHeaderWrapper } from "apps/lending/components/lists/ListHeaderWrapper";
 import { Warning } from "apps/lending/components/primitives/Warning";
-import { MarketWarning } from "apps/lending/components/transactions/Warnings/MarketWarning";
 import { AssetCapsProvider } from "apps/lending/hooks/useAssetCaps";
 import { fetchIconSymbolAndName } from "apps/lending/ui-config/reservePatches";
 
@@ -45,8 +44,7 @@ const head = [
 ];
 
 export const SupplyAssetsList = () => {
-  const { currentNetworkConfig, currentChainId, currentMarketData } =
-    useProtocolDataContext();
+  const { currentNetworkConfig, currentChainId } = useProtocolDataContext();
   const {
     user,
     reserves,
@@ -268,14 +266,7 @@ export const SupplyAssetsList = () => {
       subChildrenComponent={
         <>
           <Box sx={{ px: 6 }}>
-            {supplyDisabled && currentNetworkConfig.name === "Harmony" ? (
-              <MarketWarning marketName="Harmony" />
-            ) : supplyDisabled && currentNetworkConfig.name === "Fantom" ? (
-              <MarketWarning marketName="Fantom" />
-            ) : supplyDisabled &&
-              currentMarketData.marketTitle === "Ethereum AMM" ? (
-              <MarketWarning marketName="Ethereum AMM" />
-            ) : user?.isInIsolationMode ? (
+            {user?.isInIsolationMode ? (
               <Warning severity="warning">
                 Collateral usage is limited because of isolation mode.{" "}
                 <Link

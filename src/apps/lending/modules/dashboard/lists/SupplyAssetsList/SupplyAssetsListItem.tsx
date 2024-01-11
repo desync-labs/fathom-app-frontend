@@ -16,104 +16,107 @@ import { ListButtonsColumn } from "apps/lending/modules/dashboard/lists/ListButt
 import { ListItemCanBeCollateral } from "apps/lending/modules/dashboard/lists/ListItemCanBeCollateral";
 import { ListItemWrapper } from "apps/lending/modules/dashboard/lists/ListItemWrapper";
 import { ListValueColumn } from "apps/lending/modules/dashboard/lists/ListValueColumn";
+import { FC, memo } from "react";
 
-export const SupplyAssetsListItem = ({
-  symbol,
-  iconSymbol,
-  name,
-  walletBalance,
-  walletBalanceUSD,
-  supplyCap,
-  totalLiquidity,
-  supplyAPY,
-  aIncentivesData,
-  underlyingAsset,
-  isActive,
-  isFreezed,
-  isIsolated,
-  usageAsCollateralEnabledOnUser,
-  detailsAddress,
-}: DashboardReserve) => {
-  const { currentMarket } = useProtocolDataContext();
-  const { openSupply } = useModalContext();
+export const SupplyAssetsListItem: FC<DashboardReserve> = memo(
+  ({
+    symbol,
+    iconSymbol,
+    name,
+    walletBalance,
+    walletBalanceUSD,
+    supplyCap,
+    totalLiquidity,
+    supplyAPY,
+    aIncentivesData,
+    underlyingAsset,
+    isActive,
+    isFreezed,
+    isIsolated,
+    usageAsCollateralEnabledOnUser,
+    detailsAddress,
+  }) => {
+    const { currentMarket } = useProtocolDataContext();
+    const { openSupply } = useModalContext();
 
-  // Disable the asset to prevent it from being supplied if supply cap has been reached
-  const { supplyCap: supplyCapUsage, debtCeiling } = useAssetCaps();
-  const isMaxCapReached = supplyCapUsage.isMaxed;
+    // Disable the asset to prevent it from being supplied if supply cap has been reached
+    const { supplyCap: supplyCapUsage, debtCeiling } = useAssetCaps();
+    const isMaxCapReached = supplyCapUsage.isMaxed;
 
-  const trackEvent = useRootStore((store) => store.trackEvent);
-  const disableSupply =
-    !isActive || isFreezed || Number(walletBalance) <= 0 || isMaxCapReached;
+    const trackEvent = useRootStore((store) => store.trackEvent);
+    const disableSupply =
+      !isActive || isFreezed || Number(walletBalance) <= 0 || isMaxCapReached;
 
-  return (
-    <ListItemWrapper
-      symbol={symbol}
-      iconSymbol={iconSymbol}
-      name={name}
-      detailsAddress={detailsAddress}
-      data-cy={`dashboardSupplyListItem_${symbol.toUpperCase()}`}
-      currentMarket={currentMarket}
-      showDebtCeilingTooltips
-    >
-      <ListValueColumn
+    return (
+      <ListItemWrapper
         symbol={symbol}
-        value={Number(walletBalance)}
-        subValue={walletBalanceUSD}
-        withTooltip
-        disabled={Number(walletBalance) === 0 || isMaxCapReached}
-        capsComponent={
-          <CapsHint
-            capType={CapType.supplyCap}
-            capAmount={supplyCap}
-            totalAmount={totalLiquidity}
-            withoutText
-          />
-        }
-      />
+        iconSymbol={iconSymbol}
+        name={name}
+        detailsAddress={detailsAddress}
+        data-cy={`dashboardSupplyListItem_${symbol.toUpperCase()}`}
+        currentMarket={currentMarket}
+        showDebtCeilingTooltips
+      >
+        <ListValueColumn
+          symbol={symbol}
+          value={Number(walletBalance)}
+          subValue={walletBalanceUSD}
+          withTooltip
+          disabled={Number(walletBalance) === 0 || isMaxCapReached}
+          capsComponent={
+            <CapsHint
+              capType={CapType.supplyCap}
+              capAmount={supplyCap}
+              totalAmount={totalLiquidity}
+              withoutText
+            />
+          }
+        />
 
-      <ListAPRColumn
-        value={Number(supplyAPY)}
-        incentives={aIncentivesData}
-        symbol={symbol}
-      />
+        <ListAPRColumn
+          value={Number(supplyAPY)}
+          incentives={aIncentivesData}
+          symbol={symbol}
+        />
 
-      <ListColumn>
-        {debtCeiling.isMaxed ? (
-          <NoData variant="main14" color="text.secondary" />
-        ) : (
-          <ListItemCanBeCollateral
-            isIsolated={isIsolated}
-            usageAsCollateralEnabled={usageAsCollateralEnabledOnUser}
-          />
-        )}
-      </ListColumn>
+        <ListColumn>
+          {debtCeiling.isMaxed ? (
+            <NoData variant="main14" color="text.secondary" />
+          ) : (
+            <ListItemCanBeCollateral
+              isIsolated={isIsolated}
+              usageAsCollateralEnabled={usageAsCollateralEnabledOnUser}
+            />
+          )}
+        </ListColumn>
 
-      <ListButtonsColumn>
-        <Button
-          disabled={disableSupply}
-          variant="gradient"
-          onClick={() => {
-            openSupply(underlyingAsset, currentMarket, name, "dashboard");
-          }}
-        >
-          Supply
-        </Button>
-        <Button
-          variant="outlined"
-          component={Link}
-          href={ROUTES.reserveOverview(detailsAddress, currentMarket)}
-          onClick={() => {
-            trackEvent(DASHBOARD.DETAILS_NAVIGATION, {
-              type: "Button",
-              market: currentMarket,
-              assetName: name,
-              asset: underlyingAsset,
-            });
-          }}
-        >
-          Details
-        </Button>
-      </ListButtonsColumn>
-    </ListItemWrapper>
-  );
-};
+        <ListButtonsColumn>
+          <Button
+            disabled={disableSupply}
+            variant="gradient"
+            onClick={() => {
+              openSupply(underlyingAsset, currentMarket, name, "dashboard");
+            }}
+          >
+            Supply
+          </Button>
+          <Button
+            variant="outlined"
+            component={Link}
+            href={ROUTES.reserveOverview(detailsAddress, currentMarket)}
+            onClick={() => {
+              trackEvent(DASHBOARD.DETAILS_NAVIGATION, {
+                type: "Button",
+                market: currentMarket,
+                assetName: name,
+                asset: underlyingAsset,
+              });
+            }}
+          >
+            Details
+          </Button>
+        </ListButtonsColumn>
+      </ListItemWrapper>
+    );
+  }
+);

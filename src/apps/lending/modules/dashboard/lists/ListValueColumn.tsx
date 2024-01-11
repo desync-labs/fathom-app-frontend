@@ -1,5 +1,5 @@
 import { Box, Tooltip } from "@mui/material";
-import { ReactNode } from "react";
+import { FC, memo, ReactNode } from "react";
 
 import {
   ListColumn,
@@ -49,20 +49,49 @@ const Content = ({
   );
 };
 
-export const ListValueColumn = ({
-  symbol,
-  value,
-  subValue,
-  withTooltip,
-  capsComponent,
-  disabled,
-  listColumnProps = {},
-}: ListValueColumnProps) => {
-  return (
-    <ListColumn {...listColumnProps}>
-      {withTooltip ? (
-        <Tooltip
-          title={
+export const ListValueColumn: FC<ListValueColumnProps> = memo(
+  ({
+    symbol,
+    value,
+    subValue,
+    withTooltip,
+    capsComponent,
+    disabled,
+    listColumnProps = {},
+  }) => {
+    return (
+      <ListColumn {...listColumnProps}>
+        {withTooltip ? (
+          <Tooltip
+            title={
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <FormattedNumber
+                  value={subValue || 0}
+                  symbol="USD"
+                  variant="secondary14"
+                  sx={{ mb: "2px" }}
+                  symbolsColor="common.white"
+                  compact={false}
+                />
+                <FormattedNumber
+                  value={value}
+                  variant="secondary12"
+                  symbol={symbol}
+                  symbolsColor="common.white"
+                  compact={false}
+                />
+              </Box>
+            }
+            arrow
+            placement="top"
+          >
             <Box
               sx={{
                 display: "flex",
@@ -71,54 +100,27 @@ export const ListValueColumn = ({
                 justifyContent: "center",
               }}
             >
-              <FormattedNumber
-                value={subValue || 0}
-                symbol="USD"
-                variant="secondary14"
-                sx={{ mb: "2px" }}
-                symbolsColor="common.white"
-                compact={false}
-              />
-              <FormattedNumber
-                value={value}
-                variant="secondary12"
+              <Content
                 symbol={symbol}
-                symbolsColor="common.white"
-                compact={false}
+                value={value}
+                subValue={subValue}
+                capsComponent={capsComponent}
+                disabled={disabled}
+                withTooltip={withTooltip}
               />
             </Box>
-          }
-          arrow
-          placement="top"
-        >
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Content
-              symbol={symbol}
-              value={value}
-              subValue={subValue}
-              capsComponent={capsComponent}
-              disabled={disabled}
-              withTooltip={withTooltip}
-            />
-          </Box>
-        </Tooltip>
-      ) : (
-        <Content
-          symbol={symbol}
-          value={value}
-          subValue={subValue}
-          capsComponent={capsComponent}
-          disabled={disabled}
-          withTooltip={withTooltip}
-        />
-      )}
-    </ListColumn>
-  );
-};
+          </Tooltip>
+        ) : (
+          <Content
+            symbol={symbol}
+            value={value}
+            subValue={subValue}
+            capsComponent={capsComponent}
+            disabled={disabled}
+            withTooltip={withTooltip}
+          />
+        )}
+      </ListColumn>
+    );
+  }
+);

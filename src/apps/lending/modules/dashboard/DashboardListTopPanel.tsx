@@ -3,7 +3,7 @@ import { FaucetButton } from "apps/lending/components/FaucetButton";
 import { useRootStore } from "apps/lending/store/root";
 import {
   ENABLE_TESTNET,
-  STAGING_ENV,
+  DEV_ENV,
 } from "apps/lending/utils/marketsAndNetworksConfig";
 import { DASHBOARD } from "apps/lending/utils/mixPanelEvents";
 
@@ -49,7 +49,7 @@ export const DashboardListTopPanel = ({
         label={"Show assets with 0 balance"}
       />
 
-      {(STAGING_ENV || ENABLE_TESTNET) && <FaucetButton />}
+      {(DEV_ENV || ENABLE_TESTNET) && <FaucetButton />}
       {!ENABLE_TESTNET && <BridgeButton bridge={bridge} />}
     </Box>
   );
