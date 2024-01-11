@@ -1,7 +1,7 @@
 import { API_ETH_MOCK_ADDRESS } from "@aave/contract-helpers";
 import LocalGasStationIcon from "@mui/icons-material/LocalGasStation";
 import { Box, CircularProgress, Stack } from "@mui/material";
-import { BigNumber } from "fathom-ethers/lib/ethers";
+import { BigNumber } from "fathom-ethers";
 import { formatUnits, parseUnits } from "fathom-ethers/lib/utils";
 import { ReactNode } from "react";
 import { GasTooltip } from "apps/lending/components/infoTooltips/GasTooltip";

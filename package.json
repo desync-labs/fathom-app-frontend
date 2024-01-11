@@ -18,8 +18,7 @@
     "@mui/icons-material": "^5.10.3",
     "@mui/material": "^5.10.4",
     "@paraswap/sdk": "^6.3.0",
-    "@reach/dialog": "^0.18.0",
-    "@reach/portal": "^0.18.0",
+    "@reach/dialog": "^0.13.2",
     "@reduxjs/toolkit": "^1.9.7",
     "@tanstack/react-query": "^4.36.1",
     "@tanstack/react-query-devtools": "^4.36.1",
@@ -43,6 +42,7 @@
     "copy-to-clipboard": "^3.3.3",
     "d3-time-format": "^4.1.0",
     "fathom-ethers": "1.1.1",
+    "ethers": "^5.7.2",
     "fathom-sdk": "^0.1.39",
     "fathom-swap-standard-token-list": "^1.7.3",
     "feather-icons": "^4.29.1",
@@ -92,7 +92,8 @@
     "use-count-up": "^3.0.1",
     "wcag-contrast": "^3.0.0",
     "web-vitals": "^2.1.4",
-    "zustand": "^4.4.7"
+    "zustand": "^4.4.7",
+    "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "7.21.11",
@@ -124,7 +125,7 @@
     "eslint-plugin-import": "^2.29.0",
     "eslint-plugin-prettier": "^4.2.1",
     "prettier": "^2.4.1",
-    "react-scripts": "4.0.3",
+    "react-scripts": "^5.0.1",
     "typescript": "^4.9.5"
   },
   "scripts": {
