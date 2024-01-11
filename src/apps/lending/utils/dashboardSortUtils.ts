@@ -6,7 +6,7 @@ import { SupplyAssetsItem } from "apps/lending/modules/dashboard/lists/SupplyAss
 import {
   ComputedReserveData,
   ComputedUserReserveData,
-} from "../hooks/app-data-provider/useAppDataProvider";
+} from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 
 // Helpers
 export const DASHBOARD_LIST_COLUMN_WIDTHS = {

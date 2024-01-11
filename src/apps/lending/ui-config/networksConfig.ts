@@ -65,7 +65,7 @@ export const networkConfigs: Record<string, BaseNetworkConfig> = {
     baseAssetDecimals: 18,
     explorerLink: "https://explorer.apothem.network",
     isTestnet: true,
-    networkLogoPath: "./assets/networks/xdc.png",
+    networkLogoPath: "./icons/networks/xdc.png",
     ratesHistoryApiUrl: "http://206.189.103.116:30002/data/rates-history",
   },
   [ChainId.sepolia]: {
@@ -84,7 +84,7 @@ export const networkConfigs: Record<string, BaseNetworkConfig> = {
     explorerLink: "https://sepolia.etherscan.io",
     // usdMarket: true,
     isTestnet: true,
-    networkLogoPath: "./assets/networks/ethereum.svg",
+    networkLogoPath: "./icons/networks/ethereum.svg",
   },
   [ChainId.mainnet]: {
     name: "Ethereum",
@@ -103,6 +103,6 @@ export const networkConfigs: Record<string, BaseNetworkConfig> = {
     baseAssetDecimals: 18,
     explorerLink: "https://etherscan.io",
     ratesHistoryApiUrl: "https://aave-api-v2.aave.com/data/rates-history",
-    networkLogoPath: "./assets/networks/ethereum.svg",
+    networkLogoPath: "./icons/networks/ethereum.svg",
   },
 } as const;

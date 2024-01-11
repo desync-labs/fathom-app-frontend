@@ -14,9 +14,6 @@ import { useMemo } from "react";
 import { useRootStore } from "apps/lending/store/root";
 import { DASHBOARD } from "apps/lending/utils/mixPanelEvents";
 
-import Hal from "apps/lending/assets/icons/healthFactor/HAL.svg";
-import HalHover from "apps/lending/assets/icons/healthFactor/HALHover.svg";
-
 import { useWeb3Context } from "apps/lending/libs/hooks/useWeb3Context";
 
 const PopperComponent = styled(Popper)(({ theme }) =>
@@ -132,13 +129,13 @@ export default function HALLink({
           sx={{ opacity: 1, ...SvgIconStyle }}
           className="HALTooltip__icon"
         >
-          <Hal />
+          <img src={"./icons/icons/healthFactor/HAL.svg"} alt={"hal"} />
         </SvgIcon>
         <SvgIcon
           sx={{ opacity: 0, ...SvgIconStyle }}
           className="HALTooltip__hoverIcon"
         >
-          <HalHover />
+          <img src={"./icons/healthFactor/HALHover.svg"} alt={"hal"} />
         </SvgIcon>
         Notify
       </Button>
