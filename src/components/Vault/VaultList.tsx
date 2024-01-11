@@ -79,7 +79,7 @@ const VaultList: FC<VaultListPropsType> = ({
   const { isMobile } = useSharedContext();
 
   if (process.env.REACT_APP_ENV === "prod") {
-    return <NoResults variant="h6">Vaults coming soon.</NoResults>;
+    return <NoResults variant={"h6"}>Vaults coming soon.</NoResults>;
   }
 
   return (
@@ -100,13 +100,13 @@ const VaultList: FC<VaultListPropsType> = ({
                   openMobileFilterMenu={openMobileFilterMenu}
                 />
                 {vaultPositionsLoading || !vaultSortedList.length ? (
-                  <NoResults variant="h6">
+                  <NoResults variant={"h6"}>
                     {vaultsLoading || vaultPositionsLoading ? (
                       <CircleWrapper>
                         <CircularProgress size={30} />
                       </CircleWrapper>
                     ) : (
-                      "There are no Vaults for this query"
+                      "There are no Vaults for this query."
                     )}
                   </NoResults>
                 ) : (
@@ -132,7 +132,7 @@ const VaultList: FC<VaultListPropsType> = ({
                   setSortBy={setSortBy}
                 />
                 {vaultPositionsLoading || !vaultSortedList.length ? (
-                  <NoResults variant="h6">
+                  <NoResults variant={"h6"}>
                     {vaultsLoading || vaultPositionsLoading ? (
                       <CircleWrapper>
                         <CircularProgress size={30} />

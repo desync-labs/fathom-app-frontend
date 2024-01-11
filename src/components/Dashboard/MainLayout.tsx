@@ -37,6 +37,8 @@ import AlertMessages from "components/Common/AlertMessages";
 import TransactionStatus from "components/Transaction/TransactionStatus";
 
 import DaoView from "components/Dashboard/DaoView";
+import DexView from "components/Dashboard/DexView";
+import LendingView from "components/Dashboard/LendingView";
 
 import { Menu } from "components/Dashboard/Menu";
 import { ToggleDrawerButton } from "components/AppComponents/AppButton/AppButton";
@@ -45,7 +47,7 @@ import MobileConnector from "components/Dashboard/MobileConnector";
 import DesktopConnector from "components/Dashboard/DesktopConnector";
 import BottomLinks from "components/Dashboard/BottomLinks";
 import MobileMenu from "components/Dashboard/MobileMenu";
-import DexView from "components/Dashboard/DexView";
+
 import { drawerWidth } from "components/AppComponents/AppBar/AppBar";
 import TransactionErc20TokenModal from "components/Transaction/TransactionErc20TokenModal";
 import { themeObject } from "theme";
@@ -72,6 +74,15 @@ import FathomBalanceContent from "apps/dex/components/Header/FathomBalanceConten
 import { TYPE } from "apps/dex/theme";
 import { CountUp } from "use-count-up";
 import { CardNoise } from "apps/dex/components/earn/styled";
+
+/**
+ * Lending
+ */
+
+import Home from "apps/lending/pages/index.page";
+import Markets from "apps/lending/pages/markets.page";
+import History from "apps/lending/pages/history.page";
+import ReserveOverview from "apps/lending/pages/reserve-overview.page";
 
 import useMainLayout from "hooks/useMainLayout";
 import { StakingProvider } from "context/staking";
@@ -351,7 +362,7 @@ const MainLayout = () => {
             )}
             <Typography
               component="h1"
-              variant="h6"
+              variant={"h6"}
               color="inherit"
               noWrap
               sx={{ flexGrow: 1 }}
@@ -557,6 +568,16 @@ const MainLayout = () => {
                   }
                 />
                 <Route element={<RedirectPathToSwapOnly />} />
+              </Route>
+              <Route
+                path="/lending"
+                element={<LendingView openConnectorMenu={openConnectorMenu} />}
+              >
+                <Route index element={<Home />} />
+                <Route path="markets" element={<Markets />} />
+                <Route path="reserve-overview" element={<ReserveOverview />} />
+                <Route path="transactions" element={<History />} />
+                <Route path="*" element={<Navigate to="/lending" replace />} />
               </Route>
               <Route
                 path="/vault"

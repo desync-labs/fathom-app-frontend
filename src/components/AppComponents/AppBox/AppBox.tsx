@@ -305,6 +305,7 @@ export const NestedRouteLink = styled(Link)<{ span?: number }>`
 `;
 
 export const NestedRouteContainer = styled(Container)`
+  padding: 0;
   ${({ theme }) => theme.breakpoints.down("sm")} {
     margin-top: 15px;
   }

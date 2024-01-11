@@ -11,7 +11,7 @@ import ThemeProvider, {
   ThemedGlobalStyle,
 } from "apps/dex/theme";
 import { DexViewProps } from "components/Dashboard/DexView";
-import { DexSharedProvider } from "context/dexShared";
+import { AppsSharedProvider } from "context/appsShared";
 
 if (window.ethereum) {
   window.ethereum.autoRefreshOnNetworkChange = false;
@@ -36,9 +36,9 @@ const DexIndexComponent: FC<DexViewProps> = ({ openConnectorMenu }) => {
         <ThemeProvider>
           <>
             <ThemedGlobalStyle />
-            <DexSharedProvider openConnectorMenu={openConnectorMenu}>
+            <AppsSharedProvider openConnectorMenu={openConnectorMenu}>
               <App />
-            </DexSharedProvider>
+            </AppsSharedProvider>
           </>
         </ThemeProvider>
       </Blocklist>

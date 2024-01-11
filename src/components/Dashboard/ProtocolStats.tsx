@@ -76,7 +76,7 @@ const ProtocolStats = () => {
               }
             />
           </StatsTitle>
-          <StatsDescription variant="body2">
+          <StatsDescription variant={"body2"}>
             {!loading && formatNumber(totalBorrowed) + " FXD"}
           </StatsDescription>
         </Box>
