@@ -38,8 +38,6 @@ export const usePolling = (
       timeout = window.setTimeout(tick, time);
     }
     return () => clearTimeout(timeout);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeoutUpdate, ...deps]);
 
   return;

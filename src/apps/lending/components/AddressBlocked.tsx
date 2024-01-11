@@ -1,10 +1,10 @@
 import { ReactNode } from "react";
-import { useAddressAllowed } from "src/hooks/useAddressAllowed";
-import { MainLayout } from "src/layouts/MainLayout";
-import { useWeb3Context } from "src/libs/hooks/useWeb3Context";
-import { ENABLE_TESTNET } from "src/utils/marketsAndNetworksConfig";
+import { useAddressAllowed } from "apps/lending/hooks/useAddressAllowed";
+import { MainLayout } from "apps/lending/layouts/MainLayout";
+import { useWeb3Context } from "apps/lending/libs/hooks/useWeb3Context";
+import { ENABLE_TESTNET } from "apps/lending/utils/marketsAndNetworksConfig";
 
-import { AddressBlockedModal } from "./AddressBlockedModal";
+import { AddressBlockedModal } from "apps/lending/components/AddressBlockedModal";
 
 export const AddressBlocked = ({ children }: { children: ReactNode }) => {
   const { currentAccount, disconnectWallet, loading } = useWeb3Context();

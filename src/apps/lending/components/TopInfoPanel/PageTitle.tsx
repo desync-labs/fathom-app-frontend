@@ -1,8 +1,8 @@
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { ReactNode } from "react";
 
-import { NetworkConfig } from "../../ui-config/networksConfig";
-import { MarketSwitcher } from "../MarketSwitcher";
+import { NetworkConfig } from "apps/lending/ui-config/networksConfig";
+import { MarketSwitcher } from "apps/lending/components/MarketSwitcher";
 
 export interface PageTitleProps extends Pick<NetworkConfig, "bridge"> {
   pageTitle?: ReactNode;

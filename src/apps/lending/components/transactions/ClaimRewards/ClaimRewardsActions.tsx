@@ -1,10 +1,10 @@
 import { ProtocolAction } from "@aave/contract-helpers";
 import { Trans } from "@lingui/macro";
-import { Reward } from "src/helpers/types";
-import { useTransactionHandler } from "src/helpers/useTransactionHandler";
-import { useRootStore } from "src/store/root";
+import { Reward } from "apps/lending/helpers/types";
+import { useTransactionHandler } from "apps/lending/helpers/useTransactionHandler";
+import { useRootStore } from "apps/lending/store/root";
 
-import { TxActionsWrapper } from "../TxActionsWrapper";
+import { TxActionsWrapper } from "apps/lending/components/transactions/TxActionsWrapper";
 
 export type ClaimRewardsActionsProps = {
   isWrongNetwork: boolean;

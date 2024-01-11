@@ -2,14 +2,13 @@ import { valueToBigNumber } from "@aave/math-utils";
 import { ArrowNarrowRightIcon } from "@heroicons/react/solid";
 import { Trans } from "@lingui/macro";
 import { Box, Skeleton, Stack, SvgIcon, Typography } from "@mui/material";
-import React from "react";
-import { FormattedNumber } from "src/components/primitives/FormattedNumber";
-import { Row } from "src/components/primitives/Row";
-import { TokenIcon } from "src/components/primitives/TokenIcon";
-import { TextWithTooltip } from "src/components/TextWithTooltip";
-import { DetailsIncentivesLine } from "src/components/transactions/FlowCommons/TxModalDetails";
+import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
+import { Row } from "apps/lending/components/primitives/Row";
+import { TokenIcon } from "apps/lending/components/primitives/TokenIcon";
+import { TextWithTooltip } from "apps/lending/components/TextWithTooltip";
+import { DetailsIncentivesLine } from "apps/lending/components/transactions/FlowCommons/TxModalDetails";
 
-import { ComputedUserReserveData } from "../../../hooks/app-data-provider/useAppDataProvider";
+import { ComputedUserReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 
 export type DebtSwitchModalDetailsProps = {
   switchSource: ComputedUserReserveData;

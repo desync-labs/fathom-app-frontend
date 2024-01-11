@@ -1,5 +1,8 @@
-import { RootStore } from "./root";
-import { TransactionEvent, Transactions } from "./transactionsSlice";
+import { RootStore } from "apps/lending/store/root";
+import {
+  TransactionEvent,
+  Transactions,
+} from "apps/lending/store/transactionsSlice";
 
 export const selectSuccessfulTransactions = (state: RootStore) => {
   const successfulTransactions: Transactions = {};

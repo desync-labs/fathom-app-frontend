@@ -1,12 +1,12 @@
 import { InterestRate } from "@aave/contract-helpers";
 import { valueToBigNumber } from "@aave/math-utils";
 import { Trans } from "@lingui/macro";
-import { Warning } from "src/components/primitives/Warning";
-import { useModalContext } from "src/hooks/useModal";
+import { Warning } from "apps/lending/components/primitives/Warning";
+import { useModalContext } from "apps/lending/hooks/useModal";
 
-import { GasEstimationError } from "../FlowCommons/GasEstimationError";
-import { ModalWrapperProps } from "../FlowCommons/ModalWrapper";
-import { TxSuccessView } from "../FlowCommons/Success";
+import { GasEstimationError } from "apps/lending/components/transactions/FlowCommons/GasEstimationError";
+import { ModalWrapperProps } from "apps/lending/components/transactions/FlowCommons/ModalWrapper";
+import { TxSuccessView } from "apps/lending/components/transactions/FlowCommons/Success";
 import {
   DetailsIncentivesLine,
   DetailsNumberLine,

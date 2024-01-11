@@ -1,12 +1,12 @@
 import { ChainId } from "@aave/contract-helpers";
 import { Trans } from "@lingui/macro";
 import { Button, Typography } from "@mui/material";
-import { useWeb3Context } from "src/libs/hooks/useWeb3Context";
-import { TrackEventProps } from "src/store/analyticsSlice";
-import { useRootStore } from "src/store/root";
-import { GENERAL } from "src/utils/mixPanelEvents";
+import { useWeb3Context } from "apps/lending/libs/hooks/useWeb3Context";
+import { TrackEventProps } from "apps/lending/store/analyticsSlice";
+import { useRootStore } from "apps/lending/store/root";
+import { GENERAL } from "apps/lending/utils/mixPanelEvents";
 
-import { Warning } from "../../primitives/Warning";
+import { Warning } from "apps/lending/components/primitives/Warning";
 
 export type ChangeNetworkWarningProps = {
   funnel?: string;

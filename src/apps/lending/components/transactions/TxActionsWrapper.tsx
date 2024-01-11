@@ -8,12 +8,12 @@ import {
   SvgIcon,
 } from "@mui/material";
 import { ReactNode } from "react";
-import { TxStateType, useModalContext } from "src/hooks/useModal";
-import { TrackEventProps } from "src/store/analyticsSlice";
-import { TxAction } from "src/ui-config/errorMapping";
+import { TxStateType, useModalContext } from "apps/lending/hooks/useModal";
+import { TrackEventProps } from "apps/lending/store/analyticsSlice";
+import { TxAction } from "apps/lending/ui-config/errorMapping";
 
-import { ApprovalTooltip } from "../infoTooltips/ApprovalTooltip";
-import { RightHelperText } from "./FlowCommons/RightHelperText";
+import { ApprovalTooltip } from "apps/lending/components/infoTooltips/ApprovalTooltip";
+import { RightHelperText } from "apps/lending/components/transactions/FlowCommons/RightHelperText";
 
 interface TxActionsWrapperProps extends BoxProps {
   actionInProgressText: ReactNode;

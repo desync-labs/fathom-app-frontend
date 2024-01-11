@@ -15,7 +15,7 @@ import {
   Typography,
 } from "@mui/material";
 
-import { dynamicActivateLanguage } from "../../libs/LanguageProvider";
+import { dynamicActivateLanguage } from "apps/lending/libs/LanguageProvider";
 
 const langMap = {
   en: t`English`,

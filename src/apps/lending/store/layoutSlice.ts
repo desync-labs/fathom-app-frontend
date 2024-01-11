@@ -1,6 +1,6 @@
 import { StateCreator } from "zustand";
 
-import { RootStore } from "./root";
+import { RootStore } from "apps/lending/store/root";
 
 export type LayoutSlice = {
   setMobileDrawerOpen: (eventName: boolean) => void;

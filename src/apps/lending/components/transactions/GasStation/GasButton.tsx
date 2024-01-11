@@ -4,21 +4,17 @@ import {
   ToggleButtonProps,
   Typography,
 } from "@mui/material";
-import { formatUnits } from "ethers/lib/utils";
-import React from "react";
+import { formatUnits } from "fathom-ethers/lib/utils";
 
-import { GasOption } from "./GasStationProvider";
+import { GasOption } from "apps/lending/components/transactions/GasStation/GasStationProvider";
+import { FC } from "react";
 
 export interface GasButtonProps extends ToggleButtonProps {
   value: GasOption;
   gwei?: string | undefined;
 }
 
-export const GasButton: React.FC<GasButtonProps> = ({
-  value,
-  gwei,
-  ...props
-}) => {
+export const GasButton: FC<GasButtonProps> = ({ value, gwei, ...props }) => {
   return (
     <ToggleButton
       value={value}

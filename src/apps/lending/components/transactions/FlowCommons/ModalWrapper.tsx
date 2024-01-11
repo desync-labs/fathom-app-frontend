@@ -1,26 +1,25 @@
 import { API_ETH_MOCK_ADDRESS, PERMISSION } from "@aave/contract-helpers";
-import React from "react";
-import { ReactElement } from "react-markdown/lib/react-markdown";
+import { ReactElement } from "react";
 import {
   ComputedReserveData,
   ComputedUserReserveData,
   useAppDataContext,
-} from "src/hooks/app-data-provider/useAppDataProvider";
-import { useWalletBalances } from "src/hooks/app-data-provider/useWalletBalances";
-import { AssetCapsProvider } from "src/hooks/useAssetCaps";
-import { useIsWrongNetwork } from "src/hooks/useIsWrongNetwork";
-import { useModalContext } from "src/hooks/useModal";
-import { usePermissions } from "src/hooks/usePermissions";
-import { useProtocolDataContext } from "src/hooks/useProtocolDataContext";
+} from "apps/lending/hooks/app-data-provider/useAppDataProvider";
+import { useWalletBalances } from "apps/lending/hooks/app-data-provider/useWalletBalances";
+import { AssetCapsProvider } from "apps/lending/hooks/useAssetCaps";
+import { useIsWrongNetwork } from "apps/lending/hooks/useIsWrongNetwork";
+import { useModalContext } from "apps/lending/hooks/useModal";
+import { usePermissions } from "apps/lending/hooks/usePermissions";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
 import {
   getNetworkConfig,
   isFeatureEnabled,
-} from "src/utils/marketsAndNetworksConfig";
-import { GENERAL } from "src/utils/mixPanelEvents";
+} from "apps/lending/utils/marketsAndNetworksConfig";
+import { GENERAL } from "apps/lending/utils/mixPanelEvents";
 
-import { TxModalTitle } from "../FlowCommons/TxModalTitle";
-import { ChangeNetworkWarning } from "../Warnings/ChangeNetworkWarning";
-import { TxErrorView } from "./Error";
+import { TxModalTitle } from "apps/lending/components/transactions/FlowCommons/TxModalTitle";
+import { ChangeNetworkWarning } from "apps/lending/components/transactions//Warnings/ChangeNetworkWarning";
+import { TxErrorView } from "apps/lending/components/transactions/FlowCommons/Error";
 
 export interface ModalWrapperProps {
   underlyingAsset: string;

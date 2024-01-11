@@ -3,7 +3,7 @@ import {
   Network,
   StaticJsonRpcProvider,
 } from "@ethersproject/providers";
-import { logger } from "ethers";
+import { logger } from "fathom-ethers";
 
 const DEFAULT_FALL_FORWARD_DELAY = 60000;
 const MAX_RETRIES = 1;
@@ -142,7 +142,7 @@ export class RotationProvider extends BaseProvider {
     const index = this.currentProviderIndex;
     try {
       return await this.providers[index].perform(method, params);
-    } catch (e) {
+    } catch (e: any) {
       console.error(e.message);
       this.lastError = e.message;
       this.emit("debug", {

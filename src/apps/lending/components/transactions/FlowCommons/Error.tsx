@@ -1,8 +1,8 @@
 import { DuplicateIcon, XIcon } from "@heroicons/react/outline";
 import { Trans } from "@lingui/macro";
 import { Box, Button, Link, SvgIcon, Typography } from "@mui/material";
-import { useModalContext } from "src/hooks/useModal";
-import { TxErrorType } from "src/ui-config/errorMapping";
+import { useModalContext } from "apps/lending/hooks/useModal";
+import { TxErrorType } from "apps/lending/ui-config/errorMapping";
 
 export const TxErrorView = ({ txError }: { txError: TxErrorType }) => {
   const { close } = useModalContext();

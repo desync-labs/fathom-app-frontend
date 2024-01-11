@@ -1,17 +1,23 @@
 import { API_ETH_MOCK_ADDRESS, transactionType } from "@aave/contract-helpers";
-import { SignatureLike } from "@ethersproject/bytes";
-import { JsonRpcProvider, TransactionResponse } from "@ethersproject/providers";
+import { SignatureLike } from "@into-the-fathom/bytes";
+import {
+  JsonRpcProvider,
+  TransactionResponse,
+} from "@into-the-fathom/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { useWeb3React } from "@web3-react/core";
-import { BigNumber, PopulatedTransaction, providers } from "ethers";
+import { BigNumber, PopulatedTransaction, providers } from "fathom-ethers";
 import React, { ReactElement, useCallback, useEffect, useState } from "react";
-import { useRootStore } from "src/store/root";
-import { getNetworkConfig } from "src/utils/marketsAndNetworksConfig";
-import { hexToAscii } from "src/utils/utils";
+import { useRootStore } from "apps/lending/store/root";
+import { getNetworkConfig } from "apps/lending/utils/marketsAndNetworksConfig";
+import { hexToAscii } from "apps/lending/utils/utils";
 
-import { Web3Context } from "../hooks/useWeb3Context";
-import { WalletConnectConnector } from "./WalletConnectConnector";
-import { getWallet, WalletType } from "./WalletOptions";
+import { Web3Context } from "apps/lending/libs/hooks/useWeb3Context";
+import { WalletConnectConnector } from "apps/lending/libs/web3-data-provider/WalletConnectConnector";
+import {
+  getWallet,
+  WalletType,
+} from "apps/lending/libs/web3-data-provider/WalletOptions";
 
 export type ERC20TokenType = {
   address: string;
@@ -69,13 +75,6 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
   ]);
   const setAccountLoading = useRootStore((store) => store.setAccountLoading);
   const setWalletType = useRootStore((store) => store.setWalletType);
-  // for now we use network changed as it returns the chain string instead of hex
-  // const handleChainChanged = (chainId: number) => {
-  //   console.log('chainChanged', chainId);
-  //   if (selectedWallet) {
-  //     connectWallet(selectedWallet);
-  //   }
-  // };
 
   // Wallet connection and disconnection
   // clean local storage
@@ -118,7 +117,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
         localStorage.setItem("walletProvider", wallet.toString());
         setDeactivated(false);
         setLoading(false);
-      } catch (e) {
+      } catch (e: any) {
         console.log("error on activation", e);
         setError(e);
         setWalletType(undefined);
@@ -132,17 +131,16 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
   const activateInjectedProvider = (
     providerName: string | "MetaMask" | "CoinBase"
   ) => {
-    // @ts-expect-error ethereum doesn't necessarily exist
     const { ethereum } = window;
 
-    if (!ethereum?.providers) {
+    if ("providers" in (ethereum as InjectProviderType)) {
       return true;
     }
 
     let provider;
     switch (providerName) {
       case "CoinBase":
-        provider = ethereum.providers.find(
+        provider = (ethereum as any).providers.find(
           //@ts-expect-error no type
           ({ isCoinbaseWallet, isCoinbaseBrowser }) =>
             isCoinbaseWallet || isCoinbaseBrowser
@@ -157,7 +155,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
     }
 
     if (provider) {
-      ethereum.setSelectedProvider(provider);
+      (ethereum as any).setSelectedProvider(provider);
       return true;
     }
 
@@ -180,12 +178,11 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
               setTriedCoinbase(true);
             });
         } else {
-          // @ts-expect-error ethereum might not be in window
           const { ethereum } = window;
 
           if (ethereum) {
             activateInjectedProvider("CoinBase");
-            ethereum.request({ method: "eth_requestAccounts" });
+            (ethereum as any).request({ method: "eth_requestAccounts" });
           }
 
           setTriedCoinbase(true);
@@ -201,25 +198,12 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
   useEffect(() => {
     const lastWalletProvider = localStorage.getItem("walletProvider");
     if (!active && !deactivated && triedCoinbase) {
-      if (!!lastWalletProvider) {
+      if (lastWalletProvider) {
         connectWallet(lastWalletProvider as WalletType).catch(() => {
           setTried(true);
         });
       } else {
         setTried(true);
-        // For now we will not eagerly connect to injected provider
-        // const injected = getWallet(WalletType.INJECTED);
-        // // @ts-expect-error isAuthorized not in AbstractConnector type. But method is there for
-        // // injected provider
-        // injected.isAuthorized().then((isAuthorized: boolean) => {
-        //   if (isAuthorized) {
-        //     connectWallet(WalletType.INJECTED).catch(() => {
-        //       setTried(true);
-        //     });
-        //   } else {
-        //     setTried(true);
-        //   }
-        // });
       }
     }
   }, [activate, setTried, active, connectWallet, deactivated, triedCoinbase]);
@@ -270,7 +254,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
           { chainId: `0x${newChainId.toString(16)}` },
         ]);
         setSwitchNetworkError(undefined);
-      } catch (switchError) {
+      } catch (switchError: any) {
         const networkInfo = getNetworkConfig(newChainId);
         if (switchError.code === 4902) {
           try {
@@ -290,13 +274,13 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
                   blockExplorerUrls: [networkInfo.explorerLink],
                 },
               ]);
-            } catch (error) {
+            } catch (error: any) {
               if (error.code !== 4001) {
                 throw error;
               }
             }
             setSwitchNetworkError(undefined);
-          } catch (addError) {
+          } catch (addError: any) {
             setSwitchNetworkError(addError);
           }
         } else if (switchError.code === 4001) {
@@ -365,7 +349,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
         web3ProviderData: {
           connectWallet,
           disconnectWallet,
-          provider,
+          provider: provider as unknown as JsonRpcProvider,
           connected: active,
           loading,
           chainId: chainId || 1,

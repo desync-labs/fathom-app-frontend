@@ -1,10 +1,10 @@
 import { ExternalLinkIcon } from "@heroicons/react/outline";
 import { Trans } from "@lingui/macro";
 import { Button, SvgIcon, Typography } from "@mui/material";
-import { useProtocolDataContext } from "src/hooks/useProtocolDataContext";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
 
-import { DarkTooltip } from "./infoTooltips/DarkTooltip";
-import { Link, ROUTES } from "./primitives/Link";
+import { DarkTooltip } from "apps/lending/components/infoTooltips/DarkTooltip";
+import { Link, ROUTES } from "apps/lending/components/primitives/Link";
 
 export const FaucetButton = () => {
   const { currentNetworkConfig } = useProtocolDataContext();

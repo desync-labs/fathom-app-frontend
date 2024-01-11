@@ -3,25 +3,28 @@ import {
   gasLimitRecommendations,
   ProtocolAction,
 } from "@aave/contract-helpers";
-import { SignatureLike } from "@ethersproject/bytes";
+import { SignatureLike } from "@into-the-fathom/bytes";
 import { Trans } from "@lingui/macro";
 import { BoxProps } from "@mui/material";
-import { parseUnits } from "ethers/lib/utils";
-import { queryClient } from "pages/_app.page";
+import { parseUnits } from "fathom-ethers/lib/utils";
+import { queryClient } from "apps/lending";
 import { useCallback, useEffect, useState } from "react";
-import { MOCK_SIGNED_HASH } from "src/helpers/useTransactionHandler";
-import { useBackgroundDataProvider } from "src/hooks/app-data-provider/BackgroundDataProvider";
-import { ComputedReserveData } from "src/hooks/app-data-provider/useAppDataProvider";
+import { MOCK_SIGNED_HASH } from "apps/lending/helpers/useTransactionHandler";
+import { useBackgroundDataProvider } from "apps/lending/hooks/app-data-provider/BackgroundDataProvider";
+import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 import {
   calculateSignedAmount,
   SwapTransactionParams,
-} from "src/hooks/paraswap/common";
-import { useModalContext } from "src/hooks/useModal";
-import { useWeb3Context } from "src/libs/hooks/useWeb3Context";
-import { useRootStore } from "src/store/root";
-import { ApprovalMethod } from "src/store/walletSlice";
-import { getErrorTextFromError, TxAction } from "src/ui-config/errorMapping";
-import { QueryKeys } from "src/ui-config/queries";
+} from "apps/lending/hooks/paraswap/common";
+import { useModalContext } from "apps/lending/hooks/useModal";
+import { useWeb3Context } from "apps/lending/libs/hooks/useWeb3Context";
+import { useRootStore } from "apps/lending/store/root";
+import { ApprovalMethod } from "apps/lending/store/walletSlice";
+import {
+  getErrorTextFromError,
+  TxAction,
+} from "apps/lending/ui-config/errorMapping";
+import { QueryKeys } from "apps/lending/ui-config/queries";
 
 import { TxActionsWrapper } from "../TxActionsWrapper";
 import { APPROVE_DELEGATION_GAS_LIMIT, checkRequiresApproval } from "../utils";
@@ -172,7 +175,7 @@ export const DebtSwitchActions = ({
           fetchApprovedAmount(true);
         }
       }
-    } catch (error) {
+    } catch (error: any) {
       const parsedError = getErrorTextFromError(
         error,
         TxAction.GAS_ESTIMATION,
@@ -231,7 +234,7 @@ export const DebtSwitchActions = ({
       queryClient.invalidateQueries({ queryKey: [QueryKeys.POOL_TOKENS] });
       refetchPoolData && refetchPoolData();
       refetchIncentiveData && refetchIncentiveData();
-    } catch (error) {
+    } catch (error: any) {
       const parsedError = getErrorTextFromError(
         error,
         TxAction.GAS_ESTIMATION,

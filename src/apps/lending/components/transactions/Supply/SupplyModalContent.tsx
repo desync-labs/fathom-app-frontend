@@ -7,34 +7,34 @@ import {
 import { Trans } from "@lingui/macro";
 import BigNumber from "bignumber.js";
 import React, { useMemo, useState } from "react";
-import { Warning } from "src/components/primitives/Warning";
-import { AMPLWarning } from "src/components/Warnings/AMPLWarning";
-import { useAssetCaps } from "src/hooks/useAssetCaps";
-import { useModalContext } from "src/hooks/useModal";
-import { useProtocolDataContext } from "src/hooks/useProtocolDataContext";
-import { ERC20TokenType } from "src/libs/web3-data-provider/Web3Provider";
-import { useRootStore } from "src/store/root";
-import { getMaxAmountAvailableToSupply } from "src/utils/getMaxAmountAvailableToSupply";
-import { GENERAL } from "src/utils/mixPanelEvents";
-import { roundToTokenDecimals } from "src/utils/utils";
+import { Warning } from "apps/lending/components/primitives/Warning";
+import { AMPLWarning } from "apps/lending/components/Warnings/AMPLWarning";
+import { useAssetCaps } from "apps/lending/hooks/useAssetCaps";
+import { useModalContext } from "apps/lending/hooks/useModal";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
+import { ERC20TokenType } from "apps/lending/libs/web3-data-provider/Web3Provider";
+import { useRootStore } from "apps/lending/store/root";
+import { getMaxAmountAvailableToSupply } from "apps/lending/utils/getMaxAmountAvailableToSupply";
+import { GENERAL } from "apps/lending/utils/mixPanelEvents";
+import { roundToTokenDecimals } from "apps/lending/utils/utils";
 
-import { useAppDataContext } from "../../../hooks/app-data-provider/useAppDataProvider";
-import { CapType } from "../../caps/helper";
-import { AssetInput } from "../AssetInput";
-import { GasEstimationError } from "../FlowCommons/GasEstimationError";
-import { ModalWrapperProps } from "../FlowCommons/ModalWrapper";
-import { TxSuccessView } from "../FlowCommons/Success";
+import { useAppDataContext } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
+import { CapType } from "apps/lending/components/caps/helper";
+import { AssetInput } from "apps/lending/components/transactions/AssetInput";
+import { GasEstimationError } from "apps/lending/components/transactions/FlowCommons/GasEstimationError";
+import { ModalWrapperProps } from "apps/lending/components/transactions/FlowCommons/ModalWrapper";
+import { TxSuccessView } from "apps/lending/components/transactions/FlowCommons/Success";
 import {
   DetailsCollateralLine,
   DetailsHFLine,
   DetailsIncentivesLine,
   DetailsNumberLine,
   TxModalDetails,
-} from "../FlowCommons/TxModalDetails";
-import { getAssetCollateralType } from "../utils";
-import { IsolationModeWarning } from "../Warnings/IsolationModeWarning";
-import { SNXWarning } from "../Warnings/SNXWarning";
-import { SupplyActions } from "./SupplyActions";
+} from "apps/lending/components/transactions/FlowCommons/TxModalDetails";
+import { getAssetCollateralType } from "apps/lending/components/transactions/utils";
+import { IsolationModeWarning } from "apps/lending/components/transactions/Warnings/IsolationModeWarning";
+import { SNXWarning } from "apps/lending/components/transactions/Warnings/SNXWarning";
+import { SupplyActions } from "apps/lending/components/transactions/Supply/SupplyActions";
 
 export enum ErrorType {
   CAP_REACHED,

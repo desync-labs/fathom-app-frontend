@@ -1,13 +1,13 @@
 import { t } from "@lingui/macro";
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
-import { ReactNode } from "react";
+import { FC, ReactNode } from "react";
 
 type NoSearchResultsProps = {
   searchTerm?: string;
   subtitle?: ReactNode;
 };
 
-export const NoSearchResults: React.FC<NoSearchResultsProps> = ({
+export const NoSearchResults: FC<NoSearchResultsProps> = ({
   searchTerm,
   subtitle,
 }) => {

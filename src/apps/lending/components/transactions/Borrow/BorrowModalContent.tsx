@@ -7,25 +7,25 @@ import {
 import { Trans } from "@lingui/macro";
 import { Typography } from "@mui/material";
 import { useState } from "react";
-import { APYTypeTooltip } from "src/components/infoTooltips/APYTypeTooltip";
-import { FormattedNumber } from "src/components/primitives/FormattedNumber";
-import { Row } from "src/components/primitives/Row";
-import { StyledTxModalToggleButton } from "src/components/StyledToggleButton";
-import { StyledTxModalToggleGroup } from "src/components/StyledToggleButtonGroup";
-import { useAppDataContext } from "src/hooks/app-data-provider/useAppDataProvider";
-import { useAssetCaps } from "src/hooks/useAssetCaps";
-import { useModalContext } from "src/hooks/useModal";
-import { useProtocolDataContext } from "src/hooks/useProtocolDataContext";
-import { ERC20TokenType } from "src/libs/web3-data-provider/Web3Provider";
-import { getMaxAmountAvailableToBorrow } from "src/utils/getMaxAmountAvailableToBorrow";
-import { GENERAL } from "src/utils/mixPanelEvents";
-import { roundToTokenDecimals } from "src/utils/utils";
+import { APYTypeTooltip } from "apps/lending/components/infoTooltips/APYTypeTooltip";
+import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
+import { Row } from "apps/lending/components/primitives/Row";
+import { StyledTxModalToggleButton } from "apps/lending/components/StyledToggleButton";
+import { StyledTxModalToggleGroup } from "apps/lending/components/StyledToggleButtonGroup";
+import { useAppDataContext } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
+import { useAssetCaps } from "apps/lending/hooks/useAssetCaps";
+import { useModalContext } from "apps/lending/hooks/useModal";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
+import { ERC20TokenType } from "apps/lending/libs/web3-data-provider/Web3Provider";
+import { getMaxAmountAvailableToBorrow } from "apps/lending/utils/getMaxAmountAvailableToBorrow";
+import { GENERAL } from "apps/lending/utils/mixPanelEvents";
+import { roundToTokenDecimals } from "apps/lending/utils/utils";
 
-import { CapType } from "../../caps/helper";
-import { AssetInput } from "../AssetInput";
-import { GasEstimationError } from "../FlowCommons/GasEstimationError";
-import { ModalWrapperProps } from "../FlowCommons/ModalWrapper";
-import { TxSuccessView } from "../FlowCommons/Success";
+import { CapType } from "apps/lending/components/caps/helper";
+import { AssetInput } from "apps/lending/components/transactions/AssetInput";
+import { GasEstimationError } from "apps/lending/components/transactions/FlowCommons/GasEstimationError";
+import { ModalWrapperProps } from "apps/lending/components/transactions/FlowCommons/ModalWrapper";
+import { TxSuccessView } from "apps/lending/components/transactions/FlowCommons/Success";
 import {
   DetailsHFLine,
   DetailsIncentivesLine,

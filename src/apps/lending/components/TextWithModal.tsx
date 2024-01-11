@@ -2,9 +2,9 @@ import { InformationCircleIcon } from "@heroicons/react/outline";
 import { Trans } from "@lingui/macro";
 import { Box, Button, IconButton, SvgIcon, Typography } from "@mui/material";
 import { TypographyProps } from "@mui/material/Typography";
-import { ReactNode, useState } from "react";
+import { FC, ReactNode, useState } from "react";
 
-import { BasicModal } from "./primitives/BasicModal";
+import { BasicModal } from "apps/lending/components/primitives/BasicModal";
 
 export interface TextWithModalProps extends TypographyProps {
   text?: ReactNode;
@@ -14,7 +14,7 @@ export interface TextWithModalProps extends TypographyProps {
   withContentButton?: boolean;
 }
 
-export const TextWithModal = ({
+export const TextWithModal: FC<TextWithModalProps> = ({
   text,
   children,
   icon,
@@ -22,7 +22,7 @@ export const TextWithModal = ({
   iconColor = "#EAEBEF",
   withContentButton,
   ...rest
-}: TextWithModalProps) => {
+}) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
 

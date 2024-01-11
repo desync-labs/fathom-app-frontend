@@ -1,7 +1,7 @@
 import mixpanel from "mixpanel-browser";
 import { StateCreator } from "zustand";
 
-import { RootStore } from "./root";
+import { RootStore } from "apps/lending/store/root";
 
 const MIXPANEL_TOKEN = process.env.NEXT_PUBLIC_MIXPANEL || "";
 

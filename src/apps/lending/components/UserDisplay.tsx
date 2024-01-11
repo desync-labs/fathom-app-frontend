@@ -1,12 +1,18 @@
 import { Box } from "@mui/material";
 import { blo } from "blo";
-import { useMemo } from "react";
-import { useRootStore } from "src/store/root";
+import { FC, useMemo } from "react";
+import { useRootStore } from "apps/lending/store/root";
 import shallow from "zustand/shallow";
 
-import { Avatar, AvatarProps } from "./Avatar";
-import { BadgeSize, ExclamationBadge } from "./badges/ExclamationBadge";
-import { UserNameText, UserNameTextProps } from "./UserNameText";
+import { Avatar, AvatarProps } from "apps/lending/components/Avatar";
+import {
+  BadgeSize,
+  ExclamationBadge,
+} from "apps/lending/components/badges/ExclamationBadge";
+import {
+  UserNameText,
+  UserNameTextProps,
+} from "apps/lending/components/UserNameText";
 
 type UserDisplayProps = {
   oneLiner?: boolean;
@@ -17,7 +23,7 @@ type UserDisplayProps = {
   funnel?: string;
 };
 
-export const UserDisplay: React.FC<UserDisplayProps> = ({
+export const UserDisplay: FC<UserDisplayProps> = ({
   oneLiner = false,
   avatarProps,
   titleProps,

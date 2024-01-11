@@ -8,16 +8,19 @@ import {
 } from "@aave/contract-helpers";
 import { Trans } from "@lingui/macro";
 import { BoxProps } from "@mui/material";
-import { parseUnits } from "ethers/lib/utils";
-import { queryClient } from "pages/_app.page";
+import { parseUnits } from "fathom-ethers/lib/utils";
+import { queryClient } from "apps/lending";
 import React, { useCallback, useEffect, useState } from "react";
-import { useBackgroundDataProvider } from "src/hooks/app-data-provider/BackgroundDataProvider";
-import { ComputedReserveData } from "src/hooks/app-data-provider/useAppDataProvider";
-import { useModalContext } from "src/hooks/useModal";
-import { useWeb3Context } from "src/libs/hooks/useWeb3Context";
-import { useRootStore } from "src/store/root";
-import { getErrorTextFromError, TxAction } from "src/ui-config/errorMapping";
-import { QueryKeys } from "src/ui-config/queries";
+import { useBackgroundDataProvider } from "apps/lending/hooks/app-data-provider/BackgroundDataProvider";
+import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
+import { useModalContext } from "apps/lending/hooks/useModal";
+import { useWeb3Context } from "apps/lending/libs/hooks/useWeb3Context";
+import { useRootStore } from "apps/lending/store/root";
+import {
+  getErrorTextFromError,
+  TxAction,
+} from "apps/lending/ui-config/errorMapping";
+import { QueryKeys } from "apps/lending/ui-config/queries";
 
 import { TxActionsWrapper } from "../TxActionsWrapper";
 import { APPROVE_DELEGATION_GAS_LIMIT, checkRequiresApproval } from "../utils";
@@ -100,7 +103,7 @@ export const BorrowActions = React.memo(
           });
           fetchApprovedAmount(true);
         }
-      } catch (error) {
+      } catch (error: any) {
         const parsedError = getErrorTextFromError(
           error,
           TxAction.GAS_ESTIMATION,
@@ -146,7 +149,7 @@ export const BorrowActions = React.memo(
         queryClient.invalidateQueries({ queryKey: [QueryKeys.POOL_TOKENS] });
         refetchPoolData && refetchPoolData();
         refetchIncentiveData && refetchIncentiveData();
-      } catch (error) {
+      } catch (error: any) {
         const parsedError = getErrorTextFromError(
           error,
           TxAction.GAS_ESTIMATION,

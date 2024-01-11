@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { useRootStore } from "src/store/root";
-import { POLLING_INTERVAL, QueryKeys } from "src/ui-config/queries";
-import { useSharedDependencies } from "src/ui-config/SharedDependenciesProvider";
+import { useRootStore } from "apps/lending/store/root";
+import { POLLING_INTERVAL, QueryKeys } from "apps/lending/ui-config/queries";
+import { useSharedDependencies } from "apps/lending/ui-config/SharedDependenciesProvider";
 
 export const usePoolTokensBalance = () => {
   const { poolTokensBalanceService } = useSharedDependencies();

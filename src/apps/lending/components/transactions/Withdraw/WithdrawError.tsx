@@ -4,8 +4,8 @@ import BigNumber from "bignumber.js";
 import {
   ComputedReserveData,
   useAppDataContext,
-} from "src/hooks/app-data-provider/useAppDataProvider";
-import { useModalContext } from "src/hooks/useModal";
+} from "apps/lending/hooks/app-data-provider/useAppDataProvider";
+import { useModalContext } from "apps/lending/hooks/useModal";
 
 enum ErrorType {
   CAN_NOT_WITHDRAW_THIS_AMOUNT,

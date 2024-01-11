@@ -1,10 +1,13 @@
 import { ExternalLinkIcon } from "@heroicons/react/solid";
 import { Box, Link, SvgIcon, TypographyProps } from "@mui/material";
-import { useRootStore } from "src/store/root";
-import { GENERAL } from "src/utils/mixPanelEvents";
+import { useRootStore } from "apps/lending/store/root";
+import { GENERAL } from "apps/lending/utils/mixPanelEvents";
 
-import { CompactableTypography, CompactMode } from "./CompactableTypography";
-import { DarkTooltip } from "./infoTooltips/DarkTooltip";
+import {
+  CompactableTypography,
+  CompactMode,
+} from "apps/lending/components/CompactableTypography";
+import { DarkTooltip } from "apps/lending/components/infoTooltips/DarkTooltip";
 
 export interface UserNameTextProps extends TypographyProps {
   addressCompactMode?: CompactMode;

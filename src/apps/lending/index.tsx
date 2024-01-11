@@ -1,8 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { Web3ReactProvider } from "@web3-react/core";
-import { providers } from "fathom-ethers";
-import { useEffect } from "react";
+import { FC, useEffect } from "react";
 import { AddressBlocked } from "apps/lending/components/AddressBlocked";
 import { TransactionEventHandler } from "apps/lending/components/TransactionEventHandler";
 import { GasStationProvider } from "apps/lending/components/transactions/GasStation/GasStationProvider";
@@ -31,17 +29,12 @@ import RepayModal from "apps/lending/components/transactions/Repay/RepayModal";
 import SupplyModal from "apps/lending/components/transactions/Supply/SupplyModal";
 import SwapModal from "apps/lending/components/transactions/Swap/SwapModal";
 import WithdrawModal from "apps/lending/components/transactions/Withdraw/WithdrawModal";
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function getWeb3Library(provider: any): providers.Web3Provider {
-  const library = new providers.Web3Provider(provider);
-  library.pollingInterval = 12000;
-  return library;
-}
+import { LendingViewProps } from "components/Dashboard/LendingView";
+import { AppsSharedProvider } from "context/appsShared";
 
 export const queryClient = new QueryClient();
 
-export default function MyApp() {
+const LendingIndexComponent: FC<LendingViewProps> = ({ openConnectorMenu }) => {
   const initializeMixpanel = useRootStore((store) => store.initializeMixpanel);
 
   const MIXPANEL_TOKEN = process.env.NEXT_PUBLIC_MIXPANEL;
@@ -56,43 +49,47 @@ export default function MyApp() {
   return (
     <LanguageProvider>
       <QueryClientProvider client={queryClient}>
-        <Web3ReactProvider getLibrary={getWeb3Library}>
-          <Web3ContextProvider>
-            <AppGlobalStyles>
-              <AddressBlocked>
-                <PermissionProvider>
-                  <ModalContextProvider>
-                    <BackgroundDataProvider>
-                      <AppDataProvider>
-                        <GasStationProvider>
-                          <SharedDependenciesProvider>
+        <Web3ContextProvider>
+          <AppGlobalStyles>
+            <AddressBlocked>
+              <PermissionProvider>
+                <ModalContextProvider>
+                  <BackgroundDataProvider>
+                    <AppDataProvider>
+                      <GasStationProvider>
+                        <SharedDependenciesProvider>
+                          <AppsSharedProvider
+                            openConnectorMenu={openConnectorMenu}
+                          >
                             <MainLayout>
                               <Outlet />
                             </MainLayout>
-                            <SupplyModal />
-                            <WithdrawModal />
-                            <BorrowModal />
-                            <RepayModal />
-                            <CollateralChangeModal />
-                            <RateSwitchModal />
-                            <DebtSwitchModal />
-                            <ClaimRewardsModal />
-                            <EmodeModal />
-                            <SwapModal />
-                            <FaucetModal />
-                            <TransactionEventHandler />
-                          </SharedDependenciesProvider>
-                        </GasStationProvider>
-                      </AppDataProvider>
-                    </BackgroundDataProvider>
-                  </ModalContextProvider>
-                </PermissionProvider>
-              </AddressBlocked>
-            </AppGlobalStyles>
-          </Web3ContextProvider>
-        </Web3ReactProvider>
+                          </AppsSharedProvider>
+                          <SupplyModal />
+                          <WithdrawModal />
+                          <BorrowModal />
+                          <RepayModal />
+                          <CollateralChangeModal />
+                          <RateSwitchModal />
+                          <DebtSwitchModal />
+                          <ClaimRewardsModal />
+                          <EmodeModal />
+                          <SwapModal />
+                          <FaucetModal />
+                          <TransactionEventHandler />
+                        </SharedDependenciesProvider>
+                      </GasStationProvider>
+                    </AppDataProvider>
+                  </BackgroundDataProvider>
+                </ModalContextProvider>
+              </PermissionProvider>
+            </AddressBlocked>
+          </AppGlobalStyles>
+        </Web3ContextProvider>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </LanguageProvider>
   );
-}
+};
+
+export default LendingIndexComponent;

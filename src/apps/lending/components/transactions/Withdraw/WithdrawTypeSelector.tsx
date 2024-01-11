@@ -1,10 +1,10 @@
 import { Trans } from "@lingui/macro";
 import { Box, Typography } from "@mui/material";
-import { StyledTxModalToggleButton } from "src/components/StyledToggleButton";
-import { StyledTxModalToggleGroup } from "src/components/StyledToggleButtonGroup";
-import { useProtocolDataContext } from "src/hooks/useProtocolDataContext";
-import { useRootStore } from "src/store/root";
-import { WITHDRAW_MODAL } from "src/utils/mixPanelEvents";
+import { StyledTxModalToggleButton } from "apps/lending/components/StyledToggleButton";
+import { StyledTxModalToggleGroup } from "apps/lending/components/StyledToggleButtonGroup";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
+import { useRootStore } from "apps/lending/store/root";
+import { WITHDRAW_MODAL } from "apps/lending/utils/mixPanelEvents";
 
 export enum WithdrawType {
   WITHDRAW,

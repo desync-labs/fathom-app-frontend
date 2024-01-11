@@ -1,9 +1,10 @@
 import { Trans } from "@lingui/macro";
 import { Box, Typography } from "@mui/material";
-import { Warning } from "src/components/primitives/Warning";
-import { TxErrorType } from "src/ui-config/errorMapping";
+import { Warning } from "apps/lending/components/primitives/Warning";
+import { TxErrorType } from "apps/lending/ui-config/errorMapping";
 
-import { GasEstimationError } from "../FlowCommons/GasEstimationError";
+import { GasEstimationError } from "apps/lending/components/transactions/FlowCommons/GasEstimationError";
+import { FC } from "react";
 
 const USER_DENIED_SIGNATURE =
   "MetaMask Message Signature: User denied message signature.";
@@ -13,7 +14,7 @@ const USER_DENIED_TRANSACTION =
 interface ErrorProps {
   txError: TxErrorType;
 }
-export const ParaswapErrorDisplay: React.FC<ErrorProps> = ({ txError }) => {
+export const ParaswapErrorDisplay: FC<ErrorProps> = ({ txError }) => {
   return (
     <Box>
       <GasEstimationError txError={txError} />

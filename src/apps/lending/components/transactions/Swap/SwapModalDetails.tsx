@@ -2,19 +2,18 @@ import { valueToBigNumber } from "@aave/math-utils";
 import { ArrowNarrowRightIcon } from "@heroicons/react/outline";
 import { Trans } from "@lingui/macro";
 import { Box, Skeleton, SvgIcon } from "@mui/material";
-import React from "react";
-import { FormattedNumber } from "src/components/primitives/FormattedNumber";
-import { Row } from "src/components/primitives/Row";
-import { TokenIcon } from "src/components/primitives/TokenIcon";
+import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
+import { Row } from "apps/lending/components/primitives/Row";
+import { TokenIcon } from "apps/lending/components/primitives/TokenIcon";
 import {
   CollateralState,
   DetailsHFLine,
   DetailsIncentivesLine,
   DetailsNumberLine,
-} from "src/components/transactions/FlowCommons/TxModalDetails";
-import { CollateralType } from "src/helpers/types";
+} from "apps/lending/components/transactions/FlowCommons/TxModalDetails";
+import { CollateralType } from "apps/lending/helpers/types";
 
-import { ComputedUserReserveData } from "../../../hooks/app-data-provider/useAppDataProvider";
+import { ComputedUserReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 
 export type SupplyModalDetailsProps = {
   showHealthFactor: boolean;

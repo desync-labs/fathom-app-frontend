@@ -6,9 +6,9 @@ import {
   useModalContext,
 } from "apps/lending/hooks/useModal";
 
-import { BasicModal } from "../../primitives/BasicModal";
-import { ModalWrapper } from "../FlowCommons/ModalWrapper";
-import { SupplyModalContent } from "./SupplyModalContent";
+import { BasicModal } from "apps/lending/components/primitives/BasicModal";
+import { ModalWrapper } from "apps/lending/components/transactions/FlowCommons/ModalWrapper";
+import { SupplyModalContent } from "apps/lending/components/transactions/Supply/SupplyModalContent";
 
 const SupplyModal = () => {
   const { type, close, args } = useModalContext() as ModalContextType<{

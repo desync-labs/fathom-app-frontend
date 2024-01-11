@@ -21,7 +21,7 @@ import { NoData } from "apps/lending/components/primitives/NoData";
 import { TopInfoPanel } from "apps/lending/components/TopInfoPanel/TopInfoPanel";
 import { TopInfoPanelItem } from "apps/lending/components/TopInfoPanel/TopInfoPanelItem";
 import { useAppDataContext } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
-import { LiquidationRiskParametresInfoModal } from "apps/lending/modules/dashboard/LiquidationRiskParametresModal/LiquidationRiskParametresModal";
+import { LiquidationRiskParametersInfoModal } from "apps/lending/modules/dashboard/LiquidationRiskParametresModal/LiquidationRiskParametresModal";
 
 export const DashboardTopPanel = () => {
   const { currentNetworkConfig, currentMarketData } = useProtocolDataContext();
@@ -207,7 +207,7 @@ export const DashboardTopPanel = () => {
           </TopInfoPanelItem>
         )}
       </TopInfoPanel>
-      <LiquidationRiskParametresInfoModal
+      <LiquidationRiskParametersInfoModal
         open={open}
         setOpen={setOpen}
         healthFactor={user?.healthFactor || "-1"}

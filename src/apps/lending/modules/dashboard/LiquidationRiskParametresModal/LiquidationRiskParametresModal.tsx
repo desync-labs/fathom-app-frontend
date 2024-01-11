@@ -10,8 +10,9 @@ import { Link } from "apps/lending/components/primitives/Link";
 import { HFContent } from "apps/lending/modules/dashboard/LiquidationRiskParametresModal/components/HFContent";
 import { InfoWrapper } from "apps/lending/modules/dashboard/LiquidationRiskParametresModal/components/InfoWrapper";
 import { LTVContent } from "apps/lending/modules/dashboard/LiquidationRiskParametresModal/components/LTVContent";
+import { FC } from "react";
 
-interface LiquidationRiskParametresInfoModalProps {
+interface LiquidationRiskParametersInfoModalProps {
   open: boolean;
   setOpen: (value: boolean) => void;
   healthFactor: string;
@@ -20,14 +21,16 @@ interface LiquidationRiskParametresInfoModalProps {
   currentLiquidationThreshold: string;
 }
 
-export const LiquidationRiskParametresInfoModal = ({
+export const LiquidationRiskParametersInfoModal: FC<
+  LiquidationRiskParametersInfoModalProps
+> = ({
   open,
   setOpen,
   healthFactor,
   loanToValue,
   currentLoanToValue,
   currentLiquidationThreshold,
-}: LiquidationRiskParametresInfoModalProps) => {
+}) => {
   let healthFactorColor: AlertColor = "success";
   const hf = Number(healthFactor);
   if (hf > 1.1 && hf <= 3) {

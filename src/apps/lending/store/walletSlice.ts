@@ -1,7 +1,7 @@
-import { WalletType } from "src/libs/web3-data-provider/WalletOptions";
+import { WalletType } from "apps/lending/libs/web3-data-provider/WalletOptions";
 import { StateCreator } from "zustand";
 
-import { RootStore } from "./root";
+import { RootStore } from "apps/lending/store/root";
 
 export enum ApprovalMethod {
   APPROVE = "Transaction",

@@ -1,14 +1,14 @@
 import { API_ETH_MOCK_ADDRESS } from "@aave/contract-helpers";
 import { nativeToUSD, normalize, USD_DECIMALS } from "@aave/math-utils";
 import { BigNumber } from "bignumber.js";
-import { useRootStore } from "src/store/root";
+import { useRootStore } from "apps/lending/store/root";
 
 import {
   selectCurrentBaseCurrencyData,
   selectCurrentReserves,
-} from "../../store/poolSelectors";
-import { usePoolTokensBalance } from "../pool/usePoolTokensBalance";
-import { useProtocolDataContext } from "../useProtocolDataContext";
+} from "apps/lending/store/poolSelectors";
+import { usePoolTokensBalance } from "apps/lending/hooks/pool/usePoolTokensBalance";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
 
 export interface WalletBalance {
   address: string;
@@ -24,8 +24,6 @@ export const useWalletBalances = () => {
   ]);
 
   const walletBalances = balances ?? [];
-  console.log(walletBalances);
-  console.log(reserves);
   // process data
   let hasEmptyWallet = true;
   const aggregatedBalance = walletBalances.reduce((acc, reserve) => {

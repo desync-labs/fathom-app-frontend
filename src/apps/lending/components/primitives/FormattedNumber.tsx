@@ -6,7 +6,7 @@ import type {
   TypographyPropsVariantOverrides,
 } from "@mui/material/Typography/Typography";
 import type { OverridableStringUnion } from "@mui/types";
-import type { ElementType } from "react";
+import type { ElementType, FC } from "react";
 
 interface CompactNumberProps {
   value: string | number;
@@ -89,7 +89,7 @@ export type FormattedNumberProps = TypographyProps<
   compactThreshold?: number;
 };
 
-export function FormattedNumber({
+export const FormattedNumber: FC<FormattedNumberProps> = ({
   value,
   symbol,
   visibleDecimals,
@@ -100,7 +100,7 @@ export function FormattedNumber({
   roundDown,
   compactThreshold,
   ...rest
-}: FormattedNumberProps) {
+}) => {
   const number = percent ? Number(value) * 100 : Number(value);
 
   let decimals: number = visibleDecimals ?? 0;
@@ -195,4 +195,4 @@ export function FormattedNumber({
       )}
     </Typography>
   );
-}
+};

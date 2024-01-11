@@ -1,16 +1,16 @@
 import { mintAmountsPerToken, valueToWei } from "@aave/contract-helpers";
 import { normalize } from "@aave/math-utils";
 import { Trans } from "@lingui/macro";
-import { useModalContext } from "src/hooks/useModal";
+import { useModalContext } from "apps/lending/hooks/useModal";
 
-import { GasEstimationError } from "../FlowCommons/GasEstimationError";
-import { ModalWrapperProps } from "../FlowCommons/ModalWrapper";
-import { TxSuccessView } from "../FlowCommons/Success";
+import { GasEstimationError } from "apps/lending/components/transactions/FlowCommons/GasEstimationError";
+import { ModalWrapperProps } from "apps/lending/components/transactions/FlowCommons/ModalWrapper";
+import { TxSuccessView } from "apps/lending/components/transactions/FlowCommons/Success";
 import {
   DetailsNumberLine,
   TxModalDetails,
-} from "../FlowCommons/TxModalDetails";
-import { FaucetActions } from "./FaucetActions";
+} from "apps/lending/components/transactions/FlowCommons/TxModalDetails";
+import { FaucetActions } from "apps/lending/components/transactions/Faucet/FaucetActions";
 
 export type FaucetModalContentProps = {
   underlyingAsset: string;

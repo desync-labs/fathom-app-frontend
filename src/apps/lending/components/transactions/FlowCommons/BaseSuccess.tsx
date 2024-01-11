@@ -3,8 +3,8 @@ import { CheckIcon } from "@heroicons/react/solid";
 import { Trans } from "@lingui/macro";
 import { Box, Button, Link, SvgIcon, Typography } from "@mui/material";
 import { ReactNode } from "react";
-import { useModalContext } from "src/hooks/useModal";
-import { useProtocolDataContext } from "src/hooks/useProtocolDataContext";
+import { useModalContext } from "apps/lending/hooks/useModal";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
 
 export type BaseSuccessTxViewProps = {
   txHash?: string;

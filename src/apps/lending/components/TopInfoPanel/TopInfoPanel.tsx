@@ -1,7 +1,10 @@
 import { Box, Container, ContainerProps } from "@mui/material";
-import { ReactNode } from "react";
+import { FC, ReactNode } from "react";
 
-import { PageTitle, PageTitleProps } from "./PageTitle";
+import {
+  PageTitle,
+  PageTitleProps,
+} from "apps/lending/components/TopInfoPanel/PageTitle";
 
 interface TopInfoPanelProps extends PageTitleProps {
   children?: ReactNode;
@@ -9,14 +12,14 @@ interface TopInfoPanelProps extends PageTitleProps {
   containerProps?: ContainerProps;
 }
 
-export const TopInfoPanel = ({
+export const TopInfoPanel: FC<TopInfoPanelProps> = ({
   pageTitle,
   titleComponent,
   withMarketSwitcher,
   bridge,
   children,
   containerProps = {},
-}: TopInfoPanelProps) => {
+}) => {
   return (
     <Box
       sx={{

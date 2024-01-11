@@ -2,13 +2,16 @@ import { InterestRate } from "@aave/contract-helpers";
 import { Trans } from "@lingui/macro";
 import { Box, Button, Typography, useTheme } from "@mui/material";
 import { ReactNode, useState } from "react";
-import { WalletIcon } from "src/components/icons/WalletIcon";
-import { FormattedNumber } from "src/components/primitives/FormattedNumber";
-import { Base64Token, TokenIcon } from "src/components/primitives/TokenIcon";
-import { useWeb3Context } from "src/libs/hooks/useWeb3Context";
-import { ERC20TokenType } from "src/libs/web3-data-provider/Web3Provider";
+import { WalletIcon } from "apps/lending/components/icons/WalletIcon";
+import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
+import {
+  Base64Token,
+  TokenIcon,
+} from "apps/lending/components/primitives/TokenIcon";
+import { useWeb3Context } from "apps/lending/libs/hooks/useWeb3Context";
+import { ERC20TokenType } from "apps/lending/libs/web3-data-provider/Web3Provider";
 
-import { BaseSuccessView } from "./BaseSuccess";
+import { BaseSuccessView } from "apps/lending/components/transactions/FlowCommons/BaseSuccess";
 
 export type SuccessTxViewProps = {
   txHash?: string;

@@ -1,11 +1,11 @@
 import { InterestRate, ProtocolAction } from "@aave/contract-helpers";
 import { Trans } from "@lingui/macro";
 import { BoxProps } from "@mui/material";
-import { useTransactionHandler } from "src/helpers/useTransactionHandler";
-import { ComputedReserveData } from "src/hooks/app-data-provider/useAppDataProvider";
-import { useRootStore } from "src/store/root";
+import { useTransactionHandler } from "apps/lending/helpers/useTransactionHandler";
+import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
+import { useRootStore } from "apps/lending/store/root";
 
-import { TxActionsWrapper } from "../TxActionsWrapper";
+import { TxActionsWrapper } from "apps/lending/components/transactions/TxActionsWrapper";
 
 export interface RepayActionProps extends BoxProps {
   amountToRepay: string;

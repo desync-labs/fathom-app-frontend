@@ -1,9 +1,9 @@
 import { Trans } from "@lingui/macro";
 import { AlertProps } from "@mui/material";
-import { AssetCapData } from "src/hooks/useAssetCaps";
+import { AssetCapData } from "apps/lending/hooks/useAssetCaps";
 
-import { Link } from "../../primitives/Link";
-import { Warning } from "../../primitives/Warning";
+import { Link } from "apps/lending/components/primitives/Link";
+import { Warning } from "apps/lending/components/primitives/Warning";
 
 type SupplyCapWarningProps = AlertProps & {
   supplyCap: AssetCapData;

@@ -3,18 +3,21 @@ import {
   gasLimitRecommendations,
   ProtocolAction,
 } from "@aave/contract-helpers";
-import { SignatureLike } from "@ethersproject/bytes";
-import { TransactionResponse } from "@ethersproject/providers";
-import { queryClient } from "pages/_app.page";
+import { SignatureLike } from "@into-the-fathom/bytes";
+import { TransactionResponse } from "@into-the-fathom/providers";
+import { queryClient } from "apps/lending";
 import { DependencyList, useEffect, useRef, useState } from "react";
-import { useBackgroundDataProvider } from "src/hooks/app-data-provider/BackgroundDataProvider";
-import { useModalContext } from "src/hooks/useModal";
-import { useWeb3Context } from "src/libs/hooks/useWeb3Context";
-import { useRootStore } from "src/store/root";
-import { TransactionDetails } from "src/store/transactionsSlice";
-import { ApprovalMethod } from "src/store/walletSlice";
-import { getErrorTextFromError, TxAction } from "src/ui-config/errorMapping";
-import { QueryKeys } from "src/ui-config/queries";
+import { useBackgroundDataProvider } from "apps/lending/hooks/app-data-provider/BackgroundDataProvider";
+import { useModalContext } from "apps/lending/hooks/useModal";
+import { useWeb3Context } from "apps/lending/libs/hooks/useWeb3Context";
+import { useRootStore } from "apps/lending/store/root";
+import { TransactionDetails } from "apps/lending/store/transactionsSlice";
+import { ApprovalMethod } from "apps/lending/store/walletSlice";
+import {
+  getErrorTextFromError,
+  TxAction,
+} from "apps/lending/ui-config/errorMapping";
+import { QueryKeys } from "apps/lending/ui-config/queries";
 
 export const MOCK_SIGNED_HASH = "Signed correctly";
 
@@ -186,7 +189,7 @@ export const useTransactionHandler = ({
               success: true,
             });
             setTxError(undefined);
-          } catch (error) {
+          } catch (error: any) {
             if (!mounted.current) return;
             const parsedError = getErrorTextFromError(
               error,
@@ -199,7 +202,7 @@ export const useTransactionHandler = ({
               loading: false,
             });
           }
-        } catch (error) {
+        } catch (error: any) {
           if (!mounted.current) return;
 
           const parsedError = getErrorTextFromError(
@@ -253,7 +256,7 @@ export const useTransactionHandler = ({
             loading: false,
             success: true,
           });
-        } catch (error) {
+        } catch (error: any) {
           if (!mounted.current) return;
           const parsedError = getErrorTextFromError(
             error,
@@ -301,7 +304,7 @@ export const useTransactionHandler = ({
             });
           },
         });
-      } catch (error) {
+      } catch (error: any) {
         console.log(error, "error");
         const parsedError = getErrorTextFromError(
           error,
@@ -342,7 +345,7 @@ export const useTransactionHandler = ({
             });
           },
         });
-      } catch (error) {
+      } catch (error: any) {
         const parsedError = getErrorTextFromError(
           error,
           TxAction.GAS_ESTIMATION,
@@ -361,9 +364,10 @@ export const useTransactionHandler = ({
   // populate txns
   // fetches standard txs (optional aproval + action), then based off availability and user preference, set tx flow and gas estimation to permit or approve
   useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout>;
     if (!skip) {
       setLoadingTxns(true);
-      const timeout = setTimeout(() => {
+      timeout = setTimeout(() => {
         setLoadingTxns(true);
         return handleGetTxns()
           .then(async (txs) => {
@@ -418,7 +422,7 @@ export const useTransactionHandler = ({
                     gasLimit = gasLimit + Number(txGas.gasLimit);
                   }
                 }
-              } catch (error) {
+              } catch (error: any) {
                 const parsedError = getErrorTextFromError(
                   error,
                   TxAction.GAS_ESTIMATION,
@@ -444,11 +448,12 @@ export const useTransactionHandler = ({
             setLoadingTxns(false);
           });
       }, 1000);
-      return () => clearTimeout(timeout);
     } else {
       setApprovalTxes(undefined);
       setActionTx(undefined);
     }
+
+    return () => timeout && clearTimeout(timeout);
   }, [skip, ...deps, tryPermit, walletApprovalMethodPreference]);
 
   return {

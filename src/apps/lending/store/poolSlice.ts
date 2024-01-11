@@ -39,18 +39,26 @@ import {
 } from "@aave/contract-helpers/dist/esm/v3-pool-contract/lendingPoolTypes";
 import { SignatureLike } from "@ethersproject/bytes";
 import dayjs from "dayjs";
-import { BigNumber, PopulatedTransaction, Signature, utils } from "ethers";
-import { splitSignature } from "ethers/lib/utils";
+import {
+  BigNumber,
+  PopulatedTransaction,
+  Signature,
+  utils,
+} from "fathom-ethers";
+import { splitSignature } from "fathom-ethers/lib/utils";
 import { produce } from "immer";
-import { ClaimRewardsActionsProps } from "src/components/transactions/ClaimRewards/ClaimRewardsActions";
-import { DebtSwitchActionProps } from "src/components/transactions/DebtSwitch/DebtSwitchActions";
-import { CollateralRepayActionProps } from "src/components/transactions/Repay/CollateralRepayActions";
-import { RepayActionProps } from "src/components/transactions/Repay/RepayActions";
-import { SwapActionProps } from "src/components/transactions/Swap/SwapActions";
-import { WithdrawAndSwitchActionProps } from "src/components/transactions/Withdraw/WithdrawAndSwitchActions";
-import { Approval } from "src/helpers/useTransactionHandler";
-import { MarketDataType } from "src/ui-config/marketsConfig";
-import { minBaseTokenRemainingByNetwork, optimizedPath } from "src/utils/utils";
+import { ClaimRewardsActionsProps } from "apps/lending/components/transactions/ClaimRewards/ClaimRewardsActions";
+import { DebtSwitchActionProps } from "apps/lending/components/transactions/DebtSwitch/DebtSwitchActions";
+import { CollateralRepayActionProps } from "apps/lending/components/transactions/Repay/CollateralRepayActions";
+import { RepayActionProps } from "apps/lending/components/transactions/Repay/RepayActions";
+import { SwapActionProps } from "apps/lending/components/transactions/Swap/SwapActions";
+import { WithdrawAndSwitchActionProps } from "apps/lending/components/transactions/Withdraw/WithdrawAndSwitchActions";
+import { Approval } from "apps/lending/helpers/useTransactionHandler";
+import { MarketDataType } from "apps/lending/ui-config/marketsConfig";
+import {
+  minBaseTokenRemainingByNetwork,
+  optimizedPath,
+} from "apps/lending/utils/utils";
 import { StateCreator } from "zustand";
 
 import {
@@ -359,7 +367,7 @@ export const createPoolSlice: StateCreator<
           token: args.token,
         });
       } else {
-        return poolBundle.depositTxBuilder.getApprovedAmount({
+        return (poolBundle as any).depositTxBuilder.getApprovedAmount({
           user,
           token: args.token,
         });
