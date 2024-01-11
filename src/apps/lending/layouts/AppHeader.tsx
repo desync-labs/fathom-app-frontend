@@ -119,7 +119,7 @@ export function AppHeader() {
           top: 0,
           transition: theme.transitions.create("top"),
           zIndex: theme.zIndex.appBar,
-          background: theme.palette.gradients.fathomGradient,
+          background: theme.palette.gradients?.fathomGradient,
           padding: {
             xs:
               mobileMenuOpen || walletWidgetOpen
@@ -160,7 +160,7 @@ export function AppHeader() {
                 color="primary"
                 sx={(theme) => ({
                   color: "#00332f",
-                  background: theme.palette.gradients.fathomlightGradient,
+                  background: theme.palette.gradients?.fathomlightGradient,
                   "&:hover, &.Mui-focusVisible": {
                     backgroundColor: "rgba(182, 80, 158, 0.7)",
                   },

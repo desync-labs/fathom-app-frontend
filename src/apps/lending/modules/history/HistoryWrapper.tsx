@@ -21,7 +21,7 @@ import { useWeb3Context } from "apps/lending/libs/hooks/useWeb3Context";
 import { useRootStore } from "apps/lending/store/root";
 import { TRANSACTION_HISTORY } from "apps/lending/utils/mixPanelEvents";
 
-import LoveGhost from "/public/loveGhost.svg";
+import LoveGhost from "apps/lending/assets/loveGhost.svg";
 
 import {
   downloadData,

@@ -46,7 +46,7 @@ export default function TopBarNotify({
         component="header"
         sx={{
           padding: `8px, 12px, 8px, 12px`,
-          background: (theme) => theme.palette.gradients.newGradient,
+          background: (theme) => theme.palette.gradients?.newGradient,
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",

@@ -5,16 +5,16 @@ import { createTheme } from "@mui/material/styles";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { ColorPartial } from "@mui/material/styles/createPalette";
-import React from "react";
 
 const theme = createTheme();
 const {
   typography: { pxToRem },
 } = theme;
 
-const FONT = "Inter, Arial";
+const FONT = "Inter, sans-serif";
 
 declare module "@mui/material/styles/createPalette" {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface PaletteColor extends ColorPartial {}
 
   interface TypeText {
@@ -31,7 +31,7 @@ declare module "@mui/material/styles/createPalette" {
   }
 
   interface Palette {
-    gradients: {
+    gradients?: {
       aaveGradient: string;
       newGradient: string;
       fathomGradient: string;
@@ -47,7 +47,7 @@ declare module "@mui/material/styles/createPalette" {
   }
 
   interface PaletteOptions {
-    gradients: {
+    gradients?: {
       aaveGradient: string;
       newGradient: string;
       fathomGradient: string;
@@ -77,9 +77,11 @@ interface TypographyCustomVariants {
 }
 
 declare module "@mui/material/styles" {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface TypographyVariants extends TypographyCustomVariants {}
 
   // allow configuration using `createTheme`
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface TypographyVariantsOptions extends TypographyCustomVariants {}
 
   interface BreakpointOverrides {
@@ -472,7 +474,7 @@ export function getThemedComponents(theme: Theme) {
             props: { variant: "gradient" },
             style: {
               color: theme.palette.common.black,
-              background: theme.palette.gradients.fathomlightGradient,
+              background: theme.palette.gradients?.fathomlightGradient,
               boxSizing: "border-box",
               border: "1px solid transparent",
               "&:hover, &.Mui-focusVisible": {
@@ -534,6 +536,8 @@ export function getThemedComponents(theme: Theme) {
             h2: "h2",
             h3: "h3",
             h4: "h4",
+            h5: "h5",
+            h6: "h6",
             subheader1: "p",
             subheader2: "p",
             caption: "p",
@@ -852,7 +856,7 @@ export function getThemedComponents(theme: Theme) {
             minWidth: "375px",
             background:
               theme.palette.mode === "dark"
-                ? theme.palette.gradients.fathomGradient
+                ? theme.palette.gradients?.fathomGradient
                 : "",
             "> div:first-of-type": {
               minHeight: "100vh",
@@ -889,10 +893,10 @@ export function getThemedComponents(theme: Theme) {
       MuiLinearProgress: {
         styleOverrides: {
           bar1Indeterminate: {
-            background: theme.palette.gradients.aaveGradient,
+            background: theme.palette.gradients?.aaveGradient,
           },
           bar2Indeterminate: {
-            background: theme.palette.gradients.aaveGradient,
+            background: theme.palette.gradients?.aaveGradient,
           },
         },
       },

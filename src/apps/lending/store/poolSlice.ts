@@ -220,19 +220,19 @@ export const createPoolSlice: StateCreator<
                       ?.get(lendingPoolAddressProvider)
                   ) {
                     draft.data
-                      .get(currentChainId)!
-                      .set(lendingPoolAddressProvider, {
+                      .get(currentChainId)
+                      ?.set(lendingPoolAddressProvider, {
                         reserves: reservesResponse.reservesData,
                         baseCurrencyData: reservesResponse.baseCurrencyData,
                       });
                   } else {
-                    draft.data
-                      .get(currentChainId)!
-                      .get(lendingPoolAddressProvider)!.reserves =
+                    (draft.data as any)
+                      .get(currentChainId)
+                      .get(lendingPoolAddressProvider).reserves =
                       reservesResponse.reservesData;
-                    draft.data
-                      .get(currentChainId)!
-                      .get(lendingPoolAddressProvider)!.baseCurrencyData =
+                    (draft.data as any)
+                      .get(currentChainId)
+                      .get(lendingPoolAddressProvider).baseCurrencyData =
                       reservesResponse.baseCurrencyData;
                   }
                 })
@@ -255,15 +255,15 @@ export const createPoolSlice: StateCreator<
                       .get(currentChainId)
                       ?.get(lendingPoolAddressProvider)
                   ) {
-                    draft.data
-                      .get(currentChainId)!
+                    (draft.data as any)
+                      .get(currentChainId)
                       .set(lendingPoolAddressProvider, {
                         reserveIncentives: reserveIncentivesResponse,
                       });
                   } else {
-                    draft.data
-                      .get(currentChainId)!
-                      .get(lendingPoolAddressProvider)!.reserveIncentives =
+                    (draft.data as any)
+                      .get(currentChainId)
+                      .get(lendingPoolAddressProvider).reserveIncentives =
                       reserveIncentivesResponse;
                   }
                 })
@@ -287,21 +287,21 @@ export const createPoolSlice: StateCreator<
                         .get(currentChainId)
                         ?.get(lendingPoolAddressProvider)
                     ) {
-                      draft.data
-                        .get(currentChainId)!
+                      (draft.data as any)
+                        .get(currentChainId)
                         .set(lendingPoolAddressProvider, {
                           userReserves: userReservesResponse.userReserves,
                           userEmodeCategoryId:
                             userReservesResponse.userEmodeCategoryId,
                         });
                     } else {
-                      draft.data
-                        .get(currentChainId)!
-                        .get(lendingPoolAddressProvider)!.userReserves =
+                      (draft.data as any)
+                        .get(currentChainId)
+                        .get(lendingPoolAddressProvider).userReserves =
                         userReservesResponse.userReserves;
-                      draft.data
-                        .get(currentChainId)!
-                        .get(lendingPoolAddressProvider)!.userEmodeCategoryId =
+                      (draft.data as any)
+                        .get(currentChainId)
+                        .get(lendingPoolAddressProvider).userEmodeCategoryId =
                         userReservesResponse.userEmodeCategoryId;
                     }
                   })

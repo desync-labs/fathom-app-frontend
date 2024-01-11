@@ -19,7 +19,4 @@ export const themeObject = createTheme({
       main: "#DD3C3C",
     },
   },
-  typography: {
-    fontFamily: ["Inter, sans-serif"].join(","),
-  },
 });

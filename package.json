@@ -10,10 +10,10 @@
     "@bgd-labs/aave-address-book": "^2.14.0",
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
-    "@heroicons/react": "^2.1.1",
+    "@heroicons/react": "^1.0.6",
     "@into-the-fathom/fathom-lending-address-book": "^0.1.1",
-    "@mui/icons-material": "^5.10.3",
-    "@mui/material": "^5.10.4",
+    "@mui/icons-material": "^5.10.14",
+    "@mui/material": "^5.10.9",
     "@paraswap/sdk": "^6.3.0",
     "@reach/dialog": "^0.13.2",
     "@reduxjs/toolkit": "^1.9.7",
@@ -122,7 +122,7 @@
     "eslint-plugin-import": "^2.29.0",
     "eslint-plugin-prettier": "^4.2.1",
     "prettier": "^2.4.1",
-    "react-scripts": "^5.0.1",
+    "react-scripts": "^4.0.3",
     "typescript": "^4.9.5"
   },
   "scripts": {

@@ -20,7 +20,7 @@ export const MarketAssetsListMobileItem = ({
   const { currentMarket } = useProtocolDataContext();
   const trackEvent = useRootStore((store) => store.trackEvent);
 
-  let showStableBorrowRate = Number(reserve.totalStableDebtUSD) > 0;
+  const showStableBorrowRate = Number(reserve.totalStableDebtUSD) > 0;
 
   return (
     <ListMobileItemWrapper
