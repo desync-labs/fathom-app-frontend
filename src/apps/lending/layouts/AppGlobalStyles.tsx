@@ -1,17 +1,11 @@
-import { useMediaQuery } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { deepmerge } from "@mui/utils";
-import { createContext, ReactNode, useEffect, useMemo, useState } from "react";
+import { createContext, ReactNode, useMemo } from "react";
 
 import { getDesignTokens, getThemedComponents } from "apps/lending/utils/theme";
 
-export const ColorModeContext = createContext({
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  toggleColorMode: () => {},
-});
-
-type Mode = "light" | "dark";
+export const ColorModeContext = createContext({});
 
 /**
  * Main Layout component which wrapps around the whole app
@@ -19,37 +13,13 @@ type Mode = "light" | "dark";
  * @returns
  */
 export function AppGlobalStyles({ children }: { children: ReactNode }) {
-  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
-  const [mode, setMode] = useState<Mode>("dark");
-  const colorMode = useMemo(
-    () => ({
-      toggleColorMode: () => {
-        setMode((prevMode) => {
-          const newMode = prevMode === "light" ? "dark" : "light";
-          localStorage.setItem("colorMode", newMode);
-          return newMode;
-        });
-      },
-    }),
-    []
-  );
-
-  useEffect(() => {
-    const initialMode = localStorage?.getItem("colorMode") as Mode;
-    if (initialMode) {
-      setMode(initialMode);
-    } else if (prefersDarkMode) {
-      setMode("dark");
-    }
+  const theme = useMemo(() => {
+    const themeCreate = createTheme(getDesignTokens("dark"));
+    return deepmerge(themeCreate, getThemedComponents(themeCreate));
   }, []);
 
-  const theme = useMemo(() => {
-    const themeCreate = createTheme(getDesignTokens(mode));
-    return deepmerge(themeCreate, getThemedComponents(themeCreate));
-  }, [mode]);
-
   return (
-    <ColorModeContext.Provider value={colorMode}>
+    <ColorModeContext.Provider value={"dark"}>
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />

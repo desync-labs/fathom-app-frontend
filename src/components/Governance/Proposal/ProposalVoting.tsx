@@ -202,7 +202,7 @@ const ProposalVoting = () => {
             <VotingWrapperBox>
               <Box>
                 <Typography gutterBottom>Abstains</Typography>
-                <Typography color="text.secondary">
+                <Typography variant={"body2"} color="text.secondary">
                   {Math.round(abstainVotes)}%
                 </Typography>
               </Box>

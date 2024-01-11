@@ -82,6 +82,7 @@ const AllProposalsView = () => {
                 fetchProposalsPending ? (
                   <Grid item xs={12}>
                     <Typography
+                      variant={"h6"}
                       sx={{
                         display: "flex",
                         alignItems: "center",

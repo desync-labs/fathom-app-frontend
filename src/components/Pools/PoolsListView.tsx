@@ -58,7 +58,7 @@ const PoolsListView: FC<PoolsListViewProps> = ({ proxyWallet }) => {
     <>
       <PoolsTitle variant="h2">Available Pools</PoolsTitle>
       {pools.length === 0 ? (
-        <NoResults>
+        <NoResults variant={"h6"}>
           {loading ? (
             <CircleWrapper>
               <CircularProgress size={30} />

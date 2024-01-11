@@ -110,12 +110,12 @@ declare module "@mui/material/Typography" {
     secondary14: true;
     main12: true;
     secondary12: true;
-    h5: false;
-    h6: false;
-    subtitle1: false;
-    subtitle2: false;
-    body1: false;
-    body2: false;
+    h5: true;
+    h6: true;
+    subtitle1: true;
+    subtitle2: true;
+    body1: true;
+    body2: true;
     button: false;
     overline: false;
   }

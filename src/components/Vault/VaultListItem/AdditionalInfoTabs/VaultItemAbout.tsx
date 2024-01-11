@@ -125,7 +125,7 @@ const VaultItemAbout: FC<VaultItemAboutPropsTypes> = ({ vaultItemData }) => {
       <VaultFlexColumns>
         <Box width={isMobile ? "100%" : "50%"}>
           <Box>
-            <VaultAboutTitle>Description</VaultAboutTitle>
+            <VaultAboutTitle variant={"h5"}>Description</VaultAboutTitle>
             <Typography component={"span"} fontSize="14px">
               Welcome to our state-of-the-art Crypto Vault, an innovative
               platform designed for astute investors seeking to enhance their
@@ -135,7 +135,7 @@ const VaultItemAbout: FC<VaultItemAboutPropsTypes> = ({ vaultItemData }) => {
             </Typography>
           </Box>
           <Box pt="25px">
-            <VaultAboutTitle>APR</VaultAboutTitle>
+            <VaultAboutTitle variant={"h5"}>APR</VaultAboutTitle>
             <VaultFlexColumns>
               <Box width={isMobile ? "100%" : "50%"}>
                 <AppList>
