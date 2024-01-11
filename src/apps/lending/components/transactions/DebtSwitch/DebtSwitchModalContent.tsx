@@ -1,6 +1,6 @@
 import { InterestRate } from "@aave/contract-helpers";
 import { valueToBigNumber } from "@aave/math-utils";
-import { MaxUint256 } from "@ethersproject/constants";
+import { MaxUint256 } from "@into-the-fathom/constants";
 import { ArrowDownIcon } from "@heroicons/react/outline";
 import { ArrowNarrowRightIcon } from "@heroicons/react/solid";
 import { Trans } from "@lingui/macro";
@@ -14,28 +14,31 @@ import {
 } from "@mui/material";
 import BigNumber from "bignumber.js";
 import React, { useRef, useState } from "react";
-import { PriceImpactTooltip } from "src/components/infoTooltips/PriceImpactTooltip";
-import { FormattedNumber } from "src/components/primitives/FormattedNumber";
-import { TokenIcon } from "src/components/primitives/TokenIcon";
-import { Warning } from "src/components/primitives/Warning";
-import { Asset, AssetInput } from "src/components/transactions/AssetInput";
-import { TxModalDetails } from "src/components/transactions/FlowCommons/TxModalDetails";
-import { useDebtSwitch } from "src/hooks/paraswap/useDebtSwitch";
-import { useModalContext } from "src/hooks/useModal";
-import { useProtocolDataContext } from "src/hooks/useProtocolDataContext";
-import { useWeb3Context } from "src/libs/hooks/useWeb3Context";
-import { ListSlippageButton } from "src/modules/dashboard/lists/SlippageList";
-import { assetCanBeBorrowedByUser } from "src/utils/getMaxAmountAvailableToBorrow";
+import { PriceImpactTooltip } from "apps/lending/components/infoTooltips/PriceImpactTooltip";
+import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
+import { TokenIcon } from "apps/lending/components/primitives/TokenIcon";
+import { Warning } from "apps/lending/components/primitives/Warning";
+import {
+  Asset,
+  AssetInput,
+} from "apps/lending/components/transactions/AssetInput";
+import { TxModalDetails } from "apps/lending/components/transactions/FlowCommons/TxModalDetails";
+import { useDebtSwitch } from "apps/lending/hooks/paraswap/useDebtSwitch";
+import { useModalContext } from "apps/lending/hooks/useModal";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
+import { useWeb3Context } from "apps/lending/libs/hooks/useWeb3Context";
+import { ListSlippageButton } from "apps/lending/modules/dashboard/lists/SlippageList";
+import { assetCanBeBorrowedByUser } from "apps/lending/utils/getMaxAmountAvailableToBorrow";
 
 import {
   ComputedUserReserveData,
   useAppDataContext,
-} from "../../../hooks/app-data-provider/useAppDataProvider";
-import { ModalWrapperProps } from "../FlowCommons/ModalWrapper";
-import { TxSuccessView } from "../FlowCommons/Success";
-import { ParaswapErrorDisplay } from "../Warnings/ParaswapErrorDisplay";
-import { DebtSwitchActions } from "./DebtSwitchActions";
-import { DebtSwitchModalDetails } from "./DebtSwitchModalDetails";
+} from "apps/lending/hooks/app-data-provider/useAppDataProvider";
+import { ModalWrapperProps } from "apps/lending/components/transactions/FlowCommons/ModalWrapper";
+import { TxSuccessView } from "apps/lending/components/transactions/FlowCommons/Success";
+import { ParaswapErrorDisplay } from "apps/lending/components/transactions/Warnings/ParaswapErrorDisplay";
+import { DebtSwitchActions } from "apps/lending/components/transactions/DebtSwitch/DebtSwitchActions";
+import { DebtSwitchModalDetails } from "apps/lending/components/transactions/DebtSwitch/DebtSwitchModalDetails";
 
 export type SupplyProps = {
   underlyingAsset: string;

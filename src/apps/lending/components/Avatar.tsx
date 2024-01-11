@@ -5,7 +5,7 @@ import {
   Skeleton,
 } from "@mui/material";
 import { blo } from "blo";
-import { ReactNode, useEffect, useState } from "react";
+import { FC, ReactNode, useEffect, useState } from "react";
 
 export enum AvatarSize {
   XS = 20,
@@ -24,7 +24,7 @@ export interface AvatarProps extends Omit<MaterialAvatarProps, "src"> {
   invisibleBadge?: boolean;
 }
 
-export const Avatar: React.FC<AvatarProps> = ({
+export const Avatar: FC<AvatarProps> = ({
   image,
   fallbackImage = blo("0x"),
   size = AvatarSize.MD,

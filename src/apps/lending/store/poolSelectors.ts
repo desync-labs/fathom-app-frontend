@@ -10,8 +10,8 @@ import {
   marketsData,
 } from "apps/lending/utils/marketsAndNetworksConfig";
 
-import { PoolReserve } from "./poolSlice";
-import { RootStore } from "./root";
+import { PoolReserve } from "apps/lending/store/poolSlice";
+import { RootStore } from "apps/lending/store/root";
 
 export const selectCurrentChainIdMarkets = (state: RootStore) => {
   const marketNames = Object.keys(marketsData);

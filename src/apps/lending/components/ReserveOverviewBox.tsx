@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import React, { ReactNode } from "react";
+import { FC, ReactNode } from "react";
 
 type ReserveOverviewBoxProps = {
   children: ReactNode;
@@ -7,11 +7,11 @@ type ReserveOverviewBoxProps = {
   fullWidth?: boolean;
 };
 
-export function ReserveOverviewBox({
+export const ReserveOverviewBox: FC<ReserveOverviewBoxProps> = ({
   title,
   children,
   fullWidth = false,
-}: ReserveOverviewBoxProps) {
+}) => {
   return (
     <Box
       sx={(theme) => ({
@@ -44,4 +44,4 @@ export function ReserveOverviewBox({
       </Box>
     </Box>
   );
-}
+};

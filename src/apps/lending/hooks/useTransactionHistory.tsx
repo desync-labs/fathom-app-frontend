@@ -10,10 +10,10 @@ import {
   hasReserve,
   HistoryFilters,
   TransactionHistoryItemUnion,
-} from "src/modules/history/types";
-import { USER_TRANSACTIONS_V3 } from "src/modules/history/v3-user-history-query";
-import { useRootStore } from "src/store/root";
-import { QueryKeys } from "src/ui-config/queries";
+} from "apps/lending/modules/history/types";
+import { USER_TRANSACTIONS_V3 } from "apps/lending/modules/history/v3-user-history-query";
+import { useRootStore } from "apps/lending/store/root";
+import { QueryKeys } from "apps/lending/ui-config/queries";
 
 export const applyTxHistoryFilters = ({
   searchQuery,

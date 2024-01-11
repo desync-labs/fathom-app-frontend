@@ -148,7 +148,7 @@ export const useCollateralRepaySwap = ({
 
         setInputAmountUSD(route.srcUSD);
         setOutputAmountUSD(route.destUSD);
-      } catch (e) {
+      } catch (e: any) {
         console.error(e);
         const message = convertParaswapErrorMessage(e.message);
         setError(message);

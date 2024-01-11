@@ -3,37 +3,40 @@ import { Trans } from "@lingui/macro";
 import { Box, SvgIcon, Typography } from "@mui/material";
 import BigNumber from "bignumber.js";
 import React, { useRef, useState } from "react";
-import { PriceImpactTooltip } from "src/components/infoTooltips/PriceImpactTooltip";
-import { Warning } from "src/components/primitives/Warning";
-import { Asset, AssetInput } from "src/components/transactions/AssetInput";
-import { TxModalDetails } from "src/components/transactions/FlowCommons/TxModalDetails";
-import { StETHCollateralWarning } from "src/components/Warnings/StETHCollateralWarning";
-import { CollateralType } from "src/helpers/types";
-import { useCollateralSwap } from "src/hooks/paraswap/useCollateralSwap";
-import { getDebtCeilingData } from "src/hooks/useAssetCaps";
-import { useModalContext } from "src/hooks/useModal";
-import { useProtocolDataContext } from "src/hooks/useProtocolDataContext";
-import { useWeb3Context } from "src/libs/hooks/useWeb3Context";
-import { ListSlippageButton } from "src/modules/dashboard/lists/SlippageList";
-import { remainingCap } from "src/utils/getMaxAmountAvailableToSupply";
-import { calculateHFAfterSwap } from "src/utils/hfUtils";
-import { amountToUsd } from "src/utils/utils";
+import { PriceImpactTooltip } from "apps/lending/components/infoTooltips/PriceImpactTooltip";
+import { Warning } from "apps/lending/components/primitives/Warning";
+import {
+  Asset,
+  AssetInput,
+} from "apps/lending/components/transactions/AssetInput";
+import { TxModalDetails } from "apps/lending/components/transactions/FlowCommons/TxModalDetails";
+import { StETHCollateralWarning } from "apps/lending/components/Warnings/StETHCollateralWarning";
+import { CollateralType } from "apps/lending/helpers/types";
+import { useCollateralSwap } from "apps/lending/hooks/paraswap/useCollateralSwap";
+import { getDebtCeilingData } from "apps/lending/hooks/useAssetCaps";
+import { useModalContext } from "apps/lending/hooks/useModal";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
+import { useWeb3Context } from "apps/lending/libs/hooks/useWeb3Context";
+import { ListSlippageButton } from "apps/lending/modules/dashboard/lists/SlippageList";
+import { remainingCap } from "apps/lending/utils/getMaxAmountAvailableToSupply";
+import { calculateHFAfterSwap } from "apps/lending/utils/hfUtils";
+import { amountToUsd } from "apps/lending/utils/utils";
 
 import {
   ComputedUserReserveData,
   useAppDataContext,
-} from "../../../hooks/app-data-provider/useAppDataProvider";
-import { ModalWrapperProps } from "../FlowCommons/ModalWrapper";
-import { TxSuccessView } from "../FlowCommons/Success";
+} from "apps/lending/hooks/app-data-provider/useAppDataProvider";
+import { ModalWrapperProps } from "apps/lending/components/transactions/FlowCommons/ModalWrapper";
+import { TxSuccessView } from "apps/lending/components/transactions/FlowCommons/Success";
 import {
   ErrorType,
   getAssetCollateralType,
   useFlashloan,
   zeroLTVBlockingWithdraw,
-} from "../utils";
-import { ParaswapErrorDisplay } from "../Warnings/ParaswapErrorDisplay";
-import { SwapActions } from "./SwapActions";
-import { SwapModalDetails } from "./SwapModalDetails";
+} from "apps/lending/components/transactions/utils";
+import { ParaswapErrorDisplay } from "apps/lending/components/transactions/Warnings/ParaswapErrorDisplay";
+import { SwapActions } from "apps/lending/components/transactions/Swap/SwapActions";
+import { SwapModalDetails } from "apps/lending/components/transactions/Swap/SwapModalDetails";
 
 export type SupplyProps = {
   underlyingAsset: string;

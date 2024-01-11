@@ -10,7 +10,7 @@ import {
   ComputedReserveData,
   ComputedUserReserveData,
   ExtendedFormattedUser,
-} from "src/hooks/app-data-provider/useAppDataProvider";
+} from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 
 interface CalculateHFAfterSwapProps {
   fromAmount: BigNumberValue;

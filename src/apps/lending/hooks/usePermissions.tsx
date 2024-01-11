@@ -13,7 +13,7 @@ import {
   isFeatureEnabled,
 } from "apps/lending/utils/marketsAndNetworksConfig";
 
-import { useProtocolDataContext } from "./useProtocolDataContext";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
 
 type PermissionsContext = {
   permissions: PERMISSION[];

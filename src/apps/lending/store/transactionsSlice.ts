@@ -2,7 +2,7 @@ import { ProtocolAction } from "@aave/contract-helpers";
 import { produce } from "immer";
 import { StateCreator } from "zustand";
 
-import { RootStore } from "./root";
+import { RootStore } from "apps/lending/store/root";
 
 export type Transactions = {
   [chainId: number]: {

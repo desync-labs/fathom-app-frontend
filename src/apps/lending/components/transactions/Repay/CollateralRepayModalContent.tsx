@@ -5,30 +5,37 @@ import { Trans } from "@lingui/macro";
 import { Box, SvgIcon, Typography } from "@mui/material";
 import BigNumber from "bignumber.js";
 import { useRef, useState } from "react";
-import { PriceImpactTooltip } from "src/components/infoTooltips/PriceImpactTooltip";
+import { PriceImpactTooltip } from "apps/lending/components/infoTooltips/PriceImpactTooltip";
 import {
   ComputedReserveData,
   useAppDataContext,
-} from "src/hooks/app-data-provider/useAppDataProvider";
-import { SwapVariant } from "src/hooks/paraswap/common";
-import { useCollateralRepaySwap } from "src/hooks/paraswap/useCollateralRepaySwap";
-import { useModalContext } from "src/hooks/useModal";
-import { useProtocolDataContext } from "src/hooks/useProtocolDataContext";
-import { useWeb3Context } from "src/libs/hooks/useWeb3Context";
-import { ListSlippageButton } from "src/modules/dashboard/lists/SlippageList";
-import { calculateHFAfterRepay } from "src/utils/hfUtils";
+} from "apps/lending/hooks/app-data-provider/useAppDataProvider";
+import { SwapVariant } from "apps/lending/hooks/paraswap/common";
+import { useCollateralRepaySwap } from "apps/lending/hooks/paraswap/useCollateralRepaySwap";
+import { useModalContext } from "apps/lending/hooks/useModal";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
+import { useWeb3Context } from "apps/lending/libs/hooks/useWeb3Context";
+import { ListSlippageButton } from "apps/lending/modules/dashboard/lists/SlippageList";
+import { calculateHFAfterRepay } from "apps/lending/utils/hfUtils";
 
-import { Asset, AssetInput } from "../AssetInput";
-import { ModalWrapperProps } from "../FlowCommons/ModalWrapper";
-import { TxSuccessView } from "../FlowCommons/Success";
+import {
+  Asset,
+  AssetInput,
+} from "apps/lending/components/transactions/AssetInput";
+import { ModalWrapperProps } from "apps/lending/components/transactions/FlowCommons/ModalWrapper";
+import { TxSuccessView } from "apps/lending/components/transactions/FlowCommons/Success";
 import {
   DetailsHFLine,
   DetailsNumberLineWithSub,
   TxModalDetails,
-} from "../FlowCommons/TxModalDetails";
-import { ErrorType, useFlashloan, zeroLTVBlockingWithdraw } from "../utils";
-import { ParaswapErrorDisplay } from "../Warnings/ParaswapErrorDisplay";
-import { CollateralRepayActions } from "./CollateralRepayActions";
+} from "apps/lending/components/transactions/FlowCommons/TxModalDetails";
+import {
+  ErrorType,
+  useFlashloan,
+  zeroLTVBlockingWithdraw,
+} from "apps/lending/components/transactions/utils";
+import { ParaswapErrorDisplay } from "apps/lending/components/transactions/Warnings/ParaswapErrorDisplay";
+import { CollateralRepayActions } from "apps/lending/components/transactions/Repay/CollateralRepayActions";
 
 export function CollateralRepayModalContent({
   poolReserve,

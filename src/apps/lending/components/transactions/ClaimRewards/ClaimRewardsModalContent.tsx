@@ -2,28 +2,28 @@ import { normalize, UserIncentiveData } from "@aave/math-utils";
 import { Trans } from "@lingui/macro";
 import { Box, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { FormattedNumber } from "src/components/primitives/FormattedNumber";
-import { Row } from "src/components/primitives/Row";
-import { TokenIcon } from "src/components/primitives/TokenIcon";
-import { Reward } from "src/helpers/types";
-import { useAppDataContext } from "src/hooks/app-data-provider/useAppDataProvider";
-import { useModalContext } from "src/hooks/useModal";
-import { useProtocolDataContext } from "src/hooks/useProtocolDataContext";
-import { useWeb3Context } from "src/libs/hooks/useWeb3Context";
-import { getNetworkConfig } from "src/utils/marketsAndNetworksConfig";
+import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
+import { Row } from "apps/lending/components/primitives/Row";
+import { TokenIcon } from "apps/lending/components/primitives/TokenIcon";
+import { Reward } from "apps/lending/helpers/types";
+import { useAppDataContext } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
+import { useModalContext } from "apps/lending/hooks/useModal";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
+import { useWeb3Context } from "apps/lending/libs/hooks/useWeb3Context";
+import { getNetworkConfig } from "apps/lending/utils/marketsAndNetworksConfig";
 
-import { TxErrorView } from "../FlowCommons/Error";
-import { GasEstimationError } from "../FlowCommons/GasEstimationError";
-import { TxSuccessView } from "../FlowCommons/Success";
+import { TxErrorView } from "apps/lending/components/transactions/FlowCommons/Error";
+import { GasEstimationError } from "apps/lending/components/transactions/FlowCommons/GasEstimationError";
+import { TxSuccessView } from "apps/lending/components/transactions/FlowCommons/Success";
 import {
   DetailsNumberLine,
   DetailsNumberLineWithSub,
   TxModalDetails,
-} from "../FlowCommons/TxModalDetails";
-import { TxModalTitle } from "../FlowCommons/TxModalTitle";
-import { ChangeNetworkWarning } from "../Warnings/ChangeNetworkWarning";
-import { ClaimRewardsActions } from "./ClaimRewardsActions";
-import { RewardsSelect } from "./RewardsSelect";
+} from "apps/lending/components/transactions/FlowCommons/TxModalDetails";
+import { TxModalTitle } from "apps/lending/components/transactions/FlowCommons/TxModalTitle";
+import { ChangeNetworkWarning } from "apps/lending/components/transactions/Warnings/ChangeNetworkWarning";
+import { ClaimRewardsActions } from "apps/lending/components/transactions/ClaimRewards/ClaimRewardsActions";
+import { RewardsSelect } from "apps/lending/components/transactions/ClaimRewards/RewardsSelect";
 
 export enum ErrorType {
   NOT_ENOUGH_BALANCE,

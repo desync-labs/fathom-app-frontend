@@ -2,7 +2,7 @@ import { API_ETH_MOCK_ADDRESS } from "@aave/contract-helpers";
 import { valueToBigNumber } from "@aave/math-utils";
 import { Trans } from "@lingui/macro";
 import { Box, Checkbox, Typography } from "@mui/material";
-import { useRef, useState } from "react";
+import { FC, useRef, useState } from "react";
 import { Warning } from "apps/lending/components/primitives/Warning";
 import { useAppDataContext } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 import { useModalContext } from "apps/lending/hooks/useModal";
@@ -20,11 +20,11 @@ import {
   DetailsNumberLine,
   DetailsUnwrapSwitch,
   TxModalDetails,
-} from "../FlowCommons/TxModalDetails";
-import { zeroLTVBlockingWithdraw } from "../utils";
-import { calculateMaxWithdrawAmount } from "./utils";
-import { WithdrawActions } from "./WithdrawActions";
-import { useWithdrawError } from "./WithdrawError";
+} from "apps/lending/components/transactions/FlowCommons/TxModalDetails";
+import { zeroLTVBlockingWithdraw } from "apps/lending/components/transactions/utils";
+import { calculateMaxWithdrawAmount } from "apps/lending/components/transactions/Withdraw/utils";
+import { WithdrawActions } from "apps/lending/components/transactions/Withdraw/WithdrawActions";
+import { useWithdrawError } from "apps/lending/components/transactions/Withdraw/WithdrawError";
 
 export enum ErrorType {
   CAN_NOT_WITHDRAW_THIS_AMOUNT,
@@ -32,16 +32,18 @@ export enum ErrorType {
   ZERO_LTV_WITHDRAW_BLOCKED,
 }
 
-export const WithdrawModalContent = ({
+export const WithdrawModalContent: FC<
+  ModalWrapperProps & {
+    unwrap: boolean;
+    setUnwrap: (unwrap: boolean) => void;
+  }
+> = ({
   poolReserve,
   userReserve,
   unwrap: withdrawUnWrapped,
   setUnwrap: setWithdrawUnWrapped,
   symbol,
   isWrongNetwork,
-}: ModalWrapperProps & {
-  unwrap: boolean;
-  setUnwrap: (unwrap: boolean) => void;
 }) => {
   const { gasLimit, mainTxState: withdrawTxState, txError } = useModalContext();
   const { user } = useAppDataContext();

@@ -1,6 +1,6 @@
 import { WalletBalanceProvider } from "@aave/contract-helpers";
-import { Provider } from "@ethersproject/providers";
-import { Hashable } from "src/utils/types";
+import { Provider } from "@into-the-fathom/providers";
+import { Hashable } from "apps/lending/utils/types";
 
 type GetPoolWalletBalances = {
   user: string;

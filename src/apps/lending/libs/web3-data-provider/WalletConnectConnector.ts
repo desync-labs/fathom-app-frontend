@@ -7,7 +7,7 @@ import { ConnectorUpdate } from "@web3-react/types";
 import {
   getNetworkConfig,
   getSupportedChainIds,
-} from "src/utils/marketsAndNetworksConfig";
+} from "apps/lending/utils/marketsAndNetworksConfig";
 import invariant from "tiny-invariant";
 
 export const URI_AVAILABLE = "URI_AVAILABLE";
@@ -40,7 +40,7 @@ export class WalletConnectConnector extends AbstractConnector {
       chains: [defaultChainId],
       optionalChains: supportedChainIds,
       rpcMap,
-      projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID,
+      projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID as string,
       showQrModal: true,
     };
 
@@ -86,7 +86,7 @@ export class WalletConnectConnector extends AbstractConnector {
       const accounts = await this.walletConnectProvider.enable();
       const defaultAccount = accounts[0];
       return { provider: this.walletConnectProvider, account: defaultAccount };
-    } catch (error) {
+    } catch (error: any) {
       if (error.message === "Connection request reset. Please try again.") {
         throw new UserRejectedRequestError();
       }
@@ -94,7 +94,7 @@ export class WalletConnectConnector extends AbstractConnector {
     }
   }
 
-  public async getProvider(): Promise<typeof this.walletConnectProvider> {
+  public async getProvider(): Promise<any> {
     return this.walletConnectProvider;
   }
 

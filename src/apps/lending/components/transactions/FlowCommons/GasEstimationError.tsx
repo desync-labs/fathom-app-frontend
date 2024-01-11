@@ -1,7 +1,7 @@
 import { Trans } from "@lingui/macro";
 import { Button, Typography } from "@mui/material";
-import { Warning } from "src/components/primitives/Warning";
-import { TxErrorType } from "src/ui-config/errorMapping";
+import { Warning } from "apps/lending/components/primitives/Warning";
+import { TxErrorType } from "apps/lending/ui-config/errorMapping";
 
 export const GasEstimationError = ({ txError }: { txError: TxErrorType }) => {
   return (

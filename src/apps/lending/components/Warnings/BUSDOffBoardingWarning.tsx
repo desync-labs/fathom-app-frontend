@@ -1,6 +1,6 @@
 import { Trans } from "@lingui/macro";
 
-import { Link } from "../primitives/Link";
+import { Link } from "apps/lending/components/primitives/Link";
 
 export const BUSDOffBoardingWarning = () => {
   return (

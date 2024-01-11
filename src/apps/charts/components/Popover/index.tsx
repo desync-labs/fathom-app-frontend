@@ -3,7 +3,7 @@ import { transparentize } from "polished";
 import { FC, memo, ReactNode, useRef, useState } from "react";
 import { usePopper } from "react-popper";
 import styled from "styled-components";
-import Portal from "@reach/portal";
+import * as Portal from "@reach/portal";
 import useInterval from "apps/charts/hooks";
 
 const PopoverContainer = styled.div<{ show: boolean }>`

@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useContext } from "react";
+import { createContext, FC, ReactNode, useContext } from "react";
 import {
   useIncentiveDataSubscription,
   usePoolDataSubscription,
@@ -10,7 +10,7 @@ interface BackgroundDataProviderContextType {
 }
 
 const BackgroundDataProviderContext =
-  React.createContext<BackgroundDataProviderContextType>(
+  createContext<BackgroundDataProviderContextType>(
     {} as BackgroundDataProviderContextType
   );
 

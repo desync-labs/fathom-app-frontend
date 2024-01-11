@@ -6,15 +6,15 @@ import {
 import { SignatureLike } from "@ethersproject/bytes";
 import { Trans } from "@lingui/macro";
 import { BoxProps } from "@mui/material";
-import { useParaSwapTransactionHandler } from "src/helpers/useParaSwapTransactionHandler";
-import { ComputedReserveData } from "src/hooks/app-data-provider/useAppDataProvider";
+import { useParaSwapTransactionHandler } from "apps/lending/helpers/useParaSwapTransactionHandler";
+import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 import {
   calculateSignedAmount,
   SwapTransactionParams,
-} from "src/hooks/paraswap/common";
-import { useRootStore } from "src/store/root";
+} from "apps/lending/hooks/paraswap/common";
+import { useRootStore } from "apps/lending/store/root";
 
-import { TxActionsWrapper } from "../TxActionsWrapper";
+import { TxActionsWrapper } from "apps/lending/components/transactions/TxActionsWrapper";
 
 interface SwapBaseProps extends BoxProps {
   amountToSwap: string;

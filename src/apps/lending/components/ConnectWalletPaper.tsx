@@ -1,8 +1,8 @@
 import { Trans } from "@lingui/macro";
 import { CircularProgress, Paper, PaperProps, Typography } from "@mui/material";
-import { ReactNode } from "react";
+import { FC, ReactNode } from "react";
 
-import LoveGhost from "apps/lending/assets/loveGhost.svg";
+import { ReactComponent as LoveGhost } from "apps/lending/assets/loveGhost.svg";
 
 import { ConnectWalletButton } from "apps/lending/components/WalletConnection/ConnectWalletButton";
 
@@ -11,12 +11,12 @@ interface ConnectWalletPaperProps extends PaperProps {
   description?: ReactNode;
 }
 
-export const ConnectWalletPaper = ({
+export const ConnectWalletPaper: FC<ConnectWalletPaperProps> = ({
   loading,
   description,
   sx,
   ...rest
-}: ConnectWalletPaperProps) => {
+}) => {
   return (
     <Paper
       {...rest}

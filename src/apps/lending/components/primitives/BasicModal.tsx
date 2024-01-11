@@ -1,6 +1,6 @@
 import { XIcon } from "@heroicons/react/outline";
 import { Box, IconButton, Modal, Paper, SvgIcon } from "@mui/material";
-import React from "react";
+import React, { FC } from "react";
 
 export interface BasicModalProps {
   open: boolean;
@@ -10,14 +10,14 @@ export interface BasicModalProps {
   contentMaxWidth?: number;
 }
 
-export const BasicModal = ({
+export const BasicModal: FC<BasicModalProps> = ({
   open,
   setOpen,
   withCloseButton = true,
   contentMaxWidth = 420,
   children,
   ...props
-}: BasicModalProps) => {
+}) => {
   const handleClose = () => setOpen(false);
 
   return (

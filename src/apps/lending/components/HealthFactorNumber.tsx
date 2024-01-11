@@ -4,7 +4,7 @@ import { Box, Button, Typography, useTheme } from "@mui/material";
 import { TypographyProps } from "@mui/material/Typography";
 import BigNumber from "bignumber.js";
 
-import { FormattedNumber } from "./primitives/FormattedNumber";
+import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
 
 interface HealthFactorNumberProps extends TypographyProps {
   value: string;

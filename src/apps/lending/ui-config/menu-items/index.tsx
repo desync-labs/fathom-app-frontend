@@ -1,8 +1,8 @@
 import { t } from "@lingui/macro";
-import { ROUTES } from "src/components/primitives/Link";
-import { ENABLE_TESTNET } from "src/utils/marketsAndNetworksConfig";
+import { ROUTES } from "apps/lending/components/primitives/Link";
+import { ENABLE_TESTNET } from "apps/lending/utils/marketsAndNetworksConfig";
 
-import { MarketDataType } from "../marketsConfig";
+import { MarketDataType } from "apps/lending/ui-config/marketsConfig";
 
 interface Navigation {
   link: string;

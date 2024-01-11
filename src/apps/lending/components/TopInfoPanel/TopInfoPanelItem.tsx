@@ -5,7 +5,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { ReactNode } from "react";
+import { FC, ReactNode } from "react";
 
 interface TopInfoPanelItemProps {
   icon?: ReactNode;
@@ -19,7 +19,7 @@ interface TopInfoPanelItemProps {
   loading?: boolean;
 }
 
-export const TopInfoPanelItem = ({
+export const TopInfoPanelItem: FC<TopInfoPanelItemProps> = ({
   icon,
   title,
   titleIcon,
@@ -29,7 +29,7 @@ export const TopInfoPanelItem = ({
   withLine,
   loading,
   withoutIconWrapper,
-}: TopInfoPanelItemProps) => {
+}) => {
   const theme = useTheme();
   const upToSM = useMediaQuery(theme.breakpoints.up("sm"));
 

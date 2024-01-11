@@ -1,5 +1,4 @@
 import { styled, ToggleButton, ToggleButtonProps } from "@mui/material";
-import React from "react";
 
 const CustomToggleButton = styled(ToggleButton)<ToggleButtonProps>(
   ({ theme }) => ({

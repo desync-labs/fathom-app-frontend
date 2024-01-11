@@ -1,6 +1,6 @@
-import { useWeb3Context } from "src/libs/hooks/useWeb3Context";
+import { useWeb3Context } from "apps/lending/libs/hooks/useWeb3Context";
 
-import { useProtocolDataContext } from "./useProtocolDataContext";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
 
 export function useIsWrongNetwork(_requiredChainId?: number) {
   const { currentChainId } = useProtocolDataContext();

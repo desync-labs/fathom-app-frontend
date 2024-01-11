@@ -3,31 +3,34 @@ import { ArrowNarrowRightIcon } from "@heroicons/react/solid";
 import { Trans } from "@lingui/macro";
 import { Box, Link, SvgIcon, Typography } from "@mui/material";
 import { useState } from "react";
-import { FormattedNumber } from "src/components/primitives/FormattedNumber";
-import { Row } from "src/components/primitives/Row";
-import { Warning } from "src/components/primitives/Warning";
-import { EmodeCategory } from "src/helpers/types";
+import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
+import { Row } from "apps/lending/components/primitives/Row";
+import { Warning } from "apps/lending/components/primitives/Warning";
+import { EmodeCategory } from "apps/lending/helpers/types";
 import {
   AppDataContextType,
   useAppDataContext,
-} from "src/hooks/app-data-provider/useAppDataProvider";
-import { useCurrentTimestamp } from "src/hooks/useCurrentTimestamp";
-import { useModalContext } from "src/hooks/useModal";
-import { useProtocolDataContext } from "src/hooks/useProtocolDataContext";
-import { useWeb3Context } from "src/libs/hooks/useWeb3Context";
-import { getNetworkConfig } from "src/utils/marketsAndNetworksConfig";
+} from "apps/lending/hooks/app-data-provider/useAppDataProvider";
+import { useCurrentTimestamp } from "apps/lending/hooks/useCurrentTimestamp";
+import { useModalContext } from "apps/lending/hooks/useModal";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
+import { useWeb3Context } from "apps/lending/libs/hooks/useWeb3Context";
+import { getNetworkConfig } from "apps/lending/utils/marketsAndNetworksConfig";
 
-import LightningBoltGradient from "/public/lightningBoltGradient.svg";
+import LightningBoltGradient from "apps/lending/assets/lightningBoltGradient.svg";
 
-import { TxErrorView } from "../FlowCommons/Error";
-import { GasEstimationError } from "../FlowCommons/GasEstimationError";
-import { TxSuccessView } from "../FlowCommons/Success";
-import { DetailsHFLine, TxModalDetails } from "../FlowCommons/TxModalDetails";
-import { TxModalTitle } from "../FlowCommons/TxModalTitle";
-import { ChangeNetworkWarning } from "../Warnings/ChangeNetworkWarning";
-import { EmodeActions } from "./EmodeActions";
-import { getEmodeMessage } from "./EmodeNaming";
-import { EmodeSelect } from "./EmodeSelect";
+import { TxErrorView } from "apps/lending/components/transactions/FlowCommons/Error";
+import { GasEstimationError } from "apps/lending/components/transactions/FlowCommons/GasEstimationError";
+import { TxSuccessView } from "apps/lending/components/transactions/FlowCommons/Success";
+import {
+  DetailsHFLine,
+  TxModalDetails,
+} from "apps/lending/components/transactions/FlowCommons/TxModalDetails";
+import { TxModalTitle } from "apps/lending/components/transactions/FlowCommons/TxModalTitle";
+import { ChangeNetworkWarning } from "apps/lending/components/transactions/Warnings/ChangeNetworkWarning";
+import { EmodeActions } from "apps/lending/components/transactions/Emode/EmodeActions";
+import { getEmodeMessage } from "apps/lending/components/transactions/Emode/EmodeNaming";
+import { EmodeSelect } from "apps/lending/components/transactions/Emode/EmodeSelect";
 
 export enum ErrorType {
   EMODE_DISABLED_LIQUIDATION,

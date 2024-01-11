@@ -4,12 +4,12 @@ import {
   valueToBigNumber,
 } from "@aave/math-utils";
 import BigNumber from "bignumber.js";
-import { ethers } from "ethers";
+import { ethers } from "fathom-ethers";
 
 import {
   ComputedReserveData,
   ExtendedFormattedUser,
-} from "../hooks/app-data-provider/useAppDataProvider";
+} from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 import { roundToTokenDecimals } from "./utils";
 
 // Subset of ComputedReserveData

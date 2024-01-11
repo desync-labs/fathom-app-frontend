@@ -17,9 +17,9 @@ import {
   DetailsNumberLine,
   TxModalDetails,
 } from "apps/lending/components/transactions/FlowCommons/TxModalDetails";
-import { zeroLTVBlockingWithdraw } from "apps/lending/utils";
-import { IsolationModeWarning } from "../Warnings/IsolationModeWarning";
-import { CollateralChangeActions } from "./CollateralChangeActions";
+import { zeroLTVBlockingWithdraw } from "apps/lending/components/transactions/utils";
+import { IsolationModeWarning } from "apps/lending/components/transactions/Warnings/IsolationModeWarning";
+import { CollateralChangeActions } from "apps/lending/components/transactions/CollateralChange/CollateralChangeActions";
 
 export type CollateralChangeModalContentProps = {
   underlyingAsset: string;

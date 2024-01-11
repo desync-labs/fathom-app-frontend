@@ -3,34 +3,37 @@ import { ArrowDownIcon } from "@heroicons/react/solid";
 import { Trans } from "@lingui/macro";
 import { Box, Checkbox, SvgIcon, Typography } from "@mui/material";
 import { useRef, useState } from "react";
-import { PriceImpactTooltip } from "src/components/infoTooltips/PriceImpactTooltip";
-import { Warning } from "src/components/primitives/Warning";
+import { PriceImpactTooltip } from "apps/lending/components/infoTooltips/PriceImpactTooltip";
+import { Warning } from "apps/lending/components/primitives/Warning";
 import {
   ComputedUserReserveData,
   useAppDataContext,
-} from "src/hooks/app-data-provider/useAppDataProvider";
-import { useCollateralSwap } from "src/hooks/paraswap/useCollateralSwap";
-import { useModalContext } from "src/hooks/useModal";
-import { useProtocolDataContext } from "src/hooks/useProtocolDataContext";
-import { useWeb3Context } from "src/libs/hooks/useWeb3Context";
-import { ListSlippageButton } from "src/modules/dashboard/lists/SlippageList";
-import { useRootStore } from "src/store/root";
-import { calculateHFAfterWithdraw } from "src/utils/hfUtils";
-import { GENERAL } from "src/utils/mixPanelEvents";
+} from "apps/lending/hooks/app-data-provider/useAppDataProvider";
+import { useCollateralSwap } from "apps/lending/hooks/paraswap/useCollateralSwap";
+import { useModalContext } from "apps/lending/hooks/useModal";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
+import { useWeb3Context } from "apps/lending/libs/hooks/useWeb3Context";
+import { ListSlippageButton } from "apps/lending/modules/dashboard/lists/SlippageList";
+import { useRootStore } from "apps/lending/store/root";
+import { calculateHFAfterWithdraw } from "apps/lending/utils/hfUtils";
+import { GENERAL } from "apps/lending/utils/mixPanelEvents";
 
-import { Asset, AssetInput } from "../AssetInput";
-import { GasEstimationError } from "../FlowCommons/GasEstimationError";
-import { ModalWrapperProps } from "../FlowCommons/ModalWrapper";
+import {
+  Asset,
+  AssetInput,
+} from "apps/lending/components/transactions/AssetInput";
+import { GasEstimationError } from "apps/lending/components/transactions/FlowCommons/GasEstimationError";
+import { ModalWrapperProps } from "apps/lending/components/transactions/FlowCommons/ModalWrapper";
 import {
   DetailsHFLine,
   DetailsNumberLine,
   TxModalDetails,
 } from "../FlowCommons/TxModalDetails";
-import { zeroLTVBlockingWithdraw } from "../utils";
-import { calculateMaxWithdrawAmount } from "./utils";
-import { WithdrawAndSwitchActions } from "./WithdrawAndSwitchActions";
-import { WithdrawAndSwitchTxSuccessView } from "./WithdrawAndSwitchSuccess";
-import { useWithdrawError } from "./WithdrawError";
+import { zeroLTVBlockingWithdraw } from "apps/lending/components/transactions/utils";
+import { calculateMaxWithdrawAmount } from "apps/lending/components/transactions/Withdraw/utils";
+import { WithdrawAndSwitchActions } from "apps/lending/components/transactions/Withdraw/WithdrawAndSwitchActions";
+import { WithdrawAndSwitchTxSuccessView } from "apps/lending/components/transactions/Withdraw/WithdrawAndSwitchSuccess";
+import { useWithdrawError } from "apps/lending/components/transactions/Withdraw/WithdrawError";
 
 export enum ErrorType {
   CAN_NOT_WITHDRAW_THIS_AMOUNT,

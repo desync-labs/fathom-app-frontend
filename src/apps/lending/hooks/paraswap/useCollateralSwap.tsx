@@ -111,7 +111,7 @@ export const useCollateralSwap = ({
 
         setOutputAmount(normalize(minAmount, route.destDecimals));
         setOutputAmountUSD(route.destUSD);
-      } catch (e) {
+      } catch (e: any) {
         console.error(e);
         const message = convertParaswapErrorMessage(e.message);
         setError(message);

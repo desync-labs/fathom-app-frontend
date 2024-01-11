@@ -38,14 +38,11 @@ export const getErrorTextFromError = (
   }
 
   // Try to parse the Pool error number from RPC provider revert error
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const parsedError = JSON.parse((error as any)?.error?.body);
-    const parsedNumber = Number(parsedError.error.message.split(": ")[1]);
-    if (!isNaN(parsedNumber)) {
-      errorNumber = parsedNumber;
-    }
-  } catch {}
+  const parsedError = JSON.parse((error as any)?.error?.body);
+  const parsedNumber = Number(parsedError.error.message.split(": ")[1]);
+  if (!isNaN(parsedNumber)) {
+    errorNumber = parsedNumber;
+  }
 
   const errorRender = errorMapping[errorNumber];
 

@@ -4,9 +4,9 @@ import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import * as React from "react";
-import { EmodeCategory } from "src/helpers/types";
+import { EmodeCategory } from "apps/lending/helpers/types";
 
-import { getEmodeMessage } from "./EmodeNaming";
+import { getEmodeMessage } from "apps/lending/components/transactions/Emode/EmodeNaming";
 
 export type EmodeSelectProps = {
   emodeCategories: Record<number, EmodeCategory>;
@@ -93,6 +93,7 @@ export const EmodeSelect = ({
               </MenuItem>
             );
           }
+          return null;
         })}
       </Select>
     </FormControl>

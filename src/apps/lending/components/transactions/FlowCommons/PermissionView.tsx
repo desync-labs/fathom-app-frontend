@@ -1,6 +1,6 @@
 import { Trans } from "@lingui/macro";
 import { Box, Button, Link, Typography } from "@mui/material";
-import { useModalContext } from "src/hooks/useModal";
+import { useModalContext } from "apps/lending/hooks/useModal";
 
 export const PermissionView = () => {
   const { close } = useModalContext();

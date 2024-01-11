@@ -1,20 +1,20 @@
 import { API_ETH_MOCK_ADDRESS } from "@aave/contract-helpers";
 import LocalGasStationIcon from "@mui/icons-material/LocalGasStation";
 import { Box, CircularProgress, Stack } from "@mui/material";
-import { BigNumber } from "ethers/lib/ethers";
-import { formatUnits, parseUnits } from "ethers/lib/utils";
-import React, { ReactNode } from "react";
-import { GasTooltip } from "src/components/infoTooltips/GasTooltip";
-import { Warning } from "src/components/primitives/Warning";
-import { useWalletBalances } from "src/hooks/app-data-provider/useWalletBalances";
-import { useGasStation } from "src/hooks/useGasStation";
-import { useModalContext } from "src/hooks/useModal";
-import { useProtocolDataContext } from "src/hooks/useProtocolDataContext";
+import { BigNumber } from "fathom-ethers/lib/ethers";
+import { formatUnits, parseUnits } from "fathom-ethers/lib/utils";
+import { ReactNode } from "react";
+import { GasTooltip } from "apps/lending/components/infoTooltips/GasTooltip";
+import { Warning } from "apps/lending/components/primitives/Warning";
+import { useWalletBalances } from "apps/lending/hooks/app-data-provider/useWalletBalances";
+import { useGasStation } from "apps/lending/hooks/useGasStation";
+import { useModalContext } from "apps/lending/hooks/useModal";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
 
-import { useAppDataContext } from "../../../hooks/app-data-provider/useAppDataProvider";
-import { GasPriceData } from "../../../hooks/useGetGasPrices";
-import { FormattedNumber } from "../../primitives/FormattedNumber";
-import { GasOption } from "./GasStationProvider";
+import { useAppDataContext } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
+import { GasPriceData } from "apps/lending/hooks/useGetGasPrices";
+import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
+import { GasOption } from "apps/lending/components/transactions/GasStation/GasStationProvider";
 
 export interface GasStationProps {
   gasLimit: BigNumber;
@@ -33,7 +33,7 @@ export const getGasCosts = (
   const gasPrice =
     gasOption === GasOption.Custom
       ? parseUnits(customGas, "gwei").toString()
-      : gasData[gasOption].legacyGasPrice;
+      : (gasData as any)[gasOption].legacyGasPrice;
   return (
     Number(formatUnits(gasLimit.mul(gasPrice), 18)) *
     parseFloat(baseCurrencyUsd)

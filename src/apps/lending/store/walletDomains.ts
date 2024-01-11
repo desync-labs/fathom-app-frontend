@@ -1,7 +1,7 @@
 import { StateCreator } from "zustand";
 
-import { RootStore } from "./root";
-import { domainFetchers } from "./utils/domain-fetchers";
+import { RootStore } from "apps/lending/store/root";
+import { domainFetchers } from "apps/lending/store/utils/domain-fetchers";
 
 export enum DomainType {
   DEFAULT,

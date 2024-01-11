@@ -1,11 +1,11 @@
 import { ProtocolAction } from "@aave/contract-helpers";
 import { Trans } from "@lingui/macro";
-import { EmodeCategory } from "src/helpers/types";
-import { useTransactionHandler } from "src/helpers/useTransactionHandler";
-import { useRootStore } from "src/store/root";
+import { EmodeCategory } from "apps/lending/helpers/types";
+import { useTransactionHandler } from "apps/lending/helpers/useTransactionHandler";
+import { useRootStore } from "apps/lending/store/root";
 
-import { TxActionsWrapper } from "../TxActionsWrapper";
-import { getEmodeMessage } from "./EmodeNaming";
+import { TxActionsWrapper } from "apps/lending/components/transactions/TxActionsWrapper";
+import { getEmodeMessage } from "apps/lending/components/transactions/Emode/EmodeNaming";
 
 export type EmodeActionsProps = {
   isWrongNetwork: boolean;

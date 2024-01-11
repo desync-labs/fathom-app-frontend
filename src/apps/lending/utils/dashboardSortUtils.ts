@@ -1,6 +1,6 @@
 import { InterestRate } from "@aave/contract-helpers";
-import { BorrowAssetsItem } from "src/modules/dashboard/lists/BorrowAssetsList/types";
-import { SupplyAssetsItem } from "src/modules/dashboard/lists/SupplyAssetsList/types";
+import { BorrowAssetsItem } from "apps/lending/modules/dashboard/lists/BorrowAssetsList/types";
+import { SupplyAssetsItem } from "apps/lending/modules/dashboard/lists/SupplyAssetsList/types";
 
 // Sorting keys
 import {

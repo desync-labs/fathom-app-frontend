@@ -3,11 +3,11 @@ import { Box, Divider, FormLabel, Typography } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import * as React from "react";
-import { Reward } from "src/helpers/types";
+import { Reward } from "apps/lending/helpers/types";
 
-import { FormattedNumber } from "../../primitives/FormattedNumber";
-import { TokenIcon } from "../../primitives/TokenIcon";
+import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
+import { TokenIcon } from "apps/lending/components/primitives/TokenIcon";
+import { FC } from "react";
 
 export type RewardsSelectProps = {
   rewards: Reward[];
@@ -15,11 +15,11 @@ export type RewardsSelectProps = {
   selectedReward: string;
 };
 
-export const RewardsSelect = ({
+export const RewardsSelect: FC<RewardsSelectProps> = ({
   rewards,
   selectedReward,
   setSelectedReward,
-}: RewardsSelectProps) => {
+}) => {
   return (
     <FormControl sx={{ mb: 1, width: "100%" }}>
       <FormLabel sx={{ mb: 1, color: "text.secondary" }}>

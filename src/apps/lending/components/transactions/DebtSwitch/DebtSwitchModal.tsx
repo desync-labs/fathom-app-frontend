@@ -8,7 +8,7 @@ import {
 } from "apps/lending/hooks/useModal";
 
 import { ModalWrapper } from "apps/lending/components/transactions/FlowCommons/ModalWrapper";
-import { DebtSwitchModalContent } from "./DebtSwitchModalContent";
+import { DebtSwitchModalContent } from "apps/lending/components/transactions/DebtSwitch/DebtSwitchModalContent";
 
 const DebtSwitchModal = () => {
   const { type, close, args } = useModalContext() as ModalContextType<{

@@ -1,11 +1,11 @@
-import { FeeData } from "@ethersproject/abstract-provider";
+import { FeeData } from "@into-the-fathom/abstract-provider";
 import { useState } from "react";
-import { GasOption } from "src/components/transactions/GasStation/GasStationProvider";
-import { useWeb3Context } from "src/libs/hooks/useWeb3Context";
+import { GasOption } from "apps/lending/components/transactions/GasStation/GasStationProvider";
+import { useWeb3Context } from "apps/lending/libs/hooks/useWeb3Context";
 
-import { useModalContext } from "./useModal";
-import { usePolling } from "./usePolling";
-import { useProtocolDataContext } from "./useProtocolDataContext";
+import { useModalContext } from "apps/lending/hooks/useModal";
+import { usePolling } from "apps/lending/hooks/usePolling";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
 
 type GasInfo = {
   legacyGasPrice: string;

@@ -12,23 +12,26 @@ import {
 import { Trans } from "@lingui/macro";
 import Typography from "@mui/material/Typography";
 import BigNumber from "bignumber.js";
-import React, { useEffect, useRef, useState } from "react";
-import { useAppDataContext } from "src/hooks/app-data-provider/useAppDataProvider";
-import { useModalContext } from "src/hooks/useModal";
-import { useProtocolDataContext } from "src/hooks/useProtocolDataContext";
-import { useRootStore } from "src/store/root";
-import { getNetworkConfig } from "src/utils/marketsAndNetworksConfig";
+import { useEffect, useRef, useState } from "react";
+import { useAppDataContext } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
+import { useModalContext } from "apps/lending/hooks/useModal";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
+import { useRootStore } from "apps/lending/store/root";
+import { getNetworkConfig } from "apps/lending/utils/marketsAndNetworksConfig";
 
-import { Asset, AssetInput } from "../AssetInput";
-import { GasEstimationError } from "../FlowCommons/GasEstimationError";
-import { ModalWrapperProps } from "../FlowCommons/ModalWrapper";
-import { TxSuccessView } from "../FlowCommons/Success";
+import {
+  Asset,
+  AssetInput,
+} from "apps/lending/components/transactions/AssetInput";
+import { GasEstimationError } from "apps/lending/components/transactions/FlowCommons/GasEstimationError";
+import { ModalWrapperProps } from "apps/lending/components/transactions/FlowCommons/ModalWrapper";
+import { TxSuccessView } from "apps/lending/components/transactions/FlowCommons/Success";
 import {
   DetailsHFLine,
   DetailsNumberLineWithSub,
   TxModalDetails,
-} from "../FlowCommons/TxModalDetails";
-import { RepayActions } from "./RepayActions";
+} from "apps/lending/components/transactions/FlowCommons/TxModalDetails";
+import { RepayActions } from "apps/lending/components/transactions/Repay/RepayActions";
 
 interface RepayAsset extends Asset {
   balance: string;

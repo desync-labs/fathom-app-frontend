@@ -13,8 +13,9 @@ import { Row } from "apps/lending/components/primitives/Row";
 import { useModalContext } from "apps/lending/hooks/useModal";
 import { ListMobileItemWrapper } from "apps/lending/modules/dashboard/lists/ListMobileItemWrapper";
 import { ListValueRow } from "apps/lending/modules/dashboard/lists/ListValueRow";
+import { FC } from "react";
 
-export const BorrowAssetsListMobileItem = ({
+export const BorrowAssetsListMobileItem: FC<DashboardReserve> = ({
   symbol,
   iconSymbol,
   name,
@@ -28,7 +29,7 @@ export const BorrowAssetsListMobileItem = ({
   vIncentivesData,
   underlyingAsset,
   isFreezed,
-}: DashboardReserve) => {
+}) => {
   const { openBorrow } = useModalContext();
   const { currentMarket } = useProtocolDataContext();
 

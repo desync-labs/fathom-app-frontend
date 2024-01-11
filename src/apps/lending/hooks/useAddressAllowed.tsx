@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { usePolling } from "./usePolling";
+import { usePolling } from "apps/lending/hooks/usePolling";
 
 export interface AddressAllowedResult {
   isAllowed: boolean;

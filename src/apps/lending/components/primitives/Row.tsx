@@ -1,5 +1,5 @@
 import { Box, BoxProps, Typography } from "@mui/material";
-import { ReactNode } from "react";
+import { FC, ReactNode } from "react";
 
 interface RowProps extends BoxProps {
   caption?: ReactNode;
@@ -13,14 +13,14 @@ interface RowProps extends BoxProps {
   align?: "center" | "flex-start";
 }
 
-export const Row = ({
+export const Row: FC<RowProps> = ({
   caption,
   children,
   captionVariant = "secondary16",
   captionColor,
   align = "center",
   ...rest
-}: RowProps) => {
+}) => {
   return (
     <Box
       {...rest}

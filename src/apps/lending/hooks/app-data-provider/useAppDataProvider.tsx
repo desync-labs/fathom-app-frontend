@@ -20,8 +20,8 @@ import {
   selectEmodes,
   selectFormattedReserves,
   selectUserSummaryAndIncentives,
-} from "../../store/poolSelectors";
-import { useCurrentTimestamp } from "../useCurrentTimestamp";
+} from "apps/lending/store/poolSelectors";
+import { useCurrentTimestamp } from "apps/lending/hooks/useCurrentTimestamp";
 
 /**
  * removes the marketPrefix from a symbol

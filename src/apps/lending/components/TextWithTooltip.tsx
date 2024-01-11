@@ -2,15 +2,16 @@ import InfoIcon from "@mui/icons-material/Info";
 import { Box, BoxProps, IconButton, SvgIcon, Typography } from "@mui/material";
 import { TypographyProps } from "@mui/material/Typography";
 import {
+  FC,
   JSXElementConstructor,
   ReactElement,
   ReactNode,
   useState,
 } from "react";
-import { TrackEventProps } from "src/store/analyticsSlice";
-import { useRootStore } from "src/store/root";
+import { TrackEventProps } from "apps/lending/store/analyticsSlice";
+import { useRootStore } from "apps/lending/store/root";
 
-import { ContentWithTooltip } from "./ContentWithTooltip";
+import { ContentWithTooltip } from "apps/lending/components/ContentWithTooltip";
 
 export interface TextWithTooltipProps extends TypographyProps {
   text?: ReactNode;
@@ -27,7 +28,7 @@ export interface TextWithTooltipProps extends TypographyProps {
   setOpen?: (open: boolean) => void;
 }
 
-export const TextWithTooltip = ({
+export const TextWithTooltip: FC<TextWithTooltipProps> = ({
   text,
   icon,
   iconSize = 15,
@@ -40,7 +41,7 @@ export const TextWithTooltip = ({
   open: openProp = false,
   setOpen: setOpenProp,
   ...rest
-}: TextWithTooltipProps) => {
+}) => {
   const [open, setOpen] = useState(openProp);
   const trackEvent = useRootStore((store) => store.trackEvent);
 

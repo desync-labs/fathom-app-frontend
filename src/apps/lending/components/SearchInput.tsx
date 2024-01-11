@@ -9,7 +9,7 @@ import {
   useTheme,
 } from "@mui/material";
 import debounce from "lodash/debounce";
-import { useMemo, useRef, useState } from "react";
+import { FC, useMemo, useRef, useState } from "react";
 
 interface SearchInputProps {
   onSearchTermChange: (value: string) => void;
@@ -17,11 +17,11 @@ interface SearchInputProps {
   placeholder: string;
 }
 
-export const SearchInput = ({
+export const SearchInput: FC<SearchInputProps> = ({
   onSearchTermChange,
   wrapperSx,
   placeholder,
-}: SearchInputProps) => {
+}) => {
   const inputEl = useRef<HTMLInputElement>(null);
   const [searchTerm, setSearchTerm] = useState("");
 

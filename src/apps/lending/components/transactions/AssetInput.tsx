@@ -16,13 +16,13 @@ import {
 } from "@mui/material";
 import React, { ReactNode } from "react";
 import NumberFormat, { NumberFormatProps } from "react-number-format";
-import { TrackEventProps } from "src/store/analyticsSlice";
-import { useRootStore } from "src/store/root";
+import { TrackEventProps } from "apps/lending/store/analyticsSlice";
+import { useRootStore } from "apps/lending/store/root";
 
-import { CapType } from "../caps/helper";
-import { AvailableTooltip } from "../infoTooltips/AvailableTooltip";
-import { FormattedNumber } from "../primitives/FormattedNumber";
-import { TokenIcon } from "../primitives/TokenIcon";
+import { CapType } from "apps/lending/components/caps/helper";
+import { AvailableTooltip } from "apps/lending/components/infoTooltips/AvailableTooltip";
+import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
+import { TokenIcon } from "apps/lending/components/primitives/TokenIcon";
 
 interface CustomProps {
   onChange: (event: { target: { name: string; value: string } }) => void;

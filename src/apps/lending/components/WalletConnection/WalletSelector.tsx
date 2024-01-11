@@ -2,14 +2,14 @@ import { Trans } from "@lingui/macro";
 import { Box, Button, Typography } from "@mui/material";
 import { UnsupportedChainIdError } from "@web3-react/core";
 import { NoEthereumProviderError } from "@web3-react/injected-connector";
-import { useWeb3Context } from "src/libs/hooks/useWeb3Context";
-import { UserRejectedRequestError } from "src/libs/web3-data-provider/WalletConnectConnector";
-import { WalletType } from "src/libs/web3-data-provider/WalletOptions";
-import { useRootStore } from "src/store/root";
-import { AUTH } from "src/utils/mixPanelEvents";
+import { useWeb3Context } from "apps/lending/libs/hooks/useWeb3Context";
+import { UserRejectedRequestError } from "apps/lending/libs/web3-data-provider/WalletConnectConnector";
+import { WalletType } from "apps/lending/libs/web3-data-provider/WalletOptions";
+import { useRootStore } from "apps/lending/store/root";
+import { AUTH } from "apps/lending/utils/mixPanelEvents";
 
-import { Warning } from "../primitives/Warning";
-import { TxModalTitle } from "../transactions/FlowCommons/TxModalTitle";
+import { Warning } from "apps/lending/components/primitives/Warning";
+import { TxModalTitle } from "apps/lending/components/transactions/FlowCommons/TxModalTitle";
 
 export type WalletRowProps = {
   walletName: string;

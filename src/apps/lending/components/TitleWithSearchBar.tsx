@@ -10,11 +10,11 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { ReactNode, useState } from "react";
+import { ElementType, ReactNode, useState } from "react";
 
 import { SearchInput } from "./SearchInput";
 
-interface TitleWithSearchBarProps<C extends React.ElementType> {
+interface TitleWithSearchBarProps<C extends ElementType> {
   onSearchTermChange: (value: string) => void;
   searchPlaceholder: string;
   titleProps?: TypographyProps<C, { component?: C }>;

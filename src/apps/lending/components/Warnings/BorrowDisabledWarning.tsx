@@ -1,7 +1,7 @@
 import { Trans } from "@lingui/macro";
 
-import { getFrozenProposalLink } from "../infoTooltips/FrozenTooltip";
-import { Link } from "../primitives/Link";
+import { getFrozenProposalLink } from "apps/lending/components/infoTooltips/FrozenTooltip";
+import { Link } from "apps/lending/components/primitives/Link";
 
 interface BorrowDisabledWarningProps {
   symbol: string;

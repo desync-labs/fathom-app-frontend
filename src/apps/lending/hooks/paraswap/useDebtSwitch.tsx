@@ -9,7 +9,7 @@ import {
   SwapData,
   SwapTransactionParams,
   UseSwapProps,
-} from "./common";
+} from "apps/lending/hooks/paraswap/common";
 
 interface UseDebtSwitchResponse {
   outputAmount: string;
@@ -114,7 +114,7 @@ export const useDebtSwitch = ({
 
         setInputAmountUSD(route.srcUSD);
         setOutputAmountUSD(route.destUSD);
-      } catch (e) {
+      } catch (e: any) {
         console.error(e);
         const message = convertParaswapErrorMessage(e.message);
         setError(message);

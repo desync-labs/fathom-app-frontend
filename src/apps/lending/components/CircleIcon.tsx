@@ -2,7 +2,7 @@ import { Trans } from "@lingui/macro";
 import { Box, Typography } from "@mui/material";
 import { ReactNode } from "react";
 
-import { DarkTooltip } from "./infoTooltips/DarkTooltip";
+import { DarkTooltip } from "apps/lending/components/infoTooltips/DarkTooltip";
 
 interface CircleIconProps {
   downToSM: boolean;

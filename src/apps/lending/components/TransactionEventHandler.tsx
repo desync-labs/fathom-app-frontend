@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { useRootStore } from "src/store/root";
-import { selectSuccessfulTransactions } from "src/store/transactionsSelectors";
-import { GENERAL } from "src/utils/mixPanelEvents";
+import { useRootStore } from "apps/lending/store/root";
+import { selectSuccessfulTransactions } from "apps/lending/store/transactionsSelectors";
+import { GENERAL } from "apps/lending/utils/mixPanelEvents";
 
 export const TransactionEventHandler = () => {
   const [postedTransactions, setPostedTransactions] = useState<{
@@ -11,8 +11,6 @@ export const TransactionEventHandler = () => {
   const trackEvent = useRootStore((store) => store.trackEvent);
   const successfulTransactions = useRootStore(selectSuccessfulTransactions);
 
-  //tx's currently tracked: supply, borrow, withdraw, repay, repay with coll, collateral switch
-
   useEffect(() => {
     Object.keys(successfulTransactions).forEach((chainId) => {
       const chainIdNumber = +chainId;
@@ -20,7 +18,6 @@ export const TransactionEventHandler = () => {
         if (!postedTransactions[chainIdNumber]?.includes(txHash)) {
           const tx = successfulTransactions[chainIdNumber][txHash];
 
-          // const event = actionToEvent(tx.action);
           trackEvent(GENERAL.TRANSACTION, {
             transactionType: tx.action,
             tokenAmount: tx.amount,

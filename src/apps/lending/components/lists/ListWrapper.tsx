@@ -35,7 +35,7 @@ export const ListWrapper = ({
     localStorageName ? localStorage.getItem(localStorageName) === "true" : false
   );
   const trackEvent = useRootStore((store) => store.trackEvent);
-
+  // @ts-ignore
   const handleTrackingEvents = () => {
     if (!isCollapse) {
       switch (localStorageName as string | boolean) {
@@ -62,6 +62,7 @@ export const ListWrapper = ({
             visibility: "Hidden",
             type: "Supplied Assets",
           });
+          break;
         default:
           return null;
       }
@@ -90,6 +91,7 @@ export const ListWrapper = ({
             visibility: "Show",
             type: "Supplied Assets",
           });
+          break;
         default:
           return null;
       }

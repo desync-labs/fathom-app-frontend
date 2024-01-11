@@ -1,8 +1,8 @@
 import { Trans } from "@lingui/macro";
 import { AlertColor, Typography } from "@mui/material";
 
-import { Link } from "../../primitives/Link";
-import { Warning } from "../../primitives/Warning";
+import { Link } from "apps/lending/components/primitives/Link";
+import { Warning } from "apps/lending/components/primitives/Warning";
 
 interface IsolationModeWarningProps {
   asset?: string;

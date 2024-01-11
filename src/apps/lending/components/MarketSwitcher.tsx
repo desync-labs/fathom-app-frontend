@@ -12,11 +12,11 @@ import {
   useTheme,
 } from "@mui/material";
 import React from "react";
-import { useRootStore } from "src/store/root";
-import { BaseNetworkConfig } from "src/ui-config/networksConfig";
-import { DASHBOARD } from "src/utils/mixPanelEvents";
+import { useRootStore } from "apps/lending/store/root";
+import { BaseNetworkConfig } from "apps/lending/ui-config/networksConfig";
+import { DASHBOARD } from "apps/lending/utils/mixPanelEvents";
 
-import { useProtocolDataContext } from "../hooks/useProtocolDataContext";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
 import {
   availableMarkets,
   CustomMarket,
@@ -35,17 +35,7 @@ export const getMarketInfoById = (marketId: CustomMarket) => {
 };
 
 export const getMarketHelpData = (marketName: string) => {
-  const testChains = [
-    "Görli",
-    "Ropsten",
-    "Mumbai",
-    "Sepolia",
-    "Fuji",
-    "Testnet",
-    "Kovan",
-    "Rinkeby",
-    "Apothem",
-  ];
+  const testChains = ["Sepolia", "Apothem"];
   const arrayName = marketName.split(" ");
   const testChainName = arrayName.filter((el) => testChains.indexOf(el) > -1);
   const marketTitle = arrayName

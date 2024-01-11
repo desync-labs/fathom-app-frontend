@@ -76,7 +76,7 @@ import UnsupportedCurrencyFooter from "apps/dex/components/swap/UnsupportedCurre
 import walletSrc from "apps/dex/assets/svg/wallet.svg";
 import walletHover from "apps/dex/assets/svg/wallet-hover.svg";
 import { useNavigate } from "react-router-dom";
-import useDexShared from "context/dexShared";
+import useAppsShared from "context/appsShared";
 
 export const WalletIcon = styled.div`
   background: url("${walletSrc}") no-repeat center;
@@ -127,7 +127,7 @@ const Swap = () => {
   const { account } = useActiveWeb3React();
   const theme = useContext(ThemeContext);
 
-  const { openConnectorMenu } = useDexShared();
+  const { openConnectorMenu } = useAppsShared();
 
   // for expert mode
   const toggleSettings = useToggleSettingsMenu();

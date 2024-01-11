@@ -1,5 +1,6 @@
 import { Box, ClickAwayListener, Popper, styled, Tooltip } from "@mui/material";
 import {
+  FC,
   JSXElementConstructor,
   ReactElement,
   ReactNode,
@@ -38,7 +39,7 @@ export const PopperComponent = styled(Popper)(({ theme }) =>
   })
 );
 
-export const ContentWithTooltip = ({
+export const ContentWithTooltip: FC<ContentWithTooltipProps> = ({
   children,
   tooltipContent,
   placement = "top",
@@ -46,7 +47,7 @@ export const ContentWithTooltip = ({
   open,
   setOpen,
   offset,
-}: ContentWithTooltipProps) => {
+}) => {
   const [openTooltip, setOpenTooltip] = useState(false);
 
   const formattedOpen = typeof open !== "undefined" ? open : openTooltip;

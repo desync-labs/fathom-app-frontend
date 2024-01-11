@@ -4,16 +4,19 @@ import {
 } from "@aave/contract-helpers";
 import { SignatureLike } from "@ethersproject/bytes";
 import { TransactionResponse } from "@ethersproject/providers";
-import { queryClient } from "pages/_app.page";
-import { DependencyList, useEffect, useRef, useState } from "react";
-import { useBackgroundDataProvider } from "src/hooks/app-data-provider/BackgroundDataProvider";
-import { SIGNATURE_AMOUNT_MARGIN } from "src/hooks/paraswap/common";
-import { useModalContext } from "src/hooks/useModal";
-import { useWeb3Context } from "src/libs/hooks/useWeb3Context";
-import { useRootStore } from "src/store/root";
-import { ApprovalMethod } from "src/store/walletSlice";
-import { getErrorTextFromError, TxAction } from "src/ui-config/errorMapping";
-import { QueryKeys } from "src/ui-config/queries";
+import { queryClient } from "apps/lending";
+import { useEffect, useRef, useState } from "react";
+import { useBackgroundDataProvider } from "apps/lending/hooks/app-data-provider/BackgroundDataProvider";
+import { SIGNATURE_AMOUNT_MARGIN } from "apps/lending/hooks/paraswap/common";
+import { useModalContext } from "apps/lending/hooks/useModal";
+import { useWeb3Context } from "apps/lending/libs/hooks/useWeb3Context";
+import { useRootStore } from "apps/lending/store/root";
+import { ApprovalMethod } from "apps/lending/store/walletSlice";
+import {
+  getErrorTextFromError,
+  TxAction,
+} from "apps/lending/ui-config/errorMapping";
+import { QueryKeys } from "apps/lending/ui-config/queries";
 
 import { MOCK_SIGNED_HASH } from "./useTransactionHandler";
 
@@ -41,7 +44,7 @@ interface UseParaSwapTransactionHandlerProps {
    */
   skip?: boolean;
   spender: string;
-  deps?: DependencyList;
+  deps?: [string?, string?];
   protocolAction?: ProtocolAction;
 }
 
@@ -92,8 +95,8 @@ export const useParaSwapTransactionHandler = ({
     amount: string;
   }
   const [previousDeps, setPreviousDeps] = useState<Dependency>({
-    asset: deps[0],
-    amount: deps[1],
+    asset: deps[0] as string,
+    amount: deps[1] as string,
   });
   const [usePermit, setUsePermit] = useState(false);
   const mounted = useRef(false);
@@ -182,7 +185,7 @@ export const useParaSwapTransactionHandler = ({
             success: true,
           });
           setTxError(undefined);
-        } catch (error) {
+        } catch (error: any) {
           if (!mounted.current) return;
           const parsedError = getErrorTextFromError(
             error,
@@ -196,7 +199,7 @@ export const useParaSwapTransactionHandler = ({
             loading: false,
           });
         }
-      } catch (error) {
+      } catch (error: any) {
         if (!mounted.current) return;
         const parsedError = getErrorTextFromError(
           error,
@@ -238,7 +241,7 @@ export const useParaSwapTransactionHandler = ({
           },
           action: TxAction.APPROVAL,
         });
-      } catch (error) {
+      } catch (error: any) {
         if (!mounted.current) return;
         const parsedError = getErrorTextFromError(
           error,
@@ -288,7 +291,7 @@ export const useParaSwapTransactionHandler = ({
               },
               action: TxAction.MAIN_ACTION,
             });
-          } catch (error) {
+          } catch (error: any) {
             const parsedError = getErrorTextFromError(
               error,
               TxAction.GAS_ESTIMATION,
@@ -339,7 +342,10 @@ export const useParaSwapTransactionHandler = ({
           if (Number(deps[1]) < Number(previousDeps.amount)) {
             setTxError(undefined);
           }
-          setPreviousDeps({ asset: deps[0], amount: deps[1] });
+          setPreviousDeps({
+            asset: deps[0] as string,
+            amount: deps[1] as string,
+          });
           if (approval && preferPermit) {
             setUsePermit(true);
             setMainTxState({

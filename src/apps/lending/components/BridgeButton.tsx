@@ -1,8 +1,8 @@
 import { ExternalLinkIcon } from "@heroicons/react/outline";
 import { Button, SvgIcon, Typography } from "@mui/material";
 
-import { NetworkConfig } from "../ui-config/networksConfig";
-import { Link } from "./primitives/Link";
+import { NetworkConfig } from "apps/lending/ui-config/networksConfig";
+import { Link } from "apps/lending/components/primitives/Link";
 
 export const BridgeButton = ({ bridge }: Pick<NetworkConfig, "bridge">) => {
   if (!bridge) return null;

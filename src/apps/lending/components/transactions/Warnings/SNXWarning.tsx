@@ -1,7 +1,7 @@
 import { Trans } from "@lingui/macro";
 import { Typography } from "@mui/material";
 
-import { Warning } from "../../primitives/Warning";
+import { Warning } from "apps/lending/components/primitives/Warning";
 
 export const SNXWarning = () => {
   return (

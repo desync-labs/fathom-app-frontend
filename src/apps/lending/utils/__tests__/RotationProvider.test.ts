@@ -2,7 +2,7 @@ import { ChainId } from "@aave/contract-helpers";
 import {
   Network,
   StaticJsonRpcProvider,
-} from "@ethersproject/providers/src.ts";
+} from "@into-the-fathom/providers/src.ts";
 
 import { getNetworkConfig } from "../marketsAndNetworksConfig";
 import { checkNetworks, RotationProvider } from "../rotationProvider";
