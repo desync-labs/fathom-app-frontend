@@ -155,7 +155,7 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
           </ManageTypeButton>
         </ManagePositionRepayTypeWrapper>
         <ManageVaultItemDepositedBox>
-          <Typography variant="subtitle2" color="#B7C8E5">
+          <Typography variant={"subtitle2"} color="#B7C8E5">
             {token.name} Deposited:
           </Typography>
           <Typography component="span">

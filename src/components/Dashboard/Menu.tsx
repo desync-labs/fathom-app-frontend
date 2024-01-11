@@ -39,6 +39,11 @@ export const Menu: FC<ItemPropsType> = memo(({ open }) => {
     [location.pathname]
   );
 
+  const isLendingActive = useMemo(
+    () => location.pathname.includes("/lending"),
+    [location.pathname]
+  );
+
   const isVaultActive = useMemo(
     () => location.pathname.includes("vault"),
     [location.pathname]
@@ -71,6 +76,13 @@ export const Menu: FC<ItemPropsType> = memo(({ open }) => {
       link: "/dao/staking",
       Icon: <GovernanceIcon isactive={isDAOActive ? "true" : ""} />,
       isActive: isDAOActive,
+      showText: showText,
+    },
+    {
+      name: "Lending",
+      link: "/lending",
+      Icon: <GovernanceIcon isactive={isLendingActive ? "true" : ""} />,
+      isActive: isLendingActive,
       showText: showText,
     },
     {

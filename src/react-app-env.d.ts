@@ -1,4 +1,5 @@
 /// <reference types="react-scripts" />
+declare module "@heroicons/*";
 
 type InjectProviderType = {
   isMetaMask?: true;
