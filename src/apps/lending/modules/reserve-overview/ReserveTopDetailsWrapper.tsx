@@ -118,7 +118,6 @@ export const ReserveTopDetailsWrapper = ({
                 </SvgIcon>
               }
               onClick={() => {
-                // https://github.com/vercel/next.js/discussions/34980
                 if (history.state.idx !== 0) navigate(-1);
                 else navigate("/markets");
               }}

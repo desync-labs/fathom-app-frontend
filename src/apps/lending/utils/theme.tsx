@@ -128,7 +128,7 @@ declare module "@mui/material/Button" {
   }
 }
 
-export const getDesignTokens = (mode: "light" | "dark") => {
+export const getDesignTokens = (mode = "dark") => {
   const getColor = (lightColor: string, darkColor: string) =>
     mode === "dark" ? darkColor : lightColor;
 
@@ -221,8 +221,7 @@ export const getDesignTokens = (mode: "light" | "dark") => {
         aaveGradient:
           "linear-gradient(104.04deg, rgb(179, 255, 249) 0%, rgb(0, 219, 203) 100%)",
         newGradient: "linear-gradient(79.67deg, #8C3EBC 0%, #007782 95.82%)",
-        fathomGradient:
-          "linear-gradient(rgb(7, 17, 38) 0%, rgb(5, 12, 26) 100%)",
+        fathomGradient: "linear-gradient(180deg, #071126 0%, #050c1a 100%)",
         fathomlightGradient:
           "linear-gradient(104.04deg, rgb(179, 255, 249) 0%, rgb(0, 219, 203) 100%)",
       },
@@ -854,10 +853,7 @@ export function getThemedComponents(theme: Theme) {
             fontWeight: 400,
             fontSize: pxToRem(14),
             minWidth: "375px",
-            background:
-              theme.palette.mode === "dark"
-                ? theme.palette.gradients?.fathomGradient
-                : "",
+            background: "#050c1a",
             "> div:first-of-type": {
               minHeight: "100vh",
               display: "flex",
