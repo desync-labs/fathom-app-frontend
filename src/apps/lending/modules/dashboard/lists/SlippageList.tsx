@@ -19,8 +19,6 @@ import { SlippageTooltip } from "apps/lending/components/infoTooltips/SlippageTo
 import { useRootStore } from "apps/lending/store/root";
 import { GENERAL } from "apps/lending/utils/mixPanelEvents";
 
-import Paraswap from "apps/lending/assets/icons/other/paraswap.svg";
-
 interface ListSlippageButtonProps {
   setSlippage: (value: string) => void;
   selectedSlippage: string;
@@ -140,7 +138,7 @@ export const ListSlippageButton = ({
                 left: "5px",
               }}
             >
-              <Paraswap />
+              <img src={"./icons/other/paraswap.svg"} alt={"paraswap"} />
             </SvgIcon>
           </Typography>
           <Typography variant="main12" color="text.secondary">

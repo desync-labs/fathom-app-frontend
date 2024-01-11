@@ -9,31 +9,28 @@ import { Link as ReactLink } from "react-router-dom";
 // Add support for the sx prop for consistency with the other branches.
 const Anchor = styled("a")({});
 
-interface NextLinkComposedProps
+interface LinkComposedProps
   extends Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href"> {
   to: string;
-  linkAs?: string;
-  href?: string;
 }
 
-export const NextLinkComposed = forwardRef<
-  HTMLAnchorElement,
-  NextLinkComposedProps
->(function NextLinkComposed(props, ref) {
-  const { to, children } = props;
-  return (
-    <ReactLink to={to} ref={ref}>
-      {children}
-    </ReactLink>
-  );
-});
+export const LinkComposed = forwardRef<HTMLAnchorElement, LinkComposedProps>(
+  function LinkComposed(props, ref) {
+    const { to, className, children } = props;
+    return (
+      <ReactLink to={to} ref={ref} className={className}>
+        {children}
+      </ReactLink>
+    );
+  }
+);
 
 export type LinkProps = {
   as?: string;
   href: { pathname: string } | string;
   linkAs?: string;
   noLinkStyle?: boolean;
-} & Omit<NextLinkComposedProps, "to" | "linkAs" | "href"> &
+} & Omit<LinkComposedProps, "to" | "linkAs" | "href"> &
   Omit<MuiLinkProps, "href">;
 
 export const Link = forwardRef<HTMLAnchorElement, LinkProps>(function Link(
@@ -87,7 +84,7 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(function Link(
 
   if (noLinkStyle) {
     return (
-      <NextLinkComposed
+      <LinkComposed
         className={className}
         ref={ref}
         to={typeof href === "string" ? href : href.pathname}
@@ -99,7 +96,7 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(function Link(
 
   return (
     <MuiLink
-      component={NextLinkComposed}
+      component={LinkComposed}
       linkAs={linkAs}
       className={className}
       ref={ref}

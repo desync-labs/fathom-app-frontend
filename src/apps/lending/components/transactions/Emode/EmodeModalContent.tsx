@@ -16,8 +16,6 @@ import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContex
 import { useWeb3Context } from "apps/lending/libs/hooks/useWeb3Context";
 import { getNetworkConfig } from "apps/lending/utils/marketsAndNetworksConfig";
 
-import LightningBoltGradient from "apps/lending/assets/lightningBoltGradient.svg";
-
 import { TxErrorView } from "apps/lending/components/transactions/FlowCommons/Error";
 import { GasEstimationError } from "apps/lending/components/transactions/FlowCommons/GasEstimationError";
 import { TxSuccessView } from "apps/lending/components/transactions/FlowCommons/Success";
@@ -241,9 +239,6 @@ export const EmodeModalContent = ({ mode }: EmodeModalContentProps) => {
               <Box sx={{ display: "inline-flex", alignItems: "center", mx: 1 }}>
                 {user.userEmodeCategoryId !== 0 ? (
                   <>
-                    <SvgIcon sx={{ fontSize: "12px" }}>
-                      <LightningBoltGradient />
-                    </SvgIcon>
                     <Typography variant="subheader1">
                       {getEmodeMessage(eModes[user.userEmodeCategoryId].label)}
                     </Typography>
@@ -258,9 +253,6 @@ export const EmodeModalContent = ({ mode }: EmodeModalContentProps) => {
                   <Box sx={{ display: "inline-flex", alignItems: "center" }}>
                     {selectedEmode.id !== 0 ? (
                       <>
-                        <SvgIcon sx={{ fontSize: "12px", mr: 0.5 }}>
-                          <LightningBoltGradient />
-                        </SvgIcon>
                         <Typography variant="subheader1">
                           {getEmodeMessage(eModes[selectedEmode.id].label)}
                         </Typography>

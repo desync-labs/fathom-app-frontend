@@ -51,6 +51,7 @@ export const SupplyAssetsList = () => {
     marketReferencePriceInUsd,
     loading: loadingReserves,
   } = useAppDataContext();
+
   const { walletBalances, loading } = useWalletBalances();
   const theme = useTheme();
   const downToXSM = useMediaQuery(theme.breakpoints.down("xsm"));

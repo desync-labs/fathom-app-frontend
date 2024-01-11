@@ -8,8 +8,6 @@ import { useModalContext } from "apps/lending/hooks/useModal";
 import { useRootStore } from "apps/lending/store/root";
 import { DASHBOARD, GENERAL } from "apps/lending/utils/mixPanelEvents";
 
-import LightningBoltGradient from "apps/lending/assets/lightningBoltGradient.svg";
-
 import { Link } from "apps/lending/components/primitives/Link";
 import { Row } from "apps/lending/components/primitives/Row";
 import { TypographyGradient } from "apps/lending/components/primitives/TypographyGradient";
@@ -101,19 +99,7 @@ export const DashboardEModeButton = ({
             borderRadius: "4px",
           })}
         >
-          <SvgIcon
-            sx={{
-              fontSize: iconButtonSize,
-              mr: "4px",
-              color: isEModeDisabled ? "text.muted" : "text.primary",
-            }}
-          >
-            {isEModeDisabled ? (
-              <LightningBoltIcon />
-            ) : (
-              <LightningBoltGradient />
-            )}
-          </SvgIcon>
+          {isEModeDisabled ? <LightningBoltIcon /> : null}
 
           {isEModeDisabled ? (
             <Typography variant="buttonS" color="text.secondary">
@@ -166,14 +152,6 @@ export const DashboardEModeButton = ({
                 <Row
                   caption={
                     <Box sx={{ display: "inline-flex", alignItems: "center" }}>
-                      <SvgIcon
-                        sx={{
-                          fontSize: iconButtonSize,
-                          mr: 1,
-                        }}
-                      >
-                        <LightningBoltGradient />
-                      </SvgIcon>
                       <Typography variant="subheader2" color="text.primary">
                         <EModeLabelMessage />
                       </Typography>

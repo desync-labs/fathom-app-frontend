@@ -1,4 +1,4 @@
-import { Box, SvgIcon, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { LiquidationPenaltyTooltip } from "apps/lending/components/infoTooltips/LiquidationPenaltyTooltip";
 import { LiquidationThresholdTooltip } from "apps/lending/components/infoTooltips/LiquidationThresholdTooltip";
 import { MaxLTVTooltip } from "apps/lending/components/infoTooltips/MaxLTVTooltip";
@@ -9,8 +9,6 @@ import { getEmodeMessage } from "apps/lending/components/transactions/Emode/Emod
 import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 import { useRootStore } from "apps/lending/store/root";
 import { GENERAL, RESERVE_DETAILS } from "apps/lending/utils/mixPanelEvents";
-
-import LightningBoltGradient from "apps/lending/assets/lightningBoltGradient.svg";
 
 import {
   PanelRow,
@@ -33,9 +31,6 @@ export const ReserveEModePanel: FC<ReserverEModePanelProps> = ({ reserve }) => {
           <Typography variant="secondary14" color="text.secondary">
             E-Mode Category
           </Typography>
-          <SvgIcon sx={{ fontSize: "14px", mr: 0.5, ml: 2 }}>
-            <LightningBoltGradient />
-          </SvgIcon>
           <Typography variant="subheader1">
             {getEmodeMessage(reserve.eModeLabel)}
           </Typography>
