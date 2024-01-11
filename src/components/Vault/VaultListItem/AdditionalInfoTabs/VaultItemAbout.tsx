@@ -30,10 +30,16 @@ export const VaultFlexColumns = styled(Box)`
 
 type VaultItemAboutPropsTypes = {
   vaultItemData: IVault;
+  protocolFee: number;
+  performanceFee: number;
 };
 
-const VaultItemAbout: FC<VaultItemAboutPropsTypes> = ({ vaultItemData }) => {
-  const { strategies, token, totalFees, protocolFees } = vaultItemData;
+const VaultItemAbout: FC<VaultItemAboutPropsTypes> = ({
+  vaultItemData,
+  protocolFee,
+  performanceFee,
+}) => {
+  const { strategies, token } = vaultItemData;
   const [earnedHistoryArr, setEarnedHistoryArr] = useState<
     HistoryChartDataType[]
   >([]);
@@ -218,7 +224,7 @@ const VaultItemAbout: FC<VaultItemAboutPropsTypes> = ({ vaultItemData }) => {
                 alignItems="flex-start"
                 secondaryAction={
                   <>{`${formatPercentage(
-                    BigNumber(protocolFees).toNumber()
+                    BigNumber(performanceFee * (protocolFee / 100)).toNumber()
                   )}%`}</>
                 }
                 sx={{ padding: "0 !important" }}
@@ -228,7 +234,9 @@ const VaultItemAbout: FC<VaultItemAboutPropsTypes> = ({ vaultItemData }) => {
               <AppListItem
                 alignItems="flex-start"
                 secondaryAction={
-                  <>{`${formatPercentage(BigNumber(totalFees).toNumber())}%`}</>
+                  <>{`${formatPercentage(
+                    BigNumber(performanceFee).toNumber()
+                  )}%`}</>
                 }
                 sx={{ padding: "0 !important" }}
               >

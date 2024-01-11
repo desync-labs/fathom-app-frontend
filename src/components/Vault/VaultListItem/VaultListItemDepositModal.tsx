@@ -20,11 +20,13 @@ const VaultManageGridDialogWrapper = styled(AppDialog)`
 
 export type VaultDepositProps = {
   vaultItemData: IVault;
+  performanceFee: number;
   onClose: () => void;
 };
 
 const VaultListItemDepositModal: FC<VaultDepositProps> = ({
   vaultItemData,
+  performanceFee,
   onClose,
 }) => {
   const {
@@ -62,6 +64,7 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
             vaultItemData={vaultItemData}
             deposit={deposit}
             sharedToken={sharedToken}
+            performanceFee={performanceFee}
           />
           <DividerDefault orientation="vertical" flexItem></DividerDefault>
           <DepositVaultForm

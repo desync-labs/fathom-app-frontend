@@ -10,15 +10,16 @@ type VaultDepositInfoProps = {
   vaultItemData: IVault;
   deposit: string;
   sharedToken: string;
+  performanceFee: number;
 };
 
 const DepositVaultInfo: FC<VaultDepositInfoProps> = ({
   vaultItemData,
   deposit,
   sharedToken,
+  performanceFee,
 }) => {
-  const { token, shareToken, strategies, totalFees, sharesSupply } =
-    vaultItemData;
+  const { token, shareToken, strategies, sharesSupply } = vaultItemData;
   const { isMobile } = useSharedContext();
 
   const { totalApr, count } = strategies[0].reports.reduce(
@@ -103,7 +104,7 @@ const DepositVaultInfo: FC<VaultDepositInfoProps> = ({
         <AppListItem
           alignItems="flex-start"
           secondaryAction={
-            formatPercentage(BigNumber(totalFees).toNumber()) + "%"
+            formatPercentage(BigNumber(performanceFee).toNumber()) + "%"
           }
         >
           <ListItemText primary="Fee" />
