@@ -7,7 +7,6 @@ import {
   useAppDataContext,
 } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 import { AssetCapsProvider } from "apps/lending/hooks/useAssetCaps";
-import { MainLayout } from "apps/lending/layouts/MainLayout";
 import { ReserveActions } from "apps/lending/modules/reserve-overview/ReserveActions";
 import { ReserveConfigurationWrapper } from "apps/lending/modules/reserve-overview/ReserveConfigurationWrapper";
 import { ReserveTopDetailsWrapper } from "apps/lending/modules/reserve-overview/ReserveTopDetailsWrapper";
@@ -99,7 +98,3 @@ export default function ReserveOverview() {
     </AssetCapsProvider>
   );
 }
-
-ReserveOverview.getLayout = function getLayout(page: React.ReactElement) {
-  return <MainLayout>{page}</MainLayout>;
-};

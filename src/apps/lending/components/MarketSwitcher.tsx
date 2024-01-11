@@ -23,8 +23,8 @@ import {
   MarketDataType,
   marketsData,
   networkConfigs,
-  STAGING_ENV,
-} from "../utils/marketsAndNetworksConfig";
+  DEV_ENV,
+} from "apps/lending/utils/marketsAndNetworksConfig";
 
 export const getMarketInfoById = (marketId: CustomMarket) => {
   const market: MarketDataType = marketsData[marketId as CustomMarket];
@@ -185,7 +185,7 @@ export const MarketSwitcher = () => {
           color="text.secondary"
           sx={{ px: 4, pt: 2 }}
         >
-          {ENABLE_TESTNET || STAGING_ENV
+          {ENABLE_TESTNET || DEV_ENV
             ? "Select Testnet Market"
             : "Select Market"}
         </Typography>

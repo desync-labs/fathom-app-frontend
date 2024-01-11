@@ -6,17 +6,23 @@ import {
   TransactionsIcon,
 } from "components/Common/MenuIcons";
 import {
-  NestedRouteContainer,
   NestedRouteLink,
   NestedRouteNav,
 } from "components/AppComponents/AppBox/AppBox";
 import useConnector from "context/connector";
 
 import LendingIndexComponent from "apps/lending";
+import { styled } from "@mui/material/styles";
 
 export type LendingViewProps = {
   openConnectorMenu: (event: MouseEvent<HTMLElement>) => void;
 };
+
+const LendingNestedRouteContainer = styled("div")`
+  width: 100%;
+  margin: 0;
+  padding: 0;
+`;
 
 const LendingView: FC<LendingViewProps> = ({ openConnectorMenu }) => {
   const location = useLocation();
@@ -64,9 +70,9 @@ const LendingView: FC<LendingViewProps> = ({ openConnectorMenu }) => {
           </NestedRouteLink>
         )}
       </NestedRouteNav>
-      <NestedRouteContainer maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+      <LendingNestedRouteContainer>
         <LendingIndexComponent openConnectorMenu={openConnectorMenu} />
-      </NestedRouteContainer>
+      </LendingNestedRouteContainer>
     </>
   );
 };

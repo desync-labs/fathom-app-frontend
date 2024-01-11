@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
 import { useAddressAllowed } from "apps/lending/hooks/useAddressAllowed";
-import { MainLayout } from "apps/lending/layouts/MainLayout";
 import { useWeb3Context } from "apps/lending/libs/hooks/useWeb3Context";
 import { ENABLE_TESTNET } from "apps/lending/utils/marketsAndNetworksConfig";
 
@@ -13,13 +12,10 @@ export const AddressBlocked = ({ children }: { children: ReactNode }) => {
 
   if (!isAllowed) {
     return (
-      <MainLayout>
-        <AddressBlockedModal
-          address={currentAccount}
-          onDisconnectWallet={disconnectWallet}
-        />
-        ;
-      </MainLayout>
+      <AddressBlockedModal
+        address={currentAccount}
+        onDisconnectWallet={disconnectWallet}
+      />
     );
   }
 
