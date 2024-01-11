@@ -279,15 +279,17 @@ const StreamStats: FC = () => {
               </MyStatsBlock>
             )}
 
-            {isMobile && typeof seconds === "number" && (
+            {isMobile && (
               <MyStatsBlock>
-                {seconds > 0 && (
+                {BigNumber(Number(seconds)).isGreaterThan(0) && (
                   <>
                     <CooldownInProgress>
                       Cooldown in progress
                     </CooldownInProgress>
                     <CooldownCountDown>
-                      <StakingCountdown timeObject={secondsToTime(seconds)} />
+                      <StakingCountdown
+                        timeObject={secondsToTime(Number(seconds))}
+                      />
                     </CooldownCountDown>
                     <MyStatsValue>
                       <strong>
@@ -299,36 +301,34 @@ const StreamStats: FC = () => {
                     </MyStatsValue>
                   </>
                 )}
-                {seconds <= 0 &&
-                  stake &&
-                  BigNumber(stake.claimedAmount).isGreaterThan(0) && (
-                    <Grid container>
-                      <Grid item xs={6}>
-                        <StatsLabel>
-                          Ready to withdraw
-                          <InfoIcon sx={{ fontSize: "18px" }} />
-                        </StatsLabel>
-                        <MyStatsValue className={"green"}>
-                          <strong>
-                            {formatPercentage(
-                              Number(stake.claimedAmount) / 10 ** 18
-                            )}{" "}
-                            FTHM
-                          </strong>
-                          {BigNumber(cooldownInUsd).isGreaterThan(
-                            1 / 10 ** 6
-                          ) ? (
-                            <span>{formatPercentage(cooldownInUsd)}</span>
-                          ) : null}
-                        </MyStatsValue>
-                      </Grid>
-                      <ButtonGrid item xs={6}>
-                        <StatsButton onClick={() => processFlow("withdraw")}>
-                          Withdraw
-                        </StatsButton>
-                      </ButtonGrid>
+                {!seconds &&
+                stake &&
+                BigNumber(stake.claimedAmount).isGreaterThan(0) ? (
+                  <Grid container>
+                    <Grid item xs={6}>
+                      <StatsLabel>
+                        Ready to withdraw
+                        <InfoIcon sx={{ fontSize: "18px" }} />
+                      </StatsLabel>
+                      <MyStatsValue className={"green"}>
+                        <strong>
+                          {formatPercentage(
+                            Number(stake.claimedAmount) / 10 ** 18
+                          )}{" "}
+                          FTHM
+                        </strong>
+                        {BigNumber(cooldownInUsd).isGreaterThan(1 / 10 ** 6) ? (
+                          <span>{formatPercentage(cooldownInUsd)}</span>
+                        ) : null}
+                      </MyStatsValue>
                     </Grid>
-                  )}
+                    <ButtonGrid item xs={6}>
+                      <StatsButton onClick={() => processFlow("withdraw")}>
+                        Withdraw
+                      </StatsButton>
+                    </ButtonGrid>
+                  </Grid>
+                ) : null}
               </MyStatsBlock>
             )}
 
@@ -380,15 +380,17 @@ const StreamStats: FC = () => {
               </MyStatsBlock>
             )}
 
-            {!isMobile && typeof seconds === "number" && (
+            {!isMobile && (
               <MyStatsBlock>
-                {seconds > 0 && (
+                {BigNumber(Number(seconds)).isGreaterThan(0) && (
                   <>
                     <CooldownInProgress>
                       Cooldown in progress
                     </CooldownInProgress>
                     <CooldownCountDown>
-                      <StakingCountdown timeObject={secondsToTime(seconds)} />
+                      <StakingCountdown
+                        timeObject={secondsToTime(Number(seconds))}
+                      />
                     </CooldownCountDown>
                     <MyStatsValue>
                       <strong>
@@ -398,7 +400,9 @@ const StreamStats: FC = () => {
                     </MyStatsValue>
                   </>
                 )}
-                {seconds <= 0 && stake && Number(stake.claimedAmount) > 0 && (
+                {!seconds &&
+                stake &&
+                BigNumber(stake.claimedAmount).isGreaterThan(0) ? (
                   <Grid container>
                     <Grid item xs={6}>
                       <StatsLabel>
@@ -421,7 +425,7 @@ const StreamStats: FC = () => {
                       </StatsButton>
                     </ButtonGrid>
                   </Grid>
-                )}
+                ) : null}
               </MyStatsBlock>
             )}
           </MyStatsBlocks>
