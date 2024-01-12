@@ -18,8 +18,11 @@ export const themeObject = createTheme({
     error: {
       main: "#DD3C3C",
     },
+    background: {
+      default: "#050c1a",
+    },
   },
   typography: {
-    fontFamily: ["Inter, sans-serif"].join(","),
+    fontFamily: "Inter, sans-serif",
   },
 });
