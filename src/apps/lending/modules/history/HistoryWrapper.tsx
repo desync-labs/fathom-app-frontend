@@ -21,8 +21,6 @@ import { useWeb3Context } from "apps/lending/libs/hooks/useWeb3Context";
 import { useRootStore } from "apps/lending/store/root";
 import { TRANSACTION_HISTORY } from "apps/lending/utils/mixPanelEvents";
 
-import LoveGhost from "apps/lending/assets/loveGhost.svg";
-
 import {
   downloadData,
   formatTransactionData,
@@ -140,9 +138,6 @@ export const HistoryWrapper = () => {
           flex: 1,
         }}
       >
-        <Box sx={{ marginBottom: "16px" }}>
-          <LoveGhost />
-        </Box>
         <Typography variant={downToMD ? "h4" : "h3"}>
           Transaction history is not currently available for this market
         </Typography>
