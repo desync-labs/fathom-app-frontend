@@ -77,7 +77,7 @@ export const MarketAssetsListContainer = () => {
       titleComponent={
         <TitleWithSearchBar
           onSearchTermChange={setSearchTerm}
-          title={<>{currentMarketData.marketTitle}assets</>}
+          title={<>{currentMarketData.marketTitle} assets</>}
           searchPlaceholder={
             sm ? "Search asset" : "Search asset name, symbol, or address"
           }

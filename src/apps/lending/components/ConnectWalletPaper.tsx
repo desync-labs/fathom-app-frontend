@@ -1,9 +1,9 @@
 import { CircularProgress, Paper, PaperProps, Typography } from "@mui/material";
 import { FC, ReactNode } from "react";
 
-import { ReactComponent as LoveGhost } from "apps/lending/assets/loveGhost.svg";
-
 import { ConnectWalletButton } from "apps/lending/components/WalletConnection/ConnectWalletButton";
+
+import { ReactComponent as FathomLogo } from "../assets/Fathom-logo.svg";
 
 interface ConnectWalletPaperProps extends PaperProps {
   loading?: boolean;
@@ -31,8 +31,8 @@ export const ConnectWalletPaper: FC<ConnectWalletPaperProps> = ({
         ...sx,
       }}
     >
-      <LoveGhost style={{ marginBottom: "16px" }} />
       <>
+        <FathomLogo style={{ margin: "40px 0" }} />
         {loading ? (
           <CircularProgress />
         ) : (
