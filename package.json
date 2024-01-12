@@ -54,7 +54,6 @@
     "lodash.debounce": "^4.0.8",
     "lodash.flatmap": "^4.5.0",
     "make-plural": "^7.3.0",
-    "mixpanel-browser": "^2.48.1",
     "multicodec": "^3.2.1",
     "node-vibrant": "^3.1.5",
     "numeral": "^2.0.6",

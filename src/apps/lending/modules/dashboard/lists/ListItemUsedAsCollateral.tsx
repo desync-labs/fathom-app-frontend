@@ -1,6 +1,7 @@
 import { Switch } from "@mui/material";
 
 import { ListItemIsolationBadge } from "apps/lending/modules/dashboard/lists/ListItemIsolationBadge";
+import { FC, memo } from "react";
 
 interface ListItemUsedAsCollateralProps {
   isIsolated: boolean;
@@ -11,33 +12,36 @@ interface ListItemUsedAsCollateralProps {
   disabled?: boolean;
 }
 
-export const ListItemUsedAsCollateral = ({
-  isIsolated,
-  usageAsCollateralEnabledOnUser,
-  canBeEnabledAsCollateral,
-  onToggleSwitch,
-  disabled,
-}: ListItemUsedAsCollateralProps) => {
-  const isEnabled = usageAsCollateralEnabledOnUser && canBeEnabledAsCollateral;
-  return (
-    <>
-      {!isIsolated ? (
-        <Switch
-          onClick={onToggleSwitch}
-          disableRipple
-          checked={isEnabled}
-          disabled={!canBeEnabledAsCollateral || disabled}
-        />
-      ) : (
-        <ListItemIsolationBadge>
+export const ListItemUsedAsCollateral: FC<ListItemUsedAsCollateralProps> = memo(
+  ({
+    isIsolated,
+    usageAsCollateralEnabledOnUser,
+    canBeEnabledAsCollateral,
+    onToggleSwitch,
+    disabled,
+  }) => {
+    const isEnabled =
+      usageAsCollateralEnabledOnUser && canBeEnabledAsCollateral;
+    return (
+      <>
+        {!isIsolated ? (
           <Switch
             onClick={onToggleSwitch}
             disableRipple
             checked={isEnabled}
             disabled={!canBeEnabledAsCollateral || disabled}
           />
-        </ListItemIsolationBadge>
-      )}
-    </>
-  );
-};
+        ) : (
+          <ListItemIsolationBadge>
+            <Switch
+              onClick={onToggleSwitch}
+              disableRipple
+              checked={isEnabled}
+              disabled={!canBeEnabledAsCollateral || disabled}
+            />
+          </ListItemIsolationBadge>
+        )}
+      </>
+    );
+  }
+);

@@ -7,7 +7,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { ListColumn } from "apps/lending/components/lists/ListColumn";
 import { ListItem } from "apps/lending/components/lists/ListItem";
 import { useRootStore } from "apps/lending/store/root";
@@ -23,19 +23,21 @@ import {
   TransactionHistoryItem,
 } from "apps/lending/modules/history/types";
 
-function ActionTitle({ action }: { action: string }) {
+const ActionTitle: FC<{ action: string }> = ({ action }) => {
   return (
     <Typography sx={{ width: "180px" }}>
       <ActionTextMap action={action} />
     </Typography>
   );
-}
+};
 
 interface TransactionHistoryItemProps {
   transaction: TransactionHistoryItem & ActionFields[keyof ActionFields];
 }
 
-function TransactionRowItem({ transaction }: TransactionHistoryItemProps) {
+const TransactionRowItem: FC<TransactionHistoryItemProps> = ({
+  transaction,
+}) => {
   const [copyStatus, setCopyStatus] = useState(false);
   const { currentNetworkConfig, trackEvent } = useRootStore((state) => ({
     currentNetworkConfig: state.currentNetworkConfig,
@@ -124,6 +126,6 @@ function TransactionRowItem({ transaction }: TransactionHistoryItemProps) {
       </ListItem>
     </Box>
   );
-}
+};
 
 export default TransactionRowItem;

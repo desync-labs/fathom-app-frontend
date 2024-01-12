@@ -4,6 +4,7 @@ import {
   ESupportedTimeRanges,
   TimeRangeSelector,
 } from "apps/lending/modules/reserve-overview/TimeRangeSelector";
+import { FC } from "react";
 
 export interface GraphTimeRangeSelectorProps {
   disabled: boolean;
@@ -11,11 +12,11 @@ export interface GraphTimeRangeSelectorProps {
   onTimeRangeChanged: (value: ESupportedTimeRanges) => void;
 }
 
-export const GraphTimeRangeSelector = ({
+export const GraphTimeRangeSelector: FC<GraphTimeRangeSelectorProps> = ({
   disabled, // require disabled from parent
   timeRange,
   onTimeRangeChanged,
-}: GraphTimeRangeSelectorProps) => (
+}) => (
   <TimeRangeSelector
     disabled={disabled}
     timeRanges={reserveRateTimeRangeOptions}

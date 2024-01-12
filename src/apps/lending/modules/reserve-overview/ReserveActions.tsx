@@ -18,7 +18,7 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { ReactNode, useState } from "react";
+import { FC, memo, ReactNode, useState } from "react";
 import { WalletIcon } from "apps/lending/components/icons/WalletIcon";
 import { getMarketInfoById } from "apps/lending/components/MarketSwitcher";
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
@@ -62,7 +62,7 @@ interface ReserveActionsProps {
   reserve: ComputedReserveData;
 }
 
-export const ReserveActions = ({ reserve }: ReserveActionsProps) => {
+export const ReserveActions: FC<ReserveActionsProps> = memo(({ reserve }) => {
   const [selectedAsset, setSelectedAsset] = useState<string>(reserve.symbol);
 
   const { currentAccount, loading: loadingWeb3Context } = useWeb3Context();
@@ -208,7 +208,7 @@ export const ReserveActions = ({ reserve }: ReserveActionsProps) => {
       )}
     </PaperWrapper>
   );
-};
+});
 
 const PauseWarning = () => {
   return (
@@ -267,7 +267,7 @@ const ActionsSkeleton = () => {
   );
 };
 
-const PaperWrapper = ({ children }: { children: ReactNode }) => {
+const PaperWrapper: FC<{ children: ReactNode }> = ({ children }) => {
   return (
     <Paper
       variant="outlined"
@@ -286,7 +286,7 @@ const PaperWrapper = ({ children }: { children: ReactNode }) => {
   );
 };
 
-const ConnectWallet = ({ loading }: { loading: boolean }) => {
+const ConnectWallet: FC<{ loading: boolean }> = ({ loading }) => {
   return (
     <Paper sx={{ pt: 4, pb: { xs: 4, xsm: 6 }, px: { xs: 4, xsm: 6 } }}>
       {loading ? (
@@ -319,143 +319,130 @@ interface ActionProps {
   reserve: ComputedReserveData;
 }
 
-const SupplyAction = ({
-  reserve,
-  value,
-  usdValue,
-  symbol,
-  disable,
-  onActionClicked,
-}: ActionProps) => {
-  return (
-    <Stack>
-      <AvailableTooltip
-        variant="description"
-        text={"Available to supply"}
-        capType={CapType.supplyCap}
-        event={{
-          eventName: GENERAL.TOOL_TIP,
-          eventParams: {
-            tooltip: "Available to supply: your info",
-            asset: reserve.underlyingAsset,
-            assetName: reserve.name,
-          },
-        }}
-      />
-      <Stack
-        sx={{ height: "44px" }}
-        direction="row"
-        justifyContent="space-between"
-        alignItems="center"
-      >
-        <Box>
-          <ValueWithSymbol value={value} symbol={symbol} />
-          <FormattedNumber
-            value={usdValue}
-            variant="subheader2"
-            color="text.muted"
-            symbolsColor="text.muted"
-            symbol="USD"
-          />
-        </Box>
-        <Button
-          sx={{ height: "36px", width: "96px" }}
-          onClick={onActionClicked}
-          disabled={disable}
-          fullWidth={false}
-          variant="gradient"
-          data-cy="supplyButton"
+const SupplyAction: FC<ActionProps> = memo(
+  ({ reserve, value, usdValue, symbol, disable, onActionClicked }) => {
+    return (
+      <Stack>
+        <AvailableTooltip
+          variant="description"
+          text={"Available to supply"}
+          capType={CapType.supplyCap}
+          event={{
+            eventName: GENERAL.TOOL_TIP,
+            eventParams: {
+              tooltip: "Available to supply: your info",
+              asset: reserve.underlyingAsset,
+              assetName: reserve.name,
+            },
+          }}
+        />
+        <Stack
+          sx={{ height: "44px" }}
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
         >
-          Supply
-        </Button>
+          <Box>
+            <ValueWithSymbol value={value} symbol={symbol} />
+            <FormattedNumber
+              value={usdValue}
+              variant="subheader2"
+              color="text.muted"
+              symbolsColor="text.muted"
+              symbol="USD"
+            />
+          </Box>
+          <Button
+            sx={{ height: "36px", width: "96px" }}
+            onClick={onActionClicked}
+            disabled={disable}
+            fullWidth={false}
+            variant="gradient"
+            data-cy="supplyButton"
+          >
+            Supply
+          </Button>
+        </Stack>
       </Stack>
-    </Stack>
-  );
-};
+    );
+  }
+);
 
-const BorrowAction = ({
-  reserve,
-  value,
-  usdValue,
-  symbol,
-  disable,
-  onActionClicked,
-}: ActionProps) => {
-  return (
-    <Stack>
-      <AvailableTooltip
-        variant="description"
-        text={"Available to borrow"}
-        capType={CapType.borrowCap}
-        event={{
-          eventName: GENERAL.TOOL_TIP,
-          eventParams: {
-            tooltip: "Available to borrow: your info",
-            asset: reserve.underlyingAsset,
-            assetName: reserve.name,
-          },
-        }}
-      />
-      <Stack
-        sx={{ height: "44px" }}
-        direction="row"
-        justifyContent="space-between"
-        alignItems="center"
-      >
-        <Box>
-          <ValueWithSymbol value={value} symbol={symbol} />
-          <FormattedNumber
-            value={usdValue}
-            variant="subheader2"
-            color="text.muted"
-            symbolsColor="text.muted"
-            symbol="USD"
-          />
-        </Box>
-        <Button
-          sx={{ height: "36px", width: "96px" }}
-          onClick={onActionClicked}
-          disabled={disable}
-          fullWidth={false}
-          variant="gradient"
-          data-cy="borrowButton"
+const BorrowAction: FC<ActionProps> = memo(
+  ({ reserve, value, usdValue, symbol, disable, onActionClicked }) => {
+    return (
+      <Stack>
+        <AvailableTooltip
+          variant="description"
+          text={"Available to borrow"}
+          capType={CapType.borrowCap}
+          event={{
+            eventName: GENERAL.TOOL_TIP,
+            eventParams: {
+              tooltip: "Available to borrow: your info",
+              asset: reserve.underlyingAsset,
+              assetName: reserve.name,
+            },
+          }}
+        />
+        <Stack
+          sx={{ height: "44px" }}
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
         >
-          Borrow
-        </Button>
+          <Box>
+            <ValueWithSymbol value={value} symbol={symbol} />
+            <FormattedNumber
+              value={usdValue}
+              variant="subheader2"
+              color="text.muted"
+              symbolsColor="text.muted"
+              symbol="USD"
+            />
+          </Box>
+          <Button
+            sx={{ height: "36px", width: "96px" }}
+            onClick={onActionClicked}
+            disabled={disable}
+            fullWidth={false}
+            variant="gradient"
+            data-cy="borrowButton"
+          >
+            Borrow
+          </Button>
+        </Stack>
       </Stack>
-    </Stack>
-  );
-};
+    );
+  }
+);
 
-const WrappedBaseAssetSelector = ({
-  assetSymbol,
-  baseAssetSymbol,
-  selectedAsset,
-  setSelectedAsset,
-}: {
+const WrappedBaseAssetSelector: FC<{
   assetSymbol: string;
   baseAssetSymbol: string;
   selectedAsset: string;
   setSelectedAsset: (value: string) => void;
-}) => {
-  return (
-    <StyledTxModalToggleGroup
-      color="primary"
-      value={selectedAsset}
-      exclusive
-      onChange={(_, value) => setSelectedAsset(value)}
-      sx={{ mb: 4 }}
-    >
-      <StyledTxModalToggleButton value={assetSymbol}>
-        <Typography variant="buttonM">{assetSymbol}</Typography>
-      </StyledTxModalToggleButton>
+}> = memo(
+  ({ assetSymbol, baseAssetSymbol, selectedAsset, setSelectedAsset }) => {
+    return (
+      <StyledTxModalToggleGroup
+        color="primary"
+        value={selectedAsset}
+        exclusive
+        onChange={(_, value) => setSelectedAsset(value)}
+        sx={{ mb: 4 }}
+      >
+        <StyledTxModalToggleButton value={assetSymbol}>
+          <Typography variant="buttonM">{assetSymbol}</Typography>
+        </StyledTxModalToggleButton>
 
-      <StyledTxModalToggleButton value={baseAssetSymbol}>
-        <Typography variant="buttonM">{baseAssetSymbol}</Typography>
-      </StyledTxModalToggleButton>
-    </StyledTxModalToggleGroup>
-  );
-};
+        <StyledTxModalToggleButton value={baseAssetSymbol}>
+          <Typography variant="buttonM">{baseAssetSymbol}</Typography>
+        </StyledTxModalToggleButton>
+      </StyledTxModalToggleGroup>
+    );
+  }
+);
 
 interface ValueWithSymbolProps {
   value: string;
@@ -463,24 +450,26 @@ interface ValueWithSymbolProps {
   children?: ReactNode;
 }
 
-const ValueWithSymbol = ({ value, symbol, children }: ValueWithSymbolProps) => {
-  return (
-    <Stack direction="row" alignItems="center" gap={1}>
-      <FormattedNumber value={value} variant="h4" color="text.primary" />
-      <Typography variant="buttonL" color="text.secondary">
-        {symbol}
-      </Typography>
-      {children}
-    </Stack>
-  );
-};
+const ValueWithSymbol: FC<ValueWithSymbolProps> = memo(
+  ({ value, symbol, children }) => {
+    return (
+      <Stack direction="row" alignItems="center" gap={1}>
+        <FormattedNumber value={value} variant="h4" color="text.primary" />
+        <Typography variant="buttonL" color="text.secondary">
+          {symbol}
+        </Typography>
+        {children}
+      </Stack>
+    );
+  }
+);
 
 interface WalletBalanceProps {
   balance: string;
   symbol: string;
   marketTitle: string;
 }
-const WalletBalance = ({ balance, symbol }: WalletBalanceProps) => {
+const WalletBalance: FC<WalletBalanceProps> = memo(({ balance, symbol }) => {
   const theme = useTheme();
 
   return (
@@ -507,4 +496,4 @@ const WalletBalance = ({ balance, symbol }: WalletBalanceProps) => {
       </Box>
     </Stack>
   );
-};
+});
