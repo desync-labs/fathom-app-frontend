@@ -4,6 +4,7 @@ import { FormattedNumber } from "apps/lending/components/primitives/FormattedNum
 import { TokenIcon } from "apps/lending/components/primitives/TokenIcon";
 
 import { BaseSuccessView } from "apps/lending/components/transactions/FlowCommons/BaseSuccess";
+import { FC } from "react";
 
 export type WithdrawAndSwitchTxSuccessViewProps = {
   txHash?: string;
@@ -13,13 +14,9 @@ export type WithdrawAndSwitchTxSuccessViewProps = {
   outSymbol: string;
 };
 
-export const WithdrawAndSwitchTxSuccessView = ({
-  txHash,
-  amount,
-  symbol,
-  outAmount,
-  outSymbol,
-}: WithdrawAndSwitchTxSuccessViewProps) => {
+export const WithdrawAndSwitchTxSuccessView: FC<
+  WithdrawAndSwitchTxSuccessViewProps
+> = ({ txHash, amount, symbol, outAmount, outSymbol }) => {
   return (
     <BaseSuccessView txHash={txHash}>
       <Box

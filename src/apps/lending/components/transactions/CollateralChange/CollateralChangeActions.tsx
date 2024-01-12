@@ -1,9 +1,10 @@
-import { ProtocolAction } from "@aave/contract-helpers";
+import { ProtocolAction } from "@into-the-fathom/lending-contract-helpers";
 import { useTransactionHandler } from "apps/lending/helpers/useTransactionHandler";
 import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 import { useRootStore } from "apps/lending/store/root";
 
 import { TxActionsWrapper } from "apps/lending/components/transactions/TxActionsWrapper";
+import { FC } from "react";
 
 export type CollateralChangeActionsProps = {
   poolReserve: ComputedReserveData;
@@ -13,13 +14,13 @@ export type CollateralChangeActionsProps = {
   symbol: string;
 };
 
-export const CollateralChangeActions = ({
+export const CollateralChangeActions: FC<CollateralChangeActionsProps> = ({
   poolReserve,
   isWrongNetwork,
   usageAsCollateral,
   blocked,
   symbol,
-}: CollateralChangeActionsProps) => {
+}) => {
   const setUsageAsCollateral = useRootStore(
     (state) => state.setUsageAsCollateral
   );

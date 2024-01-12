@@ -3,8 +3,9 @@ import {
   TextWithTooltip,
   TextWithTooltipProps,
 } from "apps/lending/components/TextWithTooltip";
+import { FC } from "react";
 
-export const ApprovalTooltip = ({ ...rest }: TextWithTooltipProps) => {
+export const ApprovalTooltip: FC<TextWithTooltipProps> = ({ ...rest }) => {
   return (
     <TextWithTooltip {...rest}>
       <>

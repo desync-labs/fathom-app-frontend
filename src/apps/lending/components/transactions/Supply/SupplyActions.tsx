@@ -3,13 +3,13 @@ import {
   gasLimitRecommendations,
   MAX_UINT_AMOUNT,
   ProtocolAction,
-} from "@aave/contract-helpers";
+} from "@into-the-fathom/lending-contract-helpers";
 import { SignatureLike } from "@into-the-fathom/bytes";
 import { TransactionResponse } from "@into-the-fathom/providers";
 import { BoxProps } from "@mui/material";
 import { parseUnits } from "fathom-ethers/lib/utils";
 import { queryClient } from "apps/lending";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import { MOCK_SIGNED_HASH } from "apps/lending/helpers/useTransactionHandler";
 import { useBackgroundDataProvider } from "apps/lending/hooks/app-data-provider/BackgroundDataProvider";
 import { useModalContext } from "apps/lending/hooks/useModal";
@@ -45,7 +45,7 @@ interface SignedParams {
   amount: string;
 }
 
-export const SupplyActions = React.memo(
+export const SupplyActions: FC<SupplyActionProps> = React.memo(
   ({
     amountToSupply,
     poolAddress,
@@ -56,7 +56,7 @@ export const SupplyActions = React.memo(
     decimals,
     isWrappedBaseAsset,
     ...props
-  }: SupplyActionProps) => {
+  }) => {
     const [
       tryPermit,
       supply,

@@ -1,4 +1,4 @@
-import { API_ETH_MOCK_ADDRESS } from "@aave/contract-helpers";
+import { API_ETH_MOCK_ADDRESS } from "@into-the-fathom/lending-contract-helpers";
 import {
   Box,
   Switch,
@@ -12,7 +12,6 @@ import { NoSearchResults } from "apps/lending/components/NoSearchResults";
 import { Link } from "apps/lending/components/primitives/Link";
 import { Warning } from "apps/lending/components/primitives/Warning";
 import { TitleWithSearchBar } from "apps/lending/components/TitleWithSearchBar";
-import { MarketWarning } from "apps/lending/components/transactions/Warnings/MarketWarning";
 import { useAppDataContext } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
 import MarketAssetsList from "apps/lending/modules/markets/MarketAssetsList";
@@ -53,12 +52,6 @@ export const MarketAssetsListContainer = () => {
           })
         : {}),
     }));
-  const marketFrozen = !reserves.some((reserve) => !reserve.isFrozen);
-  const showFrozenMarketWarning =
-    marketFrozen &&
-    ["Harmony", "Fantom", "Ethereum AMM"].includes(
-      currentMarketData.marketTitle
-    );
   const unfrozenReserves = filteredData.filter(
     (r) => !r.isFrozen && !r.isPaused
   );
@@ -84,12 +77,6 @@ export const MarketAssetsListContainer = () => {
         />
       }
     >
-      {showFrozenMarketWarning && (
-        <Box mx={6}>
-          <MarketWarning marketName={currentMarketData.marketTitle} forum />
-        </Box>
-      )}
-
       {/* Unfrozen assets list */}
       <MarketAssetsList reserves={unfrozenReserves} loading={loading} />
 

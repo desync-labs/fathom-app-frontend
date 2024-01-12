@@ -1,4 +1,7 @@
-import { BigNumberZeroDecimal, normalize } from "@aave/math-utils";
+import {
+  BigNumberZeroDecimal,
+  normalize,
+} from "@into-the-fathom/lending-math-utils";
 import { OptimalRate } from "@paraswap/sdk";
 import { useCallback, useEffect, useMemo, useState } from "react";
 

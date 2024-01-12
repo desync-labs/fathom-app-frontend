@@ -1,4 +1,4 @@
-import { ChainId } from "@aave/contract-helpers";
+import { ChainId } from "@into-the-fathom/lending-contract-helpers";
 import { Theme } from "@mui/material";
 import { SxProps } from "@mui/system";
 import { Warning } from "apps/lending/components/primitives/Warning";

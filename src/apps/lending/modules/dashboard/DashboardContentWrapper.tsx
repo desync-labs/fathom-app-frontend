@@ -1,4 +1,4 @@
-import { ChainId } from "@aave/contract-helpers";
+import { ChainId } from "@into-the-fathom/lending-contract-helpers";
 import { Box, Button, useMediaQuery, useTheme } from "@mui/material";
 import { ROUTES } from "apps/lending/components/primitives/Link";
 import { useWeb3Context } from "apps/lending/libs/hooks/useWeb3Context";

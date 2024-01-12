@@ -1,6 +1,6 @@
-import { InterestRate } from "@aave/contract-helpers";
+import { InterestRate } from "@into-the-fathom/lending-contract-helpers";
 import { Box, Button, Typography, useTheme } from "@mui/material";
-import { ReactNode, useState } from "react";
+import { FC, ReactNode, useState } from "react";
 import { WalletIcon } from "apps/lending/components/icons/WalletIcon";
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
 import {
@@ -24,7 +24,7 @@ export type SuccessTxViewProps = {
   customText?: ReactNode;
 };
 
-export const TxSuccessView = ({
+export const TxSuccessView: FC<SuccessTxViewProps> = ({
   txHash,
   action,
   amount,
@@ -34,7 +34,7 @@ export const TxSuccessView = ({
   addToken,
   customAction,
   customText,
-}: SuccessTxViewProps) => {
+}) => {
   const { addERC20Token } = useWeb3Context();
   const [base64, setBase64] = useState("");
   const theme = useTheme();

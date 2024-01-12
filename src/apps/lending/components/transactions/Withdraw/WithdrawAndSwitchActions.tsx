@@ -2,12 +2,12 @@ import {
   ERC20Service,
   gasLimitRecommendations,
   ProtocolAction,
-} from "@aave/contract-helpers";
+} from "@into-the-fathom/lending-contract-helpers";
 import { SignatureLike } from "@ethersproject/bytes";
 import { BoxProps } from "@mui/material";
 import { parseUnits } from "fathom-ethers/lib/utils";
 import { queryClient } from "apps/lending";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { MOCK_SIGNED_HASH } from "apps/lending/helpers/useTransactionHandler";
 import { useBackgroundDataProvider } from "apps/lending/hooks/app-data-provider/BackgroundDataProvider";
 import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
@@ -61,7 +61,7 @@ interface SignedParams {
   amount: string;
 }
 
-export const WithdrawAndSwitchActions = ({
+export const WithdrawAndSwitchActions: FC<WithdrawAndSwitchProps> = ({
   amountToSwap,
   isWrongNetwork,
   sx,
@@ -71,7 +71,7 @@ export const WithdrawAndSwitchActions = ({
   loading,
   blocked,
   buildTxFn,
-}: WithdrawAndSwitchProps) => {
+}) => {
   const [
     withdrawAndSwitch,
     currentMarketData,

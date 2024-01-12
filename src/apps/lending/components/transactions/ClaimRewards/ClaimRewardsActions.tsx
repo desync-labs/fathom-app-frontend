@@ -1,9 +1,10 @@
-import { ProtocolAction } from "@aave/contract-helpers";
+import { ProtocolAction } from "@into-the-fathom/lending-contract-helpers";
 import { Reward } from "apps/lending/helpers/types";
 import { useTransactionHandler } from "apps/lending/helpers/useTransactionHandler";
 import { useRootStore } from "apps/lending/store/root";
 
 import { TxActionsWrapper } from "apps/lending/components/transactions/TxActionsWrapper";
+import { FC } from "react";
 
 export type ClaimRewardsActionsProps = {
   isWrongNetwork: boolean;
@@ -11,11 +12,11 @@ export type ClaimRewardsActionsProps = {
   selectedReward: Reward;
 };
 
-export const ClaimRewardsActions = ({
+export const ClaimRewardsActions: FC<ClaimRewardsActionsProps> = ({
   isWrongNetwork,
   blocked,
   selectedReward,
-}: ClaimRewardsActionsProps) => {
+}) => {
   const claimRewards = useRootStore((state) => state.claimRewards);
 
   const { action, loadingTxns, mainTxState, requiresApproval } =

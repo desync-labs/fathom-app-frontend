@@ -4,18 +4,16 @@ import { StyledTxModalToggleGroup } from "apps/lending/components/StyledToggleBu
 import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
 import { useRootStore } from "apps/lending/store/root";
 import { WITHDRAW_MODAL } from "apps/lending/utils/mixPanelEvents";
+import { FC } from "react";
 
 export enum WithdrawType {
   WITHDRAW,
   WITHDRAWSWITCH,
 }
-export function WithdrawTypeSelector({
-  withdrawType,
-  setWithdrawType,
-}: {
+export const WithdrawTypeSelector: FC<{
   withdrawType: WithdrawType;
   setWithdrawType: (type: WithdrawType) => void;
-}) {
+}> = ({ withdrawType, setWithdrawType }) => {
   const { currentMarketData } = useProtocolDataContext();
   const trackEvent = useRootStore((store) => store.trackEvent);
 
@@ -54,4 +52,4 @@ export function WithdrawTypeSelector({
       </StyledTxModalToggleGroup>
     </Box>
   );
-}
+};

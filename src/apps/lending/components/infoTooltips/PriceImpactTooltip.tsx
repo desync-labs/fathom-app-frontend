@@ -7,6 +7,7 @@ import {
   TextWithTooltip,
   TextWithTooltipProps,
 } from "apps/lending/components/TextWithTooltip";
+import { FC } from "react";
 
 interface PriceImpactTooltipProps extends TextWithTooltipProps {
   loading: boolean;
@@ -14,12 +15,12 @@ interface PriceImpactTooltipProps extends TextWithTooltipProps {
   inputAmountUSD: string;
 }
 
-export const PriceImpactTooltip = ({
+export const PriceImpactTooltip: FC<PriceImpactTooltipProps> = ({
   loading,
   outputAmountUSD,
   inputAmountUSD,
   ...rest
-}: PriceImpactTooltipProps) => {
+}) => {
   const priceDifference: BigNumber = new BigNumber(outputAmountUSD).minus(
     inputAmountUSD
   );

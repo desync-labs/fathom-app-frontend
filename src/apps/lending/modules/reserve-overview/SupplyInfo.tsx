@@ -1,4 +1,4 @@
-import { valueToBigNumber } from "@aave/math-utils";
+import { valueToBigNumber } from "@into-the-fathom/lending-math-utils";
 import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
 import { AlertTitle, Box, Typography } from "@mui/material";
 import { CapsCircularStatus } from "apps/lending/components/caps/CapsCircularStatus";

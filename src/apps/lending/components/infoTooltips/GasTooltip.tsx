@@ -4,8 +4,9 @@ import {
   TextWithTooltip,
   TextWithTooltipProps,
 } from "apps/lending/components/TextWithTooltip";
+import { FC } from "react";
 
-export const GasTooltip = ({ ...rest }: TextWithTooltipProps) => {
+export const GasTooltip: FC<TextWithTooltipProps> = ({ ...rest }) => {
   return (
     <TextWithTooltip
       event={{

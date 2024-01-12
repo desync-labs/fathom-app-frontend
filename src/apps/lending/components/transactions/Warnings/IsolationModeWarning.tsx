@@ -2,16 +2,17 @@ import { AlertColor, Typography } from "@mui/material";
 
 import { Link } from "apps/lending/components/primitives/Link";
 import { Warning } from "apps/lending/components/primitives/Warning";
+import { FC } from "react";
 
 interface IsolationModeWarningProps {
   asset?: string;
   severity?: AlertColor;
 }
 
-export const IsolationModeWarning = ({
+export const IsolationModeWarning: FC<IsolationModeWarningProps> = ({
   asset,
   severity,
-}: IsolationModeWarningProps) => {
+}) => {
   return (
     <Warning severity={severity || "info"} sx={{ mb: 3 }}>
       <Typography variant="subheader1" mb={0.5}>

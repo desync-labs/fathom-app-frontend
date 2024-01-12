@@ -1,10 +1,14 @@
-import { InterestRate, ProtocolAction } from "@aave/contract-helpers";
+import {
+  InterestRate,
+  ProtocolAction,
+} from "@into-the-fathom/lending-contract-helpers";
 import { BoxProps } from "@mui/material";
 import { useTransactionHandler } from "apps/lending/helpers/useTransactionHandler";
 import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 import { useRootStore } from "apps/lending/store/root";
 
 import { TxActionsWrapper } from "apps/lending/components/transactions/TxActionsWrapper";
+import { FC } from "react";
 
 export interface RepayActionProps extends BoxProps {
   amountToRepay: string;
@@ -18,7 +22,7 @@ export interface RepayActionProps extends BoxProps {
   blocked?: boolean;
 }
 
-export const RepayActions = ({
+export const RepayActions: FC<RepayActionProps> = ({
   amountToRepay,
   poolReserve,
   poolAddress,
@@ -29,7 +33,7 @@ export const RepayActions = ({
   repayWithATokens,
   blocked,
   ...props
-}: RepayActionProps) => {
+}) => {
   const { repay, repayWithPermit, tryPermit } = useRootStore();
 
   const usingPermit = tryPermit({

@@ -3,7 +3,7 @@ import {
   gasLimitRecommendations,
   InterestRate,
   ProtocolAction,
-} from "@aave/contract-helpers";
+} from "@into-the-fathom/lending-contract-helpers";
 import { SignatureLike } from "@into-the-fathom/bytes";
 import { BoxProps } from "@mui/material";
 import { useParaSwapTransactionHandler } from "apps/lending/helpers/useParaSwapTransactionHandler";
@@ -15,6 +15,7 @@ import {
 import { useRootStore } from "apps/lending/store/root";
 
 import { TxActionsWrapper } from "apps/lending/components/transactions/TxActionsWrapper";
+import { FC } from "react";
 
 interface CollateralRepayBaseProps extends BoxProps {
   rateMode: InterestRate;
@@ -40,7 +41,11 @@ export interface CollateralRepayActionProps extends CollateralRepayBaseProps {
   swapCallData: string;
 }
 
-export const CollateralRepayActions = ({
+export const CollateralRepayActions: FC<
+  CollateralRepayBaseProps & {
+    buildTxFn: () => Promise<SwapTransactionParams>;
+  }
+> = ({
   repayAmount,
   poolReserve,
   fromAssetData,
@@ -55,8 +60,6 @@ export const CollateralRepayActions = ({
   repayWithAmount,
   buildTxFn,
   ...props
-}: CollateralRepayBaseProps & {
-  buildTxFn: () => Promise<SwapTransactionParams>;
 }) => {
   const [paraswapRepayWithCollateral, currentMarketData] = useRootStore(
     (state) => [state.paraswapRepayWithCollateral, state.currentMarketData]

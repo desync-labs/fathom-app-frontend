@@ -18,6 +18,9 @@ export const themeObject = createTheme({
     error: {
       main: "#DD3C3C",
     },
+    background: {
+      default: "#050c1a",
+    },
   },
   // @ts-ignore
   typography: {
