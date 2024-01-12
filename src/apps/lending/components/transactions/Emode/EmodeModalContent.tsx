@@ -1,7 +1,7 @@
-import { formatUserSummary } from "@aave/math-utils";
+import { formatUserSummary } from "@into-the-fathom/lending-math-utils";
 import { ArrowNarrowRightIcon } from "@heroicons/react/solid";
 import { Box, Link, SvgIcon, Typography } from "@mui/material";
-import { useState } from "react";
+import { FC, useState } from "react";
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
 import { Row } from "apps/lending/components/primitives/Row";
 import { Warning } from "apps/lending/components/primitives/Warning";
@@ -62,7 +62,7 @@ function getInitialEmode(
   return eModes[0];
 }
 
-export const EmodeModalContent = ({ mode }: EmodeModalContentProps) => {
+export const EmodeModalContent: FC<EmodeModalContentProps> = ({ mode }) => {
   const {
     user,
     reserves,

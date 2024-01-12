@@ -1,11 +1,11 @@
 import { Box, Container } from "@mui/material";
-import { ReactNode } from "react";
+import { FC, ReactNode } from "react";
 
 interface ContentContainerProps {
   children: ReactNode;
 }
 
-export const ContentContainer = ({ children }: ContentContainerProps) => {
+export const ContentContainer: FC<ContentContainerProps> = ({ children }) => {
   return (
     <Box
       sx={{

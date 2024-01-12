@@ -1,6 +1,6 @@
-import { ReserveIncentiveResponse } from "@aave/math-utils/dist/esm/formatters/incentive/calculate-reserve-incentives";
+import { ReserveIncentiveResponse } from "@into-the-fathom/lending-math-utils/dist/esm/formatters/incentive/calculate-reserve-incentives";
 import { Box } from "@mui/material";
-import { ReactNode } from "react";
+import { FC, ReactNode } from "react";
 
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
 import { NoData } from "apps/lending/components/primitives/NoData";
@@ -17,7 +17,7 @@ interface IncentivesCardProps {
   tooltip?: ReactNode;
 }
 
-export const IncentivesCard = ({
+export const IncentivesCard: FC<IncentivesCardProps> = ({
   symbol,
   value,
   incentives,
@@ -26,7 +26,7 @@ export const IncentivesCard = ({
   align,
   color,
   tooltip,
-}: IncentivesCardProps) => {
+}) => {
   return (
     <Box
       sx={{

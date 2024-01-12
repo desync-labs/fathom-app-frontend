@@ -14,133 +14,136 @@ import { ListButtonsColumn } from "apps/lending/modules/dashboard/lists/ListButt
 import { ListItemUsedAsCollateral } from "apps/lending/modules/dashboard/lists/ListItemUsedAsCollateral";
 import { ListItemWrapper } from "apps/lending/modules/dashboard/lists/ListItemWrapper";
 import { ListValueColumn } from "apps/lending/modules/dashboard/lists/ListValueColumn";
+import { FC, memo } from "react";
 
-export const SuppliedPositionsListItem = ({
-  reserve,
-  underlyingBalance,
-  underlyingBalanceUSD,
-  usageAsCollateralEnabledOnUser,
-  underlyingAsset,
-}: DashboardReserve) => {
-  const { user } = useAppDataContext();
-  const { isIsolated, aIncentivesData, isFrozen, isActive } = reserve;
-  const { currentMarketData, currentMarket } = useProtocolDataContext();
-  const { openSupply, openWithdraw, openCollateralChange, openSwap } =
-    useModalContext();
-  const { debtCeiling } = useAssetCaps();
-  const isSwapButton = isFeatureEnabled.liquiditySwap(currentMarketData);
-  const trackEvent = useRootStore((store) => store.trackEvent);
+export const SuppliedPositionsListItem: FC<DashboardReserve> = memo(
+  ({
+    reserve,
+    underlyingBalance,
+    underlyingBalanceUSD,
+    usageAsCollateralEnabledOnUser,
+    underlyingAsset,
+  }) => {
+    const { user } = useAppDataContext();
+    const { isIsolated, aIncentivesData, isFrozen, isActive } = reserve;
+    const { currentMarketData, currentMarket } = useProtocolDataContext();
+    const { openSupply, openWithdraw, openCollateralChange, openSwap } =
+      useModalContext();
+    const { debtCeiling } = useAssetCaps();
+    const isSwapButton = isFeatureEnabled.liquiditySwap(currentMarketData);
+    const trackEvent = useRootStore((store) => store.trackEvent);
 
-  const canBeEnabledAsCollateral =
-    !debtCeiling.isMaxed &&
-    reserve.reserveLiquidationThreshold !== "0" &&
-    ((!reserve.isIsolated && !user.isInIsolationMode) ||
-      user.isolatedReserve?.underlyingAsset === reserve.underlyingAsset ||
-      (reserve.isIsolated &&
-        user.totalCollateralMarketReferenceCurrency === "0"));
+    const canBeEnabledAsCollateral =
+      !debtCeiling.isMaxed &&
+      reserve.reserveLiquidationThreshold !== "0" &&
+      ((!reserve.isIsolated && !user.isInIsolationMode) ||
+        user.isolatedReserve?.underlyingAsset === reserve.underlyingAsset ||
+        (reserve.isIsolated &&
+          user.totalCollateralMarketReferenceCurrency === "0"));
 
-  const disableSwap = !isActive || reserve.symbol == "stETH";
-  const disableWithdraw = !isActive;
-  const disableSupply = !isActive || isFrozen;
+    const disableSwap = !isActive || reserve.symbol == "stETH";
+    const disableWithdraw = !isActive;
+    const disableSupply = !isActive || isFrozen;
 
-  return (
-    <ListItemWrapper
-      symbol={reserve.symbol}
-      iconSymbol={reserve.iconSymbol}
-      name={reserve.name}
-      detailsAddress={underlyingAsset}
-      currentMarket={currentMarket}
-      frozen={reserve.isFrozen}
-      data-cy={`dashboardSuppliedListItem_${reserve.symbol.toUpperCase()}_${
-        canBeEnabledAsCollateral && usageAsCollateralEnabledOnUser
-          ? "Collateral"
-          : "NoCollateral"
-      }`}
-      showSupplyCapTooltips
-      showDebtCeilingTooltips
-    >
-      <ListValueColumn
-        symbol={reserve.iconSymbol}
-        value={Number(underlyingBalance)}
-        subValue={Number(underlyingBalanceUSD)}
-        disabled={Number(underlyingBalance) === 0}
-      />
-
-      <ListAPRColumn
-        value={Number(reserve.supplyAPY)}
-        incentives={aIncentivesData}
+    return (
+      <ListItemWrapper
         symbol={reserve.symbol}
-      />
-
-      <ListColumn>
-        <ListItemUsedAsCollateral
-          isIsolated={isIsolated}
-          usageAsCollateralEnabledOnUser={usageAsCollateralEnabledOnUser}
-          canBeEnabledAsCollateral={canBeEnabledAsCollateral}
-          onToggleSwitch={() => {
-            openCollateralChange(
-              underlyingAsset,
-              currentMarket,
-              reserve.name,
-              "dashboard",
-              usageAsCollateralEnabledOnUser
-            );
-          }}
-          data-cy={`collateralStatus`}
+        iconSymbol={reserve.iconSymbol}
+        name={reserve.name}
+        detailsAddress={underlyingAsset}
+        currentMarket={currentMarket}
+        frozen={reserve.isFrozen}
+        data-cy={`dashboardSuppliedListItem_${reserve.symbol.toUpperCase()}_${
+          canBeEnabledAsCollateral && usageAsCollateralEnabledOnUser
+            ? "Collateral"
+            : "NoCollateral"
+        }`}
+        showSupplyCapTooltips
+        showDebtCeilingTooltips
+      >
+        <ListValueColumn
+          symbol={reserve.iconSymbol}
+          value={Number(underlyingBalance)}
+          subValue={Number(underlyingBalanceUSD)}
+          disabled={Number(underlyingBalance) === 0}
         />
-      </ListColumn>
 
-      <ListButtonsColumn>
-        {isSwapButton ? (
-          <Button
-            disabled={disableSwap}
-            variant="gradient"
-            onClick={() => {
-              // track
+        <ListAPRColumn
+          value={Number(reserve.supplyAPY)}
+          incentives={aIncentivesData}
+          symbol={reserve.symbol}
+        />
 
-              trackEvent(GENERAL.OPEN_MODAL, {
-                modal: "Swap Collateral",
-                market: currentMarket,
-                assetName: reserve.name,
-                asset: underlyingAsset,
-              });
-              openSwap(underlyingAsset);
+        <ListColumn>
+          <ListItemUsedAsCollateral
+            isIsolated={isIsolated}
+            usageAsCollateralEnabledOnUser={usageAsCollateralEnabledOnUser}
+            canBeEnabledAsCollateral={canBeEnabledAsCollateral}
+            onToggleSwitch={() => {
+              openCollateralChange(
+                underlyingAsset,
+                currentMarket,
+                reserve.name,
+                "dashboard",
+                usageAsCollateralEnabledOnUser
+              );
             }}
-            data-cy={`swapButton`}
-          >
-            Switch
-          </Button>
-        ) : (
+            data-cy={`collateralStatus`}
+          />
+        </ListColumn>
+
+        <ListButtonsColumn>
+          {isSwapButton ? (
+            <Button
+              disabled={disableSwap}
+              variant="gradient"
+              onClick={() => {
+                // track
+
+                trackEvent(GENERAL.OPEN_MODAL, {
+                  modal: "Swap Collateral",
+                  market: currentMarket,
+                  assetName: reserve.name,
+                  asset: underlyingAsset,
+                });
+                openSwap(underlyingAsset);
+              }}
+              data-cy={`swapButton`}
+            >
+              Switch
+            </Button>
+          ) : (
+            <Button
+              disabled={disableSupply}
+              variant="gradient"
+              onClick={() =>
+                openSupply(
+                  underlyingAsset,
+                  currentMarket,
+                  reserve.name,
+                  "dashboard"
+                )
+              }
+            >
+              Supply
+            </Button>
+          )}
           <Button
-            disabled={disableSupply}
-            variant="gradient"
-            onClick={() =>
-              openSupply(
+            disabled={disableWithdraw}
+            variant="outlined"
+            onClick={() => {
+              openWithdraw(
                 underlyingAsset,
                 currentMarket,
                 reserve.name,
                 "dashboard"
-              )
-            }
+              );
+            }}
           >
-            Supply
+            Withdraw
           </Button>
-        )}
-        <Button
-          disabled={disableWithdraw}
-          variant="outlined"
-          onClick={() => {
-            openWithdraw(
-              underlyingAsset,
-              currentMarket,
-              reserve.name,
-              "dashboard"
-            );
-          }}
-        >
-          Withdraw
-        </Button>
-      </ListButtonsColumn>
-    </ListItemWrapper>
-  );
-};
+        </ListButtonsColumn>
+      </ListItemWrapper>
+    );
+  }
+);

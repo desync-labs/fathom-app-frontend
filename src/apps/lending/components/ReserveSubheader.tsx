@@ -2,13 +2,17 @@ import { Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
+import { FC } from "react";
 
 type ReserveSubheaderProps = {
   value: string;
   rightAlign?: boolean;
 };
 
-export function ReserveSubheader({ value, rightAlign }: ReserveSubheaderProps) {
+export const ReserveSubheader: FC<ReserveSubheaderProps> = ({
+  value,
+  rightAlign,
+}) => {
   return (
     <Box
       sx={{
@@ -42,4 +46,4 @@ export function ReserveSubheader({ value, rightAlign }: ReserveSubheaderProps) {
       )}
     </Box>
   );
-}
+};

@@ -2,7 +2,7 @@ import {
   ReservesIncentiveDataHumanized,
   UiIncentiveDataProvider,
   UserReservesIncentivesDataHumanized,
-} from "@aave/contract-helpers";
+} from "@into-the-fathom/lending-contract-helpers";
 import { StateCreator } from "zustand";
 
 import { RootStore } from "apps/lending/store/root";

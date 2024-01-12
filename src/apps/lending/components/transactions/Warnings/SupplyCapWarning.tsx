@@ -3,17 +3,18 @@ import { AssetCapData } from "apps/lending/hooks/useAssetCaps";
 
 import { Link } from "apps/lending/components/primitives/Link";
 import { Warning } from "apps/lending/components/primitives/Warning";
+import { FC } from "react";
 
 type SupplyCapWarningProps = AlertProps & {
   supplyCap: AssetCapData;
   icon?: boolean;
 };
 
-export const SupplyCapWarning = ({
+export const SupplyCapWarning: FC<SupplyCapWarningProps> = ({
   supplyCap,
   icon = true,
   ...rest
-}: SupplyCapWarningProps) => {
+}) => {
   // Don't show a warning when less than 98% utilized
   if (!supplyCap.percentUsed || supplyCap.percentUsed < 98) return null;
 

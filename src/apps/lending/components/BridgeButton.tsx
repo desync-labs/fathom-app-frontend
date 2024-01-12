@@ -3,8 +3,9 @@ import { Button, SvgIcon, Typography } from "@mui/material";
 
 import { NetworkConfig } from "apps/lending/ui-config/networksConfig";
 import { Link } from "apps/lending/components/primitives/Link";
+import { FC } from "react";
 
-export const BridgeButton = ({ bridge }: Pick<NetworkConfig, "bridge">) => {
+export const BridgeButton: FC<Pick<NetworkConfig, "bridge">> = ({ bridge }) => {
   if (!bridge) return null;
 
   return (

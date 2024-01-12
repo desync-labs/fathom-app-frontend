@@ -1,15 +1,16 @@
 import { Box, Typography } from "@mui/material";
+import { FC } from "react";
 
 interface GraphLegendProps {
   labels: { text: string; color: string }[];
 }
 
-export function GraphLegend({
+export const GraphLegend: FC<GraphLegendProps> = ({
   labels = [
     { text: "test", color: "#000" },
     { text: "bla", color: "#ff0" },
   ],
-}: GraphLegendProps) {
+}) => {
   return (
     <Box>
       {labels.map((label) => (
@@ -33,4 +34,4 @@ export function GraphLegend({
       ))}
     </Box>
   );
-}
+};

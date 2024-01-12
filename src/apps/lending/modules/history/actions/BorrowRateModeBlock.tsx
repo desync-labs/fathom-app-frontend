@@ -2,14 +2,12 @@ import { Typography } from "@mui/material";
 import { formatUnits } from "fathom-ethers/lib/utils";
 
 import { ActionFields, TransactionHistoryItem } from "../types";
+import { FC } from "react";
 
-export const BorrowRateModeBlock = ({
-  swapBorrowRateTx,
-  borrowRateMode,
-}: {
+export const BorrowRateModeBlock: FC<{
   swapBorrowRateTx: TransactionHistoryItem<ActionFields["SwapBorrowRate"]>;
   borrowRateMode: string;
-}) => {
+}> = ({ swapBorrowRateTx, borrowRateMode }) => {
   if (borrowRateMode === "Variable" || borrowRateMode === "2") {
     return (
       <>

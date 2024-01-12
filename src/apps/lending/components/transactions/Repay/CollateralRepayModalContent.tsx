@@ -1,9 +1,9 @@
-import { InterestRate } from "@aave/contract-helpers";
-import { valueToBigNumber } from "@aave/math-utils";
+import { InterestRate } from "@into-the-fathom/lending-contract-helpers";
+import { valueToBigNumber } from "@into-the-fathom/lending-math-utils";
 import { ArrowDownIcon } from "@heroicons/react/outline";
 import { Box, SvgIcon, Typography } from "@mui/material";
 import BigNumber from "bignumber.js";
-import { useRef, useState } from "react";
+import { FC, useRef, useState } from "react";
 import { PriceImpactTooltip } from "apps/lending/components/infoTooltips/PriceImpactTooltip";
 import {
   ComputedReserveData,
@@ -36,13 +36,9 @@ import {
 import { ParaswapErrorDisplay } from "apps/lending/components/transactions/Warnings/ParaswapErrorDisplay";
 import { CollateralRepayActions } from "apps/lending/components/transactions/Repay/CollateralRepayActions";
 
-export function CollateralRepayModalContent({
-  poolReserve,
-  symbol,
-  debtType,
-  userReserve,
-  isWrongNetwork,
-}: ModalWrapperProps & { debtType: InterestRate }) {
+export const CollateralRepayModalContent: FC<
+  ModalWrapperProps & { debtType: InterestRate }
+> = ({ poolReserve, symbol, debtType, userReserve, isWrongNetwork }) => {
   const { user, reserves, userReserves } = useAppDataContext();
   const { gasLimit, txError, mainTxState } = useModalContext();
   const { currentChainId, currentNetworkConfig } = useProtocolDataContext();
@@ -354,4 +350,4 @@ export function CollateralRepayModalContent({
       />
     </>
   );
-}
+};

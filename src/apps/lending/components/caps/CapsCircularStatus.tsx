@@ -23,16 +23,6 @@ export const CapsCircularStatus = ({
   // If value is zero, don't show anything
   if (value === 0) return null;
 
-  /* const determineColor = (): 'error' | 'warning' | 'success' => {
-    if (Math.round(value) >= 99.99) {
-      return 'error';
-    } else if (value >= 98) {
-      return 'warning';
-    } else {
-      return 'success';
-    }
-  }; */
-
   const determineValueDisplay = (): string => {
     if (value >= 99.99) {
       return "100%";

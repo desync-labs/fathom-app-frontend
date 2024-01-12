@@ -5,6 +5,7 @@ import { MOCK_SIGNED_HASH } from "apps/lending/helpers/useTransactionHandler";
 import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
 import { useRootStore } from "apps/lending/store/root";
 import { ApprovalMethod } from "apps/lending/store/walletSlice";
+import { FC } from "react";
 
 export type RightHelperTextProps = {
   approvalHash?: string;
@@ -17,10 +18,10 @@ const ExtLinkIcon = () => (
   </SvgIcon>
 );
 
-export const RightHelperText = ({
+export const RightHelperText: FC<RightHelperTextProps> = ({
   approvalHash,
   tryPermit,
-}: RightHelperTextProps) => {
+}) => {
   const { walletApprovalMethodPreference, setWalletApprovalMethodPreference } =
     useRootStore();
   const usingPermit = tryPermit && walletApprovalMethodPreference;

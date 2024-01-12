@@ -1,4 +1,4 @@
-import { ChainId } from "@aave/contract-helpers";
+import { ChainId } from "@into-the-fathom/lending-contract-helpers";
 import { FathomLendingApothem } from "@into-the-fathom/fathom-lending-address-book";
 
 export type ExplorerLinkBuilderProps = {

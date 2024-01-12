@@ -1,8 +1,8 @@
-import { ReserveDataHumanized } from "@aave/contract-helpers";
+import { ReserveDataHumanized } from "@into-the-fathom/lending-contract-helpers";
 import {
   formatReservesAndIncentives,
   formatUserSummaryAndIncentives,
-} from "@aave/math-utils";
+} from "@into-the-fathom/lending-math-utils";
 import { EmodeCategory } from "apps/lending/helpers/types";
 import { fetchIconSymbolAndName } from "apps/lending/ui-config/reservePatches";
 import {

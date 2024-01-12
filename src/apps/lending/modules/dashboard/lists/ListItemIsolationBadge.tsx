@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { ReactNode } from "react";
+import { FC, ReactNode } from "react";
 
 import { IsolatedEnabledBadge } from "apps/lending/components/isolationMode/IsolatedBadge";
 
@@ -7,9 +7,9 @@ interface ListItemIsolationBadgeProps {
   children: ReactNode;
 }
 
-export const ListItemIsolationBadge = ({
+export const ListItemIsolationBadge: FC<ListItemIsolationBadgeProps> = ({
   children,
-}: ListItemIsolationBadgeProps) => {
+}) => {
   return (
     <Box
       sx={{

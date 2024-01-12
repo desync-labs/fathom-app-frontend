@@ -1,4 +1,4 @@
-import { API_ETH_MOCK_ADDRESS } from "@aave/contract-helpers";
+import { API_ETH_MOCK_ADDRESS } from "@into-the-fathom/lending-contract-helpers";
 import { Typography, useMediaQuery, useTheme } from "@mui/material";
 import { Fragment, useState } from "react";
 import { ListColumn } from "apps/lending/components/lists/ListColumn";

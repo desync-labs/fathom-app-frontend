@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { FC, memo, ReactNode } from "react";
 
 import { ListColumn } from "apps/lending/components/lists/ListColumn";
 import { ListHeaderTitle } from "apps/lending/components/lists/ListHeaderTitle";
@@ -9,7 +9,7 @@ interface ListHeaderProps {
   head: ReactNode[];
 }
 
-export const ListHeader = ({ head }: ListHeaderProps) => {
+export const ListHeader: FC<ListHeaderProps> = memo(({ head }) => {
   return (
     <ListHeaderWrapper>
       {head.map((title, i) => (
@@ -21,4 +21,4 @@ export const ListHeader = ({ head }: ListHeaderProps) => {
       <ListButtonsColumn />
     </ListHeaderWrapper>
   );
-};
+});

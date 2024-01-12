@@ -6,9 +6,10 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import type { ReactNode } from "react";
+import type { FC, ReactNode } from "react";
+import { memo } from "react";
 
-export const PanelRow: React.FC<BoxProps> = (props) => (
+export const PanelRow: FC<BoxProps> = (props) => (
   <Box
     {...props}
     sx={{
@@ -19,7 +20,7 @@ export const PanelRow: React.FC<BoxProps> = (props) => (
     }}
   />
 );
-export const PanelTitle: React.FC<TypographyProps> = (props) => (
+export const PanelTitle: FC<TypographyProps> = (props) => (
   <Typography
     {...props}
     variant="subheader1"
@@ -33,53 +34,51 @@ interface PanelItemProps {
   children: ReactNode;
 }
 
-export const PanelItem: React.FC<PanelItemProps> = ({
-  title,
-  children,
-  className,
-}) => {
-  const theme = useTheme();
-  const mdUp = useMediaQuery(theme.breakpoints.up("md"));
+export const PanelItem: FC<PanelItemProps> = memo(
+  ({ title, children, className }) => {
+    const theme = useTheme();
+    const mdUp = useMediaQuery(theme.breakpoints.up("md"));
 
-  return (
-    <Box
-      sx={{
-        position: "relative",
-        "&:not(:last-child)": {
-          pr: 4,
-          mr: 4,
-        },
-        ...(mdUp
-          ? {
-              "&:not(:last-child):not(.borderless)::after": {
-                content: '""',
-                height: "32px",
-                position: "absolute",
-                right: 4,
-                top: "calc(50% - 17px)",
-                borderRight: (theme) => `1px solid ${theme.palette.divider}`,
-              },
-            }
-          : {}),
-      }}
-      className={className}
-    >
-      <Typography color="text.secondary" component="span">
-        {title}
-      </Typography>
+    return (
       <Box
         sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "flex-start",
-          justifyContent: "flex-end",
-          flex: 1,
-          overflow: "hidden",
-          py: 1,
+          position: "relative",
+          "&:not(:last-child)": {
+            pr: 4,
+            mr: 4,
+          },
+          ...(mdUp
+            ? {
+                "&:not(:last-child):not(.borderless)::after": {
+                  content: '""',
+                  height: "32px",
+                  position: "absolute",
+                  right: 4,
+                  top: "calc(50% - 17px)",
+                  borderRight: (theme) => `1px solid ${theme.palette.divider}`,
+                },
+              }
+            : {}),
         }}
+        className={className}
       >
-        {children}
+        <Typography color="text.secondary" component="span">
+          {title}
+        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-start",
+            justifyContent: "flex-end",
+            flex: 1,
+            overflow: "hidden",
+            py: 1,
+          }}
+        >
+          {children}
+        </Box>
       </Box>
-    </Box>
-  );
-};
+    );
+  }
+);

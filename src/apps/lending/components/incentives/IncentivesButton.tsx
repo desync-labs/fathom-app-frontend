@@ -1,5 +1,5 @@
-import { valueToBigNumber } from "@aave/math-utils";
-import { ReserveIncentiveResponse } from "@aave/math-utils/dist/esm/formatters/incentive/calculate-reserve-incentives";
+import { valueToBigNumber } from "@into-the-fathom/lending-math-utils";
+import { ReserveIncentiveResponse } from "@into-the-fathom/lending-math-utils/dist/esm/formatters/incentive/calculate-reserve-incentives";
 import { DotsHorizontalIcon } from "@heroicons/react/solid";
 import { Box, SvgIcon, Typography } from "@mui/material";
 import { useState } from "react";

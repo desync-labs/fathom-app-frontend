@@ -2,8 +2,9 @@ import { DuplicateIcon, XIcon } from "@heroicons/react/outline";
 import { Box, Button, Link, SvgIcon, Typography } from "@mui/material";
 import { useModalContext } from "apps/lending/hooks/useModal";
 import { TxErrorType } from "apps/lending/ui-config/errorMapping";
+import { FC } from "react";
 
-export const TxErrorView = ({ txError }: { txError: TxErrorType }) => {
+export const TxErrorView: FC<{ txError: TxErrorType }> = ({ txError }) => {
   const { close } = useModalContext();
 
   return (

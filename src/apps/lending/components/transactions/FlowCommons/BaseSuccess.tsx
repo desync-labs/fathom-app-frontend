@@ -1,7 +1,7 @@
 import { ExternalLinkIcon } from "@heroicons/react/outline";
 import { CheckIcon } from "@heroicons/react/solid";
 import { Box, Button, Link, SvgIcon, Typography } from "@mui/material";
-import { ReactNode } from "react";
+import { FC, ReactNode } from "react";
 import { useModalContext } from "apps/lending/hooks/useModal";
 import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
 
@@ -16,10 +16,10 @@ const ExtLinkIcon = () => (
   </SvgIcon>
 );
 
-export const BaseSuccessView = ({
+export const BaseSuccessView: FC<BaseSuccessTxViewProps> = ({
   txHash,
   children,
-}: BaseSuccessTxViewProps) => {
+}) => {
   const { close, mainTxState } = useModalContext();
   const { currentNetworkConfig } = useProtocolDataContext();
 

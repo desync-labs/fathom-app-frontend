@@ -2,7 +2,7 @@ import {
   API_ETH_MOCK_ADDRESS,
   gasLimitRecommendations,
   ProtocolAction,
-} from "@aave/contract-helpers";
+} from "@into-the-fathom/lending-contract-helpers";
 import { SignatureLike } from "@ethersproject/bytes";
 import { BoxProps } from "@mui/material";
 import { useParaSwapTransactionHandler } from "apps/lending/helpers/useParaSwapTransactionHandler";
@@ -14,6 +14,7 @@ import {
 import { useRootStore } from "apps/lending/store/root";
 
 import { TxActionsWrapper } from "apps/lending/components/transactions/TxActionsWrapper";
+import { FC } from "react";
 
 interface SwapBaseProps extends BoxProps {
   amountToSwap: string;
@@ -37,7 +38,9 @@ export interface SwapActionProps extends SwapBaseProps {
   augustus: string;
 }
 
-export const SwapActions = ({
+export const SwapActions: FC<
+  SwapBaseProps & { buildTxFn: () => Promise<SwapTransactionParams> }
+> = ({
   amountToSwap,
   amountToReceive,
   isWrongNetwork,
@@ -51,7 +54,7 @@ export const SwapActions = ({
   blocked,
   buildTxFn,
   ...props
-}: SwapBaseProps & { buildTxFn: () => Promise<SwapTransactionParams> }) => {
+}) => {
   const [swapCollateral, currentMarketData] = useRootStore((state) => [
     state.swapCollateral,
     state.currentMarketData,

@@ -1,5 +1,11 @@
-import { API_ETH_MOCK_ADDRESS, InterestRate } from "@aave/contract-helpers";
-import { USD_DECIMALS, valueToBigNumber } from "@aave/math-utils";
+import {
+  API_ETH_MOCK_ADDRESS,
+  InterestRate,
+} from "@into-the-fathom/lending-contract-helpers";
+import {
+  USD_DECIMALS,
+  valueToBigNumber,
+} from "@into-the-fathom/lending-math-utils";
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { Fragment, useState } from "react";
 import { StableAPYTooltip } from "apps/lending/components/infoTooltips/StableAPYTooltip";
@@ -8,7 +14,6 @@ import { ListColumn } from "apps/lending/components/lists/ListColumn";
 import { ListHeaderTitle } from "apps/lending/components/lists/ListHeaderTitle";
 import { ListHeaderWrapper } from "apps/lending/components/lists/ListHeaderWrapper";
 import { Warning } from "apps/lending/components/primitives/Warning";
-import { MarketWarning } from "apps/lending/components/transactions/Warnings/MarketWarning";
 import { AssetCapsProvider } from "apps/lending/hooks/useAssetCaps";
 import { fetchIconSymbolAndName } from "apps/lending/ui-config/reservePatches";
 import { GENERAL } from "apps/lending/utils/mixPanelEvents";
@@ -88,7 +93,7 @@ const head = [
 ];
 
 export const BorrowAssetsList = () => {
-  const { currentNetworkConfig, currentMarketData } = useProtocolDataContext();
+  const { currentNetworkConfig } = useProtocolDataContext();
   const { user, reserves, marketReferencePriceInUsd, loading } =
     useAppDataContext();
   const theme = useTheme();
@@ -219,18 +224,6 @@ export const BorrowAssetsList = () => {
       subChildrenComponent={
         <>
           <Box sx={{ px: 6, mb: 4 }}>
-            {borrowDisabled && currentNetworkConfig.name === "Harmony" && (
-              <MarketWarning marketName="Harmony" />
-            )}
-
-            {borrowDisabled && currentNetworkConfig.name === "Fantom" && (
-              <MarketWarning marketName="Fantom" />
-            )}
-            {borrowDisabled &&
-              currentMarketData.marketTitle === "Ethereum AMM" && (
-                <MarketWarning marketName="Ethereum AMM" />
-              )}
-
             {+collateralUsagePercent >= 0.98 && (
               <Warning severity="error">
                 Be careful - You are very close to liquidation. Consider

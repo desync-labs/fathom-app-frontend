@@ -1,6 +1,6 @@
 import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import { ParentSize } from "@visx/responsive";
-import { useState } from "react";
+import { FC, useState } from "react";
 import type { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 import {
   ReserveRateTimeRange,
@@ -32,11 +32,11 @@ type ApyGraphContainerProps = {
  * This likely may need to be turned into two different container components if the graphs become wildly different.
  * This graph gets its data via an external API call, thus having loading/error states
  */
-export const ApyGraphContainer = ({
+export const ApyGraphContainer: FC<ApyGraphContainerProps> = ({
   graphKey,
   reserve,
   currentMarketData,
-}: ApyGraphContainerProps): JSX.Element => {
+}) => {
   const [selectedTimeRange, setSelectedTimeRange] =
     useState<ReserveRateTimeRange>(ESupportedTimeRanges.OneMonth);
 

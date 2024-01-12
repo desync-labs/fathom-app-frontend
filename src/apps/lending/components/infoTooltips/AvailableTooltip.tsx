@@ -3,15 +3,16 @@ import {
   TextWithTooltip,
   TextWithTooltipProps,
 } from "apps/lending/components/TextWithTooltip";
+import { FC } from "react";
 
 interface AvailableTooltipProps extends TextWithTooltipProps {
   capType: CapType;
 }
 
-export const AvailableTooltip = ({
+export const AvailableTooltip: FC<AvailableTooltipProps> = ({
   capType,
   ...rest
-}: AvailableTooltipProps) => {
+}) => {
   const description =
     capType === CapType.supplyCap ? (
       <>

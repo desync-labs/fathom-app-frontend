@@ -2,16 +2,16 @@ import {
   API_ETH_MOCK_ADDRESS,
   InterestRate,
   synthetixProxyByChainId,
-} from "@aave/contract-helpers";
+} from "@into-the-fathom/lending-contract-helpers";
 import {
   BigNumberValue,
   calculateHealthFactorFromBalancesBigUnits,
   USD_DECIMALS,
   valueToBigNumber,
-} from "@aave/math-utils";
+} from "@into-the-fathom/lending-math-utils";
 import Typography from "@mui/material/Typography";
 import BigNumber from "bignumber.js";
-import { useEffect, useRef, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { useAppDataContext } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 import { useModalContext } from "apps/lending/hooks/useModal";
 import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
@@ -36,7 +36,9 @@ interface RepayAsset extends Asset {
   balance: string;
 }
 
-export const RepayModalContent = ({
+export const RepayModalContent: FC<
+  ModalWrapperProps & { debtType: InterestRate }
+> = ({
   poolReserve,
   userReserve,
   symbol: modalSymbol,
@@ -44,7 +46,7 @@ export const RepayModalContent = ({
   nativeBalance,
   isWrongNetwork,
   debtType,
-}: ModalWrapperProps & { debtType: InterestRate }) => {
+}) => {
   const { gasLimit, mainTxState: repayTxState, txError } = useModalContext();
   const { marketReferencePriceInUsd, user } = useAppDataContext();
   const { currentChainId, currentMarketData } = useProtocolDataContext();

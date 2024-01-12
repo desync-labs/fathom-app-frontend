@@ -142,36 +142,6 @@ export const Link = styled.a.attrs({
 `;
 
 export const GlobalStyle = createGlobalStyle`
-  @import url('https://rsms.me/inter/inter.css');
-  html { font-family: 'Inter', sans-serif; }
-  @supports (font-variation-settings: normal) {
-    html { font-family: 'Inter var', sans-serif; }
-  }
-  
-  html,
-  body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    font-size: 14px;
-    background: linear-gradient(180deg, #000817 7.88%, #0D1725 113.25%);
-  }
-  
-  html {
-    background-color: #0D1725;
-  }
-
-  a {
-    text-decoration: none;
-    color: #fff;
-
-    :hover {
-      text-decoration: none
-    }
-  }
-
-  
 .three-line-legend {
 	width: 100%;
 	height: 70px;
@@ -212,15 +182,4 @@ export const GlobalStyle = createGlobalStyle`
     width: 100% !important;
   }
 }
-
-
-  html {
-    font-size: 1rem;
-    font-variant: none;
-    color: #000;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-    height: 100%;
-  }
 `;
