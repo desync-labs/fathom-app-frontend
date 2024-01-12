@@ -10,17 +10,16 @@ import {
   Typography,
 } from "@mui/material";
 import { ApprovalMethod } from "apps/lending/store/walletSlice";
-import { useState, MouseEvent } from "react";
+import { useState, MouseEvent, FC } from "react";
 
 interface ApprovalMethodToggleButtonProps {
   currentMethod: ApprovalMethod;
   setMethod: (newMethod: ApprovalMethod) => void;
 }
 
-export const ApprovalMethodToggleButton = ({
-  currentMethod,
-  setMethod,
-}: ApprovalMethodToggleButtonProps) => {
+export const ApprovalMethodToggleButton: FC<
+  ApprovalMethodToggleButtonProps
+> = ({ currentMethod, setMethod }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: MouseEvent<HTMLDivElement>) => {

@@ -17,37 +17,33 @@ interface ListValueColumnProps {
   listColumnProps?: ListColumnProps;
 }
 
-const Content = ({
-  value,
-  withTooltip,
-  subValue,
-  disabled,
-  capsComponent,
-}: ListValueColumnProps) => {
-  return (
-    <>
-      <Box sx={{ display: "flex", alignItems: "center" }}>
-        <FormattedNumber
-          value={value}
-          variant="secondary14"
-          sx={{ mb: !withTooltip && !!subValue ? "2px" : 0 }}
-          color={disabled ? "text.disabled" : "text.main"}
-          data-cy={`nativeAmount`}
-        />
-        {capsComponent}
-      </Box>
+const Content: FC<ListValueColumnProps> = memo(
+  ({ value, withTooltip, subValue, disabled, capsComponent }) => {
+    return (
+      <>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <FormattedNumber
+            value={value}
+            variant="secondary14"
+            sx={{ mb: !withTooltip && !!subValue ? "2px" : 0 }}
+            color={disabled ? "text.disabled" : "text.main"}
+            data-cy={`nativeAmount`}
+          />
+          {capsComponent}
+        </Box>
 
-      {!withTooltip && !!subValue && !disabled && (
-        <FormattedNumber
-          value={subValue}
-          symbol="USD"
-          variant="secondary12"
-          color="text.secondary"
-        />
-      )}
-    </>
-  );
-};
+        {!withTooltip && !!subValue && !disabled && (
+          <FormattedNumber
+            value={subValue}
+            symbol="USD"
+            variant="secondary12"
+            color="text.secondary"
+          />
+        )}
+      </>
+    );
+  }
+);
 
 export const ListValueColumn: FC<ListValueColumnProps> = memo(
   ({

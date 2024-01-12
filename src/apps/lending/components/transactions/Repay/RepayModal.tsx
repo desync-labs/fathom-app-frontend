@@ -1,4 +1,7 @@
-import { InterestRate, PERMISSION } from "@aave/contract-helpers";
+import {
+  InterestRate,
+  PERMISSION,
+} from "@into-the-fathom/lending-contract-helpers";
 import { useState } from "react";
 import { useAppDataContext } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 import {

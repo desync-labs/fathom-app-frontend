@@ -12,112 +12,115 @@ import { useModalContext } from "apps/lending/hooks/useModal";
 import { ListItemCanBeCollateral } from "apps/lending/modules/dashboard/lists/ListItemCanBeCollateral";
 import { ListMobileItemWrapper } from "apps/lending/modules/dashboard/lists/ListMobileItemWrapper";
 import { ListValueRow } from "../ListValueRow";
+import { FC, memo } from "react";
 
-export const SupplyAssetsListMobileItem = ({
-  symbol,
-  iconSymbol,
-  name,
-  walletBalance,
-  walletBalanceUSD,
-  supplyCap,
-  totalLiquidity,
-  supplyAPY,
-  aIncentivesData,
-  isIsolated,
-  usageAsCollateralEnabledOnUser,
-  isActive,
-  isFreezed,
-  underlyingAsset,
-  detailsAddress,
-}: DashboardReserve) => {
-  const { currentMarket } = useProtocolDataContext();
-  const { openSupply } = useModalContext();
+export const SupplyAssetsListMobileItem: FC<DashboardReserve> = memo(
+  ({
+    symbol,
+    iconSymbol,
+    name,
+    walletBalance,
+    walletBalanceUSD,
+    supplyCap,
+    totalLiquidity,
+    supplyAPY,
+    aIncentivesData,
+    isIsolated,
+    usageAsCollateralEnabledOnUser,
+    isActive,
+    isFreezed,
+    underlyingAsset,
+    detailsAddress,
+  }) => {
+    const { currentMarket } = useProtocolDataContext();
+    const { openSupply } = useModalContext();
 
-  // Disable the asset to prevent it from being supplied if supply cap has been reached
-  const { supplyCap: supplyCapUsage } = useAssetCaps();
-  const isMaxCapReached = supplyCapUsage.isMaxed;
+    // Disable the asset to prevent it from being supplied if supply cap has been reached
+    const { supplyCap: supplyCapUsage } = useAssetCaps();
+    const isMaxCapReached = supplyCapUsage.isMaxed;
 
-  const disableSupply =
-    !isActive || isFreezed || Number(walletBalance) <= 0 || isMaxCapReached;
+    const disableSupply =
+      !isActive || isFreezed || Number(walletBalance) <= 0 || isMaxCapReached;
 
-  return (
-    <ListMobileItemWrapper
-      symbol={symbol}
-      iconSymbol={iconSymbol}
-      name={name}
-      underlyingAsset={underlyingAsset}
-      currentMarket={currentMarket}
-      showDebtCeilingTooltips
-    >
-      <ListValueRow
-        title={"Supply balance"}
-        value={Number(walletBalance)}
-        subValue={walletBalanceUSD}
-        disabled={Number(walletBalance) === 0 || isMaxCapReached}
-        capsComponent={
-          <CapsHint
-            capType={CapType.supplyCap}
-            capAmount={supplyCap}
-            totalAmount={totalLiquidity}
-            withoutText
-          />
-        }
-      />
-
-      <Row
-        caption={"Supply APY"}
-        align="flex-start"
-        captionVariant="description"
-        mb={2}
+    return (
+      <ListMobileItemWrapper
+        symbol={symbol}
+        iconSymbol={iconSymbol}
+        name={name}
+        underlyingAsset={underlyingAsset}
+        currentMarket={currentMarket}
+        showDebtCeilingTooltips
       >
-        <IncentivesCard
-          value={Number(supplyAPY)}
-          incentives={aIncentivesData}
-          symbol={symbol}
-          variant="secondary14"
-        />
-      </Row>
-
-      <Row
-        caption={"Can be collateral"}
-        align="flex-start"
-        captionVariant="description"
-        mb={2}
-      >
-        <ListItemCanBeCollateral
-          isIsolated={isIsolated}
-          usageAsCollateralEnabled={usageAsCollateralEnabledOnUser}
-        />
-      </Row>
-
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          mt: 5,
-        }}
-      >
-        <Button
-          disabled={disableSupply}
-          variant="gradient"
-          onClick={() =>
-            openSupply(underlyingAsset, currentMarket, name, "dashboard")
+        <ListValueRow
+          title={"Supply balance"}
+          value={Number(walletBalance)}
+          subValue={walletBalanceUSD}
+          disabled={Number(walletBalance) === 0 || isMaxCapReached}
+          capsComponent={
+            <CapsHint
+              capType={CapType.supplyCap}
+              capAmount={supplyCap}
+              totalAmount={totalLiquidity}
+              withoutText
+            />
           }
-          sx={{ mr: 1.5 }}
-          fullWidth
+        />
+
+        <Row
+          caption={"Supply APY"}
+          align="flex-start"
+          captionVariant="description"
+          mb={2}
         >
-          Supply
-        </Button>
-        <Button
-          variant="outlined"
-          component={Link}
-          href={ROUTES.reserveOverview(detailsAddress, currentMarket)}
-          fullWidth
+          <IncentivesCard
+            value={Number(supplyAPY)}
+            incentives={aIncentivesData}
+            symbol={symbol}
+            variant="secondary14"
+          />
+        </Row>
+
+        <Row
+          caption={"Can be collateral"}
+          align="flex-start"
+          captionVariant="description"
+          mb={2}
         >
-          Details
-        </Button>
-      </Box>
-    </ListMobileItemWrapper>
-  );
-};
+          <ListItemCanBeCollateral
+            isIsolated={isIsolated}
+            usageAsCollateralEnabled={usageAsCollateralEnabledOnUser}
+          />
+        </Row>
+
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            mt: 5,
+          }}
+        >
+          <Button
+            disabled={disableSupply}
+            variant="gradient"
+            onClick={() =>
+              openSupply(underlyingAsset, currentMarket, name, "dashboard")
+            }
+            sx={{ mr: 1.5 }}
+            fullWidth
+          >
+            Supply
+          </Button>
+          <Button
+            variant="outlined"
+            component={Link}
+            href={ROUTES.reserveOverview(detailsAddress, currentMarket)}
+            fullWidth
+          >
+            Details
+          </Button>
+        </Box>
+      </ListMobileItemWrapper>
+    );
+  }
+);

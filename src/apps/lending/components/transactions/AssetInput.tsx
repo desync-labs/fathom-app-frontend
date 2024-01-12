@@ -13,7 +13,7 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import React, { ReactNode } from "react";
+import { forwardRef, ReactNode } from "react";
 import NumberFormat, { NumberFormatProps } from "react-number-format";
 import { TrackEventProps } from "apps/lending/store/analyticsSlice";
 import { useRootStore } from "apps/lending/store/root";
@@ -29,31 +29,30 @@ interface CustomProps {
   value: string;
 }
 
-export const NumberFormatCustom = React.forwardRef<
-  NumberFormatProps,
-  CustomProps
->(function NumberFormatCustom(props, ref) {
-  const { onChange, ...other } = props;
+export const NumberFormatCustom = forwardRef<NumberFormatProps, CustomProps>(
+  function NumberFormatCustom(props, ref) {
+    const { onChange, ...other } = props;
 
-  return (
-    <NumberFormat
-      {...other}
-      getInputRef={ref}
-      onValueChange={(values) => {
-        if (values.value !== props.value)
-          onChange({
-            target: {
-              name: props.name,
-              value: values.value || "",
-            },
-          });
-      }}
-      thousandSeparator
-      isNumericString
-      allowNegative={false}
-    />
-  );
-});
+    return (
+      <NumberFormat
+        {...other}
+        getInputRef={ref}
+        onValueChange={(values) => {
+          if (values.value !== props.value)
+            onChange({
+              target: {
+                name: props.name,
+                value: values.value || "",
+              },
+            });
+        }}
+        thousandSeparator
+        isNumericString
+        allowNegative={false}
+      />
+    );
+  }
+);
 
 export interface Asset {
   balance?: string;

@@ -1,4 +1,4 @@
-import { WalletBalanceProvider } from "@aave/contract-helpers";
+import { WalletBalanceProvider } from "@into-the-fathom/lending-contract-helpers";
 import { Provider } from "@into-the-fathom/providers";
 import { Hashable } from "apps/lending/utils/types";
 

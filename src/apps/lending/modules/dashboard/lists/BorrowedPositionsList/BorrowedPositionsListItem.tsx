@@ -1,5 +1,5 @@
-import { InterestRate } from "@aave/contract-helpers";
-import { ReserveIncentiveResponse } from "@aave/math-utils/dist/esm/formatters/incentive/calculate-reserve-incentives";
+import { InterestRate } from "@into-the-fathom/lending-contract-helpers";
+import { ReserveIncentiveResponse } from "@into-the-fathom/lending-math-utils/dist/esm/formatters/incentive/calculate-reserve-incentives";
 import { Box, Button, useMediaQuery, useTheme } from "@mui/material";
 import { IncentivesCard } from "apps/lending/components/incentives/IncentivesCard";
 import { APYTypeTooltip } from "apps/lending/components/infoTooltips/APYTypeTooltip";
@@ -18,12 +18,11 @@ import { ListItemWrapper } from "apps/lending/modules/dashboard/lists/ListItemWr
 import { ListMobileItemWrapper } from "apps/lending/modules/dashboard/lists/ListMobileItemWrapper";
 import { ListValueColumn } from "apps/lending/modules/dashboard/lists/ListValueColumn";
 import { ListValueRow } from "apps/lending/modules/dashboard/lists/ListValueRow";
+import { FC, memo } from "react";
 
-export const BorrowedPositionsListItem = ({
-  item,
-}: {
+export const BorrowedPositionsListItem: FC<{
   item: DashboardReserve;
-}) => {
+}> = memo(({ item }) => {
   const { borrowCap } = useAssetCaps();
   const { currentMarket, currentMarketData } = useProtocolDataContext();
   const theme = useTheme();
@@ -100,7 +99,7 @@ export const BorrowedPositionsListItem = ({
   } else {
     return <BorrowedPositionsListItemDesktop {...props} />;
   }
-};
+});
 
 interface BorrowedPositionsListItemProps extends DashboardReserve {
   disableBorrow: boolean;
@@ -115,223 +114,229 @@ interface BorrowedPositionsListItemProps extends DashboardReserve {
   onOpenRateSwitch: () => void;
 }
 
-const BorrowedPositionsListItemDesktop = ({
-  reserve,
-  borrowRateMode,
-  disableBorrow,
-  disableSwitch,
-  disableRepay,
-  showSwitchButton,
-  totalBorrows,
-  totalBorrowsUSD,
-  borrowAPY,
-  incentives,
-  onDetbSwitchClick,
-  onOpenBorrow,
-  onOpenRepay,
-  onOpenRateSwitch,
-}: BorrowedPositionsListItemProps) => {
-  const { currentMarket } = useProtocolDataContext();
+const BorrowedPositionsListItemDesktop: FC<BorrowedPositionsListItemProps> =
+  memo(
+    ({
+      reserve,
+      borrowRateMode,
+      disableBorrow,
+      disableSwitch,
+      disableRepay,
+      showSwitchButton,
+      totalBorrows,
+      totalBorrowsUSD,
+      borrowAPY,
+      incentives,
+      onDetbSwitchClick,
+      onOpenBorrow,
+      onOpenRepay,
+      onOpenRateSwitch,
+    }) => {
+      const { currentMarket } = useProtocolDataContext();
 
-  const { isActive, isFrozen, isPaused, stableBorrowRateEnabled, name } =
-    reserve;
+      const { isActive, isFrozen, isPaused, stableBorrowRateEnabled, name } =
+        reserve;
 
-  return (
-    <ListItemWrapper
-      symbol={reserve.symbol}
-      iconSymbol={reserve.iconSymbol}
-      name={name}
-      detailsAddress={reserve.underlyingAsset}
-      currentMarket={currentMarket}
-      frozen={reserve.isFrozen}
-      borrowEnabled={reserve.borrowingEnabled}
-      data-cy={`dashboardBorrowedListItem_${reserve.symbol.toUpperCase()}_${borrowRateMode}`}
-      showBorrowCapTooltips
-    >
-      <ListValueColumn
-        symbol={reserve.symbol}
-        value={totalBorrows}
-        subValue={totalBorrowsUSD}
-      />
+      return (
+        <ListItemWrapper
+          symbol={reserve.symbol}
+          iconSymbol={reserve.iconSymbol}
+          name={name}
+          detailsAddress={reserve.underlyingAsset}
+          currentMarket={currentMarket}
+          frozen={reserve.isFrozen}
+          borrowEnabled={reserve.borrowingEnabled}
+          data-cy={`dashboardBorrowedListItem_${reserve.symbol.toUpperCase()}_${borrowRateMode}`}
+          showBorrowCapTooltips
+        >
+          <ListValueColumn
+            symbol={reserve.symbol}
+            value={totalBorrows}
+            subValue={totalBorrowsUSD}
+          />
 
-      <ListAPRColumn
-        value={borrowAPY}
-        incentives={incentives}
-        symbol={reserve.symbol}
-      />
+          <ListAPRColumn
+            value={borrowAPY}
+            incentives={incentives}
+            symbol={reserve.symbol}
+          />
 
-      <ListColumn>
-        <ListItemAPYButton
-          stableBorrowRateEnabled={stableBorrowRateEnabled}
-          borrowRateMode={borrowRateMode}
-          disabled={
-            !stableBorrowRateEnabled || isFrozen || !isActive || isPaused
-          }
-          onClick={onOpenRateSwitch}
-          stableBorrowAPY={reserve.stableBorrowAPY}
-          variableBorrowAPY={reserve.variableBorrowAPY}
+          <ListColumn>
+            <ListItemAPYButton
+              stableBorrowRateEnabled={stableBorrowRateEnabled}
+              borrowRateMode={borrowRateMode}
+              disabled={
+                !stableBorrowRateEnabled || isFrozen || !isActive || isPaused
+              }
+              onClick={onOpenRateSwitch}
+              stableBorrowAPY={reserve.stableBorrowAPY}
+              variableBorrowAPY={reserve.variableBorrowAPY}
+              underlyingAsset={reserve.underlyingAsset}
+              currentMarket={currentMarket}
+            />
+          </ListColumn>
+
+          <ListButtonsColumn>
+            {showSwitchButton ? (
+              <Button
+                disabled={disableSwitch}
+                variant="gradient"
+                onClick={onDetbSwitchClick}
+                data-cy={`swapButton`}
+              >
+                Switch
+              </Button>
+            ) : (
+              <Button
+                disabled={disableBorrow}
+                variant="gradient"
+                onClick={onOpenBorrow}
+              >
+                Borrow
+              </Button>
+            )}
+            <Button
+              disabled={disableRepay}
+              variant="outlined"
+              onClick={onOpenRepay}
+            >
+              Repay
+            </Button>
+          </ListButtonsColumn>
+        </ListItemWrapper>
+      );
+    }
+  );
+
+const BorrowedPositionsListItemMobile: FC<BorrowedPositionsListItemProps> =
+  memo(
+    ({
+      reserve,
+      borrowRateMode,
+      totalBorrows,
+      totalBorrowsUSD,
+      disableBorrow,
+      showSwitchButton,
+      disableSwitch,
+      borrowAPY,
+      incentives,
+      disableRepay,
+      onDetbSwitchClick,
+      onOpenBorrow,
+      onOpenRepay,
+      onOpenRateSwitch,
+    }) => {
+      const { currentMarket } = useProtocolDataContext();
+
+      const {
+        symbol,
+        iconSymbol,
+        name,
+        isActive,
+        isFrozen,
+        isPaused,
+        stableBorrowRateEnabled,
+        variableBorrowAPY,
+        stableBorrowAPY,
+        underlyingAsset,
+      } = reserve;
+
+      return (
+        <ListMobileItemWrapper
+          symbol={symbol}
+          iconSymbol={iconSymbol}
+          name={name}
           underlyingAsset={reserve.underlyingAsset}
           currentMarket={currentMarket}
-        />
-      </ListColumn>
-
-      <ListButtonsColumn>
-        {showSwitchButton ? (
-          <Button
-            disabled={disableSwitch}
-            variant="gradient"
-            onClick={onDetbSwitchClick}
-            data-cy={`swapButton`}
-          >
-            Switch
-          </Button>
-        ) : (
-          <Button
-            disabled={disableBorrow}
-            variant="gradient"
-            onClick={onOpenBorrow}
-          >
-            Borrow
-          </Button>
-        )}
-        <Button
-          disabled={disableRepay}
-          variant="outlined"
-          onClick={onOpenRepay}
+          frozen={reserve.isFrozen}
+          borrowEnabled={reserve.borrowingEnabled}
+          showBorrowCapTooltips
         >
-          Repay
-        </Button>
-      </ListButtonsColumn>
-    </ListItemWrapper>
-  );
-};
-
-const BorrowedPositionsListItemMobile = ({
-  reserve,
-  borrowRateMode,
-  totalBorrows,
-  totalBorrowsUSD,
-  disableBorrow,
-  showSwitchButton,
-  disableSwitch,
-  borrowAPY,
-  incentives,
-  disableRepay,
-  onDetbSwitchClick,
-  onOpenBorrow,
-  onOpenRepay,
-  onOpenRateSwitch,
-}: BorrowedPositionsListItemProps) => {
-  const { currentMarket } = useProtocolDataContext();
-
-  const {
-    symbol,
-    iconSymbol,
-    name,
-    isActive,
-    isFrozen,
-    isPaused,
-    stableBorrowRateEnabled,
-    variableBorrowAPY,
-    stableBorrowAPY,
-    underlyingAsset,
-  } = reserve;
-
-  return (
-    <ListMobileItemWrapper
-      symbol={symbol}
-      iconSymbol={iconSymbol}
-      name={name}
-      underlyingAsset={reserve.underlyingAsset}
-      currentMarket={currentMarket}
-      frozen={reserve.isFrozen}
-      borrowEnabled={reserve.borrowingEnabled}
-      showBorrowCapTooltips
-    >
-      <ListValueRow
-        title={"Debt"}
-        value={totalBorrows}
-        subValue={totalBorrowsUSD}
-        disabled={Number(totalBorrows) === 0}
-      />
-
-      <Row
-        caption={"APY"}
-        align="flex-start"
-        captionVariant="description"
-        mb={2}
-      >
-        <IncentivesCard
-          value={borrowAPY}
-          incentives={incentives}
-          symbol={symbol}
-          variant="secondary14"
-        />
-      </Row>
-
-      <Row
-        caption={
-          <APYTypeTooltip
-            text={"APY type"}
-            key="APY type"
-            variant="description"
+          <ListValueRow
+            title={"Debt"}
+            value={totalBorrows}
+            subValue={totalBorrowsUSD}
+            disabled={Number(totalBorrows) === 0}
           />
-        }
-        captionVariant="description"
-        mb={2}
-      >
-        <ListItemAPYButton
-          stableBorrowRateEnabled={stableBorrowRateEnabled}
-          borrowRateMode={borrowRateMode}
-          disabled={
-            !stableBorrowRateEnabled || isFrozen || !isActive || isPaused
-          }
-          onClick={onOpenRateSwitch}
-          stableBorrowAPY={stableBorrowAPY}
-          variableBorrowAPY={variableBorrowAPY}
-          underlyingAsset={underlyingAsset}
-          currentMarket={currentMarket}
-        />
-      </Row>
 
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          mt: 5,
-        }}
-      >
-        {showSwitchButton ? (
-          <Button
-            disabled={disableSwitch}
-            variant="gradient"
-            fullWidth
-            onClick={onDetbSwitchClick}
-            data-cy={`swapButton`}
+          <Row
+            caption={"APY"}
+            align="flex-start"
+            captionVariant="description"
+            mb={2}
           >
-            Switch
-          </Button>
-        ) : (
-          <Button
-            disabled={disableBorrow}
-            variant="gradient"
-            onClick={onOpenBorrow}
-            fullWidth
-            sx={{ mr: 1.5 }}
+            <IncentivesCard
+              value={borrowAPY}
+              incentives={incentives}
+              symbol={symbol}
+              variant="secondary14"
+            />
+          </Row>
+
+          <Row
+            caption={
+              <APYTypeTooltip
+                text={"APY type"}
+                key="APY type"
+                variant="description"
+              />
+            }
+            captionVariant="description"
+            mb={2}
           >
-            Borrow
-          </Button>
-        )}
-        <Button
-          disabled={disableRepay}
-          variant="outlined"
-          onClick={onOpenRepay}
-          fullWidth
-        >
-          Repay
-        </Button>
-      </Box>
-    </ListMobileItemWrapper>
+            <ListItemAPYButton
+              stableBorrowRateEnabled={stableBorrowRateEnabled}
+              borrowRateMode={borrowRateMode}
+              disabled={
+                !stableBorrowRateEnabled || isFrozen || !isActive || isPaused
+              }
+              onClick={onOpenRateSwitch}
+              stableBorrowAPY={stableBorrowAPY}
+              variableBorrowAPY={variableBorrowAPY}
+              underlyingAsset={underlyingAsset}
+              currentMarket={currentMarket}
+            />
+          </Row>
+
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              mt: 5,
+            }}
+          >
+            {showSwitchButton ? (
+              <Button
+                disabled={disableSwitch}
+                variant="gradient"
+                fullWidth
+                onClick={onDetbSwitchClick}
+                data-cy={`swapButton`}
+              >
+                Switch
+              </Button>
+            ) : (
+              <Button
+                disabled={disableBorrow}
+                variant="gradient"
+                onClick={onOpenBorrow}
+                fullWidth
+                sx={{ mr: 1.5 }}
+              >
+                Borrow
+              </Button>
+            )}
+            <Button
+              disabled={disableRepay}
+              variant="outlined"
+              onClick={onOpenRepay}
+              fullWidth
+            >
+              Repay
+            </Button>
+          </Box>
+        </ListMobileItemWrapper>
+      );
+    }
   );
-};

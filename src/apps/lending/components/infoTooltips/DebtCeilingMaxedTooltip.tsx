@@ -7,15 +7,16 @@ import {
   TextWithTooltip,
   TextWithTooltipProps,
 } from "apps/lending/components/TextWithTooltip";
+import { FC } from "react";
 
 type DebtCeilingMaxedTooltipProps = TextWithTooltipProps & {
   debtCeiling: AssetCapData;
 };
 
-export const DebtCeilingMaxedTooltip = ({
+export const DebtCeilingMaxedTooltip: FC<DebtCeilingMaxedTooltipProps> = ({
   debtCeiling,
   ...rest
-}: DebtCeilingMaxedTooltipProps) => {
+}) => {
   if (!debtCeiling || !debtCeiling.isMaxed) return null;
 
   return (

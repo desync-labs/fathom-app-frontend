@@ -2,8 +2,11 @@ import {
   TextWithTooltip,
   TextWithTooltipProps,
 } from "apps/lending/components/TextWithTooltip";
+import { FC } from "react";
 
-export const TotalSupplyAPYTooltip = ({ ...rest }: TextWithTooltipProps) => {
+export const TotalSupplyAPYTooltip: FC<TextWithTooltipProps> = ({
+  ...rest
+}) => {
   return (
     <TextWithTooltip {...rest}>
       <>

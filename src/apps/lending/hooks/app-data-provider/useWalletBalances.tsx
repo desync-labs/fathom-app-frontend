@@ -1,5 +1,9 @@
-import { API_ETH_MOCK_ADDRESS } from "@aave/contract-helpers";
-import { nativeToUSD, normalize, USD_DECIMALS } from "@aave/math-utils";
+import { API_ETH_MOCK_ADDRESS } from "@into-the-fathom/lending-contract-helpers";
+import {
+  nativeToUSD,
+  normalize,
+  USD_DECIMALS,
+} from "@into-the-fathom/lending-math-utils";
 import { BigNumber } from "bignumber.js";
 import { useRootStore } from "apps/lending/store/root";
 

@@ -1,4 +1,4 @@
-import { valueToBigNumber } from "@aave/math-utils";
+import { valueToBigNumber } from "@into-the-fathom/lending-math-utils";
 import { ArrowNarrowRightIcon } from "@heroicons/react/outline";
 import { Box, Skeleton, SvgIcon } from "@mui/material";
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
@@ -13,6 +13,7 @@ import {
 import { CollateralType } from "apps/lending/helpers/types";
 
 import { ComputedUserReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
+import { FC } from "react";
 
 export type SupplyModalDetailsProps = {
   showHealthFactor: boolean;
@@ -25,7 +26,7 @@ export type SupplyModalDetailsProps = {
   loading: boolean;
 };
 
-export const SwapModalDetails = ({
+export const SwapModalDetails: FC<SupplyModalDetailsProps> = ({
   showHealthFactor,
   healthFactor,
   healthFactorAfterSwap,
@@ -34,7 +35,7 @@ export const SwapModalDetails = ({
   toAmount,
   fromAmount,
   loading,
-}: SupplyModalDetailsProps) => {
+}) => {
   const sourceAmountAfterSwap = valueToBigNumber(
     swapSource.underlyingBalance
   ).minus(valueToBigNumber(fromAmount));

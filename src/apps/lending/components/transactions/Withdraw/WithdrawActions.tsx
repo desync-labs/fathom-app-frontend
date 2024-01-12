@@ -1,10 +1,11 @@
-import { ProtocolAction } from "@aave/contract-helpers";
+import { ProtocolAction } from "@into-the-fathom/lending-contract-helpers";
 import { BoxProps } from "@mui/material";
 import { useTransactionHandler } from "apps/lending/helpers/useTransactionHandler";
 import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 import { useRootStore } from "apps/lending/store/root";
 
 import { TxActionsWrapper } from "apps/lending/components/transactions/TxActionsWrapper";
+import { FC } from "react";
 
 export interface WithdrawActionsProps extends BoxProps {
   poolReserve: ComputedReserveData;
@@ -15,7 +16,7 @@ export interface WithdrawActionsProps extends BoxProps {
   blocked: boolean;
 }
 
-export const WithdrawActions = ({
+export const WithdrawActions: FC<WithdrawActionsProps> = ({
   poolReserve,
   amountToWithdraw,
   poolAddress,
@@ -23,7 +24,7 @@ export const WithdrawActions = ({
   symbol,
   blocked,
   sx,
-}: WithdrawActionsProps) => {
+}) => {
   const withdraw = useRootStore((state) => state.withdraw);
 
   const {

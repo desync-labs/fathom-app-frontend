@@ -3,15 +3,16 @@ import {
   TextWithTooltip,
   TextWithTooltipProps,
 } from "apps/lending/components/TextWithTooltip";
+import { FC } from "react";
 
 interface ReserveFactorTooltipProps extends TextWithTooltipProps {
   collectorLink?: string;
 }
 
-export const ReserveFactorTooltip = ({
+export const ReserveFactorTooltip: FC<ReserveFactorTooltipProps> = ({
   collectorLink,
   ...rest
-}: ReserveFactorTooltipProps) => {
+}) => {
   return (
     <TextWithTooltip {...rest}>
       <>

@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import { AddressBlocked } from "apps/lending/components/AddressBlocked";
 import { TransactionEventHandler } from "apps/lending/components/TransactionEventHandler";
 import { GasStationProvider } from "apps/lending/components/transactions/GasStation/GasStationProvider";
@@ -9,7 +9,6 @@ import { AppDataProvider } from "apps/lending/hooks/app-data-provider/useAppData
 import { ModalContextProvider } from "apps/lending/hooks/useModal";
 import { PermissionProvider } from "apps/lending/hooks/usePermissions";
 import { Web3ContextProvider } from "apps/lending/libs/web3-data-provider/Web3Provider";
-import { useRootStore } from "apps/lending/store/root";
 import { SharedDependenciesProvider } from "apps/lending/ui-config/SharedDependenciesProvider";
 
 import { AppGlobalStyles } from "apps/lending/layouts/AppGlobalStyles";
@@ -33,17 +32,6 @@ import { AppsSharedProvider } from "context/appsShared";
 export const queryClient = new QueryClient();
 
 const LendingIndexComponent: FC<LendingViewProps> = ({ openConnectorMenu }) => {
-  const initializeMixpanel = useRootStore((store) => store.initializeMixpanel);
-
-  const MIXPANEL_TOKEN = process.env.NEXT_PUBLIC_MIXPANEL;
-  useEffect(() => {
-    if (MIXPANEL_TOKEN) {
-      initializeMixpanel();
-    } else {
-      console.log("no analytics tracking");
-    }
-  }, [MIXPANEL_TOKEN, initializeMixpanel]);
-
   return (
     <QueryClientProvider client={queryClient}>
       <Web3ContextProvider>

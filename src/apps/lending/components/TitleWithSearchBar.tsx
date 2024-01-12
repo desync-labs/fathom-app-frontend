@@ -20,7 +20,7 @@ interface TitleWithSearchBarProps<C extends ElementType> {
   title: ReactNode;
 }
 
-export const TitleWithSearchBar = <T extends React.ElementType>({
+export const TitleWithSearchBar = <T extends ElementType>({
   onSearchTermChange,
   searchPlaceholder,
   titleProps,

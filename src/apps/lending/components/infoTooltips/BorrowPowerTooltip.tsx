@@ -2,8 +2,9 @@ import {
   TextWithTooltip,
   TextWithTooltipProps,
 } from "apps/lending/components/TextWithTooltip";
+import { FC } from "react";
 
-export const BorrowPowerTooltip = ({ ...rest }: TextWithTooltipProps) => {
+export const BorrowPowerTooltip: FC<TextWithTooltipProps> = ({ ...rest }) => {
   return (
     <TextWithTooltip {...rest}>
       <>

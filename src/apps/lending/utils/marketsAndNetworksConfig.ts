@@ -1,4 +1,7 @@
-import { ChainId, ChainIdToNetwork } from "@aave/contract-helpers";
+import {
+  ChainId,
+  ChainIdToNetwork,
+} from "@into-the-fathom/lending-contract-helpers";
 import { StaticJsonRpcProvider } from "@into-the-fathom/providers";
 import { providers as ethersProviders } from "fathom-ethers";
 

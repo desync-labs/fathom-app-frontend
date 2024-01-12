@@ -3,17 +3,18 @@ import { AssetCapData } from "apps/lending/hooks/useAssetCaps";
 
 import { Link } from "apps/lending/components/primitives/Link";
 import { Warning } from "apps/lending/components/primitives/Warning";
+import { FC } from "react";
 
 type DebtCeilingWarningProps = AlertProps & {
   debtCeiling: AssetCapData;
   icon?: boolean;
 };
 
-export const DebtCeilingWarning = ({
+export const DebtCeilingWarning: FC<DebtCeilingWarningProps> = ({
   debtCeiling,
   icon = true,
   ...rest
-}: DebtCeilingWarningProps) => {
+}) => {
   // Don't show a warning when less than 98% utilized
   if (!debtCeiling.percentUsed || debtCeiling.percentUsed < 98) return null;
 

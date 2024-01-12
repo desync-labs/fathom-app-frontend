@@ -12,119 +12,121 @@ import { Row } from "apps/lending/components/primitives/Row";
 import { useModalContext } from "apps/lending/hooks/useModal";
 import { ListMobileItemWrapper } from "apps/lending/modules/dashboard/lists/ListMobileItemWrapper";
 import { ListValueRow } from "apps/lending/modules/dashboard/lists/ListValueRow";
-import { FC } from "react";
+import { FC, memo } from "react";
 
-export const BorrowAssetsListMobileItem: FC<DashboardReserve> = ({
-  symbol,
-  iconSymbol,
-  name,
-  availableBorrows,
-  availableBorrowsInUSD,
-  borrowCap,
-  totalBorrows,
-  variableBorrowRate,
-  stableBorrowRate,
-  sIncentivesData,
-  vIncentivesData,
-  underlyingAsset,
-  isFreezed,
-}) => {
-  const { openBorrow } = useModalContext();
-  const { currentMarket } = useProtocolDataContext();
+export const BorrowAssetsListMobileItem: FC<DashboardReserve> = memo(
+  ({
+    symbol,
+    iconSymbol,
+    name,
+    availableBorrows,
+    availableBorrowsInUSD,
+    borrowCap,
+    totalBorrows,
+    variableBorrowRate,
+    stableBorrowRate,
+    sIncentivesData,
+    vIncentivesData,
+    underlyingAsset,
+    isFreezed,
+  }) => {
+    const { openBorrow } = useModalContext();
+    const { currentMarket } = useProtocolDataContext();
 
-  const disableBorrow = isFreezed || Number(availableBorrows) <= 0;
+    const disableBorrow = isFreezed || Number(availableBorrows) <= 0;
 
-  return (
-    <ListMobileItemWrapper
-      symbol={symbol}
-      iconSymbol={iconSymbol}
-      name={name}
-      underlyingAsset={underlyingAsset}
-      currentMarket={currentMarket}
-    >
-      <ListValueRow
-        title={"Available to borrow"}
-        value={Number(availableBorrows)}
-        subValue={Number(availableBorrowsInUSD)}
-        disabled={Number(availableBorrows) === 0}
-        capsComponent={
-          <CapsHint
-            capType={CapType.borrowCap}
-            capAmount={borrowCap}
-            totalAmount={totalBorrows}
-            withoutText
-          />
-        }
-      />
-
-      <Row
-        caption={
-          <VariableAPYTooltip
-            text={"APY, variable"}
-            key="APY_dash_mob_variable_ type"
-            variant="description"
-          />
-        }
-        align="flex-start"
-        captionVariant="description"
-        mb={2}
+    return (
+      <ListMobileItemWrapper
+        symbol={symbol}
+        iconSymbol={iconSymbol}
+        name={name}
+        underlyingAsset={underlyingAsset}
+        currentMarket={currentMarket}
       >
-        <IncentivesCard
-          value={Number(variableBorrowRate)}
-          incentives={vIncentivesData}
-          symbol={symbol}
-          variant="secondary14"
-        />
-      </Row>
-
-      <Row
-        caption={
-          <StableAPYTooltip
-            text={"APY, stable"}
-            key="APY_dash_mob_stable_ type"
-            variant="description"
-          />
-        }
-        align="flex-start"
-        captionVariant="description"
-        mb={2}
-      >
-        <IncentivesCard
-          value={Number(stableBorrowRate)}
-          incentives={sIncentivesData}
-          symbol={symbol}
-          variant="secondary14"
-        />
-      </Row>
-
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          mt: 5,
-        }}
-      >
-        <Button
-          disabled={disableBorrow}
-          variant="gradient"
-          onClick={() =>
-            openBorrow(underlyingAsset, currentMarket, name, "dashboard")
+        <ListValueRow
+          title={"Available to borrow"}
+          value={Number(availableBorrows)}
+          subValue={Number(availableBorrowsInUSD)}
+          disabled={Number(availableBorrows) === 0}
+          capsComponent={
+            <CapsHint
+              capType={CapType.borrowCap}
+              capAmount={borrowCap}
+              totalAmount={totalBorrows}
+              withoutText
+            />
           }
-          sx={{ mr: 1.5 }}
-          fullWidth
+        />
+
+        <Row
+          caption={
+            <VariableAPYTooltip
+              text={"APY, variable"}
+              key="APY_dash_mob_variable_ type"
+              variant="description"
+            />
+          }
+          align="flex-start"
+          captionVariant="description"
+          mb={2}
         >
-          Borrow
-        </Button>
-        <Button
-          variant="outlined"
-          component={Link}
-          href={ROUTES.reserveOverview(underlyingAsset, currentMarket)}
-          fullWidth
+          <IncentivesCard
+            value={Number(variableBorrowRate)}
+            incentives={vIncentivesData}
+            symbol={symbol}
+            variant="secondary14"
+          />
+        </Row>
+
+        <Row
+          caption={
+            <StableAPYTooltip
+              text={"APY, stable"}
+              key="APY_dash_mob_stable_ type"
+              variant="description"
+            />
+          }
+          align="flex-start"
+          captionVariant="description"
+          mb={2}
         >
-          Details
-        </Button>
-      </Box>
-    </ListMobileItemWrapper>
-  );
-};
+          <IncentivesCard
+            value={Number(stableBorrowRate)}
+            incentives={sIncentivesData}
+            symbol={symbol}
+            variant="secondary14"
+          />
+        </Row>
+
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            mt: 5,
+          }}
+        >
+          <Button
+            disabled={disableBorrow}
+            variant="gradient"
+            onClick={() =>
+              openBorrow(underlyingAsset, currentMarket, name, "dashboard")
+            }
+            sx={{ mr: 1.5 }}
+            fullWidth
+          >
+            Borrow
+          </Button>
+          <Button
+            variant="outlined"
+            component={Link}
+            href={ROUTES.reserveOverview(underlyingAsset, currentMarket)}
+            fullWidth
+          >
+            Details
+          </Button>
+        </Box>
+      </ListMobileItemWrapper>
+    );
+  }
+);

@@ -3,6 +3,7 @@ import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useApp
 import { useRootStore } from "apps/lending/store/root";
 
 import { TxActionsWrapper } from "apps/lending/components/transactions/TxActionsWrapper";
+import { FC } from "react";
 
 export type FaucetActionsProps = {
   poolReserve: ComputedReserveData;
@@ -10,11 +11,11 @@ export type FaucetActionsProps = {
   blocked: boolean;
 };
 
-export const FaucetActions = ({
+export const FaucetActions: FC<FaucetActionsProps> = ({
   poolReserve,
   isWrongNetwork,
   blocked,
-}: FaucetActionsProps) => {
+}) => {
   const mint = useRootStore((state) => state.mint);
 
   const { action, loadingTxns, mainTxState, requiresApproval } =

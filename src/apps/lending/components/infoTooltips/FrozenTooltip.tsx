@@ -4,6 +4,7 @@ import { Box, SvgIcon } from "@mui/material";
 import { frozenProposalMap } from "apps/lending/utils/marketsAndNetworksConfig";
 import { ContentWithTooltip } from "apps/lending/components/ContentWithTooltip";
 import { Link } from "apps/lending/components/primitives/Link";
+import { FC } from "react";
 
 interface FrozenTooltipProps {
   symbol?: string;
@@ -28,10 +29,10 @@ export const getFrozenProposalLink = (
   }
 };
 
-export const FrozenTooltip = ({
+export const FrozenTooltip: FC<FrozenTooltipProps> = ({
   symbol,
   currentMarket,
-}: FrozenTooltipProps) => {
+}) => {
   return (
     <ContentWithTooltip
       tooltipContent={

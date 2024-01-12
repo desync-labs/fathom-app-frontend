@@ -1,4 +1,7 @@
-import { PERMISSION, PermissionManager } from "@aave/contract-helpers";
+import {
+  PERMISSION,
+  PermissionManager,
+} from "@into-the-fathom/lending-contract-helpers";
 import {
   createContext,
   FC,

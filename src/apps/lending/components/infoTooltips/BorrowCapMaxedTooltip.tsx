@@ -7,15 +7,16 @@ import {
   TextWithTooltip,
   TextWithTooltipProps,
 } from "apps/lending/components/TextWithTooltip";
+import { FC } from "react";
 
 type BorrowCapMaxedTooltipProps = TextWithTooltipProps & {
   borrowCap: AssetCapData;
 };
 
-export const BorrowCapMaxedTooltip = ({
+export const BorrowCapMaxedTooltip: FC<BorrowCapMaxedTooltipProps> = ({
   borrowCap,
   ...rest
-}: BorrowCapMaxedTooltipProps) => {
+}) => {
   if (!borrowCap || !borrowCap.isMaxed) return null;
 
   return (

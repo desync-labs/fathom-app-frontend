@@ -1,9 +1,10 @@
-import { valueToBigNumber } from "@aave/math-utils";
+import { valueToBigNumber } from "@into-the-fathom/lending-math-utils";
 import { Box, Button, Typography, useTheme } from "@mui/material";
 import { TypographyProps } from "@mui/material/Typography";
 import BigNumber from "bignumber.js";
 
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
+import { FC } from "react";
 
 interface HealthFactorNumberProps extends TypographyProps {
   value: string;
@@ -11,12 +12,12 @@ interface HealthFactorNumberProps extends TypographyProps {
   HALIntegrationComponent?: React.ReactNode;
 }
 
-export const HealthFactorNumber = ({
+export const HealthFactorNumber: FC<HealthFactorNumberProps> = ({
   value,
   onInfoClick,
   HALIntegrationComponent,
   ...rest
-}: HealthFactorNumberProps) => {
+}) => {
   const { palette } = useTheme();
 
   const formattedHealthFactor = Number(

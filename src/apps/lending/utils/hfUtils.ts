@@ -4,7 +4,7 @@ import {
   ComputedUserReserve,
   UserReserveData,
   valueToBigNumber,
-} from "@aave/math-utils";
+} from "@into-the-fathom/lending-math-utils";
 import BigNumber from "bignumber.js";
 import {
   ComputedReserveData,

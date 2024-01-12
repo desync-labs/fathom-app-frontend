@@ -3,6 +3,7 @@ import { SvgIcon } from "@mui/material";
 
 import { ContentWithTooltip } from "apps/lending/components/ContentWithTooltip";
 import { CapType } from "apps/lending/components/caps/helper";
+import { FC } from "react";
 
 interface CapsTooltipProps {
   availableValue: number;
@@ -10,11 +11,11 @@ interface CapsTooltipProps {
   capType: CapType;
 }
 
-export const CapsTooltip = ({
+export const CapsTooltip: FC<CapsTooltipProps> = ({
   availableValue,
   isUSD,
   capType,
-}: CapsTooltipProps) => {
+}) => {
   const messageValue = isUSD ? `${availableValue}$` : availableValue;
 
   let message = undefined;

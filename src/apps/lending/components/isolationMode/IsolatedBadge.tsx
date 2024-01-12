@@ -7,7 +7,7 @@ import {
   TypographyProps,
   useTheme,
 } from "@mui/material";
-import { ReactNode } from "react";
+import { FC, ReactNode } from "react";
 
 import { ContentWithTooltip } from "apps/lending/components/ContentWithTooltip";
 
@@ -24,7 +24,7 @@ const contentSx = {
 interface InfoIconProps {
   color?: string;
 }
-const InfoIcon = ({ color }: InfoIconProps) => (
+const InfoIcon: FC<InfoIconProps> = ({ color }) => (
   <SvgIcon
     sx={{
       ml: "3px",
@@ -35,11 +35,9 @@ const InfoIcon = ({ color }: InfoIconProps) => (
     <InformationCircleIcon />
   </SvgIcon>
 );
-export const IsolatedEnabledBadge = ({
-  typographyProps,
-}: {
+export const IsolatedEnabledBadge: FC<{
   typographyProps?: TypographyProps;
-}) => {
+}> = ({ typographyProps }) => {
   const theme = useTheme();
 
   const sx = {
