@@ -50,7 +50,7 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     await metamask.switchAccount("Account 1");
     const newAddress = await metamask.getWalletAddress();
     console.log(newAddress);
-    await vaultPage.mintStableCoinToAddress(newAddress, depositAmount);
+    await vaultPage.mintVaultsStableCoinToAddress(newAddress, depositAmount);
     await vaultPage.transferTestXdcToAddress(newAddress, 1);
     await vaultPage.page.waitForTimeout(3000);
     await vaultPage.navigate();
@@ -84,7 +84,7 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     await metamask.switchAccount("Account 1");
     const newAddress = await metamask.getWalletAddress();
     console.log(newAddress);
-    await vaultPage.mintStableCoinToAddress(newAddress, depositAmount);
+    await vaultPage.mintVaultsStableCoinToAddress(newAddress, depositAmount);
     await vaultPage.transferTestXdcToAddress(newAddress, 1);
     await vaultPage.page.waitForTimeout(3000);
     await vaultPage.navigate();
