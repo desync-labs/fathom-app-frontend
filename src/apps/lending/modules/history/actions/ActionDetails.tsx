@@ -12,8 +12,9 @@ import {
   ActionFields,
   TransactionHistoryItem,
 } from "apps/lending/modules/history/types";
+import { FC } from "react";
 
-export const ActionTextMap = ({ action }: { action: string }) => {
+export const ActionTextMap: FC<{ action: string }> = ({ action }) => {
   switch (action) {
     case "Supply":
     case "Deposit":

@@ -1,13 +1,13 @@
 import { Box, Typography } from "@mui/material";
-import { ReactNode } from "react";
+import { FC, ReactNode } from "react";
 
 interface DashboardContentNoDataProps {
   text: ReactNode;
 }
 
-export const DashboardContentNoData = ({
+export const DashboardContentNoData: FC<DashboardContentNoDataProps> = ({
   text,
-}: DashboardContentNoDataProps) => {
+}) => {
   return (
     <Box
       sx={{

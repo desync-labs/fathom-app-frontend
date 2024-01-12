@@ -1,5 +1,5 @@
 import { useMediaQuery } from "@mui/material";
-import { useState } from "react";
+import { FC, memo, useState } from "react";
 import { StableAPYTooltip } from "apps/lending/components/infoTooltips/StableAPYTooltip";
 import { VariableAPYTooltip } from "apps/lending/components/infoTooltips/VariableAPYTooltip";
 import { ListColumn } from "apps/lending/components/lists/ListColumn";
@@ -56,13 +56,10 @@ type MarketAssetsListProps = {
   loading: boolean;
 };
 
-export default function MarketAssetsList({
-  reserves,
-  loading,
-}: MarketAssetsListProps) {
+const MarketAssetsList: FC<MarketAssetsListProps> = ({ reserves, loading }) => {
   const isTableChangedToCards = useMediaQuery("(max-width:1125px)");
-  const [sortName, setSortName] = useState("");
-  const [sortDesc, setSortDesc] = useState(false);
+  const [sortName, setSortName] = useState<string>("");
+  const [sortDesc, setSortDesc] = useState<boolean>(false);
   if (sortDesc) {
     if (sortName === "symbol") {
       reserves.sort((a, b) =>
@@ -141,4 +138,6 @@ export default function MarketAssetsList({
       )}
     </>
   );
-}
+};
+
+export default memo(MarketAssetsList);

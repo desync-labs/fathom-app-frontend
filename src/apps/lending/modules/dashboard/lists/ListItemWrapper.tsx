@@ -1,5 +1,5 @@
 import { Tooltip, Typography } from "@mui/material";
-import { memo, ReactNode } from "react";
+import { FC, memo, ReactNode } from "react";
 import { BorrowDisabledToolTip } from "apps/lending/components/infoTooltips/BorrowDisabledToolTip";
 import { BUSDOffBoardingTooltip } from "apps/lending/components/infoTooltips/BUSDOffboardingToolTip";
 import { StETHCollateralToolTip } from "apps/lending/components/infoTooltips/StETHCollateralToolTip";
@@ -31,7 +31,7 @@ interface ListItemWrapperProps {
   showDebtCeilingTooltips?: boolean;
 }
 
-export const ListItemWrapper = memo(
+export const ListItemWrapper: FC<ListItemWrapperProps> = memo(
   ({
     symbol,
     iconSymbol,
@@ -45,7 +45,7 @@ export const ListItemWrapper = memo(
     showBorrowCapTooltips = false,
     showDebtCeilingTooltips = false,
     ...rest
-  }: ListItemWrapperProps) => {
+  }) => {
     const { supplyCap, borrowCap, debtCeiling } = useAssetCaps();
 
     const showFrozenTooltip =
