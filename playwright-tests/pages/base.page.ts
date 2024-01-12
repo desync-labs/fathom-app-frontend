@@ -199,7 +199,7 @@ export default class BasePage {
     }
   }
 
-  async mintStableCoinToAddress(
+  async mintVaultsStableCoinToAddress(
     address: string,
     amount: number
   ): Promise<void> {
@@ -207,7 +207,8 @@ export default class BasePage {
     const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
     const wallet = new ethers.Wallet(this.privateKeyMainAccount, provider);
     const signer = wallet.connect(provider);
-    const fathomStablecoinContractAddress = contractAddresses.fathomStablecoin;
+    const fathomStablecoinContractAddress =
+      contractAddresses.fathomStablecoinVaults;
     const fathomStablecoinContractAbi = FathomStablecoin.abi;
     const fathomStablecoinContract = new ethers.Contract(
       fathomStablecoinContractAddress,
