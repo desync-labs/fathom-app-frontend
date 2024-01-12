@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { Box, ListItemText, Paper, Typography, styled } from "@mui/material";
 import {
   Line,
@@ -72,6 +72,23 @@ const VaultHistoryChart: FC<VaultHistoryChartPropTypes> = ({
   valueLabel,
   valueUnits,
 }) => {
+  const [minValue, setMinValue] = useState<number>(0);
+  const [maxValue, setMaxValue] = useState<number>(0);
+
+  useEffect(() => {
+    if (chartDataArray.length) {
+      const chartValues = chartDataArray.map((item) =>
+        parseFloat(item.chartValue)
+      );
+
+      setMaxValue(Math.max(...chartValues));
+      setMinValue(Math.min(...chartValues));
+    } else {
+      setMaxValue(0);
+      setMinValue(0);
+    }
+  }, [chartDataArray]);
+
   return (
     <Box pt="25px">
       <ChartTitle>{title}</ChartTitle>
@@ -92,7 +109,12 @@ const VaultHistoryChart: FC<VaultHistoryChartPropTypes> = ({
             bottom: 5,
           }}
         >
-          <YAxis orientation="right" stroke="#5977a0" width={30} />
+          <YAxis
+            domain={[minValue, maxValue]}
+            orientation="right"
+            stroke="#5977a0"
+            width={30}
+          />
           <Tooltip content={<CustomTooltip />} />
           <Line
             type="step"
