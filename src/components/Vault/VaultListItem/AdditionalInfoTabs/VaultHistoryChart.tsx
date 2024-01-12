@@ -72,8 +72,8 @@ const VaultHistoryChart: FC<VaultHistoryChartPropTypes> = ({
   valueLabel,
   valueUnits,
 }) => {
-  const [minValue, setMinValue] = useState(0);
-  const [maxValue, setMaxValue] = useState(0);
+  const [minValue, setMinValue] = useState<number>(0);
+  const [maxValue, setMaxValue] = useState<number>(0);
 
   useEffect(() => {
     if (chartDataArray.length) {
