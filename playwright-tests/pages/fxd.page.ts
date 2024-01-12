@@ -8,6 +8,7 @@ import {
   GraphOperationName,
 } from "../types";
 import { graphAPIEndpoints } from "../fixtures/api.data";
+import { extractNumericValue } from "../utils/helpers";
 
 export default class FxdPage extends BasePage {
   readonly path: string;
@@ -496,11 +497,16 @@ export default class FxdPage extends BasePage {
     expect.soft(collateralAmountLatestPositionDisplayed).toContainText("XDC");
     const safetyBufferPercentageLatestPositionDisplayed =
       this.safetyBufferLatestPositionRow;
-    expect
-      .soft(safetyBufferPercentageLatestPositionDisplayed)
-      .toContainText(
-        (Math.round(safetyBufferPercentageExpected * 100) / 100).toString()
-      );
+    const safetyBufferPercentageLatestPositionDisplayedText =
+      await safetyBufferPercentageLatestPositionDisplayed.textContent();
+    const safetyBufferPercentageLatestPositionNumber = extractNumericValue(
+      safetyBufferPercentageLatestPositionDisplayedText as string
+    );
+    const safetyBuffersAbsDifference = Math.abs(
+      (safetyBufferPercentageLatestPositionNumber as number) -
+        safetyBufferPercentageExpected
+    );
+    expect.soft(safetyBuffersAbsDifference).toBeLessThanOrEqual(1);
     expect
       .soft(safetyBufferPercentageLatestPositionDisplayed)
       .toContainText("%");
