@@ -1,4 +1,4 @@
-import { valueToBigNumber } from "@aave/math-utils";
+import { valueToBigNumber } from "@into-the-fathom/lending-math-utils";
 import { Box, Typography } from "@mui/material";
 import { CapsCircularStatus } from "apps/lending/components/caps/CapsCircularStatus";
 import { IncentivesButton } from "apps/lending/components/incentives/IncentivesButton";

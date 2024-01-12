@@ -2,7 +2,7 @@ import {
   EthereumTransactionTypeExtended,
   gasLimitRecommendations,
   ProtocolAction,
-} from "@aave/contract-helpers";
+} from "@into-the-fathom/lending-contract-helpers";
 import { SignatureLike } from "@into-the-fathom/bytes";
 import { TransactionResponse } from "@into-the-fathom/providers";
 import { queryClient } from "apps/lending";

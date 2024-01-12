@@ -3,16 +3,17 @@ import { Box, Button, SvgIcon, Typography } from "@mui/material";
 
 import { BasicModal } from "apps/lending/components/primitives/BasicModal";
 import { Link } from "apps/lending/components/primitives/Link";
+import { FC } from "react";
 
 export interface AddressBlockedProps {
   address: string;
   onDisconnectWallet: () => void;
 }
 
-export const AddressBlockedModal = ({
+export const AddressBlockedModal: FC<AddressBlockedProps> = ({
   address,
   onDisconnectWallet,
-}: AddressBlockedProps) => {
+}) => {
   // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
   const setOpen = (_value: boolean) => {}; // ignore, we want the modal to not be dismissable
 

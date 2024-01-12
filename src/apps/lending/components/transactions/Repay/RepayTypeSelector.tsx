@@ -4,18 +4,16 @@ import { StyledTxModalToggleGroup } from "apps/lending/components/StyledToggleBu
 import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
 import { useRootStore } from "apps/lending/store/root";
 import { REPAY_MODAL } from "apps/lending/utils/mixPanelEvents";
+import { FC } from "react";
 
 export enum RepayType {
   BALANCE,
   COLLATERAL,
 }
-export function RepayTypeSelector({
-  repayType,
-  setRepayType,
-}: {
+export const RepayTypeSelector: FC<{
   repayType: RepayType;
   setRepayType: (type: RepayType) => void;
-}) {
+}> = ({ repayType, setRepayType }) => {
   const { currentMarketData } = useProtocolDataContext();
   const trackEvent = useRootStore((store) => store.trackEvent);
 
@@ -58,4 +56,4 @@ export function RepayTypeSelector({
       </StyledTxModalToggleGroup>
     </Box>
   );
-}
+};

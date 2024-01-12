@@ -1,6 +1,7 @@
 import { SvgIcon, SvgIconProps } from "@mui/material";
+import { FC } from "react";
 
-export const WalletIcon = ({ sx, ...rest }: SvgIconProps) => {
+export const WalletIcon: FC<SvgIconProps> = ({ sx, ...rest }) => {
   return (
     <SvgIcon
       sx={{ fill: "none", stroke: "#A5A8B6", ...sx }}

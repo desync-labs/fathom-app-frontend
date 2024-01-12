@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { ReactNode } from "react";
+import { FC, ReactNode } from "react";
 
 export interface ListColumnProps {
   children?: ReactNode;
@@ -12,7 +12,7 @@ export interface ListColumnProps {
   p?: string | number;
 }
 
-export const ListColumn = ({
+export const ListColumn: FC<ListColumnProps> = ({
   isRow,
   children,
   minWidth,
@@ -21,7 +21,7 @@ export const ListColumn = ({
   overFlow = "visible",
   flex = 1,
   p = 1,
-}: ListColumnProps) => {
+}) => {
   return (
     <Box
       sx={{

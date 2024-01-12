@@ -1,4 +1,3 @@
-import { WalletType } from "apps/lending/libs/web3-data-provider/WalletOptions";
 import { StateCreator } from "zustand";
 
 import { RootStore } from "apps/lending/store/root";
@@ -11,10 +10,10 @@ export enum ApprovalMethod {
 export interface WalletSlice {
   account: string;
   accountLoading: boolean;
-  walletType: WalletType | undefined;
+  walletType: string | undefined;
   setAccount: (account: string | undefined) => void;
   setAccountLoading: (loading: boolean) => void;
-  setWalletType: (walletType: WalletType | undefined) => void;
+  setWalletType: (walletType: string | undefined) => void;
   isWalletModalOpen: boolean;
   setWalletModalOpen: (open: boolean) => void;
   walletApprovalMethodPreference: ApprovalMethod;

@@ -1,8 +1,8 @@
-import { InterestRate } from "@aave/contract-helpers";
+import { InterestRate } from "@into-the-fathom/lending-contract-helpers";
 import {
   FormatUserSummaryAndIncentivesResponse,
   valueToBigNumber,
-} from "@aave/math-utils";
+} from "@into-the-fathom/lending-math-utils";
 import BigNumber from "bignumber.js";
 import { ethers } from "fathom-ethers";
 

@@ -1,5 +1,6 @@
 import { ExclamationIcon } from "@heroicons/react/solid";
 import { SvgIcon, SvgIconProps } from "@mui/material";
+import { FC } from "react";
 
 export enum BadgeSize {
   SM = 15,
@@ -11,7 +12,7 @@ type ExclamationBadgeProps = {
   iconProps?: SvgIconProps;
 };
 
-export const ExclamationBadge: React.FC<ExclamationBadgeProps> = ({
+export const ExclamationBadge: FC<ExclamationBadgeProps> = ({
   size,
   iconProps = {},
 }) => {

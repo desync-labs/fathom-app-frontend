@@ -1,9 +1,10 @@
-import { valueToBigNumber } from "@aave/math-utils";
+import { valueToBigNumber } from "@into-the-fathom/lending-math-utils";
 import { Box, Typography } from "@mui/material";
 
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
 import { CapsTooltip } from "apps/lending/components/caps/CapsTooltip";
 import { CapType } from "apps/lending/components/caps/helper";
+import { FC } from "react";
 
 interface CapsHintProps {
   capType: CapType;
@@ -13,13 +14,13 @@ interface CapsHintProps {
   withoutText?: boolean;
 }
 
-export const CapsHint = ({
+export const CapsHint: FC<CapsHintProps> = ({
   capType,
   capAmount,
   totalAmount,
   isUSD,
   withoutText,
-}: CapsHintProps) => {
+}) => {
   const cap = Number(capAmount);
   if (cap <= 0) return null;
 

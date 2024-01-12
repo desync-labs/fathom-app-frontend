@@ -1,4 +1,7 @@
-import { normalizeBN, valueToBigNumber } from "@aave/math-utils";
+import {
+  normalizeBN,
+  valueToBigNumber,
+} from "@into-the-fathom/lending-math-utils";
 import { Typography } from "@mui/material";
 import { Variant } from "@mui/material/styles/createTypography";
 import type {

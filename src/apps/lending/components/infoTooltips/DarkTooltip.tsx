@@ -1,10 +1,11 @@
 import { Box, Tooltip, TooltipProps } from "@mui/material";
+import { FC } from "react";
 
-export const DarkTooltip = ({
+export const DarkTooltip: FC<TooltipProps & { wrap?: boolean }> = ({
   title,
   children,
   wrap,
-}: TooltipProps & { wrap?: boolean }) => {
+}) => {
   return (
     <div>
       <Tooltip

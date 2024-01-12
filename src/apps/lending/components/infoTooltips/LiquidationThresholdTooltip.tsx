@@ -2,10 +2,11 @@ import {
   TextWithTooltip,
   TextWithTooltipProps,
 } from "apps/lending/components/TextWithTooltip";
+import { FC } from "react";
 
-export const LiquidationThresholdTooltip = ({
+export const LiquidationThresholdTooltip: FC<TextWithTooltipProps> = ({
   ...rest
-}: TextWithTooltipProps) => {
+}) => {
   return (
     <TextWithTooltip {...rest}>
       <>

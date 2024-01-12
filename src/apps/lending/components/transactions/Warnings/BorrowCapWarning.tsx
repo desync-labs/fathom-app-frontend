@@ -3,17 +3,18 @@ import { AssetCapData } from "apps/lending/hooks/useAssetCaps";
 
 import { Link } from "apps/lending/components/primitives/Link";
 import { Warning } from "apps/lending/components/primitives/Warning";
+import { FC } from "react";
 
 type BorrowCapWarningProps = AlertProps & {
   borrowCap: AssetCapData;
   icon?: boolean;
 };
 
-export const BorrowCapWarning = ({
+export const BorrowCapWarning: FC<BorrowCapWarningProps> = ({
   borrowCap,
   icon = true,
   ...rest
-}: BorrowCapWarningProps) => {
+}) => {
   // Don't show a warning when less than 98% utilized
   if (!borrowCap.percentUsed || borrowCap.percentUsed < 98) return null;
 

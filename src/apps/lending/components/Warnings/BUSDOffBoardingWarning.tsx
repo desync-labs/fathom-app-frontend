@@ -4,7 +4,7 @@ export const BUSDOffBoardingWarning = () => {
   return (
     <>
       <>
-        This asset is planned to be offboarded due to an Aave Protocol
+        This asset is planned to be offboarded due to an Fathom Protocol
         Governance decision.
       </>{" "}
       <Link

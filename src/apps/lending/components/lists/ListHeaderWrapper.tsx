@@ -1,16 +1,16 @@
 import { Box, BoxProps } from "@mui/material";
-import { ReactNode } from "react";
+import { FC, ReactNode } from "react";
 
 interface ListHeaderWrapperProps extends BoxProps {
   px?: 4 | 6;
   children: ReactNode;
 }
 
-export const ListHeaderWrapper = ({
+export const ListHeaderWrapper: FC<ListHeaderWrapperProps> = ({
   px = 4,
   children,
   ...rest
-}: ListHeaderWrapperProps) => {
+}) => {
   return (
     <Box
       {...rest}

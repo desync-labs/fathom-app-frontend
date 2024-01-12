@@ -1,5 +1,8 @@
-import { API_ETH_MOCK_ADDRESS, InterestRate } from "@aave/contract-helpers";
-import { valueToBigNumber } from "@aave/math-utils";
+import {
+  API_ETH_MOCK_ADDRESS,
+  InterestRate,
+} from "@into-the-fathom/lending-contract-helpers";
+import { valueToBigNumber } from "@into-the-fathom/lending-math-utils";
 import { Typography, useMediaQuery, useTheme } from "@mui/material";
 import { useState } from "react";
 import { ListColumn } from "apps/lending/components/lists/ListColumn";

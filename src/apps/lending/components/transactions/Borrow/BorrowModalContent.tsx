@@ -1,11 +1,14 @@
-import { API_ETH_MOCK_ADDRESS, InterestRate } from "@aave/contract-helpers";
+import {
+  API_ETH_MOCK_ADDRESS,
+  InterestRate,
+} from "@into-the-fathom/lending-contract-helpers";
 import {
   calculateHealthFactorFromBalancesBigUnits,
   USD_DECIMALS,
   valueToBigNumber,
-} from "@aave/math-utils";
+} from "@into-the-fathom/lending-math-utils";
 import { Typography } from "@mui/material";
-import { useState } from "react";
+import { FC, useState } from "react";
 import { APYTypeTooltip } from "apps/lending/components/infoTooltips/APYTypeTooltip";
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
 import { Row } from "apps/lending/components/primitives/Row";
@@ -33,7 +36,7 @@ import {
 } from "../FlowCommons/TxModalDetails";
 import { BorrowActions } from "./BorrowActions";
 import { BorrowAmountWarning } from "./BorrowAmountWarning";
-import { ParameterChangewarning } from "./ParameterChangewarning";
+import { ParameterChangeWarning } from "apps/lending/components/transactions/Borrow/ParameterChangeWarning";
 
 export enum ErrorType {
   STABLE_RATE_NOT_ENABLED,
@@ -49,12 +52,12 @@ interface BorrowModeSwitchProps {
   stableRate: string;
 }
 
-const BorrowModeSwitch = ({
+const BorrowModeSwitch: FC<BorrowModeSwitchProps> = ({
   setInterestRateMode,
   interestRateMode,
   variableRate,
   stableRate,
-}: BorrowModeSwitchProps) => {
+}) => {
   return (
     <Row
       caption={
@@ -324,7 +327,7 @@ export const BorrowModalContent = ({
         />
       )}
 
-      <ParameterChangewarning underlyingAsset={underlyingAsset} />
+      <ParameterChangeWarning underlyingAsset={underlyingAsset} />
 
       <BorrowActions
         poolReserve={poolReserve}

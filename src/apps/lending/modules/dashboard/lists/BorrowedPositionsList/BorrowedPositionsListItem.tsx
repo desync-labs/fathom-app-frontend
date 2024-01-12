@@ -1,5 +1,5 @@
-import { InterestRate } from "@aave/contract-helpers";
-import { ReserveIncentiveResponse } from "@aave/math-utils/dist/esm/formatters/incentive/calculate-reserve-incentives";
+import { InterestRate } from "@into-the-fathom/lending-contract-helpers";
+import { ReserveIncentiveResponse } from "@into-the-fathom/lending-math-utils/dist/esm/formatters/incentive/calculate-reserve-incentives";
 import { Box, Button, useMediaQuery, useTheme } from "@mui/material";
 import { IncentivesCard } from "apps/lending/components/incentives/IncentivesCard";
 import { APYTypeTooltip } from "apps/lending/components/infoTooltips/APYTypeTooltip";

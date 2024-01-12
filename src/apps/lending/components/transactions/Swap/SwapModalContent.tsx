@@ -1,7 +1,7 @@
 import { SwitchVerticalIcon } from "@heroicons/react/outline";
 import { Box, SvgIcon, Typography } from "@mui/material";
 import BigNumber from "bignumber.js";
-import React, { useRef, useState } from "react";
+import React, { FC, useRef, useState } from "react";
 import { PriceImpactTooltip } from "apps/lending/components/infoTooltips/PriceImpactTooltip";
 import { Warning } from "apps/lending/components/primitives/Warning";
 import {
@@ -41,11 +41,11 @@ export type SupplyProps = {
   underlyingAsset: string;
 };
 
-export const SwapModalContent = ({
+export const SwapModalContent: FC<ModalWrapperProps> = ({
   poolReserve,
   userReserve,
   isWrongNetwork,
-}: ModalWrapperProps) => {
+}) => {
   const { reserves, user, marketReferencePriceInUsd } = useAppDataContext();
   const { currentChainId, currentNetworkConfig } = useProtocolDataContext();
   const { currentAccount } = useWeb3Context();

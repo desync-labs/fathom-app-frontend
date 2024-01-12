@@ -1,10 +1,10 @@
-import { ChainId, valueToWei } from "@aave/contract-helpers";
+import { ChainId, valueToWei } from "@into-the-fathom/lending-contract-helpers";
 import {
   BigNumberZeroDecimal,
   normalize,
   normalizeBN,
   valueToBigNumber,
-} from "@aave/math-utils";
+} from "@into-the-fathom/lending-math-utils";
 import { MiscBase, MiscEthereum } from "@bgd-labs/aave-address-book";
 import {
   constructBuildTx,

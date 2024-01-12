@@ -1,5 +1,5 @@
 import { Badge, Box, Icon, IconProps } from "@mui/material";
-import { forwardRef, useEffect, useRef, useState } from "react";
+import { FC, forwardRef, useEffect, useRef, useState } from "react";
 
 interface ATokenIconProps {
   symbol?: string;
@@ -162,7 +162,7 @@ interface TokenIconProps extends IconProps {
  * @param param0
  * @returns
  */
-function SingleTokenIcon({ symbol, aToken, ...rest }: TokenIconProps) {
+const SingleTokenIcon: FC<TokenIconProps> = ({ symbol, aToken, ...rest }) => {
   return (
     <Icon
       {...rest}
@@ -186,7 +186,7 @@ function SingleTokenIcon({ symbol, aToken, ...rest }: TokenIconProps) {
       )}
     </Icon>
   );
-}
+};
 
 interface MultiTokenIconProps extends IconProps {
   symbols: string[];
@@ -194,11 +194,11 @@ interface MultiTokenIconProps extends IconProps {
   aToken?: boolean;
 }
 
-export function MultiTokenIcon({
+export const MultiTokenIcon: FC<MultiTokenIconProps> = ({
   symbols,
   badgeSymbol,
   ...rest
-}: MultiTokenIconProps) {
+}) => {
   if (!badgeSymbol)
     return (
       <Box sx={{ display: "inline-flex", position: "relative" }}>
@@ -233,9 +233,9 @@ export function MultiTokenIcon({
       ))}
     </Badge>
   );
-}
+};
 
-export function TokenIcon({ symbol, ...rest }: TokenIconProps) {
+export const TokenIcon: FC<TokenIconProps> = ({ symbol, ...rest }) => {
   const symbolChunks = symbol.split("_");
   if (symbolChunks.length > 1) {
     const [badge, ...symbols] = symbolChunks;
@@ -248,4 +248,4 @@ export function TokenIcon({ symbol, ...rest }: TokenIconProps) {
     );
   }
   return <SingleTokenIcon symbol={symbol} {...rest} />;
-}
+};

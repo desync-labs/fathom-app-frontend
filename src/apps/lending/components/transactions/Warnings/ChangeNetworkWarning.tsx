@@ -1,4 +1,4 @@
-import { ChainId } from "@aave/contract-helpers";
+import { ChainId } from "@into-the-fathom/lending-contract-helpers";
 import { Button, Typography } from "@mui/material";
 import { useWeb3Context } from "apps/lending/libs/hooks/useWeb3Context";
 import { TrackEventProps } from "apps/lending/store/analyticsSlice";
@@ -6,6 +6,7 @@ import { useRootStore } from "apps/lending/store/root";
 import { GENERAL } from "apps/lending/utils/mixPanelEvents";
 
 import { Warning } from "apps/lending/components/primitives/Warning";
+import { FC } from "react";
 
 export type ChangeNetworkWarningProps = {
   funnel?: string;
@@ -14,12 +15,12 @@ export type ChangeNetworkWarningProps = {
   event?: TrackEventProps;
 };
 
-export const ChangeNetworkWarning = ({
+export const ChangeNetworkWarning: FC<ChangeNetworkWarningProps> = ({
   networkName,
   chainId,
   event,
   funnel,
-}: ChangeNetworkWarningProps) => {
+}) => {
   const { switchNetwork, switchNetworkError } = useWeb3Context();
   const trackEvent = useRootStore((store) => store.trackEvent);
 

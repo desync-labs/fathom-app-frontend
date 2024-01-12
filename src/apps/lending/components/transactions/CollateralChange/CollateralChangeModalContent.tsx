@@ -1,7 +1,7 @@
 import {
   calculateHealthFactorFromBalancesBigUnits,
   valueToBigNumber,
-} from "@aave/math-utils";
+} from "@into-the-fathom/lending-math-utils";
 import { Typography } from "@mui/material";
 import { Warning } from "apps/lending/components/primitives/Warning";
 import { useAppDataContext } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
@@ -19,6 +19,7 @@ import {
 import { zeroLTVBlockingWithdraw } from "apps/lending/components/transactions/utils";
 import { IsolationModeWarning } from "apps/lending/components/transactions/Warnings/IsolationModeWarning";
 import { CollateralChangeActions } from "apps/lending/components/transactions/CollateralChange/CollateralChangeActions";
+import { FC } from "react";
 
 export type CollateralChangeModalContentProps = {
   underlyingAsset: string;
@@ -31,12 +32,12 @@ export enum ErrorType {
   ZERO_LTV_WITHDRAW_BLOCKED,
 }
 
-export const CollateralChangeModalContent = ({
+export const CollateralChangeModalContent: FC<ModalWrapperProps> = ({
   poolReserve,
   userReserve,
   isWrongNetwork,
   symbol,
-}: ModalWrapperProps) => {
+}) => {
   const {
     gasLimit,
     mainTxState: collateralChangeTxState,

@@ -1,4 +1,4 @@
-import { ProtocolAction } from "@aave/contract-helpers";
+import { ProtocolAction } from "@into-the-fathom/lending-contract-helpers";
 import { produce } from "immer";
 import { StateCreator } from "zustand";
 

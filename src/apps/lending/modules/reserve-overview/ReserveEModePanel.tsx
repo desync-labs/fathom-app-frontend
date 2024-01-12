@@ -27,7 +27,7 @@ export const ReserveEModePanel: FC<ReserverEModePanelProps> = ({ reserve }) => {
     <PanelRow>
       <PanelTitle>E-Mode info</PanelTitle>
       <Box sx={{ flexGrow: 1, minWidth: 0, maxWidth: "100%", width: "100%" }}>
-        <Box sx={{ display: "inline-flex", alignItems: "center" }}>
+        <Box sx={{ display: "inline-flex", alignItems: "center", gap: "7px" }}>
           <Typography variant="secondary14" color="text.secondary">
             E-Mode Category
           </Typography>

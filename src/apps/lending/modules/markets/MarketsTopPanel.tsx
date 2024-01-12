@@ -1,4 +1,4 @@
-import { valueToBigNumber } from "@aave/math-utils";
+import { valueToBigNumber } from "@into-the-fathom/lending-math-utils";
 import { useMediaQuery, useTheme } from "@mui/material";
 import { marketContainerProps } from "apps/lending/pages/markets.page";
 

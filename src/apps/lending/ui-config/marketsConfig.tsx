@@ -1,4 +1,4 @@
-import { ChainId } from "@aave/contract-helpers";
+import { ChainId } from "@into-the-fathom/lending-contract-helpers";
 import { AaveV3Ethereum, AaveV3Sepolia } from "@bgd-labs/aave-address-book";
 import { FathomLendingApothem } from "@into-the-fathom/fathom-lending-address-book";
 import { ReactNode } from "react";
