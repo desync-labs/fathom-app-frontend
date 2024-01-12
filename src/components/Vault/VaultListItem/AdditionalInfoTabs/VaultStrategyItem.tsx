@@ -99,6 +99,7 @@ type VaultIndicatorItemPropsType = {
   title: string;
   value: string | number;
   units: string;
+  sx?: object;
 };
 
 type VaultStrategyItemPropsType = {
@@ -112,9 +113,10 @@ const VaultIndicatorItem: FC<VaultIndicatorItemPropsType> = ({
   title,
   value,
   units,
+  sx,
 }) => {
   return (
-    <VaultIndicatorItemWrapper>
+    <VaultIndicatorItemWrapper sx={sx}>
       <Typography fontSize="12px" color={"#5977a0"}>
         {title}
       </Typography>
@@ -219,6 +221,7 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
                     .toNumber()
                 )}`}
                 units={` ${tokenName}`}
+                sx={{ borderRadius: "8px" }}
               />
               <VaultIndicatorItem
                 title="Total Gain"
@@ -228,9 +231,12 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
                     .toNumber()
                 )}
                 units={` ${tokenName}`}
+                sx={{ borderRadius: "8px" }}
               />
             </VaultIndicatorList>
-            <VaultIndicatorList sx={{ gap: 0 }}>
+            <VaultIndicatorList
+              sx={{ gap: 0, borderRadius: "8px", overflow: "hidden" }}
+            >
               <VaultIndicatorItem
                 title="APR"
                 value={formatNumber(

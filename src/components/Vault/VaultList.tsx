@@ -255,6 +255,8 @@ const VaultList: FC<VaultListPropsType> = ({
           isMobile,
           isMobileFiltersOpen,
           vaultSortedList,
+          performanceFee,
+          protocolFee,
           vaultsLoading,
           vaultPositionsList,
           vaultPositionsLoading,
