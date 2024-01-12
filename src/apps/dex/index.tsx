@@ -6,10 +6,7 @@ import ApplicationUpdater from "apps/dex/state/application/updater";
 import ListsUpdater from "apps/dex/state/lists/updater";
 import MulticallUpdater from "apps/dex/state/multicall/updater";
 import TransactionUpdater from "apps/dex/state/transactions/updater";
-import ThemeProvider, {
-  FixedGlobalStyle,
-  ThemedGlobalStyle,
-} from "apps/dex/theme";
+import ThemeProvider from "apps/dex/theme";
 import { DexViewProps } from "components/Dashboard/DexView";
 import { DexSharedProvider } from "context/dexShared";
 
@@ -31,11 +28,9 @@ export const Updaters = () => {
 const DexIndexComponent: FC<DexViewProps> = ({ openConnectorMenu }) => {
   return (
     <>
-      <FixedGlobalStyle />
       <Blocklist>
         <ThemeProvider>
           <>
-            <ThemedGlobalStyle />
             <DexSharedProvider openConnectorMenu={openConnectorMenu}>
               <App />
             </DexSharedProvider>
