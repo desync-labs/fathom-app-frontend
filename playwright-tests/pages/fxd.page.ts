@@ -506,7 +506,6 @@ export default class FxdPage extends BasePage {
       (safetyBufferPercentageLatestPositionNumber as number) -
         safetyBufferPercentageExpected
     );
-    console.log(safetyBuffersAbsDifference);
     expect.soft(safetyBuffersAbsDifference).toBeLessThanOrEqual(1);
     expect
       .soft(safetyBufferPercentageLatestPositionDisplayed)
