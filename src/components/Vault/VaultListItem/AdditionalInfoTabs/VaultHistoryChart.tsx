@@ -36,6 +36,19 @@ type VaultHistoryChartPropTypes = {
   valueUnits?: string;
 };
 
+const CustomTooltipPaper = styled(Paper)`
+  padding: 5px;
+  background: #2a3e5a;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    padding: 5px 5px 5px 10px;
+  }
+  .MuiListItem-root {
+    > * {
+      color: #fff;
+    }
+  }
+`;
+
 const CustomTooltip = ({ payload }: TooltipProps<ValueType, NameType>) => {
   if (payload && payload.length) {
     const reportTimestamp = parseInt(payload[0]?.payload?.timestamp, 10);
@@ -44,22 +57,22 @@ const CustomTooltip = ({ payload }: TooltipProps<ValueType, NameType>) => {
     );
     const units = payload[0].unit || "";
     return (
-      <Paper sx={{ padding: "4px" }}>
+      <CustomTooltipPaper>
         <AppList sx={{ padding: 0 }}>
-          <AppListItem alignItems="flex-start" secondaryAction={""}>
+          <AppListItem alignItems="flex-start">
             <ListItemText primary={reportDateString} />
           </AppListItem>
           <AppListItem
+            sx={{ gap: "10px" }}
             alignItems="flex-start"
             secondaryAction={
               <>{`${formatNumber(payload[0].payload?.chartValue) + units}`}</>
             }
-            sx={{ gap: "10px" }}
           >
             <ListItemText primary={payload[0].name} />
           </AppListItem>
         </AppList>
-      </Paper>
+      </CustomTooltipPaper>
     );
   }
 
