@@ -74,12 +74,12 @@ const PositionsList: FC<PositionsListProps> = ({
 
   return (
     <>
-      <TitleSecondary>Your Positions</TitleSecondary>
+      <TitleSecondary variant={"h2"}>Your Positions</TitleSecondary>
       {useMemo(
         () => (
           <>
             {positions.length === 0 && (
-              <NoResults variant={"h6"}>
+              <NoResults mt={isMobile ? 2 : 3}>
                 {loading ? (
                   <CircleWrapper>
                     <CircularProgress size={30} />

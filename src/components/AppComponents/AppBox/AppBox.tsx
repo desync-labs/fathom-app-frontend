@@ -10,10 +10,12 @@ export const TitleSecondary = styled(Typography)`
   font-weight: bold;
   line-height: 24px;
   margin-bottom: 10px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    margin-bottom: 15px;
+  }
 `;
 
 export const NoResults = styled(Typography)`
-  margin: 0;
   font-weight: 500;
   color: #6379a1;
   font-size: 14px;
@@ -305,7 +307,6 @@ export const NestedRouteLink = styled(Link)<{ span?: number }>`
 `;
 
 export const NestedRouteContainer = styled(Container)`
-  padding: 0;
   ${({ theme }) => theme.breakpoints.down("sm")} {
     margin-top: 15px;
   }
