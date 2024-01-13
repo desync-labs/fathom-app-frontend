@@ -28,7 +28,7 @@ const StakingLockPaper = styled(AppPaper)`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 32px 32px 50px;
+  padding: 32px 32px 30px;
   gap: 35px;
   ${({ theme }) => theme.breakpoints.down("sm")} {
     padding: 20px 20px 25px;

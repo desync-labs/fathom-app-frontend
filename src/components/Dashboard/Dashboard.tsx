@@ -28,10 +28,10 @@ const DashboardContent = () => {
         <Grid item xs={12}>
           <ProtocolStats />
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} mt={3}>
           <PoolsListView proxyWallet={proxyWallet} />
         </Grid>
-        <Grid item xs={12} sx={{ marginTop: isMobile ? "5px" : "30px" }}>
+        <Grid item xs={12} mt={4}>
           <PositionsList
             positionCurrentPage={positionCurrentPage}
             positionsItemsCount={positionsItemsCount}

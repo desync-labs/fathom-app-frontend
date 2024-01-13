@@ -5,7 +5,7 @@ export const AppList = styled(MuiList)`
   width: 100%;
   & li {
     color: #9fadc6;
-    fontsize: 14px;
+    font-size: 14px;
     padding: 3px 0 3px 8px;
     span {
       font-size: 14px;

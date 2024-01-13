@@ -82,6 +82,11 @@ export const WalletConnect = new WalletConnectConnector({
     "eth_signTypedData",
   ],
   optionalMethods: ["eth_estimateGas"],
-} as EthereumProviderOptions);
+  qrModalOptions: {
+    themeVariables: {
+      "--wcm-z-index": "10000",
+    },
+  },
+} as unknown as EthereumProviderOptions);
 
 export { XDC_CHAIN_IDS, DEFAULT_RPC, supportedChainIds, NETWORK_LABELS };

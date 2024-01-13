@@ -62,6 +62,7 @@ const StableSwapSuccessBox = styled(SuccessBox)`
 const StableSwapForm: FC<any> = ({
   isDecentralizedState,
   isUserWhiteListed,
+  isUserWrapperWhiteListed,
   inputValue,
   outputValue,
   inputDecimals,
@@ -207,7 +208,7 @@ const StableSwapForm: FC<any> = ({
         </StableSwapSuccessBox>
       )}
 
-      {isUserWhiteListed === false && (
+      {isUserWhiteListed === false && isUserWrapperWhiteListed === false && (
         <StableSwapErrorBox>
           <ErrorInfoIcon />
           <ErrorMessage>Wallet Address Not Whitelisted.</ErrorMessage>

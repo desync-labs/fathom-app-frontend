@@ -110,6 +110,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
               });
           } else {
             setAllowStableSwapInProgress(false);
+            setIsUserWhitelisted(false);
           }
         });
       positionService
@@ -132,6 +133,8 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
         .then((isWhitelisted: boolean) => {
           setIsUserWrapperWhiteListed(isWhitelisted);
         });
+    } else {
+      setIsUserWrapperWhiteListed(false);
     }
   }, [
     chainId,
@@ -195,11 +198,10 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
   }, [connectMetamask, connectWalletConnect]);
 
   const allowStableSwap = useMemo(() => {
-    return (
-      isDecentralizedState ||
-      (isDecentralizedState === false && isUserWhiteListed === true)
-    );
-  }, [isDecentralizedState, isUserWhiteListed]);
+    return (isDecentralizedState &&
+      (isUserWrapperWhiteListed === true ||
+        isUserWhiteListed === true)) as boolean;
+  }, [isDecentralizedState, isUserWhiteListed, isUserWrapperWhiteListed]);
 
   const disconnect = useCallback(async () => {
     try {
