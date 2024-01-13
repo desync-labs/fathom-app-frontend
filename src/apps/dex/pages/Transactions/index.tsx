@@ -19,6 +19,7 @@ import {
 } from "apps/dex/components/Transactions/Transaction";
 import { TYPE } from "apps/dex/theme";
 import { useActiveWeb3React } from "apps/dex/hooks";
+import { Navigate } from "react-router-dom";
 
 const TransactionListWrapper = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap};
@@ -207,6 +208,10 @@ const Transactions: FC = () => {
     allTransactions,
     setSortedFilteredTransactions,
   ]);
+
+  if (!account) {
+    return <Navigate to={"/swap"} />;
+  }
 
   return (
     <AppBody>
