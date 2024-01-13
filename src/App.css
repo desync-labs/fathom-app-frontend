@@ -8,3 +8,7 @@ a {
   color: #5a81ff;
   text-decoration: none;
 }
+
+#wcm-modal, wcm-modal {
+  z-index: 10000 !important;
+}

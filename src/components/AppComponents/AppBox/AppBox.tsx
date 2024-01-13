@@ -323,3 +323,11 @@ export const ModalDescription = styled(Typography)`
     padding: 0;
   }
 `;
+
+export const CircleWrapper = styled(Box)`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
