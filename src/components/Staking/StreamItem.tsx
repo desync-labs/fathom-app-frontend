@@ -60,7 +60,7 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
                 </Grid>
               </Grid>
             ) : (
-              <Grid container sx={{ gap: "12px" }}>
+              <Grid container sx={{ gap: "12px" }} mt={isMobile ? 2 : 3}>
                 {lockPositions.map((lockPosition: ILockPosition) => (
                   <StakingViewItem
                     key={lockPosition.lockId}
