@@ -1,4 +1,4 @@
-import { FC, useMemo } from "react";
+import { FC, memo, useMemo } from "react";
 import {
   Box,
   CircularProgress,
@@ -427,4 +427,4 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
   );
 };
 
-export default ManageVaultForm;
+export default memo(ManageVaultForm);

@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, memo } from "react";
 import BigNumber from "bignumber.js";
 import { Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -241,4 +241,4 @@ const VaultListItemEarningDetails: FC<VaultListItemFarmingDetailsProps> = ({
   );
 };
 
-export default VaultListItemEarningDetails;
+export default memo(VaultListItemEarningDetails);

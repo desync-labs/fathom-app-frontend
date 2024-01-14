@@ -1,4 +1,4 @@
-import { FC, useMemo } from "react";
+import { FC, memo, useMemo } from "react";
 import { IconButton, TableCell, Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import BigNumber from "bignumber.js";
@@ -71,6 +71,7 @@ export const VaultPercent = styled("div")`
   height: 20px;
   background: #3665ff;
   align-items: center;
+  justify-content: center;
   font-weight: bold;
 
   ${({ theme }) => theme.breakpoints.down("sm")} {
@@ -429,4 +430,4 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
   );
 };
 
-export default VaultListItem;
+export default memo(VaultListItem);

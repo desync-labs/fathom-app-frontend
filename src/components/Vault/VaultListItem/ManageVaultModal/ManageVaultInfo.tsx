@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, memo, useMemo } from "react";
 import BigNumber from "bignumber.js";
 import { Box, Divider, Grid, ListItemText } from "@mui/material";
 import { IVault, IVaultPosition } from "fathom-sdk";
@@ -28,17 +28,25 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
   const { balancePosition, balanceShares } = vaultPosition;
   const { isMobile } = useSharedContext();
 
-  const { totalApr, count } = strategies[0].reports.reduce(
-    (accumulator: any, strategyReport: any) => {
-      strategyReport.results.forEach((result: any) => {
-        if (result.apr) {
-          accumulator.totalApr += parseFloat(result.apr);
-          accumulator.count++;
-        }
-      });
-      return accumulator;
-    },
-    { totalApr: 0, count: 0 }
+  const { totalApr, count } = useMemo(
+    () =>
+      strategies[0].reports.reduce(
+        (
+          accumulator: { totalApr: number; count: number },
+          // TODO: type for strategyReport and in DepositsVaultInfo component
+          strategyReport: any
+        ) => {
+          strategyReport.results.forEach((result: any) => {
+            if (result.apr) {
+              accumulator.totalApr += parseFloat(result.apr);
+              accumulator.count++;
+            }
+          });
+          return accumulator;
+        },
+        { totalApr: 0, count: 0 }
+      ),
+    [strategies]
   );
 
   const averageApr = count > 0 ? totalApr / count : 0;
@@ -235,4 +243,4 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
   );
 };
 
-export default ManageVaultInfo;
+export default memo(ManageVaultInfo);

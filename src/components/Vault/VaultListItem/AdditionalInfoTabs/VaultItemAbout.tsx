@@ -1,6 +1,6 @@
-import { FC, useCallback, useEffect, useState } from "react";
+import { FC, memo, useCallback, useEffect, useState } from "react";
 import BigNumber from "bignumber.js";
-import { Box, ListItemText, Typography, styled } from "@mui/material";
+import { Box, ListItemText, styled, Typography } from "@mui/material";
 import { IVault, IVaultStrategy, IVaultStrategyReport } from "fathom-sdk";
 import { formatNumber, formatPercentage } from "utils/format";
 import useSharedContext from "context/shared";
@@ -56,7 +56,7 @@ const VaultItemAbout: FC<VaultItemAboutPropsTypes> = ({
         const report = strategy.reports[i];
 
         const currentTotalEarned = BigNumber(report.gain)
-          .minus(BigNumber(report.loss))
+          .minus(report.loss)
           .dividedBy(10 ** 18)
           .plus(accumulatedTotalEarned)
           .toString();
@@ -116,9 +116,7 @@ const VaultItemAbout: FC<VaultItemAboutPropsTypes> = ({
 
       if (lastReport.results.length > 0) {
         const lastResult = lastReport.results[lastReport.results.length - 1];
-        const lastApr = lastResult.apr;
-
-        return lastApr;
+        return lastResult.apr;
       } else {
         return "0";
       }
@@ -256,4 +254,4 @@ const VaultItemAbout: FC<VaultItemAboutPropsTypes> = ({
   );
 };
 
-export default VaultItemAbout;
+export default memo(VaultItemAbout);
