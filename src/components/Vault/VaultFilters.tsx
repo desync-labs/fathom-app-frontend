@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction } from "react";
+import { Dispatch, FC, memo, SetStateAction } from "react";
 import { Grid, ToggleButtonGroup, ToggleButton, MenuItem } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import {
@@ -137,4 +137,4 @@ const VaultFilters: FC<VaultFiltersPropsType> = ({
   );
 };
 
-export default VaultFilters;
+export default memo(VaultFilters);

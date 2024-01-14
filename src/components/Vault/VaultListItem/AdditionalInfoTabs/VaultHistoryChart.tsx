@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, memo, useEffect, useState } from "react";
 import { Box, ListItemText, Paper, Typography, styled } from "@mui/material";
 import {
   Line,
@@ -38,6 +38,7 @@ type VaultHistoryChartPropTypes = {
 
 const CustomTooltipPaper = styled(Paper)`
   padding: 5px;
+  border-radius: 8px;
   background: #2a3e5a;
   ${({ theme }) => theme.breakpoints.down("sm")} {
     padding: 5px 5px 5px 10px;
@@ -49,35 +50,37 @@ const CustomTooltipPaper = styled(Paper)`
   }
 `;
 
-const CustomTooltip = ({ payload }: TooltipProps<ValueType, NameType>) => {
-  if (payload && payload.length) {
-    const reportTimestamp = parseInt(payload[0]?.payload?.timestamp, 10);
-    const reportDateString = dayjs(reportTimestamp).format(
-      "DD/MM/YYYY HH:mm:ss"
-    );
-    const units = payload[0].unit || "";
-    return (
-      <CustomTooltipPaper>
-        <AppList sx={{ padding: 0 }}>
-          <AppListItem alignItems="flex-start">
-            <ListItemText primary={reportDateString} />
-          </AppListItem>
-          <AppListItem
-            sx={{ gap: "10px" }}
-            alignItems="flex-start"
-            secondaryAction={
-              <>{`${formatNumber(payload[0].payload?.chartValue) + units}`}</>
-            }
-          >
-            <ListItemText primary={payload[0].name} />
-          </AppListItem>
-        </AppList>
-      </CustomTooltipPaper>
-    );
-  }
+const CustomTooltip: FC<TooltipProps<ValueType, NameType>> = memo(
+  ({ payload }) => {
+    if (payload && payload.length) {
+      const reportTimestamp = parseInt(payload[0]?.payload?.timestamp, 10);
+      const reportDateString = dayjs(reportTimestamp).format(
+        "DD/MM/YYYY HH:mm:ss"
+      );
+      const units = payload[0].unit || "";
+      return (
+        <CustomTooltipPaper>
+          <AppList sx={{ padding: 0 }}>
+            <AppListItem alignItems="flex-start">
+              <ListItemText primary={reportDateString} />
+            </AppListItem>
+            <AppListItem
+              sx={{ gap: "10px" }}
+              alignItems="flex-start"
+              secondaryAction={
+                <>{`${formatNumber(payload[0].payload?.chartValue) + units}`}</>
+              }
+            >
+              <ListItemText primary={payload[0].name} />
+            </AppListItem>
+          </AppList>
+        </CustomTooltipPaper>
+      );
+    }
 
-  return null;
-};
+    return null;
+  }
+);
 
 const VaultHistoryChart: FC<VaultHistoryChartPropTypes> = ({
   title,
@@ -145,4 +148,4 @@ const VaultHistoryChart: FC<VaultHistoryChartPropTypes> = ({
   );
 };
 
-export default VaultHistoryChart;
+export default memo(VaultHistoryChart);

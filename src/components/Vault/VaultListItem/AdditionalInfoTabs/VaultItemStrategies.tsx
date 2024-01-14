@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, memo } from "react";
 import { Typography } from "@mui/material";
 import { IVault } from "fathom-sdk";
 import VaultStrategyItem from "components/Vault/VaultListItem/AdditionalInfoTabs/VaultStrategyItem";
@@ -32,4 +32,4 @@ const VaultItemStrategies: FC<VaultItemStrategiesPropsTypes> = ({
   );
 };
 
-export default VaultItemStrategies;
+export default memo(VaultItemStrategies);

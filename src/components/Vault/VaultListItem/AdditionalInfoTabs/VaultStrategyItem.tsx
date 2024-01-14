@@ -89,6 +89,7 @@ export const VaultIndicatorItemWrapper = styled(Box)`
 export const VaultIndicatorItemValue = styled(Typography)`
   font-size: 20px;
   font-weight: 700;
+  text-align: center;
 
   ${({ theme }) => theme.breakpoints.down("sm")} {
     font-size: 14px;
@@ -117,7 +118,7 @@ const VaultIndicatorItem: FC<VaultIndicatorItemPropsType> = ({
 }) => {
   return (
     <VaultIndicatorItemWrapper sx={sx}>
-      <Typography fontSize="12px" color={"#5977a0"}>
+      <Typography fontSize="12px" textAlign={"center"} color={"#5977a0"}>
         {title}
       </Typography>
       <VaultIndicatorItemValue>{value + units}</VaultIndicatorItemValue>

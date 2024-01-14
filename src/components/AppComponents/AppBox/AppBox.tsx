@@ -142,6 +142,7 @@ export const WrongNetworkMobile = styled(MuiBox)`
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-right: 5px;
 `;
 
 export const WrongNetworkMobileIcon = styled(MuiBox)`

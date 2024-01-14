@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, memo } from "react";
 import BigNumber from "bignumber.js";
 import { Box, Divider, Grid, ListItemText } from "@mui/material";
 import { IVault, IVaultPosition } from "fathom-sdk";
@@ -235,4 +235,4 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
   );
 };
 
-export default ManageVaultInfo;
+export default memo(ManageVaultInfo);

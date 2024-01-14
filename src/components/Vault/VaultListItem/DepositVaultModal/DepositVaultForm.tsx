@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, memo } from "react";
 import {
   Box,
   CircularProgress,
@@ -344,4 +344,4 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
   );
 };
 
-export default DepositVaultForm;
+export default memo(DepositVaultForm);
