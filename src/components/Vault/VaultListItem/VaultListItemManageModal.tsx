@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, memo } from "react";
 import { DialogContent, Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
@@ -102,4 +102,4 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
   );
 };
 
-export default VaultListItemManageModal;
+export default memo(VaultListItemManageModal);

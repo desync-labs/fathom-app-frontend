@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useState } from "react";
+import { FC, memo, useCallback, useEffect, useState } from "react";
 import BigNumber from "bignumber.js";
 import { Box, ListItemText, Typography, styled } from "@mui/material";
 import { IVault, IVaultStrategy, IVaultStrategyReport } from "fathom-sdk";
@@ -256,4 +256,4 @@ const VaultItemAbout: FC<VaultItemAboutPropsTypes> = ({
   );
 };
 
-export default VaultItemAbout;
+export default memo(VaultItemAbout);

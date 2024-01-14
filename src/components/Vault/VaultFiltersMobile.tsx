@@ -1,4 +1,4 @@
-import { FC, MouseEvent } from "react";
+import { FC, memo, MouseEvent } from "react";
 import { Box, MenuItem, ToggleButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import {
@@ -90,4 +90,4 @@ const VaultFiltersMobile: FC<VaultMobileFiltersPropsType> = ({
   );
 };
 
-export default VaultFiltersMobile;
+export default memo(VaultFiltersMobile);

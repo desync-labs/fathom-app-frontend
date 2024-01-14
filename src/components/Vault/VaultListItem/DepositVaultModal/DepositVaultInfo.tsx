@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, memo } from "react";
 import BigNumber from "bignumber.js";
 import { Box, Divider, Grid, ListItemText } from "@mui/material";
 import { IVault } from "fathom-sdk";
@@ -131,4 +131,4 @@ const DepositVaultInfo: FC<VaultDepositInfoProps> = ({
   );
 };
 
-export default DepositVaultInfo;
+export default memo(DepositVaultInfo);
