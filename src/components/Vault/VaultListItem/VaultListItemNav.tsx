@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction } from "react";
+import { Dispatch, FC, memo, SetStateAction } from "react";
 import { Box, Button, styled } from "@mui/material";
 import { IVaultPosition } from "fathom-sdk";
 import BigNumber from "bignumber.js";
@@ -83,4 +83,4 @@ const VaultListItemNav: FC<VaultListItemNavPropsType> = ({
   );
 };
 
-export default VaultListItemNav;
+export default memo(VaultListItemNav);

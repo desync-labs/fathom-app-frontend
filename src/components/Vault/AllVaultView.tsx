@@ -1,4 +1,4 @@
-import { FC, MouseEvent } from "react";
+import { FC, memo, MouseEvent } from "react";
 import { Container, Grid } from "@mui/material";
 import { PageHeader } from "components/Dashboard/PageHeader";
 import VaultList from "components/Vault/VaultList";
@@ -39,4 +39,4 @@ const AllVaultView: FC<AllVaultViewPropsType> = ({
   );
 };
 
-export default AllVaultView;
+export default memo(AllVaultView);

@@ -1,11 +1,12 @@
-import { FC, ReactNode, useState } from "react";
+import { cloneElement, FC, ReactElement, ReactNode, useState } from "react";
 import { Popover, Typography } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 import { styled } from "@mui/material/styles";
 
-const AppPopoverWrapper = styled(Popover)`
+const AppPopoverWrapper = styled(Popover)<{ type: PopoverType }>`
   .MuiPaper-root {
-    background: rgba(255, 255, 255, 0.9);
+    background: ${({ type }) =>
+      type === PopoverType.Error ? "#FF6767" : "rgba(255, 255, 255, 0.9)"};
     border-radius: 8px;
     padding: 8px 12px;
     color: #000c24;
@@ -16,6 +17,7 @@ const AppPopoverWrapper = styled(Popover)`
       line-height: 16px;
     }
   }
+
   ${({ theme }) => theme.breakpoints.down("sm")} {
     .MuiPaper-root {
       max-width: 350px;
@@ -27,12 +29,24 @@ const AppPopoverWrapper = styled(Popover)`
   }
 `;
 
+export enum PopoverType {
+  Info = "info",
+  Error = "error",
+}
+
 type AppPopoverProps = {
   id: string;
   text: ReactNode;
+  element?: ReactElement;
+  type?: PopoverType;
 };
 
-const AppPopover: FC<AppPopoverProps> = ({ id, text }) => {
+const AppPopover: FC<AppPopoverProps> = ({
+  id,
+  text,
+  element,
+  type = PopoverType.Info,
+}) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -47,20 +61,30 @@ const AppPopover: FC<AppPopoverProps> = ({ id, text }) => {
 
   return (
     <>
-      <span
-        style={{ cursor: "pointer" }}
-        aria-owns={open ? id : undefined}
-        aria-haspopup="true"
-        onMouseEnter={handlePopoverOpen}
-        onMouseLeave={handlePopoverClose}
-      >
-        <InfoIcon sx={{ fontSize: "18px" }} />
-      </span>
+      {element ? (
+        cloneElement(element, {
+          onMouseEnter: handlePopoverOpen,
+          onMouseLeave: handlePopoverClose,
+          "aria-owns": open ? id : undefined,
+          style: { cursor: "pointer" },
+        })
+      ) : (
+        <span
+          style={{ cursor: "pointer" }}
+          aria-owns={open ? id : undefined}
+          aria-haspopup="true"
+          onMouseEnter={handlePopoverOpen}
+          onMouseLeave={handlePopoverClose}
+        >
+          <InfoIcon sx={{ fontSize: "18px" }} />
+        </span>
+      )}
       <AppPopoverWrapper
         id={id}
         sx={{
           pointerEvents: "none",
         }}
+        type={type}
         open={open}
         anchorEl={anchorEl}
         anchorOrigin={{

@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction } from "react";
+import { Dispatch, FC, memo, SetStateAction } from "react";
 import { IVault, IVaultPosition } from "fathom-sdk";
 import { VaultItemInfoWrapper } from "components/Vault/VaultListItem";
 import VaultListItemEarningDetails from "components/Vault/VaultListItem/AdditionalInfoTabs/VaultListItemEarningDetails";
@@ -38,4 +38,4 @@ const VaultItemPositionInfo: FC<VaultItemPositionInfoPropsTypes> = ({
   );
 };
 
-export default VaultItemPositionInfo;
+export default memo(VaultItemPositionInfo);
