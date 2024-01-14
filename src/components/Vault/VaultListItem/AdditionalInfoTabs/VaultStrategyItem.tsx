@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import BigNumber from "bignumber.js";
 import { Link } from "react-router-dom";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -143,16 +143,12 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
   useEffect(() => {
     if (!strategyData) return;
 
-    const extractedData = [];
-
-    for (const report of strategyData.reports) {
-      extractedData.push({
+    const extractedData = strategyData.reports
+      .map((report) => ({
         timestamp: report.timestamp,
         chartValue: BigNumber(report.results[0]?.apr || "0").toFixed(2),
-      });
-    }
-
-    extractedData.sort((a, b) => parseInt(a.timestamp) - parseInt(b.timestamp));
+      }))
+      .sort((a, b) => parseInt(a.timestamp) - parseInt(b.timestamp));
 
     const lastReport = dayjs(
       parseInt(strategyData.reports[0].timestamp, 10)
@@ -173,11 +169,15 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
     setAllocationShare(allocation);
   }, [strategyData, vaultBalanceTokens]);
 
-  const totalGain = strategyData.reports.reduce(
-    (acc: string, report: IVaultStrategyReport) => {
-      return BigNumber(acc).plus(BigNumber(report.gain)).toString();
-    },
-    "0"
+  const totalGain = useMemo(
+    () =>
+      strategyData.reports.reduce(
+        (acc: BigNumber, report: IVaultStrategyReport) => {
+          return acc.plus(report.gain);
+        },
+        BigNumber(0)
+      ),
+    [strategyData]
   );
 
   return (
@@ -226,11 +226,7 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
               />
               <VaultIndicatorItem
                 title="Total Gain"
-                value={formatNumber(
-                  BigNumber(totalGain)
-                    .dividedBy(10 ** 18)
-                    .toNumber()
-                )}
+                value={formatNumber(totalGain.dividedBy(10 ** 18).toNumber())}
                 units={` ${tokenName}`}
                 sx={{ borderRadius: "8px" }}
               />
