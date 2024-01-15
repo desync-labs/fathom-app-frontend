@@ -138,7 +138,7 @@ const VaultList: FC<VaultListPropsType> = ({
                         <CircularProgress size={30} />
                       </CircleWrapper>
                     ) : (
-                      "There are no Vaults for this query"
+                      "There are no Vaults for this query."
                     )}
                   </NoResults>
                 ) : (
