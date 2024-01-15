@@ -2,7 +2,7 @@ import { useLocation } from "react-router-dom";
 import { FC, useMemo } from "react";
 import {
   DashboardIcon,
-  PoolIcon,
+  MarketsIcon,
   TransactionsIcon,
 } from "components/Common/MenuIcons";
 import {
@@ -52,7 +52,7 @@ const LendingView: FC = () => {
           className={isMarketsActive ? "active" : ""}
           to="/lending/markets"
         >
-          <PoolIcon isactive={isMarketsActive ? "active" : ""} />
+          <MarketsIcon isactive={isMarketsActive ? "active" : ""} />
           Markets
         </NestedRouteLink>
         {account && (

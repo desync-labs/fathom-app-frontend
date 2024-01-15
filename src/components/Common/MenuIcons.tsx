@@ -14,6 +14,7 @@ import { ReactComponent as PairsSrc } from "assets/svg/icons/pairs.svg";
 import { ReactComponent as AccountsSrc } from "assets/svg/icons/account.svg";
 import { ReactComponent as LendingSrc } from "assets/svg/icons/lending.svg";
 import { ReactComponent as DashboardSrc } from "assets/svg/icons/dashboard.svg";
+import { ReactComponent as MarketsSrc } from "assets/svg/icons/markets.svg";
 
 import { styled } from "@mui/material/styles";
 
@@ -111,6 +112,12 @@ export const LendingIcon = styled(LendingSrc)<{ isactive: string }>`
 `;
 
 export const DashboardIcon = styled(DashboardSrc)<{ isactive: string }>`
+  & path {
+    fill: ${({ isactive }) => (isactive ? ACTIVE_HEX : INACTIVE_HEX)};
+  }
+`;
+
+export const MarketsIcon = styled(MarketsSrc)<{ isactive: string }>`
   & path {
     fill: ${({ isactive }) => (isactive ? ACTIVE_HEX : INACTIVE_HEX)};
   }
