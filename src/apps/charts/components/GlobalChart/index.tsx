@@ -96,7 +96,8 @@ const GlobalChart: FC<{ display: any }> = (props) => {
           options={CHART_VIEW}
           active={chartView}
           setActive={setChartView}
-          color={"#00fff6"}
+          color={"#5a81ff"}
+          shadow={"0 0 8px #003cff"}
         />
       )}
 

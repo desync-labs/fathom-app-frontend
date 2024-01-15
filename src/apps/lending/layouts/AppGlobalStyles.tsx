@@ -1,11 +1,8 @@
-import CssBaseline from "@mui/material/CssBaseline";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { deepmerge } from "@mui/utils";
-import { createContext, FC, ReactNode, useMemo } from "react";
+import { FC, ReactNode, useMemo } from "react";
 
 import { getDesignTokens, getThemedComponents } from "apps/lending/utils/theme";
-
-export const ColorModeContext = createContext({});
 
 /**
  * Main Layout component which wrapps around the whole app
@@ -14,16 +11,9 @@ export const ColorModeContext = createContext({});
  */
 export const AppGlobalStyles: FC<{ children: ReactNode }> = ({ children }) => {
   const theme = useMemo(() => {
-    const themeCreate = createTheme(getDesignTokens("dark"));
+    const themeCreate = createTheme(getDesignTokens());
     return deepmerge(themeCreate, getThemedComponents(themeCreate));
   }, []);
 
-  return (
-    <ColorModeContext.Provider value={"dark"}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        {children}
-      </ThemeProvider>
-    </ColorModeContext.Provider>
-  );
+  return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
 };

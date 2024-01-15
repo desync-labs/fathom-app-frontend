@@ -1,7 +1,7 @@
 import { useLocation } from "react-router-dom";
-import { FC, MouseEvent, useMemo } from "react";
+import { FC, useMemo } from "react";
 import {
-  SwapIcon,
+  DashboardIcon,
   PoolIcon,
   TransactionsIcon,
 } from "components/Common/MenuIcons";
@@ -14,17 +14,13 @@ import useConnector from "context/connector";
 import LendingIndexComponent from "apps/lending";
 import { styled } from "@mui/material/styles";
 
-export type LendingViewProps = {
-  openConnectorMenu: (event: MouseEvent<HTMLElement>) => void;
-};
-
 const LendingNestedRouteContainer = styled("div")`
   width: 100%;
   margin: 0;
   padding: 0;
 `;
 
-const LendingView: FC<LendingViewProps> = ({ openConnectorMenu }) => {
+const LendingView: FC = () => {
   const location = useLocation();
   const { account } = useConnector();
 
@@ -49,7 +45,7 @@ const LendingView: FC<LendingViewProps> = ({ openConnectorMenu }) => {
           className={isLendingActive ? "active" : ""}
           to="/lending"
         >
-          <SwapIcon isactive={isLendingActive ? "true" : ""} />
+          <DashboardIcon isactive={isLendingActive ? "true" : ""} />
           Dashboard
         </NestedRouteLink>
         <NestedRouteLink
@@ -71,7 +67,7 @@ const LendingView: FC<LendingViewProps> = ({ openConnectorMenu }) => {
         )}
       </NestedRouteNav>
       <LendingNestedRouteContainer>
-        <LendingIndexComponent openConnectorMenu={openConnectorMenu} />
+        <LendingIndexComponent />
       </LendingNestedRouteContainer>
     </>
   );

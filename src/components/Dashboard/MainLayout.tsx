@@ -524,10 +524,7 @@ const MainLayout = () => {
                   element={<Navigate to="/dao/staking" replace />}
                 />
               </Route>
-              <Route
-                path="/swap"
-                element={<DexView openConnectorMenu={openConnectorMenu} />}
-              >
+              <Route path="/swap" element={<DexView />}>
                 <Route index element={<Swap />} />
                 <Route path=":outputCurrency" element={<RedirectToSwap />} />
                 <Route path="send" element={<RedirectPathToSwapOnly />} />
@@ -569,10 +566,7 @@ const MainLayout = () => {
                 />
                 <Route element={<RedirectPathToSwapOnly />} />
               </Route>
-              <Route
-                path="/lending"
-                element={<LendingView openConnectorMenu={openConnectorMenu} />}
-              >
+              <Route path="/lending" element={<LendingView />}>
                 <Route index element={<Home />} />
                 <Route path="markets" element={<Markets />} />
                 <Route path="reserve-overview" element={<ReserveOverview />} />

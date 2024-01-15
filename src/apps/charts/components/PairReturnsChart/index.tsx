@@ -79,7 +79,8 @@ const PairReturnsChart: FC<PairReturnChartProps> = (props) => {
             options={timeframeOptions}
             active={timeWindow}
             setActive={setTimeWindow}
-            color={"#00fff6"}
+            color={"#5a81ff"}
+            shadow={"0 0 8px #003cff"}
           />
         </RowBetween>
       ) : (
