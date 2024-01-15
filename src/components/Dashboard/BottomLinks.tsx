@@ -30,7 +30,13 @@ const BottomLinks: FC = () => {
       <a href={"https://fathom.fi/"} rel="noreferrer" target={"_blank"}>
         Fathom.fi
       </a>
-      <a href={"https://docs.fathom.fi/"} rel="noreferrer" target={"_blank"}>
+      <a
+        href={
+          "https://gist.github.com/BaldyAsh/3676a18b003758057f634c9af2cfe49a"
+        }
+        rel="noreferrer"
+        target={"_blank"}
+      >
         Docs
       </a>
       <a href={"https://t.me/fathom_fi"} rel="noreferrer" target={"_blank"}>
