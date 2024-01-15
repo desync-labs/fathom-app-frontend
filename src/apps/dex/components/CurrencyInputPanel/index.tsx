@@ -12,7 +12,6 @@ import { Input as NumericalInput } from "apps/dex/components/NumericalInput";
 import { ReactComponent as DropDown } from "apps/dex/assets/images/dropdown.svg";
 
 import { useActiveWeb3React } from "apps/dex/hooks";
-import { useTranslation } from "react-i18next";
 import useTheme from "apps/dex/hooks/useTheme";
 
 const InputRow = styled.div<{ selected: boolean }>`
@@ -187,8 +186,6 @@ const CurrencyInputPanel: FC<CurrencyInputPanelProps> = ({
   showCommonBases,
   customBalanceText,
 }) => {
-  const { t } = useTranslation();
-
   const [modalOpen, setModalOpen] = useState(false);
   const { account } = useActiveWeb3React();
   const selectedCurrencyBalance = useCurrencyBalance(
@@ -263,7 +260,7 @@ const CurrencyInputPanel: FC<CurrencyInputPanelProps> = ({
                           currency.symbol.length - 5,
                           currency.symbol.length
                         )
-                      : currency?.symbol) || t("selectToken")}
+                      : currency?.symbol) || "Select Token"}
                   </>
                 </StyledTokenName>
               )}

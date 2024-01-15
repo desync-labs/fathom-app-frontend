@@ -24,7 +24,6 @@ const StatsItem = styled(Grid)`
 `;
 
 const ProtocolStatsContainer = styled(Grid)`
-  height: 92px;
   margin-bottom: 30px;
   display: flex;
   gap: 8px;
@@ -55,8 +54,7 @@ const StatsDescription = styled(Typography)`
   font-size: 24px;
   line-height: 28px;
   margin: 0;
-  padding: 0;
-  padding-top: 7px;
+  padding: 7px 0 0 0;
 `;
 
 const ProtocolStats = () => {

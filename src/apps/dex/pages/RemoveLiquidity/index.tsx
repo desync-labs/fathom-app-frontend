@@ -67,7 +67,7 @@ import { useUserSlippageTolerance } from "apps/dex/state/user/hooks";
 import { BigNumber } from "fathom-ethers";
 import { ConnectWalletButton, WalletIcon } from "apps/dex/pages/Swap";
 import { useNavigate, useParams } from "react-router-dom";
-import useAppsShared from "context/appsShared";
+import useConnector from "context/connector";
 
 const PlusWrapper = styled.div`
   display: flex;
@@ -106,7 +106,7 @@ const RemoveLiquidity = () => {
   const theme = useContext(ThemeContext);
 
   // toggle wallet when disconnected
-  const { openConnectorMenu } = useAppsShared();
+  const { openConnectorMenu } = useConnector();
 
   // burn state
   const { independentField, typedValue } = useBurnState();
