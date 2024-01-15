@@ -26,12 +26,10 @@ import RepayModal from "apps/lending/components/transactions/Repay/RepayModal";
 import SupplyModal from "apps/lending/components/transactions/Supply/SupplyModal";
 import SwapModal from "apps/lending/components/transactions/Swap/SwapModal";
 import WithdrawModal from "apps/lending/components/transactions/Withdraw/WithdrawModal";
-import { LendingViewProps } from "components/Dashboard/LendingView";
-import { AppsSharedProvider } from "context/appsShared";
 
 export const queryClient = new QueryClient();
 
-const LendingIndexComponent: FC<LendingViewProps> = ({ openConnectorMenu }) => {
+const LendingIndexComponent: FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <Web3ContextProvider>
@@ -43,11 +41,7 @@ const LendingIndexComponent: FC<LendingViewProps> = ({ openConnectorMenu }) => {
                   <AppDataProvider>
                     <GasStationProvider>
                       <SharedDependenciesProvider>
-                        <AppsSharedProvider
-                          openConnectorMenu={openConnectorMenu}
-                        >
-                          <Outlet />
-                        </AppsSharedProvider>
+                        <Outlet />
                         <SupplyModal />
                         <WithdrawModal />
                         <BorrowModal />

@@ -10,7 +10,6 @@ import {
   useState,
 } from "react";
 import ReactGA from "react-ga4";
-import { useTranslation } from "react-i18next";
 import { FixedSizeList } from "react-window";
 import { Text } from "rebass";
 import { useActiveWeb3React } from "apps/dex/hooks";
@@ -80,7 +79,6 @@ export const CurrencySearch: FC<CurrencySearchProps> = ({
   showImportView,
   setImportToken,
 }) => {
-  const { t } = useTranslation();
   const { chainId } = useActiveWeb3React();
   const theme = useTheme();
 
@@ -196,7 +194,7 @@ export const CurrencySearch: FC<CurrencySearchProps> = ({
           <SearchInput
             type="text"
             id="token-search-input"
-            placeholder={t("tokenSearchPlaceholder")}
+            placeholder={"Search Token"}
             autoComplete="off"
             value={searchQuery}
             ref={inputRef as RefObject<HTMLInputElement>}

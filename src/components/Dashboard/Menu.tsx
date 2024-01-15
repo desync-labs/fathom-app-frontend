@@ -10,6 +10,7 @@ import {
   VaultIcon,
   DexIcon,
   ChartsIcon,
+  LendingIcon,
 } from "components/Common/MenuIcons";
 import useConnector from "context/connector";
 import AppMenuItem from "components/MenuItem/AppMenuItem";
@@ -81,7 +82,7 @@ export const Menu: FC<ItemPropsType> = memo(({ open }) => {
     {
       name: "Lending",
       link: "/lending",
-      Icon: <GovernanceIcon isactive={isLendingActive ? "true" : ""} />,
+      Icon: <LendingIcon isactive={isLendingActive ? "true" : ""} />,
       isActive: isLendingActive,
       showText: showText,
     },

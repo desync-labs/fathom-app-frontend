@@ -168,13 +168,15 @@ const TokenChart: FC<TokenChartProps> = (props) => {
             options={CHART_VIEW}
             active={chartFilter}
             setActive={setChartFilter}
-            color={"#00fff6"}
+            color={"#5a81ff"}
+            shadow={"0 0 8px #003cff"}
           />
           <DropdownSelect
             options={timeframeOptions}
             active={timeWindow}
             setActive={setTimeWindow}
-            color={"#00fff6"}
+            color={"#5a81ff"}
+            shadow={"0 0 8px #003cff"}
           />
         </RowBetween>
       ) : (

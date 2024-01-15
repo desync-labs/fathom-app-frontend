@@ -7,12 +7,14 @@ import { ChevronDown as Arrow } from "react-feather";
 import { TYPE } from "apps/charts/Theme";
 import { StyledIcon } from "apps/charts/components";
 
-const Wrapper = styled.div<{ open?: boolean; color: string }>`
+const Wrapper = styled.div<{ open?: boolean; color?: string; shadow?: string }>`
   z-index: 20;
   position: relative;
   background-color: ${({ theme }) => theme.panelColor};
-  border: 1px solid ${({ open, color }) =>
-    open ? color : "rgba(0, 0, 0, 0.15);"} 
+  border: 1px solid
+    ${({ open, color }) =>
+      open ? (color ? color : "transparent") : "rgba(0, 0, 0, 0.15);"};
+  box-shadow: ${({ open, shadow }) => (open && shadow ? shadow : "none")};
   width: 100px;
   padding: 4px 10px;
   border-radius: 8px;
@@ -51,15 +53,16 @@ type DropdownSelectProps = {
   options: any;
   active: any;
   setActive: any;
-  color?: any;
+  color?: string;
+  shadow?: string;
 };
 
 const DropdownSelect: FC<DropdownSelectProps> = (props) => {
-  const { options, active, setActive, color } = props;
+  const { options, active, setActive, color, shadow } = props;
   const [showDropdown, toggleDropdown] = useState<boolean>(false);
 
   return (
-    <Wrapper open={showDropdown} color={color}>
+    <Wrapper open={showDropdown} color={color} shadow={shadow}>
       <RowBetween
         onClick={() => toggleDropdown(!showDropdown)}
         justify="center"
