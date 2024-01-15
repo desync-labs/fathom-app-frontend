@@ -20,6 +20,11 @@ import {
 import { TYPE } from "apps/dex/theme";
 import { useActiveWeb3React } from "apps/dex/hooks";
 import { Navigate } from "react-router-dom";
+import {
+  CircleWrapper,
+  NoResults,
+} from "components/AppComponents/AppBox/AppBox";
+import { CircularProgress } from "@mui/material";
 
 const TransactionListWrapper = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap};
@@ -64,7 +69,7 @@ const Transactions: FC = () => {
   >([]);
 
   const { account } = useActiveWeb3React();
-  const [getTransactions] = useLazyQuery(USER_TRANSACTIONS, {
+  const [getTransactions, { loading }] = useLazyQuery(USER_TRANSACTIONS, {
     fetchPolicy: "cache-first",
     onCompleted: (transactions) => {
       setSortedFilteredTransactions([]);
@@ -242,6 +247,12 @@ const Transactions: FC = () => {
               })}
             </TransactionListWrapper>
           </>
+        ) : loading ? (
+          <NoResults mt={3}>
+            <CircleWrapper>
+              <CircularProgress size={30} />
+            </CircleWrapper>
+          </NoResults>
         ) : (
           <EmptyTransactionsRow>
             <TYPE.body>There are no transactions yet</TYPE.body>

@@ -1,5 +1,4 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { FC } from "react";
 import { AddressBlocked } from "apps/lending/components/AddressBlocked";
 import { TransactionEventHandler } from "apps/lending/components/TransactionEventHandler";
@@ -63,7 +62,6 @@ const LendingIndexComponent: FC = () => {
           </AddressBlocked>
         </AppGlobalStyles>
       </Web3ContextProvider>
-      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
 };
