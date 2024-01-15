@@ -109,7 +109,7 @@ const VaultFilters: FC<VaultFiltersPropsType> = ({
           onChange={(event: SelectChangeEvent<unknown>) => {
             setSortBy(event.target.value as SortType);
           }}
-          sx={{ border: "none", fieldset: { borderColor: "transparent" } }}
+          sx={{ border: "none" }}
         >
           <MenuItem value="tvl">TVL</MenuItem>
           <MenuItem value="earned">Earned</MenuItem>
