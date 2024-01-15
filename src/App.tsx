@@ -1,4 +1,3 @@
-import "fontsource-roboto";
 import "./App.css";
 import MainLayout from "components/Dashboard/MainLayout";
 import { ApolloProvider } from "@apollo/client";
