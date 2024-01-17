@@ -1,4 +1,4 @@
-import { InterestRate } from "@aave/contract-helpers";
+import { InterestRate } from "@into-the-fathom/lending-contract-helpers";
 import { createContext, ReactNode, useContext, useState, FC } from "react";
 import { EmodeModalType } from "apps/lending/components/transactions/Emode/EmodeModalContent";
 import { useWeb3Context } from "apps/lending/libs/hooks/useWeb3Context";

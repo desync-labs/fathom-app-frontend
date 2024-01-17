@@ -63,7 +63,7 @@ import { useIsTransactionUnsupported } from "apps/dex/hooks/Trades";
 import UnsupportedCurrencyFooter from "apps/dex/components/swap/UnsupportedCurrencyFooter";
 import { ConnectWalletButton, WalletIcon } from "apps/dex/pages/Swap";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import useAppsShared from "context/appsShared";
+import useConnector from "context/connector";
 
 const PlusWrapper = styled.div`
   display: flex;
@@ -98,7 +98,7 @@ const AddLiquidity = () => {
         (currencyB && currencyEquals(currencyB, (WETH as any)[chainId])))
   );
 
-  const { openConnectorMenu } = useAppsShared(); // toggle wallet when disconnected
+  const { openConnectorMenu } = useConnector(); // toggle wallet when disconnected
 
   const expertMode = useIsExpertMode();
 

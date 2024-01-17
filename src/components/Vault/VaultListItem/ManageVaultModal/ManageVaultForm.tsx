@@ -1,4 +1,4 @@
-import { FC, useMemo } from "react";
+import { FC, memo, useMemo } from "react";
 import {
   Box,
   CircularProgress,
@@ -90,7 +90,8 @@ type VaultManageFormProps = {
   }>;
   setFormType: React.Dispatch<React.SetStateAction<FormType>>;
   approve: () => Promise<void>;
-  setMax: (walletBalance: string, balancePosition: string) => void;
+  setMax: () => void;
+  validateMaxValue: (value: string) => true | string;
   handleSubmit: UseFormHandleSubmit<
     {
       formToken: string;
@@ -119,6 +120,7 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
   setFormType,
   approve,
   setMax,
+  validateMaxValue,
   handleSubmit,
   onSubmit,
 }) => {
@@ -127,7 +129,7 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
     () =>
       BigNumber(balanceToken)
         .dividedBy(10 ** 18)
-        .toString(),
+        .toNumber(),
     [balanceToken]
   );
 
@@ -159,7 +161,7 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
             {token.name} Deposited:
           </Typography>
           <Typography component="span">
-            {formatPercentage(Number(formattedBalanceToken)) + " " + token.name}
+            {formatPercentage(formattedBalanceToken) + " " + token.name}
           </Typography>
         </ManageVaultItemDepositedBox>
         <Controller
@@ -167,13 +169,8 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
           name="formToken"
           rules={{
             required: true,
-            min: 1,
-            max:
-              formType === FormType.DEPOSIT
-                ? BigNumber(walletBalance)
-                    .dividedBy(10 ** 18)
-                    .toNumber()
-                : Number(formattedBalanceToken),
+            min: 0.0000000001,
+            validate: validateMaxValue,
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <AppFormInputWrapper>
@@ -193,7 +190,7 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
                     " " +
                     token.name
                   : "Vault Available: " +
-                    formatNumber(Number(formattedBalanceToken)) +
+                    formatNumber(formattedBalanceToken) +
                     " " +
                     token.name}
               </WalletBalance>
@@ -221,7 +218,7 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
                         </Box>
                       </AppFormInputErrorWrapper>
                     )}
-                    {error && error.type === "max" && (
+                    {error && error.type === "validate" && (
                       <AppFormInputErrorWrapper>
                         <InfoIcon
                           sx={{
@@ -235,7 +232,7 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
                           component={"span"}
                           sx={{ fontSize: "12px", paddingLeft: "6px" }}
                         >
-                          You don't have enough to repay that amount
+                          {error.message}
                         </Box>
                       </AppFormInputErrorWrapper>
                     )}
@@ -253,7 +250,7 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
                           component={"span"}
                           sx={{ fontSize: "12px", paddingLeft: "6px" }}
                         >
-                          Deposit amount should be positive.
+                          This field should be positive.
                         </Box>
                       </AppFormInputErrorWrapper>
                     )}
@@ -264,9 +261,7 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
                 onChange={onChange}
               />
               <AppFormInputLogo src={getTokenLogoURL(token.symbol)} />
-              <MaxButton onClick={() => setMax(walletBalance, balanceToken)}>
-                Max
-              </MaxButton>
+              <MaxButton onClick={() => setMax()}>Max</MaxButton>
             </AppFormInputWrapper>
           )}
         />
@@ -427,4 +422,4 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
   );
 };
 
-export default ManageVaultForm;
+export default memo(ManageVaultForm);

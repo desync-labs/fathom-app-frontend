@@ -1,9 +1,9 @@
-import { API_ETH_MOCK_ADDRESS } from "@aave/contract-helpers";
+import { API_ETH_MOCK_ADDRESS } from "@into-the-fathom/lending-contract-helpers";
 import LocalGasStationIcon from "@mui/icons-material/LocalGasStation";
 import { Box, CircularProgress, Stack } from "@mui/material";
 import { BigNumber } from "fathom-ethers";
 import { formatUnits, parseUnits } from "fathom-ethers/lib/utils";
-import { ReactNode } from "react";
+import { FC, ReactNode } from "react";
 import { GasTooltip } from "apps/lending/components/infoTooltips/GasTooltip";
 import { Warning } from "apps/lending/components/primitives/Warning";
 import { useWalletBalances } from "apps/lending/hooks/app-data-provider/useWalletBalances";
@@ -34,13 +34,14 @@ export const getGasCosts = (
     gasOption === GasOption.Custom
       ? parseUnits(customGas, "gwei").toString()
       : (gasData as any)[gasOption].legacyGasPrice;
+
   return (
     Number(formatUnits(gasLimit.mul(gasPrice), 18)) *
     parseFloat(baseCurrencyUsd)
   );
 };
 
-export const GasStation: React.FC<GasStationProps> = ({
+export const GasStation: FC<GasStationProps> = ({
   gasLimit,
   skipLoad,
   disabled,

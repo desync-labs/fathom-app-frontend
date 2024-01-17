@@ -1,4 +1,7 @@
-import { normalize, UserIncentiveData } from "@aave/math-utils";
+import {
+  normalize,
+  UserIncentiveData,
+} from "@into-the-fathom/lending-math-utils";
 import { Box, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";

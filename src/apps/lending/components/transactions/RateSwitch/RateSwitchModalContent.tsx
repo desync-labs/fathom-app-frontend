@@ -1,5 +1,5 @@
-import { InterestRate } from "@aave/contract-helpers";
-import { valueToBigNumber } from "@aave/math-utils";
+import { InterestRate } from "@into-the-fathom/lending-contract-helpers";
+import { valueToBigNumber } from "@into-the-fathom/lending-math-utils";
 import { Warning } from "apps/lending/components/primitives/Warning";
 import { useModalContext } from "apps/lending/hooks/useModal";
 
@@ -12,6 +12,7 @@ import {
   TxModalDetails,
 } from "../FlowCommons/TxModalDetails";
 import { RateSwitchActions } from "./RateSwitchActions";
+import { FC } from "react";
 
 export type RateSwitchModalContentProps = {
   underlyingAsset: string;
@@ -24,12 +25,9 @@ export enum ErrorType {
   STABLE_INTEREST_TYPE_IS_DISABLED,
 }
 
-export const RateSwitchModalContent = ({
-  currentRateMode,
-  isWrongNetwork,
-  poolReserve,
-  userReserve,
-}: ModalWrapperProps & { currentRateMode: InterestRate }) => {
+export const RateSwitchModalContent: FC<
+  ModalWrapperProps & { currentRateMode: InterestRate }
+> = ({ currentRateMode, isWrongNetwork, poolReserve, userReserve }) => {
   const {
     mainTxState: rateSwitchTxState,
     gasLimit,

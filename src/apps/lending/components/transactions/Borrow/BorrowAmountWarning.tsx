@@ -2,16 +2,17 @@ import { Box, Checkbox, Typography } from "@mui/material";
 import { Warning } from "apps/lending/components/primitives/Warning";
 import { useRootStore } from "apps/lending/store/root";
 import { GENERAL } from "apps/lending/utils/mixPanelEvents";
+import { FC } from "react";
 
 interface BorrowAmountWarningProps {
   riskCheckboxAccepted: boolean;
   onRiskCheckboxChange: () => void;
 }
 
-export const BorrowAmountWarning = ({
+export const BorrowAmountWarning: FC<BorrowAmountWarningProps> = ({
   riskCheckboxAccepted,
   onRiskCheckboxChange,
-}: BorrowAmountWarningProps) => {
+}) => {
   const trackEvent = useRootStore((store) => store.trackEvent);
 
   return (

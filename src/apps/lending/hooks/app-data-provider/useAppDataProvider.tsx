@@ -1,10 +1,10 @@
-import { ReserveDataHumanized } from "@aave/contract-helpers";
+import { ReserveDataHumanized } from "@into-the-fathom/lending-contract-helpers";
 import {
   ComputedUserReserve,
   formatReservesAndIncentives,
   FormatUserSummaryAndIncentivesResponse,
   UserReserveData,
-} from "@aave/math-utils";
+} from "@into-the-fathom/lending-math-utils";
 import BigNumber from "bignumber.js";
 import { FC, ReactNode, useContext, createContext } from "react";
 import { EmodeCategory } from "apps/lending/helpers/types";

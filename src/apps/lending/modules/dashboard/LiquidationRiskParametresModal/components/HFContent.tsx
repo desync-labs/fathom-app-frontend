@@ -1,14 +1,15 @@
-import { valueToBigNumber } from "@aave/math-utils";
+import { valueToBigNumber } from "@into-the-fathom/lending-math-utils";
 import { Box, Typography } from "@mui/material";
 import BigNumber from "bignumber.js";
 
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
+import { FC } from "react";
 
 interface HFContentProps {
   healthFactor: string;
 }
 
-export const HFContent = ({ healthFactor }: HFContentProps) => {
+export const HFContent: FC<HFContentProps> = ({ healthFactor }) => {
   const formattedHealthFactor = Number(
     valueToBigNumber(healthFactor).toFixed(2, BigNumber.ROUND_DOWN)
   );

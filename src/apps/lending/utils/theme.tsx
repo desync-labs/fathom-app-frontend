@@ -128,10 +128,7 @@ declare module "@mui/material/Button" {
   }
 }
 
-export const getDesignTokens = (mode = "dark") => {
-  const getColor = (lightColor: string, darkColor: string) =>
-    mode === "dark" ? darkColor : lightColor;
-
+export const getDesignTokens = () => {
   return {
     breakpoints: {
       keys: ["xs", "xsm", "sm", "md", "lg", "xl", "xxl"],
@@ -146,76 +143,76 @@ export const getDesignTokens = (mode = "dark") => {
       },
     },
     palette: {
-      mode,
+      mode: "dark",
       primary: {
-        main: getColor("#1d2d49", "#fff"),
-        light: getColor("#62677B", "#b0c5e7"),
-        dark: getColor("#292E41", "#D2D4DC"),
+        main: "#fff",
+        light: "#b0c5e7",
+        dark: "#D2D4DC",
       },
       secondary: {
-        main: getColor("#FF607B", "#F48FB1"),
-        light: getColor("#FF607B", "#F6A5C0"),
-        dark: getColor("#B34356", "#AA647B"),
+        main: "#F48FB1",
+        light: "#F6A5C0",
+        dark: "#AA647B",
       },
       error: {
-        main: getColor("#BC0000B8", "#F44336"),
-        light: getColor("#D26666", "#E57373"),
-        dark: getColor("#BC0000", "#D32F2F"),
-        "100": getColor("#4F1919", "#FBB4AF"), // for alert text
-        "200": getColor("#F9EBEB", "#2E0C0A"), // for alert background
+        main: "#F44336",
+        light: "#E57373",
+        dark: "#D32F2F",
+        "100": "#FBB4AF", // for alert text
+        "200": "#2E0C0A", // for alert background
       },
       warning: {
-        main: getColor("#F89F1A", "#f7b06e"),
-        light: getColor("#FFCE00", "#FFB74D"),
-        dark: getColor("#C67F15", "#F57C00"),
-        "100": getColor("#63400A", "#f7b06e"), // for alert text
-        "200": getColor("#FEF5E8", "#452508"), // for alert background
-        "300": getColor("#FEF5E8", "#5c310a"), // for alert border
+        main: "#f7b06e",
+        light: "#FFB74D",
+        dark: "#F57C00",
+        "100": "#f7b06e", // for alert text
+        "200": "#452508", // for alert background
+        "300": "#5c310a", // for alert border
       },
       info: {
-        main: getColor("#0062D2", "#29B6F6"),
-        light: getColor("#0062D2", "#4FC3F7"),
-        dark: getColor("#002754", "#0288D1"),
-        "100": getColor("#002754", "#A9E2FB"), // for alert text
-        "200": getColor("#E5EFFB", "#071F2E"), // for alert background
+        main: "#29B6F6",
+        light: "#4FC3F7",
+        dark: "#0288D1",
+        "100": "#A9E2FB", // for alert text
+        "200": "#071F2E", // for alert background
       },
       success: {
-        main: getColor("#4CAF50", "#4dcc33"),
-        light: getColor("#90FF95", "#90FF95"),
-        dark: getColor("#318435", "#388E3C"),
-        "100": getColor("#1C4B1E", "#C2E4C3"), // for alert text
-        "200": getColor("#ECF8ED", "#0A130B"), // for alert background
+        main: "#4dcc33",
+        light: "#90FF95",
+        dark: "#388E3C",
+        "100": "#C2E4C3", // for alert text
+        "200": "#0A130B", // for alert background
       },
       text: {
-        primary: getColor("#303549", "#c5d7f2"),
-        secondary: getColor("#62677B", "#6379a1"),
-        disabled: getColor("#D2D4DC", "#62677B"),
-        muted: getColor("#A5A8B6", "#5977a0"),
-        highlight: getColor("#1d2d49", "#C9B3F9"),
+        primary: "#c5d7f2",
+        secondary: "#6379a1",
+        disabled: "#62677B",
+        muted: "#5977a0",
+        highlight: "#C9B3F9",
       },
       background: {
-        default: getColor("#F1F1F3", "#071028"),
-        paper: getColor("#FFFFFF", "#131F35"),
-        surface: getColor("#F7F7F9", "#1d2d49"),
-        surface2: getColor("#F9F9FB", "#1d2d49"),
-        header: getColor("#1d2d49", "#101d32"),
-        disabled: getColor("#EAEBEF", "#EBEBEF14"),
+        default: "#071028",
+        paper: "#131F35",
+        surface: "#1d2d49",
+        surface2: "#1d2d49",
+        header: "#101d32",
+        disabled: "#EBEBEF14",
       },
-      divider: getColor("#EAEBEF", "#1D2D49"),
+      divider: "#1D2D49",
       action: {
-        active: getColor("#8E92A3", "#EBEBEF8F"),
-        hover: getColor("#F1F1F3", "#2a3e5a"),
-        selected: getColor("#EAEBEF", "#2a3e5a"),
-        disabled: getColor("#BBBECA", "#EBEBEF4D"),
-        disabledBackground: getColor("#EAEBEF", "#EBEBEF1F"),
-        focus: getColor("#F1F1F3", "#EBEBEF1F"),
+        active: "#EBEBEF8F",
+        hover: "#2a3e5a",
+        selected: "#2a3e5a",
+        disabled: "#EBEBEF4D",
+        disabledBackground: "#EBEBEF1F",
+        focus: "#EBEBEF1F",
       },
       other: {
-        standardInputLine: getColor("#1d2d491F", "#EBEBEF6B"),
-        fathomAccent: getColor("#1d2d491F", "#00FFF6"),
-        fathomAccentLight: getColor("#1d2d491F", "#B3FFF9"),
-        fathomAccentMute: getColor("#1d2d491F", "#2696a0"),
-        fathomLink: getColor("#1d2d491F", "#5a81ff"),
+        standardInputLine: "#EBEBEF6B",
+        fathomAccent: "#00FFF6",
+        fathomAccentLight: "#B3FFF9",
+        fathomAccentMute: "#2696a0",
+        fathomLink: "#5a81ff",
       },
       gradients: {
         aaveGradient:
@@ -408,12 +405,6 @@ export function getThemedComponents(theme: Theme) {
           root: {
             borderRadius: "6px",
             borderColor: theme.palette.divider,
-            "&:hover .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#CBCDD8",
-            },
-            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#CBCDD8",
-            },
           },
         },
       },

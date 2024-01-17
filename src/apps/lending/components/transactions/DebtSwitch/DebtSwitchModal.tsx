@@ -1,4 +1,4 @@
-import { InterestRate } from "@aave/contract-helpers";
+import { InterestRate } from "@into-the-fathom/lending-contract-helpers";
 import { BasicModal } from "apps/lending/components/primitives/BasicModal";
 import {
   ModalContextType,

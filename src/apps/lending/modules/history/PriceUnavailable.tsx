@@ -1,7 +1,8 @@
 import { Box } from "@mui/material";
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
+import { FC } from "react";
 
-export const PriceUnavailable = ({ value }: { value: number }) => {
+export const PriceUnavailable: FC<{ value: number }> = ({ value }) => {
   if (value > 0) {
     return (
       <FormattedNumber

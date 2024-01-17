@@ -1,4 +1,4 @@
-import { valueToBigNumber } from "@aave/math-utils";
+import { valueToBigNumber } from "@into-the-fathom/lending-math-utils";
 import { SxProps, Theme } from "@mui/system";
 import { createContext, ReactNode, useContext } from "react";
 import { BorrowCapMaxedTooltip } from "apps/lending/components/infoTooltips/BorrowCapMaxedTooltip";

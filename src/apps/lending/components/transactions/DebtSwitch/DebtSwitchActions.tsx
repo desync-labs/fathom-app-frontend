@@ -2,12 +2,12 @@ import {
   ApproveDelegationType,
   gasLimitRecommendations,
   ProtocolAction,
-} from "@aave/contract-helpers";
+} from "@into-the-fathom/lending-contract-helpers";
 import { SignatureLike } from "@into-the-fathom/bytes";
 import { BoxProps } from "@mui/material";
 import { parseUnits } from "fathom-ethers/lib/utils";
 import { queryClient } from "apps/lending";
-import { useCallback, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import { MOCK_SIGNED_HASH } from "apps/lending/helpers/useTransactionHandler";
 import { useBackgroundDataProvider } from "apps/lending/hooks/app-data-provider/BackgroundDataProvider";
 import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
@@ -54,7 +54,11 @@ interface SignedParams {
   amount: string;
 }
 
-export const DebtSwitchActions = ({
+export const DebtSwitchActions: FC<
+  DebtSwitchBaseProps & {
+    buildTxFn: () => Promise<SwapTransactionParams>;
+  }
+> = ({
   amountToSwap,
   amountToReceive,
   isWrongNetwork,
@@ -66,8 +70,6 @@ export const DebtSwitchActions = ({
   blocked,
   buildTxFn,
   currentRateMode,
-}: DebtSwitchBaseProps & {
-  buildTxFn: () => Promise<SwapTransactionParams>;
 }) => {
   const [
     getCreditDelegationApprovedAmount,

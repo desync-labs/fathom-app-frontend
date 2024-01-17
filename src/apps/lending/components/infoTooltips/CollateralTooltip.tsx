@@ -2,8 +2,9 @@ import {
   TextWithTooltip,
   TextWithTooltipProps,
 } from "apps/lending/components/TextWithTooltip";
+import { FC } from "react";
 
-export const CollateralTooltip = ({ ...rest }: TextWithTooltipProps) => {
+export const CollateralTooltip: FC<TextWithTooltipProps> = ({ ...rest }) => {
   return (
     <TextWithTooltip {...rest}>
       <>

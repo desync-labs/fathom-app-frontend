@@ -4,8 +4,9 @@ import {
   TextWithTooltip,
   TextWithTooltipProps,
 } from "apps/lending/components/TextWithTooltip";
+import { FC } from "react";
 
-export const SlippageTooltip = ({ ...rest }: TextWithTooltipProps) => {
+export const SlippageTooltip: FC<TextWithTooltipProps> = ({ ...rest }) => {
   return (
     <TextWithTooltip
       event={{

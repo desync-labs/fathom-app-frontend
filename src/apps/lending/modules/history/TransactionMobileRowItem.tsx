@@ -1,6 +1,6 @@
 import ArrowOutward from "@mui/icons-material/ArrowOutward";
 import { Box, Button, SvgIcon, Typography, useTheme } from "@mui/material";
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { ListItem } from "apps/lending/components/lists/ListItem";
 import { useRootStore } from "apps/lending/store/root";
 import { GENERAL } from "apps/lending/utils/mixPanelEvents";
@@ -15,21 +15,21 @@ import {
   TransactionHistoryItem,
 } from "apps/lending/modules/history/types";
 
-function ActionTitle({ action }: { action: string }) {
+const ActionTitle: FC<{ action: string }> = ({ action }) => {
   return (
     <Typography variant="subheader2" color="text.muted">
       <ActionTextMap action={action} />
     </Typography>
   );
-}
+};
 
 interface TransactionHistoryItemProps {
   transaction: TransactionHistoryItem & ActionFields[keyof ActionFields];
 }
 
-function TransactionMobileRowItem({
+const TransactionMobileRowItem: FC<TransactionHistoryItemProps> = ({
   transaction,
-}: TransactionHistoryItemProps) {
+}) => {
   const [copyStatus, setCopyStatus] = useState(false);
   const { currentNetworkConfig, trackEvent } = useRootStore((state) => ({
     currentNetworkConfig: state.currentNetworkConfig,
@@ -137,6 +137,6 @@ function TransactionMobileRowItem({
       </ListItem>
     </Box>
   );
-}
+};
 
 export default TransactionMobileRowItem;

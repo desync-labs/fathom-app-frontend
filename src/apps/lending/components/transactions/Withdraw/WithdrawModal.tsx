@@ -1,4 +1,4 @@
-import { PERMISSION } from "@aave/contract-helpers";
+import { PERMISSION } from "@into-the-fathom/lending-contract-helpers";
 import { useState } from "react";
 import {
   ModalContextType,

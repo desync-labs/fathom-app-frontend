@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import { ReactNode } from "react";
+import { FC, ReactNode } from "react";
 
 import { DarkTooltip } from "apps/lending/components/infoTooltips/DarkTooltip";
 
@@ -9,11 +9,11 @@ interface CircleIconProps {
   children: ReactNode;
 }
 
-export const CircleIcon = ({
+export const CircleIcon: FC<CircleIconProps> = ({
   downToSM,
   tooltipText,
   children,
-}: CircleIconProps) => {
+}) => {
   return (
     <DarkTooltip title={<Typography>{tooltipText}</Typography>}>
       <Box

@@ -25,18 +25,18 @@ import {
   UserReserveDataHumanized,
   V3FaucetService,
   WithdrawAndSwitchAdapterService,
-} from "@aave/contract-helpers";
+} from "@into-the-fathom/lending-contract-helpers";
 import {
   LPBorrowParamsType,
   LPSetUsageAsCollateral,
   LPSwapBorrowRateMode,
   LPWithdrawParamsType,
-} from "@aave/contract-helpers/dist/esm/lendingPool-contract/lendingPoolTypes";
+} from "@into-the-fathom/lending-contract-helpers/dist/esm/lendingPool-contract/lendingPoolTypes";
 import {
   LPSignERC20ApprovalType,
   LPSupplyParamsType,
   LPSupplyWithPermitType,
-} from "@aave/contract-helpers/dist/esm/v3-pool-contract/lendingPoolTypes";
+} from "@into-the-fathom/lending-contract-helpers/dist/esm/v3-pool-contract/lendingPoolTypes";
 import { SignatureLike } from "@ethersproject/bytes";
 import dayjs from "dayjs";
 import {

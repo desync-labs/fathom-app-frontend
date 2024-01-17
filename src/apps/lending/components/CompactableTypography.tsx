@@ -1,5 +1,6 @@
 import { Skeleton, Typography, TypographyProps } from "@mui/material";
 import { textCenterEllipsis } from "apps/lending/helpers/text-center-ellipsis";
+import { FC } from "react";
 
 export interface CompactableTypographyProps extends TypographyProps {
   children: string;
@@ -40,14 +41,14 @@ const compactModeMap = {
   },
 };
 
-export const CompactableTypography = ({
+export const CompactableTypography: FC<CompactableTypographyProps> = ({
   compactMode = CompactMode.SM,
   compact = true,
   children,
   loading = false,
   skeletonWidth = 100,
   ...rest
-}: CompactableTypographyProps) => {
+}) => {
   const selectedCompactMode = compactModeMap[compactMode];
 
   return (

@@ -1,5 +1,5 @@
-import { InterestRate } from "@aave/contract-helpers";
-import { valueToBigNumber } from "@aave/math-utils";
+import { InterestRate } from "@into-the-fathom/lending-contract-helpers";
+import { valueToBigNumber } from "@into-the-fathom/lending-math-utils";
 import { MaxUint256 } from "@into-the-fathom/constants";
 import { ArrowDownIcon } from "@heroicons/react/outline";
 import { ArrowNarrowRightIcon } from "@heroicons/react/solid";
@@ -12,7 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import BigNumber from "bignumber.js";
-import React, { useRef, useState } from "react";
+import React, { FC, useRef, useState } from "react";
 import { PriceImpactTooltip } from "apps/lending/components/infoTooltips/PriceImpactTooltip";
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
 import { TokenIcon } from "apps/lending/components/primitives/TokenIcon";
@@ -51,12 +51,9 @@ enum ErrorType {
   INSUFFICIENT_LIQUIDITY,
 }
 
-export const DebtSwitchModalContent = ({
-  poolReserve,
-  userReserve,
-  isWrongNetwork,
-  currentRateMode,
-}: ModalWrapperProps & { currentRateMode: InterestRate }) => {
+export const DebtSwitchModalContent: FC<
+  ModalWrapperProps & { currentRateMode: InterestRate }
+> = ({ poolReserve, userReserve, isWrongNetwork, currentRateMode }) => {
   const { reserves, user } = useAppDataContext();
   const { currentChainId, currentNetworkConfig } = useProtocolDataContext();
   const { currentAccount } = useWeb3Context();

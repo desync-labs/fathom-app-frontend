@@ -176,7 +176,11 @@ const StableSwap = () => {
         />
         <Grid item xs={12} sm={10} md={8} lg={6} sx={{ margin: "0 auto" }}>
           <StableSwapPaper>
-            {allowStableSwap && <StableSwapForm {...{ ...data, options }} />}
+            {allowStableSwap && (
+              <StableSwapForm
+                {...{ ...data, options, isUserWrapperWhiteListed }}
+              />
+            )}
 
             {useMemo(
               () =>
@@ -206,8 +210,7 @@ const StableSwap = () => {
                         !outputValue ||
                         swapPending ||
                         !!inputError ||
-                        approveInputBtn ||
-                        isUserWhiteListed === false
+                        approveInputBtn
                       }
                       onClick={handleSwap}
                     >
