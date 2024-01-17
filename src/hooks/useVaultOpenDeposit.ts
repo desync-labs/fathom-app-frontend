@@ -2,10 +2,11 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import BigNumber from "bignumber.js";
 import debounce from "lodash.debounce";
+import { IVault } from "fathom-sdk";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 import { useServices } from "context/services";
-import { IVault } from "fathom-sdk";
+import { formatNumber } from "utils/format";
 
 export const defaultValues = {
   deposit: "",
@@ -29,7 +30,7 @@ const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
     mode: "onChange",
   });
 
-  const { token } = vault;
+  const { token, depositLimit, balanceTokens } = vault;
   const [walletBalance, setWalletBalance] = useState<string>("0");
   const [isWalletFetching, setIsWalletFetching] = useState<boolean>(false);
   const [openDepositLoading, setOpenDepositLoading] = useState<boolean>(false);
@@ -107,12 +108,40 @@ const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
     setIsWalletFetching(true);
   }, [account]);
 
-  const setMax = useCallback(
-    (walletBalance: string) => {
-      const max = BigNumber(walletBalance).dividedBy(10 ** 18);
-      setValue("deposit", max.toString(), { shouldValidate: true });
+  const setMax = useCallback(() => {
+    const maxWalletBalance = BigNumber.min(
+      BigNumber(walletBalance).dividedBy(10 ** 18),
+      BigNumber(depositLimit)
+        .minus(balanceTokens)
+        .dividedBy(10 ** 18)
+    );
+
+    setValue("deposit", maxWalletBalance.toString(), {
+      shouldValidate: true,
+    });
+  }, [setValue, walletBalance, depositLimit, balanceTokens]);
+
+  const validateMaxDepositValue = useCallback(
+    (value: string) => {
+      const formattedMaxWalletBalance = BigNumber(walletBalance).dividedBy(
+        10 ** 18
+      );
+      const formattedMaxDepositLimit = BigNumber(depositLimit)
+        .minus(balanceTokens)
+        .dividedBy(10 ** 18);
+      if (BigNumber(value).isGreaterThan(formattedMaxWalletBalance)) {
+        return "You do not have enough money in your wallet";
+      }
+
+      if (BigNumber(value).isGreaterThan(formattedMaxDepositLimit)) {
+        return `Deposit value exceeds the maximum allowed limit ${formatNumber(
+          formattedMaxDepositLimit.toNumber()
+        )} ${token.symbol}`;
+      }
+
+      return true;
     },
-    [setValue, walletBalance]
+    [depositLimit, balanceTokens, walletBalance]
   );
 
   const onSubmit = useCallback(async () => {
@@ -147,6 +176,7 @@ const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
     errors,
     approve,
     setMax,
+    validateMaxDepositValue,
     handleSubmit,
     onSubmit,
   };
