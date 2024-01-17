@@ -41,6 +41,7 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
     errors,
     approve,
     setMax,
+    validateMaxDepositValue,
     handleSubmit,
     onSubmit,
   } = useVaultOpenDeposit(vaultItemData, onClose);
@@ -82,6 +83,7 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
             approve={approve}
             onClose={onClose}
             setMax={setMax}
+            validateMaxDepositValue={validateMaxDepositValue}
             handleSubmit={handleSubmit}
             onSubmit={onSubmit}
           />

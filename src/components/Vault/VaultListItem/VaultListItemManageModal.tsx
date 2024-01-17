@@ -46,6 +46,7 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
     setFormType,
     approve,
     setMax,
+    validateMaxValue,
     handleSubmit,
     onSubmit,
   } = useVaultManageDeposit(vaultItemData, vaultPosition, onClose);
@@ -93,6 +94,7 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
             setFormType={setFormType}
             approve={approve}
             setMax={setMax}
+            validateMaxValue={validateMaxValue}
             handleSubmit={handleSubmit}
             onSubmit={onSubmit}
           />
