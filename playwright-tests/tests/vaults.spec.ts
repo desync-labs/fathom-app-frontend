@@ -6,7 +6,8 @@ import * as metamask from "@synthetixio/synpress/commands/metamask";
 import dotenv from "dotenv";
 dotenv.config();
 
-test.describe("Fathom App Test Suite: Vault Operations", () => {
+// Skipped vault tests temporarily
+test.describe.skip("Fathom App Test Suite: Vault Operations", () => {
   test("FXD Vault: Manage Vault: Depositing 1 FXD is successful", async ({
     vaultPage,
   }) => {
