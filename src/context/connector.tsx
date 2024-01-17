@@ -75,7 +75,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
   const [openConnector, setOpenConnector] = useState<boolean>(false);
 
   const [shouldDisable, setShouldDisable] = useState<boolean>(false); // Should disable connect button while connecting to MetaMask
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [isDecentralizedState, setIsDecentralizedState] = useState<
     boolean | undefined
@@ -110,6 +110,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
               });
           } else {
             setAllowStableSwapInProgress(false);
+            setIsUserWhitelisted(false);
           }
         });
       positionService
@@ -132,6 +133,8 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
         .then((isWhitelisted: boolean) => {
           setIsUserWrapperWhiteListed(isWhitelisted);
         });
+    } else {
+      setIsUserWrapperWhiteListed(false);
     }
   }, [
     chainId,
@@ -164,42 +167,41 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
   // Connect to MetaMask wallet
   const connectMetamask = useCallback(() => {
     setShouldDisable(true);
+    setIsLoading(true);
     return activate(injected).then(() => {
       setShouldDisable(false);
       localStorage.setItem("isConnected", "metamask");
       setIsMetamask(true);
+      setIsLoading(false);
     });
-  }, [activate, setShouldDisable, setIsMetamask]);
+  }, [activate, setShouldDisable, setIsMetamask, setIsLoading]);
 
   const connectWalletConnect = useCallback(() => {
     setShouldDisable(true);
+    setIsLoading(true);
     return activate(WalletConnect).then(() => {
       setShouldDisable(false);
       localStorage.setItem("isConnected", "walletConnect");
       setIsWalletConnect(true);
+      setIsLoading(false);
     });
-  }, [activate, setShouldDisable, setIsWalletConnect]);
+  }, [activate, setShouldDisable, setIsWalletConnect, setIsLoading]);
 
   // Init Loading
   useEffect(() => {
     const isConnected = localStorage.getItem("isConnected");
     if (isConnected === "metamask") {
-      connectMetamask().then(() => {
-        setIsLoading(false);
-      });
+      connectMetamask();
     } else if (isConnected === "walletConnect") {
-      connectWalletConnect().then(() => {
-        setIsLoading(false);
-      });
+      connectWalletConnect();
     }
   }, [connectMetamask, connectWalletConnect]);
 
   const allowStableSwap = useMemo(() => {
-    return (
-      isDecentralizedState ||
-      (isDecentralizedState === false && isUserWhiteListed === true)
-    );
-  }, [isDecentralizedState, isUserWhiteListed]);
+    return (isDecentralizedState &&
+      (isUserWrapperWhiteListed === true ||
+        isUserWhiteListed === true)) as boolean;
+  }, [isDecentralizedState, isUserWhiteListed, isUserWrapperWhiteListed]);
 
   const disconnect = useCallback(async () => {
     try {
@@ -207,10 +209,11 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
       localStorage.removeItem("isConnected");
       setIsMetamask(false);
       setIsWalletConnect(false);
+      setIsLoading(false);
     } catch (error) {
       console.log(`Error on disconnnect: ${error}`);
     }
-  }, [deactivate, setIsMetamask, setIsWalletConnect]);
+  }, [deactivate, setIsMetamask, setIsWalletConnect, setIsLoading]);
 
   const addERC20Token = useCallback(
     async ({

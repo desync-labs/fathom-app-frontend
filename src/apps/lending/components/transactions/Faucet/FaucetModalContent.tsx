@@ -1,5 +1,8 @@
-import { mintAmountsPerToken, valueToWei } from "@aave/contract-helpers";
-import { normalize } from "@aave/math-utils";
+import {
+  mintAmountsPerToken,
+  valueToWei,
+} from "@into-the-fathom/lending-contract-helpers";
+import { normalize } from "@into-the-fathom/lending-math-utils";
 import { useModalContext } from "apps/lending/hooks/useModal";
 
 import { GasEstimationError } from "apps/lending/components/transactions/FlowCommons/GasEstimationError";
@@ -10,6 +13,7 @@ import {
   TxModalDetails,
 } from "apps/lending/components/transactions/FlowCommons/TxModalDetails";
 import { FaucetActions } from "apps/lending/components/transactions/Faucet/FaucetActions";
+import { FC } from "react";
 
 export type FaucetModalContentProps = {
   underlyingAsset: string;
@@ -17,10 +21,10 @@ export type FaucetModalContentProps = {
 
 export enum ErrorType {}
 
-export const FaucetModalContent = ({
+export const FaucetModalContent: FC<ModalWrapperProps> = ({
   poolReserve,
   isWrongNetwork,
-}: ModalWrapperProps) => {
+}) => {
   const { gasLimit, mainTxState: faucetTxState, txError } = useModalContext();
   const defaultValue = valueToWei("1000", 18);
   const mintAmount = mintAmountsPerToken[poolReserve.symbol.toUpperCase()]

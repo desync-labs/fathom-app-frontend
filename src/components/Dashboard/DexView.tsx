@@ -1,5 +1,5 @@
 import { useLocation } from "react-router-dom";
-import { FC, MouseEvent, Suspense, useMemo } from "react";
+import { FC, Suspense, useMemo } from "react";
 import {
   SwapIcon,
   PoolIcon,
@@ -15,11 +15,7 @@ import useConnector from "context/connector";
 
 import DexIndexComponent from "apps/dex/index";
 
-export type DexViewProps = {
-  openConnectorMenu: (event: MouseEvent<HTMLElement>) => void;
-};
-
-const DexView: FC<DexViewProps> = ({ openConnectorMenu }) => {
+const DexView: FC = () => {
   const location = useLocation();
   const { account } = useConnector();
 
@@ -69,7 +65,7 @@ const DexView: FC<DexViewProps> = ({ openConnectorMenu }) => {
       </NestedRouteNav>
       <NestedRouteContainer maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
         <Suspense fallback={<LocalLoader />}>
-          <DexIndexComponent openConnectorMenu={openConnectorMenu} />
+          <DexIndexComponent />
         </Suspense>
       </NestedRouteContainer>
     </>

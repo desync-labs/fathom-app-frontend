@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, memo } from "react";
 import {
   Box,
   CircularProgress,
@@ -79,7 +79,8 @@ type VaultDepositFormProps = {
     sharedToken: string;
   }>;
   approve: () => Promise<void>;
-  setMax: (walletBalance: string) => void;
+  setMax: () => void;
+  validateMaxDepositValue: (value: string) => true | string;
   handleSubmit: UseFormHandleSubmit<
     {
       deposit: string;
@@ -105,6 +106,7 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
   errors,
   approve,
   setMax,
+  validateMaxDepositValue,
   handleSubmit,
   onSubmit,
 }) => {
@@ -122,10 +124,8 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
           name="deposit"
           rules={{
             required: true,
-            min: 1,
-            max: BigNumber(walletBalance)
-              .dividedBy(10 ** 18)
-              .toNumber(),
+            min: 0.0000000001,
+            validate: validateMaxDepositValue,
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <AppFormInputWrapper>
@@ -164,7 +164,7 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
                         </Box>
                       </AppFormInputErrorWrapper>
                     )}
-                    {error && error.type === "max" && (
+                    {error && error.type === "validate" && (
                       <AppFormInputErrorWrapper>
                         <InfoIcon
                           sx={{
@@ -178,7 +178,7 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
                           component={"span"}
                           sx={{ fontSize: "12px", paddingLeft: "6px" }}
                         >
-                          You do not have enough money in your wallet
+                          {error.message}
                         </Box>
                       </AppFormInputErrorWrapper>
                     )}
@@ -210,7 +210,7 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
                 src={getTokenLogoURL(token.symbol)}
                 alt={token.name}
               />
-              <MaxButton onClick={() => setMax(walletBalance)}>Max</MaxButton>
+              <MaxButton onClick={() => setMax()}>Max</MaxButton>
             </AppFormInputWrapper>
           )}
         />
@@ -344,4 +344,4 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
   );
 };
 
-export default DepositVaultForm;
+export default memo(DepositVaultForm);

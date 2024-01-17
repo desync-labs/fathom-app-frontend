@@ -2,7 +2,7 @@ import {
   normalize,
   UserIncentiveData,
   valueToBigNumber,
-} from "@aave/math-utils";
+} from "@into-the-fathom/lending-math-utils";
 import { Box, Button, useMediaQuery, useTheme } from "@mui/material";
 import { useState } from "react";
 import { NetAPYTooltip } from "apps/lending/components/infoTooltips/NetAPYTooltip";

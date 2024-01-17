@@ -9,6 +9,7 @@ import { AssetCapHookData } from "apps/lending/hooks/useAssetCaps";
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
 import { Link } from "apps/lending/components/primitives/Link";
 import { TextWithTooltip } from "apps/lending/components/TextWithTooltip";
+import { FC } from "react";
 
 type DebtCeilingTooltipProps = {
   debt: string;
@@ -16,11 +17,9 @@ type DebtCeilingTooltipProps = {
   usageData: AssetCapHookData;
 };
 
-export const DebtCeilingStatus = ({
-  debt,
-  ceiling,
-  usageData,
-}: LinearProgressProps & DebtCeilingTooltipProps) => {
+export const DebtCeilingStatus: FC<
+  LinearProgressProps & DebtCeilingTooltipProps
+> = ({ debt, ceiling, usageData }) => {
   const progressBarStyles = {
     borderRadius: 5,
     my: 2,

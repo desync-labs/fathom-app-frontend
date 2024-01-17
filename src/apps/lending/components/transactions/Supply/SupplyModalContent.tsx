@@ -1,11 +1,11 @@
-import { API_ETH_MOCK_ADDRESS } from "@aave/contract-helpers";
+import { API_ETH_MOCK_ADDRESS } from "@into-the-fathom/lending-contract-helpers";
 import {
   calculateHealthFactorFromBalancesBigUnits,
   USD_DECIMALS,
   valueToBigNumber,
-} from "@aave/math-utils";
+} from "@into-the-fathom/lending-math-utils";
 import BigNumber from "bignumber.js";
-import React, { useMemo, useState } from "react";
+import React, { FC, useMemo, useState } from "react";
 import { Warning } from "apps/lending/components/primitives/Warning";
 import { AMPLWarning } from "apps/lending/components/Warnings/AMPLWarning";
 import { useAssetCaps } from "apps/lending/hooks/useAssetCaps";
@@ -39,7 +39,7 @@ export enum ErrorType {
   CAP_REACHED,
 }
 
-export const SupplyModalContent = React.memo(
+export const SupplyModalContent: FC<ModalWrapperProps> = React.memo(
   ({
     underlyingAsset,
     poolReserve,
@@ -47,7 +47,7 @@ export const SupplyModalContent = React.memo(
     isWrongNetwork,
     nativeBalance,
     tokenBalance,
-  }: ModalWrapperProps) => {
+  }) => {
     const { marketReferencePriceInUsd, user } = useAppDataContext();
     const { currentNetworkConfig } = useProtocolDataContext();
     const { mainTxState: supplyTxState, gasLimit, txError } = useModalContext();

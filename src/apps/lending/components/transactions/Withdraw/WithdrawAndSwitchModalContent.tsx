@@ -1,7 +1,7 @@
-import { valueToBigNumber } from "@aave/math-utils";
+import { valueToBigNumber } from "@into-the-fathom/lending-math-utils";
 import { ArrowDownIcon } from "@heroicons/react/solid";
 import { Box, Checkbox, SvgIcon, Typography } from "@mui/material";
-import { useRef, useState } from "react";
+import { FC, useRef, useState } from "react";
 import { PriceImpactTooltip } from "apps/lending/components/infoTooltips/PriceImpactTooltip";
 import { Warning } from "apps/lending/components/primitives/Warning";
 import {
@@ -40,12 +40,12 @@ export enum ErrorType {
   ZERO_LTV_WITHDRAW_BLOCKED,
 }
 
-export const WithdrawAndSwitchModalContent = ({
+export const WithdrawAndSwitchModalContent: FC<ModalWrapperProps> = ({
   poolReserve,
   userReserve,
   symbol,
   isWrongNetwork,
-}: ModalWrapperProps) => {
+}) => {
   const { gasLimit, mainTxState: withdrawTxState, txError } = useModalContext();
   const { currentAccount } = useWeb3Context();
   const { user, reserves } = useAppDataContext();

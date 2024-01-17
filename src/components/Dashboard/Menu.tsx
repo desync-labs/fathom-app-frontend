@@ -10,6 +10,7 @@ import {
   VaultIcon,
   DexIcon,
   ChartsIcon,
+  LendingIcon,
 } from "components/Common/MenuIcons";
 import useConnector from "context/connector";
 import AppMenuItem from "components/MenuItem/AppMenuItem";
@@ -20,7 +21,7 @@ type ItemPropsType = {
 
 export const Menu: FC<ItemPropsType> = memo(({ open }) => {
   const location = useLocation();
-  const { allowStableSwap, isUserWrapperWhiteListed } = useConnector();
+  const { allowStableSwap } = useConnector();
 
   const isDashboardActive = useMemo(
     () => location.pathname === "/",
@@ -81,7 +82,7 @@ export const Menu: FC<ItemPropsType> = memo(({ open }) => {
     {
       name: "Lending",
       link: "/lending",
-      Icon: <GovernanceIcon isactive={isLendingActive ? "true" : ""} />,
+      Icon: <LendingIcon isactive={isLendingActive ? "true" : ""} />,
       isActive: isLendingActive,
       showText: showText,
     },
@@ -108,7 +109,7 @@ export const Menu: FC<ItemPropsType> = memo(({ open }) => {
     },
   ];
 
-  if (!allowStableSwap && !isUserWrapperWhiteListed) {
+  if (!allowStableSwap) {
     appMenuItems.splice(1, 1);
   }
 

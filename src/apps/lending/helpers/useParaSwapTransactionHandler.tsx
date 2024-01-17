@@ -1,7 +1,7 @@
 import {
   EthereumTransactionTypeExtended,
   ProtocolAction,
-} from "@aave/contract-helpers";
+} from "@into-the-fathom/lending-contract-helpers";
 import { SignatureLike } from "@ethersproject/bytes";
 import { TransactionResponse } from "@ethersproject/providers";
 import { queryClient } from "apps/lending";

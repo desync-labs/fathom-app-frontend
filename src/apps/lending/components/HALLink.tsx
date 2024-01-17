@@ -1,4 +1,4 @@
-import { valueToBigNumber } from "@aave/math-utils";
+import { valueToBigNumber } from "@into-the-fathom/lending-math-utils";
 import {
   Button,
   Link,
@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import BigNumber from "bignumber.js";
-import { useMemo } from "react";
+import { FC, memo, useMemo } from "react";
 import { useRootStore } from "apps/lending/store/root";
 import { DASHBOARD } from "apps/lending/utils/mixPanelEvents";
 
@@ -51,11 +51,7 @@ interface Props {
   integrationURL: string;
 }
 
-export default function HALLink({
-  healthFactor,
-  marketName,
-  integrationURL,
-}: Props) {
+const HALLink: FC<Props> = ({ healthFactor, marketName, integrationURL }) => {
   const { currentAccount } = useWeb3Context();
   const trackEvent = useRootStore((store) => store.trackEvent);
 
@@ -141,4 +137,6 @@ export default function HALLink({
       </Button>
     </Tooltip>
   );
-}
+};
+
+export default memo(HALLink);

@@ -1,12 +1,11 @@
 import { Warning } from "apps/lending/components/primitives/Warning";
 import { useRootStore } from "apps/lending/store/root";
 import { GENERAL } from "apps/lending/utils/mixPanelEvents";
+import { FC } from "react";
 
-export const ParameterChangewarning = ({
-  underlyingAsset,
-}: {
+export const ParameterChangeWarning: FC<{
   underlyingAsset: string;
-}) => {
+}> = ({ underlyingAsset }) => {
   const trackEvent = useRootStore((store) => store.trackEvent);
 
   return (

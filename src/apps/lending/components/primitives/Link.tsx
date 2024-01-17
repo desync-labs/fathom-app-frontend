@@ -3,14 +3,14 @@ import { styled } from "@mui/material/styles";
 import clsx from "clsx";
 import { CustomMarket } from "apps/lending/ui-config/marketsConfig";
 import { useLocation } from "react-router-dom";
-import { forwardRef } from "react";
+import { forwardRef, AnchorHTMLAttributes } from "react";
 import { Link as ReactLink } from "react-router-dom";
 
 // Add support for the sx prop for consistency with the other branches.
 const Anchor = styled("a")({});
 
 interface LinkComposedProps
-  extends Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href"> {
+  extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> {
   to: string;
 }
 

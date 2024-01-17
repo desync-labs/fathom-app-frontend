@@ -10,7 +10,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import React from "react";
+import React, { FC } from "react";
 import { useRootStore } from "apps/lending/store/root";
 import { BaseNetworkConfig } from "apps/lending/ui-config/networksConfig";
 import { DASHBOARD } from "apps/lending/utils/mixPanelEvents";
@@ -59,7 +59,11 @@ type MarketLogoProps = {
   testChainName?: string;
 };
 
-export const MarketLogo = ({ size, logo, testChainName }: MarketLogoProps) => {
+export const MarketLogo: FC<MarketLogoProps> = ({
+  size,
+  logo,
+  testChainName,
+}) => {
   return (
     <Box sx={{ mr: 2, width: size, height: size, position: "relative" }}>
       <img src={logo} alt="" width="100%" height="100%" />

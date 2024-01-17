@@ -1,4 +1,7 @@
-import { InterestRate, ProtocolAction } from "@aave/contract-helpers";
+import {
+  InterestRate,
+  ProtocolAction,
+} from "@into-the-fathom/lending-contract-helpers";
 import { useTransactionHandler } from "apps/lending/helpers/useTransactionHandler";
 import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 import { useRootStore } from "apps/lending/store/root";

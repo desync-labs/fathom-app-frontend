@@ -6,7 +6,7 @@ import {
   CircularProgress,
   SvgIcon,
 } from "@mui/material";
-import { ReactNode } from "react";
+import { FC, ReactNode } from "react";
 import { TxStateType, useModalContext } from "apps/lending/hooks/useModal";
 import { TrackEventProps } from "apps/lending/store/analyticsSlice";
 import { TxAction } from "apps/lending/ui-config/errorMapping";
@@ -39,7 +39,7 @@ interface TxActionsWrapperProps extends BoxProps {
   event?: TrackEventProps;
 }
 
-export const TxActionsWrapper = ({
+export const TxActionsWrapper: FC<TxActionsWrapperProps> = ({
   actionInProgressText,
   actionText,
   amount,
@@ -58,7 +58,7 @@ export const TxActionsWrapper = ({
   errorParams,
   tryPermit,
   ...rest
-}: TxActionsWrapperProps) => {
+}) => {
   const { txError } = useModalContext();
   const hasApprovalError =
     requiresApproval &&

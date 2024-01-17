@@ -1,5 +1,8 @@
-import { API_ETH_MOCK_ADDRESS, PERMISSION } from "@aave/contract-helpers";
-import { ReactElement } from "react";
+import {
+  API_ETH_MOCK_ADDRESS,
+  PERMISSION,
+} from "@into-the-fathom/lending-contract-helpers";
+import { FC, ReactElement, ReactNode } from "react";
 import {
   ComputedReserveData,
   ComputedUserReserveData,
@@ -32,7 +35,7 @@ export interface ModalWrapperProps {
   action?: string;
 }
 
-export const ModalWrapper: React.FC<{
+export const ModalWrapper: FC<{
   underlyingAsset: string;
   title: ReactElement;
   requiredChainId?: number;
@@ -40,7 +43,7 @@ export const ModalWrapper: React.FC<{
   keepWrappedSymbol?: boolean;
   hideTitleSymbol?: boolean;
   requiredPermission?: PERMISSION;
-  children: (props: ModalWrapperProps) => React.ReactNode;
+  children: (props: ModalWrapperProps) => ReactNode;
   action?: string;
 }> = ({
   hideTitleSymbol,

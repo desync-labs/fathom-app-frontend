@@ -1,9 +1,9 @@
-import { ChainId } from "@aave/contract-helpers";
+import { ChainId } from "@into-the-fathom/lending-contract-helpers";
 import {
   BigNumberValue,
   USD_DECIMALS,
   valueToBigNumber,
-} from "@aave/math-utils";
+} from "@into-the-fathom/lending-math-utils";
 
 export function hexToAscii(_hex: string): string {
   const hex = _hex.toString();

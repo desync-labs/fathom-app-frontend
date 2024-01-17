@@ -1,4 +1,9 @@
-import { normalizeBN, RAY, rayDiv, rayMul } from "@aave/math-utils";
+import {
+  normalizeBN,
+  RAY,
+  rayDiv,
+  rayMul,
+} from "@into-the-fathom/lending-math-utils";
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { AxisBottom, AxisLeft } from "@visx/axis";
 import { curveMonotoneX } from "@visx/curve";

@@ -5,11 +5,11 @@ import {
   InterestRate,
   MAX_UINT_AMOUNT,
   ProtocolAction,
-} from "@aave/contract-helpers";
+} from "@into-the-fathom/lending-contract-helpers";
 import { BoxProps } from "@mui/material";
 import { parseUnits } from "fathom-ethers/lib/utils";
 import { queryClient } from "apps/lending";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import { useBackgroundDataProvider } from "apps/lending/hooks/app-data-provider/BackgroundDataProvider";
 import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 import { useModalContext } from "apps/lending/hooks/useModal";
@@ -34,7 +34,7 @@ export interface BorrowActionsProps extends BoxProps {
   blocked: boolean;
 }
 
-export const BorrowActions = React.memo(
+export const BorrowActions: FC<BorrowActionsProps> = React.memo(
   ({
     symbol,
     poolReserve,
@@ -44,7 +44,7 @@ export const BorrowActions = React.memo(
     isWrongNetwork,
     blocked,
     sx,
-  }: BorrowActionsProps) => {
+  }) => {
     const [
       borrow,
       getCreditDelegationApprovedAmount,

@@ -3,7 +3,7 @@ import { useRootStore } from "apps/lending/store/root";
 import { AUTH } from "apps/lending/utils/mixPanelEvents";
 
 import { FC } from "react";
-import useAppsShared from "context/appsShared";
+import useConnector from "context/connector";
 
 export interface ConnectWalletProps {
   funnel?: string;
@@ -11,7 +11,7 @@ export interface ConnectWalletProps {
 
 export const ConnectWalletButton: FC<ConnectWalletProps> = ({ funnel }) => {
   const trackEvent = useRootStore((store) => store.trackEvent);
-  const { openConnectorMenu } = useAppsShared();
+  const { openConnectorMenu } = useConnector();
 
   return (
     <>

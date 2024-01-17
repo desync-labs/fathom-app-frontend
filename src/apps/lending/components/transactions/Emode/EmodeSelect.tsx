@@ -6,6 +6,7 @@ import * as React from "react";
 import { EmodeCategory } from "apps/lending/helpers/types";
 
 import { getEmodeMessage } from "apps/lending/components/transactions/Emode/EmodeNaming";
+import { FC } from "react";
 
 export type EmodeSelectProps = {
   emodeCategories: Record<number, EmodeCategory>;
@@ -16,12 +17,12 @@ export type EmodeSelectProps = {
   userEmode: number;
 };
 
-export const EmodeSelect = ({
+export const EmodeSelect: FC<EmodeSelectProps> = ({
   emodeCategories,
   selectedEmode,
   setSelectedEmode,
   userEmode,
-}: EmodeSelectProps) => {
+}) => {
   return (
     <FormControl sx={{ mb: 1, width: "100%" }}>
       <FormLabel sx={{ mb: 1, color: "text.secondary" }}>

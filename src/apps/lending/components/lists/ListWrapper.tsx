@@ -1,5 +1,5 @@
 import { Box, BoxProps, Paper, Typography } from "@mui/material";
-import { ReactNode, useState } from "react";
+import { FC, ReactNode, useState } from "react";
 import { useRootStore } from "apps/lending/store/root";
 import { DASHBOARD } from "apps/lending/utils/mixPanelEvents";
 
@@ -18,7 +18,7 @@ interface ListWrapperProps {
   tooltipOpen?: boolean;
 }
 
-export const ListWrapper = ({
+export const ListWrapper: FC<ListWrapperProps> = ({
   children,
   localStorageName,
   titleComponent,
@@ -29,7 +29,7 @@ export const ListWrapper = ({
   noData,
   wrapperSx,
   tooltipOpen,
-}: ListWrapperProps) => {
+}) => {
   const [isCollapse, setIsCollapse] = useState(
     localStorageName ? localStorage.getItem(localStorageName) === "true" : false
   );

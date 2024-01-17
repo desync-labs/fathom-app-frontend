@@ -1,5 +1,5 @@
 import { Box, BoxProps } from "@mui/material";
-import { ReactNode } from "react";
+import { FC, ReactNode } from "react";
 
 interface ListItemProps extends BoxProps {
   children: ReactNode;
@@ -8,13 +8,13 @@ interface ListItemProps extends BoxProps {
   button?: boolean;
 }
 
-export const ListItem = ({
+export const ListItem: FC<ListItemProps> = ({
   children,
   minHeight = 71,
   px = 4,
   button,
   ...rest
-}: ListItemProps) => {
+}) => {
   return (
     <Box
       {...rest}

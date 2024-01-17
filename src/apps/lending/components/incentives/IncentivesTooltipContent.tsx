@@ -1,9 +1,10 @@
-import { ReserveIncentiveResponse } from "@aave/math-utils/dist/esm/formatters/incentive/calculate-reserve-incentives";
+import { ReserveIncentiveResponse } from "@into-the-fathom/lending-math-utils/dist/esm/formatters/incentive/calculate-reserve-incentives";
 import { Box, Typography } from "@mui/material";
 
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
 import { Row } from "apps/lending/components/primitives/Row";
 import { TokenIcon } from "apps/lending/components/primitives/TokenIcon";
+import { FC } from "react";
 
 interface IncentivesTooltipContentProps {
   incentives: ReserveIncentiveResponse[];
@@ -11,11 +12,11 @@ interface IncentivesTooltipContentProps {
   symbol: string;
 }
 
-export const IncentivesTooltipContent = ({
+export const IncentivesTooltipContent: FC<IncentivesTooltipContentProps> = ({
   incentives,
   incentivesNetAPR,
   symbol,
-}: IncentivesTooltipContentProps) => {
+}) => {
   const typographyVariant = "secondary12";
 
   const Number = ({

@@ -18,6 +18,7 @@ import {
 import {
   TitleSecondary,
   NoResults,
+  CircleWrapper,
 } from "components/AppComponents/AppBox/AppBox";
 import PositionListItem from "components/PositionList/PositionListItem";
 import PositionListItemMobile from "components/PositionList/PositionListItemMobile";
@@ -31,14 +32,6 @@ import TopUpPositionDialog from "components/Positions/TopUpPositionDialog";
 import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
 import AppPopover from "components/AppComponents/AppPopover/AppPopover";
 import useSharedContext from "context/shared";
-
-const CircleWrapper = styled(Box)`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
 
 const PaginationWrapper = styled(Box)`
   display: flex;
@@ -74,12 +67,12 @@ const PositionsList: FC<PositionsListProps> = ({
 
   return (
     <>
-      <TitleSecondary>Your Positions</TitleSecondary>
+      <TitleSecondary variant={"h2"}>Your Positions</TitleSecondary>
       {useMemo(
         () => (
           <>
             {positions.length === 0 && (
-              <NoResults variant={"h6"}>
+              <NoResults mt={isMobile ? 2 : 3}>
                 {loading ? (
                   <CircleWrapper>
                     <CircularProgress size={30} />

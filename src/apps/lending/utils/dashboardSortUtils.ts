@@ -1,4 +1,4 @@
-import { InterestRate } from "@aave/contract-helpers";
+import { InterestRate } from "@into-the-fathom/lending-contract-helpers";
 import { BorrowAssetsItem } from "apps/lending/modules/dashboard/lists/BorrowAssetsList/types";
 import { SupplyAssetsItem } from "apps/lending/modules/dashboard/lists/SupplyAssetsList/types";
 

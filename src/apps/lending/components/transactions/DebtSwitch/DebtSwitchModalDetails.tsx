@@ -1,4 +1,4 @@
-import { valueToBigNumber } from "@aave/math-utils";
+import { valueToBigNumber } from "@into-the-fathom/lending-math-utils";
 import { ArrowNarrowRightIcon } from "@heroicons/react/solid";
 import { Box, Skeleton, Stack, SvgIcon, Typography } from "@mui/material";
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
@@ -8,6 +8,7 @@ import { TextWithTooltip } from "apps/lending/components/TextWithTooltip";
 import { DetailsIncentivesLine } from "apps/lending/components/transactions/FlowCommons/TxModalDetails";
 
 import { ComputedUserReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
+import { FC } from "react";
 
 export type DebtSwitchModalDetailsProps = {
   switchSource: ComputedUserReserveData;
@@ -26,7 +27,7 @@ const ArrowRightIcon = (
   </SvgIcon>
 );
 
-export const DebtSwitchModalDetails = ({
+export const DebtSwitchModalDetails: FC<DebtSwitchModalDetailsProps> = ({
   switchSource,
   switchTarget,
   toAmount,
@@ -36,7 +37,7 @@ export const DebtSwitchModalDetails = ({
   sourceBorrowAPY,
   targetBorrowAPY,
   showAPYTypeChange,
-}: DebtSwitchModalDetailsProps) => {
+}) => {
   const sourceAmountAfterSwap = valueToBigNumber(sourceBalance).minus(
     valueToBigNumber(fromAmount)
   );

@@ -6,9 +6,9 @@ import {
   WrongNetworkMobileIcon,
 } from "components/AppComponents/AppBox/AppBox";
 import {
-  XDC_CHAIN_IDS,
-  NETWORK_LABELS,
   ChainId,
+  NETWORK_LABELS,
+  XDC_CHAIN_IDS,
   XDC_NETWORK_SETTINGS,
 } from "connectors/networks";
 import { getTokenLogoURL } from "utils/tokenLogo";
@@ -25,6 +25,9 @@ import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
 import { Box } from "@mui/material";
 import useConnector from "context/connector";
 import useSharedContext from "context/shared";
+import AppPopover, {
+  PopoverType,
+} from "components/AppComponents/AppPopover/AppPopover";
 
 const NetworkPaper = styled(AppPaper)`
   background: #253656;
@@ -122,7 +125,12 @@ const Web3Status = () => {
   } else if (isError) {
     button = isMobile ? (
       <WrongNetworkMobile onClick={() => setOpen(!open)}>
-        <WrongNetworkMobileIcon />
+        <AppPopover
+          id={"wrong-network"}
+          type={PopoverType.Error}
+          text={<>Select XDC network in your wallet.</>}
+          element={<WrongNetworkMobileIcon />}
+        />
         {showNetworkSelector ? <ArrowDropDownIcon /> : null}
       </WrongNetworkMobile>
     ) : (

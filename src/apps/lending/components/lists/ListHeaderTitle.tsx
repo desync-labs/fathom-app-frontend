@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import { ReactNode } from "react";
+import { FC, ReactNode } from "react";
 import { useRootStore } from "apps/lending/store/root";
 
 import { MARKETS } from "apps/lending/utils/mixPanelEvents";
@@ -15,7 +15,7 @@ interface ListHeaderTitleProps {
   children: ReactNode;
 }
 
-export const ListHeaderTitle = ({
+export const ListHeaderTitle: FC<ListHeaderTitleProps> = ({
   sortName,
   sortDesc,
   sortKey,
@@ -24,7 +24,7 @@ export const ListHeaderTitle = ({
   setSortDesc,
   onClick,
   children,
-}: ListHeaderTitleProps) => {
+}) => {
   const trackEvent = useRootStore((store) => store.trackEvent);
 
   const handleSorting = (name: string) => {

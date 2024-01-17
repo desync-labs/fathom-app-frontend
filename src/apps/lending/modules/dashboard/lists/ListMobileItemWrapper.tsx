@@ -1,4 +1,4 @@
-import { FC, ReactNode } from "react";
+import { FC, memo, ReactNode } from "react";
 import { BorrowDisabledToolTip } from "apps/lending/components/infoTooltips/BorrowDisabledToolTip";
 import { BUSDOffBoardingTooltip } from "apps/lending/components/infoTooltips/BUSDOffboardingToolTip";
 import { StETHCollateralToolTip } from "apps/lending/components/infoTooltips/StETHCollateralToolTip";
@@ -26,62 +26,64 @@ interface ListMobileItemWrapperProps {
   isIsolated?: boolean;
 }
 
-export const ListMobileItemWrapper = ({
-  symbol,
-  iconSymbol,
-  name,
-  children,
-  underlyingAsset,
-  loading,
-  currentMarket,
-  frozen,
-  borrowEnabled = true,
-  showSupplyCapTooltips = false,
-  showBorrowCapTooltips = false,
-  showDebtCeilingTooltips = false,
-  isIsolated = false,
-}: ListMobileItemWrapperProps) => {
-  const WarningComponent: FC = () => {
-    const showFrozenTooltip = frozen && symbol !== "renFIL";
-    const showRenFilTooltip = frozen && symbol === "renFIL";
-    const showAmplTooltip = !frozen && symbol === "AMPL";
-    const showstETHTooltip = symbol == "stETH";
-    const showBUSDOffBoardingTooltip = symbol == "BUSD";
-    const showBorrowDisabledTooltip = !frozen && !borrowEnabled;
-    return (
-      <>
-        {showFrozenTooltip && (
-          <FrozenTooltip symbol={symbol} currentMarket={currentMarket} />
-        )}
-        {showRenFilTooltip && <RenFILToolTip />}
-        {showAmplTooltip && <AMPLToolTip />}
-        {showstETHTooltip && <StETHCollateralToolTip />}
-        {showBUSDOffBoardingTooltip && <BUSDOffBoardingTooltip />}
-        {showBorrowDisabledTooltip && symbol && currentMarket && (
-          <BorrowDisabledToolTip
-            symbol={symbol}
-            currentMarket={currentMarket}
-          />
-        )}
-      </>
-    );
-  };
+export const ListMobileItemWrapper: FC<ListMobileItemWrapperProps> = memo(
+  ({
+    symbol,
+    iconSymbol,
+    name,
+    children,
+    underlyingAsset,
+    loading,
+    currentMarket,
+    frozen,
+    borrowEnabled = true,
+    showSupplyCapTooltips = false,
+    showBorrowCapTooltips = false,
+    showDebtCeilingTooltips = false,
+    isIsolated = false,
+  }) => {
+    const WarningComponent: FC = () => {
+      const showFrozenTooltip = frozen && symbol !== "renFIL";
+      const showRenFilTooltip = frozen && symbol === "renFIL";
+      const showAmplTooltip = !frozen && symbol === "AMPL";
+      const showstETHTooltip = symbol == "stETH";
+      const showBUSDOffBoardingTooltip = symbol == "BUSD";
+      const showBorrowDisabledTooltip = !frozen && !borrowEnabled;
+      return (
+        <>
+          {showFrozenTooltip && (
+            <FrozenTooltip symbol={symbol} currentMarket={currentMarket} />
+          )}
+          {showRenFilTooltip && <RenFILToolTip />}
+          {showAmplTooltip && <AMPLToolTip />}
+          {showstETHTooltip && <StETHCollateralToolTip />}
+          {showBUSDOffBoardingTooltip && <BUSDOffBoardingTooltip />}
+          {showBorrowDisabledTooltip && symbol && currentMarket && (
+            <BorrowDisabledToolTip
+              symbol={symbol}
+              currentMarket={currentMarket}
+            />
+          )}
+        </>
+      );
+    };
 
-  return (
-    <ListMobileItem
-      isIsolated={isIsolated}
-      symbol={symbol}
-      iconSymbol={iconSymbol}
-      name={name}
-      underlyingAsset={underlyingAsset}
-      warningComponent={<WarningComponent />}
-      loading={loading}
-      currentMarket={currentMarket}
-      showSupplyCapTooltips={showSupplyCapTooltips}
-      showBorrowCapTooltips={showBorrowCapTooltips}
-      showDebtCeilingTooltips={showDebtCeilingTooltips}
-    >
-      {children}
-    </ListMobileItem>
-  );
-};
+    return (
+      <ListMobileItem
+        isIsolated={isIsolated}
+        symbol={symbol}
+        iconSymbol={iconSymbol}
+        name={name}
+        underlyingAsset={underlyingAsset}
+        warningComponent={<WarningComponent />}
+        loading={loading}
+        currentMarket={currentMarket}
+        showSupplyCapTooltips={showSupplyCapTooltips}
+        showBorrowCapTooltips={showBorrowCapTooltips}
+        showDebtCeilingTooltips={showDebtCeilingTooltips}
+      >
+        {children}
+      </ListMobileItem>
+    );
+  }
+);

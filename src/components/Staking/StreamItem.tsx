@@ -14,6 +14,7 @@ import ClaimRewardsCoolDownDialog from "components/Staking/Dialog/ClaimRewardsCo
 import WithdrawDialog from "components/Staking/Dialog/WithdrawDialog";
 import { COUNT_PER_PAGE } from "utils/Constants";
 import { styled } from "@mui/material/styles";
+import useSharedContext from "context/shared";
 
 const PaginationWrapper = styled(Box)`
   display: flex;
@@ -41,13 +42,17 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
     isLoading,
   } = useStakingContext();
 
+  const { isMobile } = useSharedContext();
+
   return (
     <>
       {useMemo(
         () => (
           <>
             {!isLoading && !lockPositions.length ? (
-              <NoResults variant={"h6"}>You have no open positions.</NoResults>
+              <NoResults mt={isMobile ? 2 : 3}>
+                You have no open positions.
+              </NoResults>
             ) : isLoading ? (
               <Grid container>
                 <Grid item xs={12} sx={{ textAlign: "center" }}>
@@ -55,7 +60,7 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
                 </Grid>
               </Grid>
             ) : (
-              <Grid container sx={{ gap: "12px" }}>
+              <Grid container sx={{ gap: "12px" }} mt={isMobile ? 2 : 3}>
                 {lockPositions.map((lockPosition: ILockPosition) => (
                   <StakingViewItem
                     key={lockPosition.lockId}

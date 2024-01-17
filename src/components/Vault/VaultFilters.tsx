@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction } from "react";
+import { Dispatch, FC, memo, SetStateAction } from "react";
 import { Grid, ToggleButtonGroup, ToggleButton, MenuItem } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import {
@@ -109,7 +109,7 @@ const VaultFilters: FC<VaultFiltersPropsType> = ({
           onChange={(event: SelectChangeEvent<unknown>) => {
             setSortBy(event.target.value as SortType);
           }}
-          sx={{ border: "none", fieldset: { borderColor: "transparent" } }}
+          sx={{ border: "none" }}
         >
           <MenuItem value="tvl">TVL</MenuItem>
           <MenuItem value="earned">Earned</MenuItem>
@@ -137,4 +137,4 @@ const VaultFilters: FC<VaultFiltersPropsType> = ({
   );
 };
 
-export default VaultFilters;
+export default memo(VaultFilters);

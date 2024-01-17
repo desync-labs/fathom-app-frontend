@@ -1,10 +1,11 @@
-import { ProtocolAction } from "@aave/contract-helpers";
+import { ProtocolAction } from "@into-the-fathom/lending-contract-helpers";
 import { EmodeCategory } from "apps/lending/helpers/types";
 import { useTransactionHandler } from "apps/lending/helpers/useTransactionHandler";
 import { useRootStore } from "apps/lending/store/root";
 
 import { TxActionsWrapper } from "apps/lending/components/transactions/TxActionsWrapper";
 import { getEmodeMessage } from "apps/lending/components/transactions/Emode/EmodeNaming";
+import { FC } from "react";
 
 export type EmodeActionsProps = {
   isWrongNetwork: boolean;
@@ -14,13 +15,13 @@ export type EmodeActionsProps = {
   eModes: Record<number, EmodeCategory>;
 };
 
-export const EmodeActions = ({
+export const EmodeActions: FC<EmodeActionsProps> = ({
   isWrongNetwork,
   blocked,
   selectedEmode,
   activeEmode,
   eModes,
-}: EmodeActionsProps) => {
+}) => {
   const setUserEMode = useRootStore((state) => state.setUserEMode);
 
   const { action, loadingTxns, mainTxState, requiresApproval } =

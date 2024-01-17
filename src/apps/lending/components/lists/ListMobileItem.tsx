@@ -1,5 +1,5 @@
 import { Box, Divider, Skeleton, Typography } from "@mui/material";
-import { ReactNode } from "react";
+import { FC, ReactNode } from "react";
 import { IsolatedEnabledBadge } from "apps/lending/components/isolationMode/IsolatedBadge";
 import { useAssetCaps } from "apps/lending/hooks/useAssetCaps";
 import { CustomMarket } from "apps/lending/ui-config/marketsConfig";
@@ -22,7 +22,7 @@ interface ListMobileItemProps {
   isIsolated: boolean;
 }
 
-export const ListMobileItem = ({
+export const ListMobileItem: FC<ListMobileItemProps> = ({
   children,
   warningComponent,
   symbol,
@@ -35,7 +35,7 @@ export const ListMobileItem = ({
   showBorrowCapTooltips = false,
   showDebtCeilingTooltips = false,
   isIsolated,
-}: ListMobileItemProps) => {
+}) => {
   const { supplyCap, borrowCap, debtCeiling } = useAssetCaps();
   return (
     <Box>
