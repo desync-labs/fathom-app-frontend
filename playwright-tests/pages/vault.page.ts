@@ -303,7 +303,11 @@ export default class VaultPage extends BasePage {
     });
   }
 
-  async validateDepositSuccessfulModal(): Promise<void> {
+  async validateDepositSuccessfulModal({
+    shareTokenName,
+  }: {
+    shareTokenName: string;
+  }): Promise<void> {
     await expect.soft(this.doneIconModal).toBeVisible();
     await expect.soft(this.headingFourModal).toBeVisible();
     await expect.soft(this.headingFourModal).toHaveText("All done!");
@@ -314,7 +318,7 @@ export default class VaultPage extends BasePage {
     await expect.soft(this.spanBodyTwoModal).toBeVisible();
     await expect
       .soft(this.spanBodyTwoModal)
-      .toHaveText("Add Vault Shares FXD to wallet to track your balance.");
+      .toHaveText(`Add ${shareTokenName} to wallet to track your balance.`);
   }
 
   async closeDepositSuccessfuldModal(): Promise<void> {
@@ -339,9 +343,11 @@ export default class VaultPage extends BasePage {
 
   async manageVaultDeposit({
     id,
+    shareTokenName,
     depositAmount,
   }: {
     id: string;
+    shareTokenName: string;
     depositAmount: number;
   }): Promise<VaultDepositData> {
     await this.toggleFilter(VaultFilterName.LiveNow);
@@ -396,7 +402,7 @@ export default class VaultPage extends BasePage {
       ),
     ]);
     await this.validateManagePositionDialogNotVisible();
-    await this.validateDepositSuccessfulModal();
+    await this.validateDepositSuccessfulModal({ shareTokenName });
     await this.closeDepositSuccessfuldModal();
     await this.page.waitForLoadState("load");
     await this.page.waitForTimeout(2000);
@@ -571,9 +577,11 @@ export default class VaultPage extends BasePage {
 
   async depositFirstTime({
     id,
+    shareTokenName,
     depositAmount,
   }: {
     id: string;
+    shareTokenName: string;
     depositAmount: number;
   }): Promise<VaultDepositData> {
     await this.toggleFilter(VaultFilterName.LiveNow);
@@ -633,7 +641,7 @@ export default class VaultPage extends BasePage {
       ),
     ]);
     await this.validateManagePositionDialogNotVisible();
-    await this.validateDepositSuccessfulModal();
+    await this.validateDepositSuccessfulModal({ shareTokenName });
     await this.closeDepositSuccessfuldModal();
     await this.page.waitForLoadState("load");
     await this.page.waitForTimeout(2000);
