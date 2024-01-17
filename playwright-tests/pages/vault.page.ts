@@ -420,6 +420,8 @@ export default class VaultPage extends BasePage {
     expect.soft(stakedAmountActual).toEqual(Number(stakedAmount?.toFixed(2)));
     expect.soft(pooledValueActual).toEqual(stakedAmount);
     if (poolShare !== null && yourShareValueActual !== null) {
+      expect.soft(yourShareValueActual).toBeGreaterThanOrEqual(0);
+      expect.soft(shareTokenValueActual).toBeGreaterThanOrEqual(0);
       expect
         .soft(transformToSameDecimals(poolShare, yourShareValueActual))
         .toEqual(poolShare);

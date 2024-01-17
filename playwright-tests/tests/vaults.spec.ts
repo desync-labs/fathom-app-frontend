@@ -7,7 +7,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 test.describe("Fathom App Test Suite: Vault Operations", () => {
-  test("FXD Vault: Manage Vault: Depositing 100 FXD is successful", async ({
+  test("FXD Vault: Manage Vault: Depositing 10 FXD is successful", async ({
     vaultPage,
   }) => {
     await vaultPage.navigate();
@@ -15,7 +15,7 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     await vaultPage.validateConnectedWalletAddress();
     const vaultExpectedData = await vaultPage.manageVaultDeposit({
       id: fxdVaultData.id,
-      depositAmount: 100,
+      depositAmount: 10,
     });
     await vaultPage.validateVaultData({
       id: fxdVaultData.id,
@@ -25,7 +25,7 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     });
   });
 
-  test("FXD Vault: Manage Vault: Partially withdrawing 100 FXD is successful", async ({
+  test("FXD Vault: Manage Vault: Partially withdrawing 10 FXD is successful", async ({
     vaultPage,
   }) => {
     await vaultPage.navigate();
@@ -33,7 +33,7 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     await vaultPage.validateConnectedWalletAddress();
     const vaultExpectedData = await vaultPage.manageVaultWithdrawPartially({
       id: fxdVaultData.id,
-      withdrawAmount: 100,
+      withdrawAmount: 10,
     });
     await vaultPage.validateVaultData({
       id: fxdVaultData.id,
