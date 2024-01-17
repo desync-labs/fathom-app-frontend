@@ -6,6 +6,7 @@ import debounce from "lodash.debounce";
 import useConnector from "context/connector";
 import { useServices } from "context/services";
 import useSyncContext from "context/sync";
+import { formatNumber } from "utils/format";
 
 export const defaultValues = {
   formToken: "",
@@ -24,6 +25,7 @@ const useVaultManageDeposit = (
   const { account } = useConnector();
   const { poolService, vaultService } = useServices();
   const { setLastTransactionBlock } = useSyncContext();
+  const { balancePosition } = vaultPosition;
 
   const {
     handleSubmit,
@@ -37,7 +39,7 @@ const useVaultManageDeposit = (
     mode: "onChange",
   });
 
-  const { token } = vault;
+  const { token, depositLimit, balanceTokens } = vault;
   const [formType, setFormType] = useState<FormType>(FormType.DEPOSIT);
   const [walletBalance, setWalletBalance] = useState<string>("0");
   const [isWalletFetching, setIsWalletFetching] = useState<boolean>(false);
@@ -112,8 +114,8 @@ const useVaultManageDeposit = (
   );
 
   useEffect(() => {
-    setValue("formToken", "");
-    setValue("formSharedToken", "");
+    setValue("formToken", "", { shouldValidate: true });
+    setValue("formSharedToken", "", { shouldValidate: true });
   }, [formType]);
 
   useEffect(() => {
@@ -150,22 +152,68 @@ const useVaultManageDeposit = (
     setIsWalletFetching(true);
   }, [account]);
 
-  const setMax = useCallback(
-    (walletBalance: string, balancePosition: string) => {
+  const validateDeposit = (
+    value: string,
+    maxWalletBalance: BigNumber,
+    maxDepositLimit: BigNumber
+  ) => {
+    if (BigNumber(value).isGreaterThan(maxWalletBalance)) {
+      return "You do not have enough money in your wallet";
+    }
+
+    if (BigNumber(value).isGreaterThan(maxDepositLimit)) {
+      return `Deposit value exceeds the maximum allowed limit ${formatNumber(
+        maxDepositLimit.toNumber()
+      )} ${token.symbol}`;
+    }
+
+    return true;
+  };
+
+  const validateRepay = (value: string, maxBalanceToken: BigNumber) => {
+    if (BigNumber(value).isGreaterThan(maxBalanceToken)) {
+      return "You don't have enough to repay that amount";
+    }
+
+    return true;
+  };
+
+  const validateMaxValue = useCallback(
+    (value: string) => {
       if (formType === FormType.DEPOSIT) {
-        const max = BigNumber(walletBalance)
-          .dividedBy(10 ** 18)
-          .toFixed();
-        setValue("formToken", max, { shouldValidate: true });
+        const maxWalletBalance = BigNumber(walletBalance).dividedBy(10 ** 18);
+        const maxDepositLimit = BigNumber(depositLimit)
+          .minus(BigNumber(balanceTokens))
+          .dividedBy(10 ** 18);
+
+        return validateDeposit(value, maxWalletBalance, maxDepositLimit);
       } else {
-        const max = BigNumber(balancePosition)
-          .dividedBy(10 ** 18)
-          .toFixed();
-        setValue("formToken", max, { shouldValidate: true });
+        const maxBalanceToken = BigNumber(balanceToken).dividedBy(10 ** 18);
+        return validateRepay(value, maxBalanceToken);
       }
     },
-    [setValue, walletBalance, formType]
+    [depositLimit, balanceTokens, walletBalance, balanceToken, formType]
   );
+
+  const setMax = useCallback(() => {
+    const max =
+      formType === FormType.DEPOSIT
+        ? BigNumber.min(
+            BigNumber(walletBalance).dividedBy(10 ** 18),
+            BigNumber(depositLimit)
+              .minus(balanceTokens)
+              .dividedBy(10 ** 18)
+          )
+        : BigNumber(balancePosition).dividedBy(10 ** 18);
+    setValue("formToken", max.toString(), { shouldValidate: true });
+  }, [
+    setValue,
+    walletBalance,
+    balancePosition,
+    depositLimit,
+    balanceTokens,
+    formType,
+  ]);
 
   const onSubmit = useCallback(
     async (values: Record<string, any>) => {
@@ -227,6 +275,7 @@ const useVaultManageDeposit = (
     setFormType,
     approve,
     setMax,
+    validateMaxValue,
     handleSubmit,
     onSubmit,
   };
