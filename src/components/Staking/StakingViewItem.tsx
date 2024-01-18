@@ -1,4 +1,4 @@
-import { memo, FC } from "react";
+import { FC, memo } from "react";
 import { Box, Grid, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import InfoIcon from "@mui/icons-material/Info";
@@ -15,6 +15,7 @@ import { getTokenLogoURL } from "utils/tokenLogo";
 
 import clockSrc from "assets/svg/clock-circle.svg";
 import BigNumber from "bignumber.js";
+import { FlowType } from "hooks/useStakingView";
 
 const StakingViewItemWrapper = styled(Grid)`
   &.MuiGrid-item {
@@ -268,13 +269,15 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
               <ButtonGrid item xs={12} sm={6}>
                 {isUnlockable(seconds) ? (
                   <StakingViewItemButton
-                    onClick={() => processFlow("unstake", lockPosition)}
+                    onClick={() => processFlow(FlowType.UNSTAKE, lockPosition)}
                   >
                     Unstake
                   </StakingViewItemButton>
                 ) : (
                   <StakingViewItemButton
-                    onClick={() => processFlow("early", lockPosition)}
+                    onClick={() =>
+                      processFlow(FlowType.EARLY_UNSTAKE, lockPosition)
+                    }
                   >
                     Early Unstake
                   </StakingViewItemButton>
