@@ -38,7 +38,7 @@
     "copy-to-clipboard": "^3.3.3",
     "d3-time-format": "^4.1.0",
     "fathom-ethers": "^1.1.1",
-    "fathom-sdk": "^0.1.40",
+    "fathom-sdk": "^0.1.41",
     "fathom-swap-standard-token-list": "^1.7.3",
     "feather-icons": "^4.29.1",
     "graphql": "^16.6.0",
