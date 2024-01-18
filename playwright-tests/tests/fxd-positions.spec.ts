@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 test.describe("Fathom App Test Suite: Positions Operations", () => {
-  test.describe.serial("Scenario 1", () => {
+  test.describe.serial("Scenario 1 @smoke", () => {
     test("Creating a position with 40 collateral and safe max borrow amount is successful", async ({
       fxdPage,
     }) => {
