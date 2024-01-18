@@ -1,6 +1,6 @@
 import { FC, useMemo } from "react";
 
-import { Box, Typography, Grid } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import InfoIcon from "@mui/icons-material/Info";
 
@@ -17,6 +17,7 @@ import { secondsToTime } from "utils/secondsToTime";
 import useStreamStats from "hooks/useStreamStats";
 import BigNumber from "bignumber.js";
 import useSharedContext from "context/shared";
+import { FlowType } from "hooks/useStakingView";
 
 const FTHMStreamHeader = styled("h3")`
   font-weight: 600;
@@ -40,7 +41,7 @@ const StatsTypographyDescription = styled(Typography)`
 `;
 
 const StatsBlocks = styled(Box)`
-  padding: 15px 0;
+  padding: 15px 0 30px 0;
   border-bottom: 1px solid #1d2d49;
 `;
 
@@ -174,7 +175,7 @@ const StreamStats: FC = () => {
   const { isMobile } = useSharedContext();
 
   return (
-    <Box sx={{ padding: "0 10px" }}>
+    <Box sx={{ padding: isMobile ? "10px" : "0 10px" }}>
       <FTHMStreamHeader>FTHM Stream</FTHMStreamHeader>
       <StatsTypography>Network Stats</StatsTypography>
       <StatsTypographyDescription>
@@ -244,7 +245,11 @@ const StreamStats: FC = () => {
 
       {stake && (
         <>
-          <StatsTypography sx={{ padding: "30px 0" }}>My Stats</StatsTypography>
+          <StatsTypography
+            sx={{ padding: isMobile ? "40px 0 30px 0" : "30px 0" }}
+          >
+            My Stats
+          </StatsTypography>
           <MyStatsBlocks>
             <MyStatsBlock>
               <StatsLabel>Staked Balance</StatsLabel>
@@ -280,9 +285,9 @@ const StreamStats: FC = () => {
             )}
 
             {isMobile && (
-              <MyStatsBlock>
+              <>
                 {BigNumber(Number(seconds)).isGreaterThan(0) && (
-                  <>
+                  <MyStatsBlock>
                     <CooldownInProgress>
                       Cooldown in progress
                     </CooldownInProgress>
@@ -299,37 +304,43 @@ const StreamStats: FC = () => {
                         <span>{formatPercentage(cooldownInUsd)}</span>
                       ) : null}
                     </MyStatsValue>
-                  </>
+                  </MyStatsBlock>
                 )}
                 {BigNumber(Number(seconds)).isLessThanOrEqualTo(0) &&
                 stake &&
                 BigNumber(stake.claimedAmount).isGreaterThan(0) ? (
-                  <Grid container>
-                    <Grid item xs={6}>
-                      <StatsLabel>
-                        Ready to withdraw
-                        <InfoIcon sx={{ fontSize: "18px" }} />
-                      </StatsLabel>
-                      <MyStatsValue className={"green"}>
-                        <strong>
-                          {formatPercentage(
-                            Number(stake.claimedAmount) / 10 ** 18
-                          )}{" "}
-                          FTHM
-                        </strong>
-                        {BigNumber(cooldownInUsd).isGreaterThan(1 / 10 ** 6) ? (
-                          <span>{formatPercentage(cooldownInUsd)}</span>
-                        ) : null}
-                      </MyStatsValue>
+                  <MyStatsBlock>
+                    <Grid container>
+                      <Grid item xs={6}>
+                        <StatsLabel>
+                          Ready to withdraw
+                          <InfoIcon sx={{ fontSize: "18px" }} />
+                        </StatsLabel>
+                        <MyStatsValue className={"green"}>
+                          <strong>
+                            {formatPercentage(
+                              Number(stake.claimedAmount) / 10 ** 18
+                            )}{" "}
+                            FTHM
+                          </strong>
+                          {BigNumber(cooldownInUsd).isGreaterThan(
+                            1 / 10 ** 6
+                          ) ? (
+                            <span>{formatPercentage(cooldownInUsd)}</span>
+                          ) : null}
+                        </MyStatsValue>
+                      </Grid>
+                      <ButtonGrid item xs={6}>
+                        <StatsButton
+                          onClick={() => processFlow(FlowType.WITHDRAW)}
+                        >
+                          Withdraw
+                        </StatsButton>
+                      </ButtonGrid>
                     </Grid>
-                    <ButtonGrid item xs={6}>
-                      <StatsButton onClick={() => processFlow("withdraw")}>
-                        Withdraw
-                      </StatsButton>
-                    </ButtonGrid>
-                  </Grid>
+                  </MyStatsBlock>
                 ) : null}
-              </MyStatsBlock>
+              </>
             )}
 
             <MyStatsBlock>
@@ -356,7 +367,7 @@ const StreamStats: FC = () => {
                 </Grid>
                 {BigNumber(totalRewards).isGreaterThan(0) ? (
                   <ButtonGrid item xs={4}>
-                    <StatsButton onClick={() => processFlow("claim")}>
+                    <StatsButton onClick={() => processFlow(FlowType.CLAIM)}>
                       Claim
                     </StatsButton>
                   </ButtonGrid>
@@ -420,7 +431,9 @@ const StreamStats: FC = () => {
                       </MyStatsValue>
                     </Grid>
                     <ButtonGrid item xs={6}>
-                      <StatsButton onClick={() => processFlow("withdraw")}>
+                      <StatsButton
+                        onClick={() => processFlow(FlowType.WITHDRAW)}
+                      >
                         Withdraw
                       </StatsButton>
                     </ButtonGrid>

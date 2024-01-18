@@ -10,6 +10,8 @@ import {
 import useStakingView, {
   ActionType,
   DialogActions,
+  FlowType,
+  UnlockType,
 } from "hooks/useStakingView";
 import { ChainId } from "connectors/networks";
 import { ILockPosition } from "fathom-sdk";
@@ -27,7 +29,11 @@ type UseStakingReturnType = {
   withdrawAll: (callback: Function) => Promise<void>;
   claimRewards: (callback: Function) => Promise<void>;
   handleEarlyUnstake: (lockId: number) => Promise<number | Error>;
-  handleUnlock: (lockId: number, amount: number) => Promise<number | Error>;
+  handleUnlock: (
+    lockId: number,
+    type: UnlockType,
+    amount?: string
+  ) => Promise<number | Error>;
   unstake: ILockPosition | null;
   earlyUnstake: ILockPosition | null;
   dialogAction: DialogActions;
@@ -37,7 +43,7 @@ type UseStakingReturnType = {
   setUnstake: Dispatch<SetStateAction<ILockPosition | null>>;
   setEarlyUnstake: Dispatch<SetStateAction<ILockPosition | null>>;
   onClose: () => void;
-  processFlow: (action: string, position?: ILockPosition) => void;
+  processFlow: (action: FlowType, position?: ILockPosition) => void;
   stake: any;
   previousStake: any;
   lockPositions: ILockPosition[];
