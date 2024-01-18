@@ -10,7 +10,7 @@ concurrency:
   group: ${{ github.workflow }}
 
 jobs:
-  all-tests-local-dev:
+  smoke-tests-local-dev:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
