@@ -1,6 +1,6 @@
 import { FC, useMemo } from "react";
 
-import { Box, Typography, Grid } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import InfoIcon from "@mui/icons-material/Info";
 
@@ -17,6 +17,7 @@ import { secondsToTime } from "utils/secondsToTime";
 import useStreamStats from "hooks/useStreamStats";
 import BigNumber from "bignumber.js";
 import useSharedContext from "context/shared";
+import { FlowType } from "hooks/useStakingView";
 
 const FTHMStreamHeader = styled("h3")`
   font-weight: 600;
@@ -330,7 +331,9 @@ const StreamStats: FC = () => {
                         </MyStatsValue>
                       </Grid>
                       <ButtonGrid item xs={6}>
-                        <StatsButton onClick={() => processFlow("withdraw")}>
+                        <StatsButton
+                          onClick={() => processFlow(FlowType.WITHDRAW)}
+                        >
                           Withdraw
                         </StatsButton>
                       </ButtonGrid>
@@ -364,7 +367,7 @@ const StreamStats: FC = () => {
                 </Grid>
                 {BigNumber(totalRewards).isGreaterThan(0) ? (
                   <ButtonGrid item xs={4}>
-                    <StatsButton onClick={() => processFlow("claim")}>
+                    <StatsButton onClick={() => processFlow(FlowType.CLAIM)}>
                       Claim
                     </StatsButton>
                   </ButtonGrid>
@@ -428,7 +431,9 @@ const StreamStats: FC = () => {
                       </MyStatsValue>
                     </Grid>
                     <ButtonGrid item xs={6}>
-                      <StatsButton onClick={() => processFlow("withdraw")}>
+                      <StatsButton
+                        onClick={() => processFlow(FlowType.WITHDRAW)}
+                      >
                         Withdraw
                       </StatsButton>
                     </ButtonGrid>
