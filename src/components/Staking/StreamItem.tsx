@@ -2,7 +2,7 @@ import { FC, memo, useMemo } from "react";
 import { ILockPosition } from "fathom-sdk";
 import StakingViewItem from "components/Staking/StakingViewItem";
 import ClaimRewardsDialog from "components/Staking/Dialog/ClaimRewardsDialog";
-import { DialogActions } from "hooks/useStakingView";
+import { DialogActions, FlowType } from "hooks/useStakingView";
 import UnstakeDialog from "components/Staking/Dialog/UnstakeDialog";
 import EarlyUnstakeDialog from "components/Staking/Dialog/EarlyUnstakeDialog";
 import { NoResults } from "components/AppComponents/AppBox/AppBox";
@@ -99,9 +99,11 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
               totalRewards={totalRewards}
               onClose={onClose}
               onSkip={
-                unstake || earlyUnstake ? () => processFlow("skip") : null
+                unstake || earlyUnstake
+                  ? () => processFlow(FlowType.SKIP)
+                  : null
               }
-              onClaim={() => processFlow("claim-cooldown")}
+              onClaim={() => processFlow(FlowType.CLAIM_COOLDOWN)}
             />
           )
         );
@@ -123,7 +125,9 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
               token={token}
               onClose={onClose}
               onContinue={
-                unstake || earlyUnstake ? () => processFlow("continue") : null
+                unstake || earlyUnstake
+                  ? () => processFlow(FlowType.CONTINUE)
+                  : null
               }
             />
           )
@@ -158,7 +162,7 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
               token={token}
               lockPosition={unstake}
               onFinish={(unstakeAmount: number) => {
-                processFlow("unstake-cooldown-unstake", {
+                processFlow(FlowType.UNSTAKE_COOLDOWN_UNSTAKE, {
                   ...unstake,
                   amount: unstakeAmount * 10 ** 18,
                 } as ILockPosition);
@@ -176,7 +180,7 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
               onClose={onClose}
               lockPosition={earlyUnstake as ILockPosition}
               onFinish={(unstakeAmount) => {
-                processFlow("unstake-cooldown-early-unstake", {
+                processFlow(FlowType.UNSTAKE_COOLDOWN_EARLY_UNSTAKE, {
                   ...earlyUnstake,
                   amount: unstakeAmount,
                 } as ILockPosition);
@@ -193,8 +197,8 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
               position={(unstake || earlyUnstake) as ILockPosition}
               token={token}
               onClose={onClose}
-              onSkip={() => processFlow("skip")}
-              onClaim={() => processFlow("claim")}
+              onSkip={() => processFlow(FlowType.SKIP)}
+              onClaim={() => processFlow(FlowType.CLAIM)}
             />
           )
         );
