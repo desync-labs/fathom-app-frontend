@@ -25,7 +25,7 @@ const useVaultManageDeposit = (
   const { account } = useConnector();
   const { poolService, vaultService } = useServices();
   const { setLastTransactionBlock } = useSyncContext();
-  const { balancePosition } = vaultPosition;
+  const { balancePosition, balanceShares } = vaultPosition;
 
   const {
     handleSubmit,
@@ -48,6 +48,7 @@ const useVaultManageDeposit = (
 
   const [approveBtn, setApproveBtn] = useState<boolean>(false);
   const [approvalPending, setApprovalPending] = useState<boolean>(false);
+  const [isFullWithdraw, setIsFullWithdraw] = useState<boolean>(false);
 
   const formToken = watch("formToken");
   const formSharedToken = watch("formSharedToken");
@@ -70,6 +71,12 @@ const useVaultManageDeposit = (
     () =>
       debounce(async (deposit: string) => {
         let sharedAmount = "0";
+
+        if (isFullWithdraw) {
+          setIsFullWithdraw(false);
+          return;
+        }
+
         if (formType === FormType.DEPOSIT) {
           sharedAmount = await vaultService.previewDeposit(deposit, vault.id);
         } else {
@@ -82,7 +89,14 @@ const useVaultManageDeposit = (
 
         setValue("formSharedToken", sharedConverted);
       }, 500),
-    [vaultService, vault, formToken, formType]
+    [
+      vaultService,
+      vault,
+      formToken,
+      formType,
+      isFullWithdraw,
+      setIsFullWithdraw,
+    ]
   );
 
   const approve = useCallback(async () => {
@@ -97,21 +111,18 @@ const useVaultManageDeposit = (
     setApprovalPending(false);
   }, [account, vault, vaultService, setApprovalPending, setApproveBtn]);
 
-  const getBalancePosition = useCallback(
-    (vaultPosition: IVaultPosition, vault: IVault) => {
-      vaultService
-        .previewRedeem(
-          BigNumber(vaultPosition.balanceShares)
-            .dividedBy(10 ** 18)
-            .toString(),
-          vault.id
-        )
-        .then((balanceToken: string) => {
-          setBalanceToken(balanceToken);
-        });
-    },
-    [vaultService, setBalanceToken]
-  );
+  const getBalancePosition = useCallback(() => {
+    vaultService
+      .previewRedeem(
+        BigNumber(vaultPosition.balanceShares)
+          .dividedBy(10 ** 18)
+          .toString(),
+        vault.id
+      )
+      .then((balanceToken: string) => {
+        setBalanceToken(balanceToken);
+      });
+  }, [vaultService, vault, vaultPosition, setBalanceToken]);
 
   useEffect(() => {
     setValue("formToken", "", { shouldValidate: true });
@@ -123,7 +134,7 @@ const useVaultManageDeposit = (
   }, [vault, formToken]);
 
   useEffect(() => {
-    getBalancePosition(vaultPosition, vault);
+    getBalancePosition();
   }, [vaultPosition, vault]);
 
   useEffect(() => {
@@ -196,23 +207,42 @@ const useVaultManageDeposit = (
   );
 
   const setMax = useCallback(() => {
-    const max =
-      formType === FormType.DEPOSIT
-        ? BigNumber.min(
-            BigNumber(walletBalance).dividedBy(10 ** 18),
-            BigNumber(depositLimit)
-              .minus(balanceTokens)
-              .dividedBy(10 ** 18)
-          )
-        : BigNumber(balancePosition).dividedBy(10 ** 18);
-    setValue("formToken", max.toString(), { shouldValidate: true });
+    if (formType === FormType.DEPOSIT) {
+      const max = BigNumber.min(
+        BigNumber(walletBalance).dividedBy(10 ** 18),
+        BigNumber(depositLimit)
+          .minus(balanceTokens)
+          .dividedBy(10 ** 18)
+      );
+      setValue("formToken", max.toString(), { shouldValidate: true });
+    } else {
+      setIsFullWithdraw(true);
+      setValue(
+        "formToken",
+        BigNumber(balanceToken)
+          .dividedBy(10 ** 18)
+          .toString(),
+        { shouldValidate: true }
+      );
+      setValue(
+        "formSharedToken",
+        BigNumber(balanceShares)
+          .dividedBy(10 ** 18)
+          .toString(),
+        { shouldValidate: true }
+      );
+    }
   }, [
     setValue,
+    setIsFullWithdraw,
+    isFullWithdraw,
     walletBalance,
     balancePosition,
     depositLimit,
     balanceTokens,
+    balanceToken,
     formType,
+    balanceShares,
   ]);
 
   const onSubmit = useCallback(
