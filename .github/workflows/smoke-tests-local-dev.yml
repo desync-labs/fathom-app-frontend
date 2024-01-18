@@ -1,4 +1,4 @@
-name: all-tests-local-dev
+name: smoke-tests-local-dev
 
 on:
   workflow_dispatch:
