@@ -9,7 +9,7 @@ const network =
     : AvailableNetworks.Apothem;
 
 test.describe("Fathom App Test Suite: Wallet Connectivity", () => {
-  test("Connecting Metamask wallet to the application is successful", async ({
+  test("Connecting Metamask wallet to the application is successful @smoke", async ({
     fxdPage,
   }) => {
     await fxdPage.navigate();
@@ -20,7 +20,7 @@ test.describe("Fathom App Test Suite: Wallet Connectivity", () => {
     await fxdPage.validateNetworkBlock(network);
   });
 
-  test("Disconnecting Metamask wallet from the application is successful", async ({
+  test("Disconnecting Metamask wallet from the application is successful @smoke", async ({
     fxdPage,
   }) => {
     await fxdPage.navigate();
