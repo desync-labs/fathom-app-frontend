@@ -45,7 +45,7 @@ test.describe.skip("Fathom App Test Suite: Vault Operations", () => {
     });
   });
 
-  test("FXD Vault: Deposit: Depositing first 1 FXD is successful", async ({
+  test("FXD Vault: Deposit: Depositing first 1 FXD is successful @smoke", async ({
     vaultPage,
   }) => {
     const depositAmount = 1;
@@ -79,7 +79,7 @@ test.describe.skip("Fathom App Test Suite: Vault Operations", () => {
     });
   });
 
-  test("FXD Vault: Manage Vault: Fully withdrawing all FXD is successful", async ({
+  test("FXD Vault: Manage Vault: Fully withdrawing all FXD is successful @smoke", async ({
     vaultPage,
   }) => {
     test.setTimeout(150000);
