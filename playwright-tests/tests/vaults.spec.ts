@@ -52,10 +52,10 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     });
   });
 
-  test("FXD Vault: Deposit: Depositing first 1 FXD is successful @smoke", async ({
+  test("FXD Vault: Deposit: Depositing first 0.001 FXD is successful @smoke", async ({
     vaultPage,
   }) => {
-    const depositAmount = 1;
+    const depositAmount = 0.001;
     await metamask.switchAccount("Account 1");
     const newAddress = await metamask.getWalletAddress();
     console.log(newAddress);
@@ -93,7 +93,7 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     vaultPage,
   }) => {
     test.setTimeout(150000);
-    const depositAmount = 1;
+    const depositAmount = 0.001;
     await metamask.switchAccount("Account 1");
     const newAddress = await metamask.getWalletAddress();
     console.log(newAddress);

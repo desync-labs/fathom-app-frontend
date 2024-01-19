@@ -215,7 +215,9 @@ export default class BasePage {
       fathomStablecoinContractAbi,
       signer
     );
-    const amountFormatted = BigInt(amount.toString() + "000000000000000000");
+    const amountFormatted = BigInt(
+      Math.ceil(amount).toString() + "000000000000000000"
+    );
     const transaction = await fathomStablecoinContract.mint(
       address,
       amountFormatted
