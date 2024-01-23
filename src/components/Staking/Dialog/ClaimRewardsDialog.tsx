@@ -58,6 +58,7 @@ export const ButtonsWrapper = styled(Box)<{ singleBtn?: boolean }>`
   align-items: center;
 
   > button {
+    height: 48px;
     width: ${({ singleBtn }) => (singleBtn ? "100%" : "calc(50% - 3px)")};
   }
 
