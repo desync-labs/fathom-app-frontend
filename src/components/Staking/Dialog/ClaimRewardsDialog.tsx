@@ -59,6 +59,7 @@ export const ButtonsWrapper = styled(Box)<{ singleBtn?: boolean }>`
 
   > button {
     width: ${({ singleBtn }) => (singleBtn ? "100%" : "calc(50% - 3px)")};
+    height: 48px;
   }
 
   ${({ theme }) => theme.breakpoints.down("sm")} {
