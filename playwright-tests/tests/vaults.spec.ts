@@ -10,7 +10,7 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
   test("FXD Vault: Manage Vault: Depositing 1 FXD is successful", async ({
     vaultPage,
   }) => {
-    const depositAmount = 1;
+    const depositAmount = 50;
     await vaultPage.navigate();
     await vaultPage.connectWallet(WalletConnectOptions.Metamask);
     await vaultPage.validateConnectedWalletAddress();
@@ -33,7 +33,7 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
   test("FXD Vault: Manage Vault: Partially withdrawing 1 FXD is successful", async ({
     vaultPage,
   }) => {
-    const withdrawAmount = 1;
+    const withdrawAmount = 50;
     await vaultPage.navigate();
     await vaultPage.connectWallet(WalletConnectOptions.Metamask);
     await vaultPage.validateConnectedWalletAddress();
@@ -52,10 +52,10 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     });
   });
 
-  test("FXD Vault: Deposit: Depositing first 0.001 FXD is successful @smoke", async ({
+  test("FXD Vault: Deposit: Depositing first 0.1 FXD is successful @smoke", async ({
     vaultPage,
   }) => {
-    const depositAmount = 0.001;
+    const depositAmount = 0.5;
     await metamask.switchAccount("Account 1");
     const newAddress = await metamask.getWalletAddress();
     console.log(newAddress);
@@ -93,7 +93,7 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     vaultPage,
   }) => {
     test.setTimeout(150000);
-    const depositAmount = 0.001;
+    const depositAmount = 0.5;
     await metamask.switchAccount("Account 1");
     const newAddress = await metamask.getWalletAddress();
     console.log(newAddress);
