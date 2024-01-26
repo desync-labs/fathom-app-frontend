@@ -3,6 +3,7 @@ import { ILockPosition } from "fathom-sdk";
 import useStakingContext from "context/staking";
 import { UnStakeDialogProps } from "components/Staking/Dialog/UnstakeDialog";
 import BigNumber from "bignumber.js";
+import { UnlockType } from "hooks/useStakingView";
 
 const useUnstake = (
   lockPosition: ILockPosition | null,
@@ -82,7 +83,23 @@ const useUnstake = (
       return;
     }
 
-    await handleUnlock(lockPosition?.lockId as number, Number(unStakeAmount));
+    if (
+      BigNumber(totalBalance)
+        .dividedBy(10 ** 18)
+        .isEqualTo(unStakeAmount)
+    ) {
+      await handleUnlock(lockPosition?.lockId as number, UnlockType.FULL);
+    } else {
+      /**
+       * Partial unlock.
+       */
+      await handleUnlock(
+        lockPosition?.lockId as number,
+        UnlockType.PARTIAL,
+        unStakeAmount
+      );
+    }
+
     onFinish(Number(unStakeAmount));
   }, [lockPosition, handleUnlock, onFinish, unStakeAmount, totalBalance]);
 

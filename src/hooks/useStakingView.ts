@@ -31,6 +31,23 @@ export enum DialogActions {
   WITHDRAW,
 }
 
+export enum FlowType {
+  EARLY_UNSTAKE = "earlyUnstake",
+  UNSTAKE = "unstake",
+  SKIP = "skip",
+  CONTINUE = "continue",
+  CLAIM = "claim",
+  WITHDRAW = "withdraw",
+  CLAIM_COOLDOWN = "claimCooldown",
+  UNSTAKE_COOLDOWN_UNSTAKE = "unstakeCooldownUnstake",
+  UNSTAKE_COOLDOWN_EARLY_UNSTAKE = "unstakeCooldownEarlyUnstake",
+}
+
+export enum UnlockType {
+  FULL = "full",
+  PARTIAL = "partial",
+}
+
 const useStakingView = () => {
   const [action, setAction] = useState<ActionType>();
   const { account, chainId } = useConnector();
@@ -179,42 +196,43 @@ const useStakingView = () => {
   }, [totalRewards, fetchAllClaimRewards]);
 
   const processFlow = useCallback(
-    (action: string, position?: ILockPosition) => {
-      action === "early" && setEarlyUnstake(position as ILockPosition);
-      action === "unstake" && setUnstake(position as ILockPosition);
+    (action: FlowType, position?: ILockPosition) => {
+      action === FlowType.EARLY_UNSTAKE &&
+        setEarlyUnstake(position as ILockPosition);
+      action === FlowType.UNSTAKE && setUnstake(position as ILockPosition);
 
-      if (["early", "unstake"].includes(action)) {
+      if ([FlowType.UNSTAKE, FlowType.EARLY_UNSTAKE].includes(action)) {
         if ((position as ILockPosition).rewardsAvailable > 0) {
           return setDialogAction(DialogActions.UNCLAIMED);
         }
-        action === "early"
+        action === FlowType.EARLY_UNSTAKE
           ? setDialogAction(DialogActions.EARLY_UNSTAKE)
           : setDialogAction(DialogActions.UNSTAKE);
       }
 
-      if (action === "skip" || action === "continue") {
+      if ([FlowType.SKIP, FlowType.CONTINUE].includes(action)) {
         !!unstake && setDialogAction(DialogActions.UNSTAKE);
         !!earlyUnstake && setDialogAction(DialogActions.EARLY_UNSTAKE);
       }
 
-      if (action === "unstake-cooldown-unstake") {
+      if (action === FlowType.UNSTAKE_COOLDOWN_UNSTAKE) {
         setDialogAction(DialogActions.UNSTAKE_COOLDOWN);
         console.log("Unstake", position);
         !!position && setUnstake(position);
       }
 
-      if (action === "unstake-cooldown-early-unstake") {
+      if (action === FlowType.UNSTAKE_COOLDOWN_EARLY_UNSTAKE) {
         setDialogAction(DialogActions.UNSTAKE_COOLDOWN);
         console.log("Early unstake", position);
         !!position && setEarlyUnstake(position);
       }
 
-      action === "claim-cooldown" &&
+      action === FlowType.CLAIM_COOLDOWN &&
         setDialogAction(DialogActions.CLAIM_REWARDS_COOLDOWN);
 
-      action === "claim" && setDialogAction(DialogActions.CLAIM_REWARDS);
+      action === FlowType.CLAIM && setDialogAction(DialogActions.CLAIM_REWARDS);
 
-      action === "withdraw" && setDialogAction(DialogActions.WITHDRAW);
+      action === FlowType.WITHDRAW && setDialogAction(DialogActions.WITHDRAW);
     },
     [unstake, earlyUnstake, setEarlyUnstake, setUnstake, setDialogAction]
   );
@@ -290,17 +308,20 @@ const useStakingView = () => {
   );
 
   const handleUnlock = useCallback(
-    async (lockId: number, amount: number) => {
+    async (lockId: number, type: UnlockType, amount?: string) => {
       setAction({
         type: "unlock",
         id: lockId,
       });
       try {
-        const blockNumber = await stakingService.handleUnlock(
-          account,
-          lockId,
-          amount
-        );
+        const blockNumber =
+          type === UnlockType.FULL
+            ? await stakingService.handleUnlock(account, lockId)
+            : await stakingService.handlePartiallyUnlock(
+                account,
+                lockId,
+                amount as string
+              );
         setLastTransactionBlock(blockNumber as number);
 
         return blockNumber;

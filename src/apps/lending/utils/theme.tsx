@@ -405,13 +405,6 @@ export function getThemedComponents(theme: Theme) {
           root: {
             borderRadius: "6px",
             borderColor: theme.palette.divider,
-            "&:hover .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#5a81ff",
-              boxShadow: "0 0 8px #003cff",
-            },
-            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#5a81ff",
-            },
           },
         },
       },

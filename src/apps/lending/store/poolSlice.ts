@@ -2,7 +2,6 @@ import {
   ApproveDelegationType,
   ApproveType,
   BaseDebtToken,
-  DebtSwitchAdapterService,
   ERC20_2612Service,
   ERC20Service,
   EthereumTransactionTypeExtended,
@@ -14,7 +13,6 @@ import {
   InterestRate,
   LendingPoolBundle,
   MAX_UINT_AMOUNT,
-  PermitSignature,
   Pool,
   PoolBaseCurrencyHumanized,
   PoolBundle,
@@ -24,7 +22,6 @@ import {
   UiPoolDataProvider,
   UserReserveDataHumanized,
   V3FaucetService,
-  WithdrawAndSwitchAdapterService,
 } from "@into-the-fathom/lending-contract-helpers";
 import {
   LPBorrowParamsType,
@@ -39,20 +36,10 @@ import {
 } from "@into-the-fathom/lending-contract-helpers/dist/esm/v3-pool-contract/lendingPoolTypes";
 import { SignatureLike } from "@ethersproject/bytes";
 import dayjs from "dayjs";
-import {
-  BigNumber,
-  PopulatedTransaction,
-  Signature,
-  utils,
-} from "fathom-ethers";
-import { splitSignature } from "fathom-ethers/lib/utils";
+import { BigNumber, PopulatedTransaction, utils } from "fathom-ethers";
 import { produce } from "immer";
 import { ClaimRewardsActionsProps } from "apps/lending/components/transactions/ClaimRewards/ClaimRewardsActions";
-import { DebtSwitchActionProps } from "apps/lending/components/transactions/DebtSwitch/DebtSwitchActions";
-import { CollateralRepayActionProps } from "apps/lending/components/transactions/Repay/CollateralRepayActions";
 import { RepayActionProps } from "apps/lending/components/transactions/Repay/RepayActions";
-import { SwapActionProps } from "apps/lending/components/transactions/Swap/SwapActions";
-import { WithdrawAndSwitchActionProps } from "apps/lending/components/transactions/Withdraw/WithdrawAndSwitchActions";
 import { Approval } from "apps/lending/helpers/useTransactionHandler";
 import { MarketDataType } from "apps/lending/ui-config/marketsConfig";
 import {
@@ -95,10 +82,6 @@ export interface PoolSlice {
   swapBorrowRateMode: (
     args: Omit<LPSwapBorrowRateMode, "user">
   ) => Promise<EthereumTransactionTypeExtended[]>;
-  paraswapRepayWithCollateral: (
-    args: CollateralRepayActionProps
-  ) => Promise<EthereumTransactionTypeExtended[]>;
-  debtSwitch: (args: DebtSwitchActionProps) => PopulatedTransaction;
   setUserEMode: (
     categoryId: number
   ) => Promise<EthereumTransactionTypeExtended[]>;
@@ -109,12 +92,6 @@ export interface PoolSlice {
     args: ClaimRewardsActionsProps
   ) => Promise<EthereumTransactionTypeExtended[]>;
   // TODO: optimize types to use only neccessary properties
-  swapCollateral: (
-    args: SwapActionProps
-  ) => Promise<EthereumTransactionTypeExtended[]>;
-  withdrawAndSwitch: (
-    args: WithdrawAndSwitchActionProps
-  ) => PopulatedTransaction;
   repay: (args: RepayActionProps) => Promise<EthereumTransactionTypeExtended[]>;
   repayWithPermit: (
     args: RepayActionProps & {
@@ -465,50 +442,6 @@ export const createPoolSlice: StateCreator<
         useOptimizedPath: get().useOptimizedPath(),
       });
     },
-    paraswapRepayWithCollateral: async ({
-      fromAssetData,
-      poolReserve,
-      repayAmount,
-      repayWithAmount,
-      repayAllDebt,
-      useFlashLoan,
-      rateMode,
-      augustus,
-      swapCallData,
-      signature,
-      deadline,
-      signedAmount,
-    }) => {
-      const user = get().account;
-      const pool = getCorrectPool();
-
-      let permitSignature: PermitSignature | undefined;
-
-      if (signature && deadline && signedAmount) {
-        const sig: Signature = splitSignature(signature);
-        permitSignature = {
-          amount: signedAmount,
-          deadline: deadline,
-          v: sig.v,
-          r: sig.r,
-          s: sig.s,
-        };
-      }
-      return pool.paraswapRepayWithCollateral({
-        user,
-        fromAsset: fromAssetData.underlyingAsset,
-        fromAToken: fromAssetData.aTokenAddress,
-        assetToRepay: poolReserve.underlyingAsset,
-        repayWithAmount,
-        repayAmount,
-        repayAllDebt,
-        rateMode,
-        flash: useFlashLoan,
-        swapAndRepayCallData: swapCallData,
-        augustus,
-        permitSignature,
-      });
-    },
     generateCreditDelegationSignatureRequest: async ({
       amount,
       deadline,
@@ -560,70 +493,6 @@ export const createPoolSlice: StateCreator<
 
       return JSON.stringify(typedData);
     },
-    debtSwitch: ({
-      currentRateMode,
-      poolReserve,
-      amountToSwap,
-      targetReserve,
-      amountToReceive,
-      isMaxSelected,
-      txCalldata,
-      augustus,
-      signatureParams,
-    }) => {
-      const user = get().account;
-      const provider = get().jsonRpcProvider();
-      const currentMarketData = get().currentMarketData;
-      const debtSwitchService = new DebtSwitchAdapterService(
-        provider,
-        currentMarketData.addresses.DEBT_SWITCH_ADAPTER ?? ""
-      );
-      let signatureDeconstruct: PermitSignature = {
-        amount: signatureParams?.amount ?? "0",
-        deadline: signatureParams?.deadline?.toString() ?? "0",
-        v: 0,
-        r: "0x0000000000000000000000000000000000000000000000000000000000000000",
-        s: "0x0000000000000000000000000000000000000000000000000000000000000000",
-      };
-
-      if (signatureParams) {
-        const sig: Signature = splitSignature(signatureParams.signature);
-        signatureDeconstruct = {
-          ...signatureDeconstruct,
-          v: sig.v,
-          r: sig.r,
-          s: sig.s,
-        };
-      }
-      return debtSwitchService.debtSwitch({
-        user,
-        debtAssetUnderlying: poolReserve.underlyingAsset,
-        debtRepayAmount: isMaxSelected ? MAX_UINT_AMOUNT : amountToSwap,
-        debtRateMode: currentRateMode,
-        newAssetUnderlying: targetReserve.underlyingAsset,
-        newAssetDebtToken: targetReserve.variableDebtTokenAddress,
-        maxNewDebtAmount: amountToReceive,
-        extraCollateralAmount: "0",
-        extraCollateralAsset: "0x0000000000000000000000000000000000000000",
-        repayAll: isMaxSelected,
-        txCalldata,
-        augustus,
-        creditDelegationPermit: {
-          deadline: signatureDeconstruct.deadline,
-          value: signatureDeconstruct.amount,
-          v: signatureDeconstruct.v,
-          r: signatureDeconstruct.r,
-          s: signatureDeconstruct.s,
-        },
-        collateralPermit: {
-          deadline: "0",
-          value: "0",
-          v: 0,
-          r: "0x0000000000000000000000000000000000000000000000000000000000000000",
-          s: "0x0000000000000000000000000000000000000000000000000000000000000000",
-        },
-      });
-    },
     repay: ({ repayWithATokens, amountToRepay, poolAddress, debtType }) => {
       const pool = getCorrectPool();
       const currentAccount = get().account;
@@ -663,99 +532,6 @@ export const createPoolSlice: StateCreator<
         signature,
         useOptimizedPath: get().useOptimizedPath(),
         deadline,
-      });
-    },
-    swapCollateral: async ({
-      poolReserve,
-      targetReserve,
-      isMaxSelected,
-      amountToSwap,
-      amountToReceive,
-      useFlashLoan,
-      augustus,
-      swapCallData,
-      signature,
-      deadline,
-      signedAmount,
-    }) => {
-      const pool = getCorrectPool();
-      const user = get().account;
-
-      let permitSignature: PermitSignature | undefined;
-
-      if (signature && deadline && signedAmount) {
-        const sig: Signature = splitSignature(signature);
-        permitSignature = {
-          amount: signedAmount,
-          deadline: deadline,
-          v: sig.v,
-          r: sig.r,
-          s: sig.s,
-        };
-      }
-
-      return pool.swapCollateral({
-        fromAsset: poolReserve.underlyingAsset,
-        toAsset: targetReserve.underlyingAsset,
-        swapAll: isMaxSelected,
-        fromAToken: poolReserve.aTokenAddress,
-        fromAmount: amountToSwap,
-        minToAmount: amountToReceive,
-        user,
-        flash: useFlashLoan,
-        augustus,
-        swapCallData,
-        permitSignature,
-      });
-    },
-    withdrawAndSwitch: ({
-      poolReserve,
-      targetReserve,
-      isMaxSelected,
-      amountToSwap,
-      amountToReceive,
-      augustus,
-      signatureParams,
-      txCalldata,
-    }) => {
-      const user = get().account;
-
-      const provider = get().jsonRpcProvider();
-      const currentMarketData = get().currentMarketData;
-
-      const withdrawAndSwapService = new WithdrawAndSwitchAdapterService(
-        provider,
-        currentMarketData.addresses.WITHDRAW_SWITCH_ADAPTER
-      );
-
-      let signatureDeconstruct: PermitSignature = {
-        amount: signatureParams?.amount ?? "0",
-        deadline: signatureParams?.deadline?.toString() ?? "0",
-        v: 0,
-        r: "0x0000000000000000000000000000000000000000000000000000000000000000",
-        s: "0x0000000000000000000000000000000000000000000000000000000000000000",
-      };
-
-      if (signatureParams) {
-        const sig: Signature = splitSignature(signatureParams.signature);
-        signatureDeconstruct = {
-          ...signatureDeconstruct,
-          v: sig.v,
-          r: sig.r,
-          s: sig.s,
-        };
-      }
-
-      return withdrawAndSwapService.withdrawAndSwitch({
-        assetToSwitchFrom: poolReserve.underlyingAsset,
-        assetToSwitchTo: targetReserve.underlyingAsset,
-        switchAll: isMaxSelected,
-        amountToSwitch: amountToSwap,
-        minAmountToReceive: amountToReceive,
-        user,
-        augustus,
-        switchCallData: txCalldata,
-        permitParams: signatureDeconstruct,
       });
     },
     setUserEMode: async (categoryId) => {

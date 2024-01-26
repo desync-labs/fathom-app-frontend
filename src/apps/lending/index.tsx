@@ -17,13 +17,11 @@ import BorrowModal from "apps/lending/components/transactions/Borrow/BorrowModal
 
 import ClaimRewardsModal from "apps/lending/components/transactions/ClaimRewards/ClaimRewardsModal";
 import CollateralChangeModal from "apps/lending/components/transactions/CollateralChange/CollateralChangeModal";
-import DebtSwitchModal from "apps/lending/components/transactions/DebtSwitch/DebtSwitchModal";
 import EmodeModal from "apps/lending/components/transactions/Emode/EmodeModal";
 import FaucetModal from "apps/lending/components/transactions/Faucet/FaucetModal";
 import RateSwitchModal from "apps/lending/components/transactions/RateSwitch/RateSwitchModal";
 import RepayModal from "apps/lending/components/transactions/Repay/RepayModal";
 import SupplyModal from "apps/lending/components/transactions/Supply/SupplyModal";
-import SwapModal from "apps/lending/components/transactions/Swap/SwapModal";
 import WithdrawModal from "apps/lending/components/transactions/Withdraw/WithdrawModal";
 
 export const queryClient = new QueryClient();
@@ -47,10 +45,8 @@ const LendingIndexComponent: FC = () => {
                         <RepayModal />
                         <CollateralChangeModal />
                         <RateSwitchModal />
-                        <DebtSwitchModal />
                         <ClaimRewardsModal />
                         <EmodeModal />
-                        <SwapModal />
                         <FaucetModal />
                         <TransactionEventHandler />
                       </SharedDependenciesProvider>
