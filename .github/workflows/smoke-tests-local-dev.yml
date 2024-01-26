@@ -1,4 +1,4 @@
-name: all-tests-local-dev
+name: smoke-tests-local-dev
 
 on:
   workflow_dispatch:
@@ -10,7 +10,7 @@ concurrency:
   group: ${{ github.workflow }}
 
 jobs:
-  all-tests-local-dev:
+  smoke-tests-local-dev:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
@@ -27,7 +27,7 @@ jobs:
       - name: Wait for server to start
         run: sleep 40
       - name: Run Playwright tests
-        run: xvfb-run --auto-servernum -- npm run playwright:test
+        run: xvfb-run --auto-servernum -- npm run playwright:test:smoke
         env:
           ENVIRONMENT_URL: http://127.0.0.1:3000
           HEADLESS_MODE: ${{ vars.HEADLESS_MODE}}

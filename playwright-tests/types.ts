@@ -29,13 +29,18 @@ export interface PositionData {
 }
 
 export interface VaultDepositData {
-  stakedAmount: number | null;
-  poolShare: number | null;
-  shareTokens: number | null;
+  stakedAmountDialogBefore: number | null;
+  poolShareDialogBefore?: number | null;
+  shareTokensDialogBefore?: number | null;
+  stakedAmountDialogAfter: number | null;
+  poolShareDialogAfter: number | null;
+  shareTokensDialogAfter: number | null;
 }
 
 export interface ValidateVaultDataParams extends VaultDepositData {
   id: string;
+  action: VaultAction;
+  amountChanged: number;
 }
 
 export enum VaultFilterName {
@@ -47,4 +52,9 @@ export enum VaultDetailsTabs {
   YourPosition = "Your position",
   About = "About",
   Strategies = "Strategies",
+}
+
+export enum VaultAction {
+  Withdraw = "Withdraw",
+  Deposit = "Deposit",
 }
