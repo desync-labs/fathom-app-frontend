@@ -75,7 +75,7 @@ const useStyles = makeStyles<{ isActive: boolean; showText: boolean }>()(
   })
 );
 
-const AppMenuItem: FC<AppMenuItemProps> = (props) => {
+const AppMenuItem: FC<AppMenuItemProps> = memo((props) => {
   const { name, link, Icon, items = [], isActive, showText } = props;
   const isExpandable = items && items.length > 0 && showText;
 
@@ -130,6 +130,6 @@ const AppMenuItem: FC<AppMenuItemProps> = (props) => {
       {MenuItemChildren}
     </>
   );
-};
+});
 
 export default memo(AppMenuItem);
