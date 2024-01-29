@@ -87,8 +87,8 @@ export const Menu: FC<ItemPropsType> = memo(({ open }) => {
       showText: showText,
     },
     {
-      name: "Vault",
-      link: "/vault",
+      name: "Vaults",
+      link: "/vaults",
       Icon: <VaultIcon isactive={isVaultActive ? "true" : ""} />,
       isActive: isVaultActive,
       showText: showText,

@@ -2,7 +2,7 @@ import {
   BaseProvider,
   Network,
   StaticJsonRpcProvider,
-} from "@ethersproject/providers";
+} from "@into-the-fathom/providers";
 import { logger } from "fathom-ethers";
 
 const DEFAULT_FALL_FORWARD_DELAY = 60000;

@@ -216,9 +216,7 @@ export const EmodeModalContent: FC<EmodeModalContentProps> = ({ mode }) => {
       {blockingError === ErrorType.EMODE_DISABLED_LIQUIDATION && <Blocked />}
       {showLiquidationRiskWarning && (
         <Warning severity="error" sx={{ mt: 6, alignItems: "center" }}>
-          <Typography variant="subheader1" color="#4F1919">
-            Liquidation risk
-          </Typography>
+          <Typography variant="subheader1">Liquidation risk</Typography>
           <Typography variant="caption">
             This action will reduce your health factor. Please be mindful of the
             increased risk of collateral liquidation.{" "}
