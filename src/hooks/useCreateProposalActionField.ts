@@ -49,10 +49,6 @@ const useCreateProposalActionField = (index: number) => {
               }
             }
 
-            console.log({
-              callData,
-            });
-
             setValue(`actions.${index}.callData`, callData);
           } catch (e: any) {
             setValue(`actions.${index}.callData`, "");
