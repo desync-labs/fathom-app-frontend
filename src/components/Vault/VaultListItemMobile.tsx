@@ -172,7 +172,7 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
   performanceFee,
   protocolFee,
 }) => {
-  const { token, strategies } = vaultItemData;
+  const { token, apr } = vaultItemData;
 
   const {
     manageVault,
@@ -252,10 +252,7 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
           />
         </VaultListLabel>
         <VaultListValue>
-          {formatNumber(
-            BigNumber(strategies[0].reports[0].results[0].apr).toNumber()
-          )}
-          %
+          {formatNumber(BigNumber(apr).toNumber())}%
         </VaultListValue>
       </ListItemWrapper>
       {extended && (
