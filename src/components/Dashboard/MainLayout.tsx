@@ -574,7 +574,7 @@ const MainLayout = () => {
                 <Route path="*" element={<Navigate to="/lending" replace />} />
               </Route>
               <Route
-                path="/vault"
+                path="/vaults"
                 element={
                   <AllVaultView
                     isMobileFiltersOpen={isMobileFiltersOpen}

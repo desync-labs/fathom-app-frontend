@@ -48,7 +48,7 @@ export default class VaultPage extends BasePage {
 
   constructor(page: Page) {
     super(page);
-    this.path = "/#/vault";
+    this.path = "/#/vaults";
 
     // Locators
     this.dialogManageVault = this.page.locator(
