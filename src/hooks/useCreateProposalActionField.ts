@@ -43,11 +43,15 @@ const useCreateProposalActionField = (index: number) => {
               const argumentTypesSplit = argumentTypes[1].split(",");
               if (argumentTypesSplit.length === argumentValues.length) {
                 callData += abiCoder
-                  .encode(argumentTypes, argumentValues)
+                  .encode(argumentTypesSplit, argumentValues)
                   .replace("0x", "")
                   .replace("xdc", "");
               }
             }
+
+            console.log({
+              callData,
+            });
 
             setValue(`actions.${index}.callData`, callData);
           } catch (e: any) {
