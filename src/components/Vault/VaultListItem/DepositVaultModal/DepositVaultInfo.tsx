@@ -31,10 +31,7 @@ const DepositVaultInfo: FC<VaultDepositInfoProps> = ({
             <>
               0 {token.name + " "}
               <Box component="span" sx={{ color: "#29C20A" }}>
-                →{" "}
-                {formatPercentage(BigNumber(deposit || "0").toNumber()) +
-                  " " +
-                  token.name}
+                → {formatPercentage(Number(deposit || "0")) + " " + token.name}
               </Box>
             </>
           }
@@ -76,7 +73,7 @@ const DepositVaultInfo: FC<VaultDepositInfoProps> = ({
               {`0 ${shareToken.symbol} `}
               <Box component="span" sx={{ color: "#29C20A" }}>
                 →{" "}
-                {formatPercentage(BigNumber(sharedToken || "0").toNumber()) +
+                {formatPercentage(Number(sharedToken || "0")) +
                   " " +
                   shareToken.symbol}
               </Box>
@@ -88,16 +85,14 @@ const DepositVaultInfo: FC<VaultDepositInfoProps> = ({
         <Divider />
         <AppListItem
           alignItems="flex-start"
-          secondaryAction={
-            formatPercentage(BigNumber(performanceFee).toNumber()) + "%"
-          }
+          secondaryAction={formatPercentage(Number(performanceFee)) + "%"}
         >
           <ListItemText primary="Fee" />
         </AppListItem>
         <Divider />
         <AppListItem
           alignItems="flex-start"
-          secondaryAction={formatNumber(BigNumber(apr).toNumber()) + "%"}
+          secondaryAction={formatNumber(Number(apr)) + "%"}
         >
           <ListItemText primary="Estimated APR" />
         </AppListItem>

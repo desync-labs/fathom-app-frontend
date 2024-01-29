@@ -192,16 +192,14 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
         <Divider />
         <AppListItem
           alignItems="flex-start"
-          secondaryAction={
-            formatPercentage(BigNumber(performanceFee).toNumber()) + "%"
-          }
+          secondaryAction={formatPercentage(Number(performanceFee)) + "%"}
         >
           <ListItemText primary="Fee" />
         </AppListItem>
         <Divider />
         <AppListItem
           alignItems="flex-start"
-          secondaryAction={formatNumber(BigNumber(apr).toNumber()) + "%"}
+          secondaryAction={formatNumber(Number(apr)) + "%"}
         >
           <ListItemText primary="Estimated APR" />
         </AppListItem>

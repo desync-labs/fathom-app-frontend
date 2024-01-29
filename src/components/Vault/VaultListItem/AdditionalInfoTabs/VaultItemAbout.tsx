@@ -118,9 +118,7 @@ const VaultItemAbout: FC<VaultItemAboutPropsTypes> = ({
                   </AppListItem>
                   <AppListItem
                     alignItems="flex-start"
-                    secondaryAction={
-                      <>{formatNumber(BigNumber(apr).toNumber())}%</>
-                    }
+                    secondaryAction={<>{formatNumber(Number(apr))}%</>}
                     sx={{ padding: "0 !important" }}
                   >
                     <ListItemText primary={"Yearly APR"} />
@@ -138,7 +136,7 @@ const VaultItemAbout: FC<VaultItemAboutPropsTypes> = ({
                 alignItems="flex-start"
                 secondaryAction={
                   <>{`${formatPercentage(
-                    BigNumber(performanceFee * (protocolFee / 100)).toNumber()
+                    Number(performanceFee * (protocolFee / 100))
                   )}%`}</>
                 }
                 sx={{ padding: "0 !important" }}
@@ -148,9 +146,7 @@ const VaultItemAbout: FC<VaultItemAboutPropsTypes> = ({
               <AppListItem
                 alignItems="flex-start"
                 secondaryAction={
-                  <>{`${formatPercentage(
-                    BigNumber(performanceFee).toNumber()
-                  )}%`}</>
+                  <>{`${formatPercentage(Number(performanceFee))}%`}</>
                 }
                 sx={{ padding: "0 !important" }}
               >

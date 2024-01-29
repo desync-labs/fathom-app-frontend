@@ -332,11 +332,7 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
           <AppListItem
             alignItems="flex-start"
             secondaryAction={
-              <>
-                {formatNumber(BigNumber(formToken || "0").toNumber()) +
-                  " " +
-                  token.name}
-              </>
+              <>{formatNumber(Number(formToken || "0")) + " " + token.name}</>
             }
           >
             <ListItemText
@@ -349,7 +345,7 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
             alignItems="flex-start"
             secondaryAction={
               <>
-                {formatNumber(BigNumber(formSharedToken || "0").toNumber()) +
+                {formatNumber(Number(formSharedToken || "0")) +
                   " " +
                   shareToken.name}
               </>
