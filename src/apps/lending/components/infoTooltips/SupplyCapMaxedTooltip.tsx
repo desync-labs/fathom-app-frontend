@@ -2,7 +2,6 @@ import { ExclamationIcon } from "@heroicons/react/outline";
 import { Box } from "@mui/material";
 import { AssetCapData } from "apps/lending/hooks/useAssetCaps";
 
-import { Link } from "apps/lending/components/primitives/Link";
 import {
   TextWithTooltip,
   TextWithTooltipProps,
@@ -29,13 +28,7 @@ export const SupplyCapMaxedTooltip: FC<SupplyCapMaxedTooltipProps> = ({
       >
         <>
           Protocol supply cap at 100% for this asset. Further supply
-          unavailable.{" "}
-          <Link
-            href="https://docs.aave.com/developers/whats-new/supply-borrow-caps"
-            underline="always"
-          >
-            Learn more
-          </Link>
+          unavailable.
         </>
       </TextWithTooltip>
     </Box>

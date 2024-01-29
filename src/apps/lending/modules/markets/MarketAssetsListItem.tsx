@@ -1,6 +1,4 @@
 import { Box, Button, Typography, useTheme } from "@mui/material";
-import { BUSDOffBoardingTooltip } from "apps/lending/components/infoTooltips/BUSDOffboardingToolTip";
-import { RenFILToolTip } from "apps/lending/components/infoTooltips/RenFILToolTip";
 import { IsolatedEnabledBadge } from "apps/lending/components/isolationMode/IsolatedBadge";
 import { NoData } from "apps/lending/components/primitives/NoData";
 import { ReserveSubheader } from "apps/lending/components/ReserveSubheader";
@@ -9,7 +7,6 @@ import { useRootStore } from "apps/lending/store/root";
 import { CustomMarket } from "apps/lending/ui-config/marketsConfig";
 
 import { IncentivesCard } from "apps/lending/components/incentives/IncentivesCard";
-import { AMPLToolTip } from "apps/lending/components/infoTooltips/AMPLToolTip";
 import { ListColumn } from "apps/lending/components/lists/ListColumn";
 import { ListItem } from "apps/lending/components/lists/ListItem";
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
@@ -75,9 +72,6 @@ export const MarketAssetsListItem: FC<ComputedReserveData> = memo(
               </Typography>
             </Box>
           </Box>
-          {reserve.symbol === "AMPL" && <AMPLToolTip />}
-          {reserve.symbol === "renFIL" && <RenFILToolTip />}
-          {reserve.symbol === "BUSD" && <BUSDOffBoardingTooltip />}
         </ListColumn>
 
         <ListColumn>

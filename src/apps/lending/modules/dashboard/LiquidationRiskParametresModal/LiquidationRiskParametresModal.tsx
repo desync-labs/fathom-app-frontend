@@ -1,11 +1,8 @@
 import { AlertColor, Typography } from "@mui/material";
-import { useRootStore } from "apps/lending/store/root";
-import { GENERAL } from "apps/lending/utils/mixPanelEvents";
 
 import { HealthFactorNumber } from "apps/lending/components/HealthFactorNumber";
 import { BasicModal } from "apps/lending/components/primitives/BasicModal";
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
-import { Link } from "apps/lending/components/primitives/Link";
 import { HFContent } from "apps/lending/modules/dashboard/LiquidationRiskParametresModal/components/HFContent";
 import { InfoWrapper } from "apps/lending/modules/dashboard/LiquidationRiskParametresModal/components/InfoWrapper";
 import { LTVContent } from "apps/lending/modules/dashboard/LiquidationRiskParametresModal/components/LTVContent";
@@ -37,7 +34,6 @@ export const LiquidationRiskParametersInfoModal: FC<LiquidationRiskParametersInf
       } else if (hf <= 1.1) {
         healthFactorColor = "error";
       }
-      const trackEvent = useRootStore((store) => store.trackEvent);
 
       let ltvColor: AlertColor = "success";
       const ltvPercent = Number(loanToValue) * 100;
@@ -63,20 +59,7 @@ export const LiquidationRiskParametersInfoModal: FC<LiquidationRiskParametersInf
           <Typography mb={6}>
             Your health factor and loan to value determine the assurance of your
             collateral. To avoid liquidations you can supply more collateral or
-            repay borrow positions.{" "}
-            <Link
-              onClick={() => {
-                trackEvent(GENERAL.EXTERNAL_LINK, {
-                  Link: "HF Risk Link",
-                });
-              }}
-              href="https://docs.aave.com/faq/"
-              sx={{ textDecoration: "underline" }}
-              color="text.primary"
-              variant="description"
-            >
-              Learn more
-            </Link>
+            repay borrow positions.
           </Typography>
 
           <InfoWrapper
