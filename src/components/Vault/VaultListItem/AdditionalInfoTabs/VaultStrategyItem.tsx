@@ -236,7 +236,7 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
             >
               <VaultIndicatorItem
                 title="APR"
-                value={formatNumber(BigNumber(strategyData.apr).toNumber())}
+                value={formatNumber(Number(strategyData.apr))}
                 units="%"
               />
               <VaultIndicatorItem

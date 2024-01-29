@@ -211,9 +211,7 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
           />
         </VaultListLabel>
         <VaultListValue>
-          <VaultPercent>
-            {formatNumber(BigNumber(performanceFee).toNumber())}%
-          </VaultPercent>
+          <VaultPercent>{formatNumber(Number(performanceFee))}%</VaultPercent>
         </VaultListValue>
       </ListItemWrapper>
       <ListItemWrapper>
@@ -251,9 +249,7 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
             }
           />
         </VaultListLabel>
-        <VaultListValue>
-          {formatNumber(BigNumber(apr).toNumber())}%
-        </VaultListValue>
+        <VaultListValue>{formatNumber(Number(apr))}%</VaultListValue>
       </ListItemWrapper>
       {extended && (
         <>
