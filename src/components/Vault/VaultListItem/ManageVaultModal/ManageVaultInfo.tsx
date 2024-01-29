@@ -1,4 +1,4 @@
-import { FC, memo, useMemo } from "react";
+import { FC, memo } from "react";
 import BigNumber from "bignumber.js";
 import { Box, Divider, Grid, ListItemText } from "@mui/material";
 import { IVault, IVaultPosition } from "fathom-sdk";
@@ -24,32 +24,9 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
   formSharedToken,
   performanceFee,
 }) => {
-  const { token, shareToken, strategies, sharesSupply } = vaultItemData;
+  const { token, shareToken, sharesSupply, apr } = vaultItemData;
   const { balancePosition, balanceShares } = vaultPosition;
   const { isMobile } = useSharedContext();
-
-  const { totalApr, count } = useMemo(
-    () =>
-      strategies[0].reports.reduce(
-        (
-          accumulator: { totalApr: number; count: number },
-          // TODO: type for strategyReport and in DepositsVaultInfo component
-          strategyReport: any
-        ) => {
-          strategyReport.results.forEach((result: any) => {
-            if (result.apr) {
-              accumulator.totalApr += parseFloat(result.apr);
-              accumulator.count++;
-            }
-          });
-          return accumulator;
-        },
-        { totalApr: 0, count: 0 }
-      ),
-    [strategies]
-  );
-
-  const averageApr = count > 0 ? totalApr / count : 0;
 
   return (
     <Grid item xs={12} sm={6} pr={isMobile ? 0 : 2.5}>
@@ -224,19 +201,9 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
         <Divider />
         <AppListItem
           alignItems="flex-start"
-          secondaryAction={
-            formatNumber(
-              BigNumber(strategies[0].reports[0].results[0].apr).toNumber()
-            ) + "%"
-          }
+          secondaryAction={formatNumber(BigNumber(apr).toNumber()) + "%"}
         >
           <ListItemText primary="Estimated APR" />
-        </AppListItem>
-        <AppListItem
-          alignItems="flex-start"
-          secondaryAction={formatNumber(BigNumber(averageApr).toNumber()) + "%"}
-        >
-          <ListItemText primary="Historical APR" />
         </AppListItem>
       </AppList>
     </Grid>

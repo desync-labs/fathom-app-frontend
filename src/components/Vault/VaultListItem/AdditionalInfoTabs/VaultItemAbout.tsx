@@ -1,7 +1,7 @@
-import { FC, memo, useCallback, useEffect, useState } from "react";
+import { FC, memo, useEffect, useState } from "react";
 import BigNumber from "bignumber.js";
 import { Box, ListItemText, styled, Typography } from "@mui/material";
-import { IVault, IVaultStrategy, IVaultStrategyReport } from "fathom-sdk";
+import { IVault } from "fathom-sdk";
 import { formatNumber, formatPercentage } from "utils/format";
 import useSharedContext from "context/shared";
 import { VaultItemInfoWrapper } from "components/Vault/VaultListItem";
@@ -39,7 +39,7 @@ const VaultItemAbout: FC<VaultItemAboutPropsTypes> = ({
   protocolFee,
   performanceFee,
 }) => {
-  const { strategies, token } = vaultItemData;
+  const { token, apr } = vaultItemData;
   const [earnedHistoryArr, setEarnedHistoryArr] = useState<
     HistoryChartDataType[]
   >([]);
@@ -75,55 +75,6 @@ const VaultItemAbout: FC<VaultItemAboutPropsTypes> = ({
     setEarnedHistoryArr(extractedData);
   }, [vaultItemData]);
 
-  const getAvgAprForPeriod = useCallback(
-    (strategy: IVaultStrategy, numberOfDays: number) => {
-      const reportsWithinPeriod = strategy.reports.filter(
-        (report: IVaultStrategyReport) => {
-          const reportTimestamp = parseInt(report.timestamp, 10);
-          const currentTimestamp = new Date().getTime();
-          const daysDifference = Math.floor(
-            (currentTimestamp - reportTimestamp) / (1000 * 60 * 60 * 24)
-          );
-
-          return daysDifference <= numberOfDays;
-        }
-      );
-
-      if (!reportsWithinPeriod.length) {
-        return strategy.reports[0].results[0].apr;
-      }
-
-      const aprValues = reportsWithinPeriod.flatMap(
-        (report: IVaultStrategyReport) =>
-          report.results.map((result: any) => parseFloat(result.apr))
-      );
-
-      if (aprValues.length > 0) {
-        const avgApr =
-          aprValues.reduce((sum: number, apr: number) => sum + apr, 0) /
-          aprValues.length;
-        return avgApr.toString();
-      } else {
-        return "0";
-      }
-    },
-    [vaultItemData]
-  );
-
-  const getLastReportApr = useCallback(
-    (strategy: IVaultStrategy) => {
-      const lastReport = strategy.reports[strategy.reports.length - 1];
-
-      if (lastReport.results.length > 0) {
-        const lastResult = lastReport.results[lastReport.results.length - 1];
-        return lastResult.apr;
-      } else {
-        return "0";
-      }
-    },
-    [vaultItemData]
-  );
-
   return (
     <VaultItemInfoWrapper>
       <VaultFlexColumns>
@@ -141,18 +92,13 @@ const VaultItemAbout: FC<VaultItemAboutPropsTypes> = ({
           <Box pt="25px">
             <VaultAboutTitle variant={"h5"}>APR</VaultAboutTitle>
             <VaultFlexColumns>
-              <Box width={isMobile ? "100%" : "50%"}>
+              <Box width={"100%"}>
                 <AppList>
                   <AppListItem
                     alignItems="flex-start"
                     secondaryAction={
                       <>
-                        {formatNumber(
-                          BigNumber(
-                            getAvgAprForPeriod(strategies[0], 7)
-                          ).toNumber()
-                        )}
-                        %
+                        {formatNumber(BigNumber(apr).dividedBy(52).toNumber())}%
                       </>
                     }
                     sx={{ padding: "0 !important" }}
@@ -163,12 +109,7 @@ const VaultItemAbout: FC<VaultItemAboutPropsTypes> = ({
                     alignItems="flex-start"
                     secondaryAction={
                       <>
-                        {formatNumber(
-                          BigNumber(
-                            getAvgAprForPeriod(strategies[0], 30)
-                          ).toNumber()
-                        )}
-                        %
+                        {formatNumber(BigNumber(apr).dividedBy(12).toNumber())}%
                       </>
                     }
                     sx={{ padding: "0 !important" }}
@@ -178,36 +119,11 @@ const VaultItemAbout: FC<VaultItemAboutPropsTypes> = ({
                   <AppListItem
                     alignItems="flex-start"
                     secondaryAction={
-                      <>
-                        {formatNumber(
-                          BigNumber(getLastReportApr(strategies[0])).toNumber()
-                        )}
-                        %
-                      </>
+                      <>{formatNumber(BigNumber(apr).toNumber())}%</>
                     }
                     sx={{ padding: "0 !important" }}
                   >
-                    <ListItemText primary={"Inception APR"} />
-                  </AppListItem>
-                </AppList>
-              </Box>
-              <Box width={isMobile ? "100%" : "50%"}>
-                <AppList>
-                  <AppListItem
-                    alignItems="flex-start"
-                    secondaryAction={
-                      <>
-                        {formatNumber(
-                          BigNumber(
-                            strategies[0].reports[0].results[0].apr
-                          ).toNumber()
-                        )}
-                        %
-                      </>
-                    }
-                    sx={{ padding: "0 !important" }}
-                  >
-                    <ListItemText primary={"Net APR"} />
+                    <ListItemText primary={"Yearly APR"} />
                   </AppListItem>
                 </AppList>
               </Box>
