@@ -4,9 +4,7 @@ import { getFrozenProposalLink } from "apps/lending/components/infoTooltips/Froz
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
 import { Link } from "apps/lending/components/primitives/Link";
 import { Warning } from "apps/lending/components/primitives/Warning";
-import { AMPLWarning } from "apps/lending/components/Warnings/AMPLWarning";
 import { BorrowDisabledWarning } from "apps/lending/components/Warnings/BorrowDisabledWarning";
-import { BUSDOffBoardingWarning } from "apps/lending/components/Warnings/BUSDOffBoardingWarning";
 import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 import { useAssetCaps } from "apps/lending/hooks/useAssetCaps";
 import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
@@ -50,34 +48,9 @@ const ReserveConfiguration: FC<ReserveConfigurationProps> = memo(
         <Box>
           {reserve.isFrozen && reserve.symbol != "BUSD" ? (
             <Warning sx={{ mt: "16px", mb: "40px" }} severity="error">
-              This asset is frozen due to an Aave community decision.{" "}
+              This asset is frozen due to an Fathom lending community decision.{" "}
               <Link
                 href={getFrozenProposalLink(reserve.symbol, currentMarket)}
-                sx={{ textDecoration: "underline" }}
-              >
-                More details
-              </Link>
-            </Warning>
-          ) : reserve.symbol === "BUSD" ? (
-            <Warning sx={{ mt: "16px", mb: "40px" }} severity="error">
-              <BUSDOffBoardingWarning />
-            </Warning>
-          ) : (
-            reserve.symbol == "AMPL" && (
-              <Warning sx={{ mt: "16px", mb: "40px" }} severity="warning">
-                <AMPLWarning />
-              </Warning>
-            )
-          )}
-
-          {reserve.isPaused ? (
-            <Warning sx={{ mt: "16px", mb: "40px" }} severity="error">
-              MAI has been paused due to a community decision. Supply, borrows
-              and repays are impacted.{" "}
-              <Link
-                href={
-                  "https://governance.aave.com/t/arfc-add-mai-to-arbitrum-aave-v3-market/12759/8"
-                }
                 sx={{ textDecoration: "underline" }}
               >
                 More details

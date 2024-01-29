@@ -1,7 +1,4 @@
-import {
-  API_ETH_MOCK_ADDRESS,
-  transactionType,
-} from "@into-the-fathom/lending-contract-helpers";
+import { transactionType } from "@into-the-fathom/lending-contract-helpers";
 import { SignatureLike } from "@into-the-fathom/bytes";
 import {
   JsonRpcProvider,
@@ -55,6 +52,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
     error,
     disconnect,
     isLoading: loading,
+    addERC20Token,
   } = useConnector();
 
   const [switchNetworkError, setSwitchNetworkError] = useState<Error>();
@@ -150,37 +148,6 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
     throw new Error("Error getting transaction. Provider not found");
   };
 
-  const addERC20Token = async ({
-    address,
-    symbol,
-    decimals,
-    image,
-  }: ERC20TokenType): Promise<boolean> => {
-    // using window.ethereum as looks like its only supported for metamask
-    // and didn't manage to make the call with ethersjs
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const injectedProvider = (window as any).ethereum;
-    if (provider && account && window && injectedProvider) {
-      if (address.toLowerCase() !== API_ETH_MOCK_ADDRESS.toLowerCase()) {
-        await injectedProvider.request({
-          method: "wallet_watchAsset",
-          params: {
-            type: "ERC20",
-            options: {
-              address,
-              symbol,
-              decimals,
-              image,
-            },
-          },
-        });
-
-        return true;
-      }
-    }
-    return false;
-  };
-
   useEffect(() => {
     setAccount(account?.toLowerCase());
   }, [account]);
@@ -197,7 +164,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
           provider: provider as unknown as JsonRpcProvider,
           connected: active,
           loading,
-          chainId: chainId || 1,
+          chainId: chainId,
           switchNetwork,
           getTxError,
           sendTx,

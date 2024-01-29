@@ -2,7 +2,6 @@ import { ExclamationIcon } from "@heroicons/react/outline";
 import { Box } from "@mui/material";
 import { AssetCapData } from "apps/lending/hooks/useAssetCaps";
 
-import { Link } from "apps/lending/components/primitives/Link";
 import {
   TextWithTooltip,
   TextWithTooltipProps,
@@ -29,13 +28,7 @@ export const DebtCeilingMaxedTooltip: FC<DebtCeilingMaxedTooltipProps> = ({
       >
         <>
           Protocol debt ceiling is at 100% for this asset. Futher borrowing
-          against this asset is unavailable.{" "}
-          <Link
-            href="https://docs.aave.com/faq/aave-v3-features#how-does-isolation-mode-affect-my-borrowing-power"
-            underline="always"
-          >
-            Learn more
-          </Link>
+          against this asset is unavailable.
         </>
       </TextWithTooltip>
     </Box>

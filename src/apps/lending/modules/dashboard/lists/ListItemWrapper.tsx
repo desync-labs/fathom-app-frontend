@@ -1,17 +1,13 @@
 import { Tooltip, Typography } from "@mui/material";
 import { FC, memo, ReactNode } from "react";
 import { BorrowDisabledToolTip } from "apps/lending/components/infoTooltips/BorrowDisabledToolTip";
-import { BUSDOffBoardingTooltip } from "apps/lending/components/infoTooltips/BUSDOffboardingToolTip";
-import { StETHCollateralToolTip } from "apps/lending/components/infoTooltips/StETHCollateralToolTip";
 import { useAssetCaps } from "apps/lending/hooks/useAssetCaps";
 import { useRootStore } from "apps/lending/store/root";
 import { CustomMarket } from "apps/lending/ui-config/marketsConfig";
 import { DASHBOARD_LIST_COLUMN_WIDTHS } from "apps/lending/utils/dashboardSortUtils";
 import { DASHBOARD } from "apps/lending/utils/mixPanelEvents";
 
-import { AMPLToolTip } from "apps/lending/components/infoTooltips/AMPLToolTip";
 import { FrozenTooltip } from "apps/lending/components/infoTooltips/FrozenTooltip";
-import { RenFILToolTip } from "apps/lending/components/infoTooltips/RenFILToolTip";
 import { ListColumn } from "apps/lending/components/lists/ListColumn";
 import { ListItem } from "apps/lending/components/lists/ListItem";
 import { Link, ROUTES } from "apps/lending/components/primitives/Link";
@@ -48,12 +44,7 @@ export const ListItemWrapper: FC<ListItemWrapperProps> = memo(
   }) => {
     const { supplyCap, borrowCap, debtCeiling } = useAssetCaps();
 
-    const showFrozenTooltip =
-      frozen && symbol !== "renFIL" && symbol !== "BUSD";
-    const showRenFilTooltip = frozen && symbol === "renFIL";
-    const showAmplTooltip = !frozen && symbol === "AMPL";
-    const showstETHTooltip = symbol == "stETH";
-    const showBUSDOffBoardingTooltip = symbol == "BUSD";
+    const showFrozenTooltip = frozen;
     const showBorrowDisabledTooltip = !frozen && !borrowEnabled;
     const trackEvent = useRootStore((store) => store.trackEvent);
 
@@ -88,10 +79,6 @@ export const ListItemWrapper: FC<ListItemWrapperProps> = memo(
           {showFrozenTooltip && (
             <FrozenTooltip symbol={symbol} currentMarket={currentMarket} />
           )}
-          {showRenFilTooltip && <RenFILToolTip />}
-          {showAmplTooltip && <AMPLToolTip />}
-          {showstETHTooltip && <StETHCollateralToolTip />}
-          {showBUSDOffBoardingTooltip && <BUSDOffBoardingTooltip />}
           {showBorrowDisabledTooltip && (
             <BorrowDisabledToolTip
               symbol={symbol}
