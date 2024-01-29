@@ -1,32 +1,35 @@
-name: all-tests-dev
+name: smoke-tests-local-dev
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 0 * * *"
+  pull_request:
+    branches:
+      - master
 
 concurrency:
   group: ${{ github.workflow }}
 
 jobs:
-  all-tests-dev:
+  smoke-tests-local-dev:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-        with:
-          ref: dev
       - uses: actions/setup-node@v3
         with:
-          node-version: 20
+          node-version: 16
       - name: Install dependencies
         run: npm install
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps chromium
+      - name: Start Frontend on Dev environment in background
+        run: npm run start:dev &
+      - name: Wait for server to start
+        run: sleep 40
       - name: Run Playwright tests
         run: xvfb-run --auto-servernum -- npm run playwright:test
         env:
-          ENVIRONMENT_URL: https://dev-app-frontend-wpa8a.ondigitalocean.app
+          ENVIRONMENT_URL: http://127.0.0.1:3000
           HEADLESS_MODE: ${{ vars.HEADLESS_MODE}}
           METAMASK_SETUP_PRIVATE_KEY: ${{secrets.METAMASK_SETUP_PRIVATE_KEY}}
           METAMASK_TEST_ONE_PRIVATE_KEY: ${{secrets.METAMASK_TEST_ONE_PRIVATE_KEY}}
