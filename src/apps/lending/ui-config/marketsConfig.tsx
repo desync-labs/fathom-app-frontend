@@ -11,13 +11,9 @@ export type MarketDataType = {
   // the network the market operates on
   chainId: ChainId | number;
   enabledFeatures?: {
-    liquiditySwap?: boolean;
     faucet?: boolean;
-    collateralRepay?: boolean;
     incentives?: boolean;
     permissions?: boolean;
-    debtSwitch?: boolean;
-    withdrawAndSwitch?: boolean;
   };
   isFork?: boolean;
   permissionComponent?: ReactNode;
@@ -88,11 +84,7 @@ export const marketsData: {
     chainId: ChainId.mainnet,
     v3: true,
     enabledFeatures: {
-      liquiditySwap: true,
-      collateralRepay: true,
       incentives: true,
-      withdrawAndSwitch: true,
-      debtSwitch: true,
     },
     subgraphUrl: "https://api.thegraph.com/subgraphs/name/aave/protocol-v3",
     addresses: {

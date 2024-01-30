@@ -8,7 +8,6 @@ import ENS_PUBLIC_RESOLVER_ABI from "apps/dex/constants/abis/ens-public-resolver
 import ENS_ABI from "apps/dex/constants/abis/ens-registrar.json";
 import { ERC20_BYTES32_ABI } from "apps/dex/constants/abis/erc20";
 import ERC20_ABI from "apps/dex/constants/abis/erc20.json";
-import UNISOCKS_ABI from "apps/dex/constants/abis/unisocks.json";
 import WETH_ABI from "apps/dex/constants/abis/weth.json";
 import {
   MULTICALL_ABI,
@@ -98,8 +97,4 @@ export function useMulticallContract(): Contract | null {
     MULTICALL_ABI,
     false
   );
-}
-
-export function useSocksController(): Contract | null {
-  return useContract(undefined, UNISOCKS_ABI, false);
 }

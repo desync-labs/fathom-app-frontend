@@ -21,10 +21,6 @@ import { IsolationModeWarning } from "apps/lending/components/transactions/Warni
 import { CollateralChangeActions } from "apps/lending/components/transactions/CollateralChange/CollateralChangeActions";
 import { FC } from "react";
 
-export type CollateralChangeModalContentProps = {
-  underlyingAsset: string;
-};
-
 export enum ErrorType {
   DO_NOT_HAVE_SUPPLIES_IN_THIS_CURRENCY,
   CAN_NOT_USE_THIS_CURRENCY_AS_COLLATERAL,

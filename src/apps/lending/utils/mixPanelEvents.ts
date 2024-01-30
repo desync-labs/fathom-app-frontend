@@ -49,30 +49,14 @@ export const RESERVE_DETAILS = {
   GRAPH_TIME_PERIOD: "Graph Time Period Selector",
 };
 
-export const YOUR_INFO_RESERVE_DETAILS = {
-  SUPPLY_RESERVE: "Supply assets your info reserve page", // done removed for DASHBOARD.BORROW_DASHBOARD with funnel property
-  BORROW_RESERVE: "Borrow assets your info reserve page", // done removed for DASHBOARD.BORROW_DASHBOARD with funnel property
-};
-
 export const TRANSACTION_HISTORY = {
   COPY_TX_ADDRESS: "Copy Tx Address",
   DOWNLOAD: "Tx History Download",
   FILTER: "Tx History Filter Selected",
 };
 
-// TODO proper events here
-export const REPAY_MODAL = {
-  SWITCH_REPAY_TYPE: "Change repay type",
-};
-
 export const WITHDRAW_MODAL = {
   SWITCH_WITHDRAW_TYPE: "Change withdraw type",
-};
-
-export const NAV_BAR = {
-  MAIN_MENU: "Main menu navigation", //done
-  MORE: "More View", //done
-  MORE_NAV: "More navigation", //done
 };
 
 export const SETTINGS = {

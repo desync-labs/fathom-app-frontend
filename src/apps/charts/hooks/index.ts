@@ -54,33 +54,6 @@ export const useCopyClipboard = (timeout = 500): UseCopyClipboardReturnType => {
   return [isCopied, staticCopy];
 };
 
-export const useOutsideClick = (
-  ref: { current: { contains: (arg0: any) => any } },
-  ref2: { current: { contains: (arg0: any) => any } },
-  callback: (arg0: boolean) => void
-) => {
-  const handleClick = (e: { target: any }) => {
-    if (ref.current && ref.current && !ref2.current) {
-      callback(true);
-    } else if (
-      ref.current &&
-      !ref.current.contains(e.target) &&
-      ref2.current &&
-      !ref2.current.contains(e.target)
-    ) {
-      callback(true);
-    } else {
-      callback(false);
-    }
-  };
-  useEffect(() => {
-    document.addEventListener("click", handleClick);
-    return () => {
-      document.removeEventListener("click", handleClick);
-    };
-  });
-};
-
 export default function useInterval(
   callback: () => void,
   delay: null | number
