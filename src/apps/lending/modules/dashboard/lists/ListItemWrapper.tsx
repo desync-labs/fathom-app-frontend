@@ -1,13 +1,11 @@
 import { Tooltip, Typography } from "@mui/material";
 import { FC, memo, ReactNode } from "react";
-import { BorrowDisabledToolTip } from "apps/lending/components/infoTooltips/BorrowDisabledToolTip";
 import { useAssetCaps } from "apps/lending/hooks/useAssetCaps";
 import { useRootStore } from "apps/lending/store/root";
 import { CustomMarket } from "apps/lending/ui-config/marketsConfig";
 import { DASHBOARD_LIST_COLUMN_WIDTHS } from "apps/lending/utils/dashboardSortUtils";
 import { DASHBOARD } from "apps/lending/utils/mixPanelEvents";
 
-import { FrozenTooltip } from "apps/lending/components/infoTooltips/FrozenTooltip";
 import { ListColumn } from "apps/lending/components/lists/ListColumn";
 import { ListItem } from "apps/lending/components/lists/ListItem";
 import { Link, ROUTES } from "apps/lending/components/primitives/Link";
@@ -35,17 +33,12 @@ export const ListItemWrapper: FC<ListItemWrapperProps> = memo(
     name,
     detailsAddress,
     currentMarket,
-    frozen,
-    borrowEnabled = true,
     showSupplyCapTooltips = false,
     showBorrowCapTooltips = false,
     showDebtCeilingTooltips = false,
     ...rest
   }) => {
     const { supplyCap, borrowCap, debtCeiling } = useAssetCaps();
-
-    const showFrozenTooltip = frozen;
-    const showBorrowDisabledTooltip = !frozen && !borrowEnabled;
     const trackEvent = useRootStore((store) => store.trackEvent);
 
     return (
@@ -76,15 +69,6 @@ export const ListItemWrapper: FC<ListItemWrapperProps> = memo(
               </Typography>
             </Tooltip>
           </Link>
-          {showFrozenTooltip && (
-            <FrozenTooltip symbol={symbol} currentMarket={currentMarket} />
-          )}
-          {showBorrowDisabledTooltip && (
-            <BorrowDisabledToolTip
-              symbol={symbol}
-              currentMarket={currentMarket}
-            />
-          )}
           {showSupplyCapTooltips &&
             supplyCap.displayMaxedTooltip({ supplyCap })}
           {showBorrowCapTooltips &&

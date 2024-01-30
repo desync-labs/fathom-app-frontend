@@ -1,7 +1,5 @@
 import { FC, memo, ReactNode } from "react";
-import { BorrowDisabledToolTip } from "apps/lending/components/infoTooltips/BorrowDisabledToolTip";
 import { CustomMarket } from "apps/lending/ui-config/marketsConfig";
-import { FrozenTooltip } from "apps/lending/components/infoTooltips/FrozenTooltip";
 import { ListMobileItem } from "apps/lending/components/lists/ListMobileItem";
 
 // These are all optional due to MobileListItemLoader
@@ -30,31 +28,11 @@ export const ListMobileItemWrapper: FC<ListMobileItemWrapperProps> = memo(
     underlyingAsset,
     loading,
     currentMarket,
-    frozen,
-    borrowEnabled = true,
     showSupplyCapTooltips = false,
     showBorrowCapTooltips = false,
     showDebtCeilingTooltips = false,
     isIsolated = false,
   }) => {
-    const WarningComponent: FC = () => {
-      const showFrozenTooltip = frozen;
-      const showBorrowDisabledTooltip = !frozen && !borrowEnabled;
-      return (
-        <>
-          {showFrozenTooltip && (
-            <FrozenTooltip symbol={symbol} currentMarket={currentMarket} />
-          )}
-          {showBorrowDisabledTooltip && symbol && currentMarket && (
-            <BorrowDisabledToolTip
-              symbol={symbol}
-              currentMarket={currentMarket}
-            />
-          )}
-        </>
-      );
-    };
-
     return (
       <ListMobileItem
         isIsolated={isIsolated}
@@ -62,7 +40,7 @@ export const ListMobileItemWrapper: FC<ListMobileItemWrapperProps> = memo(
         iconSymbol={iconSymbol}
         name={name}
         underlyingAsset={underlyingAsset}
-        warningComponent={<WarningComponent />}
+        warningComponent={null}
         loading={loading}
         currentMarket={currentMarket}
         showSupplyCapTooltips={showSupplyCapTooltips}

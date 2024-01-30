@@ -32,10 +32,6 @@ import { getAssetCollateralType } from "apps/lending/components/transactions/uti
 import { IsolationModeWarning } from "apps/lending/components/transactions/Warnings/IsolationModeWarning";
 import { SupplyActions } from "apps/lending/components/transactions/Supply/SupplyActions";
 
-export enum ErrorType {
-  CAP_REACHED,
-}
-
 export const SupplyModalContent: FC<ModalWrapperProps> = React.memo(
   ({
     underlyingAsset,
