@@ -20,6 +20,7 @@ import { zeroLTVBlockingWithdraw } from "apps/lending/components/transactions/ut
 import { IsolationModeWarning } from "apps/lending/components/transactions/Warnings/IsolationModeWarning";
 import { CollateralChangeActions } from "apps/lending/components/transactions/CollateralChange/CollateralChangeActions";
 import { FC } from "react";
+import { styled } from "@mui/material/styles";
 
 export enum ErrorType {
   DO_NOT_HAVE_SUPPLIES_IN_THIS_CURRENCY,
@@ -27,6 +28,13 @@ export enum ErrorType {
   CAN_NOT_SWITCH_USAGE_AS_COLLATERAL_MODE,
   ZERO_LTV_WITHDRAW_BLOCKED,
 }
+
+const CollateralChangeTypography = styled(Typography)`
+  font-size: 13px;
+  text-align: center;
+  padding-top: 30px;
+  line-height: 20px;
+`;
 
 export const CollateralChangeModalContent: FC<ModalWrapperProps> = ({
   poolReserve,
@@ -97,24 +105,24 @@ export const CollateralChangeModalContent: FC<ModalWrapperProps> = ({
   }
 
   // error render handling
-  const BlockingError: React.FC = () => {
+  const BlockingError: FC = () => {
     switch (blockingError) {
       case ErrorType.DO_NOT_HAVE_SUPPLIES_IN_THIS_CURRENCY:
-        return <>You do not have supplies in this currency</>;
+        return <>You do not have supplies in this currency.</>;
       case ErrorType.CAN_NOT_USE_THIS_CURRENCY_AS_COLLATERAL:
-        return <>You can not use this currency as collateral</>;
+        return <>You can not use this currency as collateral.</>;
       case ErrorType.CAN_NOT_SWITCH_USAGE_AS_COLLATERAL_MODE:
         return (
           <>
             You can not switch usage as collateral mode for this currency,
-            because it will cause collateral call
+            because it will cause collateral call.
           </>
         );
       case ErrorType.ZERO_LTV_WITHDRAW_BLOCKED:
         return (
           <>
             Assets with zero LTV ({assetsBlockingWithdraw}) must be withdrawn or
-            disabled as collateral to perform this action
+            disabled as collateral to perform this action.
           </>
         );
       default:
@@ -176,9 +184,9 @@ export const CollateralChangeModalContent: FC<ModalWrapperProps> = ({
       </TxModalDetails>
 
       {blockingError !== undefined && (
-        <Typography variant="helperText" color="error.main">
+        <CollateralChangeTypography variant="helperText" color="error.main">
           <BlockingError />
-        </Typography>
+        </CollateralChangeTypography>
       )}
 
       {txError && <GasEstimationError txError={txError} />}

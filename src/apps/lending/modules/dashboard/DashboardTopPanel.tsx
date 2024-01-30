@@ -32,10 +32,6 @@ export const DashboardTopPanel = () => {
   const theme = useTheme();
   const downToSM = useMediaQuery(theme.breakpoints.down("sm"));
 
-  console.log({
-    user,
-  });
-
   const { claimableRewardsUsd } = Object.keys(
     user.calculatedUserIncentives
   ).reduce(
