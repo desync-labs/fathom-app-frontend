@@ -283,34 +283,6 @@ export function useStartTimestamp() {
   return startDateTimestamp;
 }
 
-// keep track of session length for refresh ticker
-export function useSessionStart() {
-  const [state, { updateSessionStart }] = useApplicationContext();
-  const sessionStart = state?.[SESSION_START];
-
-  useEffect(() => {
-    if (!sessionStart) {
-      updateSessionStart(Date.now());
-    }
-  });
-
-  const [seconds, setSeconds] = useState<number>(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setSeconds(
-        (Date.now() - (sessionStart as any)
-          ? sessionStart
-          : Date.now()) as number
-      );
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [seconds, sessionStart]);
-
-  return seconds / 1000;
-}
-
 export function useListedTokens() {
   const [state, { updateSupportedTokens }] = useApplicationContext();
   const supportedTokens = state?.[SUPPORTED_TOKENS];

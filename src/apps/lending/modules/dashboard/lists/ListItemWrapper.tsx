@@ -18,7 +18,6 @@ interface ListItemWrapperProps {
   detailsAddress: string;
   children: ReactNode;
   currentMarket: CustomMarket;
-  frozen?: boolean;
   borrowEnabled?: boolean;
   showSupplyCapTooltips?: boolean;
   showBorrowCapTooltips?: boolean;

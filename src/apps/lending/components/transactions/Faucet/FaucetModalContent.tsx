@@ -15,12 +15,6 @@ import {
 import { FaucetActions } from "apps/lending/components/transactions/Faucet/FaucetActions";
 import { FC } from "react";
 
-export type FaucetModalContentProps = {
-  underlyingAsset: string;
-};
-
-export enum ErrorType {}
-
 export const FaucetModalContent: FC<ModalWrapperProps> = ({
   poolReserve,
   isWrongNetwork,
