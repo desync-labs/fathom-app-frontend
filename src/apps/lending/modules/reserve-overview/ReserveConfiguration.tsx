@@ -1,10 +1,7 @@
 import { ExternalLinkIcon } from "@heroicons/react/solid";
 import { Box, Button, Divider, SvgIcon } from "@mui/material";
-import { getFrozenProposalLink } from "apps/lending/components/infoTooltips/FrozenTooltip";
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
 import { Link } from "apps/lending/components/primitives/Link";
-import { Warning } from "apps/lending/components/primitives/Warning";
-import { BorrowDisabledWarning } from "apps/lending/components/Warnings/BorrowDisabledWarning";
 import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 import { useAssetCaps } from "apps/lending/hooks/useAssetCaps";
 import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
@@ -29,7 +26,7 @@ type ReserveConfigurationProps = {
 
 const ReserveConfiguration: FC<ReserveConfigurationProps> = memo(
   ({ reserve }) => {
-    const { currentNetworkConfig, currentMarketData, currentMarket } =
+    const { currentNetworkConfig, currentMarketData } =
       useProtocolDataContext();
     const reserveId =
       reserve.underlyingAsset +
@@ -45,20 +42,6 @@ const ReserveConfiguration: FC<ReserveConfigurationProps> = memo(
 
     return (
       <>
-        <Box>
-          {reserve.isFrozen && reserve.symbol != "BUSD" ? (
-            <Warning sx={{ mt: "16px", mb: "40px" }} severity="error">
-              This asset is frozen due to an Fathom lending community decision.{" "}
-              <Link
-                href={getFrozenProposalLink(reserve.symbol, currentMarket)}
-                sx={{ textDecoration: "underline" }}
-              >
-                More details
-              </Link>
-            </Warning>
-          ) : null}
-        </Box>
-
         <PanelRow>
           <PanelTitle>Supply Info</PanelTitle>
           <SupplyInfo
@@ -84,14 +67,6 @@ const ReserveConfiguration: FC<ReserveConfigurationProps> = memo(
                   width: "100%",
                 }}
               >
-                {!reserve.borrowingEnabled && (
-                  <Warning sx={{ mb: "40px" }} severity="error">
-                    <BorrowDisabledWarning
-                      symbol={reserve.symbol}
-                      currentMarket={currentMarket}
-                    />
-                  </Warning>
-                )}
                 <BorrowInfo
                   reserve={reserve}
                   currentMarketData={currentMarketData}
