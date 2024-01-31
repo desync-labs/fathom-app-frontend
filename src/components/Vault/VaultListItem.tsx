@@ -192,7 +192,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
   protocolFee,
   performanceFee,
 }) => {
-  const { token, balanceTokens, depositLimit, strategies } = vaultItemData;
+  const { token, balanceTokens, depositLimit, apr } = vaultItemData;
   const { fxdPrice } = usePricesContext();
   const vaultTestId = vaultItemData.id;
 
@@ -238,9 +238,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
           colSpan={1}
           data-testid={`vaultRow-${vaultTestId}-feeValueCell`}
         >
-          <VaultPercent>
-            {formatNumber(BigNumber(performanceFee).toNumber())}%
-          </VaultPercent>
+          <VaultPercent>{formatNumber(Number(performanceFee))}%</VaultPercent>
         </TableCell>
         <TableCell
           colSpan={1}
@@ -263,12 +261,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
           colSpan={1}
           data-testid={`vaultRow-${vaultTestId}-aprValueCell`}
         >
-          <VaultApr>
-            {formatNumber(
-              BigNumber(strategies[0].reports[0].results[0].apr).toNumber()
-            )}
-            %
-          </VaultApr>
+          <VaultApr>{formatNumber(Number(apr))}%</VaultApr>
         </TableCell>
         <TableCell
           colSpan={1}

@@ -172,7 +172,7 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
   performanceFee,
   protocolFee,
 }) => {
-  const { token, strategies } = vaultItemData;
+  const { token, apr } = vaultItemData;
 
   const {
     manageVault,
@@ -211,9 +211,7 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
           />
         </VaultListLabel>
         <VaultListValue>
-          <VaultPercent>
-            {formatNumber(BigNumber(performanceFee).toNumber())}%
-          </VaultPercent>
+          <VaultPercent>{formatNumber(Number(performanceFee))}%</VaultPercent>
         </VaultListValue>
       </ListItemWrapper>
       <ListItemWrapper>
@@ -251,12 +249,7 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
             }
           />
         </VaultListLabel>
-        <VaultListValue>
-          {formatNumber(
-            BigNumber(strategies[0].reports[0].results[0].apr).toNumber()
-          )}
-          %
-        </VaultListValue>
+        <VaultListValue>{formatNumber(Number(apr))}%</VaultListValue>
       </ListItemWrapper>
       {extended && (
         <>
