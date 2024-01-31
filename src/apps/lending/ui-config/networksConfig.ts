@@ -1,4 +1,3 @@
-import { ChainId } from "@into-the-fathom/lending-contract-helpers";
 import { FathomLendingApothem } from "@into-the-fathom/fathom-lending-address-book";
 
 export type ExplorerLinkBuilderProps = {
@@ -66,40 +65,5 @@ export const networkConfigs: Record<string, BaseNetworkConfig> = {
     isTestnet: true,
     networkLogoPath: "./icons/networks/xdc.png",
     ratesHistoryApiUrl: "http://206.189.103.116:30002/data/rates-history",
-  },
-  [ChainId.sepolia]: {
-    name: "Ethereum Sepolia",
-    publicJsonRPCUrl: [
-      "https://eth-sepolia.public.blastapi.io",
-      "https://rpc.sepolia.org",
-      "https://rpc2.sepolia.org",
-      "https://rpc.sepolia.online",
-      "https://www.sepoliarpc.space",
-    ],
-    baseAssetSymbol: "ETH",
-    wrappedBaseAssetSymbol: "WETH",
-    baseAssetDecimals: 18,
-    explorerLink: "https://sepolia.etherscan.io",
-    // usdMarket: true,
-    isTestnet: true,
-    networkLogoPath: "./icons/networks/ethereum.svg",
-  },
-  [ChainId.mainnet]: {
-    name: "Ethereum",
-    privateJsonRPCUrl:
-      "https://eth-mainnet.gateway.pokt.network/v1/lb/62b3314e123e6f00397f19ca",
-    publicJsonRPCUrl: [
-      "https://rpc.ankr.com/eth",
-      "https://rpc.flashbots.net",
-      "https://eth-mainnet.public.blastapi.io",
-      "https://cloudflare-eth.com/v1/mainnet",
-    ],
-    publicJsonRPCWSUrl: "wss://eth-mainnet.alchemyapi.io/v2/demo",
-    baseAssetSymbol: "ETH",
-    wrappedBaseAssetSymbol: "WETH",
-    baseAssetDecimals: 18,
-    explorerLink: "https://etherscan.io",
-    ratesHistoryApiUrl: "https://aave-api-v2.aave.com/data/rates-history",
-    networkLogoPath: "./icons/networks/ethereum.svg",
   },
 } as const;

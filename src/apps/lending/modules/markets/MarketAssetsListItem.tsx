@@ -4,7 +4,6 @@ import { NoData } from "apps/lending/components/primitives/NoData";
 import { ReserveSubheader } from "apps/lending/components/ReserveSubheader";
 import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
 import { useRootStore } from "apps/lending/store/root";
-import { CustomMarket } from "apps/lending/ui-config/marketsConfig";
 
 import { IncentivesCard } from "apps/lending/components/incentives/IncentivesCard";
 import { ListColumn } from "apps/lending/components/lists/ListColumn";
@@ -24,13 +23,7 @@ export const MarketAssetsListItem: FC<ComputedReserveData> = memo(
     const { currentMarket } = useProtocolDataContext();
     const trackEvent = useRootStore((store) => store.trackEvent);
 
-    let showStableBorrowRate = Number(reserve.totalStableDebtUSD) > 0;
-    if (
-      currentMarket === CustomMarket.proto_mainnet_v3 &&
-      reserve.symbol === "TUSD"
-    ) {
-      showStableBorrowRate = false;
-    }
+    const showStableBorrowRate = Number(reserve.totalStableDebtUSD) > 0;
     return (
       <ListItem
         px={6}
