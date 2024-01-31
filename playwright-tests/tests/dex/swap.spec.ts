@@ -1,15 +1,18 @@
 import { test } from "../../fixtures/pomSynpressFixture";
 import { WalletConnectOptions } from "../../types";
-// @ts-ignore
-import * as metamask from "@synthetixio/synpress/commands/metamask";
 import dotenv from "dotenv";
+import { tokenIds } from "../../fixtures/dex.data";
 dotenv.config();
 
 test.describe("Fathom App Test Suite: Positions Operations", () => {
-  test("Swapping XDC with xUSDT is successful.", async ({ dexPage }) => {
+  test("Swapping 1.5 XDC with xUSDT is successful.", async ({ dexPage }) => {
     await dexPage.navigate();
     await dexPage.connectWallet(WalletConnectOptions.Metamask);
     await dexPage.validateConnectedWalletAddress();
-    // TO DO
+    await dexPage.swap({
+      fromToken: tokenIds.XDC,
+      toToken: tokenIds.xUSDT,
+      fromAmount: 1.5,
+    });
   });
 });
