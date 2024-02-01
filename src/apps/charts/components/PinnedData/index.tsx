@@ -48,6 +48,7 @@ const ScrollableDiv = styled(AutoColumn)`
 
 const StyledIcon = styled.div`
   color: ${({ theme }) => theme.text5};
+  font-size: 0;
 `;
 
 type PinnedDataProps = {
@@ -93,7 +94,7 @@ const PinnedData: FC<PinnedDataProps> = (props) => {
           <StyledIcon>
             <Bookmark size={16} />
           </StyledIcon>
-          <TYPE.main ml={"4px"}>Saved</TYPE.main>
+          <TYPE.main ml={"5px"}>Saved</TYPE.main>
         </RowFixed>
         <StyledIcon>
           <ChevronRight />

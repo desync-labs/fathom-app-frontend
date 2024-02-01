@@ -52,10 +52,6 @@ export const marketsData = Object.keys(_marketsData).reduce((acc, value) => {
   return acc;
 }, {} as { [key: string]: MarketDataType });
 
-export function getDefaultChainId() {
-  return marketsData[availableMarkets[0]].chainId;
-}
-
 export function getSupportedChainIds(): number[] {
   return Array.from(
     Object.keys(marketsData)
@@ -123,13 +119,7 @@ export function getNetworkConfig(chainId: ChainId): NetworkConfig {
 
 export const isFeatureEnabled = {
   faucet: (data: MarketDataType) => data.enabledFeatures?.faucet,
-  liquiditySwap: (data: MarketDataType) => data.enabledFeatures?.liquiditySwap,
-  collateralRepay: (data: MarketDataType) =>
-    data.enabledFeatures?.collateralRepay,
   permissions: (data: MarketDataType) => data.enabledFeatures?.permissions,
-  debtSwitch: (data: MarketDataType) => data.enabledFeatures?.debtSwitch,
-  withdrawAndSwitch: (data: MarketDataType) =>
-    data.enabledFeatures?.withdrawAndSwitch,
 };
 
 const providers: { [network: string]: ethersProviders.Provider } = {};
@@ -169,8 +159,6 @@ export const getENSProvider = () => {
   const config = getNetworkConfig(chainId);
   return new StaticJsonRpcProvider(config.publicJsonRPCUrl[0], chainId);
 };
-
-export const frozenProposalMap: Record<string, string> = {};
 
 // reexport so we can forbit config import
 export { CustomMarket };

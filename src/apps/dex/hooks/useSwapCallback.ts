@@ -20,7 +20,6 @@ import {
 import isZero from "apps/dex/utils/isZero";
 import { useActiveWeb3React } from "apps/dex/hooks";
 import useTransactionDeadline from "apps/dex/hooks/useTransactionDeadline";
-import useENS from "apps/dex/hooks/useENS";
 
 export enum SwapCallbackState {
   INVALID,
@@ -57,10 +56,8 @@ function useSwapCallArguments(
   recipientAddressOrName: string | null // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
 ): SwapCall[] {
   const { account, chainId, library } = useActiveWeb3React();
-
-  const { address: recipientAddress } = useENS(recipientAddressOrName);
   const recipient =
-    recipientAddressOrName === null ? account : recipientAddress;
+    recipientAddressOrName === null ? account : recipientAddressOrName;
   const deadline = useTransactionDeadline();
 
   return useMemo(() => {
@@ -122,10 +119,8 @@ export function useSwapCallback(
   );
 
   const addTransaction = useTransactionAdder();
-
-  const { address: recipientAddress } = useENS(recipientAddressOrName);
   const recipient =
-    recipientAddressOrName === null ? account : recipientAddress;
+    recipientAddressOrName === null ? account : recipientAddressOrName;
 
   return useMemo(() => {
     if (!trade || !library || !account || !chainId) {

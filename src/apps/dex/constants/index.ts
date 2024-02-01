@@ -1,5 +1,4 @@
 import { ChainId, JSBI, Percent, Token, WETH } from "into-the-fathom-swap-sdk";
-import { AbstractConnector } from "@web3-react/abstract-connector";
 import { APOTHEM_ADDRESSES, XDC_ADDRESSES } from "fathom-sdk";
 
 // a list of tokens by chain
@@ -13,16 +12,10 @@ export const ROUTER_ADDRESSES: RouterAddressesList = {
   [ChainId.AXDC]: "0x546F62f88cECefF9a0035156d8D456AfeEEcDe8a",
 };
 
-export const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
-
 // a list of tokens by chain
 type ChainTokenList = {
   readonly [chainId in ChainId]: Token[];
 };
-
-export const GOVERNANCE_ADDRESS = "0x0000000000000000000000000000000000000000";
-
-export const TIMELOCK_ADDRESS = "0x0000000000000000000000000000000000000000";
 
 /***
  * Apothem tokens
@@ -97,12 +90,6 @@ export const FTHM: { [chainId in ChainId]: Token } = {
   [ChainId.AXDC]: FTHM_AXDC,
 };
 
-export const COMMON_CONTRACT_NAMES: { [address: string]: string } = {
-  [FTHM_ADDRESS_XDC]: "FTHM",
-  [GOVERNANCE_ADDRESS]: "Governance",
-  [TIMELOCK_ADDRESS]: "Timelock",
-};
-
 const WETH_ONLY: ChainTokenList = {
   [ChainId.XDC]: [WETH[ChainId.XDC]],
   [ChainId.AXDC]: [WETH[ChainId.AXDC]],
@@ -156,25 +143,10 @@ export const PINNED_PAIRS: {
   ],
 };
 
-export interface WalletInfo {
-  connector?: AbstractConnector;
-  name: string;
-  iconName: string;
-  description: string;
-  href: string | null;
-  color: string;
-  primary?: true;
-  mobile?: true;
-  mobileOnly?: true;
-}
-
 // default allowed slippage, in bips
 export const INITIAL_ALLOWED_SLIPPAGE = 50;
 // 20 minutes, denominated in seconds
 export const DEFAULT_DEADLINE_FROM_NOW = 60 * 20;
-
-// used for rewards deadlines
-export const BIG_INT_SECONDS_IN_WEEK = JSBI.BigInt(60 * 60 * 24 * 7);
 
 export const BIG_INT_ZERO = JSBI.BigInt(0);
 

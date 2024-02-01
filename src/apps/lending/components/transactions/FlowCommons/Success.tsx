@@ -72,7 +72,7 @@ export const TxSuccessView: FC<SuccessTxViewProps> = ({
 
         {!action && !amount && symbol && (
           <Typography>
-            Your {symbol} {collateral ? "now" : "is not"} used as collateral
+            Your {symbol} {collateral ? "is not" : "now"} used as collateral
           </Typography>
         )}
 

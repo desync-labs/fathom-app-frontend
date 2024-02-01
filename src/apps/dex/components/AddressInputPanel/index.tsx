@@ -1,6 +1,5 @@
 import { useContext, useCallback, FC } from "react";
 import styled, { ThemeContext } from "styled-components";
-import useENS from "apps/dex/hooks/useENS";
 import { useActiveWeb3React } from "apps/dex/hooks";
 import { ExternalLink, TYPE } from "apps/dex/theme";
 import { AutoColumn } from "apps/dex/components/Column";
@@ -75,8 +74,6 @@ const AddressInputPanel: FC<AddressInputPanleProps> = ({
   const { chainId } = useActiveWeb3React();
   const theme = useContext(ThemeContext);
 
-  const { address, loading, name } = useENS(value);
-
   const handleInput = useCallback(
     (event: any) => {
       const input = event.target.value;
@@ -86,7 +83,7 @@ const AddressInputPanel: FC<AddressInputPanleProps> = ({
     [onChange]
   );
 
-  const error = Boolean(value.length > 0 && !loading && !address);
+  const error = Boolean(value.length > 0 && !value);
 
   return (
     <InputPanel id={id}>
@@ -97,9 +94,9 @@ const AddressInputPanel: FC<AddressInputPanleProps> = ({
               <TYPE.black color={theme?.text2} fontWeight={600} fontSize={13}>
                 Recipient
               </TYPE.black>
-              {address && chainId && (
+              {value && chainId && (
                 <ExternalLink
-                  href={getBlockScanLink(chainId, name ?? address, "address")}
+                  href={getBlockScanLink(chainId, value, "address")}
                   style={{ fontSize: "14px" }}
                 >
                   (View on Blocksscan)

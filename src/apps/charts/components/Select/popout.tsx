@@ -24,10 +24,6 @@ const selectStyles = {
       borderColor: "#e1e1e1",
     },
   }),
-  valueContainer: (styles: any) => ({
-    ...styles,
-    padding: 0,
-  }),
   menu: () => null,
 };
 

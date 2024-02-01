@@ -326,7 +326,7 @@ const StreamStats: FC = () => {
                           {BigNumber(cooldownInUsd).isGreaterThan(
                             1 / 10 ** 6
                           ) ? (
-                            <span>{formatPercentage(cooldownInUsd)}</span>
+                            <span>${formatPercentage(cooldownInUsd)}</span>
                           ) : null}
                         </MyStatsValue>
                       </Grid>
