@@ -1,8 +1,7 @@
-import { Dispatch, FC, memo, SetStateAction, useState } from "react";
-import "feather-icons";
+import { Dispatch, FC, memo, SetStateAction, useState, useEffect } from "react";
 import { Navigate, useParams } from "react-router-dom";
-import { Text } from "rebass";
-import styled from "styled-components";
+import { useMedia } from "react-use";
+import { Box, styled, Typography } from "@mui/material";
 import Link, { CustomLink } from "apps/charts/components/Link";
 import Panel from "apps/charts/components/Panel";
 import TokenLogo from "apps/charts/components/TokenLogo";
@@ -30,9 +29,7 @@ import {
 import { TYPE } from "apps/charts/Theme";
 import { useColor } from "apps/charts/hooks";
 import CopyHelper from "apps/charts/components/Copy";
-import { useMedia } from "react-use";
 import { useDataForList } from "apps/charts/contexts/PairData";
-import { useEffect } from "react";
 import Warning from "apps/charts/components/Warning";
 import {
   usePathDismissed,
@@ -46,10 +43,8 @@ import {
   BlockedWrapper,
   BlockedMessageWrapper,
 } from "apps/charts/components";
-import { PlusCircle, Bookmark, AlertCircle } from "react-feather";
 import FormattedName from "apps/charts/components/FormattedName";
 import { useListedTokens } from "apps/charts/contexts/Application";
-import HoverText from "apps/charts/components/HoverText";
 import {
   UNTRACKED_COPY,
   TOKEN_BLACKLIST,
@@ -62,11 +57,14 @@ import { TableHeaderBox } from "apps/charts/components/Row";
 import { isAddress } from "apps/charts/utils";
 import { LayoutWrapper } from "apps/charts/App";
 
-const DashboardWrapper = styled.div`
+import { PlusCircle, Bookmark } from "react-feather";
+import AppPopover from "components/AppComponents/AppPopover/AppPopover";
+
+const DashboardWrapper = styled(Box)`
   width: 100%;
 `;
 
-const PanelWrapper = styled.div`
+const PanelWrapper = styled(Box)`
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: max-content;
   gap: 6px;
@@ -88,7 +86,7 @@ const PanelWrapper = styled.div`
   }
 `;
 
-const TokenDetailsLayout = styled.div`
+const TokenDetailsLayout = styled(Box)`
   display: inline-grid;
   width: calc(100% - 1.25rem);
   grid-template-columns: auto auto auto 1fr;
@@ -115,20 +113,13 @@ const TokenDetailsLayout = styled.div`
   }
 `;
 
-const WarningIcon = styled(AlertCircle)`
-  stroke: ${({ theme }) => theme.text1};
-  height: 16px;
-  width: 16px;
-  opacity: 0.6;
-`;
-
-const WarningGrouping = styled.div<{ disabled?: boolean }>`
+const WarningGrouping = styled(Box)<{ disabled?: boolean }>`
   opacity: ${({ disabled }) => disabled && "0.4"};
   pointer-events: ${({ disabled }) => disabled && "none"};
 `;
 
-const HeaderWrapper = styled.div`
-  background: ${({ theme }) => theme.headerBackground};
+const HeaderWrapper = styled(Box)`
+  background: #131f35;
   border-radius: 8px;
   padding-top: 7px !important;
   padding-bottom: 7px !important;
@@ -258,13 +249,13 @@ const TokenPage: FC<{ address: string }> = memo(({ address }) => {
                 address.replace(/^.{2}/g, "xdc")
               }
             >
-              <Text
+              <Typography
                 style={{ marginLeft: ".15rem" }}
                 fontSize={"14px"}
                 fontWeight={400}
               >
                 ({address.slice(0, 8) + "..." + address.slice(36, 42)})
-              </Text>
+              </Typography>
             </Link>
           </AutoRow>
           {!below600 && <Search small={true} />}
@@ -343,7 +334,12 @@ const TokenPage: FC<{ address: string }> = memo(({ address }) => {
                     <ButtonLight>+ Add Liquidity</ButtonLight>
                   </CustomLink>
                   <CustomLink to={getSwapLink(address)}>
-                    <ButtonDark ml={".5rem"} mr={below1080 ? ".5rem" : ""}>
+                    <ButtonDark
+                      sx={{
+                        marginLeft: ".5rem",
+                        marginRight: below1080 ? ".5rem" : 0,
+                      }}
+                    >
                       Trade
                     </ButtonDark>
                   </CustomLink>
@@ -353,14 +349,12 @@ const TokenPage: FC<{ address: string }> = memo(({ address }) => {
 
             <>
               {!below1080 && (
-                <RowFixed>
+                <RowFixed alignItems={"center"}>
                   <TYPE.main fontSize={"1.125rem"} mr="6px">
                     Token Stats
                   </TYPE.main>
                   {usingUtVolume && (
-                    <HoverText text={UNTRACKED_COPY}>
-                      <WarningIcon />
-                    </HoverText>
+                    <AppPopover id={"token_stats"} text={UNTRACKED_COPY} />
                   )}
                 </RowFixed>
               )}

@@ -47,11 +47,8 @@ import {
   usePathDismissed,
   useSavedPairs,
 } from "apps/charts/contexts/LocalStorage";
-
-import { Bookmark, PlusCircle, AlertCircle } from "react-feather";
 import FormattedName from "apps/charts/components/FormattedName";
 import { useListedTokens } from "apps/charts/contexts/Application";
-import HoverText from "apps/charts/components/HoverText";
 import {
   UNTRACKED_COPY,
   PAIR_BLACKLIST,
@@ -61,6 +58,9 @@ import { TableHeaderBox } from "apps/charts/components/Row";
 import LocalLoader from "apps/charts/components/LocalLoader";
 import { isAddress } from "apps/charts/utils";
 import { LayoutWrapper } from "apps/charts/App";
+import AppPopover from "components/AppComponents/AppPopover/AppPopover";
+
+import { Bookmark, PlusCircle } from "react-feather";
 
 const DashboardWrapper = styled.div`
   width: 100%;
@@ -132,13 +132,6 @@ const HoverSpan = styled.span`
     cursor: pointer;
     opacity: 0.7;
   }
-`;
-
-const WarningIcon = styled(AlertCircle)`
-  stroke: ${({ theme }) => theme.text1};
-  height: 16px;
-  width: 16px;
-  opacity: 0.6;
 `;
 
 const WarningGrouping = styled.div<{ disabled?: boolean }>`
@@ -407,8 +400,10 @@ const PairPage: FC<{ pairAddress: string }> = memo(({ pairAddress }) => {
                   </CustomLink>
                   <CustomLink to={getSwapLink(token0?.id, token1?.id)}>
                     <ButtonDark
-                      ml={!below1080 ? ".5rem" : ""}
-                      mr={below1080 ? ".5rem" : ""}
+                      sx={{
+                        marginLeft: !below1080 ? ".5rem" : 0,
+                        marginRight: below1080 ? ".5rem" : 0,
+                      }}
                     >
                       Trade
                     </ButtonDark>
@@ -475,9 +470,7 @@ const PairPage: FC<{ pairAddress: string }> = memo(({ pairAddress }) => {
                     Pair Stats
                   </TYPE.main>
                   {showUSDWaning ? (
-                    <HoverText text={UNTRACKED_COPY}>
-                      <WarningIcon />
-                    </HoverText>
+                    <AppPopover id={"pair_stats"} text={UNTRACKED_COPY} />
                   ) : null}
                 </RowFixed>
               )}
@@ -558,7 +551,7 @@ const PairPage: FC<{ pairAddress: string }> = memo(({ pairAddress }) => {
                             <FormattedName
                               text={token0?.symbol ?? ""}
                               maxCharacters={8}
-                              margin={true}
+                              margin="0 4px"
                             />
                           </RowFixed>
                         </TYPE.main>
@@ -580,7 +573,7 @@ const PairPage: FC<{ pairAddress: string }> = memo(({ pairAddress }) => {
                             <FormattedName
                               text={token1?.symbol ?? ""}
                               maxCharacters={8}
-                              margin={true}
+                              margin="0 4px"
                             />
                           </RowFixed>
                         </TYPE.main>

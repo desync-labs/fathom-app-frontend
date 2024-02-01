@@ -228,7 +228,7 @@ const ListItem: FC<ListItemProps> = memo((props) => {
             <FormattedName
               text={item.token1Symbol}
               maxCharacters={5}
-              margin={true}
+              margin="0 4px"
             />
           </DataText>
           <DataText justifyContent={"center"}>
@@ -236,7 +236,7 @@ const ListItem: FC<ListItemProps> = memo((props) => {
             <FormattedName
               text={item.token0Symbol}
               maxCharacters={5}
-              margin={true}
+              margin="0 4px"
             />
           </DataText>
         </>

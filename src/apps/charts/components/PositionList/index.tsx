@@ -212,7 +212,7 @@ const ListItem: FC<ListItemProps> = memo((props) => {
               <FormattedName
                 text={position.pair.token0.symbol}
                 maxCharacters={below740 ? 10 : 18}
-                margin={true}
+                margin="0 4px"
                 fontSize={"11px"}
               />
             </RowFixed>
@@ -225,7 +225,7 @@ const ListItem: FC<ListItemProps> = memo((props) => {
               <FormattedName
                 text={position.pair.token1.symbol}
                 maxCharacters={below740 ? 10 : 18}
-                margin={true}
+                margin="0 4px"
                 fontSize={"11px"}
               />
             </RowFixed>
@@ -254,7 +254,7 @@ const ListItem: FC<ListItemProps> = memo((props) => {
                 <FormattedName
                   text={position.pair.token0.symbol}
                   maxCharacters={below740 ? 10 : 18}
-                  margin={true}
+                  margin="0 4px"
                   fontSize={"11px"}
                 />
               </RowFixed>
@@ -273,7 +273,7 @@ const ListItem: FC<ListItemProps> = memo((props) => {
                 <FormattedName
                   text={position.pair.token1.symbol}
                   maxCharacters={below740 ? 10 : 18}
-                  margin={true}
+                  margin="0 4px"
                   fontSize={"11px"}
                 />
               </RowFixed>

@@ -1,16 +1,17 @@
 import { useState, useEffect, useRef, FC, memo } from "react";
+import { Box, styled } from "@mui/material";
 import { createChart, CrosshairMode, IChartApi } from "lightweight-charts";
 import dayjs from "dayjs";
 import { formattedNum } from "apps/charts/utils";
 import { usePrevious } from "react-use";
-import styled from "styled-components";
-import { Play } from "react-feather";
 import { useDarkModeManager } from "apps/charts/contexts/LocalStorage";
 
-const IconWrapper = styled.div`
+import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
+
+const IconWrapper = styled(Box)`
   position: absolute;
   right: 10px;
-  color: ${({ theme }) => theme.text1}
+  color: #fafafa;
   border-radius: 3px;
   height: 16px;
   width: 16px;
@@ -217,7 +218,7 @@ const CandleStickChart: FC<CandleStickChartProps> = ({
     <div>
       <div ref={ref} id="test-id" />
       <IconWrapper>
-        <Play
+        <PlayArrowOutlinedIcon
           onClick={() => {
             chartCreated && chartCreated.timeScale().fitContent();
           }}
