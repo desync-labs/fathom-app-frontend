@@ -3,9 +3,6 @@ import { WETH } from "into-the-fathom-swap-sdk";
 import { abi as IUniswapV2PairABI } from "into-the-fathom-swap-smart-contracts/artifacts/contracts/core/interfaces/IUniswapV2Pair.sol/IUniswapV2Pair.json";
 
 import { useMemo } from "react";
-import { ARGENT_WALLET_DETECTOR_ABI } from "apps/dex/constants/abis/argent-wallet-detector";
-import ENS_PUBLIC_RESOLVER_ABI from "apps/dex/constants/abis/ens-public-resolver.json";
-import ENS_ABI from "apps/dex/constants/abis/ens-registrar.json";
 import { ERC20_BYTES32_ABI } from "apps/dex/constants/abis/erc20";
 import ERC20_ABI from "apps/dex/constants/abis/erc20.json";
 import WETH_ABI from "apps/dex/constants/abis/weth.json";
@@ -56,24 +53,6 @@ export function useWETHContract(
     WETH_ABI,
     withSignerIfPossible
   );
-}
-
-export function useArgentWalletDetectorContract(): Contract | null {
-  return useContract(undefined, ARGENT_WALLET_DETECTOR_ABI, false);
-}
-
-export function useENSRegistrarContract(
-  withSignerIfPossible?: boolean
-): Contract | null {
-  let address: string | undefined;
-  return useContract(address, ENS_ABI, withSignerIfPossible);
-}
-
-export function useENSResolverContract(
-  address: string | undefined,
-  withSignerIfPossible?: boolean
-): Contract | null {
-  return useContract(address, ENS_PUBLIC_RESOLVER_ABI, withSignerIfPossible);
 }
 
 export function useBytes32TokenContract(

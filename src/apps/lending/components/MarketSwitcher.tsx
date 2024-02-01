@@ -34,7 +34,7 @@ export const getMarketInfoById = (marketId: CustomMarket) => {
 };
 
 export const getMarketHelpData = (marketName: string) => {
-  const testChains = ["Sepolia", "Apothem"];
+  const testChains = ["Apothem"];
   const arrayName = marketName.split(" ");
   const testChainName = arrayName.filter((el) => testChains.indexOf(el) > -1);
   const marketTitle = arrayName
@@ -187,7 +187,7 @@ export const MarketSwitcher = () => {
         <Typography
           variant="subheader2"
           color="text.secondary"
-          sx={{ px: 4, pt: 2 }}
+          sx={{ px: 4, pt: 2, mb: 2 }}
         >
           {ENABLE_TESTNET || DEV_ENV
             ? "Select Testnet Market"
