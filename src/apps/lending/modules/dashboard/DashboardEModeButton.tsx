@@ -8,7 +8,6 @@ import { useModalContext } from "apps/lending/hooks/useModal";
 import { useRootStore } from "apps/lending/store/root";
 import { DASHBOARD, GENERAL } from "apps/lending/utils/mixPanelEvents";
 
-import { Link } from "apps/lending/components/primitives/Link";
 import { Row } from "apps/lending/components/primitives/Row";
 import { TypographyGradient } from "apps/lending/components/primitives/TypographyGradient";
 import { getEmodeMessage } from "apps/lending/components/transactions/Emode/EmodeNaming";
@@ -182,15 +181,7 @@ export const DashboardEModeButton: FC<DashboardEModeButtonProps> = memo(
 
             <Typography variant="caption" color="text.secondary" mb={4}>
               E-Mode increases your LTV for a selected category of assets up to
-              97%.{" "}
-              <Link
-                href="https://docs.aave.com/faq/aave-v3-features#high-efficiency-mode-e-mode"
-                sx={{ textDecoration: "underline" }}
-                variant="caption"
-                color="text.secondary"
-              >
-                Learn more
-              </Link>
+              97%.
             </Typography>
 
             {isEModeDisabled ? (

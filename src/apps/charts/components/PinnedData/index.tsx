@@ -54,6 +54,7 @@ const StyledIcon = styled(Box)`
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 0;
   :hover {
     background-color: unset;
     opacity: 0.7;
@@ -103,7 +104,7 @@ const PinnedData: FC<PinnedDataProps> = (props) => {
           <StyledIcon color={"#43fff6"}>
             <BookmarkBorderIcon sx={{ width: 20, height: 20 }} />
           </StyledIcon>
-          <TYPE.main ml={"4px"}>Saved</TYPE.main>
+          <TYPE.main ml={"5px"}>Saved</TYPE.main>
         </RowFixed>
         <StyledIcon color={"#43fff6"}>
           <ChevronRightIcon sx={{ width: 28, height: 28 }} />

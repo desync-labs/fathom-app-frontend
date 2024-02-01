@@ -8,7 +8,7 @@ import { ReserveOverviewBox } from "apps/lending/components/ReserveOverviewBox";
 import { getEmodeMessage } from "apps/lending/components/transactions/Emode/EmodeNaming";
 import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 import { useRootStore } from "apps/lending/store/root";
-import { GENERAL, RESERVE_DETAILS } from "apps/lending/utils/mixPanelEvents";
+import { RESERVE_DETAILS } from "apps/lending/utils/mixPanelEvents";
 
 import {
   PanelRow,
@@ -106,30 +106,6 @@ export const ReserveEModePanel: FC<ReserverEModePanelProps> = memo(
               }}
             >
               Dashboard
-            </Link>
-            . To learn more about E-Mode and applied restrictions in{" "}
-            <Link
-              href="https://docs.aave.com/faq/aave-v3-features#high-efficiency-mode-e-mode"
-              sx={{ textDecoration: "underline" }}
-              variant="caption"
-              color="text.secondary"
-              onClick={() => {
-                trackEvent(GENERAL.EXTERNAL_LINK, { Link: "E-mode FAQ" });
-              }}
-            >
-              FAQ
-            </Link>{" "}
-            or{" "}
-            <Link
-              href="https://github.com/aave/aave-v3-core/blob/master/techpaper/Aave_V3_Technical_Paper.pdf"
-              sx={{ textDecoration: "underline" }}
-              variant="caption"
-              color="text.secondary"
-              onClick={() => {
-                trackEvent(GENERAL.EXTERNAL_LINK, { Link: "V3 Tech Paper" });
-              }}
-            >
-              Aave V3 Technical Paper
             </Link>
             .
           </Typography>

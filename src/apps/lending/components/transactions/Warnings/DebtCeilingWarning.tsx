@@ -1,7 +1,6 @@
 import { AlertProps } from "@mui/material";
 import { AssetCapData } from "apps/lending/hooks/useAssetCaps";
 
-import { Link } from "apps/lending/components/primitives/Link";
 import { Warning } from "apps/lending/components/primitives/Warning";
 import { FC } from "react";
 
@@ -36,13 +35,7 @@ export const DebtCeilingWarning: FC<DebtCeilingWarningProps> = ({
 
   return (
     <Warning severity={severity} icon={icon} {...rest}>
-      {renderText()}{" "}
-      <Link
-        href="https://docs.aave.com/faq/aave-v3-features#how-does-isolation-mode-affect-my-borrowing-power"
-        underline="always"
-      >
-        Learn more
-      </Link>
+      {renderText()}
     </Warning>
   );
 };

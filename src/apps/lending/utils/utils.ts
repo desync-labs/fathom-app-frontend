@@ -14,11 +14,6 @@ export function hexToAscii(_hex: string): string {
   return str;
 }
 
-export interface CancelablePromise<T = unknown> {
-  promise: Promise<T>;
-  cancel: () => void;
-}
-
 export const makeCancelable = <T>(promise: Promise<T>) => {
   let hasCanceled_ = false;
 

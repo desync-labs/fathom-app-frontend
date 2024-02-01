@@ -35,18 +35,6 @@ export const selectCurrentChainIdV3MarketData = (state: RootStore) => {
   return marketData[0];
 };
 
-export const selectCurrentChainIdV3PoolReserve = (state: RootStore) => {
-  const marketData = selectCurrentChainIdV3MarketData(state);
-  const v3MarketAddressProvider = marketData
-    ? marketData.addresses.LENDING_POOL_ADDRESS_PROVIDER
-    : undefined;
-  const currentChainId = state.currentChainId;
-  if (v3MarketAddressProvider && currentChainId) {
-    return state.data.get(state.currentChainId)?.get(v3MarketAddressProvider);
-  }
-  return undefined;
-};
-
 export const selectCurrentUserLendingPoolData = (state: RootStore) => {
   const marketAddressProvider = state.currentMarketData
     ? state.currentMarketData.addresses.LENDING_POOL_ADDRESS_PROVIDER

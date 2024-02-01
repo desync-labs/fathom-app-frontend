@@ -16,11 +16,9 @@ import {
   removeSerializedToken,
   SerializedPair,
   SerializedToken,
-  updateUserDarkMode,
   updateUserDeadline,
   updateUserExpertMode,
   updateUserSlippageTolerance,
-  toggleURLWarning,
   updateUserSingleHopOnly,
 } from "./actions";
 
@@ -57,17 +55,6 @@ export function useIsDarkMode(): boolean {
   );
 
   return userDarkMode === null ? matchesDarkMode : userDarkMode;
-}
-
-export function useDarkModeManager(): [boolean, () => void] {
-  const dispatch = useDispatch<AppDispatch>();
-  const darkMode = useIsDarkMode();
-
-  const toggleSetDarkMode = useCallback(() => {
-    dispatch(updateUserDarkMode({ userDarkMode: !darkMode }));
-  }, [darkMode, dispatch]);
-
-  return [darkMode, toggleSetDarkMode];
 }
 
 export function useIsExpertMode(): boolean {
@@ -207,11 +194,6 @@ export function usePairAdder(): (pair: Pair) => void {
 
 export function useURLWarningVisible(): boolean {
   return useSelector((state: AppState) => state.user.URLWarningVisible);
-}
-
-export function useURLWarningToggle(): () => void {
-  const dispatch = useDispatch();
-  return useCallback(() => dispatch(toggleURLWarning()), [dispatch]);
 }
 
 /**
