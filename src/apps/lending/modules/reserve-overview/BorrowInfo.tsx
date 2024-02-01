@@ -5,7 +5,6 @@ import { IncentivesButton } from "apps/lending/components/incentives/IncentivesB
 import { StableAPYTooltip } from "apps/lending/components/infoTooltips/StableAPYTooltip";
 import { VariableAPYTooltip } from "apps/lending/components/infoTooltips/VariableAPYTooltip";
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
-import { Link } from "apps/lending/components/primitives/Link";
 import { ReserveSubheader } from "apps/lending/components/ReserveSubheader";
 import { TextWithTooltip } from "apps/lending/components/TextWithTooltip";
 import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
@@ -92,13 +91,7 @@ export const BorrowInfo: FC<BorrowInfoProps> = memo(
                     >
                       <>
                         Borrowing of this asset is limited to a certain amount
-                        to minimize liquidity pool insolvency.{" "}
-                        <Link
-                          href="https://docs.aave.com/developers/whats-new/supply-borrow-caps"
-                          underline="always"
-                        >
-                          Learn more
-                        </Link>
+                        to minimize liquidity pool insolvency.
                       </>
                     </TextWithTooltip>
                   </Box>

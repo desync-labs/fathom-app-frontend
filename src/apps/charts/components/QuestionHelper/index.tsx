@@ -51,14 +51,14 @@ const QuestionHelper: FC<QuestionHelper> = ({ text, disabled }) => {
   const close = useCallback(() => setShow(false), [setShow]);
 
   return (
-    <span style={{ marginLeft: 4 }}>
+    <span style={{ marginLeft: 4, fontSize: "0" }}>
       <Tooltip text={text} show={show && !disabled}>
         <QuestionWrapper
           onClick={open}
           onMouseEnter={open}
           onMouseLeave={close}
         >
-          <Question size={11} />
+          <Question size={10} />
         </QuestionWrapper>
       </Tooltip>
     </span>

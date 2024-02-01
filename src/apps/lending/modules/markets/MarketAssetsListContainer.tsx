@@ -9,16 +9,12 @@ import {
 import { useState } from "react";
 import { ListWrapper } from "apps/lending/components/lists/ListWrapper";
 import { NoSearchResults } from "apps/lending/components/NoSearchResults";
-import { Link } from "apps/lending/components/primitives/Link";
 import { Warning } from "apps/lending/components/primitives/Warning";
 import { TitleWithSearchBar } from "apps/lending/components/TitleWithSearchBar";
 import { useAppDataContext } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
 import MarketAssetsList from "apps/lending/modules/markets/MarketAssetsList";
-import { useRootStore } from "apps/lending/store/root";
 import { fetchIconSymbolAndName } from "apps/lending/ui-config/reservePatches";
-
-import { GENERAL } from "apps/lending/utils/mixPanelEvents";
 
 export const MarketAssetsListContainer = () => {
   const { reserves, loading } = useAppDataContext();
@@ -26,7 +22,6 @@ export const MarketAssetsListContainer = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const { breakpoints } = useTheme();
   const sm = useMediaQuery(breakpoints.down("sm"));
-  const trackEvent = useRootStore((store) => store.trackEvent);
 
   const filteredData = reserves
     // Filter out any non-active reserves
@@ -93,23 +88,10 @@ export const MarketAssetsListContainer = () => {
           </Typography>
           {showFrozenMarketsToggle && (
             <Warning severity="info">
-              These assets are temporarily frozen or paused by Aave community
-              decisions, meaning that further supply / borrow, or rate swap of
-              these assets are unavailable. Withdrawals and debt repayments are
-              allowed. Follow the{" "}
-              <Link
-                onClick={() => {
-                  trackEvent(GENERAL.EXTERNAL_LINK, {
-                    link: "Frozen Market Markets Page",
-                    frozenMarket: currentNetworkConfig.name,
-                  });
-                }}
-                href="https://governance.aave.com"
-                underline="always"
-              >
-                Aave governance forum
-              </Link>{" "}
-              for further updates.
+              These assets are temporarily frozen or paused by Fathom lending
+              community decisions, meaning that further supply / borrow, or rate
+              swap of these assets are unavailable. Withdrawals and debt
+              repayments are allowed.
             </Warning>
           )}
         </Box>

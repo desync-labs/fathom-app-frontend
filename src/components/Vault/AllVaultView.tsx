@@ -25,7 +25,7 @@ const AllVaultView: FC<AllVaultViewPropsType> = ({
     >
       <Grid container spacing={isMobile ? 1 : 3}>
         <PageHeader
-          title={"Vault"}
+          title={"Vaults"}
           description={`Explore existing Vaults, and deposit your assets for a sustainable yield.`}
         />
         <Grid item xs={12} sx={{ marginTop: isMobile ? "5px" : "30px" }}>
