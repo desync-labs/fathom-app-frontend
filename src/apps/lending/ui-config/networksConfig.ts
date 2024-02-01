@@ -62,7 +62,10 @@ export const networkConfigs: Record<string, BaseNetworkConfig> = {
     wrappedBaseAssetSymbol: "WXDC",
     baseAssetDecimals: 18,
     explorerLink: "https://explorer.apothem.network",
-    isTestnet: true,
+    /**
+     * This need until we have no production market.
+     */
+    isTestnet: process.env.REACT_APP_ENV !== "prod",
     networkLogoPath: "./icons/networks/xdc.png",
     ratesHistoryApiUrl: "http://206.189.103.116:30002/data/rates-history",
   },
