@@ -1,19 +1,16 @@
 import { FC, memo, useState } from "react";
-import "feather-icons";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
+import { Box, IconButton, styled } from "@mui/material";
 import { ButtonLight, ButtonFaded } from "apps/charts/components/ButtonStyled";
 import { AutoRow, RowBetween } from "apps/charts/components/Row";
 import { isAddress } from "apps/charts/utils";
 import { useSavedAccounts } from "apps/charts/contexts/LocalStorage";
 import { AutoColumn } from "apps/charts/components/Column";
 import { TYPE } from "apps/charts/Theme";
-import { Hover, StyledIcon } from "apps/charts/components";
-import { Flex } from "rebass";
 
-import { X } from "react-feather";
+import CloseIcon from "@mui/icons-material/Close";
 
-const Wrapper = styled.div`
+const Wrapper = styled(Box)`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -22,7 +19,7 @@ const Wrapper = styled.div`
   border-radius: 12px;
 `;
 
-const Input = styled.input`
+const Input = styled("input")`
   position: relative;
   display: flex;
   align-items: center;
@@ -30,15 +27,15 @@ const Input = styled.input`
   white-space: nowrap;
   outline: none;
   padding: 12px 16px;
-  border-radius: 12px;
-  color: ${({ theme }) => theme.text1};
-  background-color: ${({ theme }) => theme.bg1};
+  border-radius: 8px;
+  color: #fafafa;
+  background-color: #0e1d34;
   font-size: 16px;
   margin-right: 1rem;
-  border: 1px solid ${({ theme }) => theme.borderBG};
+  border: 1px solid #253656;
 
   ::placeholder {
-    color: ${({ theme }) => theme.white};
+    color: #fff;
     font-size: 14px;
   }
 
@@ -49,15 +46,15 @@ const Input = styled.input`
   }
 `;
 
-const AccountLink = styled.span`
+const AccountLink = styled("span")`
   display: flex;
   cursor: pointer;
-  color: ${({ theme }) => theme.link};
+  color: #fff;
   font-size: 14px;
   font-weight: 500;
 `;
 
-const DashGrid = styled.div`
+const DashGrid = styled(Box)`
   display: grid;
   grid-gap: 1em;
   grid-template-columns: 1fr;
@@ -70,12 +67,24 @@ const DashGrid = styled.div`
 `;
 
 export const HeaderWrapper = styled(DashGrid)`
-  background: ${({ theme }) => theme.headerBackground};
+  background: #131f35;
   border-radius: 8px;
   padding: 0.5rem 1.125rem 0.5rem;
-  color: ${({ theme }) => theme.primaryText2};
+  color: #5977a0;
   text-transform: uppercase;
   font-size: 11px;
+`;
+
+const CloseIconButton = styled(IconButton)`
+  padding: 0;
+  :hover {
+    background-color: unset;
+    opacity: 0.7;
+  }
+  svg {
+    width: 16px;
+    height: 16px;
+  }
 `;
 
 type AccountSearchProps = {
@@ -132,22 +141,21 @@ const AccountSearch: FC<AccountSearchProps> = ({ small }) => {
                       padding: "0.5rem 1.125rem",
                     }}
                   >
-                    <Flex
+                    <Box
+                      display="flex"
                       justifyContent="space-between"
                       onClick={() => navigate("/charts/account/" + account)}
                     >
                       <AccountLink>{account?.slice(0, 42)}</AccountLink>
-                      <Hover
+                      <CloseIconButton
                         onClick={(e) => {
                           e.stopPropagation();
                           removeAccount(account);
                         }}
                       >
-                        <StyledIcon>
-                          <X size={16} />
-                        </StyledIcon>
-                      </Hover>
-                    </Flex>
+                        <CloseIcon />
+                      </CloseIconButton>
+                    </Box>
                   </DashGrid>
                 );
               })
@@ -160,17 +168,17 @@ const AccountSearch: FC<AccountSearchProps> = ({ small }) => {
         )}
 
         {small && (
-          <>
-            <TYPE.main marginBottom="1rem">{"Accounts"}</TYPE.main>
+          <AutoColumn gap={"12px"}>
+            <TYPE.main>{"Accounts"}</TYPE.main>
             {savedAccounts?.length > 0 ? (
               savedAccounts.map((account: string) => {
                 return (
-                  <RowBetween key={account}>
+                  <RowBetween key={account} gap={"8px"}>
                     <ButtonFaded
                       onClick={() => navigate("/charts/account/" + account)}
                     >
                       {small ? (
-                        <TYPE.header>
+                        <TYPE.header fontSize={"12px"}>
                           {account?.slice(0, 6) +
                             "..." +
                             account?.slice(38, 42)}
@@ -179,18 +187,16 @@ const AccountSearch: FC<AccountSearchProps> = ({ small }) => {
                         <AccountLink>{account?.slice(0, 42)}</AccountLink>
                       )}
                     </ButtonFaded>
-                    <Hover onClick={() => removeAccount(account)}>
-                      <StyledIcon>
-                        <X size={16} />
-                      </StyledIcon>
-                    </Hover>
+                    <CloseIconButton onClick={() => removeAccount(account)}>
+                      <CloseIcon />
+                    </CloseIconButton>
                   </RowBetween>
                 );
               })
             ) : (
               <TYPE.light>No pinned wallets</TYPE.light>
             )}
-          </>
+          </AutoColumn>
         )}
       </AutoColumn>
     </AutoColumn>

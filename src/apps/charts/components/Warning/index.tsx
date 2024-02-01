@@ -98,8 +98,7 @@ const Warning: FC<WarningProps> = (props) => {
             <RowBetween style={{ marginTop: "20px" }}>
               <div />
               <ButtonDark
-                color={"#f82d3a"}
-                style={{ minWidth: "140px" }}
+                sx={{ color: "#f82d3a", minWidth: "140px" }}
                 onClick={() => setShow(false)}
               >
                 I understand
@@ -125,8 +124,7 @@ const Warning: FC<WarningProps> = (props) => {
               </Link>
             </Hover>
             <ButtonDark
-              color={"#f82d3a"}
-              style={{ minWidth: "140px" }}
+              sx={{ color: "#f82d3a", minWidth: "140px" }}
               onClick={() => setShow(false)}
             >
               I understand

@@ -1,29 +1,28 @@
-import { Link as RebassLink } from "rebass";
-import { Link as RouterLink } from "react-router-dom";
-import styled from "styled-components";
-import { lighten, darken } from "polished";
 import { FC, ReactNode } from "react";
+import { Link as RouterLink } from "react-router-dom";
+import { styled } from "@mui/material";
+import { lighten, darken } from "polished";
 
 type WrappedLinkProps = {
-  external: boolean;
+  external?: boolean;
   children: ReactNode;
 } & Record<string, any>;
 
 const WrappedLink: FC<WrappedLinkProps> = (props) => {
   const { external, children, ...rest } = props;
   return (
-    <RebassLink
+    <a
       target={external ? "_blank" : undefined}
       rel={external ? "noopener noreferrer" : undefined}
       {...rest}
     >
       {children}
-    </RebassLink>
+    </a>
   );
 };
 
 const Link = styled(WrappedLink)`
-  color: ${({ color, theme }) => (color ? color : theme.white)};
+  color: ${({ color }) => (color ? color : "#FFFFFF")};
 `;
 
 export default Link;
@@ -32,18 +31,17 @@ export const CustomLink = styled(RouterLink)`
   text-decoration: none;
   font-size: 14px;
   font-weight: 500;
-  color: ${({ color, theme }) => (color ? color : theme.link)};
+  color: ${({ color }) => (color ? color : "#fff")};
 
   &:visited {
-    color: ${({ color, theme }) =>
-      color ? lighten(0.1, color) : lighten(0.1, theme.link)};
+    color: ${({ color }) =>
+      color ? lighten(0.1, color) : lighten(0.1, "#fff")};
   }
 
   &:hover {
     cursor: pointer;
     text-decoration: none;
-    color: ${({ color, theme }) =>
-      color ? darken(0.1, color) : darken(0.1, theme.link)};
+    color: ${({ color }) => (color ? darken(0.1, color) : darken(0.1, "#fff"))};
   }
 `;
 
