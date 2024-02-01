@@ -217,7 +217,7 @@ export const BorrowActions: FC<BorrowActionsProps> = React.memo(
 
     // Update gas estimation
     useEffect(() => {
-      let borrowGasLimit = 0;
+      let borrowGasLimit;
       borrowGasLimit = Number(
         gasLimitRecommendations[ProtocolAction.borrow].recommended
       );

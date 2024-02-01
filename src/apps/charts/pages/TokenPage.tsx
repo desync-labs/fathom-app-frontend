@@ -458,7 +458,7 @@ const TokenPage: FC<{ address: string }> = memo(({ address }) => {
                   setChecked={() => setUseTracked(!useTracked)}
                   text={"Hide untracked pairs"}
                 />
-                <QuestionHelper text="USD amounts may be inaccurate in low liquiidty pairs or pairs without ETH or stablecoins." />
+                <QuestionHelper text="USD amounts may be inaccurate in low liquiidty pairs or pairs without XDC or stablecoins." />
               </AutoRow>
             </RowBetween>
             {address && fetchedPairsList ? (

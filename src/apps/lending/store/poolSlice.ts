@@ -7,7 +7,6 @@ import {
   EthereumTransactionTypeExtended,
   FaucetParamsType,
   FaucetService,
-  IncentivesController,
   IncentivesControllerV2,
   IncentivesControllerV2Interface,
   InterestRate,
@@ -569,38 +568,25 @@ export const createPoolSlice: StateCreator<
         }
       });
 
-      const incentivesTxBuilder = new IncentivesController(
-        get().jsonRpcProvider()
-      );
       const incentivesTxBuilderV2: IncentivesControllerV2Interface =
         new IncentivesControllerV2(get().jsonRpcProvider());
 
-      if (get().currentMarketData.v3) {
-        if (selectedReward.symbol === "all") {
-          return incentivesTxBuilderV2.claimAllRewards({
-            user: currentAccount,
-            assets: allReserves,
-            to: currentAccount,
-            incentivesControllerAddress:
-              selectedReward.incentiveControllerAddress,
-          });
-        } else {
-          return incentivesTxBuilderV2.claimRewards({
-            user: currentAccount,
-            assets: allReserves,
-            to: currentAccount,
-            incentivesControllerAddress:
-              selectedReward.incentiveControllerAddress,
-            reward: selectedReward.rewardTokenAddress,
-          });
-        }
-      } else {
-        return incentivesTxBuilder.claimRewards({
+      if (selectedReward.symbol === "all") {
+        return incentivesTxBuilderV2.claimAllRewards({
           user: currentAccount,
-          assets: selectedReward.assets,
+          assets: allReserves,
           to: currentAccount,
           incentivesControllerAddress:
             selectedReward.incentiveControllerAddress,
+        });
+      } else {
+        return incentivesTxBuilderV2.claimRewards({
+          user: currentAccount,
+          assets: allReserves,
+          to: currentAccount,
+          incentivesControllerAddress:
+            selectedReward.incentiveControllerAddress,
+          reward: selectedReward.rewardTokenAddress,
         });
       }
     },

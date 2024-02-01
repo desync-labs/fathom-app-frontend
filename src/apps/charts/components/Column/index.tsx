@@ -5,10 +5,6 @@ const Column = styled(Box)`
   flex-direction: column;
   justify-content: flex-start;
 `;
-export const ColumnCenter = styled(Column)`
-  width: 100%;
-  align-items: center;
-`;
 
 export const AutoColumn = styled(Box)<{ gap?: string; justify?: string }>`
   display: grid;

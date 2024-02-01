@@ -1,4 +1,3 @@
-import { ChainId } from "@into-the-fathom/lending-contract-helpers";
 import { FathomLendingApothem } from "@into-the-fathom/fathom-lending-address-book";
 
 export type ExplorerLinkBuilderProps = {
@@ -59,50 +58,15 @@ export const networkConfigs: Record<string, BaseNetworkConfig> = {
       "https://rpc.apothem.network",
       "https://apothem.xdcrpc.com",
     ],
-    baseUniswapAdapter: "0x0",
     baseAssetSymbol: "XDC",
     wrappedBaseAssetSymbol: "WXDC",
     baseAssetDecimals: 18,
     explorerLink: "https://explorer.apothem.network",
-    isTestnet: true,
+    /**
+     * This need until we have no production market.
+     */
+    isTestnet: process.env.REACT_APP_ENV !== "prod",
     networkLogoPath: "./icons/networks/xdc.png",
     ratesHistoryApiUrl: "http://206.189.103.116:30002/data/rates-history",
-  },
-  [ChainId.sepolia]: {
-    name: "Ethereum Sepolia",
-    publicJsonRPCUrl: [
-      "https://eth-sepolia.public.blastapi.io",
-      "https://rpc.sepolia.org",
-      "https://rpc2.sepolia.org",
-      "https://rpc.sepolia.online",
-      "https://www.sepoliarpc.space",
-    ],
-    baseUniswapAdapter: "0x0",
-    baseAssetSymbol: "ETH",
-    wrappedBaseAssetSymbol: "WETH",
-    baseAssetDecimals: 18,
-    explorerLink: "https://sepolia.etherscan.io",
-    // usdMarket: true,
-    isTestnet: true,
-    networkLogoPath: "./icons/networks/ethereum.svg",
-  },
-  [ChainId.mainnet]: {
-    name: "Ethereum",
-    privateJsonRPCUrl:
-      "https://eth-mainnet.gateway.pokt.network/v1/lb/62b3314e123e6f00397f19ca",
-    publicJsonRPCUrl: [
-      "https://rpc.ankr.com/eth",
-      "https://rpc.flashbots.net",
-      "https://eth-mainnet.public.blastapi.io",
-      "https://cloudflare-eth.com/v1/mainnet",
-    ],
-    publicJsonRPCWSUrl: "wss://eth-mainnet.alchemyapi.io/v2/demo",
-    baseUniswapAdapter: "0xc3efa200a60883a96ffe3d5b492b121d6e9a1f3f",
-    baseAssetSymbol: "ETH",
-    wrappedBaseAssetSymbol: "WETH",
-    baseAssetDecimals: 18,
-    explorerLink: "https://etherscan.io",
-    ratesHistoryApiUrl: "https://aave-api-v2.aave.com/data/rates-history",
-    networkLogoPath: "./icons/networks/ethereum.svg",
   },
 } as const;

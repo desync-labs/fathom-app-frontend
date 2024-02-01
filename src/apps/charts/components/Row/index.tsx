@@ -36,6 +36,8 @@ export const AutoRow = styled(Row)<{
 
 export const RowFixed = styled(Row)`
   width: fit-content;
+  display: flex;
+  align-items: center;
 `;
 
 export const TableHeaderBox = styled(Box)`
