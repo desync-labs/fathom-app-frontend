@@ -11,7 +11,6 @@ interface ListMobileItemWrapperProps {
   children: ReactNode;
   loading?: boolean;
   currentMarket?: CustomMarket;
-  borrowEnabled?: boolean;
   showSupplyCapTooltips?: boolean;
   showBorrowCapTooltips?: boolean;
   showDebtCeilingTooltips?: boolean;

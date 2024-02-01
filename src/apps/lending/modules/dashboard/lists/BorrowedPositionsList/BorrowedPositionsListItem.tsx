@@ -126,7 +126,6 @@ const BorrowedPositionsListItemDesktop: FC<BorrowedPositionsListItemProps> =
           name={name}
           detailsAddress={reserve.underlyingAsset}
           currentMarket={currentMarket}
-          borrowEnabled={reserve.borrowingEnabled}
           data-cy={`dashboardBorrowedListItem_${reserve.symbol.toUpperCase()}_${borrowRateMode}`}
           showBorrowCapTooltips
         >
@@ -215,7 +214,6 @@ const BorrowedPositionsListItemMobile: FC<BorrowedPositionsListItemProps> =
           name={name}
           underlyingAsset={reserve.underlyingAsset}
           currentMarket={currentMarket}
-          borrowEnabled={reserve.borrowingEnabled}
           showBorrowCapTooltips
         >
           <ListValueRow
