@@ -17,10 +17,6 @@ type ChainTokenList = {
   readonly [chainId in ChainId]: Token[];
 };
 
-export const GOVERNANCE_ADDRESS = "0x0000000000000000000000000000000000000000";
-
-export const TIMELOCK_ADDRESS = "0x0000000000000000000000000000000000000000";
-
 /***
  * Apothem tokens
  */

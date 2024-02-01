@@ -46,7 +46,6 @@ import {
 } from "apps/dex/hooks/useApproveCallback";
 import useENSAddress from "apps/dex/hooks/useENSAddress";
 import { useSwapCallback } from "apps/dex/hooks/useSwapCallback";
-import useToggledVersion, { Version } from "apps/dex/hooks/useToggledVersion";
 import useWrapCallback, { WrapType } from "apps/dex/hooks/useWrapCallback";
 import { useToggleSettingsMenu } from "apps/dex/state/application/hooks";
 import { Field } from "apps/dex/state/swap/actions";
@@ -157,11 +156,7 @@ const Swap = () => {
   );
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE;
   const { address: recipientAddress } = useENSAddress(recipient);
-  const toggledVersion = useToggledVersion();
-  const tradesByVersion = {
-    [Version.v2]: v2Trade,
-  };
-  const trade = showWrap ? undefined : tradesByVersion[toggledVersion];
+  const trade = showWrap ? undefined : v2Trade;
 
   const parsedAmounts = showWrap
     ? {
@@ -311,7 +306,6 @@ const Swap = () => {
           label: [
             trade?.inputAmount?.currency?.symbol,
             trade?.outputAmount?.currency?.symbol,
-            Version.v2,
           ].join("/"),
         });
 
