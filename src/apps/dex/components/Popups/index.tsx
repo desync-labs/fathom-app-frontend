@@ -50,7 +50,11 @@ const Popups = () => {
 
   return (
     <>
-      <FixedPopupColumn gap="20px" extraPadding={urlWarningActive}>
+      <FixedPopupColumn
+        gap="20px"
+        extraPadding={urlWarningActive}
+        data-testid="dex-fixedPopupColumn"
+      >
         {activePopups.map((item) => (
           <PopupItem
             key={item.key}
@@ -60,7 +64,10 @@ const Popups = () => {
           />
         ))}
       </FixedPopupColumn>
-      <MobilePopupWrapper height={activePopups?.length > 0 ? "fit-content" : 0}>
+      <MobilePopupWrapper
+        height={activePopups?.length > 0 ? "fit-content" : 0}
+        data-testid="dex-mobilePopupWrapper"
+      >
         <MobilePopupInner>
           {activePopups // reverse so new items up front
             .slice(0)
