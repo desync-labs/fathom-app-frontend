@@ -1,7 +1,6 @@
 import { InformationCircleIcon } from "@heroicons/react/outline";
 import {
   Box,
-  Link,
   SvgIcon,
   Typography,
   TypographyProps,
@@ -125,13 +124,7 @@ const IsolationModeTooltipTemplate = ({ content }: { content: ReactNode }) => {
     <Box>
       <Box sx={{ mb: 4 }}>{content}</Box>
       <Typography variant="subheader2" color="text.secondary">
-        Learn more in our{" "}
-        <Link
-          href="https://docs.aave.com/faq/aave-v3-features#isolation-mode"
-          fontWeight={500}
-        >
-          FAQ guide
-        </Link>
+        Learn more in our.
       </Typography>
     </Box>
   );

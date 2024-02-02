@@ -543,8 +543,8 @@ export function getThemedComponents(theme: Theme) {
             secondary14: "p",
             secondary16: "p",
             secondary21: "p",
-            helperText: "span",
-            tooltip: "span",
+            helperText: "div",
+            tooltip: "div",
           },
         },
       },
@@ -582,7 +582,7 @@ export function getThemedComponents(theme: Theme) {
       MuiMenuItem: {
         styleOverrides: {
           root: {
-            padding: "12px 16px",
+            padding: "8px 16px",
           },
         },
       },

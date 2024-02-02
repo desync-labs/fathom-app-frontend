@@ -81,11 +81,6 @@ export interface ModalContextType<T extends ModalArgsType> {
   openClaimRewards: () => void;
   openEmode: (mode: EmodeModalType) => void;
   openFaucet: (underlyingAsset: string) => void;
-  openSwap: (underlyingAsset: string) => void;
-  openDebtSwitch: (
-    underlyingAsset: string,
-    currentRateMode: InterestRate
-  ) => void;
   close: () => void;
   type?: ModalType;
   args: T;
@@ -245,19 +240,6 @@ export const ModalContextProvider: FC<{ children: ReactNode }> = ({
           trackEvent(GENERAL.OPEN_MODAL, { modal: "Faucet" });
           setType(ModalType.Faucet);
           setArgs({ underlyingAsset });
-        },
-        openSwap: (underlyingAsset) => {
-          trackEvent(GENERAL.OPEN_MODAL, { modal: "Swap" });
-          setType(ModalType.Swap);
-          setArgs({ underlyingAsset });
-        },
-        openDebtSwitch: (underlyingAsset, currentRateMode) => {
-          trackEvent(GENERAL.OPEN_MODAL, {
-            modal: "Debt Switch",
-            asset: underlyingAsset,
-          });
-          setType(ModalType.DebtSwitch);
-          setArgs({ underlyingAsset, currentRateMode });
         },
         close: () => {
           setType(undefined);

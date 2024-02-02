@@ -136,7 +136,7 @@ export const TxActionsWrapper: FC<TxActionsWrapperProps> = ({
   const approvalParams = getApprovalParams();
   return (
     <Box
-      sx={{ display: "flex", flexDirection: "column", mt: 12, ...sx }}
+      sx={{ display: "flex", flexDirection: "column", mt: 10, ...sx }}
       {...rest}
     >
       {requiresApproval && (

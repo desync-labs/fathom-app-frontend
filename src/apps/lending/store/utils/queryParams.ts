@@ -17,11 +17,3 @@ export const getQueryParameter = (key: string) => {
   }
   return;
 };
-
-export const getAllQueryParameters = () => {
-  if (typeof window !== "undefined" && "URLSearchParams" in window) {
-    const urlSearchParams = new URLSearchParams(window.location.search);
-    return Object.fromEntries(urlSearchParams.entries());
-  }
-  return;
-};

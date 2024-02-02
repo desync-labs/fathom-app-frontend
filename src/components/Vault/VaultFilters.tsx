@@ -57,11 +57,6 @@ const GridSwitcher = styled(Grid)`
   justify-content: flex-start;
 `;
 
-export const StackedLabel = styled("span")`
-  font-size: 14px;
-  color: #fff;
-`;
-
 const VaultFilterContainer = styled(Grid)`
   justify-content: space-between;
   padding-bottom: 55px;
