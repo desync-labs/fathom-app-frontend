@@ -4,7 +4,12 @@ import {
   DialogContentWrapper,
 } from "components/AppComponents/AppDialog/AppDialog";
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
-import { Box, CircularProgress, DialogContent } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  DialogContent,
+  Typography,
+} from "@mui/material";
 import {
   ButtonPrimary,
   CancelButton,
@@ -15,7 +20,11 @@ import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatPercentage } from "utils/format";
 import useStakingContext from "context/staking";
 import useSharedContext from "context/shared";
-import { ButtonsWrapper } from "components/Staking/Dialog/ClaimRewardsDialog";
+import {
+  ButtonsWrapper,
+  InfoMessageWrapper,
+} from "components/Staking/Dialog/ClaimRewardsDialog";
+import InfoIcon from "@mui/icons-material/Info";
 
 const ConfirmButton = styled(ButtonPrimary)`
   font-size: 17px;
@@ -66,6 +75,12 @@ const WithdrawDialog: FC<WithdrawDialogProps> = ({ token, onClose }) => {
           </ConfirmButton>
           {isMobile && <CancelButton onClick={onClose}>Cancel</CancelButton>}
         </ButtonsWrapper>
+        <InfoMessageWrapper>
+          <InfoIcon sx={{ fontSize: "18px", color: "#4F658C" }} />
+          <Typography>
+            Proceeding will prompt you to sign 1 txn in MetaMask.
+          </Typography>
+        </InfoMessageWrapper>
       </DialogContent>
     </AppDialog>
   );

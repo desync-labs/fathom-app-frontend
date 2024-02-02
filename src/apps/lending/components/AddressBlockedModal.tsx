@@ -2,7 +2,6 @@ import { ExclamationCircleIcon, LogoutIcon } from "@heroicons/react/outline";
 import { Box, Button, SvgIcon, Typography } from "@mui/material";
 
 import { BasicModal } from "apps/lending/components/primitives/BasicModal";
-import { Link } from "apps/lending/components/primitives/Link";
 import { FC } from "react";
 
 export interface AddressBlockedProps {
@@ -35,15 +34,8 @@ export const AddressBlockedModal: FC<AddressBlockedProps> = ({
           {address}
         </Typography>
         <Typography variant="description" sx={{ textAlign: "center", mb: 4 }}>
-          This address is blocked on app.aave.com because it is associated with
-          one or more{" "}
-          <Link
-            href="https://docs.aave.com/faq/#address-screening"
-            underline="always"
-          >
-            blocked activities
-          </Link>
-          {"."}
+          This address is blocked on Fathom lending because it is associated
+          with one or more blocked activities.
         </Typography>
         <Button variant="gradient" onClick={onDisconnectWallet}>
           <SvgIcon fontSize="small" sx={{ mx: 1 }}>

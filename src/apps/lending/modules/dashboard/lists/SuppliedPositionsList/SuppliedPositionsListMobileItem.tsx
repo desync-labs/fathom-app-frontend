@@ -7,7 +7,6 @@ import { IncentivesCard } from "apps/lending/components/incentives/IncentivesCar
 import { Row } from "apps/lending/components/primitives/Row";
 import { useModalContext } from "apps/lending/hooks/useModal";
 import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
-import { isFeatureEnabled } from "apps/lending/utils/marketsAndNetworksConfig";
 import { ListItemUsedAsCollateral } from "apps/lending/modules/dashboard/lists/ListItemUsedAsCollateral";
 import { ListMobileItemWrapper } from "apps/lending/modules/dashboard/lists/ListMobileItemWrapper";
 import { ListValueRow } from "apps/lending/modules/dashboard/lists/ListValueRow";
@@ -22,11 +21,10 @@ export const SuppliedPositionsListMobileItem: FC<DashboardReserve> = memo(
     underlyingAsset,
   }) => {
     const { user } = useAppDataContext();
-    const { currentMarketData, currentMarket } = useProtocolDataContext();
-    const { openSupply, openSwap, openWithdraw, openCollateralChange } =
+    const { currentMarket } = useProtocolDataContext();
+    const { openSupply, openWithdraw, openCollateralChange } =
       useModalContext();
     const { debtCeiling } = useAssetCaps();
-    const isSwapButton = isFeatureEnabled.liquiditySwap(currentMarketData);
     const {
       symbol,
       iconSymbol,
@@ -46,7 +44,6 @@ export const SuppliedPositionsListMobileItem: FC<DashboardReserve> = memo(
         (reserve.isIsolated &&
           user.totalCollateralMarketReferenceCurrency === "0"));
 
-    const disableSwap = !isActive || reserve.symbol == "stETH";
     const disableWithdraw = !isActive;
     const disableSupply = !isActive || isFrozen;
 
@@ -57,7 +54,6 @@ export const SuppliedPositionsListMobileItem: FC<DashboardReserve> = memo(
         name={name}
         underlyingAsset={underlyingAsset}
         currentMarket={currentMarket}
-        frozen={reserve.isFrozen}
         showSupplyCapTooltips
         showDebtCeilingTooltips
       >
@@ -112,33 +108,22 @@ export const SuppliedPositionsListMobileItem: FC<DashboardReserve> = memo(
             mt: 5,
           }}
         >
-          {isSwapButton ? (
-            <Button
-              disabled={disableSwap}
-              variant="gradient"
-              onClick={() => openSwap(underlyingAsset)}
-              fullWidth
-            >
-              Switch
-            </Button>
-          ) : (
-            <Button
-              disabled={disableSupply}
-              variant="gradient"
-              onClick={() =>
-                openSupply(
-                  underlyingAsset,
-                  currentMarket,
-                  reserve.name,
-                  "dashboard"
-                )
-              }
-              sx={{ mr: 1.5 }}
-              fullWidth
-            >
-              Supply
-            </Button>
-          )}
+          <Button
+            disabled={disableSupply}
+            variant="gradient"
+            onClick={() =>
+              openSupply(
+                underlyingAsset,
+                currentMarket,
+                reserve.name,
+                "dashboard"
+              )
+            }
+            sx={{ mr: 1.5 }}
+            fullWidth
+          >
+            Supply
+          </Button>
           <Button
             disabled={disableWithdraw}
             variant="outlined"

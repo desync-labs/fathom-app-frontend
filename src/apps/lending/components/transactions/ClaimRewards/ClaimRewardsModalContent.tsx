@@ -61,8 +61,7 @@ export const ClaimRewardsModalContent = () => {
         incentive.rewardTokenDecimals
       );
 
-      let tokenPrice = 0;
-      tokenPrice = Number(incentive.rewardPriceFeed);
+      const tokenPrice = Number(incentive.rewardPriceFeed);
 
       const rewardBalanceUsd = Number(rewardBalance) * tokenPrice;
 
