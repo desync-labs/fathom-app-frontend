@@ -27,3 +27,31 @@ export function transformToSameDecimals(
 
   return transformedNumber;
 }
+
+export function formatNumberToFixedLength(
+  numberString: string,
+  maxDigitsAfterDecimal = 16
+) {
+  // Convert number to string in case it's not already a string
+  numberString = numberString.toString();
+
+  // Find the decimal point position
+  const decimalPointIndex = numberString.indexOf(".");
+
+  // If there is no decimal point, return the number as is
+  if (decimalPointIndex === -1) {
+    return numberString;
+  }
+
+  // Calculate the number of digits after the decimal point
+  const digitsAfterDecimal = numberString.length - decimalPointIndex - 1;
+
+  // If the number of digits after the decimal is within the limit, return the number as is
+  if (digitsAfterDecimal <= maxDigitsAfterDecimal) {
+    return numberString;
+  }
+
+  // Otherwise, trim the number to the desired length
+  const targetLength = decimalPointIndex + 1 + maxDigitsAfterDecimal;
+  return numberString.slice(0, targetLength);
+}
