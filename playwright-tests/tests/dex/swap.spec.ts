@@ -9,10 +9,16 @@ test.describe("Fathom App Test Suite: Positions Operations", () => {
     await dexPage.navigate();
     await dexPage.connectWallet(WalletConnectOptions.Metamask);
     await dexPage.validateConnectedWalletAddress();
-    await dexPage.swap({
+    const expectedData = await dexPage.swap({
       fromToken: tokenIds.XDC,
       toToken: tokenIds.xUSDT,
       fromAmount: 1.5,
+    });
+    await dexPage.validateSwapSuccessPopup({
+      fromAmountExpected: expectedData.fromValueString,
+      fromTokenNameExpected: expectedData.fromTokenName,
+      toAmountExpected: expectedData.toValueString,
+      toTokenNameExpected: expectedData.toTokenName,
     });
   });
 });
