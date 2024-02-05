@@ -2,8 +2,12 @@ import { type Page, type Locator, expect } from "@playwright/test";
 import BasePage from "./base.page";
 // @ts-ignore
 import * as metamask from "@synthetixio/synpress/commands/metamask";
-import { formatNumberToFixedLength } from "../utils/helpers";
+import {
+  extractNumericValueDex,
+  formatNumberToFixedLength,
+} from "../utils/helpers";
 import { SwapData } from "../types";
+import { tokenIds } from "../fixtures/dex.data";
 
 export default class DexPage extends BasePage {
   readonly path: string;
@@ -35,8 +39,9 @@ export default class DexPage extends BasePage {
   readonly transactionSubmittedModalCloseButton: Locator;
   readonly wrapButton: Locator;
   readonly wrapTransactionPopupBodyText: Locator;
-  readonly unwrapButton: Locator;
   readonly unwrapTransactionPopupBodyText: Locator;
+  readonly fromBalanceDiv: Locator;
+  readonly toBalanceDiv: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -119,8 +124,13 @@ export default class DexPage extends BasePage {
     this.transactionSubmittedModalCloseButton = this.page.getByTestId(
       "dex-transactionSubmittedModal-closeButton"
     );
-    this.wrapButton = this.page.locator('//button[text()="Wrap"]');
-    this.unwrapButton = this.page.locator('//button[text()="Unwrap"]');
+    this.wrapButton = this.page.getByTestId("dex-wrap-button");
+    this.fromBalanceDiv = this.page.locator(
+      '//div[@id="swap-currency-input"]//div[contains(text(), "Balance")]'
+    );
+    this.toBalanceDiv = this.page.locator(
+      '//div[@id="swap-currency-output"]//div[contains(text(), "Balance")]'
+    );
   }
 
   async navigate(): Promise<void> {
@@ -176,10 +186,6 @@ export default class DexPage extends BasePage {
 
   async clickWrapButton(): Promise<void> {
     await this.wrapButton.click();
-  }
-
-  async clickUnwrapButton(): Promise<void> {
-    await this.unwrapButton.click();
   }
 
   async swap({
@@ -244,40 +250,30 @@ export default class DexPage extends BasePage {
       toAmountExpected: toAmountString as string,
       toTokenNameExpected: toTokenName as string,
     };
+    if (fromToken === tokenIds.XDC) {
+      await expect(this.wrapButton).toHaveText("Wrap");
+    } else if (fromToken === tokenIds.WXDC) {
+      await expect(this.wrapButton).toHaveText("Unwrap");
+    }
     await this.clickWrapButton();
     await metamask.confirmTransaction();
     return expectedData;
   }
 
-  async unwrap({
-    fromToken,
-    toToken,
-    fromAmount,
-  }: {
-    fromToken: string;
-    toToken: string;
-    fromAmount: number;
-  }): Promise<SwapData> {
-    await this.selectFromToken({ tokenId: fromToken });
-    await this.selectToToken({ tokenId: toToken });
-    await this.fillFromValue({ inputValue: fromAmount });
-    await this.page.waitForTimeout(2000);
-    const fromAmountString = await this.fromTokenAmountInput.getAttribute(
-      "value"
-    );
-    const toAmountString = await this.toTokenAmountInput.getAttribute("value");
-    expect(Number(toAmountString)).toBeGreaterThan(0);
-    const fromTokenName = await this.fromTokenSymbolContainer.textContent();
-    const toTokenName = await this.toTokenSymbolContainer.textContent();
-    const expectedData: SwapData = {
-      fromAmountExpected: fromAmountString as string,
-      fromTokenNameExpected: fromTokenName as string,
-      toAmountExpected: toAmountString as string,
-      toTokenNameExpected: toTokenName as string,
-    };
-    await this.clickUnwrapButton();
-    await metamask.confirmTransaction();
-    return expectedData;
+  async getFromBalance(): Promise<number> {
+    const fromBalance = await this.fromBalanceDiv.textContent();
+    const fromBalanceNumber = extractNumericValueDex(
+      fromBalance as string
+    ) as number;
+    return fromBalanceNumber;
+  }
+
+  async getToBalance(): Promise<number> {
+    const toBalance = await this.toBalanceDiv.textContent();
+    const toBalanceNumber = extractNumericValueDex(
+      toBalance as string
+    ) as number;
+    return toBalanceNumber;
   }
 
   async validateConfirmSwapModal({

@@ -559,6 +559,7 @@ const Swap = () => {
               <ButtonPrimary
                 disabled={Boolean(wrapInputError)}
                 onClick={onWrap}
+                data-testid="dex-wrap-button"
               >
                 {wrapInputError ??
                   (wrapType === WrapType.WRAP
