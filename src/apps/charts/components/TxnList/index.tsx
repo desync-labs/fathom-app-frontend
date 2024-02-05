@@ -1,57 +1,40 @@
 import { useState, useEffect, FC, useMemo, memo } from "react";
-import styled from "styled-components";
+import { Box, ButtonBase, Pagination, styled, Typography } from "@mui/material";
+import { useMedia } from "react-use";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 
 import { formatTime, formattedNum, urls } from "apps/charts/utils";
-import { useMedia } from "react-use";
 import { useCurrentCurrency } from "apps/charts/contexts/Application";
 import { RowFixed, RowBetween } from "apps/charts/components/Row";
-
 import LocalLoader from "apps/charts/components/LocalLoader";
-import { Box, Flex, Text } from "rebass";
 import Link from "apps/charts/components/Link";
 import { Divider, EmptyCard } from "..";
 import DropdownSelect from "apps/charts/components/DropdownSelect";
 import FormattedName from "apps/charts/components/FormattedName";
-import { TYPE } from "apps/charts/Theme";
 import { TableHeaderBox } from "apps/charts/components/Row";
 
 dayjs.extend(utc);
 
-const PageButtons = styled.div`
-  width: 100%;
+const PaginationWrapper = styled(Box)`
   display: flex;
   justify-content: center;
   margin-top: 2em;
   margin-bottom: 0.5em;
 `;
 
-const Arrow = styled.div<{ faded?: boolean }>`
-  color: ${({ theme }) => theme.white};
-  opacity: ${(props) => (props.faded ? 0.3 : 1)};
-  padding: 0 20px;
-  user-select: none;
-  :hover {
-    cursor: pointer;
-  }
-`;
-
 const List = styled(Box)`
   -webkit-overflow-scrolling: touch;
 `;
 
-export const DashGrid = styled.div`
+export const DashGrid = styled(Box)`
   display: grid;
   grid-gap: 1em;
   grid-template-columns: 80px 0.8fr 1.1fr 1.1fr;
   grid-template-areas: "type value txn  time";
 
   > * {
-    justify-content: flex-end;
-    width: 100%;
-
-    &:first-child {
+    &:first-of-type {
       justify-content: flex-start;
       text-align: left;
       width: 100px;
@@ -60,7 +43,7 @@ export const DashGrid = styled.div`
 
   @media screen and (min-width: 500px) {
     > * {
-      &:first-child {
+      &:first-of-type {
         width: 180px;
       }
     }
@@ -72,7 +55,7 @@ export const DashGrid = styled.div`
     grid-template-areas: "type value amountToken amountOther txn time";
 
     > * {
-      &:first-child {
+      &:first-of-type {
         width: 180px;
       }
     }
@@ -86,14 +69,14 @@ export const DashGrid = styled.div`
 `;
 
 const HeaderWrapper = styled(DashGrid)`
-  background: ${({ theme }) => theme.headerBackground};
+  background: #131f35;
   border-radius: 8px;
   padding-top: 7px !important;
   padding-bottom: 7px !important;
 `;
 
-const ClickableText = styled(Text)`
-  color: ${({ theme }) => theme.text1};
+const ClickableText = styled(Typography)`
+  color: #fafafa;
   user-select: none;
   text-align: end;
 
@@ -107,14 +90,24 @@ const ClickableText = styled(Text)`
   }
 `;
 
+const Flex = styled(Box)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 export const DataText = styled(Flex)`
   align-items: center;
   text-align: right;
-  color: ${({ theme }) => theme.text1};
-  font-size: 0.85rem;
+  color: #fafafa;
+  font-size: 14px;
+
+  @media screen and (max-width: 600px) {
+    font-size: 12px;
+  }
 `;
 
-const SortText = styled.button<{ active?: boolean }>`
+const SortText = styled(ButtonBase)<{ active?: boolean }>`
   cursor: pointer;
   font-weight: ${({ active }) => (active ? 500 : 400)};
   margin-right: 0.75rem !important;
@@ -122,7 +115,7 @@ const SortText = styled.button<{ active?: boolean }>`
   background-color: transparent;
   font-size: 1rem;
   padding: 0;
-  color: ${({ active, theme }) => (active ? theme.text5 : theme.text1)};
+  color: ${({ active }) => (active ? "#43FFF6" : "#fafafa")};
   outline: none;
 
   @media screen and (max-width: 600px) {
@@ -481,10 +474,10 @@ const TxnList: FC<TxnListProps> = (props) => {
       <HeaderWrapper
         style={{ height: "fit-content", padding: "0 1.125rem 1rem" }}
       >
-        <Flex alignItems="center" justifyContent={"flex-start"}>
+        <Flex justifyContent={"flex-start"}>
           <TableHeaderBox>Type</TableHeaderBox>
         </Flex>
-        <Flex alignItems="center" justifyContent="center">
+        <Flex>
           <ClickableText
             color="textDim"
             onClick={() => {
@@ -505,7 +498,7 @@ const TxnList: FC<TxnListProps> = (props) => {
           </ClickableText>
         </Flex>
         {!below780 && (
-          <Flex alignItems="center" justifyContent={"center"}>
+          <Flex>
             <ClickableText
               color="textDim"
               onClick={() => {
@@ -528,7 +521,7 @@ const TxnList: FC<TxnListProps> = (props) => {
         )}
         <>
           {!below780 && (
-            <Flex alignItems="center" justifyContent={"center"}>
+            <Flex>
               <ClickableText
                 color="textDim"
                 onClick={() => {
@@ -552,14 +545,14 @@ const TxnList: FC<TxnListProps> = (props) => {
             </Flex>
           )}
           {!below1080 && (
-            <Flex alignItems="center" justifyContent={"center"}>
+            <Flex>
               <TableHeaderBox>Account</TableHeaderBox>
             </Flex>
           )}
-          <Flex alignItems="center" justifyContent={"center"}>
+          <Flex>
             <TableHeaderBox>Transaction</TableHeaderBox>
           </Flex>
-          <Flex alignItems="center" justifyContent={"flex-end"}>
+          <Flex>
             <ClickableText
               color="textDim"
               onClick={() => {
@@ -597,23 +590,15 @@ const TxnList: FC<TxnListProps> = (props) => {
           })
         )}
       </List>
-      <PageButtons>
-        <div
-          onClick={() => {
-            setPage(page === 1 ? page : page - 1);
-          }}
-        >
-          <Arrow faded={page === 1 ? true : false}>←</Arrow>
-        </div>
-        <TYPE.body>{"Page " + page + " of " + maxPage}</TYPE.body>
-        <div
-          onClick={() => {
-            setPage(page === maxPage ? page : page + 1);
-          }}
-        >
-          <Arrow faded={page === maxPage ? true : false}>→</Arrow>
-        </div>
-      </PageButtons>
+      {maxPage > 1 && (
+        <PaginationWrapper>
+          <Pagination
+            count={Math.ceil(maxPage)}
+            page={page}
+            onChange={(event, page) => setPage(page)}
+          />
+        </PaginationWrapper>
+      )}
     </>
   );
 };

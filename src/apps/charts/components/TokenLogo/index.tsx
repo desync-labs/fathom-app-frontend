@@ -1,16 +1,16 @@
 import { useState, useEffect, FC, memo } from "react";
-import styled from "styled-components";
+import { Box, styled } from "@mui/material";
 import { isAddress } from "apps/charts/utils";
 
 const BAD_IMAGES = {};
 
-const Inline = styled.div`
+const Inline = styled(Box)`
   display: flex;
   align-items: center;
   align-self: center;
 `;
 
-const Image = styled.img<{ size: string }>`
+const Image = styled("img")<{ size: string }>`
   width: ${({ size }) => size};
   height: ${({ size }) => size};
   background-color: white;

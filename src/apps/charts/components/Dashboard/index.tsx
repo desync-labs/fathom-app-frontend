@@ -1,5 +1,4 @@
-import styled from "styled-components";
-import { Box } from "rebass";
+import { Box, styled } from "@mui/material";
 
 const Dashboard = styled(Box)`
   width: 100%;

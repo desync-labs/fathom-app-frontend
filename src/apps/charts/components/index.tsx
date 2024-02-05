@@ -1,12 +1,11 @@
-import styled from "styled-components";
-import { Box } from "rebass";
+import { Box, styled } from "@mui/material";
 
 const Divider = styled(Box)`
   height: 1px;
-  background-color: ${({ theme }) => theme.divider};
+  background-color: #131f35;
 `;
 
-export const BlockedWrapper = styled.div`
+export const BlockedWrapper = styled(Box)`
   width: 100%;
   height: 100%;
   display: flex;
@@ -14,8 +13,8 @@ export const BlockedWrapper = styled.div`
   align-items: center;
 `;
 
-export const BlockedMessageWrapper = styled.div`
-  border: 1px solid ${({ theme }) => theme.text3};
+export const BlockedMessageWrapper = styled(Box)`
+  border: 1px solid #002f2d;
   border-radius: 12px;
   display: flex;
   justify-content: center;
@@ -24,18 +23,18 @@ export const BlockedMessageWrapper = styled.div`
   max-width: 80%;
 `;
 
-export const IconWrapper = styled.div`
+export const IconWrapper = styled(Box)`
   position: absolute;
   right: 0;
   border-radius: 3px;
   height: 16px;
   width: 16px;
-  padding: 0px;
+  padding: 0;
   bottom: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: ${({ theme }) => theme.text1};
+  color: #fafafa;
 
   :hover {
     cursor: pointer;
@@ -43,27 +42,30 @@ export const IconWrapper = styled.div`
   }
 `;
 
-export const Hover = styled.div<{ fade?: boolean }>`
+export const Hover = styled(Box)<{ fade?: boolean }>`
   :hover {
     cursor: pointer;
     opacity: ${({ fade }) => fade && "0.7"};
   }
 `;
 
-export const StyledIcon = styled.div`
-  color: ${({ theme }) => theme.text5};
+export const StyledIcon = styled(Box)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #43fff6;
 `;
 
-const EmptyCard = styled.div<{ height?: string }>`
+const EmptyCard = styled(Box)<{ height?: string }>`
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 20px;
-  color: ${({ theme }) => theme.text1};
+  color: #fafafa;
   height: ${({ height }) => (height ? height : "200px")};
 `;
 
-export const PageWrapper = styled.div`
+export const PageWrapper = styled(Box)`
   display: flex;
   flex-direction: column;
   padding-top: 36px;
@@ -76,7 +78,7 @@ export const PageWrapper = styled.div`
   }
 `;
 
-export const ContentWrapper = styled.div`
+export const ContentWrapper = styled(Box)`
   display: grid;
   justify-content: start;
   align-items: start;
@@ -96,7 +98,7 @@ export const ContentWrapper = styled.div`
   }
 `;
 
-export const ContentWrapperLarge = styled.div`
+export const ContentWrapperLarge = styled(Box)`
   display: grid;
   justify-content: start;
   align-items: start;
@@ -118,7 +120,7 @@ export const ContentWrapperLarge = styled.div`
   }
 `;
 
-export const FullWrapper = styled.div`
+export const FullWrapper = styled(Box)`
   display: grid;
   justify-content: start;
   align-items: start;

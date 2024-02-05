@@ -15,6 +15,7 @@ export const AutoColumn = styled(Box)<{ gap?: string; justify?: string }>`
     (gap === "lg" && "24px") ||
     gap};
   justify-items: ${({ justify }) => justify && justify};
+  width: 100%;
 `;
 
 export default Column;

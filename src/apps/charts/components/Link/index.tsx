@@ -28,8 +28,8 @@ const Link = styled(WrappedLink)`
 export default Link;
 
 export const CustomLink = styled(RouterLink)`
-  text-decoration: none;
   font-size: 14px;
+  text-decoration: none;
   font-weight: 500;
   color: ${({ color }) => (color ? color : "#fff")};
 
