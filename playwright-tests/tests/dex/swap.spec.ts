@@ -12,9 +12,26 @@ test.describe("Fathom App Test Suite: Positions Operations", () => {
     const expectedData = await dexPage.swap({
       fromToken: tokenIds.XDC,
       toToken: tokenIds.xUSDT,
-      fromAmount: 1.5,
+      fromAmount: 0.5,
     });
     await dexPage.validateSwapSuccessPopup({
+      fromAmountExpected: expectedData.fromAmountExpected,
+      fromTokenNameExpected: expectedData.fromTokenNameExpected,
+      toAmountExpected: expectedData.toAmountExpected,
+      toTokenNameExpected: expectedData.toTokenNameExpected,
+    });
+  });
+
+  test("Wrapping XDC to WXDC is successful.", async ({ dexPage }) => {
+    await dexPage.navigate();
+    await dexPage.connectWallet(WalletConnectOptions.Metamask);
+    await dexPage.validateConnectedWalletAddress();
+    const expectedData = await dexPage.wrap({
+      fromToken: tokenIds.XDC,
+      toToken: tokenIds.WXDC,
+      fromAmount: 0.5,
+    });
+    await dexPage.validateWrapSuccessPopup({
       fromAmountExpected: expectedData.fromAmountExpected,
       fromTokenNameExpected: expectedData.fromTokenNameExpected,
       toAmountExpected: expectedData.toAmountExpected,
