@@ -109,7 +109,7 @@ const ClaimRewardsDialog: FC<ClaimRewardsDialogProps> = ({
           Claim Rewards only is available for all positions at the moment.{" "}
           <br />
           You will lose the rewards of the position you proceed to unstake
-          without claiming it here first. <a href={"/"}>Learn more.</a>
+          without claiming it here first.
         </ModalDescription>
         <DialogContentWrapper>
           <img src={getTokenLogoURL(token)} alt={"token-logo"} width={58} />
