@@ -3,6 +3,7 @@ import BasePage from "./base.page";
 // @ts-ignore
 import * as metamask from "@synthetixio/synpress/commands/metamask";
 import { formatNumberToFixedLength } from "../utils/helpers";
+import { SwapData } from "../types";
 
 export default class DexPage extends BasePage {
   readonly path: string;
@@ -21,6 +22,17 @@ export default class DexPage extends BasePage {
   readonly swapTransactionPopup: Locator;
   readonly fromTokenSymbolContainer: Locator;
   readonly toTokenSymbolContainer: Locator;
+  readonly confirmSwapModal: Locator;
+  readonly confirmSwapModalFromAmount: Locator;
+  readonly confirmSwapModalFromTokenName: Locator;
+  readonly confirmSwapModalToAmount: Locator;
+  readonly confirmSwapModalToTokenName: Locator;
+  readonly waitingForConfirmationModalBodyText: Locator;
+  readonly waitingForConfirmationModalHeaderText: Locator;
+  readonly waitingForConfirmationModalFooterText: Locator;
+  readonly transactionSubmittedModalHeaderText: Locator;
+  readonly transactionSubmittedModalFooterText: Locator;
+  readonly transactionSubmittedModalCloseButton: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -63,6 +75,39 @@ export default class DexPage extends BasePage {
     );
     this.toTokenSymbolContainer = this.page.locator(
       "#swap-currency-output .token-symbol-container"
+    );
+    this.confirmSwapModal = this.page.locator(
+      '//div[text()="Confirm Swap"]//ancestor::div[@data-reach-dialog-content]'
+    );
+    this.confirmSwapModalFromAmount = this.page.getByTestId(
+      "dex-swapModalHeader-fromAmount"
+    );
+    this.confirmSwapModalFromTokenName = this.page.getByTestId(
+      "dex-swapModalHeader-fromTokenName"
+    );
+    this.confirmSwapModalToAmount = this.page.getByTestId(
+      "dex-swapModalHeader-toAmount"
+    );
+    this.confirmSwapModalToTokenName = this.page.getByTestId(
+      "dex-swapModalHeader-toTokenName"
+    );
+    this.waitingForConfirmationModalBodyText = this.page.getByTestId(
+      "dex-waitingForConfirmationModal-bodyText"
+    );
+    this.waitingForConfirmationModalHeaderText = this.page.getByTestId(
+      "dex-waitingForConfirmationModal-headerText"
+    );
+    this.waitingForConfirmationModalFooterText = this.page.getByTestId(
+      "dex-waitingForConfirmationModal-footerText"
+    );
+    this.transactionSubmittedModalHeaderText = this.page.getByTestId(
+      "dex-transactionSubmittedModal-headerText"
+    );
+    this.transactionSubmittedModalFooterText = this.page.getByTestId(
+      "dex-transactionSubmittedModal-footerText"
+    );
+    this.transactionSubmittedModalCloseButton = this.page.getByTestId(
+      "dex-transactionSubmittedModal-closeButton"
     );
   }
 
@@ -126,12 +171,7 @@ export default class DexPage extends BasePage {
     fromToken: string;
     toToken: string;
     fromAmount: number;
-  }): Promise<{
-    fromValueString: string;
-    fromTokenName: string;
-    toValueString: string;
-    toTokenName: string;
-  }> {
+  }): Promise<SwapData> {
     await this.selectFromToken({ tokenId: fromToken });
     await this.selectToToken({ tokenId: toToken });
     await this.fillFromValue({ inputValue: fromAmount });
@@ -140,20 +180,74 @@ export default class DexPage extends BasePage {
       "value"
     );
     const toAmountString = await this.toTokenAmountInput.getAttribute("value");
+    expect(Number(toAmountString)).toBeGreaterThan(0);
     const fromTokenName = await this.fromTokenSymbolContainer.textContent();
     const toTokenName = await this.toTokenSymbolContainer.textContent();
-    expect(Number(toAmountString)).toBeGreaterThan(0);
-    await this.clickSwapButton();
-    await this.clickConfirmSwapButton();
-    await expect(this.waitingForConfirmationModal).toBeVisible();
-    await metamask.confirmTransaction();
-    await expect(this.transactionSubmittedConfirmationModal).toBeVisible();
-    return {
-      fromValueString: fromAmountString as string,
-      fromTokenName: fromTokenName as string,
-      toValueString: toAmountString as string,
-      toTokenName: toTokenName as string,
+    const expectedData: SwapData = {
+      fromAmountExpected: fromAmountString as string,
+      fromTokenNameExpected: fromTokenName as string,
+      toAmountExpected: toAmountString as string,
+      toTokenNameExpected: toTokenName as string,
     };
+    await this.clickSwapButton();
+    await this.validateConfirmSwapModal(expectedData);
+    await this.clickConfirmSwapButton();
+    await this.validateWaitingForConfirmationModal(expectedData);
+    await metamask.confirmTransaction();
+    await this.validateTransactionSubmittedModal();
+    await this.transactionSubmittedModalCloseButton.click();
+    return expectedData;
+  }
+
+  async validateConfirmSwapModal({
+    fromAmountExpected,
+    fromTokenNameExpected,
+    toAmountExpected,
+    toTokenNameExpected,
+  }: SwapData): Promise<void> {
+    await expect(this.confirmSwapModal).toBeVisible();
+    await expect
+      .soft(this.confirmSwapModalFromAmount)
+      .toHaveText(fromAmountExpected);
+    await expect
+      .soft(this.confirmSwapModalFromTokenName)
+      .toHaveText(fromTokenNameExpected);
+    await expect
+      .soft(this.confirmSwapModalToAmount)
+      .toHaveText(toAmountExpected);
+    await expect
+      .soft(this.confirmSwapModalToTokenName)
+      .toHaveText(toTokenNameExpected);
+  }
+
+  async validateWaitingForConfirmationModal({
+    fromAmountExpected,
+    fromTokenNameExpected,
+    toAmountExpected,
+    toTokenNameExpected,
+  }: SwapData): Promise<void> {
+    await expect(this.waitingForConfirmationModal).toBeVisible();
+    const expectedText = `Swapping ${fromAmountExpected} ${fromTokenNameExpected} for ${toAmountExpected} ${toTokenNameExpected}`;
+    await expect(this.waitingForConfirmationModalHeaderText).toHaveText(
+      "Waiting For Confirmation"
+    );
+    await expect
+      .soft(this.waitingForConfirmationModalBodyText)
+      .toHaveText(expectedText);
+    await expect(this.waitingForConfirmationModalFooterText).toHaveText(
+      "Confirm this transaction in your wallet"
+    );
+  }
+
+  async validateTransactionSubmittedModal(): Promise<void> {
+    await expect(this.transactionSubmittedConfirmationModal).toBeVisible();
+    await expect
+      .soft(this.transactionSubmittedModalHeaderText)
+      .toHaveText("Transaction Submitted");
+    await expect
+      .soft(this.transactionSubmittedModalFooterText)
+      .toHaveText("View on Blocksscan");
+    await expect.soft(this.transactionSubmittedModalCloseButton).toBeVisible();
   }
 
   async validateSwapSuccessPopup({
@@ -161,12 +255,7 @@ export default class DexPage extends BasePage {
     fromTokenNameExpected,
     toAmountExpected,
     toTokenNameExpected,
-  }: {
-    fromAmountExpected: string;
-    fromTokenNameExpected: string;
-    toAmountExpected: string;
-    toTokenNameExpected: string;
-  }): Promise<void> {
+  }: SwapData): Promise<void> {
     await expect(this.swapTransactionPopup).toBeVisible({ timeout: 30000 });
     await expect
       .soft(this.swapTransactionPopupStatusIcon)
