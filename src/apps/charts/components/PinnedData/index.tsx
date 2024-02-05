@@ -48,7 +48,6 @@ const ScrollableDiv = styled(AutoColumn)`
 
 const StyledIcon = styled.div`
   color: ${({ theme }) => theme.text5};
-  font-size: 0;
 `;
 
 type PinnedDataProps = {
