@@ -40,7 +40,12 @@ export const ChangeNetworkWarning: FC<ChangeNetworkWarningProps> = ({
           check if you can change it from the wallet.
         </Typography>
       ) : (
-        <Typography variant="description">
+        <Typography
+          variant="description"
+          display={"flex"}
+          alignItems={"center"}
+          gap={"7px"}
+        >
           Please switch to {networkName}.{" "}
           <Button
             variant="text"
