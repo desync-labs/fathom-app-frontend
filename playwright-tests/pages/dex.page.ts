@@ -138,7 +138,6 @@ export default class DexPage extends BasePage {
     await expect(tokenItem.locator("svg")).not.toBeVisible({ timeout: 15000 });
     const isDisabled = (await tokenItem.getAttribute("disabled")) !== null;
     if (!isDisabled) {
-      console.log("Disabled is not null");
       await tokenItem.click();
     }
     await this.closeButtonSelectTokenModal.click();
