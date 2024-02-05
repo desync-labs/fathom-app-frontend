@@ -1,28 +1,28 @@
 import { useState, useEffect, useMemo, useRef, memo } from "react";
-import styled from "styled-components";
+import { useMedia } from "react-use";
+import { client } from "apollo/client";
+import { Box, styled } from "@mui/material";
 
 import Row, { RowFixed } from "apps/charts/components/Row";
 import TokenLogo from "apps/charts/components/TokenLogo";
-import { Search as SearchIcon, X } from "react-feather";
 import { BasicLink } from "apps/charts/components/Link";
-
 import { useAllTokenData, useTokenData } from "apps/charts/contexts/TokenData";
 import { useAllPairData, usePairData } from "apps/charts/contexts/PairData";
 import DoubleTokenLogo from "apps/charts/components/DoubleLogo";
-import { useMedia } from "react-use";
 import {
   useAllPairsInUniswap,
   useAllTokensInUniswap,
 } from "apps/charts/contexts/GlobalData";
 import { TOKEN_BLACKLIST, PAIR_BLACKLIST } from "apps/charts/constants";
-
-import { client } from "apollo/client";
 import { PAIR_SEARCH, TOKEN_SEARCH } from "apps/charts/apollo/queries";
 import FormattedName from "apps/charts/components/FormattedName";
 import { TYPE } from "apps/charts/Theme";
 import { useListedTokens } from "apps/charts/contexts/Application";
 
-const Container = styled.div`
+import CloseIcon from "@mui/icons-material/Close";
+import SearchIcon from "@mui/icons-material/Search";
+
+const Container = styled(Box)`
   height: 48px;
   z-index: 30;
   position: relative;
@@ -36,16 +36,16 @@ const Container = styled.div`
   }
 `;
 
-const Wrapper = styled.div<{ open?: boolean; small: boolean }>`
+const Wrapper = styled(Box)<{ open?: boolean; small: boolean }>`
   display: flex;
   position: relative;
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
-  border-radius: 12px;
+  border-radius: 8px;
   background: transparent;
-  border-bottom-right-radius: ${({ open }) => (open ? "0px" : "12px")};
-  border-bottom-left-radius: ${({ open }) => (open ? "0px" : "12px")};
+  border-bottom-right-radius: ${(open) => (open ? "0px" : "8px")};
+  border-bottom-left-radius: ${(open) => (open ? "0px" : "8px")};
   z-index: 9999;
   width: 100%;
   min-width: 300px;
@@ -55,29 +55,40 @@ const Wrapper = styled.div<{ open?: boolean; small: boolean }>`
       ? "0px 24px 32px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.04) "
       : "none"};
   @media screen and (max-width: 500px) {
-    background: ${({ theme }) => theme.bg6};
+    background: #000;
     box-shadow: ${({ open }) =>
       !open
         ? "0px 24px 32px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.04) "
         : "none"};
   }
 `;
-const Input = styled.input<{ large: boolean }>`
+const Input = styled("input")<{ large: boolean }>`
   position: relative;
   display: flex;
   align-items: center;
   white-space: nowrap;
   outline: none;
   width: 100%;
-  color: ${({ theme }) => theme.white};
-  border: 1px solid ${({ theme }) => theme.borderBG};
+  color: #ffffff;
+  border: 1px solid #253656;
   font-size: ${({ large }) => (large ? "20px" : "14px")};
   border-radius: 8px;
   padding: 10px 10px 10px 28px;
-  background-color: #061023;
+  background-color: #0e1d34;
+
+  :hover,
+  :focus {
+    border: 1px solid rgb(90, 129, 255);
+    box-shadow: rgb(0, 60, 255) 0 0 8px;
+  }
+
+  :focus {
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+  }
 
   ::placeholder {
-    color: ${({ theme }) => theme.placeholderColor};
+    color: #4f658c;
     font-size: 16px;
   }
 
@@ -95,38 +106,39 @@ const SearchIconLarge = styled(SearchIcon)`
   position: absolute;
   left: 6px;
   pointer-events: none;
-  color: ${({ theme }) => theme.borderBG};
+  color: #4f658c;
   z-index: 1;
 `;
 
-const CloseIcon = styled(X)`
+const CloseIconStyled = styled(CloseIcon)`
   height: 20px;
   width: 20px;
   margin-right: 0.5rem;
   position: absolute;
   left: 6px;
-  color: ${({ theme }) => theme.borderBG};
+  color: #4f658c;
   z-index: 1;
   :hover {
     cursor: pointer;
   }
 `;
 
-const Menu = styled.div<{ hide?: boolean }>`
+const Menu = styled(Box)<{ hide?: boolean }>`
+  display: ${({ hide }) => (hide ? "none" : "flex")};
   flex-direction: column;
-  z-index: 9999;
   width: 100%;
   top: 50px;
   max-height: 540px;
   overflow: auto;
   left: 0;
   padding-bottom: 20px;
-  background: linear-gradient(180deg, #000817 7.88%, #0d1725 113.25%);
-  border-bottom-right-radius: 12px;
-  border-bottom-left-radius: 12px;
+  background: #0e1d34;
+  border: 1px solid #253656;
+  border-bottom-right-radius: 8px;
+  border-bottom-left-radius: 8px;
   box-shadow: 0 0 1px rgba(0, 0, 0, 0.04), 0 4px 8px rgba(0, 0, 0, 0.04),
     0 16px 24px rgba(0, 0, 0, 0.04), 0 24px 32px rgba(0, 0, 0, 0.04);
-  display: ${({ hide }) => (hide ? "none" : "flex")};
+  z-index: 9999;
 `;
 
 const MenuItem = styled(Row)`
@@ -137,7 +149,7 @@ const MenuItem = styled(Row)`
   }
   :hover {
     cursor: pointer;
-    background-color: ${({ theme }) => theme.bg2};
+    background-color: rgba(0, 255, 246, 0.16);
   }
 `;
 
@@ -146,12 +158,12 @@ const Heading = styled(Row)<{ hide?: boolean }>`
   display: ${({ hide = false }) => hide && "none"};
 `;
 
-const Gray = styled.span`
-  color: #888d9b;
+const Gray = styled("span")`
+  color: #5977a0;
 `;
 
-const Blue = styled.span`
-  color: #43fff6;
+const SeeMoreLink = styled("span")`
+  color: #fafafa;
   :hover {
     cursor: pointer;
   }
@@ -462,7 +474,7 @@ export const Search = ({ small = false }) => {
         {!showMenu ? (
           <SearchIconLarge />
         ) : (
-          <CloseIcon color={"#fff"} onClick={() => toggleMenu(false)} />
+          <CloseIconStyled onClick={() => toggleMenu(false)} />
         )}
         <Input
           large={!small}
@@ -512,7 +524,6 @@ export const Search = ({ small = false }) => {
                     <DoubleTokenLogo
                       a0={pair?.token0?.id}
                       a1={pair?.token1?.id}
-                      margin={true}
                     />
                     <TYPE.body style={{ marginLeft: "10px" }}>
                       {pair.token0.symbol + "-" + pair.token1.symbol} Pair
@@ -529,13 +540,13 @@ export const Search = ({ small = false }) => {
               )
             }
           >
-            <Blue
+            <SeeMoreLink
               onClick={() => {
                 setPairsShown(pairsShown + 5);
               }}
             >
               See more...
-            </Blue>
+            </SeeMoreLink>
           </Heading>
         </div>
         <Heading>
@@ -571,7 +582,6 @@ export const Search = ({ small = false }) => {
               </BasicLink>
             );
           })}
-
           <Heading
             hide={
               !(
@@ -580,13 +590,13 @@ export const Search = ({ small = false }) => {
               )
             }
           >
-            <Blue
+            <SeeMoreLink
               onClick={() => {
                 setTokensShown(tokensShown + 5);
               }}
             >
               See more...
-            </Blue>
+            </SeeMoreLink>
           </Heading>
         </div>
       </Menu>

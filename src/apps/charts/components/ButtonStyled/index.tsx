@@ -9,17 +9,20 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 const Base = styled(Button)<{ open?: boolean }>`
   font-size: 15px;
   font-weight: 600;
+  line-height: inherit;
   text-decoration: none;
   text-transform: capitalize;
   border-radius: 8px;
   outline: none;
   border: 1px solid transparent;
-  padding: 8px 16px;
+  padding: 8px 12px;
   border-bottom-right-radius: ${({ open }) => open && "0"};
   border-bottom-left-radius: ${({ open }) => open && "0"};
 `;
 
 export const ButtonLight = styled(Base)`
+  font-size: 0.825rem;
+  font-weight: 600;
   background: transparent;
   border: 1px solid #43fff6;
   color: #43fff6;

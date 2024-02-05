@@ -323,11 +323,12 @@ const TokenChart: FC<TokenChartProps> = (props) => {
               labelStyle={{ paddingTop: 4 }}
               contentStyle={{
                 padding: "10px 14px",
-                borderRadius: 10,
-                borderColor: color,
-                color: "black",
+                border: "none",
+                borderRadius: 8,
+                color: "white",
+                backgroundColor: "#2a3e5a",
               }}
-              wrapperStyle={{ top: -70, left: -10 }}
+              wrapperStyle={{ top: -70, left: -10, zIndex: 22 }}
             />
             <Area
               key={"other"}
@@ -388,11 +389,12 @@ const TokenChart: FC<TokenChartProps> = (props) => {
                 labelStyle={{ paddingTop: 4 }}
                 contentStyle={{
                   padding: "10px 14px",
-                  borderRadius: 10,
-                  borderColor: color,
-                  color: "black",
+                  border: "none",
+                  borderRadius: 8,
+                  color: "white",
+                  backgroundColor: "#2a3e5a",
                 }}
-                wrapperStyle={{ top: -70, left: -10 }}
+                wrapperStyle={{ top: -70, left: -10, zIndex: 22 }}
               />
               <Area
                 key={"other"}
@@ -454,11 +456,12 @@ const TokenChart: FC<TokenChartProps> = (props) => {
               labelStyle={{ paddingTop: 4 }}
               contentStyle={{
                 padding: "10px 14px",
-                borderRadius: 10,
-                borderColor: color,
-                color: "black",
+                border: "none",
+                borderRadius: 8,
+                color: "white",
+                backgroundColor: "#2a3e5a",
               }}
-              wrapperStyle={{ top: -70, left: -10 }}
+              wrapperStyle={{ top: -70, left: -10, zIndex: 22 }}
             />
             <Bar
               type="monotone"

@@ -1,8 +1,9 @@
 import { FC, memo, useState } from "react";
+import { useMedia } from "react-use";
 import { useNavigate } from "react-router-dom";
 import { Box, IconButton, styled } from "@mui/material";
 import { ButtonLight, ButtonFaded } from "apps/charts/components/ButtonStyled";
-import { AutoRow, RowBetween } from "apps/charts/components/Row";
+import { RowBetween } from "apps/charts/components/Row";
 import { isAddress } from "apps/charts/utils";
 import { useSavedAccounts } from "apps/charts/contexts/LocalStorage";
 import { AutoColumn } from "apps/charts/components/Column";
@@ -12,11 +13,11 @@ import CloseIcon from "@mui/icons-material/Close";
 
 const Wrapper = styled(Box)`
   display: flex;
+  flex-wrap: nowrap;
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
   width: 100%;
-  border-radius: 12px;
 `;
 
 const Input = styled("input")`
@@ -31,11 +32,16 @@ const Input = styled("input")`
   color: #fafafa;
   background-color: #0e1d34;
   font-size: 16px;
-  margin-right: 1rem;
   border: 1px solid #253656;
 
+  :hover,
+  :focus {
+    border: 1px solid rgb(90, 129, 255);
+    box-shadow: rgb(0, 60, 255) 0 0 8px;
+  }
+
   ::placeholder {
-    color: #fff;
+    color: #4f658c;
     font-size: 14px;
   }
 
@@ -96,6 +102,8 @@ const AccountSearch: FC<AccountSearchProps> = ({ small }) => {
   const [savedAccounts, addAccount, removeAccount] = useSavedAccounts();
   const navigate = useNavigate();
 
+  const below400 = useMedia("(max-width: 400px)");
+
   function handleAccountSearch() {
     if (isAddress(accountValue)) {
       navigate("/charts/account/" + accountValue);
@@ -108,21 +116,17 @@ const AccountSearch: FC<AccountSearchProps> = ({ small }) => {
   return (
     <AutoColumn gap={"1rem"}>
       {!small && (
-        <>
-          <AutoRow>
-            <Wrapper>
-              <Input
-                placeholder="0x..."
-                onChange={(e) => {
-                  setAccountValue(e.target.value);
-                }}
-              />
-            </Wrapper>
-            <ButtonLight onClick={handleAccountSearch}>
-              Load Account Details
-            </ButtonLight>
-          </AutoRow>
-        </>
+        <Wrapper gap={"1rem"}>
+          <Input
+            placeholder="0x..."
+            onChange={(e) => {
+              setAccountValue(e.target.value);
+            }}
+          />
+          <ButtonLight onClick={handleAccountSearch}>
+            Load Account Details
+          </ButtonLight>
+        </Wrapper>
       )}
 
       <AutoColumn>
@@ -146,7 +150,15 @@ const AccountSearch: FC<AccountSearchProps> = ({ small }) => {
                       justifyContent="space-between"
                       onClick={() => navigate("/charts/account/" + account)}
                     >
-                      <AccountLink>{account?.slice(0, 42)}</AccountLink>
+                      {!below400 ? (
+                        <AccountLink>{account?.slice(0, 42)}</AccountLink>
+                      ) : (
+                        <AccountLink>
+                          {account?.slice(0, 6) +
+                            "..." +
+                            account?.slice(30, 42)}
+                        </AccountLink>
+                      )}
                       <CloseIconButton
                         onClick={(e) => {
                           e.stopPropagation();

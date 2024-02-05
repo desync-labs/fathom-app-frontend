@@ -1,48 +1,37 @@
 import { useState, useEffect, useMemo, FC, memo } from "react";
-import styled from "styled-components";
+import { useMedia } from "react-use";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
+import { Box, Pagination, styled, Typography } from "@mui/material";
 
-import { Box, Flex, Text } from "rebass";
 import TokenLogo from "apps/charts/components/TokenLogo";
 import { CustomLink } from "apps/charts/components/Link";
 import Row from "apps/charts/components/Row";
-import { Divider } from "apps/charts/components/index";
-
+import { Divider } from "apps/charts/components";
 import { formattedNum, formattedPercent } from "apps/charts/utils";
-import { useMedia } from "react-use";
 import FormattedName from "apps/charts/components/FormattedName";
-import { TYPE } from "apps/charts/Theme";
 import { TableHeaderBox } from "apps/charts/components/Row";
 
 dayjs.extend(utc);
 
-const PageButtons = styled.div`
-  width: 100%;
+const PaginationWrapper = styled(Box)`
   display: flex;
   justify-content: center;
   margin-top: 2em;
-  margin-bottom: 2em;
-`;
-
-const Arrow = styled.div<{
-  faded: boolean;
-}>`
-  color: ${({ theme }) => theme.white};
-  opacity: ${(props) => (props.faded ? 0.3 : 1)};
-  padding: 0 20px;
-  user-select: none;
-
-  :hover {
-    cursor: pointer;
-  }
+  margin-bottom: 0.5em;
 `;
 
 const List = styled(Box)`
   -webkit-overflow-scrolling: touch;
 `;
 
-const DashGrid = styled.div`
+const Flex = styled(Box)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const DashGrid = styled(Box)`
   display: grid;
   grid-gap: 1em;
   grid-template-columns: 100px 1fr 1.25fr;
@@ -50,12 +39,9 @@ const DashGrid = styled.div`
   padding: 0 1.125rem;
 
   > * {
-    justify-content: flex-end;
-
-    &:first-child {
+    &:first-of-type {
       justify-content: flex-start;
       text-align: left;
-      width: 100px;
     }
   }
 
@@ -66,10 +52,7 @@ const DashGrid = styled.div`
     grid-template-areas: "id name symbol liq vol ";
 
     > * {
-      justify-content: flex-end;
-      width: 100%;
-
-      &:first-child {
+      &:first-of-type {
         justify-content: flex-start;
       }
     }
@@ -83,44 +66,32 @@ const DashGrid = styled.div`
   }
 `;
 
-const ListWrapper = styled.div``;
-
-const ClickableText = styled(Text)`
-  text-align: end;
+const ClickableText = styled(Typography)`
+  text-align: center;
+  user-select: none;
+  @media screen and (max-width: 640px) {
+    font-size: 0.85rem;
+  }
 
   &:hover {
     cursor: pointer;
     opacity: 0.6;
   }
-
-  user-select: none;
-  color: ${({ theme }) => theme.text1} !important;
-  @media screen and (max-width: 640px) {
-    font-size: 0.85rem;
-  }
 `;
 
-const DataText = styled(Flex)`
+const DataText = styled(Box)`
+  display: flex;
   align-items: center;
-  justify-content: flex-start;
-  text-align: center;
-  color: ${({ theme }) => theme.text1} !important;
-
-  & > * {
-    font-size: 14px;
-  }
+  justify-content: center;
+  font-size: 14px;
 
   @media screen and (max-width: 600px) {
     font-size: 12px;
   }
-
-  &.right {
-    justify-content: right;
-  }
 `;
 
 const HeaderWrapper = styled(DashGrid)`
-  background: ${({ theme }) => theme.headerBackground};
+  background: #131f35;
   border-radius: 8px;
   padding-top: 7px !important;
   padding-bottom: 7px !important;
@@ -175,25 +146,23 @@ const ListItem: FC<ListItemProps> = memo((props) => {
         </Row>
       </DataText>
       {!below680 && (
-        <DataText color="text" fontWeight="500">
-          <FormattedName text={item.symbol} maxCharacters={5} />
+        <DataText fontWeight="500">
+          <FormattedName
+            text={item.symbol}
+            fontSize={"14px"}
+            maxCharacters={5}
+          />
         </DataText>
       )}
-      <DataText justifyContent="center">
-        {formattedNum(item.totalLiquidityUSD, true)}
-      </DataText>
-      <DataText justifyContent="center">
-        {formattedNum(Math.abs(item.oneDayVolumeUSD), true)}
-      </DataText>
+      <DataText>{formattedNum(item.totalLiquidityUSD, true)}</DataText>
+      <DataText>{formattedNum(Math.abs(item.oneDayVolumeUSD), true)}</DataText>
       {!below1080 && (
-        <DataText color="text" fontWeight="500" justifyContent="center">
+        <DataText color="text" fontWeight="500">
           {formattedNum(item.priceUSD, true)}
         </DataText>
       )}
       {!below1080 && (
-        <DataText justifyContent="center">
-          {formattedPercent(item.priceChangeUSD)}
-        </DataText>
+        <DataText>{formattedPercent(item.priceChangeUSD)}</DataText>
       )}
     </DashGrid>
   );
@@ -258,16 +227,16 @@ const TopTokenList: FC<TopTokenListProps> = (props) => {
   }, [formattedTokens, itemMax, page, sortDirection, sortedColumn]);
 
   return (
-    <ListWrapper>
+    <Box>
       <HeaderWrapper
         style={{ height: "fit-content", padding: "0 1.125rem 1rem 1.125rem" }}
       >
         {!below680 && (
-          <Flex alignItems="center" justifyContent="flex-start">
+          <Flex>
             <TableHeaderBox>ID</TableHeaderBox>
           </Flex>
         )}
-        <Flex alignItems="center" justifyContent="flex-start">
+        <Flex sx={{ justifyContent: "flex-start" }}>
           <ClickableText
             color="text"
             fontWeight="500"
@@ -289,7 +258,7 @@ const TopTokenList: FC<TopTokenListProps> = (props) => {
           </ClickableText>
         </Flex>
         {!below680 && (
-          <Flex alignItems="center" justifyContent="flex-start">
+          <Flex>
             <ClickableText
               onClick={() => {
                 setSortedColumn(SORT_FIELD.SYMBOL);
@@ -310,7 +279,7 @@ const TopTokenList: FC<TopTokenListProps> = (props) => {
           </Flex>
         )}
 
-        <Flex alignItems="center" justifyContent="center">
+        <Flex>
           <ClickableText
             onClick={() => {
               setSortedColumn(SORT_FIELD.LIQ);
@@ -329,7 +298,7 @@ const TopTokenList: FC<TopTokenListProps> = (props) => {
             </TableHeaderBox>
           </ClickableText>
         </Flex>
-        <Flex alignItems="center" justifyContent="center">
+        <Flex>
           <ClickableText
             onClick={() => {
               setSortedColumn(useTracked ? SORT_FIELD.VOL_UT : SORT_FIELD.VOL);
@@ -353,7 +322,7 @@ const TopTokenList: FC<TopTokenListProps> = (props) => {
           </ClickableText>
         </Flex>
         {!below1080 && (
-          <Flex alignItems="center" justifyContent="center">
+          <Flex>
             <ClickableText
               onClick={() => {
                 setSortedColumn(SORT_FIELD.PRICE);
@@ -374,7 +343,7 @@ const TopTokenList: FC<TopTokenListProps> = (props) => {
           </Flex>
         )}
         {!below1080 && (
-          <Flex alignItems="center" justifyContent="center">
+          <Flex>
             <ClickableText
               onClick={() => {
                 setSortedColumn(SORT_FIELD.CHANGE);
@@ -410,16 +379,16 @@ const TopTokenList: FC<TopTokenListProps> = (props) => {
             );
           })}
       </List>
-      <PageButtons>
-        <div onClick={() => setPage(page === 1 ? page : page - 1)}>
-          <Arrow faded={page === 1 ? true : false}>←</Arrow>
-        </div>
-        <TYPE.body>{"Page " + page + " of " + maxPage}</TYPE.body>
-        <div onClick={() => setPage(page === maxPage ? page : page + 1)}>
-          <Arrow faded={page === maxPage ? true : false}>→</Arrow>
-        </div>
-      </PageButtons>
-    </ListWrapper>
+      {maxPage > 1 && (
+        <PaginationWrapper>
+          <Pagination
+            count={Math.ceil(maxPage)}
+            page={page}
+            onChange={(event, page) => setPage(page)}
+          />
+        </PaginationWrapper>
+      )}
+    </Box>
   );
 };
 
