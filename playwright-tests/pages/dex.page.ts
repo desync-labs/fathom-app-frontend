@@ -16,10 +16,10 @@ export default class DexPage extends BasePage {
   readonly waitingForConfirmationModal: Locator;
   readonly transactionSubmittedConfirmationModal: Locator;
   readonly closeButtonSelectTokenModal: Locator;
-  readonly swapTransactionPopupStatusIcon: Locator;
+  readonly transactionPopupStatusIcon: Locator;
   readonly swapTransactionPopupBodyText: Locator;
-  readonly swapTransactionPopupFooterText: Locator;
-  readonly swapTransactionPopup: Locator;
+  readonly transactionPopupFooterText: Locator;
+  readonly transactionPopupColumn: Locator;
   readonly fromTokenSymbolContainer: Locator;
   readonly toTokenSymbolContainer: Locator;
   readonly confirmSwapModal: Locator;
@@ -33,6 +33,8 @@ export default class DexPage extends BasePage {
   readonly transactionSubmittedModalHeaderText: Locator;
   readonly transactionSubmittedModalFooterText: Locator;
   readonly transactionSubmittedModalCloseButton: Locator;
+  readonly wrapButton: Locator;
+  readonly wrapTransactionPopupBodyText: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -60,14 +62,17 @@ export default class DexPage extends BasePage {
     this.closeButtonSelectTokenModal = this.page.locator(
       '//div[text()="Select a token"]//following-sibling::*[local-name()="svg"]'
     );
-    this.swapTransactionPopup = this.page.getByTestId("dex-fixedPopupColumn");
-    this.swapTransactionPopupStatusIcon = this.page.locator(
+    this.transactionPopupColumn = this.page.getByTestId("dex-fixedPopupColumn");
+    this.transactionPopupStatusIcon = this.page.locator(
       '[data-testid="dex-fixedPopupColumn"] > div > div svg'
     );
     this.swapTransactionPopupBodyText = this.page.locator(
       '//div[@data-testid="dex-fixedPopupColumn"]//div[contains(text(), "Swap")]'
     );
-    this.swapTransactionPopupFooterText = this.page.locator(
+    this.wrapTransactionPopupBodyText = this.page.locator(
+      '//div[@data-testid="dex-fixedPopupColumn"]//div[contains(text(), "Wrap")]'
+    );
+    this.transactionPopupFooterText = this.page.locator(
       '[data-testid="dex-fixedPopupColumn"] a'
     );
     this.fromTokenSymbolContainer = this.page.locator(
@@ -109,6 +114,7 @@ export default class DexPage extends BasePage {
     this.transactionSubmittedModalCloseButton = this.page.getByTestId(
       "dex-transactionSubmittedModal-closeButton"
     );
+    this.wrapButton = this.page.locator('//button[text()="Wrap"]');
   }
 
   async navigate(): Promise<void> {
@@ -163,6 +169,10 @@ export default class DexPage extends BasePage {
     await this.confirmSwapButton.click();
   }
 
+  async clickWrapButton(): Promise<void> {
+    await this.wrapButton.click();
+  }
+
   async swap({
     fromToken,
     toToken,
@@ -196,6 +206,37 @@ export default class DexPage extends BasePage {
     await metamask.confirmTransaction();
     await this.validateTransactionSubmittedModal();
     await this.transactionSubmittedModalCloseButton.click();
+    return expectedData;
+  }
+
+  async wrap({
+    fromToken,
+    toToken,
+    fromAmount,
+  }: {
+    fromToken: string;
+    toToken: string;
+    fromAmount: number;
+  }): Promise<SwapData> {
+    await this.selectFromToken({ tokenId: fromToken });
+    await this.selectToToken({ tokenId: toToken });
+    await this.fillFromValue({ inputValue: fromAmount });
+    await this.page.waitForTimeout(2000);
+    const fromAmountString = await this.fromTokenAmountInput.getAttribute(
+      "value"
+    );
+    const toAmountString = await this.toTokenAmountInput.getAttribute("value");
+    expect(Number(toAmountString)).toBeGreaterThan(0);
+    const fromTokenName = await this.fromTokenSymbolContainer.textContent();
+    const toTokenName = await this.toTokenSymbolContainer.textContent();
+    const expectedData: SwapData = {
+      fromAmountExpected: fromAmountString as string,
+      fromTokenNameExpected: fromTokenName as string,
+      toAmountExpected: toAmountString as string,
+      toTokenNameExpected: toTokenName as string,
+    };
+    await this.clickWrapButton();
+    await metamask.confirmTransaction();
     return expectedData;
   }
 
@@ -256,9 +297,9 @@ export default class DexPage extends BasePage {
     toAmountExpected,
     toTokenNameExpected,
   }: SwapData): Promise<void> {
-    await expect(this.swapTransactionPopup).toBeVisible({ timeout: 30000 });
+    await expect(this.transactionPopupColumn).toBeVisible({ timeout: 30000 });
     await expect
-      .soft(this.swapTransactionPopupStatusIcon)
+      .soft(this.transactionPopupStatusIcon)
       .toHaveAttribute("stroke", "#27AE60");
     await expect.soft(this.swapTransactionPopupBodyText).toBeVisible();
     await expect
@@ -269,9 +310,30 @@ export default class DexPage extends BasePage {
           16
         )} ${toTokenNameExpected}`
       );
-    await expect.soft(this.swapTransactionPopupFooterText).toBeVisible();
+    await expect.soft(this.transactionPopupFooterText).toBeVisible();
     await expect
-      .soft(this.swapTransactionPopupFooterText)
+      .soft(this.transactionPopupFooterText)
+      .toHaveText("View on Blocksscan");
+  }
+
+  async validateWrapSuccessPopup({
+    fromAmountExpected,
+    fromTokenNameExpected,
+    toTokenNameExpected,
+  }: SwapData): Promise<void> {
+    await expect(this.transactionPopupColumn).toBeVisible({ timeout: 30000 });
+    await expect
+      .soft(this.transactionPopupStatusIcon)
+      .toHaveAttribute("stroke", "#27AE60");
+    await expect.soft(this.wrapTransactionPopupBodyText).toBeVisible();
+    await expect
+      .soft(this.wrapTransactionPopupBodyText)
+      .toHaveText(
+        `Wrap ${fromAmountExpected} ${fromTokenNameExpected} to ${toTokenNameExpected}`
+      );
+    await expect.soft(this.transactionPopupFooterText).toBeVisible();
+    await expect
+      .soft(this.transactionPopupFooterText)
       .toHaveText("View on Blocksscan");
   }
 }
