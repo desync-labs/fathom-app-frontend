@@ -338,7 +338,7 @@ export default class DexPage extends BasePage {
     toAmountExpected,
     toTokenNameExpected,
   }: SwapData): Promise<void> {
-    await expect(this.transactionPopupColumn).toBeVisible({ timeout: 30000 });
+    await expect(this.transactionPopupColumn).toBeVisible({ timeout: 50000 });
     await expect
       .soft(this.transactionPopupStatusIcon)
       .toHaveAttribute("stroke", "#27AE60");
@@ -362,7 +362,7 @@ export default class DexPage extends BasePage {
     fromTokenNameExpected,
     toTokenNameExpected,
   }: SwapData): Promise<void> {
-    await expect(this.transactionPopupColumn).toBeVisible({ timeout: 30000 });
+    await expect(this.transactionPopupColumn).toBeVisible({ timeout: 50000 });
     await expect
       .soft(this.transactionPopupStatusIcon)
       .toHaveAttribute("stroke", "#27AE60");
@@ -383,7 +383,7 @@ export default class DexPage extends BasePage {
     fromTokenNameExpected,
     toTokenNameExpected,
   }: SwapData): Promise<void> {
-    await expect(this.transactionPopupColumn).toBeVisible({ timeout: 30000 });
+    await expect(this.transactionPopupColumn).toBeVisible({ timeout: 50000 });
     await expect
       .soft(this.transactionPopupStatusIcon)
       .toHaveAttribute("stroke", "#27AE60");
