@@ -58,7 +58,7 @@ test.describe("Fathom App Test Suite: Positions Operations", () => {
     });
   });
 
-  test("Swap: Insufficient balance is correctly displayed", async ({
+  test("Swap: 'Insufficient balance' is correctly displayed", async ({
     dexPage,
   }) => {
     const tokenFrom = tokenIds.XDC;
@@ -76,7 +76,7 @@ test.describe("Fathom App Test Suite: Positions Operations", () => {
     await expect(dexPage.swapButton).toBeDisabled();
   });
 
-  test("Wrap: Insufficient balance is correctly displayed", async ({
+  test("Wrap: 'Insufficient balance' is correctly displayed", async ({
     dexPage,
   }) => {
     const tokenFrom = tokenIds.XDC;
@@ -118,5 +118,33 @@ test.describe("Fathom App Test Suite: Positions Operations", () => {
     await dexPage.page.getByText("Metamask").click();
     await metamask.acceptAccess();
     await dexPage.validateConnectedWalletAddress();
+  });
+
+  test("Swap: 'Enter an amount' is correctly displayed", async ({
+    dexPage,
+  }) => {
+    const tokenFrom = tokenIds.XDC;
+    await dexPage.navigate();
+    await dexPage.connectWallet(WalletConnectOptions.Metamask);
+    await dexPage.validateConnectedWalletAddress();
+    await dexPage.selectFromToken({ tokenId: tokenFrom });
+    await dexPage.selectToToken({ tokenId: tokenIds.xUSDT });
+    await expect(dexPage.swapButton).toBeVisible();
+    await expect(dexPage.swapButton).toHaveText(`Enter an amount`);
+    await expect(dexPage.swapButton).toBeDisabled();
+  });
+
+  test("Wrap: 'Enter an amount' is correctly displayed", async ({
+    dexPage,
+  }) => {
+    const tokenFrom = tokenIds.XDC;
+    await dexPage.navigate();
+    await dexPage.connectWallet(WalletConnectOptions.Metamask);
+    await dexPage.validateConnectedWalletAddress();
+    await dexPage.selectFromToken({ tokenId: tokenFrom });
+    await dexPage.selectToToken({ tokenId: tokenIds.WXDC });
+    await expect(dexPage.wrapButton).toBeVisible();
+    await expect(dexPage.wrapButton).toHaveText(`Enter an amount`);
+    await expect(dexPage.wrapButton).toBeDisabled();
   });
 });
