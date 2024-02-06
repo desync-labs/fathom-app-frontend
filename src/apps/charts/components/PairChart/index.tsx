@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, FC, memo } from "react";
-import styled from "styled-components";
+import { useMedia } from "react-use";
+import { Box, styled } from "@mui/material";
 import {
   Area,
   XAxis,
@@ -10,8 +11,8 @@ import {
   BarChart,
   Bar,
 } from "recharts";
+import { darken } from "polished";
 import { RowBetween, AutoRow } from "apps/charts/components/Row";
-
 import {
   toK,
   toNiceDate,
@@ -20,21 +21,19 @@ import {
   getTimeframe,
 } from "apps/charts/utils";
 import { OptionButton } from "apps/charts/components/ButtonStyled";
-import { darken } from "polished";
 import {
   usePairChartData,
   useHourlyRateData,
   usePairData,
 } from "apps/charts/contexts/PairData";
 import { timeframeOptions } from "apps/charts/constants";
-import { useMedia } from "react-use";
 import { EmptyCard } from "apps/charts/components";
 import DropdownSelect from "apps/charts/components/DropdownSelect";
 import CandleStickChart from "apps/charts/components/CandleChart";
 import LocalLoader from "apps/charts/components/LocalLoader";
 import { useDarkModeManager } from "apps/charts/contexts/LocalStorage";
 
-const ChartWrapper = styled.div`
+const ChartWrapper = styled(Box)`
   height: 100%;
   max-height: 340px;
 
@@ -43,7 +42,7 @@ const ChartWrapper = styled.div`
   }
 `;
 
-const OptionsRow = styled.div`
+const OptionsRow = styled(Box)`
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -151,7 +150,7 @@ const PairChart: FC<PairChartProps> = (props) => {
   return (
     <ChartWrapper>
       {below600 ? (
-        <RowBetween mb={40}>
+        <RowBetween mb={"40px"}>
           <DropdownSelect
             options={CHART_VIEW}
             active={chartFilter}
@@ -277,11 +276,12 @@ const PairChart: FC<PairChartProps> = (props) => {
               labelStyle={{ paddingTop: 4 }}
               contentStyle={{
                 padding: "10px 14px",
-                borderRadius: 10,
-                borderColor: color,
-                color: "black",
+                border: "none",
+                borderRadius: 8,
+                color: "white",
+                backgroundColor: "#2a3e5a",
               }}
-              wrapperStyle={{ top: -70, left: -10 }}
+              wrapperStyle={{ top: -70, left: -10, zIndex: 22 }}
             />
             <Area
               strokeWidth={2}
@@ -365,11 +365,12 @@ const PairChart: FC<PairChartProps> = (props) => {
               labelStyle={{ paddingTop: 4 }}
               contentStyle={{
                 padding: "10px 14px",
-                borderRadius: 10,
-                borderColor: color,
-                color: "black",
+                border: "none",
+                borderRadius: 8,
+                color: "white",
+                backgroundColor: "#2a3e5a",
               }}
-              wrapperStyle={{ top: -70, left: -10 }}
+              wrapperStyle={{ top: -70, left: -10, zIndex: 22 }}
             />
             <Bar
               type="monotone"

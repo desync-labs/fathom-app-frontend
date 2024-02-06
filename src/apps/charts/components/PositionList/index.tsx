@@ -1,10 +1,9 @@
 import { useState, useEffect, useMemo, FC, memo } from "react";
 import { useMedia } from "react-use";
 import dayjs from "dayjs";
-import LocalLoader from "apps/charts/components/LocalLoader";
 import utc from "dayjs/plugin/utc";
-import { Box, Flex, Text } from "rebass";
-import styled from "styled-components";
+import { Box, styled, Typography } from "@mui/material";
+import LocalLoader from "apps/charts/components/LocalLoader";
 import { CustomLink } from "apps/charts/components/Link";
 import { Divider } from "apps/charts/components";
 import DoubleTokenLogo from "apps/charts/components/DoubleLogo";
@@ -20,16 +19,16 @@ import { Position } from "apps/charts/utils/returns";
 
 dayjs.extend(utc);
 
-const PageButtons = styled.div`
-  width: 100%;
+const PageButtons = styled(Box)`
   display: flex;
   justify-content: center;
+  width: 100%;
   margin-top: 2em;
   margin-bottom: 0.5em;
 `;
 
-const Arrow = styled.div<{ faded?: boolean }>`
-  color: ${({ theme }) => theme.white};
+const Arrow = styled(Box)<{ faded?: boolean }>`
+  color: #ffffff;
   opacity: ${(props) => (props.faded ? 0.3 : 1)};
   padding: 0 20px;
   user-select: none;
@@ -39,28 +38,21 @@ const Arrow = styled.div<{ faded?: boolean }>`
   }
 `;
 
+const Flex = styled(Box)`
+  display: flex;
+`;
+
 const List = styled(Box)`
   -webkit-overflow-scrolling: touch;
 `;
 
-const DashGrid = styled.div`
+const DashGrid = styled(Box)`
   display: grid;
   grid-gap: 1em;
   grid-template-columns: 20px 1.5fr 1fr 1fr;
   grid-template-areas: "number name fathomswap return";
   align-items: flex-start;
   padding: 20px 0;
-
-  > * {
-    justify-content: flex-end;
-    width: 100%;
-
-    :first-child {
-      justify-content: flex-start;
-      text-align: left;
-      width: 20px;
-    }
-  }
 
   @media screen and (min-width: 1200px) {
     grid-template-columns: 35px 2.5fr 1fr 1fr;
@@ -79,31 +71,28 @@ const DashGrid = styled.div`
 `;
 
 const HeaderWrapper = styled(DashGrid)`
-  background: ${({ theme }) => theme.headerBackground};
+  background: #131f35;
   border-radius: 8px;
   padding-top: 7px !important;
   padding-bottom: 7px !important;
 `;
 
-const ListWrapper = styled.div``;
-
-const ClickableText = styled(Text)`
-  color: ${({ theme }) => theme.text1};
+const ClickableText = styled(Typography)`
+  text-align: end;
+  user-select: none;
 
   &:hover {
     cursor: pointer;
     opacity: 0.6;
   }
-
-  text-align: end;
-  user-select: none;
 `;
 
-const DataText = styled(Flex)`
+const DataText = styled(Box)`
+  display: flex;
   align-items: center;
   justify-content: flex-start;
   text-align: center;
-  color: ${({ theme }) => theme.text1};
+  color: #fafafa;
 
   & > * {
     font-size: 1em;
@@ -151,7 +140,6 @@ const ListItem: FC<ListItemProps> = memo((props) => {
             size={16}
             a0={position.pair.token0.id}
             a1={position.pair.token1.id}
-            margin={!below740}
           />
         </AutoColumn>
         <AutoColumn
@@ -212,7 +200,7 @@ const ListItem: FC<ListItemProps> = memo((props) => {
               <FormattedName
                 text={position.pair.token0.symbol}
                 maxCharacters={below740 ? 10 : 18}
-                margin={true}
+                margin="0 4px"
                 fontSize={"11px"}
               />
             </RowFixed>
@@ -225,7 +213,7 @@ const ListItem: FC<ListItemProps> = memo((props) => {
               <FormattedName
                 text={position.pair.token1.symbol}
                 maxCharacters={below740 ? 10 : 18}
-                margin={true}
+                margin="0 4px"
                 fontSize={"11px"}
               />
             </RowFixed>
@@ -254,7 +242,7 @@ const ListItem: FC<ListItemProps> = memo((props) => {
                 <FormattedName
                   text={position.pair.token0.symbol}
                   maxCharacters={below740 ? 10 : 18}
-                  margin={true}
+                  margin="0 4px"
                   fontSize={"11px"}
                 />
               </RowFixed>
@@ -273,7 +261,7 @@ const ListItem: FC<ListItemProps> = memo((props) => {
                 <FormattedName
                   text={position.pair.token1.symbol}
                   maxCharacters={below740 ? 10 : 18}
-                  margin={true}
+                  margin="0 4px"
                   fontSize={"11px"}
                 />
               </RowFixed>
@@ -364,17 +352,17 @@ const PositionList: FC<PositionList> = (props) => {
   );
 
   return (
-    <ListWrapper>
+    <Box>
       <HeaderWrapper style={{ padding: "0 1.125rem 1rem" }}>
         {!below740 && (
-          <Flex alignItems="center" justifyContent="flex-start">
+          <Flex>
             <TableHeaderBox>#</TableHeaderBox>
           </Flex>
         )}
-        <Flex alignItems="center" justifyContent="flex-start">
+        <Flex>
           <TableHeaderBox>Name</TableHeaderBox>
         </Flex>
-        <Flex alignItems="center" justifyContent="flex-start">
+        <Flex>
           <ClickableText
             onClick={() => {
               setSortedColumn(SORT_FIELD.VALUE);
@@ -394,7 +382,7 @@ const PositionList: FC<PositionList> = (props) => {
           </ClickableText>
         </Flex>
         {!below600 && (
-          <Flex alignItems="center" justifyContent="flex-start">
+          <Flex>
             <ClickableText
               onClick={() => {
                 setSortedColumn(SORT_FIELD.FATHOMSWAP_RETURN);
@@ -420,14 +408,14 @@ const PositionList: FC<PositionList> = (props) => {
       <List p={0}>{!positionsSorted ? <LocalLoader /> : positionsSorted}</List>
       <PageButtons>
         <div onClick={() => setPage(page === 1 ? page : page - 1)}>
-          <Arrow faded={page === 1 ? true : false}>←</Arrow>
+          <Arrow faded={page === 1}>←</Arrow>
         </div>
         <TYPE.body>{"Page " + page + " of " + maxPage}</TYPE.body>
         <div onClick={() => setPage(page === maxPage ? page : page + 1)}>
-          <Arrow faded={page === maxPage ? true : false}>→</Arrow>
+          <Arrow faded={page === maxPage}>→</Arrow>
         </div>
       </PageButtons>
-    </ListWrapper>
+    </Box>
   );
 };
 

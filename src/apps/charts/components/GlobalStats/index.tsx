@@ -1,6 +1,6 @@
-import styled from "styled-components";
-import { RowBetween } from "apps/charts/components/Row";
+import { Box, styled, Typography } from "@mui/material";
 import { useMedia } from "react-use";
+import { RowBetween } from "apps/charts/components/Row";
 import {
   useGlobalData,
   useEthPrice,
@@ -8,20 +8,18 @@ import {
   useFTHMPrice,
 } from "apps/charts/contexts/GlobalData";
 import { formattedNum } from "apps/charts/utils";
-import { Box } from "rebass/styled-components";
-
 import { getTokenLogoURL } from "apps/charts/utils/getTokenLogo";
 
 import transferSrc from "apps/charts/assets/transfer.svg";
 import dollarSrc from "apps/charts/assets/dollar.svg";
 
-const Header = styled.div`
+const Header = styled(Box)`
   width: 100%;
   position: sticky;
   top: 0;
 `;
 
-const GridStats = styled.div`
+const GridStats = styled(Box)`
   display: grid;
   width: 100%;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
@@ -33,7 +31,7 @@ const GridStats = styled.div`
   }
 `;
 
-const GridStatsItem = styled.div`
+const GridStatsItem = styled(Box)`
   background-color: #131f35;
   height: auto;
   max-height: 68px;
@@ -55,24 +53,22 @@ const TextWrapper = styled(Box)`
 `;
 
 const ImgWrapper = styled(Box)`
-  background: #061023;
   width: 32px;
   height: 32px;
-  border-radius: 8px;
   padding: 4px;
   display: flex;
   justify-content: center;
   align-items: center;
 `;
 
-const Title = styled.div`
+const Title = styled(Typography)`
   font-size: 10px;
   color: #6379a1;
   font-weight: 600;
   text-transform: uppercase;
 `;
 
-const Value = styled.div`
+const Value = styled(Box)`
   font-size: 16px;
   color: #fff;
   font-weight: 600;
