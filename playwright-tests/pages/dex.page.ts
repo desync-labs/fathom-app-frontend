@@ -42,6 +42,7 @@ export default class DexPage extends BasePage {
   readonly unwrapTransactionPopupBodyText: Locator;
   readonly fromBalanceDiv: Locator;
   readonly toBalanceDiv: Locator;
+  readonly swapConnectWalletButton: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -130,6 +131,9 @@ export default class DexPage extends BasePage {
     );
     this.toBalanceDiv = this.page.locator(
       '//div[@id="swap-currency-output"]//div[contains(text(), "Balance")]'
+    );
+    this.swapConnectWalletButton = this.page.getByTestId(
+      "dex-swap-connectWalletButton"
     );
   }
 

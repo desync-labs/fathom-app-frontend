@@ -2,6 +2,8 @@ import { test, expect } from "../../fixtures/pomSynpressFixture";
 import { WalletConnectOptions } from "../../types";
 import dotenv from "dotenv";
 import { tokenIds } from "../../fixtures/dex.data";
+// @ts-ignore
+import * as metamask from "@synthetixio/synpress/commands/metamask";
 dotenv.config();
 
 test.describe("Fathom App Test Suite: Positions Operations", () => {
@@ -91,5 +93,30 @@ test.describe("Fathom App Test Suite: Positions Operations", () => {
       `Insufficient ${tokenFrom} balance`
     );
     await expect(dexPage.wrapButton).toBeDisabled();
+  });
+
+  test("Wallet not connected state layout is correct, dex connect wallet functionality is successful", async ({
+    dexPage,
+  }) => {
+    const tokenFrom = tokenIds.XDC;
+    await dexPage.navigate();
+    await expect(dexPage.swapConnectWalletButton).toBeVisible();
+    await expect(dexPage.swapConnectWalletButton).toHaveText("Connect Wallet");
+    await dexPage.selectFromToken({ tokenId: tokenFrom });
+    await expect(dexPage.swapConnectWalletButton).toBeVisible();
+    await expect(dexPage.swapConnectWalletButton).toHaveText("Connect Wallet");
+    await dexPage.selectToToken({ tokenId: tokenIds.xUSDT });
+    await expect(dexPage.swapConnectWalletButton).toBeVisible();
+    await expect(dexPage.swapConnectWalletButton).toHaveText("Connect Wallet");
+    await dexPage.fillFromValue({ inputValue: 1 });
+    await expect(dexPage.swapConnectWalletButton).toBeVisible();
+    await expect(dexPage.swapConnectWalletButton).toHaveText("Connect Wallet");
+    await dexPage.fillToValue({ inputValue: 1 });
+    await expect(dexPage.swapConnectWalletButton).toBeVisible();
+    await expect(dexPage.swapConnectWalletButton).toHaveText("Connect Wallet");
+    await dexPage.swapConnectWalletButton.click();
+    await dexPage.page.getByText("Metamask").click();
+    await metamask.acceptAccess();
+    await dexPage.validateConnectedWalletAddress();
   });
 });
