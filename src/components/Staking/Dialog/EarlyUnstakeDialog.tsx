@@ -33,13 +33,6 @@ import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatPercentage } from "utils/format";
 import useSharedContext from "context/shared";
 
-const UnstakeDialogWrapper = styled(AppDialog)`
-  .MuiGrid-container {
-    margin: 0 17px 15px 17px;
-    padding: 10px 0 30px 0;
-  }
-`;
-
 const UnstakeGrid = styled(Grid)`
   width: auto;
   &.MuiGrid-container {
@@ -108,12 +101,13 @@ const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({
   const { isMobile } = useSharedContext();
 
   return (
-    <UnstakeDialogWrapper
+    <AppDialog
       onClose={onClose}
       aria-labelledby="customized-dialog-title"
       open={true}
       fullWidth
       maxWidth="sm"
+      color="primary"
     >
       <AppDialogTitle id="customized-dialog-title" onClose={onClose}>
         Early Unstake
@@ -191,7 +185,7 @@ const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({
           </Typography>
         </InfoMessageWrapper>
       </DialogContent>
-    </UnstakeDialogWrapper>
+    </AppDialog>
   );
 };
 
