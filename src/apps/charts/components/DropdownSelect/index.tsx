@@ -1,52 +1,30 @@
-import { FC, memo, useState } from "react";
-import styled from "styled-components";
+import { FC, memo } from "react";
+import {
+  FormControl,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  styled,
+} from "@mui/material";
 
-import Row, { RowBetween } from "apps/charts/components/Row";
-import { AutoColumn } from "apps/charts/components/Column";
-import { ChevronDown as Arrow } from "react-feather";
-import { TYPE } from "apps/charts/Theme";
-import { StyledIcon } from "apps/charts/components";
-
-const Wrapper = styled.div<{ open?: boolean; color?: string; shadow?: string }>`
-  z-index: 20;
+const Wrapper = styled(FormControl)`
   position: relative;
-  background-color: ${({ theme }) => theme.panelColor};
-  border: 1px solid
-    ${({ open, color }) =>
-      open ? (color ? color : "transparent") : "rgba(0, 0, 0, 0.15);"};
-  box-shadow: ${({ open, shadow }) => (open && shadow ? shadow : "none")};
-  width: 100px;
-  padding: 4px 10px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  min-width: 120px;
+  max-width: max-content;
+  z-index: 20;
 
-  :hover {
-    cursor: pointer;
+  .MuiOutlinedInput-notchedOutline {
+    border-color: #253656;
+    border-radius: 8px;
   }
-`;
-
-const Dropdown = styled.div`
-  position: absolute;
-  top: 34px;
-  background-color: ${({ theme }) => theme.bg1};
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  padding: 10px;
-  border-radius: 8px;
-  width: calc(100% - 20px);
-  font-weight: 500;
-  font-size: 1rem;
-  color: black;
-  :hover {
-    cursor: pointer;
+  .Mui-focused .MuiOutlinedInput-notchedOutline {
+    border: 1px solid rgb(90, 129, 255) !important;
+    box-shadow: rgb(0, 60, 255) 0 0 8px;
   }
-`;
-
-const ArrowStyled = styled(Arrow)`
-  height: 20px;
-  width: 20px;
-  margin-left: 6px;
+  .MuiSelect-select {
+    background-color: #253656;
+    border-radius: 8px;
+  }
 `;
 
 type DropdownSelectProps = {
@@ -58,42 +36,25 @@ type DropdownSelectProps = {
 };
 
 const DropdownSelect: FC<DropdownSelectProps> = (props) => {
-  const { options, active, setActive, color, shadow } = props;
-  const [showDropdown, toggleDropdown] = useState<boolean>(false);
+  const { active, setActive, options } = props;
+  const handleChange = (event: SelectChangeEvent) => {
+    setActive(event.target.value as string);
+  };
+
+  console.log("Props", props);
 
   return (
-    <Wrapper open={showDropdown} color={color} shadow={shadow}>
-      <RowBetween
-        onClick={() => toggleDropdown(!showDropdown)}
-        justify="center"
-      >
-        <TYPE.main>{active}</TYPE.main>
-        <StyledIcon style={{ display: "flex", alignItems: "center" }}>
-          <ArrowStyled />
-        </StyledIcon>
-      </RowBetween>
-      {showDropdown && (
-        <Dropdown>
-          <AutoColumn gap="10px">
-            {Object.keys(options).map((key, index) => {
-              const option = options[key];
-              return (
-                option !== active && (
-                  <Row
-                    onClick={() => {
-                      toggleDropdown(!showDropdown);
-                      setActive(option);
-                    }}
-                    key={index}
-                  >
-                    <TYPE.body fontSize={14}>{option}</TYPE.body>
-                  </Row>
-                )
-              );
-            })}
-          </AutoColumn>
-        </Dropdown>
-      )}
+    <Wrapper size="small">
+      <Select id="app-select" value={active} onChange={handleChange}>
+        {Object.keys(options).map((key, index) => {
+          const option = options[key];
+          return (
+            <MenuItem key={index} value={option}>
+              {option}
+            </MenuItem>
+          );
+        })}
+      </Select>
     </Wrapper>
   );
 };

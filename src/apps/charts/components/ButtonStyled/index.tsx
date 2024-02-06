@@ -1,51 +1,45 @@
-import { Button as RebassButton } from "rebass/styled-components";
-import styled from "styled-components";
-import { ChevronDown, ChevronUp } from "react-feather";
+import { FC, memo, ReactNode } from "react";
+import { Box, Button, styled } from "@mui/material";
 import { RowBetween } from "apps/charts/components/Row";
 import { StyledIcon } from "apps/charts/components";
-import { FC, memo, ReactNode } from "react";
 
-const Base = styled(RebassButton)<{ open?: boolean }>`
-  padding: 8px 12px;
-  font-size: 0.825rem;
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
+const Base = styled(Button)<{ open?: boolean }>`
+  font-size: 15px;
   font-weight: 600;
-  border-radius: 12px;
-  cursor: pointer;
+  line-height: inherit;
+  text-decoration: none;
+  text-transform: capitalize;
+  border-radius: 8px;
   outline: none;
   border: 1px solid transparent;
+  padding: 8px 12px;
   border-bottom-right-radius: ${({ open }) => open && "0"};
   border-bottom-left-radius: ${({ open }) => open && "0"};
 `;
 
-export default function ButtonStyled({
-  children,
-  ...rest
-}: {
-  children: ReactNode;
-}) {
-  return <Base {...rest}>{children}</Base>;
-}
-
 export const ButtonLight = styled(Base)`
+  font-size: 0.825rem;
+  font-weight: 600;
   background: transparent;
-
-  border: 1px solid ${({ theme }) => theme.bg3};
-  color: ${({ theme }) => theme.bg3};
-
+  border: 1px solid #43fff6;
+  color: #43fff6;
   min-width: fit-content;
-  border-radius: 12px;
+  border-radius: 8px;
   white-space: nowrap;
 
   a {
-    color: ${({ theme }) => theme.text5};
+    color: #43fff6;
     :hover {
-      color: ${({ theme }) => theme.white};
+      color: #fff;
     }
   }
 
   :hover {
-    border: 1px solid ${({ theme }) => theme.borderBG};
-    color: ${({ theme }) => theme.white};
+    border: 1px solid #253656;
+    color: #fff;
   }
 `;
 
@@ -65,11 +59,11 @@ export const ButtonDropdown: FC<ButtonDropdownProps> = memo(
           </div>
           {open ? (
             <StyledIcon>
-              <ChevronUp size={24} />
+              <ExpandLessIcon />
             </StyledIcon>
           ) : (
             <StyledIcon>
-              <ChevronDown size={24} />
+              <ExpandMoreIcon />
             </StyledIcon>
           )}
         </RowBetween>
@@ -79,30 +73,32 @@ export const ButtonDropdown: FC<ButtonDropdownProps> = memo(
 );
 
 export const ButtonDark = styled(Base)`
-  background-color: ${({ theme }) => theme.bg3};
-  color: ${({ theme }) => theme.text3};
+  background-color: #43fff6;
+  color: #002f2d;
   width: fit-content;
-  border-radius: 12px;
+  border-radius: 8px;
   white-space: nowrap;
 
   :hover {
     background: transparent;
-    border: 1px solid ${({ theme }) => theme.bg3};
+    border: 1px solid #43fff6;
     color: #fff;
   }
 `;
 
 export const ButtonFaded = styled(Base)`
-  background-color: ${({ theme }) => theme.bg1};
+  width: 100%;
+  background-color: #0e1d34;
   color: rgba(255, 255, 255, 0.5);
   white-space: nowrap;
-  border: 1px solid ${({ theme }) => theme.borderBG}
+  border: 1px solid #253656;
+  padding: 6px 12px;
   :hover {
     opacity: 0.5;
   }
 `;
 
-export const OptionButton = styled.div<{
+export const OptionButton = styled(Box)<{
   active?: boolean;
   disabled?: boolean;
 }>`
@@ -112,7 +108,7 @@ export const OptionButton = styled.div<{
   padding: 6px;
   border-radius: 6px;
   background-color: ${({ active }) => active && "#324567"};
-  color: ${({ theme }) => theme.white};
+  color: #fff;
 
   :hover {
     cursor: ${({ disabled }) => !disabled && "pointer"};

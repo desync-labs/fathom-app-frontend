@@ -1,48 +1,39 @@
 import { useState, useEffect, FC, memo, useMemo } from "react";
 import { useMedia } from "react-use";
 import dayjs from "dayjs";
-import LocalLoader from "apps/charts/components/LocalLoader";
 import utc from "dayjs/plugin/utc";
-import { Box, Flex, Text } from "rebass";
-import styled from "styled-components";
+import { Box, Pagination, styled, Typography } from "@mui/material";
 
+import LocalLoader from "apps/charts/components/LocalLoader";
 import { CustomLink } from "apps/charts/components/Link";
 import { Divider } from "apps/charts/components";
 import { formattedNum, formattedPercent } from "apps/charts/utils";
 import DoubleTokenLogo from "apps/charts/components/DoubleLogo";
 import FormattedName from "apps/charts/components/FormattedName";
-import QuestionHelper from "apps/charts/components/QuestionHelper";
 import { TYPE } from "apps/charts/Theme";
 import { PAIR_BLACKLIST } from "apps/charts/constants";
 import { AutoColumn } from "apps/charts/components/Column";
 import { TableHeaderBox } from "apps/charts/components/Row";
+import AppPopover from "components/AppComponents/AppPopover/AppPopover";
 
 dayjs.extend(utc);
 
-const PageButtons = styled.div`
-  width: 100%;
+const PaginationWrapper = styled(Box)`
   display: flex;
   justify-content: center;
   margin-top: 2em;
   margin-bottom: 0.5em;
 `;
 
-const Arrow = styled.div<{ faded?: boolean }>`
-  color: ${({ theme }) => theme.white};
-  opacity: ${(props) => (props.faded ? 0.3 : 1)};
-  padding: 0 20px;
-  user-select: none;
-
-  :hover {
-    cursor: pointer;
-  }
+const Flex = styled(Box)`
+  display: flex;
 `;
 
 const List = styled(Box)`
   -webkit-overflow-scrolling: touch;
 `;
 
-const DashGrid = styled.div<{ fade?: boolean }>`
+const DashGrid = styled(Box)<{ fade?: boolean }>`
   display: grid;
   grid-gap: 1em;
   grid-template-columns: 1fr 1fr 1fr;
@@ -54,7 +45,7 @@ const DashGrid = styled.div<{ fade?: boolean }>`
   > * {
     justify-content: flex-end;
 
-    :first-child {
+    :first-of-type {
       justify-content: flex-start;
       text-align: left;
       width: 20px;
@@ -80,16 +71,14 @@ const DashGrid = styled.div<{ fade?: boolean }>`
 `;
 
 export const HeaderWrapper = styled(DashGrid)`
-  background: ${({ theme }) => theme.headerBackground};
+  background: #131f35;
   border-radius: 8px;
   padding-top: 7px !important;
   padding-bottom: 7px !important;
 `;
 
-const ListWrapper = styled.div``;
-
-const ClickableText = styled(Text)`
-  color: ${({ theme }) => theme.text1};
+const ClickableText = styled(Typography)`
+  color: #5977a0;
 
   &:hover {
     cursor: pointer;
@@ -100,22 +89,17 @@ const ClickableText = styled(Text)`
   user-select: none;
 `;
 
-const DataText = styled(Flex)`
+const DataText = styled(Box)`
+  display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   text-align: center;
-  color: ${({ theme }) => theme.text1};
-
-  & > * {
-    font-size: 14px;
-  }
+  width: 100%;
+  color: #fafafa;
+  font-size: 14px;
 
   @media screen and (max-width: 600px) {
     font-size: 12px;
-  }
-
-  &.right {
-    justify-content: end;
   }
 `;
 
@@ -150,7 +134,7 @@ const formatDataText = (
   const showUntracked = value !== "$0" && !trackedValue && !supressWarning;
   return (
     <AutoColumn gap="2px" style={{ opacity: showUntracked ? "0.7" : "1" }}>
-      <div style={{ textAlign: "right" }}>{value}</div>
+      <div style={{ textAlign: "center" }}>{value}</div>
       <TYPE.light fontSize={"9px"} style={{ textAlign: "right" }}>
         {showUntracked ? "untracked" : "  "}
       </TYPE.light>
@@ -170,7 +154,6 @@ const ListItem: FC<ListItemProps> = memo((props) => {
   const pairData = (pairs as any)[pairAddress];
 
   const below600 = useMedia("(max-width: 600px)");
-  const below740 = useMedia("(max-width: 740px)");
   const below1080 = useMedia("(max-width: 1080px)");
 
   if (pairData && pairData.token0 && pairData.token1) {
@@ -221,15 +204,18 @@ const ListItem: FC<ListItemProps> = memo((props) => {
             <div>{index}</div>
           </DataText>
         )}
-        <DataText fontWeight="500">
+        <DataText fontWeight="500" sx={{ justifyContent: "flex-start" }}>
           <DoubleTokenLogo
             size={below600 ? 16 : 20}
             a0={pairData.token0.id}
             a1={pairData.token1.id}
-            margin={!below740}
           />
           <CustomLink
-            style={{ marginLeft: "20px", whiteSpace: "nowrap" }}
+            style={{
+              marginLeft: "20px",
+              whiteSpace: "nowrap",
+              fontSize: "inherit",
+            }}
             to={"/charts/pair/" + pairAddress}
             color={color}
           >
@@ -237,28 +223,25 @@ const ListItem: FC<ListItemProps> = memo((props) => {
               text={pairData.token0.symbol + "-" + pairData.token1.symbol}
               maxCharacters={below600 ? 8 : 16}
               adjustSize={true}
+              fontSize={"inherit"}
               link={true}
             />
           </CustomLink>
         </DataText>
-        <DataText justifyContent="center">
+        <DataText>
           {formatDataText(liquidity, pairData.trackedReserveUSD)}
         </DataText>
-        <DataText justifyContent="center">
-          {formatDataText(volume, pairData.oneDayVolumeUSD)}
-        </DataText>
+        <DataText>{formatDataText(volume, pairData.oneDayVolumeUSD)}</DataText>
         {!below1080 && (
-          <DataText justifyContent="center">
+          <DataText>
             {formatDataText(weekVolume, pairData.oneWeekVolumeUSD)}
           </DataText>
         )}
         {!below1080 && (
-          <DataText justifyContent="center">
-            {formatDataText(fees, pairData.oneDayVolumeUSD)}
-          </DataText>
+          <DataText>{formatDataText(fees, pairData.oneDayVolumeUSD)}</DataText>
         )}
         {!below1080 && (
-          <DataText justifyContent="center">
+          <DataText>
             {formatDataText(
               apy,
               pairData.oneDayVolumeUSD,
@@ -370,7 +353,7 @@ const PairList: FC<PairListProps> = (props) => {
   ]);
 
   return (
-    <ListWrapper>
+    <Box>
       <HeaderWrapper style={{ height: "fit-content" }}>
         {!below600 && (
           <Flex alignItems="center" justifyContent="flex-start">
@@ -461,7 +444,11 @@ const PairList: FC<PairListProps> = (props) => {
           </Flex>
         )}
         {!below1080 && (
-          <Flex alignItems="center" justifyContent="center">
+          <Flex
+            alignItems="center"
+            justifyContent="center"
+            style={{ color: "#5977a0", gap: "4px" }}
+          >
             <ClickableText
               onClick={() => {
                 setSortedColumn(SORT_FIELD.APY);
@@ -479,29 +466,24 @@ const PairList: FC<PairListProps> = (props) => {
                   : ""}
               </TableHeaderBox>
             </ClickableText>
-            <QuestionHelper text={"Based on 24hr volume annualized"} />
+            <AppPopover
+              id="pairs_sorting"
+              text="Based on 24hr volume annualized"
+            />
           </Flex>
         )}
       </HeaderWrapper>
       <List p={0}>{!pairList ? <LocalLoader /> : pairList}</List>
-      <PageButtons>
-        <div
-          onClick={() => {
-            setPage(page === 1 ? page : page - 1);
-          }}
-        >
-          <Arrow faded={page === 1 ? true : false}>←</Arrow>
-        </div>
-        <TYPE.body>{"Page " + page + " of " + maxPage}</TYPE.body>
-        <div
-          onClick={() => {
-            setPage(page === maxPage ? page : page + 1);
-          }}
-        >
-          <Arrow faded={page === maxPage ? true : false}>→</Arrow>
-        </div>
-      </PageButtons>
-    </ListWrapper>
+      {maxPage > 1 && (
+        <PaginationWrapper>
+          <Pagination
+            count={Math.ceil(maxPage)}
+            page={page}
+            onChange={(event, page) => setPage(page)}
+          />
+        </PaginationWrapper>
+      )}
+    </Box>
   );
 };
 
