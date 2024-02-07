@@ -1,4 +1,6 @@
-import styled from "styled-components";
+import { FC, memo, useState } from "react";
+import { useMedia } from "react-use";
+import { Box, styled } from "@mui/material";
 import {
   Area,
   XAxis,
@@ -16,15 +18,13 @@ import {
   getTimeframe,
 } from "apps/charts/utils";
 import { OptionButton } from "apps/charts/components/ButtonStyled";
-import { useMedia } from "react-use";
 import { timeframeOptions } from "apps/charts/constants";
 import DropdownSelect from "apps/charts/components/DropdownSelect";
 import { useUserLiquidityChart } from "apps/charts/contexts/User";
 import LocalLoader from "apps/charts/components/LocalLoader";
 import { TYPE } from "apps/charts/Theme";
-import { FC, memo, useState } from "react";
 
-const ChartWrapper = styled.div`
+const ChartWrapper = styled(Box)`
   height: 100%;
   max-height: 390px;
 
@@ -58,7 +58,7 @@ const UserChart: FC<UserChartsProps> = ({ account }) => {
   return (
     <ChartWrapper>
       {below600 ? (
-        <RowBetween mb={40}>
+        <RowBetween mb={"40px"}>
           <div />
           <DropdownSelect
             options={timeframeOptions}
@@ -69,7 +69,7 @@ const UserChart: FC<UserChartsProps> = ({ account }) => {
           />
         </RowBetween>
       ) : (
-        <RowBetween mb={40}>
+        <RowBetween mb={"40px"}>
           <AutoRow gap="10px">
             <TYPE.main>Liquidity Value</TYPE.main>
           </AutoRow>

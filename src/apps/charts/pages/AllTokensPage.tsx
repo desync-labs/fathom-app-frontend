@@ -1,5 +1,6 @@
 import { FC, useEffect, useMemo } from "react";
-import "feather-icons";
+import { Box, styled } from "@mui/material";
+import { useMedia } from "react-use";
 
 import TopTokenList from "apps/charts/components/TokenList";
 import { TYPE } from "apps/charts/Theme";
@@ -7,12 +8,9 @@ import { useAllTokenData } from "apps/charts/contexts/TokenData";
 import { PageWrapper, FullWrapper } from "apps/charts/components";
 import { RowBetween } from "apps/charts/components/Row";
 import Search from "apps/charts/components/Search";
-import { useMedia } from "react-use";
 import { TOKEN_BLACKLIST } from "apps/charts/constants";
 
-import styled from "styled-components";
-
-const NoTopTokens = styled.div`
+const NoTopTokens = styled(Box)`
   background: #131f35;
   border-radius: 8px;
   padding: 0.5rem 1.125rem;
@@ -44,7 +42,7 @@ const AllTokensPage: FC = () => {
   // const [useTracked, setUseTracked] = useState(true)
 
   return (
-    <PageWrapper>
+    <PageWrapper minHeight={"70vh"}>
       <FullWrapper>
         <RowBetween>
           <TYPE.largeHeader>Top Tokens</TYPE.largeHeader>
