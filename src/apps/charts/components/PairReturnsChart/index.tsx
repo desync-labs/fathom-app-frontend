@@ -24,7 +24,6 @@ import DropdownSelect from "apps/charts/components/DropdownSelect";
 import { useUserPositionChart } from "apps/charts/contexts/User";
 import { useTimeframe } from "apps/charts/contexts/Application";
 import LocalLoader from "apps/charts/components/LocalLoader";
-import { useColor } from "apps/charts/hooks";
 import { Position } from "apps/charts/utils/returns";
 
 const ChartWrapper = styled(Box)`
@@ -57,7 +56,7 @@ const PairReturnsChart: FC<PairReturnChartProps> = (props) => {
 
   const below600 = useMedia("(max-width: 600px)");
 
-  const color = useColor(position.pair?.token0.id);
+  const color = "#43fff6";
 
   const [chartView, setChartView] = useState(CHART_VIEW.VALUE);
 
@@ -167,13 +166,13 @@ const PairReturnsChart: FC<PairReturnChartProps> = (props) => {
               labelStyle={{ paddingTop: 4 }}
               contentStyle={{
                 padding: "10px 14px",
-                borderRadius: 10,
-                borderColor: color,
-                color: "black",
+                border: "none",
+                borderRadius: 8,
+                color: "white",
+                backgroundColor: "#2a3e5a",
               }}
-              wrapperStyle={{ top: -70, left: -10 }}
+              wrapperStyle={{ top: -70, left: -10, zIndex: 22 }}
             />
-
             <Line
               type="monotone"
               dataKey={chartView === CHART_VIEW.VALUE ? "usdValue" : "fees"}
