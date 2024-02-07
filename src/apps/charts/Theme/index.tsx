@@ -116,7 +116,12 @@ export const TYPE = {
 
   light(props: TextProps) {
     return (
-      <TextWrapper fontWeight={400} color={"text4"} fontSize={14} {...props} />
+      <TextWrapper
+        fontWeight={400}
+        color={"#6379a1"}
+        fontSize={14}
+        {...props}
+      />
     );
   },
 };

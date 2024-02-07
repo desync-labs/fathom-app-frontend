@@ -1,5 +1,6 @@
 import { FC, memo, useState } from "react";
-import styled from "styled-components";
+import { useMedia } from "react-use";
+import { Box, styled } from "@mui/material";
 import {
   XAxis,
   YAxis,
@@ -10,7 +11,6 @@ import {
   CartesianGrid,
 } from "recharts";
 import { AutoRow, RowBetween } from "apps/charts/components/Row";
-
 import {
   toK,
   toNiceDate,
@@ -19,7 +19,6 @@ import {
   getTimeframe,
 } from "apps/charts/utils";
 import { OptionButton } from "apps/charts/components/ButtonStyled";
-import { useMedia } from "react-use";
 import { timeframeOptions } from "apps/charts/constants";
 import DropdownSelect from "apps/charts/components/DropdownSelect";
 import { useUserPositionChart } from "apps/charts/contexts/User";
@@ -28,7 +27,7 @@ import LocalLoader from "apps/charts/components/LocalLoader";
 import { useColor } from "apps/charts/hooks";
 import { Position } from "apps/charts/utils/returns";
 
-const ChartWrapper = styled.div`
+const ChartWrapper = styled(Box)`
   max-height: 420px;
 
   @media screen and (max-width: 600px) {
@@ -36,7 +35,7 @@ const ChartWrapper = styled.div`
   }
 `;
 
-const OptionsRow = styled.div`
+const OptionsRow = styled(Box)`
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -73,7 +72,7 @@ const PairReturnsChart: FC<PairReturnChartProps> = (props) => {
   return (
     <ChartWrapper>
       {below600 ? (
-        <RowBetween mb={40}>
+        <RowBetween mb={"40px"}>
           <div />
           <DropdownSelect
             options={timeframeOptions}

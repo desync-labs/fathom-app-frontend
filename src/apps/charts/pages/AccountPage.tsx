@@ -8,7 +8,9 @@ import {
   FC,
   memo,
 } from "react";
-import styled from "styled-components";
+import { Navigate, useParams } from "react-router-dom";
+import { Box, styled } from "@mui/material";
+import { useMedia } from "react-use";
 import {
   useUserTransactions,
   useUserPositions,
@@ -29,19 +31,18 @@ import {
   StyledIcon,
 } from "apps/charts/components";
 import DoubleTokenLogo from "apps/charts/components/DoubleLogo";
-import { Bookmark, Activity } from "react-feather";
 import Link from "apps/charts/components/Link";
 import { FEE_WARNING_TOKENS } from "apps/charts/constants";
 import { BasicLink } from "apps/charts/components/Link";
-import { useMedia } from "react-use";
 import Search from "apps/charts/components/Search";
 import { useSavedAccounts } from "apps/charts/contexts/LocalStorage";
 import { TableHeaderBox } from "apps/charts/components/Row";
 import { Position } from "apps/charts/utils/returns";
 import { LayoutWrapper } from "apps/charts/App";
-import { Navigate, useParams } from "react-router-dom";
 
-const AccountWrapper = styled.div`
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+
+const AccountWrapper = styled(Box)`
   background-color: transparent;
   padding: 6px 16px;
   border-radius: 100px;
@@ -50,45 +51,42 @@ const AccountWrapper = styled.div`
   justify-content: center;
 `;
 
-const Header = styled.div``;
-
-const DashboardWrapper = styled.div`
+const DashboardWrapper = styled(Box)`
   width: 100%;
 `;
 
-const DropdownWrapper = styled.div`
+const DropdownWrapper = styled(Box)`
   position: relative;
   margin-bottom: 1rem;
-  border: 1px solid ${({ theme }) => theme.borderBG};
+  border: 1px solid #253656;
   border-radius: 12px;
 `;
 
-const Flyout = styled.div`
+const Flyout = styled(Box)`
   position: absolute;
   top: 38px;
   left: -1px;
   width: 100%;
-  background-color: ${({ theme }) => theme.bg1};
+  background-color: #0e1d34;
   z-index: 999;
   border-bottom-right-radius: 10px;
   border-bottom-left-radius: 10px;
   padding-top: 4px;
-  border: 1px solid ${({ theme }) => theme.borderBG};
+  border: 1px solid #253656;
   border-top: none;
 `;
 
 const MenuRow = styled(Row)`
   width: 100%;
-  padding: 12px 0;
-  padding-left: 12px;
+  padding: 12px 0 12px 12px;
 
   :hover {
     cursor: pointer;
-    background-color: ${({ theme }) => theme.bg2};
+    background-color: #2c2f36;
   }
 `;
 
-const PanelWrapper = styled.div`
+const PanelWrapper = styled(Box)`
   grid-template-columns: 1fr;
   grid-template-rows: max-content;
   gap: 6px;
@@ -97,9 +95,9 @@ const PanelWrapper = styled.div`
   align-items: start;
 `;
 
-const Warning = styled.div`
-  background-color: ${({ theme }) => theme.bg2};
-  color: ${({ theme }) => theme.text1};
+const Warning = styled(Box)`
+  background-color: #2c2f36;
+  color: #fafafa;
   padding: 1rem;
   font-weight: 600;
   border-radius: 10px;
@@ -107,8 +105,8 @@ const Warning = styled.div`
   width: calc(100% - 2rem);
 `;
 
-const HeaderWrapper = styled.div`
-  background: ${({ theme }) => theme.headerBackground};
+const HeaderWrapper = styled(Box)`
+  background: #131f35;
   border-radius: 8px;
   font-size: 1.125rem;
   padding: 7px 1.125rem 7px;
@@ -116,7 +114,7 @@ const HeaderWrapper = styled.div`
   margin-bottom: 1rem;
 `;
 
-const AccountDetailsLayout = styled.div`
+const AccountDetailsLayout = styled(Box)`
   display: inline-grid;
   width: calc(100% - 1.25rem);
   grid-template-columns: auto auto auto 1fr;
@@ -145,6 +143,24 @@ const AccountDetailsLayout = styled.div`
     gap: 0;
   }
 `;
+
+const ActivityIcon = () => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+    </svg>
+  );
+};
 
 type AccountPageProps = { account: string };
 
@@ -247,12 +263,11 @@ const AccountPage: FC<AccountPageProps> = memo((props) => {
           <TYPE.body>
             <BasicLink to="/charts/accounts">{"Accounts "}</BasicLink>→{" "}
             <Link
-              lineHeight={"145.23%"}
               href={
                 "https://xdc.blocksscan.io/address/" +
                 account.replace(/^.{2}/g, "xdc")
               }
-              target="_blank"
+              external
             >
               {" "}
               {account?.slice(0, 42)}{" "}
@@ -260,28 +275,29 @@ const AccountPage: FC<AccountPageProps> = memo((props) => {
           </TYPE.body>
           {!below600 && <Search small={true} />}
         </RowBetween>
-        <Header>
+        <Box>
           <RowBetween>
             <span>
               <TYPE.header fontSize={24}>
                 {account?.slice(0, 6) + "..." + account?.slice(38, 42)}
               </TYPE.header>
               <Link
-                lineHeight={"145.23%"}
                 href={
                   "https://xdc.blocksscan.io/address/" +
                   account.replace(/^.{2}/g, "xdc")
                 }
-                target="_blank"
+                external
               >
                 <TYPE.main fontSize={14}>View on BlocksScan</TYPE.main>
               </Link>
             </span>
             <AccountWrapper>
               <StyledIcon>
-                <Bookmark
+                <BookmarkBorderIcon
                   onClick={handleBookmarkClick}
                   style={{
+                    width: "28px",
+                    height: "28px",
                     opacity: isBookmarked ? 0.8 : 0.4,
                     cursor: "pointer",
                   }}
@@ -289,7 +305,7 @@ const AccountPage: FC<AccountPageProps> = memo((props) => {
               </StyledIcon>
             </AccountWrapper>
           </RowBetween>
-        </Header>
+        </Box>
         <DashboardWrapper>
           {showWarning && (
             <Warning>
@@ -306,7 +322,7 @@ const AccountPage: FC<AccountPageProps> = memo((props) => {
                 {!activePosition && (
                   <RowFixed>
                     <StyledIcon>
-                      <Activity size={16} />
+                      <ActivityIcon />
                     </StyledIcon>
                     <TYPE.body ml={"10px"}>All Positions</TYPE.body>
                   </RowFixed>
@@ -368,7 +384,7 @@ const AccountPage: FC<AccountPageProps> = memo((props) => {
                       >
                         <RowFixed>
                           <StyledIcon>
-                            <Activity size={16} />
+                            <ActivityIcon />
                           </StyledIcon>
                           <TYPE.body ml={"10px"}>All Positions</TYPE.body>
                         </RowFixed>

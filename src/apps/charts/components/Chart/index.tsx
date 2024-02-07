@@ -1,4 +1,6 @@
 import { useState, useEffect, FC, memo } from "react";
+import { useMedia } from "react-use";
+import { Box, styled } from "@mui/material";
 import {
   Area,
   XAxis,
@@ -10,11 +12,9 @@ import {
   Tooltip,
   AreaChart,
 } from "recharts";
-import styled from "styled-components";
-import { useMedia } from "react-use";
 import { toK, toNiceDate, toNiceDateYear } from "apps/charts/utils";
 
-const ChartWrapper = styled.div`
+const ChartWrapper = styled(Box)`
   padding-top: 1em;
   margin-left: -1.5em;
   @media (max-width: 40em) {
