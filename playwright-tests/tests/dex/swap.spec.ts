@@ -7,7 +7,7 @@ import * as metamask from "@synthetixio/synpress/commands/metamask";
 dotenv.config();
 
 test.describe("Fathom App Test Suite: Positions Operations", () => {
-  test("Swapping XDC with xUSDT is successful", async ({ dexPage }) => {
+  test("Swapping XDC with xUSDT is successful @smoke", async ({ dexPage }) => {
     await dexPage.navigate();
     await dexPage.connectWallet(WalletConnectOptions.Metamask);
     await dexPage.validateConnectedWalletAddress();
@@ -24,7 +24,7 @@ test.describe("Fathom App Test Suite: Positions Operations", () => {
     });
   });
 
-  test("Wrapping XDC to WXDC is successful", async ({ dexPage }) => {
+  test("Wrapping XDC to WXDC is successful @smoke", async ({ dexPage }) => {
     await dexPage.navigate();
     await dexPage.connectWallet(WalletConnectOptions.Metamask);
     await dexPage.validateConnectedWalletAddress();
@@ -41,7 +41,7 @@ test.describe("Fathom App Test Suite: Positions Operations", () => {
     });
   });
 
-  test("Unwrapping WXDC to XDC is successful", async ({ dexPage }) => {
+  test("Unwrapping WXDC to XDC is successful @smoke", async ({ dexPage }) => {
     await dexPage.navigate();
     await dexPage.connectWallet(WalletConnectOptions.Metamask);
     await dexPage.validateConnectedWalletAddress();
