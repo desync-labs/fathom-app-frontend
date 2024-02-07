@@ -204,7 +204,7 @@ export default class DexPage extends BasePage {
     await this.selectFromToken({ tokenId: fromToken });
     await this.selectToToken({ tokenId: toToken });
     await this.fillFromValue({ inputValue: fromAmount });
-    await this.page.waitForTimeout(2000);
+    await this.page.waitForTimeout(3000);
     const fromAmountString = await this.fromTokenAmountInput.getAttribute(
       "value"
     );
@@ -240,7 +240,7 @@ export default class DexPage extends BasePage {
     await this.selectFromToken({ tokenId: fromToken });
     await this.selectToToken({ tokenId: toToken });
     await this.fillFromValue({ inputValue: fromAmount });
-    await this.page.waitForTimeout(2000);
+    await this.page.waitForTimeout(3000);
     const fromAmountString = await this.fromTokenAmountInput.getAttribute(
       "value"
     );
