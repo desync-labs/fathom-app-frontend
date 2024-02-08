@@ -4,9 +4,10 @@ import BasePage from "./base.page";
 import * as metamask from "@synthetixio/synpress/commands/metamask";
 import {
   extractNumericValueDex,
+  extractTransactionHash,
   formatNumberToFixedLength,
 } from "../utils/helpers";
-import { SwapData } from "../types";
+import { DexTabs, SwapData } from "../types";
 import { tokenIds } from "../fixtures/dex.data";
 
 export default class DexPage extends BasePage {
@@ -139,6 +140,28 @@ export default class DexPage extends BasePage {
 
   async navigate(): Promise<void> {
     await super.navigate(this.path);
+  }
+
+  async openTab({ tabName }: { tabName: DexTabs }): Promise<void> {
+    let href: string;
+    switch (tabName) {
+      case DexTabs.Swap:
+        href = "#/swap";
+        break;
+      case DexTabs.Pool:
+        href = "#/swap/pool";
+        break;
+      case DexTabs.Transactions: {
+        href = "#/swap/transactions";
+        break;
+      }
+    }
+    await this.page.locator(`main nav > a[href="${href}"]`).click();
+    expect(
+      await this.page
+        .locator(`main nav > a[href="${href}"]`)
+        .getAttribute("class")
+    ).toContain("active");
   }
 
   getTokenItemLocator({ tokenId }: { tokenId: string }): Locator {
@@ -278,6 +301,39 @@ export default class DexPage extends BasePage {
       toBalance as string
     ) as number;
     return toBalanceNumber;
+  }
+
+  async getCompletedTransactionHashFromPopup(): Promise<string> {
+    await expect(this.transactionPopupColumn).toBeVisible({ timeout: 50000 });
+    await expect(this.transactionPopupFooterText).toBeVisible();
+    const hrefValue = await this.transactionPopupFooterText.getAttribute(
+      "href"
+    );
+    const transactionHash = extractTransactionHash(hrefValue as string);
+    return transactionHash as string;
+  }
+
+  getTransactionStatusTextLocatorByHash({
+    transactionHash,
+  }: {
+    transactionHash: string;
+  }): Locator {
+    const transactionStatusText = this.page.getByTestId(
+      `dex-transactions-transactionStatusText-${transactionHash}`
+    );
+    return transactionStatusText;
+  }
+
+  async getTransactionStatusTextByHash({
+    transactionHash,
+  }: {
+    transactionHash: string;
+  }): Promise<string> {
+    const transactionStatusText =
+      await this.getTransactionStatusTextLocatorByHash({
+        transactionHash,
+      }).textContent();
+    return transactionStatusText as string;
   }
 
   async validateConfirmSwapModal({
