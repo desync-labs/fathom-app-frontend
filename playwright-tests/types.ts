@@ -65,3 +65,9 @@ export interface SwapData {
   toAmountExpected: string;
   toTokenNameExpected: string;
 }
+
+export enum DexTabs {
+  Swap = "Swap",
+  Pool = "Pool",
+  Transactions = "Transactions",
+}
