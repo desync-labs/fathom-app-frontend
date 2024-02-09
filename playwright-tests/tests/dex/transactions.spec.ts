@@ -47,7 +47,7 @@ test.describe("Fathom App Test Suite: DEX Transactions", () => {
     const expectedData = await dexPage.wrap({
       fromToken: tokenIds.XDC,
       toToken: tokenIds.WXDC,
-      fromAmount: 1,
+      fromAmount: 0.01,
     });
     const transactionHash =
       await dexPage.getCompletedTransactionHashFromPopup();
@@ -75,7 +75,7 @@ test.describe("Fathom App Test Suite: DEX Transactions", () => {
     const expectedData = await dexPage.wrap({
       fromToken: tokenIds.WXDC,
       toToken: tokenIds.XDC,
-      fromAmount: 1,
+      fromAmount: 0.01,
     });
     const transactionHash =
       await dexPage.getCompletedTransactionHashFromPopup();

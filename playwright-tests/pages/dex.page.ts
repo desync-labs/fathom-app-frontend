@@ -195,12 +195,14 @@ export default class DexPage extends BasePage {
     await this.fromTokenAmountInput.click();
     await this.fromTokenAmountInput.clear();
     await this.fromTokenAmountInput.pressSequentially(inputValue.toString());
+    await this.fromTokenAmountInput.blur();
   }
 
   async fillToValue({ inputValue }: { inputValue: number }): Promise<void> {
     await this.toTokenAmountInput.click();
-    await this.fromTokenAmountInput.clear();
-    await this.toTokenAmountInput.fill(inputValue.toString());
+    await this.toTokenAmountInput.clear();
+    await this.toTokenAmountInput.pressSequentially(inputValue.toString());
+    await this.toTokenAmountInput.blur();
   }
 
   async clickSwapButton(): Promise<void> {
@@ -227,7 +229,6 @@ export default class DexPage extends BasePage {
     await this.selectFromToken({ tokenId: fromToken });
     await this.selectToToken({ tokenId: toToken });
     await this.fillFromValue({ inputValue: fromAmount });
-    await this.page.waitForTimeout(3000);
     const fromAmountString = await this.fromTokenAmountInput.getAttribute(
       "value"
     );
@@ -263,7 +264,6 @@ export default class DexPage extends BasePage {
     await this.selectFromToken({ tokenId: fromToken });
     await this.selectToToken({ tokenId: toToken });
     await this.fillFromValue({ inputValue: fromAmount });
-    await this.page.waitForTimeout(3000);
     const fromAmountString = await this.fromTokenAmountInput.getAttribute(
       "value"
     );
