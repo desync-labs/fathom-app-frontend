@@ -93,4 +93,16 @@ test.describe("Fathom App Test Suite: DEX Transactions", () => {
         `Unwrap ${expectedData.fromAmountExpected} ${expectedData.fromTokenNameExpected} to ${expectedData.toTokenNameExpected}`
       );
   });
+
+  test("Transactions tab disconnected state layout is correct", async ({
+    dexPage,
+  }) => {
+    await dexPage.navigate();
+    await expect(
+      dexPage.page.locator('main nav > a[href="#/swap/transactions"]')
+    ).not.toBeVisible();
+    await dexPage.connectWallet(WalletConnectOptions.Metamask);
+    await dexPage.validateConnectedWalletAddress();
+    await dexPage.openTab({ tabName: DexTabs.Transactions });
+  });
 });
