@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, FC, memo } from "react";
 import { useMedia } from "react-use";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import { Box, styled, Typography } from "@mui/material";
+import { Box, Pagination, styled, Typography } from "@mui/material";
 import LocalLoader from "apps/charts/components/LocalLoader";
 import { CustomLink } from "apps/charts/components/Link";
 import { Divider } from "apps/charts/components";
@@ -19,23 +19,11 @@ import { Position } from "apps/charts/utils/returns";
 
 dayjs.extend(utc);
 
-const PageButtons = styled(Box)`
+const PaginationWrapper = styled(Box)`
   display: flex;
   justify-content: center;
-  width: 100%;
   margin-top: 2em;
   margin-bottom: 0.5em;
-`;
-
-const Arrow = styled(Box)<{ faded?: boolean }>`
-  color: #ffffff;
-  opacity: ${(props) => (props.faded ? 0.3 : 1)};
-  padding: 0 20px;
-  user-select: none;
-
-  :hover {
-    cursor: pointer;
-  }
 `;
 
 const Flex = styled(Box)`
@@ -137,7 +125,7 @@ const ListItem: FC<ListItemProps> = memo((props) => {
       <DataText justifyContent="flex-start" alignItems="center">
         <AutoColumn gap="8px" justify="flex-start">
           <DoubleTokenLogo
-            size={16}
+            size={26}
             a0={position.pair.token0.id}
             a1={position.pair.token1.id}
           />
@@ -406,15 +394,15 @@ const PositionList: FC<PositionList> = (props) => {
         )}
       </HeaderWrapper>
       <List p={0}>{!positionsSorted ? <LocalLoader /> : positionsSorted}</List>
-      <PageButtons>
-        <div onClick={() => setPage(page === 1 ? page : page - 1)}>
-          <Arrow faded={page === 1}>←</Arrow>
-        </div>
-        <TYPE.body>{"Page " + page + " of " + maxPage}</TYPE.body>
-        <div onClick={() => setPage(page === maxPage ? page : page + 1)}>
-          <Arrow faded={page === maxPage}>→</Arrow>
-        </div>
-      </PageButtons>
+      {maxPage > 1 && (
+        <PaginationWrapper>
+          <Pagination
+            count={Math.ceil(maxPage)}
+            page={page}
+            onChange={(event, page) => setPage(page)}
+          />
+        </PaginationWrapper>
+      )}
     </Box>
   );
 };

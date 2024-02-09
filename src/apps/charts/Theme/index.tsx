@@ -126,26 +126,6 @@ export const TYPE = {
   },
 };
 
-export const Link = styled.a.attrs({
-  target: "_blank",
-  rel: "noopener noreferrer",
-})`
-  text-decoration: none;
-  cursor: pointer;
-  color: ${({ theme }) => theme.primary1};
-  font-weight: 500;
-  :hover {
-    text-decoration: underline;
-  }
-  :focus {
-    outline: none;
-    text-decoration: underline;
-  }
-  :active {
-    text-decoration: none;
-  }
-`;
-
 export const GlobalStyle = createGlobalStyle`
 .three-line-legend {
 	width: 100%;
