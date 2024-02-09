@@ -104,8 +104,8 @@ const UserChart: FC<UserChartsProps> = ({ account }) => {
           >
             <defs>
               <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor={"#4f8fea"} stopOpacity={0.35} />
-                <stop offset="95%" stopColor={"#4f8fea"} stopOpacity={0} />
+                <stop offset="5%" stopColor={"#43fff6"} stopOpacity={0.35} />
+                <stop offset="95%" stopColor={"#43fff6"} stopOpacity={0} />
               </linearGradient>
             </defs>
             <XAxis
@@ -138,11 +138,12 @@ const UserChart: FC<UserChartsProps> = ({ account }) => {
               labelStyle={{ paddingTop: 4 }}
               contentStyle={{
                 padding: "10px 14px",
-                borderRadius: 10,
-                borderColor: "#4f8fea",
-                color: "black",
+                border: "none",
+                borderRadius: 8,
+                color: "white",
+                backgroundColor: "#2a3e5a",
               }}
-              wrapperStyle={{ top: -70, left: -10 }}
+              wrapperStyle={{ top: -70, left: -10, zIndex: 22 }}
             />
             <Area
               key={"other"}
@@ -153,7 +154,7 @@ const UserChart: FC<UserChartsProps> = ({ account }) => {
               type="monotone"
               name={"Liquidity"}
               yAxisId={0}
-              stroke={"#4f8fea"}
+              stroke={"#43fff6"}
               fill="url(#colorUv)"
             />
           </AreaChart>
