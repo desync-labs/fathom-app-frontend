@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { ReactNode } from "react";
 
 export const BodyWrapper = styled.div`
   position: relative;
@@ -13,7 +14,7 @@ export const BodyWrapper = styled.div`
 /**
  * The styled container element that wraps the content of most pages and the tabs.
  */
-const AppBody = ({ children }: { children: React.ReactNode }) => {
+const AppBody = ({ children }: { children: ReactNode }) => {
   return <BodyWrapper>{children}</BodyWrapper>;
 };
 

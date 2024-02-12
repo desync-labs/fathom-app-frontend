@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { escapeRegExp } from "apps/dex/utils";
-import { FC, memo } from "react";
+import { FC, HTMLProps, memo } from "react";
 
 const StyledInput = styled.input<{
   error?: boolean;
@@ -49,7 +49,7 @@ type InputProps = {
   error?: boolean;
   fontSize?: string;
   align?: "right" | "left";
-} & Omit<React.HTMLProps<HTMLInputElement>, "ref" | "onChange" | "as">;
+} & Omit<HTMLProps<HTMLInputElement>, "ref" | "onChange" | "as">;
 
 export const Input: FC<InputProps> = memo(
   ({ value, onUserInput, placeholder, ...rest }) => {

@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { ReactNode, useMemo } from "react";
 import styled, {
   css,
   DefaultTheme,
@@ -45,7 +45,7 @@ export function colors(): Colors {
     text5: "#2C2F36",
     text6: "#0E0F15",
 
-    // backgrounds / greys
+    // backgrounds / grays
     bg1: "#131F35",
 
     // main background
@@ -112,11 +112,7 @@ export function theme(): DefaultTheme {
   } as DefaultTheme;
 }
 
-export default function ThemeProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function ThemeProvider({ children }: { children: ReactNode }) {
   const themeObject = useMemo(() => theme(), []);
   return (
     <StyledComponentsThemeProvider theme={themeObject}>

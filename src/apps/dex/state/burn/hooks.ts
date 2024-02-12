@@ -98,7 +98,7 @@ export function useDerivedBurnInfo(
   if (independentField === Field.LIQUIDITY_PERCENT) {
     percentToRemove = new Percent(typedValue, "100");
   }
-  // user specified a specific amount of liquidity tokens
+  // user specified a specific number of liquidity tokens
   else if (independentField === Field.LIQUIDITY) {
     if (pair?.liquidityToken) {
       const independentAmount = tryParseAmount(typedValue, pair.liquidityToken);
