@@ -122,9 +122,6 @@ const Pool = () => {
     .map(([, pair]) => pair)
     .filter((v2Pair): v2Pair is Pair => Boolean(v2Pair));
 
-  // remove any pairs that also are included in pairs with stake in mining pool
-  const v2PairsWithoutStakedAmount = allV2PairsWithLiquidity;
-
   return (
     <>
       <PageWrapper>
@@ -207,7 +204,7 @@ const Pool = () => {
                     <span> ↗</span>
                   </RowBetween>
                 </ButtonSecondary>
-                {v2PairsWithoutStakedAmount.map((v2Pair) => (
+                {allV2PairsWithLiquidity.map((v2Pair) => (
                   <FullPositionCard
                     key={v2Pair.liquidityToken.address}
                     pair={v2Pair}
