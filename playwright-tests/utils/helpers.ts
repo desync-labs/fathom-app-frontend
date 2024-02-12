@@ -69,3 +69,15 @@ export function formatNumberToFixedLength(
   const targetLength = decimalPointIndex + 1 + maxDigitsAfterDecimal;
   return numberString.slice(0, targetLength);
 }
+
+export function extractTransactionHash(url: string): string | null {
+  // Regular expression to match a transaction hash in the URL
+  const regex = /\/txs\/(0x[a-fA-F0-9]+)/;
+  const match = url.match(regex);
+
+  if (match) {
+    return match[1]; // Return the captured group, which is the transaction hash
+  } else {
+    return null; // Return null if no match is found
+  }
+}

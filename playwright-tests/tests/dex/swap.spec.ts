@@ -6,7 +6,7 @@ import { tokenIds } from "../../fixtures/dex.data";
 import * as metamask from "@synthetixio/synpress/commands/metamask";
 dotenv.config();
 
-test.describe("Fathom App Test Suite: Positions Operations", () => {
+test.describe("Fathom App Test Suite: DEX Swap", () => {
   test("Swapping XDC with xUSDT is successful @smoke", async ({ dexPage }) => {
     await dexPage.navigate();
     await dexPage.connectWallet(WalletConnectOptions.Metamask);
@@ -14,7 +14,7 @@ test.describe("Fathom App Test Suite: Positions Operations", () => {
     const expectedData = await dexPage.swap({
       fromToken: tokenIds.XDC,
       toToken: tokenIds.xUSDT,
-      fromAmount: 0.5,
+      fromAmount: 0.05,
     });
     await dexPage.validateSwapSuccessPopup({
       fromAmountExpected: expectedData.fromAmountExpected,
@@ -31,7 +31,7 @@ test.describe("Fathom App Test Suite: Positions Operations", () => {
     const expectedData = await dexPage.wrap({
       fromToken: tokenIds.XDC,
       toToken: tokenIds.WXDC,
-      fromAmount: 0.5,
+      fromAmount: 0.05,
     });
     await dexPage.validateWrapSuccessPopup({
       fromAmountExpected: expectedData.fromAmountExpected,
@@ -48,7 +48,7 @@ test.describe("Fathom App Test Suite: Positions Operations", () => {
     const expectedData = await dexPage.wrap({
       fromToken: tokenIds.WXDC,
       toToken: tokenIds.XDC,
-      fromAmount: 0.5,
+      fromAmount: 0.05,
     });
     await dexPage.validateUnwrapSuccessPopup({
       fromAmountExpected: expectedData.fromAmountExpected,
