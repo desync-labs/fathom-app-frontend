@@ -1,14 +1,17 @@
-import styled from "styled-components";
-import { useCopyClipboard } from "apps/charts/hooks";
-import { CheckCircle, Copy } from "react-feather";
-import { StyledIcon } from "apps/charts/components";
 import { FC, memo } from "react";
+import { useCopyClipboard } from "apps/charts/hooks";
+import { Box, styled, Typography } from "@mui/material";
+import { StyledIcon } from "apps/charts/components";
 
-const CopyIcon = styled.div`
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import TaskAltIcon from "@mui/icons-material/TaskAlt";
+
+const CopyIcon = styled(Box)`
   color: #aeaeae;
   flex-shrink: 0;
   margin-right: 1rem;
   margin-left: 0.5rem;
+  margin-bottom: 3px;
   text-decoration: none;
   :hover,
   :active,
@@ -18,8 +21,9 @@ const CopyIcon = styled.div`
     cursor: pointer;
   }
 `;
-const TransactionStatusText = styled.span`
-  ${({ theme }) => theme.flexRowNoWrap};
+const TransactionStatusText = styled(Typography)`
+  display: flex;
+  flex-flow: row nowrap;
   align-items: center;
   color: black;
 `;
@@ -35,13 +39,13 @@ const CopyHelper: FC<CopyHelperProps> = (props) => {
       {isCopied ? (
         <TransactionStatusText>
           <StyledIcon>
-            <CheckCircle size={"14"} />
+            <TaskAltIcon style={{ width: "15px", height: "15px" }} />
           </StyledIcon>
         </TransactionStatusText>
       ) : (
         <TransactionStatusText>
           <StyledIcon>
-            <Copy size={"14"} />
+            <ContentCopyIcon style={{ width: "15px", height: "15px" }} />
           </StyledIcon>
         </TransactionStatusText>
       )}
