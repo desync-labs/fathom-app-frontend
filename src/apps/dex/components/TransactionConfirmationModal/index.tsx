@@ -1,5 +1,5 @@
 import { ChainId, Currency } from "into-the-fathom-swap-sdk";
-import { FC, useContext } from "react";
+import { FC, ReactNode, useContext } from "react";
 import styled, { ThemeContext } from "styled-components";
 import Modal from "apps/dex/components/Modal";
 import { ExternalLink } from "apps/dex/theme";
@@ -185,8 +185,8 @@ export function ConfirmationModalContent({
 }: {
   title: string;
   onDismiss: () => void;
-  topContent: () => React.ReactNode;
-  bottomContent: () => React.ReactNode;
+  topContent: () => ReactNode;
+  bottomContent: () => ReactNode;
 }) {
   return (
     <Wrapper>
@@ -256,7 +256,7 @@ interface ConfirmationModalProps {
   isOpen: boolean;
   onDismiss: () => void;
   hash: string | undefined;
-  content: () => React.ReactNode;
+  content: () => ReactNode;
   attemptingTxn: boolean;
   pendingText: string;
   currencyToAdd?: Currency | undefined;
