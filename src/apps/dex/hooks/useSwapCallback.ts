@@ -95,8 +95,6 @@ function useSwapCallArguments(
       );
     }
 
-    console.log(swapMethods);
-
     return swapMethods.map((parameters) => ({ parameters, contract }));
   }, [account, allowedSlippage, chainId, deadline, library, recipient, trade]);
 }
