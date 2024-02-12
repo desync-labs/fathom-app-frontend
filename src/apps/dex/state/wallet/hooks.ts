@@ -1,4 +1,4 @@
-import { FTHM } from "apps/dex/constants/index";
+import { FTHM } from "apps/dex/constants";
 import {
   Currency,
   CurrencyAmount,
