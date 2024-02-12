@@ -65,12 +65,18 @@ const SwapModalHeader: FC<SwapModalHeaderProps> = ({
                 ? theme.primary1
                 : ""
             }
+            data-testid="dex-swapModalHeader-fromAmount"
           >
             {trade.inputAmount.toSignificant(6)}
           </TruncatedText>
         </RowFixed>
         <RowFixed gap={"0px"}>
-          <Text fontSize={24} fontWeight={500} style={{ marginLeft: "10px" }}>
+          <Text
+            fontSize={24}
+            fontWeight={500}
+            style={{ marginLeft: "10px" }}
+            data-testid="dex-swapModalHeader-fromTokenName"
+          >
             {trade.inputAmount.currency.symbol}
           </Text>
         </RowFixed>
@@ -97,12 +103,18 @@ const SwapModalHeader: FC<SwapModalHeaderProps> = ({
                 ? theme.primary1
                 : ""
             }
+            data-testid="dex-swapModalHeader-toAmount"
           >
             {trade.outputAmount.toSignificant(6)}
           </TruncatedText>
         </RowFixed>
         <RowFixed gap={"0px"}>
-          <Text fontSize={24} fontWeight={500} style={{ marginLeft: "10px" }}>
+          <Text
+            fontSize={24}
+            fontWeight={500}
+            style={{ marginLeft: "10px" }}
+            data-testid="dex-swapModalHeader-toTokenName"
+          >
             {trade.outputAmount.currency.symbol}
           </Text>
         </RowFixed>

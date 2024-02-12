@@ -1,13 +1,14 @@
 import { useState, useEffect, useRef, FC, memo } from "react";
 import { createChart, IChartApi } from "lightweight-charts";
+import { usePrevious } from "react-use";
+import { Box, styled } from "@mui/material";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { formattedNum } from "apps/charts/utils";
-import styled from "styled-components";
-import { usePrevious } from "react-use";
-import { Play } from "react-feather";
 import { useDarkModeManager } from "apps/charts/contexts/LocalStorage";
 import { IconWrapper } from "apps/charts/components";
+
+import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
 import dropSrc from "apps/charts/assets/drop.svg";
 import riseSrc from "apps/charts/assets/rise.svg";
 
@@ -18,7 +19,7 @@ export const CHART_TYPES = {
   AREA: "AREA",
 };
 
-const Wrapper = styled.div`
+const Wrapper = styled(Box)`
   position: relative;
 `;
 
@@ -119,11 +120,11 @@ const TradingViewChart: FC<TradingViewChartProps> = (props) => {
         },
         grid: {
           horzLines: {
-            color: "#003CFF",
+            color: "#324567",
             visible: false,
           },
           vertLines: {
-            color: "#003CFF",
+            color: "#324567",
             visible: false,
           },
         },
@@ -136,7 +137,7 @@ const TradingViewChart: FC<TradingViewChartProps> = (props) => {
             visible: true,
             style: 0,
             width: 2,
-            color: "#003CFF",
+            color: "rgba(0, 255, 246, 0.16)",
             labelVisible: false,
           },
         },
@@ -148,7 +149,7 @@ const TradingViewChart: FC<TradingViewChartProps> = (props) => {
       const series =
         type === CHART_TYPES.BAR
           ? chart.addHistogramSeries({
-              color: "#003CFF",
+              color: "#43fff6",
               priceFormat: {
                 type: "volume",
               },
@@ -156,14 +157,14 @@ const TradingViewChart: FC<TradingViewChartProps> = (props) => {
                 top: 0.32,
                 bottom: 0,
               },
-              lineColor: "#003CFF",
+              lineColor: "#324567",
               lineWidth: 3,
             } as any)
           : chart.addAreaSeries({
-              topColor: "#003CFF",
-              bottomColor: "#003CFF",
-              lineColor: "#003CFF",
-              lineWidth: 3,
+              topColor: "#43fff6",
+              bottomColor: "#324567",
+              lineColor: "#43fff6",
+              lineWidth: 1,
             });
 
       series.setData(formattedData);
@@ -189,10 +190,10 @@ const TradingViewChart: FC<TradingViewChartProps> = (props) => {
       // get the title of the chart
       const setLastBarText = () => {
         toolTip.innerHTML = !below800
-          ? `<div style="position: absolute; top: -42px; font-size: 16px; margin: 4px 0px; color: white;">${title} ${
+          ? `<div style="position: absolute; top: -42px; font-size: 16px; margin: 4px 0; color: white;">${title} ${
               type === CHART_TYPES.BAR && !useWeekly ? "(24hr)" : ""
             }</div>` +
-            `<div style="display: flex; justify-content: space-between; align-items: center; font-size: 22px; position: absolute; top: -20px; margin: 4px 0px; color:white" >` +
+            `<div style="display: flex; justify-content: space-between; align-items: center; font-size: 22px; position: absolute; top: -20px; margin: 4px 0; color:white" >` +
             formattedNum(base ?? 0, true) +
             `<span style="
                 padding: 4px 8px;
@@ -289,7 +290,7 @@ ${formattedPercentChange}
     <Wrapper>
       <div style={{ marginTop: "25px" }} ref={ref} id={"test-id" + type} />
       <IconWrapper>
-        <Play
+        <PlayArrowOutlinedIcon
           onClick={() => {
             chartCreated && chartCreated.timeScale().fitContent();
           }}

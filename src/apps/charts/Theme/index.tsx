@@ -116,30 +116,15 @@ export const TYPE = {
 
   light(props: TextProps) {
     return (
-      <TextWrapper fontWeight={400} color={"text4"} fontSize={14} {...props} />
+      <TextWrapper
+        fontWeight={400}
+        color={"#6379a1"}
+        fontSize={14}
+        {...props}
+      />
     );
   },
 };
-
-export const Link = styled.a.attrs({
-  target: "_blank",
-  rel: "noopener noreferrer",
-})`
-  text-decoration: none;
-  cursor: pointer;
-  color: ${({ theme }) => theme.primary1};
-  font-weight: 500;
-  :hover {
-    text-decoration: underline;
-  }
-  :focus {
-    outline: none;
-    text-decoration: underline;
-  }
-  :active {
-    text-decoration: none;
-  }
-`;
 
 export const GlobalStyle = createGlobalStyle`
 .three-line-legend {

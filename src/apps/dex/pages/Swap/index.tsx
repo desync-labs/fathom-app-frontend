@@ -551,7 +551,10 @@ const Swap = () => {
                 <TYPE.main mb="4px">Unsupported Asset</TYPE.main>
               </ButtonPrimary>
             ) : !account ? (
-              <ConnectWalletButton onClick={openConnectorMenu}>
+              <ConnectWalletButton
+                onClick={openConnectorMenu}
+                data-testid="dex-swap-connectWalletButton"
+              >
                 <WalletIcon></WalletIcon>
                 Connect Wallet
               </ConnectWalletButton>
@@ -559,6 +562,7 @@ const Swap = () => {
               <ButtonPrimary
                 disabled={Boolean(wrapInputError)}
                 onClick={onWrap}
+                data-testid="dex-wrap-button"
               >
                 {wrapInputError ??
                   (wrapType === WrapType.WRAP

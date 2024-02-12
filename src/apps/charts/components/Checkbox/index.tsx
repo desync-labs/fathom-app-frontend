@@ -1,12 +1,13 @@
-import styled from "styled-components";
+import { FC, memo } from "react";
+import { styled } from "@mui/material";
 import { TYPE } from "apps/charts/Theme";
 import { RowFixed } from "apps/charts/components/Row";
-import { FC, memo } from "react";
 
-const StyleCheckbox = styled.input`
-  background: ${({ theme }) => theme.bg2};
+const StyleCheckbox = styled("input")`
+  background: transparent;
+  border: 1px solid #253656;
 
-  :before {
+  :checked {
     background: #f35429;
   }
 
