@@ -52,7 +52,7 @@ const INVALID_RESULT: CallResult = {
   data: undefined,
 };
 
-// use this options object
+// use this option object
 export const NEVER_RELOAD: ListenerOptions = {
   blocksPerFetch: Infinity,
 };

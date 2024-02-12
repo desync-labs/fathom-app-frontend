@@ -151,7 +151,7 @@ export default createReducer(initialState, (builder) =>
       removeSerializedPair,
       (state, { payload: { chainId, tokenAAddress, tokenBAddress } }) => {
         if (state.pairs[chainId]) {
-          // just delete both keys if either exists
+          // delete both keys if either exists
           delete state.pairs[chainId][pairKey(tokenAAddress, tokenBAddress)];
           delete state.pairs[chainId][pairKey(tokenBAddress, tokenAAddress)];
         }
