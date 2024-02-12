@@ -193,7 +193,7 @@ const FullPositionCard: FC<PositionCardProps> = ({ pair, border }) => {
   );
   const totalPoolTokens = useTotalSupply(pair.liquidityToken);
 
-  // if staked balance balance provided, add to standard liquidity amount
+  // if staked balance provided, add to standard liquidity amount
   const userPoolBalance = userDefaultPoolBalance;
 
   const poolTokenPercentage =

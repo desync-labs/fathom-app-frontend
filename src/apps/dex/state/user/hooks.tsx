@@ -1,11 +1,8 @@
 import { ChainId, Pair, Token } from "into-the-fathom-swap-sdk";
 import flatMap from "lodash.flatmap";
 import { useCallback, useMemo } from "react";
-import { shallowEqual, useDispatch, useSelector } from "react-redux";
-import {
-  BASES_TO_TRACK_LIQUIDITY_FOR,
-  PINNED_PAIRS,
-} from "apps/dex/constants/index";
+import { useDispatch, useSelector } from "react-redux";
+import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from "apps/dex/constants";
 
 import { useActiveWeb3React } from "apps/dex/hooks";
 import { useAllTokens } from "apps/dex/hooks/Tokens";
@@ -40,21 +37,6 @@ function deserializeToken(serializedToken: SerializedToken): Token {
     serializedToken.symbol,
     serializedToken.name
   );
-}
-
-export function useIsDarkMode(): boolean {
-  const { userDarkMode, matchesDarkMode } = useSelector<
-    AppState,
-    { userDarkMode: boolean | null; matchesDarkMode: boolean }
-  >(
-    ({ user: { matchesDarkMode, userDarkMode } }) => ({
-      userDarkMode,
-      matchesDarkMode,
-    }),
-    shallowEqual
-  );
-
-  return userDarkMode === null ? matchesDarkMode : userDarkMode;
 }
 
 export function useIsExpertMode(): boolean {

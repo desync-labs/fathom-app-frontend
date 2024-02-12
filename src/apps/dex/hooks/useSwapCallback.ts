@@ -245,7 +245,7 @@ export function useSwapCallback(
             const outputAmount = trade.outputAmount.toSignificant(3);
 
             const base = `Swap ${inputAmount} ${inputSymbol} for ${outputAmount} ${outputSymbol}`;
-            const withRecipient =
+            const withVersion =
               recipient === account
                 ? base
                 : `${base} to ${
@@ -253,8 +253,6 @@ export function useSwapCallback(
                       ? shortenAddress(recipientAddressOrName, 4)
                       : recipientAddressOrName
                   }`;
-
-            const withVersion = withRecipient;
 
             addTransaction(response, {
               summary: withVersion,
