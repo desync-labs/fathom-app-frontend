@@ -177,7 +177,7 @@ export const BLOCKED_PRICE_IMPACT_NON_EXPERT: Percent = new Percent(
   BIPS_BASE
 ); // 15%
 
-// used to ensure the user doesn't send so much ETH, so they end up with <.01
+// used to ensure the user doesn't send XDC so much, so they end up with <.01
 export const MIN_XDC: JSBI = JSBI.exponentiate(
   JSBI.BigInt(10),
   JSBI.BigInt(16)

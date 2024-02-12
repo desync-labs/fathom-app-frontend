@@ -99,8 +99,8 @@ function useSwapCallArguments(
   }, [account, allowedSlippage, chainId, deadline, library, recipient, trade]);
 }
 
-// returns a function that will execute a swap, if the parameters are all valid
-// and the user has approved the slippage adjusted input amount for the trade
+// returns a function that will execute a swap if the parameters are all valid,
+// and the user has approved the slippage-adjusted input amount for the trade
 export function useSwapCallback(
   trade: Trade | undefined, // trade to execute, required
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips

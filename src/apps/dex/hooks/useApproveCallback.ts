@@ -47,7 +47,7 @@ export function useApproveCallback(
     if (!amountToApprove || !spender) return ApprovalState.UNKNOWN;
     // In case if we have native token (amount)
     if (amountToApprove.currency === XDC) return ApprovalState.APPROVED;
-    // we might not have enough data to know whether or not we need to approve
+    // we might not have enough data to know whether we need to approve
     if (!currentAllowance) return ApprovalState.UNKNOWN;
 
     // amountToApprove will be defined if currentAllowance is
