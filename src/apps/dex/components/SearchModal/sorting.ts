@@ -2,7 +2,7 @@ import { Token, TokenAmount } from "into-the-fathom-swap-sdk";
 import { useMemo } from "react";
 import { useAllTokenBalances } from "apps/dex/state/wallet/hooks";
 
-// compare two token amounts with highest one coming first
+// compare two token amounts with the highest one coming first
 function balanceComparator(balanceA?: TokenAmount, balanceB?: TokenAmount) {
   if (balanceA && balanceB) {
     return balanceA.greaterThan(balanceB)
@@ -22,7 +22,7 @@ function getTokenComparator(balances: {
   [tokenAddress: string]: TokenAmount | undefined;
 }): (tokenA: Token, tokenB: Token) => number {
   return function sortTokens(tokenA: Token, tokenB: Token): number {
-    // -1 = a is first
+    // -1 = an is first
     // 1 = b is first
 
     // sort by balances

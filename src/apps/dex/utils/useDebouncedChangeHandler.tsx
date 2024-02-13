@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 /**
- * Easy way to debounce the handling of a rapidly changing value, e.g. a changing slider input
+ * Easy way to debounce the handling of a rapidly changing value, e.g., a changing slider input
  * @param value value that is rapidly changing
  * @param onChange change handler that should receive the debounced updates to the value
  * @param debouncedMs how long we should wait for changes to be applied
