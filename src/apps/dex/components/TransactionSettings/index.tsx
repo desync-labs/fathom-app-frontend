@@ -1,12 +1,11 @@
-import { useState, useRef, useContext, FC } from "react";
-import styled, { ThemeContext } from "styled-components";
+import { useState, useRef, FC } from "react";
+import { darken } from "polished";
+import { styled } from "@mui/material";
 
 import QuestionHelper from "apps/dex/components/QuestionHelper";
 import { TYPE } from "apps/dex/theme";
 import { AutoColumn } from "apps/dex/components/Column";
 import { RowBetween, RowFixed } from "apps/dex/components/Row";
-
-import { darken } from "polished";
 
 enum SlippageError {
   InvalidInput = "InvalidInput",
@@ -18,22 +17,22 @@ enum DeadlineError {
   InvalidInput = "InvalidInput",
 }
 
-const FancyButton = styled.button`
-  color: ${({ theme }) => theme.text1};
+const FancyButton = styled("button")`
+  color: #fff;
   align-items: center;
   height: 2rem;
   border-radius: 36px;
   font-size: 1rem;
   width: auto;
   min-width: 3.5rem;
-  border: 1px solid ${({ theme }) => theme.bg3};
+  border: 1px solid #43fff6;
   outline: none;
-  background: ${({ theme }) => theme.bg1};
+  background: #131f35;
   :hover {
-    border: 1px solid ${({ theme }) => theme.bg4};
+    border: 1px solid #565a69;
   }
   :focus {
-    border: 1px solid ${({ theme }) => theme.primary1};
+    border: 1px solid #253656;
   }
 `;
 
@@ -42,12 +41,12 @@ const Option = styled(FancyButton)<{ active: boolean }>`
   :hover {
     cursor: pointer;
   }
-  background-color: ${({ active, theme }) => active && theme.primary1};
-  color: ${({ active, theme }) => (active ? theme.white : theme.text1)};
+  background-color: ${({ active }) => active && "#253656"};
+  color: #fff;
 `;
 
-const Input = styled.input`
-  background: ${({ theme }) => theme.bg1};
+const Input = styled("input")`
+  background: #131f35;
   font-size: 16px;
   width: auto;
   outline: none;
@@ -55,7 +54,7 @@ const Input = styled.input`
   &::-webkit-inner-spin-button {
     -webkit-appearance: none;
   }
-  color: ${({ theme, color }) => (color === "red" ? theme.red1 : theme.text1)};
+  color: ${({ color }) => (color === "red" ? "#FD4040" : "#fff")};
   text-align: right;
 `;
 
@@ -67,14 +66,12 @@ const OptionCustom = styled(FancyButton)<{
   position: relative;
   padding: 0 0.75rem;
   flex: 1;
-  border: ${({ theme, active, warning }) =>
-    active && `1px solid ${warning ? theme.red1 : theme.primary1}`};
+  border: ${({ active, warning }) =>
+    active && `1px solid ${warning ? "#FD4040" : "#253656"}`};
   :hover {
-    border: ${({ theme, active, warning }) =>
+    border: ${({ active, warning }) =>
       active &&
-      `1px solid ${
-        warning ? darken(0.1, theme.red1) : darken(0.1, theme.primary1)
-      }`};
+      `1px solid ${warning ? darken(0.1, "#FD4040") : darken(0.1, "#253656")}`};
   }
 
   input {
@@ -85,11 +82,11 @@ const OptionCustom = styled(FancyButton)<{
   }
 `;
 
-const SlippageEmojiContainer = styled.span`
+const SlippageEmojiContainer = styled("span")`
   color: #f3841e;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    display: none;  
-  `}
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    display: none;
+  }
 `;
 
 export interface SlippageTabsProps {
@@ -105,8 +102,6 @@ const SlippageTabs: FC<SlippageTabsProps> = ({
   deadline,
   setDeadline,
 }) => {
-  const theme = useContext(ThemeContext);
-
   const inputRef = useRef<HTMLInputElement>();
 
   const [slippageInput, setSlippageInput] = useState("");
@@ -164,7 +159,7 @@ const SlippageTabs: FC<SlippageTabsProps> = ({
     <AutoColumn gap="md">
       <AutoColumn gap="sm">
         <RowFixed>
-          <TYPE.black fontWeight={400} fontSize={14} color={theme?.text2}>
+          <TYPE.black fontWeight={400} fontSize={14} color={"#4F658C"}>
             Slippage tolerance
           </TYPE.black>
           <QuestionHelper text="Your transaction will revert if the price changes unfavorably by more than this percentage." />
@@ -249,7 +244,7 @@ const SlippageTabs: FC<SlippageTabsProps> = ({
 
       <AutoColumn gap="sm">
         <RowFixed>
-          <TYPE.black fontSize={14} fontWeight={400} color={theme?.text2}>
+          <TYPE.black fontSize={14} fontWeight={400} color={"#4F658C"}>
             Transaction deadline
           </TYPE.black>
           <QuestionHelper text="Your transaction will revert if it is pending for more than this long." />

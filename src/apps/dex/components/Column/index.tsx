@@ -1,16 +1,16 @@
-import styled from "styled-components";
+import { Box, styled } from "@mui/material";
 
-const Column = styled.div`
+const Column = styled(Box)`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
 `;
 export const ColumnCenter = styled(Column)`
-  width: 100%;
   align-items: center;
+  width: 100%;
 `;
 
-export const AutoColumn = styled.div<{
+export const AutoColumn = styled(Box)<{
   gap?: "sm" | "md" | "lg" | string;
   justify?:
     | "stretch"

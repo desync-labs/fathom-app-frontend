@@ -1,49 +1,49 @@
 import { FC, useState } from "react";
+import { Box, styled, Typography } from "@mui/material";
+import { TokenList } from "@uniswap/token-lists";
+import { Token } from "into-the-fathom-swap-sdk";
+
 import {
   PaddedColumn,
   Separator,
 } from "apps/dex/components/SearchModal/styleds";
 import { RowBetween } from "apps/dex/components/Row";
-import { ArrowLeft } from "react-feather";
-import { Text } from "rebass";
-import { CloseIcon } from "apps/dex/theme";
-import styled from "styled-components";
-import { Token } from "into-the-fathom-swap-sdk";
 import { ManageLists } from "apps/dex/components/SearchModal/ManageLists";
 import ManageTokens from "apps/dex/components/SearchModal/ManageTokens";
-import { TokenList } from "@uniswap/token-lists";
 import { CurrencyModalView } from "apps/dex/components/SearchModal/CurrencySearchModal";
 
-const Wrapper = styled.div`
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { CloseIcon } from "apps/dex/theme";
+
+const Wrapper = styled(Box)`
   width: 100%;
   position: relative;
   padding-bottom: 80px;
 `;
 
 const ToggleWrapper = styled(RowBetween)`
-  background-color: ${({ theme }) => theme.bg2};
-  border-radius: 12px;
+  background-color: #061023;
+  border-radius: 8px;
   padding: 6px;
 `;
 
-const ToggleOption = styled.div<{ active?: boolean }>`
+const ToggleOption = styled(Box)<{ active?: boolean }>`
   width: 48%;
   padding: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 12px;
+  border-radius: 8px;
   font-weight: 600;
-  background-color: ${({ theme, active }) => (active ? theme.bg3 : theme.bg1)};
-  color: ${({ theme, active }) => (active ? theme.text3 : theme.text2)};
+  background-color: ${({ active }) => (active ? "#43FFF6" : "#131F35")};
+  color: ${({ active }) => (active ? "#00332F" : "#4F658C")};
   user-select: none;
-  border: 1px solid ${({ theme, active }) => (active ? theme.bg3 : theme.bg1)};
+  border: 1px solid ${({ active }) => (active ? "#43FFF6" : "#131F35")};
 
   :hover {
-    background-color: ${({ theme, active }) =>
-      active ? "transparent" : theme.bg1};
-    color: ${({ theme, active }) => (active ? theme.bg3 : theme.text2)};
-    border: 1px solid ${({ theme }) => theme.bg3};
+    background-color: ${({ active }) => (active ? "transparent" : "#131F35")};
+    color: ${({ active }) => (active ? "#43FFF6" : "#4F658C")};
+    border: 1px solid #43fff6;
     cursor: pointer;
     opacity: 0.7;
   }
@@ -71,13 +71,13 @@ const Manage: FC<ManageProps> = ({
     <Wrapper>
       <PaddedColumn>
         <RowBetween>
-          <ArrowLeft
+          <ArrowBackIcon
             style={{ cursor: "pointer" }}
             onClick={() => setModalView(CurrencyModalView.search)}
           />
-          <Text fontWeight={500} fontSize={20}>
+          <Typography fontWeight={500} fontSize={20}>
             Manage
-          </Text>
+          </Typography>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
       </PaddedColumn>

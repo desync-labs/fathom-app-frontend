@@ -1,9 +1,9 @@
+import { FC } from "react";
 import { Price } from "into-the-fathom-swap-sdk";
-import { FC, useContext } from "react";
-import { Repeat } from "react-feather";
-import { Text } from "rebass";
-import { ThemeContext } from "styled-components";
+import { Typography } from "@mui/material";
 import { StyledBalanceMaxMini } from "apps/dex/components/swap/styleds";
+
+import RepeatRoundedIcon from "@mui/icons-material/RepeatRounded";
 
 interface TradePriceProps {
   price?: Price;
@@ -16,8 +16,6 @@ const TradePrice: FC<TradePriceProps> = ({
   showInverted,
   setShowInverted,
 }) => {
-  const theme = useContext(ThemeContext);
-
   const formattedPrice = showInverted
     ? price?.toSignificant(6)
     : price?.invert()?.toSignificant(6);
@@ -28,10 +26,10 @@ const TradePrice: FC<TradePriceProps> = ({
     : `${price?.baseCurrency?.symbol} per ${price?.quoteCurrency?.symbol}`;
 
   return (
-    <Text
+    <Typography
       fontWeight={500}
       fontSize={14}
-      color={theme?.text2}
+      color={"#4F658C"}
       style={{
         justifyContent: "center",
         alignItems: "center",
@@ -42,13 +40,13 @@ const TradePrice: FC<TradePriceProps> = ({
         <>
           {formattedPrice ?? "-"} {label}
           <StyledBalanceMaxMini onClick={() => setShowInverted(!showInverted)}>
-            <Repeat size={14} />
+            <RepeatRoundedIcon sx={{ width: "18px", height: "18px" }} />
           </StyledBalanceMaxMini>
         </>
       ) : (
         "-"
       )}
-    </Text>
+    </Typography>
   );
 };
 

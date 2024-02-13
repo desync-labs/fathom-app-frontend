@@ -1,19 +1,19 @@
 import { transparentize } from "polished";
-import { AlertTriangle } from "react-feather";
-import styled, { css } from "styled-components";
-import { Text } from "rebass";
+import { Box, css, styled, Typography } from "@mui/material";
 import { AutoColumn } from "apps/dex/components/Column";
 
-export const Wrapper = styled.div`
+import WarningAmberIcon from "@mui/icons-material/WarningAmber";
+
+export const Wrapper = styled(Box)`
   position: relative;
   padding: 1rem;
 `;
 
-export const ArrowWrapper = styled.div<{ clickable: boolean }>`
+export const ArrowWrapper = styled(Box)<{ clickable: boolean }>`
   padding: 2px;
   z-index: 10;
   display: flex;
-  background-color: ${({ theme }) => theme.bg1};
+  background-color: #131f35;
   align-items: center;
   width: 36px;
   height: 36px;
@@ -29,7 +29,7 @@ export const ArrowWrapper = styled.div<{ clickable: boolean }>`
       : null}
 `;
 
-export const ArrowDownWrapped = styled.div`
+export const ArrowDownWrapped = styled(Box)`
   width: 30px;
   height: 30px;
   background: #6379a1;
@@ -39,31 +39,31 @@ export const ArrowDownWrapped = styled.div`
   justify-content: center;
 `;
 
-export const SectionBreak = styled.div`
+export const SectionBreak = styled(Box)`
   height: 1px;
   width: 100%;
   background-color: #2c3f59;
 `;
 
-export const BottomGrouping = styled.div`
+export const BottomGrouping = styled(Box)`
   margin-top: 1rem;
 `;
 
-export const ErrorText = styled(Text)<{ severity?: 0 | 1 | 2 | 3 | 4 }>`
-  color: ${({ theme, severity }) =>
+export const ErrorText = styled(Typography)<{ severity?: 0 | 1 | 2 | 3 | 4 }>`
+  color: ${({ severity }) =>
     severity === 3 || severity === 4
-      ? theme.red1
+      ? "#FD4040"
       : severity === 2
-      ? theme.yellow2
+      ? "#F3841E"
       : severity === 1
-      ? theme.text1
-      : theme.green1};
+      ? "#fff"
+      : "#27AE60"};
 `;
 
-export const StyledBalanceMaxMini = styled.button`
+export const StyledBalanceMaxMini = styled("button")`
   height: 22px;
   width: 22px;
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: #061023;
   border: none;
   border-radius: 50%;
   padding: 0.2rem;
@@ -71,29 +71,29 @@ export const StyledBalanceMaxMini = styled.button`
   font-weight: 400;
   margin-left: 0.4rem;
   cursor: pointer;
-  color: ${({ theme }) => theme.text2};
+  color: #4f658c;
   display: flex;
   justify-content: center;
   align-items: center;
   float: right;
 
   :hover {
-    background-color: ${({ theme }) => theme.bg1};
+    background-color: #131f35;
   }
   :focus {
-    background-color: ${({ theme }) => theme.bg1};
+    background-color: #131f35;
     outline: none;
   }
 `;
 
-export const TruncatedText = styled(Text)`
+export const TruncatedText = styled(Typography)`
   text-overflow: ellipsis;
   width: 220px;
   overflow: hidden;
 `;
 
 // styles
-export const Dots = styled.span`
+export const Dots = styled("span")`
   &::after {
     display: inline-block;
     animation: ellipsis 1.25s infinite;
@@ -114,8 +114,8 @@ export const Dots = styled.span`
   }
 `;
 
-const SwapCallbackErrorInner = styled.div`
-  background-color: ${({ theme }) => transparentize(0.9, theme.red1)};
+const SwapCallbackErrorInner = styled(Box)`
+  background-color: ${transparentize(0.9, "#FD4040")};
   border-radius: 1rem;
   display: flex;
   align-items: center;
@@ -123,7 +123,7 @@ const SwapCallbackErrorInner = styled.div`
   width: 100%;
   padding: 3rem 1.25rem 1rem 1rem;
   margin-top: -2rem;
-  color: ${({ theme }) => theme.red1};
+  color: #fd4040;
   z-index: -1;
   p {
     padding: 0;
@@ -132,8 +132,8 @@ const SwapCallbackErrorInner = styled.div`
   }
 `;
 
-const SwapCallbackErrorInnerAlertTriangle = styled.div`
-  background-color: ${({ theme }) => transparentize(0.9, theme.red1)};
+const SwapCallbackErrorInnerAlertTriangle = styled(Box)`
+  background-color: ${transparentize(0.9, "#FD4040")};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -147,7 +147,7 @@ export function SwapCallbackError({ error }: { error: string }) {
   return (
     <SwapCallbackErrorInner>
       <SwapCallbackErrorInnerAlertTriangle>
-        <AlertTriangle size={24} />
+        <WarningAmberIcon sx={{ width: "24px", height: "24px" }} />
       </SwapCallbackErrorInnerAlertTriangle>
       <p>{error}</p>
     </SwapCallbackErrorInner>
@@ -155,8 +155,8 @@ export function SwapCallbackError({ error }: { error: string }) {
 }
 
 export const SwapShowAcceptChanges = styled(AutoColumn)`
-  background-color: ${({ theme }) => transparentize(0.9, theme.primary1)};
-  color: ${({ theme }) => theme.primary1};
+  background-color: ${transparentize(0.9, "#253656")};
+  color: #253656;
   padding: 0.5rem;
   border-radius: 12px;
   margin-top: 8px;

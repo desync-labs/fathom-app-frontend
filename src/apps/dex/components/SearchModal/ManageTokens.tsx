@@ -1,4 +1,7 @@
 import { useRef, RefObject, useCallback, useState, useMemo, FC } from "react";
+import { Token } from "into-the-fathom-swap-sdk";
+import { Box, styled } from "@mui/material";
+
 import Column from "apps/dex/components/Column";
 import {
   PaddedColumn,
@@ -14,36 +17,32 @@ import {
   ExternalLink,
 } from "apps/dex/theme";
 import { useToken } from "apps/dex/hooks/Tokens";
-import styled from "styled-components";
 import {
   useUserAddedTokens,
   useRemoveUserAddedToken,
 } from "apps/dex/state/user/hooks";
-import { Token } from "into-the-fathom-swap-sdk";
 import CurrencyLogo from "apps/dex/components/CurrencyLogo";
 import { getBlockScanLink, isAddress } from "apps/dex/utils";
 import { useActiveWeb3React } from "apps/dex/hooks";
 import Card from "apps/dex/components/Card";
 import ImportRow from "apps/dex/components/SearchModal/ImportRow";
-import useTheme from "apps/dex/hooks/useTheme";
-
 import { CurrencyModalView } from "apps/dex/components/SearchModal/CurrencySearchModal";
 
-const Wrapper = styled.div`
+const Wrapper = styled(Box)`
   width: 100%;
   height: calc(100% - 60px);
   position: relative;
   padding-bottom: 60px;
 `;
 
-const Footer = styled.div`
+const Footer = styled(Box)`
   position: absolute;
   bottom: 0;
   width: 100%;
   border-radius: 20px;
   border-top-right-radius: 0;
   border-top-left-radius: 0;
-  border-top: 1px solid ${({ theme }) => theme.bg2};
+  border-top: 1px solid #061023;
   padding: 20px;
   text-align: center;
 `;
@@ -60,7 +59,6 @@ const ManageTokens: FC<ManageTokensProps> = ({
   const { chainId } = useActiveWeb3React();
 
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const theme = useTheme();
 
   // manage focus on modal show
   const inputRef = useRef<HTMLInputElement>();
@@ -101,11 +99,11 @@ const ManageTokens: FC<ManageTokensProps> = ({
               </TYPE.main>
             </ExternalLink>
           </RowFixed>
-          <RowFixed>
-            <TrashIcon onClick={() => removeToken(chainId, token.address)} />
+          <RowFixed alignItems={"center"}>
             <ExternalLinkIcon
               href={getBlockScanLink(chainId, token.address, "address")}
             />
+            <TrashIcon onClick={() => removeToken(chainId, token.address)} />
           </RowFixed>
         </RowBetween>
       ))
@@ -131,7 +129,7 @@ const ManageTokens: FC<ManageTokensProps> = ({
             <TYPE.error error={true}>Enter valid token address</TYPE.error>
           )}
           {searchToken && (
-            <Card backgroundColor={theme?.bg2} padding="10px 0">
+            <Card bgcolor="#061023" padding="10px 0">
               <ImportRow
                 token={searchToken}
                 showImportView={() =>

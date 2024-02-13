@@ -1,23 +1,23 @@
 import { useState, useEffect } from "react";
-import styled, { keyframes } from "styled-components";
-import { TYPE, ExternalLink } from "apps/dex/theme";
+import { Box, keyframes, styled } from "@mui/material";
 
+import { TYPE, ExternalLink } from "apps/dex/theme";
 import { useBlockNumber } from "apps/dex/state/application/hooks";
 import { getBlockScanLink } from "apps/dex/utils";
 import { useActiveWeb3React } from "apps/dex/hooks";
 
-const StyledPolling = styled.div`
+const StyledPolling = styled(Box)`
   position: fixed;
   display: flex;
   align-items: center;
   right: 0;
   bottom: 0;
   padding: 1rem;
-  color: ${({ theme }) => theme.green1};
+  color: #27ae60;
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.breakpoints.down("md")} {
     display: none;
-  `}
+  }
 `;
 const StyledPollingNumber = styled(TYPE.small)<{
   breathe: boolean;
@@ -29,7 +29,7 @@ const StyledPollingNumber = styled(TYPE.small)<{
     opacity: 1;
   }
 `;
-const StyledPollingDot = styled.div`
+const StyledPollingDot = styled(Box)`
   width: 8px;
   height: 8px;
   min-height: 8px;
@@ -37,7 +37,7 @@ const StyledPollingDot = styled.div`
   margin-left: 0.5rem;
   border-radius: 50%;
   position: relative;
-  background-color: ${({ theme }) => theme.green1};
+  background-color: #27ae60;
 `;
 
 const rotate360 = keyframes`
@@ -49,14 +49,14 @@ const rotate360 = keyframes`
   }
 `;
 
-const Spinner = styled.div`
+const Spinner = styled(Box)`
   animation: ${rotate360} 1s cubic-bezier(0.83, 0, 0.17, 1) infinite;
   transform: translateZ(0);
 
   border-top: 1px solid transparent;
   border-right: 1px solid transparent;
   border-bottom: 1px solid transparent;
-  border-left: 2px solid ${({ theme }) => theme.green1};
+  border-left: 2px solid #27ae60;
   background: transparent;
   width: 14px;
   height: 14px;

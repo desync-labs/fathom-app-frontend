@@ -2,21 +2,17 @@ import {
   memo,
   useCallback,
   useMemo,
-  useRef,
+  MouseEvent,
   useState,
   useEffect,
   FC,
 } from "react";
-import { Settings, CheckCircle } from "react-feather";
 import ReactGA from "react-ga4";
-import { usePopper } from "react-popper";
 import { useDispatch, useSelector } from "react-redux";
-import styled from "styled-components";
-import { useFetchListCallback } from "apps/dex/hooks/useFetchListCallback";
-import { useOnClickOutside } from "apps/dex/hooks/useOnClickOutside";
+import { Box, IconButton, Popover, styled } from "@mui/material";
 import { TokenList } from "@uniswap/token-lists";
 
-import useToggle from "apps/dex/hooks/useToggle";
+import { useFetchListCallback } from "apps/dex/hooks/useFetchListCallback";
 import { AppDispatch, AppState } from "apps/dex/state";
 import {
   acceptListUpdate,
@@ -38,8 +34,7 @@ import {
 import listVersionLabel from "apps/dex/utils/listVersionLabel";
 import { parseENSAddress } from "apps/dex/utils/parseENSAddress";
 import uriToHttp from "apps/dex/utils/uriToHttp";
-import { ButtonEmpty, ButtonPrimary } from "apps/dex/components/Button";
-
+import { ButtonPrimary } from "apps/dex/components/Button";
 import Column, { AutoColumn } from "apps/dex/components/Column";
 import ListLogo from "apps/dex/components/ListLogo";
 import Row, { RowFixed, RowBetween } from "apps/dex/components/Row";
@@ -50,11 +45,13 @@ import {
   SeparatorDark,
 } from "apps/dex/components/SearchModal/styleds";
 import { useListColor } from "apps/dex/hooks/useColor";
-import useTheme from "apps/dex/hooks/useTheme";
 import ListToggle from "apps/dex/components/Toggle/ListToggle";
 import Card from "apps/dex/components/Card";
 import { CurrencyModalView } from "apps/dex/components/SearchModal/CurrencySearchModal";
 import { SUPPORTED_LIST_URLS } from "apps/dex/constants/lists";
+
+import SettingsIcon from "@mui/icons-material/Settings";
+import TaskAltIcon from "@mui/icons-material/TaskAlt";
 
 const Wrapper = styled(Column)`
   width: 100%;
@@ -67,26 +64,7 @@ const UnpaddedLinkStyledButton = styled(LinkStyledButton)`
   opacity: ${({ disabled }) => (disabled ? "0.4" : "1")};
 `;
 
-const PopoverContainer = styled.div<{ show: boolean }>`
-  z-index: 100;
-  visibility: ${(props) => (props.show ? "visible" : "hidden")};
-  opacity: ${(props) => (props.show ? 1 : 0)};
-  transition: visibility 150ms linear, opacity 150ms linear;
-  background: ${({ theme }) => theme.bg2};
-  border: 1px solid ${({ theme }) => theme.bg3};
-  box-shadow: 0 0 1px rgba(0, 0, 0, 0.01), 0 4px 8px rgba(0, 0, 0, 0.04),
-    0 16px 24px rgba(0, 0, 0, 0.04), 0 24px 32px rgba(0, 0, 0, 0.01);
-  color: ${({ theme }) => theme.text2};
-  border-radius: 0.5rem;
-  padding: 1rem;
-  display: grid;
-  grid-template-rows: 1fr;
-  grid-gap: 8px;
-  font-size: 1rem;
-  text-align: left;
-`;
-
-const StyledMenu = styled.div`
+const StyledMenu = styled(Box)`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -94,26 +72,34 @@ const StyledMenu = styled.div`
   border: none;
 `;
 
-const StyledTitleText = styled.div<{ active: boolean }>`
+const StyledTitleText = styled(Box)<{ active: boolean }>`
   font-size: 16px;
   overflow: hidden;
   text-overflow: ellipsis;
   font-weight: 600;
-  color: ${({ theme, active }) => (active ? theme.white : theme.text2)};
+  color: ${({ active }) => (active ? "#ffffff" : "#4F658C")};
 `;
 
 const StyledListUrlText = styled(TYPE.main)<{ active: boolean }>`
   font-size: 12px;
-  color: ${({ theme, active }) => (active ? theme.white : theme.text2)};
+  color: ${({ active }) => (active ? "#ffffff" : "#4F658C")};
 `;
 
 const RowWrapper = styled(Row)<{ bgColor: string; active: boolean }>`
-  background-color: ${({ bgColor, active, theme }) =>
-    active ? bgColor ?? "transparent" : theme.bg2};
+  background-color: ${({ bgColor, active }) =>
+    active ? bgColor ?? "transparent" : "#061023"};
   transition: 200ms;
   align-items: center;
   padding: 1rem;
-  border-radius: 20px;
+  border-radius: 8px;
+`;
+
+const PopoverWrapper = styled(Box)`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background-color: #253656;
+  padding: 16px;
 `;
 
 function listUrlRowHTMLId(listUrl: string) {
@@ -127,22 +113,20 @@ const ListRow: FC<{ listUrl: string }> = memo(({ listUrl }) => {
   const dispatch = useDispatch<AppDispatch>();
   const { current: list, pendingUpdate: pending } = listsByUrl[listUrl];
 
-  const theme = useTheme();
   const listColor = useListColor(list?.logoURI);
   const isActive = useIsListActive(listUrl);
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
-  const [open, toggle] = useToggle(false);
-  const node = useRef<HTMLDivElement>();
-  const [referenceElement, setReferenceElement] = useState<HTMLDivElement>();
-  const [popperElement, setPopperElement] = useState<HTMLDivElement>();
+  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
 
-  const { styles, attributes } = usePopper(referenceElement, popperElement, {
-    placement: "auto",
-    strategy: "fixed",
-    modifiers: [{ name: "offset", options: { offset: [8, 8] } }],
-  });
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
-  useOnClickOutside(node, open ? toggle : undefined);
+  const open = Boolean(anchorEl);
+  const id = open ? "settings_popover" : undefined;
 
   const handleAcceptListUpdate = useCallback(() => {
     if (!pending) return;
@@ -219,20 +203,27 @@ const ListRow: FC<{ listUrl: string }> = memo(({ listUrl }) => {
           <StyledListUrlText active={isActive} mr="6px">
             {list.tokens.length} tokens
           </StyledListUrlText>
-          <StyledMenu ref={node as any}>
-            <ButtonEmpty onClick={toggle} ref={setReferenceElement} padding="0">
-              <Settings
-                stroke={isActive ? theme?.bg1 : theme?.text1}
-                size={12}
+          <StyledMenu>
+            <IconButton onClick={handleClick}>
+              <SettingsIcon
+                sx={{
+                  width: "12px",
+                  height: "12px",
+                  color: isActive ? "#131F35" : "#ffffff",
+                }}
               />
-            </ButtonEmpty>
-            {open && (
-              <PopoverContainer
-                show={true}
-                ref={setPopperElement as any}
-                style={styles.popper}
-                {...attributes.popper}
-              >
+            </IconButton>
+            <Popover
+              id={id}
+              open={open}
+              anchorEl={anchorEl}
+              onClose={handleClose}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+            >
+              <PopoverWrapper>
                 <div>{list && listVersionLabel(list.version)}</div>
                 <SeparatorDark />
                 <ExternalLink
@@ -251,8 +242,8 @@ const ListRow: FC<{ listUrl: string }> = memo(({ listUrl }) => {
                     Update list
                   </UnpaddedLinkStyledButton>
                 )}
-              </PopoverContainer>
-            )}
+              </PopoverWrapper>
+            </Popover>
           </StyledMenu>
         </RowFixed>
       </Column>
@@ -267,11 +258,10 @@ const ListRow: FC<{ listUrl: string }> = memo(({ listUrl }) => {
   );
 });
 
-const ListContainer = styled.div`
-  padding: 1rem;
+const ListContainer = styled(Box)`
   height: 100%;
   overflow: auto;
-  padding-bottom: 80px;
+  padding: 1rem 1rem 80px;
 `;
 
 export function ManageLists({
@@ -283,8 +273,6 @@ export function ManageLists({
   setImportList: (list: TokenList) => void;
   setListUrl: (url: string) => void;
 }) {
-  const theme = useTheme();
-
   const [listUrlInput, setListUrlInput] = useState<string>("");
 
   const lists = useAllLists();
@@ -405,7 +393,7 @@ export function ManageLists({
       </PaddedColumn>
       {tempList && (
         <PaddedColumn style={{ paddingTop: 0 }}>
-          <Card backgroundColor={theme?.bg2} padding="12px 20px">
+          <Card bgcolor={"#061023"} padding="12px 20px">
             <RowBetween>
               <RowFixed>
                 {tempList.logoURI && (
@@ -421,13 +409,14 @@ export function ManageLists({
               {isImported ? (
                 <RowFixed>
                   <IconWrapper
-                    stroke={theme?.text2}
+                    color="#4F658C"
+                    stroke="transparent"
                     size="16px"
                     marginRight={"10px"}
                   >
-                    <CheckCircle />
+                    <TaskAltIcon />
                   </IconWrapper>
-                  <TYPE.body color={theme?.text2}>Loaded</TYPE.body>
+                  <TYPE.body color={"#4F658C"}>Loaded</TYPE.body>
                 </RowFixed>
               ) : (
                 <ButtonPrimary
