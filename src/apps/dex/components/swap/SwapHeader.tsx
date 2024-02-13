@@ -1,20 +1,20 @@
-import styled from "styled-components";
+import { Box, styled } from "@mui/material";
 import Settings from "apps/dex/components/Settings";
 import { RowBetween } from "apps/dex/components/Row";
 import { TYPE } from "apps/dex/theme";
 
-const StyledSwapHeader = styled.div`
+const StyledSwapHeader = styled(Box)`
   padding: 1.5rem 1rem 0.5rem 1.5rem;
   width: 100%;
   max-width: 600px;
-  color: ${({ theme }) => theme.text2};
+  color: #4f658c;
 `;
 
-const SwapHeaderRow = styled.div`
+const SwapHeaderRow = styled(Box)`
   font-weight: 600;
   font-size: 20px;
   line-height: 24px;
-  color: ${({ theme }) => theme.white};
+  color: #ffffff;
 `;
 
 const SwapHeader = () => {

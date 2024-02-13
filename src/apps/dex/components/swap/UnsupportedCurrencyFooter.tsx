@@ -1,5 +1,6 @@
 import { FC, useState } from "react";
-import styled from "styled-components";
+import { Currency, Token } from "into-the-fathom-swap-sdk";
+import { Box, styled } from "@mui/material";
 import { TYPE, CloseIcon, ExternalLink } from "apps/dex/theme";
 import { ButtonEmpty } from "apps/dex/components/Button";
 import Modal from "apps/dex/components/Modal";
@@ -9,11 +10,10 @@ import { AutoColumn } from "apps/dex/components/Column";
 import CurrencyLogo from "apps/dex/components/CurrencyLogo";
 import { useActiveWeb3React } from "apps/dex/hooks";
 import { getBlockScanLink } from "apps/dex/utils";
-import { Currency, Token } from "into-the-fathom-swap-sdk";
 import { wrappedCurrency } from "apps/dex/utils/wrappedCurrency";
 import { useSupportedTokens } from "apps/dex/hooks/Tokens";
 
-const DetailsFooter = styled.div<{ show: boolean }>`
+const DetailsFooter = styled(Box)<{ show: boolean }>`
   padding-top: ${({ show }) => (show ? "calc(16px + 2rem)" : "0")};
   padding-bottom: ${({ show }) => (show ? "20px" : "0")};
   margin-top: ${({ show }) => (show ? "-2rem" : "0")};
@@ -21,8 +21,8 @@ const DetailsFooter = styled.div<{ show: boolean }>`
   max-width: 400px;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
-  color: ${({ theme }) => theme.text2};
-  background-color: ${({ theme }) => theme.advancedBG};
+  color: #4f658c;
+  background-color: rgba(0, 0, 0, 0.1);
   z-index: -1;
 
   transform: ${({ show }) => (show ? "translateY(0%)" : "translateY(-100%)")};
@@ -33,9 +33,9 @@ const DetailsFooter = styled.div<{ show: boolean }>`
 const AddressText = styled(TYPE.blue)`
   font-size: 12px;
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.breakpoints.down("sm")} {
     font-size: 10px;
-`}
+  }
 `;
 
 type UnsupportedCurrencyFooterProps = {

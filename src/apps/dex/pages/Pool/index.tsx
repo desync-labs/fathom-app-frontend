@@ -1,18 +1,15 @@
 import { useMemo } from "react";
-import styled from "styled-components";
 import { Pair } from "into-the-fathom-swap-sdk";
-import { Link } from "react-router-dom";
-import { SwapPoolTabs } from "apps/dex/components/NavigationTabs";
+import { Box, styled, Typography } from "@mui/material";
 
+import { SwapPoolTabs } from "apps/dex/components/NavigationTabs";
 import FullPositionCard from "apps/dex/components/PositionCard";
 import { useTokenBalancesWithLoadingIndicator } from "apps/dex/state/wallet/hooks";
-import { StyledInternalLink, TYPE, HideSmall } from "apps/dex/theme";
-import { Text } from "rebass";
+import { HideSmall, StyledInternalLink, TYPE } from "apps/dex/theme";
 import Card from "apps/dex/components/Card";
 import { RowBetween, RowFixed } from "apps/dex/components/Row";
 import { ButtonPrimary, ButtonSecondary } from "apps/dex/components/Button";
 import { AutoColumn } from "apps/dex/components/Column";
-
 import { useActiveWeb3React } from "apps/dex/hooks";
 import { usePairs } from "apps/dex/data/Reserves";
 import {
@@ -21,10 +18,10 @@ import {
 } from "apps/dex/state/user/hooks";
 import { Dots } from "apps/dex/components/swap/styleds";
 import {
+  CardBGImage,
+  CardNoise,
   CardSection,
   DataCard,
-  CardNoise,
-  CardBGImage,
 } from "apps/dex/components/earn/styled";
 
 const PageWrapper = styled(AutoColumn)`
@@ -33,44 +30,44 @@ const PageWrapper = styled(AutoColumn)`
 `;
 
 const VoteCard = styled(DataCard)`
-  background: ${({ theme }) => theme.bg7};
+  background: #00fff9;
   overflow: hidden;
 `;
 
 const TitleRow = styled(RowBetween)`
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.breakpoints.down("sm")} {
     flex-wrap: wrap;
     gap: 12px;
     width: 100%;
     flex-direction: column-reverse;
-  `};
+  }
 `;
 
 const ButtonRow = styled(RowFixed)`
   gap: 8px;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.breakpoints.down("sm")} {
     width: 100%;
     flex-direction: row-reverse;
     justify-content: space-between;
-  `};
+  }
 `;
 
 const ResponsiveButtonPrimary = styled(ButtonPrimary)`
   width: fit-content;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.breakpoints.down("sm")} {
     width: 48%;
-  `};
+  }
 `;
 
 const ResponsiveButtonSecondary = styled(ButtonSecondary)`
   width: fit-content;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.breakpoints.down("sm")} {
     width: 48%;
-  `};
+  }
 `;
 
-const EmptyProposals = styled.div`
-  border: 1px solid ${({ theme }) => theme.text4};
+const EmptyProposals = styled(Box)`
+  border: 1px solid #565a69;
   padding: 16px 12px;
   border-radius: 12px;
   display: flex;
@@ -122,9 +119,6 @@ const Pool = () => {
     .map(([, pair]) => pair)
     .filter((v2Pair): v2Pair is Pair => Boolean(v2Pair));
 
-  // remove any pairs that also are included in pairs with stake in mining pool
-  const v2PairsWithoutStakedAmount = allV2PairsWithLiquidity;
-
   return (
     <>
       <PageWrapper>
@@ -162,22 +156,20 @@ const Pool = () => {
               </HideSmall>
               <ButtonRow>
                 <ResponsiveButtonSecondary
-                  as={Link}
                   padding="6px 8px"
-                  to={"/swap/create/XDC"}
+                  href={"#/swap/create/XDC"}
                 >
                   Create a pair
                 </ResponsiveButtonSecondary>
                 <ResponsiveButtonPrimary
                   id="join-pool-button"
-                  as={Link}
                   padding="6px 8px"
                   borderRadius="12px"
-                  to={"/swap/add/XDC"}
+                  href={"#/swap/add/XDC"}
                 >
-                  <Text fontWeight={500} fontSize={16}>
+                  <Typography fontWeight={500} fontSize={16}>
                     Add Liquidity
-                  </Text>
+                  </Typography>
                 </ResponsiveButtonPrimary>
               </ButtonRow>
             </TitleRow>
@@ -207,7 +199,7 @@ const Pool = () => {
                     <span> ↗</span>
                   </RowBetween>
                 </ButtonSecondary>
-                {v2PairsWithoutStakedAmount.map((v2Pair) => (
+                {allV2PairsWithLiquidity.map((v2Pair) => (
                   <FullPositionCard
                     key={v2Pair.liquidityToken.address}
                     pair={v2Pair}

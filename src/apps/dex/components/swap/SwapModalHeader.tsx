@@ -1,8 +1,7 @@
+import { FC, useMemo } from "react";
 import { Trade, TradeType } from "into-the-fathom-swap-sdk";
-import { FC, useContext, useMemo } from "react";
-import { ArrowDown, AlertTriangle } from "react-feather";
-import { Text } from "rebass";
-import { ThemeContext } from "styled-components";
+import { Typography } from "@mui/material";
+
 import { Field } from "apps/dex/state/swap/actions";
 import { TYPE } from "apps/dex/theme";
 import { ButtonPrimary } from "apps/dex/components/Button";
@@ -20,6 +19,9 @@ import {
   SwapShowAcceptChanges,
   ArrowDownWrapped,
 } from "apps/dex/components/swap/styleds";
+
+import ArrowDownwardRoundedIcon from "@mui/icons-material/ArrowDownwardRounded";
+import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
 
 type SwapModalHeaderProps = {
   trade: Trade;
@@ -46,8 +48,6 @@ const SwapModalHeader: FC<SwapModalHeaderProps> = ({
   );
   const priceImpactSeverity = warningSeverity(priceImpactWithoutFee);
 
-  const theme = useContext(ThemeContext);
-
   return (
     <AutoColumn gap={"md"} style={{ marginTop: "20px" }}>
       <RowBetween align="flex-end">
@@ -62,7 +62,7 @@ const SwapModalHeader: FC<SwapModalHeaderProps> = ({
             fontWeight={500}
             color={
               showAcceptChanges && trade.tradeType === TradeType.EXACT_OUTPUT
-                ? theme.primary1
+                ? "#253656"
                 : ""
             }
           >
@@ -70,14 +70,20 @@ const SwapModalHeader: FC<SwapModalHeaderProps> = ({
           </TruncatedText>
         </RowFixed>
         <RowFixed gap={"0px"}>
-          <Text fontSize={24} fontWeight={500} style={{ marginLeft: "10px" }}>
+          <Typography
+            fontSize={24}
+            fontWeight={500}
+            style={{ marginLeft: "10px" }}
+          >
             {trade.inputAmount.currency.symbol}
-          </Text>
+          </Typography>
         </RowFixed>
       </RowBetween>
       <AutoRow justify={"center"}>
         <ArrowDownWrapped>
-          <ArrowDown size="20" color={theme.black} />
+          <ArrowDownwardRoundedIcon
+            sx={{ color: "#000", width: "20px", height: "20px" }}
+          />
         </ArrowDownWrapped>
       </AutoRow>
       <RowBetween align="flex-end">
@@ -92,9 +98,9 @@ const SwapModalHeader: FC<SwapModalHeaderProps> = ({
             fontWeight={500}
             color={
               priceImpactSeverity > 2
-                ? theme.red1
+                ? "#FD4040"
                 : showAcceptChanges && trade.tradeType === TradeType.EXACT_INPUT
-                ? theme.primary1
+                ? "#253656"
                 : ""
             }
           >
@@ -102,20 +108,23 @@ const SwapModalHeader: FC<SwapModalHeaderProps> = ({
           </TruncatedText>
         </RowFixed>
         <RowFixed gap={"0px"}>
-          <Text fontSize={24} fontWeight={500} style={{ marginLeft: "10px" }}>
+          <Typography
+            fontSize={"24px"}
+            fontWeight={500}
+            style={{ marginLeft: "10px" }}
+          >
             {trade.outputAmount.currency.symbol}
-          </Text>
+          </Typography>
         </RowFixed>
       </RowBetween>
       {showAcceptChanges ? (
         <SwapShowAcceptChanges justify="flex-start" gap={"0px"}>
           <RowBetween>
             <RowFixed>
-              <AlertTriangle
-                size={20}
-                style={{ marginRight: "8px", minWidth: 24 }}
+              <WarningAmberRoundedIcon
+                sx={{ width: "20px", height: "20px", marginRight: "8px" }}
               />
-              <TYPE.main color={theme.primary1}> Price Updated</TYPE.main>
+              <TYPE.main color="#253656"> Price Updated</TYPE.main>
             </RowFixed>
             <ButtonPrimary
               style={{

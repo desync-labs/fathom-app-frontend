@@ -1,4 +1,3 @@
-import { Currency, XDC, Token } from "into-the-fathom-swap-sdk";
 import {
   FC,
   KeyboardEvent,
@@ -9,9 +8,12 @@ import {
   useRef,
   useState,
 } from "react";
-import ReactGA from "react-ga4";
+import { Currency, XDC, Token } from "into-the-fathom-swap-sdk";
 import { FixedSizeList } from "react-window";
-import { Text } from "rebass";
+import AutoSizer from "react-virtualized-auto-sizer";
+import ReactGA from "react-ga4";
+import { Box, styled, Typography } from "@mui/material";
+
 import { useActiveWeb3React } from "apps/dex/hooks";
 import {
   useAllTokens,
@@ -31,14 +33,12 @@ import {
 } from "apps/dex/components/SearchModal/filtering";
 import { useTokenComparator } from "./sorting";
 import { PaddedColumn, SearchInput, Separator } from "./styleds";
-import AutoSizer from "react-virtualized-auto-sizer";
-import styled from "styled-components";
 import useToggle from "apps/dex/hooks/useToggle";
 import { useOnClickOutside } from "apps/dex/hooks/useOnClickOutside";
-import useTheme from "apps/dex/hooks/useTheme";
 import ImportRow from "apps/dex/components/SearchModal/ImportRow";
-import { Edit } from "react-feather";
 import useDebounce from "apps/dex/hooks/useDebounce";
+
+import EditIcon from "@mui/icons-material/Edit";
 
 const ContentWrapper = styled(Column)`
   width: 100%;
@@ -46,14 +46,14 @@ const ContentWrapper = styled(Column)`
   position: relative;
 `;
 
-const Footer = styled.div`
+const Footer = styled(Box)`
   width: 100%;
   border-radius: 20px;
   padding: 20px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
-  background-color: ${({ theme }) => theme.modalContentBG};
-  border-top: 1px solid ${({ theme }) => theme.bg2};
+  background-color: #1d2d49;
+  border-top: 1px solid #061023;
 `;
 
 interface CurrencySearchProps {
@@ -80,7 +80,6 @@ export const CurrencySearch: FC<CurrencySearchProps> = ({
   setImportToken,
 }) => {
   const { chainId } = useActiveWeb3React();
-  const theme = useTheme();
 
   // refs for fixed size lists
   const fixedList = useRef<FixedSizeList>();
@@ -185,9 +184,9 @@ export const CurrencySearch: FC<CurrencySearchProps> = ({
     <ContentWrapper>
       <PaddedColumn gap="16px">
         <RowBetween>
-          <Text fontWeight={500} fontSize={16}>
+          <Typography fontWeight={500} fontSize={16}>
             Select a token
-          </Text>
+          </Typography>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
         <Row>
@@ -258,12 +257,14 @@ export const CurrencySearch: FC<CurrencySearchProps> = ({
         <Row justify="center">
           <ButtonText
             onClick={showManageView}
-            color={theme?.blue1}
             className="list-token-manage-button"
+            sx={{ color: "#2172E5" }}
           >
             <RowFixed>
               <IconWrapper size="16px" marginRight="6px">
-                <Edit />
+                <EditIcon
+                  sx={{ color: "transparent", width: "20px", height: "20px" }}
+                />
               </IconWrapper>
               <TYPE.white>Manage</TYPE.white>
             </RowFixed>
