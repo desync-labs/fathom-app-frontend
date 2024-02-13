@@ -23,7 +23,7 @@ export function useFetchListCallback(): (
     [library]
   );
 
-  // note: prevent dispatch if using for list search or unsupported list
+  // note: prevent dispatch if using for a list search or unsupported list
   return useCallback(
     async (listUrl: string, sendDispatch = true) => {
       const requestId = nanoid();

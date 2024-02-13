@@ -25,7 +25,7 @@ import { filterTokens } from "apps/dex/components/SearchModal/filtering";
 import { utils } from "fathom-ethers";
 import { useServices } from "context/services";
 
-// reduce token map into standard address <-> Token mapping, optionally include user added tokens
+// reduce a token map into standard address <-> Token mapping, optionally include user added tokens
 function useTokensFromMap(
   tokenMap: TokenAddressMap,
   includeUserAdded: boolean
@@ -74,7 +74,7 @@ export function useAllInactiveTokens(): { [address: string]: Token } {
   const inactiveTokensMap = useCombinedInactiveList();
   const inactiveTokens = useTokensFromMap(inactiveTokensMap, false);
 
-  // filter out any token that are on active list
+  // filter out any token on active list
   const activeTokensAddresses = Object.keys(useAllTokens());
   return activeTokensAddresses
     ? Object.keys(inactiveTokens).reduce<{ [address: string]: Token }>(
@@ -120,7 +120,7 @@ export function useFoundOnInactiveList(
   }, [chainId, inactiveTokens, searchQuery]);
 }
 
-// Check if currency is included in custom list from user storage
+// Check if currency is included in a custom list from user storage
 export function useIsUserAddedToken(
   currency: Currency | undefined | null
 ): boolean {

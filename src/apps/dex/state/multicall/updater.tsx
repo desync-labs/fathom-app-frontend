@@ -49,7 +49,7 @@ async function fetchChunk(
 }
 
 /**
- * From the current all listeners state, return each call key mapped to the
+ * From the current all-listeners state, return each call key mapped to the
  * minimum number of blocks per fetch. This is how often each key must be fetched.
  * @param allListeners the all listeners state
  * @param chainId the current chain id
