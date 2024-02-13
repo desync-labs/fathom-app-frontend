@@ -1,12 +1,20 @@
-import { Dispatch, FC, memo, SetStateAction, useEffect } from "react";
+import {
+  Dispatch,
+  FC,
+  memo,
+  SetStateAction,
+  useCallback,
+  useEffect,
+} from "react";
 import {
   Navigate,
   useLocation,
   useNavigate,
   useParams,
 } from "react-router-dom";
-import "feather-icons";
-import styled from "styled-components";
+import { useMedia } from "react-use";
+import { Box, styled } from "@mui/material";
+
 import Panel from "apps/charts/components/Panel";
 import {
   PageWrapper,
@@ -37,7 +45,6 @@ import {
 } from "apps/charts/contexts/PairData";
 import { TYPE } from "apps/charts/Theme";
 import CopyHelper from "apps/charts/components/Copy";
-import { useMedia } from "react-use";
 import DoubleTokenLogo from "apps/charts/components/DoubleLogo";
 import TokenLogo from "apps/charts/components/TokenLogo";
 import { Hover } from "apps/charts/components";
@@ -47,11 +54,8 @@ import {
   usePathDismissed,
   useSavedPairs,
 } from "apps/charts/contexts/LocalStorage";
-
-import { Bookmark, PlusCircle, AlertCircle } from "react-feather";
 import FormattedName from "apps/charts/components/FormattedName";
 import { useListedTokens } from "apps/charts/contexts/Application";
-import HoverText from "apps/charts/components/HoverText";
 import {
   UNTRACKED_COPY,
   PAIR_BLACKLIST,
@@ -61,12 +65,15 @@ import { TableHeaderBox } from "apps/charts/components/Row";
 import LocalLoader from "apps/charts/components/LocalLoader";
 import { isAddress } from "apps/charts/utils";
 import { LayoutWrapper } from "apps/charts/App";
+import AppPopover from "components/AppComponents/AppPopover/AppPopover";
 
-const DashboardWrapper = styled.div`
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+
+const DashboardWrapper = styled(Box)`
   width: 100%;
 `;
 
-const PanelWrapper = styled.div`
+const PanelWrapper = styled(Box)`
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: max-content;
   gap: 6px;
@@ -81,14 +88,14 @@ const PanelWrapper = styled.div`
     }
 
     > * {
-      &:first-child {
+      &:first-of-type {
         width: 100%;
       }
     }
   }
 `;
 
-const TokenDetailsLayout = styled.div`
+const TokenDetailsLayout = styled(Box)`
   display: inline-grid;
   width: calc(100% - 1.125rem);
   grid-template-columns: auto auto auto auto 1fr;
@@ -119,34 +126,26 @@ const TokenDetailsLayout = styled.div`
 const FixedPanel = styled(Panel)`
   width: fit-content;
   padding: 8px 12px;
-  border-radius: 10px;
 
   :hover {
     cursor: pointer;
-    background-color: ${({ theme }) => theme.bg2};
+    background-color: #324567;
   }
 `;
 
-const HoverSpan = styled.span`
+const HoverSpan = styled("span")`
   :hover {
     cursor: pointer;
     opacity: 0.7;
   }
 `;
 
-const WarningIcon = styled(AlertCircle)`
-  stroke: ${({ theme }) => theme.text1};
-  height: 16px;
-  width: 16px;
-  opacity: 0.6;
-`;
-
-const WarningGrouping = styled.div<{ disabled?: boolean }>`
+const WarningGrouping = styled(Box)<{ disabled?: boolean }>`
   opacity: ${({ disabled }) => disabled && "0.4"};
   pointer-events: ${({ disabled }) => disabled && "none"};
 `;
-const HeaderWrapper = styled.div`
-  background: ${({ theme }) => theme.headerBackground};
+const HeaderWrapper = styled(Box)`
+  background: #131f35;
   border-radius: 8px;
   padding-top: 7px !important;
   padding-bottom: 7px !important;
@@ -185,7 +184,7 @@ const PairPage: FC<{ pairAddress: string }> = memo(({ pairAddress }) => {
     });
   }, []);
 
-  const [savedPairs, addPair] = useSavedPairs();
+  const [savedPairs, addPair, removePair] = useSavedPairs();
 
   const listedTokens = useListedTokens();
 
@@ -264,6 +263,18 @@ const PairPage: FC<{ pairAddress: string }> = memo(({ pairAddress }) => {
       ? token1?.symbol.slice(0, 5) + "..."
       : token1?.symbol;
 
+  const handleBookmarkClick = useCallback(() => {
+    savedPairs[pairAddress]
+      ? removePair(pairAddress)
+      : addPair(
+          pairAddress,
+          token0.id,
+          token1.id,
+          token0.symbol,
+          token1.symbol
+        );
+  }, [pairAddress, savedPairs, token0, token1, addPair, removePair]);
+
   if (PAIR_BLACKLIST.includes(pairAddress)) {
     return (
       <BlockedWrapper>
@@ -337,7 +348,6 @@ const PairPage: FC<{ pairAddress: string }> = memo(({ pairAddress }) => {
                         a0={token0?.id || ""}
                         a1={token1?.id || ""}
                         size={32}
-                        margin={true}
                       />
                     )}{" "}
                     <TYPE.main
@@ -372,46 +382,24 @@ const PairPage: FC<{ pairAddress: string }> = memo(({ pairAddress }) => {
                 <RowFixed
                   ml={below900 ? "0" : "2.5rem"}
                   mt={below1080 ? "1rem" : ""}
-                  style={{
-                    flexDirection: below1080 ? "row-reverse" : "initial",
-                  }}
+                  gap={".5rem"}
                 >
-                  {!savedPairs[pairAddress] && !below1080 ? (
-                    <Hover
-                      onClick={() =>
-                        addPair(
-                          pairAddress,
-                          token0.id,
-                          token1.id,
-                          token0.symbol,
-                          token1.symbol
-                        )
-                      }
-                    >
-                      <StyledIcon>
-                        <PlusCircle style={{ marginRight: "0.5rem" }} />
-                      </StyledIcon>
-                    </Hover>
-                  ) : !below1080 ? (
-                    <StyledIcon>
-                      <Bookmark
-                        style={{ marginRight: "0.5rem", opacity: 0.4 }}
-                      />
-                    </StyledIcon>
-                  ) : (
-                    <></>
-                  )}
-
+                  <StyledIcon>
+                    <BookmarkBorderIcon
+                      onClick={handleBookmarkClick}
+                      style={{
+                        width: "28px",
+                        height: "28px",
+                        opacity: savedPairs[pairAddress] ? 0.8 : 0.4,
+                        cursor: "pointer",
+                      }}
+                    />
+                  </StyledIcon>
                   <CustomLink to={getPoolLink(token0?.id, token1?.id)}>
                     <ButtonLight>+ Add Liquidity</ButtonLight>
                   </CustomLink>
                   <CustomLink to={getSwapLink(token0?.id, token1?.id)}>
-                    <ButtonDark
-                      ml={!below1080 ? ".5rem" : ""}
-                      mr={below1080 ? ".5rem" : ""}
-                    >
-                      Trade
-                    </ButtonDark>
+                    <ButtonDark>Trade</ButtonDark>
                   </CustomLink>
                 </RowFixed>
               </div>
@@ -475,9 +463,7 @@ const PairPage: FC<{ pairAddress: string }> = memo(({ pairAddress }) => {
                     Pair Stats
                   </TYPE.main>
                   {showUSDWaning ? (
-                    <HoverText text={UNTRACKED_COPY}>
-                      <WarningIcon />
-                    </HoverText>
+                    <AppPopover id={"pair_stats"} text={UNTRACKED_COPY} />
                   ) : null}
                 </RowFixed>
               )}
@@ -558,7 +544,7 @@ const PairPage: FC<{ pairAddress: string }> = memo(({ pairAddress }) => {
                             <FormattedName
                               text={token0?.symbol ?? ""}
                               maxCharacters={8}
-                              margin={true}
+                              margin="0 4px"
                             />
                           </RowFixed>
                         </TYPE.main>
@@ -580,7 +566,7 @@ const PairPage: FC<{ pairAddress: string }> = memo(({ pairAddress }) => {
                             <FormattedName
                               text={token1?.symbol ?? ""}
                               maxCharacters={8}
-                              margin={true}
+                              margin="0 4px"
                             />
                           </RowFixed>
                         </TYPE.main>
@@ -598,7 +584,7 @@ const PairPage: FC<{ pairAddress: string }> = memo(({ pairAddress }) => {
                     address={pairAddress}
                     base0={reserve1 / reserve0}
                     base1={reserve0 / reserve1}
-                    color={"#003CFF"}
+                    color="#43fff6"
                   />
                 </Panel>
               </PanelWrapper>

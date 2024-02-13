@@ -1,4 +1,6 @@
-import styled from "styled-components";
+import { FC, memo, useState } from "react";
+import { useMedia } from "react-use";
+import { Box, styled } from "@mui/material";
 import {
   Area,
   XAxis,
@@ -16,15 +18,13 @@ import {
   getTimeframe,
 } from "apps/charts/utils";
 import { OptionButton } from "apps/charts/components/ButtonStyled";
-import { useMedia } from "react-use";
 import { timeframeOptions } from "apps/charts/constants";
 import DropdownSelect from "apps/charts/components/DropdownSelect";
 import { useUserLiquidityChart } from "apps/charts/contexts/User";
 import LocalLoader from "apps/charts/components/LocalLoader";
 import { TYPE } from "apps/charts/Theme";
-import { FC, memo, useState } from "react";
 
-const ChartWrapper = styled.div`
+const ChartWrapper = styled(Box)`
   height: 100%;
   max-height: 390px;
 
@@ -58,7 +58,7 @@ const UserChart: FC<UserChartsProps> = ({ account }) => {
   return (
     <ChartWrapper>
       {below600 ? (
-        <RowBetween mb={40}>
+        <RowBetween mb={"40px"}>
           <div />
           <DropdownSelect
             options={timeframeOptions}
@@ -69,7 +69,7 @@ const UserChart: FC<UserChartsProps> = ({ account }) => {
           />
         </RowBetween>
       ) : (
-        <RowBetween mb={40}>
+        <RowBetween mb={"40px"}>
           <AutoRow gap="10px">
             <TYPE.main>Liquidity Value</TYPE.main>
           </AutoRow>
@@ -104,8 +104,8 @@ const UserChart: FC<UserChartsProps> = ({ account }) => {
           >
             <defs>
               <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor={"#4f8fea"} stopOpacity={0.35} />
-                <stop offset="95%" stopColor={"#4f8fea"} stopOpacity={0} />
+                <stop offset="5%" stopColor={"#43fff6"} stopOpacity={0.35} />
+                <stop offset="95%" stopColor={"#43fff6"} stopOpacity={0} />
               </linearGradient>
             </defs>
             <XAxis
@@ -138,11 +138,12 @@ const UserChart: FC<UserChartsProps> = ({ account }) => {
               labelStyle={{ paddingTop: 4 }}
               contentStyle={{
                 padding: "10px 14px",
-                borderRadius: 10,
-                borderColor: "#4f8fea",
-                color: "black",
+                border: "none",
+                borderRadius: 8,
+                color: "white",
+                backgroundColor: "#2a3e5a",
               }}
-              wrapperStyle={{ top: -70, left: -10 }}
+              wrapperStyle={{ top: -70, left: -10, zIndex: 22 }}
             />
             <Area
               key={"other"}
@@ -153,7 +154,7 @@ const UserChart: FC<UserChartsProps> = ({ account }) => {
               type="monotone"
               name={"Liquidity"}
               yAxisId={0}
-              stroke={"#4f8fea"}
+              stroke={"#43fff6"}
               fill="url(#colorUv)"
             />
           </AreaChart>

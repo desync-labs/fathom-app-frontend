@@ -7,8 +7,6 @@ import {
 } from "@mui/material";
 import { FC, memo } from "react";
 
-export const supportedTimeRangeOptions = ["1m", "3m", "6m", "1y"] as const;
-
 export enum ESupportedTimeRanges {
   OneMonth = "1m",
   ThreeMonths = "3m",

@@ -23,7 +23,7 @@ export const HealthFactorNumber: FC<HealthFactorNumberProps> = ({
   const formattedHealthFactor = Number(
     valueToBigNumber(value).toFixed(2, BigNumber.ROUND_DOWN)
   );
-  let healthFactorColor = "";
+  let healthFactorColor;
   if (formattedHealthFactor >= 3) {
     healthFactorColor = palette.success.main;
   } else if (formattedHealthFactor < 1.1) {

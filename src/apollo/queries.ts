@@ -219,21 +219,23 @@ export const VAULTS = gql`
       balanceTokens
       balanceTokensIdle
       depositLimit
+      apr
       strategies {
         id
         delegatedAssets
         currentDebt
         maxDebt
+        apr
+        historicalApr {
+          id
+          apr
+          timestamp
+        }
         reports(orderBy: timestamp, orderDirection: desc) {
-          totalFees
-          protocolFees
           timestamp
           gain
           loss
           currentDebt
-          results {
-            apr
-          }
         }
       }
     }

@@ -5,9 +5,7 @@ import {
   valueToBigNumber,
 } from "@into-the-fathom/lending-math-utils";
 import BigNumber from "bignumber.js";
-import React, { FC, useMemo, useState } from "react";
-import { Warning } from "apps/lending/components/primitives/Warning";
-import { AMPLWarning } from "apps/lending/components/Warnings/AMPLWarning";
+import { FC, memo, useMemo, useState } from "react";
 import { useAssetCaps } from "apps/lending/hooks/useAssetCaps";
 import { useModalContext } from "apps/lending/hooks/useModal";
 import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
@@ -32,14 +30,9 @@ import {
 } from "apps/lending/components/transactions/FlowCommons/TxModalDetails";
 import { getAssetCollateralType } from "apps/lending/components/transactions/utils";
 import { IsolationModeWarning } from "apps/lending/components/transactions/Warnings/IsolationModeWarning";
-import { SNXWarning } from "apps/lending/components/transactions/Warnings/SNXWarning";
 import { SupplyActions } from "apps/lending/components/transactions/Supply/SupplyActions";
 
-export enum ErrorType {
-  CAP_REACHED,
-}
-
-export const SupplyModalContent: FC<ModalWrapperProps> = React.memo(
+export const SupplyModalContent: FC<ModalWrapperProps> = memo(
   ({
     underlyingAsset,
     poolReserve,
@@ -186,6 +179,10 @@ export const SupplyModalContent: FC<ModalWrapperProps> = React.memo(
       aToken: true,
     };
 
+    console.log({
+      addToken,
+    });
+
     // collateralization state
     const collateralType = getAssetCollateralType(
       userReserve,
@@ -231,14 +228,6 @@ export const SupplyModalContent: FC<ModalWrapperProps> = React.memo(
         {debtCeilingUsage.determineWarningDisplay({
           debtCeiling: debtCeilingUsage,
         })}
-        {poolReserve.symbol === "AMPL" && (
-          <Warning sx={{ mt: "16px", mb: "40px" }} severity="warning">
-            <AMPLWarning />
-          </Warning>
-        )}
-        {poolReserve.symbol === "SNX" && maxAmountToSupply !== "0" && (
-          <SNXWarning />
-        )}
 
         <AssetInput
           value={amount}

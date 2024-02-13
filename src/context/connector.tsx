@@ -168,23 +168,31 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
   const connectMetamask = useCallback(() => {
     setShouldDisable(true);
     setIsLoading(true);
-    return activate(injected).then(() => {
-      setShouldDisable(false);
-      localStorage.setItem("isConnected", "metamask");
-      setIsMetamask(true);
-      setIsLoading(false);
-    });
+    return activate(injected)
+      .then(() => {
+        setShouldDisable(false);
+        localStorage.setItem("isConnected", "metamask");
+        setIsMetamask(true);
+      })
+      .catch((e) => console.log(e))
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, [activate, setShouldDisable, setIsMetamask, setIsLoading]);
 
   const connectWalletConnect = useCallback(() => {
     setShouldDisable(true);
     setIsLoading(true);
-    return activate(WalletConnect).then(() => {
-      setShouldDisable(false);
-      localStorage.setItem("isConnected", "walletConnect");
-      setIsWalletConnect(true);
-      setIsLoading(false);
-    });
+    return activate(WalletConnect)
+      .then(() => {
+        setShouldDisable(false);
+        localStorage.setItem("isConnected", "walletConnect");
+        setIsWalletConnect(true);
+      })
+      .catch((e) => console.log(e))
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, [activate, setShouldDisable, setIsWalletConnect, setIsLoading]);
 
   // Init Loading

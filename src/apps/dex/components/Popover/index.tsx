@@ -1,6 +1,6 @@
 import { Placement } from "@popperjs/core";
 import { transparentize } from "polished";
-import { FC, useCallback, useState } from "react";
+import { FC, ReactNode, useCallback, useState } from "react";
 import { usePopper } from "react-popper";
 import styled from "styled-components";
 import useInterval from "apps/dex/hooks/useInterval";
@@ -76,9 +76,9 @@ const Arrow = styled.div`
 `;
 
 export interface PopoverProps {
-  content: React.ReactNode;
+  content: ReactNode;
   show: boolean;
-  children: React.ReactNode;
+  children?: ReactNode;
   placement?: Placement;
 }
 
