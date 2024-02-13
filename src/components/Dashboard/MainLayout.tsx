@@ -244,6 +244,8 @@ const LogoLink = styled(Link)`
   align-items: center;
 `;
 
+const LENDING_ENABLED = process.env.REACT_APP_LENDING_ENABLED;
+
 const MainLayout = () => {
   const {
     savedOpen,
@@ -566,13 +568,21 @@ const MainLayout = () => {
                 />
                 <Route element={<RedirectPathToSwapOnly />} />
               </Route>
-              <Route path="/lending" element={<LendingView />}>
-                <Route index element={<Home />} />
-                <Route path="markets" element={<Markets />} />
-                <Route path="reserve-overview" element={<ReserveOverview />} />
-                <Route path="transactions" element={<History />} />
-                <Route path="*" element={<Navigate to="/lending" replace />} />
-              </Route>
+              {LENDING_ENABLED === "true" && (
+                <Route path="/lending" element={<LendingView />}>
+                  <Route index element={<Home />} />
+                  <Route path="markets" element={<Markets />} />
+                  <Route
+                    path="reserve-overview"
+                    element={<ReserveOverview />}
+                  />
+                  <Route path="transactions" element={<History />} />
+                  <Route
+                    path="*"
+                    element={<Navigate to="/lending" replace />}
+                  />
+                </Route>
+              )}
               <Route
                 path="/vaults"
                 element={
