@@ -25,12 +25,6 @@ import { calculateMaxWithdrawAmount } from "apps/lending/components/transactions
 import { WithdrawActions } from "apps/lending/components/transactions/Withdraw/WithdrawActions";
 import { useWithdrawError } from "apps/lending/components/transactions/Withdraw/WithdrawError";
 
-export enum ErrorType {
-  CAN_NOT_WITHDRAW_THIS_AMOUNT,
-  POOL_DOES_NOT_HAVE_ENOUGH_LIQUIDITY,
-  ZERO_LTV_WITHDRAW_BLOCKED,
-}
-
 export const WithdrawModalContent: FC<
   ModalWrapperProps & {
     unwrap: boolean;

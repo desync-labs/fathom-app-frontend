@@ -21,7 +21,6 @@ import { GENERAL } from "apps/lending/utils/mixPanelEvents";
 import { CapType } from "apps/lending/components/caps/helper";
 import { AvailableTooltip } from "apps/lending/components/infoTooltips/AvailableTooltip";
 import { ListWrapper } from "apps/lending/components/lists/ListWrapper";
-import { Link } from "apps/lending/components/primitives/Link";
 import {
   ComputedReserveData,
   useAppDataContext,
@@ -237,14 +236,7 @@ export const BorrowAssetsList = () => {
                 {user?.isInIsolationMode && (
                   <Warning severity="warning">
                     Borrowing power and assets are limited due to Isolation
-                    mode.{" "}
-                    <Link
-                      href="https://docs.aave.com/faq/"
-                      target="_blank"
-                      rel="noopener"
-                    >
-                      Learn More
-                    </Link>
+                    mode.
                   </Warning>
                 )}
                 {user?.isInEmode && (

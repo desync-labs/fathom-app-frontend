@@ -20,7 +20,6 @@ import {
 import isZero from "apps/dex/utils/isZero";
 import { useActiveWeb3React } from "apps/dex/hooks";
 import useTransactionDeadline from "apps/dex/hooks/useTransactionDeadline";
-import useENS from "apps/dex/hooks/useENS";
 
 export enum SwapCallbackState {
   INVALID,
@@ -57,10 +56,8 @@ function useSwapCallArguments(
   recipientAddressOrName: string | null // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
 ): SwapCall[] {
   const { account, chainId, library } = useActiveWeb3React();
-
-  const { address: recipientAddress } = useENS(recipientAddressOrName);
   const recipient =
-    recipientAddressOrName === null ? account : recipientAddress;
+    recipientAddressOrName === null ? account : recipientAddressOrName;
   const deadline = useTransactionDeadline();
 
   return useMemo(() => {
@@ -102,8 +99,8 @@ function useSwapCallArguments(
   }, [account, allowedSlippage, chainId, deadline, library, recipient, trade]);
 }
 
-// returns a function that will execute a swap, if the parameters are all valid
-// and the user has approved the slippage adjusted input amount for the trade
+// returns a function that will execute a swap if the parameters are all valid,
+// and the user has approved the slippage-adjusted input amount for the trade
 export function useSwapCallback(
   trade: Trade | undefined, // trade to execute, required
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
@@ -122,10 +119,8 @@ export function useSwapCallback(
   );
 
   const addTransaction = useTransactionAdder();
-
-  const { address: recipientAddress } = useENS(recipientAddressOrName);
   const recipient =
-    recipientAddressOrName === null ? account : recipientAddress;
+    recipientAddressOrName === null ? account : recipientAddressOrName;
 
   return useMemo(() => {
     if (!trade || !library || !account || !chainId) {
@@ -250,7 +245,7 @@ export function useSwapCallback(
             const outputAmount = trade.outputAmount.toSignificant(3);
 
             const base = `Swap ${inputAmount} ${inputSymbol} for ${outputAmount} ${outputSymbol}`;
-            const withRecipient =
+            const withVersion =
               recipient === account
                 ? base
                 : `${base} to ${
@@ -258,8 +253,6 @@ export function useSwapCallback(
                       ? shortenAddress(recipientAddressOrName, 4)
                       : recipientAddressOrName
                   }`;
-
-            const withVersion = withRecipient;
 
             addTransaction(response, {
               summary: withVersion,

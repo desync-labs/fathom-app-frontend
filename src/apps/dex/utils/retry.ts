@@ -7,7 +7,7 @@ function waitRandom(min: number, max: number): Promise<void> {
 }
 
 /**
- * This error is thrown if the function is cancelled before completing
+ * This error is thrown if the function is canceled before completing
  */
 export class CancelledError extends Error {
   constructor() {

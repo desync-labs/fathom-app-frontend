@@ -36,7 +36,6 @@ import { ROUTER_ADDRESSES } from "apps/dex/constants";
 import { useActiveWeb3React } from "apps/dex/hooks";
 import { useCurrency } from "apps/dex/hooks/Tokens";
 import { usePairContract } from "apps/dex/hooks/useContract";
-import useIsArgentWallet from "apps/dex/hooks/useIsArgentWallet";
 import useTransactionDeadline from "apps/dex/hooks/useTransactionDeadline";
 
 import { useTransactionAdder } from "apps/dex/state/transactions/hooks";
@@ -170,17 +169,11 @@ const RemoveLiquidity = () => {
     ROUTER_ADDRESSES[chainId as ChainId]
   );
 
-  const isArgentWallet = useIsArgentWallet();
-
   async function onAttemptToApprove() {
     if (!pairContract || !pair || !library || !deadline)
       throw new Error("missing dependencies");
     const liquidityAmount = parsedAmounts[Field.LIQUIDITY];
     if (!liquidityAmount) throw new Error("missing liquidity amount");
-
-    if (isArgentWallet) {
-      return approveCallback();
-    }
 
     // try to gather a signature for permission
     const nonce = await pairContract.nonces(account);

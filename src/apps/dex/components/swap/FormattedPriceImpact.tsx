@@ -5,7 +5,7 @@ import { ErrorText } from "apps/dex/components/swap/styleds";
 import { FC } from "react";
 
 /**
- * Formatted version of price impact text with warning colors
+ * Formatted version of a price impact text with warning colors
  */
 type FormattedPriceImpactProps = {
   priceImpact?: Percent;

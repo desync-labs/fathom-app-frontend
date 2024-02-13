@@ -1,4 +1,4 @@
-import { HTMLProps, useCallback } from "react";
+import { HTMLProps, MouseEvent, useCallback } from "react";
 import ReactGA from "react-ga4";
 import { Link } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
@@ -206,7 +206,7 @@ export const FthmTokenAnimated = styled.img`
 `;
 
 /**
- * Outbound link that handles firing google analytics events
+ * Outbound link that handles firing Google Analytics events
  */
 export function ExternalLink({
   target = "_blank",
@@ -217,7 +217,7 @@ export function ExternalLink({
   href: string;
 }) {
   const handleClick = useCallback(
-    (event: React.MouseEvent<HTMLAnchorElement>) => {
+    (event: MouseEvent<HTMLAnchorElement>) => {
       // don't prevent default, don't redirect if it's a new tab
       if (target === "_blank" || event.ctrlKey || event.metaKey) {
         ReactGA.event({
@@ -257,7 +257,7 @@ export function ExternalLinkIcon({
   href: string;
 }) {
   const handleClick = useCallback(
-    (event: React.MouseEvent<HTMLAnchorElement>) => {
+    (event: MouseEvent<HTMLAnchorElement>) => {
       // don't prevent default, don't redirect if it's a new tab
       if (target === "_blank" || event.ctrlKey || event.metaKey) {
         ReactGA.event({

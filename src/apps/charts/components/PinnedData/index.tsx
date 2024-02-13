@@ -1,4 +1,6 @@
-import styled from "styled-components";
+import { Dispatch, FC, memo, SetStateAction, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Box, styled } from "@mui/material";
 import { RowBetween, RowFixed } from "apps/charts/components/Row";
 import { AutoColumn } from "apps/charts/components/Column";
 import { TYPE } from "apps/charts/Theme";
@@ -9,31 +11,33 @@ import {
 import { Hover } from "apps/charts/components";
 import TokenLogo from "apps/charts/components/TokenLogo";
 import AccountSearch from "apps/charts/components/AccountSearch";
-import { Bookmark, ChevronRight, X } from "react-feather";
 import { ButtonFaded } from "apps/charts/components/ButtonStyled";
 import FormattedName from "apps/charts/components/FormattedName";
-import { useNavigate } from "react-router-dom";
-import { Dispatch, FC, memo, SetStateAction, useEffect, useState } from "react";
 
-const RightColumn = styled.div<{ open?: boolean; scrolled: number }>`
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import CloseIcon from "@mui/icons-material/Close";
+
+const RightColumn = styled(Box)<{ open?: boolean; scrolled: number }>`
   position: fixed;
   right: 0;
   top: ${({ scrolled }) => (scrolled < 60 ? `${60 - scrolled}px` : "0")};
   height: 100vh;
-  width: ${({ open }) => (open ? "160px" : "64px")};
+  width: ${({ open }) => (open ? "220px" : "64px")};
   padding: 1.25rem;
-  border-left: ${({ theme }) => "1px solid" + theme.borderBG};
-  background-color: ${({ theme }) => theme.bg1};
+  border-left: 1px solid #253656;
+  background-color: #0e1d34;
   z-index: 9999;
   overflow: auto;
+
   :hover {
     cursor: pointer;
   }
 `;
 
-const SavedButton = styled(RowBetween)`
+const SavedButton = styled(RowBetween)<{ open?: boolean }>`
   padding-bottom: ${({ open }) => open && "20px"};
-  border-bottom: ${({ theme, open }) => open && "1px solid" + theme.borderBG};
+  border-bottom: ${({ open }) => open && "1px solid #253656"};
   margin-bottom: ${({ open }) => open && "1.25rem"};
 
   :hover {
@@ -46,8 +50,15 @@ const ScrollableDiv = styled(AutoColumn)`
   padding-bottom: 60px;
 `;
 
-const StyledIcon = styled.div`
-  color: ${({ theme }) => theme.text5};
+const StyledIcon = styled(Box)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0;
+  :hover {
+    background-color: unset;
+    opacity: 0.7;
+  }
 `;
 
 type PinnedDataProps = {
@@ -81,8 +92,8 @@ const PinnedData: FC<PinnedDataProps> = (props) => {
       scrolled={scrolled}
     >
       <SavedButton open={open}>
-        <StyledIcon>
-          <Bookmark size={20} />
+        <StyledIcon color={"#43fff6"}>
+          <BookmarkBorderIcon sx={{ width: 24, height: 24 }} />
         </StyledIcon>
       </SavedButton>
     </RightColumn>
@@ -90,13 +101,13 @@ const PinnedData: FC<PinnedDataProps> = (props) => {
     <RightColumn open={open} scrolled={scrolled}>
       <SavedButton onClick={() => setSavedOpen(false)} open={open}>
         <RowFixed>
-          <StyledIcon>
-            <Bookmark size={16} />
+          <StyledIcon color={"#43fff6"}>
+            <BookmarkBorderIcon sx={{ width: 20, height: 20 }} />
           </StyledIcon>
-          <TYPE.main ml={"4px"}>Saved</TYPE.main>
+          <TYPE.main ml={"5px"}>Saved</TYPE.main>
         </RowFixed>
-        <StyledIcon>
-          <ChevronRight />
+        <StyledIcon color={"#43fff6"}>
+          <ChevronRightIcon sx={{ width: 28, height: 28 }} />
         </StyledIcon>
       </SavedButton>
       <AccountSearch small={true} />
@@ -113,7 +124,7 @@ const PinnedData: FC<PinnedDataProps> = (props) => {
               .map((address) => {
                 const pair = savedPairs[address];
                 return (
-                  <RowBetween key={pair.address}>
+                  <RowBetween key={pair.address} gap={"8px"}>
                     <ButtonFaded
                       onClick={() => navigate("/charts/pair/" + address)}
                     >
@@ -129,7 +140,7 @@ const PinnedData: FC<PinnedDataProps> = (props) => {
                     </ButtonFaded>
                     <Hover onClick={() => removePair(pair.address)}>
                       <StyledIcon>
-                        <X size={16} />
+                        <CloseIcon sx={{ width: 16, height: 16 }} />
                       </StyledIcon>
                     </Hover>
                   </RowBetween>
@@ -151,7 +162,7 @@ const PinnedData: FC<PinnedDataProps> = (props) => {
               .map((address) => {
                 const token = savedTokens[address];
                 return (
-                  <RowBetween key={address}>
+                  <RowBetween key={address} gap={"8px"}>
                     <ButtonFaded
                       onClick={() => navigate("/charts/token/" + address)}
                     >
@@ -168,7 +179,7 @@ const PinnedData: FC<PinnedDataProps> = (props) => {
                     </ButtonFaded>
                     <Hover onClick={() => removeToken(address)}>
                       <StyledIcon>
-                        <X size={16} />
+                        <CloseIcon sx={{ width: 16, height: 16 }} />
                       </StyledIcon>
                     </Hover>
                   </RowBetween>

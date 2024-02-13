@@ -143,10 +143,10 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
   useEffect(() => {
     if (!strategyData) return;
 
-    const extractedData = strategyData.reports
-      .map((report) => ({
-        timestamp: report.timestamp,
-        chartValue: BigNumber(report.results[0]?.apr || "0").toFixed(2),
+    const extractedData = strategyData.historicalApr
+      .map((aprItem) => ({
+        timestamp: aprItem.timestamp,
+        chartValue: aprItem.apr,
       }))
       .sort((a, b) => parseInt(a.timestamp) - parseInt(b.timestamp));
 
@@ -236,9 +236,7 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
             >
               <VaultIndicatorItem
                 title="APR"
-                value={formatNumber(
-                  BigNumber(strategyData.reports[0].results[0].apr).toNumber()
-                )}
+                value={formatNumber(Number(strategyData.apr))}
                 units="%"
               />
               <VaultIndicatorItem

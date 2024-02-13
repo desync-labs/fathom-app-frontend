@@ -58,7 +58,7 @@ const CurrencySearchModal: FC<CurrencySearchModalProps> = ({
   // used for import token flow
   const [importToken, setImportToken] = useState<Token | undefined>();
 
-  // used for import list
+  // used for an import list
   const [importList, setImportList] = useState<TokenList | undefined>();
   const [listURL, setListUrl] = useState<string | undefined>();
 

@@ -1,6 +1,6 @@
 import { FC, useEffect, useMemo, useState } from "react";
-import { Box } from "rebass";
-import styled from "styled-components";
+import { useMedia } from "react-use";
+import { Box, styled } from "@mui/material";
 
 import { AutoRow, RowBetween } from "apps/charts/components/Row";
 import { AutoColumn } from "apps/charts/components/Column";
@@ -10,36 +10,34 @@ import TxnList from "apps/charts/components/TxnList";
 import GlobalChart from "apps/charts/components/GlobalChart";
 import Search from "apps/charts/components/Search";
 import GlobalStats from "apps/charts/components/GlobalStats";
-
 import {
   useGlobalData,
   useGlobalTransactions,
 } from "apps/charts/contexts/GlobalData";
 import { useAllPairData } from "apps/charts/contexts/PairData";
-import { useMedia } from "react-use";
 import Panel from "apps/charts/components/Panel";
 import { useAllTokenData } from "apps/charts/contexts/TokenData";
 import { formattedNum, formattedPercent } from "apps/charts/utils";
 import { TYPE } from "apps/charts/Theme";
 import { CustomLink } from "apps/charts/components/Link";
-
 import { PageWrapper, ContentWrapper } from "apps/charts/components";
 import CheckBox from "apps/charts/components/Checkbox";
-import QuestionHelper from "apps/charts/components/QuestionHelper";
 import { TOKEN_BLACKLIST } from "apps/charts/constants";
+import AppPopover from "components/AppComponents/AppPopover/AppPopover";
 
 const ListOptions = styled(AutoRow)`
-  height: 40px;
   width: 100%;
+  gap: 10px;
   font-size: 1.25rem;
   font-weight: 600;
+  margin: 3rem 0 1rem;
 
   @media screen and (max-width: 640px) {
     font-size: 1rem;
   }
 `;
 
-const GridRow = styled.div`
+const GridRow = styled(Box)`
   display: grid;
   width: 100%;
   grid-template-columns: 1fr 1fr;
@@ -100,7 +98,7 @@ const GlobalPage: FC = () => {
             <GlobalStats />
           </AutoColumn>
           {below800 && ( // mobile card
-            <Box mb={20}>
+            <Box mb={"40px"}>
               <Box>
                 <AutoColumn gap="36px">
                   <AutoColumn gap="20px">
@@ -152,7 +150,7 @@ const GlobalPage: FC = () => {
             </Box>
           )}
           {!below800 && (
-            <Box sx={{ marginTop: "2.5rem" }}>
+            <Box sx={{ margin: "2.5rem 0" }}>
               <GridRow>
                 <Box sx={{ position: "relative" }}>
                   <GlobalChart display="liquidity" />
@@ -172,14 +170,13 @@ const GlobalPage: FC = () => {
           )}
           {formattedTokens && formattedTokens.length > 0 && (
             <>
-              <ListOptions
-                gap="10px"
-                style={{ marginTop: "2rem", marginBottom: ".5rem" }}
-              >
+              <ListOptions>
                 <RowBetween>
                   <TYPE.main
                     fontSize={"1.125rem"}
-                    style={{ whiteSpace: "nowrap", marginBottom: "2rem" }}
+                    style={{
+                      whiteSpace: "nowrap",
+                    }}
                   >
                     Top Tokens
                   </TYPE.main>
@@ -189,14 +186,13 @@ const GlobalPage: FC = () => {
               <TopTokenList formattedTokens={formattedTokens} />
             </>
           )}
-          <ListOptions
-            gap="10px"
-            style={{ marginTop: "2rem", marginBottom: ".5rem" }}
-          >
+          <ListOptions>
             <RowBetween>
               <TYPE.main
                 fontSize={"1.125rem"}
-                style={{ whiteSpace: "nowrap", marginBottom: "2rem" }}
+                style={{
+                  whiteSpace: "nowrap",
+                }}
               >
                 Top Pairs
               </TYPE.main>
@@ -206,20 +202,18 @@ const GlobalPage: FC = () => {
                   setChecked={() => setUseTracked(!useTracked)}
                   text={"Hide untracked pairs"}
                 />
-                <QuestionHelper text="USD amounts may be inaccurate in low liquiidty pairs or pairs without ETH or stablecoins." />
+                <AppPopover
+                  id="untracked_pairs"
+                  text="USD amounts may be inaccurate in low liquiidty pairs or pairs without XDC or stablecoins."
+                />
                 <CustomLink to={"/charts/pairs"}>See All</CustomLink>
               </AutoRow>
             </RowBetween>
           </ListOptions>
           <PairList pairs={allPairs} useTracked={useTracked} color={"#fff"} />
-          <span>
-            <TYPE.main
-              fontSize={"1.125rem"}
-              style={{ marginTop: "2rem", marginBottom: "2rem" }}
-            >
-              Transactions
-            </TYPE.main>
-          </span>
+          <ListOptions>
+            <TYPE.main fontSize={"1.125rem"}>Transactions</TYPE.main>
+          </ListOptions>
           <TxnList transactions={transactions} color={"#fff"} />
         </div>
       </ContentWrapper>

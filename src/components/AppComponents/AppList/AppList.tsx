@@ -65,10 +65,6 @@ export const ListLabel = styled(Box)`
   justify-content: start;
 `;
 
-export const ListLabelWithPopover = styled(ListLabel)`
-  gap: 7px;
-`;
-
 export const ListValue = styled(Box)`
   display: flex;
   justify-content: right;

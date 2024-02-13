@@ -1,6 +1,6 @@
 import { formatUserSummary } from "@into-the-fathom/lending-math-utils";
 import { ArrowNarrowRightIcon } from "@heroicons/react/solid";
-import { Box, Link, SvgIcon, Typography } from "@mui/material";
+import { Box, SvgIcon, Typography } from "@mui/material";
 import { FC, useState } from "react";
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
 import { Row } from "apps/lending/components/primitives/Row";
@@ -191,15 +191,7 @@ export const EmodeModalContent: FC<EmodeModalContentProps> = ({ mode }) => {
         <Warning severity="warning">
           <Typography variant="caption">
             Enabling E-Mode only allows you to borrow assets belonging to the
-            selected category. Please visit our{" "}
-            <Link
-              href="https://docs.aave.com/faq/aave-v3-features#high-efficiency-mode-e-mode"
-              target="_blank"
-              rel="noopener"
-            >
-              FAQ guide
-            </Link>{" "}
-            to learn more about how it works and the applied restrictions.
+            selected category.
           </Typography>
         </Warning>
       )}
@@ -216,9 +208,7 @@ export const EmodeModalContent: FC<EmodeModalContentProps> = ({ mode }) => {
       {blockingError === ErrorType.EMODE_DISABLED_LIQUIDATION && <Blocked />}
       {showLiquidationRiskWarning && (
         <Warning severity="error" sx={{ mt: 6, alignItems: "center" }}>
-          <Typography variant="subheader1" color="#4F1919">
-            Liquidation risk
-          </Typography>
+          <Typography variant="subheader1">Liquidation risk</Typography>
           <Typography variant="caption">
             This action will reduce your health factor. Please be mindful of the
             increased risk of collateral liquidation.{" "}

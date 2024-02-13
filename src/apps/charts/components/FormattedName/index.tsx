@@ -1,16 +1,14 @@
-import { FC, memo, useState } from "react";
-import styled from "styled-components";
-import { Tooltip } from "apps/charts/components/QuestionHelper";
+import { FC, memo } from "react";
+import { Box, styled } from "@mui/material";
+import AppPopover from "components/AppComponents/AppPopover/AppPopover";
 
-const TextWrapper = styled.div<{
-  margin?: boolean;
+const TextWrapper = styled(Box)<{
   link?: boolean;
   fontSize?: string;
   adjustSize?: boolean;
 }>`
   position: relative;
-  margin-left: ${({ margin }) => margin && "4px"};
-  color: ${({ theme, link }) => (link ? theme.blue : theme.text1)};
+  color: #fafafa;
   font-size: ${({ fontSize }) => fontSize ?? "inherit"};
 
   :hover {
@@ -26,7 +24,7 @@ type FormattedNameProps = {
   text: string;
   maxCharacters: number;
   Wrapper?: any;
-  margin?: boolean;
+  margin?: string;
   adjustSize?: boolean;
   fontSize?: string;
   link?: boolean;
@@ -37,13 +35,12 @@ const FormattedName: FC<FormattedNameProps> = (props) => {
     text,
     maxCharacters,
     Wrapper,
-    margin = false,
+    margin,
     adjustSize = false,
     fontSize,
     link,
     ...rest
   } = props;
-  const [showHover, setShowHover] = useState(false);
 
   if (!text) {
     return null;
@@ -51,23 +48,27 @@ const FormattedName: FC<FormattedNameProps> = (props) => {
 
   if (text.length > maxCharacters) {
     return (
-      <Tooltip text={text} show={showHover}>
-        <TextWrapper
-          onMouseEnter={() => setShowHover(true)}
-          onMouseLeave={() => setShowHover(false)}
-          margin={margin}
-          adjustSize={adjustSize}
-          link={link}
-          fontSize={fontSize}
-          {...rest}
-        >
-          {Wrapper ? (
-            <Wrapper>{" " + text.slice(0, maxCharacters - 1) + "..."}</Wrapper>
-          ) : (
-            " " + text.slice(0, maxCharacters - 1) + "..."
-          )}
-        </TextWrapper>
-      </Tooltip>
+      <AppPopover
+        id={"help_text"}
+        text={text}
+        element={
+          <TextWrapper
+            margin={margin}
+            adjustSize={adjustSize}
+            link={link}
+            fontSize={fontSize}
+            {...rest}
+          >
+            {Wrapper ? (
+              <Wrapper>
+                {" " + text.slice(0, maxCharacters - 1) + "..."}
+              </Wrapper>
+            ) : (
+              " " + text.slice(0, maxCharacters - 1) + "..."
+            )}
+          </TextWrapper>
+        }
+      />
     );
   }
 

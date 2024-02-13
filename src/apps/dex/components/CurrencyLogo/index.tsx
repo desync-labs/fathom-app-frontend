@@ -1,5 +1,5 @@
 import { Currency, Token, XDC } from "into-the-fathom-swap-sdk";
-import { FC, useMemo } from "react";
+import { CSSProperties, FC, useMemo } from "react";
 import styled from "styled-components";
 
 import XdcLogo from "apps/dex/assets/images/xdc-logo.png";
@@ -40,7 +40,7 @@ const StyledLogo = styled(Logo)<{ size: string }>`
 type CurrencyLogoProps = {
   currency?: Currency;
   size?: string;
-  style?: React.CSSProperties;
+  style?: CSSProperties;
 };
 
 const CurrencyLogo: FC<CurrencyLogoProps> = ({

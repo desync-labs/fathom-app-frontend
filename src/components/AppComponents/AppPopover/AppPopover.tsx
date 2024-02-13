@@ -70,7 +70,7 @@ const AppPopover: FC<AppPopoverProps> = ({
         })
       ) : (
         <span
-          style={{ cursor: "pointer" }}
+          style={{ display: "inline-flex", cursor: "pointer" }}
           aria-owns={open ? id : undefined}
           aria-haspopup="true"
           onMouseEnter={handlePopoverOpen}

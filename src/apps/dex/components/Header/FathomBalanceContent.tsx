@@ -7,7 +7,7 @@ import { FTHM } from "apps/dex/constants";
 import { useTotalSupply } from "apps/dex/data/TotalSupply";
 import { useActiveWeb3React } from "apps/dex/hooks";
 import {
-  useAggregateUniBalance,
+  useAggregateFTHMBalance,
   useTokenBalance,
 } from "apps/dex/state/wallet/hooks";
 import { TYPE, FthmTokenAnimated } from "apps/dex/theme";
@@ -61,7 +61,7 @@ const FathomBalanceContent: FC<FathomBalanceContent> = ({
 
   const { fthmPrice } = usePricesContext();
 
-  const total = useAggregateUniBalance();
+  const total = useAggregateFTHMBalance();
   const fthmBalance: TokenAmount | undefined = useTokenBalance(
     account ?? undefined,
     fthm

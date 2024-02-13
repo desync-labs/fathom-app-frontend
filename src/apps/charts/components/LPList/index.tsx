@@ -1,11 +1,10 @@
 import { useState, useEffect, memo, FC, useMemo } from "react";
 import { useMedia } from "react-use";
 import dayjs from "dayjs";
-import LocalLoader from "apps/charts/components/LocalLoader";
 import utc from "dayjs/plugin/utc";
-import { Box, Flex } from "rebass";
-import styled from "styled-components";
+import { Box, Pagination, styled } from "@mui/material";
 
+import LocalLoader from "apps/charts/components/LocalLoader";
 import { CustomLink } from "apps/charts/components/Link";
 import { Divider } from "apps/charts/components";
 import { formattedNum } from "apps/charts/utils";
@@ -16,30 +15,18 @@ import { TableHeaderBox } from "apps/charts/components/Row";
 
 dayjs.extend(utc);
 
-const PageButtons = styled.div`
-  width: 100%;
+const PaginationWrapper = styled(Box)`
   display: flex;
   justify-content: center;
   margin-top: 2em;
   margin-bottom: 0.5em;
 `;
 
-const Arrow = styled.div<{ faded: boolean }>`
-  color: ${({ theme }) => theme.white};
-  opacity: ${(props) => (props.faded ? 0.3 : 1)};
-  padding: 0 20px;
-  user-select: none;
-
-  :hover {
-    cursor: pointer;
-  }
-`;
-
 const List = styled(Box)`
   -webkit-overflow-scrolling: touch;
 `;
 
-const DashGrid = styled.div`
+const DashGrid = styled(Box)`
   display: grid;
   grid-gap: 1em;
   grid-template-columns: 10px 2fr 1fr 1fr;
@@ -62,18 +49,20 @@ const DashGrid = styled.div`
 `;
 
 const HeaderWrapper = styled(DashGrid)`
-  background: ${({ theme }) => theme.headerBackground};
+  background: #131f35;
   border-radius: 8px;
   padding-top: 7px !important;
   padding-bottom: 7px !important;
 `;
 
-const ListWrapper = styled.div``;
+const Flex = styled(Box)`
+  display: flex;
+`;
 
 const DataText = styled(Flex)`
   align-items: center;
   text-align: center;
-  color: ${({ theme }) => theme.text1};
+  color: #fafafa;
 
   & > * {
     font-size: 14px;
@@ -109,12 +98,7 @@ const ListItem: FC<ListItemProps> = memo((props) => {
         <CustomLink to={"/charts/pair/" + lp.pairAddress}>
           <RowFixed>
             {!below600 && (
-              <DoubleTokenLogo
-                a0={lp.token0}
-                a1={lp.token1}
-                size={16}
-                margin={true}
-              />
+              <DoubleTokenLogo a0={lp.token0} a1={lp.token1} size={16} />
             )}
             {lp.pairName}
           </RowFixed>
@@ -174,7 +158,7 @@ const LPList: FC<LPListProps> = (props) => {
   );
 
   return (
-    <ListWrapper>
+    <Box>
       <HeaderWrapper
         style={{ height: "fit-content", padding: "0px 1.125rem 1rem" }}
       >
@@ -202,16 +186,16 @@ const LPList: FC<LPListProps> = (props) => {
         </Flex>
       </HeaderWrapper>
       <List p={0}>{!lpList ? <LocalLoader /> : lpList}</List>
-      <PageButtons>
-        <div onClick={() => setPage(page === 1 ? page : page - 1)}>
-          <Arrow faded={page === 1 ? true : false}>←</Arrow>
-        </div>
-        <TYPE.body>{"Page " + page + " of " + maxPage}</TYPE.body>
-        <div onClick={() => setPage(page === maxPage ? page : page + 1)}>
-          <Arrow faded={page === maxPage ? true : false}>→</Arrow>
-        </div>
-      </PageButtons>
-    </ListWrapper>
+      {maxPage > 1 && (
+        <PaginationWrapper>
+          <Pagination
+            count={Math.ceil(maxPage)}
+            page={page}
+            onChange={(event, page) => setPage(page)}
+          />
+        </PaginationWrapper>
+      )}
+    </Box>
   );
 };
 

@@ -14,11 +14,6 @@ import {
 import { RateSwitchActions } from "./RateSwitchActions";
 import { FC } from "react";
 
-export type RateSwitchModalContentProps = {
-  underlyingAsset: string;
-  currentRateMode: InterestRate;
-};
-
 export enum ErrorType {
   NO_BORROWS_YET_USING_THIS_CURRENCY,
   YOU_CANT_BORROW_STABLE_NOW,

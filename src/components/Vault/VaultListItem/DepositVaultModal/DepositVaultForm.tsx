@@ -281,7 +281,7 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
             alignItems="flex-start"
             secondaryAction={
               <>
-                {formatPercentage(BigNumber(sharedToken || "0").toNumber()) +
+                {formatPercentage(Number(sharedToken || "0")) +
                   " " +
                   shareToken.name}
               </>
