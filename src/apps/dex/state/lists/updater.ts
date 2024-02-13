@@ -47,7 +47,7 @@ export default function Updater(): null {
     Promise.all(promises).finally(() => setLoading(false));
   }, [loading, fetchList, isWindowVisible, lists, setLoading]);
 
-  // fetch all lists every 10 minutes, but only after we initialize library
+  // fetch all lists every 10 minutes, but only after we initialize a library
   useInterval(fetchAllListsCallback, library ? 1000 * 60 * 10 : null);
 
   // whenever a list is not loaded and not loading, try again to load it

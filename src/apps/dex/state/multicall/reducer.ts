@@ -14,7 +14,7 @@ export interface MulticallState {
     [chainId: number]: {
       // stores for each call key the listeners' preferences
       [callKey: string]: {
-        // stores how many listeners there are per each blocks per fetch preference
+        // stores how many listeners there are per each block per-fetch preference
         [blocksPerFetch: number]: number;
       };
     };

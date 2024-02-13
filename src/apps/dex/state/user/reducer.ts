@@ -76,13 +76,13 @@ export const initialState: UserState = {
 export default createReducer(initialState, (builder) =>
   builder
     .addCase(updateVersion, (state) => {
-      // slippage isnt being tracked in local storage, reset to default
+      // slippage isn't being tracked in local storage, reset to default
       // noinspection SuspiciousTypeOfGuard
       if (typeof state.userSlippageTolerance !== "number") {
         state.userSlippageTolerance = INITIAL_ALLOWED_SLIPPAGE;
       }
 
-      // deadline isnt being tracked in local storage, reset to default
+      // deadline isn't being tracked in local storage, reset to default
       // noinspection SuspiciousTypeOfGuard
       if (typeof state.userDeadline !== "number") {
         state.userDeadline = DEFAULT_DEADLINE_FROM_NOW;
