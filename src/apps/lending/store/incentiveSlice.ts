@@ -32,7 +32,6 @@ export const createIncentiveSlice: StateCreator<
       chainId: currentChainId,
     });
 
-    console.log(currentMarketData.addresses.UI_INCENTIVE_DATA_PROVIDER);
     const promises: Promise<void>[] = [];
 
     try {
