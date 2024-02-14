@@ -125,7 +125,7 @@ export const TxActionsWrapper: FC<TxActionsWrapperProps> = ({
           iconSize={20}
           iconMargin={2}
           color="white"
-          text={"Approve {symbol} to continue"}
+          text={`Approve ${symbol ?? ""} to continue`}
         />
       ),
       handleClick: handleApproval,
