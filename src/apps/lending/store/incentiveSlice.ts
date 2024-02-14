@@ -31,6 +31,8 @@ export const createIncentiveSlice: StateCreator<
       provider: get().jsonRpcProvider(),
       chainId: currentChainId,
     });
+
+    console.log(currentMarketData.addresses.UI_INCENTIVE_DATA_PROVIDER);
     const promises: Promise<void>[] = [];
 
     try {
@@ -40,7 +42,12 @@ export const createIncentiveSlice: StateCreator<
             lendingPoolAddressProvider:
               currentMarketData.addresses.LENDING_POOL_ADDRESS_PROVIDER,
           })
-          .then((reserveIncentiveData) => set({ reserveIncentiveData }))
+          .then((reserveIncentiveData) => {
+            console.log({
+              reserveIncentiveData,
+            });
+            set({ reserveIncentiveData });
+          })
       );
       if (account) {
         promises.push(
@@ -50,11 +57,14 @@ export const createIncentiveSlice: StateCreator<
                 currentMarketData.addresses.LENDING_POOL_ADDRESS_PROVIDER,
               user: account,
             })
-            .then((userIncentiveData) =>
+            .then((userIncentiveData) => {
+              console.log({
+                userIncentiveData,
+              });
               set({
                 userIncentiveData,
-              })
-            )
+              });
+            })
         );
       }
       await Promise.all(promises);
