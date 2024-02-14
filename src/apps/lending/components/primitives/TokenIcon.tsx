@@ -71,6 +71,7 @@ export function Base64Token({
       }
     }
   }, [loading, aToken]);
+
   return (
     <div
       style={{
