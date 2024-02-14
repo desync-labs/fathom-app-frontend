@@ -12,7 +12,7 @@ test.describe("Fathom App Test Suite: DEX Swap", () => {
     await dexPage.connectWallet(WalletConnectOptions.Metamask);
     await dexPage.validateConnectedWalletAddress();
     const expectedData = await dexPage.swap({
-      fromToken: tokenIds.WXDC,
+      fromToken: tokenIds.XDC,
       toToken: tokenIds.xUSDT,
       fromAmount: 0.025,
     });
