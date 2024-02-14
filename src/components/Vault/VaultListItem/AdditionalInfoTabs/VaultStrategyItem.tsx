@@ -31,6 +31,11 @@ export const VaultItemAccordion = styled(Accordion)`
   box-shadow: none;
 
   ${({ theme }) => theme.breakpoints.down("sm")} {
+    &.MuiPaper-root {
+      &:before {
+        background: none;
+      }
+    }
     padding: 20px;
     margin: 16px 0;
 
