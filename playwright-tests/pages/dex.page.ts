@@ -232,6 +232,7 @@ export default class DexPage extends BasePage {
     const fromAmountString = await this.fromTokenAmountInput.getAttribute(
       "value"
     );
+    await this.page.waitForTimeout(3000);
     const toAmountString = await this.toTokenAmountInput.getAttribute("value");
     expect(Number(toAmountString)).toBeGreaterThan(0);
     const fromTokenName = await this.fromTokenSymbolContainer.textContent();
@@ -267,6 +268,7 @@ export default class DexPage extends BasePage {
     const fromAmountString = await this.fromTokenAmountInput.getAttribute(
       "value"
     );
+    await this.page.waitForTimeout(3000);
     const toAmountString = await this.toTokenAmountInput.getAttribute("value");
     expect(Number(toAmountString)).toBeGreaterThan(0);
     const fromTokenName = await this.fromTokenSymbolContainer.textContent();
@@ -403,7 +405,7 @@ export default class DexPage extends BasePage {
       .toHaveText(
         `Swap ${fromAmountExpected} ${fromTokenNameExpected} for ${formatNumberToFixedLength(
           toAmountExpected,
-          16
+          17
         )} ${toTokenNameExpected}`
       );
     await expect.soft(this.transactionPopupFooterText).toBeVisible();
