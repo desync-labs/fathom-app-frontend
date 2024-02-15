@@ -1,5 +1,5 @@
 import { DuplicateIcon, XIcon } from "@heroicons/react/outline";
-import { Box, Button, Link, SvgIcon, Typography } from "@mui/material";
+import { Box, Button, SvgIcon, Typography } from "@mui/material";
 import { useModalContext } from "apps/lending/hooks/useModal";
 import { TxErrorType } from "apps/lending/ui-config/errorMapping";
 import { FC } from "react";
@@ -37,12 +37,6 @@ export const TxErrorView: FC<{ txError: TxErrorType }> = ({ txError }) => {
 
         <Typography sx={{ mt: 2 }} variant="h2">
           Transaction failed
-        </Typography>
-
-        <Typography>
-          You can report incident to our{" "}
-          <Link href="https://discord.com/invite/aave">Discord</Link> or
-          <Link href="https://github.com/aave/interface">Github</Link>.
         </Typography>
 
         <Button
