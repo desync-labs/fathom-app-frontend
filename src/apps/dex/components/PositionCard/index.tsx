@@ -1,5 +1,4 @@
 import { FC, useState } from "react";
-import { Link } from "react-router-dom";
 import { JSBI, Pair, Percent, TokenAmount } from "into-the-fathom-swap-sdk";
 import { styled, Typography } from "@mui/material";
 
@@ -368,27 +367,39 @@ const FullPositionCard: FC<PositionCardProps> = ({ pair, border }) => {
             {userDefaultPoolBalance &&
               JSBI.greaterThan(userDefaultPoolBalance.raw, BIG_INT_ZERO) && (
                 <RowBetween marginTop="10px">
-                  <ButtonSecondary
-                    padding="8px"
-                    borderRadius="8px"
-                    as={Link}
-                    href={`/swap/add/${currencyId(currency0)}/${currencyId(
-                      currency1
-                    )}`}
-                    width="48%"
-                  >
-                    Add
+                  <ButtonSecondary padding="0" borderRadius="8px" width="48%">
+                    <StyledInternalLink
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        textAlign: "center",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                      to={`/swap/add/${currencyId(currency0)}/${currencyId(
+                        currency1
+                      )}`}
+                    >
+                      Add
+                    </StyledInternalLink>
                   </ButtonSecondary>
-                  <ButtonSecondary
-                    padding="8px"
-                    borderRadius="8px"
-                    as={Link}
-                    width="48%"
-                    href={`/swap/remove/${currencyId(currency0)}/${currencyId(
-                      currency1
-                    )}`}
-                  >
-                    Remove
+                  <ButtonSecondary padding="0" borderRadius="8px" width="48%">
+                    <StyledInternalLink
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        textAlign: "center",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                      to={`/swap/remove/${currencyId(currency0)}/${currencyId(
+                        currency1
+                      )}`}
+                    >
+                      Remove
+                    </StyledInternalLink>
                   </ButtonSecondary>
                 </RowBetween>
               )}
