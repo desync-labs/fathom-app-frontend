@@ -8,9 +8,11 @@ const Card = styled(Box)<{
   border-radius: 8px;
   padding: 1.25rem;
 `;
+
 export default Card;
 
-export const LightCard = styled(Card)`
+export const LightCard = styled(Card)<{ padding?: string }>`
+  padding: ${({ padding }) => (padding ? padding : "1.25rem")};
   border: 1px solid #061023;
   background-color: #131f35;
 `;

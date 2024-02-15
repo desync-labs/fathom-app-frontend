@@ -96,13 +96,18 @@ export const ButtonLight = styled(Base)`
   }
 `;
 
-export const ButtonSecondary = styled(Base)<{ padding?: string }>`
+export const ButtonSecondary = styled(Base)<{
+  padding?: string;
+  borderRadius?: string;
+  width?: string;
+}>`
   border: 1px solid #376bad70;
   color: #ffffff;
   background-color: transparent;
   font-size: 16px;
-  border-radius: 8px;
   padding: ${({ padding }) => (padding ? padding : "10px")};
+  border-radius: ${({ borderRadius }) => (borderRadius ? borderRadius : "8px")};
+  width: ${({ width }) => (width ? width : "auto")};
 
   &:focus {
     box-shadow: 0 0 0 1pt #376bad70;
@@ -154,6 +159,7 @@ export const ButtonEmpty = styled(Base)`
   }
   &:hover {
     text-decoration: none;
+    background: transparent;
   }
   &:active {
     text-decoration: none;

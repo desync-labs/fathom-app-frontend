@@ -506,7 +506,7 @@ const AddLiquidity = () => {
               currencies[Field.CURRENCY_B] &&
               pairState !== PairState.INVALID && (
                 <>
-                  <LightCard padding="0px" borderRadius={"20px"}>
+                  <LightCard borderRadius={"20px"} padding={"0"}>
                     <RowBetween padding="1rem">
                       <TYPE.subHeader fontWeight={500} fontSize={14}>
                         {noLiquidity ? "Initial prices" : "Prices"} and pool
