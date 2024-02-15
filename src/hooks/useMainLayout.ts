@@ -4,7 +4,7 @@ import useConnector from "context/connector";
 import { useLocation } from "react-router-dom";
 import useWindowSize from "./useWindowResize";
 import {
-  useAggregateUniBalance,
+  useAggregateFTHMBalance,
   useXDCBalances,
 } from "apps/dex/state/wallet/hooks";
 import { TokenAmount } from "into-the-fathom-swap-sdk";
@@ -36,7 +36,7 @@ const useMainLayout = () => {
     useState<boolean>(false);
   const [savedOpen, setSavedOpen] = useState<boolean>(false);
 
-  const aggregateBalance: TokenAmount | undefined = useAggregateUniBalance();
+  const aggregateBalance: TokenAmount | undefined = useAggregateFTHMBalance();
 
   const countUpValue = aggregateBalance?.toFixed(0) ?? "0";
   const countUpValuePrevious = usePrevious(countUpValue) ?? "0";

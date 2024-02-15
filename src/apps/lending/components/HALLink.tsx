@@ -81,21 +81,6 @@ const HALLink: FC<Props> = ({ healthFactor, marketName, integrationURL }) => {
           <Typography variant="tooltip" color="text.secondary" fontWeight={500}>
             Setup notifications about your Health Factor using the Hal app.
           </Typography>
-          <Typography variant="tooltip" color="text.secondary" fontWeight={500}>
-            This integration was
-            <Link
-              mx={1}
-              variant="tooltip"
-              color="text.secondary"
-              fontWeight={500}
-              target="_blank"
-              rel="noopener"
-              href="https://snapshot.org/#/aave.eth/proposal/0xa730caeec3c28e014ff456b454186ef41c6c1f382cf0a7caa3d99c4ae16c8318"
-            >
-              proposed and approved
-            </Link>
-            by the community.
-          </Typography>
         </Stack>
       }
     >

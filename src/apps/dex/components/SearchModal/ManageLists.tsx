@@ -358,7 +358,7 @@ export function ManageLists({
     }
   }, [fetchList, listUrlInput, validUrl]);
 
-  // check if list is already imported
+  // check if a list is already imported
   const isImported = Object.keys(lists).includes(listUrlInput);
 
   // set list values and have parent modal switch to import list view

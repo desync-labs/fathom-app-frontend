@@ -1,4 +1,4 @@
-import { FTHM } from "apps/dex/constants/index";
+import { FTHM } from "apps/dex/constants";
 import {
   Currency,
   CurrencyAmount,
@@ -180,8 +180,8 @@ export function useAllTokenBalances(): {
   return balances ?? {};
 }
 
-// get the total owned, unclaimed, and unharvested UNI for account
-export function useAggregateUniBalance(): TokenAmount | undefined {
+// get the total owned, unclaimed, and unharvested FTHM for an account
+export function useAggregateFTHMBalance(): TokenAmount | undefined {
   const { account, chainId } = useActiveWeb3React();
 
   const fthm = chainId ? FTHM[chainId] : undefined;

@@ -65,6 +65,7 @@ const SwapModalHeader: FC<SwapModalHeaderProps> = ({
                 ? "#253656"
                 : ""
             }
+            data-testid="dex-swapModalHeader-fromAmount"
           >
             {trade.inputAmount.toSignificant(6)}
           </TruncatedText>
@@ -103,6 +104,7 @@ const SwapModalHeader: FC<SwapModalHeaderProps> = ({
                 ? "#253656"
                 : ""
             }
+            data-testid="dex-swapModalHeader-toAmount"
           >
             {trade.outputAmount.toSignificant(6)}
           </TruncatedText>

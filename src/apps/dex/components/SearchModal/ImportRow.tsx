@@ -58,11 +58,11 @@ const ImportRow: FC<ImportRowProps> = ({
   // gloabls
   const { chainId } = useActiveWeb3React();
 
-  // check if token comes from list
+  // check if token comes from a list
   const inactiveTokenList = useCombinedInactiveList();
   const list = chainId && inactiveTokenList?.[chainId]?.[token.address]?.list;
 
-  // check if already active on list or local storage tokens
+  // check if already active on a list or local storage tokens
   const isAdded = useIsUserAddedToken(token);
   const isActive = useIsTokenActive(token);
 

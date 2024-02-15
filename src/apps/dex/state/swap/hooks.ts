@@ -224,7 +224,7 @@ export function useDerivedSwapInfo(): {
     allowedSlippage &&
     computeSlippageAdjustedAmounts(v2Trade, allowedSlippage);
 
-  // compare input balance to max input based on version
+  // compare input balance to max input based on a version
 
   if (
     slippageAdjustedAmounts &&

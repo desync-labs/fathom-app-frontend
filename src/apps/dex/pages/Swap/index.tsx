@@ -237,7 +237,7 @@ const Swap = () => {
     allowedSlippage
   );
 
-  // check if user has gone through approval process, used to show two step buttons, reset on token change
+  // check if user has gone through an approval process, used to show two-step buttons, reset on token change
   const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false);
 
   // mark when a user has submitted an approval, reset onTokenSelection for input field
@@ -340,7 +340,7 @@ const Swap = () => {
   const priceImpactSeverity = warningSeverity(priceImpactWithoutFee);
 
   // show approve flow when: no error on inputs, not approved or pending, or approved in current session
-  // never show if price impact is above threshold in non expert mode
+  // never show if price impact is an above the threshold in non-expert mode
   const showApproveFlow =
     !swapInputError &&
     (approval === ApprovalState.NOT_APPROVED ||
@@ -560,7 +560,10 @@ const Swap = () => {
                 <TYPE.main mb="4px">Unsupported Asset</TYPE.main>
               </ButtonPrimary>
             ) : !account ? (
-              <ConnectWalletButton onClick={openConnectorMenu}>
+              <ConnectWalletButton
+                onClick={openConnectorMenu}
+                data-testid="dex-swap-connectWalletButton"
+              >
                 <WalletIcon></WalletIcon>
                 Connect Wallet
               </ConnectWalletButton>
@@ -568,6 +571,7 @@ const Swap = () => {
               <ButtonPrimary
                 disabled={Boolean(wrapInputError)}
                 onClick={onWrap}
+                data-testid="dex-wrap-button"
               >
                 {wrapInputError ??
                   (wrapType === WrapType.WRAP

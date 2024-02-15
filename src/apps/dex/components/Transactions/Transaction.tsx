@@ -85,14 +85,16 @@ export const Transaction: FC<{ tx: TransactionDetails }> = ({ tx }) => {
   if (!chainId) return null;
 
   return (
-    <Box>
+    <Box data-testid={`dex-transactions-transactionWrapper-${tx.hash}`}>
       <TransactionState
         href={getBlockScanLink(chainId, tx.hash, "transaction")}
         pending={pending}
         success={success}
       >
         <RowFixed>
-          <TransactionStatusText>
+          <TransactionStatusText
+            data-testid={`dex-transactions-transactionStatusText-${tx.hash}`}
+          >
             {summary
               ? summary + " " + formatTime(tx.addedTime / 1000)
               : tx.hash}{" "}

@@ -99,8 +99,8 @@ function useSwapCallArguments(
   }, [account, allowedSlippage, chainId, deadline, library, recipient, trade]);
 }
 
-// returns a function that will execute a swap, if the parameters are all valid
-// and the user has approved the slippage adjusted input amount for the trade
+// returns a function that will execute a swap if the parameters are all valid,
+// and the user has approved the slippage-adjusted input amount for the trade
 export function useSwapCallback(
   trade: Trade | undefined, // trade to execute, required
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
@@ -206,7 +206,7 @@ export function useSwapCallback(
           })
         );
 
-        // a successful estimation is a bignumber gas estimate and the next call is also a bignumber gas estimate
+        // a successful estimation is a bignumber gas estimate, and the next call is also a bignumber gas estimate
         const successfulEstimation = estimatedCalls.find(
           (el, ix, list): el is SuccessfulCall =>
             "gasEstimate" in el &&
@@ -245,7 +245,7 @@ export function useSwapCallback(
             const outputAmount = trade.outputAmount.toSignificant(3);
 
             const base = `Swap ${inputAmount} ${inputSymbol} for ${outputAmount} ${outputSymbol}`;
-            const withRecipient =
+            const withVersion =
               recipient === account
                 ? base
                 : `${base} to ${
@@ -253,8 +253,6 @@ export function useSwapCallback(
                       ? shortenAddress(recipientAddressOrName, 4)
                       : recipientAddressOrName
                   }`;
-
-            const withVersion = withRecipient;
 
             addTransaction(response, {
               summary: withVersion,

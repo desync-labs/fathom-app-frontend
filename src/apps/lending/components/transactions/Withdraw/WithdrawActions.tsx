@@ -64,6 +64,7 @@ export const WithdrawActions: FC<WithdrawActionsProps> = ({
       actionInProgressText={<>Withdrawing {symbol}</>}
       actionText={<>Withdraw {symbol}</>}
       handleAction={action}
+      symbol={symbol}
       handleApproval={() =>
         approval([{ amount: amountToWithdraw, underlyingAsset: poolAddress }])
       }

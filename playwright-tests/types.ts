@@ -58,3 +58,16 @@ export enum VaultAction {
   Withdraw = "Withdraw",
   Deposit = "Deposit",
 }
+
+export interface SwapData {
+  fromAmountExpected: string;
+  fromTokenNameExpected: string;
+  toAmountExpected: string;
+  toTokenNameExpected: string;
+}
+
+export enum DexTabs {
+  Swap = "Swap",
+  Pool = "Pool",
+  Transactions = "Transactions",
+}

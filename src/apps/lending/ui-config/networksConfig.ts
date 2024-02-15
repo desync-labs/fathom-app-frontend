@@ -67,6 +67,6 @@ export const networkConfigs: Record<string, BaseNetworkConfig> = {
      */
     isTestnet: process.env.REACT_APP_ENV !== "prod",
     networkLogoPath: "./icons/networks/xdc.png",
-    ratesHistoryApiUrl: "http://206.189.103.116:30002/data/rates-history",
+    ratesHistoryApiUrl: "https://dev-lending.fathom.fi/data/rates-history",
   },
 } as const;

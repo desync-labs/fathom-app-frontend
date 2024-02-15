@@ -1,4 +1,4 @@
-import { FC, memo } from "react";
+import { FC, HTMLProps, memo } from "react";
 import { styled } from "@mui/material";
 import { escapeRegExp } from "apps/dex/utils";
 
@@ -49,7 +49,7 @@ type InputProps = {
   error?: boolean;
   fontSize?: string;
   align?: "right" | "left";
-} & Omit<React.HTMLProps<HTMLInputElement>, "ref" | "onChange" | "as">;
+} & Omit<HTMLProps<HTMLInputElement>, "ref" | "onChange" | "as">;
 
 export const Input: FC<InputProps> = memo(
   ({ value, onUserInput, placeholder, ...rest }) => {

@@ -61,7 +61,7 @@ export const ImportList: FC<ImportProps> = ({
   const lists = useAllLists();
   const fetchList = useFetchListCallback();
 
-  // monitor is list is loading
+  // monitor is a list is loading
   const adding = Boolean(lists[listURL]?.loadingRequestId);
   const [addError, setAddError] = useState<string | null>(null);
 
@@ -76,7 +76,7 @@ export const ImportList: FC<ImportProps> = ({
           label: listURL,
         });
 
-        // turn list on
+        // turn a list on
         dispatch(enableList(listURL));
         // go back to lists
         setModalView(CurrencyModalView.manage);
