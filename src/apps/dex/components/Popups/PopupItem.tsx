@@ -1,7 +1,5 @@
 import { FC, useCallback, useEffect } from "react";
-import { useSpring } from "react-spring/web";
-import { animated } from "react-spring";
-import { Box, styled } from "@mui/material";
+import { Box, LinearProgress, styled } from "@mui/material";
 
 import { PopupContent } from "apps/dex/state/application/actions";
 import { useRemovePopup } from "apps/dex/state/application/hooks";
@@ -33,16 +31,12 @@ export const Popup = styled(Box)`
     }
   }
 `;
-const Fader = styled(Box)`
+const LinearProgressStyled = styled(LinearProgress)`
   position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 2px;
-  background-color: #43fff6;
 `;
-
-const AnimatedFader = animated(Fader);
 
 type PopupItemProps = {
   removeAfterMs: number | null;
@@ -91,17 +85,11 @@ const PopupItem: FC<PopupItemProps> = ({ removeAfterMs, content, popKey }) => {
     );
   }
 
-  const faderStyle = useSpring({
-    from: { width: "100%" },
-    to: { width: "0%" },
-    config: { duration: removeAfterMs ?? undefined },
-  });
-
   return (
     <Popup>
       <StyledClose onClick={removeThisPopup} />
       {popupContent}
-      {removeAfterMs !== null ? <AnimatedFader style={faderStyle} /> : null}
+      {removeAfterMs !== null ? <LinearProgressStyled /> : null}
     </Popup>
   );
 };

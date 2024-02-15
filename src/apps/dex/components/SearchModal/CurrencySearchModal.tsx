@@ -1,12 +1,12 @@
-import { Currency, Token } from "into-the-fathom-swap-sdk";
 import { FC, useCallback, useEffect, useState } from "react";
+import { Currency, Token } from "into-the-fathom-swap-sdk";
+import { TokenList } from "@uniswap/token-lists";
 import useLast from "apps/dex/hooks/useLast";
 import Modal from "apps/dex/components/Modal";
 import { CurrencySearch } from "apps/dex/components/SearchModal/CurrencySearch";
 import { ImportToken } from "apps/dex/components/SearchModal/ImportToken";
 import usePrevious from "apps/dex/hooks/usePrevious";
 import Manage from "apps/dex/components/SearchModal/Manage";
-import { TokenList } from "@uniswap/token-lists";
 import { ImportList } from "apps/dex/components/SearchModal/ImportList";
 
 interface CurrencySearchModalProps {
@@ -75,6 +75,7 @@ const CurrencySearchModal: FC<CurrencySearchModalProps> = ({
       onDismiss={onDismiss}
       maxHeight={80}
       minHeight={minHeight}
+      isFixedHeight={true}
     >
       {modalView === CurrencyModalView.search ? (
         <CurrencySearch

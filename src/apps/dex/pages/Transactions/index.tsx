@@ -223,7 +223,7 @@ const Transactions: FC = () => {
     <AppBody>
       <Wrapper id={"transaction-list"}>
         <TransactionsHeaderRow>
-          <TYPE.white>Transactions</TYPE.white>
+          <TYPE.white fontSize={20}>Transactions</TYPE.white>
         </TransactionsHeaderRow>
         {pending.length || sortedFilteredTransactions.length ? (
           <>

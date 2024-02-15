@@ -26,7 +26,18 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 const Wrapper = styled(Box)`
   position: relative;
   width: 100%;
+  height: 100%;
   overflow: auto;
+`;
+
+// const ModalContentWrapper = styled(Box)`
+//     padding: 20px;
+// `;
+
+const FlexColumn = styled(Box)`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 `;
 
 interface ImportProps {
@@ -94,8 +105,8 @@ export const ImportList: FC<ImportProps> = ({
         </RowBetween>
       </PaddedColumn>
       <SectionBreak />
-      <PaddedColumn gap="md">
-        <AutoColumn gap="md">
+      <PaddedColumn gap="md" sx={{ height: "calc(100% - 65px)" }}>
+        <FlexColumn>
           <Card bgcolor="#061023" padding="12px 20px">
             <RowBetween>
               <RowFixed>
@@ -198,7 +209,7 @@ export const ImportList: FC<ImportProps> = ({
               {addError}
             </TYPE.error>
           ) : null}
-        </AutoColumn>
+        </FlexColumn>
         {/* </Card> */}
       </PaddedColumn>
     </Wrapper>

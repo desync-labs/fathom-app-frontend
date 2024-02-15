@@ -1,5 +1,4 @@
 import { FC, ReactElement } from "react";
-import ThemeProvider, { GlobalStyle } from "apps/charts/Theme";
 import LocalStorageContextProvider, {
   Updater as LocalStorageContextUpdater,
 } from "apps/charts/contexts/LocalStorage";
@@ -11,7 +10,6 @@ import UserContextProvider from "apps/charts/contexts/User";
 import GlobalDataContextProvider from "apps/charts/contexts/GlobalData";
 import ApplicationContextProvider from "apps/charts/contexts/Application";
 import TokenDataContextProvider from "apps/charts/contexts/TokenData";
-import App from "apps/charts/App";
 
 type ContextProvidersProps = {
   children: ReactElement;
@@ -42,16 +40,3 @@ export const Updaters = () => {
     </>
   );
 };
-
-export default function ChartsIndexComponent() {
-  return (
-    <>
-      <ThemeProvider>
-        <>
-          <GlobalStyle />
-          <App />
-        </>
-      </ThemeProvider>
-    </>
-  );
-}

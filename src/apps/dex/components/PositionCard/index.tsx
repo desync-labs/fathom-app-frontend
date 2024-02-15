@@ -20,7 +20,8 @@ import { RowBetween, RowFixed, AutoRow } from "apps/dex/components/Row";
 import { Dots } from "apps/dex/components/swap/styleds";
 import { BIG_INT_ZERO } from "apps/dex/constants";
 
-import { ChevronDown, ChevronUp } from "react-feather";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 
 export const FixedHeightRow = styled(RowBetween)`
   height: 24px;
@@ -262,19 +263,25 @@ const FullPositionCard: FC<PositionCardProps> = ({ pair, border }) => {
               {showMore ? (
                 <>
                   Manage
-                  <ChevronUp
-                    stroke={"white"}
-                    size="20"
-                    style={{ marginLeft: "10px" }}
+                  <ExpandLessIcon
+                    sx={{
+                      color: "#fff",
+                      width: "20px",
+                      height: "20px",
+                      marginLeft: "10px",
+                    }}
                   />
                 </>
               ) : (
                 <>
                   Manage
-                  <ChevronDown
-                    stroke={"white"}
-                    size="20"
-                    style={{ marginLeft: "10px" }}
+                  <ExpandMoreIcon
+                    sx={{
+                      color: "#fff",
+                      width: "20px",
+                      height: "20px",
+                      marginLeft: "10px",
+                    }}
                   />
                 </>
               )}

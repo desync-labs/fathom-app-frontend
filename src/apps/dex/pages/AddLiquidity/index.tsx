@@ -313,10 +313,10 @@ const AddLiquidity = () => {
       <AutoColumn gap="20px">
         <RowFlat style={{ marginTop: "20px" }}>
           <Typography
-            fontSize="48px"
+            fontSize="38px"
             fontWeight={500}
             lineHeight="42px"
-            marginRight={10}
+            marginRight="10px"
           >
             {liquidityMinted?.toSignificant(6)}
           </Typography>
@@ -327,7 +327,7 @@ const AddLiquidity = () => {
           />
         </RowFlat>
         <Row>
-          <Typography fontSize="24px">
+          <Typography fontSize="22px">
             {currencies[Field.CURRENCY_A]?.symbol +
               "/" +
               currencies[Field.CURRENCY_B]?.symbol +
@@ -438,16 +438,16 @@ const AddLiquidity = () => {
                 <ColumnCenter>
                   <BlueCard>
                     <AutoColumn gap="10px">
-                      <TYPE.link fontWeight={600} color={"text1"}>
+                      <TYPE.white fontWeight={600}>
                         You are the first liquidity provider.
-                      </TYPE.link>
-                      <TYPE.link fontWeight={400} color={"text1"}>
+                      </TYPE.white>
+                      <TYPE.white fontWeight={400}>
                         The ratio of tokens you add will set the price of this
                         pool.
-                      </TYPE.link>
-                      <TYPE.link fontWeight={400} color={"text1"}>
+                      </TYPE.white>
+                      <TYPE.white fontWeight={400}>
                         Once you are happy with the rate click supply to review.
-                      </TYPE.link>
+                      </TYPE.white>
                     </AutoColumn>
                   </BlueCard>
                 </ColumnCenter>
@@ -455,12 +455,12 @@ const AddLiquidity = () => {
                 <ColumnCenter>
                   <BlueCard>
                     <AutoColumn gap="10px">
-                      <TYPE.link fontWeight={400} color={"text1"}>
+                      <TYPE.white fontWeight={400}>
                         <b>Tip:</b> When you add liquidity, you will receive
                         pool tokens representing your position. These tokens
                         automatically earn fees proportional to your share of
                         the pool, and can be redeemed at any time.
-                      </TYPE.link>
+                      </TYPE.white>
                     </AutoColumn>
                   </BlueCard>
                 </ColumnCenter>

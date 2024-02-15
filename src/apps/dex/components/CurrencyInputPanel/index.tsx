@@ -205,17 +205,16 @@ const CurrencyInputPanel: FC<CurrencyInputPanelProps> = ({
         {!hideInput && (
           <LabelRow>
             <RowBetween>
-              <TYPE.body color="#4F658C" fontWeight={500} fontSize={14}>
+              <TYPE.main fontWeight={500} fontSize={14}>
                 {label}
-              </TYPE.body>
+              </TYPE.main>
               {account && (
-                <TYPE.body
+                <TYPE.main
                   onClick={onMax}
-                  color="#4F658C"
                   fontWeight={500}
                   fontSize={14}
                   style={{ display: "inline", cursor: "pointer" }}
-                ></TYPE.body>
+                ></TYPE.main>
               )}
             </RowBetween>
           </LabelRow>
