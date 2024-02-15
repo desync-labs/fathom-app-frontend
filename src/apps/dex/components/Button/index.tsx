@@ -101,7 +101,7 @@ export const ButtonSecondary = styled(Base)<{ padding?: string }>`
   color: #ffffff;
   background-color: transparent;
   font-size: 16px;
-  border-radius: 12px;
+  border-radius: 8px;
   padding: ${({ padding }) => (padding ? padding : "10px")};
 
   &:focus {

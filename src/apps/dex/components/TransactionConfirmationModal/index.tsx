@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, ReactNode } from "react";
 import { ChainId, Currency } from "into-the-fathom-swap-sdk";
 import { Box, styled, Typography } from "@mui/material";
 
@@ -18,17 +18,28 @@ import Circle from "apps/dex/assets/images/blue-loader.svg";
 import MetaMaskLogo from "apps/dex/assets/images/metamask.png";
 
 const Wrapper = styled(Box)`
+  position: relative;
   width: 100%;
-  border: 1px solid #253656;
+  height: 100%;
 `;
 const Section = styled(AutoColumn)`
   padding: 24px;
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    margin-bottom: 201px;
+  }
 `;
 
 const BottomSection = styled(Section)`
   background-color: #061023;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin-bottom: unset;
+  }
 `;
 
 const ConfirmedIcon = styled(ColumnCenter)`
@@ -171,8 +182,8 @@ export function ConfirmationModalContent({
 }: {
   title: string;
   onDismiss: () => void;
-  topContent: () => React.ReactNode;
-  bottomContent: () => React.ReactNode;
+  topContent: () => ReactNode;
+  bottomContent: () => ReactNode;
 }) {
   return (
     <Wrapper>

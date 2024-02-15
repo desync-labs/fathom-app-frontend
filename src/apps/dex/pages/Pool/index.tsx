@@ -81,7 +81,6 @@ const Pool = () => {
 
   // fetch the user's balances of all tracked V2 LP tokens
   const trackedTokenPairs = useTrackedTokenPairs();
-  // console.log(trackedTokenPairs)
 
   const tokenPairsWithLiquidityTokens = useMemo(
     () =>

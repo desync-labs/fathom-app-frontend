@@ -120,8 +120,17 @@ const ModalContentWrapper = styled(Box)`
   align-items: center;
   justify-content: center;
   padding: 2rem 0;
-  background-color: #061023;
-  border-radius: 20px;
+`;
+
+const ExpertModeConfirmButton = styled(ButtonError)`
+  ${({ theme }) => theme.breakpoints.down("md")} {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 20px;
+    width: auto;
+  }
 `;
 
 const SettingsTab = () => {
@@ -169,7 +178,7 @@ const SettingsTab = () => {
               <Typography fontWeight={600} fontSize={20}>
                 ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING.
               </Typography>
-              <ButtonError
+              <ExpertModeConfirmButton
                 error={true}
                 onClick={() => {
                   if (
@@ -190,7 +199,7 @@ const SettingsTab = () => {
                 >
                   Turn On Expert Mode
                 </Typography>
-              </ButtonError>
+              </ExpertModeConfirmButton>
             </AutoColumn>
           </AutoColumn>
         </ModalContentWrapper>
@@ -223,10 +232,10 @@ const SettingsTab = () => {
               Interface Settings
             </Typography>
             <RowBetween>
-              <RowFixed>
-                <TYPE.black fontWeight={400} fontSize={14} color="#4F658C">
+              <RowFixed color={"#4F658C"}>
+                <TYPE.main fontWeight={400} fontSize={14}>
                   Toggle Expert Mode
-                </TYPE.black>
+                </TYPE.main>
                 <QuestionHelper text="Bypasses confirmation modals and allows high slippage trades. Use at your own risk." />
               </RowFixed>
               <Toggle
@@ -246,10 +255,10 @@ const SettingsTab = () => {
               />
             </RowBetween>
             <RowBetween>
-              <RowFixed>
-                <TYPE.black fontWeight={400} fontSize={14} color="#4F658C">
+              <RowFixed color={"#4F658C"}>
+                <TYPE.main fontWeight={400} fontSize={14}>
                   Disable Multihops
-                </TYPE.black>
+                </TYPE.main>
                 <QuestionHelper text="Restricts swaps to direct pairs only." />
               </RowFixed>
               <Toggle

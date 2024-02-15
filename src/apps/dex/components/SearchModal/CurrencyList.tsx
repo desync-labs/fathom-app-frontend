@@ -1,10 +1,4 @@
-import {
-  CSSProperties,
-  FC,
-  MutableRefObject,
-  useCallback,
-  useMemo,
-} from "react";
+import { FC, useCallback, useMemo } from "react";
 import {
   Currency,
   CurrencyAmount,
@@ -12,8 +6,7 @@ import {
   XDC,
   Token,
 } from "into-the-fathom-swap-sdk";
-import { FixedSizeList } from "react-window";
-import { Box, styled, Typography } from "@mui/material";
+import { Box, List, ListItem, styled, Typography } from "@mui/material";
 
 import { useActiveWeb3React } from "apps/dex/hooks";
 import { useCombinedActiveList } from "apps/dex/state/lists/hooks";
@@ -75,7 +68,6 @@ type CurrencyRowProps = {
   onSelect: () => void;
   isSelected: boolean;
   otherSelected: boolean;
-  style: CSSProperties;
 };
 
 const CurrencyRow: FC<CurrencyRowProps> = ({
@@ -83,7 +75,6 @@ const CurrencyRow: FC<CurrencyRowProps> = ({
   onSelect,
   isSelected,
   otherSelected,
-  style,
 }) => {
   const { account } = useActiveWeb3React();
   const key = currencyKey(currency);
@@ -95,7 +86,6 @@ const CurrencyRow: FC<CurrencyRowProps> = ({
   // only show add or remove buttons if not on selected list
   return (
     <MenuItem
-      style={style}
       className={`token-item-${key}`}
       onClick={() => (isSelected ? null : onSelect())}
       disabled={isSelected}
@@ -123,12 +113,10 @@ const CurrencyRow: FC<CurrencyRowProps> = ({
 };
 
 type CurrencyListProps = {
-  height: number;
   currencies: Currency[];
   selectedCurrency?: Currency | null;
   onCurrencySelect: (currency: Currency) => void;
   otherCurrency?: Currency | null;
-  fixedListRef?: MutableRefObject<FixedSizeList | undefined>;
   showXDC: boolean;
   showImportView: () => void;
   setImportToken: (token: Token) => void;
@@ -136,19 +124,17 @@ type CurrencyListProps = {
 };
 
 const CurrencyList: FC<CurrencyListProps> = ({
-  height,
   currencies,
   selectedCurrency,
   onCurrencySelect,
   otherCurrency,
-  fixedListRef,
   showXDC,
   showImportView,
   setImportToken,
   breakIndex,
 }) => {
   const { chainId } = useActiveWeb3React();
-  const itemData: (Currency | undefined)[] = useMemo(() => {
+  const formattedCurrencies: (Currency | undefined)[] = useMemo(() => {
     let formatted: (Currency | undefined)[] = showXDC
       ? [Currency.XDC, ...currencies]
       : currencies;
@@ -167,14 +153,14 @@ const CurrencyList: FC<CurrencyListProps> = ({
   } = useAllInactiveTokens();
 
   const Row = useCallback(
-    ({ data, index, style }: { data: any; index: number; style: any }) => {
-      const currency: Currency = data[index];
+    ({ currency, index }: { currency: any; index: number }) => {
       const isSelected = Boolean(
         selectedCurrency && currencyEquals(selectedCurrency, currency)
       );
       const otherSelected = Boolean(
         otherCurrency && currencyEquals(otherCurrency, currency)
       );
+
       const handleSelect = () => onCurrencySelect(currency);
 
       const token = wrappedCurrency(currency, chainId);
@@ -184,10 +170,12 @@ const CurrencyList: FC<CurrencyListProps> = ({
         token &&
         Object.keys(inactiveTokens).includes(token.address);
 
-      if (index === breakIndex || !data) {
+      if (index === breakIndex || !currency) {
         return (
-          <FixedContentRow style={style}>
-            <LightGreyCard sx={{ padding: "8px 12px", borderRadius: "8px" }}>
+          <FixedContentRow
+            sx={{ padding: "10px 20px", height: "auto", width: "100%" }}
+          >
+            <LightGreyCard sx={{ padding: "12px", borderRadius: "8px" }}>
               <RowBetween alignItems={"center"}>
                 <RowFixed>
                   <TokenListLogoWrapper src={TokenListLogo} />
@@ -205,7 +193,6 @@ const CurrencyList: FC<CurrencyListProps> = ({
       if (showImport && token) {
         return (
           <ImportRow
-            style={style}
             token={token}
             showImportView={showImportView}
             setImportToken={setImportToken}
@@ -215,7 +202,6 @@ const CurrencyList: FC<CurrencyListProps> = ({
       } else {
         return (
           <CurrencyRow
-            style={style}
             currency={currency}
             isSelected={isSelected}
             onSelect={handleSelect}
@@ -236,23 +222,14 @@ const CurrencyList: FC<CurrencyListProps> = ({
     ]
   );
 
-  const itemKey = useCallback(
-    (index: number, data: any) => currencyKey(data[index]),
-    []
-  );
-
   return (
-    <FixedSizeList
-      height={height}
-      ref={fixedListRef as any}
-      width="100%"
-      itemData={itemData}
-      itemCount={itemData.length}
-      itemSize={56}
-      itemKey={itemKey}
-    >
-      {Row}
-    </FixedSizeList>
+    <List sx={{ overflow: "auto", marginBottom: "65px" }}>
+      {formattedCurrencies.map((currency, i) => (
+        <ListItem key={i} sx={{ padding: 0 }}>
+          {Row({ currency: currency, index: i })}
+        </ListItem>
+      ))}
+    </List>
   );
 };
 

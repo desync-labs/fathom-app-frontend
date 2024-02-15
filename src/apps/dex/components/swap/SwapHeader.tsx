@@ -22,7 +22,7 @@ const SwapHeader = () => {
     <StyledSwapHeader>
       <RowBetween>
         <SwapHeaderRow>
-          <TYPE.white>Swap</TYPE.white>
+          <TYPE.white fontSize={"20px"}>Swap</TYPE.white>
         </SwapHeaderRow>
         <Settings />
       </RowBetween>

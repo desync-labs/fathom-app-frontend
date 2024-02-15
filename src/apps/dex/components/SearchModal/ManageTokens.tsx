@@ -30,7 +30,7 @@ import { CurrencyModalView } from "apps/dex/components/SearchModal/CurrencySearc
 
 const Wrapper = styled(Box)`
   width: 100%;
-  height: calc(100% - 60px);
+  height: calc(100% - 145px);
   position: relative;
   padding-bottom: 60px;
 `;
@@ -38,13 +38,13 @@ const Wrapper = styled(Box)`
 const Footer = styled(Box)`
   position: absolute;
   bottom: 0;
+  left: 0;
+  right: 0;
   width: 100%;
-  border-radius: 20px;
-  border-top-right-radius: 0;
-  border-top-left-radius: 0;
   border-top: 1px solid #061023;
   padding: 20px;
   text-align: center;
+  z-index: 9;
 `;
 
 type ManageTokensProps = {

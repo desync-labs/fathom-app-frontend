@@ -27,7 +27,17 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 const Wrapper = styled(Box)`
   position: relative;
   width: 100%;
+  height: 100%;
   overflow: auto;
+`;
+
+const ModalContentWrapper = styled(Box)`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  height: calc(100% - 65px);
+  padding: 20px;
 `;
 
 const WarningWrapper = styled(Card)<{ highWarning: boolean }>`
@@ -89,7 +99,7 @@ export const ImportToken: FC<ImportProps> = ({
         </RowBetween>
       </PaddedColumn>
       <SectionBreak />
-      <PaddedColumn gap="md">
+      <ModalContentWrapper>
         {tokens.map((token) => {
           const list =
             chainId && inactiveTokenList?.[chainId]?.[token.address]?.list;
@@ -227,7 +237,7 @@ export const ImportToken: FC<ImportProps> = ({
         >
           Import
         </ButtonPrimary>
-      </PaddedColumn>
+      </ModalContentWrapper>
     </Wrapper>
   );
 };

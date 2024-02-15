@@ -158,10 +158,10 @@ const SlippageTabs: FC<SlippageTabsProps> = ({
   return (
     <AutoColumn gap="md">
       <AutoColumn gap="sm">
-        <RowFixed>
-          <TYPE.black fontWeight={400} fontSize={14} color={"#4F658C"}>
+        <RowFixed color={"#4F658C"}>
+          <TYPE.main fontWeight={400} fontSize={14}>
             Slippage tolerance
-          </TYPE.black>
+          </TYPE.main>
           <QuestionHelper text="Your transaction will revert if the price changes unfavorably by more than this percentage." />
         </RowFixed>
         <RowBetween>
@@ -224,12 +224,12 @@ const SlippageTabs: FC<SlippageTabsProps> = ({
         </RowBetween>
         {!!slippageError && (
           <RowBetween
-            style={{
+            sx={{
               fontSize: "14px",
               paddingTop: "7px",
               color:
                 slippageError === SlippageError.InvalidInput
-                  ? "red"
+                  ? "#f3841e"
                   : "#F3841E",
             }}
           >
@@ -243,10 +243,10 @@ const SlippageTabs: FC<SlippageTabsProps> = ({
       </AutoColumn>
 
       <AutoColumn gap="sm">
-        <RowFixed>
-          <TYPE.black fontSize={14} fontWeight={400} color={"#4F658C"}>
+        <RowFixed color={"#4F658C"}>
+          <TYPE.main fontSize={14} fontWeight={400}>
             Transaction deadline
-          </TYPE.black>
+          </TYPE.main>
           <QuestionHelper text="Your transaction will revert if it is pending for more than this long." />
         </RowFixed>
         <RowFixed>

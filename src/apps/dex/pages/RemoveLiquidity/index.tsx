@@ -65,7 +65,8 @@ import { useUserSlippageTolerance } from "apps/dex/state/user/hooks";
 import { ConnectWalletButton, WalletIcon } from "apps/dex/pages/Swap";
 import useConnector from "context/connector";
 
-import { ArrowDown, Plus } from "react-feather";
+import AddIcon from "@mui/icons-material/Add";
+import ArrowDownwardRoundedIcon from "@mui/icons-material/ArrowDownwardRounded";
 
 const PlusWrapper = styled(Box)`
   display: flex;
@@ -449,7 +450,9 @@ const RemoveLiquidity = () => {
         <PlusWrapper>
           <ColumnCenter>
             <IconWrapper>
-              <Plus size="20" color="#061023" />
+              <AddIcon
+                sx={{ width: "20px", height: "20px", color: "#061023" }}
+              />
             </IconWrapper>
           </ColumnCenter>
         </PlusWrapper>
@@ -692,7 +695,9 @@ const RemoveLiquidity = () => {
                 <ColumnCenter>
                   <ArrowWrapper clickable={false}>
                     <ArrowDownWrapped>
-                      <ArrowDown size="20" color="#000" />
+                      <ArrowDownwardRoundedIcon
+                        sx={{ width: "20px", height: "20px", color: "#000" }}
+                      />
                     </ArrowDownWrapped>
                   </ArrowWrapper>
                 </ColumnCenter>
@@ -791,7 +796,9 @@ const RemoveLiquidity = () => {
                 <ColumnCenter>
                   <ArrowWrapper clickable={false}>
                     <ArrowDownWrapped>
-                      <ArrowDown size="20" color="#000" />
+                      <ArrowDownwardRoundedIcon
+                        sx={{ width: "20px", height: "20px", color: "#000" }}
+                      />
                     </ArrowDownWrapped>
                   </ArrowWrapper>
                 </ColumnCenter>
@@ -809,7 +816,9 @@ const RemoveLiquidity = () => {
                 <PlusWrapper>
                   <ColumnCenter>
                     <IconWrapper>
-                      <Plus size="20" color="#061023" />
+                      <AddIcon
+                        sx={{ width: "20px", height: "20px", color: "#061023" }}
+                      />
                     </IconWrapper>
                   </ColumnCenter>
                 </PlusWrapper>
