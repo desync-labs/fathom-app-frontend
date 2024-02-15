@@ -2,8 +2,6 @@ import { ChainId } from "@into-the-fathom/lending-contract-helpers";
 import { FathomLendingApothem } from "@into-the-fathom/fathom-lending-address-book";
 import { ReactNode } from "react";
 
-// Enable for premissioned market
-// import { PermissionView } from 'src/components/transactions/FlowCommons/PermissionView';
 export type MarketDataType = {
   v3?: boolean;
   marketTitle: string;
@@ -36,8 +34,8 @@ export type MarketDataType = {
     V3_MIGRATOR?: string;
   };
   /**
-   * https://www.hal.xyz/ has integrated aave for healtfactor warning notification
-   * the integration doesn't follow aave market naming & only supports a subset of markets.
+   * https://www.hal.xyz/ has integrated lending for healtfactor warning notification
+   * the integration doesn't follow lending market naming & only supports a subset of markets.
    * When a halIntegration is specified a link to hal will be displayed on the ui.
    */
   halIntegration?: {
