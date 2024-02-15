@@ -5,7 +5,6 @@ import ApplicationUpdater from "apps/dex/state/application/updater";
 import ListsUpdater from "apps/dex/state/lists/updater";
 import MulticallUpdater from "apps/dex/state/multicall/updater";
 import TransactionUpdater from "apps/dex/state/transactions/updater";
-import ThemeProvider from "apps/dex/theme";
 
 if (window.ethereum) {
   window.ethereum.autoRefreshOnNetworkChange = false;
@@ -26,11 +25,7 @@ const DexIndexComponent: FC = () => {
   return (
     <>
       <Blocklist>
-        <ThemeProvider>
-          <>
-            <App />
-          </>
-        </ThemeProvider>
+        <App />
       </Blocklist>
     </>
   );

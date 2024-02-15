@@ -1,17 +1,17 @@
 import { Suspense } from "react";
 import { Outlet } from "react-router-dom";
-import styled from "styled-components";
+import { Box, styled } from "@mui/material";
 import Polling from "apps/dex/components/Header/Polling";
 import Popups from "apps/dex/components/Popups";
 
-const AppWrapper = styled.div`
+const AppWrapper = styled(Box)`
   display: flex;
   flex-flow: column;
   align-items: flex-start;
   overflow-x: hidden;
 `;
 
-const BodyWrapper = styled.div`
+const BodyWrapper = styled(Box)`
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -21,10 +21,10 @@ const BodyWrapper = styled.div`
   overflow-y: auto;
   overflow-x: hidden;
   z-index: 1;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    padding: 0;
-    padding-top: 2rem;
-  `};
+
+  ${({ theme }) => theme.breakpoints.down("md")} {
+    padding: 2rem 0 0;
+  }
 `;
 
 const App = () => {

@@ -1,5 +1,6 @@
 import { useLocation } from "react-router-dom";
 import { FC, Suspense, useMemo } from "react";
+import { styled } from "@mui/material/styles";
 import {
   OverviewIcon,
   TokensIcon,
@@ -10,16 +11,14 @@ import {
   NestedRouteLink,
   NestedRouteNav,
 } from "components/AppComponents/AppBox/AppBox";
-import { styled } from "@mui/material/styles";
 import LocalLoader from "apps/charts/components/LocalLoader";
+import App from "apps/charts/App";
 
 const ChartsNestedRouteContainer = styled("div")`
   width: 100%;
   margin: 0;
   padding: 0;
 `;
-
-import ChartsIndexComponent from "apps/charts/index";
 
 const ChartsView: FC = () => {
   const location = useLocation();
@@ -84,7 +83,7 @@ const ChartsView: FC = () => {
       </NestedRouteNav>
       <ChartsNestedRouteContainer>
         <Suspense fallback={<LocalLoader />}>
-          <ChartsIndexComponent />
+          <App />
         </Suspense>
       </ChartsNestedRouteContainer>
     </>

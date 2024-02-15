@@ -1,12 +1,12 @@
-import styled from "styled-components";
+import { FC } from "react";
+import { Box, styled } from "@mui/material";
 import { useLastTruthy } from "apps/dex/hooks/useLast";
 import {
   AdvancedSwapDetails,
   AdvancedSwapDetailsProps,
 } from "apps/dex/components/swap/AdvancedSwapDetails";
-import { FC } from "react";
 
-const AdvancedDetailsFooter = styled.div<{ show: boolean }>`
+const AdvancedDetailsFooter = styled(Box)<{ show: boolean }>`
   padding-top: ${({ show }) => (show ? "calc(16px + 2rem)" : "0")};
   padding-bottom: ${({ show }) => (show ? "16px" : "0")};
   margin-top: ${({ show }) => (show ? "-2rem" : "0")};
@@ -14,7 +14,7 @@ const AdvancedDetailsFooter = styled.div<{ show: boolean }>`
   max-width: 400px;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
-  color: ${({ theme }) => theme.text2};
+  color: #4f658c;
   z-index: -1;
 
   transform: ${({ show }) => (show ? "translateY(0%)" : "translateY(-100%)")};

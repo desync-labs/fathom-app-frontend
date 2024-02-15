@@ -1,8 +1,7 @@
+import { FC, useMemo, useState } from "react";
 import { Trade, TradeType } from "into-the-fathom-swap-sdk";
-import { FC, useContext, useMemo, useState } from "react";
-import { Repeat } from "react-feather";
-import { Text } from "rebass";
-import { ThemeContext } from "styled-components";
+import { Typography } from "@mui/material";
+
 import { Field } from "apps/dex/state/swap/actions";
 import { TYPE } from "apps/dex/theme";
 import {
@@ -21,6 +20,8 @@ import {
   SwapCallbackError,
 } from "apps/dex/components/swap/styleds";
 
+import RepeatRoundedIcon from "@mui/icons-material/RepeatRounded";
+
 type SwapModalFooterProps = {
   trade: Trade;
   allowedSlippage: number;
@@ -37,7 +38,6 @@ const SwapModalFooter: FC<SwapModalFooterProps> = ({
   disabledConfirm,
 }) => {
   const [showInverted, setShowInverted] = useState<boolean>(false);
-  const theme = useContext(ThemeContext);
   const slippageAdjustedAmounts = useMemo(
     () => computeSlippageAdjustedAmounts(trade, allowedSlippage),
     [allowedSlippage, trade]
@@ -52,13 +52,13 @@ const SwapModalFooter: FC<SwapModalFooterProps> = ({
     <>
       <AutoColumn gap="0px">
         <RowBetween align="center">
-          <Text fontWeight={400} fontSize={14} color={theme?.text2}>
+          <Typography fontWeight={400} fontSize={14} color={"#4F658C"}>
             Price
-          </Text>
-          <Text
+          </Typography>
+          <Typography
             fontWeight={500}
             fontSize={14}
-            color={theme?.text1}
+            color={"#fff"}
             style={{
               justifyContent: "center",
               alignItems: "center",
@@ -71,21 +71,21 @@ const SwapModalFooter: FC<SwapModalFooterProps> = ({
             <StyledBalanceMaxMini
               onClick={() => setShowInverted(!showInverted)}
             >
-              <Repeat size={14} />
+              <RepeatRoundedIcon sx={{ width: "18px", height: "18px" }} />
             </StyledBalanceMaxMini>
-          </Text>
+          </Typography>
         </RowBetween>
 
         <RowBetween>
-          <RowFixed>
-            <TYPE.black fontSize={14} fontWeight={400} color={theme?.text2}>
+          <RowFixed sx={{ color: "#4F658C" }}>
+            <TYPE.black fontSize={14} fontWeight={400} color={"#4F658C"}>
               {trade.tradeType === TradeType.EXACT_INPUT
                 ? "Minimum received"
                 : "Maximum sold"}
             </TYPE.black>
             <QuestionHelper text="Your transaction will revert if there is a large, unfavorable price movement before it is confirmed." />
           </RowFixed>
-          <RowFixed>
+          <RowFixed sx={{ color: "#4F658C" }}>
             <TYPE.white fontSize={14}>
               {trade.tradeType === TradeType.EXACT_INPUT
                 ? slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(4) ?? "-"
@@ -99,8 +99,8 @@ const SwapModalFooter: FC<SwapModalFooterProps> = ({
           </RowFixed>
         </RowBetween>
         <RowBetween>
-          <RowFixed>
-            <TYPE.black color={theme?.text2} fontSize={14} fontWeight={400}>
+          <RowFixed sx={{ color: "#4F658C" }}>
+            <TYPE.black color={"#4F658C"} fontSize={14} fontWeight={400}>
               Price Impact
             </TYPE.black>
             <QuestionHelper text="The difference between the market price and your price due to trade size." />
@@ -108,8 +108,8 @@ const SwapModalFooter: FC<SwapModalFooterProps> = ({
           <FormattedPriceImpact priceImpact={priceImpactWithoutFee} />
         </RowBetween>
         <RowBetween>
-          <RowFixed>
-            <TYPE.black fontSize={14} fontWeight={400} color={theme?.text2}>
+          <RowFixed sx={{ color: "#4F658C" }}>
+            <TYPE.black fontSize={14} fontWeight={400} color={"#4F658C"}>
               Liquidity Provider Fee
             </TYPE.black>
             <QuestionHelper text="A portion of each trade (0.30%) goes to liquidity providers as a protocol incentive." />
@@ -132,9 +132,9 @@ const SwapModalFooter: FC<SwapModalFooterProps> = ({
           style={{ margin: "10px 0 0 0" }}
           id="confirm-swap-or-send"
         >
-          <Text fontSize={20} fontWeight={500}>
+          <Typography fontSize={20} fontWeight={500}>
             {severity > 2 ? "Swap Anyway" : "Confirm Swap"}
-          </Text>
+          </Typography>
         </ButtonError>
 
         {swapErrorMessage ? (
