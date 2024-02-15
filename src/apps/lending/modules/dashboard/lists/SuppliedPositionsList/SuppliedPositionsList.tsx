@@ -197,7 +197,7 @@ export const SuppliedPositionsList = () => {
           ))}
         </>
       ) : (
-        <DashboardContentNoData text={"Nothing supplied yet"} />
+        <DashboardContentNoData text={"Nothing supplied yet."} />
       )}
     </ListWrapper>
   );
