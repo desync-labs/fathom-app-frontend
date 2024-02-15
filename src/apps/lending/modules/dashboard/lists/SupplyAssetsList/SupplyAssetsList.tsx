@@ -136,6 +136,7 @@ export const SupplyAssetsList = () => {
             reserve,
             underlyingAsset: API_ETH_MOCK_ADDRESS.toLowerCase(),
             ...fetchIconSymbolAndName({
+              name: reserve.name,
               symbol: baseAssetSymbol,
               underlyingAsset: API_ETH_MOCK_ADDRESS.toLowerCase(),
             }),

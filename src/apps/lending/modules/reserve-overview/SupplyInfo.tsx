@@ -1,6 +1,6 @@
 import { valueToBigNumber } from "@into-the-fathom/lending-math-utils";
 import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
-import { AlertTitle, Box, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { CapsCircularStatus } from "apps/lending/components/caps/CapsCircularStatus";
 import { DebtCeilingStatus } from "apps/lending/components/caps/DebtCeilingStatus";
 import { IncentivesButton } from "apps/lending/components/incentives/IncentivesButton";
@@ -8,7 +8,6 @@ import { LiquidationPenaltyTooltip } from "apps/lending/components/infoTooltips/
 import { LiquidationThresholdTooltip } from "apps/lending/components/infoTooltips/LiquidationThresholdTooltip";
 import { MaxLTVTooltip } from "apps/lending/components/infoTooltips/MaxLTVTooltip";
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
-import { Link } from "apps/lending/components/primitives/Link";
 import { Warning } from "apps/lending/components/primitives/Warning";
 import { ReserveOverviewBox } from "apps/lending/components/ReserveOverviewBox";
 import { ReserveSubheader } from "apps/lending/components/ReserveSubheader";
@@ -321,21 +320,6 @@ export const SupplyInfo: FC<SupplyInfoProps> = memo(
                 />
               </ReserveOverviewBox>
             )}
-          </Box>
-        )}
-        {reserve.symbol == "stETH" && (
-          <Box>
-            <Warning severity="info">
-              <AlertTitle>Staking Rewards</AlertTitle>
-              stETH supplied as collateral will continue to accrue staking
-              rewards provided by daily rebases.{" "}
-              <Link
-                href="https://blog.lido.fi/aave-integrates-lidos-steth-as-collateral/"
-                underline="always"
-              >
-                Learn more
-              </Link>
-            </Warning>
           </Box>
         )}
       </Box>

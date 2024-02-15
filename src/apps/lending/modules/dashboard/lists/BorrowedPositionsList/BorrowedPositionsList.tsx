@@ -82,6 +82,7 @@ export const BorrowedPositionsList = () => {
             ...userReserve.reserve,
             ...(userReserve.reserve.isWrappedBaseAsset
               ? fetchIconSymbolAndName({
+                  name: userReserve.reserve.name,
                   symbol: currentNetworkConfig.baseAssetSymbol,
                   underlyingAsset: API_ETH_MOCK_ADDRESS.toLowerCase(),
                 })
@@ -97,6 +98,7 @@ export const BorrowedPositionsList = () => {
             ...userReserve.reserve,
             ...(userReserve.reserve.isWrappedBaseAsset
               ? fetchIconSymbolAndName({
+                  name: userReserve.reserve.name,
                   symbol: currentNetworkConfig.baseAssetSymbol,
                   underlyingAsset: API_ETH_MOCK_ADDRESS.toLowerCase(),
                 })
@@ -236,7 +238,7 @@ export const BorrowedPositionsList = () => {
           ))}
         </>
       ) : (
-        <DashboardContentNoData text={"Nothing borrowed yet"} />
+        <DashboardContentNoData text={"Nothing borrowed yet."} />
       )}
     </ListWrapper>
   );

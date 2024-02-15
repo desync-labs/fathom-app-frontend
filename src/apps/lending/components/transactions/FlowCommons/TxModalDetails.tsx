@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import { parseUnits } from "fathom-ethers/lib/utils";
-import { FC, ReactNode } from "react";
+import { FC, memo, ReactNode } from "react";
 import {
   IsolatedDisabledBadge,
   IsolatedEnabledBadge,
@@ -50,15 +50,12 @@ export const TxModalDetails: FC<TxModalDetailsProps> = ({
 }) => {
   return (
     <Box sx={{ pt: 5 }}>
-      <Typography sx={{ mb: 1 }} color="text.secondary">
+      <Typography sx={{ mb: 3 }} color="text.secondary">
         Transaction overview
       </Typography>
 
       <Box
-        sx={(theme) => ({
-          p: 3,
-          border: `1px solid ${theme.palette.divider}`,
-          borderRadius: "4px",
+        sx={() => ({
           ".MuiBox-root:last-of-type": {
             mb: 0,
           },
@@ -368,65 +365,66 @@ export interface DetailsHFLineProps {
   loading?: boolean;
 }
 
-export const DetailsHFLine = ({
-  healthFactor,
-  futureHealthFactor,
-  visibleHfChange,
-  loading = false,
-}: DetailsHFLineProps) => {
-  if (healthFactor === "-1" && futureHealthFactor === "-1") return null;
-  return (
-    <Row
-      caption={"Health factor"}
-      captionVariant="description"
-      mb={4}
-      align="flex-start"
-    >
-      <Box sx={{ textAlign: "right" }}>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "flex-end",
-          }}
-        >
-          {loading ? (
-            <Skeleton
-              variant="rectangular"
-              height={20}
-              width={80}
-              sx={{ borderRadius: "4px" }}
-            />
-          ) : (
-            <>
-              <HealthFactorNumber value={healthFactor} variant="secondary14" />
+export const DetailsHFLine: FC<DetailsHFLineProps> = memo(
+  ({ healthFactor, futureHealthFactor, visibleHfChange, loading = false }) => {
+    if (healthFactor === "-1" && futureHealthFactor === "-1") return null;
 
-              {visibleHfChange && (
-                <>
-                  {ArrowRightIcon}
+    return (
+      <Row
+        caption={"Health factor"}
+        captionVariant="description"
+        mb={4}
+        align="flex-start"
+      >
+        <Box sx={{ textAlign: "right" }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-end",
+            }}
+          >
+            {loading ? (
+              <Skeleton
+                variant="rectangular"
+                height={20}
+                width={80}
+                sx={{ borderRadius: "4px" }}
+              />
+            ) : (
+              <>
+                <HealthFactorNumber
+                  value={healthFactor}
+                  variant="secondary14"
+                />
 
-                  <HealthFactorNumber
-                    value={
-                      isNaN(Number(futureHealthFactor))
-                        ? healthFactor
-                        : futureHealthFactor
-                    }
-                    variant="secondary14"
-                  />
-                </>
-              )}
-            </>
-          )}
+                {visibleHfChange && (
+                  <>
+                    {ArrowRightIcon}
+
+                    <HealthFactorNumber
+                      value={
+                        isNaN(Number(futureHealthFactor))
+                          ? healthFactor
+                          : futureHealthFactor
+                      }
+                      variant="secondary14"
+                    />
+                  </>
+                )}
+              </>
+            )}
+          </Box>
+
+          <Typography variant="helperText" color="text.secondary">
+            Liquidation at
+            {" <1.0"}
+          </Typography>
         </Box>
-
-        <Typography variant="helperText" color="text.secondary">
-          Liquidation at
-          {" <1.0"}
-        </Typography>
-      </Box>
-    </Row>
-  );
-};
+      </Row>
+    );
+  }
+);
 
 export interface DetailsUnwrapSwitchProps {
   unwrapped: boolean;
@@ -434,26 +432,24 @@ export interface DetailsUnwrapSwitchProps {
   label: ReactNode;
 }
 
-export const DetailsUnwrapSwitch = ({
-  unwrapped,
-  setUnWrapped,
-  label,
-}: DetailsUnwrapSwitchProps) => {
-  return (
-    <Row captionVariant="description" sx={{ mt: 5 }}>
-      <FormControlLabel
-        sx={{ mx: 0 }}
-        control={
-          <Switch
-            disableRipple
-            checked={unwrapped}
-            onClick={() => setUnWrapped(!unwrapped)}
-            data-cy={"wrappedSwitcher"}
-          />
-        }
-        labelPlacement="end"
-        label={label}
-      />
-    </Row>
-  );
-};
+export const DetailsUnwrapSwitch: FC<DetailsUnwrapSwitchProps> = memo(
+  ({ unwrapped, setUnWrapped, label }) => {
+    return (
+      <Row captionVariant="description" sx={{ mt: 5 }}>
+        <FormControlLabel
+          sx={{ mx: 0 }}
+          control={
+            <Switch
+              disableRipple
+              checked={unwrapped}
+              onClick={() => setUnWrapped(!unwrapped)}
+              data-cy={"wrappedSwitcher"}
+            />
+          }
+          labelPlacement="end"
+          label={label}
+        />
+      </Row>
+    );
+  }
+);

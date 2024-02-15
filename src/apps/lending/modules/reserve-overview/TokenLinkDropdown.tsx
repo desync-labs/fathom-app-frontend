@@ -115,7 +115,7 @@ export const TokenLinkDropdown: FC<TokenLinkDropdownProps> = memo(
             <Box>
               <Box sx={{ px: 4, pt: 3, pb: 2 }}>
                 <Typography variant="secondary12" color="text.secondary">
-                  Aave aToken
+                  fmToken
                 </Typography>
               </Box>
 
@@ -123,7 +123,7 @@ export const TokenLinkDropdown: FC<TokenLinkDropdownProps> = memo(
                 component="a"
                 onClick={() => {
                   trackEvent(RESERVE_DETAILS.RESERVE_TOKEN_ACTIONS, {
-                    type: "aToken",
+                    type: "fmToken",
                     assetName: poolReserve.name,
                     asset: poolReserve.underlyingAsset,
                     aToken: poolReserve.aTokenAddress,
