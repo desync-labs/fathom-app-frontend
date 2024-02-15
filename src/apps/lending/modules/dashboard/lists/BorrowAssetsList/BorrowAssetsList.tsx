@@ -139,6 +139,7 @@ export const BorrowAssetsList = () => {
             iconSymbol: reserve.iconSymbol,
             ...(reserve.isWrappedBaseAsset
               ? fetchIconSymbolAndName({
+                  name: reserve.name,
                   symbol: baseAssetSymbol,
                   underlyingAsset: API_ETH_MOCK_ADDRESS.toLowerCase(),
                 })

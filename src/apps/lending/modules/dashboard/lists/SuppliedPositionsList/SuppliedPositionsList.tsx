@@ -75,6 +75,7 @@ export const SuppliedPositionsList = () => {
           ...userReserve.reserve,
           ...(userReserve.reserve.isWrappedBaseAsset
             ? fetchIconSymbolAndName({
+                name: userReserve.reserve.name,
                 symbol: currentNetworkConfig.baseAssetSymbol,
                 underlyingAsset: API_ETH_MOCK_ADDRESS.toLowerCase(),
               })
