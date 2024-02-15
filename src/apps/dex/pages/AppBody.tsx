@@ -1,11 +1,11 @@
-import styled from "styled-components";
 import { ReactNode } from "react";
+import { Box, styled } from "@mui/material";
 
-export const BodyWrapper = styled.div`
+export const BodyWrapper = styled(Box)`
   position: relative;
   max-width: 600px;
   width: 100%;
-  background: ${({ theme }) => theme.bg1};
+  background: #131f35;
   border: 1px solid #253656;
   border-radius: 16px;
   padding-bottom: 1rem;

@@ -1,7 +1,7 @@
 import { FC, useCallback } from "react";
-import styled from "styled-components";
+import { styled } from "@mui/material";
 
-const StyledRangeInput = styled.input<{ size: number }>`
+const StyledRangeInput = styled("input")<{ size: number }>`
   -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
   width: 100%; /* Specific width is required for Firefox. */
   background: transparent; /* Otherwise white in Chrome */
@@ -23,7 +23,7 @@ const StyledRangeInput = styled.input<{ size: number }>`
     border-radius: 100%;
     border: none;
     transform: translateY(-50%);
-    color: ${({ theme }) => theme.bg1};
+    color: #131f35;
 
     &:hover,
     &:focus {
@@ -38,7 +38,7 @@ const StyledRangeInput = styled.input<{ size: number }>`
     background-color: #565a69;
     border-radius: 100%;
     border: none;
-    color: ${({ theme }) => theme.bg1};
+    color: #131f35;
 
     &:hover,
     &:focus {
@@ -52,7 +52,7 @@ const StyledRangeInput = styled.input<{ size: number }>`
     width: ${({ size }) => size}px;
     background-color: #565a69;
     border-radius: 100%;
-    color: ${({ theme }) => theme.bg1};
+    color: #131f35;
 
     &:hover,
     &:focus {
@@ -62,20 +62,12 @@ const StyledRangeInput = styled.input<{ size: number }>`
   }
 
   &::-webkit-slider-runnable-track {
-    background: linear-gradient(
-      90deg,
-      ${({ theme }) => theme.bg5},
-      ${({ theme }) => theme.bg3}
-    );
+    background: linear-gradient(90deg, #6c7284, #43fff6);
     height: 2px;
   }
 
   &::-moz-range-track {
-    background: linear-gradient(
-      90deg,
-      ${({ theme }) => theme.bg5},
-      ${({ theme }) => theme.bg3}
-    );
+    background: linear-gradient(90deg, #6c7284, #43fff6);
     height: 2px;
   }
 
@@ -84,14 +76,14 @@ const StyledRangeInput = styled.input<{ size: number }>`
     border-color: transparent;
     color: transparent;
 
-    background: ${({ theme }) => theme.bg5};
+    background: #6c7284;
     height: 2px;
   }
   &::-ms-fill-lower {
-    background: ${({ theme }) => theme.bg5};
+    background: #6c7284;
   }
   &::-ms-fill-upper {
-    background: ${({ theme }) => theme.bg3};
+    background: #43fff6;
   }
 `;
 

@@ -1,8 +1,7 @@
-import { useContext, useRef, useState } from "react";
-import { X } from "react-feather";
+import { useRef, useState } from "react";
+import { Box, styled, Typography } from "@mui/material";
 import ReactGA from "react-ga4";
-import { Text } from "rebass";
-import styled, { ThemeContext } from "styled-components";
+
 import { useOnClickOutside } from "apps/dex/hooks/useOnClickOutside";
 import { ApplicationModal } from "apps/dex/state/application/actions";
 import {
@@ -24,9 +23,10 @@ import { RowBetween, RowFixed } from "apps/dex/components/Row";
 import Toggle from "apps/dex/components/Toggle";
 import TransactionSettings from "apps/dex/components/TransactionSettings";
 
+import CloseIcon from "@mui/icons-material/Close";
 import settingsSrc from "apps/dex/assets/svg/settings.svg";
 
-const StyledMenuIcon = styled.div`
+const StyledMenuIcon = styled(Box)`
   height: 32px;
   width: 32px;
   background: rgba(99, 121, 161, 0.2);
@@ -40,7 +40,7 @@ const StyledMenuIcon = styled.div`
   }
 `;
 
-const StyledCloseIcon = styled(X)`
+const StyledCloseIcon = styled(CloseIcon)`
   height: 20px;
   width: 20px;
   :hover {
@@ -48,39 +48,39 @@ const StyledCloseIcon = styled(X)`
   }
 
   > * {
-    stroke: ${({ theme }) => theme.text1};
+    stroke: #ffffff;
   }
 `;
 
-const StyledMenuButton = styled.button`
+const StyledMenuButton = styled("button")`
   position: relative;
   width: 100%;
   border: none;
   background-color: transparent;
   margin: 0;
   height: 35px;
-
-  padding: 0.15rem 0.5rem;
-  border-radius: 0.5rem;
+  padding: 3px 8px;
+  border-radius: 8px;
 
   :hover,
   :focus {
     cursor: pointer;
     outline: none;
+    background: transparent;
   }
 
   svg {
     margin-top: 2px;
   }
 `;
-const EmojiWrapper = styled.div`
+const EmojiWrapper = styled(Box)`
   position: absolute;
   bottom: -6px;
   right: 0;
   font-size: 14px;
 `;
 
-const StyledMenu = styled.div`
+const StyledMenu = styled(Box)`
   margin-left: 0.5rem;
   display: flex;
   justify-content: center;
@@ -90,9 +90,9 @@ const StyledMenu = styled.div`
   text-align: left;
 `;
 
-const MenuFlyout = styled.span`
-  min-width: 20.125rem;
-  background-color: ${({ theme }) => theme.bg2};
+const MenuFlyout = styled(Box)`
+  min-width: 320px;
+  background-color: #061023;
   box-shadow: 0 0 1px rgba(0, 0, 0, 0.01), 0 4px 8px rgba(0, 0, 0, 0.04),
     0 16px 24px rgba(0, 0, 0, 0.04), 0 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 12px;
@@ -104,24 +104,33 @@ const MenuFlyout = styled.span`
   right: 0;
   z-index: 100;
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.breakpoints.down("md")} {
     min-width: 18.125rem;
-  `};
+  }
 `;
 
-const Break = styled.div`
+const Break = styled(Box)`
   width: 100%;
   height: 1px;
-  background-color: ${({ theme }) => theme.bg4};
+  background-color: #565a69;
 `;
 
-const ModalContentWrapper = styled.div`
+const ModalContentWrapper = styled(Box)`
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 2rem 0;
-  background-color: ${({ theme }) => theme.bg2};
-  border-radius: 20px;
+`;
+
+const ExpertModeConfirmButton = styled(ButtonError)`
+  ${({ theme }) => theme.breakpoints.down("md")} {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 20px;
+    width: auto;
+  }
 `;
 
 const SettingsTab = () => {
@@ -129,7 +138,6 @@ const SettingsTab = () => {
   const open = useModalOpen(ApplicationModal.SETTINGS);
   const toggle = useToggleSettingsMenu();
 
-  const theme = useContext(ThemeContext);
   const [userSlippageTolerance, setUserslippageTolerance] =
     useUserSlippageTolerance();
 
@@ -145,7 +153,6 @@ const SettingsTab = () => {
   useOnClickOutside(node, open ? toggle : undefined);
 
   return (
-    // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
     <StyledMenu ref={node as any}>
       <Modal
         isOpen={showConfirmation}
@@ -156,24 +163,23 @@ const SettingsTab = () => {
           <AutoColumn gap="lg">
             <RowBetween style={{ padding: "0 2rem" }}>
               <div />
-              <Text fontWeight={500} fontSize={20}>
+              <Typography fontWeight={500} fontSize={20}>
                 Are you sure?
-              </Text>
+              </Typography>
               <StyledCloseIcon onClick={() => setShowConfirmation(false)} />
             </RowBetween>
             <Break />
             <AutoColumn gap="lg" style={{ padding: "0 2rem" }}>
-              <Text fontWeight={500} fontSize={20}>
+              <Typography fontWeight={500} fontSize={20}>
                 Expert mode turns off the confirm transaction prompt and allows
                 high slippage trades that often result in bad rates and lost
                 funds.
-              </Text>
-              <Text fontWeight={600} fontSize={20}>
+              </Typography>
+              <Typography fontWeight={600} fontSize={20}>
                 ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING.
-              </Text>
-              <ButtonError
+              </Typography>
+              <ExpertModeConfirmButton
                 error={true}
-                padding={"12px"}
                 onClick={() => {
                   if (
                     window.prompt(
@@ -184,11 +190,16 @@ const SettingsTab = () => {
                     setShowConfirmation(false);
                   }
                 }}
+                sx={{ padding: "12px" }}
               >
-                <Text fontSize={20} fontWeight={500} id="confirm-expert-mode">
+                <Typography
+                  fontSize={20}
+                  fontWeight={500}
+                  id="confirm-expert-mode"
+                >
                   Turn On Expert Mode
-                </Text>
-              </ButtonError>
+                </Typography>
+              </ExpertModeConfirmButton>
             </AutoColumn>
           </AutoColumn>
         </ModalContentWrapper>
@@ -208,23 +219,23 @@ const SettingsTab = () => {
       {open && (
         <MenuFlyout>
           <AutoColumn gap="md" style={{ padding: "1rem" }}>
-            <Text fontWeight={600} fontSize={14}>
+            <Typography fontWeight={600} fontSize={14}>
               Transaction Settings
-            </Text>
+            </Typography>
             <TransactionSettings
               rawSlippage={userSlippageTolerance}
               setRawSlippage={setUserslippageTolerance}
               deadline={ttl}
               setDeadline={setTtl}
             />
-            <Text fontWeight={600} fontSize={14}>
+            <Typography fontWeight={600} fontSize={14}>
               Interface Settings
-            </Text>
+            </Typography>
             <RowBetween>
-              <RowFixed>
-                <TYPE.black fontWeight={400} fontSize={14} color={theme?.text2}>
+              <RowFixed color={"#4F658C"}>
+                <TYPE.main fontWeight={400} fontSize={14}>
                   Toggle Expert Mode
-                </TYPE.black>
+                </TYPE.main>
                 <QuestionHelper text="Bypasses confirmation modals and allows high slippage trades. Use at your own risk." />
               </RowFixed>
               <Toggle
@@ -244,10 +255,10 @@ const SettingsTab = () => {
               />
             </RowBetween>
             <RowBetween>
-              <RowFixed>
-                <TYPE.black fontWeight={400} fontSize={14} color={theme?.text2}>
+              <RowFixed color={"#4F658C"}>
+                <TYPE.main fontWeight={400} fontSize={14}>
                   Disable Multihops
-                </TYPE.black>
+                </TYPE.main>
                 <QuestionHelper text="Restricts swaps to direct pairs only." />
               </RowFixed>
               <Toggle

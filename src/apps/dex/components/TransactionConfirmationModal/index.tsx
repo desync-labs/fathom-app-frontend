@@ -1,39 +1,52 @@
+import { FC, ReactNode } from "react";
 import { ChainId, Currency } from "into-the-fathom-swap-sdk";
-import { FC, ReactNode, useContext } from "react";
-import styled, { ThemeContext } from "styled-components";
-import Modal from "apps/dex/components/Modal";
-import { ExternalLink } from "apps/dex/theme";
-import { Text } from "rebass";
-import { CloseIcon, CustomLightSpinner } from "apps/dex/theme/components";
-import { RowBetween, RowFixed } from "apps/dex/components/Row";
-import { AlertTriangle, ArrowUpCircle, CheckCircle } from "react-feather";
-import { ButtonPrimary, ButtonLight } from "apps/dex/components/Button";
-import { AutoColumn, ColumnCenter } from "apps/dex/components/Column";
-import Circle from "apps/dex/assets/images/blue-loader.svg";
-import MetaMaskLogo from "apps/dex/assets/images/metamask.png";
+import { Box, styled, Typography } from "@mui/material";
+
 import { getBlockScanLink } from "apps/dex/utils";
 import { useActiveWeb3React } from "apps/dex/hooks";
 import useAddTokenToMetamask from "apps/dex/hooks/useAddTokenToMetamask";
+import { CloseIcon, CustomLightSpinner } from "apps/dex/theme/components";
+import { RowBetween, RowFixed } from "apps/dex/components/Row";
+import { ButtonPrimary, ButtonLight } from "apps/dex/components/Button";
+import { AutoColumn, ColumnCenter } from "apps/dex/components/Column";
+import Modal from "apps/dex/components/Modal";
+import { ExternalLink } from "apps/dex/theme";
 
-const Wrapper = styled.div`
+import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
+import TaskAltRoundedIcon from "@mui/icons-material/TaskAltRounded";
+import Circle from "apps/dex/assets/images/blue-loader.svg";
+import MetaMaskLogo from "apps/dex/assets/images/metamask.png";
+
+const Wrapper = styled(Box)`
+  position: relative;
   width: 100%;
-  border: 1px solid #253656;
+  height: 100%;
 `;
 const Section = styled(AutoColumn)`
   padding: 24px;
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    margin-bottom: 201px;
+  }
 `;
 
 const BottomSection = styled(Section)`
-  background-color: ${({ theme }) => theme.bg2};
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
+  background-color: #061023;
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin-bottom: unset;
+  }
 `;
 
 const ConfirmedIcon = styled(ColumnCenter)`
   padding: 60px 0;
 `;
 
-const StyledLogo = styled.img`
+const StyledLogo = styled("img")`
   height: 16px;
   width: 16px;
   margin-left: 6px;
@@ -59,32 +72,22 @@ const ConfirmationPendingContent: FC<ConfirmationPendingContentProps> = ({
           <CustomLightSpinner src={Circle} alt="loader" size={"90px"} />
         </ConfirmedIcon>
         <AutoColumn gap="12px" justify={"center"}>
-          <Text
-            fontWeight={500}
-            fontSize={20}
-            data-testid="dex-waitingForConfirmationModal-headerText"
-          >
+          <Typography fontWeight={500} fontSize={20}>
             Waiting For Confirmation
-          </Text>
+          </Typography>
           <AutoColumn gap="12px" justify={"center"}>
-            <Text
+            <Typography
               fontWeight={600}
               fontSize={14}
               color=""
               textAlign="center"
-              data-testid="dex-waitingForConfirmationModal-bodyText"
             >
               {pendingText}
-            </Text>
+            </Typography>
           </AutoColumn>
-          <Text
-            fontSize={12}
-            color="#565A69"
-            textAlign="center"
-            data-testid="dex-waitingForConfirmationModal-footerText"
-          >
+          <Typography fontSize={12} color="#565A69" textAlign="center">
             Confirm this transaction in your wallet
-          </Text>
+          </Typography>
         </AutoColumn>
       </Section>
     </Wrapper>
@@ -102,8 +105,6 @@ function TransactionSubmittedContent({
   chainId: ChainId;
   currencyToAdd?: Currency | undefined;
 }) {
-  const theme = useContext(ThemeContext);
-
   const { library } = useActiveWeb3React();
 
   const { addToken, success } = useAddTokenToMetamask(currencyToAdd);
@@ -116,34 +117,31 @@ function TransactionSubmittedContent({
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
         <ConfirmedIcon>
-          <ArrowUpCircle strokeWidth={0.5} size={90} color={theme?.white} />
+          <TaskAltRoundedIcon
+            sx={{
+              color: "#27AE60",
+              width: "90px",
+              height: "90px",
+            }}
+          />
         </ConfirmedIcon>
         <AutoColumn gap="12px" justify={"center"}>
-          <Text
-            fontWeight={500}
-            fontSize={20}
-            data-testid="dex-transactionSubmittedModal-headerText"
-          >
+          <Typography fontWeight={500} fontSize={20}>
             Transaction Submitted
-          </Text>
+          </Typography>
           {chainId && hash && (
             <ExternalLink href={getBlockScanLink(chainId, hash, "transaction")}>
-              <Text
-                fontWeight={600}
-                fontSize={14}
-                color={theme?.text2}
-                data-testid="dex-transactionSubmittedModal-footerText"
-              >
+              <Typography fontWeight={600} fontSize={14} color="#4F658C">
                 View on Blocksscan
-              </Text>
+              </Typography>
             </ExternalLink>
           )}
           {currencyToAdd && library?.provider?.isMetaMask && (
             <ButtonLight
-              mt="12px"
               padding="6px 12px"
               width="fit-content"
               onClick={addToken}
+              sx={{ marginTop: "12px" }}
             >
               {!success ? (
                 <RowFixed>
@@ -153,23 +151,22 @@ function TransactionSubmittedContent({
               ) : (
                 <RowFixed>
                   Added {currencyToAdd.symbol}{" "}
-                  <CheckCircle
-                    size={"16px"}
-                    stroke={theme?.green1}
-                    style={{ marginLeft: "6px" }}
+                  <TaskAltRoundedIcon
+                    sx={{
+                      color: "#27AE60",
+                      width: "16px",
+                      height: "16px",
+                      marginLeft: "6px",
+                    }}
                   />
                 </RowFixed>
               )}
             </ButtonLight>
           )}
           <ButtonPrimary onClick={onDismiss} style={{ margin: "20px 0 0 0" }}>
-            <Text
-              fontWeight={500}
-              fontSize={20}
-              data-testid="dex-transactionSubmittedModal-closeButton"
-            >
+            <Typography fontWeight={500} fontSize={20}>
               Close
-            </Text>
+            </Typography>
           </ButtonPrimary>
         </AutoColumn>
       </Section>
@@ -192,9 +189,9 @@ export function ConfirmationModalContent({
     <Wrapper>
       <Section>
         <RowBetween>
-          <Text fontWeight={500} fontSize={20}>
+          <Typography fontWeight={500} fontSize={20}>
             {title}
-          </Text>
+          </Typography>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
         {topContent()}
@@ -211,14 +208,13 @@ export function TransactionErrorContent({
   message: string;
   onDismiss: () => void;
 }) {
-  const theme = useContext(ThemeContext);
   return (
     <Wrapper>
       <Section>
         <RowBetween>
-          <Text fontWeight={500} fontSize={20}>
+          <Typography fontWeight={500} fontSize={20}>
             Error
-          </Text>
+          </Typography>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
         <AutoColumn
@@ -226,15 +222,13 @@ export function TransactionErrorContent({
           gap="24px"
           justify="center"
         >
-          <AlertTriangle
-            color={theme?.red1}
-            style={{ strokeWidth: 1.5 }}
-            size={64}
+          <WarningAmberRoundedIcon
+            sx={{ color: "#fd4040", width: "40px", height: "40px" }}
           />
-          <Text
+          <Typography
             fontWeight={500}
             fontSize={14}
-            color={theme?.red1}
+            color="#fd4040"
             style={{
               textAlign: "center",
               width: "85%",
@@ -242,7 +236,7 @@ export function TransactionErrorContent({
             }}
           >
             {message}
-          </Text>
+          </Typography>
         </AutoColumn>
       </Section>
       <BottomSection gap="12px">
