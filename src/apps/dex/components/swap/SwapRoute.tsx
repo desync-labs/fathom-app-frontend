@@ -1,13 +1,17 @@
+import { Fragment, memo } from "react";
 import { Trade } from "into-the-fathom-swap-sdk";
-import { Fragment, memo, useContext } from "react";
-import { ChevronRight } from "react-feather";
-import { Flex } from "rebass";
-import { ThemeContext } from "styled-components";
+import { Box, styled } from "@mui/material";
 import { TYPE } from "apps/dex/theme";
 import { unwrappedToken } from "apps/dex/utils/wrappedCurrency";
 
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+
+const Flex = styled(Box)`
+  display: flex;
+  flex-flow: row nowrap;
+`;
+
 export default memo(({ trade }: { trade: Trade }) => {
-  const theme = useContext(ThemeContext);
   return (
     <Flex
       flexWrap="wrap"
@@ -23,7 +27,7 @@ export default memo(({ trade }: { trade: Trade }) => {
             <Flex alignItems="end">
               <TYPE.black
                 fontSize={14}
-                color={theme?.text1}
+                color={"#ffffff"}
                 ml="0.125rem"
                 mr="0.125rem"
               >
@@ -31,7 +35,13 @@ export default memo(({ trade }: { trade: Trade }) => {
               </TYPE.black>
             </Flex>
             {isLastItem ? null : (
-              <ChevronRight size={12} color={theme?.text2} />
+              <KeyboardArrowRightIcon
+                sx={{
+                  width: "12px",
+                  height: "12px",
+                  color: "#4F658C",
+                }}
+              />
             )}
           </Fragment>
         );

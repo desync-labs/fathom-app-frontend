@@ -1,18 +1,18 @@
-import styled from "styled-components";
+import { Box, styled } from "@mui/material";
 import { AutoColumn } from "apps/dex/components/Column";
 
 import uImage from "apps/dex/assets/images/big_unicorn.png";
 import noise from "apps/dex/assets/images/noise.png";
 
 export const DataCard = styled(AutoColumn)<{ disabled?: boolean }>`
-  background: ${({ theme }) => theme.bg7};
+  background: #00fff9;
   border-radius: 12px;
   width: 100%;
   position: relative;
   overflow: hidden;
 `;
 
-export const CardBGImage = styled.span<{ desaturate?: boolean }>`
+export const CardBGImage = styled("span")<{ desaturate?: boolean }>`
   background: url(${uImage});
   width: 1000px;
   height: 600px;
@@ -27,7 +27,7 @@ export const CardBGImage = styled.span<{ desaturate?: boolean }>`
   ${({ desaturate }) => desaturate && `filter: saturate(0)`}
 `;
 
-export const CardNoise = styled.span`
+export const CardNoise = styled("span")`
   background: url(${noise});
   background-size: cover;
   mix-blend-mode: overlay;
@@ -47,7 +47,7 @@ export const CardSection = styled(AutoColumn)<{ disabled?: boolean }>`
   opacity: ${({ disabled }) => disabled && "0.4"};
 `;
 
-export const Break = styled.div`
+export const Break = styled(Box)`
   width: 100%;
   background-color: rgba(255, 255, 255, 0.2);
   height: 1px;

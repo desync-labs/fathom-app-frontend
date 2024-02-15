@@ -1,8 +1,7 @@
-import styled from "styled-components";
-import useHttpLocations from "apps/dex/hooks/useHttpLocations";
-
-import Logo from "apps/dex/components/Logo";
 import { CSSProperties, FC } from "react";
+import { styled } from "@mui/material";
+import useHttpLocations from "apps/dex/hooks/useHttpLocations";
+import Logo from "apps/dex/components/Logo";
 
 const StyledListLogo = styled(Logo)<{ size: string }>`
   width: ${({ size }) => size};

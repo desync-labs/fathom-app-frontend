@@ -1,13 +1,12 @@
 import { FC } from "react";
-
+import { Box, styled } from "@mui/material";
 import { AutoColumn, ColumnCenter } from "apps/dex/components/Column";
-import styled from "styled-components";
 import { RowBetween } from "apps/dex/components/Row";
 import { TYPE, CloseIcon, CustomLightSpinner } from "apps/dex/theme";
 
 import Circle from "apps/dex/assets/images/blue-loader.svg";
 
-const ConfirmOrLoadingWrapper = styled.div`
+const ConfirmOrLoadingWrapper = styled(Box)`
   width: 100%;
   padding: 24px;
 `;

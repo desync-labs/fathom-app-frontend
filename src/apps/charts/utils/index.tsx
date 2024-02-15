@@ -4,12 +4,12 @@ import { ethers } from "fathom-ethers";
 import utc from "dayjs/plugin/utc";
 import { dexClient as client, blockClient } from "apollo/client";
 import { GET_BLOCK, GET_BLOCKS, SHARE_VALUE } from "apps/charts/apollo/queries";
-import { Text } from "rebass";
 import _Decimal from "decimal.js-light";
 import * as toFormatImport from "toformat";
 import { timeframeOptions } from "apps/charts/constants";
 import Numeral from "numeral";
 import { ApolloClient } from "@apollo/client";
+import { Typography } from "@mui/material";
 
 const toFormat = toFormatImport as any;
 
@@ -395,24 +395,24 @@ export function formattedPercent(percent: string | number) {
   }
   if (!percent || percent === 0) {
     // @ts-ignore
-    return <Text fontWeight={500}>0%</Text>;
+    return <Typography fontWeight={500}>0%</Typography>;
   }
 
   if (percent < 0.0001 && percent > 0) {
     return (
       // @ts-ignore
-      <Text fontWeight={500} color="green">
+      <Typography fontWeight={500} color="green">
         {"< 0.0001%"}
-      </Text>
+      </Typography>
     );
   }
 
   if (percent < 0 && percent > -0.0001) {
     return (
       // @ts-ignore
-      <Text fontWeight={500} color="red">
+      <Typography fontWeight={500} color="red">
         {"< 0.0001%"}
-      </Text>
+      </Typography>
     );
   }
 
@@ -426,17 +426,24 @@ export function formattedPercent(percent: string | number) {
     if (fixedPercent > 100) {
       return (
         // @ts-ignore
-        <Text fontWeight={500} color="text5">{`+${percent
+        <Typography fontWeight={500} color="text5">{`+${percent
           ?.toFixed(0)
-          .toLocaleString()}%`}</Text>
+          .toLocaleString()}%`}</Typography>
       );
     } else {
       // @ts-ignore
-      return <Text fontWeight={500} color="text5">{`+${fixedPercent}%`}</Text>;
+      return (
+        <Typography
+          fontWeight={500}
+          color="text5"
+        >{`+${fixedPercent}%`}</Typography>
+      );
     }
   } else {
     // @ts-ignore
-    return <Text fontWeight={500} color="red">{`${fixedPercent}%`}</Text>;
+    return (
+      <Typography fontWeight={500} color="red">{`${fixedPercent}%`}</Typography>
+    );
   }
 }
 
