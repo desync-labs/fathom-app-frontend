@@ -17,7 +17,7 @@ export const BorrowAmountWarning: FC<BorrowAmountWarningProps> = ({
 
   return (
     <>
-      <Warning severity="error" sx={{ my: 6 }}>
+      <Warning severity="error" sx={{ my: 3 }}>
         Borrowing this amount will reduce your health factor and increase risk
         of liquidation.
       </Warning>
@@ -25,9 +25,7 @@ export const BorrowAmountWarning: FC<BorrowAmountWarningProps> = ({
         sx={{
           display: "flex",
           flexDirection: "row",
-          justifyContent: "center",
           alignItems: "center",
-          mx: "24px",
           mb: "12px",
         }}
       >
