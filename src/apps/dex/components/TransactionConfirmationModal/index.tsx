@@ -250,7 +250,7 @@ interface ConfirmationModalProps {
   isOpen: boolean;
   onDismiss: () => void;
   hash: string | undefined;
-  content: () => React.ReactNode;
+  content: () => ReactNode;
   attemptingTxn: boolean;
   pendingText: string;
   currencyToAdd?: Currency | undefined;

@@ -164,7 +164,7 @@ const Transactions: FC = () => {
   }, [storageTransactions, account]);
 
   /**
-   * Get transactions for last 7 days.
+   * Get transactions for the last 7 days.
    */
   const sortedRecentTransactions = useMemo(() => {
     const txs = Object.values(allTransactions);

@@ -169,7 +169,7 @@ export const CurrencySearch: FC<CurrencySearchProps> = ({
   const node = useRef<HTMLDivElement>();
   useOnClickOutside(node, open ? toggle : undefined);
 
-  // if no results on main list, show option to expand into inactive
+  // if no results on the main list, show an option to expand into inactive
   const inactiveTokens = useFoundOnInactiveList(debouncedQuery);
   const filteredInactiveTokens: Token[] = useSortedTokensByQuery(
     inactiveTokens,

@@ -83,7 +83,7 @@ const CurrencyRow: FC<CurrencyRowProps> = ({
   const customAdded = useIsUserAddedToken(currency);
   const balance = useCurrencyBalance(account ?? undefined, currency);
 
-  // only show add or remove buttons if not on selected list
+  // only show add or remove buttons if not on a selected list
   return (
     <MenuItem
       className={`token-item-${key}`}

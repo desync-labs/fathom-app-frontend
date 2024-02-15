@@ -84,7 +84,7 @@ const Polling = () => {
       setIsMounting(true);
       const mountingTimer = setTimeout(() => setIsMounting(false), 1000);
 
-      // this will clear Timeout when component unmount like in willComponentUnmount
+      // this will clear Timeout when component unmounts like in willComponentUnmount
       return () => {
         clearTimeout(mountingTimer);
       };

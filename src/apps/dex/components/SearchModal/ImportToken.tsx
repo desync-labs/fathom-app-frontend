@@ -75,7 +75,7 @@ export const ImportToken: FC<ImportProps> = ({
 
   const addToken = useAddUserToken();
 
-  // use for showing import source on inactive tokens
+  // use for showing an import source on inactive tokens
   const inactiveTokenList = useCombinedInactiveList();
 
   // higher warning severity if either is not on a list

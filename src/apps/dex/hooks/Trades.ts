@@ -141,7 +141,7 @@ export function useTradeExactIn(
           })[0] ?? null
         );
       }
-      // search through trades with varying hops, find best trade out of them
+      // search through trades with varying hops, find the best trade out of them
       let bestTradeSoFar: Trade | null = null;
       for (let i = 1; i <= MAX_HOPS; i++) {
         const currentTrade: Trade | null =
@@ -191,7 +191,7 @@ export function useTradeExactOut(
           })[0] ?? null
         );
       }
-      // search through trades with varying hops, find best trade out of them
+      // search through trades with varying hops, find the best trade out of them
       let bestTradeSoFar: Trade | null = null;
       for (let i = 1; i <= MAX_HOPS; i++) {
         const currentTrade =

@@ -42,6 +42,7 @@ export const MarketAssetsListContainer = () => {
       ...reserve,
       ...(reserve.isWrappedBaseAsset
         ? fetchIconSymbolAndName({
+            name: reserve.name,
             symbol: currentNetworkConfig.baseAssetSymbol,
             underlyingAsset: API_ETH_MOCK_ADDRESS.toLowerCase(),
           })

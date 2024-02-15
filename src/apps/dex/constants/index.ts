@@ -171,13 +171,13 @@ export const PRICE_IMPACT_WITHOUT_FEE_CONFIRM_MIN: Percent = new Percent(
   JSBI.BigInt(1000),
   BIPS_BASE
 ); // 10%
-// for non expert mode disable swaps above this
+// for non-expert mode disable swaps above this
 export const BLOCKED_PRICE_IMPACT_NON_EXPERT: Percent = new Percent(
   JSBI.BigInt(1500),
   BIPS_BASE
 ); // 15%
 
-// used to ensure the user doesn't send so much ETH so they end up with <.01
+// used to ensure the user doesn't send XDC so much, so they end up with <.01
 export const MIN_XDC: JSBI = JSBI.exponentiate(
   JSBI.BigInt(10),
   JSBI.BigInt(16)
