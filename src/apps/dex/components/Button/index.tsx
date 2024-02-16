@@ -56,6 +56,7 @@ export const ButtonPrimary = styled(Base)<{
     background: transparent;
   }
   &:disabled {
+    pointer-events: unset;
     background-color: ${({ altDisabledStyle, disabled }) =>
       altDisabledStyle ? (disabled ? "#565A69" : "#253656") : "#565A69"};
     color: #00332f;
