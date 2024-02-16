@@ -1,7 +1,7 @@
+import { useCallback, useEffect, useState } from "react";
 import { Currency, JSBI, TokenAmount, XDC } from "into-the-fathom-swap-sdk";
-import { useCallback, useContext, useEffect, useState } from "react";
-import { Plus } from "react-feather";
-import { Text } from "rebass";
+import { Box, styled, Typography } from "@mui/material";
+
 import { ButtonDropdownLight } from "apps/dex/components/Button";
 import { LightCard } from "apps/dex/components/Card";
 import { AutoColumn, ColumnCenter } from "apps/dex/components/Column";
@@ -20,21 +20,22 @@ import AppBody from "apps/dex/pages/AppBody";
 import { Dots } from "apps/dex/pages/Pool/styleds";
 import { BlueCard } from "apps/dex/components/Card";
 import { TYPE } from "apps/dex/theme";
-import styled, { ThemeContext } from "styled-components";
+
+import AddIcon from "@mui/icons-material/Add";
 
 enum Fields {
   TOKEN0 = 0,
   TOKEN1 = 1,
 }
 
-const PlusWrapper = styled.div`
+const PlusWrapper = styled(Box)`
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 10;
 `;
 
-const IconWrapper = styled.div`
+const IconWrapper = styled(Box)`
   width: 30px;
   height: 30px;
   display: flex;
@@ -46,7 +47,6 @@ const IconWrapper = styled.div`
 
 const PoolFinder = () => {
   const { account } = useActiveWeb3React();
-  const theme = useContext(ThemeContext);
 
   const [showSearch, setShowSearch] = useState<boolean>(false);
   const [activeField, setActiveField] = useState<number>(Fields.TOKEN1);
@@ -99,11 +99,11 @@ const PoolFinder = () => {
 
   const prerequisiteMessage = (
     <LightCard padding="45px 10px">
-      <Text textAlign="center">
+      <Typography textAlign="center">
         {!account
           ? "Connect to a wallet to find pools"
           : "Select a token to find your liquidity."}
-      </Text>
+      </Typography>
     </LightCard>
   );
 
@@ -128,21 +128,23 @@ const PoolFinder = () => {
           {currency0 ? (
             <Row>
               <CurrencyLogo currency={currency0} />
-              <Text fontWeight={500} fontSize={20} marginLeft={"12px"}>
+              <Typography fontWeight={500} fontSize={20} marginLeft={"12px"}>
                 {currency0.symbol}
-              </Text>
+              </Typography>
             </Row>
           ) : (
-            <Text fontWeight={500} fontSize={20} marginLeft={"12px"}>
+            <Typography fontWeight={500} fontSize={20} marginLeft={"12px"}>
               Select a Token
-            </Text>
+            </Typography>
           )}
         </ButtonDropdownLight>
 
         <PlusWrapper>
           <ColumnCenter>
             <IconWrapper>
-              <Plus size="20" color={theme.bg2} />
+              <AddIcon
+                sx={{ width: "20px", height: "20px", color: "#061023" }}
+              />
             </IconWrapper>
           </ColumnCenter>
         </PlusWrapper>
@@ -156,14 +158,14 @@ const PoolFinder = () => {
           {currency1 ? (
             <Row>
               <CurrencyLogo currency={currency1} />
-              <Text fontWeight={500} fontSize={20} marginLeft={"12px"}>
+              <Typography fontWeight={500} fontSize={20} marginLeft={"12px"}>
                 {currency1.symbol}
-              </Text>
+              </Typography>
             </Row>
           ) : (
-            <Text fontWeight={500} fontSize={20} marginLeft={"12px"}>
+            <Typography fontWeight={500} fontSize={20} marginLeft={"12px"}>
               Select a Token
-            </Text>
+            </Typography>
           )}
         </ButtonDropdownLight>
 
@@ -176,11 +178,11 @@ const PoolFinder = () => {
               borderRadius: "12px",
             }}
           >
-            <Text textAlign="center" fontWeight={500}>
+            <Typography textAlign="center" fontWeight={500}>
               Pool Found!
-            </Text>
+            </Typography>
             <StyledInternalLink to={`/swap/pool`}>
-              <Text textAlign="center">Manage this pool.</Text>
+              <Typography textAlign="center">Manage this pool.</Typography>
             </StyledInternalLink>
           </ColumnCenter>
         )}
@@ -192,15 +194,15 @@ const PoolFinder = () => {
             ) : (
               <LightCard padding="45px 10px">
                 <AutoColumn gap="sm" justify="center">
-                  <Text textAlign="center">
+                  <Typography textAlign="center">
                     You don’t have liquidity in this pool yet.
-                  </Text>
+                  </Typography>
                   <StyledInternalLink
                     to={`/swap/add/${currencyId(currency0)}/${currencyId(
                       currency1
                     )}`}
                   >
-                    <Text textAlign="center">Add liquidity.</Text>
+                    <Typography textAlign="center">Add liquidity.</Typography>
                   </StyledInternalLink>
                 </AutoColumn>
               </LightCard>
@@ -208,7 +210,7 @@ const PoolFinder = () => {
           ) : validPairNoLiquidity ? (
             <LightCard padding="45px 10px">
               <AutoColumn gap="sm" justify="center">
-                <Text textAlign="center">No pool found.</Text>
+                <Typography textAlign="center">No pool found.</Typography>
                 <StyledInternalLink
                   to={`/swap/add/${currencyId(currency0)}/${currencyId(
                     currency1
@@ -221,18 +223,18 @@ const PoolFinder = () => {
           ) : pairState === PairState.INVALID ? (
             <LightCard padding="45px 10px">
               <AutoColumn gap="sm" justify="center">
-                <Text textAlign="center" fontWeight={500}>
+                <Typography textAlign="center" fontWeight={500}>
                   Invalid pair.
-                </Text>
+                </Typography>
               </AutoColumn>
             </LightCard>
           ) : pairState === PairState.LOADING ? (
             <LightCard padding="45px 10px">
               <AutoColumn gap="sm" justify="center">
-                <Text textAlign="center">
+                <Typography textAlign="center">
                   Loading
                   <Dots />
-                </Text>
+                </Typography>
               </AutoColumn>
             </LightCard>
           ) : null

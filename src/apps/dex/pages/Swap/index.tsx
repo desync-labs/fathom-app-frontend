@@ -1,3 +1,6 @@
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import ReactGA from "react-ga4";
 import {
   Currency,
   CurrencyAmount,
@@ -5,11 +8,9 @@ import {
   Token,
   Trade,
 } from "into-the-fathom-swap-sdk";
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { ArrowDown } from "react-feather";
-import ReactGA from "react-ga4";
-import { Text } from "rebass";
-import styled, { ThemeContext } from "styled-components";
+import { Box, styled, Typography } from "@mui/material";
+
+import useConnector from "context/connector";
 import AddressInputPanel from "apps/dex/components/AddressInputPanel";
 import {
   ButtonError,
@@ -71,12 +72,11 @@ import Loader from "apps/dex/components/Loader";
 import { useIsTransactionUnsupported } from "apps/dex/hooks/Trades";
 import UnsupportedCurrencyFooter from "apps/dex/components/swap/UnsupportedCurrencyFooter";
 
+import ArrowDownwardRoundedIcon from "@mui/icons-material/ArrowDownwardRounded";
 import walletSrc from "apps/dex/assets/svg/wallet.svg";
 import walletHover from "apps/dex/assets/svg/wallet-hover.svg";
-import { useNavigate } from "react-router-dom";
-import useConnector from "context/connector";
 
-export const WalletIcon = styled.div`
+export const WalletIcon = styled(Box)`
   background: url("${walletSrc}") no-repeat center;
   width: 20px;
   height: 20px;
@@ -123,7 +123,6 @@ const Swap = () => {
     });
 
   const { account } = useActiveWeb3React();
-  const theme = useContext(ThemeContext);
 
   const { openConnectorMenu } = useConnector();
 
@@ -238,7 +237,7 @@ const Swap = () => {
     allowedSlippage
   );
 
-  // check if user has gone through approval process, used to show two-step buttons, reset on token change
+  // check if user has gone through an approval process, used to show two-step buttons, reset on token change
   const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false);
 
   // mark when a user has submitted an approval, reset onTokenSelection for input field
@@ -442,13 +441,16 @@ const Swap = () => {
               <AutoRow justify={"center"} style={{ padding: "0 1rem" }}>
                 <ArrowWrapper clickable>
                   <ArrowDownWrapped>
-                    <ArrowDown
-                      size="20"
+                    <ArrowDownwardRoundedIcon
                       onClick={() => {
                         setApprovalSubmitted(false); // reset 2 step UI for approvals
                         onSwitchTokens();
                       }}
-                      color={theme.black}
+                      sx={{
+                        width: "20px",
+                        height: "20px",
+                        color: "#000",
+                      }}
                     />
                   </ArrowDownWrapped>
                 </ArrowWrapper>
@@ -491,7 +493,13 @@ const Swap = () => {
                 <AutoRow justify="center" style={{ marginTop: "-35px" }}>
                   <ArrowWrapper clickable={false}>
                     <ArrowDownWrapped>
-                      <ArrowDown size="20" color={theme.black} />
+                      <ArrowDownwardRoundedIcon
+                        sx={{
+                          width: "20px",
+                          height: "20px",
+                          color: "#000",
+                        }}
+                      />
                     </ArrowDownWrapped>
                   </ArrowWrapper>
                 </AutoRow>
@@ -504,16 +512,17 @@ const Swap = () => {
             ) : null}
 
             {showWrap ? null : (
-              <Card
-                padding={showWrap ? ".25rem 1rem 0 1rem" : "0px"}
-                borderRadius={"20px"}
-              >
-                <AutoColumn gap="8px" style={{ padding: "0 16px" }}>
+              <Card sx={{ padding: showWrap ? ".25rem 1rem 0 1rem" : 0 }}>
+                <AutoColumn gap="8px" sx={{ padding: "0 16px" }}>
                   {Boolean(trade) && (
                     <RowBetween align="center">
-                      <Text fontWeight={500} fontSize={14} color={theme.text2}>
+                      <Typography
+                        fontWeight={500}
+                        fontSize={14}
+                        color={"#4F658C"}
+                      >
                         Price
-                      </Text>
+                      </Typography>
                       <TradePrice
                         price={trade?.executionPrice}
                         showInverted={showInverted}
@@ -526,7 +535,7 @@ const Swap = () => {
                       <ClickableText
                         fontWeight={500}
                         fontSize={14}
-                        color={theme.text2}
+                        color={"#4F658C"}
                         onClick={toggleSettings}
                       >
                         Slippage Tolerance
@@ -534,7 +543,7 @@ const Swap = () => {
                       <ClickableText
                         fontWeight={500}
                         fontSize={14}
-                        color={theme.text2}
+                        color={"#4F658C"}
                         onClick={toggleSettings}
                       >
                         {allowedSlippage / 100}%
@@ -587,7 +596,7 @@ const Swap = () => {
                   disabled={
                     approval !== ApprovalState.NOT_APPROVED || approvalSubmitted
                   }
-                  width="48%"
+                  sx={{ width: "48%" }}
                   altDisabledStyle={approval === ApprovalState.PENDING} // show solid button while waiting
                   confirmed={approval === ApprovalState.APPROVED}
                 >
@@ -616,7 +625,6 @@ const Swap = () => {
                       });
                     }
                   }}
-                  width="48%"
                   id="swap-button"
                   disabled={
                     !isValid ||
@@ -624,12 +632,13 @@ const Swap = () => {
                     (priceImpactSeverity > 3 && !isExpertMode)
                   }
                   error={isValid && priceImpactSeverity > 2}
+                  sx={{ width: "48%" }}
                 >
-                  <Text fontSize={16} fontWeight={500}>
+                  <Typography fontSize={16} fontWeight={500}>
                     {priceImpactSeverity > 3 && !isExpertMode
                       ? `Price Impact High`
                       : `Swap${priceImpactSeverity > 2 ? " Anyway" : ""}`}
-                  </Text>
+                  </Typography>
                 </ButtonError>
               </RowBetween>
             ) : (
@@ -655,13 +664,13 @@ const Swap = () => {
                 }
                 error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
               >
-                <Text fontSize={20} fontWeight={500}>
+                <Typography fontSize={20} fontWeight={500}>
                   {swapInputError
                     ? swapInputError
                     : priceImpactSeverity > 3 && !isExpertMode
                     ? `Price Impact Too High`
                     : `Swap${priceImpactSeverity > 2 ? " Anyway" : ""}`}
-                </Text>
+                </Typography>
               </ButtonError>
             )}
             {showApproveFlow && (

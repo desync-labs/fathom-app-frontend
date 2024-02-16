@@ -7,7 +7,7 @@ import {
   valueToBigNumber,
 } from "@into-the-fathom/lending-math-utils";
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
-import { Fragment, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import { StableAPYTooltip } from "apps/lending/components/infoTooltips/StableAPYTooltip";
 import { VariableAPYTooltip } from "apps/lending/components/infoTooltips/VariableAPYTooltip";
 import { ListColumn } from "apps/lending/components/lists/ListColumn";
@@ -102,43 +102,52 @@ export const BorrowAssetsList = () => {
 
   const { baseAssetSymbol } = currentNetworkConfig;
 
-  const tokensToBorrow = reserves
-    .filter((reserve) => assetCanBeBorrowedByUser(reserve, user))
-    .map((reserve: ComputedReserveData) => {
-      const availableBorrows = user
-        ? Number(
-            getMaxAmountAvailableToBorrow(reserve, user, InterestRate.Variable)
-          )
-        : 0;
+  const tokensToBorrow = useMemo(
+    () =>
+      reserves
+        .filter((reserve) => assetCanBeBorrowedByUser(reserve, user))
+        .map((reserve: ComputedReserveData) => {
+          const availableBorrows = user
+            ? Number(
+                getMaxAmountAvailableToBorrow(
+                  reserve,
+                  user,
+                  InterestRate.Variable
+                )
+              )
+            : 0;
 
-      const availableBorrowsInUSD = valueToBigNumber(availableBorrows)
-        .multipliedBy(reserve.formattedPriceInMarketReferenceCurrency)
-        .multipliedBy(marketReferencePriceInUsd)
-        .shiftedBy(-USD_DECIMALS)
-        .toFixed(2);
+          const availableBorrowsInUSD = valueToBigNumber(availableBorrows)
+            .multipliedBy(reserve.formattedPriceInMarketReferenceCurrency)
+            .multipliedBy(marketReferencePriceInUsd)
+            .shiftedBy(-USD_DECIMALS)
+            .toFixed(2);
 
-      return {
-        ...reserve,
-        reserve,
-        totalBorrows: reserve.totalDebt,
-        availableBorrows,
-        availableBorrowsInUSD,
-        stableBorrowRate:
-          reserve.stableBorrowRateEnabled && reserve.borrowingEnabled
-            ? Number(reserve.stableBorrowAPY)
-            : -1,
-        variableBorrowRate: reserve.borrowingEnabled
-          ? Number(reserve.variableBorrowAPY)
-          : -1,
-        iconSymbol: reserve.iconSymbol,
-        ...(reserve.isWrappedBaseAsset
-          ? fetchIconSymbolAndName({
-              symbol: baseAssetSymbol,
-              underlyingAsset: API_ETH_MOCK_ADDRESS.toLowerCase(),
-            })
-          : {}),
-      };
-    });
+          return {
+            ...reserve,
+            reserve,
+            totalBorrows: reserve.totalDebt,
+            availableBorrows,
+            availableBorrowsInUSD,
+            stableBorrowRate:
+              reserve.stableBorrowRateEnabled && reserve.borrowingEnabled
+                ? Number(reserve.stableBorrowAPY)
+                : -1,
+            variableBorrowRate: reserve.borrowingEnabled
+              ? Number(reserve.variableBorrowAPY)
+              : -1,
+            iconSymbol: reserve.iconSymbol,
+            ...(reserve.isWrappedBaseAsset
+              ? fetchIconSymbolAndName({
+                  name: reserve.name,
+                  symbol: baseAssetSymbol,
+                  underlyingAsset: API_ETH_MOCK_ADDRESS.toLowerCase(),
+                })
+              : {}),
+          };
+        }),
+    [reserves]
+  );
 
   const maxBorrowAmount = valueToBigNumber(
     user?.totalBorrowsMarketReferenceCurrency || "0"
@@ -225,9 +234,9 @@ export const BorrowAssetsList = () => {
           <Box sx={{ px: 6, mb: 4 }}>
             {+collateralUsagePercent >= 0.98 && (
               <Warning severity="error">
-                Be careful - You are very close to liquidation. Consider
-                depositing more collateral or paying down some of your borrowed
-                positions
+                Be careful - You are very close to liquidation. <br />
+                Consider depositing more collateral or paying down some of your
+                borrowed positions.
               </Warning>
             )}
 
@@ -242,7 +251,7 @@ export const BorrowAssetsList = () => {
                 {user?.isInEmode && (
                   <Warning severity="warning">
                     In E-Mode some assets are not borrowable. Exit E-Mode to get
-                    access to all assets
+                    access to all assets.
                   </Warning>
                 )}
                 {user?.totalCollateralMarketReferenceCurrency === "0" && (

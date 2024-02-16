@@ -1,12 +1,13 @@
 import { FC, useState } from "react";
-import { HelpCircle } from "react-feather";
-import { ImageProps } from "rebass";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 
 const BAD_SRCS: { [tokenAddress: string]: true } = {};
 
-export interface LogoProps
-  extends Pick<ImageProps, "style" | "alt" | "className"> {
+export interface LogoProps {
   srcs: string[];
+  style?: React.CSSProperties;
+  alt?: string;
+  className?: string;
 }
 
 /**
@@ -32,7 +33,7 @@ const Logo: FC<LogoProps> = ({ srcs, alt, ...rest }) => {
     );
   }
 
-  return <HelpCircle {...rest} />;
+  return <HelpOutlineIcon {...rest} />;
 };
 
 export default Logo;

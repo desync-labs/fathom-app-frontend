@@ -81,7 +81,7 @@ export const GasStation: FC<GasStationProps> = ({
 
   return (
     <Stack gap={6} sx={{ width: "100%" }}>
-      <Box sx={{ display: "flex", mt: 6, justifyContent: "space-between" }}>
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <LocalGasStationIcon
             color="primary"

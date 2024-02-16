@@ -1,9 +1,11 @@
+import { useEffect, useState, memo, useMemo, FC } from "react";
+import { useLazyQuery } from "@apollo/client";
+import { Navigate } from "react-router-dom";
+import { Box, CircularProgress, styled } from "@mui/material";
+
 import AppBody from "apps/dex/pages/AppBody";
 import { Wrapper } from "apps/dex/pages/Pool/styleds";
-import { useLazyQuery } from "@apollo/client";
 import { USER_TRANSACTIONS } from "apps/charts/apollo/queries";
-import { useEffect, useState, memo, useMemo, FC } from "react";
-import styled from "styled-components";
 import { TXN_TYPE } from "apps/charts/components/TxnList";
 import {
   isTransactionRecent,
@@ -19,26 +21,25 @@ import {
 } from "apps/dex/components/Transactions/Transaction";
 import { TYPE } from "apps/dex/theme";
 import { useActiveWeb3React } from "apps/dex/hooks";
-import { Navigate } from "react-router-dom";
 import {
   CircleWrapper,
   NoResults,
 } from "components/AppComponents/AppBox/AppBox";
-import { CircularProgress } from "@mui/material";
 
-const TransactionListWrapper = styled.div`
-  ${({ theme }) => theme.flexColumnNoWrap};
+const TransactionListWrapper = styled(Box)`
+  display: flex;
+  flex-flow: column nowrap;
 `;
 
-const TransactionsHeaderRow = styled.div`
+const TransactionsHeaderRow = styled(Box)`
   font-weight: 600;
   font-size: 20px;
   line-height: 24px;
   padding: 1rem 0 0.5rem;
-  color: ${({ theme }) => theme.white};
+  color: #fafafa;
 `;
 
-const EmptyTransactionsRow = styled.div`
+const EmptyTransactionsRow = styled(Box)`
   display: flex;
   justify-content: center;
   font-weight: 400;
@@ -163,7 +164,7 @@ const Transactions: FC = () => {
   }, [storageTransactions, account]);
 
   /**
-   * Get transactions for last 7 days.
+   * Get transactions for the last 7 days.
    */
   const sortedRecentTransactions = useMemo(() => {
     const txs = Object.values(allTransactions);
@@ -222,7 +223,7 @@ const Transactions: FC = () => {
     <AppBody>
       <Wrapper id={"transaction-list"}>
         <TransactionsHeaderRow>
-          <TYPE.white>Transactions</TYPE.white>
+          <TYPE.white fontSize={20}>Transactions</TYPE.white>
         </TransactionsHeaderRow>
         {pending.length || sortedFilteredTransactions.length ? (
           <>

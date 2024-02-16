@@ -1,12 +1,13 @@
-import { Currency, Token, XDC } from "into-the-fathom-swap-sdk";
 import { CSSProperties, FC, useMemo } from "react";
-import styled from "styled-components";
+import { Currency, Token, XDC } from "into-the-fathom-swap-sdk";
+import { styled } from "@mui/material";
 
-import XdcLogo from "apps/dex/assets/images/xdc-logo.png";
 import useHttpLocations from "apps/dex/hooks/useHttpLocations";
 import { WrappedTokenInfo } from "apps/dex/state/lists/hooks";
 import Logo from "apps/dex/components/Logo";
 import DEFAULT_TOKEN_LIST from "fathom-swap-standard-token-list";
+
+import XdcLogo from "apps/dex/assets/images/xdc-logo.png";
 
 export const getTokenLogoURL = (address: string) => {
   let logo;
@@ -22,10 +23,10 @@ export const getTokenLogoURL = (address: string) => {
   return logo;
 };
 
-const StyledXdcLogo = styled.img<{ size: string }>`
+const StyledXdcLogo = styled("img")<{ size: string }>`
   width: ${({ size }) => size};
   height: ${({ size }) => size};
-  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.075);
   border-radius: 24px;
 `;
 
@@ -33,8 +34,8 @@ const StyledLogo = styled(Logo)<{ size: string }>`
   width: ${({ size }) => size};
   height: ${({ size }) => size};
   border-radius: ${({ size }) => size};
-  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
-  background-color: ${({ theme }) => theme.white};
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.075);
+  background-color: #ffffff;
 `;
 
 type CurrencyLogoProps = {

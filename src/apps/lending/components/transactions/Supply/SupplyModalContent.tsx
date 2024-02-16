@@ -179,10 +179,6 @@ export const SupplyModalContent: FC<ModalWrapperProps> = memo(
       aToken: true,
     };
 
-    console.log({
-      addToken,
-    });
-
     // collateralization state
     const collateralType = getAssetCollateralType(
       userReserve,

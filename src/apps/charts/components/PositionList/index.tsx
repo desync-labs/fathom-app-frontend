@@ -123,7 +123,7 @@ const ListItem: FC<ListItemProps> = memo((props) => {
         </DataText>
       )}
       <DataText justifyContent="flex-start" alignItems="center">
-        <AutoColumn gap="8px" justify="flex-start">
+        <AutoColumn justify="flex-start" sx={{ width: "fit-content" }}>
           <DoubleTokenLogo
             size={26}
             a0={position.pair.token0.id}

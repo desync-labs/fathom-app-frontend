@@ -41,7 +41,7 @@ export default function Updater(): null {
 
   const transactions = chainId ? state[chainId] ?? {} : {};
 
-  // show popup on confirm
+  // show popup on confirmation
   const addPopup = useAddPopup();
 
   useEffect(() => {
