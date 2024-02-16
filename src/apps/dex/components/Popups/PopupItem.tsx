@@ -1,5 +1,5 @@
 import { FC, useCallback, useEffect } from "react";
-import { Box, LinearProgress, styled } from "@mui/material";
+import { Box, LinearProgress, styled, keyframes } from "@mui/material";
 
 import { PopupContent } from "apps/dex/state/application/actions";
 import { useRemovePopup } from "apps/dex/state/application/hooks";
@@ -31,11 +31,33 @@ export const Popup = styled(Box)`
     }
   }
 `;
+
+const indeterminate1Keyframes = keyframes({
+  "0%": {
+    left: "100%",
+    right: "-35%",
+  },
+  "100%": {
+    left: "0%",
+    right: "0%",
+  },
+});
+
 const LinearProgressStyled = styled(LinearProgress)`
   position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
+  height: 2px;
+  background: none;
+
+  & .MuiLinearProgress-bar1Indeterminate {
+    width: auto;
+    animation: ${indeterminate1Keyframes} 15s linear forwards;
+  }
+  & .MuiLinearProgress-bar2Indeterminate {
+    display: none;
+  }
 `;
 
 type PopupItemProps = {
@@ -89,7 +111,9 @@ const PopupItem: FC<PopupItemProps> = ({ removeAfterMs, content, popKey }) => {
     <Popup>
       <StyledClose onClick={removeThisPopup} />
       {popupContent}
-      {removeAfterMs !== null ? <LinearProgressStyled /> : null}
+      {removeAfterMs !== null ? (
+        <LinearProgressStyled variant="indeterminate" />
+      ) : null}
     </Popup>
   );
 };
