@@ -108,13 +108,10 @@ const TokenDetailsLayout = styled(Box)`
   @media screen and (max-width: 1024px) {
     grid-template-columns: 1fr;
     align-items: stretch;
-    > * {
-      /* grid-column: 1 / 4; */
-      margin-bottom: 1rem;
-    }
+    gap: 18px;
 
     &:last-child {
-      align-items: start;
+      align-items: center;
       justify-items: start;
     }
   }
@@ -478,8 +475,8 @@ const TokenPage: FC<{ address: string }> = memo(({ address }) => {
             <>
               <HeaderWrapper
                 style={{
-                  marginTop: "3rem",
-                  marginBottom: "2rem",
+                  marginTop: "2rem",
+                  marginBottom: "1rem",
                   padding: "0px 1.125rem",
                 }}
               >
@@ -488,20 +485,20 @@ const TokenPage: FC<{ address: string }> = memo(({ address }) => {
               <TokenDetailsLayout>
                 <Column>
                   <TYPE.main>Symbol</TYPE.main>
-                  <TYPE.main style={{ marginTop: ".5rem" }} fontWeight="500">
+                  <TYPE.main style={{ marginTop: ".15rem" }} fontWeight="500">
                     <FormattedName text={symbol} maxCharacters={12} />
                   </TYPE.main>
                 </Column>
                 <Column>
                   <TYPE.main>Name</TYPE.main>
-                  <TYPE.main style={{ marginTop: ".5rem" }} fontWeight="500">
+                  <TYPE.main style={{ marginTop: ".15rem" }} fontWeight="500">
                     <FormattedName text={name} maxCharacters={16} />
                   </TYPE.main>
                 </Column>
                 <Column>
                   <TYPE.main>Address</TYPE.main>
                   <AutoRow align="flex-end">
-                    <TYPE.main style={{ marginTop: ".5rem" }} fontWeight="500">
+                    <TYPE.main style={{ marginTop: ".15rem" }} fontWeight="500">
                       {address.slice(0, 8) + "..." + address.slice(36, 42)}
                     </TYPE.main>
                     <CopyHelper toCopy={address} />
