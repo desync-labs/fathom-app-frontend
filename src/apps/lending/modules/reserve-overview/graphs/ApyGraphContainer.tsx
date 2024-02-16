@@ -42,14 +42,9 @@ export const ApyGraphContainer: FC<ApyGraphContainerProps> = ({
 
   const CHART_HEIGHT = 155;
   const CHART_HEIGHT_LOADING_FIX = 3.5;
-  let reserveAddress = "";
-  if (reserve) {
-    if (currentMarketData.v3) {
-      reserveAddress = `${reserve.underlyingAsset}${currentMarketData.addresses.LENDING_POOL_ADDRESS_PROVIDER}${currentMarketData.chainId}`;
-    } else {
-      reserveAddress = `${reserve.underlyingAsset}${currentMarketData.addresses.LENDING_POOL_ADDRESS_PROVIDER}`;
-    }
-  }
+  const reserveAddress = reserve
+    ? `${reserve.underlyingAsset}${currentMarketData.addresses.LENDING_POOL_ADDRESS_PROVIDER}`
+    : "";
   const { data, loading, error, refetch } = useReserveRatesHistory(
     reserveAddress,
     selectedTimeRange
