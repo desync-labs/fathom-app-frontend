@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { makeStyles } from "tss-react/mui";
-import { useState } from "react";
+import { FC, useState, memo } from "react";
 
 import {
   ExpandLess as IconExpandLess,
@@ -39,7 +39,7 @@ const useStyles = makeStyles<{ isActive: boolean; showText: boolean }>()(
       margin: "0 auto",
       padding: "8px 9px 9px 8px",
       width: showText ? "100%" : "40px",
-      borderRadius: isActive ? "8px" : "0",
+      borderRadius: "8px",
       "&.active": {
         background: isActive ? "#2A3E5A" : "transparent",
 
@@ -69,14 +69,13 @@ const useStyles = makeStyles<{ isActive: boolean; showText: boolean }>()(
         fontWeight: "600",
         lineHeight: "20px",
       },
-      paddingBottom: "4px",
+      margin: "0",
       color: isActive ? "#fff" : "#B0C5E7",
-      marginBottom: "-4px",
     },
   })
 );
 
-const AppMenuItem: React.FC<AppMenuItemProps> = (props) => {
+const AppMenuItem: FC<AppMenuItemProps> = memo((props) => {
   const { name, link, Icon, items = [], isActive, showText } = props;
   const isExpandable = items && items.length > 0 && showText;
 
@@ -131,6 +130,6 @@ const AppMenuItem: React.FC<AppMenuItemProps> = (props) => {
       {MenuItemChildren}
     </>
   );
-};
+});
 
-export default AppMenuItem;
+export default memo(AppMenuItem);

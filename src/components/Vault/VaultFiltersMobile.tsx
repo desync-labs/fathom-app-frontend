@@ -1,4 +1,4 @@
-import { FC, MouseEvent } from "react";
+import { FC, memo, MouseEvent } from "react";
 import { Box, MenuItem, ToggleButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import {
@@ -80,7 +80,6 @@ const VaultFiltersMobile: FC<VaultMobileFiltersPropsType> = ({
               sx={{ border: "none", fieldset: { borderColor: "transparent" } }}
             >
               <MenuItem value="tvl">TVL</MenuItem>
-              <MenuItem value="fee">Fee</MenuItem>
               <MenuItem value="earned">Earned</MenuItem>
               <MenuItem value="staked">Staked</MenuItem>
             </AppSelect>
@@ -91,4 +90,4 @@ const VaultFiltersMobile: FC<VaultMobileFiltersPropsType> = ({
   );
 };
 
-export default VaultFiltersMobile;
+export default memo(VaultFiltersMobile);

@@ -12,6 +12,9 @@ import { ReactComponent as OverviewSrc } from "assets/svg/icons/overview.svg";
 import { ReactComponent as TokensSrc } from "assets/svg/icons/tokens.svg";
 import { ReactComponent as PairsSrc } from "assets/svg/icons/pairs.svg";
 import { ReactComponent as AccountsSrc } from "assets/svg/icons/account.svg";
+import { ReactComponent as LendingSrc } from "assets/svg/icons/lending.svg";
+import { ReactComponent as DashboardSrc } from "assets/svg/icons/dashboard.svg";
+import { ReactComponent as MarketsSrc } from "assets/svg/icons/markets.svg";
 
 import { styled } from "@mui/material/styles";
 
@@ -25,21 +28,18 @@ export const FxdIcon = styled(FxdSrc)<{ isactive: string }>`
 `;
 
 export const StableSwapIcon = styled(SwapIconSrc)<{ isactive: string }>`
-  margin-top: -3px;
   & path {
     fill: ${({ isactive }) => (isactive ? ACTIVE_HEX : INACTIVE_HEX)};
   }
 `;
 
 export const StakingIcon = styled(StakingIconSrc)<{ isactive: string }>`
-  margin-top: -3px;
   & path {
     fill: ${({ isactive }) => (isactive ? ACTIVE_HEX : INACTIVE_HEX)};
   }
 `;
 
 export const GovernanceIcon = styled(GovernanceSrc)<{ isactive: string }>`
-  margin-top: 2px;
   & path {
     fill: ${({ isactive }) => (isactive ? ACTIVE_HEX : INACTIVE_HEX)};
   }
@@ -100,6 +100,24 @@ export const PairsIcon = styled(PairsSrc)<{ isactive: string }>`
 `;
 
 export const AccountsIcon = styled(AccountsSrc)<{ isactive: string }>`
+  & path {
+    fill: ${({ isactive }) => (isactive ? ACTIVE_HEX : INACTIVE_HEX)};
+  }
+`;
+
+export const LendingIcon = styled(LendingSrc)<{ isactive: string }>`
+  & path {
+    fill: ${({ isactive }) => (isactive ? ACTIVE_HEX : INACTIVE_HEX)};
+  }
+`;
+
+export const DashboardIcon = styled(DashboardSrc)<{ isactive: string }>`
+  & path {
+    fill: ${({ isactive }) => (isactive ? ACTIVE_HEX : INACTIVE_HEX)};
+  }
+`;
+
+export const MarketsIcon = styled(MarketsSrc)<{ isactive: string }>`
   & path {
     fill: ${({ isactive }) => (isactive ? ACTIVE_HEX : INACTIVE_HEX)};
   }

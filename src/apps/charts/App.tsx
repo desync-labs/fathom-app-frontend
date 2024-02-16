@@ -1,5 +1,6 @@
 import { Dispatch, FC, memo, ReactNode, SetStateAction } from "react";
-import styled from "styled-components";
+import { Outlet } from "react-router-dom";
+import { Box, styled } from "@mui/material";
 import { ApolloProvider } from "@apollo/client";
 import { dexClient as client } from "apollo/client";
 import {
@@ -9,14 +10,13 @@ import {
 import PinnedData from "apps/charts/components/PinnedData";
 import LocalLoader from "apps/charts/components/LocalLoader";
 import { useLatestBlocks } from "apps/charts/contexts/Application";
-import { Outlet } from "react-router-dom";
 
-const AppWrapper = styled.div`
+const AppWrapper = styled(Box)`
   position: relative;
   width: 100%;
   height: 100%;
 `;
-const ContentWrapper = styled.div<{ open: boolean }>`
+const ContentWrapper = styled(Box)<{ open: boolean }>`
   display: grid;
   grid-template-columns: ${({ open }) => (open ? "1fr 200px" : "1fr 64px")};
   @media screen and (max-width: 1400px) {
@@ -28,7 +28,7 @@ const ContentWrapper = styled.div<{ open: boolean }>`
   }
 `;
 
-const Right = styled.div<{ open: boolean }>`
+const Right = styled(Box)<{ open: boolean }>`
   position: fixed;
   right: 0;
   top: 0;
@@ -37,27 +37,26 @@ const Right = styled.div<{ open: boolean }>`
   width: ${({ open }) => (open ? "220px" : "64px")};
   height: ${({ open }) => (open ? "fit-content" : "100vh")};
   overflow: auto;
-  border-left: ${({ theme }) => "1px solid" + theme.borderBG};
-  background-color: ${({ theme }) => theme.bg1};
+  border-left: 1px solid #253656;
   @media screen and (max-width: 1400px) {
     display: none;
   }
 `;
 
-const Center = styled.div`
+const Center = styled(Box)`
   height: 100%;
   z-index: 1;
   transition: width 0.25s ease;
   overflow: hidden;
 `;
 
-const WarningWrapper = styled.div`
+const WarningWrapper = styled(Box)`
   width: 100%;
   display: flex;
   justify-content: center;
 `;
 
-const WarningBanner = styled.div`
+const WarningBanner = styled("span")`
   background-color: #ff6871;
   padding: 1.5rem;
   color: white;
@@ -95,8 +94,6 @@ const App = () => {
   const globalData = useGlobalData();
   const globalChartData = useGlobalChartData();
   const [latestBlock, headBlock] = useLatestBlocks();
-
-  // show warning
 
   const showWarning =
     headBlock && latestBlock

@@ -118,6 +118,19 @@ export const AppSelect = styled(Select)`
   border: 1px solid #324567;
   border-radius: 8px;
   width: 100%;
+  &:hover,
+  &:focus {
+    border: 1px solid #5a81ff;
+    box-shadow: 0 0 8px #003cff;
+  }
+  &.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border: 1px solid #5a81ff !important;
+    box-shadow: 0 0 8px #003cff !important;
+  }
+  fieldset {
+    border: none !important;
+    outline: none !important;
+  }
 `;
 
 export const AppFormInputErrorWrapper = styled("span")`

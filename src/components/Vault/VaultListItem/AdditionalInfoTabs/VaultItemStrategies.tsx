@@ -1,16 +1,18 @@
-import { FC } from "react";
+import { FC, memo } from "react";
 import { Typography } from "@mui/material";
 import { IVault } from "fathom-sdk";
 import VaultStrategyItem from "components/Vault/VaultListItem/AdditionalInfoTabs/VaultStrategyItem";
 
 type VaultItemStrategiesPropsTypes = {
   vaultItemData: IVault;
+  performanceFee: number;
 };
 
 const VaultItemStrategies: FC<VaultItemStrategiesPropsTypes> = ({
   vaultItemData,
+  performanceFee,
 }) => {
-  const { strategies, balanceTokens, token, totalFees } = vaultItemData;
+  const { strategies, balanceTokens, token } = vaultItemData;
   return (
     <>
       {!strategies.length ? (
@@ -21,7 +23,7 @@ const VaultItemStrategies: FC<VaultItemStrategiesPropsTypes> = ({
             strategyData={strategy}
             vaultBalanceTokens={balanceTokens}
             tokenName={token.name}
-            totalFees={totalFees}
+            performanceFee={performanceFee}
             key={strategy.id}
           />
         ))
@@ -30,4 +32,4 @@ const VaultItemStrategies: FC<VaultItemStrategiesPropsTypes> = ({
   );
 };
 
-export default VaultItemStrategies;
+export default memo(VaultItemStrategies);

@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, memo } from "react";
 import BigNumber from "bignumber.js";
 import { Box, Divider, Grid, ListItemText } from "@mui/material";
 import { IVault } from "fathom-sdk";
@@ -10,31 +10,17 @@ type VaultDepositInfoProps = {
   vaultItemData: IVault;
   deposit: string;
   sharedToken: string;
+  performanceFee: number;
 };
 
 const DepositVaultInfo: FC<VaultDepositInfoProps> = ({
   vaultItemData,
   deposit,
   sharedToken,
+  performanceFee,
 }) => {
-  const { token, shareToken, strategies, totalFees, sharesSupply } =
-    vaultItemData;
+  const { token, shareToken, apr, sharesSupply } = vaultItemData;
   const { isMobile } = useSharedContext();
-
-  const { totalApr, count } = strategies[0].reports.reduce(
-    (accumulator: any, strategyReport: any) => {
-      strategyReport.results.forEach((result: any) => {
-        if (result.apr) {
-          accumulator.totalApr += parseFloat(result.apr);
-          accumulator.count++;
-        }
-      });
-      return accumulator;
-    },
-    { totalApr: 0, count: 0 }
-  );
-
-  const averageApr = count > 0 ? totalApr / count : 0;
 
   return (
     <Grid item xs={12} sm={6} pr={isMobile ? 0 : 2.5}>
@@ -45,10 +31,7 @@ const DepositVaultInfo: FC<VaultDepositInfoProps> = ({
             <>
               0 {token.name + " "}
               <Box component="span" sx={{ color: "#29C20A" }}>
-                →{" "}
-                {formatPercentage(BigNumber(deposit || "0").toNumber()) +
-                  " " +
-                  token.name}
+                → {formatPercentage(Number(deposit || "0")) + " " + token.name}
               </Box>
             </>
           }
@@ -90,7 +73,7 @@ const DepositVaultInfo: FC<VaultDepositInfoProps> = ({
               {`0 ${shareToken.symbol} `}
               <Box component="span" sx={{ color: "#29C20A" }}>
                 →{" "}
-                {formatPercentage(BigNumber(sharedToken || "0").toNumber()) +
+                {formatPercentage(Number(sharedToken || "0")) +
                   " " +
                   shareToken.symbol}
               </Box>
@@ -102,32 +85,20 @@ const DepositVaultInfo: FC<VaultDepositInfoProps> = ({
         <Divider />
         <AppListItem
           alignItems="flex-start"
-          secondaryAction={
-            formatPercentage(BigNumber(totalFees).toNumber()) + "%"
-          }
+          secondaryAction={formatPercentage(Number(performanceFee)) + "%"}
         >
           <ListItemText primary="Fee" />
         </AppListItem>
         <Divider />
         <AppListItem
           alignItems="flex-start"
-          secondaryAction={
-            formatNumber(
-              BigNumber(strategies[0].reports[0].results[0].apr).toNumber()
-            ) + "%"
-          }
+          secondaryAction={formatNumber(Number(apr)) + "%"}
         >
           <ListItemText primary="Estimated APR" />
-        </AppListItem>
-        <AppListItem
-          alignItems="flex-start"
-          secondaryAction={formatNumber(BigNumber(averageApr).toNumber()) + "%"}
-        >
-          <ListItemText primary="Historical APR" />
         </AppListItem>
       </AppList>
     </Grid>
   );
 };
 
-export default DepositVaultInfo;
+export default memo(DepositVaultInfo);

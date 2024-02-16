@@ -1,4 +1,3 @@
-import { Currency, XDC, Token } from "into-the-fathom-swap-sdk";
 import {
   FC,
   KeyboardEvent,
@@ -9,10 +8,10 @@ import {
   useRef,
   useState,
 } from "react";
+import { Currency, XDC, Token } from "into-the-fathom-swap-sdk";
 import ReactGA from "react-ga4";
-import { useTranslation } from "react-i18next";
-import { FixedSizeList } from "react-window";
-import { Text } from "rebass";
+import { Box, styled, Typography } from "@mui/material";
+
 import { useActiveWeb3React } from "apps/dex/hooks";
 import {
   useAllTokens,
@@ -32,29 +31,29 @@ import {
 } from "apps/dex/components/SearchModal/filtering";
 import { useTokenComparator } from "./sorting";
 import { PaddedColumn, SearchInput, Separator } from "./styleds";
-import AutoSizer from "react-virtualized-auto-sizer";
-import styled from "styled-components";
 import useToggle from "apps/dex/hooks/useToggle";
 import { useOnClickOutside } from "apps/dex/hooks/useOnClickOutside";
-import useTheme from "apps/dex/hooks/useTheme";
 import ImportRow from "apps/dex/components/SearchModal/ImportRow";
-import { Edit } from "react-feather";
 import useDebounce from "apps/dex/hooks/useDebounce";
+
+import EditIcon from "@mui/icons-material/Edit";
 
 const ContentWrapper = styled(Column)`
   width: 100%;
-  flex: 1 1;
+  height: 100%;
   position: relative;
 `;
 
-const Footer = styled.div`
+const Footer = styled(Box)`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
   width: 100%;
-  border-radius: 20px;
-  padding: 20px;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-  background-color: ${({ theme }) => theme.modalContentBG};
-  border-top: 1px solid ${({ theme }) => theme.bg2};
+  padding: 20px 0;
+  background-color: #1d2d49;
+  border-top: 1px solid #061023;
+  z-index: 9;
 `;
 
 interface CurrencySearchProps {
@@ -80,12 +79,7 @@ export const CurrencySearch: FC<CurrencySearchProps> = ({
   showImportView,
   setImportToken,
 }) => {
-  const { t } = useTranslation();
   const { chainId } = useActiveWeb3React();
-  const theme = useTheme();
-
-  // refs for fixed size lists
-  const fixedList = useRef<FixedSizeList>();
 
   const [searchQuery, setSearchQuery] = useState<string>("");
   const debouncedQuery = useDebounce(searchQuery, 200);
@@ -148,7 +142,6 @@ export const CurrencySearch: FC<CurrencySearchProps> = ({
     const input = event.target.value;
     const checksummedInput = isAddress(input);
     setSearchQuery(checksummedInput || input);
-    fixedList.current?.scrollTo(0);
   }, []);
 
   const handleEnter = useCallback(
@@ -176,7 +169,7 @@ export const CurrencySearch: FC<CurrencySearchProps> = ({
   const node = useRef<HTMLDivElement>();
   useOnClickOutside(node, open ? toggle : undefined);
 
-  // if no results on main list, show option to expand into inactive
+  // if no results on the main list, show an option to expand into inactive
   const inactiveTokens = useFoundOnInactiveList(debouncedQuery);
   const filteredInactiveTokens: Token[] = useSortedTokensByQuery(
     inactiveTokens,
@@ -187,16 +180,16 @@ export const CurrencySearch: FC<CurrencySearchProps> = ({
     <ContentWrapper>
       <PaddedColumn gap="16px">
         <RowBetween>
-          <Text fontWeight={500} fontSize={16}>
+          <Typography fontWeight={500} fontSize={16}>
             Select a token
-          </Text>
+          </Typography>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
         <Row>
           <SearchInput
             type="text"
             id="token-search-input"
-            placeholder={t("tokenSearchPlaceholder")}
+            placeholder={"Search Token"}
             autoComplete="off"
             value={searchQuery}
             ref={inputRef as RefObject<HTMLInputElement>}
@@ -223,32 +216,24 @@ export const CurrencySearch: FC<CurrencySearchProps> = ({
         </Column>
       ) : filteredSortedTokens?.length > 0 ||
         filteredInactiveTokens?.length > 0 ? (
-        <div style={{ flex: "1" }}>
-          <AutoSizer disableWidth>
-            {({ height }: { height: number }) => (
-              <CurrencyList
-                height={height}
-                showXDC={showXDC}
-                currencies={
-                  filteredInactiveTokens
-                    ? filteredSortedTokens.concat(filteredInactiveTokens)
-                    : filteredSortedTokens
-                }
-                breakIndex={
-                  inactiveTokens && filteredSortedTokens
-                    ? filteredSortedTokens.length
-                    : undefined
-                }
-                onCurrencySelect={handleCurrencySelect}
-                otherCurrency={otherSelectedCurrency}
-                selectedCurrency={selectedCurrency}
-                fixedListRef={fixedList}
-                showImportView={showImportView}
-                setImportToken={setImportToken}
-              />
-            )}
-          </AutoSizer>
-        </div>
+        <CurrencyList
+          showXDC={showXDC}
+          currencies={
+            filteredInactiveTokens
+              ? filteredSortedTokens.concat(filteredInactiveTokens)
+              : filteredSortedTokens
+          }
+          breakIndex={
+            inactiveTokens && filteredSortedTokens
+              ? filteredSortedTokens.length
+              : undefined
+          }
+          onCurrencySelect={handleCurrencySelect}
+          otherCurrency={otherSelectedCurrency}
+          selectedCurrency={selectedCurrency}
+          showImportView={showImportView}
+          setImportToken={setImportToken}
+        />
       ) : (
         <Column style={{ padding: "20px", height: "100%" }}>
           <TYPE.main textAlign="center" mb="20px">
@@ -260,12 +245,14 @@ export const CurrencySearch: FC<CurrencySearchProps> = ({
         <Row justify="center">
           <ButtonText
             onClick={showManageView}
-            color={theme?.blue1}
             className="list-token-manage-button"
+            sx={{ color: "#2172E5" }}
           >
             <RowFixed>
               <IconWrapper size="16px" marginRight="6px">
-                <Edit />
+                <EditIcon
+                  sx={{ color: "transparent", width: "20px", height: "20px" }}
+                />
               </IconWrapper>
               <TYPE.white>Manage</TYPE.white>
             </RowFixed>

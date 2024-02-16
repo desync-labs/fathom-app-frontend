@@ -1,13 +1,13 @@
-import styled from "styled-components";
+import { FC, HTMLProps, memo } from "react";
+import { styled } from "@mui/material";
 import { escapeRegExp } from "apps/dex/utils";
-import { FC, memo } from "react";
 
-const StyledInput = styled.input<{
+const StyledInput = styled("input")<{
   error?: boolean;
   fontSize?: string;
   align?: string;
 }>`
-  color: ${({ error, theme }) => (error ? theme.red1 : theme.text1)};
+  color: ${({ error }) => (error ? "#FD4040" : "#ffffff")};
   width: 0;
   position: relative;
   font-weight: 500;
@@ -37,7 +37,7 @@ const StyledInput = styled.input<{
   }
 
   ::placeholder {
-    color: ${({ theme }) => theme.text1};
+    color: #ffffff;
   }
 `;
 
@@ -49,7 +49,7 @@ type InputProps = {
   error?: boolean;
   fontSize?: string;
   align?: "right" | "left";
-} & Omit<React.HTMLProps<HTMLInputElement>, "ref" | "onChange" | "as">;
+} & Omit<HTMLProps<HTMLInputElement>, "ref" | "onChange" | "as">;
 
 export const Input: FC<InputProps> = memo(
   ({ value, onUserInput, placeholder, ...rest }) => {
@@ -86,5 +86,3 @@ export const Input: FC<InputProps> = memo(
     );
   }
 );
-
-export default Input;

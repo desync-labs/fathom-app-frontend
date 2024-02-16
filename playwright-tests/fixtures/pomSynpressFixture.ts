@@ -10,6 +10,7 @@ import { resetState } from "@synthetixio/synpress/commands/synpress";
 import dotenv from "dotenv";
 import FxdPage from "../pages/fxd.page";
 import VaultPage from "../pages/vault.page";
+import DexPage from "../pages/dex.page";
 import { APOTHEM_RPC, XDC_RPC } from "../../src/connectors/networks";
 dotenv.config();
 
@@ -46,6 +47,7 @@ interface pagesAndContext {
   context: BrowserContext;
   fxdPage: FxdPage;
   vaultPage: VaultPage;
+  dexPage: DexPage;
 }
 
 export const test = base.extend<pagesAndContext>({
@@ -99,6 +101,9 @@ export const test = base.extend<pagesAndContext>({
   },
   vaultPage: async ({ page }, use) => {
     await use(new VaultPage(page));
+  },
+  dexPage: async ({ page }, use) => {
+    await use(new DexPage(page));
   },
 });
 

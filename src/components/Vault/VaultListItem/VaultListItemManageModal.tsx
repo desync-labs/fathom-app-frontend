@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, memo } from "react";
 import { DialogContent, Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
@@ -21,12 +21,14 @@ const VaultManageGridDialogWrapper = styled(AppDialog)`
 export type VaultManageProps = {
   vaultItemData: IVault;
   vaultPosition: IVaultPosition;
+  performanceFee: number;
   onClose: () => void;
 };
 
 const VaultListItemManageModal: FC<VaultManageProps> = ({
   vaultItemData,
   vaultPosition,
+  performanceFee,
   onClose,
 }) => {
   const {
@@ -44,6 +46,7 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
     setFormType,
     approve,
     setMax,
+    validateMaxValue,
     handleSubmit,
     onSubmit,
   } = useVaultManageDeposit(vaultItemData, vaultPosition, onClose);
@@ -69,6 +72,7 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
             vaultPosition={vaultPosition}
             formToken={formToken}
             formSharedToken={formSharedToken}
+            performanceFee={performanceFee}
           />
           <DividerDefault orientation="vertical" flexItem></DividerDefault>
           <ManageVaultForm
@@ -90,6 +94,7 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
             setFormType={setFormType}
             approve={approve}
             setMax={setMax}
+            validateMaxValue={validateMaxValue}
             handleSubmit={handleSubmit}
             onSubmit={onSubmit}
           />
@@ -99,4 +104,4 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
   );
 };
 
-export default VaultListItemManageModal;
+export default memo(VaultListItemManageModal);

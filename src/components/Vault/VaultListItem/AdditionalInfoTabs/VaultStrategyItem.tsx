@@ -1,5 +1,8 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import BigNumber from "bignumber.js";
+import { Link } from "react-router-dom";
+import relativeTime from "dayjs/plugin/relativeTime";
+import dayjs from "dayjs";
 import {
   Accordion,
   AccordionDetails,
@@ -11,12 +14,12 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { IVaultStrategy, IVaultStrategyReport } from "fathom-sdk";
 import { formatNumber } from "utils/format";
+import { getAccountUrl } from "utils/explorer";
+import { DEFAULT_CHAIN_ID } from "utils/Constants";
 import useSharedContext from "context/shared";
 import VaultHistoryChart, {
   HistoryChartDataType,
 } from "components/Vault/VaultListItem/AdditionalInfoTabs/VaultHistoryChart";
-import relativeTime from "dayjs/plugin/relativeTime";
-import dayjs from "dayjs";
 
 dayjs.extend(relativeTime);
 
@@ -28,6 +31,11 @@ export const VaultItemAccordion = styled(Accordion)`
   box-shadow: none;
 
   ${({ theme }) => theme.breakpoints.down("sm")} {
+    &.MuiPaper-root {
+      &:before {
+        background: none;
+      }
+    }
     padding: 20px;
     margin: 16px 0;
 
@@ -86,6 +94,7 @@ export const VaultIndicatorItemWrapper = styled(Box)`
 export const VaultIndicatorItemValue = styled(Typography)`
   font-size: 20px;
   font-weight: 700;
+  text-align: center;
 
   ${({ theme }) => theme.breakpoints.down("sm")} {
     font-size: 14px;
@@ -96,23 +105,25 @@ type VaultIndicatorItemPropsType = {
   title: string;
   value: string | number;
   units: string;
+  sx?: object;
 };
 
 type VaultStrategyItemPropsType = {
   strategyData: IVaultStrategy;
   vaultBalanceTokens: string;
   tokenName: string;
-  totalFees: string;
+  performanceFee: number;
 };
 
 const VaultIndicatorItem: FC<VaultIndicatorItemPropsType> = ({
   title,
   value,
   units,
+  sx,
 }) => {
   return (
-    <VaultIndicatorItemWrapper>
-      <Typography fontSize="12px" color={"#5977a0"}>
+    <VaultIndicatorItemWrapper sx={sx}>
+      <Typography fontSize="12px" textAlign={"center"} color={"#5977a0"}>
         {title}
       </Typography>
       <VaultIndicatorItemValue>{value + units}</VaultIndicatorItemValue>
@@ -124,7 +135,7 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
   strategyData,
   vaultBalanceTokens,
   tokenName,
-  totalFees,
+  performanceFee,
 }) => {
   const [aprHistoryArr, setAprHistoryArr] = useState<HistoryChartDataType[]>(
     []
@@ -137,16 +148,12 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
   useEffect(() => {
     if (!strategyData) return;
 
-    const extractedData = [];
-
-    for (const report of strategyData.reports) {
-      extractedData.push({
-        timestamp: report.timestamp,
-        chartValue: BigNumber(report.results[0]?.apr || "0").toFixed(2),
-      });
-    }
-
-    extractedData.sort((a, b) => parseInt(a.timestamp) - parseInt(b.timestamp));
+    const extractedData = strategyData.historicalApr
+      .map((aprItem) => ({
+        timestamp: aprItem.timestamp,
+        chartValue: aprItem.apr,
+      }))
+      .sort((a, b) => parseInt(a.timestamp) - parseInt(b.timestamp));
 
     const lastReport = dayjs(
       parseInt(strategyData.reports[0].timestamp, 10)
@@ -167,11 +174,15 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
     setAllocationShare(allocation);
   }, [strategyData, vaultBalanceTokens]);
 
-  const totalGain = strategyData.reports.reduce(
-    (acc: string, report: IVaultStrategyReport) => {
-      return BigNumber(acc).plus(BigNumber(report.gain)).toString();
-    },
-    "0"
+  const totalGain = useMemo(
+    () =>
+      strategyData.reports.reduce(
+        (acc: BigNumber, report: IVaultStrategyReport) => {
+          return acc.plus(report.gain);
+        },
+        BigNumber(0)
+      ),
+    [strategyData]
   );
 
   return (
@@ -188,9 +199,17 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
         <Typography>Dynamic Market Analysis for Optimal Returns</Typography>
       </AccordionSummary>
       <AccordionDetails sx={{ padding: "0" }}>
-        <Typography component={"p"} fontSize="12px" pb={2}>
+        <Link
+          to={getAccountUrl(strategyData.id, DEFAULT_CHAIN_ID)}
+          target="_blank"
+          style={{
+            display: "inline-flex",
+            fontSize: "12px",
+            marginBottom: "16px",
+          }}
+        >
           {strategyData.id}
-        </Typography>
+        </Link>
         <Typography fontSize="14px" pb={2}>
           Our strategy involves dynamically allocating our reserves to different
           investment opportunities. This flexibility allows us to capitalize on
@@ -208,23 +227,21 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
                     .toNumber()
                 )}`}
                 units={` ${tokenName}`}
+                sx={{ borderRadius: "8px" }}
               />
               <VaultIndicatorItem
                 title="Total Gain"
-                value={formatNumber(
-                  BigNumber(totalGain)
-                    .dividedBy(10 ** 18)
-                    .toNumber()
-                )}
+                value={formatNumber(totalGain.dividedBy(10 ** 18).toNumber())}
                 units={` ${tokenName}`}
+                sx={{ borderRadius: "8px" }}
               />
             </VaultIndicatorList>
-            <VaultIndicatorList sx={{ gap: 0 }}>
+            <VaultIndicatorList
+              sx={{ gap: 0, borderRadius: "8px", overflow: "hidden" }}
+            >
               <VaultIndicatorItem
                 title="APR"
-                value={formatNumber(
-                  BigNumber(strategyData.reports[0].results[0].apr).toNumber()
-                )}
+                value={formatNumber(Number(strategyData.apr))}
                 units="%"
               />
               <VaultIndicatorItem
@@ -234,7 +251,7 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
               />
               <VaultIndicatorItem
                 title="Perfomance fee"
-                value={formatNumber(BigNumber(totalFees).toNumber())}
+                value={formatNumber(performanceFee)}
                 units="%"
               />
             </VaultIndicatorList>

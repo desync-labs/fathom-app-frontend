@@ -5,16 +5,16 @@ import * as metamask from "@synthetixio/synpress/commands/metamask";
 import dotenv from "dotenv";
 dotenv.config();
 
-test.describe("Fathom App Test Suite: Positions Operations", () => {
-  test.describe.serial("Scenario 1", () => {
-    test("Creating a position with 40 collateral and safe max borrow amount is successful", async ({
+test.describe("Fathom App Test Suite: FXD Positions Operations", () => {
+  test.describe.serial("Scenario 1 @smoke", () => {
+    test("Creating a position with 100 collateral and safe max borrow amount is successful", async ({
       fxdPage,
     }) => {
       await fxdPage.navigate();
       await fxdPage.connectWallet(WalletConnectOptions.Metamask);
       await fxdPage.validateConnectedWalletAddress();
       const positionData = await fxdPage.openPosition({
-        collateralAmount: 40,
+        collateralAmount: 100,
         borrowAmount: "safeMax",
       });
       await fxdPage.page.waitForTimeout(3000);
@@ -37,14 +37,14 @@ test.describe("Fathom App Test Suite: Positions Operations", () => {
   });
 
   test.describe.serial("Scenario 2", () => {
-    test("Creating a position with 50 collateral and 1 borrow amount is successful", async ({
+    test("Creating a position with 150 collateral and 1 borrow amount is successful", async ({
       fxdPage,
     }) => {
       await fxdPage.navigate();
       await fxdPage.connectWallet(WalletConnectOptions.Metamask);
       await fxdPage.validateConnectedWalletAddress();
       const positionData = await fxdPage.openPosition({
-        collateralAmount: 50,
+        collateralAmount: 150,
         borrowAmount: 1,
       });
       await fxdPage.page.waitForTimeout(3000);
@@ -61,7 +61,7 @@ test.describe("Fathom App Test Suite: Positions Operations", () => {
       await fxdPage.connectWallet(WalletConnectOptions.Metamask);
       await fxdPage.validateConnectedWalletAddress();
       const toppedUpPositionData = await fxdPage.topUpLatestPosition({
-        collateralAmount: 40,
+        collateralAmount: 60,
         borrowAmount: 1,
       });
       await fxdPage.page.waitForTimeout(3000);
@@ -85,14 +85,14 @@ test.describe("Fathom App Test Suite: Positions Operations", () => {
   });
 
   test.describe.serial("Scenario 3", () => {
-    test("Creating a position with 55.5 collateral and 1.5 borrow amount is successful", async ({
+    test("Creating a position with 85.5 collateral and 1.5 borrow amount is successful", async ({
       fxdPage,
     }) => {
       await fxdPage.navigate();
       await fxdPage.connectWallet(WalletConnectOptions.Metamask);
       await fxdPage.validateConnectedWalletAddress();
       const positionData = await fxdPage.openPosition({
-        collateralAmount: 55.5,
+        collateralAmount: 105.5,
         borrowAmount: 1.5,
       });
       await fxdPage.page.waitForTimeout(3000);

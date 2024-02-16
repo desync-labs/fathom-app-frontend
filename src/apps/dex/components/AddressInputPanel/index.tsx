@@ -1,54 +1,54 @@
-import { useContext, useCallback, FC } from "react";
-import styled, { ThemeContext } from "styled-components";
-import useENS from "apps/dex/hooks/useENS";
+import { useCallback, FC } from "react";
+import { Box, styled } from "@mui/material";
 import { useActiveWeb3React } from "apps/dex/hooks";
 import { ExternalLink, TYPE } from "apps/dex/theme";
+import { getBlockScanLink } from "apps/dex/utils";
 import { AutoColumn } from "apps/dex/components/Column";
 import { RowBetween } from "apps/dex/components/Row";
-import { getBlockScanLink } from "apps/dex/utils";
 
-const InputPanel = styled.div`
-  ${({ theme }) => theme.flexColumnNoWrap}
+const InputPanel = styled(Box)`
   position: relative;
+  display: flex;
+  flex-flow: column nowrap;
   border-radius: 1.25rem;
-  background-color: ${({ theme }) => theme.bg1};
+  background-color: #131f35;
   z-index: 1;
   width: 100%;
 `;
 
-const ContainerRow = styled.div<{ error: boolean }>`
+const ContainerRow = styled(Box)<{ error: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 1.25rem;
-  border: 1px solid ${({ error, theme }) => (error ? theme.red1 : theme.bg2)};
+  border: 1px solid ${({ error }) => (error ? "#FD4040" : "#131F35")};
   transition: border-color 300ms
       ${({ error }) => (error ? "step-end" : "step-start")},
     color 500ms ${({ error }) => (error ? "step-end" : "step-start")};
-  background-color: ${({ theme }) => theme.bg1};
+  background-color: #131f35;
 `;
 
-const InputContainer = styled.div`
+const InputContainer = styled(Box)`
   flex: 1;
   padding: 1rem;
 `;
 
-const Input = styled.input<{ error?: boolean }>`
+const Input = styled("input")<{ error?: boolean }>`
   font-size: 1.25rem;
   outline: none;
   border: none;
   flex: 1 1 auto;
-  background-color: ${({ theme }) => theme.bg1};
+  background-color: #131f35;
   transition: color 300ms ${({ error }) => (error ? "step-end" : "step-start")};
-  color: ${({ error, theme }) => (error ? theme.red1 : theme.white)};
+  color: ${({ error }) => (error ? "#FD4040" : "#fff")};
   overflow: hidden;
   text-overflow: ellipsis;
   font-weight: 500;
   width: 100%;
   ::placeholder {
-    color: ${({ theme }) => theme.white};
+    color: #ffffff;
   }
-  padding: 0px;
+  padding: 0;
   -webkit-appearance: textfield;
 
   ::-webkit-search-decoration {
@@ -73,9 +73,6 @@ const AddressInputPanel: FC<AddressInputPanleProps> = ({
   onChange,
 }) => {
   const { chainId } = useActiveWeb3React();
-  const theme = useContext(ThemeContext);
-
-  const { address, loading, name } = useENS(value);
 
   const handleInput = useCallback(
     (event: any) => {
@@ -86,7 +83,7 @@ const AddressInputPanel: FC<AddressInputPanleProps> = ({
     [onChange]
   );
 
-  const error = Boolean(value.length > 0 && !loading && !address);
+  const error = Boolean(value.length > 0 && !value);
 
   return (
     <InputPanel id={id}>
@@ -94,12 +91,12 @@ const AddressInputPanel: FC<AddressInputPanleProps> = ({
         <InputContainer>
           <AutoColumn gap="md">
             <RowBetween>
-              <TYPE.black color={theme?.text2} fontWeight={600} fontSize={13}>
+              <TYPE.black color={"#4F658C"} fontWeight={600} fontSize={13}>
                 Recipient
               </TYPE.black>
-              {address && chainId && (
+              {value && chainId && (
                 <ExternalLink
-                  href={getBlockScanLink(chainId, name ?? address, "address")}
+                  href={getBlockScanLink(chainId, value, "address")}
                   style={{ fontSize: "14px" }}
                 >
                   (View on Blocksscan)

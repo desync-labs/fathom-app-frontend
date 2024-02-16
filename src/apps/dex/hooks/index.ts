@@ -3,10 +3,8 @@ import useConnector from "context/connector";
 
 export function useActiveWeb3React() {
   const context = useConnector();
-  const newContext = {
+  return {
     ...context,
     library: context.library as Web3Provider,
   };
-
-  return newContext;
 }

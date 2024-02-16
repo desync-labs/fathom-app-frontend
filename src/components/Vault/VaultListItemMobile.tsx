@@ -1,4 +1,4 @@
-import { FC, useMemo } from "react";
+import { FC, memo, useMemo } from "react";
 import { styled } from "@mui/material/styles";
 import { Box } from "@mui/material";
 import BigNumber from "bignumber.js";
@@ -94,80 +94,85 @@ type VaultListItemMobileAdditionalDataProps = {
   vaultPosition: IVaultPosition | null | undefined;
 };
 
-export const VaultListItemMobileAdditionalData = ({
-  vaultItemData,
-  vaultPosition,
-}: VaultListItemMobileAdditionalDataProps) => {
-  const { token, depositLimit, balanceTokens } = vaultItemData;
+export const VaultListItemMobileAdditionalData: FC<VaultListItemMobileAdditionalDataProps> =
+  memo(({ vaultItemData, vaultPosition }) => {
+    const { token, depositLimit, balanceTokens } = vaultItemData;
 
-  return (
-    <>
-      <ListItemWrapper>
-        <VaultListLabel>
-          TVL
-          <AppPopover
-            id={"tvl"}
-            text={
-              <>
-                Total value locked (TVL) is a metric that refers to the sum of
-                assets that are staked in the Vault.
-              </>
-            }
-          />
-        </VaultListLabel>
-        <VaultListValue>
-          $
-          {formatNumber(
-            BigNumber(balanceTokens)
-              .dividedBy(10 ** 18)
-              .toNumber()
-          )}
-        </VaultListValue>
-      </ListItemWrapper>
-      <ListItemWrapper>
-        <VaultListLabel>Available</VaultListLabel>
-        <VaultListValue className={"neutral"}>
-          {formatNumber(
-            BigNumber(depositLimit)
-              .minus(BigNumber(balanceTokens))
-              .dividedBy(10 ** 18)
-              .toNumber()
-          )}{" "}
-          {token.symbol}
-        </VaultListValue>
-      </ListItemWrapper>
-      <ListItemWrapper>
-        <VaultListLabel>Locked</VaultListLabel>
-        <VaultListValue className={"neutral"}>
-          <VaultStacked>
-            <div className={"img-wrapper"}>
-              {vaultPosition?.balancePosition &&
-              BigNumber(vaultPosition?.balancePosition).isGreaterThan(0) ? (
-                <img src={LockAquaSrc} alt={"locked"} width={20} height={20} />
-              ) : (
-                <img src={LockSrc} alt={"locked"} width={20} height={20} />
-              )}
-            </div>
-            {vaultPosition
-              ? formatNumber(
-                  BigNumber(vaultPosition.balancePosition)
-                    .dividedBy(10 ** 18)
-                    .toNumber()
-                )
-              : 0}
-            {" " + token.symbol}
-          </VaultStacked>
-        </VaultListValue>
-      </ListItemWrapper>
-    </>
-  );
-};
+    return (
+      <>
+        <ListItemWrapper>
+          <VaultListLabel>
+            TVL
+            <AppPopover
+              id={"tvl"}
+              text={
+                <>
+                  Total value locked (TVL) is a metric that refers to the sum of
+                  assets that are staked in the Vault.
+                </>
+              }
+            />
+          </VaultListLabel>
+          <VaultListValue>
+            $
+            {formatNumber(
+              BigNumber(balanceTokens)
+                .dividedBy(10 ** 18)
+                .toNumber()
+            )}
+          </VaultListValue>
+        </ListItemWrapper>
+        <ListItemWrapper>
+          <VaultListLabel>Available</VaultListLabel>
+          <VaultListValue className={"neutral"}>
+            {formatNumber(
+              BigNumber(depositLimit)
+                .minus(BigNumber(balanceTokens))
+                .dividedBy(10 ** 18)
+                .toNumber()
+            )}{" "}
+            {token.symbol}
+          </VaultListValue>
+        </ListItemWrapper>
+        <ListItemWrapper>
+          <VaultListLabel>Locked</VaultListLabel>
+          <VaultListValue className={"neutral"}>
+            <VaultStacked>
+              <div className={"img-wrapper"}>
+                {vaultPosition?.balancePosition &&
+                BigNumber(vaultPosition?.balancePosition).isGreaterThan(0) ? (
+                  <img
+                    src={LockAquaSrc}
+                    alt={"locked"}
+                    width={20}
+                    height={20}
+                  />
+                ) : (
+                  <img src={LockSrc} alt={"locked"} width={20} height={20} />
+                )}
+              </div>
+              {vaultPosition
+                ? formatNumber(
+                    BigNumber(vaultPosition.balancePosition)
+                      .dividedBy(10 ** 18)
+                      .toNumber()
+                  )
+                : 0}
+              {" " + token.symbol}
+            </VaultStacked>
+          </VaultListValue>
+        </ListItemWrapper>
+      </>
+    );
+  });
 
 const VaultListItemMobile: FC<VaultListItemPropsType> = ({
   vaultItemData,
   vaultPosition,
+  performanceFee,
+  protocolFee,
 }) => {
-  const { token, strategies, totalFees } = vaultItemData;
+  const { token, apr } = vaultItemData;
 
   const {
     manageVault,
@@ -206,9 +211,7 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
           />
         </VaultListLabel>
         <VaultListValue>
-          <VaultPercent>
-            {formatNumber(BigNumber(totalFees).toNumber())}%
-          </VaultPercent>
+          <VaultPercent>{formatNumber(Number(performanceFee))}%</VaultPercent>
         </VaultListValue>
       </ListItemWrapper>
       <ListItemWrapper>
@@ -246,12 +249,7 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
             }
           />
         </VaultListLabel>
-        <VaultListValue>
-          {formatNumber(
-            BigNumber(strategies[0].reports[0].results[0].apr).toNumber()
-          )}
-          %
-        </VaultListValue>
+        <VaultListValue>{formatNumber(Number(apr))}%</VaultListValue>
       </ListItemWrapper>
       {extended && (
         <>
@@ -270,10 +268,17 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
               />
             )}
           {activeVaultInfoTab === VaultInfoTabs.ABOUT && (
-            <VaultItemAbout vaultItemData={vaultItemData} />
+            <VaultItemAbout
+              vaultItemData={vaultItemData}
+              protocolFee={protocolFee}
+              performanceFee={performanceFee}
+            />
           )}
           {activeVaultInfoTab === VaultInfoTabs.STRATEGIES && (
-            <VaultItemStrategies vaultItemData={vaultItemData} />
+            <VaultItemStrategies
+              vaultItemData={vaultItemData}
+              performanceFee={performanceFee}
+            />
           )}
         </>
       )}
@@ -286,7 +291,7 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
         account && (
           <ButtonPrimary
             onClick={() => setNewVaultDeposit(true)}
-            sx={{ width: "100%" }}
+            sx={{ width: "100%", marginTop: "16px" }}
           >
             Deposit
           </ButtonPrimary>
@@ -314,22 +319,30 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
               vaultItemData={vaultItemData}
               vaultPosition={vaultPosition}
               onClose={() => setManageVault(false)}
+              performanceFee={performanceFee}
             />
           )
         );
-      }, [manageVault, setManageVault])}
+      }, [
+        manageVault,
+        vaultItemData,
+        vaultPosition,
+        performanceFee,
+        setManageVault,
+      ])}
       {useMemo(() => {
         return (
           newVaultDeposit && (
             <VaultListItemDepositModal
               vaultItemData={vaultItemData}
               onClose={() => setNewVaultDeposit(false)}
+              performanceFee={performanceFee}
             />
           )
         );
-      }, [newVaultDeposit, setNewVaultDeposit])}
+      }, [newVaultDeposit, vaultItemData, vaultItemData, setNewVaultDeposit])}
     </VaultListItemMobileContainer>
   );
 };
 
-export default VaultListItemMobile;
+export default memo(VaultListItemMobile);

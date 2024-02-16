@@ -10,6 +10,7 @@ import {
   VaultIcon,
   DexIcon,
   ChartsIcon,
+  LendingIcon,
 } from "components/Common/MenuIcons";
 import useConnector from "context/connector";
 import AppMenuItem from "components/MenuItem/AppMenuItem";
@@ -18,9 +19,11 @@ type ItemPropsType = {
   open: boolean;
 };
 
+const LENDING_ENABLED = process.env.REACT_APP_LENDING_ENABLED;
+
 export const Menu: FC<ItemPropsType> = memo(({ open }) => {
   const location = useLocation();
-  const { allowStableSwap, isUserWrapperWhiteListed } = useConnector();
+  const { allowStableSwap } = useConnector();
 
   const isDashboardActive = useMemo(
     () => location.pathname === "/",
@@ -39,8 +42,13 @@ export const Menu: FC<ItemPropsType> = memo(({ open }) => {
     [location.pathname]
   );
 
+  const isLendingActive = useMemo(
+    () => location.pathname.includes("/lending"),
+    [location.pathname]
+  );
+
   const isVaultActive = useMemo(
-    () => location.pathname.includes("vault"),
+    () => location.pathname.includes("vaults"),
     [location.pathname]
   );
 
@@ -51,7 +59,7 @@ export const Menu: FC<ItemPropsType> = memo(({ open }) => {
 
   const { showText } = useShowText(open);
 
-  const appMenuItems = [
+  let appMenuItems = [
     {
       name: "FXD",
       link: "/",
@@ -73,30 +81,69 @@ export const Menu: FC<ItemPropsType> = memo(({ open }) => {
       isActive: isDAOActive,
       showText: showText,
     },
-    {
-      name: "Vault",
-      link: "/vault",
-      Icon: <VaultIcon isactive={isVaultActive ? "true" : ""} />,
-      isActive: isVaultActive,
-      showText: showText,
-    },
-    {
-      name: "DEX",
-      link: "/swap",
-      Icon: <DexIcon isactive={isDexActive ? "true" : ""} />,
-      isActive: isDexActive,
-      showText: showText,
-    },
-    {
-      name: "Charts",
-      link: "/charts",
-      Icon: <ChartsIcon isactive={isChartsActive ? "true" : ""} />,
-      isActive: isChartsActive,
-      showText: showText,
-    },
   ];
 
-  if (!allowStableSwap && !isUserWrapperWhiteListed) {
+  /**
+   * Add Lending Menu Item when it enabled.
+   */
+  appMenuItems = appMenuItems.concat(
+    LENDING_ENABLED === "true"
+      ? [
+          {
+            name: "Lending",
+            link: "/lending",
+            Icon: <LendingIcon isactive={isLendingActive ? "true" : ""} />,
+            isActive: isLendingActive,
+            showText: showText,
+          },
+          {
+            name: "Vaults",
+            link: "/vaults",
+            Icon: <VaultIcon isactive={isVaultActive ? "true" : ""} />,
+            isActive: isVaultActive,
+            showText: showText,
+          },
+          {
+            name: "DEX",
+            link: "/swap",
+            Icon: <DexIcon isactive={isDexActive ? "true" : ""} />,
+            isActive: isDexActive,
+            showText: showText,
+          },
+          {
+            name: "Charts",
+            link: "/charts",
+            Icon: <ChartsIcon isactive={isChartsActive ? "true" : ""} />,
+            isActive: isChartsActive,
+            showText: showText,
+          },
+        ]
+      : [
+          {
+            name: "Vaults",
+            link: "/vaults",
+            Icon: <VaultIcon isactive={isVaultActive ? "true" : ""} />,
+            isActive: isVaultActive,
+            showText: showText,
+          },
+          {
+            name: "DEX",
+            link: "/swap",
+            Icon: <DexIcon isactive={isDexActive ? "true" : ""} />,
+            isActive: isDexActive,
+            showText: showText,
+          },
+          {
+            name: "Charts",
+            link: "/charts",
+            Icon: <ChartsIcon isactive={isChartsActive ? "true" : ""} />,
+            isActive: isChartsActive,
+            showText: showText,
+          },
+        ]
+  );
+
+  if (!allowStableSwap) {
     appMenuItems.splice(1, 1);
   }
 

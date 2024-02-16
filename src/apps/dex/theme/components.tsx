@@ -1,20 +1,24 @@
-import { HTMLProps, useCallback } from "react";
-import ReactGA from "react-ga4";
+import { HTMLProps, MouseEvent, useCallback } from "react";
 import { Link } from "react-router-dom";
-import styled, { keyframes } from "styled-components";
-import { darken } from "polished";
-import { X, ExternalLink as LinkIconFeather, Trash } from "react-feather";
+import ReactGA from "react-ga4";
+import { styled, keyframes, Button, Box } from "@mui/material";
 
-export const ButtonText = styled.button`
+import CloseIconMui from "@mui/icons-material/Close";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+
+export const ButtonText = styled(Button)`
   outline: none;
   border: none;
   font-size: inherit;
+  text-transform: none;
   padding: 0;
   margin: 0;
   background: none;
   cursor: pointer;
 
   :hover {
+    background: none;
     opacity: 0.7;
   }
 
@@ -23,45 +27,11 @@ export const ButtonText = styled.button`
   }
 `;
 
-export const Button = styled.button.attrs<
-  { warning: boolean },
-  { backgroundColor: string }
->(({ warning, theme }) => ({
-  backgroundColor: warning ? theme.red1 : theme.primary1,
-}))`
-  padding: 1rem 2rem 1rem 2rem;
-  border-radius: 3rem;
-  cursor: pointer;
-  user-select: none;
-  font-size: 1rem;
-  border: none;
-  outline: none;
-  background-color: ${({ backgroundColor }) => backgroundColor};
-  color: ${({ theme }) => theme.white};
-  width: 100%;
-
-  :hover,
-  :focus {
-    background-color: ${({ backgroundColor }) => darken(0.05, backgroundColor)};
-  }
-
-  :active {
-    background-color: ${({ backgroundColor }) => darken(0.1, backgroundColor)};
-  }
-
-  :disabled {
-    background-color: ${({ theme }) => theme.bg1};
-    color: ${({ theme }) => theme.text4};
-    cursor: auto;
-  }
-`;
-
-export const CloseIcon = styled(X)<{ onClick: () => void }>`
+export const CloseIcon = styled(CloseIconMui)<{ onClick: () => void }>`
   cursor: pointer;
 `;
 
-// for wrapper react feather icons
-export const IconWrapper = styled.div<{
+export const IconWrapper = styled(Box)<{
   stroke?: string;
   size?: string;
   marginRight?: string;
@@ -75,21 +45,22 @@ export const IconWrapper = styled.div<{
   margin-right: ${({ marginRight }) => marginRight ?? 0};
   margin-left: ${({ marginLeft }) => marginLeft ?? 0};
   & > * {
-    stroke: ${({ theme, stroke }) => stroke ?? theme.white};
+    stroke: ${({ stroke }) => stroke ?? "#ffffff"};
   }
 `;
 
 // A button that triggers some onClick result, but looks like a link.
-export const LinkStyledButton = styled.button<{ disabled?: boolean }>`
+export const LinkStyledButton = styled(Button)<{ disabled?: boolean }>`
   border: none;
   text-decoration: none;
+  text-transform: unset;
   background: none;
-
   cursor: ${({ disabled }) => (disabled ? "default" : "pointer")};
-  color: ${({ theme, disabled }) => (disabled ? theme.text4 : theme.text1)};
+  color: ${({ disabled }) => (disabled ? "#565A69" : "#ffffff")};
   font-weight: 500;
 
   :hover {
+    background: none;
     text-decoration: ${({ disabled }) => (disabled ? null : "underline")};
   }
 
@@ -104,10 +75,37 @@ export const LinkStyledButton = styled.button<{ disabled?: boolean }>`
 `;
 
 // An internal link from the react-router-dom library that is correctly styled
-export const StyledInternalLink = styled(Link)`
+export const StyledInternalLink = styled(Link)<{
+  padding?: string;
+  borderRadius?: string;
+  width?: string;
+}>`
   text-decoration: none;
   cursor: pointer;
-  color: ${({ theme }) => theme.text1};
+  color: #ffffff;
+  font-weight: 500;
+  padding: ${({ padding }) => (padding ? padding : "auto")};
+  border-radius: ${({ borderRadius }) => (borderRadius ? borderRadius : "0")};
+  width: ${({ width }) => (width ? width : "auto")};
+
+  :hover {
+    text-decoration: underline;
+  }
+
+  :focus {
+    outline: none;
+    text-decoration: underline;
+  }
+
+  :active {
+    text-decoration: none;
+  }
+`;
+
+const StyledLink = styled("a")`
+  text-decoration: none;
+  cursor: pointer;
+  color: #ffffff;
   font-weight: 500;
 
   :hover {
@@ -124,27 +122,7 @@ export const StyledInternalLink = styled(Link)`
   }
 `;
 
-const StyledLink = styled.a`
-  text-decoration: none;
-  cursor: pointer;
-  color: ${({ theme }) => theme.text1};
-  font-weight: 500;
-
-  :hover {
-    text-decoration: underline;
-  }
-
-  :focus {
-    outline: none;
-    text-decoration: underline;
-  }
-
-  :active {
-    text-decoration: none;
-  }
-`;
-
-const LinkIconWrapper = styled.a`
+const LinkIconWrapper = styled("a")`
   text-decoration: none;
   cursor: pointer;
   align-items: center;
@@ -166,19 +144,18 @@ const LinkIconWrapper = styled.a`
   }
 `;
 
-export const LinkIcon = styled(LinkIconFeather)`
-  height: 16px;
+export const LinkIcon = styled(OpenInNewIcon)`
+  height: 18px;
   width: 18px;
   margin-left: 10px;
-  stroke: ${({ theme }) => theme.blue1};
+  color: #ffffff;
 `;
 
-export const TrashIcon = styled(Trash)`
-  height: 16px;
-  width: 18px;
+export const TrashIcon = styled(DeleteOutlineIcon)`
+  height: 20px;
+  width: 20px;
   margin-left: 10px;
-  stroke: ${({ theme }) => theme.text3};
-
+  color: #ffffff;
   cursor: pointer;
   align-items: center;
   justify-content: center;
@@ -199,14 +176,14 @@ const rotateImg = keyframes`
   }
 `;
 
-export const FthmTokenAnimated = styled.img`
+export const FthmTokenAnimated = styled("img")`
   animation: ${rotateImg} 5s cubic-bezier(0.83, 0, 0.17, 1) infinite;
   padding: 0.5rem 0 1rem 0;
   filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.15));
 `;
 
 /**
- * Outbound link that handles firing google analytics events
+ * Outbound link that handles firing Google Analytics events
  */
 export function ExternalLink({
   target = "_blank",
@@ -217,7 +194,7 @@ export function ExternalLink({
   href: string;
 }) {
   const handleClick = useCallback(
-    (event: React.MouseEvent<HTMLAnchorElement>) => {
+    (event: MouseEvent<HTMLAnchorElement>) => {
       // don't prevent default, don't redirect if it's a new tab
       if (target === "_blank" || event.ctrlKey || event.metaKey) {
         ReactGA.event({
@@ -257,7 +234,7 @@ export function ExternalLinkIcon({
   href: string;
 }) {
   const handleClick = useCallback(
-    (event: React.MouseEvent<HTMLAnchorElement>) => {
+    (event: MouseEvent<HTMLAnchorElement>) => {
       // don't prevent default, don't redirect if it's a new tab
       if (target === "_blank" || event.ctrlKey || event.metaKey) {
         ReactGA.event({
@@ -299,7 +276,7 @@ const rotate = keyframes`
   }
 `;
 
-export const Spinner = styled.img`
+export const Spinner = styled("img")`
   animation: 2s ${rotate} linear infinite;
   width: 16px;
   height: 16px;
@@ -310,8 +287,8 @@ export const CustomLightSpinner = styled(Spinner)<{ size: string }>`
   width: ${({ size }) => size};
 `;
 
-export const HideSmall = styled.span`
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+export const HideSmall = styled(Box)`
+  ${({ theme }) => theme.breakpoints.down("md")} {
     display: none;
-  `};
+  }
 `;

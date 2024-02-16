@@ -1,20 +1,21 @@
 import { useState, useMemo, useEffect, useRef, FC, memo } from "react";
+import { useMedia } from "react-use";
 import { ResponsiveContainer } from "recharts";
+
+import useSharedContext from "context/shared";
+import { getTimeframe } from "apps/charts/utils";
+import { TYPE } from "apps/charts/Theme";
 import { timeframeOptions } from "apps/charts/constants";
 import {
   useGlobalChartData,
   useGlobalData,
 } from "apps/charts/contexts/GlobalData";
-import { useMedia } from "react-use";
 import DropdownSelect from "apps/charts/components/DropdownSelect";
 import TradingViewChart, {
   CHART_TYPES,
 } from "apps/charts/components/TradingviewChart";
 import { RowFixed } from "apps/charts/components/Row";
 import { OptionButton } from "apps/charts/components/ButtonStyled";
-import { getTimeframe } from "apps/charts/utils";
-import { TYPE } from "apps/charts/Theme";
-import useSharedContext from "context/shared";
 
 const CHART_VIEW = {
   VOLUME: "Volume",
@@ -96,7 +97,8 @@ const GlobalChart: FC<{ display: any }> = (props) => {
           options={CHART_VIEW}
           active={chartView}
           setActive={setChartView}
-          color={"#00fff6"}
+          color={"#5a81ff"}
+          shadow={"0 0 8px #003cff"}
         />
       )}
 

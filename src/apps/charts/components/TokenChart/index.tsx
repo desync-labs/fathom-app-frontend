@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect, FC, memo } from "react";
-import styled from "styled-components";
+import { useMedia, usePrevious } from "react-use";
+import { darken } from "polished";
+import { Box, styled } from "@mui/material";
 import {
   Area,
   XAxis,
@@ -11,7 +13,6 @@ import {
   Bar,
 } from "recharts";
 import { AutoRow, RowBetween, RowFixed } from "apps/charts/components/Row";
-
 import {
   toK,
   toNiceDate,
@@ -20,8 +21,6 @@ import {
   getTimeframe,
 } from "apps/charts/utils";
 import { OptionButton } from "apps/charts/components/ButtonStyled";
-import { darken } from "polished";
-import { useMedia, usePrevious } from "react-use";
 import { timeframeOptions } from "apps/charts/constants";
 import {
   useTokenChartData,
@@ -30,10 +29,9 @@ import {
 import DropdownSelect from "apps/charts/components/DropdownSelect";
 import CandleStickChart from "apps/charts/components/CandleChart";
 import LocalLoader from "apps/charts/components/LocalLoader";
-import { Activity } from "react-feather";
 import { useDarkModeManager } from "apps/charts/contexts/LocalStorage";
 
-const ChartWrapper = styled.div`
+const ChartWrapper = styled(Box)`
   height: 100%;
   min-height: 300px;
 
@@ -57,6 +55,24 @@ const DATA_FREQUENCY = {
   DAY: "DAY",
   HOUR: "HOUR",
   LINE: "LINE",
+};
+
+const ActivityIcon = () => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+    </svg>
+  );
 };
 
 type TokenChartProps = { address: any; color: any; base: any };
@@ -163,18 +179,20 @@ const TokenChart: FC<TokenChartProps> = (props) => {
   return (
     <ChartWrapper>
       {below600 ? (
-        <RowBetween mb={40}>
+        <RowBetween mb={"40px"}>
           <DropdownSelect
             options={CHART_VIEW}
             active={chartFilter}
             setActive={setChartFilter}
-            color={"#00fff6"}
+            color={"#5a81ff"}
+            shadow={"0 0 8px #003cff"}
           />
           <DropdownSelect
             options={timeframeOptions}
             active={timeWindow}
             setActive={setTimeWindow}
-            color={"#00fff6"}
+            color={"#5a81ff"}
+            shadow={"0 0 8px #003cff"}
           />
         </RowBetween>
       ) : (
@@ -184,7 +202,7 @@ const TokenChart: FC<TokenChartProps> = (props) => {
             chartFilter === CHART_VIEW.VOLUME ||
             (chartFilter === CHART_VIEW.PRICE &&
               frequency === DATA_FREQUENCY.LINE)
-              ? 40
+              ? "40px"
               : 0
           }
           align="flex-start"
@@ -235,7 +253,7 @@ const TokenChart: FC<TokenChartProps> = (props) => {
                   active={frequency === DATA_FREQUENCY.LINE}
                   onClick={() => setFrequency(DATA_FREQUENCY.LINE)}
                 >
-                  <Activity size={14} />
+                  <ActivityIcon />
                 </PriceOption>
               </AutoRow>
             )}
@@ -305,11 +323,12 @@ const TokenChart: FC<TokenChartProps> = (props) => {
               labelStyle={{ paddingTop: 4 }}
               contentStyle={{
                 padding: "10px 14px",
-                borderRadius: 10,
-                borderColor: color,
-                color: "black",
+                border: "none",
+                borderRadius: 8,
+                color: "white",
+                backgroundColor: "#2a3e5a",
               }}
-              wrapperStyle={{ top: -70, left: -10 }}
+              wrapperStyle={{ top: -70, left: -10, zIndex: 22 }}
             />
             <Area
               key={"other"}
@@ -370,11 +389,12 @@ const TokenChart: FC<TokenChartProps> = (props) => {
                 labelStyle={{ paddingTop: 4 }}
                 contentStyle={{
                   padding: "10px 14px",
-                  borderRadius: 10,
-                  borderColor: color,
-                  color: "black",
+                  border: "none",
+                  borderRadius: 8,
+                  color: "white",
+                  backgroundColor: "#2a3e5a",
                 }}
-                wrapperStyle={{ top: -70, left: -10 }}
+                wrapperStyle={{ top: -70, left: -10, zIndex: 22 }}
               />
               <Area
                 key={"other"}
@@ -436,11 +456,12 @@ const TokenChart: FC<TokenChartProps> = (props) => {
               labelStyle={{ paddingTop: 4 }}
               contentStyle={{
                 padding: "10px 14px",
-                borderRadius: 10,
-                borderColor: color,
-                color: "black",
+                border: "none",
+                borderRadius: 8,
+                color: "white",
+                backgroundColor: "#2a3e5a",
               }}
-              wrapperStyle={{ top: -70, left: -10 }}
+              wrapperStyle={{ top: -70, left: -10, zIndex: 22 }}
             />
             <Bar
               type="monotone"

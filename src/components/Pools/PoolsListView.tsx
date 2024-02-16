@@ -40,7 +40,6 @@ const CircleWrapper = styled(Box)`
 
 const PoolsTitle = styled(TitleSecondary)`
   ${({ theme }) => theme.breakpoints.down("sm")} {
-    margin-bottom: 15px;
     margin-top: 25px;
   }
 `;
@@ -58,7 +57,7 @@ const PoolsListView: FC<PoolsListViewProps> = ({ proxyWallet }) => {
     <>
       <PoolsTitle variant="h2">Available Pools</PoolsTitle>
       {pools.length === 0 ? (
-        <NoResults variant="h6">
+        <NoResults variant={"h6"}>
           {loading ? (
             <CircleWrapper>
               <CircularProgress size={30} />

@@ -1,14 +1,13 @@
 import { FC, useState } from "react";
 import { Token, Currency } from "into-the-fathom-swap-sdk";
-import styled from "styled-components";
+import { transparentize } from "polished";
+import { Box, styled } from "@mui/material";
+
 import { TYPE, CloseIcon } from "apps/dex/theme";
 import Card from "apps/dex/components/Card";
 import { AutoColumn } from "apps/dex/components/Column";
 import { RowBetween, RowFixed, AutoRow } from "apps/dex/components/Row";
 import CurrencyLogo from "apps/dex/components/CurrencyLogo";
-import { ArrowLeft, AlertTriangle } from "react-feather";
-import { transparentize } from "polished";
-import useTheme from "apps/dex/hooks/useTheme";
 import { ButtonPrimary } from "apps/dex/components/Button";
 import { SectionBreak } from "apps/dex/components/swap/styleds";
 import { useAddUserToken } from "apps/dex/state/user/hooks";
@@ -22,26 +21,39 @@ import {
   Checkbox,
 } from "apps/dex/components/SearchModal/styleds";
 
-const Wrapper = styled.div`
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+
+const Wrapper = styled(Box)`
   position: relative;
   width: 100%;
+  height: 100%;
   overflow: auto;
 `;
 
+const ModalContentWrapper = styled(Box)`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  height: calc(100% - 65px);
+  padding: 20px;
+`;
+
 const WarningWrapper = styled(Card)<{ highWarning: boolean }>`
-  background-color: ${({ theme, highWarning }) =>
+  background-color: ${({ highWarning }) =>
     highWarning
-      ? transparentize(0.8, theme.red1)
-      : transparentize(0.8, theme.yellow2)};
+      ? transparentize(0.8, "#FD4040")
+      : transparentize(0.8, "#F3841E")};
   width: fit-content;
 `;
 
 const AddressText = styled(TYPE.blue)`
   font-size: 12px;
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.breakpoints.up("sm")} {
     font-size: 10px;
-`}
+  }
 `;
 
 interface ImportProps {
@@ -57,17 +69,13 @@ export const ImportToken: FC<ImportProps> = ({
   onDismiss,
   handleCurrencySelect,
 }) => {
-  console.log(tokens);
-
-  const theme = useTheme();
-
   const { chainId } = useActiveWeb3React();
 
   const [confirmed, setConfirmed] = useState(false);
 
   const addToken = useAddUserToken();
 
-  // use for showing import source on inactive tokens
+  // use for showing an import source on inactive tokens
   const inactiveTokenList = useCombinedInactiveList();
 
   // higher warning severity if either is not on a list
@@ -80,7 +88,7 @@ export const ImportToken: FC<ImportProps> = ({
       <PaddedColumn gap="14px" style={{ width: "100%", flex: "1 1" }}>
         <RowBetween>
           {onBack ? (
-            <ArrowLeft style={{ cursor: "pointer" }} onClick={onBack} />
+            <ArrowBackIcon style={{ cursor: "pointer" }} onClick={onBack} />
           ) : (
             <div></div>
           )}
@@ -91,13 +99,13 @@ export const ImportToken: FC<ImportProps> = ({
         </RowBetween>
       </PaddedColumn>
       <SectionBreak />
-      <PaddedColumn gap="md">
+      <ModalContentWrapper>
         {tokens.map((token) => {
           const list =
             chainId && inactiveTokenList?.[chainId]?.[token.address]?.list;
           return (
             <Card
-              backgroundColor={theme?.bg2}
+              bgcolor={"#061023"}
               key={"import" + token.address}
               className=".token-warning-container"
             >
@@ -121,20 +129,21 @@ export const ImportToken: FC<ImportProps> = ({
                     {list.logoURI && (
                       <ListLogo logoURI={list.logoURI} size="12px" />
                     )}
-                    <TYPE.small ml="6px" color={theme?.text3}>
+                    <TYPE.small ml="6px" color={"#00332F"}>
                       via {list.name}
                     </TYPE.small>
                   </RowFixed>
                 ) : (
                   <WarningWrapper
-                    padding="4px"
                     highWarning={true}
-                    sx={{ borderRadius: "4px" }}
+                    sx={{ borderRadius: "8px", padding: "4px" }}
                   >
                     <RowFixed>
-                      <AlertTriangle stroke={theme?.red1} size="10px" />
+                      <ErrorOutlineIcon
+                        sx={{ color: "#FD4040", width: "10px", height: "10px" }}
+                      />
                       <TYPE.body
-                        color={theme?.red1}
+                        color={"#FD4040"}
                         ml="4px"
                         fontSize="10px"
                         fontWeight={500}
@@ -152,22 +161,25 @@ export const ImportToken: FC<ImportProps> = ({
         <Card
           style={{
             backgroundColor: fromLists
-              ? transparentize(0.8, theme?.yellow2 as string)
-              : transparentize(0.8, theme?.red1 as string),
+              ? transparentize(0.8, "#F3841E")
+              : transparentize(0.8, "#FD4040"),
           }}
         >
           <AutoColumn
             justify="center"
             style={{ textAlign: "center", gap: "16px", marginBottom: "12px" }}
           >
-            <AlertTriangle
-              stroke={fromLists ? theme?.yellow2 : theme?.red1}
-              size={32}
+            <ErrorOutlineIcon
+              sx={{
+                color: fromLists ? "#F3841E" : "#FD4040",
+                width: "32px",
+                height: "32px",
+              }}
             />
             <TYPE.body
               fontWeight={600}
               fontSize={20}
-              color={fromLists ? theme?.yellow2 : theme?.red1}
+              color={fromLists ? "#F3841E" : "#FD4040"}
             >
               Trade at your own risk!
             </TYPE.body>
@@ -178,14 +190,14 @@ export const ImportToken: FC<ImportProps> = ({
           >
             <TYPE.body
               fontWeight={400}
-              color={fromLists ? theme?.yellow2 : theme?.red1}
+              color={fromLists ? "#F3841E" : "#FD4040"}
             >
               Anyone can create a token, including creating fake versions of
               existing tokens that claim to represent projects.
             </TYPE.body>
             <TYPE.body
               fontWeight={600}
-              color={fromLists ? theme?.yellow2 : theme?.red1}
+              color={fromLists ? "#F3841E" : "#FD4040"}
             >
               If you purchase this token, you may not be able to sell it back.
             </TYPE.body>
@@ -205,7 +217,7 @@ export const ImportToken: FC<ImportProps> = ({
             <TYPE.body
               ml="10px"
               fontSize="16px"
-              color={fromLists ? theme?.yellow2 : theme?.red1}
+              color={fromLists ? "#F3841E" : "#FD4040"}
               fontWeight={500}
             >
               I understand
@@ -225,7 +237,7 @@ export const ImportToken: FC<ImportProps> = ({
         >
           Import
         </ButtonPrimary>
-      </PaddedColumn>
+      </ModalContentWrapper>
     </Wrapper>
   );
 };

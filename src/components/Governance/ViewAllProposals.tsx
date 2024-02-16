@@ -1,18 +1,15 @@
 import { useMemo } from "react";
-import {
-  Typography,
-  Grid,
-  CircularProgress,
-  Pagination,
-  Box,
-} from "@mui/material";
+import { Grid, CircularProgress, Pagination, Box } from "@mui/material";
 import { useAllProposals } from "hooks/useAllProposals";
 import { IProposal } from "fathom-sdk";
 import { PageHeader } from "components/Dashboard/PageHeader";
 import ViewAllProposalItem from "components/Governance/ViewAllProposalItem";
 import Propose from "components/Governance/Propose";
 import ProposalFilters from "components/Governance/ProposalFilters";
-import { NoResults } from "components/AppComponents/AppBox/AppBox";
+import {
+  CircleWrapper,
+  NoResults,
+} from "components/AppComponents/AppBox/AppBox";
 
 import { COUNT_PER_PAGE } from "utils/Constants";
 import { styled } from "@mui/material/styles";
@@ -79,20 +76,7 @@ const AllProposalsView = () => {
           <Grid container spacing={1}>
             {useMemo(
               () =>
-                fetchProposalsPending ? (
-                  <Grid item xs={12}>
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "10px",
-                      }}
-                    >
-                      Loading all proposals <CircularProgress size={20} />
-                    </Typography>
-                  </Grid>
-                ) : fetchedProposals.length ? (
+                fetchedProposals.length ? (
                   fetchedProposals.map((proposal: IProposal, index: number) => (
                     <ViewAllProposalItem
                       proposal={proposal}
@@ -102,7 +86,15 @@ const AllProposalsView = () => {
                   ))
                 ) : (
                   <Grid item xs={12}>
-                    <NoResults>No opened any proposals.</NoResults>
+                    <NoResults>
+                      {fetchProposalsPending ? (
+                        <CircleWrapper>
+                          <CircularProgress size={30} />
+                        </CircleWrapper>
+                      ) : (
+                        "No opened any proposals."
+                      )}
+                    </NoResults>
                   </Grid>
                 ),
               [fetchedProposals, fetchProposalsPending]

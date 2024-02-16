@@ -1,48 +1,64 @@
-import { FC, useCallback, useContext, useEffect } from "react";
-import { X } from "react-feather";
-import { useSpring } from "react-spring/web";
-import styled, { ThemeContext } from "styled-components";
-import { animated } from "react-spring";
+import { FC, useCallback, useEffect } from "react";
+import { Box, LinearProgress, styled, keyframes } from "@mui/material";
+
 import { PopupContent } from "apps/dex/state/application/actions";
 import { useRemovePopup } from "apps/dex/state/application/hooks";
 import ListUpdatePopup from "apps/dex/components/Popups/ListUpdatePopup";
 import TransactionPopup from "apps/dex/components/Popups/TransactionPopup";
 
-export const StyledClose = styled(X)`
+import CloseIcon from "@mui/icons-material/Close";
+
+export const StyledClose = styled(CloseIcon)`
   position: absolute;
   right: 10px;
   top: 10px;
-
-  :hover {
-    cursor: pointer;
-  }
+  color: #4f658c;
+  cursor: pointer;
 `;
-export const Popup = styled.div`
+export const Popup = styled(Box)`
   display: inline-block;
   width: 100%;
-  background-color: ${({ theme }) => theme.bg1};
+  background-color: #131f35;
   position: relative;
   border-radius: 10px;
   padding: 20px 35px 20px 20px;
   overflow: hidden;
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.breakpoints.down("md")} {
     min-width: 290px;
     &:not(:last-of-type) {
       margin-right: 20px;
     }
-  `}
-`;
-const Fader = styled.div`
-  position: absolute;
-  bottom: 0px;
-  left: 0px;
-  width: 100%;
-  height: 2px;
-  background-color: ${({ theme }) => theme.bg3};
+  }
 `;
 
-const AnimatedFader = animated(Fader);
+const indeterminate1Keyframes = keyframes({
+  "0%": {
+    left: "0%",
+    right: "0%",
+  },
+  "100%": {
+    left: "-35%",
+    right: "100%",
+  },
+});
+
+const LinearProgressStyled = styled(LinearProgress)`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: none;
+
+  & .MuiLinearProgress-bar1Indeterminate {
+    width: auto;
+    animation: ${indeterminate1Keyframes} 15s linear forwards;
+  }
+  & .MuiLinearProgress-bar2Indeterminate {
+    display: none;
+  }
+`;
 
 type PopupItemProps = {
   removeAfterMs: number | null;
@@ -68,8 +84,6 @@ const PopupItem: FC<PopupItemProps> = ({ removeAfterMs, content, popKey }) => {
     };
   }, [removeAfterMs, removeThisPopup]);
 
-  const theme = useContext(ThemeContext);
-
   let popupContent;
   if ("txn" in content) {
     const {
@@ -93,17 +107,13 @@ const PopupItem: FC<PopupItemProps> = ({ removeAfterMs, content, popKey }) => {
     );
   }
 
-  const faderStyle = useSpring({
-    from: { width: "100%" },
-    to: { width: "0%" },
-    config: { duration: removeAfterMs ?? undefined },
-  });
-
   return (
     <Popup>
-      <StyledClose color={theme?.text2} onClick={removeThisPopup} />
+      <StyledClose onClick={removeThisPopup} />
       {popupContent}
-      {removeAfterMs !== null ? <AnimatedFader style={faderStyle} /> : null}
+      {removeAfterMs !== null ? (
+        <LinearProgressStyled variant="indeterminate" />
+      ) : null}
     </Popup>
   );
 };

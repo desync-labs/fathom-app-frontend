@@ -1,5 +1,4 @@
-import styled from "styled-components";
-import { Box } from "rebass/styled-components";
+import { Box, styled } from "@mui/material";
 
 const Row = styled(Box)<{
   align?: string;
@@ -17,12 +16,16 @@ const Row = styled(Box)<{
   justify-content: ${({ justify }) => justify};
 `;
 
-export const RowBetween = styled(Row)`
+export const RowBetween = styled(Row)<{
+  gap?: string;
+}>`
   justify-content: space-between;
+  gap: ${({ gap }) => gap};
 `;
 
 export const AutoRow = styled(Row)<{
   gap?: string;
+  wrap?: string;
 }>`
   flex-wrap: ${({ wrap }) => wrap ?? "nowrap"};
   margin: -${({ gap }) => gap};
@@ -33,10 +36,11 @@ export const AutoRow = styled(Row)<{
 
 export const RowFixed = styled(Row)`
   width: fit-content;
+  align-items: center;
 `;
 
-export const TableHeaderBox = styled.div`
-  color: ${({ theme }) => theme.primaryText2};
+export const TableHeaderBox = styled(Box)`
+  color: #5977a0;
   text-transform: uppercase;
   font-size: 11px;
 `;

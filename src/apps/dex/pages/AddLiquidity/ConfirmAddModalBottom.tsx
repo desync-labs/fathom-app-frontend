@@ -1,17 +1,17 @@
+import { FC } from "react";
 import {
   Currency,
   CurrencyAmount,
   Fraction,
   Percent,
 } from "into-the-fathom-swap-sdk";
+import { Typography } from "@mui/material";
 
-import { Text } from "rebass";
 import { ButtonPrimary } from "apps/dex/components/Button";
 import { RowBetween, RowFixed } from "apps/dex/components/Row";
 import CurrencyLogo from "apps/dex/components/CurrencyLogo";
 import { Field } from "apps/dex/state/mint/actions";
 import { TYPE } from "apps/dex/theme";
-import { FC } from "react";
 
 type ConfirmAddModalBottomProps = {
   noLiquidity?: boolean;
@@ -78,9 +78,9 @@ export const ConfirmAddModalBottom: FC<ConfirmAddModalBottomProps> = ({
         </TYPE.body>
       </RowBetween>
       <ButtonPrimary style={{ margin: "20px 0 0 0" }} onClick={onAdd}>
-        <Text fontWeight={500} fontSize={20}>
+        <Typography fontWeight={500} fontSize={20}>
           {noLiquidity ? "Create Pool & Supply" : "Confirm Supply"}
-        </Text>
+        </Typography>
       </ButtonPrimary>
     </>
   );

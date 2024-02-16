@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, memo } from "react";
 import BigNumber from "bignumber.js";
 import { Box, Divider, Grid, ListItemText } from "@mui/material";
 import { IVault, IVaultPosition } from "fathom-sdk";
@@ -13,6 +13,7 @@ type VaultManageInfoProps = {
   formToken: string;
   formSharedToken: string;
   formType: FormType;
+  performanceFee: number;
 };
 
 const ManageVaultInfo: FC<VaultManageInfoProps> = ({
@@ -21,26 +22,11 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
   vaultPosition,
   formToken,
   formSharedToken,
+  performanceFee,
 }) => {
-  const { token, shareToken, strategies, totalFees, sharesSupply } =
-    vaultItemData;
+  const { token, shareToken, sharesSupply, apr } = vaultItemData;
   const { balancePosition, balanceShares } = vaultPosition;
   const { isMobile } = useSharedContext();
-
-  const { totalApr, count } = strategies[0].reports.reduce(
-    (accumulator: any, strategyReport: any) => {
-      strategyReport.results.forEach((result: any) => {
-        if (result.apr) {
-          accumulator.totalApr += parseFloat(result.apr);
-          accumulator.count++;
-        }
-      });
-      return accumulator;
-    },
-    { totalApr: 0, count: 0 }
-  );
-
-  const averageApr = count > 0 ? totalApr / count : 0;
 
   return (
     <Grid item xs={12} sm={6} pr={isMobile ? 0 : 2.5}>
@@ -206,32 +192,20 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
         <Divider />
         <AppListItem
           alignItems="flex-start"
-          secondaryAction={
-            formatPercentage(BigNumber(totalFees).toNumber()) + "%"
-          }
+          secondaryAction={formatPercentage(Number(performanceFee)) + "%"}
         >
           <ListItemText primary="Fee" />
         </AppListItem>
         <Divider />
         <AppListItem
           alignItems="flex-start"
-          secondaryAction={
-            formatNumber(
-              BigNumber(strategies[0].reports[0].results[0].apr).toNumber()
-            ) + "%"
-          }
+          secondaryAction={formatNumber(Number(apr)) + "%"}
         >
           <ListItemText primary="Estimated APR" />
-        </AppListItem>
-        <AppListItem
-          alignItems="flex-start"
-          secondaryAction={formatNumber(BigNumber(averageApr).toNumber()) + "%"}
-        >
-          <ListItemText primary="Historical APR" />
         </AppListItem>
       </AppList>
     </Grid>
   );
 };
 
-export default ManageVaultInfo;
+export default memo(ManageVaultInfo);

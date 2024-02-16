@@ -1,4 +1,4 @@
-import { FC, MouseEvent } from "react";
+import { FC, memo, MouseEvent } from "react";
 import { Container, Grid } from "@mui/material";
 import { PageHeader } from "components/Dashboard/PageHeader";
 import VaultList from "components/Vault/VaultList";
@@ -25,7 +25,7 @@ const AllVaultView: FC<AllVaultViewPropsType> = ({
     >
       <Grid container spacing={isMobile ? 1 : 3}>
         <PageHeader
-          title={"Vault"}
+          title={"Vaults"}
           description={`Explore existing Vaults, and deposit your assets for a sustainable yield.`}
         />
         <Grid item xs={12} sx={{ marginTop: isMobile ? "5px" : "30px" }}>
@@ -39,4 +39,4 @@ const AllVaultView: FC<AllVaultViewPropsType> = ({
   );
 };
 
-export default AllVaultView;
+export default memo(AllVaultView);

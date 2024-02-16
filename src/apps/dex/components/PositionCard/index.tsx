@@ -1,21 +1,16 @@
-import { JSBI, Pair, Percent, TokenAmount } from "into-the-fathom-swap-sdk";
 import { FC, useState } from "react";
-import { ChevronDown, ChevronUp } from "react-feather";
-import { Link } from "react-router-dom";
-import { Text } from "rebass";
-import styled from "styled-components";
-import { useTotalSupply } from "apps/dex/data/TotalSupply";
+import { JSBI, Pair, Percent, TokenAmount } from "into-the-fathom-swap-sdk";
+import { styled, Typography } from "@mui/material";
 
+import { useTotalSupply } from "apps/dex/data/TotalSupply";
 import { useActiveWeb3React } from "apps/dex/hooks";
+import { useColor } from "apps/dex/hooks/useColor";
 import { useTokenBalance } from "apps/dex/state/wallet/hooks";
 import { StyledInternalLink, TYPE } from "apps/dex/theme";
 import { currencyId } from "apps/dex/utils/currencyId";
 import { unwrappedToken } from "apps/dex/utils/wrappedCurrency";
 import { ButtonSecondary, ButtonEmpty } from "apps/dex/components/Button";
 import { CardNoise } from "apps/dex/components/earn/styled";
-
-import { useColor } from "apps/dex/hooks/useColor";
-
 import { GreyCard, LightCard } from "apps/dex/components/Card";
 import { AutoColumn } from "apps/dex/components/Column";
 import CurrencyLogo from "apps/dex/components/CurrencyLogo";
@@ -24,13 +19,16 @@ import { RowBetween, RowFixed, AutoRow } from "apps/dex/components/Row";
 import { Dots } from "apps/dex/components/swap/styleds";
 import { BIG_INT_ZERO } from "apps/dex/constants";
 
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+
 export const FixedHeightRow = styled(RowBetween)`
   height: 24px;
 `;
 
 const StyledPositionCard = styled(LightCard)<{ bgColor: any }>`
   border: none;
-  background-color: ${({ theme }) => theme.bg1};
+  background-color: #131f35;
   position: relative;
   overflow: hidden;
 `;
@@ -97,9 +95,9 @@ export const MinimalPositionCard: FC<PositionCardProps> = ({
           <AutoColumn gap="12px">
             <FixedHeightRow>
               <RowFixed>
-                <Text fontWeight={500} fontSize={16}>
+                <Typography fontWeight={500} fontSize={16}>
                   Your position
-                </Text>
+                </Typography>
               </RowFixed>
             </FixedHeightRow>
             <FixedHeightRow onClick={() => setShowMore(!showMore)}>
@@ -110,50 +108,58 @@ export const MinimalPositionCard: FC<PositionCardProps> = ({
                   margin={true}
                   size={20}
                 />
-                <Text fontWeight={500} fontSize={20}>
+                <Typography fontWeight={500} fontSize={20}>
                   {currency0.symbol}/{currency1.symbol}
-                </Text>
+                </Typography>
               </RowFixed>
               <RowFixed>
-                <Text fontWeight={500} fontSize={20}>
+                <Typography fontWeight={500} fontSize={20}>
                   {userPoolBalance ? userPoolBalance.toSignificant(4) : "-"}
-                </Text>
+                </Typography>
               </RowFixed>
             </FixedHeightRow>
             <AutoColumn gap="4px">
               <FixedHeightRow>
-                <Text fontSize={16} fontWeight={500}>
+                <Typography fontSize={16} fontWeight={500}>
                   Your pool share:
-                </Text>
-                <Text fontSize={16} fontWeight={500}>
+                </Typography>
+                <Typography fontSize={16} fontWeight={500}>
                   {poolTokenPercentage
                     ? poolTokenPercentage.toFixed(6) + "%"
                     : "-"}
-                </Text>
+                </Typography>
               </FixedHeightRow>
               <FixedHeightRow>
-                <Text fontSize={16} fontWeight={500}>
+                <Typography fontSize={16} fontWeight={500}>
                   {currency0.symbol}:
-                </Text>
+                </Typography>
                 {token0Deposited ? (
                   <RowFixed>
-                    <Text fontSize={16} fontWeight={500} marginLeft={"6px"}>
+                    <Typography
+                      fontSize={16}
+                      fontWeight={500}
+                      marginLeft={"6px"}
+                    >
                       {token0Deposited?.toSignificant(6)}
-                    </Text>
+                    </Typography>
                   </RowFixed>
                 ) : (
                   "-"
                 )}
               </FixedHeightRow>
               <FixedHeightRow>
-                <Text fontSize={16} fontWeight={500}>
+                <Typography fontSize={16} fontWeight={500}>
                   {currency1.symbol}:
-                </Text>
+                </Typography>
                 {token1Deposited ? (
                   <RowFixed>
-                    <Text fontSize={16} fontWeight={500} marginLeft={"6px"}>
+                    <Typography
+                      fontSize={16}
+                      fontWeight={500}
+                      marginLeft={"6px"}
+                    >
                       {token1Deposited?.toSignificant(6)}
-                    </Text>
+                    </Typography>
                   </RowFixed>
                 ) : (
                   "-"
@@ -193,7 +199,7 @@ const FullPositionCard: FC<PositionCardProps> = ({ pair, border }) => {
   );
   const totalPoolTokens = useTotalSupply(pair.liquidityToken);
 
-  // if staked balance balance provided, add to standard liquidity amount
+  // if staked balance provided, add to standard liquidity amount
   const userPoolBalance = userDefaultPoolBalance;
 
   const poolTokenPercentage =
@@ -238,13 +244,13 @@ const FullPositionCard: FC<PositionCardProps> = ({ pair, border }) => {
               currency1={currency1}
               size={20}
             />
-            <Text fontWeight={500} fontSize={20}>
+            <Typography fontWeight={500} fontSize={20}>
               {!currency0 || !currency1 ? (
                 <Dots>Loading</Dots>
               ) : (
                 `${currency0.symbol}/${currency1.symbol}`
               )}
-            </Text>
+            </Typography>
           </AutoRow>
           <RowFixed gap="8px">
             <ButtonEmpty
@@ -256,19 +262,25 @@ const FullPositionCard: FC<PositionCardProps> = ({ pair, border }) => {
               {showMore ? (
                 <>
                   Manage
-                  <ChevronUp
-                    stroke={"white"}
-                    size="20"
-                    style={{ marginLeft: "10px" }}
+                  <ExpandLessIcon
+                    sx={{
+                      color: "#fff",
+                      width: "20px",
+                      height: "20px",
+                      marginLeft: "10px",
+                    }}
                   />
                 </>
               ) : (
                 <>
                   Manage
-                  <ChevronDown
-                    stroke={"white"}
-                    size="20"
-                    style={{ marginLeft: "10px" }}
+                  <ExpandMoreIcon
+                    sx={{
+                      color: "#fff",
+                      width: "20px",
+                      height: "20px",
+                      marginLeft: "10px",
+                    }}
                   />
                 </>
               )}
@@ -279,24 +291,24 @@ const FullPositionCard: FC<PositionCardProps> = ({ pair, border }) => {
         {showMore && (
           <AutoColumn gap="8px">
             <FixedHeightRow>
-              <Text fontSize={16} fontWeight={500}>
+              <Typography fontSize={16} fontWeight={500}>
                 Your total pool tokens:
-              </Text>
-              <Text fontSize={16} fontWeight={500}>
+              </Typography>
+              <Typography fontSize={16} fontWeight={500}>
                 {userPoolBalance ? userPoolBalance.toSignificant(4) : "-"}
-              </Text>
+              </Typography>
             </FixedHeightRow>
             <FixedHeightRow>
               <RowFixed>
-                <Text fontSize={16} fontWeight={500}>
+                <Typography fontSize={16} fontWeight={500}>
                   Pooled {currency0.symbol}:
-                </Text>
+                </Typography>
               </RowFixed>
               {token0Deposited ? (
                 <RowFixed>
-                  <Text fontSize={16} fontWeight={500} marginLeft={"6px"}>
+                  <Typography fontSize={16} fontWeight={500} marginLeft={"6px"}>
                     {token0Deposited?.toSignificant(6)}
-                  </Text>
+                  </Typography>
                   <CurrencyLogo
                     size="20px"
                     style={{ marginLeft: "8px" }}
@@ -310,15 +322,15 @@ const FullPositionCard: FC<PositionCardProps> = ({ pair, border }) => {
 
             <FixedHeightRow>
               <RowFixed>
-                <Text fontSize={16} fontWeight={500}>
+                <Typography fontSize={16} fontWeight={500}>
                   Pooled {currency1.symbol}:
-                </Text>
+                </Typography>
               </RowFixed>
               {token1Deposited ? (
                 <RowFixed>
-                  <Text fontSize={16} fontWeight={500} marginLeft={"6px"}>
+                  <Typography fontSize={16} fontWeight={500} marginLeft={"6px"}>
                     {token1Deposited?.toSignificant(6)}
-                  </Text>
+                  </Typography>
                   <CurrencyLogo
                     size="20px"
                     style={{ marginLeft: "8px" }}
@@ -331,16 +343,16 @@ const FullPositionCard: FC<PositionCardProps> = ({ pair, border }) => {
             </FixedHeightRow>
 
             <FixedHeightRow>
-              <Text fontSize={16} fontWeight={500}>
+              <Typography fontSize={16} fontWeight={500}>
                 Your pool share:
-              </Text>
-              <Text fontSize={16} fontWeight={500}>
+              </Typography>
+              <Typography fontSize={16} fontWeight={500}>
                 {poolTokenPercentage
                   ? (poolTokenPercentage.toFixed(2) === "0.00"
                       ? "<0.01"
                       : poolTokenPercentage.toFixed(2)) + "%"
                   : "-"}
-              </Text>
+              </Typography>
             </FixedHeightRow>
 
             <ButtonSecondary padding="8px" borderRadius="8px">
@@ -355,27 +367,39 @@ const FullPositionCard: FC<PositionCardProps> = ({ pair, border }) => {
             {userDefaultPoolBalance &&
               JSBI.greaterThan(userDefaultPoolBalance.raw, BIG_INT_ZERO) && (
                 <RowBetween marginTop="10px">
-                  <ButtonSecondary
-                    padding="8px"
-                    borderRadius="8px"
-                    as={Link}
-                    to={`/swap/add/${currencyId(currency0)}/${currencyId(
-                      currency1
-                    )}`}
-                    width="48%"
-                  >
-                    Add
+                  <ButtonSecondary padding="0" borderRadius="8px" width="48%">
+                    <StyledInternalLink
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        textAlign: "center",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                      to={`/swap/add/${currencyId(currency0)}/${currencyId(
+                        currency1
+                      )}`}
+                    >
+                      Add
+                    </StyledInternalLink>
                   </ButtonSecondary>
-                  <ButtonSecondary
-                    padding="8px"
-                    borderRadius="8px"
-                    as={Link}
-                    width="48%"
-                    to={`/swap/remove/${currencyId(currency0)}/${currencyId(
-                      currency1
-                    )}`}
-                  >
-                    Remove
+                  <ButtonSecondary padding="0" borderRadius="8px" width="48%">
+                    <StyledInternalLink
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        textAlign: "center",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                      to={`/swap/remove/${currencyId(currency0)}/${currencyId(
+                        currency1
+                      )}`}
+                    >
+                      Remove
+                    </StyledInternalLink>
                   </ButtonSecondary>
                 </RowBetween>
               )}

@@ -1,9 +1,9 @@
-import { diffTokenLists, TokenList } from "@uniswap/token-lists";
 import { FC, Fragment, useCallback, useMemo } from "react";
 import ReactGA from "react-ga4";
 import { useDispatch } from "react-redux";
-import { Text } from "rebass";
-import styled from "styled-components";
+import { diffTokenLists, TokenList } from "@uniswap/token-lists";
+import { styled, Typography } from "@mui/material";
+
 import { AppDispatch } from "apps/dex/state";
 import { useRemovePopup } from "apps/dex/state/application/hooks";
 import { acceptListUpdate } from "apps/dex/state/lists/actions";
@@ -13,7 +13,7 @@ import { ButtonSecondary } from "apps/dex/components/Button";
 import { AutoColumn } from "apps/dex/components/Column";
 import { AutoRow } from "apps/dex/components/Row";
 
-export const ChangesList = styled.ul`
+export const ChangesList = styled("ul")`
   max-height: 400px;
   overflow: auto;
 `;
@@ -79,11 +79,11 @@ const ListUpdatePopup: FC<ListUpdatePopupProps> = ({
         ) : (
           <>
             <div>
-              <Text>
+              <Typography>
                 An update is available for the token list &quot;{oldList.name}
                 &quot; ({listVersionLabel(oldList.version)} to{" "}
                 {listVersionLabel(newList.version)}).
-              </Text>
+              </Typography>
               <ChangesList>
                 {tokensAdded.length > 0 ? (
                   <li>

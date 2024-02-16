@@ -80,7 +80,7 @@ const TransactionErc20TokenModal: FC = () => {
           sx={{ alignItems: "center", margin: "30px 15px" }}
         >
           {image && <img src={image} alt={"fxd"} width={28} height={28} />}
-          <Typography component="span" variant="body2">
+          <Typography variant={"body2"} component="span">
             {erc20TokenModalDescription}
           </Typography>
           <ButtonPrimary onClick={addTokenToMetamaskWalletHandler}>

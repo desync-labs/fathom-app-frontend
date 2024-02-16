@@ -1,6 +1,6 @@
 import { DEFAULT_LIST_OF_LISTS } from "apps/dex/constants/lists";
 
-// use ordering of default list of lists to assign priority
+// use ordering of a default list of lists to assign priority
 export default function sortByListPriority(urlA: string, urlB: string) {
   const first = DEFAULT_LIST_OF_LISTS.includes(urlA)
     ? DEFAULT_LIST_OF_LISTS.indexOf(urlA)

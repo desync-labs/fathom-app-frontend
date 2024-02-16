@@ -1,5 +1,7 @@
 import { CSSProperties, FC } from "react";
 import { Token } from "into-the-fathom-swap-sdk";
+import { Box, styled } from "@mui/material";
+
 import { AutoRow, RowFixed } from "apps/dex/components/Row";
 import { AutoColumn } from "apps/dex/components/Column";
 import CurrencyLogo from "apps/dex/components/CurrencyLogo";
@@ -7,13 +9,12 @@ import { TYPE } from "apps/dex/theme";
 import ListLogo from "apps/dex/components/ListLogo";
 import { useActiveWeb3React } from "apps/dex/hooks";
 import { useCombinedInactiveList } from "apps/dex/state/lists/hooks";
-import useTheme from "apps/dex/hooks/useTheme";
 import { ButtonPrimary } from "apps/dex/components/Button";
-import styled from "styled-components";
 import { useIsUserAddedToken, useIsTokenActive } from "apps/dex/hooks/Tokens";
-import { CheckCircle } from "react-feather";
 
-const TokenSection = styled.div<{ dim?: boolean }>`
+import TaskAltIcon from "@mui/icons-material/TaskAlt";
+
+const TokenSection = styled(Box)<{ dim?: boolean }>`
   padding: 4px 20px;
   height: 56px;
   display: grid;
@@ -24,14 +25,14 @@ const TokenSection = styled.div<{ dim?: boolean }>`
   opacity: ${({ dim }) => (dim ? "0.4" : "1")};
 `;
 
-const CheckIcon = styled(CheckCircle)`
+const CheckIcon = styled(TaskAltIcon)`
   height: 16px;
   width: 16px;
   margin-right: 6px;
-  stroke: ${({ theme }) => theme.green1};
+  color: #27ae60;
 `;
 
-const NameOverflow = styled.div`
+const NameOverflow = styled(Box)`
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -56,13 +57,12 @@ const ImportRow: FC<ImportRowProps> = ({
 }) => {
   // gloabls
   const { chainId } = useActiveWeb3React();
-  const theme = useTheme();
 
-  // check if token comes from list
+  // check if token comes from a list
   const inactiveTokenList = useCombinedInactiveList();
   const list = chainId && inactiveTokenList?.[chainId]?.[token.address]?.list;
 
-  // check if already active on list or local storage tokens
+  // check if already active on a list or local storage tokens
   const isAdded = useIsUserAddedToken(token);
   const isActive = useIsTokenActive(token);
 
@@ -103,7 +103,7 @@ const ImportRow: FC<ImportRowProps> = ({
       ) : (
         <RowFixed style={{ minWidth: "fit-content" }}>
           <CheckIcon />
-          <TYPE.main color={theme?.green1}>Active</TYPE.main>
+          <TYPE.main color="#27AE60">Active</TYPE.main>
         </RowFixed>
       )}
     </TokenSection>

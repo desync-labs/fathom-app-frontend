@@ -1,16 +1,16 @@
-import styled from "styled-components";
+import { Box, styled } from "@mui/material";
 import { AutoColumn } from "apps/dex/components/Column";
 import { RowBetween } from "apps/dex/components/Row";
 
-export const TextDot = styled.div`
+export const TextDot = styled(Box)`
   height: 3px;
   width: 3px;
-  background-color: ${({ theme }) => theme.text2};
+  background-color: #4f658c;
   border-radius: 50%;
 `;
 
-export const Checkbox = styled.input`
-  border: 1px solid ${({ theme }) => theme.red3};
+export const Checkbox = styled("input")`
+  border: 1px solid #d60000;
   height: 20px;
   margin: 0;
 `;
@@ -19,53 +19,62 @@ export const PaddedColumn = styled(AutoColumn)`
   padding: 20px;
 `;
 
-export const MenuItem = styled(RowBetween)`
+export const MenuItem = styled(RowBetween)<{
+  disabled: boolean;
+  selected: boolean;
+}>`
   padding: 4px 20px;
   height: 56px;
   display: grid;
-  grid-template-columns: auto minmax(auto, 1fr) auto minmax(0, 72px);
+  grid-template-columns: auto minmax(auto, 1fr) minmax(0, 72px);
   grid-gap: 16px;
   cursor: ${({ disabled }) => !disabled && "pointer"};
   pointer-events: ${({ disabled }) => disabled && "none"};
   :hover {
-    background-color: ${({ theme, disabled }) => !disabled && theme.bg2};
+    background-color: ${({ disabled }) => !disabled && "#061023"};
   }
   opacity: ${({ disabled, selected }) => (disabled || selected ? 0.5 : 1)};
 `;
 
-export const SearchInput = styled.input`
+export const SearchInput = styled("input")`
   position: relative;
   display: flex;
-  padding: 16px;
   align-items: center;
-  width: 100%;
   white-space: nowrap;
-  background: none;
   outline: none;
-  border-radius: 20px;
-  color: ${({ theme }) => theme.text1};
-  border-style: solid;
-  border: 1px solid ${({ theme }) => theme.bg2};
-  -webkit-appearance: none;
+  width: 100%;
+  color: #ffffff;
+  border: 1px solid #253656;
+  font-size: 20px;
+  border-radius: 8px;
+  padding: 15px 20px;
+  background-color: #0e1d34;
 
-  font-size: 18px;
+  :hover,
+  :focus {
+    border: 1px solid rgb(90, 129, 255);
+    box-shadow: rgb(0, 60, 255) 0 0 8px;
+  }
 
   ::placeholder {
-    color: ${({ theme }) => theme.text1};
+    color: #4f658c;
+    font-size: 16px;
   }
-  transition: border 100ms;
-  :focus {
-    border: 1px solid ${({ theme }) => theme.bg2};
+
+  @media screen and (max-width: 640px) {
+    ::placeholder {
+      font-size: 1rem;
+    }
   }
 `;
-export const Separator = styled.div`
+export const Separator = styled(Box)`
   width: 100%;
   height: 1px;
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: #061023;
 `;
 
-export const SeparatorDark = styled.div`
+export const SeparatorDark = styled(Box)`
   width: 100%;
   height: 1px;
-  background-color: ${({ theme }) => theme.bg3};
+  background-color: #43fff6;
 `;

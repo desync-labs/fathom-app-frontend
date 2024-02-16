@@ -1,11 +1,13 @@
-import styled from "styled-components";
-import { TYPE } from "apps/dex/theme";
 import { FC } from "react";
+import { styled, Typography } from "@mui/material";
 
-const Wrapper = styled.button<{ isActive?: boolean; activeElement?: boolean }>`
+const Wrapper = styled("button")<{
+  isActive?: boolean;
+  activeElement?: boolean;
+}>`
   border-radius: 20px;
   border: none;
-  background: ${({ theme }) => theme.bg1};
+  background: #131f35;
   display: flex;
   width: fit-content;
   cursor: pointer;
@@ -14,21 +16,21 @@ const Wrapper = styled.button<{ isActive?: boolean; activeElement?: boolean }>`
   align-items: center;
 `;
 
-const ToggleElement = styled.span<{ isActive?: boolean; bgColor?: string }>`
+const ToggleElement = styled("span")<{ isActive?: boolean; bgColor?: string }>`
   border-radius: 50%;
   height: 24px;
   width: 24px;
-  background-color: ${({ isActive, bgColor, theme }) =>
-    isActive ? bgColor : theme.bg4};
+  background-color: ${({ isActive, bgColor }) =>
+    isActive ? bgColor : "#565A69"};
   :hover {
     opacity: 0.8;
   }
 `;
 
-const StatusText = styled(TYPE.main)<{ isActive?: boolean }>`
+const StatusText = styled(Typography)<{ isActive?: boolean }>`
   margin: 0 10px;
   width: 24px;
-  color: ${({ theme, isActive }) => (isActive ? theme.text1 : theme.text3)};
+  color: ${({ isActive }) => (isActive ? "#ffffff" : "#00332F")};
 `;
 
 export interface ToggleProps {

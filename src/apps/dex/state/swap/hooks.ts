@@ -1,4 +1,3 @@
-import useENS from "apps/dex/hooks/useENS";
 import { utils } from "fathom-ethers";
 import {
   Currency,
@@ -158,9 +157,7 @@ export function useDerivedSwapInfo(): {
 
   const inputCurrency = useCurrency(inputCurrencyId);
   const outputCurrency = useCurrency(outputCurrencyId);
-  const recipientLookup = useENS(recipient ?? undefined);
-  const to: string | null =
-    (recipient === null ? account : recipientLookup.address) ?? null;
+  const to: string | null = (recipient === null ? account : recipient) ?? null;
 
   const relevantTokenBalances = useCurrencyBalances(account ?? undefined, [
     inputCurrency ?? undefined,
@@ -227,7 +224,7 @@ export function useDerivedSwapInfo(): {
     allowedSlippage &&
     computeSlippageAdjustedAmounts(v2Trade, allowedSlippage);
 
-  // compare input balance to max input based on version
+  // compare input balance to max input based on a version
 
   if (
     slippageAdjustedAmounts &&

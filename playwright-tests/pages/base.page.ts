@@ -42,10 +42,10 @@ export default class BasePage {
         break;
       case "https://dev-app-frontend-wpa8a.ondigitalocean.app" ||
         "http://127.0.0.1:3000":
-        this.graphAPIBaseUrl = "https://dev.fathom.fi";
+        this.graphAPIBaseUrl = "https://dev-graph.fathom.fi";
         break;
       default:
-        this.graphAPIBaseUrl = "https://dev.fathom.fi";
+        this.graphAPIBaseUrl = "https://dev-graph.fathom.fi";
     }
 
     if (process.env.METAMASK_SETUP_PRIVATE_KEY) {
@@ -199,7 +199,7 @@ export default class BasePage {
     }
   }
 
-  async mintStableCoinToAddress(
+  async mintVaultsStableCoinToAddress(
     address: string,
     amount: number
   ): Promise<void> {
@@ -207,14 +207,17 @@ export default class BasePage {
     const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
     const wallet = new ethers.Wallet(this.privateKeyMainAccount, provider);
     const signer = wallet.connect(provider);
-    const fathomStablecoinContractAddress = contractAddresses.fathomStablecoin;
+    const fathomStablecoinContractAddress =
+      contractAddresses.fathomStablecoinVaults;
     const fathomStablecoinContractAbi = FathomStablecoin.abi;
     const fathomStablecoinContract = new ethers.Contract(
       fathomStablecoinContractAddress,
       fathomStablecoinContractAbi,
       signer
     );
-    const amountFormatted = BigInt(amount.toString() + "000000000000000000");
+    const amountFormatted = BigInt(
+      Math.ceil(amount).toString() + "000000000000000000"
+    );
     const transaction = await fathomStablecoinContract.mint(
       address,
       amountFormatted
