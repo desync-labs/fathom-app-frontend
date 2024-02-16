@@ -59,7 +59,7 @@ const ConfirmationPendingContent: FC<ConfirmationPendingContentProps> = ({
           <CustomLightSpinner src={Circle} alt="loader" size={"90px"} />
         </ConfirmedIcon>
         <AutoColumn gap="12px" justify={"center"}>
-          <Text
+          <Typography
             fontWeight={500}
             fontSize={20}
             data-testid="dex-waitingForConfirmationModal-headerText"
@@ -77,7 +77,7 @@ const ConfirmationPendingContent: FC<ConfirmationPendingContentProps> = ({
               {pendingText}
             </Text>
           </AutoColumn>
-          <Text
+          <Typography
             fontSize={12}
             color="#565A69"
             textAlign="center"

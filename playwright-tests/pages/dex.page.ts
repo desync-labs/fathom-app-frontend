@@ -63,13 +63,13 @@ export default class DexPage extends BasePage {
     this.swapButton = this.page.locator("#swap-button");
     this.confirmSwapButton = this.page.locator("#confirm-swap-or-send");
     this.waitingForConfirmationModal = this.page.locator(
-      '//div[text()="Waiting For Confirmation"]//ancestor::div[@data-reach-dialog-content]'
+      '//p[text()="Waiting For Confirmation"]//ancestor::div[@role="dialog"]'
     );
     this.transactionSubmittedConfirmationModal = this.page.locator(
-      '//div[text()="Transaction Submitted"]//ancestor::div[@data-reach-dialog-content]'
+      '//p[text()="Transaction Submitted"]//ancestor::div[@role="dialog"]'
     );
     this.closeButtonSelectTokenModal = this.page.locator(
-      '//div[text()="Select a token"]//following-sibling::*[local-name()="svg"]'
+      '//p[text()="Select a token"]//following-sibling::*[local-name()="svg"]'
     );
     this.transactionPopupColumn = this.page.getByTestId("dex-fixedPopupColumn");
     this.transactionPopupStatusIcon = this.page.locator(
@@ -94,7 +94,7 @@ export default class DexPage extends BasePage {
       "#swap-currency-output .token-symbol-container"
     );
     this.confirmSwapModal = this.page.locator(
-      '//div[text()="Confirm Swap"]//ancestor::div[@data-reach-dialog-content]'
+      '//p[text()="Confirm Swap"]//ancestor::div[@role="dialog"]'
     );
     this.confirmSwapModalFromAmount = this.page.getByTestId(
       "dex-swapModalHeader-fromAmount"
