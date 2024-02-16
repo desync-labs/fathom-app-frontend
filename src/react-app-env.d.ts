@@ -17,10 +17,6 @@ interface Window {
   web3?: {};
 }
 
-declare module "jazzicon" {
-  export default function (diameter: number, seed: number): HTMLElement;
-}
-
 declare module "fortmatic";
 
 declare module "content-hash" {
