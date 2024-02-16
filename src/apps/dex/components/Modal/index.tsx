@@ -15,7 +15,7 @@ const AppDialogStyled = styled(AppDialog)<{
 
   ${({ theme }) => theme.breakpoints.down("md")} {
     .MuiDialog-paper {
-      height: 100vh;
+      height: 100dvh;
       min-height: unset;
       max-height: unset;
     }

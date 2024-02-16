@@ -24,7 +24,7 @@ import {
   DataCard,
 } from "apps/dex/components/earn/styled";
 
-import CloseIcon from "@mui/icons-material/Close";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import tokenLogo from "apps/dex/assets/images/token-logo.svg";
 
 const ContentWrapper = styled(AutoColumn)`
@@ -33,15 +33,16 @@ const ContentWrapper = styled(AutoColumn)`
 
 const ModalUpper = styled(DataCard)`
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  background: #00fff9;
+  background: transparent;
   color: #0e0f15;
   padding: 0.5rem;
 `;
 
-const StyledClose = styled(CloseIcon)`
+const StyledClose = styled(CloseRoundedIcon)`
   position: absolute;
   right: 16px;
   top: 16px;
+  color: #ffffff;
 
   :hover {
     cursor: pointer;
