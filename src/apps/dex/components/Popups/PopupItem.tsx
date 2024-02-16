@@ -34,12 +34,12 @@ export const Popup = styled(Box)`
 
 const indeterminate1Keyframes = keyframes({
   "0%": {
-    left: "100%",
-    right: "-35%",
-  },
-  "100%": {
     left: "0%",
     right: "0%",
+  },
+  "100%": {
+    left: "-35%",
+    right: "100%",
   },
 });
 
