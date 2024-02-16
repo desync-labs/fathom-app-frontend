@@ -1,12 +1,15 @@
-import { FC, useContext } from "react";
-import { AlertCircle, CheckCircle } from "react-feather";
-import styled, { ThemeContext } from "styled-components";
+import { FC } from "react";
+import { styled } from "@mui/material";
+
 import { useActiveWeb3React } from "apps/dex/hooks";
 import { TYPE } from "apps/dex/theme";
 import { ExternalLink } from "apps/dex/theme/components";
 import { getBlockScanLink } from "apps/dex/utils";
 import { AutoColumn } from "apps/dex/components/Column";
 import { AutoRow } from "apps/dex/components/Row";
+
+import TaskAltIcon from "@mui/icons-material/TaskAlt";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 
 const RowNoFlex = styled(AutoRow)`
   flex-wrap: nowrap;
@@ -25,15 +28,17 @@ const TransactionPopup: FC<TransactionPopupProps> = ({
 }) => {
   const { chainId } = useActiveWeb3React();
 
-  const theme = useContext(ThemeContext);
-
   return (
     <RowNoFlex>
       <div style={{ paddingRight: 16 }}>
         {success ? (
-          <CheckCircle color={theme?.green1} size={24} />
+          <TaskAltIcon
+            sx={{ color: "#27AE60", width: "24px", height: "24px" }}
+          />
         ) : (
-          <AlertCircle color={theme?.red1} size={24} />
+          <ErrorOutlineIcon
+            sx={{ color: "#FD4040", width: "24px", height: "24px" }}
+          />
         )}
       </div>
       <AutoColumn gap="8px">

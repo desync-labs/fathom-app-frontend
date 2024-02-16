@@ -22,7 +22,7 @@ export interface ListsState {
       readonly error: string | null;
     };
   };
-  // this contains the default list of lists from the last time the updateVersion was called, i.e. the app was reloaded
+  // this contains the default list of lists from the last time the updateVersion was called, i.e., the app was reloaded
   readonly lastInitializedDefaultListOfLists?: string[];
 
   // currently active lists
@@ -133,7 +133,7 @@ export default createReducer(initialState, (builder) =>
       if (state.byUrl[url]) {
         delete state.byUrl[url];
       }
-      // remove list from active urls if needed
+      // remove a list from active urls if needed
       if (state.activeListUrls && state.activeListUrls.includes(url)) {
         state.activeListUrls = state.activeListUrls.filter((u) => u !== url);
       }

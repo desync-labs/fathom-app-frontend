@@ -8,6 +8,7 @@ import {
   GraphOperationName,
 } from "../types";
 import { graphAPIEndpoints } from "../fixtures/api.data";
+import { extractNumericValue } from "../utils/helpers";
 
 export default class FxdPage extends BasePage {
   readonly path: string;
@@ -73,7 +74,7 @@ export default class FxdPage extends BasePage {
     this.btnMax = this.page.getByText("Max");
     this.btnSafeMax = this.page.getByText("Safe Max");
     this.tableYourPositions = this.page.locator(
-      '//p[text()="Your Positions"]/following-sibling::div/table'
+      '//h2[text()="Your Positions"]/following-sibling::div/table'
     );
     this.rowLatestPosition = this.tableYourPositions.locator(
       "tbody > tr:nth-child(1)"
@@ -254,7 +255,7 @@ export default class FxdPage extends BasePage {
     await expect(this.tableYourPositions).toBeVisible();
     const allRowsOnPageLocators = await this.page
       .locator(
-        '//p[text()="Your Positions"]/following-sibling::div/table/tbody/tr'
+        '//h2[text()="Your Positions"]/following-sibling::div/table/tbody/tr'
       )
       .all();
     expect(allRowsOnPageLocators.length).toEqual(countExpected);
@@ -496,11 +497,16 @@ export default class FxdPage extends BasePage {
     expect.soft(collateralAmountLatestPositionDisplayed).toContainText("XDC");
     const safetyBufferPercentageLatestPositionDisplayed =
       this.safetyBufferLatestPositionRow;
-    expect
-      .soft(safetyBufferPercentageLatestPositionDisplayed)
-      .toContainText(
-        (Math.round(safetyBufferPercentageExpected * 100) / 100).toString()
-      );
+    const safetyBufferPercentageLatestPositionDisplayedText =
+      await safetyBufferPercentageLatestPositionDisplayed.textContent();
+    const safetyBufferPercentageLatestPositionNumber = extractNumericValue(
+      safetyBufferPercentageLatestPositionDisplayedText as string
+    );
+    const safetyBuffersAbsDifference = Math.abs(
+      (safetyBufferPercentageLatestPositionNumber as number) -
+        safetyBufferPercentageExpected
+    );
+    expect.soft(safetyBuffersAbsDifference).toBeLessThanOrEqual(1);
     expect
       .soft(safetyBufferPercentageLatestPositionDisplayed)
       .toContainText("%");

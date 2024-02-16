@@ -1,13 +1,16 @@
-import { ChainId, TokenAmount } from "into-the-fathom-swap-sdk";
 import { FC } from "react";
-import { X } from "react-feather";
-import styled from "styled-components";
-import tokenLogo from "apps/dex/assets/images/token-logo.svg";
+import { NavLink } from "react-router-dom";
+import { ChainId, TokenAmount } from "into-the-fathom-swap-sdk";
+import BigNumber from "bignumber.js";
+import { styled } from "@mui/material";
+
+import usePricesContext from "context/prices";
+import { formatPercentage } from "utils/format";
 import { FTHM } from "apps/dex/constants";
 import { useTotalSupply } from "apps/dex/data/TotalSupply";
 import { useActiveWeb3React } from "apps/dex/hooks";
 import {
-  useAggregateUniBalance,
+  useAggregateFTHMBalance,
   useTokenBalance,
 } from "apps/dex/state/wallet/hooks";
 import { TYPE, FthmTokenAnimated } from "apps/dex/theme";
@@ -20,26 +23,26 @@ import {
   CardSection,
   DataCard,
 } from "apps/dex/components/earn/styled";
-import usePricesContext from "context/prices";
-import { formatPercentage } from "utils/format";
-import BigNumber from "bignumber.js";
-import { NavLink } from "react-router-dom";
+
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import tokenLogo from "apps/dex/assets/images/token-logo.svg";
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
 `;
 
 const ModalUpper = styled(DataCard)`
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  background: ${({ theme }) => theme.bg7};
-  color: ${({ theme }) => theme.text6};
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background: transparent;
+  color: #0e0f15;
   padding: 0.5rem;
 `;
 
-const StyledClose = styled(X)`
+const StyledClose = styled(CloseRoundedIcon)`
   position: absolute;
   right: 16px;
   top: 16px;
+  color: #ffffff;
 
   :hover {
     cursor: pointer;
@@ -61,7 +64,7 @@ const FathomBalanceContent: FC<FathomBalanceContent> = ({
 
   const { fthmPrice } = usePricesContext();
 
-  const total = useAggregateUniBalance();
+  const total = useAggregateFTHMBalance();
   const fthmBalance: TokenAmount | undefined = useTokenBalance(
     account ?? undefined,
     fthm

@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction } from "react";
+import { Dispatch, FC, memo, SetStateAction } from "react";
 import { Grid, ToggleButtonGroup, ToggleButton, MenuItem } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import {
@@ -57,11 +57,6 @@ const GridSwitcher = styled(Grid)`
   justify-content: flex-start;
 `;
 
-export const StackedLabel = styled("span")`
-  font-size: 14px;
-  color: #fff;
-`;
-
 const VaultFilterContainer = styled(Grid)`
   justify-content: space-between;
   padding-bottom: 55px;
@@ -109,10 +104,9 @@ const VaultFilters: FC<VaultFiltersPropsType> = ({
           onChange={(event: SelectChangeEvent<unknown>) => {
             setSortBy(event.target.value as SortType);
           }}
-          sx={{ border: "none", fieldset: { borderColor: "transparent" } }}
+          sx={{ border: "none" }}
         >
           <MenuItem value="tvl">TVL</MenuItem>
-          <MenuItem value="fee">Fee</MenuItem>
           <MenuItem value="earned">Earned</MenuItem>
           <MenuItem value="staked">Staked</MenuItem>
         </AppSelect>
@@ -138,4 +132,4 @@ const VaultFilters: FC<VaultFiltersPropsType> = ({
   );
 };
 
-export default VaultFilters;
+export default memo(VaultFilters);

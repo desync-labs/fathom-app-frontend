@@ -4,12 +4,12 @@ import { ethers } from "fathom-ethers";
 import utc from "dayjs/plugin/utc";
 import { dexClient as client, blockClient } from "apollo/client";
 import { GET_BLOCK, GET_BLOCKS, SHARE_VALUE } from "apps/charts/apollo/queries";
-import { Text } from "rebass";
 import _Decimal from "decimal.js-light";
 import * as toFormatImport from "toformat";
 import { timeframeOptions } from "apps/charts/constants";
 import Numeral from "numeral";
 import { ApolloClient } from "@apollo/client";
+import { Typography } from "@mui/material";
 
 const toFormat = toFormatImport as any;
 
@@ -103,22 +103,6 @@ export function shortenAddress(address: string, chars = 4) {
   }
   return `${parsed.substring(0, chars + 2)}...${parsed.substring(42 - chars)}`;
 }
-
-export const toWeeklyDate = (date: number) => {
-  const formatted = dayjs.utc(dayjs.unix(date));
-  const dateObj = new Date(formatted as unknown as Date);
-  const day = new Date(formatted as unknown as Date).getDay();
-  const lessDays = day === 6 ? 0 : day + 1;
-  const wkStart = new Date(
-    new Date(dateObj).setDate(dateObj.getDate() - lessDays)
-  );
-  const wkEnd = new Date(new Date(wkStart).setDate(wkStart.getDate() + 6));
-  return (
-    dayjs.utc(wkStart).format("MMM DD") +
-    " - " +
-    dayjs.utc(wkEnd).format("MMM DD")
-  );
-};
 
 export function getTimestampsForChanges() {
   const utcCurrentTime = dayjs();
@@ -321,11 +305,6 @@ export const toK = (num: any) => {
   return Numeral(num).format("0.[00]a");
 };
 
-export const setThemeColor = (theme: string) =>
-  document.documentElement.style.setProperty("--c-token", theme || "#333333");
-
-export const Big = (number: any) => new BigNumber(number);
-
 export const urls = {
   showTransaction: (tx: string) => `https://xdc.blocksscan.io/txs/${tx}/`,
   showAddress: (address: string) =>
@@ -410,41 +389,30 @@ export const formattedNum = (number: string | number, usd = false): string => {
   return Number(parseFloat(String(num)).toFixed(4)).toString();
 };
 
-export function rawPercent(percentRaw: number) {
-  const percent = parseFloat(String(percentRaw * 100));
-  if (!percent || percent === 0) {
-    return "0%";
-  }
-  if (percent < 1 && percent > 0) {
-    return "< 1%";
-  }
-  return percent.toFixed(0) + "%";
-}
-
 export function formattedPercent(percent: string | number) {
   if (typeof percent === "string") {
     percent = parseFloat(percent);
   }
   if (!percent || percent === 0) {
     // @ts-ignore
-    return <Text fontWeight={500}>0%</Text>;
+    return <Typography fontWeight={500}>0%</Typography>;
   }
 
   if (percent < 0.0001 && percent > 0) {
     return (
       // @ts-ignore
-      <Text fontWeight={500} color="green">
+      <Typography fontWeight={500} color="green">
         {"< 0.0001%"}
-      </Text>
+      </Typography>
     );
   }
 
   if (percent < 0 && percent > -0.0001) {
     return (
       // @ts-ignore
-      <Text fontWeight={500} color="red">
+      <Typography fontWeight={500} color="red">
         {"< 0.0001%"}
-      </Text>
+      </Typography>
     );
   }
 
@@ -458,17 +426,24 @@ export function formattedPercent(percent: string | number) {
     if (fixedPercent > 100) {
       return (
         // @ts-ignore
-        <Text fontWeight={500} color="text5">{`+${percent
+        <Typography fontWeight={500} color="text5">{`+${percent
           ?.toFixed(0)
-          .toLocaleString()}%`}</Text>
+          .toLocaleString()}%`}</Typography>
       );
     } else {
       // @ts-ignore
-      return <Text fontWeight={500} color="text5">{`+${fixedPercent}%`}</Text>;
+      return (
+        <Typography
+          fontWeight={500}
+          color="text5"
+        >{`+${fixedPercent}%`}</Typography>
+      );
     }
   } else {
     // @ts-ignore
-    return <Text fontWeight={500} color="red">{`${fixedPercent}%`}</Text>;
+    return (
+      <Typography fontWeight={500} color="red">{`${fixedPercent}%`}</Typography>
+    );
   }
 }
 
@@ -519,18 +494,3 @@ export const getPercentChange = (
   }
   return adjustedPercentChange;
 };
-
-export function isEquivalent(a: { [x: string]: any }, b: { [x: string]: any }) {
-  const aProps = Object.getOwnPropertyNames(a);
-  const bProps = Object.getOwnPropertyNames(b);
-  if (aProps.length !== bProps.length) {
-    return false;
-  }
-  for (let i = 0; i < aProps.length; i++) {
-    const propName = aProps[i];
-    if (a[propName] !== b[propName]) {
-      return false;
-    }
-  }
-  return true;
-}

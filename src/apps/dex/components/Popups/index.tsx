@@ -1,23 +1,23 @@
-import styled from "styled-components";
+import { Box, styled } from "@mui/material";
 import { useActivePopups } from "apps/dex/state/application/hooks";
 import { AutoColumn } from "apps/dex/components/Column";
 import PopupItem from "apps/dex/components/Popups/PopupItem";
 import { useURLWarningVisible } from "apps/dex/state/user/hooks";
 
-const MobilePopupWrapper = styled.div<{ height: string | number }>`
+const MobilePopupWrapper = styled(Box)<{ height: string | number }>`
   position: relative;
+  display: none;
   max-width: 100%;
   height: ${({ height }) => height};
   margin: ${({ height }) => (height ? "0 auto;" : 0)};
-  margin-bottom: ${({ height }) => (height ? "20px" : 0)}};
-  display: none;
+  margin-bottom: ${({ height }) => (height ? "20px" : 0)};
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.breakpoints.down("sm")} {
     display: block;
-  `};
+  }
 `;
 
-const MobilePopupInner = styled.div`
+const MobilePopupInner = styled(Box)`
   height: 99%;
   overflow-x: auto;
   overflow-y: hidden;
@@ -37,9 +37,9 @@ const FixedPopupColumn = styled(AutoColumn)<{ extraPadding: boolean }>`
   width: 100%;
   z-index: 3;
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.breakpoints.down("sm")} {
     display: none;
-  `};
+  }
 `;
 
 const Popups = () => {
@@ -50,7 +50,11 @@ const Popups = () => {
 
   return (
     <>
-      <FixedPopupColumn gap="20px" extraPadding={urlWarningActive}>
+      <FixedPopupColumn
+        gap="20px"
+        extraPadding={urlWarningActive}
+        data-testid="dex-fixedPopupColumn"
+      >
         {activePopups.map((item) => (
           <PopupItem
             key={item.key}
@@ -60,7 +64,10 @@ const Popups = () => {
           />
         ))}
       </FixedPopupColumn>
-      <MobilePopupWrapper height={activePopups?.length > 0 ? "fit-content" : 0}>
+      <MobilePopupWrapper
+        height={activePopups?.length > 0 ? "fit-content" : 0}
+        data-testid="dex-mobilePopupWrapper"
+      >
         <MobilePopupInner>
           {activePopups // reverse so new items up front
             .slice(0)

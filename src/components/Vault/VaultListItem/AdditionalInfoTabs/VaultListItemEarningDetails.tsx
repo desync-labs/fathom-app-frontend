@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, memo } from "react";
 import BigNumber from "bignumber.js";
 import { Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -138,7 +138,7 @@ const VaultListItemEarningDetails: FC<VaultListItemFarmingDetailsProps> = ({
   vaultItemData,
   vaultPosition,
 }) => {
-  const { token, shareToken, strategies, sharesSupply } = vaultItemData;
+  const { token, shareToken, sharesSupply, apr } = vaultItemData;
   const { balancePosition, balanceShares } = vaultPosition;
   const { fxdPrice } = usePricesContext();
   const { isMobile } = useSharedContext();
@@ -200,7 +200,7 @@ const VaultListItemEarningDetails: FC<VaultListItemFarmingDetailsProps> = ({
             <span
               data-testid={`vaultRowDetails-${vaultTestId}-itemPositionInfo-earningDetails-aprValue`}
             >
-              {formatNumber(Number(strategies[0].reports[0].results[0].apr))}%
+              {formatNumber(Number(apr))}%
             </span>
           </Apr>
         )}
@@ -208,16 +208,14 @@ const VaultListItemEarningDetails: FC<VaultListItemFarmingDetailsProps> = ({
           {!isMobile && (
             <Apr>
               Apr
-              <span>
-                {formatNumber(Number(strategies[0].reports[0].results[0].apr))}%
-              </span>
+              <span>{formatNumber(Number(apr))}%</span>
             </Apr>
           )}
           <Approx>
             ~
             {formatNumber(
               BigNumber(balancePosition)
-                .multipliedBy(strategies[0].reports[0].results[0].apr)
+                .multipliedBy(apr)
                 .dividedBy(100)
                 .dividedBy(10 ** 36)
                 .multipliedBy(fxdPrice)
@@ -241,4 +239,4 @@ const VaultListItemEarningDetails: FC<VaultListItemFarmingDetailsProps> = ({
   );
 };
 
-export default VaultListItemEarningDetails;
+export default memo(VaultListItemEarningDetails);

@@ -1,3 +1,5 @@
+import { useCallback, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { BigNumber } from "@into-the-fathom/bignumber";
 import { TransactionResponse } from "@into-the-fathom/providers";
 import {
@@ -8,11 +10,10 @@ import {
   WETH,
   XDC,
 } from "into-the-fathom-swap-sdk";
-import { useCallback, useContext, useState } from "react";
-import { Plus } from "react-feather";
 import ReactGA from "react-ga4";
-import { Text } from "rebass";
-import styled, { ThemeContext } from "styled-components";
+import { Box, styled, Typography } from "@mui/material";
+
+import useConnector from "context/connector";
 import { ButtonError, ButtonPrimary } from "apps/dex/components/Button";
 import { BlueCard, LightCard } from "apps/dex/components/Card";
 import { AutoColumn, ColumnCenter } from "apps/dex/components/Column";
@@ -62,17 +63,17 @@ import { PoolPriceBar } from "apps/dex/pages/AddLiquidity/PoolPriceBar";
 import { useIsTransactionUnsupported } from "apps/dex/hooks/Trades";
 import UnsupportedCurrencyFooter from "apps/dex/components/swap/UnsupportedCurrencyFooter";
 import { ConnectWalletButton, WalletIcon } from "apps/dex/pages/Swap";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import useDexShared from "../../../../context/dexShared";
 
-const PlusWrapper = styled.div`
+import AddIcon from "@mui/icons-material/Add";
+
+const PlusWrapper = styled(Box)`
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 10;
 `;
 
-const IconWrapper = styled.div`
+const IconWrapper = styled(Box)`
   width: 30px;
   height: 30px;
   display: flex;
@@ -84,7 +85,6 @@ const IconWrapper = styled.div`
 
 const AddLiquidity = () => {
   const { account, chainId, library } = useActiveWeb3React();
-  const theme = useContext(ThemeContext);
   const { currencyIdA, currencyIdB } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -98,7 +98,7 @@ const AddLiquidity = () => {
         (currencyB && currencyEquals(currencyB, (WETH as any)[chainId])))
   );
 
-  const { openConnectorMenu } = useDexShared(); // toggle wallet when disconnected
+  const { openConnectorMenu } = useConnector(); // toggle wallet when disconnected
 
   const expertMode = useIsExpertMode();
 
@@ -291,7 +291,7 @@ const AddLiquidity = () => {
       <AutoColumn gap="20px">
         <LightCard mt="20px" borderRadius="20px">
           <RowFlat>
-            <Text
+            <Typography
               fontSize="48px"
               fontWeight={500}
               lineHeight="42px"
@@ -300,7 +300,7 @@ const AddLiquidity = () => {
               {currencies[Field.CURRENCY_A]?.symbol +
                 "/" +
                 currencies[Field.CURRENCY_B]?.symbol}
-            </Text>
+            </Typography>
             <DoubleCurrencyLogo
               currency0={currencies[Field.CURRENCY_A]}
               currency1={currencies[Field.CURRENCY_B]}
@@ -312,14 +312,14 @@ const AddLiquidity = () => {
     ) : (
       <AutoColumn gap="20px">
         <RowFlat style={{ marginTop: "20px" }}>
-          <Text
-            fontSize="48px"
+          <Typography
+            fontSize="38px"
             fontWeight={500}
             lineHeight="42px"
-            marginRight={10}
+            marginRight="10px"
           >
             {liquidityMinted?.toSignificant(6)}
-          </Text>
+          </Typography>
           <DoubleCurrencyLogo
             currency0={currencies[Field.CURRENCY_A]}
             currency1={currencies[Field.CURRENCY_B]}
@@ -327,12 +327,12 @@ const AddLiquidity = () => {
           />
         </RowFlat>
         <Row>
-          <Text fontSize="24px">
+          <Typography fontSize="22px">
             {currencies[Field.CURRENCY_A]?.symbol +
               "/" +
               currencies[Field.CURRENCY_B]?.symbol +
               " Pool Tokens"}
-          </Text>
+          </Typography>
         </Row>
         <TYPE.italic fontSize={12} textAlign="left" padding={"8px 0 0 0 "}>
           {`Output is estimated. If the price changes by more than ${
@@ -438,16 +438,16 @@ const AddLiquidity = () => {
                 <ColumnCenter>
                   <BlueCard>
                     <AutoColumn gap="10px">
-                      <TYPE.link fontWeight={600} color={"text1"}>
+                      <TYPE.white fontWeight={600}>
                         You are the first liquidity provider.
-                      </TYPE.link>
-                      <TYPE.link fontWeight={400} color={"text1"}>
+                      </TYPE.white>
+                      <TYPE.white fontWeight={400}>
                         The ratio of tokens you add will set the price of this
                         pool.
-                      </TYPE.link>
-                      <TYPE.link fontWeight={400} color={"text1"}>
+                      </TYPE.white>
+                      <TYPE.white fontWeight={400}>
                         Once you are happy with the rate click supply to review.
-                      </TYPE.link>
+                      </TYPE.white>
                     </AutoColumn>
                   </BlueCard>
                 </ColumnCenter>
@@ -455,12 +455,12 @@ const AddLiquidity = () => {
                 <ColumnCenter>
                   <BlueCard>
                     <AutoColumn gap="10px">
-                      <TYPE.link fontWeight={400} color={"text1"}>
+                      <TYPE.white fontWeight={400}>
                         <b>Tip:</b> When you add liquidity, you will receive
                         pool tokens representing your position. These tokens
                         automatically earn fees proportional to your share of
                         the pool, and can be redeemed at any time.
-                      </TYPE.link>
+                      </TYPE.white>
                     </AutoColumn>
                   </BlueCard>
                 </ColumnCenter>
@@ -480,7 +480,13 @@ const AddLiquidity = () => {
             <PlusWrapper>
               <ColumnCenter>
                 <IconWrapper>
-                  <Plus size="20" color={theme.bg2} />
+                  <AddIcon
+                    sx={{
+                      width: "20px",
+                      height: "20px",
+                      color: "#061023",
+                    }}
+                  />
                 </IconWrapper>
               </ColumnCenter>
             </PlusWrapper>
@@ -500,7 +506,7 @@ const AddLiquidity = () => {
               currencies[Field.CURRENCY_B] &&
               pairState !== PairState.INVALID && (
                 <>
-                  <LightCard padding="0px" borderRadius={"20px"}>
+                  <LightCard borderRadius={"20px"} padding={"0"}>
                     <RowBetween padding="1rem">
                       <TYPE.subHeader fontWeight={500} fontSize={14}>
                         {noLiquidity ? "Initial prices" : "Prices"} and pool
@@ -591,9 +597,9 @@ const AddLiquidity = () => {
                     !!parsedAmounts[Field.CURRENCY_B]
                   }
                 >
-                  <Text fontSize={20} fontWeight={500}>
+                  <Typography fontSize={20} fontWeight={500}>
                     {error ?? "Supply"}
-                  </Text>
+                  </Typography>
                 </ButtonError>
               </AutoColumn>
             )}

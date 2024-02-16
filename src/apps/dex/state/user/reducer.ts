@@ -76,13 +76,13 @@ export const initialState: UserState = {
 export default createReducer(initialState, (builder) =>
   builder
     .addCase(updateVersion, (state) => {
-      // slippage isnt being tracked in local storage, reset to default
+      // slippage isn't being tracked in local storage, reset to default
       // noinspection SuspiciousTypeOfGuard
       if (typeof state.userSlippageTolerance !== "number") {
         state.userSlippageTolerance = INITIAL_ALLOWED_SLIPPAGE;
       }
 
-      // deadline isnt being tracked in local storage, reset to default
+      // deadline isn't being tracked in local storage, reset to default
       // noinspection SuspiciousTypeOfGuard
       if (typeof state.userDeadline !== "number") {
         state.userDeadline = DEFAULT_DEADLINE_FROM_NOW;
@@ -151,7 +151,7 @@ export default createReducer(initialState, (builder) =>
       removeSerializedPair,
       (state, { payload: { chainId, tokenAAddress, tokenBAddress } }) => {
         if (state.pairs[chainId]) {
-          // just delete both keys if either exists
+          // delete both keys if either exists
           delete state.pairs[chainId][pairKey(tokenAAddress, tokenBAddress)];
           delete state.pairs[chainId][pairKey(tokenBAddress, tokenAAddress)];
         }

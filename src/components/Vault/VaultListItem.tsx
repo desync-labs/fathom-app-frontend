@@ -1,4 +1,4 @@
-import { FC, useMemo } from "react";
+import { FC, memo, useMemo } from "react";
 import { IconButton, TableCell, Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import BigNumber from "bignumber.js";
@@ -71,6 +71,7 @@ export const VaultPercent = styled("div")`
   height: 20px;
   background: #3665ff;
   align-items: center;
+  justify-content: center;
   font-weight: bold;
 
   ${({ theme }) => theme.breakpoints.down("sm")} {
@@ -181,14 +182,17 @@ export const EarningLabel = styled("div")`
 export type VaultListItemPropsType = {
   vaultItemData: IVault;
   vaultPosition: IVaultPosition | null | undefined;
+  protocolFee: number;
+  performanceFee: number;
 };
 
 const VaultListItem: FC<VaultListItemPropsType> = ({
   vaultItemData,
   vaultPosition,
+  protocolFee,
+  performanceFee,
 }) => {
-  const { token, balanceTokens, depositLimit, strategies, totalFees } =
-    vaultItemData;
+  const { token, balanceTokens, depositLimit, apr } = vaultItemData;
   const { fxdPrice } = usePricesContext();
   const vaultTestId = vaultItemData.id;
 
@@ -234,9 +238,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
           colSpan={1}
           data-testid={`vaultRow-${vaultTestId}-feeValueCell`}
         >
-          <VaultPercent>
-            {formatNumber(BigNumber(totalFees).toNumber())}%
-          </VaultPercent>
+          <VaultPercent>{formatNumber(Number(performanceFee))}%</VaultPercent>
         </TableCell>
         <TableCell
           colSpan={1}
@@ -259,12 +261,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
           colSpan={1}
           data-testid={`vaultRow-${vaultTestId}-aprValueCell`}
         >
-          <VaultApr>
-            {formatNumber(
-              BigNumber(strategies[0].reports[0].results[0].apr).toNumber()
-            )}
-            %
-          </VaultApr>
+          <VaultApr>{formatNumber(Number(apr))}%</VaultApr>
         </TableCell>
         <TableCell
           colSpan={1}
@@ -382,10 +379,17 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
                   />
                 )}
               {activeVaultInfoTab === VaultInfoTabs.ABOUT && (
-                <VaultItemAbout vaultItemData={vaultItemData} />
+                <VaultItemAbout
+                  vaultItemData={vaultItemData}
+                  protocolFee={protocolFee}
+                  performanceFee={performanceFee}
+                />
               )}
               {activeVaultInfoTab === VaultInfoTabs.STRATEGIES && (
-                <VaultItemStrategies vaultItemData={vaultItemData} />
+                <VaultItemStrategies
+                  vaultItemData={vaultItemData}
+                  performanceFee={performanceFee}
+                />
               )}
             </Box>
           </TableCell>
@@ -398,6 +402,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
             <VaultListItemManageModal
               vaultItemData={vaultItemData}
               vaultPosition={vaultPosition}
+              performanceFee={performanceFee}
               onClose={() => setManageVault(false)}
             />
           )
@@ -408,6 +413,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
           newVaultDeposit && (
             <VaultListItemDepositModal
               vaultItemData={vaultItemData}
+              performanceFee={performanceFee}
               onClose={() => setNewVaultDeposit(false)}
             />
           )
@@ -417,4 +423,4 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
   );
 };
 
-export default VaultListItem;
+export default memo(VaultListItem);

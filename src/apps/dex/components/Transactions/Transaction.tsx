@@ -1,19 +1,19 @@
-import styled from "styled-components";
-import { CheckCircle, Triangle } from "react-feather";
+import { FC } from "react";
+import { Box, styled } from "@mui/material";
 
 import { useActiveWeb3React } from "apps/dex/hooks";
 import { getBlockScanLink } from "apps/dex/utils";
 import { ExternalLink } from "apps/dex/theme";
 import { RowFixed } from "apps/dex/components/Row";
 import Loader from "apps/dex/components/Loader";
-import { FC } from "react";
 import { formattedNum, formatTime, urls } from "apps/charts/utils";
 import { getTransactionType } from "apps/charts/components/TxnList";
 import { TransactionDetails } from "apps/dex/state/transactions/reducer";
 
-const TransactionWrapper = styled.div``;
+import TaskAltIcon from "@mui/icons-material/TaskAlt";
+import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 
-const TransactionStatusText = styled.div`
+const TransactionStatusText = styled(Box)`
   margin-right: 0.5rem;
   display: flex;
   align-items: center;
@@ -31,15 +31,15 @@ const TransactionState = styled(ExternalLink)<{
   align-items: center;
   text-decoration: none !important;
   border-radius: 0.5rem;
-  padding: 0.25rem 0rem;
+  padding: 0.25rem 0;
   font-weight: 500;
   font-size: 0.825rem;
-  color: ${({ theme }) => theme.text1};
+  color: #fff;
 `;
 
-const IconWrapper = styled.div<{ pending: boolean; success?: boolean }>`
-  color: ${({ pending, success, theme }) =>
-    pending ? theme.primary1 : success ? theme.green1 : theme.red1};
+const IconWrapper = styled(Box)<{ pending: boolean; success?: boolean }>`
+  color: ${({ pending, success }) =>
+    pending ? "#253656" : success ? "#27AE60" : "#FD4040"};
 `;
 
 export type TransactionItem = {
@@ -85,14 +85,16 @@ export const Transaction: FC<{ tx: TransactionDetails }> = ({ tx }) => {
   if (!chainId) return null;
 
   return (
-    <TransactionWrapper>
+    <Box data-testid={`dex-transactions-transactionWrapper-${tx.hash}`}>
       <TransactionState
         href={getBlockScanLink(chainId, tx.hash, "transaction")}
         pending={pending}
         success={success}
       >
         <RowFixed>
-          <TransactionStatusText>
+          <TransactionStatusText
+            data-testid={`dex-transactions-transactionStatusText-${tx.hash}`}
+          >
             {summary
               ? summary + " " + formatTime(tx.addedTime / 1000)
               : tx.hash}{" "}
@@ -103,13 +105,13 @@ export const Transaction: FC<{ tx: TransactionDetails }> = ({ tx }) => {
           {pending ? (
             <Loader stroke={"white"} />
           ) : success ? (
-            <CheckCircle size="16" />
+            <TaskAltIcon sx={{ width: "16px", height: "16px" }} />
           ) : (
-            <Triangle size="16" />
+            <WarningAmberIcon sx={{ width: "16px", height: "16px" }} />
           )}
         </IconWrapper>
       </TransactionState>
-    </TransactionWrapper>
+    </Box>
   );
 };
 
@@ -117,7 +119,7 @@ export const PreviousTransaction: FC<{ item: FormattedTransaction }> = ({
   item,
 }) => {
   return (
-    <TransactionWrapper>
+    <Box>
       <TransactionState
         href={urls.showTransaction(item.hash)}
         pending={false}
@@ -137,9 +139,9 @@ export const PreviousTransaction: FC<{ item: FormattedTransaction }> = ({
           </TransactionStatusText>
         </RowFixed>
         <IconWrapper pending={false} success={true}>
-          <CheckCircle size="16" />
+          <TaskAltIcon sx={{ width: "16px", height: "16px" }} />
         </IconWrapper>
       </TransactionState>
-    </TransactionWrapper>
+    </Box>
   );
 };

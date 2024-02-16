@@ -22,6 +22,7 @@ export const themeObject = createTheme({
       default: "#050c1a",
     },
   },
+  // @ts-ignore
   typography: {
     fontFamily: "Inter, sans-serif",
   },

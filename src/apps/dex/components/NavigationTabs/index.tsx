@@ -1,25 +1,27 @@
-import styled from "styled-components";
-import { darken } from "polished";
-import { useTranslation } from "react-i18next";
-import { NavLink, Link as HistoryLink } from "react-router-dom";
-
-import { ArrowLeft } from "react-feather";
-import { RowBetween } from "apps/dex/components/Row";
-import Settings from "apps/dex/components/Settings";
+import { FC } from "react";
 import { useDispatch } from "react-redux";
+import { darken } from "polished";
+import { NavLink, Link as HistoryLink } from "react-router-dom";
+import { Box, styled } from "@mui/material";
+
 import { AppDispatch } from "apps/dex/state";
 import { resetMintState } from "apps/dex/state/mint/actions";
-import { FC } from "react";
+import Settings from "apps/dex/components/Settings";
+import { RowBetween } from "apps/dex/components/Row";
 
-const Tabs = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap}
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+
+const Tabs = styled(Box)`
+  display: flex;
+  flex-flow: row nowrap;
   align-items: center;
   border-radius: 3rem;
   justify-content: space-evenly;
 `;
 
 const StyledNavLink = styled(NavLink)`
-  ${({ theme }) => theme.flexRowNoWrap}
+  display: flex;
+  flex-flow: row nowrap;
   align-items: center;
   justify-content: center;
   height: 3rem;
@@ -27,39 +29,32 @@ const StyledNavLink = styled(NavLink)`
   outline: none;
   cursor: pointer;
   text-decoration: none;
-  color: ${({ theme }) => theme.text3};
+  color: #00332f;
   font-size: 20px;
-
-  &.active {
-    border-radius: 12px;
-    font-weight: 500;
-    color: ${({ theme }) => theme.text1};
-  }
 
   :hover,
   :focus {
-    color: ${({ theme }) => darken(0.1, theme.text1)};
+    color: ${darken(0.1, "#ffffff")};
   }
 `;
 
-const ActiveText = styled.div`
+const ActiveText = styled(Box)`
   font-weight: 500;
   font-size: 20px;
 `;
 
-const StyledArrowLeft = styled(ArrowLeft)`
-  color: ${({ theme }) => theme.text1};
+const StyledArrowLeft = styled(ArrowBackIcon)`
+  color: #ffffff;
 `;
 
 export const SwapPoolTabs = () => {
-  const { t } = useTranslation();
   return (
     <Tabs style={{ marginBottom: "20px", display: "none" }}>
       <StyledNavLink id={`swap-nav-link`} to={"/swap"}>
-        <>{t("swap")}</>
+        <>Swap</>
       </StyledNavLink>
       <StyledNavLink id={`pool-nav-link`} to={"/swap/pool"}>
-        <>{t("pool")}</>
+        <>Pool</>
       </StyledNavLink>
     </Tabs>
   );

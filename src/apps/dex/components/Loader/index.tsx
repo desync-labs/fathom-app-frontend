@@ -1,5 +1,5 @@
-import styled, { keyframes } from "styled-components";
 import { FC } from "react";
+import { keyframes, styled } from "@mui/material";
 
 const rotate = keyframes`
   from {
@@ -10,18 +10,18 @@ const rotate = keyframes`
   }
 `;
 
-const StyledSVG = styled.svg<{ size: string; stroke?: string }>`
+const StyledSVG = styled("svg")<{ size: string; stroke?: string }>`
   animation: 2s ${rotate} linear infinite;
   height: ${({ size }) => size};
   width: ${({ size }) => size};
   path {
-    stroke: ${({ stroke, theme }) => stroke ?? theme.primary1};
+    stroke: ${({ stroke }) => stroke ?? "#253656"};
   }
 `;
 
 /**
  * Takes in custom size and stroke for circle color, default to primary color as fill,
- * need ...rest for layered styles on top
+ * need it ...rest for layered styles on top
  */
 type LoaderProps = {
   size?: string;

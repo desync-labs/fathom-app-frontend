@@ -5,7 +5,7 @@ export const AppList = styled(MuiList)`
   width: 100%;
   & li {
     color: #9fadc6;
-    fontsize: 14px;
+    font-size: 14px;
     padding: 3px 0 3px 8px;
     span {
       font-size: 14px;
@@ -63,10 +63,6 @@ export const ListLabel = styled(Box)`
   display: flex;
   align-items: center;
   justify-content: start;
-`;
-
-export const ListLabelWithPopover = styled(ListLabel)`
-  gap: 7px;
 `;
 
 export const ListValue = styled(Box)`

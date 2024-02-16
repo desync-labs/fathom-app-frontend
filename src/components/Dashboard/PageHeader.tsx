@@ -36,7 +36,7 @@ export const PageHeader: FC<PageHeaderType> = ({
   const { isMobile } = useSharedContext();
   return (
     <Grid item xs={12} md={10} lg={8}>
-      <PageHeaderTitle variant="h6" gutterBottom addPadding={addPadding}>
+      <PageHeaderTitle variant={"h6"} gutterBottom addPadding={addPadding}>
         {title}
       </PageHeaderTitle>
       {!isMobile && (

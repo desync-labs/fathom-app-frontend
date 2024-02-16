@@ -1,22 +1,20 @@
-import styled from "styled-components";
+import { FC } from "react";
+import { transparentize } from "polished";
+import { Box, styled } from "@mui/material";
 import { RowBetween } from "apps/dex/components/Row";
 import { AutoColumn } from "apps/dex/components/Column";
-import { transparentize } from "polished";
-import { FC } from "react";
-
-const Wrapper = styled(AutoColumn)``;
 
 const Grouping = styled(RowBetween)`
   width: 50%;
 `;
 
-const Circle = styled.div<{ confirmed?: boolean; disabled?: boolean }>`
+const Circle = styled(Box)<{ confirmed?: boolean; disabled?: boolean }>`
   min-width: 20px;
   min-height: 20px;
-  background-color: ${({ theme, confirmed, disabled }) =>
-    disabled ? theme.bg4 : confirmed ? theme.green1 : theme.primary1};
+  background-color: ${({ confirmed, disabled }) =>
+    disabled ? "#565A69" : confirmed ? "#27AE60" : "#253656"};
   border-radius: 50%;
-  color: ${({ theme }) => theme.white};
+  color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -24,24 +22,24 @@ const Circle = styled.div<{ confirmed?: boolean; disabled?: boolean }>`
   font-size: 12px;
 `;
 
-const CircleRow = styled.div`
+const CircleRow = styled(Box)`
   width: calc(100% - 20px);
   display: flex;
   align-items: center;
 `;
 
-const Connector = styled.div<{ prevConfirmed?: boolean; disabled?: boolean }>`
+const Connector = styled(Box)<{ prevConfirmed?: boolean; disabled?: boolean }>`
   width: 100%;
   height: 2px;
   background: linear-gradient(
     90deg,
-    ${({ theme, prevConfirmed, disabled }) =>
+    ${({ prevConfirmed, disabled }) =>
         disabled
-          ? theme.bg4
-          : transparentize(0.5, prevConfirmed ? theme.green1 : theme.primary1)}
+          ? "#565A69"
+          : transparentize(0.5, prevConfirmed ? "#27AE60" : "#253656")}
       0%,
-    ${({ theme, prevConfirmed, disabled }) =>
-        disabled ? theme.bg4 : prevConfirmed ? theme.primary1 : theme.bg4}
+    ${({ prevConfirmed, disabled }) =>
+        disabled ? "#565A69" : prevConfirmed ? "#253656" : "#565A69"}
       80%
   );
   opacity: 0.6;
@@ -55,12 +53,12 @@ interface ProgressCirclesProps {
 /**
  * Based on array of steps, create a step counter of circles.
  * A circle can be enabled, disabled, or confirmed. States are derived
- * from previous step.
+ * from a previous step.
  *
  * An extra circle is added to represent the ability to swap, add, or remove.
  * This step will never be marked as complete (because no 'txn done' state in body ui).
  *
- * @param steps  array of booleans where true means step is complete
+ * @param steps  array of booleans where a true means step is complete
  */
 const ProgressCircles: FC<ProgressCirclesProps> = ({
   steps,
@@ -68,7 +66,7 @@ const ProgressCircles: FC<ProgressCirclesProps> = ({
   ...rest
 }) => {
   return (
-    <Wrapper justify={"center"} {...rest}>
+    <AutoColumn justify={"center"} {...rest}>
       <Grouping>
         {steps.map((step, i) => {
           return (
@@ -87,7 +85,7 @@ const ProgressCircles: FC<ProgressCirclesProps> = ({
           {steps.length + 1}
         </Circle>
       </Grouping>
-    </Wrapper>
+    </AutoColumn>
   );
 };
 

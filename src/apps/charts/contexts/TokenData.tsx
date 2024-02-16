@@ -806,42 +806,6 @@ export function useTokenPairs(tokenAddress: string) {
   return tokenPairs || [];
 }
 
-export function useTokenDataCombined(tokenAddresses: string[]) {
-  const [state, { updateCombinedVolume }] = useTokenDataContext();
-  const [ethPrice, ethPriceOld] = useEthPrice();
-
-  const volume = state?.combinedVol;
-
-  useEffect(() => {
-    async function fetchDatas() {
-      Promise.all(
-        tokenAddresses.map(async (address: string) => {
-          return await getTokenData(address, ethPrice, ethPriceOld);
-        })
-      )
-        .then((res) => {
-          if (res) {
-            const newVolume = res
-              ? res?.reduce(function (acc, entry) {
-                  acc = acc + parseFloat(entry.oneDayVolumeUSD);
-                  return acc;
-                }, 0)
-              : 0;
-            updateCombinedVolume(newVolume);
-          }
-        })
-        .catch(() => {
-          console.log("error fetching combined data");
-        });
-    }
-    if (!volume && ethPrice && ethPriceOld) {
-      fetchDatas();
-    }
-  }, [tokenAddresses, ethPrice, ethPriceOld, volume, updateCombinedVolume]);
-
-  return volume;
-}
-
 export function useTokenChartDataCombined(tokenAddresses: string[]) {
   const [state, { updateChartData }] = useTokenDataContext();
 

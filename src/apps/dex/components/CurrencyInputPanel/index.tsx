@@ -1,30 +1,31 @@
-import { Currency, Pair } from "into-the-fathom-swap-sdk";
 import { useState, useCallback, FC } from "react";
-import styled from "styled-components";
+import { Currency, Pair } from "into-the-fathom-swap-sdk";
 import { darken } from "polished";
+import { Box, Button, styled } from "@mui/material";
+
+import { useActiveWeb3React } from "apps/dex/hooks";
+import { TYPE } from "apps/dex/theme";
 import { useCurrencyBalance } from "apps/dex/state/wallet/hooks";
 import CurrencySearchModal from "apps/dex/components/SearchModal/CurrencySearchModal";
 import CurrencyLogo from "apps/dex/components/CurrencyLogo";
 import DoubleCurrencyLogo from "apps/dex/components/DoubleLogo";
 import { RowBetween } from "apps/dex/components/Row";
-import { TYPE } from "apps/dex/theme";
 import { Input as NumericalInput } from "apps/dex/components/NumericalInput";
+
 import { ReactComponent as DropDown } from "apps/dex/assets/images/dropdown.svg";
 
-import { useActiveWeb3React } from "apps/dex/hooks";
-import { useTranslation } from "react-i18next";
-import useTheme from "apps/dex/hooks/useTheme";
-
-const InputRow = styled.div<{ selected: boolean }>`
-  ${({ theme }) => theme.flexRowNoWrap}
+const InputRow = styled(Box)<{ selected: boolean }>`
+  display: flex;
+  flex-flow: row nowrap;
   align-items: center;
   padding: ${({ selected }) =>
     selected ? "0.75rem 0.5rem 0.75rem 1rem" : "0.75rem 0.75rem 0.75rem 1rem"};
   justify-content: space-between;
 `;
 
-const BalanceRow = styled.div<{ selected: boolean }>`
-  ${({ theme }) => theme.flexRowNoWrap}
+const BalanceRow = styled(Box)<{ selected: boolean }>`
+  display: flex;
+  flex-flow: row nowrap;
   justify-content: right;
   align-items: center;
   padding: ${({ selected }) =>
@@ -32,13 +33,14 @@ const BalanceRow = styled.div<{ selected: boolean }>`
   gap: 7px;
 `;
 
-const CurrencySelect = styled.button<{ selected: boolean }>`
+const CurrencySelect = styled(Button)<{ selected: boolean }>`
   align-items: center;
   height: 2.2rem;
   font-size: 20px;
   font-weight: 500;
-  background-color: ${({ theme }) => theme.primary1};
-  color: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
+  background-color: #253656;
+  color: #ffffff;
+  text-transform: capitalize;
   border-radius: 12px;
   box-shadow: ${({ selected }) =>
     selected ? "none" : "0px 6px 10px rgba(0, 0, 0, 0.075)"};
@@ -53,31 +55,32 @@ const CurrencySelect = styled.button<{ selected: boolean }>`
   }
 `;
 
-const LabelRow = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap}
+const LabelRow = styled(Box)`
+  display: flex;
+  flex-flow: row nowrap;
   align-items: center;
-  color: ${({ theme }) => theme.text1};
+  color: #ffffff;
   font-size: 0.75rem;
   line-height: 1rem;
   padding: 0.75rem 1rem 0 1rem;
   span:hover {
     cursor: pointer;
-    color: ${({ theme }) => darken(0.2, theme.text2)};
+    color: ${darken(0.2, "#4F658C")};
   }
 `;
 
-const Aligner = styled.span`
+const Aligner = styled("span")`
   display: flex;
   align-items: center;
   justify-content: space-between;
 `;
 
-const Balance = styled.div`
+const Balance = styled(Box)`
   font-weight: 600;
   font-size: 13px;
   line-height: 16px;
   text-transform: uppercase;
-  color: ${({ theme }) => theme.text2};
+  color: #4f658c;
 `;
 
 const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
@@ -85,18 +88,18 @@ const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
   height: 35%;
 
   path {
-    stroke: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
+    stroke: #ffffff;
     stroke-width: 1.5px;
   }
 `;
 
-const InputPanel = styled.div<{ hideInput?: boolean }>`
-  ${({ theme }) => theme.flexColumnNoWrap}
+const InputPanel = styled(Box)`
+  display: flex;
+  flex-flow: row nowrap;
   position: relative;
-  border-radius: ${({ hideInput }) => (hideInput ? "8px" : "20px")};
-  background-color: ${({ theme }) => theme.bg2};
+  border-radius: 8px;
+  background-color: #061023;
   z-index: 1;
-  border-radius: 12px;
 
   &#swap-currency-input {
     margin-bottom: -25px;
@@ -115,41 +118,39 @@ const InputPanel = styled.div<{ hideInput?: boolean }>`
   }
 `;
 
-const Container = styled.div<{ hideInput: boolean }>`
+const Container = styled(Box)<{ hideInput: boolean }>`
+  width: 100%;
   border-radius: ${({ hideInput }) => (hideInput ? "8px" : "20px")};
-  border: 1px solid ${({ theme }) => theme.bg2};
-  background-color: ${({ theme }) => theme.bg2};
+  border: 1px solid #061023;
+  background-color: #061023;
 `;
 
-const StyledTokenName = styled.span<{ active?: boolean }>`
+const StyledTokenName = styled("span")<{ active?: boolean }>`
+  text-transform: none;
+  font-size: ${({ active }) => (active ? "20px" : "16px")};
   ${({ active }) =>
     active
       ? "  margin: 0 0.25rem 0 0.75rem;"
       : "  margin: 0 0.25rem 0 0.25rem;"}
-  font-size:  ${({ active }) => (active ? "20px" : "16px")};
 `;
 
-const StyledBalanceMax = styled.button`
+const StyledBalanceMax = styled(Button)`
   height: 28px;
-  background-color: ${({ theme }) => theme.primary5};
-  border: 1px solid ${({ theme }) => theme.primary5};
+  background-color: #22354f;
+  border: 1px solid #22354f;
   border-radius: 0.5rem;
   font-size: 0.875rem;
 
   font-weight: 500;
   cursor: pointer;
-  color: ${({ theme }) => theme.primaryText1};
+  color: #43fff6;
   :hover {
-    border: 1px solid ${({ theme }) => theme.primary1};
+    border: 1px solid #253656;
   }
   :focus {
-    border: 1px solid ${({ theme }) => theme.primary1};
+    border: 1px solid #253656;
     outline: none;
   }
-
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    margin-right: 0.5rem;
-  `};
 `;
 
 interface CurrencyInputPanelProps {
@@ -187,15 +188,12 @@ const CurrencyInputPanel: FC<CurrencyInputPanelProps> = ({
   showCommonBases,
   customBalanceText,
 }) => {
-  const { t } = useTranslation();
-
   const [modalOpen, setModalOpen] = useState(false);
   const { account } = useActiveWeb3React();
   const selectedCurrencyBalance = useCurrencyBalance(
     account ?? undefined,
     currency ?? undefined
   );
-  const theme = useTheme();
 
   const handleDismissSearch = useCallback(() => {
     setModalOpen(false);
@@ -207,17 +205,16 @@ const CurrencyInputPanel: FC<CurrencyInputPanelProps> = ({
         {!hideInput && (
           <LabelRow>
             <RowBetween>
-              <TYPE.body color={theme?.text2} fontWeight={500} fontSize={14}>
+              <TYPE.main fontWeight={500} fontSize={14}>
                 {label}
-              </TYPE.body>
+              </TYPE.main>
               {account && (
-                <TYPE.body
+                <TYPE.main
                   onClick={onMax}
-                  color={theme?.text2}
                   fontWeight={500}
                   fontSize={14}
                   style={{ display: "inline", cursor: "pointer" }}
-                ></TYPE.body>
+                ></TYPE.main>
               )}
             </RowBetween>
           </LabelRow>
@@ -263,7 +260,7 @@ const CurrencyInputPanel: FC<CurrencyInputPanelProps> = ({
                           currency.symbol.length - 5,
                           currency.symbol.length
                         )
-                      : currency?.symbol) || t("selectToken")}
+                      : currency?.symbol) || "Select Token"}
                   </>
                 </StyledTokenName>
               )}

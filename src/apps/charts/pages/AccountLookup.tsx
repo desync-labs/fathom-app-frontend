@@ -1,21 +1,15 @@
 import { useEffect } from "react";
-import "feather-icons";
+import { useMedia } from "react-use";
+import { Box } from "@mui/material";
+
 import { TYPE } from "apps/charts/Theme";
 import { PageWrapper, FullWrapper } from "apps/charts/components";
 import LPList from "apps/charts/components/LPList";
-import styled from "styled-components";
 import AccountSearch from "apps/charts/components/AccountSearch";
 import { useTopLps } from "apps/charts/contexts/GlobalData";
 import LocalLoader from "apps/charts/components/LocalLoader";
 import { RowBetween } from "apps/charts/components/Row";
-import { useMedia } from "react-use";
 import Search from "apps/charts/components/Search";
-
-const AccountWrapper = styled.div`
-  @media screen and (max-width: 600px) {
-    width: 100%;
-  }
-`;
 
 const AccountLookup = () => {
   // scroll to top
@@ -34,9 +28,9 @@ const AccountLookup = () => {
           <TYPE.largeHeader>Wallet analytics</TYPE.largeHeader>
           {!below600 && <Search small={true} />}
         </RowBetween>
-        <AccountWrapper>
+        <Box>
           <AccountSearch />
-        </AccountWrapper>
+        </Box>
         {topLps && topLps.length > 0 ? (
           <>
             <TYPE.main fontSize={"1.125rem"} style={{ marginTop: "2rem" }}>

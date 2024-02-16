@@ -1,4 +1,5 @@
 /// <reference types="react-scripts" />
+declare module "@heroicons/*";
 
 type InjectProviderType = {
   isMetaMask?: true;
@@ -14,10 +15,6 @@ type InjectProviderType = {
 interface Window {
   ethereum?: InjectProviderType;
   web3?: {};
-}
-
-declare module "jazzicon" {
-  export default function (diameter: number, seed: number): HTMLElement;
 }
 
 declare module "fortmatic";

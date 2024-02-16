@@ -1,3 +1,6 @@
+import { useCallback, useMemo, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { BigNumber } from "fathom-ethers";
 import { splitSignature } from "@into-the-fathom/bytes";
 import { Contract } from "@into-the-fathom/contracts";
 import { TransactionResponse } from "@into-the-fathom/providers";
@@ -9,11 +12,9 @@ import {
   WETH,
   XDC,
 } from "into-the-fathom-swap-sdk";
-import { useCallback, useContext, useMemo, useState } from "react";
-import { ArrowDown, Plus } from "react-feather";
 import ReactGA from "react-ga4";
-import { Text } from "rebass";
-import styled, { ThemeContext } from "styled-components";
+import { Box, styled, Typography } from "@mui/material";
+
 import {
   ButtonPrimary,
   ButtonError,
@@ -29,16 +30,13 @@ import DoubleCurrencyLogo from "apps/dex/components/DoubleLogo";
 import { AddRemoveTabs } from "apps/dex/components/NavigationTabs";
 import { MinimalPositionCard } from "apps/dex/components/PositionCard";
 import Row, { RowBetween, RowFixed } from "apps/dex/components/Row";
-
 import Slider from "apps/dex/components/Slider";
 import CurrencyLogo from "apps/dex/components/CurrencyLogo";
 import { ROUTER_ADDRESSES } from "apps/dex/constants";
 import { useActiveWeb3React } from "apps/dex/hooks";
 import { useCurrency } from "apps/dex/hooks/Tokens";
 import { usePairContract } from "apps/dex/hooks/useContract";
-import useIsArgentWallet from "apps/dex/hooks/useIsArgentWallet";
 import useTransactionDeadline from "apps/dex/hooks/useTransactionDeadline";
-
 import { useTransactionAdder } from "apps/dex/state/transactions/hooks";
 import { StyledInternalLink, TYPE } from "apps/dex/theme";
 import {
@@ -64,19 +62,20 @@ import { useBurnActionHandlers } from "apps/dex/state/burn/hooks";
 import { useDerivedBurnInfo, useBurnState } from "apps/dex/state/burn/hooks";
 import { Field } from "apps/dex/state/burn/actions";
 import { useUserSlippageTolerance } from "apps/dex/state/user/hooks";
-import { BigNumber } from "fathom-ethers";
 import { ConnectWalletButton, WalletIcon } from "apps/dex/pages/Swap";
-import { useNavigate, useParams } from "react-router-dom";
-import useDexShared from "context/dexShared";
+import useConnector from "context/connector";
 
-const PlusWrapper = styled.div`
+import AddIcon from "@mui/icons-material/Add";
+import ArrowDownwardRoundedIcon from "@mui/icons-material/ArrowDownwardRounded";
+
+const PlusWrapper = styled(Box)`
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 10;
 `;
 
-const IconWrapper = styled.div`
+const IconWrapper = styled(Box)`
   width: 30px;
   height: 30px;
   display: flex;
@@ -103,10 +102,8 @@ const RemoveLiquidity = () => {
     [currencyA, currencyB, chainId]
   );
 
-  const theme = useContext(ThemeContext);
-
   // toggle wallet when disconnected
-  const { openConnectorMenu } = useDexShared();
+  const { openConnectorMenu } = useConnector();
 
   // burn state
   const { independentField, typedValue } = useBurnState();
@@ -170,17 +167,11 @@ const RemoveLiquidity = () => {
     ROUTER_ADDRESSES[chainId as ChainId]
   );
 
-  const isArgentWallet = useIsArgentWallet();
-
   async function onAttemptToApprove() {
     if (!pairContract || !pair || !library || !deadline)
       throw new Error("missing dependencies");
     const liquidityAmount = parsedAmounts[Field.LIQUIDITY];
     if (!liquidityAmount) throw new Error("missing liquidity amount");
-
-    if (isArgentWallet) {
-      return approveCallback();
-    }
 
     // try to gather a signature for permission
     const nonce = await pairContract.nonces(account);
@@ -442,38 +433,48 @@ const RemoveLiquidity = () => {
     return (
       <AutoColumn gap={"md"} style={{ marginTop: "20px" }}>
         <RowBetween align="flex-end">
-          <Text fontSize={24} fontWeight={500}>
+          <Typography fontSize={24} fontWeight={500}>
             {parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)}
-          </Text>
+          </Typography>
           <RowFixed gap="4px">
             <CurrencyLogo currency={currencyA} size={"24px"} />
-            <Text fontSize={24} fontWeight={500} style={{ marginLeft: "10px" }}>
+            <Typography
+              fontSize={24}
+              fontWeight={500}
+              style={{ marginLeft: "10px" }}
+            >
               {currencyA?.symbol}
-            </Text>
+            </Typography>
           </RowFixed>
         </RowBetween>
         <PlusWrapper>
           <ColumnCenter>
             <IconWrapper>
-              <Plus size="20" color={theme.bg2} />
+              <AddIcon
+                sx={{ width: "20px", height: "20px", color: "#061023" }}
+              />
             </IconWrapper>
           </ColumnCenter>
         </PlusWrapper>
         <RowBetween align="flex-end">
-          <Text fontSize={24} fontWeight={500}>
+          <Typography fontSize={24} fontWeight={500}>
             {parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)}
-          </Text>
+          </Typography>
           <RowFixed gap="4px">
             <CurrencyLogo currency={currencyB} size={"24px"} />
-            <Text fontSize={24} fontWeight={500} style={{ marginLeft: "10px" }}>
+            <Typography
+              fontSize={24}
+              fontWeight={500}
+              style={{ marginLeft: "10px" }}
+            >
               {currencyB?.symbol}
-            </Text>
+            </Typography>
           </RowFixed>
         </RowBetween>
 
         <TYPE.italic
           fontSize={12}
-          color={theme.text2}
+          color="#4f658c"
           textAlign="left"
           padding={"12px 0 0 0"}
         >
@@ -489,39 +490,39 @@ const RemoveLiquidity = () => {
     return (
       <>
         <RowBetween>
-          <Text color={theme.text2} fontWeight={500} fontSize={16}>
+          <Typography color="#4f658c" fontWeight={500} fontSize={16}>
             {"FTHM " + currencyA?.symbol + "/" + currencyB?.symbol} Burned
-          </Text>
+          </Typography>
           <RowFixed>
             <DoubleCurrencyLogo
               currency0={currencyA}
               currency1={currencyB}
               margin={true}
             />
-            <Text fontWeight={500} fontSize={16}>
+            <Typography fontWeight={500} fontSize={16}>
               {parsedAmounts[Field.LIQUIDITY]?.toSignificant(6)}
-            </Text>
+            </Typography>
           </RowFixed>
         </RowBetween>
         {pair && (
           <>
             <RowBetween>
-              <Text color={theme.text2} fontWeight={500} fontSize={16}>
+              <Typography color="#4f658c" fontWeight={500} fontSize={16}>
                 Price
-              </Text>
-              <Text fontWeight={500} fontSize={16} color={theme.text1}>
+              </Typography>
+              <Typography fontWeight={500} fontSize={16} color="#ffffff">
                 1 {currencyA?.symbol} ={" "}
                 {tokenA ? pair.priceOf(tokenA).toSignificant(6) : "-"}{" "}
                 {currencyB?.symbol}
-              </Text>
+              </Typography>
             </RowBetween>
             <RowBetween>
               <div />
-              <Text fontWeight={500} fontSize={16} color={theme.text1}>
+              <Typography fontWeight={500} fontSize={16} color="#ffffff">
                 1 {currencyB?.symbol} ={" "}
                 {tokenB ? pair.priceOf(tokenB).toSignificant(6) : "-"}{" "}
                 {currencyA?.symbol}
-              </Text>
+              </Typography>
             </RowBetween>
           </>
         )}
@@ -531,9 +532,9 @@ const RemoveLiquidity = () => {
           }
           onClick={onRemove}
         >
-          <Text fontWeight={500} fontSize={20}>
+          <Typography fontWeight={500} fontSize={20}>
             Confirm
-          </Text>
+          </Typography>
         </ButtonPrimary>
       </>
     );
@@ -619,18 +620,18 @@ const RemoveLiquidity = () => {
           <AutoColumn gap="md">
             <BlueCard>
               <AutoColumn gap="10px">
-                <TYPE.link fontWeight={400} color={"text1"}>
+                <TYPE.white fontWeight={400}>
                   <b>Tip:</b> Removing pool tokens converts your position back
                   into underlying tokens at the current rate, proportional to
                   your share of the pool. Accrued fees are included in the
                   amounts you receive.
-                </TYPE.link>
+                </TYPE.white>
               </AutoColumn>
             </BlueCard>
             <LightCard>
               <AutoColumn gap="20px">
                 <RowBetween>
-                  <Text fontWeight={500}>Amount</Text>
+                  <Typography fontWeight={500}>Amount</Typography>
                   <ClickableText
                     fontWeight={500}
                     onClick={() => {
@@ -641,9 +642,9 @@ const RemoveLiquidity = () => {
                   </ClickableText>
                 </RowBetween>
                 <Row style={{ alignItems: "flex-end" }}>
-                  <Text fontSize={72} fontWeight={500}>
+                  <Typography fontSize={72} fontWeight={500}>
                     {formattedAmounts[Field.LIQUIDITY_PERCENT]}%
-                  </Text>
+                  </Typography>
                 </Row>
                 {!showDetailed && (
                   <>
@@ -694,46 +695,48 @@ const RemoveLiquidity = () => {
                 <ColumnCenter>
                   <ArrowWrapper clickable={false}>
                     <ArrowDownWrapped>
-                      <ArrowDown size="20" color={theme.black} />
+                      <ArrowDownwardRoundedIcon
+                        sx={{ width: "20px", height: "20px", color: "#000" }}
+                      />
                     </ArrowDownWrapped>
                   </ArrowWrapper>
                 </ColumnCenter>
                 <LightCard>
                   <AutoColumn gap="10px">
                     <RowBetween>
-                      <Text fontSize={24} fontWeight={500}>
+                      <Typography fontSize={24} fontWeight={500}>
                         {formattedAmounts[Field.CURRENCY_A] || "-"}
-                      </Text>
+                      </Typography>
                       <RowFixed>
                         <CurrencyLogo
                           currency={currencyA}
                           style={{ marginRight: "12px" }}
                         />
-                        <Text
+                        <Typography
                           fontSize={24}
                           fontWeight={500}
                           id="remove-liquidity-tokena-symbol"
                         >
                           {currencyA?.symbol}
-                        </Text>
+                        </Typography>
                       </RowFixed>
                     </RowBetween>
                     <RowBetween>
-                      <Text fontSize={24} fontWeight={500}>
+                      <Typography fontSize={24} fontWeight={500}>
                         {formattedAmounts[Field.CURRENCY_B] || "-"}
-                      </Text>
+                      </Typography>
                       <RowFixed>
                         <CurrencyLogo
                           currency={currencyB}
                           style={{ marginRight: "12px" }}
                         />
-                        <Text
+                        <Typography
                           fontSize={24}
                           fontWeight={500}
                           id="remove-liquidity-tokenb-symbol"
                         >
                           {currencyB?.symbol}
-                        </Text>
+                        </Typography>
                       </RowFixed>
                     </RowBetween>
                     {chainId && (oneCurrencyIsWETH || oneCurrencyIsXDC) ? (
@@ -793,7 +796,9 @@ const RemoveLiquidity = () => {
                 <ColumnCenter>
                   <ArrowWrapper clickable={false}>
                     <ArrowDownWrapped>
-                      <ArrowDown size="20" color={theme.black} />
+                      <ArrowDownwardRoundedIcon
+                        sx={{ width: "20px", height: "20px", color: "#000" }}
+                      />
                     </ArrowDownWrapped>
                   </ArrowWrapper>
                 </ColumnCenter>
@@ -811,7 +816,9 @@ const RemoveLiquidity = () => {
                 <PlusWrapper>
                   <ColumnCenter>
                     <IconWrapper>
-                      <Plus size="20" color={theme.bg2} />
+                      <AddIcon
+                        sx={{ width: "20px", height: "20px", color: "#061023" }}
+                      />
                     </IconWrapper>
                   </ColumnCenter>
                 </PlusWrapper>
@@ -866,9 +873,11 @@ const RemoveLiquidity = () => {
                       approval !== ApprovalState.NOT_APPROVED ||
                       signatureData !== null
                     }
-                    mr="0.5rem"
-                    fontWeight={500}
-                    fontSize={16}
+                    sx={{
+                      marginRight: "0.5rem",
+                      fontWeight: 500,
+                      fontSize: 16,
+                    }}
                   >
                     {approval === ApprovalState.PENDING ? (
                       <Dots>Approving</Dots>
@@ -894,9 +903,9 @@ const RemoveLiquidity = () => {
                       !!parsedAmounts[Field.CURRENCY_B]
                     }
                   >
-                    <Text fontSize={16} fontWeight={500}>
+                    <Typography fontSize={16} fontWeight={500}>
                       {error || "Remove"}
-                    </Text>
+                    </Typography>
                   </ButtonError>
                 </RowBetween>
               )}

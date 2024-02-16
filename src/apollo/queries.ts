@@ -218,26 +218,24 @@ export const VAULTS = gql`
       sharesSupply
       balanceTokens
       balanceTokensIdle
-      totalDebtAmount
       depositLimit
-      totalFees
-      protocolFees
-      protocolFeeRecipient
+      apr
       strategies {
         id
         delegatedAssets
         currentDebt
         maxDebt
+        apr
+        historicalApr {
+          id
+          apr
+          timestamp
+        }
         reports(orderBy: timestamp, orderDirection: desc) {
-          totalFees
-          protocolFees
           timestamp
           gain
           loss
           currentDebt
-          results {
-            apr
-          }
         }
       }
     }
@@ -263,6 +261,27 @@ export const ACCOUNT_VAULT_POSITIONS = gql`
         symbol
         name
       }
+    }
+  }
+`;
+
+export const VAULT_FACTORIES = gql`
+  query VaultFactories {
+    factories {
+      feeRecipient
+      id
+      protocolFee
+      timestamp
+      vaultPackage
+      vaults {
+        id
+      }
+    }
+    accountants {
+      id
+      feeRecipient
+      performanceFee
+      timestamp
     }
   }
 `;
