@@ -620,12 +620,12 @@ const RemoveLiquidity = () => {
           <AutoColumn gap="md">
             <BlueCard>
               <AutoColumn gap="10px">
-                <TYPE.link fontWeight={400} color={"text1"}>
+                <TYPE.white fontWeight={400}>
                   <b>Tip:</b> Removing pool tokens converts your position back
                   into underlying tokens at the current rate, proportional to
                   your share of the pool. Accrued fees are included in the
                   amounts you receive.
-                </TYPE.link>
+                </TYPE.white>
               </AutoColumn>
             </BlueCard>
             <LightCard>
