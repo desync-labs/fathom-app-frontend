@@ -24,6 +24,6 @@ export const themeObject = createTheme({
   },
   // @ts-ignore
   typography: {
-    fontFamily: ["Inter, sans-serif"].join(","),
+    fontFamily: "Inter, sans-serif",
   },
 });
