@@ -44,7 +44,7 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
         const xdcPromise = oracleService.getXdcPrice();
 
         const pricesPromise = fetch(
-          `https://pro-api.coingecko.com/api/v3/simple/price?ids=fathom-dollar,fathom-protocol&vs_currencies=usd&x_cg_pro_api_key=${process.env.REACT_APP_COINGEKO_API_KEY}`
+          process.env.REACT_APP_PRICE_FEED_URL as string
         )
           .then((data) => data.json())
           .then((response) => ({
@@ -58,9 +58,9 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
 
         Promise.all([pricesPromise, xdcPromise])
           .then(([prices, xdcPrice]) => {
-            setXdcPrice(xdcPrice[0].toString());
             setFxdPrice(prices.fxd);
             setFthmPrice(prices.fthm);
+            setXdcPrice(xdcPrice[0].toString());
 
             const prevPriceData = localStorage.getItem("prevPrice");
             const startOfDay = dayjs().startOf("day").unix();
