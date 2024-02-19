@@ -72,7 +72,11 @@ const ConfirmationPendingContent: FC<ConfirmationPendingContentProps> = ({
           <CustomLightSpinner src={Circle} alt="loader" size={"90px"} />
         </ConfirmedIcon>
         <AutoColumn gap="12px" justify={"center"}>
-          <Typography fontWeight={500} fontSize={20}>
+          <Typography
+            fontWeight={500}
+            fontSize={20}
+            data-testid="dex-waitingForConfirmationModal-headerText"
+          >
             Waiting For Confirmation
           </Typography>
           <AutoColumn gap="12px" justify={"center"}>
@@ -81,11 +85,17 @@ const ConfirmationPendingContent: FC<ConfirmationPendingContentProps> = ({
               fontSize={14}
               color=""
               textAlign="center"
+              data-testid="dex-waitingForConfirmationModal-bodyText"
             >
               {pendingText}
             </Typography>
           </AutoColumn>
-          <Typography fontSize={12} color="#565A69" textAlign="center">
+          <Typography
+            fontSize={12}
+            color="#565A69"
+            textAlign="center"
+            data-testid="dex-waitingForConfirmationModal-footerText"
+          >
             Confirm this transaction in your wallet
           </Typography>
         </AutoColumn>
@@ -126,12 +136,21 @@ function TransactionSubmittedContent({
           />
         </ConfirmedIcon>
         <AutoColumn gap="12px" justify={"center"}>
-          <Typography fontWeight={500} fontSize={20}>
+          <Typography
+            fontWeight={500}
+            fontSize={20}
+            data-testid="dex-transactionSubmittedModal-headerText"
+          >
             Transaction Submitted
           </Typography>
           {chainId && hash && (
             <ExternalLink href={getBlockScanLink(chainId, hash, "transaction")}>
-              <Typography fontWeight={600} fontSize={14} color="#4F658C">
+              <Typography
+                fontWeight={600}
+                fontSize={14}
+                color="#4F658C"
+                data-testid="dex-transactionSubmittedModal-footerText"
+              >
                 View on Blocksscan
               </Typography>
             </ExternalLink>
@@ -164,7 +183,11 @@ function TransactionSubmittedContent({
             </ButtonLight>
           )}
           <ButtonPrimary onClick={onDismiss} style={{ margin: "20px 0 0 0" }}>
-            <Typography fontWeight={500} fontSize={20}>
+            <Typography
+              fontWeight={500}
+              fontSize={20}
+              data-testid="dex-transactionSubmittedModal-closeButton"
+            >
               Close
             </Typography>
           </ButtonPrimary>
