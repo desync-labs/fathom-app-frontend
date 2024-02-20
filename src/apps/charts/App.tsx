@@ -66,7 +66,7 @@ const WarningBanner = styled("span")`
 `;
 
 /**
- * Wrap the component with the header and sidebar pinned tab
+ * Wrap the component with the header and sidebar-pinned tab
  */
 
 type LayoutWrapperProps = {

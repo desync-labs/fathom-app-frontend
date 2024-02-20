@@ -5,7 +5,6 @@ import { Box, styled } from "@mui/material";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { formattedNum } from "apps/charts/utils";
-import { useDarkModeManager } from "apps/charts/contexts/LocalStorage";
 import { IconWrapper } from "apps/charts/components";
 
 import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
@@ -57,9 +56,7 @@ const TradingViewChart: FC<TradingViewChartProps> = (props) => {
   const [chartCreated, setChartCreated] = useState<IChartApi | null>(null);
   const dataPrev = usePrevious(data);
 
-  const [darkMode] = useDarkModeManager();
   const textColor = "#6379A1";
-  const previousTheme = usePrevious(darkMode);
 
   useEffect(() => {
     if (data !== dataPrev && chartCreated && type === CHART_TYPES.BAR) {
@@ -85,18 +82,6 @@ const TradingViewChart: FC<TradingViewChartProps> = (props) => {
 
   // adjust the scale based on the type of chart
   const topScale = type === CHART_TYPES.AREA ? 0.32 : 0.2;
-
-  // reset the chart if them switches
-  useEffect(() => {
-    if (chartCreated && previousTheme !== darkMode) {
-      // remove the tooltip element
-      const tooltip = document.getElementById("tooltip-id" + type);
-      const node = document.getElementById("test-id" + type);
-      node?.removeChild(tooltip as HTMLElement);
-      chartCreated.resize(0, 0);
-      setChartCreated(null);
-    }
-  }, [chartCreated, darkMode, previousTheme, type]);
 
   // if no chart created yet, create one with options and add to DOM manually
   useEffect(() => {
@@ -170,9 +155,7 @@ const TradingViewChart: FC<TradingViewChartProps> = (props) => {
       series.setData(formattedData);
       const toolTip = document.createElement("div");
       toolTip.setAttribute("id", "tooltip-id" + type);
-      toolTip.className = darkMode
-        ? "three-line-legend-dark"
-        : "three-line-legend";
+      toolTip.className = "three-line-legend-dark";
       (ref.current as HTMLElement).appendChild(toolTip);
       toolTip.style.display = "block";
       toolTip.style.fontWeight = "500";
@@ -266,7 +249,6 @@ ${formattedPercentChange}
     base,
     baseChange,
     chartCreated,
-    darkMode,
     data,
     formattedData,
     textColor,

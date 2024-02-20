@@ -29,7 +29,7 @@ import {
 import DropdownSelect from "apps/charts/components/DropdownSelect";
 import CandleStickChart from "apps/charts/components/CandleChart";
 import LocalLoader from "apps/charts/components/LocalLoader";
-import { useDarkModeManager } from "apps/charts/contexts/LocalStorage";
+import useSharedContext from "context/shared";
 
 const ChartWrapper = styled(Box)`
   height: 100%;
@@ -82,9 +82,9 @@ const TokenChart: FC<TokenChartProps> = (props) => {
   // settings for the window and candle width
   const [chartFilter, setChartFilter] = useState(CHART_VIEW.PRICE);
   const [frequency, setFrequency] = useState(DATA_FREQUENCY.HOUR);
+  const { isMobile } = useSharedContext();
 
-  const [darkMode] = useDarkModeManager();
-  const textColor = darkMode ? "white" : "black";
+  const textColor = "white";
 
   // reset view on new address
   const addressPrev = usePrevious(address);
@@ -194,6 +194,7 @@ const TokenChart: FC<TokenChartProps> = (props) => {
             setActive={setTimeWindow}
             color={"#5a81ff"}
             shadow={"0 0 8px #003cff"}
+            style={{ paddingRight: isMobile ? "1.25rem" : "0" }}
           />
         </RowBetween>
       ) : (

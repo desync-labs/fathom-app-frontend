@@ -68,6 +68,7 @@ import { LayoutWrapper } from "apps/charts/App";
 import AppPopover from "components/AppComponents/AppPopover/AppPopover";
 
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import useSharedContext from "context/shared";
 
 const DashboardWrapper = styled(Box)`
   width: 100%;
@@ -186,6 +187,7 @@ const PairPage: FC<{ pairAddress: string }> = memo(({ pairAddress }) => {
   }, []);
 
   const [savedPairs, addPair, removePair] = useSavedPairs();
+  const { isMobile } = useSharedContext();
 
   const listedTokens = useListedTokens();
 
@@ -579,6 +581,7 @@ const PairPage: FC<{ pairAddress: string }> = memo(({ pairAddress }) => {
                   style={{
                     gridColumn: below1080 ? "1" : "2/4",
                     gridRow: below1080 ? "" : "1/5",
+                    padding: isMobile ? "1.25rem 0 1.25rem 1.25rem" : "1.25rem",
                   }}
                 >
                   <PairChart

@@ -4,7 +4,6 @@ import { createChart, CrosshairMode, IChartApi } from "lightweight-charts";
 import dayjs from "dayjs";
 import { formattedNum } from "apps/charts/utils";
 import { usePrevious } from "react-use";
-import { useDarkModeManager } from "apps/charts/contexts/LocalStorage";
 
 import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
 
@@ -76,21 +75,7 @@ const CandleStickChart: FC<CandleStickChartProps> = ({
   const [chartCreated, setChartCreated] = useState<IChartApi | null>(null);
   const dataPrev = usePrevious(data);
 
-  const [darkMode] = useDarkModeManager();
-  const textColor = darkMode ? "white" : "black";
-  const previousTheme = usePrevious(darkMode);
-
-  // reset the chart if theme switches
-  useEffect(() => {
-    if (chartCreated && previousTheme !== darkMode) {
-      // remove the tooltip element
-      const tooltip = document.getElementById("tooltip-id");
-      const node = document.getElementById("test-id");
-      node?.removeChild(tooltip as HTMLElement);
-      (chartCreated as any).resize(0, 0);
-      setChartCreated(null);
-    }
-  }, [chartCreated, darkMode, previousTheme]);
+  const textColor = "white";
 
   useEffect(() => {
     if (data !== dataPrev && chartCreated) {

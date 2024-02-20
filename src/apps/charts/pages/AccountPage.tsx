@@ -42,6 +42,7 @@ import { Position } from "apps/charts/utils/returns";
 import { LayoutWrapper } from "apps/charts/App";
 
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import useSharedContext from "context/shared";
 
 const AccountWrapper = styled(Box)`
   background-color: transparent;
@@ -170,6 +171,7 @@ const AccountPage: FC<AccountPageProps> = memo((props) => {
   // get data for this account
   const transactions = useUserTransactions(account);
   const positions = useUserPositions(account);
+  const { isMobile } = useSharedContext();
 
   // get data for user stats
   const transactionCount =
@@ -449,7 +451,12 @@ const AccountPage: FC<AccountPageProps> = memo((props) => {
           )}
           {!hideLPContent && (
             <PanelWrapper>
-              <Panel style={{ gridColumn: "1" }}>
+              <Panel
+                style={{
+                  gridColumn: "1",
+                  padding: isMobile ? "1.25rem 0 1.25rem 1.25rem" : "1.25rem",
+                }}
+              >
                 {activePosition ? (
                   <PairReturnsChart
                     account={account}
