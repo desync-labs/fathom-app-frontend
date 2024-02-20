@@ -180,7 +180,6 @@ const TopTokenList: FC<TopTokenListProps> = (props) => {
 
   const below1080 = useMedia("(max-width: 1080px)");
   const below680 = useMedia("(max-width: 680px)");
-  const below600 = useMedia("(max-width: 600px)");
 
   useEffect(() => {
     setMaxPage(1); // edit this to do modular
@@ -237,7 +236,7 @@ const TopTokenList: FC<TopTokenListProps> = (props) => {
             <TableHeaderBox>ID</TableHeaderBox>
           </Flex>
         )}
-        <Flex justifyContent={below600 ? "flex-start" : "center"}>
+        <Flex sx={{ justifyContent: "flex-start" }}>
           <ClickableText
             color="text"
             fontWeight="500"
