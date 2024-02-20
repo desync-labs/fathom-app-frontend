@@ -70,12 +70,6 @@ export const PageWrapper = styled(Box)`
   flex-direction: column;
   padding-top: 36px;
   padding-bottom: 80px;
-
-  @media screen and (max-width: 600px) {
-    & > * {
-      padding: 0 12px;
-    }
-  }
 `;
 
 export const ContentWrapper = styled(Box)`

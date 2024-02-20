@@ -52,17 +52,22 @@ type ButtonDropdownProps = {
 export const ButtonDropdown: FC<ButtonDropdownProps> = memo(
   ({ disabled = false, children, open, ...rest }) => {
     return (
-      <ButtonFaded {...rest} disabled={disabled} open={open}>
+      <ButtonFaded
+        {...rest}
+        disabled={disabled}
+        open={open}
+        className={open ? "expanded" : ""}
+      >
         <RowBetween>
           <div style={{ display: "flex", alignItems: "center" }}>
             {children}
           </div>
           {open ? (
-            <StyledIcon>
+            <StyledIcon sx={{ color: "#fff" }}>
               <ExpandLessIcon />
             </StyledIcon>
           ) : (
-            <StyledIcon>
+            <StyledIcon sx={{ color: "#fff" }}>
               <ExpandMoreIcon />
             </StyledIcon>
           )}
@@ -92,9 +97,20 @@ export const ButtonFaded = styled(Base)`
   color: rgba(255, 255, 255, 0.5);
   white-space: nowrap;
   border: 1px solid #253656;
+  border-radius: 8px;
   padding: 6px 12px;
   :hover {
-    opacity: 0.5;
+    border: 1px solid rgb(90, 129, 255);
+    box-shadow: rgb(0, 60, 255) 0 0 8px;
+    background-color: #0e1d34;
+  }
+  &.expanded {
+    border-radius: 8px 8px 0 0;
+  }
+  @media (max-width: 768px) {
+    :hover {
+      opacity: 1;
+    }
   }
 `;
 
