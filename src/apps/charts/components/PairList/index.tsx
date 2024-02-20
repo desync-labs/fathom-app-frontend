@@ -43,8 +43,6 @@ const DashGrid = styled(Box)<{ fade?: boolean }>`
   opacity: ${({ fade }) => (fade ? "0.6" : "1")};
 
   > * {
-    justify-content: flex-end;
-
     :first-of-type {
       justify-content: flex-start;
       text-align: left;
@@ -212,7 +210,7 @@ const ListItem: FC<ListItemProps> = memo((props) => {
           />
           <CustomLink
             style={{
-              marginLeft: "20px",
+              marginLeft: "14px",
               whiteSpace: "nowrap",
               fontSize: "inherit",
             }}
@@ -360,7 +358,10 @@ const PairList: FC<PairListProps> = (props) => {
             <TableHeaderBox>ID</TableHeaderBox>
           </Flex>
         )}
-        <Flex alignItems="center" justifyContent="flex-start">
+        <Flex
+          alignItems="center"
+          justifyContent={below600 ? "flex-start" : "center"}
+        >
           <TableHeaderBox>Name</TableHeaderBox>
         </Flex>
         <Flex alignItems="center" justifyContent="center">
@@ -456,6 +457,7 @@ const PairList: FC<PairListProps> = (props) => {
                   sortedColumn !== SORT_FIELD.APY ? true : !sortDirection
                 );
               }}
+              sx={{ width: "min-content" }}
             >
               <TableHeaderBox>
                 1y Fees / Liquidity{" "}

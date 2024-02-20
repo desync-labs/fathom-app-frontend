@@ -7,9 +7,10 @@ import {
   SetStateAction,
   FC,
   memo,
+  MouseEvent,
 } from "react";
 import { Navigate, useParams } from "react-router-dom";
-import { Box, styled } from "@mui/material";
+import { Box, Fade, Menu, styled } from "@mui/material";
 import { useMedia } from "react-use";
 import {
   useUserTransactions,
@@ -58,22 +59,22 @@ const DashboardWrapper = styled(Box)`
 const DropdownWrapper = styled(Box)`
   position: relative;
   margin-bottom: 1rem;
-  border: 1px solid #253656;
-  border-radius: 12px;
 `;
 
-const Flyout = styled(Box)`
-  position: absolute;
-  top: 38px;
-  left: -1px;
-  width: 100%;
-  background-color: #0e1d34;
-  z-index: 999;
-  border-bottom-right-radius: 10px;
-  border-bottom-left-radius: 10px;
-  padding-top: 4px;
-  border: 1px solid #253656;
-  border-top: none;
+const DropdownMenu = styled(Menu)<{ hide?: boolean }>`
+  .MuiPaper-root {
+    max-width: unset;
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0.04), 0 4px 8px rgba(0, 0, 0, 0.04),
+      0 16px 24px rgba(0, 0, 0, 0.04), 0 24px 32px rgba(0, 0, 0, 0.04);
+    @media screen and (max-width: 600px) {
+      margin-left: -6px;
+    }
+  }
+  .MuiList-root {
+    border-radius: 0 0 8px 8px;
+    border: 1px solid #253656;
+    background: #0e1d34;
+  }
 `;
 
 const MenuRow = styled(Row)`
@@ -82,7 +83,7 @@ const MenuRow = styled(Row)`
 
   :hover {
     cursor: pointer;
-    background-color: #2c2f36;
+    background-color: rgba(0, 255, 246, 0.16);
   }
 `;
 
@@ -205,8 +206,18 @@ const AccountPage: FC<AccountPageProps> = memo((props) => {
 
   // settings for list view and dropdowns
   const hideLPContent = positions && positions.length === 0;
-  const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const [activePosition, setActivePosition] = useState<Position | null>(null);
+  const [anchorDropdown, setAnchorDropdown] = useState<null | HTMLElement>(
+    null
+  );
+  const openDropdown = Boolean(anchorDropdown);
+
+  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
+    setAnchorDropdown(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorDropdown(null);
+  };
 
   const dynamicPositions = activePosition ? [activePosition] : positions;
 
@@ -315,11 +326,23 @@ const AccountPage: FC<AccountPageProps> = memo((props) => {
           {!hideLPContent && (
             <DropdownWrapper>
               <ButtonDropdown
+                open={openDropdown}
                 width="100%"
-                onClick={() => setShowDropdown(!showDropdown)}
-                open={showDropdown}
+                onClick={handleClick}
               >
-                {!activePosition && (
+                {activePosition ? (
+                  <RowFixed>
+                    <DoubleTokenLogo
+                      a0={activePosition.pair?.token0.id}
+                      a1={activePosition.pair?.token1.id}
+                      size={16}
+                    />
+                    <TYPE.body ml={"16px"}>
+                      {activePosition.pair?.token0.symbol}-
+                      {activePosition.pair?.token1.symbol} Position
+                    </TYPE.body>
+                  </RowFixed>
+                ) : (
                   <RowFixed>
                     <StyledIcon>
                       <ActivityIcon />
@@ -327,72 +350,65 @@ const AccountPage: FC<AccountPageProps> = memo((props) => {
                     <TYPE.body ml={"10px"}>All Positions</TYPE.body>
                   </RowFixed>
                 )}
-                {activePosition && (
-                  <RowFixed>
-                    {activePosition && (
-                      <DoubleTokenLogo
-                        a0={activePosition.pair?.token0.id}
-                        a1={activePosition.pair?.token1.id}
-                        size={16}
-                      />
-                    )}
-                    <TYPE.body ml={"16px"}>
-                      {activePosition.pair?.token0.symbol}-
-                      {activePosition.pair?.token1.symbol} Position
-                    </TYPE.body>
-                  </RowFixed>
-                )}
               </ButtonDropdown>
-              {showDropdown && (
-                <Flyout>
-                  <AutoColumn gap="0px">
-                    {positions?.map((p: any, i: any) => {
-                      if (p.pair?.token1.symbol === "WXDC") {
-                        p.pair.token1.symbol = "XDC";
-                      }
-                      if (p.pair?.token0.symbol === "WXDC") {
-                        p.pair.token0.symbol = "XDC";
-                      }
-                      return (
-                        p.pair?.id !== activePosition?.pair.id && (
-                          <MenuRow
-                            onClick={() => {
-                              setActivePosition(p);
-                              setShowDropdown(false);
-                            }}
-                            key={i}
-                          >
-                            <DoubleTokenLogo
-                              a0={p.pair?.token0.id}
-                              a1={p.pair?.token1.id}
-                              size={16}
-                            />
-                            <TYPE.body ml={"16px"}>
-                              {p.pair?.token0.symbol}-{p.pair?.token1.symbol}{" "}
-                              Position
-                            </TYPE.body>
-                          </MenuRow>
-                        )
-                      );
-                    })}
-                    {activePosition && (
-                      <MenuRow
-                        onClick={() => {
-                          setActivePosition(null);
-                          setShowDropdown(false);
-                        }}
-                      >
-                        <RowFixed>
-                          <StyledIcon>
-                            <ActivityIcon />
-                          </StyledIcon>
-                          <TYPE.body ml={"10px"}>All Positions</TYPE.body>
-                        </RowFixed>
-                      </MenuRow>
-                    )}
-                  </AutoColumn>
-                </Flyout>
-              )}
+              <DropdownMenu
+                anchorEl={anchorDropdown}
+                open={openDropdown}
+                keepMounted
+                onClose={handleClose}
+                MenuListProps={{
+                  "aria-labelledby": "basic-button",
+                  sx: { width: anchorDropdown && anchorDropdown.offsetWidth },
+                }}
+                TransitionComponent={Fade}
+              >
+                <AutoColumn gap="0px">
+                  {positions?.map((p: any, i: any) => {
+                    if (p.pair?.token1.symbol === "WXDC") {
+                      p.pair.token1.symbol = "XDC";
+                    }
+                    if (p.pair?.token0.symbol === "WXDC") {
+                      p.pair.token0.symbol = "XDC";
+                    }
+                    return (
+                      p.pair?.id !== activePosition?.pair.id && (
+                        <MenuRow
+                          onClick={() => {
+                            setActivePosition(p);
+                            handleClose();
+                          }}
+                          key={i}
+                        >
+                          <DoubleTokenLogo
+                            a0={p.pair?.token0.id}
+                            a1={p.pair?.token1.id}
+                            size={16}
+                          />
+                          <TYPE.body ml={"16px"}>
+                            {p.pair?.token0.symbol}-{p.pair?.token1.symbol}{" "}
+                            Position
+                          </TYPE.body>
+                        </MenuRow>
+                      )
+                    );
+                  })}
+                  {activePosition && (
+                    <MenuRow
+                      onClick={() => {
+                        setActivePosition(null);
+                        handleClose();
+                      }}
+                    >
+                      <RowFixed>
+                        <StyledIcon>
+                          <ActivityIcon />
+                        </StyledIcon>
+                        <TYPE.body ml={"10px"}>All Positions</TYPE.body>
+                      </RowFixed>
+                    </MenuRow>
+                  )}
+                </AutoColumn>
+              </DropdownMenu>
             </DropdownWrapper>
           )}
           {!hideLPContent && (
