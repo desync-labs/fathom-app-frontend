@@ -33,6 +33,7 @@ type DropdownSelectProps = {
   setActive: any;
   color?: string;
   shadow?: string;
+  style?: Record<string, any>;
 };
 
 const DropdownSelect: FC<DropdownSelectProps> = (props) => {
@@ -44,7 +45,7 @@ const DropdownSelect: FC<DropdownSelectProps> = (props) => {
   console.log("Props", props);
 
   return (
-    <Wrapper size="small">
+    <Wrapper size="small" style={props.style}>
       <Select id="app-select" value={active} onChange={handleChange}>
         {Object.keys(options).map((key, index) => {
           const option = options[key];
