@@ -66,6 +66,7 @@ import { LayoutWrapper } from "apps/charts/App";
 import AppPopover from "components/AppComponents/AppPopover/AppPopover";
 
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import useSharedContext from "context/shared";
 
 const DashboardWrapper = styled(Box)`
   width: 100%;
@@ -145,6 +146,8 @@ const TokenPage: FC<{ address: string }> = memo(({ address }) => {
     oneDayTxns,
     txnChange,
   } = useTokenData(address);
+
+  const { isMobile } = useSharedContext();
 
   useEffect(() => {
     (document.querySelector("body") as HTMLBodyElement).scrollTo(0, 0);
@@ -434,6 +437,7 @@ const TokenPage: FC<{ address: string }> = memo(({ address }) => {
                   style={{
                     gridColumn: below1080 ? "1" : "2/4",
                     gridRow: below1080 ? "" : "1/4",
+                    padding: isMobile ? "1.25rem 0 1.25rem 1.25rem" : "1.25rem",
                   }}
                 >
                   <TokenChart

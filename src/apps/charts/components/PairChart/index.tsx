@@ -31,7 +31,7 @@ import { EmptyCard } from "apps/charts/components";
 import DropdownSelect from "apps/charts/components/DropdownSelect";
 import CandleStickChart from "apps/charts/components/CandleChart";
 import LocalLoader from "apps/charts/components/LocalLoader";
-import { useDarkModeManager } from "apps/charts/contexts/LocalStorage";
+import useSharedContext from "context/shared";
 
 const ChartWrapper = styled(Box)`
   height: 100%;
@@ -69,9 +69,9 @@ const PairChart: FC<PairChartProps> = (props) => {
   const [chartFilter, setChartFilter] = useState(CHART_VIEW.LIQUIDITY);
 
   const [timeWindow, setTimeWindow] = useState(timeframeOptions.MONTH);
+  const { isMobile } = useSharedContext();
 
-  const [darkMode] = useDarkModeManager();
-  const textColor = darkMode ? "white" : "black";
+  const textColor = "white";
 
   // update the width on a window resize
   const ref = useRef<HTMLDivElement>(null);
@@ -173,6 +173,7 @@ const PairChart: FC<PairChartProps> = (props) => {
             setActive={setTimeWindow}
             color={"#5a81ff"}
             shadow={"0 0 8px #003cff"}
+            style={{ paddingRight: isMobile ? "1.25rem" : "0" }}
           />
         </RowBetween>
       ) : (

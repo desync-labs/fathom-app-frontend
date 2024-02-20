@@ -23,6 +23,7 @@ import DropdownSelect from "apps/charts/components/DropdownSelect";
 import { useUserLiquidityChart } from "apps/charts/contexts/User";
 import LocalLoader from "apps/charts/components/LocalLoader";
 import { TYPE } from "apps/charts/Theme";
+import useSharedContext from "context/shared";
 
 const ChartWrapper = styled(Box)`
   height: 100%;
@@ -45,6 +46,7 @@ const UserChart: FC<UserChartsProps> = ({ account }) => {
 
   const below600 = useMedia("(max-width: 600px)");
   const above1600 = useMedia("(min-width: 1600px)");
+  const { isMobile } = useSharedContext();
 
   const domain = [
     (dataMin: any) => (dataMin > utcStartTime ? dataMin : utcStartTime),
@@ -66,6 +68,7 @@ const UserChart: FC<UserChartsProps> = ({ account }) => {
             setActive={setTimeWindow}
             color={"#5a81ff"}
             shadow={"0 0 8px #003cff"}
+            style={{ paddingRight: isMobile ? "1.25rem" : "0" }}
           />
         </RowBetween>
       ) : (

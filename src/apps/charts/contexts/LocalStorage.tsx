@@ -19,10 +19,7 @@ const SAVED_ACCOUNTS = "SAVED_ACCOUNTS";
 const SAVED_TOKENS = "SAVED_TOKENS";
 const SAVED_PAIRS = "SAVED_PAIRS";
 
-const DARK_MODE = "DARK_MODE";
-
 const UPDATABLE_KEYS = [
-  DARK_MODE,
   DISMISSED_PATHS,
   SAVED_ACCOUNTS,
   SAVED_PAIRS,
@@ -33,7 +30,6 @@ const UPDATE_KEY = "UPDATE_KEY";
 
 type State = {
   [VERSION]: string;
-  [DARK_MODE]: boolean;
   [DISMISSED_PATHS]: Record<string, any>;
   [SAVED_ACCOUNTS]: string[];
   [SAVED_TOKENS]: Record<string, any>;
@@ -71,7 +67,6 @@ function reducer(
 function init() {
   const defaultLocalStorage = {
     [VERSION]: CURRENT_VERSION,
-    [DARK_MODE]: true,
     [DISMISSED_PATHS]: {},
     [SAVED_ACCOUNTS]: [],
     [SAVED_TOKENS]: {},
@@ -126,26 +121,6 @@ export function Updater() {
   });
 
   return null;
-}
-
-type UseDarkModeManagerReturnType = [
-  boolean,
-  (value: boolean | string) => void
-];
-
-export function useDarkModeManager(): UseDarkModeManagerReturnType {
-  const [state, { updateKey }] = useLocalStorageContext();
-  const isDarkMode = state[DARK_MODE];
-  const toggleDarkMode = useCallback(
-    (value: boolean | string) => {
-      updateKey(
-        DARK_MODE,
-        value === false || value === true ? value : !isDarkMode
-      );
-    },
-    [updateKey, isDarkMode]
-  );
-  return [isDarkMode, toggleDarkMode];
 }
 
 export function usePathDismissed(path: string) {

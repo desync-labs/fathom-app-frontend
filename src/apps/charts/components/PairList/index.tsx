@@ -358,10 +358,7 @@ const PairList: FC<PairListProps> = (props) => {
             <TableHeaderBox>ID</TableHeaderBox>
           </Flex>
         )}
-        <Flex
-          alignItems="center"
-          justifyContent={below600 ? "flex-start" : "center"}
-        >
+        <Flex alignItems="center" sx={{ justifyContent: "flex-start" }}>
           <TableHeaderBox>Name</TableHeaderBox>
         </Flex>
         <Flex alignItems="center" justifyContent="center">
@@ -459,7 +456,7 @@ const PairList: FC<PairListProps> = (props) => {
               }}
               sx={{ width: "min-content" }}
             >
-              <TableHeaderBox>
+              <TableHeaderBox sx={{ whiteSpace: "nowrap" }}>
                 1y Fees / Liquidity{" "}
                 {sortedColumn === SORT_FIELD.APY
                   ? !sortDirection
