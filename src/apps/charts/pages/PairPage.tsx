@@ -143,6 +143,7 @@ const HoverSpan = styled("span")`
 const WarningGrouping = styled(Box)<{ disabled?: boolean }>`
   opacity: ${({ disabled }) => disabled && "0.4"};
   pointer-events: ${({ disabled }) => disabled && "none"};
+  overflow: hidden;
 `;
 const HeaderWrapper = styled(Box)`
   background: #131f35;
