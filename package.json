@@ -13,7 +13,7 @@
     "@into-the-fathom/lending-math-utils": "^0.0.1",
     "@mui/icons-material": "^5.10.14",
     "@mui/material": "^5.10.9",
-    "@reduxjs/toolkit": "^1.9.7",
+    "@reduxjs/toolkit": "^2.2.1",
     "@tanstack/react-query": "^4.36.1",
     "@uniswap/token-lists": "^1.0.0-beta.33",
     "@visx/axis": "^2.18.0",
