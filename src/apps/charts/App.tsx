@@ -66,7 +66,7 @@ const WarningBanner = styled("span")`
 `;
 
 /**
- * Wrap the component with the header and sidebar pinned tab
+ * Wrap the component with the header and sidebar-pinned tab
  */
 
 type LayoutWrapperProps = {
@@ -107,7 +107,7 @@ const App = () => {
         {showWarning && (
           <WarningWrapper>
             <WarningBanner>
-              {`Warning: The data on this site has only synced to Ethereum block ${latestBlock} (out of ${headBlock}). Please check back soon.`}
+              {`Warning: The data on this site has only synced to XDC block ${latestBlock} (out of ${headBlock}). Please check back soon.`}
             </WarningBanner>
           </WarningWrapper>
         )}

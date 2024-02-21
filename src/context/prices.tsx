@@ -35,6 +35,8 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
   const [xdcPrice, setXdcPrice] = useState<string>("0");
   const [prevXdcPrice, setPrevXdcPrice] = useState<string | null>(null);
   const [fthmPrice, setFthmPrice] = useState<string>("0");
+  const [fetchPricesInProgress, setFetchPricesInProgress] =
+    useState<boolean>(false);
 
   const { syncDao, prevSyncDao, syncFXD, prevSyncFxd } = useSyncContext();
 
@@ -42,6 +44,7 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
     if (provider) {
       try {
         const xdcPromise = oracleService.getXdcPrice();
+        setFetchPricesInProgress(true);
 
         const pricesPromise = fetch(
           process.env.REACT_APP_PRICE_FEED_URL as string
@@ -101,15 +104,22 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
           })
           .catch((e) => {
             console.log("Can`t retrieve prices", e);
-          });
+          })
+          .finally(() => setFetchPricesInProgress(false));
       } catch (e: any) {
         console.log(e);
       }
     }
-  }, [provider, setFxdPrice, setFthmPrice, setXdcPrice]);
+  }, [
+    provider,
+    setFxdPrice,
+    setFthmPrice,
+    setXdcPrice,
+    setFetchPricesInProgress,
+  ]);
 
   useEffect(() => {
-    fetchPairPrices();
+    !fetchPricesInProgress && fetchPairPrices();
   }, [fetchPairPrices]);
 
   useEffect(() => {

@@ -75,6 +75,7 @@ const SwapModalHeader: FC<SwapModalHeaderProps> = ({
             fontSize={24}
             fontWeight={500}
             style={{ marginLeft: "10px" }}
+            data-testid="dex-swapModalHeader-fromTokenName"
           >
             {trade.inputAmount.currency.symbol}
           </Typography>
@@ -114,6 +115,7 @@ const SwapModalHeader: FC<SwapModalHeaderProps> = ({
             fontSize={"24px"}
             fontWeight={500}
             style={{ marginLeft: "10px" }}
+            data-testid="dex-swapModalHeader-toTokenName"
           >
             {trade.outputAmount.currency.symbol}
           </Typography>

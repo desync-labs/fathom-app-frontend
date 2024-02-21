@@ -250,7 +250,9 @@ const ListItem: FC<ListItemProps> = memo((props) => {
           {item.hash && item.hash.slice(0, 6) + "..." + item.hash.slice(38, 42)}
         </Link>
       </DataText>
-      <DataText justifyContent={"end"}>{formatTime(item.timestamp)}</DataText>
+      <DataText justifyContent={"end"} textAlign={"end"}>
+        {formatTime(item.timestamp)}
+      </DataText>
     </DashGrid>
   );
 });

@@ -33,10 +33,6 @@ const DashGrid = styled(Box)`
   grid-template-areas: "number name pair value";
   padding: 0 4px;
 
-  > * {
-    justify-content: flex-end;
-  }
-
   @media screen and (max-width: 1080px) {
     grid-template-columns: 10px 3fr 1fr 1fr;
     grid-template-areas: "number name pair value";
@@ -83,7 +79,10 @@ const ListItem: FC<ListItemProps> = memo((props) => {
   return (
     <DashGrid style={{ height: "48px", padding: "0 1.125rem" }}>
       {!below600 && <DataText fontWeight="500">{index}</DataText>}
-      <DataText fontWeight="500" justifyContent="center">
+      <DataText
+        fontWeight="500"
+        justifyContent={below600 ? "flex-start" : "center"}
+      >
         <CustomLink
           style={{ marginLeft: below600 ? 0 : "1rem", whiteSpace: "nowrap" }}
           to={"/charts/account/" + lp.user.id}
@@ -104,7 +103,9 @@ const ListItem: FC<ListItemProps> = memo((props) => {
           </RowFixed>
         </CustomLink>
       </DataText>
-      <DataText>{formattedNum(lp.usd, true)}</DataText>
+      <DataText justifyContent={"center"}>
+        {formattedNum(lp.usd, true)}
+      </DataText>
     </DashGrid>
   );
 });
@@ -169,7 +170,10 @@ const LPList: FC<LPListProps> = (props) => {
             </TYPE.main>
           </Flex>
         )}
-        <Flex alignItems="center" justifyContent="center">
+        <Flex
+          alignItems="center"
+          justifyContent={below600 ? "flex-start" : "center"}
+        >
           <TYPE.main>
             <TableHeaderBox>Account</TableHeaderBox>
           </TYPE.main>
@@ -179,7 +183,7 @@ const LPList: FC<LPListProps> = (props) => {
             <TableHeaderBox>Pair</TableHeaderBox>
           </TYPE.main>
         </Flex>
-        <Flex alignItems="center" justifyContent="flex-end">
+        <Flex alignItems="center" justifyContent="center">
           <TYPE.main>
             <TableHeaderBox>Value</TableHeaderBox>
           </TYPE.main>
