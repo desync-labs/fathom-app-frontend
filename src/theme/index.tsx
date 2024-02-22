@@ -2,7 +2,7 @@ import { CheckCircleIcon, ChevronDownIcon } from "@heroicons/react/outline";
 import InfoIcon from "@mui/icons-material/Info";
 import { SvgIcon, Theme, ThemeOptions } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
 // @ts-ignore
 import { ColorPartial } from "@mui/material/styles/createPalette";
 
@@ -145,12 +145,12 @@ export const getDesignTokens = () => {
     palette: {
       mode: "dark",
       primary: {
-        main: "#fff",
+        main: "#00FFF6",
         light: "#b0c5e7",
         dark: "#D2D4DC",
       },
       secondary: {
-        main: "#F48FB1",
+        main: "#7D91B5",
         light: "#F6A5C0",
         dark: "#AA647B",
       },
@@ -177,14 +177,14 @@ export const getDesignTokens = () => {
         "200": "#071F2E", // for alert background
       },
       success: {
-        main: "#4dcc33",
+        main: "#3DA329",
         light: "#90FF95",
         dark: "#388E3C",
         "100": "#C2E4C3", // for alert text
         "200": "#0A130B", // for alert background
       },
       text: {
-        primary: "#c5d7f2",
+        primary: "#fff",
         secondary: "#6379a1",
         disabled: "#62677B",
         muted: "#5977a0",
@@ -198,7 +198,7 @@ export const getDesignTokens = () => {
         header: "#101d32",
         disabled: "#EBEBEF14",
       },
-      divider: "#1D2D49",
+      divider: "rgba(255, 255, 255, 0.12)",
       action: {
         active: "#EBEBEF8F",
         hover: "#2a3e5a",
@@ -223,7 +223,7 @@ export const getDesignTokens = () => {
           "linear-gradient(104.04deg, rgb(179, 255, 249) 0%, rgb(0, 219, 203) 100%)",
       },
     },
-    spacing: 4,
+    spacing: 8,
     typography: {
       fontFamily: FONT,
       h5: undefined,
@@ -636,46 +636,46 @@ export function getThemedComponents(theme: Theme) {
           },
         ],
       },
-      MuiContainer: {
-        styleOverrides: {
-          root: {
-            display: "flex",
-            flexDirection: "column",
-            flex: 1,
-            paddingBottom: "39px",
-            [theme.breakpoints.up("xs")]: {
-              paddingLeft: "8px",
-              paddingRight: "8px",
-            },
-            [theme.breakpoints.up("xsm")]: {
-              paddingLeft: "20px",
-              paddingRight: "20px",
-            },
-            [theme.breakpoints.up("sm")]: {
-              paddingLeft: "48px",
-              paddingRight: "48px",
-            },
-            [theme.breakpoints.up("md")]: {
-              paddingLeft: "96px",
-              paddingRight: "96px",
-            },
-            [theme.breakpoints.up("lg")]: {
-              paddingLeft: "20px",
-              paddingRight: "20px",
-            },
-            [theme.breakpoints.up("xl")]: {
-              maxWidth: "unset",
-              paddingLeft: "96px",
-              paddingRight: "96px",
-            },
-            [theme.breakpoints.up("xxl")]: {
-              paddingLeft: 0,
-              paddingRight: 0,
-              maxWidth: "1440px",
-            },
-          },
-        },
-      },
+      // MuiContainer: {
+      //   styleOverrides: {
+      //     root: {
+      //       display: "flex",
+      //       flexDirection: "column",
+      //       flex: 1,
+      //       paddingBottom: "39px",
+      //       [theme.breakpoints.up("xs")]: {
+      //         paddingLeft: "8px",
+      //         paddingRight: "8px",
+      //       },
+      //       [theme.breakpoints.up("xsm")]: {
+      //         paddingLeft: "20px",
+      //         paddingRight: "20px",
+      //       },
+      //       [theme.breakpoints.up("sm")]: {
+      //         paddingLeft: "48px",
+      //         paddingRight: "48px",
+      //       },
+      //       [theme.breakpoints.up("md")]: {
+      //         paddingLeft: "96px",
+      //         paddingRight: "96px",
+      //       },
+      //       [theme.breakpoints.up("lg")]: {
+      //         paddingLeft: "20px",
+      //         paddingRight: "20px",
+      //       },
+      //       [theme.breakpoints.up("xl")]: {
+      //         maxWidth: "unset",
+      //         paddingLeft: "96px",
+      //         paddingRight: "96px",
+      //       },
+      //       [theme.breakpoints.up("xxl")]: {
+      //         paddingLeft: 0,
+      //         paddingRight: 0,
+      //         maxWidth: "1440px",
+      //       },
+      //     },
+      //   },
+      // },
       MuiSwitch: {
         styleOverrides: {
           switchBase: {
@@ -843,7 +843,9 @@ export function getThemedComponents(theme: Theme) {
             fontFamily: FONT,
             fontWeight: 400,
             fontSize: pxToRem(14),
+            lineHeight: 1.5,
             minWidth: "375px",
+            color: "#fff",
             background: "#050c1a",
             "> div:first-of-type": {
               minHeight: "100vh",

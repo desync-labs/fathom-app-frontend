@@ -13,7 +13,7 @@ const LinksWrapper = styled(Box)`
   a {
     font-size: 0.825rem;
     font-weight: 500;
-    color: rgb(255, 255, 255);
+    color: ${({ theme }) => theme.palette.text.primary};
     opacity: 0.8;
     display: flex;
     justify-content: start;

@@ -1,4 +1,4 @@
-import { styled, ThemeProvider } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import {
   CssBaseline,
   Drawer as MuiDrawer,
@@ -17,6 +17,7 @@ import {
 import truncateEthAddress from "truncate-eth-address";
 import { Link, Navigate, Route, Routes, useLocation } from "react-router-dom";
 
+import { AppGlobalStyles } from "components/AppComponents/AppGlobalStyles/AppGlobalStyles";
 import Copyright from "components/Footer/Footer";
 import AppBar from "components/AppComponents/AppBar/AppBar";
 import DashboardContent from "components/Dashboard/Dashboard";
@@ -50,7 +51,6 @@ import MobileMenu from "components/Dashboard/MobileMenu";
 
 import { drawerWidth } from "components/AppComponents/AppBar/AppBar";
 import TransactionErc20TokenModal from "components/Transaction/TransactionErc20TokenModal";
-import { themeObject } from "theme";
 import FthmInfoModal from "components/FthmInfo/FthmInfoModal";
 
 /**
@@ -302,7 +302,7 @@ const MainLayout = () => {
   const { erc20TokenModalData } = useAlertAndTransactionContext();
 
   return (
-    <ThemeProvider theme={themeObject}>
+    <AppGlobalStyles>
       <Box sx={{ display: "flex" }} onClick={mainBlockClickHandler}>
         <CssBaseline />
         <AppBar position="absolute" open={open}>
@@ -692,7 +692,7 @@ const MainLayout = () => {
         />
       </FthmInfoModal>
       {erc20TokenModalData && <TransactionErc20TokenModal />}
-    </ThemeProvider>
+    </AppGlobalStyles>
   );
 };
 
