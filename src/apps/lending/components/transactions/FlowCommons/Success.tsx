@@ -101,7 +101,7 @@ export const TxSuccessView: FC<SuccessTxViewProps> = ({
           >
             <TokenIcon
               symbol={addToken.symbol}
-              aToken={addToken && addToken.aToken ? true : false}
+              aToken={!!(addToken && addToken.aToken)}
               sx={{ fontSize: "32px", mt: "12px", mb: "8px" }}
             />
             <Typography
@@ -109,8 +109,11 @@ export const TxSuccessView: FC<SuccessTxViewProps> = ({
               color="text.primary"
               sx={{ mx: "24px" }}
             >
-              Add {addToken && addToken.aToken ? "aToken " : "token "} to wallet
-              to track your balance.
+              Add{" "}
+              {addToken && addToken.aToken
+                ? `a${addToken.symbol} `
+                : `${addToken.symbol} `}{" "}
+              to wallet to track your balance.
             </Typography>
             <Button
               onClick={() => {

@@ -221,7 +221,7 @@ export const SupplyActions: FC<SupplyActionProps> = React.memo(
         );
         setTxError(parsedError);
         setApprovalTxState({
-          txHash: undefined,
+          txHash: "",
           loading: false,
         });
       }
