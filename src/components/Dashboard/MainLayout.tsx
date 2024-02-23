@@ -83,6 +83,7 @@ import Home from "apps/lending/pages/index.page";
 import Markets from "apps/lending/pages/markets.page";
 import History from "apps/lending/pages/history.page";
 import ReserveOverview from "apps/lending/pages/reserve-overview.page";
+import Faucet from "apps/lending/pages/faucet.page";
 
 import useMainLayout from "hooks/useMainLayout";
 import { StakingProvider } from "context/staking";
@@ -577,6 +578,7 @@ const MainLayout = () => {
                     element={<ReserveOverview />}
                   />
                   <Route path="transactions" element={<History />} />
+                  <Route path="faucet" element={<Faucet />} />
                   <Route
                     path="*"
                     element={<Navigate to="/lending" replace />}
