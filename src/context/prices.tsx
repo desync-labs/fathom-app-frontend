@@ -22,6 +22,7 @@ export type UsePricesContextReturn = {
   xdcPrice: string;
   fthmPrice: string;
   prevXdcPrice: string | null;
+  fetchPricesInProgress: boolean;
 };
 
 export const PricesContext = createContext<UsePricesContextReturn>(
@@ -134,8 +135,9 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
       xdcPrice,
       fthmPrice,
       prevXdcPrice,
+      fetchPricesInProgress,
     };
-  }, [fxdPrice, xdcPrice, fthmPrice, prevXdcPrice]);
+  }, [fxdPrice, xdcPrice, fthmPrice, prevXdcPrice, fetchPricesInProgress]);
 
   return (
     <PricesContext.Provider value={values}>{children}</PricesContext.Provider>
