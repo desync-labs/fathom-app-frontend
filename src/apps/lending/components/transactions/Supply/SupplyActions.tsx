@@ -27,6 +27,7 @@ import {
   APPROVAL_GAS_LIMIT,
   checkRequiresApproval,
 } from "apps/lending/components/transactions/utils";
+import { checkErc20MethodExistence } from "apps/lending/utils/utils";
 
 export interface SupplyActionProps extends BoxProps {
   amountToSupply: string;
@@ -90,10 +91,7 @@ export const SupplyActions: FC<SupplyActionProps> = React.memo(
     } = useModalContext();
     const { refetchPoolData, refetchIncentiveData } =
       useBackgroundDataProvider();
-    const permitAvailable = tryPermit({
-      reserveAddress: poolAddress,
-      isWrappedBaseAsset,
-    });
+    const [permitAvailable, setPermitAvailable] = useState(false);
     const { signTxData, sendTx } = useWeb3Context();
 
     const [usePermit, setUsePermit] = useState(false);
@@ -104,6 +102,21 @@ export const SupplyActions: FC<SupplyActionProps> = React.memo(
     const [signatureParams, setSignatureParams] = useState<
       SignedParams | undefined
     >();
+
+    useEffect(() => {
+      checkErc20MethodExistence(poolAddress, "nonces").then((response) => {
+        if (response) {
+          setPermitAvailable(
+            tryPermit({
+              reserveAddress: poolAddress,
+              isWrappedBaseAsset,
+            })
+          );
+        } else {
+          setPermitAvailable(false);
+        }
+      });
+    }, [poolAddress, tryPermit, isWrappedBaseAsset, setPermitAvailable]);
 
     // callback to fetch approved amount and determine execution path on dependency updates
     const fetchApprovedAmount = useCallback(
