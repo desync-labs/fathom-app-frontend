@@ -58,7 +58,7 @@ export const marketsData: {
     v3: true,
     chainId: FathomLendingApothem.CHAIN_ID,
     enabledFeatures: {
-      faucet: false,
+      faucet: true,
       incentives: true,
     },
     subgraphUrl: "https://dev.fathom.fi/subgraphs/name/lending-subgraph",
@@ -72,6 +72,7 @@ export const marketsData: {
       UI_INCENTIVE_DATA_PROVIDER:
         FathomLendingApothem.UI_INCENTIVE_DATA_PROVIDER,
       COLLECTOR: FathomLendingApothem.COLLECTOR,
+      FAUCET: FathomLendingApothem.FAUCET,
     },
   },
 } as const;
