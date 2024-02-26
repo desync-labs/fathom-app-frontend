@@ -15,18 +15,13 @@ export type TxErrorType = {
 };
 
 export const getErrorTextFromError = (
-  error: Error,
+  error: any,
   txAction: TxAction,
   blocking = true
 ): TxErrorType => {
   let errorNumber = 1;
 
-  if (
-    error.message ===
-      "MetaMask Tx Signature: User denied transaction signature." ||
-    error.message ===
-      "MetaMask Message Signature: User denied message signature."
-  ) {
+  if (error.code === 4001 || error.code === "ACTION_REJECTED") {
     return {
       error: errorMapping[4001],
       blocking: false,

@@ -1,4 +1,4 @@
-import { Grid, Box, Typography } from "@mui/material";
+import { Grid, Box, Typography, Skeleton } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import useProtocolStats from "hooks/useProtocolStats";
 import { formatCurrency, formatNumber } from "utils/format";
@@ -57,9 +57,21 @@ const StatsDescription = styled(Typography)`
   padding: 7px 0 0 0;
 `;
 
+const StatsValueSkeleton = () => {
+  return (
+    <Skeleton
+      variant="rounded"
+      animation={"wave"}
+      width={200}
+      height={28}
+      sx={{ bgcolor: "#2536564a", marginTop: "7px" }}
+    />
+  );
+};
+
 const ProtocolStats = () => {
-  const { tvl, loading, totalBorrowed } = useProtocolStats();
-  const { fxdPrice } = usePricesContext();
+  const { tvl, loading, poolsLoading, totalBorrowed } = useProtocolStats();
+  const { fxdPrice, fetchPricesInProgress } = usePricesContext();
 
   return (
     <ProtocolStatsContainer container>
@@ -74,9 +86,13 @@ const ProtocolStats = () => {
               }
             />
           </StatsTitle>
-          <StatsDescription variant={"body2"}>
-            {!loading && formatNumber(totalBorrowed) + " FXD"}
-          </StatsDescription>
+          {poolsLoading ? (
+            <StatsValueSkeleton />
+          ) : (
+            <StatsDescription variant={"body2"}>
+              {formatNumber(totalBorrowed) + " FXD"}
+            </StatsDescription>
+          )}
         </Box>
       </StatsItem>
       <StatsItem item>
@@ -90,19 +106,27 @@ const ProtocolStats = () => {
               }
             />
           </StatsTitle>
-          <StatsDescription>{!loading && formatCurrency(tvl)}</StatsDescription>
+          {loading ? (
+            <StatsValueSkeleton />
+          ) : (
+            <StatsDescription>{formatCurrency(tvl)}</StatsDescription>
+          )}
         </Box>
       </StatsItem>
       <StatsItem item>
         <Box>
           <StatsTitle>FXD Price</StatsTitle>
-          <StatsDescription>
-            {formatCurrency(
-              BigNumber(fxdPrice)
-                .dividedBy(10 ** 18)
-                .toNumber()
-            )}
-          </StatsDescription>
+          {fetchPricesInProgress ? (
+            <StatsValueSkeleton />
+          ) : (
+            <StatsDescription>
+              {formatCurrency(
+                BigNumber(fxdPrice)
+                  .dividedBy(10 ** 18)
+                  .toNumber()
+              )}
+            </StatsDescription>
+          )}
         </Box>
       </StatsItem>
     </ProtocolStatsContainer>

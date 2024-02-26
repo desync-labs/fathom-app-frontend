@@ -13,7 +13,7 @@ export const GasEstimationError: FC<{ txError: TxErrorType }> = ({
           <>
             {txError.error}{" "}
             <Button
-              sx={{ verticalAlign: "top" }}
+              sx={{ verticalAlign: "top", height: "auto" }}
               variant="text"
               onClick={() =>
                 navigator.clipboard.writeText(
