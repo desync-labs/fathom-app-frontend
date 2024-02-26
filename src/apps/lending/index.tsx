@@ -15,7 +15,6 @@ import { Outlet } from "react-router-dom";
 
 import BorrowModal from "apps/lending/components/transactions/Borrow/BorrowModal";
 
-import ClaimRewardsModal from "apps/lending/components/transactions/ClaimRewards/ClaimRewardsModal";
 import CollateralChangeModal from "apps/lending/components/transactions/CollateralChange/CollateralChangeModal";
 import EmodeModal from "apps/lending/components/transactions/Emode/EmodeModal";
 import FaucetModal from "apps/lending/components/transactions/Faucet/FaucetModal";
@@ -45,7 +44,6 @@ const LendingIndexComponent: FC = () => {
                         <RepayModal />
                         <CollateralChangeModal />
                         <RateSwitchModal />
-                        <ClaimRewardsModal />
                         <EmodeModal />
                         <FaucetModal />
                         <TransactionEventHandler />
