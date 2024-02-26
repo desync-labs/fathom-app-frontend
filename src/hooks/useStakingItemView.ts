@@ -17,12 +17,13 @@ const useStakingItemView = (lockPosition: ILockPosition) => {
   );
 
   const fetchRewards = useCallback(() => {
-    !!account &&
+    if (account) {
       stakingService
         .getStreamClaimableAmountPerLock(0, account, lockPosition.lockId)
         .then((claimRewards) => {
           setRewardsAvailable(claimRewards.toString());
         });
+    }
   }, [stakingService, lockPosition, account, library, setRewardsAvailable]);
 
   useEffect(() => {
@@ -53,7 +54,7 @@ const useStakingItemView = (lockPosition: ILockPosition) => {
   }, [seconds, setSeconds]);
 
   useEffect(() => {
-    if (seconds > 0 && Math.floor(seconds % 30) === 0) {
+    if (Math.floor(seconds % 30) === 0) {
       fetchRewards();
     }
   }, [seconds, fetchRewards]);
