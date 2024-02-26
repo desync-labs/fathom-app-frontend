@@ -11,7 +11,7 @@ const useProtocolStats = () => {
     context: { clientName: "stable", chainId },
   });
 
-  const { pools } = usePoolsList();
+  const { pools, loading: poolsLoading } = usePoolsList();
 
   const totalBorrowed = useMemo(() => {
     if (pools.length) {
@@ -31,6 +31,7 @@ const useProtocolStats = () => {
     totalBorrowed,
     tvl: data?.protocolStat?.tvl || 0,
     loading,
+    poolsLoading,
     refetch,
   };
 };
