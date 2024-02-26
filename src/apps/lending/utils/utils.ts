@@ -4,8 +4,6 @@ import {
   USD_DECIMALS,
   valueToBigNumber,
 } from "@into-the-fathom/lending-math-utils";
-import { ethers } from "fathom-ethers";
-import { ERC20_ABI } from "apps/dex/constants/abis/erc20";
 
 export function hexToAscii(_hex: string): string {
   const hex = _hex.toString();
@@ -77,22 +75,4 @@ export const roundToTokenDecimals = (
 
   // Combine the whole and adjusted decimal parts
   return whole + "." + adjustedDecimals;
-};
-
-export const checkErc20MethodExistence = async (
-  tokenAddress: string,
-  methodName: string
-) => {
-  try {
-    const provider = new ethers.providers.JsonRpcProvider();
-    const tokenContract = new ethers.Contract(
-      tokenAddress,
-      ERC20_ABI,
-      provider
-    );
-
-    return tokenContract.interface.functions[methodName] !== undefined;
-  } catch (error) {
-    return `Error checking method exist: ${error}`;
-  }
 };
