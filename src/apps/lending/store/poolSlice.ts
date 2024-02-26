@@ -582,7 +582,7 @@ export const createPoolSlice: StateCreator<
       }
     },
     useOptimizedPath: () => {
-      return get().currentMarketData.v3 && optimizedPath(get().currentChainId);
+      return optimizedPath(get().currentChainId);
     },
     poolComputed: {
       get minRemainingBaseTokenBalance() {

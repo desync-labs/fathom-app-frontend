@@ -9,7 +9,7 @@ export interface AddressAllowedResult {
 const TWO_MINUTES = 2 * 60 * 1000;
 
 export const useAddressAllowed = (address: string): AddressAllowedResult => {
-  const [isAllowed, setIsAllowed] = useState(true);
+  const [isAllowed, setIsAllowed] = useState(false);
 
   const screeningUrl = `${process.env.NEXT_PUBLIC_API_BASEURL}/addresses/status`;
   const queryParams = `?address=${address}`;

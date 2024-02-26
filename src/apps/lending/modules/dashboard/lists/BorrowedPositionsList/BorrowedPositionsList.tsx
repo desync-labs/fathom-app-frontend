@@ -63,13 +63,12 @@ const head = [
 
 export const BorrowedPositionsList = () => {
   const { user, loading, eModes } = useAppDataContext();
-  const { currentMarketData, currentNetworkConfig } = useProtocolDataContext();
+  const { currentNetworkConfig } = useProtocolDataContext();
   const [sortName, setSortName] = useState("");
   const [sortDesc, setSortDesc] = useState(false);
   const theme = useTheme();
   const downToXSM = useMediaQuery(theme.breakpoints.down("xsm"));
-  const showEModeButton =
-    currentMarketData.v3 && Object.keys(eModes).length > 1;
+  const showEModeButton = Object.keys(eModes).length > 1;
   const [tooltipOpen, setTooltipOpen] = useState<boolean>(false);
 
   const borrowPositions =
