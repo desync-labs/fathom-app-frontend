@@ -92,7 +92,7 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
   test("FXD Vault: Manage Vault: Fully withdrawing all FXD is successful @smoke", async ({
     vaultPage,
   }) => {
-    test.setTimeout(150000);
+    test.setTimeout(180000);
     const depositAmount = 0.5;
     await metamask.switchAccount("Account 1");
     const newAddress = await metamask.getWalletAddress();

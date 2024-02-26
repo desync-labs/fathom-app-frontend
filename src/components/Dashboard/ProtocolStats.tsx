@@ -70,7 +70,7 @@ const StatsValueSkeleton = () => {
 };
 
 const ProtocolStats = () => {
-  const { tvl, loading, totalBorrowed } = useProtocolStats();
+  const { tvl, loading, poolsLoading, totalBorrowed } = useProtocolStats();
   const { fxdPrice, fetchPricesInProgress } = usePricesContext();
 
   return (
@@ -86,7 +86,7 @@ const ProtocolStats = () => {
               }
             />
           </StatsTitle>
-          {loading ? (
+          {poolsLoading ? (
             <StatsValueSkeleton />
           ) : (
             <StatsDescription variant={"body2"}>

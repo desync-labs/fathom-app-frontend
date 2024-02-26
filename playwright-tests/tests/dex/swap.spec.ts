@@ -61,7 +61,7 @@ test.describe("Fathom App Test Suite: DEX Swap", () => {
   test("Swap: 'Insufficient balance' is correctly displayed", async ({
     dexPage,
   }) => {
-    const tokenFrom = tokenIds.XDC;
+    const tokenFrom = tokenIds.WXDC;
     await dexPage.navigate();
     await dexPage.connectWallet(WalletConnectOptions.Metamask);
     await dexPage.validateConnectedWalletAddress();
@@ -70,9 +70,7 @@ test.describe("Fathom App Test Suite: DEX Swap", () => {
     const fromBalance = await dexPage.getFromBalance();
     await dexPage.fillFromValue({ inputValue: fromBalance + 1 });
     await expect(dexPage.swapButton).toBeVisible();
-    await expect(dexPage.swapButton).toHaveText(
-      `Insufficient ${tokenFrom} balance`
-    );
+    await expect(dexPage.swapButton).toHaveText(`Insufficient WXDC balance`);
     await expect(dexPage.swapButton).toBeDisabled();
   });
 

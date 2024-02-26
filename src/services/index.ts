@@ -18,7 +18,7 @@ import {
 
 import { DEFAULT_CHAIN_ID } from "utils/Constants";
 import { getDefaultProvider } from "utils/defaultProvider";
-import { DefaultProvider } from "connectors/networks";
+import { DefaultProvider, supportedChainIds } from "connectors/networks";
 import { Web3Provider } from "@into-the-fathom/providers";
 
 export class RootService {
@@ -71,6 +71,9 @@ export class RootService {
   }
 
   setChainId(chainId: number) {
+    if (!supportedChainIds.includes(chainId)) {
+      return;
+    }
     this.chainId = chainId;
     Object.values(this.serviceList).forEach((service) => {
       service.setChainId(chainId);
