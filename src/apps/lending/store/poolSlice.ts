@@ -5,8 +5,7 @@ import {
   ERC20_2612Service,
   ERC20Service,
   EthereumTransactionTypeExtended,
-  FaucetParamsType,
-  FaucetService,
+  V3FaucetParamsType,
   IncentivesControllerV2,
   IncentivesControllerV2Interface,
   InterestRate,
@@ -70,7 +69,7 @@ export interface PoolSlice {
   // methods
   useOptimizedPath: () => boolean | undefined;
   mint: (
-    args: Omit<FaucetParamsType, "userAddress">
+    args: Omit<V3FaucetParamsType, "userAddress">
   ) => Promise<EthereumTransactionTypeExtended[]>;
   withdraw: (
     args: Omit<LPWithdrawParamsType, "user">
@@ -400,19 +399,11 @@ export const createPoolSlice: StateCreator<
           "currently selected market does not have a faucet attached"
         );
 
-      if (currentMarketData.v3) {
-        const v3Service = new V3FaucetService(
-          jsonRpcProvider(),
-          currentMarketData.addresses.FAUCET
-        );
-        return v3Service.mint({ ...args, userAddress });
-      } else {
-        const service = new FaucetService(
-          jsonRpcProvider(),
-          currentMarketData.addresses.FAUCET
-        );
-        return service.mint({ ...args, userAddress });
-      }
+      const v3Service = new V3FaucetService(
+        jsonRpcProvider(),
+        currentMarketData.addresses.FAUCET
+      );
+      return v3Service.mint({ ...args, userAddress });
     },
     withdraw: (args) => {
       const pool = getCorrectPool();
