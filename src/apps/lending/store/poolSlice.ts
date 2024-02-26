@@ -14,7 +14,6 @@ import {
   PoolBundle,
   ReserveDataHumanized,
   ReservesIncentiveDataHumanized,
-  UiIncentiveDataProvider,
   UiPoolDataProvider,
   UserReserveDataHumanized,
   V3FaucetService,
@@ -130,12 +129,7 @@ export const createPoolSlice: StateCreator<
     const provider = get().jsonRpcProvider();
     return new Pool(provider, {
       POOL: currentMarketData.addresses.LENDING_POOL,
-      REPAY_WITH_COLLATERAL_ADAPTER:
-        currentMarketData.addresses.REPAY_WITH_COLLATERAL_ADAPTER,
-      SWAP_COLLATERAL_ADAPTER:
-        currentMarketData.addresses.SWAP_COLLATERAL_ADAPTER,
       WETH_GATEWAY: currentMarketData.addresses.WETH_GATEWAY,
-      L2_ENCODER: currentMarketData.addresses.L2_ENCODER,
     });
   }
   function getCorrectPoolBundle() {
@@ -144,7 +138,6 @@ export const createPoolSlice: StateCreator<
     return new PoolBundle(provider, {
       POOL: currentMarketData.addresses.LENDING_POOL,
       WETH_GATEWAY: currentMarketData.addresses.WETH_GATEWAY,
-      L2_ENCODER: currentMarketData.addresses.L2_ENCODER,
     });
   }
   return {
@@ -156,12 +149,6 @@ export const createPoolSlice: StateCreator<
       const poolDataProviderContract = new UiPoolDataProvider({
         uiPoolDataProviderAddress:
           currentMarketData.addresses.UI_POOL_DATA_PROVIDER,
-        provider: get().jsonRpcProvider(),
-        chainId: currentChainId,
-      });
-      const uiIncentiveDataProviderContract = new UiIncentiveDataProvider({
-        uiIncentiveDataProviderAddress:
-          currentMarketData.addresses.UI_INCENTIVE_DATA_PROVIDER || "",
         provider: get().jsonRpcProvider(),
         chainId: currentChainId,
       });
@@ -199,37 +186,6 @@ export const createPoolSlice: StateCreator<
                       .get(currentChainId)
                       .get(lendingPoolAddressProvider).baseCurrencyData =
                       reservesResponse.baseCurrencyData;
-                  }
-                })
-              )
-            )
-        );
-        promises.push(
-          uiIncentiveDataProviderContract
-            .getReservesIncentivesDataHumanized({
-              lendingPoolAddressProvider:
-                currentMarketData.addresses.LENDING_POOL_ADDRESS_PROVIDER,
-            })
-            .then((reserveIncentivesResponse) =>
-              set((state) =>
-                produce(state, (draft) => {
-                  if (!draft.data.get(currentChainId))
-                    draft.data.set(currentChainId, new Map());
-                  if (
-                    !draft.data
-                      .get(currentChainId)
-                      ?.get(lendingPoolAddressProvider)
-                  ) {
-                    (draft.data as any)
-                      .get(currentChainId)
-                      .set(lendingPoolAddressProvider, {
-                        reserveIncentives: reserveIncentivesResponse,
-                      });
-                  } else {
-                    (draft.data as any)
-                      .get(currentChainId)
-                      .get(lendingPoolAddressProvider).reserveIncentives =
-                      reserveIncentivesResponse;
                   }
                 })
               )

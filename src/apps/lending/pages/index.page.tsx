@@ -10,6 +10,7 @@ import { ConnectWalletPaper } from "apps/lending/components/ConnectWalletPaper";
 import { ContentContainer } from "apps/lending/components/ContentContainer";
 import { useWeb3Context } from "apps/lending/libs/hooks/useWeb3Context";
 import { DashboardContentWrapper } from "apps/lending/modules/dashboard/DashboardContentWrapper";
+import { DashboardTopPanel } from "apps/lending/modules/dashboard/DashboardTopPanel";
 
 export default function Home() {
   const { currentAccount, loading: web3Loading } = useWeb3Context();
@@ -27,6 +28,7 @@ export default function Home() {
 
   return (
     <>
+      <DashboardTopPanel />
       <ContentContainer>
         {currentAccount && !isPermissionsLoading && (
           <Box

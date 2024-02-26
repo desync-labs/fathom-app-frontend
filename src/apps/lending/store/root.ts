@@ -7,10 +7,6 @@ import {
   AnalyticsSlice,
   createAnalyticsSlice,
 } from "apps/lending/store/analyticsSlice";
-import {
-  createIncentiveSlice,
-  IncentiveSlice,
-} from "apps/lending/store/incentiveSlice";
 import { createLayoutSlice, LayoutSlice } from "apps/lending/store/layoutSlice";
 import { createPoolSlice, PoolSlice } from "apps/lending/store/poolSlice";
 import {
@@ -30,7 +26,6 @@ enableMapSet();
 export type RootStore = ProtocolDataSlice &
   WalletSlice &
   PoolSlice &
-  IncentiveSlice &
   AnalyticsSlice &
   TransactionsSlice &
   LayoutSlice;
@@ -42,7 +37,6 @@ export const useRootStore = create<RootStore>()(
         ...createProtocolDataSlice(...args),
         ...createWalletSlice(...args),
         ...createPoolSlice(...args),
-        ...createIncentiveSlice(...args),
         ...createAnalyticsSlice(...args),
         ...createTransactionsSlice(...args),
         ...createLayoutSlice(...args),
@@ -73,9 +67,4 @@ if (typeof document !== "undefined") {
 export const usePoolDataSubscription = createSingletonSubscriber(() => {
   console.log("Fetch Pool Data");
   return useRootStore.getState().refreshPoolData();
-}, 60000);
-
-export const useIncentiveDataSubscription = createSingletonSubscriber(() => {
-  console.log("Fetch Incentive Data");
-  return useRootStore.getState().refreshIncentiveData();
 }, 60000);
