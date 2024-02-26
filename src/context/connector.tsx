@@ -20,6 +20,7 @@ import {
   injected,
   DefaultProvider,
   WalletConnect,
+  supportedChainIds,
 } from "connectors/networks";
 
 type ConnectorProviderType = {
@@ -101,7 +102,11 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
         .isDecentralizedState()
         .then((isDecentralizedState: boolean) => {
           setIsDecentralizedState(isDecentralizedState);
-          if (isDecentralizedState === false && account) {
+          if (
+            isDecentralizedState === false &&
+            account &&
+            supportedChainIds.includes(chainId)
+          ) {
             stableSwapService
               .isUserWhitelisted(account)
               .then((isWhitelisted: boolean) => {
