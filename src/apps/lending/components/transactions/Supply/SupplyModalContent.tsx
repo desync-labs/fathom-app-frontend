@@ -176,7 +176,7 @@ export const SupplyModalContent: FC<ModalWrapperProps> = memo(
       address: poolReserve.aTokenAddress,
       symbol: poolReserve.iconSymbol,
       decimals: poolReserve.decimals,
-      aToken: true,
+      fmToken: true,
     };
 
     // collateralization state

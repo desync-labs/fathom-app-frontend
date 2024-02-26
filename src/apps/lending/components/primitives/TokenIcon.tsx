@@ -1,7 +1,7 @@
 import { Badge, Box, Icon, IconProps } from "@mui/material";
 import { FC, forwardRef, useEffect, useRef, useState } from "react";
 
-interface ATokenIconProps {
+interface FMTokenIconProps {
   symbol?: string;
 }
 
@@ -13,29 +13,25 @@ interface ATokenIconProps {
  * Supplying a url seems not very rational, but supplying a base64 for an external svg image that is composed with a react component is non trivial.
  * Therefore the solution we came up with is:
  * 1. rendering the svg component as an object
- * 2. rendering the aToken ring as a react component
+ * 2. rendering the aToken ring as a React component
  * 3. using js to manipulate the dome to have the object without the subdocument inside the react component
  * 4. base64 encode the composed dom svg
  *
- * This component is probably hugely over engineered & unnecessary.
+ * This component is probably hugely overengineered & unnecessary.
  * I'm looking forward for the pr which evicts it.
  */
-export function Base64Token({
-  symbol,
-  onImageGenerated,
-  aToken,
-}: {
+export const Base64Token: FC<{
   symbol: string;
-  aToken?: boolean;
+  fmToken?: boolean;
   onImageGenerated: (base64: string) => void;
-}) {
+}> = ({ symbol, onImageGenerated, fmToken }) => {
   const ref = useRef<HTMLObjectElement>(null);
   const aRef = useRef<SVGSVGElement>(null);
 
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     if (!loading && ref.current && ref.current?.contentDocument) {
-      if (aToken) {
+      if (fmToken) {
         // eslint-disable-next-line
         const inner = ref.current?.contentDocument?.childNodes?.[0] as any;
         const oldWidth = inner.getAttribute("width");
@@ -70,7 +66,7 @@ export function Base64Token({
         );
       }
     }
-  }, [loading, aToken]);
+  }, [loading, fmToken]);
 
   return (
     <div
@@ -88,12 +84,12 @@ export function Base64Token({
         data={`/icons/tokens/${symbol.toLowerCase()}.svg`}
         onLoad={() => setLoading(false)}
       />
-      {aToken && <ATokenIcon ref={aRef} />}
+      {fmToken && <FMTokenIcon ref={aRef} />}
     </div>
   );
-}
+};
 
-export const ATokenIcon = forwardRef<SVGSVGElement, ATokenIconProps>(
+export const FMTokenIcon = forwardRef<SVGSVGElement, FMTokenIconProps>(
   ({ symbol }, ref) => {
     return (
       <svg
@@ -150,11 +146,11 @@ export const ATokenIcon = forwardRef<SVGSVGElement, ATokenIconProps>(
     );
   }
 );
-ATokenIcon.displayName = "ATokenIcon";
+FMTokenIcon.displayName = "ATokenIcon";
 
 interface TokenIconProps extends IconProps {
   symbol: string;
-  aToken?: boolean;
+  fmToken?: boolean;
 }
 
 /**
@@ -163,7 +159,7 @@ interface TokenIconProps extends IconProps {
  * @param param0
  * @returns
  */
-const SingleTokenIcon: FC<TokenIconProps> = ({ symbol, aToken, ...rest }) => {
+const SingleTokenIcon: FC<TokenIconProps> = ({ symbol, fmToken, ...rest }) => {
   return (
     <Icon
       {...rest}
@@ -174,8 +170,8 @@ const SingleTokenIcon: FC<TokenIconProps> = ({ symbol, aToken, ...rest }) => {
         ...rest.sx,
       }}
     >
-      {aToken ? (
-        <ATokenIcon symbol={symbol} />
+      {fmToken ? (
+        <FMTokenIcon symbol={symbol} />
       ) : (
         // eslint-disable-next-line
         <img
@@ -192,7 +188,7 @@ const SingleTokenIcon: FC<TokenIconProps> = ({ symbol, aToken, ...rest }) => {
 interface MultiTokenIconProps extends IconProps {
   symbols: string[];
   badgeSymbol?: string;
-  aToken?: boolean;
+  fmToken?: boolean;
 }
 
 export const MultiTokenIcon: FC<MultiTokenIconProps> = ({

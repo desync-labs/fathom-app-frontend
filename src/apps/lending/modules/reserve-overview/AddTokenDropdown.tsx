@@ -78,19 +78,19 @@ export const AddTokenDropdown: FC<AddTokenDropdownProps> = memo(
 
     return (
       <>
-        {/* Load base64 token symbol for adding underlying and aTokens to wallet */}
+        {/* Load base64 token symbol for adding underlying and fmTokens to wallet */}
         {poolReserve?.symbol && !/_/.test(poolReserve.symbol) && (
           <>
             <Base64Token
               symbol={poolReserve.iconSymbol}
               onImageGenerated={setUnderlyingBase64}
-              aToken={false}
+              fmToken={false}
             />
             {!hideAToken && (
               <Base64Token
                 symbol={poolReserve.iconSymbol}
                 onImageGenerated={setATokenBase64}
-                aToken={true}
+                fmToken={true}
               />
             )}
           </>
@@ -218,7 +218,7 @@ export const AddTokenDropdown: FC<AddTokenDropdownProps> = memo(
                 <TokenIcon
                   symbol={poolReserve.iconSymbol}
                   sx={{ fontSize: "20px" }}
-                  aToken={true}
+                  fmToken={true}
                 />
                 <Typography
                   variant="subheader1"
@@ -226,7 +226,7 @@ export const AddTokenDropdown: FC<AddTokenDropdownProps> = memo(
                   noWrap
                   data-cy={`assetName`}
                 >
-                  {`a${poolReserve.symbol}`}
+                  {`fm${poolReserve.symbol}`}
                 </Typography>
               </MenuItem>
             </Box>
