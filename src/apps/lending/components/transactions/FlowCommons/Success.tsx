@@ -111,7 +111,7 @@ export const TxSuccessView: FC<SuccessTxViewProps> = ({
             >
               Add{" "}
               {addToken && addToken.fmToken
-                ? `a${addToken.symbol} `
+                ? `fm${addToken.symbol} `
                 : `${addToken.symbol} `}{" "}
               to wallet to track your balance.
             </Typography>
@@ -121,7 +121,7 @@ export const TxSuccessView: FC<SuccessTxViewProps> = ({
                   address: addToken.address,
                   decimals: addToken.decimals,
                   symbol: addToken.fmToken
-                    ? `a${addToken.symbol}`
+                    ? `fm${addToken.symbol}`
                     : addToken.symbol,
                   image: !/_/.test(addToken.symbol) ? base64 : undefined,
                 });

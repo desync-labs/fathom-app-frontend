@@ -206,7 +206,7 @@ export const AddTokenDropdown: FC<AddTokenDropdownProps> = memo(
                     addERC20Token({
                       address: poolReserve.aTokenAddress,
                       decimals: poolReserve.decimals,
-                      symbol: `a${poolReserve.symbol}`,
+                      symbol: `fm${poolReserve.symbol}`,
                       image: !/_/.test(poolReserve.symbol)
                         ? aTokenBase64
                         : undefined,
