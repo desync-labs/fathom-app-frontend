@@ -4,14 +4,11 @@ import {
   Drawer as MuiDrawer,
   Box,
   Toolbar,
-  Typography,
   Divider,
   IconButton,
 } from "@mui/material";
 import {
-  ArrowBack,
   ArrowForward,
-  Menu as MenuIcon,
   AccountBalanceWallet as AccountBalanceWalletIcon,
 } from "@mui/icons-material";
 import truncateEthAddress from "truncate-eth-address";
@@ -159,6 +156,14 @@ const MenuWrapper = styled("nav")<{ open: boolean }>`
   gap: 14px;
 `;
 
+const AccountInfoWrapper = styled(Box)`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-end;
+`;
+
 export const AccountElement = styled("div")<{ active: string }>`
   display: flex;
   flex-direction: row;
@@ -180,6 +185,7 @@ export const AccountElement = styled("div")<{ active: string }>`
 
 export const FTHMAmount = styled(AccountElement)`
   color: white;
+  font-size: 1rem;
   padding: 0.5rem 0.5rem 0.5rem 0.5rem;
   font-weight: 500;
   background-color: #131f35;
@@ -228,6 +234,7 @@ const MobileMenuWrapper = styled(Box)`
   align-items: center;
   justify-content: start;
   gap: 7px;
+  font-size: 1rem;
 `;
 
 const WalletBox = styled(Box)`
@@ -308,7 +315,8 @@ const MainLayout = () => {
         <AppBar position="absolute" open={open}>
           <Toolbar
             sx={{
-              pr: "24px", // keep right padding when drawer closed
+              width: "100%",
+              justifyContent: isMobile ? "space-between" : "flex-end",
             }}
           >
             {isMobile && (
@@ -348,90 +356,73 @@ const MainLayout = () => {
                 </MobileMenuWrapper>
               </MenuLogoWrapper>
             )}
-            {!isMobile && (
-              <IconButton
-                edge="start"
-                color="inherit"
-                aria-label="open drawer"
-                onClick={toggleDrawer}
-                sx={{
-                  marginRight: "36px",
-                  ...(open && { display: "none" }),
-                }}
-              >
-                <MenuIcon />
-              </IconButton>
-            )}
-            <Typography
-              component="h1"
-              variant={"h6"}
-              color="inherit"
-              noWrap
-              sx={{ flexGrow: 1 }}
-            ></Typography>
 
-            <Web3Status />
+            <AccountInfoWrapper>
+              <Web3Status />
 
-            {isMetamask && <img src={MetamaskSrc} alt={"metamask"} />}
-            {isWalletConnect && (
-              <img src={WalletConnectSrc} alt={"wallet-connect"} />
-            )}
-            {aggregateBalance && (
-              <FTHMWrapper onClick={() => setShowFthmBalanceModal(true)}>
-                <FTHMAmount
-                  active={account ? "true" : "false"}
-                  style={{ pointerEvents: "auto" }}
-                >
-                  {account && (
-                    <TYPE.white
-                      style={{
-                        paddingRight: ".4rem",
-                      }}
-                    >
-                      <CountUp
-                        key={countUpValue}
-                        isCounting
-                        start={parseFloat(countUpValuePrevious)}
-                        end={parseFloat(countUpValue)}
-                        thousandsSeparator={","}
-                        duration={1}
-                      />
-                    </TYPE.white>
-                  )}
-                  FTHM
-                </FTHMAmount>
-                <CardNoise />
-              </FTHMWrapper>
-            )}
-            <AccountElement
-              active={account ? "true" : "false"}
-              style={{ pointerEvents: "auto" }}
-            >
-              {account && userXDCBalance ? (
-                <Box
-                  sx={{ flexShrink: 0 }}
-                  p="0.5rem 0.5rem 0.5rem 0.5rem"
-                  fontWeight={500}
-                >
-                  {formatNumber(Number(userXDCBalance?.toSignificant(8)))}{" "}
-                  {"XDC"}
-                </Box>
-              ) : null}
-            </AccountElement>
-            {account && !error && (
-              <WalletBox>{truncateEthAddress(account)}</WalletBox>
-            )}
-
-            <IconButton
-              color="inherit"
-              onClick={isActive || error ? disconnect : openConnectorMenu}
-            >
-              {isActive ? (
-                <img src={ExitSrc} alt={"exit"} />
-              ) : (
-                <AccountBalanceWalletIcon />
+              {isMetamask && <img src={MetamaskSrc} alt={"metamask"} />}
+              {isWalletConnect && (
+                <img src={WalletConnectSrc} alt={"wallet-connect"} />
               )}
-            </IconButton>
+              {aggregateBalance && (
+                <FTHMWrapper onClick={() => setShowFthmBalanceModal(true)}>
+                  <FTHMAmount
+                    active={account ? "true" : "false"}
+                    style={{ pointerEvents: "auto" }}
+                  >
+                    {account && (
+                      <TYPE.white
+                        style={{
+                          fontSize: "inherit",
+                          paddingRight: ".4rem",
+                        }}
+                      >
+                        <CountUp
+                          key={countUpValue}
+                          isCounting
+                          start={parseFloat(countUpValuePrevious)}
+                          end={parseFloat(countUpValue)}
+                          thousandsSeparator={","}
+                          duration={1}
+                        />
+                      </TYPE.white>
+                    )}
+                    FTHM
+                  </FTHMAmount>
+                  <CardNoise />
+                </FTHMWrapper>
+              )}
+              <AccountElement
+                active={account ? "true" : "false"}
+                style={{ pointerEvents: "auto" }}
+              >
+                {account && userXDCBalance ? (
+                  <Box
+                    fontSize={"1rem"}
+                    sx={{ flexShrink: 0 }}
+                    p="0.5rem 0.5rem 0.5rem 0.5rem"
+                    fontWeight={500}
+                  >
+                    {formatNumber(Number(userXDCBalance?.toSignificant(8)))}{" "}
+                    {"XDC"}
+                  </Box>
+                ) : null}
+              </AccountElement>
+              {account && !error && (
+                <WalletBox>{truncateEthAddress(account)}</WalletBox>
+              )}
+
+              <IconButton
+                color="inherit"
+                onClick={isActive || error ? disconnect : openConnectorMenu}
+              >
+                {isActive ? (
+                  <img src={ExitSrc} alt={"exit"} />
+                ) : (
+                  <AccountBalanceWalletIcon />
+                )}
+              </IconButton>
+            </AccountInfoWrapper>
           </Toolbar>
         </AppBar>
         {!isMobile && (
@@ -451,11 +442,7 @@ const MainLayout = () => {
               )}
               {showToggleDrawerBtn && (
                 <ToggleDrawerButton open={open} onClick={toggleDrawer}>
-                  {open ? (
-                    <ArrowBack sx={{ fontSize: "0.9rem" }} />
-                  ) : (
-                    <ArrowForward sx={{ fontSize: "0.9rem", color: "#fff" }} />
-                  )}
+                  <ArrowForward sx={{ fontSize: "0.9rem" }} />
                 </ToggleDrawerButton>
               )}
             </MainToolbar>

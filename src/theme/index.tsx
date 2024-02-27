@@ -136,7 +136,7 @@ export const getDesignTokens = () => {
         xs: 0,
         xsm: 640,
         sm: 760,
-        md: 960,
+        md: 900,
         lg: 1280,
         xl: 1575,
         xxl: 1800,

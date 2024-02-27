@@ -13,10 +13,12 @@ export const ToggleDrawerButton = styled(MuiButton, {
   width: "20px",
   height: "20px",
   borderRadius: "20px",
-  background: open ? "#808084" : "#3E3F45",
+  background: "#808084",
   padding: 0,
   position: "absolute",
   right: "-10px",
+  transform: `rotate(${open ? "180deg" : "0deg"})`,
+  transition: "transform 0.3s ease-in-out",
   "&:hover": { background: open ? "#3E3F45" : "#808084" },
 }));
 
