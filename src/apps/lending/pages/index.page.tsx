@@ -29,7 +29,6 @@ export default function Home() {
   return (
     <>
       <DashboardTopPanel />
-
       <ContentContainer>
         {currentAccount && !isPermissionsLoading && (
           <Box

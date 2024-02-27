@@ -172,16 +172,16 @@ export const RepayModalContent: FC<
       balance: maxReserveTokenForRepay.toString(10),
     });
     // push reserve aToken
-    const aTokenBalance = valueToBigNumber(underlyingBalance);
+    const fmTokenBalance = valueToBigNumber(underlyingBalance);
     const maxBalance = BigNumber.max(
-      aTokenBalance,
-      BigNumber.min(aTokenBalance, debt).toString(10)
+      fmTokenBalance,
+      BigNumber.min(fmTokenBalance, debt).toString(10)
     );
     repayTokens.push({
       address: poolReserve.aTokenAddress,
-      symbol: `a${poolReserve.symbol}`,
+      symbol: `fm${poolReserve.symbol}`,
       iconSymbol: poolReserve.iconSymbol,
-      aToken: true,
+      fmToken: true,
       balance: maxBalance.toString(10),
     });
     setAssets(repayTokens);

@@ -13,7 +13,6 @@ export enum ModalType {
   Repay,
   CollateralChange,
   RateSwitch,
-  ClaimRewards,
   Emode,
   Faucet,
   Swap,
@@ -78,7 +77,6 @@ export interface ModalContextType<T extends ModalArgsType> {
     underlyingAsset: string,
     currentRateMode: InterestRate
   ) => void;
-  openClaimRewards: () => void;
   openEmode: (mode: EmodeModalType) => void;
   openFaucet: (underlyingAsset: string) => void;
   close: () => void;
@@ -226,10 +224,6 @@ export const ModalContextProvider: FC<{ children: ReactNode }> = ({
           trackEvent(GENERAL.OPEN_MODAL, { modal: "Rate Switch" });
           setType(ModalType.RateSwitch);
           setArgs({ underlyingAsset, currentRateMode });
-        },
-        openClaimRewards: () => {
-          trackEvent(GENERAL.OPEN_MODAL, { modal: "Claim" });
-          setType(ModalType.ClaimRewards);
         },
         openEmode: (mode) => {
           trackEvent(GENERAL.OPEN_MODAL, { modal: "eMode" });
