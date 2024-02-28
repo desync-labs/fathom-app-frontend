@@ -118,6 +118,11 @@ const AddLiquidity = () => {
     error,
   } = useDerivedMintInfo(currencyA ?? undefined, currencyB ?? undefined);
 
+  console.log({
+    parsedAmounts,
+    dependentField,
+  });
+
   const { onFieldAInput, onFieldBInput } = useMintActionHandlers(noLiquidity);
 
   const isValid = !error;
@@ -437,15 +442,13 @@ const AddLiquidity = () => {
               (isCreate ? (
                 <ColumnCenter>
                   <BlueCard>
-                    <AutoColumn gap="10px">
+                    <AutoColumn>
                       <TYPE.white fontWeight={600}>
                         You are the first liquidity provider.
                       </TYPE.white>
                       <TYPE.white fontWeight={400}>
                         The ratio of tokens you add will set the price of this
-                        pool.
-                      </TYPE.white>
-                      <TYPE.white fontWeight={400}>
+                        pool. <br />
                         Once you are happy with the rate click supply to review.
                       </TYPE.white>
                     </AutoColumn>
