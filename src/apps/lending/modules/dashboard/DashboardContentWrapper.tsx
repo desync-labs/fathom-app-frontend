@@ -77,7 +77,6 @@ export const DashboardContentWrapper: FC<DashboardContentWrapperProps> = memo(
           <Box
             sx={{
               position: "relative",
-
               display: { xs: !isBorrow ? "none" : "block", lg: "block" },
               width: paperWidth,
             }}
@@ -86,9 +85,7 @@ export const DashboardContentWrapper: FC<DashboardContentWrapperProps> = memo(
               <Box
                 sx={{
                   position: "absolute",
-
                   top: upFromSm ? "-60px" : "-90px",
-
                   right: "0px",
                 }}
               >

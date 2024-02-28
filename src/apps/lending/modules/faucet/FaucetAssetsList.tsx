@@ -68,7 +68,7 @@ export default function FaucetAssetsList() {
         </Typography>
       }
     >
-      <ListHeaderWrapper px={downToXSM ? 4 : 6}>
+      <ListHeaderWrapper px={downToXSM ? 2 : 3}>
         <ListColumn isRow maxWidth={280}>
           <ListHeaderTitle>Asset</ListHeaderTitle>
         </ListColumn>

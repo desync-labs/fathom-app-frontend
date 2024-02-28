@@ -29,13 +29,13 @@ export const DashboardListTopPanel: FC<DashboardListTopPanelProps> = memo(
           alignItems: { xs: "flex-start", xsm: "center" },
           justifyContent: "space-between",
           flexDirection: { xs: "column-reverse", xsm: "row" },
-          px: { xs: 4, xsm: 6 },
-          py: 2,
+          px: { xs: 2, xsm: 3 },
+          py: 1,
           pl: { xs: "18px", xsm: "27px" },
         }}
       >
         <FormControlLabel
-          sx={{ mt: { xs: bridge ? 2 : 0, xsm: 0 } }}
+          sx={{ mt: { xs: bridge ? 1 : 0, xsm: 0 } }}
           control={<Checkbox sx={{ p: "6px" }} />}
           checked={value}
           onChange={() => {

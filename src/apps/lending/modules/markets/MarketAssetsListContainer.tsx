@@ -78,8 +78,8 @@ export const MarketAssetsListContainer = () => {
 
       {/* Frozen or paused assets list */}
       {frozenOrPausedReserves.length > 0 && (
-        <Box sx={{ mt: 10, px: { xs: 4, xsm: 6 } }}>
-          <Typography variant="h4" mb={4}>
+        <Box sx={{ mt: 5, px: { xs: 2, xsm: 3 } }}>
+          <Typography variant="h4" mb={2}>
             Show Frozen or paused assets
             <Switch
               checked={showFrozenMarketsToggle}

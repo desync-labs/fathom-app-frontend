@@ -19,6 +19,7 @@ declare module "@mui/material/styles/createPalette" {
 
   interface TypeText {
     muted: string;
+    light: string;
   }
 
   interface TypeBackground {
@@ -186,9 +187,10 @@ export const getDesignTokens = () => {
       text: {
         primary: "#fff",
         secondary: "#6379a1",
+        light: "#c5d7f2",
         disabled: "#62677B",
         muted: "#5977a0",
-        highlight: "#C9B3F9",
+        highlight: "#00fff6",
       },
       background: {
         default: "#071028",
@@ -198,7 +200,7 @@ export const getDesignTokens = () => {
         header: "#101d32",
         disabled: "#EBEBEF14",
       },
-      divider: "rgba(255, 255, 255, 0.12)",
+      divider: "#1d2d49",
       action: {
         active: "#EBEBEF8F",
         hover: "#2a3e5a",
@@ -408,14 +410,24 @@ export function getThemedComponents(theme: Theme) {
           },
         },
       },
+      MuiInputBase: {
+        styleOverrides: {
+          input: {
+            color: theme.palette.text.primary,
+            "&::placeholder": {
+              color: theme.palette.text.muted,
+            },
+          },
+        },
+      },
       MuiSlider: {
         styleOverrides: {
           root: {
             "& .MuiSlider-thumb": {
-              color: theme.palette.mode === "light" ? "#62677B" : "#C9B3F9",
+              color: "#00fff6",
             },
             "& .MuiSlider-track": {
-              color: theme.palette.mode === "light" ? "#1d2d49" : "#9C93B3",
+              color: "#00fff6",
             },
           },
         },
@@ -636,46 +648,38 @@ export function getThemedComponents(theme: Theme) {
           },
         ],
       },
-      // MuiContainer: {
-      //   styleOverrides: {
-      //     root: {
-      //       display: "flex",
-      //       flexDirection: "column",
-      //       flex: 1,
-      //       paddingBottom: "39px",
-      //       [theme.breakpoints.up("xs")]: {
-      //         paddingLeft: "8px",
-      //         paddingRight: "8px",
-      //       },
-      //       [theme.breakpoints.up("xsm")]: {
-      //         paddingLeft: "20px",
-      //         paddingRight: "20px",
-      //       },
-      //       [theme.breakpoints.up("sm")]: {
-      //         paddingLeft: "48px",
-      //         paddingRight: "48px",
-      //       },
-      //       [theme.breakpoints.up("md")]: {
-      //         paddingLeft: "96px",
-      //         paddingRight: "96px",
-      //       },
-      //       [theme.breakpoints.up("lg")]: {
-      //         paddingLeft: "20px",
-      //         paddingRight: "20px",
-      //       },
-      //       [theme.breakpoints.up("xl")]: {
-      //         maxWidth: "unset",
-      //         paddingLeft: "96px",
-      //         paddingRight: "96px",
-      //       },
-      //       [theme.breakpoints.up("xxl")]: {
-      //         paddingLeft: 0,
-      //         paddingRight: 0,
-      //         maxWidth: "1440px",
-      //       },
-      //     },
-      //   },
-      // },
+      MuiTooltip: {
+        styleOverrides: {
+          tooltip: {
+            backgroundColor: theme.palette.background.paper,
+            color: theme.palette.text.light,
+            boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+            borderRadius: "8px",
+            padding: "8px 12px",
+            ...theme.typography.tooltip,
+          },
+          arrow: {
+            color: theme.palette.background.paper,
+            "&:before": {
+              boxShadow:
+                "0px 0px 2px rgba(0, 0, 0, 0.2), 0px 2px 10px rgba(0, 0, 0, 0.1)",
+            },
+          },
+        },
+      },
+      MuiCheckbox: {
+        styleOverrides: {
+          root: {
+            color: theme.palette.text.secondary,
+            "&.Mui-checked": {
+              color: theme.palette.text.primary,
+            },
+            "&.Mui-disabled": {
+              color: theme.palette.action.disabled,
+            },
+          },
+        },
+      },
       MuiSwitch: {
         styleOverrides: {
           switchBase: {

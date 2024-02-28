@@ -1,7 +1,7 @@
 import { valueToBigNumber } from "@into-the-fathom/lending-math-utils";
 import { useMediaQuery, useTheme } from "@mui/material";
-import { marketContainerProps } from "apps/lending/pages/markets.page";
 
+import { lendingContainerProps } from "apps/lending/components/ContentContainer";
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
 import { TopInfoPanel } from "apps/lending/components/TopInfoPanel/TopInfoPanel";
 import { TopInfoPanelItem } from "apps/lending/components/TopInfoPanel/TopInfoPanelItem";
@@ -31,7 +31,7 @@ export const MarketsTopPanel = () => {
 
   return (
     <TopInfoPanel
-      containerProps={marketContainerProps}
+      containerProps={lendingContainerProps}
       pageTitle={"Markets"}
       withMarketSwitcher
     >

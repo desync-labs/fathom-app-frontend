@@ -1,40 +1,9 @@
-import { Box, Container } from "@mui/material";
-import { ReactNode, useEffect } from "react";
+import { Box } from "@mui/material";
+import { useEffect } from "react";
 import { MarketAssetsListContainer } from "apps/lending/modules/markets/MarketAssetsListContainer";
 import { MarketsTopPanel } from "apps/lending/modules/markets/MarketsTopPanel";
 import { useRootStore } from "apps/lending/store/root";
-
-interface MarketContainerProps {
-  children: ReactNode;
-}
-
-export const marketContainerProps = {
-  sx: {
-    display: "flex",
-    flexDirection: "column",
-    flex: 1,
-    pb: "39px",
-    px: {
-      xs: 2,
-      xsm: 5,
-      sm: 12,
-      md: 5,
-      lg: 0,
-      xl: "96px",
-      xxl: 0,
-    },
-    maxWidth: {
-      xs: "unset",
-      lg: "1240px",
-      xl: "unset",
-      xxl: "1440px",
-    },
-  },
-};
-
-export const MarketContainer = ({ children }: MarketContainerProps) => {
-  return <Container {...marketContainerProps}>{children}</Container>;
-};
+import { ContentContainer } from "apps/lending/components/ContentContainer";
 
 export default function Markets() {
   const trackEvent = useRootStore((store) => store.trackEvent);
@@ -56,9 +25,9 @@ export default function Markets() {
           mt: { xs: "-32px", lg: "-46px", xl: "-44px", xxl: "-48px" },
         }}
       >
-        <MarketContainer>
+        <ContentContainer>
           <MarketAssetsListContainer />
-        </MarketContainer>
+        </ContentContainer>
       </Box>
     </>
   );

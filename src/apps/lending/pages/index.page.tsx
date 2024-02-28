@@ -30,38 +30,47 @@ export default function Home() {
     <>
       <DashboardTopPanel />
 
-      <ContentContainer>
-        {currentAccount && !isPermissionsLoading && (
-          <Box
-            sx={{
-              display: { xs: "flex", lg: "none" },
-              justifyContent: { xs: "center", xsm: "flex-start" },
-              mb: { xs: 3, xsm: 4 },
-            }}
-          >
-            <StyledToggleButtonGroup
-              color="primary"
-              value={mode}
-              exclusive
-              onChange={(_, value) => setMode(value)}
-              sx={{ width: { xs: "100%", xsm: "359px" }, height: "44px" }}
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          flex: 1,
+          mt: { xs: "-32px", lg: "-46px", xl: "-44px", xxl: "-48px" },
+        }}
+      >
+        <ContentContainer>
+          {currentAccount && !isPermissionsLoading && (
+            <Box
+              sx={{
+                display: { xs: "flex", lg: "none" },
+                justifyContent: { xs: "center", xsm: "flex-start" },
+                mb: { xs: 1.5, xsm: 2 },
+              }}
             >
-              <StyledToggleButton value="supply" disabled={mode === "supply"}>
-                <Typography variant="subheader1">Supply</Typography>
-              </StyledToggleButton>
-              <StyledToggleButton value="borrow" disabled={mode === "borrow"}>
-                <Typography variant="subheader1">Borrow</Typography>
-              </StyledToggleButton>
-            </StyledToggleButtonGroup>
-          </Box>
-        )}
+              <StyledToggleButtonGroup
+                color="primary"
+                value={mode}
+                exclusive
+                onChange={(_, value) => setMode(value)}
+                sx={{ width: { xs: "100%", xsm: "359px" }, height: "44px" }}
+              >
+                <StyledToggleButton value="supply" disabled={mode === "supply"}>
+                  <Typography variant="subheader1">Supply</Typography>
+                </StyledToggleButton>
+                <StyledToggleButton value="borrow" disabled={mode === "borrow"}>
+                  <Typography variant="subheader1">Borrow</Typography>
+                </StyledToggleButton>
+              </StyledToggleButtonGroup>
+            </Box>
+          )}
 
-        {currentAccount && !isPermissionsLoading ? (
-          <DashboardContentWrapper isBorrow={mode === "borrow"} />
-        ) : (
-          <ConnectWalletPaper loading={web3Loading} />
-        )}
-      </ContentContainer>
+          {currentAccount && !isPermissionsLoading ? (
+            <DashboardContentWrapper isBorrow={mode === "borrow"} />
+          ) : (
+            <ConnectWalletPaper loading={web3Loading} />
+          )}
+        </ContentContainer>
+      </Box>
     </>
   );
 }

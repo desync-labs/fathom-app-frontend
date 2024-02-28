@@ -227,13 +227,15 @@ const BorrowedPositionsListItemMobile: FC<BorrowedPositionsListItemProps> =
             caption={"APY"}
             align="flex-start"
             captionVariant="description"
-            mb={2}
+            captionColor="text.light"
+            mb={1}
           >
             <IncentivesCard
               value={borrowAPY}
               incentives={incentives}
               symbol={symbol}
               variant="secondary14"
+              color="text.light"
             />
           </Row>
 
@@ -246,7 +248,8 @@ const BorrowedPositionsListItemMobile: FC<BorrowedPositionsListItemProps> =
               />
             }
             captionVariant="description"
-            mb={2}
+            captionColor="text.light"
+            mb={1}
           >
             <ListItemAPYButton
               stableBorrowRateEnabled={stableBorrowRateEnabled}
@@ -267,7 +270,7 @@ const BorrowedPositionsListItemMobile: FC<BorrowedPositionsListItemProps> =
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
-              mt: 5,
+              mt: 2.5,
             }}
           >
             <Button
@@ -275,7 +278,7 @@ const BorrowedPositionsListItemMobile: FC<BorrowedPositionsListItemProps> =
               variant="gradient"
               onClick={onOpenBorrow}
               fullWidth
-              sx={{ mr: 1.5 }}
+              sx={{ mr: 0.75 }}
             >
               Borrow
             </Button>

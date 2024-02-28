@@ -259,8 +259,8 @@ export const SupplyAssetsList = () => {
         <Typography
           component="div"
           variant="h3"
-          sx={{ mr: 4 }}
-          color={theme.palette.primary.main}
+          sx={{ mr: 2 }}
+          color={theme.palette.text.primary}
         >
           Assets to supply
         </Typography>
@@ -270,7 +270,7 @@ export const SupplyAssetsList = () => {
       noData={supplyDisabled}
       subChildrenComponent={
         <>
-          <Box sx={{ px: 6 }}>
+          <Box sx={{ px: 3 }}>
             {user?.isInIsolationMode ? (
               <Warning severity="warning">
                 Collateral usage is limited because of isolation mode.

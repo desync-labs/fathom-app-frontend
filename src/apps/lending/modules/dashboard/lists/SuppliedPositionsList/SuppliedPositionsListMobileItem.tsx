@@ -68,13 +68,15 @@ export const SuppliedPositionsListMobileItem: FC<DashboardReserve> = memo(
           caption={"Supply APY"}
           align="flex-start"
           captionVariant="description"
-          mb={2}
+          captionColor="text.light"
+          mb={1}
         >
           <IncentivesCard
             value={Number(supplyAPY)}
             incentives={aIncentivesData}
             symbol={symbol}
             variant="secondary14"
+            color="text.light"
           />
         </Row>
 
@@ -82,7 +84,8 @@ export const SuppliedPositionsListMobileItem: FC<DashboardReserve> = memo(
           caption={"Used as collateral"}
           align={isIsolated ? "flex-start" : "center"}
           captionVariant="description"
-          mb={2}
+          captionColor="text.light"
+          mb={1}
         >
           <ListItemUsedAsCollateral
             isIsolated={isIsolated}
@@ -105,7 +108,7 @@ export const SuppliedPositionsListMobileItem: FC<DashboardReserve> = memo(
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            mt: 5,
+            mt: 2.5,
           }}
         >
           <Button
@@ -119,7 +122,7 @@ export const SuppliedPositionsListMobileItem: FC<DashboardReserve> = memo(
                 "dashboard"
               )
             }
-            sx={{ mr: 1.5 }}
+            sx={{ mr: 0.75 }}
             fullWidth
           >
             Supply
@@ -135,7 +138,7 @@ export const SuppliedPositionsListMobileItem: FC<DashboardReserve> = memo(
                 "dashboard"
               )
             }
-            sx={{ mr: 1.5 }}
+            sx={{ mr: 0.75 }}
             fullWidth
           >
             Withdraw

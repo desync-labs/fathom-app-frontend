@@ -26,7 +26,7 @@ export const ConnectWalletPaper: FC<ConnectWalletPaperProps> = ({
         alignItems: "center",
         justifyContent: "center",
         textAlign: "center",
-        p: 4,
+        p: 2,
         flex: 1,
         ...sx,
       }}
@@ -37,10 +37,10 @@ export const ConnectWalletPaper: FC<ConnectWalletPaperProps> = ({
           <CircularProgress />
         ) : (
           <>
-            <Typography variant="h2" sx={{ mb: 2 }}>
+            <Typography variant="h2" sx={{ color: "#c5d7f2", mb: 1 }}>
               Please, connect your wallet
             </Typography>
-            <Typography sx={{ mb: 6 }} color="text.secondary">
+            <Typography sx={{ mb: 3 }} color="text.secondary">
               {description ||
                 "Please connect your wallet to see your supplies, borrowings,\n" +
                   "                  and open positions."}

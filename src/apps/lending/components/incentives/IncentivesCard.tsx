@@ -51,7 +51,7 @@ export const IncentivesCard: FC<IncentivesCardProps> = ({
           {tooltip}
         </Box>
       ) : (
-        <NoData variant={variant} color={color || "text.secondary"} />
+        <NoData variant={variant} color={"text.secondary"} />
       )}
 
       <IncentivesButton incentives={incentives} symbol={symbol} />

@@ -59,7 +59,7 @@ export const ListItemWrapper: FC<ListItemWrapperProps> = memo(
             <Tooltip title={`${name} (${symbol})`} arrow placement="top">
               <Typography
                 variant="subheader1"
-                sx={{ ml: 3 }}
+                sx={{ ml: 1.5, color: "text.primary" }}
                 noWrap
                 data-cy={`assetName`}
               >

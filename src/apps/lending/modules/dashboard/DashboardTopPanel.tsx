@@ -12,6 +12,7 @@ import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContex
 import { useWeb3Context } from "apps/lending/libs/hooks/useWeb3Context";
 import { useRootStore } from "apps/lending/store/root";
 import { DASHBOARD, GENERAL } from "apps/lending/utils/mixPanelEvents";
+import { lendingContainerProps } from "apps/lending/components/ContentContainer";
 
 import HALLink from "apps/lending/components/HALLink";
 import { HealthFactorNumber } from "apps/lending/components/HealthFactorNumber";
@@ -86,6 +87,7 @@ export const DashboardTopPanel = () => {
             />
           </Box>
         }
+        containerProps={lendingContainerProps}
       >
         <TopInfoPanelItem title={"Net worth"} loading={loading} hideIcon>
           {currentAccount ? (

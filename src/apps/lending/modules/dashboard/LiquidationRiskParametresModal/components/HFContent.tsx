@@ -17,7 +17,7 @@ export const HFContent: FC<HFContentProps> = ({ healthFactor }) => {
   const dotPosition = +healthFactor > 10 ? 100 : +healthFactor * 10;
 
   return (
-    <Box sx={{ position: "relative", mt: "33px", mb: 4 }}>
+    <Box sx={{ position: "relative", mt: "33px", mb: 2 }}>
       <Box
         sx={{
           height: "4px",
@@ -45,7 +45,7 @@ export const HFContent: FC<HFContentProps> = ({ healthFactor }) => {
               height: 0,
               borderStyle: "solid",
               borderWidth: "6px 4px 0 4px",
-              borderColor: `${theme.palette.primary.main} transparent transparent transparent`,
+              borderColor: `${theme.palette.text.primary} transparent transparent transparent`,
               content: "''",
               position: "absolute",
               left: dotPosition > 75 ? "auto" : "50%",
@@ -94,7 +94,7 @@ export const HFContent: FC<HFContentProps> = ({ healthFactor }) => {
         sx={{
           maxWidth: "20%",
           textAlign: "center",
-          pt: 1.5,
+          pt: 0.75,
           "&:after": {
             content: "''",
             position: "absolute",

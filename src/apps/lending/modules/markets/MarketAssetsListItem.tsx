@@ -26,7 +26,7 @@ export const MarketAssetsListItem: FC<ComputedReserveData> = memo(
     const showStableBorrowRate = Number(reserve.totalStableDebtUSD) > 0;
     return (
       <ListItem
-        px={6}
+        px={3}
         minHeight={76}
         onClick={() => {
           trackEvent(MARKETS.DETAILS_NAVIGATION, {
@@ -45,8 +45,8 @@ export const MarketAssetsListItem: FC<ComputedReserveData> = memo(
       >
         <ListColumn isRow maxWidth={280}>
           <TokenIcon symbol={reserve.iconSymbol} fontSize="large" />
-          <Box sx={{ pl: 3.5, overflow: "hidden" }}>
-            <Typography variant="h4" color={theme.palette.primary.main} noWrap>
+          <Box sx={{ pl: 1.75, overflow: "hidden" }}>
+            <Typography variant="h4" color={theme.palette.text.primary} noWrap>
               {reserve.name}
             </Typography>
 
@@ -72,6 +72,7 @@ export const MarketAssetsListItem: FC<ComputedReserveData> = memo(
             compact
             value={reserve.totalLiquidity}
             variant="main16"
+            color="text.light"
           />
           <ReserveSubheader value={reserve.totalLiquidityUSD} />
         </ListColumn>
@@ -83,6 +84,7 @@ export const MarketAssetsListItem: FC<ComputedReserveData> = memo(
             symbol={reserve.symbol}
             variant="main16"
             symbolsVariant="secondary16"
+            color="text.light"
           />
         </ListColumn>
 
@@ -93,6 +95,7 @@ export const MarketAssetsListItem: FC<ComputedReserveData> = memo(
                 compact
                 value={reserve.totalDebt}
                 variant="main16"
+                color="text.light"
               />{" "}
               <ReserveSubheader value={reserve.totalDebtUSD} />
             </>
@@ -112,6 +115,7 @@ export const MarketAssetsListItem: FC<ComputedReserveData> = memo(
             symbol={reserve.symbol}
             variant="main16"
             symbolsVariant="secondary16"
+            color="text.light"
           />
           {!reserve.borrowingEnabled &&
             Number(reserve.totalVariableDebt) > 0 &&
@@ -125,6 +129,7 @@ export const MarketAssetsListItem: FC<ComputedReserveData> = memo(
             symbol={reserve.symbol}
             variant="main16"
             symbolsVariant="secondary16"
+            color="text.light"
           />
           {!reserve.borrowingEnabled &&
             Number(reserve.totalStableDebt) > 0 &&
