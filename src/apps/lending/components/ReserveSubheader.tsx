@@ -27,7 +27,7 @@ export const ReserveSubheader: FC<ReserveSubheaderProps> = ({
       {value === "Disabled" ? (
         <Typography
           component="span"
-          sx={{ mr: 0.5 }}
+          sx={{ mr: 0.25 }}
           variant="secondary12"
           color="text.muted"
         >

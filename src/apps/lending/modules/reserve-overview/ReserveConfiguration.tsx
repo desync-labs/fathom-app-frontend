@@ -56,7 +56,7 @@ const ReserveConfiguration: FC<ReserveConfigurationProps> = memo(
 
         {(reserve.borrowingEnabled || Number(reserve.totalDebt) > 0) && (
           <>
-            <Divider sx={{ my: { xs: 6, sm: 10 } }} />
+            <Divider sx={{ my: { xs: 3, sm: 5 } }} />
             <PanelRow>
               <PanelTitle>Borrow info</PanelTitle>
               <Box
@@ -82,14 +82,14 @@ const ReserveConfiguration: FC<ReserveConfigurationProps> = memo(
 
         {reserve.eModeCategoryId !== 0 && (
           <>
-            <Divider sx={{ my: { xs: 6, sm: 10 } }} />
+            <Divider sx={{ my: { xs: 3, sm: 5 } }} />
             <ReserveEModePanel reserve={reserve} />
           </>
         )}
 
         {(reserve.borrowingEnabled || Number(reserve.totalDebt) > 0) && (
           <>
-            <Divider sx={{ my: { xs: 6, sm: 10 } }} />
+            <Divider sx={{ my: { xs: 3, sm: 5 } }} />
 
             <PanelRow>
               <PanelTitle>Interest rate model</PanelTitle>
@@ -115,6 +115,7 @@ const ReserveConfiguration: FC<ReserveConfigurationProps> = memo(
                       percent
                       variant="main16"
                       compact
+                      color="text.light"
                     />
                   </PanelItem>
                   <Button

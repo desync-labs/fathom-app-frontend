@@ -5,17 +5,17 @@ import { ListItem } from "apps/lending/components/lists/ListItem";
 
 const HistoryRowItem = () => {
   return (
-    <ListItem px={6} minHeight={68}>
+    <ListItem px={3} minHeight={68}>
       <ListColumn isRow maxWidth={280}>
         <Skeleton variant="circular" width={24} height={24} />
-        <Box sx={{ pl: 6, overflow: "hidden" }}>
+        <Box sx={{ pl: 3, overflow: "hidden" }}>
           <Skeleton width={48} height={14} />
         </Box>
       </ListColumn>
 
       <ListColumn isRow align="center">
         <Skeleton width={40} height={12} />
-        <Box sx={{ pl: 5, display: "flex", gap: 1, alignItems: "center" }}>
+        <Box sx={{ pl: 2.5, display: "flex", gap: 1, alignItems: "center" }}>
           <Skeleton variant="circular" width={20} height={20} />
           <Skeleton width={64} height={14} />
           <Skeleton width={24} height={14} />
@@ -35,7 +35,7 @@ const HistoryRowItem = () => {
 export const HistoryItemLoader = () => {
   return (
     <>
-      <ListItem px={6} minHeight={68}>
+      <ListItem px={3} minHeight={68}>
         <ListColumn align="left">
           <Skeleton
             width={140}

@@ -111,8 +111,8 @@ export const HistoryFilterMenu: React.FC<HistoryFilterMenuProps> = ({
         <Box sx={{ display: "flex" }}>
           <Typography
             variant="description"
-            color={theme.palette.primary.main}
-            sx={{ mr: 1 }}
+            color={theme.palette.text.primary}
+            sx={{ mr: 0.5 }}
           >
             TXs:
           </Typography>
@@ -144,10 +144,10 @@ export const HistoryFilterMenu: React.FC<HistoryFilterMenuProps> = ({
           border: "1px solid",
           borderColor: "divider",
           borderRadius: "4px",
-          mr: downToMD ? 0 : 2,
-          ml: downToMD ? 4 : 0,
-          pl: 2,
-          pr: 1,
+          mr: downToMD ? 0 : 1,
+          ml: downToMD ? 2 : 0,
+          pl: 1,
+          pr: 0.5,
         }}
         onClick={handleClick}
       >
@@ -157,13 +157,12 @@ export const HistoryFilterMenu: React.FC<HistoryFilterMenuProps> = ({
           </SvgIcon>
           <Typography
             variant="subheader1"
-            color="text.primary"
+            color="text.light"
             sx={{
-              ml: 1,
               textOverflow: "ellipsis",
               whiteSpace: "nowrap",
               overflow: "hidden",
-              mr: 1,
+              mx: 0.5,
             }}
           >
             <FilterButtonLabel />
@@ -201,7 +200,7 @@ export const HistoryFilterMenu: React.FC<HistoryFilterMenuProps> = ({
           sx: {
             width: 280,
             maxHeight: 300,
-            mt: 1,
+            mt: 0.5,
             boxShadow:
               "0px 0px 2px rgba(0, 0, 0, 0.2), 0px 2px 10px rgba(0, 0, 0, 0.1)",
             borderRadius: "4px",
@@ -216,18 +215,19 @@ export const HistoryFilterMenu: React.FC<HistoryFilterMenuProps> = ({
               : undefined,
             display: "flex",
             justifyContent: "space-between",
+            color: theme.palette.text.light,
           }}
         >
-          <Typography variant="subheader1" color="text.primary">
+          <Typography variant="subheader1" color="text.light">
             All transactions
           </Typography>
           {allSelected && (
-            <SvgIcon sx={{ fontSize: "16px" }}>
+            <SvgIcon sx={{ fontSize: "16px" }} color={"inherit"}>
               <CheckIcon />
             </SvgIcon>
           )}
         </MenuItem>
-        <Divider sx={{ mt: 1 }} />
+        <Divider sx={{ mt: 0.5 }} />
         <Box
           sx={{
             overflowY: "scroll",
@@ -254,13 +254,14 @@ export const HistoryFilterMenu: React.FC<HistoryFilterMenuProps> = ({
                       : undefined,
                     display: "flex",
                     justifyContent: "space-between",
+                    color: theme.palette.text.light,
                   }}
                 >
-                  <Typography variant="subheader1" color="text.primary">
+                  <Typography variant="subheader1" color="text.light">
                     <FilterLabel filter={option} />
                   </Typography>
                   {currentFilter.includes(option) && (
-                    <SvgIcon sx={{ fontSize: "16px" }}>
+                    <SvgIcon sx={{ fontSize: "16px" }} color={"inherit"}>
                       <CheckIcon />
                     </SvgIcon>
                   )}

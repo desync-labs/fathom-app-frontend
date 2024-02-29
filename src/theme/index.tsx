@@ -579,12 +579,6 @@ export function getThemedComponents(theme: Theme) {
       },
       MuiList: {
         styleOverrides: {
-          root: {
-            ".MuiMenuItem-root+.MuiDivider-root, .MuiDivider-root": {
-              marginTop: "4px",
-              marginBottom: "4px",
-            },
-          },
           padding: {
             paddingTop: "4px",
             paddingBottom: "4px",
@@ -601,7 +595,7 @@ export function getThemedComponents(theme: Theme) {
       MuiListItemText: {
         styleOverrides: {
           root: {
-            ...theme.typography.subheader1,
+            ...theme.typography.description,
           },
         },
       },
