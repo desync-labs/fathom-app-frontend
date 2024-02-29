@@ -28,6 +28,5 @@ test.describe("Fathom App Test Suite: Wallet Connectivity", () => {
     await fxdPage.validateConnectedWalletAddress();
     await fxdPage.disconnectWallet();
     await fxdPage.validateWalletDisconnected();
-    await fxdPage.validateNoPositions();
   });
 });

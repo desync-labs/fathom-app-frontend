@@ -707,6 +707,7 @@ export default class VaultPage extends BasePage {
       .not.toBeVisible();
     await this.getDepositButtonRowLocatorById(id).click();
     await expect(this.diaologDepositToVaultModal).toBeVisible();
+    await this.page.waitForTimeout(2000);
     await this.enterDepositAmount(depositAmount);
     await this.page.waitForTimeout(2000);
     await this.approveTokensMaxUint();
