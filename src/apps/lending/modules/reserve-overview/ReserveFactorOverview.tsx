@@ -64,6 +64,7 @@ export const ReserveFactorOverview: FC<ReserveFactorOverviewProps> = memo(
             percent
             variant="secondary14"
             visibleDecimals={2}
+            color="text.light"
           />
         </ReserveOverviewBox>
 
@@ -89,7 +90,7 @@ export const ReserveFactorOverview: FC<ReserveFactorOverviewProps> = memo(
               <Typography variant="description" color="text.secondary">
                 View contract
               </Typography>
-              <SvgIcon sx={{ ml: 1, fontSize: 14 }}>
+              <SvgIcon sx={{ ml: 0.5, fontSize: 14, color: "text.primary" }}>
                 <ExternalLinkIcon />
               </SvgIcon>
             </Box>

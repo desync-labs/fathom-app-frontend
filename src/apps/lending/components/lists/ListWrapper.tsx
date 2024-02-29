@@ -103,13 +103,13 @@ export const ListWrapper: FC<ListWrapperProps> = ({
     <Paper
       variant="outlined"
       sx={{
-        mt: withTopMargin ? 4 : 0,
+        mt: withTopMargin ? 2 : 0,
       }}
     >
       <Box
         sx={{
-          px: { xs: 4, xsm: 6 },
-          py: { xs: 3.5, xsm: 4 },
+          px: { xs: 2, xsm: 3 },
+          py: { xs: 1.5, xsm: 2 },
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
@@ -136,13 +136,13 @@ export const ListWrapper: FC<ListWrapperProps> = ({
               alignItems: "center",
               cursor: "pointer",
               minHeight: "28px",
-              pl: 3,
+              pl: 1.5,
               span: {
                 width: "14px",
                 height: "2px",
                 bgcolor: "text.secondary",
                 position: "relative",
-                ml: 1,
+                ml: 0.5,
                 "&:after": {
                   content: "''",
                   position: "absolute",
@@ -180,10 +180,10 @@ export const ListWrapper: FC<ListWrapperProps> = ({
           sx={{
             display: "flex",
             alignItems: "center",
-            px: { xs: 4, xsm: 6 },
+            px: { xs: 2, xsm: 3 },
             pb: {
-              xs: collapsed && !noData ? 6 : 2,
-              xsm: collapsed && !noData ? 6 : 0,
+              xs: collapsed && !noData ? 3 : 1,
+              xsm: collapsed && !noData ? 3 : 0,
             },
             overflowX: tooltipOpen ? "hidden" : "auto",
           }}
@@ -192,7 +192,7 @@ export const ListWrapper: FC<ListWrapperProps> = ({
         </Box>
       )}
       {subChildrenComponent && !collapsed && (
-        <Box sx={{ marginBottom: { xs: 2, xsm: 0 } }}>
+        <Box sx={{ marginBottom: { xs: 1, xsm: 0 } }}>
           {subChildrenComponent}
         </Box>
       )}

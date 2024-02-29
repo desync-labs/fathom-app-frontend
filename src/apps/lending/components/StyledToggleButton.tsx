@@ -7,10 +7,10 @@ const CustomToggleButton = styled(ToggleButton)<ToggleButtonProps>(
     backgroundColor: "transparent",
     borderRadius: "unset",
     ".MuiTypography-subheader1": {
-      color: theme.palette.primary.main,
+      color: theme.palette.text.primary,
     },
     ".MuiTypography-secondary14": {
-      color: theme.palette.primary.main,
+      color: theme.palette.text.primary,
     },
     "&:hover": {
       backgroundColor: "transparent",

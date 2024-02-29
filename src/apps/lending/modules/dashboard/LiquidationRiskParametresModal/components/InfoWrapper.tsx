@@ -16,11 +16,11 @@ export const InfoWrapper: FC<InfoWrapperProps> = memo(
       <Box
         sx={(theme) => ({
           border: `1px solid ${theme.palette.divider}`,
-          mb: 6,
+          mb: 3,
           borderRadius: "6px",
-          px: 4,
-          pt: 4,
-          pb: 6,
+          px: 2,
+          pt: 2,
+          pb: 3,
           "&:last-of-type": {
             mb: 0,
           },
@@ -28,7 +28,7 @@ export const InfoWrapper: FC<InfoWrapperProps> = memo(
       >
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
           <Box sx={{ width: "calc(100% - 72px)" }}>
-            <Typography variant="subheader1" mb={1}>
+            <Typography variant="subheader1" mb={0.5} color="text.light">
               {topTitle}
             </Typography>
             <Typography variant="caption" color="text.secondary">

@@ -20,7 +20,7 @@ export const ListColumn: FC<ListColumnProps> = ({
   align = "center",
   overFlow = "visible",
   flex = 1,
-  p = 1,
+  p = 0.5,
 }) => {
   return (
     <Box

@@ -144,7 +144,7 @@ export const FormattedNumber: FC<FormattedNumberProps> = ({
       {isSmallerThanMin && (
         <Typography
           component="span"
-          sx={{ mr: 0.5 }}
+          sx={{ mr: 0.25 }}
           variant={symbolsVariant || rest.variant}
           color={symbolsColor || "text.main"}
         >
@@ -154,14 +154,13 @@ export const FormattedNumber: FC<FormattedNumberProps> = ({
       {symbol?.toLowerCase() === "usd" && !percent && (
         <Typography
           component="span"
-          sx={{ mr: 0.5 }}
+          sx={{ mr: 0.25 }}
           variant={symbolsVariant || rest.variant}
           color={symbolsColor || "text.main"}
         >
           $
         </Typography>
       )}
-
       {!forceCompact ? (
         new Intl.NumberFormat("en-US", {
           maximumFractionDigits: decimals,
@@ -175,11 +174,10 @@ export const FormattedNumber: FC<FormattedNumberProps> = ({
           compactThreshold={compactThreshold}
         />
       )}
-
       {percent && (
         <Typography
           component="span"
-          sx={{ ml: 0.5 }}
+          sx={{ ml: 0.25 }}
           variant={symbolsVariant || rest.variant}
           color={symbolsColor || "text.main"}
         >
@@ -189,7 +187,7 @@ export const FormattedNumber: FC<FormattedNumberProps> = ({
       {symbol?.toLowerCase() !== "usd" && typeof symbol !== "undefined" && (
         <Typography
           component="span"
-          sx={{ ml: 0.5 }}
+          sx={{ ml: 0.25 }}
           variant={symbolsVariant || rest.variant}
           color={symbolsColor || "text.main"}
         >

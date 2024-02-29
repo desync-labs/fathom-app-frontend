@@ -23,13 +23,13 @@ export const TopInfoPanel: FC<TopInfoPanelProps> = ({
   return (
     <Box
       sx={{
-        pt: { xs: 10, md: 12 },
-        pb: { xs: 18, md: 20, lg: "94px", xl: "92px", xxl: "96px" },
+        pt: { xs: 5, md: 6 },
+        pb: { xs: 9, md: 10, lg: "94px", xl: "92px", xxl: "96px" },
         color: "#F1F1F3",
       }}
     >
       <Container {...containerProps} sx={{ ...containerProps.sx, pb: 0 }}>
-        <Box sx={{ px: { xs: 4, xsm: 6 } }}>
+        <Box sx={{ px: { xs: 0, xsm: 3 } }}>
           {!titleComponent && (
             <PageTitle
               pageTitle={pageTitle}
@@ -44,7 +44,7 @@ export const TopInfoPanel: FC<TopInfoPanelProps> = ({
             sx={{
               display: "flex",
               alignItems: "flex-start",
-              gap: { xs: 3, xsm: 8 },
+              gap: { xs: 2, xsm: 4 },
               flexWrap: "wrap",
               width: "100%",
             }}

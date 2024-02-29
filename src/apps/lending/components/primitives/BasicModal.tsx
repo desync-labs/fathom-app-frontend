@@ -76,7 +76,7 @@ export const BasicModal: FC<BasicModalProps> = memo(
                 onClick={handleClose}
                 data-cy={"close-button"}
               >
-                <SvgIcon sx={{ fontSize: "24px", color: "primary.main" }}>
+                <SvgIcon sx={{ fontSize: "24px", color: "text.primary" }}>
                   <XIcon data-cy={"CloseModalIcon"} />
                 </SvgIcon>
               </IconButton>

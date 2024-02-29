@@ -20,18 +20,22 @@ export const NoSearchResults: FC<NoSearchResultsProps> = ({
         flexDirection: "column",
         alignItems: "center",
         gap: 1,
-        pt: 15,
-        pb: 32,
-        px: 4,
+        pt: 7.5,
+        pb: 16,
+        px: 2,
       }}
     >
       {sm ? (
         <Box sx={{ textAlign: "center", maxWidth: "300px" }}>
-          <Typography variant="h2">{`No search results${
+          <Typography variant="h2" color="text.light">{`No search results${
             searchTerm && " for"
           }`}</Typography>
           {searchTerm && (
-            <Typography sx={{ overflowWrap: "anywhere" }} variant="h2">
+            <Typography
+              sx={{ overflowWrap: "anywhere" }}
+              variant="h2"
+              color="text.light"
+            >
               &apos;{searchTerm}&apos;
             </Typography>
           )}
@@ -44,6 +48,7 @@ export const NoSearchResults: FC<NoSearchResultsProps> = ({
             overflowWrap: "anywhere",
           }}
           variant="h2"
+          color="text.light"
         >
           No search results for {searchTerm}
         </Typography>

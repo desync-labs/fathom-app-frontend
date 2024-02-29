@@ -44,7 +44,7 @@ export const TopInfoPanelItem: FC<TopInfoPanelItemProps> = ({
       {withLine && (
         <Box
           sx={{
-            mr: 8,
+            mr: 4,
             my: "auto",
             width: "1px",
             bgcolor: "#F2F3F729",
@@ -69,7 +69,7 @@ export const TopInfoPanelItem: FC<TopInfoPanelItemProps> = ({
                 "0px 2px 1px rgba(0, 0, 0, 0.05), 0px 0px 1px rgba(0, 0, 0, 0.25)",
               width: 42,
               height: 42,
-              mr: 3,
+              mr: 1.5,
             }}
           >
             {icon && icon}

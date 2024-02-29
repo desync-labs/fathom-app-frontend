@@ -11,7 +11,7 @@ interface ListItemProps extends BoxProps {
 export const ListItem: FC<ListItemProps> = ({
   children,
   minHeight = 71,
-  px = 4,
+  px = 2,
   button,
   ...rest
 }) => {

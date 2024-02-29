@@ -11,9 +11,9 @@ export const DashboardContentNoData: FC<DashboardContentNoDataProps> = ({
   return (
     <Box
       sx={{
-        px: { xs: 4, xsm: 6 },
-        pt: { xs: 3.5, xsm: 5.5 },
-        pb: { xs: 6, sxm: 7 },
+        px: { xs: 2, xsm: 3 },
+        pt: { xs: 1.5, xsm: 3 },
+        pb: { xs: 3, sxm: 3.5 },
       }}
     >
       <Typography color="text.secondary">{text}</Typography>

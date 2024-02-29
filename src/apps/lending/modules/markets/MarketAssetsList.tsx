@@ -106,7 +106,7 @@ const MarketAssetsList: FC<MarketAssetsListProps> = ({ reserves, loading }) => {
   return (
     <>
       {!isTableChangedToCards && (
-        <ListHeaderWrapper px={6}>
+        <ListHeaderWrapper px={3}>
           {listHeaders.map((col) => (
             <ListColumn
               isRow={col.sortKey === "symbol"}

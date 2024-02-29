@@ -21,6 +21,7 @@ export const ListAPRColumn: FC<ListAPRColumnProps> = memo(
             value={value}
             incentives={incentives}
             symbol={symbol}
+            color="text.light"
           />
           {tooltip}
         </Box>

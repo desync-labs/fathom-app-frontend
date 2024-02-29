@@ -461,9 +461,9 @@ export const InterestRateModelGraph = withTooltip<AreaProps, TooltipData>(
               }
             >
               <Box
-                sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}
+                sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}
               >
-                <Typography variant="main12" color="primary" sx={{ mr: 2 }}>
+                <Typography variant="main12" color="primary" sx={{ mr: 1 }}>
                   Utilization Rate
                 </Typography>
                 <Typography variant="main12" color="primary">
@@ -476,7 +476,7 @@ export const InterestRateModelGraph = withTooltip<AreaProps, TooltipData>(
                   display: "flex",
                   justifyContent: "space-between",
                   width: isMobile ? "180px" : "100%",
-                  mb: 2,
+                  mb: 1,
                 }}
               >
                 {(tooltipData.utilization / 100) *
@@ -487,7 +487,7 @@ export const InterestRateModelGraph = withTooltip<AreaProps, TooltipData>(
                     <Typography
                       variant="caption"
                       color="text.secondary"
-                      sx={{ mr: 2 }}
+                      sx={{ mr: 1 }}
                     >
                       Borrow amount to reach {tooltipData.utilization}%
                       utilization
@@ -509,7 +509,7 @@ export const InterestRateModelGraph = withTooltip<AreaProps, TooltipData>(
                     <Typography
                       variant="caption"
                       color="text.secondary"
-                      sx={{ mr: 2 }}
+                      sx={{ mr: 1 }}
                     >
                       Repayment amount to reach {tooltipData.utilization}%
                       utilization
@@ -539,7 +539,7 @@ export const InterestRateModelGraph = withTooltip<AreaProps, TooltipData>(
                   <Typography
                     variant="caption"
                     color="text.secondary"
-                    sx={{ mr: 2 }}
+                    sx={{ mr: 1 }}
                   >
                     {field.text}
                   </Typography>
