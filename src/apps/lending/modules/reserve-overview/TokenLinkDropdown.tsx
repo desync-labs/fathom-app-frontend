@@ -28,7 +28,7 @@ export const TokenLinkDropdown: FC<TokenLinkDropdownProps> = memo(
       trackEvent(RESERVE_DETAILS.RESERVE_TOKENS_DROPDOWN, {
         assetName: poolReserve.name,
         asset: poolReserve.underlyingAsset,
-        aToken: poolReserve.aTokenAddress,
+        fmToken: poolReserve.aTokenAddress,
         market: currentMarket,
         variableDebtToken: poolReserve.variableDebtTokenAddress,
       });
@@ -85,7 +85,7 @@ export const TokenLinkDropdown: FC<TokenLinkDropdownProps> = memo(
                 type: "Underlying Token",
                 assetName: poolReserve.name,
                 asset: poolReserve.underlyingAsset,
-                aToken: poolReserve.aTokenAddress,
+                fmToken: poolReserve.aTokenAddress,
                 market: currentMarket,
                 variableDebtToken: poolReserve.variableDebtTokenAddress,
               });
@@ -126,7 +126,7 @@ export const TokenLinkDropdown: FC<TokenLinkDropdownProps> = memo(
                     type: "fmToken",
                     assetName: poolReserve.name,
                     asset: poolReserve.underlyingAsset,
-                    aToken: poolReserve.aTokenAddress,
+                    fmToken: poolReserve.aTokenAddress,
                     market: currentMarket,
                     variableDebtToken: poolReserve.variableDebtTokenAddress,
                   });
@@ -139,7 +139,7 @@ export const TokenLinkDropdown: FC<TokenLinkDropdownProps> = memo(
               >
                 <TokenIcon
                   symbol={poolReserve.iconSymbol}
-                  aToken={true}
+                  fmToken={true}
                   sx={{ fontSize: "20px" }}
                 />
                 <Typography
@@ -148,7 +148,7 @@ export const TokenLinkDropdown: FC<TokenLinkDropdownProps> = memo(
                   noWrap
                   data-cy={`assetName`}
                 >
-                  {"a" + poolReserve.symbol}
+                  {`fm${poolReserve.symbol}`}
                 </Typography>
               </MenuItem>
             </Box>
@@ -157,7 +157,7 @@ export const TokenLinkDropdown: FC<TokenLinkDropdownProps> = memo(
           {showDebtTokenHeader && (
             <Box sx={{ px: 4, pt: 3, pb: 2 }}>
               <Typography variant="secondary12" color="text.secondary">
-                Aave debt token
+                Fathom lending debt token
               </Typography>
             </Box>
           )}
@@ -173,7 +173,7 @@ export const TokenLinkDropdown: FC<TokenLinkDropdownProps> = memo(
                   type: "Variable Debt",
                   assetName: poolReserve.name,
                   asset: poolReserve.underlyingAsset,
-                  aToken: poolReserve.aTokenAddress,
+                  fmToken: poolReserve.aTokenAddress,
                   market: currentMarket,
                   variableDebtToken: poolReserve.variableDebtTokenAddress,
                 });
@@ -202,7 +202,7 @@ export const TokenLinkDropdown: FC<TokenLinkDropdownProps> = memo(
                   type: "Stable Debt",
                   assetName: poolReserve.name,
                   asset: poolReserve.underlyingAsset,
-                  aToken: poolReserve.aTokenAddress,
+                  fmToken: poolReserve.aTokenAddress,
                   market: currentMarket,
                   variableDebtToken: poolReserve.variableDebtTokenAddress,
                   stableDebtToken: poolReserve.stableDebtTokenAddress,

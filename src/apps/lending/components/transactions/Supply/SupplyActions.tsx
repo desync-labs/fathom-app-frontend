@@ -90,10 +90,6 @@ export const SupplyActions: FC<SupplyActionProps> = React.memo(
     } = useModalContext();
     const { refetchPoolData, refetchIncentiveData } =
       useBackgroundDataProvider();
-    const permitAvailable = tryPermit({
-      reserveAddress: poolAddress,
-      isWrappedBaseAsset,
-    });
     const { signTxData, sendTx } = useWeb3Context();
 
     const [usePermit, setUsePermit] = useState(false);
@@ -104,6 +100,10 @@ export const SupplyActions: FC<SupplyActionProps> = React.memo(
     const [signatureParams, setSignatureParams] = useState<
       SignedParams | undefined
     >();
+    const permitAvailable = tryPermit({
+      reserveAddress: poolAddress,
+      isWrappedBaseAsset,
+    });
 
     // callback to fetch approved amount and determine execution path on dependency updates
     const fetchApprovedAmount = useCallback(
@@ -221,7 +221,7 @@ export const SupplyActions: FC<SupplyActionProps> = React.memo(
         );
         setTxError(parsedError);
         setApprovalTxState({
-          txHash: undefined,
+          txHash: "",
           loading: false,
         });
       }

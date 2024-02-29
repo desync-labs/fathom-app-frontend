@@ -49,7 +49,7 @@ export const RepayModalContent: FC<
 }) => {
   const { gasLimit, mainTxState: repayTxState, txError } = useModalContext();
   const { marketReferencePriceInUsd, user } = useAppDataContext();
-  const { currentChainId, currentMarketData } = useProtocolDataContext();
+  const { currentChainId } = useProtocolDataContext();
 
   const [minRemainingBaseTokenBalance] = useRootStore((store) => [
     store.poolComputed.minRemainingBaseTokenBalance,
@@ -172,20 +172,18 @@ export const RepayModalContent: FC<
       balance: maxReserveTokenForRepay.toString(10),
     });
     // push reserve aToken
-    if (currentMarketData.v3) {
-      const aTokenBalance = valueToBigNumber(underlyingBalance);
-      const maxBalance = BigNumber.max(
-        aTokenBalance,
-        BigNumber.min(aTokenBalance, debt).toString(10)
-      );
-      repayTokens.push({
-        address: poolReserve.aTokenAddress,
-        symbol: `a${poolReserve.symbol}`,
-        iconSymbol: poolReserve.iconSymbol,
-        aToken: true,
-        balance: maxBalance.toString(10),
-      });
-    }
+    const fmTokenBalance = valueToBigNumber(underlyingBalance);
+    const maxBalance = BigNumber.max(
+      fmTokenBalance,
+      BigNumber.min(fmTokenBalance, debt).toString(10)
+    );
+    repayTokens.push({
+      address: poolReserve.aTokenAddress,
+      symbol: `fm${poolReserve.symbol}`,
+      iconSymbol: poolReserve.iconSymbol,
+      fmToken: true,
+      balance: maxBalance.toString(10),
+    });
     setAssets(repayTokens);
     setTokenToRepayWith(repayTokens[0]);
   }, []);

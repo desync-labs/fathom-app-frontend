@@ -625,7 +625,7 @@ export default class VaultPage extends BasePage {
     await this.getManageVaultButtonRowDetailsLocatorById(id).click();
     await expect(this.dialogManageVault).toBeVisible();
     await this.btnWithdrawNavManageDialogModal.click();
-    await this.page.waitForTimeout(500);
+    await this.page.waitForTimeout(2000);
     await this.btnMax.click();
     await this.page.waitForTimeout(2000);
     const depositedValueAfterText =
@@ -707,6 +707,7 @@ export default class VaultPage extends BasePage {
       .not.toBeVisible();
     await this.getDepositButtonRowLocatorById(id).click();
     await expect(this.diaologDepositToVaultModal).toBeVisible();
+    await this.page.waitForTimeout(2000);
     await this.enterDepositAmount(depositAmount);
     await this.page.waitForTimeout(2000);
     await this.approveTokensMaxUint();

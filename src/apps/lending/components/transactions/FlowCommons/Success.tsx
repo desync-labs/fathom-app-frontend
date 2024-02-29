@@ -101,7 +101,7 @@ export const TxSuccessView: FC<SuccessTxViewProps> = ({
           >
             <TokenIcon
               symbol={addToken.symbol}
-              aToken={addToken && addToken.aToken ? true : false}
+              fmToken={!!(addToken && addToken.fmToken)}
               sx={{ fontSize: "32px", mt: "12px", mb: "8px" }}
             />
             <Typography
@@ -109,16 +109,19 @@ export const TxSuccessView: FC<SuccessTxViewProps> = ({
               color="text.primary"
               sx={{ mx: "24px" }}
             >
-              Add {addToken && addToken.aToken ? "aToken " : "token "} to wallet
-              to track your balance.
+              Add{" "}
+              {addToken && addToken.fmToken
+                ? `fm${addToken.symbol} `
+                : `${addToken.symbol} `}{" "}
+              to wallet to track your balance.
             </Typography>
             <Button
               onClick={() => {
                 addERC20Token({
                   address: addToken.address,
                   decimals: addToken.decimals,
-                  symbol: addToken.aToken
-                    ? `a${addToken.symbol}`
+                  symbol: addToken.fmToken
+                    ? `fm${addToken.symbol}`
                     : addToken.symbol,
                   image: !/_/.test(addToken.symbol) ? base64 : undefined,
                 });
@@ -131,7 +134,7 @@ export const TxSuccessView: FC<SuccessTxViewProps> = ({
                 <Base64Token
                   symbol={addToken.symbol}
                   onImageGenerated={setBase64}
-                  aToken={addToken.aToken}
+                  fmToken={addToken.fmToken}
                 />
               )}
               <WalletIcon

@@ -7,7 +7,7 @@ import {
   valueToBigNumber,
 } from "@into-the-fathom/lending-math-utils";
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
-import { Fragment, useMemo, useState } from "react";
+import { FC, Fragment, useMemo, useState } from "react";
 import { StableAPYTooltip } from "apps/lending/components/infoTooltips/StableAPYTooltip";
 import { VariableAPYTooltip } from "apps/lending/components/infoTooltips/VariableAPYTooltip";
 import { ListColumn } from "apps/lending/components/lists/ListColumn";
@@ -158,24 +158,15 @@ export const BorrowAssetsList = () => {
         .div(maxBorrowAmount)
         .toFixed();
 
-  const borrowReserves =
-    user?.totalCollateralMarketReferenceCurrency === "0" ||
-    +collateralUsagePercent >= 0.98
-      ? tokensToBorrow
-      : tokensToBorrow.filter(
-          ({ availableBorrowsInUSD, totalLiquidityUSD }) =>
-            availableBorrowsInUSD !== "0.00" && totalLiquidityUSD !== "0"
-        );
-
   const sortedReserves = handleSortDashboardReserves(
     sortDesc,
     sortName,
     "asset",
-    borrowReserves as unknown as DashboardReserve[]
+    tokensToBorrow as unknown as DashboardReserve[]
   );
   const borrowDisabled = !sortedReserves.length;
 
-  const RenderHeader: React.FC = () => {
+  const RenderHeader: FC = () => {
     return (
       <ListHeaderWrapper>
         {head.map((col) => (
@@ -267,7 +258,7 @@ export const BorrowAssetsList = () => {
       }
     >
       <>
-        {!downToXSM && !!borrowReserves.length && <RenderHeader />}
+        {!downToXSM && !!sortedReserves.length && <RenderHeader />}
         {sortedReserves?.map((item) => (
           <Fragment key={item.underlyingAsset}>
             <AssetCapsProvider asset={item.reserve}>

@@ -155,7 +155,7 @@ export const useTransactionHistory = ({
         skip: skip,
         account,
         subgraphUrl: currentMarketData.subgraphUrl ?? "",
-        v3: !!currentMarketData.v3,
+        v3: true,
         pool: selectedPool,
       });
       currentBatchSize = currentBatch.length;
@@ -193,7 +193,7 @@ export const useTransactionHistory = ({
           subgraphUrl: currentMarketData.subgraphUrl ?? "",
           first: 100,
           skip: pageParam,
-          v3: !!currentMarketData.v3,
+          v3: true,
           pool: selectedPool,
         });
         return response;

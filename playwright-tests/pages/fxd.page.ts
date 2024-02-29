@@ -162,6 +162,7 @@ export default class FxdPage extends BasePage {
     await expect.soft(this.progressBar).toBeVisible();
     await this.page.waitForTimeout(1000);
     await expect(this.divAlert).toBeHidden({ timeout: 100 });
+    await this.page.waitForTimeout(5000);
     await metamask.confirmTransaction();
   }
 
@@ -284,6 +285,7 @@ export default class FxdPage extends BasePage {
     await expect.soft(this.progressBar).toBeVisible();
     await this.page.waitForTimeout(1000);
     await expect(this.divAlert).toBeHidden({ timeout: 100 });
+    await this.page.waitForTimeout(5000);
     await metamask.confirmTransaction();
   }
 
@@ -337,6 +339,7 @@ export default class FxdPage extends BasePage {
     await expect.soft(this.progressBar).toBeVisible();
     await this.page.waitForTimeout(1000);
     await expect(this.divAlert).toBeHidden({ timeout: 100 });
+    await this.page.waitForTimeout(5000);
     await metamask.confirmTransaction();
   }
 
