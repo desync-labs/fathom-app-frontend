@@ -105,7 +105,7 @@ export default class VaultPage extends BasePage {
     this.doneIconModal = this.page.locator('[data-testid="DoneIcon"]');
     this.headingFourModal = this.page.locator('div[role="dialog"] h4');
     this.spanBodyOneModal = this.page.locator(
-      'div[role="dialog"] p[class*="MuiTypography-body1"]'
+      'div[role="dialog"] p[class*="MuiTypography-description"]'
     );
     this.spanBodyTwoModal = this.page.locator(
       'div[role="dialog"] span[class*="MuiTypography-body2"]'
