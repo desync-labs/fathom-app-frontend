@@ -206,7 +206,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
   }, [connectMetamask, connectWalletConnect]);
 
   const allowStableSwap = useMemo(() => {
-    return (isDecentralizedState &&
+    return (!isDecentralizedState &&
       (isUserWrapperWhiteListed === true ||
         isUserWhiteListed === true)) as boolean;
   }, [isDecentralizedState, isUserWhiteListed, isUserWrapperWhiteListed]);
