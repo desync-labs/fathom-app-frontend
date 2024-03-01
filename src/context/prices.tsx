@@ -22,6 +22,7 @@ export type UsePricesContextReturn = {
   xdcPrice: string;
   fthmPrice: string;
   prevXdcPrice: string | null;
+  fetchPricesInProgress: boolean;
 };
 
 export const PricesContext = createContext<UsePricesContextReturn>(
@@ -35,6 +36,8 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
   const [xdcPrice, setXdcPrice] = useState<string>("0");
   const [prevXdcPrice, setPrevXdcPrice] = useState<string | null>(null);
   const [fthmPrice, setFthmPrice] = useState<string>("0");
+  const [fetchPricesInProgress, setFetchPricesInProgress] =
+    useState<boolean>(false);
 
   const { syncDao, prevSyncDao, syncFXD, prevSyncFxd } = useSyncContext();
 
@@ -42,9 +45,10 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
     if (provider) {
       try {
         const xdcPromise = oracleService.getXdcPrice();
+        setFetchPricesInProgress(true);
 
         const pricesPromise = fetch(
-          `https://pro-api.coingecko.com/api/v3/simple/price?ids=fathom-dollar,fathom-protocol&vs_currencies=usd&x_cg_pro_api_key=${process.env.REACT_APP_COINGEKO_API_KEY}`
+          process.env.REACT_APP_PRICE_FEED_URL as string
         )
           .then((data) => data.json())
           .then((response) => ({
@@ -58,9 +62,9 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
 
         Promise.all([pricesPromise, xdcPromise])
           .then(([prices, xdcPrice]) => {
-            setXdcPrice(xdcPrice[0].toString());
             setFxdPrice(prices.fxd);
             setFthmPrice(prices.fthm);
+            setXdcPrice(xdcPrice[0].toString());
 
             const prevPriceData = localStorage.getItem("prevPrice");
             const startOfDay = dayjs().startOf("day").unix();
@@ -101,15 +105,22 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
           })
           .catch((e) => {
             console.log("Can`t retrieve prices", e);
-          });
+          })
+          .finally(() => setFetchPricesInProgress(false));
       } catch (e: any) {
         console.log(e);
       }
     }
-  }, [provider, setFxdPrice, setFthmPrice, setXdcPrice]);
+  }, [
+    provider,
+    setFxdPrice,
+    setFthmPrice,
+    setXdcPrice,
+    setFetchPricesInProgress,
+  ]);
 
   useEffect(() => {
-    fetchPairPrices();
+    !fetchPricesInProgress && fetchPairPrices();
   }, [fetchPairPrices]);
 
   useEffect(() => {
@@ -124,8 +135,9 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
       xdcPrice,
       fthmPrice,
       prevXdcPrice,
+      fetchPricesInProgress,
     };
-  }, [fxdPrice, xdcPrice, fthmPrice, prevXdcPrice]);
+  }, [fxdPrice, xdcPrice, fthmPrice, prevXdcPrice, fetchPricesInProgress]);
 
   return (
     <PricesContext.Provider value={values}>{children}</PricesContext.Provider>

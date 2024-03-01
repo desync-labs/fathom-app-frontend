@@ -68,6 +68,7 @@ import { LayoutWrapper } from "apps/charts/App";
 import AppPopover from "components/AppComponents/AppPopover/AppPopover";
 
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import useSharedContext from "context/shared";
 
 const DashboardWrapper = styled(Box)`
   width: 100%;
@@ -143,6 +144,7 @@ const HoverSpan = styled("span")`
 const WarningGrouping = styled(Box)<{ disabled?: boolean }>`
   opacity: ${({ disabled }) => disabled && "0.4"};
   pointer-events: ${({ disabled }) => disabled && "none"};
+  overflow: hidden;
 `;
 const HeaderWrapper = styled(Box)`
   background: #131f35;
@@ -185,6 +187,7 @@ const PairPage: FC<{ pairAddress: string }> = memo(({ pairAddress }) => {
   }, []);
 
   const [savedPairs, addPair, removePair] = useSavedPairs();
+  const { isMobile } = useSharedContext();
 
   const listedTokens = useListedTokens();
 
@@ -578,6 +581,7 @@ const PairPage: FC<{ pairAddress: string }> = memo(({ pairAddress }) => {
                   style={{
                     gridColumn: below1080 ? "1" : "2/4",
                     gridRow: below1080 ? "" : "1/5",
+                    padding: isMobile ? "1.25rem 0 1.25rem 1.25rem" : "1.25rem",
                   }}
                 >
                   <PairChart
@@ -601,8 +605,8 @@ const PairPage: FC<{ pairAddress: string }> = memo(({ pairAddress }) => {
               )}
               <HeaderWrapper
                 style={{
-                  marginTop: "3rem",
-                  marginBottom: "2rem",
+                  marginTop: "2rem",
+                  marginBottom: "1rem",
                   padding: "0 1.125rem 1rem",
                 }}
               >
@@ -611,7 +615,7 @@ const PairPage: FC<{ pairAddress: string }> = memo(({ pairAddress }) => {
               <TokenDetailsLayout>
                 <Column>
                   <TYPE.main>Pair Name</TYPE.main>
-                  <TYPE.main style={{ marginTop: ".5rem" }}>
+                  <TYPE.main style={{ marginTop: ".15rem" }}>
                     <RowFixed>
                       <FormattedName
                         text={token0?.symbol ?? ""}
@@ -628,7 +632,7 @@ const PairPage: FC<{ pairAddress: string }> = memo(({ pairAddress }) => {
                 <Column>
                   <TYPE.main>Pair Address</TYPE.main>
                   <AutoRow align="flex-end">
-                    <TYPE.main style={{ marginTop: ".5rem" }}>
+                    <TYPE.main style={{ marginTop: ".15rem" }}>
                       {pairAddress.slice(0, 6) +
                         "..." +
                         pairAddress.slice(38, 42)}
@@ -647,7 +651,7 @@ const PairPage: FC<{ pairAddress: string }> = memo(({ pairAddress }) => {
                     </RowFixed>
                   </TYPE.main>
                   <AutoRow align="flex-end">
-                    <TYPE.main style={{ marginTop: ".5rem" }}>
+                    <TYPE.main style={{ marginTop: ".15rem" }}>
                       {token0 &&
                         token0.id.slice(0, 6) + "..." + token0.id.slice(38, 42)}
                     </TYPE.main>
@@ -665,7 +669,7 @@ const PairPage: FC<{ pairAddress: string }> = memo(({ pairAddress }) => {
                     </RowFixed>
                   </TYPE.main>
                   <AutoRow align="flex-end">
-                    <TYPE.main style={{ marginTop: ".5rem" }} fontSize={16}>
+                    <TYPE.main style={{ marginTop: ".15rem" }} fontSize={16}>
                       {token1 &&
                         token1.id.slice(0, 6) + "..." + token1.id.slice(38, 42)}
                     </TYPE.main>

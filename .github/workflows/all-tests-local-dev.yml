@@ -1,4 +1,4 @@
-name: smoke-tests-local-dev
+name: all-tests-local-dev
 
 on:
   workflow_dispatch:
@@ -10,7 +10,7 @@ concurrency:
   group: ${{ github.workflow }}
 
 jobs:
-  smoke-tests-local-dev:
+  all-tests-local-dev:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:

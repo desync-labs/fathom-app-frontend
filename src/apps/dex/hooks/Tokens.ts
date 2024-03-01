@@ -24,6 +24,7 @@ import {
 import { filterTokens } from "apps/dex/components/SearchModal/filtering";
 import { utils } from "fathom-ethers";
 import { useServices } from "context/services";
+import { ChainId } from "connectors/networks";
 
 // reduce a token map into standard address <-> Token mapping, optionally include user added tokens
 function useTokensFromMap(
@@ -35,7 +36,9 @@ function useTokensFromMap(
   const { chainId: servicesChainId } = useServices();
 
   return useMemo(() => {
-    const checkedChainId = chainId || servicesChainId;
+    const checkedChainId = (
+      tokenMap[chainId] ? chainId : servicesChainId
+    ) as ChainId;
     // reduce to just tokens
     const mapWithoutUrls = Object.keys(tokenMap[checkedChainId]).reduce<{
       [address: string]: Token;

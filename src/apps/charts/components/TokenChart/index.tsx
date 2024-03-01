@@ -29,7 +29,7 @@ import {
 import DropdownSelect from "apps/charts/components/DropdownSelect";
 import CandleStickChart from "apps/charts/components/CandleChart";
 import LocalLoader from "apps/charts/components/LocalLoader";
-import { useDarkModeManager } from "apps/charts/contexts/LocalStorage";
+import useSharedContext from "context/shared";
 
 const ChartWrapper = styled(Box)`
   height: 100%;
@@ -82,9 +82,9 @@ const TokenChart: FC<TokenChartProps> = (props) => {
   // settings for the window and candle width
   const [chartFilter, setChartFilter] = useState(CHART_VIEW.PRICE);
   const [frequency, setFrequency] = useState(DATA_FREQUENCY.HOUR);
+  const { isMobile } = useSharedContext();
 
-  const [darkMode] = useDarkModeManager();
-  const textColor = darkMode ? "white" : "black";
+  const textColor = "white";
 
   // reset view on new address
   const addressPrev = usePrevious(address);
@@ -155,7 +155,8 @@ const TokenChart: FC<TokenChartProps> = (props) => {
   const below600 = useMedia("(max-width: 600px)");
 
   const utcStartTime = getTimeframe(timeWindow);
-  const aspect = below1080 ? 60 / 32 : below600 ? 60 / 42 : 60 / 22;
+  const aspect = below600 ? 60 / 60 : below1080 ? 60 / 32 : 60 / 22;
+  const textSize = below600 ? 12 : 16;
 
   chartData = chartData?.filter(
     (entry: { date: number }) => entry.date >= utcStartTime
@@ -193,6 +194,7 @@ const TokenChart: FC<TokenChartProps> = (props) => {
             setActive={setTimeWindow}
             color={"#5a81ff"}
             shadow={"0 0 8px #003cff"}
+            style={{ paddingRight: isMobile ? "1.25rem" : "0" }}
           />
         </RowBetween>
       ) : (
@@ -283,9 +285,9 @@ const TokenChart: FC<TokenChartProps> = (props) => {
       {chartFilter === CHART_VIEW.LIQUIDITY && chartData && (
         <ResponsiveContainer aspect={aspect}>
           <AreaChart
-            margin={{ top: 0, right: 10, bottom: 6, left: 0 }}
             barCategoryGap={1}
             data={chartData}
+            margin={{ top: 0, right: below600 ? -15 : 0, bottom: 5, left: 0 }}
           >
             <defs>
               <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
@@ -301,7 +303,7 @@ const TokenChart: FC<TokenChartProps> = (props) => {
               minTickGap={120}
               tickFormatter={(tick) => toNiceDate(tick)}
               dataKey="date"
-              tick={{ fill: textColor }}
+              tick={{ fill: textColor, fontSize: textSize }}
               type={"number"}
               domain={["dataMin", "dataMax"]}
             />
@@ -314,7 +316,7 @@ const TokenChart: FC<TokenChartProps> = (props) => {
               interval="preserveEnd"
               minTickGap={80}
               yAxisId={0}
-              tick={{ fill: textColor }}
+              tick={{ fill: textColor, fontSize: textSize }}
             />
             <Tooltip
               cursor={true}
@@ -347,9 +349,9 @@ const TokenChart: FC<TokenChartProps> = (props) => {
       )}
       {chartFilter === CHART_VIEW.PRICE &&
         (frequency === DATA_FREQUENCY.LINE ? (
-          <ResponsiveContainer aspect={below1080 ? 60 / 32 : 60 / 16}>
+          <ResponsiveContainer aspect={aspect}>
             <AreaChart
-              margin={{ top: 0, right: 10, bottom: 6, left: 0 }}
+              margin={{ top: 0, right: -5, bottom: 5, left: 0 }}
               barCategoryGap={1}
               data={chartData}
             >
@@ -421,7 +423,7 @@ const TokenChart: FC<TokenChartProps> = (props) => {
       {chartFilter === CHART_VIEW.VOLUME && (
         <ResponsiveContainer aspect={aspect}>
           <BarChart
-            margin={{ top: 0, right: 10, bottom: 6, left: 10 }}
+            margin={{ top: 0, right: below600 ? -10 : 0, bottom: 5, left: 0 }}
             barCategoryGap={1}
             data={chartData}
           >
@@ -433,7 +435,7 @@ const TokenChart: FC<TokenChartProps> = (props) => {
               tickMargin={14}
               tickFormatter={(tick) => toNiceDate(tick)}
               dataKey="date"
-              tick={{ fill: textColor }}
+              tick={{ fill: textColor, fontSize: textSize }}
               type={"number"}
               domain={["dataMin", "dataMax"]}
             />
@@ -447,7 +449,7 @@ const TokenChart: FC<TokenChartProps> = (props) => {
               interval="preserveEnd"
               minTickGap={80}
               yAxisId={0}
-              tick={{ fill: textColor }}
+              tick={{ fill: textColor, fontSize: textSize }}
             />
             <Tooltip
               cursor={{ fill: color, opacity: 0.1 }}

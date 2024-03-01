@@ -119,7 +119,7 @@ export const ReserveTopDetailsWrapper: FC<ReserveTopDetailsProps> = memo(
                 }
                 onClick={() => {
                   if (history.state.idx !== 0) navigate(-1);
-                  else navigate("/markets");
+                  else navigate("/lending/markets");
                 }}
                 sx={{ mr: 3, mb: downToSM ? "24px" : "0" }}
               >

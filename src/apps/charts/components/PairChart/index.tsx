@@ -31,7 +31,7 @@ import { EmptyCard } from "apps/charts/components";
 import DropdownSelect from "apps/charts/components/DropdownSelect";
 import CandleStickChart from "apps/charts/components/CandleChart";
 import LocalLoader from "apps/charts/components/LocalLoader";
-import { useDarkModeManager } from "apps/charts/contexts/LocalStorage";
+import useSharedContext from "context/shared";
 
 const ChartWrapper = styled(Box)`
   height: 100%;
@@ -39,6 +39,7 @@ const ChartWrapper = styled(Box)`
 
   @media screen and (max-width: 600px) {
     min-height: 200px;
+    max-height: unset;
   }
 `;
 
@@ -68,9 +69,9 @@ const PairChart: FC<PairChartProps> = (props) => {
   const [chartFilter, setChartFilter] = useState(CHART_VIEW.LIQUIDITY);
 
   const [timeWindow, setTimeWindow] = useState(timeframeOptions.MONTH);
+  const { isMobile } = useSharedContext();
 
-  const [darkMode] = useDarkModeManager();
-  const textColor = darkMode ? "white" : "black";
+  const textColor = "white";
 
   // update the width on a window resize
   const ref = useRef<HTMLDivElement>(null);
@@ -145,7 +146,15 @@ const PairChart: FC<PairChartProps> = (props) => {
     return null;
   }
 
-  const aspect = below1080 ? 60 / 20 : below1600 ? 60 / 28 : 60 / 22;
+  const aspect = below600
+    ? 60 / 60
+    : below1080
+    ? 60 / 24
+    : below1600
+    ? 60 / 32
+    : 60 / 23;
+
+  const textSize = below600 ? 12 : 16;
 
   return (
     <ChartWrapper>
@@ -164,6 +173,7 @@ const PairChart: FC<PairChartProps> = (props) => {
             setActive={setTimeWindow}
             color={"#5a81ff"}
             shadow={"0 0 8px #003cff"}
+            style={{ paddingRight: isMobile ? "1.25rem" : "0" }}
           />
         </RowBetween>
       ) : (
@@ -235,7 +245,12 @@ const PairChart: FC<PairChartProps> = (props) => {
       {chartFilter === CHART_VIEW.LIQUIDITY && (
         <ResponsiveContainer aspect={aspect}>
           <AreaChart
-            margin={{ top: 0, right: 10, bottom: 6, left: 0 }}
+            margin={{
+              top: 0,
+              right: below600 ? -15 : 0,
+              bottom: 0,
+              left: 0,
+            }}
             barCategoryGap={1}
             data={chartData}
           >
@@ -249,11 +264,11 @@ const PairChart: FC<PairChartProps> = (props) => {
               tickLine={false}
               axisLine={false}
               interval="preserveEnd"
-              tickMargin={14}
               minTickGap={80}
+              tickMargin={10}
               tickFormatter={(tick) => toNiceDate(tick)}
               dataKey="date"
-              tick={{ fill: textColor }}
+              tick={{ fill: textColor, fontSize: textSize }}
               type={"number"}
               domain={["dataMin", "dataMax"]}
             />
@@ -266,8 +281,7 @@ const PairChart: FC<PairChartProps> = (props) => {
               interval="preserveEnd"
               minTickGap={80}
               yAxisId={0}
-              tickMargin={16}
-              tick={{ fill: textColor }}
+              tick={{ fill: textColor, fontSize: textSize }}
             />
             <Tooltip
               cursor={true}
@@ -330,7 +344,12 @@ const PairChart: FC<PairChartProps> = (props) => {
       {chartFilter === CHART_VIEW.VOLUME && (
         <ResponsiveContainer aspect={aspect}>
           <BarChart
-            margin={{ top: 0, right: 0, bottom: 6, left: below1080 ? 0 : 10 }}
+            margin={{
+              top: 0,
+              right: below600 ? -16 : 0,
+              bottom: 6,
+              left: below1080 ? 0 : 10,
+            }}
             barCategoryGap={1}
             data={chartData}
           >
@@ -342,21 +361,20 @@ const PairChart: FC<PairChartProps> = (props) => {
               tickMargin={14}
               tickFormatter={(tick) => toNiceDate(tick)}
               dataKey="date"
-              tick={{ fill: textColor }}
+              tick={{ fill: textColor, fontSize: textSize }}
               type={"number"}
               domain={["dataMin", "dataMax"]}
             />
             <YAxis
               type="number"
               axisLine={false}
-              tickMargin={16}
               tickFormatter={(tick) => "$" + toK(tick)}
               tickLine={false}
               interval="preserveEnd"
               orientation="right"
               minTickGap={80}
               yAxisId={0}
-              tick={{ fill: textColor }}
+              tick={{ fill: textColor, fontSize: textSize }}
             />
             <Tooltip
               cursor={{ fill: color, opacity: 0.1 }}
