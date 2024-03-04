@@ -39,13 +39,13 @@ export const InterestRateModelGraphContainer: FC<InteresetRateModelGraphContaine
     ];
 
     return (
-      <Box sx={{ mt: 8, mb: 10 }}>
+      <Box sx={{ mt: 4, mb: 5 }}>
         <Box
           sx={{
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            mb: 4,
+            mb: 2,
           }}
         >
           <GraphLegend

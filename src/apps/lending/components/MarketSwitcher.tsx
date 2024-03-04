@@ -65,7 +65,7 @@ export const MarketLogo: FC<MarketLogoProps> = ({
   testChainName,
 }) => {
   return (
-    <Box sx={{ mr: 2, width: size, height: size, position: "relative" }}>
+    <Box sx={{ mr: 1, width: size, height: size, position: "relative" }}>
       <img src={logo} alt="" width="100%" height="100%" />
 
       {testChainName && (
@@ -115,7 +115,7 @@ export const MarketSwitcher = () => {
       value={currentMarket}
       onChange={handleMarketSelect}
       sx={{
-        mr: 2,
+        mr: 0.5,
         "& .MuiOutlinedInput-notchedOutline": {
           border: "none",
         },
@@ -142,14 +142,18 @@ export const MarketSwitcher = () => {
                 }
               />
               <Box
-                sx={{ mr: 1, display: "inline-flex", alignItems: "flex-start" }}
+                sx={{
+                  mr: 0.5,
+                  display: "inline-flex",
+                  alignItems: "flex-start",
+                }}
               >
                 <Typography
                   variant={upToLG ? "display1" : "h1"}
                   sx={{
                     fontSize: downToXSM ? "1.55rem" : undefined,
                     color: "common.white",
-                    mr: 1,
+                    mr: 0.5,
                   }}
                 >
                   {getMarketHelpData(market.marketTitle).name}{" "}
@@ -187,7 +191,7 @@ export const MarketSwitcher = () => {
         <Typography
           variant="subheader2"
           color="text.secondary"
-          sx={{ px: 4, pt: 2, mb: 2 }}
+          sx={{ px: 2, pt: 1, mb: 1 }}
         >
           {ENABLE_TESTNET || DEV_ENV
             ? "Select Testnet Market"
@@ -216,7 +220,7 @@ export const MarketSwitcher = () => {
               {marketNaming.name} {market.isFork ? "Fork" : ""}
             </ListItemText>
             <ListItemText sx={{ textAlign: "right" }}>
-              <Typography color="text.muted" variant="description">
+              <Typography color="info.100" variant="description">
                 {marketNaming.testChainName}
               </Typography>
             </ListItemText>

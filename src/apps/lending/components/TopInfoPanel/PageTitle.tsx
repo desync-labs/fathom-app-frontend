@@ -23,7 +23,7 @@ export const PageTitle: FC<PageTitleProps> = ({
       sx={{
         display: "flex",
         alignItems: { xs: "flex-start", xsm: "center" },
-        mb: pageTitle ? 4 : 0,
+        mb: pageTitle ? 2 : 0,
         flexDirection: { xs: "column", xsm: "row" },
       }}
     >
@@ -33,8 +33,8 @@ export const PageTitle: FC<PageTitleProps> = ({
             variant={downToXSM ? "h2" : upToLG ? "display1" : "h1"}
             sx={{
               color: withMarketSwitcher ? "text.muted" : "text.white",
-              mr: { xs: 5, xsm: 3 },
-              mb: { xs: 1, xsm: 0 },
+              mr: { xs: 2.5, xsm: 1 },
+              mb: { xs: 0.5, xsm: 0 },
             }}
           >
             {pageTitle}
@@ -47,7 +47,7 @@ export const PageTitle: FC<PageTitleProps> = ({
           display: "flex",
           alignItems: "flex-start",
           flexWrap: "wrap",
-          mb: !pageTitle ? 4 : 0,
+          mb: !pageTitle ? 2 : 0,
         }}
       >
         {withMarketSwitcher && <MarketSwitcher />}

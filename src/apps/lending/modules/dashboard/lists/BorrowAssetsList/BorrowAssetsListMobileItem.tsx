@@ -68,13 +68,15 @@ export const BorrowAssetsListMobileItem: FC<DashboardReserve> = memo(
           }
           align="flex-start"
           captionVariant="description"
-          mb={2}
+          captionColor={"primary.light"}
+          mb={1}
         >
           <IncentivesCard
             value={Number(variableBorrowRate)}
             incentives={vIncentivesData}
             symbol={symbol}
             variant="secondary14"
+            color={"primary.light"}
           />
         </Row>
 
@@ -88,13 +90,15 @@ export const BorrowAssetsListMobileItem: FC<DashboardReserve> = memo(
           }
           align="flex-start"
           captionVariant="description"
-          mb={2}
+          captionColor={"primary.light"}
+          mb={1}
         >
           <IncentivesCard
             value={Number(stableBorrowRate)}
             incentives={sIncentivesData}
             symbol={symbol}
             variant="secondary14"
+            color={"primary.light"}
           />
         </Row>
 
@@ -103,7 +107,7 @@ export const BorrowAssetsListMobileItem: FC<DashboardReserve> = memo(
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            mt: 5,
+            mt: 2.5,
           }}
         >
           <Button
@@ -112,7 +116,7 @@ export const BorrowAssetsListMobileItem: FC<DashboardReserve> = memo(
             onClick={() =>
               openBorrow(underlyingAsset, currentMarket, name, "dashboard")
             }
-            sx={{ mr: 1.5 }}
+            sx={{ mr: 0.75 }}
             fullWidth
           >
             Borrow

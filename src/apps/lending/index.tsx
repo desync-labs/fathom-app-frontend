@@ -10,7 +10,6 @@ import { PermissionProvider } from "apps/lending/hooks/usePermissions";
 import { Web3ContextProvider } from "apps/lending/libs/web3-data-provider/Web3Provider";
 import { SharedDependenciesProvider } from "apps/lending/ui-config/SharedDependenciesProvider";
 
-import { AppGlobalStyles } from "apps/lending/layouts/AppGlobalStyles";
 import { Outlet } from "react-router-dom";
 
 import BorrowModal from "apps/lending/components/transactions/Borrow/BorrowModal";
@@ -29,32 +28,30 @@ const LendingIndexComponent: FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <Web3ContextProvider>
-        <AppGlobalStyles>
-          <AddressBlocked>
-            <PermissionProvider>
-              <ModalContextProvider>
-                <BackgroundDataProvider>
-                  <AppDataProvider>
-                    <GasStationProvider>
-                      <SharedDependenciesProvider>
-                        <Outlet />
-                        <SupplyModal />
-                        <WithdrawModal />
-                        <BorrowModal />
-                        <RepayModal />
-                        <CollateralChangeModal />
-                        <RateSwitchModal />
-                        <EmodeModal />
-                        <FaucetModal />
-                        <TransactionEventHandler />
-                      </SharedDependenciesProvider>
-                    </GasStationProvider>
-                  </AppDataProvider>
-                </BackgroundDataProvider>
-              </ModalContextProvider>
-            </PermissionProvider>
-          </AddressBlocked>
-        </AppGlobalStyles>
+        <AddressBlocked>
+          <PermissionProvider>
+            <ModalContextProvider>
+              <BackgroundDataProvider>
+                <AppDataProvider>
+                  <GasStationProvider>
+                    <SharedDependenciesProvider>
+                      <Outlet />
+                      <SupplyModal />
+                      <WithdrawModal />
+                      <BorrowModal />
+                      <RepayModal />
+                      <CollateralChangeModal />
+                      <RateSwitchModal />
+                      <EmodeModal />
+                      <FaucetModal />
+                      <TransactionEventHandler />
+                    </SharedDependenciesProvider>
+                  </GasStationProvider>
+                </AppDataProvider>
+              </BackgroundDataProvider>
+            </ModalContextProvider>
+          </PermissionProvider>
+        </AddressBlocked>
       </Web3ContextProvider>
     </QueryClientProvider>
   );

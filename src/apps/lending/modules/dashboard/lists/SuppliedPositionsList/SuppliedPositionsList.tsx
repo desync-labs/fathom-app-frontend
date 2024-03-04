@@ -1,6 +1,6 @@
 import { API_ETH_MOCK_ADDRESS } from "@into-the-fathom/lending-contract-helpers";
 import { Typography, useMediaQuery, useTheme } from "@mui/material";
-import { Fragment, useState } from "react";
+import { FC, Fragment, useState } from "react";
 import { ListColumn } from "apps/lending/components/lists/ListColumn";
 import { ListHeaderTitle } from "apps/lending/components/lists/ListHeaderTitle";
 import { ListHeaderWrapper } from "apps/lending/components/lists/ListHeaderWrapper";
@@ -92,7 +92,7 @@ export const SuppliedPositionsList = () => {
     preSortedReserves
   );
 
-  const RenderHeader: React.FC = () => {
+  const RenderHeader: FC = () => {
     return (
       <ListHeaderWrapper>
         {head.map((col) => (
@@ -134,8 +134,8 @@ export const SuppliedPositionsList = () => {
         <Typography
           component="div"
           variant="h3"
-          sx={{ mr: 4 }}
-          color={theme.palette.primary.main}
+          sx={{ mr: 2 }}
+          color={theme.palette.text.primary}
         >
           Your supplies
         </Typography>

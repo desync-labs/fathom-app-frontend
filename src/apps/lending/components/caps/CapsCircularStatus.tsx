@@ -44,7 +44,7 @@ export const CapsCircularStatus = ({
         if (onClick) onClick(value);
       }}
     >
-      <Box sx={{ position: "relative", mr: 4 }}>
+      <Box sx={{ position: "relative", mr: 2 }}>
         <CircularProgress
           variant="determinate"
           sx={{

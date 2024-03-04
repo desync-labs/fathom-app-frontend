@@ -16,16 +16,17 @@ export const ListTopInfoItem: FC<ListTopInfoItemProps> = memo(
       <Paper
         variant="outlined"
         sx={{
-          mr: 2,
+          mr: 1,
           p: "2px 4px",
           display: "flex",
           alignItems: "center",
           boxShadow: "none",
           bgcolor: "transparent",
           border: "none",
+          color: "primary.light",
         }}
       >
-        <Typography color="text.main" sx={{ mr: 1 }} noWrap>
+        <Typography sx={{ mr: 0.5 }} noWrap>
           {title}
         </Typography>
         <FormattedNumber

@@ -36,7 +36,7 @@ export const Row: FC<RowProps> = ({
           component="div"
           variant={captionVariant}
           color={captionColor}
-          sx={{ mr: 2 }}
+          sx={{ mr: 1 }}
         >
           {caption}
         </Typography>

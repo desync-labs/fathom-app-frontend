@@ -9,7 +9,7 @@ export const AppDialog = styled(
     padding: theme.spacing(2),
   },
   "& .MuiPaper-root": {
-    background: "#1D2D49",
+    background: theme.palette.background.surface,
     border: "1px solid #324567",
     borderRadius: "16px",
     width: "1000px",
@@ -21,6 +21,9 @@ export const AppDialog = styled(
       height: "100%",
       margin: 0,
       borderRadius: 0,
+    },
+    "& .MuiDivider-root": {
+      borderColor: "rgba(255, 255, 255, 0.12)",
     },
   },
   "& .MuiDialogActions-root": {

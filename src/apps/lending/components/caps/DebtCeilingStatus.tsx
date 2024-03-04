@@ -21,7 +21,7 @@ export const DebtCeilingStatus: FC<
 > = ({ debt, ceiling, usageData }) => {
   const progressBarStyles = {
     borderRadius: 5,
-    my: 2,
+    my: 1,
     height: 5,
     [`&.${linearProgressClasses.colorPrimary}`]: {
       backgroundColor: (theme: Theme) => theme.palette.other.fathomAccentMute,

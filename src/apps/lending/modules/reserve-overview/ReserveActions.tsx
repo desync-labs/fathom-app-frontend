@@ -169,13 +169,13 @@ export const ReserveActions: FC<ReserveActionsProps> = memo(({ reserve }) => {
         marketTitle={market.marketTitle}
       />
       {reserve.isFrozen || reserve.isPaused ? (
-        <Box sx={{ mt: 3 }}>
+        <Box sx={{ mt: 1.5 }}>
           {reserve.isPaused ? <PauseWarning /> : <FrozenWarning />}
         </Box>
       ) : (
         <>
-          <Divider sx={{ my: 6 }} />
-          <Stack gap={3}>
+          <Divider sx={{ my: 3 }} />
+          <Stack gap={1.5}>
             <SupplyAction
               reserve={reserve}
               value={maxAmountToSupply.toString()}
@@ -239,7 +239,7 @@ const ActionsSkeleton = () => {
         alignItems="center"
       >
         <Box>
-          <Skeleton width={100} height={14} sx={{ mt: 1, mb: 2 }} />
+          <Skeleton width={100} height={14} sx={{ mt: 0.5, mb: 1 }} />
           <Skeleton width={75} height={12} />
         </Box>
         <Skeleton height={36} width={96} />
@@ -249,16 +249,16 @@ const ActionsSkeleton = () => {
 
   return (
     <PaperWrapper>
-      <Stack direction="row" gap={3}>
+      <Stack direction="row" gap={1.5}>
         <Skeleton width={42} height={42} sx={{ borderRadius: "12px" }} />
         <Box>
-          <Skeleton width={100} height={12} sx={{ mt: 1, mb: 2 }} />
+          <Skeleton width={100} height={12} sx={{ mt: 0.5, mb: 1 }} />
           <Skeleton width={100} height={14} />
         </Box>
       </Stack>
-      <Divider sx={{ my: 6 }} />
+      <Divider sx={{ my: 3 }} />
       <Box>
-        <Stack gap={3}>
+        <Stack gap={1.5}>
           {RowSkeleton}
           {RowSkeleton}
         </Stack>
@@ -271,12 +271,12 @@ const PaperWrapper: FC<{ children: ReactNode }> = ({ children }) => {
   return (
     <Paper
       variant="outlined"
-      sx={{ pt: 4, pb: { xs: 4, xsm: 6 }, px: { xs: 4, xsm: 6 } }}
+      sx={{ pt: 2, pb: { xs: 2, xsm: 3 }, px: { xs: 2, xsm: 3 } }}
     >
       <Typography
         variant="h3"
-        sx={{ mb: 6 }}
-        color={(theme) => theme.palette.primary.main}
+        sx={{ mb: 3 }}
+        color={(theme) => theme.palette.text.primary}
       >
         Your info
       </Typography>
@@ -288,19 +288,19 @@ const PaperWrapper: FC<{ children: ReactNode }> = ({ children }) => {
 
 const ConnectWallet: FC<{ loading: boolean }> = ({ loading }) => {
   return (
-    <Paper sx={{ pt: 4, pb: { xs: 4, xsm: 6 }, px: { xs: 4, xsm: 6 } }}>
+    <Paper sx={{ pt: 2, pb: { xs: 2, xsm: 3 }, px: { xs: 2, xsm: 3 } }}>
       {loading ? (
         <CircularProgress />
       ) : (
         <>
           <Typography
             variant="h3"
-            sx={{ mb: { xs: 6, xsm: 10 } }}
-            color={(theme) => theme.palette.primary.main}
+            sx={{ mb: { xs: 3, xsm: 5 } }}
+            color={(theme) => theme.palette.text.primary}
           >
             Your info
           </Typography>
-          <Typography sx={{ mb: 6 }} color="text.secondary">
+          <Typography sx={{ mb: 3 }} color="text.secondary">
             Please connect a wallet to view your personal information here.
           </Typography>
           <ConnectWalletButton />
@@ -335,6 +335,7 @@ const SupplyAction: FC<ActionProps> = memo(
               assetName: reserve.name,
             },
           }}
+          textColor="text.light"
         />
         <Stack
           sx={{ height: "44px" }}
@@ -384,6 +385,7 @@ const BorrowAction: FC<ActionProps> = memo(
               assetName: reserve.name,
             },
           }}
+          textColor="text.light"
         />
         <Stack
           sx={{ height: "44px" }}
@@ -453,8 +455,8 @@ interface ValueWithSymbolProps {
 const ValueWithSymbol: FC<ValueWithSymbolProps> = memo(
   ({ value, symbol, children }) => {
     return (
-      <Stack direction="row" alignItems="center" gap={1}>
-        <FormattedNumber value={value} variant="h4" color="text.primary" />
+      <Stack direction="row" alignItems="center" gap={0.5}>
+        <FormattedNumber value={value} variant="h4" color="text.light" />
         <Typography variant="buttonL" color="text.secondary">
           {symbol}
         </Typography>
@@ -473,7 +475,7 @@ const WalletBalance: FC<WalletBalanceProps> = memo(({ balance, symbol }) => {
   const theme = useTheme();
 
   return (
-    <Stack direction="row" gap={3}>
+    <Stack direction="row" gap={1.5}>
       <Box
         sx={(theme) => ({
           width: "42px",

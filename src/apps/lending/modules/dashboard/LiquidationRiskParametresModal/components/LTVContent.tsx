@@ -124,7 +124,7 @@ export const LTVContent: FC<LTVContentProps> = memo(
                 height: 0,
                 borderStyle: "solid",
                 borderWidth: "6px 4px 0 4px",
-                borderColor: `${theme.palette.primary.main} transparent transparent transparent`,
+                borderColor: `${theme.palette.text.primary} transparent transparent transparent`,
                 content: "''",
                 position: "absolute",
                 left: LTVLineWidth > 75 ? "auto" : "50%",

@@ -128,7 +128,7 @@ export default class FxdPage extends BasePage {
     this.doneIconModal = this.page.locator('[data-testid="DoneIcon"]');
     this.headingFourModal = this.page.locator('div[role="dialog"] h4');
     this.spanBodyOneModal = this.page.locator(
-      'div[role="dialog"] p[class*="MuiTypography-body1"]'
+      'div[role="dialog"] p[class*="MuiTypography-description"]'
     );
     this.spanBodyTwoModal = this.page.locator(
       'div[role="dialog"] span[class*="MuiTypography-body2"]'
@@ -162,6 +162,7 @@ export default class FxdPage extends BasePage {
     await expect.soft(this.progressBar).toBeVisible();
     await this.page.waitForTimeout(1000);
     await expect(this.divAlert).toBeHidden({ timeout: 100 });
+    await this.page.waitForTimeout(5000);
     await metamask.confirmTransaction();
   }
 
@@ -284,6 +285,7 @@ export default class FxdPage extends BasePage {
     await expect.soft(this.progressBar).toBeVisible();
     await this.page.waitForTimeout(1000);
     await expect(this.divAlert).toBeHidden({ timeout: 100 });
+    await this.page.waitForTimeout(5000);
     await metamask.confirmTransaction();
   }
 
@@ -337,6 +339,7 @@ export default class FxdPage extends BasePage {
     await expect.soft(this.progressBar).toBeVisible();
     await this.page.waitForTimeout(1000);
     await expect(this.divAlert).toBeHidden({ timeout: 100 });
+    await this.page.waitForTimeout(5000);
     await metamask.confirmTransaction();
   }
 

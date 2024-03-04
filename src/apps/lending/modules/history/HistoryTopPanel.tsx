@@ -1,4 +1,5 @@
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { lendingContainerProps } from "apps/lending/components/ContentContainer";
 import { PageTitle } from "apps/lending/components/TopInfoPanel/PageTitle";
 
 import { TopInfoPanel } from "apps/lending/components/TopInfoPanel/TopInfoPanel";
@@ -22,6 +23,7 @@ export const HistoryTopPanel = () => {
           <Box sx={{ width: md ? (xsm ? "320px" : "540px") : "860px" }} />
         </Box>
       }
+      containerProps={lendingContainerProps}
     />
   );
 };

@@ -25,7 +25,7 @@ import {
 
 const ActionTitle: FC<{ action: string }> = ({ action }) => {
   return (
-    <Typography sx={{ width: "180px" }}>
+    <Typography sx={{ width: "180px" }} color={"text.light"}>
       <ActionTextMap action={action} />
     </Typography>
   );
@@ -81,7 +81,7 @@ const TransactionRowItem: FC<TransactionHistoryItemProps> = ({
             justifyContent: "center",
             alignItems: "left",
             gap: "4px",
-            mr: 6,
+            mr: 3,
           }}
         >
           <ActionTitle action={transaction.action} />

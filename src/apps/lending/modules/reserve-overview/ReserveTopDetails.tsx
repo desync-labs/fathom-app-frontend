@@ -87,7 +87,7 @@ export const ReserveTopDetails: FC<ReserveTopDetailsProps> = memo(
               <Skeleton
                 width={16}
                 height={16}
-                sx={{ ml: 1, background: "#383D51" }}
+                sx={{ ml: 0.5, background: "#383D51" }}
               />
             ) : (
               <CircleIcon

@@ -2,7 +2,7 @@ import { CheckCircleIcon, ChevronDownIcon } from "@heroicons/react/outline";
 import InfoIcon from "@mui/icons-material/Info";
 import { SvgIcon, Theme, ThemeOptions } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
 // @ts-ignore
 import { ColorPartial } from "@mui/material/styles/createPalette";
 
@@ -19,6 +19,7 @@ declare module "@mui/material/styles/createPalette" {
 
   interface TypeText {
     muted: string;
+    light: string;
   }
 
   interface TypeBackground {
@@ -136,7 +137,7 @@ export const getDesignTokens = () => {
         xs: 0,
         xsm: 640,
         sm: 760,
-        md: 960,
+        md: 900,
         lg: 1280,
         xl: 1575,
         xxl: 1800,
@@ -145,12 +146,12 @@ export const getDesignTokens = () => {
     palette: {
       mode: "dark",
       primary: {
-        main: "#fff",
+        main: "#00FFF6",
         light: "#b0c5e7",
         dark: "#D2D4DC",
       },
       secondary: {
-        main: "#F48FB1",
+        main: "#7D91B5",
         light: "#F6A5C0",
         dark: "#AA647B",
       },
@@ -177,18 +178,19 @@ export const getDesignTokens = () => {
         "200": "#071F2E", // for alert background
       },
       success: {
-        main: "#4dcc33",
+        main: "#3DA329",
         light: "#90FF95",
         dark: "#388E3C",
         "100": "#C2E4C3", // for alert text
         "200": "#0A130B", // for alert background
       },
       text: {
-        primary: "#c5d7f2",
+        primary: "#fff",
         secondary: "#6379a1",
+        light: "#c5d7f2",
         disabled: "#62677B",
         muted: "#5977a0",
-        highlight: "#C9B3F9",
+        highlight: "#00fff6",
       },
       background: {
         default: "#071028",
@@ -198,7 +200,7 @@ export const getDesignTokens = () => {
         header: "#101d32",
         disabled: "#EBEBEF14",
       },
-      divider: "#1D2D49",
+      divider: "#1d2d49",
       action: {
         active: "#EBEBEF8F",
         hover: "#2a3e5a",
@@ -223,7 +225,7 @@ export const getDesignTokens = () => {
           "linear-gradient(104.04deg, rgb(179, 255, 249) 0%, rgb(0, 219, 203) 100%)",
       },
     },
-    spacing: 4,
+    spacing: 8,
     typography: {
       fontFamily: FONT,
       h5: undefined,
@@ -408,14 +410,24 @@ export function getThemedComponents(theme: Theme) {
           },
         },
       },
+      MuiInputBase: {
+        styleOverrides: {
+          input: {
+            color: theme.palette.text.primary,
+            "&::placeholder": {
+              color: theme.palette.text.muted,
+            },
+          },
+        },
+      },
       MuiSlider: {
         styleOverrides: {
           root: {
             "& .MuiSlider-thumb": {
-              color: theme.palette.mode === "light" ? "#62677B" : "#C9B3F9",
+              color: "#00fff6",
             },
             "& .MuiSlider-track": {
-              color: theme.palette.mode === "light" ? "#1d2d49" : "#9C93B3",
+              color: "#00fff6",
             },
           },
         },
@@ -567,12 +579,6 @@ export function getThemedComponents(theme: Theme) {
       },
       MuiList: {
         styleOverrides: {
-          root: {
-            ".MuiMenuItem-root+.MuiDivider-root, .MuiDivider-root": {
-              marginTop: "4px",
-              marginBottom: "4px",
-            },
-          },
           padding: {
             paddingTop: "4px",
             paddingBottom: "4px",
@@ -589,7 +595,7 @@ export function getThemedComponents(theme: Theme) {
       MuiListItemText: {
         styleOverrides: {
           root: {
-            ...theme.typography.subheader1,
+            ...theme.typography.description,
           },
         },
       },
@@ -636,42 +642,34 @@ export function getThemedComponents(theme: Theme) {
           },
         ],
       },
-      MuiContainer: {
+      MuiTooltip: {
+        styleOverrides: {
+          tooltip: {
+            backgroundColor: theme.palette.background.paper,
+            color: theme.palette.text.light,
+            boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+            borderRadius: "8px",
+            padding: "8px 12px",
+            ...theme.typography.tooltip,
+          },
+          arrow: {
+            color: theme.palette.background.paper,
+            "&:before": {
+              boxShadow:
+                "0px 0px 2px rgba(0, 0, 0, 0.2), 0px 2px 10px rgba(0, 0, 0, 0.1)",
+            },
+          },
+        },
+      },
+      MuiCheckbox: {
         styleOverrides: {
           root: {
-            display: "flex",
-            flexDirection: "column",
-            flex: 1,
-            paddingBottom: "39px",
-            [theme.breakpoints.up("xs")]: {
-              paddingLeft: "8px",
-              paddingRight: "8px",
+            color: theme.palette.text.secondary,
+            "&.Mui-checked": {
+              color: theme.palette.text.primary,
             },
-            [theme.breakpoints.up("xsm")]: {
-              paddingLeft: "20px",
-              paddingRight: "20px",
-            },
-            [theme.breakpoints.up("sm")]: {
-              paddingLeft: "48px",
-              paddingRight: "48px",
-            },
-            [theme.breakpoints.up("md")]: {
-              paddingLeft: "96px",
-              paddingRight: "96px",
-            },
-            [theme.breakpoints.up("lg")]: {
-              paddingLeft: "20px",
-              paddingRight: "20px",
-            },
-            [theme.breakpoints.up("xl")]: {
-              maxWidth: "unset",
-              paddingLeft: "96px",
-              paddingRight: "96px",
-            },
-            [theme.breakpoints.up("xxl")]: {
-              paddingLeft: 0,
-              paddingRight: 0,
-              maxWidth: "1440px",
+            "&.Mui-disabled": {
+              color: theme.palette.action.disabled,
             },
           },
         },
@@ -843,7 +841,9 @@ export function getThemedComponents(theme: Theme) {
             fontFamily: FONT,
             fontWeight: 400,
             fontSize: pxToRem(14),
+            lineHeight: 1.5,
             minWidth: "375px",
+            color: "#fff",
             background: "#050c1a",
             "> div:first-of-type": {
               minHeight: "100vh",

@@ -170,8 +170,8 @@ export const BorrowedPositionsList = () => {
         <Typography
           component="div"
           variant="h3"
-          sx={{ mr: 4 }}
-          color={theme.palette.primary.main}
+          sx={{ mr: 2 }}
+          color={theme.palette.text.primary}
         >
           Your borrows
         </Typography>

@@ -211,8 +211,8 @@ export const BorrowAssetsList = () => {
         <Typography
           component="div"
           variant="h3"
-          sx={{ mr: 4 }}
-          color={theme.palette.primary.main}
+          sx={{ mr: 2 }}
+          color={theme.palette.text.primary}
         >
           Assets to borrow
         </Typography>
@@ -222,7 +222,7 @@ export const BorrowAssetsList = () => {
       noData={borrowDisabled}
       subChildrenComponent={
         <>
-          <Box sx={{ px: 6, mb: 4 }}>
+          <Box sx={{ px: 3, mb: 2 }}>
             {+collateralUsagePercent >= 0.98 && (
               <Warning severity="error">
                 Be careful - You are very close to liquidation. <br />

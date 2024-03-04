@@ -57,9 +57,8 @@ export const ReserveTopDetailsWrapper: FC<ReserveTopDetailsProps> = memo(
     const ReserveIcon = () => {
       return (
         <Box
-          mr={3}
           sx={{
-            mr: 3,
+            mr: 1.5,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -103,7 +102,7 @@ export const ReserveTopDetailsWrapper: FC<ReserveTopDetailsProps> = memo(
                 display: "flex",
                 alignItems: downToSM ? "flex-start" : "center",
                 alignSelf: downToSM ? "flex-start" : "center",
-                mb: 4,
+                mb: 2,
                 minHeight: "40px",
                 flexDirection: downToSM ? "column" : "row",
               }}
@@ -121,7 +120,7 @@ export const ReserveTopDetailsWrapper: FC<ReserveTopDetailsProps> = memo(
                   if (history.state.idx !== 0) navigate(-1);
                   else navigate("/lending/markets");
                 }}
-                sx={{ mr: 3, mb: downToSM ? "24px" : "0" }}
+                sx={{ mr: 1.5, mb: downToSM ? "24px" : "0" }}
               >
                 Go Back
               </Button>
@@ -135,7 +134,7 @@ export const ReserveTopDetailsWrapper: FC<ReserveTopDetailsProps> = memo(
             </Box>
 
             {downToSM && (
-              <Box sx={{ display: "flex", alignItems: "center", mb: 6 }}>
+              <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
                 <ReserveIcon />
                 <Box>
                   {!loading && (
@@ -149,7 +148,7 @@ export const ReserveTopDetailsWrapper: FC<ReserveTopDetailsProps> = memo(
                       <Skeleton
                         width={160}
                         height={16}
-                        sx={{ ml: 1, background: "red" }}
+                        sx={{ ml: 0.5, background: "red" }}
                       />
                     ) : (
                       <Box sx={{ display: "flex" }}>

@@ -73,7 +73,7 @@ export const TextWithTooltip: FC<TextWithTooltipProps> = ({
             borderRadius: "50%",
             p: 0,
             minWidth: 0,
-            ml: iconMargin || 0.5,
+            ml: iconMargin || 0.25,
           }}
           onClick={() => {
             if (event) {

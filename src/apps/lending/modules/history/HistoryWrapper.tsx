@@ -134,7 +134,7 @@ export const HistoryWrapper = () => {
           alignItems: "center",
           justifyContent: "center",
           textAlign: "center",
-          p: 4,
+          p: 2,
           flex: 1,
         }}
       >
@@ -167,8 +167,8 @@ export const HistoryWrapper = () => {
         <Typography
           component="div"
           variant="h2"
-          sx={{ mr: 4 }}
-          color="primary.main"
+          sx={{ mr: 2 }}
+          color="text.primary"
         >
           Transactions
         </Typography>
@@ -178,9 +178,9 @@ export const HistoryWrapper = () => {
         sx={{
           display: "flex",
           justifyContent: "space-between",
-          mx: 8,
-          mt: 6,
-          mb: 4,
+          mx: 4,
+          mt: 3,
+          mb: 2,
         }}
       >
         <Box sx={{ display: "inline-flex" }}>
@@ -199,7 +199,7 @@ export const HistoryWrapper = () => {
           sx={{ display: "flex", alignItems: "center", height: 36, gap: 0.5 }}
         >
           {loadingDownload && (
-            <CircularProgress size={16} sx={{ mr: 2 }} color="inherit" />
+            <CircularProgress size={16} sx={{ mr: 1 }} color="inherit" />
           )}
           <Box
             sx={{
@@ -209,14 +209,14 @@ export const HistoryWrapper = () => {
               width: "auto",
               display: "flex",
               alignItems: "center",
-              mr: 6,
+              mr: 3,
             }}
             onClick={handleCsvDownload}
           >
-            <SvgIcon>
+            <SvgIcon sx={{ color: "text.light" }}>
               <DocumentDownloadIcon width={22} height={22} />
             </SvgIcon>
-            <Typography variant="buttonM" color="text.primary">
+            <Typography variant="buttonM" color="text.light">
               .CSV
             </Typography>
           </Box>
@@ -231,10 +231,10 @@ export const HistoryWrapper = () => {
             }}
             onClick={handleJsonDownload}
           >
-            <SvgIcon>
+            <SvgIcon sx={{ color: "text.light" }}>
               <DocumentDownloadIcon width={22} height={22} />
             </SvgIcon>
-            <Typography variant="buttonM" color="text.primary">
+            <Typography variant="buttonM" color="text.light">
               .JSON
             </Typography>
           </Box>
@@ -252,8 +252,8 @@ export const HistoryWrapper = () => {
             <Fragment key={groupIndex}>
               <Typography
                 variant="h4"
-                color="text.primary"
-                sx={{ ml: 9, mt: 6, mb: 2 }}
+                color="text.light"
+                sx={{ ml: 4.5, mt: 3, mb: 1 }}
               >
                 {date}
               </Typography>
@@ -281,18 +281,18 @@ export const HistoryWrapper = () => {
             alignItems: "center",
             justifyContent: "center",
             textAlign: "center",
-            p: 4,
+            p: 2,
             flex: 1,
             maxWidth: "468px",
             margin: "0 auto",
-            my: 24,
+            my: 12,
           }}
         >
-          <Typography variant="h3" color="text.primary">
+          <Typography variant="h3" color="text.light">
             Nothing found
           </Typography>
           <Typography
-            sx={{ mt: 1, mb: 4 }}
+            sx={{ mt: 0.5, mb: 2 }}
             variant="description"
             color="text.secondary"
           >
@@ -318,11 +318,11 @@ export const HistoryWrapper = () => {
             alignItems: "center",
             justifyContent: "center",
             textAlign: "center",
-            p: 4,
+            p: 2,
             flex: 1,
           }}
         >
-          <Typography sx={{ my: 24 }} variant="h3" color="text.primary">
+          <Typography sx={{ my: 12 }} variant="h3" color="text.light">
             No transactions yet.
           </Typography>
         </Box>
@@ -334,8 +334,8 @@ export const HistoryWrapper = () => {
         sx={{
           display: "flex",
           justifyContent: "center",
-          mb: isFetchingNextPage ? 6 : 0,
-          mt: 10,
+          mb: isFetchingNextPage ? 3 : 0,
+          mt: 5,
         }}
       >
         {isFetchingNextPage && (
