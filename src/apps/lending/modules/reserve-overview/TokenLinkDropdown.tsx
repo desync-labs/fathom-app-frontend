@@ -13,11 +13,11 @@ import { RESERVE_DETAILS } from "apps/lending/utils/mixPanelEvents";
 interface TokenLinkDropdownProps {
   poolReserve: ComputedReserveData;
   downToSM: boolean;
-  hideAToken?: boolean;
+  hideFmToken?: boolean;
 }
 
 export const TokenLinkDropdown: FC<TokenLinkDropdownProps> = memo(
-  ({ poolReserve, downToSM, hideAToken }) => {
+  ({ poolReserve, downToSM, hideFmToken }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
     const { currentNetworkConfig, currentMarket } = useProtocolDataContext();
@@ -111,7 +111,7 @@ export const TokenLinkDropdown: FC<TokenLinkDropdownProps> = memo(
             </Typography>
           </MenuItem>
 
-          {!hideAToken && (
+          {!hideFmToken && (
             <Box>
               <Box sx={{ px: 2, pt: 1, pb: 1 }}>
                 <Typography variant="secondary12" color="text.secondary">

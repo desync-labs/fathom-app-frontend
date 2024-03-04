@@ -33,9 +33,9 @@ export const AddTokenDropdown: FC<AddTokenDropdownProps> = memo(
     hideFmToken,
   }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const [changingNetwork, setChangingNetwork] = useState(false);
-    const [underlyingBase64, setUnderlyingBase64] = useState("");
-    const [aTokenBase64, setATokenBase64] = useState("");
+    const [changingNetwork, setChangingNetwork] = useState<boolean>(false);
+    const [underlyingBase64, setUnderlyingBase64] = useState<string>("");
+    const [fmTokenBase64, setFmTokenBase64] = useState<string>("");
     const open = Boolean(anchorEl);
     const trackEvent = useRootStore((store) => store.trackEvent);
     const theme = useTheme();
@@ -89,7 +89,7 @@ export const AddTokenDropdown: FC<AddTokenDropdownProps> = memo(
             {!hideFmToken && (
               <Base64Token
                 symbol={poolReserve.iconSymbol}
-                onImageGenerated={setATokenBase64}
+                onImageGenerated={setFmTokenBase64}
                 fmToken={true}
               />
             )}
@@ -208,7 +208,7 @@ export const AddTokenDropdown: FC<AddTokenDropdownProps> = memo(
                       decimals: poolReserve.decimals,
                       symbol: `fm${poolReserve.symbol}`,
                       image: !/_/.test(poolReserve.symbol)
-                        ? aTokenBase64
+                        ? fmTokenBase64
                         : undefined,
                     });
                   }
