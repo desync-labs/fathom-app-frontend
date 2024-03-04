@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Box } from "@mui/material";
 import { ContentContainer } from "apps/lending/components/ContentContainer";
 import { HistoryTopPanel } from "apps/lending/modules/history/HistoryTopPanel";
-import { HistoryWrapper } from "apps/lending/modules/history/HistoryWrapper";
+import HistoryWrapper from "apps/lending/modules/history/HistoryWrapper";
 import { useRootStore } from "apps/lending/store/root";
 
 export default function History() {

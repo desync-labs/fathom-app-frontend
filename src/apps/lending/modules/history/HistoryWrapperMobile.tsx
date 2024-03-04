@@ -1,4 +1,3 @@
-import { DocumentDownloadIcon, SearchIcon } from "@heroicons/react/outline";
 import {
   Box,
   Button,
@@ -10,6 +9,8 @@ import {
   SvgIcon,
   Typography,
 } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+import SimCardDownloadOutlinedIcon from "@mui/icons-material/SimCardDownloadOutlined";
 import React, {
   useCallback,
   useEffect,
@@ -158,7 +159,7 @@ export const HistoryWrapperMobile = () => {
 
   return (
     <ListWrapper
-      wrapperSx={showSearchBar ? { px: 4 } : undefined}
+      wrapperSx={showSearchBar ? { px: 2 } : undefined}
       titleComponent={
         <Box
           ref={searchBarRef}
@@ -173,7 +174,8 @@ export const HistoryWrapperMobile = () => {
             <Typography
               component="div"
               variant="h2"
-              sx={{ mr: 4, height: "36px" }}
+              color="text.light"
+              sx={{ mr: 2, height: "36px" }}
             >
               Transactions
             </Typography>
@@ -181,11 +183,11 @@ export const HistoryWrapperMobile = () => {
           {!showSearchBar && (
             <Box sx={{ display: "flex", gap: "22px" }}>
               {loadingDownload && (
-                <CircularProgress size={20} sx={{ mr: 2 }} color="inherit" />
+                <CircularProgress size={20} sx={{ mr: 1 }} color="inherit" />
               )}
               <Box onClick={handleDownloadMenuClick} sx={{ cursor: "pointer" }}>
-                <SvgIcon>
-                  <DocumentDownloadIcon width={20} height={20} />
+                <SvgIcon sx={{ color: "#c5d7f2" }}>
+                  <SimCardDownloadOutlinedIcon width={20} height={20} />
                 </SvgIcon>
               </Box>
               <Menu
@@ -196,7 +198,7 @@ export const HistoryWrapperMobile = () => {
                 <Typography
                   variant="subheader2"
                   color="text.secondary"
-                  sx={{ mx: 4, my: 3 }}
+                  sx={{ mx: 2, my: 1.5 }}
                 >
                   Export data to
                 </Typography>
@@ -207,8 +209,8 @@ export const HistoryWrapperMobile = () => {
                   }}
                 >
                   <ListItemIcon>
-                    <SvgIcon>
-                      <DocumentDownloadIcon width={22} height={22} />
+                    <SvgIcon sx={{ color: "#c5d7f2" }}>
+                      <SimCardDownloadOutlinedIcon width={22} height={22} />
                     </SvgIcon>
                   </ListItemIcon>
                   <ListItemText
@@ -224,8 +226,8 @@ export const HistoryWrapperMobile = () => {
                   }}
                 >
                   <ListItemIcon>
-                    <SvgIcon>
-                      <DocumentDownloadIcon width={22} height={22} />
+                    <SvgIcon sx={{ color: "#c5d7f2" }}>
+                      <SimCardDownloadOutlinedIcon width={22} height={22} />
                     </SvgIcon>
                   </ListItemIcon>
                   <ListItemText
@@ -236,7 +238,7 @@ export const HistoryWrapperMobile = () => {
                 </MenuItem>
               </Menu>
               <Box onClick={() => setShowSearchBar(true)}>
-                <SvgIcon sx={{ cursor: "pointer" }}>
+                <SvgIcon sx={{ color: "#c5d7f2", cursor: "pointer" }}>
                   <SearchIcon width={20} height={20} />
                 </SvgIcon>
               </Box>
@@ -284,7 +286,7 @@ export const HistoryWrapperMobile = () => {
               <Typography
                 variant="h4"
                 color="text.primary"
-                sx={{ ml: 4, mt: 6, mb: 2 }}
+                sx={{ ml: 2, mt: 3, mb: 1 }}
               >
                 {date}
               </Typography>
@@ -315,14 +317,14 @@ export const HistoryWrapperMobile = () => {
             flex: 1,
             maxWidth: "468px",
             margin: "0 auto",
-            my: 24,
+            my: 12,
           }}
         >
           <Typography variant="h3" color="text.primary">
             Nothing found
           </Typography>
           <Typography
-            sx={{ mt: 1, mb: 4 }}
+            sx={{ mt: 1, mb: 2 }}
             variant="description"
             color="text.secondary"
           >
@@ -352,7 +354,7 @@ export const HistoryWrapperMobile = () => {
             flex: 1,
           }}
         >
-          <Typography sx={{ my: 24 }} variant="h3" color="text.primary">
+          <Typography sx={{ my: 12 }} variant="h3" color="text.primary">
             No transactions yet.
           </Typography>
         </Box>
@@ -364,8 +366,8 @@ export const HistoryWrapperMobile = () => {
         sx={{
           display: "flex",
           justifyContent: "center",
-          mb: isFetchingNextPage ? 6 : 0,
-          mt: 10,
+          mb: isFetchingNextPage ? 3 : 0,
+          mt: 5,
         }}
       >
         {isFetchingNextPage && (
