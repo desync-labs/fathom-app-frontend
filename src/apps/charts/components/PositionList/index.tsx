@@ -1,8 +1,13 @@
 import { useState, useEffect, useMemo, FC, memo } from "react";
-import { useMedia } from "react-use";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import { Box, Pagination, styled, Typography } from "@mui/material";
+import {
+  Box,
+  Pagination,
+  styled,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import LocalLoader from "apps/charts/components/LocalLoader";
 import { CustomLink } from "apps/charts/components/Link";
 import { Divider } from "apps/charts/components";
@@ -105,8 +110,8 @@ const ListItem: FC<ListItemProps> = memo((props) => {
     position.liquidityTokenBalance / position.pair.totalSupply;
   const valueUSD = poolOwnership * position.pair.reserveUSD;
 
-  const below600 = useMedia("(max-width: 600px)");
-  const below740 = useMedia("(max-width: 740px)");
+  const below600 = useMediaQuery("(max-width: 600px)");
+  const below740 = useMediaQuery("(max-width: 740px)");
 
   const [ethPrice] = useEthPrice();
 
@@ -263,8 +268,8 @@ const ListItem: FC<ListItemProps> = memo((props) => {
 
 const PositionList: FC<PositionList> = (props) => {
   const { positions } = props;
-  const below600 = useMedia("(max-width: 600px)");
-  const below740 = useMedia("(max-width: 740px)");
+  const below600 = useMediaQuery("(max-width: 600px)");
+  const below740 = useMediaQuery("(max-width: 740px)");
 
   // pagination
   const [page, setPage] = useState<number>(1);

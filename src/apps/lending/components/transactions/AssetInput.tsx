@@ -1,4 +1,3 @@
-import { XCircleIcon } from "@heroicons/react/solid";
 import {
   Box,
   Button,
@@ -22,6 +21,8 @@ import { CapType } from "apps/lending/components/caps/helper";
 import { AvailableTooltip } from "apps/lending/components/infoTooltips/AvailableTooltip";
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
 import { TokenIcon } from "apps/lending/components/primitives/TokenIcon";
+
+import CancelIcon from "@mui/icons-material/Cancel";
 
 interface CustomProps {
   onChange: (event: { target: { name: string; value: string } }) => void;
@@ -189,7 +190,7 @@ export const AssetInput = <T extends Asset = Asset>({
               }}
               disabled={disabled}
             >
-              <XCircleIcon height={16} />
+              <CancelIcon sx={{ color: "text.mute", height: 16, width: 16 }} />
             </IconButton>
           )}
           {!onSelect || assets.length === 1 ? (

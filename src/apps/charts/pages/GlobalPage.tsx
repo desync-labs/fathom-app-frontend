@@ -1,6 +1,5 @@
 import { FC, useEffect, useMemo, useState } from "react";
-import { useMedia } from "react-use";
-import { Box, styled } from "@mui/material";
+import { Box, styled, useMediaQuery } from "@mui/material";
 
 import { AutoRow, RowBetween } from "apps/charts/components/Row";
 import { AutoColumn } from "apps/charts/components/Column";
@@ -59,7 +58,7 @@ const GlobalPage: FC = () => {
   } = useGlobalData();
 
   // breakpoints
-  const below800 = useMedia("(max-width: 800px)");
+  const below800 = useMediaQuery("(max-width: 800px)");
 
   // scrolling refs
   useEffect(() => {

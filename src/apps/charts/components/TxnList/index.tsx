@@ -1,6 +1,12 @@
 import { useState, useEffect, FC, useMemo, memo } from "react";
-import { Box, ButtonBase, Pagination, styled, Typography } from "@mui/material";
-import { useMedia } from "react-use";
+import {
+  Box,
+  ButtonBase,
+  Pagination,
+  styled,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 
@@ -199,8 +205,8 @@ type ListItemProps = { item: any };
 const ListItem: FC<ListItemProps> = memo((props) => {
   const { item } = props;
   const [currency] = useCurrentCurrency();
-  const below1080 = useMedia("(max-width: 1080px)");
-  const below780 = useMedia("(max-width: 780px)");
+  const below1080 = useMediaQuery("(max-width: 1080px)");
+  const below780 = useMediaQuery("(max-width: 780px)");
 
   return (
     <DashGrid style={{ height: "48px", padding: "0px 1.125rem" }}>
@@ -420,8 +426,8 @@ const TxnList: FC<TxnListProps> = (props) => {
     [filteredItems, sortDirection, page, sortedColumn]
   );
 
-  const below1080 = useMedia("(max-width: 1080px)");
-  const below780 = useMedia("(max-width: 780px)");
+  const below1080 = useMediaQuery("(max-width: 1080px)");
+  const below780 = useMediaQuery("(max-width: 780px)");
 
   return (
     <>

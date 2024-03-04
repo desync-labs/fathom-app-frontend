@@ -54,7 +54,6 @@
     "react-number-format": "^4.9.4",
     "react-redux": "^7.2.0",
     "react-router-dom": "^6.4.0",
-    "react-use": "^17.4.2",
     "recharts": "^2.10.3",
     "redux-localstorage-simple": "^2.5.1",
     "toformat": "^2.0.0",

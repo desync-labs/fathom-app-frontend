@@ -1,4 +1,4 @@
-import { ExternalLinkIcon } from "@heroicons/react/outline";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { Box, Link, SvgIcon, Typography } from "@mui/material";
 import { ApprovalMethodToggleButton } from "apps/lending/components/transactions/FlowCommons/ApprovalMethodToggleButton";
 import { MOCK_SIGNED_HASH } from "apps/lending/helpers/useTransactionHandler";
@@ -14,7 +14,7 @@ export type RightHelperTextProps = {
 
 const ExtLinkIcon = () => (
   <SvgIcon sx={{ ml: "2px", fontSize: "11px" }}>
-    <ExternalLinkIcon />
+    <OpenInNewIcon />
   </SvgIcon>
 );
 

@@ -1,8 +1,13 @@
 import { useState, useEffect, useMemo, FC, memo } from "react";
-import { useMedia } from "react-use";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import { Box, Pagination, styled, Typography } from "@mui/material";
+import {
+  Box,
+  Pagination,
+  styled,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 
 import TokenLogo from "apps/charts/components/TokenLogo";
 import { CustomLink } from "apps/charts/components/Link";
@@ -117,9 +122,9 @@ type TopTokenListProps = {
 type ListItemProps = { item: any; index: number };
 
 const ListItem: FC<ListItemProps> = memo((props) => {
-  const below1080 = useMedia("(max-width: 1080px)");
-  const below680 = useMedia("(max-width: 680px)");
-  const below600 = useMedia("(max-width: 600px)");
+  const below1080 = useMediaQuery("(max-width: 1080px)");
+  const below680 = useMediaQuery("(max-width: 680px)");
+  const below600 = useMediaQuery("(max-width: 600px)");
 
   const { item, index } = props;
   return (
@@ -178,8 +183,8 @@ const TopTokenList: FC<TopTokenListProps> = (props) => {
   const [sortDirection, setSortDirection] = useState(true);
   const [sortedColumn, setSortedColumn] = useState(SORT_FIELD.VOL);
 
-  const below1080 = useMedia("(max-width: 1080px)");
-  const below680 = useMedia("(max-width: 680px)");
+  const below1080 = useMediaQuery("(max-width: 1080px)");
+  const below680 = useMediaQuery("(max-width: 680px)");
 
   useEffect(() => {
     setMaxPage(1); // edit this to do modular

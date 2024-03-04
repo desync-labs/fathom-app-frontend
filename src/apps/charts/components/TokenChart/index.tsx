@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect, FC, memo } from "react";
-import { useMedia, usePrevious } from "react-use";
 import { darken } from "polished";
-import { Box, styled } from "@mui/material";
+import { Box, styled, useMediaQuery, useTheme } from "@mui/material";
 import {
   Area,
   XAxis,
@@ -20,6 +19,8 @@ import {
   formattedNum,
   getTimeframe,
 } from "apps/charts/utils";
+import useSharedContext from "context/shared";
+import { usePrevious } from "hooks/usePrevious";
 import { OptionButton } from "apps/charts/components/ButtonStyled";
 import { timeframeOptions } from "apps/charts/constants";
 import {
@@ -29,7 +30,6 @@ import {
 import DropdownSelect from "apps/charts/components/DropdownSelect";
 import CandleStickChart from "apps/charts/components/CandleChart";
 import LocalLoader from "apps/charts/components/LocalLoader";
-import useSharedContext from "context/shared";
 
 const ChartWrapper = styled(Box)`
   height: 100%;
@@ -151,8 +151,9 @@ const TokenChart: FC<TokenChartProps> = (props) => {
     }
   }, [prevWindow, timeWindow]);
 
-  const below1080 = useMedia("(max-width: 1080px)");
-  const below600 = useMedia("(max-width: 600px)");
+  const theme = useTheme();
+  const below1080 = useMediaQuery(theme.breakpoints.down(1080));
+  const below600 = useMediaQuery(theme.breakpoints.down(600));
 
   const utcStartTime = getTimeframe(timeWindow);
   const aspect = below600 ? 60 / 60 : below1080 ? 60 / 32 : 60 / 22;

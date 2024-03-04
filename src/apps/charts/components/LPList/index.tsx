@@ -1,8 +1,7 @@
 import { useState, useEffect, memo, FC, useMemo } from "react";
-import { useMedia } from "react-use";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import { Box, Pagination, styled } from "@mui/material";
+import { Box, Pagination, styled, useMediaQuery } from "@mui/material";
 
 import LocalLoader from "apps/charts/components/LocalLoader";
 import { CustomLink } from "apps/charts/components/Link";
@@ -72,8 +71,8 @@ const DataText = styled(Flex)`
 type ListItemProps = { lp: any; index: number };
 
 const ListItem: FC<ListItemProps> = memo((props) => {
-  const below600 = useMedia("(max-width: 600px)");
-  const below800 = useMedia("(max-width: 800px)");
+  const below600 = useMediaQuery("(max-width: 600px)");
+  const below800 = useMediaQuery("(max-width: 800px)");
 
   const { lp, index } = props;
   return (
@@ -114,7 +113,7 @@ type LPListProps = { lps: any; maxItems?: number };
 
 const LPList: FC<LPListProps> = (props) => {
   const { lps, maxItems = 10 } = props;
-  const below600 = useMedia("(max-width: 600px)");
+  const below600 = useMediaQuery("(max-width: 600px)");
 
   // pagination
   const [page, setPage] = useState(1);

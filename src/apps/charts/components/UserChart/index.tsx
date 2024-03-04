@@ -1,6 +1,5 @@
 import { FC, memo, useState } from "react";
-import { useMedia } from "react-use";
-import { Box, styled } from "@mui/material";
+import { Box, styled, useMediaQuery } from "@mui/material";
 import {
   Area,
   XAxis,
@@ -44,8 +43,8 @@ const UserChart: FC<UserChartsProps> = ({ account }) => {
   );
   const utcStartTime = getTimeframe(timeWindow);
 
-  const below600 = useMedia("(max-width: 600px)");
-  const above1600 = useMedia("(min-width: 1600px)");
+  const below600 = useMediaQuery("(max-width: 600px)");
+  const above1600 = useMediaQuery("(min-width: 1600px)");
   const { isMobile } = useSharedContext();
 
   const domain = [

@@ -1,4 +1,4 @@
-import { ExternalLinkIcon } from "@heroicons/react/outline";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { Button, SvgIcon, Typography } from "@mui/material";
 import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
 
@@ -20,7 +20,7 @@ export const FaucetButton = () => {
         }
         endIcon={
           <SvgIcon sx={{ width: 14, height: 14 }}>
-            <ExternalLinkIcon />
+            <OpenInNewIcon />
           </SvgIcon>
         }
         component={Link}

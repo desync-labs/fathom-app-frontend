@@ -8,8 +8,7 @@ import {
   useCallback,
 } from "react";
 import { Navigate, useParams } from "react-router-dom";
-import { useMedia } from "react-use";
-import { Box, styled, Typography } from "@mui/material";
+import { Box, styled, Typography, useMediaQuery } from "@mui/material";
 
 import Link, { CustomLink } from "apps/charts/components/Link";
 import Panel from "apps/charts/components/Panel";
@@ -186,9 +185,9 @@ const TokenPage: FC<{ address: string }> = memo(({ address }) => {
   // transactions
   const txnChangeFormatted = formattedPercent(txnChange);
 
-  const below1080 = useMedia("(max-width: 1080px)");
-  const below600 = useMedia("(max-width: 600px)");
-  const below500 = useMedia("(max-width: 500px)");
+  const below1080 = useMediaQuery("(max-width: 1080px)");
+  const below600 = useMediaQuery("(max-width: 600px)");
+  const below500 = useMediaQuery("(max-width: 500px)");
 
   // format for long symbol
   const LENGTH = below1080 ? 10 : 16;

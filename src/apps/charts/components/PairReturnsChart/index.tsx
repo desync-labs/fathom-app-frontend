@@ -1,6 +1,5 @@
 import { FC, memo, useState } from "react";
-import { useMedia } from "react-use";
-import { Box, styled } from "@mui/material";
+import { Box, styled, useMediaQuery } from "@mui/material";
 import {
   XAxis,
   YAxis,
@@ -54,7 +53,7 @@ const PairReturnsChart: FC<PairReturnChartProps> = (props) => {
 
   const [timeWindow, setTimeWindow] = useTimeframe();
 
-  const below600 = useMedia("(max-width: 600px)");
+  const below600 = useMediaQuery("(max-width: 600px)");
 
   const color = "#43fff6";
 

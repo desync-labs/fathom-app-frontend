@@ -1,4 +1,4 @@
-import { ExternalLinkIcon } from "@heroicons/react/outline";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { Box, Skeleton, SvgIcon, useMediaQuery, useTheme } from "@mui/material";
 import { CircleIcon } from "apps/lending/components/CircleIcon";
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
@@ -109,7 +109,7 @@ export const ReserveTopDetails: FC<ReserveTopDetailsProps> = memo(
                   sx={iconStyling}
                 >
                   <SvgIcon sx={{ fontSize: downToSM ? "12px" : "14px" }}>
-                    <ExternalLinkIcon />
+                    <OpenInNewIcon />
                   </SvgIcon>
                 </Link>
               </CircleIcon>
