@@ -72,12 +72,6 @@ const PositionsList: FC<PositionsListProps> = ({
     [loadingPositions, loading]
   );
 
-  console.log({
-    loadingPositions,
-    loading,
-    listLoading,
-  });
-
   return (
     <>
       <TitleSecondary variant={"h2"}>Your Positions</TitleSecondary>
