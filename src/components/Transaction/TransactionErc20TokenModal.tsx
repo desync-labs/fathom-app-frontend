@@ -71,7 +71,7 @@ const TransactionErc20TokenModal: FC = () => {
       aria-labelledby="customized-dialog-title"
       open={true}
       color="primary"
-      maxWidth="xsm"
+      maxWidth="sm"
     >
       <SuccessContentWrapper>
         <AppDialogTitle
@@ -85,7 +85,11 @@ const TransactionErc20TokenModal: FC = () => {
         <SuccessMessage>{successAlertMessage}</SuccessMessage>
         <DialogContentWrapper
           width={"80%"}
-          sx={{ alignItems: "center", margin: "30px 15px" }}
+          sx={{
+            alignItems: "center",
+            textAlign: "center",
+            margin: "30px 15px",
+          }}
         >
           {image && <img src={image} alt={"fxd"} width={28} height={28} />}
           <Typography variant={"body2"} component="span">

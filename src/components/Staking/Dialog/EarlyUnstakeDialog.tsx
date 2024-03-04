@@ -163,7 +163,7 @@ const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({
         </UnstakeGrid>
         <WarningBlock>
           <InfoIcon sx={{ fontSize: "18px", color: "#F5953D" }} />
-          <Typography component={"span"}>
+          <Typography component={"span"} fontSize="1rem">
             Penalty fee will be applied.
           </Typography>
         </WarningBlock>
