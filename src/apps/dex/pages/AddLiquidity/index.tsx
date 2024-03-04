@@ -118,11 +118,6 @@ const AddLiquidity = () => {
     error,
   } = useDerivedMintInfo(currencyA ?? undefined, currencyB ?? undefined);
 
-  console.log({
-    parsedAmounts,
-    dependentField,
-  });
-
   const { onFieldAInput, onFieldBInput } = useMintActionHandlers(noLiquidity);
 
   const isValid = !error;
