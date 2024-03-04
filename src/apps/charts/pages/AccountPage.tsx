@@ -10,8 +10,7 @@ import {
   MouseEvent,
 } from "react";
 import { Navigate, useParams } from "react-router-dom";
-import { Box, Fade, Menu, styled } from "@mui/material";
-import { useMedia } from "react-use";
+import { Box, Fade, Menu, styled, useMediaQuery } from "@mui/material";
 import {
   useUserTransactions,
   useUserPositions,
@@ -260,7 +259,7 @@ const AccountPage: FC<AccountPageProps> = memo((props) => {
     });
   }, []);
 
-  const below600 = useMedia("(max-width: 600px)");
+  const below600 = useMediaQuery("(max-width: 600px)");
 
   // adding/removing account from saved accounts
   const [savedAccounts, addAccount, removeAccount] = useSavedAccounts();

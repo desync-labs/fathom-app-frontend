@@ -12,8 +12,7 @@ import {
   useNavigate,
   useParams,
 } from "react-router-dom";
-import { useMedia } from "react-use";
-import { Box, styled } from "@mui/material";
+import { Box, styled, useMediaQuery } from "@mui/material";
 
 import Panel from "apps/charts/components/Panel";
 import {
@@ -193,9 +192,9 @@ const PairPage: FC<{ pairAddress: string }> = memo(({ pairAddress }) => {
 
   const transactions = usePairTransactions(pairAddress);
 
-  const below1080 = useMedia("(max-width: 1080px)");
-  const below900 = useMedia("(max-width: 900px)");
-  const below600 = useMedia("(max-width: 600px)");
+  const below1080 = useMediaQuery("(max-width: 1080px)");
+  const below900 = useMediaQuery("(max-width: 900px)");
+  const below600 = useMediaQuery("(max-width: 600px)");
 
   const formattedLiquidity = reserveUSD
     ? formattedNum(reserveUSD, true)

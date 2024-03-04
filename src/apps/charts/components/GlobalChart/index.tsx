@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, useRef, FC, memo } from "react";
-import { useMedia } from "react-use";
 import { ResponsiveContainer } from "recharts";
+import { useMediaQuery } from "@mui/material";
 
 import useSharedContext from "context/shared";
 import { getTimeframe } from "apps/charts/utils";
@@ -71,7 +71,7 @@ const GlobalChart: FC<{ display: any }> = (props) => {
         })
     );
   }, [dailyData, utcStartTime, volumeWindow, weeklyData]);
-  const below800 = useMedia("(max-width: 800px)");
+  const below800 = useMediaQuery("(max-width: 800px)");
 
   // update the width on a window resize
   const ref = useRef<HTMLDivElement>(null);

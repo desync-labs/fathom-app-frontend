@@ -1,8 +1,13 @@
 import { useState, useEffect, FC, memo, useMemo } from "react";
-import { useMedia } from "react-use";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import { Box, Pagination, styled, Typography } from "@mui/material";
+import {
+  Box,
+  Pagination,
+  styled,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 
 import LocalLoader from "apps/charts/components/LocalLoader";
 import { CustomLink } from "apps/charts/components/Link";
@@ -151,8 +156,8 @@ const ListItem: FC<ListItemProps> = memo((props) => {
   const { pairAddress, index, pairs, color } = props;
   const pairData = (pairs as any)[pairAddress];
 
-  const below600 = useMedia("(max-width: 600px)");
-  const below1080 = useMedia("(max-width: 1080px)");
+  const below600 = useMediaQuery("(max-width: 600px)");
+  const below1080 = useMediaQuery("(max-width: 1080px)");
 
   if (pairData && pairData.token0 && pairData.token1) {
     const liquidity = formattedNum(
@@ -263,8 +268,8 @@ type PairListProps = {
 
 const PairList: FC<PairListProps> = (props) => {
   const { pairs, color, maxItems = 10, useTracked = false } = props;
-  const below600 = useMedia("(max-width: 600px)");
-  const below1080 = useMedia("(max-width: 1080px)");
+  const below600 = useMediaQuery("(max-width: 600px)");
+  const below1080 = useMediaQuery("(max-width: 1080px)");
 
   // pagination
   const [page, setPage] = useState<number>(1);

@@ -1,4 +1,4 @@
-import { ExternalLinkIcon } from "@heroicons/react/outline";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { CheckIcon } from "@heroicons/react/solid";
 import { Box, Button, Link, SvgIcon, Typography } from "@mui/material";
 import { FC, ReactNode } from "react";
@@ -12,7 +12,7 @@ export type BaseSuccessTxViewProps = {
 
 const ExtLinkIcon = () => (
   <SvgIcon sx={{ ml: "2px", fontSize: "11px" }}>
-    <ExternalLinkIcon />
+    <OpenInNewIcon />
   </SvgIcon>
 );
 

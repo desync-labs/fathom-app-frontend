@@ -45,7 +45,6 @@ export const DashboardListTopPanel: FC<DashboardListTopPanelProps> = memo(
           }}
           label={"Show assets with 0 balance"}
         />
-
         {(DEV_ENV || ENABLE_TESTNET) && <FaucetButton />}
         {!ENABLE_TESTNET && <BridgeButton bridge={bridge} />}
       </Box>

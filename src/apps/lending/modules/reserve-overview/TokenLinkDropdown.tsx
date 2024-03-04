@@ -1,4 +1,4 @@
-import { ExternalLinkIcon } from "@heroicons/react/outline";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { Box, Menu, MenuItem, SvgIcon, Typography } from "@mui/material";
 import * as React from "react";
 import { FC, memo, useState } from "react";
@@ -58,7 +58,7 @@ export const TokenLinkDropdown: FC<TokenLinkDropdownProps> = memo(
               })}
             >
               <SvgIcon sx={{ fontSize: "14px" }}>
-                <ExternalLinkIcon />
+                <OpenInNewIcon />
               </SvgIcon>
             </Box>
           </CircleIcon>

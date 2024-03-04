@@ -1,6 +1,7 @@
-import { CheckCircleIcon, ChevronDownIcon } from "@heroicons/react/outline";
 import InfoIcon from "@mui/icons-material/Info";
 import { SvgIcon, Theme, ThemeOptions } from "@mui/material";
+import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
+import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutlineOutlined";
 import { createTheme } from "@mui/material/styles";
 
 // @ts-ignore
@@ -763,7 +764,7 @@ export function getThemedComponents(theme: Theme) {
             ),
             success: (
               <SvgIcon color="success">
-                <CheckCircleIcon />
+                <CheckCircleOutlineOutlinedIcon />
               </SvgIcon>
             ),
             warning: (
@@ -863,9 +864,10 @@ export function getThemedComponents(theme: Theme) {
       MuiSelect: {
         defaultProps: {
           IconComponent: (props) => (
-            <SvgIcon sx={{ fontSize: "16px" }} {...props}>
-              <ChevronDownIcon />
-            </SvgIcon>
+            <KeyboardArrowDownRoundedIcon
+              sx={{ fontSize: "22px" }}
+              {...props}
+            />
           ),
         },
         styleOverrides: {

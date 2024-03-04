@@ -1,4 +1,4 @@
-import { ExternalLinkIcon } from "@heroicons/react/solid";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { Box, Button, Divider, SvgIcon } from "@mui/material";
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
 import { Link } from "apps/lending/components/primitives/Link";
@@ -131,7 +131,7 @@ const ReserveConfiguration: FC<ReserveConfigurationProps> = memo(
                     })}
                     endIcon={
                       <SvgIcon sx={{ width: 14, height: 14 }}>
-                        <ExternalLinkIcon />
+                        <OpenInNewIcon />
                       </SvgIcon>
                     }
                     component={Link}

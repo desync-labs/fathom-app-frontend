@@ -1,7 +1,12 @@
 import { FC, memo, useState } from "react";
-import { useMedia } from "react-use";
 import { useNavigate } from "react-router-dom";
-import { Box, IconButton, styled } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  styled,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import { ButtonLight, ButtonFaded } from "apps/charts/components/ButtonStyled";
 import { RowBetween } from "apps/charts/components/Row";
 import { isAddress } from "apps/charts/utils";
@@ -102,7 +107,8 @@ const AccountSearch: FC<AccountSearchProps> = ({ small }) => {
   const [savedAccounts, addAccount, removeAccount] = useSavedAccounts();
   const navigate = useNavigate();
 
-  const below400 = useMedia("(max-width: 400px)");
+  const theme = useTheme();
+  const below400 = useMediaQuery(theme.breakpoints.down(400));
 
   function handleAccountSearch() {
     if (isAddress(accountValue)) {

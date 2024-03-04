@@ -1,5 +1,3 @@
-import { XCircleIcon } from "@heroicons/react/solid";
-import { Check as CheckIcon, Sort as SortIcon } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -15,8 +13,10 @@ import React, { useEffect, useState } from "react";
 import { DarkTooltip } from "apps/lending/components/infoTooltips/DarkTooltip";
 import { useRootStore } from "apps/lending/store/root";
 import { TRANSACTION_HISTORY } from "apps/lending/utils/mixPanelEvents";
-
 import { FilterOptions } from "./types";
+
+import { Check as CheckIcon, Sort as SortIcon } from "@mui/icons-material";
+import CancelIcon from "@mui/icons-material/Cancel";
 
 interface HistoryFilterMenuProps {
   onFilterChange: (filter: FilterOptions[]) => void;
@@ -187,7 +187,7 @@ export const HistoryFilterMenu: React.FC<HistoryFilterMenuProps> = ({
               }}
               onClick={handleClearFilter}
             >
-              <XCircleIcon color="#A5A8B6" width={18} height={18} />
+              <CancelIcon sx={{ color: "#A5A8B6", height: 16, width: 16 }} />
             </Box>
           </DarkTooltip>
         )}
