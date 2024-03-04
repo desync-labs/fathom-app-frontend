@@ -1,4 +1,4 @@
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import ErrorOutlineOutlinedIcon from "@mui/icons-material/ErrorOutlineOutlined";
 import { SvgIcon, Theme, ThemeOptions } from "@mui/material";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutlineOutlined";
@@ -162,7 +162,7 @@ export const getDesignTokens = () => {
         light: "#E57373",
         dark: "#D32F2F",
         "100": "#FBB4AF", // for alert text
-        "200": "#2E0C0A", // for alert background
+        "200": "#9a2a2a", // for alert background
       },
       warning: {
         main: "#f7b06e",
@@ -184,7 +184,7 @@ export const getDesignTokens = () => {
         light: "#90FF95",
         dark: "#388E3C",
         "100": "#C2E4C3", // for alert text
-        "200": "#0A130B", // for alert background
+        "200": "#2a721c", // for alert background
       },
       text: {
         primary: "#fff",
@@ -719,6 +719,9 @@ export function getThemedComponents(theme: Theme) {
             alignItems: "flex-start",
             "& .MuiAlert-message": {
               color: theme.palette.text.primary,
+              fontWeight: 500,
+              fontSize: "0.875rem",
+              lineHeight: 1.43,
               padding: "8px 0",
             },
 
@@ -756,23 +759,23 @@ export function getThemedComponents(theme: Theme) {
         defaultProps: {
           iconMapping: {
             error: (
-              <SvgIcon color="error">
-                <InfoOutlinedIcon />
+              <SvgIcon color="inherit">
+                <ErrorOutlineOutlinedIcon />
               </SvgIcon>
             ),
             info: (
               <SvgIcon color="inherit">
-                <InfoOutlinedIcon />
+                <ErrorOutlineOutlinedIcon />
               </SvgIcon>
             ),
             success: (
-              <SvgIcon color="success">
+              <SvgIcon color="inherit">
                 <CheckCircleOutlineOutlinedIcon />
               </SvgIcon>
             ),
             warning: (
-              <SvgIcon color="warning">
-                <InfoOutlinedIcon />
+              <SvgIcon color="inherit">
+                <ErrorOutlineOutlinedIcon />
               </SvgIcon>
             ),
           },
@@ -783,7 +786,7 @@ export function getThemedComponents(theme: Theme) {
             style: {
               color: "#ff8585",
               background: theme.palette.error["200"],
-              border: "1px solid #5a0000",
+              border: "none",
               a: {
                 color: theme.palette.error["100"],
               },
