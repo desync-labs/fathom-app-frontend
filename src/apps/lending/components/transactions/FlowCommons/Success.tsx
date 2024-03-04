@@ -43,7 +43,7 @@ export const TxSuccessView: FC<SuccessTxViewProps> = ({
     <BaseSuccessView txHash={txHash}>
       <Box
         sx={{
-          mt: 2,
+          mt: 1,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -96,7 +96,7 @@ export const TxSuccessView: FC<SuccessTxViewProps> = ({
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
-              mt: "24px",
+              mt: "18px",
             })}
           >
             <TokenIcon
@@ -128,7 +128,7 @@ export const TxSuccessView: FC<SuccessTxViewProps> = ({
               }}
               variant={theme.palette.mode === "dark" ? "outlined" : "contained"}
               size="medium"
-              sx={{ mt: "8px", mb: "12px" }}
+              sx={{ mt: "8px", mb: "8px" }}
             >
               {addToken.symbol && !/_/.test(addToken.symbol) && (
                 <Base64Token

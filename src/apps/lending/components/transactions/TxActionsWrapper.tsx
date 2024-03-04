@@ -137,7 +137,7 @@ export const TxActionsWrapper: FC<TxActionsWrapperProps> = memo(
     const approvalParams = getApprovalParams();
     return (
       <Box
-        sx={{ display: "flex", flexDirection: "column", mt: 10, ...sx }}
+        sx={{ display: "flex", flexDirection: "column", mt: 5, ...sx }}
         {...rest}
       >
         {requiresApproval && (

@@ -39,7 +39,7 @@ export const BaseSuccessView: FC<BaseSuccessTxViewProps> = ({
             height: "48px",
             bgcolor: "transparent",
             borderRadius: "50%",
-            mt: 14,
+            mt: 4,
             mx: "auto",
             display: "flex",
             alignItems: "center",
@@ -51,7 +51,7 @@ export const BaseSuccessView: FC<BaseSuccessTxViewProps> = ({
           </SvgIcon>
         </Box>
 
-        <Typography sx={{ mt: 4 }} variant="h2">
+        <Typography sx={{ mt: 2 }} variant="h2">
           All done!
         </Typography>
 
@@ -68,8 +68,8 @@ export const BaseSuccessView: FC<BaseSuccessTxViewProps> = ({
             display: "inline-flex",
             alignItems: "center",
             justifyContent: "right",
-            mt: 6,
-            mb: 3,
+            mt: 4,
+            mb: 2,
           }}
           underline="hover"
           target="_blank"
