@@ -1,4 +1,4 @@
-import InfoIcon from "@mui/icons-material/Info";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { SvgIcon, Theme, ThemeOptions } from "@mui/material";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutlineOutlined";
@@ -713,28 +713,22 @@ export function getThemedComponents(theme: Theme) {
         styleOverrides: {
           root: {
             boxShadow: "none",
-            borderRadius: "8px",
-            padding: "8px 16px",
+            borderRadius: "4px",
+            padding: "6px 16px",
             ...theme.typography.caption,
             alignItems: "flex-start",
-            ".MuiAlert-message": {
-              padding: 0,
-              paddingTop: "2px",
-              paddingBottom: "2px",
+            "& .MuiAlert-message": {
+              color: theme.palette.text.primary,
+              padding: "8px 0",
             },
+
             ".MuiAlert-icon": {
-              padding: 0,
+              marginRight: "12px",
+              padding: "7px 0",
+              color: theme.palette.text.primary,
               opacity: 1,
               ".MuiSvgIcon-root": {
-                fontSize: pxToRem(20),
-              },
-            },
-            a: {
-              ...theme.typography.caption,
-              fontWeight: 500,
-              textDecoration: "underline",
-              "&:hover": {
-                textDecoration: "none",
+                fontSize: pxToRem(22),
               },
             },
             ".MuiButton-text": {
@@ -749,18 +743,26 @@ export function getThemedComponents(theme: Theme) {
                 background: "transparent",
               },
             },
+            "& a": {
+              color: `${theme.palette.other.fathomLink} !important`,
+              fontWeight: 700,
+              textDecoration: "underline",
+              "&:hover": {
+                textDecoration: "none",
+              },
+            },
           },
         },
         defaultProps: {
           iconMapping: {
             error: (
               <SvgIcon color="error">
-                <InfoIcon />
+                <InfoOutlinedIcon />
               </SvgIcon>
             ),
             info: (
-              <SvgIcon color="info">
-                <InfoIcon />
+              <SvgIcon color="inherit">
+                <InfoOutlinedIcon />
               </SvgIcon>
             ),
             success: (
@@ -770,7 +772,7 @@ export function getThemedComponents(theme: Theme) {
             ),
             warning: (
               <SvgIcon color="warning">
-                <InfoIcon />
+                <InfoOutlinedIcon />
               </SvgIcon>
             ),
           },
