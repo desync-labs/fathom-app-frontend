@@ -49,8 +49,8 @@ export const TxModalDetails: FC<TxModalDetailsProps> = ({
   children,
 }) => {
   return (
-    <Box sx={{ pt: 5 }}>
-      <Typography sx={{ mb: 3 }} color="text.secondary">
+    <Box sx={{ pt: 3 }}>
+      <Typography sx={{ mb: 2 }} color="text.secondary">
         Transaction overview
       </Typography>
 
@@ -94,7 +94,7 @@ export const DetailsNumberLine = ({
   ...rest
 }: DetailsNumberLineProps) => {
   return (
-    <Row caption={description} captionVariant="description" mb={4}>
+    <Row caption={description} captionVariant="description" mb={2}>
       <Box sx={{ display: "flex", alignItems: "center" }}>
         {loading ? (
           <Skeleton
@@ -252,7 +252,7 @@ export const DetailsCollateralLine = ({
   collateralType,
 }: DetailsCollateralLine) => {
   return (
-    <Row caption={"Collateralization"} captionVariant="description" mb={4}>
+    <Row caption={"Collateralization"} captionVariant="description" mb={2}>
       <CollateralState collateralType={collateralType} />
     </Row>
   );
