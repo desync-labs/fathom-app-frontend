@@ -27,6 +27,7 @@ import { ReserveTopDetails } from "apps/lending/modules/reserve-overview/Reserve
 import { TokenLinkDropdown } from "apps/lending/modules/reserve-overview/TokenLinkDropdown";
 import { useNavigate } from "react-router-dom";
 import { FC, memo } from "react";
+import { lendingContainerProps } from "apps/lending/components/ContentContainer";
 
 interface ReserveTopDetailsProps {
   underlyingAsset: string;
@@ -95,6 +96,7 @@ export const ReserveTopDetailsWrapper: FC<ReserveTopDetailsProps> = memo(
 
     return (
       <TopInfoPanel
+        containerProps={lendingContainerProps}
         titleComponent={
           <Box>
             <Box
