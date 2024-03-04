@@ -877,6 +877,14 @@ export function getThemedComponents(theme: Theme) {
           ),
         },
         styleOverrides: {
+          root: {
+            "&.Mui-focused": {
+              ".MuiOutlinedInput-notchedOutline": {
+                border: "1px solid #5a81ff",
+                boxShadow: "0 0 8px #003cff",
+              },
+            },
+          },
           outlined: {
             backgroundColor: theme.palette.background.surface,
             ...theme.typography.buttonM,
