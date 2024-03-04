@@ -1,6 +1,6 @@
 import { API_ETH_MOCK_ADDRESS } from "@into-the-fathom/lending-contract-helpers";
 import { Typography, useMediaQuery, useTheme } from "@mui/material";
-import { FC, Fragment, useState } from "react";
+import { FC, Fragment, useMemo, useState } from "react";
 import { ListColumn } from "apps/lending/components/lists/ListColumn";
 import { ListHeaderTitle } from "apps/lending/components/lists/ListHeaderTitle";
 import { ListHeaderWrapper } from "apps/lending/components/lists/ListHeaderWrapper";
@@ -65,24 +65,26 @@ export const SuppliedPositionsList = () => {
   const [sortDesc, setSortDesc] = useState(false);
   const [tooltipOpen, setTooltipOpen] = useState<boolean>(false);
 
-  const suppliedPositions =
-    user?.userReservesData
-      .filter((userReserve) => userReserve.underlyingBalance !== "0")
-      .map((userReserve) => ({
-        ...userReserve,
-        supplyAPY: userReserve.reserve.supplyAPY, // Note: added only for table sort
-        reserve: {
-          ...userReserve.reserve,
-          ...(userReserve.reserve.isWrappedBaseAsset
-            ? fetchIconSymbolAndName({
-                name: userReserve.reserve.name,
-                symbol: currentNetworkConfig.baseAssetSymbol,
-                underlyingAsset: API_ETH_MOCK_ADDRESS.toLowerCase(),
-              })
-            : {}),
-        },
-      })) || [];
-
+  const suppliedPositions = useMemo(
+    () =>
+      user?.userReservesData
+        .filter((userReserve) => userReserve.underlyingBalance !== "0")
+        .map((userReserve) => ({
+          ...userReserve,
+          supplyAPY: userReserve.reserve.supplyAPY, // Note: added only for table sort
+          reserve: {
+            ...userReserve.reserve,
+            ...(userReserve.reserve.isWrappedBaseAsset
+              ? fetchIconSymbolAndName({
+                  name: userReserve.reserve.name,
+                  symbol: currentNetworkConfig.baseAssetSymbol,
+                  underlyingAsset: API_ETH_MOCK_ADDRESS.toLowerCase(),
+                })
+              : {}),
+          },
+        })) || [],
+    [user?.userReservesData]
+  );
   // Transform to the DashboardReserve schema so the sort utils can work with it
   const preSortedReserves = suppliedPositions as DashboardReserve[];
   const sortedReserves = handleSortDashboardReserves(
