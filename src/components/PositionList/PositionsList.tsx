@@ -43,6 +43,7 @@ type PositionsListProps = {
   positionsItemsCount: number;
   proxyWallet: string;
   positionCurrentPage: number;
+  loadingPositions: boolean;
   setPositionCurrentPage: Dispatch<number>;
 };
 
@@ -51,6 +52,7 @@ const PositionsList: FC<PositionsListProps> = ({
   positionsItemsCount,
   positionCurrentPage,
   setPositionCurrentPage,
+  loadingPositions,
 }) => {
   const {
     topUpPositionPool,
@@ -65,13 +67,24 @@ const PositionsList: FC<PositionsListProps> = ({
   } = useOpenPositionList(setPositionCurrentPage, proxyWallet);
   const { isMobile } = useSharedContext();
 
+  const listLoading = useMemo(
+    () => loadingPositions || loading,
+    [loadingPositions, loading]
+  );
+
+  console.log({
+    loadingPositions,
+    loading,
+    listLoading,
+  });
+
   return (
     <>
       <TitleSecondary variant={"h2"}>Your Positions</TitleSecondary>
       {useMemo(
         () => (
           <>
-            {positions.length === 0 && (
+            {(positions.length === 0 || listLoading) && (
               <NoResults mt={isMobile ? 2 : 3}>
                 {loading ? (
                   <CircleWrapper>
@@ -83,7 +96,7 @@ const PositionsList: FC<PositionsListProps> = ({
               </NoResults>
             )}
 
-            {!!positions.length && !isMobile && (
+            {!!positions.length && !listLoading && !isMobile && (
               <>
                 <TableContainer>
                   <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -161,7 +174,7 @@ const PositionsList: FC<PositionsListProps> = ({
                 </PaginationWrapper>
               </>
             )}
-            {!!positions.length && isMobile && (
+            {!!positions.length && !listLoading && isMobile && (
               <>
                 {positions.map((position: IOpenPosition) => (
                   <PositionListItemMobile
