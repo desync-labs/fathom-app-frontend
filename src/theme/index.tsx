@@ -3,6 +3,7 @@ import { SvgIcon, Theme, ThemeOptions } from "@mui/material";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutlineOutlined";
 import { createTheme } from "@mui/material/styles";
+import { CSSProperties } from "react";
 
 // @ts-ignore
 import { ColorPartial } from "@mui/material/styles/createPalette";
@@ -59,23 +60,23 @@ declare module "@mui/material/styles/createPalette" {
 }
 
 interface TypographyCustomVariants {
-  display1: React.CSSProperties;
-  subheader1: React.CSSProperties;
-  subheader2: React.CSSProperties;
-  description: React.CSSProperties;
-  buttonL: React.CSSProperties;
-  buttonM: React.CSSProperties;
-  buttonS: React.CSSProperties;
-  helperText: React.CSSProperties;
-  tooltip: React.CSSProperties;
-  main21: React.CSSProperties;
-  secondary21: React.CSSProperties;
-  main16: React.CSSProperties;
-  secondary16: React.CSSProperties;
-  main14: React.CSSProperties;
-  secondary14: React.CSSProperties;
-  main12: React.CSSProperties;
-  secondary12: React.CSSProperties;
+  display1: CSSProperties;
+  subheader1: CSSProperties;
+  subheader2: CSSProperties;
+  description: CSSProperties;
+  buttonL: CSSProperties;
+  buttonM: CSSProperties;
+  buttonS: CSSProperties;
+  helperText: CSSProperties;
+  tooltip: CSSProperties;
+  main21: CSSProperties;
+  secondary21: CSSProperties;
+  main16: CSSProperties;
+  secondary16: CSSProperties;
+  main14: CSSProperties;
+  secondary14: CSSProperties;
+  main12: CSSProperties;
+  secondary12: CSSProperties;
 }
 
 declare module "@mui/material/styles" {
@@ -136,11 +137,11 @@ export const getDesignTokens = () => {
       keys: ["xs", "xsm", "sm", "md", "lg", "xl", "xxl"],
       values: {
         xs: 0,
-        xsm: 640,
-        sm: 760,
+        xsm: 480,
+        sm: 600,
         md: 900,
-        lg: 1280,
-        xl: 1575,
+        lg: 1200,
+        xl: 1536,
         xxl: 1800,
       },
     },
