@@ -35,9 +35,6 @@ const ErrorInfoIcon = styled(InfoIcon)`
 `;
 
 const StableSwapCurrencySelect = styled(Select)`
-  background: #253656;
-  border: 1px solid #324567;
-  border-radius: 8px;
   color: #fff;
   font-weight: bold;
   font-size: 13px;
@@ -48,11 +45,22 @@ const StableSwapCurrencySelect = styled(Select)`
   left: 32px;
   top: 41px;
   z-index: 1;
-  padding-top: 4px;
 
-  .MuiSelect-select {
-    padding-left: 12px;
+  & .MuiSelect-select {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: flex-start;
+    border-radius: 6px;
+    padding: 4px 12px !important;
   }
+`;
+
+const TokenLogoBox = styled(Box)`
+  display: flex;
+  height: fit-content;
+  padding-right: 10px;
 `;
 
 const StableSwapSuccessBox = styled(SuccessBox)`
@@ -117,9 +125,9 @@ const StableSwapForm: FC<any> = ({
             () =>
               options.map((option: string) => (
                 <MenuItem key={option} value={option}>
-                  <Box sx={{ float: "left", paddingRight: "10px" }}>
+                  <TokenLogoBox>
                     <img width={16} src={getTokenLogoURL(option)} alt={""} />
-                  </Box>
+                  </TokenLogoBox>
                   {option}
                 </MenuItem>
               )),
@@ -179,9 +187,9 @@ const StableSwapForm: FC<any> = ({
             () =>
               options.map((option: string) => (
                 <MenuItem key={option} value={option}>
-                  <Box sx={{ float: "left", paddingRight: "10px" }}>
+                  <TokenLogoBox>
                     <img width={16} src={getTokenLogoURL(option)} alt={""} />
-                  </Box>
+                  </TokenLogoBox>
                   {option}
                 </MenuItem>
               )),
