@@ -6,7 +6,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { ListWrapper } from "apps/lending/components/lists/ListWrapper";
 import { NoSearchResults } from "apps/lending/components/NoSearchResults";
 import { Warning } from "apps/lending/components/primitives/Warning";
@@ -23,31 +23,35 @@ export const MarketAssetsListContainer = () => {
   const { breakpoints } = useTheme();
   const sm = useMediaQuery(breakpoints.down("sm"));
 
-  const filteredData = reserves
-    // Filter out any non-active reserves
-    .filter((res) => res.isActive)
-    // Filter out all GHO, as we deliberately display it on supported markets
-    // filter out any that don't meet search term criteria
-    .filter((res) => {
-      if (!searchTerm) return true;
-      const term = searchTerm.toLowerCase().trim();
-      return (
-        res.symbol.toLowerCase().includes(term) ||
-        res.name.toLowerCase().includes(term) ||
-        res.underlyingAsset.toLowerCase().includes(term)
-      );
-    })
-    // Transform the object for list to consume it
-    .map((reserve) => ({
-      ...reserve,
-      ...(reserve.isWrappedBaseAsset
-        ? fetchIconSymbolAndName({
-            name: reserve.name,
-            symbol: currentNetworkConfig.baseAssetSymbol,
-            underlyingAsset: API_ETH_MOCK_ADDRESS.toLowerCase(),
-          })
-        : {}),
-    }));
+  const filteredData = useMemo(
+    () =>
+      reserves
+        // Filter out any non-active reserves
+        .filter((res) => res.isActive)
+        // Filter out all GHO, as we deliberately display it on supported markets
+        // filter out any that don't meet search term criteria
+        .filter((res) => {
+          if (!searchTerm) return true;
+          const term = searchTerm.toLowerCase().trim();
+          return (
+            res.symbol.toLowerCase().includes(term) ||
+            res.name.toLowerCase().includes(term) ||
+            res.underlyingAsset.toLowerCase().includes(term)
+          );
+        })
+        // Transform the object for list to consume it
+        .map((reserve) => ({
+          ...reserve,
+          ...(reserve.isWrappedBaseAsset
+            ? fetchIconSymbolAndName({
+                name: reserve.name,
+                symbol: currentNetworkConfig.baseAssetSymbol,
+                underlyingAsset: API_ETH_MOCK_ADDRESS.toLowerCase(),
+              })
+            : {}),
+        })),
+    [searchTerm, reserves]
+  );
   const unfrozenReserves = filteredData.filter(
     (r) => !r.isFrozen && !r.isPaused
   );

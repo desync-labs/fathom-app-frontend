@@ -31,6 +31,7 @@ import {
   TxModalDetails,
 } from "apps/lending/components/transactions/FlowCommons/TxModalDetails";
 import { RepayActions } from "apps/lending/components/transactions/Repay/RepayActions";
+import { roundToTokenDecimals } from "apps/lending/utils/utils";
 
 interface RepayAsset extends Asset {
   balance: string;
@@ -111,7 +112,11 @@ export const RepayModalContent: FC<
   const handleChange = (value: string) => {
     const maxSelected = value === "-1";
     amountRef.current = maxSelected ? maxAmountToRepay.toString(10) : value;
-    setAmount(value);
+    const decimalTruncatedValue = roundToTokenDecimals(
+      value,
+      poolReserve.decimals
+    );
+    setAmount(decimalTruncatedValue);
     if (maxSelected && (repayWithATokens || maxAmountToRepay.eq(debt))) {
       if (
         tokenToRepayWith.address === API_ETH_MOCK_ADDRESS.toLowerCase() ||
