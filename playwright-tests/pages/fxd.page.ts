@@ -126,7 +126,7 @@ export default class FxdPage extends BasePage {
     );
     this.btnCloseModal = this.page.locator('button[aria-label="close"]');
     this.doneIconModal = this.page.locator('[data-testid="DoneIcon"]');
-    this.headingFourModal = this.page.locator('div[role="dialog"] h4');
+    this.headingFourModal = this.page.locator('div[role="dialog"] h1');
     this.spanBodyOneModal = this.page.locator(
       'div[role="dialog"] p[class*="MuiTypography-description"]'
     );
