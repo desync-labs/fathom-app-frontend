@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import StyledToggleButton from "apps/lending/components/StyledToggleButton";
 import StyledToggleButtonGroup from "apps/lending/components/StyledToggleButtonGroup";
 import {
@@ -18,15 +18,18 @@ import { useLocation } from "react-router-dom";
 export default function ReserveOverview() {
   const location = useLocation();
   const { reserves } = useAppDataContext();
-  const underlyingAsset = new URLSearchParams(location.search).get(
-    "underlyingAsset"
+  const underlyingAsset = useMemo(
+    () => new URLSearchParams(location.search).get("underlyingAsset"),
+    [location.search]
   ) as string;
 
   const [mode, setMode] = useState<"overview" | "actions" | "">("overview");
   const trackEvent = useRootStore((store) => store.trackEvent);
 
-  const reserve = reserves.find(
-    (reserve) => reserve.underlyingAsset === underlyingAsset
+  const reserve = useMemo(
+    () =>
+      reserves.find((reserve) => reserve.underlyingAsset === underlyingAsset),
+    [reserves]
   ) as ComputedReserveData;
 
   const [pageEventCalled, setPageEventCalled] = useState(false);
@@ -42,7 +45,7 @@ export default function ReserveOverview() {
     }
   }, [trackEvent, reserve, underlyingAsset, pageEventCalled]);
 
-  const isOverview = mode === "overview";
+  const isOverview = useMemo(() => mode === "overview", [mode]);
 
   return (
     <AssetCapsProvider asset={reserve}>
