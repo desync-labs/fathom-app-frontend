@@ -5,6 +5,8 @@ import useClosePositionContext from "context/repayPosition";
 import { AppList, AppListItem } from "components/AppComponents/AppList/AppList";
 
 import { formatNumber, formatNumberPrice } from "utils/format";
+import AppPopover from "components/AppComponents/AppPopover/AppPopover";
+import { ListTitleWrapper } from "components/Positions/OpenPosition/OpenPositionInfo";
 
 const RepayPositionInfo = () => {
   const {
@@ -59,7 +61,26 @@ const RepayPositionInfo = () => {
           alignItems={"flex-start"}
           secondaryAction={`${formatNumber(overCollateral)} %`}
         >
-          <ListItemText primary="Collateralization Ratio" />
+          <ListItemText
+            primary={
+              <ListTitleWrapper>
+                Collateralization Ratio
+                <AppPopover
+                  id={"collateralization-ratio"}
+                  text={
+                    <>
+                      Collateralization Ratio is the percentage of the total
+                      value of your Collateral compared to the amount you've
+                      borrowed. A higher ratio indicates a larger safety buffer,
+                      reducing liquidation risk. If this ratio falls below the
+                      minimum required level due to market fluctuations, your
+                      Collateral could be liquidated to repay the loan.
+                    </>
+                  }
+                />
+              </ListTitleWrapper>
+            }
+          />
         </AppListItem>
         <AppListItem
           alignItems="flex-start"
@@ -67,7 +88,27 @@ const RepayPositionInfo = () => {
             liquidationPrice
           )} FXD`}
         >
-          <ListItemText primary="Liquidation Price" />
+          <ListItemText
+            primary={
+              <ListTitleWrapper>
+                Liquidation Price of {pool.poolName}
+                <AppPopover
+                  id={"liquidation-price"}
+                  text={
+                    <>
+                      Liquidation Price of XDC - Liquidation Price is the price
+                      of the collateral token when your Collateral will be
+                      automatically sold to partially or fully repay the loan if
+                      your collateral value drops. It's a safety mechanism to
+                      ensure that loans are always sufficiently collateralized.
+                      Monitoring this price helps prevent the unwanted
+                      liquidation of your assets.
+                    </>
+                  }
+                />
+              </ListTitleWrapper>
+            }
+          />
         </AppListItem>
       </AppList>
     </Grid>
