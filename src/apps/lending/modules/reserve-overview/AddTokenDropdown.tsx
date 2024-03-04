@@ -19,7 +19,7 @@ interface AddTokenDropdownProps {
   addERC20Token: (args: ERC20TokenType) => Promise<boolean>;
   currentChainId: number;
   connectedChainId: number;
-  hideAToken?: boolean;
+  hideFmToken?: boolean;
 }
 
 export const AddTokenDropdown: FC<AddTokenDropdownProps> = memo(
@@ -30,12 +30,12 @@ export const AddTokenDropdown: FC<AddTokenDropdownProps> = memo(
     addERC20Token,
     currentChainId,
     connectedChainId,
-    hideAToken,
+    hideFmToken,
   }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const [changingNetwork, setChangingNetwork] = useState(false);
-    const [underlyingBase64, setUnderlyingBase64] = useState("");
-    const [aTokenBase64, setATokenBase64] = useState("");
+    const [changingNetwork, setChangingNetwork] = useState<boolean>(false);
+    const [underlyingBase64, setUnderlyingBase64] = useState<string>("");
+    const [fmTokenBase64, setFmTokenBase64] = useState<string>("");
     const open = Boolean(anchorEl);
     const trackEvent = useRootStore((store) => store.trackEvent);
     const theme = useTheme();
@@ -86,10 +86,10 @@ export const AddTokenDropdown: FC<AddTokenDropdownProps> = memo(
               onImageGenerated={setUnderlyingBase64}
               fmToken={false}
             />
-            {!hideAToken && (
+            {!hideFmToken && (
               <Base64Token
                 symbol={poolReserve.iconSymbol}
-                onImageGenerated={setATokenBase64}
+                onImageGenerated={setFmTokenBase64}
                 fmToken={true}
               />
             )}
@@ -135,7 +135,7 @@ export const AddTokenDropdown: FC<AddTokenDropdownProps> = memo(
           keepMounted={true}
           data-cy="addToWaletSelector"
         >
-          <Box sx={{ px: 4, pt: 3, pb: 2 }}>
+          <Box sx={{ px: 2, pt: 1, pb: 1 }}>
             <Typography variant="secondary12" color="text.secondary">
               Underlying token
             </Typography>
@@ -182,9 +182,9 @@ export const AddTokenDropdown: FC<AddTokenDropdownProps> = memo(
               {poolReserve.symbol}
             </Typography>
           </MenuItem>
-          {!hideAToken && (
+          {!hideFmToken && (
             <Box>
-              <Box sx={{ px: 4, pt: 3, pb: 2 }}>
+              <Box sx={{ px: 2, pt: 1, pb: 1 }}>
                 <Typography variant="secondary12" color="text.secondary">
                   Fathom fmToken
                 </Typography>
@@ -208,7 +208,7 @@ export const AddTokenDropdown: FC<AddTokenDropdownProps> = memo(
                       decimals: poolReserve.decimals,
                       symbol: `fm${poolReserve.symbol}`,
                       image: !/_/.test(poolReserve.symbol)
-                        ? aTokenBase64
+                        ? fmTokenBase64
                         : undefined,
                     });
                   }
