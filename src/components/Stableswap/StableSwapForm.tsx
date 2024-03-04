@@ -25,6 +25,7 @@ import { formatPercentage } from "utils/format";
 const StableSwapErrorBox = styled(ErrorBox)`
   width: 100%;
   margin: 0;
+  margin: 20px 0 0;
 `;
 
 const ErrorInfoIcon = styled(InfoIcon)`
@@ -211,7 +212,7 @@ const StableSwapForm: FC<any> = ({
       {isUserWhiteListed === false && isUserWrapperWhiteListed === false && (
         <StableSwapErrorBox>
           <ErrorInfoIcon />
-          <ErrorMessage>Wallet Address Not Whitelisted.</ErrorMessage>
+          <ErrorMessage>Wallet Address is not whitelisted.</ErrorMessage>
         </StableSwapErrorBox>
       )}
     </>
