@@ -70,21 +70,24 @@ const useOpenPositionList = (
 
   const handlePageChange = useCallback(
     (event: ChangeEvent<unknown>, page: number) => {
+      setIsLoading(true);
       fetchMore({
         variables: {
           first: COUNT_PER_PAGE,
           skip: (page - 1) * COUNT_PER_PAGE,
           walletAddress: proxyWallet,
         },
-      });
+      }).then(
+        ({ data: { positions } }) => !positions.length && setIsLoading(false)
+      );
       setPositionCurrentPage(page);
     },
-    [proxyWallet, setPositionCurrentPage, fetchMore]
+    [proxyWallet, setPositionCurrentPage, setIsLoading, fetchMore]
   );
 
   const fetchPositions = useMemo(
     () =>
-      debounce((loading, data, poolsData) => {
+      debounce((data, poolsData) => {
         setIsLoading(true);
         const filteredPosition = data.positions.filter(
           (position: IOpenPosition) => position.positionStatus !== "closed"
@@ -144,7 +147,7 @@ const useOpenPositionList = (
       return setFormattedPositions([]);
     }
 
-    fetchPositions(loading, data, poolsData);
+    fetchPositions(data, poolsData);
   }, [loading, data, poolsData, fetchPositions]);
 
   const onClose = useCallback(() => {

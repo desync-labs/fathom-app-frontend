@@ -12,13 +12,15 @@ const useDashboard = () => {
   const { account } = useConnector();
   const { syncFXD, prevSyncFxd } = useSyncContext();
 
-  const { refetch: refetchStats } = useQuery(FXD_STATS, {
+  const { refetch: refetchStats, loading: loadingStats } = useQuery(FXD_STATS, {
     context: { clientName: "stable" },
   });
-  const [, { refetch: refetchPositions }] = useLazyQuery(FXD_POSITIONS, {
-    context: { clientName: "stable" },
-  });
-  const { refetch: refetchPools } = useQuery(FXD_POOLS, {
+  const [, { refetch: refetchPositions, loading: loadingPositions }] =
+    useLazyQuery(FXD_POSITIONS, {
+      context: { clientName: "stable" },
+    });
+
+  const { refetch: refetchPools, loading: loadingPools } = useQuery(FXD_POOLS, {
     context: { clientName: "stable" },
   });
 
@@ -134,6 +136,9 @@ const useDashboard = () => {
   }, [syncFXD, prevSyncFxd, refetchData]);
 
   return {
+    loadingPools,
+    loadingStats,
+    loadingPositions,
     proxyWallet,
     positionCurrentPage,
     positionsItemsCount,

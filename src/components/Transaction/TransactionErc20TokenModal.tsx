@@ -62,8 +62,7 @@ const TransactionErc20TokenModal: FC = () => {
 
   const addTokenToMetamaskWalletHandler = useCallback(() => {
     addERC20Token(erc20TokenModalData as ERC20TokenType);
-    resetErc20TokenModal();
-  }, [addERC20Token, resetErc20TokenModal]);
+  }, [addERC20Token]);
 
   return (
     <AppDialog
