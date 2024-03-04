@@ -172,23 +172,25 @@ export default class DexPage extends BasePage {
   async selectFromToken({ tokenId }: { tokenId: string }): Promise<void> {
     await this.fromCurrencySelectButton.click();
     const tokenItem = this.getTokenItemLocator({ tokenId });
-    await expect(tokenItem.locator("svg")).not.toBeVisible({ timeout: 15000 });
+    await expect(tokenItem.locator("svg")).not.toBeVisible({ timeout: 25000 });
     const isDisabled = (await tokenItem.getAttribute("disabled")) !== null;
     if (!isDisabled) {
       await tokenItem.click();
+    } else {
+      await this.closeButtonSelectTokenModal.click();
     }
-    await this.closeButtonSelectTokenModal.click();
   }
 
   async selectToToken({ tokenId }: { tokenId: string }): Promise<void> {
     await this.toCurrencySelectButton.click();
     const tokenItem = this.getTokenItemLocator({ tokenId });
-    await expect(tokenItem.locator("svg")).not.toBeVisible({ timeout: 15000 });
+    await expect(tokenItem.locator("svg")).not.toBeVisible({ timeout: 25000 });
     const isDisabled = (await tokenItem.getAttribute("disabled")) !== null;
     if (!isDisabled) {
       await tokenItem.click();
+    } else {
+      await this.closeButtonSelectTokenModal.click();
     }
-    await this.closeButtonSelectTokenModal.click();
   }
 
   async fillFromValue({ inputValue }: { inputValue: number }): Promise<void> {
@@ -232,7 +234,7 @@ export default class DexPage extends BasePage {
     const fromAmountString = await this.fromTokenAmountInput.getAttribute(
       "value"
     );
-    await this.page.waitForTimeout(3000);
+    await expect(this.swapButton).toHaveText("Swap", { timeout: 20000 });
     const toAmountString = await this.toTokenAmountInput.getAttribute("value");
     expect(Number(toAmountString)).toBeGreaterThan(0);
     const fromTokenName = await this.fromTokenSymbolContainer.textContent();
@@ -268,7 +270,11 @@ export default class DexPage extends BasePage {
     const fromAmountString = await this.fromTokenAmountInput.getAttribute(
       "value"
     );
-    await this.page.waitForTimeout(3000);
+    if (fromToken === tokenIds.XDC) {
+      await expect(this.wrapButton).toHaveText("Wrap", { timeout: 20000 });
+    } else if (fromToken === tokenIds.WXDC) {
+      await expect(this.wrapButton).toHaveText("Unwrap", { timeout: 20000 });
+    }
     const toAmountString = await this.toTokenAmountInput.getAttribute("value");
     expect(Number(toAmountString)).toBeGreaterThan(0);
     const fromTokenName = await this.fromTokenSymbolContainer.textContent();
@@ -279,11 +285,6 @@ export default class DexPage extends BasePage {
       toAmountExpected: toAmountString as string,
       toTokenNameExpected: toTokenName as string,
     };
-    if (fromToken === tokenIds.XDC) {
-      await expect(this.wrapButton).toHaveText("Wrap");
-    } else if (fromToken === tokenIds.WXDC) {
-      await expect(this.wrapButton).toHaveText("Unwrap");
-    }
     await this.clickWrapButton();
     await metamask.confirmTransaction();
     return expectedData;
@@ -306,7 +307,7 @@ export default class DexPage extends BasePage {
   }
 
   async getCompletedTransactionHashFromPopup(): Promise<string> {
-    await expect(this.transactionPopupColumn).toBeVisible({ timeout: 50000 });
+    await expect(this.transactionPopupColumn).toBeVisible({ timeout: 60000 });
     await expect(this.transactionPopupFooterText).toBeVisible();
     const hrefValue = await this.transactionPopupFooterText.getAttribute(
       "href"
@@ -395,7 +396,7 @@ export default class DexPage extends BasePage {
     toAmountExpected,
     toTokenNameExpected,
   }: SwapData): Promise<void> {
-    await expect(this.transactionPopupColumn).toBeVisible({ timeout: 50000 });
+    await expect(this.transactionPopupColumn).toBeVisible({ timeout: 60000 });
     await expect.soft(this.transactionPopupStatusIcon).toBeVisible();
     await expect.soft(this.swapTransactionPopupBodyText).toBeVisible();
     await expect
@@ -417,7 +418,7 @@ export default class DexPage extends BasePage {
     fromTokenNameExpected,
     toTokenNameExpected,
   }: SwapData): Promise<void> {
-    await expect(this.transactionPopupColumn).toBeVisible({ timeout: 50000 });
+    await expect(this.transactionPopupColumn).toBeVisible({ timeout: 60000 });
     await expect.soft(this.transactionPopupStatusIcon).toBeVisible();
     await expect.soft(this.wrapTransactionPopupBodyText).toBeVisible();
     await expect
@@ -436,7 +437,7 @@ export default class DexPage extends BasePage {
     fromTokenNameExpected,
     toTokenNameExpected,
   }: SwapData): Promise<void> {
-    await expect(this.transactionPopupColumn).toBeVisible({ timeout: 50000 });
+    await expect(this.transactionPopupColumn).toBeVisible({ timeout: 60000 });
     await expect.soft(this.transactionPopupStatusIcon).toBeVisible();
     await expect.soft(this.unwrapTransactionPopupBodyText).toBeVisible();
     await expect

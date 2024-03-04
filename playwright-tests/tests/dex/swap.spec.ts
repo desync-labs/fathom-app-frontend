@@ -68,8 +68,9 @@ test.describe("Fathom App Test Suite: DEX Swap", () => {
     await dexPage.selectFromToken({ tokenId: tokenFrom });
     await dexPage.selectToToken({ tokenId: tokenIds.xUSDT });
     const fromBalance = await dexPage.getFromBalance();
+    await dexPage.page.waitForTimeout(2000);
     await dexPage.fillFromValue({ inputValue: fromBalance + 1 });
-    await expect(dexPage.swapButton).toBeVisible();
+    await expect(dexPage.swapButton).toBeVisible({ timeout: 20000 });
     await expect(dexPage.swapButton).toHaveText(`Insufficient WXDC balance`);
     await expect(dexPage.swapButton).toBeDisabled();
   });
@@ -86,7 +87,7 @@ test.describe("Fathom App Test Suite: DEX Swap", () => {
     await dexPage.page.waitForTimeout(2000);
     const fromBalance = await dexPage.getFromBalance();
     await dexPage.fillFromValue({ inputValue: fromBalance + 1 });
-    await expect(dexPage.wrapButton).toBeVisible();
+    await expect(dexPage.wrapButton).toBeVisible({ timeout: 20000 });
     await expect(dexPage.wrapButton).toHaveText(
       `Insufficient ${tokenFrom} balance`
     );

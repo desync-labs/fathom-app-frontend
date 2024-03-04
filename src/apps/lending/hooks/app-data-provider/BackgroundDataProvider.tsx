@@ -2,7 +2,6 @@ import { createContext, FC, ReactNode, useContext } from "react";
 import { usePoolDataSubscription } from "apps/lending/store/root";
 
 interface BackgroundDataProviderContextType {
-  refetchIncentiveData?: () => Promise<void>;
   refetchPoolData?: () => Promise<void> | Promise<void[]>;
 }
 
