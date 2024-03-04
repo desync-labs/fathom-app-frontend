@@ -80,7 +80,7 @@ const ClaimRewardsCoolDownDialog: FC<ClaimRewardsDialogProps> = ({
       <DialogContent>
         <ModalDescription>
           You successfully requested to claim rewards. Now it's going to a
-          “Cooldown" period for 2 days. After this period, you'll be able to
+          “Cooldown" period for 5 days. After this period, you'll be able to
           Withdraw it at My Stats &gt; Ready to Withdraw.
         </ModalDescription>
         <DialogContentWrapper>

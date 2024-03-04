@@ -1,7 +1,7 @@
 import { ReactComponent as FxdSrc } from "assets/svg/icons/fxd.svg";
 import { ReactComponent as SwapIconSrc } from "assets/svg/icons/stable-swap.svg";
 import { ReactComponent as StakingIconSrc } from "assets/svg/icons/staking.svg";
-import { ReactComponent as GovernanceSrc } from "assets/svg/icons/governance.svg";
+import { ReactComponent as GovernanceSrc } from "assets/svg/icons/dao.svg";
 import { ReactComponent as VaultSrc } from "assets/svg/icons/vault.svg";
 import { ReactComponent as DexSrc } from "assets/svg/icons/dex.svg";
 import { ReactComponent as SwapSrc } from "assets/svg/icons/swap.svg";
