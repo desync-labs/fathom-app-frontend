@@ -73,7 +73,7 @@ export const TokenLinkDropdown: FC<TokenLinkDropdownProps> = memo(
           keepMounted={true}
           data-cy="addToWaletSelector"
         >
-          <Box sx={{ px: 4, pt: 3, pb: 2 }}>
+          <Box sx={{ px: 2, pt: 1, pb: 1 }}>
             <Typography variant="secondary12" color="text.secondary">
               Underlying token
             </Typography>
@@ -113,7 +113,7 @@ export const TokenLinkDropdown: FC<TokenLinkDropdownProps> = memo(
 
           {!hideAToken && (
             <Box>
-              <Box sx={{ px: 4, pt: 3, pb: 2 }}>
+              <Box sx={{ px: 2, pt: 1, pb: 1 }}>
                 <Typography variant="secondary12" color="text.secondary">
                   fmToken
                 </Typography>
@@ -155,7 +155,7 @@ export const TokenLinkDropdown: FC<TokenLinkDropdownProps> = memo(
           )}
 
           {showDebtTokenHeader && (
-            <Box sx={{ px: 4, pt: 3, pb: 2 }}>
+            <Box sx={{ px: 2, pt: 1, pb: 1 }}>
               <Typography variant="secondary12" color="text.secondary">
                 Fathom lending debt token
               </Typography>
