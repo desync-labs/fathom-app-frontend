@@ -14,6 +14,7 @@ const AlertMessage = styled(Alert, {
   width: 100%;
   margin-bottom: 2px;
   top: ${({ scroll }) => (scroll > 65 ? "0" : `${65 - scroll}px`)};
+  background-color: #3e5ab2;
   z-index: 1301;
 `;
 
@@ -34,8 +35,11 @@ const TransactionStatus: FC<TransactionStatusPropsType> = ({ scroll }) => {
           variant="filled"
           key={idx}
         >
-          <AlertTitle>{transaction.title}</AlertTitle>
-          <Typography color="text.secondary" sx={{ flex: 1 }}>
+          <AlertTitle sx={{ fontSize: "1rem" }}>{transaction.title}</AlertTitle>
+          <Typography
+            color="rgba(255, 255, 255, 0.7)"
+            sx={{ fontSize: "1rem", flex: 1 }}
+          >
             {transaction.message}{" "}
             <strong>
               <a

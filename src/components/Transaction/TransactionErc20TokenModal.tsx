@@ -33,8 +33,16 @@ export const SuccessIconWrapper = styled(Box)`
   border-radius: 50%;
   margin-bottom: 20px;
 `;
+const ModalTitle = styled(Typography)`
+  font-weight: 400;
+  font-size: 2.125rem;
+  line-height: 1.235;
+`;
 
 const SuccessMessage = styled(Typography)`
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.5;
   ${({ theme }) => theme.breakpoints.down("sm")} {
     margin-bottom: 25px;
   }
@@ -61,9 +69,9 @@ const TransactionErc20TokenModal: FC = () => {
     <AppDialog
       onClose={resetErc20TokenModal}
       aria-labelledby="customized-dialog-title"
-      maxWidth="sm"
       open={true}
       color="primary"
+      maxWidth="xsm"
     >
       <SuccessContentWrapper>
         <AppDialogTitle
@@ -73,7 +81,7 @@ const TransactionErc20TokenModal: FC = () => {
         <SuccessIconWrapper>
           <DoneIcon color="success" />
         </SuccessIconWrapper>
-        <Typography variant="h4">All done!</Typography>
+        <ModalTitle variant="h1">All done!</ModalTitle>
         <SuccessMessage>{successAlertMessage}</SuccessMessage>
         <DialogContentWrapper
           width={"80%"}
