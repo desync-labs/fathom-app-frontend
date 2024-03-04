@@ -54,7 +54,7 @@ export const marketsData: {
       faucet: true,
       incentives: true,
     },
-    subgraphUrl: "https://dev.fathom.fi/subgraphs/name/lending-subgraph",
+    subgraphUrl: `${process.env.REACT_APP_API_URL}/subgraphs/name/lending-subgraph`,
     addresses: {
       LENDING_POOL_ADDRESS_PROVIDER:
         FathomLendingApothem.POOL_ADDRESSES_PROVIDER,
