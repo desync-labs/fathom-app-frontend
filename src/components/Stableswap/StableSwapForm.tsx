@@ -65,7 +65,7 @@ const TokenLogoBox = styled(Box)`
 
 const StableSwapSuccessBox = styled(SuccessBox)`
   width: 100%;
-  margin: 0;
+  margin: 20px 0 0;
 `;
 
 const StableSwapForm: FC<any> = ({
