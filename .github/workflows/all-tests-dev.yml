@@ -6,7 +6,7 @@ on:
     - cron: "0 0 * * *"
 
 concurrency:
-  group: ${{ github.workflow }}
+  group: ci-dev
 
 jobs:
   all-tests-dev:
