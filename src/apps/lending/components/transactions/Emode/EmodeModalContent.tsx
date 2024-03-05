@@ -1,5 +1,4 @@
 import { formatUserSummary } from "@into-the-fathom/lending-math-utils";
-import { ArrowNarrowRightIcon } from "@heroicons/react/solid";
 import { Box, SvgIcon, Typography } from "@mui/material";
 import { FC, memo, useState } from "react";
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
@@ -28,6 +27,8 @@ import { ChangeNetworkWarning } from "apps/lending/components/transactions/Warni
 import { EmodeActions } from "apps/lending/components/transactions/Emode/EmodeActions";
 import { getEmodeMessage } from "apps/lending/components/transactions/Emode/EmodeNaming";
 import { EmodeSelect } from "apps/lending/components/transactions/Emode/EmodeSelect";
+
+import EastRoundedIcon from "@mui/icons-material/EastRounded";
 
 export enum ErrorType {
   EMODE_DISABLED_LIQUIDATION,
@@ -157,9 +158,9 @@ export const EmodeModalContent: FC<EmodeModalContentProps> = memo(
     // is Network mismatched
     const isWrongNetwork: boolean = currentChainId !== connectedChainId;
 
-    const ArrowRight: React.FC = () => (
-      <SvgIcon color="primary" sx={{ fontSize: "14px", mx: 1 }}>
-        <ArrowNarrowRightIcon />
+    const ArrowRight: FC = () => (
+      <SvgIcon color="primary" sx={{ fontSize: "14px", mx: 0.5 }}>
+        <EastRoundedIcon />
       </SvgIcon>
     );
 

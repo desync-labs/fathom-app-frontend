@@ -1,7 +1,6 @@
-import { CogIcon, LightningBoltIcon } from "@heroicons/react/solid";
+import React, { FC, memo, useState } from "react";
 import { Box, Button, SvgIcon, Typography } from "@mui/material";
 import Menu from "@mui/material/Menu";
-import React, { FC, memo, useState } from "react";
 import { EmodeModalType } from "apps/lending/components/transactions/Emode/EmodeModalContent";
 import { useAppDataContext } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 import { useModalContext } from "apps/lending/hooks/useModal";
@@ -11,6 +10,9 @@ import { DASHBOARD, GENERAL } from "apps/lending/utils/mixPanelEvents";
 import { Row } from "apps/lending/components/primitives/Row";
 import { TypographyGradient } from "apps/lending/components/primitives/TypographyGradient";
 import { getEmodeMessage } from "apps/lending/components/transactions/Emode/EmodeNaming";
+
+import SettingsIcon from "@mui/icons-material/Settings";
+import BoltIcon from "@mui/icons-material/Bolt";
 
 interface DashboardEModeButtonProps {
   userEmodeCategoryId: number;
@@ -97,7 +99,7 @@ export const DashboardEModeButton: FC<DashboardEModeButtonProps> = memo(
               borderRadius: "4px",
             })}
           >
-            {isEModeDisabled ? <LightningBoltIcon /> : null}
+            {isEModeDisabled ? <BoltIcon /> : null}
 
             {isEModeDisabled ? (
               <Typography variant="buttonS" color="text.secondary">
@@ -116,7 +118,7 @@ export const DashboardEModeButton: FC<DashboardEModeButtonProps> = memo(
                 color: "primary.light",
               }}
             >
-              <CogIcon />
+              <SettingsIcon />
             </SvgIcon>
           </Box>
         </Button>
