@@ -31,6 +31,10 @@ export const BaseSuccessView: FC<BaseSuccessTxViewProps> = ({
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
+          height: {
+            sm: "auto",
+            xs: "80%",
+          },
         }}
       >
         <Box
@@ -58,7 +62,10 @@ export const BaseSuccessView: FC<BaseSuccessTxViewProps> = ({
         {children}
       </Box>
 
-      <Box sx={{ display: "flex", flexDirection: "column" }}>
+      <Box
+        sx={{ display: "flex", flexDirection: "column" }}
+        className="TxActionsWrapper"
+      >
         <Link
           variant="helperText"
           href={currentNetworkConfig.explorerLinkBuilder({

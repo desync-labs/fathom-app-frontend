@@ -138,6 +138,7 @@ export const TxActionsWrapper: FC<TxActionsWrapperProps> = memo(
     return (
       <Box
         sx={{ display: "flex", flexDirection: "column", mt: 5, ...sx }}
+        className="TxActionsWrapper"
         {...rest}
       >
         {requiresApproval && (

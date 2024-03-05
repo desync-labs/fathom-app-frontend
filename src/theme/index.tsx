@@ -1,10 +1,11 @@
-import ErrorOutlineOutlinedIcon from "@mui/icons-material/ErrorOutlineOutlined";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { SvgIcon, Theme, ThemeOptions } from "@mui/material";
-import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
-import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutlineOutlined";
 import { createTheme } from "@mui/material/styles";
 import { CSSProperties } from "react";
+
+import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
+import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutlineOutlined";
+import ErrorOutlineOutlinedIcon from "@mui/icons-material/ErrorOutlineOutlined";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 // @ts-ignore
 import { ColorPartial } from "@mui/material/styles/createPalette";
@@ -878,6 +879,31 @@ export function getThemedComponents(theme: Theme) {
           },
           bar2Indeterminate: {
             background: theme.palette.gradients?.aaveGradient,
+          },
+        },
+      },
+      MuiModal: {
+        styleOverrides: {
+          root: {
+            "&.LendingModal": {
+              [`@media (max-width: ${theme.breakpoints.values.sm}px)`]: {
+                "&>.MuiPaper-root": {
+                  position: "relative",
+                  height: "100%",
+                  width: "100%",
+                  maxHeight: "unset",
+                  maxWidth: "unset",
+                  borderRadius: "0",
+                  margin: "0",
+                },
+                ".TxActionsWrapper": {
+                  position: "absolute",
+                  bottom: 20,
+                  left: 20,
+                  right: 20,
+                },
+              },
+            },
           },
         },
       },
