@@ -116,7 +116,7 @@ export default class FxdPage extends BasePage {
       '//span[contains(text(), "Collateral Locked")]//ancestor::li/div[2]/span'
     );
     this.safetyBufferResultNumberTopUp = this.page.locator(
-      '//span[contains(text(), "Safety Buffer")]//ancestor::li/div[2]'
+      '//div[contains(text(), "Safety Buffer")]//ancestor::li/div[2]'
     );
     this.btnNextPage = this.page.locator(
       'button[aria-label="Go to next page"]'
