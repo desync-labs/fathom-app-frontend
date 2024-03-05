@@ -22,6 +22,7 @@ export type SuccessTxViewProps = {
   addToken?: ERC20TokenType;
   customAction?: ReactNode;
   customText?: ReactNode;
+  visibleDecimals?: number;
 };
 
 export const TxSuccessView: FC<SuccessTxViewProps> = ({
@@ -34,6 +35,7 @@ export const TxSuccessView: FC<SuccessTxViewProps> = ({
   addToken,
   customAction,
   customText,
+  visibleDecimals,
 }) => {
   const { addERC20Token } = useWeb3Context();
   const [base64, setBase64] = useState("");
@@ -58,6 +60,7 @@ export const TxSuccessView: FC<SuccessTxViewProps> = ({
               value={Number(amount)}
               compact
               variant="secondary14"
+              visibleDecimals={visibleDecimals}
             />{" "}
             {symbol}
           </Typography>
