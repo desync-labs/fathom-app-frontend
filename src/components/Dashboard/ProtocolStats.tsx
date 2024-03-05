@@ -55,6 +55,7 @@ const StatsDescription = styled(Typography)`
   line-height: 28px;
   margin: 0;
   padding: 7px 0 0 0;
+  text-align: center;
 `;
 
 const StatsValueSkeleton = () => {
