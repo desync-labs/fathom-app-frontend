@@ -426,6 +426,8 @@ const TxnList: FC<TxnListProps> = (props) => {
     [filteredItems, sortDirection, page, sortedColumn]
   );
 
+  console.log(filteredList);
+
   const below1080 = useMediaQuery("(max-width: 1080px)");
   const below780 = useMediaQuery("(max-width: 780px)");
 

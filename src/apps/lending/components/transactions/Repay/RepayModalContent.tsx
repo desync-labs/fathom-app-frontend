@@ -283,6 +283,7 @@ export const RepayModalContent: FC<
               ? networkConfig.baseAssetSymbol
               : poolReserve.iconSymbol
           }
+          decimals={poolReserve.decimals}
         />
         <DetailsHFLine
           visibleHfChange={!!_amount}

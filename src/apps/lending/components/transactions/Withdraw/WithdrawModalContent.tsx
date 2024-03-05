@@ -24,6 +24,7 @@ import { zeroLTVBlockingWithdraw } from "apps/lending/components/transactions/ut
 import { calculateMaxWithdrawAmount } from "apps/lending/components/transactions/Withdraw/utils";
 import { WithdrawActions } from "apps/lending/components/transactions/Withdraw/WithdrawActions";
 import { useWithdrawError } from "apps/lending/components/transactions/Withdraw/WithdrawError";
+import { roundToTokenDecimals } from "apps/lending/utils/utils";
 
 export const WithdrawModalContent: FC<
   ModalWrapperProps & {
@@ -65,7 +66,11 @@ export const WithdrawModalContent: FC<
   const handleChange = (value: string) => {
     const maxSelected = value === "-1";
     amountRef.current = maxSelected ? maxAmountToWithdraw.toString(10) : value;
-    setAmount(value);
+    const decimalTruncatedValue = roundToTokenDecimals(
+      value,
+      poolReserve.decimals
+    );
+    setAmount(decimalTruncatedValue);
     if (maxSelected && maxAmountToWithdraw.eq(underlyingBalance)) {
       trackEvent(GENERAL.MAX_INPUT_SELECTION, { type: "withdraw" });
       setWithdrawMax("-1");
@@ -167,6 +172,7 @@ export const WithdrawModalContent: FC<
               ? currentNetworkConfig.baseAssetSymbol
               : poolReserve.symbol
           }
+          decimals={poolReserve.decimals}
         />
         <DetailsHFLine
           visibleHfChange={!!_amount}

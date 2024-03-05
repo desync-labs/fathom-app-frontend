@@ -16,9 +16,9 @@ export const lendingContainerProps = {
       xsm: 2.5,
       sm: 6,
       md: 2.5,
-      lg: 0,
+      lg: 2,
       xl: "96px",
-      xxl: 0,
+      xxl: 2,
     },
     maxWidth: {
       xs: "unset",
