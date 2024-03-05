@@ -7,7 +7,7 @@ on:
       - master
 
 concurrency:
-  group: ${{ github.workflow }}
+  group: ci-dev
 
 jobs:
   all-tests-local-dev:
