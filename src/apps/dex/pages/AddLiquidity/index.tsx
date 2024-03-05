@@ -290,9 +290,11 @@ const AddLiquidity = () => {
     return noLiquidity ? (
       <AutoColumn gap="20px">
         <LightCard mt="20px" borderRadius="20px">
-          <RowFlat>
+          <RowFlat
+            sx={{ justifyContent: "space-between", alignItems: "center" }}
+          >
             <Typography
-              fontSize="48px"
+              fontSize="28px"
               fontWeight={500}
               lineHeight="42px"
               marginRight={10}
