@@ -57,7 +57,7 @@ const TransactionMobileRowItem: FC<TransactionHistoryItemProps> = ({
   return (
     <Box>
       <ListItem
-        px={4}
+        px={2}
         sx={{
           borderWidth: `1px 0 0 0`,
           borderStyle: `solid`,
@@ -83,7 +83,7 @@ const TransactionMobileRowItem: FC<TransactionHistoryItemProps> = ({
               pt: "14px",
             }}
           >
-            <Box sx={{ display: "flex", gap: 2 }}>
+            <Box sx={{ display: "flex", gap: 1 }}>
               <ActionTitle action={transaction.action} />
             </Box>
 
@@ -97,15 +97,15 @@ const TransactionMobileRowItem: FC<TransactionHistoryItemProps> = ({
               <Button
                 sx={{
                   display: "flex",
-                  ml: 3,
-                  mr: 1,
+                  ml: 1.5,
+                  mr: 0.5,
                   width: "69px",
                   height: "20px",
                   fontSize: "0.6rem",
                   alignItems: "center",
                   justifyContent: "center",
-                  pl: 1,
-                  pr: 1,
+                  pl: 0.5,
+                  pr: 0.5,
                 }}
                 variant="outlined"
                 href={explorerLink}
@@ -121,8 +121,8 @@ const TransactionMobileRowItem: FC<TransactionHistoryItemProps> = ({
                 <SvgIcon
                   sx={{
                     fontSize: "15px",
-                    pl: 1,
-                    pb: 0.5,
+                    pl: 0.5,
+                    pb: 0.25,
                   }}
                 >
                   <ArrowOutward />

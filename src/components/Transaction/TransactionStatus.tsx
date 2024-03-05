@@ -12,10 +12,52 @@ const AlertMessage = styled(Alert, {
 })<{ scroll: number }>`
   position: fixed;
   width: 100%;
-  margin-bottom: 2px;
   top: ${({ scroll }) => (scroll > 65 ? "0" : `${65 - scroll}px`)};
   background-color: #3e5ab2;
   z-index: 1301;
+
+  &.MuiAlert-root {
+    border-radius: 6px;
+    padding: 6px 16px;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  & .MuiAlert-message {
+    color: #fff;
+    font-weight: 500;
+    font-size: 0.875rem;
+    line-height: 1.43;
+    padding: 8px 0;
+  }
+  .MuiAlert-icon {
+    margin-right: 12px;
+    padding: 7px 0;
+    color: #fff;
+    opacity: 1;
+    .MuiSvgIcon-root {
+      font-size: 22px;
+    }
+  }
+  .MuiButton-text {
+    font-weight: 500;
+    text-decoration: underline;
+    padding: 0;
+    margin: 0;
+    min-width: unset;
+    &:hover {
+      text-decoration: none;
+      background: transparent;
+    }
+  }
+  & a {
+    color: #5a81ff;
+    font-weight: 700;
+    text-decoration: none;
+    &:hover {
+      text-decoration: none;
+    }
+  }
 `;
 
 type TransactionStatusPropsType = {

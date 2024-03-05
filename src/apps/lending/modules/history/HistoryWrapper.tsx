@@ -1,4 +1,3 @@
-import { DocumentDownloadIcon } from "@heroicons/react/outline";
 import {
   Box,
   Button,
@@ -9,6 +8,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
+import SimCardDownloadOutlinedIcon from "@mui/icons-material/SimCardDownloadOutlined";
 import { Fragment, useCallback, useMemo, useRef, useState } from "react";
 import { ConnectWalletPaper } from "apps/lending/components/ConnectWalletPaper";
 import { ListWrapper } from "apps/lending/components/lists/ListWrapper";
@@ -35,7 +35,7 @@ import {
   TransactionHistoryItemUnion,
 } from "apps/lending/modules/history/types";
 
-export const HistoryWrapper = () => {
+const HistoryWrapper = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [loadingDownload, setLoadingDownload] = useState(false);
   const [filterQuery, setFilterQuery] = useState<FilterOptions[]>([]);
@@ -214,7 +214,7 @@ export const HistoryWrapper = () => {
             onClick={handleCsvDownload}
           >
             <SvgIcon sx={{ color: "text.light" }}>
-              <DocumentDownloadIcon width={22} height={22} />
+              <SimCardDownloadOutlinedIcon width={22} height={22} />
             </SvgIcon>
             <Typography variant="buttonM" color="text.light">
               .CSV
@@ -232,7 +232,7 @@ export const HistoryWrapper = () => {
             onClick={handleJsonDownload}
           >
             <SvgIcon sx={{ color: "text.light" }}>
-              <DocumentDownloadIcon width={22} height={22} />
+              <SimCardDownloadOutlinedIcon width={22} height={22} />
             </SvgIcon>
             <Typography variant="buttonM" color="text.light">
               .JSON

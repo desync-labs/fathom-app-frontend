@@ -1,4 +1,5 @@
 import ErrorOutlineOutlinedIcon from "@mui/icons-material/ErrorOutlineOutlined";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { SvgIcon, Theme, ThemeOptions } from "@mui/material";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutlineOutlined";
@@ -162,7 +163,7 @@ export const getDesignTokens = () => {
         light: "#E57373",
         dark: "#D32F2F",
         "100": "#FBB4AF", // for alert text
-        "200": "#9a2a2a", // for alert background
+        "200": "#2E0C0A", // for alert background
       },
       warning: {
         main: "#f7b06e",
@@ -184,7 +185,7 @@ export const getDesignTokens = () => {
         light: "#90FF95",
         dark: "#388E3C",
         "100": "#C2E4C3", // for alert text
-        "200": "#2a721c", // for alert background
+        "200": "#0A130B", // for alert background
       },
       text: {
         primary: "#fff",
@@ -712,47 +713,17 @@ export function getThemedComponents(theme: Theme) {
       MuiAlert: {
         styleOverrides: {
           root: {
-            boxShadow: "none",
-            borderRadius: "4px",
-            padding: "6px 16px",
             ...theme.typography.caption,
+            boxShadow: "none",
             alignItems: "flex-start",
+            "&.MuiAlert-root": {
+              padding: "4px 16px",
+              marginTop: "12px",
+              marginBottom: "12px",
+            },
             "& .MuiAlert-message": {
               color: theme.palette.text.primary,
-              fontWeight: 500,
-              fontSize: "0.875rem",
-              lineHeight: 1.43,
               padding: "8px 0",
-            },
-
-            ".MuiAlert-icon": {
-              marginRight: "12px",
-              padding: "7px 0",
-              color: theme.palette.text.primary,
-              opacity: 1,
-              ".MuiSvgIcon-root": {
-                fontSize: pxToRem(22),
-              },
-            },
-            ".MuiButton-text": {
-              ...theme.typography.caption,
-              fontWeight: 500,
-              textDecoration: "underline",
-              padding: 0,
-              margin: 0,
-              minWidth: "unset",
-              "&:hover": {
-                textDecoration: "none",
-                background: "transparent",
-              },
-            },
-            "& a": {
-              color: `${theme.palette.other.fathomLink} !important`,
-              fontWeight: 700,
-              textDecoration: "underline",
-              "&:hover": {
-                textDecoration: "none",
-              },
             },
           },
         },
@@ -765,7 +736,7 @@ export function getThemedComponents(theme: Theme) {
             ),
             info: (
               <SvgIcon color="inherit">
-                <ErrorOutlineOutlinedIcon />
+                <InfoOutlinedIcon />
               </SvgIcon>
             ),
             success: (
@@ -786,11 +757,15 @@ export function getThemedComponents(theme: Theme) {
             style: {
               color: "#ff8585",
               background: theme.palette.error["200"],
-              border: "none",
+              border: "1px solid #5a0000",
+              "& .MuiAlert-message": {
+                color: "#ff8585",
+              },
               a: {
                 color: theme.palette.error["100"],
               },
               ".MuiButton-text": {
+                padding: 0,
                 color: theme.palette.error["100"],
               },
             },
@@ -805,6 +780,7 @@ export function getThemedComponents(theme: Theme) {
                 color: theme.palette.info["100"],
               },
               ".MuiButton-text": {
+                padding: 0,
                 color: theme.palette.info["100"],
               },
             },
@@ -818,6 +794,7 @@ export function getThemedComponents(theme: Theme) {
                 color: theme.palette.success["100"],
               },
               ".MuiButton-text": {
+                padding: 0,
                 color: theme.palette.success["100"],
               },
             },
@@ -836,6 +813,7 @@ export function getThemedComponents(theme: Theme) {
                 },
               },
               ".MuiButton-text": {
+                padding: 0,
                 color: theme.palette.warning["100"],
               },
             },
@@ -877,6 +855,14 @@ export function getThemedComponents(theme: Theme) {
           ),
         },
         styleOverrides: {
+          root: {
+            "&.Mui-focused": {
+              ".MuiOutlinedInput-notchedOutline": {
+                border: "1px solid #5a81ff",
+                boxShadow: "0 0 8px #003cff",
+              },
+            },
+          },
           outlined: {
             backgroundColor: theme.palette.background.surface,
             ...theme.typography.buttonM,
