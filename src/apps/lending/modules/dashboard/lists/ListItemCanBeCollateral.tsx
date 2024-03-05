@@ -1,9 +1,9 @@
-import { CheckIcon } from "@heroicons/react/outline";
+import { FC, memo } from "react";
 import { Box, SvgIcon } from "@mui/material";
+import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
 
 import { NoData } from "apps/lending/components/primitives/NoData";
 import { ListItemIsolationBadge } from "apps/lending/modules/dashboard/lists/ListItemIsolationBadge";
-import { FC, memo } from "react";
 
 interface ListItemCanBeCollateralProps {
   isIsolated: boolean;
@@ -21,7 +21,7 @@ export const ListItemCanBeCollateral: FC<ListItemCanBeCollateralProps> = memo(
               fontSize: { xs: "20px", xsm: "24px" },
             }}
           >
-            <CheckIcon />
+            <CheckRoundedIcon />
           </SvgIcon>
         );
       } else if (usageAsCollateralEnabled && isIsolated) {

@@ -1,6 +1,6 @@
-import { ExclamationIcon } from "@heroicons/react/outline";
 import { Box } from "@mui/material";
 import { AssetCapData } from "apps/lending/hooks/useAssetCaps";
+import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
 
 import {
   TextWithTooltip,
@@ -22,7 +22,7 @@ export const SupplyCapMaxedTooltip: FC<SupplyCapMaxedTooltipProps> = ({
     <Box sx={{ ml: 2 }}>
       <TextWithTooltip
         {...rest}
-        icon={<ExclamationIcon />}
+        icon={<WarningAmberRoundedIcon />}
         iconColor="warning.main"
         iconSize={18}
       >

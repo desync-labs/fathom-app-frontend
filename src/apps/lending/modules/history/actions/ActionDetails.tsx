@@ -1,4 +1,4 @@
-import { ArrowNarrowRightIcon } from "@heroicons/react/outline";
+import ArrowRightAltRoundedIcon from "@mui/icons-material/ArrowRightAltRounded";
 import { Box, SvgIcon, Typography } from "@mui/material";
 import { formatUnits } from "fathom-ethers/lib/utils";
 import { DarkTooltip } from "apps/lending/components/infoTooltips/DarkTooltip";
@@ -476,8 +476,8 @@ export const ActionDetails = <K extends keyof ActionFields>({
             borrowRateMode={swapBorrowRateTx.borrowRateModeFrom.toString()}
             swapBorrowRateTx={swapBorrowRateTx}
           />
-          <SvgIcon sx={{ fontSize: "20px", px: 0.5 }}>
-            <ArrowNarrowRightIcon />
+          <SvgIcon sx={{ fontSize: "28px", px: 0.5 }}>
+            <ArrowRightAltRoundedIcon />
           </SvgIcon>
           <BorrowRateModeBlock
             borrowRateMode={swapBorrowRateTx.borrowRateModeTo.toString()}
@@ -621,8 +621,8 @@ export const ActionDetails = <K extends keyof ActionFields>({
               </Box>
             </Box>
           </Box>
-          <SvgIcon sx={{ fontSize: "14px" }}>
-            <ArrowNarrowRightIcon />
+          <SvgIcon sx={{ fontSize: "20px" }}>
+            <ArrowRightAltRoundedIcon />
           </SvgIcon>
           <Box sx={{ display: "flex", flexDirection: "column" }} pl={4.5}>
             <Typography>Covered debt</Typography>

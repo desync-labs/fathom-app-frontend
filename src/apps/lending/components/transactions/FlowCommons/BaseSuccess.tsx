@@ -1,9 +1,10 @@
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import { CheckIcon } from "@heroicons/react/solid";
 import { Box, Button, Link, SvgIcon, Typography } from "@mui/material";
 import { FC, ReactNode } from "react";
 import { useModalContext } from "apps/lending/hooks/useModal";
 import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
+
+import DoneRoundedIcon from "@mui/icons-material/DoneRounded";
 
 export type BaseSuccessTxViewProps = {
   txHash?: string;
@@ -51,7 +52,7 @@ export const BaseSuccessView: FC<BaseSuccessTxViewProps> = ({
           }}
         >
           <SvgIcon sx={{ color: "success.main", fontSize: "32px" }}>
-            <CheckIcon />
+            <DoneRoundedIcon />
           </SvgIcon>
         </Box>
 

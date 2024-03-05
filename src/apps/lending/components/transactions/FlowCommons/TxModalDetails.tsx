@@ -1,5 +1,4 @@
 import { ReserveIncentiveResponse } from "@into-the-fathom/lending-math-utils/dist/esm/formatters/incentive/calculate-reserve-incentives";
-import { ArrowNarrowRightIcon } from "@heroicons/react/solid";
 import {
   Box,
   FormControlLabel,
@@ -27,6 +26,8 @@ import {
 import { TokenIcon } from "apps/lending/components/primitives/TokenIcon";
 import { GasStation } from "apps/lending/components/transactions/GasStation/GasStation";
 
+import EastRoundedIcon from "@mui/icons-material/EastRounded";
+
 export interface TxModalDetailsProps {
   gasLimit?: string;
   slippageSelector?: ReactNode;
@@ -36,8 +37,8 @@ export interface TxModalDetailsProps {
 }
 
 const ArrowRightIcon = (
-  <SvgIcon color="primary" sx={{ fontSize: "14px", mx: 1 }}>
-    <ArrowNarrowRightIcon />
+  <SvgIcon color="primary" sx={{ fontSize: "14px", mx: 0.5 }}>
+    <EastRoundedIcon />
   </SvgIcon>
 );
 

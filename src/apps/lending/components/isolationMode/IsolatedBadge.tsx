@@ -1,4 +1,4 @@
-import { InformationCircleIcon } from "@heroicons/react/outline";
+import { FC, ReactNode } from "react";
 import {
   Box,
   SvgIcon,
@@ -6,9 +6,9 @@ import {
   TypographyProps,
   useTheme,
 } from "@mui/material";
-import { FC, ReactNode } from "react";
-
 import { ContentWithTooltip } from "apps/lending/components/ContentWithTooltip";
+
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 const contentSx = {
   borderRadius: "4px",
@@ -31,7 +31,7 @@ const InfoIcon: FC<InfoIconProps> = ({ color }) => (
       fontSize: "14px",
     }}
   >
-    <InformationCircleIcon />
+    <InfoOutlinedIcon />
   </SvgIcon>
 );
 export const IsolatedEnabledBadge: FC<{
@@ -120,12 +120,5 @@ export const UnavailableDueToIsolationBadge = () => {
 };
 
 const IsolationModeTooltipTemplate = ({ content }: { content: ReactNode }) => {
-  return (
-    <Box>
-      <Box sx={{ mb: 4 }}>{content}</Box>
-      <Typography variant="subheader2" color="text.secondary">
-        Learn more in our.
-      </Typography>
-    </Box>
-  );
+  return <Box>{content}</Box>;
 };
