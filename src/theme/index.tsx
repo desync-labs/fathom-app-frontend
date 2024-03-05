@@ -857,10 +857,16 @@ export function getThemedComponents(theme: Theme) {
         },
         styleOverrides: {
           root: {
-            "&.Mui-focused": {
+            "&.Mui-focused, &:hover": {
               ".MuiOutlinedInput-notchedOutline": {
                 border: "1px solid #5a81ff",
                 boxShadow: "0 0 8px #003cff",
+              },
+            },
+            "&.Mui-disabled:hover": {
+              ".MuiOutlinedInput-notchedOutline": {
+                borderColor: "#EBEBEF4D",
+                boxShadow: "none",
               },
             },
           },
@@ -885,8 +891,8 @@ export function getThemedComponents(theme: Theme) {
       MuiModal: {
         styleOverrides: {
           root: {
-            "&.LendingModal": {
-              [`@media (max-width: ${theme.breakpoints.values.sm}px)`]: {
+            [`@media (max-width: ${theme.breakpoints.values.sm}px)`]: {
+              "&.LendingModal": {
                 "&>.MuiPaper-root": {
                   position: "relative",
                   height: "100%",
@@ -896,12 +902,12 @@ export function getThemedComponents(theme: Theme) {
                   borderRadius: "0",
                   margin: "0",
                 },
-                ".TxActionsWrapper": {
-                  position: "absolute",
-                  bottom: 20,
-                  left: 20,
-                  right: 20,
-                },
+              },
+              ".TxActionsWrapper": {
+                position: "absolute",
+                bottom: 20,
+                left: 20,
+                right: 20,
               },
             },
           },
