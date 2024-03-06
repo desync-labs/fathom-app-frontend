@@ -5,7 +5,7 @@ import {
 } from "@into-the-fathom/lending-math-utils";
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import BigNumber from "bignumber.js";
-import { Fragment, useState } from "react";
+import { FC, Fragment, useCallback, useMemo, useState } from "react";
 import { ListColumn } from "apps/lending/components/lists/ListColumn";
 import { ListHeaderTitle } from "apps/lending/components/lists/ListHeaderTitle";
 import { ListHeaderWrapper } from "apps/lending/components/lists/ListHeaderWrapper";
@@ -46,6 +46,8 @@ const head = [
   },
 ];
 
+const LOCAL_STORAGE_NAME = "showSupplyZeroAssets";
+
 export const SupplyAssetsList = () => {
   const { currentNetworkConfig, currentChainId } = useProtocolDataContext();
   const {
@@ -59,8 +61,8 @@ export const SupplyAssetsList = () => {
   const theme = useTheme();
   const downToXSM = useMediaQuery(theme.breakpoints.down("xsm"));
 
-  const [sortName, setSortName] = useState("");
-  const [sortDesc, setSortDesc] = useState(false);
+  const [sortName, setSortName] = useState<string>("");
+  const [sortDesc, setSortDesc] = useState<boolean>(false);
 
   const {
     bridge,
@@ -69,88 +71,109 @@ export const SupplyAssetsList = () => {
     name: networkName,
   } = currentNetworkConfig;
 
-  const localStorageName = "showSupplyZeroAssets";
   const [isShowZeroAssets, setIsShowZeroAssets] = useState(
-    localStorage.getItem(localStorageName) === "true"
+    localStorage.getItem(LOCAL_STORAGE_NAME) === "true"
   );
 
-  const tokensToSupply = reserves
-    .filter(
-      (reserve: ComputedReserveData) => !(reserve.isFrozen || reserve.isPaused)
-    )
-    .map((reserve: ComputedReserveData) => {
-      const walletBalance = walletBalances[reserve.underlyingAsset]?.amount;
-      const walletBalanceUSD =
-        walletBalances[reserve.underlyingAsset]?.amountUSD;
-      let availableToDeposit = valueToBigNumber(walletBalance);
-      if (reserve.supplyCap !== "0") {
-        availableToDeposit = BigNumber.min(
-          availableToDeposit,
-          new BigNumber(reserve.supplyCap)
-            .minus(reserve.totalLiquidity)
-            .multipliedBy("0.995")
-        );
-      }
-      const availableToDepositUSD = valueToBigNumber(availableToDeposit)
-        .multipliedBy(reserve.priceInMarketReferenceCurrency)
-        .multipliedBy(marketReferencePriceInUsd)
-        .shiftedBy(-USD_DECIMALS)
-        .toString();
-
-      const isIsolated = reserve.isIsolated;
-      const hasDifferentCollateral = user?.userReservesData.find(
-        (userRes) =>
-          userRes.usageAsCollateralEnabledOnUser &&
-          userRes.reserve.id !== reserve.id
-      );
-
-      const usageAsCollateralEnabledOnUser = !user?.isInIsolationMode
-        ? reserve.reserveLiquidationThreshold !== "0" &&
-          (!isIsolated || (isIsolated && !hasDifferentCollateral))
-        : !isIsolated
-        ? false
-        : !hasDifferentCollateral;
-
-      if (reserve.isWrappedBaseAsset) {
-        let baseAvailableToDeposit = valueToBigNumber(
-          walletBalances[API_ETH_MOCK_ADDRESS.toLowerCase()]?.amount
-        );
-        if (reserve.supplyCap !== "0") {
-          baseAvailableToDeposit = BigNumber.min(
-            baseAvailableToDeposit,
-            new BigNumber(reserve.supplyCap)
-              .minus(reserve.totalLiquidity)
-              .multipliedBy("0.995")
-          );
-        }
-        const baseAvailableToDepositUSD = valueToBigNumber(
-          baseAvailableToDeposit
+  const tokensToSupply = useMemo(
+    () =>
+      reserves
+        .filter(
+          (reserve: ComputedReserveData) =>
+            !(reserve.isFrozen || reserve.isPaused)
         )
-          .multipliedBy(reserve.priceInMarketReferenceCurrency)
-          .multipliedBy(marketReferencePriceInUsd)
-          .shiftedBy(-USD_DECIMALS)
-          .toString();
-        return [
-          {
-            ...reserve,
-            reserve,
-            underlyingAsset: API_ETH_MOCK_ADDRESS.toLowerCase(),
-            ...fetchIconSymbolAndName({
-              name: reserve.name,
-              symbol: baseAssetSymbol,
-              underlyingAsset: API_ETH_MOCK_ADDRESS.toLowerCase(),
-            }),
-            walletBalance:
-              walletBalances[API_ETH_MOCK_ADDRESS.toLowerCase()]?.amount,
-            walletBalanceUSD:
-              walletBalances[API_ETH_MOCK_ADDRESS.toLowerCase()]?.amountUSD,
-            availableToDeposit: baseAvailableToDeposit.toString(),
-            availableToDepositUSD: baseAvailableToDepositUSD,
-            usageAsCollateralEnabledOnUser,
-            detailsAddress: reserve.underlyingAsset,
-            id: reserve.id + "base",
-          },
-          {
+        .map((reserve: ComputedReserveData) => {
+          const walletBalance = walletBalances[reserve.underlyingAsset]?.amount;
+          const walletBalanceUSD =
+            walletBalances[reserve.underlyingAsset]?.amountUSD;
+          let availableToDeposit = valueToBigNumber(walletBalance);
+          if (reserve.supplyCap !== "0") {
+            availableToDeposit = BigNumber.min(
+              availableToDeposit,
+              new BigNumber(reserve.supplyCap)
+                .minus(reserve.totalLiquidity)
+                .multipliedBy("0.995")
+            );
+          }
+          const availableToDepositUSD = valueToBigNumber(availableToDeposit)
+            .multipliedBy(reserve.priceInMarketReferenceCurrency)
+            .multipliedBy(marketReferencePriceInUsd)
+            .shiftedBy(-USD_DECIMALS)
+            .toString();
+
+          const isIsolated = reserve.isIsolated;
+          const hasDifferentCollateral = user?.userReservesData.find(
+            (userRes) =>
+              userRes.usageAsCollateralEnabledOnUser &&
+              userRes.reserve.id !== reserve.id
+          );
+
+          const usageAsCollateralEnabledOnUser = !user?.isInIsolationMode
+            ? reserve.reserveLiquidationThreshold !== "0" &&
+              (!isIsolated || (isIsolated && !hasDifferentCollateral))
+            : !isIsolated
+            ? false
+            : !hasDifferentCollateral;
+
+          if (reserve.isWrappedBaseAsset) {
+            let baseAvailableToDeposit = valueToBigNumber(
+              walletBalances[API_ETH_MOCK_ADDRESS.toLowerCase()]?.amount
+            );
+            if (reserve.supplyCap !== "0") {
+              baseAvailableToDeposit = BigNumber.min(
+                baseAvailableToDeposit,
+                new BigNumber(reserve.supplyCap)
+                  .minus(reserve.totalLiquidity)
+                  .multipliedBy("0.995")
+              );
+            }
+            const baseAvailableToDepositUSD = valueToBigNumber(
+              baseAvailableToDeposit
+            )
+              .multipliedBy(reserve.priceInMarketReferenceCurrency)
+              .multipliedBy(marketReferencePriceInUsd)
+              .shiftedBy(-USD_DECIMALS)
+              .toString();
+            return [
+              {
+                ...reserve,
+                reserve,
+                underlyingAsset: API_ETH_MOCK_ADDRESS.toLowerCase(),
+                ...fetchIconSymbolAndName({
+                  name: reserve.name,
+                  symbol: baseAssetSymbol,
+                  underlyingAsset: API_ETH_MOCK_ADDRESS.toLowerCase(),
+                }),
+                walletBalance:
+                  walletBalances[API_ETH_MOCK_ADDRESS.toLowerCase()]?.amount,
+                walletBalanceUSD:
+                  walletBalances[API_ETH_MOCK_ADDRESS.toLowerCase()]?.amountUSD,
+                availableToDeposit: baseAvailableToDeposit.toString(),
+                availableToDepositUSD: baseAvailableToDepositUSD,
+                usageAsCollateralEnabledOnUser,
+                detailsAddress: reserve.underlyingAsset,
+                id: reserve.id + "base",
+              },
+              {
+                ...reserve,
+                reserve,
+                walletBalance,
+                walletBalanceUSD,
+                availableToDeposit:
+                  availableToDeposit.toNumber() <= 0
+                    ? "0"
+                    : availableToDeposit.toString(),
+                availableToDepositUSD:
+                  Number(availableToDepositUSD) <= 0
+                    ? "0"
+                    : availableToDepositUSD.toString(),
+                usageAsCollateralEnabledOnUser,
+                detailsAddress: reserve.underlyingAsset,
+              },
+            ];
+          }
+
+          return {
             ...reserve,
             reserve,
             walletBalance,
@@ -165,34 +188,25 @@ export const SupplyAssetsList = () => {
                 : availableToDepositUSD.toString(),
             usageAsCollateralEnabledOnUser,
             detailsAddress: reserve.underlyingAsset,
-          },
-        ];
-      }
-
-      return {
-        ...reserve,
-        reserve,
-        walletBalance,
-        walletBalanceUSD,
-        availableToDeposit:
-          availableToDeposit.toNumber() <= 0
-            ? "0"
-            : availableToDeposit.toString(),
-        availableToDepositUSD:
-          Number(availableToDepositUSD) <= 0
-            ? "0"
-            : availableToDepositUSD.toString(),
-        usageAsCollateralEnabledOnUser,
-        detailsAddress: reserve.underlyingAsset,
-      };
-    })
-    .flat();
-
-  const sortedSupplyReserves = tokensToSupply.sort((a, b) =>
-    +a.walletBalanceUSD > +b.walletBalanceUSD ? -1 : 1
+          };
+        })
+        .flat(),
+    [reserves, walletBalances, user]
   );
-  const filteredSupplyReserves = sortedSupplyReserves.filter(
-    (reserve) => reserve.availableToDepositUSD !== "0"
+
+  const sortedSupplyReserves = useMemo(
+    () =>
+      tokensToSupply.sort((a, b) =>
+        +a.walletBalanceUSD > +b.walletBalanceUSD ? -1 : 1
+      ),
+    [tokensToSupply]
+  );
+  const filteredSupplyReserves = useMemo(
+    () =>
+      sortedSupplyReserves.filter(
+        (reserve) => reserve.availableToDepositUSD !== "0"
+      ),
+    [sortedSupplyReserves]
   );
 
   // Filter out reserves
@@ -211,7 +225,7 @@ export const SupplyAssetsList = () => {
     preSortedReserves
   );
 
-  const RenderHeader: React.FC = () => {
+  const RenderHeader: FC = useCallback(() => {
     return (
       <ListHeaderWrapper>
         {head.map((col) => (
@@ -240,7 +254,7 @@ export const SupplyAssetsList = () => {
         <ListButtonsColumn isColumnHeader />
       </ListHeaderWrapper>
     );
-  };
+  }, [sortName, sortDesc, setSortName, setSortDesc]);
 
   if (loadingReserves || loading)
     return (
@@ -298,7 +312,7 @@ export const SupplyAssetsList = () => {
             <DashboardListTopPanel
               value={isShowZeroAssets}
               onClick={setIsShowZeroAssets}
-              localStorageName={localStorageName}
+              localStorageName={LOCAL_STORAGE_NAME}
               bridge={bridge}
             />
           )}
