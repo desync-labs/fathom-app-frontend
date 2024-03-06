@@ -1,4 +1,4 @@
-import { FC, useMemo, memo } from "react";
+import { FC, useMemo, memo, ChangeEvent } from "react";
 import BigNumber from "bignumber.js";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { Box, MenuItem, Select, Typography } from "@mui/material";
@@ -68,7 +68,35 @@ const StableSwapSuccessBox = styled(SuccessBox)`
   margin: 20px 0 0;
 `;
 
-const StableSwapForm: FC<any> = ({
+export type StableSwapFormProps = {
+  isDecentralizedState: boolean;
+  isUserWhiteListed: boolean;
+  isUserWrapperWhiteListed: boolean;
+  inputValue: string;
+  outputValue: string;
+  inputDecimals: number;
+  outputDecimals: number;
+  handleInputValueTextFieldChange: (
+    event: ChangeEvent<HTMLInputElement>
+  ) => void;
+  handleOutputValueTextFieldChange: (
+    event: ChangeEvent<HTMLInputElement>
+  ) => void;
+  inputCurrency: string;
+  outputCurrency: string;
+  setInputCurrencyHandler: (value: string) => void;
+  setOutputCurrencyHandler: (value: string) => void;
+  inputBalance: string;
+  outputBalance: string;
+  changeCurrenciesPosition: (inputValue: string, outputValue: string) => void;
+  setMax: () => void;
+  inputError: string;
+  options: string[];
+  fxdAvailable: string;
+  usStableAvailable: string;
+};
+
+const StableSwapForm: FC<StableSwapFormProps> = ({
   isDecentralizedState,
   isUserWhiteListed,
   isUserWrapperWhiteListed,
@@ -118,7 +146,7 @@ const StableSwapForm: FC<any> = ({
         <StableSwapCurrencySelect
           value={inputCurrency}
           onChange={(event: SelectChangeEvent<unknown>) => {
-            setInputCurrencyHandler(event.target.value);
+            setInputCurrencyHandler(event.target.value as string);
           }}
         >
           {useMemo(
@@ -179,7 +207,7 @@ const StableSwapForm: FC<any> = ({
         <StableSwapCurrencySelect
           value={outputCurrency}
           onChange={(event: SelectChangeEvent<unknown>) => {
-            setOutputCurrencyHandler(event.target.value);
+            setOutputCurrencyHandler(event.target.value as string);
           }}
           disabled={true}
         >

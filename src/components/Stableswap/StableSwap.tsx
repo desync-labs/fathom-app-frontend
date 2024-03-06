@@ -31,7 +31,9 @@ import {
 } from "components/AppComponents/AppButton/AppButton";
 
 import useConnector from "context/connector";
-import StableSwapForm from "components/Stableswap/StableSwapForm";
+import StableSwapForm, {
+  StableSwapFormProps,
+} from "components/Stableswap/StableSwapForm";
 import useSharedContext from "context/shared";
 
 export const StableSwapInputWrapper = styled(MuiBox)`
@@ -178,7 +180,11 @@ const StableSwap = () => {
           <StableSwapPaper>
             {allowStableSwap && (
               <StableSwapForm
-                {...{ ...data, options, isUserWrapperWhiteListed }}
+                {...({
+                  ...data,
+                  options,
+                  isUserWrapperWhiteListed,
+                } as unknown as StableSwapFormProps)}
               />
             )}
 
@@ -277,7 +283,7 @@ const StableSwap = () => {
                   </InfoValue>
                 </StableSwapInfoWrapper>
               )}
-              {isDecentralizedState && allowStableSwap && (
+              {(isDecentralizedState || allowStableSwap) && (
                 <>
                   <StableSwapInfoWrapper>
                     <InfoLabel>Daily Limit</InfoLabel>
