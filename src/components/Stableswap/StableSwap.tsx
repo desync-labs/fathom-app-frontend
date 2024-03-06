@@ -285,18 +285,22 @@ const StableSwap = () => {
               )}
               {(isDecentralizedState || allowStableSwap) && (
                 <>
-                  <StableSwapInfoWrapper>
-                    <InfoLabel>Daily Limit</InfoLabel>
-                    <InfoValue>
-                      {formatPercentage(Number(dailyLimit))}
-                    </InfoValue>
-                  </StableSwapInfoWrapper>
-                  <StableSwapInfoWrapper sx={{ mb: 1 }}>
-                    <InfoLabel>One time Limit</InfoLabel>
-                    <InfoValue>
-                      {formatPercentage(Number(oneTimeSwapLimit))}
-                    </InfoValue>
-                  </StableSwapInfoWrapper>
+                  {BigNumber(dailyLimit).isGreaterThan(0) && (
+                    <StableSwapInfoWrapper>
+                      <InfoLabel>Daily Limit</InfoLabel>
+                      <InfoValue>
+                        {formatPercentage(Number(dailyLimit))}
+                      </InfoValue>
+                    </StableSwapInfoWrapper>
+                  )}
+                  {BigNumber(oneTimeSwapLimit).isGreaterThan(0) && (
+                    <StableSwapInfoWrapper sx={{ mb: 1 }}>
+                      <InfoLabel>One time Limit</InfoLabel>
+                      <InfoValue>
+                        {formatPercentage(Number(oneTimeSwapLimit))}
+                      </InfoValue>
+                    </StableSwapInfoWrapper>
+                  )}
                 </>
               )}
 
