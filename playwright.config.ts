@@ -75,6 +75,14 @@ export default defineConfig({
       testDir: "./playwright-tests/tests/dex",
       testMatch: "**.spec.ts",
     },
+    {
+      name: "lending-tests",
+      use: {
+        ...devices["Desktop Chrome"],
+      },
+      testDir: "./playwright-tests/tests/lending",
+      testMatch: "**.spec.ts",
+    },
   ],
 
   /* Run your local dev server before starting the tests */
