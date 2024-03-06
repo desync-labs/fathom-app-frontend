@@ -1,6 +1,6 @@
 import { API_ETH_MOCK_ADDRESS } from "@into-the-fathom/lending-contract-helpers";
 import { Typography, useMediaQuery, useTheme } from "@mui/material";
-import { FC, Fragment, useMemo, useState } from "react";
+import { FC, Fragment, useCallback, useMemo, useState } from "react";
 import { ListColumn } from "apps/lending/components/lists/ListColumn";
 import { ListHeaderTitle } from "apps/lending/components/lists/ListHeaderTitle";
 import { ListHeaderWrapper } from "apps/lending/components/lists/ListHeaderWrapper";
@@ -61,8 +61,8 @@ export const SuppliedPositionsList = () => {
   const { currentNetworkConfig } = useProtocolDataContext();
   const theme = useTheme();
   const downToXSM = useMediaQuery(theme.breakpoints.down("xsm"));
-  const [sortName, setSortName] = useState("");
-  const [sortDesc, setSortDesc] = useState(false);
+  const [sortName, setSortName] = useState<string>("");
+  const [sortDesc, setSortDesc] = useState<boolean>(false);
   const [tooltipOpen, setTooltipOpen] = useState<boolean>(false);
 
   const suppliedPositions = useMemo(
@@ -94,7 +94,7 @@ export const SuppliedPositionsList = () => {
     preSortedReserves
   );
 
-  const RenderHeader: FC = () => {
+  const RenderHeader: FC = useCallback(() => {
     return (
       <ListHeaderWrapper>
         {head.map((col) => (
@@ -122,7 +122,7 @@ export const SuppliedPositionsList = () => {
         <ListButtonsColumn isColumnHeader />
       </ListHeaderWrapper>
     );
-  };
+  }, [sortName, sortDesc, setSortName, setSortDesc]);
 
   if (loading)
     return (
