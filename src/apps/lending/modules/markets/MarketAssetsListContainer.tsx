@@ -19,7 +19,7 @@ import { fetchIconSymbolAndName } from "apps/lending/ui-config/reservePatches";
 export const MarketAssetsListContainer = () => {
   const { reserves, loading } = useAppDataContext();
   const { currentMarketData, currentNetworkConfig } = useProtocolDataContext();
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const { breakpoints } = useTheme();
   const sm = useMediaQuery(breakpoints.down("sm"));
 
@@ -55,7 +55,8 @@ export const MarketAssetsListContainer = () => {
   const unfrozenReserves = filteredData.filter(
     (r) => !r.isFrozen && !r.isPaused
   );
-  const [showFrozenMarketsToggle, setShowFrozenMarketsToggle] = useState(false);
+  const [showFrozenMarketsToggle, setShowFrozenMarketsToggle] =
+    useState<boolean>(false);
 
   const handleChange = () => {
     setShowFrozenMarketsToggle((prevState) => !prevState);
