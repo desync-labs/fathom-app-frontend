@@ -80,6 +80,7 @@ export default defineConfig({
       use: {
         ...devices["Desktop Chrome"],
       },
+      timeout: 60000 * 4,
       testDir: "./playwright-tests/tests/lending",
       testMatch: "**.spec.ts",
     },

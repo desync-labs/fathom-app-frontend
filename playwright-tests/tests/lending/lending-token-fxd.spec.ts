@@ -1,18 +1,19 @@
 import { test, expect } from "../../fixtures/pomSynpressFixture";
 import { WalletConnectOptions } from "../../types";
 import dotenv from "dotenv";
-import { tokenIds } from "../../fixtures/dex.data";
 // @ts-ignore
 import * as metamask from "@synthetixio/synpress/commands/metamask";
 dotenv.config();
 
-test.describe.serial("Fathom App Test Suite: Lending - FXD Token Tests", () => {
-  test.beforeAll(async ({ lendingPage }) => {
-    // Connect with dedicated lending test account that has all necessary funds available
-    await metamask.importAccount(process.env.METAMASK_TEST_ONE_PRIVATE_KEY);
-    await metamask.switchAccount("Account 3");
-    await lendingPage.navigate();
+test.describe("Fathom App Test Suite: Lending - FXD Token Tests", () => {
+  test.beforeEach(async ({ lendingPage }) => {
+    test.setTimeout(60000 * 3);
     // TO DO - Cleanup, repay all tokens if any and withrdraw all tokens if any
+    await lendingPage.navigate();
+    await lendingPage.connectWallet(WalletConnectOptions.Metamask);
+    await lendingPage.validateConnectedWalletAddress();
+    await lendingPage.repayAllBorrowedAssetsFullyIfAny();
+    await lendingPage.withdrawAllSuppliedAssetsFullyIfAny();
   });
 
   test("Supply FXD Token when no FXD is supplied is successful", async ({
