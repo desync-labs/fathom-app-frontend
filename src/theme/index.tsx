@@ -895,7 +895,7 @@ export function getThemedComponents(theme: Theme) {
               "&.LendingModal": {
                 "&>.MuiPaper-root": {
                   position: "relative",
-                  height: "100%",
+                  height: "100dvh",
                   width: "100%",
                   maxHeight: "unset",
                   maxWidth: "unset",
@@ -905,7 +905,7 @@ export function getThemedComponents(theme: Theme) {
               },
               ".TxActionsWrapper": {
                 position: "absolute",
-                bottom: 20,
+                bottom: 50,
                 left: 20,
                 right: 20,
               },
