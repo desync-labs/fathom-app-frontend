@@ -47,7 +47,7 @@ export const SupplyAssetsListMobileItem: FC<DashboardReserve> = memo(
         symbol={symbol}
         iconSymbol={iconSymbol}
         name={name}
-        underlyingAsset={underlyingAsset}
+        underlyingAsset={detailsAddress}
         currentMarket={currentMarket}
         showDebtCeilingTooltips
       >
