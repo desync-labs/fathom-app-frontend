@@ -7,7 +7,6 @@ dotenv.config();
 
 test.describe("Fathom App Test Suite: Lending - FXD Token Tests", () => {
   test.beforeEach(async ({ lendingPage }) => {
-    // TO DO - Cleanup, repay all tokens if any and withrdraw all tokens if any
     await lendingPage.navigate();
     await lendingPage.connectWallet(WalletConnectOptions.Metamask);
     await lendingPage.validateConnectedWalletAddress();
