@@ -1,4 +1,4 @@
-import { Button, Stack, Typography } from "@mui/material";
+import { Stack } from "@mui/material";
 import { Link, ROUTES } from "apps/lending/components/primitives/Link";
 import { Warning } from "apps/lending/components/primitives/Warning";
 import { getEmodeMessage } from "apps/lending/components/transactions/Emode/EmodeNaming";
@@ -10,8 +10,6 @@ import { useAssetCaps } from "apps/lending/hooks/useAssetCaps";
 import { WalletEmptyInfo } from "apps/lending/modules/dashboard/lists/SupplyAssetsList/WalletEmptyInfo";
 import { useRootStore } from "apps/lending/store/root";
 import { assetCanBeBorrowedByUser } from "apps/lending/utils/getMaxAmountAvailableToBorrow";
-
-import { useModalContext } from "./useModal";
 
 interface ReserveActionStateProps {
   balance: string;
@@ -32,7 +30,6 @@ export const useReserveActionState = ({
     store.currentNetworkConfig,
     store.currentChainId,
   ]);
-  const { openFaucet } = useModalContext();
 
   const { bridge, name: networkName } = currentNetworkConfig;
 
@@ -60,16 +57,15 @@ export const useReserveActionState = ({
               <Warning sx={{ mb: 0 }} severity="info" icon={false}>
                 Your {networkName} wallet is empty. Get free test {reserve.name}{" "}
                 at{" "}
-                <Button
-                  variant="text"
-                  sx={{ verticalAlign: "top" }}
-                  onClick={() => openFaucet(reserve.underlyingAsset)}
-                  disableRipple
+                <Link
+                  href={ROUTES.faucet}
+                  style={{
+                    fontWeight: 400,
+                  }}
+                  sx={{ "&:hover": { textDecoration: "underline" } }}
                 >
-                  <Typography variant="caption">
-                    {networkName} Faucet
-                  </Typography>
-                </Button>
+                  {networkName} Faucet
+                </Link>
               </Warning>
             ) : (
               <WalletEmptyInfo

@@ -1,5 +1,5 @@
 import React, { FC, memo, useState } from "react";
-import { Box, Button, SvgIcon, Typography } from "@mui/material";
+import { Box, Button, styled, SvgIcon, Typography } from "@mui/material";
 import Menu from "@mui/material/Menu";
 import { EmodeModalType } from "apps/lending/components/transactions/Emode/EmodeModalContent";
 import { useAppDataContext } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
@@ -17,6 +17,12 @@ import BoltIcon from "@mui/icons-material/Bolt";
 interface DashboardEModeButtonProps {
   userEmodeCategoryId: number;
 }
+
+const EModeWrapper = styled(Box)`
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    margin-top: 16px;
+  }
+`;
 
 export const DashboardEModeButton: FC<DashboardEModeButtonProps> = memo(
   ({ userEmodeCategoryId }) => {
@@ -48,7 +54,7 @@ export const DashboardEModeButton: FC<DashboardEModeButtonProps> = memo(
     const eModes = Object.keys(_eModes).length;
 
     return (
-      <Box
+      <EModeWrapper
         sx={{ display: "inline-flex", alignItems: "center" }}
         onClick={(e) => {
           e.stopPropagation();
@@ -244,7 +250,7 @@ export const DashboardEModeButton: FC<DashboardEModeButtonProps> = memo(
             )}
           </Box>
         </Menu>
-      </Box>
+      </EModeWrapper>
     );
   }
 );
