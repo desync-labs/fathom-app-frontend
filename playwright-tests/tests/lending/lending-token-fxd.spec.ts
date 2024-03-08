@@ -7,7 +7,6 @@ dotenv.config();
 
 test.describe("Fathom App Test Suite: Lending - FXD Token Tests", () => {
   test.beforeEach(async ({ lendingPage }) => {
-    test.setTimeout(60000 * 3);
     // TO DO - Cleanup, repay all tokens if any and withrdraw all tokens if any
     await lendingPage.navigate();
     await lendingPage.connectWallet(WalletConnectOptions.Metamask);
@@ -52,23 +51,23 @@ test.describe("Fathom App Test Suite: Lending - FXD Token Tests", () => {
     await lendingPage.navigate();
   });
 
-  test("Repay FXD fully with fmFXD is successfull", async ({ lendingPage }) => {
+  test("Repay FXD fully with fmFXD is successful", async ({ lendingPage }) => {
     await lendingPage.navigate();
   });
 
-  test("Withdraw FXD partially is successfull", async ({ lendingPage }) => {
+  test("Withdraw FXD partially is successful", async ({ lendingPage }) => {
     await lendingPage.navigate();
   });
 
-  test("Disable FXD as collateral is successfull", async ({ lendingPage }) => {
+  test("Disable FXD as collateral is successful", async ({ lendingPage }) => {
     await lendingPage.navigate();
   });
 
-  test("Enable FXD as collateral is successfull", async ({ lendingPage }) => {
+  test("Enable FXD as collateral is successful", async ({ lendingPage }) => {
     await lendingPage.navigate();
   });
 
-  test("Withdraw FXD fully is successfull", async ({ lendingPage }) => {
+  test("Withdraw FXD fully is successful", async ({ lendingPage }) => {
     await lendingPage.navigate();
   });
 });
