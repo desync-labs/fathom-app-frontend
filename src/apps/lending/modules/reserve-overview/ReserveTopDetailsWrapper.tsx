@@ -26,7 +26,7 @@ import { AddTokenDropdown } from "apps/lending/modules/reserve-overview/AddToken
 import { ReserveTopDetails } from "apps/lending/modules/reserve-overview/ReserveTopDetails";
 import { TokenLinkDropdown } from "apps/lending/modules/reserve-overview/TokenLinkDropdown";
 import { useNavigate } from "react-router-dom";
-import { FC, memo } from "react";
+import { FC, memo, useCallback } from "react";
 import { lendingContainerProps } from "apps/lending/components/ContentContainer";
 
 interface ReserveTopDetailsProps {
@@ -55,7 +55,7 @@ export const ReserveTopDetailsWrapper: FC<ReserveTopDetailsProps> = memo(
 
     const valueTypographyVariant = downToSM ? "main16" : "main21";
 
-    const ReserveIcon = () => {
+    const ReserveIcon = useCallback(() => {
       return (
         <Box
           sx={{
@@ -82,7 +82,7 @@ export const ReserveTopDetailsWrapper: FC<ReserveTopDetailsProps> = memo(
           )}
         </Box>
       );
-    };
+    }, [loading, poolReserve.iconSymbol]);
 
     const ReserveName = () => {
       return loading ? (
@@ -150,7 +150,7 @@ export const ReserveTopDetailsWrapper: FC<ReserveTopDetailsProps> = memo(
                       <Skeleton
                         width={160}
                         height={16}
-                        sx={{ ml: 0.5, background: "red" }}
+                        sx={{ ml: 0.5, background: "#383D51" }}
                       />
                     ) : (
                       <Box sx={{ display: "flex" }}>
