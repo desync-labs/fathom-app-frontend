@@ -35,7 +35,7 @@ export const DashboardListTopPanel: FC<DashboardListTopPanelProps> = memo(
         }}
       >
         <FormControlLabel
-          sx={{ mt: { xs: bridge ? 1 : 0, xsm: 0 } }}
+          sx={{ mt: { xs: 2, sm: 0 } }}
           control={<Checkbox sx={{ p: "6px" }} />}
           checked={value}
           onChange={() => {
