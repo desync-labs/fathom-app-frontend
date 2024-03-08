@@ -103,7 +103,7 @@ export const TokenLinkDropdown: FC<TokenLinkDropdownProps> = memo(
             />
             <Typography
               variant="subheader1"
-              sx={{ ml: 3 }}
+              sx={{ ml: 2 }}
               noWrap
               data-cy={`assetName`}
             >
@@ -144,7 +144,7 @@ export const TokenLinkDropdown: FC<TokenLinkDropdownProps> = memo(
                 />
                 <Typography
                   variant="subheader1"
-                  sx={{ ml: 3 }}
+                  sx={{ ml: 2 }}
                   noWrap
                   data-cy={`assetName`}
                 >
@@ -182,7 +182,7 @@ export const TokenLinkDropdown: FC<TokenLinkDropdownProps> = memo(
               <TokenIcon symbol="default" sx={{ fontSize: "20px" }} />
               <Typography
                 variant="subheader1"
-                sx={{ ml: 3 }}
+                sx={{ ml: 2 }}
                 noWrap
                 data-cy={`assetName`}
               >
@@ -212,7 +212,7 @@ export const TokenLinkDropdown: FC<TokenLinkDropdownProps> = memo(
               <TokenIcon symbol="default" sx={{ fontSize: "20px" }} />
               <Typography
                 variant="subheader1"
-                sx={{ ml: 3 }}
+                sx={{ ml: 2 }}
                 noWrap
                 data-cy={`assetName`}
               >
