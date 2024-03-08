@@ -6,6 +6,7 @@ import { ILockPosition } from "fathom-sdk";
 import { useServices } from "context/services";
 import useConnector from "context/connector";
 import BigNumber from "bignumber.js";
+import usePricesContext from "context/prices";
 
 const useStakingItemView = (lockPosition: ILockPosition) => {
   const [seconds, setSeconds] = useState(lockPosition.end - Date.now() / 1000);
@@ -14,6 +15,15 @@ const useStakingItemView = (lockPosition: ILockPosition) => {
   const { stakingService } = useServices();
   const [rewardsAvailable, setRewardsAvailable] = useState<string>(
     lockPosition.rewardsAvailable.toString()
+  );
+  const { fthmPrice } = usePricesContext();
+
+  const fthmPriceFormatted = useMemo(
+    () =>
+      BigNumber(fthmPrice)
+        .dividedBy(10 ** 18)
+        .toNumber(),
+    [fthmPrice]
   );
 
   const fetchRewards = useCallback(() => {
@@ -75,6 +85,7 @@ const useStakingItemView = (lockPosition: ILockPosition) => {
     penaltyFee,
     seconds,
     rewardsAvailable,
+    fthmPriceFormatted,
   };
 };
 
