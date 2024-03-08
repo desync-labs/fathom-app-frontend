@@ -97,7 +97,12 @@ export const DashboardTopPanel = () => {
         {currentAccount && user?.healthFactor !== "-1" && (
           <TopInfoPanelItem
             title={
-              <Box sx={{ display: "inline-flex", alignItems: "center" }}>
+              <Box
+                sx={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                }}
+              >
                 Health factor
               </Box>
             }
