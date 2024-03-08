@@ -203,9 +203,8 @@ export const WithdrawModalContent: FC<
               sx={{
                 display: "flex",
                 flexDirection: "row",
-                justifyContent: "center",
+                justifyContent: "flex-start",
                 alignItems: "center",
-                mx: "24px",
                 mb: "12px",
               }}
             >
