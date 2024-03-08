@@ -2,7 +2,6 @@ import {
   calculateHealthFactorFromBalancesBigUnits,
   valueToBigNumber,
 } from "@into-the-fathom/lending-math-utils";
-import { Typography } from "@mui/material";
 import { Warning } from "apps/lending/components/primitives/Warning";
 import { useAppDataContext } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 import { useAssetCaps } from "apps/lending/hooks/useAssetCaps";
@@ -20,7 +19,6 @@ import { zeroLTVBlockingWithdraw } from "apps/lending/components/transactions/ut
 import { IsolationModeWarning } from "apps/lending/components/transactions/Warnings/IsolationModeWarning";
 import { CollateralChangeActions } from "apps/lending/components/transactions/CollateralChange/CollateralChangeActions";
 import { FC, memo } from "react";
-import { styled } from "@mui/material/styles";
 
 export enum ErrorType {
   DO_NOT_HAVE_SUPPLIES_IN_THIS_CURRENCY,
@@ -28,13 +26,6 @@ export enum ErrorType {
   CAN_NOT_SWITCH_USAGE_AS_COLLATERAL_MODE,
   ZERO_LTV_WITHDRAW_BLOCKED,
 }
-
-const CollateralChangeTypography = styled(Typography)`
-  font-size: 13px;
-  text-align: center;
-  padding-top: 30px;
-  line-height: 20px;
-`;
 
 export const CollateralChangeModalContent: FC<ModalWrapperProps> = memo(
   ({ poolReserve, userReserve, isWrongNetwork, symbol }) => {
@@ -180,9 +171,9 @@ export const CollateralChangeModalContent: FC<ModalWrapperProps> = memo(
         </TxModalDetails>
 
         {blockingError !== undefined && (
-          <CollateralChangeTypography variant="helperText" color="error.main">
+          <Warning severity="error" sx={{ my: 6 }}>
             <BlockingError />
-          </CollateralChangeTypography>
+          </Warning>
         )}
 
         {txError && <GasEstimationError txError={txError} />}

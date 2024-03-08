@@ -165,6 +165,7 @@ export const getDesignTokens = () => {
         dark: "#D32F2F",
         "100": "#FBB4AF", // for alert text
         "200": "#2E0C0A", // for alert background
+        "300": "#5a0000", // for alert border
       },
       warning: {
         main: "#f7b06e",
@@ -752,12 +753,9 @@ export function getThemedComponents(theme: Theme) {
           {
             props: { severity: "error" },
             style: {
-              color: "#ff8585",
+              color: theme.palette.error["100"],
               background: theme.palette.error["200"],
-              border: "1px solid #5a0000",
-              "& .MuiAlert-message": {
-                color: "#ff8585",
-              },
+              border: `1px solid ${theme.palette.error["300"]}`,
               a: {
                 color: theme.palette.error["100"],
               },
