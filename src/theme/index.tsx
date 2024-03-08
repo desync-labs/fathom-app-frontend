@@ -722,10 +722,6 @@ export function getThemedComponents(theme: Theme) {
               marginTop: "12px",
               marginBottom: "12px",
             },
-            "& .MuiAlert-message": {
-              color: theme.palette.text.primary,
-              padding: "8px 0",
-            },
           },
         },
         defaultProps: {
