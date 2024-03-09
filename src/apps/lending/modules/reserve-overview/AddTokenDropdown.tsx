@@ -126,6 +126,7 @@ export const AddTokenDropdown: FC<AddTokenDropdownProps> = memo(
           </CircleIcon>
         </Box>
         <Menu
+          sx={{ "& .MuiMenu-paper": { minWidth: "220px !important" } }}
           anchorEl={anchorEl}
           open={open}
           onClose={handleClose}
@@ -135,7 +136,7 @@ export const AddTokenDropdown: FC<AddTokenDropdownProps> = memo(
           keepMounted={true}
           data-cy="addToWaletSelector"
         >
-          <Box sx={{ px: 2, pt: 1, pb: 1 }}>
+          <Box sx={{ px: 2, pt: "6px", pb: "6px" }}>
             <Typography variant="secondary12" color="text.secondary">
               Underlying token
             </Typography>
@@ -145,6 +146,7 @@ export const AddTokenDropdown: FC<AddTokenDropdownProps> = memo(
             key="underlying"
             value="underlying"
             divider
+            sx={{ px: 2, pt: "4px", pb: "4px", minHeight: "40px !important" }}
             onClick={() => {
               if (currentChainId !== connectedChainId) {
                 switchNetwork(currentChainId).then(() => {
@@ -184,14 +186,20 @@ export const AddTokenDropdown: FC<AddTokenDropdownProps> = memo(
           </MenuItem>
           {!hideFmToken && (
             <Box>
-              <Box sx={{ px: 2, pt: 1, pb: 1 }}>
+              <Box sx={{ px: 2, pt: "6px", pb: "6px" }}>
                 <Typography variant="secondary12" color="text.secondary">
-                  Fathom fmToken
+                  fmToken
                 </Typography>
               </Box>
               <MenuItem
-                key="atoken"
-                value="atoken"
+                sx={{
+                  px: 2,
+                  pt: "4px",
+                  pb: "4px",
+                  minHeight: "40px !important",
+                }}
+                key="fmtoken"
+                value="fmtoken"
                 onClick={() => {
                   if (currentChainId !== connectedChainId) {
                     switchNetwork(currentChainId).then(() => {
