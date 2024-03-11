@@ -22,6 +22,7 @@ export type SuccessTxViewProps = {
   addToken?: ERC20TokenType;
   customAction?: ReactNode;
   customText?: ReactNode;
+  visibleDecimals?: number;
 };
 
 export const TxSuccessView: FC<SuccessTxViewProps> = ({
@@ -34,6 +35,7 @@ export const TxSuccessView: FC<SuccessTxViewProps> = ({
   addToken,
   customAction,
   customText,
+  visibleDecimals,
 }) => {
   const { addERC20Token } = useWeb3Context();
   const [base64, setBase64] = useState("");
@@ -43,7 +45,7 @@ export const TxSuccessView: FC<SuccessTxViewProps> = ({
     <BaseSuccessView txHash={txHash}>
       <Box
         sx={{
-          mt: 2,
+          mt: 1,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -58,6 +60,7 @@ export const TxSuccessView: FC<SuccessTxViewProps> = ({
               value={Number(amount)}
               compact
               variant="secondary14"
+              visibleDecimals={visibleDecimals}
             />{" "}
             {symbol}
           </Typography>
@@ -96,12 +99,12 @@ export const TxSuccessView: FC<SuccessTxViewProps> = ({
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
-              mt: "24px",
+              mt: "18px",
             })}
           >
             <TokenIcon
               symbol={addToken.symbol}
-              aToken={!!(addToken && addToken.aToken)}
+              fmToken={!!(addToken && addToken.fmToken)}
               sx={{ fontSize: "32px", mt: "12px", mb: "8px" }}
             />
             <Typography
@@ -110,8 +113,8 @@ export const TxSuccessView: FC<SuccessTxViewProps> = ({
               sx={{ mx: "24px" }}
             >
               Add{" "}
-              {addToken && addToken.aToken
-                ? `a${addToken.symbol} `
+              {addToken && addToken.fmToken
+                ? `fm${addToken.symbol} `
                 : `${addToken.symbol} `}{" "}
               to wallet to track your balance.
             </Typography>
@@ -120,21 +123,21 @@ export const TxSuccessView: FC<SuccessTxViewProps> = ({
                 addERC20Token({
                   address: addToken.address,
                   decimals: addToken.decimals,
-                  symbol: addToken.aToken
-                    ? `a${addToken.symbol}`
+                  symbol: addToken.fmToken
+                    ? `fm${addToken.symbol}`
                     : addToken.symbol,
                   image: !/_/.test(addToken.symbol) ? base64 : undefined,
                 });
               }}
               variant={theme.palette.mode === "dark" ? "outlined" : "contained"}
               size="medium"
-              sx={{ mt: "8px", mb: "12px" }}
+              sx={{ mt: "8px", mb: "8px" }}
             >
               {addToken.symbol && !/_/.test(addToken.symbol) && (
                 <Base64Token
                   symbol={addToken.symbol}
                   onImageGenerated={setBase64}
-                  aToken={addToken.aToken}
+                  fmToken={addToken.fmToken}
                 />
               )}
               <WalletIcon

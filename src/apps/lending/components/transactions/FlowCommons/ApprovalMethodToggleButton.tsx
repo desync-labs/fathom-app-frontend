@@ -1,5 +1,4 @@
-import { CheckIcon } from "@heroicons/react/outline";
-import { CogIcon } from "@heroicons/react/solid";
+import { useState, MouseEvent, FC } from "react";
 import {
   Box,
   ListItemIcon,
@@ -10,7 +9,9 @@ import {
   Typography,
 } from "@mui/material";
 import { ApprovalMethod } from "apps/lending/store/walletSlice";
-import { useState, MouseEvent, FC } from "react";
+
+import SettingsIcon from "@mui/icons-material/Settings";
+import DoneRoundedIcon from "@mui/icons-material/DoneRounded";
 
 interface ApprovalMethodToggleButtonProps {
   currentMethod: ApprovalMethod;
@@ -44,8 +45,8 @@ export const ApprovalMethodToggleButton: FC<
         <Typography variant="subheader2" color="other.fathomLink">
           {currentMethod}
         </Typography>
-        <SvgIcon sx={{ fontSize: 16, ml: 1, color: "other.fathomLink" }}>
-          <CogIcon />
+        <SvgIcon sx={{ fontSize: 16, ml: 0.5, color: "other.fathomLink" }}>
+          <SettingsIcon />
         </SvgIcon>
       </Box>
 
@@ -75,7 +76,7 @@ export const ApprovalMethodToggleButton: FC<
           </ListItemText>
           <ListItemIcon>
             <SvgIcon>
-              {currentMethod === ApprovalMethod.PERMIT && <CheckIcon />}
+              {currentMethod === ApprovalMethod.PERMIT && <DoneRoundedIcon />}
             </SvgIcon>
           </ListItemIcon>
         </MenuItem>
@@ -96,7 +97,7 @@ export const ApprovalMethodToggleButton: FC<
           </ListItemText>
           <ListItemIcon>
             <SvgIcon>
-              {currentMethod === ApprovalMethod.APPROVE && <CheckIcon />}
+              {currentMethod === ApprovalMethod.APPROVE && <DoneRoundedIcon />}
             </SvgIcon>
           </ListItemIcon>
         </MenuItem>

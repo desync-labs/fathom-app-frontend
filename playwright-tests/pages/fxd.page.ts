@@ -116,7 +116,7 @@ export default class FxdPage extends BasePage {
       '//span[contains(text(), "Collateral Locked")]//ancestor::li/div[2]/span'
     );
     this.safetyBufferResultNumberTopUp = this.page.locator(
-      '//span[contains(text(), "Safety Buffer")]//ancestor::li/div[2]'
+      '//div[contains(text(), "Safety Buffer")]//ancestor::li/div[2]'
     );
     this.btnNextPage = this.page.locator(
       'button[aria-label="Go to next page"]'
@@ -126,9 +126,9 @@ export default class FxdPage extends BasePage {
     );
     this.btnCloseModal = this.page.locator('button[aria-label="close"]');
     this.doneIconModal = this.page.locator('[data-testid="DoneIcon"]');
-    this.headingFourModal = this.page.locator('div[role="dialog"] h4');
+    this.headingFourModal = this.page.locator('div[role="dialog"] h1');
     this.spanBodyOneModal = this.page.locator(
-      'div[role="dialog"] p[class*="MuiTypography-body1"]'
+      'div[role="dialog"] p[class*="MuiTypography-description"]'
     );
     this.spanBodyTwoModal = this.page.locator(
       'div[role="dialog"] span[class*="MuiTypography-body2"]'
@@ -162,6 +162,7 @@ export default class FxdPage extends BasePage {
     await expect.soft(this.progressBar).toBeVisible();
     await this.page.waitForTimeout(1000);
     await expect(this.divAlert).toBeHidden({ timeout: 100 });
+    await this.page.waitForTimeout(5000);
     await metamask.confirmTransaction();
   }
 
@@ -284,6 +285,7 @@ export default class FxdPage extends BasePage {
     await expect.soft(this.progressBar).toBeVisible();
     await this.page.waitForTimeout(1000);
     await expect(this.divAlert).toBeHidden({ timeout: 100 });
+    await this.page.waitForTimeout(5000);
     await metamask.confirmTransaction();
   }
 
@@ -337,6 +339,7 @@ export default class FxdPage extends BasePage {
     await expect.soft(this.progressBar).toBeVisible();
     await this.page.waitForTimeout(1000);
     await expect(this.divAlert).toBeHidden({ timeout: 100 });
+    await this.page.waitForTimeout(5000);
     await metamask.confirmTransaction();
   }
 

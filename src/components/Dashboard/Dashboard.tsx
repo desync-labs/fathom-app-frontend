@@ -12,6 +12,7 @@ const DashboardContent = () => {
     positionCurrentPage,
     positionsItemsCount,
     setPositionCurrentPage,
+    loadingPositions,
   } = useDashboard();
   const { isMobile } = useSharedContext();
 
@@ -33,6 +34,7 @@ const DashboardContent = () => {
         </Grid>
         <Grid item xs={12} mt={4}>
           <PositionsList
+            loadingPositions={loadingPositions}
             positionCurrentPage={positionCurrentPage}
             positionsItemsCount={positionsItemsCount}
             proxyWallet={proxyWallet}

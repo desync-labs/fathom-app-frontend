@@ -24,7 +24,8 @@ export const PanelTitle: FC<TypographyProps> = (props) => (
   <Typography
     {...props}
     variant="subheader1"
-    sx={{ minWidth: { xs: "170px" }, mr: 4, mb: { xs: 6, md: 0 }, ...props.sx }}
+    color={props.color || "text.light"}
+    sx={{ minWidth: { xs: "170px" }, mr: 2, mb: { xs: 3, md: 0 }, ...props.sx }}
   />
 );
 
@@ -44,8 +45,8 @@ export const PanelItem: FC<PanelItemProps> = memo(
         sx={{
           position: "relative",
           "&:not(:last-child)": {
-            pr: 4,
-            mr: 4,
+            pr: 2,
+            mr: 1,
           },
           ...(mdUp
             ? {
@@ -73,7 +74,7 @@ export const PanelItem: FC<PanelItemProps> = memo(
             justifyContent: "flex-end",
             flex: 1,
             overflow: "hidden",
-            py: 1,
+            py: 0.5,
           }}
         >
           {children}

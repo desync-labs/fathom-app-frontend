@@ -40,12 +40,12 @@ export const ListMobileItem: FC<ListMobileItemProps> = ({
   return (
     <Box>
       <Divider />
-      <Box sx={{ px: 4, pt: 4, pb: 6 }}>
-        <Box sx={{ mb: 4, display: "flex", alignItems: "center" }}>
+      <Box sx={{ px: 2, pt: 2, pb: 3 }}>
+        <Box sx={{ mb: 2, display: "flex", alignItems: "center" }}>
           {loading ? (
             <Box sx={{ display: "inline-flex", alignItems: "center" }}>
               <Skeleton variant="circular" width={40} height={40} />
-              <Box sx={{ ml: 2 }}>
+              <Box sx={{ ml: 1 }}>
                 <Skeleton width={100} height={24} />
               </Box>
             </Box>
@@ -60,8 +60,10 @@ export const ListMobileItem: FC<ListMobileItemProps> = ({
                 sx={{ display: "inline-flex", alignItems: "center" }}
               >
                 <TokenIcon symbol={iconSymbol} sx={{ fontSize: "40px" }} />
-                <Box sx={{ ml: 2 }}>
-                  <Typography variant="h4">{name}</Typography>
+                <Box sx={{ ml: 1 }}>
+                  <Typography variant="h4" color="text.primary">
+                    {name}
+                  </Typography>
                   <Box display="flex" alignItems="center">
                     <Typography variant="subheader2" color="text.muted">
                       {symbol}

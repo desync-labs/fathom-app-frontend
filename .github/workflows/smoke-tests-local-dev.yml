@@ -7,7 +7,7 @@ on:
       - dev
 
 concurrency:
-  group: ${{ github.workflow }}
+  group: ci-dev
 
 jobs:
   smoke-tests-local-dev:

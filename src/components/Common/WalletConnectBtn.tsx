@@ -1,6 +1,7 @@
 import { Button, SxProps, Theme, styled } from "@mui/material";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import useConnector from "context/connector";
+import { FC, ReactNode, MouseEvent } from "react";
 
 export const WalletButton = styled(Button)`
   border-radius: 8px;
@@ -29,23 +30,28 @@ type WalletConnectBtnPropsTypes = {
   fullwidth?: boolean | undefined;
   sx?: SxProps<Theme> | undefined;
   testId?: string;
+  children?: ReactNode;
+  onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
 };
 
-const WalletConnectBtn = ({
+const WalletConnectBtn: FC<WalletConnectBtnPropsTypes> = ({
   fullwidth,
   sx,
   testId,
-}: WalletConnectBtnPropsTypes) => {
+  children,
+  onClick,
+}) => {
   const { openConnectorMenu } = useConnector();
+
   return (
     <WalletButton
-      onClick={openConnectorMenu}
+      onClick={onClick ? onClick : openConnectorMenu}
       startIcon={<AccountBalanceWalletIcon />}
       fullWidth={fullwidth}
       sx={sx}
       data-testid={testId}
     >
-      Connect Wallet
+      {children ? children : "Connect Wallet"}
     </WalletButton>
   );
 };

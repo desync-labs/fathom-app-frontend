@@ -26,7 +26,7 @@ const Content: FC<ListValueColumnProps> = memo(
             value={value}
             variant="secondary14"
             sx={{ mb: !withTooltip && !!subValue ? "2px" : 0 }}
-            color={disabled ? "text.disabled" : "text.main"}
+            color={disabled ? "text.disabled" : "text.light"}
             data-cy={`nativeAmount`}
           />
           {capsComponent}
@@ -73,20 +73,23 @@ export const ListValueColumn: FC<ListValueColumnProps> = memo(
                   symbol="USD"
                   variant="secondary14"
                   sx={{ mb: "2px" }}
-                  symbolsColor="common.white"
                   compact={false}
+                  color="text.light"
+                  symbolsColor="text.light"
                 />
                 <FormattedNumber
                   value={value}
                   variant="secondary12"
                   symbol={symbol}
-                  symbolsColor="common.white"
                   compact={false}
+                  color="text.light"
+                  symbolsColor="text.light"
                 />
               </Box>
             }
             arrow
             placement="top"
+            sx={{ maxWidth: "none" }}
           >
             <Box
               sx={{

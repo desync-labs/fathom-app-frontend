@@ -1,6 +1,5 @@
 import { FC, useEffect, useMemo } from "react";
-import { Box, styled } from "@mui/material";
-import { useMedia } from "react-use";
+import { Box, styled, useMediaQuery } from "@mui/material";
 
 import TopTokenList from "apps/charts/components/TokenList";
 import { TYPE } from "apps/charts/Theme";
@@ -37,7 +36,7 @@ const AllTokensPage: FC = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  const below600 = useMedia("(max-width: 800px)");
+  const below600 = useMediaQuery("(max-width: 800px)");
 
   // const [useTracked, setUseTracked] = useState(true)
 

@@ -47,7 +47,7 @@ export const SupplyAssetsListMobileItem: FC<DashboardReserve> = memo(
         symbol={symbol}
         iconSymbol={iconSymbol}
         name={name}
-        underlyingAsset={underlyingAsset}
+        underlyingAsset={detailsAddress}
         currentMarket={currentMarket}
         showDebtCeilingTooltips
       >
@@ -70,13 +70,15 @@ export const SupplyAssetsListMobileItem: FC<DashboardReserve> = memo(
           caption={"Supply APY"}
           align="flex-start"
           captionVariant="description"
-          mb={2}
+          captionColor={"primary.light"}
+          mb={1}
         >
           <IncentivesCard
             value={Number(supplyAPY)}
             incentives={aIncentivesData}
             symbol={symbol}
             variant="secondary14"
+            color={"primary.light"}
           />
         </Row>
 
@@ -84,7 +86,8 @@ export const SupplyAssetsListMobileItem: FC<DashboardReserve> = memo(
           caption={"Can be collateral"}
           align="flex-start"
           captionVariant="description"
-          mb={2}
+          captionColor={"primary.light"}
+          mb={1}
         >
           <ListItemCanBeCollateral
             isIsolated={isIsolated}
@@ -97,7 +100,7 @@ export const SupplyAssetsListMobileItem: FC<DashboardReserve> = memo(
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            mt: 5,
+            mt: 2.5,
           }}
         >
           <Button
@@ -106,7 +109,7 @@ export const SupplyAssetsListMobileItem: FC<DashboardReserve> = memo(
             onClick={() =>
               openSupply(underlyingAsset, currentMarket, name, "dashboard")
             }
-            sx={{ mr: 1.5 }}
+            sx={{ mr: 0.75 }}
             fullWidth
           >
             Supply

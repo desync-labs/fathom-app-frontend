@@ -14,7 +14,7 @@ export const ReserveConfigurationWrapper: FC<ReserveConfigurationProps> = memo(
     const downToXsm = useMediaQuery(breakpoints.down("xsm"));
 
     return (
-      <Paper variant="outlined" sx={{ pt: 4, pb: 20, px: downToXsm ? 4 : 6 }}>
+      <Paper variant="outlined" sx={{ pt: 2, pb: 10, px: downToXsm ? 2 : 3 }}>
         <Box
           sx={{
             display: "flex",
@@ -29,10 +29,7 @@ export const ReserveConfigurationWrapper: FC<ReserveConfigurationProps> = memo(
                 : "36px",
           }}
         >
-          <Typography
-            variant="h3"
-            color={(theme) => theme.palette.primary.main}
-          >
+          <Typography variant="h3">
             Reserve status &#38; configuration
           </Typography>
         </Box>

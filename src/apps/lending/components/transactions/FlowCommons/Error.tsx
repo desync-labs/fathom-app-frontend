@@ -1,8 +1,10 @@
-import { DuplicateIcon, XIcon } from "@heroicons/react/outline";
+import { FC } from "react";
 import { Box, Button, SvgIcon, Typography } from "@mui/material";
 import { useModalContext } from "apps/lending/hooks/useModal";
 import { TxErrorType } from "apps/lending/ui-config/errorMapping";
-import { FC } from "react";
+
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
 
 export const TxErrorView: FC<{ txError: TxErrorType }> = ({ txError }) => {
   const { close } = useModalContext();
@@ -24,18 +26,18 @@ export const TxErrorView: FC<{ txError: TxErrorType }> = ({ txError }) => {
             height: "48px",
             backgroundColor: "error.200",
             borderRadius: "50%",
-            mt: 14,
+            mt: 7,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
           }}
         >
           <SvgIcon sx={{ color: "error.main", fontSize: "32px" }}>
-            <XIcon />
+            <CloseRoundedIcon />
           </SvgIcon>
         </Box>
 
-        <Typography sx={{ mt: 2 }} variant="h2">
+        <Typography sx={{ mt: 1 }} variant="h2">
           Transaction failed
         </Typography>
 
@@ -45,15 +47,15 @@ export const TxErrorView: FC<{ txError: TxErrorType }> = ({ txError }) => {
             navigator.clipboard.writeText(txError.rawError.message.toString())
           }
           size="small"
-          sx={{ mt: 6 }}
+          sx={{ mt: 3 }}
         >
           Copy error text
-          <SvgIcon sx={{ ml: 0.5, fontSize: "12px" }}>
-            <DuplicateIcon />
+          <SvgIcon sx={{ ml: 0.25, fontSize: "12px" }}>
+            <ContentCopyRoundedIcon />
           </SvgIcon>
         </Button>
       </Box>
-      <Box sx={{ display: "flex", flexDirection: "column", mt: 12 }}>
+      <Box sx={{ display: "flex", flexDirection: "column", mt: 6 }}>
         <Button
           onClick={close}
           variant="gradient"

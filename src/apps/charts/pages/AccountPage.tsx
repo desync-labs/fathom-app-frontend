@@ -10,8 +10,7 @@ import {
   MouseEvent,
 } from "react";
 import { Navigate, useParams } from "react-router-dom";
-import { Box, Fade, Menu, styled } from "@mui/material";
-import { useMedia } from "react-use";
+import { Box, Fade, Menu, styled, useMediaQuery } from "@mui/material";
 import {
   useUserTransactions,
   useUserPositions,
@@ -64,6 +63,10 @@ const DropdownWrapper = styled(Box)`
 
 const DropdownMenu = styled(Menu)<{ hide?: boolean }>`
   .MuiPaper-root {
+    border: none !important;
+    background: transparent !important;
+    margin-top: 0 !important;
+    border-radius: 0;
     max-width: unset;
     box-shadow: 0 0 1px rgba(0, 0, 0, 0.04), 0 4px 8px rgba(0, 0, 0, 0.04),
       0 16px 24px rgba(0, 0, 0, 0.04), 0 24px 32px rgba(0, 0, 0, 0.04);
@@ -260,7 +263,7 @@ const AccountPage: FC<AccountPageProps> = memo((props) => {
     });
   }, []);
 
-  const below600 = useMedia("(max-width: 600px)");
+  const below600 = useMediaQuery("(max-width: 600px)");
 
   // adding/removing account from saved accounts
   const [savedAccounts, addAccount, removeAccount] = useSavedAccounts();

@@ -1,4 +1,4 @@
-import { FC, useMemo, memo } from "react";
+import { FC, useMemo, memo, ChangeEvent } from "react";
 import BigNumber from "bignumber.js";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { Box, MenuItem, Select, Typography } from "@mui/material";
@@ -25,6 +25,7 @@ import { formatPercentage } from "utils/format";
 const StableSwapErrorBox = styled(ErrorBox)`
   width: 100%;
   margin: 0;
+  margin: 20px 0 0;
 `;
 
 const ErrorInfoIcon = styled(InfoIcon)`
@@ -34,9 +35,6 @@ const ErrorInfoIcon = styled(InfoIcon)`
 `;
 
 const StableSwapCurrencySelect = styled(Select)`
-  background: #253656;
-  border: 1px solid #324567;
-  border-radius: 8px;
   color: #fff;
   font-weight: bold;
   font-size: 13px;
@@ -47,19 +45,58 @@ const StableSwapCurrencySelect = styled(Select)`
   left: 32px;
   top: 41px;
   z-index: 1;
-  padding-top: 4px;
 
-  .MuiSelect-select {
-    padding-left: 12px;
+  & .MuiSelect-select {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: flex-start;
+    border-radius: 6px;
+    padding: 4px 12px !important;
   }
+`;
+
+const TokenLogoBox = styled(Box)`
+  display: flex;
+  height: fit-content;
+  padding-right: 10px;
 `;
 
 const StableSwapSuccessBox = styled(SuccessBox)`
   width: 100%;
-  margin: 0;
+  margin: 20px 0 0;
 `;
 
-const StableSwapForm: FC<any> = ({
+export type StableSwapFormProps = {
+  isDecentralizedState: boolean;
+  isUserWhiteListed: boolean;
+  isUserWrapperWhiteListed: boolean;
+  inputValue: string;
+  outputValue: string;
+  inputDecimals: number;
+  outputDecimals: number;
+  handleInputValueTextFieldChange: (
+    event: ChangeEvent<HTMLInputElement>
+  ) => void;
+  handleOutputValueTextFieldChange: (
+    event: ChangeEvent<HTMLInputElement>
+  ) => void;
+  inputCurrency: string;
+  outputCurrency: string;
+  setInputCurrencyHandler: (value: string) => void;
+  setOutputCurrencyHandler: (value: string) => void;
+  inputBalance: string;
+  outputBalance: string;
+  changeCurrenciesPosition: (inputValue: string, outputValue: string) => void;
+  setMax: () => void;
+  inputError: string;
+  options: string[];
+  fxdAvailable: string;
+  usStableAvailable: string;
+};
+
+const StableSwapForm: FC<StableSwapFormProps> = ({
   isDecentralizedState,
   isUserWhiteListed,
   isUserWrapperWhiteListed,
@@ -109,16 +146,16 @@ const StableSwapForm: FC<any> = ({
         <StableSwapCurrencySelect
           value={inputCurrency}
           onChange={(event: SelectChangeEvent<unknown>) => {
-            setInputCurrencyHandler(event.target.value);
+            setInputCurrencyHandler(event.target.value as string);
           }}
         >
           {useMemo(
             () =>
               options.map((option: string) => (
                 <MenuItem key={option} value={option}>
-                  <Box sx={{ float: "left", paddingRight: "10px" }}>
+                  <TokenLogoBox>
                     <img width={16} src={getTokenLogoURL(option)} alt={""} />
-                  </Box>
+                  </TokenLogoBox>
                   {option}
                 </MenuItem>
               )),
@@ -170,7 +207,7 @@ const StableSwapForm: FC<any> = ({
         <StableSwapCurrencySelect
           value={outputCurrency}
           onChange={(event: SelectChangeEvent<unknown>) => {
-            setOutputCurrencyHandler(event.target.value);
+            setOutputCurrencyHandler(event.target.value as string);
           }}
           disabled={true}
         >
@@ -178,9 +215,9 @@ const StableSwapForm: FC<any> = ({
             () =>
               options.map((option: string) => (
                 <MenuItem key={option} value={option}>
-                  <Box sx={{ float: "left", paddingRight: "10px" }}>
+                  <TokenLogoBox>
                     <img width={16} src={getTokenLogoURL(option)} alt={""} />
-                  </Box>
+                  </TokenLogoBox>
                   {option}
                 </MenuItem>
               )),
@@ -211,7 +248,7 @@ const StableSwapForm: FC<any> = ({
       {isUserWhiteListed === false && isUserWrapperWhiteListed === false && (
         <StableSwapErrorBox>
           <ErrorInfoIcon />
-          <ErrorMessage>Wallet Address Not Whitelisted.</ErrorMessage>
+          <ErrorMessage>Wallet Address is not whitelisted.</ErrorMessage>
         </StableSwapErrorBox>
       )}
     </>

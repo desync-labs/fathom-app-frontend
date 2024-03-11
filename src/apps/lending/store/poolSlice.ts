@@ -5,10 +5,7 @@ import {
   ERC20_2612Service,
   ERC20Service,
   EthereumTransactionTypeExtended,
-  FaucetParamsType,
-  FaucetService,
-  IncentivesControllerV2,
-  IncentivesControllerV2Interface,
+  V3FaucetParamsType,
   InterestRate,
   LendingPoolBundle,
   MAX_UINT_AMOUNT,
@@ -17,7 +14,6 @@ import {
   PoolBundle,
   ReserveDataHumanized,
   ReservesIncentiveDataHumanized,
-  UiIncentiveDataProvider,
   UiPoolDataProvider,
   UserReserveDataHumanized,
   V3FaucetService,
@@ -34,10 +30,8 @@ import {
   LPSupplyWithPermitType,
 } from "@into-the-fathom/lending-contract-helpers/dist/esm/v3-pool-contract/lendingPoolTypes";
 import { SignatureLike } from "@ethersproject/bytes";
-import dayjs from "dayjs";
 import { BigNumber, PopulatedTransaction, utils } from "fathom-ethers";
 import { produce } from "immer";
-import { ClaimRewardsActionsProps } from "apps/lending/components/transactions/ClaimRewards/ClaimRewardsActions";
 import { RepayActionProps } from "apps/lending/components/transactions/Repay/RepayActions";
 import { Approval } from "apps/lending/helpers/useTransactionHandler";
 import { MarketDataType } from "apps/lending/ui-config/marketsConfig";
@@ -47,10 +41,7 @@ import {
 } from "apps/lending/utils/utils";
 import { StateCreator } from "zustand";
 
-import {
-  selectCurrentChainIdV3MarketData,
-  selectFormattedReserves,
-} from "./poolSelectors";
+import { selectCurrentChainIdV3MarketData } from "./poolSelectors";
 import { RootStore } from "./root";
 
 // TODO: what is the better name for this type?
@@ -70,7 +61,7 @@ export interface PoolSlice {
   // methods
   useOptimizedPath: () => boolean | undefined;
   mint: (
-    args: Omit<FaucetParamsType, "userAddress">
+    args: Omit<V3FaucetParamsType, "userAddress">
   ) => Promise<EthereumTransactionTypeExtended[]>;
   withdraw: (
     args: Omit<LPWithdrawParamsType, "user">
@@ -87,9 +78,6 @@ export interface PoolSlice {
   signERC20Approval: (
     args: Omit<LPSignERC20ApprovalType, "user">
   ) => Promise<string>;
-  claimRewards: (
-    args: ClaimRewardsActionsProps
-  ) => Promise<EthereumTransactionTypeExtended[]>;
   // TODO: optimize types to use only neccessary properties
   repay: (args: RepayActionProps) => Promise<EthereumTransactionTypeExtended[]>;
   repayWithPermit: (
@@ -141,12 +129,7 @@ export const createPoolSlice: StateCreator<
     const provider = get().jsonRpcProvider();
     return new Pool(provider, {
       POOL: currentMarketData.addresses.LENDING_POOL,
-      REPAY_WITH_COLLATERAL_ADAPTER:
-        currentMarketData.addresses.REPAY_WITH_COLLATERAL_ADAPTER,
-      SWAP_COLLATERAL_ADAPTER:
-        currentMarketData.addresses.SWAP_COLLATERAL_ADAPTER,
       WETH_GATEWAY: currentMarketData.addresses.WETH_GATEWAY,
-      L2_ENCODER: currentMarketData.addresses.L2_ENCODER,
     });
   }
   function getCorrectPoolBundle() {
@@ -155,7 +138,6 @@ export const createPoolSlice: StateCreator<
     return new PoolBundle(provider, {
       POOL: currentMarketData.addresses.LENDING_POOL,
       WETH_GATEWAY: currentMarketData.addresses.WETH_GATEWAY,
-      L2_ENCODER: currentMarketData.addresses.L2_ENCODER,
     });
   }
   return {
@@ -167,12 +149,6 @@ export const createPoolSlice: StateCreator<
       const poolDataProviderContract = new UiPoolDataProvider({
         uiPoolDataProviderAddress:
           currentMarketData.addresses.UI_POOL_DATA_PROVIDER,
-        provider: get().jsonRpcProvider(),
-        chainId: currentChainId,
-      });
-      const uiIncentiveDataProviderContract = new UiIncentiveDataProvider({
-        uiIncentiveDataProviderAddress:
-          currentMarketData.addresses.UI_INCENTIVE_DATA_PROVIDER || "",
         provider: get().jsonRpcProvider(),
         chainId: currentChainId,
       });
@@ -210,37 +186,6 @@ export const createPoolSlice: StateCreator<
                       .get(currentChainId)
                       .get(lendingPoolAddressProvider).baseCurrencyData =
                       reservesResponse.baseCurrencyData;
-                  }
-                })
-              )
-            )
-        );
-        promises.push(
-          uiIncentiveDataProviderContract
-            .getReservesIncentivesDataHumanized({
-              lendingPoolAddressProvider:
-                currentMarketData.addresses.LENDING_POOL_ADDRESS_PROVIDER,
-            })
-            .then((reserveIncentivesResponse) =>
-              set((state) =>
-                produce(state, (draft) => {
-                  if (!draft.data.get(currentChainId))
-                    draft.data.set(currentChainId, new Map());
-                  if (
-                    !draft.data
-                      .get(currentChainId)
-                      ?.get(lendingPoolAddressProvider)
-                  ) {
-                    (draft.data as any)
-                      .get(currentChainId)
-                      .set(lendingPoolAddressProvider, {
-                        reserveIncentives: reserveIncentivesResponse,
-                      });
-                  } else {
-                    (draft.data as any)
-                      .get(currentChainId)
-                      .get(lendingPoolAddressProvider).reserveIncentives =
-                      reserveIncentivesResponse;
                   }
                 })
               )
@@ -400,19 +345,11 @@ export const createPoolSlice: StateCreator<
           "currently selected market does not have a faucet attached"
         );
 
-      if (currentMarketData.v3) {
-        const v3Service = new V3FaucetService(
-          jsonRpcProvider(),
-          currentMarketData.addresses.FAUCET
-        );
-        return v3Service.mint({ ...args, userAddress });
-      } else {
-        const service = new FaucetService(
-          jsonRpcProvider(),
-          currentMarketData.addresses.FAUCET
-        );
-        return service.mint({ ...args, userAddress });
-      }
+      const v3Service = new V3FaucetService(
+        jsonRpcProvider(),
+        currentMarketData.addresses.FAUCET
+      );
+      return v3Service.mint({ ...args, userAddress });
     },
     withdraw: (args) => {
       const pool = getCorrectPool();
@@ -549,49 +486,8 @@ export const createPoolSlice: StateCreator<
         user,
       });
     },
-    claimRewards: async ({ selectedReward }) => {
-      // TODO: think about moving timestamp from hook to EventEmitter
-      const timestamp = dayjs().unix();
-      const reserves = selectFormattedReserves(get(), timestamp);
-      const currentAccount = get().account;
-
-      const allReserves: string[] = [];
-      reserves.forEach((reserve) => {
-        if (reserve.aIncentivesData && reserve.aIncentivesData.length > 0) {
-          allReserves.push(reserve.aTokenAddress);
-        }
-        if (reserve.vIncentivesData && reserve.vIncentivesData.length > 0) {
-          allReserves.push(reserve.variableDebtTokenAddress);
-        }
-        if (reserve.sIncentivesData && reserve.sIncentivesData.length > 0) {
-          allReserves.push(reserve.stableDebtTokenAddress);
-        }
-      });
-
-      const incentivesTxBuilderV2: IncentivesControllerV2Interface =
-        new IncentivesControllerV2(get().jsonRpcProvider());
-
-      if (selectedReward.symbol === "all") {
-        return incentivesTxBuilderV2.claimAllRewards({
-          user: currentAccount,
-          assets: allReserves,
-          to: currentAccount,
-          incentivesControllerAddress:
-            selectedReward.incentiveControllerAddress,
-        });
-      } else {
-        return incentivesTxBuilderV2.claimRewards({
-          user: currentAccount,
-          assets: allReserves,
-          to: currentAccount,
-          incentivesControllerAddress:
-            selectedReward.incentiveControllerAddress,
-          reward: selectedReward.rewardTokenAddress,
-        });
-      }
-    },
     useOptimizedPath: () => {
-      return get().currentMarketData.v3 && optimizedPath(get().currentChainId);
+      return optimizedPath(get().currentChainId);
     },
     poolComputed: {
       get minRemainingBaseTokenBalance() {

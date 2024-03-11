@@ -109,7 +109,7 @@ export const SupplyInfo: FC<SupplyInfoProps> = memo(
                     component="span"
                     color="text.primary"
                     variant="secondary16"
-                    sx={{ display: "inline-block", mx: 1 }}
+                    sx={{ display: "inline-block", mx: 0.5 }}
                   >
                     of
                   </Typography>
@@ -121,7 +121,7 @@ export const SupplyInfo: FC<SupplyInfoProps> = memo(
                     component="span"
                     color="text.secondary"
                     variant="secondary12"
-                    sx={{ display: "inline-block", mx: 1 }}
+                    sx={{ display: "inline-block", mx: 0.5 }}
                   >
                     of
                   </Typography>
@@ -142,6 +142,7 @@ export const SupplyInfo: FC<SupplyInfoProps> = memo(
                 value={reserve.totalLiquidity}
                 variant="main16"
                 compact
+                color="text.light"
               />
               <ReserveSubheader value={reserve.totalLiquidityUSD} />
             </PanelItem>
@@ -151,6 +152,7 @@ export const SupplyInfo: FC<SupplyInfoProps> = memo(
               value={reserve.supplyAPY}
               percent
               variant="main16"
+              color="text.light"
             />
             <IncentivesButton
               symbol={reserve.symbol}
@@ -164,6 +166,7 @@ export const SupplyInfo: FC<SupplyInfoProps> = memo(
                 value={reserve.unbacked}
                 variant="main16"
                 symbol={reserve.name}
+                color="text.light"
               />
               <ReserveSubheader value={reserve.unbackedUSD} />
             </PanelItem>
@@ -182,7 +185,7 @@ export const SupplyInfo: FC<SupplyInfoProps> = memo(
             <Box sx={{ pt: "42px", pb: "12px" }}>
               <Typography
                 variant="subheader1"
-                color="text.main"
+                color="text.light"
                 paddingBottom={"12px"}
               >
                 Collateral usage
@@ -208,13 +211,13 @@ export const SupplyInfo: FC<SupplyInfoProps> = memo(
               }}
               paddingTop={"42px"}
             >
-              <Typography variant="subheader1" color="text.main">
+              <Typography variant="subheader1" color="text.light">
                 Collateral usage
               </Typography>
               <CheckRoundedIcon
                 fontSize="small"
                 color="success"
-                sx={{ ml: 2 }}
+                sx={{ ml: 1 }}
               />
               <Typography variant="subheader1" sx={{ color: "#46BC4B" }}>
                 Can be collateral
@@ -222,7 +225,7 @@ export const SupplyInfo: FC<SupplyInfoProps> = memo(
             </Box>
           ) : (
             <Box sx={{ pt: "42px", pb: "12px" }}>
-              <Typography variant="subheader1" color="text.main">
+              <Typography variant="subheader1" color="text.light">
                 Collateral usage
               </Typography>
               <Warning sx={{ my: "12px" }} severity="warning">
@@ -260,6 +263,7 @@ export const SupplyInfo: FC<SupplyInfoProps> = memo(
                 percent
                 variant="secondary14"
                 visibleDecimals={2}
+                color="text.light"
               />
             </ReserveOverviewBox>
 
@@ -284,6 +288,7 @@ export const SupplyInfo: FC<SupplyInfoProps> = memo(
                 percent
                 variant="secondary14"
                 visibleDecimals={2}
+                color="text.light"
               />
             </ReserveOverviewBox>
 
@@ -308,6 +313,7 @@ export const SupplyInfo: FC<SupplyInfoProps> = memo(
                 percent
                 variant="secondary14"
                 visibleDecimals={2}
+                color="text.light"
               />
             </ReserveOverviewBox>
 

@@ -1,4 +1,4 @@
-import { ExternalLinkIcon } from "@heroicons/react/solid";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { Box, Button, Divider, SvgIcon } from "@mui/material";
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
 import { Link } from "apps/lending/components/primitives/Link";
@@ -56,7 +56,7 @@ const ReserveConfiguration: FC<ReserveConfigurationProps> = memo(
 
         {(reserve.borrowingEnabled || Number(reserve.totalDebt) > 0) && (
           <>
-            <Divider sx={{ my: { xs: 6, sm: 10 } }} />
+            <Divider sx={{ my: { xs: 3, sm: 3 } }} />
             <PanelRow>
               <PanelTitle>Borrow info</PanelTitle>
               <Box
@@ -82,14 +82,14 @@ const ReserveConfiguration: FC<ReserveConfigurationProps> = memo(
 
         {reserve.eModeCategoryId !== 0 && (
           <>
-            <Divider sx={{ my: { xs: 6, sm: 10 } }} />
+            <Divider sx={{ my: { xs: 3, sm: 3 } }} />
             <ReserveEModePanel reserve={reserve} />
           </>
         )}
 
         {(reserve.borrowingEnabled || Number(reserve.totalDebt) > 0) && (
           <>
-            <Divider sx={{ my: { xs: 6, sm: 10 } }} />
+            <Divider sx={{ my: { xs: 3, sm: 3 } }} />
 
             <PanelRow>
               <PanelTitle>Interest rate model</PanelTitle>
@@ -115,6 +115,7 @@ const ReserveConfiguration: FC<ReserveConfigurationProps> = memo(
                       percent
                       variant="main16"
                       compact
+                      color="text.light"
                     />
                   </PanelItem>
                   <Button
@@ -130,7 +131,7 @@ const ReserveConfiguration: FC<ReserveConfigurationProps> = memo(
                     })}
                     endIcon={
                       <SvgIcon sx={{ width: 14, height: 14 }}>
-                        <ExternalLinkIcon />
+                        <OpenInNewIcon />
                       </SvgIcon>
                     }
                     component={Link}

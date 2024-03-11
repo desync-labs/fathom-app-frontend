@@ -3,6 +3,7 @@ import { PageTitle } from "apps/lending/components/TopInfoPanel/PageTitle";
 import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
 
 import { TopInfoPanel } from "apps/lending/components/TopInfoPanel/TopInfoPanel";
+import { lendingContainerProps } from "apps/lending/components/ContentContainer";
 
 export const FaucetTopPanel = () => {
   const { breakpoints } = useTheme();
@@ -12,6 +13,7 @@ export const FaucetTopPanel = () => {
   return (
     <TopInfoPanel
       pageTitle={<></>}
+      containerProps={lendingContainerProps}
       titleComponent={
         <Box>
           <PageTitle

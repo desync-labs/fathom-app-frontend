@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect, FC, memo } from "react";
-import { useMedia } from "react-use";
-import { Box, styled } from "@mui/material";
+import { Box, styled, useMediaQuery } from "@mui/material";
 import {
   Area,
   XAxis,
@@ -107,9 +106,9 @@ const PairChart: FC<PairChartProps> = (props) => {
       ? pairData?.token1?.symbol.slice(0, 5) + "..."
       : pairData?.token1?.symbol;
 
-  const below1600 = useMedia("(max-width: 1600px)");
-  const below1080 = useMedia("(max-width: 1080px)");
-  const below600 = useMedia("(max-width: 600px)");
+  const below1600 = useMediaQuery("(max-width: 1600px)");
+  const below1080 = useMediaQuery("(max-width: 1080px)");
+  const below600 = useMediaQuery("(max-width: 600px)");
 
   const utcStartTime = getTimeframe(timeWindow);
   chartData = chartData?.filter(

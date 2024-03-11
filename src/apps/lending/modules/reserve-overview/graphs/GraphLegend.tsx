@@ -16,7 +16,7 @@ export const GraphLegend: FC<GraphLegendProps> = ({
       {labels.map((label) => (
         <Box
           key={label.text}
-          sx={{ display: "inline-flex", alignItems: "center", mr: 6 }}
+          sx={{ display: "inline-flex", alignItems: "center", mr: 3 }}
         >
           <Box
             sx={{

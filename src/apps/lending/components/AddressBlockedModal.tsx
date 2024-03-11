@@ -1,8 +1,10 @@
-import { ExclamationCircleIcon, LogoutIcon } from "@heroicons/react/outline";
+import { FC } from "react";
 import { Box, Button, SvgIcon, Typography } from "@mui/material";
 
 import { BasicModal } from "apps/lending/components/primitives/BasicModal";
-import { FC } from "react";
+
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 
 export interface AddressBlockedProps {
   address: string;
@@ -27,7 +29,7 @@ export const AddressBlockedModal: FC<AddressBlockedProps> = ({
         }}
       >
         <SvgIcon sx={{ fontSize: "24px", color: "warning.main", mb: 2 }}>
-          <ExclamationCircleIcon />
+          <ErrorOutlineIcon />
         </SvgIcon>
         <Typography variant="h2">Blocked Address</Typography>
         <Typography variant="helperText" sx={{ my: 4 }}>
@@ -39,7 +41,7 @@ export const AddressBlockedModal: FC<AddressBlockedProps> = ({
         </Typography>
         <Button variant="gradient" onClick={onDisconnectWallet}>
           <SvgIcon fontSize="small" sx={{ mx: 1 }}>
-            <LogoutIcon />
+            <LogoutRoundedIcon />
           </SvgIcon>
           Disconnect Wallet
         </Button>

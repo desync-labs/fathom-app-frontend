@@ -90,10 +90,11 @@ export const ContentWithTooltip: FC<ContentWithTooltipProps> = ({
         >
           <Box
             sx={{
-              py: 4,
-              px: 6,
+              py: 2,
+              px: 3,
               fontSize: "12px",
               lineHeight: "16px",
+              color: "text.light",
               a: {
                 fontSize: "12px",
                 lineHeight: "16px",

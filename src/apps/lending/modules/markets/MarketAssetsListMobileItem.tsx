@@ -31,7 +31,12 @@ export const MarketAssetsListMobileItem: FC<ComputedReserveData> = memo(
         currentMarket={currentMarket}
         isIsolated={reserve.isIsolated}
       >
-        <Row caption={"Total supplied"} captionVariant="description" mb={3}>
+        <Row
+          caption={"Total supplied"}
+          captionVariant="description"
+          captionColor="text.light"
+          mb={1.5}
+        >
           <Box
             sx={{
               display: "flex",
@@ -45,6 +50,7 @@ export const MarketAssetsListMobileItem: FC<ComputedReserveData> = memo(
               compact
               value={reserve.totalLiquidity}
               variant="secondary14"
+              color="text.light"
             />
             <ReserveSubheader
               value={reserve.totalLiquidityUSD}
@@ -55,7 +61,8 @@ export const MarketAssetsListMobileItem: FC<ComputedReserveData> = memo(
         <Row
           caption={"Supply APY"}
           captionVariant="description"
-          mb={3}
+          captionColor="text.light"
+          mb={1.5}
           align="flex-start"
         >
           <IncentivesCard
@@ -64,12 +71,18 @@ export const MarketAssetsListMobileItem: FC<ComputedReserveData> = memo(
             incentives={reserve.aIncentivesData || []}
             symbol={reserve.symbol}
             variant="secondary14"
+            color="text.light"
           />
         </Row>
 
-        <Divider sx={{ mb: 3 }} />
+        <Divider sx={{ mb: 1.5 }} />
 
-        <Row caption={"Total borrowed"} captionVariant="description" mb={3}>
+        <Row
+          caption={"Total borrowed"}
+          captionVariant="description"
+          captionColor="text.light"
+          mb={1.5}
+        >
           <Box
             sx={{
               display: "flex",
@@ -85,6 +98,7 @@ export const MarketAssetsListMobileItem: FC<ComputedReserveData> = memo(
                   compact
                   value={reserve.totalDebt}
                   variant="secondary14"
+                  color="text.light"
                 />
                 <ReserveSubheader
                   value={reserve.totalDebtUSD}
@@ -105,7 +119,8 @@ export const MarketAssetsListMobileItem: FC<ComputedReserveData> = memo(
             />
           }
           captionVariant="description"
-          mb={3}
+          captionColor="text.light"
+          mb={1.5}
           align="flex-start"
         >
           <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -119,6 +134,7 @@ export const MarketAssetsListMobileItem: FC<ComputedReserveData> = memo(
               incentives={reserve.vIncentivesData || []}
               symbol={reserve.symbol}
               variant="secondary14"
+              color="text.light"
             />
             {!reserve.borrowingEnabled &&
               Number(reserve.totalVariableDebt) > 0 &&
@@ -134,7 +150,8 @@ export const MarketAssetsListMobileItem: FC<ComputedReserveData> = memo(
             />
           }
           captionVariant="description"
-          mb={4}
+          captionColor="text.light"
+          mb={2}
           align="flex-start"
         >
           <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -144,6 +161,7 @@ export const MarketAssetsListMobileItem: FC<ComputedReserveData> = memo(
               incentives={reserve.sIncentivesData || []}
               symbol={reserve.symbol}
               variant="secondary14"
+              color="text.light"
             />
             {!reserve.borrowingEnabled &&
               Number(reserve.totalStableDebt) > 0 &&

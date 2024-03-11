@@ -1,5 +1,5 @@
 import { useMediaQuery } from "@mui/material";
-import { FC, memo, useState } from "react";
+import { FC, memo, useMemo, useState } from "react";
 import { StableAPYTooltip } from "apps/lending/components/infoTooltips/StableAPYTooltip";
 import { VariableAPYTooltip } from "apps/lending/components/infoTooltips/VariableAPYTooltip";
 import { ListColumn } from "apps/lending/components/lists/ListColumn";
@@ -60,27 +60,30 @@ const MarketAssetsList: FC<MarketAssetsListProps> = ({ reserves, loading }) => {
   const isTableChangedToCards = useMediaQuery("(max-width:1125px)");
   const [sortName, setSortName] = useState<string>("");
   const [sortDesc, setSortDesc] = useState<boolean>(false);
-  if (sortDesc) {
-    if (sortName === "symbol") {
-      reserves.sort((a, b) =>
-        a.symbol.toUpperCase() < b.symbol.toUpperCase() ? -1 : 1
-      );
+
+  const sortedReserves = useMemo(() => {
+    if (sortDesc) {
+      if (sortName === "symbol") {
+        return reserves.sort((a, b) =>
+          a.symbol.toUpperCase() < b.symbol.toUpperCase() ? -1 : 1
+        );
+      } else {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        return reserves.sort((a, b) => a[sortName] - b[sortName]);
+      }
     } else {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      reserves.sort((a, b) => a[sortName] - b[sortName]);
+      if (sortName === "symbol") {
+        return reserves.sort((a, b) =>
+          b.symbol.toUpperCase() < a.symbol.toUpperCase() ? -1 : 1
+        );
+      } else {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        return reserves.sort((a, b) => b[sortName] - a[sortName]);
+      }
     }
-  } else {
-    if (sortName === "symbol") {
-      reserves.sort((a, b) =>
-        b.symbol.toUpperCase() < a.symbol.toUpperCase() ? -1 : 1
-      );
-    } else {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      reserves.sort((a, b) => b[sortName] - a[sortName]);
-    }
-  }
+  }, [reserves, sortName, sortDesc]);
 
   // Show loading state when loading
   if (loading) {
@@ -101,12 +104,12 @@ const MarketAssetsList: FC<MarketAssetsListProps> = ({ reserves, loading }) => {
   }
 
   // Hide list when no results, via search term or if a market has all/no frozen/unfrozen assets
-  if (reserves.length === 0) return null;
+  if (sortedReserves.length === 0) return null;
 
   return (
     <>
       {!isTableChangedToCards && (
-        <ListHeaderWrapper px={6}>
+        <ListHeaderWrapper px={3}>
           {listHeaders.map((col) => (
             <ListColumn
               isRow={col.sortKey === "symbol"}
@@ -129,7 +132,7 @@ const MarketAssetsList: FC<MarketAssetsListProps> = ({ reserves, loading }) => {
         </ListHeaderWrapper>
       )}
 
-      {reserves.map((reserve) =>
+      {sortedReserves.map((reserve) =>
         isTableChangedToCards ? (
           <MarketAssetsListMobileItem {...reserve} key={reserve.id} />
         ) : (

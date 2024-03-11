@@ -1,6 +1,6 @@
-import { XIcon } from "@heroicons/react/outline";
-import { Box, IconButton, Modal, Paper, SvgIcon } from "@mui/material";
 import React, { FC, memo } from "react";
+import { Box, IconButton, Modal, Paper, SvgIcon } from "@mui/material";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 
 export interface BasicModalProps {
   open: boolean;
@@ -39,6 +39,7 @@ export const BasicModal: FC<BasicModalProps> = memo(
         }}
         {...props}
         data-cy={"Modal"}
+        className="LendingModal"
       >
         <Paper
           variant="outlined"
@@ -76,8 +77,8 @@ export const BasicModal: FC<BasicModalProps> = memo(
                 onClick={handleClose}
                 data-cy={"close-button"}
               >
-                <SvgIcon sx={{ fontSize: "24px", color: "primary.main" }}>
-                  <XIcon data-cy={"CloseModalIcon"} />
+                <SvgIcon sx={{ fontSize: "24px", color: "text.primary" }}>
+                  <CloseRoundedIcon data-cy={"CloseModalIcon"} />
                 </SvgIcon>
               </IconButton>
             </Box>

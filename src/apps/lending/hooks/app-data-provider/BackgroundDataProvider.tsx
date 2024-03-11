@@ -1,11 +1,7 @@
 import { createContext, FC, ReactNode, useContext } from "react";
-import {
-  useIncentiveDataSubscription,
-  usePoolDataSubscription,
-} from "apps/lending/store/root";
+import { usePoolDataSubscription } from "apps/lending/store/root";
 
 interface BackgroundDataProviderContextType {
-  refetchIncentiveData?: () => Promise<void>;
   refetchPoolData?: () => Promise<void> | Promise<void[]>;
 }
 
@@ -23,11 +19,8 @@ export const BackgroundDataProvider: FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const refetchPoolData = usePoolDataSubscription();
-  const refetchIncentiveData = useIncentiveDataSubscription();
   return (
-    <BackgroundDataProviderContext.Provider
-      value={{ refetchIncentiveData, refetchPoolData }}
-    >
+    <BackgroundDataProviderContext.Provider value={{ refetchPoolData }}>
       {children}
     </BackgroundDataProviderContext.Provider>
   );

@@ -18,8 +18,9 @@ export const ListValueRow: FC<ListValueRowProps> = memo(
       <Row
         caption={title}
         captionVariant="description"
+        captionColor="primary.light"
         align="flex-start"
-        mb={2}
+        mb={1}
       >
         <Box
           sx={{
@@ -28,11 +29,11 @@ export const ListValueRow: FC<ListValueRowProps> = memo(
             alignItems: "flex-end",
           }}
         >
-          <Box sx={{ display: "flex", alignItems: "center", mb: 0.5 }}>
+          <Box sx={{ display: "flex", alignItems: "center", mb: 0.25 }}>
             <FormattedNumber
               value={value}
               variant="secondary14"
-              color={disabled ? "text.disabled" : "text.primary"}
+              color={disabled ? "text.disabled" : "primary.light"}
             />
             {capsComponent}
           </Box>
@@ -43,7 +44,7 @@ export const ListValueRow: FC<ListValueRowProps> = memo(
               variant="secondary12"
               color="text.secondary"
               symbol="USD"
-              mb={0.5}
+              mb={0.25}
             />
           )}
         </Box>

@@ -48,13 +48,17 @@ const StatsTitle = styled(
   },
 }));
 
-const StatsDescription = styled(Typography)`
+const StatsValue = styled(Typography)`
   font-style: normal;
   font-weight: 600;
   font-size: 24px;
   line-height: 28px;
   margin: 0;
   padding: 7px 0 0 0;
+  text-align: center;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    text-align: left;
+  }
 `;
 
 const StatsValueSkeleton = () => {
@@ -89,9 +93,9 @@ const ProtocolStats = () => {
           {poolsLoading ? (
             <StatsValueSkeleton />
           ) : (
-            <StatsDescription variant={"body2"}>
+            <StatsValue variant={"body2"}>
               {formatNumber(totalBorrowed) + " FXD"}
-            </StatsDescription>
+            </StatsValue>
           )}
         </Box>
       </StatsItem>
@@ -109,7 +113,7 @@ const ProtocolStats = () => {
           {loading ? (
             <StatsValueSkeleton />
           ) : (
-            <StatsDescription>{formatCurrency(tvl)}</StatsDescription>
+            <StatsValue>{formatCurrency(tvl)}</StatsValue>
           )}
         </Box>
       </StatsItem>
@@ -119,13 +123,13 @@ const ProtocolStats = () => {
           {fetchPricesInProgress ? (
             <StatsValueSkeleton />
           ) : (
-            <StatsDescription>
+            <StatsValue>
               {formatCurrency(
                 BigNumber(fxdPrice)
                   .dividedBy(10 ** 18)
                   .toNumber()
               )}
-            </StatsDescription>
+            </StatsValue>
           )}
         </Box>
       </StatsItem>

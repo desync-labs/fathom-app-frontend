@@ -246,7 +246,7 @@ export const CurrencySearch: FC<CurrencySearchProps> = ({
           <ButtonText
             onClick={showManageView}
             className="list-token-manage-button"
-            sx={{ color: "#2172E5" }}
+            sx={{ color: "#2172E5", height: "unset" }}
           >
             <RowFixed>
               <IconWrapper size="16px" marginRight="6px">

@@ -19,7 +19,7 @@ interface AddTokenDropdownProps {
   addERC20Token: (args: ERC20TokenType) => Promise<boolean>;
   currentChainId: number;
   connectedChainId: number;
-  hideAToken?: boolean;
+  hideFmToken?: boolean;
 }
 
 export const AddTokenDropdown: FC<AddTokenDropdownProps> = memo(
@@ -30,12 +30,12 @@ export const AddTokenDropdown: FC<AddTokenDropdownProps> = memo(
     addERC20Token,
     currentChainId,
     connectedChainId,
-    hideAToken,
+    hideFmToken,
   }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const [changingNetwork, setChangingNetwork] = useState(false);
-    const [underlyingBase64, setUnderlyingBase64] = useState("");
-    const [aTokenBase64, setATokenBase64] = useState("");
+    const [changingNetwork, setChangingNetwork] = useState<boolean>(false);
+    const [underlyingBase64, setUnderlyingBase64] = useState<string>("");
+    const [fmTokenBase64, setFmTokenBase64] = useState<string>("");
     const open = Boolean(anchorEl);
     const trackEvent = useRootStore((store) => store.trackEvent);
     const theme = useTheme();
@@ -78,19 +78,19 @@ export const AddTokenDropdown: FC<AddTokenDropdownProps> = memo(
 
     return (
       <>
-        {/* Load base64 token symbol for adding underlying and aTokens to wallet */}
+        {/* Load base64 token symbol for adding underlying and fmTokens to wallet */}
         {poolReserve?.symbol && !/_/.test(poolReserve.symbol) && (
           <>
             <Base64Token
               symbol={poolReserve.iconSymbol}
               onImageGenerated={setUnderlyingBase64}
-              aToken={false}
+              fmToken={false}
             />
-            {!hideAToken && (
+            {!hideFmToken && (
               <Base64Token
                 symbol={poolReserve.iconSymbol}
-                onImageGenerated={setATokenBase64}
-                aToken={true}
+                onImageGenerated={setFmTokenBase64}
+                fmToken={true}
               />
             )}
           </>
@@ -126,6 +126,7 @@ export const AddTokenDropdown: FC<AddTokenDropdownProps> = memo(
           </CircleIcon>
         </Box>
         <Menu
+          sx={{ "& .MuiMenu-paper": { minWidth: "220px !important" } }}
           anchorEl={anchorEl}
           open={open}
           onClose={handleClose}
@@ -135,7 +136,7 @@ export const AddTokenDropdown: FC<AddTokenDropdownProps> = memo(
           keepMounted={true}
           data-cy="addToWaletSelector"
         >
-          <Box sx={{ px: 4, pt: 3, pb: 2 }}>
+          <Box sx={{ px: 2, pt: "6px", pb: "6px" }}>
             <Typography variant="secondary12" color="text.secondary">
               Underlying token
             </Typography>
@@ -145,6 +146,7 @@ export const AddTokenDropdown: FC<AddTokenDropdownProps> = memo(
             key="underlying"
             value="underlying"
             divider
+            sx={{ px: 2, pt: "4px", pb: "4px", minHeight: "40px !important" }}
             onClick={() => {
               if (currentChainId !== connectedChainId) {
                 switchNetwork(currentChainId).then(() => {
@@ -175,23 +177,29 @@ export const AddTokenDropdown: FC<AddTokenDropdownProps> = memo(
             />
             <Typography
               variant="subheader1"
-              sx={{ ml: 3 }}
+              sx={{ ml: 2 }}
               noWrap
               data-cy={`assetName`}
             >
               {poolReserve.symbol}
             </Typography>
           </MenuItem>
-          {!hideAToken && (
+          {!hideFmToken && (
             <Box>
-              <Box sx={{ px: 4, pt: 3, pb: 2 }}>
+              <Box sx={{ px: 2, pt: "6px", pb: "6px" }}>
                 <Typography variant="secondary12" color="text.secondary">
-                  Fathom fmToken
+                  fmToken
                 </Typography>
               </Box>
               <MenuItem
-                key="atoken"
-                value="atoken"
+                sx={{
+                  px: 2,
+                  pt: "4px",
+                  pb: "4px",
+                  minHeight: "40px !important",
+                }}
+                key="fmtoken"
+                value="fmtoken"
                 onClick={() => {
                   if (currentChainId !== connectedChainId) {
                     switchNetwork(currentChainId).then(() => {
@@ -206,9 +214,9 @@ export const AddTokenDropdown: FC<AddTokenDropdownProps> = memo(
                     addERC20Token({
                       address: poolReserve.aTokenAddress,
                       decimals: poolReserve.decimals,
-                      symbol: `a${poolReserve.symbol}`,
+                      symbol: `fm${poolReserve.symbol}`,
                       image: !/_/.test(poolReserve.symbol)
-                        ? aTokenBase64
+                        ? fmTokenBase64
                         : undefined,
                     });
                   }
@@ -218,15 +226,15 @@ export const AddTokenDropdown: FC<AddTokenDropdownProps> = memo(
                 <TokenIcon
                   symbol={poolReserve.iconSymbol}
                   sx={{ fontSize: "20px" }}
-                  aToken={true}
+                  fmToken={true}
                 />
                 <Typography
                   variant="subheader1"
-                  sx={{ ml: 3 }}
+                  sx={{ ml: 2 }}
                   noWrap
                   data-cy={`assetName`}
                 >
-                  {`a${poolReserve.symbol}`}
+                  {`fm${poolReserve.symbol}`}
                 </Typography>
               </MenuItem>
             </Box>

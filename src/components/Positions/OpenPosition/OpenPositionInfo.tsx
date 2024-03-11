@@ -17,7 +17,7 @@ const ListDivider = styled(Divider)`
   }
 `;
 
-const ListTitleWrapper = styled("div")`
+export const ListTitleWrapper = styled("div")`
   display: flex;
   gap: 7px;
 `;
@@ -50,7 +50,10 @@ const OpenPositionInfo = () => {
                 <AppPopover
                   id={"collateral-locked"}
                   text={
-                    "Collateral to be Locked - the amount of Collateral to be used to borrow FXD"
+                    <>
+                      Collateral to be Locked - the amount of Collateral to be
+                      used to borrow FXD.
+                    </>
                   }
                 />
               </ListTitleWrapper>
@@ -110,7 +113,7 @@ const OpenPositionInfo = () => {
                   text={
                     <>
                       Max FXD can be Borrowed - how many FXD you can borrow
-                      providing Collateral with 0% Safety Buffer
+                      providing Collateral with 0% Safety Buffer.
                     </>
                   }
                 />
@@ -137,7 +140,14 @@ const OpenPositionInfo = () => {
                 <AppPopover
                   id={"collateralization-ratio"}
                   text={
-                    "Collateralization Ratio is the percentage of the total value of your Collateral compared to the amount you've borrowed. A higher ratio indicates a larger safety buffer, reducing liquidation risk. If this ratio falls below the minimum required level due to market fluctuations, your Collateral could be liquidated to repay the loan."
+                    <>
+                      Collateralization Ratio is the percentage of the total
+                      value of your Collateral compared to the amount you've
+                      borrowed. A higher ratio indicates a larger safety buffer,
+                      reducing liquidation risk. If this ratio falls below the
+                      minimum required level due to market fluctuations, your
+                      Collateral could be liquidated to repay the loan.
+                    </>
                   }
                 />
               </ListTitleWrapper>
@@ -163,7 +173,15 @@ const OpenPositionInfo = () => {
                 <AppPopover
                   id={"liquidation-price"}
                   text={
-                    "Liquidation Price of XDC - Liquidation Price is the price of the collateral token when your Collateral will be automatically sold to partially or fully repay the loan if your collateral value drops. It's a safety mechanism to ensure that loans are always sufficiently collateralized. Monitoring this price helps prevent the unwanted liquidation of your assets."
+                    <>
+                      Liquidation Price of XDC - Liquidation Price is the price
+                      of the collateral token when your Collateral will be
+                      automatically sold to partially or fully repay the loan if
+                      your collateral value drops. It's a safety mechanism to
+                      ensure that loans are always sufficiently collateralized.
+                      Monitoring this price helps prevent the unwanted
+                      liquidation of your assets.
+                    </>
                   }
                 />
               </ListTitleWrapper>
@@ -177,9 +195,14 @@ const OpenPositionInfo = () => {
               <ListTitleWrapper>
                 Stability Fee
                 <AppPopover
-                  id={"liquidation-price"}
+                  id={"stability-fee"}
                   text={
-                    "Stability Fee - yearly interest paid when a position is closed. This fee is used to cover bad debt for liquidators, and any remaining part of the stability fee may be considered Fathom Protocol revenue."
+                    <>
+                      Stability Fee - yearly interest paid when a position is
+                      closed. This fee is used to cover bad debt for
+                      liquidators, and any remaining part of the stability fee
+                      may be considered Fathom Protocol revenue.
+                    </>
                   }
                 />
               </ListTitleWrapper>

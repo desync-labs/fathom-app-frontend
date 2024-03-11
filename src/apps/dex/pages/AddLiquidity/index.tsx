@@ -290,9 +290,11 @@ const AddLiquidity = () => {
     return noLiquidity ? (
       <AutoColumn gap="20px">
         <LightCard mt="20px" borderRadius="20px">
-          <RowFlat>
+          <RowFlat
+            sx={{ justifyContent: "space-between", alignItems: "center" }}
+          >
             <Typography
-              fontSize="48px"
+              fontSize="28px"
               fontWeight={500}
               lineHeight="42px"
               marginRight={10}
@@ -437,15 +439,13 @@ const AddLiquidity = () => {
               (isCreate ? (
                 <ColumnCenter>
                   <BlueCard>
-                    <AutoColumn gap="10px">
+                    <AutoColumn>
                       <TYPE.white fontWeight={600}>
                         You are the first liquidity provider.
                       </TYPE.white>
                       <TYPE.white fontWeight={400}>
                         The ratio of tokens you add will set the price of this
-                        pool.
-                      </TYPE.white>
-                      <TYPE.white fontWeight={400}>
+                        pool. <br />
                         Once you are happy with the rate click supply to review.
                       </TYPE.white>
                     </AutoColumn>

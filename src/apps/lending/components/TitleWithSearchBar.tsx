@@ -1,4 +1,4 @@
-import { SearchIcon } from "@heroicons/react/solid";
+import SearchIcon from "@mui/icons-material/Search";
 import {
   Box,
   Button,
@@ -52,8 +52,8 @@ export const TitleWithSearchBar = <T extends ElementType>({
         <Typography
           component="div"
           variant="h2"
-          sx={{ mr: 4 }}
-          color={palette.primary.main}
+          sx={{ mr: 2 }}
+          color={palette.text.primary}
           {...titleProps}
         >
           {title}
@@ -95,8 +95,10 @@ export const TitleWithSearchBar = <T extends ElementType>({
               onSearchTermChange={onSearchTermChange}
             />
             {sm && (
-              <Button sx={{ ml: 2 }} onClick={() => handleCancelClick()}>
-                <Typography variant="buttonM">Cancel</Typography>
+              <Button sx={{ ml: 1 }} onClick={() => handleCancelClick()}>
+                <Typography variant="buttonM" color="text.primary">
+                  Cancel
+                </Typography>
               </Button>
             )}
           </Box>

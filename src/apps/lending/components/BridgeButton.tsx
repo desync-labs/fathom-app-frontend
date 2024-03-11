@@ -1,9 +1,10 @@
-import { ExternalLinkIcon } from "@heroicons/react/outline";
+import { FC } from "react";
 import { Button, SvgIcon, Typography } from "@mui/material";
 
 import { NetworkConfig } from "apps/lending/ui-config/networksConfig";
 import { Link } from "apps/lending/components/primitives/Link";
-import { FC } from "react";
+
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
 export const BridgeButton: FC<Pick<NetworkConfig, "bridge">> = ({ bridge }) => {
   if (!bridge) return null;
@@ -18,9 +19,7 @@ export const BridgeButton: FC<Pick<NetworkConfig, "bridge">> = ({ bridge }) => {
         />
       }
       endIcon={
-        <SvgIcon sx={{ width: 14, height: 14 }}>
-          <ExternalLinkIcon />
-        </SvgIcon>
+        <SvgIcon component={OpenInNewIcon} sx={{ width: 13, height: 13 }} />
       }
       component={Link}
       size="small"

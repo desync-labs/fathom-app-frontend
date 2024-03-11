@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo, useRef, memo } from "react";
-import { useMedia } from "react-use";
 import { client } from "apollo/client";
-import { Box, styled } from "@mui/material";
+import { Box, styled, useMediaQuery } from "@mui/material";
 
 import Row, { RowFixed } from "apps/charts/components/Row";
 import TokenLogo from "apps/charts/components/TokenLogo";
@@ -186,9 +185,9 @@ export const Search = ({ small = false }) => {
   useTokenData(value);
   usePairData(value);
 
-  const below700 = useMedia("(max-width: 700px)");
-  const below470 = useMedia("(max-width: 470px)");
-  const below410 = useMedia("(max-width: 410px)");
+  const below700 = useMediaQuery("(max-width: 700px)");
+  const below470 = useMediaQuery("(max-width: 470px)");
+  const below410 = useMediaQuery("(max-width: 410px)");
 
   useEffect(() => {
     if (value !== "") {

@@ -60,7 +60,7 @@ const useStyles = makeStyles<{ isActive: boolean; showText: boolean }>()(
     menuItemIcon: {
       color: isActive ? theme.palette.primary.main : "#415D83",
       minWidth: "0",
-      paddingRight: showText ? "7px" : "0",
+      marginRight: showText ? "7px" : "0",
     },
     menuItemText: {
       "> span": {

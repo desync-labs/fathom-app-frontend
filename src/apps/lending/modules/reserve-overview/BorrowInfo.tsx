@@ -61,6 +61,7 @@ export const BorrowInfo: FC<BorrowInfoProps> = memo(
                         valueToBigNumber(reserve.totalDebt).toNumber()
                       }
                       variant="secondary12"
+                      color="text.light"
                     />{" "}
                     {reserve.symbol} (
                     <FormattedNumber
@@ -70,6 +71,7 @@ export const BorrowInfo: FC<BorrowInfoProps> = memo(
                       }
                       variant="secondary12"
                       symbol="USD"
+                      color="text.light"
                     />
                     ).
                   </>
@@ -98,7 +100,11 @@ export const BorrowInfo: FC<BorrowInfoProps> = memo(
                 }
               >
                 <Box>
-                  <FormattedNumber value={reserve.totalDebt} variant="main16" />
+                  <FormattedNumber
+                    value={reserve.totalDebt}
+                    variant="main16"
+                    color="text.light"
+                  />
                   <Typography
                     component="span"
                     color="text.primary"
@@ -107,7 +113,11 @@ export const BorrowInfo: FC<BorrowInfoProps> = memo(
                   >
                     of
                   </Typography>
-                  <FormattedNumber value={reserve.borrowCap} variant="main16" />
+                  <FormattedNumber
+                    value={reserve.borrowCap}
+                    variant="main16"
+                    color="text.light"
+                  />
                 </Box>
                 <Box>
                   <ReserveSubheader value={reserve.totalDebtUSD} />
@@ -132,7 +142,11 @@ export const BorrowInfo: FC<BorrowInfoProps> = memo(
                 </Box>
               }
             >
-              <FormattedNumber value={reserve.totalDebt} variant="main16" />
+              <FormattedNumber
+                value={reserve.totalDebt}
+                variant="main16"
+                color="text.light"
+              />
               <ReserveSubheader value={reserve.totalDebtUSD} />
             </PanelItem>
           )}
@@ -157,6 +171,7 @@ export const BorrowInfo: FC<BorrowInfoProps> = memo(
               value={reserve.variableBorrowAPY}
               percent
               variant="main16"
+              color="text.light"
             />
             <IncentivesButton
               symbol={reserve.symbol}
@@ -186,6 +201,7 @@ export const BorrowInfo: FC<BorrowInfoProps> = memo(
                 value={reserve.stableBorrowAPY}
                 percent
                 variant="main16"
+                color="text.light"
               />
               <IncentivesButton
                 symbol={reserve.symbol}
@@ -196,7 +212,11 @@ export const BorrowInfo: FC<BorrowInfoProps> = memo(
           )}
           {reserve.borrowCapUSD && reserve.borrowCapUSD !== "0" && (
             <PanelItem title={"Borrow cap"}>
-              <FormattedNumber value={reserve.borrowCap} variant="main16" />
+              <FormattedNumber
+                value={reserve.borrowCap}
+                variant="main16"
+                color="text.light"
+              />
               <ReserveSubheader value={reserve.borrowCapUSD} />
             </PanelItem>
           )}
@@ -217,7 +237,7 @@ export const BorrowInfo: FC<BorrowInfoProps> = memo(
           }}
           paddingTop={"42px"}
         >
-          <Typography variant="subheader1" color="text.main">
+          <Typography variant="subheader1" color="text.light">
             Collector Info
           </Typography>
         </Box>

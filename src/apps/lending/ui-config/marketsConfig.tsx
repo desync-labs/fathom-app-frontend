@@ -20,18 +20,11 @@ export type MarketDataType = {
     LENDING_POOL_ADDRESS_PROVIDER: string;
     LENDING_POOL: string;
     WETH_GATEWAY?: string;
-    SWAP_COLLATERAL_ADAPTER?: string;
-    REPAY_WITH_COLLATERAL_ADAPTER?: string;
-    DEBT_SWITCH_ADAPTER?: string;
-    WITHDRAW_SWITCH_ADAPTER?: string;
     FAUCET?: string;
     PERMISSION_MANAGER?: string;
     WALLET_BALANCE_PROVIDER: string;
-    L2_ENCODER?: string;
     UI_POOL_DATA_PROVIDER: string;
-    UI_INCENTIVE_DATA_PROVIDER?: string;
     COLLECTOR?: string;
-    V3_MIGRATOR?: string;
   };
   /**
    * https://www.hal.xyz/ has integrated lending for healtfactor warning notification
@@ -61,7 +54,7 @@ export const marketsData: {
       faucet: true,
       incentives: true,
     },
-    subgraphUrl: "https://dev.fathom.fi/subgraphs/name/lending-subgraph",
+    subgraphUrl: `${process.env.REACT_APP_API_URL}/subgraphs/name/lending-subgraph`,
     addresses: {
       LENDING_POOL_ADDRESS_PROVIDER:
         FathomLendingApothem.POOL_ADDRESSES_PROVIDER,
@@ -69,8 +62,6 @@ export const marketsData: {
       WETH_GATEWAY: FathomLendingApothem.WETH_GATEWAY,
       WALLET_BALANCE_PROVIDER: FathomLendingApothem.WALLET_BALANCE_PROVIDER,
       UI_POOL_DATA_PROVIDER: FathomLendingApothem.UI_POOL_DATA_PROVIDER,
-      UI_INCENTIVE_DATA_PROVIDER:
-        FathomLendingApothem.UI_INCENTIVE_DATA_PROVIDER,
       COLLECTOR: FathomLendingApothem.COLLECTOR,
       FAUCET: FathomLendingApothem.FAUCET,
     },

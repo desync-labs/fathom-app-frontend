@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import { useMedia } from "react-use";
+import { useMediaQuery } from "@mui/material";
 import { TYPE } from "apps/charts/Theme";
 import { useAllPairData } from "apps/charts/contexts/PairData";
 import PairList from "apps/charts/components/PairList";
@@ -16,7 +16,7 @@ const AllPairsPage: FC = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  const below800 = useMedia("(max-width: 800px)");
+  const below800 = useMediaQuery("(max-width: 800px)");
 
   const [useTracked, setUseTracked] = useState(true);
 

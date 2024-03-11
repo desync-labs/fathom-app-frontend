@@ -9,6 +9,8 @@ const Footer = styled(Typography)`
   justify-content: center;
   gap: 4px;
   padding-bottom: 10px;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.7);
 `;
 
 const TokensWrapper = styled("div")`
@@ -18,6 +20,7 @@ const TokensWrapper = styled("div")`
   margin-bottom: 10px;
   line-height: 18px;
   a {
+    font-size: 1rem;
     color: rgba(255, 255, 255, 0.7);
     :hover {
       text-decoration: underline;
@@ -53,9 +56,9 @@ const Copyright = function Copyright(props: any) {
           FTHM
         </a>
       </TokensWrapper>
-      <Footer color="text.secondary" {...props}>
+      <Footer {...props}>
         {"Copyright©"}
-        <Link color="inherit" href="https://fathom.fi/">
+        <Link color="inherit" fontSize="inherit" href="https://fathom.fi/">
           Fathom App
         </Link>
         {new Date().getFullYear()}.

@@ -1,5 +1,3 @@
-import { SearchIcon } from "@heroicons/react/outline";
-import { XCircleIcon } from "@heroicons/react/solid";
 import {
   Box,
   BoxProps,
@@ -10,6 +8,9 @@ import {
 } from "@mui/material";
 import debounce from "lodash/debounce";
 import { FC, useMemo, useRef, useState } from "react";
+
+import SearchIcon from "@mui/icons-material/Search";
+import CancelIcon from "@mui/icons-material/Cancel";
 
 interface SearchInputProps {
   onSearchTermChange: (value: string) => void;
@@ -44,15 +45,15 @@ export const SearchInput: FC<SearchInputProps> = ({
       sx={(theme) => ({
         display: "flex",
         alignItems: "center",
-        gap: 2,
+        gap: 1,
         border: `1px solid ${theme.palette.divider}`,
         borderRadius: "6px",
         height: "36px",
         ...wrapperSx,
       })}
     >
-      <Box sx={{ ml: 2, mt: 1 }}>
-        <SearchIcon height={16} />
+      <Box sx={{ ml: 1, mt: 0.5 }}>
+        <SearchIcon sx={{ color: "text.light", height: 19, width: 19 }} />
       </Box>
       <InputBase
         autoFocus={sm}
@@ -66,10 +67,10 @@ export const SearchInput: FC<SearchInputProps> = ({
         }}
       />
       <IconButton
-        sx={{ p: 0, mr: 2, visibility: searchTerm ? "visible" : "hidden" }}
+        sx={{ p: 0, mr: 1, visibility: searchTerm ? "visible" : "hidden" }}
         onClick={() => handleClear()}
       >
-        <XCircleIcon height={16} />
+        <CancelIcon sx={{ color: "text.mute", height: 16, width: 16 }} />
       </IconButton>
     </Box>
   );

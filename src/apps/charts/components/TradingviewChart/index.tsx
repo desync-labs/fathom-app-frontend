@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef, FC, memo } from "react";
 import { createChart, IChartApi } from "lightweight-charts";
-import { usePrevious } from "react-use";
 import { Box, styled } from "@mui/material";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
+import { usePrevious } from "hooks/usePrevious";
 import { formattedNum } from "apps/charts/utils";
 import { IconWrapper } from "apps/charts/components";
 

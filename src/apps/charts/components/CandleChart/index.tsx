@@ -2,8 +2,8 @@ import { useState, useEffect, useRef, FC, memo } from "react";
 import { Box, styled } from "@mui/material";
 import { createChart, CrosshairMode, IChartApi } from "lightweight-charts";
 import dayjs from "dayjs";
+import { usePrevious } from "hooks/usePrevious";
 import { formattedNum } from "apps/charts/utils";
-import { usePrevious } from "react-use";
 
 import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
 

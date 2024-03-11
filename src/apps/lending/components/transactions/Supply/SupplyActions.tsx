@@ -88,8 +88,7 @@ export const SupplyActions: FC<SupplyActionProps> = React.memo(
       setGasLimit,
       setTxError,
     } = useModalContext();
-    const { refetchPoolData, refetchIncentiveData } =
-      useBackgroundDataProvider();
+    const { refetchPoolData } = useBackgroundDataProvider();
     const { signTxData, sendTx } = useWeb3Context();
 
     const [usePermit, setUsePermit] = useState(false);
@@ -279,7 +278,6 @@ export const SupplyActions: FC<SupplyActionProps> = React.memo(
 
         queryClient.invalidateQueries({ queryKey: [QueryKeys.POOL_TOKENS] });
         refetchPoolData && refetchPoolData();
-        refetchIncentiveData && refetchIncentiveData();
       } catch (error: any) {
         const parsedError = getErrorTextFromError(
           error,

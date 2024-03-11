@@ -114,7 +114,7 @@ export const AppSelect = styled(Select)`
   padding: 8px 12px;
   gap: 8px;
   height: 40px;
-  background: #253656;
+  background: #1d2d49;
   border: 1px solid #324567;
   border-radius: 8px;
   width: 100%;

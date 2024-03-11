@@ -1,9 +1,10 @@
-import { ExternalLinkIcon } from "@heroicons/react/outline";
-import { CheckIcon } from "@heroicons/react/solid";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { Box, Button, Link, SvgIcon, Typography } from "@mui/material";
 import { FC, ReactNode } from "react";
 import { useModalContext } from "apps/lending/hooks/useModal";
 import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
+
+import DoneRoundedIcon from "@mui/icons-material/DoneRounded";
 
 export type BaseSuccessTxViewProps = {
   txHash?: string;
@@ -12,7 +13,7 @@ export type BaseSuccessTxViewProps = {
 
 const ExtLinkIcon = () => (
   <SvgIcon sx={{ ml: "2px", fontSize: "11px" }}>
-    <ExternalLinkIcon />
+    <OpenInNewIcon />
   </SvgIcon>
 );
 
@@ -31,6 +32,10 @@ export const BaseSuccessView: FC<BaseSuccessTxViewProps> = ({
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
+          height: {
+            sm: "auto",
+            xs: "80%",
+          },
         }}
       >
         <Box
@@ -39,7 +44,7 @@ export const BaseSuccessView: FC<BaseSuccessTxViewProps> = ({
             height: "48px",
             bgcolor: "transparent",
             borderRadius: "50%",
-            mt: 14,
+            mt: 4,
             mx: "auto",
             display: "flex",
             alignItems: "center",
@@ -47,18 +52,21 @@ export const BaseSuccessView: FC<BaseSuccessTxViewProps> = ({
           }}
         >
           <SvgIcon sx={{ color: "success.main", fontSize: "32px" }}>
-            <CheckIcon />
+            <DoneRoundedIcon />
           </SvgIcon>
         </Box>
 
-        <Typography sx={{ mt: 4 }} variant="h2">
+        <Typography sx={{ mt: 2 }} variant="h2">
           All done!
         </Typography>
 
         {children}
       </Box>
 
-      <Box sx={{ display: "flex", flexDirection: "column" }}>
+      <Box
+        sx={{ display: "flex", flexDirection: "column" }}
+        className="TxActionsWrapper"
+      >
         <Link
           variant="helperText"
           href={currentNetworkConfig.explorerLinkBuilder({
@@ -68,8 +76,8 @@ export const BaseSuccessView: FC<BaseSuccessTxViewProps> = ({
             display: "inline-flex",
             alignItems: "center",
             justifyContent: "right",
-            mt: 6,
-            mb: 3,
+            mt: 4,
+            mb: 2,
           }}
           underline="hover"
           target="_blank"

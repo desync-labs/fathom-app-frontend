@@ -1,17 +1,13 @@
-import {
-  normalize,
-  UserIncentiveData,
-  valueToBigNumber,
-} from "@into-the-fathom/lending-math-utils";
-import { Box, Button, useMediaQuery, useTheme } from "@mui/material";
+import { valueToBigNumber } from "@into-the-fathom/lending-math-utils";
+import { Box, useMediaQuery, useTheme } from "@mui/material";
 import { useState } from "react";
 import { NetAPYTooltip } from "apps/lending/components/infoTooltips/NetAPYTooltip";
 import { PageTitle } from "apps/lending/components/TopInfoPanel/PageTitle";
-import { useModalContext } from "apps/lending/hooks/useModal";
 import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
 import { useWeb3Context } from "apps/lending/libs/hooks/useWeb3Context";
 import { useRootStore } from "apps/lending/store/root";
 import { DASHBOARD, GENERAL } from "apps/lending/utils/mixPanelEvents";
+import { lendingContainerProps } from "apps/lending/components/ContentContainer";
 
 import HALLink from "apps/lending/components/HALLink";
 import { HealthFactorNumber } from "apps/lending/components/HealthFactorNumber";
@@ -27,42 +23,9 @@ export const DashboardTopPanel = () => {
   const { user, loading } = useAppDataContext();
   const { currentAccount } = useWeb3Context();
   const [open, setOpen] = useState(false);
-  const { openClaimRewards } = useModalContext();
   const trackEvent = useRootStore((store) => store.trackEvent);
   const theme = useTheme();
   const downToSM = useMediaQuery(theme.breakpoints.down("sm"));
-
-  const { claimableRewardsUsd } = Object.keys(
-    user.calculatedUserIncentives
-  ).reduce(
-    (acc, rewardTokenAddress) => {
-      const incentive: UserIncentiveData =
-        user.calculatedUserIncentives[rewardTokenAddress];
-      const rewardBalance = normalize(
-        incentive.claimableRewards,
-        incentive.rewardTokenDecimals
-      );
-
-      let tokenPrice = 0;
-      tokenPrice = Number(incentive.rewardPriceFeed);
-
-      const rewardBalanceUsd = Number(rewardBalance) * tokenPrice;
-
-      if (rewardBalanceUsd > 0) {
-        if (acc.assets.indexOf(incentive.rewardTokenSymbol) === -1) {
-          acc.assets.push(incentive.rewardTokenSymbol);
-        }
-
-        acc.claimableRewardsUsd += Number(rewardBalanceUsd);
-      }
-
-      return acc;
-    },
-    { claimableRewardsUsd: 0, assets: [] } as {
-      claimableRewardsUsd: number;
-      assets: string[];
-    }
-  );
 
   const loanToValue =
     user?.totalCollateralMarketReferenceCurrency === "0"
@@ -86,6 +49,7 @@ export const DashboardTopPanel = () => {
             />
           </Box>
         }
+        containerProps={lendingContainerProps}
       >
         <TopInfoPanelItem title={"Net worth"} loading={loading} hideIcon>
           {currentAccount ? (
@@ -133,7 +97,12 @@ export const DashboardTopPanel = () => {
         {currentAccount && user?.healthFactor !== "-1" && (
           <TopInfoPanelItem
             title={
-              <Box sx={{ display: "inline-flex", alignItems: "center" }}>
+              <Box
+                sx={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                }}
+              >
                 Health factor
               </Box>
             }
@@ -157,48 +126,6 @@ export const DashboardTopPanel = () => {
                 )
               }
             />
-          </TopInfoPanelItem>
-        )}
-
-        {currentAccount && claimableRewardsUsd > 0 && (
-          <TopInfoPanelItem
-            title={"Available rewards"}
-            loading={loading}
-            hideIcon
-          >
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: { xs: "flex-start", xsm: "center" },
-                flexDirection: { xs: "column", xsm: "row" },
-              }}
-            >
-              <Box
-                sx={{ display: "inline-flex", alignItems: "center" }}
-                data-cy={"Claim_Box"}
-              >
-                <FormattedNumber
-                  value={claimableRewardsUsd}
-                  variant={valueTypographyVariant}
-                  visibleDecimals={2}
-                  compact
-                  symbol="USD"
-                  symbolsColor="#A5A8B6"
-                  symbolsVariant={noDataTypographyVariant}
-                  data-cy={"Claim_Value"}
-                />
-              </Box>
-
-              <Button
-                variant="gradient"
-                size="small"
-                onClick={() => openClaimRewards()}
-                sx={{ minWidth: "unset", ml: { xs: 0, xsm: 2 } }}
-                data-cy={"Dashboard_Claim_Button"}
-              >
-                Claim
-              </Button>
-            </Box>
           </TopInfoPanelItem>
         )}
       </TopInfoPanel>

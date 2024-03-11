@@ -1,5 +1,4 @@
 import { ReserveIncentiveResponse } from "@into-the-fathom/lending-math-utils/dist/esm/formatters/incentive/calculate-reserve-incentives";
-import { ArrowNarrowRightIcon } from "@heroicons/react/solid";
 import {
   Box,
   FormControlLabel,
@@ -27,6 +26,8 @@ import {
 import { TokenIcon } from "apps/lending/components/primitives/TokenIcon";
 import { GasStation } from "apps/lending/components/transactions/GasStation/GasStation";
 
+import EastRoundedIcon from "@mui/icons-material/EastRounded";
+
 export interface TxModalDetailsProps {
   gasLimit?: string;
   slippageSelector?: ReactNode;
@@ -36,44 +37,40 @@ export interface TxModalDetailsProps {
 }
 
 const ArrowRightIcon = (
-  <SvgIcon color="primary" sx={{ fontSize: "14px", mx: 1 }}>
-    <ArrowNarrowRightIcon />
+  <SvgIcon color="primary" sx={{ fontSize: "14px", mx: 0.5 }}>
+    <EastRoundedIcon />
   </SvgIcon>
 );
 
-export const TxModalDetails: FC<TxModalDetailsProps> = ({
-  gasLimit,
-  slippageSelector,
-  skipLoad,
-  disabled,
-  children,
-}) => {
-  return (
-    <Box sx={{ pt: 5 }}>
-      <Typography sx={{ mb: 3 }} color="text.secondary">
-        Transaction overview
-      </Typography>
+export const TxModalDetails: FC<TxModalDetailsProps> = memo(
+  ({ gasLimit, slippageSelector, skipLoad, disabled, children }) => {
+    return (
+      <Box sx={{ pt: 2 }}>
+        <Typography sx={{ mb: 2 }} color="text.secondary">
+          Transaction overview
+        </Typography>
 
-      <Box
-        sx={() => ({
-          ".MuiBox-root:last-of-type": {
-            mb: 0,
-          },
-        })}
-      >
-        {children}
+        <Box
+          sx={() => ({
+            ".MuiBox-root:last-of-type": {
+              mb: 0,
+            },
+          })}
+        >
+          {children}
+        </Box>
+        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+          <GasStation
+            gasLimit={parseUnits(gasLimit || "0", "wei")}
+            skipLoad={skipLoad}
+            disabled={disabled}
+            rightComponent={slippageSelector}
+          />
+        </Box>
       </Box>
-      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-        <GasStation
-          gasLimit={parseUnits(gasLimit || "0", "wei")}
-          skipLoad={skipLoad}
-          disabled={disabled}
-          rightComponent={slippageSelector}
-        />
-      </Box>
-    </Box>
-  );
-};
+    );
+  }
+);
 
 interface DetailsNumberLineProps extends FormattedNumberProps {
   description: ReactNode;
@@ -82,52 +79,64 @@ interface DetailsNumberLineProps extends FormattedNumberProps {
   numberPrefix?: ReactNode;
   iconSymbol?: string;
   loading?: boolean;
+  decimals?: number;
 }
 
-export const DetailsNumberLine = ({
-  description,
-  value,
-  futureValue,
-  numberPrefix,
-  iconSymbol,
-  loading = false,
-  ...rest
-}: DetailsNumberLineProps) => {
-  return (
-    <Row caption={description} captionVariant="description" mb={4}>
-      <Box sx={{ display: "flex", alignItems: "center" }}>
-        {loading ? (
-          <Skeleton
-            variant="rectangular"
-            height={20}
-            width={100}
-            sx={{ borderRadius: "4px" }}
-          />
-        ) : (
-          <>
-            {iconSymbol && (
-              <TokenIcon symbol={iconSymbol} sx={{ mr: 1, fontSize: "16px" }} />
-            )}
-            {numberPrefix && (
-              <Typography sx={{ mr: 1 }}>{numberPrefix}</Typography>
-            )}
-            <FormattedNumber value={value} variant="secondary14" {...rest} />
-            {futureValue && (
-              <>
-                {ArrowRightIcon}
-                <FormattedNumber
-                  value={futureValue}
-                  variant="secondary14"
-                  {...rest}
+export const DetailsNumberLine: FC<DetailsNumberLineProps> = memo(
+  ({
+    description,
+    value,
+    futureValue,
+    numberPrefix,
+    iconSymbol,
+    loading = false,
+    decimals,
+    ...rest
+  }) => {
+    return (
+      <Row caption={description} captionVariant="description" mb={2}>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          {loading ? (
+            <Skeleton
+              variant="rectangular"
+              height={20}
+              width={100}
+              sx={{ borderRadius: "4px" }}
+            />
+          ) : (
+            <>
+              {iconSymbol && (
+                <TokenIcon
+                  symbol={iconSymbol}
+                  sx={{ mr: 1, fontSize: "16px" }}
                 />
-              </>
-            )}
-          </>
-        )}
-      </Box>
-    </Row>
-  );
-};
+              )}
+              {numberPrefix && (
+                <Typography sx={{ mr: 1 }}>{numberPrefix}</Typography>
+              )}
+              <FormattedNumber
+                value={value}
+                visibleDecimals={decimals}
+                variant="secondary14"
+                {...rest}
+              />
+              {futureValue && (
+                <>
+                  {ArrowRightIcon}
+                  <FormattedNumber
+                    value={futureValue}
+                    variant="secondary14"
+                    {...rest}
+                  />
+                </>
+              )}
+            </>
+          )}
+        </Box>
+      </Row>
+    );
+  }
+);
 
 interface DetailsNumberLineWithSubProps {
   description: ReactNode;
@@ -140,119 +149,125 @@ interface DetailsNumberLineWithSubProps {
   color?: string;
   tokenIcon?: string;
   loading?: boolean;
+  decimals?: number;
 }
 
-export const DetailsNumberLineWithSub = ({
-  description,
-  symbol,
-  value,
-  valueUSD,
-  futureValue,
-  futureValueUSD,
-  hideSymbolSuffix,
-  color,
-  tokenIcon,
-  loading = false,
-}: DetailsNumberLineWithSubProps) => {
-  return (
-    <Row
-      caption={description}
-      captionVariant="description"
-      mb={4}
-      align="flex-start"
-    >
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "flex-end",
-        }}
+export const DetailsNumberLineWithSub: FC<DetailsNumberLineWithSubProps> = memo(
+  ({
+    description,
+    symbol,
+    value,
+    valueUSD,
+    futureValue,
+    futureValueUSD,
+    hideSymbolSuffix,
+    color,
+    tokenIcon,
+    loading = false,
+    decimals,
+  }) => {
+    return (
+      <Row
+        caption={description}
+        captionVariant="description"
+        mb={4}
+        align="flex-start"
       >
-        {loading ? (
-          <>
-            <Skeleton
-              variant="rectangular"
-              height={20}
-              width={100}
-              sx={{ borderRadius: "4px" }}
-            />
-            <Skeleton
-              variant="rectangular"
-              height={15}
-              width={80}
-              sx={{ borderRadius: "4px", marginTop: "4px" }}
-            />
-          </>
-        ) : (
-          <>
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              {value && (
-                <>
-                  <FormattedNumber
-                    value={value}
-                    variant="secondary14"
-                    color={color}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-end",
+          }}
+        >
+          {loading ? (
+            <>
+              <Skeleton
+                variant="rectangular"
+                height={20}
+                width={100}
+                sx={{ borderRadius: "4px" }}
+              />
+              <Skeleton
+                variant="rectangular"
+                height={15}
+                width={80}
+                sx={{ borderRadius: "4px", marginTop: "4px" }}
+              />
+            </>
+          ) : (
+            <>
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                {value && (
+                  <>
+                    <FormattedNumber
+                      value={value}
+                      visibleDecimals={decimals}
+                      variant="secondary14"
+                      color={color}
+                    />
+                    {!hideSymbolSuffix && (
+                      <Typography ml={1} variant="secondary14">
+                        {symbol}
+                      </Typography>
+                    )}
+                    {ArrowRightIcon}
+                  </>
+                )}
+                {tokenIcon && (
+                  <TokenIcon
+                    symbol={tokenIcon}
+                    sx={{ mr: 1, fontSize: "14px" }}
                   />
-                  {!hideSymbolSuffix && (
-                    <Typography ml={1} variant="secondary14">
-                      {symbol}
-                    </Typography>
-                  )}
-                  {ArrowRightIcon}
-                </>
-              )}
-              {tokenIcon && (
-                <TokenIcon
-                  symbol={tokenIcon}
-                  sx={{ mr: 1, fontSize: "14px" }}
+                )}
+                <FormattedNumber
+                  visibleDecimals={decimals}
+                  value={futureValue}
+                  variant="secondary14"
+                  color={color}
                 />
-              )}
-              <FormattedNumber
-                value={futureValue}
-                variant="secondary14"
-                color={color}
-              />
-              {!hideSymbolSuffix && (
-                <Typography ml={1} variant="secondary14">
-                  {symbol}
-                </Typography>
-              )}
-            </Box>
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              {valueUSD && (
-                <>
-                  <FormattedNumber
-                    value={valueUSD}
-                    variant="helperText"
-                    compact
-                    symbol="USD"
-                  />
-                  {ArrowRightIcon}
-                </>
-              )}
-              <FormattedNumber
-                value={futureValueUSD}
-                variant="helperText"
-                compact
-                symbol="USD"
-              />
-            </Box>
-          </>
-        )}
-      </Box>
-    </Row>
-  );
-};
+                {!hideSymbolSuffix && (
+                  <Typography ml={1} variant="secondary14">
+                    {symbol}
+                  </Typography>
+                )}
+              </Box>
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                {valueUSD && (
+                  <>
+                    <FormattedNumber
+                      value={valueUSD}
+                      variant="helperText"
+                      compact
+                      symbol="USD"
+                    />
+                    {ArrowRightIcon}
+                  </>
+                )}
+                <FormattedNumber
+                  value={futureValueUSD}
+                  variant="helperText"
+                  compact
+                  symbol="USD"
+                />
+              </Box>
+            </>
+          )}
+        </Box>
+      </Row>
+    );
+  }
+);
 
 export interface DetailsCollateralLine {
   collateralType: CollateralType;
 }
 
-export const DetailsCollateralLine = ({
+export const DetailsCollateralLine: FC<DetailsCollateralLine> = ({
   collateralType,
-}: DetailsCollateralLine) => {
+}) => {
   return (
-    <Row caption={"Collateralization"} captionVariant="description" mb={4}>
+    <Row caption={"Collateralization"} captionVariant="description" mb={2}>
       <CollateralState collateralType={collateralType} />
     </Row>
   );
@@ -262,7 +277,9 @@ interface CollateralStateProps {
   collateralType: CollateralType;
 }
 
-export const CollateralState = ({ collateralType }: CollateralStateProps) => {
+export const CollateralState: FC<CollateralStateProps> = ({
+  collateralType,
+}) => {
   return (
     <Box sx={{ display: "inline-flex", alignItems: "center" }}>
       {
@@ -309,54 +326,50 @@ interface DetailsIncentivesLineProps {
   loading?: boolean;
 }
 
-export const DetailsIncentivesLine = ({
-  incentives,
-  symbol,
-  futureIncentives,
-  futureSymbol,
-  loading = false,
-}: DetailsIncentivesLineProps) => {
-  if (
-    !incentives ||
-    incentives.filter((i) => i.incentiveAPR !== "0").length === 0
-  )
-    return null;
-  return (
-    <Row
-      caption={"Rewards APR"}
-      captionVariant="description"
-      mb={4}
-      minHeight={24}
-    >
-      <Box sx={{ display: "flex", alignItems: "center" }}>
-        {loading ? (
-          <Skeleton
-            variant="rectangular"
-            height={20}
-            width={100}
-            sx={{ borderRadius: "4px" }}
-          />
-        ) : (
-          <>
-            <IncentivesButton incentives={incentives} symbol={symbol} />
-            {futureSymbol && (
-              <>
-                {ArrowRightIcon}
-                <IncentivesButton
-                  incentives={futureIncentives}
-                  symbol={futureSymbol}
-                />
-                {futureIncentives && futureIncentives.length === 0 && (
-                  <Typography variant="secondary14">None</Typography>
-                )}
-              </>
-            )}
-          </>
-        )}
-      </Box>
-    </Row>
-  );
-};
+export const DetailsIncentivesLine: FC<DetailsIncentivesLineProps> = memo(
+  ({ incentives, symbol, futureIncentives, futureSymbol, loading = false }) => {
+    if (
+      !incentives ||
+      incentives.filter((i) => i.incentiveAPR !== "0").length === 0
+    )
+      return null;
+    return (
+      <Row
+        caption={"Rewards APR"}
+        captionVariant="description"
+        mb={4}
+        minHeight={24}
+      >
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          {loading ? (
+            <Skeleton
+              variant="rectangular"
+              height={20}
+              width={100}
+              sx={{ borderRadius: "4px" }}
+            />
+          ) : (
+            <>
+              <IncentivesButton incentives={incentives} symbol={symbol} />
+              {futureSymbol && (
+                <>
+                  {ArrowRightIcon}
+                  <IncentivesButton
+                    incentives={futureIncentives}
+                    symbol={futureSymbol}
+                  />
+                  {futureIncentives && futureIncentives.length === 0 && (
+                    <Typography variant="secondary14">None</Typography>
+                  )}
+                </>
+              )}
+            </>
+          )}
+        </Box>
+      </Row>
+    );
+  }
+);
 
 export interface DetailsHFLineProps {
   healthFactor: string;
@@ -435,7 +448,7 @@ export interface DetailsUnwrapSwitchProps {
 export const DetailsUnwrapSwitch: FC<DetailsUnwrapSwitchProps> = memo(
   ({ unwrapped, setUnWrapped, label }) => {
     return (
-      <Row captionVariant="description" sx={{ mt: 5 }}>
+      <Row captionVariant="description" sx={{ mt: 2 }}>
         <FormControlLabel
           sx={{ mx: 0 }}
           control={

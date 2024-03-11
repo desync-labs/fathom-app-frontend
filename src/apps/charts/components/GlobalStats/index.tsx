@@ -1,5 +1,4 @@
-import { Box, styled, Typography } from "@mui/material";
-import { useMedia } from "react-use";
+import { Box, styled, Typography, useMediaQuery } from "@mui/material";
 import { RowBetween } from "apps/charts/components/Row";
 import {
   useGlobalData,
@@ -75,7 +74,7 @@ const Value = styled(Box)`
 `;
 
 export default function GlobalStats() {
-  const below800 = useMedia("(max-width: 800px)");
+  const below800 = useMediaQuery("(max-width: 800px)");
 
   const { oneDayVolumeUSD, oneDayTxns } = useGlobalData();
 

@@ -1,6 +1,5 @@
 import { useEffect } from "react";
-import { useMedia } from "react-use";
-import { Box } from "@mui/material";
+import { Box, useMediaQuery } from "@mui/material";
 
 import { TYPE } from "apps/charts/Theme";
 import { PageWrapper, FullWrapper } from "apps/charts/components";
@@ -19,7 +18,7 @@ const AccountLookup = () => {
 
   const topLps = useTopLps();
 
-  const below600 = useMedia("(max-width: 600px)");
+  const below600 = useMediaQuery("(max-width: 600px)");
 
   return (
     <PageWrapper>

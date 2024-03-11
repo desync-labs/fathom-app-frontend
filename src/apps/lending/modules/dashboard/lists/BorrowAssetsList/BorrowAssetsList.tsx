@@ -7,7 +7,7 @@ import {
   valueToBigNumber,
 } from "@into-the-fathom/lending-math-utils";
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
-import { FC, Fragment, useMemo, useState } from "react";
+import { FC, Fragment, useCallback, useMemo, useState } from "react";
 import { StableAPYTooltip } from "apps/lending/components/infoTooltips/StableAPYTooltip";
 import { VariableAPYTooltip } from "apps/lending/components/infoTooltips/VariableAPYTooltip";
 import { ListColumn } from "apps/lending/components/lists/ListColumn";
@@ -97,8 +97,8 @@ export const BorrowAssetsList = () => {
     useAppDataContext();
   const theme = useTheme();
   const downToXSM = useMediaQuery(theme.breakpoints.down("xsm"));
-  const [sortName, setSortName] = useState("");
-  const [sortDesc, setSortDesc] = useState(false);
+  const [sortName, setSortName] = useState<string>("");
+  const [sortDesc, setSortDesc] = useState<boolean>(false);
 
   const { baseAssetSymbol } = currentNetworkConfig;
 
@@ -146,17 +146,22 @@ export const BorrowAssetsList = () => {
               : {}),
           };
         }),
-    [reserves]
+    [reserves, user, marketReferencePriceInUsd, baseAssetSymbol]
   );
 
-  const maxBorrowAmount = valueToBigNumber(
-    user?.totalBorrowsMarketReferenceCurrency || "0"
-  ).plus(user?.availableBorrowsMarketReferenceCurrency || "0");
-  const collateralUsagePercent = maxBorrowAmount.eq(0)
-    ? "0"
-    : valueToBigNumber(user?.totalBorrowsMarketReferenceCurrency || "0")
-        .div(maxBorrowAmount)
-        .toFixed();
+  const collateralUsagePercent = useMemo(() => {
+    const maxBorrowAmount = valueToBigNumber(
+      user?.totalBorrowsMarketReferenceCurrency || "0"
+    ).plus(user?.availableBorrowsMarketReferenceCurrency || "0");
+    return maxBorrowAmount.eq(0)
+      ? "0"
+      : valueToBigNumber(user?.totalBorrowsMarketReferenceCurrency || "0")
+          .div(maxBorrowAmount)
+          .toFixed();
+  }, [
+    user?.totalBorrowsMarketReferenceCurrency,
+    user?.availableBorrowsMarketReferenceCurrency,
+  ]);
 
   const sortedReserves = handleSortDashboardReserves(
     sortDesc,
@@ -166,7 +171,7 @@ export const BorrowAssetsList = () => {
   );
   const borrowDisabled = !sortedReserves.length;
 
-  const RenderHeader: FC = () => {
+  const RenderHeader: FC = useCallback(() => {
     return (
       <ListHeaderWrapper>
         {head.map((col) => (
@@ -194,7 +199,7 @@ export const BorrowAssetsList = () => {
         <ListButtonsColumn isColumnHeader />
       </ListHeaderWrapper>
     );
-  };
+  }, [sortName, sortDesc, setSortName, setSortDesc]);
 
   if (loading)
     return (
@@ -211,8 +216,8 @@ export const BorrowAssetsList = () => {
         <Typography
           component="div"
           variant="h3"
-          sx={{ mr: 4 }}
-          color={theme.palette.primary.main}
+          sx={{ mr: 2 }}
+          color={theme.palette.text.primary}
         >
           Assets to borrow
         </Typography>
@@ -222,7 +227,7 @@ export const BorrowAssetsList = () => {
       noData={borrowDisabled}
       subChildrenComponent={
         <>
-          <Box sx={{ px: 6, mb: 4 }}>
+          <Box sx={{ px: 3, mb: 2 }}>
             {+collateralUsagePercent >= 0.98 && (
               <Warning severity="error">
                 Be careful - You are very close to liquidation. <br />

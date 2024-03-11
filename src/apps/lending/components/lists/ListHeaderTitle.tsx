@@ -55,7 +55,7 @@ export const ListHeaderTitle: FC<ListHeaderTitleProps> = ({
       {children}
 
       {!!sortKey && (
-        <Box sx={{ display: "inline-flex", flexDirection: "column", ml: 1 }}>
+        <Box sx={{ display: "inline-flex", flexDirection: "column", ml: 0.5 }}>
           <Box
             component="span"
             sx={(theme) => ({
@@ -68,7 +68,7 @@ export const ListHeaderTitle: FC<ListHeaderTitleProps> = ({
                   ? theme.palette.text.secondary
                   : theme.palette.divider
               } transparent`,
-              mb: 0.5,
+              mb: 0.25,
             })}
           />
           <Box

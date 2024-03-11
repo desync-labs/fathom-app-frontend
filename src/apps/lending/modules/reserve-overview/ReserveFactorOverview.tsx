@@ -1,4 +1,4 @@
-import { ExternalLinkIcon } from "@heroicons/react/outline";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { Box, SvgIcon, Typography } from "@mui/material";
 import { ReserveFactorTooltip } from "apps/lending/components/infoTooltips/ReserveFactorTooltip";
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
@@ -64,6 +64,7 @@ export const ReserveFactorOverview: FC<ReserveFactorOverviewProps> = memo(
             percent
             variant="secondary14"
             visibleDecimals={2}
+            color="text.light"
           />
         </ReserveOverviewBox>
 
@@ -89,8 +90,8 @@ export const ReserveFactorOverview: FC<ReserveFactorOverviewProps> = memo(
               <Typography variant="description" color="text.secondary">
                 View contract
               </Typography>
-              <SvgIcon sx={{ ml: 1, fontSize: 14 }}>
-                <ExternalLinkIcon />
+              <SvgIcon sx={{ ml: 0.5, fontSize: 14, color: "text.primary" }}>
+                <OpenInNewIcon />
               </SvgIcon>
             </Box>
           </Link>

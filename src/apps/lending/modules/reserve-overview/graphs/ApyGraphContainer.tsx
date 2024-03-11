@@ -86,7 +86,7 @@ export const ApyGraphContainer: FC<ApyGraphContainerProps> = ({
         justifyContent: "center",
       }}
     >
-      <CircularProgress size={20} sx={{ mb: 2, opacity: 0.5 }} />
+      <CircularProgress size={20} sx={{ mb: 1, opacity: 0.5 }} />
       <Typography variant="subheader1" color="text.muted">
         Loading data...
       </Typography>
@@ -105,7 +105,7 @@ export const ApyGraphContainer: FC<ApyGraphContainerProps> = ({
       }}
     >
       <Typography variant="subheader1">Something went wrong</Typography>
-      <Typography variant="caption" sx={{ mb: 3 }}>
+      <Typography variant="caption" sx={{ mb: 1.5 }}>
         Data couldn&apos;t be fetched, please reload graph.
       </Typography>
       <Button variant="outlined" color="primary" onClick={refetch}>
@@ -115,13 +115,13 @@ export const ApyGraphContainer: FC<ApyGraphContainerProps> = ({
   );
 
   return (
-    <Box sx={{ mt: 10, mb: 4 }}>
+    <Box sx={{ mt: 5, mb: 2 }}>
       <Box
         sx={{
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          mb: 4,
+          mb: 2,
         }}
       >
         <GraphLegend labels={fields} />

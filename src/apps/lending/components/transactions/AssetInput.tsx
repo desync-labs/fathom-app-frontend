@@ -1,4 +1,3 @@
-import { XCircleIcon } from "@heroicons/react/solid";
 import {
   Box,
   Button,
@@ -22,6 +21,8 @@ import { CapType } from "apps/lending/components/caps/helper";
 import { AvailableTooltip } from "apps/lending/components/infoTooltips/AvailableTooltip";
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
 import { TokenIcon } from "apps/lending/components/primitives/TokenIcon";
+
+import CancelIcon from "@mui/icons-material/Cancel";
 
 interface CustomProps {
   onChange: (event: { target: { name: string; value: string } }) => void;
@@ -59,7 +60,7 @@ export interface Asset {
   symbol: string;
   iconSymbol?: string;
   address?: string;
-  aToken?: boolean;
+  fmToken?: boolean;
   priceInUsd?: string;
   decimals?: number;
 }
@@ -189,13 +190,13 @@ export const AssetInput = <T extends Asset = Asset>({
               }}
               disabled={disabled}
             >
-              <XCircleIcon height={16} />
+              <CancelIcon sx={{ color: "text.mute", height: 16, width: 16 }} />
             </IconButton>
           )}
           {!onSelect || assets.length === 1 ? (
             <Box sx={{ display: "inline-flex", alignItems: "center" }}>
               <TokenIcon
-                aToken={asset.aToken}
+                fmToken={asset.fmToken}
                 symbol={asset.iconSymbol || asset.symbol}
                 sx={{ mr: 2, ml: 4 }}
               />
@@ -256,7 +257,7 @@ export const AssetInput = <T extends Asset = Asset>({
                     >
                       <TokenIcon
                         symbol={asset.iconSymbol || asset.symbol}
-                        aToken={asset.aToken}
+                        fmToken={asset.fmToken}
                         sx={{ mr: 2, ml: 4 }}
                       />
                       <Typography variant="main16" color="text.primary">
@@ -278,7 +279,7 @@ export const AssetInput = <T extends Asset = Asset>({
                     ) : (
                       <>
                         <TokenIcon
-                          aToken={asset.aToken}
+                          fmToken={asset.fmToken}
                           symbol={asset.iconSymbol || asset.symbol}
                           sx={{ fontSize: "22px", mr: 1 }}
                         />

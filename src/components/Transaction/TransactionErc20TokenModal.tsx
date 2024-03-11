@@ -1,5 +1,5 @@
 import { FC, useCallback } from "react";
-import { Box, Typography, styled } from "@mui/material";
+import { Box, Typography, styled, Button } from "@mui/material";
 import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
 import {
   AppDialog,
@@ -19,7 +19,7 @@ export const SuccessContentWrapper = styled(Box)`
   align-items: center;
   ${({ theme }) => theme.breakpoints.down("sm")} {
     width: 100%;
-    height: 100%;
+    height: 90%;
   }
 `;
 
@@ -33,8 +33,16 @@ export const SuccessIconWrapper = styled(Box)`
   border-radius: 50%;
   margin-bottom: 20px;
 `;
+const ModalTitle = styled(Typography)`
+  font-weight: 400;
+  font-size: 2.125rem;
+  line-height: 1.235;
+`;
 
 const SuccessMessage = styled(Typography)`
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.5;
   ${({ theme }) => theme.breakpoints.down("sm")} {
     margin-bottom: 25px;
   }
@@ -54,16 +62,15 @@ const TransactionErc20TokenModal: FC = () => {
 
   const addTokenToMetamaskWalletHandler = useCallback(() => {
     addERC20Token(erc20TokenModalData as ERC20TokenType);
-    resetErc20TokenModal();
-  }, [addERC20Token, resetErc20TokenModal]);
+  }, [addERC20Token]);
 
   return (
     <AppDialog
       onClose={resetErc20TokenModal}
       aria-labelledby="customized-dialog-title"
-      maxWidth="sm"
       open={true}
       color="primary"
+      maxWidth="xsm"
     >
       <SuccessContentWrapper>
         <AppDialogTitle
@@ -73,11 +80,15 @@ const TransactionErc20TokenModal: FC = () => {
         <SuccessIconWrapper>
           <DoneIcon color="success" />
         </SuccessIconWrapper>
-        <Typography variant="h4">All done!</Typography>
+        <ModalTitle variant="h1">All done!</ModalTitle>
         <SuccessMessage>{successAlertMessage}</SuccessMessage>
         <DialogContentWrapper
           width={"80%"}
-          sx={{ alignItems: "center", margin: "30px 15px" }}
+          sx={{
+            alignItems: "center",
+            textAlign: "center",
+            margin: "30px 15px",
+          }}
         >
           {image && <img src={image} alt={"fxd"} width={28} height={28} />}
           <Typography variant={"body2"} component="span">
@@ -89,6 +100,27 @@ const TransactionErc20TokenModal: FC = () => {
           </ButtonPrimary>
         </DialogContentWrapper>
       </SuccessContentWrapper>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          margin: {
+            sm: "20px",
+            xs: "0",
+          },
+        }}
+        className="TxActionsWrapper"
+      >
+        <Button
+          onClick={resetErc20TokenModal}
+          variant="gradient"
+          size="large"
+          sx={{ minHeight: "44px" }}
+          data-cy="closeButton"
+        >
+          Ok, Close
+        </Button>
+      </Box>
     </AppDialog>
   );
 };

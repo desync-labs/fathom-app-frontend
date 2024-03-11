@@ -18,7 +18,7 @@ export type ERC20TokenType = {
   symbol: string;
   decimals: number;
   image?: string;
-  aToken?: boolean;
+  fmToken?: boolean;
 };
 
 export type Web3Data = {

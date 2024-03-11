@@ -36,8 +36,9 @@ export const HealthFactorNumber: FC<HealthFactorNumberProps> = ({
     <Box
       sx={{
         display: "inline-flex",
-        alignItems: { xs: "flex-start", xsm: "center" },
-        flexDirection: { xs: "column", xsm: "row" },
+        alignItems: { xs: "center" },
+        flexDirection: "row",
+        gap: { xs: "7px", sm: "0" },
       }}
       data-cy={"HealthFactorTopPannel"}
     >
@@ -60,14 +61,14 @@ export const HealthFactorNumber: FC<HealthFactorNumberProps> = ({
           onClick={onInfoClick}
           variant="surface"
           size="small"
-          sx={{ minWidth: "unset", ml: { xs: 0, xsm: 2 } }}
+          sx={{ minWidth: "unset", ml: { xs: 0, xsm: 1 } }}
         >
           Risk details
         </Button>
       )}
 
       {HALIntegrationComponent && (
-        <Box ml={{ xs: 0, xsm: 2 }} mt={{ xs: 1, xsm: 0 }}>
+        <Box ml={{ xs: 0, xsm: 1 }} mt={{ xs: 0.5, xsm: 0 }}>
           {HALIntegrationComponent}
         </Box>
       )}

@@ -6,6 +6,7 @@ import { ILockPosition } from "fathom-sdk";
 import { useServices } from "context/services";
 import useConnector from "context/connector";
 import BigNumber from "bignumber.js";
+import usePricesContext from "context/prices";
 
 const useStakingItemView = (lockPosition: ILockPosition) => {
   const [seconds, setSeconds] = useState(lockPosition.end - Date.now() / 1000);
@@ -15,14 +16,24 @@ const useStakingItemView = (lockPosition: ILockPosition) => {
   const [rewardsAvailable, setRewardsAvailable] = useState<string>(
     lockPosition.rewardsAvailable.toString()
   );
+  const { fthmPrice } = usePricesContext();
+
+  const fthmPriceFormatted = useMemo(
+    () =>
+      BigNumber(fthmPrice)
+        .dividedBy(10 ** 18)
+        .toNumber(),
+    [fthmPrice]
+  );
 
   const fetchRewards = useCallback(() => {
-    !!account &&
+    if (account) {
       stakingService
         .getStreamClaimableAmountPerLock(0, account, lockPosition.lockId)
         .then((claimRewards) => {
           setRewardsAvailable(claimRewards.toString());
         });
+    }
   }, [stakingService, lockPosition, account, library, setRewardsAvailable]);
 
   useEffect(() => {
@@ -53,7 +64,7 @@ const useStakingItemView = (lockPosition: ILockPosition) => {
   }, [seconds, setSeconds]);
 
   useEffect(() => {
-    if (seconds > 0 && Math.floor(seconds % 30) === 0) {
+    if (Math.floor(seconds % 30) === 0) {
       fetchRewards();
     }
   }, [seconds, fetchRewards]);
@@ -74,6 +85,7 @@ const useStakingItemView = (lockPosition: ILockPosition) => {
     penaltyFee,
     seconds,
     rewardsAvailable,
+    fthmPriceFormatted,
   };
 };
 

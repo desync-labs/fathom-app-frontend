@@ -1,6 +1,6 @@
 import { API_ETH_MOCK_ADDRESS } from "@into-the-fathom/lending-contract-helpers";
 import { Typography, useMediaQuery, useTheme } from "@mui/material";
-import { Fragment, useState } from "react";
+import { FC, Fragment, useCallback, useMemo, useState } from "react";
 import { ListColumn } from "apps/lending/components/lists/ListColumn";
 import { ListHeaderTitle } from "apps/lending/components/lists/ListHeaderTitle";
 import { ListHeaderWrapper } from "apps/lending/components/lists/ListHeaderWrapper";
@@ -61,28 +61,30 @@ export const SuppliedPositionsList = () => {
   const { currentNetworkConfig } = useProtocolDataContext();
   const theme = useTheme();
   const downToXSM = useMediaQuery(theme.breakpoints.down("xsm"));
-  const [sortName, setSortName] = useState("");
-  const [sortDesc, setSortDesc] = useState(false);
+  const [sortName, setSortName] = useState<string>("");
+  const [sortDesc, setSortDesc] = useState<boolean>(false);
   const [tooltipOpen, setTooltipOpen] = useState<boolean>(false);
 
-  const suppliedPositions =
-    user?.userReservesData
-      .filter((userReserve) => userReserve.underlyingBalance !== "0")
-      .map((userReserve) => ({
-        ...userReserve,
-        supplyAPY: userReserve.reserve.supplyAPY, // Note: added only for table sort
-        reserve: {
-          ...userReserve.reserve,
-          ...(userReserve.reserve.isWrappedBaseAsset
-            ? fetchIconSymbolAndName({
-                name: userReserve.reserve.name,
-                symbol: currentNetworkConfig.baseAssetSymbol,
-                underlyingAsset: API_ETH_MOCK_ADDRESS.toLowerCase(),
-              })
-            : {}),
-        },
-      })) || [];
-
+  const suppliedPositions = useMemo(
+    () =>
+      user?.userReservesData
+        .filter((userReserve) => userReserve.underlyingBalance !== "0")
+        .map((userReserve) => ({
+          ...userReserve,
+          supplyAPY: userReserve.reserve.supplyAPY, // Note: added only for table sort
+          reserve: {
+            ...userReserve.reserve,
+            ...(userReserve.reserve.isWrappedBaseAsset
+              ? fetchIconSymbolAndName({
+                  name: userReserve.reserve.name,
+                  symbol: currentNetworkConfig.baseAssetSymbol,
+                  underlyingAsset: API_ETH_MOCK_ADDRESS.toLowerCase(),
+                })
+              : {}),
+          },
+        })) || [],
+    [user?.userReservesData]
+  );
   // Transform to the DashboardReserve schema so the sort utils can work with it
   const preSortedReserves = suppliedPositions as DashboardReserve[];
   const sortedReserves = handleSortDashboardReserves(
@@ -92,7 +94,7 @@ export const SuppliedPositionsList = () => {
     preSortedReserves
   );
 
-  const RenderHeader: React.FC = () => {
+  const RenderHeader: FC = useCallback(() => {
     return (
       <ListHeaderWrapper>
         {head.map((col) => (
@@ -120,7 +122,7 @@ export const SuppliedPositionsList = () => {
         <ListButtonsColumn isColumnHeader />
       </ListHeaderWrapper>
     );
-  };
+  }, [sortName, sortDesc, setSortName, setSortDesc]);
 
   if (loading)
     return (
@@ -134,8 +136,8 @@ export const SuppliedPositionsList = () => {
         <Typography
           component="div"
           variant="h3"
-          sx={{ mr: 4 }}
-          color={theme.palette.primary.main}
+          sx={{ mr: 2 }}
+          color={theme.palette.text.primary}
         >
           Your supplies
         </Typography>

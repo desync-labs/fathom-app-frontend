@@ -26,7 +26,8 @@ import { AddTokenDropdown } from "apps/lending/modules/reserve-overview/AddToken
 import { ReserveTopDetails } from "apps/lending/modules/reserve-overview/ReserveTopDetails";
 import { TokenLinkDropdown } from "apps/lending/modules/reserve-overview/TokenLinkDropdown";
 import { useNavigate } from "react-router-dom";
-import { FC, memo } from "react";
+import { FC, memo, useCallback } from "react";
+import { lendingContainerProps } from "apps/lending/components/ContentContainer";
 
 interface ReserveTopDetailsProps {
   underlyingAsset: string;
@@ -54,12 +55,11 @@ export const ReserveTopDetailsWrapper: FC<ReserveTopDetailsProps> = memo(
 
     const valueTypographyVariant = downToSM ? "main16" : "main21";
 
-    const ReserveIcon = () => {
+    const ReserveIcon = useCallback(() => {
       return (
         <Box
-          mr={3}
           sx={{
-            mr: 3,
+            mr: 1.5,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -82,7 +82,7 @@ export const ReserveTopDetailsWrapper: FC<ReserveTopDetailsProps> = memo(
           )}
         </Box>
       );
-    };
+    }, [loading, poolReserve.iconSymbol]);
 
     const ReserveName = () => {
       return loading ? (
@@ -96,6 +96,7 @@ export const ReserveTopDetailsWrapper: FC<ReserveTopDetailsProps> = memo(
 
     return (
       <TopInfoPanel
+        containerProps={lendingContainerProps}
         titleComponent={
           <Box>
             <Box
@@ -103,7 +104,7 @@ export const ReserveTopDetailsWrapper: FC<ReserveTopDetailsProps> = memo(
                 display: "flex",
                 alignItems: downToSM ? "flex-start" : "center",
                 alignSelf: downToSM ? "flex-start" : "center",
-                mb: 4,
+                mb: 2,
                 minHeight: "40px",
                 flexDirection: downToSM ? "column" : "row",
               }}
@@ -121,7 +122,7 @@ export const ReserveTopDetailsWrapper: FC<ReserveTopDetailsProps> = memo(
                   if (history.state.idx !== 0) navigate(-1);
                   else navigate("/lending/markets");
                 }}
-                sx={{ mr: 3, mb: downToSM ? "24px" : "0" }}
+                sx={{ mr: 1.5, mb: downToSM ? "24px" : "0" }}
               >
                 Go Back
               </Button>
@@ -135,7 +136,7 @@ export const ReserveTopDetailsWrapper: FC<ReserveTopDetailsProps> = memo(
             </Box>
 
             {downToSM && (
-              <Box sx={{ display: "flex", alignItems: "center", mb: 6 }}>
+              <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
                 <ReserveIcon />
                 <Box>
                   {!loading && (
@@ -149,7 +150,7 @@ export const ReserveTopDetailsWrapper: FC<ReserveTopDetailsProps> = memo(
                       <Skeleton
                         width={160}
                         height={16}
-                        sx={{ ml: 1, background: "red" }}
+                        sx={{ ml: 0.5, background: "#383D51" }}
                       />
                     ) : (
                       <Box sx={{ display: "flex" }}>

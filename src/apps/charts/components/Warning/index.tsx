@@ -1,6 +1,5 @@
 import { FC } from "react";
-import { useMedia } from "react-use";
-import { Box, styled, Typography } from "@mui/material";
+import { Box, styled, Typography, useMediaQuery } from "@mui/material";
 import { RowBetween, RowFixed } from "apps/charts/components/Row";
 import { ButtonDark } from "apps/charts/components/ButtonStyled";
 import { AutoColumn } from "apps/charts/components/Column";
@@ -34,7 +33,7 @@ type WarningProps = {
 
 const Warning: FC<WarningProps> = (props) => {
   const { type, show, setShow, address } = props;
-  const below800 = useMedia("(max-width: 800px)");
+  const below800 = useMediaQuery("(max-width: 800px)");
 
   const textContent = below800 ? (
     <div>
