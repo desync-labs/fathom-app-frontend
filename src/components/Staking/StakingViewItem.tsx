@@ -100,9 +100,6 @@ const Label = styled(Box)`
 `;
 
 const Value = styled(Box)`
-  display: flex;
-  align-items: center;
-  gap: 7px;
   font-weight: 600;
   font-size: 14px;
   line-height: 20px;
