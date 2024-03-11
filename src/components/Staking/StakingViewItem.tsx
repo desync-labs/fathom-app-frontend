@@ -104,6 +104,12 @@ const Value = styled(Box)`
   font-size: 14px;
   line-height: 20px;
 
+  &.flex {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
   &.green {
     color: #4dcc33;
     text-transform: uppercase;
@@ -226,7 +232,7 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
             </Grid>
             <Grid item xs={7} sm={8}>
               <Label>Locking Time</Label>
-              <Value className={"orange"}>
+              <Value className={"orange flex"}>
                 <img src={clockSrc} alt={"clock-circle"} />
                 {seconds > 0 ? (
                   <StakingCountdown timeObject={secondsToTime(seconds)} />
