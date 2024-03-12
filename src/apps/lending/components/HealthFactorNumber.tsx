@@ -36,8 +36,9 @@ export const HealthFactorNumber: FC<HealthFactorNumberProps> = ({
     <Box
       sx={{
         display: "inline-flex",
-        alignItems: { xs: "flex-start", xsm: "center" },
-        flexDirection: { xs: "column", xsm: "row" },
+        alignItems: { xs: "center" },
+        flexDirection: "row",
+        gap: { xs: "7px", sm: "0" },
       }}
       data-cy={"HealthFactorTopPannel"}
     >

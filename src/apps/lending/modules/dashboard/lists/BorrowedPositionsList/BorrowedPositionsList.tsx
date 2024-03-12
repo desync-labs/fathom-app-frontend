@@ -42,7 +42,7 @@ const head = [
     sortKey: "variableBorrows",
   },
   {
-    title: "AP",
+    title: "APY",
     sortKey: "borrowAPY",
   },
   {

@@ -66,6 +66,7 @@ export const TokenLinkDropdown: FC<TokenLinkDropdownProps> = memo(
         <Menu
           anchorEl={anchorEl}
           open={open}
+          sx={{ "& .MuiMenu-paper": { minWidth: "220px !important" } }}
           onClose={handleClose}
           MenuListProps={{
             "aria-labelledby": "basic-button",
@@ -73,13 +74,14 @@ export const TokenLinkDropdown: FC<TokenLinkDropdownProps> = memo(
           keepMounted={true}
           data-cy="addToWaletSelector"
         >
-          <Box sx={{ px: 2, pt: 1, pb: 1 }}>
+          <Box sx={{ px: 2, pt: "6px", pb: "6px" }}>
             <Typography variant="secondary12" color="text.secondary">
               Underlying token
             </Typography>
           </Box>
 
           <MenuItem
+            sx={{ px: 2, pt: "4px", pb: "4px", minHeight: "40px !important" }}
             onClick={() => {
               trackEvent(RESERVE_DETAILS.RESERVE_TOKEN_ACTIONS, {
                 type: "Underlying Token",
@@ -103,7 +105,7 @@ export const TokenLinkDropdown: FC<TokenLinkDropdownProps> = memo(
             />
             <Typography
               variant="subheader1"
-              sx={{ ml: 3 }}
+              sx={{ ml: 2 }}
               noWrap
               data-cy={`assetName`}
             >
@@ -113,7 +115,7 @@ export const TokenLinkDropdown: FC<TokenLinkDropdownProps> = memo(
 
           {!hideFmToken && (
             <Box>
-              <Box sx={{ px: 2, pt: 1, pb: 1 }}>
+              <Box sx={{ px: 2, pt: "6px", pb: "6px" }}>
                 <Typography variant="secondary12" color="text.secondary">
                   fmToken
                 </Typography>
@@ -121,6 +123,12 @@ export const TokenLinkDropdown: FC<TokenLinkDropdownProps> = memo(
 
               <MenuItem
                 component="a"
+                sx={{
+                  px: 2,
+                  pt: "4px",
+                  pb: "4px",
+                  minHeight: "40px !important",
+                }}
                 onClick={() => {
                   trackEvent(RESERVE_DETAILS.RESERVE_TOKEN_ACTIONS, {
                     type: "fmToken",
@@ -144,7 +152,7 @@ export const TokenLinkDropdown: FC<TokenLinkDropdownProps> = memo(
                 />
                 <Typography
                   variant="subheader1"
-                  sx={{ ml: 3 }}
+                  sx={{ ml: 2 }}
                   noWrap
                   data-cy={`assetName`}
                 >
@@ -155,7 +163,7 @@ export const TokenLinkDropdown: FC<TokenLinkDropdownProps> = memo(
           )}
 
           {showDebtTokenHeader && (
-            <Box sx={{ px: 2, pt: 1, pb: 1 }}>
+            <Box sx={{ px: 2, pt: "6px", pb: "6px" }}>
               <Typography variant="secondary12" color="text.secondary">
                 Fathom lending debt token
               </Typography>
@@ -163,6 +171,7 @@ export const TokenLinkDropdown: FC<TokenLinkDropdownProps> = memo(
           )}
           {poolReserve.borrowingEnabled && (
             <MenuItem
+              sx={{ px: 2, pt: "4px", pb: "4px", minHeight: "40px !important" }}
               component="a"
               href={currentNetworkConfig.explorerLinkBuilder({
                 address: poolReserve?.variableDebtTokenAddress,
@@ -182,7 +191,7 @@ export const TokenLinkDropdown: FC<TokenLinkDropdownProps> = memo(
               <TokenIcon symbol="default" sx={{ fontSize: "20px" }} />
               <Typography
                 variant="subheader1"
-                sx={{ ml: 3 }}
+                sx={{ ml: 2 }}
                 noWrap
                 data-cy={`assetName`}
               >
@@ -193,6 +202,7 @@ export const TokenLinkDropdown: FC<TokenLinkDropdownProps> = memo(
           {poolReserve.stableBorrowRateEnabled && (
             <MenuItem
               component="a"
+              sx={{ px: 2, pt: "4px", pb: "4px", minHeight: "40px !important" }}
               href={currentNetworkConfig.explorerLinkBuilder({
                 address: poolReserve?.stableDebtTokenAddress,
               })}
@@ -212,7 +222,7 @@ export const TokenLinkDropdown: FC<TokenLinkDropdownProps> = memo(
               <TokenIcon symbol="default" sx={{ fontSize: "20px" }} />
               <Typography
                 variant="subheader1"
-                sx={{ ml: 3 }}
+                sx={{ ml: 2 }}
                 noWrap
                 data-cy={`assetName`}
               >

@@ -92,6 +92,7 @@ export const ButtonDark = styled(Base)`
 `;
 
 export const ButtonFaded = styled(Base)`
+  height: auto;
   width: 100%;
   background-color: #0e1d34;
   color: rgba(255, 255, 255, 0.5);

@@ -100,12 +100,15 @@ const Label = styled(Box)`
 `;
 
 const Value = styled(Box)`
-  display: flex;
-  align-items: center;
-  gap: 7px;
   font-weight: 600;
   font-size: 14px;
   line-height: 20px;
+
+  &.flex {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
 
   &.green {
     color: #4dcc33;
@@ -117,6 +120,14 @@ const Value = styled(Box)`
 
   div {
     color: #fff;
+  }
+
+  span {
+    display: block;
+    font-weight: 400;
+    line-height: 20px;
+    font-size: 12px;
+    color: #9fadc6;
   }
 `;
 
@@ -179,8 +190,14 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
   lockPosition,
   token,
 }) => {
-  const { processFlow, isUnlockable, penaltyFee, seconds, rewardsAvailable } =
-    useStakingItemView(lockPosition);
+  const {
+    processFlow,
+    isUnlockable,
+    penaltyFee,
+    seconds,
+    rewardsAvailable,
+    fthmPriceFormatted,
+  } = useStakingItemView(lockPosition);
 
   return (
     <StakingViewItemWrapper item xs={12} sm={6}>
@@ -195,6 +212,12 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
               <Label>Locked Amount</Label>
               <Value>
                 {formatPercentage(lockPosition.amount / 10 ** 18)} {token}
+                <span>
+                  $
+                  {formatPercentage(
+                    (lockPosition.amount / 10 ** 18) * fthmPriceFormatted
+                  )}
+                </span>
               </Value>
             </Grid>
             <Grid item xs={5} sm={4}>
@@ -209,7 +232,7 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
             </Grid>
             <Grid item xs={7} sm={8}>
               <Label>Locking Time</Label>
-              <Value className={"orange"}>
+              <Value className={"orange flex"}>
                 <img src={clockSrc} alt={"clock-circle"} />
                 {seconds > 0 ? (
                   <StakingCountdown timeObject={secondsToTime(seconds)} />
@@ -227,6 +250,15 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
                     .toNumber()
                 )}{" "}
                 {token}
+                <span>
+                  $
+                  {formatPercentage(
+                    BigNumber(rewardsAvailable)
+                      .dividedBy(10 ** 18)
+                      .multipliedBy(fthmPriceFormatted)
+                      .toNumber()
+                  )}
+                </span>
               </Value>
             </Grid>
           </Grid>
