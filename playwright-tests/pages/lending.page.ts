@@ -138,65 +138,107 @@ export default class LendingPage extends BasePage {
     }
   }
 
-  getDashboardSupplyListItemLocator(assetName: LendingAssets): Locator {
+  getDashboardSupplyListItemLocator({
+    assetName,
+  }: {
+    assetName: LendingAssets;
+  }): Locator {
     return this.page.locator(
       `[data-cy='dashboardSupplyListItem_${assetName}']`
     );
   }
 
-  getDashboardSupplyListItemSupplyButtonLocator(
-    assetName: LendingAssets
-  ): Locator {
-    return this.getDashboardSupplyListItemLocator(assetName).locator("button");
+  getDashboardSupplyListItemSupplyButtonLocator({
+    assetName,
+  }: {
+    assetName: LendingAssets;
+  }): Locator {
+    return this.getDashboardSupplyListItemLocator({ assetName }).locator(
+      "button"
+    );
   }
 
-  getDashboardSupplyListItemDetailsButtonLocator(
-    assetName: LendingAssets
-  ): Locator {
-    return this.getDashboardSupplyListItemLocator(assetName).locator(
+  getDashboardSupplyListItemDetailsButtonLocator({
+    assetName,
+  }: {
+    assetName: LendingAssets;
+  }): Locator {
+    return this.getDashboardSupplyListItemLocator({ assetName }).locator(
       "//a[text()='Details']"
     );
   }
 
-  getDashboardSuppliedListItemLocator(assetName: LendingAssets): Locator {
+  getDashboardSuppliedListItemLocator({
+    assetName,
+  }: {
+    assetName: LendingAssets;
+  }): Locator {
     return this.page.locator(
       `[data-cy*='dashboardSuppliedListItem_${assetName}']`
     );
   }
 
-  getDashboardSuppliedListItemNativeAmountLocator(
-    assetName: LendingAssets
-  ): Locator {
-    return this.getDashboardSuppliedListItemLocator(assetName).locator(
+  getDashboardSuppliedListItemSupplyButtonLocator({
+    assetName,
+  }: {
+    assetName: LendingAssets;
+  }): Locator {
+    return this.getDashboardSuppliedListItemLocator({ assetName }).locator(
+      "button"
+    );
+  }
+
+  getDashboardSuppliedListItemNativeAmountLocator({
+    assetName,
+  }: {
+    assetName: LendingAssets;
+  }): Locator {
+    return this.getDashboardSuppliedListItemLocator({ assetName }).locator(
       "[data-cy='nativeAmount']"
     );
   }
 
-  async getSuppliedAssetNativeAmount(
-    assetName: LendingAssets
-  ): Promise<number> {
+  async getSuppliedAssetNativeAmount({
+    assetName,
+  }: {
+    assetName: LendingAssets;
+  }): Promise<number> {
     await this.page.waitForLoadState("load");
     const isSuppliedEmpty = await this.paragraphSupplyEmpty.isVisible();
-    const isAssetSupplied = await this.getDashboardSuppliedListItemLocator(
-      assetName
-    ).isVisible();
+    const isAssetSupplied = await this.getDashboardSuppliedListItemLocator({
+      assetName,
+    }).isVisible();
     if (!isSuppliedEmpty && isAssetSupplied) {
       const nativeAmount =
-        await this.getDashboardSuppliedListItemNativeAmountLocator(
-          assetName
-        ).innerText();
+        await this.getDashboardSuppliedListItemNativeAmountLocator({
+          assetName,
+        }).innerText();
       return parseFloat(nativeAmount);
     } else {
       return 0;
     }
   }
 
-  async supplyAsset(
-    assetName: LendingAssets,
-    amount: number,
-    isMax?: boolean
-  ): Promise<void> {
-    await this.getDashboardSupplyListItemSupplyButtonLocator(assetName).click();
+  async supplyAsset({
+    assetName,
+    amount,
+    isSupplied,
+    isMax,
+  }: {
+    assetName: LendingAssets;
+    amount: number;
+    isSupplied?: boolean;
+    isMax?: boolean;
+  }): Promise<void> {
+    if (isSupplied) {
+      await this.getDashboardSuppliedListItemSupplyButtonLocator({
+        assetName,
+      }).click();
+    } else {
+      await this.getDashboardSupplyListItemSupplyButtonLocator({
+        assetName,
+      }).click();
+    }
     if (isMax) {
       await this.btnMax.click();
     } else {

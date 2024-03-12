@@ -18,10 +18,17 @@ test.describe("Fathom App Test Suite: Lending - FXD Token Tests", () => {
     const supplyAmount = 1.43;
     await lendingPage.navigate();
     const assetNativeAmoundBefore =
-      await lendingPage.getSuppliedAssetNativeAmount(LendingAssets.FXD);
-    await lendingPage.supplyAsset(LendingAssets.FXD, supplyAmount);
+      await lendingPage.getSuppliedAssetNativeAmount({
+        assetName: LendingAssets.FXD,
+      });
+    await lendingPage.supplyAsset({
+      assetName: LendingAssets.FXD,
+      amount: supplyAmount,
+    });
     const assetNativeAmoundAfter =
-      await lendingPage.getSuppliedAssetNativeAmount(LendingAssets.FXD);
+      await lendingPage.getSuppliedAssetNativeAmount({
+        assetName: LendingAssets.FXD,
+      });
     expect(assetNativeAmoundAfter).toEqual(
       assetNativeAmoundBefore + supplyAmount
     );
@@ -33,13 +40,23 @@ test.describe("Fathom App Test Suite: Lending - FXD Token Tests", () => {
     await lendingPage.navigate();
     const supplyAmountFirst = 1.832;
     await lendingPage.navigate();
-    await lendingPage.supplyAsset(LendingAssets.FXD, supplyAmountFirst);
+    await lendingPage.supplyAsset({
+      assetName: LendingAssets.FXD,
+      amount: supplyAmountFirst,
+    });
     const assetNativeAmoundBefore =
-      await lendingPage.getSuppliedAssetNativeAmount(LendingAssets.FXD);
+      await lendingPage.getSuppliedAssetNativeAmount({
+        assetName: LendingAssets.FXD,
+      });
     const supplyAmountSecond = 2;
-    await lendingPage.supplyAsset(LendingAssets.FXD, supplyAmountSecond);
+    await lendingPage.supplyAsset({
+      assetName: LendingAssets.FXD,
+      amount: supplyAmountSecond,
+    });
     const assetNativeAmoundAfter =
-      await lendingPage.getSuppliedAssetNativeAmount(LendingAssets.FXD);
+      await lendingPage.getSuppliedAssetNativeAmount({
+        assetName: LendingAssets.FXD,
+      });
     expect(assetNativeAmoundAfter).toEqual(
       assetNativeAmoundBefore + supplyAmountSecond
     );
