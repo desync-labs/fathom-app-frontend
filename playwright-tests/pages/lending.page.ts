@@ -2,7 +2,7 @@ import { type Page, type Locator, expect } from "@playwright/test";
 import BasePage from "./base.page";
 // @ts-ignore
 import * as metamask from "@synthetixio/synpress/commands/metamask";
-import { extractNumericValue } from "../utils/helpers";
+import { LendingAssets } from "../types";
 
 export default class LendingPage extends BasePage {
   readonly path: string;
@@ -15,6 +15,7 @@ export default class LendingPage extends BasePage {
   readonly btnCloseAllDoneModal: Locator;
   readonly paragraphBorrowEmpty: Locator;
   readonly paragraphSupplyEmpty: Locator;
+  readonly spanLoadingActionButton: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -37,6 +38,9 @@ export default class LendingPage extends BasePage {
     );
     this.paragraphSupplyEmpty = this.page.locator(
       "//p[text()='Nothing supplied yet.']"
+    );
+    this.spanLoadingActionButton = this.btnAction.locator(
+      "span[class*='MuiCircularProgress-root']"
     );
   }
 
@@ -62,7 +66,19 @@ export default class LendingPage extends BasePage {
         const repayButton = borrowedAsset.locator("//button[text()='Repay']");
         await repayButton.click();
         await this.btnMax.click();
-        await this.page.waitForSelector("[data-cy='actionButton']");
+        await expect(this.spanLoadingActionButton).toBeVisible();
+        await expect(this.spanLoadingActionButton).not.toBeVisible({
+          timeout: 5000,
+        });
+        const isApprovalButtonVisible = await this.btnApproval.isVisible();
+        const isApproveChangeVisible = await this.btnApproveChange.isVisible();
+        if (isApprovalButtonVisible && isApproveChangeVisible) {
+          await this.btnApproval.click();
+          await metamask.confirmDataSignatureRequest();
+        } else if (isApprovalButtonVisible && !isApproveChangeVisible) {
+          await this.btnApproval.click();
+          await metamask.confirmPermissionToSpend();
+        }
         await this.btnAction.click();
         await metamask.confirmTransaction();
         await expect(this.headingTwoAllDoneModal).toBeVisible({
@@ -96,7 +112,19 @@ export default class LendingPage extends BasePage {
         );
         await withdrawButton.click();
         await this.btnMax.click();
-        await this.page.waitForSelector("[data-cy='actionButton']");
+        await expect(this.spanLoadingActionButton).toBeVisible();
+        await expect(this.spanLoadingActionButton).not.toBeVisible({
+          timeout: 5000,
+        });
+        const isApprovalButtonVisible = await this.btnApproval.isVisible();
+        const isApproveChangeVisible = await this.btnApproveChange.isVisible();
+        if (isApprovalButtonVisible && isApproveChangeVisible) {
+          await this.btnApproval.click();
+          await metamask.confirmDataSignatureRequest();
+        } else if (isApprovalButtonVisible && !isApproveChangeVisible) {
+          await this.btnApproval.click();
+          await metamask.confirmPermissionToSpend();
+        }
         await this.btnAction.click();
         await metamask.confirmTransaction();
         await expect(this.headingTwoAllDoneModal).toBeVisible({
@@ -108,5 +136,88 @@ export default class LendingPage extends BasePage {
       const isSuppliedEmpty = await this.paragraphSupplyEmpty.isVisible();
       expect(isSuppliedEmpty).toEqual(true);
     }
+  }
+
+  getDashboardSupplyListItemLocator(assetName: LendingAssets): Locator {
+    return this.page.locator(
+      `[data-cy='dashboardSupplyListItem_${assetName}']`
+    );
+  }
+
+  getDashboardSupplyListItemSupplyButtonLocator(
+    assetName: LendingAssets
+  ): Locator {
+    return this.getDashboardSupplyListItemLocator(assetName).locator("button");
+  }
+
+  getDashboardSupplyListItemDetailsButtonLocator(
+    assetName: LendingAssets
+  ): Locator {
+    return this.getDashboardSupplyListItemLocator(assetName).locator(
+      "//a[text()='Details']"
+    );
+  }
+
+  getDashboardSuppliedListItemLocator(assetName: LendingAssets): Locator {
+    return this.page.locator(
+      `[data-cy*='dashboardSuppliedListItem_${assetName}']`
+    );
+  }
+
+  getDashboardSuppliedListItemNativeAmountLocator(
+    assetName: LendingAssets
+  ): Locator {
+    return this.getDashboardSuppliedListItemLocator(assetName).locator(
+      "[data-cy='nativeAmount']"
+    );
+  }
+
+  async getSuppliedAssetNativeAmount(
+    assetName: LendingAssets
+  ): Promise<number> {
+    await this.page.waitForLoadState("load");
+    const isSuppliedEmpty = await this.paragraphSupplyEmpty.isVisible();
+    const isAssetSupplied = await this.getDashboardSuppliedListItemLocator(
+      assetName
+    ).isVisible();
+    if (!isSuppliedEmpty && isAssetSupplied) {
+      const nativeAmount =
+        await this.getDashboardSuppliedListItemNativeAmountLocator(
+          assetName
+        ).innerText();
+      return parseFloat(nativeAmount);
+    } else {
+      return 0;
+    }
+  }
+
+  async supplyAsset(
+    assetName: LendingAssets,
+    amount: number,
+    isMax?: boolean
+  ): Promise<void> {
+    await this.getDashboardSupplyListItemSupplyButtonLocator(assetName).click();
+    if (isMax) {
+      await this.btnMax.click();
+    } else {
+      await this.inputModal.fill(amount.toString());
+    }
+    await this.page.waitForTimeout(1000);
+    const isApprovalButtonVisible = await this.btnApproval.isVisible();
+    const isApproveChangeVisible = await this.btnApproveChange.isVisible();
+    if (isApprovalButtonVisible && isApproveChangeVisible) {
+      await this.btnApproval.click();
+      await metamask.confirmDataSignatureRequest();
+    } else if (isApprovalButtonVisible && !isApproveChangeVisible) {
+      await this.btnApproval.click();
+      await metamask.confirmPermissionToSpend();
+    }
+    await this.btnAction.click();
+    await metamask.confirmTransaction();
+    await expect(this.headingTwoAllDoneModal).toBeVisible({
+      timeout: 50000,
+    });
+    await this.btnCloseAllDoneModal.click();
+    await this.page.waitForTimeout(1000);
   }
 }

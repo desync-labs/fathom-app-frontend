@@ -71,3 +71,12 @@ export enum DexTabs {
   Pool = "Pool",
   Transactions = "Transactions",
 }
+
+export enum LendingAssets {
+  CGO = "CGO",
+  FXD = "FXD",
+  USDTX = "USDTX",
+  XDC = "XDC",
+  EURS = "EURS",
+  WXDC = "WXDC",
+}

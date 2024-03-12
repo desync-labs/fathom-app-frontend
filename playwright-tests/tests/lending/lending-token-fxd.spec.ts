@@ -1,8 +1,6 @@
 import { test, expect } from "../../fixtures/pomSynpressFixture";
-import { WalletConnectOptions } from "../../types";
+import { LendingAssets, WalletConnectOptions } from "../../types";
 import dotenv from "dotenv";
-// @ts-ignore
-import * as metamask from "@synthetixio/synpress/commands/metamask";
 dotenv.config();
 
 test.describe("Fathom App Test Suite: Lending - FXD Token Tests", () => {
@@ -17,13 +15,34 @@ test.describe("Fathom App Test Suite: Lending - FXD Token Tests", () => {
   test("Supply FXD Token when no FXD is supplied is successful", async ({
     lendingPage,
   }) => {
+    const supplyAmount = 1.43;
     await lendingPage.navigate();
+    const assetNativeAmoundBefore =
+      await lendingPage.getSuppliedAssetNativeAmount(LendingAssets.FXD);
+    await lendingPage.supplyAsset(LendingAssets.FXD, supplyAmount);
+    const assetNativeAmoundAfter =
+      await lendingPage.getSuppliedAssetNativeAmount(LendingAssets.FXD);
+    expect(assetNativeAmoundAfter).toEqual(
+      assetNativeAmoundBefore + supplyAmount
+    );
   });
 
   test("Supply FXD Token when FXD is already supplied is successful", async ({
     lendingPage,
   }) => {
     await lendingPage.navigate();
+    const supplyAmountFirst = 1.832;
+    await lendingPage.navigate();
+    await lendingPage.supplyAsset(LendingAssets.FXD, supplyAmountFirst);
+    const assetNativeAmoundBefore =
+      await lendingPage.getSuppliedAssetNativeAmount(LendingAssets.FXD);
+    const supplyAmountSecond = 2;
+    await lendingPage.supplyAsset(LendingAssets.FXD, supplyAmountSecond);
+    const assetNativeAmoundAfter =
+      await lendingPage.getSuppliedAssetNativeAmount(LendingAssets.FXD);
+    expect(assetNativeAmoundAfter).toEqual(
+      assetNativeAmoundBefore + supplyAmountSecond
+    );
   });
 
   test("Borrow FXD Token when no FXD is borrowed is successful", async ({
