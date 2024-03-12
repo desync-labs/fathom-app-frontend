@@ -51,6 +51,12 @@ test.describe("Fathom App Test Suite: Lending - FXD Token Tests", () => {
     await lendingPage.navigate();
   });
 
+  test("Borrow FXD Token when FXD is already borrowed is successful", async ({
+    lendingPage,
+  }) => {
+    await lendingPage.navigate();
+  });
+
   test("Change FXD Token APY type to Stable is successful", async ({
     lendingPage,
   }) => {
