@@ -1,9 +1,10 @@
-import { ExclamationIcon } from "@heroicons/react/outline";
+import { FC } from "react";
 import { SvgIcon } from "@mui/material";
 
 import { ContentWithTooltip } from "apps/lending/components/ContentWithTooltip";
 import { CapType } from "apps/lending/components/caps/helper";
-import { FC } from "react";
+
+import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
 
 interface CapsTooltipProps {
   availableValue: number;
@@ -50,7 +51,7 @@ export const CapsTooltip: FC<CapsTooltipProps> = ({
   return (
     <ContentWithTooltip tooltipContent={<>{message || ""}</>}>
       <SvgIcon sx={{ fontSize: "14px", color: "error.main" }}>
-        <ExclamationIcon />
+        <WarningAmberRoundedIcon />
       </SvgIcon>
     </ContentWithTooltip>
   );

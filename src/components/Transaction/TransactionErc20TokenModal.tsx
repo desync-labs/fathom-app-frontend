@@ -1,5 +1,5 @@
 import { FC, useCallback } from "react";
-import { Box, Typography, styled } from "@mui/material";
+import { Box, Typography, styled, Button } from "@mui/material";
 import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
 import {
   AppDialog,
@@ -19,7 +19,7 @@ export const SuccessContentWrapper = styled(Box)`
   align-items: center;
   ${({ theme }) => theme.breakpoints.down("sm")} {
     width: 100%;
-    height: 100%;
+    height: 90%;
   }
 `;
 
@@ -70,7 +70,7 @@ const TransactionErc20TokenModal: FC = () => {
       aria-labelledby="customized-dialog-title"
       open={true}
       color="primary"
-      maxWidth="sm"
+      maxWidth="xsm"
     >
       <SuccessContentWrapper>
         <AppDialogTitle
@@ -100,6 +100,27 @@ const TransactionErc20TokenModal: FC = () => {
           </ButtonPrimary>
         </DialogContentWrapper>
       </SuccessContentWrapper>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          margin: {
+            sm: "20px",
+            xs: "0",
+          },
+        }}
+        className="TxActionsWrapper"
+      >
+        <Button
+          onClick={resetErc20TokenModal}
+          variant="gradient"
+          size="large"
+          sx={{ minHeight: "44px" }}
+          data-cy="closeButton"
+        >
+          Ok, Close
+        </Button>
+      </Box>
     </AppDialog>
   );
 };

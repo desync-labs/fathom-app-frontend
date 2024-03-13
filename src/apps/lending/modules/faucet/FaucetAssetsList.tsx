@@ -39,7 +39,8 @@ export default function FaucetAssetsList() {
       (reserve) =>
         !reserve.isWrappedBaseAsset &&
         !reserve.isFrozen &&
-        reserve.symbol !== "FXD"
+        reserve.symbol !== "FXD" &&
+        reserve.symbol !== "USDTx"
     )
     .map((reserve) => {
       const walletBalance = valueToBigNumber(
@@ -63,7 +64,11 @@ export default function FaucetAssetsList() {
   return (
     <ListWrapper
       titleComponent={
-        <Typography component="div" variant="h2" sx={{ mr: 4 }}>
+        <Typography
+          component="div"
+          variant="h2"
+          sx={{ mr: 2, color: "text.light" }}
+        >
           Test Assets
         </Typography>
       }
@@ -101,7 +106,7 @@ export default function FaucetAssetsList() {
       ) : (
         listData.map((reserve) => (
           <ListItem
-            px={downToXSM ? 4 : 6}
+            px={downToXSM ? 2 : 3}
             key={reserve.symbol}
             data-cy={`faucetListItem_${reserve.symbol.toUpperCase()}`}
           >
@@ -115,8 +120,12 @@ export default function FaucetAssetsList() {
                 sx={{ display: "inline-flex", alignItems: "center" }}
               >
                 <TokenIcon symbol={reserve.iconSymbol} fontSize="large" />
-                <Box sx={{ pl: 3.5, overflow: "hidden" }}>
-                  <Typography variant="h4" noWrap>
+                <Box sx={{ pl: 1.75, overflow: "hidden" }}>
+                  <Typography
+                    variant="h4"
+                    noWrap
+                    sx={{ color: "text.primary" }}
+                  >
                     {reserve.name}
                   </Typography>
                   <Typography variant="subheader2" color="text.muted" noWrap>
@@ -132,6 +141,7 @@ export default function FaucetAssetsList() {
                   compact
                   value={reserve.walletBalance.toString()}
                   variant="main16"
+                  sx={{ color: "text.light" }}
                 />
               </ListColumn>
             )}

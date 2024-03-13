@@ -1,10 +1,5 @@
+import { FC, memo, MouseEvent, useState } from "react";
 import { InterestRate } from "@into-the-fathom/lending-contract-helpers";
-import {
-  CheckIcon,
-  ChevronDownIcon,
-  ChevronUpIcon,
-  ExternalLinkIcon,
-} from "@heroicons/react/outline";
 import {
   Box,
   Button,
@@ -19,7 +14,11 @@ import {
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
 import { Link, ROUTES } from "apps/lending/components/primitives/Link";
 import { CustomMarket } from "apps/lending/ui-config/marketsConfig";
-import { FC, memo, MouseEvent, useState } from "react";
+
+import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
+import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
+import CheckIcon from "@mui/icons-material/Check";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
 interface ListItemAPYButtonProps {
   stableBorrowRateEnabled: boolean;
@@ -60,8 +59,12 @@ export const ListItemAPYButton: FC<ListItemAPYButtonProps> = memo(
           size="small"
           endIcon={
             stableBorrowRateEnabled && (
-              <SvgIcon sx={{ fontSize: "14px !important" }}>
-                {open ? <ChevronUpIcon /> : <ChevronDownIcon />}
+              <SvgIcon sx={{ fontSize: "20px" }}>
+                {open ? (
+                  <KeyboardArrowUpRoundedIcon />
+                ) : (
+                  <KeyboardArrowDownRoundedIcon />
+                )}
               </SvgIcon>
             )
           }
@@ -81,7 +84,11 @@ export const ListItemAPYButton: FC<ListItemAPYButtonProps> = memo(
           keepMounted={true}
           data-cy={`apyMenu_${borrowRateMode}`}
         >
-          <Typography variant="subheader2" sx={{ px: 4, py: 3 }}>
+          <Typography
+            variant="subheader2"
+            color="text.light"
+            sx={{ px: 2, py: 1.5 }}
+          >
             Select APY type to switch
           </Typography>
 
@@ -94,6 +101,7 @@ export const ListItemAPYButton: FC<ListItemAPYButtonProps> = memo(
               }
               handleClose();
             }}
+            sx={{ color: "text.light" }}
           >
             <ListItemIcon>
               <SvgIcon>
@@ -119,6 +127,7 @@ export const ListItemAPYButton: FC<ListItemAPYButtonProps> = memo(
               }
               handleClose();
             }}
+            sx={{ color: "text.light" }}
           >
             <ListItemIcon>
               <SvgIcon>
@@ -139,14 +148,14 @@ export const ListItemAPYButton: FC<ListItemAPYButtonProps> = memo(
 
           <Box sx={{ display: "flex", flexDirection: "row" }}>
             <Button
-              sx={{ my: 2, ml: 4 }}
+              sx={{ mb: 1, ml: 2, color: "text.primary" }}
               size="small"
               component={Link}
               target="_blank"
               href={ROUTES.reserveOverview(underlyingAsset, currentMarket)}
               endIcon={
                 <SvgIcon>
-                  <ExternalLinkIcon />
+                  <OpenInNewIcon />
                 </SvgIcon>
               }
             >

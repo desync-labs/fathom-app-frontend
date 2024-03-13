@@ -1,15 +1,15 @@
+import { useState } from "react";
 import { valueToBigNumber } from "@into-the-fathom/lending-math-utils";
 import { ReserveIncentiveResponse } from "@into-the-fathom/lending-math-utils/dist/esm/formatters/incentive/calculate-reserve-incentives";
-import { DotsHorizontalIcon } from "@heroicons/react/solid";
 import { Box, SvgIcon, Typography } from "@mui/material";
-import { useState } from "react";
 import { useRootStore } from "apps/lending/store/root";
 import { DASHBOARD } from "apps/lending/utils/mixPanelEvents";
-
 import { ContentWithTooltip } from "apps/lending/components/ContentWithTooltip";
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
 import { TokenIcon } from "apps/lending/components/primitives/TokenIcon";
 import { IncentivesTooltipContent } from "apps/lending/components/incentives/IncentivesTooltipContent";
+
+import PendingRoundedIcon from "@mui/icons-material/PendingRounded";
 
 interface IncentivesButtonProps {
   symbol: string;
@@ -104,7 +104,7 @@ export const IncentivesButton = ({
     return null;
   };
 
-  const iconSize = 12;
+  const iconSize = 14;
 
   return (
     <ContentWithTooltip
@@ -169,14 +169,11 @@ export const IncentivesButton = ({
                 <SvgIcon
                   sx={{
                     fontSize: `${iconSize}px`,
-                    borderRadius: "50%",
-                    bgcolor: "common.white",
-                    color: "common.black",
                     ml: -1,
                     zIndex: 5,
                   }}
                 >
-                  <DotsHorizontalIcon />
+                  <PendingRoundedIcon />
                 </SvgIcon>
               </>
             )}

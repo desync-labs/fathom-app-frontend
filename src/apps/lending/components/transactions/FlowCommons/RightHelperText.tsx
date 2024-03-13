@@ -30,7 +30,7 @@ export const RightHelperText: FC<RightHelperTextProps> = ({
   // a signature is not submitted on-chain so there is no link to review
   if (!approvalHash && !isSigned && tryPermit)
     return (
-      <Box sx={{ display: "inline-flex", alignItems: "center", mb: 2 }}>
+      <Box sx={{ display: "inline-flex", alignItems: "center", mb: 1 }}>
         <Typography variant="subheader2" color="text.secondary">
           Approve with&nbsp;
         </Typography>

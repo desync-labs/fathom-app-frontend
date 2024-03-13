@@ -1,4 +1,3 @@
-import { CheckIcon } from "@heroicons/react/solid";
 import {
   Box,
   BoxProps,
@@ -13,6 +12,8 @@ import { TxAction } from "apps/lending/ui-config/errorMapping";
 
 import { ApprovalTooltip } from "apps/lending/components/infoTooltips/ApprovalTooltip";
 import { RightHelperText } from "apps/lending/components/transactions/FlowCommons/RightHelperText";
+
+import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
 
 interface TxActionsWrapperProps extends BoxProps {
   actionInProgressText: ReactNode;
@@ -114,7 +115,7 @@ export const TxActionsWrapper: FC<TxActionsWrapperProps> = memo(
             <>
               Approve Confirmed
               <SvgIcon sx={{ fontSize: 20, ml: 2 }}>
-                <CheckIcon />
+                <CheckRoundedIcon />
               </SvgIcon>
             </>
           ),
@@ -179,7 +180,7 @@ export const TxActionsWrapper: FC<TxActionsWrapperProps> = memo(
           disabled={disabled || blocked}
           onClick={handleClick}
           size="large"
-          sx={{ minHeight: "44px", ...(approvalParams ? { mt: 2 } : {}) }}
+          sx={{ minHeight: "44px", ...(approvalParams ? { mt: 1 } : {}) }}
           data-cy="actionButton"
         >
           {loading && (

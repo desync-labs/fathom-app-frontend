@@ -46,7 +46,7 @@ export const PanelItem: FC<PanelItemProps> = memo(
           position: "relative",
           "&:not(:last-child)": {
             pr: 2,
-            mr: 2,
+            mr: 1,
           },
           ...(mdUp
             ? {

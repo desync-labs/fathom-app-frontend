@@ -21,6 +21,7 @@ interface ListItemWrapperProps {
   showSupplyCapTooltips?: boolean;
   showBorrowCapTooltips?: boolean;
   showDebtCeilingTooltips?: boolean;
+  withTooltip?: boolean;
 }
 
 export const ListItemWrapper: FC<ListItemWrapperProps> = memo(
@@ -34,6 +35,7 @@ export const ListItemWrapper: FC<ListItemWrapperProps> = memo(
     showSupplyCapTooltips = false,
     showBorrowCapTooltips = false,
     showDebtCeilingTooltips = false,
+    withTooltip = true,
     ...rest
   }) => {
     const { supplyCap, borrowCap, debtCeiling } = useAssetCaps();
@@ -56,7 +58,11 @@ export const ListItemWrapper: FC<ListItemWrapperProps> = memo(
             sx={{ display: "inline-flex", alignItems: "center" }}
           >
             <TokenIcon symbol={iconSymbol} fontSize="large" />
-            <Tooltip title={`${name} (${symbol})`} arrow placement="top">
+            <Tooltip
+              title={withTooltip ? `${name} (${symbol})` : name}
+              arrow
+              placement="top"
+            >
               <Typography
                 variant="subheader1"
                 sx={{ ml: 1.5, color: "text.primary" }}

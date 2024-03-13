@@ -1,5 +1,4 @@
 import { ReserveIncentiveResponse } from "@into-the-fathom/lending-math-utils/dist/esm/formatters/incentive/calculate-reserve-incentives";
-import { ArrowNarrowRightIcon } from "@heroicons/react/solid";
 import {
   Box,
   FormControlLabel,
@@ -27,6 +26,8 @@ import {
 import { TokenIcon } from "apps/lending/components/primitives/TokenIcon";
 import { GasStation } from "apps/lending/components/transactions/GasStation/GasStation";
 
+import EastRoundedIcon from "@mui/icons-material/EastRounded";
+
 export interface TxModalDetailsProps {
   gasLimit?: string;
   slippageSelector?: ReactNode;
@@ -36,15 +37,15 @@ export interface TxModalDetailsProps {
 }
 
 const ArrowRightIcon = (
-  <SvgIcon color="primary" sx={{ fontSize: "14px", mx: 1 }}>
-    <ArrowNarrowRightIcon />
+  <SvgIcon color="primary" sx={{ fontSize: "14px", mx: 0.5 }}>
+    <EastRoundedIcon />
   </SvgIcon>
 );
 
 export const TxModalDetails: FC<TxModalDetailsProps> = memo(
   ({ gasLimit, slippageSelector, skipLoad, disabled, children }) => {
     return (
-      <Box sx={{ pt: 3 }}>
+      <Box sx={{ pt: 2 }}>
         <Typography sx={{ mb: 2 }} color="text.secondary">
           Transaction overview
         </Typography>
@@ -447,7 +448,7 @@ export interface DetailsUnwrapSwitchProps {
 export const DetailsUnwrapSwitch: FC<DetailsUnwrapSwitchProps> = memo(
   ({ unwrapped, setUnWrapped, label }) => {
     return (
-      <Row captionVariant="description" sx={{ mt: 5 }}>
+      <Row captionVariant="description" sx={{ mt: 2 }}>
         <FormControlLabel
           sx={{ mx: 0 }}
           control={

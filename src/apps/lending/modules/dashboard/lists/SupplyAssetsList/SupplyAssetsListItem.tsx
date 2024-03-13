@@ -56,6 +56,7 @@ export const SupplyAssetsListItem: FC<DashboardReserve> = memo(
         data-cy={`dashboardSupplyListItem_${symbol.toUpperCase()}`}
         currentMarket={currentMarket}
         showDebtCeilingTooltips
+        withTooltip={symbol !== "XDC"}
       >
         <ListValueColumn
           symbol={symbol}

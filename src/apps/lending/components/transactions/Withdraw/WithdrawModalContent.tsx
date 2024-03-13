@@ -1,7 +1,7 @@
 import { API_ETH_MOCK_ADDRESS } from "@into-the-fathom/lending-contract-helpers";
 import { valueToBigNumber } from "@into-the-fathom/lending-math-utils";
 import { Box, Checkbox, Typography } from "@mui/material";
-import { FC, useRef, useState } from "react";
+import { FC, memo, useRef, useState } from "react";
 import { Warning } from "apps/lending/components/primitives/Warning";
 import { useAppDataContext } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 import { useModalContext } from "apps/lending/hooks/useModal";
@@ -31,209 +31,219 @@ export const WithdrawModalContent: FC<
     unwrap: boolean;
     setUnwrap: (unwrap: boolean) => void;
   }
-> = ({
-  poolReserve,
-  userReserve,
-  unwrap: withdrawUnWrapped,
-  setUnwrap: setWithdrawUnWrapped,
-  symbol,
-  isWrongNetwork,
-}) => {
-  const { gasLimit, mainTxState: withdrawTxState, txError } = useModalContext();
-  const { user } = useAppDataContext();
-  const { currentNetworkConfig } = useProtocolDataContext();
-
-  const [_amount, setAmount] = useState("");
-  const [withdrawMax, setWithdrawMax] = useState("");
-  const [riskCheckboxAccepted, setRiskCheckboxAccepted] = useState(false);
-  const amountRef = useRef<string>("");
-  const trackEvent = useRootStore((store) => store.trackEvent);
-
-  const isMaxSelected = _amount === "-1";
-  const maxAmountToWithdraw = calculateMaxWithdrawAmount(
-    user,
+> = memo(
+  ({
+    poolReserve,
     userReserve,
-    poolReserve
-  );
-  const underlyingBalance = valueToBigNumber(
-    userReserve?.underlyingBalance || "0"
-  );
-  const unborrowedLiquidity = valueToBigNumber(poolReserve.unborrowedLiquidity);
-  const withdrawAmount = isMaxSelected
-    ? maxAmountToWithdraw.toString(10)
-    : _amount;
+    unwrap: withdrawUnWrapped,
+    setUnwrap: setWithdrawUnWrapped,
+    symbol,
+    isWrongNetwork,
+  }) => {
+    const {
+      gasLimit,
+      mainTxState: withdrawTxState,
+      txError,
+    } = useModalContext();
+    const { user } = useAppDataContext();
+    const { currentNetworkConfig } = useProtocolDataContext();
 
-  const handleChange = (value: string) => {
-    const maxSelected = value === "-1";
-    amountRef.current = maxSelected ? maxAmountToWithdraw.toString(10) : value;
-    const decimalTruncatedValue = roundToTokenDecimals(
-      value,
-      poolReserve.decimals
+    const [_amount, setAmount] = useState("");
+    const [withdrawMax, setWithdrawMax] = useState("");
+    const [riskCheckboxAccepted, setRiskCheckboxAccepted] = useState(false);
+    const amountRef = useRef<string>("");
+    const trackEvent = useRootStore((store) => store.trackEvent);
+
+    const isMaxSelected = _amount === "-1";
+    const maxAmountToWithdraw = calculateMaxWithdrawAmount(
+      user,
+      userReserve,
+      poolReserve
     );
-    setAmount(decimalTruncatedValue);
-    if (maxSelected && maxAmountToWithdraw.eq(underlyingBalance)) {
-      trackEvent(GENERAL.MAX_INPUT_SELECTION, { type: "withdraw" });
-      setWithdrawMax("-1");
-    } else {
-      setWithdrawMax(maxAmountToWithdraw.toString(10));
-    }
-  };
+    const underlyingBalance = valueToBigNumber(
+      userReserve?.underlyingBalance || "0"
+    );
+    const unborrowedLiquidity = valueToBigNumber(
+      poolReserve.unborrowedLiquidity
+    );
+    const withdrawAmount = isMaxSelected
+      ? maxAmountToWithdraw.toString(10)
+      : _amount;
 
-  const assetsBlockingWithdraw: string[] = zeroLTVBlockingWithdraw(user);
+    const handleChange = (value: string) => {
+      const maxSelected = value === "-1";
+      const decimalTruncatedValue = roundToTokenDecimals(
+        value,
+        poolReserve.decimals
+      );
+      amountRef.current = maxSelected
+        ? maxAmountToWithdraw.toString(10)
+        : decimalTruncatedValue;
+      setAmount(decimalTruncatedValue);
+      if (maxSelected && maxAmountToWithdraw.eq(underlyingBalance)) {
+        trackEvent(GENERAL.MAX_INPUT_SELECTION, { type: "withdraw" });
+        setWithdrawMax("-1");
+      } else {
+        setWithdrawMax(maxAmountToWithdraw.toString(10));
+      }
+    };
 
-  const healthFactorAfterWithdraw = calculateHFAfterWithdraw({
-    user,
-    userReserve,
-    poolReserve,
-    withdrawAmount,
-  });
+    const assetsBlockingWithdraw: string[] = zeroLTVBlockingWithdraw(user);
 
-  const { blockingError, errorComponent } = useWithdrawError({
-    assetsBlockingWithdraw,
-    poolReserve,
-    healthFactorAfterWithdraw,
-    withdrawAmount,
-  });
+    const healthFactorAfterWithdraw = calculateHFAfterWithdraw({
+      user,
+      userReserve,
+      poolReserve,
+      withdrawAmount,
+    });
 
-  const displayRiskCheckbox =
-    healthFactorAfterWithdraw.toNumber() >= 1 &&
-    healthFactorAfterWithdraw.toNumber() < 1.5 &&
-    userReserve.usageAsCollateralEnabledOnUser;
+    const { blockingError, errorComponent } = useWithdrawError({
+      assetsBlockingWithdraw,
+      poolReserve,
+      healthFactorAfterWithdraw,
+      withdrawAmount,
+    });
 
-  // calculating input usd value
-  const usdValue = valueToBigNumber(withdrawAmount).multipliedBy(
-    userReserve?.reserve.priceInUSD || 0
-  );
+    const displayRiskCheckbox =
+      healthFactorAfterWithdraw.toNumber() >= 1 &&
+      healthFactorAfterWithdraw.toNumber() < 1.5 &&
+      userReserve.usageAsCollateralEnabledOnUser;
 
-  if (withdrawTxState.success)
-    return (
-      <TxSuccessView
-        action={<>Withdrew</>}
-        amount={amountRef.current}
-        symbol={
-          withdrawUnWrapped && poolReserve.isWrappedBaseAsset
-            ? currentNetworkConfig.baseAssetSymbol
-            : poolReserve.symbol
-        }
-      />
+    // calculating input usd value
+    const usdValue = valueToBigNumber(withdrawAmount).multipliedBy(
+      userReserve?.reserve.priceInUSD || 0
     );
 
-  return (
-    <>
-      <AssetInput
-        value={withdrawAmount}
-        onChange={handleChange}
-        symbol={symbol}
-        assets={[
-          {
-            balance: maxAmountToWithdraw.toString(10),
-            symbol: symbol,
-            iconSymbol:
-              withdrawUnWrapped && poolReserve.isWrappedBaseAsset
-                ? currentNetworkConfig.baseAssetSymbol
-                : poolReserve.iconSymbol,
-          },
-        ]}
-        usdValue={usdValue.toString(10)}
-        isMaxSelected={isMaxSelected}
-        disabled={withdrawTxState.loading}
-        maxValue={maxAmountToWithdraw.toString(10)}
-        balanceText={
-          unborrowedLiquidity.lt(underlyingBalance) ? (
-            <>Available</>
-          ) : (
-            <>Supply balance</>
-          )
-        }
-      />
-
-      {blockingError !== undefined && (
-        <Typography variant="helperText" color="error.main">
-          {errorComponent}
-        </Typography>
-      )}
-
-      {poolReserve.isWrappedBaseAsset && (
-        <DetailsUnwrapSwitch
-          unwrapped={withdrawUnWrapped}
-          setUnWrapped={setWithdrawUnWrapped}
-          label={
-            <Typography>{`Unwrap ${poolReserve.symbol} (to withdraw ${currentNetworkConfig.baseAssetSymbol})`}</Typography>
-          }
-        />
-      )}
-
-      <TxModalDetails gasLimit={gasLimit}>
-        <DetailsNumberLine
-          description={"Remaining supply"}
-          value={underlyingBalance.minus(withdrawAmount || "0").toString(10)}
+    if (withdrawTxState.success)
+      return (
+        <TxSuccessView
+          action={<>Withdrew</>}
+          amount={amountRef.current}
           symbol={
-            poolReserve.isWrappedBaseAsset
+            withdrawUnWrapped && poolReserve.isWrappedBaseAsset
               ? currentNetworkConfig.baseAssetSymbol
               : poolReserve.symbol
           }
-          decimals={poolReserve.decimals}
+          visibleDecimals={poolReserve.decimals > 6 ? 6 : poolReserve.decimals}
         />
-        <DetailsHFLine
-          visibleHfChange={!!_amount}
-          healthFactor={user ? user.healthFactor : "-1"}
-          futureHealthFactor={healthFactorAfterWithdraw.toString(10)}
+      );
+
+    return (
+      <>
+        <AssetInput
+          value={withdrawAmount}
+          onChange={handleChange}
+          symbol={symbol}
+          assets={[
+            {
+              balance: maxAmountToWithdraw.toString(10),
+              symbol: symbol,
+              iconSymbol:
+                withdrawUnWrapped && poolReserve.isWrappedBaseAsset
+                  ? currentNetworkConfig.baseAssetSymbol
+                  : poolReserve.iconSymbol,
+            },
+          ]}
+          usdValue={usdValue.toString(10)}
+          isMaxSelected={isMaxSelected}
+          disabled={withdrawTxState.loading}
+          maxValue={maxAmountToWithdraw.toString(10)}
+          balanceText={
+            unborrowedLiquidity.lt(underlyingBalance) ? (
+              <>Available</>
+            ) : (
+              <>Supply balance</>
+            )
+          }
         />
-      </TxModalDetails>
 
-      {txError && <GasEstimationError txError={txError} />}
+        {blockingError !== undefined && (
+          <Typography variant="helperText" color="error.main">
+            {errorComponent}
+          </Typography>
+        )}
 
-      {displayRiskCheckbox && (
-        <>
-          <Warning severity="error" sx={{ my: 6 }}>
-            Withdrawing this amount will reduce your health factor and increase
-            risk of liquidation.
-          </Warning>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-              mx: "24px",
-              mb: "12px",
-            }}
-          >
-            <Checkbox
-              checked={riskCheckboxAccepted}
-              onChange={() => {
-                setRiskCheckboxAccepted(!riskCheckboxAccepted),
-                  trackEvent(GENERAL.ACCEPT_RISK, {
-                    modal: "Withdraw",
-                    riskCheckboxAccepted: riskCheckboxAccepted,
-                  });
+        {poolReserve.isWrappedBaseAsset && (
+          <DetailsUnwrapSwitch
+            unwrapped={withdrawUnWrapped}
+            setUnWrapped={setWithdrawUnWrapped}
+            label={
+              <Typography>{`Unwrap ${poolReserve.symbol} (to withdraw ${currentNetworkConfig.baseAssetSymbol})`}</Typography>
+            }
+          />
+        )}
+
+        <TxModalDetails gasLimit={gasLimit}>
+          <DetailsNumberLine
+            description={"Remaining supply"}
+            value={underlyingBalance.minus(withdrawAmount || "0").toString(10)}
+            symbol={
+              poolReserve.isWrappedBaseAsset
+                ? currentNetworkConfig.baseAssetSymbol
+                : poolReserve.symbol
+            }
+            decimals={poolReserve.decimals}
+          />
+          <DetailsHFLine
+            visibleHfChange={!!_amount}
+            healthFactor={user ? user.healthFactor : "-1"}
+            futureHealthFactor={healthFactorAfterWithdraw.toString(10)}
+          />
+        </TxModalDetails>
+
+        {txError && <GasEstimationError txError={txError} />}
+
+        {displayRiskCheckbox && (
+          <>
+            <Warning severity="error" sx={{ my: 6 }}>
+              Withdrawing this amount will reduce your health factor and
+              increase risk of liquidation.
+            </Warning>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "flex-start",
+                alignItems: "center",
+                mb: "12px",
               }}
-              size="small"
-              data-cy={`risk-checkbox`}
-            />
-            <Typography variant="description">
-              I acknowledge the risks involved.
-            </Typography>
-          </Box>
-        </>
-      )}
+            >
+              <Checkbox
+                checked={riskCheckboxAccepted}
+                onChange={() => {
+                  setRiskCheckboxAccepted(!riskCheckboxAccepted),
+                    trackEvent(GENERAL.ACCEPT_RISK, {
+                      modal: "Withdraw",
+                      riskCheckboxAccepted: riskCheckboxAccepted,
+                    });
+                }}
+                size="small"
+                data-cy={`risk-checkbox`}
+              />
+              <Typography variant="description">
+                I acknowledge the risks involved.
+              </Typography>
+            </Box>
+          </>
+        )}
 
-      <WithdrawActions
-        poolReserve={poolReserve}
-        amountToWithdraw={isMaxSelected ? withdrawMax : withdrawAmount}
-        poolAddress={
-          withdrawUnWrapped && poolReserve.isWrappedBaseAsset
-            ? API_ETH_MOCK_ADDRESS
-            : poolReserve.underlyingAsset
-        }
-        isWrongNetwork={isWrongNetwork}
-        symbol={symbol}
-        blocked={
-          blockingError !== undefined ||
-          (displayRiskCheckbox && !riskCheckboxAccepted)
-        }
-        sx={displayRiskCheckbox ? { mt: 0 } : {}}
-      />
-    </>
-  );
-};
+        <WithdrawActions
+          poolReserve={poolReserve}
+          amountToWithdraw={isMaxSelected ? withdrawMax : withdrawAmount}
+          poolAddress={
+            withdrawUnWrapped && poolReserve.isWrappedBaseAsset
+              ? API_ETH_MOCK_ADDRESS
+              : poolReserve.underlyingAsset
+          }
+          isWrongNetwork={isWrongNetwork}
+          symbol={symbol}
+          blocked={
+            blockingError !== undefined ||
+            (displayRiskCheckbox && !riskCheckboxAccepted)
+          }
+          sx={displayRiskCheckbox ? { mt: 0 } : {}}
+        />
+      </>
+    );
+  }
+);

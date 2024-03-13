@@ -12,7 +12,7 @@ import {
   TxModalDetails,
 } from "../FlowCommons/TxModalDetails";
 import { RateSwitchActions } from "./RateSwitchActions";
-import { FC } from "react";
+import { FC, memo } from "react";
 
 export enum ErrorType {
   NO_BORROWS_YET_USING_THIS_CURRENCY,
@@ -22,7 +22,7 @@ export enum ErrorType {
 
 export const RateSwitchModalContent: FC<
   ModalWrapperProps & { currentRateMode: InterestRate }
-> = ({ currentRateMode, isWrongNetwork, poolReserve, userReserve }) => {
+> = memo(({ currentRateMode, isWrongNetwork, poolReserve, userReserve }) => {
   const {
     mainTxState: rateSwitchTxState,
     gasLimit,
@@ -121,4 +121,4 @@ export const RateSwitchModalContent: FC<
       />
     </>
   );
-};
+});

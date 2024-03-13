@@ -1,4 +1,3 @@
-import { ChevronDownIcon } from "@heroicons/react/outline";
 import {
   Box,
   ListItemText,
@@ -25,6 +24,8 @@ import {
   networkConfigs,
   DEV_ENV,
 } from "apps/lending/utils/marketsAndNetworksConfig";
+
+import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 
 export const getMarketInfoById = (marketId: CustomMarket) => {
   const market: MarketDataType = marketsData[marketId as CustomMarket];
@@ -124,8 +125,8 @@ export const MarketSwitcher = () => {
         native: false,
         className: "MarketSwitcher__select",
         IconComponent: (props) => (
-          <SvgIcon fontSize="medium" {...props}>
-            <ChevronDownIcon />
+          <SvgIcon fontSize="large" {...props}>
+            <KeyboardArrowDownRoundedIcon />
           </SvgIcon>
         ),
         renderValue: (marketId) => {

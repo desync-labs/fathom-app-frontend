@@ -157,10 +157,10 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
           </ManageTypeButton>
         </ManagePositionRepayTypeWrapper>
         <ManageVaultItemDepositedBox>
-          <Typography variant={"subtitle2"} color="#B7C8E5">
+          <Typography sx={{ color: "#B7C8E5", marginBottom: "2px" }}>
             {token.name} Deposited:
           </Typography>
-          <Typography component="span">
+          <Typography fontSize="1rem" component="span">
             {formatPercentage(formattedBalanceToken) + " " + token.name}
           </Typography>
         </ManageVaultItemDepositedBox>

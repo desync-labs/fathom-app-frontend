@@ -165,6 +165,7 @@ export const getDesignTokens = () => {
         dark: "#D32F2F",
         "100": "#FBB4AF", // for alert text
         "200": "#2E0C0A", // for alert background
+        "300": "#5a0000", // for alert border
       },
       warning: {
         main: "#f7b06e",
@@ -722,10 +723,6 @@ export function getThemedComponents(theme: Theme) {
               marginTop: "12px",
               marginBottom: "12px",
             },
-            "& .MuiAlert-message": {
-              color: theme.palette.text.primary,
-              padding: "8px 0",
-            },
           },
         },
         defaultProps: {
@@ -756,12 +753,9 @@ export function getThemedComponents(theme: Theme) {
           {
             props: { severity: "error" },
             style: {
-              color: "#ff8585",
+              color: theme.palette.error["100"],
               background: theme.palette.error["200"],
-              border: "1px solid #5a0000",
-              "& .MuiAlert-message": {
-                color: "#ff8585",
-              },
+              border: `1px solid ${theme.palette.error["300"]}`,
               a: {
                 color: theme.palette.error["100"],
               },
@@ -857,10 +851,16 @@ export function getThemedComponents(theme: Theme) {
         },
         styleOverrides: {
           root: {
-            "&.Mui-focused": {
+            "&.Mui-focused, &:hover": {
               ".MuiOutlinedInput-notchedOutline": {
                 border: "1px solid #5a81ff",
                 boxShadow: "0 0 8px #003cff",
+              },
+            },
+            "&.Mui-disabled:hover": {
+              ".MuiOutlinedInput-notchedOutline": {
+                borderColor: "#EBEBEF4D",
+                boxShadow: "none",
               },
             },
           },
@@ -885,23 +885,23 @@ export function getThemedComponents(theme: Theme) {
       MuiModal: {
         styleOverrides: {
           root: {
-            "&.LendingModal": {
-              [`@media (max-width: ${theme.breakpoints.values.sm}px)`]: {
+            [`@media (max-width: ${theme.breakpoints.values.sm}px)`]: {
+              "&.LendingModal": {
                 "&>.MuiPaper-root": {
                   position: "relative",
-                  height: "100%",
+                  height: "100dvh",
                   width: "100%",
                   maxHeight: "unset",
                   maxWidth: "unset",
                   borderRadius: "0",
                   margin: "0",
                 },
-                ".TxActionsWrapper": {
-                  position: "absolute",
-                  bottom: 20,
-                  left: 20,
-                  right: 20,
-                },
+              },
+              ".TxActionsWrapper": {
+                position: "absolute",
+                bottom: 50,
+                left: 20,
+                right: 20,
               },
             },
           },

@@ -4,7 +4,7 @@ import {
 } from "@into-the-fathom/lending-contract-helpers";
 import { valueToBigNumber } from "@into-the-fathom/lending-math-utils";
 import { Typography, useMediaQuery, useTheme } from "@mui/material";
-import { useState } from "react";
+import { FC, useCallback, useMemo, useState } from "react";
 import { ListColumn } from "apps/lending/components/lists/ListColumn";
 import { ListHeaderTitle } from "apps/lending/components/lists/ListHeaderTitle";
 import { ListHeaderWrapper } from "apps/lending/components/lists/ListHeaderWrapper";
@@ -42,7 +42,7 @@ const head = [
     sortKey: "variableBorrows",
   },
   {
-    title: "AP",
+    title: "APY",
     sortKey: "borrowAPY",
   },
   {
@@ -64,59 +64,69 @@ const head = [
 export const BorrowedPositionsList = () => {
   const { user, loading, eModes } = useAppDataContext();
   const { currentNetworkConfig } = useProtocolDataContext();
-  const [sortName, setSortName] = useState("");
-  const [sortDesc, setSortDesc] = useState(false);
+  const [sortName, setSortName] = useState<string>("");
+  const [sortDesc, setSortDesc] = useState<boolean>(false);
   const theme = useTheme();
   const downToXSM = useMediaQuery(theme.breakpoints.down("xsm"));
+
   const showEModeButton = Object.keys(eModes).length > 1;
   const [tooltipOpen, setTooltipOpen] = useState<boolean>(false);
 
-  const borrowPositions =
-    user?.userReservesData.reduce((acc, userReserve) => {
-      if (userReserve.variableBorrows !== "0") {
-        acc.push({
-          ...userReserve,
-          borrowRateMode: InterestRate.Variable,
-          reserve: {
-            ...userReserve.reserve,
-            ...(userReserve.reserve.isWrappedBaseAsset
-              ? fetchIconSymbolAndName({
-                  name: userReserve.reserve.name,
-                  symbol: currentNetworkConfig.baseAssetSymbol,
-                  underlyingAsset: API_ETH_MOCK_ADDRESS.toLowerCase(),
-                })
-              : {}),
-          },
-        });
-      }
-      if (userReserve.stableBorrows !== "0") {
-        acc.push({
-          ...userReserve,
-          borrowRateMode: InterestRate.Stable,
-          reserve: {
-            ...userReserve.reserve,
-            ...(userReserve.reserve.isWrappedBaseAsset
-              ? fetchIconSymbolAndName({
-                  name: userReserve.reserve.name,
-                  symbol: currentNetworkConfig.baseAssetSymbol,
-                  underlyingAsset: API_ETH_MOCK_ADDRESS.toLowerCase(),
-                })
-              : {}),
-          },
-        });
-      }
-      return acc;
-    }, [] as (ComputedUserReserveData & { borrowRateMode: InterestRate })[]) ||
-    [];
+  const borrowPositions = useMemo(
+    () =>
+      user?.userReservesData.reduce((acc, userReserve) => {
+        if (userReserve.variableBorrows !== "0") {
+          acc.push({
+            ...userReserve,
+            borrowRateMode: InterestRate.Variable,
+            reserve: {
+              ...userReserve.reserve,
+              ...(userReserve.reserve.isWrappedBaseAsset
+                ? fetchIconSymbolAndName({
+                    name: userReserve.reserve.name,
+                    symbol: currentNetworkConfig.baseAssetSymbol,
+                    underlyingAsset: API_ETH_MOCK_ADDRESS.toLowerCase(),
+                  })
+                : {}),
+            },
+          });
+        }
+        if (userReserve.stableBorrows !== "0") {
+          acc.push({
+            ...userReserve,
+            borrowRateMode: InterestRate.Stable,
+            reserve: {
+              ...userReserve.reserve,
+              ...(userReserve.reserve.isWrappedBaseAsset
+                ? fetchIconSymbolAndName({
+                    name: userReserve.reserve.name,
+                    symbol: currentNetworkConfig.baseAssetSymbol,
+                    underlyingAsset: API_ETH_MOCK_ADDRESS.toLowerCase(),
+                  })
+                : {}),
+            },
+          });
+        }
+        return acc;
+      }, [] as (ComputedUserReserveData & { borrowRateMode: InterestRate })[]) ||
+      [],
+    [user?.userReservesData]
+  );
 
-  const maxBorrowAmount = valueToBigNumber(
-    user?.totalBorrowsMarketReferenceCurrency || "0"
-  ).plus(user?.availableBorrowsMarketReferenceCurrency || "0");
-  const collateralUsagePercent = maxBorrowAmount.eq(0)
-    ? "0"
-    : valueToBigNumber(user?.totalBorrowsMarketReferenceCurrency || "0")
-        .div(maxBorrowAmount)
-        .toFixed();
+  const collateralUsagePercent = useMemo(() => {
+    const maxBorrowAmount = valueToBigNumber(
+      user?.totalBorrowsMarketReferenceCurrency || "0"
+    ).plus(user?.availableBorrowsMarketReferenceCurrency || "0");
+
+    return maxBorrowAmount.eq(0)
+      ? "0"
+      : valueToBigNumber(user?.totalBorrowsMarketReferenceCurrency || "0")
+          .div(maxBorrowAmount)
+          .toFixed();
+  }, [
+    user?.totalBorrowsMarketReferenceCurrency,
+    user?.availableBorrowsMarketReferenceCurrency,
+  ]);
 
   // Transform to the DashboardReserve schema so the sort utils can work with it
   const preSortedReserves = borrowPositions as DashboardReserve[];
@@ -128,7 +138,7 @@ export const BorrowedPositionsList = () => {
     true
   );
 
-  const RenderHeader: React.FC = () => {
+  const RenderHeader: FC = useCallback(() => {
     return (
       <ListHeaderWrapper>
         {head.map((col) => (
@@ -156,7 +166,7 @@ export const BorrowedPositionsList = () => {
         <ListButtonsColumn isColumnHeader />
       </ListHeaderWrapper>
     );
-  };
+  }, [sortName, sortDesc, setSortName, setSortDesc]);
 
   if (loading)
     return (

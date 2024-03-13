@@ -539,11 +539,17 @@ const useStableSwap = (options: string[]) => {
         : formattedBalance.decimalPlaces(18).toString();
     }
 
-    if (BigNumber(formattedBalance).isGreaterThan(displayDailyLimit)) {
+    if (
+      BigNumber(displayDailyLimit).isGreaterThan(0) &&
+      BigNumber(formattedBalance).isGreaterThan(displayDailyLimit)
+    ) {
       formattedBalance = displayDailyLimit;
     }
 
-    if (BigNumber(formattedBalance).isGreaterThan(oneTimeSwapLimit)) {
+    if (
+      BigNumber(oneTimeSwapLimit).isGreaterThan(0) &&
+      BigNumber(formattedBalance).isGreaterThan(oneTimeSwapLimit)
+    ) {
       formattedBalance = oneTimeSwapLimit;
     }
 
