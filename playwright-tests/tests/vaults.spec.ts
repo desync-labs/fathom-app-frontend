@@ -17,7 +17,6 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     const isDepositButtonVisible = await vaultPage
       .getDepositButtonRowLocatorById(fxdVaultData.id)
       .isVisible();
-    console.log(isDepositButtonVisible);
     if (isDepositButtonVisible) {
       await vaultPage.depositFirstTime({
         id: fxdVaultData.id,
