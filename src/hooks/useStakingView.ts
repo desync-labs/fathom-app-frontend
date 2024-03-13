@@ -190,9 +190,11 @@ const useStakingView = () => {
    * Get All claimed rewards
    */
   useEffect(() => {
-    setTimeout(() => {
+    const timeout = setTimeout(() => {
       fetchAllClaimRewards();
     }, 30 * 1000);
+
+    return () => clearTimeout(timeout);
   }, [totalRewards, fetchAllClaimRewards]);
 
   const processFlow = useCallback(
