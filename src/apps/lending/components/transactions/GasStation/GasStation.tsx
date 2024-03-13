@@ -85,7 +85,7 @@ export const GasStation: FC<GasStationProps> = ({
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <LocalGasStationIcon
             color="primary"
-            sx={{ fontSize: "16px", mr: 1.5 }}
+            sx={{ fontSize: "16px", mr: 0.5 }}
           />
 
           {loadingTxns && !skipLoad ? (
