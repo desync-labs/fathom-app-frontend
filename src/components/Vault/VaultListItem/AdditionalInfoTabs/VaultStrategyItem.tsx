@@ -155,11 +155,14 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
       }))
       .sort((a, b) => parseInt(a.timestamp) - parseInt(b.timestamp));
 
-    const lastReport = dayjs(
-      parseInt(strategyData.reports[0].timestamp, 10)
-    ).fromNow();
+    if (strategyData.reports.length !== 0) {
+      const lastReport = dayjs(
+        parseInt(strategyData.reports[0].timestamp, 10)
+      ).fromNow();
 
-    setLastReportDate(lastReport);
+      setLastReportDate(lastReport);
+    }
+
     setAprHistoryArr(extractedData);
   }, [strategyData]);
 
@@ -215,7 +218,9 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
           investment opportunities. This flexibility allows us to capitalize on
           the best market conditions.
         </Typography>
-        <Typography fontSize="14px">{`Last report ${lastReportDate}.`}</Typography>
+        {lastReportDate !== "" && (
+          <Typography fontSize="14px">{`Last report ${lastReportDate}.`}</Typography>
+        )}
         <VaultStrategyStatsWrapper>
           <VaultIndicatorsWrapper>
             <VaultIndicatorList>
