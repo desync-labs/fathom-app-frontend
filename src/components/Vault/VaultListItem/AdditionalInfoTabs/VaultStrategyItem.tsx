@@ -155,7 +155,7 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
       }))
       .sort((a, b) => parseInt(a.timestamp) - parseInt(b.timestamp));
 
-    if (strategyData.reports.length !== 0) {
+    if (strategyData.reports.length) {
       const lastReport = dayjs(
         parseInt(strategyData.reports[0].timestamp, 10)
       ).fromNow();
@@ -218,7 +218,7 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
           investment opportunities. This flexibility allows us to capitalize on
           the best market conditions.
         </Typography>
-        {lastReportDate !== "" && (
+        {lastReportDate && (
           <Typography fontSize="14px">{`Last report ${lastReportDate}.`}</Typography>
         )}
         <VaultStrategyStatsWrapper>
