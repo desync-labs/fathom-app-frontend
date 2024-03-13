@@ -7,6 +7,25 @@ import dotenv from "dotenv";
 dotenv.config();
 
 test.describe("Fathom App Test Suite: Vault Operations", () => {
+  test.beforeAll(async ({ vaultPage }) => {
+    const depositAmount = 3000;
+    await vaultPage.navigate();
+    await vaultPage.connectWallet(WalletConnectOptions.Metamask);
+    await vaultPage.validateConnectedWalletAddress();
+    await vaultPage.page.waitForLoadState("load");
+    await vaultPage.page.waitForTimeout(3000);
+    const isDepositButtonVisible = await vaultPage
+      .getDepositButtonRowLocatorById(fxdVaultData.id)
+      .isVisible();
+    if (isDepositButtonVisible) {
+      await vaultPage.depositFirstTime({
+        id: fxdVaultData.id,
+        shareTokenName: fxdVaultData.shareTokenName,
+        depositAmount,
+      });
+    }
+  });
+
   test("FXD Vault: Manage Vault: Depositing 1 FXD is successful", async ({
     vaultPage,
   }) => {
