@@ -2,7 +2,6 @@ import ArrowOutward from "@mui/icons-material/ArrowOutward";
 import {
   Box,
   Button,
-  SvgIcon,
   Typography,
   useMediaQuery,
   useTheme,
@@ -110,15 +109,13 @@ const TransactionRowItem: FC<TransactionHistoryItemProps> = ({
                 }
               >
                 View{" "}
-                <SvgIcon
+                <ArrowOutward
                   sx={{
                     marginLeft: "5px",
                     fontSize: "20px",
-                    color: "text.secondary",
+                    color: "primary",
                   }}
-                >
-                  <ArrowOutward />
-                </SvgIcon>
+                />
               </Button>
             )}
           </Box>
