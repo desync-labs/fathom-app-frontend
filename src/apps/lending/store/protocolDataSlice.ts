@@ -77,7 +77,8 @@ export const createProtocolDataSlice: StateCreator<
       const testnetPermitEnabled = Boolean(
         currentNetworkConfig.isTestnet &&
           !isWrappedBaseAsset &&
-          reserveAddress !== APOTHEM_ADDRESSES.FXD.toLowerCase()
+          reserveAddress !== APOTHEM_ADDRESSES.FXD.toLowerCase() &&
+          reserveAddress !== APOTHEM_ADDRESSES.xUSDT.toLowerCase()
       );
       const productionPermitEnabled = Boolean(
         underlyingChainId &&
