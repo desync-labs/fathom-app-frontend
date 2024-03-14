@@ -49,6 +49,7 @@ test.describe("Fathom App Test Suite: Lending - FXD Token Tests", () => {
     await lendingPage.supplyAsset({
       assetName: LendingAssets.FXD,
       amount: supplyAmountSecond,
+      isSupplied: true,
     });
     const assetNativeAmoundAfter =
       await lendingPage.getSuppliedAssetNativeAmount({

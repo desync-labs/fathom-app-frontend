@@ -184,7 +184,7 @@ export default class LendingPage extends BasePage {
     assetName: LendingAssets;
   }): Locator {
     return this.getDashboardSuppliedListItemLocator({ assetName }).locator(
-      "button"
+      "//button[text()='Supply']"
     );
   }
 
