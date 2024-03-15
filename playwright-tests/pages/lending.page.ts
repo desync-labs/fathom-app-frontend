@@ -16,6 +16,8 @@ export default class LendingPage extends BasePage {
   readonly paragraphBorrowEmpty: Locator;
   readonly paragraphSupplyEmpty: Locator;
   readonly spanLoadingActionButton: Locator;
+  readonly btnVariableApyRateBorrowModal: Locator;
+  readonly btnStableApyRateBorrowModal: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -42,6 +44,12 @@ export default class LendingPage extends BasePage {
     this.spanLoadingActionButton = this.btnAction.locator(
       "span[class*='MuiCircularProgress-root']"
     );
+    this.btnVariableApyRateBorrowModal = this.page.locator(
+      "[data-cy='Modal'] button[value='Variable']"
+    );
+    this.btnStableApyRateBorrowModal = this.page.locator(
+      "[data-cy='Modal'] button[value='Stable']"
+    );
   }
 
   async navigate(): Promise<void> {
@@ -50,6 +58,7 @@ export default class LendingPage extends BasePage {
 
   async repayAllBorrowedAssetsFullyIfAny(): Promise<void> {
     await this.page.waitForLoadState("load");
+    await this.page.waitForTimeout(2000);
     const isBorrowedEmpty = await this.paragraphBorrowEmpty.isVisible();
     if (isBorrowedEmpty) {
       expect(isBorrowedEmpty).toEqual(true);
@@ -68,7 +77,7 @@ export default class LendingPage extends BasePage {
         await this.btnMax.click();
         await expect(this.spanLoadingActionButton).toBeVisible();
         await expect(this.spanLoadingActionButton).not.toBeVisible({
-          timeout: 5000,
+          timeout: 10000,
         });
         const isApprovalButtonVisible = await this.btnApproval.isVisible();
         const isApproveChangeVisible = await this.btnApproveChange.isVisible();
@@ -94,6 +103,7 @@ export default class LendingPage extends BasePage {
 
   async withdrawAllSuppliedAssetsFullyIfAny(): Promise<void> {
     await this.page.waitForLoadState("load");
+    await this.page.waitForTimeout(2000);
     const isSuppliedEmpty = await this.paragraphSupplyEmpty.isVisible();
     if (isSuppliedEmpty) {
       expect(isSuppliedEmpty).toEqual(true);
@@ -114,7 +124,7 @@ export default class LendingPage extends BasePage {
         await this.btnMax.click();
         await expect(this.spanLoadingActionButton).toBeVisible();
         await expect(this.spanLoadingActionButton).not.toBeVisible({
-          timeout: 5000,
+          timeout: 10000,
         });
         const isApprovalButtonVisible = await this.btnApproval.isVisible();
         const isApproveChangeVisible = await this.btnApproveChange.isVisible();
@@ -219,6 +229,87 @@ export default class LendingPage extends BasePage {
     }
   }
 
+  getDashboardBorrowListItemLocator({
+    assetName,
+  }: {
+    assetName: LendingAssets;
+  }): Locator {
+    return this.page.locator(
+      `[data-cy='dashboardBorrowListItem_${assetName}']`
+    );
+  }
+
+  getDashboardBorrowListItemBorrowButtonLocator({
+    assetName,
+  }: {
+    assetName: LendingAssets;
+  }): Locator {
+    return this.getDashboardBorrowListItemLocator({ assetName }).locator(
+      "button"
+    );
+  }
+
+  getDashboardBorrowListItemDetailsButtonLocator({
+    assetName,
+  }: {
+    assetName: LendingAssets;
+  }): Locator {
+    return this.getDashboardBorrowListItemLocator({ assetName }).locator(
+      "//a[text()='Details']"
+    );
+  }
+
+  getDashboardBorrowedListItemLocator({
+    assetName,
+  }: {
+    assetName: LendingAssets;
+  }): Locator {
+    return this.page.locator(
+      `[data-cy*='dashboardBorrowedListItem_${assetName}']`
+    );
+  }
+
+  getDashboardBorrowedListItemBorrowButtonLocator({
+    assetName,
+  }: {
+    assetName: LendingAssets;
+  }): Locator {
+    return this.getDashboardBorrowedListItemLocator({ assetName }).locator(
+      "//button[text()='Supply']"
+    );
+  }
+
+  getDashboardBorrowedListItemNativeAmountLocator({
+    assetName,
+  }: {
+    assetName: LendingAssets;
+  }): Locator {
+    return this.getDashboardBorrowedListItemLocator({ assetName }).locator(
+      "[data-cy='nativeAmount']"
+    );
+  }
+
+  async getBorrowedAssetNativeAmount({
+    assetName,
+  }: {
+    assetName: LendingAssets;
+  }): Promise<number> {
+    await this.page.waitForLoadState("load");
+    const isSuppliedEmpty = await this.paragraphSupplyEmpty.isVisible();
+    const isAssetSupplied = await this.getDashboardBorrowedListItemLocator({
+      assetName,
+    }).isVisible();
+    if (!isSuppliedEmpty && isAssetSupplied) {
+      const nativeAmount =
+        await this.getDashboardBorrowedListItemNativeAmountLocator({
+          assetName,
+        }).innerText();
+      return parseFloat(nativeAmount);
+    } else {
+      return 0;
+    }
+  }
+
   async supplyAsset({
     assetName,
     amount,
@@ -238,6 +329,55 @@ export default class LendingPage extends BasePage {
       await this.getDashboardSupplyListItemSupplyButtonLocator({
         assetName,
       }).click();
+    }
+    if (isMax) {
+      await this.btnMax.click();
+    } else {
+      await this.inputModal.fill(amount.toString());
+    }
+    await this.page.waitForTimeout(1000);
+    const isApprovalButtonVisible = await this.btnApproval.isVisible();
+    const isApproveChangeVisible = await this.btnApproveChange.isVisible();
+    if (isApprovalButtonVisible && isApproveChangeVisible) {
+      await this.btnApproval.click();
+      await metamask.confirmDataSignatureRequest();
+    } else if (isApprovalButtonVisible && !isApproveChangeVisible) {
+      await this.btnApproval.click();
+      await metamask.confirmPermissionToSpend();
+    }
+    await this.btnAction.click();
+    await metamask.confirmTransaction();
+    await expect(this.headingTwoAllDoneModal).toBeVisible({
+      timeout: 50000,
+    });
+    await this.btnCloseAllDoneModal.click();
+    await this.page.waitForTimeout(1000);
+  }
+
+  async borrowAsset({
+    assetName,
+    amount,
+    isBorrowed,
+    isMax,
+    isStable,
+  }: {
+    assetName: LendingAssets;
+    amount: number;
+    isStable: boolean;
+    isBorrowed?: boolean;
+    isMax?: boolean;
+  }): Promise<void> {
+    if (isBorrowed) {
+      await this.getDashboardBorrowedListItemBorrowButtonLocator({
+        assetName,
+      }).click();
+    } else {
+      await this.getDashboardBorrowListItemBorrowButtonLocator({
+        assetName,
+      }).click();
+    }
+    if (isStable) {
+      await this.btnStableApyRateBorrowModal.click();
     }
     if (isMax) {
       await this.btnMax.click();

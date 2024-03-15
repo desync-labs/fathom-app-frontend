@@ -12,11 +12,19 @@ test.describe("Fathom App Test Suite: Lending - FXD Token Tests", () => {
     await lendingPage.withdrawAllSuppliedAssetsFullyIfAny();
   });
 
+  test.afterAll(async ({ lendingPage }) => {
+    await lendingPage.navigate();
+    await lendingPage.connectWallet(WalletConnectOptions.Metamask);
+    await lendingPage.validateConnectedWalletAddress();
+    await lendingPage.repayAllBorrowedAssetsFullyIfAny();
+    await lendingPage.withdrawAllSuppliedAssetsFullyIfAny();
+  });
+
   test("Supply FXD Token when no FXD is supplied is successful", async ({
     lendingPage,
   }) => {
     const supplyAmount = 1.43;
-    const assetNativeAmoundBefore =
+    const assetNativeAmountBefore =
       await lendingPage.getSuppliedAssetNativeAmount({
         assetName: LendingAssets.FXD,
       });
@@ -24,61 +32,108 @@ test.describe("Fathom App Test Suite: Lending - FXD Token Tests", () => {
       assetName: LendingAssets.FXD,
       amount: supplyAmount,
     });
-    const assetNativeAmoundAfter =
+    const assetNativeAmountAfter =
       await lendingPage.getSuppliedAssetNativeAmount({
         assetName: LendingAssets.FXD,
       });
-    expect(assetNativeAmoundAfter).toEqual(
-      assetNativeAmoundBefore + supplyAmount
+    expect(assetNativeAmountAfter).toEqual(
+      assetNativeAmountBefore + supplyAmount
     );
   });
 
   test("Supply FXD Token when FXD is already supplied is successful", async ({
     lendingPage,
   }) => {
+    // Supply token first
     const supplyAmountFirst = 1.832;
     await lendingPage.supplyAsset({
       assetName: LendingAssets.FXD,
       amount: supplyAmountFirst,
     });
-    const assetNativeAmoundBefore =
+    const assetNativeAmountBefore =
       await lendingPage.getSuppliedAssetNativeAmount({
         assetName: LendingAssets.FXD,
       });
+    // Supply token when token is already supplied
     const supplyAmountSecond = 2;
     await lendingPage.supplyAsset({
       assetName: LendingAssets.FXD,
       amount: supplyAmountSecond,
       isSupplied: true,
     });
-    const assetNativeAmoundAfter =
+    const assetNativeAmountAfter =
       await lendingPage.getSuppliedAssetNativeAmount({
         assetName: LendingAssets.FXD,
       });
-    expect(assetNativeAmoundAfter).toEqual(
-      assetNativeAmoundBefore + supplyAmountSecond
+    expect(assetNativeAmountAfter).toEqual(
+      assetNativeAmountBefore + supplyAmountSecond
     );
   });
 
-  test("Borrow FXD Token when no FXD is borrowed is successful", async ({
+  test("Borrow FXD Token with variable APY rate is successful", async ({
     lendingPage,
   }) => {
-    await lendingPage.navigate();
+    // Supply token first
+    const supplyAmount = 10;
+    await lendingPage.supplyAsset({
+      assetName: LendingAssets.FXD,
+      amount: supplyAmount,
+    });
+    // Borrow token
+    const borrowAmount = 1;
+    const assetNativeAmountBorrowedBefore =
+      await lendingPage.getBorrowedAssetNativeAmount({
+        assetName: LendingAssets.FXD,
+      });
+    await lendingPage.borrowAsset({
+      assetName: LendingAssets.FXD,
+      amount: borrowAmount,
+      isStable: false,
+    });
+    const assetNativeAmountBorrowedAfter =
+      await lendingPage.getBorrowedAssetNativeAmount({
+        assetName: LendingAssets.FXD,
+      });
+    expect(assetNativeAmountBorrowedAfter).toEqual(
+      assetNativeAmountBorrowedBefore + borrowAmount
+    );
   });
 
-  test("Borrow FXD Token when FXD is already borrowed is successful", async ({
+  test("Borrow FXD Token with stable APY rate is successful", async ({
     lendingPage,
   }) => {
-    await lendingPage.navigate();
+    // Supply tokens first
+    const supplyAmountFXD = 10;
+    const supplyAmountCGO = 10;
+    await lendingPage.supplyAsset({
+      assetName: LendingAssets.FXD,
+      amount: supplyAmountFXD,
+    });
+    await lendingPage.supplyAsset({
+      assetName: LendingAssets.CGO,
+      amount: supplyAmountCGO,
+    });
+    // Borrow token
+    const borrowAmount = supplyAmountFXD + 1;
+    const assetNativeAmountBorrowedBefore =
+      await lendingPage.getBorrowedAssetNativeAmount({
+        assetName: LendingAssets.FXD,
+      });
+    await lendingPage.borrowAsset({
+      assetName: LendingAssets.FXD,
+      amount: borrowAmount,
+      isStable: true,
+    });
+    const assetNativeAmountBorrowedAfter =
+      await lendingPage.getBorrowedAssetNativeAmount({
+        assetName: LendingAssets.FXD,
+      });
+    expect(assetNativeAmountBorrowedAfter).toEqual(
+      assetNativeAmountBorrowedBefore + borrowAmount
+    );
   });
 
-  test("Change FXD Token APY type to Stable is successful", async ({
-    lendingPage,
-  }) => {
-    await lendingPage.navigate();
-  });
-
-  test("Change FXD Token APY type to Variable is successful", async ({
+  test("Toggling FXD Token APY type to Variable / Stable is successful", async ({
     lendingPage,
   }) => {
     await lendingPage.navigate();
