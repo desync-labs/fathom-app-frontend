@@ -125,6 +125,7 @@ export const ModalContextProvider: FC<{ children: ReactNode }> = ({
         ) => {
           setType(ModalType.Supply);
           setArgs({ underlyingAsset });
+          setMainTxState({});
 
           if (isReserve) {
             trackEvent(GENERAL.OPEN_MODAL, {
@@ -147,6 +148,7 @@ export const ModalContextProvider: FC<{ children: ReactNode }> = ({
         openWithdraw: (underlyingAsset, currentMarket, name, funnel) => {
           setType(ModalType.Withdraw);
           setArgs({ underlyingAsset });
+          setMainTxState({});
 
           trackEvent(GENERAL.OPEN_MODAL, {
             modal: "Withdraw",
@@ -165,6 +167,8 @@ export const ModalContextProvider: FC<{ children: ReactNode }> = ({
         ) => {
           setType(ModalType.Borrow);
           setArgs({ underlyingAsset });
+          setMainTxState({});
+
           if (isReserve) {
             trackEvent(GENERAL.OPEN_MODAL, {
               modal: "Borrow",
@@ -193,6 +197,7 @@ export const ModalContextProvider: FC<{ children: ReactNode }> = ({
         ) => {
           setType(ModalType.Repay);
           setArgs({ underlyingAsset, currentRateMode, isFrozen });
+          setMainTxState({});
 
           trackEvent(GENERAL.OPEN_MODAL, {
             modal: "Repay",
@@ -211,6 +216,8 @@ export const ModalContextProvider: FC<{ children: ReactNode }> = ({
         ) => {
           setType(ModalType.CollateralChange);
           setArgs({ underlyingAsset });
+          setMainTxState({});
+
           trackEvent(GENERAL.OPEN_MODAL, {
             modal: "Toggle Collateral",
             market: currentMarket,
@@ -224,16 +231,19 @@ export const ModalContextProvider: FC<{ children: ReactNode }> = ({
           trackEvent(GENERAL.OPEN_MODAL, { modal: "Rate Switch" });
           setType(ModalType.RateSwitch);
           setArgs({ underlyingAsset, currentRateMode });
+          setMainTxState({});
         },
         openEmode: (mode) => {
           trackEvent(GENERAL.OPEN_MODAL, { modal: "eMode" });
           setType(ModalType.Emode);
           setArgs({ emode: mode });
+          setMainTxState({});
         },
         openFaucet: (underlyingAsset) => {
           trackEvent(GENERAL.OPEN_MODAL, { modal: "Faucet" });
           setType(ModalType.Faucet);
           setArgs({ underlyingAsset });
+          setMainTxState({});
         },
         close: () => {
           setType(undefined);
