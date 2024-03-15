@@ -18,12 +18,13 @@ const VaultItemStrategies: FC<VaultItemStrategiesPropsTypes> = ({
       {!strategies.length ? (
         <Typography>Has not strategies yet</Typography>
       ) : (
-        strategies.map((strategy: any) => (
+        strategies.map((strategy: any, index: number) => (
           <VaultStrategyItem
             strategyData={strategy}
             vaultBalanceTokens={balanceTokens}
             tokenName={token.name}
             performanceFee={performanceFee}
+            index={index}
             key={strategy.id}
           />
         ))
