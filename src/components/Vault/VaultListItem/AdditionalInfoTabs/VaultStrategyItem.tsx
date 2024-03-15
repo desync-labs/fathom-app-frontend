@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, memo, useEffect, useMemo, useState } from "react";
 import BigNumber from "bignumber.js";
 import { Link } from "react-router-dom";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -310,4 +310,4 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
   );
 };
 
-export default VaultStrategyItem;
+export default memo(VaultStrategyItem);
