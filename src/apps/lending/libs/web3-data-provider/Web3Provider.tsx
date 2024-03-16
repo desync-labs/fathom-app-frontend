@@ -7,7 +7,6 @@ import {
 import { BigNumber, PopulatedTransaction } from "fathom-ethers";
 import React, { ReactElement, useEffect, useState } from "react";
 import { useRootStore } from "apps/lending/store/root";
-import { getNetworkConfig } from "apps/lending/utils/marketsAndNetworksConfig";
 import { hexToAscii } from "apps/lending/utils/utils";
 
 import { Web3Context } from "apps/lending/libs/hooks/useWeb3Context";
@@ -53,6 +52,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
     disconnect,
     isLoading: loading,
     addERC20Token,
+    requestChangeNetwork,
   } = useConnector();
 
   const [switchNetworkError, setSwitchNetworkError] = useState<Error>();
@@ -92,51 +92,6 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
     throw new Error("Error initializing permit signature");
   };
 
-  const switchNetwork = async (newChainId: number) => {
-    if (provider) {
-      try {
-        await provider.send("wallet_switchEthereumChain", [
-          { chainId: `0x${newChainId.toString(16)}` },
-        ]);
-        setSwitchNetworkError(undefined);
-      } catch (switchError: any) {
-        const networkInfo = getNetworkConfig(newChainId);
-        if (switchError.code === 4902) {
-          try {
-            try {
-              await provider.send("wallet_addEthereumChain", [
-                {
-                  chainId: `0x${newChainId.toString(16)}`,
-                  chainName: networkInfo.name,
-                  nativeCurrency: {
-                    symbol: networkInfo.baseAssetSymbol,
-                    decimals: networkInfo.baseAssetDecimals,
-                  },
-                  rpcUrls: [
-                    ...networkInfo.publicJsonRPCUrl,
-                    networkInfo.publicJsonRPCWSUrl,
-                  ],
-                  blockExplorerUrls: [networkInfo.explorerLink],
-                },
-              ]);
-            } catch (error: any) {
-              if (error.code !== 4001) {
-                throw error;
-              }
-            }
-            setSwitchNetworkError(undefined);
-          } catch (addError: any) {
-            setSwitchNetworkError(addError);
-          }
-        } else if (switchError.code === 4001) {
-          setSwitchNetworkError(undefined);
-        } else {
-          setSwitchNetworkError(switchError);
-        }
-      }
-    }
-  };
-
   const getTxError = async (txHash: string): Promise<string> => {
     if (provider) {
       const tx = await provider.getTransaction(txHash);
@@ -165,7 +120,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
           connected: active,
           loading,
           chainId: chainId,
-          switchNetwork,
+          switchNetwork: requestChangeNetwork,
           getTxError,
           sendTx,
           signTxData,
