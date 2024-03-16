@@ -99,7 +99,9 @@ const VaultList: FC<VaultListPropsType> = ({
                   setSortBy={setSortBy}
                   openMobileFilterMenu={openMobileFilterMenu}
                 />
-                {vaultPositionsLoading || !vaultSortedList.length ? (
+                {vaultsLoading ||
+                vaultPositionsLoading ||
+                !vaultSortedList.length ? (
                   <NoResults variant={"h6"}>
                     {vaultsLoading || vaultPositionsLoading ? (
                       <CircleWrapper>
@@ -131,7 +133,9 @@ const VaultList: FC<VaultListPropsType> = ({
                   setSearch={setSearch}
                   setSortBy={setSortBy}
                 />
-                {vaultPositionsLoading || !vaultSortedList.length ? (
+                {vaultsLoading ||
+                vaultPositionsLoading ||
+                !vaultSortedList.length ? (
                   <NoResults variant={"h6"}>
                     {vaultsLoading || vaultPositionsLoading ? (
                       <CircleWrapper>
