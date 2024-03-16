@@ -28,6 +28,7 @@ import useSharedContext from "context/shared";
 import AppPopover, {
   PopoverType,
 } from "components/AppComponents/AppPopover/AppPopover";
+import { Web3Provider } from "@into-the-fathom/providers";
 
 const NetworkPaper = styled(AppPaper)`
   background: #253656;
@@ -67,7 +68,7 @@ const EmptyButtonWrapper = styled(Box)`
 `;
 
 const Web3Status = () => {
-  const { error, account, chainId, nativeProvider } = useConnector();
+  const { error, account, chainId, library } = useConnector();
   const anchorRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState<boolean>(false);
   const { isMobile } = useSharedContext();
@@ -85,20 +86,18 @@ const Web3Status = () => {
   const requestChangeNetwork = useCallback(
     async (chainId: number) => {
       setOpen(false);
-      if (nativeProvider) {
+      if (library && library instanceof Web3Provider) {
         try {
-          await nativeProvider.request?.({
-            method: "wallet_switchEthereumChain",
-            params: [{ chainId: `0x${chainId.toString(16)}` }],
-          });
+          await library.send("wallet_switchEthereumChain", [
+            { chainId: `0x${chainId.toString(16)}` },
+          ]); // 0x32 is the hexadecimal equivalent of 50
         } catch (switchError: any) {
           // This error code indicates that the chain has not been added to MetaMask.
           if (switchError.code === 4902) {
             try {
-              await nativeProvider.request?.({
-                method: "wallet_addEthereumChain",
-                params: [(XDC_NETWORK_SETTINGS as any)[chainId]],
-              });
+              await library.send("wallet_addEthereumChain", [
+                (XDC_NETWORK_SETTINGS as any)[chainId],
+              ]);
             } catch (addError) {
               console.error("Failed to add the XDC Network:", addError);
             }
@@ -108,7 +107,7 @@ const Web3Status = () => {
         }
       }
     },
-    [setOpen, nativeProvider]
+    [setOpen, library]
   );
 
   const showNetworkSelector =
