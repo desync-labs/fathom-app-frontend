@@ -58,6 +58,7 @@ export const XDC_NETWORK_SETTINGS = {
     chainId: `0x${(50).toString(16)}`,
     nativeCurrency: { name: "XDC", decimals: 18, symbol: "XDC" },
     rpcUrls: [XDC_RPC],
+    blockExplorerUrls: ["https://explorer.xinfin.network"],
   },
   51: {
     chainName: "Apothem",
