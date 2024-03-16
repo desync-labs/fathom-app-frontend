@@ -67,7 +67,7 @@ const EmptyButtonWrapper = styled(Box)`
 `;
 
 const Web3Status = () => {
-  const { error, account, chainId, isMetamask } = useConnector();
+  const { error, account, chainId, nativeProvider } = useConnector();
   const anchorRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState<boolean>(false);
   const { isMobile } = useSharedContext();
@@ -85,30 +85,34 @@ const Web3Status = () => {
   const requestChangeNetwork = useCallback(
     async (chainId: number) => {
       setOpen(false);
-      if (window && window.ethereum) {
+      if (nativeProvider) {
         try {
-          window.ethereum.request?.({
+          await nativeProvider.request?.({
             method: "wallet_switchEthereumChain",
             params: [{ chainId: `0x${chainId.toString(16)}` }],
           });
-        } catch (err: any) {
-          console.log(err);
-          if (err.code === 4902) {
-            window.ethereum.request?.({
-              method: "wallet_addEthereumChain",
-              params: [(XDC_NETWORK_SETTINGS as any)[chainId]],
-            });
+        } catch (switchError: any) {
+          // This error code indicates that the chain has not been added to MetaMask.
+          if (switchError.code === 4902) {
+            try {
+              await nativeProvider.request?.({
+                method: "wallet_addEthereumChain",
+                params: [(XDC_NETWORK_SETTINGS as any)[chainId]],
+              });
+            } catch (addError) {
+              console.error("Failed to add the XDC Network:", addError);
+            }
+          } else {
+            console.error("Failed to switch to the XDC Network:", switchError);
           }
         }
       }
     },
-    [setOpen]
+    [setOpen, nativeProvider]
   );
 
   const showNetworkSelector =
-    (chainId || error instanceof UnsupportedChainIdError) &&
-    options.length &&
-    isMetamask;
+    (chainId || error instanceof UnsupportedChainIdError) && options.length;
 
   const isError = error || (chainId && !XDC_CHAIN_IDS.includes(chainId));
 
@@ -154,8 +158,7 @@ const Web3Status = () => {
   return (chainId ||
     error instanceof UnsupportedChainIdError ||
     !XDC_CHAIN_IDS.includes(chainId)) &&
-    options.length &&
-    isMetamask ? (
+    options.length ? (
     <>
       <ButtonGroup
         variant="contained"
