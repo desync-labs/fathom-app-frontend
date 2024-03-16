@@ -28,7 +28,6 @@ type ConnectorProviderType = {
 };
 
 export type UseConnectorReturnType = {
-  nativeProvider: any;
   connector: AbstractConnector | undefined;
   isActive: boolean;
   account: string;
@@ -78,7 +77,6 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
 
   const [shouldDisable, setShouldDisable] = useState<boolean>(false); // Should disable connect button while connecting to MetaMask
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [nativeProvider, setNativeProvider] = useState();
 
   const [isDecentralizedState, setIsDecentralizedState] = useState<
     boolean | undefined
@@ -98,12 +96,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
     useState<boolean>(true);
 
   useEffect(() => {
-    if (connector)
-      connector.getProvider().then((provider) => setNativeProvider(provider));
-  }, [connector, setNativeProvider]);
-
-  useEffect(() => {
-    if (chainId) {
+    if (chainId && supportedChainIds.includes(chainId)) {
       setAllowStableSwapInProgress(true);
       stableSwapService
         .isDecentralizedState()
@@ -139,7 +132,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
         });
     }
 
-    if (account) {
+    if (account && chainId && supportedChainIds.includes(chainId)) {
       stableSwapService
         .usersWrapperWhitelist(account)
         .then((isWhitelisted: boolean) => {
@@ -299,7 +292,6 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
       openConnector,
       allowStableSwap,
       allowStableSwapInProgress,
-      nativeProvider,
     }),
     [
       addERC20Token,
@@ -326,7 +318,6 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
       openConnector,
       allowStableSwap,
       allowStableSwapInProgress,
-      nativeProvider,
     ]
   );
 

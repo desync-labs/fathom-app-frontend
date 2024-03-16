@@ -7,7 +7,6 @@ import {
   useMemo,
 } from "react";
 import { RootService } from "services";
-import { supportedChainIds } from "connectors/networks";
 import { getDefaultProvider } from "utils/defaultProvider";
 import {
   ITransaction,
@@ -39,7 +38,7 @@ export const ServicesProvider: FC<{ children: ReactElement }> = ({
   const rootService = useMemo(() => new RootService(), []);
 
   useEffect(() => {
-    if (library && chainId && supportedChainIds.includes(chainId)) {
+    if (library) {
       rootService.setProvider(library);
     } else {
       rootService.setProvider(getDefaultProvider());

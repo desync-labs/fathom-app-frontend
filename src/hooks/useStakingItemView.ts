@@ -7,11 +7,12 @@ import { useServices } from "context/services";
 import useConnector from "context/connector";
 import BigNumber from "bignumber.js";
 import usePricesContext from "context/prices";
+import { supportedChainIds } from "connectors/networks";
 
 const useStakingItemView = (lockPosition: ILockPosition) => {
   const [seconds, setSeconds] = useState(lockPosition.end - Date.now() / 1000);
   const { processFlow, isUnlockable } = useStakingContext();
-  const { account, library } = useConnector();
+  const { account, library, chainId } = useConnector();
   const { stakingService } = useServices();
   const [rewardsAvailable, setRewardsAvailable] = useState<string>(
     lockPosition.rewardsAvailable.toString()
@@ -27,14 +28,21 @@ const useStakingItemView = (lockPosition: ILockPosition) => {
   );
 
   const fetchRewards = useCallback(() => {
-    if (account) {
+    if (account && supportedChainIds.includes(chainId)) {
       stakingService
         .getStreamClaimableAmountPerLock(0, account, lockPosition.lockId)
         .then((claimRewards) => {
           setRewardsAvailable(claimRewards.toString());
         });
     }
-  }, [stakingService, lockPosition, account, library, setRewardsAvailable]);
+  }, [
+    stakingService,
+    lockPosition,
+    account,
+    chainId,
+    library,
+    setRewardsAvailable,
+  ]);
 
   useEffect(() => {
     const diff = lockPosition.end - Date.now() / 1000;
