@@ -21,13 +21,16 @@ import {
   DefaultProvider,
   WalletConnect,
   supportedChainIds,
+  XDC_NETWORK_SETTINGS,
 } from "connectors/networks";
+import { Web3Provider } from "@into-the-fathom/providers";
 
 type ConnectorProviderType = {
   children: ReactElement;
 };
 
 export type UseConnectorReturnType = {
+  requestChangeNetwork: (chainId: number) => Promise<void>;
   connector: AbstractConnector | undefined;
   isActive: boolean;
   account: string;
@@ -256,6 +259,47 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
     [provider, account]
   );
 
+  const requestChangeNetwork = useCallback(
+    async (chainId: number) => {
+      if (provider && provider instanceof Web3Provider) {
+        try {
+          await provider.send("wallet_switchEthereumChain", [
+            { chainId: `0x${chainId.toString(16)}` },
+          ]); // 0x32 is the hexadecimal equivalent of 50
+        } catch (switchError: any) {
+          // This error code indicates that the chain has not been added to MetaMask.
+          if (switchError.code === 4902) {
+            try {
+              await provider.send("wallet_addEthereumChain", [
+                (XDC_NETWORK_SETTINGS as any)[chainId],
+              ]);
+            } catch (addError) {
+              console.error("Failed to add the XDC Network:", addError);
+            }
+          } else {
+            console.error("Failed to switch to the XDC Network:", switchError);
+          }
+        }
+      } else if (window && window.ethereum) {
+        try {
+          window.ethereum.request?.({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: `0x${chainId.toString(16)}` }],
+          });
+        } catch (err: any) {
+          console.log(err);
+          if (err.code === 4902) {
+            window.ethereum.request?.({
+              method: "wallet_addEthereumChain",
+              params: [(XDC_NETWORK_SETTINGS as any)[chainId]],
+            });
+          }
+        }
+      }
+    },
+    [provider]
+  );
+
   const openConnectorMenu = useCallback(
     (event: MouseEvent<HTMLElement>) => {
       event.stopPropagation();
@@ -292,6 +336,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
       openConnector,
       allowStableSwap,
       allowStableSwapInProgress,
+      requestChangeNetwork,
     }),
     [
       addERC20Token,
@@ -318,6 +363,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
       openConnector,
       allowStableSwap,
       allowStableSwapInProgress,
+      requestChangeNetwork,
     ]
   );
 

@@ -3,7 +3,7 @@ import { WalletConnectConnector } from "connectors/wallet-connect-connector/Wall
 import { EthereumProviderOptions } from "@walletconnect/ethereum-provider/dist/types/EthereumProvider";
 import { JsonRpcProvider, Web3Provider } from "@into-the-fathom/providers";
 
-export const APOTHEM_RPC = "https://rpc.apothem.network/";
+export const APOTHEM_RPC = "https://erpc.apothem.network/";
 export const XDC_RPC = "https://rpc.ankr.com/xdc/";
 
 let XDC_CHAIN_IDS = [51];

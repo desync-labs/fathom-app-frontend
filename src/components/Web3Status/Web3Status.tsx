@@ -5,12 +5,7 @@ import {
   WrongNetworkMobile,
   WrongNetworkMobileIcon,
 } from "components/AppComponents/AppBox/AppBox";
-import {
-  ChainId,
-  NETWORK_LABELS,
-  XDC_CHAIN_IDS,
-  XDC_NETWORK_SETTINGS,
-} from "connectors/networks";
+import { ChainId, NETWORK_LABELS, XDC_CHAIN_IDS } from "connectors/networks";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
@@ -19,7 +14,7 @@ import Grow from "@mui/material/Grow";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import MenuList from "@mui/material/MenuList";
 import MenuItem from "@mui/material/MenuItem";
-import { ReactElement, useCallback, useMemo, useRef, useState } from "react";
+import { ReactElement, useMemo, useRef, useState } from "react";
 import { styled } from "@mui/material/styles";
 import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
 import { Box } from "@mui/material";
@@ -28,12 +23,11 @@ import useSharedContext from "context/shared";
 import AppPopover, {
   PopoverType,
 } from "components/AppComponents/AppPopover/AppPopover";
-import { Web3Provider } from "@into-the-fathom/providers";
 
 const NetworkPaper = styled(AppPaper)`
   background: #253656;
   border: 1px solid #4f658c;
-  box-shadow: 0px 12px 32px #000715;
+  box-shadow: 0 12px 32px #000715;
   border-radius: 8px;
   padding: 4px;
 
@@ -68,7 +62,7 @@ const EmptyButtonWrapper = styled(Box)`
 `;
 
 const Web3Status = () => {
-  const { error, account, chainId, library } = useConnector();
+  const { error, account, chainId, requestChangeNetwork } = useConnector();
   const anchorRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState<boolean>(false);
   const { isMobile } = useSharedContext();
@@ -81,33 +75,6 @@ const Web3Status = () => {
         return Number(filterChainId) !== chainId;
       }),
     [chainId]
-  );
-
-  const requestChangeNetwork = useCallback(
-    async (chainId: number) => {
-      setOpen(false);
-      if (library && library instanceof Web3Provider) {
-        try {
-          await library.send("wallet_switchEthereumChain", [
-            { chainId: `0x${chainId.toString(16)}` },
-          ]); // 0x32 is the hexadecimal equivalent of 50
-        } catch (switchError: any) {
-          // This error code indicates that the chain has not been added to MetaMask.
-          if (switchError.code === 4902) {
-            try {
-              await library.send("wallet_addEthereumChain", [
-                (XDC_NETWORK_SETTINGS as any)[chainId],
-              ]);
-            } catch (addError) {
-              console.error("Failed to add the XDC Network:", addError);
-            }
-          } else {
-            console.error("Failed to switch to the XDC Network:", switchError);
-          }
-        }
-      }
-    },
-    [setOpen, library]
   );
 
   const showNetworkSelector =
@@ -188,7 +155,10 @@ const Web3Status = () => {
                 <MenuList id="split-button-menu" autoFocusItem>
                   {options.map(([chainId, chainName]) => (
                     <MenuItem
-                      onClick={() => requestChangeNetwork(Number(chainId))}
+                      onClick={() => {
+                        setOpen(false);
+                        requestChangeNetwork(Number(chainId));
+                      }}
                       key={chainId}
                     >
                       {chainName}
