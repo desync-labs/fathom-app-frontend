@@ -20,12 +20,12 @@ import VaultItemAbout from "components/Vault/VaultListItem/AdditionalInfoTabs/Va
 import VaultItemStrategies from "components/Vault/VaultListItem/AdditionalInfoTabs/VaultItemStrategies";
 import WalletConnectBtn from "components/Common/WalletConnectBtn";
 
+import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
+import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
 import LockSrc from "assets/svg/lock.svg";
 import LockAquaSrc from "assets/svg/lock-aqua.svg";
-import DirectionDown from "assets/svg/direction-down.svg";
-import DirectionUp from "assets/svg/direction-up.svg";
 
-const FlexBox = styled(Box)`
+export const FlexBox = styled(Box)`
   display: flex;
   align-items: center;
   gap: 20px;
@@ -266,6 +266,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
         <TableCell
           colSpan={1}
           data-testid={`vaultRow-${vaultTestId}-tvlValueCell`}
+          sx={{ minWidth: "100px" }}
         >
           <VaultStackedLiquidity>
             {formatCurrency(
@@ -279,6 +280,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
         <TableCell
           colSpan={1}
           data-testid={`vaultRow-${vaultTestId}-availableValueCell`}
+          sx={{ minWidth: "100px" }}
         >
           <VaultAvailable className={"blue"}>
             {formatNumber(
@@ -342,14 +344,18 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
               onClick={() => setExtended(!extended)}
               data-testid={`vaultRow-${vaultTestId}-hideButton`}
             >
-              <img src={DirectionUp} alt={"direction-up"} />
+              <KeyboardArrowUpRoundedIcon
+                sx={{ width: "32px", height: "32px", color: "#fff" }}
+              />
             </ExtendedBtn>
             <ExtendedBtn
               className={!extended ? "visible" : "hidden"}
               onClick={() => setExtended(!extended)}
               data-testid={`vaultRow-${vaultTestId}-extendButton`}
             >
-              <img src={DirectionDown} alt={"direction-down"} />
+              <KeyboardArrowDownRoundedIcon
+                sx={{ width: "32px", height: "32px", color: "#fff" }}
+              />
             </ExtendedBtn>
           </FlexBox>
         </TableCell>

@@ -1,5 +1,5 @@
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
-import { useQuery } from "@apollo/client";
+import { useLazyQuery, useQuery } from "@apollo/client";
 import { IVault, IVaultPosition } from "fathom-sdk";
 import {
   ACCOUNT_VAULT_POSITIONS,
@@ -52,17 +52,6 @@ const useVaultList = () => {
     context: { clientName: "vaults" },
   });
 
-  const {
-    data: positionsData,
-    loading: vaultPositionsLoading,
-    refetch: positionsRefetch,
-  } = useQuery(ACCOUNT_VAULT_POSITIONS, {
-    variables: {
-      account: account ? account.toLowerCase() : undefined,
-    },
-    context: { clientName: "vaults" },
-  });
-
   const { data: vaultsFactories, loading: vaultsFactoriesLoading } = useQuery(
     VAULT_FACTORIES,
     {
@@ -70,16 +59,36 @@ const useVaultList = () => {
     }
   );
 
-  useEffect(() => {
-    if (syncVault && !prevSyncVault) {
-      positionsRefetch();
-      vaultsRefetch();
-    }
-  }, [syncVault, prevSyncVault, positionsRefetch, vaultsRefetch]);
+  const [
+    loadData,
+    { loading: vaultPositionsLoading, refetch: positionsRefetch },
+  ] = useLazyQuery(ACCOUNT_VAULT_POSITIONS, {
+    context: { clientName: "vaults" },
+  });
 
   useEffect(() => {
-    positionsRefetch();
-  }, [account]);
+    if (account) {
+      loadData({ variables: { account: account.toLowerCase() } }).then(
+        (res) => {
+          res.data?.accountVaultPositions &&
+            setVaultPositionsList(res.data.accountVaultPositions);
+        }
+      );
+    } else {
+      setVaultPositionsList([]);
+    }
+  }, [account, loadData, setVaultPositionsList]);
+
+  useEffect(() => {
+    if (syncVault && !prevSyncVault) {
+      positionsRefetch({ account: account.toLowerCase() }).then((res) => {
+        res.data?.accountVaultPositions
+          ? setVaultPositionsList(res.data.accountVaultPositions)
+          : setVaultPositionsList([]);
+      });
+      vaultsRefetch();
+    }
+  }, [syncVault, prevSyncVault, vaultsRefetch]);
 
   useEffect(() => {
     if (!vaultsFactoriesLoading && vaultsFactories) {
@@ -95,14 +104,6 @@ const useVaultList = () => {
       }
     }
   }, [vaultsFactories]);
-
-  useEffect(() => {
-    if (positionsData && positionsData.accountVaultPositions) {
-      setVaultPositionsList(positionsData.accountVaultPositions);
-    } else {
-      setVaultPositionsList([]);
-    }
-  }, [positionsData]);
 
   useEffect(() => {
     if (vaultItemsData && vaultItemsData.vaults) {
