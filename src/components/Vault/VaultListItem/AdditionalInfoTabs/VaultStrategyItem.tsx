@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, memo, useEffect, useMemo, useState } from "react";
 import BigNumber from "bignumber.js";
 import { Link } from "react-router-dom";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -30,6 +30,12 @@ export const VaultItemAccordion = styled(Accordion)`
   margin-bottom: 5px;
   box-shadow: none;
 
+  &.MuiAccordion-root {
+    &:before {
+      background: none;
+    }
+  }
+
   ${({ theme }) => theme.breakpoints.down("sm")} {
     &.MuiPaper-root {
       &:before {
@@ -58,6 +64,13 @@ export const VaultStrategyStatsWrapper = styled(Box)`
   ${({ theme }) => theme.breakpoints.down("sm")} {
     flex-direction: column;
     width: 100%;
+  }
+`;
+export const VaultStrategyDescription = styled(Box)`
+  font-size: 14px;
+  padding-bottom: 16px;
+  p {
+    margin: 0;
   }
 `;
 
@@ -113,6 +126,7 @@ type VaultStrategyItemPropsType = {
   vaultBalanceTokens: string;
   tokenName: string;
   performanceFee: number;
+  index: number;
 };
 
 const VaultIndicatorItem: FC<VaultIndicatorItemPropsType> = ({
@@ -136,13 +150,14 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
   vaultBalanceTokens,
   tokenName,
   performanceFee,
+  index,
 }) => {
   const [aprHistoryArr, setAprHistoryArr] = useState<HistoryChartDataType[]>(
     []
   );
   const [lastReportDate, setLastReportDate] = useState<string>("");
   const [allocationShare, setAllocationShare] = useState<number>(0);
-  const [expanded, setExpanded] = useState<boolean>(true);
+  const [expanded, setExpanded] = useState<boolean>(!index);
   const { isMobile } = useSharedContext();
 
   useEffect(() => {
@@ -199,7 +214,9 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
         id="panel1a-header"
         sx={{ padding: "0" }}
       >
-        <Typography>Dynamic Market Analysis for Optimal Returns</Typography>
+        <Typography>
+          FXD: Direct Incentive - Educational Strategy {index + 1}
+        </Typography>
       </AccordionSummary>
       <AccordionDetails sx={{ padding: "0" }}>
         <Link
@@ -213,11 +230,29 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
         >
           {strategyData.id}
         </Link>
-        <Typography fontSize="14px" pb={2}>
-          Our strategy involves dynamically allocating our reserves to different
-          investment opportunities. This flexibility allows us to capitalize on
-          the best market conditions.
-        </Typography>
+        <VaultStrategyDescription>
+          <p>
+            The strategy enhances returns for FXD Vault investors by ensuring
+            continuous earnings. Here's what makes it stand out:
+          </p>
+          <ul>
+            <li>
+              Consistent Earnings: Our approach guarantees a steady flow of
+              returns to Vault participants, boosting investment outcomes and
+              securing the Vault's growth.
+            </li>
+            <li>
+              Transparency and Security: Trust is key. We share detailed
+              performance and earnings reports, keeping operations transparent
+              and secure.
+            </li>
+            <li>
+              Educational: Designed to give returns as direct incentivization,
+              the strategy reduces participants' risk and doesn't suffer from
+              market fluctuations.
+            </li>
+          </ul>
+        </VaultStrategyDescription>
         {lastReportDate && (
           <Typography fontSize="14px">{`Last report ${lastReportDate}.`}</Typography>
         )}
@@ -275,4 +310,4 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
   );
 };
 
-export default VaultStrategyItem;
+export default memo(VaultStrategyItem);
