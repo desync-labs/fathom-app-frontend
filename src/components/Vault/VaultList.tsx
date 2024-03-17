@@ -1,7 +1,6 @@
 import { FC, memo, useMemo, MouseEvent } from "react";
 import {
   Box,
-  CircularProgress,
   Table,
   TableBody,
   TableCell,
@@ -11,6 +10,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
+import useSharedContext from "context/shared";
 import { COUNT_PER_PAGE } from "utils/Constants";
 import useVaultList from "hooks/useVaultList";
 
@@ -20,16 +20,11 @@ import VaultListItem from "components/Vault/VaultListItem";
 import VaultFilters from "components/Vault/VaultFilters";
 import VaultListItemMobile from "components/Vault/VaultListItemMobile";
 import VaultFiltersMobile from "components/Vault/VaultFiltersMobile";
+import {
+  VaultListItemMobileSkeleton,
+  VaultListItemSkeleton,
+} from "components/Vault/VaultListItemSkeleton";
 import AppPopover from "components/AppComponents/AppPopover/AppPopover";
-import useSharedContext from "context/shared";
-
-const CircleWrapper = styled(Box)`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
 
 const PaginationWrapper = styled(Box)`
   display: flex;
@@ -102,15 +97,18 @@ const VaultList: FC<VaultListPropsType> = ({
                 {vaultsLoading ||
                 vaultPositionsLoading ||
                 !vaultSortedList.length ? (
-                  <NoResults variant={"h6"}>
+                  <>
                     {vaultsLoading || vaultPositionsLoading ? (
-                      <CircleWrapper>
-                        <CircularProgress size={30} />
-                      </CircleWrapper>
+                      <>
+                        <VaultListItemMobileSkeleton />
+                        <VaultListItemMobileSkeleton />
+                      </>
                     ) : (
-                      "There are no Vaults for this query."
+                      <NoResults variant={"h6"}>
+                        There are no Vaults for this query.
+                      </NoResults>
                     )}
-                  </NoResults>
+                  </>
                 ) : (
                   vaultSortedList.map((vault) => (
                     <VaultListItemMobile
@@ -133,17 +131,11 @@ const VaultList: FC<VaultListPropsType> = ({
                   setSearch={setSearch}
                   setSortBy={setSortBy}
                 />
-                {vaultsLoading ||
-                vaultPositionsLoading ||
+                {!vaultsLoading &&
+                !vaultPositionsLoading &&
                 !vaultSortedList.length ? (
                   <NoResults variant={"h6"}>
-                    {vaultsLoading || vaultPositionsLoading ? (
-                      <CircleWrapper>
-                        <CircularProgress size={30} />
-                      </CircleWrapper>
-                    ) : (
-                      "There are no Vaults for this query."
-                    )}
+                    There are no Vaults for this query.
                   </NoResults>
                 ) : (
                   <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -227,15 +219,22 @@ const VaultList: FC<VaultListPropsType> = ({
                       </AppTableHeaderRow>
                     </TableHead>
                     <TableBody>
-                      {vaultSortedList.map((vault) => (
-                        <VaultListItem
-                          key={vault.id}
-                          vaultItemData={vault}
-                          vaultPosition={filterCurrentPosition(vault.id)}
-                          protocolFee={protocolFee}
-                          performanceFee={performanceFee}
-                        />
-                      ))}
+                      {vaultsLoading || vaultPositionsLoading ? (
+                        <>
+                          <VaultListItemSkeleton />
+                          <VaultListItemSkeleton />
+                        </>
+                      ) : (
+                        vaultSortedList.map((vault) => (
+                          <VaultListItem
+                            key={vault.id}
+                            vaultItemData={vault}
+                            vaultPosition={filterCurrentPosition(vault.id)}
+                            protocolFee={protocolFee}
+                            performanceFee={performanceFee}
+                          />
+                        ))
+                      )}
                     </TableBody>
                   </Table>
                 )}
