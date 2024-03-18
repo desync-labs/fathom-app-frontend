@@ -40,7 +40,7 @@ import DirectionDown from "assets/svg/direction-down.svg";
 import LockSrc from "assets/svg/lock.svg";
 import LockAquaSrc from "assets/svg/lock-aqua.svg";
 
-const VaultPoolName = styled("div")`
+export const VaultPoolName = styled("div")`
   display: flex;
   justify-content: left;
   align-items: center;
@@ -48,7 +48,7 @@ const VaultPoolName = styled("div")`
   margin-bottom: 15px;
 `;
 
-const VaultListItemMobileContainer = styled(Box)`
+export const VaultListItemMobileContainer = styled(Box)`
   width: 100%;
   background: #131f35;
   border-bottom: 1px solid #131f35;

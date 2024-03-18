@@ -157,14 +157,7 @@ const useStakingView = () => {
               }
             );
           } else {
-            const newLockPositions = stakesData?.stakers[0].lockPositions.map(
-              (lockPosition: ILockPosition) => ({
-                ...lockPosition,
-                rewardsAvailable: 0,
-              })
-            );
-
-            setLockPositions(newLockPositions);
+            setLockPositions([]);
             setFetchPositionLoading(false);
             return;
           }
