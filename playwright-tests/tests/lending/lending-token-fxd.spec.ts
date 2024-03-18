@@ -12,14 +12,6 @@ test.describe("Fathom App Test Suite: Lending - FXD Token Tests", () => {
     await lendingPage.withdrawAllSuppliedAssetsFullyIfAny();
   });
 
-  test.afterAll(async ({ lendingPage }) => {
-    await lendingPage.navigate();
-    await lendingPage.connectWallet(WalletConnectOptions.Metamask);
-    await lendingPage.validateConnectedWalletAddress();
-    await lendingPage.repayAllBorrowedAssetsFullyIfAny();
-    await lendingPage.withdrawAllSuppliedAssetsFullyIfAny();
-  });
-
   test("Supply FXD Token when no FXD is supplied is successful", async ({
     lendingPage,
   }) => {
@@ -133,10 +125,35 @@ test.describe("Fathom App Test Suite: Lending - FXD Token Tests", () => {
     );
   });
 
-  test("Toggling FXD Token APY type to Variable / Stable is successful", async ({
+  test("Toggling FXD token APY type to variable and stable is successful", async ({
     lendingPage,
   }) => {
-    await lendingPage.navigate();
+    // Supply tokens first
+    const supplyAmountFXD = 10;
+    const supplyAmountCGO = 10;
+    await lendingPage.supplyAsset({
+      assetName: LendingAssets.FXD,
+      amount: supplyAmountFXD,
+    });
+    await lendingPage.supplyAsset({
+      assetName: LendingAssets.CGO,
+      amount: supplyAmountCGO,
+    });
+    // Borrow token
+    const borrowAmount = 11;
+    await lendingPage.borrowAsset({
+      assetName: LendingAssets.FXD,
+      amount: borrowAmount,
+      isStable: false,
+    });
+    // Toggle Apy to stable and validate
+    await lendingPage.toggleApyTypeAndValidate({
+      assetName: LendingAssets.FXD,
+    });
+    // Toggle Apy to variable and validate
+    await lendingPage.toggleApyTypeAndValidate({
+      assetName: LendingAssets.FXD,
+    });
   });
 
   test("Repay FXD with regular FXD partially is successfull", async ({

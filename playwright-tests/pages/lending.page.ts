@@ -2,7 +2,8 @@ import { type Page, type Locator, expect } from "@playwright/test";
 import BasePage from "./base.page";
 // @ts-ignore
 import * as metamask from "@synthetixio/synpress/commands/metamask";
-import { LendingAssets } from "../types";
+import { LendingAssets, LendingSection } from "../types";
+import { extractNumericValue } from "../utils/helpers";
 
 export default class LendingPage extends BasePage {
   readonly path: string;
@@ -18,6 +19,9 @@ export default class LendingPage extends BasePage {
   readonly spanLoadingActionButton: Locator;
   readonly btnVariableApyRateBorrowModal: Locator;
   readonly btnStableApyRateBorrowModal: Locator;
+  readonly btnApyVariable: Locator;
+  readonly btnApyStable: Locator;
+  readonly newApyValueSwitchApyModal: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -49,6 +53,11 @@ export default class LendingPage extends BasePage {
     );
     this.btnStableApyRateBorrowModal = this.page.locator(
       "[data-cy='Modal'] button[value='Stable']"
+    );
+    this.btnApyVariable = this.page.locator("[data-cy='apyButton_Variable']");
+    this.btnApyStable = this.page.locator("[data-cy='apyButton_Stable']");
+    this.newApyValueSwitchApyModal = this.page.locator(
+      "//div[text()='New APY']//following-sibling::div//p[2]"
     );
   }
 
@@ -310,6 +319,70 @@ export default class LendingPage extends BasePage {
     }
   }
 
+  getApyButtonVariableLocator({
+    assetName,
+  }: {
+    assetName: LendingAssets;
+  }): Locator {
+    return this.getDashboardBorrowedListItemLocator({ assetName }).locator(
+      "[data-cy='apyButton_Variable']"
+    );
+  }
+
+  getApyButtonStableLocator({
+    assetName,
+  }: {
+    assetName: LendingAssets;
+  }): Locator {
+    return this.getDashboardBorrowedListItemLocator({ assetName }).locator(
+      "[data-cy='apyButton_Stable']"
+    );
+  }
+
+  async getApyValueLocator({
+    section,
+    assetName,
+  }: {
+    section: LendingSection;
+    assetName: LendingAssets;
+  }): Promise<Locator> {
+    if (section === LendingSection.Supply) {
+      return this.getDashboardSupplyListItemLocator({ assetName }).locator(
+        "[data-cy='apy']"
+      );
+    } else if (section === LendingSection.Supplied) {
+      return this.getDashboardSuppliedListItemLocator({ assetName }).locator(
+        "[data-cy='apy']"
+      );
+    } else if (section === LendingSection.Borrow) {
+      return this.getDashboardBorrowListItemLocator({ assetName }).locator(
+        "[data-cy='apy']"
+      );
+    } else if (section === LendingSection.Borrowed) {
+      return this.getDashboardBorrowedListItemLocator({ assetName }).locator(
+        "[data-cy='apy']"
+      );
+    } else {
+      throw new Error("Invalid section");
+    }
+  }
+
+  async getApyValue({
+    section,
+    assetName,
+  }: {
+    section: LendingSection;
+    assetName: LendingAssets;
+  }): Promise<number> {
+    await this.page.waitForLoadState("load");
+    const apyValueLocator = await this.getApyValueLocator({
+      section,
+      assetName,
+    });
+    const apyValueTextContent = await apyValueLocator.textContent();
+    return extractNumericValue(apyValueTextContent as string) as number;
+  }
+
   async supplyAsset({
     assetName,
     amount,
@@ -401,5 +474,77 @@ export default class LendingPage extends BasePage {
     });
     await this.btnCloseAllDoneModal.click();
     await this.page.waitForTimeout(1000);
+  }
+
+  async toggleApyTypeAndValidate({
+    assetName,
+  }: {
+    assetName: LendingAssets;
+  }): Promise<void> {
+    await expect(
+      this.getDashboardBorrowedListItemLocator({ assetName }).locator(
+        "[data-cy*='apyButton']"
+      )
+    ).toBeVisible();
+    const isApyVariable = await this.getApyButtonVariableLocator({
+      assetName,
+    }).isVisible();
+    if (isApyVariable) {
+      await this.getApyButtonVariableLocator({ assetName }).click();
+      await expect(
+        this.page.getByText("Select APY type to switch")
+      ).toBeVisible();
+      await this.page.locator("[value='Stable']").click();
+      const newApyValueTextContent =
+        await this.newApyValueSwitchApyModal.textContent();
+      const newApyValueExpected = extractNumericValue(
+        newApyValueTextContent as string
+      );
+      await this.btnAction.click();
+      await metamask.confirmTransaction();
+      await expect(this.headingTwoAllDoneModal).toBeVisible({
+        timeout: 50000,
+      });
+      await this.btnCloseAllDoneModal.click();
+      await this.page.waitForTimeout(1000);
+      await expect(this.getApyButtonStableLocator({ assetName })).toBeVisible();
+      await expect(this.getApyButtonStableLocator({ assetName })).toHaveText(
+        "Stable"
+      );
+      const newApyValueDashboard = await this.getApyValue({
+        assetName,
+        section: LendingSection.Borrowed,
+      });
+      expect(newApyValueDashboard).toEqual(newApyValueExpected);
+    } else {
+      await this.getApyButtonStableLocator({ assetName }).click();
+      await expect(
+        this.page.getByText("Select APY type to switch")
+      ).toBeVisible();
+      await this.page.locator("[value='Variable']").click();
+      const newApyValueTextContent =
+        await this.newApyValueSwitchApyModal.textContent();
+      const newApyValueExpected = extractNumericValue(
+        newApyValueTextContent as string
+      );
+      await this.btnAction.click();
+      await metamask.confirmTransaction();
+      await expect(this.headingTwoAllDoneModal).toBeVisible({
+        timeout: 50000,
+      });
+      await this.btnCloseAllDoneModal.click();
+      await this.page.waitForTimeout(1000);
+      await expect(
+        this.getApyButtonVariableLocator({ assetName })
+      ).toBeVisible();
+      await expect(this.getApyButtonVariableLocator({ assetName })).toHaveText(
+        "Variable"
+      );
+      const newApyValueDashboard = await this.getApyValue({
+        assetName,
+        section: LendingSection.Borrowed,
+      });
+      expect(newApyValueDashboard).toEqual(newApyValueExpected);
+    }
   }
 }
