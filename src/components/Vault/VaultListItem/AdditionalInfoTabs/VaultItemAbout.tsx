@@ -49,28 +49,31 @@ const VaultItemAbout: FC<VaultItemAboutPropsTypes> = ({
     if (!vaultItemData) return;
 
     const extractedData = [];
+    const allReports = [];
     let accumulatedTotalEarned = "0";
 
     for (const strategy of vaultItemData.strategies) {
-      for (let i = strategy.reports.length - 1; i >= 0; i--) {
-        const report = strategy.reports[i];
-
-        const currentTotalEarned = BigNumber(report.gain)
-          .minus(report.loss)
-          .dividedBy(10 ** 18)
-          .plus(accumulatedTotalEarned)
-          .toString();
-
-        accumulatedTotalEarned = currentTotalEarned;
-
-        extractedData.push({
-          timestamp: report.timestamp,
-          chartValue: currentTotalEarned,
-        });
-      }
+      allReports.push(...strategy.reports);
     }
 
-    extractedData.sort((a, b) => parseInt(a.timestamp) - parseInt(b.timestamp));
+    allReports.sort((a, b) => parseInt(a.timestamp) - parseInt(b.timestamp));
+
+    for (let i = allReports.length - 1; i >= 0; i--) {
+      const report = allReports[i];
+
+      const currentTotalEarned = BigNumber(report.gain)
+        .minus(report.loss)
+        .dividedBy(10 ** 18)
+        .plus(accumulatedTotalEarned)
+        .toString();
+
+      accumulatedTotalEarned = currentTotalEarned;
+
+      extractedData.push({
+        timestamp: report.timestamp,
+        chartValue: currentTotalEarned,
+      });
+    }
 
     setEarnedHistoryArr(extractedData);
   }, [vaultItemData]);

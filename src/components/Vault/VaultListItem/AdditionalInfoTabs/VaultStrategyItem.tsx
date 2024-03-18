@@ -79,6 +79,7 @@ export const VaultIndicatorsWrapper = styled(Box)`
   width: 50%;
   flex-direction: column;
   justify-content: space-evenly;
+  gap: 8px;
 
   ${({ theme }) => theme.breakpoints.down("sm")} {
     gap: 20px;
