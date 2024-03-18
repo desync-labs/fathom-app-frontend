@@ -5,12 +5,7 @@ import {
   WrongNetworkMobile,
   WrongNetworkMobileIcon,
 } from "components/AppComponents/AppBox/AppBox";
-import {
-  ChainId,
-  NETWORK_LABELS,
-  XDC_CHAIN_IDS,
-  XDC_NETWORK_SETTINGS,
-} from "connectors/networks";
+import { ChainId, NETWORK_LABELS, XDC_CHAIN_IDS } from "connectors/networks";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
@@ -19,7 +14,7 @@ import Grow from "@mui/material/Grow";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import MenuList from "@mui/material/MenuList";
 import MenuItem from "@mui/material/MenuItem";
-import { ReactElement, useCallback, useMemo, useRef, useState } from "react";
+import { ReactElement, useMemo, useRef, useState } from "react";
 import { styled } from "@mui/material/styles";
 import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
 import { Box } from "@mui/material";
@@ -32,7 +27,7 @@ import AppPopover, {
 const NetworkPaper = styled(AppPaper)`
   background: #253656;
   border: 1px solid #4f658c;
-  box-shadow: 0px 12px 32px #000715;
+  box-shadow: 0 12px 32px #000715;
   border-radius: 8px;
   padding: 4px;
 
@@ -67,7 +62,7 @@ const EmptyButtonWrapper = styled(Box)`
 `;
 
 const Web3Status = () => {
-  const { error, account, chainId, isMetamask } = useConnector();
+  const { error, account, chainId, requestChangeNetwork } = useConnector();
   const anchorRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState<boolean>(false);
   const { isMobile } = useSharedContext();
@@ -82,33 +77,8 @@ const Web3Status = () => {
     [chainId]
   );
 
-  const requestChangeNetwork = useCallback(
-    async (chainId: number) => {
-      setOpen(false);
-      if (window && window.ethereum) {
-        try {
-          window.ethereum.request?.({
-            method: "wallet_switchEthereumChain",
-            params: [{ chainId: `0x${chainId.toString(16)}` }],
-          });
-        } catch (err: any) {
-          console.log(err);
-          if (err.code === 4902) {
-            window.ethereum.request?.({
-              method: "wallet_addEthereumChain",
-              params: [(XDC_NETWORK_SETTINGS as any)[chainId]],
-            });
-          }
-        }
-      }
-    },
-    [setOpen]
-  );
-
   const showNetworkSelector =
-    (chainId || error instanceof UnsupportedChainIdError) &&
-    options.length &&
-    isMetamask;
+    (chainId || error instanceof UnsupportedChainIdError) && options.length;
 
   const isError = error || (chainId && !XDC_CHAIN_IDS.includes(chainId));
 
@@ -154,8 +124,7 @@ const Web3Status = () => {
   return (chainId ||
     error instanceof UnsupportedChainIdError ||
     !XDC_CHAIN_IDS.includes(chainId)) &&
-    options.length &&
-    isMetamask ? (
+    options.length ? (
     <>
       <ButtonGroup
         variant="contained"
@@ -186,7 +155,10 @@ const Web3Status = () => {
                 <MenuList id="split-button-menu" autoFocusItem>
                   {options.map(([chainId, chainName]) => (
                     <MenuItem
-                      onClick={() => requestChangeNetwork(Number(chainId))}
+                      onClick={() => {
+                        setOpen(false);
+                        requestChangeNetwork(Number(chainId));
+                      }}
                       key={chainId}
                     >
                       {chainName}

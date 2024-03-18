@@ -49,7 +49,7 @@ export function useWETHContract(
 ): Contract | null {
   const { chainId } = useActiveWeb3React();
   return useContract(
-    chainId ? WETH[chainId].address : undefined,
+    chainId ? WETH[chainId]?.address : undefined,
     WETH_ABI,
     withSignerIfPossible
   );

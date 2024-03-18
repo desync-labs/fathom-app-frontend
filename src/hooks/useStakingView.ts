@@ -17,6 +17,7 @@ import useConnector from "context/connector";
 import debounce from "lodash.debounce";
 import { BigNumber as eBigNumber } from "fathom-ethers";
 import BigNumber from "bignumber.js";
+import { supportedChainIds } from "connectors/networks";
 
 export type ActionType = { type: string; id: number | null };
 
@@ -94,7 +95,7 @@ const useStakingView = () => {
   });
 
   const fetchAllClaimRewards = useCallback(() => {
-    if (account) {
+    if (account && supportedChainIds.includes(chainId)) {
       stakingService.getStreamClaimableAmount(account).then((amount) => {
         setTotalRewards(amount.toString());
         setTimeout(() => {
@@ -102,7 +103,7 @@ const useStakingView = () => {
         }, 1000);
       });
     }
-  }, [stakingService, account, setTotalRewards]);
+  }, [stakingService, account, chainId, setTotalRewards]);
 
   useEffect(() => {
     if (syncDao && !prevSyncDao) {
@@ -142,17 +143,24 @@ const useStakingView = () => {
           account
         ) {
           const promises: Promise<eBigNumber>[] = [];
-          stakesData?.stakers[0].lockPositions.forEach(
-            (lockPosition: ILockPosition) => {
-              promises.push(
-                stakingService.getStreamClaimableAmountPerLock(
-                  0,
-                  account,
-                  lockPosition.lockId
-                )
-              );
-            }
-          );
+
+          if (supportedChainIds.includes(chainId)) {
+            stakesData?.stakers[0].lockPositions.forEach(
+              (lockPosition: ILockPosition) => {
+                promises.push(
+                  stakingService.getStreamClaimableAmountPerLock(
+                    0,
+                    account,
+                    lockPosition.lockId
+                  )
+                );
+              }
+            );
+          } else {
+            setLockPositions([]);
+            setFetchPositionLoading(false);
+            return;
+          }
 
           setFetchPositionLoading(true);
 
@@ -190,9 +198,11 @@ const useStakingView = () => {
    * Get All claimed rewards
    */
   useEffect(() => {
-    setTimeout(() => {
+    const timeout = setTimeout(() => {
       fetchAllClaimRewards();
     }, 30 * 1000);
+
+    return () => clearTimeout(timeout);
   }, [totalRewards, fetchAllClaimRewards]);
 
   const processFlow = useCallback(
