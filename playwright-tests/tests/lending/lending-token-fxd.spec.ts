@@ -156,14 +156,66 @@ test.describe("Fathom App Test Suite: Lending - FXD Token Tests", () => {
     });
   });
 
-  test("Repay FXD with regular FXD partially is successfull", async ({
+  test.only("Repay FXD with regular FXD partially is successfull", async ({
     lendingPage,
   }) => {
-    await lendingPage.navigate();
+    // Supply token first
+    const supplyAmount = 10;
+    await lendingPage.supplyAsset({
+      assetName: LendingAssets.FXD,
+      amount: supplyAmount,
+    });
+    // Borrow token
+    const borrowAmount = 1;
+    await lendingPage.borrowAsset({
+      assetName: LendingAssets.FXD,
+      amount: borrowAmount,
+      isStable: false,
+    });
+    // Repay token partially
+    const repayAmount = 0.5;
+    const assetNativeAmountBorrowedBefore =
+      await lendingPage.getBorrowedAssetNativeAmount({
+        assetName: LendingAssets.FXD,
+      });
+    await lendingPage.repayAsset({
+      assetName: LendingAssets.FXD,
+      amount: repayAmount,
+    });
+    const assetNativeAmountBorrowedAfter =
+      await lendingPage.getBorrowedAssetNativeAmount({
+        assetName: LendingAssets.FXD,
+      });
+    expect(assetNativeAmountBorrowedAfter).toEqual(
+      assetNativeAmountBorrowedBefore - repayAmount
+    );
   });
 
-  test("Repay FXD fully with fmFXD is successful", async ({ lendingPage }) => {
-    await lendingPage.navigate();
+  test.only("Repay FXD fully with fmFXD is successful", async ({
+    lendingPage,
+  }) => {
+    // Supply token first
+    const supplyAmount = 10;
+    await lendingPage.supplyAsset({
+      assetName: LendingAssets.FXD,
+      amount: supplyAmount,
+    });
+    // Borrow token
+    const borrowAmount = 1;
+    await lendingPage.borrowAsset({
+      assetName: LendingAssets.FXD,
+      amount: borrowAmount,
+      isStable: false,
+    });
+    // Repay token fully
+    await lendingPage.repayAsset({
+      assetName: LendingAssets.FXD,
+      isMax: true,
+      isFm: true,
+    });
+    await expect(lendingPage.paragraphBorrowEmpty).toBeVisible({
+      timeout: 10000,
+    });
   });
 
   test("Withdraw FXD partially is successful", async ({ lendingPage }) => {

@@ -22,6 +22,8 @@ export default class LendingPage extends BasePage {
   readonly btnApyVariable: Locator;
   readonly btnApyStable: Locator;
   readonly newApyValueSwitchApyModal: Locator;
+  readonly drpdwnAssetSelect: Locator;
+  readonly liFmAssetSelect: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -59,6 +61,8 @@ export default class LendingPage extends BasePage {
     this.newApyValueSwitchApyModal = this.page.locator(
       "//div[text()='New APY']//following-sibling::div//p[2]"
     );
+    this.drpdwnAssetSelect = this.page.locator("[data-cy='assetSelect']");
+    this.liFmAssetSelect = this.page.locator("li[data-value*='fm']");
   }
 
   async navigate(): Promise<void> {
@@ -207,6 +211,16 @@ export default class LendingPage extends BasePage {
     );
   }
 
+  getDashboardSuppliedListItemWithdrawButtonLocator({
+    assetName,
+  }: {
+    assetName: LendingAssets;
+  }): Locator {
+    return this.getDashboardSuppliedListItemLocator({ assetName }).locator(
+      "//button[text()='Withdraw']"
+    );
+  }
+
   getDashboardSuppliedListItemNativeAmountLocator({
     assetName,
   }: {
@@ -284,7 +298,17 @@ export default class LendingPage extends BasePage {
     assetName: LendingAssets;
   }): Locator {
     return this.getDashboardBorrowedListItemLocator({ assetName }).locator(
-      "//button[text()='Supply']"
+      "//button[text()='Borrow']"
+    );
+  }
+
+  getDashboardBorrowedListItemRepayButtonLocator({
+    assetName,
+  }: {
+    assetName: LendingAssets;
+  }): Locator {
+    return this.getDashboardBorrowedListItemLocator({ assetName }).locator(
+      "//button[text()='Repay']"
     );
   }
 
@@ -390,7 +414,7 @@ export default class LendingPage extends BasePage {
     isMax,
   }: {
     assetName: LendingAssets;
-    amount: number;
+    amount?: number;
     isSupplied?: boolean;
     isMax?: boolean;
   }): Promise<void> {
@@ -405,7 +429,7 @@ export default class LendingPage extends BasePage {
     }
     if (isMax) {
       await this.btnMax.click();
-    } else {
+    } else if (amount !== undefined) {
       await this.inputModal.fill(amount.toString());
     }
     await this.page.waitForTimeout(1000);
@@ -435,7 +459,7 @@ export default class LendingPage extends BasePage {
     isStable,
   }: {
     assetName: LendingAssets;
-    amount: number;
+    amount?: number;
     isStable: boolean;
     isBorrowed?: boolean;
     isMax?: boolean;
@@ -454,7 +478,7 @@ export default class LendingPage extends BasePage {
     }
     if (isMax) {
       await this.btnMax.click();
-    } else {
+    } else if (amount !== undefined) {
       await this.inputModal.fill(amount.toString());
     }
     await this.page.waitForTimeout(1000);
@@ -546,5 +570,91 @@ export default class LendingPage extends BasePage {
       });
       expect(newApyValueDashboard).toEqual(newApyValueExpected);
     }
+  }
+
+  async repayAsset({
+    assetName,
+    amount,
+    isMax,
+    isFm,
+  }: {
+    assetName: LendingAssets;
+    amount?: number;
+    isMax?: boolean;
+    isFm?: boolean;
+  }): Promise<void> {
+    await this.getDashboardBorrowedListItemRepayButtonLocator({
+      assetName,
+    }).click();
+    if (isFm) {
+      await this.drpdwnAssetSelect.click();
+      await this.liFmAssetSelect.click();
+    }
+    if (isMax) {
+      await this.btnMax.click();
+    } else if (amount !== undefined) {
+      await this.inputModal.fill(amount.toString());
+    }
+    await expect(this.spanLoadingActionButton).toBeVisible();
+    await expect(this.spanLoadingActionButton).not.toBeVisible({
+      timeout: 10000,
+    });
+    await this.page.waitForTimeout(1000);
+    const isApprovalButtonVisible = await this.btnApproval.isVisible();
+    const isApproveChangeVisible = await this.btnApproveChange.isVisible();
+    if (isApprovalButtonVisible && isApproveChangeVisible) {
+      await this.btnApproval.click();
+      await metamask.confirmDataSignatureRequest();
+    } else if (isApprovalButtonVisible && !isApproveChangeVisible) {
+      await this.btnApproval.click();
+      await metamask.confirmPermissionToSpend();
+    }
+    await this.btnAction.click();
+    await metamask.confirmTransaction();
+    await expect(this.headingTwoAllDoneModal).toBeVisible({
+      timeout: 50000,
+    });
+    await this.btnCloseAllDoneModal.click();
+    await this.page.waitForTimeout(1000);
+  }
+
+  async withdrawAsset({
+    assetName,
+    amount,
+    isMax,
+  }: {
+    assetName: LendingAssets;
+    amount?: number;
+    isMax?: boolean;
+  }): Promise<void> {
+    await this.getDashboardSuppliedListItemWithdrawButtonLocator({
+      assetName,
+    }).click();
+    if (isMax) {
+      await this.btnMax.click();
+    } else if (amount !== undefined) {
+      await this.inputModal.fill(amount.toString());
+    }
+    await expect(this.spanLoadingActionButton).toBeVisible();
+    await expect(this.spanLoadingActionButton).not.toBeVisible({
+      timeout: 10000,
+    });
+    await this.page.waitForTimeout(1000);
+    const isApprovalButtonVisible = await this.btnApproval.isVisible();
+    const isApproveChangeVisible = await this.btnApproveChange.isVisible();
+    if (isApprovalButtonVisible && isApproveChangeVisible) {
+      await this.btnApproval.click();
+      await metamask.confirmDataSignatureRequest();
+    } else if (isApprovalButtonVisible && !isApproveChangeVisible) {
+      await this.btnApproval.click();
+      await metamask.confirmPermissionToSpend();
+    }
+    await this.btnAction.click();
+    await metamask.confirmTransaction();
+    await expect(this.headingTwoAllDoneModal).toBeVisible({
+      timeout: 50000,
+    });
+    await this.btnCloseAllDoneModal.click();
+    await this.page.waitForTimeout(1000);
   }
 }
