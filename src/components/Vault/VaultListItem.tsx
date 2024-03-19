@@ -127,6 +127,7 @@ export const VaultStacked = styled("div")`
 
 export const ExtendedBtn = styled(IconButton)`
   float: right;
+  padding: 0;
 
   &:hover {
     background: none;
@@ -214,7 +215,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
         className={!extended || !vaultPosition ? "border single" : undefined}
         data-testid={`vaultRow-${vaultTestId}`}
       >
-        <TableCell colSpan={2}>
+        <TableCell colSpan={2} sx={{ width: "20%" }}>
           <FlexBox>
             <VaultListItemImageWrapper>
               <img
@@ -236,12 +237,14 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
         </TableCell>
         <TableCell
           colSpan={1}
+          sx={{ width: "7%" }}
           data-testid={`vaultRow-${vaultTestId}-feeValueCell`}
         >
           <VaultPercent>{formatNumber(Number(performanceFee))}%</VaultPercent>
         </TableCell>
         <TableCell
           colSpan={1}
+          sx={{ width: account ? "11%" : "10%" }}
           data-testid={`vaultRow-${vaultTestId}-earnedValueCell`}
         >
           <VaultEarned>
@@ -259,6 +262,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
         </TableCell>
         <TableCell
           colSpan={1}
+          sx={{ width: account ? "10%" : "8%" }}
           data-testid={`vaultRow-${vaultTestId}-aprValueCell`}
         >
           <VaultApr>{formatNumber(Number(apr))}%</VaultApr>
@@ -266,7 +270,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
         <TableCell
           colSpan={1}
           data-testid={`vaultRow-${vaultTestId}-tvlValueCell`}
-          sx={{ minWidth: "100px" }}
+          sx={{ width: account ? "13%" : "11%" }}
         >
           <VaultStackedLiquidity>
             {formatCurrency(
@@ -280,7 +284,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
         <TableCell
           colSpan={1}
           data-testid={`vaultRow-${vaultTestId}-availableValueCell`}
-          sx={{ minWidth: "100px" }}
+          sx={{ width: account ? "14%" : "12%" }}
         >
           <VaultAvailable className={"blue"}>
             {formatNumber(
@@ -294,6 +298,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
         </TableCell>
         <TableCell
           colSpan={1}
+          sx={{ width: "10%" }}
           data-testid={`vaultRow-${vaultTestId}-stakedValueCell`}
         >
           <VaultStacked>
@@ -323,7 +328,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
           </VaultStacked>
         </TableCell>
         <TableCell colSpan={2}>
-          <FlexBox justifyContent={"space-evenly"}>
+          <FlexBox sx={{ justifyContent: "flex-end", gap: "16px", mx: "16px" }}>
             {(!vaultPosition ||
               !BigNumber(vaultPosition.balanceShares).isGreaterThan(0)) &&
               account && (
