@@ -156,7 +156,7 @@ test.describe("Fathom App Test Suite: Lending - FXD Token Tests", () => {
     });
   });
 
-  test.only("Repay FXD with regular FXD partially is successfull", async ({
+  test("Repay FXD with regular FXD partially is successfull", async ({
     lendingPage,
   }) => {
     // Supply token first
@@ -191,9 +191,7 @@ test.describe("Fathom App Test Suite: Lending - FXD Token Tests", () => {
     );
   });
 
-  test.only("Repay FXD fully with fmFXD is successful", async ({
-    lendingPage,
-  }) => {
+  test("Repay FXD fully with fmFXD is successful", async ({ lendingPage }) => {
     // Supply token first
     const supplyAmount = 10;
     await lendingPage.supplyAsset({
