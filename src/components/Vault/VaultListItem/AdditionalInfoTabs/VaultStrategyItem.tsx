@@ -115,6 +115,10 @@ export const VaultIndicatorItemValue = styled(Typography)`
   }
 `;
 
+const DescriptionList = styled("ul")`
+  padding-inline-start: 20px;
+`;
+
 type VaultIndicatorItemPropsType = {
   title: string;
   value: string | number;
@@ -236,7 +240,7 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
             The strategy enhances returns for FXD Vault investors by ensuring
             continuous earnings. Here's what makes it stand out:
           </p>
-          <ul>
+          <DescriptionList>
             <li>
               Consistent Earnings: Our approach guarantees a steady flow of
               returns to Vault participants, boosting investment outcomes and
@@ -252,7 +256,7 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
               the strategy reduces participants' risk and doesn't suffer from
               market fluctuations.
             </li>
-          </ul>
+          </DescriptionList>
         </VaultStrategyDescription>
         {lastReportDate && (
           <Typography fontSize="14px">{`Last report ${lastReportDate}.`}</Typography>
