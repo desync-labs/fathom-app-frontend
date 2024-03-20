@@ -156,7 +156,7 @@ const VaultList: FC<VaultListPropsType> = ({
                             <AppPopover
                               id={"fee"}
                               text={
-                                <>The amount of fee that this Vault takes</>
+                                <>The amount of fee that this Vault takes.</>
                               }
                             />
                           </VaultListTableCellPopover>
@@ -168,7 +168,7 @@ const VaultList: FC<VaultListPropsType> = ({
                               id={"earned"}
                               text={
                                 <>
-                                  How much have you earned on this Vault so far
+                                  How much have you earned on this Vault so far.
                                 </>
                               }
                             />
