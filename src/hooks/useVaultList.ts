@@ -91,6 +91,14 @@ const useVaultList = () => {
   }, [syncVault, prevSyncVault, vaultsRefetch]);
 
   useEffect(() => {
+    /**
+     * Refetch vaults every 60 seconds
+     */
+    const interval = setInterval(vaultsRefetch, 60 * 1000);
+    return () => clearInterval(interval);
+  }, [vaultsRefetch]);
+
+  useEffect(() => {
     if (!vaultsFactoriesLoading && vaultsFactories) {
       const { factories, accountants } = vaultsFactories;
       const protocolFeeRes = factories[0].protocolFee;
