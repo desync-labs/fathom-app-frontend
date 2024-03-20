@@ -173,7 +173,7 @@ export const SupplyModalContent: FC<ModalWrapperProps> = memo(
 
     // token info to add to wallet
     const addToken: ERC20TokenType = {
-      address: poolReserve.aTokenAddress,
+      address: poolReserve.fmTokenAddress,
       symbol: poolReserve.iconSymbol,
       decimals: poolReserve.decimals,
       fmToken: true,

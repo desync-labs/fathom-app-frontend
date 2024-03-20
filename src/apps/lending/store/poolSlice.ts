@@ -429,11 +429,11 @@ export const createPoolSlice: StateCreator<
 
       return JSON.stringify(typedData);
     },
-    repay: ({ repayWithATokens, amountToRepay, poolAddress, debtType }) => {
+    repay: ({ repayWithFmTokens, amountToRepay, poolAddress, debtType }) => {
       const pool = getCorrectPool();
       const currentAccount = get().account;
-      if (pool instanceof Pool && repayWithATokens) {
-        return pool.repayWithATokens({
+      if (pool instanceof Pool && repayWithFmTokens) {
+        return pool.repayWithFmTokens({
           user: currentAccount,
           reserve: poolAddress,
           amount: amountToRepay,
