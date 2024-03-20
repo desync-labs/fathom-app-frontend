@@ -40,7 +40,7 @@ export const WithdrawActions: FC<WithdrawActionsProps> = ({
       withdraw({
         reserve: poolAddress,
         amount: amountToWithdraw,
-        aTokenAddress: poolReserve.aTokenAddress,
+        fmTokenAddress: poolReserve.fmTokenAddress,
       }),
     skip: !amountToWithdraw || parseFloat(amountToWithdraw) === 0 || blocked,
     deps: [amountToWithdraw, poolAddress],

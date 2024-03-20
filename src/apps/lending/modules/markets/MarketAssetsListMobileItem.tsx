@@ -68,7 +68,7 @@ export const MarketAssetsListMobileItem: FC<ComputedReserveData> = memo(
           <IncentivesCard
             align="flex-end"
             value={reserve.supplyAPY}
-            incentives={reserve.aIncentivesData || []}
+            incentives={reserve.fmIncentivesData || []}
             symbol={reserve.symbol}
             variant="secondary14"
             color="text.light"

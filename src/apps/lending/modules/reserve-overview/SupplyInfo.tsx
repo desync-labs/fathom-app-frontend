@@ -156,7 +156,7 @@ export const SupplyInfo: FC<SupplyInfoProps> = memo(
             />
             <IncentivesButton
               symbol={reserve.symbol}
-              incentives={reserve.aIncentivesData}
+              incentives={reserve.fmIncentivesData}
               displayBlank={true}
             />
           </PanelItem>
