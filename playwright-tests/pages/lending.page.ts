@@ -252,6 +252,16 @@ export default class LendingPage extends BasePage {
     }
   }
 
+  getDashboardSuppliedAssetCollateralSwitchLocator({
+    assetName,
+  }: {
+    assetName: LendingAssets;
+  }): Locator {
+    return this.getDashboardSuppliedListItemLocator({ assetName }).locator(
+      "input[type='checkbox']"
+    );
+  }
+
   getDashboardBorrowListItemLocator({
     assetName,
   }: {
@@ -649,6 +659,23 @@ export default class LendingPage extends BasePage {
       await this.btnApproval.click();
       await metamask.confirmPermissionToSpend();
     }
+    await this.btnAction.click();
+    await metamask.confirmTransaction();
+    await expect(this.headingTwoAllDoneModal).toBeVisible({
+      timeout: 50000,
+    });
+    await this.btnCloseAllDoneModal.click();
+    await this.page.waitForTimeout(1000);
+  }
+
+  async toggleAssetCollateral({
+    assetName,
+  }: {
+    assetName: LendingAssets;
+  }): Promise<void> {
+    await this.getDashboardSuppliedAssetCollateralSwitchLocator({
+      assetName,
+    }).click();
     await this.btnAction.click();
     await metamask.confirmTransaction();
     await expect(this.headingTwoAllDoneModal).toBeVisible({
