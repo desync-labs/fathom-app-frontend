@@ -34,7 +34,7 @@ export const zeroLTVBlockingWithdraw = (
   const zeroLTVBlockingWithdraw: string[] = [];
   user.userReservesData.forEach((userReserve) => {
     if (
-      Number(userReserve.scaledATokenBalance) > 0 &&
+      Number(userReserve.scaledFmTokenBalance) > 0 &&
       userReserve.reserve.baseLTVasCollateral === "0" &&
       userReserve.usageAsCollateralEnabledOnUser &&
       userReserve.reserve.reserveLiquidationThreshold !== "0"
@@ -59,7 +59,7 @@ export const getAssetCollateralType = (
 
   let collateralType: CollateralType = CollateralType.ENABLED;
   const userHasSuppliedReserve =
-    userReserve && userReserve.scaledATokenBalance !== "0";
+    userReserve && userReserve.scaledFmTokenBalance !== "0";
   const userHasCollateral = userTotalCollateralUSD !== "0";
 
   if (poolReserve.isIsolated) {
