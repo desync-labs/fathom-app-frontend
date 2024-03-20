@@ -270,7 +270,7 @@ export const SupplyModalContent: FC<ModalWrapperProps> = memo(
             percent
           />
           <DetailsIncentivesLine
-            incentives={poolReserve.aIncentivesData}
+            incentives={poolReserve.fmIncentivesData}
             symbol={poolReserve.symbol}
           />
           <DetailsCollateralLine collateralType={collateralType} />

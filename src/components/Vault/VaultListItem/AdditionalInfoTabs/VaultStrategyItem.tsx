@@ -158,7 +158,7 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
   );
   const [lastReportDate, setLastReportDate] = useState<string>("");
   const [allocationShare, setAllocationShare] = useState<number>(0);
-  const [expanded, setExpanded] = useState<boolean>(!index);
+  const [expanded, setExpanded] = useState<boolean>(false);
   const { isMobile } = useSharedContext();
 
   useEffect(() => {

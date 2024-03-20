@@ -80,7 +80,7 @@ export const MarketAssetsListItem: FC<ComputedReserveData> = memo(
         <ListColumn>
           <IncentivesCard
             value={reserve.supplyAPY}
-            incentives={reserve.aIncentivesData || []}
+            incentives={reserve.fmIncentivesData || []}
             symbol={reserve.symbol}
             variant="main16"
             symbolsVariant="secondary16"

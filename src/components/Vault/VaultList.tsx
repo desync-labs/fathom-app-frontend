@@ -73,10 +73,6 @@ const VaultList: FC<VaultListPropsType> = ({
   } = useVaultList();
   const { isMobile } = useSharedContext();
 
-  if (process.env.REACT_APP_ENV === "prod") {
-    return <NoResults variant={"h6"}>Vaults coming soon.</NoResults>;
-  }
-
   return (
     <>
       {useMemo(

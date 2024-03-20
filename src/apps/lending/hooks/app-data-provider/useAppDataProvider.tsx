@@ -113,8 +113,8 @@ export const AppDataProvider: FC<{ children: ReactNode }> = ({ children }) => {
               value.underlyingBalanceUSD
             )
           );
-          if (reserve.aIncentivesData) {
-            reserve.aIncentivesData.forEach((incentive) => {
+          if (reserve.fmIncentivesData) {
+            reserve.fmIncentivesData.forEach((incentive) => {
               acc.positiveProportion = acc.positiveProportion.plus(
                 new BigNumber(incentive.incentiveAPR).multipliedBy(
                   value.underlyingBalanceUSD
@@ -168,7 +168,7 @@ export const AppDataProvider: FC<{ children: ReactNode }> = ({ children }) => {
   );
 
   const isUserHasDeposits = user.userReservesData.some(
-    (userReserve) => userReserve.scaledATokenBalance !== "0"
+    (userReserve) => userReserve.scaledFmTokenBalance !== "0"
   );
 
   const earnedAPY = proportions.positiveProportion

@@ -28,7 +28,7 @@ export const TokenLinkDropdown: FC<TokenLinkDropdownProps> = memo(
       trackEvent(RESERVE_DETAILS.RESERVE_TOKENS_DROPDOWN, {
         assetName: poolReserve.name,
         asset: poolReserve.underlyingAsset,
-        fmToken: poolReserve.aTokenAddress,
+        fmToken: poolReserve.fmTokenAddress,
         market: currentMarket,
         variableDebtToken: poolReserve.variableDebtTokenAddress,
       });
@@ -87,7 +87,7 @@ export const TokenLinkDropdown: FC<TokenLinkDropdownProps> = memo(
                 type: "Underlying Token",
                 assetName: poolReserve.name,
                 asset: poolReserve.underlyingAsset,
-                fmToken: poolReserve.aTokenAddress,
+                fmToken: poolReserve.fmTokenAddress,
                 market: currentMarket,
                 variableDebtToken: poolReserve.variableDebtTokenAddress,
               });
@@ -134,13 +134,13 @@ export const TokenLinkDropdown: FC<TokenLinkDropdownProps> = memo(
                     type: "fmToken",
                     assetName: poolReserve.name,
                     asset: poolReserve.underlyingAsset,
-                    fmToken: poolReserve.aTokenAddress,
+                    fmToken: poolReserve.fmTokenAddress,
                     market: currentMarket,
                     variableDebtToken: poolReserve.variableDebtTokenAddress,
                   });
                 }}
                 href={currentNetworkConfig.explorerLinkBuilder({
-                  address: poolReserve?.aTokenAddress,
+                  address: poolReserve?.fmTokenAddress,
                 })}
                 target="_blank"
                 divider={showDebtTokenHeader}
@@ -182,7 +182,7 @@ export const TokenLinkDropdown: FC<TokenLinkDropdownProps> = memo(
                   type: "Variable Debt",
                   assetName: poolReserve.name,
                   asset: poolReserve.underlyingAsset,
-                  fmToken: poolReserve.aTokenAddress,
+                  fmToken: poolReserve.fmTokenAddress,
                   market: currentMarket,
                   variableDebtToken: poolReserve.variableDebtTokenAddress,
                 });
@@ -212,7 +212,7 @@ export const TokenLinkDropdown: FC<TokenLinkDropdownProps> = memo(
                   type: "Stable Debt",
                   assetName: poolReserve.name,
                   asset: poolReserve.underlyingAsset,
-                  fmToken: poolReserve.aTokenAddress,
+                  fmToken: poolReserve.fmTokenAddress,
                   market: currentMarket,
                   variableDebtToken: poolReserve.variableDebtTokenAddress,
                   stableDebtToken: poolReserve.stableDebtTokenAddress,

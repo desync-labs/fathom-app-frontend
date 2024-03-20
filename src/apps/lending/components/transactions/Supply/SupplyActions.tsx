@@ -262,11 +262,13 @@ export const SupplyActions: FC<SupplyActionProps> = React.memo(
           await response.wait(1);
         }
 
-        setMainTxState({
-          txHash: response.hash,
-          loading: false,
-          success: true,
-        });
+        if (mainTxState.loading) {
+          setMainTxState({
+            txHash: response.hash,
+            loading: false,
+            success: true,
+          });
+        }
 
         addTransaction(response.hash, {
           action,

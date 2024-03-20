@@ -13,7 +13,6 @@ import {
   PoolBaseCurrencyHumanized,
   PoolBundle,
   ReserveDataHumanized,
-  ReservesIncentiveDataHumanized,
   UiPoolDataProvider,
   UserReserveDataHumanized,
   V3FaucetService,
@@ -47,7 +46,6 @@ import { RootStore } from "./root";
 // TODO: what is the better name for this type?
 export type PoolReserve = {
   reserves?: ReserveDataHumanized[];
-  reserveIncentives?: ReservesIncentiveDataHumanized[];
   baseCurrencyData?: PoolBaseCurrencyHumanized;
   userEmodeCategoryId?: number;
   userReserves?: UserReserveDataHumanized[];
