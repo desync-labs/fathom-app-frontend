@@ -310,7 +310,7 @@ export const RepayModalContent: FC<
           isWrongNetwork={isWrongNetwork}
           symbol={modalSymbol}
           debtType={debtType}
-          repayWithATokens={repayWithFmTokens}
+          repayWithFmTokens={repayWithFmTokens}
         />
       </>
     );
