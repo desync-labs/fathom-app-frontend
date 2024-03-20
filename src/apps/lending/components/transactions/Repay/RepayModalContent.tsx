@@ -75,7 +75,7 @@ export const RepayModalContent: FC<
       userReserve;
 
     const repayWithFmTokens =
-      tokenToRepayWith.address === poolReserve.aTokenAddress;
+      tokenToRepayWith.address === poolReserve.fmTokenAddress;
 
     const debt =
       debtType === InterestRate.Stable
@@ -187,7 +187,7 @@ export const RepayModalContent: FC<
         BigNumber.min(fmTokenBalance, debt).toString(10)
       );
       repayTokens.push({
-        address: poolReserve.aTokenAddress,
+        address: poolReserve.fmTokenAddress,
         symbol: `fm${poolReserve.symbol}`,
         iconSymbol: poolReserve.iconSymbol,
         fmToken: true,

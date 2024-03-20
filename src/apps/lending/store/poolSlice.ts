@@ -13,7 +13,6 @@ import {
   PoolBaseCurrencyHumanized,
   PoolBundle,
   ReserveDataHumanized,
-  ReservesIncentiveDataHumanized,
   UiPoolDataProvider,
   UserReserveDataHumanized,
   V3FaucetService,
@@ -47,7 +46,6 @@ import { RootStore } from "./root";
 // TODO: what is the better name for this type?
 export type PoolReserve = {
   reserves?: ReserveDataHumanized[];
-  reserveIncentives?: ReservesIncentiveDataHumanized[];
   baseCurrencyData?: PoolBaseCurrencyHumanized;
   userEmodeCategoryId?: number;
   userReserves?: UserReserveDataHumanized[];
@@ -433,7 +431,7 @@ export const createPoolSlice: StateCreator<
       const pool = getCorrectPool();
       const currentAccount = get().account;
       if (pool instanceof Pool && repayWithATokens) {
-        return pool.repayWithATokens({
+        return pool.repayWithFmTokens({
           user: currentAccount,
           reserve: poolAddress,
           amount: amountToRepay,
