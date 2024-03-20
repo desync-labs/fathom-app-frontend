@@ -70,7 +70,11 @@ const WithdrawDialog: FC<WithdrawDialogProps> = ({ token, onClose }) => {
         </DialogContentWrapper>
         <ButtonsWrapper>
           {!isMobile && <CancelButton onClick={onClose}>Cancel</CancelButton>}
-          <ConfirmButton onClick={() => withdrawAll(onClose)}>
+          <ConfirmButton
+            disabled={isLoading}
+            isLoading={isLoading}
+            onClick={() => withdrawAll(onClose)}
+          >
             {isLoading ? <CircularProgress size={30} /> : "Confirm Withdraw"}
           </ConfirmButton>
           {isMobile && <CancelButton onClick={onClose}>Cancel</CancelButton>}
