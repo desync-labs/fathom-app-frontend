@@ -262,8 +262,6 @@ export const SupplyActions: FC<SupplyActionProps> = React.memo(
           await response.wait(1);
         }
 
-        console.log(mainTxState);
-
         if (mainTxState.loading) {
           setMainTxState({
             txHash: response.hash,
