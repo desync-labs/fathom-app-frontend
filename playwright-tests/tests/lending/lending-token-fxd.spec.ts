@@ -25,6 +25,7 @@ test.describe("Fathom App Test Suite: Lending - FXD Token Tests", () => {
       assetName,
       amount: supplyAmount,
     });
+    await lendingPage.btnCloseAllDoneModal.click();
     const assetNativeAmountAfter =
       await lendingPage.getSuppliedAssetNativeAmount({
         assetName,
@@ -45,6 +46,7 @@ test.describe("Fathom App Test Suite: Lending - FXD Token Tests", () => {
       assetName,
       amount: supplyAmountFirst,
     });
+    await lendingPage.btnCloseAllDoneModal.click();
     const assetNativeAmountBefore =
       await lendingPage.getSuppliedAssetNativeAmount({
         assetName,
@@ -55,6 +57,7 @@ test.describe("Fathom App Test Suite: Lending - FXD Token Tests", () => {
       amount: supplyAmountSecond,
       isSupplied: true,
     });
+    await lendingPage.btnCloseAllDoneModal.click();
     const assetNativeAmountAfter =
       await lendingPage.getSuppliedAssetNativeAmount({
         assetName,
@@ -75,6 +78,7 @@ test.describe("Fathom App Test Suite: Lending - FXD Token Tests", () => {
       assetName,
       amount: supplyAmount,
     });
+    await lendingPage.btnCloseAllDoneModal.click();
     // Borrow token
     const assetNativeAmountBorrowedBefore =
       await lendingPage.getBorrowedAssetNativeAmount({
@@ -85,6 +89,7 @@ test.describe("Fathom App Test Suite: Lending - FXD Token Tests", () => {
       amount: borrowAmount,
       isStable: false,
     });
+    await lendingPage.btnCloseAllDoneModal.click();
     const assetNativeAmountBorrowedAfter =
       await lendingPage.getBorrowedAssetNativeAmount({
         assetName,
@@ -107,10 +112,12 @@ test.describe("Fathom App Test Suite: Lending - FXD Token Tests", () => {
       assetName: assetNameOne,
       amount: supplyAmountFXD,
     });
+    await lendingPage.btnCloseAllDoneModal.click();
     await lendingPage.supplyAsset({
       assetName: assetNameTwo,
       amount: supplyAmountCGO,
     });
+    await lendingPage.btnCloseAllDoneModal.click();
     // Borrow token
     const assetNativeAmountBorrowedBefore =
       await lendingPage.getBorrowedAssetNativeAmount({
@@ -121,6 +128,7 @@ test.describe("Fathom App Test Suite: Lending - FXD Token Tests", () => {
       amount: borrowAmount,
       isStable: true,
     });
+    await lendingPage.btnCloseAllDoneModal.click();
     const assetNativeAmountBorrowedAfter =
       await lendingPage.getBorrowedAssetNativeAmount({
         assetName: assetNameOne,
@@ -143,16 +151,19 @@ test.describe("Fathom App Test Suite: Lending - FXD Token Tests", () => {
       assetName: assetNameOne,
       amount: supplyAmountFXD,
     });
+    await lendingPage.btnCloseAllDoneModal.click();
     await lendingPage.supplyAsset({
       assetName: assetNameTwo,
       amount: supplyAmountCGO,
     });
+    await lendingPage.btnCloseAllDoneModal.click();
     // Borrow token
     await lendingPage.borrowAsset({
       assetName: assetNameOne,
       amount: borrowAmount,
       isStable: false,
     });
+    await lendingPage.btnCloseAllDoneModal.click();
     // Toggle Apy to stable and validate
     await lendingPage.toggleApyTypeAndValidate({
       assetName: assetNameOne,
@@ -175,12 +186,14 @@ test.describe("Fathom App Test Suite: Lending - FXD Token Tests", () => {
       assetName,
       amount: supplyAmount,
     });
+    await lendingPage.btnCloseAllDoneModal.click();
     // Borrow token
     await lendingPage.borrowAsset({
       assetName,
       amount: borrowAmount,
       isStable: false,
     });
+    await lendingPage.btnCloseAllDoneModal.click();
     // Repay token partially
     const assetNativeAmountBorrowedBefore =
       await lendingPage.getBorrowedAssetNativeAmount({
@@ -190,6 +203,7 @@ test.describe("Fathom App Test Suite: Lending - FXD Token Tests", () => {
       assetName,
       amount: repayAmount,
     });
+    await lendingPage.btnCloseAllDoneModal.click();
     const assetNativeAmountBorrowedAfter =
       await lendingPage.getBorrowedAssetNativeAmount({
         assetName,
@@ -208,18 +222,21 @@ test.describe("Fathom App Test Suite: Lending - FXD Token Tests", () => {
       assetName,
       amount: supplyAmount,
     });
+    await lendingPage.btnCloseAllDoneModal.click();
     // Borrow token
     await lendingPage.borrowAsset({
       assetName,
       amount: borrowAmount,
       isStable: false,
     });
+    await lendingPage.btnCloseAllDoneModal.click();
     // Repay token fully
     await lendingPage.repayAsset({
       assetName,
       isMax: true,
       isFm: true,
     });
+    await lendingPage.btnCloseAllDoneModal.click();
     await expect(lendingPage.paragraphBorrowEmpty).toBeVisible({
       timeout: 10000,
     });
@@ -234,6 +251,7 @@ test.describe("Fathom App Test Suite: Lending - FXD Token Tests", () => {
       assetName,
       amount: supplyAmount,
     });
+    await lendingPage.btnCloseAllDoneModal.click();
     // Withdraw token partially
     const assetNativeAmountSuppliedBefore =
       await lendingPage.getSuppliedAssetNativeAmount({
@@ -243,6 +261,7 @@ test.describe("Fathom App Test Suite: Lending - FXD Token Tests", () => {
       assetName,
       amount: withdrawAmount,
     });
+    await lendingPage.btnCloseAllDoneModal.click();
     const assetNativeAmountSuppliedAfter =
       await lendingPage.getSuppliedAssetNativeAmount({
         assetName,
@@ -260,11 +279,13 @@ test.describe("Fathom App Test Suite: Lending - FXD Token Tests", () => {
       assetName,
       amount: supplyAmount,
     });
+    await lendingPage.btnCloseAllDoneModal.click();
     // Withdraw token fully
     await lendingPage.withdrawAsset({
       assetName,
       isMax: true,
     });
+    await lendingPage.btnCloseAllDoneModal.click();
     await expect(lendingPage.paragraphSupplyEmpty).toBeVisible({
       timeout: 10000,
     });
@@ -280,6 +301,7 @@ test.describe("Fathom App Test Suite: Lending - FXD Token Tests", () => {
       assetName,
       amount: supplyAmount,
     });
+    await lendingPage.btnCloseAllDoneModal.click();
     await expect(
       lendingPage.getDashboardSuppliedAssetCollateralSwitchLocator({
         assetName,
@@ -299,5 +321,37 @@ test.describe("Fathom App Test Suite: Lending - FXD Token Tests", () => {
         assetName,
       })
     ).toBeChecked();
+  });
+
+  test("Add fmFXD token to wallet from supply success modal is successful", async ({
+    lendingPage,
+  }) => {
+    const assetName = LendingAssets.FXD;
+    const supplyAmount = 3;
+    await lendingPage.supplyAsset({
+      assetName,
+      amount: supplyAmount,
+    });
+    await expect(lendingPage.descriptionAddToWalletAllDoneModal).toContainText(
+      `fm${assetName}`
+    );
+    await lendingPage.addTokenToWalletAllDoneModal();
+    await lendingPage.btnCloseAllDoneModal.click();
+  });
+
+  test("Add FXD token to wallet from borrow success modal is successful", async ({
+    lendingPage,
+  }) => {
+    const assetName = LendingAssets.FXD;
+    const supplyAmount = 1.12;
+    await lendingPage.supplyAsset({
+      assetName,
+      amount: supplyAmount,
+    });
+    await expect(lendingPage.descriptionAddToWalletAllDoneModal).toContainText(
+      assetName
+    );
+    await lendingPage.addTokenToWalletAllDoneModal();
+    await lendingPage.btnCloseAllDoneModal.click();
   });
 });

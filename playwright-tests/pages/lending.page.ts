@@ -24,6 +24,8 @@ export default class LendingPage extends BasePage {
   readonly newApyValueSwitchApyModal: Locator;
   readonly drpdwnAssetSelect: Locator;
   readonly liFmAssetSelect: Locator;
+  readonly btnAddToWallet: Locator;
+  readonly descriptionAddToWalletAllDoneModal: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -63,6 +65,12 @@ export default class LendingPage extends BasePage {
     );
     this.drpdwnAssetSelect = this.page.locator("[data-cy='assetSelect']");
     this.liFmAssetSelect = this.page.locator("li[data-value*='fm']");
+    this.btnAddToWallet = this.page.locator(
+      "//p[text()='Add to wallet']//parent::button"
+    );
+    this.descriptionAddToWalletAllDoneModal = this.page.locator(
+      "//p[text()='Add to wallet']//parent::button/preceding-sibling::p"
+    );
   }
 
   async navigate(): Promise<void> {
@@ -457,7 +465,6 @@ export default class LendingPage extends BasePage {
     await expect(this.headingTwoAllDoneModal).toBeVisible({
       timeout: 50000,
     });
-    await this.btnCloseAllDoneModal.click();
     await this.page.waitForTimeout(1000);
   }
 
@@ -506,7 +513,6 @@ export default class LendingPage extends BasePage {
     await expect(this.headingTwoAllDoneModal).toBeVisible({
       timeout: 50000,
     });
-    await this.btnCloseAllDoneModal.click();
     await this.page.waitForTimeout(1000);
   }
 
@@ -624,7 +630,6 @@ export default class LendingPage extends BasePage {
     await expect(this.headingTwoAllDoneModal).toBeVisible({
       timeout: 50000,
     });
-    await this.btnCloseAllDoneModal.click();
     await this.page.waitForTimeout(1000);
   }
 
@@ -664,7 +669,6 @@ export default class LendingPage extends BasePage {
     await expect(this.headingTwoAllDoneModal).toBeVisible({
       timeout: 50000,
     });
-    await this.btnCloseAllDoneModal.click();
     await this.page.waitForTimeout(1000);
   }
 
@@ -683,5 +687,10 @@ export default class LendingPage extends BasePage {
     });
     await this.btnCloseAllDoneModal.click();
     await this.page.waitForTimeout(1000);
+  }
+
+  async addTokenToWalletAllDoneModal(): Promise<void> {
+    await this.btnAddToWallet.click();
+    await metamask.confirmAddToken();
   }
 }
