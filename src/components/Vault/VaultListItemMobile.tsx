@@ -207,7 +207,7 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
           Fee
           <AppPopover
             id={"fee"}
-            text={<>The amount of fee that this Vault takes</>}
+            text={<>The amount of fee that this Vault takes.</>}
           />
         </VaultListLabel>
         <VaultListValue>
@@ -219,7 +219,7 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
           Earned
           <AppPopover
             id={"earned"}
-            text={<>How much have you earned on this Vault so far</>}
+            text={<>How much have you earned on this Vault so far.</>}
           />
         </VaultListLabel>
         <VaultListValue>
