@@ -18,7 +18,7 @@ export interface RepayActionProps extends BoxProps {
   poolAddress: string;
   symbol: string;
   debtType: InterestRate;
-  repayWithATokens: boolean;
+  repayWithFmTokens: boolean;
   blocked?: boolean;
 }
 
@@ -30,7 +30,7 @@ export const RepayActions: FC<RepayActionProps> = ({
   sx,
   symbol,
   debtType,
-  repayWithATokens,
+  repayWithFmTokens,
   blocked,
   ...props
 }) => {
@@ -60,7 +60,7 @@ export const RepayActions: FC<RepayActionProps> = ({
       return repay({
         amountToRepay,
         poolAddress,
-        repayWithATokens,
+        repayWithFmTokens,
         debtType,
         poolReserve,
         isWrongNetwork,
@@ -75,13 +75,13 @@ export const RepayActions: FC<RepayActionProps> = ({
         poolAddress,
         symbol,
         debtType,
-        repayWithATokens,
+        repayWithFmTokens,
         signature: signatures[0],
         deadline,
       });
     },
     skip: !amountToRepay || parseFloat(amountToRepay) === 0 || blocked,
-    deps: [amountToRepay, poolAddress, repayWithATokens],
+    deps: [amountToRepay, poolAddress, repayWithFmTokens],
   });
 
   return (

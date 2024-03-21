@@ -31,7 +31,7 @@ export const SuppliedPositionsListMobileItem: FC<DashboardReserve> = memo(
       name,
       supplyAPY,
       isIsolated,
-      aIncentivesData,
+      fmIncentivesData,
       isFrozen,
       isActive,
     } = reserve;
@@ -73,7 +73,7 @@ export const SuppliedPositionsListMobileItem: FC<DashboardReserve> = memo(
         >
           <IncentivesCard
             value={Number(supplyAPY)}
-            incentives={aIncentivesData}
+            incentives={fmIncentivesData}
             symbol={symbol}
             variant="secondary14"
             color="text.light"

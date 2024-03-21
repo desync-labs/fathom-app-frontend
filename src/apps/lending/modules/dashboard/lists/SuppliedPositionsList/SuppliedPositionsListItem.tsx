@@ -22,7 +22,7 @@ export const SuppliedPositionsListItem: FC<DashboardReserve> = memo(
     underlyingAsset,
   }) => {
     const { user } = useAppDataContext();
-    const { isIsolated, aIncentivesData, isFrozen, isActive } = reserve;
+    const { isIsolated, fmIncentivesData, isFrozen, isActive } = reserve;
     const { currentMarket } = useProtocolDataContext();
     const { openSupply, openWithdraw, openCollateralChange } =
       useModalContext();
@@ -63,7 +63,7 @@ export const SuppliedPositionsListItem: FC<DashboardReserve> = memo(
 
         <ListAPRColumn
           value={Number(reserve.supplyAPY)}
-          incentives={aIncentivesData}
+          incentives={fmIncentivesData}
           symbol={reserve.symbol}
         />
 

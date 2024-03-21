@@ -85,11 +85,11 @@ const VaultItemAbout: FC<VaultItemAboutPropsTypes> = ({
           <Box>
             <VaultAboutTitle variant={"h5"}>Description</VaultAboutTitle>
             <Typography component={"span"} fontSize="14px">
-              Welcome to our state-of-the-art Crypto Vault, an innovative
-              platform designed for astute investors seeking to enhance their
-              digital asset portfolio. Inspired by the pioneering model of Yearn
-              Finance, our vault offers a secure and dynamic way to grow your
-              cryptocurrency investments.
+              FXD Educational Vault is used to onboard the Fathom community into
+              Fathom Vaults. It allows users to learn how to use the Fathom
+              digital asset management platform. In this Vault, we onboard only
+              Strategies with no loss risk. Fathom Vaults are the most secure
+              and dynamic way to grow cryptocurrency investments.
             </Typography>
           </Box>
           <Box pt="25px">
