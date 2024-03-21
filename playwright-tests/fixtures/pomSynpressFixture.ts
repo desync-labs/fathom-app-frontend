@@ -11,6 +11,7 @@ import dotenv from "dotenv";
 import FxdPage from "../pages/fxd.page";
 import VaultPage from "../pages/vault.page";
 import DexPage from "../pages/dex.page";
+import LendingPage from "../pages/lending.page";
 import { APOTHEM_RPC, XDC_RPC } from "../../src/connectors/networks";
 dotenv.config();
 
@@ -48,6 +49,7 @@ interface pagesAndContext {
   fxdPage: FxdPage;
   vaultPage: VaultPage;
   dexPage: DexPage;
+  lendingPage: LendingPage;
 }
 
 export const test = base.extend<pagesAndContext>({
@@ -104,6 +106,9 @@ export const test = base.extend<pagesAndContext>({
   },
   dexPage: async ({ page }, use) => {
     await use(new DexPage(page));
+  },
+  lendingPage: async ({ page }, use) => {
+    await use(new LendingPage(page));
   },
 });
 
