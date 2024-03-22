@@ -144,26 +144,19 @@ const useStakingView = () => {
         ) {
           const promises: Promise<eBigNumber>[] = [];
 
-          if (supportedChainIds.includes(chainId)) {
-            stakesData?.stakers[0].lockPositions.forEach(
-              (lockPosition: ILockPosition) => {
-                promises.push(
-                  stakingService.getStreamClaimableAmountPerLock(
-                    0,
-                    account,
-                    lockPosition.lockId
-                  )
-                );
-              }
-            );
-          } else {
-            setLockPositions([]);
-            setFetchPositionLoading(false);
-            return;
-          }
+          stakesData?.stakers[0].lockPositions.forEach(
+            (lockPosition: ILockPosition) => {
+              promises.push(
+                stakingService.getStreamClaimableAmountPerLock(
+                  0,
+                  account,
+                  lockPosition.lockId
+                )
+              );
+            }
+          );
 
           setFetchPositionLoading(true);
-
           Promise.all(promises).then((result) => {
             const newLockPositions = stakesData?.stakers[0].lockPositions
               .map((lockPosition: ILockPosition, index: number) => {
@@ -191,8 +184,12 @@ const useStakingView = () => {
   );
 
   useEffect(() => {
-    fetchPositions(stakesData, account, stakesLoading);
-  }, [stakesData, account, stakesLoading, fetchPositions]);
+    if (supportedChainIds.includes(chainId)) {
+      fetchPositions(stakesData, account, stakesLoading);
+    } else {
+      setLockPositions([]);
+    }
+  }, [stakesData, account, stakesLoading, fetchPositions, chainId]);
 
   /**
    * Get All claimed rewards
