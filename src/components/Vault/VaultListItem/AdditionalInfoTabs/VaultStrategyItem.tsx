@@ -20,6 +20,11 @@ import useSharedContext from "context/shared";
 import VaultHistoryChart, {
   HistoryChartDataType,
 } from "components/Vault/VaultListItem/AdditionalInfoTabs/VaultHistoryChart";
+import {
+  DescriptionList,
+  strategyDescription,
+  strategyTitle,
+} from "utils/getStrategyTitleAndDescription";
 
 dayjs.extend(relativeTime);
 
@@ -115,10 +120,6 @@ export const VaultIndicatorItemValue = styled(Typography)`
   }
 `;
 
-const DescriptionList = styled("ul")`
-  padding-inline-start: 20px;
-`;
-
 type VaultIndicatorItemPropsType = {
   title: string;
   value: string | number;
@@ -134,21 +135,18 @@ type VaultStrategyItemPropsType = {
   index: number;
 };
 
-const VaultIndicatorItem: FC<VaultIndicatorItemPropsType> = ({
-  title,
-  value,
-  units,
-  sx,
-}) => {
-  return (
-    <VaultIndicatorItemWrapper sx={sx}>
-      <Typography fontSize="12px" textAlign={"center"} color={"#5977a0"}>
-        {title}
-      </Typography>
-      <VaultIndicatorItemValue>{value + units}</VaultIndicatorItemValue>
-    </VaultIndicatorItemWrapper>
-  );
-};
+const VaultIndicatorItem: FC<VaultIndicatorItemPropsType> = memo(
+  ({ title, value, units, sx }) => {
+    return (
+      <VaultIndicatorItemWrapper sx={sx}>
+        <Typography fontSize="12px" textAlign={"center"} color={"#5977a0"}>
+          {title}
+        </Typography>
+        <VaultIndicatorItemValue>{value + units}</VaultIndicatorItemValue>
+      </VaultIndicatorItemWrapper>
+    );
+  }
+);
 
 const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
   strategyData,
@@ -220,7 +218,11 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
         sx={{ padding: "0" }}
       >
         <Typography>
-          FXD: Direct Incentive - Educational Strategy {index + 1}
+          {strategyTitle[strategyData.id.toLowerCase()] ? (
+            strategyTitle[strategyData.id.toLowerCase()]
+          ) : (
+            <>FXD: Direct Incentive - Educational Strategy {index + 1}</>
+          )}
         </Typography>
       </AccordionSummary>
       <AccordionDetails sx={{ padding: "0" }}>
@@ -236,27 +238,33 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
           {strategyData.id}
         </Link>
         <VaultStrategyDescription>
-          <p>
-            The strategy enhances returns for FXD Vault investors by ensuring
-            continuous earnings. Here's what makes it stand out:
-          </p>
-          <DescriptionList>
-            <li>
-              Consistent Earnings: Our approach guarantees a steady flow of
-              returns to Vault participants, boosting investment outcomes and
-              securing the Vault's growth.
-            </li>
-            <li>
-              Transparency and Security: Trust is key. We share detailed
-              performance and earnings reports, keeping operations transparent
-              and secure.
-            </li>
-            <li>
-              Educational: Designed to give returns as direct incentivization,
-              the strategy reduces participants' risk and doesn't suffer from
-              market fluctuations.
-            </li>
-          </DescriptionList>
+          {strategyDescription[strategyData.id.toLowerCase()] ? (
+            strategyDescription[strategyData.id.toLowerCase()]
+          ) : (
+            <>
+              <p>
+                The strategy enhances returns for FXD Vault investors by
+                ensuring continuous earnings. Here's what makes it stand out:
+              </p>
+              <DescriptionList>
+                <li>
+                  Consistent Earnings: Our approach guarantees a steady flow of
+                  returns to Vault participants, boosting investment outcomes
+                  and securing the Vault's growth.
+                </li>
+                <li>
+                  Transparency and Security: Trust is key. We share detailed
+                  performance and earnings reports, keeping operations
+                  transparent and secure.
+                </li>
+                <li>
+                  Educational: Designed to give returns as direct
+                  incentivization, the strategy reduces participants' risk and
+                  doesn't suffer from market fluctuations.
+                </li>
+              </DescriptionList>
+            </>
+          )}
         </VaultStrategyDescription>
         {lastReportDate && (
           <Typography fontSize="14px">{`Last report ${lastReportDate}.`}</Typography>
