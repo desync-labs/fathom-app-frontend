@@ -22,7 +22,7 @@ const VaultItemStrategies: FC<VaultItemStrategiesPropsTypes> = ({
   return (
     <>
       {!strategies.length ? (
-        <NoStrategiesTitle>Has not strategies yet</NoStrategiesTitle>
+        <NoStrategiesTitle>Has no strategies yet</NoStrategiesTitle>
       ) : (
         strategies.map((strategy: any, index: number) => (
           <VaultStrategyItem
