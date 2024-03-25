@@ -8,7 +8,7 @@ export const DescriptionList = styled("ul")`
   padding-inline-start: 20px;
 `;
 
-strategyDescription["0xa91aebf8c534ae1fe2c70377097d20e2902f8bf8"] = (
+strategyDescription["0xe2dea7e0c272de04e8708674dae73ebd6e5c1455"] = (
   <>
     <p>The Strategy distributes FXD at a variable APY to depositors.</p>
     <DescriptionList>
@@ -29,7 +29,7 @@ strategyDescription["0xa91aebf8c534ae1fe2c70377097d20e2902f8bf8"] = (
   </>
 );
 
-strategyTitle["0xa91aebf8c534ae1fe2c70377097d20e2902f8bf8"] =
+strategyTitle["0xe2dea7e0c272de04e8708674dae73ebd6e5c1455"] =
   "FXD Strategy - 3 Months - 100.000 FXD";
 
 export { strategyTitle, strategyDescription };

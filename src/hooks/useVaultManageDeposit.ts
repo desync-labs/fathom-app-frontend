@@ -7,6 +7,7 @@ import useConnector from "context/connector";
 import { useServices } from "context/services";
 import useSyncContext from "context/sync";
 import { formatNumber } from "utils/format";
+import { MAX_PERSONAL_DEPOSIT } from "./useVaultOpenDeposit";
 
 export const defaultValues = {
   formToken: "",
@@ -178,6 +179,18 @@ const useVaultManageDeposit = (
       )} ${token.symbol}`;
     }
 
+    if (
+      BigNumber(value).isGreaterThan(MAX_PERSONAL_DEPOSIT) ||
+      BigNumber(balancePosition)
+        .dividedBy(10 ** 18)
+        .plus(value)
+        .isGreaterThan(MAX_PERSONAL_DEPOSIT)
+    ) {
+      return `The ${MAX_PERSONAL_DEPOSIT / 1000}k ${
+        token.symbol
+      } limit has been exceeded. Please reduce the amount to continue.`;
+    }
+
     return true;
   };
 
@@ -212,9 +225,15 @@ const useVaultManageDeposit = (
         BigNumber(walletBalance).dividedBy(10 ** 18),
         BigNumber(depositLimit)
           .minus(balanceTokens)
-          .dividedBy(10 ** 18)
+          .dividedBy(10 ** 18),
+        BigNumber(MAX_PERSONAL_DEPOSIT).minus(
+          BigNumber(balancePosition).dividedBy(10 ** 18)
+        )
       );
-      setValue("formToken", max.toString(), { shouldValidate: true });
+
+      const maxCapped = max.isNegative() ? BigNumber(0) : max;
+
+      setValue("formToken", maxCapped.toString(), { shouldValidate: true });
     } else {
       setIsFullWithdraw(true);
       setValue(
