@@ -1,7 +1,13 @@
 import { FC, memo } from "react";
-import { Typography } from "@mui/material";
+import { styled, Typography } from "@mui/material";
 import { IVault } from "fathom-sdk";
 import VaultStrategyItem from "components/Vault/VaultListItem/AdditionalInfoTabs/VaultStrategyItem";
+
+const NoStrategiesTitle = styled(Typography)`
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    padding: 16px 8px 24px;
+  }
+`;
 
 type VaultItemStrategiesPropsTypes = {
   vaultItemData: IVault;
@@ -16,7 +22,7 @@ const VaultItemStrategies: FC<VaultItemStrategiesPropsTypes> = ({
   return (
     <>
       {!strategies.length ? (
-        <Typography>Has not strategies yet</Typography>
+        <NoStrategiesTitle>Has no strategies yet</NoStrategiesTitle>
       ) : (
         strategies.map((strategy: any, index: number) => (
           <VaultStrategyItem

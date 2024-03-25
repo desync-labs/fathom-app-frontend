@@ -8,6 +8,8 @@ import useConnector from "context/connector";
 import { useServices } from "context/services";
 import { formatNumber } from "utils/format";
 
+// ToDo: Remove or rebase this constant
+export const MAX_PERSONAL_DEPOSIT = 50000;
 export const defaultValues = {
   deposit: "",
   sharedToken: "",
@@ -113,7 +115,8 @@ const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
       BigNumber(walletBalance).dividedBy(10 ** 18),
       BigNumber(depositLimit)
         .minus(balanceTokens)
-        .dividedBy(10 ** 18)
+        .dividedBy(10 ** 18),
+      BigNumber(MAX_PERSONAL_DEPOSIT)
     );
 
     setValue("deposit", maxWalletBalance.toString(), {
@@ -137,6 +140,11 @@ const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
         return `Deposit value exceeds the maximum allowed limit ${formatNumber(
           formattedMaxDepositLimit.toNumber()
         )} ${token.symbol}`;
+      }
+      if (BigNumber(value).isGreaterThan(MAX_PERSONAL_DEPOSIT)) {
+        return `The ${MAX_PERSONAL_DEPOSIT / 1000}k ${
+          token.symbol
+        } limit has been exceeded. Please reduce the amount to continue.`;
       }
 
       return true;
