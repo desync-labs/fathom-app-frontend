@@ -92,9 +92,9 @@ const useVaultList = () => {
 
   useEffect(() => {
     /**
-     * Refetch vaults every 60 seconds
+     * Refetch vaults every 15 seconds
      */
-    const interval = setInterval(vaultsRefetch, 60 * 1000);
+    const interval = setInterval(vaultsRefetch, 15 * 1000);
     return () => clearInterval(interval);
   }, [vaultsRefetch]);
 
