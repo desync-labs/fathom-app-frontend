@@ -32,4 +32,15 @@ const useAprNumber = (vault: IVault) => {
   return Number(vault.apr);
 };
 
-export { useApr, useAprNumber };
+const getApr = (currentDept: string, vaultId: string, apr: string) => {
+  if (vaultId === EDUCATION_STRATEGY_ID) {
+    return BigNumber(394200)
+      .dividedBy(BigNumber(currentDept).dividedBy(10 ** 18))
+      .multipliedBy(100)
+      .toString();
+  } else {
+    return apr;
+  }
+};
+
+export { useApr, useAprNumber, getApr };

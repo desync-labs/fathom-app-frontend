@@ -26,6 +26,7 @@ const VaultItemStrategies: FC<VaultItemStrategiesPropsTypes> = ({
       ) : (
         strategies.map((strategy: any, index: number) => (
           <VaultStrategyItem
+            vaultId={vaultItemData.id}
             strategyData={strategy}
             vaultBalanceTokens={balanceTokens}
             tokenName={token.name}
