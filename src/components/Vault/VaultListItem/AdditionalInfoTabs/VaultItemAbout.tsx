@@ -9,6 +9,10 @@ import { AppList, AppListItem } from "components/AppComponents/AppList/AppList";
 import VaultHistoryChart, {
   HistoryChartDataType,
 } from "components/Vault/VaultListItem/AdditionalInfoTabs/VaultHistoryChart";
+import { getAccountUrl } from "utils/explorer";
+import { DEFAULT_CHAIN_ID } from "utils/Constants";
+import { Link } from "react-router-dom";
+import { useAprNumber } from "hooks/useApr";
 
 export const VaultAboutTitle = styled(Typography)`
   font-size: 16px;
@@ -39,7 +43,8 @@ const VaultItemAbout: FC<VaultItemAboutPropsTypes> = ({
   protocolFee,
   performanceFee,
 }) => {
-  const { token, apr } = vaultItemData;
+  const { token } = vaultItemData;
+  const aprNumber = useAprNumber(vaultItemData);
   const [earnedHistoryArr, setEarnedHistoryArr] = useState<
     HistoryChartDataType[]
   >([]);
@@ -85,11 +90,32 @@ const VaultItemAbout: FC<VaultItemAboutPropsTypes> = ({
           <Box>
             <VaultAboutTitle variant={"h5"}>Description</VaultAboutTitle>
             <Typography component={"span"} fontSize="14px">
-              FXD Educational Vault is used to onboard the Fathom community into
-              Fathom Vaults. It allows users to learn how to use the Fathom
-              digital asset management platform. In this Vault, we onboard only
-              Strategies with no loss risk. Fathom Vaults are the most secure
-              and dynamic way to grow cryptocurrency investments.
+              The FXD vault functions as a pool of funds with an
+              auto-compounding strategy that manages and executes various tasks
+              based on predefined conditions. Users can deposit FXD only into
+              this vault, which then uses algorithms to perform actions such as
+              yield farming: lending, borrowing, etc. The FXD can consist of
+              different strategies, all separately investable. Each strategy
+              investment returns a strategy share token. Note that this is a
+              share token and so not 1:1 equivalent with FXD deposited. The FXD
+              vault only charges performance fees when strategy tokens are
+              redeemed. There is no management fee. Note that the vault
+              strategies have been carefully audited, nevertheless users are -
+              as always in defi - exposed to smart contract risk.
+              <Box mt={2}>
+                Vault contract address:{" "}
+                <Link
+                  to={getAccountUrl(vaultItemData.id, DEFAULT_CHAIN_ID)}
+                  target="_blank"
+                  style={{
+                    display: "inline-flex",
+                    fontSize: "12px",
+                    marginBottom: "16px",
+                  }}
+                >
+                  {vaultItemData.id}
+                </Link>
+              </Box>
             </Typography>
           </Box>
           <Box pt="25px">
@@ -101,7 +127,10 @@ const VaultItemAbout: FC<VaultItemAboutPropsTypes> = ({
                     alignItems="flex-start"
                     secondaryAction={
                       <>
-                        {formatNumber(BigNumber(apr).dividedBy(52).toNumber())}%
+                        {formatNumber(
+                          BigNumber(aprNumber).dividedBy(52).toNumber()
+                        )}
+                        %
                       </>
                     }
                     sx={{ padding: "0 !important" }}
@@ -112,7 +141,10 @@ const VaultItemAbout: FC<VaultItemAboutPropsTypes> = ({
                     alignItems="flex-start"
                     secondaryAction={
                       <>
-                        {formatNumber(BigNumber(apr).dividedBy(12).toNumber())}%
+                        {formatNumber(
+                          BigNumber(aprNumber).dividedBy(12).toNumber()
+                        )}
+                        %
                       </>
                     }
                     sx={{ padding: "0 !important" }}
@@ -121,7 +153,7 @@ const VaultItemAbout: FC<VaultItemAboutPropsTypes> = ({
                   </AppListItem>
                   <AppListItem
                     alignItems="flex-start"
-                    secondaryAction={<>{formatNumber(Number(apr))}%</>}
+                    secondaryAction={<>{formatNumber(aprNumber)}%</>}
                     sx={{ padding: "0 !important" }}
                   >
                     <ListItemText primary={"Yearly APR"} />

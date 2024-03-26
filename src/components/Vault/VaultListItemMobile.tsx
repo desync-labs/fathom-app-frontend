@@ -39,6 +39,7 @@ import DirectionUp from "assets/svg/direction-up.svg";
 import DirectionDown from "assets/svg/direction-down.svg";
 import LockSrc from "assets/svg/lock.svg";
 import LockAquaSrc from "assets/svg/lock-aqua.svg";
+import { useApr } from "hooks/useApr";
 
 export const VaultPoolName = styled("div")`
   display: flex;
@@ -172,9 +173,11 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
   performanceFee,
   protocolFee,
 }) => {
-  const { token, apr } = vaultItemData;
+  const { token } = vaultItemData;
+  const formattedApr = useApr(vaultItemData);
 
   const {
+    balanceToken,
     manageVault,
     newVaultDeposit,
     extended,
@@ -183,7 +186,7 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
     setNewVaultDeposit,
     setExtended,
     setManageVault,
-  } = useVaultListItem({ vaultPosition });
+  } = useVaultListItem({ vaultPosition, vault: vaultItemData });
 
   const { fxdPrice } = usePricesContext();
   const { account } = useConnector();
@@ -249,7 +252,7 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
             }
           />
         </VaultListLabel>
-        <VaultListValue>{formatNumber(Number(apr))}%</VaultListValue>
+        <VaultListValue>{formattedApr}%</VaultListValue>
       </ListItemWrapper>
       {extended && (
         <>
@@ -262,6 +265,7 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
             BigNumber(vaultPosition.balanceShares).isGreaterThan(0) &&
             activeVaultInfoTab === VaultInfoTabs.POSITION && (
               <VaultItemPositionInfo
+                balanceToken={balanceToken}
                 vaultItemData={vaultItemData}
                 vaultPosition={vaultPosition}
                 setManageVault={setManageVault}
