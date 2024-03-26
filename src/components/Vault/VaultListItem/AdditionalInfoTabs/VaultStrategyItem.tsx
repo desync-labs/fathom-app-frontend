@@ -166,6 +166,10 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
   const [expanded, setExpanded] = useState<boolean>(false);
   const { isMobile } = useSharedContext();
 
+  console.log({
+    strategyData,
+  });
+
   useEffect(() => {
     if (!strategyData) return;
 
