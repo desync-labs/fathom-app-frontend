@@ -6,7 +6,7 @@ import { FormType } from "hooks/useVaultManageDeposit";
 import { AppList, AppListItem } from "components/AppComponents/AppList/AppList";
 import { formatNumber, formatPercentage } from "utils/format";
 import useSharedContext from "context/shared";
-import { useApr } from "../../../../hooks/useApr";
+import { useApr } from "hooks/useApr";
 
 type VaultManageInfoProps = {
   vaultItemData: IVault;
