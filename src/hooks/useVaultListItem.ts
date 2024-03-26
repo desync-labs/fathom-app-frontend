@@ -39,7 +39,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     }
   }, [vaultPosition]);
 
-  const getBalancePosition = useCallback(() => {
+  const fetchBalanceToken = useCallback(() => {
     vaultService
       .previewRedeem(
         BigNumber(vaultPosition?.balanceShares as string)
@@ -50,7 +50,13 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
       .then((balanceToken: string) => {
         setBalanceToken(balanceToken);
       });
-  }, [vaultService, vault, vaultPosition, setBalanceToken]);
+  }, [vaultService, vault.id, vaultPosition, setBalanceToken]);
+
+  const getBalancePosition = useCallback(() => {
+    fetchBalanceToken();
+    const interval = setInterval(fetchBalanceToken, 15 * 1000);
+    return () => clearInterval(interval);
+  }, [fetchBalanceToken]);
 
   useEffect(() => {
     if (vaultPosition && vault) {
