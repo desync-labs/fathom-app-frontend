@@ -25,6 +25,7 @@ import {
   strategyDescription,
   strategyTitle,
 } from "utils/getStrategyTitleAndDescription";
+import { getApr } from "hooks/useApr";
 
 dayjs.extend(relativeTime);
 
@@ -133,6 +134,7 @@ type VaultStrategyItemPropsType = {
   tokenName: string;
   performanceFee: number;
   index: number;
+  vaultId: string;
 };
 
 const VaultIndicatorItem: FC<VaultIndicatorItemPropsType> = memo(
@@ -154,6 +156,7 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
   tokenName,
   performanceFee,
   index,
+  vaultId,
 }) => {
   const [aprHistoryArr, setAprHistoryArr] = useState<HistoryChartDataType[]>(
     []
@@ -166,11 +169,19 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
   useEffect(() => {
     if (!strategyData) return;
 
-    const extractedData = strategyData.historicalApr
-      .map((aprItem) => ({
-        timestamp: aprItem.timestamp,
-        chartValue: aprItem.apr,
-      }))
+    const { historicalApr } = strategyData;
+
+    const extractedData = strategyData.reports
+      .map((reportsItem, index) => {
+        return {
+          timestamp: reportsItem.timestamp,
+          chartValue: getApr(
+            reportsItem.currentDebt,
+            vaultId,
+            historicalApr[index].apr
+          ),
+        };
+      })
       .sort((a, b) => parseInt(a.timestamp) - parseInt(b.timestamp));
 
     if (strategyData.reports.length) {
@@ -182,7 +193,7 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
     }
 
     setAprHistoryArr(extractedData);
-  }, [strategyData]);
+  }, [strategyData, vaultId]);
 
   useEffect(() => {
     const allocation =
@@ -294,7 +305,11 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
             >
               <VaultIndicatorItem
                 title="APY"
-                value={formatNumber(Number(strategyData.apr))}
+                value={formatNumber(
+                  Number(
+                    getApr(strategyData.currentDebt, vaultId, strategyData.apr)
+                  )
+                )}
                 units="%"
               />
               <VaultIndicatorItem
