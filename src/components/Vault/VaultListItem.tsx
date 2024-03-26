@@ -200,7 +200,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
   const vaultTestId = vaultItemData.id;
 
   const {
-    balanceToken,
+    balanceEarned,
     extended,
     manageVault,
     newVaultDeposit,
@@ -240,32 +240,33 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
         </TableCell>
         <TableCell
           colSpan={1}
-          sx={{ width: "7%" }}
+          sx={{ width: account ? "7%" : "10%" }}
           data-testid={`vaultRow-${vaultTestId}-feeValueCell`}
         >
           <VaultPercent>{formatNumber(Number(performanceFee))}%</VaultPercent>
         </TableCell>
+        {account && (
+          <TableCell
+            colSpan={1}
+            sx={{ width: account ? "11%" : "10%" }}
+            data-testid={`vaultRow-${vaultTestId}-earnedValueCell`}
+          >
+            <VaultEarned>
+              {balanceEarned && BigNumber(balanceEarned).isGreaterThan(0)
+                ? "$" +
+                  formatPercentage(
+                    BigNumber(balanceEarned)
+                      .multipliedBy(fxdPrice)
+                      .dividedBy(10 ** 18)
+                      .toNumber()
+                  )
+                : "0"}
+            </VaultEarned>
+          </TableCell>
+        )}
         <TableCell
           colSpan={1}
-          sx={{ width: account ? "11%" : "10%" }}
-          data-testid={`vaultRow-${vaultTestId}-earnedValueCell`}
-        >
-          <VaultEarned>
-            {vaultPosition?.balanceProfit &&
-            BigNumber(vaultPosition?.balanceProfit).isGreaterThan(0)
-              ? "$" +
-                formatPercentage(
-                  BigNumber(vaultPosition.balanceProfit)
-                    .multipliedBy(fxdPrice)
-                    .dividedBy(10 ** 36)
-                    .toNumber()
-                )
-              : "0"}
-          </VaultEarned>
-        </TableCell>
-        <TableCell
-          colSpan={1}
-          sx={{ width: account ? "10%" : "8%" }}
+          sx={{ width: account ? "10%" : "10%" }}
           data-testid={`vaultRow-${vaultTestId}-aprValueCell`}
         >
           <VaultApr>{formattedApr}%</VaultApr>
@@ -273,7 +274,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
         <TableCell
           colSpan={1}
           data-testid={`vaultRow-${vaultTestId}-tvlValueCell`}
-          sx={{ width: account ? "13%" : "11%" }}
+          sx={{ width: account ? "13%" : "13%" }}
         >
           <VaultStackedLiquidity>
             {formatCurrency(
@@ -287,7 +288,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
         <TableCell
           colSpan={1}
           data-testid={`vaultRow-${vaultTestId}-availableValueCell`}
-          sx={{ width: account ? "14%" : "12%" }}
+          sx={{ width: account ? "14%" : "15%" }}
         >
           <VaultAvailable className={"blue"}>
             {formatNumber(
@@ -301,7 +302,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
         </TableCell>
         <TableCell
           colSpan={1}
-          sx={{ width: "10%" }}
+          sx={{ width: account ? "13%" : "10%" }}
           data-testid={`vaultRow-${vaultTestId}-stakedValueCell`}
         >
           <VaultStacked>
@@ -390,7 +391,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
                     vaultItemData={vaultItemData}
                     vaultPosition={vaultPosition}
                     setManageVault={setManageVault}
-                    balanceToken={balanceToken}
+                    balanceEarned={balanceEarned}
                   />
                 )}
               {activeVaultInfoTab === VaultInfoTabs.ABOUT && (

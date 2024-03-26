@@ -177,7 +177,7 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
   const formattedApr = useApr(vaultItemData);
 
   const {
-    balanceToken,
+    balanceEarned,
     manageVault,
     newVaultDeposit,
     extended,
@@ -217,30 +217,31 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
           <VaultPercent>{formatNumber(Number(performanceFee))}%</VaultPercent>
         </VaultListValue>
       </ListItemWrapper>
+      {account && (
+        <ListItemWrapper>
+          <VaultListLabel>
+            Earned
+            <AppPopover
+              id={"earned"}
+              text={<>How much have you earned on this Vault so far.</>}
+            />
+          </VaultListLabel>
+          <VaultListValue>
+            {balanceEarned && BigNumber(balanceEarned).isGreaterThan(0)
+              ? "$" +
+                formatPercentage(
+                  BigNumber(balanceEarned)
+                    .multipliedBy(fxdPrice)
+                    .dividedBy(10 ** 18)
+                    .toNumber()
+                )
+              : "0"}
+          </VaultListValue>
+        </ListItemWrapper>
+      )}
       <ListItemWrapper>
         <VaultListLabel>
-          Earned
-          <AppPopover
-            id={"earned"}
-            text={<>How much have you earned on this Vault so far.</>}
-          />
-        </VaultListLabel>
-        <VaultListValue>
-          {vaultPosition?.balanceProfit &&
-          BigNumber(vaultPosition?.balanceProfit).isGreaterThan(0)
-            ? "$" +
-              formatPercentage(
-                BigNumber(vaultPosition.balanceProfit)
-                  .multipliedBy(fxdPrice)
-                  .dividedBy(10 ** 36)
-                  .toNumber()
-              )
-            : "0"}
-        </VaultListValue>
-      </ListItemWrapper>
-      <ListItemWrapper>
-        <VaultListLabel>
-          Apr
+          Apy
           <AppPopover
             id={"apr"}
             text={
@@ -265,7 +266,7 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
             BigNumber(vaultPosition.balanceShares).isGreaterThan(0) &&
             activeVaultInfoTab === VaultInfoTabs.POSITION && (
               <VaultItemPositionInfo
-                balanceToken={balanceToken}
+                balanceEarned={balanceEarned}
                 vaultItemData={vaultItemData}
                 vaultPosition={vaultPosition}
                 setManageVault={setManageVault}
