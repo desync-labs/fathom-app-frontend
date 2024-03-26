@@ -6,6 +6,7 @@ import { FormType } from "hooks/useVaultManageDeposit";
 import { AppList, AppListItem } from "components/AppComponents/AppList/AppList";
 import { formatNumber, formatPercentage } from "utils/format";
 import useSharedContext from "context/shared";
+import { useApr } from "hooks/useApr";
 
 type VaultManageInfoProps = {
   vaultItemData: IVault;
@@ -24,9 +25,10 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
   formSharedToken,
   performanceFee,
 }) => {
-  const { token, shareToken, sharesSupply, apr } = vaultItemData;
+  const { token, shareToken, sharesSupply } = vaultItemData;
   const { balancePosition, balanceShares } = vaultPosition;
   const { isMobile } = useSharedContext();
+  const formattedApr = useApr(vaultItemData);
 
   return (
     <Grid item xs={12} sm={6} pr={isMobile ? 0 : 2.5}>
@@ -199,9 +201,9 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
         <Divider />
         <AppListItem
           alignItems="flex-start"
-          secondaryAction={formatNumber(Number(apr)) + "%"}
+          secondaryAction={formattedApr + "%"}
         >
-          <ListItemText primary="Estimated APR" />
+          <ListItemText primary="Estimated APY" />
         </AppListItem>
       </AppList>
     </Grid>

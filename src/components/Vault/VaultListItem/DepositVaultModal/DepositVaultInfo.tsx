@@ -5,6 +5,7 @@ import { IVault } from "fathom-sdk";
 import { AppList, AppListItem } from "components/AppComponents/AppList/AppList";
 import { formatNumber, formatPercentage } from "utils/format";
 import useSharedContext from "context/shared";
+import { useApr } from "hooks/useApr";
 
 type VaultDepositInfoProps = {
   vaultItemData: IVault;
@@ -19,8 +20,9 @@ const DepositVaultInfo: FC<VaultDepositInfoProps> = ({
   sharedToken,
   performanceFee,
 }) => {
-  const { token, shareToken, apr, sharesSupply } = vaultItemData;
+  const { token, shareToken, sharesSupply } = vaultItemData;
   const { isMobile } = useSharedContext();
+  const formattedApr = useApr(vaultItemData);
 
   return (
     <Grid item xs={12} sm={6} pr={isMobile ? 0 : 2.5}>
@@ -92,9 +94,9 @@ const DepositVaultInfo: FC<VaultDepositInfoProps> = ({
         <Divider />
         <AppListItem
           alignItems="flex-start"
-          secondaryAction={formatNumber(Number(apr)) + "%"}
+          secondaryAction={formattedApr + "%"}
         >
-          <ListItemText primary="Estimated APR" />
+          <ListItemText primary="Estimated APY" />
         </AppListItem>
       </AppList>
     </Grid>
