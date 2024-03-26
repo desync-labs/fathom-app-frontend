@@ -35,22 +35,24 @@ export const VaultListItemSkeleton = () => {
           </VaultInfo>
         </FlexBox>
       </TableCell>
-      <TableCell colSpan={1} sx={{ width: "7%" }}>
+      <TableCell colSpan={1} sx={{ width: account ? "7%" : "10%" }}>
         <CustomSkeleton animation={"wave"} width={35} />
       </TableCell>
-      <TableCell colSpan={1} sx={{ width: account ? "11%" : "10%" }}>
-        <CustomSkeleton animation={"wave"} width={20} />
-      </TableCell>
-      <TableCell colSpan={1} sx={{ width: account ? "10%" : "8%" }}>
+      {account && (
+        <TableCell colSpan={1} sx={{ width: account ? "11%" : "10%" }}>
+          <CustomSkeleton animation={"wave"} width={20} />
+        </TableCell>
+      )}
+      <TableCell colSpan={1} sx={{ width: account ? "10%" : "10%" }}>
         <CustomSkeleton animation={"wave"} width={35} />
       </TableCell>
       <TableCell colSpan={1} sx={{ width: account ? "13%" : "11%" }}>
         <CustomSkeleton animation={"wave"} width={100} />
       </TableCell>
-      <TableCell colSpan={1} sx={{ width: account ? "14%" : "12%" }}>
+      <TableCell colSpan={1} sx={{ width: account ? "14%" : "15%" }}>
         <CustomSkeleton animation={"wave"} width={100} />
       </TableCell>
-      <TableCell colSpan={1} sx={{ width: "10%" }}>
+      <TableCell colSpan={1} sx={{ width: account ? "13%" : "10%" }}>
         <CustomSkeleton animation={"wave"} width={70} />
       </TableCell>
       <TableCell colSpan={2}>

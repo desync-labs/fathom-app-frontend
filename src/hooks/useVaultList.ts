@@ -94,9 +94,12 @@ const useVaultList = () => {
     /**
      * Refetch vaults every 15 seconds
      */
-    const interval = setInterval(vaultsRefetch, 15 * 1000);
+    const interval = setInterval(() => {
+      vaultsRefetch();
+      positionsRefetch({ account: account.toLowerCase() });
+    }, 15 * 1000);
     return () => clearInterval(interval);
-  }, [vaultsRefetch]);
+  }, [vaultsRefetch, account]);
 
   useEffect(() => {
     if (!vaultsFactoriesLoading && vaultsFactories) {

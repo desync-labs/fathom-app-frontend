@@ -119,7 +119,7 @@ const VaultItemAbout: FC<VaultItemAboutPropsTypes> = ({
             </Typography>
           </Box>
           <Box pt="25px">
-            <VaultAboutTitle variant={"h5"}>APR</VaultAboutTitle>
+            <VaultAboutTitle variant={"h5"}>APY</VaultAboutTitle>
             <VaultFlexColumns>
               <Box width={"100%"}>
                 <AppList>
@@ -135,7 +135,7 @@ const VaultItemAbout: FC<VaultItemAboutPropsTypes> = ({
                     }
                     sx={{ padding: "0 !important" }}
                   >
-                    <ListItemText primary={"Weekly APR"} />
+                    <ListItemText primary={"Weekly APY"} />
                   </AppListItem>
                   <AppListItem
                     alignItems="flex-start"
@@ -149,14 +149,14 @@ const VaultItemAbout: FC<VaultItemAboutPropsTypes> = ({
                     }
                     sx={{ padding: "0 !important" }}
                   >
-                    <ListItemText primary={"Monthly APR"} />
+                    <ListItemText primary={"Monthly APY"} />
                   </AppListItem>
                   <AppListItem
                     alignItems="flex-start"
                     secondaryAction={<>{formatNumber(aprNumber)}%</>}
                     sx={{ padding: "0 !important" }}
                   >
-                    <ListItemText primary={"Yearly APR"} />
+                    <ListItemText primary={"Yearly APY"} />
                   </AppListItem>
                 </AppList>
               </Box>

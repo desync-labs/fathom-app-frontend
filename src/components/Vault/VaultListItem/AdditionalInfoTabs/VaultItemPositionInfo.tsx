@@ -8,14 +8,14 @@ type VaultItemPositionInfoPropsTypes = {
   vaultItemData: IVault;
   vaultPosition: IVaultPosition;
   setManageVault: Dispatch<SetStateAction<boolean>>;
-  balanceToken: string;
+  balanceEarned: number;
 };
 
 const VaultItemPositionInfo: FC<VaultItemPositionInfoPropsTypes> = ({
   vaultItemData,
   vaultPosition,
   setManageVault,
-  balanceToken,
+  balanceEarned,
 }) => {
   const vaultTestId = vaultItemData.id;
 
@@ -32,9 +32,8 @@ const VaultItemPositionInfo: FC<VaultItemPositionInfoPropsTypes> = ({
       </VaultItemInfoWrapper>
       <VaultItemInfoWrapper>
         <VaultListItemEarned
-          balanceToken={balanceToken}
+          balanceEarned={balanceEarned}
           vaultItemData={vaultItemData}
-          vaultPosition={vaultPosition}
         />
       </VaultItemInfoWrapper>
     </>

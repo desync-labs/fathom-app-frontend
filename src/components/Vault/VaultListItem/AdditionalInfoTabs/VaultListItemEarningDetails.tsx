@@ -199,7 +199,7 @@ const VaultListItemEarningDetails: FC<VaultListItemFarmingDetailsProps> = ({
         </VaultInfo>
         {isMobile && (
           <Apr>
-            Apr
+            Apy
             <span
               data-testid={`vaultRowDetails-${vaultTestId}-itemPositionInfo-earningDetails-aprValue`}
             >
@@ -210,7 +210,7 @@ const VaultListItemEarningDetails: FC<VaultListItemFarmingDetailsProps> = ({
         <VaultInfoStats>
           {!isMobile && (
             <Apr>
-              Apr
+              Apy
               <span>{formattedApr}%</span>
             </Apr>
           )}

@@ -293,7 +293,7 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
               sx={{ gap: 0, borderRadius: "8px", overflow: "hidden" }}
             >
               <VaultIndicatorItem
-                title="APR"
+                title="APY"
                 value={formatNumber(Number(strategyData.apr))}
                 units="%"
               />
@@ -311,7 +311,7 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
           </VaultIndicatorsWrapper>
           <Box width={isMobile ? "100%" : "50%"}>
             <VaultHistoryChart
-              title={"Historical APR"}
+              title={"Historical APY"}
               chartDataArray={aprHistoryArr}
               valueLabel="APR"
               valueUnits="%"

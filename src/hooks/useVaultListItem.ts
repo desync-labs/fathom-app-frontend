@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { IVault, IVaultPosition } from "fathom-sdk";
 import BigNumber from "bignumber.js";
 import { useServices } from "context/services";
@@ -58,7 +58,15 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     }
   }, [vaultPosition, vault]);
 
+  const balanceEarned = useMemo(() => {
+    return BigNumber(balanceToken || "0")
+      .minus(vaultPosition?.balancePosition as string)
+      .dividedBy(10 ** 18)
+      .toNumber();
+  }, [vaultPosition, balanceToken]);
+
   return {
+    balanceEarned,
     balanceToken,
     manageVault,
     newVaultDeposit,
