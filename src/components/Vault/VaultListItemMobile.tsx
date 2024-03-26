@@ -246,9 +246,8 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
             id={"apr"}
             text={
               <>
-                Annual Percentage Rate – refers to the total cost of your
-                borrowing for a year. Importantly, it includes the standard fees
-                and interest you'll have to pay.
+                Annual Percentage Yield – The annualized rate of return for the
+                vault.
               </>
             }
           />
