@@ -2,7 +2,7 @@ import { FC, memo } from "react";
 import BigNumber from "bignumber.js";
 import { Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { IVault, IVaultPosition } from "fathom-sdk";
+import { IVault } from "fathom-sdk";
 import AppPopover from "components/AppComponents/AppPopover/AppPopover";
 import usePricesContext from "context/prices";
 import useSharedContext from "context/shared";
@@ -45,24 +45,16 @@ const TokenValue = styled("div")`
 
 type FarmListItemEarnedProps = {
   vaultItemData: IVault;
-  vaultPosition: IVaultPosition;
-  balanceToken: string;
+  balanceEarned: number;
 };
 
 const VaultListItemEarned: FC<FarmListItemEarnedProps> = ({
   vaultItemData,
-  vaultPosition,
-  balanceToken,
+  balanceEarned,
 }) => {
   const { token } = vaultItemData;
-  const { balancePosition } = vaultPosition;
   const { fxdPrice } = usePricesContext();
   const { isMobile } = useSharedContext();
-
-  console.log({
-    balanceToken,
-    vaultPosition,
-  });
 
   return (
     <Grid container>
@@ -81,19 +73,13 @@ const VaultListItemEarned: FC<FarmListItemEarnedProps> = ({
           />
         </TokenName>
         <TokenValue>
-          {formatPercentage(
-            BigNumber(balanceToken || "0")
-              .minus(balancePosition)
-              .dividedBy(10 ** 18)
-              .toNumber()
-          )}{" "}
+          {formatPercentage(balanceEarned)}{" "}
           <span>
             $
             {formatPercentage(
-              BigNumber(balanceToken || "0")
-                .minus(balancePosition)
+              BigNumber(balanceEarned || "0")
                 .multipliedBy(fxdPrice)
-                .dividedBy(10 ** 36)
+                .dividedBy(10 ** 18)
                 .toNumber()
             )}
           </span>

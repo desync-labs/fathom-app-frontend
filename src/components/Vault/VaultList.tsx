@@ -25,6 +25,7 @@ import {
   VaultListItemSkeleton,
 } from "components/Vault/VaultListItemSkeleton";
 import AppPopover from "components/AppComponents/AppPopover/AppPopover";
+import useConnector from "context/connector";
 
 const PaginationWrapper = styled(Box)`
   display: flex;
@@ -72,6 +73,7 @@ const VaultList: FC<VaultListPropsType> = ({
     filterCurrentPosition,
   } = useVaultList();
   const { isMobile } = useSharedContext();
+  const { account } = useConnector();
 
   return (
     <>
@@ -161,22 +163,25 @@ const VaultList: FC<VaultListPropsType> = ({
                             />
                           </VaultListTableCellPopover>
                         </VaultListTableCell>
+                        {account && (
+                          <VaultListTableCell colSpan={1}>
+                            <VaultListTableCellPopover>
+                              Earned
+                              <AppPopover
+                                id={"earned"}
+                                text={
+                                  <>
+                                    How much have you earned on this Vault so
+                                    far.
+                                  </>
+                                }
+                              />
+                            </VaultListTableCellPopover>
+                          </VaultListTableCell>
+                        )}
                         <VaultListTableCell colSpan={1}>
                           <VaultListTableCellPopover>
-                            Earned
-                            <AppPopover
-                              id={"earned"}
-                              text={
-                                <>
-                                  How much have you earned on this Vault so far.
-                                </>
-                              }
-                            />
-                          </VaultListTableCellPopover>
-                        </VaultListTableCell>
-                        <VaultListTableCell colSpan={1}>
-                          <VaultListTableCellPopover>
-                            Apr
+                            Apy
                             <AppPopover
                               id={"apr"}
                               text={
