@@ -24,6 +24,7 @@ import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownR
 import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
 import LockSrc from "assets/svg/lock.svg";
 import LockAquaSrc from "assets/svg/lock-aqua.svg";
+import { useApr } from "hooks/useApr";
 
 export const FlexBox = styled(Box)`
   display: flex;
@@ -193,11 +194,13 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
   protocolFee,
   performanceFee,
 }) => {
-  const { token, balanceTokens, depositLimit, apr } = vaultItemData;
+  const { token, balanceTokens, depositLimit } = vaultItemData;
+  const formattedApr = useApr(vaultItemData);
   const { fxdPrice } = usePricesContext();
   const vaultTestId = vaultItemData.id;
 
   const {
+    balanceToken,
     extended,
     manageVault,
     newVaultDeposit,
@@ -206,7 +209,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
     setExtended,
     setManageVault,
     setNewVaultDeposit,
-  } = useVaultListItem({ vaultPosition });
+  } = useVaultListItem({ vaultPosition, vault: vaultItemData });
   const { account } = useConnector();
 
   return (
@@ -265,7 +268,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
           sx={{ width: account ? "10%" : "8%" }}
           data-testid={`vaultRow-${vaultTestId}-aprValueCell`}
         >
-          <VaultApr>{formatNumber(Number(apr))}%</VaultApr>
+          <VaultApr>{formattedApr}%</VaultApr>
         </TableCell>
         <TableCell
           colSpan={1}
@@ -387,6 +390,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
                     vaultItemData={vaultItemData}
                     vaultPosition={vaultPosition}
                     setManageVault={setManageVault}
+                    balanceToken={balanceToken}
                   />
                 )}
               {activeVaultInfoTab === VaultInfoTabs.ABOUT && (

@@ -8,6 +8,7 @@ import { ButtonSecondary } from "components/AppComponents/AppButton/AppButton";
 import usePricesContext from "context/prices";
 import useSharedContext from "context/shared";
 import { formatNumber, formatPercentage } from "utils/format";
+import { useApr, useAprNumber } from "hooks/useApr";
 
 const VaultTitle = styled("div")`
   color: #5a81ff;
@@ -138,7 +139,9 @@ const VaultListItemEarningDetails: FC<VaultListItemFarmingDetailsProps> = ({
   vaultItemData,
   vaultPosition,
 }) => {
-  const { token, shareToken, sharesSupply, apr } = vaultItemData;
+  const { token, shareToken, sharesSupply } = vaultItemData;
+  const formattedApr = useApr(vaultItemData);
+  const aprNumber = useAprNumber(vaultItemData);
   const { balancePosition, balanceShares } = vaultPosition;
   const { fxdPrice } = usePricesContext();
   const { isMobile } = useSharedContext();
@@ -200,7 +203,7 @@ const VaultListItemEarningDetails: FC<VaultListItemFarmingDetailsProps> = ({
             <span
               data-testid={`vaultRowDetails-${vaultTestId}-itemPositionInfo-earningDetails-aprValue`}
             >
-              {formatNumber(Number(apr))}%
+              {formattedApr}%
             </span>
           </Apr>
         )}
@@ -208,14 +211,14 @@ const VaultListItemEarningDetails: FC<VaultListItemFarmingDetailsProps> = ({
           {!isMobile && (
             <Apr>
               Apr
-              <span>{formatNumber(Number(apr))}%</span>
+              <span>{formattedApr}%</span>
             </Apr>
           )}
           <Approx>
             ~
             {formatNumber(
               BigNumber(balancePosition)
-                .multipliedBy(apr)
+                .multipliedBy(aprNumber)
                 .dividedBy(100)
                 .dividedBy(10 ** 36)
                 .multipliedBy(fxdPrice)

@@ -46,16 +46,23 @@ const TokenValue = styled("div")`
 type FarmListItemEarnedProps = {
   vaultItemData: IVault;
   vaultPosition: IVaultPosition;
+  balanceToken: string;
 };
 
 const VaultListItemEarned: FC<FarmListItemEarnedProps> = ({
   vaultItemData,
   vaultPosition,
+  balanceToken,
 }) => {
   const { token } = vaultItemData;
-  const { balanceProfit } = vaultPosition;
+  const { balancePosition } = vaultPosition;
   const { fxdPrice } = usePricesContext();
   const { isMobile } = useSharedContext();
+
+  console.log({
+    balanceToken,
+    vaultPosition,
+  });
 
   return (
     <Grid container>
@@ -75,14 +82,16 @@ const VaultListItemEarned: FC<FarmListItemEarnedProps> = ({
         </TokenName>
         <TokenValue>
           {formatPercentage(
-            BigNumber(balanceProfit || "0")
+            BigNumber(balanceToken || "0")
+              .minus(balancePosition)
               .dividedBy(10 ** 18)
               .toNumber()
           )}{" "}
           <span>
             $
             {formatPercentage(
-              BigNumber(balanceProfit || "0")
+              BigNumber(balanceToken || "0")
+                .minus(balancePosition)
                 .multipliedBy(fxdPrice)
                 .dividedBy(10 ** 36)
                 .toNumber()
