@@ -186,7 +186,7 @@ const VaultList: FC<VaultListPropsType> = ({
                               id={"apr"}
                               text={
                                 <>
-                                  Annual Percentage Rate – refers to the total
+                                  Annual Percentage Yield – refers to the total
                                   cost of your borrowing for a year.
                                   Importantly, it includes the standard fees and
                                   interest you'll have to pay.
