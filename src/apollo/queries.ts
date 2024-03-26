@@ -226,12 +226,12 @@ export const VAULTS = gql`
         currentDebt
         maxDebt
         apr
-        historicalApr {
+        historicalApr(first: 1000) {
           id
           apr
           timestamp
         }
-        reports(orderBy: timestamp, orderDirection: desc) {
+        reports(orderBy: timestamp, orderDirection: desc, first: 1000) {
           timestamp
           gain
           loss

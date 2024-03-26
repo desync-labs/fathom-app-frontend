@@ -178,7 +178,7 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
           chartValue: getApr(
             reportsItem.currentDebt,
             vaultId,
-            historicalApr[index].apr
+            historicalApr[index]?.apr
           ),
         };
       })
