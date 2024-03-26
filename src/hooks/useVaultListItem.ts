@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
-import { IVaultPosition } from "fathom-sdk";
+import { useCallback, useEffect, useState } from "react";
+import { IVault, IVaultPosition } from "fathom-sdk";
 import BigNumber from "bignumber.js";
+import { useServices } from "context/services";
 
 interface UseVaultListItemProps {
   vaultPosition: IVaultPosition | null | undefined;
+  vault: IVault;
 }
 
 export enum VaultInfoTabs {
@@ -12,15 +14,19 @@ export enum VaultInfoTabs {
   STRATEGIES,
 }
 
-const useVaultListItem = ({ vaultPosition }: UseVaultListItemProps) => {
+const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
   const [extended, setExtended] = useState<boolean>(true);
   const [manageVault, setManageVault] = useState<boolean>(false);
   const [newVaultDeposit, setNewVaultDeposit] = useState<boolean>(false);
+  const [balanceToken, setBalanceToken] = useState<string>("0");
+
   const [activeVaultInfoTab, setActiveVaultInfoTab] = useState<VaultInfoTabs>(
     vaultPosition && BigNumber(vaultPosition.balanceShares).isGreaterThan(0)
       ? VaultInfoTabs.POSITION
       : VaultInfoTabs.ABOUT
   );
+
+  const { vaultService } = useServices();
 
   useEffect(() => {
     if (
@@ -33,7 +39,27 @@ const useVaultListItem = ({ vaultPosition }: UseVaultListItemProps) => {
     }
   }, [vaultPosition]);
 
+  const getBalancePosition = useCallback(() => {
+    vaultService
+      .previewRedeem(
+        BigNumber(vaultPosition?.balanceShares as string)
+          .dividedBy(10 ** 18)
+          .toString(),
+        vault.id
+      )
+      .then((balanceToken: string) => {
+        setBalanceToken(balanceToken);
+      });
+  }, [vaultService, vault, vaultPosition, setBalanceToken]);
+
+  useEffect(() => {
+    if (vaultPosition && vault) {
+      getBalancePosition();
+    }
+  }, [vaultPosition, vault]);
+
   return {
+    balanceToken,
     manageVault,
     newVaultDeposit,
     extended,
