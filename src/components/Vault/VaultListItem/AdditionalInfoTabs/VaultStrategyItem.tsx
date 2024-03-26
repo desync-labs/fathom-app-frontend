@@ -166,10 +166,6 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
   const [expanded, setExpanded] = useState<boolean>(false);
   const { isMobile } = useSharedContext();
 
-  console.log({
-    strategyData,
-  });
-
   useEffect(() => {
     if (!strategyData) return;
 
@@ -197,7 +193,7 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
     }
 
     setAprHistoryArr(extractedData);
-  }, [strategyData]);
+  }, [strategyData, vaultId]);
 
   useEffect(() => {
     const allocation =
