@@ -226,18 +226,37 @@ export const VAULTS = gql`
         currentDebt
         maxDebt
         apr
-        historicalApr {
-          id
-          apr
-          timestamp
-        }
-        reports(orderBy: timestamp, orderDirection: desc) {
-          timestamp
-          gain
-          loss
-          currentDebt
-        }
       }
+    }
+  }
+`;
+
+export const VAULT_STRATEGY_REPORTS = gql`
+  query VaultStrategyReports(
+    $strategy: String!
+    $reportsFirst: Int
+    $reportsSkip: Int
+  ) {
+    strategyHistoricalAprs(
+      first: $reportsFirst
+      skip: $reportsSkip
+      where: { strategy: $strategy }
+    ) {
+      id
+      apr
+      timestamp
+    }
+    strategyReports(
+      orderBy: timestamp
+      orderDirection: desc
+      first: $reportsFirst
+      skip: $reportsSkip
+      where: { strategy: $strategy }
+    ) {
+      timestamp
+      gain
+      loss
+      currentDebt
     }
   }
 `;

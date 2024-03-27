@@ -200,6 +200,8 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
   const vaultTestId = vaultItemData.id;
 
   const {
+    reports,
+    historicalApr,
     balanceEarned,
     extended,
     manageVault,
@@ -396,6 +398,8 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
                 )}
               {activeVaultInfoTab === VaultInfoTabs.ABOUT && (
                 <VaultItemAbout
+                  reports={reports}
+                  historicalApr={historicalApr}
                   vaultItemData={vaultItemData}
                   protocolFee={protocolFee}
                   performanceFee={performanceFee}
@@ -403,6 +407,8 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
               )}
               {activeVaultInfoTab === VaultInfoTabs.STRATEGIES && (
                 <VaultItemStrategies
+                  reports={reports}
+                  historicalApr={historicalApr}
                   vaultItemData={vaultItemData}
                   performanceFee={performanceFee}
                 />

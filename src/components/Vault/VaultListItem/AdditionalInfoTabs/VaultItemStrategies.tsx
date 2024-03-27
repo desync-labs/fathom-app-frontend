@@ -1,7 +1,8 @@
 import { FC, memo } from "react";
 import { styled, Typography } from "@mui/material";
-import { IVault } from "fathom-sdk";
+import { IVault, IVaultStrategy, IVaultStrategyReport } from "fathom-sdk";
 import VaultStrategyItem from "components/Vault/VaultListItem/AdditionalInfoTabs/VaultStrategyItem";
+import { IVaultStrategyHistoricalApr } from "hooks/useVaultListItem";
 
 const NoStrategiesTitle = styled(Typography)`
   ${({ theme }) => theme.breakpoints.down("sm")} {
@@ -12,11 +13,15 @@ const NoStrategiesTitle = styled(Typography)`
 type VaultItemStrategiesPropsTypes = {
   vaultItemData: IVault;
   performanceFee: number;
+  reports: Record<string, IVaultStrategyReport[]>;
+  historicalApr: Record<string, IVaultStrategyHistoricalApr[]>;
 };
 
 const VaultItemStrategies: FC<VaultItemStrategiesPropsTypes> = ({
   vaultItemData,
   performanceFee,
+  reports,
+  historicalApr,
 }) => {
   const { strategies, balanceTokens, token } = vaultItemData;
   return (
@@ -24,10 +29,12 @@ const VaultItemStrategies: FC<VaultItemStrategiesPropsTypes> = ({
       {!strategies.length ? (
         <NoStrategiesTitle>Has no strategies yet</NoStrategiesTitle>
       ) : (
-        strategies.map((strategy: any, index: number) => (
+        strategies.map((strategy: IVaultStrategy, index: number) => (
           <VaultStrategyItem
             vaultId={vaultItemData.id}
             strategyData={strategy}
+            reports={reports[strategy.id] || []}
+            historicalApr={historicalApr[strategy.id] || []}
             vaultBalanceTokens={balanceTokens}
             tokenName={token.name}
             performanceFee={performanceFee}
