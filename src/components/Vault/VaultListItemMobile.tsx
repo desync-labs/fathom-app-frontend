@@ -177,6 +177,8 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
   const formattedApr = useApr(vaultItemData);
 
   const {
+    reports,
+    historicalApr,
     balanceEarned,
     manageVault,
     newVaultDeposit,
@@ -273,6 +275,8 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
             )}
           {activeVaultInfoTab === VaultInfoTabs.ABOUT && (
             <VaultItemAbout
+              reports={reports}
+              historicalApr={historicalApr}
               vaultItemData={vaultItemData}
               protocolFee={protocolFee}
               performanceFee={performanceFee}
@@ -282,6 +286,8 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
             <VaultItemStrategies
               vaultItemData={vaultItemData}
               performanceFee={performanceFee}
+              reports={reports}
+              historicalApr={historicalApr}
             />
           )}
         </>

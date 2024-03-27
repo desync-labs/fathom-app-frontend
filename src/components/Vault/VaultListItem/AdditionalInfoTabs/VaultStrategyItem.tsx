@@ -26,6 +26,7 @@ import {
   strategyTitle,
 } from "utils/getStrategyTitleAndDescription";
 import { getApr } from "hooks/useApr";
+import { IVaultStrategyHistoricalApr } from "hooks/useVaultListItem";
 
 dayjs.extend(relativeTime);
 
@@ -129,6 +130,8 @@ type VaultIndicatorItemPropsType = {
 };
 
 type VaultStrategyItemPropsType = {
+  reports: IVaultStrategyReport[];
+  historicalApr: IVaultStrategyHistoricalApr[];
   strategyData: IVaultStrategy;
   vaultBalanceTokens: string;
   tokenName: string;
@@ -157,6 +160,8 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
   performanceFee,
   index,
   vaultId,
+  reports,
+  historicalApr,
 }) => {
   const [aprHistoryArr, setAprHistoryArr] = useState<HistoryChartDataType[]>(
     []
@@ -167,11 +172,9 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
   const { isMobile } = useSharedContext();
 
   useEffect(() => {
-    if (!strategyData) return;
+    if (!historicalApr.length || !reports.length) return;
 
-    const { historicalApr } = strategyData;
-
-    const extractedData = strategyData.reports
+    const extractedData = reports
       .map((reportsItem, index) => {
         return {
           timestamp: reportsItem.timestamp,
@@ -184,16 +187,14 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
       })
       .sort((a, b) => parseInt(a.timestamp) - parseInt(b.timestamp));
 
-    if (strategyData.reports.length) {
-      const lastReport = dayjs(
-        parseInt(strategyData.reports[0].timestamp, 10)
-      ).fromNow();
+    if (reports.length) {
+      const lastReport = dayjs(parseInt(reports[0].timestamp, 10)).fromNow();
 
       setLastReportDate(lastReport);
     }
 
     setAprHistoryArr(extractedData);
-  }, [strategyData, vaultId]);
+  }, [historicalApr, reports, vaultId]);
 
   useEffect(() => {
     const allocation =
@@ -208,13 +209,10 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
 
   const totalGain = useMemo(
     () =>
-      strategyData.reports.reduce(
-        (acc: BigNumber, report: IVaultStrategyReport) => {
-          return acc.plus(report.gain);
-        },
-        BigNumber(0)
-      ),
-    [strategyData]
+      reports.reduce((acc: BigNumber, report: IVaultStrategyReport) => {
+        return acc.plus(report.gain);
+      }, BigNumber(0)),
+    [reports]
   );
 
   return (

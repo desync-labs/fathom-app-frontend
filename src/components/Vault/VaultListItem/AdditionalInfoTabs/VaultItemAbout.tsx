@@ -1,7 +1,7 @@
 import { FC, memo, useEffect, useState } from "react";
 import BigNumber from "bignumber.js";
 import { Box, ListItemText, styled, Typography } from "@mui/material";
-import { IVault } from "fathom-sdk";
+import { IVault, IVaultStrategyReport } from "fathom-sdk";
 import { formatNumber, formatPercentage } from "utils/format";
 import useSharedContext from "context/shared";
 import { VaultItemInfoWrapper } from "components/Vault/VaultListItem";
@@ -13,6 +13,7 @@ import { getAccountUrl } from "utils/explorer";
 import { DEFAULT_CHAIN_ID } from "utils/Constants";
 import { Link } from "react-router-dom";
 import { useAprNumber } from "hooks/useApr";
+import { IVaultStrategyHistoricalApr } from "hooks/useVaultListItem";
 
 export const VaultAboutTitle = styled(Typography)`
   font-size: 16px;
@@ -36,12 +37,16 @@ type VaultItemAboutPropsTypes = {
   vaultItemData: IVault;
   protocolFee: number;
   performanceFee: number;
+  reports: Record<string, IVaultStrategyReport[]>;
+  historicalApr: Record<string, IVaultStrategyHistoricalApr[]>;
 };
 
 const VaultItemAbout: FC<VaultItemAboutPropsTypes> = ({
   vaultItemData,
   protocolFee,
   performanceFee,
+  reports,
+  historicalApr,
 }) => {
   const { token } = vaultItemData;
   const aprNumber = useAprNumber(vaultItemData);
@@ -51,14 +56,16 @@ const VaultItemAbout: FC<VaultItemAboutPropsTypes> = ({
   const { isMobile } = useSharedContext();
 
   useEffect(() => {
-    if (!vaultItemData) return;
+    if (!Object.keys(reports).length || !Object.keys(historicalApr).length) {
+      return;
+    }
 
     const extractedData = [];
-    const allReports = [];
+    let allReports: IVaultStrategyReport[] = [];
     let accumulatedTotalEarned = "0";
 
-    for (const strategy of vaultItemData.strategies) {
-      allReports.push(...strategy.reports);
+    for (const reportsCollection of Object.values(reports)) {
+      allReports = [...allReports, ...reportsCollection];
     }
 
     allReports.sort((a, b) => parseInt(a.timestamp) - parseInt(b.timestamp));
@@ -81,7 +88,7 @@ const VaultItemAbout: FC<VaultItemAboutPropsTypes> = ({
     }
 
     setEarnedHistoryArr(extractedData);
-  }, [vaultItemData]);
+  }, [reports, historicalApr]);
 
   return (
     <VaultItemInfoWrapper>

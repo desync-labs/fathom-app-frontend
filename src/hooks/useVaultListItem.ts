@@ -7,8 +7,8 @@ import {
 } from "fathom-sdk";
 import BigNumber from "bignumber.js";
 import { useServices } from "context/services";
-import { useLazyQuery, useQuery } from "@apollo/client";
-import { VAULT_STRATEGY_REPORTS, VAULTS_STRATEGIES } from "apollo/queries";
+import { useLazyQuery } from "@apollo/client";
+import { VAULT_STRATEGY_REPORTS } from "apollo/queries";
 
 interface UseVaultListItemProps {
   vaultPosition: IVaultPosition | null | undefined;
@@ -23,7 +23,7 @@ export enum VaultInfoTabs {
 
 const VAULT_REPORTS_PER_PAGE = 1000;
 
-type IVaultStrategyHistorycalApr = {
+export type IVaultStrategyHistoricalApr = {
   id: string;
   apr: string;
   timestamp: string;
@@ -35,14 +35,13 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
   const [newVaultDeposit, setNewVaultDeposit] = useState<boolean>(false);
   const [balanceToken, setBalanceToken] = useState<string>("0");
 
-  const [strategies, setStrategies] = useState<IVaultStrategy[]>([]);
   const [reports, setReports] = useState<
     Record<string, IVaultStrategyReport[]>
-  >([] as unknown as Record<string, IVaultStrategyReport[]>);
+  >({});
 
   const [historicalApr, setHistoricalApr] = useState<
-    Record<string, IVaultStrategyHistorycalApr[]>
-  >([] as unknown as Record<string, IVaultStrategyHistorycalApr[]>);
+    Record<string, IVaultStrategyHistoricalApr[]>
+  >({});
 
   const [activeVaultInfoTab, setActiveVaultInfoTab] = useState<VaultInfoTabs>(
     vaultPosition && BigNumber(vaultPosition.balanceShares).isGreaterThan(0)
@@ -51,13 +50,6 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
   );
 
   const { vaultService } = useServices();
-
-  const { data: vaultStrategiesData } = useQuery(VAULTS_STRATEGIES, {
-    variables: {
-      vault: vault.id,
-    },
-    context: { clientName: "vaults" },
-  });
 
   const [loadReports, { fetchMore: fetchMoreReports }] = useLazyQuery(
     VAULT_STRATEGY_REPORTS,
@@ -70,7 +62,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     (
       strategyId: string,
       prevStateReports: IVaultStrategyReport[] = [],
-      prevStateApr: IVaultStrategyHistorycalApr[] = []
+      prevStateApr: IVaultStrategyHistoricalApr[] = []
     ) => {
       (!prevStateReports.length ? loadReports : fetchMoreReports)({
         variables: {
@@ -106,13 +98,23 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
   );
 
   useEffect(() => {
-    if (vaultStrategiesData && vaultStrategiesData?.strategies) {
-      vaultStrategiesData?.strategies.forEach((strategy: IVaultStrategy) => {
+    let interval: ReturnType<typeof setInterval>;
+    if (vault && vault?.strategies && vault?.strategies?.length) {
+      vault?.strategies.forEach((strategy: IVaultStrategy) => {
         fetchReports(strategy.id, [], []);
       });
-      setStrategies(vaultStrategiesData?.strategies);
+      /**
+       * Refetch reports every 30 seconds
+       */
+      interval = setInterval(() => {
+        vault?.strategies.forEach((strategy: IVaultStrategy) => {
+          fetchReports(strategy.id, [], []);
+        });
+      }, 30 * 1000);
     }
-  }, [vaultStrategiesData, fetchReports, setStrategies]);
+
+    return () => clearInterval(interval);
+  }, [vault, fetchReports]);
 
   useEffect(() => {
     if (
@@ -160,7 +162,6 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
   return {
     reports,
     historicalApr,
-    strategies,
     balanceEarned,
     balanceToken,
     manageVault,
