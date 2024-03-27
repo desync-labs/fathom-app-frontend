@@ -24,6 +24,18 @@ const cache = new InMemoryCache({
             return incoming;
           },
         },
+        strategyHistoricalAprs: {
+          keyArgs: ["strategy"],
+          merge(existing = [], incoming) {
+            return [...existing, ...incoming];
+          },
+        },
+        strategyReports: {
+          keyArgs: ["strategy"],
+          merge(existing = [], incoming) {
+            return [...existing, ...incoming];
+          },
+        },
       },
     },
     Staker: {
