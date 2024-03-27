@@ -67,6 +67,12 @@ const useVaultList = () => {
   });
 
   useEffect(() => {
+    if (vaultItemsData?.vaults && vaultItemsData?.vaults.length) {
+      console.log("Vaults data", vaultItemsData);
+    }
+  }, [vaultItemsData, fetchMore]);
+
+  useEffect(() => {
     if (account) {
       loadData({ variables: { account: account.toLowerCase() } }).then(
         (res) => {

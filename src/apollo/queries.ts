@@ -196,6 +196,8 @@ export const VAULTS = gql`
     $skip: Int!
     $search: String!
     $shutdown: Boolean
+    $reportsFirst: Int
+    $reportsSkip: Int
   ) {
     vaults(
       first: $first
@@ -226,18 +228,70 @@ export const VAULTS = gql`
         currentDebt
         maxDebt
         apr
-        historicalApr(first: 1000) {
+        historicalApr(first: $reportsFirst, skip: $reportsSkip) {
           id
           apr
           timestamp
         }
-        reports(orderBy: timestamp, orderDirection: desc, first: 1000) {
+        reports(
+          orderBy: timestamp
+          orderDirection: desc
+          first: $reportsFirst
+          skip: $reportsSkip
+        ) {
           timestamp
           gain
           loss
           currentDebt
         }
       }
+    }
+  }
+`;
+
+export const VAULTS_STRATEGIES = gql`
+  query VaultsStrategies($vault: String!) {
+    strategies(
+      first: 1000
+      orderBy: activation
+      orderDirection: asc
+      where: { vault: $vault }
+    ) {
+      id
+      delegatedAssets
+      currentDebt
+      maxDebt
+      apr
+    }
+  }
+`;
+
+export const VAULT_STRATEGY_REPORTS = gql`
+  query VaultStrategyReports(
+    $strategy: String!
+    $reportsFirst: Int
+    $reportsSkip: Int
+  ) {
+    strategyHistoricalAprs(
+      first: $reportsFirst
+      skip: $reportsSkip
+      where: { strategy: $strategy }
+    ) {
+      id
+      apr
+      timestamp
+    }
+    strategyReports(
+      orderBy: timestamp
+      orderDirection: desc
+      first: $reportsFirst
+      skip: $reportsSkip
+      where: { strategy: $strategy }
+    ) {
+      timestamp
+      gain
+      loss
+      currentDebt
     }
   }
 `;
