@@ -73,15 +73,19 @@ const VaultListItemEarned: FC<FarmListItemEarnedProps> = ({
           />
         </TokenName>
         <TokenValue>
-          {formatPercentage(balanceEarned)}{" "}
+          {BigNumber(balanceEarned).isGreaterThan(0)
+            ? formatPercentage(balanceEarned)
+            : "0"}{" "}
           <span>
             $
-            {formatPercentage(
-              BigNumber(balanceEarned || "0")
-                .multipliedBy(fxdPrice)
-                .dividedBy(10 ** 18)
-                .toNumber()
-            )}
+            {BigNumber(balanceEarned).isGreaterThan(0)
+              ? formatPercentage(
+                  BigNumber(balanceEarned || "0")
+                    .multipliedBy(fxdPrice)
+                    .dividedBy(10 ** 18)
+                    .toNumber()
+                )
+              : "0"}
           </span>
         </TokenValue>
       </Grid>
