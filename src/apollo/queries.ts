@@ -196,8 +196,6 @@ export const VAULTS = gql`
     $skip: Int!
     $search: String!
     $shutdown: Boolean
-    $reportsFirst: Int
-    $reportsSkip: Int
   ) {
     vaults(
       first: $first
