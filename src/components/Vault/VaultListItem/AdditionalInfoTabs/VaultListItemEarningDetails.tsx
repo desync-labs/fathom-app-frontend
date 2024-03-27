@@ -41,6 +41,7 @@ const TotalTokens = styled("div")`
     margin-bottom: 5px;
 
     span {
+      text-align: end;
       align-items: end;
     }
   }

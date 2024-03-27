@@ -63,7 +63,7 @@ const VaultItemAbout: FC<VaultItemAboutPropsTypes> = ({
 
     allReports.sort((a, b) => parseInt(a.timestamp) - parseInt(b.timestamp));
 
-    for (let i = allReports.length - 1; i >= 0; i--) {
+    for (let i = 0; i <= allReports.length - 1; i++) {
       const report = allReports[i];
 
       const currentTotalEarned = BigNumber(report.gain)

@@ -21,9 +21,9 @@ export enum VaultInfoTabs {
   STRATEGIES,
 }
 
-const VAULT_REPORTS_PER_PAGE = 100;
+const VAULT_REPORTS_PER_PAGE = 1000;
 
-type VaultStrategyHistorycalAprType = {
+type IVaultStrategyHistorycalApr = {
   id: string;
   apr: string;
   timestamp: string;
@@ -41,8 +41,8 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
   >([] as unknown as Record<string, IVaultStrategyReport[]>);
 
   const [historicalApr, setHistoricalApr] = useState<
-    Record<string, VaultStrategyHistorycalAprType[]>
-  >([] as unknown as Record<string, VaultStrategyHistorycalAprType[]>);
+    Record<string, IVaultStrategyHistorycalApr[]>
+  >([] as unknown as Record<string, IVaultStrategyHistorycalApr[]>);
 
   const [activeVaultInfoTab, setActiveVaultInfoTab] = useState<VaultInfoTabs>(
     vaultPosition && BigNumber(vaultPosition.balanceShares).isGreaterThan(0)
@@ -70,78 +70,37 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     (
       strategyId: string,
       prevStateReports: IVaultStrategyReport[] = [],
-      prevStateApr: {
-        id: string;
-        apr: string;
-        timestamp: string;
-      }[] = []
+      prevStateApr: IVaultStrategyHistorycalApr[] = []
     ) => {
-      if (!prevStateReports.length) {
-        loadReports({
-          variables: {
-            strategy: strategyId,
-            reportsFirst: VAULT_REPORTS_PER_PAGE,
-            reportsSkip: prevStateReports.length,
-          },
-        }).then((response) => {
-          const { data } = response;
+      (!prevStateReports.length ? loadReports : fetchMoreReports)({
+        variables: {
+          strategy: strategyId,
+          reportsFirst: VAULT_REPORTS_PER_PAGE,
+          reportsSkip: prevStateReports.length,
+        },
+      }).then((response) => {
+        const { data } = response;
 
-          if (
-            data?.strategyReports &&
-            data?.strategyReports.length === VAULT_REPORTS_PER_PAGE
-          ) {
-            fetchReports(
-              strategyId,
-              data.strategyReports,
-              data.strategyHistoricalAprs
-            );
-          } else {
-            setReports((prev) => ({
-              ...prev,
-              [strategyId]: data.strategyReports,
-            }));
-            setHistoricalApr((prev) => ({
-              ...prev,
-              [strategyId]: data.strategyHistoricalAprs,
-            }));
-          }
-        });
-      } else {
-        fetchMoreReports({
-          variables: {
-            strategy: strategyId,
-            reportsFirst: VAULT_REPORTS_PER_PAGE,
-            reportsSkip: prevStateReports.length,
-          },
-        }).then((response) => {
-          const { data } = response;
-
-          if (
-            data?.strategyReports &&
-            data?.strategyReports.length % VAULT_REPORTS_PER_PAGE === 0
-          ) {
-            fetchReports(
-              strategyId,
-              [...prevStateReports, ...data.strategyReports],
-              [...prevStateApr, ...data.strategyHistoricalAprs]
-            );
-          } else {
-            // return console.log({
-            //   reports: [...prevStateReports, ...data.strategyReports],
-            //   apr: [...prevStateApr, ...data.strategyHistoricalAprs],
-            // });
-
-            setReports((prev) => ({
-              ...prev,
-              [strategyId]: [...prevStateReports, ...data.strategyReports],
-            }));
-            setHistoricalApr((prev) => ({
-              ...prev,
-              [strategyId]: [...prevStateApr, ...data.strategyHistoricalAprs],
-            }));
-          }
-        });
-      }
+        if (
+          data?.strategyReports &&
+          data?.strategyReports.length % VAULT_REPORTS_PER_PAGE === 0
+        ) {
+          fetchReports(
+            strategyId,
+            [...prevStateReports, ...data.strategyReports],
+            [...prevStateApr, ...data.strategyHistoricalAprs]
+          );
+        } else {
+          setReports((prev) => ({
+            ...prev,
+            [strategyId]: [...prevStateReports, ...data.strategyReports],
+          }));
+          setHistoricalApr((prev) => ({
+            ...prev,
+            [strategyId]: [...prevStateApr, ...data.strategyHistoricalAprs],
+          }));
+        }
+      });
     },
     [loadReports, fetchMoreReports, setReports, setHistoricalApr]
   );
