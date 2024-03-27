@@ -141,17 +141,14 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
       });
   }, [vaultService, vault.id, vaultPosition, setBalanceToken]);
 
-  const getBalancePosition = useCallback(() => {
-    fetchBalanceToken();
-    const interval = setInterval(fetchBalanceToken, 15 * 1000);
-    return () => clearInterval(interval);
-  }, [fetchBalanceToken]);
-
   useEffect(() => {
+    let interval: ReturnType<typeof setInterval>;
     if (vaultPosition && vault) {
-      getBalancePosition();
+      fetchBalanceToken();
+      interval = setInterval(fetchBalanceToken, 15 * 1000);
     }
-  }, [vaultPosition, vault]);
+    return () => clearInterval(interval);
+  }, [vaultPosition, vault, fetchBalanceToken]);
 
   const balanceEarned = useMemo(() => {
     return BigNumber(balanceToken || "0")
