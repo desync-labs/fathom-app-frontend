@@ -75,6 +75,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
 
         if (
           data?.strategyReports &&
+          data?.strategyReports.length &&
           data?.strategyReports.length % VAULT_REPORTS_PER_PAGE === 0
         ) {
           fetchReports(

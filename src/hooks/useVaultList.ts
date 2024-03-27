@@ -67,12 +67,6 @@ const useVaultList = () => {
   });
 
   useEffect(() => {
-    if (vaultItemsData?.vaults && vaultItemsData?.vaults.length) {
-      console.log("Vaults data", vaultItemsData);
-    }
-  }, [vaultItemsData, fetchMore]);
-
-  useEffect(() => {
     if (account) {
       loadData({ variables: { account: account.toLowerCase() } }).then(
         (res) => {
@@ -98,12 +92,11 @@ const useVaultList = () => {
 
   useEffect(() => {
     /**
-     * Refetch vaults every 15 seconds
+     * Refetch vaults every 60 seconds
      */
     const interval = setInterval(() => {
       vaultsRefetch();
-      positionsRefetch({ account: account.toLowerCase() });
-    }, 15 * 1000);
+    }, 60 * 1000);
     return () => clearInterval(interval);
   }, [vaultsRefetch, account]);
 
@@ -203,11 +196,11 @@ const useVaultList = () => {
 
   const filterCurrentPosition = useCallback(
     (vaultId: string) => {
-      const filteredPositions = vaultPositionsList.filter((position) => {
+      const filteredPositions = vaultPositionsList.find((position) => {
         return position.vault.id === vaultId;
       });
 
-      return filteredPositions ? filteredPositions[0] : null;
+      return filteredPositions ? filteredPositions : null;
     },
     [vaultPositionsList, vaultPositionsLoading]
   );
