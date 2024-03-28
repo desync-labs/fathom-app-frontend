@@ -129,26 +129,26 @@ const RepayPositionForm: FC<ClosePositionDialogPropsType> = ({
             <>
               {balanceError ? (
                 <Box
-                  sx={{ mt: "5px", display: "inline-block" }}
+                  sx={{ mt: "5px", display: "flex", alignItems: "center" }}
                   component={"span"}
                 >
                   <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
                   <Typography
                     component={"span"}
-                    sx={{ fontSize: "12px", paddingLeft: "10px" }}
+                    sx={{ fontSize: "12px", paddingLeft: "5px" }}
                   >
                     You don't have enough to repay that amount
                   </Typography>
                 </Box>
               ) : balanceErrorNotFilled && fathomTokenIsDirty ? (
                 <Box
-                  sx={{ mt: "5px", display: "inline-block" }}
+                  sx={{ mt: "5px", display: "flex", alignItems: "center" }}
                   component={"span"}
                 >
                   <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
                   <Typography
                     component={"span"}
-                    sx={{ fontSize: "12px", paddingLeft: "10px" }}
+                    sx={{ fontSize: "12px", paddingLeft: "5px" }}
                   >
                     Please fill repaying amount
                   </Typography>

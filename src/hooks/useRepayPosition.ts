@@ -50,6 +50,8 @@ const useRepayPosition = (
   const [approveBtn, setApproveBtn] = useState<boolean>(false);
   const [approvalPending, setApprovalPending] = useState<boolean>(false);
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const pool = useMemo(
     () =>
       data?.pools?.find(
@@ -196,14 +198,18 @@ const useRepayPosition = (
   ]);
 
   useEffect(() => {
-    Promise.all([getBalance(), getDebtValue()]).then(() => {
-      handleOnOpen();
-    });
-  }, [getBalance, handleOnOpen, getDebtValue]);
+    setIsLoading(true);
+    Promise.all([getBalance(), getDebtValue()])
+      .then(handleOnOpen)
+      .finally(() => setIsLoading(false));
+  }, [getBalance, handleOnOpen, getDebtValue, setIsLoading]);
 
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
     if (account && chainId) {
+      /**
+       * Get debt balance of the user every 5 seconds
+       */
       interval = setInterval(getDebtValue, 5000);
     }
 
@@ -211,14 +217,28 @@ const useRepayPosition = (
   }, [account, chainId, getDebtValue]);
 
   useEffect(() => {
-    balance && BigNumber(balance).isLessThan(fathomToken)
-      ? setBalanceError(true)
-      : setBalanceError(false);
+    const timeout = setTimeout(() => {
+      if (balance && !isLoading && BigNumber(balance).isLessThan(fathomToken)) {
+        setBalanceError(true);
+      } else {
+        setBalanceError(false);
+      }
 
-    !fathomToken
-      ? setBalanceErrorNotFilled(true)
-      : setBalanceErrorNotFilled(false);
-  }, [fathomToken, balance]);
+      if (BigNumber(fathomToken).isLessThanOrEqualTo(0) && !isLoading) {
+        setBalanceErrorNotFilled(true);
+      } else {
+        setBalanceErrorNotFilled(false);
+      }
+    }, 100);
+
+    return () => clearTimeout(timeout);
+  }, [
+    fathomToken,
+    balance,
+    isLoading,
+    setBalanceErrorNotFilled,
+    setBalanceError,
+  ]);
 
   useEffect(() => {
     if (fathomToken) {
@@ -373,6 +393,11 @@ const useRepayPosition = (
 
     setApprovalPending(false);
   }, [account, positionService, setApprovalPending, setApproveBtn]);
+
+  console.log({
+    balanceError,
+    balanceErrorNotFilled,
+  });
 
   return {
     liquidationPrice,
