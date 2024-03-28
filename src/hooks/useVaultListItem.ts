@@ -10,8 +10,7 @@ import { useServices } from "context/services";
 import useConnector from "context/connector";
 import { useLazyQuery } from "@apollo/client";
 import {
-  VAULT_POSITION_DEPOSITS,
-  VAULT_POSITION_WITHDRAWALS,
+  VAULT_POSITION_TRANSACTIONS,
   VAULT_STRATEGY_REPORTS,
 } from "apollo/queries";
 
@@ -66,11 +65,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     }
   );
 
-  const [loadPositionDeposits] = useLazyQuery(VAULT_POSITION_DEPOSITS, {
-    context: { clientName: "vaults" },
-  });
-
-  const [loadPositionWithdrawals] = useLazyQuery(VAULT_POSITION_WITHDRAWALS, {
+  const [loadPositionTransactions] = useLazyQuery(VAULT_POSITION_TRANSACTIONS, {
     context: { clientName: "vaults" },
   });
 
@@ -159,15 +154,10 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
 
   const fetchPositionTransactions = useCallback(() => {
     if (account) {
-      loadPositionDeposits({
+      loadPositionTransactions({
         variables: { account: account.toLowerCase() },
       }).then((res) => {
         res.data?.deposits && setDepositsList(res.data.deposits);
-      });
-
-      loadPositionWithdrawals({
-        variables: { account: account.toLowerCase() },
-      }).then((res) => {
         res.data?.withdrawals && setWithdrawalsList(res.data.withdrawals);
       });
     } else {
