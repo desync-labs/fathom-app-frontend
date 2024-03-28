@@ -45,8 +45,8 @@ const OpenPositionFormWrapper = styled(Grid)`
 `;
 
 const DangerErrorBox = styled(ErrorBox)`
-  margin-bottom: 10px;
-  margin-top: 0px;
+  margin-bottom: 30px;
+  margin-top: 0;
 `;
 
 const OpenPositionApproveBox = styled(ApproveBox)`
