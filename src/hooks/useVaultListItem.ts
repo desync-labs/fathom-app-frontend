@@ -174,7 +174,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
       interval = setInterval(fetchBalanceToken, 15 * 1000);
     }
     return () => clearInterval(interval);
-  }, [vaultPosition, vault, fetchBalanceToken]);
+  }, [vaultPosition, vault, fetchBalanceToken, fetchPositionTransactions]);
 
   const balanceEarned = useMemo(() => {
     const sumTokenDeposits = depositsList.reduce(
