@@ -204,6 +204,7 @@ const useTopUpPosition = (
                   .dividedBy(100)
               )
               .minus(debtValue)
+              .decimalPlaces(6, BigNumber.ROUND_DOWN)
               .toNumber()
           );
 
