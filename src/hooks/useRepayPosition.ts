@@ -394,11 +394,6 @@ const useRepayPosition = (
     setApprovalPending(false);
   }, [account, positionService, setApprovalPending, setApproveBtn]);
 
-  console.log({
-    balanceError,
-    balanceErrorNotFilled,
-  });
-
   return {
     liquidationPrice,
     ltv,
