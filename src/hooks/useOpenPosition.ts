@@ -176,6 +176,7 @@ const useOpenPosition = (
             .multipliedBy(BigNumber(100).minus(DANGER_SAFETY_BUFFER * 100))
             .dividedBy(100)
         )
+        .decimalPlaces(6, BigNumber.ROUND_DOWN)
         .toString();
 
       setFxdToBeBorrowed(safeMax);
