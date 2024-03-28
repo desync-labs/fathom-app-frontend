@@ -7,8 +7,13 @@ import {
 } from "fathom-sdk";
 import BigNumber from "bignumber.js";
 import { useServices } from "context/services";
+import useConnector from "context/connector";
 import { useLazyQuery } from "@apollo/client";
-import { VAULT_STRATEGY_REPORTS } from "apollo/queries";
+import {
+  VAULT_POSITION_DEPOSITS,
+  VAULT_POSITION_WITHDRAWALS,
+  VAULT_STRATEGY_REPORTS,
+} from "apollo/queries";
 
 interface UseVaultListItemProps {
   vaultPosition: IVaultPosition | null | undefined;
@@ -34,6 +39,8 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
   const [manageVault, setManageVault] = useState<boolean>(false);
   const [newVaultDeposit, setNewVaultDeposit] = useState<boolean>(false);
   const [balanceToken, setBalanceToken] = useState<string>("0");
+  const [depositsList, setDepositsList] = useState([]);
+  const [withdrawalsList, setWithdrawalsList] = useState([]);
 
   const [reports, setReports] = useState<
     Record<string, IVaultStrategyReport[]>
@@ -49,6 +56,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
       : VaultInfoTabs.ABOUT
   );
 
+  const { account } = useConnector();
   const { vaultService } = useServices();
 
   const [loadReports, { fetchMore: fetchMoreReports }] = useLazyQuery(
@@ -57,6 +65,14 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
       context: { clientName: "vaults" },
     }
   );
+
+  const [loadPositionDeposits] = useLazyQuery(VAULT_POSITION_DEPOSITS, {
+    context: { clientName: "vaults" },
+  });
+
+  const [loadPositionWithdrawals] = useLazyQuery(VAULT_POSITION_WITHDRAWALS, {
+    context: { clientName: "vaults" },
+  });
 
   const fetchReports = useCallback(
     (
@@ -141,21 +157,51 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
       });
   }, [vaultService, vault.id, vaultPosition, setBalanceToken]);
 
+  const fetchPositionTransactions = useCallback(() => {
+    if (account) {
+      loadPositionDeposits({
+        variables: { account: account.toLowerCase() },
+      }).then((res) => {
+        res.data?.deposits && setDepositsList(res.data.deposits);
+      });
+
+      loadPositionWithdrawals({
+        variables: { account: account.toLowerCase() },
+      }).then((res) => {
+        res.data?.withdrawals && setWithdrawalsList(res.data.withdrawals);
+      });
+    } else {
+      setDepositsList([]);
+      setWithdrawalsList([]);
+    }
+  }, [account, setDepositsList]);
+
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
     if (vaultPosition && vault) {
       fetchBalanceToken();
+      fetchPositionTransactions();
       interval = setInterval(fetchBalanceToken, 15 * 1000);
     }
     return () => clearInterval(interval);
   }, [vaultPosition, vault, fetchBalanceToken]);
 
   const balanceEarned = useMemo(() => {
+    const sumTokenDeposits = depositsList.reduce(
+      (acc: BigNumber, deposit: any) => acc.plus(deposit.tokenAmount),
+      new BigNumber(0)
+    );
+
+    const sumTokenWithdrawals = withdrawalsList.reduce(
+      (acc: BigNumber, withdrawal: any) => acc.plus(withdrawal.tokenAmount),
+      new BigNumber(0)
+    );
+
     return BigNumber(balanceToken || "0")
-      .minus(vaultPosition?.balancePosition as string)
+      .minus(sumTokenDeposits.minus(sumTokenWithdrawals))
       .dividedBy(10 ** 18)
       .toNumber();
-  }, [vaultPosition, balanceToken]);
+  }, [vaultPosition, balanceToken, depositsList, withdrawalsList]);
 
   return {
     reports,
