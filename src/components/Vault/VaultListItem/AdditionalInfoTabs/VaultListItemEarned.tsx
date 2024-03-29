@@ -66,8 +66,6 @@ const VaultListItemEarned: FC<FarmListItemEarnedProps> = ({
             text={
               <>
                 The accumulated profit for the account/vault.
-                <br />
-                It is only updated when the user withdraw all the shares.
               </>
             }
           />
