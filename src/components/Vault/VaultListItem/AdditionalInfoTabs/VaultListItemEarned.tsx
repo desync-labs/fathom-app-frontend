@@ -63,11 +63,7 @@ const VaultListItemEarned: FC<FarmListItemEarnedProps> = ({
           {token.name} <span>Earned</span>
           <AppPopover
             id={"earned"}
-            text={
-              <>
-                The accumulated profit for the account/vault.
-              </>
-            }
+            text={<>The accumulated profit for the account/vault.</>}
           />
         </TokenName>
         <TokenValue>
