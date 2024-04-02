@@ -121,7 +121,7 @@ const ProposalInfo = () => {
           </Grid>
           <Grid item xs={12}>
             <TimeslotContainer container gap={2}>
-              <Grid item xs={12} sm={4}>
+              <Grid item xs={12} sm={3}>
                 <TimeslotTitle>Submit time:</TimeslotTitle>
                 <TimeslotValue>{submitTime}</TimeslotValue>
               </Grid>
@@ -129,7 +129,7 @@ const ProposalInfo = () => {
                 <TimeslotTitle>Voting starts:</TimeslotTitle>
                 <TimeslotValue>{votingStartsTime}</TimeslotValue>
               </Grid>
-              <Grid item xs={12} sm={4}>
+              <Grid item xs={12} sm={5}>
                 <TimeslotTitle>Voting ends:</TimeslotTitle>
                 <TimeslotValue>
                   {secondsLeft ? "in " : null}
