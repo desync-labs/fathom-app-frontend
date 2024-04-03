@@ -1,6 +1,6 @@
 import BigNumber from "bignumber.js";
 
-export const XDC_BLOCK_TIME = 2; // 2 seconds
+export const XDC_BLOCK_TIME = 2.666; // 2.666 seconds
 export const DEFAULT_CHAIN_ID = process.env.REACT_APP_ENV === "prod" ? 50 : 51;
 
 export const YEAR_IN_SECONDS = 365 * 24 * 60 * 60;
