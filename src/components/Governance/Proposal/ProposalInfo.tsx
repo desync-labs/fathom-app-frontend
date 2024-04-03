@@ -38,6 +38,12 @@ const TimeslotValue = styled(Typography)`
   line-height: 20px;
 `;
 
+const TimeslotBlock = styled(Typography)`
+  font-size: 14px;
+  line-height: 20px;
+  color: #9fadc6;
+`;
+
 const ActionLabel = styled(Box)`
   color: #7d91b5;
   font-weight: 700;
@@ -126,11 +132,14 @@ const ProposalInfo = () => {
                 <TimeslotValue>{submitTime}</TimeslotValue>
               </Grid>
               <Grid item xs={12} sm={3}>
-                <TimeslotTitle>Voting starts:</TimeslotTitle>
+                <TimeslotTitle>Exp. Voting starts:</TimeslotTitle>
                 <TimeslotValue>{votingStartsTime}</TimeslotValue>
+                <TimeslotBlock>
+                  Start block: {fetchedProposal.startBlock}
+                </TimeslotBlock>
               </Grid>
               <Grid item xs={12} sm={5}>
-                <TimeslotTitle>Voting ends:</TimeslotTitle>
+                <TimeslotTitle>Exp. Voting ends:</TimeslotTitle>
                 <TimeslotValue>
                   {secondsLeft ? "in " : null}
                   <TimeslotInProgress
@@ -147,6 +156,9 @@ const ProposalInfo = () => {
                     )}
                   </TimeslotInProgress>
                 </TimeslotValue>
+                <TimeslotBlock>
+                  End block: {fetchedProposal.endBlock}
+                </TimeslotBlock>
               </Grid>
             </TimeslotContainer>
           </Grid>
