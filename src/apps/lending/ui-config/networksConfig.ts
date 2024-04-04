@@ -1,4 +1,7 @@
-import { FathomLendingApothem } from "@into-the-fathom/fathom-lending-address-book";
+import {
+  FathomLendingApothem,
+  FathomLendingXdc,
+} from "@into-the-fathom/fathom-lending-address-book";
 
 export type ExplorerLinkBuilderProps = {
   tx?: string;
@@ -65,8 +68,26 @@ export const networkConfigs: Record<string, BaseNetworkConfig> = {
     /**
      * This need until we have no production market.
      */
-    isTestnet: process.env.REACT_APP_ENV !== "prod",
+    isTestnet: true,
     networkLogoPath: "./icons/networks/xdc.png",
     ratesHistoryApiUrl: "https://dev-lending.fathom.fi/data/rates-history",
+  },
+  [FathomLendingXdc.CHAIN_ID]: {
+    name: "XDC",
+    publicJsonRPCUrl: [
+      "https://rpc.ankr.com/xdc",
+      "https://erpc.xdcrpc.com",
+      "https://erpc.xinfin.network",
+    ],
+    baseAssetSymbol: "XDC",
+    wrappedBaseAssetSymbol: "WXDC",
+    baseAssetDecimals: 18,
+    explorerLink: "https://explorer.xinfin.network",
+    /**
+     * This need until we have no production market.
+     */
+    isTestnet: false,
+    networkLogoPath: "./icons/networks/xdc.png",
+    ratesHistoryApiUrl: "https://lending.fathom.fi/data/rates-history",
   },
 } as const;

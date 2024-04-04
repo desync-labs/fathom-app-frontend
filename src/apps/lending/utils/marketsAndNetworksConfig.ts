@@ -120,6 +120,8 @@ export function getNetworkConfig(chainId: ChainId): NetworkConfig {
 export const isFeatureEnabled = {
   faucet: (data: MarketDataType) => data.enabledFeatures?.faucet,
   permissions: (data: MarketDataType) => data.enabledFeatures?.permissions,
+  addressBlocked: (data: MarketDataType) =>
+    data.enabledFeatures?.addressBlocked,
 };
 
 const providers: { [network: string]: ethersProviders.Provider } = {};

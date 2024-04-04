@@ -1,5 +1,8 @@
 import { ChainId } from "@into-the-fathom/lending-contract-helpers";
-import { FathomLendingApothem } from "@into-the-fathom/fathom-lending-address-book";
+import {
+  FathomLendingApothem,
+  FathomLendingXdc,
+} from "@into-the-fathom/fathom-lending-address-book";
 import { ReactNode } from "react";
 
 export type MarketDataType = {
@@ -11,6 +14,7 @@ export type MarketDataType = {
     faucet?: boolean;
     incentives?: boolean;
     permissions?: boolean;
+    addressBlocked?: boolean;
   };
   isFork?: boolean;
   permissionComponent?: ReactNode;
@@ -41,6 +45,7 @@ export enum CustomMarket {
   // v3 test networks, all v3.0.1
   proto_apothem_v3 = "proto_apothem_v3",
   // v3 mainnets
+  proto_mainnet_v3 = "proto_mainnet_v3",
 }
 
 export const marketsData: {
@@ -52,7 +57,8 @@ export const marketsData: {
     chainId: FathomLendingApothem.CHAIN_ID,
     enabledFeatures: {
       faucet: true,
-      incentives: true,
+      incentives: false,
+      addressBlocked: false,
     },
     subgraphUrl: `${process.env.REACT_APP_API_URL}/subgraphs/name/lending-subgraph`,
     addresses: {
@@ -64,6 +70,25 @@ export const marketsData: {
       UI_POOL_DATA_PROVIDER: FathomLendingApothem.UI_POOL_DATA_PROVIDER,
       COLLECTOR: FathomLendingApothem.COLLECTOR,
       FAUCET: FathomLendingApothem.FAUCET,
+    },
+  },
+  [CustomMarket.proto_mainnet_v3]: {
+    marketTitle: "XDC",
+    v3: true,
+    chainId: FathomLendingXdc.CHAIN_ID,
+    enabledFeatures: {
+      faucet: false,
+      incentives: false,
+      addressBlocked: false,
+    },
+    subgraphUrl: `${process.env.REACT_APP_API_URL}/subgraphs/name/lending-subgraph`,
+    addresses: {
+      LENDING_POOL_ADDRESS_PROVIDER: FathomLendingXdc.POOL_ADDRESSES_PROVIDER,
+      LENDING_POOL: FathomLendingXdc.POOL,
+      WETH_GATEWAY: FathomLendingXdc.WETH_GATEWAY,
+      WALLET_BALANCE_PROVIDER: FathomLendingXdc.WALLET_BALANCE_PROVIDER,
+      UI_POOL_DATA_PROVIDER: FathomLendingXdc.UI_POOL_DATA_PROVIDER,
+      COLLECTOR: FathomLendingXdc.COLLECTOR,
     },
   },
 } as const;
