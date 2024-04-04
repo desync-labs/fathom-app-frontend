@@ -14,10 +14,11 @@ import { Row } from "apps/lending/components/primitives/Row";
 import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 import { ListMobileItemWrapper } from "apps/lending/modules/dashboard/lists/ListMobileItemWrapper";
 import { FC, memo } from "react";
+import { isFeatureEnabled } from "apps/lending/utils/marketsAndNetworksConfig";
 
 export const MarketAssetsListMobileItem: FC<ComputedReserveData> = memo(
   ({ ...reserve }) => {
-    const { currentMarket } = useProtocolDataContext();
+    const { currentMarket, currentMarketData } = useProtocolDataContext();
     const trackEvent = useRootStore((store) => store.trackEvent);
 
     const showStableBorrowRate = Number(reserve.totalStableDebtUSD) > 0;
@@ -141,33 +142,35 @@ export const MarketAssetsListMobileItem: FC<ComputedReserveData> = memo(
               !reserve.isFrozen && <ReserveSubheader value={"Disabled"} />}
           </Box>
         </Row>
-        <Row
-          caption={
-            <StableAPYTooltip
-              text={"Borrow APY, stable"}
-              key="APY_list_mob_stable_type"
-              variant="description"
-            />
-          }
-          captionVariant="description"
-          captionColor="text.light"
-          mb={2}
-          align="flex-start"
-        >
-          <Box sx={{ display: "flex", flexDirection: "column" }}>
-            <IncentivesCard
-              align="flex-end"
-              value={showStableBorrowRate ? reserve.stableBorrowAPY : "-1"}
-              incentives={reserve.sIncentivesData || []}
-              symbol={reserve.symbol}
-              variant="secondary14"
-              color="text.light"
-            />
-            {!reserve.borrowingEnabled &&
-              Number(reserve.totalStableDebt) > 0 &&
-              !reserve.isFrozen && <ReserveSubheader value={"Disabled"} />}
-          </Box>
-        </Row>
+        {isFeatureEnabled.stableBorrowRate(currentMarketData) ? (
+          <Row
+            caption={
+              <StableAPYTooltip
+                text={"Borrow APY, stable"}
+                key="APY_list_mob_stable_type"
+                variant="description"
+              />
+            }
+            captionVariant="description"
+            captionColor="text.light"
+            mb={2}
+            align="flex-start"
+          >
+            <Box sx={{ display: "flex", flexDirection: "column" }}>
+              <IncentivesCard
+                align="flex-end"
+                value={showStableBorrowRate ? reserve.stableBorrowAPY : "-1"}
+                incentives={reserve.sIncentivesData || []}
+                symbol={reserve.symbol}
+                variant="secondary14"
+                color="text.light"
+              />
+              {!reserve.borrowingEnabled &&
+                Number(reserve.totalStableDebt) > 0 &&
+                !reserve.isFrozen && <ReserveSubheader value={"Disabled"} />}
+            </Box>
+          </Row>
+        ) : null}
 
         <Button
           variant="outlined"

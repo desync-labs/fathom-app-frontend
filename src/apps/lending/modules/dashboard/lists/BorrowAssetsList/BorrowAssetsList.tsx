@@ -39,6 +39,7 @@ import { ListButtonsColumn } from "apps/lending/modules/dashboard/lists/ListButt
 import { ListLoader } from "apps/lending/modules/dashboard/lists/ListLoader";
 import { BorrowAssetsListItem } from "apps/lending/modules/dashboard/lists/BorrowAssetsList/BorrowAssetsListItem";
 import { BorrowAssetsListMobileItem } from "apps/lending/modules/dashboard/lists/BorrowAssetsList/BorrowAssetsListMobileItem";
+import { isFeatureEnabled } from "apps/lending/utils/marketsAndNetworksConfig";
 
 const head = [
   {
@@ -92,7 +93,7 @@ const head = [
 ];
 
 export const BorrowAssetsList = () => {
-  const { currentNetworkConfig } = useProtocolDataContext();
+  const { currentNetworkConfig, currentMarketData } = useProtocolDataContext();
   const { user, reserves, marketReferencePriceInUsd, loading } =
     useAppDataContext();
   const theme = useTheme();
@@ -174,7 +175,10 @@ export const BorrowAssetsList = () => {
   const RenderHeader: FC = useCallback(() => {
     return (
       <ListHeaderWrapper>
-        {head.map((col) => (
+        {(isFeatureEnabled.stableBorrowRate(currentMarketData)
+          ? head
+          : head.filter((item) => item.sortKey !== "stableBorrowAPY")
+        ).map((col) => (
           <ListColumn
             isRow={col.sortKey === "symbol"}
             maxWidth={

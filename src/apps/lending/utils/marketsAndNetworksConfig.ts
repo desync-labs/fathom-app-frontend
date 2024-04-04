@@ -122,6 +122,8 @@ export const isFeatureEnabled = {
   permissions: (data: MarketDataType) => data.enabledFeatures?.permissions,
   addressBlocked: (data: MarketDataType) =>
     data.enabledFeatures?.addressBlocked,
+  stableBorrowRate: (data: MarketDataType) =>
+    data.enabledFeatures?.stableBorrowRate,
 };
 
 const providers: { [network: string]: ethersProviders.Provider } = {};
