@@ -19,7 +19,7 @@ export const HistoryTopPanel = () => {
               Transaction history
             </Typography>
           </Box>
-          <PageTitle withMarketSwitcher={true} />
+          <PageTitle withMarketSwitcher={false} />
           <Box sx={{ width: md ? (xsm ? "320px" : "540px") : "860px" }} />
         </Box>
       }
