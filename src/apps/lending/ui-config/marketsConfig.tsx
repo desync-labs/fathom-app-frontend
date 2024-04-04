@@ -14,6 +14,7 @@ export type MarketDataType = {
     faucet?: boolean;
     incentives?: boolean;
     permissions?: boolean;
+    addressBlocked?: boolean;
   };
   isFork?: boolean;
   permissionComponent?: ReactNode;
@@ -57,6 +58,7 @@ export const marketsData: {
     enabledFeatures: {
       faucet: true,
       incentives: false,
+      addressBlocked: false,
     },
     subgraphUrl: `${process.env.REACT_APP_API_URL}/subgraphs/name/lending-subgraph`,
     addresses: {
@@ -77,6 +79,7 @@ export const marketsData: {
     enabledFeatures: {
       faucet: false,
       incentives: false,
+      addressBlocked: false,
     },
     subgraphUrl: `${process.env.REACT_APP_API_URL}/subgraphs/name/lending-subgraph`,
     addresses: {
