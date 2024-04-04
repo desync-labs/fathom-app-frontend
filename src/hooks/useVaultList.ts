@@ -9,6 +9,8 @@ import {
 import { COUNT_PER_PAGE } from "utils/Constants";
 import useConnector from "context/connector";
 import useSyncContext from "context/sync";
+import { useServices } from "context/services";
+import BigNumber from "bignumber.js";
 
 interface IdToVaultIdMap {
   [key: string]: string | undefined;
@@ -22,6 +24,7 @@ export enum SortType {
 
 const useVaultList = () => {
   const { account } = useConnector();
+  const { poolService, vaultService } = useServices();
   const { syncVault, prevSyncVault } = useSyncContext();
 
   const [vaultSortedList, setVaultSortedList] = useState<IVault[]>([]);
@@ -70,14 +73,66 @@ const useVaultList = () => {
     if (account) {
       loadData({ variables: { account: account.toLowerCase() } }).then(
         (res) => {
-          res.data?.accountVaultPositions &&
-            setVaultPositionsList(res.data.accountVaultPositions);
+          if (
+            res.data?.accountVaultPositions &&
+            res.data?.accountVaultPositions.length
+          ) {
+            setVaultPositionsList(res.data?.accountVaultPositions);
+
+            const promises: Promise<any>[] = [];
+
+            res.data?.accountVaultPositions.forEach(
+              (position: IVaultPosition) => {
+                promises.push(
+                  poolService.getUserTokenBalance(
+                    account,
+                    position.shareToken.id
+                  )
+                );
+              }
+            );
+
+            const balancePositionsPromises: Promise<any>[] = [];
+
+            Promise.all(promises).then((balances) => {
+              const vaultPositions = res.data.accountVaultPositions.map(
+                (position: IVaultPosition, index: number) => {
+                  balancePositionsPromises.push(
+                    vaultService.previewRedeem(
+                      balances[index].toString(),
+                      position.vault.id
+                    )
+                  );
+                  return {
+                    ...position,
+                    balanceShares: balances[index].toString(),
+                  };
+                }
+              );
+
+              Promise.all(balancePositionsPromises).then((values) => {
+                const updatedVaultPositions = vaultPositions.map(
+                  (position: IVaultPosition, index: number) => {
+                    return {
+                      ...position,
+                      balancePosition: BigNumber(values[index].toString())
+                        .dividedBy(10 ** 18)
+                        .toString(),
+                    };
+                  }
+                );
+                setVaultPositionsList(updatedVaultPositions);
+              });
+            });
+          } else {
+            setVaultPositionsList([]);
+          }
         }
       );
     } else {
       setVaultPositionsList([]);
     }
-  }, [account, loadData, setVaultPositionsList]);
+  }, [account, loadData, setVaultPositionsList, poolService, vaultService]);
 
   useEffect(() => {
     if (syncVault && !prevSyncVault) {
