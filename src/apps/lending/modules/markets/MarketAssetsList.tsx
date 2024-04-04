@@ -11,6 +11,8 @@ import { MarketAssetsListItem } from "apps/lending/modules/markets/MarketAssetsL
 import { MarketAssetsListItemLoader } from "apps/lending/modules/markets/MarketAssetsListItemLoader";
 import { MarketAssetsListMobileItem } from "apps/lending/modules/markets/MarketAssetsListMobileItem";
 import { MarketAssetsListMobileItemLoader } from "apps/lending/modules/markets/MarketAssetsListMobileItemLoader";
+import { isFeatureEnabled } from "apps/lending/utils/marketsAndNetworksConfig";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
 
 const listHeaders = [
   {
@@ -61,6 +63,8 @@ const MarketAssetsList: FC<MarketAssetsListProps> = ({ reserves, loading }) => {
   const [sortName, setSortName] = useState<string>("");
   const [sortDesc, setSortDesc] = useState<boolean>(false);
 
+  const { currentMarketData } = useProtocolDataContext();
+
   const sortedReserves = useMemo(() => {
     if (sortDesc) {
       if (sortName === "symbol") {
@@ -110,7 +114,10 @@ const MarketAssetsList: FC<MarketAssetsListProps> = ({ reserves, loading }) => {
     <>
       {!isTableChangedToCards && (
         <ListHeaderWrapper px={3}>
-          {listHeaders.map((col) => (
+          {(isFeatureEnabled.stableBorrowRate(currentMarketData)
+            ? listHeaders
+            : listHeaders.filter((col) => col.sortKey !== "stableBorrowAPY")
+          ).map((col) => (
             <ListColumn
               isRow={col.sortKey === "symbol"}
               maxWidth={col.sortKey === "symbol" ? 280 : undefined}

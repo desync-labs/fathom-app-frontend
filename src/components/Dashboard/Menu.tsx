@@ -74,13 +74,6 @@ export const Menu: FC<ItemPropsType> = memo(({ open }) => {
       isActive: isStableSwapActive,
       showText: showText,
     },
-    {
-      name: "DAO",
-      link: "/dao/staking",
-      Icon: <GovernanceIcon isactive={isDAOActive ? "true" : ""} />,
-      isActive: isDAOActive,
-      showText: showText,
-    },
   ];
 
   /**
@@ -117,6 +110,13 @@ export const Menu: FC<ItemPropsType> = memo(({ open }) => {
             isActive: isChartsActive,
             showText: showText,
           },
+          {
+            name: "DAO",
+            link: "/dao/staking",
+            Icon: <GovernanceIcon isactive={isDAOActive ? "true" : ""} />,
+            isActive: isDAOActive,
+            showText: showText,
+          },
         ]
       : [
           {
@@ -138,6 +138,13 @@ export const Menu: FC<ItemPropsType> = memo(({ open }) => {
             link: "/charts",
             Icon: <ChartsIcon isactive={isChartsActive ? "true" : ""} />,
             isActive: isChartsActive,
+            showText: showText,
+          },
+          {
+            name: "DAO",
+            link: "/dao/staking",
+            Icon: <GovernanceIcon isactive={isDAOActive ? "true" : ""} />,
+            isActive: isDAOActive,
             showText: showText,
           },
         ]

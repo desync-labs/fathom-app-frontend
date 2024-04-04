@@ -13,6 +13,7 @@ import { ListButtonsColumn } from "apps/lending/modules/dashboard/lists/ListButt
 import { ListItemWrapper } from "apps/lending/modules/dashboard/lists/ListItemWrapper";
 import { ListValueColumn } from "apps/lending/modules/dashboard/lists/ListValueColumn";
 import { FC, memo } from "react";
+import { isFeatureEnabled } from "apps/lending/utils/marketsAndNetworksConfig";
 
 export const BorrowAssetsListItem: FC<DashboardReserve> = memo(
   ({
@@ -31,7 +32,7 @@ export const BorrowAssetsListItem: FC<DashboardReserve> = memo(
     isFreezed,
   }) => {
     const { openBorrow } = useModalContext();
-    const { currentMarket } = useProtocolDataContext();
+    const { currentMarket, currentMarketData } = useProtocolDataContext();
 
     const disableBorrow = isFreezed || Number(availableBorrows) <= 0;
 
@@ -66,11 +67,14 @@ export const BorrowAssetsListItem: FC<DashboardReserve> = memo(
           incentives={vIncentivesData}
           symbol={symbol}
         />
-        <ListAPRColumn
-          value={Number(stableBorrowRate)}
-          incentives={sIncentivesData}
-          symbol={symbol}
-        />
+        {isFeatureEnabled.stableBorrowRate(currentMarketData) ? (
+          <ListAPRColumn
+            value={Number(stableBorrowRate)}
+            incentives={sIncentivesData}
+            symbol={symbol}
+          />
+        ) : null}
+
         <ListButtonsColumn>
           <Button
             disabled={disableBorrow}
