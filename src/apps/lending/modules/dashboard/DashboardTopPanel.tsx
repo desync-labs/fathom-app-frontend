@@ -44,7 +44,7 @@ export const DashboardTopPanel = () => {
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <PageTitle
               pageTitle={"Dashboard"}
-              withMarketSwitcher={true}
+              withMarketSwitcher={false}
               bridge={currentNetworkConfig.bridge}
             />
           </Box>
