@@ -15,12 +15,13 @@ import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useApp
 import { MARKETS } from "apps/lending/utils/mixPanelEvents";
 import { useNavigate } from "react-router-dom";
 import { FC, memo } from "react";
+import { isFeatureEnabled } from "apps/lending/utils/marketsAndNetworksConfig";
 
 export const MarketAssetsListItem: FC<ComputedReserveData> = memo(
   ({ ...reserve }) => {
     const navigate = useNavigate();
     const theme = useTheme();
-    const { currentMarket } = useProtocolDataContext();
+    const { currentMarket, currentMarketData } = useProtocolDataContext();
     const trackEvent = useRootStore((store) => store.trackEvent);
 
     const showStableBorrowRate = Number(reserve.totalStableDebtUSD) > 0;
@@ -122,19 +123,21 @@ export const MarketAssetsListItem: FC<ComputedReserveData> = memo(
             !reserve.isFrozen && <ReserveSubheader value={"Disabled"} />}
         </ListColumn>
 
-        <ListColumn>
-          <IncentivesCard
-            value={showStableBorrowRate ? reserve.stableBorrowAPY : "-1"}
-            incentives={reserve.sIncentivesData || []}
-            symbol={reserve.symbol}
-            variant="main16"
-            symbolsVariant="secondary16"
-            color="text.light"
-          />
-          {!reserve.borrowingEnabled &&
-            Number(reserve.totalStableDebt) > 0 &&
-            !reserve.isFrozen && <ReserveSubheader value={"Disabled"} />}
-        </ListColumn>
+        {isFeatureEnabled.stableBorrowRate(currentMarketData) ? (
+          <ListColumn>
+            <IncentivesCard
+              value={showStableBorrowRate ? reserve.stableBorrowAPY : "-1"}
+              incentives={reserve.sIncentivesData || []}
+              symbol={reserve.symbol}
+              variant="main16"
+              symbolsVariant="secondary16"
+              color="text.light"
+            />
+            {!reserve.borrowingEnabled &&
+              Number(reserve.totalStableDebt) > 0 &&
+              !reserve.isFrozen && <ReserveSubheader value={"Disabled"} />}
+          </ListColumn>
+        ) : null}
 
         <ListColumn minWidth={95} maxWidth={95} align="right">
           <Button

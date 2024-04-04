@@ -13,6 +13,7 @@ import { useModalContext } from "apps/lending/hooks/useModal";
 import { ListMobileItemWrapper } from "apps/lending/modules/dashboard/lists/ListMobileItemWrapper";
 import { ListValueRow } from "apps/lending/modules/dashboard/lists/ListValueRow";
 import { FC, memo } from "react";
+import { isFeatureEnabled } from "apps/lending/utils/marketsAndNetworksConfig";
 
 export const BorrowAssetsListMobileItem: FC<DashboardReserve> = memo(
   ({
@@ -31,7 +32,7 @@ export const BorrowAssetsListMobileItem: FC<DashboardReserve> = memo(
     isFreezed,
   }) => {
     const { openBorrow } = useModalContext();
-    const { currentMarket } = useProtocolDataContext();
+    const { currentMarket, currentMarketData } = useProtocolDataContext();
 
     const disableBorrow = isFreezed || Number(availableBorrows) <= 0;
 
@@ -80,27 +81,29 @@ export const BorrowAssetsListMobileItem: FC<DashboardReserve> = memo(
           />
         </Row>
 
-        <Row
-          caption={
-            <StableAPYTooltip
-              text={"APY, stable"}
-              key="APY_dash_mob_stable_ type"
-              variant="description"
+        {isFeatureEnabled.stableBorrowRate(currentMarketData) ? (
+          <Row
+            caption={
+              <StableAPYTooltip
+                text={"APY, stable"}
+                key="APY_dash_mob_stable_ type"
+                variant="description"
+              />
+            }
+            align="flex-start"
+            captionVariant="description"
+            captionColor={"primary.light"}
+            mb={1}
+          >
+            <IncentivesCard
+              value={Number(stableBorrowRate)}
+              incentives={sIncentivesData}
+              symbol={symbol}
+              variant="secondary14"
+              color={"primary.light"}
             />
-          }
-          align="flex-start"
-          captionVariant="description"
-          captionColor={"primary.light"}
-          mb={1}
-        >
-          <IncentivesCard
-            value={Number(stableBorrowRate)}
-            incentives={sIncentivesData}
-            symbol={symbol}
-            variant="secondary14"
-            color={"primary.light"}
-          />
-        </Row>
+          </Row>
+        ) : null}
 
         <Box
           sx={{
