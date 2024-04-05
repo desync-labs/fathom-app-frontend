@@ -237,8 +237,10 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
                   .dividedBy(10 ** 18)
                   .toNumber()
               )
-            ) : (
+            ) : balanceEarned === -1 ? (
               <CircularProgress size={20} />
+            ) : (
+              0
             )}
           </VaultListValue>
         </ListItemWrapper>
