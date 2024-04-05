@@ -1,6 +1,6 @@
 import { FC, memo, useMemo } from "react";
 import { styled } from "@mui/material/styles";
-import { Box } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import BigNumber from "bignumber.js";
 import { IVault, IVaultPosition } from "fathom-sdk";
 
@@ -229,15 +229,19 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
             />
           </VaultListLabel>
           <VaultListValue>
-            {balanceEarned && BigNumber(balanceEarned).isGreaterThan(0)
-              ? "$" +
-                formatPercentage(
-                  BigNumber(balanceEarned)
-                    .multipliedBy(fxdPrice)
-                    .dividedBy(10 ** 18)
-                    .toNumber()
-                )
-              : "0"}
+            {balanceEarned && BigNumber(balanceEarned).isGreaterThan(0) ? (
+              "$" +
+              formatPercentage(
+                BigNumber(balanceEarned)
+                  .multipliedBy(fxdPrice)
+                  .dividedBy(10 ** 18)
+                  .toNumber()
+              )
+            ) : balanceEarned === -1 ? (
+              <CircularProgress size={20} />
+            ) : (
+              0
+            )}
           </VaultListValue>
         </ListItemWrapper>
       )}
