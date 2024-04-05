@@ -1,5 +1,5 @@
 import { FC, memo, useMemo } from "react";
-import { IconButton, TableCell, Box } from "@mui/material";
+import { IconButton, TableCell, Box, CircularProgress } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import BigNumber from "bignumber.js";
 import { IVault, IVaultPosition } from "fathom-sdk";
@@ -254,15 +254,19 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
             data-testid={`vaultRow-${vaultTestId}-earnedValueCell`}
           >
             <VaultEarned>
-              {balanceEarned && BigNumber(balanceEarned).isGreaterThan(0)
-                ? "$" +
-                  formatPercentage(
-                    BigNumber(balanceEarned)
-                      .multipliedBy(fxdPrice)
-                      .dividedBy(10 ** 18)
-                      .toNumber()
-                  )
-                : "0"}
+              {balanceEarned && BigNumber(balanceEarned).isGreaterThan(0) ? (
+                "$" +
+                formatPercentage(
+                  BigNumber(balanceEarned)
+                    .multipliedBy(fxdPrice)
+                    .dividedBy(10 ** 18)
+                    .toNumber()
+                )
+              ) : balanceEarned === -1 ? (
+                <CircularProgress size={20} />
+              ) : (
+                0
+              )}
             </VaultEarned>
           </TableCell>
         )}

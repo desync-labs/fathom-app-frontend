@@ -15,9 +15,7 @@ export const HistoryTopPanel = () => {
       titleComponent={
         <Box>
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Typography variant="h3" sx={{ color: "#A5A8B6" }}>
-              Transaction history
-            </Typography>
+            <Typography variant="h1">Transaction history</Typography>
           </Box>
           <PageTitle withMarketSwitcher={false} />
           <Box sx={{ width: md ? (xsm ? "320px" : "540px") : "860px" }} />
