@@ -176,20 +176,32 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
 
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
-    if (vaultPosition && vault) {
+    if (vaultPosition && vault && vaultService) {
       fetchBalanceToken();
       fetchPositionTransactions();
       interval = setInterval(fetchBalanceToken, 15 * 1000);
     }
     return () => clearInterval(interval);
-  }, [vaultPosition, vault, fetchBalanceToken, fetchPositionTransactions]);
+  }, [
+    vaultPosition,
+    vault,
+    fetchBalanceToken,
+    vaultService,
+    fetchPositionTransactions,
+  ]);
 
   useEffect(() => {
     if (syncVault && !prevSyncVault) {
       fetchPositionTransactions();
       fetchBalanceToken();
     }
-  }, [syncVault, prevSyncVault, fetchPositionTransactions]);
+  }, [
+    syncVault,
+    prevSyncVault,
+    fetchPositionTransactions,
+    vaultPosition,
+    vault,
+  ]);
 
   const balanceEarned = useMemo(() => {
     const sumTokenDeposits = depositsList.reduce(

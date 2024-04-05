@@ -273,10 +273,12 @@ export const ACCOUNT_VAULT_POSITIONS = gql`
         id
       }
       token {
+        id
         symbol
         name
       }
       shareToken {
+        id
         symbol
         name
       }
