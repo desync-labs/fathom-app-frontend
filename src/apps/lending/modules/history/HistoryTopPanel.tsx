@@ -15,7 +15,7 @@ export const HistoryTopPanel = () => {
       titleComponent={
         <Box>
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Typography variant="h3" sx={{ color: "#A5A8B6" }}>
+            <Typography variant="h1" sx={{ color: "#A5A8B6" }}>
               Transaction history
             </Typography>
           </Box>

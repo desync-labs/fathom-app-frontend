@@ -1,6 +1,6 @@
 import { FC, memo } from "react";
 import BigNumber from "bignumber.js";
-import { Grid } from "@mui/material";
+import { Grid, CircularProgress } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { IVault } from "fathom-sdk";
 import AppPopover from "components/AppComponents/AppPopover/AppPopover";
@@ -67,20 +67,24 @@ const VaultListItemEarned: FC<FarmListItemEarnedProps> = ({
           />
         </TokenName>
         <TokenValue>
-          {BigNumber(balanceEarned).isGreaterThan(0)
-            ? formatPercentage(balanceEarned)
-            : "0"}{" "}
-          <span>
-            $
-            {BigNumber(balanceEarned).isGreaterThan(0)
-              ? formatPercentage(
-                  BigNumber(balanceEarned || "0")
-                    .multipliedBy(fxdPrice)
-                    .dividedBy(10 ** 18)
-                    .toNumber()
-                )
-              : "0"}
-          </span>
+          {BigNumber(balanceEarned).isGreaterThan(0) ? (
+            formatPercentage(balanceEarned)
+          ) : (
+            <CircularProgress size={20} />
+          )}{" "}
+          {BigNumber(balanceEarned).isGreaterThan(0) ?? (
+            <span>
+              $
+              {BigNumber(balanceEarned).isGreaterThan(0)
+                ? formatPercentage(
+                    BigNumber(balanceEarned || "0")
+                      .multipliedBy(fxdPrice)
+                      .dividedBy(10 ** 18)
+                      .toNumber()
+                  )
+                : "0"}
+            </span>
+          )}
         </TokenValue>
       </Grid>
     </Grid>
