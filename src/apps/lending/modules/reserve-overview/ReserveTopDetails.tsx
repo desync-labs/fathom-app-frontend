@@ -82,6 +82,7 @@ export const ReserveTopDetails: FC<ReserveTopDetailsProps> = memo(
               symbol="USD"
               variant={valueTypographyVariant}
               symbolsVariant={symbolsTypographyVariant}
+              visibleDecimals={4}
             />
             {loading ? (
               <Skeleton
