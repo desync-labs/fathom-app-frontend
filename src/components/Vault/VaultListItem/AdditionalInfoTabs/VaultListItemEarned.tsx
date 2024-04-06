@@ -72,7 +72,7 @@ const VaultListItemEarned: FC<FarmListItemEarnedProps> = ({
           ) : (
             <CircularProgress size={20} />
           )}{" "}
-          {BigNumber(balanceEarned).isGreaterThan(0) ?? (
+          {BigNumber(balanceEarned).isGreaterThan(0) ? (
             <span>
               $
               {BigNumber(balanceEarned).isGreaterThan(0)
@@ -84,7 +84,7 @@ const VaultListItemEarned: FC<FarmListItemEarnedProps> = ({
                   )
                 : "0"}
             </span>
-          )}
+          ) : null}
         </TokenValue>
       </Grid>
     </Grid>

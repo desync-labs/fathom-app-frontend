@@ -70,7 +70,7 @@ const useVaultList = () => {
   });
 
   useEffect(() => {
-    if (account) {
+    if (account && vaultService) {
       loadData({ variables: { account: account.toLowerCase() } }).then(
         (res) => {
           if (
