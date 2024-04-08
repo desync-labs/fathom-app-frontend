@@ -217,20 +217,13 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
 
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
-    if (vaultPosition && vault && vaultService && library) {
+    if (vaultPosition && vault) {
       fetchBalanceToken();
       fetchPositionTransactions();
       interval = setInterval(fetchBalanceToken, 15 * 1000);
     }
     return () => clearInterval(interval);
-  }, [
-    library,
-    vaultPosition,
-    vault,
-    fetchBalanceToken,
-    vaultService,
-    fetchPositionTransactions,
-  ]);
+  }, [vault, fetchBalanceToken, vaultService, fetchPositionTransactions]);
 
   useEffect(() => {
     if (syncVault && !prevSyncVault) {
