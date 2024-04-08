@@ -1,6 +1,6 @@
 import { useState, useEffect, FC, memo } from "react";
 import { Box, styled } from "@mui/material";
-import { isAddress } from "apps/charts/utils";
+import { getTokenLogoURL } from "utils/tokenLogo";
 
 const BAD_IMAGES = {};
 
@@ -42,9 +42,7 @@ const TokenLogo: FC<TokenLogoProps> = (props) => {
     );
   }
 
-  const path = `https://raw.githubusercontent.com/Into-the-Fathom/assets/master/blockchains/xinfin/${isAddress(
-    address
-  )}/logo.png`;
+  const path = getTokenLogoURL(address);
 
   return (
     <Inline>
