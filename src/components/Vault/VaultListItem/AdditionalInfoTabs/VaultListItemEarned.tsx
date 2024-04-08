@@ -69,8 +69,10 @@ const VaultListItemEarned: FC<FarmListItemEarnedProps> = ({
         <TokenValue>
           {BigNumber(balanceEarned).isGreaterThan(0) ? (
             formatPercentage(balanceEarned)
-          ) : (
+          ) : balanceEarned === -1 ? (
             <CircularProgress size={20} />
+          ) : (
+            balanceEarned
           )}{" "}
           {BigNumber(balanceEarned).isGreaterThan(0) ? (
             <span>
