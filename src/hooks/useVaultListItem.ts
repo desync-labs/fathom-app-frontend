@@ -70,7 +70,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
       : VaultInfoTabs.ABOUT
   );
 
-  const { account } = useConnector();
+  const { account, library } = useConnector();
   const { vaultService } = useServices();
 
   const [loadReports, { fetchMore: fetchMoreReports }] = useLazyQuery(
@@ -217,13 +217,14 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
 
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
-    if (vaultPosition && vault && vaultService) {
+    if (vaultPosition && vault && vaultService && library) {
       fetchBalanceToken();
       fetchPositionTransactions();
       interval = setInterval(fetchBalanceToken, 15 * 1000);
     }
     return () => clearInterval(interval);
   }, [
+    library,
     vaultPosition,
     vault,
     fetchBalanceToken,
