@@ -70,7 +70,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
       : VaultInfoTabs.ABOUT
   );
 
-  const { account, library } = useConnector();
+  const { account } = useConnector();
   const { vaultService } = useServices();
 
   const [loadReports, { fetchMore: fetchMoreReports }] = useLazyQuery(
