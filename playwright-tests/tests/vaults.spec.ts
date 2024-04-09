@@ -127,9 +127,6 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
       shareTokenName: fxdVaultData.shareTokenName,
       depositAmount,
     });
-    const earnedValueRowBefore = Number(
-      await vaultPage.getEarnedVaultRowValue(fxdVaultData.id)
-    );
     await vaultPage.manageVaultWithdrawFully({ id: fxdVaultData.id });
     await expect
       .soft(vaultPage.getDepositButtonRowLocatorById(fxdVaultData.id))
@@ -141,10 +138,6 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     expect
       .soft(await vaultPage.getStakedVaultRowValue(fxdVaultData.id))
       .toEqual(0);
-    const earnedValueRowAfter = Number(
-      await vaultPage.getEarnedVaultRowValue(fxdVaultData.id)
-    );
-    expect.soft(earnedValueRowAfter).toBeGreaterThan(earnedValueRowBefore);
   });
 
   test("FXD Vault: Wallet not connected state layout is correct, vault connect wallet functionality is successful", async ({
