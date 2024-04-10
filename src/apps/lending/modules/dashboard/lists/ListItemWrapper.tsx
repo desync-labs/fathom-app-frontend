@@ -43,7 +43,11 @@ export const ListItemWrapper: FC<ListItemWrapperProps> = memo(
 
     return (
       <ListItem {...rest}>
-        <ListColumn maxWidth={DASHBOARD_LIST_COLUMN_WIDTHS.CELL} isRow>
+        <ListColumn
+          minWidth={100}
+          maxWidth={DASHBOARD_LIST_COLUMN_WIDTHS.CELL}
+          isRow
+        >
           <Link
             onClick={() =>
               trackEvent(DASHBOARD.DETAILS_NAVIGATION, {
