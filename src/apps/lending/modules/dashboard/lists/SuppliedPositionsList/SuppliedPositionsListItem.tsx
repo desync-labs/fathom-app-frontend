@@ -37,7 +37,11 @@ export const SuppliedPositionsListItem: FC<DashboardReserve> = memo(
           user.totalCollateralMarketReferenceCurrency === "0"));
 
     const disableWithdraw = !isActive;
-    const disableSupply = !isActive || isFrozen;
+    const disableSupply =
+      !isActive ||
+      isFrozen ||
+      reserve.symbol === "USDTx" ||
+      reserve.symbol === "xUSDT";
 
     return (
       <ListItemWrapper
