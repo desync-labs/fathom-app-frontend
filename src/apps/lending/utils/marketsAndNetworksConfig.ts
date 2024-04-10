@@ -24,11 +24,6 @@ export type Pool = {
 };
 
 export const DEV_ENV = process.env.REACT_APP_ENV === "dev";
-export const PROD_ENV =
-  !process.env.NEXT_PUBLIC_ENV || process.env.NEXT_PUBLIC_ENV === "prod";
-export const ENABLE_TESTNET =
-  PROD_ENV &&
-  global?.window?.localStorage.getItem("testnetsEnabled") === "true";
 
 /**
  * Generates network configs based on networkConfigs & fork settings.
@@ -62,7 +57,7 @@ export function getSupportedChainIds(): number[] {
           ].isTestnet;
 
         // If this is a staging environment, or the testnet toggle is on, only show testnets
-        if (DEV_ENV || ENABLE_TESTNET) {
+        if (DEV_ENV) {
           return isTestnet;
         }
 

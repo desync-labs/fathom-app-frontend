@@ -40,7 +40,12 @@ export const SupplyAssetsListMobileItem: FC<DashboardReserve> = memo(
     const isMaxCapReached = supplyCapUsage.isMaxed;
 
     const disableSupply =
-      !isActive || isFreezed || Number(walletBalance) <= 0 || isMaxCapReached;
+      !isActive ||
+      isFreezed ||
+      Number(walletBalance) <= 0 ||
+      isMaxCapReached ||
+      symbol === "USDTx" ||
+      symbol === "xUSDT";
 
     return (
       <ListMobileItemWrapper

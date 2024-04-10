@@ -35,7 +35,9 @@ export const BorrowedPositionsListItem: FC<{
     !reserve.borrowingEnabled ||
     reserve.isFrozen ||
     reserve.isPaused ||
-    borrowCap.isMaxed;
+    borrowCap.isMaxed ||
+    reserve.symbol === "USDTx" ||
+    reserve.symbol === "xUSDT";
 
   const disableRepay = !reserve.isActive || reserve.isPaused;
 

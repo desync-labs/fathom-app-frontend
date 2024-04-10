@@ -18,7 +18,6 @@ import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContex
 import {
   availableMarkets,
   CustomMarket,
-  ENABLE_TESTNET,
   MarketDataType,
   marketsData,
   networkConfigs,
@@ -194,9 +193,7 @@ export const MarketSwitcher = () => {
           color="text.secondary"
           sx={{ px: 2, pt: 1, mb: 1 }}
         >
-          {ENABLE_TESTNET || DEV_ENV
-            ? "Select Testnet Market"
-            : "Select Market"}
+          {DEV_ENV ? "Select Testnet Market" : "Select Market"}
         </Typography>
       </Box>
       {availableMarkets.map((marketId: CustomMarket) => {

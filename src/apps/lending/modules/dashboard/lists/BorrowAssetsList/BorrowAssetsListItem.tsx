@@ -34,7 +34,11 @@ export const BorrowAssetsListItem: FC<DashboardReserve> = memo(
     const { openBorrow } = useModalContext();
     const { currentMarket, currentMarketData } = useProtocolDataContext();
 
-    const disableBorrow = isFreezed || Number(availableBorrows) <= 0;
+    const disableBorrow =
+      isFreezed ||
+      Number(availableBorrows) <= 0 ||
+      symbol === "USDTx" ||
+      symbol === "xUSDT";
 
     const trackEvent = useRootStore((store) => store.trackEvent);
 
