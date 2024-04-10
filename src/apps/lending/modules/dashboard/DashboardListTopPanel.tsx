@@ -1,10 +1,7 @@
 import { Box, Checkbox, FormControlLabel } from "@mui/material";
 import { FaucetButton } from "apps/lending/components/FaucetButton";
 import { useRootStore } from "apps/lending/store/root";
-import {
-  ENABLE_TESTNET,
-  DEV_ENV,
-} from "apps/lending/utils/marketsAndNetworksConfig";
+import { DEV_ENV } from "apps/lending/utils/marketsAndNetworksConfig";
 import { DASHBOARD } from "apps/lending/utils/mixPanelEvents";
 
 import { BridgeButton } from "apps/lending/components/BridgeButton";
@@ -45,8 +42,8 @@ export const DashboardListTopPanel: FC<DashboardListTopPanelProps> = memo(
           }}
           label={"Show assets with 0 balance"}
         />
-        {(DEV_ENV || ENABLE_TESTNET) && <FaucetButton />}
-        {!ENABLE_TESTNET && <BridgeButton bridge={bridge} />}
+        {DEV_ENV && <FaucetButton />}
+        <BridgeButton bridge={bridge} />
       </Box>
     );
   }
