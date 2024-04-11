@@ -51,11 +51,13 @@ const AccordionSummaryStyled = styled(AccordionSummary)`
   }
 `;
 
+const MethodResponseStyled = styled(Box)``;
+
 const VaultManagementItem: FC<{ method: AbiItem; vaultId: string }> = ({
   method,
   vaultId,
 }) => {
-  const { formState, control, handleSubmit } = useForm({
+  const { formState, control, handleSubmit, getValues } = useForm({
     defaultValues: {},
     reValidateMode: "onChange",
     mode: "onChange",
@@ -65,13 +67,7 @@ const VaultManagementItem: FC<{ method: AbiItem; vaultId: string }> = ({
 
   const [methodType, setMethodType] = useState<MethodType>(MethodType.View);
   const [contract, setContract] = useState<Contract>();
-
-  useEffect(() => {
-    console.log({
-      formState,
-      contract,
-    });
-  }, [formState, contract]);
+  const [response, setResponse] = useState<any>();
 
   useEffect(() => {
     const methodType = STATE_MUTABILITY_TRANSACTIONS.includes(
@@ -93,9 +89,25 @@ const VaultManagementItem: FC<{ method: AbiItem; vaultId: string }> = ({
     setContract(contract);
   }, [method, library, account, setMethodType, setContract]);
 
-  const handleSubmitForm = useCallback(() => {
-    console.log("Execute Tx: ", formState);
-  }, [formState]);
+  console.log({
+    response,
+  });
+
+  const handleSubmitForm = useCallback(async () => {
+    const values = getValues();
+
+    console.log({
+      values,
+    });
+
+    /**
+     * @todo: need to check arguments and put to this function.
+     */
+    if (methodType === MethodType.View) {
+      const response = await (contract as Contract)[method.name]();
+      setResponse(response);
+    }
+  }, [formState, contract, methodType, method, getValues]);
 
   const getMethodType = useMemo(() => {
     return methodType === MethodType.Mutate ? "Write" : "Read";
@@ -156,6 +168,9 @@ const VaultManagementItem: FC<{ method: AbiItem; vaultId: string }> = ({
             </ApproveButton>
           </FlexBox>
         </Box>
+        {response && (
+          <MethodResponseStyled>Response: {response}</MethodResponseStyled>
+        )}
       </AccordionDetails>
     </VaultItemAccordion>
   );

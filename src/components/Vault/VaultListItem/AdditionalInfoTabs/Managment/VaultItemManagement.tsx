@@ -31,7 +31,8 @@ const VaultItemManagement: FC<VaultItemManagementProps> = ({ vaultId }) => {
     (abiJson: AbiItem[]) => {
       try {
         const methods = abiJson.filter(
-          (item: AbiItem) => item.type === "function"
+          (item: AbiItem) =>
+            item.type === "function" && item.name.toUpperCase() !== item.name
         );
 
         setContractMethods(methods);

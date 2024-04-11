@@ -85,7 +85,7 @@ const VaultListItemNav: FC<VaultListItemNavPropsType> = ({
           activeVaultInfoTab === VaultInfoTabs.MANAGEMENT ? "active" : ""
         }
       >
-        Management
+        Vault Manager
       </VaultNavItem>
     </VaultNavWrapper>
   );
