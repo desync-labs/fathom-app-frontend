@@ -20,6 +20,8 @@ import {
 } from "components/AppComponents/AppForm/AppForm";
 import { FlexBox } from "components/Vault/VaultListItem";
 import { ApproveButton } from "components/AppComponents/AppButton/AppButton";
+import useConnector from "context/connector";
+import { Contract } from "fathom-ethers";
 
 enum MethodType {
   View = "view",
@@ -49,14 +51,20 @@ const AccordionSummaryStyled = styled(AccordionSummary)`
   }
 `;
 
-const VaultManagementItem: FC<{ method: AbiItem }> = ({ method }) => {
+const VaultManagementItem: FC<{ method: AbiItem; vaultId: string }> = ({
+  method,
+  vaultId,
+}) => {
   const { formState, control, handleSubmit } = useForm({
     defaultValues: {},
     reValidateMode: "onChange",
     mode: "onChange",
   });
 
+  const { account, library } = useConnector();
+
   const [methodType, setMethodType] = useState<MethodType>(MethodType.View);
+  const [contract, setContract] = useState<Contract>();
 
   useEffect(() => {
     console.log("Form state: ", formState);
@@ -70,7 +78,17 @@ const VaultManagementItem: FC<{ method: AbiItem }> = ({ method }) => {
       : MethodType.View;
 
     setMethodType(methodType);
-  }, [method, setMethodType]);
+
+    let contract;
+
+    if (methodType === MethodType.Mutate) {
+      contract = new Contract(vaultId, [method], library.getSigner(account));
+    } else {
+      contract = new Contract(vaultId, [method], library);
+    }
+
+    setContract(contract);
+  }, [method, library, account, setMethodType, setContract]);
 
   const handleSubmitForm = useCallback(() => {
     console.log("Execute Tx: ", formState);

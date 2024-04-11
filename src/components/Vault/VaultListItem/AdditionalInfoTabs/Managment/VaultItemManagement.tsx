@@ -58,7 +58,7 @@ const VaultItemManagement: FC<VaultItemManagementProps> = ({ vaultId }) => {
         <Typography>Has no strategies yet</Typography>
       ) : (
         contractMethods.map((method: AbiItem, index: number) => (
-          <VaultManagementItem key={index} method={method} />
+          <VaultManagementItem key={index} method={method} vaultId={vaultId} />
         ))
       )}
     </>
