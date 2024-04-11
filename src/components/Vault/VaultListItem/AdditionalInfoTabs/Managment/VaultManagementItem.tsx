@@ -21,7 +21,7 @@ import {
 import { FlexBox } from "components/Vault/VaultListItem";
 import { ApproveButton } from "components/AppComponents/AppButton/AppButton";
 import useConnector from "context/connector";
-import { Contract, BigNumber as eBigNumber } from "fathom-ethers";
+import { Contract, BigNumber as eBigNumber, utils } from "fathom-ethers";
 
 enum MethodType {
   View = "view",
@@ -89,10 +89,6 @@ const VaultManagementItem: FC<{ method: AbiItem; vaultId: string }> = ({
     setContract(contract);
   }, [method, library, account, setMethodType, setContract]);
 
-  console.log({
-    response,
-  });
-
   const handleSubmitForm = useCallback(async () => {
     const values = getValues();
 
@@ -114,16 +110,26 @@ const VaultManagementItem: FC<{ method: AbiItem; vaultId: string }> = ({
   }, [methodType]);
 
   const renderResponse = useCallback(() => {
-    if (response instanceof eBigNumber) {
+    if (
+      [
+        "totalAssets",
+        "totalSupply",
+        "totalSupplyAmount",
+        "totalIdleAmount",
+        "totalDebtAmount",
+      ].includes(method.name)
+    ) {
+      return utils.formatUnits(response, 18).toString();
+    } else if (method.name === "lastProfitUpdate") {
+      return new Date(response * 1000).toLocaleString();
+    } else if (response instanceof eBigNumber) {
       return response.toString();
-    }
-
-    if (response) {
+    } else if (typeof response === "string") {
       return response;
     }
 
     return null;
-  }, [response]);
+  }, [response, method]);
 
   return (
     <VaultItemAccordion>
