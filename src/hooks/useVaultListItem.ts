@@ -24,6 +24,7 @@ export enum VaultInfoTabs {
   POSITION,
   ABOUT,
   STRATEGIES,
+  MANAGEMENT,
 }
 
 const VAULT_REPORTS_PER_PAGE = 1000;
