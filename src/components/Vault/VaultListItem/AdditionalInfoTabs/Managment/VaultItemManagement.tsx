@@ -1,9 +1,10 @@
-import { IVault, SmartContractFactory } from "fathom-sdk";
+import { SmartContractFactory } from "fathom-sdk";
 import { FC, useCallback, useEffect, useState } from "react";
 import { Typography } from "@mui/material";
-import VaultManagementItem from "./VaultManagementItem";
+import VaultManagementItem from "components/Vault/VaultListItem/AdditionalInfoTabs/Managment/VaultManagementItem";
 
-const STATE_MUTABILITY_TRANSACTIONS = ["nonpayable", "payable"];
+export const STATE_MUTABILITY_TRANSACTIONS = ["nonpayable", "payable"];
+export const STATE_MUTABILITY_VIEW = ["view", "pure"];
 
 type AbiInputOutputType = {
   name: string;
@@ -21,18 +22,16 @@ type VaultItemManagementProps = {
   vaultId: string;
 };
 
+const ABI = SmartContractFactory.FathomVault("").abi;
+
 const VaultItemManagement: FC<VaultItemManagementProps> = ({ vaultId }) => {
   const [contractMethods, setContractMethods] = useState<AbiItem[]>([]);
-  const vaultAbi = SmartContractFactory.FathomVault("").abi;
 
   const extractContractMethods = useCallback(
-    (abi: string) => {
+    (abiJson: AbiItem[]) => {
       try {
-        const abiJson = JSON.parse(abi);
         const methods = abiJson.filter(
-          (item: AbiItem) =>
-            item.type === "function" &&
-            STATE_MUTABILITY_TRANSACTIONS.includes(item.stateMutability)
+          (item: AbiItem) => item.type === "function"
         );
 
         setContractMethods(methods);
@@ -44,12 +43,12 @@ const VaultItemManagement: FC<VaultItemManagementProps> = ({ vaultId }) => {
   );
 
   useEffect(() => {
-    extractContractMethods(JSON.stringify(vaultAbi));
-  }, [vaultAbi, extractContractMethods]);
+    extractContractMethods(ABI as AbiItem[]);
+  }, [extractContractMethods]);
 
   useEffect(() => {
     console.log("VaultId: ", vaultId);
-    console.log("Abi: ", vaultAbi);
+    console.log("Abi: ", ABI);
     console.log("Methods: ", contractMethods);
   }, [contractMethods]);
 
