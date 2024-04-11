@@ -21,7 +21,11 @@ export const getErrorTextFromError = (
 ): TxErrorType => {
   let errorNumber = 1;
 
-  if (error.code === 4001 || error.code === "ACTION_REJECTED") {
+  if (
+    error.code === 4001 ||
+    error.code === "ACTION_REJECTED" ||
+    error.code === 5000
+  ) {
     return {
       error: errorMapping[4001],
       blocking: false,
