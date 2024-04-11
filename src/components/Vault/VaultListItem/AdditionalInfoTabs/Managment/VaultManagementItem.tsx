@@ -21,7 +21,7 @@ import {
 import { FlexBox } from "components/Vault/VaultListItem";
 import { ApproveButton } from "components/AppComponents/AppButton/AppButton";
 import useConnector from "context/connector";
-import { Contract } from "fathom-ethers";
+import { Contract, BigNumber as eBigNumber } from "fathom-ethers";
 
 enum MethodType {
   View = "view",
@@ -113,6 +113,18 @@ const VaultManagementItem: FC<{ method: AbiItem; vaultId: string }> = ({
     return methodType === MethodType.Mutate ? "Write" : "Read";
   }, [methodType]);
 
+  const renderResponse = useCallback(() => {
+    if (response instanceof eBigNumber) {
+      return response.toString();
+    }
+
+    if (response) {
+      return response;
+    }
+
+    return null;
+  }, [response]);
+
   return (
     <VaultItemAccordion>
       <AccordionSummaryStyled
@@ -169,7 +181,7 @@ const VaultManagementItem: FC<{ method: AbiItem; vaultId: string }> = ({
           </FlexBox>
         </Box>
         {response && (
-          <MethodResponseStyled>Response: {response}</MethodResponseStyled>
+          <MethodResponseStyled>{renderResponse()}</MethodResponseStyled>
         )}
       </AccordionDetails>
     </VaultItemAccordion>
