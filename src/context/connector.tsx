@@ -158,6 +158,8 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
 
   const deactivateEvent = useCallback(() => {
     localStorage.removeItem("isConnected");
+    setIsMetamask(false);
+    setIsWalletConnect(false);
   }, []);
 
   useEffect(() => {
