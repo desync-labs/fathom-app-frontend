@@ -181,7 +181,9 @@ const VaultManagementItem: FC<{ method: AbiItem; vaultId: string }> = ({
           </FlexBox>
         </Box>
         {response && (
-          <MethodResponseStyled>{renderResponse()}</MethodResponseStyled>
+          <MethodResponseStyled>
+            Response: {renderResponse()}
+          </MethodResponseStyled>
         )}
       </AccordionDetails>
     </VaultItemAccordion>
