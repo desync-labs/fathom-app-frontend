@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Controller, useForm } from "react-hook-form";
-import { FC, useCallback, useEffect } from "react";
+import { FC, memo, useCallback, useEffect, useMemo, useState } from "react";
 import {
   AppFormLabel,
   AppTextField,
@@ -21,7 +21,12 @@ import {
 import { FlexBox } from "components/Vault/VaultListItem";
 import { ApproveButton } from "components/AppComponents/AppButton/AppButton";
 
-const MethodType = styled(Box)`
+enum MethodType {
+  View = "view",
+  Mutate = "mutate",
+}
+
+const MethodTypeStyled = styled(Box)`
   padding: 5px 10px;
   border-radius: 5px;
   color: #fff;
@@ -51,21 +56,29 @@ const VaultManagementItem: FC<{ method: AbiItem }> = ({ method }) => {
     mode: "onChange",
   });
 
+  const [methodType, setMethodType] = useState<MethodType>(MethodType.View);
+
   useEffect(() => {
     console.log("Form state: ", formState);
   }, [formState]);
+
+  useEffect(() => {
+    const methodType = STATE_MUTABILITY_TRANSACTIONS.includes(
+      method.stateMutability
+    )
+      ? MethodType.Mutate
+      : MethodType.View;
+
+    setMethodType(methodType);
+  }, [method, setMethodType]);
 
   const handleSubmitForm = useCallback(() => {
     console.log("Execute Tx: ", formState);
   }, [formState]);
 
-  const getMethodType = useCallback(() => {
-    if (STATE_MUTABILITY_TRANSACTIONS.includes(method.stateMutability)) {
-      return "Write";
-    } else {
-      return "Read";
-    }
-  }, [method.stateMutability]);
+  const getMethodType = useMemo(() => {
+    return methodType === MethodType.Mutate ? "Write" : "Read";
+  }, [methodType]);
 
   return (
     <VaultItemAccordion>
@@ -74,15 +87,15 @@ const VaultManagementItem: FC<{ method: AbiItem }> = ({ method }) => {
         aria-controls="panel1a-content"
         id="panel1a-header"
       >
-        <MethodType
+        <MethodTypeStyled
           className={
             STATE_MUTABILITY_TRANSACTIONS.includes(method.stateMutability)
               ? "mutate"
               : "view"
           }
         >
-          {getMethodType()}
-        </MethodType>{" "}
+          {getMethodType}
+        </MethodTypeStyled>{" "}
         <Typography>{method.name}</Typography>
       </AccordionSummaryStyled>
       <AccordionDetails sx={{ padding: "0" }}>
@@ -127,4 +140,4 @@ const VaultManagementItem: FC<{ method: AbiItem }> = ({ method }) => {
   );
 };
 
-export default VaultManagementItem;
+export default memo(VaultManagementItem);
