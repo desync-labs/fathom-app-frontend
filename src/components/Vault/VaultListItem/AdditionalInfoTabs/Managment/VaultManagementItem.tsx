@@ -67,8 +67,11 @@ const VaultManagementItem: FC<{ method: AbiItem; vaultId: string }> = ({
   const [contract, setContract] = useState<Contract>();
 
   useEffect(() => {
-    console.log("Form state: ", formState);
-  }, [formState]);
+    console.log({
+      formState,
+      contract,
+    });
+  }, [formState, contract]);
 
   useEffect(() => {
     const methodType = STATE_MUTABILITY_TRANSACTIONS.includes(
