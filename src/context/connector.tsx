@@ -160,7 +160,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
     localStorage.removeItem("isConnected");
     setIsMetamask(false);
     setIsWalletConnect(false);
-  }, []);
+  }, [setIsMetamask, setIsWalletConnect]);
 
   useEffect(() => {
     if (connector) {
