@@ -1,6 +1,7 @@
 import { InterestRate } from "@into-the-fathom/lending-contract-helpers";
 import { Box, Button, Typography, useTheme } from "@mui/material";
 import { FC, ReactNode, useState } from "react";
+import useConnector from "context/connector";
 import { WalletIcon } from "apps/lending/components/icons/WalletIcon";
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
 import {
@@ -40,6 +41,7 @@ export const TxSuccessView: FC<SuccessTxViewProps> = ({
   const { addERC20Token } = useWeb3Context();
   const [base64, setBase64] = useState("");
   const theme = useTheme();
+  const { isMetamask } = useConnector();
 
   return (
     <BaseSuccessView txHash={txHash}>
@@ -86,7 +88,7 @@ export const TxSuccessView: FC<SuccessTxViewProps> = ({
           </Typography>
         )}
 
-        {addToken && symbol && (
+        {addToken && symbol && isMetamask && (
           <Box
             sx={(theme) => ({
               border:
