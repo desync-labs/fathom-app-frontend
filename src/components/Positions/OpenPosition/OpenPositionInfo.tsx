@@ -61,7 +61,6 @@ const OpenPositionInfo = () => {
           />
         </AppListItem>
         <AppListItem
-          className={"short"}
           alignItems="flex-start"
           secondaryAction={`${formatNumber(
             Number(collateralAvailableToWithdraw)

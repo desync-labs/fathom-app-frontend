@@ -26,13 +26,18 @@ const RepayPositionInfo = () => {
           alignItems="flex-start"
           secondaryAction={
             <>
-              {BigNumber(lockedCollateral).multipliedBy(price).toFixed(6)} FXD{" "}
+              {formatNumber(
+                BigNumber(lockedCollateral).multipliedBy(price).toNumber()
+              )}{" "}
+              FXD{" "}
               <Box component="span" sx={{ color: "#29C20A" }}>
                 →{" "}
-                {BigNumber(lockedCollateral)
-                  .multipliedBy(price)
-                  .minus(fathomToken)
-                  .toFixed(6)}{" "}
+                {formatNumber(
+                  BigNumber(lockedCollateral)
+                    .multipliedBy(price)
+                    .minus(fathomToken)
+                    .toNumber()
+                )}{" "}
                 FXD
               </Box>
             </>
@@ -44,12 +49,15 @@ const RepayPositionInfo = () => {
           alignItems="flex-start"
           secondaryAction={
             <>
-              {BigNumber(lockedCollateral).toFixed(6)} {pool.poolName}{" "}
+              {formatNumber(BigNumber(lockedCollateral).toNumber())}{" "}
+              {pool.poolName}{" "}
               <Box component="span" sx={{ color: "#29C20A" }}>
                 →{" "}
-                {BigNumber(lockedCollateral)
-                  .minus(BigNumber(collateral))
-                  .toFixed(6)}{" "}
+                {formatNumber(
+                  BigNumber(lockedCollateral)
+                    .minus(BigNumber(collateral))
+                    .toNumber()
+                )}{" "}
                 {pool.poolName}
               </Box>
             </>
