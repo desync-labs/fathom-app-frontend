@@ -189,7 +189,7 @@ const useVaultList = () => {
       let sortedVaults = [...vaultData];
       if (vaultData.length) {
         if (sortBy === SortType.TVL) {
-          sortedVaults = vaultData.sort((a, b) => {
+          sortedVaults = sortedVaults.sort((a, b) => {
             const tvlA = Number(a.balanceTokens);
             const tvlB = Number(b.balanceTokens);
 
@@ -217,7 +217,7 @@ const useVaultList = () => {
               idToVaultIdMap[key] = position.balanceProfit;
             });
 
-            sortedVaults = vaultData.sort(sortVaultsByVaultPositionValue);
+            sortedVaults = sortedVaults.sort(sortVaultsByVaultPositionValue);
           }
 
           if (sortBy === SortType.STAKED) {
@@ -226,7 +226,7 @@ const useVaultList = () => {
               idToVaultIdMap[key] = position.balancePosition;
             });
 
-            sortedVaults = vaultData.sort(sortVaultsByVaultPositionValue);
+            sortedVaults = sortedVaults.sort(sortVaultsByVaultPositionValue);
           }
         }
       }
