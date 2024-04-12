@@ -84,7 +84,9 @@ export interface ModalContextType<T extends ModalArgsType> {
   args: T;
   mainTxState: TxStateType;
   approvalTxState: TxStateType;
+  requiresApproval: boolean;
   setApprovalTxState: (data: TxStateType) => void;
+  setRequiresApproval: (requiresApproval: boolean) => void;
   setMainTxState: (data: TxStateType) => void;
   gasLimit: string;
   setGasLimit: (limit: string) => void;
@@ -112,6 +114,7 @@ export const ModalContextProvider: FC<{ children: ReactNode }> = ({
   const [loadingTxns, setLoadingTxns] = useState<boolean>(false);
   const [txError, setTxError] = useState<TxErrorType>();
   const trackEvent = useRootStore((store) => store.trackEvent);
+  const [requiresApproval, setRequiresApproval] = useState<boolean>(false);
 
   return (
     <ModalContext.Provider
@@ -257,8 +260,10 @@ export const ModalContextProvider: FC<{ children: ReactNode }> = ({
         type,
         args,
         approvalTxState,
+        requiresApproval,
         mainTxState,
         setApprovalTxState,
+        setRequiresApproval,
         setMainTxState,
         gasLimit,
         setGasLimit,
