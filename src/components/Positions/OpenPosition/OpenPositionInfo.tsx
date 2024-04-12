@@ -85,7 +85,7 @@ const OpenPositionInfo = () => {
                       Safety buffer is calculated from LTV. When you multiply
                       your collateral value with LTV - you will get how much you
                       can borrow maximum with a 0% safety buffer. For example,
-                      if your collateral value is $100, with 25% LTV, you can
+                      if your collateral value is $100, with 75% LTV, you can
                       maximum borrow 75 FXD, which gives you 0% Safety Buffer,
                       and your position becomes very risky for liquidation.{" "}
                       <br />
