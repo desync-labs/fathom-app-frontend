@@ -60,6 +60,7 @@ export const useTransactionHandler = ({
     loadingTxns,
     setLoadingTxns,
     setTxError,
+    setRequiresApproval,
   } = useModalContext();
   const { signTxData, sendTx, getTxError } = useWeb3Context();
   const { refetchPoolData } = useBackgroundDataProvider();
@@ -91,6 +92,10 @@ export const useTransactionHandler = ({
       mounted.current = false;
     }; // ... and to false on unmount
   }, []);
+
+  useEffect(() => {
+    setRequiresApproval(!!approvalTxes || usePermit);
+  }, [approvalTxes, usePermit]);
   /**
    * Executes the transactions and handles loading & error states.
    * @param fn
