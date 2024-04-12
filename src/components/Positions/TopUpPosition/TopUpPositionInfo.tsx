@@ -34,9 +34,9 @@ const TopUpPositionInfo = () => {
           alignItems="flex-start"
           secondaryAction={
             <>
-              {BigNumber(debtValue).toFixed(6)} FXD{" "}
+              {formatNumber(BigNumber(debtValue).toNumber())} FXD{" "}
               <Box component="span" sx={{ color: "#29C20A" }}>
-                → {BigNumber(totalFathomToken).toFixed(6)} FXD
+                → {formatNumber(BigNumber(totalFathomToken).toNumber())} FXD
               </Box>
             </>
           }
