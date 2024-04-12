@@ -44,6 +44,7 @@ export const WithdrawModalContent: FC<
       gasLimit,
       mainTxState: withdrawTxState,
       txError,
+      requiresApproval,
     } = useModalContext();
     const { user } = useAppDataContext();
     const { currentNetworkConfig } = useProtocolDataContext();
@@ -190,6 +191,14 @@ export const WithdrawModalContent: FC<
             futureHealthFactor={healthFactorAfterWithdraw.toString(10)}
           />
         </TxModalDetails>
+
+        {isMaxSelected && requiresApproval && (
+          <Warning severity="warning" sx={{ my: 6 }}>
+            Your fm{poolReserve.symbol} amount is increasing every second. For
+            correct withdrawal of the whole amount, confirm in MetaMask the
+            amount by 0.1 more than the current balance.
+          </Warning>
+        )}
 
         {txError && <GasEstimationError txError={txError} />}
 
