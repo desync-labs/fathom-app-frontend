@@ -615,6 +615,10 @@ export function useGlobalData() {
     if (!data && ethPrice && oldEthPrice && !loading) {
       fetchData();
     }
+
+    return () => {
+      setLoading(false);
+    };
   }, [
     loading,
     ethPrice,
