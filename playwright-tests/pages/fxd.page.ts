@@ -99,7 +99,9 @@ export default class FxdPage extends BasePage {
     this.btnConfirmRepayPosition = this.page.locator(
       '//button[text()="Repay this position"]'
     );
-    this.progressBar = this.page.locator('[role="progressbar"]');
+    this.progressBar = this.page.locator(
+      '[role="dialog"] [role="progressbar"]'
+    );
     this.safetyBufferNumberOpenPositionDialog = this.page.locator(
       '//span[contains(text(), "Safety Buffer (%)")]//ancestor::li/div[2]'
     );
