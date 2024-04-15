@@ -9,6 +9,8 @@ import useConnector from "context/connector";
 import useVaultListItem, { VaultInfoTabs } from "hooks/useVaultListItem";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatCurrency, formatNumber, formatPercentage } from "utils/format";
+import { useApr } from "hooks/useApr";
+import { vaultTitle } from "utils/getVaultTitleAndDescription";
 
 import { AppTableRow } from "components/AppComponents/AppTable/AppTable";
 import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
@@ -24,7 +26,6 @@ import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownR
 import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
 import LockSrc from "assets/svg/lock.svg";
 import LockAquaSrc from "assets/svg/lock-aqua.svg";
-import { useApr } from "hooks/useApr";
 
 export const FlexBox = styled(Box)`
   display: flex;
@@ -235,7 +236,9 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
                   <EarningLabel>Earning</EarningLabel>
                 )}
               <VaultTitle data-testid={`vaultRow-${vaultTestId}-tokenTitle`}>
-                {token.name}
+                {vaultTitle[vaultItemData.id.toLowerCase()]
+                  ? vaultTitle[vaultItemData.id.toLowerCase()]
+                  : token.name}
               </VaultTitle>
             </VaultInfo>
           </FlexBox>
