@@ -1,8 +1,6 @@
-import {
-  AbiItem,
-  STATE_MUTABILITY_TRANSACTIONS,
-} from "components/Vault/VaultListItem/AdditionalInfoTabs/Managment/VaultItemManagement";
-import { VaultItemAccordion } from "components/Vault/VaultListItem/AdditionalInfoTabs/VaultStrategyItem";
+import { Controller, useForm } from "react-hook-form";
+import { FC, memo, useCallback, useEffect, useMemo, useState } from "react";
+import { Contract, BigNumber as eBigNumber, utils } from "fathom-ethers";
 import {
   AccordionDetails,
   AccordionSummary,
@@ -12,16 +10,21 @@ import {
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Controller, useForm } from "react-hook-form";
-import { FC, memo, useCallback, useEffect, useMemo, useState } from "react";
+
+import useConnector from "context/connector";
+import {
+  AbiItem,
+  STATE_MUTABILITY_TRANSACTIONS,
+} from "components/Vault/VaultListItem/AdditionalInfoTabs/Managment/VaultItemManagement";
+import { VaultItemAccordion } from "components/Vault/VaultListItem/AdditionalInfoTabs/VaultStrategyItem";
 import {
   AppFormLabel,
   AppTextField,
 } from "components/AppComponents/AppForm/AppForm";
 import { FlexBox } from "components/Vault/VaultListItem";
 import { ApproveButton } from "components/AppComponents/AppButton/AppButton";
-import useConnector from "context/connector";
-import { Contract, BigNumber as eBigNumber, utils } from "fathom-ethers";
+import { getEstimateGas } from "fathom-sdk";
+import { ESTIMATE_GAS_MULTIPLIER } from "fathom-sdk/dist/cjs/utils/Constants";
 
 enum MethodType {
   View = "view",
@@ -51,7 +54,10 @@ const AccordionSummaryStyled = styled(AccordionSummary)`
   }
 `;
 
-const MethodResponseStyled = styled(Box)``;
+const MethodResponseStyled = styled(Box)`
+  width: calc(100% - 200px);
+  word-wrap: break-word;
+`;
 
 const VaultManagementItem: FC<{ method: AbiItem; vaultId: string }> = ({
   method,
@@ -91,17 +97,48 @@ const VaultManagementItem: FC<{ method: AbiItem; vaultId: string }> = ({
 
   const handleSubmitForm = useCallback(async () => {
     const values = getValues();
+    const options = { gasLimit: 0 };
+    console.log(1, values, method);
 
-    console.log({
-      values,
+    const args: any[] = [];
+
+    method.inputs.forEach((input, index) => {
+      if (input.type === "uint256") {
+        // @ts-ignore
+        args[index] = utils.parseUnits(values[input.name], 18);
+      } else if (input.type === "bytes32") {
+        // @ts-ignore
+        args[index] = utils.formatBytes32String(values[input.name]);
+      } else {
+        // @ts-ignore
+        args[index] = values[input.name];
+      }
     });
 
-    /**
-     * @todo: need to check arguments and put to this function.
-     */
-    if (methodType === MethodType.View) {
-      const response = await (contract as Contract)[method.name]();
+    console.log(111, args);
+    try {
+      let response;
+      if (methodType === MethodType.View) {
+        response = await (contract as Contract)[method.name](...args);
+      } else if (methodType === MethodType.Mutate) {
+        console.log(222);
+
+        const gasLimit = await getEstimateGas(
+          contract as Contract,
+          method.name,
+          args,
+          options
+        );
+
+        console.log(333, gasLimit);
+
+        options.gasLimit = Math.ceil(gasLimit * ESTIMATE_GAS_MULTIPLIER);
+        response = await (contract as Contract)[method.name](...args, options);
+      }
+      console.log("Res: ", response);
       setResponse(response);
+    } catch (e: any) {
+      console.error(e);
     }
   }, [formState, contract, methodType, method, getValues]);
 
@@ -117,15 +154,42 @@ const VaultManagementItem: FC<{ method: AbiItem; vaultId: string }> = ({
         "totalSupplyAmount",
         "totalIdleAmount",
         "totalDebtAmount",
+        "balanceOf",
+        "convertToAssets",
+        "convertToShares",
+        "depositLimit",
+        "maxDeposit",
+        "maxMint",
+        "previewDeposit",
+        "previewMint",
+        "previewRedeem",
+        "previewWithdraw",
+        "maxMint",
+        "pricePerShare",
       ].includes(method.name)
     ) {
       return utils.formatUnits(response, 18).toString();
-    } else if (method.name === "lastProfitUpdate") {
+    } else if (
+      method.name === "lastProfitUpdate" ||
+      method.name === "fullProfitUnlockDate"
+    ) {
       return new Date(response * 1000).toLocaleString();
+    } else if (method.name === "strategies") {
+      return `activation: ${new Date(
+        response.activation * 1000
+      ).toLocaleString()}, currentDebt: ${utils.formatUnits(
+        response.currentDebt,
+        18
+      )}, maxDebt: ${utils.formatUnits(
+        response.maxDebt,
+        18
+      )}, lastReport: ${new Date(response.lastReport * 1000).toLocaleString()}`;
     } else if (response instanceof eBigNumber) {
       return response.toString();
-    } else if (typeof response === "string") {
+    } else if (typeof response === "string" || typeof response === "number") {
       return response;
+    } else if (typeof response === "boolean") {
+      return response.toString();
     }
 
     return null;
@@ -177,7 +241,10 @@ const VaultManagementItem: FC<{ method: AbiItem; vaultId: string }> = ({
               )}
             />
           ))}
-          <FlexBox sx={{ justifyContent: "flex-end" }}>
+          <FlexBox sx={{ justifyContent: "space-between", flexWrap: "nowrap" }}>
+            <MethodResponseStyled>
+              {response !== undefined && <>Response: {renderResponse()}</>}
+            </MethodResponseStyled>
             <ApproveButton
               type="submit"
               sx={{ width: "200px", height: "40px" }}
@@ -186,11 +253,6 @@ const VaultManagementItem: FC<{ method: AbiItem; vaultId: string }> = ({
             </ApproveButton>
           </FlexBox>
         </Box>
-        {response && (
-          <MethodResponseStyled>
-            Response: {renderResponse()}
-          </MethodResponseStyled>
-        )}
       </AccordionDetails>
     </VaultItemAccordion>
   );

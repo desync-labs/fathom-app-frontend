@@ -47,16 +47,10 @@ const VaultItemManagement: FC<VaultItemManagementProps> = ({ vaultId }) => {
     extractContractMethods(ABI as AbiItem[]);
   }, [extractContractMethods]);
 
-  useEffect(() => {
-    console.log("VaultId: ", vaultId);
-    console.log("Abi: ", ABI);
-    console.log("Methods: ", contractMethods);
-  }, [contractMethods]);
-
   return (
     <>
       {!contractMethods.length ? (
-        <Typography>Has no strategies yet</Typography>
+        <Typography>Has no contract methods yet</Typography>
       ) : (
         contractMethods.map((method: AbiItem, index: number) => (
           <VaultManagementItem key={index} method={method} vaultId={vaultId} />
