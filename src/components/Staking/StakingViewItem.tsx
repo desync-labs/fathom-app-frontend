@@ -1,7 +1,6 @@
 import { FC, memo } from "react";
 import { Box, Grid, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import InfoIcon from "@mui/icons-material/Info";
 
 import { ILockPosition } from "fathom-sdk";
 import useStakingItemView from "hooks/useStakingItemView";
@@ -16,6 +15,7 @@ import { getTokenLogoURL } from "utils/tokenLogo";
 import clockSrc from "assets/svg/clock-circle.svg";
 import BigNumber from "bignumber.js";
 import { FlowType } from "hooks/useStakingView";
+import AppPopover from "components/AppComponents/AppPopover/AppPopover";
 
 const StakingViewItemWrapper = styled(Grid)`
   &.MuiGrid-item {
@@ -295,7 +295,20 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
               <Grid item xs={12} sm={6}>
                 <CoolDownInfo>
                   Cooldown Period: 5 days
-                  <InfoIcon sx={{ fontSize: "18px" }} />
+                  <AppPopover
+                    id={`cooldown-info-${lockPosition.lockId}`}
+                    text={
+                      <>
+                        The period of time after which the amount can be
+                        withdrawn. <br />
+                        Cooldown is implemented as a protection mechanism for
+                        the Fathom ecosystem. It prevents malicious behavior,
+                        limits the number of withdrawals, and protects the
+                        Governance system from being overused and vulnerable to
+                        a Sybil attack.
+                      </>
+                    }
+                  />
                 </CoolDownInfo>
               </Grid>
               <ButtonGrid item xs={12} sm={6}>
