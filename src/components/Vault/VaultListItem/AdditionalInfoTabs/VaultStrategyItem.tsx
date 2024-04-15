@@ -79,6 +79,10 @@ export const VaultStrategyDescription = styled(Box)`
   p {
     margin: 0;
   }
+  b {
+    display: inline-block;
+    margin-top: 8px;
+  }
 `;
 
 export const VaultIndicatorsWrapper = styled(Box)`
