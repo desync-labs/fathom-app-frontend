@@ -21,7 +21,11 @@ export const getErrorTextFromError = (
 ): TxErrorType => {
   let errorNumber = 1;
 
-  if (error.code === 4001 || error.code === "ACTION_REJECTED") {
+  if (
+    error.code === 4001 ||
+    error.code === "ACTION_REJECTED" ||
+    error.code === 5000
+  ) {
     return {
       error: errorMapping[4001],
       blocking: false,
@@ -32,10 +36,14 @@ export const getErrorTextFromError = (
   }
 
   // Try to parse the Pool error number from RPC provider revert error
-  const parsedError = JSON.parse((error as any)?.error?.body);
-  const parsedNumber = Number(parsedError.error.message.split(": ")[1]);
-  if (!isNaN(parsedNumber)) {
-    errorNumber = parsedNumber;
+  const errorBody = (error as any)?.error?.body;
+
+  if (errorBody) {
+    const parsedError = JSON.parse((error as any)?.error?.body);
+    const parsedNumber = Number(parsedError.error.message.split(": ")[1]);
+    if (!isNaN(parsedNumber)) {
+      errorNumber = parsedNumber;
+    }
   }
 
   const errorRender = errorMapping[errorNumber];
@@ -60,7 +68,7 @@ export const getErrorTextFromError = (
 };
 
 export const errorMapping: Record<number, string> = {
-  // 1: "The caller of the function is not a pool admin",
+  1: "An unknown error occurred. Please try again.",
   // 2: "The caller of the function is not an emergency admin",
   // 3: "The caller of the function is not a pool or emergency admin",
   // 4: "The caller of the function is not a risk or pool admin",
