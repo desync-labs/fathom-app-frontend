@@ -613,7 +613,7 @@ export function useGlobalData() {
     }
 
     if (!data && ethPrice && oldEthPrice && !loading) {
-      fetchData().finally(() => setLoading(false));
+      fetchData();
     }
   }, [
     loading,

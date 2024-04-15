@@ -1,11 +1,4 @@
-import {
-  Dispatch,
-  FC,
-  memo,
-  SetStateAction,
-  useCallback,
-  useEffect,
-} from "react";
+import { Dispatch, FC, memo, SetStateAction, useEffect } from "react";
 import {
   Navigate,
   useLocation,
@@ -265,7 +258,7 @@ const PairPage: FC<{ pairAddress: string }> = memo(({ pairAddress }) => {
       ? token1?.symbol.slice(0, 5) + "..."
       : token1?.symbol;
 
-  const handleBookmarkClick = useCallback(() => {
+  const handleBookmarkClick = () => {
     savedPairs[pairAddress]
       ? removePair(pairAddress)
       : addPair(
@@ -275,7 +268,7 @@ const PairPage: FC<{ pairAddress: string }> = memo(({ pairAddress }) => {
           token0.symbol,
           token1.symbol
         );
-  }, [pairAddress, savedPairs, token0, token1, addPair, removePair]);
+  };
 
   if (PAIR_BLACKLIST.includes(pairAddress)) {
     return (
