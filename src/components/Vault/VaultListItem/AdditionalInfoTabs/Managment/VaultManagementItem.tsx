@@ -108,7 +108,7 @@ const VaultManagementItem: FC<{ method: AbiItem; vaultId: string }> = ({
         args[index] = utils.parseUnits(values[input.name], 18);
       } else if (input.type === "bytes32") {
         // @ts-ignore
-        args[index] = utils.formatBytes32String(values[input.name]);
+        args[index] = utils.id(values[input.name]);
       } else {
         // @ts-ignore
         args[index] = values[input.name];
