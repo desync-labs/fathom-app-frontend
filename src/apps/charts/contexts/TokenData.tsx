@@ -748,9 +748,6 @@ export function Updater() {
         fxdPrice,
         listedTokens
       );
-      console.log({
-        topTokens,
-      });
       topTokens && updateTopTokens(topTokens);
     }
     listedTokens?.length && ethPrice && fxdPrice && ethPriceOld && getData();
