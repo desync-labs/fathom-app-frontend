@@ -1,7 +1,7 @@
 import { test, expect } from "../../fixtures/pomSynpressFixture";
 import { DexTabs, WalletConnectOptions } from "../../types";
 import dotenv from "dotenv";
-import { tokenIds } from "../../fixtures/dex.data";
+import { wxdcData, xUsdtData, xdcData } from "../../fixtures/dex.data";
 import { formatNumberToFixedLength } from "../../utils/helpers";
 dotenv.config();
 
@@ -13,8 +13,8 @@ test.describe("Fathom App Test Suite: DEX Transactions", () => {
     await dexPage.connectWallet(WalletConnectOptions.Metamask);
     await dexPage.validateConnectedWalletAddress();
     const expectedData = await dexPage.swap({
-      fromToken: tokenIds.XDC,
-      toToken: tokenIds.xUSDT,
+      fromTokenData: xdcData,
+      toTokenData: xUsdtData,
       fromAmount: 0.5,
     });
     const transactionHash =
@@ -45,8 +45,8 @@ test.describe("Fathom App Test Suite: DEX Transactions", () => {
     await dexPage.connectWallet(WalletConnectOptions.Metamask);
     await dexPage.validateConnectedWalletAddress();
     const expectedData = await dexPage.wrap({
-      fromToken: tokenIds.XDC,
-      toToken: tokenIds.WXDC,
+      fromTokenData: xdcData,
+      toTokenData: wxdcData,
       fromAmount: 0.01,
     });
     const transactionHash =
@@ -73,8 +73,8 @@ test.describe("Fathom App Test Suite: DEX Transactions", () => {
     await dexPage.connectWallet(WalletConnectOptions.Metamask);
     await dexPage.validateConnectedWalletAddress();
     const expectedData = await dexPage.wrap({
-      fromToken: tokenIds.WXDC,
-      toToken: tokenIds.XDC,
+      fromTokenData: wxdcData,
+      toTokenData: xdcData,
       fromAmount: 0.01,
     });
     const transactionHash =

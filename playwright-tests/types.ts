@@ -72,6 +72,11 @@ export enum DexTabs {
   Transactions = "Transactions",
 }
 
+export interface DexTokenData {
+  name: string;
+  tokenId: string;
+}
+
 export enum LendingSection {
   Supply = "Supply",
   Supplied = "Supplied",

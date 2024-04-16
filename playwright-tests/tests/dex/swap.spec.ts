@@ -1,7 +1,7 @@
 import { test, expect } from "../../fixtures/pomSynpressFixture";
 import { WalletConnectOptions } from "../../types";
 import dotenv from "dotenv";
-import { tokenIds } from "../../fixtures/dex.data";
+import { wxdcData, xUsdtData, xdcData } from "../../fixtures/dex.data";
 // @ts-ignore
 import * as metamask from "@synthetixio/synpress/commands/metamask";
 dotenv.config();
@@ -12,8 +12,8 @@ test.describe("Fathom App Test Suite: DEX Swap", () => {
     await dexPage.connectWallet(WalletConnectOptions.Metamask);
     await dexPage.validateConnectedWalletAddress();
     const expectedData = await dexPage.swap({
-      fromToken: tokenIds.XDC,
-      toToken: tokenIds.xUSDT,
+      fromTokenData: xdcData,
+      toTokenData: xUsdtData,
       fromAmount: 0.025,
     });
     await dexPage.validateSwapSuccessPopup({
@@ -29,8 +29,8 @@ test.describe("Fathom App Test Suite: DEX Swap", () => {
     await dexPage.connectWallet(WalletConnectOptions.Metamask);
     await dexPage.validateConnectedWalletAddress();
     const expectedData = await dexPage.wrap({
-      fromToken: tokenIds.XDC,
-      toToken: tokenIds.WXDC,
+      fromTokenData: xdcData,
+      toTokenData: wxdcData,
       fromAmount: 0.05,
     });
     await dexPage.validateWrapSuccessPopup({
@@ -46,8 +46,8 @@ test.describe("Fathom App Test Suite: DEX Swap", () => {
     await dexPage.connectWallet(WalletConnectOptions.Metamask);
     await dexPage.validateConnectedWalletAddress();
     const expectedData = await dexPage.wrap({
-      fromToken: tokenIds.WXDC,
-      toToken: tokenIds.XDC,
+      fromTokenData: wxdcData,
+      toTokenData: xdcData,
       fromAmount: 0.05,
     });
     await dexPage.validateUnwrapSuccessPopup({
@@ -61,12 +61,13 @@ test.describe("Fathom App Test Suite: DEX Swap", () => {
   test("Swap: 'Insufficient balance' is correctly displayed", async ({
     dexPage,
   }) => {
-    const tokenFrom = tokenIds.WXDC;
+    const tokenFrom = wxdcData;
+    const tokenTo = xUsdtData;
     await dexPage.navigate();
     await dexPage.connectWallet(WalletConnectOptions.Metamask);
     await dexPage.validateConnectedWalletAddress();
-    await dexPage.selectFromToken({ tokenId: tokenFrom });
-    await dexPage.selectToToken({ tokenId: tokenIds.xUSDT });
+    await dexPage.selectFromToken({ tokenData: tokenFrom });
+    await dexPage.selectToToken({ tokenData: tokenTo });
     const fromBalance = await dexPage.getFromBalance();
     await dexPage.page.waitForTimeout(2000);
     await dexPage.fillFromValue({ inputValue: fromBalance + 1 });
@@ -78,18 +79,19 @@ test.describe("Fathom App Test Suite: DEX Swap", () => {
   test("Wrap: 'Insufficient balance' is correctly displayed", async ({
     dexPage,
   }) => {
-    const tokenFrom = tokenIds.XDC;
+    const tokenFrom = xdcData;
+    const tokenTo = wxdcData;
     await dexPage.navigate();
     await dexPage.connectWallet(WalletConnectOptions.Metamask);
     await dexPage.validateConnectedWalletAddress();
-    await dexPage.selectFromToken({ tokenId: tokenFrom });
-    await dexPage.selectToToken({ tokenId: tokenIds.WXDC });
+    await dexPage.selectFromToken({ tokenData: tokenFrom });
+    await dexPage.selectToToken({ tokenData: tokenTo });
     await dexPage.page.waitForTimeout(2000);
     const fromBalance = await dexPage.getFromBalance();
     await dexPage.fillFromValue({ inputValue: fromBalance + 1 });
     await expect(dexPage.wrapButton).toBeVisible({ timeout: 20000 });
     await expect(dexPage.wrapButton).toHaveText(
-      `Insufficient ${tokenFrom} balance`
+      `Insufficient ${tokenFrom.name} balance`
     );
     await expect(dexPage.wrapButton).toBeDisabled();
   });
@@ -97,14 +99,15 @@ test.describe("Fathom App Test Suite: DEX Swap", () => {
   test("Wallet not connected state layout is correct, dex connect wallet functionality is successful", async ({
     dexPage,
   }) => {
-    const tokenFrom = tokenIds.XDC;
+    const tokenFrom = xdcData;
+    const tokenTo = xUsdtData;
     await dexPage.navigate();
     await expect(dexPage.swapConnectWalletButton).toBeVisible();
     await expect(dexPage.swapConnectWalletButton).toHaveText("Connect Wallet");
-    await dexPage.selectFromToken({ tokenId: tokenFrom });
+    await dexPage.selectFromToken({ tokenData: tokenFrom });
     await expect(dexPage.swapConnectWalletButton).toBeVisible();
     await expect(dexPage.swapConnectWalletButton).toHaveText("Connect Wallet");
-    await dexPage.selectToToken({ tokenId: tokenIds.xUSDT });
+    await dexPage.selectToToken({ tokenData: tokenTo });
     await expect(dexPage.swapConnectWalletButton).toBeVisible();
     await expect(dexPage.swapConnectWalletButton).toHaveText("Connect Wallet");
     await dexPage.fillFromValue({ inputValue: 1 });
@@ -122,12 +125,13 @@ test.describe("Fathom App Test Suite: DEX Swap", () => {
   test("Swap: 'Enter an amount' is correctly displayed", async ({
     dexPage,
   }) => {
-    const tokenFrom = tokenIds.XDC;
+    const tokenFrom = xdcData;
+    const tokenTo = xUsdtData;
     await dexPage.navigate();
     await dexPage.connectWallet(WalletConnectOptions.Metamask);
     await dexPage.validateConnectedWalletAddress();
-    await dexPage.selectFromToken({ tokenId: tokenFrom });
-    await dexPage.selectToToken({ tokenId: tokenIds.xUSDT });
+    await dexPage.selectFromToken({ tokenData: tokenFrom });
+    await dexPage.selectToToken({ tokenData: tokenTo });
     await expect(dexPage.swapButton).toBeVisible();
     await expect(dexPage.swapButton).toHaveText(`Enter an amount`);
     await expect(dexPage.swapButton).toBeDisabled();
@@ -136,12 +140,13 @@ test.describe("Fathom App Test Suite: DEX Swap", () => {
   test("Wrap: 'Enter an amount' is correctly displayed", async ({
     dexPage,
   }) => {
-    const tokenFrom = tokenIds.XDC;
+    const tokenFrom = xdcData;
+    const tokenTo = wxdcData;
     await dexPage.navigate();
     await dexPage.connectWallet(WalletConnectOptions.Metamask);
     await dexPage.validateConnectedWalletAddress();
-    await dexPage.selectFromToken({ tokenId: tokenFrom });
-    await dexPage.selectToToken({ tokenId: tokenIds.WXDC });
+    await dexPage.selectFromToken({ tokenData: tokenFrom });
+    await dexPage.selectToToken({ tokenData: tokenTo });
     await expect(dexPage.wrapButton).toBeVisible();
     await expect(dexPage.wrapButton).toHaveText(`Enter an amount`);
     await expect(dexPage.wrapButton).toBeDisabled();
