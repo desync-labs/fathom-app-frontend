@@ -11,17 +11,13 @@ import VaultHistoryChart, {
 } from "components/Vault/VaultListItem/AdditionalInfoTabs/VaultHistoryChart";
 import { getAccountUrl } from "utils/explorer";
 import { DEFAULT_CHAIN_ID } from "utils/Constants";
+import {
+  VaultAboutTitle,
+  vaultDescription,
+} from "utils/getVaultTitleAndDescription";
 import { Link } from "react-router-dom";
 import { useAprNumber } from "hooks/useApr";
 import { IVaultStrategyHistoricalApr } from "hooks/useVaultListItem";
-
-export const VaultAboutTitle = styled(Typography)`
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 24px;
-  color: #fff;
-  margin-bottom: 16px;
-`;
 
 export const VaultFlexColumns = styled(Box)`
   display: flex;
@@ -95,35 +91,42 @@ const VaultItemAbout: FC<VaultItemAboutPropsTypes> = ({
       <VaultFlexColumns>
         <Box width={isMobile ? "100%" : "50%"}>
           <Box>
-            <VaultAboutTitle variant={"h5"}>Description</VaultAboutTitle>
-            <Typography component={"span"} fontSize="14px">
-              The FXD vault functions as a pool of funds with an
-              auto-compounding strategy that manages and executes various tasks
-              based on predefined conditions. Users can deposit FXD only into
-              this vault, which then uses algorithms to perform actions such as
-              yield farming: lending, borrowing, etc. The FXD can consist of
-              different strategies, all separately investable. Each strategy
-              investment returns a strategy share token. Note that this is a
-              share token and so not 1:1 equivalent with FXD deposited. The FXD
-              vault only charges performance fees when strategy tokens are
-              redeemed. There is no management fee. Note that the vault
-              strategies have been carefully audited, nevertheless users are -
-              as always in defi - exposed to smart contract risk.
-              <Box mt={2}>
-                Vault contract address:{" "}
-                <Link
-                  to={getAccountUrl(vaultItemData.id, DEFAULT_CHAIN_ID)}
-                  target="_blank"
-                  style={{
-                    display: "inline-flex",
-                    fontSize: "12px",
-                    marginBottom: "16px",
-                  }}
-                >
-                  {vaultItemData.id}
-                </Link>
-              </Box>
-            </Typography>
+            {vaultDescription[vaultItemData.id.toLowerCase()] ? (
+              vaultDescription[vaultItemData.id.toLowerCase()]
+            ) : (
+              <>
+                <VaultAboutTitle variant={"h5"}>Description</VaultAboutTitle>
+                <Typography component={"span"} fontSize="14px">
+                  The FXD vault functions as a pool of funds with an
+                  auto-compounding strategy that manages and executes various
+                  tasks based on predefined conditions. Users can deposit FXD
+                  only into this vault, which then uses algorithms to perform
+                  actions such as yield farming: lending, borrowing, etc. The
+                  FXD can consist of different strategies, all separately
+                  investable. Each strategy investment returns a strategy share
+                  token. Note that this is a share token and so not 1:1
+                  equivalent with FXD deposited. The FXD vault only charges
+                  performance fees when strategy tokens are redeemed. There is
+                  no management fee. Note that the vault strategies have been
+                  carefully audited, nevertheless users are - as always in defi
+                  - exposed to smart contract risk.
+                </Typography>
+              </>
+            )}
+            <Box mt={2}>
+              Vault contract address:{" "}
+              <Link
+                to={getAccountUrl(vaultItemData.id, DEFAULT_CHAIN_ID)}
+                target="_blank"
+                style={{
+                  display: "inline-flex",
+                  fontSize: "12px",
+                  marginBottom: "16px",
+                }}
+              >
+                {vaultItemData.id}
+              </Link>
+            </Box>
           </Box>
           <Box pt="25px">
             <VaultAboutTitle variant={"h5"}>APY</VaultAboutTitle>
