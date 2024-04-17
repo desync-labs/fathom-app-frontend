@@ -1,10 +1,9 @@
 import { SmartContractFactory } from "fathom-sdk";
 import { FC, useCallback, useEffect, useState } from "react";
 import { Typography } from "@mui/material";
-import VaultManagementItem from "components/Vault/VaultListItem/AdditionalInfoTabs/Managment/VaultManagementItem";
+import MethodListItem from "components/Vault/VaultListItem/AdditionalInfoTabs/Managment/MethodListItem";
 
 export const STATE_MUTABILITY_TRANSACTIONS = ["nonpayable", "payable"];
-export const STATE_MUTABILITY_VIEW = ["view", "pure"];
 
 type AbiInputOutputType = {
   name: string;
@@ -24,7 +23,9 @@ type VaultItemManagementProps = {
 
 const ABI = SmartContractFactory.FathomVault("").abi;
 
-const VaultItemManagement: FC<VaultItemManagementProps> = ({ vaultId }) => {
+const ManagementContractMethodList: FC<VaultItemManagementProps> = ({
+  vaultId,
+}) => {
   const [contractMethods, setContractMethods] = useState<AbiItem[]>([]);
 
   const extractContractMethods = useCallback(
@@ -53,11 +54,11 @@ const VaultItemManagement: FC<VaultItemManagementProps> = ({ vaultId }) => {
         <Typography>Has no contract methods yet</Typography>
       ) : (
         contractMethods.map((method: AbiItem, index: number) => (
-          <VaultManagementItem key={index} method={method} vaultId={vaultId} />
+          <MethodListItem key={index} method={method} vaultId={vaultId} />
         ))
       )}
     </>
   );
 };
 
-export default VaultItemManagement;
+export default ManagementContractMethodList;

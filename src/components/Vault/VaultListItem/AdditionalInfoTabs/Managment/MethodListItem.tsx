@@ -5,6 +5,7 @@ import {
   AccordionDetails,
   AccordionSummary,
   Box,
+  CircularProgress,
   FormGroup,
   styled,
   Typography,
@@ -15,7 +16,7 @@ import useConnector from "context/connector";
 import {
   AbiItem,
   STATE_MUTABILITY_TRANSACTIONS,
-} from "components/Vault/VaultListItem/AdditionalInfoTabs/Managment/VaultItemManagement";
+} from "components/Vault/VaultListItem/AdditionalInfoTabs/Managment/ManagementContractMethodList";
 import { VaultItemAccordion } from "components/Vault/VaultListItem/AdditionalInfoTabs/VaultStrategyItem";
 import {
   AppFormLabel,
@@ -25,6 +26,7 @@ import { FlexBox } from "components/Vault/VaultListItem";
 import { ApproveButton } from "components/AppComponents/AppButton/AppButton";
 import { getEstimateGas } from "fathom-sdk";
 import { ESTIMATE_GAS_MULTIPLIER } from "fathom-sdk/dist/cjs/utils/Constants";
+import TransactionResponseDataList from "./TransactionResponseDataList";
 
 enum MethodType {
   View = "view",
@@ -55,11 +57,12 @@ const AccordionSummaryStyled = styled(AccordionSummary)`
 `;
 
 const MethodResponseStyled = styled(Box)`
-  width: calc(100% - 200px);
+  position: relative;
+  width: 100%;
   word-wrap: break-word;
 `;
 
-const VaultManagementItem: FC<{ method: AbiItem; vaultId: string }> = ({
+const MethodListItem: FC<{ method: AbiItem; vaultId: string }> = ({
   method,
   vaultId,
 }) => {
@@ -74,6 +77,7 @@ const VaultManagementItem: FC<{ method: AbiItem; vaultId: string }> = ({
   const [methodType, setMethodType] = useState<MethodType>(MethodType.View);
   const [contract, setContract] = useState<Contract>();
   const [response, setResponse] = useState<any>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const methodType = STATE_MUTABILITY_TRANSACTIONS.includes(
@@ -98,6 +102,8 @@ const VaultManagementItem: FC<{ method: AbiItem; vaultId: string }> = ({
   const handleSubmitForm = useCallback(async () => {
     const values = getValues();
     const options = { gasLimit: 0 };
+    setIsLoading(true);
+
     console.log(1, values, method);
 
     const args: any[] = [];
@@ -106,9 +112,9 @@ const VaultManagementItem: FC<{ method: AbiItem; vaultId: string }> = ({
       if (input.type === "uint256") {
         // @ts-ignore
         args[index] = utils.parseUnits(values[input.name], 18);
-      } else if (input.type === "bytes32") {
+      } else if (input.type === "address") {
         // @ts-ignore
-        args[index] = utils.id(values[input.name]);
+        args[index] = values[input.name].toLowerCase();
       } else {
         // @ts-ignore
         args[index] = values[input.name];
@@ -133,12 +139,19 @@ const VaultManagementItem: FC<{ method: AbiItem; vaultId: string }> = ({
         console.log(333, gasLimit);
 
         options.gasLimit = Math.ceil(gasLimit * ESTIMATE_GAS_MULTIPLIER);
-        response = await (contract as Contract)[method.name](...args, options);
+        const transaction = await (contract as Contract)[method.name](
+          ...args,
+          options
+        );
+
+        response = await transaction.wait();
       }
       console.log("Res: ", response);
       setResponse(response);
     } catch (e: any) {
       console.error(e);
+    } finally {
+      setIsLoading(false);
     }
   }, [formState, contract, methodType, method, getValues]);
 
@@ -184,6 +197,8 @@ const VaultManagementItem: FC<{ method: AbiItem; vaultId: string }> = ({
         response.maxDebt,
         18
       )}, lastReport: ${new Date(response.lastReport * 1000).toLocaleString()}`;
+    } else if (STATE_MUTABILITY_TRANSACTIONS.includes(method.stateMutability)) {
+      return <TransactionResponseDataList transactionResponseData={response} />;
     } else if (response instanceof eBigNumber) {
       return response.toString();
     } else if (typeof response === "string" || typeof response === "number") {
@@ -241,21 +256,41 @@ const VaultManagementItem: FC<{ method: AbiItem; vaultId: string }> = ({
               )}
             />
           ))}
-          <FlexBox sx={{ justifyContent: "space-between", flexWrap: "nowrap" }}>
-            <MethodResponseStyled>
-              {response !== undefined && <>Response: {renderResponse()}</>}
-            </MethodResponseStyled>
+          {method.stateMutability === "payable" && (
+            <Controller
+              key="value"
+              name={"value" as never}
+              rules={{ required: true }}
+              control={control}
+              render={({ field, fieldState: { error } }) => (
+                <FormGroup>
+                  <AppFormLabel>XDC value</AppFormLabel>
+                  <AppTextField
+                    error={!!error}
+                    multiline
+                    rows={1}
+                    helperText={`Fill XDC value.`}
+                    {...field}
+                  />
+                </FormGroup>
+              )}
+            />
+          )}
+          <FlexBox sx={{ justifyContent: "flex-end" }}>
             <ApproveButton
               type="submit"
               sx={{ width: "200px", height: "40px" }}
             >
-              Execute
+              {isLoading ? <CircularProgress size={30} /> : "Execute"}
             </ApproveButton>
           </FlexBox>
         </Box>
+        <MethodResponseStyled>
+          {response !== undefined && <>Response: {renderResponse()}</>}
+        </MethodResponseStyled>
       </AccordionDetails>
     </VaultItemAccordion>
   );
 };
 
-export default memo(VaultManagementItem);
+export default memo(MethodListItem);

@@ -25,7 +25,7 @@ import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRound
 import LockSrc from "assets/svg/lock.svg";
 import LockAquaSrc from "assets/svg/lock-aqua.svg";
 import { useApr } from "hooks/useApr";
-import VaultItemManagement from "components/Vault/VaultListItem/AdditionalInfoTabs/Managment/VaultItemManagement";
+import ManagementContractMethodList from "components/Vault/VaultListItem/AdditionalInfoTabs/Managment/ManagementContractMethodList";
 
 export const FlexBox = styled(Box)`
   display: flex;
@@ -419,7 +419,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
                 />
               )}
               {activeVaultInfoTab === VaultInfoTabs.MANAGEMENT && (
-                <VaultItemManagement vaultId={vaultItemData.id} />
+                <ManagementContractMethodList vaultId={vaultItemData.id} />
               )}
             </Box>
           </TableCell>
