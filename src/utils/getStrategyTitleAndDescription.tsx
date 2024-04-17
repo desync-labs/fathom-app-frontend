@@ -29,7 +29,7 @@ strategyDescription["0xe2dea7e0c272de04e8708674dae73ebd6e5c1455"] = (
   </>
 );
 
-strategyDescription["0x0767644e57c373a210b6f1f1c4692181bedab6a1"] = (
+strategyDescription["0x3adf1e440657fa55d11adb6a102d140b01449139"] = (
   <>
     <p>
       Invest directly in one of the world's leading gold mining companies with
@@ -58,7 +58,7 @@ strategyDescription["0x0767644e57c373a210b6f1f1c4692181bedab6a1"] = (
   </>
 );
 
-strategyDescription["0x3af9bd516e8e58bca804b1f78d169f13d12ba9df"] = (
+strategyDescription["0xde53c24ddce2d42816450dc06b2caff6384691dc"] = (
   <>
     <p>
       Diversify your investment through the iShares Gold Trust Micro Strategy,
@@ -85,7 +85,7 @@ strategyDescription["0x3af9bd516e8e58bca804b1f78d169f13d12ba9df"] = (
   </>
 );
 
-strategyDescription["0xe18fae6426fdbd7eb69e7a26ef8bc45e8a9b6c11"] = (
+strategyDescription["0xcea3c48da7aa17d5bc0a588a3e743577d94eb192"] = (
   <>
     <p>
       Engage in the global gold market through Anglogold Ashanti PLC, one of the
@@ -115,13 +115,13 @@ strategyDescription["0xe18fae6426fdbd7eb69e7a26ef8bc45e8a9b6c11"] = (
 strategyTitle["0xe2dea7e0c272de04e8708674dae73ebd6e5c1455"] =
   "FXD Strategy - 3 Months - 100.000 FXD";
 
-strategyTitle["0x0767644e57c373a210b6f1f1c4692181bedab6a1"] =
+strategyTitle["0x3adf1e440657fa55d11adb6a102d140b01449139"] =
   "Newmont Corp (NEM) Strategy";
 
-strategyTitle["0x3af9bd516e8e58bca804b1f78d169f13d12ba9df"] =
+strategyTitle["0xde53c24ddce2d42816450dc06b2caff6384691dc"] =
   "iShares Gold Trust Micro (IAUM) Strategy";
 
-strategyTitle["0xe18fae6426fdbd7eb69e7a26ef8bc45e8a9b6c11"] =
+strategyTitle["0xcea3c48da7aa17d5bc0a588a3e743577d94eb192"] =
   "Anglogold Ashanti PLC (AU) Strategy";
 
 export { strategyTitle, strategyDescription };

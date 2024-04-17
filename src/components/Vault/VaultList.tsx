@@ -71,6 +71,9 @@ const VaultList: FC<VaultListPropsType> = ({
     setSortBy,
     handlePageChange,
     filterCurrentPosition,
+    expandedVault,
+    handleExpandVault,
+    handleCollapseVault,
   } = useVaultList();
   const { isMobile } = useSharedContext();
   const { account } = useConnector();
@@ -108,13 +111,17 @@ const VaultList: FC<VaultListPropsType> = ({
                     )}
                   </>
                 ) : (
-                  vaultSortedList.map((vault) => (
+                  vaultSortedList.map((vault, index) => (
                     <VaultListItemMobile
                       key={vault.id}
                       vaultItemData={vault}
                       vaultPosition={filterCurrentPosition(vault.id)}
                       protocolFee={protocolFee}
                       performanceFee={performanceFee}
+                      index={index}
+                      isExtended={expandedVault === index}
+                      handleExpandVault={handleExpandVault}
+                      handleCollapseVault={handleCollapseVault}
                     />
                   ))
                 )}
@@ -224,13 +231,17 @@ const VaultList: FC<VaultListPropsType> = ({
                           <VaultListItemSkeleton />
                         </>
                       ) : (
-                        vaultSortedList.map((vault) => (
+                        vaultSortedList.map((vault, index) => (
                           <VaultListItem
                             key={vault.id}
                             vaultItemData={vault}
                             vaultPosition={filterCurrentPosition(vault.id)}
                             protocolFee={protocolFee}
                             performanceFee={performanceFee}
+                            index={index}
+                            isExtended={expandedVault === index}
+                            handleExpandVault={handleExpandVault}
+                            handleCollapseVault={handleCollapseVault}
                           />
                         ))
                       )}
@@ -262,6 +273,7 @@ const VaultList: FC<VaultListPropsType> = ({
           vaultsLoading,
           vaultPositionsList,
           vaultPositionsLoading,
+          expandedVault,
         ]
       )}
     </>

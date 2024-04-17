@@ -308,15 +308,27 @@ export const VAULT_FACTORIES = gql`
 `;
 
 export const VAULT_POSITION_TRANSACTIONS = gql`
-  query VaultPositionTransactions($account: String!) {
-    deposits(where: { account_contains: $account }, orderBy: blockNumber) {
+  query VaultPositionTransactions($account: String!, $vault: String!) {
+    deposits(
+      where: {
+        account_contains_nocase: $account
+        vault_contains_nocase: $vault
+      }
+      orderBy: blockNumber
+    ) {
       id
       timestamp
       sharesMinted
       tokenAmount
       blockNumber
     }
-    withdrawals(where: { account_contains: $account }, orderBy: blockNumber) {
+    withdrawals(
+      where: {
+        account_contains_nocase: $account
+        vault_contains_nocase: $vault
+      }
+      orderBy: blockNumber
+    ) {
       id
       timestamp
       sharesBurnt
