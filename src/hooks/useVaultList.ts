@@ -39,6 +39,7 @@ const useVaultList = () => {
   const [search, setSearch] = useState<string>("");
   const [sortBy, setSortBy] = useState<SortType>(SortType.TVL);
   const [isShutdown, setIsShutdown] = useState<boolean>(false);
+  const [expandedVault, setExpandedVault] = useState<number | null>(null);
 
   const {
     data: vaultItemsData,
@@ -183,6 +184,14 @@ const useVaultList = () => {
     }
   }, [sortBy]);
 
+  useEffect(() => {
+    if (vaultSortedList.length === 1) {
+      setExpandedVault(0);
+    } else {
+      setExpandedVault(null);
+    }
+  }, [vaultSortedList]);
+
   // Sort vaults
   const sortingVaults = useCallback(
     (vaultData: IVault[]) => {
@@ -260,6 +269,17 @@ const useVaultList = () => {
     [vaultPositionsList, vaultPositionsLoading]
   );
 
+  const handleExpandVault = useCallback(
+    (index: number) => {
+      setExpandedVault(index);
+    },
+    [setExpandedVault]
+  );
+
+  const handleCollapseVault = useCallback(() => {
+    setExpandedVault(null);
+  }, [setExpandedVault]);
+
   return {
     vaultSortedList,
     vaultsLoading,
@@ -277,6 +297,9 @@ const useVaultList = () => {
     setSortBy,
     handlePageChange,
     filterCurrentPosition,
+    expandedVault,
+    handleExpandVault,
+    handleCollapseVault,
   };
 };
 
