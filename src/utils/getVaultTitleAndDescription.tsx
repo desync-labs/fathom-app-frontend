@@ -16,7 +16,7 @@ export const VaultAboutTitle = styled(Typography)`
   margin-bottom: 16px;
 `;
 
-vaultDescription["0xd43a604f2c04867d61d59c2a4b4a35dd1104c669"] = (
+vaultDescription["0x50d150069a0fce09e6ded55a75aec67d2be79037"] = (
   <>
     <VaultAboutTitle>
       Gold World ETF Vault: Bridging Traditional Assets and Decentralized
@@ -69,6 +69,6 @@ vaultDescription["0xd43a604f2c04867d61d59c2a4b4a35dd1104c669"] = (
   </>
 );
 
-vaultTitle["0xd43a604f2c04867d61d59c2a4b4a35dd1104c669"] = "Gold World ETF";
+vaultTitle["0x50d150069a0fce09e6ded55a75aec67d2be79037"] = "Gold World ETF";
 
 export { vaultTitle, vaultDescription };
