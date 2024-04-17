@@ -45,7 +45,6 @@ enum FetchBalanceTokenType {
 }
 
 const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
-  const [extended, setExtended] = useState<boolean>(true);
   const [manageVault, setManageVault] = useState<boolean>(false);
   const [newVaultDeposit, setNewVaultDeposit] = useState<boolean>(false);
   const [balanceToken, setBalanceToken] = useState<string>("0");
@@ -285,10 +284,8 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     balanceToken,
     manageVault,
     newVaultDeposit,
-    extended,
     activeVaultInfoTab,
     setActiveVaultInfoTab,
-    setExtended,
     setManageVault,
     setNewVaultDeposit,
   };

@@ -4,7 +4,6 @@ import { Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { IVault } from "fathom-sdk";
 import { getTokenLogoURL } from "utils/tokenLogo";
-import { ButtonSecondary } from "components/AppComponents/AppButton/AppButton";
 import usePricesContext from "context/prices";
 import useSharedContext from "context/shared";
 import { formatNumber, formatPercentage } from "utils/format";
@@ -74,22 +73,6 @@ const PoolShare = styled("div")`
   }
 `;
 
-const ManageVaultBtnWrapper = styled("div")`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  ${({ theme }) => theme.breakpoints.down("sm")} {
-    margin-top: 40px;
-    height: auto;
-  }
-`;
-
-const ManageVaultBtn = styled(ButtonSecondary)`
-  width: 100%;
-  height: 40px;
-`;
-
 const VaultInfoStats = styled("div")`
   display: flex;
   gap: 20px;
@@ -133,11 +116,9 @@ const Token = styled("div")`
 type VaultListItemFarmingDetailsProps = {
   vaultItemData: IVault;
   vaultPosition?: any;
-  onOpen: () => void;
 };
 
 const VaultListItemEarningDetails: FC<VaultListItemFarmingDetailsProps> = ({
-  onOpen,
   vaultItemData,
   vaultPosition,
 }) => {
@@ -151,7 +132,7 @@ const VaultListItemEarningDetails: FC<VaultListItemFarmingDetailsProps> = ({
 
   return (
     <Grid container>
-      <Grid item xs={isMobile ? 12 : 10}>
+      <Grid item>
         <VaultTitle>
           {vaultTitle[vaultItemData.id.toLowerCase()]
             ? vaultTitle[vaultItemData.id.toLowerCase()]
@@ -233,16 +214,6 @@ const VaultListItemEarningDetails: FC<VaultListItemFarmingDetailsProps> = ({
             USD
           </Approx>
         </VaultInfoStats>
-      </Grid>
-      <Grid item xs={isMobile ? 12 : 2}>
-        <ManageVaultBtnWrapper>
-          <ManageVaultBtn
-            onClick={onOpen}
-            data-testid={`vaultRowDetails-${vaultTestId}-managePositionButton`}
-          >
-            Manage Vault
-          </ManageVaultBtn>
-        </ManageVaultBtnWrapper>
       </Grid>
     </Grid>
   );
