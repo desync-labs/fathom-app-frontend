@@ -249,7 +249,7 @@ export default class VaultPage extends BasePage {
   }
 
   getHideDetailsButtonVaultRow(id: string): Locator {
-    return this.page.locator(`[data-testid="vaultRow-${id}-hideButton"`);
+    return this.page.locator(`[data-testid="vaultRow-${id}-hideButton"]`);
   }
 
   async toggleFilter(filterName: VaultFilterName): Promise<void> {
