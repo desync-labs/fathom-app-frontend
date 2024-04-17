@@ -192,7 +192,10 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
         setTransactionLoading(true);
 
         return loadPositionTransactions({
-          variables: { account: account.toLowerCase() },
+          variables: {
+            account: account.toLowerCase(),
+            vault: vault.id,
+          },
         })
           .then((res) => {
             res.data?.deposits && setDepositsList(res.data.deposits);
