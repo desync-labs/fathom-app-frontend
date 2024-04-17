@@ -150,6 +150,7 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     await expect
       .soft(vaultPage.getConnectWalletButtonRowLocatorById(fxdVaultData.id))
       .toContainText("Connect Wallet");
+    await vaultPage.extendVaultDetails(fxdVaultData.id);
     await vaultPage.validateYourPositionTabNotVisible(fxdVaultData.id);
     await vaultPage.validateAboutTabIsVisible(fxdVaultData.id);
     await vaultPage.validateStrategiesTabIsVisible(fxdVaultData.id);
