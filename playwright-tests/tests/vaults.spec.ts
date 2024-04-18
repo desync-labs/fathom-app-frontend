@@ -144,11 +144,9 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     vaultPage,
   }) => {
     await vaultPage.navigate();
+    await expect.soft(vaultPage.btnConnectWallet).toBeVisible();
     await expect
-      .soft(vaultPage.getConnectWalletButtonRowLocatorById(fxdVaultData.id))
-      .toBeVisible();
-    await expect
-      .soft(vaultPage.getConnectWalletButtonRowLocatorById(fxdVaultData.id))
+      .soft(vaultPage.btnConnectWallet)
       .toContainText("Connect Wallet");
     await vaultPage.extendVaultDetails(fxdVaultData.id);
     await vaultPage.validateYourPositionTabNotVisible(fxdVaultData.id);
@@ -157,11 +155,9 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     expect
       .soft(await vaultPage.getStakedVaultRowValue(fxdVaultData.id))
       .toEqual(0);
-    await vaultPage.connectWalletVault(
-      fxdVaultData.id,
-      WalletConnectOptions.Metamask
-    );
+    await vaultPage.connectWalletVault(WalletConnectOptions.Metamask);
     await vaultPage.validateConnectedWalletAddress();
+    await vaultPage.extendVaultDetails(fxdVaultData.id);
     await vaultPage.validateYourPositionTabIsVisible(fxdVaultData.id);
     await vaultPage.validateAboutTabIsVisible(fxdVaultData.id);
     await vaultPage.validateStrategiesTabIsVisible(fxdVaultData.id);
