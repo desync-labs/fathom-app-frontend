@@ -5,6 +5,8 @@ import MethodListItem from "components/Vault/VaultListItem/AdditionalInfoTabs/Ma
 import { AppSelect } from "../../../../AppComponents/AppForm/AppForm";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { FilterLabel } from "../../../VaultFilters";
+import { strategyTitle } from "../../../../../utils/getStrategyTitleAndDescription";
+import { formatHashShorten } from "../../../../../utils/format";
 
 export const STATE_MUTABILITY_TRANSACTIONS = ["nonpayable", "payable"];
 
@@ -62,6 +64,7 @@ const ManagementContractMethodList: FC<VaultItemManagementProps> = ({
   }, [extractContractMethods]);
 
   useEffect(() => {
+    console.log({ strategiesIds });
     if (strategiesIds) {
       setCurrentStrategyId(strategiesIds[0]);
     }
@@ -69,7 +72,7 @@ const ManagementContractMethodList: FC<VaultItemManagementProps> = ({
 
   return (
     <>
-      {strategiesIds && (
+      {strategiesIds?.length && (
         <Box my={2}>
           <FilterLabel>Strategy</FilterLabel>
           <AppSelect
@@ -78,8 +81,15 @@ const ManagementContractMethodList: FC<VaultItemManagementProps> = ({
               setCurrentStrategyId(event.target.value as string);
             }}
           >
-            {strategiesIds.map((id) => (
-              <MenuItem value={id}>{id}</MenuItem>
+            {strategiesIds.map((id, index) => (
+              <MenuItem value={id}>
+                {strategyTitle[id.toLowerCase()] ? (
+                  strategyTitle[id.toLowerCase()]
+                ) : (
+                  <>FXD: Direct Incentive - Educational Strategy {index + 1}</>
+                )}{" "}
+                {`(${formatHashShorten(id)})`}
+              </MenuItem>
             ))}
           </AppSelect>
         </Box>
@@ -88,7 +98,11 @@ const ManagementContractMethodList: FC<VaultItemManagementProps> = ({
         <Typography>Has no contract methods yet</Typography>
       ) : (
         contractMethods.map((method: AbiItem, index: number) => (
-          <MethodListItem key={index} method={method} vaultId={vaultId} />
+          <MethodListItem
+            key={index}
+            method={method}
+            contractAddress={currentStrategyId ? currentStrategyId : vaultId}
+          />
         ))
       )}
     </>

@@ -62,9 +62,9 @@ const MethodResponseStyled = styled(Box)`
   word-wrap: break-word;
 `;
 
-const MethodListItem: FC<{ method: AbiItem; vaultId: string }> = ({
+const MethodListItem: FC<{ method: AbiItem; contractAddress: string }> = ({
   method,
-  vaultId,
+  contractAddress,
 }) => {
   const { formState, control, handleSubmit, getValues } = useForm({
     defaultValues: {},
@@ -91,13 +91,17 @@ const MethodListItem: FC<{ method: AbiItem; vaultId: string }> = ({
     let contract;
 
     if (methodType === MethodType.Mutate) {
-      contract = new Contract(vaultId, [method], library.getSigner(account));
+      contract = new Contract(
+        contractAddress,
+        [method],
+        library.getSigner(account)
+      );
     } else {
-      contract = new Contract(vaultId, [method], library);
+      contract = new Contract(contractAddress, [method], library);
     }
 
     setContract(contract);
-  }, [method, library, account, setMethodType, setContract]);
+  }, [contractAddress, method, library, account, setMethodType, setContract]);
 
   const handleSubmitForm = useCallback(async () => {
     const values = getValues();

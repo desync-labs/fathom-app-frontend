@@ -219,7 +219,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
     setActiveVaultInfoTab,
     setManageVault,
     setNewVaultDeposit,
-    getStrategiesIds,
+    managedStrategiesIds,
   } = useVaultListItem({ vaultPosition, vault: vaultItemData });
   const { account } = useConnector();
 
@@ -443,7 +443,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
               {activeVaultInfoTab === VaultInfoTabs.MANAGEMENT_STRATEGY && (
                 <ManagementContractMethodList
                   vaultId={vaultItemData.id}
-                  strategiesIds={getStrategiesIds}
+                  strategiesIds={managedStrategiesIds}
                 />
               )}
             </Box>

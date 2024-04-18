@@ -4,6 +4,7 @@ import {
   IVaultPosition,
   IVaultStrategy,
   IVaultStrategyReport,
+  SmartContractFactory,
 } from "fathom-sdk";
 import BigNumber from "bignumber.js";
 import { useServices } from "context/services";
@@ -14,6 +15,7 @@ import {
   VAULT_STRATEGY_REPORTS,
 } from "apollo/queries";
 import useSyncContext from "context/sync";
+import { Contract } from "fathom-ethers";
 
 interface UseVaultListItemProps {
   vaultPosition: IVaultPosition | null | undefined;
@@ -63,6 +65,10 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     Record<string, IVaultStrategyHistoricalApr[]>
   >({});
 
+  const [managedStrategiesIds, setManagedStrategiesIds] = useState<string[]>(
+    []
+  );
+
   const { syncVault, prevSyncVault } = useSyncContext();
 
   const [activeVaultInfoTab, setActiveVaultInfoTab] = useState<VaultInfoTabs>(
@@ -71,7 +77,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
       : VaultInfoTabs.ABOUT
   );
 
-  const { account } = useConnector();
+  const { account, library } = useConnector();
   const { vaultService } = useServices();
 
   const [loadReports, { fetchMore: fetchMoreReports }] = useLazyQuery(
@@ -282,9 +288,46 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     transactionsLoading,
   ]);
 
+  const executeManagementMethod = async (
+    strategyId: string
+  ): Promise<boolean> => {
+    const STRATEGY_ABI = SmartContractFactory.FathomVaultStrategy("").abi;
+    try {
+      const strategyContract = new Contract(strategyId, STRATEGY_ABI, library);
+
+      const result = await strategyContract.management();
+      return result.includes(account);
+    } catch (error) {
+      console.error(
+        `Failed to execute management method for strategy ${strategyId}:`,
+        error
+      );
+      return false;
+    }
+  };
+
   const getStrategiesIds = useMemo(() => {
-    return vault?.strategies?.map((strategy) => strategy.id);
+    const strategyIdsPromises = (vault.strategies || []).map(
+      async (strategy: IVaultStrategy) => {
+        const isUserAuthorized = await executeManagementMethod(strategy.id);
+        return isUserAuthorized ? strategy.id : null;
+      }
+    );
+
+    return Promise.all(strategyIdsPromises).then(
+      (authorizedIds) => authorizedIds.filter((id) => id !== null) as string[]
+    );
   }, [vault]);
+
+  useEffect(() => {
+    if (vault && account) {
+      getStrategiesIds.then((authorizedIds) =>
+        setManagedStrategiesIds(authorizedIds)
+      );
+    } else {
+      setManagedStrategiesIds([]);
+    }
+  }, [vault, account, getStrategiesIds]);
 
   return {
     reports,
@@ -297,7 +340,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     setActiveVaultInfoTab,
     setManageVault,
     setNewVaultDeposit,
-    getStrategiesIds,
+    managedStrategiesIds,
   };
 };
 
