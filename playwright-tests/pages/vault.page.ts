@@ -45,6 +45,7 @@ export default class VaultPage extends BasePage {
   readonly diaologDepositToVaultModal: Locator;
   readonly btnConfirmDepositDepositToVaultModal: Locator;
   readonly btnApproveTokens: Locator;
+  readonly btnConnectWallet: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -128,6 +129,9 @@ export default class VaultPage extends BasePage {
       );
     this.btnApproveTokens = this.page.locator(
       '//button[text()="Approve token"]'
+    );
+    this.btnConnectWallet = this.page.locator(
+      "[data-testid*='connectWalletButton']"
     );
   }
 
@@ -820,11 +824,10 @@ export default class VaultPage extends BasePage {
   }
 
   async connectWalletVault(
-    id: string,
     wallet: WalletConnectOptions,
     options?: { allAccounts: boolean }
   ): Promise<void> {
-    await this.getConnectWalletButtonRowLocatorById(id).click();
+    await this.btnConnectWallet.click();
     await this.page.getByText(wallet).click();
     if (options) {
       await metamask.acceptAccess(options);
