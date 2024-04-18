@@ -212,6 +212,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
     setExtended,
     setManageVault,
     setNewVaultDeposit,
+    getStrategiesIds,
   } = useVaultListItem({ vaultPosition, vault: vaultItemData });
   const { account } = useConnector();
 
@@ -418,8 +419,14 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
                   performanceFee={performanceFee}
                 />
               )}
-              {activeVaultInfoTab === VaultInfoTabs.MANAGEMENT && (
+              {activeVaultInfoTab === VaultInfoTabs.MANAGEMENT_VAULT && (
                 <ManagementContractMethodList vaultId={vaultItemData.id} />
+              )}
+              {activeVaultInfoTab === VaultInfoTabs.MANAGEMENT_STRATEGY && (
+                <ManagementContractMethodList
+                  vaultId={vaultItemData.id}
+                  strategiesIds={getStrategiesIds}
+                />
               )}
             </Box>
           </TableCell>

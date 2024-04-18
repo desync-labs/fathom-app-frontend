@@ -24,7 +24,8 @@ export enum VaultInfoTabs {
   POSITION,
   ABOUT,
   STRATEGIES,
-  MANAGEMENT,
+  MANAGEMENT_VAULT,
+  MANAGEMENT_STRATEGY,
 }
 
 const VAULT_REPORTS_PER_PAGE = 1000;
@@ -279,6 +280,10 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     transactionsLoading,
   ]);
 
+  const getStrategiesIds = useMemo(() => {
+    return vault?.strategies?.map((strategy) => strategy.id);
+  }, [vault]);
+
   return {
     reports,
     historicalApr,
@@ -292,6 +297,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     setExtended,
     setManageVault,
     setNewVaultDeposit,
+    getStrategiesIds,
   };
 };
 

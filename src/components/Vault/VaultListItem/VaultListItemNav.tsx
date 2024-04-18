@@ -80,12 +80,22 @@ const VaultListItemNav: FC<VaultListItemNavPropsType> = ({
         Strategies
       </VaultNavItem>
       <VaultNavItem
-        onClick={() => setActiveVaultInfoTab(VaultInfoTabs.MANAGEMENT)}
+        onClick={() => setActiveVaultInfoTab(VaultInfoTabs.MANAGEMENT_VAULT)}
         className={
-          activeVaultInfoTab === VaultInfoTabs.MANAGEMENT ? "active" : ""
+          activeVaultInfoTab === VaultInfoTabs.MANAGEMENT_VAULT ? "active" : ""
         }
       >
         Vault Manager
+      </VaultNavItem>
+      <VaultNavItem
+        onClick={() => setActiveVaultInfoTab(VaultInfoTabs.MANAGEMENT_STRATEGY)}
+        className={
+          activeVaultInfoTab === VaultInfoTabs.MANAGEMENT_STRATEGY
+            ? "active"
+            : ""
+        }
+      >
+        Strategies Manager
       </VaultNavItem>
     </VaultNavWrapper>
   );
