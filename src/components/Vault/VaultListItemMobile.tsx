@@ -40,6 +40,7 @@ import DirectionDown from "assets/svg/direction-down.svg";
 import LockSrc from "assets/svg/lock.svg";
 import LockAquaSrc from "assets/svg/lock-aqua.svg";
 import { useApr } from "hooks/useApr";
+import { vaultTitle } from "../../utils/getVaultTitleAndDescription";
 
 export const VaultPoolName = styled("div")`
   display: flex;
@@ -172,6 +173,10 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
   vaultPosition,
   performanceFee,
   protocolFee,
+  isExtended,
+  handleExpandVault,
+  handleCollapseVault,
+  index,
 }) => {
   const { token } = vaultItemData;
   const formattedApr = useApr(vaultItemData);
@@ -182,16 +187,15 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
     balanceEarned,
     manageVault,
     newVaultDeposit,
-    extended,
     activeVaultInfoTab,
     setActiveVaultInfoTab,
     setNewVaultDeposit,
-    setExtended,
     setManageVault,
   } = useVaultListItem({ vaultPosition, vault: vaultItemData });
 
   const { fxdPrice } = usePricesContext();
   const { account } = useConnector();
+  const vaultTestId = vaultItemData.id;
 
   return (
     <VaultListItemMobileContainer>
@@ -204,7 +208,11 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
           <img src={getTokenLogoURL(token.symbol)} alt={token.name} />
         </VaultListItemImageWrapper>
         <VaultInfo>
-          <VaultTitle>{token.name}</VaultTitle>
+          <VaultTitle>
+            {vaultTitle[vaultItemData.id.toLowerCase()]
+              ? vaultTitle[vaultItemData.id.toLowerCase()]
+              : token.name}
+          </VaultTitle>
         </VaultInfo>
       </VaultPoolName>
       <ListItemWrapper>
@@ -260,7 +268,7 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
         </VaultListLabel>
         <VaultListValue>{formattedApr}%</VaultListValue>
       </ListItemWrapper>
-      {extended && (
+      {isExtended && (
         <>
           <VaultListItemNav
             vaultPosition={vaultPosition}
@@ -274,7 +282,6 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
                 balanceEarned={balanceEarned}
                 vaultItemData={vaultItemData}
                 vaultPosition={vaultPosition}
-                setManageVault={setManageVault}
               />
             )}
           {activeVaultInfoTab === VaultInfoTabs.ABOUT && (
@@ -310,17 +317,28 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
             Deposit
           </ButtonPrimary>
         )}
+      {vaultPosition &&
+        BigNumber(vaultPosition.balanceShares).isGreaterThan(0) &&
+        account && (
+          <ButtonPrimary
+            onClick={() => setManageVault(true)}
+            data-testid={`vaultRowDetails-${vaultTestId}-managePositionButton`}
+            sx={{ width: "100%", marginTop: "16px" }}
+          >
+            Manage
+          </ButtonPrimary>
+        )}
       {!account && <WalletConnectBtn fullwidth sx={{ marginTop: "16px" }} />}
       <ExtendedBtnWrapper>
         <ExtendedBtn
-          className={extended ? "visible" : "hidden"}
-          onClick={() => setExtended(!extended)}
+          className={isExtended ? "visible" : "hidden"}
+          onClick={() => handleCollapseVault()}
         >
           <img src={DirectionUp} alt={"direction-up"} />
         </ExtendedBtn>
         <ExtendedBtn
-          className={!extended ? "visible" : "hidden"}
-          onClick={() => setExtended(!extended)}
+          className={!isExtended ? "visible" : "hidden"}
+          onClick={() => handleExpandVault(index)}
         >
           <img src={DirectionDown} alt={"direction-down"} />
         </ExtendedBtn>

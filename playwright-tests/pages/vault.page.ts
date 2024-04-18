@@ -245,11 +245,11 @@ export default class VaultPage extends BasePage {
   }
 
   getExtendDetailsButtonVaultRow(id: string): Locator {
-    return this.page.locator(`vaultRow-${id}-extendButton`);
+    return this.page.locator(`[data-testid="vaultRow-${id}-extendButton"]`);
   }
 
   getHideDetailsButtonVaultRow(id: string): Locator {
-    return this.page.locator(`vaultRow-${id}-hideButton`);
+    return this.page.locator(`[data-testid="vaultRow-${id}-hideButton"]`);
   }
 
   async toggleFilter(filterName: VaultFilterName): Promise<void> {
@@ -285,8 +285,8 @@ export default class VaultPage extends BasePage {
   }
 
   async hideVaultDetails(id: string): Promise<void> {
-    await this.page.waitForSelector(`vaultRow-${id}-extendButton`);
-    await this.page.waitForSelector(`vaultRow-${id}-hideButton`);
+    await this.page.waitForLoadState("load");
+    await expect(this.getVaultRowLocatorById(id)).toBeVisible();
     if (await this.getHideDetailsButtonVaultRow(id).isVisible()) {
       await this.getHideDetailsButtonVaultRow(id).click();
       expect(this.getVaultRowDetailsLocatorById(id)).not.toBeVisible();
@@ -469,6 +469,7 @@ export default class VaultPage extends BasePage {
     poolShareDialogAfter,
     shareTokensDialogAfter,
   }: ValidateVaultDataParams): Promise<void> {
+    await this.extendVaultDetails(id);
     const stakedAmountRowActual = await this.getStakedVaultRowValue(id);
     const pooledValueRowDetailsActual =
       await this.getPooledVaultRowDetailsValue(id);
@@ -787,6 +788,7 @@ export default class VaultPage extends BasePage {
     await this.closeDepositSuccessfuldModal();
     await this.page.waitForLoadState("load");
     await this.page.waitForTimeout(2000);
+    await this.extendVaultDetails(id);
     await expect
       .soft(this.getVaultDetailsTabLocator(id, VaultDetailsTabs.YourPosition))
       .toBeVisible();

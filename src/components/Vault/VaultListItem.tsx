@@ -9,6 +9,8 @@ import useConnector from "context/connector";
 import useVaultListItem, { VaultInfoTabs } from "hooks/useVaultListItem";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatCurrency, formatNumber, formatPercentage } from "utils/format";
+import { useApr } from "hooks/useApr";
+import { vaultTitle } from "utils/getVaultTitleAndDescription";
 
 import { AppTableRow } from "components/AppComponents/AppTable/AppTable";
 import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
@@ -24,7 +26,6 @@ import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownR
 import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
 import LockSrc from "assets/svg/lock.svg";
 import LockAquaSrc from "assets/svg/lock-aqua.svg";
-import { useApr } from "hooks/useApr";
 import ManagementContractMethodList from "components/Vault/VaultListItem/AdditionalInfoTabs/Managment/ManagementContractMethodList";
 
 export const FlexBox = styled(Box)`
@@ -187,6 +188,10 @@ export type VaultListItemPropsType = {
   vaultPosition: IVaultPosition | null | undefined;
   protocolFee: number;
   performanceFee: number;
+  index: number;
+  isExtended: boolean;
+  handleExpandVault: (index: number) => void;
+  handleCollapseVault: () => void;
 };
 
 const VaultListItem: FC<VaultListItemPropsType> = ({
@@ -194,6 +199,10 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
   vaultPosition,
   protocolFee,
   performanceFee,
+  index,
+  isExtended,
+  handleExpandVault,
+  handleCollapseVault,
 }) => {
   const { token, balanceTokens, depositLimit } = vaultItemData;
   const formattedApr = useApr(vaultItemData);
@@ -204,12 +213,10 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
     reports,
     historicalApr,
     balanceEarned,
-    extended,
     manageVault,
     newVaultDeposit,
     activeVaultInfoTab,
     setActiveVaultInfoTab,
-    setExtended,
     setManageVault,
     setNewVaultDeposit,
     getStrategiesIds,
@@ -219,7 +226,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
   return (
     <>
       <AppTableRow
-        className={!extended || !vaultPosition ? "border single" : undefined}
+        className={!isExtended || !vaultPosition ? "border single" : undefined}
         data-testid={`vaultRow-${vaultTestId}`}
       >
         <TableCell colSpan={2} sx={{ width: "20%" }}>
@@ -237,7 +244,9 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
                   <EarningLabel>Earning</EarningLabel>
                 )}
               <VaultTitle data-testid={`vaultRow-${vaultTestId}-tokenTitle`}>
-                {token.name}
+                {vaultTitle[vaultItemData.id.toLowerCase()]
+                  ? vaultTitle[vaultItemData.id.toLowerCase()]
+                  : token.name}
               </VaultTitle>
             </VaultInfo>
           </FlexBox>
@@ -350,15 +359,25 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
                 >
                   Deposit
                 </ButtonPrimary>
-              )}{" "}
-            {!account && (
+              )}
+            {vaultPosition &&
+              BigNumber(vaultPosition.balanceShares).isGreaterThan(0) &&
+              account && (
+                <ButtonPrimary
+                  onClick={() => setManageVault(true)}
+                  data-testid={`vaultRowDetails-${vaultTestId}-managePositionButton`}
+                >
+                  Manage
+                </ButtonPrimary>
+              )}
+            {!account && !index && (
               <WalletConnectBtn
                 testId={`vaultRow-${vaultTestId}-connectWalletButton`}
               />
             )}
             <ExtendedBtn
-              className={extended ? "visible" : "hidden"}
-              onClick={() => setExtended(!extended)}
+              className={isExtended ? "visible" : "hidden"}
+              onClick={() => handleCollapseVault()}
               data-testid={`vaultRow-${vaultTestId}-hideButton`}
             >
               <KeyboardArrowUpRoundedIcon
@@ -366,8 +385,8 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
               />
             </ExtendedBtn>
             <ExtendedBtn
-              className={!extended ? "visible" : "hidden"}
-              onClick={() => setExtended(!extended)}
+              className={!isExtended ? "visible" : "hidden"}
+              onClick={() => handleExpandVault(index)}
               data-testid={`vaultRow-${vaultTestId}-extendButton`}
             >
               <KeyboardArrowDownRoundedIcon
@@ -377,7 +396,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
           </FlexBox>
         </TableCell>
       </AppTableRow>
-      {extended && (
+      {isExtended && (
         <AppTableRow
           className={"border"}
           data-testid={`vaultRowDetails-${vaultTestId}`}
@@ -398,7 +417,6 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
                   <VaultItemPositionInfo
                     vaultItemData={vaultItemData}
                     vaultPosition={vaultPosition}
-                    setManageVault={setManageVault}
                     balanceEarned={balanceEarned}
                   />
                 )}

@@ -7,8 +7,8 @@ import {
   extractTransactionHash,
   formatNumberToFixedLength,
 } from "../utils/helpers";
-import { DexTabs, SwapData } from "../types";
-import { tokenIds } from "../fixtures/dex.data";
+import { DexTabs, DexTokenData, SwapData } from "../types";
+import { wxdcData, xdcData } from "../fixtures/dex.data";
 
 export default class DexPage extends BasePage {
   readonly path: string;
@@ -44,6 +44,7 @@ export default class DexPage extends BasePage {
   readonly fromBalanceDiv: Locator;
   readonly toBalanceDiv: Locator;
   readonly swapConnectWalletButton: Locator;
+  readonly inputTokenSearch: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -136,6 +137,7 @@ export default class DexPage extends BasePage {
     this.swapConnectWalletButton = this.page.getByTestId(
       "dex-swap-connectWalletButton"
     );
+    this.inputTokenSearch = this.page.getByPlaceholder("Search Token");
   }
 
   async navigate(): Promise<void> {
@@ -169,9 +171,15 @@ export default class DexPage extends BasePage {
     return locator;
   }
 
-  async selectFromToken({ tokenId }: { tokenId: string }): Promise<void> {
+  async selectFromToken({
+    tokenData,
+  }: {
+    tokenData: DexTokenData;
+  }): Promise<void> {
     await this.fromCurrencySelectButton.click();
-    const tokenItem = this.getTokenItemLocator({ tokenId });
+    await this.inputTokenSearch.clear();
+    await this.inputTokenSearch.fill(tokenData.name);
+    const tokenItem = this.getTokenItemLocator({ tokenId: tokenData.tokenId });
     await expect(tokenItem.locator("svg")).not.toBeVisible({ timeout: 25000 });
     const isDisabled = (await tokenItem.getAttribute("disabled")) !== null;
     if (!isDisabled) {
@@ -181,9 +189,15 @@ export default class DexPage extends BasePage {
     }
   }
 
-  async selectToToken({ tokenId }: { tokenId: string }): Promise<void> {
+  async selectToToken({
+    tokenData,
+  }: {
+    tokenData: DexTokenData;
+  }): Promise<void> {
     await this.toCurrencySelectButton.click();
-    const tokenItem = this.getTokenItemLocator({ tokenId });
+    await this.inputTokenSearch.clear();
+    await this.inputTokenSearch.fill(tokenData.name);
+    const tokenItem = this.getTokenItemLocator({ tokenId: tokenData.tokenId });
     await expect(tokenItem.locator("svg")).not.toBeVisible({ timeout: 25000 });
     const isDisabled = (await tokenItem.getAttribute("disabled")) !== null;
     if (!isDisabled) {
@@ -220,16 +234,16 @@ export default class DexPage extends BasePage {
   }
 
   async swap({
-    fromToken,
-    toToken,
+    fromTokenData,
+    toTokenData,
     fromAmount,
   }: {
-    fromToken: string;
-    toToken: string;
+    fromTokenData: DexTokenData;
+    toTokenData: DexTokenData;
     fromAmount: number;
   }): Promise<SwapData> {
-    await this.selectFromToken({ tokenId: fromToken });
-    await this.selectToToken({ tokenId: toToken });
+    await this.selectFromToken({ tokenData: fromTokenData });
+    await this.selectToToken({ tokenData: toTokenData });
     await this.fillFromValue({ inputValue: fromAmount });
     const fromAmountString = await this.fromTokenAmountInput.getAttribute(
       "value"
@@ -256,23 +270,23 @@ export default class DexPage extends BasePage {
   }
 
   async wrap({
-    fromToken,
-    toToken,
+    fromTokenData,
+    toTokenData,
     fromAmount,
   }: {
-    fromToken: string;
-    toToken: string;
+    fromTokenData: DexTokenData;
+    toTokenData: DexTokenData;
     fromAmount: number;
   }): Promise<SwapData> {
-    await this.selectFromToken({ tokenId: fromToken });
-    await this.selectToToken({ tokenId: toToken });
+    await this.selectFromToken({ tokenData: fromTokenData });
+    await this.selectToToken({ tokenData: toTokenData });
     await this.fillFromValue({ inputValue: fromAmount });
     const fromAmountString = await this.fromTokenAmountInput.getAttribute(
       "value"
     );
-    if (fromToken === tokenIds.XDC) {
+    if (fromTokenData.tokenId === xdcData.tokenId) {
       await expect(this.wrapButton).toHaveText("Wrap", { timeout: 20000 });
-    } else if (fromToken === tokenIds.WXDC) {
+    } else if (fromTokenData.tokenId === wxdcData.tokenId) {
       await expect(this.wrapButton).toHaveText("Unwrap", { timeout: 20000 });
     }
     const toAmountString = await this.toTokenAmountInput.getAttribute("value");

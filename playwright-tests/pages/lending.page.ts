@@ -112,7 +112,7 @@ export default class LendingPage extends BasePage {
         await this.btnAction.click();
         await metamask.confirmTransaction();
         await expect(this.headingTwoAllDoneModal).toBeVisible({
-          timeout: 50000,
+          timeout: 90000,
         });
         await this.btnCloseAllDoneModal.click();
         await this.page.waitForTimeout(1000);

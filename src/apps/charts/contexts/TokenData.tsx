@@ -325,9 +325,15 @@ const getTopTokens = async (ethPrice, ethPriceOld, fxdPrice, listedTokens) => {
 
           // calculate percentage changes and daily changes
           const [oneDayVolumeUSD, volumeChangeUSD] = get2DayPercentChange(
-            data.tradeVolumeUSD,
-            oneDayHistory?.tradeVolumeUSD ?? 0,
-            twoDayHistory?.tradeVolumeUSD ?? 0
+            Math.max(data.tradeVolumeUSD, data.untrackedVolumeUSD).toString(),
+            Math.max(
+              oneDayHistory?.tradeVolumeUSD,
+              oneDayHistory?.untrackedVolumeUSD
+            ) ?? 0,
+            Math.max(
+              twoDayHistory?.tradeVolumeUSD,
+              twoDayHistory?.untrackedVolumeUSD
+            ) ?? 0
           );
           const [oneDayTxns, txnChange] = get2DayPercentChange(
             data.txCount,
