@@ -191,17 +191,8 @@ export const STAKING_STAKER = gql`
 `;
 
 export const VAULTS = gql`
-  query Vaults(
-    $first: Int!
-    $skip: Int!
-    $search: String!
-    $shutdown: Boolean
-  ) {
-    vaults(
-      first: $first
-      skip: $skip
-      where: { token_: { name_contains_nocase: $search }, shutdown: $shutdown }
-    ) {
+  query Vaults($first: Int!, $skip: Int!, $shutdown: Boolean) {
+    vaults(first: $first, skip: $skip, where: { shutdown: $shutdown }) {
       id
       token {
         id

@@ -10,7 +10,6 @@ import useVaultListItem, { VaultInfoTabs } from "hooks/useVaultListItem";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatCurrency, formatNumber, formatPercentage } from "utils/format";
 import { useApr } from "hooks/useApr";
-import { vaultTitle } from "utils/getVaultTitleAndDescription";
 
 import { AppTableRow } from "components/AppComponents/AppTable/AppTable";
 import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
@@ -242,9 +241,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
                   <EarningLabel>Earning</EarningLabel>
                 )}
               <VaultTitle data-testid={`vaultRow-${vaultTestId}-tokenTitle`}>
-                {vaultTitle[vaultItemData.id.toLowerCase()]
-                  ? vaultTitle[vaultItemData.id.toLowerCase()]
-                  : token.name}
+                {vaultItemData.name}
               </VaultTitle>
             </VaultInfo>
           </FlexBox>
