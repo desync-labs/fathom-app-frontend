@@ -1,5 +1,4 @@
-import { SmartContractFactory } from "fathom-sdk";
-import { FC, memo, useCallback, useEffect, useState } from "react";
+import { FC } from "react";
 import { Typography } from "@mui/material";
 import MethodListItem from "components/Vault/VaultListItem/AdditionalInfoTabs/Managment/MethodListItem";
 
@@ -19,41 +18,19 @@ export interface AbiItem {
 
 type VaultItemManagementProps = {
   vaultId: string;
+  vaultMethods: AbiItem[];
 };
-
-const VAULT_ABI = SmartContractFactory.FathomVault("").abi;
 
 const ManagementContractMethodList: FC<VaultItemManagementProps> = ({
   vaultId,
+  vaultMethods,
 }) => {
-  const [contractMethods, setContractMethods] = useState<AbiItem[]>([]);
-
-  const extractContractMethods = useCallback(
-    (abiJson: AbiItem[]) => {
-      try {
-        const methods = abiJson.filter(
-          (item: AbiItem) =>
-            item.type === "function" && item.name.toUpperCase() !== item.name
-        );
-
-        setContractMethods(methods);
-      } catch (e: any) {
-        console.error(e);
-      }
-    },
-    [setContractMethods]
-  );
-
-  useEffect(() => {
-    extractContractMethods(VAULT_ABI as AbiItem[]);
-  }, [extractContractMethods]);
-
   return (
     <>
-      {!contractMethods.length ? (
+      {!vaultMethods.length ? (
         <Typography>Has no contract methods yet</Typography>
       ) : (
-        contractMethods.map((method: AbiItem, index: number) => (
+        vaultMethods.map((method: AbiItem, index: number) => (
           <MethodListItem
             key={index}
             method={method}
@@ -65,4 +42,4 @@ const ManagementContractMethodList: FC<VaultItemManagementProps> = ({
   );
 };
 
-export default memo(ManagementContractMethodList);
+export default ManagementContractMethodList;

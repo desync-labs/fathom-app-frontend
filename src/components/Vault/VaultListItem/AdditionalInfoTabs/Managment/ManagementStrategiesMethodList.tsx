@@ -1,5 +1,4 @@
-import { SmartContractFactory } from "fathom-sdk";
-import { FC, memo, useCallback, useEffect, useState } from "react";
+import { FC, memo, useState } from "react";
 import { Box, MenuItem, Typography } from "@mui/material";
 import MethodListItem from "components/Vault/VaultListItem/AdditionalInfoTabs/Managment/MethodListItem";
 import { AppSelect } from "components/AppComponents/AppForm/AppForm";
@@ -11,36 +10,13 @@ import { AbiItem } from "./ManagementContractMethodList";
 
 type ManagementStrategiesMethodListProps = {
   strategiesIds: string[];
+  strategyMethods: AbiItem[];
 };
-
-const STRATEGY_ABI = SmartContractFactory.FathomVaultStrategy("").abi;
 
 const ManagementStrategiesMethodList: FC<
   ManagementStrategiesMethodListProps
-> = ({ strategiesIds }) => {
-  const [contractMethods, setContractMethods] = useState<AbiItem[]>([]);
+> = ({ strategiesIds, strategyMethods }) => {
   const [currentStrategyId, setCurrentStrategyId] = useState<string>("");
-
-  const extractContractMethods = useCallback(
-    (abiJson: AbiItem[]) => {
-      try {
-        const methods = abiJson.filter(
-          (item: AbiItem) =>
-            item.type === "function" && item.name.toUpperCase() !== item.name
-        );
-
-        setContractMethods(methods);
-      } catch (e: any) {
-        console.error(e);
-      }
-    },
-    [setContractMethods]
-  );
-
-  useEffect(() => {
-    extractContractMethods(STRATEGY_ABI as AbiItem[]);
-    setCurrentStrategyId(strategiesIds[0]);
-  }, [strategiesIds]);
 
   return (
     <>
@@ -66,10 +42,10 @@ const ManagementStrategiesMethodList: FC<
           </AppSelect>
         </Box>
       )}
-      {!contractMethods.length ? (
+      {!strategyMethods.length ? (
         <Typography>Has no contract methods yet</Typography>
       ) : (
-        contractMethods.map((method: AbiItem, index: number) => (
+        strategyMethods.map((method: AbiItem, index: number) => (
           <MethodListItem
             key={index}
             method={method}

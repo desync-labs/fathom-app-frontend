@@ -16,6 +16,7 @@ import {
 } from "apollo/queries";
 import useSyncContext from "context/sync";
 import { Contract } from "fathom-ethers";
+import { AbiItem } from "components/Vault/VaultListItem/AdditionalInfoTabs/Managment/ManagementContractMethodList";
 
 interface UseVaultListItemProps {
   vaultPosition: IVaultPosition | null | undefined;
@@ -50,6 +51,9 @@ enum FetchBalanceTokenType {
   FETCH = "fetch",
 }
 
+const VAULT_ABI = SmartContractFactory.FathomVault("").abi;
+const STRATEGY_ABI = SmartContractFactory.FathomVaultStrategy("").abi;
+
 const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
   const [manageVault, setManageVault] = useState<boolean>(false);
   const [newVaultDeposit, setNewVaultDeposit] = useState<boolean>(false);
@@ -58,6 +62,9 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
   const [depositsList, setDepositsList] = useState([]);
   const [withdrawalsList, setWithdrawalsList] = useState([]);
   const [transactionsLoading, setTransactionLoading] = useState<boolean>(false);
+
+  const [vaultMethods, setVaultMethods] = useState<AbiItem[]>([]);
+  const [strategyMethods, setStrategyMethods] = useState<AbiItem[]>([]);
 
   const [reports, setReports] = useState<
     Record<string, IVaultStrategyReport[]>
@@ -89,6 +96,32 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
       context: { clientName: "vaults" },
     }
   );
+
+  useEffect(() => {
+    try {
+      const methods = (VAULT_ABI as AbiItem[]).filter(
+        (item: AbiItem) =>
+          item.type === "function" && item.name.toUpperCase() !== item.name
+      );
+
+      setVaultMethods(methods);
+    } catch (e: any) {
+      console.error(e);
+    }
+  }, [setVaultMethods]);
+
+  useEffect(() => {
+    try {
+      const methods = (STRATEGY_ABI as AbiItem[]).filter(
+        (item: AbiItem) =>
+          item.type === "function" && item.name.toUpperCase() !== item.name
+      );
+
+      setStrategyMethods(methods);
+    } catch (e: any) {
+      console.error(e);
+    }
+  }, [setStrategyMethods]);
 
   const [loadPositionTransactions, { refetch: refetchTransactions }] =
     useLazyQuery(VAULT_POSITION_TRANSACTIONS, {
@@ -356,6 +389,8 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
   }, [vault, account]);
 
   return {
+    vaultMethods,
+    strategyMethods,
     reports,
     historicalApr,
     balanceEarned,

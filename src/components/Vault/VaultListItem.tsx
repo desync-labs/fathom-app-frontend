@@ -211,6 +211,8 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
   const vaultTestId = vaultItemData.id;
 
   const {
+    vaultMethods,
+    strategyMethods,
     reports,
     historicalApr,
     balanceEarned,
@@ -443,11 +445,15 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
               )}
               {activeVaultInfoTab === VaultInfoTabs.MANAGEMENT_VAULT &&
                 isUserManager && (
-                  <ManagementContractMethodList vaultId={vaultItemData.id} />
+                  <ManagementContractMethodList
+                    vaultId={vaultItemData.id}
+                    vaultMethods={vaultMethods}
+                  />
                 )}
               {activeVaultInfoTab === VaultInfoTabs.MANAGEMENT_STRATEGY &&
                 managedStrategiesIds.length > 0 && (
                   <ManagementStrategiesMethodList
+                    strategyMethods={strategyMethods}
                     strategiesIds={managedStrategiesIds}
                   />
                 )}
