@@ -30,6 +30,8 @@ export enum VaultInfoTabs {
   MANAGEMENT_STRATEGY,
 }
 
+const DEFAULT_ADMIN_ROLE =
+  "0x0000000000000000000000000000000000000000000000000000000000000000";
 const VAULT_REPORTS_PER_PAGE = 1000;
 
 export type IVaultStrategyHistoricalApr = {
@@ -68,6 +70,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
   const [managedStrategiesIds, setManagedStrategiesIds] = useState<string[]>(
     []
   );
+  const [isUserManager, setIsUserManager] = useState<boolean>(false);
 
   const { syncVault, prevSyncVault } = useSyncContext();
 
@@ -288,6 +291,21 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     transactionsLoading,
   ]);
 
+  const executeHasRoleMethod = async (): Promise<boolean> => {
+    try {
+      const VAULT_ABI = SmartContractFactory.FathomVault("").abi;
+      const vaultContract = new Contract(vault.id, VAULT_ABI, library);
+
+      return await vaultContract.hasRole(DEFAULT_ADMIN_ROLE, account);
+    } catch (error) {
+      console.error(
+        `Failed to execute hasRole method for vault ${vault.id}:`,
+        error
+      );
+      return false;
+    }
+  };
+
   const executeManagementMethod = async (
     strategyId: string
   ): Promise<boolean> => {
@@ -329,6 +347,14 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     }
   }, [vault, account, getStrategiesIds]);
 
+  useEffect(() => {
+    if (vault && account) {
+      executeHasRoleMethod().then((isManager) => setIsUserManager(isManager));
+    } else {
+      setIsUserManager(false);
+    }
+  }, [vault, account]);
+
   return {
     reports,
     historicalApr,
@@ -341,6 +367,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     setManageVault,
     setNewVaultDeposit,
     managedStrategiesIds,
+    isUserManager,
   };
 };
 
