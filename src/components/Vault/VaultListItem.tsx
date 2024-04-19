@@ -20,6 +20,8 @@ import VaultItemPositionInfo from "components/Vault/VaultListItem/AdditionalInfo
 import VaultItemAbout from "components/Vault/VaultListItem/AdditionalInfoTabs/VaultItemAbout";
 import VaultItemStrategies from "components/Vault/VaultListItem/AdditionalInfoTabs/VaultItemStrategies";
 import WalletConnectBtn from "components/Common/WalletConnectBtn";
+import ManagementContractMethodList from "components/Vault/VaultListItem/AdditionalInfoTabs/Managment/ManagementContractMethodList";
+import ManagementStrategiesMethodList from "components/Vault/VaultListItem/AdditionalInfoTabs/Managment/ManagementStrategiesMethodList";
 
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
@@ -208,6 +210,8 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
   const vaultTestId = vaultItemData.id;
 
   const {
+    vaultMethods,
+    strategyMethods,
     reports,
     historicalApr,
     balanceEarned,
@@ -217,6 +221,8 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
     setActiveVaultInfoTab,
     setManageVault,
     setNewVaultDeposit,
+    managedStrategiesIds,
+    isUserManager,
   } = useVaultListItem({ vaultPosition, vault: vaultItemData });
   const { account } = useConnector();
 
@@ -404,6 +410,8 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
               vaultPosition={vaultPosition}
               activeVaultInfoTab={activeVaultInfoTab}
               setActiveVaultInfoTab={setActiveVaultInfoTab}
+              managedStrategiesIds={managedStrategiesIds}
+              isUserManager={isUserManager}
             />
             <Box sx={{ padding: "20px" }}>
               {vaultPosition &&
@@ -432,6 +440,20 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
                   performanceFee={performanceFee}
                 />
               )}
+              {activeVaultInfoTab === VaultInfoTabs.MANAGEMENT_VAULT &&
+                isUserManager && (
+                  <ManagementContractMethodList
+                    vaultId={vaultItemData.id}
+                    vaultMethods={vaultMethods}
+                  />
+                )}
+              {activeVaultInfoTab === VaultInfoTabs.MANAGEMENT_STRATEGY &&
+                managedStrategiesIds.length > 0 && (
+                  <ManagementStrategiesMethodList
+                    strategyMethods={strategyMethods}
+                    strategiesIds={managedStrategiesIds}
+                  />
+                )}
             </Box>
           </TableCell>
         </AppTableRow>
