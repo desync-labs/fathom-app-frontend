@@ -440,20 +440,22 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
                   performanceFee={performanceFee}
                 />
               )}
-              {activeVaultInfoTab === VaultInfoTabs.MANAGEMENT_VAULT &&
-                isUserManager && (
-                  <ManagementContractMethodList
-                    vaultId={vaultItemData.id}
-                    vaultMethods={vaultMethods}
-                  />
-                )}
-              {activeVaultInfoTab === VaultInfoTabs.MANAGEMENT_STRATEGY &&
-                managedStrategiesIds.length > 0 && (
-                  <ManagementStrategiesMethodList
-                    strategyMethods={strategyMethods}
-                    strategiesIds={managedStrategiesIds}
-                  />
-                )}
+              {isUserManager && (
+                <ManagementContractMethodList
+                  isShow={activeVaultInfoTab === VaultInfoTabs.MANAGEMENT_VAULT}
+                  vaultId={vaultItemData.id}
+                  vaultMethods={vaultMethods}
+                />
+              )}
+              {managedStrategiesIds.length > 0 && (
+                <ManagementStrategiesMethodList
+                  isShow={
+                    activeVaultInfoTab === VaultInfoTabs.MANAGEMENT_STRATEGY
+                  }
+                  strategyMethods={strategyMethods}
+                  strategiesIds={managedStrategiesIds}
+                />
+              )}
             </Box>
           </TableCell>
         </AppTableRow>

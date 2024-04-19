@@ -6,20 +6,26 @@ import { SelectChangeEvent } from "@mui/material/Select";
 import { FilterLabel } from "components/Vault/VaultFilters";
 import { strategyTitle } from "utils/getStrategyTitleAndDescription";
 import { formatHashShorten } from "utils/format";
-import { AbiItem } from "./ManagementContractMethodList";
+import {
+  AbiItem,
+  ContractMethodListWrapper,
+} from "./ManagementContractMethodList";
 
 type ManagementStrategiesMethodListProps = {
+  isShow: boolean;
   strategiesIds: string[];
   strategyMethods: AbiItem[];
 };
 
 const ManagementStrategiesMethodList: FC<
   ManagementStrategiesMethodListProps
-> = ({ strategiesIds, strategyMethods }) => {
-  const [currentStrategyId, setCurrentStrategyId] = useState<string>("");
+> = ({ isShow, strategiesIds, strategyMethods }) => {
+  const [currentStrategyId, setCurrentStrategyId] = useState<string>(
+    strategiesIds[0]
+  );
 
   return (
-    <>
+    <ContractMethodListWrapper className={isShow ? "showing" : "hide"}>
       {strategiesIds?.length && (
         <Box my={2}>
           <FilterLabel>Strategy</FilterLabel>
@@ -53,7 +59,7 @@ const ManagementStrategiesMethodList: FC<
           />
         ))
       )}
-    </>
+    </ContractMethodListWrapper>
   );
 };
 

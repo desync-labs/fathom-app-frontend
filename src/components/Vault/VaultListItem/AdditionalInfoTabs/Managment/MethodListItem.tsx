@@ -108,8 +108,6 @@ const MethodListItem: FC<{ method: AbiItem; contractAddress: string }> = ({
     const options = { gasLimit: 0 };
     setIsLoading(true);
 
-    console.log(1, values, method);
-
     const args: any[] = [];
 
     method.inputs.forEach((input, index) => {
@@ -125,22 +123,17 @@ const MethodListItem: FC<{ method: AbiItem; contractAddress: string }> = ({
       }
     });
 
-    console.log(111, args);
     try {
       let response;
       if (methodType === MethodType.View) {
         response = await (contract as Contract)[method.name](...args);
       } else if (methodType === MethodType.Mutate) {
-        console.log(222);
-
         const gasLimit = await getEstimateGas(
           contract as Contract,
           method.name,
           args,
           options
         );
-
-        console.log(333, gasLimit);
 
         options.gasLimit = Math.ceil(gasLimit * ESTIMATE_GAS_MULTIPLIER);
         const transaction = await (contract as Contract)[method.name](
@@ -150,7 +143,6 @@ const MethodListItem: FC<{ method: AbiItem; contractAddress: string }> = ({
 
         response = await transaction.wait();
       }
-      console.log("Res: ", response);
       setResponse(response);
     } catch (e: any) {
       console.error(e);
