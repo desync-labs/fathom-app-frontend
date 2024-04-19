@@ -1,6 +1,14 @@
 import { FC } from "react";
-import { Typography } from "@mui/material";
+import { Box, styled, Typography } from "@mui/material";
 import MethodListItem from "components/Vault/VaultListItem/AdditionalInfoTabs/Managment/MethodListItem";
+
+export const ContractMethodListWrapper = styled(Box)`
+  padding: 0;
+
+  &.hide {
+    display: none;
+  }
+`;
 
 export const STATE_MUTABILITY_TRANSACTIONS = ["nonpayable", "payable"];
 
@@ -17,16 +25,18 @@ export interface AbiItem {
 }
 
 type VaultItemManagementProps = {
+  isShow: boolean;
   vaultId: string;
   vaultMethods: AbiItem[];
 };
 
 const ManagementContractMethodList: FC<VaultItemManagementProps> = ({
+  isShow,
   vaultId,
   vaultMethods,
 }) => {
   return (
-    <>
+    <ContractMethodListWrapper className={isShow ? "showing" : "hide"}>
       {!vaultMethods.length ? (
         <Typography>Has no contract methods yet</Typography>
       ) : (
@@ -38,7 +48,7 @@ const ManagementContractMethodList: FC<VaultItemManagementProps> = ({
           />
         ))
       )}
-    </>
+    </ContractMethodListWrapper>
   );
 };
 
