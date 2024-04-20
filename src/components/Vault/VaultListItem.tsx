@@ -20,13 +20,14 @@ import VaultItemPositionInfo from "components/Vault/VaultListItem/AdditionalInfo
 import VaultItemAbout from "components/Vault/VaultListItem/AdditionalInfoTabs/VaultItemAbout";
 import VaultItemStrategies from "components/Vault/VaultListItem/AdditionalInfoTabs/VaultItemStrategies";
 import WalletConnectBtn from "components/Common/WalletConnectBtn";
-import ManagementContractMethodList from "components/Vault/VaultListItem/AdditionalInfoTabs/Managment/ManagementContractMethodList";
+import ManagementVaultMethodList from "components/Vault/VaultListItem/AdditionalInfoTabs/Managment/ManagementVaultMethodList";
 import ManagementStrategiesMethodList from "components/Vault/VaultListItem/AdditionalInfoTabs/Managment/ManagementStrategiesMethodList";
 
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
 import LockSrc from "assets/svg/lock.svg";
 import LockAquaSrc from "assets/svg/lock-aqua.svg";
+import { FunctionFragment } from "@into-the-fathom/abi";
 
 export const FlexBox = styled(Box)`
   display: flex;
@@ -184,6 +185,8 @@ export const EarningLabel = styled("div")`
 `;
 
 export type VaultListItemPropsType = {
+  vaultMethods: FunctionFragment[];
+  strategyMethods: FunctionFragment[];
   vaultItemData: IVault;
   vaultPosition: IVaultPosition | null | undefined;
   protocolFee: number;
@@ -195,6 +198,8 @@ export type VaultListItemPropsType = {
 };
 
 const VaultListItem: FC<VaultListItemPropsType> = ({
+  vaultMethods,
+  strategyMethods,
   vaultItemData,
   vaultPosition,
   protocolFee,
@@ -210,8 +215,6 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
   const vaultTestId = vaultItemData.id;
 
   const {
-    vaultMethods,
-    strategyMethods,
     reports,
     historicalApr,
     balanceEarned,
@@ -441,7 +444,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
                 />
               )}
               {isUserManager && (
-                <ManagementContractMethodList
+                <ManagementVaultMethodList
                   isShow={activeVaultInfoTab === VaultInfoTabs.MANAGEMENT_VAULT}
                   vaultId={vaultItemData.id}
                   vaultMethods={vaultMethods}
