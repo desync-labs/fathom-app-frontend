@@ -1,24 +1,13 @@
 import { FC } from "react";
 import { Typography } from "@mui/material";
 import MethodListItem from "components/Vault/VaultListItem/AdditionalInfoTabs/Managment/MethodListItem";
+import { FunctionFragment } from "@into-the-fathom/abi";
 
 export const STATE_MUTABILITY_TRANSACTIONS = ["nonpayable", "payable"];
 
-type AbiInputOutputType = {
-  name: string;
-  type: string;
-};
-export interface AbiItem {
-  name: string;
-  type: string;
-  inputs: AbiInputOutputType[];
-  outputs: AbiInputOutputType[];
-  stateMutability: string;
-}
-
 type VaultItemManagementProps = {
   vaultId: string;
-  vaultMethods: AbiItem[];
+  vaultMethods: FunctionFragment[];
 };
 
 const ManagementContractMethodList: FC<VaultItemManagementProps> = ({
@@ -30,7 +19,7 @@ const ManagementContractMethodList: FC<VaultItemManagementProps> = ({
       {!vaultMethods.length ? (
         <Typography>Has no contract methods yet</Typography>
       ) : (
-        vaultMethods.map((method: AbiItem, index: number) => (
+        vaultMethods.map((method: FunctionFragment, index: number) => (
           <MethodListItem
             key={index}
             method={method}

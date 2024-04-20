@@ -1,6 +1,6 @@
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { useLazyQuery, useQuery } from "@apollo/client";
-import { IVault, IVaultPosition } from "fathom-sdk";
+import { IVault, IVaultPosition, SmartContractFactory } from "fathom-sdk";
 import {
   ACCOUNT_VAULT_POSITIONS,
   VAULTS,
@@ -11,6 +11,7 @@ import useConnector from "context/connector";
 import useSyncContext from "context/sync";
 import { useServices } from "context/services";
 import BigNumber from "bignumber.js";
+import { FunctionFragment } from "@into-the-fathom/abi";
 
 interface IdToVaultIdMap {
   [key: string]: string | undefined;
@@ -21,6 +22,9 @@ export enum SortType {
   TVL = "tvl",
   STAKED = "staked",
 }
+
+const VAULT_ABI = SmartContractFactory.FathomVault("").abi;
+const STRATEGY_ABI = SmartContractFactory.FathomVaultStrategy("").abi;
 
 const useVaultList = () => {
   const { account } = useConnector();
@@ -40,6 +44,11 @@ const useVaultList = () => {
   const [sortBy, setSortBy] = useState<SortType>(SortType.TVL);
   const [isShutdown, setIsShutdown] = useState<boolean>(false);
   const [expandedVault, setExpandedVault] = useState<number | null>(null);
+
+  const [vaultMethods, setVaultMethods] = useState<FunctionFragment[]>([]);
+  const [strategyMethods, setStrategyMethods] = useState<FunctionFragment[]>(
+    []
+  );
 
   const {
     data: vaultItemsData,
@@ -134,6 +143,32 @@ const useVaultList = () => {
       setVaultPositionsList([]);
     }
   }, [account, loadData, setVaultPositionsList, poolService, vaultService]);
+
+  useEffect(() => {
+    try {
+      const methods = (VAULT_ABI as FunctionFragment[]).filter(
+        (item: FunctionFragment) =>
+          item.type === "function" && item.name.toUpperCase() !== item.name
+      );
+
+      setVaultMethods(methods);
+    } catch (e: any) {
+      console.error(e);
+    }
+  }, [setVaultMethods]);
+
+  useEffect(() => {
+    try {
+      const methods = (STRATEGY_ABI as FunctionFragment[]).filter(
+        (item: FunctionFragment) =>
+          item.type === "function" && item.name.toUpperCase() !== item.name
+      );
+
+      setStrategyMethods(methods);
+    } catch (e: any) {
+      console.error(e);
+    }
+  }, [setStrategyMethods]);
 
   useEffect(() => {
     if (syncVault && !prevSyncVault) {
@@ -285,6 +320,8 @@ const useVaultList = () => {
   }, [setExpandedVault]);
 
   return {
+    vaultMethods,
+    strategyMethods,
     vaultSortedList,
     vaultsLoading,
     vaultPositionsLoading,

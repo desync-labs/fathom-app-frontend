@@ -13,10 +13,7 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import useConnector from "context/connector";
-import {
-  AbiItem,
-  STATE_MUTABILITY_TRANSACTIONS,
-} from "components/Vault/VaultListItem/AdditionalInfoTabs/Managment/ManagementContractMethodList";
+import { STATE_MUTABILITY_TRANSACTIONS } from "components/Vault/VaultListItem/AdditionalInfoTabs/Managment/ManagementContractMethodList";
 import { VaultItemAccordion } from "components/Vault/VaultListItem/AdditionalInfoTabs/VaultStrategyItem";
 import {
   AppFormLabel,
@@ -27,6 +24,7 @@ import { ApproveButton } from "components/AppComponents/AppButton/AppButton";
 import { getEstimateGas } from "fathom-sdk";
 import { ESTIMATE_GAS_MULTIPLIER } from "fathom-sdk/dist/cjs/utils/Constants";
 import TransactionResponseDataList from "./TransactionResponseDataList";
+import { FunctionFragment } from "@into-the-fathom/abi";
 
 enum MethodType {
   View = "view",
@@ -62,10 +60,14 @@ const MethodResponseStyled = styled(Box)`
   word-wrap: break-word;
 `;
 
-const MethodListItem: FC<{ method: AbiItem; contractAddress: string }> = ({
-  method,
-  contractAddress,
-}) => {
+const MethodListItemAccordion = styled(VaultItemAccordion)`
+  padding: 0 32px;
+`;
+
+const MethodListItem: FC<{
+  method: FunctionFragment;
+  contractAddress: string;
+}> = ({ method, contractAddress }) => {
   const { formState, control, handleSubmit, getValues } = useForm({
     defaultValues: {},
     reValidateMode: "onChange",
@@ -215,7 +217,7 @@ const MethodListItem: FC<{ method: AbiItem; contractAddress: string }> = ({
   }, [response, method]);
 
   return (
-    <VaultItemAccordion>
+    <MethodListItemAccordion>
       <AccordionSummaryStyled
         expandIcon={<ExpandMoreIcon sx={{ width: "30px", height: "30px" }} />}
         aria-controls="panel1a-content"
@@ -232,7 +234,7 @@ const MethodListItem: FC<{ method: AbiItem; contractAddress: string }> = ({
         </MethodTypeStyled>{" "}
         <Typography>{method.name}</Typography>
       </AccordionSummaryStyled>
-      <AccordionDetails sx={{ padding: "0" }}>
+      <AccordionDetails sx={{ padding: "0 0 10px 0" }}>
         <Box
           component="form"
           onSubmit={handleSubmit(handleSubmitForm)}
@@ -293,7 +295,7 @@ const MethodListItem: FC<{ method: AbiItem; contractAddress: string }> = ({
           {response !== undefined && <>Response: {renderResponse()}</>}
         </MethodResponseStyled>
       </AccordionDetails>
-    </VaultItemAccordion>
+    </MethodListItemAccordion>
   );
 };
 

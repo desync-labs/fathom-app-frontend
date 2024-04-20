@@ -28,6 +28,7 @@ import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownR
 import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
 import LockSrc from "assets/svg/lock.svg";
 import LockAquaSrc from "assets/svg/lock-aqua.svg";
+import { FunctionFragment } from "@into-the-fathom/abi";
 
 export const FlexBox = styled(Box)`
   display: flex;
@@ -185,6 +186,8 @@ export const EarningLabel = styled("div")`
 `;
 
 export type VaultListItemPropsType = {
+  vaultMethods: FunctionFragment[];
+  strategyMethods: FunctionFragment[];
   vaultItemData: IVault;
   vaultPosition: IVaultPosition | null | undefined;
   protocolFee: number;
@@ -196,6 +199,8 @@ export type VaultListItemPropsType = {
 };
 
 const VaultListItem: FC<VaultListItemPropsType> = ({
+  vaultMethods,
+  strategyMethods,
   vaultItemData,
   vaultPosition,
   protocolFee,
@@ -211,8 +216,6 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
   const vaultTestId = vaultItemData.id;
 
   const {
-    vaultMethods,
-    strategyMethods,
     reports,
     historicalApr,
     balanceEarned,

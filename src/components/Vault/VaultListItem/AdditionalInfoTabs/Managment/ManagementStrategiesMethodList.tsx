@@ -6,11 +6,11 @@ import { SelectChangeEvent } from "@mui/material/Select";
 import { FilterLabel } from "components/Vault/VaultFilters";
 import { strategyTitle } from "utils/getStrategyTitleAndDescription";
 import { formatHashShorten } from "utils/format";
-import { AbiItem } from "./ManagementContractMethodList";
+import { FunctionFragment } from "@into-the-fathom/abi";
 
 type ManagementStrategiesMethodListProps = {
   strategiesIds: string[];
-  strategyMethods: AbiItem[];
+  strategyMethods: FunctionFragment[];
 };
 
 const ManagementStrategiesMethodList: FC<
@@ -45,7 +45,7 @@ const ManagementStrategiesMethodList: FC<
       {!strategyMethods.length ? (
         <Typography>Has no contract methods yet</Typography>
       ) : (
-        strategyMethods.map((method: AbiItem, index: number) => (
+        strategyMethods.map((method: FunctionFragment, index: number) => (
           <MethodListItem
             key={index}
             method={method}
