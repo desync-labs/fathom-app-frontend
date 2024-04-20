@@ -8,7 +8,6 @@ import usePricesContext from "context/prices";
 import useSharedContext from "context/shared";
 import { formatNumber, formatPercentage } from "utils/format";
 import { useApr, useAprNumber } from "hooks/useApr";
-import { vaultTitle } from "utils/getVaultTitleAndDescription";
 
 const VaultTitle = styled("div")`
   color: #5a81ff;
@@ -133,11 +132,7 @@ const VaultListItemEarningDetails: FC<VaultListItemFarmingDetailsProps> = ({
   return (
     <Grid container>
       <Grid item>
-        <VaultTitle>
-          {vaultTitle[vaultItemData.id.toLowerCase()]
-            ? vaultTitle[vaultItemData.id.toLowerCase()]
-            : token.name}
-        </VaultTitle>
+        <VaultTitle>{vaultItemData.name}</VaultTitle>
         <VaultInfo>
           <Pooled>
             Pooled {token.name}:

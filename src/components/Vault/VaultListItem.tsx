@@ -10,7 +10,6 @@ import useVaultListItem, { VaultInfoTabs } from "hooks/useVaultListItem";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatCurrency, formatNumber, formatPercentage } from "utils/format";
 import { useApr } from "hooks/useApr";
-import { vaultTitle } from "utils/getVaultTitleAndDescription";
 
 import { AppTableRow } from "components/AppComponents/AppTable/AppTable";
 import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
@@ -21,7 +20,7 @@ import VaultItemPositionInfo from "components/Vault/VaultListItem/AdditionalInfo
 import VaultItemAbout from "components/Vault/VaultListItem/AdditionalInfoTabs/VaultItemAbout";
 import VaultItemStrategies from "components/Vault/VaultListItem/AdditionalInfoTabs/VaultItemStrategies";
 import WalletConnectBtn from "components/Common/WalletConnectBtn";
-import ManagementContractMethodList from "components/Vault/VaultListItem/AdditionalInfoTabs/Managment/ManagementContractMethodList";
+import ManagementVaultMethodList from "components/Vault/VaultListItem/AdditionalInfoTabs/Managment/ManagementVaultMethodList";
 import ManagementStrategiesMethodList from "components/Vault/VaultListItem/AdditionalInfoTabs/Managment/ManagementStrategiesMethodList";
 
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
@@ -251,9 +250,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
                   <EarningLabel>Earning</EarningLabel>
                 )}
               <VaultTitle data-testid={`vaultRow-${vaultTestId}-tokenTitle`}>
-                {vaultTitle[vaultItemData.id.toLowerCase()]
-                  ? vaultTitle[vaultItemData.id.toLowerCase()]
-                  : token.name}
+                {vaultItemData.name}
               </VaultTitle>
             </VaultInfo>
           </FlexBox>
@@ -446,20 +443,22 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
                   performanceFee={performanceFee}
                 />
               )}
-              {activeVaultInfoTab === VaultInfoTabs.MANAGEMENT_VAULT &&
-                isUserManager && (
-                  <ManagementContractMethodList
-                    vaultId={vaultItemData.id}
-                    vaultMethods={vaultMethods}
-                  />
-                )}
-              {activeVaultInfoTab === VaultInfoTabs.MANAGEMENT_STRATEGY &&
-                managedStrategiesIds.length > 0 && (
-                  <ManagementStrategiesMethodList
-                    strategyMethods={strategyMethods}
-                    strategiesIds={managedStrategiesIds}
-                  />
-                )}
+              {isUserManager && (
+                <ManagementVaultMethodList
+                  isShow={activeVaultInfoTab === VaultInfoTabs.MANAGEMENT_VAULT}
+                  vaultId={vaultItemData.id}
+                  vaultMethods={vaultMethods}
+                />
+              )}
+              {managedStrategiesIds.length > 0 && (
+                <ManagementStrategiesMethodList
+                  isShow={
+                    activeVaultInfoTab === VaultInfoTabs.MANAGEMENT_STRATEGY
+                  }
+                  strategyMethods={strategyMethods}
+                  strategiesIds={managedStrategiesIds}
+                />
+              )}
             </Box>
           </TableCell>
         </AppTableRow>

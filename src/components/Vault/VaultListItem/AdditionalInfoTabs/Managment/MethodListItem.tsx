@@ -13,7 +13,7 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import useConnector from "context/connector";
-import { STATE_MUTABILITY_TRANSACTIONS } from "components/Vault/VaultListItem/AdditionalInfoTabs/Managment/ManagementContractMethodList";
+import { STATE_MUTABILITY_TRANSACTIONS } from "components/Vault/VaultListItem/AdditionalInfoTabs/Managment/ManagementVaultMethodList";
 import { VaultItemAccordion } from "components/Vault/VaultListItem/AdditionalInfoTabs/VaultStrategyItem";
 import {
   AppFormLabel,
@@ -110,8 +110,6 @@ const MethodListItem: FC<{
     const options = { gasLimit: 0 };
     setIsLoading(true);
 
-    console.log(1, values, method);
-
     const args: any[] = [];
 
     method.inputs.forEach((input, index) => {
@@ -127,22 +125,17 @@ const MethodListItem: FC<{
       }
     });
 
-    console.log(111, args);
     try {
       let response;
       if (methodType === MethodType.View) {
         response = await (contract as Contract)[method.name](...args);
       } else if (methodType === MethodType.Mutate) {
-        console.log(222);
-
         const gasLimit = await getEstimateGas(
           contract as Contract,
           method.name,
           args,
           options
         );
-
-        console.log(333, gasLimit);
 
         options.gasLimit = Math.ceil(gasLimit * ESTIMATE_GAS_MULTIPLIER);
         const transaction = await (contract as Contract)[method.name](
@@ -152,7 +145,6 @@ const MethodListItem: FC<{
 
         response = await transaction.wait();
       }
-      console.log("Res: ", response);
       setResponse(response);
     } catch (e: any) {
       console.error(e);

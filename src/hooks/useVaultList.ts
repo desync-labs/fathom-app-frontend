@@ -7,11 +7,18 @@ import {
   VAULT_FACTORIES,
 } from "apollo/queries";
 import { COUNT_PER_PAGE } from "utils/Constants";
+import { vaultTitle } from "utils/getVaultTitleAndDescription";
 import useConnector from "context/connector";
 import useSyncContext from "context/sync";
 import { useServices } from "context/services";
 import BigNumber from "bignumber.js";
 import { FunctionFragment } from "@into-the-fathom/abi";
+
+declare module "fathom-sdk" {
+  interface IVault {
+    name: string;
+  }
+}
 
 interface IdToVaultIdMap {
   [key: string]: string | undefined;
@@ -59,7 +66,6 @@ const useVaultList = () => {
     variables: {
       first: COUNT_PER_PAGE,
       skip: 0,
-      search: search,
       shutdown: isShutdown,
     },
     context: { clientName: "vaults" },
@@ -147,8 +153,7 @@ const useVaultList = () => {
   useEffect(() => {
     try {
       const methods = (VAULT_ABI as FunctionFragment[]).filter(
-        (item: FunctionFragment) =>
-          item.type === "function" && item.name.toUpperCase() !== item.name
+        (item: FunctionFragment) => item.type === "function"
       );
 
       setVaultMethods(methods);
@@ -160,8 +165,7 @@ const useVaultList = () => {
   useEffect(() => {
     try {
       const methods = (STRATEGY_ABI as FunctionFragment[]).filter(
-        (item: FunctionFragment) =>
-          item.type === "function" && item.name.toUpperCase() !== item.name
+        (item: FunctionFragment) => item.type === "function"
       );
 
       setStrategyMethods(methods);
@@ -215,9 +219,9 @@ const useVaultList = () => {
 
   useEffect(() => {
     if (vaultItemsData && vaultItemsData.vaults) {
-      sortingVaults(vaultItemsData.vaults);
+      sortingVaults(filteringVaultsBySearch(vaultItemsData.vaults));
     }
-  }, [sortBy]);
+  }, [sortBy, search, vaultItemsData]);
 
   useEffect(() => {
     if (vaultSortedList.length === 1) {
@@ -282,6 +286,28 @@ const useVaultList = () => {
       setVaultSortedList(sortedVaults);
     },
     [sortBy, vaultPositionsList]
+  );
+
+  const filteringVaultsBySearch = useCallback(
+    (vaultList: IVault[]) => {
+      let vaultListWithNames = vaultList.map((vault) => {
+        return {
+          ...vault,
+          name: vaultTitle[vault.id.toLowerCase()]
+            ? vaultTitle[vault.id.toLowerCase()]
+            : vault.token.name,
+        };
+      });
+
+      if (search) {
+        vaultListWithNames = vaultListWithNames.filter((vault) =>
+          vault.name.toLowerCase().includes(search.toLowerCase())
+        );
+      }
+
+      return vaultListWithNames;
+    },
+    [search]
   );
 
   const handlePageChange = useCallback(
