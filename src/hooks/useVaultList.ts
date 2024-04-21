@@ -1,16 +1,24 @@
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { useLazyQuery, useQuery } from "@apollo/client";
-import { IVault, IVaultPosition } from "fathom-sdk";
+import { IVault, IVaultPosition, SmartContractFactory } from "fathom-sdk";
 import {
   ACCOUNT_VAULT_POSITIONS,
   VAULTS,
   VAULT_FACTORIES,
 } from "apollo/queries";
 import { COUNT_PER_PAGE } from "utils/Constants";
+import { vaultTitle } from "utils/getVaultTitleAndDescription";
 import useConnector from "context/connector";
 import useSyncContext from "context/sync";
 import { useServices } from "context/services";
 import BigNumber from "bignumber.js";
+import { FunctionFragment } from "@into-the-fathom/abi";
+
+declare module "fathom-sdk" {
+  interface IVault {
+    name: string;
+  }
+}
 
 interface IdToVaultIdMap {
   [key: string]: string | undefined;
@@ -21,6 +29,9 @@ export enum SortType {
   TVL = "tvl",
   STAKED = "staked",
 }
+
+const VAULT_ABI = SmartContractFactory.FathomVault("").abi;
+const STRATEGY_ABI = SmartContractFactory.FathomVaultStrategy("").abi;
 
 const useVaultList = () => {
   const { account } = useConnector();
@@ -41,6 +52,11 @@ const useVaultList = () => {
   const [isShutdown, setIsShutdown] = useState<boolean>(false);
   const [expandedVault, setExpandedVault] = useState<number | null>(null);
 
+  const [vaultMethods, setVaultMethods] = useState<FunctionFragment[]>([]);
+  const [strategyMethods, setStrategyMethods] = useState<FunctionFragment[]>(
+    []
+  );
+
   const {
     data: vaultItemsData,
     loading: vaultsLoading,
@@ -50,7 +66,6 @@ const useVaultList = () => {
     variables: {
       first: COUNT_PER_PAGE,
       skip: 0,
-      search: search,
       shutdown: isShutdown,
     },
     context: { clientName: "vaults" },
@@ -136,6 +151,30 @@ const useVaultList = () => {
   }, [account, loadData, setVaultPositionsList, poolService, vaultService]);
 
   useEffect(() => {
+    try {
+      const methods = (VAULT_ABI as FunctionFragment[]).filter(
+        (item: FunctionFragment) => item.type === "function"
+      );
+
+      setVaultMethods(methods);
+    } catch (e: any) {
+      console.error(e);
+    }
+  }, [setVaultMethods]);
+
+  useEffect(() => {
+    try {
+      const methods = (STRATEGY_ABI as FunctionFragment[]).filter(
+        (item: FunctionFragment) => item.type === "function"
+      );
+
+      setStrategyMethods(methods);
+    } catch (e: any) {
+      console.error(e);
+    }
+  }, [setStrategyMethods]);
+
+  useEffect(() => {
     if (syncVault && !prevSyncVault) {
       positionsRefetch({ account: account.toLowerCase() }).then((res) => {
         res.data?.accountVaultPositions
@@ -180,14 +219,18 @@ const useVaultList = () => {
 
   useEffect(() => {
     if (vaultItemsData && vaultItemsData.vaults) {
-      sortingVaults(vaultItemsData.vaults);
+      sortingVaults(filteringVaultsBySearch(vaultItemsData.vaults));
     }
-  }, [sortBy]);
+  }, [sortBy, search, vaultItemsData]);
 
   useEffect(() => {
     if (vaultSortedList.length === 1) {
       setExpandedVault(0);
-    } else {
+    } else if (
+      vaultSortedList.length !== null &&
+      expandedVault !== null &&
+      vaultSortedList.length !== expandedVault + 1
+    ) {
       setExpandedVault(null);
     }
   }, [vaultSortedList]);
@@ -245,6 +288,28 @@ const useVaultList = () => {
     [sortBy, vaultPositionsList]
   );
 
+  const filteringVaultsBySearch = useCallback(
+    (vaultList: IVault[]) => {
+      let vaultListWithNames = vaultList.map((vault) => {
+        return {
+          ...vault,
+          name: vaultTitle[vault.id.toLowerCase()]
+            ? vaultTitle[vault.id.toLowerCase()]
+            : vault.token.name,
+        };
+      });
+
+      if (search) {
+        vaultListWithNames = vaultListWithNames.filter((vault) =>
+          vault.name.toLowerCase().includes(search.toLowerCase())
+        );
+      }
+
+      return vaultListWithNames;
+    },
+    [search]
+  );
+
   const handlePageChange = useCallback(
     (event: ChangeEvent<unknown>, page: number) => {
       fetchMore({
@@ -281,6 +346,8 @@ const useVaultList = () => {
   }, [setExpandedVault]);
 
   return {
+    vaultMethods,
+    strategyMethods,
     vaultSortedList,
     vaultsLoading,
     vaultPositionsLoading,

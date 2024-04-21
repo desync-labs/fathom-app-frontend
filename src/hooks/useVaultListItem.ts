@@ -4,6 +4,7 @@ import {
   IVaultPosition,
   IVaultStrategy,
   IVaultStrategyReport,
+  SmartContractFactory,
 } from "fathom-sdk";
 import BigNumber from "bignumber.js";
 import { useServices } from "context/services";
@@ -14,6 +15,7 @@ import {
   VAULT_STRATEGY_REPORTS,
 } from "apollo/queries";
 import useSyncContext from "context/sync";
+import { Contract } from "fathom-ethers";
 
 interface UseVaultListItemProps {
   vaultPosition: IVaultPosition | null | undefined;
@@ -24,8 +26,12 @@ export enum VaultInfoTabs {
   POSITION,
   ABOUT,
   STRATEGIES,
+  MANAGEMENT_VAULT,
+  MANAGEMENT_STRATEGY,
 }
 
+const DEFAULT_ADMIN_ROLE =
+  "0x0000000000000000000000000000000000000000000000000000000000000000";
 const VAULT_REPORTS_PER_PAGE = 1000;
 
 export type IVaultStrategyHistoricalApr = {
@@ -61,6 +67,11 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     Record<string, IVaultStrategyHistoricalApr[]>
   >({});
 
+  const [managedStrategiesIds, setManagedStrategiesIds] = useState<string[]>(
+    []
+  );
+  const [isUserManager, setIsUserManager] = useState<boolean>(false);
+
   const { syncVault, prevSyncVault } = useSyncContext();
 
   const [activeVaultInfoTab, setActiveVaultInfoTab] = useState<VaultInfoTabs>(
@@ -69,7 +80,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
       : VaultInfoTabs.ABOUT
   );
 
-  const { account } = useConnector();
+  const { account, library } = useConnector();
   const { vaultService } = useServices();
 
   const [loadReports, { fetchMore: fetchMoreReports }] = useLazyQuery(
@@ -280,6 +291,70 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     transactionsLoading,
   ]);
 
+  const executeHasRoleMethod = async (): Promise<boolean> => {
+    try {
+      const VAULT_ABI = SmartContractFactory.FathomVault("").abi;
+      const vaultContract = new Contract(vault.id, VAULT_ABI, library);
+
+      return await vaultContract.hasRole(DEFAULT_ADMIN_ROLE, account);
+    } catch (error) {
+      console.error(
+        `Failed to execute hasRole method for vault ${vault.id}:`,
+        error
+      );
+      return false;
+    }
+  };
+
+  const executeManagementMethod = async (
+    strategyId: string
+  ): Promise<boolean> => {
+    const STRATEGY_ABI = SmartContractFactory.FathomVaultStrategy("").abi;
+    try {
+      const strategyContract = new Contract(strategyId, STRATEGY_ABI, library);
+
+      const result = await strategyContract.management();
+      return result.includes(account);
+    } catch (error) {
+      console.error(
+        `Failed to execute management method for strategy ${strategyId}:`,
+        error
+      );
+      return false;
+    }
+  };
+
+  const getStrategiesIds = useMemo(() => {
+    const strategyIdsPromises = (vault.strategies || []).map(
+      async (strategy: IVaultStrategy) => {
+        const isUserAuthorized = await executeManagementMethod(strategy.id);
+        return isUserAuthorized ? strategy.id : null;
+      }
+    );
+
+    return Promise.all(strategyIdsPromises).then(
+      (authorizedIds) => authorizedIds.filter((id) => id !== null) as string[]
+    );
+  }, [vault]);
+
+  useEffect(() => {
+    if (vault && account) {
+      getStrategiesIds.then((authorizedIds) =>
+        setManagedStrategiesIds(authorizedIds)
+      );
+    } else {
+      setManagedStrategiesIds([]);
+    }
+  }, [vault, account, getStrategiesIds]);
+
+  useEffect(() => {
+    if (vault && account) {
+      executeHasRoleMethod().then((isManager) => setIsUserManager(isManager));
+    } else {
+      setIsUserManager(false);
+    }
+  }, [vault, account]);
+
   return {
     reports,
     historicalApr,
@@ -291,6 +366,8 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     setActiveVaultInfoTab,
     setManageVault,
     setNewVaultDeposit,
+    managedStrategiesIds,
+    isUserManager,
   };
 };
 

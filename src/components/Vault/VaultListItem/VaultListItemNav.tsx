@@ -45,12 +45,16 @@ type VaultListItemNavPropsType = {
   vaultPosition: IVaultPosition | null | undefined;
   activeVaultInfoTab: VaultInfoTabs;
   setActiveVaultInfoTab: Dispatch<SetStateAction<VaultInfoTabs>>;
+  managedStrategiesIds?: string[];
+  isUserManager?: boolean;
 };
 
 const VaultListItemNav: FC<VaultListItemNavPropsType> = ({
   vaultPosition,
   activeVaultInfoTab,
   setActiveVaultInfoTab,
+  managedStrategiesIds = [],
+  isUserManager = false,
 }) => {
   return (
     <VaultNavWrapper>
@@ -79,6 +83,32 @@ const VaultListItemNav: FC<VaultListItemNavPropsType> = ({
       >
         Strategies
       </VaultNavItem>
+      {isUserManager && (
+        <VaultNavItem
+          onClick={() => setActiveVaultInfoTab(VaultInfoTabs.MANAGEMENT_VAULT)}
+          className={
+            activeVaultInfoTab === VaultInfoTabs.MANAGEMENT_VAULT
+              ? "active"
+              : ""
+          }
+        >
+          Vault Manager
+        </VaultNavItem>
+      )}
+      {managedStrategiesIds.length > 0 && (
+        <VaultNavItem
+          onClick={() =>
+            setActiveVaultInfoTab(VaultInfoTabs.MANAGEMENT_STRATEGY)
+          }
+          className={
+            activeVaultInfoTab === VaultInfoTabs.MANAGEMENT_STRATEGY
+              ? "active"
+              : ""
+          }
+        >
+          Strategies Manager
+        </VaultNavItem>
+      )}
     </VaultNavWrapper>
   );
 };

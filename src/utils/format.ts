@@ -49,3 +49,14 @@ export const formatPercentage = (number: number) => {
 export const formatCurrency = (number: number) => {
   return formatterPrice.format(number);
 };
+
+export const formatHashShorten = (hash: string) => {
+  if (!hash || hash.length <= 8) {
+    return hash;
+  }
+
+  const prefix = hash.slice(0, 4);
+  const suffix = hash.slice(-4);
+
+  return `${prefix}...${suffix}`;
+};

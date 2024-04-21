@@ -56,7 +56,7 @@ const TransactionErc20TokenModal: FC = () => {
     resetErc20TokenModal,
   } = useAlertAndTransactionContext();
 
-  const { addERC20Token } = useConnector();
+  const { addERC20Token, isMetamask } = useConnector();
 
   const { image } = erc20TokenModalData as ERC20TokenType;
 
@@ -82,23 +82,25 @@ const TransactionErc20TokenModal: FC = () => {
         </SuccessIconWrapper>
         <ModalTitle variant="h1">All done!</ModalTitle>
         <SuccessMessage>{successAlertMessage}</SuccessMessage>
-        <DialogContentWrapper
-          width={"80%"}
-          sx={{
-            alignItems: "center",
-            textAlign: "center",
-            margin: "30px 15px",
-          }}
-        >
-          {image && <img src={image} alt={"fxd"} width={28} height={28} />}
-          <Typography variant={"body2"} component="span">
-            {erc20TokenModalDescription}
-          </Typography>
-          <ButtonPrimary onClick={addTokenToMetamaskWalletHandler}>
-            <WalletIcon sx={{ fontSize: "16px", marginRight: "7px" }} />
-            Add to wallet
-          </ButtonPrimary>
-        </DialogContentWrapper>
+        {isMetamask && (
+          <DialogContentWrapper
+            width={"80%"}
+            sx={{
+              alignItems: "center",
+              textAlign: "center",
+              margin: "30px 15px",
+            }}
+          >
+            {image && <img src={image} alt={"fxd"} width={28} height={28} />}
+            <Typography variant={"body2"} component="span">
+              {erc20TokenModalDescription}
+            </Typography>
+            <ButtonPrimary onClick={addTokenToMetamaskWalletHandler}>
+              <WalletIcon sx={{ fontSize: "16px", marginRight: "7px" }} />
+              Add to wallet
+            </ButtonPrimary>
+          </DialogContentWrapper>
+        )}
       </SuccessContentWrapper>
       <Box
         sx={{

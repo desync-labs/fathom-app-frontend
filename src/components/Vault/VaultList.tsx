@@ -55,6 +55,8 @@ const VaultList: FC<VaultListPropsType> = ({
   openMobileFilterMenu,
 }) => {
   const {
+    vaultMethods,
+    strategyMethods,
     vaultSortedList,
     vaultsLoading,
     vaultPositionsLoading,
@@ -113,6 +115,8 @@ const VaultList: FC<VaultListPropsType> = ({
                 ) : (
                   vaultSortedList.map((vault, index) => (
                     <VaultListItemMobile
+                      vaultMethods={vaultMethods}
+                      strategyMethods={strategyMethods}
                       key={vault.id}
                       vaultItemData={vault}
                       vaultPosition={filterCurrentPosition(vault.id)}
@@ -233,6 +237,8 @@ const VaultList: FC<VaultListPropsType> = ({
                       ) : (
                         vaultSortedList.map((vault, index) => (
                           <VaultListItem
+                            vaultMethods={vaultMethods}
+                            strategyMethods={strategyMethods}
                             key={vault.id}
                             vaultItemData={vault}
                             vaultPosition={filterCurrentPosition(vault.id)}

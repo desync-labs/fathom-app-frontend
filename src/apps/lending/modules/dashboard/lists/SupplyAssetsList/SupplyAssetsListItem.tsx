@@ -45,12 +45,7 @@ export const SupplyAssetsListItem: FC<DashboardReserve> = memo(
 
     const trackEvent = useRootStore((store) => store.trackEvent);
     const disableSupply =
-      !isActive ||
-      isFreezed ||
-      Number(walletBalance) <= 0 ||
-      isMaxCapReached ||
-      symbol === "USDTx" ||
-      symbol === "xUSDT";
+      !isActive || isFreezed || Number(walletBalance) <= 0 || isMaxCapReached;
 
     return (
       <ListItemWrapper

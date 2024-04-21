@@ -10,7 +10,6 @@ import useVaultListItem, { VaultInfoTabs } from "hooks/useVaultListItem";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatCurrency, formatNumber, formatPercentage } from "utils/format";
 import { useApr } from "hooks/useApr";
-import { vaultTitle } from "utils/getVaultTitleAndDescription";
 
 import { AppTableRow } from "components/AppComponents/AppTable/AppTable";
 import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
@@ -21,11 +20,14 @@ import VaultItemPositionInfo from "components/Vault/VaultListItem/AdditionalInfo
 import VaultItemAbout from "components/Vault/VaultListItem/AdditionalInfoTabs/VaultItemAbout";
 import VaultItemStrategies from "components/Vault/VaultListItem/AdditionalInfoTabs/VaultItemStrategies";
 import WalletConnectBtn from "components/Common/WalletConnectBtn";
+import ManagementVaultMethodList from "components/Vault/VaultListItem/AdditionalInfoTabs/Managment/ManagementVaultMethodList";
+import ManagementStrategiesMethodList from "components/Vault/VaultListItem/AdditionalInfoTabs/Managment/ManagementStrategiesMethodList";
 
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
 import LockSrc from "assets/svg/lock.svg";
 import LockAquaSrc from "assets/svg/lock-aqua.svg";
+import { FunctionFragment } from "@into-the-fathom/abi";
 
 export const FlexBox = styled(Box)`
   display: flex;
@@ -183,6 +185,8 @@ export const EarningLabel = styled("div")`
 `;
 
 export type VaultListItemPropsType = {
+  vaultMethods: FunctionFragment[];
+  strategyMethods: FunctionFragment[];
   vaultItemData: IVault;
   vaultPosition: IVaultPosition | null | undefined;
   protocolFee: number;
@@ -194,6 +198,8 @@ export type VaultListItemPropsType = {
 };
 
 const VaultListItem: FC<VaultListItemPropsType> = ({
+  vaultMethods,
+  strategyMethods,
   vaultItemData,
   vaultPosition,
   protocolFee,
@@ -218,6 +224,8 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
     setActiveVaultInfoTab,
     setManageVault,
     setNewVaultDeposit,
+    managedStrategiesIds,
+    isUserManager,
   } = useVaultListItem({ vaultPosition, vault: vaultItemData });
   const { account } = useConnector();
 
@@ -242,9 +250,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
                   <EarningLabel>Earning</EarningLabel>
                 )}
               <VaultTitle data-testid={`vaultRow-${vaultTestId}-tokenTitle`}>
-                {vaultTitle[vaultItemData.id.toLowerCase()]
-                  ? vaultTitle[vaultItemData.id.toLowerCase()]
-                  : token.name}
+                {vaultItemData.name}
               </VaultTitle>
             </VaultInfo>
           </FlexBox>
@@ -407,6 +413,8 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
               vaultPosition={vaultPosition}
               activeVaultInfoTab={activeVaultInfoTab}
               setActiveVaultInfoTab={setActiveVaultInfoTab}
+              managedStrategiesIds={managedStrategiesIds}
+              isUserManager={isUserManager}
             />
             <Box sx={{ padding: "20px" }}>
               {vaultPosition &&
@@ -433,6 +441,22 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
                   historicalApr={historicalApr}
                   vaultItemData={vaultItemData}
                   performanceFee={performanceFee}
+                />
+              )}
+              {isUserManager && (
+                <ManagementVaultMethodList
+                  isShow={activeVaultInfoTab === VaultInfoTabs.MANAGEMENT_VAULT}
+                  vaultId={vaultItemData.id}
+                  vaultMethods={vaultMethods}
+                />
+              )}
+              {managedStrategiesIds.length > 0 && (
+                <ManagementStrategiesMethodList
+                  isShow={
+                    activeVaultInfoTab === VaultInfoTabs.MANAGEMENT_STRATEGY
+                  }
+                  strategyMethods={strategyMethods}
+                  strategiesIds={managedStrategiesIds}
                 />
               )}
             </Box>

@@ -40,7 +40,6 @@ import DirectionDown from "assets/svg/direction-down.svg";
 import LockSrc from "assets/svg/lock.svg";
 import LockAquaSrc from "assets/svg/lock-aqua.svg";
 import { useApr } from "hooks/useApr";
-import { vaultTitle } from "../../utils/getVaultTitleAndDescription";
 
 export const VaultPoolName = styled("div")`
   display: flex;
@@ -208,11 +207,7 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
           <img src={getTokenLogoURL(token.symbol)} alt={token.name} />
         </VaultListItemImageWrapper>
         <VaultInfo>
-          <VaultTitle>
-            {vaultTitle[vaultItemData.id.toLowerCase()]
-              ? vaultTitle[vaultItemData.id.toLowerCase()]
-              : token.name}
-          </VaultTitle>
+          <VaultTitle>{vaultItemData.name}</VaultTitle>
         </VaultInfo>
       </VaultPoolName>
       <ListItemWrapper>
