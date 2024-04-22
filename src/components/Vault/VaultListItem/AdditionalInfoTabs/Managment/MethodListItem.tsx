@@ -279,7 +279,11 @@ const MethodListItem: FC<{
               type="submit"
               sx={{ width: "200px", height: "40px" }}
             >
-              {isLoading ? <CircularProgress size={30} /> : "Execute"}
+              {isLoading ? (
+                <CircularProgress size={20} sx={{ color: "#00332f" }} />
+              ) : (
+                "Execute"
+              )}
             </ApproveButton>
           </FlexBox>
         </Box>
