@@ -71,6 +71,20 @@ export const WXDC_XDC = new Token(
   "WXDC",
   "Wrapped XDC"
 );
+export const EURS_XDC = new Token(
+  ChainId.XDC,
+  "0x1eBb2C8a71A9ec59bF558886a8Adf8F4a565814F",
+  2,
+  "EURS",
+  "STASIS EURS"
+);
+export const PLI_XDC = new Token(
+  ChainId.XDC,
+  "0xFf7412Ea7C8445C46a8254dFB557Ac1E48094391",
+  18,
+  "PLI",
+  "Plugin"
+);
 
 /**
  * XDC Mainnet Tokens
@@ -140,6 +154,9 @@ export const PINNED_PAIRS: {
     [WXDC_XDC, FTHM_XDC],
     [FXD_XDC, WXDC_XDC],
     [WXDC_XDC, US_PLUS_XDC],
+    [EURS_XDC, FXD_XDC],
+    [PLI_XDC, WXDC_XDC],
+    [PLI_XDC, FXD_XDC],
   ],
 };
 
