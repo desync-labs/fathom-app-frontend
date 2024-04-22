@@ -124,7 +124,8 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
   handleSubmit,
   onSubmit,
 }) => {
-  const { token, shareToken, balanceTokens, depositLimit } = vaultItemData;
+  const { token, shareToken, balanceTokens, depositLimit, shutdown } =
+    vaultItemData;
   const formattedBalanceToken = useMemo(
     () =>
       BigNumber(balanceToken)
@@ -141,21 +142,23 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
         autoComplete="off"
       >
         <Summary>Summary</Summary>
-        <ManagePositionRepayTypeWrapper>
-          <ManageTypeButton
-            sx={{ marginRight: "5px" }}
-            className={`${formType === FormType.DEPOSIT ? "active" : null}`}
-            onClick={() => setFormType(FormType.DEPOSIT)}
-          >
-            Deposit
-          </ManageTypeButton>
-          <ManageTypeButton
-            className={`${formType === FormType.WITHDRAW ? "active" : null}`}
-            onClick={() => setFormType(FormType.WITHDRAW)}
-          >
-            Withdraw
-          </ManageTypeButton>
-        </ManagePositionRepayTypeWrapper>
+        {!shutdown && (
+          <ManagePositionRepayTypeWrapper>
+            <ManageTypeButton
+              sx={{ marginRight: "5px" }}
+              className={`${formType === FormType.DEPOSIT ? "active" : null}`}
+              onClick={() => setFormType(FormType.DEPOSIT)}
+            >
+              Deposit
+            </ManageTypeButton>
+            <ManageTypeButton
+              className={`${formType === FormType.WITHDRAW ? "active" : null}`}
+              onClick={() => setFormType(FormType.WITHDRAW)}
+            >
+              Withdraw
+            </ManageTypeButton>
+          </ManagePositionRepayTypeWrapper>
+        )}
         <ManageVaultItemDepositedBox>
           <Typography sx={{ color: "#B7C8E5", marginBottom: "2px" }}>
             {token.name} Deposited:
@@ -169,7 +172,7 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
           name="formToken"
           rules={{
             required: true,
-            min: 0.0000000001,
+            min: 0.000000000000000000001,
             validate: validateMaxValue,
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (

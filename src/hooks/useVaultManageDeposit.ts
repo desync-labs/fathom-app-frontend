@@ -41,7 +41,9 @@ const useVaultManageDeposit = (
   });
 
   const { token, depositLimit, balanceTokens } = vault;
-  const [formType, setFormType] = useState<FormType>(FormType.DEPOSIT);
+  const [formType, setFormType] = useState<FormType>(
+    vault.shutdown ? FormType.WITHDRAW : FormType.DEPOSIT
+  );
   const [walletBalance, setWalletBalance] = useState<string>("0");
   const [isWalletFetching, setIsWalletFetching] = useState<boolean>(false);
   const [openDepositLoading, setOpenDepositLoading] = useState<boolean>(false);

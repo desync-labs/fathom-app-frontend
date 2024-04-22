@@ -51,6 +51,7 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
     onSubmit,
   } = useVaultManageDeposit(vaultItemData, vaultPosition, onClose);
   const { isMobile } = useSharedContext();
+  const { shutdown } = vaultItemData;
 
   return (
     <VaultManageGridDialogWrapper
@@ -61,7 +62,7 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
       maxWidth="md"
     >
       <AppDialogTitle id="customized-dialog-title" onClose={onClose}>
-        Manage Vault
+        {shutdown ? "Withdrawing" : "Manage Vault"}
       </AppDialogTitle>
 
       <DialogContent>
