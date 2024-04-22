@@ -1,6 +1,27 @@
 import { FC } from "react";
-import { Box, ListItemText } from "@mui/material";
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Box,
+  ListItemText,
+  styled,
+} from "@mui/material";
 import { AppList, AppListItem } from "components/AppComponents/AppList/AppList";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
+const EventsListAccordion = styled(Accordion)`
+  padding-right: 0 !important;
+
+  & .MuiAccordionSummary-root {
+    min-height: 40px;
+  }
+`;
+const EventsListItem = styled(AppListItem)`
+  & .MuiListItemSecondaryAction-root {
+    max-width: 70%;
+  }
+`;
 
 interface TransactionReceipt {
   to: string;
@@ -38,11 +59,38 @@ const TransactionResponseDataList: FC<TransactionResponseDataListProps> = ({
       return res.toString();
     } else if (key === "gasUsed" || key === "cumulativeGasUsed") {
       return res.toString();
+    } else if (res === null) {
+      return "null";
+    } else if (key === "events" || key === "logs") {
+      return renderLogsEvents(res);
     } else if (typeof res === "object") {
       return JSON.stringify(res);
     }
 
     return null;
+  };
+
+  const renderLogsEvents = (eventList: any) => {
+    return eventList.map((event: any, index: number) => {
+      return (
+        <EventsListAccordion key={index}>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            {event.logIndex}
+          </AccordionSummary>
+          <AccordionDetails>
+            {Object.entries(event).map(([key, value]) => (
+              <AppList key={key}>
+                <EventsListItem
+                  secondaryAction={<Box>{renderResponseItem(key, value)}</Box>}
+                >
+                  <ListItemText primary={<Box>{key.toString()}</Box>} />
+                </EventsListItem>
+              </AppList>
+            ))}
+          </AccordionDetails>
+        </EventsListAccordion>
+      );
+    });
   };
 
   return (

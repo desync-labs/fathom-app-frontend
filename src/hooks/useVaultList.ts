@@ -226,12 +226,6 @@ const useVaultList = () => {
   useEffect(() => {
     if (vaultSortedList.length === 1) {
       setExpandedVault(0);
-    } else if (
-      vaultSortedList.length !== null &&
-      expandedVault !== null &&
-      vaultSortedList.length !== expandedVault + 1
-    ) {
-      setExpandedVault(null);
     }
   }, [vaultSortedList]);
 
