@@ -1,4 +1,10 @@
-import { ChangeEvent, useCallback, useEffect, useState } from "react";
+import {
+  ChangeEvent,
+  useCallback,
+  useEffect,
+  useState,
+  MouseEvent,
+} from "react";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import { IVault, IVaultPosition, SmartContractFactory } from "fathom-sdk";
 import {
@@ -339,6 +345,15 @@ const useVaultList = () => {
     setExpandedVault(null);
   }, [setExpandedVault]);
 
+  const handleIsShutdown = (
+    event: MouseEvent<HTMLElement>,
+    newValue: boolean
+  ) => {
+    if (newValue !== null) {
+      setIsShutdown(newValue);
+    }
+  };
+
   return {
     vaultMethods,
     strategyMethods,
@@ -353,7 +368,7 @@ const useVaultList = () => {
     isShutdown,
     search,
     sortBy,
-    setIsShutdown,
+    handleIsShutdown,
     setSearch,
     setSortBy,
     handlePageChange,

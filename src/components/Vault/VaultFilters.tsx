@@ -1,4 +1,4 @@
-import { Dispatch, FC, memo, SetStateAction } from "react";
+import { Dispatch, FC, memo, SetStateAction, MouseEvent } from "react";
 import { Grid, ToggleButtonGroup, ToggleButton, MenuItem } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import {
@@ -66,7 +66,7 @@ export type VaultFiltersPropsType = {
   isShutdown: boolean;
   search: string;
   sortBy: SortType;
-  setIsShutdown: Dispatch<SetStateAction<boolean>>;
+  handleIsShutdown: (event: MouseEvent<HTMLElement>, value: boolean) => void;
   setSearch: Dispatch<SetStateAction<string>>;
   setSortBy: Dispatch<SetStateAction<SortType>>;
 };
@@ -75,7 +75,7 @@ const VaultFilters: FC<VaultFiltersPropsType> = ({
   isShutdown,
   search,
   sortBy,
-  setIsShutdown,
+  handleIsShutdown,
   setSearch,
   setSortBy,
 }) => {
@@ -87,7 +87,7 @@ const VaultFilters: FC<VaultFiltersPropsType> = ({
           color="primary"
           value={isShutdown}
           exclusive
-          onChange={(event, isShutdown: boolean) => setIsShutdown(isShutdown)}
+          onChange={handleIsShutdown}
           aria-label="Platform"
         >
           <ToggleButton value={false}>Live Now</ToggleButton>
