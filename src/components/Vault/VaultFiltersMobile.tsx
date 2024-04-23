@@ -33,7 +33,7 @@ const VaultFiltersMobile: FC<VaultMobileFiltersPropsType> = ({
   search,
   sortBy,
   isMobileFiltersOpen,
-  setIsShutdown,
+  handleIsShutdown,
   setSearch,
   setSortBy,
   openMobileFilterMenu,
@@ -60,9 +60,7 @@ const VaultFiltersMobile: FC<VaultMobileFiltersPropsType> = ({
               color="primary"
               value={isShutdown}
               exclusive
-              onChange={(event, isShutdown: boolean) =>
-                setIsShutdown(isShutdown)
-              }
+              onChange={handleIsShutdown}
               aria-label="Platform"
               sx={{ width: "100%", button: { width: "50%" } }}
             >
