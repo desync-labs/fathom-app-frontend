@@ -41,7 +41,9 @@ const useVaultManageDeposit = (
   });
 
   const { token, depositLimit, balanceTokens } = vault;
-  const [formType, setFormType] = useState<FormType>(FormType.DEPOSIT);
+  const [formType, setFormType] = useState<FormType>(
+    vault.shutdown ? FormType.WITHDRAW : FormType.DEPOSIT
+  );
   const [walletBalance, setWalletBalance] = useState<string>("0");
   const [isWalletFetching, setIsWalletFetching] = useState<boolean>(false);
   const [openDepositLoading, setOpenDepositLoading] = useState<boolean>(false);
@@ -90,14 +92,7 @@ const useVaultManageDeposit = (
 
         setValue("formSharedToken", sharedConverted);
       }, 500),
-    [
-      vaultService,
-      vault,
-      formToken,
-      formType,
-      isFullWithdraw,
-      setIsFullWithdraw,
-    ]
+    [vaultService, vault, formType, isFullWithdraw, setIsFullWithdraw]
   );
 
   const approve = useCallback(async () => {
@@ -156,7 +151,7 @@ const useVaultManageDeposit = (
     return () => {
       timeout && clearTimeout(timeout);
     };
-  }, [formToken]);
+  }, [formToken, updateSharedAmount]);
 
   const getVaultTokenBalance = useCallback(async () => {
     const balance = await poolService.getUserTokenBalance(account, token.id);

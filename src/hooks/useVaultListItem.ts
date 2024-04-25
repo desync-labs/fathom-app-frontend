@@ -137,10 +137,13 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
 
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
+    let timeout: ReturnType<typeof setTimeout>;
     if (vault && vault?.strategies && vault?.strategies?.length) {
-      vault?.strategies.forEach((strategy: IVaultStrategy) => {
-        fetchReports(strategy.id, [], []);
-      });
+      timeout = setTimeout(() => {
+        vault?.strategies.forEach((strategy: IVaultStrategy) => {
+          fetchReports(strategy.id, [], []);
+        });
+      }, 500);
       /**
        * Refetch reports every 30 seconds
        */
@@ -151,7 +154,10 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
       }, 30 * 1000);
     }
 
-    return () => clearInterval(interval);
+    return () => {
+      interval && clearInterval(interval);
+      timeout && clearTimeout(timeout);
+    };
   }, [vault, fetchReports]);
 
   useEffect(() => {

@@ -29,7 +29,7 @@ export const MethodsTabPanel: FC<TabPanelProps> = memo(
         aria-labelledby={`method-tab-${index}`}
         {...other}
       >
-        {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+        {value === index && <Box sx={{ p: "24px 0" }}>{children}</Box>}
       </div>
     );
   }

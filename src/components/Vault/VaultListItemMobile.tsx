@@ -12,7 +12,7 @@ import {
 import {
   ExtendedBtn,
   VaultInfo,
-  EarningLabel,
+  VaultTagLabel,
   VaultListItemImageWrapper,
   VaultPercent,
   VaultStacked,
@@ -127,10 +127,13 @@ export const VaultListItemMobileAdditionalData: FC<VaultListItemMobileAdditional
           <VaultListLabel>Available</VaultListLabel>
           <VaultListValue className={"neutral"}>
             {formatNumber(
-              BigNumber(depositLimit)
-                .minus(BigNumber(balanceTokens))
-                .dividedBy(10 ** 18)
-                .toNumber()
+              Math.max(
+                BigNumber(depositLimit)
+                  .minus(BigNumber(balanceTokens))
+                  .dividedBy(10 ** 18)
+                  .toNumber(),
+                0
+              )
             )}{" "}
             {token.symbol}
           </VaultListValue>
@@ -195,13 +198,14 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
   const { fxdPrice } = usePricesContext();
   const { account } = useConnector();
   const vaultTestId = vaultItemData.id;
+  const { shutdown } = vaultItemData;
 
   return (
     <VaultListItemMobileContainer>
       {vaultPosition?.balancePosition &&
-        BigNumber(vaultPosition?.balancePosition).isGreaterThan(0) && (
-          <EarningLabel>Earning</EarningLabel>
-        )}
+        BigNumber(vaultPosition?.balancePosition).isGreaterThan(0) &&
+        !shutdown && <VaultTagLabel>Earning</VaultTagLabel>}
+      {shutdown && <VaultTagLabel>Finished</VaultTagLabel>}
       <VaultPoolName>
         <VaultListItemImageWrapper>
           <img src={getTokenLogoURL(token.symbol)} alt={token.name} />
@@ -304,7 +308,8 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
       />
       {(!vaultPosition ||
         !BigNumber(vaultPosition.balanceShares).isGreaterThan(0)) &&
-        account && (
+        account &&
+        !shutdown && (
           <ButtonPrimary
             onClick={() => setNewVaultDeposit(true)}
             sx={{ width: "100%", marginTop: "16px" }}
@@ -314,13 +319,25 @@ const VaultListItemMobile: FC<VaultListItemPropsType> = ({
         )}
       {vaultPosition &&
         BigNumber(vaultPosition.balanceShares).isGreaterThan(0) &&
-        account && (
+        account &&
+        !shutdown && (
           <ButtonPrimary
             onClick={() => setManageVault(true)}
             data-testid={`vaultRowDetails-${vaultTestId}-managePositionButton`}
             sx={{ width: "100%", marginTop: "16px" }}
           >
             Manage
+          </ButtonPrimary>
+        )}
+      {vaultPosition &&
+        BigNumber(vaultPosition.balanceShares).isGreaterThan(0) &&
+        account &&
+        shutdown && (
+          <ButtonPrimary
+            onClick={() => setManageVault(true)}
+            sx={{ width: "100%", marginTop: "16px" }}
+          >
+            Withdraw
           </ButtonPrimary>
         )}
       {!account && <WalletConnectBtn fullwidth sx={{ marginTop: "16px" }} />}

@@ -8,7 +8,7 @@ import usePricesContext from "context/prices";
 import useConnector from "context/connector";
 import useVaultListItem, { VaultInfoTabs } from "hooks/useVaultListItem";
 import { getTokenLogoURL } from "utils/tokenLogo";
-import { formatCurrency, formatNumber, formatPercentage } from "utils/format";
+import { formatCurrency, formatNumber } from "utils/format";
 import { useApr } from "hooks/useApr";
 
 import { AppTableRow } from "components/AppComponents/AppTable/AppTable";
@@ -166,7 +166,7 @@ export const VaultItemInfoWrapper = styled("div")`
   }
 `;
 
-export const EarningLabel = styled("div")`
+export const VaultTagLabel = styled("div")`
   background: rgba(0, 128, 118, 0.15);
   font-size: 12px;
   font-weight: 600;
@@ -209,7 +209,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
   handleExpandVault,
   handleCollapseVault,
 }) => {
-  const { token, balanceTokens, depositLimit } = vaultItemData;
+  const { token, balanceTokens, depositLimit, shutdown } = vaultItemData;
   const formattedApr = useApr(vaultItemData);
   const { fxdPrice } = usePricesContext();
   const vaultTestId = vaultItemData.id;
@@ -246,9 +246,9 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
             </VaultListItemImageWrapper>
             <VaultInfo>
               {vaultPosition?.balancePosition &&
-                BigNumber(vaultPosition?.balancePosition).isGreaterThan(0) && (
-                  <EarningLabel>Earning</EarningLabel>
-                )}
+                BigNumber(vaultPosition?.balancePosition).isGreaterThan(0) &&
+                !shutdown && <VaultTagLabel>Earning</VaultTagLabel>}
+              {shutdown && <VaultTagLabel>Finished</VaultTagLabel>}
               <VaultTitle data-testid={`vaultRow-${vaultTestId}-tokenTitle`}>
                 {vaultItemData.name}
               </VaultTitle>
@@ -271,7 +271,7 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
             <VaultEarned>
               {balanceEarned && BigNumber(balanceEarned).isGreaterThan(0) ? (
                 "$" +
-                formatPercentage(
+                formatNumber(
                   BigNumber(balanceEarned)
                     .multipliedBy(fxdPrice)
                     .dividedBy(10 ** 18)
@@ -313,10 +313,13 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
         >
           <VaultAvailable className={"blue"}>
             {formatNumber(
-              BigNumber(depositLimit)
-                .minus(BigNumber(balanceTokens))
-                .dividedBy(10 ** 18)
-                .toNumber()
+              Math.max(
+                BigNumber(depositLimit)
+                  .minus(BigNumber(balanceTokens))
+                  .dividedBy(10 ** 18)
+                  .toNumber(),
+                0
+              )
             )}{" "}
             {token.symbol}
           </VaultAvailable>
@@ -356,7 +359,8 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
           <FlexBox sx={{ justifyContent: "flex-end", gap: "16px", mx: "16px" }}>
             {(!vaultPosition ||
               !BigNumber(vaultPosition.balanceShares).isGreaterThan(0)) &&
-              account && (
+              account &&
+              !shutdown && (
                 <ButtonPrimary
                   onClick={() => setNewVaultDeposit(true)}
                   data-testid={`vaultRow-${vaultTestId}-depositButton`}
@@ -366,12 +370,21 @@ const VaultListItem: FC<VaultListItemPropsType> = ({
               )}
             {vaultPosition &&
               BigNumber(vaultPosition.balanceShares).isGreaterThan(0) &&
-              account && (
+              account &&
+              !shutdown && (
                 <ButtonPrimary
                   onClick={() => setManageVault(true)}
                   data-testid={`vaultRowDetails-${vaultTestId}-managePositionButton`}
                 >
                   Manage
+                </ButtonPrimary>
+              )}
+            {vaultPosition &&
+              BigNumber(vaultPosition.balanceShares).isGreaterThan(0) &&
+              account &&
+              shutdown && (
+                <ButtonPrimary onClick={() => setManageVault(true)}>
+                  Withdraw
                 </ButtonPrimary>
               )}
             {!account && !index && (

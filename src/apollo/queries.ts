@@ -211,6 +211,7 @@ export const VAULTS = gql`
       balanceTokensIdle
       depositLimit
       apr
+      shutdown
       strategies(orderBy: activation, orderDirection: asc) {
         id
         delegatedAssets

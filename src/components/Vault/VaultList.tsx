@@ -68,7 +68,7 @@ const VaultList: FC<VaultListPropsType> = ({
     isShutdown,
     search,
     sortBy,
-    setIsShutdown,
+    handleIsShutdown,
     setSearch,
     setSortBy,
     handlePageChange,
@@ -92,7 +92,7 @@ const VaultList: FC<VaultListPropsType> = ({
                   isMobileFiltersOpen={isMobileFiltersOpen}
                   search={search}
                   sortBy={sortBy}
-                  setIsShutdown={setIsShutdown}
+                  handleIsShutdown={handleIsShutdown}
                   setSearch={setSearch}
                   setSortBy={setSortBy}
                   openMobileFilterMenu={openMobileFilterMenu}
@@ -136,7 +136,7 @@ const VaultList: FC<VaultListPropsType> = ({
                   isShutdown={isShutdown}
                   search={search}
                   sortBy={sortBy}
-                  setIsShutdown={setIsShutdown}
+                  handleIsShutdown={handleIsShutdown}
                   setSearch={setSearch}
                   setSortBy={setSortBy}
                 />
