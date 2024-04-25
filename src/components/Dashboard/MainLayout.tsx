@@ -116,6 +116,7 @@ import { dexClient } from "apollo/client";
 import Transactions from "apps/dex/pages/Transactions";
 import { memo, useEffect } from "react";
 import ReactGA from "react-ga4";
+import PositionsTransactionList from "../PositionsTxList/PositionsTransactionList";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -461,6 +462,10 @@ const MainLayout = () => {
             <TransactionStatus scroll={scroll} />
             <Routes>
               <Route path="/" element={<DashboardContent />} />
+              <Route
+                path="/fxd-transactions"
+                element={<PositionsTransactionList />}
+              />
               {allowStableSwap ||
               isUserWrapperWhiteListed ||
               allowStableSwapInProgress ? (

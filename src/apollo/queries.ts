@@ -70,6 +70,25 @@ export const FXD_USER = gql`
   }
 `;
 
+export const FXD_EVENTS = gql`
+  query FXDUser($owner: String!) {
+    swapEvents(
+      where: { owner: $owner }
+      orderBy: blockTimestamp
+      orderDirection: desc
+    ) {
+      id
+      fee
+      isStablecoinToTokenSwap
+      isTokenToStablecoinSwap
+      owner
+      transaction
+      value
+      blockTimestamp
+    }
+  }
+`;
+
 export const GOVERNANCE_PROPOSALS = gql`
   query GovernanceProposals($first: Int!, $skip: Int!) {
     proposals(

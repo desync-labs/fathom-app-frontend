@@ -33,6 +33,18 @@ import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
 import AppPopover from "components/AppComponents/AppPopover/AppPopover";
 import useSharedContext from "context/shared";
 
+const FlexBox = styled(Box)`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const TxListLink = styled("a")`
+  font-size: 1rem;
+  text-decoration: underline;
+  margin-bottom: 10px;
+`;
+
 const PaginationWrapper = styled(Box)`
   display: flex;
   justify-content: center;
@@ -74,7 +86,12 @@ const PositionsList: FC<PositionsListProps> = ({
 
   return (
     <>
-      <TitleSecondary variant={"h2"}>Your Positions</TitleSecondary>
+      <FlexBox>
+        <TitleSecondary variant={"h2"}>Your Positions</TitleSecondary>
+        <TxListLink href={"/#/fxd-transactions"} rel="noreferrer">
+          Transactions
+        </TxListLink>
+      </FlexBox>
       {useMemo(
         () => (
           <>
