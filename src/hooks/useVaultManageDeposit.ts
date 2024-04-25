@@ -92,14 +92,7 @@ const useVaultManageDeposit = (
 
         setValue("formSharedToken", sharedConverted);
       }, 500),
-    [
-      vaultService,
-      vault,
-      formToken,
-      formType,
-      isFullWithdraw,
-      setIsFullWithdraw,
-    ]
+    [vaultService, vault, formType, isFullWithdraw, setIsFullWithdraw]
   );
 
   const approve = useCallback(async () => {
@@ -158,7 +151,7 @@ const useVaultManageDeposit = (
     return () => {
       timeout && clearTimeout(timeout);
     };
-  }, [formToken]);
+  }, [formToken, updateSharedAmount]);
 
   const getVaultTokenBalance = useCallback(async () => {
     const balance = await poolService.getUserTokenBalance(account, token.id);
