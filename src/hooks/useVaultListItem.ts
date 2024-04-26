@@ -7,15 +7,17 @@ import {
   SmartContractFactory,
 } from "fathom-sdk";
 import BigNumber from "bignumber.js";
+import { Contract } from "fathom-ethers";
+import { useLazyQuery } from "@apollo/client";
+
 import { useServices } from "context/services";
 import useConnector from "context/connector";
-import { useLazyQuery } from "@apollo/client";
+import useSyncContext from "context/sync";
+import useRpcError from "hooks/useRpcError";
 import {
   VAULT_POSITION_TRANSACTIONS,
   VAULT_STRATEGY_REPORTS,
 } from "apollo/queries";
-import useSyncContext from "context/sync";
-import { Contract } from "fathom-ethers";
 
 interface UseVaultListItemProps {
   vaultPosition: IVaultPosition | null | undefined;
@@ -43,11 +45,6 @@ export type IVaultStrategyHistoricalApr = {
 enum TransactionFetchType {
   FETCH = "fetch",
   PROMISE = "promise",
-}
-
-enum FetchBalanceTokenType {
-  PROMISE = "promise",
-  FETCH = "fetch",
 }
 
 const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
@@ -82,6 +79,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
 
   const { account, library } = useConnector();
   const { vaultService } = useServices();
+  const { showErrorNotification } = useRpcError();
 
   const [loadReports, { fetchMore: fetchMoreReports }] = useLazyQuery(
     VAULT_STRATEGY_REPORTS,
@@ -171,31 +169,24 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     }
   }, [vaultPosition]);
 
-  const fetchBalanceToken = useCallback(
-    (
-      fetchBalanceTokenType: FetchBalanceTokenType = FetchBalanceTokenType.FETCH
-    ) => {
-      if (fetchBalanceTokenType === FetchBalanceTokenType.PROMISE) {
-        return vaultService.previewRedeem(
-          BigNumber(vaultPosition?.balanceShares as string)
-            .dividedBy(10 ** 18)
-            .toString(),
-          vault.id
-        );
-      }
-      return vaultService
-        .previewRedeem(
-          BigNumber(vaultPosition?.balanceShares as string)
-            .dividedBy(10 ** 18)
-            .toString(),
-          vault.id
-        )
-        .then((balanceToken: string) => {
-          setBalanceToken(balanceToken);
-        });
-    },
-    [vaultService, vault.id, vaultPosition, setBalanceToken]
-  );
+  const fetchBalanceToken = useCallback(async () => {
+    try {
+      const balanceToken = await vaultService.previewRedeem(
+        BigNumber(vaultPosition?.balanceShares as string)
+          .dividedBy(10 ** 18)
+          .toString(),
+        vault.id
+      );
+      setBalanceToken(balanceToken);
+    } catch (error) {
+      setBalanceToken("-1");
+      showErrorNotification(error);
+      console.error(
+        `Failed to fetch balance token for vault ${vault.id}:`,
+        error
+      );
+    }
+  }, [vaultService, vault.id, vaultPosition, setBalanceToken]);
 
   const fetchPositionTransactions = useCallback(
     (fetchType: TransactionFetchType = TransactionFetchType.FETCH) => {
@@ -249,10 +240,9 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
       setTransactionLoading(true);
       Promise.all([
         fetchPositionTransactions(TransactionFetchType.PROMISE),
-        fetchBalanceToken(FetchBalanceTokenType.PROMISE),
+        fetchBalanceToken(),
       ])
-        .then(([transactions, balanceToken]) => {
-          setBalanceToken(balanceToken as string);
+        .then(([transactions]) => {
           transactions?.data?.deposits &&
             setDepositsList(transactions?.data.deposits);
           transactions?.data?.withdrawals &&
@@ -282,6 +272,8 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
       (acc: BigNumber, withdrawal: any) => acc.plus(withdrawal.tokenAmount),
       new BigNumber(0)
     );
+
+    if (balanceToken === "-1") return 0;
 
     return transactionsLoading
       ? -1
