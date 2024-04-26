@@ -74,7 +74,7 @@ export default class FxdPage extends BasePage {
     this.btnMax = this.page.getByText("Max");
     this.btnSafeMax = this.page.getByText("Safe Max");
     this.tableYourPositions = this.page.locator(
-      '//h2[text()="Your Positions"]/following-sibling::div/table'
+      '//h2[text()="Your Positions"]/parent::div/following-sibling::div/table'
     );
     this.rowLatestPosition = this.tableYourPositions.locator(
       "tbody > tr:nth-child(1)"
