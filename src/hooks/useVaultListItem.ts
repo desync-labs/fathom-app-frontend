@@ -47,6 +47,11 @@ enum TransactionFetchType {
   PROMISE = "promise",
 }
 
+enum FetchBalanceTokenType {
+  PROMISE = "promise",
+  FETCH = "fetch",
+}
+
 const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
   const [manageVault, setManageVault] = useState<boolean>(false);
   const [newVaultDeposit, setNewVaultDeposit] = useState<boolean>(false);
@@ -169,24 +174,40 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     }
   }, [vaultPosition]);
 
-  const fetchBalanceToken = useCallback(async () => {
-    try {
-      const balanceToken = await vaultService.previewRedeem(
-        BigNumber(vaultPosition?.balanceShares as string)
-          .dividedBy(10 ** 18)
-          .toString(),
-        vault.id
-      );
-      setBalanceToken(balanceToken);
-    } catch (error) {
-      setBalanceToken("-1");
-      showErrorNotification(error);
-      console.error(
-        `Failed to fetch balance token for vault ${vault.id}:`,
-        error
-      );
-    }
-  }, [vaultService, vault.id, vaultPosition, setBalanceToken]);
+  const fetchBalanceToken = useCallback(
+    (
+      fetchBalanceTokenType: FetchBalanceTokenType = FetchBalanceTokenType.FETCH
+    ) => {
+      if (fetchBalanceTokenType === FetchBalanceTokenType.PROMISE) {
+        return vaultService
+          .previewRedeem(
+            BigNumber(vaultPosition?.balanceShares as string)
+              .dividedBy(10 ** 18)
+              .toString(),
+            vault.id
+          )
+          .catch((error) => {
+            showErrorNotification(error);
+            return "-1";
+          });
+      }
+      return vaultService
+        .previewRedeem(
+          BigNumber(vaultPosition?.balanceShares as string)
+            .dividedBy(10 ** 18)
+            .toString(),
+          vault.id
+        )
+        .then((balanceToken: string) => {
+          setBalanceToken(balanceToken);
+        })
+        .catch((error) => {
+          setBalanceToken("-1");
+          showErrorNotification(error);
+        });
+    },
+    [vaultService, vault.id, vaultPosition, setBalanceToken]
+  );
 
   const fetchPositionTransactions = useCallback(
     (fetchType: TransactionFetchType = TransactionFetchType.FETCH) => {
@@ -240,9 +261,10 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
       setTransactionLoading(true);
       Promise.all([
         fetchPositionTransactions(TransactionFetchType.PROMISE),
-        fetchBalanceToken(),
+        fetchBalanceToken(FetchBalanceTokenType.PROMISE),
       ])
-        .then(([transactions]) => {
+        .then(([transactions, balanceToken]) => {
+          setBalanceToken(balanceToken as string);
           transactions?.data?.deposits &&
             setDepositsList(transactions?.data.deposits);
           transactions?.data?.withdrawals &&
