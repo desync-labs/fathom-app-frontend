@@ -285,6 +285,8 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
   ]);
 
   const balanceEarned = useMemo(() => {
+    if (balanceToken === "-1") return 0;
+
     const sumTokenDeposits = depositsList.reduce(
       (acc: BigNumber, deposit: any) => acc.plus(deposit.tokenAmount),
       new BigNumber(0)
@@ -294,8 +296,6 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
       (acc: BigNumber, withdrawal: any) => acc.plus(withdrawal.tokenAmount),
       new BigNumber(0)
     );
-
-    if (balanceToken === "-1") return 0;
 
     return transactionsLoading
       ? -1
