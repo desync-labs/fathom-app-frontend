@@ -15,7 +15,6 @@ import { Divider } from "apps/charts/components";
 import { formattedNum, formattedPercent } from "apps/charts/utils";
 import DoubleTokenLogo from "apps/charts/components/DoubleLogo";
 import FormattedName from "apps/charts/components/FormattedName";
-import { TYPE } from "apps/charts/Theme";
 import { PAIR_BLACKLIST } from "apps/charts/constants";
 import { AutoColumn } from "apps/charts/components/Column";
 import { TableHeaderBox } from "apps/charts/components/Row";
@@ -129,18 +128,10 @@ const FIELD_TO_VALUE = (field: number, useTracked: boolean) => {
   }
 };
 
-const formatDataText = (
-  value: any,
-  trackedValue: any,
-  supressWarning = false
-) => {
-  const showUntracked = value !== "$0" && !trackedValue && !supressWarning;
+const formatDataText = (value: any) => {
   return (
-    <AutoColumn gap="2px" style={{ opacity: showUntracked ? "0.7" : "1" }}>
+    <AutoColumn gap="2px" style={{ opacity: "1" }}>
       <div style={{ textAlign: "center" }}>{value}</div>
-      <TYPE.light fontSize={"9px"} style={{ textAlign: "right" }}>
-        {showUntracked ? "untracked" : "  "}
-      </TYPE.light>
     </AutoColumn>
   );
 };
@@ -231,27 +222,11 @@ const ListItem: FC<ListItemProps> = memo((props) => {
             />
           </CustomLink>
         </DataText>
-        <DataText>
-          {formatDataText(liquidity, pairData.trackedReserveUSD)}
-        </DataText>
-        <DataText>{formatDataText(volume, pairData.oneDayVolumeUSD)}</DataText>
-        {!below1080 && (
-          <DataText>
-            {formatDataText(weekVolume, pairData.oneWeekVolumeUSD)}
-          </DataText>
-        )}
-        {!below1080 && (
-          <DataText>{formatDataText(fees, pairData.oneDayVolumeUSD)}</DataText>
-        )}
-        {!below1080 && (
-          <DataText>
-            {formatDataText(
-              apy,
-              pairData.oneDayVolumeUSD,
-              pairData.oneDayVolumeUSD === 0
-            )}
-          </DataText>
-        )}
+        <DataText>{formatDataText(liquidity)}</DataText>
+        <DataText>{formatDataText(volume)}</DataText>
+        {!below1080 && <DataText>{formatDataText(weekVolume)}</DataText>}
+        {!below1080 && <DataText>{formatDataText(fees)}</DataText>}
+        {!below1080 && <DataText>{formatDataText(apy)}</DataText>}
       </DashGrid>
     );
   } else {

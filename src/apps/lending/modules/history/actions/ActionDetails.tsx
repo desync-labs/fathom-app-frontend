@@ -13,6 +13,7 @@ import {
   TransactionHistoryItem,
 } from "apps/lending/modules/history/types";
 import { FC } from "react";
+import { useAppDataContext } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 
 export const ActionTextMap: FC<{ action: string }> = ({ action }) => {
   switch (action) {
@@ -32,6 +33,8 @@ export const ActionTextMap: FC<{ action: string }> = ({ action }) => {
       return <>Borrow rate change</>;
     case "LiquidationCall":
       return <>Liquidation</>;
+    case "UserEModeSet":
+      return <>E-Mode</>;
     default:
       return <></>;
   }
@@ -712,6 +715,44 @@ export const ActionDetails = <K extends keyof ActionFields>({
               </Box>
             </Box>
           </Box>
+        </Box>
+      );
+    case "UserEModeSet":
+      const eModeFields = transaction as TransactionHistoryItem<
+        ActionFields["UserEModeSet"]
+      >;
+      const { eModes } = useAppDataContext();
+      return (
+        <Box sx={{ display: "inline-flex", alignItems: "center" }}>
+          <Typography variant="description" color="text.light">
+            E-Mode
+          </Typography>
+          {eModeFields.categoryId !== 0 && eModes ? (
+            <>
+              <Typography
+                variant="subheader1"
+                color="success.main"
+                sx={{ px: 0.75 }}
+              >
+                enabled
+              </Typography>
+              <Typography
+                variant="description"
+                color="text.light"
+                sx={{ mr: 0.5 }}
+              >
+                for {eModes[eModeFields.categoryId]?.assets?.join(", ")}
+              </Typography>
+            </>
+          ) : (
+            <Typography
+              variant="subheader1"
+              color="error.main"
+              sx={{ px: 0.75 }}
+            >
+              disabled
+            </Typography>
+          )}
         </Box>
       );
     default:
