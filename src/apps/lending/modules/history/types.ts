@@ -58,6 +58,9 @@ export type ActionFields = {
     toState: boolean;
     assetPriceUSD: string;
   };
+  UserEModeSet: {
+    categoryId: number;
+  };
 };
 
 export type TransactionHistoryItemUnion =
@@ -67,7 +70,8 @@ export type TransactionHistoryItemUnion =
   | TransactionHistoryItem<ActionFields["RedeemUnderlying"]>
   | TransactionHistoryItem<ActionFields["LiquidationCall"]>
   | TransactionHistoryItem<ActionFields["SwapBorrowRate"]>
-  | TransactionHistoryItem<ActionFields["UsageAsCollateral"]>;
+  | TransactionHistoryItem<ActionFields["UsageAsCollateral"]>
+  | TransactionHistoryItem<ActionFields["UserEModeSet"]>;
 
 // Type guards
 export const hasCollateralReserve = (
