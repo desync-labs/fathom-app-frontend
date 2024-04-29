@@ -7,15 +7,17 @@ import {
   SmartContractFactory,
 } from "fathom-sdk";
 import BigNumber from "bignumber.js";
+import { Contract } from "fathom-ethers";
+import { useLazyQuery } from "@apollo/client";
+
 import { useServices } from "context/services";
 import useConnector from "context/connector";
-import { useLazyQuery } from "@apollo/client";
+import useSyncContext from "context/sync";
+import useRpcError from "hooks/useRpcError";
 import {
   VAULT_POSITION_TRANSACTIONS,
   VAULT_STRATEGY_REPORTS,
 } from "apollo/queries";
-import useSyncContext from "context/sync";
-import { Contract } from "fathom-ethers";
 
 interface UseVaultListItemProps {
   vaultPosition: IVaultPosition | null | undefined;
@@ -82,6 +84,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
 
   const { account, library } = useConnector();
   const { vaultService } = useServices();
+  const { showErrorNotification } = useRpcError();
 
   const [loadReports, { fetchMore: fetchMoreReports }] = useLazyQuery(
     VAULT_STRATEGY_REPORTS,
@@ -176,12 +179,17 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
       fetchBalanceTokenType: FetchBalanceTokenType = FetchBalanceTokenType.FETCH
     ) => {
       if (fetchBalanceTokenType === FetchBalanceTokenType.PROMISE) {
-        return vaultService.previewRedeem(
-          BigNumber(vaultPosition?.balanceShares as string)
-            .dividedBy(10 ** 18)
-            .toString(),
-          vault.id
-        );
+        return vaultService
+          .previewRedeem(
+            BigNumber(vaultPosition?.balanceShares as string)
+              .dividedBy(10 ** 18)
+              .toString(),
+            vault.id
+          )
+          .catch((error) => {
+            showErrorNotification(error);
+            return "-1";
+          });
       }
       return vaultService
         .previewRedeem(
@@ -192,6 +200,10 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
         )
         .then((balanceToken: string) => {
           setBalanceToken(balanceToken);
+        })
+        .catch((error) => {
+          setBalanceToken("-1");
+          showErrorNotification(error);
         });
     },
     [vaultService, vault.id, vaultPosition, setBalanceToken]
@@ -273,6 +285,8 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
   ]);
 
   const balanceEarned = useMemo(() => {
+    if (balanceToken === "-1") return 0;
+
     const sumTokenDeposits = depositsList.reduce(
       (acc: BigNumber, deposit: any) => acc.plus(deposit.tokenAmount),
       new BigNumber(0)
