@@ -85,6 +85,9 @@ query UserTransactions($userAddress: String!, $first: Int!, $skip: Int!) {
       collateralAssetPriceUSD
       borrowAssetPriceUSD
     }
+    ... on UserEModeSet {
+      categoryId
+    }
   }
 }
 `;
