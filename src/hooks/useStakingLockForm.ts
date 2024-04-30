@@ -198,7 +198,7 @@ const useStakingLockForm = () => {
 
   const unlockDate = useMemo(() => {
     const now = new Date();
-    now.setDate(now.getDate() + lockDays);
+    now.setDate(now.getDate() + Number(lockDays));
     return now.toLocaleDateString();
   }, [lockDays]);
 
