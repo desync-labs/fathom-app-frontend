@@ -24,7 +24,7 @@ import StableSwapAddLiquidity from "components/Stableswap/StableSwapAddLiquidity
 import StableSwapRemoveLiquidity from "components/Stableswap/StableSwapRemoveLiquidity";
 import StableSwapManageFees from "components/Stableswap/StableSwapManageFees";
 
-import AllVaultView from "components/Vault/AllVaultView";
+import VaultsView from "components/Vaults/VaultsView";
 import Web3Status from "components/Web3Status/Web3Status";
 
 import AllProposalsView from "components/Governance/ViewAllProposals";
@@ -116,6 +116,8 @@ import { dexClient } from "apollo/client";
 import Transactions from "apps/dex/pages/Transactions";
 import { memo, useEffect } from "react";
 import ReactGA from "react-ga4";
+import VaultListView from "../Vaults/VaultList/VaultListView";
+import VaultTutorial from "../Vaults/VaultTutorial/VaultTutorial";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -575,12 +577,15 @@ const MainLayout = () => {
               <Route
                 path="/vaults"
                 element={
-                  <AllVaultView
+                  <VaultsView
                     isMobileFiltersOpen={isMobileFiltersOpen}
                     openMobileFilterMenu={openMobileFilterMenu}
                   />
                 }
-              ></Route>
+              >
+                <Route index element={<VaultListView />} />
+                <Route path="tutorial" index element={<VaultTutorial />} />
+              </Route>
               <Route path="/charts" element={<ChartsView />}>
                 <Route
                   index
