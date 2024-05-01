@@ -488,9 +488,12 @@ export default class FxdPage extends BasePage {
       .toHaveText(positionIdExpected.toString());
     const borrowAmountLatestPositionDisplayed =
       this.borrowAmountLatestPositionRow;
+    const borrowAmountActual = extractNumericValue(
+      (await borrowAmountLatestPositionDisplayed.textContent()) as string
+    );
     expect
-      .soft(borrowAmountLatestPositionDisplayed)
-      .toContainText((Math.round(borrowAmountExpected * 100) / 100).toString());
+      .soft(borrowAmountActual)
+      .toEqual(Math.round(borrowAmountExpected * 100) / 100);
     expect.soft(borrowAmountLatestPositionDisplayed).toContainText("FXD");
     const collateralAmountLatestPositionDisplayed =
       this.collateralAmountLatestPositionRow;
