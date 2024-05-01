@@ -228,7 +228,7 @@ const StakingLockForm: FC = () => {
                   step={1}
                   min={minLockPeriod}
                   max={365}
-                  value={value}
+                  value={Number(value)}
                   onChange={onChange}
                 />
               </Box>
