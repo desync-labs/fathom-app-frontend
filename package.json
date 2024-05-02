@@ -8,7 +8,7 @@
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
     "@into-the-fathom/fathom-lending-address-book": "^1.0.0",
-    "@into-the-fathom/lending-contract-helpers": "^0.0.3",
+    "@into-the-fathom/lending-contract-helpers": "^0.0.7",
     "@into-the-fathom/lending-math-utils": "^0.0.3",
     "@mui/icons-material": "^5.10.14",
     "@mui/material": "^5.10.9",

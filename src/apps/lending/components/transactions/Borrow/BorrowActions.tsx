@@ -70,7 +70,8 @@ export const BorrowActions: FC<BorrowActionsProps> = React.memo(
       setLoadingTxns,
       setApprovalTxState,
     } = useModalContext();
-    const { refetchPoolData } = useBackgroundDataProvider();
+    const { refetchPoolData, refetchIncentiveData } =
+      useBackgroundDataProvider();
     const { sendTx } = useWeb3Context();
     const [requiresApproval, setRequiresApproval] = useState<boolean>(false);
     const [approvedAmount, setApprovedAmount] = useState<
@@ -146,6 +147,7 @@ export const BorrowActions: FC<BorrowActionsProps> = React.memo(
 
         queryClient.invalidateQueries({ queryKey: [QueryKeys.POOL_TOKENS] });
         refetchPoolData && refetchPoolData();
+        refetchIncentiveData && refetchIncentiveData();
       } catch (error: any) {
         const parsedError = getErrorTextFromError(
           error,
