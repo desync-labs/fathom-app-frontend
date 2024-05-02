@@ -28,7 +28,7 @@ export const SupplyAssetsListItem: FC<DashboardReserve> = memo(
     supplyCap,
     totalLiquidity,
     supplyAPY,
-    aIncentivesData,
+    fmIncentivesData,
     underlyingAsset,
     isActive,
     isFreezed,
@@ -76,7 +76,7 @@ export const SupplyAssetsListItem: FC<DashboardReserve> = memo(
 
         <ListAPRColumn
           value={Number(supplyAPY)}
-          incentives={aIncentivesData}
+          incentives={fmIncentivesData}
           symbol={symbol}
         />
 
