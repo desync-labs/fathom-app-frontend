@@ -40,7 +40,12 @@ export const createIncentiveSlice: StateCreator<
             lendingPoolAddressProvider:
               currentMarketData.addresses.LENDING_POOL_ADDRESS_PROVIDER,
           })
-          .then((reserveIncentiveData) => set({ reserveIncentiveData }))
+          .then((reserveIncentiveData) => {
+            console.log({
+              reserveIncentiveData,
+            });
+            set({ reserveIncentiveData });
+          })
       );
       if (account) {
         promises.push(
@@ -50,11 +55,14 @@ export const createIncentiveSlice: StateCreator<
                 currentMarketData.addresses.LENDING_POOL_ADDRESS_PROVIDER,
               user: account,
             })
-            .then((userIncentiveData) =>
+            .then((userIncentiveData) => {
+              console.log({
+                userIncentiveData,
+              });
               set({
                 userIncentiveData,
-              })
-            )
+              });
+            })
         );
       }
       await Promise.all(promises);

@@ -141,9 +141,11 @@ export const selectUserSummaryAndIncentives = (
     currentTimestamp
   );
   const userEmodeCategoryId = selectCurrentUserEmodeCategoryId(state);
+  const reserveIncentiveData = state.reserveIncentiveData;
+  const userIncentiveData = state.userIncentiveData;
 
   // TODO: why <any>
-  return formatUserSummaryAndIncentives({
+  const data = formatUserSummaryAndIncentives({
     currentTimestamp,
     marketReferencePriceInUsd:
       baseCurrencyData.marketReferenceCurrencyPriceInUsd,
@@ -152,9 +154,11 @@ export const selectUserSummaryAndIncentives = (
     userReserves,
     formattedReserves: formattedPoolReserves,
     userEmodeCategoryId: userEmodeCategoryId,
-    reserveIncentives: [],
-    userIncentives: [],
+    reserveIncentives: reserveIncentiveData || [],
+    userIncentives: userIncentiveData || [],
   });
+
+  return data;
 };
 
 export const formatEmodes = (reserves: ReserveDataHumanized[]) => {
