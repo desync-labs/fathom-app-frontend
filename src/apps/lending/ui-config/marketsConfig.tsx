@@ -30,6 +30,7 @@ export type MarketDataType = {
     WALLET_BALANCE_PROVIDER: string;
     UI_POOL_DATA_PROVIDER: string;
     COLLECTOR?: string;
+    UI_INCENTIVE_DATA_PROVIDER?: string;
   };
   /**
    * https://www.hal.xyz/ has integrated lending for healtfactor warning notification
@@ -58,7 +59,7 @@ export const marketsData: {
     chainId: FathomLendingApothem.CHAIN_ID,
     enabledFeatures: {
       faucet: true,
-      incentives: false,
+      incentives: true,
       addressBlocked: false,
       stableBorrowRate: false,
     },
@@ -72,6 +73,8 @@ export const marketsData: {
       UI_POOL_DATA_PROVIDER: FathomLendingApothem.UI_POOL_DATA_PROVIDER,
       COLLECTOR: FathomLendingApothem.COLLECTOR,
       FAUCET: FathomLendingApothem.FAUCET,
+      UI_INCENTIVE_DATA_PROVIDER:
+        FathomLendingApothem.UI_INCENTIVE_DATA_PROVIDER,
     },
   },
   [CustomMarket.proto_mainnet_v3]: {
@@ -92,6 +95,7 @@ export const marketsData: {
       WALLET_BALANCE_PROVIDER: FathomLendingXdc.WALLET_BALANCE_PROVIDER,
       UI_POOL_DATA_PROVIDER: FathomLendingXdc.UI_POOL_DATA_PROVIDER,
       COLLECTOR: FathomLendingXdc.COLLECTOR,
+      UI_INCENTIVE_DATA_PROVIDER: FathomLendingXdc.UI_INCENTIVE_DATA_PROVIDER,
     },
   },
 } as const;
