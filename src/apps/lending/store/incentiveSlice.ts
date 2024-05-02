@@ -41,9 +41,6 @@ export const createIncentiveSlice: StateCreator<
               currentMarketData.addresses.LENDING_POOL_ADDRESS_PROVIDER,
           })
           .then((reserveIncentiveData) => {
-            console.log({
-              reserveIncentiveData,
-            });
             set({ reserveIncentiveData });
           })
       );
@@ -56,9 +53,6 @@ export const createIncentiveSlice: StateCreator<
               user: account,
             })
             .then((userIncentiveData) => {
-              console.log({
-                userIncentiveData,
-              });
               set({
                 userIncentiveData,
               });

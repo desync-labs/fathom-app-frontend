@@ -115,7 +115,7 @@ export const selectFormattedReserves = (
       baseCurrencyData.marketReferenceCurrencyDecimals,
     marketReferencePriceInUsd:
       baseCurrencyData.marketReferenceCurrencyPriceInUsd,
-    reserveIncentives: [],
+    reserveIncentives: state.reserveIncentiveData || [],
   })
     .map((r) => ({
       ...r,
