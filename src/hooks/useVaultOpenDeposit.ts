@@ -117,7 +117,7 @@ const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
         .minus(balanceTokens)
         .dividedBy(10 ** 18),
       BigNumber(MAX_PERSONAL_DEPOSIT)
-    );
+    ).decimalPlaces(18, BigNumber.ROUND_DOWN);
 
     setValue("deposit", maxWalletBalance.toString(), {
       shouldValidate: true,

@@ -202,7 +202,7 @@ const useVaultManageDeposit = (
       if (formType === FormType.DEPOSIT) {
         const maxWalletBalance = BigNumber(walletBalance).dividedBy(10 ** 18);
         const maxDepositLimit = BigNumber(depositLimit)
-          .minus(BigNumber(balanceTokens))
+          .minus(balanceTokens)
           .dividedBy(10 ** 18);
 
         return validateDeposit(value, maxWalletBalance, maxDepositLimit);
@@ -224,7 +224,7 @@ const useVaultManageDeposit = (
         BigNumber(MAX_PERSONAL_DEPOSIT).minus(
           BigNumber(balancePosition).dividedBy(10 ** 18)
         )
-      );
+      ).decimalPlaces(18, BigNumber.ROUND_DOWN);
 
       const maxCapped = max.isNegative() ? BigNumber(0) : max;
 
