@@ -27,6 +27,7 @@ export default defineConfig({
   reporter: [
     ["list"],
     ["html", { outputFolder: "playwright-tests/test-report", open: "never" }],
+    ["json", { outputFile: "playwright-tests/test-report/results.json" }],
   ],
   timeout: process.env.CI ? 150000 : 120000,
   outputDir: "./playwright-tests/test-results",
