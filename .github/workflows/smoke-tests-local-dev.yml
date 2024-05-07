@@ -43,4 +43,4 @@ jobs:
           retention-days: 30
       - uses: daun/playwright-report-summary@v3
         with:
-          report-file: plawyright-tests/test-report/results.json
+          report-file: playwright-tests/test-report/results.json
