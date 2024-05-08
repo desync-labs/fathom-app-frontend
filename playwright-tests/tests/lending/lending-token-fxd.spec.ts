@@ -31,7 +31,7 @@ test.describe("Fathom App Test Suite: Lending - FXD Token Tests", () => {
         assetName,
       });
     expect(assetNativeAmountAfter).toEqual(
-      assetNativeAmountBefore + supplyAmount + 1
+      assetNativeAmountBefore + supplyAmount
     );
   });
 
