@@ -222,6 +222,63 @@ export const VAULTS = gql`
     }
   }
 `;
+export const VAULT = gql`
+  query Vault($id: ID) {
+    vault(id: $id) {
+      id
+      token {
+        id
+        decimals
+        name
+        symbol
+      }
+      shareToken {
+        id
+        decimals
+        name
+        symbol
+      }
+      sharesSupply
+      balanceTokens
+      balanceTokensIdle
+      depositLimit
+      apr
+      shutdown
+      strategies(orderBy: activation, orderDirection: asc) {
+        id
+        delegatedAssets
+        currentDebt
+        maxDebt
+        apr
+      }
+    }
+  }
+`;
+
+export const VAULT_POSITION = gql`
+  query AccountVaultPositions($account: String!, $vault: String!) {
+    accountVaultPositions(where: { account: $account, vault: $vault }) {
+      id
+      balancePosition
+      balanceProfit
+      balanceShares
+      balanceTokens
+      vault {
+        id
+      }
+      token {
+        id
+        symbol
+        name
+      }
+      shareToken {
+        id
+        symbol
+        name
+      }
+    }
+  }
+`;
 
 export const VAULT_STRATEGY_REPORTS = gql`
   query VaultStrategyReports(

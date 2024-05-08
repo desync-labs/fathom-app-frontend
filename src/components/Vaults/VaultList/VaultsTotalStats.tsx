@@ -3,6 +3,7 @@ import { Box, styled } from "@mui/material";
 
 import { ReactComponent as DepositedIcon } from "assets/svg/icons/vault-stats-deposited.svg";
 import { ReactComponent as EarnedIcon } from "assets/svg/icons/vault-stats-earning.svg";
+import { FC } from "react";
 
 const StatItemWrapper = styled(Box)`
   display: flex;
@@ -30,7 +31,9 @@ const StatItemValue = styled(Box)`
   line-height: 24px;
 `;
 
-const StatItem = ({ title, value, icon }) => {
+type StatItemPropsType = { title: string; value: string; icon: JSX.Element };
+
+const StatItem: FC<StatItemPropsType> = ({ title, value, icon }) => {
   return (
     <StatItemWrapper>
       <AppFlexBox sx={{ gap: 2 }}>

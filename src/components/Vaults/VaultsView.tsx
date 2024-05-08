@@ -1,11 +1,11 @@
 import { FC, MouseEvent, useMemo } from "react";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation, useParams } from "react-router-dom";
 import {
   NestedRouteContainer,
   NestedRouteLink,
   NestedRouteNav,
 } from "components/AppComponents/AppBox/AppBox";
-import useSharedContext from "../../context/shared";
+import useSharedContext from "context/shared";
 
 type VaultsViewPropsType = {
   isMobileFiltersOpen: boolean;
@@ -14,6 +14,7 @@ type VaultsViewPropsType = {
 
 const VaultsView: FC<VaultsViewPropsType> = () => {
   const location = useLocation();
+  const { vaultAddress } = useParams();
   const { isMobile } = useSharedContext();
 
   const isVaultListActive = useMemo(() => {
@@ -24,22 +25,27 @@ const VaultsView: FC<VaultsViewPropsType> = () => {
     () => location.pathname.includes("tutorial"),
     [location.pathname]
   );
+
+  const isVaultVaultDetail = useMemo(() => !!vaultAddress, [vaultAddress]);
+
   return (
     <>
-      <NestedRouteNav>
-        <NestedRouteLink
-          className={isVaultListActive ? "active" : ""}
-          to="/vaults"
-        >
-          Vault Management
-        </NestedRouteLink>
-        <NestedRouteLink
-          className={isVaultTutorialActive ? "active" : ""}
-          to="/vaults/tutorial"
-        >
-          Tutorial
-        </NestedRouteLink>
-      </NestedRouteNav>
+      {!isVaultVaultDetail && (
+        <NestedRouteNav>
+          <NestedRouteLink
+            className={isVaultListActive ? "active" : ""}
+            to="/vaults"
+          >
+            Vault Management
+          </NestedRouteLink>
+          <NestedRouteLink
+            className={isVaultTutorialActive ? "active" : ""}
+            to="/vaults/tutorial"
+          >
+            Tutorial
+          </NestedRouteLink>
+        </NestedRouteNav>
+      )}
       <NestedRouteContainer
         maxWidth="lg"
         sx={{

@@ -118,6 +118,7 @@ import { memo, useEffect } from "react";
 import ReactGA from "react-ga4";
 import VaultListView from "../Vaults/VaultList/VaultListView";
 import VaultTutorial from "../Vaults/VaultTutorial/VaultTutorial";
+import VaultDetailView from "../Vaults/VaultDetail/VaultDetailView";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -585,6 +586,7 @@ const MainLayout = () => {
               >
                 <Route index element={<VaultListView />} />
                 <Route path="tutorial" index element={<VaultTutorial />} />
+                <Route path=":vaultAddress" element={<VaultDetailView />} />
               </Route>
               <Route path="/charts" element={<ChartsView />}>
                 <Route
