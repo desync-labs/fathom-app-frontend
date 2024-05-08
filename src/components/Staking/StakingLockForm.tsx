@@ -9,7 +9,10 @@ import {
   AppFormLabel,
   AppTextField,
 } from "components/AppComponents/AppForm/AppForm";
-import { WalletBalance } from "components/AppComponents/AppBox/AppBox";
+import {
+  ErrorBox,
+  WalletBalance,
+} from "components/AppComponents/AppBox/AppBox";
 import {
   ButtonPrimary,
   MaxButton,
@@ -21,6 +24,7 @@ import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatCurrency, formatNumber, formatPercentage } from "utils/format";
 
 import usePricesContext from "context/prices";
+import useStakingContext from "context/staking";
 import BigNumber from "bignumber.js";
 import WalletConnectBtn from "components/Common/WalletConnectBtn";
 
@@ -109,6 +113,8 @@ const StakingLockForm: FC = () => {
     fxdBalance,
     xdcBalance,
   } = useStakingLockForm();
+
+  const { isMaxLockPositionExceeded, maxLockPositions } = useStakingContext();
 
   const { fthmPrice, xdcPrice, fxdPrice } = usePricesContext();
 
@@ -257,6 +263,16 @@ const StakingLockForm: FC = () => {
           );
         }, [lockDays, unlockDate])}
 
+        {isMaxLockPositionExceeded && (
+          <ErrorBox sx={{ width: "100%" }}>
+            <InfoIcon />
+            <Typography>
+              Limit of {maxLockPositions} open positions has been exceeded.
+              Please close some positions to open new ones.
+            </Typography>
+          </ErrorBox>
+        )}
+
         {!account ? (
           <WalletConnectBtn fullwidth sx={{ marginTop: 3 }} />
         ) : (
@@ -277,7 +293,7 @@ const StakingLockForm: FC = () => {
             ) : (
               <ButtonPrimary
                 isLoading={isLoading}
-                disabled={isLoading}
+                disabled={isLoading || isMaxLockPositionExceeded}
                 type="submit"
                 sx={{ width: "100%", height: "48px" }}
               >
