@@ -18,7 +18,7 @@ export default defineConfig({
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
-  /* forbidOnly: !(process.env.CI == null), */
+  forbidOnly: !(process.env.CI == null),
   /* Retry on CI only */
   retries: process.env.CI != null ? 0 : 0,
   /* Opt out of parallel tests on CI. */
