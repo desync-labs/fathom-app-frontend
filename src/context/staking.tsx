@@ -26,6 +26,8 @@ type UseStakingReturnType = {
   action: ActionType | undefined;
   isLoading: boolean;
   isUnlockable: (remainingTime: number) => boolean;
+  isMaxLockPositionExceeded: boolean;
+  maxLockPositions: number;
   withdrawAll: (callback: Function) => Promise<void>;
   claimRewards: (callback: Function) => Promise<void>;
   handleEarlyUnstake: (lockId: number) => Promise<number | Error>;

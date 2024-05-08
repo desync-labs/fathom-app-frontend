@@ -72,6 +72,9 @@ const useStakingView = () => {
   const [dialogAction, setDialogAction] = useState<DialogActions>(
     DialogActions.NONE
   );
+  const [isMaxLockPositionExceeded, setIsMaxLockPositionExceeded] =
+    useState<boolean>(false);
+  const [maxLockPositions, setMaxLockPositions] = useState<number>(0);
 
   const {
     data: protocolStatsInfo,
@@ -190,6 +193,29 @@ const useStakingView = () => {
       setLockPositions([]);
     }
   }, [stakesData, account, stakesLoading, fetchPositions, chainId]);
+
+  const getMaxLockPositions = useCallback(async () => {
+    const maxLockPositions = await stakingService.getMaxLockPositions();
+    setMaxLockPositions(maxLockPositions.toNumber());
+
+    if (stakesData?.stakers[0]?.lockPositionCount) {
+      setIsMaxLockPositionExceeded(
+        parseInt(stakesData?.stakers[0].lockPositionCount) >=
+          maxLockPositions.toNumber()
+      );
+    } else {
+      setIsMaxLockPositionExceeded(false);
+    }
+  }, [
+    stakingService,
+    setIsMaxLockPositionExceeded,
+    setMaxLockPositions,
+    stakesData,
+  ]);
+
+  useEffect(() => {
+    getMaxLockPositions();
+  }, [stakesData, getMaxLockPositions]);
 
   /**
    * Get All claimed rewards
@@ -372,6 +398,8 @@ const useStakingView = () => {
     action,
     isLoading: stakesLoading || fetchPositionsLoading,
     isUnlockable,
+    isMaxLockPositionExceeded,
+    maxLockPositions,
     withdrawAll,
     claimRewards,
     handleEarlyUnstake,
