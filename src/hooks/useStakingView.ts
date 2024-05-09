@@ -136,6 +136,25 @@ const useStakingView = () => {
     }
   }, [account, stakesData, fetchAllClaimRewards]);
 
+  const getMaxLockPositions = useCallback(async () => {
+    const maxLockPositions = await stakingService.getMaxLockPositions();
+    setMaxLockPositions(maxLockPositions.toNumber());
+
+    if (stakesData?.stakers[0]?.lockPositionCount) {
+      setIsMaxLockPositionExceeded(
+        parseInt(stakesData?.stakers[0]?.lockPositionCount) >=
+          maxLockPositions.toNumber()
+      );
+    } else {
+      setIsMaxLockPositionExceeded(false);
+    }
+  }, [
+    stakingService,
+    setIsMaxLockPositionExceeded,
+    setMaxLockPositions,
+    stakesData,
+  ]);
+
   const fetchPositions = useMemo(
     () =>
       debounce((stakesData, account, stakesLoading) => {
@@ -182,8 +201,14 @@ const useStakingView = () => {
           setLockPositions([]);
           setFetchPositionLoading(false);
         }
+        getMaxLockPositions();
       }, 300),
-    [stakingService, setLockPositions, setFetchPositionLoading]
+    [
+      stakingService,
+      setLockPositions,
+      setFetchPositionLoading,
+      getMaxLockPositions,
+    ]
   );
 
   useEffect(() => {
@@ -193,29 +218,6 @@ const useStakingView = () => {
       setLockPositions([]);
     }
   }, [stakesData, account, stakesLoading, fetchPositions, chainId]);
-
-  const getMaxLockPositions = useCallback(async () => {
-    const maxLockPositions = await stakingService.getMaxLockPositions();
-    setMaxLockPositions(maxLockPositions.toNumber());
-
-    if (stakesData?.stakers[0]?.lockPositionCount) {
-      setIsMaxLockPositionExceeded(
-        parseInt(stakesData?.stakers[0].lockPositionCount) >=
-          maxLockPositions.toNumber()
-      );
-    } else {
-      setIsMaxLockPositionExceeded(false);
-    }
-  }, [
-    stakingService,
-    setIsMaxLockPositionExceeded,
-    setMaxLockPositions,
-    stakesData,
-  ]);
-
-  useEffect(() => {
-    getMaxLockPositions();
-  }, [stakesData, getMaxLockPositions]);
 
   /**
    * Get All claimed rewards
