@@ -22,6 +22,7 @@ import {
   VAULT_STRATEGY_REPORTS,
 } from "apollo/queries";
 import { vaultTitle } from "utils/getVaultTitleAndDescription";
+import { FunctionFragment } from "@into-the-fathom/abi";
 
 declare module "fathom-sdk" {
   interface IVault {
@@ -43,6 +44,9 @@ export enum VaultInfoTabs {
 const DEFAULT_ADMIN_ROLE =
   "0x0000000000000000000000000000000000000000000000000000000000000000";
 const VAULT_REPORTS_PER_PAGE = 1000;
+
+const VAULT_ABI = SmartContractFactory.FathomVault("").abi;
+const STRATEGY_ABI = SmartContractFactory.FathomVaultStrategy("").abi;
 
 export type IVaultStrategyHistoricalApr = {
   id: string;
@@ -89,6 +93,11 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
 
   const [activeVaultInfoTab, setActiveVaultInfoTab] = useState<VaultInfoTabs>(
     VaultInfoTabs.ABOUT
+  );
+
+  const [vaultMethods, setVaultMethods] = useState<FunctionFragment[]>([]);
+  const [strategyMethods, setStrategyMethods] = useState<FunctionFragment[]>(
+    []
   );
 
   const { account, library } = useConnector();
@@ -288,6 +297,30 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     poolService,
     vaultService,
   ]);
+
+  useEffect(() => {
+    try {
+      const methods = (VAULT_ABI as FunctionFragment[]).filter(
+        (item: FunctionFragment) => item.type === "function"
+      );
+
+      setVaultMethods(methods);
+    } catch (e: any) {
+      console.error(e);
+    }
+  }, [setVaultMethods]);
+
+  useEffect(() => {
+    try {
+      const methods = (STRATEGY_ABI as FunctionFragment[]).filter(
+        (item: FunctionFragment) => item.type === "function"
+      );
+
+      setStrategyMethods(methods);
+    } catch (e: any) {
+      console.error(e);
+    }
+  }, [setStrategyMethods]);
 
   const fetchBalanceToken = useCallback(
     (
@@ -512,6 +545,8 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     protocolFee,
     performanceFee,
     activeVaultInfoTab,
+    vaultMethods,
+    strategyMethods,
     setActiveVaultInfoTab,
     managedStrategiesIds,
     isUserManager,

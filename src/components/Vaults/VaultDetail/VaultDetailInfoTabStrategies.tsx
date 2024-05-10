@@ -49,7 +49,7 @@ export const StrategySelector = styled(ButtonGroup)`
       border-color: currentColor;
     }
 
-    &.activeStrategy {
+    &.activeStrategyItem {
       color: #fff;
       border: 1px solid #43fff1;
       background: #1e2f4d;
@@ -83,7 +83,9 @@ const VaultDetailInfoTabStrategies = () => {
         {strategies.map((strategy: IVaultStrategy, index: number) => (
           <Button
             onClick={() => setActiveStrategy(index)}
-            className={activeStrategy === index && "activeStrategy"}
+            className={
+              activeStrategy === index ? "activeStrategyItem" : "strategyItem"
+            }
           >
             {strategyTitle[strategy.id.toLowerCase()] ? (
               strategyTitle[strategy.id.toLowerCase()]

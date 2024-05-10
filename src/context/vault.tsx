@@ -11,6 +11,7 @@ import useVaultDetail, {
   VaultInfoTabs,
 } from "hooks/useVaultDetail";
 import { IVault, IVaultPosition, IVaultStrategyReport } from "fathom-sdk";
+import { FunctionFragment } from "@into-the-fathom/abi";
 
 export type VaultContextType = {
   vaultId: string;
@@ -29,6 +30,8 @@ export type UseVaultContextReturnType = {
   protocolFee: number;
   performanceFee: number;
   activeVaultInfoTab: VaultInfoTabs;
+  vaultMethods: FunctionFragment[];
+  strategyMethods: FunctionFragment[];
   setActiveVaultInfoTab: Dispatch<SetStateAction<VaultInfoTabs>>;
   managedStrategiesIds: string[];
   isUserManager: boolean;
