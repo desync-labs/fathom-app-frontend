@@ -5,6 +5,7 @@ import { JsonRpcProvider, Web3Provider } from "@into-the-fathom/providers";
 
 export const APOTHEM_RPC = "https://erpc.apothem.network/";
 export const XDC_RPC = "https://rpc.ankr.com/xdc/";
+export const SEPOLIA_RPC = "wss://sepolia.gateway.tenderly.co/";
 
 let XDC_CHAIN_IDS = [51];
 
@@ -12,14 +13,16 @@ let DEFAULT_RPC: any = {
   51: APOTHEM_RPC,
 };
 
-let supportedChainIds = [51];
+let supportedChainIds = [51, 11155111];
 
 let rpc: any = {
   51: APOTHEM_RPC,
+  11155111: SEPOLIA_RPC,
 };
 
 let NETWORK_LABELS: { [n: number]: string } = {
   51: "Apothem",
+  11155111: "Sepolia",
 };
 
 if (process.env.REACT_APP_ENV === "prod") {
@@ -43,6 +46,7 @@ if (process.env.REACT_APP_ENV === "prod") {
 export declare enum ChainId {
   XDC = 50,
   AXDC = 51,
+  SEPOLIA = 11155111,
 }
 
 export type DefaultProvider = Web3Provider | JsonRpcProvider;
@@ -50,6 +54,7 @@ export type DefaultProvider = Web3Provider | JsonRpcProvider;
 export const EXPLORERS = {
   51: "https://explorer.apothem.network/",
   50: "https://xdc.blocksscan.io/",
+  11155111: "https://sepolia.etherscan.io/",
 };
 
 export const XDC_NETWORK_SETTINGS = {
@@ -65,6 +70,12 @@ export const XDC_NETWORK_SETTINGS = {
     chainId: `0x${(51).toString(16)}`,
     nativeCurrency: { name: "Apothem", decimals: 18, symbol: "TXDC" },
     rpcUrls: [APOTHEM_RPC],
+  },
+  11155111: {
+    chainName: "Sepolia",
+    chainId: `0x${(11155111).toString(16)}`,
+    nativeCurrency: { name: "SepoliaETH", decimals: 18, symbol: "ETH" },
+    rpcUrls: [SEPOLIA_RPC],
   },
 };
 

@@ -99,6 +99,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
     useState<boolean>(true);
 
   useEffect(() => {
+    console.log("Connector chainId", chainId);
     if (chainId && supportedChainIds.includes(chainId)) {
       setAllowStableSwapInProgress(true);
       stableSwapService
