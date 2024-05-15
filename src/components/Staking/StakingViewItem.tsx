@@ -200,7 +200,12 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
   } = useStakingItemView(lockPosition);
 
   return (
-    <StakingViewItemWrapper item xs={12} sm={6}>
+    <StakingViewItemWrapper
+      item
+      xs={12}
+      sm={6}
+      data-testid={`dao-position-${lockPosition.lockId}`}
+    >
       <HeaderWrapper>
         <NumberCell>
           <img src={getTokenLogoURL(token)} alt={token} width={28} />
