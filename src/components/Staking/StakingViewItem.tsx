@@ -210,7 +210,9 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
           <Grid container spacing={2}>
             <Grid item xs={7} sm={8}>
               <Label>Locked Amount</Label>
-              <Value>
+              <Value
+                data-testid={`dao-position-${lockPosition.lockId}-lockedValue`}
+              >
                 {formatPercentage(lockPosition.amount / 10 ** 18)} {token}
                 <span>
                   $
@@ -222,7 +224,9 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
             </Grid>
             <Grid item xs={5} sm={4}>
               <Label>Voting Power</Label>
-              <Value>
+              <Value
+                data-testid={`dao-position-${lockPosition.lockId}-votingPowerValue`}
+              >
                 {lockPosition.nVoteToken
                   ? `${formatPercentage(
                       lockPosition.nVoteToken / 10 ** 18
@@ -243,7 +247,10 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
             </Grid>
             <Grid item xs={5} sm={4}>
               <Label>Rewards Accrued</Label>
-              <Value className={"green"}>
+              <Value
+                className={"green"}
+                data-testid={`dao-position-${lockPosition.lockId}-rewardsAccruedValue`}
+              >
                 {formatPercentage(
                   BigNumber(rewardsAvailable)
                     .dividedBy(10 ** 18)
@@ -272,11 +279,15 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
           <Grid item xs={12}>
             <Grid container>
               <Grid item xs={12}>
-                <TotalLocked>
+                <TotalLocked
+                  data-testid={`dao-position-${lockPosition.lockId}-unstakeLockedValue`}
+                >
                   Locked: {formatPercentage(lockPosition.amount / 10 ** 18)}{" "}
                   {token}
                 </TotalLocked>
-                <TotalLocked>
+                <TotalLocked
+                  data-testid={`dao-position-${lockPosition.lockId}-unstakeAccruedRewardsValue`}
+                >
                   Accrued Rewards:{" "}
                   {formatPercentage(
                     BigNumber(rewardsAvailable)
@@ -285,7 +296,10 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
                   )}{" "}
                   {token}
                 </TotalLocked>
-                <Penalty className={isUnlockable(seconds) ? "" : "penalty"}>
+                <Penalty
+                  className={isUnlockable(seconds) ? "" : "penalty"}
+                  data-testid={`dao-position-${lockPosition.lockId}-penaltyFee`}
+                >
                   {isUnlockable(seconds)
                     ? "Penalty Fee: No"
                     : `Penalty Fee: Yes (${penaltyFee}%)`}
@@ -293,7 +307,9 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
               </Grid>
 
               <Grid item xs={12} sm={6}>
-                <CoolDownInfo>
+                <CoolDownInfo
+                  data-testid={`dao-position-${lockPosition.lockId}-cooldownInfo`}
+                >
                   Cooldown Period: 5 days
                   <AppPopover
                     id={`cooldown-info-${lockPosition.lockId}`}
@@ -315,6 +331,7 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
                 {isUnlockable(seconds) ? (
                   <StakingViewItemButton
                     onClick={() => processFlow(FlowType.UNSTAKE, lockPosition)}
+                    data-testid={`dao-position-${lockPosition.lockId}-unstakeButton`}
                   >
                     Unstake
                   </StakingViewItemButton>
@@ -323,6 +340,7 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
                     onClick={() =>
                       processFlow(FlowType.EARLY_UNSTAKE, lockPosition)
                     }
+                    data-testid={`dao-position-${lockPosition.lockId}-earlyUnstakeButton`}
                   >
                     Early Unstake
                   </StakingViewItemButton>
