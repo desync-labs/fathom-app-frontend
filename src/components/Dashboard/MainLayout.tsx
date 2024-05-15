@@ -297,10 +297,8 @@ const MainLayout = () => {
   /**
    * Load charts data.
    */
-  if (chainId === 50 || chainId === 51) {
-    useGlobalData();
-    useGlobalChartData();
-  }
+  useGlobalData();
+  useGlobalChartData();
 
   /**
    * Google Analytics
@@ -311,10 +309,6 @@ const MainLayout = () => {
   }, [pathname, search]);
 
   const { erc20TokenModalData } = useAlertAndTransactionContext();
-
-  useEffect(() => {
-    console.log("chainId", chainId);
-  }, [chainId]);
 
   return (
     <AppGlobalStyles>

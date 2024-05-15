@@ -5,7 +5,7 @@ import {
   WrongNetworkMobile,
   WrongNetworkMobileIcon,
 } from "components/AppComponents/AppBox/AppBox";
-import { ChainId, NETWORK_LABELS, XDC_CHAIN_IDS } from "connectors/networks";
+import { ChainId, NETWORK_LABELS, CHAIN_IDS } from "connectors/networks";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
@@ -80,9 +80,9 @@ const Web3Status = () => {
   const showNetworkSelector =
     (chainId || error instanceof UnsupportedChainIdError) && options.length;
 
-  const isError = error || (chainId && !XDC_CHAIN_IDS.includes(chainId));
+  const isError = error || (chainId && !CHAIN_IDS.includes(chainId));
 
-  if (XDC_CHAIN_IDS.includes(chainId)) {
+  if (CHAIN_IDS.includes(chainId)) {
     button = (
       <RightNetwork onClick={() => setOpen(!open)}>
         <>
@@ -110,7 +110,7 @@ const Web3Status = () => {
       >
         <>
           {error instanceof UnsupportedChainIdError ||
-          !XDC_CHAIN_IDS.includes(chainId)
+          !CHAIN_IDS.includes(chainId)
             ? "Wrong Network"
             : !account
             ? "Wallet Request Permissions Error"
@@ -123,7 +123,7 @@ const Web3Status = () => {
 
   return (chainId ||
     error instanceof UnsupportedChainIdError ||
-    !XDC_CHAIN_IDS.includes(chainId)) &&
+    !CHAIN_IDS.includes(chainId)) &&
     options.length ? (
     <>
       <ButtonGroup

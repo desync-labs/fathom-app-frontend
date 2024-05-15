@@ -51,14 +51,16 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
           process.env.REACT_APP_PRICE_FEED_URL as string
         )
           .then((data) => data.json())
-          .then((response) => ({
-            fxd: BigNumber(response["fathom-dollar"]["usd"])
-              .multipliedBy(10 ** 18)
-              .toString(),
-            fthm: BigNumber(response["fathom-protocol"]["usd"])
-              .multipliedBy(10 ** 18)
-              .toString(),
-          }));
+          .then((response) => {
+            return {
+              fxd: BigNumber(response["fathom-dollar"]["usd"])
+                .multipliedBy(10 ** 18)
+                .toString(),
+              fthm: BigNumber(response["fathom-protocol"]["usd"])
+                .multipliedBy(10 ** 18)
+                .toString(),
+            };
+          });
 
         Promise.all([pricesPromise, xdcPromise])
           .then(([prices, xdcPrice]) => {

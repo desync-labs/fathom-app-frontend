@@ -5,9 +5,9 @@ import { JsonRpcProvider, Web3Provider } from "@into-the-fathom/providers";
 
 export const APOTHEM_RPC = "https://erpc.apothem.network/";
 export const XDC_RPC = "https://rpc.ankr.com/xdc/";
-export const SEPOLIA_RPC = "wss://sepolia.gateway.tenderly.co/";
+export const SEPOLIA_RPC = "https://ethereum-sepolia-rpc.publicnode.com/";
 
-let XDC_CHAIN_IDS = [51];
+let CHAIN_IDS = [51, 11155111];
 
 let DEFAULT_RPC: any = {
   51: APOTHEM_RPC,
@@ -26,7 +26,7 @@ let NETWORK_LABELS: { [n: number]: string } = {
 };
 
 if (process.env.REACT_APP_ENV === "prod") {
-  XDC_CHAIN_IDS = [50];
+  CHAIN_IDS = [50];
 
   DEFAULT_RPC = {
     50: XDC_RPC,
@@ -101,4 +101,4 @@ export const WalletConnect = new WalletConnectConnector({
   },
 } as unknown as EthereumProviderOptions);
 
-export { XDC_CHAIN_IDS, DEFAULT_RPC, supportedChainIds, NETWORK_LABELS };
+export { CHAIN_IDS, DEFAULT_RPC, supportedChainIds, NETWORK_LABELS };

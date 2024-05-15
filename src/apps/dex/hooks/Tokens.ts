@@ -35,15 +35,11 @@ function useTokensFromMap(
   const userAddedTokens = useUserAddedTokens();
   const { chainId: servicesChainId } = useServices();
 
-  console.log("chainId", chainId);
-  console.log("tokenMap", tokenMap);
-
   return useMemo(() => {
     const checkedChainId = (
       tokenMap[chainId] ? chainId : servicesChainId
     ) as ChainId;
 
-    console.log("checkedChainId", checkedChainId);
     // reduce to just tokens
     const mapWithoutUrls = Object.keys(tokenMap[checkedChainId]).reduce<{
       [address: string]: Token;

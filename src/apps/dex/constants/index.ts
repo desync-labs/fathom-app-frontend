@@ -1,5 +1,9 @@
 import { ChainId, JSBI, Percent, Token, WETH } from "into-the-fathom-swap-sdk";
-import { APOTHEM_ADDRESSES, XDC_ADDRESSES } from "fathom-sdk";
+import {
+  APOTHEM_ADDRESSES,
+  XDC_ADDRESSES,
+  SEPOLIA_ADDRESSES,
+} from "fathom-sdk";
 
 // a list of tokens by chain
 type RouterAddressesList = {
@@ -100,10 +104,23 @@ export const FTHM_XDC = new Token(
   "FTHM"
 );
 
+/**
+ * Sepolia Tokens
+ */
+const FTHM_ADDRESS_SEPOLIA = SEPOLIA_ADDRESSES.FTHM_TOKEN;
+
+export const FTHM_SEPOLIA = new Token(
+  ChainId.SEPOLIA,
+  FTHM_ADDRESS_SEPOLIA,
+  18,
+  "FTHM",
+  "FTHM"
+);
+
 export const FTHM: { [chainId in ChainId]: Token } = {
   [ChainId.XDC]: FTHM_XDC,
   [ChainId.AXDC]: FTHM_AXDC,
-  [ChainId.SEPOLIA]: ,
+  [ChainId.SEPOLIA]: FTHM_SEPOLIA,
 };
 
 const WETH_ONLY: ChainTokenList = {

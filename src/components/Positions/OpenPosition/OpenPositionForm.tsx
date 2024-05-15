@@ -77,7 +77,7 @@ const OpenPositionForm = () => {
   } = useOpenPositionContext();
   const { isMobile } = useSharedContext();
 
-  const { isOpenPositionWhitelisted } = useConnector();
+  const { isOpenPositionWhitelisted, chainId } = useConnector();
 
   return (
     <OpenPositionFormWrapper item>
@@ -94,7 +94,7 @@ const OpenPositionForm = () => {
           name="collateral"
           rules={{
             required: true,
-            min: 1,
+            min: chainId === 11155111 ? 0.0000001 : 1,
             max: BigNumber(balance)
               .dividedBy(10 ** 18)
               .toString(),
