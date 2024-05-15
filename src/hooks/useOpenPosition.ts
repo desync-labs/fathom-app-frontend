@@ -93,7 +93,10 @@ const useOpenPosition = (
     /**
      * Native token collateral.
      */
-    if (pool.poolName.toUpperCase() === "XDC") {
+    if (
+      pool.poolName.toUpperCase() === "XDC" ||
+      pool.poolName.toUpperCase() === "ETH"
+    ) {
       const balance = await library.getBalance(account);
       setCollateralTokenAddress(null);
       setBalance(balance.toString());
@@ -200,7 +203,8 @@ const useOpenPosition = (
        * PRICE OF COLLATERAL FROM DEX
        */
       const priceOfCollateralFromDex =
-        pool.poolName.toUpperCase() === "XDC"
+        pool.poolName.toUpperCase() === "XDC" ||
+        pool.poolName.toUpperCase() === "ETH"
           ? BigNumber(pool.collateralLastPrice)
               .multipliedBy(10 ** 18)
               .toNumber()

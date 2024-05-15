@@ -131,7 +131,20 @@ const useOpenPositionList = (
             }
           );
 
-          setFormattedPositions(positions);
+          const renamedPoolName = positions.map(
+            (positionItem: IOpenPosition) => {
+              if (
+                positionItem.collateralPoolName.toUpperCase() === "XDC" &&
+                chainId === 11155111
+              ) {
+                return { ...positionItem, collateralPoolName: "ETH" };
+              } else {
+                return positionItem;
+              }
+            }
+          );
+
+          setFormattedPositions(renamedPoolName);
           setIsLoading(false);
         });
       }, 300),

@@ -52,7 +52,13 @@ const cache = new InMemoryCache({
   },
 });
 
-const chainId = localStorage.getItem("chainId") || DEFAULT_CHAIN_SUBGRAPH;
+const chainFromLocalStorage = localStorage.getItem("chainId");
+const chainId =
+  chainFromLocalStorage && chainFromLocalStorage !== "undefined"
+    ? chainFromLocalStorage
+    : DEFAULT_CHAIN_SUBGRAPH;
+console.log("localstorage", localStorage.getItem("chainId"));
+console.log("Chain", chainId);
 
 const stableCoinLink = new HttpLink({
   uri: `${(SUBGRAPH_URLS as any)[chainId]}/subgraphs/name/stablecoin-subgraph`,
