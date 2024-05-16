@@ -241,7 +241,10 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
             </Grid>
             <Grid item xs={7} sm={8}>
               <Label>Locking Time</Label>
-              <Value className={"orange flex"}>
+              <Value
+                className={"orange flex"}
+                data-testid={`dao-position-${lockPosition.lockId}-lockingTimeValue`}
+              >
                 <img src={clockSrc} alt={"clock-circle"} />
                 {seconds > 0 ? (
                   <StakingCountdown timeObject={secondsToTime(seconds)} />
