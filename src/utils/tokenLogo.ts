@@ -4,6 +4,10 @@ export const getTokenLogoURL = (address: string) => {
   let logo;
   let findToken;
   const addressLowerCase = address?.toLowerCase();
+
+  if (addressLowerCase === "cgo" || addressLowerCase === "eth")
+    return `/icons/tokens/${addressLowerCase}.svg`;
+
   for (let i = 0; i < DEFAULT_TOKEN_LIST.tokens.length; i++) {
     const tokenListItem = DEFAULT_TOKEN_LIST.tokens[i];
     if (
