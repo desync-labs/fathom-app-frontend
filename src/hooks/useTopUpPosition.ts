@@ -293,7 +293,10 @@ const useTopUpPosition = (
       try {
         let blockNumber;
         if (BigNumber(fathomToken).isGreaterThan(0)) {
-          if (pool.poolName.toUpperCase() === "XDC") {
+          if (
+            pool.poolName.toUpperCase() === "XDC" ||
+            pool.poolName.toUpperCase() === "ETH"
+          ) {
             blockNumber = await positionService.topUpPositionAndBorrow(
               account,
               pool,
@@ -311,7 +314,10 @@ const useTopUpPosition = (
             );
           }
         } else {
-          if (pool.poolName.toUpperCase() === "XDC") {
+          if (
+            pool.poolName.toUpperCase() === "XDC" ||
+            pool.poolName.toUpperCase() === "ETH"
+          ) {
             blockNumber = await positionService.topUpPosition(
               account,
               pool,

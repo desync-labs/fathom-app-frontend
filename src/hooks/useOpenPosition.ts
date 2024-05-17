@@ -308,7 +308,10 @@ const useOpenPosition = (
 
       try {
         let blockNumber;
-        if (pool.poolName.toUpperCase() === "XDC") {
+        if (
+          pool.poolName.toUpperCase() === "XDC" ||
+          pool.poolName.toUpperCase() === "ETH"
+        ) {
           blockNumber = await positionService.openPosition(
             account,
             pool,

@@ -18,11 +18,7 @@ const usePoolsList = () => {
 
   const filteredPools = useCallback(() => {
     if (!loading && data && data.pools) {
-      const poolList = data.pools.filter(
-        (pool: ICollateralPool) => pool.poolName.toUpperCase() === "XDC"
-      );
-
-      return poolList.map((poolItem: ICollateralPool) => {
+      return data.pools.map((poolItem: ICollateralPool) => {
         if (poolItem.poolName.toUpperCase() === "XDC" && chainId === 11155111) {
           return { ...poolItem, poolName: "ETH" };
         } else {

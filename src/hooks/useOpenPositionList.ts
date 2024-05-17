@@ -55,6 +55,10 @@ const useOpenPositionList = (
 
   useEffect(() => {
     if (proxyWallet && account) {
+      console.log(
+        "useOpenPositionList -> loadPositions -> proxyWallet",
+        proxyWallet
+      );
       loadPositions({
         variables: {
           first: COUNT_PER_PAGE,
