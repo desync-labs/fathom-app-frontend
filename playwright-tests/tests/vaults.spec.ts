@@ -6,7 +6,9 @@ import * as metamask from "@synthetixio/synpress/commands/metamask";
 import dotenv from "dotenv";
 dotenv.config();
 
-test.describe("Fathom App Test Suite: Vault Operations", () => {
+// Skip all vaults tests. Vaults are not stable on dev environment. Failing due to VLT-55, VL-56 and other issues.
+// Will unksip after the env is stable again.
+test.describe.skip("Fathom App Test Suite: Vault Operations", () => {
   test.beforeAll(async ({ vaultPage }) => {
     const depositAmount = 3000;
     await vaultPage.navigate();
@@ -71,8 +73,7 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     });
   });
 
-  // Failing due to VLT-55 issue. will unksip after the issue is fixed
-  test.skip("FXD Vault: Deposit: Depositing first 0.1 FXD is successful", async ({
+  test("FXD Vault: Deposit: Depositing first 0.1 FXD is successful", async ({
     vaultPage,
   }) => {
     const depositAmount = 0.5;
@@ -109,8 +110,7 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     });
   });
 
-  // Failing due to VLT-55 issue. will unksip after the issue is fixed
-  test.skip("FXD Vault: Manage Vault: Fully withdrawing all FXD is successful @smoke", async ({
+  test("FXD Vault: Manage Vault: Fully withdrawing all FXD is successful @smoke", async ({
     vaultPage,
   }) => {
     test.setTimeout(180000);

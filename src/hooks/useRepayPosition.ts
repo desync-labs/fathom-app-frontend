@@ -258,26 +258,51 @@ const useRepayPosition = (
     try {
       let blockNumber;
       if (BigNumber(fathomToken).isEqualTo(position.debtValue)) {
-        blockNumber = await positionService.closePosition(
-          position.positionId,
-          pool,
-          account,
-          BigNumber(collateral).multipliedBy(WeiPerWad).toFixed(0)
-        );
+        if (pool.poolName.toUpperCase() === "XDC") {
+          blockNumber = await positionService.closePosition(
+            position.positionId,
+            pool,
+            account,
+            BigNumber(collateral).multipliedBy(WeiPerWad).toFixed(0)
+          );
+        } else {
+          blockNumber = await positionService.closePositionERC20(
+            position.positionId,
+            pool,
+            account,
+            BigNumber(collateral).multipliedBy(WeiPerWad).toFixed(0)
+          );
+        }
       } else {
-        blockNumber = await positionService.partiallyClosePosition(
-          position.positionId,
-          pool,
-          account,
-          fathomToken
-            ? BigNumber(fathomToken)
-                .multipliedBy(WeiPerWad)
-                .toFixed(0, BigNumber.ROUND_UP)
-            : "0",
-          BigNumber(collateral)
-            .multipliedBy(WeiPerWad)
-            .toFixed(0, BigNumber.ROUND_UP)
-        );
+        if (pool.poolName.toUpperCase() === "XDC") {
+          blockNumber = await positionService.partiallyClosePosition(
+            position.positionId,
+            pool,
+            account,
+            fathomToken
+              ? BigNumber(fathomToken)
+                  .multipliedBy(WeiPerWad)
+                  .toFixed(0, BigNumber.ROUND_UP)
+              : "0",
+            BigNumber(collateral)
+              .multipliedBy(WeiPerWad)
+              .toFixed(0, BigNumber.ROUND_UP)
+          );
+        } else {
+          blockNumber = await positionService.partiallyClosePositionERC20(
+            position.positionId,
+            pool,
+            account,
+            fathomToken
+              ? BigNumber(fathomToken)
+                  .multipliedBy(WeiPerWad)
+                  .toFixed(0, BigNumber.ROUND_UP)
+              : "0",
+            BigNumber(collateral)
+              .multipliedBy(WeiPerWad)
+              .toFixed(0, BigNumber.ROUND_UP)
+          );
+        }
       }
 
       setLastTransactionBlock(blockNumber as number);
