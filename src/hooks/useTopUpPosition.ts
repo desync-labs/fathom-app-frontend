@@ -110,7 +110,9 @@ const useTopUpPosition = (
      * PRICE OF COLLATERAL FROM DEX
      */
     const priceOfCollateralFromDex =
-      pool.poolName.toUpperCase() === "XDC"
+      pool.poolName.toUpperCase() === "XDC" ||
+      pool.poolName.toUpperCase() === "CGO" ||
+      pool.poolName === "CollateralTokenAdapterJeju"
         ? BigNumber(pool.collateralLastPrice)
             .multipliedBy(10 ** 18)
             .toNumber()
@@ -287,20 +289,39 @@ const useTopUpPosition = (
       try {
         let blockNumber;
         if (BigNumber(fathomToken).isGreaterThan(0)) {
-          blockNumber = await positionService.topUpPositionAndBorrow(
-            account,
-            pool,
-            collateral,
-            fathomToken,
-            position.positionId
-          );
+          if (pool.poolName.toUpperCase() === "XDC") {
+            blockNumber = await positionService.topUpPositionAndBorrow(
+              account,
+              pool,
+              collateral,
+              fathomToken,
+              position.positionId
+            );
+          } else {
+            blockNumber = await positionService.topUpPositionAndBorrowERC20(
+              account,
+              pool,
+              collateral,
+              fathomToken,
+              position.positionId
+            );
+          }
         } else {
-          blockNumber = await positionService.topUpPosition(
-            account,
-            pool,
-            collateral,
-            position.positionId
-          );
+          if (pool.poolName.toUpperCase() === "XDC") {
+            blockNumber = await positionService.topUpPosition(
+              account,
+              pool,
+              collateral,
+              position.positionId
+            );
+          } else {
+            blockNumber = await positionService.topUpPositionERC20(
+              account,
+              pool,
+              collateral,
+              position.positionId
+            );
+          }
         }
         setLastTransactionBlock(blockNumber as number);
         onClose();

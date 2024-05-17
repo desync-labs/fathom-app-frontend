@@ -200,7 +200,9 @@ const useOpenPosition = (
        * PRICE OF COLLATERAL FROM DEX
        */
       const priceOfCollateralFromDex =
-        pool.poolName.toUpperCase() === "XDC"
+        pool.poolName.toUpperCase() === "XDC" ||
+        pool.poolName.toUpperCase() === "CGO" ||
+        pool.poolName === "CollateralTokenAdapterJeju"
           ? BigNumber(pool.collateralLastPrice)
               .multipliedBy(10 ** 18)
               .toNumber()
@@ -301,12 +303,22 @@ const useOpenPosition = (
       const { collateral, fathomToken } = values;
 
       try {
-        const blockNumber = await positionService.openPosition(
-          account,
-          pool,
-          collateral,
-          fathomToken
-        );
+        let blockNumber;
+        if (pool.poolName.toUpperCase() === "XDC") {
+          blockNumber = await positionService.openPosition(
+            account,
+            pool,
+            collateral,
+            fathomToken
+          );
+        } else {
+          blockNumber = await positionService.openPositionERC20(
+            account,
+            pool,
+            collateral,
+            fathomToken
+          );
+        }
 
         setLastTransactionBlock(blockNumber as number);
         onClose();
@@ -331,6 +343,7 @@ const useOpenPosition = (
       await positionService.approve(account, collateralTokenAddress as string);
       setApproveBtn(false);
     } catch (e) {
+      console.error(e);
       setApproveBtn(true);
     }
 

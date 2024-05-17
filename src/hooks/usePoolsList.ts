@@ -16,11 +16,7 @@ const usePoolsList = () => {
 
   return {
     pools:
-      !loading && data && data.pools
-        ? data.pools.filter(
-            (pool: ICollateralPool) => pool.poolName.toUpperCase() === "XDC"
-          )
-        : [],
+      !loading && data && data.pools ? (data.pools as ICollateralPool[]) : [],
     selectedPool,
     onCloseNewPosition,
     setSelectedPool,
