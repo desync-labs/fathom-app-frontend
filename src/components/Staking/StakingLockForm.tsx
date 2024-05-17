@@ -277,7 +277,11 @@ const StakingLockForm: FC = () => {
         )}
 
         {!account ? (
-          <WalletConnectBtn fullwidth sx={{ marginTop: 3 }} />
+          <WalletConnectBtn
+            fullwidth
+            sx={{ marginTop: 3 }}
+            testId="dao-connect-wallet-button"
+          />
         ) : (
           <Grid container mt={3}>
             {approvedBtn ? (

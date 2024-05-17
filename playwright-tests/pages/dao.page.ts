@@ -3,7 +3,7 @@ import BasePage from "./base.page";
 // @ts-ignore
 import * as metamask from "@synthetixio/synpress/commands/metamask";
 import { graphAPIEndpoints } from "../fixtures/api.data";
-import { GraphOperationName } from "../types";
+import { GraphOperationName, WalletConnectOptions } from "../types";
 import { extractNumericValue } from "../utils/helpers";
 import { logoLinks } from "../fixtures/global.data";
 
@@ -31,6 +31,7 @@ export default class DaoPage extends BasePage {
   readonly titleUnstakeCooldownDialog: Locator;
   readonly descriptionUnstakeCooldownDialog: Locator;
   readonly coolingDownContentUnstakeCooldownDialog: Locator;
+  readonly btnDaoConnectWallet: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -81,6 +82,9 @@ export default class DaoPage extends BasePage {
     );
     this.coolingDownContentUnstakeCooldownDialog = this.page.getByTestId(
       "dao-unstake-cooldown-dialog-cooling-down-content"
+    );
+    this.btnDaoConnectWallet = this.page.getByTestId(
+      "dao-connect-wallet-button"
     );
   }
 
@@ -418,5 +422,18 @@ export default class DaoPage extends BasePage {
       .soft(this.coolingDownContentUnstakeCooldownDialog.locator("span"))
       .toHaveText("FTHM");
     await expect(this.page.getByText("Back to My Positions")).toBeVisible();
+  }
+
+  async connectWalletDao(
+    wallet: WalletConnectOptions,
+    options?: { allAccounts: boolean }
+  ): Promise<void> {
+    await this.btnDaoConnectWallet.click();
+    await this.page.getByText(wallet).click();
+    if (options) {
+      await metamask.acceptAccess(options);
+    } else {
+      await metamask.acceptAccess();
+    }
   }
 }
