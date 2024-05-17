@@ -108,19 +108,24 @@ const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({
       fullWidth
       maxWidth="sm"
       color="primary"
+      data-testid="dao-early-unstake-dialog"
     >
-      <AppDialogTitle id="customized-dialog-title" onClose={onClose}>
+      <AppDialogTitle
+        id="customized-dialog-title"
+        onClose={onClose}
+        data-testid="dao-early-unstake-dialog-title"
+      >
         Early Unstake
       </AppDialogTitle>
 
       <DialogContent>
-        <ModalDescription>
+        <ModalDescription data-testid="dao-early-unstake-dialog-description">
           Position lock time has not yet passed - by requesting <br />
           Early Unstake - you will pay the penalty. <br />
           Ensure you Claim Rewards before Unstaking so as not to lose your
           rewards.
         </ModalDescription>
-        <DialogContentWrapper>
+        <DialogContentWrapper data-testid="dao-early-unstake-dialog-requesting-unstake-content">
           <img src={getTokenLogoURL(token)} alt={"token-logo"} width={58} />
           <Box>You’re requesting to unstake</Box>
           <Box className={"amount"}>

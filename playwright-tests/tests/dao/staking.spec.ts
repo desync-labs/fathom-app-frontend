@@ -1,12 +1,14 @@
 import { test, expect } from "../../fixtures/pomSynpressFixture";
 import { WalletConnectOptions } from "../../types";
-// @ts-ignore
-import * as metamask from "@synthetixio/synpress/commands/metamask";
 import dotenv from "dotenv";
 dotenv.config();
 
 test.describe("Fathom App Test Suite: DAO Staking", () => {
   test.describe.serial("Scenario 1 @smoke", () => {
+    let newPositionLockId: number;
+    const stakingAmount = 150;
+    const lockPeriod = 7;
+
     test.beforeEach(async ({ daoPage }) => {
       await daoPage.navigateStaking();
       await daoPage.connectWallet(WalletConnectOptions.Metamask);
@@ -16,11 +18,9 @@ test.describe("Fathom App Test Suite: DAO Staking", () => {
     test("Staking 150 FTHM with a 7-day lock period is successful", async ({
       daoPage,
     }) => {
-      const stakingAmount = 150;
-      const lockPeriod = 7;
       const walletFTHMBalanceBefore =
         await daoPage.getMyWalletFTHMBalanceValue();
-      const newPositionLockId = await daoPage.createStakeFTHMPosition({
+      newPositionLockId = await daoPage.createStakeFTHMPosition({
         stakingAmount,
         lockPeriod,
       });
@@ -39,7 +39,15 @@ test.describe("Fathom App Test Suite: DAO Staking", () => {
     test("Early unstaking a FTHM staked position is successful", async ({
       daoPage,
     }) => {
-      await daoPage.navigateStaking();
+      await daoPage.clickEarlyUnstakeButtonByLockId({
+        lockId: newPositionLockId,
+      });
+      await daoPage.validateEarlyUnstakeDialog({
+        stakingAmountExpected: stakingAmount,
+      });
+      await daoPage.confirmUnstakeEarlyUnstakeDialog();
+      await daoPage.validateConfirmEarlyUnstake({ lockId: newPositionLockId });
+      await daoPage.validateUnstakeCooldownDialog({ stakingAmount });
     });
   });
 });
