@@ -12,7 +12,7 @@ import { extractNumericValue } from "../utils/helpers";
 
 export default class FxdPage extends BasePage {
   readonly path: string;
-  readonly btnOpenPosition: Locator;
+  readonly btnXDCOpenPosition: Locator;
   readonly inputCollateral: Locator;
   readonly inputBorrowAmount: Locator;
   readonly btnConfirmOpenPosition: Locator;
@@ -61,7 +61,9 @@ export default class FxdPage extends BasePage {
     this.dialogRepayPosition = this.page.locator(
       '//h2[text()="Repay Position"]/parent::div'
     );
-    this.btnOpenPosition = this.page.getByText("Open position");
+    this.btnXDCOpenPosition = this.page
+      .locator("table[aria-label='simple table'] > tbody > tr:nth-child(3)")
+      .getByText("Open position");
     this.btnConfirmOpenPosition = this.dialogOpenNewPosition.locator(
       '//button[text()="Open this position"]'
     );
@@ -172,7 +174,7 @@ export default class FxdPage extends BasePage {
     collateralAmount,
     borrowAmount,
   }: OpenPositionParams): Promise<PositionData> {
-    await this.btnOpenPosition.click();
+    await this.btnXDCOpenPosition.click();
     if (collateralAmount === "max") {
       await this.btnMax.click();
     } else {

@@ -164,6 +164,7 @@ const StakingLockForm: FC = () => {
                   }
                   value={value}
                   onChange={onChange}
+                  data-testid="dao-stakingAmount-input"
                 />
                 <AppFormInputLogo src={getTokenLogoURL("FTHM")} />
                 <MaxButton onClick={() => setMax(fthmBalance)}>Max</MaxButton>
@@ -222,6 +223,7 @@ const StakingLockForm: FC = () => {
                   value={value}
                   type="number"
                   onChange={onChange}
+                  data-testid="dao-lockPeriod-input"
                 />
                 <MaxButton sx={{ color: "#6379A1", background: "none" }}>
                   Days
@@ -236,6 +238,7 @@ const StakingLockForm: FC = () => {
                   max={365}
                   value={Number(value)}
                   onChange={onChange}
+                  data-testid="dao-lockPeriod-slider"
                 />
               </Box>
             </>
@@ -274,7 +277,11 @@ const StakingLockForm: FC = () => {
         )}
 
         {!account ? (
-          <WalletConnectBtn fullwidth sx={{ marginTop: 3 }} />
+          <WalletConnectBtn
+            fullwidth
+            sx={{ marginTop: 3 }}
+            testId="dao-connect-wallet-button"
+          />
         ) : (
           <Grid container mt={3}>
             {approvedBtn ? (
@@ -283,6 +290,7 @@ const StakingLockForm: FC = () => {
                 isLoading={approvalPending}
                 disabled={approvalPending}
                 sx={{ width: "100%", height: "48px" }}
+                data-testid="dao-approve-button"
               >
                 {approvalPending ? (
                   <CircularProgress size={20} />
@@ -296,6 +304,7 @@ const StakingLockForm: FC = () => {
                 disabled={isLoading || isMaxLockPositionExceeded}
                 type="submit"
                 sx={{ width: "100%", height: "48px" }}
+                data-testid="dao-stake-button"
               >
                 {isLoading ? <CircularProgress size={30} /> : "Stake"}
               </ButtonPrimary>
@@ -315,7 +324,7 @@ const StakingLockForm: FC = () => {
                       width={24}
                     />
                     <Box>
-                      <FTHMBalance>
+                      <FTHMBalance data-testid="dao-FTHM-balance">
                         <strong>{formatNumber(Number(fthmBalance))}</strong>{" "}
                         FTHM
                       </FTHMBalance>
@@ -338,7 +347,7 @@ const StakingLockForm: FC = () => {
                       width={24}
                     />
                     <Box>
-                      <FTHMBalance>
+                      <FTHMBalance data-testid="dao-FXD-balance">
                         <strong>{formatNumber(Number(fxdBalance))}</strong> FXD
                       </FTHMBalance>
                       <USDBalance>
@@ -360,7 +369,7 @@ const StakingLockForm: FC = () => {
                       width={24}
                     />
                     <Box>
-                      <FTHMBalance>
+                      <FTHMBalance data-testid="dao-XDC-balance">
                         <strong>{formatNumber(Number(xdcBalance))}</strong> XDC
                       </FTHMBalance>
                       <USDBalance>
