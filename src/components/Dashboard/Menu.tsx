@@ -19,11 +19,9 @@ type ItemPropsType = {
   open: boolean;
 };
 
-const LENDING_ENABLED = process.env.REACT_APP_LENDING_ENABLED;
-
 export const Menu: FC<ItemPropsType> = memo(({ open }) => {
   const location = useLocation();
-  const { allowStableSwap } = useConnector();
+  const { allowStableSwap, chainId } = useConnector();
 
   const isDashboardActive = useMemo(
     () => location.pathname === "/",
@@ -67,20 +65,13 @@ export const Menu: FC<ItemPropsType> = memo(({ open }) => {
       isActive: isDashboardActive,
       showText: showText,
     },
-    {
-      name: "Stable Swap",
-      link: "/stable-swap",
-      Icon: <StableSwapIcon isactive={isStableSwapActive ? "true" : ""} />,
-      isActive: isStableSwapActive,
-      showText: showText,
-    },
   ];
 
   /**
    * Add Lending Menu Item when it enabled.
    */
   appMenuItems = appMenuItems.concat(
-    LENDING_ENABLED === "true"
+    chainId === 11155111
       ? [
           {
             name: "Lending",
@@ -96,29 +87,24 @@ export const Menu: FC<ItemPropsType> = memo(({ open }) => {
             isActive: isVaultActive,
             showText: showText,
           },
-          {
-            name: "DEX",
-            link: "/swap",
-            Icon: <DexIcon isactive={isDexActive ? "true" : ""} />,
-            isActive: isDexActive,
-            showText: showText,
-          },
-          {
-            name: "Charts",
-            link: "/charts",
-            Icon: <ChartsIcon isactive={isChartsActive ? "true" : ""} />,
-            isActive: isChartsActive,
-            showText: showText,
-          },
-          {
-            name: "DAO",
-            link: "/dao/staking",
-            Icon: <GovernanceIcon isactive={isDAOActive ? "true" : ""} />,
-            isActive: isDAOActive,
-            showText: showText,
-          },
         ]
       : [
+          {
+            name: "Stable Swap",
+            link: "/stable-swap",
+            Icon: (
+              <StableSwapIcon isactive={isStableSwapActive ? "true" : ""} />
+            ),
+            isActive: isStableSwapActive,
+            showText: showText,
+          },
+          {
+            name: "Lending",
+            link: "/lending",
+            Icon: <LendingIcon isactive={isLendingActive ? "true" : ""} />,
+            isActive: isLendingActive,
+            showText: showText,
+          },
           {
             name: "Vaults",
             link: "/vaults",
