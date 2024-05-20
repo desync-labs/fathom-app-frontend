@@ -45,6 +45,12 @@ const cache = new InMemoryCache({
             return incoming;
           },
         },
+        vaults: {
+          keyArgs: false,
+          merge(_, incoming) {
+            return incoming;
+          },
+        },
       },
     },
     Staker: {

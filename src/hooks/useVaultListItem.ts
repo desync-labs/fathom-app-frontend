@@ -345,7 +345,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     }
   };
 
-  const getStrategiesIds = useMemo(() => {
+  const getStrategiesIds = () => {
     const strategyIdsPromises = (vault.strategies || []).map(
       async (strategy: IVaultStrategy) => {
         const isUserAuthorized = await executeManagementMethod(strategy.id);
@@ -356,25 +356,32 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     return Promise.all(strategyIdsPromises).then(
       (authorizedIds) => authorizedIds.filter((id) => id !== null) as string[]
     );
-  }, [vault]);
+  };
 
   useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout>;
     if (vault && account) {
-      getStrategiesIds.then((authorizedIds) =>
-        setManagedStrategiesIds(authorizedIds)
-      );
+      timeout = setTimeout(() => {
+        getStrategiesIds().then((ids) => setManagedStrategiesIds(ids));
+      }, 500);
     } else {
       setManagedStrategiesIds([]);
     }
-  }, [vault, account, getStrategiesIds]);
+
+    return () => timeout && clearTimeout(timeout);
+  }, [vault, account, chainId, getStrategiesIds]);
 
   useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout>;
     if (vault && account) {
-      executeHasRoleMethod().then((isManager) => setIsUserManager(isManager));
+      timeout = setTimeout(() => {
+        executeHasRoleMethod().then(setIsUserManager);
+      }, 500);
     } else {
       setIsUserManager(false);
     }
-  }, [vault, account]);
+    return () => timeout && clearTimeout(timeout);
+  }, [vault, account, chainId]);
 
   return {
     reports,
