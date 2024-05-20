@@ -78,7 +78,7 @@ const useTopUpPosition = (
 
   const approvalStatus = useMemo(
     () =>
-      debounce(async (collateral: string) => {
+      debounce(async (collateral) => {
         const approved = await positionService.approvalStatus(
           account,
           collateralTokenAddress as string,
@@ -419,7 +419,7 @@ const useTopUpPosition = (
       (totalCollateral || totalFathomToken)
     ) {
       handleUpdates(totalCollateral, totalFathomToken);
-      approvalStatus(totalCollateral);
+      approvalStatus(collateral || "0");
     }
   }, [
     pool,

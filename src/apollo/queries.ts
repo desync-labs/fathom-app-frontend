@@ -132,7 +132,7 @@ export const GOVERNANCE_STATS = gql`
 `;
 
 export const HEALTH = gql`
-  query FathomHealth($name: String!) {
+  query FathomHealth($name: String!, $chainId: String) {
     indexingStatusForCurrentVersion(subgraphName: $name) {
       synced
       health
