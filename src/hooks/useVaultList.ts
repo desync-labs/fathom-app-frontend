@@ -74,6 +74,7 @@ const useVaultList = () => {
       first: COUNT_PER_PAGE,
       skip: 0,
       shutdown: isShutdown,
+      chainId,
     },
     context: { clientName: "vaults", chainId },
     fetchPolicy: "network-only",
@@ -84,6 +85,9 @@ const useVaultList = () => {
     {
       context: { clientName: "vaults", chainId },
       fetchPolicy: "network-only",
+      variables: {
+        chainId,
+      },
     }
   );
 
@@ -93,10 +97,11 @@ const useVaultList = () => {
   ] = useLazyQuery(ACCOUNT_VAULT_POSITIONS, {
     context: { clientName: "vaults", chainId },
     fetchPolicy: "network-only",
+    variables: { chainId },
   });
 
   useEffect(() => {
-    if (account && vaultService) {
+    if (account && vaultService && chainId) {
       loadData({ variables: { account: account.toLowerCase() } }).then(
         (res) => {
           if (
@@ -158,7 +163,14 @@ const useVaultList = () => {
     } else {
       setVaultPositionsList([]);
     }
-  }, [account, loadData, setVaultPositionsList, poolService, vaultService]);
+  }, [
+    account,
+    chainId,
+    loadData,
+    setVaultPositionsList,
+    poolService,
+    vaultService,
+  ]);
 
   useEffect(() => {
     try {

@@ -196,7 +196,12 @@ export const STAKING_STAKER = gql`
 `;
 
 export const VAULTS = gql`
-  query Vaults($first: Int!, $skip: Int!, $shutdown: Boolean) {
+  query Vaults(
+    $first: Int!
+    $skip: Int!
+    $shutdown: Boolean
+    $chainId: String
+  ) {
     vaults(first: $first, skip: $skip, where: { shutdown: $shutdown }) {
       id
       token {
@@ -260,7 +265,7 @@ export const VAULT_STRATEGY_REPORTS = gql`
 `;
 
 export const ACCOUNT_VAULT_POSITIONS = gql`
-  query AccountVaultPositions($account: String!) {
+  query AccountVaultPositions($account: String!, $chainId: String) {
     accountVaultPositions(where: { account: $account }) {
       id
       balancePosition
@@ -285,7 +290,7 @@ export const ACCOUNT_VAULT_POSITIONS = gql`
 `;
 
 export const VAULT_FACTORIES = gql`
-  query VaultFactories {
+  query VaultFactories($chainId: String) {
     factories {
       feeRecipient
       id
@@ -306,7 +311,11 @@ export const VAULT_FACTORIES = gql`
 `;
 
 export const VAULT_POSITION_TRANSACTIONS = gql`
-  query VaultPositionTransactions($account: String!, $vault: String!) {
+  query VaultPositionTransactions(
+    $account: String!
+    $vault: String!
+    $chainId: String
+  ) {
     deposits(
       where: {
         account_contains_nocase: $account
