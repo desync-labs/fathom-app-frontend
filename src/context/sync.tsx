@@ -11,6 +11,7 @@ import {
 } from "react";
 import { useQuery } from "@apollo/client";
 import { HEALTH } from "apollo/queries";
+import useConnector from "context/connector";
 
 type StakingProviderType = {
   children: ReactElement;
@@ -39,23 +40,39 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
   const prevSyncFxd = useRef<boolean>(true);
   const prevSyncDao = useRef<boolean>(true);
   const prevSyncVault = useRef<boolean>(true);
+  const { chainId } = useConnector();
 
   const { data: fxdData, refetch: refetchFxd } = useQuery(HEALTH, {
     variables: {
       name: "stablecoin-subgraph",
+      chainId,
     },
+    context: {
+      chainId,
+    },
+    fetchPolicy: "network-only",
   });
 
   const { data: daoData, refetch: refetchDao } = useQuery(HEALTH, {
     variables: {
       name: "dao-subgraph",
+      chainId,
     },
+    context: {
+      chainId,
+    },
+    fetchPolicy: "network-only",
   });
 
   const { data: vaultData, refetch: refetchVault } = useQuery(HEALTH, {
     variables: {
       name: "vaults-subgraph",
+      chainId,
     },
+    context: {
+      chainId,
+    },
+    fetchPolicy: "network-only",
   });
 
   const values = useMemo(() => {
