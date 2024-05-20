@@ -9,7 +9,7 @@ const useProtocolStats = () => {
   const { chainId } = useConnector();
   const { data, loading, refetch } = useQuery(FXD_STATS, {
     context: { clientName: "stable", chainId },
-    variables: { chainId: chainId },
+    variables: { chainId },
     fetchPolicy: "network-only",
   });
 

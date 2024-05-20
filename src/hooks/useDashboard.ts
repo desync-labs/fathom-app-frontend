@@ -16,20 +16,20 @@ const useDashboard = () => {
     FXD_STATS,
     {
       context: { clientName: "stable", chainId },
-      variables: { chainId: chainId },
+      variables: { chainId },
     }
   );
   const [, { refetch: refetchPositions, loading: loadingPositions }] =
     useLazyQuery(FXD_POSITIONS, {
       context: { clientName: "stable", chainId },
-      variables: { chainId: chainId },
+      variables: { chainId },
     });
 
   const [, { refetch: refetchPools, loading: loadingPools }] = useLazyQuery(
     FXD_POOLS,
     {
       context: { clientName: "stable", chainId },
-      variables: { chainId: chainId },
+      variables: { chainId },
     }
   );
 
