@@ -91,53 +91,55 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     VAULT_STRATEGY_REPORTS,
     {
       context: { clientName: "vaults", chainId },
+      variables: { chainId },
+      fetchPolicy: "network-only",
     }
   );
 
   const [loadPositionTransactions, { refetch: refetchTransactions }] =
     useLazyQuery(VAULT_POSITION_TRANSACTIONS, {
       context: { clientName: "vaults", chainId },
+      variables: { chainId },
+      fetchPolicy: "network-only",
     });
 
-  const fetchReports = useCallback(
-    (
-      strategyId: string,
-      prevStateReports: IVaultStrategyReport[] = [],
-      prevStateApr: IVaultStrategyHistoricalApr[] = []
-    ) => {
-      (!prevStateReports.length ? loadReports : fetchMoreReports)({
-        variables: {
-          strategy: strategyId,
-          reportsFirst: VAULT_REPORTS_PER_PAGE,
-          reportsSkip: prevStateReports.length,
-        },
-      }).then((response) => {
-        const { data } = response;
+  const fetchReports = (
+    strategyId: string,
+    prevStateReports: IVaultStrategyReport[] = [],
+    prevStateApr: IVaultStrategyHistoricalApr[] = []
+  ) => {
+    (!prevStateReports.length ? loadReports : fetchMoreReports)({
+      variables: {
+        strategy: strategyId,
+        reportsFirst: VAULT_REPORTS_PER_PAGE,
+        reportsSkip: prevStateReports.length,
+        chainId,
+      },
+    }).then((response) => {
+      const { data } = response;
 
-        if (
-          data?.strategyReports &&
-          data?.strategyReports.length &&
-          data?.strategyReports.length % VAULT_REPORTS_PER_PAGE === 0
-        ) {
-          fetchReports(
-            strategyId,
-            [...prevStateReports, ...data.strategyReports],
-            [...prevStateApr, ...data.strategyHistoricalAprs]
-          );
-        } else {
-          setReports((prev) => ({
-            ...prev,
-            [strategyId]: [...prevStateReports, ...data.strategyReports],
-          }));
-          setHistoricalApr((prev) => ({
-            ...prev,
-            [strategyId]: [...prevStateApr, ...data.strategyHistoricalAprs],
-          }));
-        }
-      });
-    },
-    [loadReports, fetchMoreReports, setReports, setHistoricalApr]
-  );
+      if (
+        data?.strategyReports &&
+        data?.strategyReports.length &&
+        data?.strategyReports.length % VAULT_REPORTS_PER_PAGE === 0
+      ) {
+        fetchReports(
+          strategyId,
+          [...prevStateReports, ...data.strategyReports],
+          [...prevStateApr, ...data.strategyHistoricalAprs]
+        );
+      } else {
+        setReports((prev) => ({
+          ...prev,
+          [strategyId]: [...prevStateReports, ...data.strategyReports],
+        }));
+        setHistoricalApr((prev) => ({
+          ...prev,
+          [strategyId]: [...prevStateApr, ...data.strategyHistoricalAprs],
+        }));
+      }
+    });
+  };
 
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
@@ -145,6 +147,17 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     if (vault && vault?.strategies && vault?.strategies?.length) {
       timeout = setTimeout(() => {
         vault?.strategies.forEach((strategy: IVaultStrategy) => {
+          /**
+           * Clear reports and historical APRs necessary for chain switch
+           */
+          setReports((prev) => ({
+            ...prev,
+            [strategy.id]: [],
+          }));
+          setHistoricalApr((prev) => ({
+            ...prev,
+            [strategy.id]: [],
+          }));
           fetchReports(strategy.id, [], []);
         });
       }, 500);
@@ -153,6 +166,17 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
        */
       interval = setInterval(() => {
         vault?.strategies.forEach((strategy: IVaultStrategy) => {
+          /**
+           * Clear reports and historical APRs necessary for chain switch
+           */
+          setReports((prev) => ({
+            ...prev,
+            [strategy.id]: [],
+          }));
+          setHistoricalApr((prev) => ({
+            ...prev,
+            [strategy.id]: [],
+          }));
           fetchReports(strategy.id, [], []);
         });
       }, 30 * 1000);
@@ -162,7 +186,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
       interval && clearInterval(interval);
       timeout && clearTimeout(timeout);
     };
-  }, [vault, fetchReports]);
+  }, [vault, chainId]);
 
   useEffect(() => {
     if (

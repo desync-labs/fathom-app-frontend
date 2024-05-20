@@ -28,13 +28,13 @@ const cache = new InMemoryCache({
           },
         },
         strategyHistoricalAprs: {
-          keyArgs: ["strategy"],
+          keyArgs: ["strategy", "chainId"],
           merge(existing = [], incoming) {
             return [...existing, ...incoming];
           },
         },
         strategyReports: {
-          keyArgs: ["strategy"],
+          keyArgs: ["strategy", "chainId"],
           merge(existing = [], incoming) {
             return [...existing, ...incoming];
           },

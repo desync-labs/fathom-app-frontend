@@ -195,6 +195,9 @@ export const STAKING_STAKER = gql`
   }
 `;
 
+/**
+ * Vault queries
+ */
 export const VAULTS = gql`
   query Vaults(
     $first: Int!
