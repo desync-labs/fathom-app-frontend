@@ -37,7 +37,7 @@ const useOpenPositionList = (
 
   const { data: poolsData, refetch } = useQuery(FXD_POOLS, {
     context: { clientName: "stable", chainId },
-    fetchPolicy: "cache-first",
+    fetchPolicy: "network-only",
   });
 
   const [closePosition, setClosePosition] = useState<IOpenPosition>();

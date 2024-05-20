@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { ICollateralPool } from "fathom-sdk";
 import { useQuery } from "@apollo/client";
 import { FXD_POOLS } from "apollo/queries";
@@ -12,20 +12,11 @@ const usePoolsList = () => {
     fetchPolicy: "network-only",
   });
 
-  useEffect(() => {
-    if (chainId) {
-      refetch({
-        context: { clientName: "stable", chainId },
-        fetchPolicy: "network-only",
-      });
-    }
-  }, [chainId]);
-
   const onCloseNewPosition = useCallback(() => {
     setSelectedPool(undefined);
   }, [setSelectedPool]);
 
-  const filteredPools = useCallback(() => {
+  const filteredPools = useMemo(() => {
     if (!loading && data && data.pools) {
       return data.pools.map((poolItem: ICollateralPool) => {
         if (poolItem.poolName.toUpperCase() === "XDC" && chainId === 11155111) {
@@ -39,14 +30,8 @@ const usePoolsList = () => {
     }
   }, [data, loading, chainId]);
 
-  useEffect(() => {
-    if (chainId) {
-      refetch();
-    }
-  }, [chainId, refetch]);
-
   return {
-    pools: filteredPools(),
+    pools: filteredPools,
     selectedPool,
     onCloseNewPosition,
     setSelectedPool,

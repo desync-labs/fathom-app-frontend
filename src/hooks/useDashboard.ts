@@ -40,6 +40,11 @@ const useDashboard = () => {
     const proxyWallet = await positionService.getProxyWallet(account);
     setProxyWallet(proxyWallet);
 
+    console.log({
+      proxyWallet,
+      chainId: positionService.chainId,
+    });
+
     return loadUserStats({
       variables: {
         walletAddress: proxyWallet,
