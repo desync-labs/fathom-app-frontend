@@ -19,6 +19,7 @@ export enum GraphOperationName {
   FXDPositions = "FXDPositions",
   AccountVaultPositions = "AccountVaultPositions",
   Vaults = "Vaults",
+  Stakers = "Stakers",
 }
 
 export interface PositionData {

@@ -31,18 +31,23 @@ const UnstakeCoolDownDialog: FC<UnstakeCoolDownDialogProps> = ({
       fullWidth
       maxWidth="sm"
       color="primary"
+      data-testid="dao-unstake-cooldown-dialog"
     >
-      <AppDialogTitle id="customized-dialog-title" onClose={onClose}>
+      <AppDialogTitle
+        id="customized-dialog-title"
+        onClose={onClose}
+        data-testid="dao-unstake-cooldown-dialog-title"
+      >
         Unstake Cooling Down ...
       </AppDialogTitle>
 
       <DialogContent>
-        <ModalDescription>
+        <ModalDescription data-testid="dao-unstake-cooldown-dialog-description">
           You successfully requested to unstake. Now it's going to a “Cooldown"
           period for 2 days. After this period, you'll be able to Withdraw it at
           My Stats &gt; Ready-to-Withdraw. Learn more
         </ModalDescription>
-        <DialogContentWrapper>
+        <DialogContentWrapper data-testid="dao-unstake-cooldown-dialog-cooling-down-content">
           <img src={getTokenLogoURL(token)} alt={"token-logo"} width={58} />
           <Box sx={{ fontSize: "18px" }}>Cooling down ...</Box>
           <Box className={"amount"}>
