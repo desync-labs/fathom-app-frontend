@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const FXD_STATS = gql`
-  query FxdStats {
+  query FxdStats($chainId: String) {
     protocolStat(id: "fathom_stats") {
       id
       totalSupply
@@ -11,7 +11,7 @@ export const FXD_STATS = gql`
 `;
 
 export const FXD_POOLS = gql`
-  query FXDPools {
+  query FXDPools($chainId: String) {
     pools {
       rawPrice
       collateralLastPrice
@@ -33,7 +33,12 @@ export const FXD_POOLS = gql`
 `;
 
 export const FXD_POSITIONS = gql`
-  query FXDPositions($walletAddress: String!, $first: Int!, $skip: Int!) {
+  query FXDPositions(
+    $walletAddress: String!
+    $first: Int!
+    $skip: Int!
+    $chainId: String
+  ) {
     positions(
       first: $first
       skip: $skip
@@ -62,7 +67,7 @@ export const FXD_POSITIONS = gql`
 `;
 
 export const FXD_USER = gql`
-  query FXDUser($walletAddress: String!) {
+  query FXDUser($walletAddress: String!, $chainId: String) {
     users(where: { address: $walletAddress }) {
       id
       activePositionsCount

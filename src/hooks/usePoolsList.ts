@@ -9,7 +9,7 @@ const usePoolsList = () => {
   const { chainId } = useConnector();
   const { loading, data, refetch } = useQuery(FXD_POOLS, {
     context: { clientName: "stable", chainId },
-    fetchPolicy: "network-only",
+    variables: { chainId },
   });
 
   const onCloseNewPosition = useCallback(() => {
