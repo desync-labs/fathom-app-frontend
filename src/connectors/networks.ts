@@ -14,6 +14,7 @@ const SUBGRAPH_URLS = {
 };
 
 let supportedChainIds = [51, 11155111];
+const NATIVE_ASSETS = ["ETH", "XDC"];
 
 let DEFAULT_RPCS: any = {
   51: APOTHEM_RPC,
@@ -92,4 +93,10 @@ export const WalletConnect = new WalletConnectConnector({
   },
 } as unknown as EthereumProviderOptions);
 
-export { NETWORK_SETTINGS, supportedChainIds, SUBGRAPH_URLS, DEFAULT_RPCS };
+export {
+  NATIVE_ASSETS,
+  NETWORK_SETTINGS,
+  supportedChainIds,
+  SUBGRAPH_URLS,
+  DEFAULT_RPCS,
+};

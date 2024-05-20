@@ -8,6 +8,7 @@ import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 import { DANGER_SAFETY_BUFFER } from "utils/Constants";
 import { ZERO_ADDRESS } from "fathom-sdk";
+import { NATIVE_ASSETS } from "connectors/networks";
 
 export const defaultValues = {
   collateral: "",
@@ -19,7 +20,8 @@ export const defaultValues = {
 const useOpenPosition = (
   pool: OpenPositionContextType["pool"],
   onClose: OpenPositionContextType["onClose"],
-  proxyWallet: OpenPositionContextType["proxyWallet"]
+  proxyWallet: OpenPositionContextType["proxyWallet"],
+  fetchProxyWallet: OpenPositionContextType["fetchProxyWallet"]
 ) => {
   const { poolService, positionService } = useServices();
   const { account, chainId, library } = useConnector();
@@ -308,10 +310,7 @@ const useOpenPosition = (
 
       try {
         let blockNumber;
-        if (
-          pool.poolName.toUpperCase() === "XDC" ||
-          pool.poolName.toUpperCase() === "ETH"
-        ) {
+        if (NATIVE_ASSETS.includes(pool.poolName.toUpperCase())) {
           blockNumber = await positionService.openPosition(
             account,
             pool,
@@ -319,6 +318,15 @@ const useOpenPosition = (
             fathomToken
           );
         } else {
+          /**
+           * ERC20 token collateral.
+           */
+          if (!proxyWalletExists) {
+            await positionService.createProxyWallet(account);
+            fetchProxyWallet(); // Fetch proxy wallet
+            return;
+          }
+
           blockNumber = await positionService.openPositionERC20(
             account,
             pool,
@@ -331,16 +339,19 @@ const useOpenPosition = (
         onClose();
       } catch (e) {
         console.log(e);
+      } finally {
+        setOpenPositionLoading(false);
       }
-      setOpenPositionLoading(false);
     },
     [
+      proxyWalletExists,
       account,
       pool,
       positionService,
       setOpenPositionLoading,
       setLastTransactionBlock,
       onClose,
+      fetchProxyWallet,
     ]
   );
 
@@ -375,10 +386,11 @@ const useOpenPosition = (
     if (isTouched) {
       handleUpdates(collateral, fathomToken);
     }
-    if (collateralTokenAddress) {
-      approvalStatus(collateral);
+    if (collateralTokenAddress && proxyWallet !== ZERO_ADDRESS) {
+      approvalStatus(collateral || "0");
     }
   }, [
+    proxyWallet,
     pool,
     collateral,
     collateralTokenAddress,
