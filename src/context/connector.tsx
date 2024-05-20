@@ -21,7 +21,7 @@ import {
   DefaultProvider,
   WalletConnect,
   supportedChainIds,
-  XDC_NETWORK_SETTINGS,
+  NETWORK_SETTINGS,
 } from "connectors/networks";
 import { Web3Provider } from "@into-the-fathom/providers";
 
@@ -273,7 +273,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
           if (switchError.code === 4902) {
             try {
               await provider.send("wallet_addEthereumChain", [
-                (XDC_NETWORK_SETTINGS as any)[chainId],
+                (NETWORK_SETTINGS as any)[chainId],
               ]);
             } catch (addError) {
               console.error("Failed to add the XDC Network:", addError);
@@ -293,7 +293,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
           if (err.code === 4902) {
             window.ethereum.request?.({
               method: "wallet_addEthereumChain",
-              params: [(XDC_NETWORK_SETTINGS as any)[chainId]],
+              params: [(NETWORK_SETTINGS as any)[chainId]],
             });
           }
         }

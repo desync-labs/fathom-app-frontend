@@ -116,6 +116,8 @@ import { dexClient } from "apollo/client";
 import Transactions from "apps/dex/pages/Transactions";
 import { memo, useEffect } from "react";
 import ReactGA from "react-ga4";
+import { ChainId, NETWORK_SETTINGS } from "connectors/networks";
+import { DEFAULT_CHAIN_ID } from "utils/Constants";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -404,7 +406,9 @@ const MainLayout = () => {
                     fontWeight={500}
                   >
                     {formatNumber(Number(userXDCBalance?.toSignificant(8)))}{" "}
-                    {"XDC"}
+                    {NETWORK_SETTINGS[chainId as ChainId].nativeCurrency
+                      .symbol ||
+                      NETWORK_SETTINGS[DEFAULT_CHAIN_ID].nativeCurrency.symbol}
                   </Box>
                 ) : null}
               </AccountElement>
