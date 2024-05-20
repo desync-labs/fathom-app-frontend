@@ -39,6 +39,12 @@ const cache = new InMemoryCache({
             return [...existing, ...incoming];
           },
         },
+        accountVaultPositions: {
+          keyArgs: ["account"],
+          merge(_, incoming) {
+            return incoming;
+          },
+        },
       },
     },
     Staker: {
