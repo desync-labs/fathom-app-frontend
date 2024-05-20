@@ -116,6 +116,8 @@ import { dexClient } from "apollo/client";
 import Transactions from "apps/dex/pages/Transactions";
 import { memo, useEffect } from "react";
 import ReactGA from "react-ga4";
+import { ChainId, NETWORK_SETTINGS } from "connectors/networks";
+import { DEFAULT_CHAIN_ID } from "utils/Constants";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -252,8 +254,6 @@ const LogoLink = styled(Link)`
   align-items: center;
 `;
 
-const LENDING_ENABLED = process.env.REACT_APP_LENDING_ENABLED;
-
 const MainLayout = () => {
   const {
     savedOpen,
@@ -285,6 +285,7 @@ const MainLayout = () => {
   } = useMainLayout();
 
   const {
+    chainId,
     allowStableSwap,
     allowStableSwapInProgress,
     isUserWrapperWhiteListed,
@@ -405,7 +406,9 @@ const MainLayout = () => {
                     fontWeight={500}
                   >
                     {formatNumber(Number(userXDCBalance?.toSignificant(8)))}{" "}
-                    {"XDC"}
+                    {NETWORK_SETTINGS[chainId as ChainId].nativeCurrency
+                      .symbol ||
+                      NETWORK_SETTINGS[DEFAULT_CHAIN_ID].nativeCurrency.symbol}
                   </Box>
                 ) : null}
               </AccountElement>
@@ -482,96 +485,95 @@ const MainLayout = () => {
                   />
                 </>
               ) : null}
-              <Route path="/dao" element={<DaoView />}>
-                <Route
-                  index
-                  element={
-                    <StakingProvider>
-                      <StakingView />
-                    </StakingProvider>
-                  }
-                />
-                <Route
-                  path="staking"
-                  index
-                  element={
-                    <StakingProvider>
-                      <StakingView />
-                    </StakingProvider>
-                  }
-                />
-                <Route path="governance" element={<AllProposalsView />}></Route>
-                <Route
-                  path="governance/proposal/:_proposalId"
-                  element={
-                    <ProposalProvider>
-                      <ProposalView />
-                    </ProposalProvider>
-                  }
-                />
-                <Route
-                  path="*"
-                  element={<Navigate to="/dao/staking" replace />}
-                />
-              </Route>
-              <Route path="/swap" element={<DexView />}>
-                <Route index element={<Swap />} />
-                <Route path=":outputCurrency" element={<RedirectToSwap />} />
-                <Route path="send" element={<RedirectPathToSwapOnly />} />
-                <Route path="find" element={<PoolFinder />} />
-                <Route path="pool" element={<Pool />} />
-                <Route path="add" element={<AddLiquidity />} />
-                <Route
-                  path="add/:currencyIdA"
-                  element={<RedirectOldAddLiquidityPathStructure />}
-                />
-                <Route
-                  path="add/:currencyIdA/:currencyIdB"
-                  element={<RedirectDuplicateTokenIds />}
-                />
-                <Route path="create" element={<AddLiquidity />} />
-                <Route
-                  path="create/:currencyIdA"
-                  element={<RedirectOldAddLiquidityPathStructure />}
-                />
-                <Route
-                  path="create/:currencyIdA/:currencyIdB"
-                  element={<RedirectDuplicateTokenIds />}
-                />
-                <Route
-                  path="remove/:tokens"
-                  element={<RedirectOldRemoveLiquidityPathStructure />}
-                />
-                <Route
-                  path="remove/:currencyIdA/:currencyIdB"
-                  element={<RemoveLiquidity />}
-                />
-                <Route
-                  path="transactions"
-                  element={
-                    <ApolloProvider client={dexClient}>
-                      <Transactions />
-                    </ApolloProvider>
-                  }
-                />
-                <Route element={<RedirectPathToSwapOnly />} />
-              </Route>
-              {LENDING_ENABLED === "true" && (
-                <Route path="/lending" element={<LendingView />}>
-                  <Route index element={<Home />} />
-                  <Route path="markets" element={<Markets />} />
+              {chainId === 50 || chainId === 51 ? (
+                <Route path="/dao" element={<DaoView />}>
                   <Route
-                    path="reserve-overview"
-                    element={<ReserveOverview />}
+                    index
+                    element={
+                      <StakingProvider>
+                        <StakingView />
+                      </StakingProvider>
+                    }
                   />
-                  <Route path="transactions" element={<History />} />
-                  <Route path="faucet" element={<Faucet />} />
+                  <Route
+                    path="staking"
+                    index
+                    element={
+                      <StakingProvider>
+                        <StakingView />
+                      </StakingProvider>
+                    }
+                  />
+                  <Route
+                    path="governance"
+                    element={<AllProposalsView />}
+                  ></Route>
+                  <Route
+                    path="governance/proposal/:_proposalId"
+                    element={
+                      <ProposalProvider>
+                        <ProposalView />
+                      </ProposalProvider>
+                    }
+                  />
                   <Route
                     path="*"
-                    element={<Navigate to="/lending" replace />}
+                    element={<Navigate to="/dao/staking" replace />}
                   />
                 </Route>
-              )}
+              ) : null}
+              {chainId === 50 || chainId === 51 ? (
+                <Route path="/swap" element={<DexView />}>
+                  <Route index element={<Swap />} />
+                  <Route path=":outputCurrency" element={<RedirectToSwap />} />
+                  <Route path="send" element={<RedirectPathToSwapOnly />} />
+                  <Route path="find" element={<PoolFinder />} />
+                  <Route path="pool" element={<Pool />} />
+                  <Route path="add" element={<AddLiquidity />} />
+                  <Route
+                    path="add/:currencyIdA"
+                    element={<RedirectOldAddLiquidityPathStructure />}
+                  />
+                  <Route
+                    path="add/:currencyIdA/:currencyIdB"
+                    element={<RedirectDuplicateTokenIds />}
+                  />
+                  <Route path="create" element={<AddLiquidity />} />
+                  <Route
+                    path="create/:currencyIdA"
+                    element={<RedirectOldAddLiquidityPathStructure />}
+                  />
+                  <Route
+                    path="create/:currencyIdA/:currencyIdB"
+                    element={<RedirectDuplicateTokenIds />}
+                  />
+                  <Route
+                    path="remove/:tokens"
+                    element={<RedirectOldRemoveLiquidityPathStructure />}
+                  />
+                  <Route
+                    path="remove/:currencyIdA/:currencyIdB"
+                    element={<RemoveLiquidity />}
+                  />
+                  <Route
+                    path="transactions"
+                    element={
+                      <ApolloProvider client={dexClient}>
+                        <Transactions />
+                      </ApolloProvider>
+                    }
+                  />
+                  <Route element={<RedirectPathToSwapOnly />} />
+                </Route>
+              ) : null}
+              <Route path="/lending" element={<LendingView />}>
+                <Route index element={<Home />} />
+                <Route path="markets" element={<Markets />} />
+                <Route path="reserve-overview" element={<ReserveOverview />} />
+                <Route path="transactions" element={<History />} />
+                <Route path="faucet" element={<Faucet />} />
+                <Route path="*" element={<Navigate to="/lending" replace />} />
+              </Route>
               <Route
                 path="/vaults"
                 element={
@@ -581,83 +583,85 @@ const MainLayout = () => {
                   />
                 }
               ></Route>
-              <Route path="/charts" element={<ChartsView />}>
-                <Route
-                  index
-                  element={
-                    <LayoutWrapper
-                      savedOpen={savedOpen}
-                      setSavedOpen={setSavedOpen}
-                    >
-                      <GlobalPage />
-                    </LayoutWrapper>
-                  }
-                ></Route>
+              {chainId === 50 || chainId === 51 ? (
+                <Route path="/charts" element={<ChartsView />}>
+                  <Route
+                    index
+                    element={
+                      <LayoutWrapper
+                        savedOpen={savedOpen}
+                        setSavedOpen={setSavedOpen}
+                      >
+                        <GlobalPage />
+                      </LayoutWrapper>
+                    }
+                  ></Route>
 
-                <Route
-                  path="token/:tokenAddress"
-                  element={
-                    <TokenPageRouterComponent
-                      savedOpen={savedOpen}
-                      setSavedOpen={setSavedOpen}
-                    />
-                  }
-                />
-                <Route
-                  path="pair/:pairAddress"
-                  element={
-                    <PairPageRouterComponent
-                      savedOpen={savedOpen}
-                      setSavedOpen={setSavedOpen}
-                    />
-                  }
-                />
-                <Route
-                  path="account/:accountAddress"
-                  element={
-                    <AccountPageRouterComponent
-                      savedOpen={savedOpen}
-                      setSavedOpen={setSavedOpen}
-                    />
-                  }
-                />
+                  <Route
+                    path="token/:tokenAddress"
+                    element={
+                      <TokenPageRouterComponent
+                        savedOpen={savedOpen}
+                        setSavedOpen={setSavedOpen}
+                      />
+                    }
+                  />
+                  <Route
+                    path="pair/:pairAddress"
+                    element={
+                      <PairPageRouterComponent
+                        savedOpen={savedOpen}
+                        setSavedOpen={setSavedOpen}
+                      />
+                    }
+                  />
+                  <Route
+                    path="account/:accountAddress"
+                    element={
+                      <AccountPageRouterComponent
+                        savedOpen={savedOpen}
+                        setSavedOpen={setSavedOpen}
+                      />
+                    }
+                  />
 
-                <Route
-                  path="tokens"
-                  element={
-                    <LayoutWrapper
-                      savedOpen={savedOpen}
-                      setSavedOpen={setSavedOpen}
-                    >
-                      <AllTokensPage />
-                    </LayoutWrapper>
-                  }
-                ></Route>
+                  <Route
+                    path="tokens"
+                    element={
+                      <LayoutWrapper
+                        savedOpen={savedOpen}
+                        setSavedOpen={setSavedOpen}
+                      >
+                        <AllTokensPage />
+                      </LayoutWrapper>
+                    }
+                  ></Route>
 
-                <Route
-                  path="pairs"
-                  element={
-                    <LayoutWrapper
-                      savedOpen={savedOpen}
-                      setSavedOpen={setSavedOpen}
-                    >
-                      <AllPairsPage />
-                    </LayoutWrapper>
-                  }
-                ></Route>
+                  <Route
+                    path="pairs"
+                    element={
+                      <LayoutWrapper
+                        savedOpen={savedOpen}
+                        setSavedOpen={setSavedOpen}
+                      >
+                        <AllPairsPage />
+                      </LayoutWrapper>
+                    }
+                  ></Route>
 
-                <Route
-                  path="accounts"
-                  element={
-                    <LayoutWrapper
-                      savedOpen={savedOpen}
-                      setSavedOpen={setSavedOpen}
-                    >
-                      <AccountLookup />
-                    </LayoutWrapper>
-                  }
-                ></Route>
-              </Route>
+                  <Route
+                    path="accounts"
+                    element={
+                      <LayoutWrapper
+                        savedOpen={savedOpen}
+                        setSavedOpen={setSavedOpen}
+                      >
+                        <AccountLookup />
+                      </LayoutWrapper>
+                    }
+                  ></Route>
+                </Route>
+              ) : null}
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </Box>
@@ -671,15 +675,17 @@ const MainLayout = () => {
       {!isMobile && openConnector && (
         <DesktopConnector onClose={() => setOpenConnector(false)} />
       )}
+      {chainId === 50 || chainId === 51 ? (
+        <FthmInfoModal
+          onClose={() => setShowFthmBalanceModal(false)}
+          open={showFthmBalanceModal}
+        >
+          <FathomBalanceContent
+            setShowFthmBalanceModal={setShowFthmBalanceModal}
+          />
+        </FthmInfoModal>
+      ) : null}
 
-      <FthmInfoModal
-        onClose={() => setShowFthmBalanceModal(false)}
-        open={showFthmBalanceModal}
-      >
-        <FathomBalanceContent
-          setShowFthmBalanceModal={setShowFthmBalanceModal}
-        />
-      </FthmInfoModal>
       {erc20TokenModalData && <TransactionErc20TokenModal />}
     </AppGlobalStyles>
   );

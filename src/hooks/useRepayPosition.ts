@@ -21,7 +21,7 @@ const useRepayPosition = (
   const { chainId, account } = useConnector();
 
   const { data } = useQuery(FXD_POOLS, {
-    context: { clientName: "stable" },
+    context: { clientName: "stable", chainId },
     fetchPolicy: "cache-first",
   });
 

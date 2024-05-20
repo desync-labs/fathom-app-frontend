@@ -62,6 +62,7 @@ const useVaultList = () => {
   const [strategyMethods, setStrategyMethods] = useState<FunctionFragment[]>(
     []
   );
+  const { chainId } = useConnector();
 
   const {
     data: vaultItemsData,
@@ -73,14 +74,20 @@ const useVaultList = () => {
       first: COUNT_PER_PAGE,
       skip: 0,
       shutdown: isShutdown,
+      chainId,
     },
-    context: { clientName: "vaults" },
+    context: { clientName: "vaults", chainId },
+    fetchPolicy: "network-only",
   });
 
   const { data: vaultsFactories, loading: vaultsFactoriesLoading } = useQuery(
     VAULT_FACTORIES,
     {
-      context: { clientName: "vaults" },
+      context: { clientName: "vaults", chainId },
+      fetchPolicy: "network-only",
+      variables: {
+        chainId,
+      },
     }
   );
 
@@ -88,11 +95,13 @@ const useVaultList = () => {
     loadData,
     { loading: vaultPositionsLoading, refetch: positionsRefetch },
   ] = useLazyQuery(ACCOUNT_VAULT_POSITIONS, {
-    context: { clientName: "vaults" },
+    context: { clientName: "vaults", chainId },
+    fetchPolicy: "network-only",
+    variables: { chainId },
   });
 
   useEffect(() => {
-    if (account && vaultService) {
+    if (account && vaultService && chainId) {
       loadData({ variables: { account: account.toLowerCase() } }).then(
         (res) => {
           if (
@@ -154,7 +163,14 @@ const useVaultList = () => {
     } else {
       setVaultPositionsList([]);
     }
-  }, [account, loadData, setVaultPositionsList, poolService, vaultService]);
+  }, [
+    account,
+    chainId,
+    loadData,
+    setVaultPositionsList,
+    poolService,
+    vaultService,
+  ]);
 
   useEffect(() => {
     try {

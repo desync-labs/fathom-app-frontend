@@ -78,7 +78,7 @@ const useTopUpPosition = (
 
   const approvalStatus = useMemo(
     () =>
-      debounce(async (collateral: string) => {
+      debounce(async (collateral) => {
         const approved = await positionService.approvalStatus(
           account,
           collateralTokenAddress as string,
@@ -112,7 +112,8 @@ const useTopUpPosition = (
     const priceOfCollateralFromDex =
       pool.poolName.toUpperCase() === "XDC" ||
       pool.poolName.toUpperCase() === "CGO" ||
-      pool.poolName === "CollateralTokenAdapterJeju"
+      pool.poolName === "CollateralTokenAdapterJeju" ||
+      pool.poolName.toUpperCase() === "ETH"
         ? BigNumber(pool.collateralLastPrice)
             .multipliedBy(10 ** 18)
             .toNumber()
@@ -151,7 +152,10 @@ const useTopUpPosition = (
   }, [positionService, pool, setMaxBorrowAmount]);
 
   const getCollateralTokenAndBalance = useCallback(async () => {
-    if (pool.poolName.toUpperCase() === "XDC") {
+    if (
+      pool.poolName.toUpperCase() === "XDC" ||
+      pool.poolName.toUpperCase() === "ETH"
+    ) {
       const balance = await library.getBalance(account);
       setCollateralTokenAddress(null);
       setBalance(balance.toString());
@@ -289,7 +293,10 @@ const useTopUpPosition = (
       try {
         let blockNumber;
         if (BigNumber(fathomToken).isGreaterThan(0)) {
-          if (pool.poolName.toUpperCase() === "XDC") {
+          if (
+            pool.poolName.toUpperCase() === "XDC" ||
+            pool.poolName.toUpperCase() === "ETH"
+          ) {
             blockNumber = await positionService.topUpPositionAndBorrow(
               account,
               pool,
@@ -307,7 +314,10 @@ const useTopUpPosition = (
             );
           }
         } else {
-          if (pool.poolName.toUpperCase() === "XDC") {
+          if (
+            pool.poolName.toUpperCase() === "XDC" ||
+            pool.poolName.toUpperCase() === "ETH"
+          ) {
             blockNumber = await positionService.topUpPosition(
               account,
               pool,
@@ -409,7 +419,7 @@ const useTopUpPosition = (
       (totalCollateral || totalFathomToken)
     ) {
       handleUpdates(totalCollateral, totalFathomToken);
-      approvalStatus(totalCollateral);
+      approvalStatus(collateral || "0");
     }
   }, [
     pool,

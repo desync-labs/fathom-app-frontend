@@ -261,7 +261,7 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
           }}
         />
         {approveBtn && !!balance && (
-          <ApproveBox>
+          <ApproveBox sx={{ marginBottom: "25px" }}>
             <InfoIcon
               sx={{
                 color: "#7D91B5",

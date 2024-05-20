@@ -29,7 +29,7 @@ export const useAllProposals = () => {
     loading: statsLoading,
     refetch: statsRefetch,
   } = useQuery(GOVERNANCE_STATS, {
-    context: { clientName: "governance" },
+    context: { clientName: "governance", chainId },
   });
 
   const refetchProposals = useCallback(() => {

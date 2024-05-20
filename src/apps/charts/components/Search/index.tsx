@@ -1,5 +1,4 @@
 import { useState, useEffect, useMemo, useRef, memo } from "react";
-import { client } from "apollo/client";
 import { Box, styled, useMediaQuery } from "@mui/material";
 
 import Row, { RowFixed } from "apps/charts/components/Row";
@@ -20,6 +19,7 @@ import { useListedTokens } from "apps/charts/contexts/Application";
 
 import CloseIcon from "@mui/icons-material/Close";
 import SearchIcon from "@mui/icons-material/Search";
+import { dexClient } from "apollo/client";
 
 const Container = styled(Box)`
   height: 48px;
@@ -204,7 +204,7 @@ export const Search = ({ small = false }) => {
     async function fetchData() {
       try {
         if (value?.length > 0) {
-          const tokens = await client.query({
+          const tokens = await dexClient.query({
             query: TOKEN_SEARCH,
             variables: {
               value: value ? value.toUpperCase() : "",
@@ -212,7 +212,7 @@ export const Search = ({ small = false }) => {
             },
           });
 
-          const pairs = await client.query({
+          const pairs = await dexClient.query({
             query: PAIR_SEARCH,
             variables: {
               tokens: tokens.data.asSymbol?.map((t: { id: any }) => t.id),

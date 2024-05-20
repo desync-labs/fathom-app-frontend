@@ -1,7 +1,6 @@
 import "./App.css";
 import MainLayout from "components/Dashboard/MainLayout";
 import { ApolloProvider } from "@apollo/client";
-import { client } from "apollo/client";
 import { SyncProvider } from "context/sync";
 import { PricesProvider } from "context/prices";
 import { Updaters } from "apps/dex";
@@ -12,6 +11,7 @@ import { HashRouter as Router } from "react-router-dom";
 import { ContextProviders, Updaters as ChartUpdaters } from "apps/charts";
 import ReactGA from "react-ga4";
 import { isMobile } from "react-device-detect";
+import { client } from "apollo/client";
 
 // initialize GA
 const GOOGLE_ANALYTICS_ID = process.env.REACT_APP_GOOGLE_ANALYTICS_ID;

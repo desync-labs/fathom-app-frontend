@@ -5,44 +5,61 @@ import { JsonRpcProvider, Web3Provider } from "@into-the-fathom/providers";
 
 export const APOTHEM_RPC = "https://erpc.apothem.network/";
 export const XDC_RPC = "https://rpc.ankr.com/xdc/";
+export const SEPOLIA_RPC = "https://ethereum-sepolia-rpc.publicnode.com/";
 
-let XDC_CHAIN_IDS = [51];
-
-let DEFAULT_RPC: any = {
-  51: APOTHEM_RPC,
+const SUBGRAPH_URLS = {
+  50: "https://xinfin-graph.fathom.fi",
+  51: "https://dev-graph.fathom.fi",
+  11155111: "https://graph.sepolia.fathom.fi",
 };
 
-let supportedChainIds = [51];
+let supportedChainIds = [51, 11155111];
 
-let rpc: any = {
+let DEFAULT_RPCS: any = {
   51: APOTHEM_RPC,
+  11155111: SEPOLIA_RPC,
 };
 
-let NETWORK_LABELS: { [n: number]: string } = {
-  51: "Apothem",
+let NETWORK_SETTINGS: { [n: number]: any } = {
+  51: {
+    chainName: "Apothem",
+    chainId: `0x${(51).toString(16)}`,
+    nativeCurrency: { name: "Apothem", decimals: 18, symbol: "AXDC" },
+    rpcUrls: [APOTHEM_RPC],
+    logoName: "WXDC",
+  },
+  11155111: {
+    chainName: "Sepolia",
+    chainId: `0x${(11155111).toString(16)}`,
+    nativeCurrency: { name: "SepoliaETH", decimals: 18, symbol: "ETH" },
+    rpcUrls: [SEPOLIA_RPC],
+    logoName: "ETH",
+  },
 };
 
 if (process.env.REACT_APP_ENV === "prod") {
-  XDC_CHAIN_IDS = [50];
-
-  DEFAULT_RPC = {
-    50: XDC_RPC,
-  };
-
   supportedChainIds = [50];
 
-  rpc = {
+  DEFAULT_RPCS = {
     50: XDC_RPC,
   };
 
-  NETWORK_LABELS = {
-    50: "XDC",
+  NETWORK_SETTINGS = {
+    50: {
+      chainName: "XDC",
+      chainId: `0x${(50).toString(16)}`,
+      nativeCurrency: { name: "XDC", decimals: 18, symbol: "XDC" },
+      rpcUrls: [XDC_RPC],
+      blockExplorerUrls: ["https://explorer.xinfin.network"],
+      logoName: "WXDC",
+    },
   };
 }
 
-export declare enum ChainId {
+export enum ChainId {
   XDC = 50,
   AXDC = 51,
+  SEPOLIA = 11155111,
 }
 
 export type DefaultProvider = Web3Provider | JsonRpcProvider;
@@ -50,29 +67,14 @@ export type DefaultProvider = Web3Provider | JsonRpcProvider;
 export const EXPLORERS = {
   51: "https://explorer.apothem.network/",
   50: "https://xdc.blocksscan.io/",
-};
-
-export const XDC_NETWORK_SETTINGS = {
-  50: {
-    chainName: "XDC",
-    chainId: `0x${(50).toString(16)}`,
-    nativeCurrency: { name: "XDC", decimals: 18, symbol: "XDC" },
-    rpcUrls: [XDC_RPC],
-    blockExplorerUrls: ["https://explorer.xinfin.network"],
-  },
-  51: {
-    chainName: "Apothem",
-    chainId: `0x${(51).toString(16)}`,
-    nativeCurrency: { name: "Apothem", decimals: 18, symbol: "TXDC" },
-    rpcUrls: [APOTHEM_RPC],
-  },
+  11155111: "https://sepolia.etherscan.io/",
 };
 
 export const injected = new InjectedConnector({ supportedChainIds });
 
 export const WalletConnect = new WalletConnectConnector({
   chains: supportedChainIds,
-  rpcMap: rpc,
+  rpcMap: DEFAULT_RPCS,
   showQrModal: true,
   projectId: "5da328ee81006c5aa59662d6cadfd5fe",
   methods: [
@@ -90,4 +92,4 @@ export const WalletConnect = new WalletConnectConnector({
   },
 } as unknown as EthereumProviderOptions);
 
-export { XDC_CHAIN_IDS, DEFAULT_RPC, supportedChainIds, NETWORK_LABELS };
+export { NETWORK_SETTINGS, supportedChainIds, SUBGRAPH_URLS, DEFAULT_RPCS };

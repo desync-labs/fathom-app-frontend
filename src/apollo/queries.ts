@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const FXD_STATS = gql`
-  query FxdStats {
+  query FxdStats($chainId: String) {
     protocolStat(id: "fathom_stats") {
       id
       totalSupply
@@ -11,7 +11,7 @@ export const FXD_STATS = gql`
 `;
 
 export const FXD_POOLS = gql`
-  query FXDPools {
+  query FXDPools($chainId: String) {
     pools {
       rawPrice
       collateralLastPrice
@@ -33,7 +33,12 @@ export const FXD_POOLS = gql`
 `;
 
 export const FXD_POSITIONS = gql`
-  query FXDPositions($walletAddress: String!, $first: Int!, $skip: Int!) {
+  query FXDPositions(
+    $walletAddress: String!
+    $first: Int!
+    $skip: Int!
+    $chainId: String
+  ) {
     positions(
       first: $first
       skip: $skip
@@ -62,7 +67,7 @@ export const FXD_POSITIONS = gql`
 `;
 
 export const FXD_USER = gql`
-  query FXDUser($walletAddress: String!) {
+  query FXDUser($walletAddress: String!, $chainId: String) {
     users(where: { address: $walletAddress }) {
       id
       activePositionsCount
@@ -127,7 +132,7 @@ export const GOVERNANCE_STATS = gql`
 `;
 
 export const HEALTH = gql`
-  query FathomHealth($name: String!) {
+  query FathomHealth($name: String!, $chainId: String) {
     indexingStatusForCurrentVersion(subgraphName: $name) {
       synced
       health
@@ -190,8 +195,16 @@ export const STAKING_STAKER = gql`
   }
 `;
 
+/**
+ * Vault queries
+ */
 export const VAULTS = gql`
-  query Vaults($first: Int!, $skip: Int!, $shutdown: Boolean) {
+  query Vaults(
+    $first: Int!
+    $skip: Int!
+    $shutdown: Boolean
+    $chainId: String
+  ) {
     vaults(first: $first, skip: $skip, where: { shutdown: $shutdown }) {
       id
       token {
@@ -228,6 +241,7 @@ export const VAULT_STRATEGY_REPORTS = gql`
     $strategy: String!
     $reportsFirst: Int
     $reportsSkip: Int
+    $chainId: String
   ) {
     strategyHistoricalAprs(
       first: $reportsFirst
@@ -254,7 +268,7 @@ export const VAULT_STRATEGY_REPORTS = gql`
 `;
 
 export const ACCOUNT_VAULT_POSITIONS = gql`
-  query AccountVaultPositions($account: String!) {
+  query AccountVaultPositions($account: String!, $chainId: String) {
     accountVaultPositions(where: { account: $account }) {
       id
       balancePosition
@@ -279,7 +293,7 @@ export const ACCOUNT_VAULT_POSITIONS = gql`
 `;
 
 export const VAULT_FACTORIES = gql`
-  query VaultFactories {
+  query VaultFactories($chainId: String) {
     factories {
       feeRecipient
       id
@@ -300,7 +314,11 @@ export const VAULT_FACTORIES = gql`
 `;
 
 export const VAULT_POSITION_TRANSACTIONS = gql`
-  query VaultPositionTransactions($account: String!, $vault: String!) {
+  query VaultPositionTransactions(
+    $account: String!
+    $vault: String!
+    $chainId: String
+  ) {
     deposits(
       where: {
         account_contains_nocase: $account

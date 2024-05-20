@@ -93,7 +93,10 @@ const useOpenPosition = (
     /**
      * Native token collateral.
      */
-    if (pool.poolName.toUpperCase() === "XDC") {
+    if (
+      pool.poolName.toUpperCase() === "XDC" ||
+      pool.poolName.toUpperCase() === "ETH"
+    ) {
       const balance = await library.getBalance(account);
       setCollateralTokenAddress(null);
       setBalance(balance.toString());
@@ -202,7 +205,8 @@ const useOpenPosition = (
       const priceOfCollateralFromDex =
         pool.poolName.toUpperCase() === "XDC" ||
         pool.poolName.toUpperCase() === "CGO" ||
-        pool.poolName === "CollateralTokenAdapterJeju"
+        pool.poolName === "CollateralTokenAdapterJeju" ||
+        pool.poolName.toUpperCase() === "ETH"
           ? BigNumber(pool.collateralLastPrice)
               .multipliedBy(10 ** 18)
               .toNumber()
@@ -304,7 +308,10 @@ const useOpenPosition = (
 
       try {
         let blockNumber;
-        if (pool.poolName.toUpperCase() === "XDC") {
+        if (
+          pool.poolName.toUpperCase() === "XDC" ||
+          pool.poolName.toUpperCase() === "ETH"
+        ) {
           blockNumber = await positionService.openPosition(
             account,
             pool,

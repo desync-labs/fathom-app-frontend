@@ -5,7 +5,11 @@ import {
   WrongNetworkMobile,
   WrongNetworkMobileIcon,
 } from "components/AppComponents/AppBox/AppBox";
-import { ChainId, NETWORK_LABELS, XDC_CHAIN_IDS } from "connectors/networks";
+import {
+  ChainId,
+  NETWORK_SETTINGS,
+  supportedChainIds,
+} from "connectors/networks";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
@@ -23,6 +27,7 @@ import useSharedContext from "context/shared";
 import AppPopover, {
   PopoverType,
 } from "components/AppComponents/AppPopover/AppPopover";
+import { DEFAULT_CHAIN_ID } from "../../utils/Constants";
 
 const NetworkPaper = styled(AppPaper)`
   background: #253656;
@@ -71,7 +76,7 @@ const Web3Status = () => {
 
   const options = useMemo(
     () =>
-      Object.entries(NETWORK_LABELS).filter(([filterChainId]) => {
+      Object.entries(NETWORK_SETTINGS).filter(([filterChainId]) => {
         return Number(filterChainId) !== chainId;
       }),
     [chainId]
@@ -80,14 +85,26 @@ const Web3Status = () => {
   const showNetworkSelector =
     (chainId || error instanceof UnsupportedChainIdError) && options.length;
 
-  const isError = error || (chainId && !XDC_CHAIN_IDS.includes(chainId));
+  const isError = error || (chainId && !supportedChainIds.includes(chainId));
 
-  if (XDC_CHAIN_IDS.includes(chainId)) {
+  if (supportedChainIds.includes(chainId)) {
     button = (
       <RightNetwork onClick={() => setOpen(!open)}>
         <>
-          <img src={getTokenLogoURL("WXDC")} alt={"xdc"} width={16} />
-          {!isMobile && NETWORK_LABELS[chainId as ChainId]}
+          <img
+            src={
+              NETWORK_SETTINGS[chainId as ChainId]
+                ? getTokenLogoURL(NETWORK_SETTINGS[chainId as ChainId].logoName)
+                : getTokenLogoURL(
+                    NETWORK_SETTINGS[DEFAULT_CHAIN_ID as ChainId].logoName
+                  )
+            }
+            alt={"xdc"}
+            width={16}
+          />
+          {!isMobile &&
+            (NETWORK_SETTINGS[chainId as ChainId].chainName ||
+              NETWORK_SETTINGS[DEFAULT_CHAIN_ID as ChainId].chainName)}
           {showNetworkSelector ? <ArrowDropDownIcon /> : null}
         </>
       </RightNetwork>
@@ -110,7 +127,7 @@ const Web3Status = () => {
       >
         <>
           {error instanceof UnsupportedChainIdError ||
-          !XDC_CHAIN_IDS.includes(chainId)
+          !supportedChainIds.includes(chainId)
             ? "Wrong Network"
             : !account
             ? "Wallet Request Permissions Error"
@@ -123,7 +140,7 @@ const Web3Status = () => {
 
   return (chainId ||
     error instanceof UnsupportedChainIdError ||
-    !XDC_CHAIN_IDS.includes(chainId)) &&
+    !supportedChainIds.includes(chainId)) &&
     options.length ? (
     <>
       <ButtonGroup
@@ -153,7 +170,7 @@ const Web3Status = () => {
             <NetworkPaper>
               <ClickAwayListener onClickAway={() => setOpen(false)}>
                 <MenuList id="split-button-menu" autoFocusItem>
-                  {options.map(([chainId, chainName]) => (
+                  {options.map(([chainId, chainData]) => (
                     <MenuItem
                       onClick={() => {
                         setOpen(false);
@@ -161,7 +178,7 @@ const Web3Status = () => {
                       }}
                       key={chainId}
                     >
-                      {chainName}
+                      {chainData.chainName}
                     </MenuItem>
                   ))}
                 </MenuList>

@@ -27,9 +27,10 @@ export function isAddress(value: any): string | false {
   }
 }
 
-const BLOCKSCAN_PREFIXES: { [chainId in ChainId]: string } = {
-  50: "xdc.",
-  51: "apothem.",
+const BLOCKSCAN_DOMAIN: { [chainId in ChainId]: string } = {
+  50: "xdc.blocksscan.io",
+  51: "apothem.blocksscan.io",
+  11155111: "sepolia.etherscan.io",
 };
 
 export function getBlockScanLink(
@@ -44,7 +45,7 @@ export function getBlockScanLink(
     | "tokens"
     | "blocks"
 ): string {
-  const prefix = `https://${BLOCKSCAN_PREFIXES[chainId]}blocksscan.io`;
+  const prefix = `https://${BLOCKSCAN_DOMAIN[chainId]}`;
 
   switch (type) {
     case "transaction": {

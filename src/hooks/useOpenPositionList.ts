@@ -31,13 +31,13 @@ const useOpenPositionList = (
   const [loadPositions, { loading, data, fetchMore, called }] = useLazyQuery(
     FXD_POSITIONS,
     {
-      context: { clientName: "stable" },
+      context: { clientName: "stable", chainId },
     }
   );
 
-  const { data: poolsData } = useQuery(FXD_POOLS, {
-    context: { clientName: "stable" },
-    fetchPolicy: "cache-first",
+  const { data: poolsData, refetch } = useQuery(FXD_POOLS, {
+    context: { clientName: "stable", chainId },
+    fetchPolicy: "network-only",
   });
 
   const [closePosition, setClosePosition] = useState<IOpenPosition>();
@@ -67,6 +67,12 @@ const useOpenPositionList = (
       setFormattedPositions([]);
     }
   }, [chainId, proxyWallet, account, called, loadPositions]);
+
+  useEffect(() => {
+    if (chainId) {
+      refetch();
+    }
+  }, [chainId, account, refetch]);
 
   const handlePageChange = useCallback(
     (event: ChangeEvent<unknown>, page: number) => {
@@ -131,11 +137,24 @@ const useOpenPositionList = (
             }
           );
 
-          setFormattedPositions(positions);
+          const renamedPoolName = positions.map(
+            (positionItem: IOpenPosition) => {
+              if (
+                positionItem.collateralPoolName.toUpperCase() === "XDC" &&
+                chainId === 11155111
+              ) {
+                return { ...positionItem, collateralPoolName: "ETH" };
+              } else {
+                return positionItem;
+              }
+            }
+          );
+
+          setFormattedPositions(renamedPoolName);
           setIsLoading(false);
         });
       }, 300),
-    [positionService, setFormattedPositions, setIsLoading]
+    [positionService, chainId, setFormattedPositions, setIsLoading]
   );
 
   useEffect(() => {
