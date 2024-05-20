@@ -50,7 +50,7 @@ const DangerErrorBox = styled(ErrorBox)`
 `;
 
 const OpenPositionApproveBox = styled(ApproveBox)`
-  margin-bottom: 10px;
+  margin-bottom: 25px;
 `;
 
 const OpenPositionForm = () => {
