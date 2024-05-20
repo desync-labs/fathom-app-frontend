@@ -1,7 +1,6 @@
 import "./App.css";
 import MainLayout from "components/Dashboard/MainLayout";
 import { ApolloProvider } from "@apollo/client";
-import { createApolloClient } from "apollo/client";
 import { SyncProvider } from "context/sync";
 import { PricesProvider } from "context/prices";
 import { Updaters } from "apps/dex";
@@ -12,8 +11,7 @@ import { HashRouter as Router } from "react-router-dom";
 import { ContextProviders, Updaters as ChartUpdaters } from "apps/charts";
 import ReactGA from "react-ga4";
 import { isMobile } from "react-device-detect";
-import useConnector from "context/connector";
-import { DEFAULT_CHAIN_ID } from "utils/Constants";
+import { client } from "apollo/client";
 
 // initialize GA
 const GOOGLE_ANALYTICS_ID = process.env.REACT_APP_GOOGLE_ANALYTICS_ID;
@@ -38,8 +36,6 @@ if (typeof GOOGLE_ANALYTICS_ID === "string") {
 }
 
 function App() {
-  const { chainId } = useConnector();
-  const client = createApolloClient(chainId ? chainId : DEFAULT_CHAIN_ID);
   return (
     <ApolloProvider client={client}>
       <SyncProvider>

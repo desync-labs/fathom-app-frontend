@@ -31,12 +31,12 @@ const useOpenPositionList = (
   const [loadPositions, { loading, data, fetchMore, called }] = useLazyQuery(
     FXD_POSITIONS,
     {
-      context: { clientName: "stable" },
+      context: { clientName: "stable", chainId },
     }
   );
 
   const { data: poolsData, refetch } = useQuery(FXD_POOLS, {
-    context: { clientName: "stable" },
+    context: { clientName: "stable", chainId },
     fetchPolicy: "cache-first",
   });
 

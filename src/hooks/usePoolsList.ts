@@ -6,11 +6,20 @@ import useConnector from "context/connector";
 
 const usePoolsList = () => {
   const [selectedPool, setSelectedPool] = useState<ICollateralPool>();
-  const { data, loading, refetch } = useQuery(FXD_POOLS, {
-    context: { clientName: "stable" },
-    fetchPolicy: "cache-first",
-  });
   const { chainId } = useConnector();
+  const { loading, data, refetch } = useQuery(FXD_POOLS, {
+    context: { clientName: "stable", chainId },
+    fetchPolicy: "network-only",
+  });
+
+  useEffect(() => {
+    if (chainId) {
+      refetch({
+        context: { clientName: "stable", chainId },
+        fetchPolicy: "network-only",
+      });
+    }
+  }, [chainId]);
 
   const onCloseNewPosition = useCallback(() => {
     setSelectedPool(undefined);

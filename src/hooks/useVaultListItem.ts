@@ -56,6 +56,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
   const [manageVault, setManageVault] = useState<boolean>(false);
   const [newVaultDeposit, setNewVaultDeposit] = useState<boolean>(false);
   const [balanceToken, setBalanceToken] = useState<string>("0");
+  const { chainId } = useConnector();
 
   const [depositsList, setDepositsList] = useState([]);
   const [withdrawalsList, setWithdrawalsList] = useState([]);
@@ -89,13 +90,13 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
   const [loadReports, { fetchMore: fetchMoreReports }] = useLazyQuery(
     VAULT_STRATEGY_REPORTS,
     {
-      context: { clientName: "vaults" },
+      context: { clientName: "vaults", chainId },
     }
   );
 
   const [loadPositionTransactions, { refetch: refetchTransactions }] =
     useLazyQuery(VAULT_POSITION_TRANSACTIONS, {
-      context: { clientName: "vaults" },
+      context: { clientName: "vaults", chainId },
     });
 
   const fetchReports = useCallback(

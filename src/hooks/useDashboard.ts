@@ -13,15 +13,15 @@ const useDashboard = () => {
   const { syncFXD, prevSyncFxd } = useSyncContext();
 
   const { refetch: refetchStats, loading: loadingStats } = useQuery(FXD_STATS, {
-    context: { clientName: "stable" },
+    context: { clientName: "stable", chainId },
   });
   const [, { refetch: refetchPositions, loading: loadingPositions }] =
     useLazyQuery(FXD_POSITIONS, {
-      context: { clientName: "stable" },
+      context: { clientName: "stable", chainId },
     });
 
   const { refetch: refetchPools, loading: loadingPools } = useQuery(FXD_POOLS, {
-    context: { clientName: "stable" },
+    context: { clientName: "stable", chainId },
   });
 
   const [positionCurrentPage, setPositionCurrentPage] = useState(1);
@@ -31,7 +31,7 @@ const useDashboard = () => {
   const [loadUserStats, { refetch: refetchUserStats }] = useLazyQuery(
     FXD_USER,
     {
-      context: { clientName: "stable" },
+      context: { clientName: "stable", chainId },
       fetchPolicy: "cache-first",
     }
   );
@@ -117,7 +117,7 @@ const useDashboard = () => {
   ]);
 
   useEffect(() => {
-    if (account) {
+    if (account && chainId) {
       fetchUserStatsAndProxyWallet();
     } else {
       setProxyWallet("");

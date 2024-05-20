@@ -62,6 +62,7 @@ const useVaultList = () => {
   const [strategyMethods, setStrategyMethods] = useState<FunctionFragment[]>(
     []
   );
+  const { chainId } = useConnector();
 
   const {
     data: vaultItemsData,
@@ -74,13 +75,13 @@ const useVaultList = () => {
       skip: 0,
       shutdown: isShutdown,
     },
-    context: { clientName: "vaults" },
+    context: { clientName: "vaults", chainId },
   });
 
   const { data: vaultsFactories, loading: vaultsFactoriesLoading } = useQuery(
     VAULT_FACTORIES,
     {
-      context: { clientName: "vaults" },
+      context: { clientName: "vaults", chainId },
     }
   );
 
@@ -88,7 +89,7 @@ const useVaultList = () => {
     loadData,
     { loading: vaultPositionsLoading, refetch: positionsRefetch },
   ] = useLazyQuery(ACCOUNT_VAULT_POSITIONS, {
-    context: { clientName: "vaults" },
+    context: { clientName: "vaults", chainId },
   });
 
   useEffect(() => {

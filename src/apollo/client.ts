@@ -1,10 +1,12 @@
 import {
   ApolloClient,
   ApolloLink,
+  concat,
   HttpLink,
   InMemoryCache,
 } from "@apollo/client";
-import { ChainId, SUBGRAPH_URLS } from "connectors/networks";
+import { SUBGRAPH_URLS } from "connectors/networks";
+import { DEFAULT_CHAIN_ID } from "../utils/Constants";
 
 /***
  * For Query we have pagination, So we need to return incoming items
@@ -52,42 +54,38 @@ const cache = new InMemoryCache({
   },
 });
 
-export const createApolloClient = (chainId: ChainId) => {
-  const stableCoinLink = new HttpLink({
-    uri: `${
-      (SUBGRAPH_URLS as any)[chainId]
-    }/subgraphs/name/stablecoin-subgraph`,
-  });
+const httpLink = new HttpLink({ uri: SUBGRAPH_URLS[DEFAULT_CHAIN_ID] });
 
-  const governanceLink = new HttpLink({
-    uri: `${(SUBGRAPH_URLS as any)[chainId]}/subgraphs/name/dao-subgraph`,
-  });
+const authMiddleware = new ApolloLink((operation, forward) => {
+  // add the authorization to the headers
+  const chainId = operation.getContext().chainId;
 
-  const vaultsLink = new HttpLink({
-    uri: `${(SUBGRAPH_URLS as any)[chainId]}/subgraphs/name/vaults-subgraph`,
-  });
+  let uri =
+    chainId && (SUBGRAPH_URLS as any)[chainId]
+      ? (SUBGRAPH_URLS as any)[chainId]
+      : SUBGRAPH_URLS[DEFAULT_CHAIN_ID];
 
-  const defaultLink = new HttpLink({
-    uri: `${(SUBGRAPH_URLS as any)[chainId]}/graphql`,
-  });
+  if (operation.getContext().clientName === "stable") {
+    uri += "/subgraphs/name/stablecoin-subgraph";
+  } else if (operation.getContext().clientName === "governance") {
+    uri += "/subgraphs/name/dao-subgraph";
+  } else if (operation.getContext().clientName === "vaults") {
+    uri += "/subgraphs/name/vaults-subgraph";
+  } else {
+    uri += "/graphql";
+  }
 
-  return new ApolloClient({
-    link: ApolloLink.split(
-      (operation) => operation.getContext().clientName === "stable", // Routes the query to the proper client
-      stableCoinLink,
-      ApolloLink.split(
-        (operation) => operation.getContext().clientName === "governance", // Routes the query to the proper client
-        governanceLink,
-        ApolloLink.split(
-          (operation) => operation.getContext().clientName === "vaults", // Routes the query to the vaultsLink
-          vaultsLink,
-          defaultLink
-        )
-      )
-    ),
-    cache,
-  });
-};
+  operation.setContext(() => ({
+    uri,
+  }));
+
+  return forward(operation);
+});
+
+export const client = new ApolloClient({
+  link: concat(authMiddleware, httpLink),
+  cache,
+});
 
 export const dexClient = new ApolloClient({
   link: new HttpLink({
