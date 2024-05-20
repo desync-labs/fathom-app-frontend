@@ -4,7 +4,7 @@ import {
   HttpLink,
   InMemoryCache,
 } from "@apollo/client";
-import { DEFAULT_CHAIN_SUBGRAPH, SUBGRAPH_URLS } from "utils/chains";
+import { ChainId, SUBGRAPH_URLS } from "connectors/networks";
 
 /***
  * For Query we have pagination, So we need to return incoming items
@@ -52,46 +52,42 @@ const cache = new InMemoryCache({
   },
 });
 
-const chainFromLocalStorage = localStorage.getItem("chainId");
-const chainId =
-  chainFromLocalStorage && chainFromLocalStorage !== "undefined"
-    ? chainFromLocalStorage
-    : DEFAULT_CHAIN_SUBGRAPH;
-console.log("localstorage", localStorage.getItem("chainId"));
-console.log("Chain", chainId);
+export const createApolloClient = (chainId: ChainId) => {
+  const stableCoinLink = new HttpLink({
+    uri: `${
+      (SUBGRAPH_URLS as any)[chainId]
+    }/subgraphs/name/stablecoin-subgraph`,
+  });
 
-const stableCoinLink = new HttpLink({
-  uri: `${(SUBGRAPH_URLS as any)[chainId]}/subgraphs/name/stablecoin-subgraph`,
-});
+  const governanceLink = new HttpLink({
+    uri: `${(SUBGRAPH_URLS as any)[chainId]}/subgraphs/name/dao-subgraph`,
+  });
 
-const governanceLink = new HttpLink({
-  uri: `${(SUBGRAPH_URLS as any)[chainId]}/subgraphs/name/dao-subgraph`,
-});
+  const vaultsLink = new HttpLink({
+    uri: `${(SUBGRAPH_URLS as any)[chainId]}/subgraphs/name/vaults-subgraph`,
+  });
 
-const vaultsLink = new HttpLink({
-  uri: `${(SUBGRAPH_URLS as any)[chainId]}/subgraphs/name/vaults-subgraph`,
-});
+  const defaultLink = new HttpLink({
+    uri: `${(SUBGRAPH_URLS as any)[chainId]}/graphql`,
+  });
 
-const defaultLink = new HttpLink({
-  uri: `${(SUBGRAPH_URLS as any)[chainId]}/graphql`,
-});
-
-export const client = new ApolloClient({
-  link: ApolloLink.split(
-    (operation) => operation.getContext().clientName === "stable", // Routes the query to the proper client
-    stableCoinLink,
-    ApolloLink.split(
-      (operation) => operation.getContext().clientName === "governance", // Routes the query to the proper client
-      governanceLink,
+  return new ApolloClient({
+    link: ApolloLink.split(
+      (operation) => operation.getContext().clientName === "stable", // Routes the query to the proper client
+      stableCoinLink,
       ApolloLink.split(
-        (operation) => operation.getContext().clientName === "vaults", // Routes the query to the vaultsLink
-        vaultsLink,
-        defaultLink
+        (operation) => operation.getContext().clientName === "governance", // Routes the query to the proper client
+        governanceLink,
+        ApolloLink.split(
+          (operation) => operation.getContext().clientName === "vaults", // Routes the query to the vaultsLink
+          vaultsLink,
+          defaultLink
+        )
       )
-    )
-  ),
-  cache,
-});
+    ),
+    cache,
+  });
+};
 
 export const dexClient = new ApolloClient({
   link: new HttpLink({

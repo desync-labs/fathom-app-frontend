@@ -99,7 +99,6 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
     useState<boolean>(true);
 
   useEffect(() => {
-    console.log("Connector chainId", chainId);
     if (chainId && supportedChainIds.includes(chainId)) {
       setAllowStableSwapInProgress(true);
       stableSwapService
@@ -159,7 +158,6 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
 
   const deactivateEvent = useCallback(() => {
     localStorage.removeItem("isConnected");
-    localStorage.removeItem("chainId");
     setIsMetamask(false);
     setIsWalletConnect(false);
   }, [setIsMetamask, setIsWalletConnect]);
@@ -313,24 +311,6 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
     },
     [setOpenConnector]
   );
-
-  const updateEvent = useCallback(({ chainId }: any) => {
-    localStorage.setItem("chainId", chainId);
-  }, []);
-
-  useEffect(() => {
-    if (connector) {
-      connector.on(ConnectorEvent.Deactivate, deactivateEvent);
-      connector.on(ConnectorEvent.Update, updateEvent);
-    }
-
-    return () => {
-      if (connector) {
-        connector.off(ConnectorEvent.Deactivate, deactivateEvent);
-        connector.off(ConnectorEvent.Update, updateEvent);
-      }
-    };
-  }, [connector, updateEvent, deactivateEvent]);
 
   const values = useMemo(
     () => ({

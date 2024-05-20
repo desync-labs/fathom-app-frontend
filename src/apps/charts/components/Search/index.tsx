@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo, useRef, memo } from "react";
-import { client } from "apollo/client";
+import { createApolloClient } from "apollo/client";
+import useConnector from "context/connector";
 import { Box, styled, useMediaQuery } from "@mui/material";
 
 import Row, { RowFixed } from "apps/charts/components/Row";
@@ -171,6 +172,8 @@ const SeeMoreLink = styled("span")`
 export const Search = ({ small = false }) => {
   let allTokens = useAllTokensInUniswap();
   const allTokenData = useAllTokenData();
+  const { chainId } = useConnector();
+  const client = createApolloClient(chainId);
 
   let allPairs = useAllPairsInUniswap();
   const allPairData = useAllPairData();

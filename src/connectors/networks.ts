@@ -7,6 +7,12 @@ export const APOTHEM_RPC = "https://erpc.apothem.network/";
 export const XDC_RPC = "https://rpc.ankr.com/xdc/";
 export const SEPOLIA_RPC = "https://ethereum-sepolia-rpc.publicnode.com/";
 
+const SUBGRAPH_URLS = {
+  50: "https://xinfin-graph.fathom.fi",
+  51: "https://dev-graph.fathom.fi",
+  11155111: "https://graph.sepolia.fathom.fi",
+};
+
 let CHAIN_IDS = [51, 11155111];
 
 let DEFAULT_RPC: any = {
@@ -43,7 +49,7 @@ if (process.env.REACT_APP_ENV === "prod") {
   };
 }
 
-export declare enum ChainId {
+export enum ChainId {
   XDC = 50,
   AXDC = 51,
   SEPOLIA = 11155111,
@@ -101,4 +107,10 @@ export const WalletConnect = new WalletConnectConnector({
   },
 } as unknown as EthereumProviderOptions);
 
-export { CHAIN_IDS, DEFAULT_RPC, supportedChainIds, NETWORK_LABELS };
+export {
+  CHAIN_IDS,
+  DEFAULT_RPC,
+  supportedChainIds,
+  NETWORK_LABELS,
+  SUBGRAPH_URLS,
+};

@@ -35,7 +35,7 @@ const useOpenPositionList = (
     }
   );
 
-  const { data: poolsData } = useQuery(FXD_POOLS, {
+  const { data: poolsData, refetch } = useQuery(FXD_POOLS, {
     context: { clientName: "stable" },
     fetchPolicy: "cache-first",
   });
@@ -55,10 +55,6 @@ const useOpenPositionList = (
 
   useEffect(() => {
     if (proxyWallet && account) {
-      console.log(
-        "useOpenPositionList -> loadPositions -> proxyWallet",
-        proxyWallet
-      );
       loadPositions({
         variables: {
           first: COUNT_PER_PAGE,
@@ -71,6 +67,12 @@ const useOpenPositionList = (
       setFormattedPositions([]);
     }
   }, [chainId, proxyWallet, account, called, loadPositions]);
+
+  useEffect(() => {
+    if (chainId) {
+      refetch();
+    }
+  }, [chainId, account, refetch]);
 
   const handlePageChange = useCallback(
     (event: ChangeEvent<unknown>, page: number) => {

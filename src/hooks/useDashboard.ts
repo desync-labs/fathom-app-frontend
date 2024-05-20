@@ -9,7 +9,7 @@ import { ZERO_ADDRESS } from "fathom-sdk";
 
 const useDashboard = () => {
   const { positionService } = useServices();
-  const { account } = useConnector();
+  const { account, chainId } = useConnector();
   const { syncFXD, prevSyncFxd } = useSyncContext();
 
   const { refetch: refetchStats, loading: loadingStats } = useQuery(FXD_STATS, {
@@ -51,6 +51,7 @@ const useDashboard = () => {
         setPositionsItemsCount(data.users[0]?.activePositionsCount || 0);
     });
   }, [
+    chainId,
     positionService,
     account,
     loadUserStats,
@@ -123,6 +124,7 @@ const useDashboard = () => {
       setPositionsItemsCount(0);
     }
   }, [
+    chainId,
     account,
     fetchUserStatsAndProxyWallet,
     setPositionsItemsCount,

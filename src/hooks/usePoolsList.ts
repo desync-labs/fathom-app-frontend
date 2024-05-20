@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ICollateralPool } from "fathom-sdk";
 import { useQuery } from "@apollo/client";
 import { FXD_POOLS } from "apollo/queries";
@@ -29,6 +29,12 @@ const usePoolsList = () => {
       return [];
     }
   }, [data, loading, chainId]);
+
+  useEffect(() => {
+    if (chainId) {
+      refetch();
+    }
+  }, [chainId, refetch]);
 
   return {
     pools: filteredPools(),
