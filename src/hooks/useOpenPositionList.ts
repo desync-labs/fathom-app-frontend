@@ -154,7 +154,7 @@ const useOpenPositionList = (
           setIsLoading(false);
         });
       }, 300),
-    [positionService, setFormattedPositions, setIsLoading]
+    [positionService, chainId, setFormattedPositions, setIsLoading]
   );
 
   useEffect(() => {

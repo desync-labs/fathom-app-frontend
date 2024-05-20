@@ -196,7 +196,12 @@ export const STAKING_STAKER = gql`
 `;
 
 export const VAULTS = gql`
-  query Vaults($first: Int!, $skip: Int!, $shutdown: Boolean) {
+  query Vaults(
+    $first: Int!
+    $skip: Int!
+    $shutdown: Boolean
+    $chainId: String
+  ) {
     vaults(first: $first, skip: $skip, where: { shutdown: $shutdown }) {
       id
       token {
@@ -233,6 +238,7 @@ export const VAULT_STRATEGY_REPORTS = gql`
     $strategy: String!
     $reportsFirst: Int
     $reportsSkip: Int
+    $chainId: String
   ) {
     strategyHistoricalAprs(
       first: $reportsFirst
@@ -259,7 +265,7 @@ export const VAULT_STRATEGY_REPORTS = gql`
 `;
 
 export const ACCOUNT_VAULT_POSITIONS = gql`
-  query AccountVaultPositions($account: String!) {
+  query AccountVaultPositions($account: String!, $chainId: String) {
     accountVaultPositions(where: { account: $account }) {
       id
       balancePosition

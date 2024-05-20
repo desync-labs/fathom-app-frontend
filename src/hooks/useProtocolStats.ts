@@ -10,6 +10,7 @@ const useProtocolStats = () => {
   const { data, loading, refetch } = useQuery(FXD_STATS, {
     context: { clientName: "stable", chainId },
     variables: { chainId: chainId },
+    fetchPolicy: "network-only",
   });
 
   const { pools, loading: poolsLoading } = usePoolsList();

@@ -1,18 +1,18 @@
-import { memo, useMemo } from "react";
-import { FC } from "react";
+import { FC, memo, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 
 import useShowText from "hooks/useShowText";
+import { ChainId } from "connectors/networks";
+import useConnector from "context/connector";
 import {
+  ChartsIcon,
+  DexIcon,
   FxdIcon,
   GovernanceIcon,
+  LendingIcon,
   StableSwapIcon,
   VaultIcon,
-  DexIcon,
-  ChartsIcon,
-  LendingIcon,
 } from "components/Common/MenuIcons";
-import useConnector from "context/connector";
 import AppMenuItem from "components/MenuItem/AppMenuItem";
 
 type ItemPropsType = {
@@ -71,7 +71,7 @@ export const Menu: FC<ItemPropsType> = memo(({ open }) => {
    * Add Lending Menu Item when it enabled.
    */
   appMenuItems = appMenuItems.concat(
-    chainId === 11155111
+    chainId === ChainId.SEPOLIA
       ? [
           {
             name: "Lending",
@@ -136,7 +136,7 @@ export const Menu: FC<ItemPropsType> = memo(({ open }) => {
         ]
   );
 
-  if (!allowStableSwap) {
+  if (!allowStableSwap && chainId !== ChainId.SEPOLIA) {
     appMenuItems.splice(1, 1);
   }
 

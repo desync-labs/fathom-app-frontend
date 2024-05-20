@@ -74,6 +74,7 @@ const useVaultList = () => {
       first: COUNT_PER_PAGE,
       skip: 0,
       shutdown: isShutdown,
+      chainId: chainId,
     },
     context: { clientName: "vaults", chainId },
   });
