@@ -485,7 +485,7 @@ const MainLayout = () => {
                   />
                 </>
               ) : null}
-              {chainId === 50 || chainId === 51 ? (
+              {!chainId || [ChainId.AXDC, ChainId.XDC].includes(chainId) ? (
                 <Route path="/dao" element={<DaoView />}>
                   <Route
                     index
@@ -522,7 +522,7 @@ const MainLayout = () => {
                   />
                 </Route>
               ) : null}
-              {chainId === 50 || chainId === 51 ? (
+              {!chainId || [ChainId.AXDC, ChainId.XDC].includes(chainId) ? (
                 <Route path="/swap" element={<DexView />}>
                   <Route index element={<Swap />} />
                   <Route path=":outputCurrency" element={<RedirectToSwap />} />
@@ -583,7 +583,7 @@ const MainLayout = () => {
                   />
                 }
               ></Route>
-              {chainId === 50 || chainId === 51 ? (
+              {!chainId || [ChainId.AXDC, ChainId.XDC].includes(chainId) ? (
                 <Route path="/charts" element={<ChartsView />}>
                   <Route
                     index
@@ -675,7 +675,7 @@ const MainLayout = () => {
       {!isMobile && openConnector && (
         <DesktopConnector onClose={() => setOpenConnector(false)} />
       )}
-      {chainId === 50 || chainId === 51 ? (
+      {!chainId || [ChainId.AXDC, ChainId.XDC].includes(chainId) ? (
         <FthmInfoModal
           onClose={() => setShowFthmBalanceModal(false)}
           open={showFthmBalanceModal}
