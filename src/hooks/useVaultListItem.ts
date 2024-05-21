@@ -92,7 +92,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     {
       context: { clientName: "vaults", chainId },
       variables: { chainId },
-      fetchPolicy: "network-only",
+      fetchPolicy: "no-cache",
     }
   );
 
@@ -100,7 +100,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     useLazyQuery(VAULT_POSITION_TRANSACTIONS, {
       context: { clientName: "vaults", chainId },
       variables: { chainId },
-      fetchPolicy: "network-only",
+      fetchPolicy: "no-cache",
     });
 
   const fetchReports = (

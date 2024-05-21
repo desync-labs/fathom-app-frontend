@@ -32,13 +32,31 @@ const useOpenPositionList = (
     FXD_POSITIONS,
     {
       context: { clientName: "stable", chainId },
+      variables: {
+        chainId,
+      },
     }
   );
 
-  const { data: poolsData, refetch } = useQuery(FXD_POOLS, {
+  const { data: poolsItems, loading: poolsLoading } = useQuery(FXD_POOLS, {
     context: { clientName: "stable", chainId },
     fetchPolicy: "network-only",
+    variables: { chainId },
   });
+
+  const poolsData = useMemo(() => {
+    if (!poolsLoading && data && data.pools) {
+      return data.pools.map((poolItem: ICollateralPool) => {
+        if (poolItem.poolName.toUpperCase() === "XDC" && chainId === 11155111) {
+          return { ...poolItem, poolName: "ETH" };
+        } else {
+          return poolItem;
+        }
+      });
+    } else {
+      return [];
+    }
+  }, [poolsItems, poolsLoading, chainId]);
 
   const [closePosition, setClosePosition] = useState<IOpenPosition>();
   const [topUpPosition, setTopUpPosition] = useState<IOpenPosition>();
@@ -67,12 +85,6 @@ const useOpenPositionList = (
       setFormattedPositions([]);
     }
   }, [chainId, proxyWallet, account, called, loadPositions]);
-
-  useEffect(() => {
-    if (chainId) {
-      refetch();
-    }
-  }, [chainId, account, refetch]);
 
   const handlePageChange = useCallback(
     (event: ChangeEvent<unknown>, page: number) => {
