@@ -111,6 +111,19 @@ strategyDescription["0xcea3c48da7aa17d5bc0a588a3e743577d94eb192"] = (
     </DescriptionList>
   </>
 );
+strategyDescription["0xc0ac2e5181f90fda9e9264b5b1634b2c8bd88cdd"] = (
+  <>
+    <p>
+      The Strategy utilizes funds in the FXD liquidation process. It uses
+      several liquidity sources (Fathom DEX, XSwap, etc.) to liquidate risky
+      positions in the FXD protocol. If there is insufficient liquidity in the
+      market, the Strategy uses internally allocated funds to process the
+      liquidation. All liquidation income is considered a gain. Possible
+      liquidation debt is compensated by strategy gain and the FXD stability fee
+      reserve.
+    </p>
+  </>
+);
 
 strategyTitle["0xe2dea7e0c272de04e8708674dae73ebd6e5c1455"] =
   "FXD Strategy - 3 Months - 100.000 FXD";
