@@ -90,14 +90,14 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     VAULT_STRATEGY_REPORTS,
     {
       context: { clientName: "vaults" },
-      fetchPolicy: "network-only",
+      fetchPolicy: "no-cache",
     }
   );
 
   const [loadPositionTransactions, { refetch: refetchTransactions }] =
     useLazyQuery(VAULT_POSITION_TRANSACTIONS, {
       context: { clientName: "vaults" },
-      fetchPolicy: "network-only",
+      fetchPolicy: "no-cache",
     });
 
   const fetchReports = useCallback(
