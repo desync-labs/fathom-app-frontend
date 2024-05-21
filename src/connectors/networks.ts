@@ -73,7 +73,8 @@ export const EXPLORERS = {
 export const injected = new InjectedConnector({ supportedChainIds });
 
 export const WalletConnect = new WalletConnectConnector({
-  chains: supportedChainIds,
+  chains: [supportedChainIds[0]],
+  optionalChains: supportedChainIds.slice(1),
   rpcMap: DEFAULT_RPCS,
   showQrModal: true,
   projectId: "5da328ee81006c5aa59662d6cadfd5fe",
