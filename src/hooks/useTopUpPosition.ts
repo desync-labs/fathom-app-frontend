@@ -231,10 +231,6 @@ const useTopUpPosition = (
 
           setSafetyBuffer(safetyBuffer);
 
-          console.log({
-            safetyBuffer,
-          });
-
           setValue("safeMax", safeMax);
           setValue("dangerSafeMax", dangerSafeMax);
 
