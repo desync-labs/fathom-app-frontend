@@ -1,14 +1,14 @@
 import {
-  useCallback,
-  useEffect,
-  useState,
   ChangeEvent,
   Dispatch,
+  useCallback,
+  useEffect,
   useMemo,
+  useState,
 } from "react";
 
 import { useServices } from "context/services";
-import { IOpenPosition, ICollateralPool } from "fathom-sdk";
+import { ICollateralPool, IOpenPosition } from "fathom-sdk";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import { FXD_POOLS, FXD_POSITIONS } from "apollo/queries";
 
@@ -16,6 +16,7 @@ import { COUNT_PER_PAGE } from "utils/Constants";
 import useConnector from "context/connector";
 import BigNumber from "bignumber.js";
 import debounce from "lodash.debounce";
+import { ChainId } from "../connectors/networks";
 
 const useOpenPositionList = (
   setPositionCurrentPage: Dispatch<number>,
@@ -47,7 +48,10 @@ const useOpenPositionList = (
   const poolsData = useMemo(() => {
     if (!poolsLoading && poolsItems && poolsItems.pools) {
       return poolsItems.pools.map((poolItem: ICollateralPool) => {
-        if (poolItem.poolName.toUpperCase() === "XDC" && chainId === 11155111) {
+        if (
+          poolItem.poolName.toUpperCase() === "XDC" &&
+          chainId === ChainId.SEPOLIA
+        ) {
           return { ...poolItem, poolName: "ETH" };
         } else {
           return poolItem;
@@ -153,7 +157,7 @@ const useOpenPositionList = (
             (positionItem: IOpenPosition) => {
               if (
                 positionItem.collateralPoolName.toUpperCase() === "XDC" &&
-                chainId === 11155111
+                chainId === ChainId.SEPOLIA
               ) {
                 return { ...positionItem, collateralPoolName: "ETH" };
               } else {

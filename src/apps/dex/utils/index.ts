@@ -28,9 +28,9 @@ export function isAddress(value: any): string | false {
 }
 
 const BLOCKSCAN_DOMAIN: { [chainId in ChainId]: string } = {
-  50: "xdc.blocksscan.io",
-  51: "apothem.blocksscan.io",
-  11155111: "sepolia.etherscan.io",
+  [ChainId.XDC]: "xdc.blocksscan.io",
+  [ChainId.AXDC]: "apothem.blocksscan.io",
+  [ChainId.SEPOLIA]: "sepolia.etherscan.io",
 };
 
 export function getBlockScanLink(

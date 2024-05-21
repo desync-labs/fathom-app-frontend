@@ -12,7 +12,7 @@ import { WeiPerWad } from "utils/Constants";
 
 import { ICollateralPool, IOpenPosition } from "fathom-sdk";
 import debounce from "lodash.debounce";
-import { NATIVE_ASSETS } from "../connectors/networks";
+import { ChainId, NATIVE_ASSETS } from "../connectors/networks";
 
 const useRepayPosition = (
   position: ClosePositionContextType["position"],
@@ -30,7 +30,10 @@ const useRepayPosition = (
   const poolsData = useMemo(() => {
     if (!poolsLoading && poolsItems && poolsItems.pools) {
       return poolsItems.pools.map((poolItem: ICollateralPool) => {
-        if (poolItem.poolName.toUpperCase() === "XDC" && chainId === 11155111) {
+        if (
+          poolItem.poolName.toUpperCase() === "XDC" &&
+          chainId === ChainId.SEPOLIA
+        ) {
           return { ...poolItem, poolName: "ETH" };
         } else {
           return poolItem;

@@ -3,6 +3,7 @@ import { ICollateralPool } from "fathom-sdk";
 import { useQuery } from "@apollo/client";
 import { FXD_POOLS } from "apollo/queries";
 import useConnector from "context/connector";
+import { ChainId } from "../connectors/networks";
 
 const usePoolsList = () => {
   const [selectedPool, setSelectedPool] = useState<ICollateralPool>();
@@ -19,7 +20,10 @@ const usePoolsList = () => {
   const filteredPools = useMemo(() => {
     if (!loading && data && data.pools) {
       return data.pools.map((poolItem: ICollateralPool) => {
-        if (poolItem.poolName.toUpperCase() === "XDC" && chainId === 11155111) {
+        if (
+          poolItem.poolName.toUpperCase() === "XDC" &&
+          chainId === ChainId.SEPOLIA
+        ) {
           return { ...poolItem, poolName: "ETH" };
         } else {
           return poolItem;

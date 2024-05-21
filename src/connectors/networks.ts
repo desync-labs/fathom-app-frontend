@@ -7,31 +7,37 @@ export const APOTHEM_RPC = "https://erpc.apothem.network/";
 export const XDC_RPC = "https://rpc.ankr.com/xdc/";
 export const SEPOLIA_RPC = "https://ethereum-sepolia-rpc.publicnode.com/";
 
+export enum ChainId {
+  XDC = 50,
+  AXDC = 51,
+  SEPOLIA = 11155111,
+}
+
 const SUBGRAPH_URLS = {
-  50: "https://xinfin-graph.fathom.fi",
-  51: "https://dev-graph.fathom.fi",
-  11155111: "https://graph.sepolia.fathom.fi",
+  [ChainId.XDC]: "https://xinfin-graph.fathom.fi",
+  [ChainId.AXDC]: "https://dev-graph.fathom.fi",
+  [ChainId.SEPOLIA]: "https://graph.sepolia.fathom.fi",
 };
 
-let supportedChainIds = [51, 11155111];
+let supportedChainIds = [ChainId.AXDC, ChainId.SEPOLIA];
 const NATIVE_ASSETS = ["ETH", "XDC"];
 
 let DEFAULT_RPCS: any = {
-  51: APOTHEM_RPC,
-  11155111: SEPOLIA_RPC,
+  [ChainId.AXDC]: APOTHEM_RPC,
+  [ChainId.SEPOLIA]: SEPOLIA_RPC,
 };
 
 let NETWORK_SETTINGS: { [n: number]: any } = {
-  51: {
+  [ChainId.AXDC]: {
     chainName: "Apothem",
-    chainId: `0x${(51).toString(16)}`,
+    chainId: `0x${ChainId.AXDC.toString(16)}`,
     nativeCurrency: { name: "Apothem", decimals: 18, symbol: "AXDC" },
     rpcUrls: [APOTHEM_RPC],
     logoName: "WXDC",
   },
-  11155111: {
+  [ChainId.SEPOLIA]: {
     chainName: "Sepolia",
-    chainId: `0x${(11155111).toString(16)}`,
+    chainId: `0x${ChainId.SEPOLIA.toString(16)}`,
     nativeCurrency: { name: "SepoliaETH", decimals: 18, symbol: "ETH" },
     rpcUrls: [SEPOLIA_RPC],
     logoName: "ETH",
@@ -39,16 +45,16 @@ let NETWORK_SETTINGS: { [n: number]: any } = {
 };
 
 if (process.env.REACT_APP_ENV === "prod") {
-  supportedChainIds = [50];
+  supportedChainIds = [ChainId.XDC];
 
   DEFAULT_RPCS = {
-    50: XDC_RPC,
+    [ChainId.XDC]: XDC_RPC,
   };
 
   NETWORK_SETTINGS = {
-    50: {
+    [ChainId.XDC]: {
       chainName: "XDC",
-      chainId: `0x${(50).toString(16)}`,
+      chainId: `0x${ChainId.XDC.toString(16)}`,
       nativeCurrency: { name: "XDC", decimals: 18, symbol: "XDC" },
       rpcUrls: [XDC_RPC],
       blockExplorerUrls: ["https://explorer.xinfin.network"],
@@ -57,18 +63,12 @@ if (process.env.REACT_APP_ENV === "prod") {
   };
 }
 
-export enum ChainId {
-  XDC = 50,
-  AXDC = 51,
-  SEPOLIA = 11155111,
-}
-
 export type DefaultProvider = Web3Provider | JsonRpcProvider;
 
 export const EXPLORERS = {
-  51: "https://explorer.apothem.network/",
-  50: "https://xdc.blocksscan.io/",
-  11155111: "https://sepolia.etherscan.io/",
+  [ChainId.AXDC]: "https://explorer.apothem.network/",
+  [ChainId.XDC]: "https://xdc.blocksscan.io/",
+  [ChainId.SEPOLIA]: "https://sepolia.etherscan.io/",
 };
 
 export const injected = new InjectedConnector({ supportedChainIds });
