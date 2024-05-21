@@ -168,7 +168,7 @@ const OpenPositionInfo = () => {
           <ListItemText
             primary={
               <ListTitleWrapper>
-                Liquidation Price of {pool.poolName}
+                Liquidation Price of {pool?.poolName}
                 <AppPopover
                   id={"liquidation-price"}
                   text={

@@ -40,7 +40,7 @@ const useOpenPositionList = (
 
   const { data: poolsItems, loading: poolsLoading } = useQuery(FXD_POOLS, {
     context: { clientName: "stable", chainId },
-    fetchPolicy: "network-only",
+    fetchPolicy: "cache-first",
     variables: { chainId },
   });
 
@@ -63,7 +63,7 @@ const useOpenPositionList = (
 
   const topUpPositionPool = useMemo(() => {
     if (topUpPosition && poolsData) {
-      return poolsData.pools.find(
+      return poolsData.find(
         (pool: ICollateralPool) => pool.id === topUpPosition.collateralPool
       );
     }
@@ -121,7 +121,7 @@ const useOpenPositionList = (
         Promise.all(promises).then((debtValues) => {
           const positions = filteredPosition.map(
             (position: IOpenPosition, index: number) => {
-              const findPool = poolsData.pools.find(
+              const findPool = poolsData.find(
                 (pool: ICollateralPool) => pool.id === position.collateralPool
               );
 

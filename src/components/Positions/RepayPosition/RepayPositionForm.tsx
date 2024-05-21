@@ -209,7 +209,7 @@ const RepayPositionForm: FC<ClosePositionDialogPropsType> = ({
         <InfoWrapper>
           <InfoLabel>Receive</InfoLabel>
           <InfoValue>
-            {formatPercentage(Number(collateral))} {pool.poolName}
+            {formatPercentage(Number(collateral))} {pool?.poolName}
           </InfoValue>
         </InfoWrapper>
       ) : null}

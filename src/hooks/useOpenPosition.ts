@@ -386,6 +386,7 @@ const useOpenPosition = (
     if (isTouched) {
       handleUpdates(collateral, fathomToken);
     }
+
     if (collateralTokenAddress && proxyWallet !== ZERO_ADDRESS) {
       approvalStatus(collateral || "0");
     }

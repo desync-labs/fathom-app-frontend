@@ -110,7 +110,7 @@ const OpenPositionForm = () => {
                       .dividedBy(10 ** 18)
                       .toNumber()
                   )}{" "}
-                  {pool.poolName}
+                  {pool?.poolName}
                 </WalletBalance>
               ) : null}
               <AppTextField
@@ -126,7 +126,7 @@ const OpenPositionForm = () => {
                           component={"span"}
                           sx={{ fontSize: "12px", paddingLeft: "6px" }}
                         >
-                          You do not have enough {pool.poolName}
+                          You do not have enough {pool?.poolName}
                         </Box>
                       </>
                     )}
