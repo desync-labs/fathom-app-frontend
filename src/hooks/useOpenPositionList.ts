@@ -45,8 +45,8 @@ const useOpenPositionList = (
   });
 
   const poolsData = useMemo(() => {
-    if (!poolsLoading && data && data.pools) {
-      return data.pools.map((poolItem: ICollateralPool) => {
+    if (!poolsLoading && poolsItems && poolsItems.pools) {
+      return poolsItems.pools.map((poolItem: ICollateralPool) => {
         if (poolItem.poolName.toUpperCase() === "XDC" && chainId === 11155111) {
           return { ...poolItem, poolName: "ETH" };
         } else {

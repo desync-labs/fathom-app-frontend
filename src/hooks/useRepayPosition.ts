@@ -20,10 +20,25 @@ const useRepayPosition = (
   const { positionService } = useServices();
   const { chainId, account } = useConnector();
 
-  const { data } = useQuery(FXD_POOLS, {
+  const { data: poolsItems, loading: poolsLoading } = useQuery(FXD_POOLS, {
     context: { clientName: "stable", chainId },
-    fetchPolicy: "cache-first",
+    fetchPolicy: "network-only",
+    variables: { chainId },
   });
+
+  const poolsData = useMemo(() => {
+    if (!poolsLoading && poolsItems && poolsItems.pools) {
+      return poolsItems.pools.map((poolItem: ICollateralPool) => {
+        if (poolItem.poolName.toUpperCase() === "XDC" && chainId === 11155111) {
+          return { ...poolItem, poolName: "ETH" };
+        } else {
+          return poolItem;
+        }
+      });
+    } else {
+      return [];
+    }
+  }, [poolsItems, poolsLoading, chainId]);
 
   const { setLastTransactionBlock } = useSyncContext();
 
@@ -54,10 +69,10 @@ const useRepayPosition = (
 
   const pool = useMemo(
     () =>
-      data?.pools?.find(
+      poolsData?.find(
         (pool: ICollateralPool) => pool.id === position?.collateralPool
       ),
-    [data, position]
+    [poolsData, position]
   );
 
   const lockedCollateral = useMemo(
