@@ -2,6 +2,7 @@ import { InjectedConnector } from "@web3-react/injected-connector";
 import { WalletConnectConnector } from "connectors/wallet-connect-connector/WalletConnectConnector";
 import { EthereumProviderOptions } from "@walletconnect/ethereum-provider/dist/types/EthereumProvider";
 import { JsonRpcProvider, Web3Provider } from "@into-the-fathom/providers";
+import { DEFAULT_CHAIN_ID } from "../utils/Constants";
 
 export const APOTHEM_RPC = "https://erpc.apothem.network/";
 export const XDC_RPC = "https://rpc.ankr.com/xdc/";
@@ -74,7 +75,8 @@ export const EXPLORERS = {
 export const injected = new InjectedConnector({ supportedChainIds });
 
 export const WalletConnect = new WalletConnectConnector({
-  chains: supportedChainIds,
+  chains: [DEFAULT_CHAIN_ID],
+  optionalChains: supportedChainIds,
   rpcMap: DEFAULT_RPCS,
   showQrModal: true,
   projectId: "5da328ee81006c5aa59662d6cadfd5fe",
