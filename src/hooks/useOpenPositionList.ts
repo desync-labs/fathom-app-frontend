@@ -40,7 +40,7 @@ const useOpenPositionList = (
 
   const { data: poolsItems, loading: poolsLoading } = useQuery(FXD_POOLS, {
     context: { clientName: "stable", chainId },
-    fetchPolicy: "cache-first",
+    fetchPolicy: "network-only",
     variables: { chainId },
   });
 

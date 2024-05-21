@@ -95,10 +95,7 @@ const useOpenPosition = (
     /**
      * Native token collateral.
      */
-    if (
-      pool.poolName.toUpperCase() === "XDC" ||
-      pool.poolName.toUpperCase() === "ETH"
-    ) {
+    if (NATIVE_ASSETS.includes(pool.poolName.toUpperCase())) {
       const balance = await library.getBalance(account);
       setCollateralTokenAddress(null);
       setBalance(balance.toString());
@@ -153,6 +150,7 @@ const useOpenPosition = (
     async (collateralInput: string, fathomTokenInput: string) => {
       collateralInput = collateralInput || "0";
       fathomTokenInput = fathomTokenInput || "0";
+
       setCollateralToBeLocked(collateralInput);
       setFxdToBeBorrowed(fathomTokenInput);
 
@@ -205,10 +203,8 @@ const useOpenPosition = (
        * PRICE OF COLLATERAL FROM DEX
        */
       const priceOfCollateralFromDex =
-        pool.poolName.toUpperCase() === "XDC" ||
-        pool.poolName.toUpperCase() === "CGO" ||
-        pool.poolName === "CollateralTokenAdapterJeju" ||
-        pool.poolName.toUpperCase() === "ETH"
+        ["XDC", "ETH", "CGO"].includes(pool.poolName.toUpperCase()) ||
+        pool.poolName === "CollateralTokenAdapterJeju"
           ? BigNumber(pool.collateralLastPrice)
               .multipliedBy(10 ** 18)
               .toNumber()
