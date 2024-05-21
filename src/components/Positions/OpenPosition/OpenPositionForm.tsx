@@ -6,8 +6,11 @@ import { styled } from "@mui/material/styles";
 import {
   ApproveBox,
   ApproveBoxTypography,
+  ErrorBox,
+  ErrorMessage,
   Summary,
   WalletBalance,
+  WarningBox,
 } from "components/AppComponents/AppBox/AppBox";
 import {
   AppFormInputLogo,
@@ -24,13 +27,12 @@ import {
 } from "components/AppComponents/AppButton/AppButton";
 import useOpenPositionContext from "context/openPosition";
 import { FXD_MINIMUM_BORROW_AMOUNT } from "utils/Constants";
-import { ErrorBox, ErrorMessage } from "components/AppComponents/AppBox/AppBox";
-import { WarningBox } from "components/AppComponents/AppBox/AppBox";
 import useConnector from "context/connector";
 
 import { formatPercentage } from "utils/format";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import useSharedContext from "context/shared";
+import { ChainId } from "../../../connectors/networks";
 
 const OpenPositionFormWrapper = styled(Grid)`
   padding-left: 20px;
@@ -94,7 +96,7 @@ const OpenPositionForm = () => {
           name="collateral"
           rules={{
             required: true,
-            min: chainId === 11155111 ? 0.0000001 : 1,
+            min: chainId === ChainId.SEPOLIA ? 0.0000001 : 1,
             max: BigNumber(balance)
               .dividedBy(10 ** 18)
               .toString(),
@@ -110,7 +112,7 @@ const OpenPositionForm = () => {
                       .dividedBy(10 ** 18)
                       .toNumber()
                   )}{" "}
-                  {pool.poolName}
+                  {pool?.poolName}
                 </WalletBalance>
               ) : null}
               <AppTextField
@@ -126,7 +128,7 @@ const OpenPositionForm = () => {
                           component={"span"}
                           sx={{ fontSize: "12px", paddingLeft: "6px" }}
                         >
-                          You do not have enough {pool.poolName}
+                          You do not have enough {pool?.poolName}
                         </Box>
                       </>
                     )}
@@ -148,7 +150,8 @@ const OpenPositionForm = () => {
                           component={"span"}
                           sx={{ fontSize: "12px", paddingLeft: "6px" }}
                         >
-                          Minimum collateral amount is 1.
+                          Minimum collateral amount is{" "}
+                          {chainId === ChainId.SEPOLIA ? "0.0000001" : "1"}.
                         </Box>
                       </>
                     )}

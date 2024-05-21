@@ -8,6 +8,7 @@ import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 import { IOpenPosition } from "fathom-sdk";
 import { DANGER_SAFETY_BUFFER } from "utils/Constants";
+import { NATIVE_ASSETS } from "../connectors/networks";
 
 const defaultValues = {
   collateral: "",
@@ -110,10 +111,8 @@ const useTopUpPosition = (
      * PRICE OF COLLATERAL FROM DEX
      */
     const priceOfCollateralFromDex =
-      pool.poolName.toUpperCase() === "XDC" ||
-      pool.poolName.toUpperCase() === "CGO" ||
-      pool.poolName === "CollateralTokenAdapterJeju" ||
-      pool.poolName.toUpperCase() === "ETH"
+      ["XDC", "CGO", "ETH"].includes(pool.poolName.toUpperCase()) ||
+      pool.poolName === "CollateralTokenAdapterJeju"
         ? BigNumber(pool.collateralLastPrice)
             .multipliedBy(10 ** 18)
             .toNumber()
@@ -152,10 +151,7 @@ const useTopUpPosition = (
   }, [positionService, pool, setMaxBorrowAmount]);
 
   const getCollateralTokenAndBalance = useCallback(async () => {
-    if (
-      pool.poolName.toUpperCase() === "XDC" ||
-      pool.poolName.toUpperCase() === "ETH"
-    ) {
+    if (NATIVE_ASSETS.includes(pool.poolName.toUpperCase())) {
       const balance = await library.getBalance(account);
       setCollateralTokenAddress(null);
       setBalance(balance.toString());
@@ -314,10 +310,10 @@ const useTopUpPosition = (
             );
           }
         } else {
-          if (
-            pool.poolName.toUpperCase() === "XDC" ||
-            pool.poolName.toUpperCase() === "ETH"
-          ) {
+          if (NATIVE_ASSETS.includes(pool.poolName.toUpperCase())) {
+            /**
+             * Top-up position with native assets
+             */
             blockNumber = await positionService.topUpPosition(
               account,
               pool,
@@ -325,6 +321,9 @@ const useTopUpPosition = (
               position.positionId
             );
           } else {
+            /**
+             * Top-up position with ERC20 token
+             */
             blockNumber = await positionService.topUpPositionERC20(
               account,
               pool,
@@ -409,16 +408,11 @@ const useTopUpPosition = (
   }, [account, chainId, getDebtValue]);
 
   useEffect(() => {
-    if (
-      pool?.poolName?.toUpperCase() === "XDC" &&
-      (totalCollateral || totalFathomToken)
-    ) {
+    if (totalCollateral || totalFathomToken) {
       handleUpdates(totalCollateral, totalFathomToken);
-    } else if (
-      collateralTokenAddress &&
-      (totalCollateral || totalFathomToken)
-    ) {
-      handleUpdates(totalCollateral, totalFathomToken);
+    }
+
+    if (collateralTokenAddress) {
       approvalStatus(collateral || "0");
     }
   }, [

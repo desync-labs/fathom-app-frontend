@@ -46,9 +46,13 @@ const PoolsTitle = styled(TitleSecondary)`
 
 type PoolsListViewProps = {
   proxyWallet: string;
+  fetchProxyWallet: () => void;
 };
 
-const PoolsListView: FC<PoolsListViewProps> = ({ proxyWallet }) => {
+const PoolsListView: FC<PoolsListViewProps> = ({
+  proxyWallet,
+  fetchProxyWallet,
+}) => {
   const { pools, selectedPool, onCloseNewPosition, setSelectedPool, loading } =
     usePoolsList();
   const { isMobile } = useSharedContext();
@@ -113,12 +117,13 @@ const PoolsListView: FC<PoolsListViewProps> = ({ proxyWallet }) => {
               onClose={onCloseNewPosition}
               pool={selectedPool}
               proxyWallet={proxyWallet}
+              fetchProxyWallet={fetchProxyWallet}
             >
               <OpenNewPositionDialog />
             </OpenPositionProvider>
           )
         );
-      }, [selectedPool, onCloseNewPosition])}
+      }, [selectedPool, onCloseNewPosition, proxyWallet])}
     </>
   );
 };

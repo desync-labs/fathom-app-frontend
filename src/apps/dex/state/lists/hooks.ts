@@ -107,9 +107,9 @@ function combineMaps(
   map2: TokenAddressMap
 ): TokenAddressMap {
   return {
-    50: { ...map1[50], ...map2[50] },
-    51: { ...map1[51], ...map2[51] },
-    11155111: { ...map1[11155111], ...map2[11155111] },
+    [ChainId.XDC]: { ...map1[ChainId.XDC], ...map2[ChainId.XDC] },
+    [ChainId.AXDC]: { ...map1[ChainId.AXDC], ...map2[ChainId.AXDC] },
+    [ChainId.SEPOLIA]: { ...map1[ChainId.SEPOLIA], ...map2[ChainId.SEPOLIA] },
   };
 }
 

@@ -12,6 +12,7 @@ import { WeiPerWad } from "utils/Constants";
 
 import { ICollateralPool, IOpenPosition } from "fathom-sdk";
 import debounce from "lodash.debounce";
+import { ChainId, NATIVE_ASSETS } from "../connectors/networks";
 
 const useRepayPosition = (
   position: ClosePositionContextType["position"],
@@ -20,10 +21,28 @@ const useRepayPosition = (
   const { positionService } = useServices();
   const { chainId, account } = useConnector();
 
-  const { data } = useQuery(FXD_POOLS, {
+  const { data: poolsItems, loading: poolsLoading } = useQuery(FXD_POOLS, {
     context: { clientName: "stable", chainId },
     fetchPolicy: "cache-first",
+    variables: { chainId },
   });
+
+  const poolsData = useMemo(() => {
+    if (!poolsLoading && poolsItems && poolsItems.pools) {
+      return poolsItems.pools.map((poolItem: ICollateralPool) => {
+        if (
+          poolItem.poolName.toUpperCase() === "XDC" &&
+          chainId === ChainId.SEPOLIA
+        ) {
+          return { ...poolItem, poolName: "ETH" };
+        } else {
+          return poolItem;
+        }
+      });
+    } else {
+      return [];
+    }
+  }, [poolsItems, poolsLoading, chainId]);
 
   const { setLastTransactionBlock } = useSyncContext();
 
@@ -54,10 +73,10 @@ const useRepayPosition = (
 
   const pool = useMemo(
     () =>
-      data?.pools?.find(
+      poolsData?.find(
         (pool: ICollateralPool) => pool.id === position?.collateralPool
       ),
-    [data, position]
+    [poolsData, position]
   );
 
   const lockedCollateral = useMemo(
@@ -258,7 +277,10 @@ const useRepayPosition = (
     try {
       let blockNumber;
       if (BigNumber(fathomToken).isEqualTo(position.debtValue)) {
-        if (pool.poolName.toUpperCase() === "XDC") {
+        if (NATIVE_ASSETS.includes(pool.poolName.toUpperCase())) {
+          /**
+           * Fully close position with native assets
+           */
           blockNumber = await positionService.closePosition(
             position.positionId,
             pool,
@@ -266,6 +288,9 @@ const useRepayPosition = (
             BigNumber(collateral).multipliedBy(WeiPerWad).toFixed(0)
           );
         } else {
+          /**
+           * Fully close position with ERC20 token
+           */
           blockNumber = await positionService.closePositionERC20(
             position.positionId,
             pool,
@@ -274,7 +299,10 @@ const useRepayPosition = (
           );
         }
       } else {
-        if (pool.poolName.toUpperCase() === "XDC") {
+        /**
+         * Close position with native assets
+         */
+        if (NATIVE_ASSETS.includes(pool.poolName.toUpperCase())) {
           blockNumber = await positionService.partiallyClosePosition(
             position.positionId,
             pool,
@@ -289,6 +317,9 @@ const useRepayPosition = (
               .toFixed(0, BigNumber.ROUND_UP)
           );
         } else {
+          /**
+           * Close position with ERC20 token
+           */
           blockNumber = await positionService.partiallyClosePositionERC20(
             position.positionId,
             pool,

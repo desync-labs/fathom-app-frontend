@@ -13,6 +13,7 @@ const DashboardContent = () => {
     positionsItemsCount,
     setPositionCurrentPage,
     loadingPositions,
+    fetchProxyWallet,
   } = useDashboard();
   const { isMobile } = useSharedContext();
 
@@ -30,7 +31,10 @@ const DashboardContent = () => {
           <ProtocolStats />
         </Grid>
         <Grid item xs={12} mt={3}>
-          <PoolsListView proxyWallet={proxyWallet} />
+          <PoolsListView
+            proxyWallet={proxyWallet}
+            fetchProxyWallet={fetchProxyWallet}
+          />
         </Grid>
         <Grid item xs={12} mt={4}>
           <PositionsList
