@@ -27,6 +27,12 @@ const cache = new InMemoryCache({
             return incoming;
           },
         },
+        pools: {
+          keyArgs: false,
+          merge(_, incoming) {
+            return incoming;
+          },
+        },
         strategyHistoricalAprs: {
           keyArgs: ["strategy", "chainId"],
           merge(existing = [], incoming) {
