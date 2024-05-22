@@ -57,6 +57,12 @@ const cache = new InMemoryCache({
             return incoming;
           },
         },
+        indexingStatusForCurrentVersion: {
+          keyArgs: ["chainId"],
+          merge(_, incoming) {
+            return incoming;
+          },
+        },
       },
     },
     Staker: {
