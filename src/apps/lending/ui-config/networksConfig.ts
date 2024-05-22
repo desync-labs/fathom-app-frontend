@@ -1,6 +1,7 @@
 import {
   FathomLendingApothem,
   FathomLendingXdc,
+  FathomLendingSepolia,
 } from "@into-the-fathom/fathom-lending-address-book";
 
 export type ExplorerLinkBuilderProps = {
@@ -89,5 +90,23 @@ export const networkConfigs: Record<string, BaseNetworkConfig> = {
     isTestnet: false,
     networkLogoPath: "./icons/networks/xdc.png",
     ratesHistoryApiUrl: "https://lending.fathom.fi/data/rates-history",
+  },
+  [FathomLendingSepolia.CHAIN_ID]: {
+    name: "Sepolia",
+    publicJsonRPCUrl: [
+      "https://ethereum-sepolia.publicnode.com",
+      "https://rpc2.sepolia.org",
+      "https://sepolia.drpc.org",
+    ],
+    baseAssetSymbol: "SepoliaETH",
+    wrappedBaseAssetSymbol: "WETH",
+    baseAssetDecimals: 18,
+    explorerLink: "https://sepolia.etherscan.io",
+    /**
+     * This need until we have no production market.
+     */
+    isTestnet: true,
+    networkLogoPath: "./icons/networks/eth.svg",
+    ratesHistoryApiUrl: "https://dev-lending.fathom.fi/data/rates-history",
   },
 } as const;
