@@ -11,10 +11,14 @@ import { ContentContainer } from "apps/lending/components/ContentContainer";
 import { useWeb3Context } from "apps/lending/libs/hooks/useWeb3Context";
 import { DashboardContentWrapper } from "apps/lending/modules/dashboard/DashboardContentWrapper";
 import { DashboardTopPanel } from "apps/lending/modules/dashboard/DashboardTopPanel";
+import useConnector from "../../../context/connector";
+import { availableMarkets } from "../utils/marketsAndNetworksConfig";
+import { ChainId } from "../../../connectors/networks";
 
 export default function Home() {
+  const { chainId } = useConnector();
   const { currentAccount, loading: web3Loading } = useWeb3Context();
-  const { currentMarket } = useProtocolDataContext();
+  const { currentMarket, setCurrentMarket } = useProtocolDataContext();
   const { isPermissionsLoading } = usePermissions();
   const trackEvent = useRootStore((store) => store.trackEvent);
 
@@ -25,6 +29,18 @@ export default function Home() {
       Market: currentMarket,
     });
   }, [trackEvent]);
+
+  useEffect(() => {
+    console.log("availableMarkets", availableMarkets);
+    console.log("chainId", chainId);
+    console.log("currentMarket", currentMarket);
+    if (chainId && chainId == ChainId.SEPOLIA) {
+      setCurrentMarket(availableMarkets[1]);
+    }
+    if (chainId && chainId == ChainId.AXDC) {
+      setCurrentMarket(availableMarkets[0]);
+    }
+  }, [chainId, setCurrentMarket]);
 
   return (
     <>
