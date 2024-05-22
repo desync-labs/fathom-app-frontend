@@ -1,5 +1,4 @@
 import { enableMapSet } from "immer";
-import { CustomMarket } from "apps/lending/ui-config/marketsConfig";
 import { create } from "zustand";
 import { devtools, subscribeWithSelector } from "zustand/middleware";
 
@@ -19,7 +18,6 @@ import {
   TransactionsSlice,
 } from "apps/lending/store/transactionsSlice";
 import { createSingletonSubscriber } from "apps/lending/store/utils/createSingletonSubscriber";
-import { getQueryParameter } from "apps/lending/store/utils/queryParams";
 import { createWalletSlice, WalletSlice } from "apps/lending/store/walletSlice";
 
 enableMapSet();
@@ -47,25 +45,6 @@ export const useRootStore = create<RootStore>()(
     })
   )
 );
-
-// hydrate state from localeStorage to not break on ssr issues
-if (typeof document !== "undefined") {
-  document.onreadystatechange = function () {
-    if (document.readyState == "complete") {
-      const selectedMarket =
-        getQueryParameter("marketName") ||
-        localStorage.getItem("selectedMarket");
-
-      if (selectedMarket) {
-        const currentMarket = useRootStore.getState().currentMarket;
-        const setCurrentMarket = useRootStore.getState().setCurrentMarket;
-        if (selectedMarket !== currentMarket) {
-          setCurrentMarket(selectedMarket as CustomMarket, true);
-        }
-      }
-    }
-  };
-}
 
 export const usePoolDataSubscription = createSingletonSubscriber(() => {
   console.log("Fetch Pool Data");

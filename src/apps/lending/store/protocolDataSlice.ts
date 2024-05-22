@@ -1,5 +1,5 @@
 import { providers, utils } from "fathom-ethers";
-import { APOTHEM_ADDRESSES } from "fathom-sdk";
+import { APOTHEM_ADDRESSES, SEPOLIA_ADDRESSES } from "fathom-sdk";
 import { permitByChainAndToken } from "apps/lending/ui-config/permitConfig";
 import {
   availableMarkets,
@@ -15,7 +15,6 @@ import {
 } from "apps/lending/ui-config/marketsConfig";
 import { NetworkConfig } from "apps/lending/ui-config/networksConfig";
 import { RootStore } from "apps/lending/store/root";
-import { setQueryParameter } from "apps/lending/store/utils/queryParams";
 
 type TypePermitParams = {
   reserveAddress: string;
@@ -44,7 +43,6 @@ export const createProtocolDataSlice: StateCreator<
   [],
   ProtocolDataSlice
 > = (set, get) => {
-  console.log("store", availableMarkets);
   const initialMarket = availableMarkets[0];
   const initialMarketData = marketsData[initialMarket];
   return {
@@ -53,13 +51,10 @@ export const createProtocolDataSlice: StateCreator<
     currentChainId: initialMarketData.chainId,
     currentNetworkConfig: getNetworkConfig(initialMarketData.chainId),
     jsonRpcProvider: () => getProvider(get().currentChainId),
-    setCurrentMarket: (market, omitQueryParameterUpdate) => {
+    setCurrentMarket: (market) => {
       if (!availableMarkets.includes(market as CustomMarket)) return;
       const nextMarketData = marketsData[market];
       localStorage.setItem("selectedMarket", market);
-      if (!omitQueryParameterUpdate) {
-        setQueryParameter("marketName", market);
-      }
       set({
         currentMarket: market,
         currentMarketData: nextMarketData,
@@ -79,7 +74,8 @@ export const createProtocolDataSlice: StateCreator<
         currentNetworkConfig.isTestnet &&
           !isWrappedBaseAsset &&
           reserveAddress !== APOTHEM_ADDRESSES.FXD.toLowerCase() &&
-          reserveAddress !== APOTHEM_ADDRESSES.xUSDT.toLowerCase()
+          reserveAddress !== APOTHEM_ADDRESSES.xUSDT.toLowerCase() &&
+          reserveAddress !== SEPOLIA_ADDRESSES.FXD.toLowerCase()
       );
       const productionPermitEnabled = Boolean(
         underlyingChainId &&

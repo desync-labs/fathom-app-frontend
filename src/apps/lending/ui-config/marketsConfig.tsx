@@ -111,7 +111,7 @@ export const marketsData: {
     v3: true,
     chainId: FathomLendingSepolia.CHAIN_ID,
     enabledFeatures: {
-      faucet: false,
+      faucet: true,
       incentives: true,
       addressBlocked: false,
       stableBorrowRate: false,
@@ -127,6 +127,7 @@ export const marketsData: {
       WALLET_BALANCE_PROVIDER: FathomLendingSepolia.WALLET_BALANCE_PROVIDER,
       UI_POOL_DATA_PROVIDER: FathomLendingSepolia.UI_POOL_DATA_PROVIDER,
       COLLECTOR: FathomLendingSepolia.COLLECTOR,
+      FAUCET: FathomLendingSepolia.FAUCET,
       UI_INCENTIVE_DATA_PROVIDER:
         FathomLendingSepolia.UI_INCENTIVE_DATA_PROVIDER,
     },

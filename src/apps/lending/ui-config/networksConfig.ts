@@ -107,6 +107,6 @@ export const networkConfigs: Record<string, BaseNetworkConfig> = {
      */
     isTestnet: true,
     networkLogoPath: "./icons/networks/eth.svg",
-    ratesHistoryApiUrl: "https://dev-lending.fathom.fi/data/rates-history",
+    ratesHistoryApiUrl: "https://lending.sepolia.fathom.fi/data/rates-history",
   },
 } as const;
