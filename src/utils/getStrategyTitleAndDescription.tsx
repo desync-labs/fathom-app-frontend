@@ -137,4 +137,7 @@ strategyTitle["0xde53c24ddce2d42816450dc06b2caff6384691dc"] =
 strategyTitle["0xcea3c48da7aa17d5bc0a588a3e743577d94eb192"] =
   "Anglogold Ashanti PLC (AU) Strategy";
 
+strategyTitle["0xc0ac2e5181f90fda9e9264b5b1634b2c8bd88cdd"] =
+  "FXD - Liquidation Strategy 1";
+
 export { strategyTitle, strategyDescription };
