@@ -2,8 +2,10 @@ import { ChainId } from "@into-the-fathom/lending-contract-helpers";
 import {
   FathomLendingApothem,
   FathomLendingXdc,
+  FathomLendingSepolia,
 } from "@into-the-fathom/fathom-lending-address-book";
 import { ReactNode } from "react";
+import { SUBGRAPH_URLS } from "connectors/networks";
 
 export type MarketDataType = {
   v3?: boolean;
@@ -48,6 +50,8 @@ export enum CustomMarket {
   proto_apothem_v3 = "proto_apothem_v3",
   // v3 mainnets
   proto_mainnet_v3 = "proto_mainnet_v3",
+  // v3 Sepolia
+  proto_sepolia_v3 = "proto_sepolia_v3",
 }
 
 export const marketsData: {
@@ -63,7 +67,9 @@ export const marketsData: {
       addressBlocked: false,
       stableBorrowRate: false,
     },
-    subgraphUrl: `${process.env.REACT_APP_API_URL}/subgraphs/name/lending-subgraph`,
+    subgraphUrl: `${
+      SUBGRAPH_URLS[FathomLendingApothem.CHAIN_ID]
+    }/subgraphs/name/lending-subgraph`,
     addresses: {
       LENDING_POOL_ADDRESS_PROVIDER:
         FathomLendingApothem.POOL_ADDRESSES_PROVIDER,
@@ -87,7 +93,9 @@ export const marketsData: {
       addressBlocked: false,
       stableBorrowRate: false,
     },
-    subgraphUrl: `${process.env.REACT_APP_API_URL}/subgraphs/name/lending-subgraph`,
+    subgraphUrl: `${
+      SUBGRAPH_URLS[FathomLendingXdc.CHAIN_ID]
+    }/subgraphs/name/lending-subgraph`,
     addresses: {
       LENDING_POOL_ADDRESS_PROVIDER: FathomLendingXdc.POOL_ADDRESSES_PROVIDER,
       LENDING_POOL: FathomLendingXdc.POOL,
@@ -96,6 +104,32 @@ export const marketsData: {
       UI_POOL_DATA_PROVIDER: FathomLendingXdc.UI_POOL_DATA_PROVIDER,
       COLLECTOR: FathomLendingXdc.COLLECTOR,
       UI_INCENTIVE_DATA_PROVIDER: FathomLendingXdc.UI_INCENTIVE_DATA_PROVIDER,
+    },
+  },
+  [CustomMarket.proto_sepolia_v3]: {
+    marketTitle: "Sepolia",
+    v3: true,
+    chainId: FathomLendingSepolia.CHAIN_ID,
+    enabledFeatures: {
+      faucet: true,
+      incentives: true,
+      addressBlocked: false,
+      stableBorrowRate: false,
+    },
+    subgraphUrl: `${
+      SUBGRAPH_URLS[FathomLendingSepolia.CHAIN_ID]
+    }/subgraphs/name/lending-subgraph`,
+    addresses: {
+      LENDING_POOL_ADDRESS_PROVIDER:
+        FathomLendingSepolia.POOL_ADDRESSES_PROVIDER,
+      LENDING_POOL: FathomLendingSepolia.POOL,
+      WETH_GATEWAY: FathomLendingSepolia.WETH_GATEWAY,
+      WALLET_BALANCE_PROVIDER: FathomLendingSepolia.WALLET_BALANCE_PROVIDER,
+      UI_POOL_DATA_PROVIDER: FathomLendingSepolia.UI_POOL_DATA_PROVIDER,
+      COLLECTOR: FathomLendingSepolia.COLLECTOR,
+      FAUCET: FathomLendingSepolia.FAUCET,
+      UI_INCENTIVE_DATA_PROVIDER:
+        FathomLendingSepolia.UI_INCENTIVE_DATA_PROVIDER,
     },
   },
 } as const;

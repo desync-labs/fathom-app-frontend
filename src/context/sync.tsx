@@ -75,6 +75,12 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
     fetchPolicy: "network-only",
   });
 
+  useEffect(() => {
+    if (chainId) {
+      setLastTransactionBlock(undefined);
+    }
+  }, [chainId, setLastTransactionBlock]);
+
   const values = useMemo(() => {
     return {
       syncFXD,
