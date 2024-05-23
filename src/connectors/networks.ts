@@ -6,7 +6,7 @@ import { DEFAULT_CHAIN_ID } from "../utils/Constants";
 
 export const APOTHEM_RPC = "https://erpc.apothem.network/";
 export const XDC_RPC = "https://rpc.ankr.com/xdc/";
-export const SEPOLIA_RPC = "https://ethereum-sepolia-rpc.publicnode.com/";
+export const SEPOLIA_RPC = "https://eth-sepolia.public.blastapi.io/";
 
 export enum ChainId {
   XDC = 50,
@@ -79,15 +79,7 @@ export const WalletConnect = new WalletConnectConnector({
   optionalChains: supportedChainIds,
   rpcMap: DEFAULT_RPCS,
   showQrModal: true,
-  projectId: "5da328ee81006c5aa59662d6cadfd5fe",
-  methods: [
-    "eth_sendTransaction",
-    "eth_signTransaction",
-    "eth_sign",
-    "personal_sign",
-    "eth_signTypedData",
-  ],
-  optionalMethods: ["eth_estimateGas"],
+  projectId: process.env.REACT_APP_WALLET_CONNECT_PROJECT_ID,
   qrModalOptions: {
     themeVariables: {
       "--wcm-z-index": "10000",
