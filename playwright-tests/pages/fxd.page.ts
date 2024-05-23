@@ -62,7 +62,7 @@ export default class FxdPage extends BasePage {
       '//h2[text()="Repay Position"]/parent::div'
     );
     this.btnXDCOpenPosition = this.page
-      .locator("table[aria-label='simple table'] > tbody > tr:nth-child(3)")
+      .locator("//p[text()='XDC']//ancestor::tr")
       .getByText("Open position");
     this.btnConfirmOpenPosition = this.dialogOpenNewPosition.locator(
       '//button[text()="Open this position"]'

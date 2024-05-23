@@ -24,6 +24,7 @@ import {
   NETWORK_SETTINGS,
 } from "connectors/networks";
 import { Web3Provider } from "@into-the-fathom/providers";
+import { useNavigate } from "react-router-dom";
 
 type ConnectorProviderType = {
   children: ReactElement;
@@ -71,6 +72,8 @@ export const ConnectorContext = createContext<UseConnectorReturnType>(
 export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
   const { connector, activate, account, active, deactivate, error, chainId } =
     useWeb3React();
+
+  const navigate = useNavigate();
 
   const { stableSwapService, positionService, provider } = useServices();
 
@@ -162,14 +165,31 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
     setIsWalletConnect(false);
   }, [setIsMetamask, setIsWalletConnect]);
 
+  /**
+   * Navigate to home page if chainId is changed
+   */
+  const updateEvent = useCallback(
+    (data: any) => {
+      if (
+        data.chainId &&
+        Object.keys(NETWORK_SETTINGS).includes(data.chainId)
+      ) {
+        navigate("/");
+      }
+    },
+    [navigate]
+  );
+
   useEffect(() => {
     if (connector) {
       connector.on(ConnectorEvent.Deactivate, deactivateEvent);
+      connector.on(ConnectorEvent.Update, updateEvent);
     }
 
     return () => {
       if (connector) {
         connector.off(ConnectorEvent.Deactivate, deactivateEvent);
+        connector.off(ConnectorEvent.Update, updateEvent);
       }
     };
   }, [connector, deactivateEvent]);
