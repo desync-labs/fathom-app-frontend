@@ -137,7 +137,7 @@ export const Menu: FC<ItemPropsType> = memo(({ open }) => {
     });
   }
 
-  if (!allowStableSwap) {
+  if (!allowStableSwap && (!chainId || DISPLAY_STABLE_SWAP.includes(chainId))) {
     appMenuItems.splice(1, 1);
   }
 
