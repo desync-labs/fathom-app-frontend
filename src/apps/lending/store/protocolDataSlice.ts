@@ -75,7 +75,8 @@ export const createProtocolDataSlice: StateCreator<
           !isWrappedBaseAsset &&
           reserveAddress !== APOTHEM_ADDRESSES.FXD.toLowerCase() &&
           reserveAddress !== APOTHEM_ADDRESSES.xUSDT.toLowerCase() &&
-          reserveAddress !== SEPOLIA_ADDRESSES.FXD.toLowerCase()
+          reserveAddress !== SEPOLIA_ADDRESSES.FXD.toLowerCase() &&
+          reserveAddress !== SEPOLIA_ADDRESSES.xUSDT.toLowerCase()
       );
       const productionPermitEnabled = Boolean(
         underlyingChainId &&
