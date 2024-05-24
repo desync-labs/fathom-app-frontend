@@ -4,6 +4,7 @@ import useDebounce from "apps/dex/hooks/useDebounce";
 import useIsWindowVisible from "apps/dex/hooks/useIsWindowVisible";
 import { updateBlockNumber } from "apps/dex/state/application/actions";
 import { useDispatch } from "react-redux";
+import { DISPLAY_DEX } from "connectors/networks";
 
 export default function Updater(): null {
   const { library, chainId } = useActiveWeb3React();
@@ -38,7 +39,13 @@ export default function Updater(): null {
 
   // attach/detach listeners
   useEffect(() => {
-    if (!library || !chainId || !windowVisible) return undefined;
+    if (
+      !library ||
+      !chainId ||
+      !windowVisible ||
+      !DISPLAY_DEX.includes(chainId)
+    )
+      return undefined;
 
     setState({ chainId, blockNumber: null });
 
