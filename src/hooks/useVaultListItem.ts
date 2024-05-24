@@ -216,7 +216,8 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
       if (account) {
         if (fetchType === TransactionFetchType.PROMISE) {
           return refetchTransactions({
-            variables: { account: account.toLowerCase() },
+            account: account.toLowerCase(),
+            vault: vault.id,
           });
         }
 
@@ -240,6 +241,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
       }
     },
     [
+      vault,
       account,
       setDepositsList,
       setTransactionLoading,
