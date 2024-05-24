@@ -7,7 +7,6 @@ import { Updaters } from "apps/dex";
 import { SharedProvider } from "context/shared";
 import { Provider } from "react-redux";
 import store from "apps/dex/state";
-import { HashRouter as Router } from "react-router-dom";
 import { ContextProviders, Updaters as ChartUpdaters } from "apps/charts";
 import ReactGA from "react-ga4";
 import { isMobile } from "react-device-detect";
@@ -42,15 +41,13 @@ function App() {
         <PricesProvider>
           <SharedProvider>
             <Provider store={store}>
-              <Router>
-                <ContextProviders>
-                  <>
-                    <Updaters />
-                    <ChartUpdaters />
-                    <MainLayout />
-                  </>
-                </ContextProviders>
-              </Router>
+              <ContextProviders>
+                <>
+                  <Updaters />
+                  <ChartUpdaters />
+                  <MainLayout />
+                </>
+              </ContextProviders>
             </Provider>
           </SharedProvider>
         </PricesProvider>

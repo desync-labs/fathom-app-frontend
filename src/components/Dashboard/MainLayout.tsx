@@ -116,7 +116,17 @@ import { dexClient } from "apollo/client";
 import Transactions from "apps/dex/pages/Transactions";
 import { memo, useEffect } from "react";
 import ReactGA from "react-ga4";
-import { ChainId, NETWORK_SETTINGS } from "connectors/networks";
+import {
+  ChainId,
+  DISPLAY_CHARTS,
+  DISPLAY_DEX,
+  DISPLAY_FXD,
+  DISPLAY_GOVERNANCE,
+  DISPLAY_LENDING,
+  DISPLAY_STABLE_SWAP,
+  DISPLAY_VAULTS,
+  NETWORK_SETTINGS,
+} from "connectors/networks";
 import { DEFAULT_CHAIN_ID } from "utils/Constants";
 
 const Drawer = styled(MuiDrawer, {
@@ -463,29 +473,35 @@ const MainLayout = () => {
             <AlertMessages scroll={scroll} />
             <TransactionStatus scroll={scroll} />
             <Routes>
-              <Route path="/" element={<DashboardContent />} />
-              {allowStableSwap ||
-              isUserWrapperWhiteListed ||
-              allowStableSwapInProgress ? (
-                <Route path="/stable-swap" element={<StableSwap />} />
+              {!chainId || DISPLAY_FXD.includes(chainId) ? (
+                <Route path="/" element={<DashboardContent />} />
               ) : null}
-              {isUserWrapperWhiteListed ? (
+              {!chainId || DISPLAY_STABLE_SWAP.includes(chainId) ? (
                 <>
-                  <Route
-                    path="/stable-swap/add-liquidity"
-                    element={<StableSwapAddLiquidity />}
-                  />
-                  <Route
-                    path="/stable-swap/remove-liquidity"
-                    element={<StableSwapRemoveLiquidity />}
-                  />
-                  <Route
-                    path="/stable-swap/manage-fees"
-                    element={<StableSwapManageFees />}
-                  />
+                  {allowStableSwap ||
+                  isUserWrapperWhiteListed ||
+                  allowStableSwapInProgress ? (
+                    <Route path="/stable-swap" element={<StableSwap />} />
+                  ) : null}
+                  {isUserWrapperWhiteListed ? (
+                    <>
+                      <Route
+                        path="/stable-swap/add-liquidity"
+                        element={<StableSwapAddLiquidity />}
+                      />
+                      <Route
+                        path="/stable-swap/remove-liquidity"
+                        element={<StableSwapRemoveLiquidity />}
+                      />
+                      <Route
+                        path="/stable-swap/manage-fees"
+                        element={<StableSwapManageFees />}
+                      />
+                    </>
+                  ) : null}
                 </>
               ) : null}
-              {!chainId || [ChainId.AXDC, ChainId.XDC].includes(chainId) ? (
+              {!chainId || DISPLAY_GOVERNANCE.includes(chainId) ? (
                 <Route path="/dao" element={<DaoView />}>
                   <Route
                     index
@@ -522,7 +538,7 @@ const MainLayout = () => {
                   />
                 </Route>
               ) : null}
-              {!chainId || [ChainId.AXDC, ChainId.XDC].includes(chainId) ? (
+              {!chainId || DISPLAY_DEX.includes(chainId) ? (
                 <Route path="/swap" element={<DexView />}>
                   <Route index element={<Swap />} />
                   <Route path=":outputCurrency" element={<RedirectToSwap />} />
@@ -566,24 +582,34 @@ const MainLayout = () => {
                   <Route element={<RedirectPathToSwapOnly />} />
                 </Route>
               ) : null}
-              <Route path="/lending" element={<LendingView />}>
-                <Route index element={<Home />} />
-                <Route path="markets" element={<Markets />} />
-                <Route path="reserve-overview" element={<ReserveOverview />} />
-                <Route path="transactions" element={<History />} />
-                <Route path="faucet" element={<Faucet />} />
-                <Route path="*" element={<Navigate to="/lending" replace />} />
-              </Route>
-              <Route
-                path="/vaults"
-                element={
-                  <AllVaultView
-                    isMobileFiltersOpen={isMobileFiltersOpen}
-                    openMobileFilterMenu={openMobileFilterMenu}
+              {!chainId || DISPLAY_LENDING.includes(chainId) ? (
+                <Route path="/lending" element={<LendingView />}>
+                  <Route index element={<Home />} />
+                  <Route path="markets" element={<Markets />} />
+                  <Route
+                    path="reserve-overview"
+                    element={<ReserveOverview />}
                   />
-                }
-              ></Route>
-              {!chainId || [ChainId.AXDC, ChainId.XDC].includes(chainId) ? (
+                  <Route path="transactions" element={<History />} />
+                  <Route path="faucet" element={<Faucet />} />
+                  <Route
+                    path="*"
+                    element={<Navigate to="/lending" replace />}
+                  />
+                </Route>
+              ) : null}
+              {!chainId || DISPLAY_VAULTS.includes(chainId) ? (
+                <Route
+                  path="/vaults"
+                  element={
+                    <AllVaultView
+                      isMobileFiltersOpen={isMobileFiltersOpen}
+                      openMobileFilterMenu={openMobileFilterMenu}
+                    />
+                  }
+                ></Route>
+              ) : null}
+              {!chainId || DISPLAY_CHARTS.includes(chainId) ? (
                 <Route path="/charts" element={<ChartsView />}>
                   <Route
                     index

@@ -127,7 +127,7 @@ export const TxActionsWrapper: FC<TxActionsWrapperProps> = memo(
             iconSize={20}
             iconMargin={2}
             color="white"
-            text={`Approve ${symbol ?? ""} to continue`}
+            text={`Approve to continue`}
           />
         ),
         handleClick: handleApproval,

@@ -63,6 +63,12 @@ const cache = new InMemoryCache({
             return incoming;
           },
         },
+        users: {
+          keyArgs: ["walletAddress"],
+          merge(_, incoming) {
+            return incoming;
+          },
+        },
       },
     },
     Staker: {

@@ -94,3 +94,14 @@ export {
   SUBGRAPH_URLS,
   DEFAULT_RPCS,
 };
+
+/**
+ * Display settings for the different sections of the app
+ */
+export const DISPLAY_FXD = [ChainId.XDC, ChainId.AXDC, ChainId.SEPOLIA];
+export const DISPLAY_STABLE_SWAP = [ChainId.XDC, ChainId.AXDC];
+export const DISPLAY_LENDING = [ChainId.XDC, ChainId.AXDC, ChainId.SEPOLIA];
+export const DISPLAY_VAULTS = [ChainId.XDC, ChainId.AXDC, ChainId.SEPOLIA];
+export const DISPLAY_DEX = [ChainId.XDC, ChainId.AXDC];
+export const DISPLAY_CHARTS = [ChainId.XDC, ChainId.AXDC];
+export const DISPLAY_GOVERNANCE = [ChainId.XDC, ChainId.AXDC];
