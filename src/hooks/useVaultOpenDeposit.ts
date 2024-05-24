@@ -113,9 +113,12 @@ const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
   const setMax = useCallback(() => {
     const maxWalletBalance = BigNumber.min(
       BigNumber(walletBalance).dividedBy(10 ** 18),
-      BigNumber(depositLimit)
-        .minus(balanceTokens)
-        .dividedBy(10 ** 18),
+      BigNumber.max(
+        BigNumber(depositLimit)
+          .minus(balanceTokens)
+          .dividedBy(10 ** 18),
+        BigNumber(0)
+      ),
       BigNumber(MAX_PERSONAL_DEPOSIT)
     ).decimalPlaces(18, BigNumber.ROUND_DOWN);
 
@@ -129,16 +132,20 @@ const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
       const formattedMaxWalletBalance = BigNumber(walletBalance).dividedBy(
         10 ** 18
       );
-      const formattedMaxDepositLimit = BigNumber(depositLimit)
-        .minus(balanceTokens)
-        .dividedBy(10 ** 18);
+      const formattedMaxDepositLimit = Math.max(
+        BigNumber(depositLimit)
+          .minus(BigNumber(balanceTokens))
+          .dividedBy(10 ** 18)
+          .toNumber(),
+        0
+      );
       if (BigNumber(value).isGreaterThan(formattedMaxWalletBalance)) {
         return "You do not have enough money in your wallet";
       }
 
       if (BigNumber(value).isGreaterThan(formattedMaxDepositLimit)) {
         return `Deposit value exceeds the maximum allowed limit ${formatNumber(
-          formattedMaxDepositLimit.toNumber()
+          formattedMaxDepositLimit
         )} ${token.symbol}`;
       }
       if (BigNumber(value).isGreaterThan(MAX_PERSONAL_DEPOSIT)) {
