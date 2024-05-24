@@ -218,7 +218,6 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
           return refetchTransactions({
             account: account.toLowerCase(),
             vault: vault.id,
-            chainId,
           });
         }
 
@@ -228,7 +227,6 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
           variables: {
             account: account.toLowerCase(),
             vault: vault.id,
-            chainId,
           },
         })
           .then((res) => {
@@ -244,7 +242,6 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     },
     [
       vault,
-      chainId,
       account,
       setDepositsList,
       setTransactionLoading,
