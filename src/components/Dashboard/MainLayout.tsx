@@ -286,7 +286,7 @@ const MainLayout = () => {
     drawerRef,
     showToggleDrawerBtn,
     setOpenMobile,
-    userXDCBalance,
+    userBalance,
     showFthmBalanceModal,
     setShowFthmBalanceModal,
     aggregateBalance,
@@ -376,46 +376,47 @@ const MainLayout = () => {
               {isWalletConnect && (
                 <img src={WalletConnectSrc} alt={"wallet-connect"} />
               )}
-              {aggregateBalance && (
-                <FTHMWrapper onClick={() => setShowFthmBalanceModal(true)}>
-                  <FTHMAmount
-                    active={account ? "true" : "false"}
-                    style={{ pointerEvents: "auto" }}
-                  >
-                    {account && (
-                      <TYPE.white
-                        style={{
-                          fontSize: "inherit",
-                          paddingRight: ".4rem",
-                        }}
-                      >
-                        <CountUp
-                          key={countUpValue}
-                          isCounting
-                          start={parseFloat(countUpValuePrevious)}
-                          end={parseFloat(countUpValue)}
-                          thousandsSeparator={","}
-                          duration={1}
-                        />
-                      </TYPE.white>
-                    )}
-                    FTHM
-                  </FTHMAmount>
-                  <CardNoise />
-                </FTHMWrapper>
-              )}
+              {(!chainId || DISPLAY_GOVERNANCE.includes(chainId)) &&
+                aggregateBalance && (
+                  <FTHMWrapper onClick={() => setShowFthmBalanceModal(true)}>
+                    <FTHMAmount
+                      active={account ? "true" : "false"}
+                      style={{ pointerEvents: "auto" }}
+                    >
+                      {account && (
+                        <TYPE.white
+                          style={{
+                            fontSize: "inherit",
+                            paddingRight: ".4rem",
+                          }}
+                        >
+                          <CountUp
+                            key={countUpValue}
+                            isCounting
+                            start={parseFloat(countUpValuePrevious)}
+                            end={parseFloat(countUpValue)}
+                            thousandsSeparator={","}
+                            duration={1}
+                          />
+                        </TYPE.white>
+                      )}
+                      FTHM
+                    </FTHMAmount>
+                    <CardNoise />
+                  </FTHMWrapper>
+                )}
               <AccountElement
                 active={account ? "true" : "false"}
                 style={{ pointerEvents: "auto" }}
               >
-                {account && userXDCBalance ? (
+                {account && userBalance ? (
                   <Box
                     fontSize={"1rem"}
                     sx={{ flexShrink: 0 }}
                     p="0.5rem 0.5rem 0.5rem 0.5rem"
                     fontWeight={500}
                   >
-                    {formatNumber(Number(userXDCBalance?.toSignificant(8)))}{" "}
+                    {formatNumber(Number(userBalance))}{" "}
                     {NETWORK_SETTINGS[chainId as ChainId].nativeCurrency
                       .symbol ||
                       NETWORK_SETTINGS[DEFAULT_CHAIN_ID].nativeCurrency.symbol}

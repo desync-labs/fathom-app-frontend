@@ -22,6 +22,7 @@ import {
   WalletConnect,
   supportedChainIds,
   NETWORK_SETTINGS,
+  DISPLAY_STABLE_SWAP,
 } from "connectors/networks";
 import { Web3Provider } from "@into-the-fathom/providers";
 import { useNavigate } from "react-router-dom";
@@ -103,7 +104,11 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
 
   useEffect(() => {
     setTimeout(() => {
-      if (chainId && supportedChainIds.includes(chainId)) {
+      if (
+        chainId &&
+        DISPLAY_STABLE_SWAP.includes(chainId) &&
+        supportedChainIds.includes(chainId)
+      ) {
         setAllowStableSwapInProgress(true);
         stableSwapService
           .isDecentralizedState()
@@ -139,7 +144,12 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
           });
       }
 
-      if (account && chainId && supportedChainIds.includes(chainId)) {
+      if (
+        account &&
+        chainId &&
+        DISPLAY_STABLE_SWAP.includes(chainId) &&
+        supportedChainIds.includes(chainId)
+      ) {
         stableSwapService
           .usersWrapperWhitelist(account)
           .then((isWhitelisted: boolean) => {
