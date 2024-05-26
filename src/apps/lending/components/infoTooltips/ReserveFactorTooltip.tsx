@@ -22,7 +22,7 @@ export const ReserveFactorTooltip: FC<ReserveFactorTooltipProps> = ({
         ) : (
           "collector contract"
         )}{" "}
-        that is controlled by Aave governance to promote ecosystem growth.{" "}
+        that is controlled by Fathom governance to promote ecosystem growth.{" "}
       </>
     </TextWithTooltip>
   );
