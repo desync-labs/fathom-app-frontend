@@ -382,6 +382,8 @@ export const useTransactionHandler = ({
             );
             if (approvalTransactions.length > 0) {
               setApprovalTxes(approvalTransactions);
+            } else {
+              setApprovalTxes(undefined);
             }
             const preferPermit =
               tryPermit &&

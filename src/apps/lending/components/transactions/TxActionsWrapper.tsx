@@ -106,7 +106,7 @@ export const TxActionsWrapper: FC<TxActionsWrapperProps> = memo(
         return {
           loading: true,
           disabled: true,
-          content: <>Approving {symbol}...</>,
+          content: <>Approving...</>,
         };
       if (approvalTxState?.success)
         return {
