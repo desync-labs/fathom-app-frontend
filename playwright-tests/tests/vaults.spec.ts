@@ -6,9 +6,7 @@ import * as metamask from "@synthetixio/synpress/commands/metamask";
 import dotenv from "dotenv";
 dotenv.config();
 
-// Skip all vaults tests. Vaults are not stable on dev environment. Failing due to VLT-55, VL-56 and other issues.
-// Will unksip after the env is stable again.
-test.describe.skip("Fathom App Test Suite: Vault Operations", () => {
+test.describe("Fathom App Test Suite: Vault Operations", () => {
   test.beforeAll(async ({ vaultPage }) => {
     const depositAmount = 3000;
     await vaultPage.navigate();
