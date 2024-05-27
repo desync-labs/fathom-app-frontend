@@ -12,7 +12,7 @@ dotenv.config();
 
 export function getLibrary(provider: any): Web3Provider {
   console.log("getLibrary", provider);
-  return new Web3Provider(provider);
+  return new Web3Provider(provider, "any");
 }
 
 ReactDOM.render(

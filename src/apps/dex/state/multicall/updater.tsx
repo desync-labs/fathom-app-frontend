@@ -15,6 +15,7 @@ import {
   parseCallKey,
   updateMulticallResults,
 } from "./actions";
+import { DISPLAY_DEX } from "connectors/networks";
 
 // chunk calls so we do not exceed the gas limit
 const CALL_CHUNK_SIZE = 500;
@@ -154,7 +155,13 @@ export default function Updater(): null {
   );
 
   useEffect(() => {
-    if (!latestBlockNumber || !chainId || !multicallContract) return;
+    if (
+      !latestBlockNumber ||
+      !chainId ||
+      !multicallContract ||
+      !DISPLAY_DEX.includes(chainId)
+    )
+      return;
 
     const outdatedCallKeys: string[] = JSON.parse(serializedOutdatedCallKeys);
     if (outdatedCallKeys.length === 0) return;

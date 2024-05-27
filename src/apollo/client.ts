@@ -16,7 +16,7 @@ const cache = new InMemoryCache({
     Query: {
       fields: {
         positions: {
-          keyArgs: false,
+          keyArgs: ["chainId", "account"],
           merge(_, incoming) {
             return incoming;
           },
@@ -28,7 +28,7 @@ const cache = new InMemoryCache({
           },
         },
         pools: {
-          keyArgs: false,
+          keyArgs: ["chainId"],
           merge(_, incoming) {
             return incoming;
           },
@@ -52,7 +52,7 @@ const cache = new InMemoryCache({
           },
         },
         vaults: {
-          keyArgs: false,
+          keyArgs: ["chainId"],
           merge(_, incoming) {
             return incoming;
           },

@@ -11,6 +11,8 @@ import { ContextProviders, Updaters as ChartUpdaters } from "apps/charts";
 import ReactGA from "react-ga4";
 import { isMobile } from "react-device-detect";
 import { client } from "apollo/client";
+import useConnector from "context/connector";
+import { DISPLAY_CHARTS, DISPLAY_DEX } from "./connectors/networks";
 
 // initialize GA
 const GOOGLE_ANALYTICS_ID = process.env.REACT_APP_GOOGLE_ANALYTICS_ID;
@@ -35,6 +37,8 @@ if (typeof GOOGLE_ANALYTICS_ID === "string") {
 }
 
 function App() {
+  const { chainId } = useConnector();
+
   return (
     <ApolloProvider client={client}>
       <SyncProvider>
@@ -43,8 +47,12 @@ function App() {
             <Provider store={store}>
               <ContextProviders>
                 <>
-                  <Updaters />
-                  <ChartUpdaters />
+                  {!chainId || DISPLAY_DEX.includes(chainId) ? (
+                    <Updaters />
+                  ) : null}
+                  {!chainId || DISPLAY_CHARTS.includes(chainId) ? (
+                    <ChartUpdaters />
+                  ) : null}
                   <MainLayout />
                 </>
               </ContextProviders>
