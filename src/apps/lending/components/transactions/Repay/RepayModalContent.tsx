@@ -32,6 +32,7 @@ import {
 } from "apps/lending/components/transactions/FlowCommons/TxModalDetails";
 import { RepayActions } from "apps/lending/components/transactions/Repay/RepayActions";
 import { roundToTokenDecimals } from "apps/lending/utils/utils";
+import { Warning } from "apps/lending/components/primitives/Warning";
 
 interface RepayAsset extends Asset {
   balance: string;
@@ -49,7 +50,12 @@ export const RepayModalContent: FC<
     isWrongNetwork,
     debtType,
   }) => {
-    const { gasLimit, mainTxState: repayTxState, txError } = useModalContext();
+    const {
+      gasLimit,
+      mainTxState: repayTxState,
+      txError,
+      requiresApproval,
+    } = useModalContext();
     const { marketReferencePriceInUsd, user } = useAppDataContext();
     const { currentChainId } = useProtocolDataContext();
 
@@ -296,6 +302,14 @@ export const RepayModalContent: FC<
             futureHealthFactor={newHF}
           />
         </TxModalDetails>
+
+        {isMaxSelected && requiresApproval && (
+          <Warning severity="warning" sx={{ my: 6 }}>
+            Your {poolReserve.symbol} amount is increasing every second. For
+            correct repay of the whole amount, confirm in your wallet the
+            suggested value.
+          </Warning>
+        )}
 
         {txError && <GasEstimationError txError={txError} />}
 
