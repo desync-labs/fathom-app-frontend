@@ -32,7 +32,7 @@ import {
 } from "apps/lending/components/transactions/FlowCommons/TxModalDetails";
 import { RepayActions } from "apps/lending/components/transactions/Repay/RepayActions";
 import { roundToTokenDecimals } from "apps/lending/utils/utils";
-import { Warning } from "../../primitives/Warning";
+import { Warning } from "apps/lending/components/primitives/Warning";
 
 interface RepayAsset extends Asset {
   balance: string;
