@@ -106,7 +106,7 @@ export const TxActionsWrapper: FC<TxActionsWrapperProps> = memo(
         return {
           loading: true,
           disabled: true,
-          content: <>Approving {symbol}...</>,
+          content: <>Approving...</>,
         };
       if (approvalTxState?.success)
         return {
@@ -127,7 +127,7 @@ export const TxActionsWrapper: FC<TxActionsWrapperProps> = memo(
             iconSize={20}
             iconMargin={2}
             color="white"
-            text={`Approve ${symbol ?? ""} to continue`}
+            text={`Approve to continue`}
           />
         ),
         handleClick: handleApproval,

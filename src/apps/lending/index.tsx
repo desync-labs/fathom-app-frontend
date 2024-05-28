@@ -21,6 +21,7 @@ import RateSwitchModal from "apps/lending/components/transactions/RateSwitch/Rat
 import RepayModal from "apps/lending/components/transactions/Repay/RepayModal";
 import SupplyModal from "apps/lending/components/transactions/Supply/SupplyModal";
 import WithdrawModal from "apps/lending/components/transactions/Withdraw/WithdrawModal";
+import ClaimRewardsModal from "apps/lending/components/transactions/ClaimRewards/ClaimRewardsModal";
 
 export const queryClient = new QueryClient();
 
@@ -44,6 +45,7 @@ const LendingIndexComponent: FC = () => {
                       <RateSwitchModal />
                       <EmodeModal />
                       <FaucetModal />
+                      <ClaimRewardsModal />
                       <TransactionEventHandler />
                     </SharedDependenciesProvider>
                   </GasStationProvider>

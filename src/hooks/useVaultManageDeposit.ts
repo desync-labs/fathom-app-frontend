@@ -161,7 +161,7 @@ const useVaultManageDeposit = (
   const validateDeposit = (
     value: string,
     maxWalletBalance: BigNumber,
-    maxDepositLimit: BigNumber
+    maxDepositLimit: number
   ) => {
     if (BigNumber(value).isGreaterThan(maxWalletBalance)) {
       return "You do not have enough money in your wallet";
@@ -169,7 +169,7 @@ const useVaultManageDeposit = (
 
     if (BigNumber(value).isGreaterThan(maxDepositLimit)) {
       return `Deposit value exceeds the maximum allowed limit ${formatNumber(
-        maxDepositLimit.toNumber()
+        maxDepositLimit
       )} ${token.symbol}`;
     }
 
@@ -200,9 +200,13 @@ const useVaultManageDeposit = (
     (value: string) => {
       if (formType === FormType.DEPOSIT) {
         const maxWalletBalance = BigNumber(walletBalance).dividedBy(10 ** 18);
-        const maxDepositLimit = BigNumber(depositLimit)
-          .minus(BigNumber(balanceTokens))
-          .dividedBy(10 ** 18);
+        const maxDepositLimit = Math.max(
+          BigNumber(depositLimit)
+            .minus(BigNumber(balanceTokens))
+            .dividedBy(10 ** 18)
+            .toNumber(),
+          0
+        );
 
         return validateDeposit(value, maxWalletBalance, maxDepositLimit);
       } else {
@@ -223,7 +227,7 @@ const useVaultManageDeposit = (
         BigNumber(MAX_PERSONAL_DEPOSIT).minus(
           BigNumber(balancePosition).dividedBy(10 ** 18)
         )
-      );
+      ).decimalPlaces(18, BigNumber.ROUND_DOWN);
 
       const maxCapped = max.isNegative() ? BigNumber(0) : max;
 

@@ -24,7 +24,7 @@ export const SupplyAssetsListMobileItem: FC<DashboardReserve> = memo(
     supplyCap,
     totalLiquidity,
     supplyAPY,
-    aIncentivesData,
+    fmIncentivesData,
     isIsolated,
     usageAsCollateralEnabledOnUser,
     isActive,
@@ -75,7 +75,7 @@ export const SupplyAssetsListMobileItem: FC<DashboardReserve> = memo(
         >
           <IncentivesCard
             value={Number(supplyAPY)}
-            incentives={aIncentivesData}
+            incentives={fmIncentivesData}
             symbol={symbol}
             variant="secondary14"
             color={"primary.light"}

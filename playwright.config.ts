@@ -27,6 +27,7 @@ export default defineConfig({
   reporter: [
     ["list"],
     ["html", { outputFolder: "playwright-tests/test-report", open: "never" }],
+    ["json", { outputFile: "playwright-tests/test-report/results.json" }],
   ],
   timeout: process.env.CI ? 150000 : 120000,
   outputDir: "./playwright-tests/test-results",
@@ -83,6 +84,14 @@ export default defineConfig({
       },
       timeout: 60000 * 4,
       testDir: "./playwright-tests/tests/lending",
+      testMatch: "**.spec.ts",
+    },
+    {
+      name: "dao-tests",
+      use: {
+        ...devices["Desktop Chrome"],
+      },
+      testDir: "./playwright-tests/tests/dao",
       testMatch: "**.spec.ts",
     },
   ],

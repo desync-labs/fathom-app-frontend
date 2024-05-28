@@ -1,3 +1,5 @@
+import { CustomMarket } from "./marketsConfig";
+
 export interface IconSymbolInterface {
   underlyingAsset: string;
   symbol: string;
@@ -15,13 +17,24 @@ export function fetchIconSymbolAndName({
   name,
   underlyingAsset,
 }: IconSymbolInterface) {
-  const underlyingAssetMap: Record<string, IconMapInterface> = {
-    "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee": {
-      name: "XDC",
-      symbol: "XDC",
-      iconSymbol: "XDC",
-    },
-  };
+  const currentMarket = localStorage.getItem("selectedMarket");
+  const underlyingAssetMap: Record<string, IconMapInterface> =
+    currentMarket === CustomMarket.proto_apothem_v3 ||
+    currentMarket === CustomMarket.proto_mainnet_v3
+      ? {
+          "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee": {
+            name: "XDC",
+            symbol: "XDC",
+            iconSymbol: "XDC",
+          },
+        }
+      : {
+          "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee": {
+            name: "SepoliaETH",
+            symbol: "ETH",
+            iconSymbol: "ETH",
+          },
+        };
 
   const lowerUnderlyingAsset = underlyingAsset.toLowerCase();
   if (lowerUnderlyingAsset in underlyingAssetMap) {

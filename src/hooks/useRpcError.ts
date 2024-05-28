@@ -25,15 +25,15 @@ const useRpcError = () => {
     return {
       error: errorBody ? JSON.parse(errorBody) : error,
       code: errorCode,
-      message:
-        contractTxErrorMapping[errorCode] ||
-        `Unknown error with code ${errorCode}`,
+      message: contractTxErrorMapping[errorCode] || null,
     };
   };
 
   const showErrorNotification = (error: any) => {
     const { message } = parseRpcError(error);
-    setShowErrorAlertHandler(true, message);
+    if (message) {
+      setShowErrorAlertHandler(true, message);
+    }
   };
 
   return { parseRpcError, showErrorNotification };

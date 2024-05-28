@@ -16,6 +16,8 @@ import {
   UiPoolDataProvider,
   UserReserveDataHumanized,
   V3FaucetService,
+  IncentivesControllerV2Interface,
+  IncentivesControllerV2,
 } from "@into-the-fathom/lending-contract-helpers";
 import {
   LPBorrowParamsType,
@@ -40,8 +42,13 @@ import {
 } from "apps/lending/utils/utils";
 import { StateCreator } from "zustand";
 
-import { selectCurrentChainIdV3MarketData } from "./poolSelectors";
+import {
+  selectCurrentChainIdV3MarketData,
+  selectFormattedReserves,
+} from "./poolSelectors";
 import { RootStore } from "./root";
+import { ClaimRewardsActionsProps } from "apps/lending/components/transactions/ClaimRewards/ClaimRewardsActions";
+import dayjs from "dayjs";
 
 // TODO: what is the better name for this type?
 export type PoolReserve = {
@@ -76,6 +83,9 @@ export interface PoolSlice {
   signERC20Approval: (
     args: Omit<LPSignERC20ApprovalType, "user">
   ) => Promise<string>;
+  claimRewards: (
+    args: ClaimRewardsActionsProps
+  ) => Promise<EthereumTransactionTypeExtended[]>;
   // TODO: optimize types to use only neccessary properties
   repay: (args: RepayActionProps) => Promise<EthereumTransactionTypeExtended[]>;
   repayWithPermit: (
@@ -483,6 +493,47 @@ export const createPoolSlice: StateCreator<
         ...args,
         user,
       });
+    },
+    claimRewards: async ({ selectedReward }) => {
+      // TODO: think about moving timestamp from hook to EventEmitter
+      const timestamp = dayjs().unix();
+      const reserves = selectFormattedReserves(get(), timestamp);
+      const currentAccount = get().account;
+
+      const allReserves: string[] = [];
+      reserves.forEach((reserve) => {
+        if (reserve.fmIncentivesData && reserve.fmIncentivesData.length > 0) {
+          allReserves.push(reserve.fmTokenAddress);
+        }
+        if (reserve.vIncentivesData && reserve.vIncentivesData.length > 0) {
+          allReserves.push(reserve.variableDebtTokenAddress);
+        }
+        if (reserve.sIncentivesData && reserve.sIncentivesData.length > 0) {
+          allReserves.push(reserve.stableDebtTokenAddress);
+        }
+      });
+
+      const incentivesTxBuilderV2: IncentivesControllerV2Interface =
+        new IncentivesControllerV2(get().jsonRpcProvider());
+
+      if (selectedReward.symbol === "all") {
+        return incentivesTxBuilderV2.claimAllRewards({
+          user: currentAccount,
+          assets: allReserves,
+          to: currentAccount,
+          incentivesControllerAddress:
+            selectedReward.incentiveControllerAddress,
+        });
+      } else {
+        return incentivesTxBuilderV2.claimRewards({
+          user: currentAccount,
+          assets: allReserves,
+          to: currentAccount,
+          incentivesControllerAddress:
+            selectedReward.incentiveControllerAddress,
+          reward: selectedReward.rewardTokenAddress,
+        });
+      }
     },
     useOptimizedPath: () => {
       return optimizedPath(get().currentChainId);
