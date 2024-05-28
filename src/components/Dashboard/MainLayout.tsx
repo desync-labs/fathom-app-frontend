@@ -116,9 +116,9 @@ import { dexClient } from "apollo/client";
 import Transactions from "apps/dex/pages/Transactions";
 import { memo, useEffect } from "react";
 import ReactGA from "react-ga4";
-import VaultListView from "../Vaults/VaultList/VaultListView";
-import VaultTutorial from "../Vaults/VaultTutorial/VaultTutorial";
-import VaultDetailView from "../Vaults/VaultDetail/VaultDetailView";
+import VaultListView from "components/Vaults/VaultList/VaultListView";
+import VaultTutorial from "components/Vaults/VaultTutorial/VaultTutorial";
+import VaultDetailView from "components/Vaults/VaultDetail/VaultDetailView";
 import {
   ChainId,
   DISPLAY_CHARTS,
@@ -604,18 +604,18 @@ const MainLayout = () => {
               ) : null}
               {!chainId || DISPLAY_VAULTS.includes(chainId) ? (
                 <Route
-                path="/vaults"
-                element={
-                  <VaultsView
-                    isMobileFiltersOpen={isMobileFiltersOpen}
-                    openMobileFilterMenu={openMobileFilterMenu}
-                  />
-                }
-              >
-                <Route index element={<VaultListView />} />
-                <Route path="tutorial" index element={<VaultTutorial />} />
-                <Route path=":vaultAddress" element={<VaultDetailView />} />
-              </Route>
+                  path="/vaults"
+                  element={
+                    <VaultsView
+                      isMobileFiltersOpen={isMobileFiltersOpen}
+                      openMobileFilterMenu={openMobileFilterMenu}
+                    />
+                  }
+                >
+                  <Route index element={<VaultListView />} />
+                  <Route path="tutorial" index element={<VaultTutorial />} />
+                  <Route path=":vaultAddress" element={<VaultDetailView />} />
+                </Route>
               ) : null}
               {!chainId || DISPLAY_CHARTS.includes(chainId) ? (
                 <Route path="/charts" element={<ChartsView />}>
