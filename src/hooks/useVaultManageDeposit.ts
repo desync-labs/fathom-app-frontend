@@ -20,8 +20,7 @@ export enum FormType {
 }
 const useVaultManageDeposit = (
   vault: IVault,
-  vaultPosition: IVaultPosition,
-  onClose: () => void
+  vaultPosition: IVaultPosition
 ) => {
   const { account } = useConnector();
   const { poolService, vaultService } = useServices();
@@ -40,9 +39,9 @@ const useVaultManageDeposit = (
     mode: "onChange",
   });
 
-  const { token, depositLimit, balanceTokens } = vault;
+  const { token, depositLimit, balanceTokens, shutdown } = vault;
   const [formType, setFormType] = useState<FormType>(
-    vault.shutdown ? FormType.WITHDRAW : FormType.DEPOSIT
+    shutdown ? FormType.WITHDRAW : FormType.DEPOSIT
   );
   const [walletBalance, setWalletBalance] = useState<string>("0");
   const [isWalletFetching, setIsWalletFetching] = useState<boolean>(false);
@@ -274,8 +273,6 @@ const useVaultManageDeposit = (
           );
 
           setLastTransactionBlock(blockNumber as number);
-
-          onClose();
         } catch (e) {
           console.log(e);
         } finally {
@@ -291,8 +288,6 @@ const useVaultManageDeposit = (
           );
 
           setLastTransactionBlock(blockNumber as number);
-
-          onClose();
         } catch (e) {
           console.log(e);
         } finally {

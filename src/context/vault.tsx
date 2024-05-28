@@ -19,9 +19,9 @@ export type VaultContextType = {
 };
 
 export type UseVaultContextReturnType = {
-  vault: IVault | null;
+  vault: IVault;
   vaultLoading: boolean;
-  vaultPosition: IVaultPosition | null;
+  vaultPosition: IVaultPosition;
   vaultPositionLoading: boolean;
   reports: Record<string, IVaultStrategyReport[]>;
   historicalApr: Record<string, IVaultStrategyHistoricalApr[]>;

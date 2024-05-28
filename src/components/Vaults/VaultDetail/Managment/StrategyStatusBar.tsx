@@ -1,8 +1,7 @@
 import { Box, styled } from "@mui/material";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import { formatHashShorten } from "utils/format";
-import { AppFlexBox } from "../../../AppComponents/AppBox/AppBox";
-import { useState } from "react";
+import { AppFlexBox } from "components/AppComponents/AppBox/AppBox";
 
 const StatusBarWrapper = styled(Box)`
   display: flex;
@@ -33,9 +32,7 @@ const StatusBoxStyled = styled(Box)`
   padding: 4px 8px;
 `;
 
-const StatusLabel = ({ strategyId }: { strategyId: string }) => {
-  const [strategyStatus, setStrategyStatus] = useState<boolean>();
-
+const StatusLabel = ({ strategyId }: { strategyId?: string }) => {
   return (
     <StatusBoxStyled>
       <CheckCircleRoundedIcon sx={{ width: "16px", height: "16px" }} />

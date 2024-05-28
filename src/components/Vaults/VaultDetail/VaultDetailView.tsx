@@ -1,9 +1,7 @@
 import { useParams } from "react-router-dom";
 import { Box, Typography } from "@mui/material";
 import { VaultProvider } from "context/vault";
-import VaultBreadcrumbs from "components/Vaults/VaultDetail/Breadcrumbs";
-import VaultPositionStats from "components/Vaults/VaultDetail/VaultPositionStats";
-import VaultDetailInfoTabs from "./VaultDetailInfoTabs";
+import VaultDetailContent from "components/Vaults/VaultDetail/VaultDetailContent";
 
 const VaultDetailView = () => {
   const { vaultAddress } = useParams();
@@ -11,18 +9,14 @@ const VaultDetailView = () => {
   if (vaultAddress === undefined) {
     return (
       <Box>
-        <Typography variant="h1">Vault Address undefined</Typography>
+        <Typography variant="h1">Vault Address not exist</Typography>
       </Box>
     );
   }
 
   return (
     <VaultProvider vaultId={vaultAddress}>
-      <>
-        <VaultBreadcrumbs />
-        <VaultPositionStats />
-        <VaultDetailInfoTabs />
-      </>
+      <VaultDetailContent />
     </VaultProvider>
   );
 };

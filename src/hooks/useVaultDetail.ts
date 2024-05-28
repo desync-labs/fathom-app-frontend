@@ -65,9 +65,9 @@ enum FetchBalanceTokenType {
 }
 
 const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
-  const [vault, setVault] = useState<IVault | null>(null);
-  const [vaultPosition, setVaultPosition] = useState<IVaultPosition | null>(
-    null
+  const [vault, setVault] = useState<IVault>({} as IVault);
+  const [vaultPosition, setVaultPosition] = useState<IVaultPosition>(
+    {} as IVaultPosition
   );
   const [balanceToken, setBalanceToken] = useState<string>("0");
   const [depositsList, setDepositsList] = useState([]);
@@ -283,11 +283,11 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
             });
           });
         } else {
-          setVaultPosition(null);
+          setVaultPosition({} as IVaultPosition);
         }
       });
     } else {
-      setVaultPosition(null);
+      setVaultPosition({} as IVaultPosition);
     }
   }, [
     account,

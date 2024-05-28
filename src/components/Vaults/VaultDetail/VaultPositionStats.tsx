@@ -57,7 +57,7 @@ const VaultPositionStats = () => {
     <Box pb={"24px"}>
       <VaultPositionTitle variant="h1">Your Position</VaultPositionTitle>
       <Grid container gap={1.5}>
-        <PositionStatItem item xs={4}>
+        <PositionStatItem item xs={3.8}>
           <PositionStatItemTitle>Total Deposited</PositionStatItemTitle>
           <PositionStatItemValue>
             {vaultLoading
