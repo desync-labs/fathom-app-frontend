@@ -8,6 +8,7 @@ import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 import { DANGER_SAFETY_BUFFER } from "utils/Constants";
 import { ZERO_ADDRESS } from "fathom-sdk";
+import { NATIVE_ASSETS } from "connectors/networks";
 
 export const defaultValues = {
   collateral: "",
@@ -19,7 +20,8 @@ export const defaultValues = {
 const useOpenPosition = (
   pool: OpenPositionContextType["pool"],
   onClose: OpenPositionContextType["onClose"],
-  proxyWallet: OpenPositionContextType["proxyWallet"]
+  proxyWallet: OpenPositionContextType["proxyWallet"],
+  fetchProxyWallet: OpenPositionContextType["fetchProxyWallet"]
 ) => {
   const { poolService, positionService } = useServices();
   const { account, chainId, library } = useConnector();
@@ -93,7 +95,7 @@ const useOpenPosition = (
     /**
      * Native token collateral.
      */
-    if (pool.poolName.toUpperCase() === "XDC") {
+    if (NATIVE_ASSETS.includes(pool.poolName.toUpperCase())) {
       const balance = await library.getBalance(account);
       setCollateralTokenAddress(null);
       setBalance(balance.toString());
@@ -148,6 +150,7 @@ const useOpenPosition = (
     async (collateralInput: string, fathomTokenInput: string) => {
       collateralInput = collateralInput || "0";
       fathomTokenInput = fathomTokenInput || "0";
+
       setCollateralToBeLocked(collateralInput);
       setFxdToBeBorrowed(fathomTokenInput);
 
@@ -200,7 +203,8 @@ const useOpenPosition = (
        * PRICE OF COLLATERAL FROM DEX
        */
       const priceOfCollateralFromDex =
-        pool.poolName.toUpperCase() === "XDC"
+        ["XDC", "ETH", "CGO"].includes(pool.poolName.toUpperCase()) ||
+        pool.poolName === "CollateralTokenAdapterJeju"
           ? BigNumber(pool.collateralLastPrice)
               .multipliedBy(10 ** 18)
               .toNumber()
@@ -301,27 +305,49 @@ const useOpenPosition = (
       const { collateral, fathomToken } = values;
 
       try {
-        const blockNumber = await positionService.openPosition(
-          account,
-          pool,
-          collateral,
-          fathomToken
-        );
+        let blockNumber;
+        if (NATIVE_ASSETS.includes(pool.poolName.toUpperCase())) {
+          blockNumber = await positionService.openPosition(
+            account,
+            pool,
+            collateral,
+            fathomToken
+          );
+        } else {
+          /**
+           * ERC20 token collateral.
+           */
+          if (!proxyWalletExists) {
+            await positionService.createProxyWallet(account);
+            fetchProxyWallet(); // Fetch proxy wallet
+            return;
+          }
+
+          blockNumber = await positionService.openPositionERC20(
+            account,
+            pool,
+            collateral,
+            fathomToken
+          );
+        }
 
         setLastTransactionBlock(blockNumber as number);
         onClose();
       } catch (e) {
         console.log(e);
+      } finally {
+        setOpenPositionLoading(false);
       }
-      setOpenPositionLoading(false);
     },
     [
+      proxyWalletExists,
       account,
       pool,
       positionService,
       setOpenPositionLoading,
       setLastTransactionBlock,
       onClose,
+      fetchProxyWallet,
     ]
   );
 
@@ -331,6 +357,7 @@ const useOpenPosition = (
       await positionService.approve(account, collateralTokenAddress as string);
       setApproveBtn(false);
     } catch (e) {
+      console.error(e);
       setApproveBtn(true);
     }
 
@@ -355,10 +382,12 @@ const useOpenPosition = (
     if (isTouched) {
       handleUpdates(collateral, fathomToken);
     }
-    if (collateralTokenAddress) {
-      approvalStatus(collateral);
+
+    if (collateralTokenAddress && proxyWallet !== ZERO_ADDRESS) {
+      approvalStatus(collateral || "0");
     }
   }, [
+    proxyWallet,
     pool,
     collateral,
     collateralTokenAddress,

@@ -1,5 +1,6 @@
 import { useLocation } from "react-router-dom";
-import { FC, useMemo } from "react";
+import { FC, useEffect, useMemo } from "react";
+import { styled } from "@mui/material/styles";
 import {
   DashboardIcon,
   MarketsIcon,
@@ -10,9 +11,10 @@ import {
   NestedRouteNav,
 } from "components/AppComponents/AppBox/AppBox";
 import useConnector from "context/connector";
-
 import LendingIndexComponent from "apps/lending";
-import { styled } from "@mui/material/styles";
+import { availableMarkets } from "apps/lending/utils/marketsAndNetworksConfig";
+import { ChainId } from "connectors/networks";
+import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
 
 const LendingNestedRouteContainer = styled("div")`
   width: 100%;
@@ -22,7 +24,17 @@ const LendingNestedRouteContainer = styled("div")`
 
 const LendingView: FC = () => {
   const location = useLocation();
-  const { account } = useConnector();
+  const { account, chainId } = useConnector();
+  const { setCurrentMarket } = useProtocolDataContext();
+
+  useEffect(() => {
+    if (chainId && chainId == ChainId.SEPOLIA) {
+      setCurrentMarket(availableMarkets[1]);
+    }
+    if (chainId && chainId == ChainId.AXDC) {
+      setCurrentMarket(availableMarkets[0]);
+    }
+  }, [chainId, setCurrentMarket]);
 
   const isLendingActive = useMemo(
     () => ["/lending"].includes(location.pathname),

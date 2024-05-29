@@ -21,9 +21,11 @@ import {
   DefaultProvider,
   WalletConnect,
   supportedChainIds,
-  XDC_NETWORK_SETTINGS,
+  NETWORK_SETTINGS,
+  DISPLAY_STABLE_SWAP,
 } from "connectors/networks";
 import { Web3Provider } from "@into-the-fathom/providers";
+import { useNavigate } from "react-router-dom";
 
 type ConnectorProviderType = {
   children: ReactElement;
@@ -72,6 +74,8 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
   const { connector, activate, account, active, deactivate, error, chainId } =
     useWeb3React();
 
+  const navigate = useNavigate();
+
   const { stableSwapService, positionService, provider } = useServices();
 
   const [isMetamask, setIsMetamask] = useState<boolean>(false);
@@ -99,51 +103,62 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
     useState<boolean>(true);
 
   useEffect(() => {
-    if (chainId && supportedChainIds.includes(chainId)) {
-      setAllowStableSwapInProgress(true);
-      stableSwapService
-        .isDecentralizedState()
-        .then((isDecentralizedState: boolean) => {
-          setIsDecentralizedState(isDecentralizedState);
-          if (
-            isDecentralizedState === false &&
-            account &&
-            supportedChainIds.includes(chainId)
-          ) {
-            stableSwapService
-              .isUserWhitelisted(account)
-              .then((isWhitelisted: boolean) => {
-                setAllowStableSwapInProgress(false);
-                setIsUserWhitelisted(isWhitelisted);
-              });
-          } else {
-            setAllowStableSwapInProgress(false);
-            setIsUserWhitelisted(false);
-          }
-        });
-      positionService
-        .isDecentralizedMode()
-        .then((isDecentralizedMode: boolean) => {
-          setIsDecentralizedMode(isDecentralizedMode);
-          if (isDecentralizedMode === false && account) {
-            positionService
-              .isWhitelisted(account)
-              .then((isOpenPositionWhitelisted: boolean) => {
-                setIsOpenPositionWhitelisted(isOpenPositionWhitelisted);
-              });
-          }
-        });
-    }
+    setTimeout(() => {
+      if (
+        chainId &&
+        DISPLAY_STABLE_SWAP.includes(chainId) &&
+        supportedChainIds.includes(chainId)
+      ) {
+        setAllowStableSwapInProgress(true);
+        stableSwapService
+          .isDecentralizedState()
+          .then((isDecentralizedState: boolean) => {
+            setIsDecentralizedState(isDecentralizedState);
+            if (
+              isDecentralizedState === false &&
+              account &&
+              supportedChainIds.includes(chainId)
+            ) {
+              stableSwapService
+                .isUserWhitelisted(account)
+                .then((isWhitelisted: boolean) => {
+                  setAllowStableSwapInProgress(false);
+                  setIsUserWhitelisted(isWhitelisted);
+                });
+            } else {
+              setAllowStableSwapInProgress(false);
+              setIsUserWhitelisted(false);
+            }
+          });
+        positionService
+          .isDecentralizedMode()
+          .then((isDecentralizedMode: boolean) => {
+            setIsDecentralizedMode(isDecentralizedMode);
+            if (isDecentralizedMode === false && account) {
+              positionService
+                .isWhitelisted(account)
+                .then((isOpenPositionWhitelisted: boolean) => {
+                  setIsOpenPositionWhitelisted(isOpenPositionWhitelisted);
+                });
+            }
+          });
+      }
 
-    if (account && chainId && supportedChainIds.includes(chainId)) {
-      stableSwapService
-        .usersWrapperWhitelist(account)
-        .then((isWhitelisted: boolean) => {
-          setIsUserWrapperWhiteListed(isWhitelisted);
-        });
-    } else {
-      setIsUserWrapperWhiteListed(false);
-    }
+      if (
+        account &&
+        chainId &&
+        DISPLAY_STABLE_SWAP.includes(chainId) &&
+        supportedChainIds.includes(chainId)
+      ) {
+        stableSwapService
+          .usersWrapperWhitelist(account)
+          .then((isWhitelisted: boolean) => {
+            setIsUserWrapperWhiteListed(isWhitelisted);
+          });
+      } else {
+        setIsUserWrapperWhiteListed(false);
+      }
+    });
   }, [
     chainId,
     account,
@@ -162,14 +177,31 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
     setIsWalletConnect(false);
   }, [setIsMetamask, setIsWalletConnect]);
 
+  /**
+   * Navigate to home page if chainId is changed
+   */
+  const updateEvent = useCallback(
+    (data: any) => {
+      if (
+        data.chainId &&
+        Object.keys(NETWORK_SETTINGS).includes(data.chainId)
+      ) {
+        navigate("/");
+      }
+    },
+    [navigate]
+  );
+
   useEffect(() => {
     if (connector) {
       connector.on(ConnectorEvent.Deactivate, deactivateEvent);
+      connector.on(ConnectorEvent.Update, updateEvent);
     }
 
     return () => {
       if (connector) {
         connector.off(ConnectorEvent.Deactivate, deactivateEvent);
+        connector.off(ConnectorEvent.Update, updateEvent);
       }
     };
   }, [connector, deactivateEvent]);
@@ -273,7 +305,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
           if (switchError.code === 4902) {
             try {
               await provider.send("wallet_addEthereumChain", [
-                (XDC_NETWORK_SETTINGS as any)[chainId],
+                (NETWORK_SETTINGS as any)[chainId],
               ]);
             } catch (addError) {
               console.error("Failed to add the XDC Network:", addError);
@@ -293,7 +325,7 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
           if (err.code === 4902) {
             window.ethereum.request?.({
               method: "wallet_addEthereumChain",
-              params: [(XDC_NETWORK_SETTINGS as any)[chainId]],
+              params: [(NETWORK_SETTINGS as any)[chainId]],
             });
           }
         }

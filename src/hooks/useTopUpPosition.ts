@@ -8,6 +8,7 @@ import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 import { IOpenPosition } from "fathom-sdk";
 import { DANGER_SAFETY_BUFFER } from "utils/Constants";
+import { NATIVE_ASSETS } from "../connectors/networks";
 
 const defaultValues = {
   collateral: "",
@@ -78,7 +79,7 @@ const useTopUpPosition = (
 
   const approvalStatus = useMemo(
     () =>
-      debounce(async (collateral: string) => {
+      debounce(async (collateral) => {
         const approved = await positionService.approvalStatus(
           account,
           collateralTokenAddress as string,
@@ -110,7 +111,8 @@ const useTopUpPosition = (
      * PRICE OF COLLATERAL FROM DEX
      */
     const priceOfCollateralFromDex =
-      pool.poolName.toUpperCase() === "XDC"
+      ["XDC", "CGO", "ETH"].includes(pool.poolName.toUpperCase()) ||
+      pool.poolName === "CollateralTokenAdapterJeju"
         ? BigNumber(pool.collateralLastPrice)
             .multipliedBy(10 ** 18)
             .toNumber()
@@ -149,7 +151,7 @@ const useTopUpPosition = (
   }, [positionService, pool, setMaxBorrowAmount]);
 
   const getCollateralTokenAndBalance = useCallback(async () => {
-    if (pool.poolName.toUpperCase() === "XDC") {
+    if (NATIVE_ASSETS.includes(pool.poolName.toUpperCase())) {
       const balance = await library.getBalance(account);
       setCollateralTokenAddress(null);
       setBalance(balance.toString());
@@ -287,20 +289,48 @@ const useTopUpPosition = (
       try {
         let blockNumber;
         if (BigNumber(fathomToken).isGreaterThan(0)) {
-          blockNumber = await positionService.topUpPositionAndBorrow(
-            account,
-            pool,
-            collateral,
-            fathomToken,
-            position.positionId
-          );
+          if (
+            pool.poolName.toUpperCase() === "XDC" ||
+            pool.poolName.toUpperCase() === "ETH"
+          ) {
+            blockNumber = await positionService.topUpPositionAndBorrow(
+              account,
+              pool,
+              collateral,
+              fathomToken,
+              position.positionId
+            );
+          } else {
+            blockNumber = await positionService.topUpPositionAndBorrowERC20(
+              account,
+              pool,
+              collateral,
+              fathomToken,
+              position.positionId
+            );
+          }
         } else {
-          blockNumber = await positionService.topUpPosition(
-            account,
-            pool,
-            collateral,
-            position.positionId
-          );
+          if (NATIVE_ASSETS.includes(pool.poolName.toUpperCase())) {
+            /**
+             * Top-up position with native assets
+             */
+            blockNumber = await positionService.topUpPosition(
+              account,
+              pool,
+              collateral,
+              position.positionId
+            );
+          } else {
+            /**
+             * Top-up position with ERC20 token
+             */
+            blockNumber = await positionService.topUpPositionERC20(
+              account,
+              pool,
+              collateral,
+              position.positionId
+            );
+          }
         }
         setLastTransactionBlock(blockNumber as number);
         onClose();
@@ -378,17 +408,12 @@ const useTopUpPosition = (
   }, [account, chainId, getDebtValue]);
 
   useEffect(() => {
-    if (
-      pool?.poolName?.toUpperCase() === "XDC" &&
-      (totalCollateral || totalFathomToken)
-    ) {
+    if (totalCollateral || totalFathomToken) {
       handleUpdates(totalCollateral, totalFathomToken);
-    } else if (
-      collateralTokenAddress &&
-      (totalCollateral || totalFathomToken)
-    ) {
-      handleUpdates(totalCollateral, totalFathomToken);
-      approvalStatus(totalCollateral);
+    }
+
+    if (collateralTokenAddress) {
+      approvalStatus(collateral || "0");
     }
   }, [
     pool,

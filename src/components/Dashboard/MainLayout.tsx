@@ -116,6 +116,18 @@ import { dexClient } from "apollo/client";
 import Transactions from "apps/dex/pages/Transactions";
 import { memo, useEffect } from "react";
 import ReactGA from "react-ga4";
+import {
+  ChainId,
+  DISPLAY_CHARTS,
+  DISPLAY_DEX,
+  DISPLAY_FXD,
+  DISPLAY_GOVERNANCE,
+  DISPLAY_LENDING,
+  DISPLAY_STABLE_SWAP,
+  DISPLAY_VAULTS,
+  NETWORK_SETTINGS,
+} from "connectors/networks";
+import { DEFAULT_CHAIN_ID } from "utils/Constants";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -252,8 +264,6 @@ const LogoLink = styled(Link)`
   align-items: center;
 `;
 
-const LENDING_ENABLED = process.env.REACT_APP_LENDING_ENABLED;
-
 const MainLayout = () => {
   const {
     savedOpen,
@@ -276,7 +286,7 @@ const MainLayout = () => {
     drawerRef,
     showToggleDrawerBtn,
     setOpenMobile,
-    userXDCBalance,
+    userBalance,
     showFthmBalanceModal,
     setShowFthmBalanceModal,
     aggregateBalance,
@@ -285,6 +295,7 @@ const MainLayout = () => {
   } = useMainLayout();
 
   const {
+    chainId,
     allowStableSwap,
     allowStableSwapInProgress,
     isUserWrapperWhiteListed,
@@ -365,47 +376,50 @@ const MainLayout = () => {
               {isWalletConnect && (
                 <img src={WalletConnectSrc} alt={"wallet-connect"} />
               )}
-              {aggregateBalance && (
-                <FTHMWrapper onClick={() => setShowFthmBalanceModal(true)}>
-                  <FTHMAmount
-                    active={account ? "true" : "false"}
-                    style={{ pointerEvents: "auto" }}
-                  >
-                    {account && (
-                      <TYPE.white
-                        style={{
-                          fontSize: "inherit",
-                          paddingRight: ".4rem",
-                        }}
-                      >
-                        <CountUp
-                          key={countUpValue}
-                          isCounting
-                          start={parseFloat(countUpValuePrevious)}
-                          end={parseFloat(countUpValue)}
-                          thousandsSeparator={","}
-                          duration={1}
-                        />
-                      </TYPE.white>
-                    )}
-                    FTHM
-                  </FTHMAmount>
-                  <CardNoise />
-                </FTHMWrapper>
-              )}
+              {(!chainId || DISPLAY_GOVERNANCE.includes(chainId)) &&
+                aggregateBalance && (
+                  <FTHMWrapper onClick={() => setShowFthmBalanceModal(true)}>
+                    <FTHMAmount
+                      active={account ? "true" : "false"}
+                      style={{ pointerEvents: "auto" }}
+                    >
+                      {account && (
+                        <TYPE.white
+                          style={{
+                            fontSize: "inherit",
+                            paddingRight: ".4rem",
+                          }}
+                        >
+                          <CountUp
+                            key={countUpValue}
+                            isCounting
+                            start={parseFloat(countUpValuePrevious)}
+                            end={parseFloat(countUpValue)}
+                            thousandsSeparator={","}
+                            duration={1}
+                          />
+                        </TYPE.white>
+                      )}
+                      FTHM
+                    </FTHMAmount>
+                    <CardNoise />
+                  </FTHMWrapper>
+                )}
               <AccountElement
                 active={account ? "true" : "false"}
                 style={{ pointerEvents: "auto" }}
               >
-                {account && userXDCBalance ? (
+                {account && userBalance ? (
                   <Box
                     fontSize={"1rem"}
                     sx={{ flexShrink: 0 }}
                     p="0.5rem 0.5rem 0.5rem 0.5rem"
                     fontWeight={500}
                   >
-                    {formatNumber(Number(userXDCBalance?.toSignificant(8)))}{" "}
-                    {"XDC"}
+                    {formatNumber(Number(userBalance))}{" "}
+                    {NETWORK_SETTINGS[chainId as ChainId].nativeCurrency
+                      .symbol ||
+                      NETWORK_SETTINGS[DEFAULT_CHAIN_ID].nativeCurrency.symbol}
                   </Box>
                 ) : null}
               </AccountElement>
@@ -460,103 +474,116 @@ const MainLayout = () => {
             <AlertMessages scroll={scroll} />
             <TransactionStatus scroll={scroll} />
             <Routes>
-              <Route path="/" element={<DashboardContent />} />
-              {allowStableSwap ||
-              isUserWrapperWhiteListed ||
-              allowStableSwapInProgress ? (
-                <Route path="/stable-swap" element={<StableSwap />} />
+              {!chainId || DISPLAY_FXD.includes(chainId) ? (
+                <Route path="/" element={<DashboardContent />} />
               ) : null}
-              {isUserWrapperWhiteListed ? (
+              {!chainId || DISPLAY_STABLE_SWAP.includes(chainId) ? (
                 <>
-                  <Route
-                    path="/stable-swap/add-liquidity"
-                    element={<StableSwapAddLiquidity />}
-                  />
-                  <Route
-                    path="/stable-swap/remove-liquidity"
-                    element={<StableSwapRemoveLiquidity />}
-                  />
-                  <Route
-                    path="/stable-swap/manage-fees"
-                    element={<StableSwapManageFees />}
-                  />
+                  {allowStableSwap ||
+                  isUserWrapperWhiteListed ||
+                  allowStableSwapInProgress ? (
+                    <Route path="/stable-swap" element={<StableSwap />} />
+                  ) : null}
+                  {isUserWrapperWhiteListed ? (
+                    <>
+                      <Route
+                        path="/stable-swap/add-liquidity"
+                        element={<StableSwapAddLiquidity />}
+                      />
+                      <Route
+                        path="/stable-swap/remove-liquidity"
+                        element={<StableSwapRemoveLiquidity />}
+                      />
+                      <Route
+                        path="/stable-swap/manage-fees"
+                        element={<StableSwapManageFees />}
+                      />
+                    </>
+                  ) : null}
                 </>
               ) : null}
-              <Route path="/dao" element={<DaoView />}>
-                <Route
-                  index
-                  element={
-                    <StakingProvider>
-                      <StakingView />
-                    </StakingProvider>
-                  }
-                />
-                <Route
-                  path="staking"
-                  index
-                  element={
-                    <StakingProvider>
-                      <StakingView />
-                    </StakingProvider>
-                  }
-                />
-                <Route path="governance" element={<AllProposalsView />}></Route>
-                <Route
-                  path="governance/proposal/:_proposalId"
-                  element={
-                    <ProposalProvider>
-                      <ProposalView />
-                    </ProposalProvider>
-                  }
-                />
-                <Route
-                  path="*"
-                  element={<Navigate to="/dao/staking" replace />}
-                />
-              </Route>
-              <Route path="/swap" element={<DexView />}>
-                <Route index element={<Swap />} />
-                <Route path=":outputCurrency" element={<RedirectToSwap />} />
-                <Route path="send" element={<RedirectPathToSwapOnly />} />
-                <Route path="find" element={<PoolFinder />} />
-                <Route path="pool" element={<Pool />} />
-                <Route path="add" element={<AddLiquidity />} />
-                <Route
-                  path="add/:currencyIdA"
-                  element={<RedirectOldAddLiquidityPathStructure />}
-                />
-                <Route
-                  path="add/:currencyIdA/:currencyIdB"
-                  element={<RedirectDuplicateTokenIds />}
-                />
-                <Route path="create" element={<AddLiquidity />} />
-                <Route
-                  path="create/:currencyIdA"
-                  element={<RedirectOldAddLiquidityPathStructure />}
-                />
-                <Route
-                  path="create/:currencyIdA/:currencyIdB"
-                  element={<RedirectDuplicateTokenIds />}
-                />
-                <Route
-                  path="remove/:tokens"
-                  element={<RedirectOldRemoveLiquidityPathStructure />}
-                />
-                <Route
-                  path="remove/:currencyIdA/:currencyIdB"
-                  element={<RemoveLiquidity />}
-                />
-                <Route
-                  path="transactions"
-                  element={
-                    <ApolloProvider client={dexClient}>
-                      <Transactions />
-                    </ApolloProvider>
-                  }
-                />
-                <Route element={<RedirectPathToSwapOnly />} />
-              </Route>
-              {LENDING_ENABLED === "true" && (
+              {!chainId || DISPLAY_GOVERNANCE.includes(chainId) ? (
+                <Route path="/dao" element={<DaoView />}>
+                  <Route
+                    index
+                    element={
+                      <StakingProvider>
+                        <StakingView />
+                      </StakingProvider>
+                    }
+                  />
+                  <Route
+                    path="staking"
+                    index
+                    element={
+                      <StakingProvider>
+                        <StakingView />
+                      </StakingProvider>
+                    }
+                  />
+                  <Route
+                    path="governance"
+                    element={<AllProposalsView />}
+                  ></Route>
+                  <Route
+                    path="governance/proposal/:_proposalId"
+                    element={
+                      <ProposalProvider>
+                        <ProposalView />
+                      </ProposalProvider>
+                    }
+                  />
+                  <Route
+                    path="*"
+                    element={<Navigate to="/dao/staking" replace />}
+                  />
+                </Route>
+              ) : null}
+              {!chainId || DISPLAY_DEX.includes(chainId) ? (
+                <Route path="/swap" element={<DexView />}>
+                  <Route index element={<Swap />} />
+                  <Route path=":outputCurrency" element={<RedirectToSwap />} />
+                  <Route path="send" element={<RedirectPathToSwapOnly />} />
+                  <Route path="find" element={<PoolFinder />} />
+                  <Route path="pool" element={<Pool />} />
+                  <Route path="add" element={<AddLiquidity />} />
+                  <Route
+                    path="add/:currencyIdA"
+                    element={<RedirectOldAddLiquidityPathStructure />}
+                  />
+                  <Route
+                    path="add/:currencyIdA/:currencyIdB"
+                    element={<RedirectDuplicateTokenIds />}
+                  />
+                  <Route path="create" element={<AddLiquidity />} />
+                  <Route
+                    path="create/:currencyIdA"
+                    element={<RedirectOldAddLiquidityPathStructure />}
+                  />
+                  <Route
+                    path="create/:currencyIdA/:currencyIdB"
+                    element={<RedirectDuplicateTokenIds />}
+                  />
+                  <Route
+                    path="remove/:tokens"
+                    element={<RedirectOldRemoveLiquidityPathStructure />}
+                  />
+                  <Route
+                    path="remove/:currencyIdA/:currencyIdB"
+                    element={<RemoveLiquidity />}
+                  />
+                  <Route
+                    path="transactions"
+                    element={
+                      <ApolloProvider client={dexClient}>
+                        <Transactions />
+                      </ApolloProvider>
+                    }
+                  />
+                  <Route element={<RedirectPathToSwapOnly />} />
+                </Route>
+              ) : null}
+              {!chainId || DISPLAY_LENDING.includes(chainId) ? (
                 <Route path="/lending" element={<LendingView />}>
                   <Route index element={<Home />} />
                   <Route path="markets" element={<Markets />} />
@@ -571,93 +598,97 @@ const MainLayout = () => {
                     element={<Navigate to="/lending" replace />}
                   />
                 </Route>
-              )}
-              <Route
-                path="/vaults"
-                element={
-                  <AllVaultView
-                    isMobileFiltersOpen={isMobileFiltersOpen}
-                    openMobileFilterMenu={openMobileFilterMenu}
+              ) : null}
+              {!chainId || DISPLAY_VAULTS.includes(chainId) ? (
+                <Route
+                  path="/vaults"
+                  element={
+                    <AllVaultView
+                      isMobileFiltersOpen={isMobileFiltersOpen}
+                      openMobileFilterMenu={openMobileFilterMenu}
+                    />
+                  }
+                ></Route>
+              ) : null}
+              {!chainId || DISPLAY_CHARTS.includes(chainId) ? (
+                <Route path="/charts" element={<ChartsView />}>
+                  <Route
+                    index
+                    element={
+                      <LayoutWrapper
+                        savedOpen={savedOpen}
+                        setSavedOpen={setSavedOpen}
+                      >
+                        <GlobalPage />
+                      </LayoutWrapper>
+                    }
+                  ></Route>
+
+                  <Route
+                    path="token/:tokenAddress"
+                    element={
+                      <TokenPageRouterComponent
+                        savedOpen={savedOpen}
+                        setSavedOpen={setSavedOpen}
+                      />
+                    }
                   />
-                }
-              ></Route>
-              <Route path="/charts" element={<ChartsView />}>
-                <Route
-                  index
-                  element={
-                    <LayoutWrapper
-                      savedOpen={savedOpen}
-                      setSavedOpen={setSavedOpen}
-                    >
-                      <GlobalPage />
-                    </LayoutWrapper>
-                  }
-                ></Route>
+                  <Route
+                    path="pair/:pairAddress"
+                    element={
+                      <PairPageRouterComponent
+                        savedOpen={savedOpen}
+                        setSavedOpen={setSavedOpen}
+                      />
+                    }
+                  />
+                  <Route
+                    path="account/:accountAddress"
+                    element={
+                      <AccountPageRouterComponent
+                        savedOpen={savedOpen}
+                        setSavedOpen={setSavedOpen}
+                      />
+                    }
+                  />
 
-                <Route
-                  path="token/:tokenAddress"
-                  element={
-                    <TokenPageRouterComponent
-                      savedOpen={savedOpen}
-                      setSavedOpen={setSavedOpen}
-                    />
-                  }
-                />
-                <Route
-                  path="pair/:pairAddress"
-                  element={
-                    <PairPageRouterComponent
-                      savedOpen={savedOpen}
-                      setSavedOpen={setSavedOpen}
-                    />
-                  }
-                />
-                <Route
-                  path="account/:accountAddress"
-                  element={
-                    <AccountPageRouterComponent
-                      savedOpen={savedOpen}
-                      setSavedOpen={setSavedOpen}
-                    />
-                  }
-                />
+                  <Route
+                    path="tokens"
+                    element={
+                      <LayoutWrapper
+                        savedOpen={savedOpen}
+                        setSavedOpen={setSavedOpen}
+                      >
+                        <AllTokensPage />
+                      </LayoutWrapper>
+                    }
+                  ></Route>
 
-                <Route
-                  path="tokens"
-                  element={
-                    <LayoutWrapper
-                      savedOpen={savedOpen}
-                      setSavedOpen={setSavedOpen}
-                    >
-                      <AllTokensPage />
-                    </LayoutWrapper>
-                  }
-                ></Route>
+                  <Route
+                    path="pairs"
+                    element={
+                      <LayoutWrapper
+                        savedOpen={savedOpen}
+                        setSavedOpen={setSavedOpen}
+                      >
+                        <AllPairsPage />
+                      </LayoutWrapper>
+                    }
+                  ></Route>
 
-                <Route
-                  path="pairs"
-                  element={
-                    <LayoutWrapper
-                      savedOpen={savedOpen}
-                      setSavedOpen={setSavedOpen}
-                    >
-                      <AllPairsPage />
-                    </LayoutWrapper>
-                  }
-                ></Route>
-
-                <Route
-                  path="accounts"
-                  element={
-                    <LayoutWrapper
-                      savedOpen={savedOpen}
-                      setSavedOpen={setSavedOpen}
-                    >
-                      <AccountLookup />
-                    </LayoutWrapper>
-                  }
-                ></Route>
-              </Route>
+                  <Route
+                    path="accounts"
+                    element={
+                      <LayoutWrapper
+                        savedOpen={savedOpen}
+                        setSavedOpen={setSavedOpen}
+                      >
+                        <AccountLookup />
+                      </LayoutWrapper>
+                    }
+                  ></Route>
+                </Route>
+              ) : null}
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </Box>
@@ -671,15 +702,17 @@ const MainLayout = () => {
       {!isMobile && openConnector && (
         <DesktopConnector onClose={() => setOpenConnector(false)} />
       )}
+      {!chainId || [ChainId.AXDC, ChainId.XDC].includes(chainId) ? (
+        <FthmInfoModal
+          onClose={() => setShowFthmBalanceModal(false)}
+          open={showFthmBalanceModal}
+        >
+          <FathomBalanceContent
+            setShowFthmBalanceModal={setShowFthmBalanceModal}
+          />
+        </FthmInfoModal>
+      ) : null}
 
-      <FthmInfoModal
-        onClose={() => setShowFthmBalanceModal(false)}
-        open={showFthmBalanceModal}
-      >
-        <FathomBalanceContent
-          setShowFthmBalanceModal={setShowFthmBalanceModal}
-        />
-      </FthmInfoModal>
       {erc20TokenModalData && <TransactionErc20TokenModal />}
     </AppGlobalStyles>
   );

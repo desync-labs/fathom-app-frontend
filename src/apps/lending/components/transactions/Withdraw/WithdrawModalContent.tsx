@@ -195,8 +195,8 @@ export const WithdrawModalContent: FC<
         {isMaxSelected && requiresApproval && (
           <Warning severity="warning" sx={{ my: 6 }}>
             Your fm{poolReserve.symbol} amount is increasing every second. For
-            correct withdrawal of the whole amount, confirm in MetaMask the
-            amount by 0.1 more than the current balance.
+            correct withdrawal of the whole amount, confirm in your wallet the
+            suggested value.
           </Warning>
         )}
 

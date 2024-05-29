@@ -47,10 +47,10 @@ const TopUpPositionInfo = () => {
           alignItems="flex-start"
           secondaryAction={
             <>
-              {formatPercentage(position.lockedCollateral)} {pool.poolName}{" "}
+              {formatPercentage(position.lockedCollateral)} {pool?.poolName}{" "}
               <Box component="span" sx={{ color: "#29C20A" }}>
                 → {formatPercentage(BigNumber(totalCollateral).toNumber())}{" "}
-                {pool.poolName}
+                {pool?.poolName}
               </Box>
             </>
           }
@@ -130,7 +130,7 @@ const TopUpPositionInfo = () => {
           <ListItemText
             primary={
               <ListTitleWrapper>
-                Liquidation Price of {pool.poolName}
+                Liquidation Price of {pool?.poolName}
                 <AppPopover
                   id={"liquidation-price"}
                   text={

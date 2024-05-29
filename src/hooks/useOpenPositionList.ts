@@ -1,14 +1,14 @@
 import {
-  useCallback,
-  useEffect,
-  useState,
   ChangeEvent,
   Dispatch,
+  useCallback,
+  useEffect,
   useMemo,
+  useState,
 } from "react";
 
 import { useServices } from "context/services";
-import { IOpenPosition, ICollateralPool } from "fathom-sdk";
+import { ICollateralPool, IOpenPosition } from "fathom-sdk";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import { FXD_POOLS, FXD_POSITIONS } from "apollo/queries";
 
@@ -16,6 +16,7 @@ import { COUNT_PER_PAGE } from "utils/Constants";
 import useConnector from "context/connector";
 import BigNumber from "bignumber.js";
 import debounce from "lodash.debounce";
+import { ChainId } from "../connectors/networks";
 
 const useOpenPositionList = (
   setPositionCurrentPage: Dispatch<number>,
@@ -31,21 +32,42 @@ const useOpenPositionList = (
   const [loadPositions, { loading, data, fetchMore, called }] = useLazyQuery(
     FXD_POSITIONS,
     {
-      context: { clientName: "stable" },
+      context: { clientName: "stable", chainId },
+      variables: {
+        chainId,
+      },
     }
   );
 
-  const { data: poolsData } = useQuery(FXD_POOLS, {
-    context: { clientName: "stable" },
-    fetchPolicy: "cache-first",
+  const { data: poolsItems, loading: poolsLoading } = useQuery(FXD_POOLS, {
+    context: { clientName: "stable", chainId },
+    fetchPolicy: "network-only",
+    variables: { chainId },
   });
+
+  const poolsData = useMemo(() => {
+    if (!poolsLoading && poolsItems && poolsItems.pools) {
+      return poolsItems.pools.map((poolItem: ICollateralPool) => {
+        if (
+          poolItem.poolName.toUpperCase() === "XDC" &&
+          chainId === ChainId.SEPOLIA
+        ) {
+          return { ...poolItem, poolName: "ETH" };
+        } else {
+          return poolItem;
+        }
+      });
+    } else {
+      return [];
+    }
+  }, [poolsItems, poolsLoading, chainId]);
 
   const [closePosition, setClosePosition] = useState<IOpenPosition>();
   const [topUpPosition, setTopUpPosition] = useState<IOpenPosition>();
 
   const topUpPositionPool = useMemo(() => {
     if (topUpPosition && poolsData) {
-      return poolsData.pools.find(
+      return poolsData.find(
         (pool: ICollateralPool) => pool.id === topUpPosition.collateralPool
       );
     }
@@ -103,7 +125,7 @@ const useOpenPositionList = (
         Promise.all(promises).then((debtValues) => {
           const positions = filteredPosition.map(
             (position: IOpenPosition, index: number) => {
-              const findPool = poolsData.pools.find(
+              const findPool = poolsData.find(
                 (pool: ICollateralPool) => pool.id === position.collateralPool
               );
 
@@ -131,11 +153,24 @@ const useOpenPositionList = (
             }
           );
 
-          setFormattedPositions(positions);
+          const renamedPoolName = positions.map(
+            (positionItem: IOpenPosition) => {
+              if (
+                positionItem.collateralPoolName.toUpperCase() === "XDC" &&
+                chainId === ChainId.SEPOLIA
+              ) {
+                return { ...positionItem, collateralPoolName: "ETH" };
+              } else {
+                return positionItem;
+              }
+            }
+          );
+
+          setFormattedPositions(renamedPoolName);
           setIsLoading(false);
         });
       }, 300),
-    [positionService, setFormattedPositions, setIsLoading]
+    [positionService, chainId, setFormattedPositions, setIsLoading]
   );
 
   useEffect(() => {

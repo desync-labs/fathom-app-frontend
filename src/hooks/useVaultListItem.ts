@@ -56,6 +56,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
   const [manageVault, setManageVault] = useState<boolean>(false);
   const [newVaultDeposit, setNewVaultDeposit] = useState<boolean>(false);
   const [balanceToken, setBalanceToken] = useState<string>("0");
+  const { chainId } = useConnector();
 
   const [depositsList, setDepositsList] = useState([]);
   const [withdrawalsList, setWithdrawalsList] = useState([]);
@@ -89,56 +90,56 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
   const [loadReports, { fetchMore: fetchMoreReports }] = useLazyQuery(
     VAULT_STRATEGY_REPORTS,
     {
-      context: { clientName: "vaults" },
+      context: { clientName: "vaults", chainId },
+      variables: { chainId },
       fetchPolicy: "no-cache",
     }
   );
 
   const [loadPositionTransactions, { refetch: refetchTransactions }] =
     useLazyQuery(VAULT_POSITION_TRANSACTIONS, {
-      context: { clientName: "vaults" },
+      context: { clientName: "vaults", chainId },
+      variables: { chainId },
       fetchPolicy: "no-cache",
     });
 
-  const fetchReports = useCallback(
-    (
-      strategyId: string,
-      prevStateReports: IVaultStrategyReport[] = [],
-      prevStateApr: IVaultStrategyHistoricalApr[] = []
-    ) => {
-      (!prevStateReports.length ? loadReports : fetchMoreReports)({
-        variables: {
-          strategy: strategyId,
-          reportsFirst: VAULT_REPORTS_PER_PAGE,
-          reportsSkip: prevStateReports.length,
-        },
-      }).then((response) => {
-        const { data } = response;
+  const fetchReports = (
+    strategyId: string,
+    prevStateReports: IVaultStrategyReport[] = [],
+    prevStateApr: IVaultStrategyHistoricalApr[] = []
+  ) => {
+    (!prevStateReports.length ? loadReports : fetchMoreReports)({
+      variables: {
+        strategy: strategyId,
+        reportsFirst: VAULT_REPORTS_PER_PAGE,
+        reportsSkip: prevStateReports.length,
+        chainId,
+      },
+    }).then((response) => {
+      const { data } = response;
 
-        if (
-          data?.strategyReports &&
-          data?.strategyReports.length &&
-          data?.strategyReports.length % VAULT_REPORTS_PER_PAGE === 0
-        ) {
-          fetchReports(
-            strategyId,
-            [...prevStateReports, ...data.strategyReports],
-            [...prevStateApr, ...data.strategyHistoricalAprs]
-          );
-        } else {
-          setReports((prev) => ({
-            ...prev,
-            [strategyId]: [...prevStateReports, ...data.strategyReports],
-          }));
-          setHistoricalApr((prev) => ({
-            ...prev,
-            [strategyId]: [...prevStateApr, ...data.strategyHistoricalAprs],
-          }));
-        }
-      });
-    },
-    [loadReports, fetchMoreReports, setReports, setHistoricalApr]
-  );
+      if (
+        data?.strategyReports &&
+        data?.strategyReports.length &&
+        data?.strategyReports.length % VAULT_REPORTS_PER_PAGE === 0
+      ) {
+        fetchReports(
+          strategyId,
+          [...prevStateReports, ...data.strategyReports],
+          [...prevStateApr, ...data.strategyHistoricalAprs]
+        );
+      } else {
+        setReports((prev) => ({
+          ...prev,
+          [strategyId]: [...prevStateReports, ...data.strategyReports],
+        }));
+        setHistoricalApr((prev) => ({
+          ...prev,
+          [strategyId]: [...prevStateApr, ...data.strategyHistoricalAprs],
+        }));
+      }
+    });
+  };
 
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
@@ -146,6 +147,17 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     if (vault && vault?.strategies && vault?.strategies?.length) {
       timeout = setTimeout(() => {
         vault?.strategies.forEach((strategy: IVaultStrategy) => {
+          /**
+           * Clear reports and historical APRs necessary for chain switch
+           */
+          setReports((prev) => ({
+            ...prev,
+            [strategy.id]: [],
+          }));
+          setHistoricalApr((prev) => ({
+            ...prev,
+            [strategy.id]: [],
+          }));
           fetchReports(strategy.id, [], []);
         });
       }, 500);
@@ -154,6 +166,17 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
        */
       interval = setInterval(() => {
         vault?.strategies.forEach((strategy: IVaultStrategy) => {
+          /**
+           * Clear reports and historical APRs necessary for chain switch
+           */
+          setReports((prev) => ({
+            ...prev,
+            [strategy.id]: [],
+          }));
+          setHistoricalApr((prev) => ({
+            ...prev,
+            [strategy.id]: [],
+          }));
           fetchReports(strategy.id, [], []);
         });
       }, 30 * 1000);
@@ -163,7 +186,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
       interval && clearInterval(interval);
       timeout && clearTimeout(timeout);
     };
-  }, [vault, fetchReports]);
+  }, [vault, chainId]);
 
   useEffect(() => {
     if (
@@ -218,15 +241,16 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
           return refetchTransactions({
             account: account.toLowerCase(),
             vault: vault.id,
+            chainId,
           });
         }
-
         setTransactionLoading(true);
 
         return loadPositionTransactions({
           variables: {
             account: account.toLowerCase(),
             vault: vault.id,
+            chainId,
           },
         })
           .then((res) => {
@@ -242,6 +266,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     },
     [
       vault,
+      chainId,
       account,
       setDepositsList,
       setTransactionLoading,
@@ -252,17 +277,26 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
 
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
+    let timeout: ReturnType<typeof setTimeout>;
+
     if (vaultPosition && vault) {
-      fetchBalanceToken();
-      fetchPositionTransactions();
-      interval = setInterval(fetchBalanceToken, 15 * 1000);
+      timeout = setTimeout(() => {
+        fetchBalanceToken();
+        fetchPositionTransactions();
+        interval = setInterval(fetchBalanceToken, 15 * 1000);
+      }, 200);
     }
-    return () => clearInterval(interval);
+
+    return () => {
+      interval && clearInterval(interval);
+      timeout && clearTimeout(timeout);
+    };
   }, [vault, fetchBalanceToken, fetchPositionTransactions]);
 
   useEffect(() => {
     if (syncVault && !prevSyncVault) {
       setTransactionLoading(true);
+      console.log("promise loading sync");
       Promise.all([
         fetchPositionTransactions(TransactionFetchType.PROMISE),
         fetchBalanceToken(FetchBalanceTokenType.PROMISE),
@@ -348,7 +382,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     }
   };
 
-  const getStrategiesIds = useMemo(() => {
+  const getStrategiesIds = () => {
     const strategyIdsPromises = (vault.strategies || []).map(
       async (strategy: IVaultStrategy) => {
         const isUserAuthorized = await executeManagementMethod(strategy.id);
@@ -359,25 +393,32 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     return Promise.all(strategyIdsPromises).then(
       (authorizedIds) => authorizedIds.filter((id) => id !== null) as string[]
     );
-  }, [vault]);
+  };
 
   useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout>;
     if (vault && account) {
-      getStrategiesIds.then((authorizedIds) =>
-        setManagedStrategiesIds(authorizedIds)
-      );
+      timeout = setTimeout(() => {
+        getStrategiesIds().then((ids) => setManagedStrategiesIds(ids));
+      }, 500);
     } else {
       setManagedStrategiesIds([]);
     }
-  }, [vault, account, getStrategiesIds]);
+
+    return () => timeout && clearTimeout(timeout);
+  }, [vault, account, chainId, getStrategiesIds]);
 
   useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout>;
     if (vault && account) {
-      executeHasRoleMethod().then((isManager) => setIsUserManager(isManager));
+      timeout = setTimeout(() => {
+        executeHasRoleMethod().then(setIsUserManager);
+      }, 500);
     } else {
       setIsUserManager(false);
     }
-  }, [vault, account]);
+    return () => timeout && clearTimeout(timeout);
+  }, [vault, account, chainId]);
 
   return {
     reports,

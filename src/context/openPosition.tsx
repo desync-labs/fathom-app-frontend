@@ -8,6 +8,7 @@ export type OpenPositionContextType = {
   pool: ICollateralPool;
   onClose: () => void;
   proxyWallet: string;
+  fetchProxyWallet: () => void;
 };
 
 export type UseOpenPositionContextReturnType = {
@@ -51,8 +52,9 @@ export const OpenPositionProvider: FC<OpenPositionContextType> = ({
   pool,
   onClose,
   proxyWallet,
+  fetchProxyWallet,
 }) => {
-  const values = useOpenPosition(pool, onClose, proxyWallet);
+  const values = useOpenPosition(pool, onClose, proxyWallet, fetchProxyWallet);
 
   return (
     <OpenPositionContext.Provider value={values}>

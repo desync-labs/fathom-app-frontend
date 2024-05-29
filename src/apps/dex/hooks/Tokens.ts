@@ -39,6 +39,7 @@ function useTokensFromMap(
     const checkedChainId = (
       tokenMap[chainId] ? chainId : servicesChainId
     ) as ChainId;
+
     // reduce to just tokens
     const mapWithoutUrls = Object.keys(tokenMap[checkedChainId]).reduce<{
       [address: string]: Token;
