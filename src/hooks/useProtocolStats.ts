@@ -19,7 +19,7 @@ const useProtocolStats = () => {
     if (pools.length) {
       return pools.reduce(
         (accumulator: number, currentPool: ICollateralPool) => {
-          return accumulator + currentPool.totalBorrowed;
+          return accumulator + Number(currentPool.totalBorrowed);
         },
         0
       );
