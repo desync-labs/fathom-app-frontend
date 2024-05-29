@@ -54,7 +54,6 @@ export const TxActionsWrapper: FC<TxActionsWrapperProps> = memo(
     requiresAmount,
     requiresApproval,
     sx,
-    symbol,
     blocked,
     fetchingData = false,
     errorParams,
