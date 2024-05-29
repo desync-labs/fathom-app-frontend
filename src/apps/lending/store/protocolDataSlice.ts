@@ -45,6 +45,7 @@ export const createProtocolDataSlice: StateCreator<
 > = (set, get) => {
   const initialMarket = availableMarkets[0];
   const initialMarketData = marketsData[initialMarket];
+  localStorage.setItem("selectedMarket", initialMarket);
   return {
     currentMarket: initialMarket,
     currentMarketData: marketsData[initialMarket],
