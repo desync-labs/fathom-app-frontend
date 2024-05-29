@@ -40,6 +40,7 @@ export type UseOpenPositionContextReturnType = {
   errors: Partial<FieldErrorsImpl<typeof defaultValues>>;
   maxBorrowAmount: string;
   proxyWalletExists: boolean;
+  minCollateralAmount: number;
 };
 
 export const OpenPositionContext =
