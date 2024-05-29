@@ -107,9 +107,6 @@ const useOpenPosition = (
         pool.tokenAdapterAddress
       );
 
-      console.log("Token Adapter Address", pool.tokenAdapterAddress);
-      console.log("Collateral Token Address", tokenAddress);
-
       const balance = await poolService.getUserTokenBalance(
         account,
         tokenAddress
@@ -135,6 +132,17 @@ const useOpenPosition = (
     () => Number(pool.totalAvailable),
     [pool]
   );
+
+  const minCollateralAmount = useMemo(() => {
+    return BigNumber(1)
+      .dividedBy(
+        BigNumber(pool.priceWithSafetyMargin)
+          .multipliedBy(BigNumber(100).minus(DANGER_SAFETY_BUFFER * 100))
+          .dividedBy(100)
+      )
+      .decimalPlaces(6, BigNumber.ROUND_UP)
+      .toNumber();
+  }, [pool]);
 
   const dangerSafetyBuffer = useMemo(() => {
     return (
@@ -442,6 +450,7 @@ const useOpenPosition = (
     dangerSafetyBuffer,
     errors,
     maxBorrowAmount,
+    minCollateralAmount,
   };
 };
 
