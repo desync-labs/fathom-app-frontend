@@ -10,11 +10,10 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import useConnector from "context/connector";
 import AppPopover from "components/AppComponents/AppPopover/AppPopover";
 import { VaultListItemSkeleton } from "components/Vaults/VaultList/VaultListItemSkeleton";
 import VaultListItem from "components/Vaults/VaultList/VaultListItem";
-import AppPagination from "../../AppComponents/AppPagination/AppPagination";
+import AppPagination from "components/AppComponents/AppPagination/AppPagination";
 
 const VaultListTableContainer = styled(TableContainer)`
   border-radius: 12px;
@@ -64,7 +63,6 @@ const VaultsList: FC<VaultListPropsType> = ({
   vaultPositionsLoading,
   filterCurrentPosition,
 }) => {
-  const { account } = useConnector();
   return (
     <VaultListTableContainer>
       <Table aria-label="simple table">

@@ -1,4 +1,4 @@
-import { FC, MouseEvent, useMemo } from "react";
+import { useMemo } from "react";
 import { Outlet, useLocation, useParams } from "react-router-dom";
 import {
   NestedRouteContainer,
@@ -7,12 +7,7 @@ import {
 } from "components/AppComponents/AppBox/AppBox";
 import useSharedContext from "context/shared";
 
-type VaultsViewPropsType = {
-  isMobileFiltersOpen: boolean;
-  openMobileFilterMenu: (event: MouseEvent<HTMLElement>) => void;
-};
-
-const VaultsView: FC<VaultsViewPropsType> = () => {
+const VaultsView = () => {
   const location = useLocation();
   const { vaultAddress } = useParams();
   const { isMobile } = useSharedContext();

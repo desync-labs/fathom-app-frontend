@@ -6,7 +6,7 @@ import {
   MouseEvent,
 } from "react";
 import { useLazyQuery, useQuery } from "@apollo/client";
-import { IVault, IVaultPosition, SmartContractFactory } from "fathom-sdk";
+import { IVault, IVaultPosition } from "fathom-sdk";
 import {
   ACCOUNT_VAULT_POSITIONS,
   VAULTS,
@@ -18,7 +18,6 @@ import useConnector from "context/connector";
 import useSyncContext from "context/sync";
 import { useServices } from "context/services";
 import BigNumber from "bignumber.js";
-import { FunctionFragment } from "@into-the-fathom/abi";
 
 declare module "fathom-sdk" {
   interface IVault {
@@ -35,9 +34,6 @@ export enum SortType {
   TVL = "tvl",
   STAKED = "staked",
 }
-
-const VAULT_ABI = SmartContractFactory.FathomVault("").abi;
-const STRATEGY_ABI = SmartContractFactory.FathomVaultStrategy("").abi;
 
 const useVaultList = () => {
   const { account } = useConnector();
@@ -56,12 +52,6 @@ const useVaultList = () => {
   const [search, setSearch] = useState<string>("");
   const [sortBy, setSortBy] = useState<SortType>(SortType.TVL);
   const [isShutdown, setIsShutdown] = useState<boolean>(false);
-  const [expandedVault, setExpandedVault] = useState<number | null>(null);
-
-  const [vaultMethods, setVaultMethods] = useState<FunctionFragment[]>([]);
-  const [strategyMethods, setStrategyMethods] = useState<FunctionFragment[]>(
-    []
-  );
   const { chainId } = useConnector();
 
   const {
@@ -173,30 +163,6 @@ const useVaultList = () => {
   ]);
 
   useEffect(() => {
-    try {
-      const methods = (VAULT_ABI as FunctionFragment[]).filter(
-        (item: FunctionFragment) => item.type === "function"
-      );
-
-      setVaultMethods(methods);
-    } catch (e: any) {
-      console.error(e);
-    }
-  }, [setVaultMethods]);
-
-  useEffect(() => {
-    try {
-      const methods = (STRATEGY_ABI as FunctionFragment[]).filter(
-        (item: FunctionFragment) => item.type === "function"
-      );
-
-      setStrategyMethods(methods);
-    } catch (e: any) {
-      console.error(e);
-    }
-  }, [setStrategyMethods]);
-
-  useEffect(() => {
     if (syncVault && !prevSyncVault) {
       positionsRefetch({ account: account.toLowerCase() }).then((res) => {
         res.data?.accountVaultPositions
@@ -244,12 +210,6 @@ const useVaultList = () => {
       sortingVaults(filteringVaultsBySearch(vaultItemsData.vaults));
     }
   }, [sortBy, search, vaultItemsData]);
-
-  useEffect(() => {
-    if (vaultSortedList.length === 1) {
-      setExpandedVault(0);
-    }
-  }, [vaultSortedList]);
 
   // Sort vaults
   const sortingVaults = useCallback(
@@ -350,17 +310,6 @@ const useVaultList = () => {
     [vaultPositionsList, vaultPositionsLoading]
   );
 
-  const handleExpandVault = useCallback(
-    (index: number) => {
-      setExpandedVault(index);
-    },
-    [setExpandedVault]
-  );
-
-  const handleCollapseVault = useCallback(() => {
-    setExpandedVault(null);
-  }, [setExpandedVault]);
-
   const handleIsShutdown = (
     event: MouseEvent<HTMLElement>,
     newValue: boolean
@@ -371,8 +320,6 @@ const useVaultList = () => {
   };
 
   return {
-    vaultMethods,
-    strategyMethods,
     vaultSortedList,
     vaultsLoading,
     vaultPositionsLoading,
@@ -389,9 +336,6 @@ const useVaultList = () => {
     setSortBy,
     handlePageChange,
     filterCurrentPosition,
-    expandedVault,
-    handleExpandVault,
-    handleCollapseVault,
   };
 };
 

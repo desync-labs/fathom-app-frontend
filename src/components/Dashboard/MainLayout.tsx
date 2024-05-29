@@ -603,16 +603,16 @@ const MainLayout = () => {
                 </Route>
               ) : null}
               {!chainId || DISPLAY_VAULTS.includes(chainId) ? (
-                <Route
-                  path="/vaults"
-                  element={
-                    <VaultsView
-                      isMobileFiltersOpen={isMobileFiltersOpen}
-                      openMobileFilterMenu={openMobileFilterMenu}
-                    />
-                  }
-                >
-                  <Route index element={<VaultListView />} />
+                <Route path="/vaults" element={<VaultsView />}>
+                  <Route
+                    index
+                    element={
+                      <VaultListView
+                        isMobileFiltersOpen={isMobileFiltersOpen}
+                        openMobileFilterMenu={openMobileFilterMenu}
+                      />
+                    }
+                  />
                   <Route path="tutorial" index element={<VaultTutorial />} />
                   <Route path=":vaultAddress" element={<VaultDetailView />} />
                 </Route>

@@ -27,13 +27,7 @@ const useVaultManageDeposit = (
   const { setLastTransactionBlock } = useSyncContext();
   const { balancePosition, balanceShares } = vaultPosition;
 
-  const {
-    handleSubmit,
-    watch,
-    control,
-    setValue,
-    formState: { errors },
-  } = useForm({
+  const methods = useForm({
     defaultValues,
     reValidateMode: "onChange",
     mode: "onChange",
@@ -52,8 +46,8 @@ const useVaultManageDeposit = (
   const [approvalPending, setApprovalPending] = useState<boolean>(false);
   const [isFullWithdraw, setIsFullWithdraw] = useState<boolean>(false);
 
-  const formToken = watch("formToken");
-  const formSharedToken = watch("formSharedToken");
+  const formToken = methods.watch("formToken");
+  const formSharedToken = methods.watch("formSharedToken");
 
   const approvalStatus = useMemo(
     () =>
@@ -89,7 +83,7 @@ const useVaultManageDeposit = (
           .dividedBy(10 ** 18)
           .toString();
 
-        setValue("formSharedToken", sharedConverted);
+        methods.setValue("formSharedToken", sharedConverted);
       }, 500),
     [vaultService, vault, formType, isFullWithdraw, setIsFullWithdraw]
   );
@@ -120,8 +114,8 @@ const useVaultManageDeposit = (
   }, [vaultService, vault, vaultPosition, setBalanceToken]);
 
   useEffect(() => {
-    setValue("formToken", "", { shouldValidate: true });
-    setValue("formSharedToken", "", { shouldValidate: true });
+    methods.setValue("formToken", "", { shouldValidate: true });
+    methods.setValue("formSharedToken", "", { shouldValidate: true });
   }, [formType]);
 
   useEffect(() => {
@@ -143,7 +137,7 @@ const useVaultManageDeposit = (
       updateSharedAmount(formToken);
     } else {
       timeout = setTimeout(() => {
-        setValue("formSharedToken", "");
+        methods.setValue("formSharedToken", "");
       }, 600);
     }
 
@@ -231,17 +225,19 @@ const useVaultManageDeposit = (
 
       const maxCapped = max.isNegative() ? BigNumber(0) : max;
 
-      setValue("formToken", maxCapped.toString(), { shouldValidate: true });
+      methods.setValue("formToken", maxCapped.toString(), {
+        shouldValidate: true,
+      });
     } else {
       setIsFullWithdraw(true);
-      setValue(
+      methods.setValue(
         "formToken",
         BigNumber(balanceToken)
           .dividedBy(10 ** 18)
           .toString(),
         { shouldValidate: true }
       );
-      setValue(
+      methods.setValue(
         "formSharedToken",
         BigNumber(balanceShares)
           .dividedBy(10 ** 18)
@@ -250,7 +246,7 @@ const useVaultManageDeposit = (
       );
     }
   }, [
-    setValue,
+    methods.setValue,
     setIsFullWithdraw,
     isFullWithdraw,
     walletBalance,
@@ -306,7 +302,7 @@ const useVaultManageDeposit = (
     walletBalance,
     isWalletFetching,
     token,
-    control,
+    control: methods.control,
     formToken,
     formSharedToken,
     balanceToken,
@@ -314,13 +310,14 @@ const useVaultManageDeposit = (
     approvalPending,
     formType,
     openDepositLoading,
-    errors,
+    errors: methods.formState.errors,
     setFormType,
     approve,
     setMax,
     validateMaxValue,
-    handleSubmit,
+    handleSubmit: methods.handleSubmit,
     onSubmit,
+    methods,
   };
 };
 

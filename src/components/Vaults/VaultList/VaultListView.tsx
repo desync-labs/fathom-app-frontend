@@ -1,31 +1,35 @@
+import { FC, MouseEvent } from "react";
 import useVaultList from "hooks/useVaultList";
 import { PageHeader } from "components/Dashboard/PageHeader";
 import VaultsTotalStats from "components/Vaults/VaultList/VaultsTotalStats";
 import VaultsList from "components/Vaults/VaultList/VaultsList";
 
-const VaultListView = () => {
+type VaultListViewPropsType = {
+  isMobileFiltersOpen: boolean;
+  openMobileFilterMenu: (event: MouseEvent<HTMLElement>) => void;
+};
+
+const VaultListView: FC<VaultListViewPropsType> = ({
+  isMobileFiltersOpen,
+  openMobileFilterMenu,
+}) => {
   const {
-    vaultMethods,
-    strategyMethods,
     vaultSortedList,
     vaultsLoading,
     vaultPositionsLoading,
     vaultPositionsList,
-    vaultCurrentPage,
-    vaultItemsCount,
-    protocolFee,
-    performanceFee,
-    isShutdown,
-    search,
-    sortBy,
-    handleIsShutdown,
-    setSearch,
-    setSortBy,
-    handlePageChange,
+    // vaultCurrentPage,
+    // vaultItemsCount,
+    // protocolFee,
+    // performanceFee,
+    // isShutdown,
+    // search,
+    // sortBy,
+    // handleIsShutdown,
+    // setSearch,
+    // setSortBy,
+    // handlePageChange,
     filterCurrentPosition,
-    expandedVault,
-    handleExpandVault,
-    handleCollapseVault,
   } = useVaultList();
   return (
     <>
@@ -40,7 +44,8 @@ const VaultListView = () => {
         vaultPositionsLoading={vaultPositionsLoading}
         vaultPositionsList={vaultPositionsList}
         filterCurrentPosition={filterCurrentPosition}
-        isMobileFiltersOpen
+        isMobileFiltersOpen={isMobileFiltersOpen}
+        openMobileFilterMenu={openMobileFilterMenu}
       />
     </>
   );

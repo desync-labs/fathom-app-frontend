@@ -1,12 +1,7 @@
 import { FC, memo, useMemo } from "react";
 import { Box, CircularProgress, Typography, styled } from "@mui/material";
 import BigNumber from "bignumber.js";
-import {
-  Control,
-  Controller,
-  FieldErrors,
-  UseFormHandleSubmit,
-} from "react-hook-form";
+import { Control, Controller, UseFormHandleSubmit } from "react-hook-form";
 
 import { IVault, IVaultPosition } from "fathom-sdk";
 import { FormType } from "hooks/useVaultManageDeposit";
@@ -20,8 +15,6 @@ import {
 } from "components/AppComponents/AppBox/AppBox";
 import {
   ButtonPrimary,
-  ButtonSecondary,
-  ButtonsWrapper,
   MaxButton,
 } from "components/AppComponents/AppButton/AppButton";
 import {
@@ -33,7 +26,7 @@ import {
 } from "components/AppComponents/AppForm/AppForm";
 import { InfoIcon } from "components/Governance/Propose";
 
-const ManageVaultItemFormWrapper = styled(Box)`
+const ManageVaultFormWrapper = styled(Box)`
   position: relative;
   border-radius: 12px;
   background: #1e2f4d;
@@ -54,8 +47,6 @@ type VaultManageFormProps = {
   vaultItemData: IVault;
   vaultPosition: IVaultPosition;
   balanceToken: string;
-  isMobile: boolean;
-  onClose: () => void;
   walletBalance: string;
   isWalletFetching: boolean;
   control: Control<
@@ -69,11 +60,6 @@ type VaultManageFormProps = {
   approveBtn: boolean;
   approvalPending: boolean;
   formType: FormType;
-  openDepositLoading: boolean;
-  errors: FieldErrors<{
-    formToken: string;
-    formSharedToken: string;
-  }>;
   approve: () => Promise<void>;
   setMax: () => void;
   validateMaxValue: (value: string) => true | string;
@@ -90,8 +76,6 @@ type VaultManageFormProps = {
 const ManageVaultForm: FC<VaultManageFormProps> = ({
   vaultItemData,
   balanceToken,
-  isMobile,
-  onClose,
   walletBalance,
   isWalletFetching,
   control,
@@ -99,8 +83,6 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
   approveBtn,
   approvalPending,
   formType,
-  openDepositLoading,
-  errors,
   approve,
   setMax,
   validateMaxValue,
@@ -117,7 +99,7 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
   );
 
   return (
-    <ManageVaultItemFormWrapper>
+    <ManageVaultFormWrapper>
       <ManageVaultFormStyled
         onSubmit={handleSubmit(onSubmit)}
         noValidate
@@ -319,33 +301,8 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
               <Typography>Wallet balance is not enough to deposit.</Typography>
             </ErrorBox>
           )}
-        <ButtonsWrapper>
-          {!isMobile && (
-            <ButtonSecondary onClick={onClose}>Close</ButtonSecondary>
-          )}
-          <ButtonPrimary
-            type="submit"
-            disabled={
-              openDepositLoading ||
-              (formType === FormType.DEPOSIT && approveBtn) ||
-              !!Object.keys(errors).length
-            }
-            isLoading={openDepositLoading}
-          >
-            {openDepositLoading ? (
-              <CircularProgress sx={{ color: "#0D1526" }} size={20} />
-            ) : formType === FormType.DEPOSIT ? (
-              "Deposit"
-            ) : (
-              "Withdraw"
-            )}
-          </ButtonPrimary>
-          {isMobile && (
-            <ButtonSecondary onClick={onClose}>Close</ButtonSecondary>
-          )}
-        </ButtonsWrapper>
       </ManageVaultFormStyled>
-    </ManageVaultItemFormWrapper>
+    </ManageVaultFormWrapper>
   );
 };
 

@@ -236,7 +236,7 @@ export const VAULTS = gql`
   }
 `;
 export const VAULT = gql`
-  query Vault($id: ID) {
+  query Vault($id: ID, $chainId: String) {
     vault(id: $id) {
       id
       token {
@@ -269,7 +269,11 @@ export const VAULT = gql`
 `;
 
 export const VAULT_POSITION = gql`
-  query AccountVaultPositions($account: String!, $vault: String!) {
+  query AccountVaultPositions(
+    $account: String!
+    $vault: String!
+    $chainId: String
+  ) {
     accountVaultPositions(where: { account: $account, vault: $vault }) {
       id
       balancePosition

@@ -100,82 +100,91 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     []
   );
 
-  const { account, library } = useConnector();
+  const { chainId, account, library } = useConnector();
   const { vaultService, poolService } = useServices();
   const { showErrorNotification } = useRpcError();
 
   const { data: vaultItemData, loading: vaultLoading } = useQuery(VAULT, {
     variables: {
       id: vaultId,
+      chainId,
     },
-    context: { clientName: "vaults" },
+    context: { clientName: "vaults", chainId },
+    fetchPolicy: "network-only",
   });
 
   const [loadPosition, { loading: vaultPositionLoading }] = useLazyQuery(
     VAULT_POSITION,
     {
-      context: { clientName: "vaults" },
+      context: { clientName: "vaults", chainId },
+      fetchPolicy: "no-cache",
     }
   );
 
   const [loadReports, { fetchMore: fetchMoreReports }] = useLazyQuery(
     VAULT_STRATEGY_REPORTS,
     {
-      context: { clientName: "vaults" },
+      context: { clientName: "vaults", chainId },
+      variables: { chainId },
+      fetchPolicy: "no-cache",
     }
   );
 
   const [loadPositionTransactions, { refetch: refetchTransactions }] =
     useLazyQuery(VAULT_POSITION_TRANSACTIONS, {
-      context: { clientName: "vaults" },
+      context: { clientName: "vaults", chainId },
+      variables: { chainId },
+      fetchPolicy: "no-cache",
     });
 
   const { data: vaultsFactories, loading: vaultsFactoriesLoading } = useQuery(
     VAULT_FACTORIES,
     {
-      context: { clientName: "vaults" },
+      context: { clientName: "vaults", chainId },
+      fetchPolicy: "network-only",
+      variables: {
+        chainId,
+      },
     }
   );
 
-  const fetchReports = useCallback(
-    (
-      strategyId: string,
-      prevStateReports: IVaultStrategyReport[] = [],
-      prevStateApr: IVaultStrategyHistoricalApr[] = []
-    ) => {
-      (!prevStateReports.length ? loadReports : fetchMoreReports)({
-        variables: {
-          strategy: strategyId,
-          reportsFirst: VAULT_REPORTS_PER_PAGE,
-          reportsSkip: prevStateReports.length,
-        },
-      }).then((response) => {
-        const { data } = response;
+  const fetchReports = (
+    strategyId: string,
+    prevStateReports: IVaultStrategyReport[] = [],
+    prevStateApr: IVaultStrategyHistoricalApr[] = []
+  ) => {
+    (!prevStateReports.length ? loadReports : fetchMoreReports)({
+      variables: {
+        strategy: strategyId,
+        reportsFirst: VAULT_REPORTS_PER_PAGE,
+        reportsSkip: prevStateReports.length,
+        chainId,
+      },
+    }).then((response) => {
+      const { data } = response;
 
-        if (
-          data?.strategyReports &&
-          data?.strategyReports.length &&
-          data?.strategyReports.length % VAULT_REPORTS_PER_PAGE === 0
-        ) {
-          fetchReports(
-            strategyId,
-            [...prevStateReports, ...data.strategyReports],
-            [...prevStateApr, ...data.strategyHistoricalAprs]
-          );
-        } else {
-          setReports((prev) => ({
-            ...prev,
-            [strategyId]: [...prevStateReports, ...data.strategyReports],
-          }));
-          setHistoricalApr((prev) => ({
-            ...prev,
-            [strategyId]: [...prevStateApr, ...data.strategyHistoricalAprs],
-          }));
-        }
-      });
-    },
-    [loadReports, fetchMoreReports, setReports, setHistoricalApr]
-  );
+      if (
+        data?.strategyReports &&
+        data?.strategyReports.length &&
+        data?.strategyReports.length % VAULT_REPORTS_PER_PAGE === 0
+      ) {
+        fetchReports(
+          strategyId,
+          [...prevStateReports, ...data.strategyReports],
+          [...prevStateApr, ...data.strategyHistoricalAprs]
+        );
+      } else {
+        setReports((prev) => ({
+          ...prev,
+          [strategyId]: [...prevStateReports, ...data.strategyReports],
+        }));
+        setHistoricalApr((prev) => ({
+          ...prev,
+          [strategyId]: [...prevStateApr, ...data.strategyHistoricalAprs],
+        }));
+      }
+    });
+  };
 
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
@@ -183,6 +192,17 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     if (vault && vault?.strategies && vault?.strategies?.length) {
       timeout = setTimeout(() => {
         vault?.strategies.forEach((strategy: IVaultStrategy) => {
+          /**
+           * Clear reports and historical APRs necessary for chain switch
+           */
+          setReports((prev) => ({
+            ...prev,
+            [strategy.id]: [],
+          }));
+          setHistoricalApr((prev) => ({
+            ...prev,
+            [strategy.id]: [],
+          }));
           fetchReports(strategy.id, [], []);
         });
       }, 500);
@@ -191,6 +211,17 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
        */
       interval = setInterval(() => {
         vault?.strategies.forEach((strategy: IVaultStrategy) => {
+          /**
+           * Clear reports and historical APRs necessary for chain switch
+           */
+          setReports((prev) => ({
+            ...prev,
+            [strategy.id]: [],
+          }));
+          setHistoricalApr((prev) => ({
+            ...prev,
+            [strategy.id]: [],
+          }));
           fetchReports(strategy.id, [], []);
         });
       }, 30 * 1000);
@@ -200,7 +231,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
       interval && clearInterval(interval);
       timeout && clearTimeout(timeout);
     };
-  }, [vault, fetchReports]);
+  }, [vault, chainId]);
 
   useEffect(() => {
     if (!vaultsFactoriesLoading && vaultsFactories) {
@@ -229,6 +260,35 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     }
   }, [vaultItemData, setVault]);
 
+  const updateVaultPosition = async (position: IVaultPosition) => {
+    try {
+      const balance = await poolService.getUserTokenBalance(
+        account,
+        position.shareToken.id
+      );
+
+      const previewRedeemValue = await vaultService.previewRedeem(
+        balance.toString(),
+        position.vault.id
+      );
+
+      console.log("balance", balance.toString());
+      console.log("previewRedeemValue", previewRedeemValue.toString());
+
+      const updatedVaultPosition = {
+        ...position,
+        balanceShares: balance.toString(),
+        balancePosition: BigNumber(previewRedeemValue.toString())
+          .dividedBy(10 ** 18)
+          .toString(),
+      };
+
+      setVaultPosition(updatedVaultPosition);
+    } catch (error) {
+      console.error("Error updating vault position:", error);
+    }
+  };
+
   useEffect(() => {
     if (account && vaultService) {
       loadPosition({
@@ -238,50 +298,10 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
           res.data?.accountVaultPositions &&
           res.data?.accountVaultPositions.length
         ) {
-          setVaultPosition(res.data?.accountVaultPositions[0]);
+          const position = res.data.accountVaultPositions[0];
 
-          const promises: Promise<any>[] = [];
-
-          res.data?.accountVaultPositions.forEach(
-            (position: IVaultPosition) => {
-              promises.push(
-                poolService.getUserTokenBalance(account, position.shareToken.id)
-              );
-            }
-          );
-
-          const balancePositionsPromises: Promise<any>[] = [];
-
-          Promise.all(promises).then((balances) => {
-            const vaultPositions = res.data.accountVaultPositions.map(
-              (position: IVaultPosition, index: number) => {
-                balancePositionsPromises.push(
-                  vaultService.previewRedeem(
-                    balances[index].toString(),
-                    position.vault.id
-                  )
-                );
-                return {
-                  ...position,
-                  balanceShares: balances[index].toString(),
-                };
-              }
-            );
-
-            Promise.all(balancePositionsPromises).then((values) => {
-              const updatedVaultPositions = vaultPositions.map(
-                (position: IVaultPosition, index: number) => {
-                  return {
-                    ...position,
-                    balancePosition: BigNumber(values[index].toString())
-                      .dividedBy(10 ** 18)
-                      .toString(),
-                  };
-                }
-              );
-              setVaultPosition(updatedVaultPositions[0]);
-            });
-          });
+          setVaultPosition(position);
+          updateVaultPosition(position);
         } else {
           setVaultPosition({} as IVaultPosition);
         }

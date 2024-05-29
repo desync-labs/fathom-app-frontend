@@ -1,11 +1,22 @@
 import { FC, memo } from "react";
 import BigNumber from "bignumber.js";
-import { Box, Divider, ListItemText, styled } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Divider,
+  ListItemText,
+  styled,
+} from "@mui/material";
 import { IVault, IVaultPosition } from "fathom-sdk";
+import { FieldErrors, UseFormHandleSubmit } from "react-hook-form";
 import { FormType } from "hooks/useVaultManageDeposit";
 import { AppList, AppListItem } from "components/AppComponents/AppList/AppList";
 import { formatNumber, formatPercentage } from "utils/format";
-import { Summary } from "../../../AppComponents/AppBox/AppBox";
+import { AppFlexBox, Summary } from "components/AppComponents/AppBox/AppBox";
+import {
+  ButtonPrimary,
+  ButtonSecondary,
+} from "components/AppComponents/AppButton/AppButton";
 
 const ManageVaultInfoWrapper = styled(Box)`
   position: relative;
@@ -17,12 +28,36 @@ const ManageVaultInfoWrapper = styled(Box)`
   }
 `;
 
+const VaultList = styled(AppList)`
+  & li {
+    color: #fff;
+    align-items: flex-start;
+    padding: 4px 0;
+  }
+`;
+
 type VaultManageInfoProps = {
   vaultItemData: IVault;
   vaultPosition: IVaultPosition;
   formToken: string;
   formSharedToken: string;
   formType: FormType;
+  isMobile: boolean;
+  onClose: () => void;
+  openDepositLoading: boolean;
+  errors: FieldErrors<{
+    formToken: string;
+    formSharedToken: string;
+  }>;
+  approveBtn: boolean;
+  handleSubmit: UseFormHandleSubmit<
+    {
+      formToken: string;
+      formSharedToken: string;
+    },
+    undefined
+  >;
+  onSubmit: (values: Record<string, any>) => Promise<void>;
 };
 
 const ManageVaultInfo: FC<VaultManageInfoProps> = ({
@@ -31,6 +66,13 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
   vaultPosition,
   formToken,
   formSharedToken,
+  isMobile,
+  onClose,
+  openDepositLoading,
+  errors,
+  approveBtn,
+  handleSubmit,
+  onSubmit,
 }) => {
   const { token, shareToken, sharesSupply } = vaultItemData;
   const { balancePosition, balanceShares } = vaultPosition;
@@ -38,10 +80,9 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
   return (
     <ManageVaultInfoWrapper>
       <Summary>Summary</Summary>
-      <Divider />
-      <AppList>
+      <Divider sx={{ borderColor: "#3D5580" }} />
+      <VaultList>
         <AppListItem
-          alignItems="flex-start"
           secondaryAction={
             <>
               {formatPercentage(
@@ -88,7 +129,6 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
           <ListItemText primary={token.name + " Deposited"} />
         </AppListItem>
         <AppListItem
-          alignItems="flex-start"
           secondaryAction={
             <>
               {`${formatNumber(
@@ -154,7 +194,6 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
           <ListItemText primary="Pool share" />
         </AppListItem>
         <AppListItem
-          alignItems="flex-start"
           secondaryAction={
             <>
               {formatPercentage(
@@ -198,7 +237,34 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
         >
           <ListItemText primary="Share tokens" />
         </AppListItem>
-      </AppList>
+      </VaultList>
+      <AppFlexBox>
+        {!isMobile && (
+          <ButtonSecondary sx={{ width: "auto" }} onClick={onClose}>
+            Close
+          </ButtonSecondary>
+        )}
+        <ButtonPrimary
+          type="button"
+          onClick={handleSubmit(onSubmit)}
+          disabled={
+            openDepositLoading ||
+            (formType === FormType.DEPOSIT && approveBtn) ||
+            !!Object.keys(errors).length
+          }
+          isLoading={openDepositLoading}
+          sx={{ width: "auto" }}
+        >
+          {openDepositLoading ? (
+            <CircularProgress sx={{ color: "#0D1526" }} size={20} />
+          ) : formType === FormType.DEPOSIT ? (
+            "Deposit"
+          ) : (
+            "Withdraw"
+          )}
+        </ButtonPrimary>
+        {isMobile && <ButtonSecondary onClick={onClose}>Close</ButtonSecondary>}
+      </AppFlexBox>
     </ManageVaultInfoWrapper>
   );
 };
