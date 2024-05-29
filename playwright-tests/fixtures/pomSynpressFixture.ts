@@ -13,7 +13,11 @@ import VaultPage from "../pages/vault.page";
 import DexPage from "../pages/dex.page";
 import LendingPage from "../pages/lending.page";
 import DaoPage from "../pages/dao.page";
-import { APOTHEM_RPC, XDC_RPC } from "../../src/connectors/networks";
+import {
+  APOTHEM_RPC,
+  SEPOLIA_RPC,
+  XDC_RPC,
+} from "../../src/connectors/networks";
 dotenv.config();
 
 let networkName: string;
@@ -22,21 +26,27 @@ let chainId: string;
 let symbol: string;
 let blockExplorer: string;
 
-switch (process.env.ENVIRONMENT_URL) {
-  case "https://dapp.fathom.fi":
+switch (process.env.CHAIN) {
+  case "xdc_mainnet":
     networkName = "XDC";
     rpcUrl = XDC_RPC;
     chainId = "50";
     symbol = "XDC";
     blockExplorer = "https://explorer.xinfin.network/";
     break;
-  case "https://dev-app-frontend-wpa8a.ondigitalocean.app" ||
-    "http://127.0.0.1:3000":
+  case "apothem":
     networkName = "XDC Test";
     rpcUrl = APOTHEM_RPC;
     chainId = "51";
     symbol = "TXDC";
     blockExplorer = "https://apothem.blocksscan.io/";
+    break;
+  case "sepolia":
+    networkName = "sepolia";
+    rpcUrl = SEPOLIA_RPC;
+    chainId = "11155111";
+    symbol = "ETH";
+    blockExplorer = "https://sepolia.etherscan.io/";
     break;
   default:
     networkName = "XDC Test";
