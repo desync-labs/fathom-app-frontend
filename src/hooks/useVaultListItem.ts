@@ -244,7 +244,6 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
             chainId,
           });
         }
-
         setTransactionLoading(true);
 
         return loadPositionTransactions({
@@ -278,17 +277,26 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
 
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
+    let timeout: ReturnType<typeof setTimeout>;
+
     if (vaultPosition && vault) {
-      fetchBalanceToken();
-      fetchPositionTransactions();
-      interval = setInterval(fetchBalanceToken, 15 * 1000);
+      timeout = setTimeout(() => {
+        fetchBalanceToken();
+        fetchPositionTransactions();
+        interval = setInterval(fetchBalanceToken, 15 * 1000);
+      }, 200);
     }
-    return () => clearInterval(interval);
+
+    return () => {
+      interval && clearInterval(interval);
+      timeout && clearTimeout(timeout);
+    };
   }, [vault, fetchBalanceToken, fetchPositionTransactions]);
 
   useEffect(() => {
     if (syncVault && !prevSyncVault) {
       setTransactionLoading(true);
+      console.log("promise loading sync");
       Promise.all([
         fetchPositionTransactions(TransactionFetchType.PROMISE),
         fetchBalanceToken(FetchBalanceTokenType.PROMISE),

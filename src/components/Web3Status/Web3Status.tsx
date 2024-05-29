@@ -66,6 +66,13 @@ const EmptyButtonWrapper = styled(Box)`
   }
 `;
 
+const SelectNetworkMenuItem = styled(MenuItem)`
+  display: flex;
+  align-items: center;
+  padding: 4px 6px;
+  gap: 7px;
+`;
+
 const Web3Status = () => {
   const { error, account, chainId, requestChangeNetwork } = useConnector();
   const anchorRef = useRef<HTMLDivElement>(null);
@@ -171,15 +178,30 @@ const Web3Status = () => {
               <ClickAwayListener onClickAway={() => setOpen(false)}>
                 <MenuList id="split-button-menu" autoFocusItem>
                   {options.map(([chainId, chainData]) => (
-                    <MenuItem
+                    <SelectNetworkMenuItem
                       onClick={() => {
                         setOpen(false);
                         requestChangeNetwork(Number(chainId));
                       }}
                       key={chainId}
                     >
+                      <img
+                        src={
+                          NETWORK_SETTINGS[chainId as unknown as ChainId]
+                            ? getTokenLogoURL(
+                                NETWORK_SETTINGS[chainId as unknown as ChainId]
+                                  .logoName
+                              )
+                            : getTokenLogoURL(
+                                NETWORK_SETTINGS[DEFAULT_CHAIN_ID as ChainId]
+                                  .logoName
+                              )
+                        }
+                        alt={"xdc"}
+                        width={16}
+                      />{" "}
                       {chainData.chainName}
-                    </MenuItem>
+                    </SelectNetworkMenuItem>
                   ))}
                 </MenuList>
               </ClickAwayListener>
