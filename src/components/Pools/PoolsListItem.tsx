@@ -72,6 +72,7 @@ const PoolsListItem: FC<PoolsListItemPropsType> = ({
       </TableCell>
       <TableCell>
         <PriceWrapper>
+          $
           {formatNumberPrice(
             pool.poolName.toUpperCase() === "XDC" &&
               BigNumber(xdcPrice).isGreaterThan(0)
