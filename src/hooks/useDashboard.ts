@@ -70,10 +70,10 @@ const useDashboard = () => {
 
   const refetchData = useCallback(async () => {
     refetchStats({
-      variables: { chainId },
+      chainId,
     });
     refetchPools({
-      variables: { chainId },
+      chainId,
     });
 
     let currentProxyWallet = proxyWallet;
