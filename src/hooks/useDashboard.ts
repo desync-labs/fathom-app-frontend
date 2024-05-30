@@ -93,10 +93,8 @@ const useDashboard = () => {
     });
 
     refetchUserStats({
-      variables: {
-        walletAddress: currentProxyWallet,
-        chainId,
-      },
+      walletAddress: currentProxyWallet,
+      chainId,
     }).then(({ data: { users } }) => {
       if (users !== undefined && users.length > 0) {
         const itemsCount = users[0].activePositionsCount;
