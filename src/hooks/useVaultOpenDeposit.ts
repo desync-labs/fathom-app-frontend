@@ -20,13 +20,7 @@ const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
   const { poolService, vaultService } = useServices();
   const { setLastTransactionBlock } = useSyncContext();
 
-  const {
-    handleSubmit,
-    watch,
-    control,
-    setValue,
-    formState: { errors },
-  } = useForm({
+  const methods = useForm({
     defaultValues,
     reValidateMode: "onChange",
     mode: "onChange",
@@ -40,8 +34,8 @@ const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
   const [approveBtn, setApproveBtn] = useState<boolean>(false);
   const [approvalPending, setApprovalPending] = useState<boolean>(false);
 
-  const deposit = watch("deposit");
-  const sharedToken = watch("sharedToken");
+  const deposit = methods.watch("deposit");
+  const sharedToken = methods.watch("sharedToken");
 
   const approvalStatus = useMemo(
     () =>
@@ -69,7 +63,7 @@ const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
           .dividedBy(10 ** 18)
           .toFixed();
 
-        setValue("sharedToken", sharedConverted);
+        methods.setValue("sharedToken", sharedConverted);
       }, 500),
     [vaultService, vault, deposit]
   );
@@ -99,7 +93,7 @@ const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
       updateSharedAmount(deposit);
     } else {
       setTimeout(() => {
-        setValue("sharedToken", "0");
+        methods.setValue("sharedToken", "0");
       }, 600);
     }
   }, [deposit]);
@@ -122,10 +116,10 @@ const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
       BigNumber(MAX_PERSONAL_DEPOSIT)
     ).decimalPlaces(18, BigNumber.ROUND_DOWN);
 
-    setValue("deposit", maxWalletBalance.toString(), {
+    methods.setValue("deposit", maxWalletBalance.toString(), {
       shouldValidate: true,
     });
-  }, [setValue, walletBalance, depositLimit, balanceTokens]);
+  }, [methods, walletBalance, depositLimit, balanceTokens]);
 
   const validateMaxDepositValue = useCallback(
     (value: string) => {
@@ -179,20 +173,21 @@ const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
   }, [account, deposit, vault]);
 
   return {
+    methods,
     walletBalance,
     isWalletFetching,
     token,
-    control,
+    control: methods.control,
     deposit,
     sharedToken,
     approveBtn,
     approvalPending,
     openDepositLoading,
-    errors,
+    errors: methods.formState.errors,
     approve,
     setMax,
     validateMaxDepositValue,
-    handleSubmit,
+    handleSubmit: methods.handleSubmit,
     onSubmit,
   };
 };

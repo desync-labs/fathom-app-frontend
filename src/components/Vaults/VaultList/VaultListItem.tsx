@@ -1,21 +1,24 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { Box, CircularProgress, TableCell } from "@mui/material";
 import { IVault, IVaultPosition } from "fathom-sdk";
 import BigNumber from "bignumber.js";
+import { useApr } from "hooks/useApr";
+import usePricesContext from "context/prices";
+import useVaultListItem from "hooks/useVaultListItem";
+import useConnector from "context/connector";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatCurrency, formatNumber } from "utils/format";
-import { ButtonPrimary } from "../../AppComponents/AppButton/AppButton";
-import WalletConnectBtn from "../../Common/WalletConnectBtn";
-import { AppTableRow } from "../../AppComponents/AppTable/AppTable";
-import { useApr } from "../../../hooks/useApr";
-import usePricesContext from "../../../context/prices";
-import useVaultListItem from "../../../hooks/useVaultListItem";
-import useConnector from "../../../context/connector";
-import { AppFlexBox } from "../../AppComponents/AppBox/AppBox";
-import LockAquaSrc from "../../../assets/svg/lock-aqua.svg";
-import LockSrc from "../../../assets/svg/lock.svg";
+import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
+import WalletConnectBtn from "components/Common/WalletConnectBtn";
+import { AppTableRow } from "components/AppComponents/AppTable/AppTable";
+import VaultListItemDepositModal from "components/Vaults/VaultList/VaultListItemDepositModal";
+import VaultListItemManageModal from "components/Vaults/VaultList/VaultListItemManageModal";
+
+import { AppFlexBox } from "components/AppComponents/AppBox/AppBox";
+import LockAquaSrc from "assets/svg/lock-aqua.svg";
+import LockSrc from "assets/svg/lock.svg";
 
 const VaultItemTableRow = styled(AppTableRow)`
   background: transparent;
@@ -140,9 +143,11 @@ export const VaultListItemImageWrapper = styled("div")`
 const VaultListItem = ({
   vaultItemData,
   vaultPosition,
+  performanceFee,
 }: {
   vaultItemData: IVault;
   vaultPosition: IVaultPosition | null;
+  performanceFee: number;
 }) => {
   const { token, balanceTokens, depositLimit, shutdown } = vaultItemData;
   const formattedApr = useApr(vaultItemData);
@@ -152,17 +157,11 @@ const VaultListItem = ({
   const vaultTestId = vaultItemData.id;
 
   const {
-    reports,
-    historicalApr,
     balanceEarned,
     manageVault,
     newVaultDeposit,
-    activeVaultInfoTab,
-    setActiveVaultInfoTab,
     setManageVault,
     setNewVaultDeposit,
-    managedStrategiesIds,
-    isUserManager,
   } = useVaultListItem({ vaultPosition, vault: vaultItemData });
 
   const redirectToVaultDetail = useCallback(() => {
@@ -335,6 +334,30 @@ const VaultListItem = ({
           </AppFlexBox>
         </TableCell>
       </VaultItemTableRow>
+      {useMemo(() => {
+        return (
+          newVaultDeposit && (
+            <VaultListItemDepositModal
+              vaultItemData={vaultItemData}
+              performanceFee={performanceFee}
+              onClose={() => setNewVaultDeposit(false)}
+            />
+          )
+        );
+      }, [newVaultDeposit, setNewVaultDeposit])}
+      {useMemo(() => {
+        return (
+          manageVault &&
+          vaultPosition && (
+            <VaultListItemManageModal
+              vaultItemData={vaultItemData}
+              vaultPosition={vaultPosition}
+              performanceFee={performanceFee}
+              onClose={() => setManageVault(false)}
+            />
+          )
+        );
+      }, [manageVault, setManageVault])}
     </>
   );
 };

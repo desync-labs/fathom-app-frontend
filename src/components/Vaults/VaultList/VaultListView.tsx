@@ -18,10 +18,10 @@ const VaultListView: FC<VaultListViewPropsType> = ({
     vaultsLoading,
     vaultPositionsLoading,
     vaultPositionsList,
+    performanceFee,
     // vaultCurrentPage,
     // vaultItemsCount,
     // protocolFee,
-    // performanceFee,
     // isShutdown,
     // search,
     // sortBy,
@@ -42,6 +42,7 @@ const VaultListView: FC<VaultListViewPropsType> = ({
         vaults={vaultSortedList}
         vaultsLoading={vaultsLoading}
         vaultPositionsLoading={vaultPositionsLoading}
+        performanceFee={performanceFee}
         vaultPositionsList={vaultPositionsList}
         filterCurrentPosition={filterCurrentPosition}
         isMobileFiltersOpen={isMobileFiltersOpen}

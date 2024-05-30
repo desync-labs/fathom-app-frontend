@@ -1,40 +1,18 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import {
-  IVault,
-  IVaultPosition,
-  IVaultStrategy,
-  IVaultStrategyReport,
-  SmartContractFactory,
-} from "fathom-sdk";
+import { IVault, IVaultPosition } from "fathom-sdk";
 import BigNumber from "bignumber.js";
-import { Contract } from "fathom-ethers";
 import { useLazyQuery } from "@apollo/client";
 
 import { useServices } from "context/services";
 import useConnector from "context/connector";
 import useSyncContext from "context/sync";
 import useRpcError from "hooks/useRpcError";
-import {
-  VAULT_POSITION_TRANSACTIONS,
-  VAULT_STRATEGY_REPORTS,
-} from "apollo/queries";
+import { VAULT_POSITION_TRANSACTIONS } from "apollo/queries";
 
 interface UseVaultListItemProps {
   vaultPosition: IVaultPosition | null | undefined;
   vault: IVault;
 }
-
-export enum VaultInfoTabs {
-  POSITION,
-  ABOUT,
-  STRATEGIES,
-  MANAGEMENT_VAULT,
-  MANAGEMENT_STRATEGY,
-}
-
-const DEFAULT_ADMIN_ROLE =
-  "0x0000000000000000000000000000000000000000000000000000000000000000";
-const VAULT_REPORTS_PER_PAGE = 1000;
 
 export type IVaultStrategyHistoricalApr = {
   id: string;
@@ -62,39 +40,11 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
   const [withdrawalsList, setWithdrawalsList] = useState([]);
   const [transactionsLoading, setTransactionLoading] = useState<boolean>(false);
 
-  const [reports, setReports] = useState<
-    Record<string, IVaultStrategyReport[]>
-  >({});
-
-  const [historicalApr, setHistoricalApr] = useState<
-    Record<string, IVaultStrategyHistoricalApr[]>
-  >({});
-
-  const [managedStrategiesIds, setManagedStrategiesIds] = useState<string[]>(
-    []
-  );
-  const [isUserManager, setIsUserManager] = useState<boolean>(false);
-
   const { syncVault, prevSyncVault } = useSyncContext();
 
-  const [activeVaultInfoTab, setActiveVaultInfoTab] = useState<VaultInfoTabs>(
-    vaultPosition && BigNumber(vaultPosition.balanceShares).isGreaterThan(0)
-      ? VaultInfoTabs.POSITION
-      : VaultInfoTabs.ABOUT
-  );
-
-  const { account, library } = useConnector();
+  const { account } = useConnector();
   const { vaultService } = useServices();
   const { showErrorNotification } = useRpcError();
-
-  const [loadReports, { fetchMore: fetchMoreReports }] = useLazyQuery(
-    VAULT_STRATEGY_REPORTS,
-    {
-      context: { clientName: "vaults", chainId },
-      variables: { chainId },
-      fetchPolicy: "no-cache",
-    }
-  );
 
   const [loadPositionTransactions, { refetch: refetchTransactions }] =
     useLazyQuery(VAULT_POSITION_TRANSACTIONS, {
@@ -102,102 +52,6 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
       variables: { chainId },
       fetchPolicy: "no-cache",
     });
-
-  const fetchReports = (
-    strategyId: string,
-    prevStateReports: IVaultStrategyReport[] = [],
-    prevStateApr: IVaultStrategyHistoricalApr[] = []
-  ) => {
-    (!prevStateReports.length ? loadReports : fetchMoreReports)({
-      variables: {
-        strategy: strategyId,
-        reportsFirst: VAULT_REPORTS_PER_PAGE,
-        reportsSkip: prevStateReports.length,
-        chainId,
-      },
-    }).then((response) => {
-      const { data } = response;
-
-      if (
-        data?.strategyReports &&
-        data?.strategyReports.length &&
-        data?.strategyReports.length % VAULT_REPORTS_PER_PAGE === 0
-      ) {
-        fetchReports(
-          strategyId,
-          [...prevStateReports, ...data.strategyReports],
-          [...prevStateApr, ...data.strategyHistoricalAprs]
-        );
-      } else {
-        setReports((prev) => ({
-          ...prev,
-          [strategyId]: [...prevStateReports, ...data.strategyReports],
-        }));
-        setHistoricalApr((prev) => ({
-          ...prev,
-          [strategyId]: [...prevStateApr, ...data.strategyHistoricalAprs],
-        }));
-      }
-    });
-  };
-
-  useEffect(() => {
-    let interval: ReturnType<typeof setInterval>;
-    let timeout: ReturnType<typeof setTimeout>;
-    if (vault && vault?.strategies && vault?.strategies?.length) {
-      timeout = setTimeout(() => {
-        vault?.strategies.forEach((strategy: IVaultStrategy) => {
-          /**
-           * Clear reports and historical APRs necessary for chain switch
-           */
-          setReports((prev) => ({
-            ...prev,
-            [strategy.id]: [],
-          }));
-          setHistoricalApr((prev) => ({
-            ...prev,
-            [strategy.id]: [],
-          }));
-          fetchReports(strategy.id, [], []);
-        });
-      }, 500);
-      /**
-       * Refetch reports every 30 seconds
-       */
-      interval = setInterval(() => {
-        vault?.strategies.forEach((strategy: IVaultStrategy) => {
-          /**
-           * Clear reports and historical APRs necessary for chain switch
-           */
-          setReports((prev) => ({
-            ...prev,
-            [strategy.id]: [],
-          }));
-          setHistoricalApr((prev) => ({
-            ...prev,
-            [strategy.id]: [],
-          }));
-          fetchReports(strategy.id, [], []);
-        });
-      }, 30 * 1000);
-    }
-
-    return () => {
-      interval && clearInterval(interval);
-      timeout && clearTimeout(timeout);
-    };
-  }, [vault, chainId]);
-
-  useEffect(() => {
-    if (
-      vaultPosition &&
-      BigNumber(vaultPosition.balanceShares).isGreaterThan(0)
-    ) {
-      setActiveVaultInfoTab(VaultInfoTabs.POSITION);
-    } else if (activeVaultInfoTab === VaultInfoTabs.POSITION) {
-      setActiveVaultInfoTab(VaultInfoTabs.ABOUT);
-    }
-  }, [vaultPosition]);
 
   const fetchBalanceToken = useCallback(
     (
@@ -341,90 +195,13 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     transactionsLoading,
   ]);
 
-  const executeHasRoleMethod = async (): Promise<boolean> => {
-    try {
-      const VAULT_ABI = SmartContractFactory.FathomVault("").abi;
-      const vaultContract = new Contract(vault.id, VAULT_ABI, library);
-
-      return await vaultContract.hasRole(DEFAULT_ADMIN_ROLE, account);
-    } catch (error) {
-      console.error(
-        `Failed to execute hasRole method for vault ${vault.id}:`,
-        error
-      );
-      return false;
-    }
-  };
-
-  const executeManagementMethod = async (
-    strategyId: string
-  ): Promise<boolean> => {
-    const STRATEGY_ABI = SmartContractFactory.FathomVaultStrategy("").abi;
-    try {
-      const strategyContract = new Contract(strategyId, STRATEGY_ABI, library);
-
-      const result = await strategyContract.management();
-      return result.includes(account);
-    } catch (error) {
-      console.error(
-        `Failed to execute management method for strategy ${strategyId}:`,
-        error
-      );
-      return false;
-    }
-  };
-
-  const getStrategiesIds = () => {
-    const strategyIdsPromises = (vault.strategies || []).map(
-      async (strategy: IVaultStrategy) => {
-        const isUserAuthorized = await executeManagementMethod(strategy.id);
-        return isUserAuthorized ? strategy.id : null;
-      }
-    );
-
-    return Promise.all(strategyIdsPromises).then(
-      (authorizedIds) => authorizedIds.filter((id) => id !== null) as string[]
-    );
-  };
-
-  useEffect(() => {
-    let timeout: ReturnType<typeof setTimeout>;
-    if (vault && account) {
-      timeout = setTimeout(() => {
-        getStrategiesIds().then((ids) => setManagedStrategiesIds(ids));
-      }, 500);
-    } else {
-      setManagedStrategiesIds([]);
-    }
-
-    return () => timeout && clearTimeout(timeout);
-  }, [vault, account, chainId, getStrategiesIds]);
-
-  useEffect(() => {
-    let timeout: ReturnType<typeof setTimeout>;
-    if (vault && account) {
-      timeout = setTimeout(() => {
-        executeHasRoleMethod().then(setIsUserManager);
-      }, 500);
-    } else {
-      setIsUserManager(false);
-    }
-    return () => timeout && clearTimeout(timeout);
-  }, [vault, account, chainId]);
-
   return {
-    reports,
-    historicalApr,
     balanceEarned,
     balanceToken,
     manageVault,
     newVaultDeposit,
-    activeVaultInfoTab,
-    setActiveVaultInfoTab,
     setManageVault,
     setNewVaultDeposit,
-    managedStrategiesIds,
-    isUserManager,
   };
 };
 

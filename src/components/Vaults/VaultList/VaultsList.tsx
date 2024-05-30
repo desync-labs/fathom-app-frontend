@@ -52,6 +52,7 @@ type VaultListPropsType = {
   vaults: IVault[];
   vaultPositionsList: IVaultPosition[];
   vaultsLoading: boolean;
+  performanceFee: number;
   vaultPositionsLoading: boolean;
   filterCurrentPosition: (vaultId: string) => IVaultPosition | null;
 };
@@ -61,7 +62,10 @@ const VaultsList: FC<VaultListPropsType> = ({
   vaultsLoading,
   vaultPositionsList,
   vaultPositionsLoading,
+  performanceFee,
   filterCurrentPosition,
+  isMobileFiltersOpen,
+  openMobileFilterMenu,
 }) => {
   return (
     <VaultListTableContainer>
@@ -123,6 +127,7 @@ const VaultsList: FC<VaultListPropsType> = ({
                 key={vault.id}
                 vaultItemData={vault}
                 vaultPosition={filterCurrentPosition(vault.id)}
+                performanceFee={performanceFee}
               />
             ))
           )}
