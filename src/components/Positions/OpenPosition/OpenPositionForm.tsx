@@ -294,7 +294,7 @@ const OpenPositionForm = () => {
             <ApproveBoxTypography>
               First-time connect? Please allow token approval in your MetaMask
             </ApproveBoxTypography>
-            <ApproveButton onClick={approve}>
+            <ApproveButton onClick={approve} disabled={approvalPending}>
               {" "}
               {approvalPending ? (
                 <CircularProgress size={20} sx={{ color: "#0D1526" }} />
