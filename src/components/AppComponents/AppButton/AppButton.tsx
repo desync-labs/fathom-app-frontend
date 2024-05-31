@@ -182,6 +182,10 @@ export const ApproveButton = styled(MuiButton)`
   margin-top: 15px;
   min-width: 80px;
   height: 28px;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
 `;
 
 export const ButtonsWrapper = styled(Box)`
