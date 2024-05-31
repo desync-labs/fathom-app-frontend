@@ -201,6 +201,27 @@ export const ButtonsWrapper = styled(Box)`
   }
 `;
 
+export const ModalButtonWrapper = styled(Box)`
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 20px;
+
+  & > button {
+    height: 48px;
+    font-size: 17px;
+    font-weight: 600;
+    padding: 8px 32px;
+
+    &:first-child {
+      width: 118px;
+    }
+    &:last-child {
+      width: calc(100% - 128px);
+    }
+  }
+`;
+
 export const ManagePositionRepayTypeWrapper = styled(Box)`
   margin-bottom: 20px;
 `;

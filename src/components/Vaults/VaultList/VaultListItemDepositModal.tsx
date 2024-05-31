@@ -1,21 +1,20 @@
 import { FC } from "react";
+import { FormProvider } from "react-hook-form";
 import { CircularProgress, DialogContent } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 import { IVault } from "fathom-sdk";
 import useVaultOpenDeposit from "hooks/useVaultOpenDeposit";
-import useSharedContext from "context/shared";
 
 import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
 import DepositVaultInfo from "components/Vaults/VaultList/DepositVaultModal/DepositVaultInfo";
 import DepositVaultForm from "components/Vaults/VaultList/DepositVaultModal/DepositVaultForm";
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
-import { FormProvider } from "react-hook-form";
 import {
   ButtonPrimary,
   ButtonSecondary,
-  ButtonsWrapper,
-} from "../../AppComponents/AppButton/AppButton";
+  ModalButtonWrapper,
+} from "components/AppComponents/AppButton/AppButton";
 
 const VaultManageGridDialogWrapper = styled(AppDialog)`
   & .MuiDialog-paper {
@@ -57,7 +56,6 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
     handleSubmit,
     onSubmit,
   } = useVaultOpenDeposit(vaultItemData, onClose);
-  const { isMobile } = useSharedContext();
 
   return (
     <VaultManageGridDialogWrapper
@@ -93,10 +91,8 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
             sharedToken={sharedToken}
             performanceFee={performanceFee}
           />
-          <ButtonsWrapper>
-            {!isMobile && (
-              <ButtonSecondary onClick={onClose}>Close</ButtonSecondary>
-            )}
+          <ModalButtonWrapper>
+            <ButtonSecondary onClick={onClose}>Close</ButtonSecondary>
             <ButtonPrimary
               type="submit"
               disabled={
@@ -110,10 +106,7 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
                 "Deposit"
               )}
             </ButtonPrimary>
-            {isMobile && (
-              <ButtonSecondary onClick={onClose}>Close</ButtonSecondary>
-            )}
-          </ButtonsWrapper>
+          </ModalButtonWrapper>
         </FormProvider>
       </DialogContent>
     </VaultManageGridDialogWrapper>

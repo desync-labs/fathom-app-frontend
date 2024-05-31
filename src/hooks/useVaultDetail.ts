@@ -187,7 +187,6 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
   };
 
   useEffect(() => {
-    let interval: ReturnType<typeof setInterval>;
     let timeout: ReturnType<typeof setTimeout>;
     if (vault && vault?.strategies && vault?.strategies?.length) {
       timeout = setTimeout(() => {
@@ -206,29 +205,9 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
           fetchReports(strategy.id, [], []);
         });
       }, 500);
-      /**
-       * Refetch reports every 30 seconds
-       */
-      interval = setInterval(() => {
-        vault?.strategies.forEach((strategy: IVaultStrategy) => {
-          /**
-           * Clear reports and historical APRs necessary for chain switch
-           */
-          setReports((prev) => ({
-            ...prev,
-            [strategy.id]: [],
-          }));
-          setHistoricalApr((prev) => ({
-            ...prev,
-            [strategy.id]: [],
-          }));
-          fetchReports(strategy.id, [], []);
-        });
-      }, 30 * 1000);
     }
 
     return () => {
-      interval && clearInterval(interval);
       timeout && clearTimeout(timeout);
     };
   }, [vault, chainId]);
