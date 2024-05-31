@@ -369,7 +369,11 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
                   First-time connect? Please allow token approval in your
                   MetaMask
                 </Typography>
-                <ButtonPrimary onClick={approve} style={{ marginTop: "16px" }}>
+                <ButtonPrimary
+                  onClick={approve}
+                  disabled={approvalPending}
+                  style={{ marginTop: "16px" }}
+                >
                   {" "}
                   {approvalPending ? (
                     <CircularProgress size={20} sx={{ color: "#0D1526" }} />
