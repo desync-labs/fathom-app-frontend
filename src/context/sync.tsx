@@ -25,6 +25,8 @@ type UseSyncContextReturn = {
   prevSyncDao: boolean;
   syncVault: boolean;
   prevSyncVault: boolean;
+  syncDex: boolean;
+  prevSyncDex: boolean;
 };
 
 export const SyncContext = createContext<UseSyncContextReturn>(
@@ -36,10 +38,12 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
   const [syncFXD, setSyncFXD] = useState<boolean>(true);
   const [syncDao, setSyncDao] = useState<boolean>(true);
   const [syncVault, setSyncVault] = useState<boolean>(true);
+  const [syncDex, setSyncDex] = useState<boolean>(true);
 
   const prevSyncFxd = useRef<boolean>(true);
   const prevSyncDao = useRef<boolean>(true);
   const prevSyncVault = useRef<boolean>(true);
+  const prevSyncDex = useRef<boolean>(true);
   const { chainId } = useConnector();
 
   const { data: fxdData, refetch: refetchFxd } = useQuery(HEALTH, {
@@ -75,6 +79,17 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
     fetchPolicy: "network-only",
   });
 
+  const { data: dexData, refetch: refetchDex } = useQuery(HEALTH, {
+    variables: {
+      name: "dex-subgraph",
+      chainId,
+    },
+    context: {
+      chainId,
+    },
+    fetchPolicy: "network-only",
+  });
+
   useEffect(() => {
     if (chainId) {
       setLastTransactionBlock(undefined);
@@ -86,12 +101,14 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
       syncFXD,
       syncDao,
       syncVault,
-      setLastTransactionBlock,
+      syncDex,
       prevSyncFxd: prevSyncFxd.current,
       prevSyncDao: prevSyncDao.current,
       prevSyncVault: prevSyncVault.current,
+      prevSyncDex: prevSyncDex.current,
+      setLastTransactionBlock,
     };
-  }, [setLastTransactionBlock, syncFXD, syncDao, syncVault]);
+  }, [setLastTransactionBlock, syncFXD, syncDao, syncVault, syncDex]);
 
   useEffect(() => {
     prevSyncFxd.current = syncFXD;
@@ -104,6 +121,10 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
   useEffect(() => {
     prevSyncVault.current = syncVault;
   }, [syncVault]);
+
+  useEffect(() => {
+    prevSyncDex.current = syncDex;
+  }, [syncDex]);
 
   useEffect(() => {
     if (
@@ -236,6 +257,50 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
     setLastTransactionBlock,
     refetchVault,
     setSyncVault,
+  ]);
+
+  useEffect(() => {
+    if (
+      !lastTransactionBlock &&
+      dexData?.indexingStatusForCurrentVersion?.chains[0]?.latestBlock?.number
+    ) {
+      setSyncDex(true);
+      return setLastTransactionBlock(
+        Number(
+          dexData?.indexingStatusForCurrentVersion?.chains[0]?.latestBlock
+            ?.number
+        )
+      );
+    }
+
+    /***
+     * Check if transaction block from transaction receipt has block number higher than latestBlock from Graph, if so our Graph state is not up-to-date.
+     */
+    let interval: ReturnType<typeof setInterval>;
+    if (
+      Number(lastTransactionBlock) >
+      Number(
+        dexData?.indexingStatusForCurrentVersion?.chains[0]?.latestBlock?.number
+      )
+    ) {
+      interval = setInterval(() => {
+        refetchDex();
+      }, 500);
+
+      setSyncDex(false);
+    } else {
+      setSyncDex(true);
+    }
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [
+    lastTransactionBlock,
+    dexData,
+    setLastTransactionBlock,
+    refetchDex,
+    setSyncDex,
   ]);
 
   return <SyncContext.Provider value={values}>{children}</SyncContext.Provider>;
