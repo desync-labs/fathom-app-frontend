@@ -1,4 +1,7 @@
-import { TransactionResponse } from "@into-the-fathom/providers";
+import {
+  TransactionReceipt,
+  TransactionResponse,
+} from "@into-the-fathom/providers";
 import { useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -6,6 +9,7 @@ import { useActiveWeb3React } from "apps/dex/hooks";
 import { AppDispatch, AppState } from "apps/dex/state";
 import { addTransaction } from "apps/dex/state/transactions/actions";
 import { TransactionDetails } from "apps/dex/state/transactions/reducer";
+import useSyncContext from "context/sync";
 
 // helper that can take a fathom-ethers library transaction response and add it to the list of transactions
 export function useTransactionAdder(): (
@@ -18,9 +22,10 @@ export function useTransactionAdder(): (
 ) => void {
   const { chainId, account } = useActiveWeb3React();
   const dispatch = useDispatch<AppDispatch>();
+  const { setLastTransactionBlock } = useSyncContext();
 
   return useCallback(
-    (
+    async (
       response: TransactionResponse,
       {
         summary,
@@ -39,6 +44,7 @@ export function useTransactionAdder(): (
       if (!hash) {
         throw Error("No transaction hash found.");
       }
+
       dispatch(
         addTransaction({
           hash,
@@ -49,6 +55,12 @@ export function useTransactionAdder(): (
           claim,
         })
       );
+
+      if (response.wait) {
+        response.wait().then((receipt: TransactionReceipt) => {
+          setLastTransactionBlock(receipt.blockNumber);
+        });
+      }
     },
     [dispatch, chainId, account]
   );

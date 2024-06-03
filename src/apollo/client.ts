@@ -6,7 +6,7 @@ import {
   InMemoryCache,
 } from "@apollo/client";
 import { SUBGRAPH_URLS } from "connectors/networks";
-import { DEFAULT_CHAIN_ID } from "../utils/Constants";
+import { DEFAULT_CHAIN_ID } from "utils/Constants";
 
 /***
  * For Query we have pagination, So we need to return incoming items
@@ -65,6 +65,24 @@ const cache = new InMemoryCache({
         },
         users: {
           keyArgs: ["walletAddress"],
+          merge(_, incoming) {
+            return incoming;
+          },
+        },
+        mints: {
+          keyArgs: ["chainId", "account"],
+          merge(_, incoming) {
+            return incoming;
+          },
+        },
+        burns: {
+          keyArgs: ["chainId", "account"],
+          merge(_, incoming) {
+            return incoming;
+          },
+        },
+        swaps: {
+          keyArgs: ["chainId", "account"],
           merge(_, incoming) {
             return incoming;
           },

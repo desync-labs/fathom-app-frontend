@@ -1,4 +1,4 @@
-import { useEffect, useState, memo, useMemo, FC } from "react";
+import { useEffect, useState, memo, useMemo, FC, useCallback } from "react";
 import { useLazyQuery } from "@apollo/client";
 import { Navigate } from "react-router-dom";
 import { Box, CircularProgress, styled } from "@mui/material";
@@ -25,6 +25,7 @@ import {
   CircleWrapper,
   NoResults,
 } from "components/AppComponents/AppBox/AppBox";
+import useSyncContext from "context/sync";
 
 const TransactionListWrapper = styled(Box)`
   display: flex;
@@ -65,15 +66,12 @@ const Transactions: FC = () => {
     FormattedTransaction[]
   >([]);
 
-  const [sortedFilteredTransactions, setSortedFilteredTransactions] = useState<
-    (TransactionDetails | FormattedTransaction)[]
-  >([]);
-
   const { account } = useActiveWeb3React();
-  const [getTransactions, { loading }] = useLazyQuery(USER_TRANSACTIONS, {
-    fetchPolicy: "cache-first",
-    onCompleted: (transactions) => {
-      setSortedFilteredTransactions([]);
+  const { syncDex, prevSyncDex } = useSyncContext();
+
+  const onCompleted = useCallback(
+    (response: any) => {
+      const transactions = response?.data ? response.data : response;
       if (
         transactions &&
         transactions.mints &&
@@ -148,11 +146,18 @@ const Transactions: FC = () => {
         setTransactionList([]);
       }
     },
-  });
+    [setTransactionList]
+  );
+
+  const [getTransactions, { loading, refetch: refetchTransactions }] =
+    useLazyQuery(USER_TRANSACTIONS, {
+      fetchPolicy: "network-only",
+      onCompleted,
+    });
 
   const storageTransactions = useAllTransactions();
 
-  const allTransactions = useMemo(() => {
+  const storageFilteredTransactions = useMemo(() => {
     if (account) {
       const filtered = Object.entries(storageTransactions).filter(
         ([, tx]) => tx.from?.toLowerCase() === account?.toLowerCase()
@@ -167,17 +172,42 @@ const Transactions: FC = () => {
    * Get transactions for the last 7 days.
    */
   const sortedRecentTransactions = useMemo(() => {
-    const txs = Object.values(allTransactions);
+    const txs = Object.values(storageFilteredTransactions);
     return txs
       .filter((tx) => isTransactionRecent(tx, 7))
       .sort(newTransactionsFirst);
-  }, [allTransactions]);
+  }, [storageFilteredTransactions]);
 
   const pending = useMemo(() => {
     return sortedRecentTransactions
       .filter((tx) => !tx.receipt)
       .map((tx) => tx.hash);
   }, [sortedRecentTransactions]);
+
+  const filteredTransactionList = useMemo(
+    () => transactionList?.filter((tx) => !pending.includes(tx.hash)),
+    [transactionList, pending]
+  );
+
+  const filteredTransactionListHashes = useMemo(() => {
+    return filteredTransactionList?.map((tx) => tx.hash) || [];
+  }, [filteredTransactionList]);
+
+  const confirmed = useMemo(() => {
+    return sortedRecentTransactions
+      .filter((tx) => tx.receipt)
+      .filter((tx) => !filteredTransactionListHashes.includes(tx.hash))
+      .map((tx) => ({
+        ...tx,
+        transactionType: TransactionType.STORAGE,
+      }));
+  }, [sortedRecentTransactions, filteredTransactionListHashes]);
+
+  useEffect(() => {
+    if (syncDex && !prevSyncDex) {
+      refetchTransactions({ user: account }).then(onCompleted);
+    }
+  }, [syncDex, prevSyncDex, refetchTransactions, onCompleted]);
 
   useEffect(() => {
     if (account) {
@@ -186,34 +216,6 @@ const Transactions: FC = () => {
       });
     }
   }, [account, getTransactions]);
-
-  useEffect(() => {
-    if (!transactionList.length && !sortedRecentTransactions.length) {
-      return;
-    }
-
-    const transactionListHashCollection = transactionList.map(
-      (transaction) => transaction.hash
-    );
-    const confirmed = sortedRecentTransactions
-      .filter((tx) => tx.receipt)
-      .map((tx) => tx.hash);
-
-    const confirmedCollection = confirmed
-      .filter((hash) => !transactionListHashCollection.includes(hash))
-      .map((hash: string) => allTransactions?.[hash]);
-
-    const sortedArray = [...confirmedCollection, ...transactionList].sort(
-      newTransactionsFirst
-    );
-
-    setSortedFilteredTransactions(sortedArray);
-  }, [
-    transactionList,
-    sortedRecentTransactions,
-    allTransactions,
-    setSortedFilteredTransactions,
-  ]);
 
   if (!account) {
     return <Navigate to={"/swap"} />;
@@ -225,27 +227,34 @@ const Transactions: FC = () => {
         <TransactionsHeaderRow>
           <TYPE.white fontSize={20}>Transactions</TYPE.white>
         </TransactionsHeaderRow>
-        {pending.length || sortedFilteredTransactions.length ? (
+        {pending.length || transactionList.length ? (
           <>
             <TransactionListWrapper>
               {pending.map((hash) => {
-                return <Transaction key={hash} tx={allTransactions?.[hash]} />;
-              })}
-            </TransactionListWrapper>
-            <TransactionListWrapper>
-              {sortedFilteredTransactions.map((item) => {
-                return item?.transactionType === TransactionType.GRAPH ? (
-                  <PreviousTransaction
-                    item={item as FormattedTransaction}
-                    key={item.hash}
-                  />
-                ) : (
+                return (
                   <Transaction
-                    tx={item as TransactionDetails}
-                    key={item.hash}
+                    key={hash}
+                    tx={storageFilteredTransactions?.[hash]}
                   />
                 );
               })}
+            </TransactionListWrapper>
+            <TransactionListWrapper>
+              {[...confirmed, ...filteredTransactionList]
+                .sort(newTransactionsFirst)
+                .map((item) => {
+                  return item?.transactionType === TransactionType.GRAPH ? (
+                    <PreviousTransaction
+                      item={item as FormattedTransaction}
+                      key={item.hash}
+                    />
+                  ) : (
+                    <Transaction
+                      tx={item as unknown as TransactionDetails}
+                      key={item.hash}
+                    />
+                  );
+                })}
             </TransactionListWrapper>
           </>
         ) : loading ? (
