@@ -128,6 +128,7 @@ import {
   NETWORK_SETTINGS,
 } from "connectors/networks";
 import { DEFAULT_CHAIN_ID } from "utils/Constants";
+import CookieConsent from "components/Common/CookieConsent";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -714,6 +715,7 @@ const MainLayout = () => {
       ) : null}
 
       {erc20TokenModalData && <TransactionErc20TokenModal />}
+      <CookieConsent />
     </AppGlobalStyles>
   );
 };
