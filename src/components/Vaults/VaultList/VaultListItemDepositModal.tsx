@@ -11,6 +11,7 @@ import BigNumber from "bignumber.js";
 
 import { IVault } from "fathom-sdk";
 import useVaultOpenDeposit from "hooks/useVaultOpenDeposit";
+import useConnector from "context/connector";
 
 import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
 import DepositVaultInfo from "components/Vaults/VaultList/DepositVaultModal/DepositVaultInfo";
@@ -23,6 +24,7 @@ import {
 } from "components/AppComponents/AppButton/AppButton";
 import { ErrorBox, InfoBoxV2 } from "components/AppComponents/AppBox/AppBox";
 import { InfoIcon } from "components/Governance/Propose";
+import WalletConnectBtn from "components/Common/WalletConnectBtn";
 
 const VaultManageGridDialogWrapper = styled(AppDialog)`
   & .MuiDialog-paper {
@@ -64,6 +66,7 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
     handleSubmit,
     onSubmit,
   } = useVaultOpenDeposit(vaultItemData, onClose);
+  const { account } = useConnector();
 
   return (
     <VaultManageGridDialogWrapper
@@ -124,7 +127,9 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
           )}
           <ModalButtonWrapper>
             <ButtonSecondary onClick={onClose}>Close</ButtonSecondary>
-            {approveBtn && walletBalance !== "0" ? (
+            {!account ? (
+              <WalletConnectBtn />
+            ) : approveBtn && walletBalance !== "0" ? (
               <ButtonPrimary onClick={approve}>
                 {" "}
                 {approvalPending ? (
@@ -135,7 +140,8 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
               </ButtonPrimary>
             ) : (
               <ButtonPrimary
-                type="submit"
+                type="button"
+                onClick={handleSubmit(onSubmit)}
                 disabled={
                   openDepositLoading ||
                   approveBtn ||

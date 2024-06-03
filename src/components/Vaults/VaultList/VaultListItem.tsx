@@ -11,7 +11,6 @@ import useConnector from "context/connector";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatCurrency, formatNumber } from "utils/format";
 import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
-import WalletConnectBtn from "components/Common/WalletConnectBtn";
 import { AppTableRow } from "components/AppComponents/AppTable/AppTable";
 import VaultListItemDepositModal from "components/Vaults/VaultList/VaultListItemDepositModal";
 import VaultListItemManageModal from "components/Vaults/VaultList/VaultListItemManageModal";
@@ -37,24 +36,6 @@ export const VaultTitle = styled("div")`
   font-size: 14px;
   line-height: 20px;
   text-decoration-line: underline;
-`;
-
-export const VaultPercent = styled("div")`
-  display: flex;
-  padding: 4px 8px;
-  color: #fff;
-  font-size: 12px;
-  border-radius: 6px;
-  width: fit-content;
-  height: 20px;
-  background: #3665ff;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-
-  ${({ theme }) => theme.breakpoints.down("sm")} {
-    width: 46px;
-  }
 `;
 
 export const VaultEarned = styled("div")`
@@ -293,7 +274,6 @@ const VaultListItem = ({
           >
             {(!vaultPosition ||
               !BigNumber(vaultPosition.balanceShares).isGreaterThan(0)) &&
-              account &&
               !shutdown && (
                 <ButtonPrimary
                   onClick={() => setNewVaultDeposit(true)}
@@ -305,7 +285,6 @@ const VaultListItem = ({
               )}
             {vaultPosition &&
               BigNumber(vaultPosition.balanceShares).isGreaterThan(0) &&
-              account &&
               !shutdown && (
                 <ButtonPrimary
                   onClick={() => setManageVault(true)}
@@ -317,7 +296,6 @@ const VaultListItem = ({
               )}
             {vaultPosition &&
               BigNumber(vaultPosition.balanceShares).isGreaterThan(0) &&
-              account &&
               shutdown && (
                 <ButtonPrimary
                   onClick={() => setManageVault(true)}
@@ -326,11 +304,6 @@ const VaultListItem = ({
                   Withdraw
                 </ButtonPrimary>
               )}
-            {!account && (
-              <WalletConnectBtn
-                testId={`vaultRow-${vaultTestId}-connectWalletButton`}
-              />
-            )}
           </AppFlexBox>
         </TableCell>
       </VaultItemTableRow>

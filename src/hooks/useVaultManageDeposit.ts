@@ -20,7 +20,8 @@ export enum FormType {
 }
 const useVaultManageDeposit = (
   vault: IVault,
-  vaultPosition: IVaultPosition
+  vaultPosition: IVaultPosition,
+  onClose?: () => void
 ) => {
   const { account } = useConnector();
   const { poolService, vaultService } = useServices();
@@ -273,6 +274,10 @@ const useVaultManageDeposit = (
           );
 
           setLastTransactionBlock(blockNumber as number);
+
+          if (onClose) {
+            onClose();
+          }
         } catch (e) {
           console.log(e);
         } finally {
@@ -288,6 +293,10 @@ const useVaultManageDeposit = (
           );
 
           setLastTransactionBlock(blockNumber as number);
+
+          if (onClose) {
+            onClose();
+          }
         } catch (e) {
           console.log(e);
         } finally {
