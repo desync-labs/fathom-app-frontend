@@ -27,7 +27,7 @@ export const NoResults = styled(Typography)`
 `;
 
 export const Summary = styled(Typography)`
-  color: #fff;
+  color: #b7c8e5;
   font-weight: bold;
   font-size: 16px;
   line-height: 24px;
@@ -223,6 +223,33 @@ export const InfoBox = styled(Box)`
     height: 20px;
     width: 20px;
     color: #6379a1;
+  }
+
+  p {
+    color: #b7c8e5;
+    font-size: 14px;
+    width: 100%;
+    white-space: break-spaces;
+  }
+  a {
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+`;
+export const InfoBoxV2 = styled(Box)`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+  padding-top: 20px;
+
+  svg {
+    height: 20px;
+    width: 20px;
+    color: #b7c8e5;
+    margin: 0;
   }
 
   p {

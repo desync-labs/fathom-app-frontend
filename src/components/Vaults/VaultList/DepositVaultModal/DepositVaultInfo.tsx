@@ -1,11 +1,27 @@
 import { FC, memo } from "react";
 import BigNumber from "bignumber.js";
-import { Box, Divider, ListItemText } from "@mui/material";
+import { Box, Divider, ListItemText, styled } from "@mui/material";
 import { IVault } from "fathom-sdk";
 import { formatNumber, formatPercentage } from "utils/format";
 import { useApr } from "hooks/useApr";
-import { AppList, AppListItem } from "components/AppComponents/AppList/AppList";
+import {
+  AppListItem,
+  AppListVault,
+} from "components/AppComponents/AppList/AppList";
 import { Summary } from "components/AppComponents/AppBox/AppBox";
+
+const DepositVaultFormInfoWrapper = styled(Box)`
+  position: relative;
+  width: 100%;
+  border-radius: 12px;
+  background: #1e2f4c;
+  padding: 24px;
+  margin-top: 20px;
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    padding: 0;
+  }
+`;
 
 type VaultDepositInfoProps = {
   vaultItemData: IVault;
@@ -24,9 +40,10 @@ const DepositVaultInfo: FC<VaultDepositInfoProps> = ({
   const formattedApr = useApr(vaultItemData);
 
   return (
-    <Box>
+    <DepositVaultFormInfoWrapper>
       <Summary>Summary</Summary>
-      <AppList>
+      <Divider />
+      <AppListVault>
         <AppListItem
           alignItems="flex-start"
           secondaryAction={
@@ -84,22 +101,20 @@ const DepositVaultInfo: FC<VaultDepositInfoProps> = ({
         >
           <ListItemText primary="Share tokens" />
         </AppListItem>
-        <Divider />
         <AppListItem
           alignItems="flex-start"
           secondaryAction={formatPercentage(Number(performanceFee)) + "%"}
         >
-          <ListItemText primary="Fee" />
+          <ListItemText primary="Total Fee" />
         </AppListItem>
-        <Divider />
         <AppListItem
           alignItems="flex-start"
           secondaryAction={formattedApr + "%"}
         >
-          <ListItemText primary="Estimated APY" />
+          <ListItemText primary="Estimated APR" />
         </AppListItem>
-      </AppList>
-    </Box>
+      </AppListVault>
+    </DepositVaultFormInfoWrapper>
   );
 };
 

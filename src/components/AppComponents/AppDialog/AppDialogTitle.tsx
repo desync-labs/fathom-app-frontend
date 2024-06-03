@@ -2,7 +2,8 @@ import { FC, ReactNode } from "react";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import { styled } from "@mui/material/styles";
-import { DialogTitle as MuiDialogTitle } from "@mui/material";
+import { DialogTitle as MuiDialogTitle, SxProps } from "@mui/material";
+import { Theme } from "@mui/system";
 
 export const AppDialogTitleWrapper = styled(MuiDialogTitle)`
   font-weight: bold;
@@ -27,18 +28,25 @@ export interface DialogTitleProps {
   id: string;
   children?: ReactNode;
   onClose: () => void;
+  sx?: SxProps<Theme>;
+  sxCloseIcon?: SxProps<Theme>;
 }
 
 export const AppDialogTitle: FC<DialogTitleProps> = ({
   children,
   onClose,
+  sxCloseIcon,
   ...other
 }) => {
   return (
     <AppDialogTitleWrapper {...other}>
       {children}
       {onClose ? (
-        <AppDialogCloseIcon aria-label="close" onClick={onClose}>
+        <AppDialogCloseIcon
+          aria-label="close"
+          onClick={onClose}
+          sx={sxCloseIcon}
+        >
           <CloseIcon />
         </AppDialogCloseIcon>
       ) : null}

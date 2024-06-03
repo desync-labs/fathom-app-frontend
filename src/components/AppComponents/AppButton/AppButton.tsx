@@ -169,6 +169,22 @@ export const MaxButton = styled(MuiButton)`
   right: 7px;
   cursor: pointer;
 `;
+export const MaxButtonV2 = styled(MuiButton)`
+  color: #43fff1;
+  text-align: center;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+
+  &:hover {
+    background: transparent;
+  }
+`;
 
 export const ApproveButton = styled(MuiButton)`
   color: #00332f;

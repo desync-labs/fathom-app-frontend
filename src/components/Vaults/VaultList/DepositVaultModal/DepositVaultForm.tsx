@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Box, CircularProgress, Typography, styled } from "@mui/material";
+import { Box, styled } from "@mui/material";
 import { Control, Controller, UseFormHandleSubmit } from "react-hook-form";
 import BigNumber from "bignumber.js";
 
@@ -8,20 +8,17 @@ import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatNumber } from "utils/format";
 
 import {
-  ErrorBox,
-  InfoBox,
+  AppFlexBox,
   WalletBalance,
 } from "components/AppComponents/AppBox/AppBox";
-import {
-  ButtonPrimary,
-  MaxButton,
-} from "components/AppComponents/AppButton/AppButton";
+import { MaxButtonV2 } from "components/AppComponents/AppButton/AppButton";
 import {
   AppFormInputErrorWrapper,
-  AppFormInputLogo,
-  AppFormInputWrapper,
-  AppFormLabel,
-  AppTextField,
+  AppFormInputLogoV2,
+  AppFormInputWrapperV2,
+  AppFormLabelRow,
+  AppFormLabelV2,
+  AppTextFieldV2,
 } from "components/AppComponents/AppForm/AppForm";
 import { InfoIcon } from "components/Governance/Propose";
 
@@ -38,13 +35,12 @@ const DepositVaultItemFormWrapper = styled(Box)`
 `;
 
 const ManageVaultForm = styled("form")`
-  padding-bottom: 45px;
+  padding-bottom: 0;
 `;
 
 type VaultDepositFormProps = {
   vaultItemData: IVault;
   walletBalance: string;
-  isWalletFetching: boolean;
   control: Control<
     {
       deposit: string;
@@ -52,10 +48,6 @@ type VaultDepositFormProps = {
     },
     any
   >;
-  deposit: string;
-  approveBtn: boolean;
-  approvalPending: boolean;
-  approve: () => Promise<void>;
   setMax: () => void;
   validateMaxDepositValue: (value: string) => true | string;
   handleSubmit: UseFormHandleSubmit<
@@ -71,12 +63,7 @@ type VaultDepositFormProps = {
 const DepositVaultForm: FC<VaultDepositFormProps> = ({
   vaultItemData,
   walletBalance,
-  isWalletFetching,
   control,
-  deposit,
-  approveBtn,
-  approvalPending,
-  approve,
   setMax,
   validateMaxDepositValue,
   handleSubmit,
@@ -99,19 +86,24 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
             validate: validateMaxDepositValue,
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
-            <AppFormInputWrapper>
-              <AppFormLabel>Deposit {token.name}</AppFormLabel>
-              <WalletBalance>
-                Wallet Available:{" "}
-                {formatNumber(
-                  BigNumber(walletBalance)
-                    .dividedBy(10 ** 18)
-                    .toNumber()
-                ) +
-                  " " +
-                  token.name}
-              </WalletBalance>
-              <AppTextField
+            <AppFormInputWrapperV2>
+              <AppFormLabelRow>
+                <AppFormLabelV2>Deposit {token.name}</AppFormLabelV2>
+                <AppFlexBox sx={{ width: "auto", justifyContent: "flex-end" }}>
+                  <MaxButtonV2 onClick={() => setMax()}>Max</MaxButtonV2>
+                  <WalletBalance sx={{ color: "#43FFF1" }}>
+                    Balance:{" "}
+                    {formatNumber(
+                      BigNumber(walletBalance)
+                        .dividedBy(10 ** 18)
+                        .toNumber()
+                    ) +
+                      " " +
+                      token.name}
+                  </WalletBalance>
+                </AppFlexBox>
+              </AppFormLabelRow>
+              <AppTextFieldV2
                 error={!!error}
                 id="outlined-helperText"
                 placeholder={"0"}
@@ -177,12 +169,11 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
                 type="number"
                 onChange={onChange}
               />
-              <AppFormInputLogo
+              <AppFormInputLogoV2
                 src={getTokenLogoURL(token.symbol)}
                 alt={token.name}
               />
-              <MaxButton onClick={() => setMax()}>Max</MaxButton>
-            </AppFormInputWrapper>
+            </AppFormInputWrapperV2>
           )}
         />
         <Controller
@@ -196,9 +187,11 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => {
             return (
-              <AppFormInputWrapper>
-                <AppFormLabel>Receive shares token</AppFormLabel>
-                <AppTextField
+              <AppFormInputWrapperV2>
+                <AppFormLabelRow>
+                  <AppFormLabelV2>Receive shares token</AppFormLabelV2>
+                </AppFormLabelRow>
+                <AppTextFieldV2
                   error={!!error}
                   id="outlined-helperText"
                   helperText={
@@ -236,39 +229,11 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
                   onChange={onChange}
                   disabled
                 />
-                <AppFormInputLogo src={getTokenLogoURL("FXD")} />
-              </AppFormInputWrapper>
+                <AppFormInputLogoV2 src={getTokenLogoURL("FXD")} />
+              </AppFormInputWrapperV2>
             );
           }}
         />
-        {approveBtn && walletBalance !== "0" && (
-          <InfoBox sx={{ alignItems: "flex-start", padding: "16px" }}>
-            <InfoIcon />
-            <Box flexDirection="column">
-              <Typography width="100%">
-                First-time connect? Please allow token approval in your MetaMask
-              </Typography>
-              <ButtonPrimary onClick={approve} style={{ marginTop: "16px" }}>
-                {" "}
-                {approvalPending ? (
-                  <CircularProgress size={20} sx={{ color: "#0D1526" }} />
-                ) : (
-                  "Approve token"
-                )}{" "}
-              </ButtonPrimary>
-            </Box>
-          </InfoBox>
-        )}
-        {isWalletFetching &&
-          (BigNumber(walletBalance)
-            .dividedBy(10 ** 18)
-            .isLessThan(BigNumber(deposit)) ||
-            walletBalance == "0") && (
-            <ErrorBox>
-              <InfoIcon />
-              <Typography>Wallet balance is not enough to deposit.</Typography>
-            </ErrorBox>
-          )}
       </ManageVaultForm>
     </DepositVaultItemFormWrapper>
   );
