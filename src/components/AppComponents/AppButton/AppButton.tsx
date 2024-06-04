@@ -229,7 +229,7 @@ export const ModalButtonWrapper = styled(Box)`
     font-weight: 600;
     padding: 8px 32px;
 
-    &:first-child {
+    &:first-of-type {
       width: 118px;
     }
     &:last-child {

@@ -1,8 +1,9 @@
-import { FC, MouseEvent } from "react";
+import { ChangeEvent, FC, MouseEvent } from "react";
 import { IVault, IVaultPosition } from "fathom-sdk";
 import { styled } from "@mui/material/styles";
 import {
   Box,
+  Pagination,
   Table,
   TableBody,
   TableCell,
@@ -10,10 +11,10 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import { COUNT_PER_PAGE } from "utils/Constants";
 import AppPopover from "components/AppComponents/AppPopover/AppPopover";
 import { VaultListItemSkeleton } from "components/Vaults/VaultList/VaultListItemSkeleton";
 import VaultListItem from "components/Vaults/VaultList/VaultListItem";
-import AppPagination from "components/AppComponents/AppPagination/AppPagination";
 
 const VaultListTableContainer = styled(TableContainer)`
   border-radius: 12px;
@@ -33,7 +34,7 @@ const VaultListTableCell = styled(TableCell)`
   text-transform: uppercase;
   padding: 16px 8px;
 
-  &:first-child {
+  &:first-of-type {
     padding: 16px 24px;
   }
 `;
@@ -46,6 +47,11 @@ const VaultListTableCellPopover = styled(Box)`
   padding-top: 4px !important;
 `;
 
+const PaginationWrapper = styled(Box)`
+  display: flex;
+  justify-content: center;
+`;
+
 type VaultListPropsType = {
   isMobileFiltersOpen: boolean;
   openMobileFilterMenu: (event: MouseEvent<HTMLElement>) => void;
@@ -55,6 +61,9 @@ type VaultListPropsType = {
   performanceFee: number;
   vaultPositionsLoading: boolean;
   filterCurrentPosition: (vaultId: string) => IVaultPosition | null;
+  vaultCurrentPage: number;
+  vaultItemsCount: number;
+  handlePageChange: (event: ChangeEvent<unknown>, page: number) => void;
 };
 
 const VaultsList: FC<VaultListPropsType> = ({
@@ -66,6 +75,9 @@ const VaultsList: FC<VaultListPropsType> = ({
   filterCurrentPosition,
   isMobileFiltersOpen,
   openMobileFilterMenu,
+  vaultCurrentPage,
+  vaultItemsCount,
+  handlePageChange,
 }) => {
   return (
     <VaultListTableContainer>
@@ -133,13 +145,15 @@ const VaultsList: FC<VaultListPropsType> = ({
           )}
         </TableBody>
       </Table>
-      <AppPagination
-        currentPage={1}
-        totalPages={3}
-        onPageChange={() => {
-          console.log("Change page");
-        }}
-      />
+      {!vaultsLoading && vaults.length > COUNT_PER_PAGE && (
+        <PaginationWrapper>
+          <Pagination
+            count={Math.ceil(vaultItemsCount / COUNT_PER_PAGE)}
+            page={vaultCurrentPage}
+            onChange={handlePageChange}
+          />
+        </PaginationWrapper>
+      )}
     </VaultListTableContainer>
   );
 };

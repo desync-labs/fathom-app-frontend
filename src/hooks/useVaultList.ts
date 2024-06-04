@@ -1,10 +1,4 @@
-import {
-  ChangeEvent,
-  useCallback,
-  useEffect,
-  useState,
-  MouseEvent,
-} from "react";
+import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import { IVault, IVaultPosition } from "fathom-sdk";
 import {
@@ -46,7 +40,6 @@ const useVaultList = () => {
   >([]);
   const [vaultCurrentPage, setVaultCurrentPage] = useState(1);
   const [vaultItemsCount, setVaultItemsCount] = useState(0);
-  const [protocolFee, setProtocolFee] = useState(0);
   const [performanceFee, setPerformanceFee] = useState(0);
 
   const [search, setSearch] = useState<string>("");
@@ -185,13 +178,9 @@ const useVaultList = () => {
 
   useEffect(() => {
     if (!vaultsFactoriesLoading && vaultsFactories) {
-      const { factories, accountants } = vaultsFactories;
-      const protocolFeeRes = factories[0].protocolFee;
+      const { accountants } = vaultsFactories;
       const performanceFeeRes = accountants[0].performanceFee;
 
-      if (protocolFeeRes) {
-        setProtocolFee(protocolFeeRes / 100);
-      }
       if (performanceFeeRes) {
         setPerformanceFee(performanceFeeRes / 100);
       }
@@ -310,10 +299,7 @@ const useVaultList = () => {
     [vaultPositionsList, vaultPositionsLoading]
   );
 
-  const handleIsShutdown = (
-    event: MouseEvent<HTMLElement>,
-    newValue: boolean
-  ) => {
+  const handleIsShutdown = (newValue: boolean) => {
     if (newValue !== null) {
       setIsShutdown(newValue);
     }
@@ -326,7 +312,6 @@ const useVaultList = () => {
     vaultPositionsList,
     vaultCurrentPage,
     vaultItemsCount,
-    protocolFee,
     performanceFee,
     isShutdown,
     search,

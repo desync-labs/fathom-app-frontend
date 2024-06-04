@@ -3,6 +3,7 @@ import useVaultList from "hooks/useVaultList";
 import { PageHeader } from "components/Dashboard/PageHeader";
 import VaultsTotalStats from "components/Vaults/VaultList/VaultsTotalStats";
 import VaultsList from "components/Vaults/VaultList/VaultsList";
+import VaultFilters from "components/Vaults/VaultList/VaultFilters";
 
 type VaultListViewPropsType = {
   isMobileFiltersOpen: boolean;
@@ -19,16 +20,15 @@ const VaultListView: FC<VaultListViewPropsType> = ({
     vaultPositionsLoading,
     vaultPositionsList,
     performanceFee,
-    // vaultCurrentPage,
-    // vaultItemsCount,
-    // protocolFee,
-    // isShutdown,
-    // search,
-    // sortBy,
-    // handleIsShutdown,
-    // setSearch,
-    // setSortBy,
-    // handlePageChange,
+    vaultCurrentPage,
+    vaultItemsCount,
+    isShutdown,
+    search,
+    sortBy,
+    handleIsShutdown,
+    setSearch,
+    setSortBy,
+    handlePageChange,
     filterCurrentPosition,
   } = useVaultList();
   return (
@@ -38,6 +38,14 @@ const VaultListView: FC<VaultListViewPropsType> = ({
         description={`Explore existing Vaults, and deposit your assets for a sustainable yield.`}
       />
       <VaultsTotalStats />
+      <VaultFilters
+        search={search}
+        sortBy={sortBy}
+        setSearch={setSearch}
+        setSortBy={setSortBy}
+        handleIsShutdown={handleIsShutdown}
+        isShutdown={isShutdown}
+      />
       <VaultsList
         vaults={vaultSortedList}
         vaultsLoading={vaultsLoading}
@@ -47,6 +55,9 @@ const VaultListView: FC<VaultListViewPropsType> = ({
         filterCurrentPosition={filterCurrentPosition}
         isMobileFiltersOpen={isMobileFiltersOpen}
         openMobileFilterMenu={openMobileFilterMenu}
+        vaultCurrentPage={vaultCurrentPage}
+        vaultItemsCount={vaultItemsCount}
+        handlePageChange={handlePageChange}
       />
     </>
   );

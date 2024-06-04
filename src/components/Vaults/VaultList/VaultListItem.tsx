@@ -21,6 +21,12 @@ import LockSrc from "assets/svg/lock.svg";
 
 const VaultItemTableRow = styled(AppTableRow)`
   background: transparent;
+
+  &:last-child {
+    td {
+      border-bottom: none;
+    }
+  }
   & td {
     border-bottom: 1px solid #4f658c4d;
     padding: 16px 8px;
@@ -175,29 +181,27 @@ const VaultListItem = ({
             </Box>
           </AppFlexBox>
         </TableCell>
-        {account && (
-          <TableCell
-            colSpan={1}
-            sx={{ width: account ? "11%" : "10%" }}
-            data-testid={`vaultRow-${vaultTestId}-earnedValueCell`}
-          >
-            <VaultEarned>
-              {balanceEarned && BigNumber(balanceEarned).isGreaterThan(0) ? (
-                "$" +
-                formatNumber(
-                  BigNumber(balanceEarned)
-                    .multipliedBy(fxdPrice)
-                    .dividedBy(10 ** 18)
-                    .toNumber()
-                )
-              ) : balanceEarned === -1 ? (
-                <CircularProgress size={20} />
-              ) : (
-                0
-              )}
-            </VaultEarned>
-          </TableCell>
-        )}
+        <TableCell
+          colSpan={1}
+          sx={{ width: account ? "11%" : "10%" }}
+          data-testid={`vaultRow-${vaultTestId}-earnedValueCell`}
+        >
+          <VaultEarned>
+            {balanceEarned && BigNumber(balanceEarned).isGreaterThan(0) ? (
+              "$" +
+              formatNumber(
+                BigNumber(balanceEarned)
+                  .multipliedBy(fxdPrice)
+                  .dividedBy(10 ** 18)
+                  .toNumber()
+              )
+            ) : balanceEarned === -1 ? (
+              <CircularProgress size={20} />
+            ) : (
+              0
+            )}
+          </VaultEarned>
+        </TableCell>
         <TableCell
           colSpan={1}
           sx={{ width: account ? "10%" : "10%" }}
