@@ -125,11 +125,6 @@ const authMiddleware = new ApolloLink((operation, forward) => {
     uri += "/graphql";
   }
 
-  console.log({
-    chainId,
-    uri,
-  });
-
   operation.setContext(() => ({
     uri,
   }));
