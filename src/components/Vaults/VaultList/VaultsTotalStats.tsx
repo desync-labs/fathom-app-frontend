@@ -1,9 +1,9 @@
-import { AppFlexBox } from "components/AppComponents/AppBox/AppBox";
+import { FC } from "react";
 import { Box, styled } from "@mui/material";
-
+import useVaultTotalStats from "hooks/useVaultTotalStats";
+import { AppFlexBox } from "components/AppComponents/AppBox/AppBox";
 import { ReactComponent as DepositedIcon } from "assets/svg/icons/vault-stats-deposited.svg";
 import { ReactComponent as EarnedIcon } from "assets/svg/icons/vault-stats-earning.svg";
-import { FC } from "react";
 
 const StatItemWrapper = styled(Box)`
   display: flex;
@@ -31,7 +31,7 @@ const StatItemValue = styled(Box)`
   line-height: 24px;
 `;
 
-type StatItemPropsType = { title: string; value: string; icon: JSX.Element };
+type StatItemPropsType = { title: string; value: number; icon: JSX.Element };
 
 const StatItem: FC<StatItemPropsType> = ({ title, value, icon }) => {
   return (
@@ -40,16 +40,21 @@ const StatItem: FC<StatItemPropsType> = ({ title, value, icon }) => {
         {icon}
         <StatItemLabel>{title}</StatItemLabel>
       </AppFlexBox>
-      <StatItemValue>{value}</StatItemValue>
+      <StatItemValue>${value}</StatItemValue>
     </StatItemWrapper>
   );
 };
 
 const VaultsTotalStats = () => {
+  const { totalDeposited, totalEarned } = useVaultTotalStats();
   return (
     <AppFlexBox sx={{ gap: "16px", padding: "40px 0" }}>
-      <StatItem title="Deposited" value="$12.99" icon={<DepositedIcon />} />
-      <StatItem title="Earnings" value="$12.99" icon={<EarnedIcon />} />
+      <StatItem
+        title="Deposited"
+        value={totalDeposited}
+        icon={<DepositedIcon />}
+      />
+      <StatItem title="Earnings" value={totalEarned} icon={<EarnedIcon />} />
     </AppFlexBox>
   );
 };
