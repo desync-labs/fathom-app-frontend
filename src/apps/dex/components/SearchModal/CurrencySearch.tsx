@@ -176,10 +176,6 @@ export const CurrencySearch: FC<CurrencySearchProps> = ({
     debouncedQuery
   );
 
-  console.log({
-    filteredSortedTokens,
-  });
-
   return (
     <ContentWrapper>
       <PaddedColumn gap="16px">
