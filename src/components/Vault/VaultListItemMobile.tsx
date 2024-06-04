@@ -1,0 +1,392 @@
+import { FC, memo, useMemo } from "react";
+import { styled } from "@mui/material/styles";
+import { Box, CircularProgress } from "@mui/material";
+import BigNumber from "bignumber.js";
+import { IVault, IVaultPosition } from "fathom-sdk";
+
+import {
+  ListItemWrapper,
+  ListLabel,
+  ListValue,
+} from "components/AppComponents/AppList/AppList";
+import {
+  ExtendedBtn,
+  VaultInfo,
+  VaultTagLabel,
+  VaultListItemImageWrapper,
+  VaultPercent,
+  VaultStacked,
+  VaultTitle,
+  VaultListItemPropsType,
+} from "components/Vault/VaultListItem";
+import VaultItemPositionInfo from "components/Vault/VaultListItem/AdditionalInfoTabs/VaultItemPositionInfo";
+import VaultListItemManageModal from "components/Vault/VaultListItem/VaultListItemManageModal";
+import AppPopover from "components/AppComponents/AppPopover/AppPopover";
+import VaultListItemDepositModal from "components/Vault/VaultListItem/VaultListItemDepositModal";
+import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
+import VaultListItemNav from "components/Vault/VaultListItem/VaultListItemNav";
+import VaultItemAbout from "components/Vault/VaultListItem/AdditionalInfoTabs/VaultItemAbout";
+import VaultItemStrategies from "components/Vault/VaultListItem/AdditionalInfoTabs/VaultItemStrategies";
+import WalletConnectBtn from "components/Common/WalletConnectBtn";
+
+import { getTokenLogoURL } from "utils/tokenLogo";
+import { formatNumber, formatPercentage } from "utils/format";
+import useVaultListItem, { VaultInfoTabs } from "hooks/useVaultListItem";
+import usePricesContext from "context/prices";
+import useConnector from "context/connector";
+
+import DirectionUp from "assets/svg/direction-up.svg";
+import DirectionDown from "assets/svg/direction-down.svg";
+import LockSrc from "assets/svg/lock.svg";
+import LockAquaSrc from "assets/svg/lock-aqua.svg";
+import { useApr } from "hooks/useApr";
+
+export const VaultPoolName = styled("div")`
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 15px;
+`;
+
+export const VaultListItemMobileContainer = styled(Box)`
+  width: 100%;
+  background: #131f35;
+  border-bottom: 1px solid #131f35;
+  border-radius: 8px;
+  padding: 20px 16px;
+  margin-bottom: 5px;
+`;
+
+export const VaultListValue = styled(ListValue)`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 7px;
+
+  &.neutral {
+    font-size: 14px;
+    color: #6d86b2;
+    line-height: 20px;
+    font-weight: 600;
+  }
+`;
+
+export const VaultListLabel = styled(ListLabel)`
+  color: #6d86b2;
+  font-weight: 600;
+  font-size: 11px;
+  line-height: 16px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+`;
+
+const ExtendedBtnWrapper = styled("div")`
+  height: 36px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+`;
+
+type VaultListItemMobileAdditionalDataProps = {
+  vaultItemData: IVault;
+  vaultPosition: IVaultPosition | null | undefined;
+};
+
+export const VaultListItemMobileAdditionalData: FC<VaultListItemMobileAdditionalDataProps> =
+  memo(({ vaultItemData, vaultPosition }) => {
+    const { token, depositLimit, balanceTokens } = vaultItemData;
+
+    return (
+      <>
+        <ListItemWrapper>
+          <VaultListLabel>
+            TVL
+            <AppPopover
+              id={"tvl"}
+              text={
+                <>
+                  Total value locked (TVL) is a metric that refers to the sum of
+                  assets that are staked in the Vault.
+                </>
+              }
+            />
+          </VaultListLabel>
+          <VaultListValue>
+            $
+            {formatNumber(
+              BigNumber(balanceTokens)
+                .dividedBy(10 ** 18)
+                .toNumber()
+            )}
+          </VaultListValue>
+        </ListItemWrapper>
+        <ListItemWrapper>
+          <VaultListLabel>Available</VaultListLabel>
+          <VaultListValue className={"neutral"}>
+            {formatNumber(
+              Math.max(
+                BigNumber(depositLimit)
+                  .minus(BigNumber(balanceTokens))
+                  .dividedBy(10 ** 18)
+                  .toNumber(),
+                0
+              )
+            )}{" "}
+            {token.symbol}
+          </VaultListValue>
+        </ListItemWrapper>
+        <ListItemWrapper>
+          <VaultListLabel>Locked</VaultListLabel>
+          <VaultListValue className={"neutral"}>
+            <VaultStacked>
+              <div className={"img-wrapper"}>
+                {vaultPosition?.balancePosition &&
+                BigNumber(vaultPosition?.balancePosition).isGreaterThan(0) ? (
+                  <img
+                    src={LockAquaSrc}
+                    alt={"locked"}
+                    width={20}
+                    height={20}
+                  />
+                ) : (
+                  <img src={LockSrc} alt={"locked"} width={20} height={20} />
+                )}
+              </div>
+              {vaultPosition
+                ? formatNumber(
+                    BigNumber(vaultPosition.balancePosition)
+                      .dividedBy(10 ** 18)
+                      .toNumber()
+                  )
+                : 0}
+              {" " + token.symbol}
+            </VaultStacked>
+          </VaultListValue>
+        </ListItemWrapper>
+      </>
+    );
+  });
+
+const VaultListItemMobile: FC<VaultListItemPropsType> = ({
+  vaultItemData,
+  vaultPosition,
+  performanceFee,
+  protocolFee,
+  isExtended,
+  handleExpandVault,
+  handleCollapseVault,
+  index,
+}) => {
+  const { token } = vaultItemData;
+  const formattedApr = useApr(vaultItemData);
+
+  const {
+    reports,
+    historicalApr,
+    balanceEarned,
+    manageVault,
+    newVaultDeposit,
+    activeVaultInfoTab,
+    setActiveVaultInfoTab,
+    setNewVaultDeposit,
+    setManageVault,
+  } = useVaultListItem({ vaultPosition, vault: vaultItemData });
+
+  const { fxdPrice } = usePricesContext();
+  const { account } = useConnector();
+  const vaultTestId = vaultItemData.id;
+  const { shutdown } = vaultItemData;
+
+  return (
+    <VaultListItemMobileContainer>
+      {vaultPosition?.balancePosition &&
+        BigNumber(vaultPosition?.balancePosition).isGreaterThan(0) &&
+        !shutdown && <VaultTagLabel>Earning</VaultTagLabel>}
+      {shutdown && <VaultTagLabel>Finished</VaultTagLabel>}
+      <VaultPoolName>
+        <VaultListItemImageWrapper>
+          <img src={getTokenLogoURL(token.symbol)} alt={token.name} />
+        </VaultListItemImageWrapper>
+        <VaultInfo>
+          <VaultTitle>{vaultItemData.name}</VaultTitle>
+        </VaultInfo>
+      </VaultPoolName>
+      <ListItemWrapper>
+        <VaultListLabel>
+          Fee
+          <AppPopover
+            id={"fee"}
+            text={<>The amount of fee that this Vault takes.</>}
+          />
+        </VaultListLabel>
+        <VaultListValue>
+          <VaultPercent>{formatNumber(Number(performanceFee))}%</VaultPercent>
+        </VaultListValue>
+      </ListItemWrapper>
+      {account && (
+        <ListItemWrapper>
+          <VaultListLabel>
+            Earned
+            <AppPopover
+              id={"earned"}
+              text={<>How much have you earned on this Vault so far.</>}
+            />
+          </VaultListLabel>
+          <VaultListValue>
+            {balanceEarned && BigNumber(balanceEarned).isGreaterThan(0) ? (
+              "$" +
+              formatPercentage(
+                BigNumber(balanceEarned)
+                  .multipliedBy(fxdPrice)
+                  .dividedBy(10 ** 18)
+                  .toNumber()
+              )
+            ) : balanceEarned === -1 ? (
+              <CircularProgress size={20} />
+            ) : (
+              0
+            )}
+          </VaultListValue>
+        </ListItemWrapper>
+      )}
+      <ListItemWrapper>
+        <VaultListLabel>
+          Apy
+          <AppPopover
+            id={"apr"}
+            text={
+              <>
+                Annual Percentage Yield – The annualized rate of return for the
+                vault.
+              </>
+            }
+          />
+        </VaultListLabel>
+        <VaultListValue>{formattedApr}%</VaultListValue>
+      </ListItemWrapper>
+      {isExtended && (
+        <>
+          <VaultListItemNav
+            vaultPosition={vaultPosition}
+            activeVaultInfoTab={activeVaultInfoTab}
+            setActiveVaultInfoTab={setActiveVaultInfoTab}
+          />
+          {vaultPosition &&
+            BigNumber(vaultPosition.balanceShares).isGreaterThan(0) &&
+            activeVaultInfoTab === VaultInfoTabs.POSITION && (
+              <VaultItemPositionInfo
+                balanceEarned={balanceEarned}
+                vaultItemData={vaultItemData}
+                vaultPosition={vaultPosition}
+              />
+            )}
+          {activeVaultInfoTab === VaultInfoTabs.ABOUT && (
+            <VaultItemAbout
+              reports={reports}
+              historicalApr={historicalApr}
+              vaultItemData={vaultItemData}
+              protocolFee={protocolFee}
+              performanceFee={performanceFee}
+            />
+          )}
+          {activeVaultInfoTab === VaultInfoTabs.STRATEGIES && (
+            <VaultItemStrategies
+              vaultItemData={vaultItemData}
+              performanceFee={performanceFee}
+              reports={reports}
+              historicalApr={historicalApr}
+            />
+          )}
+        </>
+      )}
+      <VaultListItemMobileAdditionalData
+        vaultItemData={vaultItemData}
+        vaultPosition={vaultPosition}
+      />
+      {(!vaultPosition ||
+        !BigNumber(vaultPosition.balanceShares).isGreaterThan(0)) &&
+        account &&
+        !shutdown && (
+          <ButtonPrimary
+            onClick={() => setNewVaultDeposit(true)}
+            sx={{ width: "100%", marginTop: "16px" }}
+          >
+            Deposit
+          </ButtonPrimary>
+        )}
+      {vaultPosition &&
+        BigNumber(vaultPosition.balanceShares).isGreaterThan(0) &&
+        account &&
+        !shutdown && (
+          <ButtonPrimary
+            onClick={() => setManageVault(true)}
+            data-testid={`vaultRowDetails-${vaultTestId}-managePositionButton`}
+            sx={{ width: "100%", marginTop: "16px" }}
+          >
+            Manage
+          </ButtonPrimary>
+        )}
+      {vaultPosition &&
+        BigNumber(vaultPosition.balanceShares).isGreaterThan(0) &&
+        account &&
+        shutdown && (
+          <ButtonPrimary
+            onClick={() => setManageVault(true)}
+            sx={{ width: "100%", marginTop: "16px" }}
+          >
+            Withdraw
+          </ButtonPrimary>
+        )}
+      {!account && <WalletConnectBtn fullwidth sx={{ marginTop: "16px" }} />}
+      <ExtendedBtnWrapper>
+        <ExtendedBtn
+          className={isExtended ? "visible" : "hidden"}
+          onClick={() => handleCollapseVault()}
+        >
+          <img src={DirectionUp} alt={"direction-up"} />
+        </ExtendedBtn>
+        <ExtendedBtn
+          className={!isExtended ? "visible" : "hidden"}
+          onClick={() => handleExpandVault(index)}
+        >
+          <img src={DirectionDown} alt={"direction-down"} />
+        </ExtendedBtn>
+      </ExtendedBtnWrapper>
+      {useMemo(() => {
+        return (
+          vaultPosition &&
+          manageVault && (
+            <VaultListItemManageModal
+              vaultItemData={vaultItemData}
+              vaultPosition={vaultPosition}
+              onClose={() => setManageVault(false)}
+              performanceFee={performanceFee}
+            />
+          )
+        );
+      }, [
+        manageVault,
+        vaultItemData,
+        vaultPosition,
+        performanceFee,
+        setManageVault,
+      ])}
+      {useMemo(() => {
+        return (
+          newVaultDeposit && (
+            <VaultListItemDepositModal
+              vaultItemData={vaultItemData}
+              onClose={() => setNewVaultDeposit(false)}
+              performanceFee={performanceFee}
+            />
+          )
+        );
+      }, [newVaultDeposit, vaultItemData, vaultItemData, setNewVaultDeposit])}
+    </VaultListItemMobileContainer>
+  );
+};
+
+export default memo(VaultListItemMobile);

@@ -1,0 +1,186 @@
+import { ReserveDataHumanized } from "@into-the-fathom/lending-contract-helpers";
+import {
+  formatReservesAndIncentives,
+  formatUserSummaryAndIncentives,
+} from "@into-the-fathom/lending-math-utils";
+import { EmodeCategory } from "apps/lending/helpers/types";
+import { fetchIconSymbolAndName } from "apps/lending/ui-config/reservePatches";
+import {
+  CustomMarket,
+  marketsData,
+} from "apps/lending/utils/marketsAndNetworksConfig";
+
+import { PoolReserve } from "apps/lending/store/poolSlice";
+import { RootStore } from "apps/lending/store/root";
+
+export const selectCurrentChainIdMarkets = (state: RootStore) => {
+  const marketNames = Object.keys(marketsData);
+  return Object.values(marketsData)
+    .map((marketData, index) => ({
+      ...marketData,
+      marketName: marketNames[index] as CustomMarket,
+    }))
+    .filter(
+      (marketData) =>
+        marketData.chainId == state.currentChainId &&
+        state.currentNetworkConfig.isFork == marketData.isFork
+    );
+};
+
+export const selectCurrentChainIdV3MarketData = (state: RootStore) => {
+  const currentChainIdMarkets = selectCurrentChainIdMarkets(state);
+  const marketData = currentChainIdMarkets.filter(
+    (marketData) => marketData.v3
+  );
+  return marketData[0];
+};
+
+export const selectCurrentUserLendingPoolData = (state: RootStore) => {
+  const marketAddressProvider = state.currentMarketData
+    ? state.currentMarketData.addresses.LENDING_POOL_ADDRESS_PROVIDER
+    : undefined;
+  const currentChainId = state.currentChainId;
+  if (marketAddressProvider && currentChainId) {
+    return state.data.get(state.currentChainId)?.get(marketAddressProvider);
+  }
+  return undefined;
+};
+
+export const selectFormatUserEmodeCategoryId = (reserve?: PoolReserve) => {
+  return reserve?.userEmodeCategoryId || 0;
+};
+
+export const selectCurrentUserEmodeCategoryId = (state: RootStore): number => {
+  return selectFormatUserEmodeCategoryId(
+    selectCurrentUserLendingPoolData(state)
+  );
+};
+
+export const selectFormatUserReserves = (reserve?: PoolReserve) => {
+  return reserve?.userReserves || [];
+};
+
+export const selectCurrentUserReserves = (state: RootStore) => {
+  return selectFormatUserReserves(selectCurrentUserLendingPoolData(state));
+};
+
+export const selectFormatReserves = (reserve?: PoolReserve) => {
+  return reserve?.reserves || [];
+};
+
+export const selectCurrentReserves = (state: RootStore) => {
+  return selectFormatReserves(selectCurrentUserLendingPoolData(state));
+};
+
+export const selectFormatBaseCurrencyData = (reserve?: PoolReserve) => {
+  return (
+    reserve?.baseCurrencyData || {
+      marketReferenceCurrencyDecimals: 0,
+      marketReferenceCurrencyPriceInUsd: "0",
+      networkBaseTokenPriceInUsd: "0",
+      networkBaseTokenPriceDecimals: 0,
+    }
+  );
+};
+
+export const selectCurrentBaseCurrencyData = (state: RootStore) => {
+  return selectFormatBaseCurrencyData(selectCurrentUserLendingPoolData(state));
+};
+
+export const reserveSortFn = (
+  a: { totalLiquidityUSD: string },
+  b: { totalLiquidityUSD: string }
+) => {
+  const numA = parseFloat(a.totalLiquidityUSD);
+  const numB = parseFloat(b.totalLiquidityUSD);
+
+  return numB > numA ? 1 : -1;
+};
+
+// TODO move formatUserSummaryAndIncentives
+// export const selectSortedCurrentUserReservesData = (state: RootStore) => {};
+
+export const selectFormattedReserves = (
+  state: RootStore,
+  currentTimestamp: number
+) => {
+  const reserves = selectCurrentReserves(state);
+  const baseCurrencyData = selectCurrentBaseCurrencyData(state);
+  const currentNetworkConfig = state.currentNetworkConfig;
+
+  const formattedPoolReserves = formatReservesAndIncentives({
+    reserves,
+    currentTimestamp,
+    marketReferenceCurrencyDecimals:
+      baseCurrencyData.marketReferenceCurrencyDecimals,
+    marketReferencePriceInUsd:
+      baseCurrencyData.marketReferenceCurrencyPriceInUsd,
+    reserveIncentives: state.reserveIncentiveData || [],
+  })
+    .map((r) => ({
+      ...r,
+      ...fetchIconSymbolAndName(r),
+      isEmodeEnabled: r.eModeCategoryId !== 0,
+      isWrappedBaseAsset:
+        r.symbol.toLowerCase() ===
+        currentNetworkConfig.wrappedBaseAssetSymbol?.toLowerCase(),
+    }))
+    .sort(reserveSortFn);
+
+  return formattedPoolReserves;
+};
+
+export const selectUserSummaryAndIncentives = (
+  state: RootStore,
+  currentTimestamp: number
+) => {
+  const baseCurrencyData = selectCurrentBaseCurrencyData(state);
+  const userReserves = selectCurrentUserReserves(state);
+  const formattedPoolReserves = selectFormattedReserves(
+    state,
+    currentTimestamp
+  );
+  const userEmodeCategoryId = selectCurrentUserEmodeCategoryId(state);
+  const reserveIncentiveData = state.reserveIncentiveData;
+  const userIncentiveData = state.userIncentiveData;
+
+  // TODO: why <any>
+  const data = formatUserSummaryAndIncentives({
+    currentTimestamp,
+    marketReferencePriceInUsd:
+      baseCurrencyData.marketReferenceCurrencyPriceInUsd,
+    marketReferenceCurrencyDecimals:
+      baseCurrencyData.marketReferenceCurrencyDecimals,
+    userReserves,
+    formattedReserves: formattedPoolReserves,
+    userEmodeCategoryId: userEmodeCategoryId,
+    reserveIncentives: reserveIncentiveData || [],
+    userIncentives: userIncentiveData || [],
+  });
+
+  return data;
+};
+
+export const formatEmodes = (reserves: ReserveDataHumanized[]) => {
+  const eModes = reserves?.reduce((acc, r) => {
+    if (!acc[r.eModeCategoryId])
+      acc[r.eModeCategoryId] = {
+        liquidationBonus: r.eModeLiquidationBonus,
+        id: r.eModeCategoryId,
+        label: r.eModeLabel,
+        liquidationThreshold: r.eModeLiquidationThreshold,
+        ltv: r.eModeLtv,
+        priceSource: r.eModePriceSource,
+        assets: [r.symbol],
+      };
+    else acc[r.eModeCategoryId].assets.push(r.symbol);
+    return acc;
+  }, {} as Record<number, EmodeCategory>);
+
+  return eModes;
+};
+
+export const selectEmodes = (state: RootStore) => {
+  const reserves = selectCurrentReserves(state);
+  return formatEmodes(reserves);
+};
