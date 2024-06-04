@@ -1,0 +1,40 @@
+name: all-tests-dev
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"
+
+concurrency:
+  group: ci-dev
+
+jobs:
+  all-tests-dev:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: dev
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Install dependencies
+        run: npm install
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
+      - name: Run Playwright tests
+        run: xvfb-run --auto-servernum -- npm run playwright:test
+        env:
+          ENVIRONMENT_URL: https://dev-app-frontend-wpa8a.ondigitalocean.app
+          HEADLESS_MODE: ${{ vars.HEADLESS_MODE}}
+          METAMASK_SETUP_PRIVATE_KEY: ${{secrets.METAMASK_SETUP_PRIVATE_KEY}}
+          METAMASK_TEST_ONE_PRIVATE_KEY: ${{secrets.METAMASK_TEST_ONE_PRIVATE_KEY}}
+          METAMASK_TEST_TWO_PRIVATE_KEY: ${{secrets.METAMASK_TEST_TWO_PRIVATE_KEY}}
+          METAMASK_SETUP_PASSWORD: ${{secrets.METAMASK_SETUP_PASSWORD}}
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: test-report
+          path: playwright-tests/test-report/
+          retention-days: 30
