@@ -106,6 +106,12 @@ export const test = base.extend<pagesAndContext>({
       enableAdvancedSettings: true,
       enableExperimentalSettings: false,
     });
+    // Set cookie consent to true
+    const [page] = context.pages();
+    await page.goto(process.env.ENVIRONMENT_URL as string);
+    await page.evaluate(() => {
+      localStorage.setItem("cookieConsent", "true");
+    });
     await use(context);
     await context.close();
     await resetState();

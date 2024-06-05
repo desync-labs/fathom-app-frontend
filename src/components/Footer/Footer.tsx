@@ -37,9 +37,7 @@ const Copyright = function Copyright(props: any) {
     <Box>
       <TokensWrapper>
         <a
-          href={
-            "https://xdc.blocksscan.io/tokens/xdc49d3f7543335cf38fa10889ccff10207e22110b5#tokenTransfers"
-          }
+          href={"https://docs.fathom.fi/fxd-deployments"}
           target={"_blank"}
           rel="noreferrer"
         >
@@ -47,9 +45,7 @@ const Copyright = function Copyright(props: any) {
         </a>
         <FooterDivider orientation="vertical" flexItem />
         <a
-          href={
-            "https://xdc.blocksscan.io/tokens/xdc3279dbefabf3c6ac29d7ff24a6c46645f3f4403c#tokenTransfers"
-          }
+          href={"https://docs.fathom.fi/fthm-deployments"}
           target={"_blank"}
           rel="noreferrer"
         >

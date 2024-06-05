@@ -111,8 +111,6 @@ import {
   useGlobalChartData,
   useGlobalData,
 } from "apps/charts/contexts/GlobalData";
-import { ApolloProvider } from "@apollo/client";
-import { dexClient } from "apollo/client";
 import Transactions from "apps/dex/pages/Transactions";
 import { memo, useEffect } from "react";
 import ReactGA from "react-ga4";
@@ -128,6 +126,7 @@ import {
   NETWORK_SETTINGS,
 } from "connectors/networks";
 import { DEFAULT_CHAIN_ID } from "utils/Constants";
+import CookieConsent from "components/Common/CookieConsent";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -572,14 +571,7 @@ const MainLayout = () => {
                     path="remove/:currencyIdA/:currencyIdB"
                     element={<RemoveLiquidity />}
                   />
-                  <Route
-                    path="transactions"
-                    element={
-                      <ApolloProvider client={dexClient}>
-                        <Transactions />
-                      </ApolloProvider>
-                    }
-                  />
+                  <Route path="transactions" element={<Transactions />} />
                   <Route element={<RedirectPathToSwapOnly />} />
                 </Route>
               ) : null}
@@ -714,6 +706,7 @@ const MainLayout = () => {
       ) : null}
 
       {erc20TokenModalData && <TransactionErc20TokenModal />}
+      <CookieConsent />
     </AppGlobalStyles>
   );
 };

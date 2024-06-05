@@ -30,13 +30,7 @@ const BottomLinks: FC = () => {
       <a href={"https://fathom.fi/"} rel="noreferrer" target={"_blank"}>
         Fathom.fi
       </a>
-      <a
-        href={
-          "https://gist.github.com/BaldyAsh/3676a18b003758057f634c9af2cfe49a"
-        }
-        rel="noreferrer"
-        target={"_blank"}
-      >
+      <a href={"https://docs.fathom.fi"} rel="noreferrer" target={"_blank"}>
         Docs
       </a>
       <a href={"https://t.me/fathom_fi"} rel="noreferrer" target={"_blank"}>
@@ -57,36 +51,28 @@ const BottomLinks: FC = () => {
         LinkedIn
       </a>
       <a
-        href={
-          "https://gist.github.com/BaldyAsh/47a33c5e8005c05315cc8dfc9baa4c0e"
-        }
+        href={"https://docs.fathom.fi/privacy-policy"}
         rel="noreferrer"
         target={"_blank"}
       >
         Privacy Policy
       </a>
       <a
-        href={
-          "https://gist.github.com/BaldyAsh/9e1efbfd87fa87fd67091b5d45c481b3"
-        }
+        href={"https://docs.fathom.fi/terms-of-service"}
         rel="noreferrer"
         target={"_blank"}
       >
         Terms of Service
       </a>
       <a
-        href={
-          "https://xdc.blocksscan.io/tokens/xdc49d3f7543335cf38fa10889ccff10207e22110b5#tokenTransfers"
-        }
+        href={"https://docs.fathom.fi/fxd-deployments"}
         target={"_blank"}
         rel="noreferrer"
       >
         FXD
       </a>
       <a
-        href={
-          "https://xdc.blocksscan.io/tokens/xdc3279dbefabf3c6ac29d7ff24a6c46645f3f4403c#tokenTransfers"
-        }
+        href={"https://docs.fathom.fi/fthm-deployments"}
         target={"_blank"}
         rel="noreferrer"
       >

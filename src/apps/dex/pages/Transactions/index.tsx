@@ -66,95 +66,102 @@ const Transactions: FC = () => {
     FormattedTransaction[]
   >([]);
 
-  const { account } = useActiveWeb3React();
+  const { account, chainId } = useActiveWeb3React();
   const { syncDex, prevSyncDex } = useSyncContext();
 
-  const onCompleted = useCallback((response: any) => {
-    const transactions = response?.data ? response.data : response;
-    if (
-      transactions &&
-      transactions.mints &&
-      transactions.burns &&
-      transactions.swaps
-    ) {
-      const newTxns: FormattedTransaction[] = [];
-      if (transactions.mints.length > 0) {
-        transactions.mints.map((mint: TransactionItem) => {
-          const newTxn = {
-            hash: mint.transaction.id,
-            addedTime: Number(mint.transaction.timestamp) * 1000,
-            type: TXN_TYPE.ADD,
-            token0Amount: mint.amount0,
-            token1Amount: mint.amount1,
-            token0Symbol: mint.pair.token0.symbol,
-            token1Symbol: mint.pair.token1.symbol,
-            transactionType: TransactionType.GRAPH,
-          };
-          return newTxns.push(newTxn);
-        });
+  const onCompleted = useCallback(
+    (response: any) => {
+      const transactions = response?.data ? response.data : response;
+      if (
+        transactions &&
+        transactions.mints &&
+        transactions.burns &&
+        transactions.swaps
+      ) {
+        const newTxns: FormattedTransaction[] = [];
+        if (transactions.mints.length > 0) {
+          transactions.mints.map((mint: TransactionItem) => {
+            const newTxn = {
+              hash: mint.transaction.id,
+              addedTime: Number(mint.transaction.timestamp) * 1000,
+              type: TXN_TYPE.ADD,
+              token0Amount: mint.amount0,
+              token1Amount: mint.amount1,
+              token0Symbol: mint.pair.token0.symbol,
+              token1Symbol: mint.pair.token1.symbol,
+              transactionType: TransactionType.GRAPH,
+            };
+            return newTxns.push(newTxn);
+          });
+        }
+        if (transactions.burns.length > 0) {
+          transactions.burns.map((burn: TransactionItem) => {
+            const newTxn = {
+              hash: burn.transaction.id,
+              addedTime: Number(burn.transaction.timestamp) * 1000,
+              type: TXN_TYPE.REMOVE,
+              token0Amount: burn.amount0,
+              token1Amount: burn.amount1,
+              token0Symbol: burn.pair.token0.symbol,
+              token1Symbol: burn.pair.token1.symbol,
+              transactionType: TransactionType.GRAPH,
+            };
+            return newTxns.push(newTxn);
+          });
+        }
+        if (transactions.swaps.length > 0) {
+          transactions.swaps.map((swap: SwapTransactionItem) => {
+            const netToken0 = swap.amount0In - swap.amount0Out;
+            const netToken1 = swap.amount1In - swap.amount1Out;
+
+            const newTxn = {
+              token0Symbol: "",
+              token1Symbol: "",
+              token0Amount: 0,
+              token1Amount: 0,
+              hash: swap.transaction.id,
+              addedTime: Number(swap.transaction.timestamp) * 1000,
+              type: TXN_TYPE.SWAP,
+              transactionType: TransactionType.GRAPH,
+            };
+
+            if (netToken0 < 0) {
+              newTxn.token0Symbol = swap.pair.token0.symbol;
+              newTxn.token1Symbol = swap.pair.token1.symbol;
+              newTxn.token0Amount = Math.abs(netToken0);
+              newTxn.token1Amount = Math.abs(netToken1);
+            } else if (netToken1 < 0) {
+              newTxn.token0Symbol = swap.pair.token1.symbol;
+              newTxn.token1Symbol = swap.pair.token0.symbol;
+              newTxn.token0Amount = Math.abs(netToken1);
+              newTxn.token1Amount = Math.abs(netToken0);
+            }
+
+            return newTxns.push(newTxn);
+          });
+        }
+
+        setTransactionList(newTxns);
+      } else {
+        setTransactionList([]);
       }
-      if (transactions.burns.length > 0) {
-        transactions.burns.map((burn: TransactionItem) => {
-          const newTxn = {
-            hash: burn.transaction.id,
-            addedTime: Number(burn.transaction.timestamp) * 1000,
-            type: TXN_TYPE.REMOVE,
-            token0Amount: burn.amount0,
-            token1Amount: burn.amount1,
-            token0Symbol: burn.pair.token0.symbol,
-            token1Symbol: burn.pair.token1.symbol,
-            transactionType: TransactionType.GRAPH,
-          };
-          return newTxns.push(newTxn);
-        });
-      }
-      if (transactions.swaps.length > 0) {
-        transactions.swaps.map((swap: SwapTransactionItem) => {
-          const netToken0 = swap.amount0In - swap.amount0Out;
-          const netToken1 = swap.amount1In - swap.amount1Out;
-
-          const newTxn = {
-            token0Symbol: "",
-            token1Symbol: "",
-            token0Amount: 0,
-            token1Amount: 0,
-            hash: swap.transaction.id,
-            addedTime: Number(swap.transaction.timestamp) * 1000,
-            type: TXN_TYPE.SWAP,
-            transactionType: TransactionType.GRAPH,
-          };
-
-          if (netToken0 < 0) {
-            newTxn.token0Symbol = swap.pair.token0.symbol;
-            newTxn.token1Symbol = swap.pair.token1.symbol;
-            newTxn.token0Amount = Math.abs(netToken0);
-            newTxn.token1Amount = Math.abs(netToken1);
-          } else if (netToken1 < 0) {
-            newTxn.token0Symbol = swap.pair.token1.symbol;
-            newTxn.token1Symbol = swap.pair.token0.symbol;
-            newTxn.token0Amount = Math.abs(netToken1);
-            newTxn.token1Amount = Math.abs(netToken0);
-          }
-
-          return newTxns.push(newTxn);
-        });
-      }
-
-      setTransactionList(newTxns.sort(newTransactionsFirst));
-    } else {
-      setTransactionList([]);
-    }
-  }, []);
+    },
+    [setTransactionList]
+  );
 
   const [getTransactions, { loading, refetch: refetchTransactions }] =
     useLazyQuery(USER_TRANSACTIONS, {
       fetchPolicy: "network-only",
       onCompleted,
+      context: {
+        chainId,
+        clientName: "dex",
+      },
     });
 
   const storageTransactions = useAllTransactions();
 
-  const allTransactions = useMemo(() => {
+  const storageFilteredTransactions = useMemo(() => {
     if (account) {
       const filtered = Object.entries(storageTransactions).filter(
         ([, tx]) => tx.from?.toLowerCase() === account?.toLowerCase()
@@ -169,11 +176,11 @@ const Transactions: FC = () => {
    * Get transactions for the last 7 days.
    */
   const sortedRecentTransactions = useMemo(() => {
-    const txs = Object.values(allTransactions);
+    const txs = Object.values(storageFilteredTransactions);
     return txs
       .filter((tx) => isTransactionRecent(tx, 7))
       .sort(newTransactionsFirst);
-  }, [allTransactions]);
+  }, [storageFilteredTransactions]);
 
   const pending = useMemo(() => {
     return sortedRecentTransactions
@@ -186,6 +193,20 @@ const Transactions: FC = () => {
     [transactionList, pending]
   );
 
+  const filteredTransactionListHashes = useMemo(() => {
+    return filteredTransactionList?.map((tx) => tx.hash) || [];
+  }, [filteredTransactionList]);
+
+  const confirmed = useMemo(() => {
+    return sortedRecentTransactions
+      .filter((tx) => tx.receipt)
+      .filter((tx) => !filteredTransactionListHashes.includes(tx.hash))
+      .map((tx) => ({
+        ...tx,
+        transactionType: TransactionType.STORAGE,
+      }));
+  }, [sortedRecentTransactions, filteredTransactionListHashes]);
+
   useEffect(() => {
     if (syncDex && !prevSyncDex) {
       refetchTransactions({ user: account }).then(onCompleted);
@@ -193,12 +214,12 @@ const Transactions: FC = () => {
   }, [syncDex, prevSyncDex, refetchTransactions, onCompleted]);
 
   useEffect(() => {
-    if (account) {
+    if (account && chainId) {
       getTransactions({
         variables: { user: account },
       });
     }
-  }, [account, getTransactions]);
+  }, [account, getTransactions, chainId]);
 
   if (!account) {
     return <Navigate to={"/swap"} />;
@@ -214,23 +235,30 @@ const Transactions: FC = () => {
           <>
             <TransactionListWrapper>
               {pending.map((hash) => {
-                return <Transaction key={hash} tx={allTransactions?.[hash]} />;
-              })}
-            </TransactionListWrapper>
-            <TransactionListWrapper>
-              {filteredTransactionList.map((item) => {
-                return item?.transactionType === TransactionType.GRAPH ? (
-                  <PreviousTransaction
-                    item={item as FormattedTransaction}
-                    key={item.hash}
-                  />
-                ) : (
+                return (
                   <Transaction
-                    tx={item as unknown as TransactionDetails}
-                    key={item.hash}
+                    key={hash}
+                    tx={storageFilteredTransactions?.[hash]}
                   />
                 );
               })}
+            </TransactionListWrapper>
+            <TransactionListWrapper>
+              {[...confirmed, ...filteredTransactionList]
+                .sort(newTransactionsFirst)
+                .map((item) => {
+                  return item?.transactionType === TransactionType.GRAPH ? (
+                    <PreviousTransaction
+                      item={item as FormattedTransaction}
+                      key={item.hash}
+                    />
+                  ) : (
+                    <Transaction
+                      tx={item as unknown as TransactionDetails}
+                      key={item.hash}
+                    />
+                  );
+                })}
             </TransactionListWrapper>
           </>
         ) : loading ? (
