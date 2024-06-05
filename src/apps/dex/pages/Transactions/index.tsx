@@ -66,7 +66,7 @@ const Transactions: FC = () => {
     FormattedTransaction[]
   >([]);
 
-  const { account } = useActiveWeb3React();
+  const { account, chainId } = useActiveWeb3React();
   const { syncDex, prevSyncDex } = useSyncContext();
 
   const onCompleted = useCallback(
@@ -153,6 +153,10 @@ const Transactions: FC = () => {
     useLazyQuery(USER_TRANSACTIONS, {
       fetchPolicy: "network-only",
       onCompleted,
+      context: {
+        chainId,
+        clientName: "dex",
+      },
     });
 
   const storageTransactions = useAllTransactions();
@@ -210,12 +214,12 @@ const Transactions: FC = () => {
   }, [syncDex, prevSyncDex, refetchTransactions, onCompleted]);
 
   useEffect(() => {
-    if (account) {
+    if (account && chainId) {
       getTransactions({
         variables: { user: account },
       });
     }
-  }, [account, getTransactions]);
+  }, [account, getTransactions, chainId]);
 
   if (!account) {
     return <Navigate to={"/swap"} />;
