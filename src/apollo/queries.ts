@@ -408,3 +408,27 @@ export const VAULT_POSITION_TRANSACTIONS = gql`
     }
   }
 `;
+export const VAULTS_ACCOUNT_TRANSACTIONS = gql`
+  query VaultPositionTransactions($account: String!, $chainId: String) {
+    deposits(
+      where: { account_contains_nocase: $account }
+      orderBy: blockNumber
+    ) {
+      id
+      timestamp
+      sharesMinted
+      tokenAmount
+      blockNumber
+    }
+    withdrawals(
+      where: { account_contains_nocase: $account }
+      orderBy: blockNumber
+    ) {
+      id
+      timestamp
+      sharesBurnt
+      tokenAmount
+      blockNumber
+    }
+  }
+`;

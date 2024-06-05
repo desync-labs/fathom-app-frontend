@@ -37,7 +37,10 @@ const VaultListView: FC<VaultListViewPropsType> = ({
         title={"Vaults"}
         description={`Explore existing Vaults, and deposit your assets for a sustainable yield.`}
       />
-      <VaultsTotalStats />
+      <VaultsTotalStats
+        positionsList={vaultPositionsList}
+        positionsLoading={vaultPositionsLoading}
+      />
       <VaultFilters
         search={search}
         sortBy={sortBy}
