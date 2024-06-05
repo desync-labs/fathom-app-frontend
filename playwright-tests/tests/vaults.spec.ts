@@ -75,11 +75,17 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     vaultPage,
   }) => {
     const depositAmount = 0.5;
+    const nativeToken =
+      process.env.CHAIN_ID === "apothem"
+        ? 1
+        : process.env.CHAIN_ID === "sepolia"
+        ? 0.001
+        : 1;
     await metamask.switchAccount("Account 1");
     const newAddress = await metamask.getWalletAddress();
     console.log(newAddress);
     await vaultPage.mintVaultsStableCoinToAddress(newAddress, depositAmount);
-    await vaultPage.transferTestXdcToAddress(newAddress, 1);
+    await vaultPage.transferTestNativeTokenToAddress(newAddress, nativeToken);
     await vaultPage.page.waitForTimeout(3000);
     await vaultPage.navigate();
     await vaultPage.connectWallet(WalletConnectOptions.Metamask);
@@ -113,11 +119,17 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
   }) => {
     test.setTimeout(180000);
     const depositAmount = 0.5;
+    const nativeToken =
+      process.env.CHAIN_ID === "apothem"
+        ? 1
+        : process.env.CHAIN_ID === "sepolia"
+        ? 0.001
+        : 1;
     await metamask.switchAccount("Account 1");
     const newAddress = await metamask.getWalletAddress();
     console.log(newAddress);
     await vaultPage.mintVaultsStableCoinToAddress(newAddress, depositAmount);
-    await vaultPage.transferTestXdcToAddress(newAddress, 1);
+    await vaultPage.transferTestNativeTokenToAddress(newAddress, nativeToken);
     await vaultPage.page.waitForTimeout(3000);
     await vaultPage.navigate();
     await vaultPage.connectWallet(WalletConnectOptions.Metamask);

@@ -15,7 +15,11 @@ import {
 import { ethers } from "fathom-ethers";
 import FathomStablecoin from "../fixtures/abis/FathomStablecoin.json";
 import { contractAddresses } from "../fixtures/global.data";
-import { APOTHEM_RPC } from "../../src/connectors/networks";
+import {
+  APOTHEM_RPC,
+  SEPOLIA_RPC,
+  XDC_RPC,
+} from "../../src/connectors/networks";
 dotenv.config();
 
 export default class BasePage {
@@ -32,6 +36,7 @@ export default class BasePage {
   readonly paragraphAlertBody: Locator;
   readonly timeoutTransactionPending = process.env.CI ? 90000 : 60000;
   readonly privateKeyMainAccount: string;
+  readonly rpcURL: string;
 
   constructor(page: Page) {
     this.page = page;
@@ -39,15 +44,19 @@ export default class BasePage {
     switch (process.env.CHAIN) {
       case "xdc_mainnet":
         this.graphAPIBaseUrl = "https://xinfin-graph.fathom.fi";
+        this.rpcURL = XDC_RPC;
         break;
       case "apothem":
         this.graphAPIBaseUrl = "https://dev-graph.fathom.fi";
+        this.rpcURL = APOTHEM_RPC;
         break;
       case "sepolia":
         this.graphAPIBaseUrl = "https://graph.sepolia.fathom.fi";
+        this.rpcURL = SEPOLIA_RPC;
         break;
       default:
         this.graphAPIBaseUrl = "https://dev-graph.fathom.fi";
+        this.rpcURL = APOTHEM_RPC;
     }
 
     if (process.env.METAMASK_SETUP_PRIVATE_KEY) {
@@ -205,7 +214,7 @@ export default class BasePage {
     address: string,
     amount: number
   ): Promise<void> {
-    const rpcUrl = APOTHEM_RPC;
+    const rpcUrl = this.rpcURL;
     const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
     const wallet = new ethers.Wallet(this.privateKeyMainAccount, provider);
     const signer = wallet.connect(provider);
@@ -228,13 +237,13 @@ export default class BasePage {
     expect(receipt.status).toEqual(1);
   }
 
-  async transferTestXdcToAddress(
+  async transferTestNativeTokenToAddress(
     address: string,
     amountToSend: number
   ): Promise<void> {
     const senderPrivateKey = this.privateKeyMainAccount;
     const receiverAddress = address;
-    const rpcUrl = APOTHEM_RPC;
+    const rpcUrl = this.rpcURL;
     const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
     const senderWallet = new ethers.Wallet(senderPrivateKey, provider);
     const tokenAmount = ethers.utils.parseEther(amountToSend.toString());
