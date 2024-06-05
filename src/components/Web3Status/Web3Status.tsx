@@ -43,7 +43,7 @@ const NetworkPaper = styled(AppPaper)`
     gap: 3px;
 
     li {
-      padding: 6px 12px;
+      padding: 6px 8px 6px 6px;
       font-size: 13px;
       border-radius: 6px;
 
