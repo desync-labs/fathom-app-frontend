@@ -58,7 +58,7 @@ export const IncentivesTooltipContent: FC<IncentivesTooltipContentProps> = ({
         flexDirection: "column",
       }}
     >
-      <Typography variant="caption" color="text.secondary" mb={3}>
+      <Typography variant="caption" color="#000c24" mb={2} fontSize={"13px"}>
         Participating in this {symbol} reserve gives annualized rewards.
       </Typography>
 
