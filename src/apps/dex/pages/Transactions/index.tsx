@@ -125,17 +125,10 @@ const Transactions: FC = () => {
               transactionType: TransactionType.GRAPH,
             };
 
-            if (netToken0 < 0) {
-              newTxn.token0Symbol = swap.pair.token0.symbol;
-              newTxn.token1Symbol = swap.pair.token1.symbol;
-              newTxn.token0Amount = Math.abs(netToken0);
-              newTxn.token1Amount = Math.abs(netToken1);
-            } else if (netToken1 < 0) {
-              newTxn.token0Symbol = swap.pair.token1.symbol;
-              newTxn.token1Symbol = swap.pair.token0.symbol;
-              newTxn.token0Amount = Math.abs(netToken1);
-              newTxn.token1Amount = Math.abs(netToken0);
-            }
+            newTxn.token0Symbol = swap.pair.token1.symbol;
+            newTxn.token1Symbol = swap.pair.token0.symbol;
+            newTxn.token0Amount = Math.abs(netToken1);
+            newTxn.token1Amount = Math.abs(netToken0);
 
             return newTxns.push(newTxn);
           });

@@ -6,12 +6,13 @@ import { getBlockScanLink } from "apps/dex/utils";
 import { ExternalLink } from "apps/dex/theme";
 import { RowFixed } from "apps/dex/components/Row";
 import Loader from "apps/dex/components/Loader";
-import { formattedNum, formatTime, urls } from "apps/charts/utils";
+import { formattedNum, formatTime } from "apps/charts/utils";
 import { getTransactionType } from "apps/charts/components/TxnList";
 import { TransactionDetails } from "apps/dex/state/transactions/reducer";
 
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
+import useConnector from "context/connector";
 
 const TransactionStatusText = styled(Box)`
   margin-right: 0.5rem;
@@ -118,10 +119,12 @@ export const Transaction: FC<{ tx: TransactionDetails }> = ({ tx }) => {
 export const PreviousTransaction: FC<{ item: FormattedTransaction }> = ({
   item,
 }) => {
+  const { chainId } = useConnector();
+
   return (
     <Box>
       <TransactionState
-        href={urls.showTransaction(item.hash)}
+        href={getBlockScanLink(chainId, item.hash, "transaction")}
         pending={false}
         success={true}
       >
