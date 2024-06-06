@@ -90,13 +90,15 @@ export const ContentWithTooltip: FC<ContentWithTooltipProps> = ({
         >
           <Box
             sx={{
-              py: 2,
-              px: 3,
+              py: 1,
+              px: 2,
               fontSize: "12px",
               lineHeight: "16px",
-              color: "text.light",
+              color: "#000c24",
+              background: "rgba(255, 255, 255, 0.9)",
+              borderRadius: "8px",
               a: {
-                fontSize: "12px",
+                fontSize: "13px",
                 lineHeight: "16px",
                 fontWeight: 500,
                 "&:hover": { textDecoration: "underline" },

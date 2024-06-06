@@ -14,7 +14,7 @@ test.describe("Fathom App Test Suite: DEX Swap", () => {
     const expectedData = await dexPage.swap({
       fromTokenData: xdcData,
       toTokenData: xUsdtData,
-      fromAmount: 0.025,
+      fromAmount: 0.5,
     });
     await dexPage.validateSwapSuccessPopup({
       fromAmountExpected: expectedData.fromAmountExpected,
