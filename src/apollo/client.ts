@@ -70,19 +70,19 @@ const cache = new InMemoryCache({
           },
         },
         mints: {
-          keyArgs: ["chainId", "account"],
+          keyArgs: ["account"],
           merge(_, incoming) {
             return incoming;
           },
         },
         burns: {
-          keyArgs: ["chainId", "account"],
+          keyArgs: ["account"],
           merge(_, incoming) {
             return incoming;
           },
         },
         swaps: {
-          keyArgs: ["chainId", "account"],
+          keyArgs: ["account"],
           merge(_, incoming) {
             return incoming;
           },
@@ -119,6 +119,8 @@ const authMiddleware = new ApolloLink((operation, forward) => {
     uri += "/subgraphs/name/dao-subgraph";
   } else if (operation.getContext().clientName === "vaults") {
     uri += "/subgraphs/name/vaults-subgraph";
+  } else if (operation.getContext().clientName === "dex") {
+    uri += "/subgraphs/name/dex-subgraph";
   } else {
     uri += "/graphql";
   }
