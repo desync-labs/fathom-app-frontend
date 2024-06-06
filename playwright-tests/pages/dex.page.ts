@@ -5,7 +5,7 @@ import * as metamask from "@synthetixio/synpress/commands/metamask";
 import {
   extractNumericValueDex,
   extractTransactionHash,
-  formatNumberToFixedLength,
+  formatNumberDexSuccessPopup,
 } from "../utils/helpers";
 import { DexTabs, DexTokenData, SwapData } from "../types";
 import { wxdcData, xdcData } from "../fixtures/dex.data";
@@ -416,9 +416,8 @@ export default class DexPage extends BasePage {
     await expect
       .soft(this.swapTransactionPopupBodyText)
       .toHaveText(
-        `Swap ${fromAmountExpected} ${fromTokenNameExpected} for ${formatNumberToFixedLength(
-          toAmountExpected,
-          17
+        `Swap ${fromAmountExpected} ${fromTokenNameExpected} for ${formatNumberDexSuccessPopup(
+          Number(toAmountExpected)
         )} ${toTokenNameExpected}`
       );
     await expect.soft(this.transactionPopupFooterText).toBeVisible();
