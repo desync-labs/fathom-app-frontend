@@ -170,19 +170,24 @@ export const MaxButton = styled(MuiButton)`
   cursor: pointer;
 `;
 export const MaxButtonV2 = styled(MuiButton)`
+  position: absolute;
+  top: 35px;
+  right: 16px;
+  height: 40px;
   color: #43fff1;
   text-align: center;
-  font-size: 14px;
+  font-size: 12px;
   font-style: normal;
   font-weight: 600;
-  line-height: 20px;
-  background: transparent;
-  border: none;
+  border-radius: 8px;
+  border: 0.7px solid #2c4066;
+  background: #091433;
   cursor: pointer;
-  padding: 0;
+  padding: 8px;
 
   &:hover {
-    background: transparent;
+    border: 0.7px solid #43fff1;
+    background: #253656;
   }
 `;
 
@@ -235,6 +240,21 @@ export const ModalButtonWrapper = styled(Box)`
     &:last-child {
       width: calc(100% - 128px);
     }
+  }
+`;
+
+export const VaultDetailFormButtonWrapper = styled(Box)`
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 20px;
+
+  & > button {
+    height: 48px;
+    width: 50%;
+    font-size: 17px;
+    font-weight: 600;
+    padding: 8px 32px;
   }
 `;
 

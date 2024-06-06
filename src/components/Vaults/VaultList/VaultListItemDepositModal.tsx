@@ -130,7 +130,10 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
             {!account ? (
               <WalletConnectBtn />
             ) : approveBtn && walletBalance !== "0" ? (
-              <ButtonPrimary onClick={approve}>
+              <ButtonPrimary
+                onClick={approve}
+                disabled={!!Object.keys(errors).length}
+              >
                 {" "}
                 {approvalPending ? (
                   <CircularProgress size={20} sx={{ color: "#0D1526" }} />

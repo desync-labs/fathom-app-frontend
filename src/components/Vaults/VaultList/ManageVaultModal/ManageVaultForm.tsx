@@ -7,6 +7,7 @@ import { IVault, IVaultPosition } from "fathom-sdk";
 import { FormType } from "hooks/useVaultManageDeposit";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatNumber } from "utils/format";
+import usePricesContext from "context/prices";
 
 import {
   AppFlexBox,
@@ -16,6 +17,7 @@ import { MaxButtonV2 } from "components/AppComponents/AppButton/AppButton";
 import {
   AppFormInputErrorWrapper,
   AppFormInputLogoV2,
+  AppFormInputUsdIndicator,
   AppFormInputWrapperV2,
   AppFormLabelRow,
   AppFormLabelV2,
@@ -76,6 +78,7 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
   onSubmit,
 }) => {
   const { token, balanceTokens, depositLimit } = vaultItemData;
+  const { fxdPrice } = usePricesContext();
   const formattedBalanceToken = useMemo(
     () =>
       BigNumber(balanceToken)
@@ -108,7 +111,6 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
                     : `Withdraw ${token.name}`}
                 </AppFormLabelV2>
                 <AppFlexBox sx={{ width: "auto", justifyContent: "flex-end" }}>
-                  <MaxButtonV2 onClick={() => setMax()}>Max</MaxButtonV2>
                   <WalletBalance sx={{ color: "#43FFF1" }}>
                     {formType === FormType.DEPOSIT
                       ? "Balance: " +
@@ -192,10 +194,18 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
                 type="number"
                 onChange={onChange}
               />
+              <AppFormInputUsdIndicator>{`$${formatNumber(
+                BigNumber(value || 0)
+                  .multipliedBy(fxdPrice)
+                  .dividedBy(10 ** 18)
+                  .toNumber()
+              )}`}</AppFormInputUsdIndicator>
               <AppFormInputLogoV2
+                className={"extendedInput"}
                 src={getTokenLogoURL(token.symbol)}
                 alt={token.name}
               />
+              <MaxButtonV2 onClick={() => setMax()}>Max</MaxButtonV2>
             </AppFormInputWrapperV2>
           )}
         />

@@ -1,17 +1,21 @@
+import { FormProvider } from "react-hook-form";
+import { Box, styled } from "@mui/material";
+import useVaultManageDeposit, { FormType } from "hooks/useVaultManageDeposit";
+import useVaultContext from "context/vault";
 import { VaultPaper } from "components/AppComponents/AppPaper/AppPaper";
 import {
   VaultNavItem,
   VaultNavWrapper,
 } from "components/Vaults/VaultDetail/VaultDetailInfoNav";
 import { AppFlexBox } from "components/AppComponents/AppBox/AppBox";
-import ManageVaultForm from "components/Vaults/VaultDetail/VaultDetailForm/ManageVaultForm";
 import ManageVaultInfo from "components/Vaults/VaultDetail/VaultDetailForm/ManageVaultInfo";
-import useVaultManageDeposit, { FormType } from "hooks/useVaultManageDeposit";
-import useVaultContext from "context/vault";
-import useSharedContext from "context/shared";
-import { FormProvider } from "react-hook-form";
+import ManageVaultForm from "components/Vaults/VaultList/ManageVaultModal/ManageVaultForm";
 
-const VaultDetailForm = () => {
+const VaultDetailFormColumn = styled(Box)`
+  width: 50%;
+`;
+
+const VaultDetailManageForm = () => {
   const { vault, vaultPosition, balanceToken } = useVaultContext();
   const {
     formType,
@@ -32,7 +36,6 @@ const VaultDetailForm = () => {
     onSubmit,
     methods,
   } = useVaultManageDeposit(vault, vaultPosition);
-  const { isMobile } = useSharedContext();
 
   const { shutdown } = vault;
 
@@ -60,34 +63,34 @@ const VaultDetailForm = () => {
       </VaultNavWrapper>
       <AppFlexBox pt="20px" sx={{ alignItems: "flex-start", gap: "20px" }}>
         <FormProvider {...methods}>
-          <ManageVaultForm
-            vaultItemData={vault}
-            balanceToken={balanceToken}
-            walletBalance={walletBalance}
-            isWalletFetching={isWalletFetching}
-            control={control}
-            formToken={formToken}
-            approveBtn={approveBtn}
-            approvalPending={approvalPending}
-            formType={formType}
-            approve={approve}
-            setMax={setMax}
-            validateMaxValue={validateMaxValue}
-            handleSubmit={handleSubmit}
-            onSubmit={onSubmit}
-            vaultPosition={vaultPosition}
-          />
+          <VaultDetailFormColumn>
+            <ManageVaultForm
+              vaultItemData={vault}
+              balanceToken={balanceToken}
+              walletBalance={walletBalance}
+              control={control}
+              formType={formType}
+              setMax={setMax}
+              validateMaxValue={validateMaxValue}
+              handleSubmit={handleSubmit}
+              onSubmit={onSubmit}
+              vaultPosition={vaultPosition}
+            />
+          </VaultDetailFormColumn>
           <ManageVaultInfo
             formType={formType}
             vaultItemData={vault}
             vaultPosition={vaultPosition}
             formToken={formToken}
             formSharedToken={formSharedToken}
-            isMobile={isMobile}
+            isWalletFetching={isWalletFetching}
+            walletBalance={walletBalance}
             onClose={onClose}
             openDepositLoading={openDepositLoading}
             errors={errors}
             approveBtn={approveBtn}
+            approve={approve}
+            approvalPending={approvalPending}
             handleSubmit={handleSubmit}
             onSubmit={onSubmit}
           />
@@ -97,4 +100,4 @@ const VaultDetailForm = () => {
   );
 };
 
-export default VaultDetailForm;
+export default VaultDetailManageForm;

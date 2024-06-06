@@ -6,17 +6,26 @@ import {
   Divider,
   ListItemText,
   styled,
+  Typography,
 } from "@mui/material";
 import { IVault, IVaultPosition } from "fathom-sdk";
 import { FieldErrors, UseFormHandleSubmit } from "react-hook-form";
 import { FormType } from "hooks/useVaultManageDeposit";
-import { AppList, AppListItem } from "components/AppComponents/AppList/AppList";
 import { formatNumber, formatPercentage } from "utils/format";
-import { AppFlexBox, Summary } from "components/AppComponents/AppBox/AppBox";
+import useConnector from "context/connector";
+import { AppList, AppListItem } from "components/AppComponents/AppList/AppList";
+import {
+  ErrorBox,
+  InfoBoxV2,
+  Summary,
+} from "components/AppComponents/AppBox/AppBox";
 import {
   ButtonPrimary,
   ButtonSecondary,
+  VaultDetailFormButtonWrapper,
 } from "components/AppComponents/AppButton/AppButton";
+import { InfoIcon } from "components/Governance/Propose";
+import WalletConnectBtn from "components/Common/WalletConnectBtn";
 
 const ManageVaultInfoWrapper = styled(Box)`
   position: relative;
@@ -42,7 +51,8 @@ type VaultManageInfoProps = {
   formToken: string;
   formSharedToken: string;
   formType: FormType;
-  isMobile: boolean;
+  isWalletFetching: boolean;
+  walletBalance: string;
   onClose: () => void;
   openDepositLoading: boolean;
   errors: FieldErrors<{
@@ -50,6 +60,8 @@ type VaultManageInfoProps = {
     formSharedToken: string;
   }>;
   approveBtn: boolean;
+  approve: () => void;
+  approvalPending: boolean;
   handleSubmit: UseFormHandleSubmit<
     {
       formToken: string;
@@ -66,7 +78,10 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
   vaultPosition,
   formToken,
   formSharedToken,
-  isMobile,
+  approve,
+  approvalPending,
+  isWalletFetching,
+  walletBalance,
   onClose,
   openDepositLoading,
   errors,
@@ -76,6 +91,7 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
 }) => {
   const { token, shareToken, sharesSupply } = vaultItemData;
   const { balancePosition, balanceShares } = vaultPosition;
+  const { account } = useConnector();
 
   return (
     <ManageVaultInfoWrapper>
@@ -238,33 +254,66 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
           <ListItemText primary="Share tokens" />
         </AppListItem>
       </VaultList>
-      <AppFlexBox>
-        {!isMobile && (
-          <ButtonSecondary sx={{ width: "auto" }} onClick={onClose}>
-            Close
-          </ButtonSecondary>
+      {isWalletFetching &&
+        formType === FormType.DEPOSIT &&
+        (BigNumber(walletBalance)
+          .dividedBy(10 ** 18)
+          .isLessThan(BigNumber(formToken)) ||
+          walletBalance == "0") && (
+          <ErrorBox sx={{ marginBottom: 0 }}>
+            <InfoIcon />
+            <Typography>Wallet balance is not enough to deposit.</Typography>
+          </ErrorBox>
         )}
-        <ButtonPrimary
-          type="button"
-          onClick={handleSubmit(onSubmit)}
-          disabled={
-            openDepositLoading ||
-            (formType === FormType.DEPOSIT && approveBtn) ||
-            !!Object.keys(errors).length
-          }
-          isLoading={openDepositLoading}
-          sx={{ width: "auto" }}
-        >
-          {openDepositLoading ? (
-            <CircularProgress sx={{ color: "#0D1526" }} size={20} />
-          ) : formType === FormType.DEPOSIT ? (
-            "Deposit"
-          ) : (
-            "Withdraw"
-          )}
-        </ButtonPrimary>
-        {isMobile && <ButtonSecondary onClick={onClose}>Close</ButtonSecondary>}
-      </AppFlexBox>
+      {approveBtn && formType === FormType.DEPOSIT && walletBalance !== "0" && (
+        <InfoBoxV2>
+          <InfoIcon />
+          <Box flexDirection="column">
+            <Typography width="100%">
+              First-time connect? Please allow token approval in your MetaMask
+            </Typography>
+          </Box>
+        </InfoBoxV2>
+      )}
+      <VaultDetailFormButtonWrapper>
+        <ButtonSecondary onClick={onClose}>Close</ButtonSecondary>
+        {!account ? (
+          <WalletConnectBtn />
+        ) : approveBtn &&
+          formType === FormType.DEPOSIT &&
+          walletBalance !== "0" ? (
+          <ButtonPrimary
+            onClick={approve}
+            disabled={!!Object.keys(errors).length}
+          >
+            {" "}
+            {approvalPending ? (
+              <CircularProgress size={20} sx={{ color: "#0D1526" }} />
+            ) : (
+              "Approve token"
+            )}{" "}
+          </ButtonPrimary>
+        ) : (
+          <ButtonPrimary
+            type="button"
+            onClick={handleSubmit(onSubmit)}
+            disabled={
+              openDepositLoading ||
+              (formType === FormType.DEPOSIT && approveBtn) ||
+              !!Object.keys(errors).length
+            }
+            isLoading={openDepositLoading}
+          >
+            {openDepositLoading ? (
+              <CircularProgress sx={{ color: "#0D1526" }} size={20} />
+            ) : formType === FormType.DEPOSIT ? (
+              "Deposit"
+            ) : (
+              "Withdraw"
+            )}
+          </ButtonPrimary>
+        )}
+      </VaultDetailFormButtonWrapper>
     </ManageVaultInfoWrapper>
   );
 };

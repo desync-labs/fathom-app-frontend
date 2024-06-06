@@ -95,7 +95,7 @@ export const AppTextFieldV2 = styled(MuiTextField)`
 
   input,
   textarea {
-    height: 46px;
+    height: 42px;
     width: 100%;
     background: #091433;
     color: #fff;
@@ -104,7 +104,7 @@ export const AppTextFieldV2 = styled(MuiTextField)`
     line-height: 20px;
     border: 1px solid #2c4066;
     border-radius: 8px;
-    padding: 0 50px 0 35px;
+    padding: 0 72px 18px 40px;
 
     &:hover,
     &:focus {
@@ -138,12 +138,14 @@ export const AppTextFieldV2 = styled(MuiTextField)`
 
   & input:disabled,
   textarea:disabled {
+    height: 46px;
     background: unset;
     border: 1px solid #2c4066;
     color: #566e99;
     -webkit-text-fill-color: unset;
     cursor: not-allowed;
     pointer-events: all;
+    padding: 0 72px 0 40px;
 
     &:hover,
     &:focus {
@@ -226,12 +228,24 @@ export const AppFormInputLogo = styled("img")`
 `;
 export const AppFormInputLogoV2 = styled("img")`
   position: absolute;
-  top: 38px;
+  top: 36px;
   left: 9px;
-  width: 18px;
-  height: 18px;
+  width: 24px;
+  height: 24px;
   filter: drop-shadow(0px 4px 40px rgba(0, 7, 21, 0.3));
   border-radius: 50%;
+
+  &.extendedInput {
+    top: 43px;
+  }
+`;
+export const AppFormInputUsdIndicator = styled("div")`
+  position: absolute;
+  top: 58px;
+  left: 40px;
+  color: #b7c8e5;
+  font-size: 14px;
+  font-weight: 400;
 `;
 
 export const AppSelect = styled(Select)`
