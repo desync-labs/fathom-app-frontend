@@ -5,7 +5,7 @@ import { wxdcData, xUsdtData, xdcData } from "../../fixtures/dex.data";
 dotenv.config();
 
 test.describe("Fathom App Test Suite: DEX Transactions", () => {
-  test.only("Successful Swap transaction is correctly displayed in transactions page @smoke", async ({
+  test("Successful Swap transaction is correctly displayed in transactions page @smoke", async ({
     dexPage,
   }) => {
     await dexPage.navigate();
