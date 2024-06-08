@@ -318,12 +318,14 @@ export const VAULT_POSITION_TRANSACTIONS = gql`
     $account: String!
     $vault: String!
     $chainId: String
+    $first: Int
   ) {
     deposits(
       where: {
         account_contains_nocase: $account
         vault_contains_nocase: $vault
       }
+      first: $first
       orderBy: blockNumber
     ) {
       id
@@ -337,6 +339,7 @@ export const VAULT_POSITION_TRANSACTIONS = gql`
         account_contains_nocase: $account
         vault_contains_nocase: $vault
       }
+      first: $first
       orderBy: blockNumber
     ) {
       id

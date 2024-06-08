@@ -1,3 +1,5 @@
+import BigNumber from "bignumber.js";
+
 export function extractNumericValue(inputString: string): number | null {
   const match = inputString.match(/(\d{1,3}(,\d{3})*(\.\d+)?|\.\d+|\d+)%?/);
 
@@ -46,38 +48,47 @@ export function formatNumberToFixedLength(
   numberString: string,
   maxDigitsAfterDecimal = 16
 ) {
-  // Convert number to string in case it's not already a string
   numberString = numberString.toString();
 
-  // Find the decimal point position
   const decimalPointIndex = numberString.indexOf(".");
 
-  // If there is no decimal point, return the number as is
   if (decimalPointIndex === -1) {
     return numberString;
   }
 
-  // Calculate the number of digits after the decimal point
   const digitsAfterDecimal = numberString.length - decimalPointIndex - 1;
 
-  // If the number of digits after the decimal is within the limit, return the number as is
   if (digitsAfterDecimal <= maxDigitsAfterDecimal) {
     return numberString;
   }
 
-  // Otherwise, trim the number to the desired length
   const targetLength = decimalPointIndex + 1 + maxDigitsAfterDecimal;
   return numberString.slice(0, targetLength);
 }
 
 export function extractTransactionHash(url: string): string | null {
-  // Regular expression to match a transaction hash in the URL
   const regex = /\/txs\/(0x[a-fA-F0-9]+)/;
   const match = url.match(regex);
 
   if (match) {
-    return match[1]; // Return the captured group, which is the transaction hash
+    return match[1];
   } else {
-    return null; // Return null if no match is found
+    return null;
   }
+}
+
+export function formatNumberDexSuccessPopup(
+  input: number,
+  significantDigits = 3
+): string {
+  const bn = new BigNumber(input);
+
+  BigNumber.config({
+    DECIMAL_PLACES: significantDigits,
+    ROUNDING_MODE: BigNumber.ROUND_DOWN,
+  });
+
+  const formatted = bn.toPrecision(significantDigits, BigNumber.ROUND_DOWN);
+
+  return formatted;
 }
