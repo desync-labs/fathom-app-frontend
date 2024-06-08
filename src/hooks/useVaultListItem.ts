@@ -99,7 +99,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
   const [loadPositionTransactions, { refetch: refetchTransactions }] =
     useLazyQuery(VAULT_POSITION_TRANSACTIONS, {
       context: { clientName: "vaults", chainId },
-      variables: { chainId },
+      variables: { chainId, first: 1000 },
       fetchPolicy: "no-cache",
     });
 
@@ -314,12 +314,16 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
       new BigNumber(0)
     );
 
+    const earnedValue = BigNumber(balanceToken || "0")
+      .minus(sumTokenDeposits.minus(sumTokenWithdrawals))
+      .dividedBy(10 ** 18)
+      .toNumber();
+
     return transactionsLoading
       ? -1
-      : BigNumber(balanceToken || "0")
-          .minus(sumTokenDeposits.minus(sumTokenWithdrawals))
-          .dividedBy(10 ** 18)
-          .toNumber();
+      : BigNumber(earnedValue).isLessThan(0.0001)
+      ? 0
+      : earnedValue;
   }, [
     vaultPosition,
     balanceToken,
