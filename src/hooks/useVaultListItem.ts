@@ -365,7 +365,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     }
   };
 
-  const getStrategiesIds = () => {
+  const getStrategiesIds = useCallback(() => {
     const strategyIdsPromises = (vault.strategies || []).map(
       async (strategy: IVaultStrategy) => {
         const isUserAuthorized = await executeManagementMethod(strategy.id);
@@ -376,7 +376,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     return Promise.all(strategyIdsPromises).then(
       (authorizedIds) => authorizedIds.filter((id) => id !== null) as string[]
     );
-  };
+  }, [vault]);
 
   useEffect(() => {
     let timeout: ReturnType<typeof setTimeout>;
