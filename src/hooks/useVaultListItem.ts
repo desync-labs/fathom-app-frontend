@@ -87,14 +87,11 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
   const { vaultService } = useServices();
   const { showErrorNotification } = useRpcError();
 
-  const [loadReports, { fetchMore: fetchMoreReports }] = useLazyQuery(
-    VAULT_STRATEGY_REPORTS,
-    {
-      context: { clientName: "vaults", chainId },
-      variables: { chainId },
-      fetchPolicy: "no-cache",
-    }
-  );
+  const [loadReports] = useLazyQuery(VAULT_STRATEGY_REPORTS, {
+    context: { clientName: "vaults", chainId },
+    variables: { chainId },
+    fetchPolicy: "no-cache",
+  });
 
   const [loadPositionTransactions, { refetch: refetchTransactions }] =
     useLazyQuery(VAULT_POSITION_TRANSACTIONS, {
@@ -108,7 +105,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     prevStateReports: IVaultStrategyReport[] = [],
     prevStateApr: IVaultStrategyHistoricalApr[] = []
   ) => {
-    (!prevStateReports.length ? loadReports : fetchMoreReports)({
+    loadReports({
       variables: {
         strategy: strategyId,
         reportsFirst: VAULT_REPORTS_PER_PAGE,
