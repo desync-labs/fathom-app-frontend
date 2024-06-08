@@ -111,7 +111,7 @@ const DepositVaultInfo: FC<VaultDepositInfoProps> = ({
           alignItems="flex-start"
           secondaryAction={formattedApr + "%"}
         >
-          <ListItemText primary="Estimated APR" />
+          <ListItemText primary="Estimated APY" />
         </AppListItem>
       </AppListVault>
     </DepositVaultFormInfoWrapper>

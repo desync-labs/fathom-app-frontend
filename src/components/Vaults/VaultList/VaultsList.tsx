@@ -96,7 +96,7 @@ const VaultsList: FC<VaultListPropsType> = ({
             </VaultListTableCell>
             <VaultListTableCell colSpan={1}>
               <VaultListTableCellPopover>
-                Apr
+                Apy
                 <AppPopover
                   id={"apr"}
                   text={

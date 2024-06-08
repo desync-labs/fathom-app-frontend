@@ -218,7 +218,7 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
           alignItems="flex-start"
           secondaryAction={formattedApr + "%"}
         >
-          <ListItemText primary="Estimated APR" />
+          <ListItemText primary="Estimated APY" />
         </AppListItem>
       </AppListVault>
     </ManageVaultFormInfoWrapper>

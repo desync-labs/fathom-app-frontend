@@ -1,5 +1,6 @@
 import { FC, memo, PureComponent, useEffect, useState } from "react";
 import { Box, ListItemText, Paper, Typography, styled } from "@mui/material";
+import dayjs from "dayjs";
 import {
   CartesianGrid,
   Line,
@@ -16,7 +17,6 @@ import {
 } from "recharts/types/component/DefaultTooltipContent";
 import { formatNumber } from "utils/format";
 import { AppList, AppListItem } from "components/AppComponents/AppList/AppList";
-import dayjs from "dayjs";
 
 export const ChartTitle = styled(Typography)`
   font-size: 16px;
@@ -84,24 +84,6 @@ const CustomTooltip: FC<TooltipProps<ValueType, NameType>> = memo(
   }
 );
 
-class CustomizedXAxisTick extends PureComponent {
-  formatDate = (timestamp) => {
-    const reportTimestamp = parseInt(timestamp, 10);
-    const date = dayjs(reportTimestamp).format("DD/MM/YYYY HH:mm:ss");
-    return date;
-  };
-  render() {
-    const { x, y, stroke, payload } = this.props;
-
-    return (
-      <g transform={`translate(${x},${y})`}>
-        <text x={0} y={0} dy={16} dx={0} textAnchor="center" fill="#6D86B2">
-          {this.formatDate(payload.value)}
-        </text>
-      </g>
-    );
-  }
-}
 class CustomizedYAxisTick extends PureComponent {
   render() {
     const { x, y, stroke, payload } = this.props;
@@ -128,7 +110,7 @@ const VaultHistoryChart: FC<VaultHistoryChartPropTypes> = ({
   useEffect(() => {
     if (chartDataArray.length) {
       const chartValues = chartDataArray.map((item) =>
-        parseFloat(item.chartValue)
+        parseFloat(item.chartValue || "0")
       );
 
       setMaxValue(Math.max(...chartValues));
@@ -138,6 +120,18 @@ const VaultHistoryChart: FC<VaultHistoryChartPropTypes> = ({
       setMinValue(0);
     }
   }, [chartDataArray]);
+
+  const tickFormatter = (timestamp: string, index: number) => {
+    const date = dayjs(parseInt(timestamp, 10));
+    if (
+      index === 0 ||
+      dayjs(parseInt(chartDataArray[index - 1].timestamp, 10)).year() !==
+        date.year()
+    ) {
+      return date.format("YYYY");
+    }
+    return date.format("MMM");
+  };
 
   return (
     <Box pt="25px">
@@ -160,8 +154,8 @@ const VaultHistoryChart: FC<VaultHistoryChartPropTypes> = ({
           <XAxis
             domain={["auto", "auto"]}
             dataKey="timestamp"
-            stroke={"#5977a0"}
-            tick={<CustomizedXAxisTick />}
+            stroke="#5977a0"
+            tickFormatter={tickFormatter}
             allowDataOverflow={true}
             strokeWidth={1}
           />
@@ -170,6 +164,7 @@ const VaultHistoryChart: FC<VaultHistoryChartPropTypes> = ({
             stroke={"transparent"}
             orientation="right"
             tick={<CustomizedYAxisTick />}
+            allowDataOverflow={false}
             width={20}
           />
           <Tooltip content={<CustomTooltip />} />
@@ -189,4 +184,4 @@ const VaultHistoryChart: FC<VaultHistoryChartPropTypes> = ({
   );
 };
 
-export default memo(VaultHistoryChart);
+export default VaultHistoryChart;

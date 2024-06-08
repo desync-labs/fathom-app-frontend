@@ -91,18 +91,18 @@ export const VaultStacked = styled("div")`
 `;
 
 export const VaultTagLabel = styled("div")`
-  background: rgba(0, 128, 118, 0.15);
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 16px;
-  color: #43fff1;
-  border-radius: 6px;
-  height: 20px;
-  width: 64px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 5px;
+  height: 28px;
+  width: fit-content;
+  background: rgba(79, 101, 140, 0.3);
+  font-size: 13px;
+  font-weight: 600;
+  color: #43fff1;
+  border-radius: 6px;
+  margin-bottom: 4px;
+  padding: 4px 8px;
   ${({ theme }) => theme.breakpoints.down("sm")} {
     margin-left: 19px;
   }
@@ -172,9 +172,14 @@ const VaultListItem = ({
             </VaultListItemImageWrapper>
             <Box>
               {vaultPosition?.balancePosition &&
-                BigNumber(vaultPosition?.balancePosition).isGreaterThan(0) &&
-                !shutdown && <VaultTagLabel>Earning</VaultTagLabel>}
-              {shutdown && <VaultTagLabel>Finished</VaultTagLabel>}
+              BigNumber(vaultPosition?.balancePosition).isGreaterThan(0) &&
+              !shutdown ? (
+                <VaultTagLabel>Earning</VaultTagLabel>
+              ) : shutdown ? (
+                <VaultTagLabel>Finished</VaultTagLabel>
+              ) : (
+                <VaultTagLabel>Live</VaultTagLabel>
+              )}
               <VaultTitle data-testid={`vaultRow-${vaultTestId}-tokenTitle`}>
                 {vaultItemData.name}
               </VaultTitle>
