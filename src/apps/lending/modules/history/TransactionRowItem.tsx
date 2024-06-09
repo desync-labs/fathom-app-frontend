@@ -1,4 +1,3 @@
-import ArrowOutward from "@mui/icons-material/ArrowOutward";
 import {
   Box,
   Button,
@@ -21,6 +20,7 @@ import {
   ActionFields,
   TransactionHistoryItem,
 } from "apps/lending/modules/history/types";
+import { ExtLinkIcon } from "components/AppComponents/AppButton/AppButton";
 
 const ActionTitle: FC<{ action: string }> = ({ action }) => {
   return (
@@ -108,14 +108,7 @@ const TransactionRowItem: FC<TransactionHistoryItemProps> = ({
                   })
                 }
               >
-                View{" "}
-                <ArrowOutward
-                  sx={{
-                    marginLeft: "5px",
-                    fontSize: "20px",
-                    color: "primary",
-                  }}
-                />
+                View <ExtLinkIcon />
               </Button>
             )}
           </Box>
