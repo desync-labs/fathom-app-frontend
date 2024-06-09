@@ -1,5 +1,4 @@
-import ArrowOutward from "@mui/icons-material/ArrowOutward";
-import { Box, Button, SvgIcon, Typography, useTheme } from "@mui/material";
+import { Box, Button, Typography, useTheme } from "@mui/material";
 import { FC, useEffect, useState } from "react";
 import { ListItem } from "apps/lending/components/lists/ListItem";
 import { useRootStore } from "apps/lending/store/root";
@@ -14,6 +13,7 @@ import {
   ActionFields,
   TransactionHistoryItem,
 } from "apps/lending/modules/history/types";
+import { ExtLinkIcon } from "components/AppComponents/AppButton/AppButton";
 
 const ActionTitle: FC<{ action: string }> = ({ action }) => {
   return (
@@ -117,16 +117,7 @@ const TransactionMobileRowItem: FC<TransactionHistoryItemProps> = ({
                   })
                 }
               >
-                VIEW TX{" "}
-                <SvgIcon
-                  sx={{
-                    fontSize: "15px",
-                    pl: 0.5,
-                    pb: 0.25,
-                  }}
-                >
-                  <ArrowOutward />
-                </SvgIcon>
+                VIEW TX <ExtLinkIcon />
               </Button>
             </Box>
           </Box>
