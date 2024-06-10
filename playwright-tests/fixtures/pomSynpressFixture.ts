@@ -12,6 +12,7 @@ import FxdPage from "../pages/fxd.page";
 import VaultPage from "../pages/vault.page";
 import DexPage from "../pages/dex.page";
 import LendingPage from "../pages/lending.page";
+import DaoPage from "../pages/dao.page";
 import { APOTHEM_RPC, XDC_RPC } from "../../src/connectors/networks";
 dotenv.config();
 
@@ -50,6 +51,7 @@ interface pagesAndContext {
   vaultPage: VaultPage;
   dexPage: DexPage;
   lendingPage: LendingPage;
+  daoPage: DaoPage;
 }
 
 export const test = base.extend<pagesAndContext>({
@@ -94,6 +96,12 @@ export const test = base.extend<pagesAndContext>({
       enableAdvancedSettings: true,
       enableExperimentalSettings: false,
     });
+    // Set cookie consent to true
+    const [page] = context.pages();
+    await page.goto(process.env.ENVIRONMENT_URL as string);
+    await page.evaluate(() => {
+      localStorage.setItem("cookieConsent", "true");
+    });
     await use(context);
     await context.close();
     await resetState();
@@ -109,6 +117,9 @@ export const test = base.extend<pagesAndContext>({
   },
   lendingPage: async ({ page }, use) => {
     await use(new LendingPage(page));
+  },
+  daoPage: async ({ page }, use) => {
+    await use(new DaoPage(page));
   },
 });
 

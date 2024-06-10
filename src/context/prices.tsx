@@ -12,6 +12,8 @@ import { useServices } from "context/services";
 import useSyncContext from "context/sync";
 import BigNumber from "bignumber.js";
 import dayjs from "dayjs";
+import useConnector from "./connector";
+import { ChainId } from "connectors/networks";
 
 type PricesProviderType = {
   children: ReactElement;
@@ -31,6 +33,7 @@ export const PricesContext = createContext<UsePricesContextReturn>(
 
 export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
   const { oracleService, provider } = useServices();
+  const { chainId } = useConnector();
 
   const [fxdPrice, setFxdPrice] = useState<string>("0");
   const [xdcPrice, setXdcPrice] = useState<string>("0");
@@ -44,21 +47,27 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
   const fetchPairPrices = useCallback(async () => {
     if (provider) {
       try {
-        const xdcPromise = oracleService.getXdcPrice();
+        const xdcPromise =
+          !chainId || [ChainId.XDC, ChainId.AXDC].includes(chainId)
+            ? oracleService.getXdcPrice()
+            : Promise.resolve([new BigNumber(0)]);
+
         setFetchPricesInProgress(true);
 
         const pricesPromise = fetch(
           process.env.REACT_APP_PRICE_FEED_URL as string
         )
           .then((data) => data.json())
-          .then((response) => ({
-            fxd: BigNumber(response["fathom-dollar"]["usd"])
-              .multipliedBy(10 ** 18)
-              .toString(),
-            fthm: BigNumber(response["fathom-protocol"]["usd"])
-              .multipliedBy(10 ** 18)
-              .toString(),
-          }));
+          .then((response) => {
+            return {
+              fxd: BigNumber(response["fathom-dollar"]["usd"])
+                .multipliedBy(10 ** 18)
+                .toString(),
+              fthm: BigNumber(response["fathom-protocol"]["usd"])
+                .multipliedBy(10 ** 18)
+                .toString(),
+            };
+          });
 
         Promise.all([pricesPromise, xdcPromise])
           .then(([prices, xdcPrice]) => {
@@ -112,6 +121,7 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
       }
     }
   }, [
+    chainId,
     provider,
     setFxdPrice,
     setFthmPrice,
@@ -120,7 +130,11 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
   ]);
 
   useEffect(() => {
-    !fetchPricesInProgress && fetchPairPrices();
+    const timeout = setTimeout(() => {
+      !fetchPricesInProgress && fetchPairPrices();
+    }, 100);
+
+    return () => timeout && clearTimeout(timeout);
   }, [fetchPairPrices]);
 
   useEffect(() => {

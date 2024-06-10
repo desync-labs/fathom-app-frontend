@@ -16,6 +16,7 @@ export enum ModalType {
   Emode,
   Faucet,
   Swap,
+  ClaimRewards,
   DebtSwitch,
 }
 
@@ -80,6 +81,7 @@ export interface ModalContextType<T extends ModalArgsType> {
   openEmode: (mode: EmodeModalType) => void;
   openFaucet: (underlyingAsset: string) => void;
   close: () => void;
+  openClaimRewards: () => void;
   type?: ModalType;
   args: T;
   mainTxState: TxStateType;
@@ -241,6 +243,10 @@ export const ModalContextProvider: FC<{ children: ReactNode }> = ({
           setType(ModalType.Emode);
           setArgs({ emode: mode });
           setMainTxState({});
+        },
+        openClaimRewards: () => {
+          trackEvent(GENERAL.OPEN_MODAL, { modal: "Claim" });
+          setType(ModalType.ClaimRewards);
         },
         openFaucet: (underlyingAsset) => {
           trackEvent(GENERAL.OPEN_MODAL, { modal: "Faucet" });

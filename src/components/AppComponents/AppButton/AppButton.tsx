@@ -1,6 +1,7 @@
 import { styled } from "@mui/material/styles";
 import { Box, IconButton, IconButton as MuiButton } from "@mui/material";
 import { IconButtonProps as MuiIconButtonProps } from "@mui/material/IconButton/IconButton";
+import OpenInNewRoundedIcon from "@mui/icons-material/OpenInNewRounded";
 
 interface ToggleDrawerButtonProps extends MuiIconButtonProps {
   open?: boolean;
@@ -182,6 +183,10 @@ export const ApproveButton = styled(MuiButton)`
   margin-top: 15px;
   min-width: 80px;
   height: 28px;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
 `;
 
 export const ButtonsWrapper = styled(Box)`
@@ -265,4 +270,11 @@ export const FarmFilterMobileBtn = styled(MuiButton)`
   height: 44px;
   background: rgba(79, 101, 140, 0.2);
   border-radius: 8px;
+`;
+
+export const ExtLinkIcon = styled(OpenInNewRoundedIcon)`
+  width: 16px;
+  height: 16px;
+  color: #43fff1;
+  margin-left: 4px;
 `;

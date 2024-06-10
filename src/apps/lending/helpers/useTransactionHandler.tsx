@@ -63,7 +63,7 @@ export const useTransactionHandler = ({
     setRequiresApproval,
   } = useModalContext();
   const { signTxData, sendTx, getTxError } = useWeb3Context();
-  const { refetchPoolData } = useBackgroundDataProvider();
+  const { refetchPoolData, refetchIncentiveData } = useBackgroundDataProvider();
   const [signatures, setSignatures] = useState<SignatureLike[]>([]);
   const [signatureDeadline, setSignatureDeadline] = useState<string>();
 
@@ -132,6 +132,7 @@ export const useTransactionHandler = ({
 
         queryClient.invalidateQueries({ queryKey: [QueryKeys.POOL_TOKENS] });
         refetchPoolData && refetchPoolData();
+        refetchIncentiveData && refetchIncentiveData();
       } catch (e) {
         // TODO: what to do with this error?
         try {
@@ -381,6 +382,8 @@ export const useTransactionHandler = ({
             );
             if (approvalTransactions.length > 0) {
               setApprovalTxes(approvalTransactions);
+            } else {
+              setApprovalTxes(undefined);
             }
             const preferPermit =
               tryPermit &&

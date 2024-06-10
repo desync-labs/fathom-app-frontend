@@ -72,6 +72,7 @@ const PoolsListItem: FC<PoolsListItemPropsType> = ({
       </TableCell>
       <TableCell>
         <PriceWrapper>
+          $
           {formatNumberPrice(
             pool.poolName.toUpperCase() === "XDC" &&
               BigNumber(xdcPrice).isGreaterThan(0)
@@ -90,7 +91,9 @@ const PoolsListItem: FC<PoolsListItemPropsType> = ({
                 : Number(pool.collateralPrice)
             }
             previous={
-              prevXdcPrice && BigNumber(prevXdcPrice).isGreaterThan(0)
+              pool.poolName.toUpperCase() === "XDC" &&
+              prevXdcPrice &&
+              BigNumber(prevXdcPrice).isGreaterThan(0)
                 ? BigNumber(prevXdcPrice)
                     .dividedBy(10 ** 18)
                     .toNumber()

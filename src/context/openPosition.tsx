@@ -8,6 +8,7 @@ export type OpenPositionContextType = {
   pool: ICollateralPool;
   onClose: () => void;
   proxyWallet: string;
+  fetchProxyWallet: () => void;
 };
 
 export type UseOpenPositionContextReturnType = {
@@ -39,6 +40,7 @@ export type UseOpenPositionContextReturnType = {
   errors: Partial<FieldErrorsImpl<typeof defaultValues>>;
   maxBorrowAmount: string;
   proxyWalletExists: boolean;
+  minCollateralAmount: number;
 };
 
 export const OpenPositionContext =
@@ -51,8 +53,9 @@ export const OpenPositionProvider: FC<OpenPositionContextType> = ({
   pool,
   onClose,
   proxyWallet,
+  fetchProxyWallet,
 }) => {
-  const values = useOpenPosition(pool, onClose, proxyWallet);
+  const values = useOpenPosition(pool, onClose, proxyWallet, fetchProxyWallet);
 
   return (
     <OpenPositionContext.Provider value={values}>

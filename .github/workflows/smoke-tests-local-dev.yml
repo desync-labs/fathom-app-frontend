@@ -41,3 +41,7 @@ jobs:
           name: test-report
           path: playwright-tests/test-report/
           retention-days: 30
+      - uses: daun/playwright-report-summary@v3
+        if: always()
+        with:
+          report-file: playwright-tests/test-report/results.json

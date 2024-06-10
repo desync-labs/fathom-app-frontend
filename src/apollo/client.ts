@@ -1,9 +1,12 @@
 import {
   ApolloClient,
   ApolloLink,
+  concat,
   HttpLink,
   InMemoryCache,
 } from "@apollo/client";
+import { SUBGRAPH_URLS } from "connectors/networks";
+import { DEFAULT_CHAIN_ID } from "utils/Constants";
 
 /***
  * For Query we have pagination, So we need to return incoming items
@@ -13,7 +16,7 @@ const cache = new InMemoryCache({
     Query: {
       fields: {
         positions: {
-          keyArgs: false,
+          keyArgs: ["chainId", "account"],
           merge(_, incoming) {
             return incoming;
           },
@@ -24,16 +27,64 @@ const cache = new InMemoryCache({
             return incoming;
           },
         },
+        pools: {
+          keyArgs: ["chainId"],
+          merge(_, incoming) {
+            return incoming;
+          },
+        },
         strategyHistoricalAprs: {
-          keyArgs: ["strategy"],
+          keyArgs: ["strategy", "chainId"],
           merge(existing = [], incoming) {
             return [...existing, ...incoming];
           },
         },
         strategyReports: {
-          keyArgs: ["strategy"],
+          keyArgs: ["strategy", "chainId"],
           merge(existing = [], incoming) {
             return [...existing, ...incoming];
+          },
+        },
+        accountVaultPositions: {
+          keyArgs: ["account"],
+          merge(_, incoming) {
+            return incoming;
+          },
+        },
+        vaults: {
+          keyArgs: ["chainId"],
+          merge(_, incoming) {
+            return incoming;
+          },
+        },
+        indexingStatusForCurrentVersion: {
+          keyArgs: ["chainId"],
+          merge(_, incoming) {
+            return incoming;
+          },
+        },
+        users: {
+          keyArgs: ["walletAddress"],
+          merge(_, incoming) {
+            return incoming;
+          },
+        },
+        mints: {
+          keyArgs: ["account"],
+          merge(_, incoming) {
+            return incoming;
+          },
+        },
+        burns: {
+          keyArgs: ["account"],
+          merge(_, incoming) {
+            return incoming;
+          },
+        },
+        swaps: {
+          keyArgs: ["account"],
+          merge(_, incoming) {
+            return incoming;
           },
         },
       },
@@ -51,36 +102,38 @@ const cache = new InMemoryCache({
   },
 });
 
-const stableCoinLink = new HttpLink({
-  uri: `${process.env.REACT_APP_API_URL}/subgraphs/name/stablecoin-subgraph`,
-});
+const httpLink = new HttpLink({ uri: SUBGRAPH_URLS[DEFAULT_CHAIN_ID] });
 
-const governanceLink = new HttpLink({
-  uri: `${process.env.REACT_APP_API_URL}/subgraphs/name/dao-subgraph`,
-});
+const authMiddleware = new ApolloLink((operation, forward) => {
+  // add the authorization to the headers
+  const chainId = operation.getContext().chainId;
 
-const vaultsLink = new HttpLink({
-  uri: `${process.env.REACT_APP_API_URL}/subgraphs/name/vaults-subgraph`,
-});
+  let uri =
+    chainId && (SUBGRAPH_URLS as any)[chainId]
+      ? (SUBGRAPH_URLS as any)[chainId]
+      : SUBGRAPH_URLS[DEFAULT_CHAIN_ID];
 
-const defaultLink = new HttpLink({
-  uri: `${process.env.REACT_APP_API_URL}/graphql`,
+  if (operation.getContext().clientName === "stable") {
+    uri += "/subgraphs/name/stablecoin-subgraph";
+  } else if (operation.getContext().clientName === "governance") {
+    uri += "/subgraphs/name/dao-subgraph";
+  } else if (operation.getContext().clientName === "vaults") {
+    uri += "/subgraphs/name/vaults-subgraph";
+  } else if (operation.getContext().clientName === "dex") {
+    uri += "/subgraphs/name/dex-subgraph";
+  } else {
+    uri += "/graphql";
+  }
+
+  operation.setContext(() => ({
+    uri,
+  }));
+
+  return forward(operation);
 });
 
 export const client = new ApolloClient({
-  link: ApolloLink.split(
-    (operation) => operation.getContext().clientName === "stable", // Routes the query to the proper client
-    stableCoinLink,
-    ApolloLink.split(
-      (operation) => operation.getContext().clientName === "governance", // Routes the query to the proper client
-      governanceLink,
-      ApolloLink.split(
-        (operation) => operation.getContext().clientName === "vaults", // Routes the query to the vaultsLink
-        vaultsLink,
-        defaultLink
-      )
-    )
-  ),
+  link: concat(authMiddleware, httpLink),
   cache,
 });
 

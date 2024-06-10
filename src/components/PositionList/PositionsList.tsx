@@ -39,12 +39,6 @@ const FlexBox = styled(Box)`
   align-items: center;
 `;
 
-const TxListLink = styled("a")`
-  font-size: 1rem;
-  text-decoration: underline;
-  margin-bottom: 10px;
-`;
-
 const PaginationWrapper = styled(Box)`
   display: flex;
   justify-content: center;
@@ -88,9 +82,6 @@ const PositionsList: FC<PositionsListProps> = ({
     <>
       <FlexBox>
         <TitleSecondary variant={"h2"}>Your Positions</TitleSecondary>
-        <TxListLink href={"/#/fxd-transactions"} rel="noreferrer">
-          Transactions
-        </TxListLink>
       </FlexBox>
       {useMemo(
         () => (

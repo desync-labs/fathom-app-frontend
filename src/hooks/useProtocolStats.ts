@@ -9,6 +9,8 @@ const useProtocolStats = () => {
   const { chainId } = useConnector();
   const { data, loading, refetch } = useQuery(FXD_STATS, {
     context: { clientName: "stable", chainId },
+    variables: { chainId },
+    fetchPolicy: "network-only",
   });
 
   const { pools, loading: poolsLoading } = usePoolsList();
@@ -17,7 +19,7 @@ const useProtocolStats = () => {
     if (pools.length) {
       return pools.reduce(
         (accumulator: number, currentPool: ICollateralPool) => {
-          return accumulator + currentPool.totalBorrowed;
+          return accumulator + Number(currentPool.totalBorrowed);
         },
         0
       );

@@ -209,7 +209,7 @@ const RepayPositionForm: FC<ClosePositionDialogPropsType> = ({
         <InfoWrapper>
           <InfoLabel>Receive</InfoLabel>
           <InfoValue>
-            {formatPercentage(Number(collateral))} {pool.poolName}
+            {formatPercentage(Number(collateral))} {pool?.poolName}
           </InfoValue>
         </InfoWrapper>
       ) : null}
@@ -231,7 +231,10 @@ const RepayPositionForm: FC<ClosePositionDialogPropsType> = ({
         <ButtonPrimary
           onClick={closePositionHandler}
           disabled={
-            balanceError || balanceErrorNotFilled || disableClosePosition
+            balanceError ||
+            balanceErrorNotFilled ||
+            disableClosePosition ||
+            approveBtn
           }
           isLoading={disableClosePosition}
         >

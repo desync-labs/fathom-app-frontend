@@ -2,6 +2,7 @@
 export const SUPPORTED_LIST_URLS: string[] = [
   "https://raw.githubusercontent.com/Into-the-Fathom/fathom-swap-default-token-list/main/src/tokenlists/apothem.json",
   "https://raw.githubusercontent.com/Into-the-Fathom/fathom-swap-default-token-list/main/src/tokenlists/xdc.json",
+  "https://raw.githubusercontent.com/Into-the-Fathom/fathom-swap-default-token-list/main/src/tokenlists/sepolia.json",
 ];
 
 // lower index == higher priority for token import

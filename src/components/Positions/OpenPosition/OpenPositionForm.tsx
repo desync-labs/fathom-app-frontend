@@ -6,8 +6,11 @@ import { styled } from "@mui/material/styles";
 import {
   ApproveBox,
   ApproveBoxTypography,
+  ErrorBox,
+  ErrorMessage,
   Summary,
   WalletBalance,
+  WarningBox,
 } from "components/AppComponents/AppBox/AppBox";
 import {
   AppFormInputLogo,
@@ -24,8 +27,6 @@ import {
 } from "components/AppComponents/AppButton/AppButton";
 import useOpenPositionContext from "context/openPosition";
 import { FXD_MINIMUM_BORROW_AMOUNT } from "utils/Constants";
-import { ErrorBox, ErrorMessage } from "components/AppComponents/AppBox/AppBox";
-import { WarningBox } from "components/AppComponents/AppBox/AppBox";
 import useConnector from "context/connector";
 
 import { formatPercentage } from "utils/format";
@@ -50,7 +51,7 @@ const DangerErrorBox = styled(ErrorBox)`
 `;
 
 const OpenPositionApproveBox = styled(ApproveBox)`
-  margin-bottom: 10px;
+  margin-bottom: 25px;
 `;
 
 const OpenPositionForm = () => {
@@ -74,6 +75,7 @@ const OpenPositionForm = () => {
     errors,
     maxBorrowAmount,
     proxyWalletExists,
+    minCollateralAmount,
   } = useOpenPositionContext();
   const { isMobile } = useSharedContext();
 
@@ -94,7 +96,7 @@ const OpenPositionForm = () => {
           name="collateral"
           rules={{
             required: true,
-            min: 1,
+            min: minCollateralAmount,
             max: BigNumber(balance)
               .dividedBy(10 ** 18)
               .toString(),
@@ -110,7 +112,7 @@ const OpenPositionForm = () => {
                       .dividedBy(10 ** 18)
                       .toNumber()
                   )}{" "}
-                  {pool.poolName}
+                  {pool?.poolName}
                 </WalletBalance>
               ) : null}
               <AppTextField
@@ -126,7 +128,7 @@ const OpenPositionForm = () => {
                           component={"span"}
                           sx={{ fontSize: "12px", paddingLeft: "6px" }}
                         >
-                          You do not have enough {pool.poolName}
+                          You do not have enough {pool?.poolName}
                         </Box>
                       </>
                     )}
@@ -148,7 +150,7 @@ const OpenPositionForm = () => {
                           component={"span"}
                           sx={{ fontSize: "12px", paddingLeft: "6px" }}
                         >
-                          Minimum collateral amount is 1.
+                          Minimum collateral amount is {minCollateralAmount}.
                         </Box>
                       </>
                     )}
@@ -292,7 +294,7 @@ const OpenPositionForm = () => {
             <ApproveBoxTypography>
               First-time connect? Please allow token approval in your MetaMask
             </ApproveBoxTypography>
-            <ApproveButton onClick={approve}>
+            <ApproveButton onClick={approve} disabled={approvalPending}>
               {" "}
               {approvalPending ? (
                 <CircularProgress size={20} sx={{ color: "#0D1526" }} />

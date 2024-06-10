@@ -33,7 +33,7 @@ const useProposalItem = () => {
     variables: {
       id: _proposalId,
     },
-    context: { clientName: "governance" },
+    context: { clientName: "governance", chainId },
   });
 
   useEffect(() => {

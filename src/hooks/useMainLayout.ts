@@ -3,19 +3,19 @@ import BigNumber from "bignumber.js";
 import useConnector from "context/connector";
 import { useLocation } from "react-router-dom";
 import useWindowSize from "./useWindowResize";
-import {
-  useAggregateFTHMBalance,
-  useXDCBalances,
-} from "apps/dex/state/wallet/hooks";
+import { useAggregateFTHMBalance } from "apps/dex/state/wallet/hooks";
 import { TokenAmount } from "into-the-fathom-swap-sdk";
 import usePrevious from "apps/dex/hooks/usePrevious";
 import useSharedContext from "context/shared";
+import { BigNumber as eBigNumber } from "fathom-ethers";
 
 const useMainLayout = () => {
   const { isMobile, isTablet } = useSharedContext();
   const [open, setOpen] = useState<boolean>(!isMobile);
   const [showToggleDrawerBtn, setShowToggleDrawerBtn] = useState<boolean>(true);
   const {
+    chainId,
+    library,
     disconnect,
     isActive,
     account,
@@ -40,10 +40,7 @@ const useMainLayout = () => {
 
   const countUpValue = aggregateBalance?.toFixed(0) ?? "0";
   const countUpValuePrevious = usePrevious(countUpValue) ?? "0";
-
-  const userXDCBalance = useXDCBalances(account ? [account] : [])?.[
-    account ?? ""
-  ];
+  const [userBalance, setUserBalance] = useState<null | string>(null);
 
   const drawerRef = useRef<HTMLDivElement | null>(null);
 
@@ -70,6 +67,23 @@ const useMainLayout = () => {
       setOpen(true);
     }
   }, [isTablet, isMobile, width, height, setOpen, setShowToggleDrawerBtn]);
+
+  useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout>;
+    if (chainId) {
+      timeout = setTimeout(() => {
+        library.getBalance(account).then((balance: eBigNumber) => {
+          setUserBalance(
+            BigNumber(balance.toString()).dividedBy(1e18).toString()
+          );
+        });
+      }, 100);
+    }
+
+    return () => {
+      timeout && clearTimeout(timeout);
+    };
+  }, [library, account, chainId]);
 
   useEffect(() => {
     document.addEventListener("scroll", scrollHandler);
@@ -148,7 +162,7 @@ const useMainLayout = () => {
     openMobileFilterMenu,
     drawerRef,
     showToggleDrawerBtn,
-    userXDCBalance,
+    userBalance,
     showFthmBalanceModal,
     setShowFthmBalanceModal,
     aggregateBalance,

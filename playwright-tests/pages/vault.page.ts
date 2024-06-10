@@ -602,7 +602,7 @@ export default class VaultPage extends BasePage {
     await Promise.all([
       this.validateAlertMessage({
         status: "pending",
-        title: "Withdraw Rewards Pending.",
+        title: "Withdraw Pending.",
         body: "Click on transaction to view on Block Explorer.",
       }),
       this.validateAlertMessage({
@@ -662,7 +662,7 @@ export default class VaultPage extends BasePage {
     await Promise.all([
       this.validateAlertMessage({
         status: "pending",
-        title: "Withdraw Rewards Pending.",
+        title: "Withdraw Pending.",
         body: "Click on transaction to view on Block Explorer.",
       }),
       this.validateAlertMessage({

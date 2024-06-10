@@ -14,6 +14,7 @@ import {
   TRANSACTION_SUCCESS_MESSAGES,
   CHECK_ON_BLOCK_EXPLORER,
   TransactionType,
+  TxErrorType,
 } from "fathom-sdk";
 import { TransactionReceipt } from "@into-the-fathom/providers";
 import { useWeb3React } from "@web3-react/core";
@@ -67,8 +68,8 @@ export const ServicesProvider: FC<{ children: ReactElement }> = ({
       addTransaction(transaction);
     };
 
-    const errorTransactionHandler = ({ error }: { error: Error }) => {
-      setShowErrorAlertHandler(true, error.message);
+    const errorTransactionHandler = ({ error }: { error: TxErrorType }) => {
+      setShowErrorAlertHandler(true, error?.error as string);
     };
 
     const successTransactionHandler = async ({
@@ -76,7 +77,7 @@ export const ServicesProvider: FC<{ children: ReactElement }> = ({
       receipt,
       tokenName,
     }: {
-      type: string;
+      type: TransactionType;
       receipt: TransactionReceipt;
       tokenName?: string;
     }) => {
@@ -89,7 +90,7 @@ export const ServicesProvider: FC<{ children: ReactElement }> = ({
       let addTokenToWalletText =
         "Add ${tokenName} to wallet to track your balance.";
 
-      if (type === "OpenPosition") {
+      if (type === TransactionType.OpenPosition) {
         const { provider, chainId } = rootService;
         const contractData = SmartContractFactory.FathomStableCoin(chainId);
         const { address } = contractData;
@@ -116,7 +117,7 @@ export const ServicesProvider: FC<{ children: ReactElement }> = ({
           },
           addTokenToWalletText
         );
-      } else if (type === "OpenVaultDeposit") {
+      } else if (type === TransactionType.OpenVaultDeposit) {
         const { provider } = rootService;
         const address = receipt.to;
 

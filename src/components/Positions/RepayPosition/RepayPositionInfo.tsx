@@ -50,7 +50,7 @@ const RepayPositionInfo = () => {
           secondaryAction={
             <>
               {formatNumber(BigNumber(lockedCollateral).toNumber())}{" "}
-              {pool.poolName}{" "}
+              {pool?.poolName}{" "}
               <Box component="span" sx={{ color: "#29C20A" }}>
                 →{" "}
                 {formatNumber(
@@ -58,7 +58,7 @@ const RepayPositionInfo = () => {
                     .minus(BigNumber(collateral))
                     .toNumber()
                 )}{" "}
-                {pool.poolName}
+                {pool?.poolName}
               </Box>
             </>
           }
@@ -92,14 +92,14 @@ const RepayPositionInfo = () => {
         </AppListItem>
         <AppListItem
           alignItems="flex-start"
-          secondaryAction={`1 ${pool.poolName} = ${formatNumberPrice(
+          secondaryAction={`1 ${pool?.poolName} = ${formatNumberPrice(
             liquidationPrice
           )} FXD`}
         >
           <ListItemText
             primary={
               <ListTitleWrapper>
-                Liquidation Price of {pool.poolName}
+                Liquidation Price of {pool?.poolName}
                 <AppPopover
                   id={"liquidation-price"}
                   text={
