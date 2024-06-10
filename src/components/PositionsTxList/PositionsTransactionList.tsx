@@ -12,7 +12,10 @@ import usePositionsTransactionList from "hooks/usePositionsTransactionList";
 import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
 import { AppList, AppListItem } from "components/AppComponents/AppList/AppList";
 import PositionsTransactionFilters from "components/PositionsTxList/PositionsTransactionFilters";
-import { ButtonSecondary } from "components/AppComponents/AppButton/AppButton";
+import {
+  ButtonSecondary,
+  ExtLinkIcon,
+} from "components/AppComponents/AppButton/AppButton";
 
 const PageHeader = styled(Box)`
   display: flex;
@@ -61,7 +64,12 @@ const PositionsTransactionList = () => {
               {userTxList.map((transaction) => (
                 <AppListItem
                   key={transaction.id}
-                  secondaryAction={<ButtonSecondary>View</ButtonSecondary>}
+                  secondaryAction={
+                    <ButtonSecondary>
+                      View
+                      <ExtLinkIcon />
+                    </ButtonSecondary>
+                  }
                   sx={{ borderTop: "1px solid #1d2d49" }}
                 >
                   <ListItemText

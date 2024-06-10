@@ -29,12 +29,12 @@ const FXDView: FC = () => {
 
   return (
     <>
-      <NestedRouteNav>
-        <NestedRouteLink className={isFXDActive ? "active" : ""} to="/fxd">
-          <DashboardIcon isactive={isFXDActive ? "true" : ""} />
-          Overview
-        </NestedRouteLink>
-        {account && (
+      {account && (
+        <NestedRouteNav>
+          <NestedRouteLink className={isFXDActive ? "active" : ""} to="/fxd">
+            <DashboardIcon isactive={isFXDActive ? "true" : ""} />
+            Overview
+          </NestedRouteLink>
           <NestedRouteLink
             span={2}
             className={isTransactionsActive ? "active" : ""}
@@ -43,8 +43,8 @@ const FXDView: FC = () => {
             <TransactionsIcon isactive={isTransactionsActive ? "active" : ""} />
             Transactions
           </NestedRouteLink>
-        )}
-      </NestedRouteNav>
+        </NestedRouteNav>
+      )}
       <FXDNestedRouteContainer>
         <Outlet />
       </FXDNestedRouteContainer>

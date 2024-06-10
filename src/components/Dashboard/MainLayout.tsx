@@ -479,10 +479,12 @@ const MainLayout = () => {
               {!chainId || DISPLAY_FXD.includes(chainId) ? (
                 <Route path="/fxd" element={<FXDView />}>
                   <Route path="/fxd" element={<DashboardContent />} />
-                  <Route
-                    path="/fxd/transactions"
-                    element={<PositionsTransactionList />}
-                  />
+                  {account && (
+                    <Route
+                      path="/fxd/transactions"
+                      element={<PositionsTransactionList />}
+                    />
+                  )}
                   <Route path="*" element={<Navigate to="/fxd" replace />} />
                 </Route>
               ) : null}
