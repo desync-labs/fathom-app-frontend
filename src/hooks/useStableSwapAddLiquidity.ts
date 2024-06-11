@@ -81,6 +81,11 @@ const useStableSwapAddLiquidity = () => {
   const approvalStatus = useMemo(
     () =>
       debounce(async (value: string) => {
+        if (value.length === 0) {
+          setApproveInputBtn(false);
+          return;
+        }
+
         const approvedUsdt = await stableSwapService.approvalStatusUsdt(
           account,
           value,
@@ -97,6 +102,8 @@ const useStableSwapAddLiquidity = () => {
 
         if (!approvedUsdt || !approvedFxd) {
           setApproveInputBtn(true);
+        } else {
+          setApproveInputBtn(false);
         }
         setApprovedFxd(approvedFxd);
         setApprovedStableCoin(approvedUsdt);
