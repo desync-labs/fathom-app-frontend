@@ -13,6 +13,7 @@ import { TransactionDetails } from "apps/dex/state/transactions/reducer";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import useConnector from "context/connector";
+import { ExtLinkIcon } from "components/AppComponents/AppButton/AppButton";
 
 const TransactionStatusText = styled(Box)`
   margin-right: 0.5rem;
@@ -99,7 +100,7 @@ export const Transaction: FC<{ tx: TransactionDetails }> = ({ tx }) => {
             {summary
               ? summary + " " + formatTime(tx.addedTime / 1000)
               : tx.hash}{" "}
-            ↗
+            <ExtLinkIcon />
           </TransactionStatusText>
         </RowFixed>
         <IconWrapper pending={pending} success={success}>
@@ -138,7 +139,7 @@ export const PreviousTransaction: FC<{ item: FormattedTransaction }> = ({
               formattedNum(item.token1Amount),
               formatTime(item.addedTime / 1000)
             )}{" "}
-            ↗
+            <ExtLinkIcon />
           </TransactionStatusText>
         </RowFixed>
         <IconWrapper pending={false} success={true}>
