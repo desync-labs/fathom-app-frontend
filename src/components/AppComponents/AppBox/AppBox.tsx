@@ -74,18 +74,11 @@ export const ApproveBoxTypography = styled(Typography)`
   color: #9fadc6;
 `;
 
-export const PoolName = styled(Typography)`
-  font-size: 14px;
-  color: #fff;
-  text-align: left;
-  line-height: 20px;
-  font-weight: 600;
-`;
-
 export const TVL = styled(Typography)`
   font-size: 12px;
   color: #6379a1;
   line-height: 16px;
+  text-align: left;
 `;
 
 export const ErrorBox = styled(MuiBox)`

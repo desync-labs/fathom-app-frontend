@@ -7,10 +7,11 @@ import BigNumber from "bignumber.js";
 import usePricesContext from "context/prices";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatCurrency, formatNumber } from "utils/format";
-import { TVL, PoolName } from "components/AppComponents/AppBox/AppBox";
+import { TVL } from "components/AppComponents/AppBox/AppBox";
 import PriceChanged from "components/Common/PriceChange";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { OpenPositionButton } from "components/AppComponents/AppButton/AppButton";
+import PoolName from "components/Pools/PoolListItem/PoolName";
 
 type PoolsListItemMobilePropsType = {
   pool: ICollateralPool;
