@@ -45,9 +45,11 @@ const AllVaultView: FC<AllVaultViewPropsType> = ({
                 rel={"noreferrer"}
               >
                 https://kyc.tradeflow.network/
-              </a>
-              . Only KYC-verified users can deposit. <br />
-              Note: Participation and deposit amounts are limited.
+              </a>{" "}
+              .
+              <br />
+              Only KYC-verified users can deposit. Note: Participation and
+              deposit amounts are limited.
             </Typography>
           </WarningBox>
         </Grid>
