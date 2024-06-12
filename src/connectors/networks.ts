@@ -25,6 +25,7 @@ const NATIVE_ASSETS = ["ETH", "XDC"];
 
 let DEFAULT_RPCS: any = {
   [ChainId.AXDC]: APOTHEM_RPC,
+  [ChainId.XDC]: XDC_RPC,
   [ChainId.SEPOLIA]: SEPOLIA_RPC,
 };
 

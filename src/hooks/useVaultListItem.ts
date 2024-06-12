@@ -87,19 +87,16 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
   const { vaultService } = useServices();
   const { showErrorNotification } = useRpcError();
 
-  const [loadReports, { fetchMore: fetchMoreReports }] = useLazyQuery(
-    VAULT_STRATEGY_REPORTS,
-    {
-      context: { clientName: "vaults", chainId },
-      variables: { chainId },
-      fetchPolicy: "no-cache",
-    }
-  );
+  const [loadReports] = useLazyQuery(VAULT_STRATEGY_REPORTS, {
+    context: { clientName: "vaults", chainId },
+    variables: { chainId },
+    fetchPolicy: "no-cache",
+  });
 
   const [loadPositionTransactions, { refetch: refetchTransactions }] =
     useLazyQuery(VAULT_POSITION_TRANSACTIONS, {
       context: { clientName: "vaults", chainId },
-      variables: { chainId },
+      variables: { chainId, first: 1000 },
       fetchPolicy: "no-cache",
     });
 
@@ -108,7 +105,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     prevStateReports: IVaultStrategyReport[] = [],
     prevStateApr: IVaultStrategyHistoricalApr[] = []
   ) => {
-    (!prevStateReports.length ? loadReports : fetchMoreReports)({
+    loadReports({
       variables: {
         strategy: strategyId,
         reportsFirst: VAULT_REPORTS_PER_PAGE,
@@ -314,12 +311,16 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
       new BigNumber(0)
     );
 
+    const earnedValue = BigNumber(balanceToken || "0")
+      .minus(sumTokenDeposits.minus(sumTokenWithdrawals))
+      .dividedBy(10 ** 18)
+      .toNumber();
+
     return transactionsLoading
       ? -1
-      : BigNumber(balanceToken || "0")
-          .minus(sumTokenDeposits.minus(sumTokenWithdrawals))
-          .dividedBy(10 ** 18)
-          .toNumber();
+      : BigNumber(earnedValue).isLessThan(0.0001)
+      ? 0
+      : earnedValue;
   }, [
     vaultPosition,
     balanceToken,
@@ -361,7 +362,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     }
   };
 
-  const getStrategiesIds = () => {
+  const getStrategiesIds = useCallback(() => {
     const strategyIdsPromises = (vault.strategies || []).map(
       async (strategy: IVaultStrategy) => {
         const isUserAuthorized = await executeManagementMethod(strategy.id);
@@ -372,7 +373,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     return Promise.all(strategyIdsPromises).then(
       (authorizedIds) => authorizedIds.filter((id) => id !== null) as string[]
     );
-  };
+  }, [vault]);
 
   useEffect(() => {
     let timeout: ReturnType<typeof setTimeout>;

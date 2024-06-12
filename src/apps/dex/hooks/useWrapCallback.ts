@@ -1,5 +1,5 @@
 import { Currency, currencyEquals, WETH, XDC } from "into-the-fathom-swap-sdk";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { tryParseAmount } from "apps/dex/state/swap/hooks";
 import { useTransactionAdder } from "apps/dex/state/transactions/hooks";
 import { useCurrencyBalance } from "apps/dex/state/wallet/hooks";
@@ -27,7 +27,9 @@ export default function useWrapCallback(
   wrapType: WrapType;
   execute?: undefined | (() => Promise<void>);
   inputError?: string;
+  wrappingLoading?: boolean;
 } {
+  const [wrappingLoading, setWrappingLoading] = useState<boolean>(false);
   const { chainId, account } = useActiveWeb3React();
   const wethContract = useWETHContract();
   const balance = useCurrencyBalance(account ?? undefined, inputCurrency);
@@ -54,6 +56,7 @@ export default function useWrapCallback(
         execute:
           sufficientBalance && inputAmount
             ? async () => {
+                setWrappingLoading(true);
                 try {
                   const txReceipt = await wethContract.deposit({
                     value: `0x${inputAmount.raw.toString(16)}`,
@@ -61,8 +64,12 @@ export default function useWrapCallback(
                   addTransaction(txReceipt, {
                     summary: `Wrap ${inputAmount.toSignificant(6)} XDC to WXDC`,
                   });
+                  txReceipt.wait().then(() => {
+                    setWrappingLoading(false);
+                  });
                 } catch (error) {
                   console.error("Could not deposit", error);
+                  setWrappingLoading(false);
                 }
               }
             : undefined,
@@ -71,6 +78,7 @@ export default function useWrapCallback(
           : sufficientBalance
           ? undefined
           : "Insufficient XDC balance",
+        wrappingLoading,
       };
     } else if (
       currencyEquals(WETH[chainId], inputCurrency) &&
@@ -81,6 +89,7 @@ export default function useWrapCallback(
         execute:
           sufficientBalance && inputAmount
             ? async () => {
+                setWrappingLoading(true);
                 try {
                   const txReceipt = await wethContract.withdraw(
                     `0x${inputAmount.raw.toString(16)}`
@@ -90,8 +99,12 @@ export default function useWrapCallback(
                       6
                     )} WXDC to XDC`,
                   });
+                  txReceipt.wait().then(() => {
+                    setWrappingLoading(false);
+                  });
                 } catch (error) {
                   console.error("Could not withdraw", error);
+                  setWrappingLoading(false);
                 }
               }
             : undefined,
@@ -100,6 +113,7 @@ export default function useWrapCallback(
           : sufficientBalance
           ? undefined
           : "Insufficient WXDC balance",
+        wrappingLoading,
       };
     } else {
       return NOT_APPLICABLE;

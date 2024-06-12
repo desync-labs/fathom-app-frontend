@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ReactGA from "react-ga4";
 import {
@@ -8,7 +8,7 @@ import {
   Token,
   Trade,
 } from "into-the-fathom-swap-sdk";
-import { Box, styled, Typography } from "@mui/material";
+import { Box, CircularProgress, styled, Typography } from "@mui/material";
 
 import useConnector from "context/connector";
 import AddressInputPanel from "apps/dex/components/AddressInputPanel";
@@ -147,6 +147,7 @@ const Swap = () => {
     wrapType,
     execute: onWrap,
     inputError: wrapInputError,
+    wrappingLoading,
   } = useWrapCallback(
     currencies[Field.INPUT],
     currencies[Field.OUTPUT],
@@ -236,16 +237,6 @@ const Swap = () => {
     trade,
     allowedSlippage
   );
-
-  // check if user has gone through an approval process, used to show two-step buttons, reset on token change
-  const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false);
-
-  // mark when a user has submitted an approval, reset onTokenSelection for input field
-  useEffect(() => {
-    if (approval === ApprovalState.PENDING) {
-      setApprovalSubmitted(true);
-    }
-  }, [approval, approvalSubmitted]);
 
   const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(
     currencyBalances[Field.INPUT]
@@ -345,7 +336,7 @@ const Swap = () => {
     !swapInputError &&
     (approval === ApprovalState.NOT_APPROVED ||
       approval === ApprovalState.PENDING ||
-      (approvalSubmitted && approval === ApprovalState.APPROVED)) &&
+      approval === ApprovalState.APPROVED) &&
     !(priceImpactSeverity > 3 && !isExpertMode);
 
   const handleConfirmDismiss = useCallback(() => {
@@ -374,7 +365,6 @@ const Swap = () => {
 
   const handleInputSelect = useCallback(
     (inputCurrency: Currency) => {
-      setApprovalSubmitted(false); // reset 2 step UI for approvals
       onCurrencySelection(Field.INPUT, inputCurrency);
     },
     [onCurrencySelection]
@@ -443,7 +433,6 @@ const Swap = () => {
                   <ArrowDownWrapped>
                     <ArrowDownwardRoundedIcon
                       onClick={() => {
-                        setApprovalSubmitted(false); // reset 2 step UI for approvals
                         onSwitchTokens();
                       }}
                       sx={{
@@ -569,16 +558,20 @@ const Swap = () => {
               </ConnectWalletButton>
             ) : showWrap ? (
               <ButtonPrimary
-                disabled={Boolean(wrapInputError)}
+                disabled={Boolean(wrapInputError) || wrappingLoading}
                 onClick={onWrap}
                 data-testid="dex-wrap-button"
               >
-                {wrapInputError ??
+                {wrappingLoading ? (
+                  <CircularProgress size={20} sx={{ color: "#00332f" }} />
+                ) : (
+                  wrapInputError ??
                   (wrapType === WrapType.WRAP
                     ? "Wrap"
                     : wrapType === WrapType.UNWRAP
                     ? "Unwrap"
-                    : null)}
+                    : null)
+                )}
               </ButtonPrimary>
             ) : noRoute && userHasSpecifiedInputOutput ? (
               <GreyCard style={{ textAlign: "center" }}>
@@ -593,9 +586,7 @@ const Swap = () => {
               <RowBetween>
                 <ButtonConfirmed
                   onClick={approveCallback}
-                  disabled={
-                    approval !== ApprovalState.NOT_APPROVED || approvalSubmitted
-                  }
+                  disabled={approval !== ApprovalState.NOT_APPROVED}
                   sx={{ width: "48%" }}
                   altDisabledStyle={approval === ApprovalState.PENDING} // show solid button while waiting
                   confirmed={approval === ApprovalState.APPROVED}
@@ -604,8 +595,7 @@ const Swap = () => {
                     <AutoRow gap="6px" justify="center">
                       Approving <Loader stroke="#061023" />
                     </AutoRow>
-                  ) : approvalSubmitted &&
-                    approval === ApprovalState.APPROVED ? (
+                  ) : approval === ApprovalState.APPROVED ? (
                     "Approved"
                   ) : (
                     "Approve " + currencies[Field.INPUT]?.symbol

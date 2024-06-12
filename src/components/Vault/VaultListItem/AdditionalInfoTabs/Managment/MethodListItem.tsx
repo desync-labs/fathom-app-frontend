@@ -25,6 +25,7 @@ import { getEstimateGas } from "fathom-sdk";
 import { ESTIMATE_GAS_MULTIPLIER } from "fathom-sdk/dist/cjs/utils/Constants";
 import TransactionResponseDataList from "./TransactionResponseDataList";
 import { FunctionFragment } from "@into-the-fathom/abi";
+import useRpcError from "hooks/useRpcError";
 
 enum MethodType {
   View = "view",
@@ -64,6 +65,8 @@ const MethodListItemAccordion = styled(VaultItemAccordion)`
   padding: 0 32px;
 `;
 
+const EMPTY_FIELD_NAME = "noname";
+
 const MethodListItem: FC<{
   method: FunctionFragment;
   contractAddress: string;
@@ -75,6 +78,7 @@ const MethodListItem: FC<{
   });
 
   const { account, library } = useConnector();
+  const { showErrorNotification } = useRpcError();
 
   const [methodType, setMethodType] = useState<MethodType>(MethodType.View);
   const [contract, setContract] = useState<Contract>();
@@ -113,15 +117,16 @@ const MethodListItem: FC<{
     const args: any[] = [];
 
     method.inputs.forEach((input, index) => {
+      const inputName = input.name !== "" ? input.name : EMPTY_FIELD_NAME;
       if (input.type === "uint256") {
         // @ts-ignore
-        args[index] = utils.parseUnits(values[input.name], 18);
+        args[index] = utils.parseUnits(values[inputName], 18);
       } else if (input.type === "address") {
         // @ts-ignore
-        args[index] = values[input.name].toLowerCase();
+        args[index] = values[inputName]?.toLowerCase();
       } else {
         // @ts-ignore
-        args[index] = values[input.name];
+        args[index] = values[inputName];
       }
     });
 
@@ -148,6 +153,7 @@ const MethodListItem: FC<{
       setResponse(response);
     } catch (e: any) {
       console.error(e);
+      showErrorNotification(e);
     } finally {
       setIsLoading(false);
     }
@@ -237,7 +243,11 @@ const MethodListItem: FC<{
           {method.inputs.map((input) => (
             <Controller
               key={input.name}
-              name={input.name as never}
+              name={
+                input.name !== ""
+                  ? (input.name as never)
+                  : (EMPTY_FIELD_NAME as never)
+              }
               rules={{ required: true }}
               control={control}
               render={({ field, fieldState: { error } }) => (
@@ -278,6 +288,7 @@ const MethodListItem: FC<{
             <ApproveButton
               type="submit"
               sx={{ width: "200px", height: "40px" }}
+              disabled={isLoading}
             >
               {isLoading ? (
                 <CircularProgress size={20} sx={{ color: "#00332f" }} />

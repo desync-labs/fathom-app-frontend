@@ -2,7 +2,7 @@ import {
   TransactionReceipt,
   TransactionResponse,
 } from "@into-the-fathom/providers";
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { useActiveWeb3React } from "apps/dex/hooks";
@@ -86,33 +86,4 @@ export function useAllTransactions(): {
  */
 export function isTransactionRecent(tx: TransactionDetails, days = 1): boolean {
   return new Date().getTime() - tx.addedTime < days * 86_400_000;
-}
-
-// returns whether a token has a pending approval transaction
-export function useHasPendingApproval(
-  tokenAddress: string | undefined,
-  spender: string | undefined
-): boolean {
-  const allTransactions = useAllTransactions();
-  return useMemo(
-    () =>
-      typeof tokenAddress === "string" &&
-      typeof spender === "string" &&
-      Object.keys(allTransactions).some((hash) => {
-        const tx = allTransactions[hash];
-        if (!tx) return false;
-        if (tx.receipt) {
-          return false;
-        } else {
-          const approval = tx.approval;
-          if (!approval) return false;
-          return (
-            approval.spender === spender &&
-            approval.tokenAddress === tokenAddress &&
-            isTransactionRecent(tx)
-          );
-        }
-      }),
-    [allTransactions, spender, tokenAddress]
-  );
 }
