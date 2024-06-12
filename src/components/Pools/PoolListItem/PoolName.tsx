@@ -1,7 +1,7 @@
 import { FC, useMemo } from "react";
 import { styled } from "@mui/material/styles";
 import { Typography } from "@mui/material";
-import { getTokenInfo } from "../../../utils/tokenLogo";
+import { getTokenInfo } from "utils/tokenLogo";
 
 type PoolNameProps = {
   children: string;

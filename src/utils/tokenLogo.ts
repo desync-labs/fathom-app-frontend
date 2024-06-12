@@ -2,7 +2,7 @@ import DEFAULT_TOKEN_LIST from "fathom-swap-standard-token-list";
 
 const TOKEN_LIST_LOGOS = ["cgo", "eth"];
 
-export type TOKEN_ITEM = {
+export type TokenItem = {
   address: string;
   chainId?: number;
   decimals?: number;
@@ -40,7 +40,7 @@ export const getTokenLogoURL = (address: string) => {
   return logo;
 };
 
-export const getTokenInfo = (address: string): TOKEN_ITEM => {
+export const getTokenInfo = (address: string): TokenItem => {
   const addressLowerCase = address?.toLowerCase();
   console.log({
     address,
