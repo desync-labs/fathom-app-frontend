@@ -128,11 +128,14 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
       } else {
         setReports((prev) => ({
           ...prev,
-          [strategyId]: [...prevStateReports, ...data?.strategyReports],
+          [strategyId]: [...prevStateReports, ...(data?.strategyReports || [])],
         }));
         setHistoricalApr((prev) => ({
           ...prev,
-          [strategyId]: [...prevStateApr, ...data?.strategyHistoricalAprs],
+          [strategyId]: [
+            ...prevStateApr,
+            ...(data?.strategyHistoricalAprs || []),
+          ],
         }));
       }
     });
