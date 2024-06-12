@@ -42,6 +42,10 @@ export const getTokenLogoURL = (address: string) => {
 
 export const getTokenInfo = (address: string): TokenItem => {
   const addressLowerCase = address?.toLowerCase();
+  console.log({
+    address,
+    DEFAULT_TOKEN_LIST,
+  });
 
   for (let i = 0; i < DEFAULT_TOKEN_LIST.tokens.length; i++) {
     const tokenListItem = DEFAULT_TOKEN_LIST.tokens[i];
