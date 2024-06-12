@@ -1,4 +1,4 @@
-import { FC, useMemo } from "react";
+import { FC, useMemo, memo } from "react";
 import { styled } from "@mui/material/styles";
 import { Typography } from "@mui/material";
 import { getTokenInfo } from "utils/tokenLogo";
@@ -35,4 +35,4 @@ const PoolName: FC<PoolNameProps> = ({ children }) => {
   return <PoolNameWrapper>{children}</PoolNameWrapper>;
 };
 
-export default PoolName;
+export default memo(PoolName);
