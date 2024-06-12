@@ -117,22 +117,22 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
 
       if (
         data?.strategyReports &&
-        data?.strategyReports.length &&
-        data?.strategyReports.length % VAULT_REPORTS_PER_PAGE === 0
+        data?.strategyReports?.length &&
+        data?.strategyReports?.length % VAULT_REPORTS_PER_PAGE === 0
       ) {
         fetchReports(
           strategyId,
-          [...prevStateReports, ...data.strategyReports],
-          [...prevStateApr, ...data.strategyHistoricalAprs]
+          [...prevStateReports, ...data?.strategyReports],
+          [...prevStateApr, ...data?.strategyHistoricalAprs]
         );
       } else {
         setReports((prev) => ({
           ...prev,
-          [strategyId]: [...prevStateReports, ...data.strategyReports],
+          [strategyId]: [...prevStateReports, ...data?.strategyReports],
         }));
         setHistoricalApr((prev) => ({
           ...prev,
-          [strategyId]: [...prevStateApr, ...data.strategyHistoricalAprs],
+          [strategyId]: [...prevStateApr, ...data?.strategyHistoricalAprs],
         }));
       }
     });
