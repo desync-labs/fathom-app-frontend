@@ -17,6 +17,11 @@ const VaultDetailFormColumn = styled(Box)`
 
 const VaultDetailManageForm = () => {
   const { vault, vaultPosition, balanceToken } = useVaultContext();
+
+  const onClose = () => {
+    methods.reset();
+  };
+
   const {
     formType,
     setFormType,
@@ -35,13 +40,9 @@ const VaultDetailManageForm = () => {
     handleSubmit,
     onSubmit,
     methods,
-  } = useVaultManageDeposit(vault, vaultPosition);
+  } = useVaultManageDeposit(vault, vaultPosition, onClose);
 
   const { shutdown } = vault;
-
-  const onClose = () => {
-    console.log("onClose");
-  };
 
   return (
     <VaultPaper sx={{ marginBottom: "24px" }}>

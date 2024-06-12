@@ -1,4 +1,4 @@
-import { FC, memo, PureComponent, useEffect, useState } from "react";
+import { FC, memo, useEffect, useState } from "react";
 import { Box, ListItemText, Paper, Typography, styled } from "@mui/material";
 import dayjs from "dayjs";
 import {
@@ -16,7 +16,16 @@ import {
   ValueType,
 } from "recharts/types/component/DefaultTooltipContent";
 import { formatNumber } from "utils/format";
+import useSharedContext from "context/shared";
 import { AppList, AppListItem } from "components/AppComponents/AppList/AppList";
+
+export const ChartWrapper = styled(Box)`
+  position: relative;
+  display: block;
+  width: 100%;
+  height: fit-content;
+  padding-top: 25px;
+`;
 
 export const ChartTitle = styled(Typography)`
   font-size: 16px;
@@ -25,18 +34,6 @@ export const ChartTitle = styled(Typography)`
   color: #fff;
   margin-bottom: 16px;
 `;
-
-export interface HistoryChartDataType {
-  timestamp: string;
-  chartValue: string;
-}
-
-type VaultHistoryChartPropTypes = {
-  title: string;
-  chartDataArray: HistoryChartDataType[];
-  valueLabel: string;
-  valueUnits?: string;
-};
 
 const CustomTooltipPaper = styled(Paper)`
   padding: 5px;
@@ -51,6 +48,25 @@ const CustomTooltipPaper = styled(Paper)`
     }
   }
 `;
+
+export interface HistoryChartDataType {
+  timestamp: string;
+  chartValue: string;
+}
+
+type VaultHistoryChartPropTypes = {
+  title: string;
+  chartDataArray: HistoryChartDataType[];
+  valueLabel: string;
+  valueUnits?: string;
+};
+
+interface CustomizedYAxisTickProps {
+  x: number;
+  y: number;
+  stroke?: string;
+  payload: { value: number };
+}
 
 const CustomTooltip: FC<TooltipProps<ValueType, NameType>> = memo(
   ({ payload }) => {
@@ -84,19 +100,20 @@ const CustomTooltip: FC<TooltipProps<ValueType, NameType>> = memo(
   }
 );
 
-class CustomizedYAxisTick extends PureComponent {
-  render() {
-    const { x, y, stroke, payload } = this.props;
-
-    return (
-      <g transform={`translate(${x},${y - 10})`}>
-        <text x={0} y={0} dy={16} textAnchor="start" fill="#6D86B2">
-          {formatNumber(payload.value)}
-        </text>
-      </g>
-    );
-  }
-}
+const CustomizedYAxisTick: FC<CustomizedYAxisTickProps> = ({
+  x,
+  y,
+  stroke,
+  payload,
+}) => {
+  return (
+    <g transform={`translate(${x},${y - 10})`}>
+      <text x={0} y={0} dy={16} textAnchor="start" fill="#6D86B2">
+        {formatNumber(payload.value)}
+      </text>
+    </g>
+  );
+};
 
 const VaultHistoryChart: FC<VaultHistoryChartPropTypes> = ({
   title,
@@ -106,6 +123,8 @@ const VaultHistoryChart: FC<VaultHistoryChartPropTypes> = ({
 }) => {
   const [minValue, setMinValue] = useState<number>(0);
   const [maxValue, setMaxValue] = useState<number>(0);
+
+  const { isMobile } = useSharedContext();
 
   useEffect(() => {
     if (chartDataArray.length) {
@@ -122,6 +141,9 @@ const VaultHistoryChart: FC<VaultHistoryChartPropTypes> = ({
   }, [chartDataArray]);
 
   const tickFormatter = (timestamp: string, index: number) => {
+    if (timestamp === "auto") {
+      return "";
+    }
     const date = dayjs(parseInt(timestamp, 10));
     if (
       index === 0 ||
@@ -133,10 +155,19 @@ const VaultHistoryChart: FC<VaultHistoryChartPropTypes> = ({
     return date.format("MMM");
   };
 
+  const containerProps = {
+    width: "100%",
+    aspect: 6,
+  };
+
+  if (isMobile) {
+    containerProps["aspect"] = 10;
+  }
+
   return (
-    <Box pt="25px">
+    <ChartWrapper>
       <ChartTitle>{title}</ChartTitle>
-      <ResponsiveContainer width="100%" aspect={6}>
+      <ResponsiveContainer {...containerProps}>
         <LineChart
           data={chartDataArray}
           margin={{
@@ -163,9 +194,9 @@ const VaultHistoryChart: FC<VaultHistoryChartPropTypes> = ({
             domain={[minValue, maxValue]}
             stroke={"transparent"}
             orientation="right"
-            tick={<CustomizedYAxisTick />}
+            tick={(props) => <CustomizedYAxisTick {...props} />}
             allowDataOverflow={false}
-            width={20}
+            width={30}
           />
           <Tooltip content={<CustomTooltip />} />
           <Line
@@ -180,7 +211,7 @@ const VaultHistoryChart: FC<VaultHistoryChartPropTypes> = ({
           />
         </LineChart>
       </ResponsiveContainer>
-    </Box>
+    </ChartWrapper>
   );
 };
 

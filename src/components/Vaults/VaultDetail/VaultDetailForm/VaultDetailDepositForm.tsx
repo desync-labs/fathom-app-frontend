@@ -13,6 +13,11 @@ const VaultDetailFormColumn = styled(Box)`
 
 const VaultDetailDepositForm = () => {
   const { vault } = useVaultContext();
+
+  const onClose = () => {
+    methods.reset();
+  };
+
   const {
     methods,
     walletBalance,
@@ -29,11 +34,7 @@ const VaultDetailDepositForm = () => {
     validateMaxDepositValue,
     handleSubmit,
     onSubmit,
-  } = useVaultOpenDeposit(vault);
-
-  const onClose = () => {
-    console.log("onClose");
-  };
+  } = useVaultOpenDeposit(vault, onClose);
 
   return (
     <VaultPaper sx={{ marginBottom: "24px" }}>

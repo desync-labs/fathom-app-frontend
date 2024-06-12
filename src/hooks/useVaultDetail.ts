@@ -121,14 +121,11 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     }
   );
 
-  const [loadReports, { fetchMore: fetchMoreReports }] = useLazyQuery(
-    VAULT_STRATEGY_REPORTS,
-    {
-      context: { clientName: "vaults", chainId },
-      variables: { chainId },
-      fetchPolicy: "no-cache",
-    }
-  );
+  const [loadReports] = useLazyQuery(VAULT_STRATEGY_REPORTS, {
+    context: { clientName: "vaults", chainId },
+    variables: { chainId },
+    fetchPolicy: "no-cache",
+  });
 
   const [loadPositionTransactions, { refetch: refetchTransactions }] =
     useLazyQuery(VAULT_POSITION_TRANSACTIONS, {
@@ -153,7 +150,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     prevStateReports: IVaultStrategyReport[] = [],
     prevStateApr: IVaultStrategyHistoricalApr[] = []
   ) => {
-    (!prevStateReports.length ? loadReports : fetchMoreReports)({
+    loadReports({
       variables: {
         strategy: strategyId,
         reportsFirst: VAULT_REPORTS_PER_PAGE,
@@ -250,9 +247,6 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
         balance.toString(),
         position.vault.id
       );
-
-      console.log("balance", balance.toString());
-      console.log("previewRedeemValue", previewRedeemValue.toString());
 
       const updatedVaultPosition = {
         ...position,
@@ -430,8 +424,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     syncVault,
     prevSyncVault,
     fetchPositionTransactions,
-    vaultPosition,
-    vault,
+    fetchBalanceToken,
     setBalanceToken,
     setDepositsList,
     setWithdrawalsList,

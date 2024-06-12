@@ -15,7 +15,7 @@ export const defaultValues = {
   sharedToken: "",
 };
 
-const useVaultOpenDeposit = (vault: IVault, onClose?: () => void) => {
+const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
   const { account } = useConnector();
   const { poolService, vaultService } = useServices();
   const { setLastTransactionBlock } = useSyncContext();
@@ -164,9 +164,7 @@ const useVaultOpenDeposit = (vault: IVault, onClose?: () => void) => {
       );
 
       setLastTransactionBlock(blockNumber as number);
-      if (onClose) {
-        onClose();
-      }
+      onClose();
     } catch (e) {
       console.log(e);
     } finally {

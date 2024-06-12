@@ -82,6 +82,7 @@ const VaultDetailInfoTabStrategies = () => {
       <StrategySelector>
         {strategies.map((strategy: IVaultStrategy, index: number) => (
           <Button
+            key={strategy.id}
             onClick={() => setActiveStrategy(index)}
             className={
               activeStrategy === index ? "activeStrategyItem" : "strategyItem"
