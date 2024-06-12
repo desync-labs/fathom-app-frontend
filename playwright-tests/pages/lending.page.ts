@@ -117,6 +117,9 @@ export default class LendingPage extends BasePage {
         await this.btnCloseAllDoneModal.click();
         await this.page.waitForTimeout(1000);
       }
+      await this.page.waitForSelector("//p[text()='Nothing borrowed yet.']", {
+        timeout: 5000,
+      });
       const isBorrowedEmpty = await this.paragraphBorrowEmpty.isVisible();
       expect(isBorrowedEmpty).toEqual(true);
     }
@@ -164,6 +167,9 @@ export default class LendingPage extends BasePage {
         await this.btnCloseAllDoneModal.click();
         await this.page.waitForTimeout(1000);
       }
+      await this.page.waitForSelector("//p[text()='Nothing supplied yet.']", {
+        timeout: 5000,
+      });
       const isSuppliedEmpty = await this.paragraphSupplyEmpty.isVisible();
       expect(isSuppliedEmpty).toEqual(true);
     }
