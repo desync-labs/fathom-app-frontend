@@ -120,12 +120,22 @@ const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
         BigNumber(0)
       ),
       BigNumber(MAX_PERSONAL_DEPOSIT)
-    ).decimalPlaces(18, BigNumber.ROUND_DOWN);
+    ).decimalPlaces(6, BigNumber.ROUND_DOWN);
 
     setValue("deposit", maxWalletBalance.toString(), {
       shouldValidate: true,
     });
   }, [setValue, walletBalance, depositLimit, balanceTokens]);
+
+  const depositLimitExceeded = (value: string) => {
+    if (BigNumber(value).isGreaterThanOrEqualTo(MAX_PERSONAL_DEPOSIT)) {
+      return `The ${MAX_PERSONAL_DEPOSIT / 1000}k ${
+        token.symbol
+      } limit has been exceeded.`;
+    } else {
+      return false;
+    }
+  };
 
   const validateMaxDepositValue = useCallback(
     (value: string) => {
@@ -134,8 +144,7 @@ const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
       );
       const formattedMaxDepositLimit = Math.max(
         BigNumber(depositLimit)
-          .minus(BigNumber(balanceTokens))
-          .dividedBy(10 ** 18)
+          .minus(BigNumber(balanceTokens).dividedBy(10 ** 18))
           .toNumber(),
         0
       );
@@ -194,6 +203,7 @@ const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
     validateMaxDepositValue,
     handleSubmit,
     onSubmit,
+    depositLimitExceeded,
   };
 };
 

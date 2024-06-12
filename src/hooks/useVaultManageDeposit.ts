@@ -162,7 +162,7 @@ const useVaultManageDeposit = (
   const validateDeposit = (
     value: string,
     maxWalletBalance: BigNumber,
-    maxDepositLimit: number
+    maxDepositLimit: BigNumber
   ) => {
     if (BigNumber(value).isGreaterThan(maxWalletBalance)) {
       return "You do not have enough money in your wallet";
@@ -170,7 +170,7 @@ const useVaultManageDeposit = (
 
     if (BigNumber(value).isGreaterThan(maxDepositLimit)) {
       return `Deposit value exceeds the maximum allowed limit ${formatNumber(
-        maxDepositLimit
+        maxDepositLimit.toNumber()
       )} ${token.symbol}`;
     }
 
@@ -189,6 +189,23 @@ const useVaultManageDeposit = (
     return true;
   };
 
+  const depositLimitExceeded = (value: string) => {
+    if (
+      BigNumber(value).isGreaterThanOrEqualTo(MAX_PERSONAL_DEPOSIT) ||
+      BigNumber(balancePosition)
+        .dividedBy(10 ** 18)
+        .plus(value)
+        .decimalPlaces(6, BigNumber.ROUND_UP)
+        .isGreaterThanOrEqualTo(MAX_PERSONAL_DEPOSIT)
+    ) {
+      return `The ${MAX_PERSONAL_DEPOSIT / 1000}k ${
+        token.symbol
+      } limit has been exceeded.`;
+    } else {
+      return false;
+    }
+  };
+
   const validateRepay = (value: string, maxBalanceToken: BigNumber) => {
     if (BigNumber(value).isGreaterThan(maxBalanceToken)) {
       return "You don't have enough to repay that amount";
@@ -201,10 +218,9 @@ const useVaultManageDeposit = (
     (value: string) => {
       if (formType === FormType.DEPOSIT) {
         const maxWalletBalance = BigNumber(walletBalance).dividedBy(10 ** 18);
-        const maxDepositLimit = Math.max(
+        const maxDepositLimit = BigNumber.max(
           BigNumber(depositLimit)
-            .minus(BigNumber(balanceTokens))
-            .dividedBy(10 ** 18)
+            .minus(BigNumber(balanceTokens).dividedBy(10 ** 18))
             .toNumber(),
           0
         );
@@ -228,7 +244,7 @@ const useVaultManageDeposit = (
         BigNumber(MAX_PERSONAL_DEPOSIT).minus(
           BigNumber(balancePosition).dividedBy(10 ** 18)
         )
-      ).decimalPlaces(18, BigNumber.ROUND_DOWN);
+      ).decimalPlaces(6, BigNumber.ROUND_DOWN);
 
       const maxCapped = max.isNegative() ? BigNumber(0) : max;
 
@@ -326,6 +342,7 @@ const useVaultManageDeposit = (
     validateMaxValue,
     handleSubmit,
     onSubmit,
+    depositLimitExceeded,
   };
 };
 
