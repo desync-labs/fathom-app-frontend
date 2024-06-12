@@ -140,4 +140,10 @@ strategyTitle["0xcea3c48da7aa17d5bc0a588a3e743577d94eb192"] =
 strategyTitle["0xc0ac2e5181f90fda9e9264b5b1634b2c8bd88cdd"] =
   "FXD - Liquidation Strategy 1";
 
+strategyTitle["0x989a19e29cb9bc194bd35606af8f9a641a4cbce4"] =
+  "Liquidation strategy";
+
+strategyTitle["0x4e2fc8a4e62cf515ee7954fd01346cd2501e7e81"] =
+  "Lending strategy";
+
 export { strategyTitle, strategyDescription };
