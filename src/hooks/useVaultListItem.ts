@@ -259,7 +259,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
       timeout = setTimeout(() => {
         fetchBalanceToken();
         fetchPositionTransactions();
-        interval = setInterval(fetchBalanceToken, 15 * 1000);
+        interval = setInterval(() => fetchBalanceToken(), 15 * 1000);
       }, 200);
     }
 
@@ -270,9 +270,8 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
   }, [vault, fetchBalanceToken, fetchPositionTransactions]);
 
   useEffect(() => {
-    if (syncVault && !prevSyncVault) {
+    if (syncVault && !prevSyncVault && vaultPosition) {
       setTransactionLoading(true);
-      console.log("promise loading sync");
       Promise.all([
         fetchPositionTransactions(TransactionFetchType.PROMISE),
         fetchBalanceToken(FetchBalanceTokenType.PROMISE),
@@ -290,6 +289,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     syncVault,
     prevSyncVault,
     fetchPositionTransactions,
+    fetchBalanceToken,
     vaultPosition,
     vault,
     setBalanceToken,
