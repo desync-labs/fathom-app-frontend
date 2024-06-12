@@ -30,7 +30,7 @@ const AllVaultView: FC<AllVaultViewPropsType> = ({
           title={"Vaults"}
           description={`Explore existing Vaults, and deposit your assets for a sustainable yield.`}
         />
-        <Grid item xs={12}>
+        <Grid item xs={12} lg={8}>
           <WarningBox sx={{ my: 3 }}>
             <InfoIcon
               sx={{ width: "16px", color: "#F5953D", height: "16px" }}
