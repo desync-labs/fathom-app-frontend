@@ -7,8 +7,7 @@ import { useTransactionHandler } from "apps/lending/helpers/useTransactionHandle
 import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 import { useRootStore } from "apps/lending/store/root";
 
-import { TxActionsWrapper } from "apps/lending/components/transactions/TxActionsWrapper";
-import { FC } from "react";
+import { TxActionsWrapper } from "../TxActionsWrapper";
 
 export interface RepayActionProps extends BoxProps {
   amountToRepay: string;
@@ -22,7 +21,7 @@ export interface RepayActionProps extends BoxProps {
   blocked?: boolean;
 }
 
-export const RepayActions: FC<RepayActionProps> = ({
+export const RepayActions = ({
   amountToRepay,
   poolReserve,
   poolAddress,
@@ -33,7 +32,7 @@ export const RepayActions: FC<RepayActionProps> = ({
   repayWithFmTokens,
   blocked,
   ...props
-}) => {
+}: RepayActionProps) => {
   const { repay, repayWithPermit, tryPermit } = useRootStore();
 
   const usingPermit = tryPermit({

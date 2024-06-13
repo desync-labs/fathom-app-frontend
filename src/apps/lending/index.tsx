@@ -22,6 +22,8 @@ import RepayModal from "apps/lending/components/transactions/Repay/RepayModal";
 import SupplyModal from "apps/lending/components/transactions/Supply/SupplyModal";
 import WithdrawModal from "apps/lending/components/transactions/Withdraw/WithdrawModal";
 import ClaimRewardsModal from "apps/lending/components/transactions/ClaimRewards/ClaimRewardsModal";
+import SwapModal from "apps/lending/components/transactions/Swap/SwapModal";
+import DebtSwitchModal from "apps/lending/components/transactions/DebtSwitch/DebtSwitchModal";
 
 export const queryClient = new QueryClient();
 
@@ -43,9 +45,11 @@ const LendingIndexComponent: FC = () => {
                       <RepayModal />
                       <CollateralChangeModal />
                       <RateSwitchModal />
-                      <EmodeModal />
-                      <FaucetModal />
+                      <DebtSwitchModal />
                       <ClaimRewardsModal />
+                      <EmodeModal />
+                      <SwapModal />
+                      <FaucetModal />
                       <TransactionEventHandler />
                     </SharedDependenciesProvider>
                   </GasStationProvider>
