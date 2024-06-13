@@ -40,6 +40,10 @@ export const MARKETS = {
   SORT: "Sort",
 };
 
+export const REPAY_MODAL = {
+  SWITCH_REPAY_TYPE: "Change repay type",
+};
+
 export const RESERVE_DETAILS = {
   RESERVE_TOKENS_DROPDOWN: "View reserve tokens", // done
   RESERVE_TOKEN_ACTIONS: "Reserve Token Action",

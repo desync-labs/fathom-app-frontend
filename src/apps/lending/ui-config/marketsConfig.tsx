@@ -13,11 +13,15 @@ export type MarketDataType = {
   // the network the market operates on
   chainId: ChainId | number;
   enabledFeatures?: {
+    liquiditySwap?: boolean;
     faucet?: boolean;
     incentives?: boolean;
     permissions?: boolean;
     addressBlocked?: boolean;
     stableBorrowRate?: boolean;
+    collateralRepay?: boolean;
+    debtSwitch?: boolean;
+    withdrawAndSwitch?: boolean;
   };
   isFork?: boolean;
   permissionComponent?: ReactNode;
@@ -33,6 +37,11 @@ export type MarketDataType = {
     UI_POOL_DATA_PROVIDER: string;
     COLLECTOR?: string;
     UI_INCENTIVE_DATA_PROVIDER?: string;
+    DEBT_SWITCH_ADAPTER?: string;
+    REPAY_WITH_COLLATERAL_ADAPTER?: string;
+    SWAP_COLLATERAL_ADAPTER?: string;
+    L2_ENCODER?: string;
+    WITHDRAW_SWITCH_ADAPTER?: string;
   };
   /**
    * https://www.hal.xyz/ has integrated lending for healtfactor warning notification

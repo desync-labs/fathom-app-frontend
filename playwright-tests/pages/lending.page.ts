@@ -361,7 +361,7 @@ export default class LendingPage extends BasePage {
         await this.getDashboardBorrowedListItemNativeAmountLocator({
           assetName,
         }).innerText();
-      return parseFloat(nativeAmount);
+      return Number(parseFloat(nativeAmount).toFixed(2));
     } else {
       return 0;
     }
