@@ -30,10 +30,6 @@ const DepositVaultItemFormWrapper = styled(Box)`
   border-radius: 12px;
   background: #1e2f4d;
   padding: 24px 16px;
-
-  ${({ theme }) => theme.breakpoints.down("sm")} {
-    padding: 0;
-  }
 `;
 
 const ManageVaultForm = styled("form")`

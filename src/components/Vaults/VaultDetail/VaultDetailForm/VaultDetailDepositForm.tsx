@@ -1,14 +1,28 @@
 import { FormProvider } from "react-hook-form";
 import { Box, styled, Typography } from "@mui/material";
 import useVaultContext from "context/vault";
+import useSharedContext from "context/shared";
 import useVaultOpenDeposit from "hooks/useVaultOpenDeposit";
 import { VaultPaper } from "components/AppComponents/AppPaper/AppPaper";
 import { AppFlexBox } from "components/AppComponents/AppBox/AppBox";
 import DepositVaultForm from "components/Vaults/VaultList/DepositVaultModal/DepositVaultForm";
-import DepositVaultInfo from "./DepositVaultInfo";
+import DepositVaultInfo from "components/Vaults/VaultDetail/VaultDetailForm/DepositVaultInfo";
+
+const VaultFormWrapper = styled(AppFlexBox)`
+  align-items: flex-start;
+  gap: 20px;
+  padding-top: 20px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    flex-direction: column;
+    padding-top: 10px;
+  }
+`;
 
 const VaultDetailFormColumn = styled(Box)`
   width: 50%;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    width: 100%;
+  }
 `;
 
 const VaultDetailDepositForm = () => {
@@ -35,11 +49,14 @@ const VaultDetailDepositForm = () => {
     handleSubmit,
     onSubmit,
   } = useVaultOpenDeposit(vault, onClose);
+  const { isMobile } = useSharedContext();
 
   return (
-    <VaultPaper sx={{ marginBottom: "24px" }}>
-      <Typography variant="h3">Deposit</Typography>
-      <AppFlexBox pt="20px" sx={{ alignItems: "flex-start", gap: "20px" }}>
+    <VaultPaper sx={{ marginBottom: isMobile ? "20px" : "24px" }}>
+      <Typography variant="h3" sx={{ fontSize: isMobile ? "14px" : "16px" }}>
+        Deposit
+      </Typography>
+      <VaultFormWrapper>
         <FormProvider {...methods}>
           <VaultDetailFormColumn>
             <DepositVaultForm
@@ -68,7 +85,7 @@ const VaultDetailDepositForm = () => {
             onSubmit={onSubmit}
           />
         </FormProvider>
-      </AppFlexBox>
+      </VaultFormWrapper>
     </VaultPaper>
   );
 };

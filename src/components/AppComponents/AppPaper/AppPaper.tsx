@@ -23,4 +23,8 @@ export const VaultPaper = styled(AppPaper)`
   border: 1px solid #2c4066;
   background: #132340;
   padding: 24px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    border-radius: 12px;
+    padding: 24px 16px;
+  }
 `;

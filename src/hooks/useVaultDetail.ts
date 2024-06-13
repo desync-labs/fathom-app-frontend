@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   IVault,
   IVaultPosition,
@@ -31,7 +32,7 @@ declare module "fathom-sdk" {
 }
 
 interface UseVaultDetailProps {
-  vaultId: string;
+  vaultId: string | undefined;
 }
 
 export enum VaultInfoTabs {
@@ -65,6 +66,7 @@ enum FetchBalanceTokenType {
 }
 
 const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
+  const navigate = useNavigate();
   const [vault, setVault] = useState<IVault>({} as IVault);
   const [vaultPosition, setVaultPosition] = useState<IVaultPosition>(
     {} as IVaultPosition
@@ -225,7 +227,9 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
   }, [vaultsFactories]);
 
   useEffect(() => {
-    if (vaultItemData) {
+    if ((!vaultItemData || vaultItemData?.vault === null) && !vaultLoading) {
+      navigate("/vaults");
+    } else if (vaultItemData && !vaultLoading) {
       const { vault } = vaultItemData;
       setVault({
         ...vault,
@@ -234,7 +238,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
           : vault.token.name,
       });
     }
-  }, [vaultItemData, setVault]);
+  }, [vaultItemData, vaultLoading, setVault]);
 
   const updateVaultPosition = async (position: IVaultPosition) => {
     try {
@@ -263,7 +267,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
   };
 
   useEffect(() => {
-    if (account && vaultService) {
+    if (account && vault.id && vaultService) {
       loadPosition({
         variables: { account: account.toLowerCase(), vault: vaultId },
       }).then((res) => {
@@ -319,7 +323,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     (
       fetchBalanceTokenType: FetchBalanceTokenType = FetchBalanceTokenType.FETCH
     ) => {
-      if (vault === null) {
+      if (vault.id === undefined) {
         return;
       }
 
@@ -396,7 +400,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
 
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
-    if (vaultPosition && vault) {
+    if (vaultPosition && vault.id) {
       fetchBalanceToken();
       fetchPositionTransactions();
       interval = setInterval(fetchBalanceToken, 15 * 1000);
@@ -508,7 +512,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
   }, [vault]);
 
   useEffect(() => {
-    if (vault && account) {
+    if (vault.id && account) {
       getStrategiesIds.then((authorizedIds) =>
         setManagedStrategiesIds(authorizedIds)
       );
@@ -518,7 +522,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
   }, [vault, account, getStrategiesIds]);
 
   useEffect(() => {
-    if (vault && account) {
+    if (vault.id && account) {
       executeHasRoleMethod().then((isManager) => setIsUserManager(isManager));
     } else {
       setIsUserManager(false);

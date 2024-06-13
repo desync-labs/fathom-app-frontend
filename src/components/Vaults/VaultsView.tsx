@@ -44,8 +44,8 @@ const VaultsView = () => {
       <NestedRouteContainer
         maxWidth="lg"
         sx={{
-          mt: isMobile ? 2 : 4,
-          mb: isMobile ? 2 : 4,
+          mt: isMobile ? 3 : 4,
+          mb: isMobile ? 3 : 4,
         }}
       >
         <Outlet />

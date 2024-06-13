@@ -14,7 +14,7 @@ import { IVault, IVaultPosition, IVaultStrategyReport } from "fathom-sdk";
 import { FunctionFragment } from "@into-the-fathom/abi";
 
 export type VaultContextType = {
-  vaultId: string;
+  vaultId: string | undefined;
   children: ReactElement;
 };
 
