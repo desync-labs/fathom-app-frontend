@@ -122,8 +122,8 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
       ) {
         fetchReports(
           strategyId,
-          [...prevStateReports, ...data?.strategyReports],
-          [...prevStateApr, ...data?.strategyHistoricalAprs]
+          [...prevStateReports, ...(data?.strategyReports || [])],
+          [...prevStateApr, ...(data?.strategyHistoricalAprs || [])]
         );
       } else {
         setReports((prev) => ({
