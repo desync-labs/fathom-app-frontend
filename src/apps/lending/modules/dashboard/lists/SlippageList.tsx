@@ -16,7 +16,7 @@ import { SlippageTooltip } from "apps/lending/components/infoTooltips/SlippageTo
 import { useRootStore } from "apps/lending/store/root";
 import { GENERAL } from "apps/lending/utils/mixPanelEvents";
 
-import Paraswap from "apps/lending/assets/paraswap.svg";
+import { ReactComponent as Paraswap } from "apps/lending/assets/paraswap.svg";
 import { useState } from "react";
 
 interface ListSlippageButtonProps {
