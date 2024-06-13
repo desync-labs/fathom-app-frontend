@@ -2,17 +2,31 @@ import { FormProvider } from "react-hook-form";
 import { Box, styled } from "@mui/material";
 import useVaultManageDeposit, { FormType } from "hooks/useVaultManageDeposit";
 import useVaultContext from "context/vault";
+import useSharedContext from "context/shared";
 import { VaultPaper } from "components/AppComponents/AppPaper/AppPaper";
 import {
-  VaultNavItem,
-  VaultNavWrapper,
-} from "components/Vaults/VaultDetail/VaultDetailInfoNav";
+  AppNavItem,
+  AppNavWrapper,
+} from "components/AppComponents/AppTabs/AppTabs";
 import { AppFlexBox } from "components/AppComponents/AppBox/AppBox";
 import ManageVaultInfo from "components/Vaults/VaultDetail/VaultDetailForm/ManageVaultInfo";
 import ManageVaultForm from "components/Vaults/VaultList/ManageVaultModal/ManageVaultForm";
 
+const VaultFormWrapper = styled(AppFlexBox)`
+  align-items: flex-start;
+  gap: 20px;
+  padding-top: 20px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    flex-direction: column;
+    padding-top: 20px;
+  }
+`;
+
 const VaultDetailFormColumn = styled(Box)`
   width: 50%;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    width: 100%;
+  }
 `;
 
 const VaultDetailManageForm = () => {
@@ -41,28 +55,29 @@ const VaultDetailManageForm = () => {
     onSubmit,
     methods,
   } = useVaultManageDeposit(vault, vaultPosition, onClose);
+  const { isMobile } = useSharedContext();
 
   const { shutdown } = vault;
 
   return (
-    <VaultPaper sx={{ marginBottom: "24px" }}>
-      <VaultNavWrapper>
+    <VaultPaper sx={{ marginBottom: isMobile ? "20px" : "24px" }}>
+      <AppNavWrapper>
         {!shutdown && (
-          <VaultNavItem
+          <AppNavItem
             className={formType === FormType.DEPOSIT ? "active" : ""}
             onClick={() => setFormType(FormType.DEPOSIT)}
           >
             Deposit
-          </VaultNavItem>
+          </AppNavItem>
         )}
-        <VaultNavItem
+        <AppNavItem
           className={formType === FormType.WITHDRAW ? "active" : ""}
           onClick={() => setFormType(FormType.WITHDRAW)}
         >
           Withdraw
-        </VaultNavItem>
-      </VaultNavWrapper>
-      <AppFlexBox pt="20px" sx={{ alignItems: "flex-start", gap: "20px" }}>
+        </AppNavItem>
+      </AppNavWrapper>
+      <VaultFormWrapper>
         <FormProvider {...methods}>
           <VaultDetailFormColumn>
             <ManageVaultForm
@@ -96,7 +111,7 @@ const VaultDetailManageForm = () => {
             onSubmit={onSubmit}
           />
         </FormProvider>
-      </AppFlexBox>
+      </VaultFormWrapper>
     </VaultPaper>
   );
 };

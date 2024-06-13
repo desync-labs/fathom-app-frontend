@@ -11,7 +11,7 @@ import usePricesContext from "context/prices";
 
 import {
   AppFlexBox,
-  WalletBalance,
+  VaultWalletBalance,
 } from "components/AppComponents/AppBox/AppBox";
 import { MaxButtonV2 } from "components/AppComponents/AppButton/AppButton";
 import {
@@ -31,10 +31,6 @@ const ManageVaultItemFormWrapper = styled(Box)`
   border-radius: 12px;
   background: #1e2f4d;
   padding: 24px 16px;
-
-  ${({ theme }) => theme.breakpoints.down("sm")} {
-    padding: 0;
-  }
 `;
 
 const ManageVaultFormStyled = styled("form")`
@@ -111,7 +107,7 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
                     : `Withdraw ${token.name}`}
                 </AppFormLabelV2>
                 <AppFlexBox sx={{ width: "auto", justifyContent: "flex-end" }}>
-                  <WalletBalance sx={{ color: "#43FFF1" }}>
+                  <VaultWalletBalance>
                     {formType === FormType.DEPOSIT
                       ? "Balance: " +
                         formatNumber(
@@ -125,7 +121,7 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
                         formatNumber(formattedBalanceToken) +
                         " " +
                         token.name}
-                  </WalletBalance>
+                  </VaultWalletBalance>
                 </AppFlexBox>
               </AppFormLabelRow>
               <AppTextFieldV2

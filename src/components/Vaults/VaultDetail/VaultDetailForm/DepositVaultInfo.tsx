@@ -16,7 +16,7 @@ import { AppList, AppListItem } from "components/AppComponents/AppList/AppList";
 import {
   ErrorBox,
   InfoBoxV2,
-  Summary,
+  SummaryVaultFormInfo,
 } from "components/AppComponents/AppBox/AppBox";
 import {
   ButtonPrimary,
@@ -41,6 +41,18 @@ const VaultList = styled(AppList)`
     color: #fff;
     align-items: flex-start;
     padding: 4px 0;
+  }
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    & li {
+      font-size: 12px;
+      font-weight: 400;
+      padding: 2px 0;
+
+      & .MuiListItemSecondaryAction-root span {
+        font-size: 12px;
+        font-weight: 400;
+      }
+    }
   }
 `;
 
@@ -89,7 +101,7 @@ const DepositVaultInfo: FC<DepositVaultInfoProps> = ({
 
   return (
     <ManageVaultInfoWrapper>
-      <Summary>Summary</Summary>
+      <SummaryVaultFormInfo>Summary</SummaryVaultFormInfo>
       <Divider sx={{ borderColor: "#3D5580" }} />
       <VaultList>
         <AppListItem

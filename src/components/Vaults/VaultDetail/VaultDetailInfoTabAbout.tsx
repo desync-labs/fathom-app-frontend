@@ -3,7 +3,10 @@ import BigNumber from "bignumber.js";
 import { Box, ListItemText, styled, Typography } from "@mui/material";
 import { IVaultStrategyReport } from "fathom-sdk";
 import { formatNumber, formatPercentage } from "utils/format";
-import { AppList, AppListItem } from "components/AppComponents/AppList/AppList";
+import {
+  AppListItem,
+  AppListVault,
+} from "components/AppComponents/AppList/AppList";
 import VaultHistoryChart, {
   HistoryChartDataType,
 } from "components/Vaults/VaultDetail/VaultHistoryChart";
@@ -23,6 +26,10 @@ export const VaultInfoWrapper = styled(Box)`
   gap: 24px;
   width: 100%;
   padding-top: 24px;
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    gap: 20px;
+  }
 `;
 
 const VaultDescriptionWrapper = styled(Box)`
@@ -35,6 +42,12 @@ const VaultDescriptionWrapper = styled(Box)`
     font-weight: 400;
     color: #b7c8e5;
   }
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    font-size: 12px;
+    span {
+      font-size: 12px;
+    }
+  }
 `;
 
 const VaultContractAddress = styled(Box)`
@@ -43,6 +56,55 @@ const VaultContractAddress = styled(Box)`
   a {
     color: #b7c8e5;
     text-decoration: underline;
+  }
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    font-size: 12px;
+  }
+`;
+
+const AppListApy = styled(AppListVault)`
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    & li {
+      color: #b7c8e5;
+      padding: 0;
+      &.MuiListItemText-root {
+        margin-top: 2px;
+        margin-bottom: 2px;
+      }
+      span {
+        color: #b7c8e5;
+      }
+      & div:last-child {
+        font-weight: 400;
+      }
+    }
+  }
+`;
+
+const AppListFees = styled(AppListVault)`
+  padding: 0;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    padding: 4px 0;
+    & li {
+      color: #6d86b2;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 0;
+      &.MuiListItemText-root {
+        margin-top: 2px;
+        margin-bottom: 2px;
+      }
+      span {
+        color: #6d86b2;
+        font-size: 13px;
+        font-weight: 600;
+      }
+      & div:last-child {
+        color: #fff;
+        font-weight: 600;
+      }
+    }
   }
 `;
 
@@ -126,7 +188,7 @@ const VaultDetailInfoTabAbout = () => {
           APY
         </VaultAboutTitle>
         <Box width={"100%"}>
-          <AppList>
+          <AppListApy>
             <AppListItem
               alignItems="flex-start"
               secondaryAction={
@@ -156,12 +218,12 @@ const VaultDetailInfoTabAbout = () => {
             >
               <ListItemText primary={"Yearly APY"} />
             </AppListItem>
-          </AppList>
+          </AppListApy>
         </Box>
       </Box>
       <Box>
         <VaultAboutTitle sx={{ marginBottom: 0 }}>Fees</VaultAboutTitle>
-        <AppList sx={{ padding: 0 }}>
+        <AppListFees>
           <AppListItem
             alignItems="flex-start"
             secondaryAction={
@@ -182,9 +244,8 @@ const VaultDetailInfoTabAbout = () => {
           >
             <ListItemText primary={"Total fee"} />
           </AppListItem>
-        </AppList>
+        </AppListFees>
       </Box>
-
       <VaultHistoryChart
         title={"Cumulative Earnings"}
         chartDataArray={earnedHistoryArr}

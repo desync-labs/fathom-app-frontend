@@ -177,6 +177,21 @@ export const AppTextFieldV2 = styled(MuiTextField)`
       padding-left: 0;
     }
   }
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    input,
+    textarea {
+      height: 34px;
+      font-size: 12px;
+      padding: 0 52px 12px 34px;
+    }
+
+    & input:disabled,
+    textarea:disabled {
+      height: 38px;
+      padding: 0 52px 0 34px;
+    }
+  }
 `;
 
 export const AppFormLabel = styled(MuiFormLabel)`
@@ -238,6 +253,16 @@ export const AppFormInputLogoV2 = styled("img")`
   &.extendedInput {
     top: 43px;
   }
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    width: 18px;
+    height: 18px;
+    top: 35px;
+
+    &.extendedInput {
+      top: 40px;
+    }
+  }
 `;
 export const AppFormInputUsdIndicator = styled("div")`
   position: absolute;
@@ -246,6 +271,11 @@ export const AppFormInputUsdIndicator = styled("div")`
   color: #b7c8e5;
   font-size: 14px;
   font-weight: 400;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    top: 50px;
+    left: 35px;
+    font-size: 11px;
+  }
 `;
 
 export const AppSelect = styled(Select)`

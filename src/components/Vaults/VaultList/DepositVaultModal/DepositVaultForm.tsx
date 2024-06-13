@@ -10,7 +10,7 @@ import usePricesContext from "context/prices";
 
 import {
   AppFlexBox,
-  WalletBalance,
+  VaultWalletBalance,
 } from "components/AppComponents/AppBox/AppBox";
 import { MaxButtonV2 } from "components/AppComponents/AppButton/AppButton";
 import {
@@ -89,7 +89,7 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
               <AppFormLabelRow>
                 <AppFormLabelV2>Deposit {token.name}</AppFormLabelV2>
                 <AppFlexBox sx={{ width: "auto", justifyContent: "flex-end" }}>
-                  <WalletBalance sx={{ color: "#43FFF1" }}>
+                  <VaultWalletBalance>
                     Balance:{" "}
                     {formatNumber(
                       BigNumber(walletBalance)
@@ -98,7 +98,7 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
                     ) +
                       " " +
                       token.name}
-                  </WalletBalance>
+                  </VaultWalletBalance>
                 </AppFlexBox>
               </AppFormLabelRow>
               <AppTextFieldV2

@@ -9,6 +9,10 @@ export const ContractMethodListWrapper = styled(Box)`
   &.hide {
     display: none;
   }
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    padding: 24px 0 0;
+  }
 `;
 
 export const MethodTypesTabs = styled(Tabs)`
@@ -34,6 +38,15 @@ export const MethodTypesTabs = styled(Tabs)`
       color: #fff;
     }
   }
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    width: 100%;
+    margin-top: 0;
+
+    & .MuiTab-root {
+      width: 50%;
+    }
+  }
 `;
 
 export const STATE_MUTABILITY_TRANSACTIONS = ["nonpayable", "payable"];
@@ -54,7 +67,7 @@ export const MethodsTabPanel: FC<TabPanelProps> = memo(
         aria-labelledby={`method-tab-${index}`}
         {...other}
       >
-        {value === index && <Box sx={{ p: "24px 0" }}>{children}</Box>}
+        {value === index && <Box sx={{ pt: "24px" }}>{children}</Box>}
       </div>
     );
   }

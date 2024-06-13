@@ -1,41 +1,36 @@
 import { memo } from "react";
-import { Box, Button, styled } from "@mui/material";
+import { styled } from "@mui/material";
 import { VaultInfoTabs } from "hooks/useVaultDetail";
 import useVaultContext from "context/vault";
+import {
+  AppNavItem,
+  AppNavWrapper,
+} from "components/AppComponents/AppTabs/AppTabs";
 
-export const VaultNavWrapper = styled(Box)`
-  width: fit-content;
-  border-bottom: 1.5px solid #1d2d49;
-  display: flex;
-  align-items: center;
-  padding: 0;
+const VaultNavWrapper = styled(AppNavWrapper)`
   ${({ theme }) => theme.breakpoints.down("sm")} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 24px;
     width: 100%;
-    padding: 0;
+    background: #2c4066;
+    padding: 0 16px;
+    z-index: 9;
   }
 `;
-
-export const VaultNavItem = styled(Button)`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  height: 100%;
-  font-size: 16px;
-  font-weight: 600;
-  text-transform: none;
-  color: #9fadc6;
-  background: unset;
-  border-radius: 0;
-  padding: 8px 18px;
-
-  &.active {
-    color: #fff;
-    border-bottom: 1px solid #00fff6;
-  }
-
-  &:hover {
-    background-color: unset;
+const VaultNavItem = styled(AppNavItem)`
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    height: 48px;
+    width: fit-content;
+    min-width: unset;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 0;
   }
 `;
 

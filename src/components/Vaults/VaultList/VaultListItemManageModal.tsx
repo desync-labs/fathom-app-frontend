@@ -18,9 +18,9 @@ import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
 import ManageVaultForm from "components/Vaults/VaultList/ManageVaultModal/ManageVaultForm";
 import ManageVaultInfo from "components/Vaults/VaultList/ManageVaultModal/ManageVaultInfo";
 import {
-  VaultNavItem,
-  VaultNavWrapper,
-} from "components/Vaults/VaultDetail/VaultDetailInfoNav";
+  AppNavItem,
+  AppNavWrapper,
+} from "components/AppComponents/AppTabs/AppTabs";
 import {
   ButtonPrimary,
   ButtonSecondary,
@@ -95,20 +95,20 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
         {shutdown ? (
           "Withdrawing"
         ) : (
-          <VaultNavWrapper sx={{ marginTop: "-10px" }}>
-            <VaultNavItem
+          <AppNavWrapper sx={{ marginTop: "-10px" }}>
+            <AppNavItem
               onClick={() => setFormType(FormType.DEPOSIT)}
               className={formType === FormType.DEPOSIT ? "active" : ""}
             >
               Deposit
-            </VaultNavItem>
-            <VaultNavItem
+            </AppNavItem>
+            <AppNavItem
               onClick={() => setFormType(FormType.WITHDRAW)}
               className={formType === FormType.WITHDRAW ? "active" : ""}
             >
               Withdraw
-            </VaultNavItem>
-          </VaultNavWrapper>
+            </AppNavItem>
+          </AppNavWrapper>
         )}
       </AppDialogTitle>
 

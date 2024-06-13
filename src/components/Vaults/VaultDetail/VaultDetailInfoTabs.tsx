@@ -1,3 +1,4 @@
+import { styled } from "@mui/material";
 import useVaultContext from "context/vault";
 import { VaultInfoTabs } from "hooks/useVaultDetail";
 import { VaultPaper } from "components/AppComponents/AppPaper/AppPaper";
@@ -6,6 +7,15 @@ import VaultDetailInfoTabAbout from "components/Vaults/VaultDetail/VaultDetailIn
 import VaultDetailInfoTabStrategies from "components/Vaults/VaultDetail/VaultDetailInfoTabStrategies";
 import ManagementVaultMethodList from "components/Vaults/VaultDetail/Managment/ManagementVaultMethodList";
 import ManagementStrategiesMethodList from "components/Vaults/VaultDetail/Managment/ManagementStrategiesMethodList";
+
+const VaultDetailInfoPaper = styled(VaultPaper)`
+  overflow: hidden;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    position: relative;
+    width: 100%;
+    padding-top: 50px;
+  }
+`;
 
 const VaultDetailInfoTabs = () => {
   const {
@@ -17,7 +27,7 @@ const VaultDetailInfoTabs = () => {
     strategyMethods,
   } = useVaultContext();
   return (
-    <VaultPaper>
+    <VaultDetailInfoPaper>
       <VaultDetailInfoNav />
       {vault && activeVaultInfoTab === VaultInfoTabs.ABOUT && (
         <VaultDetailInfoTabAbout />
@@ -39,7 +49,7 @@ const VaultDetailInfoTabs = () => {
           strategiesIds={managedStrategiesIds}
         />
       )}
-    </VaultPaper>
+    </VaultDetailInfoPaper>
   );
 };
 

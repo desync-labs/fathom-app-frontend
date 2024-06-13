@@ -34,8 +34,14 @@ enum MethodType {
 const MethodResponseStyled = styled(Box)`
   position: relative;
   width: calc(100% - 122px);
+  font-size: 14px;
+  font-weight: 500;
   word-wrap: break-word;
   padding-top: 4px;
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    font-size: 12px;
+  }
 `;
 
 const MethodListItemAccordion = styled(Accordion)`
@@ -57,25 +63,19 @@ const MethodListItemAccordion = styled(Accordion)`
     margin: 0 0 8px 0;
   }
 
+  & .MuiAccordionSummary-content.Mui-expanded {
+    margin: unset;
+  }
+
   & .MuiCollapse-root {
     padding: 0 16px;
   }
 
   ${({ theme }) => theme.breakpoints.down("sm")} {
-    &.MuiPaper-root {
-      &:before {
-        background: none;
+    & .MuiAccordionSummary-content {
+      p {
+        font-size: 12px;
       }
-    }
-    padding: 20px;
-    margin: 16px 0;
-
-    &.mb-0 {
-      margin-bottom: 0;
-    }
-
-    &.mt-3 {
-      margin-top: 3px;
     }
   }
 `;
@@ -276,7 +276,7 @@ const MethodListItem: FC<{
         aria-controls="panel1a-content"
         id="panel1a-header"
       >
-        <Typography>{`${index}. ${method.name}`}</Typography>
+        <Typography>{`${index + 1}. ${method.name}`}</Typography>
       </AccordionSummaryStyled>
       <AccordionDetails sx={{ padding: "10px 0" }}>
         <Box

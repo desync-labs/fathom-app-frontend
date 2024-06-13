@@ -189,6 +189,16 @@ export const MaxButtonV2 = styled(MuiButton)`
     border: 0.7px solid #43fff1;
     background: #253656;
   }
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    top: 32px;
+    right: 8px;
+    height: 32px;
+    font-size: 11px;
+    color: #fff;
+    border: 0.7px solid #2c4066;
+    background: #243454;
+  }
 `;
 
 export const ApproveButton = styled(MuiButton)`
@@ -251,10 +261,18 @@ export const VaultDetailFormButtonWrapper = styled(Box)`
 
   & > button {
     height: 48px;
-    width: 50%;
+    width: calc(50% - 4px);
     font-size: 17px;
     font-weight: 600;
     padding: 8px 32px;
+  }
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    & > button {
+      height: 34px;
+      font-size: 15px;
+      padding: 4px 18px;
+    }
   }
 `;
 

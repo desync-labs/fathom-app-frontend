@@ -33,11 +33,29 @@ export const Summary = styled(Typography)`
   line-height: 24px;
   margin-bottom: 15px;
 `;
+
+export const SummaryVaultFormInfo = styled(Summary)`
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 8px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    font-size: 14px;
+  }
+`;
+
 export const WalletBalance = styled(Typography)`
   font-size: 12px;
   line-height: 16px;
   color: #6379a1;
   float: right;
+`;
+export const VaultWalletBalance = styled(WalletBalance)`
+  color: #43fff1;
+  text-align: end;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    font-size: 11px;
+  }
 `;
 
 export const InfoLabel = styled(Typography)`
