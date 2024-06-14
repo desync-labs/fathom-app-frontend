@@ -26,7 +26,7 @@ const PositionActivityListItemAmounts: FC<{
     return (
       <PositionActivityListItemAmountsWrapper>
         <img width={20} height={20} src={getTokenLogoURL("FXD")} alt={"logo"} />
-        <Box>{formatNumber(Number(transaction.debtAmount))}</Box>
+        <Box>{formatNumber(Number(transaction.debtAmount))} FXD</Box>
         <KeyboardDoubleArrowRightRoundedIcon width={20} />
         <img
           width={20}
@@ -39,7 +39,8 @@ const PositionActivityListItemAmounts: FC<{
           alt={"logo"}
         />
         <Box>
-          {formatNumber(Math.abs(Number(transaction.collateralAmount)))}
+          {formatNumber(Math.abs(Number(transaction.collateralAmount)))}{" "}
+          {transaction.position?.collateralPoolName?.toUpperCase()}
         </Box>
       </PositionActivityListItemAmountsWrapper>
     );
@@ -60,11 +61,12 @@ const PositionActivityListItemAmounts: FC<{
         />
         <Box>
           {!BigNumber(transaction.collateralAmount).isEqualTo(0) ? "-" : ""}
-          {formatNumber(Number(transaction.collateralAmount))}
+          {formatNumber(Number(transaction.collateralAmount))}{" "}
+          {transaction.position?.collateralPoolName?.toUpperCase()}
         </Box>
         <KeyboardDoubleArrowRightRoundedIcon width={20} />
         <img width={20} height={20} src={getTokenLogoURL("FXD")} alt={"logo"} />
-        <Box>{formatNumber(Number(transaction.debtAmount))}</Box>
+        <Box>{formatNumber(Number(transaction.debtAmount))} FXD</Box>
       </PositionActivityListItemAmountsWrapper>
     );
   }
@@ -80,10 +82,13 @@ const PositionActivityListItemAmounts: FC<{
         )}
         alt={"logo"}
       />
-      <Box>{formatNumber(Number(transaction.collateralAmount))}</Box>
+      <Box>
+        {formatNumber(Number(transaction.collateralAmount))}{" "}
+        {transaction.position?.collateralPoolName?.toUpperCase()}
+      </Box>
       <KeyboardDoubleArrowRightRoundedIcon width={20} />
       <img width={20} height={20} src={getTokenLogoURL("FXD")} alt={"logo"} />
-      <Box>{formatNumber(Number(transaction.debtAmount))}</Box>
+      <Box>{formatNumber(Number(transaction.debtAmount))} FXD</Box>
     </PositionActivityListItemAmountsWrapper>
   );
 };
