@@ -3,8 +3,8 @@ import PositionsList from "components/PositionList/PositionsList";
 import ProtocolStats from "components/Dashboard/ProtocolStats";
 import PoolsListView from "components/Pools/PoolsListView";
 import { PageHeader } from "components/Dashboard/PageHeader";
-import useDashboard from "hooks/useDashboard";
 import useSharedContext from "context/shared";
+import useDashboard from "context/fxd";
 
 const DashboardContent = () => {
   const {

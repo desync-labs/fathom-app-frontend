@@ -66,7 +66,7 @@ const useOpenPositionList = (
   const [topUpPosition, setTopUpPosition] = useState<IOpenPosition>();
 
   const topUpPositionPool = useMemo(() => {
-    if (topUpPosition && poolsData) {
+    if (topUpPosition && poolsData.length) {
       return poolsData.find(
         (pool: ICollateralPool) => pool.id === topUpPosition.collateralPool
       );
@@ -131,14 +131,14 @@ const useOpenPositionList = (
 
               const debtValue = debtValues[index];
 
-              const liquidationPrice = BigNumber(position.debtValue)
-                .dividedBy(position.lockedCollateral)
-                .multipliedBy(findPool.liquidationRatio)
+              const liquidationPrice = BigNumber(position?.debtValue)
+                .dividedBy(position?.lockedCollateral)
+                .multipliedBy(findPool?.liquidationRatio)
                 .toNumber();
 
               const ltv = BigNumber(position.debtValue)
                 .dividedBy(
-                  BigNumber(findPool.rawPrice).multipliedBy(
+                  BigNumber(findPool?.rawPrice).multipliedBy(
                     position.lockedCollateral
                   )
                 )
@@ -178,7 +178,7 @@ const useOpenPositionList = (
   }, [loading, setIsLoading]);
 
   useEffect(() => {
-    if (loading || !data || !poolsData) {
+    if (loading || !data || !poolsData.length) {
       return setFormattedPositions([]);
     }
 

@@ -91,6 +91,35 @@ export const ButtonSecondary = styled(MuiButton)`
   }
 `;
 
+export const ButtonSecondaryLink = styled("a")`
+  display: flex;
+  align-items: center;  
+  color: #43FFF1;
+  font-weight: bold;
+  font-size: 15px;
+  line-height: 20px;
+  padding: 8px 16px;
+  gap: 8px;
+  border: 1px solid #009E92;
+  border-radius: 8px;
+  height: 40px;
+  &:hover {
+    background: transparent;
+    color: #B3FFF9;
+    border: 1px solid #B3FFF9;
+    svg: {
+      color: #B3FFF9;
+    }, 
+  }
+  &:disabled {
+    color: gray;
+    background: transparent;
+    border-color: gray;
+    cursor: not-allowed !important;
+    pointer-events: all !important; 
+  }
+`;
+
 export const SkipButton = styled(MuiButton)`
   background: rgba(143, 36, 36, 0.25);
   border-radius: 8px;
