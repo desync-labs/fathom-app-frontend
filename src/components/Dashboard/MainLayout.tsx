@@ -421,9 +421,10 @@ const MainLayout = () => {
                     fontWeight={500}
                   >
                     {formatNumber(Number(userBalance))}{" "}
-                    {NETWORK_SETTINGS[chainId as ChainId].nativeCurrency
-                      .symbol ||
-                      NETWORK_SETTINGS[DEFAULT_CHAIN_ID].nativeCurrency.symbol}
+                    {NETWORK_SETTINGS[chainId as ChainId]?.nativeCurrency
+                      ?.symbol ||
+                      NETWORK_SETTINGS[DEFAULT_CHAIN_ID]?.nativeCurrency
+                        ?.symbol}
                   </Box>
                 ) : null}
               </AccountElement>
