@@ -306,4 +306,7 @@ export const ExtLinkIcon = styled(OpenInNewRoundedIcon)`
   height: 16px;
   color: #43fff1;
   margin-left: 4px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    margin-left: 0;
+  }
 `;

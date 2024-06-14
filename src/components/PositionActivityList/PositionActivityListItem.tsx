@@ -13,6 +13,7 @@ import {
 import { getBlockScanLink } from "apps/dex/utils";
 import useConnector from "context/connector";
 import PositionActivityListItemAmounts from "components/PositionActivityList/PositionActivityListItem/PostionActivityListItemAmounts";
+import useSharedContext from "../../context/shared";
 
 const PositionActivityListItemWrapper = styled(AppListItem)`
   padding-left: 24px;
@@ -21,12 +22,17 @@ const PositionActivityListItemWrapper = styled(AppListItem)`
   .MuiListItemText-multiline {
     width: 50px;
   }
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    padding-left: 0;
+    padding-right: 0;
+  }
 `;
 
 const PositionActivityListItem: FC<{ transaction: IFxdTransaction }> = ({
   transaction,
 }) => {
   const { chainId } = useConnector();
+  const { isMobile } = useSharedContext();
 
   return (
     <PositionActivityListItemWrapper
@@ -39,7 +45,7 @@ const PositionActivityListItem: FC<{ transaction: IFxdTransaction }> = ({
             "transaction"
           )}
         >
-          View
+          {!isMobile && "View"}
           <ExtLinkIcon />
         </ButtonSecondaryLink>
       }

@@ -13,11 +13,24 @@ const PositionActivityListItemAmountsWrapper = styled(Box)`
   display: flex;
   align-items: start;
   gap: 7px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    flex-direction: column;
+  }
+`;
+
+const PositionActivityListItemAmountsItemWrapper = styled(Box)`
+  display: flex;
+  align-items: start;
+  gap: 5px;
 `;
 
 const PositionActivityListItemAmounts: FC<{
   transaction: IFxdTransaction;
 }> = ({ transaction }) => {
+  // console.log({
+  //   transaction,
+  // });
+
   if (
     [PositionActivityState.REPAY, PositionActivityState.CLOSED].includes(
       transaction.activityState
@@ -25,23 +38,32 @@ const PositionActivityListItemAmounts: FC<{
   ) {
     return (
       <PositionActivityListItemAmountsWrapper>
-        <img width={20} height={20} src={getTokenLogoURL("FXD")} alt={"logo"} />
-        <Box>{formatNumber(Number(transaction.debtAmount))} FXD</Box>
+        <PositionActivityListItemAmountsItemWrapper>
+          <img
+            width={20}
+            height={20}
+            src={getTokenLogoURL("FXD")}
+            alt={"logo"}
+          />
+          <Box>{formatNumber(Number(transaction.debtAmount))} FXD</Box>
+        </PositionActivityListItemAmountsItemWrapper>
         <KeyboardDoubleArrowRightRoundedIcon width={20} />
-        <img
-          width={20}
-          height={20}
-          src={getTokenLogoURL(
-            transaction.position?.collateralPoolName?.toUpperCase() === "XDC"
-              ? "WXDC"
-              : transaction.position?.collateralPoolName?.toUpperCase()
-          )}
-          alt={"logo"}
-        />
-        <Box>
-          {formatNumber(Math.abs(Number(transaction.collateralAmount)))}{" "}
-          {transaction.position?.collateralPoolName?.toUpperCase()}
-        </Box>
+        <PositionActivityListItemAmountsItemWrapper>
+          <img
+            width={20}
+            height={20}
+            src={getTokenLogoURL(
+              transaction.position?.collateralPoolName?.toUpperCase() === "XDC"
+                ? "WXDC"
+                : transaction.position?.collateralPoolName?.toUpperCase()
+            )}
+            alt={"logo"}
+          />
+          <Box>
+            {formatNumber(Math.abs(Number(transaction.collateralAmount)))}{" "}
+            {transaction.position?.collateralPoolName?.toUpperCase()}
+          </Box>
+        </PositionActivityListItemAmountsItemWrapper>
       </PositionActivityListItemAmountsWrapper>
     );
   } else if (
@@ -49,6 +71,39 @@ const PositionActivityListItemAmounts: FC<{
   ) {
     return (
       <PositionActivityListItemAmountsWrapper>
+        <PositionActivityListItemAmountsWrapper>
+          <img
+            width={20}
+            height={20}
+            src={getTokenLogoURL(
+              transaction.position?.collateralPoolName?.toUpperCase() === "XDC"
+                ? "WXDC"
+                : transaction.position?.collateralPoolName?.toUpperCase()
+            )}
+            alt={"logo"}
+          />
+          <Box>
+            {!BigNumber(transaction.collateralAmount).isEqualTo(0) ? "-" : ""}
+            {formatNumber(Number(transaction.collateralAmount))}{" "}
+            {transaction.position?.collateralPoolName?.toUpperCase()}
+          </Box>
+        </PositionActivityListItemAmountsWrapper>
+        <KeyboardDoubleArrowRightRoundedIcon width={20} />
+        <PositionActivityListItemAmountsItemWrapper>
+          <img
+            width={20}
+            height={20}
+            src={getTokenLogoURL("FXD")}
+            alt={"logo"}
+          />
+          <Box>{formatNumber(Number(transaction.debtAmount))} FXD</Box>
+        </PositionActivityListItemAmountsItemWrapper>
+      </PositionActivityListItemAmountsWrapper>
+    );
+  }
+  return (
+    <PositionActivityListItemAmountsWrapper>
+      <PositionActivityListItemAmountsItemWrapper>
         <img
           width={20}
           height={20}
@@ -60,35 +115,16 @@ const PositionActivityListItemAmounts: FC<{
           alt={"logo"}
         />
         <Box>
-          {!BigNumber(transaction.collateralAmount).isEqualTo(0) ? "-" : ""}
           {formatNumber(Number(transaction.collateralAmount))}{" "}
           {transaction.position?.collateralPoolName?.toUpperCase()}
         </Box>
-        <KeyboardDoubleArrowRightRoundedIcon width={20} />
+      </PositionActivityListItemAmountsItemWrapper>
+
+      <KeyboardDoubleArrowRightRoundedIcon width={20} />
+      <PositionActivityListItemAmountsItemWrapper>
         <img width={20} height={20} src={getTokenLogoURL("FXD")} alt={"logo"} />
         <Box>{formatNumber(Number(transaction.debtAmount))} FXD</Box>
-      </PositionActivityListItemAmountsWrapper>
-    );
-  }
-  return (
-    <PositionActivityListItemAmountsWrapper>
-      <img
-        width={20}
-        height={20}
-        src={getTokenLogoURL(
-          transaction.position?.collateralPoolName?.toUpperCase() === "XDC"
-            ? "WXDC"
-            : transaction.position?.collateralPoolName?.toUpperCase()
-        )}
-        alt={"logo"}
-      />
-      <Box>
-        {formatNumber(Number(transaction.collateralAmount))}{" "}
-        {transaction.position?.collateralPoolName?.toUpperCase()}
-      </Box>
-      <KeyboardDoubleArrowRightRoundedIcon width={20} />
-      <img width={20} height={20} src={getTokenLogoURL("FXD")} alt={"logo"} />
-      <Box>{formatNumber(Number(transaction.debtAmount))} FXD</Box>
+      </PositionActivityListItemAmountsItemWrapper>
     </PositionActivityListItemAmountsWrapper>
   );
 };
