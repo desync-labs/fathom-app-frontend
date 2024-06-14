@@ -12,6 +12,21 @@ export const VaultInfoWrapper = styled(Box)`
   width: 100%;
   padding-top: 24px;
 `;
+
+const StrategySelectorLabel = styled(Typography)`
+  color: #b7c8e5;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 16px;
+  letter-spacing: 0.44px;
+  text-transform: uppercase;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    font-size: 14px;
+    text-transform: capitalize;
+    margin-bottom: 10px;
+  }
+`;
+
 export const StrategySelector = styled(ButtonGroup)`
   flex-wrap: nowrap;
   gap: 16px;
@@ -55,6 +70,19 @@ export const StrategySelector = styled(ButtonGroup)`
       background: #1e2f4d;
     }
   }
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+    overflow: hidden;
+
+    & .MuiButton-root {
+      width: 100%;
+      font-size: 14px;
+      margin-left: 0;
+      padding: 10px;
+    }
+  }
 `;
 
 const NoStrategiesTitle = styled(Typography)`
@@ -79,23 +107,26 @@ const VaultDetailInfoTabStrategies = () => {
 
   return (
     <VaultInfoWrapper>
-      <StrategySelector>
-        {strategies.map((strategy: IVaultStrategy, index: number) => (
-          <Button
-            key={strategy.id}
-            onClick={() => setActiveStrategy(index)}
-            className={
-              activeStrategy === index ? "activeStrategyItem" : "strategyItem"
-            }
-          >
-            {strategyTitle[strategy.id.toLowerCase()] ? (
-              strategyTitle[strategy.id.toLowerCase()]
-            ) : (
-              <>FXD: Direct Incentive - Educational Strategy {index + 1}</>
-            )}
-          </Button>
-        ))}
-      </StrategySelector>
+      <Box>
+        <StrategySelectorLabel>Strategy</StrategySelectorLabel>
+        <StrategySelector>
+          {strategies.map((strategy: IVaultStrategy, index: number) => (
+            <Button
+              key={strategy.id}
+              onClick={() => setActiveStrategy(index)}
+              className={
+                activeStrategy === index ? "activeStrategyItem" : "strategyItem"
+              }
+            >
+              {strategyTitle[strategy.id.toLowerCase()] ? (
+                strategyTitle[strategy.id.toLowerCase()]
+              ) : (
+                <>FXD: Direct Incentive - Educational Strategy {index + 1}</>
+              )}
+            </Button>
+          ))}
+        </StrategySelector>
+      </Box>
       {strategies.map((strategy: IVaultStrategy, index: number) => (
         <VaultStrategyItem
           vaultId={vault.id}

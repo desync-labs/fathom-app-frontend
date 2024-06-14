@@ -122,6 +122,17 @@ const MethodInputFormGroup = styled(FormGroup)`
     text-transform: capitalize;
     padding: 8px;
   }
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    & .MuiFormLabel-root {
+      font-size: 12px;
+    }
+
+    & .MuiTextField-root textarea {
+      font-size: 12px;
+      padding: 4px 8px;
+    }
+  }
 `;
 
 const MethodListItem: FC<{

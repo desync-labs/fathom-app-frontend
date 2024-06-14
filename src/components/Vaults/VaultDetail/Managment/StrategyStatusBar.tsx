@@ -2,6 +2,8 @@ import { Box, styled } from "@mui/material";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import { formatHashShorten } from "utils/format";
 import { AppFlexBox } from "components/AppComponents/AppBox/AppBox";
+import useVaultContext from "../../../../context/vault";
+import { useEffect, useState } from "react";
 
 const StatusBarWrapper = styled(Box)`
   display: flex;
@@ -11,6 +13,9 @@ const StatusBarWrapper = styled(Box)`
   background: #1e2f4d;
   margin-top: 24px;
   padding: 20px 24px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    padding: 10px 8px;
+  }
 `;
 
 const StrategyName = styled("div")`
@@ -18,6 +23,10 @@ const StrategyName = styled("div")`
   font-size: 14px;
   font-weight: 600;
   line-height: 32px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    font-size: 10px;
+    line-height: 15px;
+  }
 `;
 
 const StatusBoxStyled = styled(Box)`
@@ -30,13 +39,31 @@ const StatusBoxStyled = styled(Box)`
   font-weight: 600;
   background: rgba(79, 101, 140, 0.2);
   padding: 4px 8px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    font-size: 10px;
+  }
 `;
 
-const StatusLabel = ({ strategyId }: { strategyId?: string }) => {
+//ToDo: Implement the StatusLabel component
+export const StatusLabel = ({ strategyId }: { strategyId?: string }) => {
+  const [isShutDown, setIsShutDown] = useState(true);
+  const { vault } = useVaultContext();
+  const { strategies } = vault;
+
+  useEffect(() => {
+    if (strategies) {
+      const strategy = strategies.find(
+        (strategy) => strategy.id === strategyId
+      );
+      if (strategy) {
+        setIsShutDown(false);
+      }
+    }
+  }, [strategies]);
   return (
     <StatusBoxStyled>
       <CheckCircleRoundedIcon sx={{ width: "16px", height: "16px" }} />
-      Active
+      {isShutDown ? "Inactive" : "Active"}
     </StatusBoxStyled>
   );
 };

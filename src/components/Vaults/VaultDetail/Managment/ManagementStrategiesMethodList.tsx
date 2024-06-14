@@ -1,5 +1,5 @@
 import { FC, memo, SyntheticEvent, useMemo, useState } from "react";
-import { Box, MenuItem, styled, Tab, Typography } from "@mui/material";
+import { Box, Divider, MenuItem, styled, Tab, Typography } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { FunctionFragment } from "@into-the-fathom/abi";
 
@@ -15,6 +15,7 @@ import {
 } from "components/Vaults/VaultDetail/Managment/ManagementVaultMethodList";
 import MethodListItem from "components/Vaults/VaultDetail/Managment/MethodListItem";
 import StrategyStatusBar from "./StrategyStatusBar";
+import useSharedContext from "../../../../context/shared";
 
 const StrategyManagerDescription = styled("div")`
   color: #fff;
@@ -30,6 +31,19 @@ const StrategyManagerDescription = styled("div")`
     color: #43fff1;
     text-decoration-line: underline;
   }
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    padding: 0;
+  }
+`;
+
+const StrategyManagerDescriptionDivider = styled(Divider)`
+  display: none;
+  border-color: #3d5580;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    display: block;
+    padding-top: 20px;
+  }
 `;
 
 export const StrategySelectLabel = styled("div")`
@@ -39,6 +53,9 @@ export const StrategySelectLabel = styled("div")`
   color: #b7c8e5;
   text-transform: uppercase;
   padding-bottom: 5px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    margin-top: 20px;
+  }
 `;
 
 const StrategySelect = styled(AppSelect)`
@@ -145,6 +162,7 @@ const ManagementStrategiesMethodList: FC<
     strategyTitle[strategiesIds[0].toLowerCase()] ||
       `FXD: Direct Incentive - Educational Strategy 1`
   );
+  const { isMobile } = useSharedContext();
 
   const handleStrategyChange = (event: SelectChangeEvent<unknown>) => {
     const { value } = event.target as HTMLInputElement;
@@ -160,7 +178,7 @@ const ManagementStrategiesMethodList: FC<
   return (
     <ContractMethodListWrapper className={isShow ? "showing" : "hide"}>
       {strategiesIds?.length && (
-        <Box my={2}>
+        <Box my={isMobile ? 0 : 2}>
           <StrategyManagerDescription>
             The strategy manager for a vault is responsible for overseeing and
             managing various investment strategies within the vault. This
@@ -168,6 +186,7 @@ const ManagementStrategiesMethodList: FC<
             optimal execution of the strategies to achieve the desired financial
             outcomes. <a href="#">Learn More</a>
           </StrategyManagerDescription>
+          <StrategyManagerDescriptionDivider />
           <StrategySelectLabel>Select Strategy</StrategySelectLabel>
           <StrategySelect
             value={currentStrategyId}

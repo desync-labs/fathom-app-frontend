@@ -8,6 +8,7 @@ import { IVaultStrategy, IVaultStrategyReport } from "fathom-sdk";
 import { formatNumber } from "utils/format";
 import { getAccountUrl } from "utils/explorer";
 import { DEFAULT_CHAIN_ID } from "utils/Constants";
+import useSharedContext from "context/shared";
 import {
   DescriptionList,
   strategyDescription,
@@ -27,6 +28,9 @@ export const VaultStrategyTitle = styled(Typography)`
   font-weight: 400;
   color: #fff;
   margin-bottom: 12px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    font-size: 14px;
+  }
 `;
 export const VaultStrategyDescription = styled(Box)`
   font-size: 14px;
@@ -40,17 +44,52 @@ export const VaultStrategyDescription = styled(Box)`
     display: inline-block;
     margin-top: 8px;
   }
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    font-size: 12px;
+  }
+`;
+
+export const VaultIndicatorsWrapper = styled(AppFlexBox)`
+  padding-top: 24px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    flex-direction: column;
+    gap: 4px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
 `;
 
 export const VaultIndicatorItemWrapper = styled(Box)`
+  display: flex;
   flex-direction: column;
   flex-grow: 1;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+`;
+
+export const VaultIndicatorItemLabel = styled(Typography)`
+  font-size: 14px;
+  font-weight: 600;
+  color: #6d86b2;
+  text-align: left;
+  padding-bottom: 4px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    font-size: 13px;
+    padding-bottom: 0;
+  }
 `;
 
 export const VaultIndicatorItemValue = styled(Typography)`
   font-size: 14px;
   font-weight: 600;
   text-align: left;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    font-size: 13px;
+  }
 `;
 
 type VaultIndicatorItemPropsType = {
@@ -76,9 +115,7 @@ const VaultIndicatorItem: FC<VaultIndicatorItemPropsType> = memo(
   ({ title, value, units, sx }) => {
     return (
       <VaultIndicatorItemWrapper sx={sx}>
-        <Typography fontSize="14px" color={"#6D86B2"} fontWeight={600} pb="4px">
-          {title}
-        </Typography>
+        <VaultIndicatorItemLabel>{title}</VaultIndicatorItemLabel>
         <VaultIndicatorItemValue>{value + units}</VaultIndicatorItemValue>
       </VaultIndicatorItemWrapper>
     );
@@ -101,6 +138,8 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
   );
   const [lastReportDate, setLastReportDate] = useState<string>("");
   const [allocationShare, setAllocationShare] = useState<number>(0);
+
+  const { isMobile } = useSharedContext();
 
   useEffect(() => {
     if (!historicalApr.length || !reports.length) return;
@@ -160,7 +199,7 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
         target="_blank"
         style={{
           display: "inline-flex",
-          fontSize: "14px",
+          fontSize: isMobile ? "12px" : "14px",
           color: "#B7C8E5",
           textDecoration: "underline",
           marginBottom: "16px",
@@ -198,9 +237,11 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
         )}
       </VaultStrategyDescription>
       {lastReportDate && (
-        <Typography fontSize="16px">{`Last report ${lastReportDate}.`}</Typography>
+        <Typography
+          fontSize={isMobile ? "14px" : "16px"}
+        >{`Last report ${lastReportDate}.`}</Typography>
       )}
-      <AppFlexBox pt="24px">
+      <VaultIndicatorsWrapper>
         <VaultIndicatorItem
           title="Capital Allocation"
           value={`${formatNumber(
@@ -232,7 +273,7 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
           value={formatNumber(performanceFee)}
           units="%"
         />
-      </AppFlexBox>
+      </VaultIndicatorsWrapper>
       <Box width={"100%"}>
         <VaultHistoryChart
           title={"Historical APY"}
