@@ -484,12 +484,14 @@ const MainLayout = () => {
                   <Route path="/fxd" element={<FXDView />}>
                     <>
                       <Route path="/fxd" element={<DashboardContent />} />
-                      {(account || isConnected) && (
-                        <Route
-                          path="/fxd/transactions"
-                          element={<PositionsTransactionList />}
-                        />
-                      )}
+                      {process.env.REACT_APP_FXD_TRANSACTIONS_ENABLED ===
+                        "true" &&
+                        (account || isConnected) && (
+                          <Route
+                            path="/fxd/transactions"
+                            element={<PositionsTransactionList />}
+                          />
+                        )}
                       <Route
                         path="*"
                         element={<Navigate to="/fxd" replace />}
