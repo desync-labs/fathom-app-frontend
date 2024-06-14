@@ -13,14 +13,30 @@ import {
 import { getBlockScanLink } from "apps/dex/utils";
 import useConnector from "context/connector";
 import PositionActivityListItemAmounts from "components/PositionActivityList/PositionActivityListItem/PostionActivityListItemAmounts";
-import useSharedContext from "../../context/shared";
+import useSharedContext from "context/shared";
 
 const PositionActivityListItemWrapper = styled(AppListItem)`
   padding-left: 24px;
   padding-right: 10px;
-
+  .MuiListItemText-root {
+    ${({ theme }) => theme.breakpoints.down("sm")} {
+      &:nth-child(2) {
+        width: 30%;
+      }
+      font-size: 11px;
+      flex: none;
+    }
+  }
   .MuiListItemText-multiline {
-    width: 50px;
+    width: 30%;
+    flex: none;
+    ${({ theme }) => theme.breakpoints.down("sm")} {
+      width: 40%;
+      font-size: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
   }
   ${({ theme }) => theme.breakpoints.down("sm")} {
     padding-left: 0;
