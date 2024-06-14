@@ -18,10 +18,6 @@ const PositionActivityListItemAmountsWrapper = styled(Box)`
 const PositionActivityListItemAmounts: FC<{
   transaction: IFxdTransaction;
 }> = ({ transaction }) => {
-  if (transaction.activityState === PositionActivityState.CLOSED) {
-    console.log(transaction);
-  }
-
   if (
     [PositionActivityState.REPAY, PositionActivityState.CLOSED].includes(
       transaction.activityState
