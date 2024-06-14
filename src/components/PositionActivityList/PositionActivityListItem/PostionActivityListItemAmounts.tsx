@@ -15,22 +15,29 @@ const PositionActivityListItemAmountsWrapper = styled(Box)`
   gap: 7px;
   ${({ theme }) => theme.breakpoints.down("sm")} {
     flex-direction: column;
+    justify-content: space-between;
+    gap: 2px;
   }
+`;
+
+const TokenAmount = styled(Box)`
+  word-break: break-word;
+  width: 100%;
 `;
 
 const PositionActivityListItemAmountsItemWrapper = styled(Box)`
   display: flex;
   align-items: start;
   gap: 5px;
+  padding-top: 2px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    width: 100%;
+  }
 `;
 
 const PositionActivityListItemAmounts: FC<{
   transaction: IFxdTransaction;
 }> = ({ transaction }) => {
-  // console.log({
-  //   transaction,
-  // });
-
   if (
     [PositionActivityState.REPAY, PositionActivityState.CLOSED].includes(
       transaction.activityState
@@ -45,9 +52,13 @@ const PositionActivityListItemAmounts: FC<{
             src={getTokenLogoURL("FXD")}
             alt={"logo"}
           />
-          <Box>{formatNumber(Number(transaction.debtAmount))} FXD</Box>
+          <TokenAmount>
+            {formatNumber(Number(transaction.debtAmount))} FXD
+          </TokenAmount>
         </PositionActivityListItemAmountsItemWrapper>
+
         <KeyboardDoubleArrowRightRoundedIcon width={20} />
+
         <PositionActivityListItemAmountsItemWrapper>
           <img
             width={20}
@@ -59,10 +70,10 @@ const PositionActivityListItemAmounts: FC<{
             )}
             alt={"logo"}
           />
-          <Box>
-            {formatNumber(Math.abs(Number(transaction.collateralAmount)))}{" "}
+          <TokenAmount>
+            +{formatNumber(Math.abs(Number(transaction.collateralAmount)))}{" "}
             {transaction.position?.collateralPoolName?.toUpperCase()}
-          </Box>
+          </TokenAmount>
         </PositionActivityListItemAmountsItemWrapper>
       </PositionActivityListItemAmountsWrapper>
     );
@@ -71,7 +82,7 @@ const PositionActivityListItemAmounts: FC<{
   ) {
     return (
       <PositionActivityListItemAmountsWrapper>
-        <PositionActivityListItemAmountsWrapper>
+        <PositionActivityListItemAmountsItemWrapper>
           <img
             width={20}
             height={20}
@@ -82,13 +93,15 @@ const PositionActivityListItemAmounts: FC<{
             )}
             alt={"logo"}
           />
-          <Box>
+          <TokenAmount>
             {!BigNumber(transaction.collateralAmount).isEqualTo(0) ? "-" : ""}
             {formatNumber(Number(transaction.collateralAmount))}{" "}
             {transaction.position?.collateralPoolName?.toUpperCase()}
-          </Box>
-        </PositionActivityListItemAmountsWrapper>
+          </TokenAmount>
+        </PositionActivityListItemAmountsItemWrapper>
+
         <KeyboardDoubleArrowRightRoundedIcon width={20} />
+
         <PositionActivityListItemAmountsItemWrapper>
           <img
             width={20}
@@ -96,7 +109,9 @@ const PositionActivityListItemAmounts: FC<{
             src={getTokenLogoURL("FXD")}
             alt={"logo"}
           />
-          <Box>{formatNumber(Number(transaction.debtAmount))} FXD</Box>
+          <TokenAmount>
+            +{formatNumber(Number(transaction.debtAmount))} FXD
+          </TokenAmount>
         </PositionActivityListItemAmountsItemWrapper>
       </PositionActivityListItemAmountsWrapper>
     );
@@ -114,16 +129,19 @@ const PositionActivityListItemAmounts: FC<{
           )}
           alt={"logo"}
         />
-        <Box>
-          {formatNumber(Number(transaction.collateralAmount))}{" "}
+        <TokenAmount>
+          -{formatNumber(Number(transaction.collateralAmount))}{" "}
           {transaction.position?.collateralPoolName?.toUpperCase()}
-        </Box>
+        </TokenAmount>
       </PositionActivityListItemAmountsItemWrapper>
 
       <KeyboardDoubleArrowRightRoundedIcon width={20} />
+
       <PositionActivityListItemAmountsItemWrapper>
         <img width={20} height={20} src={getTokenLogoURL("FXD")} alt={"logo"} />
-        <Box>{formatNumber(Number(transaction.debtAmount))} FXD</Box>
+        <TokenAmount>
+          +{formatNumber(Number(transaction.debtAmount))} FXD
+        </TokenAmount>
       </PositionActivityListItemAmountsItemWrapper>
     </PositionActivityListItemAmountsWrapper>
   );
