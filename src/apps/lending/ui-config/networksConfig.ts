@@ -22,7 +22,6 @@ export type NetworkConfig = {
   publicJsonRPCUrl: readonly string[]; // public rpc used if not private found, and used to add specific network to wallets if user don't have them. Normally with slow rates
   publicJsonRPCWSUrl?: string;
   // protocolDataUrl: string;
-  // https://github.com/aave/aave-api
   ratesHistoryApiUrl?: string;
   // cachingServerUrl?: string;
   // cachingWSServerUrl?: string;

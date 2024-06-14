@@ -3,9 +3,29 @@ import {
   ComputedUserReserveData,
   ExtendedFormattedUser,
 } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
+import BigNumber from "bignumber.js";
 
 export const APPROVAL_GAS_LIMIT = 65000;
 export const APPROVE_DELEGATION_GAS_LIMIT = 55000;
+
+export enum ErrorType {
+  SUPPLY_CAP_REACHED,
+  HF_BELOW_ONE,
+  NOT_ENOUGH_COLLATERAL_TO_REPAY_WITH,
+  ZERO_LTV_WITHDRAW_BLOCKED,
+}
+
+export const useFlashloan = (
+  healthFactor: string,
+  hfEffectOfFromAmount: string
+) => {
+  return (
+    healthFactor !== "-1" &&
+    new BigNumber(healthFactor)
+      .minus(new BigNumber(hfEffectOfFromAmount))
+      .lt("1.05")
+  );
+};
 
 export const checkRequiresApproval = ({
   approvedAmount,

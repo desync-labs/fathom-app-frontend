@@ -18,6 +18,13 @@ export type MarketDataType = {
     permissions?: boolean;
     addressBlocked?: boolean;
     stableBorrowRate?: boolean;
+    /**
+     * Paraswap features
+     */
+    liquiditySwap?: boolean;
+    collateralRepay?: boolean;
+    debtSwitch?: boolean;
+    withdrawAndSwitch?: boolean;
   };
   isFork?: boolean;
   permissionComponent?: ReactNode;
@@ -33,6 +40,14 @@ export type MarketDataType = {
     UI_POOL_DATA_PROVIDER: string;
     COLLECTOR?: string;
     UI_INCENTIVE_DATA_PROVIDER?: string;
+    /**
+     * Paraswap addresses
+     */
+    DEBT_SWITCH_ADAPTER?: string;
+    REPAY_WITH_COLLATERAL_ADAPTER?: string;
+    SWAP_COLLATERAL_ADAPTER?: string;
+    L2_ENCODER?: string;
+    WITHDRAW_SWITCH_ADAPTER?: string;
   };
   /**
    * https://www.hal.xyz/ has integrated lending for healtfactor warning notification
@@ -66,6 +81,13 @@ export const marketsData: {
       incentives: true,
       addressBlocked: false,
       stableBorrowRate: false,
+      /**
+       * Paraswap features
+       */
+      liquiditySwap: false,
+      collateralRepay: false,
+      debtSwitch: false,
+      withdrawAndSwitch: false,
     },
     subgraphUrl: `${
       SUBGRAPH_URLS[FathomLendingApothem.CHAIN_ID]
@@ -92,6 +114,13 @@ export const marketsData: {
       incentives: false,
       addressBlocked: false,
       stableBorrowRate: false,
+      /**
+       * Paraswap features
+       */
+      liquiditySwap: false,
+      collateralRepay: false,
+      debtSwitch: false,
+      withdrawAndSwitch: false,
     },
     subgraphUrl: `${
       SUBGRAPH_URLS[FathomLendingXdc.CHAIN_ID]
@@ -115,6 +144,13 @@ export const marketsData: {
       incentives: true,
       addressBlocked: false,
       stableBorrowRate: false,
+      /**
+       * Paraswap features
+       */
+      liquiditySwap: false,
+      collateralRepay: false,
+      debtSwitch: false,
+      withdrawAndSwitch: false,
     },
     subgraphUrl: `${
       SUBGRAPH_URLS[FathomLendingSepolia.CHAIN_ID]

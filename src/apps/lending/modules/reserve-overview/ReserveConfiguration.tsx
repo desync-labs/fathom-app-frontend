@@ -5,7 +5,6 @@ import { Link } from "apps/lending/components/primitives/Link";
 import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 import { useAssetCaps } from "apps/lending/hooks/useAssetCaps";
 import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
-import { BROKEN_ASSETS } from "apps/lending/hooks/useReservesHistory";
 import { useRootStore } from "apps/lending/store/root";
 import { GENERAL } from "apps/lending/utils/mixPanelEvents";
 
@@ -28,13 +27,9 @@ const ReserveConfiguration: FC<ReserveConfigurationProps> = memo(
   ({ reserve }) => {
     const { currentNetworkConfig, currentMarketData } =
       useProtocolDataContext();
-    const reserveId =
-      reserve.underlyingAsset +
-      currentMarketData.addresses.LENDING_POOL_ADDRESS_PROVIDER;
     const renderCharts =
       !!currentNetworkConfig.ratesHistoryApiUrl &&
-      !currentMarketData.disableCharts &&
-      !BROKEN_ASSETS.includes(reserveId);
+      !currentMarketData.disableCharts;
     const { supplyCap, borrowCap, debtCeiling } = useAssetCaps();
     const showSupplyCapStatus: boolean = reserve.supplyCap !== "0";
     const showBorrowCapStatus: boolean = reserve.borrowCap !== "0";

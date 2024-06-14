@@ -10,6 +10,8 @@ import { ListColumn } from "apps/lending/components/lists/ListColumn";
 import { ListItem } from "apps/lending/components/lists/ListItem";
 import { Link, ROUTES } from "apps/lending/components/primitives/Link";
 import { TokenIcon } from "apps/lending/components/primitives/TokenIcon";
+import { FrozenTooltip } from "apps/lending/components/infoTooltips/FrozenTooltip";
+import { BorrowDisabledToolTip } from "apps/lending/components/infoTooltips/BorrowDisabledToolTip";
 
 interface ListItemWrapperProps {
   symbol: string;
@@ -22,6 +24,8 @@ interface ListItemWrapperProps {
   showBorrowCapTooltips?: boolean;
   showDebtCeilingTooltips?: boolean;
   withTooltip?: boolean;
+  frozen?: boolean;
+  borrowEnabled?: boolean;
 }
 
 export const ListItemWrapper: FC<ListItemWrapperProps> = memo(
@@ -36,9 +40,14 @@ export const ListItemWrapper: FC<ListItemWrapperProps> = memo(
     showBorrowCapTooltips = false,
     showDebtCeilingTooltips = false,
     withTooltip = true,
+    frozen,
+    borrowEnabled = true,
     ...rest
   }) => {
     const { supplyCap, borrowCap, debtCeiling } = useAssetCaps();
+    const showFrozenTooltip =
+      frozen && symbol !== "renFIL" && symbol !== "BUSD";
+    const showBorrowDisabledTooltip = !frozen && !borrowEnabled;
     const trackEvent = useRootStore((store) => store.trackEvent);
 
     return (
@@ -77,6 +86,15 @@ export const ListItemWrapper: FC<ListItemWrapperProps> = memo(
               </Typography>
             </Tooltip>
           </Link>
+          {showSupplyCapTooltips &&
+            supplyCap.displayMaxedTooltip({ supplyCap })}
+          {showBorrowCapTooltips &&
+            borrowCap.displayMaxedTooltip({ borrowCap })}
+          {showDebtCeilingTooltips &&
+            debtCeiling.displayMaxedTooltip({ debtCeiling })}
+
+          {showFrozenTooltip && <FrozenTooltip />}
+          {showBorrowDisabledTooltip && <BorrowDisabledToolTip />}
           {showSupplyCapTooltips &&
             supplyCap.displayMaxedTooltip({ supplyCap })}
           {showBorrowCapTooltips &&
