@@ -1,7 +1,7 @@
 import { Outlet, useLocation } from "react-router-dom";
 import { FC, useMemo } from "react";
 import { styled } from "@mui/material/styles";
-import { DashboardIcon, TransactionsIcon } from "components/Common/MenuIcons";
+import { FxdIcon, TransactionsIcon } from "components/Common/MenuIcons";
 import {
   NestedRouteLink,
   NestedRouteNav,
@@ -32,11 +32,10 @@ const FXDView: FC = () => {
       {account && (
         <NestedRouteNav>
           <NestedRouteLink className={isFXDActive ? "active" : ""} to="/fxd">
-            <DashboardIcon isactive={isFXDActive ? "true" : ""} />
+            <FxdIcon isactive={isFXDActive ? "true" : ""} />
             Overview
           </NestedRouteLink>
           <NestedRouteLink
-            span={2}
             className={isTransactionsActive ? "active" : ""}
             to="/fxd/transactions"
           >
