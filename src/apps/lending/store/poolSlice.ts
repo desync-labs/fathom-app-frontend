@@ -2,38 +2,55 @@ import {
   ApproveDelegationType,
   ApproveType,
   BaseDebtToken,
+  DebtSwitchAdapterService,
   ERC20_2612Service,
   ERC20Service,
   EthereumTransactionTypeExtended,
   V3FaucetParamsType,
+  IncentivesControllerV2,
+  IncentivesControllerV2Interface,
   InterestRate,
   LendingPoolBundle,
   MAX_UINT_AMOUNT,
+  PermitSignature,
   Pool,
   PoolBaseCurrencyHumanized,
   PoolBundle,
   ReserveDataHumanized,
+  ReservesIncentiveDataHumanized,
+  UiIncentiveDataProvider,
   UiPoolDataProvider,
   UserReserveDataHumanized,
   V3FaucetService,
-  IncentivesControllerV2Interface,
-  IncentivesControllerV2,
+  WithdrawAndSwitchAdapterService,
 } from "@into-the-fathom/lending-contract-helpers";
 import {
   LPBorrowParamsType,
   LPSetUsageAsCollateral,
   LPSwapBorrowRateMode,
   LPWithdrawParamsType,
-} from "@into-the-fathom/lending-contract-helpers/dist/esm/lendingPool-contract/lendingPoolTypes";
+} from "@into-the-fathom/lending-contract-helpers/dist/esm/v3-pool-contract/lendingPoolTypes";
 import {
   LPSignERC20ApprovalType,
   LPSupplyParamsType,
   LPSupplyWithPermitType,
 } from "@into-the-fathom/lending-contract-helpers/dist/esm/v3-pool-contract/lendingPoolTypes";
 import { SignatureLike } from "@ethersproject/bytes";
-import { BigNumber, PopulatedTransaction, utils } from "fathom-ethers";
+import dayjs from "dayjs";
+import {
+  BigNumber,
+  PopulatedTransaction,
+  Signature,
+  utils,
+} from "fathom-ethers";
+import { splitSignature } from "fathom-ethers/lib/utils";
 import { produce } from "immer";
+import { ClaimRewardsActionsProps } from "apps/lending/components/transactions/ClaimRewards/ClaimRewardsActions";
+import { DebtSwitchActionProps } from "apps/lending/components/transactions/DebtSwitch/DebtSwitchActions";
+import { CollateralRepayActionProps } from "apps/lending/components/transactions/Repay/CollateralRepayActions";
 import { RepayActionProps } from "apps/lending/components/transactions/Repay/RepayActions";
+import { SwapActionProps } from "apps/lending/components/transactions/Swap/SwapActions";
+import { WithdrawAndSwitchActionProps } from "apps/lending/components/transactions/Withdraw/WithdrawAndSwitchActions";
 import { Approval } from "apps/lending/helpers/useTransactionHandler";
 import { MarketDataType } from "apps/lending/ui-config/marketsConfig";
 import {
@@ -47,12 +64,11 @@ import {
   selectFormattedReserves,
 } from "./poolSelectors";
 import { RootStore } from "./root";
-import { ClaimRewardsActionsProps } from "apps/lending/components/transactions/ClaimRewards/ClaimRewardsActions";
-import dayjs from "dayjs";
 
 // TODO: what is the better name for this type?
 export type PoolReserve = {
   reserves?: ReserveDataHumanized[];
+  reserveIncentives?: ReservesIncentiveDataHumanized[];
   baseCurrencyData?: PoolBaseCurrencyHumanized;
   userEmodeCategoryId?: number;
   userReserves?: UserReserveDataHumanized[];
@@ -77,6 +93,10 @@ export interface PoolSlice {
   swapBorrowRateMode: (
     args: Omit<LPSwapBorrowRateMode, "user">
   ) => Promise<EthereumTransactionTypeExtended[]>;
+  paraswapRepayWithCollateral: (
+    args: CollateralRepayActionProps
+  ) => Promise<EthereumTransactionTypeExtended[]>;
+  debtSwitch: (args: DebtSwitchActionProps) => PopulatedTransaction;
   setUserEMode: (
     categoryId: number
   ) => Promise<EthereumTransactionTypeExtended[]>;
@@ -87,6 +107,12 @@ export interface PoolSlice {
     args: ClaimRewardsActionsProps
   ) => Promise<EthereumTransactionTypeExtended[]>;
   // TODO: optimize types to use only neccessary properties
+  swapCollateral: (
+    args: SwapActionProps
+  ) => Promise<EthereumTransactionTypeExtended[]>;
+  withdrawAndSwitch: (
+    args: WithdrawAndSwitchActionProps
+  ) => PopulatedTransaction;
   repay: (args: RepayActionProps) => Promise<EthereumTransactionTypeExtended[]>;
   repayWithPermit: (
     args: RepayActionProps & {
@@ -137,7 +163,12 @@ export const createPoolSlice: StateCreator<
     const provider = get().jsonRpcProvider();
     return new Pool(provider, {
       POOL: currentMarketData.addresses.LENDING_POOL,
+      REPAY_WITH_COLLATERAL_ADAPTER:
+        currentMarketData.addresses.REPAY_WITH_COLLATERAL_ADAPTER,
+      SWAP_COLLATERAL_ADAPTER:
+        currentMarketData.addresses.SWAP_COLLATERAL_ADAPTER,
       WETH_GATEWAY: currentMarketData.addresses.WETH_GATEWAY,
+      L2_ENCODER: currentMarketData.addresses.L2_ENCODER,
     });
   }
   function getCorrectPoolBundle() {
@@ -146,6 +177,7 @@ export const createPoolSlice: StateCreator<
     return new PoolBundle(provider, {
       POOL: currentMarketData.addresses.LENDING_POOL,
       WETH_GATEWAY: currentMarketData.addresses.WETH_GATEWAY,
+      L2_ENCODER: currentMarketData.addresses.L2_ENCODER,
     });
   }
   return {
@@ -157,6 +189,12 @@ export const createPoolSlice: StateCreator<
       const poolDataProviderContract = new UiPoolDataProvider({
         uiPoolDataProviderAddress:
           currentMarketData.addresses.UI_POOL_DATA_PROVIDER,
+        provider: get().jsonRpcProvider(),
+        chainId: currentChainId,
+      });
+      const uiIncentiveDataProviderContract = new UiIncentiveDataProvider({
+        uiIncentiveDataProviderAddress:
+          currentMarketData.addresses.UI_INCENTIVE_DATA_PROVIDER || "",
         provider: get().jsonRpcProvider(),
         chainId: currentChainId,
       });
@@ -179,9 +217,9 @@ export const createPoolSlice: StateCreator<
                       .get(currentChainId)
                       ?.get(lendingPoolAddressProvider)
                   ) {
-                    draft.data
+                    (draft.data as any)
                       .get(currentChainId)
-                      ?.set(lendingPoolAddressProvider, {
+                      .set(lendingPoolAddressProvider, {
                         reserves: reservesResponse.reservesData,
                         baseCurrencyData: reservesResponse.baseCurrencyData,
                       });
@@ -199,6 +237,37 @@ export const createPoolSlice: StateCreator<
               )
             )
         );
+        promises.push(
+          uiIncentiveDataProviderContract
+            .getReservesIncentivesDataHumanized({
+              lendingPoolAddressProvider:
+                currentMarketData.addresses.LENDING_POOL_ADDRESS_PROVIDER,
+            })
+            .then((reserveIncentivesResponse) =>
+              set((state) =>
+                produce(state, (draft) => {
+                  if (!draft.data.get(currentChainId))
+                    draft.data.set(currentChainId, new Map());
+                  if (
+                    !draft.data
+                      .get(currentChainId)
+                      ?.get(lendingPoolAddressProvider)
+                  ) {
+                    (draft.data as any)
+                      .get(currentChainId)
+                      .set(lendingPoolAddressProvider, {
+                        reserveIncentives: reserveIncentivesResponse,
+                      });
+                  } else {
+                    (draft.data as any)
+                      .get(currentChainId)
+                      .get(lendingPoolAddressProvider).reserveIncentives =
+                      reserveIncentivesResponse;
+                  }
+                })
+              )
+            )
+        );
         if (account) {
           promises.push(
             poolDataProviderContract
@@ -206,7 +275,7 @@ export const createPoolSlice: StateCreator<
                 lendingPoolAddressProvider,
                 user: account,
               })
-              .then((userReservesResponse) =>
+              .then((userReservesResponse: any) =>
                 set((state) =>
                   produce(state, (draft) => {
                     if (!draft.data.get(currentChainId))
@@ -290,34 +359,19 @@ export const createPoolSlice: StateCreator<
     getApprovedAmount: async (args: { token: string }) => {
       const poolBundle = getCorrectPoolBundle();
       const user = get().account;
-      if (poolBundle instanceof PoolBundle) {
-        return poolBundle.supplyTxBuilder.getApprovedAmount({
-          user,
-          token: args.token,
-        });
-      } else {
-        return (poolBundle as any).depositTxBuilder.getApprovedAmount({
-          user,
-          token: args.token,
-        });
-      }
+      return poolBundle.supplyTxBuilder.getApprovedAmount({
+        user,
+        token: args.token,
+      });
     },
     borrow: (args: Omit<LPBorrowParamsType, "user">) => {
       const poolBundle = getCorrectPoolBundle();
       const currentAccount = get().account;
-      if (poolBundle instanceof PoolBundle) {
-        return poolBundle.borrowTxBuilder.generateTxData({
-          ...args,
-          user: currentAccount,
-          useOptimizedPath: get().useOptimizedPath(),
-        });
-      } else {
-        const lendingPool = poolBundle as LendingPoolBundle;
-        return lendingPool.borrowTxBuilder.generateTxData({
-          ...args,
-          user: currentAccount,
-        });
-      }
+      return poolBundle.borrowTxBuilder.generateTxData({
+        ...args,
+        user: currentAccount,
+        useOptimizedPath: get().useOptimizedPath(),
+      });
     },
     getCreditDelegationApprovedAmount: async (
       args: Omit<ApproveDelegationType, "user" | "amount">
@@ -386,6 +440,50 @@ export const createPoolSlice: StateCreator<
         useOptimizedPath: get().useOptimizedPath(),
       });
     },
+    paraswapRepayWithCollateral: async ({
+      fromAssetData,
+      poolReserve,
+      repayAmount,
+      repayWithAmount,
+      repayAllDebt,
+      useFlashLoan,
+      rateMode,
+      augustus,
+      swapCallData,
+      signature,
+      deadline,
+      signedAmount,
+    }) => {
+      const user = get().account;
+      const pool = getCorrectPool();
+
+      let permitSignature: PermitSignature | undefined;
+
+      if (signature && deadline && signedAmount) {
+        const sig: Signature = splitSignature(signature);
+        permitSignature = {
+          amount: signedAmount,
+          deadline: deadline,
+          v: sig.v,
+          r: sig.r,
+          s: sig.s,
+        };
+      }
+      return pool.paraswapRepayWithCollateral({
+        user,
+        fromAsset: fromAssetData.underlyingAsset,
+        fromFmToken: fromAssetData.fmTokenAddress,
+        assetToRepay: poolReserve.underlyingAsset,
+        repayWithAmount,
+        repayAmount,
+        repayAllDebt,
+        rateMode,
+        flash: useFlashLoan,
+        swapAndRepayCallData: swapCallData,
+        augustus,
+        permitSignature,
+      });
+    },
     generateCreditDelegationSignatureRequest: async ({
       amount,
       deadline,
@@ -437,6 +535,70 @@ export const createPoolSlice: StateCreator<
 
       return JSON.stringify(typedData);
     },
+    debtSwitch: ({
+      currentRateMode,
+      poolReserve,
+      amountToSwap,
+      targetReserve,
+      amountToReceive,
+      isMaxSelected,
+      txCalldata,
+      augustus,
+      signatureParams,
+    }) => {
+      const user = get().account;
+      const provider = get().jsonRpcProvider();
+      const currentMarketData = get().currentMarketData;
+      const debtSwitchService = new DebtSwitchAdapterService(
+        provider,
+        currentMarketData.addresses.DEBT_SWITCH_ADAPTER ?? ""
+      );
+      let signatureDeconstruct: PermitSignature = {
+        amount: signatureParams?.amount ?? "0",
+        deadline: signatureParams?.deadline?.toString() ?? "0",
+        v: 0,
+        r: "0x0000000000000000000000000000000000000000000000000000000000000000",
+        s: "0x0000000000000000000000000000000000000000000000000000000000000000",
+      };
+
+      if (signatureParams) {
+        const sig: Signature = splitSignature(signatureParams.signature);
+        signatureDeconstruct = {
+          ...signatureDeconstruct,
+          v: sig.v,
+          r: sig.r,
+          s: sig.s,
+        };
+      }
+      return debtSwitchService.debtSwitch({
+        user,
+        debtAssetUnderlying: poolReserve.underlyingAsset,
+        debtRepayAmount: isMaxSelected ? MAX_UINT_AMOUNT : amountToSwap,
+        debtRateMode: currentRateMode,
+        newAssetUnderlying: targetReserve.underlyingAsset,
+        newAssetDebtToken: targetReserve.variableDebtTokenAddress,
+        maxNewDebtAmount: amountToReceive,
+        extraCollateralAmount: "0",
+        extraCollateralAsset: "0x0000000000000000000000000000000000000000",
+        repayAll: isMaxSelected,
+        txCalldata,
+        augustus,
+        creditDelegationPermit: {
+          deadline: signatureDeconstruct.deadline,
+          value: signatureDeconstruct.amount,
+          v: signatureDeconstruct.v,
+          r: signatureDeconstruct.r,
+          s: signatureDeconstruct.s,
+        },
+        collateralPermit: {
+          deadline: "0",
+          value: "0",
+          v: 0,
+          r: "0x0000000000000000000000000000000000000000000000000000000000000000",
+          s: "0x0000000000000000000000000000000000000000000000000000000000000000",
+        },
+      });
+    },
     repay: ({ repayWithFmTokens, amountToRepay, poolAddress, debtType }) => {
       const pool = getCorrectPool();
       const currentAccount = get().account;
@@ -476,6 +638,99 @@ export const createPoolSlice: StateCreator<
         signature,
         useOptimizedPath: get().useOptimizedPath(),
         deadline,
+      });
+    },
+    swapCollateral: async ({
+      poolReserve,
+      targetReserve,
+      isMaxSelected,
+      amountToSwap,
+      amountToReceive,
+      useFlashLoan,
+      augustus,
+      swapCallData,
+      signature,
+      deadline,
+      signedAmount,
+    }) => {
+      const pool = getCorrectPool();
+      const user = get().account;
+
+      let permitSignature: PermitSignature | undefined;
+
+      if (signature && deadline && signedAmount) {
+        const sig: Signature = splitSignature(signature);
+        permitSignature = {
+          amount: signedAmount,
+          deadline: deadline,
+          v: sig.v,
+          r: sig.r,
+          s: sig.s,
+        };
+      }
+
+      return pool.swapCollateral({
+        fromAsset: poolReserve.underlyingAsset,
+        toAsset: targetReserve.underlyingAsset,
+        swapAll: isMaxSelected,
+        fromFmToken: poolReserve.fmTokenAddress,
+        fromAmount: amountToSwap,
+        minToAmount: amountToReceive,
+        user,
+        flash: useFlashLoan,
+        augustus,
+        swapCallData,
+        permitSignature,
+      });
+    },
+    withdrawAndSwitch: ({
+      poolReserve,
+      targetReserve,
+      isMaxSelected,
+      amountToSwap,
+      amountToReceive,
+      augustus,
+      signatureParams,
+      txCalldata,
+    }) => {
+      const user = get().account;
+
+      const provider = get().jsonRpcProvider();
+      const currentMarketData = get().currentMarketData;
+
+      const withdrawAndSwapService = new WithdrawAndSwitchAdapterService(
+        provider,
+        currentMarketData.addresses.WITHDRAW_SWITCH_ADAPTER
+      );
+
+      let signatureDeconstruct: PermitSignature = {
+        amount: signatureParams?.amount ?? "0",
+        deadline: signatureParams?.deadline?.toString() ?? "0",
+        v: 0,
+        r: "0x0000000000000000000000000000000000000000000000000000000000000000",
+        s: "0x0000000000000000000000000000000000000000000000000000000000000000",
+      };
+
+      if (signatureParams) {
+        const sig: Signature = splitSignature(signatureParams.signature);
+        signatureDeconstruct = {
+          ...signatureDeconstruct,
+          v: sig.v,
+          r: sig.r,
+          s: sig.s,
+        };
+      }
+
+      return withdrawAndSwapService.withdrawAndSwitch({
+        assetToSwitchFrom: poolReserve.underlyingAsset,
+        assetToSwitchTo: targetReserve.underlyingAsset,
+        switchAll: isMaxSelected,
+        amountToSwitch: amountToSwap,
+        minAmountToReceive: amountToReceive,
+        user,
+        augustus,
+        switchCallData: txCalldata,
+        permitParams: signatureDeconstruct,
       });
     },
     setUserEMode: async (categoryId) => {
@@ -536,7 +791,7 @@ export const createPoolSlice: StateCreator<
       }
     },
     useOptimizedPath: () => {
-      return optimizedPath(get().currentChainId);
+      return get().currentMarketData.v3 && optimizedPath(get().currentChainId);
     },
     poolComputed: {
       get minRemainingBaseTokenBalance() {

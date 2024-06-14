@@ -65,8 +65,8 @@ const HALLink: FC<Props> = ({ healthFactor, marketName, integrationURL }) => {
     url.searchParams.set("user", currentAccount);
     url.searchParams.set("healthfactor", formattedHealthFactor);
     url.searchParams.set("chain", marketName);
-    url.searchParams.set("aaveversion", marketName);
-    url.searchParams.set("utm_source", "aave-integration");
+    url.searchParams.set("fathomversion", marketName);
+    url.searchParams.set("utm_source", "fathom-integration");
 
     return url.toString();
   }, [currentAccount, healthFactor, marketName, integrationURL]);

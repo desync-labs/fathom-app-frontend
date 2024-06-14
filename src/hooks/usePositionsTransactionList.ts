@@ -1,83 +1,115 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import useConnector from "context/connector";
 import { useLazyQuery } from "@apollo/client";
-import { FXD_EVENTS } from "apollo/queries";
+import { FXD_ACTIVITIES } from "apollo/queries";
 import { SelectChangeEvent } from "@mui/material";
+import { IOpenPosition } from "fathom-sdk";
+import useDashboard from "../context/fxd";
 
-const DummyData = [
-  {
-    id: "111",
-    amount: "100453985434354364432",
-    type: "Position created",
-    txHash:
-      "0xcc78665b3b42ea68bfc623240248c36c65a4c5f830200334c258f5a01f150f77",
-    timestamp: 1703839616,
-  },
-  {
-    id: "222",
-    amount: "76453985434354364432",
-    type: "Position top up",
-    txHash:
-      "0xcc78665b3b42ea68bfc623240248c36c65a4c5f830200334c258f5a01f150f77",
-    timestamp: 1703239616,
-  },
-];
+export enum PositionActivityState {
+  CREATED = "created",
+  TOP_UP = "topup",
+  REPAY = "repay",
+  LIQUIDATION = "liquidation",
+  CLOSED = "closed",
+}
 
 export interface IFxdTransaction {
   id: string;
-  amount: string;
-  type: string;
-  txHash: string;
-  timestamp: number;
+  position: IOpenPosition;
+  activityState: PositionActivityState;
+  collateralAmount: string;
+  debtAmount: string;
+  blockNumber: number;
+  blockTimestamp: number;
+  transaction: string;
 }
 
 export enum FilterTxType {
-  ALL = "all",
-  CREATED = "Position created",
-  TOP_UP = "Position top up",
-  PARTIAL_WITHDRAW = "Position partial withdraw",
-  FULL_WITHDRAW = "Position close",
-  LIQUIDATION = "Position liquidation",
+  all = "All",
+  created = "Position created",
+  topup = "Position top up",
+  repay = "Position partial withdraw",
+  closed = "Position close",
+  liquidation = "Position liquidation",
 }
 
+export type FilterTxTypeKeys = keyof typeof FilterTxType;
+
 const usePositionsTransactionList = () => {
-  const [userTxList, setUserTxList] = useState<IFxdTransaction[]>([]);
-  const [filterByType, setFilterByType] = useState<FilterTxType>(
-    FilterTxType.ALL
-  );
-  const [serachValue, setSearchValue] = useState<string>("");
-  const { account } = useConnector();
+  /**
+   * Filter state
+   */
+  const [filterByType, setFilterByType] = useState<FilterTxTypeKeys>("all");
+  const [searchValue, setSearchValue] = useState<string>("");
+  /**
+   * Activities
+   */
+  const [fxdActivities, setFxdActivities] = useState<IFxdTransaction[]>([]);
 
-  const [loadFxdEvents] = useLazyQuery(FXD_EVENTS, {
-    context: { clientName: "stable" },
-  });
+  const { account, chainId } = useConnector();
+  const { proxyWallet } = useDashboard();
 
-  const fetchUserTxList = useCallback(async () => {
-    return loadFxdEvents({
+  const [fetchActivities, { refetch: refetchActivities, loading }] =
+    useLazyQuery(FXD_ACTIVITIES, {
+      context: { clientName: "stable", chainId },
       variables: {
-        owner: account,
+        first: 1000,
+        chainId,
+        orderBy: "blockNumber",
+        orderDirection: "desc",
       },
-    }).then((response) => {
-      const { data } = response;
-      console.log(data);
-      setUserTxList(DummyData);
     });
-  }, [account, loadFxdEvents, setUserTxList]);
 
   useEffect(() => {
-    fetchUserTxList();
-  }, []);
+    if (account && proxyWallet && chainId) {
+      const variables: {
+        proxyWallet: string;
+        activityState?: string[];
+        first?: number;
+      } = {
+        proxyWallet,
+      };
 
-  const handleFilterByType = (event: SelectChangeEvent<unknown>) => {
-    setFilterByType(event.target.value as FilterTxType);
-  };
+      if (filterByType === Object.keys(FilterTxType)[0]) {
+        variables["activityState"] = Object.values(PositionActivityState);
+        variables["first"] = 1000;
+      } else {
+        variables["activityState"] = [filterByType];
+        variables["first"] = 100;
+      }
+
+      fetchActivities({
+        variables,
+      }).then(({ data }) => {
+        setFxdActivities(data?.positionActivities || []);
+      });
+    } else {
+      setFxdActivities([]);
+    }
+  }, [account, proxyWallet, setFxdActivities, chainId, filterByType]);
+
+  const handleFilterByType = useCallback(
+    (event: SelectChangeEvent<unknown>) => {
+      setFilterByType(event.target.value as FilterTxTypeKeys);
+    },
+    [setFilterByType]
+  );
+
+  const filterActive = useMemo(() => {
+    return filterByType !== "all" || searchValue !== "";
+  }, [filterByType, searchValue]);
 
   return {
-    userTxList,
+    fxdActivities,
+    isLoading: loading,
+    filterActive,
     filterByType,
-    serachValue,
-    setSearchValue,
+    searchValue,
     handleFilterByType,
+    refetchActivities,
+    setFilterByType,
+    setSearchValue,
   };
 };
 

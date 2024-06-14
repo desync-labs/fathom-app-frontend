@@ -1,4 +1,4 @@
-import { FC, memo, useMemo, MouseEvent } from "react";
+import { FC, memo, MouseEvent } from "react";
 import {
   Box,
   Table,
@@ -60,7 +60,6 @@ const VaultList: FC<VaultListPropsType> = ({
     vaultSortedList,
     vaultsLoading,
     vaultPositionsLoading,
-    vaultPositionsList,
     vaultCurrentPage,
     vaultItemsCount,
     protocolFee,
@@ -82,39 +81,146 @@ const VaultList: FC<VaultListPropsType> = ({
 
   return (
     <>
-      {useMemo(
-        () => (
-          <>
-            {isMobile ? (
-              <>
-                <VaultFiltersMobile
-                  isShutdown={isShutdown}
-                  isMobileFiltersOpen={isMobileFiltersOpen}
-                  search={search}
-                  sortBy={sortBy}
-                  handleIsShutdown={handleIsShutdown}
-                  setSearch={setSearch}
-                  setSortBy={setSortBy}
-                  openMobileFilterMenu={openMobileFilterMenu}
-                />
-                {vaultsLoading ||
-                vaultPositionsLoading ||
-                !vaultSortedList.length ? (
+      {isMobile ? (
+        <>
+          <VaultFiltersMobile
+            isShutdown={isShutdown}
+            isMobileFiltersOpen={isMobileFiltersOpen}
+            search={search}
+            sortBy={sortBy}
+            handleIsShutdown={handleIsShutdown}
+            setSearch={setSearch}
+            setSortBy={setSortBy}
+            openMobileFilterMenu={openMobileFilterMenu}
+          />
+          {vaultsLoading || vaultPositionsLoading || !vaultSortedList.length ? (
+            <>
+              {vaultsLoading || vaultPositionsLoading ? (
+                <>
+                  <VaultListItemMobileSkeleton />
+                  <VaultListItemMobileSkeleton />
+                </>
+              ) : (
+                <NoResults variant={"h6"}>
+                  There are no Vaults for this query.
+                </NoResults>
+              )}
+            </>
+          ) : (
+            vaultSortedList.map((vault, index) => (
+              <VaultListItemMobile
+                vaultMethods={vaultMethods}
+                strategyMethods={strategyMethods}
+                key={vault.id}
+                vaultItemData={vault}
+                vaultPosition={filterCurrentPosition(vault.id)}
+                protocolFee={protocolFee}
+                performanceFee={performanceFee}
+                index={index}
+                isExtended={expandedVault === index}
+                handleExpandVault={handleExpandVault}
+                handleCollapseVault={handleCollapseVault}
+              />
+            ))
+          )}
+        </>
+      ) : (
+        <TableContainer>
+          <VaultFilters
+            isShutdown={isShutdown}
+            search={search}
+            sortBy={sortBy}
+            handleIsShutdown={handleIsShutdown}
+            setSearch={setSearch}
+            setSortBy={setSortBy}
+          />
+          {!vaultsLoading &&
+          !vaultPositionsLoading &&
+          !vaultSortedList.length ? (
+            <NoResults variant={"h6"}>
+              There are no Vaults for this query.
+            </NoResults>
+          ) : (
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <TableHead>
+                <AppTableHeaderRow
+                  sx={{
+                    th: {
+                      textAlign: "left",
+                      "&:first-of-type": { paddingLeft: "0" },
+                    },
+                  }}
+                >
+                  <VaultListTableCell
+                    colSpan={2}
+                    sx={{ paddingLeft: "20px !important" }}
+                  >
+                    Token
+                  </VaultListTableCell>
+                  <VaultListTableCell colSpan={1}>
+                    <VaultListTableCellPopover>
+                      Fee
+                      <AppPopover
+                        id={"fee"}
+                        text={<>The amount of fee that this Vault takes.</>}
+                      />
+                    </VaultListTableCellPopover>
+                  </VaultListTableCell>
+                  {account && (
+                    <VaultListTableCell colSpan={1}>
+                      <VaultListTableCellPopover>
+                        Earned
+                        <AppPopover
+                          id={"earned"}
+                          text={
+                            <>How much have you earned on this Vault so far.</>
+                          }
+                        />
+                      </VaultListTableCellPopover>
+                    </VaultListTableCell>
+                  )}
+                  <VaultListTableCell colSpan={1}>
+                    <VaultListTableCellPopover>
+                      Apy
+                      <AppPopover
+                        id={"apr"}
+                        text={
+                          <>
+                            Annual Percentage Yield – The annualized rate of
+                            return for the vault.
+                          </>
+                        }
+                      />
+                    </VaultListTableCellPopover>
+                  </VaultListTableCell>
+                  <VaultListTableCell colSpan={1}>
+                    <VaultListTableCellPopover>
+                      Tvl
+                      <AppPopover
+                        id={"tvl"}
+                        text={
+                          <>
+                            Total value locked (TVL) is a metric that refers to
+                            the sum of assets that are staked in the Vault.
+                          </>
+                        }
+                      />
+                    </VaultListTableCellPopover>
+                  </VaultListTableCell>
+                  <VaultListTableCell colSpan={1}>Available</VaultListTableCell>
+                  <VaultListTableCell colSpan={1}>Staked</VaultListTableCell>
+                  <TableCell colSpan={2}></TableCell>
+                </AppTableHeaderRow>
+              </TableHead>
+              <TableBody>
+                {vaultsLoading || vaultPositionsLoading ? (
                   <>
-                    {vaultsLoading || vaultPositionsLoading ? (
-                      <>
-                        <VaultListItemMobileSkeleton />
-                        <VaultListItemMobileSkeleton />
-                      </>
-                    ) : (
-                      <NoResults variant={"h6"}>
-                        There are no Vaults for this query.
-                      </NoResults>
-                    )}
+                    <VaultListItemSkeleton />
+                    <VaultListItemSkeleton />
                   </>
                 ) : (
                   vaultSortedList.map((vault, index) => (
-                    <VaultListItemMobile
+                    <VaultListItem
                       vaultMethods={vaultMethods}
                       strategyMethods={strategyMethods}
                       key={vault.id}
@@ -129,158 +235,19 @@ const VaultList: FC<VaultListPropsType> = ({
                     />
                   ))
                 )}
-              </>
-            ) : (
-              <TableContainer>
-                <VaultFilters
-                  isShutdown={isShutdown}
-                  search={search}
-                  sortBy={sortBy}
-                  handleIsShutdown={handleIsShutdown}
-                  setSearch={setSearch}
-                  setSortBy={setSortBy}
-                />
-                {!vaultsLoading &&
-                !vaultPositionsLoading &&
-                !vaultSortedList.length ? (
-                  <NoResults variant={"h6"}>
-                    There are no Vaults for this query.
-                  </NoResults>
-                ) : (
-                  <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                    <TableHead>
-                      <AppTableHeaderRow
-                        sx={{
-                          th: {
-                            textAlign: "left",
-                            "&:first-of-type": { paddingLeft: "0" },
-                          },
-                        }}
-                      >
-                        <VaultListTableCell
-                          colSpan={2}
-                          sx={{ paddingLeft: "20px !important" }}
-                        >
-                          Token
-                        </VaultListTableCell>
-                        <VaultListTableCell colSpan={1}>
-                          <VaultListTableCellPopover>
-                            Fee
-                            <AppPopover
-                              id={"fee"}
-                              text={
-                                <>The amount of fee that this Vault takes.</>
-                              }
-                            />
-                          </VaultListTableCellPopover>
-                        </VaultListTableCell>
-                        {account && (
-                          <VaultListTableCell colSpan={1}>
-                            <VaultListTableCellPopover>
-                              Earned
-                              <AppPopover
-                                id={"earned"}
-                                text={
-                                  <>
-                                    How much have you earned on this Vault so
-                                    far.
-                                  </>
-                                }
-                              />
-                            </VaultListTableCellPopover>
-                          </VaultListTableCell>
-                        )}
-                        <VaultListTableCell colSpan={1}>
-                          <VaultListTableCellPopover>
-                            Apy
-                            <AppPopover
-                              id={"apr"}
-                              text={
-                                <>
-                                  Annual Percentage Yield – The annualized rate
-                                  of return for the vault.
-                                </>
-                              }
-                            />
-                          </VaultListTableCellPopover>
-                        </VaultListTableCell>
-                        <VaultListTableCell colSpan={1}>
-                          <VaultListTableCellPopover>
-                            Tvl
-                            <AppPopover
-                              id={"tvl"}
-                              text={
-                                <>
-                                  Total value locked (TVL) is a metric that
-                                  refers to the sum of assets that are staked in
-                                  the Vault.
-                                </>
-                              }
-                            />
-                          </VaultListTableCellPopover>
-                        </VaultListTableCell>
-                        <VaultListTableCell colSpan={1}>
-                          Available
-                        </VaultListTableCell>
-                        <VaultListTableCell colSpan={1}>
-                          Staked
-                        </VaultListTableCell>
-                        <TableCell colSpan={2}></TableCell>
-                      </AppTableHeaderRow>
-                    </TableHead>
-                    <TableBody>
-                      {vaultsLoading || vaultPositionsLoading ? (
-                        <>
-                          <VaultListItemSkeleton />
-                          <VaultListItemSkeleton />
-                        </>
-                      ) : (
-                        vaultSortedList.map((vault, index) => (
-                          <VaultListItem
-                            vaultMethods={vaultMethods}
-                            strategyMethods={strategyMethods}
-                            key={vault.id}
-                            vaultItemData={vault}
-                            vaultPosition={filterCurrentPosition(vault.id)}
-                            protocolFee={protocolFee}
-                            performanceFee={performanceFee}
-                            index={index}
-                            isExtended={expandedVault === index}
-                            handleExpandVault={handleExpandVault}
-                            handleCollapseVault={handleCollapseVault}
-                          />
-                        ))
-                      )}
-                    </TableBody>
-                  </Table>
-                )}
-              </TableContainer>
-            )}
-            {!vaultsLoading && vaultSortedList.length > COUNT_PER_PAGE && (
-              <PaginationWrapper>
-                <Pagination
-                  count={Math.ceil(vaultItemsCount / COUNT_PER_PAGE)}
-                  page={vaultCurrentPage}
-                  onChange={handlePageChange}
-                />
-              </PaginationWrapper>
-            )}
-          </>
-        ),
-        [
-          search,
-          sortBy,
-          isShutdown,
-          isMobile,
-          isMobileFiltersOpen,
-          vaultSortedList,
-          performanceFee,
-          protocolFee,
-          vaultsLoading,
-          vaultPositionsList,
-          vaultPositionsLoading,
-          expandedVault,
-        ]
+              </TableBody>
+            </Table>
+          )}
+        </TableContainer>
+      )}
+      {!vaultsLoading && vaultSortedList.length > COUNT_PER_PAGE && (
+        <PaginationWrapper>
+          <Pagination
+            count={Math.ceil(vaultItemsCount / COUNT_PER_PAGE)}
+            page={vaultCurrentPage}
+            onChange={handlePageChange}
+          />
+        </PaginationWrapper>
       )}
     </>
   );

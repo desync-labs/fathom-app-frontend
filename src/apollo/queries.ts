@@ -75,21 +75,40 @@ export const FXD_USER = gql`
   }
 `;
 
-export const FXD_EVENTS = gql`
-  query FXDUser($owner: String!) {
-    swapEvents(
-      where: { owner: $owner }
-      orderBy: blockTimestamp
-      orderDirection: desc
+export const FXD_ACTIVITIES = gql`
+  query FXDActivities(
+    $first: Int!
+    $proxyWallet: String!
+    $orderBy: String
+    $orderDirection: String
+    $chainId: String
+    $activityState: [String!]
+  ) {
+    positionActivities(
+      first: $first
+      orderBy: $orderBy
+      orderDirection: $orderDirection
+      where: {
+        position_: { userAddress: $proxyWallet }
+        activityState_in: $activityState
+      }
     ) {
       id
-      fee
-      isStablecoinToTokenSwap
-      isTokenToStablecoinSwap
-      owner
-      transaction
-      value
+      blockNumber
+      activityState
+      blockNumber
       blockTimestamp
+      collateralAmount
+      debtAmount
+      transaction
+      position {
+        positionId
+        lockedCollateral
+        debtValue
+        debtShare
+        collateralPool
+        collateralPoolName
+      }
     }
   }
 `;

@@ -1,10 +1,11 @@
-import { Grid, Box, Typography, Skeleton } from "@mui/material";
+import { Grid, Box, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import useProtocolStats from "hooks/useProtocolStats";
 import { formatCurrency, formatNumber } from "utils/format";
 import usePricesContext from "context/prices";
 import AppPopover from "components/AppComponents/AppPopover/AppPopover";
 import BigNumber from "bignumber.js";
+import { StatsValueSkeleton } from "../AppComponents/AppSkeleton/AppSkeleton";
 
 const StatsItem = styled(Grid)`
   text-align: left;
@@ -60,18 +61,6 @@ const StatsValue = styled(Typography)`
     text-align: left;
   }
 `;
-
-const StatsValueSkeleton = () => {
-  return (
-    <Skeleton
-      variant="rounded"
-      animation={"wave"}
-      width={200}
-      height={28}
-      sx={{ bgcolor: "#2536564a", marginTop: "7px" }}
-    />
-  );
-};
 
 const ProtocolStats = () => {
   const { tvl, loading, poolsLoading, totalBorrowed } = useProtocolStats();

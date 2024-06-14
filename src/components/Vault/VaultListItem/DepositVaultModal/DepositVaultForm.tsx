@@ -89,6 +89,7 @@ type VaultDepositFormProps = {
     undefined
   >;
   onSubmit: () => Promise<void>;
+  depositLimitExceeded: (value: string) => false | string;
 };
 
 const DepositVaultForm: FC<VaultDepositFormProps> = ({
@@ -109,6 +110,7 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
   validateMaxDepositValue,
   handleSubmit,
   onSubmit,
+  depositLimitExceeded,
 }) => {
   const { token, shareToken, depositLimit, balanceTokens } = vaultItemData;
   return (
@@ -146,7 +148,7 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
                 placeholder={"0"}
                 helperText={
                   <>
-                    {error && error.type === "required" && (
+                    {depositLimitExceeded(value) !== false ? (
                       <AppFormInputErrorWrapper>
                         <InfoIcon
                           sx={{
@@ -160,45 +162,66 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
                           component={"span"}
                           sx={{ fontSize: "12px", paddingLeft: "6px" }}
                         >
-                          This field is required
+                          {depositLimitExceeded(value)}
                         </Box>
                       </AppFormInputErrorWrapper>
-                    )}
-                    {error && error.type === "validate" && (
-                      <AppFormInputErrorWrapper>
-                        <InfoIcon
-                          sx={{
-                            float: "left",
-                            width: "14px",
-                            height: "14px",
-                            marginRight: "0",
-                          }}
-                        />
-                        <Box
-                          component={"span"}
-                          sx={{ fontSize: "12px", paddingLeft: "6px" }}
-                        >
-                          {error.message}
-                        </Box>
-                      </AppFormInputErrorWrapper>
-                    )}
-                    {error && error.type === "min" && (
-                      <AppFormInputErrorWrapper>
-                        <InfoIcon
-                          sx={{
-                            float: "left",
-                            width: "14px",
-                            height: "14px",
-                            marginRight: "0",
-                          }}
-                        />
-                        <Box
-                          component={"span"}
-                          sx={{ fontSize: "12px", paddingLeft: "6px" }}
-                        >
-                          Deposit amount should be positive.
-                        </Box>
-                      </AppFormInputErrorWrapper>
+                    ) : (
+                      <>
+                        {error && error.type === "required" && (
+                          <AppFormInputErrorWrapper>
+                            <InfoIcon
+                              sx={{
+                                float: "left",
+                                width: "14px",
+                                height: "14px",
+                                marginRight: "0",
+                              }}
+                            />
+                            <Box
+                              component={"span"}
+                              sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                            >
+                              This field is required
+                            </Box>
+                          </AppFormInputErrorWrapper>
+                        )}
+                        {error && error.type === "validate" && (
+                          <AppFormInputErrorWrapper>
+                            <InfoIcon
+                              sx={{
+                                float: "left",
+                                width: "14px",
+                                height: "14px",
+                                marginRight: "0",
+                              }}
+                            />
+                            <Box
+                              component={"span"}
+                              sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                            >
+                              {error.message}
+                            </Box>
+                          </AppFormInputErrorWrapper>
+                        )}
+                        {error && error.type === "min" && (
+                          <AppFormInputErrorWrapper>
+                            <InfoIcon
+                              sx={{
+                                float: "left",
+                                width: "14px",
+                                height: "14px",
+                                marginRight: "0",
+                              }}
+                            />
+                            <Box
+                              component={"span"}
+                              sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                            >
+                              Deposit amount should be positive.
+                            </Box>
+                          </AppFormInputErrorWrapper>
+                        )}
+                      </>
                     )}
                   </>
                 }

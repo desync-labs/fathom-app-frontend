@@ -1,5 +1,5 @@
 import { InterestRate } from "@into-the-fathom/lending-contract-helpers";
-import { createContext, ReactNode, useContext, useState, FC } from "react";
+import { createContext, FC, ReactNode, useContext, useState } from "react";
 import { EmodeModalType } from "apps/lending/components/transactions/Emode/EmodeModalContent";
 import { useWeb3Context } from "apps/lending/libs/hooks/useWeb3Context";
 import { useRootStore } from "apps/lending/store/root";
@@ -13,10 +13,10 @@ export enum ModalType {
   Repay,
   CollateralChange,
   RateSwitch,
+  ClaimRewards,
   Emode,
   Faucet,
   Swap,
-  ClaimRewards,
   DebtSwitch,
 }
 
@@ -78,6 +78,11 @@ export interface ModalContextType<T extends ModalArgsType> {
     underlyingAsset: string,
     currentRateMode: InterestRate
   ) => void;
+  openDebtSwitch: (
+    underlyingAsset: string,
+    currentRateMode: InterestRate
+  ) => void;
+  openSwap: (underlyingAsset: string) => void;
   openEmode: (mode: EmodeModalType) => void;
   openFaucet: (underlyingAsset: string) => void;
   close: () => void;
@@ -162,6 +167,19 @@ export const ModalContextProvider: FC<{ children: ReactNode }> = ({
             asset: underlyingAsset,
             funnel: funnel,
           });
+        },
+        openDebtSwitch: (underlyingAsset, currentRateMode) => {
+          trackEvent(GENERAL.OPEN_MODAL, {
+            modal: "Debt Switch",
+            asset: underlyingAsset,
+          });
+          setType(ModalType.DebtSwitch);
+          setArgs({ underlyingAsset, currentRateMode });
+        },
+        openSwap: (underlyingAsset) => {
+          trackEvent(GENERAL.OPEN_MODAL, { modal: "Swap" });
+          setType(ModalType.Swap);
+          setArgs({ underlyingAsset });
         },
         openBorrow: (
           underlyingAsset,

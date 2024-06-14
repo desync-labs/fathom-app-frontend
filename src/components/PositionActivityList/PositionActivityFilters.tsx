@@ -3,14 +3,17 @@ import { SelectChangeEvent } from "@mui/material/Select";
 import { Grid, MenuItem } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-import { FilterTxType } from "hooks/usePositionsTransactionList";
+import {
+  FilterTxType,
+  FilterTxTypeKeys,
+} from "hooks/usePositionsTransactionList";
 import {
   AppFormInputLogo,
   AppFormInputWrapper,
   AppSelect,
   AppTextField,
 } from "components/AppComponents/AppForm/AppForm";
-import SearchSrc from "../../assets/svg/search.svg";
+import SearchSrc from "assets/svg/search.svg";
 
 const FilterLabel = styled("div")`
   font-size: 11px;
@@ -22,33 +25,34 @@ const FilterLabel = styled("div")`
 `;
 
 type PositionsTransactionFiltersProps = {
-  filterByType: FilterTxType;
+  filterByType: FilterTxTypeKeys;
   handleFilterByType: (event: SelectChangeEvent<unknown>) => void;
   searchValue: string;
   setSearchValue: (value: string) => void;
 };
 
-const PositionsTransactionFilters: FC<PositionsTransactionFiltersProps> = ({
+const PositionActivityFilters: FC<PositionsTransactionFiltersProps> = ({
   filterByType,
   handleFilterByType,
   searchValue,
   setSearchValue,
 }) => {
   const filterOptions = Object.values(FilterTxType);
+  const filterValues = Object.keys(FilterTxType);
 
   return (
     <Grid container spacing={2} py={3}>
-      <Grid item xs={3}>
+      <Grid item xs={6} md={3}>
         <FilterLabel>Filter by tx type</FilterLabel>
         <AppSelect value={filterByType} onChange={handleFilterByType}>
-          {filterOptions.map((option) => (
-            <MenuItem key={option} value={option}>
+          {filterOptions.map((option, index) => (
+            <MenuItem key={option} value={filterValues[index]}>
               {option}
             </MenuItem>
           ))}
         </AppSelect>
       </Grid>
-      <Grid item xs={3}>
+      <Grid item xs={6} md={3}>
         <FilterLabel>Search</FilterLabel>
         <AppFormInputWrapper sx={{ margin: 0 }}>
           <AppTextField
@@ -69,4 +73,4 @@ const PositionsTransactionFilters: FC<PositionsTransactionFiltersProps> = ({
   );
 };
 
-export default PositionsTransactionFilters;
+export default PositionActivityFilters;
