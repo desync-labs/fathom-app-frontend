@@ -68,15 +68,22 @@ enum FetchBalanceTokenType {
 const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
   const navigate = useNavigate();
   const [vault, setVault] = useState<IVault>({} as IVault);
+
   const [vaultPosition, setVaultPosition] = useState<IVaultPosition>(
     {} as IVaultPosition
   );
   const [balanceToken, setBalanceToken] = useState<string>("0");
+
   const [depositsList, setDepositsList] = useState([]);
   const [withdrawalsList, setWithdrawalsList] = useState([]);
-  const [transactionsLoading, setTransactionLoading] = useState<boolean>(false);
+
   const [protocolFee, setProtocolFee] = useState(0);
   const [performanceFee, setPerformanceFee] = useState(0);
+
+  const [updateVaultPositionLoading, setUpdateVaultPositionLoading] =
+    useState<boolean>(false);
+  const [fetchBalanceLoading, setFetchBalanceLoading] =
+    useState<boolean>(false);
 
   const [reports, setReports] = useState<
     Record<string, IVaultStrategyReport[]>
@@ -129,12 +136,14 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     fetchPolicy: "no-cache",
   });
 
-  const [loadPositionTransactions, { refetch: refetchTransactions }] =
-    useLazyQuery(VAULT_POSITION_TRANSACTIONS, {
-      context: { clientName: "vaults", chainId },
-      variables: { chainId },
-      fetchPolicy: "no-cache",
-    });
+  const [
+    loadPositionTransactions,
+    { loading: transactionsLoading, refetch: refetchTransactions },
+  ] = useLazyQuery(VAULT_POSITION_TRANSACTIONS, {
+    context: { clientName: "vaults", chainId },
+    variables: { chainId, first: 1000 },
+    fetchPolicy: "no-cache",
+  });
 
   const { data: vaultsFactories, loading: vaultsFactoriesLoading } = useQuery(
     VAULT_FACTORIES,
@@ -164,22 +173,25 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
 
       if (
         data?.strategyReports &&
-        data?.strategyReports.length &&
-        data?.strategyReports.length % VAULT_REPORTS_PER_PAGE === 0
+        data?.strategyReports?.length &&
+        data?.strategyReports?.length % VAULT_REPORTS_PER_PAGE === 0
       ) {
         fetchReports(
           strategyId,
-          [...prevStateReports, ...data.strategyReports],
-          [...prevStateApr, ...data.strategyHistoricalAprs]
+          [...prevStateReports, ...(data?.strategyReports || [])],
+          [...prevStateApr, ...(data?.strategyHistoricalAprs || [])]
         );
       } else {
         setReports((prev) => ({
           ...prev,
-          [strategyId]: [...prevStateReports, ...data.strategyReports],
+          [strategyId]: [...prevStateReports, ...(data?.strategyReports || [])],
         }));
         setHistoricalApr((prev) => ({
           ...prev,
-          [strategyId]: [...prevStateApr, ...data.strategyHistoricalAprs],
+          [strategyId]: [
+            ...prevStateApr,
+            ...(data?.strategyHistoricalAprs || []),
+          ],
         }));
       }
     });
@@ -203,7 +215,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
           }));
           fetchReports(strategy.id, [], []);
         });
-      }, 500);
+      }, 300);
     }
 
     return () => {
@@ -242,6 +254,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
 
   const updateVaultPosition = async (position: IVaultPosition) => {
     try {
+      setUpdateVaultPositionLoading(true);
       const balance = await poolService.getUserTokenBalance(
         account,
         position.shareToken.id
@@ -261,6 +274,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
       };
 
       setVaultPosition(updatedVaultPosition);
+      setUpdateVaultPositionLoading(false);
     } catch (error) {
       console.error("Error updating vault position:", error);
     }
@@ -277,8 +291,8 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
         ) {
           const position = res.data.accountVaultPositions[0];
 
-          setVaultPosition(position);
           updateVaultPosition(position);
+          setVaultPosition(position);
         } else {
           setVaultPosition({} as IVaultPosition);
         }
@@ -323,14 +337,8 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     (
       fetchBalanceTokenType: FetchBalanceTokenType = FetchBalanceTokenType.FETCH
     ) => {
-      if (
-        vault.id === undefined ||
-        vaultPosition?.balanceShares === undefined
-      ) {
-        return;
-      }
-
       if (fetchBalanceTokenType === FetchBalanceTokenType.PROMISE) {
+        setFetchBalanceLoading(true);
         return vaultService
           .previewRedeem(
             BigNumber(vaultPosition?.balanceShares as string)
@@ -342,8 +350,10 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
             console.error("Error fetching balance token:", error);
             showErrorNotification(error);
             return "-1";
-          });
+          })
+          .finally(() => setFetchBalanceLoading(false));
       }
+      setFetchBalanceLoading(true);
       return vaultService
         .previewRedeem(
           BigNumber(vaultPosition?.balanceShares as string)
@@ -358,16 +368,20 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
           console.error("Error fetching balance token:", error);
           setBalanceToken("-1");
           showErrorNotification(error);
-        });
+        })
+        .finally(() => setFetchBalanceLoading(false));
     },
-    [vaultService, vault, vaultPosition, setBalanceToken]
+    [
+      vaultService,
+      vault,
+      vaultPosition,
+      setBalanceToken,
+      setFetchBalanceLoading,
+    ]
   );
 
   const fetchPositionTransactions = useCallback(
     (fetchType: TransactionFetchType = TransactionFetchType.FETCH) => {
-      if (vault === null) {
-        return;
-      }
       if (account) {
         if (fetchType === TransactionFetchType.PROMISE) {
           return refetchTransactions({
@@ -375,19 +389,15 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
           });
         }
 
-        setTransactionLoading(true);
-
         return loadPositionTransactions({
           variables: {
             account: account.toLowerCase(),
             vault: vault.id,
           },
-        })
-          .then((res) => {
-            res.data?.deposits && setDepositsList(res.data.deposits);
-            res.data?.withdrawals && setWithdrawalsList(res.data.withdrawals);
-          })
-          .finally(() => setTransactionLoading(false));
+        }).then((res) => {
+          res.data?.deposits && setDepositsList(res.data.deposits);
+          res.data?.withdrawals && setWithdrawalsList(res.data.withdrawals);
+        });
       } else {
         setDepositsList([]);
         setWithdrawalsList([]);
@@ -396,8 +406,8 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     },
     [
       account,
+      vault,
       setDepositsList,
-      setTransactionLoading,
       loadPositionTransactions,
       refetchTransactions,
     ]
@@ -405,31 +415,47 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
 
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
-    if (vaultPosition && vault.id) {
-      fetchBalanceToken();
-      fetchPositionTransactions();
-      interval = setInterval(fetchBalanceToken, 15 * 1000);
+    let timeout: ReturnType<typeof setTimeout>;
+    if (
+      vaultPosition &&
+      vault.id &&
+      !vaultPositionLoading &&
+      !updateVaultPositionLoading
+    ) {
+      timeout = setTimeout(() => {
+        fetchBalanceToken();
+        fetchPositionTransactions();
+        interval = setInterval(() => fetchBalanceToken(), 15 * 1000);
+      }, 300);
     }
-    return () => clearInterval(interval);
-  }, [vault, fetchBalanceToken, fetchPositionTransactions]);
+    return () => {
+      clearInterval(interval);
+      clearTimeout(timeout);
+    };
+  }, [
+    vault,
+    fetchBalanceToken,
+    fetchPositionTransactions,
+    vaultPositionLoading,
+    updateVaultPositionLoading,
+  ]);
 
   useEffect(() => {
-    if (syncVault && !prevSyncVault) {
-      setTransactionLoading(true);
+    if (syncVault && !prevSyncVault && vaultPosition && vault.id) {
       Promise.all([
         fetchPositionTransactions(TransactionFetchType.PROMISE),
         fetchBalanceToken(FetchBalanceTokenType.PROMISE),
-      ])
-        .then(([transactions, balanceToken]) => {
-          setBalanceToken(balanceToken as string);
-          transactions?.data?.deposits &&
-            setDepositsList(transactions?.data.deposits);
-          transactions?.data?.withdrawals &&
-            setWithdrawalsList(transactions?.data.withdrawals);
-        })
-        .finally(() => setTransactionLoading(false));
+      ]).then(([transactions, balanceToken]) => {
+        setBalanceToken(balanceToken as string);
+        transactions?.data?.deposits &&
+          setDepositsList(transactions?.data.deposits);
+        transactions?.data?.withdrawals &&
+          setWithdrawalsList(transactions?.data.withdrawals);
+      });
     }
   }, [
+    vaultPosition,
+    vault,
     syncVault,
     prevSyncVault,
     fetchPositionTransactions,
@@ -437,7 +463,6 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     setBalanceToken,
     setDepositsList,
     setWithdrawalsList,
-    setTransactionLoading,
   ]);
 
   const balanceEarned = useMemo(() => {
@@ -453,7 +478,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
       new BigNumber(0)
     );
 
-    return transactionsLoading
+    return transactionsLoading || fetchBalanceLoading
       ? -1
       : BigNumber(balanceToken || "0")
           .minus(sumTokenDeposits.minus(sumTokenWithdrawals))
@@ -465,6 +490,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     depositsList,
     withdrawalsList,
     transactionsLoading,
+    fetchBalanceLoading,
   ]);
 
   const executeHasRoleMethod = async (): Promise<boolean> => {
@@ -551,6 +577,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     setActiveVaultInfoTab,
     managedStrategiesIds,
     isUserManager,
+    updateVaultPositionLoading,
   };
 };
 

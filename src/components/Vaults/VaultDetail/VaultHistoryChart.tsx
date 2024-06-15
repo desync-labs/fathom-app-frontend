@@ -207,12 +207,6 @@ const VaultHistoryChart: FC<VaultHistoryChartPropTypes> = ({
     }
 
     counter.current = counter.current + 1;
-
-    console.log({
-      returnValue,
-      counter: counter.current,
-    });
-
     return returnValue;
   };
 
