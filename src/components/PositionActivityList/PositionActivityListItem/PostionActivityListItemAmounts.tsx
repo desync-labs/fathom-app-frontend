@@ -27,7 +27,7 @@ const TokenAmount = styled(Box)`
 
 const PositionActivityListItemAmountsItemWrapper = styled(Box)`
   display: flex;
-  align-items: start;
+  align-items: center;
   gap: 5px;
   padding-top: 2px;
   ${({ theme }) => theme.breakpoints.down("sm")} {
