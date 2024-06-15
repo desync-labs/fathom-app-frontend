@@ -1,6 +1,5 @@
-import { FC, memo, useEffect, useState } from "react";
+import { FC, memo, useEffect, useRef, useState } from "react";
 import { Box, ListItemText, Paper, Typography, styled } from "@mui/material";
-import dayjs from "dayjs";
 import {
   CartesianGrid,
   Line,
@@ -18,6 +17,7 @@ import {
 import { formatNumber } from "utils/format";
 import useSharedContext from "context/shared";
 import { AppList, AppListItem } from "components/AppComponents/AppList/AppList";
+import dayjs from "dayjs";
 
 export const ChartWrapper = styled(Box)`
   position: relative;
@@ -152,36 +152,68 @@ const VaultHistoryChart: FC<VaultHistoryChartPropTypes> = ({
 }) => {
   const [minValue, setMinValue] = useState<number>(0);
   const [maxValue, setMaxValue] = useState<number>(0);
+  const [multiplier, setMultiplier] = useState<number>(1);
 
   const { isMobile } = useSharedContext();
+  const counter = useRef(0);
 
   useEffect(() => {
     if (chartDataArray.length) {
-      const chartValues = chartDataArray.map((item) =>
-        parseFloat(item.chartValue || "0")
-      );
-
-      setMaxValue(Math.max(...chartValues));
-      setMinValue(Math.min(...chartValues));
-    } else {
-      setMaxValue(0);
-      setMinValue(0);
+      counter.current = 0;
     }
   }, [chartDataArray]);
 
+  useEffect(() => {
+    if (chartDataArray.length) {
+      const chartValues: number[] = [];
+      const valuesLength: number[] = [];
+
+      chartDataArray.forEach((item) => {
+        /**
+         * Chart values for Y axis
+         */
+        const chartValue = parseFloat(item.chartValue || "0");
+        chartValues.push(chartValue);
+        valuesLength.push(formatNumber(chartValue).length);
+      });
+
+      setMaxValue(Math.max(...chartValues));
+      setMinValue(Math.min(...chartValues));
+
+      const maxLength = Math.max(...valuesLength);
+      let multiplier = maxLength / 3;
+      multiplier = multiplier < 1 ? 1 : multiplier;
+      setMultiplier(multiplier);
+    } else {
+      setMaxValue(0);
+      setMinValue(0);
+      setMultiplier(1);
+    }
+  }, [chartDataArray, setMultiplier, setMaxValue, setMinValue]);
+
+  // @ts-ignore
   const tickFormatter = (timestamp: string, index: number) => {
-    if (timestamp === "auto") {
-      return "";
+    const date = dayjs(Number(timestamp));
+    let returnValue =
+      date.month() === 0 ? date.format("YYYY") : date.format("DD/MMM");
+
+    if (chartDataArray.length > 100) {
+      returnValue =
+        counter.current % 10 === 0
+          ? date.month() === 0
+            ? date.format("YYYY")
+            : date.format("DD/MMM")
+          : "";
     }
-    const date = dayjs(parseInt(timestamp, 10));
-    if (
-      index === 0 ||
-      dayjs(parseInt(chartDataArray[index - 1].timestamp, 10)).year() !==
-        date.year()
-    ) {
-      return date.format("YYYY");
-    }
-    return date.format("MMM");
+
+    counter.current = counter.current + 1;
+
+    console.log({
+      returnValue,
+      counter: counter.current,
+    });
+
+    return returnValue;
   };
 
   const containerProps = {
@@ -201,7 +233,7 @@ const VaultHistoryChart: FC<VaultHistoryChartPropTypes> = ({
           data={chartDataArray}
           margin={{
             top: 0,
-            right: 30,
+            right: formatNumber(maxValue).length * multiplier,
             left: 0,
             bottom: 0,
           }}
@@ -245,4 +277,4 @@ const VaultHistoryChart: FC<VaultHistoryChartPropTypes> = ({
   );
 };
 
-export default VaultHistoryChart;
+export default memo(VaultHistoryChart);
