@@ -1,5 +1,4 @@
-import { useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useMemo, useState } from "react";
 import { styled } from "@mui/material/styles";
 import { TableCell } from "@mui/material";
 import { IVault, IVaultPosition } from "fathom-sdk";
@@ -8,10 +7,14 @@ import { useApr } from "hooks/Vaults/useApr";
 import usePricesContext from "context/prices";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatCurrency } from "utils/format";
+import useVaultListItem from "hooks/Vaults/useVaultListItem";
 import { AppTableRow } from "components/AppComponents/AppTable/AppTable";
 import { AppFlexBox } from "components/AppComponents/AppBox/AppBox";
+import VaultListItemPreviewModal from "components/Vaults/VaultList/VaultListItemPreviewModal";
+import VaultListItemDepositModal from "components/Vaults/VaultList/VaultListItemDepositModal";
+import VaultListItemManageModal from "components/Vaults/VaultList/VaultListItemManageModal";
 
-const VaultItemTableRow = styled(AppTableRow)`
+export const VaultItemTableRow = styled(AppTableRow)`
   width: 100%;
   border-radius: 8px;
   background: #132340;
@@ -83,70 +86,121 @@ const VaultListItemMobile = ({
   const { token, balanceTokens, shutdown } = vaultItemData;
   const formattedApr = useApr(vaultItemData);
   const { fxdPrice } = usePricesContext();
-  const navigate = useNavigate();
   const vaultTestId = vaultItemData.id;
 
-  // const {
-  //   balanceEarned,
-  //   manageVault,
-  //   newVaultDeposit,
-  //   setManageVault,
-  //   setNewVaultDeposit,
-  // } = useVaultListItem({ vaultPosition, vault: vaultItemData });
+  const [isOpenPreviewModal, setIsOpenPreviewModal] = useState<boolean>(false);
 
-  const redirectToVaultDetail = useCallback(() => {
-    navigate(`/vaults/${vaultItemData.id}`);
-  }, [vaultItemData.id]);
+  const {
+    balanceEarned,
+    manageVault,
+    newVaultDeposit,
+    setManageVault,
+    setNewVaultDeposit,
+  } = useVaultListItem({ vaultPosition, vault: vaultItemData });
+
+  const handleOpenPreviewModal = () => {
+    setIsOpenPreviewModal(true);
+  };
+  const handleClosePreviewModal = () => {
+    setIsOpenPreviewModal(false);
+  };
+
   return (
-    <VaultItemTableRow
-      data-testid={`vaultRow-${vaultTestId}`}
-      onClick={redirectToVaultDetail}
-    >
-      <TableCell colSpan={2}>
-        <AppFlexBox sx={{ justifyContent: "flex-start", gap: "4px" }}>
-          <VaultListItemImageWrapper>
-            <img
-              src={getTokenLogoURL(token.symbol)}
-              alt={token.name}
-              data-testid={`vaultRow-${vaultTestId}-tokenImg`}
-            />
-          </VaultListItemImageWrapper>
-          <VaultTitle data-testid={`vaultRow-${vaultTestId}-tokenTitle`}>
-            {vaultItemData.name}
-          </VaultTitle>
-        </AppFlexBox>
-      </TableCell>
-      <TableCell
-        colSpan={1}
-        data-testid={`vaultRow-${vaultTestId}-aprValueCell`}
+    <>
+      <VaultItemTableRow
+        data-testid={`vaultRow-${vaultTestId}`}
+        onClick={handleOpenPreviewModal}
       >
-        <VaultApr>{formattedApr}%</VaultApr>
-      </TableCell>
-      <TableCell
-        colSpan={2}
-        data-testid={`vaultRow-${vaultTestId}-tvlValueCell`}
-      >
-        <VaultStackedLiquidity>
-          {formatCurrency(
-            BigNumber(fxdPrice)
-              .dividedBy(10 ** 18)
-              .multipliedBy(BigNumber(balanceTokens).dividedBy(10 ** 18))
-              .toNumber()
+        <TableCell colSpan={2}>
+          <AppFlexBox sx={{ justifyContent: "flex-start", gap: "4px" }}>
+            <VaultListItemImageWrapper>
+              <img
+                src={getTokenLogoURL(token.symbol)}
+                alt={token.name}
+                data-testid={`vaultRow-${vaultTestId}-tokenImg`}
+              />
+            </VaultListItemImageWrapper>
+            <VaultTitle data-testid={`vaultRow-${vaultTestId}-tokenTitle`}>
+              {vaultItemData.name}
+            </VaultTitle>
+          </AppFlexBox>
+        </TableCell>
+        <TableCell
+          colSpan={1}
+          data-testid={`vaultRow-${vaultTestId}-aprValueCell`}
+        >
+          <VaultApr>{formattedApr}%</VaultApr>
+        </TableCell>
+        <TableCell
+          colSpan={2}
+          data-testid={`vaultRow-${vaultTestId}-tvlValueCell`}
+        >
+          <VaultStackedLiquidity>
+            {formatCurrency(
+              BigNumber(fxdPrice)
+                .dividedBy(10 ** 18)
+                .multipliedBy(BigNumber(balanceTokens).dividedBy(10 ** 18))
+                .toNumber()
+            )}
+          </VaultStackedLiquidity>
+        </TableCell>
+        <TableCell colSpan={1}>
+          {vaultPosition?.balancePosition &&
+          BigNumber(vaultPosition?.balancePosition).isGreaterThan(0) &&
+          !shutdown ? (
+            <VaultTagLabel>Earning</VaultTagLabel>
+          ) : shutdown ? (
+            <VaultTagLabel>Finished</VaultTagLabel>
+          ) : (
+            <VaultTagLabel>Live</VaultTagLabel>
           )}
-        </VaultStackedLiquidity>
-      </TableCell>
-      <TableCell colSpan={1}>
-        {vaultPosition?.balancePosition &&
-        BigNumber(vaultPosition?.balancePosition).isGreaterThan(0) &&
-        !shutdown ? (
-          <VaultTagLabel>Earning</VaultTagLabel>
-        ) : shutdown ? (
-          <VaultTagLabel>Finished</VaultTagLabel>
-        ) : (
-          <VaultTagLabel>Live</VaultTagLabel>
-        )}
-      </TableCell>
-    </VaultItemTableRow>
+        </TableCell>
+      </VaultItemTableRow>
+      {useMemo(() => {
+        return (
+          <VaultListItemPreviewModal
+            isOpenPreviewModal={isOpenPreviewModal}
+            vault={vaultItemData}
+            vaultPosition={vaultPosition}
+            balanceEarned={balanceEarned}
+            handleClosePreview={handleClosePreviewModal}
+            setManageVault={setManageVault}
+            setNewVaultDeposit={setNewVaultDeposit}
+          />
+        );
+      }, [
+        isOpenPreviewModal,
+        vaultItemData,
+        vaultPosition,
+        balanceEarned,
+        setManageVault,
+        setNewVaultDeposit,
+      ])}
+      {useMemo(() => {
+        return (
+          newVaultDeposit && (
+            <VaultListItemDepositModal
+              vaultItemData={vaultItemData}
+              performanceFee={performanceFee}
+              onClose={() => setNewVaultDeposit(false)}
+            />
+          )
+        );
+      }, [newVaultDeposit, setNewVaultDeposit])}
+      {useMemo(() => {
+        return (
+          manageVault &&
+          vaultPosition && (
+            <VaultListItemManageModal
+              vaultItemData={vaultItemData}
+              vaultPosition={vaultPosition}
+              performanceFee={performanceFee}
+              onClose={() => setManageVault(false)}
+            />
+          )
+        );
+      }, [manageVault, setManageVault])}
+    </>
   );
 };
 

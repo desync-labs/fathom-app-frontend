@@ -3,7 +3,7 @@ import { Breadcrumbs, styled, Typography } from "@mui/material";
 import KeyboardArrowRightRoundedIcon from "@mui/icons-material/KeyboardArrowRightRounded";
 import useVaultContext from "context/vault";
 
-const BreadcrumbsWrapper = styled(Breadcrumbs)`
+export const BreadcrumbsWrapper = styled(Breadcrumbs)`
   margin-top: 40px;
   margin-bottom: 40px;
   ${({ theme }) => theme.breakpoints.down("sm")} {
@@ -28,7 +28,7 @@ const VaultBreadcrumbsLink = styled(Link)`
   }
 `;
 
-const VaultBreadcrumbsCurrentPage = styled(Typography)`
+export const VaultBreadcrumbsCurrentPage = styled(Typography)`
   color: #6d86b2;
   font-size: 14px;
   font-weight: 600;

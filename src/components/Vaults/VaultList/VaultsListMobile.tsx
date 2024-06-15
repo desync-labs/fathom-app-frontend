@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, MouseEvent } from "react";
+import { ChangeEvent, FC } from "react";
 import { IVault, IVaultPosition } from "fathom-sdk";
 import { styled } from "@mui/material/styles";
 import {
@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { COUNT_PER_PAGE } from "utils/Constants";
 import VaultListItemMobile from "components/Vaults/VaultList/VaultListItemMobile";
+import { VaultListItemMobileSkeleton } from "components/Vaults/VaultList/VaultListItemSkeleton";
 
 const VaultListTableHeaderRow = styled(TableRow)`
   height: 16px;
@@ -40,55 +41,7 @@ const PaginationWrapper = styled(Box)`
   justify-content: center;
 `;
 
-// const VaultListItemMobileSkeleton = () => {
-//   return (
-//     <VaultListItemMobileContainer>
-//       <VaultPoolName>
-//         <CustomSkeleton
-//           animation="wave"
-//           variant="circular"
-//           width={28}
-//           height={28}
-//         />
-//         <CustomSkeleton animation={"wave"} width={90} />
-//       </VaultPoolName>
-//       <ListItemWrapper>
-//         <CustomSkeleton animation={"wave"} width={60} height={20} />
-//         <CustomSkeleton animation={"wave"} width={60} height={20} />
-//       </ListItemWrapper>
-//       <ListItemWrapper>
-//         <CustomSkeleton animation={"wave"} width={60} height={20} />
-//         <CustomSkeleton animation={"wave"} width={60} height={20} />
-//       </ListItemWrapper>
-//       <ListItemWrapper>
-//         <CustomSkeleton animation={"wave"} width={60} height={20} />
-//         <CustomSkeleton animation={"wave"} width={60} height={20} />
-//       </ListItemWrapper>
-//       <ListItemWrapper>
-//         <CustomSkeleton animation={"wave"} width={60} height={20} />
-//         <CustomSkeleton animation={"wave"} width={100} height={20} />
-//       </ListItemWrapper>
-//       <ListItemWrapper>
-//         <CustomSkeleton animation={"wave"} width={60} height={20} />
-//         <CustomSkeleton animation={"wave"} width={100} height={20} />
-//       </ListItemWrapper>
-//       <ListItemWrapper>
-//         <CustomSkeleton animation={"wave"} width={60} height={20} />
-//         <CustomSkeleton animation={"wave"} width={60} height={20} />
-//       </ListItemWrapper>
-//       <CustomSkeleton
-//         animation={"wave"}
-//         width="100%"
-//         height={40}
-//         sx={{ mt: "26px", mb: "16px" }}
-//       />
-//     </VaultListItemMobileContainer>
-//   );
-// };
-
 type VaultListPropsType = {
-  isMobileFiltersOpen: boolean;
-  openMobileFilterMenu: (event: MouseEvent<HTMLElement>) => void;
   vaults: IVault[];
   vaultsLoading: boolean;
   performanceFee: number;
@@ -105,8 +58,6 @@ const VaultsListMobile: FC<VaultListPropsType> = ({
   vaultPositionsLoading,
   performanceFee,
   filterCurrentPosition,
-  isMobileFiltersOpen,
-  openMobileFilterMenu,
   vaultCurrentPage,
   vaultItemsCount,
   handlePageChange,
@@ -125,9 +76,8 @@ const VaultsListMobile: FC<VaultListPropsType> = ({
         <TableBody>
           {vaultsLoading || vaultPositionsLoading ? (
             <>
-              Skeletons
-              {/*<VaultListItemMobileSkeleton />*/}
-              {/*<VaultListItemMobileSkeleton />*/}
+              <VaultListItemMobileSkeleton />
+              <VaultListItemMobileSkeleton />
             </>
           ) : (
             vaults.map((vault) => (
