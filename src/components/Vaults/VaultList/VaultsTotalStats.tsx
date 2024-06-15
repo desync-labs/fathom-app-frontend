@@ -118,7 +118,10 @@ const StatItem: FC<StatItemPropsType> = ({ title, value, icon }) => {
   );
 };
 
-const VaultsTotalStats: FC<VaultsTotalStatsType> = ({ positionsList }) => {
+const VaultsTotalStats: FC<VaultsTotalStatsType> = ({
+  positionsList,
+  positionsLoading,
+}) => {
   const [totalBalance, setTotalBalance] = useState("-1");
   const [transactionsLoading, setTransactionsLoading] = useState(false);
   const [depositsList, setDepositsList] = useState([]);
