@@ -7,7 +7,7 @@ import useConnector from "context/connector";
 import { useServices } from "context/services";
 import useSyncContext from "context/sync";
 import { formatNumber } from "utils/format";
-import { MAX_PERSONAL_DEPOSIT } from "hooks/useVaultOpenDeposit";
+import { MAX_PERSONAL_DEPOSIT } from "hooks/Vaults/useVaultOpenDeposit";
 
 export const defaultValues = {
   formToken: "",

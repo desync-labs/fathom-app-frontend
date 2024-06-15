@@ -1,5 +1,5 @@
 import { createContext, FC, ReactElement, useContext } from "react";
-import useProposalItem from "hooks/useProposalItem";
+import useProposalItem from "hooks/Governance/useProposalItem";
 import { ChainId } from "connectors/networks";
 
 export type ProposalContextType = {

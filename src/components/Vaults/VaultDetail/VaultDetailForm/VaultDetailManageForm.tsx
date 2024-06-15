@@ -1,6 +1,8 @@
 import { FormProvider } from "react-hook-form";
 import { Box, styled } from "@mui/material";
-import useVaultManageDeposit, { FormType } from "hooks/useVaultManageDeposit";
+import useVaultManageDeposit, {
+  FormType,
+} from "hooks/Vaults/useVaultManageDeposit";
 import useVaultContext from "context/vault";
 import useSharedContext from "context/shared";
 import { VaultPaper } from "components/AppComponents/AppPaper/AppPaper";

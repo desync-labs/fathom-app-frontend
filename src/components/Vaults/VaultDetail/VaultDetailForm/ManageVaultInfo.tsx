@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { IVault, IVaultPosition } from "fathom-sdk";
 import { FieldErrors, UseFormHandleSubmit } from "react-hook-form";
-import { FormType } from "hooks/useVaultManageDeposit";
+import { FormType } from "hooks/Vaults/useVaultManageDeposit";
 import { formatNumber, formatPercentage } from "utils/format";
 import useConnector from "context/connector";
 import { AppList, AppListItem } from "components/AppComponents/AppList/AppList";

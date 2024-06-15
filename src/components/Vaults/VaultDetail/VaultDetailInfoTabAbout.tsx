@@ -17,7 +17,7 @@ import {
   vaultDescription,
 } from "utils/getVaultTitleAndDescription";
 import { Link } from "react-router-dom";
-import { useAprNumber } from "hooks/useApr";
+import { useAprNumber } from "hooks/Vaults/useApr";
 import useVaultContext from "context/vault";
 
 export const VaultInfoWrapper = styled(Box)`

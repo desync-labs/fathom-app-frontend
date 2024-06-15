@@ -3,7 +3,7 @@ import { ILockPosition } from "fathom-sdk";
 import useStakingContext from "context/staking";
 import { UnStakeDialogProps } from "components/Staking/Dialog/UnstakeDialog";
 import BigNumber from "bignumber.js";
-import { UnlockType } from "hooks/useStakingView";
+import { UnlockType } from "hooks/Staking/useStakingView";
 
 const useUnstake = (
   lockPosition: ILockPosition | null,

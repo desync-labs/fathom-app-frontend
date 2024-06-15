@@ -1,6 +1,6 @@
 import { memo } from "react";
 import { styled } from "@mui/material";
-import { VaultInfoTabs } from "hooks/useVaultDetail";
+import { VaultInfoTabs } from "hooks/Vaults/useVaultDetail";
 import useVaultContext from "context/vault";
 import {
   AppNavItem,

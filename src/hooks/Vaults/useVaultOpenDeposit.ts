@@ -85,11 +85,13 @@ const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
   }, [vault, deposit]);
 
   useEffect(() => {
-    getVaultTokenBalance();
+    if (account) {
+      getVaultTokenBalance();
+    }
   }, [account, token]);
 
   useEffect(() => {
-    if (deposit && Number(deposit) > 0) {
+    if (deposit && BigNumber(deposit).isGreaterThan(0)) {
       updateSharedAmount(deposit);
     } else {
       setTimeout(() => {
@@ -102,7 +104,7 @@ const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
     const balance = await poolService.getUserTokenBalance(account, token.id);
     setWalletBalance(balance.toString());
     setIsWalletFetching(true);
-  }, [account]);
+  }, [account, token, setWalletBalance, setIsWalletFetching]);
 
   const setMax = useCallback(() => {
     const maxWalletBalance = BigNumber.min(

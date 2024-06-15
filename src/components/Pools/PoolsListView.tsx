@@ -17,7 +17,7 @@ import {
   NoResults,
   TitleSecondary,
 } from "components/AppComponents/AppBox/AppBox";
-import usePoolsList from "hooks/usePoolsList";
+import usePoolsList from "hooks/Pools/usePoolsList";
 import PoolsListItemMobile from "components/Pools/PoolsListItemMobile";
 import { OpenPositionProvider } from "context/openPosition";
 import useSharedContext from "context/shared";

@@ -14,10 +14,10 @@ import LockedSrc from "assets/svg/locked.svg";
 import RewardsSrc from "assets/svg/rewards.svg";
 
 import { secondsToTime } from "utils/secondsToTime";
-import useStreamStats from "hooks/useStreamStats";
+import useStreamStats from "hooks/Staking/useStreamStats";
 import BigNumber from "bignumber.js";
 import useSharedContext from "context/shared";
-import { FlowType } from "hooks/useStakingView";
+import { FlowType } from "hooks/Staking/useStakingView";
 
 const FTHMStreamHeader = styled("h3")`
   font-weight: 600;

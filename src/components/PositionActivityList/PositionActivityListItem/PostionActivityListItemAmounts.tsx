@@ -2,7 +2,7 @@ import { FC, memo } from "react";
 import {
   IFxdTransaction,
   PositionActivityState,
-} from "hooks/usePositionsTransactionList";
+} from "hooks/Pools/usePositionsTransactionList";
 import { Box, styled } from "@mui/material";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatNumber } from "utils/format";

@@ -4,7 +4,7 @@ import { styled } from "@mui/material/styles";
 import { TableCell } from "@mui/material";
 import { IVault, IVaultPosition } from "fathom-sdk";
 import BigNumber from "bignumber.js";
-import { useApr } from "hooks/useApr";
+import { useApr } from "hooks/Vaults/useApr";
 import usePricesContext from "context/prices";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatCurrency } from "utils/format";

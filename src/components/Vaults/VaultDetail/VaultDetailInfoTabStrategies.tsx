@@ -35,6 +35,8 @@ export const StrategySelector = styled(ButtonGroup)`
   border-radius: unset;
   border-bottom: 1px solid #43fff1;
   padding: 8px 0 16px 0;
+  overflow-x: scroll;
+  width: 100%;
 
   &::-webkit-scrollbar {
     height: 4px;

@@ -1,6 +1,6 @@
 import { createContext, Dispatch, FC, ReactElement, useContext } from "react";
 import { IOpenPosition, ICollateralPool } from "fathom-sdk";
-import useRepayPosition from "hooks/useRepayPosition";
+import useRepayPosition from "hooks/Positions/useRepayPosition";
 import { ChainId } from "connectors/networks";
 
 export type ClosePositionContextType = {

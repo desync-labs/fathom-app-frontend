@@ -6,7 +6,7 @@ import { useLazyQuery } from "@apollo/client";
 import { useServices } from "context/services";
 import useConnector from "context/connector";
 import useSyncContext from "context/sync";
-import useRpcError from "hooks/useRpcError";
+import useRpcError from "hooks/General/useRpcError";
 import { VAULT_POSITION_TRANSACTIONS } from "apollo/queries";
 
 interface UseVaultListItemProps {

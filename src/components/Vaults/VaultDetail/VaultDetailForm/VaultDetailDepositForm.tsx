@@ -2,7 +2,7 @@ import { FormProvider } from "react-hook-form";
 import { Box, styled, Typography } from "@mui/material";
 import useVaultContext from "context/vault";
 import useSharedContext from "context/shared";
-import useVaultOpenDeposit from "hooks/useVaultOpenDeposit";
+import useVaultOpenDeposit from "hooks/Vaults/useVaultOpenDeposit";
 import { VaultPaper } from "components/AppComponents/AppPaper/AppPaper";
 import { AppFlexBox } from "components/AppComponents/AppBox/AppBox";
 import DepositVaultForm from "components/Vaults/VaultList/DepositVaultModal/DepositVaultForm";

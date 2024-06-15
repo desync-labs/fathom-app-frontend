@@ -2,7 +2,7 @@ import { FC, memo, useMemo } from "react";
 import { ILockPosition } from "fathom-sdk";
 import StakingViewItem from "components/Staking/StakingViewItem";
 import ClaimRewardsDialog from "components/Staking/Dialog/ClaimRewardsDialog";
-import { DialogActions, FlowType } from "hooks/useStakingView";
+import { DialogActions, FlowType } from "hooks/Staking/useStakingView";
 import UnstakeDialog from "components/Staking/Dialog/UnstakeDialog";
 import EarlyUnstakeDialog from "components/Staking/Dialog/EarlyUnstakeDialog";
 import { NoResults } from "components/AppComponents/AppBox/AppBox";

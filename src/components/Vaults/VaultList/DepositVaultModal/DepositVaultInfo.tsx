@@ -3,7 +3,7 @@ import BigNumber from "bignumber.js";
 import { Box, Divider, ListItemText, styled } from "@mui/material";
 import { IVault } from "fathom-sdk";
 import { formatNumber, formatPercentage } from "utils/format";
-import { useApr } from "hooks/useApr";
+import { useApr } from "hooks/Vaults/useApr";
 import {
   AppListItem,
   AppListVault,

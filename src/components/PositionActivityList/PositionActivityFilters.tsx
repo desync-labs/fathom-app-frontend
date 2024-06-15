@@ -6,7 +6,7 @@ import { styled } from "@mui/material/styles";
 import {
   FilterTxType,
   FilterTxTypeKeys,
-} from "hooks/usePositionsTransactionList";
+} from "hooks/Pools/usePositionsTransactionList";
 import {
   AppFormInputLogo,
   AppFormInputWrapper,

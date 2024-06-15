@@ -8,7 +8,7 @@ import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 import { IOpenPosition } from "fathom-sdk";
 import { DANGER_SAFETY_BUFFER } from "utils/Constants";
-import { NATIVE_ASSETS } from "../connectors/networks";
+import { NATIVE_ASSETS } from "../../connectors/networks";
 
 const defaultValues = {
   collateral: "",

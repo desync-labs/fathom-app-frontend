@@ -33,7 +33,7 @@ import {
   CancelButton,
   MaxButton,
 } from "components/AppComponents/AppButton/AppButton";
-import useUnstake from "hooks/useUnstake";
+import useUnstake from "hooks/Staking/useUnstake";
 import {
   ButtonsWrapper,
   InfoMessageWrapper,

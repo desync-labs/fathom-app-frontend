@@ -4,9 +4,9 @@ import { styled } from "@mui/material/styles";
 import { Box, CircularProgress, TableCell } from "@mui/material";
 import { IVault, IVaultPosition } from "fathom-sdk";
 import BigNumber from "bignumber.js";
-import { useApr } from "hooks/useApr";
+import { useApr } from "hooks/Vaults/useApr";
 import usePricesContext from "context/prices";
-import useVaultListItem from "hooks/useVaultListItem";
+import useVaultListItem from "hooks/Vaults/useVaultListItem";
 import useConnector from "context/connector";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatCurrency, formatNumber } from "utils/format";
@@ -154,6 +154,7 @@ const VaultListItem = ({
   const redirectToVaultDetail = useCallback(() => {
     navigate(`/vaults/${vaultItemData.id}`);
   }, [vaultItemData.id]);
+
   return (
     <>
       <VaultItemTableRow data-testid={`vaultRow-${vaultTestId}`}>

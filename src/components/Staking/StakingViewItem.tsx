@@ -3,7 +3,7 @@ import { Box, Grid, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 import { ILockPosition } from "fathom-sdk";
-import useStakingItemView from "hooks/useStakingItemView";
+import useStakingItemView from "hooks/Staking/useStakingItemView";
 
 import StakingCountdown from "components/Staking/StakingCountdown";
 import { ButtonSecondary } from "components/AppComponents/AppButton/AppButton";
@@ -14,7 +14,7 @@ import { getTokenLogoURL } from "utils/tokenLogo";
 
 import clockSrc from "assets/svg/clock-circle.svg";
 import BigNumber from "bignumber.js";
-import { FlowType } from "hooks/useStakingView";
+import { FlowType } from "hooks/Staking/useStakingView";
 import AppPopover from "components/AppComponents/AppPopover/AppPopover";
 
 const StakingViewItemWrapper = styled(Grid)`

@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { FXD_STATS } from "apollo/queries";
 import useConnector from "context/connector";
-import usePoolsList from "hooks/usePoolsList";
+import usePoolsList from "hooks/Pools/usePoolsList";
 import { useMemo } from "react";
 import { ICollateralPool } from "fathom-sdk";
 

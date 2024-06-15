@@ -3,7 +3,7 @@ import { Box, Button, Container, styled, Typography } from "@mui/material";
 import useSharedContext from "context/shared";
 import usePositionsTransactionList, {
   IFxdTransaction,
-} from "hooks/usePositionsTransactionList";
+} from "hooks/Pools/usePositionsTransactionList";
 import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
 import PositionActivityFilters from "components/PositionActivityList/PositionActivityFilters";
 import PositionActivityListItem from "components/PositionActivityList/PositionActivityListItem";

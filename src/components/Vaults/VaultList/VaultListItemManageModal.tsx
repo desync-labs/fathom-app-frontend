@@ -10,7 +10,9 @@ import { styled } from "@mui/material/styles";
 import BigNumber from "bignumber.js";
 
 import { IVault, IVaultPosition } from "fathom-sdk";
-import useVaultManageDeposit, { FormType } from "hooks/useVaultManageDeposit";
+import useVaultManageDeposit, {
+  FormType,
+} from "hooks/Vaults/useVaultManageDeposit";
 import useConnector from "context/connector";
 
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";

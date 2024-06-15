@@ -1,4 +1,4 @@
-import { IFxdTransaction } from "hooks/usePositionsTransactionList";
+import { IFxdTransaction } from "hooks/Pools/usePositionsTransactionList";
 
 export const fxdActivitiesGroupByDate = (
   transactions: IFxdTransaction[]

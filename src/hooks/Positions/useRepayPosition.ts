@@ -12,7 +12,7 @@ import { WeiPerWad } from "utils/Constants";
 
 import { ICollateralPool, IOpenPosition } from "fathom-sdk";
 import debounce from "lodash.debounce";
-import { ChainId, NATIVE_ASSETS } from "../connectors/networks";
+import { ChainId, NATIVE_ASSETS } from "../../connectors/networks";
 
 const useRepayPosition = (
   position: ClosePositionContextType["position"],

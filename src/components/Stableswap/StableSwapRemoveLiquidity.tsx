@@ -14,7 +14,7 @@ import { InfoLabel, InfoValue } from "components/AppComponents/AppBox/AppBox";
 import InfoIcon from "@mui/icons-material/Info";
 import { formatPercentage } from "utils/format";
 import BigNumber from "bignumber.js";
-import useStableSwapRemoveLiquidity from "hooks/useStableSwapRemoveLiquidity";
+import useStableSwapRemoveLiquidity from "hooks/StableSwap/useStableSwapRemoveLiquidity";
 import { styled } from "@mui/material/styles";
 import useSharedContext from "context/shared";
 import { memo } from "react";

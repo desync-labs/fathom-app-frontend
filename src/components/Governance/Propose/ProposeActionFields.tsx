@@ -13,7 +13,7 @@ import { ButtonSecondary } from "components/AppComponents/AppButton/AppButton";
 
 import { AppTextField } from "components/AppComponents/AppForm/AppForm";
 import { ProposeLabel, InfoIcon } from "components/Governance/Propose";
-import useCreateProposalActionField from "hooks/useCreateProposalActionField";
+import useCreateProposalActionField from "hooks/Governance/useCreateProposalActionField";
 
 type ProposeActionFieldsProps = {
   index: number;

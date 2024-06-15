@@ -1,6 +1,6 @@
 import { styled } from "@mui/material";
 import useVaultContext from "context/vault";
-import { VaultInfoTabs } from "hooks/useVaultDetail";
+import { VaultInfoTabs } from "hooks/Vaults/useVaultDetail";
 import { VaultPaper } from "components/AppComponents/AppPaper/AppPaper";
 import VaultDetailInfoNav from "components/Vaults/VaultDetail/VaultDetailInfoNav";
 import VaultDetailInfoTabAbout from "components/Vaults/VaultDetail/VaultDetailInfoTabAbout";

@@ -2,7 +2,7 @@ import { Dispatch, FC, memo, SetStateAction } from "react";
 import { MenuItem, Box, Select } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { SelectChangeEvent } from "@mui/material/Select";
-import { SortType } from "hooks/useVaultList";
+import { SortType } from "hooks/Vaults/useVaultList";
 import {
   AppFormInputLogo,
   AppTextField,

@@ -1,5 +1,5 @@
 import { FC, MouseEvent } from "react";
-import useVaultList from "hooks/useVaultList";
+import useVaultList from "hooks/Vaults/useVaultList";
 import useSharedContext from "context/shared";
 import VaultsTotalStats from "components/Vaults/VaultList/VaultsTotalStats";
 import VaultsList from "components/Vaults/VaultList/VaultsList";

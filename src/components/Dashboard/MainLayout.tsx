@@ -83,7 +83,7 @@ import History from "apps/lending/pages/history.page";
 import ReserveOverview from "apps/lending/pages/reserve-overview.page";
 import Faucet from "apps/lending/pages/faucet.page";
 
-import useMainLayout from "hooks/useMainLayout";
+import useMainLayout from "hooks/General/useMainLayout";
 import { StakingProvider } from "context/staking";
 import { ProposalProvider } from "context/proposal";
 import useConnector from "context/connector";

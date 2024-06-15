@@ -9,7 +9,7 @@ import {
 import useVaultDetail, {
   IVaultStrategyHistoricalApr,
   VaultInfoTabs,
-} from "hooks/useVaultDetail";
+} from "hooks/Vaults/useVaultDetail";
 import { IVault, IVaultPosition, IVaultStrategyReport } from "fathom-sdk";
 import { FunctionFragment } from "@into-the-fathom/abi";
 

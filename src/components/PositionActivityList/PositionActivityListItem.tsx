@@ -9,7 +9,7 @@ import { FC, memo } from "react";
 import {
   FilterTxType,
   IFxdTransaction,
-} from "hooks/usePositionsTransactionList";
+} from "hooks/Pools/usePositionsTransactionList";
 import { getBlockScanLink } from "apps/dex/utils";
 import useConnector from "context/connector";
 import PositionActivityListItemAmounts from "components/PositionActivityList/PositionActivityListItem/PostionActivityListItemAmounts";

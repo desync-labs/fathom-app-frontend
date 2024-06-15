@@ -24,7 +24,7 @@ import {
   ButtonPrimary,
   CancelButton,
 } from "components/AppComponents/AppButton/AppButton";
-import useEarlyUnstake from "hooks/useEarlyUnstake";
+import useEarlyUnstake from "hooks/Staking/useEarlyUnstake";
 import {
   ButtonsWrapper,
   InfoMessageWrapper,

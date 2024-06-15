@@ -4,7 +4,7 @@ import BigNumber from "bignumber.js";
 import { Control, Controller, UseFormHandleSubmit } from "react-hook-form";
 
 import { IVault, IVaultPosition } from "fathom-sdk";
-import { FormType } from "hooks/useVaultManageDeposit";
+import { FormType } from "hooks/Vaults/useVaultManageDeposit";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatNumber } from "utils/format";
 import usePricesContext from "context/prices";

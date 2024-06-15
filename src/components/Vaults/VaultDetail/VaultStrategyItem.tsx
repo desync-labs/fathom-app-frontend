@@ -14,8 +14,8 @@ import {
   strategyDescription,
   strategyTitle,
 } from "utils/getStrategyTitleAndDescription";
-import { getApr } from "hooks/useApr";
-import { IVaultStrategyHistoricalApr } from "hooks/useVaultListItem";
+import { getApr } from "hooks/Vaults/useApr";
+import { IVaultStrategyHistoricalApr } from "hooks/Vaults/useVaultListItem";
 import VaultHistoryChart, {
   HistoryChartDataType,
 } from "components/Vaults/VaultDetail/VaultHistoryChart";

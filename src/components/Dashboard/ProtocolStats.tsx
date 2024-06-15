@@ -1,6 +1,6 @@
 import { Grid, Box, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import useProtocolStats from "hooks/useProtocolStats";
+import useProtocolStats from "hooks/General/useProtocolStats";
 import { formatCurrency, formatNumber } from "utils/format";
 import usePricesContext from "context/prices";
 import AppPopover from "components/AppComponents/AppPopover/AppPopover";

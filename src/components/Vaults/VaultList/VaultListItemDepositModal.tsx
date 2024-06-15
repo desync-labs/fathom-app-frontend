@@ -10,7 +10,7 @@ import { styled } from "@mui/material/styles";
 import BigNumber from "bignumber.js";
 
 import { IVault } from "fathom-sdk";
-import useVaultOpenDeposit from "hooks/useVaultOpenDeposit";
+import useVaultOpenDeposit from "hooks/Vaults/useVaultOpenDeposit";
 import useConnector from "context/connector";
 
 import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";

@@ -2,14 +2,14 @@ import { FC, memo } from "react";
 import BigNumber from "bignumber.js";
 import { Box, Divider, ListItemText, styled } from "@mui/material";
 import { IVault, IVaultPosition } from "fathom-sdk";
-import { FormType } from "hooks/useVaultManageDeposit";
+import { FormType } from "hooks/Vaults/useVaultManageDeposit";
 import {
   AppListItem,
   AppListVault,
 } from "components/AppComponents/AppList/AppList";
 import { Summary } from "components/AppComponents/AppBox/AppBox";
 import { formatNumber, formatPercentage } from "utils/format";
-import { useApr } from "hooks/useApr";
+import { useApr } from "hooks/Vaults/useApr";
 
 const ManageVaultFormInfoWrapper = styled(Box)`
   position: relative;
