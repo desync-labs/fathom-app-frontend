@@ -426,7 +426,10 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
       timeout = setTimeout(() => {
         fetchBalanceToken();
         fetchPositionTransactions();
-        interval = setInterval(() => fetchBalanceToken(), 15 * 1000);
+        /**
+         * Fetch balance token every 60 seconds
+         */
+        interval = setInterval(fetchBalanceToken, 60 * 1000);
       }, 300);
     }
     return () => {
