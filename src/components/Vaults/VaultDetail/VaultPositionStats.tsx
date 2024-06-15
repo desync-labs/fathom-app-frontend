@@ -4,6 +4,7 @@ import useVaultContext from "context/vault";
 import usePricesContext from "context/prices";
 import useSharedContext from "context/shared";
 import { formatNumber } from "utils/format";
+import { StatsValueSkeleton } from "components/AppComponents/AppSkeleton/AppSkeleton";
 
 const VaultPositionTitle = styled(Typography)`
   color: #fff;
@@ -113,15 +114,17 @@ const VaultPositionStats = () => {
           <Box>
             <PositionStatItemTitle>Balance</PositionStatItemTitle>
             <PositionStatItemValue>
-              {vaultPositionLoading
-                ? "Loading..."
-                : "$" +
-                  formatNumber(
-                    BigNumber(vaultPosition?.balancePosition || 0)
-                      .multipliedBy(fxdPrice)
-                      .dividedBy(10 ** 36)
-                      .toNumber()
-                  )}
+              {vaultPositionLoading ? (
+                <StatsValueSkeleton />
+              ) : (
+                "$" +
+                formatNumber(
+                  BigNumber(vaultPosition?.balancePosition || 0)
+                    .multipliedBy(fxdPrice)
+                    .dividedBy(10 ** 36)
+                    .toNumber()
+                )
+              )}
             </PositionStatItemValue>
           </Box>
         </PositionStatItem>
@@ -129,15 +132,19 @@ const VaultPositionStats = () => {
           <Box>
             <PositionStatItemTitle>Earned</PositionStatItemTitle>
             <PositionStatItemValue>
-              $
-              {BigNumber(balanceEarned).isGreaterThan(0)
-                ? formatNumber(
+              <>
+                {BigNumber(balanceEarned).isGreaterThan(0) ? (
+                  "$" +
+                  formatNumber(
                     BigNumber(balanceEarned || "0")
                       .multipliedBy(fxdPrice)
                       .dividedBy(10 ** 18)
                       .toNumber()
                   )
-                : "0"}
+                ) : (
+                  <StatsValueSkeleton />
+                )}
+              </>
             </PositionStatItemValue>
           </Box>
         </PositionStatItem>
