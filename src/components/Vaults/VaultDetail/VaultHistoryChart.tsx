@@ -192,7 +192,7 @@ const VaultHistoryChart: FC<VaultHistoryChartPropTypes> = ({
   }, [chartDataArray, setMultiplier, setMaxValue, setMinValue]);
 
   // @ts-ignore
-  const tickFormatter = (timestamp: string, index: number) => {
+  const tickFormatter = (timestamp: string) => {
     const date = dayjs(Number(timestamp));
     let returnValue =
       date.month() === 0 ? date.format("YYYY") : date.format("DD/MMM");
