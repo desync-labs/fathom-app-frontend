@@ -80,7 +80,7 @@ const useVaultList = () => {
   ] = useLazyQuery(ACCOUNT_VAULT_POSITIONS, {
     context: { clientName: "vaults", chainId },
     fetchPolicy: "network-only",
-    variables: { chainId },
+    variables: { chainId, first: 1000 },
   });
 
   useEffect(() => {

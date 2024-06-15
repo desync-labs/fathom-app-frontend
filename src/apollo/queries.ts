@@ -367,8 +367,12 @@ export const VAULT_STRATEGY_REPORTS = gql`
 `;
 
 export const ACCOUNT_VAULT_POSITIONS = gql`
-  query AccountVaultPositions($account: String!, $chainId: String) {
-    accountVaultPositions(where: { account: $account }) {
+  query AccountVaultPositions(
+    $account: String!
+    $chainId: String
+    $first: Int!
+  ) {
+    accountVaultPositions(where: { account: $account }, first: $first) {
       id
       balancePosition
       balanceProfit

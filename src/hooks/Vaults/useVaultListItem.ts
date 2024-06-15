@@ -20,12 +20,12 @@ export type IVaultStrategyHistoricalApr = {
   timestamp: string;
 };
 
-enum TransactionFetchType {
+export enum TransactionFetchType {
   FETCH = "fetch",
   PROMISE = "promise",
 }
 
-enum FetchBalanceTokenType {
+export enum FetchBalanceTokenType {
   PROMISE = "promise",
   FETCH = "fetch",
 }
