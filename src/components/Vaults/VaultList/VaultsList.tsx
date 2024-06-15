@@ -69,12 +69,9 @@ type VaultListPropsType = {
 const VaultsList: FC<VaultListPropsType> = ({
   vaults,
   vaultsLoading,
-  vaultPositionsList,
   vaultPositionsLoading,
   performanceFee,
   filterCurrentPosition,
-  isMobileFiltersOpen,
-  openMobileFilterMenu,
   vaultCurrentPage,
   vaultItemsCount,
   handlePageChange,

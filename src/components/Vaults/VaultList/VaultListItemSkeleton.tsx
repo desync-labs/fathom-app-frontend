@@ -1,16 +1,8 @@
-import { Skeleton, styled, TableCell } from "@mui/material";
+import { Box, Skeleton, styled, TableCell } from "@mui/material";
 import useConnector from "context/connector";
 import { AppTableRow } from "components/AppComponents/AppTable/AppTable";
-import { ListItemWrapper } from "components/AppComponents/AppList/AppList";
-import {
-  FlexBox,
-  VaultInfo,
-  VaultListItemImageWrapper,
-} from "components/Vault/VaultListItem";
-import {
-  VaultListItemMobileContainer,
-  VaultPoolName,
-} from "components/Vault/VaultListItemMobile";
+import { AppFlexBox } from "components/AppComponents/AppBox/AppBox";
+import { VaultListItemImageWrapper } from "components/Vaults/VaultList/VaultListItem";
 
 const CustomSkeleton = styled(Skeleton)`
   background-color: #2536564a;
@@ -21,7 +13,7 @@ export const VaultListItemSkeleton = () => {
   return (
     <AppTableRow className="border single">
       <TableCell colSpan={2} sx={{ width: "20%" }}>
-        <FlexBox>
+        <AppFlexBox>
           <VaultListItemImageWrapper>
             <CustomSkeleton
               animation="wave"
@@ -30,10 +22,10 @@ export const VaultListItemSkeleton = () => {
               height={36}
             />
           </VaultListItemImageWrapper>
-          <VaultInfo>
+          <Box>
             <CustomSkeleton animation={"wave"} width={90} />
-          </VaultInfo>
-        </FlexBox>
+          </Box>
+        </AppFlexBox>
       </TableCell>
       <TableCell colSpan={1} sx={{ width: account ? "7%" : "10%" }}>
         <CustomSkeleton animation={"wave"} width={35} />
@@ -56,61 +48,15 @@ export const VaultListItemSkeleton = () => {
         <CustomSkeleton animation={"wave"} width={70} />
       </TableCell>
       <TableCell colSpan={2}>
-        <FlexBox justifyContent={"flex-end"} mx={2}>
+        <AppFlexBox justifyContent={"flex-end"} mx={2}>
           <CustomSkeleton
             animation={"wave"}
             width={account ? 60 : 120}
             height={35}
           />
           <CustomSkeleton animation={"wave"} width={22} />
-        </FlexBox>
+        </AppFlexBox>
       </TableCell>
     </AppTableRow>
-  );
-};
-
-export const VaultListItemMobileSkeleton = () => {
-  return (
-    <VaultListItemMobileContainer>
-      <VaultPoolName>
-        <CustomSkeleton
-          animation="wave"
-          variant="circular"
-          width={28}
-          height={28}
-        />
-        <CustomSkeleton animation={"wave"} width={90} />
-      </VaultPoolName>
-      <ListItemWrapper>
-        <CustomSkeleton animation={"wave"} width={60} height={20} />
-        <CustomSkeleton animation={"wave"} width={60} height={20} />
-      </ListItemWrapper>
-      <ListItemWrapper>
-        <CustomSkeleton animation={"wave"} width={60} height={20} />
-        <CustomSkeleton animation={"wave"} width={60} height={20} />
-      </ListItemWrapper>
-      <ListItemWrapper>
-        <CustomSkeleton animation={"wave"} width={60} height={20} />
-        <CustomSkeleton animation={"wave"} width={60} height={20} />
-      </ListItemWrapper>
-      <ListItemWrapper>
-        <CustomSkeleton animation={"wave"} width={60} height={20} />
-        <CustomSkeleton animation={"wave"} width={100} height={20} />
-      </ListItemWrapper>
-      <ListItemWrapper>
-        <CustomSkeleton animation={"wave"} width={60} height={20} />
-        <CustomSkeleton animation={"wave"} width={100} height={20} />
-      </ListItemWrapper>
-      <ListItemWrapper>
-        <CustomSkeleton animation={"wave"} width={60} height={20} />
-        <CustomSkeleton animation={"wave"} width={60} height={20} />
-      </ListItemWrapper>
-      <CustomSkeleton
-        animation={"wave"}
-        width="100%"
-        height={40}
-        sx={{ mt: "26px", mb: "16px" }}
-      />
-    </VaultListItemMobileContainer>
   );
 };
