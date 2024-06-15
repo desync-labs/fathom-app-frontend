@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, MouseEvent } from "react";
+import { ChangeEvent, FC } from "react";
 import { IVault, IVaultPosition } from "fathom-sdk";
 import { styled } from "@mui/material/styles";
 import {
@@ -53,10 +53,7 @@ const PaginationWrapper = styled(Box)`
 `;
 
 type VaultListPropsType = {
-  isMobileFiltersOpen: boolean;
-  openMobileFilterMenu: (event: MouseEvent<HTMLElement>) => void;
   vaults: IVault[];
-  vaultPositionsList: IVaultPosition[];
   vaultsLoading: boolean;
   performanceFee: number;
   vaultPositionsLoading: boolean;
@@ -69,12 +66,9 @@ type VaultListPropsType = {
 const VaultsList: FC<VaultListPropsType> = ({
   vaults,
   vaultsLoading,
-  vaultPositionsList,
   vaultPositionsLoading,
   performanceFee,
   filterCurrentPosition,
-  isMobileFiltersOpen,
-  openMobileFilterMenu,
   vaultCurrentPage,
   vaultItemsCount,
   handlePageChange,

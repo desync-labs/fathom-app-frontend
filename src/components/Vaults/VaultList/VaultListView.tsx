@@ -1,9 +1,11 @@
 import { FC, MouseEvent } from "react";
 import useVaultList from "hooks/useVaultList";
-import { PageHeader } from "components/Dashboard/PageHeader";
+import useSharedContext from "context/shared";
 import VaultsTotalStats from "components/Vaults/VaultList/VaultsTotalStats";
 import VaultsList from "components/Vaults/VaultList/VaultsList";
+import VaultsListMobile from "components/Vaults/VaultList/VaultsListMobile";
 import VaultFilters from "components/Vaults/VaultList/VaultFilters";
+import VaultPageHeader from "components/Vaults/VaultList/VaultPageHeader";
 
 type VaultListViewPropsType = {
   isMobileFiltersOpen: boolean;
@@ -31,9 +33,10 @@ const VaultListView: FC<VaultListViewPropsType> = ({
     handlePageChange,
     filterCurrentPosition,
   } = useVaultList();
+  const { isMobile } = useSharedContext();
   return (
     <>
-      <PageHeader
+      <VaultPageHeader
         title={"Vaults"}
         description={`Explore existing Vaults, and deposit your assets for a sustainable yield.`}
       />
@@ -49,19 +52,31 @@ const VaultListView: FC<VaultListViewPropsType> = ({
         handleIsShutdown={handleIsShutdown}
         isShutdown={isShutdown}
       />
-      <VaultsList
-        vaults={vaultSortedList}
-        vaultsLoading={vaultsLoading}
-        vaultPositionsLoading={vaultPositionsLoading}
-        performanceFee={performanceFee}
-        vaultPositionsList={vaultPositionsList}
-        filterCurrentPosition={filterCurrentPosition}
-        isMobileFiltersOpen={isMobileFiltersOpen}
-        openMobileFilterMenu={openMobileFilterMenu}
-        vaultCurrentPage={vaultCurrentPage}
-        vaultItemsCount={vaultItemsCount}
-        handlePageChange={handlePageChange}
-      />
+      {isMobile ? (
+        <VaultsListMobile
+          vaults={vaultSortedList}
+          vaultsLoading={vaultsLoading}
+          vaultPositionsLoading={vaultPositionsLoading}
+          performanceFee={performanceFee}
+          filterCurrentPosition={filterCurrentPosition}
+          isMobileFiltersOpen={isMobileFiltersOpen}
+          openMobileFilterMenu={openMobileFilterMenu}
+          vaultCurrentPage={vaultCurrentPage}
+          vaultItemsCount={vaultItemsCount}
+          handlePageChange={handlePageChange}
+        />
+      ) : (
+        <VaultsList
+          vaults={vaultSortedList}
+          vaultsLoading={vaultsLoading}
+          vaultPositionsLoading={vaultPositionsLoading}
+          performanceFee={performanceFee}
+          filterCurrentPosition={filterCurrentPosition}
+          vaultCurrentPage={vaultCurrentPage}
+          vaultItemsCount={vaultItemsCount}
+          handlePageChange={handlePageChange}
+        />
+      )}
     </>
   );
 };
