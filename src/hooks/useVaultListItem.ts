@@ -39,7 +39,6 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
   const [depositsList, setDepositsList] = useState([]);
   const [withdrawalsList, setWithdrawalsList] = useState([]);
   const [transactionsLoading, setTransactionLoading] = useState<boolean>(false);
-
   const { syncVault, prevSyncVault } = useSyncContext();
 
   const { account } = useConnector();
@@ -49,7 +48,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
   const [loadPositionTransactions, { refetch: refetchTransactions }] =
     useLazyQuery(VAULT_POSITION_TRANSACTIONS, {
       context: { clientName: "vaults", chainId },
-      variables: { chainId },
+      variables: { chainId, first: 1000 },
       fetchPolicy: "no-cache",
     });
 
@@ -98,7 +97,6 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
             chainId,
           });
         }
-
         setTransactionLoading(true);
 
         return loadPositionTransactions({
@@ -132,16 +130,24 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
 
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
+    let timeout: ReturnType<typeof setTimeout>;
+
     if (vaultPosition && vault) {
-      fetchBalanceToken();
-      fetchPositionTransactions();
-      interval = setInterval(fetchBalanceToken, 15 * 1000);
+      timeout = setTimeout(() => {
+        fetchBalanceToken();
+        fetchPositionTransactions();
+        interval = setInterval(() => fetchBalanceToken(), 15 * 1000);
+      }, 200);
     }
-    return () => clearInterval(interval);
+
+    return () => {
+      interval && clearInterval(interval);
+      timeout && clearTimeout(timeout);
+    };
   }, [vault, fetchBalanceToken, fetchPositionTransactions]);
 
   useEffect(() => {
-    if (syncVault && !prevSyncVault) {
+    if (syncVault && !prevSyncVault && vaultPosition) {
       setTransactionLoading(true);
       Promise.all([
         fetchPositionTransactions(TransactionFetchType.PROMISE),
@@ -160,6 +166,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     syncVault,
     prevSyncVault,
     fetchPositionTransactions,
+    fetchBalanceToken,
     vaultPosition,
     vault,
     setBalanceToken,
@@ -181,12 +188,16 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
       new BigNumber(0)
     );
 
+    const earnedValue = BigNumber(balanceToken || "0")
+      .minus(sumTokenDeposits.minus(sumTokenWithdrawals))
+      .dividedBy(10 ** 18)
+      .toNumber();
+
     return transactionsLoading
       ? -1
-      : BigNumber(balanceToken || "0")
-          .minus(sumTokenDeposits.minus(sumTokenWithdrawals))
-          .dividedBy(10 ** 18)
-          .toNumber();
+      : BigNumber(earnedValue).isLessThan(0.0001)
+      ? 0
+      : earnedValue;
   }, [
     vaultPosition,
     balanceToken,

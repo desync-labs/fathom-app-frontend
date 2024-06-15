@@ -40,7 +40,8 @@ export default function FaucetAssetsList() {
         !reserve.isWrappedBaseAsset &&
         !reserve.isFrozen &&
         reserve.symbol !== "FXD" &&
-        reserve.symbol !== "USDTx"
+        reserve.symbol !== "USDTx" &&
+        reserve.symbol !== "FTHM"
     )
     .map((reserve) => {
       const walletBalance = valueToBigNumber(

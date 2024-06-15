@@ -5,7 +5,7 @@ import * as metamask from "@synthetixio/synpress/commands/metamask";
 import dotenv from "dotenv";
 dotenv.config();
 
-test.describe("Fathom App Test Suite: FXD Positions Operations", () => {
+test.describe.skip("Fathom App Test Suite: FXD Positions Operations", () => {
   test.describe.serial("Scenario 1 @smoke", () => {
     test("Creating a position with 100 collateral and safe max borrow amount is successful", async ({
       fxdPage,

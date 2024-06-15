@@ -108,7 +108,7 @@ type VaultStrategyItemPropsType = {
   performanceFee: number;
   index: number;
   vaultId: string;
-  isShow: boolean;
+  isShow?: boolean;
 };
 
 const VaultIndicatorItem: FC<VaultIndicatorItemPropsType> = memo(

@@ -1,11 +1,15 @@
-import { TransactionResponse } from "@into-the-fathom/providers";
-import { useCallback, useMemo } from "react";
+import {
+  TransactionReceipt,
+  TransactionResponse,
+} from "@into-the-fathom/providers";
+import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { useActiveWeb3React } from "apps/dex/hooks";
 import { AppDispatch, AppState } from "apps/dex/state";
 import { addTransaction } from "apps/dex/state/transactions/actions";
 import { TransactionDetails } from "apps/dex/state/transactions/reducer";
+import useSyncContext from "context/sync";
 
 // helper that can take a fathom-ethers library transaction response and add it to the list of transactions
 export function useTransactionAdder(): (
@@ -18,9 +22,10 @@ export function useTransactionAdder(): (
 ) => void {
   const { chainId, account } = useActiveWeb3React();
   const dispatch = useDispatch<AppDispatch>();
+  const { setLastTransactionBlock } = useSyncContext();
 
   return useCallback(
-    (
+    async (
       response: TransactionResponse,
       {
         summary,
@@ -39,6 +44,7 @@ export function useTransactionAdder(): (
       if (!hash) {
         throw Error("No transaction hash found.");
       }
+
       dispatch(
         addTransaction({
           hash,
@@ -49,6 +55,12 @@ export function useTransactionAdder(): (
           claim,
         })
       );
+
+      if (response.wait) {
+        response.wait().then((receipt: TransactionReceipt) => {
+          setLastTransactionBlock(receipt.blockNumber);
+        });
+      }
     },
     [dispatch, chainId, account]
   );
@@ -74,33 +86,4 @@ export function useAllTransactions(): {
  */
 export function isTransactionRecent(tx: TransactionDetails, days = 1): boolean {
   return new Date().getTime() - tx.addedTime < days * 86_400_000;
-}
-
-// returns whether a token has a pending approval transaction
-export function useHasPendingApproval(
-  tokenAddress: string | undefined,
-  spender: string | undefined
-): boolean {
-  const allTransactions = useAllTransactions();
-  return useMemo(
-    () =>
-      typeof tokenAddress === "string" &&
-      typeof spender === "string" &&
-      Object.keys(allTransactions).some((hash) => {
-        const tx = allTransactions[hash];
-        if (!tx) return false;
-        if (tx.receipt) {
-          return false;
-        } else {
-          const approval = tx.approval;
-          if (!approval) return false;
-          return (
-            approval.spender === spender &&
-            approval.tokenAddress === tokenAddress &&
-            isTransactionRecent(tx)
-          );
-        }
-      }),
-    [allTransactions, spender, tokenAddress]
-  );
 }

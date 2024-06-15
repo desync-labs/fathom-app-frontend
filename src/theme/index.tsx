@@ -37,7 +37,7 @@ declare module "@mui/material/styles/createPalette" {
 
   interface Palette {
     gradients?: {
-      aaveGradient: string;
+      fathomMainGradient: string;
       newGradient: string;
       fathomGradient: string;
       fathomlightGradient: string;
@@ -53,7 +53,7 @@ declare module "@mui/material/styles/createPalette" {
 
   interface PaletteOptions {
     gradients?: {
-      aaveGradient: string;
+      fathomMainGradient: string;
       newGradient: string;
       fathomGradient: string;
       fathomlightGradient: string;
@@ -222,7 +222,7 @@ export const getDesignTokens = () => {
         fathomLink: "#5a81ff",
       },
       gradients: {
-        aaveGradient:
+        fathomMainGradient:
           "linear-gradient(104.04deg, rgb(179, 255, 249) 0%, rgb(0, 219, 203) 100%)",
         newGradient: "linear-gradient(79.67deg, #8C3EBC 0%, #007782 95.82%)",
         fathomGradient: "linear-gradient(180deg, #071126 0%, #050c1a 100%)",
@@ -875,10 +875,10 @@ export function getThemedComponents(theme: Theme) {
       MuiLinearProgress: {
         styleOverrides: {
           bar1Indeterminate: {
-            background: theme.palette.gradients?.aaveGradient,
+            background: theme.palette.gradients?.fathomMainGradient,
           },
           bar2Indeterminate: {
-            background: theme.palette.gradients?.aaveGradient,
+            background: theme.palette.gradients?.fathomMainGradient,
           },
         },
       },

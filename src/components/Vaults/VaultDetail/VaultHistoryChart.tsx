@@ -133,7 +133,6 @@ const CustomTooltip: FC<TooltipProps<ValueType, NameType>> = memo(
 const CustomizedYAxisTick: FC<CustomizedYAxisTickProps> = ({
   x,
   y,
-  stroke,
   payload,
 }) => {
   return (

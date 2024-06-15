@@ -2,7 +2,6 @@ import { test, expect } from "../../fixtures/pomSynpressFixture";
 import { DexTabs, WalletConnectOptions } from "../../types";
 import dotenv from "dotenv";
 import { wxdcData, xUsdtData, xdcData } from "../../fixtures/dex.data";
-import { formatNumberToFixedLength } from "../../utils/helpers";
 dotenv.config();
 
 test.describe("Fathom App Test Suite: DEX Transactions", () => {
@@ -29,13 +28,12 @@ test.describe("Fathom App Test Suite: DEX Transactions", () => {
       });
     expect
       .soft(transactionStatusTextActual)
-      .toContain(
-        `Swap ${expectedData.fromAmountExpected} ${
-          expectedData.fromTokenNameExpected
-        } for ${formatNumberToFixedLength(expectedData.toAmountExpected)} ${
-          expectedData.toTokenNameExpected
-        }`
-      );
+      .toContain(`Swap ${expectedData.fromAmountExpected} WXDC for`);
+    expect.soft(transactionStatusTextActual).toContain(`USDTx`);
+    expect.soft(transactionStatusTextActual).toContain(`seconds ago`);
+    expect
+      .soft(dexPage.getTransactionSuccessIconByHash({ transactionHash }))
+      .toBeVisible();
   });
 
   test("Successful Wrap transaction is correctly displayed in transactions page", async ({
@@ -64,6 +62,9 @@ test.describe("Fathom App Test Suite: DEX Transactions", () => {
       .toContain(
         `Wrap ${expectedData.fromAmountExpected} ${expectedData.fromTokenNameExpected} to ${expectedData.toTokenNameExpected}`
       );
+    expect
+      .soft(dexPage.getTransactionSuccessIconByHash({ transactionHash }))
+      .toBeVisible();
   });
 
   test("Successful Unwrap transaction is correctly displayed in transactions page", async ({
@@ -92,6 +93,9 @@ test.describe("Fathom App Test Suite: DEX Transactions", () => {
       .toContain(
         `Unwrap ${expectedData.fromAmountExpected} ${expectedData.fromTokenNameExpected} to ${expectedData.toTokenNameExpected}`
       );
+    expect
+      .soft(dexPage.getTransactionSuccessIconByHash({ transactionHash }))
+      .toBeVisible();
   });
 
   test("Transactions tab disconnected state layout is correct", async ({

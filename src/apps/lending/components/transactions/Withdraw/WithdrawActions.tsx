@@ -4,8 +4,7 @@ import { useTransactionHandler } from "apps/lending/helpers/useTransactionHandle
 import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 import { useRootStore } from "apps/lending/store/root";
 
-import { TxActionsWrapper } from "apps/lending/components/transactions/TxActionsWrapper";
-import { FC } from "react";
+import { TxActionsWrapper } from "../TxActionsWrapper";
 
 export interface WithdrawActionsProps extends BoxProps {
   poolReserve: ComputedReserveData;
@@ -16,7 +15,7 @@ export interface WithdrawActionsProps extends BoxProps {
   blocked: boolean;
 }
 
-export const WithdrawActions: FC<WithdrawActionsProps> = ({
+export const WithdrawActions = ({
   poolReserve,
   amountToWithdraw,
   poolAddress,
@@ -24,7 +23,7 @@ export const WithdrawActions: FC<WithdrawActionsProps> = ({
   symbol,
   blocked,
   sx,
-}) => {
+}: WithdrawActionsProps) => {
   const withdraw = useRootStore((state) => state.withdraw);
 
   const {
@@ -64,7 +63,6 @@ export const WithdrawActions: FC<WithdrawActionsProps> = ({
       actionInProgressText={<>Withdrawing {symbol}</>}
       actionText={<>Withdraw {symbol}</>}
       handleAction={action}
-      symbol={symbol}
       handleApproval={() =>
         approval([{ amount: amountToWithdraw, underlyingAsset: poolAddress }])
       }

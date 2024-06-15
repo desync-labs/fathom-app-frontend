@@ -191,7 +191,10 @@ const StableSwap = () => {
             {useMemo(
               () =>
                 approveInputBtn ? (
-                  <StableSwapApproveBtn onClick={approveInput}>
+                  <StableSwapApproveBtn
+                    onClick={approveInput}
+                    disabled={approvalPending === "input"}
+                  >
                     {approvalPending === "input" ? (
                       <CircularProgress size={30} />
                     ) : (
@@ -199,7 +202,10 @@ const StableSwap = () => {
                     )}
                   </StableSwapApproveBtn>
                 ) : approveOutputBtn ? (
-                  <StableSwapApproveBtn onClick={approveOutput}>
+                  <StableSwapApproveBtn
+                    onClick={approveOutput}
+                    disabled={approvalPending === "output"}
+                  >
                     {approvalPending === "output" ? (
                       <CircularProgress size={30} />
                     ) : (

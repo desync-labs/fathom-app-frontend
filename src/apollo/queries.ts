@@ -75,6 +75,44 @@ export const FXD_USER = gql`
   }
 `;
 
+export const FXD_ACTIVITIES = gql`
+  query FXDActivities(
+    $first: Int!
+    $proxyWallet: String!
+    $orderBy: String
+    $orderDirection: String
+    $chainId: String
+    $activityState: [String!]
+  ) {
+    positionActivities(
+      first: $first
+      orderBy: $orderBy
+      orderDirection: $orderDirection
+      where: {
+        position_: { userAddress: $proxyWallet }
+        activityState_in: $activityState
+      }
+    ) {
+      id
+      blockNumber
+      activityState
+      blockNumber
+      blockTimestamp
+      collateralAmount
+      debtAmount
+      transaction
+      position {
+        positionId
+        lockedCollateral
+        debtValue
+        debtShare
+        collateralPool
+        collateralPoolName
+      }
+    }
+  }
+`;
+
 export const GOVERNANCE_PROPOSALS = gql`
   query GovernanceProposals($first: Int!, $skip: Int!) {
     proposals(
@@ -379,12 +417,14 @@ export const VAULT_POSITION_TRANSACTIONS = gql`
     $account: String!
     $vault: String!
     $chainId: String
+    $first: Int
   ) {
     deposits(
       where: {
         account_contains_nocase: $account
         vault_contains_nocase: $vault
       }
+      first: $first
       orderBy: blockNumber
     ) {
       id
@@ -398,6 +438,7 @@ export const VAULT_POSITION_TRANSACTIONS = gql`
         account_contains_nocase: $account
         vault_contains_nocase: $vault
       }
+      first: $first
       orderBy: blockNumber
     ) {
       id

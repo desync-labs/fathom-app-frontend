@@ -42,10 +42,10 @@ export default class BasePage {
         break;
       case "https://dev-app-frontend-wpa8a.ondigitalocean.app" ||
         "http://127.0.0.1:3000":
-        this.graphAPIBaseUrl = "https://dev-graph.fathom.fi";
+        this.graphAPIBaseUrl = "https://graph.apothem.fathom.fi";
         break;
       default:
-        this.graphAPIBaseUrl = "https://dev-graph.fathom.fi";
+        this.graphAPIBaseUrl = "https://graph.apothem.fathom.fi";
     }
 
     if (process.env.METAMASK_SETUP_PRIVATE_KEY) {

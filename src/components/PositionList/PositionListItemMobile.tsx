@@ -1,7 +1,7 @@
 import { FC, memo } from "react";
 import { PositionListItemProps } from "components/PositionList/PositionListItem";
 import { getTokenLogoURL } from "utils/tokenLogo";
-import { PoolName, TVL } from "components/AppComponents/AppBox/AppBox";
+import { TVL } from "components/AppComponents/AppBox/AppBox";
 import {
   formatCurrency,
   formatNumber,
@@ -12,6 +12,7 @@ import { styled } from "@mui/material/styles";
 import { Box } from "@mui/material";
 import { ManagePositionButton } from "components/AppComponents/AppButton/AppButton";
 import AppPopover from "components/AppComponents/AppPopover/AppPopover";
+import PoolName from "components/Pools/PoolListItem/PoolName";
 
 const PositionListItemMobileContainer = styled(Box)`
   width: 100%;

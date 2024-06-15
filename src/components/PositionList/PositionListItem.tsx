@@ -1,6 +1,6 @@
 import { memo, Dispatch, FC, SetStateAction } from "react";
 import { Box, TableCell, Stack } from "@mui/material";
-import { PoolName, TVL } from "components/AppComponents/AppBox/AppBox";
+import { TVL } from "components/AppComponents/AppBox/AppBox";
 import { ManagePositionButton } from "components/AppComponents/AppButton/AppButton";
 import { AppTableRow } from "components/AppComponents/AppTable/AppTable";
 import { IOpenPosition } from "fathom-sdk";
@@ -14,6 +14,7 @@ import {
   formatNumberPrice,
   formatPercentage,
 } from "utils/format";
+import PoolName from "components/Pools/PoolListItem/PoolName";
 
 export type PositionListItemProps = {
   position: IOpenPosition;
