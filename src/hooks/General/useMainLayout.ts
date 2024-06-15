@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState, MouseEvent, useRef } from "react";
 import BigNumber from "bignumber.js";
 import useConnector from "context/connector";
 import { useLocation } from "react-router-dom";
-import useWindowSize from "../Governance/useWindowResize";
+import useWindowSize from "./useWindowResize";
 import { useAggregateFTHMBalance } from "apps/dex/state/wallet/hooks";
 import { TokenAmount } from "into-the-fathom-swap-sdk";
 import usePrevious from "apps/dex/hooks/usePrevious";

@@ -1,7 +1,7 @@
 import { FC, memo, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 
-import useShowText from "hooks/Governance/useShowText";
+import useShowText from "hooks/General/useShowText";
 import {
   DISPLAY_CHARTS,
   DISPLAY_DEX,

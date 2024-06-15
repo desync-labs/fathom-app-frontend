@@ -20,7 +20,7 @@ import {
   getTimeframe,
 } from "apps/charts/utils";
 import useSharedContext from "context/shared";
-import { usePrevious } from "hooks/Governance/usePrevious";
+import { usePrevious } from "hooks/General/usePrevious";
 import { OptionButton } from "apps/charts/components/ButtonStyled";
 import { timeframeOptions } from "apps/charts/constants";
 import {
