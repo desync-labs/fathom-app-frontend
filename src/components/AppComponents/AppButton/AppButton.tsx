@@ -1,6 +1,7 @@
 import { styled } from "@mui/material/styles";
 import { Box, IconButton, IconButton as MuiButton } from "@mui/material";
 import { IconButtonProps as MuiIconButtonProps } from "@mui/material/IconButton/IconButton";
+import OpenInNewRoundedIcon from "@mui/icons-material/OpenInNewRounded";
 
 interface ToggleDrawerButtonProps extends MuiIconButtonProps {
   open?: boolean;
@@ -64,6 +65,35 @@ export const ButtonPrimary = styled(MuiButton, {
 });
 
 export const ButtonSecondary = styled(MuiButton)`
+  color: #43FFF1;
+  font-weight: bold;
+  font-size: 15px;
+  line-height: 20px;
+  padding: 8px 16px;
+  gap: 8px;
+  border: 1px solid #009E92;
+  border-radius: 8px;
+  height: 40px;
+  &:hover {
+    background: transparent;
+    color: #B3FFF9;
+    border: 1px solid #B3FFF9;
+    svg: {
+      color: #B3FFF9;
+    }, 
+  }
+  &:disabled {
+    color: gray;
+    background: transparent;
+    border-color: gray;
+    cursor: not-allowed !important;
+    pointer-events: all !important; 
+  }
+`;
+
+export const ButtonSecondaryLink = styled("a")`
+  display: flex;
+  align-items: center;  
   color: #43FFF1;
   font-weight: bold;
   font-size: 15px;
@@ -213,6 +243,10 @@ export const ApproveButton = styled(MuiButton)`
   margin-top: 15px;
   min-width: 80px;
   height: 28px;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
 `;
 
 export const ButtonsWrapper = styled(Box)`
@@ -340,4 +374,14 @@ export const FarmFilterMobileBtn = styled(MuiButton)`
   height: 44px;
   background: rgba(79, 101, 140, 0.2);
   border-radius: 8px;
+`;
+
+export const ExtLinkIcon = styled(OpenInNewRoundedIcon)`
+  width: 16px;
+  height: 16px;
+  color: #43fff1;
+  margin-left: 4px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    margin-left: 0;
+  }
 `;

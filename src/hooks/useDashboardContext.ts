@@ -7,7 +7,7 @@ import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 import { ZERO_ADDRESS } from "fathom-sdk";
 
-const useDashboard = () => {
+const useDashboardContext = () => {
   const { positionService } = useServices();
   const { account, chainId } = useConnector();
   const { syncFXD, prevSyncFxd } = useSyncContext();
@@ -33,9 +33,9 @@ const useDashboard = () => {
     }
   );
 
-  const [positionCurrentPage, setPositionCurrentPage] = useState(1);
-  const [positionsItemsCount, setPositionsItemsCount] = useState(0);
-  const [proxyWallet, setProxyWallet] = useState("");
+  const [positionCurrentPage, setPositionCurrentPage] = useState<number>(1);
+  const [positionsItemsCount, setPositionsItemsCount] = useState<number>(0);
+  const [proxyWallet, setProxyWallet] = useState<string>("");
 
   const [loadUserStats, { refetch: refetchUserStats }] = useLazyQuery(
     FXD_USER,
@@ -70,10 +70,10 @@ const useDashboard = () => {
 
   const refetchData = useCallback(async () => {
     refetchStats({
-      variables: { chainId },
+      chainId,
     });
     refetchPools({
-      variables: { chainId },
+      chainId,
     });
 
     let currentProxyWallet = proxyWallet;
@@ -93,10 +93,8 @@ const useDashboard = () => {
     });
 
     refetchUserStats({
-      variables: {
-        walletAddress: currentProxyWallet,
-        chainId,
-      },
+      walletAddress: currentProxyWallet,
+      chainId,
     }).then(({ data: { users } }) => {
       if (users !== undefined && users.length > 0) {
         const itemsCount = users[0].activePositionsCount;
@@ -147,4 +145,4 @@ const useDashboard = () => {
   };
 };
 
-export default useDashboard;
+export default useDashboardContext;

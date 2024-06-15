@@ -100,6 +100,7 @@ type VaultManageFormProps = {
     undefined
   >;
   onSubmit: (values: Record<string, any>) => Promise<void>;
+  depositLimitExceeded: (value: string) => string | false;
 };
 
 const ManageVaultForm: FC<VaultManageFormProps> = ({
@@ -123,6 +124,7 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
   validateMaxValue,
   handleSubmit,
   onSubmit,
+  depositLimitExceeded,
 }) => {
   const { token, shareToken, balanceTokens, depositLimit, shutdown } =
     vaultItemData;
@@ -203,7 +205,8 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
                 placeholder={"0"}
                 helperText={
                   <>
-                    {error && error.type === "required" && (
+                    {formType === FormType.DEPOSIT &&
+                    depositLimitExceeded(value) !== false ? (
                       <AppFormInputErrorWrapper>
                         <InfoIcon
                           sx={{
@@ -217,45 +220,66 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
                           component={"span"}
                           sx={{ fontSize: "12px", paddingLeft: "6px" }}
                         >
-                          This field is required
+                          {depositLimitExceeded(value)}
                         </Box>
                       </AppFormInputErrorWrapper>
-                    )}
-                    {error && error.type === "validate" && (
-                      <AppFormInputErrorWrapper>
-                        <InfoIcon
-                          sx={{
-                            float: "left",
-                            width: "14px",
-                            height: "14px",
-                            marginRight: "0",
-                          }}
-                        />
-                        <Box
-                          component={"span"}
-                          sx={{ fontSize: "12px", paddingLeft: "6px" }}
-                        >
-                          {error.message}
-                        </Box>
-                      </AppFormInputErrorWrapper>
-                    )}
-                    {error && error.type === "min" && (
-                      <AppFormInputErrorWrapper>
-                        <InfoIcon
-                          sx={{
-                            float: "left",
-                            width: "14px",
-                            height: "14px",
-                            marginRight: "0",
-                          }}
-                        />
-                        <Box
-                          component={"span"}
-                          sx={{ fontSize: "12px", paddingLeft: "6px" }}
-                        >
-                          This field should be positive.
-                        </Box>
-                      </AppFormInputErrorWrapper>
+                    ) : (
+                      <>
+                        {error && error.type === "required" && (
+                          <AppFormInputErrorWrapper>
+                            <InfoIcon
+                              sx={{
+                                float: "left",
+                                width: "14px",
+                                height: "14px",
+                                marginRight: "0",
+                              }}
+                            />
+                            <Box
+                              component={"span"}
+                              sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                            >
+                              This field is required
+                            </Box>
+                          </AppFormInputErrorWrapper>
+                        )}
+                        {error && error.type === "validate" && (
+                          <AppFormInputErrorWrapper>
+                            <InfoIcon
+                              sx={{
+                                float: "left",
+                                width: "14px",
+                                height: "14px",
+                                marginRight: "0",
+                              }}
+                            />
+                            <Box
+                              component={"span"}
+                              sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                            >
+                              {error.message}
+                            </Box>
+                          </AppFormInputErrorWrapper>
+                        )}
+                        {error && error.type === "min" && (
+                          <AppFormInputErrorWrapper>
+                            <InfoIcon
+                              sx={{
+                                float: "left",
+                                width: "14px",
+                                height: "14px",
+                                marginRight: "0",
+                              }}
+                            />
+                            <Box
+                              component={"span"}
+                              sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                            >
+                              This field should be positive.
+                            </Box>
+                          </AppFormInputErrorWrapper>
+                        )}
+                      </>
                     )}
                   </>
                 }
@@ -369,7 +393,11 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
                   First-time connect? Please allow token approval in your
                   MetaMask
                 </Typography>
-                <ButtonPrimary onClick={approve} style={{ marginTop: "16px" }}>
+                <ButtonPrimary
+                  onClick={approve}
+                  disabled={approvalPending}
+                  style={{ marginTop: "16px" }}
+                >
                   {" "}
                   {approvalPending ? (
                     <CircularProgress size={20} sx={{ color: "#0D1526" }} />

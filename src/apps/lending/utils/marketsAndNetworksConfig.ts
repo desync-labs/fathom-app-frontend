@@ -119,6 +119,15 @@ export const isFeatureEnabled = {
     data.enabledFeatures?.addressBlocked,
   stableBorrowRate: (data: MarketDataType) =>
     data.enabledFeatures?.stableBorrowRate,
+  /**
+   * Paraswap features
+   */
+  liquiditySwap: (data: MarketDataType) => data.enabledFeatures?.liquiditySwap,
+  collateralRepay: (data: MarketDataType) =>
+    data.enabledFeatures?.collateralRepay,
+  debtSwitch: (data: MarketDataType) => data.enabledFeatures?.debtSwitch,
+  withdrawAndSwitch: (data: MarketDataType) =>
+    data.enabledFeatures?.withdrawAndSwitch,
 };
 
 const providers: { [network: string]: ethersProviders.Provider } = {};

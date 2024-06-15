@@ -74,10 +74,14 @@ const StableSwapAddLiquidity = () => {
               {approveInputBtn ? (
                 <ButtonPrimary
                   onClick={approve}
+                  disabled={approvalPending}
                   sx={{ float: "right", mt: "10px" }}
                 >
                   {approvalPending ? (
-                    <CircularProgress size={30} />
+                    <CircularProgress
+                      size={20}
+                      sx={{ color: "#43fff1 !important" }}
+                    />
                   ) : (
                     "Approve Tokens for Add Liquidity"
                   )}
@@ -122,7 +126,7 @@ const StableSwapAddLiquidity = () => {
 
             <SwapButton
               isLoading={addLiquidityPending}
-              disabled={addLiquidityPending || !inputValue}
+              disabled={addLiquidityPending || !inputValue || approveInputBtn}
               onClick={handleAddLiquidity}
             >
               {addLiquidityPending ? (

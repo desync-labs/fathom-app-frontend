@@ -8,7 +8,7 @@ import { AppTableRow } from "components/AppComponents/AppTable/AppTable";
 import { styled } from "@mui/material/styles";
 import { OpenPositionButton } from "components/AppComponents/AppButton/AppButton";
 
-import { TVL, PoolName } from "components/AppComponents/AppBox/AppBox";
+import { TVL } from "components/AppComponents/AppBox/AppBox";
 import TokenLogo from "components/Common/TokenLogo";
 
 import { getTokenLogoURL } from "utils/tokenLogo";
@@ -16,6 +16,7 @@ import { formatCurrency, formatNumber, formatNumberPrice } from "utils/format";
 import usePricesContext from "context/prices";
 
 import PriceChanged from "components/Common/PriceChange";
+import PoolName from "components/Pools/PoolListItem/PoolName";
 
 type PoolsListItemPropsType = {
   pool: ICollateralPool;
@@ -72,6 +73,7 @@ const PoolsListItem: FC<PoolsListItemPropsType> = ({
       </TableCell>
       <TableCell>
         <PriceWrapper>
+          $
           {formatNumberPrice(
             pool.poolName.toUpperCase() === "XDC" &&
               BigNumber(xdcPrice).isGreaterThan(0)
@@ -90,7 +92,9 @@ const PoolsListItem: FC<PoolsListItemPropsType> = ({
                 : Number(pool.collateralPrice)
             }
             previous={
-              prevXdcPrice && BigNumber(prevXdcPrice).isGreaterThan(0)
+              pool.poolName.toUpperCase() === "XDC" &&
+              prevXdcPrice &&
+              BigNumber(prevXdcPrice).isGreaterThan(0)
                 ? BigNumber(prevXdcPrice)
                     .dividedBy(10 ** 18)
                     .toNumber()

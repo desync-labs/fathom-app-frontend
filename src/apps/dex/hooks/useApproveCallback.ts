@@ -7,14 +7,11 @@ import {
   XDC,
   ChainId,
 } from "into-the-fathom-swap-sdk";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { ROUTER_ADDRESSES } from "apps/dex/constants";
 import { useTokenAllowance } from "apps/dex/data/Allowances";
 import { Field } from "apps/dex/state/swap/actions";
-import {
-  useTransactionAdder,
-  useHasPendingApproval,
-} from "apps/dex/state/transactions/hooks";
+import { useTransactionAdder } from "apps/dex/state/transactions/hooks";
 import { computeSlippageAdjustedAmounts } from "apps/dex/utils/prices";
 import { calculateGasMargin } from "apps/dex/utils";
 import { useTokenContract } from "apps/dex/hooks/useContract";
@@ -40,7 +37,7 @@ export function useApproveCallback(
     account ?? undefined,
     spender
   );
-  const pendingApproval = useHasPendingApproval(token?.address, spender);
+  const [pendingApproval, setPendingApproval] = useState<boolean>(false);
 
   // check the current approval status
   const approvalState: ApprovalState = useMemo(() => {
@@ -85,6 +82,7 @@ export function useApproveCallback(
       console.error("no spender");
       return;
     }
+    setPendingApproval(true);
 
     let useExact = false;
     const estimatedGas = await tokenContract.estimateGas
@@ -111,8 +109,12 @@ export function useApproveCallback(
           summary: "Approve " + amountToApprove.currency.symbol,
           approval: { tokenAddress: token.address, spender: spender },
         });
+        response.wait().then(() => {
+          setPendingApproval(false);
+        });
       })
       .catch((error: Error) => {
+        setPendingApproval(false);
         console.debug("Failed to approve token", error);
         throw error;
       });

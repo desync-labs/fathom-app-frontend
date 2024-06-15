@@ -49,6 +49,7 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
     validateMaxValue,
     handleSubmit,
     onSubmit,
+    depositLimitExceeded,
   } = useVaultManageDeposit(vaultItemData, vaultPosition, onClose);
   const { isMobile } = useSharedContext();
   const { shutdown } = vaultItemData;
@@ -98,6 +99,7 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
             validateMaxValue={validateMaxValue}
             handleSubmit={handleSubmit}
             onSubmit={onSubmit}
+            depositLimitExceeded={depositLimitExceeded}
           />
         </Grid>
       </DialogContent>

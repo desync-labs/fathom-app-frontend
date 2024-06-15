@@ -43,7 +43,7 @@ const NetworkPaper = styled(AppPaper)`
     gap: 3px;
 
     li {
-      padding: 6px 12px;
+      padding: 6px 8px 6px 6px;
       font-size: 13px;
       border-radius: 6px;
 
@@ -64,6 +64,13 @@ const EmptyButtonWrapper = styled(Box)`
     background: transparent;
     margin-right: 0;
   }
+`;
+
+const SelectNetworkMenuItem = styled(MenuItem)`
+  display: flex;
+  align-items: center;
+  padding: 4px 6px;
+  gap: 7px;
 `;
 
 const Web3Status = () => {
@@ -171,15 +178,30 @@ const Web3Status = () => {
               <ClickAwayListener onClickAway={() => setOpen(false)}>
                 <MenuList id="split-button-menu" autoFocusItem>
                   {options.map(([chainId, chainData]) => (
-                    <MenuItem
+                    <SelectNetworkMenuItem
                       onClick={() => {
                         setOpen(false);
                         requestChangeNetwork(Number(chainId));
                       }}
                       key={chainId}
                     >
+                      <img
+                        src={
+                          NETWORK_SETTINGS[chainId as unknown as ChainId]
+                            ? getTokenLogoURL(
+                                NETWORK_SETTINGS[chainId as unknown as ChainId]
+                                  .logoName
+                              )
+                            : getTokenLogoURL(
+                                NETWORK_SETTINGS[DEFAULT_CHAIN_ID as ChainId]
+                                  .logoName
+                              )
+                        }
+                        alt={"xdc"}
+                        width={16}
+                      />{" "}
                       {chainData.chainName}
-                    </MenuItem>
+                    </SelectNetworkMenuItem>
                   ))}
                 </MenuList>
               </ClickAwayListener>

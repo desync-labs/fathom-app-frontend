@@ -231,7 +231,10 @@ const RepayPositionForm: FC<ClosePositionDialogPropsType> = ({
         <ButtonPrimary
           onClick={closePositionHandler}
           disabled={
-            balanceError || balanceErrorNotFilled || disableClosePosition
+            balanceError ||
+            balanceErrorNotFilled ||
+            disableClosePosition ||
+            approveBtn
           }
           isLoading={disableClosePosition}
         >

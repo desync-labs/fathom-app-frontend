@@ -160,9 +160,6 @@ const useTopUpPosition = (
         pool.tokenAdapterAddress
       );
 
-      console.log("Token Adapter Address", pool.tokenAdapterAddress);
-      console.log("Collateral Token Address", tokenAddress);
-
       const balance = await poolService.getUserTokenBalance(
         account,
         tokenAddress

@@ -45,6 +45,7 @@ export const createProtocolDataSlice: StateCreator<
 > = (set, get) => {
   const initialMarket = availableMarkets[0];
   const initialMarketData = marketsData[initialMarket];
+  localStorage.setItem("selectedMarket", initialMarket);
   return {
     currentMarket: initialMarket,
     currentMarketData: marketsData[initialMarket],
@@ -75,6 +76,7 @@ export const createProtocolDataSlice: StateCreator<
           !isWrappedBaseAsset &&
           reserveAddress !== APOTHEM_ADDRESSES.FXD.toLowerCase() &&
           reserveAddress !== APOTHEM_ADDRESSES.xUSDT.toLowerCase() &&
+          reserveAddress !== APOTHEM_ADDRESSES.FTHM_TOKEN.toLowerCase() &&
           reserveAddress !== SEPOLIA_ADDRESSES.FXD.toLowerCase() &&
           reserveAddress !== SEPOLIA_ADDRESSES.xUSDT.toLowerCase()
       );

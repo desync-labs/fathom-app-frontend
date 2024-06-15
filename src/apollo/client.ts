@@ -6,7 +6,7 @@ import {
   InMemoryCache,
 } from "@apollo/client";
 import { SUBGRAPH_URLS } from "connectors/networks";
-import { DEFAULT_CHAIN_ID } from "../utils/Constants";
+import { DEFAULT_CHAIN_ID } from "utils/Constants";
 
 /***
  * For Query we have pagination, So we need to return incoming items
@@ -69,6 +69,24 @@ const cache = new InMemoryCache({
             return incoming;
           },
         },
+        mints: {
+          keyArgs: ["account"],
+          merge(_, incoming) {
+            return incoming;
+          },
+        },
+        burns: {
+          keyArgs: ["account"],
+          merge(_, incoming) {
+            return incoming;
+          },
+        },
+        swaps: {
+          keyArgs: ["account"],
+          merge(_, incoming) {
+            return incoming;
+          },
+        },
       },
     },
     Staker: {
@@ -101,6 +119,8 @@ const authMiddleware = new ApolloLink((operation, forward) => {
     uri += "/subgraphs/name/dao-subgraph";
   } else if (operation.getContext().clientName === "vaults") {
     uri += "/subgraphs/name/vaults-subgraph";
+  } else if (operation.getContext().clientName === "dex") {
+    uri += "/subgraphs/name/dex-subgraph";
   } else {
     uri += "/graphql";
   }

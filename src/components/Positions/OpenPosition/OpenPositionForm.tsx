@@ -32,7 +32,6 @@ import useConnector from "context/connector";
 import { formatPercentage } from "utils/format";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import useSharedContext from "context/shared";
-import { ChainId } from "../../../connectors/networks";
 
 const OpenPositionFormWrapper = styled(Grid)`
   padding-left: 20px;
@@ -76,10 +75,11 @@ const OpenPositionForm = () => {
     errors,
     maxBorrowAmount,
     proxyWalletExists,
+    minCollateralAmount,
   } = useOpenPositionContext();
   const { isMobile } = useSharedContext();
 
-  const { isOpenPositionWhitelisted, chainId } = useConnector();
+  const { isOpenPositionWhitelisted } = useConnector();
 
   return (
     <OpenPositionFormWrapper item>
@@ -96,7 +96,7 @@ const OpenPositionForm = () => {
           name="collateral"
           rules={{
             required: true,
-            min: chainId === ChainId.SEPOLIA ? 0.0000001 : 1,
+            min: minCollateralAmount,
             max: BigNumber(balance)
               .dividedBy(10 ** 18)
               .toString(),
@@ -150,8 +150,7 @@ const OpenPositionForm = () => {
                           component={"span"}
                           sx={{ fontSize: "12px", paddingLeft: "6px" }}
                         >
-                          Minimum collateral amount is{" "}
-                          {chainId === ChainId.SEPOLIA ? "0.0000001" : "1"}.
+                          Minimum collateral amount is {minCollateralAmount}.
                         </Box>
                       </>
                     )}
@@ -295,7 +294,7 @@ const OpenPositionForm = () => {
             <ApproveBoxTypography>
               First-time connect? Please allow token approval in your MetaMask
             </ApproveBoxTypography>
-            <ApproveButton onClick={approve}>
+            <ApproveButton onClick={approve} disabled={approvalPending}>
               {" "}
               {approvalPending ? (
                 <CircularProgress size={20} sx={{ color: "#0D1526" }} />

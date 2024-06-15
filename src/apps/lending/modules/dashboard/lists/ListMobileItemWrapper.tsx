@@ -1,6 +1,8 @@
 import { FC, memo, ReactNode } from "react";
 import { CustomMarket } from "apps/lending/ui-config/marketsConfig";
 import { ListMobileItem } from "apps/lending/components/lists/ListMobileItem";
+import { FrozenTooltip } from "../../../components/infoTooltips/FrozenTooltip";
+import { BorrowDisabledToolTip } from "../../../components/infoTooltips/BorrowDisabledToolTip";
 
 // These are all optional due to MobileListItemLoader
 interface ListMobileItemWrapperProps {
@@ -15,6 +17,8 @@ interface ListMobileItemWrapperProps {
   showBorrowCapTooltips?: boolean;
   showDebtCeilingTooltips?: boolean;
   isIsolated?: boolean;
+  frozen?: boolean;
+  borrowEnabled?: boolean;
 }
 
 export const ListMobileItemWrapper: FC<ListMobileItemWrapperProps> = memo(
@@ -30,7 +34,22 @@ export const ListMobileItemWrapper: FC<ListMobileItemWrapperProps> = memo(
     showBorrowCapTooltips = false,
     showDebtCeilingTooltips = false,
     isIsolated = false,
+    borrowEnabled = true,
+    frozen,
   }) => {
+    const WarningComponent: FC = () => {
+      const showBorrowDisabledTooltip = !frozen && !borrowEnabled;
+      const showFrozenTooltip = frozen;
+      return (
+        <>
+          {showFrozenTooltip && <FrozenTooltip />}
+          {showBorrowDisabledTooltip && symbol && currentMarket && (
+            <BorrowDisabledToolTip />
+          )}
+        </>
+      );
+    };
+
     return (
       <ListMobileItem
         isIsolated={isIsolated}
@@ -38,7 +57,7 @@ export const ListMobileItemWrapper: FC<ListMobileItemWrapperProps> = memo(
         iconSymbol={iconSymbol}
         name={name}
         underlyingAsset={underlyingAsset}
-        warningComponent={null}
+        warningComponent={<WarningComponent />}
         loading={loading}
         currentMarket={currentMarket}
         showSupplyCapTooltips={showSupplyCapTooltips}

@@ -32,7 +32,7 @@ export const Menu: FC<ItemPropsType> = memo(({ open }) => {
   const { allowStableSwap, chainId } = useConnector();
 
   const isDashboardActive = useMemo(
-    () => location.pathname === "/",
+    () => location.pathname.includes("/fxd"),
     [location.pathname]
   );
   const isStableSwapActive = useMemo(

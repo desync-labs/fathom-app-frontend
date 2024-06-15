@@ -85,7 +85,7 @@ export const DashboardEModeButton: FC<DashboardEModeButtonProps> = memo(
               top: -1,
               background: isEModeDisabled
                 ? "transparent"
-                : theme.palette.gradients?.aaveGradient,
+                : theme.palette.gradients?.fathomMainGradient,
               borderRadius: "4px",
             },
           })}

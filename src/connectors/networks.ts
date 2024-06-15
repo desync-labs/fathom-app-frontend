@@ -16,7 +16,7 @@ export enum ChainId {
 
 const SUBGRAPH_URLS = {
   [ChainId.XDC]: "https://xinfin-graph.fathom.fi",
-  [ChainId.AXDC]: "https://dev-graph.fathom.fi",
+  [ChainId.AXDC]: "https://graph.apothem.fathom.fi",
   [ChainId.SEPOLIA]: "https://graph.sepolia.fathom.fi",
 };
 
@@ -25,6 +25,7 @@ const NATIVE_ASSETS = ["ETH", "XDC"];
 
 let DEFAULT_RPCS: any = {
   [ChainId.AXDC]: APOTHEM_RPC,
+  [ChainId.XDC]: XDC_RPC,
   [ChainId.SEPOLIA]: SEPOLIA_RPC,
 };
 
