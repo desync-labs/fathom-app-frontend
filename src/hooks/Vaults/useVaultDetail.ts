@@ -323,7 +323,10 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     (
       fetchBalanceTokenType: FetchBalanceTokenType = FetchBalanceTokenType.FETCH
     ) => {
-      if (vault.id === undefined) {
+      if (
+        vault.id === undefined ||
+        vaultPosition?.balanceShares === undefined
+      ) {
         return;
       }
 
@@ -336,6 +339,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
             vault.id
           )
           .catch((error) => {
+            console.error("Error fetching balance token:", error);
             showErrorNotification(error);
             return "-1";
           });
@@ -351,6 +355,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
           setBalanceToken(balanceToken);
         })
         .catch((error) => {
+          console.error("Error fetching balance token:", error);
           setBalanceToken("-1");
           showErrorNotification(error);
         });
