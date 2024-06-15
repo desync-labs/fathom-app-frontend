@@ -274,9 +274,10 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
       };
 
       setVaultPosition(updatedVaultPosition);
-      setUpdateVaultPositionLoading(false);
     } catch (error) {
       console.error("Error updating vault position:", error);
+    } finally {
+      setUpdateVaultPositionLoading(false);
     }
   };
 
