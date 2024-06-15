@@ -1,4 +1,5 @@
 import { Box, styled, Typography } from "@mui/material";
+import ReactPlayer from "react-player";
 
 const EmbedVideoWrapper = styled("div")`
   position: relative;
@@ -22,16 +23,12 @@ const VaultTutorial = () => {
     <Box>
       <Typography variant={"h1"}>Vault Tutorial</Typography>
       <EmbedVideoWrapper>
-        <iframe
-          width="560"
-          height="315"
-          src="https://www.youtube.com/embed/gGhBAL4SyHo?si=G568oJvrvkuZsolL"
-          title="Fathom Vault Tutorial"
-          frameBorder={0}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          referrerPolicy="strict-origin-when-cross-origin"
-          allowFullScreen
-        ></iframe>
+        <ReactPlayer
+          url={"/videos/vaults/vault-tutorial.mp4"}
+          controls={true}
+          width={"1000px"}
+          height={"540px"}
+        />
       </EmbedVideoWrapper>
     </Box>
   );
