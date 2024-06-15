@@ -29,7 +29,7 @@ const FXDView: FC = () => {
 
   return (
     <>
-      {account && (
+      {process.env.REACT_APP_FXD_TRANSACTIONS_ENABLED === "true" && account && (
         <NestedRouteNav>
           <NestedRouteLink className={isFXDActive ? "active" : ""} to="/fxd">
             <FxdIcon isactive={isFXDActive ? "true" : ""} />
