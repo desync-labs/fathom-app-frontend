@@ -1,4 +1,4 @@
-import { Skeleton, styled, TableCell } from "@mui/material";
+import { TableCell } from "@mui/material";
 import useConnector from "context/connector";
 import { AppTableRow } from "components/AppComponents/AppTable/AppTable";
 import { ListItemWrapper } from "components/AppComponents/AppList/AppList";
@@ -11,10 +11,7 @@ import {
   VaultListItemMobileContainer,
   VaultPoolName,
 } from "components/Vault/VaultListItemMobile";
-
-const CustomSkeleton = styled(Skeleton)`
-  background-color: #2536564a;
-`;
+import { CustomSkeleton } from "components/AppComponents/AppSkeleton/AppSkeleton";
 
 export const VaultListItemSkeleton = () => {
   const { account } = useConnector();

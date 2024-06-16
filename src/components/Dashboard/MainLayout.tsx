@@ -37,6 +37,7 @@ import TransactionStatus from "components/Transaction/TransactionStatus";
 import DaoView from "components/Dashboard/DaoView";
 import DexView from "components/Dashboard/DexView";
 import LendingView from "components/Dashboard/LendingView";
+import FXDView from "components/Dashboard/FxdView";
 
 import { Menu } from "components/Dashboard/Menu";
 import { ToggleDrawerButton } from "components/AppComponents/AppButton/AppButton";
@@ -114,6 +115,8 @@ import {
 import Transactions from "apps/dex/pages/Transactions";
 import { memo, useEffect } from "react";
 import ReactGA from "react-ga4";
+
+import PositionsTransactionList from "../PositionActivityList/PositionActivityList";
 import {
   ChainId,
   DISPLAY_CHARTS,
@@ -127,6 +130,7 @@ import {
 } from "connectors/networks";
 import { DEFAULT_CHAIN_ID } from "utils/Constants";
 import CookieConsent from "components/Common/CookieConsent";
+import { FxdProvider } from "../../context/fxd";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -318,6 +322,7 @@ const MainLayout = () => {
   }, [pathname, search]);
 
   const { erc20TokenModalData } = useAlertAndTransactionContext();
+  const isConnected = localStorage.getItem("isConnected");
 
   return (
     <AppGlobalStyles>
@@ -416,9 +421,10 @@ const MainLayout = () => {
                     fontWeight={500}
                   >
                     {formatNumber(Number(userBalance))}{" "}
-                    {NETWORK_SETTINGS[chainId as ChainId].nativeCurrency
-                      .symbol ||
-                      NETWORK_SETTINGS[DEFAULT_CHAIN_ID].nativeCurrency.symbol}
+                    {NETWORK_SETTINGS[chainId as ChainId]?.nativeCurrency
+                      ?.symbol ||
+                      NETWORK_SETTINGS[DEFAULT_CHAIN_ID]?.nativeCurrency
+                        ?.symbol}
                   </Box>
                 ) : null}
               </AccountElement>
@@ -472,217 +478,238 @@ const MainLayout = () => {
             <Toolbar />
             <AlertMessages scroll={scroll} />
             <TransactionStatus scroll={scroll} />
-            <Routes>
-              {!chainId || DISPLAY_FXD.includes(chainId) ? (
-                <Route path="/" element={<DashboardContent />} />
-              ) : null}
-              {!chainId || DISPLAY_STABLE_SWAP.includes(chainId) ? (
-                <>
-                  {allowStableSwap ||
-                  isUserWrapperWhiteListed ||
-                  allowStableSwapInProgress ? (
-                    <Route path="/stable-swap" element={<StableSwap />} />
-                  ) : null}
-                  {isUserWrapperWhiteListed ? (
+            <FxdProvider>
+              <Routes>
+                {!chainId || DISPLAY_FXD.includes(chainId) ? (
+                  <Route path="/fxd" element={<FXDView />}>
                     <>
+                      <Route path="/fxd" element={<DashboardContent />} />
+                      {process.env.REACT_APP_FXD_TRANSACTIONS_ENABLED ===
+                        "true" &&
+                        (account || isConnected) && (
+                          <Route
+                            path="/fxd/transactions"
+                            element={<PositionsTransactionList />}
+                          />
+                        )}
                       <Route
-                        path="/stable-swap/add-liquidity"
-                        element={<StableSwapAddLiquidity />}
-                      />
-                      <Route
-                        path="/stable-swap/remove-liquidity"
-                        element={<StableSwapRemoveLiquidity />}
-                      />
-                      <Route
-                        path="/stable-swap/manage-fees"
-                        element={<StableSwapManageFees />}
+                        path="*"
+                        element={<Navigate to="/fxd" replace />}
                       />
                     </>
-                  ) : null}
-                </>
-              ) : null}
-              {!chainId || DISPLAY_GOVERNANCE.includes(chainId) ? (
-                <Route path="/dao" element={<DaoView />}>
-                  <Route
-                    index
-                    element={
-                      <StakingProvider>
-                        <StakingView />
-                      </StakingProvider>
-                    }
-                  />
-                  <Route
-                    path="staking"
-                    index
-                    element={
-                      <StakingProvider>
-                        <StakingView />
-                      </StakingProvider>
-                    }
-                  />
-                  <Route
-                    path="governance"
-                    element={<AllProposalsView />}
-                  ></Route>
-                  <Route
-                    path="governance/proposal/:_proposalId"
-                    element={
-                      <ProposalProvider>
-                        <ProposalView />
-                      </ProposalProvider>
-                    }
-                  />
-                  <Route
-                    path="*"
-                    element={<Navigate to="/dao/staking" replace />}
-                  />
-                </Route>
-              ) : null}
-              {!chainId || DISPLAY_DEX.includes(chainId) ? (
-                <Route path="/swap" element={<DexView />}>
-                  <Route index element={<Swap />} />
-                  <Route path=":outputCurrency" element={<RedirectToSwap />} />
-                  <Route path="send" element={<RedirectPathToSwapOnly />} />
-                  <Route path="find" element={<PoolFinder />} />
-                  <Route path="pool" element={<Pool />} />
-                  <Route path="add" element={<AddLiquidity />} />
-                  <Route
-                    path="add/:currencyIdA"
-                    element={<RedirectOldAddLiquidityPathStructure />}
-                  />
-                  <Route
-                    path="add/:currencyIdA/:currencyIdB"
-                    element={<RedirectDuplicateTokenIds />}
-                  />
-                  <Route path="create" element={<AddLiquidity />} />
-                  <Route
-                    path="create/:currencyIdA"
-                    element={<RedirectOldAddLiquidityPathStructure />}
-                  />
-                  <Route
-                    path="create/:currencyIdA/:currencyIdB"
-                    element={<RedirectDuplicateTokenIds />}
-                  />
-                  <Route
-                    path="remove/:tokens"
-                    element={<RedirectOldRemoveLiquidityPathStructure />}
-                  />
-                  <Route
-                    path="remove/:currencyIdA/:currencyIdB"
-                    element={<RemoveLiquidity />}
-                  />
-                  <Route path="transactions" element={<Transactions />} />
-                  <Route element={<RedirectPathToSwapOnly />} />
-                </Route>
-              ) : null}
-              {!chainId || DISPLAY_LENDING.includes(chainId) ? (
-                <Route path="/lending" element={<LendingView />}>
-                  <Route index element={<Home />} />
-                  <Route path="markets" element={<Markets />} />
-                  <Route
-                    path="reserve-overview"
-                    element={<ReserveOverview />}
-                  />
-                  <Route path="transactions" element={<History />} />
-                  <Route path="faucet" element={<Faucet />} />
-                  <Route
-                    path="*"
-                    element={<Navigate to="/lending" replace />}
-                  />
-                </Route>
-              ) : null}
-              {!chainId || DISPLAY_VAULTS.includes(chainId) ? (
-                <Route
-                  path="/vaults"
-                  element={
-                    <AllVaultView
-                      isMobileFiltersOpen={isMobileFiltersOpen}
-                      openMobileFilterMenu={openMobileFilterMenu}
+                  </Route>
+                ) : null}
+                {!chainId || DISPLAY_STABLE_SWAP.includes(chainId) ? (
+                  <>
+                    {allowStableSwap ||
+                    isUserWrapperWhiteListed ||
+                    allowStableSwapInProgress ? (
+                      <Route path="/stable-swap" element={<StableSwap />} />
+                    ) : null}
+                    {isUserWrapperWhiteListed ? (
+                      <>
+                        <Route
+                          path="/stable-swap/add-liquidity"
+                          element={<StableSwapAddLiquidity />}
+                        />
+                        <Route
+                          path="/stable-swap/remove-liquidity"
+                          element={<StableSwapRemoveLiquidity />}
+                        />
+                        <Route
+                          path="/stable-swap/manage-fees"
+                          element={<StableSwapManageFees />}
+                        />
+                      </>
+                    ) : null}
+                  </>
+                ) : null}
+                {!chainId || DISPLAY_GOVERNANCE.includes(chainId) ? (
+                  <Route path="/dao" element={<DaoView />}>
+                    <Route
+                      index
+                      element={
+                        <StakingProvider>
+                          <StakingView />
+                        </StakingProvider>
+                      }
                     />
-                  }
-                ></Route>
-              ) : null}
-              {!chainId || DISPLAY_CHARTS.includes(chainId) ? (
-                <Route path="/charts" element={<ChartsView />}>
+                    <Route
+                      path="staking"
+                      index
+                      element={
+                        <StakingProvider>
+                          <StakingView />
+                        </StakingProvider>
+                      }
+                    />
+                    <Route
+                      path="governance"
+                      element={<AllProposalsView />}
+                    ></Route>
+                    <Route
+                      path="governance/proposal/:_proposalId"
+                      element={
+                        <ProposalProvider>
+                          <ProposalView />
+                        </ProposalProvider>
+                      }
+                    />
+                    <Route
+                      path="*"
+                      element={<Navigate to="/dao/staking" replace />}
+                    />
+                  </Route>
+                ) : null}
+                {!chainId || DISPLAY_DEX.includes(chainId) ? (
+                  <Route path="/swap" element={<DexView />}>
+                    <Route index element={<Swap />} />
+                    <Route
+                      path=":outputCurrency"
+                      element={<RedirectToSwap />}
+                    />
+                    <Route path="send" element={<RedirectPathToSwapOnly />} />
+                    <Route path="find" element={<PoolFinder />} />
+                    <Route path="pool" element={<Pool />} />
+                    <Route path="add" element={<AddLiquidity />} />
+                    <Route
+                      path="add/:currencyIdA"
+                      element={<RedirectOldAddLiquidityPathStructure />}
+                    />
+                    <Route
+                      path="add/:currencyIdA/:currencyIdB"
+                      element={<RedirectDuplicateTokenIds />}
+                    />
+                    <Route path="create" element={<AddLiquidity />} />
+                    <Route
+                      path="create/:currencyIdA"
+                      element={<RedirectOldAddLiquidityPathStructure />}
+                    />
+                    <Route
+                      path="create/:currencyIdA/:currencyIdB"
+                      element={<RedirectDuplicateTokenIds />}
+                    />
+                    <Route
+                      path="remove/:tokens"
+                      element={<RedirectOldRemoveLiquidityPathStructure />}
+                    />
+                    <Route
+                      path="remove/:currencyIdA/:currencyIdB"
+                      element={<RemoveLiquidity />}
+                    />
+                    <Route path="transactions" element={<Transactions />} />
+                    <Route element={<RedirectPathToSwapOnly />} />
+                  </Route>
+                ) : null}
+                {!chainId || DISPLAY_LENDING.includes(chainId) ? (
+                  <Route path="/lending" element={<LendingView />}>
+                    <Route index element={<Home />} />
+                    <Route path="markets" element={<Markets />} />
+                    <Route
+                      path="reserve-overview"
+                      element={<ReserveOverview />}
+                    />
+                    <Route path="transactions" element={<History />} />
+                    <Route path="faucet" element={<Faucet />} />
+                    <Route
+                      path="*"
+                      element={<Navigate to="/lending" replace />}
+                    />
+                  </Route>
+                ) : null}
+                {!chainId || DISPLAY_VAULTS.includes(chainId) ? (
                   <Route
-                    index
+                    path="/vaults"
                     element={
-                      <LayoutWrapper
-                        savedOpen={savedOpen}
-                        setSavedOpen={setSavedOpen}
-                      >
-                        <GlobalPage />
-                      </LayoutWrapper>
-                    }
-                  ></Route>
-
-                  <Route
-                    path="token/:tokenAddress"
-                    element={
-                      <TokenPageRouterComponent
-                        savedOpen={savedOpen}
-                        setSavedOpen={setSavedOpen}
+                      <AllVaultView
+                        isMobileFiltersOpen={isMobileFiltersOpen}
+                        openMobileFilterMenu={openMobileFilterMenu}
                       />
                     }
-                  />
-                  <Route
-                    path="pair/:pairAddress"
-                    element={
-                      <PairPageRouterComponent
-                        savedOpen={savedOpen}
-                        setSavedOpen={setSavedOpen}
-                      />
-                    }
-                  />
-                  <Route
-                    path="account/:accountAddress"
-                    element={
-                      <AccountPageRouterComponent
-                        savedOpen={savedOpen}
-                        setSavedOpen={setSavedOpen}
-                      />
-                    }
-                  />
-
-                  <Route
-                    path="tokens"
-                    element={
-                      <LayoutWrapper
-                        savedOpen={savedOpen}
-                        setSavedOpen={setSavedOpen}
-                      >
-                        <AllTokensPage />
-                      </LayoutWrapper>
-                    }
                   ></Route>
+                ) : null}
+                {!chainId || DISPLAY_CHARTS.includes(chainId) ? (
+                  <Route path="/charts" element={<ChartsView />}>
+                    <Route
+                      index
+                      element={
+                        <LayoutWrapper
+                          savedOpen={savedOpen}
+                          setSavedOpen={setSavedOpen}
+                        >
+                          <GlobalPage />
+                        </LayoutWrapper>
+                      }
+                    ></Route>
 
-                  <Route
-                    path="pairs"
-                    element={
-                      <LayoutWrapper
-                        savedOpen={savedOpen}
-                        setSavedOpen={setSavedOpen}
-                      >
-                        <AllPairsPage />
-                      </LayoutWrapper>
-                    }
-                  ></Route>
+                    <Route
+                      path="token/:tokenAddress"
+                      element={
+                        <TokenPageRouterComponent
+                          savedOpen={savedOpen}
+                          setSavedOpen={setSavedOpen}
+                        />
+                      }
+                    />
+                    <Route
+                      path="pair/:pairAddress"
+                      element={
+                        <PairPageRouterComponent
+                          savedOpen={savedOpen}
+                          setSavedOpen={setSavedOpen}
+                        />
+                      }
+                    />
+                    <Route
+                      path="account/:accountAddress"
+                      element={
+                        <AccountPageRouterComponent
+                          savedOpen={savedOpen}
+                          setSavedOpen={setSavedOpen}
+                        />
+                      }
+                    />
 
-                  <Route
-                    path="accounts"
-                    element={
-                      <LayoutWrapper
-                        savedOpen={savedOpen}
-                        setSavedOpen={setSavedOpen}
-                      >
-                        <AccountLookup />
-                      </LayoutWrapper>
-                    }
-                  ></Route>
-                </Route>
-              ) : null}
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
+                    <Route
+                      path="tokens"
+                      element={
+                        <LayoutWrapper
+                          savedOpen={savedOpen}
+                          setSavedOpen={setSavedOpen}
+                        >
+                          <AllTokensPage />
+                        </LayoutWrapper>
+                      }
+                    ></Route>
+
+                    <Route
+                      path="pairs"
+                      element={
+                        <LayoutWrapper
+                          savedOpen={savedOpen}
+                          setSavedOpen={setSavedOpen}
+                        >
+                          <AllPairsPage />
+                        </LayoutWrapper>
+                      }
+                    ></Route>
+
+                    <Route
+                      path="accounts"
+                      element={
+                        <LayoutWrapper
+                          savedOpen={savedOpen}
+                          setSavedOpen={setSavedOpen}
+                        >
+                          <AccountLookup />
+                        </LayoutWrapper>
+                      }
+                    ></Route>
+                  </Route>
+                ) : null}
+                <Route path="*" element={<Navigate to="/fxd" replace />} />
+              </Routes>
+            </FxdProvider>
           </Box>
           <Copyright />
         </MainBox>
