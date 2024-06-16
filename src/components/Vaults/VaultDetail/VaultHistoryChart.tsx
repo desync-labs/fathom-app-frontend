@@ -151,10 +151,6 @@ const VaultHistoryChart: FC<VaultHistoryChartPropTypes> = ({
   valueLabel,
   valueUnits,
 }) => {
-  console.log({
-    chartDataArray,
-  });
-
   const [minValue, setMinValue] = useState<number>(0);
   const [maxValue, setMaxValue] = useState<number>(0);
   const [multiplier, setMultiplier] = useState<number>(1);

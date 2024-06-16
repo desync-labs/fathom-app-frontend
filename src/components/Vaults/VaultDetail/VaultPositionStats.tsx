@@ -81,15 +81,21 @@ const VaultPositionStats = () => {
           <Box>
             <PositionStatItemTitle>Total Deposited</PositionStatItemTitle>
             <PositionStatItemValue>
-              {vaultLoading
-                ? "Loading..."
-                : formatNumber(
-                    BigNumber(vault?.balanceTokens || 0)
-                      .dividedBy(10 ** 18)
-                      .toNumber()
-                  ) +
-                  " " +
-                  vault?.token.symbol}
+              {vaultLoading ? (
+                <StatsValueSkeleton
+                  height={isMobile ? 20 : 28}
+                  width={"100%"}
+                  isMobile={isMobile}
+                />
+              ) : (
+                formatNumber(
+                  BigNumber(vault?.balanceTokens || 0)
+                    .dividedBy(10 ** 18)
+                    .toNumber()
+                ) +
+                " " +
+                vault?.token.symbol
+              )}
             </PositionStatItemValue>
           </Box>
         </PositionStatItem>
@@ -115,7 +121,11 @@ const VaultPositionStats = () => {
             <PositionStatItemTitle>Balance</PositionStatItemTitle>
             <PositionStatItemValue>
               {vaultPositionLoading ? (
-                <StatsValueSkeleton />
+                <StatsValueSkeleton
+                  height={isMobile ? 20 : 28}
+                  width={"100%"}
+                  isMobile={isMobile}
+                />
               ) : (
                 "$" +
                 formatNumber(
@@ -142,7 +152,11 @@ const VaultPositionStats = () => {
                       .toNumber()
                   )
                 ) : (
-                  <StatsValueSkeleton />
+                  <StatsValueSkeleton
+                    height={isMobile ? 20 : 28}
+                    width={"100%"}
+                    isMobile={isMobile}
+                  />
                 )}
               </>
             </PositionStatItemValue>
