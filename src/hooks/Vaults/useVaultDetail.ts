@@ -354,23 +354,29 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
           })
           .finally(() => setFetchBalanceLoading(false));
       }
-      setFetchBalanceLoading(true);
-      return vaultService
-        .previewRedeem(
-          BigNumber(vaultPosition?.balanceShares as string)
-            .dividedBy(10 ** 18)
-            .toString(),
-          vault.id
-        )
-        .then((balanceToken: string) => {
-          setBalanceToken(balanceToken);
-        })
-        .catch((error) => {
-          console.error("Error fetching balance token:", error);
-          setBalanceToken("-1");
-          showErrorNotification(error);
-        })
-        .finally(() => setFetchBalanceLoading(false));
+
+      if (BigNumber(vaultPosition?.balanceShares).isGreaterThan(0)) {
+        setFetchBalanceLoading(true);
+        return vaultService
+          .previewRedeem(
+            BigNumber(vaultPosition?.balanceShares as string)
+              .dividedBy(10 ** 18)
+              .toString(),
+            vault.id
+          )
+          .then((balanceToken: string) => {
+            setBalanceToken(balanceToken);
+          })
+          .catch((error) => {
+            console.error("Error fetching balance token:", error);
+            setBalanceToken("-1");
+            showErrorNotification(error);
+          })
+          .finally(() => setFetchBalanceLoading(false));
+      } else {
+        setBalanceToken("-1");
+        return;
+      }
     },
     [
       vaultService,

@@ -143,7 +143,13 @@ const VaultPositionStats = () => {
             <PositionStatItemTitle>Earned</PositionStatItemTitle>
             <PositionStatItemValue>
               <>
-                {BigNumber(balanceEarned).isGreaterThan(0) ? (
+                {balanceEarned === -1 ? (
+                  <StatsValueSkeleton
+                    height={isMobile ? 20 : 28}
+                    width={"100%"}
+                    isMobile={isMobile}
+                  />
+                ) : BigNumber(balanceEarned).isGreaterThan(0) ? (
                   "$" +
                   formatNumber(
                     BigNumber(balanceEarned || "0")
@@ -152,11 +158,7 @@ const VaultPositionStats = () => {
                       .toNumber()
                   )
                 ) : (
-                  <StatsValueSkeleton
-                    height={isMobile ? 20 : 28}
-                    width={"100%"}
-                    isMobile={isMobile}
-                  />
+                  0
                 )}
               </>
             </PositionStatItemValue>
