@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, FC, memo } from "react";
+import { useState, useEffect, useRef, FC, memo, useMemo } from "react";
 import { createChart, IChartApi } from "lightweight-charts";
 import { Box, styled } from "@mui/material";
 import dayjs from "dayjs";
@@ -69,23 +69,34 @@ const TradingViewChart: FC<TradingViewChartProps> = (props) => {
     }
   }, [chartCreated, data, dataPrev, type]);
 
-  // parese the data and format for tardingview consumption
-  const formattedData = data?.map((entry: any) => {
-    return {
-      time: dayjs
-        .unix(entry.date as number)
-        .utc()
-        .format("YYYY-MM-DD"),
-      value: parseFloat(entry[field]),
-    };
-  });
+  // parse the data and format for tradeview consumption
+  const formattedData = useMemo(() => {
+    const formattedDataValues: { time: string; value: number }[] = [];
+
+    data?.forEach((entry: any) => {
+      const date = dayjs.unix(entry.date as number);
+
+      if (!date.isValid()) {
+        return;
+      }
+
+      const item = {
+        time: date.utc().format("YYYY-MM-DD"),
+        value: parseFloat(entry[field]),
+      };
+
+      formattedDataValues.push(item);
+    });
+
+    return formattedDataValues || [];
+  }, [data]);
 
   // adjust the scale based on the type of chart
   const topScale = type === CHART_TYPES.AREA ? 0.32 : 0.2;
 
   // if no chart created yet, create one with options and add to DOM manually
   useEffect(() => {
-    if (!chartCreated && formattedData) {
+    if (!chartCreated && formattedData && formattedData.length) {
       const chart = createChart(ref.current as HTMLDivElement, {
         width: width,
         height: HEIGHT,
@@ -190,10 +201,7 @@ const TradingViewChart: FC<TradingViewChartProps> = (props) => {
           ">
           <img src="${
             percentChange >= 0 ? riseSrc : dropSrc
-          }" alt="percentage-state" />
-          
-${formattedPercentChange}
-</span>` +
+          }" alt="percentage-state" /> ${formattedPercentChange} </span>` +
             "</div>"
           : "";
       };
