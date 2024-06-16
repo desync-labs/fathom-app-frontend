@@ -18,7 +18,7 @@ import { formatNumber } from "utils/format";
 import useSharedContext from "context/shared";
 import { AppList, AppListItem } from "components/AppComponents/AppList/AppList";
 import dayjs from "dayjs";
-import { AppSkeletonValue } from "../../AppComponents/AppSkeleton/AppSkeleton";
+import { AppSkeletonValue } from "components/AppComponents/AppSkeleton/AppSkeleton";
 
 export const ChartWrapper = styled(Box)`
   position: relative;
