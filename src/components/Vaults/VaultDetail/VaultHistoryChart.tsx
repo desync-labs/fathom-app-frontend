@@ -18,6 +18,7 @@ import { formatNumber } from "utils/format";
 import useSharedContext from "context/shared";
 import { AppList, AppListItem } from "components/AppComponents/AppList/AppList";
 import dayjs from "dayjs";
+import { AppSkeletonValue } from "../../AppComponents/AppSkeleton/AppSkeleton";
 
 export const ChartWrapper = styled(Box)`
   position: relative;
@@ -150,6 +151,10 @@ const VaultHistoryChart: FC<VaultHistoryChartPropTypes> = ({
   valueLabel,
   valueUnits,
 }) => {
+  console.log({
+    chartDataArray,
+  });
+
   const [minValue, setMinValue] = useState<number>(0);
   const [maxValue, setMaxValue] = useState<number>(0);
   const [multiplier, setMultiplier] = useState<number>(1);
@@ -172,9 +177,9 @@ const VaultHistoryChart: FC<VaultHistoryChartPropTypes> = ({
         /**
          * Chart values for Y axis
          */
-        const chartValue = parseFloat(item.chartValue || "0");
+        const chartValue = Number(item.chartValue) || 0;
         chartValues.push(chartValue);
-        valuesLength.push(formatNumber(chartValue).length);
+        valuesLength.push(Math.ceil(chartValue).toString().length);
       });
 
       setMaxValue(Math.max(...chartValues));
@@ -210,6 +215,10 @@ const VaultHistoryChart: FC<VaultHistoryChartPropTypes> = ({
     return returnValue;
   };
 
+  const tickFormatterY = (chartValue: number) => {
+    return Math.ceil(chartValue).toString();
+  };
+
   const containerProps = {
     width: "100%",
     aspect: 6,
@@ -217,6 +226,20 @@ const VaultHistoryChart: FC<VaultHistoryChartPropTypes> = ({
 
   if (isMobile) {
     containerProps["aspect"] = 2.1;
+  }
+
+  if (!chartDataArray.length) {
+    return (
+      <ChartWrapper>
+        <ChartTitle>{title}</ChartTitle>
+        <AppSkeletonValue
+          width={"100%"}
+          height={180}
+          variant="rounded"
+          animation={"wave"}
+        />
+      </ChartWrapper>
+    );
   }
 
   return (
@@ -247,10 +270,11 @@ const VaultHistoryChart: FC<VaultHistoryChartPropTypes> = ({
             strokeWidth={1}
           />
           <YAxis
-            domain={[minValue, maxValue]}
+            domain={[Math.ceil(minValue), Math.ceil(maxValue)]}
             stroke={"transparent"}
             orientation="right"
             tick={(props) => <CustomizedYAxisTick {...props} />}
+            tickFormatter={tickFormatterY}
             allowDataOverflow={false}
             width={30}
           />
