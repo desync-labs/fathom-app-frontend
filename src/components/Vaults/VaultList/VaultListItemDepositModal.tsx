@@ -36,6 +36,11 @@ const VaultManageGridDialogWrapper = styled(AppDialog)`
       padding: 0 24px 24px;
     }
   }
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    & .MuiDialog-paper {
+      height: fit-content;
+    }
+  }
 `;
 
 export type VaultDepositProps = {
@@ -79,7 +84,7 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
       <AppDialogTitle
         id="customized-dialog-title"
         onClose={onClose}
-        sx={{ padding: "24px" }}
+        sx={{ padding: "24px !important" }}
         sxCloseIcon={{ right: "16px", top: "16px" }}
       >
         Deposit

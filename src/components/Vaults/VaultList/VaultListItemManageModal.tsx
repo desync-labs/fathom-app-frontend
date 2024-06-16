@@ -42,7 +42,23 @@ const VaultManageGridDialogWrapper = styled(AppDialog)`
       padding: 0 24px 24px;
     }
   }
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    & .MuiDialog-paper {
+      height: fit-content;
+    }
+  }
 `;
+
+const ModalNavWrapper = styled(AppNavWrapper)`
+    margin-top: -10px;
+    ${({ theme }) => theme.breakpoints.down("sm")} {
+     width: fit-content;
+      
+      & button {
+        font-size: 16px;
+      }
+  }
+}`;
 
 export type VaultManageProps = {
   vaultItemData: IVault;
@@ -97,7 +113,7 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
         {shutdown ? (
           "Withdrawing"
         ) : (
-          <AppNavWrapper sx={{ marginTop: "-10px" }}>
+          <ModalNavWrapper>
             <AppNavItem
               onClick={() => setFormType(FormType.DEPOSIT)}
               className={formType === FormType.DEPOSIT ? "active" : ""}
@@ -110,7 +126,7 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
             >
               Withdraw
             </AppNavItem>
-          </AppNavWrapper>
+          </ModalNavWrapper>
         )}
       </AppDialogTitle>
 

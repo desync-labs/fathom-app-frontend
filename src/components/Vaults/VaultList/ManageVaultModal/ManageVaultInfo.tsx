@@ -20,7 +20,7 @@ const ManageVaultFormInfoWrapper = styled(Box)`
   margin-top: 20px;
 
   ${({ theme }) => theme.breakpoints.down("sm")} {
-    padding: 0;
+    padding: 24px 16px;
   }
 `;
 

@@ -285,6 +285,14 @@ export const ModalButtonWrapper = styled(Box)`
       width: calc(100% - 128px);
     }
   }
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    & > button {
+      height: 36px;
+      font-size: 15px;
+      padding: 4px 18px;
+    }
+  }
 `;
 
 export const VaultDetailFormButtonWrapper = styled(Box)`
