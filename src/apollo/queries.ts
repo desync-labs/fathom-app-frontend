@@ -453,11 +453,18 @@ export const VAULT_POSITION_TRANSACTIONS = gql`
     }
   }
 `;
-export const VAULTS_ACCOUNT_TRANSACTIONS = gql`
-  query VaultPositionTransactions($account: String!, $chainId: String) {
+export const VAULTS_ACCOUNT_DEPOSITS = gql`
+  query VaultAccountDeposits(
+    $account: String!
+    $chainId: String
+    $first: Int
+    $skip: Int
+  ) {
     deposits(
       where: { account_contains_nocase: $account }
       orderBy: blockNumber
+      first: $first
+      skip: $skip
     ) {
       id
       timestamp
@@ -465,9 +472,21 @@ export const VAULTS_ACCOUNT_TRANSACTIONS = gql`
       tokenAmount
       blockNumber
     }
+  }
+`;
+
+export const VAULTS_ACCOUNT_WITHDRAWALS = gql`
+  query VaultAccountWithdrawals(
+    $account: String!
+    $chainId: String
+    $first: Int
+    $skip: Int
+  ) {
     withdrawals(
       where: { account_contains_nocase: $account }
       orderBy: blockNumber
+      first: $first
+      skip: $skip
     ) {
       id
       timestamp
