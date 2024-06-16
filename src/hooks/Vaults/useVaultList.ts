@@ -75,7 +75,7 @@ const useVaultList = () => {
   );
 
   const [
-    loadData,
+    loadPositions,
     { loading: vaultPositionsLoading, refetch: positionsRefetch },
   ] = useLazyQuery(ACCOUNT_VAULT_POSITIONS, {
     context: { clientName: "vaults", chainId },
@@ -85,7 +85,7 @@ const useVaultList = () => {
 
   useEffect(() => {
     if (account && vaultService && chainId) {
-      loadData({ variables: { account: account.toLowerCase() } }).then(
+      loadPositions({ variables: { account: account.toLowerCase() } }).then(
         (res) => {
           if (
             res.data?.accountVaultPositions &&
@@ -149,7 +149,7 @@ const useVaultList = () => {
   }, [
     account,
     chainId,
-    loadData,
+    loadPositions,
     setVaultPositionsList,
     poolService,
     vaultService,
