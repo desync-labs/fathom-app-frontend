@@ -13,7 +13,7 @@ export const VaultInfoWrapper = styled(Box)`
   padding-top: 24px;
 `;
 
-const StrategySelectorLabel = styled(Typography)`
+export const StrategySelectorLabel = styled(Typography)`
   color: #b7c8e5;
   font-size: 11px;
   font-weight: 600;

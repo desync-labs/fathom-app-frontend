@@ -81,7 +81,7 @@ const VaultPositionStats = () => {
           <Box>
             <PositionStatItemTitle>Total Deposited</PositionStatItemTitle>
             <PositionStatItemValue>
-              {vaultLoading ? (
+              {vaultLoading || !vault.id ? (
                 <StatsValueSkeleton
                   height={isMobile ? 20 : 28}
                   width={"100%"}
@@ -103,16 +103,23 @@ const VaultPositionStats = () => {
           <Box>
             <PositionStatItemTitle>Available</PositionStatItemTitle>
             <PositionStatItemValue>
-              {formatNumber(
-                Math.max(
-                  BigNumber(vault?.depositLimit || 0)
-                    .minus(BigNumber(vault?.balanceTokens || 0))
-                    .dividedBy(10 ** 18)
-                    .toNumber(),
-                  0
-                )
-              )}{" "}
-              {vault?.token.symbol}
+              {vaultLoading || !vault.id ? (
+                <StatsValueSkeleton
+                  height={isMobile ? 20 : 28}
+                  width={"100%"}
+                  isMobile={isMobile}
+                />
+              ) : (
+                `${formatNumber(
+                  Math.max(
+                    BigNumber(vault?.depositLimit || 0)
+                      .minus(BigNumber(vault?.balanceTokens || 0))
+                      .dividedBy(10 ** 18)
+                      .toNumber(),
+                    0
+                  )
+                )} ${vault?.token.symbol}`
+              )}
             </PositionStatItemValue>
           </Box>
         </PositionStatItem>
@@ -120,7 +127,7 @@ const VaultPositionStats = () => {
           <Box>
             <PositionStatItemTitle>Balance</PositionStatItemTitle>
             <PositionStatItemValue>
-              {vaultPositionLoading ? (
+              {vaultLoading || vaultPositionLoading ? (
                 <StatsValueSkeleton
                   height={isMobile ? 20 : 28}
                   width={"100%"}
@@ -143,7 +150,9 @@ const VaultPositionStats = () => {
             <PositionStatItemTitle>Earned</PositionStatItemTitle>
             <PositionStatItemValue>
               <>
-                {balanceEarned === -1 ? (
+                {vaultLoading ||
+                vaultPositionLoading ||
+                balanceEarned === -1 ? (
                   <StatsValueSkeleton
                     height={isMobile ? 20 : 28}
                     width={"100%"}

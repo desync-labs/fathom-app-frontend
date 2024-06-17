@@ -7,7 +7,6 @@ import BigNumber from "bignumber.js";
 import { useApr } from "hooks/Vaults/useApr";
 import usePricesContext from "context/prices";
 import useVaultListItem from "hooks/Vaults/useVaultListItem";
-import useConnector from "context/connector";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatCurrency, formatNumber } from "utils/format";
 import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
@@ -19,7 +18,7 @@ import { AppFlexBox } from "components/AppComponents/AppBox/AppBox";
 import LockAquaSrc from "assets/svg/lock-aqua.svg";
 import LockSrc from "assets/svg/lock.svg";
 
-const VaultItemTableRow = styled(AppTableRow)`
+export const VaultItemTableRow = styled(AppTableRow)`
   background: transparent;
 
   &:last-child {
@@ -139,7 +138,6 @@ const VaultListItem = ({
   const { token, balanceTokens, depositLimit, shutdown } = vaultItemData;
   const formattedApr = useApr(vaultItemData);
   const { fxdPrice } = usePricesContext();
-  const { account } = useConnector();
   const navigate = useNavigate();
   const vaultTestId = vaultItemData.id;
 
@@ -189,7 +187,7 @@ const VaultListItem = ({
         </TableCell>
         <TableCell
           colSpan={1}
-          sx={{ width: account ? "11%" : "10%" }}
+          sx={{ width: "11%" }}
           data-testid={`vaultRow-${vaultTestId}-earnedValueCell`}
         >
           <VaultEarned>
@@ -210,7 +208,7 @@ const VaultListItem = ({
         </TableCell>
         <TableCell
           colSpan={1}
-          sx={{ width: account ? "10%" : "10%" }}
+          sx={{ width: "10%" }}
           data-testid={`vaultRow-${vaultTestId}-aprValueCell`}
         >
           <VaultApr>{formattedApr}%</VaultApr>
@@ -218,7 +216,7 @@ const VaultListItem = ({
         <TableCell
           colSpan={2}
           data-testid={`vaultRow-${vaultTestId}-tvlValueCell`}
-          sx={{ width: account ? "13%" : "13%" }}
+          sx={{ width: "13%" }}
         >
           <VaultStackedLiquidity>
             {formatCurrency(
@@ -232,7 +230,7 @@ const VaultListItem = ({
         <TableCell
           colSpan={1}
           data-testid={`vaultRow-${vaultTestId}-availableValueCell`}
-          sx={{ width: account ? "14%" : "15%" }}
+          sx={{ width: "14%" }}
         >
           <VaultAvailable className={"blue"}>
             {formatNumber(
@@ -249,7 +247,7 @@ const VaultListItem = ({
         </TableCell>
         <TableCell
           colSpan={1}
-          sx={{ width: account ? "13%" : "10%" }}
+          sx={{ width: "13%" }}
           data-testid={`vaultRow-${vaultTestId}-stakedValueCell`}
         >
           <VaultStacked>

@@ -18,7 +18,6 @@ import { formatNumber } from "utils/format";
 import useSharedContext from "context/shared";
 import { AppList, AppListItem } from "components/AppComponents/AppList/AppList";
 import dayjs from "dayjs";
-import { AppSkeletonValue } from "components/AppComponents/AppSkeleton/AppSkeleton";
 
 export const ChartWrapper = styled(Box)`
   position: relative;
@@ -222,20 +221,6 @@ const VaultHistoryChart: FC<VaultHistoryChartPropTypes> = ({
 
   if (isMobile) {
     containerProps["aspect"] = 2.1;
-  }
-
-  if (!chartDataArray.length) {
-    return (
-      <ChartWrapper>
-        <ChartTitle>{title}</ChartTitle>
-        <AppSkeletonValue
-          width={"100%"}
-          height={180}
-          variant="rounded"
-          animation={"wave"}
-        />
-      </ChartWrapper>
-    );
   }
 
   return (

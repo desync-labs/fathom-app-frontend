@@ -7,23 +7,17 @@ import VaultDetailManageForm from "components/Vaults/VaultDetail/VaultDetailForm
 import VaultDetailDepositForm from "components/Vaults/VaultDetail/VaultDetailForm/VaultDetailDepositForm";
 
 const VaultDetailContent = () => {
-  const { vault, vaultLoading, vaultPosition } = useVaultContext();
-
-  if (vaultLoading || !vault.id) {
-    return <>Loading...</>;
-  }
+  const { vaultPosition } = useVaultContext();
   return (
     <>
       <VaultBreadcrumbs />
       <VaultPositionStats />
-      {!vault.shutdown ? (
-        vaultPosition &&
-        BigNumber(vaultPosition.balanceShares).isGreaterThan(0) ? (
-          <VaultDetailManageForm />
-        ) : (
-          <VaultDetailDepositForm />
-        )
-      ) : null}
+      {vaultPosition &&
+      BigNumber(vaultPosition.balanceShares).isGreaterThan(0) ? (
+        <VaultDetailManageForm />
+      ) : (
+        <VaultDetailDepositForm />
+      )}
       <VaultDetailInfoTabs />
     </>
   );

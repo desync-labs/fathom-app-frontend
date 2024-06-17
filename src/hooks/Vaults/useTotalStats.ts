@@ -123,11 +123,6 @@ const useTotalStats = (
     fetchAccountWithdrawals([]);
   }, [account, fetchAccountDeposits, fetchAccountWithdrawals]);
 
-  console.log({
-    depositsList,
-    withdrawalsList,
-  });
-
   const balanceEarned = useMemo(() => {
     if (totalBalance === "-1") return "0";
 

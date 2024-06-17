@@ -7,6 +7,10 @@ import VaultDetailInfoTabAbout from "components/Vaults/VaultDetail/VaultDetailIn
 import VaultDetailInfoTabStrategies from "components/Vaults/VaultDetail/VaultDetailInfoTabStrategies";
 import ManagementVaultMethodList from "components/Vaults/VaultDetail/Managment/ManagementVaultMethodList";
 import ManagementStrategiesMethodList from "components/Vaults/VaultDetail/Managment/ManagementStrategiesMethodList";
+import {
+  VaultAboutSkeleton,
+  VaultStrategiesSkeleton,
+} from "components/AppComponents/AppSkeleton/AppSkeleton";
 
 const VaultDetailInfoPaper = styled(VaultPaper)`
   overflow: hidden;
@@ -20,6 +24,7 @@ const VaultDetailInfoPaper = styled(VaultPaper)`
 const VaultDetailInfoTabs = () => {
   const {
     vault,
+    vaultLoading,
     activeVaultInfoTab,
     isUserManager,
     managedStrategiesIds,
@@ -29,11 +34,20 @@ const VaultDetailInfoTabs = () => {
   return (
     <VaultDetailInfoPaper>
       <VaultDetailInfoNav />
-      {vault && activeVaultInfoTab === VaultInfoTabs.ABOUT && (
+      {vaultLoading || !vault.id ? (
+        activeVaultInfoTab === VaultInfoTabs.ABOUT ? (
+          <VaultAboutSkeleton />
+        ) : (
+          activeVaultInfoTab === VaultInfoTabs.STRATEGIES && (
+            <VaultStrategiesSkeleton />
+          )
+        )
+      ) : activeVaultInfoTab === VaultInfoTabs.ABOUT ? (
         <VaultDetailInfoTabAbout />
-      )}
-      {vault && activeVaultInfoTab === VaultInfoTabs.STRATEGIES && (
-        <VaultDetailInfoTabStrategies />
+      ) : (
+        activeVaultInfoTab === VaultInfoTabs.STRATEGIES && (
+          <VaultDetailInfoTabStrategies />
+        )
       )}
       {isUserManager && (
         <ManagementVaultMethodList

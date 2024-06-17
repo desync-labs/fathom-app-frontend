@@ -1,21 +1,19 @@
 import { Box, Skeleton, styled, TableCell } from "@mui/material";
-import useConnector from "context/connector";
-import { AppTableRow } from "components/AppComponents/AppTable/AppTable";
 import { AppFlexBox } from "components/AppComponents/AppBox/AppBox";
 import { VaultListItemImageWrapper } from "components/Vaults/VaultList/VaultListItem";
 import { VaultListItemImageWrapper as VaultListItemImageWrapperMobile } from "components/Vaults/VaultList/VaultListItemMobile";
 import { VaultItemTableRow } from "components/Vaults/VaultList/VaultListItemMobile";
+import { VaultItemTableRow as VaultItemTableRowDesktop } from "components/Vaults/VaultList/VaultListItem";
 
 const CustomSkeleton = styled(Skeleton)`
   background-color: #2536564a;
 `;
 
 export const VaultListItemSkeleton = () => {
-  const { account } = useConnector();
   return (
-    <AppTableRow className="border single">
+    <VaultItemTableRowDesktop>
       <TableCell colSpan={2} sx={{ width: "20%" }}>
-        <AppFlexBox>
+        <AppFlexBox sx={{ justifyContent: "flex-start", gap: "11px" }}>
           <VaultListItemImageWrapper>
             <CustomSkeleton
               animation="wave"
@@ -25,41 +23,39 @@ export const VaultListItemSkeleton = () => {
             />
           </VaultListItemImageWrapper>
           <Box>
-            <CustomSkeleton animation={"wave"} width={90} />
+            <CustomSkeleton
+              animation={"wave"}
+              width={40}
+              height={28}
+              sx={{ marginBottom: "4px" }}
+            />
+            <CustomSkeleton animation={"wave"} width={90} height={20} />
           </Box>
         </AppFlexBox>
       </TableCell>
-      <TableCell colSpan={1} sx={{ width: account ? "7%" : "10%" }}>
+      <TableCell colSpan={1} sx={{ width: "11%" }}>
         <CustomSkeleton animation={"wave"} width={35} />
       </TableCell>
-      {account && (
-        <TableCell colSpan={1} sx={{ width: account ? "11%" : "10%" }}>
-          <CustomSkeleton animation={"wave"} width={20} />
-        </TableCell>
-      )}
-      <TableCell colSpan={1} sx={{ width: account ? "10%" : "10%" }}>
-        <CustomSkeleton animation={"wave"} width={35} />
+      <TableCell colSpan={1} sx={{ width: "10%" }}>
+        <CustomSkeleton animation={"wave"} width={40} />
       </TableCell>
-      <TableCell colSpan={1} sx={{ width: account ? "13%" : "11%" }}>
+      <TableCell colSpan={2} sx={{ width: "13%" }}>
         <CustomSkeleton animation={"wave"} width={100} />
       </TableCell>
-      <TableCell colSpan={1} sx={{ width: account ? "14%" : "15%" }}>
+      <TableCell colSpan={1} sx={{ width: "14%" }}>
         <CustomSkeleton animation={"wave"} width={100} />
       </TableCell>
-      <TableCell colSpan={1} sx={{ width: account ? "13%" : "10%" }}>
-        <CustomSkeleton animation={"wave"} width={70} />
+      <TableCell colSpan={1} sx={{ width: "13%" }}>
+        <CustomSkeleton animation={"wave"} width={100} />
       </TableCell>
-      <TableCell colSpan={2}>
-        <AppFlexBox justifyContent={"flex-end"} mx={2}>
-          <CustomSkeleton
-            animation={"wave"}
-            width={account ? 60 : 120}
-            height={35}
-          />
-          <CustomSkeleton animation={"wave"} width={22} />
+      <TableCell colSpan={4}>
+        <AppFlexBox
+          sx={{ justifyContent: "flex-end", gap: "16px", mx: "16px" }}
+        >
+          <CustomSkeleton animation={"wave"} width={100} height={36} />
         </AppFlexBox>
       </TableCell>
-    </AppTableRow>
+    </VaultItemTableRowDesktop>
   );
 };
 

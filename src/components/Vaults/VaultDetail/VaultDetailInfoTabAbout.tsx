@@ -32,7 +32,7 @@ export const VaultInfoWrapper = styled(Box)`
   }
 `;
 
-const VaultDescriptionWrapper = styled(Box)`
+export const VaultDescriptionWrapper = styled(Box)`
   font-size: 14px;
   font-weight: 400;
   color: #b7c8e5;
@@ -50,7 +50,7 @@ const VaultDescriptionWrapper = styled(Box)`
   }
 `;
 
-const VaultContractAddress = styled(Box)`
+export const VaultContractAddress = styled(Box)`
   font-size: 14px;
   color: #b7c8e5;
   a {
@@ -63,7 +63,7 @@ const VaultContractAddress = styled(Box)`
   }
 `;
 
-const AppListApy = styled(AppListVault)`
+export const AppListApy = styled(AppListVault)`
   ${({ theme }) => theme.breakpoints.down("sm")} {
     & li {
       color: #b7c8e5;
@@ -82,7 +82,7 @@ const AppListApy = styled(AppListVault)`
   }
 `;
 
-const AppListFees = styled(AppListVault)`
+export const AppListFees = styled(AppListVault)`
   padding: 0;
   ${({ theme }) => theme.breakpoints.down("sm")} {
     padding: 4px 0;

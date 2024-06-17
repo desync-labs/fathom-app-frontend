@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Breadcrumbs, styled, Typography } from "@mui/material";
 import KeyboardArrowRightRoundedIcon from "@mui/icons-material/KeyboardArrowRightRounded";
 import useVaultContext from "context/vault";
+import { CustomSkeleton } from "components/AppComponents/AppSkeleton/AppSkeleton";
 
 export const BreadcrumbsWrapper = styled(Breadcrumbs)`
   margin-top: 40px;
@@ -40,14 +41,18 @@ export const VaultBreadcrumbsCurrentPage = styled(Typography)`
 `;
 
 const VaultBreadcrumbs = () => {
-  const { vault } = useVaultContext();
+  const { vault, vaultLoading } = useVaultContext();
   const breadcrumbs = [
     <VaultBreadcrumbsLink key="1" color="inherit" to={"/vaults"}>
       Vaults
     </VaultBreadcrumbsLink>,
-    <VaultBreadcrumbsCurrentPage key="2">
-      {vault?.name}
-    </VaultBreadcrumbsCurrentPage>,
+    vaultLoading || !vault.id ? (
+      <CustomSkeleton key="2" width="80px" />
+    ) : (
+      <VaultBreadcrumbsCurrentPage key="2">
+        {vault?.name}
+      </VaultBreadcrumbsCurrentPage>
+    ),
   ];
 
   return (
