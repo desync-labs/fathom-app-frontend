@@ -8,6 +8,7 @@ test.describe("Fathom App Test Suite: Lending - FXD Token Tests", () => {
     await lendingPage.navigate();
     await lendingPage.connectWallet(WalletConnectOptions.Metamask);
     await lendingPage.validateConnectedWalletAddress();
+    await lendingPage.validateLendingPageLoaded();
     await lendingPage.repayAllBorrowedAssetsFullyIfAny();
     await lendingPage.withdrawAllSuppliedAssetsFullyIfAny();
   });
