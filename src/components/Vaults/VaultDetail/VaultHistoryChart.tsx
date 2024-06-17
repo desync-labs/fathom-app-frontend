@@ -38,8 +38,15 @@ export const ChartTitle = styled(Typography)`
   line-height: 24px;
   color: #fff;
   margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   ${({ theme }) => theme.breakpoints.down("sm")} {
     font-size: 14px;
+  }
+  span {
+    font-size: 13px;
+    color: rgb(109, 134, 178);
   }
 `;
 
@@ -214,7 +221,7 @@ const VaultHistoryChart: FC<VaultHistoryChartPropTypes> = ({
   };
 
   const tickFormatterY = (chartValue: number) => {
-    return Math.ceil(chartValue).toString();
+    return Math.floor(chartValue).toString();
   };
 
   const containerProps = {
@@ -242,7 +249,9 @@ const VaultHistoryChart: FC<VaultHistoryChartPropTypes> = ({
 
   return (
     <ChartWrapper>
-      <ChartTitle>{title}</ChartTitle>
+      <ChartTitle>
+        {title} <span>{formatNumber(maxValue)}</span>
+      </ChartTitle>
       <ResponsiveContainer {...containerProps}>
         <LineChart
           data={chartDataArray}
