@@ -77,7 +77,7 @@ const VaultPositionStats = () => {
     <Box pb={isMobile ? "20px" : "24px"}>
       <VaultPositionTitle variant="h1">Your Position</VaultPositionTitle>
       <Grid container spacing={isMobile ? 0.5 : 1.5}>
-        <PositionStatItem item xs={6} sm={6} md={4}>
+        <PositionStatItem item xs={6} sm={6} md={3.75}>
           <Box>
             <PositionStatItemTitle>Total Deposited</PositionStatItemTitle>
             <PositionStatItemValue>
@@ -99,7 +99,7 @@ const VaultPositionStats = () => {
             </PositionStatItemValue>
           </Box>
         </PositionStatItem>
-        <PositionStatItem item xs={6} sm={6} md={2.66}>
+        <PositionStatItem item xs={6} sm={6} md={3.75}>
           <Box>
             <PositionStatItemTitle>Available</PositionStatItemTitle>
             <PositionStatItemValue>
@@ -123,7 +123,7 @@ const VaultPositionStats = () => {
             </PositionStatItemValue>
           </Box>
         </PositionStatItem>
-        <PositionStatItem item xs={6} sm={6} md={2.66}>
+        <PositionStatItem item xs={6} sm={6} md={2.25}>
           <Box>
             <PositionStatItemTitle>Balance</PositionStatItemTitle>
             <PositionStatItemValue>
@@ -145,7 +145,7 @@ const VaultPositionStats = () => {
             </PositionStatItemValue>
           </Box>
         </PositionStatItem>
-        <PositionStatItem item xs={6} sm={6} md={2.66}>
+        <PositionStatItem item xs={6} sm={6} md={2.25}>
           <Box>
             <PositionStatItemTitle>Earned</PositionStatItemTitle>
             <PositionStatItemValue>

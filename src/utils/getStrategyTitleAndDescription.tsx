@@ -128,8 +128,8 @@ strategyDescription["0xc0ac2e5181f90fda9e9264b5b1634b2c8bd88cdd"] = (
 strategyDescription["0x0425b4f142059eb15cae157dac4277f89b9894c2"] = (
   <>
     <p>
-      "The Strategy utilizes funds in Fathom Lending. It supplies certain
-      lending pools to achieve the maximum possible gain."
+      The Strategy utilizes funds in Fathom Lending. It supplies certain lending
+      pools to achieve the maximum possible gain.
     </p>
   </>
 );
