@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, FC, memo } from "react";
+import { useState, useEffect, useRef, FC, memo, useMemo } from "react";
 import { Box, styled } from "@mui/material";
 import { createChart, CrosshairMode, IChartApi } from "lightweight-charts";
 import dayjs from "dayjs";
@@ -45,31 +45,39 @@ const CandleStickChart: FC<CandleStickChartProps> = ({
   // reference for DOM element to create with chart
   const ref = useRef<HTMLDivElement>(null);
 
-  const formattedData = data?.map((entry: any) => {
-    return {
-      time: parseFloat(entry.timestamp),
-      open: parseFloat(entry.open),
-      low: parseFloat(entry.open),
-      close: parseFloat(entry.close),
-      high: parseFloat(entry.close),
-    };
-  });
+  const formattedData = useMemo(() => {
+    const formattedDataValues: any[] = [];
 
-  if (formattedData && formattedData.length > 0) {
-    formattedData.push({
-      time: dayjs().unix(),
-      open: parseFloat(formattedData[formattedData.length - 1].close),
-      close: parseFloat(base),
-      low: Math.min(
-        parseFloat(base),
-        parseFloat(formattedData[formattedData.length - 1].close)
-      ),
-      high: Math.max(
-        parseFloat(base),
-        parseFloat(formattedData[formattedData.length - 1].close)
-      ),
+    data?.forEach((entry: any) => {
+      formattedDataValues.push({
+        time: parseFloat(entry.timestamp),
+        open: parseFloat(entry.open),
+        low: parseFloat(entry.open),
+        close: parseFloat(entry.close),
+        high: parseFloat(entry.close),
+      });
     });
-  }
+
+    if (formattedDataValues && formattedDataValues.length > 0) {
+      formattedDataValues.push({
+        time: dayjs().unix(),
+        open: parseFloat(
+          formattedDataValues[formattedDataValues.length - 1].close
+        ),
+        close: parseFloat(base),
+        low: Math.min(
+          parseFloat(base),
+          parseFloat(formattedDataValues[formattedDataValues.length - 1].close)
+        ),
+        high: Math.max(
+          parseFloat(base),
+          parseFloat(formattedDataValues[formattedDataValues.length - 1].close)
+        ),
+      });
+    }
+
+    return formattedDataValues;
+  }, [data]);
 
   // pointer to the chart object
   const [chartCreated, setChartCreated] = useState<IChartApi | null>(null);

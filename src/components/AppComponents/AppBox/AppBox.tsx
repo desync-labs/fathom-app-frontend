@@ -325,3 +325,11 @@ export const CircleWrapper = styled(Box)`
   align-items: center;
   justify-content: center;
 `;
+
+export const AppFlexBox = styled(Box)`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+`;

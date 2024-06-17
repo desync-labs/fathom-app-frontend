@@ -76,8 +76,7 @@ export const ClaimRewardsModalContent = ({
       // getting price from reserves for the native rewards for v2 markets
       if (!currentMarketData.v3 && Number(rewardBalance) > 0) {
         if (currentMarketData.chainId === ChainId.mainnet) {
-          const aave = reserves.find((reserve) => reserve.symbol === "AAVE");
-          tokenPrice = aave ? Number(aave.priceInUSD) : 0;
+          tokenPrice = 0;
         } else {
           reserves.forEach((reserve) => {
             if (reserve.isWrappedBaseAsset) {
