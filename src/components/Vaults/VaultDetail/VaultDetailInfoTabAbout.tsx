@@ -109,8 +109,14 @@ export const AppListFees = styled(AppListVault)`
 `;
 
 const VaultDetailInfoTabAbout = () => {
-  const { vault, protocolFee, performanceFee, reports, historicalApr } =
-    useVaultContext();
+  const {
+    vault,
+    protocolFee,
+    performanceFee,
+    reports,
+    historicalApr,
+    reportsLoading,
+  } = useVaultContext();
   const { token } = vault;
   const aprNumber = useAprNumber(vault);
   const [earnedHistoryArr, setEarnedHistoryArr] = useState<
@@ -251,6 +257,7 @@ const VaultDetailInfoTabAbout = () => {
         chartDataArray={earnedHistoryArr}
         valueLabel="Earnings"
         valueUnits={` ${token.name}`}
+        isLoading={reportsLoading}
       />
     </VaultInfoWrapper>
   );

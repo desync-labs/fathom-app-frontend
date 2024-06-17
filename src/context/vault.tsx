@@ -35,6 +35,7 @@ export type UseVaultContextReturnType = {
   setActiveVaultInfoTab: Dispatch<SetStateAction<VaultInfoTabs>>;
   managedStrategiesIds: string[];
   isUserManager: boolean;
+  reportsLoading: boolean;
 };
 
 export const VaultContext = createContext<UseVaultContextReturnType>(

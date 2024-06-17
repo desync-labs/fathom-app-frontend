@@ -30,13 +30,14 @@ const VaultDetailInfoTabs = () => {
     managedStrategiesIds,
     vaultMethods,
     strategyMethods,
+    reportsLoading,
   } = useVaultContext();
   return (
     <VaultDetailInfoPaper>
       <VaultDetailInfoNav />
       {vaultLoading || !vault.id ? (
         activeVaultInfoTab === VaultInfoTabs.ABOUT ? (
-          <VaultAboutSkeleton />
+          <VaultAboutSkeleton reportsLoading={reportsLoading} />
         ) : (
           activeVaultInfoTab === VaultInfoTabs.STRATEGIES && (
             <VaultStrategiesSkeleton />

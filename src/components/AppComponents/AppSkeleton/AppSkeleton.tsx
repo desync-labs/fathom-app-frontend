@@ -24,6 +24,7 @@ import {
   StrategySelector,
   StrategySelectorLabel,
 } from "components/Vaults/VaultDetail/VaultDetailInfoTabStrategies";
+import VaultHistoryChart from "../../Vaults/VaultDetail/VaultHistoryChart";
 
 export const CustomSkeleton = styled(Skeleton)`
   background-color: #2536564a;
@@ -54,7 +55,10 @@ export const StatsValueSkeleton: FC<StatsValueSkeletonProps> = ({
     />
   );
 };
-export const VaultAboutSkeleton = () => {
+
+export const VaultAboutSkeleton: FC<{ reportsLoading: boolean }> = ({
+  reportsLoading = true,
+}) => {
   return (
     <VaultInfoWrapper>
       <VaultDescriptionWrapper>
@@ -154,17 +158,18 @@ export const VaultAboutSkeleton = () => {
         </AppListFees>
       </Box>
       <ChartWrapper>
-        <ChartTitle>Сumulative Earnings</ChartTitle>
-        <CustomSkeleton
-          variant={"rounded"}
-          animation={"wave"}
-          width={"100%"}
-          height={155}
+        <VaultHistoryChart
+          title={"Cumulative Earnings"}
+          chartDataArray={[]}
+          valueLabel="Earnings"
+          valueUnits={""}
+          isLoading={reportsLoading}
         />
       </ChartWrapper>
     </VaultInfoWrapper>
   );
 };
+
 export const VaultStrategiesSkeleton = () => {
   return (
     <VaultInfoWrapper>

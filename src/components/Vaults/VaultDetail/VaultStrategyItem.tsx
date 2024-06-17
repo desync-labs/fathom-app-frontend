@@ -109,6 +109,7 @@ type VaultStrategyItemPropsType = {
   index: number;
   vaultId: string;
   isShow?: boolean;
+  reportsLoading?: boolean;
 };
 
 const VaultIndicatorItem: FC<VaultIndicatorItemPropsType> = memo(
@@ -132,6 +133,7 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
   reports,
   historicalApr,
   isShow,
+  reportsLoading = false,
 }) => {
   const [aprHistoryArr, setAprHistoryArr] = useState<HistoryChartDataType[]>(
     []
@@ -280,6 +282,7 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
           chartDataArray={aprHistoryArr}
           valueLabel="APR"
           valueUnits="%"
+          isLoading={reportsLoading}
         />
       </Box>
     </Box>

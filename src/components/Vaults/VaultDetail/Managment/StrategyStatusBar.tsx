@@ -2,7 +2,7 @@ import { Box, styled } from "@mui/material";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import { formatHashShorten } from "utils/format";
 import { AppFlexBox } from "components/AppComponents/AppBox/AppBox";
-import useVaultContext from "../../../../context/vault";
+import useVaultContext from "context/vault";
 import { useEffect, useState } from "react";
 
 const StatusBarWrapper = styled(Box)`
