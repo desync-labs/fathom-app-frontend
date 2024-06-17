@@ -22,7 +22,7 @@ import {
 } from "components/AppComponents/AppBox/AppBox";
 import PositionListItem from "components/PositionList/PositionListItem";
 import PositionListItemMobile from "components/PositionList/PositionListItemMobile";
-import useOpenPositionList from "hooks/useOpenPositionList";
+import useOpenPositionList from "hooks/Positions/useOpenPositionList";
 import { styled } from "@mui/material/styles";
 import { COUNT_PER_PAGE } from "utils/Constants";
 

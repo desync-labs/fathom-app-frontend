@@ -17,3 +17,14 @@ export const StableSwapPaper = styled(AppPaper)`
   border: 1px solid #253656;
   border-radius: 16px;
 `;
+
+export const VaultPaper = styled(AppPaper)`
+  border-radius: 16px;
+  border: 1px solid #2c4066;
+  background: #132340;
+  padding: 24px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    border-radius: 12px;
+    padding: 24px 16px;
+  }
+`;

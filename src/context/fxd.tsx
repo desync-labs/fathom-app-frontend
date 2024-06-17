@@ -6,7 +6,7 @@ import {
   useContext,
   SetStateAction,
 } from "react";
-import useDashboardContext from "hooks/useDashboardContext";
+import useDashboardContext from "hooks/General/useDashboardContext";
 
 export type UseFxdContextReturn = {
   loadingStats: boolean;

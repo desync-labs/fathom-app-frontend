@@ -2,7 +2,7 @@ import BigNumber from "bignumber.js";
 import { CircularProgress, Container, Grid } from "@mui/material";
 import { PageHeader } from "components/Dashboard/PageHeader";
 import { StableSwapPaper } from "components/AppComponents/AppPaper/AppPaper";
-import useStableSwapManageFees from "hooks/useStableSwapManageFees";
+import useStableSwapManageFees from "hooks/StableSwap/useStableSwapManageFees";
 import {
   StableSwapInfoContainer,
   StableSwapInfoWrapper,

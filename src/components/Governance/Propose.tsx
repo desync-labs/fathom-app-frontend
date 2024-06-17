@@ -23,7 +23,7 @@ import {
   ButtonSecondary,
 } from "components/AppComponents/AppButton/AppButton";
 import { getTokenLogoURL } from "utils/tokenLogo";
-import useCreateProposal from "hooks/useCreateProposal";
+import useCreateProposal from "hooks/Governance/useCreateProposal";
 
 import MuiInfoIcon from "@mui/icons-material/Info";
 import { styled } from "@mui/material/styles";

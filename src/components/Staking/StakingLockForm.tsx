@@ -17,7 +17,7 @@ import {
   ButtonPrimary,
   MaxButton,
 } from "components/AppComponents/AppButton/AppButton";
-import useStakingLockForm from "hooks/useStakingLockForm";
+import useStakingLockForm from "hooks/Staking/useStakingLockForm";
 import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
 import Period from "components/Staking/Components/Period";
 import { getTokenLogoURL } from "utils/tokenLogo";

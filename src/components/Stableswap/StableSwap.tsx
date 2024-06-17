@@ -14,7 +14,7 @@ import {
   AppFormLabel,
   AppTextField,
 } from "components/AppComponents/AppForm/AppForm";
-import useStableSwap from "hooks/useStableSwap";
+import useStableSwap from "hooks/StableSwap/useStableSwap";
 
 import { formatNumber, formatPercentage } from "utils/format";
 

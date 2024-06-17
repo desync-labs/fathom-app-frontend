@@ -13,7 +13,11 @@ export const VaultAboutTitle = styled(Typography)`
   font-weight: 600;
   line-height: 24px;
   color: #fff;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    font-size: 14px;
+  }
 `;
 
 vaultDescription["0x50d150069a0fce09e6ded55a75aec67d2be79037"] = (
