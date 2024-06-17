@@ -12,7 +12,7 @@ import { useServices } from "context/services";
 import useSyncContext from "context/sync";
 import BigNumber from "bignumber.js";
 import dayjs from "dayjs";
-import useConnector from "./connector";
+import useConnector from "context/connector";
 import { ChainId } from "connectors/networks";
 
 type PricesProviderType = {

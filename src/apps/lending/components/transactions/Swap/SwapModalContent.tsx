@@ -25,17 +25,17 @@ import {
   ComputedUserReserveData,
   useAppDataContext,
 } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
-import { ModalWrapperProps } from "../FlowCommons/ModalWrapper";
-import { TxSuccessView } from "../FlowCommons/Success";
+import { ModalWrapperProps } from "apps/lending/components/transactions/FlowCommons/ModalWrapper";
+import { TxSuccessView } from "apps/lending/components/transactions/FlowCommons/Success";
 import {
   ErrorType,
   getAssetCollateralType,
   useFlashloan,
   zeroLTVBlockingWithdraw,
-} from "../utils";
-import { ParaswapErrorDisplay } from "../Warnings/ParaswapErrorDisplay";
-import { SwapActions } from "./SwapActions";
-import { SwapModalDetails } from "./SwapModalDetails";
+} from "apps/lending/components/transactions/utils";
+import { ParaswapErrorDisplay } from "apps/lending/components/transactions/Warnings/ParaswapErrorDisplay";
+import { SwapActions } from "apps/lending/components/transactions/Swap/SwapActions";
+import { SwapModalDetails } from "apps/lending/components/transactions/Swap/SwapModalDetails";
 
 export type SupplyProps = {
   underlyingAsset: string;

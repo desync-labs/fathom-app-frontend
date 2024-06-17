@@ -1,8 +1,8 @@
 import InfoIcon from "@mui/icons-material/Info";
 import { Box, SvgIcon } from "@mui/material";
 
-import { ContentWithTooltip } from "../ContentWithTooltip";
-import { BorrowDisabledWarning } from "../Warnings/BorrowDisabledWarning";
+import { ContentWithTooltip } from "apps/lending/components/ContentWithTooltip";
+import { BorrowDisabledWarning } from "apps/lending/components/Warnings/BorrowDisabledWarning";
 
 export const BorrowDisabledToolTip = () => {
   return (

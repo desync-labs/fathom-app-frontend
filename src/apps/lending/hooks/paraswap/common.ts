@@ -17,7 +17,7 @@ import {
 } from "@paraswap/sdk";
 import { RateOptions } from "@paraswap/sdk/dist/methods/swap/rates";
 
-import { ComputedReserveData } from "../app-data-provider/useAppDataProvider";
+import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 
 export type UseSwapProps = {
   chainId: ChainId;

@@ -33,9 +33,9 @@ import {
   DetailsIncentivesLine,
   DetailsUnwrapSwitch,
   TxModalDetails,
-} from "../FlowCommons/TxModalDetails";
-import { BorrowActions } from "./BorrowActions";
-import { BorrowAmountWarning } from "./BorrowAmountWarning";
+} from "apps/lending/components/transactions/FlowCommons/TxModalDetails";
+import { BorrowActions } from "apps/lending/components/transactions/Borrow/BorrowActions";
+import { BorrowAmountWarning } from "apps/lending/components/transactions/Borrow/BorrowAmountWarning";
 import { ParameterChangeWarning } from "apps/lending/components/transactions/Borrow/ParameterChangeWarning";
 
 export enum ErrorType {

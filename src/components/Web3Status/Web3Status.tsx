@@ -27,7 +27,7 @@ import useSharedContext from "context/shared";
 import AppPopover, {
   PopoverType,
 } from "components/AppComponents/AppPopover/AppPopover";
-import { DEFAULT_CHAIN_ID } from "../../utils/Constants";
+import { DEFAULT_CHAIN_ID } from "utils/Constants";
 
 const NetworkPaper = styled(AppPaper)`
   background: #253656;

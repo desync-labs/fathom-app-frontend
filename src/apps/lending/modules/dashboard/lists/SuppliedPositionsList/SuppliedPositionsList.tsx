@@ -21,7 +21,7 @@ import {
 } from "apps/lending/utils/dashboardSortUtils";
 import { ListTopInfoItem } from "apps/lending/modules/dashboard/lists/ListTopInfoItem";
 import { DashboardContentNoData } from "apps/lending/modules/dashboard/DashboardContentNoData";
-import { ListButtonsColumn } from "../ListButtonsColumn";
+import { ListButtonsColumn } from "apps/lending/modules/dashboard/lists/ListButtonsColumn";
 import { ListLoader } from "apps/lending/modules/dashboard/lists/ListLoader";
 import { SuppliedPositionsListItem } from "apps/lending/modules/dashboard/lists/SuppliedPositionsList/SuppliedPositionsListItem";
 import { SuppliedPositionsListMobileItem } from "apps/lending/modules/dashboard/lists/SuppliedPositionsList/SuppliedPositionsListMobileItem";

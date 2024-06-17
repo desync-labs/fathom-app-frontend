@@ -2,8 +2,11 @@ import { Box, Skeleton } from "@mui/material";
 import BigNumber from "bignumber.js";
 import { GENERAL } from "apps/lending/utils/mixPanelEvents";
 
-import { FormattedNumber } from "../primitives/FormattedNumber";
-import { TextWithTooltip, TextWithTooltipProps } from "../TextWithTooltip";
+import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
+import {
+  TextWithTooltip,
+  TextWithTooltipProps,
+} from "apps/lending/components/TextWithTooltip";
 
 interface PriceImpactTooltipProps extends TextWithTooltipProps {
   loading: boolean;

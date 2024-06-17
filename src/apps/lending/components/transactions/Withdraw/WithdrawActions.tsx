@@ -4,7 +4,7 @@ import { useTransactionHandler } from "apps/lending/helpers/useTransactionHandle
 import { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 import { useRootStore } from "apps/lending/store/root";
 
-import { TxActionsWrapper } from "../TxActionsWrapper";
+import { TxActionsWrapper } from "apps/lending/components/transactions/TxActionsWrapper";
 
 export interface WithdrawActionsProps extends BoxProps {
   poolReserve: ComputedReserveData;

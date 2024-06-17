@@ -13,7 +13,7 @@ import {
 } from "apps/lending/hooks/paraswap/common";
 import { useRootStore } from "apps/lending/store/root";
 
-import { TxActionsWrapper } from "../TxActionsWrapper";
+import { TxActionsWrapper } from "apps/lending/components/transactions/TxActionsWrapper";
 
 interface SwapBaseProps extends BoxProps {
   amountToSwap: string;

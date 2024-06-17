@@ -19,7 +19,7 @@ import { BigNumber } from "bignumber.js";
 import { bisector, max } from "d3-array";
 import { Fragment, useCallback, useMemo } from "react";
 
-import type { Fields } from "./InterestRateModelGraphContainer";
+import type { Fields } from "apps/lending/modules/reserve-overview/graphs/InterestRateModelGraphContainer";
 
 type TooltipData = Rate;
 

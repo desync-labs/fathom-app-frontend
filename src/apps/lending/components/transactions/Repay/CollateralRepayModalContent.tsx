@@ -17,17 +17,24 @@ import { useWeb3Context } from "apps/lending/libs/hooks/useWeb3Context";
 import { ListSlippageButton } from "apps/lending/modules/dashboard/lists/SlippageList";
 import { calculateHFAfterRepay } from "apps/lending/utils/hfUtils";
 
-import { Asset, AssetInput } from "../AssetInput";
-import { ModalWrapperProps } from "../FlowCommons/ModalWrapper";
-import { TxSuccessView } from "../FlowCommons/Success";
+import {
+  Asset,
+  AssetInput,
+} from "apps/lending/components/transactions/AssetInput";
+import { ModalWrapperProps } from "apps/lending/components/transactions/FlowCommons/ModalWrapper";
+import { TxSuccessView } from "apps/lending/components/transactions/FlowCommons/Success";
 import {
   DetailsHFLine,
   DetailsNumberLineWithSub,
   TxModalDetails,
-} from "../FlowCommons/TxModalDetails";
-import { ErrorType, useFlashloan, zeroLTVBlockingWithdraw } from "../utils";
-import { ParaswapErrorDisplay } from "../Warnings/ParaswapErrorDisplay";
-import { CollateralRepayActions } from "./CollateralRepayActions";
+} from "apps/lending/components/transactions/FlowCommons/TxModalDetails";
+import {
+  ErrorType,
+  useFlashloan,
+  zeroLTVBlockingWithdraw,
+} from "apps/lending/components/transactions/utils";
+import { ParaswapErrorDisplay } from "apps/lending/components/transactions/Warnings/ParaswapErrorDisplay";
+import { CollateralRepayActions } from "apps/lending/components/transactions/Repay/CollateralRepayActions";
 
 export function CollateralRepayModalContent({
   poolReserve,
