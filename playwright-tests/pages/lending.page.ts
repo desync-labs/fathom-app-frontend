@@ -26,6 +26,7 @@ export default class LendingPage extends BasePage {
   readonly liFmAssetSelect: Locator;
   readonly btnAddToWallet: Locator;
   readonly descriptionAddToWalletAllDoneModal: Locator;
+  readonly netWorthAmountText: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -71,6 +72,9 @@ export default class LendingPage extends BasePage {
     this.descriptionAddToWalletAllDoneModal = this.page.locator(
       "//p[text()='Add to wallet']//parent::button/preceding-sibling::p"
     );
+    this.netWorthAmountText = this.page.locator(
+      "//div[text()='Net worth']/parent::div/following-sibling::p"
+    );
   }
 
   async navigate(): Promise<void> {
@@ -78,8 +82,6 @@ export default class LendingPage extends BasePage {
   }
 
   async repayAllBorrowedAssetsFullyIfAny(): Promise<void> {
-    await this.page.waitForLoadState("load");
-    await this.page.waitForTimeout(2000);
     const isBorrowedEmpty = await this.paragraphBorrowEmpty.isVisible();
     if (isBorrowedEmpty) {
       expect(isBorrowedEmpty).toEqual(true);
@@ -98,7 +100,7 @@ export default class LendingPage extends BasePage {
         await this.btnMax.click();
         await expect(this.spanLoadingActionButton).toBeVisible();
         await expect(this.spanLoadingActionButton).not.toBeVisible({
-          timeout: 10000,
+          timeout: 20000,
         });
         const isApprovalButtonVisible = await this.btnApproval.isVisible();
         const isApproveChangeVisible = await this.btnApproveChange.isVisible();
@@ -115,7 +117,7 @@ export default class LendingPage extends BasePage {
           timeout: 90000,
         });
         await this.btnCloseAllDoneModal.click();
-        await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(3000);
       }
       await this.page.waitForSelector("//p[text()='Nothing borrowed yet.']", {
         timeout: 5000,
@@ -126,8 +128,6 @@ export default class LendingPage extends BasePage {
   }
 
   async withdrawAllSuppliedAssetsFullyIfAny(): Promise<void> {
-    await this.page.waitForLoadState("load");
-    await this.page.waitForTimeout(2000);
     const isSuppliedEmpty = await this.paragraphSupplyEmpty.isVisible();
     if (isSuppliedEmpty) {
       expect(isSuppliedEmpty).toEqual(true);
@@ -148,7 +148,7 @@ export default class LendingPage extends BasePage {
         await this.btnMax.click();
         await expect(this.spanLoadingActionButton).toBeVisible();
         await expect(this.spanLoadingActionButton).not.toBeVisible({
-          timeout: 10000,
+          timeout: 20000,
         });
         const isApprovalButtonVisible = await this.btnApproval.isVisible();
         const isApproveChangeVisible = await this.btnApproveChange.isVisible();
@@ -165,7 +165,7 @@ export default class LendingPage extends BasePage {
           timeout: 50000,
         });
         await this.btnCloseAllDoneModal.click();
-        await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(3000);
       }
       await this.page.waitForSelector("//p[text()='Nothing supplied yet.']", {
         timeout: 5000,
@@ -251,6 +251,7 @@ export default class LendingPage extends BasePage {
     assetName: LendingAssets;
   }): Promise<number> {
     await this.page.waitForLoadState("load");
+    await this.page.waitForTimeout(1000);
     const isSuppliedEmpty = await this.paragraphSupplyEmpty.isVisible();
     const isAssetSupplied = await this.getDashboardSuppliedListItemLocator({
       assetName,
@@ -352,6 +353,7 @@ export default class LendingPage extends BasePage {
     assetName: LendingAssets;
   }): Promise<number> {
     await this.page.waitForLoadState("load");
+    await this.page.waitForTimeout(1000);
     const isSuppliedEmpty = await this.paragraphSupplyEmpty.isVisible();
     const isAssetSupplied = await this.getDashboardBorrowedListItemLocator({
       assetName,
@@ -698,5 +700,13 @@ export default class LendingPage extends BasePage {
   async addTokenToWalletAllDoneModal(): Promise<void> {
     await this.btnAddToWallet.click();
     await metamask.confirmAddToken();
+  }
+
+  async validateLendingPageLoaded(): Promise<void> {
+    await this.page.waitForLoadState("load");
+    await expect(this.netWorthAmountText).toBeVisible({
+      timeout: 10000,
+    });
+    await this.page.waitForTimeout(1000);
   }
 }
