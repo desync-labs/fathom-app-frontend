@@ -6,13 +6,8 @@ import {
   AppListFees,
   VaultContractAddress,
   VaultDescriptionWrapper,
-  VaultInfoWrapper,
 } from "components/Vaults/VaultDetail/VaultDetailInfoTabAbout";
 import { AppListItem } from "components/AppComponents/AppList/AppList";
-import {
-  ChartTitle,
-  ChartWrapper,
-} from "components/Vaults/VaultDetail/VaultHistoryChart";
 import {
   VaultIndicatorItemLabel,
   VaultIndicatorItemWrapper,
@@ -159,7 +154,7 @@ export const VaultAboutSkeleton = () => {
 
 export const VaultStrategiesSkeleton = () => {
   return (
-    <VaultInfoWrapper>
+    <>
       <Box>
         <StrategySelectorLabel>Strategy</StrategySelectorLabel>
         <StrategySelector>
@@ -250,17 +245,8 @@ export const VaultStrategiesSkeleton = () => {
             />
           </VaultIndicatorItemWrapper>
         </VaultIndicatorsWrapper>
-        <ChartWrapper>
-          <ChartTitle>Historical APY</ChartTitle>
-          <CustomSkeleton
-            variant={"rounded"}
-            animation={"wave"}
-            width={"100%"}
-            height={155}
-          />
-        </ChartWrapper>
       </Box>
-    </VaultInfoWrapper>
+    </>
   );
 };
 

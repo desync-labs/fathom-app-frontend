@@ -4,6 +4,7 @@ import { IVaultStrategy } from "fathom-sdk";
 import useVaultContext from "context/vault";
 import { strategyTitle } from "utils/getStrategyTitleAndDescription";
 import VaultStrategyItem from "components/Vaults/VaultDetail/VaultStrategyItem";
+import { VaultStrategiesSkeleton } from "../../AppComponents/AppSkeleton/AppSkeleton";
 
 export const VaultInfoWrapper = styled(Box)`
   display: flex;
@@ -94,13 +95,19 @@ const NoStrategiesTitle = styled(Typography)`
 `;
 
 const VaultDetailInfoTabStrategies = () => {
-  const { vault, performanceFee, reports, historicalApr, reportsLoading } =
-    useVaultContext();
+  const {
+    vault,
+    vaultLoading,
+    performanceFee,
+    reports,
+    historicalApr,
+    isReportsLoaded,
+  } = useVaultContext();
   const { strategies, balanceTokens, token } = vault;
 
   const [activeStrategy, setActiveStrategy] = useState(0);
 
-  if (!strategies.length) {
+  if (!vault?.strategies?.length && !vaultLoading) {
     return (
       <VaultInfoWrapper>
         <NoStrategiesTitle>Has no strategies yet</NoStrategiesTitle>
@@ -110,41 +117,51 @@ const VaultDetailInfoTabStrategies = () => {
 
   return (
     <VaultInfoWrapper>
-      <Box>
-        <StrategySelectorLabel>Strategy</StrategySelectorLabel>
-        <StrategySelector>
+      {vaultLoading ? (
+        <VaultStrategiesSkeleton />
+      ) : (
+        <>
+          <Box>
+            <StrategySelectorLabel>Strategy</StrategySelectorLabel>
+            <StrategySelector>
+              {strategies.map((strategy: IVaultStrategy, index: number) => (
+                <Button
+                  key={strategy.id}
+                  onClick={() => setActiveStrategy(index)}
+                  className={
+                    activeStrategy === index
+                      ? "activeStrategyItem"
+                      : "strategyItem"
+                  }
+                >
+                  {strategyTitle[strategy.id.toLowerCase()] ? (
+                    strategyTitle[strategy.id.toLowerCase()]
+                  ) : (
+                    <>
+                      FXD: Direct Incentive - Educational Strategy {index + 1}
+                    </>
+                  )}
+                </Button>
+              ))}
+            </StrategySelector>
+          </Box>
           {strategies.map((strategy: IVaultStrategy, index: number) => (
-            <Button
+            <VaultStrategyItem
+              vaultId={vault.id}
+              strategyData={strategy}
+              reports={reports[strategy.id] || []}
+              historicalApr={historicalApr[strategy.id] || []}
+              vaultBalanceTokens={balanceTokens}
+              tokenName={token.name}
+              performanceFee={performanceFee}
+              index={index}
+              isShow={activeStrategy === index}
               key={strategy.id}
-              onClick={() => setActiveStrategy(index)}
-              className={
-                activeStrategy === index ? "activeStrategyItem" : "strategyItem"
-              }
-            >
-              {strategyTitle[strategy.id.toLowerCase()] ? (
-                strategyTitle[strategy.id.toLowerCase()]
-              ) : (
-                <>FXD: Direct Incentive - Educational Strategy {index + 1}</>
-              )}
-            </Button>
+              reportsLoading={!isReportsLoaded}
+            />
           ))}
-        </StrategySelector>
-      </Box>
-      {strategies.map((strategy: IVaultStrategy, index: number) => (
-        <VaultStrategyItem
-          vaultId={vault.id}
-          strategyData={strategy}
-          reports={reports[strategy.id] || []}
-          historicalApr={historicalApr[strategy.id] || []}
-          vaultBalanceTokens={balanceTokens}
-          tokenName={token.name}
-          performanceFee={performanceFee}
-          index={index}
-          isShow={activeStrategy === index}
-          key={strategy.id}
-          reportsLoading={reportsLoading}
-        />
-      ))}
+        </>
+      )}
     </VaultInfoWrapper>
   );
 };

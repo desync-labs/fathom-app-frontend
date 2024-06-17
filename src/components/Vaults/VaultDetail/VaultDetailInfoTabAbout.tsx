@@ -4,15 +4,10 @@ import { Box, styled } from "@mui/material";
 import { IVaultStrategyReport } from "fathom-sdk";
 import { AppListVault } from "components/AppComponents/AppList/AppList";
 import VaultHistoryChart, {
-  ChartTitle,
-  ChartWrapper,
   HistoryChartDataType,
 } from "components/Vaults/VaultDetail/VaultHistoryChart";
 import useVaultContext from "context/vault";
-import {
-  CustomSkeleton,
-  VaultAboutSkeleton,
-} from "components/AppComponents/AppSkeleton/AppSkeleton";
+import { VaultAboutSkeleton } from "components/AppComponents/AppSkeleton/AppSkeleton";
 import VaultAboutTabContent from "components/Vaults/VaultDetail/VaultAboutTabContent";
 
 export const VaultInfoWrapper = styled(Box)`
@@ -104,7 +99,7 @@ export const AppListFees = styled(AppListVault)`
 `;
 
 const VaultDetailInfoTabAbout = () => {
-  const { vault, reports, historicalApr, vaultLoading, vaultPositionLoading } =
+  const { vault, reports, historicalApr, vaultLoading, isReportsLoaded } =
     useVaultContext();
   const [earnedHistoryArr, setEarnedHistoryArr] = useState<
     HistoryChartDataType[]
@@ -152,24 +147,13 @@ const VaultDetailInfoTabAbout = () => {
       ) : (
         <VaultAboutTabContent />
       )}
-      {vaultPositionLoading ? (
-        <ChartWrapper>
-          <ChartTitle>Сumulative Earnings</ChartTitle>
-          <CustomSkeleton
-            variant={"rounded"}
-            animation={"wave"}
-            width={"100%"}
-            height={155}
-          />
-        </ChartWrapper>
-      ) : (
-        <VaultHistoryChart
-          title={"Cumulative Earnings"}
-          chartDataArray={earnedHistoryArr}
-          valueLabel="Earnings"
-          valueUnits={` ${vault?.token?.name}`}
-        />
-      )}
+      <VaultHistoryChart
+        title={"Cumulative Earnings"}
+        chartDataArray={earnedHistoryArr}
+        valueLabel="Earnings"
+        valueUnits={` ${vault?.token?.name}`}
+        isLoading={!isReportsLoaded}
+      />
     </VaultInfoWrapper>
   );
 };

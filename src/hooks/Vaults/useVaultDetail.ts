@@ -88,6 +88,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
   const [reports, setReports] = useState<
     Record<string, IVaultStrategyReport[]>
   >({});
+  const [isReportsLoaded, setIsReportsLoaded] = useState<boolean>(false);
 
   const [historicalApr, setHistoricalApr] = useState<
     Record<string, IVaultStrategyHistoricalApr[]>
@@ -130,14 +131,11 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     }
   );
 
-  const [loadReports, { loading: reportsLoading }] = useLazyQuery(
-    VAULT_STRATEGY_REPORTS,
-    {
-      context: { clientName: "vaults", chainId },
-      variables: { chainId },
-      fetchPolicy: "no-cache",
-    }
-  );
+  const [loadReports] = useLazyQuery(VAULT_STRATEGY_REPORTS, {
+    context: { clientName: "vaults", chainId },
+    variables: { chainId },
+    fetchPolicy: "no-cache",
+  });
 
   const [
     loadPositionTransactions,
@@ -196,6 +194,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
             ...(data?.strategyHistoricalAprs || []),
           ],
         }));
+        setIsReportsLoaded(true);
       }
     });
   };
@@ -591,7 +590,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     managedStrategiesIds,
     isUserManager,
     updateVaultPositionLoading,
-    reportsLoading,
+    isReportsLoaded,
   };
 };
 
