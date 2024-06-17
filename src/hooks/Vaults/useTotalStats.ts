@@ -7,6 +7,7 @@ import {
 } from "apollo/queries";
 import BigNumber from "bignumber.js";
 import { IVaultPosition } from "fathom-sdk";
+import useSyncContext from "../../context/sync";
 
 const TRANSACTIONS_PER_PAGE = 1000;
 
@@ -27,6 +28,7 @@ const useTotalStats = (
   const [withdrawalsList, setWithdrawalsList] = useState<TransactionItem[]>([]);
 
   const { chainId, account } = useConnector();
+  const { syncVault, prevSyncVault } = useSyncContext();
 
   const [loadAccountDeposits, { loading: fetchDepositsLoading }] = useLazyQuery(
     VAULTS_ACCOUNT_DEPOSITS,
@@ -122,6 +124,13 @@ const useTotalStats = (
     fetchAccountDeposits([]);
     fetchAccountWithdrawals([]);
   }, [account, fetchAccountDeposits, fetchAccountWithdrawals]);
+
+  useEffect(() => {
+    if (syncVault && !prevSyncVault) {
+      fetchAccountDeposits([]);
+      fetchAccountWithdrawals([]);
+    }
+  }, [syncVault, prevSyncVault]);
 
   const balanceEarned = useMemo(() => {
     if (totalBalance === "-1") return "0";

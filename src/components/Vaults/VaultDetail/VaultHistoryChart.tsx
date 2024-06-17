@@ -250,7 +250,11 @@ const VaultHistoryChart: FC<VaultHistoryChartPropTypes> = ({
   return (
     <ChartWrapper>
       <ChartTitle>
-        {title} <span>{formatNumber(maxValue)}</span>
+        {title}{" "}
+        <span>
+          {formatNumber(maxValue)}
+          {valueUnits}
+        </span>
       </ChartTitle>
       <ResponsiveContainer {...containerProps}>
         <LineChart
