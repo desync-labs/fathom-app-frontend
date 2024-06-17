@@ -33,12 +33,23 @@ const VaultDetailDepositForm = () => {
   if (vaultLoading || !vault.id) {
     return (
       <VaultPaper sx={{ marginBottom: isMobile ? "20px" : "24px" }}>
-        <CustomSkeleton
-          variant={"rounded"}
-          width={"100%"}
-          height={isMobile ? 464 : 268}
-          animation={"wave"}
-        />
+        <Typography variant="h3" sx={{ fontSize: isMobile ? "14px" : "16px" }}>
+          Deposit
+        </Typography>
+        <VaultFormWrapper>
+          <CustomSkeleton
+            variant={"rounded"}
+            width={"100%"}
+            height={isMobile ? 200 : 222}
+            animation={"wave"}
+          />
+          <CustomSkeleton
+            variant={"rounded"}
+            width={"100%"}
+            height={isMobile ? 211 : 222}
+            animation={"wave"}
+          />
+        </VaultFormWrapper>
       </VaultPaper>
     );
   }
