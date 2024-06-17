@@ -27,10 +27,10 @@ const VaultDetailFormColumn = styled(Box)`
 `;
 
 const VaultDetailDepositForm = () => {
-  const { vault, vaultLoading, vaultPositionLoading } = useVaultContext();
+  const { vault, vaultLoading } = useVaultContext();
   const { isMobile } = useSharedContext();
 
-  if (vaultPositionLoading || vaultLoading || !vault.id) {
+  if (vaultLoading || !vault.id) {
     return (
       <VaultPaper sx={{ marginBottom: isMobile ? "20px" : "24px" }}>
         <CustomSkeleton

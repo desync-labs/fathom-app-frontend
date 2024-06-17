@@ -56,7 +56,7 @@ export const StatsValueSkeleton: FC<StatsValueSkeletonProps> = ({
 };
 export const VaultAboutSkeleton = () => {
   return (
-    <VaultInfoWrapper>
+    <>
       <VaultDescriptionWrapper>
         <VaultAboutTitle variant={"h5"}>Description</VaultAboutTitle>
         <CustomSkeleton
@@ -153,16 +153,7 @@ export const VaultAboutSkeleton = () => {
           </AppListItem>
         </AppListFees>
       </Box>
-      <ChartWrapper>
-        <ChartTitle>Сumulative Earnings</ChartTitle>
-        <CustomSkeleton
-          variant={"rounded"}
-          animation={"wave"}
-          width={"100%"}
-          height={155}
-        />
-      </ChartWrapper>
-    </VaultInfoWrapper>
+    </>
   );
 };
 export const VaultStrategiesSkeleton = () => {
