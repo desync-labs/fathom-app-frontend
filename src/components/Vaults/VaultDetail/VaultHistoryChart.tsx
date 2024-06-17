@@ -18,6 +18,7 @@ import { formatNumber } from "utils/format";
 import useSharedContext from "context/shared";
 import { AppList, AppListItem } from "components/AppComponents/AppList/AppList";
 import dayjs from "dayjs";
+import { AppSkeletonValue } from "../../AppComponents/AppSkeleton/AppSkeleton";
 
 export const ChartWrapper = styled(Box)`
   position: relative;
@@ -91,6 +92,7 @@ type VaultHistoryChartPropTypes = {
   chartDataArray: HistoryChartDataType[];
   valueLabel: string;
   valueUnits?: string;
+  isLoading?: boolean;
 };
 
 interface CustomizedYAxisTickProps {
@@ -149,6 +151,7 @@ const VaultHistoryChart: FC<VaultHistoryChartPropTypes> = ({
   chartDataArray,
   valueLabel,
   valueUnits,
+  isLoading = false,
 }) => {
   const [minValue, setMinValue] = useState<number>(0);
   const [maxValue, setMaxValue] = useState<number>(0);
@@ -221,6 +224,20 @@ const VaultHistoryChart: FC<VaultHistoryChartPropTypes> = ({
 
   if (isMobile) {
     containerProps["aspect"] = 2.1;
+  }
+
+  if (isLoading) {
+    return (
+      <ChartWrapper>
+        <ChartTitle>{title}</ChartTitle>
+        <AppSkeletonValue
+          width={"100%"}
+          height={180}
+          variant="rounded"
+          animation={"wave"}
+        />
+      </ChartWrapper>
+    );
   }
 
   return (

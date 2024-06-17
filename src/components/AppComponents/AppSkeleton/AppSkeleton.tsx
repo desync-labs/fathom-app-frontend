@@ -156,6 +156,7 @@ export const VaultAboutSkeleton = () => {
     </>
   );
 };
+
 export const VaultStrategiesSkeleton = () => {
   return (
     <VaultInfoWrapper>

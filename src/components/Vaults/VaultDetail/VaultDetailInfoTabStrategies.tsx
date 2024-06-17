@@ -94,7 +94,8 @@ const NoStrategiesTitle = styled(Typography)`
 `;
 
 const VaultDetailInfoTabStrategies = () => {
-  const { vault, performanceFee, reports, historicalApr } = useVaultContext();
+  const { vault, performanceFee, reports, historicalApr, reportsLoading } =
+    useVaultContext();
   const { strategies, balanceTokens, token } = vault;
 
   const [activeStrategy, setActiveStrategy] = useState(0);
@@ -141,6 +142,7 @@ const VaultDetailInfoTabStrategies = () => {
           index={index}
           isShow={activeStrategy === index}
           key={strategy.id}
+          reportsLoading={reportsLoading}
         />
       ))}
     </VaultInfoWrapper>
