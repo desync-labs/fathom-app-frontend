@@ -1,4 +1,3 @@
-import { FC, MouseEvent } from "react";
 import useVaultList from "hooks/Vaults/useVaultList";
 import useSharedContext from "context/shared";
 import VaultsTotalStats from "components/Vaults/VaultList/VaultsTotalStats";
@@ -7,15 +6,7 @@ import VaultsListMobile from "components/Vaults/VaultList/VaultsListMobile";
 import VaultFilters from "components/Vaults/VaultList/VaultFilters";
 import VaultPageHeader from "components/Vaults/VaultList/VaultPageHeader";
 
-type VaultListViewPropsType = {
-  isMobileFiltersOpen: boolean;
-  openMobileFilterMenu: (event: MouseEvent<HTMLElement>) => void;
-};
-
-const VaultListView: FC<VaultListViewPropsType> = ({
-  isMobileFiltersOpen,
-  openMobileFilterMenu,
-}) => {
+const VaultListView = () => {
   const {
     vaultSortedList,
     vaultsLoading,

@@ -284,11 +284,9 @@ const MainLayout = () => {
     open,
     isMetamask,
     isWalletConnect,
-    isMobileFiltersOpen,
     toggleDrawer,
     mainBlockClickHandler,
     openMobileMenu,
-    openMobileFilterMenu,
     drawerRef,
     showToggleDrawerBtn,
     setOpenMobile,
@@ -622,15 +620,7 @@ const MainLayout = () => {
                 ) : null}
                 {!chainId || DISPLAY_VAULTS.includes(chainId) ? (
                   <Route path="/vaults" element={<VaultsView />}>
-                    <Route
-                      index
-                      element={
-                        <VaultListView
-                          isMobileFiltersOpen={isMobileFiltersOpen}
-                          openMobileFilterMenu={openMobileFilterMenu}
-                        />
-                      }
-                    />
+                    <Route index element={<VaultListView />} />
                     <Route path="tutorial" index element={<VaultTutorial />} />
                     <Route path=":vaultAddress" element={<VaultDetailView />} />
                   </Route>

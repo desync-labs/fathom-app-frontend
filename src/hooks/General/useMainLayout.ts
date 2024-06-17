@@ -32,8 +32,6 @@ const useMainLayout = () => {
   const [width, height] = useWindowSize();
   const [showFthmBalanceModal, setShowFthmBalanceModal] =
     useState<boolean>(false);
-  const [isMobileFiltersOpen, setIsMobileFiltersOpen] =
-    useState<boolean>(false);
   const [savedOpen, setSavedOpen] = useState<boolean>(false);
 
   const aggregateBalance: TokenAmount | undefined = useAggregateFTHMBalance();
@@ -106,18 +104,7 @@ const useMainLayout = () => {
       setOpenMobile(false);
       setOpenConnector(false);
     }
-    if (isMobile && isMobileFiltersOpen) {
-      setIsMobileFiltersOpen(false);
-    }
-  }, [
-    isMobile,
-    openMobile,
-    openConnector,
-    isMobileFiltersOpen,
-    setOpenMobile,
-    setOpenConnector,
-    setIsMobileFiltersOpen,
-  ]);
+  }, [isMobile, openMobile, openConnector, setOpenMobile, setOpenConnector]);
 
   const openMobileMenu = useCallback(
     (event: MouseEvent<HTMLElement>) => {
@@ -127,16 +114,6 @@ const useMainLayout = () => {
       setOpenMobile(true);
     },
     [setOpenMobile]
-  );
-
-  const openMobileFilterMenu = useCallback(
-    (event: MouseEvent<HTMLElement>) => {
-      event.stopPropagation();
-      event.preventDefault();
-
-      setIsMobileFiltersOpen(!isMobileFiltersOpen);
-    },
-    [setIsMobileFiltersOpen, isMobileFiltersOpen]
   );
 
   return {
@@ -151,7 +128,6 @@ const useMainLayout = () => {
     disconnect,
     isMetamask,
     isWalletConnect,
-    isMobileFiltersOpen,
     toggleDrawer,
     openMobile,
     setOpenMobile,
@@ -159,7 +135,6 @@ const useMainLayout = () => {
     setOpenConnector,
     mainBlockClickHandler,
     openMobileMenu,
-    openMobileFilterMenu,
     drawerRef,
     showToggleDrawerBtn,
     userBalance,
