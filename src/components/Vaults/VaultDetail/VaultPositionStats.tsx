@@ -269,7 +269,7 @@ const VaultPositionStats = () => {
                   />
                 ) : BigNumber(balanceEarned).isGreaterThan(0) ? (
                   <>
-                    {formatNumber(BigNumber(balanceEarned || "0").toNumber()) +
+                    {formatNumber(Number(balanceEarned)) +
                       " " +
                       vault?.token?.symbol}
                     <UsdValue>
