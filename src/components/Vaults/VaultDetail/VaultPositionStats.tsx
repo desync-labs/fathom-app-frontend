@@ -24,7 +24,6 @@ const PositionStatItem = styled(Grid)`
     border: 1px solid #2c4066;
     background: #132340;
     padding: 12px 24px;
-    height: 100px;
   }
   ${({ theme }) => theme.breakpoints.down("sm")} {
     & > .MuiBox-root {
@@ -110,7 +109,7 @@ const VaultPositionStats = () => {
             }
           }
         });
-      });
+      }, 300);
     }
 
     return () => {
