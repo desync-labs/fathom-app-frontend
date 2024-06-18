@@ -347,9 +347,6 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
       fetchBalanceTokenType: FetchBalanceTokenType = FetchBalanceTokenType.FETCH
     ) => {
       if (fetchBalanceTokenType === FetchBalanceTokenType.PROMISE) {
-        console.log({
-          vaultPosition,
-        });
         setFetchBalanceLoading(true);
         return vaultService
           .previewRedeem(
