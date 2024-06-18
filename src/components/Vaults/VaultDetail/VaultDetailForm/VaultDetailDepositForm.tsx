@@ -30,6 +30,28 @@ const VaultDetailDepositForm = () => {
   const { vault, vaultLoading } = useVaultContext();
   const { isMobile } = useSharedContext();
 
+  const onClose = () => {
+    methods.reset();
+  };
+
+  const {
+    methods,
+    walletBalance,
+    isWalletFetching,
+    control,
+    deposit,
+    sharedToken,
+    approveBtn,
+    approvalPending,
+    openDepositLoading,
+    errors,
+    approve,
+    setMax,
+    validateMaxDepositValue,
+    handleSubmit,
+    onSubmit,
+  } = useVaultOpenDeposit(vault, onClose);
+
   if (vaultLoading || !vault.id) {
     return (
       <VaultPaper sx={{ marginBottom: isMobile ? "20px" : "24px" }}>
@@ -53,28 +75,6 @@ const VaultDetailDepositForm = () => {
       </VaultPaper>
     );
   }
-
-  const onClose = () => {
-    methods.reset();
-  };
-
-  const {
-    methods,
-    walletBalance,
-    isWalletFetching,
-    control,
-    deposit,
-    sharedToken,
-    approveBtn,
-    approvalPending,
-    openDepositLoading,
-    errors,
-    approve,
-    setMax,
-    validateMaxDepositValue,
-    handleSubmit,
-    onSubmit,
-  } = useVaultOpenDeposit(vault, onClose);
 
   return (
     <VaultPaper sx={{ marginBottom: isMobile ? "20px" : "24px" }}>

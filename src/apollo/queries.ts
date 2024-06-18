@@ -358,6 +358,7 @@ export const VAULT_STRATEGY_REPORTS = gql`
       skip: $reportsSkip
       where: { strategy: $strategy }
     ) {
+      id
       timestamp
       gain
       loss
@@ -398,8 +399,8 @@ export const ACCOUNT_VAULT_POSITIONS = gql`
 export const VAULT_FACTORIES = gql`
   query VaultFactories($chainId: String) {
     factories {
-      feeRecipient
       id
+      feeRecipient
       protocolFee
       timestamp
       vaultPackage

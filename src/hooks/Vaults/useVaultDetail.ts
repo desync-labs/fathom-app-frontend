@@ -254,63 +254,69 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     }
   }, [vaultItemData, vaultLoading, setVault]);
 
-  const updateVaultPosition = async (position: IVaultPosition) => {
-    try {
-      setUpdateVaultPositionLoading(true);
-      const balance = await poolService.getUserTokenBalance(
-        account,
-        position.shareToken.id
-      );
-
-      const previewRedeemValue = await vaultService.previewRedeem(
-        balance.toString(),
-        position.vault.id
-      );
-
-      const updatedVaultPosition = {
-        ...position,
-        balanceShares: balance.toString(),
-        balancePosition: BigNumber(previewRedeemValue.toString())
-          .dividedBy(10 ** 18)
-          .toString(),
-      };
-
-      setVaultPosition(updatedVaultPosition);
-    } catch (error) {
-      console.error("Error updating vault position:", error);
-    } finally {
-      setUpdateVaultPositionLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (account && vault.id && vaultService) {
+  const fetchVaultPosition = useCallback(() => {
+    return new Promise((resolve, reject) => {
       loadPosition({
         variables: { account: account.toLowerCase(), vault: vaultId },
-      }).then((res) => {
+      }).then(async (res) => {
         if (
           res.data?.accountVaultPositions &&
           res.data?.accountVaultPositions.length
         ) {
           const position = res.data.accountVaultPositions[0];
 
-          updateVaultPosition(position);
-          setVaultPosition(position);
+          try {
+            setUpdateVaultPositionLoading(true);
+            const balance = await poolService.getUserTokenBalance(
+              account,
+              position.shareToken.id
+            );
+
+            const previewRedeemValue = await vaultService.previewRedeem(
+              balance.toString(),
+              position.vault.id
+            );
+
+            const updatedVaultPosition = {
+              ...position,
+              balanceShares: balance.toString(),
+              balancePosition: BigNumber(previewRedeemValue.toString())
+                .dividedBy(10 ** 18)
+                .toString(),
+            };
+
+            setVaultPosition(updatedVaultPosition);
+            resolve(updatedVaultPosition);
+          } catch (error) {
+            console.error("Error updating vault position:", error);
+            setVaultPosition(position);
+            reject(position);
+          } finally {
+            setUpdateVaultPositionLoading(false);
+          }
         } else {
           setVaultPosition({} as IVaultPosition);
+          resolve({});
         }
       });
+    });
+  }, [
+    poolService,
+    vaultService,
+    vaultId,
+    account,
+    loadPosition,
+    setVaultPosition,
+    setUpdateVaultPositionLoading,
+  ]);
+
+  useEffect(() => {
+    if (account && vault.id && vaultService) {
+      fetchVaultPosition();
     } else {
       setVaultPosition({} as IVaultPosition);
     }
-  }, [
-    account,
-    vault,
-    loadPosition,
-    setVaultPosition,
-    poolService,
-    vaultService,
-  ]);
+  }, [fetchVaultPosition, account, vault, vaultService, setVaultPosition]);
 
   useEffect(() => {
     try {
@@ -341,6 +347,9 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
       fetchBalanceTokenType: FetchBalanceTokenType = FetchBalanceTokenType.FETCH
     ) => {
       if (fetchBalanceTokenType === FetchBalanceTokenType.PROMISE) {
+        console.log({
+          vaultPosition,
+        });
         setFetchBalanceLoading(true);
         return vaultService
           .previewRedeem(
@@ -394,7 +403,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
       if (account) {
         if (fetchType === TransactionFetchType.PROMISE) {
           return refetchTransactions({
-            variables: { account: account.toLowerCase() },
+            variables: { account: account.toLowerCase(), vault: vault.id },
           });
         }
 
@@ -454,18 +463,21 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
 
   useEffect(() => {
     if (syncVault && !prevSyncVault && vaultPosition && vault.id) {
-      Promise.all([
-        fetchPositionTransactions(TransactionFetchType.PROMISE),
-        fetchBalanceToken(FetchBalanceTokenType.PROMISE),
-      ]).then(([transactions, balanceToken]) => {
-        setBalanceToken(balanceToken as string);
-        transactions?.data?.deposits &&
-          setDepositsList(transactions?.data.deposits);
-        transactions?.data?.withdrawals &&
-          setWithdrawalsList(transactions?.data.withdrawals);
+      fetchVaultPosition().then(() => {
+        Promise.all([
+          fetchPositionTransactions(TransactionFetchType.PROMISE),
+          fetchBalanceToken(FetchBalanceTokenType.PROMISE),
+        ]).then(([transactions, balanceToken]) => {
+          setBalanceToken(balanceToken as string);
+          transactions?.data?.deposits &&
+            setDepositsList(transactions?.data.deposits);
+          transactions?.data?.withdrawals &&
+            setWithdrawalsList(transactions?.data.withdrawals);
+        });
       });
     }
   }, [
+    fetchVaultPosition,
     vaultPosition,
     vault,
     syncVault,

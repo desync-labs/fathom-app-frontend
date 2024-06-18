@@ -160,6 +160,7 @@ interface VaultListItemPreviewModalProps {
 const BreadcrumbsWrapperContainer = styled(Box)`
   display: flex;
   justify-content: space-between;
+  align-items: center;
 `;
 
 const VaultListItemPreviewModal: FC<VaultListItemPreviewModalProps> = ({
@@ -180,6 +181,7 @@ const VaultListItemPreviewModal: FC<VaultListItemPreviewModalProps> = ({
   const redirectToVaultDetail = useCallback(() => {
     navigate(`/vaults/${vault.id}`);
   }, [vault.id]);
+
   return (
     <FullScreenDialog
       fullScreen={true}
@@ -192,7 +194,7 @@ const VaultListItemPreviewModal: FC<VaultListItemPreviewModalProps> = ({
             vaultName={vault.name}
             handleCloseModal={handleClosePreview}
           />
-          <CloseIcon />
+          <CloseIcon sx={{ color: "#6d86b2" }} onClick={handleClosePreview} />
         </BreadcrumbsWrapperContainer>
         <AppFlexBox>
           <AppFlexBox sx={{ justifyContent: "flex-start", gap: "4px" }}>

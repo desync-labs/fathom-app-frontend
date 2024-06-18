@@ -24,6 +24,7 @@ const PositionStatItem = styled(Grid)`
     border: 1px solid #2c4066;
     background: #132340;
     padding: 12px 24px;
+    height: 100px;
   }
   ${({ theme }) => theme.breakpoints.down("sm")} {
     & > .MuiBox-root {
@@ -64,6 +65,14 @@ const PositionStatItemValue = styled(Box)`
   }
 `;
 
+const UsdValue = styled(Box)`
+  color: #6d86b2;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+`;
+
 const VaultPositionStats = () => {
   const {
     vault,
@@ -75,6 +84,10 @@ const VaultPositionStats = () => {
   const { fxdPrice } = usePricesContext();
   const { isMobile } = useSharedContext();
   const container = useRef<HTMLElement>(null);
+
+  console.log({
+    fxdPrice,
+  });
 
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
@@ -88,9 +101,18 @@ const VaultPositionStats = () => {
           heights.push((block.firstChild as HTMLElement).offsetHeight);
         });
         const maxHeight = Math.max(...heights);
-        blocks.forEach((block) => {
+        blocks.forEach((block, index) => {
           (block.firstChild as HTMLElement).style.height = `${maxHeight}px`;
           (block as HTMLElement).style.height = `${maxHeight}px`;
+          if (isMobile) {
+            if (index % 2 === 0) {
+              (block.firstChild as HTMLElement).style.marginRight = "5px";
+            }
+            if (index > 1) {
+              (block.firstChild as HTMLElement).style.marginTop = "5px";
+              (block as HTMLElement).style.marginTop = `5px`;
+            }
+          }
         });
       });
     }
@@ -98,7 +120,7 @@ const VaultPositionStats = () => {
     return () => {
       timer && clearTimeout(timer);
     };
-  }, [container, vault, vaultLoading, vaultPositionLoading]);
+  }, [container, vault, vaultLoading, vaultPositionLoading, isMobile]);
 
   return (
     <Box pb={isMobile ? "20px" : "24px"} ref={container}>
@@ -121,13 +143,24 @@ const VaultPositionStats = () => {
                   isMobile={isMobile}
                 />
               ) : (
-                formatNumber(
-                  BigNumber(vault?.balanceTokens || 0)
-                    .dividedBy(10 ** 18)
-                    .toNumber()
-                ) +
-                " " +
-                vault?.token.symbol
+                <>
+                  {formatNumber(
+                    BigNumber(vault?.balanceTokens || 0)
+                      .dividedBy(10 ** 18)
+                      .toNumber()
+                  ) +
+                    " " +
+                    vault?.token?.symbol}
+                  <UsdValue>
+                    {"$" +
+                      formatNumber(
+                        BigNumber(vault?.balanceTokens || 0)
+                          .multipliedBy(fxdPrice)
+                          .dividedBy(10 ** 36)
+                          .toNumber()
+                      )}
+                  </UsdValue>
+                </>
               )}
             </PositionStatItemValue>
           </Box>
@@ -149,15 +182,33 @@ const VaultPositionStats = () => {
                   isMobile={isMobile}
                 />
               ) : (
-                `${formatNumber(
-                  Math.max(
-                    BigNumber(vault?.depositLimit || 0)
-                      .minus(vault?.balanceTokens || 0)
-                      .dividedBy(10 ** 18)
-                      .toNumber(),
-                    0
-                  )
-                )} ${vault?.token.symbol}`
+                <>
+                  {formatNumber(
+                    Math.max(
+                      BigNumber(vault?.depositLimit || 0)
+                        .minus(vault?.balanceTokens || 0)
+                        .dividedBy(10 ** 18)
+                        .toNumber(),
+                      0
+                    )
+                  )}{" "}
+                  {vault?.token?.symbol}
+                  <UsdValue>
+                    {"$" +
+                      formatNumber(
+                        BigNumber.max(
+                          BigNumber(vault?.depositLimit || 0)
+                            .minus(vault?.balanceTokens || 0)
+                            .dividedBy(10 ** 18)
+                            .toNumber(),
+                          0
+                        )
+                          .multipliedBy(fxdPrice)
+                          .dividedBy(10 ** 18)
+                          .toNumber()
+                      )}
+                  </UsdValue>
+                </>
               )}
             </PositionStatItemValue>
           </Box>
@@ -179,13 +230,24 @@ const VaultPositionStats = () => {
                   isMobile={isMobile}
                 />
               ) : (
-                "$" +
-                formatNumber(
-                  BigNumber(vaultPosition?.balancePosition || 0)
-                    .multipliedBy(fxdPrice)
-                    .dividedBy(10 ** 36)
-                    .toNumber()
-                )
+                <>
+                  {formatNumber(
+                    BigNumber(vaultPosition?.balancePosition || 0)
+                      .dividedBy(10 ** 18)
+                      .toNumber()
+                  ) +
+                    " " +
+                    vault?.token?.symbol}
+                  <UsdValue>
+                    {"$" +
+                      formatNumber(
+                        BigNumber(vaultPosition?.balancePosition || 0)
+                          .multipliedBy(fxdPrice)
+                          .dividedBy(10 ** 36)
+                          .toNumber()
+                      )}
+                  </UsdValue>
+                </>
               )}
             </PositionStatItemValue>
           </Box>
@@ -210,15 +272,28 @@ const VaultPositionStats = () => {
                     isMobile={isMobile}
                   />
                 ) : BigNumber(balanceEarned).isGreaterThan(0) ? (
-                  "$" +
-                  formatNumber(
-                    BigNumber(balanceEarned || "0")
-                      .multipliedBy(fxdPrice)
-                      .dividedBy(10 ** 18)
-                      .toNumber()
-                  )
+                  <>
+                    {formatNumber(
+                      BigNumber(balanceEarned || "0")
+                        .dividedBy(10 ** 18)
+                        .toNumber()
+                    ) +
+                      " " +
+                      vault?.token?.symbol}
+                    <UsdValue>
+                      {"$" +
+                        formatNumber(
+                          BigNumber(balanceEarned || "0")
+                            .multipliedBy(fxdPrice)
+                            .dividedBy(10 ** 36)
+                            .toNumber()
+                        )}
+                    </UsdValue>
+                  </>
                 ) : (
-                  0
+                  <>
+                    0<UsdValue>$0</UsdValue>
+                  </>
                 )}
               </>
             </PositionStatItemValue>
