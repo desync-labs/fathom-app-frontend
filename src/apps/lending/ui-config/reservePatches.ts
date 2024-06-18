@@ -1,4 +1,4 @@
-import { CustomMarket } from "./marketsConfig";
+import { CustomMarket } from "apps/lending/ui-config/marketsConfig";
 
 export interface IconSymbolInterface {
   underlyingAsset: string;

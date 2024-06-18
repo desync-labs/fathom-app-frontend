@@ -8,9 +8,9 @@ import { Row } from "apps/lending/components/primitives/Row";
 import { useModalContext } from "apps/lending/hooks/useModal";
 import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
 import { isFeatureEnabled } from "apps/lending/utils/marketsAndNetworksConfig";
-import { ListItemUsedAsCollateral } from "../ListItemUsedAsCollateral";
-import { ListMobileItemWrapper } from "../ListMobileItemWrapper";
-import { ListValueRow } from "../ListValueRow";
+import { ListItemUsedAsCollateral } from "apps/lending/modules/dashboard/lists/ListItemUsedAsCollateral";
+import { ListMobileItemWrapper } from "apps/lending/modules/dashboard/lists/ListMobileItemWrapper";
+import { ListValueRow } from "apps/lending/modules/dashboard/lists/ListValueRow";
 
 export const SuppliedPositionsListMobileItem = ({
   reserve,

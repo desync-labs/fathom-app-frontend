@@ -14,7 +14,7 @@ import {
   CUSTOM_BASES,
   BETTER_TRADE_LESS_HOPS_THRESHOLD,
   ADDITIONAL_BASES,
-} from "../constants";
+} from "apps/dex/constants";
 import { PairState, usePairs } from "apps/dex/data/Reserves";
 import { wrappedCurrency } from "apps/dex/utils/wrappedCurrency";
 

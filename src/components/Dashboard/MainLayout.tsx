@@ -119,7 +119,7 @@ import VaultListView from "components/Vaults/VaultList/VaultListView";
 import VaultTutorial from "components/Vaults/VaultTutorial/VaultTutorial";
 import VaultDetailView from "components/Vaults/VaultDetail/VaultDetailView";
 
-import PositionsTransactionList from "../PositionActivityList/PositionActivityList";
+import PositionsTransactionList from "components/PositionActivityList/PositionActivityList";
 import {
   ChainId,
   DISPLAY_CHARTS,
@@ -133,7 +133,7 @@ import {
 } from "connectors/networks";
 import { DEFAULT_CHAIN_ID } from "utils/Constants";
 import CookieConsent from "components/Common/CookieConsent";
-import { FxdProvider } from "../../context/fxd";
+import { FxdProvider } from "context/fxd";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",

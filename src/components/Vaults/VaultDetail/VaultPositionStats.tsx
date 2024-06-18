@@ -5,6 +5,7 @@ import usePricesContext from "context/prices";
 import useSharedContext from "context/shared";
 import { formatNumber } from "utils/format";
 import { StatsValueSkeleton } from "components/AppComponents/AppSkeleton/AppSkeleton";
+import { useEffect, useRef } from "react";
 
 const VaultPositionTitle = styled(Typography)`
   color: #fff;
@@ -55,6 +56,7 @@ const PositionStatItemValue = styled(Box)`
   font-size: 20px;
   font-weight: 600;
   line-height: 36px;
+  word-wrap: break-word;
   ${({ theme }) => theme.breakpoints.down("sm")} {
     font-size: 14px;
     line-height: 20px;
@@ -72,12 +74,43 @@ const VaultPositionStats = () => {
   } = useVaultContext();
   const { fxdPrice } = usePricesContext();
   const { isMobile } = useSharedContext();
+  const container = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>;
+    if (container.current && !vaultLoading && !vaultPositionLoading) {
+      timer = setTimeout(() => {
+        const blocks = (container.current as HTMLElement).querySelectorAll(
+          ".position-stats-item"
+        );
+        const heights: number[] = [];
+        blocks.forEach((block) => {
+          heights.push((block.firstChild as HTMLElement).offsetHeight);
+        });
+        const maxHeight = Math.max(...heights);
+        blocks.forEach((block) => {
+          (block.firstChild as HTMLElement).style.height = `${maxHeight}px`;
+          (block as HTMLElement).style.height = `${maxHeight}px`;
+        });
+      });
+    }
+
+    return () => {
+      timer && clearTimeout(timer);
+    };
+  }, [container, vault, vaultLoading, vaultPositionLoading]);
 
   return (
-    <Box pb={isMobile ? "20px" : "24px"}>
+    <Box pb={isMobile ? "20px" : "24px"} ref={container}>
       <VaultPositionTitle variant="h1">Your Position</VaultPositionTitle>
       <Grid container spacing={isMobile ? 0.5 : 1.5}>
-        <PositionStatItem item xs={6} sm={6} md={3.75}>
+        <PositionStatItem
+          item
+          xs={6}
+          sm={6}
+          md={3.75}
+          className={"position-stats-item"}
+        >
           <Box>
             <PositionStatItemTitle>Total Deposited</PositionStatItemTitle>
             <PositionStatItemValue>
@@ -99,7 +132,13 @@ const VaultPositionStats = () => {
             </PositionStatItemValue>
           </Box>
         </PositionStatItem>
-        <PositionStatItem item xs={6} sm={6} md={3.75}>
+        <PositionStatItem
+          item
+          xs={6}
+          sm={6}
+          md={3.75}
+          className={"position-stats-item"}
+        >
           <Box>
             <PositionStatItemTitle>Available</PositionStatItemTitle>
             <PositionStatItemValue>
@@ -113,7 +152,7 @@ const VaultPositionStats = () => {
                 `${formatNumber(
                   Math.max(
                     BigNumber(vault?.depositLimit || 0)
-                      .minus(BigNumber(vault?.balanceTokens || 0))
+                      .minus(vault?.balanceTokens || 0)
                       .dividedBy(10 ** 18)
                       .toNumber(),
                     0
@@ -123,7 +162,13 @@ const VaultPositionStats = () => {
             </PositionStatItemValue>
           </Box>
         </PositionStatItem>
-        <PositionStatItem item xs={6} sm={6} md={2.25}>
+        <PositionStatItem
+          item
+          xs={6}
+          sm={6}
+          md={2.25}
+          className={"position-stats-item"}
+        >
           <Box>
             <PositionStatItemTitle>Balance</PositionStatItemTitle>
             <PositionStatItemValue>
@@ -145,7 +190,13 @@ const VaultPositionStats = () => {
             </PositionStatItemValue>
           </Box>
         </PositionStatItem>
-        <PositionStatItem item xs={6} sm={6} md={2.25}>
+        <PositionStatItem
+          item
+          xs={6}
+          sm={6}
+          md={2.25}
+          className={"position-stats-item"}
+        >
           <Box>
             <PositionStatItemTitle>Earned</PositionStatItemTitle>
             <PositionStatItemValue>

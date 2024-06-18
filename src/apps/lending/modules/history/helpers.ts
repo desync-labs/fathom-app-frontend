@@ -11,7 +11,7 @@ import {
   hasReserve,
   hasSwapBorrowRate,
   TransactionHistoryItemUnion,
-} from "./types";
+} from "apps/lending/modules/history/types";
 
 export const unixTimestampToFormattedTime = ({
   unixTimestamp,

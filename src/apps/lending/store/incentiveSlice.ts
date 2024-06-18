@@ -5,7 +5,7 @@ import {
 } from "@into-the-fathom/lending-contract-helpers";
 import { StateCreator } from "zustand";
 
-import { RootStore } from "./root";
+import { RootStore } from "apps/lending/store/root";
 
 // TODO: add chain/provider/account mapping
 export interface IncentiveSlice {

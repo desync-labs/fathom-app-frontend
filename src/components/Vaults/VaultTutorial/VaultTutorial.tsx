@@ -1,6 +1,6 @@
 import { Box, styled, Typography } from "@mui/material";
 import ReactPlayer from "react-player";
-import useSharedContext from "../../../context/shared";
+import useSharedContext from "context/shared";
 
 const EmbedVideoWrapper = styled("div")`
   position: relative;

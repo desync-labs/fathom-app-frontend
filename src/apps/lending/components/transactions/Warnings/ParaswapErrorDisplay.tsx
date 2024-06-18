@@ -2,7 +2,7 @@ import { Box, Typography } from "@mui/material";
 import { Warning } from "apps/lending/components/primitives/Warning";
 import { TxErrorType } from "apps/lending/ui-config/errorMapping";
 
-import { GasEstimationError } from "../FlowCommons/GasEstimationError";
+import { GasEstimationError } from "apps/lending/components/transactions/FlowCommons/GasEstimationError";
 import { FC } from "react";
 
 const USER_DENIED_SIGNATURE =

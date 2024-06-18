@@ -35,6 +35,7 @@ import {
   VaultTitle,
 } from "components/Vaults/VaultList/VaultListItemMobile";
 import { VaultStacked } from "components/Vaults/VaultList/VaultListItem";
+import CloseIcon from "@mui/icons-material/Close";
 
 import LockAquaSrc from "assets/svg/lock-aqua.svg";
 import LockSrc from "assets/svg/lock.svg";
@@ -156,6 +157,11 @@ interface VaultListItemPreviewModalProps {
   setManageVault: (value: boolean) => void;
 }
 
+const BreadcrumbsWrapperContainer = styled(Box)`
+  display: flex;
+  justify-content: space-between;
+`;
+
 const VaultListItemPreviewModal: FC<VaultListItemPreviewModalProps> = ({
   vault,
   vaultPosition,
@@ -181,10 +187,13 @@ const VaultListItemPreviewModal: FC<VaultListItemPreviewModalProps> = ({
       onClose={handleClosePreview}
     >
       <VaultListItemPreviewModalContainer>
-        <PseudoBreadcrumbs
-          vaultName={vault.name}
-          handleCloseModal={handleClosePreview}
-        />
+        <BreadcrumbsWrapperContainer>
+          <PseudoBreadcrumbs
+            vaultName={vault.name}
+            handleCloseModal={handleClosePreview}
+          />
+          <CloseIcon />
+        </BreadcrumbsWrapperContainer>
         <AppFlexBox>
           <AppFlexBox sx={{ justifyContent: "flex-start", gap: "4px" }}>
             <VaultListItemImageWrapper>

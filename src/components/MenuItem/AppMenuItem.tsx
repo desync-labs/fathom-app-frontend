@@ -7,7 +7,7 @@ import {
   ExpandMore as IconExpandMore,
 } from "@mui/icons-material";
 
-import AppMenuItemComponent from "./AppMenuItemComponent";
+import AppMenuItemComponent from "components/MenuItem/AppMenuItemComponent";
 import { Collapse, ListItemIcon, ListItemText, List } from "@mui/material";
 
 // React runtime PropTypes

@@ -17,8 +17,8 @@ import { AssetCapHookData } from "apps/lending/hooks/useAssetCaps";
 import { MarketDataType } from "apps/lending/utils/marketsAndNetworksConfig";
 import { GENERAL } from "apps/lending/utils/mixPanelEvents";
 
-import { ApyGraphContainer } from "./graphs/ApyGraphContainer";
-import { PanelItem } from "./ReservePanels";
+import { ApyGraphContainer } from "apps/lending/modules/reserve-overview/graphs/ApyGraphContainer";
+import { PanelItem } from "apps/lending/modules/reserve-overview/ReservePanels";
 import { FC, memo } from "react";
 
 interface SupplyInfoProps {
