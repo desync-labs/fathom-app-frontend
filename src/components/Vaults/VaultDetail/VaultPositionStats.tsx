@@ -109,7 +109,7 @@ const VaultPositionStats = () => {
             }
           }
         });
-      }, 300);
+      }, 100);
     }
 
     return () => {
