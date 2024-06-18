@@ -400,7 +400,8 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
       if (account) {
         if (fetchType === TransactionFetchType.PROMISE) {
           return refetchTransactions({
-            variables: { account: account.toLowerCase(), vault: vault.id },
+            account: account.toLowerCase(),
+            vault: vault.id,
           });
         }
 
