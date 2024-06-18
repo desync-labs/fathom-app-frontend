@@ -283,7 +283,8 @@ const VaultPositionStats = () => {
                   </>
                 ) : (
                   <>
-                    0<UsdValue>$0</UsdValue>
+                    0 {vault?.token?.symbol}
+                    <UsdValue>$0</UsdValue>
                   </>
                 )}
               </>
