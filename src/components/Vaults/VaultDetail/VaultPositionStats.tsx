@@ -85,10 +85,6 @@ const VaultPositionStats = () => {
   const { isMobile } = useSharedContext();
   const container = useRef<HTMLElement>(null);
 
-  console.log({
-    fxdPrice,
-  });
-
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
     if (container.current && !vaultLoading && !vaultPositionLoading) {
@@ -273,11 +269,7 @@ const VaultPositionStats = () => {
                   />
                 ) : BigNumber(balanceEarned).isGreaterThan(0) ? (
                   <>
-                    {formatNumber(
-                      BigNumber(balanceEarned || "0")
-                        .dividedBy(10 ** 18)
-                        .toNumber()
-                    ) +
+                    {formatNumber(Number(balanceEarned)) +
                       " " +
                       vault?.token?.symbol}
                     <UsdValue>
@@ -285,7 +277,7 @@ const VaultPositionStats = () => {
                         formatNumber(
                           BigNumber(balanceEarned || "0")
                             .multipliedBy(fxdPrice)
-                            .dividedBy(10 ** 36)
+                            .dividedBy(10 ** 18)
                             .toNumber()
                         )}
                     </UsdValue>
