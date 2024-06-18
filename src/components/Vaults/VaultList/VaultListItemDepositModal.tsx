@@ -102,6 +102,7 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
             validateMaxDepositValue={validateMaxDepositValue}
             handleSubmit={handleSubmit}
             onSubmit={onSubmit}
+            dataTestIdPrefix="vault-listItemDepositModal"
           />
           <DepositVaultInfo
             vaultItemData={vaultItemData}
