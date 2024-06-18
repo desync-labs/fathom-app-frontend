@@ -30,7 +30,7 @@ const VaultDetailContent = () => {
       {notLoading && BigNumber(vaultPosition.balanceShares).isGreaterThan(0) ? (
         <VaultDetailManageForm />
       ) : (
-        <VaultDetailDepositForm />
+        <VaultDetailDepositForm notLoading={notLoading} />
       )}
       <VaultDetailInfoTabs />
     </>

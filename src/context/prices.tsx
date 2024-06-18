@@ -42,7 +42,16 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
   const [fetchPricesInProgress, setFetchPricesInProgress] =
     useState<boolean>(false);
 
-  const { syncDao, prevSyncDao, syncFXD, prevSyncFxd } = useSyncContext();
+  const {
+    syncDao,
+    prevSyncDao,
+    syncFXD,
+    prevSyncFxd,
+    syncVault,
+    prevSyncVault,
+    syncDex,
+    prevSyncDex,
+  } = useSyncContext();
 
   const fetchPairPrices = useCallback(async () => {
     if (provider) {
@@ -138,10 +147,24 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
   }, [fetchPairPrices]);
 
   useEffect(() => {
-    if ((syncFXD && !prevSyncFxd) || (syncDao && !prevSyncDao)) {
+    if (
+      (syncFXD && !prevSyncFxd) ||
+      (syncDao && !prevSyncDao) ||
+      (syncVault && !prevSyncVault) ||
+      (syncDex && !prevSyncDex)
+    ) {
       fetchPairPrices();
     }
-  }, [syncFXD, prevSyncFxd, syncDao, prevSyncDao]);
+  }, [
+    syncFXD,
+    prevSyncFxd,
+    syncDao,
+    prevSyncDao,
+    syncVault,
+    prevSyncVault,
+    syncDex,
+    prevSyncDex,
+  ]);
 
   const values = useMemo(() => {
     return {
