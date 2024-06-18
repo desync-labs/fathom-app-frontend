@@ -6,7 +6,9 @@ import {
   IVaultStrategy,
   IVaultStrategyReport,
   SmartContractFactory,
+  VaultType,
 } from "fathom-sdk";
+import { FunctionFragment } from "@into-the-fathom/abi";
 import BigNumber from "bignumber.js";
 import { Contract } from "fathom-ethers";
 import { useLazyQuery, useQuery } from "@apollo/client";
@@ -23,7 +25,7 @@ import {
   VAULT_STRATEGY_REPORTS,
 } from "apollo/queries";
 import { vaultTitle } from "utils/getVaultTitleAndDescription";
-import { FunctionFragment } from "@into-the-fathom/abi";
+import { vaultType } from "utils/getVaultType";
 
 declare module "fathom-sdk" {
   interface IVault {
@@ -114,11 +116,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
   const { vaultService, poolService } = useServices();
   const { showErrorNotification } = useRpcError();
 
-  const { data: vaultItemData, loading: vaultLoading } = useQuery(VAULT, {
-    variables: {
-      id: vaultId,
-      chainId,
-    },
+  const [loadVault, { loading: vaultLoading }] = useLazyQuery(VAULT, {
     context: { clientName: "vaults", chainId },
     fetchPolicy: "network-only",
   });
@@ -240,19 +238,73 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     }
   }, [vaultsFactories]);
 
+  const updateVaultDepositLimit = async (vaultData: IVault) => {
+    try {
+      const depositLimitValue = await vaultService.getDepositLimit(
+        vaultData.id,
+        !!vaultType[vaultData.id.toLowerCase()]
+      );
+
+      const updatedVault = {
+        ...vaultData,
+        depositLimit: depositLimitValue,
+        name: vaultTitle[vaultData.id.toLowerCase()]
+          ? vaultTitle[vaultData.id.toLowerCase()]
+          : vaultData.token.name,
+        type: vaultType[vaultData.id.toLowerCase()]
+          ? vaultType[vaultData.id.toLowerCase()]
+          : VaultType.DEFAULT,
+      };
+
+      setVault(updatedVault);
+    } catch (error) {
+      console.error("Error updating vault deposit limit:", error);
+    }
+  };
+
   useEffect(() => {
-    if ((!vaultItemData || vaultItemData?.vault === null) && !vaultLoading) {
+    if (!vaultId) {
       navigate("/vaults");
-    } else if (vaultItemData && !vaultLoading) {
-      const { vault } = vaultItemData;
-      setVault({
-        ...vault,
-        name: vaultTitle[vault.id.toLowerCase()]
-          ? vaultTitle[vault.id.toLowerCase()]
-          : vault.token.name,
+    } else {
+      loadVault({
+        variables: {
+          id: vaultId,
+          chainId,
+        },
+      }).then((res) => {
+        if (!res.data?.vault) {
+          navigate("/vaults");
+        } else {
+          const vaultData = res.data.vault;
+
+          updateVaultDepositLimit(vaultData);
+          setVault({
+            ...vaultData,
+            name: vaultTitle[vaultData.id.toLowerCase()]
+              ? vaultTitle[vaultData.id.toLowerCase()]
+              : vaultData.token.name,
+            type: vaultType[vaultData.id.toLowerCase()]
+              ? vaultType[vaultData.id.toLowerCase()]
+              : VaultType.DEFAULT,
+          });
+        }
       });
     }
-  }, [vaultItemData, vaultLoading, setVault]);
+    // if ((!vaultItemData || vaultItemData?.vault === null) && !vaultLoading) {
+    //   navigate("/vaults");
+    // } else if (vaultItemData && !vaultLoading) {
+    //   const { vault } = vaultItemData;
+    //   setVault({
+    //     ...vault,
+    //     name: vaultTitle[vault.id.toLowerCase()]
+    //       ? vaultTitle[vault.id.toLowerCase()]
+    //       : vault.token.name,
+    //     type: vaultType[vault.id.toLowerCase()]
+    //       ? vaultType[vault.id.toLowerCase()]
+    //       : VaultType.DEFAULT,
+    //   });
+    // }
+  }, [loadVault, vaultId, chainId, setVault]);
 
   const updateVaultPosition = async (position: IVaultPosition) => {
     try {

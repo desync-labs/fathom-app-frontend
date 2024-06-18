@@ -55,6 +55,7 @@ const PositionStatItemValue = styled(Box)`
   font-size: 20px;
   font-weight: 600;
   line-height: 36px;
+  word-break: break-all;
   ${({ theme }) => theme.breakpoints.down("sm")} {
     font-size: 14px;
     line-height: 20px;
