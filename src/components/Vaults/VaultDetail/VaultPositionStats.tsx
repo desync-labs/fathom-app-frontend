@@ -98,7 +98,7 @@ const VaultPositionStats = () => {
         const maxHeight = Math.max(...heights);
         blocks.forEach((block, index) => {
           (block.firstChild as HTMLElement).style.height = `${maxHeight}px`;
-          (block as HTMLElement).style.height = `${maxHeight}px`;
+          (block as HTMLElement).style.height = `${maxHeight + 12}px`;
           if (isMobile) {
             if (index % 2 === 0) {
               (block.firstChild as HTMLElement).style.marginRight = "5px";
@@ -133,7 +133,7 @@ const VaultPositionStats = () => {
             <PositionStatItemValue>
               {vaultLoading || !vault.id ? (
                 <StatsValueSkeleton
-                  height={isMobile ? 20 : 28}
+                  height={isMobile ? 20 : 48}
                   width={"100%"}
                   isMobile={isMobile}
                 />
@@ -172,7 +172,7 @@ const VaultPositionStats = () => {
             <PositionStatItemValue>
               {vaultLoading || !vault.id ? (
                 <StatsValueSkeleton
-                  height={isMobile ? 20 : 28}
+                  height={isMobile ? 20 : 48}
                   width={"100%"}
                   isMobile={isMobile}
                 />
@@ -220,7 +220,7 @@ const VaultPositionStats = () => {
             <PositionStatItemValue>
               {vaultLoading || vaultPositionLoading ? (
                 <StatsValueSkeleton
-                  height={isMobile ? 20 : 28}
+                  height={isMobile ? 20 : 48}
                   width={"100%"}
                   isMobile={isMobile}
                 />
@@ -262,7 +262,7 @@ const VaultPositionStats = () => {
                 vaultPositionLoading ||
                 balanceEarned === -1 ? (
                   <StatsValueSkeleton
-                    height={isMobile ? 20 : 28}
+                    height={isMobile ? 20 : 48}
                     width={"100%"}
                     isMobile={isMobile}
                   />

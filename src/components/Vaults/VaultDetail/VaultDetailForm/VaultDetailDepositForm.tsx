@@ -26,8 +26,13 @@ const VaultDetailFormColumn = styled(Box)`
   }
 `;
 
+const VaultDepositPaper = styled(VaultPaper)`
+  padding-bottom: 33px;
+  padding-top: 33px;
+`;
+
 const VaultDetailDepositForm = () => {
-  const { vault, vaultLoading } = useVaultContext();
+  const { vault, vaultLoading, vaultPositionLoading } = useVaultContext();
   const { isMobile } = useSharedContext();
 
   const onClose = () => {
@@ -52,9 +57,9 @@ const VaultDetailDepositForm = () => {
     onSubmit,
   } = useVaultOpenDeposit(vault, onClose);
 
-  if (vaultLoading || !vault.id) {
+  if (vaultLoading || !vault.id || vaultPositionLoading) {
     return (
-      <VaultPaper sx={{ marginBottom: isMobile ? "20px" : "24px" }}>
+      <VaultDepositPaper sx={{ marginBottom: isMobile ? "20px" : "24px" }}>
         <Typography variant="h3" sx={{ fontSize: isMobile ? "14px" : "16px" }}>
           Deposit
         </Typography>
@@ -72,12 +77,12 @@ const VaultDetailDepositForm = () => {
             animation={"wave"}
           />
         </VaultFormWrapper>
-      </VaultPaper>
+      </VaultDepositPaper>
     );
   }
 
   return (
-    <VaultPaper sx={{ marginBottom: isMobile ? "20px" : "24px" }}>
+    <VaultDepositPaper sx={{ marginBottom: isMobile ? "20px" : "24px" }}>
       <Typography variant="h3" sx={{ fontSize: isMobile ? "14px" : "16px" }}>
         Deposit
       </Typography>
@@ -111,7 +116,7 @@ const VaultDetailDepositForm = () => {
           />
         </FormProvider>
       </VaultFormWrapper>
-    </VaultPaper>
+    </VaultDepositPaper>
   );
 };
 
