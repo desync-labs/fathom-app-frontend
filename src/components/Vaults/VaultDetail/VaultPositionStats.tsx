@@ -5,7 +5,8 @@ import usePricesContext from "context/prices";
 import useSharedContext from "context/shared";
 import { formatNumber } from "utils/format";
 import { StatsValueSkeleton } from "components/AppComponents/AppSkeleton/AppSkeleton";
-import { useEffect, useRef } from "react";
+import { memo, useEffect, useRef, useState } from "react";
+import useWindowResize from "hooks/General/useWindowResize";
 
 const VaultPositionTitle = styled(Typography)`
   color: #fff;
@@ -80,20 +81,37 @@ const VaultPositionStats = () => {
     vaultPositionLoading,
     balanceEarned,
   } = useVaultContext();
-  const { fxdPrice } = usePricesContext();
+  const { fxdPrice, fetchPricesInProgress } = usePricesContext();
   const { isMobile } = useSharedContext();
   const container = useRef<HTMLElement>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const [width, height] = useWindowResize();
 
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
-    if (container.current && !vaultLoading && !vaultPositionLoading) {
+    if (container.current && !isLoading) {
       timer = setTimeout(() => {
         const blocks = (container.current as HTMLElement).querySelectorAll(
           ".position-stats-item"
         );
         const heights: number[] = [];
         blocks.forEach((block) => {
-          heights.push((block.firstChild as HTMLElement).offsetHeight);
+          const childs = (block.firstChild as HTMLElement).getElementsByTagName(
+            "div"
+          );
+          const totalHeight = Array.from(childs)
+            .slice(0, 2)
+            .reduce(
+              (accumulator, currentItem) =>
+                accumulator + currentItem.offsetHeight,
+              0
+            );
+
+          /**
+           * 24 is the padding of the parent element
+           */
+          heights.push(totalHeight + 24);
         });
         const maxHeight = Math.max(...heights);
         blocks.forEach((block, index) => {
@@ -109,13 +127,31 @@ const VaultPositionStats = () => {
             }
           }
         });
-      }, 100);
+      });
     }
 
     return () => {
       timer && clearTimeout(timer);
     };
-  }, [container, vault, vaultLoading, vaultPositionLoading, isMobile]);
+  }, [
+    container,
+    vault,
+    isLoading,
+    fetchPricesInProgress,
+    isMobile,
+    width,
+    height,
+  ]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setIsLoading(vaultLoading || vaultPositionLoading);
+    }, 300);
+
+    return () => {
+      timeout && clearTimeout(timeout);
+    };
+  }, [vaultLoading, vaultPositionLoading, setIsLoading]);
 
   return (
     <Box pb={isMobile ? "20px" : "24px"} ref={container}>
@@ -131,9 +167,9 @@ const VaultPositionStats = () => {
           <Box>
             <PositionStatItemTitle>Total Deposited</PositionStatItemTitle>
             <PositionStatItemValue>
-              {vaultLoading || !vault.id ? (
+              {isLoading ? (
                 <StatsValueSkeleton
-                  height={isMobile ? 20 : 48}
+                  height={isMobile ? 20 : 42}
                   width={"100%"}
                   isMobile={isMobile}
                 />
@@ -170,9 +206,9 @@ const VaultPositionStats = () => {
           <Box>
             <PositionStatItemTitle>Available</PositionStatItemTitle>
             <PositionStatItemValue>
-              {vaultLoading || !vault.id ? (
+              {isLoading ? (
                 <StatsValueSkeleton
-                  height={isMobile ? 20 : 48}
+                  height={isMobile ? 20 : 42}
                   width={"100%"}
                   isMobile={isMobile}
                 />
@@ -218,9 +254,9 @@ const VaultPositionStats = () => {
           <Box>
             <PositionStatItemTitle>Balance</PositionStatItemTitle>
             <PositionStatItemValue>
-              {vaultLoading || vaultPositionLoading ? (
+              {isLoading ? (
                 <StatsValueSkeleton
-                  height={isMobile ? 20 : 48}
+                  height={isMobile ? 20 : 42}
                   width={"100%"}
                   isMobile={isMobile}
                 />
@@ -258,11 +294,9 @@ const VaultPositionStats = () => {
             <PositionStatItemTitle>Earned</PositionStatItemTitle>
             <PositionStatItemValue>
               <>
-                {vaultLoading ||
-                vaultPositionLoading ||
-                balanceEarned === -1 ? (
+                {isLoading || balanceEarned === -1 ? (
                   <StatsValueSkeleton
-                    height={isMobile ? 20 : 48}
+                    height={isMobile ? 20 : 42}
                     width={"100%"}
                     isMobile={isMobile}
                   />
@@ -296,4 +330,4 @@ const VaultPositionStats = () => {
   );
 };
 
-export default VaultPositionStats;
+export default memo(VaultPositionStats);

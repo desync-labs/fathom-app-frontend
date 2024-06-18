@@ -8,6 +8,7 @@ import { AppFlexBox } from "components/AppComponents/AppBox/AppBox";
 import DepositVaultForm from "components/Vaults/VaultList/DepositVaultModal/DepositVaultForm";
 import DepositVaultInfo from "components/Vaults/VaultDetail/VaultDetailForm/DepositVaultInfo";
 import { CustomSkeleton } from "components/AppComponents/AppSkeleton/AppSkeleton";
+import { FC } from "react";
 
 const VaultFormWrapper = styled(AppFlexBox)`
   align-items: flex-start;
@@ -31,8 +32,10 @@ const VaultDepositPaper = styled(VaultPaper)`
   padding-top: 37px;
 `;
 
-const VaultDetailDepositForm = () => {
-  const { vault, vaultLoading, vaultPositionLoading } = useVaultContext();
+const VaultDetailDepositForm: FC<{ notLoading: boolean }> = ({
+  notLoading,
+}) => {
+  const { vault } = useVaultContext();
   const { isMobile } = useSharedContext();
 
   const onClose = () => {
@@ -57,7 +60,7 @@ const VaultDetailDepositForm = () => {
     onSubmit,
   } = useVaultOpenDeposit(vault, onClose);
 
-  if (vaultLoading || !vault.id || vaultPositionLoading) {
+  if (!notLoading) {
     return (
       <VaultDepositPaper sx={{ marginBottom: isMobile ? "20px" : "24px" }}>
         <Typography variant="h3" sx={{ fontSize: isMobile ? "14px" : "16px" }}>
