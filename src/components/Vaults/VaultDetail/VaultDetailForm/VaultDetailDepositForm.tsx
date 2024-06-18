@@ -27,8 +27,8 @@ const VaultDetailFormColumn = styled(Box)`
 `;
 
 const VaultDepositPaper = styled(VaultPaper)`
-  padding-bottom: 33px;
-  padding-top: 33px;
+  padding-bottom: 37px;
+  padding-top: 37px;
 `;
 
 const VaultDetailDepositForm = () => {
