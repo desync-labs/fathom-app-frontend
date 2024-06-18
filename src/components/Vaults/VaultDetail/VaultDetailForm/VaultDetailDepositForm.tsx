@@ -8,6 +8,7 @@ import { AppFlexBox } from "components/AppComponents/AppBox/AppBox";
 import DepositVaultForm from "components/Vaults/VaultList/DepositVaultModal/DepositVaultForm";
 import DepositVaultInfo from "components/Vaults/VaultDetail/VaultDetailForm/DepositVaultInfo";
 import { CustomSkeleton } from "components/AppComponents/AppSkeleton/AppSkeleton";
+import { FC } from "react";
 
 const VaultFormWrapper = styled(AppFlexBox)`
   align-items: flex-start;
@@ -26,33 +27,16 @@ const VaultDetailFormColumn = styled(Box)`
   }
 `;
 
-const VaultDetailDepositForm = () => {
-  const { vault, vaultLoading } = useVaultContext();
-  const { isMobile } = useSharedContext();
+const VaultDepositPaper = styled(VaultPaper)`
+  padding-bottom: 37px;
+  padding-top: 37px;
+`;
 
-  if (vaultLoading || !vault.id) {
-    return (
-      <VaultPaper sx={{ marginBottom: isMobile ? "20px" : "24px" }}>
-        <Typography variant="h3" sx={{ fontSize: isMobile ? "14px" : "16px" }}>
-          Deposit
-        </Typography>
-        <VaultFormWrapper>
-          <CustomSkeleton
-            variant={"rounded"}
-            width={"100%"}
-            height={isMobile ? 200 : 222}
-            animation={"wave"}
-          />
-          <CustomSkeleton
-            variant={"rounded"}
-            width={"100%"}
-            height={isMobile ? 211 : 222}
-            animation={"wave"}
-          />
-        </VaultFormWrapper>
-      </VaultPaper>
-    );
-  }
+const VaultDetailDepositForm: FC<{ notLoading: boolean }> = ({
+  notLoading,
+}) => {
+  const { vault } = useVaultContext();
+  const { isMobile } = useSharedContext();
 
   const onClose = () => {
     methods.reset();
@@ -76,8 +60,32 @@ const VaultDetailDepositForm = () => {
     onSubmit,
   } = useVaultOpenDeposit(vault, onClose);
 
+  if (!notLoading) {
+    return (
+      <VaultDepositPaper sx={{ marginBottom: isMobile ? "20px" : "24px" }}>
+        <Typography variant="h3" sx={{ fontSize: isMobile ? "14px" : "16px" }}>
+          Deposit
+        </Typography>
+        <VaultFormWrapper>
+          <CustomSkeleton
+            variant={"rounded"}
+            width={"100%"}
+            height={isMobile ? 200 : 222}
+            animation={"wave"}
+          />
+          <CustomSkeleton
+            variant={"rounded"}
+            width={"100%"}
+            height={isMobile ? 211 : 222}
+            animation={"wave"}
+          />
+        </VaultFormWrapper>
+      </VaultDepositPaper>
+    );
+  }
+
   return (
-    <VaultPaper sx={{ marginBottom: isMobile ? "20px" : "24px" }}>
+    <VaultDepositPaper sx={{ marginBottom: isMobile ? "20px" : "24px" }}>
       <Typography variant="h3" sx={{ fontSize: isMobile ? "14px" : "16px" }}>
         Deposit
       </Typography>
@@ -111,7 +119,7 @@ const VaultDetailDepositForm = () => {
           />
         </FormProvider>
       </VaultFormWrapper>
-    </VaultPaper>
+    </VaultDepositPaper>
   );
 };
 

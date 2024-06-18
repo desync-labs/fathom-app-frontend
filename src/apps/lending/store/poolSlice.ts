@@ -62,8 +62,8 @@ import { StateCreator } from "zustand";
 import {
   selectCurrentChainIdV3MarketData,
   selectFormattedReserves,
-} from "./poolSelectors";
-import { RootStore } from "./root";
+} from "apps/lending/store/poolSelectors";
+import { RootStore } from "apps/lending/store/root";
 
 // TODO: what is the better name for this type?
 export type PoolReserve = {

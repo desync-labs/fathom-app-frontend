@@ -21,8 +21,11 @@ import {
 } from "apps/lending/ui-config/errorMapping";
 import { QueryKeys } from "apps/lending/ui-config/queries";
 
-import { TxActionsWrapper } from "../TxActionsWrapper";
-import { APPROVE_DELEGATION_GAS_LIMIT, checkRequiresApproval } from "../utils";
+import { TxActionsWrapper } from "apps/lending/components/transactions/TxActionsWrapper";
+import {
+  APPROVE_DELEGATION_GAS_LIMIT,
+  checkRequiresApproval,
+} from "apps/lending/components/transactions/utils";
 
 export interface BorrowActionsProps extends BoxProps {
   poolReserve: ComputedReserveData;

@@ -61,9 +61,8 @@ export const VaultAvailable = styled("div")`
   &.blue {
     color: #6d86b2;
   }
-
   color: #fff;
-  word-break: break-all;
+  word-break: break-word;
 `;
 
 export const VaultStacked = styled("div")`

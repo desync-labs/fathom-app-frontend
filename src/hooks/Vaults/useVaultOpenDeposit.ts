@@ -68,6 +68,12 @@ const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
     [vaultService, vault, deposit]
   );
 
+  const getVaultTokenBalance = useCallback(async () => {
+    const balance = await poolService.getUserTokenBalance(account, token.id);
+    setWalletBalance(balance.toString());
+    setIsWalletFetching(true);
+  }, [account, token, setWalletBalance, setIsWalletFetching]);
+
   const approve = useCallback(async () => {
     setApprovalPending(true);
     try {
@@ -85,10 +91,10 @@ const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
   }, [vault, deposit]);
 
   useEffect(() => {
-    if (account) {
+    if (account && vault.token) {
       getVaultTokenBalance();
     }
-  }, [account, token]);
+  }, [account, vault, getVaultTokenBalance]);
 
   useEffect(() => {
     if (deposit && BigNumber(deposit).isGreaterThan(0)) {
@@ -99,12 +105,6 @@ const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
       }, 600);
     }
   }, [deposit]);
-
-  const getVaultTokenBalance = useCallback(async () => {
-    const balance = await poolService.getUserTokenBalance(account, token.id);
-    setWalletBalance(balance.toString());
-    setIsWalletFetching(true);
-  }, [account, token, setWalletBalance, setIsWalletFetching]);
 
   const setMax = useCallback(() => {
     const maxWalletBalance = BigNumber.min(

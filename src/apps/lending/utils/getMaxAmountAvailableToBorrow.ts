@@ -10,7 +10,7 @@ import {
   ComputedReserveData,
   ExtendedFormattedUser,
 } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
-import { roundToTokenDecimals } from "./utils";
+import { roundToTokenDecimals } from "apps/lending/utils/utils";
 
 // Subset of ComputedReserveData
 interface PoolReserveBorrowSubset {

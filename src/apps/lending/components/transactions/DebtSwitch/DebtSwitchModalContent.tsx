@@ -34,11 +34,11 @@ import {
   ComputedUserReserveData,
   useAppDataContext,
 } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
-import { ModalWrapperProps } from "../FlowCommons/ModalWrapper";
-import { TxSuccessView } from "../FlowCommons/Success";
-import { ParaswapErrorDisplay } from "../Warnings/ParaswapErrorDisplay";
-import { DebtSwitchActions } from "./DebtSwitchActions";
-import { DebtSwitchModalDetails } from "./DebtSwitchModalDetails";
+import { ModalWrapperProps } from "apps/lending/components/transactions/FlowCommons/ModalWrapper";
+import { TxSuccessView } from "apps/lending/components/transactions/FlowCommons/Success";
+import { ParaswapErrorDisplay } from "apps/lending/components/transactions/Warnings/ParaswapErrorDisplay";
+import { DebtSwitchActions } from "apps/lending/components/transactions/DebtSwitch/DebtSwitchActions";
+import { DebtSwitchModalDetails } from "apps/lending/components/transactions/DebtSwitch/DebtSwitchModalDetails";
 
 export type SupplyProps = {
   underlyingAsset: string;

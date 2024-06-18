@@ -7,9 +7,23 @@ import VaultPositionStats from "components/Vaults/VaultDetail/VaultPositionStats
 import VaultDetailInfoTabs from "components/Vaults/VaultDetail/VaultDetailInfoTabs";
 import VaultDetailManageForm from "components/Vaults/VaultDetail/VaultDetailForm/VaultDetailManageForm";
 import VaultDetailDepositForm from "components/Vaults/VaultDetail/VaultDetailForm/VaultDetailDepositForm";
+import { useEffect, useState } from "react";
 
 const VaultDetailContent = () => {
-  const { vault, vaultLoading, vaultPosition } = useVaultContext();
+  const { vault, vaultLoading, vaultPosition, vaultPositionLoading, vaultLoading } =
+    useVaultContext();
+
+  const [notLoading, setNotLoaded] = useState(false);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setNotLoaded(vaultPosition && !vaultPositionLoading && !vaultLoading);
+    }, 300);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [vaultPosition, vaultPositionLoading, vaultLoading, setNotLoaded]);
   return (
     <>
       <VaultBreadcrumbs />
@@ -17,11 +31,11 @@ const VaultDetailContent = () => {
       {!vaultLoading && vault.type === VaultType.TRADEFLOW && (
         <VaultLockingBar />
       )}
-      {vaultPosition &&
+      {notLoading &&
       BigNumber(vaultPosition.balanceShares).isGreaterThan(0) ? (
         <VaultDetailManageForm />
       ) : (
-        <VaultDetailDepositForm />
+        <VaultDetailDepositForm notLoading={notLoading} />
       )}
       <VaultDetailInfoTabs />
     </>

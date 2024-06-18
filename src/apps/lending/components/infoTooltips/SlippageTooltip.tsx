@@ -1,6 +1,9 @@
 import { GENERAL } from "apps/lending/utils/mixPanelEvents";
 
-import { TextWithTooltip, TextWithTooltipProps } from "../TextWithTooltip";
+import {
+  TextWithTooltip,
+  TextWithTooltipProps,
+} from "apps/lending/components/TextWithTooltip";
 
 export const SlippageTooltip = ({ ...rest }: TextWithTooltipProps) => {
   return (

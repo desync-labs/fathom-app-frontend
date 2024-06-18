@@ -10,20 +10,20 @@ import { useRootStore } from "apps/lending/store/root";
 import { calculateHFAfterWithdraw } from "apps/lending/utils/hfUtils";
 import { GENERAL } from "apps/lending/utils/mixPanelEvents";
 
-import { AssetInput } from "../AssetInput";
-import { GasEstimationError } from "../FlowCommons/GasEstimationError";
-import { ModalWrapperProps } from "../FlowCommons/ModalWrapper";
-import { TxSuccessView } from "../FlowCommons/Success";
+import { AssetInput } from "apps/lending/components/transactions/AssetInput";
+import { GasEstimationError } from "apps/lending/components/transactions/FlowCommons/GasEstimationError";
+import { ModalWrapperProps } from "apps/lending/components/transactions/FlowCommons/ModalWrapper";
+import { TxSuccessView } from "apps/lending/components/transactions/FlowCommons/Success";
 import {
   DetailsHFLine,
   DetailsNumberLine,
   DetailsUnwrapSwitch,
   TxModalDetails,
-} from "../FlowCommons/TxModalDetails";
-import { zeroLTVBlockingWithdraw } from "../utils";
-import { calculateMaxWithdrawAmount } from "./utils";
-import { WithdrawActions } from "./WithdrawActions";
-import { useWithdrawError } from "./WithdrawError";
+} from "apps/lending/components/transactions/FlowCommons/TxModalDetails";
+import { zeroLTVBlockingWithdraw } from "apps/lending/components/transactions/utils";
+import { calculateMaxWithdrawAmount } from "apps/lending/components/transactions/Withdraw/utils";
+import { WithdrawActions } from "apps/lending/components/transactions/Withdraw/WithdrawActions";
+import { useWithdrawError } from "apps/lending/components/transactions/Withdraw/WithdrawError";
 
 export enum ErrorType {
   CAN_NOT_WITHDRAW_THIS_AMOUNT,

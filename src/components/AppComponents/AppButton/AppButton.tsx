@@ -303,10 +303,13 @@ export const VaultDetailFormButtonWrapper = styled(Box)`
 
   & > button {
     height: 48px;
-    width: calc(50% - 4px);
+    width: calc(70% - 4px);
     font-size: 17px;
     font-weight: 600;
     padding: 8px 32px;
+    &.reset {
+      width: 30%;
+    }
   }
 
   ${({ theme }) => theme.breakpoints.down("sm")} {

@@ -288,7 +288,9 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
         </InfoBoxV2>
       )}
       <VaultDetailFormButtonWrapper>
-        <ButtonSecondary onClick={onClose}>Close</ButtonSecondary>
+        <ButtonSecondary className={"reset"} onClick={onClose}>
+          Reset
+        </ButtonSecondary>
         {!account ? (
           <WalletConnectBtn />
         ) : approveBtn &&

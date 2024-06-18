@@ -5,6 +5,8 @@ import usePricesContext from "context/prices";
 import useSharedContext from "context/shared";
 import { formatNumber } from "utils/format";
 import { StatsValueSkeleton } from "components/AppComponents/AppSkeleton/AppSkeleton";
+import { memo, useEffect, useRef, useState } from "react";
+import useWindowResize from "hooks/General/useWindowResize";
 
 const VaultPositionTitle = styled(Typography)`
   color: #fff;
@@ -55,12 +57,20 @@ const PositionStatItemValue = styled(Box)`
   font-size: 20px;
   font-weight: 600;
   line-height: 36px;
-  word-break: break-all;
+  word-wrap: break-word;
   ${({ theme }) => theme.breakpoints.down("sm")} {
     font-size: 14px;
     line-height: 20px;
     letter-spacing: 0.14px;
   }
+`;
+
+const UsdValue = styled(Box)`
+  color: #6d86b2;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
 `;
 
 const VaultPositionStats = () => {
@@ -71,104 +81,245 @@ const VaultPositionStats = () => {
     vaultPositionLoading,
     balanceEarned,
   } = useVaultContext();
-  const { fxdPrice } = usePricesContext();
+  const { fxdPrice, fetchPricesInProgress } = usePricesContext();
   const { isMobile } = useSharedContext();
+  const container = useRef<HTMLElement>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const [width, height] = useWindowResize();
+
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>;
+    if (container.current && !isLoading) {
+      timer = setTimeout(() => {
+        const blocks = (container.current as HTMLElement).querySelectorAll(
+          ".position-stats-item"
+        );
+        const heights: number[] = [];
+        blocks.forEach((block) => {
+          const childs = (block.firstChild as HTMLElement).getElementsByTagName(
+            "div"
+          );
+          const totalHeight = Array.from(childs)
+            .slice(0, 2)
+            .reduce(
+              (accumulator, currentItem) =>
+                accumulator + currentItem.offsetHeight,
+              0
+            );
+
+          /**
+           * 24 is the padding of the parent element
+           */
+          heights.push(totalHeight + 24);
+        });
+        const maxHeight = Math.max(...heights);
+        blocks.forEach((block, index) => {
+          (block.firstChild as HTMLElement).style.height = `${maxHeight}px`;
+          (block as HTMLElement).style.height = `${maxHeight + 12}px`;
+          if (isMobile) {
+            if (index % 2 === 0) {
+              (block.firstChild as HTMLElement).style.marginRight = "5px";
+            }
+            if (index > 1) {
+              (block.firstChild as HTMLElement).style.marginTop = "5px";
+              (block as HTMLElement).style.marginTop = `5px`;
+            }
+          }
+        });
+      });
+    }
+
+    return () => {
+      timer && clearTimeout(timer);
+    };
+  }, [
+    container,
+    vault,
+    isLoading,
+    fetchPricesInProgress,
+    isMobile,
+    width,
+    height,
+  ]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setIsLoading(vaultLoading || vaultPositionLoading);
+    }, 300);
+
+    return () => {
+      timeout && clearTimeout(timeout);
+    };
+  }, [vaultLoading, vaultPositionLoading, setIsLoading]);
 
   return (
-    <Box pb={isMobile ? "20px" : "24px"}>
+    <Box pb={isMobile ? "20px" : "24px"} ref={container}>
       <VaultPositionTitle variant="h1">Your Position</VaultPositionTitle>
       <Grid container spacing={isMobile ? 0.5 : 1.5}>
-        <PositionStatItem item xs={6} sm={6} md={3.75}>
+        <PositionStatItem
+          item
+          xs={6}
+          sm={6}
+          md={3.75}
+          className={"position-stats-item"}
+        >
           <Box>
             <PositionStatItemTitle>Total Deposited</PositionStatItemTitle>
             <PositionStatItemValue>
-              {vaultLoading || !vault.id ? (
+              {isLoading ? (
                 <StatsValueSkeleton
-                  height={isMobile ? 20 : 28}
+                  height={isMobile ? 20 : 42}
                   width={"100%"}
                   isMobile={isMobile}
                 />
               ) : (
-                formatNumber(
-                  BigNumber(vault?.balanceTokens || 0)
-                    .dividedBy(10 ** 18)
-                    .toNumber()
-                ) +
-                " " +
-                vault?.token.symbol
+                <>
+                  {formatNumber(
+                    BigNumber(vault?.balanceTokens || 0)
+                      .dividedBy(10 ** 18)
+                      .toNumber()
+                  ) +
+                    " " +
+                    vault?.token?.symbol}
+                  <UsdValue>
+                    {"$" +
+                      formatNumber(
+                        BigNumber(vault?.balanceTokens || 0)
+                          .multipliedBy(fxdPrice)
+                          .dividedBy(10 ** 36)
+                          .toNumber()
+                      )}
+                  </UsdValue>
+                </>
               )}
             </PositionStatItemValue>
           </Box>
         </PositionStatItem>
-        <PositionStatItem item xs={6} sm={6} md={3.75}>
+        <PositionStatItem
+          item
+          xs={6}
+          sm={6}
+          md={3.75}
+          className={"position-stats-item"}
+        >
           <Box>
             <PositionStatItemTitle>Available</PositionStatItemTitle>
             <PositionStatItemValue>
-              {vaultLoading || !vault.id ? (
+              {isLoading ? (
                 <StatsValueSkeleton
-                  height={isMobile ? 20 : 28}
+                  height={isMobile ? 20 : 42}
                   width={"100%"}
                   isMobile={isMobile}
                 />
               ) : (
-                `${formatNumber(
-                  Math.max(
-                    BigNumber(vault?.depositLimit || 0)
-                      .minus(BigNumber(vault?.balanceTokens || 0))
-                      .dividedBy(10 ** 18)
-                      .toNumber(),
-                    0
-                  )
-                )} ${vault?.token.symbol}`
+                <>
+                  {formatNumber(
+                    Math.max(
+                      BigNumber(vault?.depositLimit || 0)
+                        .minus(vault?.balanceTokens || 0)
+                        .dividedBy(10 ** 18)
+                        .toNumber(),
+                      0
+                    )
+                  )}{" "}
+                  {vault?.token?.symbol}
+                  <UsdValue>
+                    {"$" +
+                      formatNumber(
+                        BigNumber.max(
+                          BigNumber(vault?.depositLimit || 0)
+                            .minus(vault?.balanceTokens || 0)
+                            .dividedBy(10 ** 18)
+                            .toNumber(),
+                          0
+                        )
+                          .multipliedBy(fxdPrice)
+                          .dividedBy(10 ** 18)
+                          .toNumber()
+                      )}
+                  </UsdValue>
+                </>
               )}
             </PositionStatItemValue>
           </Box>
         </PositionStatItem>
-        <PositionStatItem item xs={6} sm={6} md={2.25}>
+        <PositionStatItem
+          item
+          xs={6}
+          sm={6}
+          md={2.25}
+          className={"position-stats-item"}
+        >
           <Box>
             <PositionStatItemTitle>Balance</PositionStatItemTitle>
             <PositionStatItemValue>
-              {vaultLoading || vaultPositionLoading ? (
+              {isLoading ? (
                 <StatsValueSkeleton
-                  height={isMobile ? 20 : 28}
+                  height={isMobile ? 20 : 42}
                   width={"100%"}
                   isMobile={isMobile}
                 />
               ) : (
-                "$" +
-                formatNumber(
-                  BigNumber(vaultPosition?.balancePosition || 0)
-                    .multipliedBy(fxdPrice)
-                    .dividedBy(10 ** 36)
-                    .toNumber()
-                )
+                <>
+                  {formatNumber(
+                    BigNumber(vaultPosition?.balancePosition || 0)
+                      .dividedBy(10 ** 18)
+                      .toNumber()
+                  ) +
+                    " " +
+                    vault?.token?.symbol}
+                  <UsdValue>
+                    {"$" +
+                      formatNumber(
+                        BigNumber(vaultPosition?.balancePosition || 0)
+                          .multipliedBy(fxdPrice)
+                          .dividedBy(10 ** 36)
+                          .toNumber()
+                      )}
+                  </UsdValue>
+                </>
               )}
             </PositionStatItemValue>
           </Box>
         </PositionStatItem>
-        <PositionStatItem item xs={6} sm={6} md={2.25}>
+        <PositionStatItem
+          item
+          xs={6}
+          sm={6}
+          md={2.25}
+          className={"position-stats-item"}
+        >
           <Box>
             <PositionStatItemTitle>Earned</PositionStatItemTitle>
             <PositionStatItemValue>
               <>
-                {vaultLoading ||
-                vaultPositionLoading ||
-                balanceEarned === -1 ? (
+                {isLoading || balanceEarned === -1 ? (
                   <StatsValueSkeleton
-                    height={isMobile ? 20 : 28}
+                    height={isMobile ? 20 : 42}
                     width={"100%"}
                     isMobile={isMobile}
                   />
                 ) : BigNumber(balanceEarned).isGreaterThan(0) ? (
-                  "$" +
-                  formatNumber(
-                    BigNumber(balanceEarned || "0")
-                      .multipliedBy(fxdPrice)
-                      .dividedBy(10 ** 18)
-                      .toNumber()
-                  )
+                  <>
+                    {formatNumber(Number(balanceEarned)) +
+                      " " +
+                      vault?.token?.symbol}
+                    <UsdValue>
+                      {"$" +
+                        formatNumber(
+                          BigNumber(balanceEarned || "0")
+                            .multipliedBy(fxdPrice)
+                            .dividedBy(10 ** 18)
+                            .toNumber()
+                        )}
+                    </UsdValue>
+                  </>
                 ) : (
-                  0
+                  <>
+                    0 {vault?.token?.symbol}
+                    <UsdValue>$0</UsdValue>
+                  </>
                 )}
               </>
             </PositionStatItemValue>
@@ -179,4 +330,4 @@ const VaultPositionStats = () => {
   );
 };
 
-export default VaultPositionStats;
+export default memo(VaultPositionStats);
