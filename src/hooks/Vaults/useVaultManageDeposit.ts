@@ -122,6 +122,12 @@ const useVaultManageDeposit = (
       });
   }, [vaultService, vault, vaultPosition, setBalanceToken]);
 
+  const getVaultTokenBalance = useCallback(async () => {
+    const balance = await poolService.getUserTokenBalance(account, token.id);
+    setWalletBalance(balance.toString());
+    setIsWalletFetching(true);
+  }, [account]);
+
   useEffect(() => {
     setValue("formToken", "", { shouldValidate: true });
     setValue("formSharedToken", "", { shouldValidate: true });
@@ -136,8 +142,10 @@ const useVaultManageDeposit = (
   }, [vaultPosition, vault]);
 
   useEffect(() => {
-    getVaultTokenBalance();
-  }, [account, token]);
+    if (account && vault.token) {
+      getVaultTokenBalance();
+    }
+  }, [account, vault, getVaultTokenBalance]);
 
   useEffect(() => {
     let timeout: ReturnType<typeof setTimeout>;
@@ -154,12 +162,6 @@ const useVaultManageDeposit = (
       timeout && clearTimeout(timeout);
     };
   }, [formToken, updateSharedAmount]);
-
-  const getVaultTokenBalance = useCallback(async () => {
-    const balance = await poolService.getUserTokenBalance(account, token.id);
-    setWalletBalance(balance.toString());
-    setIsWalletFetching(true);
-  }, [account]);
 
   const validateDeposit = (
     value: string,
