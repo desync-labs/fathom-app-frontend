@@ -93,6 +93,7 @@ const VaultDetailManageForm = () => {
               handleSubmit={handleSubmit}
               onSubmit={onSubmit}
               vaultPosition={vaultPosition}
+              dataTestIdPrefix="vault-detailManageModal"
             />
           </VaultDetailFormColumn>
           <ManageVaultInfo

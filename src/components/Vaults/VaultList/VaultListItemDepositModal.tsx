@@ -80,12 +80,14 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
       open={true}
       fullWidth
       maxWidth="sm"
+      data-testid="vault-listItemDepositModal"
     >
       <AppDialogTitle
         id="customized-dialog-title"
         onClose={onClose}
         sx={{ padding: "24px !important" }}
         sxCloseIcon={{ right: "16px", top: "16px" }}
+        data-testid="vault-listItemDepositModal-dialogTitle"
       >
         Deposit
       </AppDialogTitle>
@@ -131,13 +133,19 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
             </InfoBoxV2>
           )}
           <ModalButtonWrapper>
-            <ButtonSecondary onClick={onClose}>Close</ButtonSecondary>
+            <ButtonSecondary
+              onClick={onClose}
+              data-testid="vault-listItemDepositModal-closeButton"
+            >
+              Close
+            </ButtonSecondary>
             {!account ? (
               <WalletConnectBtn />
             ) : approveBtn && walletBalance !== "0" ? (
               <ButtonPrimary
                 onClick={approve}
                 disabled={!!Object.keys(errors).length}
+                data-testid="vault-listItemDepositModal-approveButton"
               >
                 {" "}
                 {approvalPending ? (
@@ -156,6 +164,7 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
                   !!Object.keys(errors).length
                 }
                 isLoading={openDepositLoading}
+                data-testid="vault-listItemDepositModal-depositButton"
               >
                 {openDepositLoading ? (
                   <CircularProgress sx={{ color: "#0D1526" }} size={20} />

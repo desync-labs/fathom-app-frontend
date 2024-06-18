@@ -92,6 +92,7 @@ const VaultDetailDepositForm = () => {
               handleSubmit={handleSubmit}
               onSubmit={onSubmit}
               validateMaxDepositValue={validateMaxDepositValue}
+              dataTestIdPrefix="vault-detailDepositModal"
             />
           </VaultDetailFormColumn>
           <DepositVaultInfo

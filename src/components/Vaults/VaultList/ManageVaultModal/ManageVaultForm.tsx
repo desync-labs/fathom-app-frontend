@@ -60,6 +60,7 @@ type VaultManageFormProps = {
     undefined
   >;
   onSubmit: (values: Record<string, any>) => Promise<void>;
+  dataTestIdPrefix?: string;
 };
 
 const ManageVaultForm: FC<VaultManageFormProps> = ({
@@ -72,6 +73,7 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
   validateMaxValue,
   handleSubmit,
   onSubmit,
+  dataTestIdPrefix,
 }) => {
   const { token, balanceTokens, depositLimit } = vaultItemData;
   const { fxdPrice } = usePricesContext();
@@ -189,6 +191,15 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
                 value={value}
                 type="number"
                 onChange={onChange}
+                data-testid={
+                  dataTestIdPrefix !== undefined
+                    ? `${dataTestIdPrefix}-${
+                        formType === FormType.DEPOSIT
+                          ? "depositInputWrapper"
+                          : "withdrawInputWrapper"
+                      }`
+                    : null
+                }
               />
               <AppFormInputUsdIndicator>{`$${formatNumber(
                 BigNumber(value || 0)
@@ -201,7 +212,20 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
                 src={getTokenLogoURL(token.symbol)}
                 alt={token.name}
               />
-              <MaxButtonV2 onClick={() => setMax()}>Max</MaxButtonV2>
+              <MaxButtonV2
+                onClick={() => setMax()}
+                data-testid={
+                  dataTestIdPrefix !== undefined
+                    ? `${dataTestIdPrefix}-${
+                        formType === FormType.DEPOSIT
+                          ? "depositInput-maxButton"
+                          : "withdrawInput-maxButton"
+                      }`
+                    : null
+                }
+              >
+                Max
+              </MaxButtonV2>
             </AppFormInputWrapperV2>
           )}
         />
@@ -264,6 +288,15 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
                   placeholder={"0"}
                   onChange={onChange}
                   disabled
+                  data-testid={
+                    dataTestIdPrefix !== undefined
+                      ? `${dataTestIdPrefix}-${
+                          formType === FormType.DEPOSIT
+                            ? "receiveSharesInputWrapper"
+                            : "burnSharesInputWrapper"
+                        }`
+                      : null
+                  }
                 />
                 <AppFormInputLogoV2 src={getTokenLogoURL("FXD")} />
               </AppFormInputWrapperV2>

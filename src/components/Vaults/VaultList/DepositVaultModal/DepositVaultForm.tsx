@@ -56,6 +56,7 @@ type VaultDepositFormProps = {
     undefined
   >;
   onSubmit: () => Promise<void>;
+  dataTestIdPrefix?: string;
 };
 
 const DepositVaultForm: FC<VaultDepositFormProps> = ({
@@ -66,6 +67,7 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
   validateMaxDepositValue,
   handleSubmit,
   onSubmit,
+  dataTestIdPrefix,
 }) => {
   const { token, depositLimit, balanceTokens } = vaultItemData;
   const { fxdPrice } = usePricesContext();
@@ -166,6 +168,11 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
                 value={value}
                 type="number"
                 onChange={onChange}
+                data-testid={
+                  dataTestIdPrefix !== undefined
+                    ? `${dataTestIdPrefix}-depositInputWrapper`
+                    : null
+                }
               />
               <AppFormInputUsdIndicator>{`$${formatNumber(
                 BigNumber(value || 0)
@@ -178,7 +185,16 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
                 src={getTokenLogoURL(token.symbol)}
                 alt={token.name}
               />
-              <MaxButtonV2 onClick={() => setMax()}>Max</MaxButtonV2>
+              <MaxButtonV2
+                onClick={() => setMax()}
+                data-testid={
+                  dataTestIdPrefix !== undefined
+                    ? `${dataTestIdPrefix}-depositInput-maxButton`
+                    : null
+                }
+              >
+                Max
+              </MaxButtonV2>
             </AppFormInputWrapperV2>
           )}
         />
@@ -234,6 +250,11 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
                   placeholder={"0"}
                   onChange={onChange}
                   disabled
+                  data-testid={
+                    dataTestIdPrefix !== undefined
+                      ? `${dataTestIdPrefix}-receiveSharesInputWrapper`
+                      : null
+                  }
                 />
                 <AppFormInputLogoV2 src={getTokenLogoURL("FXD")} />
               </AppFormInputWrapperV2>
