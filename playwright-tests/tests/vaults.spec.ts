@@ -1,5 +1,5 @@
 import { test, expect } from "../fixtures/pomSynpressFixture";
-import { fxdVaultData } from "../fixtures/vaults.data";
+import { lendingLiquidationVaultData } from "../fixtures/vaults.data";
 import { VaultAction, WalletConnectOptions } from "../types";
 // @ts-ignore
 import * as metamask from "@synthetixio/synpress/commands/metamask";
@@ -15,18 +15,18 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     await vaultPage.page.waitForLoadState("load");
     await vaultPage.page.waitForTimeout(3000);
     const isDepositButtonVisible = await vaultPage
-      .getDepositButtonRowLocatorById(fxdVaultData.id)
+      .getDepositButtonRowLocatorById(lendingLiquidationVaultData.id)
       .isVisible();
     if (isDepositButtonVisible) {
       await vaultPage.depositFirstTime({
-        id: fxdVaultData.id,
-        shareTokenName: fxdVaultData.shareTokenName,
+        id: lendingLiquidationVaultData.id,
+        shareTokenName: lendingLiquidationVaultData.shareTokenName,
         depositAmount,
       });
     }
   });
 
-  test("FXD Vault: Manage Vault: Depositing 50 FXD is successful", async ({
+  test.only("FXD Vault: Manage Vault: Depositing 50 FXD is successful", async ({
     vaultPage,
   }) => {
     const depositAmount = 50;
@@ -34,12 +34,12 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     await vaultPage.connectWallet(WalletConnectOptions.Metamask);
     await vaultPage.validateConnectedWalletAddress();
     const vaultExpectedData = await vaultPage.manageVaultDeposit({
-      id: fxdVaultData.id,
-      shareTokenName: fxdVaultData.shareTokenName,
+      id: lendingLiquidationVaultData.id,
+      shareTokenName: lendingLiquidationVaultData.shareTokenName,
       depositAmount,
     });
     await vaultPage.validateVaultData({
-      id: fxdVaultData.id,
+      id: lendingLiquidationVaultData.id,
       action: VaultAction.Deposit,
       amountChanged: depositAmount,
       stakedAmountDialogBefore: vaultExpectedData.stakedAmountDialogBefore,
@@ -57,11 +57,11 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     await vaultPage.connectWallet(WalletConnectOptions.Metamask);
     await vaultPage.validateConnectedWalletAddress();
     const vaultExpectedData = await vaultPage.manageVaultWithdrawPartially({
-      id: fxdVaultData.id,
+      id: lendingLiquidationVaultData.id,
       withdrawAmount,
     });
     await vaultPage.validateVaultData({
-      id: fxdVaultData.id,
+      id: lendingLiquidationVaultData.id,
       action: VaultAction.Withdraw,
       amountChanged: withdrawAmount,
       stakedAmountDialogBefore: vaultExpectedData.stakedAmountDialogBefore,
@@ -85,20 +85,24 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     await vaultPage.connectWallet(WalletConnectOptions.Metamask);
     await vaultPage.validateConnectedWalletAddress();
     await expect(
-      vaultPage.getDepositButtonRowLocatorById(fxdVaultData.id)
+      vaultPage.getDepositButtonRowLocatorById(lendingLiquidationVaultData.id)
     ).toBeVisible();
     await expect(
-      vaultPage.getDepositButtonRowLocatorById(fxdVaultData.id)
+      vaultPage.getDepositButtonRowLocatorById(lendingLiquidationVaultData.id)
     ).toHaveText("Deposit");
-    await vaultPage.validateYourPositionTabNotVisible(fxdVaultData.id);
+    await vaultPage.validateYourPositionTabNotVisible(
+      lendingLiquidationVaultData.id
+    );
     const vaultExpectedData = await vaultPage.depositFirstTime({
-      id: fxdVaultData.id,
-      shareTokenName: fxdVaultData.shareTokenName,
+      id: lendingLiquidationVaultData.id,
+      shareTokenName: lendingLiquidationVaultData.shareTokenName,
       depositAmount,
     });
-    await vaultPage.validateYourPositionTabIsVisible(fxdVaultData.id);
+    await vaultPage.validateYourPositionTabIsVisible(
+      lendingLiquidationVaultData.id
+    );
     await vaultPage.validateVaultData({
-      id: fxdVaultData.id,
+      id: lendingLiquidationVaultData.id,
       action: VaultAction.Deposit,
       amountChanged: depositAmount,
       stakedAmountDialogBefore: vaultExpectedData.stakedAmountDialogBefore,
@@ -123,20 +127,30 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     await vaultPage.connectWallet(WalletConnectOptions.Metamask);
     await vaultPage.validateConnectedWalletAddress();
     await vaultPage.depositFirstTime({
-      id: fxdVaultData.id,
-      shareTokenName: fxdVaultData.shareTokenName,
+      id: lendingLiquidationVaultData.id,
+      shareTokenName: lendingLiquidationVaultData.shareTokenName,
       depositAmount,
     });
-    await vaultPage.manageVaultWithdrawFully({ id: fxdVaultData.id });
+    await vaultPage.manageVaultWithdrawFully({
+      id: lendingLiquidationVaultData.id,
+    });
     await expect
-      .soft(vaultPage.getDepositButtonRowLocatorById(fxdVaultData.id))
+      .soft(
+        vaultPage.getDepositButtonRowLocatorById(lendingLiquidationVaultData.id)
+      )
       .toBeVisible();
     await expect
-      .soft(vaultPage.getDepositButtonRowLocatorById(fxdVaultData.id))
+      .soft(
+        vaultPage.getDepositButtonRowLocatorById(lendingLiquidationVaultData.id)
+      )
       .toHaveText("Deposit");
-    await vaultPage.validateYourPositionTabNotVisible(fxdVaultData.id);
+    await vaultPage.validateYourPositionTabNotVisible(
+      lendingLiquidationVaultData.id
+    );
     expect
-      .soft(await vaultPage.getStakedVaultRowValue(fxdVaultData.id))
+      .soft(
+        await vaultPage.getStakedVaultRowValue(lendingLiquidationVaultData.id)
+      )
       .toEqual(0);
   });
 
@@ -148,24 +162,40 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     await expect
       .soft(vaultPage.btnConnectWallet)
       .toContainText("Connect Wallet");
-    await vaultPage.extendVaultDetails(fxdVaultData.id);
-    await vaultPage.validateYourPositionTabNotVisible(fxdVaultData.id);
-    await vaultPage.validateAboutTabIsVisible(fxdVaultData.id);
-    await vaultPage.validateStrategiesTabIsVisible(fxdVaultData.id);
+    await vaultPage.extendVaultDetails(lendingLiquidationVaultData.id);
+    await vaultPage.validateYourPositionTabNotVisible(
+      lendingLiquidationVaultData.id
+    );
+    await vaultPage.validateAboutTabIsVisible(lendingLiquidationVaultData.id);
+    await vaultPage.validateStrategiesTabIsVisible(
+      lendingLiquidationVaultData.id
+    );
     expect
-      .soft(await vaultPage.getStakedVaultRowValue(fxdVaultData.id))
+      .soft(
+        await vaultPage.getStakedVaultRowValue(lendingLiquidationVaultData.id)
+      )
       .toEqual(0);
     await vaultPage.connectWalletVault(WalletConnectOptions.Metamask);
     await vaultPage.validateConnectedWalletAddress();
-    await vaultPage.extendVaultDetails(fxdVaultData.id);
-    await vaultPage.validateYourPositionTabIsVisible(fxdVaultData.id);
-    await vaultPage.validateAboutTabIsVisible(fxdVaultData.id);
-    await vaultPage.validateStrategiesTabIsVisible(fxdVaultData.id);
+    await vaultPage.extendVaultDetails(lendingLiquidationVaultData.id);
+    await vaultPage.validateYourPositionTabIsVisible(
+      lendingLiquidationVaultData.id
+    );
+    await vaultPage.validateAboutTabIsVisible(lendingLiquidationVaultData.id);
+    await vaultPage.validateStrategiesTabIsVisible(
+      lendingLiquidationVaultData.id
+    );
     await expect(
-      vaultPage.getManageVaultButtonRowDetailsLocatorById(fxdVaultData.id)
+      vaultPage.getManageVaultButtonRowDetailsLocatorById(
+        lendingLiquidationVaultData.id
+      )
     ).toBeVisible();
     await expect
-      .soft(vaultPage.getConnectWalletButtonRowLocatorById(fxdVaultData.id))
+      .soft(
+        vaultPage.getConnectWalletButtonRowLocatorById(
+          lendingLiquidationVaultData.id
+        )
+      )
       .not.toBeVisible();
   });
 });

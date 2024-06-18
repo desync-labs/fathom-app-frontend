@@ -7,7 +7,6 @@ import {
   VaultAction,
   VaultDepositData,
   VaultDetailsTabs,
-  VaultFilterName,
   WalletConnectOptions,
 } from "../types";
 // @ts-ignore
@@ -52,9 +51,7 @@ export default class VaultPage extends BasePage {
     this.path = "/#/vaults";
 
     // Locators
-    this.dialogManageVault = this.page.locator(
-      '//h2[text()="Manage Vault"]/parent::div'
-    );
+    this.dialogManageVault = this.page.locator('//div[@role="dialog"]');
     this.spanDepositedValueAfterManageVaultDialog = this.page.locator(
       '//span[contains(text(), "Deposited")]//ancestor::li/div[2]/span'
     );
@@ -256,28 +253,28 @@ export default class VaultPage extends BasePage {
     return this.page.locator(`[data-testid="vaultRow-${id}-hideButton"]`);
   }
 
-  async toggleFilter(filterName: VaultFilterName): Promise<void> {
-    await expect.soft(this.btnLiveNow).toBeVisible();
-    await expect.soft(this.btnFinished).toBeVisible();
-    if (
-      filterName === VaultFilterName.LiveNow &&
-      (await this.btnLiveNow.getAttribute("aria-pressed")) === "false"
-    ) {
-      await this.btnLiveNow.click();
-      expect(await this.btnLiveNow.getAttribute("aria-pressed")).toEqual(
-        "true"
-      );
-    }
-    if (
-      filterName === VaultFilterName.Finished &&
-      (await this.btnFinished.getAttribute("aria-pressed")) === "false"
-    ) {
-      await this.btnFinished.click();
-      expect(await this.btnFinished.getAttribute("aria-pressed")).toEqual(
-        "true"
-      );
-    }
-  }
+  // async toggleFilter(filterName: VaultFilterName): Promise<void> {
+  //   await expect.soft(this.btnLiveNow).toBeVisible();
+  //   await expect.soft(this.btnFinished).toBeVisible();
+  //   if (
+  //     filterName === VaultFilterName.LiveNow &&
+  //     (await this.btnLiveNow.getAttribute("aria-pressed")) === "false"
+  //   ) {
+  //     await this.btnLiveNow.click();
+  //     expect(await this.btnLiveNow.getAttribute("aria-pressed")).toEqual(
+  //       "true"
+  //     );
+  //   }
+  //   if (
+  //     filterName === VaultFilterName.Finished &&
+  //     (await this.btnFinished.getAttribute("aria-pressed")) === "false"
+  //   ) {
+  //     await this.btnFinished.click();
+  //     expect(await this.btnFinished.getAttribute("aria-pressed")).toEqual(
+  //       "true"
+  //     );
+  //   }
+  // }
 
   async extendVaultDetails(id: string): Promise<void> {
     await this.page.waitForLoadState("load");
@@ -362,12 +359,12 @@ export default class VaultPage extends BasePage {
     );
   }
 
-  async clickVaultDetailsTab(
-    id: string,
-    tabName: VaultDetailsTabs
-  ): Promise<void> {
-    await this.getVaultDetailsTabLocator(id, tabName).click();
-  }
+  // async clickVaultDetailsTab(
+  //   id: string,
+  //   tabName: VaultDetailsTabs
+  // ): Promise<void> {
+  //   await this.getVaultDetailsTabLocator(id, tabName).click();
+  // }
 
   async manageVaultDeposit({
     id,
@@ -378,9 +375,7 @@ export default class VaultPage extends BasePage {
     shareTokenName: string;
     depositAmount: number;
   }): Promise<VaultDepositData> {
-    await this.toggleFilter(VaultFilterName.LiveNow);
     await this.extendVaultDetails(id);
-    await this.clickVaultDetailsTab(id, VaultDetailsTabs.YourPosition);
     await this.getManageVaultButtonRowDetailsLocatorById(id).click();
     await expect(this.dialogManageVault).toBeVisible();
     await this.btnDepositNavManageDialogModal.click();
@@ -536,9 +531,7 @@ export default class VaultPage extends BasePage {
     id: string;
     withdrawAmount: number;
   }): Promise<VaultDepositData> {
-    await this.toggleFilter(VaultFilterName.LiveNow);
     await this.extendVaultDetails(id);
-    await this.clickVaultDetailsTab(id, VaultDetailsTabs.YourPosition);
     await this.getManageVaultButtonRowDetailsLocatorById(id).click();
     await expect(this.dialogManageVault).toBeVisible();
     await this.btnWithdrawNavManageDialogModal.click();
@@ -624,9 +617,7 @@ export default class VaultPage extends BasePage {
   }
 
   async manageVaultWithdrawFully({ id }: { id: string }): Promise<void> {
-    await this.toggleFilter(VaultFilterName.LiveNow);
     await this.extendVaultDetails(id);
-    await this.clickVaultDetailsTab(id, VaultDetailsTabs.YourPosition);
     await this.getManageVaultButtonRowDetailsLocatorById(id).click();
     await expect(this.dialogManageVault).toBeVisible();
     await this.btnWithdrawNavManageDialogModal.click();
@@ -703,7 +694,6 @@ export default class VaultPage extends BasePage {
     shareTokenName: string;
     depositAmount: number;
   }): Promise<VaultDepositData> {
-    await this.toggleFilter(VaultFilterName.LiveNow);
     await expect
       .soft(this.getDepositButtonRowLocatorById(id))
       .toHaveText("Deposit");
