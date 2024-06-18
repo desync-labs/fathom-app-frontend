@@ -129,8 +129,8 @@ const useVaultManageDeposit = (
   }, [account]);
 
   useEffect(() => {
-    setValue("formToken", "", { shouldValidate: true });
-    setValue("formSharedToken", "", { shouldValidate: true });
+    setValue("formToken", "", { shouldValidate: false });
+    setValue("formSharedToken", "", { shouldValidate: false });
   }, [formType]);
 
   useEffect(() => {
