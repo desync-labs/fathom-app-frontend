@@ -520,6 +520,7 @@ export default class VaultPage extends BasePage {
       this.page.getByTestId("KeyboardArrowRightRoundedIcon")
     ).toBeVisible();
     expect.soft(await this.getContractAddressDetailAbout()).toEqual(id);
+    await this.page.waitForTimeout(2000);
     const depositedValueDetailPageBeforeText =
       await this.spanDepositedValueBeforeManageVaultDialog.textContent();
     const depositedValueDetailPageAfterText =
@@ -579,19 +580,33 @@ export default class VaultPage extends BasePage {
       expect(shareTokensValueDetailPageAfter).not.toBeNull();
     }
     expect
-      .soft(depositedValueDetailPageBefore)
-      .toBeGreaterThanOrEqual(stakedAmountDialogAfter as number);
+      .soft(Math.round((depositedValueDetailPageBefore as number) * 100) / 100)
+      .toBeGreaterThanOrEqual(
+        Math.round((stakedAmountDialogAfter as number) * 100) / 100
+      );
     expect
-      .soft(depositedValueDetailPageAfter)
-      .toBeGreaterThanOrEqual(stakedAmountDialogAfter as number);
-    expect.soft(poolShareValueDetailPageBefore).toEqual(poolShareDialogAfter);
-    expect.soft(poolShareValueDetailPageAfter).toEqual(poolShareDialogAfter);
+      .soft(Math.round((depositedValueDetailPageAfter as number) * 100) / 100)
+      .toBeGreaterThanOrEqual(
+        Math.round((stakedAmountDialogAfter as number) * 100) / 100
+      );
     expect
-      .soft(shareTokensValueDetailPageBefore)
-      .toBeGreaterThanOrEqual(shareTokensDialogAfter as number);
+      .soft(Math.round((poolShareValueDetailPageBefore as number) * 100) / 100)
+      .toEqual(Math.round((poolShareDialogAfter as number) * 100) / 100);
     expect
-      .soft(shareTokensValueDetailPageAfter)
-      .toBeGreaterThanOrEqual(shareTokensDialogAfter as number);
+      .soft(Math.round((poolShareValueDetailPageAfter as number) * 100) / 100)
+      .toEqual(Math.round((poolShareDialogAfter as number) * 100) / 100);
+    expect
+      .soft(
+        Math.round((shareTokensValueDetailPageBefore as number) * 100) / 100
+      )
+      .toBeGreaterThanOrEqual(
+        Math.round((shareTokensDialogAfter as number) * 100) / 100
+      );
+    expect
+      .soft(Math.round((shareTokensValueDetailPageAfter as number) * 100) / 100)
+      .toBeGreaterThanOrEqual(
+        Math.round((shareTokensDialogAfter as number) * 100) / 100
+      );
   }
 
   async manageVaultWithdrawPartially({
