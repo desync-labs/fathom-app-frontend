@@ -324,14 +324,16 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
   useEffect(() => {
     if (isTfVaultType && vault.strategies?.length) {
       vaultService
-        .getTfVaultDepositEndDate(vault.strategies[0].id)
+        .getTradeFlowVaultDepositEndDate(vault.strategies[0].id)
         .then((res) => {
           setTfVaultDepositEndDate(res);
         });
 
-      vaultService.getTfVaultLockEndDate(vault.strategies[0].id).then((res) => {
-        setTfVaultLockEndDate(res);
-      });
+      vaultService
+        .getTradeFlowVaultLockEndDate(vault.strategies[0].id)
+        .then((res) => {
+          setTfVaultLockEndDate(res);
+        });
     }
   }, [vault, isTfVaultType]);
 
