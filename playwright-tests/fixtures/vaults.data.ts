@@ -7,5 +7,5 @@ export const fxdVaultData = {
 export const lendingLiquidationVaultData = {
   name: "Fathom USD",
   id: "0x0bd92a4749392e99df284d216ad8ec09d622a5c4",
-  shareTokenName: "fvFXDDefi1",
+  shareTokenName: "FXD-DeFi-1",
 };

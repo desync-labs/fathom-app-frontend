@@ -16,6 +16,7 @@ import { graphAPIEndpoints } from "../fixtures/api.data";
 export default class VaultPage extends BasePage {
   readonly path: string;
   readonly dialogListItemManageModal: Locator;
+  readonly dialogListItemDepositModal: Locator;
   readonly spanDepositedValueAfterManageVaultDialog: Locator;
   readonly spanPoolShareValueAfterManageVaultDialog: Locator;
   readonly spanShareTokensValueAfterManageVaultDialog: Locator;
@@ -26,12 +27,16 @@ export default class VaultPage extends BasePage {
   readonly inputReceiveSharesTokenListItemManageModal: Locator;
   readonly inputWithdrawAmountListItemManageModal: Locator;
   readonly inputBurnSharesTokenListItemManageModal: Locator;
-  readonly btnMax: Locator;
-  readonly btnConfirmDepositDialogModal: Locator;
-  readonly btnCloseManageDialogModal: Locator;
-  readonly btnConfirmWithdrawManageDialogModal: Locator;
-  readonly btnLiveNow: Locator;
-  readonly btnFinished: Locator;
+  readonly inputDepositAmountListItemDepositModal: Locator;
+  readonly inputReceiveSharesTokenListItemDepositModal: Locator;
+  readonly btnMaxDepositInputListItemManageModal: Locator;
+  readonly btnMaxWithdrawInputListItemManageModal: Locator;
+  readonly btnMaxDepositInputListItemDepositModal: Locator;
+  readonly btnConfirmDepositListItemManageModal: Locator;
+  readonly btnConfirmWithdrawListItemManageModal: Locator;
+  readonly btnConfirmDepositListItemDepositModal: Locator;
+  readonly btnDepositNavItemListItemManageModal: Locator;
+  readonly btnWithdrawNavItemListItemManageModal: Locator;
   readonly progressBar: Locator;
   readonly divDialogModalPositionOpenedSuccessfully: Locator;
   readonly btnCloseModal: Locator;
@@ -39,11 +44,7 @@ export default class VaultPage extends BasePage {
   readonly headingFourModal: Locator;
   readonly spanBodyOneModal: Locator;
   readonly spanBodyTwoModal: Locator;
-  readonly btnDepositNavManageDialogModal: Locator;
-  readonly btnWithdrawNavManageDialogModal: Locator;
-  readonly diaologDepositToVaultModal: Locator;
-  readonly btnConfirmDepositDepositToVaultModal: Locator;
-  readonly btnApproveTokens: Locator;
+  readonly btnApproveListItemDepositModal: Locator;
   readonly btnConnectWallet: Locator;
 
   constructor(page: Page) {
@@ -53,6 +54,9 @@ export default class VaultPage extends BasePage {
     // Locators
     this.dialogListItemManageModal = this.page
       .getByTestId("vault-listItemManageModal")
+      .locator('//div[@role="dialog"]');
+    this.dialogListItemDepositModal = this.page
+      .getByTestId("vault-listItemDepositModal")
       .locator('//div[@role="dialog"]');
     this.spanDepositedValueAfterManageVaultDialog = this.page.locator(
       '//span[contains(text(), "Deposited")]//ancestor::li/div[2]/span'
@@ -84,22 +88,31 @@ export default class VaultPage extends BasePage {
     this.inputBurnSharesTokenListItemManageModal = this.page
       .getByTestId("vault-listItemManageModal-burnSharesInputWrapper")
       .locator("input");
-    this.btnMax = this.page.getByText("Max");
-    this.btnConfirmDepositDialogModal = this.page.locator(
-      '//button[text()="Deposit"][@type="submit"]'
+    this.inputDepositAmountListItemDepositModal = this.page
+      .getByTestId("vault-listItemDepositModal-depositInputWrapper")
+      .locator("input");
+    this.inputReceiveSharesTokenListItemDepositModal = this.page
+      .getByTestId("vault-listItemDepositModal-receiveSharesInputWrapper")
+      .locator("input");
+    this.btnMaxDepositInputListItemManageModal = this.page.getByTestId(
+      "vault-listItemManageModal-depositInput-maxButton"
     );
-    this.btnConfirmWithdrawManageDialogModal = this.dialogManageVault.locator(
-      '//button[text()="Withdraw"][@type="submit"]'
+    this.btnMaxWithdrawInputListItemManageModal = this.page.getByTestId(
+      "vault-listItemManageModal-withdrawInput-maxButton"
     );
-    this.btnCloseManageDialogModal = this.dialogManageVault.locator(
-      '//button[text()="Close"]'
+    this.btnMaxDepositInputListItemDepositModal = this.page.getByTestId(
+      "vault-listItemDepositModal-depositInput-maxButton"
     );
-    this.btnLiveNow = this.page.locator(
-      '//button[contains(text(), "Live Now")]'
+    this.btnConfirmDepositListItemManageModal = this.page.getByTestId(
+      "vault-listItemManageModal-depositButton"
     );
-    this.btnFinished = this.page.locator(
-      '//button[contains(text(), "Finished")]'
+    this.btnConfirmWithdrawListItemManageModal = this.page.getByTestId(
+      "vault-listItemManageModal-withdrawButton"
     );
+    this.btnConfirmDepositListItemDepositModal = this.page.getByTestId(
+      "vault-listItemDepositModal-depositButton"
+    );
+
     this.progressBar = this.page.locator('[role="progressbar"]');
     this.btnCloseModal = this.page.locator('button[aria-label="close"]');
     this.doneIconModal = this.page.locator('[data-testid="DoneIcon"]');
@@ -113,21 +126,14 @@ export default class VaultPage extends BasePage {
     this.divDialogModalPositionOpenedSuccessfully = this.page.locator(
       '//h4[text()="All done!"]/parent::div'
     );
-    this.btnDepositNavManageDialogModal = this.dialogManageVault.locator(
-      '//button[text()="Deposit"][not(@type="submit")]'
+    this.btnDepositNavItemListItemManageModal = this.page.getByTestId(
+      "vault-listItemManageModal-depositNavItem"
     );
-    this.btnWithdrawNavManageDialogModal = this.dialogManageVault.locator(
-      '//button[text()="Withdraw"]'
+    this.btnWithdrawNavItemListItemManageModal = this.page.getByTestId(
+      "vault-listItemManageModal-withdrawNavItem"
     );
-    this.diaologDepositToVaultModal = this.page.locator(
-      '//h2[text()="Deposit To Vault"]/parent::div'
-    );
-    this.btnConfirmDepositDepositToVaultModal =
-      this.diaologDepositToVaultModal.locator(
-        '//button[text()="Deposit"][@type="submit"]'
-      );
-    this.btnApproveTokens = this.page.locator(
-      '//button[text()="Approve token"]'
+    this.btnApproveListItemDepositModal = this.page.getByTestId(
+      "vault-listItemDepositModal-approveButton"
     );
     this.btnConnectWallet = this.page.locator(
       "[data-testid*='connectWalletButton']"
@@ -296,28 +302,28 @@ export default class VaultPage extends BasePage {
   //   }
   // }
 
-  async enterDepositAmount(amount: number): Promise<void> {
+  async enterDepositAmountDialogManageModal(amount: number): Promise<void> {
     await this.page.waitForTimeout(1000);
-    await this.inputDepositAmount.clear();
-    await this.inputDepositAmount.fill(amount.toString());
+    await this.inputDepositAmountListItemManageModal.clear();
+    await this.inputDepositAmountListItemManageModal.fill(amount.toString());
   }
 
-  async enterWithdrawAmount(amount: number): Promise<void> {
+  async enterWithdrawAmountDialogManageModal(amount: number): Promise<void> {
     await this.page.waitForTimeout(1000);
-    await this.inputWithdrawAmount.clear();
-    await this.inputWithdrawAmount.fill(amount.toString());
+    await this.inputWithdrawAmountListItemManageModal.clear();
+    await this.inputWithdrawAmountListItemManageModal.fill(amount.toString());
   }
 
-  async confirmDeposit(): Promise<void> {
-    await this.btnConfirmDepositDialogModal.click();
+  async confirmDepositDialogManageModal(): Promise<void> {
+    await this.btnConfirmDepositListItemManageModal.click();
     await expect.soft(this.progressBar).toBeVisible();
     await this.page.waitForTimeout(1000);
     await expect(this.divAlert).toBeHidden({ timeout: 100 });
     await metamask.confirmTransaction();
   }
 
-  async confirmWithdraw(): Promise<void> {
-    await this.btnConfirmWithdrawManageDialogModal.click();
+  async confirmWithdrawDialogManageModal(): Promise<void> {
+    await this.btnConfirmWithdrawListItemManageModal.click();
     await expect.soft(this.progressBar).toBeVisible();
     await this.page.waitForTimeout(1000);
     await expect(this.divAlert).toBeHidden({ timeout: 100 });
@@ -325,7 +331,7 @@ export default class VaultPage extends BasePage {
   }
 
   async validateManagePositionDialogNotVisible(): Promise<void> {
-    await expect.soft(this.dialogManageVault).not.toBeVisible({
+    await expect.soft(this.dialogListItemManageModal).not.toBeVisible({
       timeout: 20000,
     });
   }
@@ -368,7 +374,7 @@ export default class VaultPage extends BasePage {
   //   await this.getVaultDetailsTabLocator(id, tabName).click();
   // }
 
-  async manageVaultDeposit({
+  async manageVaultDialogDeposit({
     id,
     shareTokenName,
     depositAmount,
@@ -378,9 +384,9 @@ export default class VaultPage extends BasePage {
     depositAmount: number;
   }): Promise<VaultDepositData> {
     await this.getManageVaultButtonRowDetailsLocatorById(id).click();
-    await expect(this.dialogManageVault).toBeVisible();
-    await this.btnDepositNavManageDialogModal.click();
-    await this.enterDepositAmount(depositAmount);
+    await expect(this.dialogListItemManageModal).toBeVisible();
+    await this.btnDepositNavItemListItemManageModal.click();
+    await this.enterDepositAmountDialogManageModal(depositAmount);
     await this.page.waitForTimeout(2000);
     const depositedValueBeforeText =
       await this.spanDepositedValueBeforeManageVaultDialog.textContent();
@@ -436,7 +442,7 @@ export default class VaultPage extends BasePage {
       poolShareDialogAfter: poolShareValueAfter,
       shareTokensDialogAfter: shareTokensValueAfter,
     };
-    await this.confirmDeposit();
+    await this.confirmDepositDialogManageModal();
     await Promise.all([
       this.validateAlertMessage({
         status: "pending",

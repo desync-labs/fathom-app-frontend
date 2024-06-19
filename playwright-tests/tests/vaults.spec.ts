@@ -33,7 +33,7 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     await vaultPage.navigate();
     await vaultPage.connectWallet(WalletConnectOptions.Metamask);
     await vaultPage.validateConnectedWalletAddress();
-    const vaultExpectedData = await vaultPage.manageVaultDeposit({
+    const vaultExpectedData = await vaultPage.manageVaultDialogDeposit({
       id: lendingLiquidationVaultData.id,
       shareTokenName: lendingLiquidationVaultData.shareTokenName,
       depositAmount,
