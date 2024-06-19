@@ -27,6 +27,7 @@ import {
 } from "apollo/queries";
 import { vaultTitle } from "utils/getVaultTitleAndDescription";
 import { vaultType } from "utils/getVaultType";
+import dayjs from "dayjs";
 
 declare module "fathom-sdk" {
   interface IVault {
@@ -288,8 +289,11 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
       };
 
       setVault(updatedVault);
+
+      return updatedVault;
     } catch (error) {
       console.error("Error updating vault deposit limit:", error);
+      return vaultData;
     }
   };
 
@@ -302,43 +306,73 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
           id: vaultId,
           chainId,
         },
-      }).then((res) => {
+      }).then(async (res) => {
         if (!res.data?.vault) {
           navigate("/vaults");
         } else {
-          const vaultData = res.data.vault;
-
-          updateVaultDepositLimit(vaultData, account, isTfVaultType);
-        }
-      });
-
-      /**
-       * Fetch additional data for strategies
-       */
-      if (vault && vault?.strategies && vault?.strategies?.length) {
-        const promises: Promise<boolean>[] = [];
-        vault?.strategies.forEach((strategy: IVaultStrategy) => {
-          promises.push(vaultService.isStrategyShutdown(strategy.id));
-        });
-
-        Promise.all(promises).then((response) => {
-          const strategies = vault?.strategies.map(
-            (strategy: IVaultStrategy, index: number) => {
-              return {
-                ...strategy,
-                isShutdown: response[index],
-              };
-            }
+          let vaultData = res.data.vault;
+          vaultData = await updateVaultDepositLimit(
+            vaultData,
+            account,
+            isTfVaultType
           );
 
-          setVault((prev) => ({
-            ...prev,
-            strategies,
-          }));
-        });
-      }
+          /**
+           * Fetch additional data for strategies
+           */
+          if (
+            vaultData &&
+            vaultData?.strategies &&
+            vaultData?.strategies?.length
+          ) {
+            if (vaultData.type === VaultType.TRADEFLOW) {
+              const strategies = vaultData?.strategies.map(
+                (strategy: IVaultStrategy) => {
+                  return {
+                    ...strategy,
+                    isShutdown: false,
+                  };
+                }
+              );
+              setVault({
+                ...vaultData,
+                strategies,
+              });
+            } else {
+              const promises: Promise<boolean>[] = [];
+              vaultData?.strategies.forEach((strategy: IVaultStrategy) => {
+                promises.push(vaultService.isStrategyShutdown(strategy.id));
+              });
+
+              Promise.all(promises).then((response) => {
+                const strategies = vault?.strategies.map(
+                  (strategy: IVaultStrategy, index: number) => {
+                    return {
+                      ...strategy,
+                      isShutdown: response[index],
+                    };
+                  }
+                );
+
+                setVault({
+                  ...vaultData,
+                  strategies,
+                });
+              });
+            }
+          }
+        }
+      });
     }
-  }, [loadVault, vaultId, account, isTfVaultType, chainId]);
+  }, [
+    loadVault,
+    vaultId,
+    account,
+    isTfVaultType,
+    chainId,
+    vaultService,
+    setVault,
+  ]);
 
   useEffect(() => {
     if (vaultId && account && isTfVaultType) {
@@ -365,14 +399,15 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
   }, [vault, isTfVaultType]);
 
   useEffect(() => {
-    if (tfVaultDepositEndDate === null || tfVaultLockEndDate === null) return;
-    const now = new Date();
+    if (!tfVaultDepositEndDate || !tfVaultLockEndDate) return;
+    const now = dayjs();
     let activePeriod = 2;
 
-    if (now < new Date(Number(tfVaultLockEndDate) * 1000)) {
+    if (now.isBefore(dayjs.unix(Number(tfVaultLockEndDate)))) {
       activePeriod = 1;
     }
-    if (now < new Date(Number(tfVaultDepositEndDate) * 1000)) {
+
+    if (now.isBefore(dayjs.unix(Number(tfVaultDepositEndDate)))) {
       activePeriod = 0;
     }
 

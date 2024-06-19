@@ -2,6 +2,7 @@ import {
   createContext,
   Dispatch,
   FC,
+  memo,
   ReactElement,
   SetStateAction,
   useContext,
@@ -47,13 +48,15 @@ export const VaultContext = createContext<UseVaultContextReturnType>(
   {} as UseVaultContextReturnType
 );
 
-export const VaultProvider: FC<VaultContextType> = ({ vaultId, children }) => {
-  const values = useVaultDetail({ vaultId });
+export const VaultProvider: FC<VaultContextType> = memo(
+  ({ vaultId, children }) => {
+    const values = useVaultDetail({ vaultId });
 
-  return (
-    <VaultContext.Provider value={values}>{children}</VaultContext.Provider>
-  );
-};
+    return (
+      <VaultContext.Provider value={values}>{children}</VaultContext.Provider>
+    );
+  }
+);
 
 const useVaultContext = () => useContext(VaultContext);
 
