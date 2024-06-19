@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import {
   Box,
@@ -11,9 +10,11 @@ import {
   Typography,
 } from "@mui/material";
 import useSharedContext from "context/shared";
+import useVaultContext from "context/vault";
 import { VaultPaper } from "components/AppComponents/AppPaper/AppPaper";
 import { AppFlexBox } from "components/AppComponents/AppBox/AppBox";
 import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
+import { CustomSkeleton } from "components/AppComponents/AppSkeleton/AppSkeleton";
 
 import LockAquaSrc from "assets/svg/lock-aqua.svg";
 import StepperItemIcon from "assets/svg/icons/stepper-item-icon.svg";
@@ -129,25 +130,25 @@ const QontoStepIcon = (props: StepIconProps) => {
   );
 };
 
-const VaultLockingBar = ({
-  depositEndTime = 1718140800,
-  lockingEndTime = 1718313600,
-}) => {
-  const [activeStep, setActiveStep] = useState(0);
+const VaultLockingBar = () => {
   const { isMobile } = useSharedContext();
-
-  useEffect(() => {
-    setActiveStep(1);
-  }, []);
+  const { tfVaultDepositEndDate, tfVaultLockEndDate, activeTfPeriod } =
+    useVaultContext();
 
   const steps = [
     {
       label: "Deposit Time",
-      date: depositEndTime,
+      date:
+        tfVaultDepositEndDate === null
+          ? tfVaultDepositEndDate
+          : new Date(Number(tfVaultDepositEndDate) * 1000),
     },
     {
       label: "Lock Time",
-      date: lockingEndTime,
+      date:
+        tfVaultLockEndDate === null
+          ? tfVaultLockEndDate
+          : new Date(Number(tfVaultLockEndDate) * 1000),
     },
   ];
   return (
@@ -160,14 +161,14 @@ const VaultLockingBar = ({
       </SummaryWrapper>
       <AppFlexBox mt="12px">
         <CustomPaper>
-          <AppStepper activeStep={activeStep} orientation="vertical">
+          <AppStepper activeStep={activeTfPeriod} orientation="vertical">
             {steps.map((step, index) => (
-              <AppStep key={step.date}>
+              <AppStep key={step.label}>
                 <AppFlexBox>
                   <StepLabel
                     StepIconComponent={QontoStepIcon}
                     optional={
-                      index < activeStep ? (
+                      index < activeTfPeriod ? (
                         <StepLabelOptionalValue>
                           Completed
                         </StepLabelOptionalValue>
@@ -177,7 +178,16 @@ const VaultLockingBar = ({
                     {step.label}
                   </StepLabel>
                   <StepContent>
-                    {dayjs(step.date * 1000).format("DD.MM.YYYY HH:mm:ss")}
+                    {step.date === null ? (
+                      <CustomSkeleton
+                        animation={"wave"}
+                        variant={"rounded"}
+                        width={100}
+                        height={20}
+                      />
+                    ) : (
+                      dayjs(step.date).format("DD.MM.YYYY HH:mm:ss")
+                    )}
                   </StepContent>
                 </AppFlexBox>
               </AppStep>
@@ -185,7 +195,10 @@ const VaultLockingBar = ({
           </AppStepper>
         </CustomPaper>
         <CustomPaper className="withdraw-btn">
-          <ButtonPrimary type="button" disabled={activeStep !== steps.length}>
+          <ButtonPrimary
+            type="button"
+            disabled={activeTfPeriod !== steps.length}
+          >
             Withdraw
           </ButtonPrimary>
         </CustomPaper>

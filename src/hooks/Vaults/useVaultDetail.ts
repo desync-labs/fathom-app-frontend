@@ -101,6 +101,16 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
   );
   const [isUserManager, setIsUserManager] = useState<boolean>(false);
 
+  const [isTfVaultType, setIsTfVaultType] = useState<boolean>(false);
+  const [isUserKycPassed, setIsUserKycPassed] = useState<boolean>(false);
+  const [tfVaultDepositEndDate, setTfVaultDepositEndDate] = useState<
+    string | null
+  >(null);
+  const [tfVaultLockEndDate, setTfVaultLockEndDate] = useState<string | null>(
+    null
+  );
+  const [activeTfPeriod, setActiveTfPeriod] = useState(0);
+
   const { syncVault, prevSyncVault } = useSyncContext();
 
   const [activeVaultInfoTab, setActiveVaultInfoTab] = useState<VaultInfoTabs>(
@@ -154,6 +164,18 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
       },
     }
   );
+
+  useEffect(() => {
+    if (
+      vaultId &&
+      vaultType[vaultId.toLowerCase()] &&
+      vaultType[vaultId.toLowerCase()] === VaultType.TRADEFLOW
+    ) {
+      setIsTfVaultType(true);
+    } else {
+      setIsTfVaultType(false);
+    }
+  }, [vaultId]);
 
   const fetchReports = (
     strategyId: string,
@@ -238,12 +260,20 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     }
   }, [vaultsFactories]);
 
-  const updateVaultDepositLimit = async (vaultData: IVault) => {
+  const updateVaultDepositLimit = async (
+    vaultData: IVault,
+    account: string,
+    isTfVaultType: boolean
+  ) => {
+    let depositLimitValue = vaultData.depositLimit;
     try {
-      const depositLimitValue = await vaultService.getDepositLimit(
-        vaultData.id,
-        !!vaultType[vaultData.id.toLowerCase()]
-      );
+      if (account && isTfVaultType) {
+        depositLimitValue = await vaultService.getDepositLimit(
+          vaultData.id,
+          account,
+          isTfVaultType
+        );
+      }
 
       const updatedVault = {
         ...vaultData,
@@ -277,34 +307,48 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
         } else {
           const vaultData = res.data.vault;
 
-          updateVaultDepositLimit(vaultData);
-          setVault({
-            ...vaultData,
-            name: vaultTitle[vaultData.id.toLowerCase()]
-              ? vaultTitle[vaultData.id.toLowerCase()]
-              : vaultData.token.name,
-            type: vaultType[vaultData.id.toLowerCase()]
-              ? vaultType[vaultData.id.toLowerCase()]
-              : VaultType.DEFAULT,
-          });
+          updateVaultDepositLimit(vaultData, account, isTfVaultType);
         }
       });
     }
-    // if ((!vaultItemData || vaultItemData?.vault === null) && !vaultLoading) {
-    //   navigate("/vaults");
-    // } else if (vaultItemData && !vaultLoading) {
-    //   const { vault } = vaultItemData;
-    //   setVault({
-    //     ...vault,
-    //     name: vaultTitle[vault.id.toLowerCase()]
-    //       ? vaultTitle[vault.id.toLowerCase()]
-    //       : vault.token.name,
-    //     type: vaultType[vault.id.toLowerCase()]
-    //       ? vaultType[vault.id.toLowerCase()]
-    //       : VaultType.DEFAULT,
-    //   });
-    // }
-  }, [loadVault, vaultId, chainId, setVault]);
+  }, [loadVault, vaultId, account, isTfVaultType, chainId]);
+
+  useEffect(() => {
+    if (vaultId && account && isTfVaultType) {
+      vaultService.kycPassed(vaultId, account).then((res) => {
+        setIsUserKycPassed(res);
+      });
+    }
+  }, [vaultId, account, isTfVaultType]);
+
+  useEffect(() => {
+    if (isTfVaultType && vault.strategies?.length) {
+      vaultService
+        .getTfVaultDepositEndDate(vault.strategies[0].id)
+        .then((res) => {
+          setTfVaultDepositEndDate(res);
+        });
+
+      vaultService.getTfVaultLockEndDate(vault.strategies[0].id).then((res) => {
+        setTfVaultLockEndDate(res);
+      });
+    }
+  }, [vault, isTfVaultType]);
+
+  useEffect(() => {
+    if (tfVaultDepositEndDate === null || tfVaultLockEndDate === null) return;
+    const now = new Date();
+    let activePeriod = 2;
+
+    if (now < new Date(Number(tfVaultLockEndDate) * 1000)) {
+      activePeriod = 1;
+    }
+    if (now < new Date(Number(tfVaultDepositEndDate) * 1000)) {
+      activePeriod = 0;
+    }
+
+    setActiveTfPeriod(activePeriod);
+  }, [tfVaultDepositEndDate, tfVaultLockEndDate, setActiveTfPeriod]);
 
   const fetchVaultPosition = useCallback(() => {
     return new Promise((resolve, reject) => {
@@ -653,6 +697,11 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     isUserManager,
     updateVaultPositionLoading,
     isReportsLoaded,
+    isUserKycPassed,
+    isTfVaultType,
+    tfVaultDepositEndDate,
+    tfVaultLockEndDate,
+    activeTfPeriod,
   };
 };
 

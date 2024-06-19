@@ -36,6 +36,11 @@ export type UseVaultContextReturnType = {
   managedStrategiesIds: string[];
   isUserManager: boolean;
   isReportsLoaded: boolean;
+  isUserKycPassed: boolean;
+  isTfVaultType: boolean;
+  tfVaultDepositEndDate: string | null;
+  tfVaultLockEndDate: string | null;
+  activeTfPeriod: number;
 };
 
 export const VaultContext = createContext<UseVaultContextReturnType>(
