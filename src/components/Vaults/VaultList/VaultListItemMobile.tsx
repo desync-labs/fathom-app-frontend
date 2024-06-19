@@ -96,6 +96,13 @@ const VaultListItemMobile = ({
     newVaultDeposit,
     setManageVault,
     setNewVaultDeposit,
+    isTfVaultType,
+    isUserKycPassed,
+    tfVaultDepositEndDate,
+    tfVaultLockEndDate,
+    activeTfPeriod,
+    tfVaultDepositLimit,
+    handleWithdrawAll,
   } = useVaultListItem({ vaultPosition, vault: vaultItemData });
 
   const handleOpenPreviewModal = () => {
@@ -166,6 +173,10 @@ const VaultListItemMobile = ({
             handleClosePreview={handleClosePreviewModal}
             setManageVault={setManageVault}
             setNewVaultDeposit={setNewVaultDeposit}
+            tfVaultDepositLimit={tfVaultDepositLimit}
+            handleWithdrawAll={handleWithdrawAll}
+            isTfVaultType={isTfVaultType}
+            activeTfPeriod={activeTfPeriod}
           />
         );
       }, [
@@ -182,6 +193,11 @@ const VaultListItemMobile = ({
             <VaultListItemDepositModal
               vaultItemData={vaultItemData}
               performanceFee={performanceFee}
+              isTfVaultType={isTfVaultType}
+              isUserKycPassed={isUserKycPassed}
+              tfVaultDepositEndDate={tfVaultDepositEndDate}
+              tfVaultLockEndDate={tfVaultLockEndDate}
+              activeTfPeriod={activeTfPeriod}
               onClose={() => setNewVaultDeposit(false)}
             />
           )
@@ -195,6 +211,10 @@ const VaultListItemMobile = ({
               vaultItemData={vaultItemData}
               vaultPosition={vaultPosition}
               performanceFee={performanceFee}
+              isTfVaultType={isTfVaultType}
+              tfVaultDepositEndDate={tfVaultDepositEndDate}
+              tfVaultLockEndDate={tfVaultLockEndDate}
+              activeTfPeriod={activeTfPeriod}
               onClose={() => setManageVault(false)}
             />
           )

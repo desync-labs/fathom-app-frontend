@@ -44,9 +44,18 @@ const CustomPaper = styled(Box)`
       padding: 8px 16px;
     }
   }
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    &.withdraw-btn {
+      width: 100%;
+
+      button {
+        width: 100%;
+      }
+    }
+  }
 `;
 
-const AppStepper = styled(Stepper)`
+export const AppStepper = styled(Stepper)`
   & .MuiStepConnector-root {
     margin-left: 8px;
   }
@@ -57,7 +66,7 @@ const AppStepper = styled(Stepper)`
   }
 `;
 
-const AppStep = styled(Step)`
+export const AppStep = styled(Step)`
   position: relative;
   & .MuiStepLabel-root {
     padding: 2px 0;
@@ -90,7 +99,7 @@ const AppStep = styled(Step)`
   }
 `;
 
-const StepLabelOptionalValue = styled("div")`
+export const StepLabelOptionalValue = styled("div")`
   position: absolute;
   right: 0;
   top: 1px;
@@ -104,7 +113,7 @@ const StepLabelOptionalValue = styled("div")`
   margin: 0;
 `;
 
-const CounterIndicator = styled("div")`
+export const CounterIndicator = styled("div")`
   color: #f5953d;
   font-size: 14px;
   font-weight: 600;
@@ -116,19 +125,19 @@ const LockWrapper = styled(Box)`
   gap: 4px;
 `;
 
-const QontoStepIconRoot = styled("div")<{ ownerState: { active?: boolean } }>(
-  ({ theme, ownerState }) => ({
-    color: theme.palette.mode === "dark" ? theme.palette.grey[700] : "#eaeaf0",
-    display: "flex",
-    height: 22,
-    alignItems: "center",
-    ...(ownerState.active && {
-      color: "#784af4",
-    }),
-  })
-);
+export const QontoStepIconRoot = styled("div")<{
+  ownerState: { active?: boolean };
+}>(({ theme, ownerState }) => ({
+  color: theme.palette.mode === "dark" ? theme.palette.grey[700] : "#eaeaf0",
+  display: "flex",
+  height: 22,
+  alignItems: "center",
+  ...(ownerState.active && {
+    color: "#784af4",
+  }),
+}));
 
-const QontoStepIcon = (props: StepIconProps) => {
+export const QontoStepIcon = (props: StepIconProps) => {
   const { active, completed, className } = props;
 
   return (
@@ -147,7 +156,7 @@ const QontoStepIcon = (props: StepIconProps) => {
   );
 };
 
-const calculateTimeLeft = (date: Date | null) => {
+export const calculateTimeLeft = (date: Date | null) => {
   if (!date) return { days: 0, hours: 0, minutes: 0, seconds: 0 };
 
   const difference = +date - +new Date();
@@ -165,7 +174,7 @@ const calculateTimeLeft = (date: Date | null) => {
   return timeLeft;
 };
 
-const StepContentCounter = ({ date }: { date: Date }) => {
+export const StepContentCounter = ({ date }: { date: Date }) => {
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft(date));
 
   useEffect(() => {
@@ -186,8 +195,13 @@ const StepContentCounter = ({ date }: { date: Date }) => {
 
 const VaultLockingBar = () => {
   const { isMobile } = useSharedContext();
-  const { tfVaultDepositEndDate, tfVaultLockEndDate, activeTfPeriod } =
-    useVaultContext();
+  const {
+    vaultPosition,
+    tfVaultDepositEndDate,
+    tfVaultLockEndDate,
+    activeTfPeriod,
+    handleWithdrawAll,
+  } = useVaultContext();
 
   const steps = [
     {
@@ -245,7 +259,7 @@ const VaultLockingBar = () => {
           Locking Period
         </Typography>
       </SummaryWrapper>
-      <AppFlexBox mt="12px">
+      <AppFlexBox mt="12px" sx={{ flexDirection: isMobile ? "column" : "row" }}>
         <CustomPaper>
           <AppStepper activeStep={activeTfPeriod} orientation="vertical">
             {steps.map((step, index) => (
@@ -283,7 +297,12 @@ const VaultLockingBar = () => {
         <CustomPaper className="withdraw-btn">
           <ButtonPrimary
             type="button"
-            disabled={activeTfPeriod !== steps.length}
+            disabled={
+              !vaultPosition ||
+              vaultPosition.balanceShares === "0" ||
+              activeTfPeriod !== 2
+            }
+            onClick={handleWithdrawAll}
           >
             Withdraw
           </ButtonPrimary>
