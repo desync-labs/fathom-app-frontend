@@ -17,7 +17,7 @@ import MethodListItem from "components/Vaults/VaultDetail/Managment/MethodListIt
 import StrategyStatusBar from "components/Vaults/VaultDetail/Managment/StrategyStatusBar";
 import useSharedContext from "context/shared";
 import { Contract } from "@into-the-fathom/contracts";
-import useConnector from "../../../../context/connector";
+import useConnector from "context/connector";
 
 const StrategyManagerDescription = styled("div")`
   color: #fff;
