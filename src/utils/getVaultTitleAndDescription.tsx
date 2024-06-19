@@ -74,5 +74,7 @@ vaultDescription["0x50d150069a0fce09e6ded55a75aec67d2be79037"] = (
 );
 
 vaultTitle["0x50d150069a0fce09e6ded55a75aec67d2be79037"] = "Gold World ETF";
+vaultTitle["0xfa6ed4d32110e1c27c9d8c2930e217746cb8acab"] =
+  "Trade Fintech Vault";
 
 export { vaultTitle, vaultDescription };

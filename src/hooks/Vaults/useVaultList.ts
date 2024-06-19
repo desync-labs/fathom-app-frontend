@@ -1,6 +1,6 @@
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { useLazyQuery, useQuery } from "@apollo/client";
-import { IVault, IVaultPosition } from "fathom-sdk";
+import { IVault, IVaultPosition, VaultType } from "fathom-sdk";
 import {
   ACCOUNT_VAULT_POSITIONS,
   VAULTS,
@@ -8,6 +8,7 @@ import {
 } from "apollo/queries";
 import { COUNT_PER_PAGE } from "utils/Constants";
 import { vaultTitle } from "utils/getVaultTitleAndDescription";
+import { vaultType } from "utils/getVaultType";
 import useConnector from "context/connector";
 import useSyncContext from "context/sync";
 import { useServices } from "context/services";
@@ -261,6 +262,9 @@ const useVaultList = () => {
           name: vaultTitle[vault.id.toLowerCase()]
             ? vaultTitle[vault.id.toLowerCase()]
             : vault.token.name,
+          type: vaultType[vault.id.toLowerCase()]
+            ? vaultType[vault.id.toLowerCase()]
+            : VaultType.DEFAULT,
         };
       });
 
