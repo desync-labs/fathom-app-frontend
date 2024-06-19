@@ -120,7 +120,7 @@ export const CounterIndicator = styled("div")`
   line-height: 20px;
 `;
 
-const LockWrapper = styled(Box)`
+export const LockWrapper = styled(Box)`
   display: flex;
   gap: 4px;
 `;
