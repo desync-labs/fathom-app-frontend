@@ -1,5 +1,5 @@
-import { getTokenInfo } from "./tokenLogo";
-import { NATIVE_ASSETS } from "../connectors/networks";
+import { getTokenInfo } from "utils/tokenLogo";
+import { NATIVE_ASSETS } from "connectors/networks";
 
 export const filterPoolCollateralAddress = (
   search: string,

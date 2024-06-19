@@ -35,6 +35,7 @@ import {
   VaultTitle,
 } from "components/Vaults/VaultList/VaultListItemMobile";
 import { VaultStacked } from "components/Vaults/VaultList/VaultListItem";
+import CloseIcon from "@mui/icons-material/Close";
 
 import LockAquaSrc from "assets/svg/lock-aqua.svg";
 import LockSrc from "assets/svg/lock.svg";
@@ -156,6 +157,12 @@ interface VaultListItemPreviewModalProps {
   setManageVault: (value: boolean) => void;
 }
 
+const BreadcrumbsWrapperContainer = styled(Box)`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
 const VaultListItemPreviewModal: FC<VaultListItemPreviewModalProps> = ({
   vault,
   vaultPosition,
@@ -174,6 +181,7 @@ const VaultListItemPreviewModal: FC<VaultListItemPreviewModalProps> = ({
   const redirectToVaultDetail = useCallback(() => {
     navigate(`/vaults/${vault.id}`);
   }, [vault.id]);
+
   return (
     <FullScreenDialog
       fullScreen={true}
@@ -181,10 +189,13 @@ const VaultListItemPreviewModal: FC<VaultListItemPreviewModalProps> = ({
       onClose={handleClosePreview}
     >
       <VaultListItemPreviewModalContainer>
-        <PseudoBreadcrumbs
-          vaultName={vault.name}
-          handleCloseModal={handleClosePreview}
-        />
+        <BreadcrumbsWrapperContainer>
+          <PseudoBreadcrumbs
+            vaultName={vault.name}
+            handleCloseModal={handleClosePreview}
+          />
+          <CloseIcon sx={{ color: "#6d86b2" }} onClick={handleClosePreview} />
+        </BreadcrumbsWrapperContainer>
         <AppFlexBox>
           <AppFlexBox sx={{ justifyContent: "flex-start", gap: "4px" }}>
             <VaultListItemImageWrapper>

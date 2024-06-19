@@ -16,7 +16,7 @@ import { COUNT_PER_PAGE } from "utils/Constants";
 import useConnector from "context/connector";
 import BigNumber from "bignumber.js";
 import debounce from "lodash.debounce";
-import { ChainId } from "../../connectors/networks";
+import { ChainId } from "connectors/networks";
 
 const useOpenPositionList = (
   setPositionCurrentPage: Dispatch<number>,

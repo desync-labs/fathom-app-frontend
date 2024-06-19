@@ -3,7 +3,7 @@ import { ICollateralPool } from "fathom-sdk";
 import { useQuery } from "@apollo/client";
 import { FXD_POOLS } from "apollo/queries";
 import useConnector from "context/connector";
-import { ChainId } from "../../connectors/networks";
+import { ChainId } from "connectors/networks";
 
 const usePoolsList = () => {
   const [selectedPool, setSelectedPool] = useState<ICollateralPool>();

@@ -1,6 +1,6 @@
 import { FC, memo } from "react";
 import { Box, css, keyframes, styled } from "@mui/material";
-import imgSrc from "../../assets/Fathom-app-logo.svg";
+import imgSrc from "apps/charts/assets/Fathom-app-logo.svg";
 
 const pulse = keyframes`
   0% { transform: scale(1); }

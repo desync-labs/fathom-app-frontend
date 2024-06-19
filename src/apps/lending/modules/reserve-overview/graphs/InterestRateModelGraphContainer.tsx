@@ -2,8 +2,8 @@ import { Box } from "@mui/material";
 import { ParentSize } from "@visx/responsive";
 import type { ComputedReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 
-import { GraphLegend } from "./GraphLegend";
-import { InterestRateModelGraph } from "./InterestRateModelGraph";
+import { GraphLegend } from "apps/lending/modules/reserve-overview/graphs/GraphLegend";
+import { InterestRateModelGraph } from "apps/lending/modules/reserve-overview/graphs/InterestRateModelGraph";
 import { FC, memo } from "react";
 
 type InteresetRateModelGraphContainerProps = {

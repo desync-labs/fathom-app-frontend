@@ -1,7 +1,7 @@
 import ErrorIcon from "@mui/icons-material/Error";
 import { Box, SvgIcon } from "@mui/material";
 
-import { ContentWithTooltip } from "../ContentWithTooltip";
+import { ContentWithTooltip } from "apps/lending/components/ContentWithTooltip";
 
 export const FrozenTooltip = () => {
   return (

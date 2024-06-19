@@ -11,13 +11,13 @@ import { DashboardReserve } from "apps/lending/utils/dashboardSortUtils";
 import { isFeatureEnabled } from "apps/lending/utils/marketsAndNetworksConfig";
 
 import { ListColumn } from "apps/lending/components/lists/ListColumn";
-import { ListAPRColumn } from "../ListAPRColumn";
-import { ListButtonsColumn } from "../ListButtonsColumn";
-import { ListItemAPYButton } from "../ListItemAPYButton";
-import { ListItemWrapper } from "../ListItemWrapper";
-import { ListMobileItemWrapper } from "../ListMobileItemWrapper";
-import { ListValueColumn } from "../ListValueColumn";
-import { ListValueRow } from "../ListValueRow";
+import { ListAPRColumn } from "apps/lending/modules/dashboard/lists/ListAPRColumn";
+import { ListButtonsColumn } from "apps/lending/modules/dashboard/lists/ListButtonsColumn";
+import { ListItemAPYButton } from "apps/lending/modules/dashboard/lists/ListItemAPYButton";
+import { ListItemWrapper } from "apps/lending/modules/dashboard/lists/ListItemWrapper";
+import { ListMobileItemWrapper } from "apps/lending/modules/dashboard/lists/ListMobileItemWrapper";
+import { ListValueColumn } from "apps/lending/modules/dashboard/lists/ListValueColumn";
+import { ListValueRow } from "apps/lending/modules/dashboard/lists/ListValueRow";
 import { FC } from "react";
 
 export const BorrowedPositionsListItem: FC<{ item: DashboardReserve }> = ({

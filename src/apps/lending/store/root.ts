@@ -8,7 +8,10 @@ import {
 } from "apps/lending/store/analyticsSlice";
 import { createLayoutSlice, LayoutSlice } from "apps/lending/store/layoutSlice";
 import { createPoolSlice, PoolSlice } from "apps/lending/store/poolSlice";
-import { createIncentiveSlice, IncentiveSlice } from "./incentiveSlice";
+import {
+  createIncentiveSlice,
+  IncentiveSlice,
+} from "apps/lending/store/incentiveSlice";
 import {
   createProtocolDataSlice,
   ProtocolDataSlice,

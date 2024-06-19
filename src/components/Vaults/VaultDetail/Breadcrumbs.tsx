@@ -7,6 +7,9 @@ import { CustomSkeleton } from "components/AppComponents/AppSkeleton/AppSkeleton
 export const BreadcrumbsWrapper = styled(Breadcrumbs)`
   margin-top: 40px;
   margin-bottom: 40px;
+  .close {
+    float: right;
+  }
   ${({ theme }) => theme.breakpoints.down("sm")} {
     margin-top: 24px;
     margin-bottom: 20px;

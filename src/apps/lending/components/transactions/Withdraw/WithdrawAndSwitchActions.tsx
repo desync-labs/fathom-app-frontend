@@ -26,8 +26,8 @@ import {
 import { QueryKeys } from "apps/lending/ui-config/queries";
 import { GENERAL } from "apps/lending/utils/mixPanelEvents";
 
-import { TxActionsWrapper } from "../TxActionsWrapper";
-import { APPROVAL_GAS_LIMIT } from "../utils";
+import { TxActionsWrapper } from "apps/lending/components/transactions/TxActionsWrapper";
+import { APPROVAL_GAS_LIMIT } from "apps/lending/components/transactions/utils";
 
 interface WithdrawAndSwitchProps extends BoxProps {
   amountToSwap: string;

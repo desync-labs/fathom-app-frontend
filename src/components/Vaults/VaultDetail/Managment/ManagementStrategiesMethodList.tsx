@@ -14,8 +14,8 @@ import {
   STATE_MUTABILITY_TRANSACTIONS,
 } from "components/Vaults/VaultDetail/Managment/ManagementVaultMethodList";
 import MethodListItem from "components/Vaults/VaultDetail/Managment/MethodListItem";
-import StrategyStatusBar from "./StrategyStatusBar";
-import useSharedContext from "../../../../context/shared";
+import StrategyStatusBar from "components/Vaults/VaultDetail/Managment/StrategyStatusBar";
+import useSharedContext from "context/shared";
 
 const StrategyManagerDescription = styled("div")`
   color: #fff;

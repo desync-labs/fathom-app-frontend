@@ -25,7 +25,11 @@ import {
   useTransactionHistory,
 } from "apps/lending/hooks/useTransactionHistory";
 
-import { downloadData, formatTransactionData, groupByDate } from "./helpers";
+import {
+  downloadData,
+  formatTransactionData,
+  groupByDate,
+} from "apps/lending/modules/history/helpers";
 import { HistoryFilterMenu } from "apps/lending/modules/history/HistoryFilterMenu";
 import { HistoryMobileItemLoader } from "apps/lending/modules/history/HistoryMobileItemLoader";
 import TransactionMobileRowItem from "apps/lending/modules/history/TransactionMobileRowItem";

@@ -7,7 +7,7 @@ import {
 } from "apollo/queries";
 import BigNumber from "bignumber.js";
 import { IVaultPosition } from "fathom-sdk";
-import useSyncContext from "../../context/sync";
+import useSyncContext from "context/sync";
 
 const TRANSACTIONS_PER_PAGE = 1000;
 
