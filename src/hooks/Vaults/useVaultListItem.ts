@@ -9,6 +9,7 @@ import useSyncContext from "context/sync";
 import useRpcError from "hooks/General/useRpcError";
 import { VAULT_POSITION_TRANSACTIONS } from "apollo/queries";
 import { vaultType } from "utils/getVaultType";
+import dayjs from "dayjs";
 
 interface UseVaultListItemProps {
   vaultPosition: IVaultPosition | null | undefined;
@@ -178,14 +179,15 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
   }, [vault, isTfVaultType]);
 
   useEffect(() => {
-    if (tfVaultDepositEndDate === null || tfVaultLockEndDate === null) return;
-    const now = new Date();
+    if (!tfVaultDepositEndDate || !tfVaultLockEndDate) return;
+    const now = dayjs();
     let activePeriod = 2;
 
-    if (now < new Date(Number(tfVaultLockEndDate) * 1000)) {
+    if (now.isBefore(dayjs.unix(Number(tfVaultLockEndDate)))) {
       activePeriod = 1;
     }
-    if (now < new Date(Number(tfVaultDepositEndDate) * 1000)) {
+
+    if (now.isBefore(dayjs.unix(Number(tfVaultDepositEndDate)))) {
       activePeriod = 0;
     }
 
@@ -195,7 +197,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
   useEffect(() => {
     if (account && isTfVaultType) {
       vaultService
-        .getDepositLimit(vault.id, account, isTfVaultType)
+        .getDepositLimit(vault.id, isTfVaultType, account)
         .then((res) => {
           setTfVaultDepositLimit(res);
         });
