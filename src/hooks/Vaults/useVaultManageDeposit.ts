@@ -217,6 +217,21 @@ const useVaultManageDeposit = (
     }
   };
 
+  useEffect(() => {
+    if (type === VaultType.TRADEFLOW) {
+      const maxBalanceToken = BigNumber(balanceToken).dividedBy(10 ** 18);
+
+      if (
+        BigNumber(maxBalanceToken).minus(formToken).isGreaterThan(0) &&
+        BigNumber(maxBalanceToken).minus(formToken).isLessThan(minimumDeposit)
+      ) {
+        setIsFullWithdraw(true);
+      } else {
+        setIsFullWithdraw(false);
+      }
+    }
+  }, [balanceToken, type, formToken]);
+
   const withdrawLimitExceeded = (value: string) => {
     /**
      * Logic for TradeFlowVault
@@ -228,18 +243,14 @@ const useVaultManageDeposit = (
         BigNumber(maxBalanceToken).minus(value).isGreaterThan(0) &&
         BigNumber(maxBalanceToken).minus(value).isLessThan(minimumDeposit)
       ) {
-        return `After withdraw ${formatNumber(
-          Number(value)
-        )}  you will have ${formatNumber(
+        return `After withdraw ${formatNumber(Number(value))} ${
+          token.name
+        }  you will have ${formatNumber(
           BigNumber(maxBalanceToken).minus(value).toNumber()
-        )} less then minimum allowed deposit ${
+        )} ${token.name} less then minimum allowed deposit ${
           minimumDeposit / 1000
-        }k, so we will process full withdraw.`;
-        setIsFullWithdraw(true);
-      } else {
-        setIsFullWithdraw(false);
+        }k ${token.name}, so we will process full withdraw.`;
       }
-
       return "";
     } else {
       return "";
