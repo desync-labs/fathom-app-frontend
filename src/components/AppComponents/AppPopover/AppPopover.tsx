@@ -39,6 +39,7 @@ type AppPopoverProps = {
   text: ReactNode;
   element?: ReactElement;
   type?: PopoverType;
+  iconSize?: string;
 };
 
 const AppPopover: FC<AppPopoverProps> = ({
@@ -46,6 +47,7 @@ const AppPopover: FC<AppPopoverProps> = ({
   text,
   element,
   type = PopoverType.Info,
+  iconSize = "18px",
 }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
@@ -76,7 +78,7 @@ const AppPopover: FC<AppPopoverProps> = ({
           onMouseEnter={handlePopoverOpen}
           onMouseLeave={handlePopoverClose}
         >
-          <InfoIcon sx={{ fontSize: "18px" }} />
+          <InfoIcon sx={{ fontSize: iconSize }} />
         </span>
       )}
       <AppPopoverWrapper

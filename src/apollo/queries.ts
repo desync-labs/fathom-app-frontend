@@ -454,6 +454,7 @@ export const VAULT_POSITION_TRANSACTIONS = gql`
     }
   }
 `;
+
 export const VAULTS_ACCOUNT_DEPOSITS = gql`
   query VaultAccountDeposits(
     $account: String!

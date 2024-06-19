@@ -238,7 +238,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
         setPerformanceFee(performanceFeeRes / 100);
       }
     }
-  }, [vaultsFactories]);
+  }, [vaultsFactories, vaultsFactoriesLoading]);
 
   useEffect(() => {
     if ((!vaultItemData || vaultItemData?.vault === null) && !vaultLoading) {
@@ -251,6 +251,32 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
           ? vaultTitle[vault.id.toLowerCase()]
           : vault.token.name,
       });
+
+      /**
+       * Fetch additional data for strategies
+       */
+      if (vault && vault?.strategies && vault?.strategies?.length) {
+        const promises: Promise<boolean>[] = [];
+        vault?.strategies.forEach((strategy: IVaultStrategy) => {
+          promises.push(vaultService.isStrategyShutdown(strategy.id));
+        });
+
+        Promise.all(promises).then((response) => {
+          const strategies = vault?.strategies.map(
+            (strategy: IVaultStrategy, index: number) => {
+              return {
+                ...strategy,
+                isShutdown: response[index],
+              };
+            }
+          );
+
+          setVault((prev) => ({
+            ...prev,
+            strategies,
+          }));
+        });
+      }
     }
   }, [vaultItemData, vaultLoading, setVault]);
 

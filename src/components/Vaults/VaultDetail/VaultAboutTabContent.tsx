@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import BigNumber from "bignumber.js";
-import { Box, ListItemText, Typography } from "@mui/material";
+import { Box, ListItemText, styled, Typography } from "@mui/material";
 import {
   VaultAboutTitle,
   vaultDescription,
@@ -17,6 +17,12 @@ import {
   VaultContractAddress,
   VaultDescriptionWrapper,
 } from "components/Vaults/VaultDetail/VaultDetailInfoTabAbout";
+import AppPopover from "../../AppComponents/AppPopover/AppPopover";
+
+const FeesItemWrapper = styled(Box)`
+  display: flex;
+  gap: 4px;
+`;
 
 const VaultAboutTabContent = () => {
   const { vault, performanceFee, protocolFee } = useVaultContext();
@@ -96,13 +102,28 @@ const VaultAboutTabContent = () => {
           <AppListItem
             alignItems="flex-start"
             secondaryAction={
-              <>{`${formatPercentage(
-                Number(performanceFee * (protocolFee / 100))
-              )}%`}</>
+              <>
+                {`${formatPercentage(
+                  Number(performanceFee * (protocolFee / 100))
+                )}%`}
+              </>
             }
             sx={{ padding: "0 !important" }}
           >
-            <ListItemText primary={"Protocol fee"} />
+            <ListItemText
+              primary={
+                <FeesItemWrapper>
+                  Protocol fee
+                  <AppPopover
+                    id={"protocol-fee"}
+                    text={
+                      "Taken from the performance fee as a percentage of it."
+                    }
+                    iconSize={"15px"}
+                  />
+                </FeesItemWrapper>
+              }
+            />
           </AppListItem>
           <AppListItem
             alignItems="flex-start"
@@ -111,7 +132,20 @@ const VaultAboutTabContent = () => {
             }
             sx={{ padding: "0 !important" }}
           >
-            <ListItemText primary={"Total fee"} />
+            <ListItemText
+              primary={
+                <FeesItemWrapper>
+                  Total fee
+                  <AppPopover
+                    id={"total-fee"}
+                    text={
+                      "The fee is charged from the gain (performance fee) and shared between the manager and protocol."
+                    }
+                    iconSize={"15px"}
+                  />
+                </FeesItemWrapper>
+              }
+            />
           </AppListItem>
         </AppListFees>
       </Box>
