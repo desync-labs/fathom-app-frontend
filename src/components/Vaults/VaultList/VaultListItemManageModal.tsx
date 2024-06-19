@@ -92,7 +92,7 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
     validateMaxValue,
     handleSubmit,
     onSubmit,
-  } = useVaultManageDeposit(vaultItemData, vaultPosition, onClose);
+  } = useVaultManageDeposit(vaultItemData, vaultPosition, 10000, onClose);
   const { account } = useConnector();
   const { shutdown } = vaultItemData;
 

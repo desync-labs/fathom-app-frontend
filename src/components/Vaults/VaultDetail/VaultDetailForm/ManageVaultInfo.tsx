@@ -82,6 +82,7 @@ type VaultManageInfoProps = {
     undefined
   >;
   onSubmit: (values: Record<string, any>) => Promise<void>;
+  withdrawLimitExceeded: (value: string) => string;
 };
 
 const ManageVaultInfo: FC<VaultManageInfoProps> = ({
@@ -100,6 +101,7 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
   approveBtn,
   handleSubmit,
   onSubmit,
+  withdrawLimitExceeded,
 }) => {
   const { token, shareToken, sharesSupply } = vaultItemData;
   const { balancePosition, balanceShares } = vaultPosition;
@@ -270,13 +272,19 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
         formType === FormType.DEPOSIT &&
         (BigNumber(walletBalance)
           .dividedBy(10 ** 18)
-          .isLessThan(BigNumber(formToken)) ||
+          .isLessThan(formToken) ||
           walletBalance == "0") && (
           <ErrorBox sx={{ marginBottom: 0 }}>
             <InfoIcon />
             <Typography>Wallet balance is not enough to deposit.</Typography>
           </ErrorBox>
         )}
+      {withdrawLimitExceeded(formToken) && (
+        <ErrorBox sx={{ marginBottom: 0 }}>
+          <InfoIcon />
+          <Typography>{withdrawLimitExceeded(formToken)}</Typography>
+        </ErrorBox>
+      )}
       {approveBtn && formType === FormType.DEPOSIT && walletBalance !== "0" && (
         <InfoBoxV2>
           <InfoIcon />

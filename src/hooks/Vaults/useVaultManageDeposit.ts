@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { IVault, IVaultPosition } from "fathom-sdk";
+import { IVault, IVaultPosition, VaultType } from "fathom-sdk";
 import { useForm } from "react-hook-form";
 import BigNumber from "bignumber.js";
 import debounce from "lodash.debounce";
@@ -7,7 +7,7 @@ import useConnector from "context/connector";
 import { useServices } from "context/services";
 import useSyncContext from "context/sync";
 import { formatNumber } from "utils/format";
-import { MAX_PERSONAL_DEPOSIT } from "hooks/Vaults/useVaultOpenDeposit";
+import { MAX_PERSONAL_DEPOSIT } from "./useVaultOpenDeposit";
 
 export const defaultValues = {
   formToken: "",
@@ -21,6 +21,7 @@ export enum FormType {
 const useVaultManageDeposit = (
   vault: IVault,
   vaultPosition: IVaultPosition,
+  minimumDeposit: number,
   onClose: () => void
 ) => {
   const { account } = useConnector();
@@ -42,7 +43,7 @@ const useVaultManageDeposit = (
     formState: { errors },
   } = methods;
 
-  const { token, depositLimit, balanceTokens, shutdown } = vault;
+  const { token, depositLimit, balanceTokens, shutdown, type } = vault;
   const [formType, setFormType] = useState<FormType>(
     shutdown ? FormType.WITHDRAW : FormType.DEPOSIT
   );
@@ -178,14 +179,17 @@ const useVaultManageDeposit = (
       )} ${token.symbol}`;
     }
 
-    if (
-      BigNumber(value).isGreaterThan(MAX_PERSONAL_DEPOSIT) ||
-      BigNumber(balancePosition)
-        .dividedBy(10 ** 18)
-        .plus(value)
-        .isGreaterThan(MAX_PERSONAL_DEPOSIT)
-    ) {
-      return `The ${MAX_PERSONAL_DEPOSIT / 1000}k ${
+    const formattedDeposit = BigNumber(depositLimit).dividedBy(10 ** 18);
+    const rule =
+      type === VaultType.TRADEFLOW
+        ? BigNumber(value).isGreaterThan(formattedDeposit)
+        : BigNumber(balancePosition)
+            .dividedBy(10 ** 18)
+            .plus(value)
+            .isGreaterThan(formattedDeposit);
+
+    if (rule) {
+      return `The ${formattedDeposit.toNumber() / 1000}k ${
         token.symbol
       } limit has been exceeded. Please reduce the amount to continue.`;
     }
@@ -194,19 +198,51 @@ const useVaultManageDeposit = (
   };
 
   const depositLimitExceeded = (value: string) => {
-    if (
-      BigNumber(value).isGreaterThanOrEqualTo(MAX_PERSONAL_DEPOSIT) ||
-      BigNumber(balancePosition)
-        .dividedBy(10 ** 18)
-        .plus(value)
-        .decimalPlaces(6, BigNumber.ROUND_UP)
-        .isGreaterThanOrEqualTo(MAX_PERSONAL_DEPOSIT)
-    ) {
-      return `The ${MAX_PERSONAL_DEPOSIT / 1000}k ${
+    const formattedDepositLimit = BigNumber(depositLimit).dividedBy(10 ** 18);
+    const rule =
+      type === VaultType.TRADEFLOW
+        ? BigNumber(value).isGreaterThanOrEqualTo(formattedDepositLimit)
+        : BigNumber(balancePosition)
+            .dividedBy(10 ** 18)
+            .plus(value)
+            .decimalPlaces(6, BigNumber.ROUND_UP)
+            .isGreaterThanOrEqualTo(formattedDepositLimit);
+
+    if (rule) {
+      return `The ${formattedDepositLimit.toNumber() / 1000}k ${
         token.symbol
       } limit has been exceeded.`;
     } else {
       return false;
+    }
+  };
+
+  const withdrawLimitExceeded = (value: string) => {
+    /**
+     * Logic for TradeFlowVault
+     */
+    if (type === VaultType.TRADEFLOW) {
+      const maxBalanceToken = BigNumber(balanceToken).dividedBy(10 ** 18);
+
+      if (
+        BigNumber(maxBalanceToken).minus(value).isGreaterThan(0) &&
+        BigNumber(maxBalanceToken).minus(value).isLessThan(minimumDeposit)
+      ) {
+        return `After withdraw ${formatNumber(
+          Number(value)
+        )}  you will have ${formatNumber(
+          BigNumber(maxBalanceToken).minus(value).toNumber()
+        )} less then minimum allowed deposit ${
+          minimumDeposit / 1000
+        }k, so we will process full withdraw.`;
+        setIsFullWithdraw(true);
+      } else {
+        setIsFullWithdraw(false);
+      }
+
+      return "";
+    } else {
+      return "";
     }
   };
 
@@ -222,12 +258,18 @@ const useVaultManageDeposit = (
     (value: string) => {
       if (formType === FormType.DEPOSIT) {
         const maxWalletBalance = BigNumber(walletBalance).dividedBy(10 ** 18);
-        const maxDepositLimit = BigNumber.max(
-          BigNumber(depositLimit)
-            .minus(BigNumber(balanceTokens).dividedBy(10 ** 18))
-            .toNumber(),
-          0
+        const formattedDepositLimit = BigNumber(depositLimit).dividedBy(
+          10 ** 18
         );
+        const maxDepositLimit =
+          type === VaultType.TRADEFLOW
+            ? BigNumber.max(formattedDepositLimit, 0)
+            : BigNumber.max(
+                BigNumber(formattedDepositLimit)
+                  .minus(BigNumber(balanceTokens).dividedBy(10 ** 18))
+                  .toNumber(),
+                0
+              );
 
         return validateDeposit(value, maxWalletBalance, maxDepositLimit);
       } else {
@@ -240,21 +282,33 @@ const useVaultManageDeposit = (
 
   const setMax = useCallback(() => {
     if (formType === FormType.DEPOSIT) {
-      const max = BigNumber.min(
-        BigNumber(walletBalance).dividedBy(10 ** 18),
-        BigNumber(depositLimit)
-          .minus(balanceTokens)
-          .dividedBy(10 ** 18),
-        BigNumber(MAX_PERSONAL_DEPOSIT).minus(
-          BigNumber(balancePosition).dividedBy(10 ** 18)
-        )
-      ).decimalPlaces(6, BigNumber.ROUND_DOWN);
+      if (type === VaultType.TRADEFLOW) {
+        const max = BigNumber.min(walletBalance, depositLimit)
+          .dividedBy(10 ** 18)
+          .decimalPlaces(6, BigNumber.ROUND_DOWN);
 
-      const maxCapped = max.isNegative() ? BigNumber(0) : max;
+        const maxCapped = max.isNegative() ? BigNumber(0) : max;
 
-      setValue("formToken", maxCapped.toString(), {
-        shouldValidate: true,
-      });
+        setValue("formToken", maxCapped.toString(), {
+          shouldValidate: true,
+        });
+      } else {
+        const max = BigNumber.min(
+          BigNumber(walletBalance).dividedBy(10 ** 18),
+          BigNumber(depositLimit)
+            .minus(balanceTokens)
+            .dividedBy(10 ** 18),
+          BigNumber(MAX_PERSONAL_DEPOSIT).minus(
+            BigNumber(balancePosition).dividedBy(10 ** 18)
+          )
+        ).decimalPlaces(6, BigNumber.ROUND_DOWN);
+
+        const maxCapped = max.isNegative() ? BigNumber(0) : max;
+
+        setValue("formToken", maxCapped.toString(), {
+          shouldValidate: true,
+        });
+      }
     } else {
       setIsFullWithdraw(true);
       setValue(
@@ -309,13 +363,25 @@ const useVaultManageDeposit = (
         }
       } else {
         try {
-          const blockNumber = await vaultService.redeem(
+          console.log({
             formSharedToken,
+            full: BigNumber(vaultPosition.balanceShares)
+              .dividedBy(10 ** 18)
+              .toString(),
+          });
+
+          const blockNumber = await vaultService.redeem(
+            isFullWithdraw
+              ? BigNumber(vaultPosition.balanceShares)
+                  .dividedBy(10 ** 18)
+                  .toString()
+              : formSharedToken,
             account,
             account,
             vault.shareToken.id
           );
 
+          setIsFullWithdraw(false);
           setLastTransactionBlock(blockNumber as number);
 
           onClose();
@@ -326,7 +392,7 @@ const useVaultManageDeposit = (
         }
       }
     },
-    [account, formType, vault]
+    [account, vaultPosition, isFullWithdraw, formType, vault, setIsFullWithdraw]
   );
 
   return {
@@ -350,6 +416,7 @@ const useVaultManageDeposit = (
     onSubmit,
     methods,
     depositLimitExceeded,
+    withdrawLimitExceeded,
   };
 };
 

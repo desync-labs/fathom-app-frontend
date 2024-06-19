@@ -19,6 +19,7 @@ import { CustomSkeleton } from "components/AppComponents/AppSkeleton/AppSkeleton
 import LockAquaSrc from "assets/svg/lock-aqua.svg";
 import StepperItemIcon from "assets/svg/icons/stepper-item-icon.svg";
 import StepperItemIconActive from "assets/svg/icons/stepper-item-icon-active.svg";
+import AppPopover from "../../AppComponents/AppPopover/AppPopover";
 
 const SummaryWrapper = styled(AppFlexBox)`
   justify-content: flex-start;
@@ -110,6 +111,11 @@ const CounterIndicator = styled("div")`
   line-height: 20px;
 `;
 
+const LockWrapper = styled(Box)`
+  display: flex;
+  gap: 4px;
+`;
+
 const QontoStepIconRoot = styled("div")<{ ownerState: { active?: boolean } }>(
   ({ theme, ownerState }) => ({
     color: theme.palette.mode === "dark" ? theme.palette.grey[700] : "#eaeaf0",
@@ -185,14 +191,46 @@ const VaultLockingBar = () => {
 
   const steps = [
     {
-      label: "Deposit Time",
+      key: "deposit-time", // added key to the object
+      label: (
+        <LockWrapper>
+          Deposit Time
+          <AppPopover
+            id={"deposit-time"}
+            text={
+              <>
+                Deposit Time - the period when users are allowed to deposit and
+                withdraw funds.
+              </>
+            }
+            iconSize={"14px"}
+          />
+        </LockWrapper>
+      ),
       date:
         tfVaultDepositEndDate === null
           ? tfVaultDepositEndDate
           : new Date(Number(tfVaultDepositEndDate) * 1000),
     },
     {
-      label: "Lock Time",
+      key: "lock-time", // added key to the object
+      label: (
+        <LockWrapper>
+          Lock Time
+          <AppPopover
+            id={"lock-time"}
+            text={
+              <>
+                Lock Time - the period of time when deposited funds are used to
+                generate yield according to the strategy. <br />
+                Users can’t withdraw and deposit any funds within this period.{" "}
+                After the lock period ends, users can withdraw funds.
+              </>
+            }
+            iconSize={"14px"}
+          />
+        </LockWrapper>
+      ),
       date:
         tfVaultLockEndDate === null
           ? tfVaultLockEndDate
@@ -211,7 +249,7 @@ const VaultLockingBar = () => {
         <CustomPaper>
           <AppStepper activeStep={activeTfPeriod} orientation="vertical">
             {steps.map((step, index) => (
-              <AppStep key={step.label}>
+              <AppStep key={step.key}>
                 <AppFlexBox>
                   <StepLabel
                     StepIconComponent={QontoStepIcon}

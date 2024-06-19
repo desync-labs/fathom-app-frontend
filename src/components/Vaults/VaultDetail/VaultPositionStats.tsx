@@ -7,6 +7,7 @@ import { formatNumber } from "utils/format";
 import { StatsValueSkeleton } from "components/AppComponents/AppSkeleton/AppSkeleton";
 import { memo, useEffect, useRef, useState } from "react";
 import useWindowResize from "hooks/General/useWindowResize";
+import { VaultType } from "fathom-sdk";
 
 const VaultPositionTitle = styled(Typography)`
   color: #fff;
@@ -215,13 +216,16 @@ const VaultPositionStats = () => {
               ) : (
                 <>
                   {formatNumber(
-                    Math.max(
-                      BigNumber(vault?.depositLimit || 0)
-                        .minus(vault?.balanceTokens || 0)
-                        .dividedBy(10 ** 18)
-                        .toNumber(),
+                    BigNumber.max(
+                      vault.type === VaultType.TRADEFLOW
+                        ? BigNumber(vault?.depositLimit || 0).dividedBy(
+                            10 ** 18
+                          )
+                        : BigNumber(vault?.depositLimit || 0)
+                            .minus(BigNumber(vault?.balanceTokens || 0))
+                            .dividedBy(10 ** 18),
                       0
-                    )
+                    ).toNumber()
                   )}{" "}
                   {vault?.token?.symbol}
                   <UsdValue>

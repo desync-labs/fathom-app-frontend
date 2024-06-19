@@ -100,6 +100,7 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
             validateMaxDepositValue={validateMaxDepositValue}
             handleSubmit={handleSubmit}
             onSubmit={onSubmit}
+            minimumDeposit={10000}
           />
           <DepositVaultInfo
             vaultItemData={vaultItemData}

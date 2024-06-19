@@ -7,7 +7,6 @@ import {
   IVaultStrategyReport,
   SmartContractFactory,
   VaultType,
-  IAccountVaultPosition,
 } from "fathom-sdk";
 import { FunctionFragment } from "@into-the-fathom/abi";
 import BigNumber from "bignumber.js";
@@ -83,6 +82,8 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
 
   const [protocolFee, setProtocolFee] = useState(0);
   const [performanceFee, setPerformanceFee] = useState(0);
+
+  const [minimumDeposit, setMinimumDeposit] = useState<number>(0.0000000001);
 
   const [updateVaultPositionLoading, setUpdateVaultPositionLoading] =
     useState<boolean>(false);
@@ -269,17 +270,15 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
   ) => {
     let depositLimitValue = vaultData.depositLimit;
     try {
-      if (account && isTfVaultType) {
-        depositLimitValue = await vaultService.getDepositLimit(
-          vaultData.id,
-          account,
-          isTfVaultType
-        );
-      }
+      depositLimitValue = await vaultService.getDepositLimit(
+        vaultData.id,
+        isTfVaultType,
+        account
+      );
 
       const updatedVault = {
         ...vaultData,
-        depositLimit: depositLimitValue,
+        depositLimit: BigNumber(depositLimitValue).toString(),
         name: vaultTitle[vaultData.id.toLowerCase()]
           ? vaultTitle[vaultData.id.toLowerCase()]
           : vaultData.token.name,
@@ -290,9 +289,22 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
 
       setVault(updatedVault);
 
+      /**
+       * Min Deposit for TradeFlow vaults is 10,000
+       * Min Deposit for other vaults is 0.0000000001
+       */
+      setMinimumDeposit(
+        updatedVault.type === VaultType.TRADEFLOW
+          ? BigNumber(await vaultService.getMinUserDeposit(vaultData.id))
+              .dividedBy(10 ** 18)
+              .toNumber()
+          : 0.0000000001
+      );
+
       return updatedVault;
     } catch (error) {
       console.error("Error updating vault deposit limit:", error);
+      setVault(vaultData);
       return vaultData;
     }
   };
@@ -311,6 +323,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
           navigate("/vaults");
         } else {
           let vaultData = res.data.vault;
+
           vaultData = await updateVaultDepositLimit(
             vaultData,
             account,
@@ -334,6 +347,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
                   };
                 }
               );
+
               setVault({
                 ...vaultData,
                 strategies,
@@ -365,12 +379,12 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
       });
     }
   }, [
-    loadVault,
     vaultId,
     account,
     isTfVaultType,
     chainId,
     vaultService,
+    loadVault,
     setVault,
   ]);
 
@@ -414,8 +428,8 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     setActiveTfPeriod(activePeriod);
   }, [tfVaultDepositEndDate, tfVaultLockEndDate, setActiveTfPeriod]);
 
-  const fetchVaultPosition = useCallback((): Promise<IAccountVaultPosition> => {
-    return new Promise((resolve, reject) => {
+  const fetchVaultPosition = useCallback((): Promise<IVaultPosition> => {
+    return new Promise((resolve) => {
       loadPosition({
         variables: { account: account.toLowerCase(), vault: vaultId },
       }).then(async (res) => {
@@ -427,22 +441,31 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
 
           try {
             setUpdateVaultPositionLoading(true);
-            const balance = await poolService.getUserTokenBalance(
-              account,
-              position.shareToken.id
-            );
+            const balance = (
+              await poolService.getUserTokenBalance(
+                account,
+                position.shareToken.id
+              )
+            ).toString();
 
-            const previewRedeemValue = await vaultService.previewRedeem(
-              balance.toString(),
-              position.vault.id
-            );
+            let previewRedeemValue = "0";
+
+            if (BigNumber(balance).isGreaterThan(0)) {
+              previewRedeemValue = (
+                await vaultService.previewRedeem(
+                  balance.toString(),
+                  position.vault.id
+                )
+              ).toString();
+              previewRedeemValue = BigNumber(previewRedeemValue)
+                .dividedBy(10 ** 18)
+                .toString();
+            }
 
             const updatedVaultPosition = {
               ...position,
-              balanceShares: balance.toString(),
-              balancePosition: BigNumber(previewRedeemValue.toString())
-                .dividedBy(10 ** 18)
-                .toString(),
+              balanceShares: balance,
+              balancePosition: previewRedeemValue,
             };
 
             setVaultPosition(updatedVaultPosition);
@@ -450,13 +473,13 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
           } catch (error) {
             console.error("Error updating vault position:", error);
             setVaultPosition(position);
-            reject(position);
+            resolve(position);
           } finally {
             setUpdateVaultPositionLoading(false);
           }
         } else {
           setVaultPosition({} as IVaultPosition);
-          resolve({} as IAccountVaultPosition);
+          resolve({} as IVaultPosition);
         }
       });
     });
@@ -505,7 +528,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
   const fetchBalanceToken = useCallback(
     (
       fetchBalanceTokenType: FetchBalanceTokenType = FetchBalanceTokenType.FETCH,
-      updatedVaultPosition?: IAccountVaultPosition
+      updatedVaultPosition?: IVaultPosition
     ) => {
       if (fetchBalanceTokenType === FetchBalanceTokenType.PROMISE) {
         setFetchBalanceLoading(true);
@@ -622,7 +645,10 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
 
   useEffect(() => {
     if (syncVault && !prevSyncVault && vaultPosition && vault.id) {
-      fetchVaultPosition().then((vaultPosition: IAccountVaultPosition) => {
+      fetchVaultPosition().then((vaultPosition: IVaultPosition) => {
+        console.log({
+          updatePosition: vaultPosition,
+        });
         Promise.all([
           fetchPositionTransactions(TransactionFetchType.PROMISE),
           fetchBalanceToken(FetchBalanceTokenType.PROMISE, vaultPosition),
@@ -743,6 +769,10 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     }
   }, [vault, account]);
 
+  console.log({
+    minimumDeposit,
+  });
+
   return {
     vault,
     vaultLoading,
@@ -767,6 +797,8 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     tfVaultDepositEndDate,
     tfVaultLockEndDate,
     activeTfPeriod,
+    minimumDeposit,
+    setMinimumDeposit,
   };
 };
 
