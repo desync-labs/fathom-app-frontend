@@ -139,7 +139,9 @@ const MethodListItem: FC<{
   method: FunctionFragment;
   contractAddress: string;
   index: number;
-}> = ({ method, contractAddress, index }) => {
+  readContract: Contract;
+  writeContract: Contract;
+}> = ({ method, contractAddress, index, readContract, writeContract }) => {
   const { formState, control, handleSubmit, getValues } = useForm({
     defaultValues: {},
     reValidateMode: "onChange",
@@ -165,17 +167,22 @@ const MethodListItem: FC<{
     let contract;
 
     if (methodType === MethodType.Mutate) {
-      contract = new Contract(
-        contractAddress,
-        [method],
-        library.getSigner(account)
-      );
+      contract = writeContract;
     } else {
-      contract = new Contract(contractAddress, [method], library);
+      contract = readContract;
     }
 
     setContract(contract);
-  }, [contractAddress, method, library, account, setMethodType, setContract]);
+  }, [
+    contractAddress,
+    method,
+    library,
+    account,
+    setMethodType,
+    setContract,
+    readContract,
+    writeContract,
+  ]);
 
   const handleSubmitForm = useCallback(async () => {
     const values = getValues();

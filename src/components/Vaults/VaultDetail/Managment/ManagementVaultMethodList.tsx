@@ -2,6 +2,8 @@ import { FC, useState, SyntheticEvent, useMemo, memo, ReactNode } from "react";
 import { Box, styled, Tab, Tabs, Typography } from "@mui/material";
 import { FunctionFragment } from "@into-the-fathom/abi";
 import MethodListItem from "components/Vaults/VaultDetail/Managment/MethodListItem";
+import { Contract } from "@into-the-fathom/contracts";
+import useConnector from "../../../../context/connector";
 
 export const ContractMethodListWrapper = styled(Box)`
   padding: 0;
@@ -97,6 +99,16 @@ const ManagementVaultMethodList: FC<VaultItemManagementProps> = ({
     setValue(newValue);
   };
 
+  const { account, library } = useConnector();
+
+  const readContract = useMemo(() => {
+    return new Contract(vaultId, vaultMethods, library);
+  }, [vaultMethods, vaultId, library]);
+
+  const writeContract = useMemo(() => {
+    return new Contract(vaultId, vaultMethods, library.getSigner(account));
+  }, [vaultMethods, vaultId, account, library]);
+
   return (
     <ContractMethodListWrapper className={isShow ? "showing" : "hide"}>
       {!vaultMethods.length ? (
@@ -127,6 +139,8 @@ const ManagementVaultMethodList: FC<VaultItemManagementProps> = ({
                       method={method}
                       contractAddress={vaultId}
                       index={index}
+                      readContract={readContract}
+                      writeContract={writeContract}
                     />
                   )),
               [vaultMethods]
@@ -147,6 +161,8 @@ const ManagementVaultMethodList: FC<VaultItemManagementProps> = ({
                       method={method}
                       contractAddress={vaultId}
                       index={index}
+                      readContract={readContract}
+                      writeContract={writeContract}
                     />
                   )),
               [vaultMethods]
