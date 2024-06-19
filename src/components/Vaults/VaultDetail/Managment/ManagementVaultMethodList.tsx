@@ -3,7 +3,7 @@ import { Box, styled, Tab, Tabs, Typography } from "@mui/material";
 import { FunctionFragment } from "@into-the-fathom/abi";
 import MethodListItem from "components/Vaults/VaultDetail/Managment/MethodListItem";
 import { Contract } from "@into-the-fathom/contracts";
-import useConnector from "../../../../context/connector";
+import useConnector from "context/connector";
 
 export const ContractMethodListWrapper = styled(Box)`
   padding: 0;

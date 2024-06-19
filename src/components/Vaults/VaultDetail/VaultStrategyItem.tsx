@@ -20,6 +20,7 @@ import VaultHistoryChart, {
   HistoryChartDataType,
 } from "components/Vaults/VaultDetail/VaultHistoryChart";
 import { AppFlexBox } from "components/AppComponents/AppBox/AppBox";
+import { StatusLabel } from "components/Vaults/VaultDetail/Managment/StrategyStatusBar";
 
 dayjs.extend(relativeTime);
 
@@ -28,6 +29,9 @@ export const VaultStrategyTitle = styled(Typography)`
   font-weight: 400;
   color: #fff;
   margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   ${({ theme }) => theme.breakpoints.down("sm")} {
     font-size: 14px;
   }
@@ -187,14 +191,19 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
     [reports]
   );
 
+  const title = useMemo(() => {
+    if (strategyTitle[strategyData.id.toLowerCase()]) {
+      return strategyTitle[strategyData.id.toLowerCase()];
+    } else {
+      return `FXD: Direct Incentive - Educational Strategy ${index + 1}`;
+    }
+  }, [strategyData.id, index]);
+
   return (
     <Box sx={{ display: isShow ? "block" : "none" }}>
       <VaultStrategyTitle>
-        {strategyTitle[strategyData.id.toLowerCase()] ? (
-          strategyTitle[strategyData.id.toLowerCase()]
-        ) : (
-          <>FXD: Direct Incentive - Educational Strategy {index + 1}</>
-        )}
+        {title}
+        <StatusLabel strategyId={strategyData.id} />
       </VaultStrategyTitle>
       <Link
         to={getAccountUrl(strategyData.id, DEFAULT_CHAIN_ID)}
