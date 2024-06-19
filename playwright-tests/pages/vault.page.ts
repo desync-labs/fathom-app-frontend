@@ -46,6 +46,7 @@ export default class VaultPage extends BasePage {
   readonly spanBodyTwoModal: Locator;
   readonly btnApproveListItemDepositModal: Locator;
   readonly btnConnectWallet: Locator;
+  readonly vaultContractAddressDetailAbout: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -137,6 +138,9 @@ export default class VaultPage extends BasePage {
     );
     this.btnConnectWallet = this.page.locator(
       "[data-testid*='connectWalletButton']"
+    );
+    this.vaultContractAddressDetailAbout = this.page.locator(
+      "//div[text()='Vault contract address:']//a"
     );
   }
 
@@ -374,6 +378,17 @@ export default class VaultPage extends BasePage {
   //   await this.getVaultDetailsTabLocator(id, tabName).click();
   // }
 
+  async openVaultDetails(id: string): Promise<void> {
+    await expect(this.getVaultRowLocatorById(id)).toBeVisible();
+    await this.page.getByTestId(`vaultRow-${id}-tokenTitle`).click();
+  }
+
+  async getContractAddressDetailAbout(): Promise<string> {
+    const addressValue =
+      (await this.vaultContractAddressDetailAbout.textContent()) as string;
+    return addressValue;
+  }
+
   async manageVaultDialogDeposit({
     id,
     shareTokenName,
@@ -466,23 +481,14 @@ export default class VaultPage extends BasePage {
     return vaultDepositDataExpected;
   }
 
-  async validateVaultData({
+  async validateVaultDataListItemPage({
     id,
     action,
     amountChanged,
     stakedAmountDialogBefore,
     stakedAmountDialogAfter,
-    poolShareDialogAfter,
-    shareTokensDialogAfter,
   }: ValidateVaultDataParams): Promise<void> {
     const stakedAmountRowActual = await this.getStakedVaultRowValue(id);
-    const pooledValueRowDetailsActual =
-      await this.getPooledVaultRowDetailsValue(id);
-    const yourShareValueRowDetailsActual =
-      await this.getYourShareVaultRowDetailsValue(id);
-    const shareTokenValueRowDetailsActual =
-      await this.getShareTokenVaultRowDetailsValue(id);
-    // Staked / Withdraw Amount Row and Pooled amount Row Details Validations
     if (action === VaultAction.Deposit) {
       expect
         .soft(stakedAmountDialogAfter)
@@ -491,11 +497,6 @@ export default class VaultPage extends BasePage {
         .soft(stakedAmountRowActual)
         .toBeGreaterThanOrEqual(
           Number((Number(stakedAmountDialogBefore) + amountChanged).toFixed(2))
-        );
-      expect
-        .soft(pooledValueRowDetailsActual)
-        .toBeGreaterThanOrEqual(
-          Number(stakedAmountDialogBefore) + amountChanged
         );
     } else if (action === VaultAction.Withdraw) {
       expect
@@ -506,28 +507,91 @@ export default class VaultPage extends BasePage {
         .toBeGreaterThanOrEqual(
           Number((Number(stakedAmountDialogBefore) - amountChanged).toFixed(2))
         );
-      expect
-        .soft(pooledValueRowDetailsActual)
-        .toBeGreaterThanOrEqual(
-          Number(stakedAmountDialogBefore) - amountChanged
-        );
     }
-    // Your Share Value Row Details Validations
-    expect.soft(yourShareValueRowDetailsActual).toBeGreaterThanOrEqual(0);
-    expect.soft(yourShareValueRowDetailsActual).toBeLessThanOrEqual(100);
+  }
+
+  async validateVaultDataDetailPage({
+    id,
+    stakedAmountDialogAfter,
+    poolShareDialogAfter,
+    shareTokensDialogAfter,
+  }: ValidateVaultDataParams): Promise<void> {
+    await expect(
+      this.page.getByTestId("KeyboardArrowRightRoundedIcon")
+    ).toBeVisible();
+    expect.soft(await this.getContractAddressDetailAbout()).toEqual(id);
+    const depositedValueDetailPageBeforeText =
+      await this.spanDepositedValueBeforeManageVaultDialog.textContent();
+    const depositedValueDetailPageAfterText =
+      await this.spanDepositedValueAfterManageVaultDialog.textContent();
+    const poolShareValueDetailPageBeforeText =
+      await this.spanPoolShareValueBeforeManageVaultDialog.textContent();
+    const poolShareValueDetailPageAfterText =
+      await this.spanPoolShareValueAfterManageVaultDialog.textContent();
+    const shareTokensValueDetailPageBeforeText =
+      await this.spanShareTokensValueBeforeManageVaultDialog.textContent();
+    const shareTokensValueDetailPageAfterText =
+      await this.spanShareTokensValueAfterManageVaultDialog.textContent();
+    let depositedValueDetailPageBefore: number | null;
+    let poolShareValueDetailPageBefore: number | null;
+    let shareTokensValueDetailPageBefore: number | null;
+    let depositedValueDetailPageAfter: number | null;
+    let poolShareValueDetailPageAfter: number | null;
+    let shareTokensValueDetailPageAfter: number | null;
+    if (
+      depositedValueDetailPageBeforeText !== null &&
+      poolShareValueDetailPageBeforeText !== null &&
+      shareTokensValueDetailPageBeforeText !== null &&
+      depositedValueDetailPageAfterText !== null &&
+      poolShareValueDetailPageAfterText !== null &&
+      shareTokensValueDetailPageAfterText !== null
+    ) {
+      depositedValueDetailPageBefore = extractNumericValue(
+        depositedValueDetailPageBeforeText
+      );
+      poolShareValueDetailPageBefore = extractNumericValue(
+        poolShareValueDetailPageBeforeText
+      );
+      shareTokensValueDetailPageBefore = extractNumericValue(
+        shareTokensValueDetailPageBeforeText
+      );
+      depositedValueDetailPageAfter = extractNumericValue(
+        depositedValueDetailPageAfterText
+      );
+      poolShareValueDetailPageAfter = extractNumericValue(
+        poolShareValueDetailPageAfterText
+      );
+      shareTokensValueDetailPageAfter = extractNumericValue(
+        shareTokensValueDetailPageAfterText
+      );
+    } else {
+      depositedValueDetailPageBefore = null;
+      expect(depositedValueDetailPageBefore).not.toBeNull();
+      poolShareValueDetailPageBefore = null;
+      expect(poolShareValueDetailPageBefore).not.toBeNull();
+      shareTokensValueDetailPageBefore = null;
+      expect(shareTokensValueDetailPageBefore).not.toBeNull();
+      depositedValueDetailPageAfter = null;
+      expect(depositedValueDetailPageAfter).not.toBeNull();
+      poolShareValueDetailPageAfter = null;
+      expect(poolShareValueDetailPageAfter).not.toBeNull();
+      shareTokensValueDetailPageAfter = null;
+      expect(shareTokensValueDetailPageAfter).not.toBeNull();
+    }
     expect
-      .soft(
-        transformToSameDecimals(
-          Number(poolShareDialogAfter),
-          Number(yourShareValueRowDetailsActual)
-        )
-      )
-      .toEqual(poolShareDialogAfter);
-    // Share Token Row Details Value Validations
-    expect.soft(shareTokenValueRowDetailsActual).toBeGreaterThanOrEqual(0);
+      .soft(depositedValueDetailPageBefore)
+      .toBeGreaterThanOrEqual(stakedAmountDialogAfter as number);
     expect
-      .soft(shareTokenValueRowDetailsActual)
-      .toEqual(shareTokensDialogAfter);
+      .soft(depositedValueDetailPageAfter)
+      .toBeGreaterThanOrEqual(stakedAmountDialogAfter as number);
+    expect.soft(poolShareValueDetailPageBefore).toEqual(poolShareDialogAfter);
+    expect.soft(poolShareValueDetailPageAfter).toEqual(poolShareDialogAfter);
+    expect
+      .soft(shareTokensValueDetailPageBefore)
+      .toBeGreaterThanOrEqual(shareTokensDialogAfter as number);
+    expect
+      .soft(shareTokensValueDetailPageAfter)
+      .toBeGreaterThanOrEqual(shareTokensDialogAfter as number);
   }
 
   async manageVaultWithdrawPartially({
