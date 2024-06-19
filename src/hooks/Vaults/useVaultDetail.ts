@@ -112,7 +112,8 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
   );
   const [activeTfPeriod, setActiveTfPeriod] = useState(0);
 
-  const { syncVault, prevSyncVault } = useSyncContext();
+  const { syncVault, prevSyncVault, setLastTransactionBlock } =
+    useSyncContext();
 
   const [activeVaultInfoTab, setActiveVaultInfoTab] = useState<VaultInfoTabs>(
     VaultInfoTabs.ABOUT
@@ -708,6 +709,25 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     }
   }, [vault, account]);
 
+  const handleWithdrawAll = useCallback(async () => {
+    if (vaultPosition) {
+      try {
+        const blockNumber = await vaultService.redeem(
+          BigNumber(vaultPosition.balanceShares)
+            .dividedBy(10 ** 18)
+            .toString(),
+          account,
+          account,
+          vault.shareToken.id
+        );
+
+        setLastTransactionBlock(blockNumber as number);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }, [vaultPosition, account, vaultService, setLastTransactionBlock]);
+
   return {
     vault,
     vaultLoading,
@@ -732,6 +752,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     tfVaultDepositEndDate,
     tfVaultLockEndDate,
     activeTfPeriod,
+    handleWithdrawAll,
   };
 };
 

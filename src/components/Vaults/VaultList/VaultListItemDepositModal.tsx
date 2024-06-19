@@ -22,9 +22,14 @@ import {
   ButtonSecondary,
   ModalButtonWrapper,
 } from "components/AppComponents/AppButton/AppButton";
-import { ErrorBox, InfoBoxV2 } from "components/AppComponents/AppBox/AppBox";
+import {
+  ErrorBox,
+  InfoBoxV2,
+  WarningBox,
+} from "components/AppComponents/AppBox/AppBox";
 import { InfoIcon } from "components/Governance/Propose";
 import WalletConnectBtn from "components/Common/WalletConnectBtn";
+import VaultModalLockingBar from "components/Vaults/VaultList/DepositVaultModal/VaultModalLockingBar";
 
 const VaultManageGridDialogWrapper = styled(AppDialog)`
   & .MuiDialog-paper {
@@ -46,12 +51,22 @@ const VaultManageGridDialogWrapper = styled(AppDialog)`
 export type VaultDepositProps = {
   vaultItemData: IVault;
   performanceFee: number;
+  isTfVaultType: boolean;
+  isUserKycPassed: boolean;
+  tfVaultDepositEndDate: string | null;
+  tfVaultLockEndDate: string | null;
+  activeTfPeriod: number;
   onClose: () => void;
 };
 
 const VaultListItemDepositModal: FC<VaultDepositProps> = ({
   vaultItemData,
   performanceFee,
+  isTfVaultType,
+  isUserKycPassed,
+  tfVaultDepositEndDate,
+  tfVaultLockEndDate,
+  activeTfPeriod,
   onClose,
 }) => {
   const {
@@ -91,6 +106,13 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
       </AppDialogTitle>
 
       <DialogContent>
+        {isTfVaultType && (
+          <VaultModalLockingBar
+            tfVaultLockEndDate={tfVaultLockEndDate}
+            tfVaultDepositEndDate={tfVaultDepositEndDate}
+            activeTfPeriod={activeTfPeriod}
+          />
+        )}
         <FormProvider {...methods}>
           <DepositVaultForm
             vaultItemData={vaultItemData}
@@ -130,6 +152,25 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
               </Box>
             </InfoBoxV2>
           )}
+          {isTfVaultType && !isUserKycPassed && (
+            <WarningBox>
+              <InfoIcon
+                sx={{ width: "20px", color: "#F5953D", height: "20px" }}
+              />
+              <Box flexDirection="column">
+                <Typography width="100%">
+                  Only KYC-verified users can deposit. Please completing KYC at{" "}
+                  <a
+                    href={"https://kyc.tradeflow.network/"}
+                    target={"_blank"}
+                    rel={"noreferrer"}
+                  >
+                    https://kyc.tradeflow.network/
+                  </a>
+                </Typography>
+              </Box>
+            </WarningBox>
+          )}
           <ModalButtonWrapper>
             <ButtonSecondary onClick={onClose}>Close</ButtonSecondary>
             {!account ? (
@@ -137,7 +178,11 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
             ) : approveBtn && walletBalance !== "0" ? (
               <ButtonPrimary
                 onClick={approve}
-                disabled={!!Object.keys(errors).length}
+                disabled={
+                  !!Object.keys(errors).length ||
+                  (isTfVaultType && !isUserKycPassed) ||
+                  (isTfVaultType && activeTfPeriod > 0)
+                }
               >
                 {" "}
                 {approvalPending ? (
@@ -153,7 +198,9 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
                 disabled={
                   openDepositLoading ||
                   approveBtn ||
-                  !!Object.keys(errors).length
+                  !!Object.keys(errors).length ||
+                  (isTfVaultType && !isUserKycPassed) ||
+                  (isTfVaultType && activeTfPeriod > 0)
                 }
                 isLoading={openDepositLoading}
               >
