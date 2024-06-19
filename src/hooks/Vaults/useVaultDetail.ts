@@ -7,6 +7,7 @@ import {
   IVaultStrategyReport,
   SmartContractFactory,
   VaultType,
+  IAccountVaultPosition,
 } from "fathom-sdk";
 import { FunctionFragment } from "@into-the-fathom/abi";
 import BigNumber from "bignumber.js";
@@ -378,7 +379,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     setActiveTfPeriod(activePeriod);
   }, [tfVaultDepositEndDate, tfVaultLockEndDate, setActiveTfPeriod]);
 
-  const fetchVaultPosition = useCallback(() => {
+  const fetchVaultPosition = useCallback((): Promise<IAccountVaultPosition> => {
     return new Promise((resolve, reject) => {
       loadPosition({
         variables: { account: account.toLowerCase(), vault: vaultId },
@@ -420,7 +421,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
           }
         } else {
           setVaultPosition({} as IVaultPosition);
-          resolve({});
+          resolve({} as IAccountVaultPosition);
         }
       });
     });
@@ -468,13 +469,14 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
 
   const fetchBalanceToken = useCallback(
     (
-      fetchBalanceTokenType: FetchBalanceTokenType = FetchBalanceTokenType.FETCH
+      fetchBalanceTokenType: FetchBalanceTokenType = FetchBalanceTokenType.FETCH,
+      updatedVaultPosition?: IAccountVaultPosition
     ) => {
       if (fetchBalanceTokenType === FetchBalanceTokenType.PROMISE) {
         setFetchBalanceLoading(true);
         return vaultService
           .previewRedeem(
-            BigNumber(vaultPosition?.balanceShares as string)
+            BigNumber(updatedVaultPosition?.balanceShares as string)
               .dividedBy(10 ** 18)
               .toString(),
             vault.id
@@ -585,10 +587,10 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
 
   useEffect(() => {
     if (syncVault && !prevSyncVault && vaultPosition && vault.id) {
-      fetchVaultPosition().then(() => {
+      fetchVaultPosition().then((vaultPosition: IAccountVaultPosition) => {
         Promise.all([
           fetchPositionTransactions(TransactionFetchType.PROMISE),
-          fetchBalanceToken(FetchBalanceTokenType.PROMISE),
+          fetchBalanceToken(FetchBalanceTokenType.PROMISE, vaultPosition),
         ]).then(([transactions, balanceToken]) => {
           setBalanceToken(balanceToken as string);
           transactions?.data?.deposits &&
