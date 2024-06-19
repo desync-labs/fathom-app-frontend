@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import { useEffect, useState } from "react";
 import {
   Box,
   Step,
@@ -72,6 +72,10 @@ const AppStep = styled(Step)`
       color: #b7c8e5;
       font-weight: 600;
     }
+    &.Mui-active {
+      color: #b7c8e5;
+      font-weight: 600;
+    }
   }
 
   & .MuiStepContent-root {
@@ -97,6 +101,13 @@ const StepLabelOptionalValue = styled("div")`
   border: none;
   padding: 0;
   margin: 0;
+`;
+
+const CounterIndicator = styled("div")`
+  color: #f5953d;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
 `;
 
 const QontoStepIconRoot = styled("div")<{ ownerState: { active?: boolean } }>(
@@ -127,6 +138,43 @@ const QontoStepIcon = (props: StepIconProps) => {
         <img src={StepperItemIcon} alt={"step"} width={18} height={18} />
       )}
     </QontoStepIconRoot>
+  );
+};
+
+const calculateTimeLeft = (date: Date | null) => {
+  if (!date) return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+
+  const difference = +date - +new Date();
+  let timeLeft = { days: 0, hours: 0, minutes: 0, seconds: 0 };
+
+  if (difference > 0) {
+    timeLeft = {
+      days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+      hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+      minutes: Math.floor((difference / 1000 / 60) % 60),
+      seconds: Math.floor((difference / 1000) % 60),
+    };
+  }
+
+  return timeLeft;
+};
+
+const StepContentCounter = ({ date }: { date: Date }) => {
+  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft(date));
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft(calculateTimeLeft(date));
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [date]);
+
+  return (
+    <CounterIndicator>
+      {timeLeft.days}D : {timeLeft.hours}H : {timeLeft.minutes}M :{" "}
+      {timeLeft.seconds}S
+    </CounterIndicator>
   );
 };
 
@@ -186,7 +234,7 @@ const VaultLockingBar = () => {
                         height={20}
                       />
                     ) : (
-                      dayjs(step.date).format("DD.MM.YYYY HH:mm:ss")
+                      <StepContentCounter date={step.date} />
                     )}
                   </StepContent>
                 </AppFlexBox>
