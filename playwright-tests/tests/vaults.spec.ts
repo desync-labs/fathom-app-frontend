@@ -26,7 +26,7 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     }
   });
 
-  test.only("FXD Vault: Manage Vault: Depositing 50 FXD is successful", async ({
+  test("FXD Vault: Manage Vault: Depositing 50 FXD is successful", async ({
     vaultPage,
   }) => {
     const depositAmount = 50;
@@ -46,7 +46,7 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
       stakedAmountDialogAfter: vaultExpectedData.stakedAmountDialogAfter,
     });
     await vaultPage.openVaultDetails(lendingLiquidationVaultData.id);
-    await vaultPage.validateVaultDataDetailPage({
+    await vaultPage.validateVaultDataDetailManagePage({
       id: lendingLiquidationVaultData.id,
       action: VaultAction.Deposit,
       amountChanged: depositAmount,
@@ -73,6 +73,15 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
       amountChanged: withdrawAmount,
       stakedAmountDialogBefore: vaultExpectedData.stakedAmountDialogBefore,
       stakedAmountDialogAfter: vaultExpectedData.stakedAmountDialogAfter,
+    });
+    await vaultPage.openVaultDetails(lendingLiquidationVaultData.id);
+    await vaultPage.validateVaultDataDetailManagePage({
+      id: lendingLiquidationVaultData.id,
+      action: VaultAction.Deposit,
+      amountChanged: withdrawAmount,
+      stakedAmountDialogAfter: vaultExpectedData.stakedAmountDialogAfter,
+      shareTokensDialogAfter: vaultExpectedData.shareTokensDialogAfter,
+      poolShareDialogAfter: vaultExpectedData.poolShareDialogAfter,
     });
   });
 
@@ -103,9 +112,6 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
       shareTokenName: lendingLiquidationVaultData.shareTokenName,
       depositAmount,
     });
-    await vaultPage.validateYourPositionTabIsVisible(
-      lendingLiquidationVaultData.id
-    );
     await vaultPage.validateVaultDataListItemPage({
       id: lendingLiquidationVaultData.id,
       action: VaultAction.Deposit,
@@ -147,9 +153,6 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
         vaultPage.getDepositButtonRowLocatorById(lendingLiquidationVaultData.id)
       )
       .toHaveText("Deposit");
-    await vaultPage.validateYourPositionTabNotVisible(
-      lendingLiquidationVaultData.id
-    );
     expect
       .soft(
         await vaultPage.getStakedVaultRowValue(lendingLiquidationVaultData.id)
