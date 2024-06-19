@@ -16,6 +16,8 @@ import {
 import MethodListItem from "components/Vaults/VaultDetail/Managment/MethodListItem";
 import StrategyStatusBar from "components/Vaults/VaultDetail/Managment/StrategyStatusBar";
 import useSharedContext from "context/shared";
+import { Contract } from "@into-the-fathom/contracts";
+import useConnector from "context/connector";
 
 const StrategyManagerDescription = styled("div")`
   color: #fff;
@@ -90,67 +92,75 @@ const ManagementStrategiesMethodTabsStyled = styled(Box)`
 const ManagementStrategiesMethodTabs: FC<{
   strategyMethods: FunctionFragment[];
   currentStrategyId: string;
-}> = memo(({ strategyMethods, currentStrategyId }) => {
-  const [value, setValue] = useState(0);
+  readContract: Contract;
+  writeContract: Contract;
+}> = memo(
+  ({ strategyMethods, currentStrategyId, readContract, writeContract }) => {
+    const [value, setValue] = useState(0);
 
-  const handleChange = (event: SyntheticEvent, newValue: number) => {
-    setValue(newValue);
-  };
+    const handleChange = (event: SyntheticEvent, newValue: number) => {
+      setValue(newValue);
+    };
 
-  return !strategyMethods.length ? (
-    <Typography>Has no contract methods yet</Typography>
-  ) : (
-    <ManagementStrategiesMethodTabsStyled>
-      <MethodTypesTabs
-        value={value}
-        onChange={handleChange}
-        aria-label="state mutability tabs"
-      >
-        <Tab label="Read Contract" {...a11yProps(0)} />
-        <Tab label="Write Contract" {...a11yProps(1)} />
-      </MethodTypesTabs>
-      <MethodsTabPanel value={value} index={0}>
-        {useMemo(
-          () =>
-            strategyMethods
-              .filter(
-                (method) =>
-                  !STATE_MUTABILITY_TRANSACTIONS.includes(
-                    method.stateMutability
-                  )
-              )
-              .map((method: FunctionFragment, index: number) => (
-                <MethodListItem
-                  key={index}
-                  method={method}
-                  contractAddress={currentStrategyId}
-                  index={index}
-                />
-              )),
-          [strategyMethods]
-        )}
-      </MethodsTabPanel>
-      <MethodsTabPanel value={value} index={1}>
-        {useMemo(
-          () =>
-            strategyMethods
-              .filter((method) =>
-                STATE_MUTABILITY_TRANSACTIONS.includes(method.stateMutability)
-              )
-              .map((method: FunctionFragment, index: number) => (
-                <MethodListItem
-                  key={index}
-                  method={method}
-                  contractAddress={currentStrategyId}
-                  index={index}
-                />
-              )),
-          [strategyMethods]
-        )}
-      </MethodsTabPanel>
-    </ManagementStrategiesMethodTabsStyled>
-  );
-});
+    return !strategyMethods.length ? (
+      <Typography>Has no contract methods yet</Typography>
+    ) : (
+      <ManagementStrategiesMethodTabsStyled>
+        <MethodTypesTabs
+          value={value}
+          onChange={handleChange}
+          aria-label="state mutability tabs"
+        >
+          <Tab label="Read Contract" {...a11yProps(0)} />
+          <Tab label="Write Contract" {...a11yProps(1)} />
+        </MethodTypesTabs>
+        <MethodsTabPanel value={value} index={0}>
+          {useMemo(
+            () =>
+              strategyMethods
+                .filter(
+                  (method) =>
+                    !STATE_MUTABILITY_TRANSACTIONS.includes(
+                      method.stateMutability
+                    )
+                )
+                .map((method: FunctionFragment, index: number) => (
+                  <MethodListItem
+                    key={index}
+                    method={method}
+                    contractAddress={currentStrategyId}
+                    index={index}
+                    readContract={readContract}
+                    writeContract={writeContract}
+                  />
+                )),
+            [strategyMethods]
+          )}
+        </MethodsTabPanel>
+        <MethodsTabPanel value={value} index={1}>
+          {useMemo(
+            () =>
+              strategyMethods
+                .filter((method) =>
+                  STATE_MUTABILITY_TRANSACTIONS.includes(method.stateMutability)
+                )
+                .map((method: FunctionFragment, index: number) => (
+                  <MethodListItem
+                    key={index}
+                    method={method}
+                    contractAddress={currentStrategyId}
+                    index={index}
+                    readContract={readContract}
+                    writeContract={writeContract}
+                  />
+                )),
+            [strategyMethods]
+          )}
+        </MethodsTabPanel>
+      </ManagementStrategiesMethodTabsStyled>
+    );
+  }
+);
 
 const ManagementStrategiesMethodList: FC<
   ManagementStrategiesMethodListProps
@@ -163,6 +173,19 @@ const ManagementStrategiesMethodList: FC<
       `FXD: Direct Incentive - Educational Strategy 1`
   );
   const { isMobile } = useSharedContext();
+  const { library, account } = useConnector();
+
+  const readContract = useMemo(() => {
+    return new Contract(currentStrategyId, strategyMethods, library);
+  }, [strategyMethods, currentStrategyId, library]);
+
+  const writeContract = useMemo(() => {
+    return new Contract(
+      currentStrategyId,
+      strategyMethods,
+      library.getSigner(account)
+    );
+  }, [strategyMethods, currentStrategyId, account, library]);
 
   const handleStrategyChange = (event: SelectChangeEvent<unknown>) => {
     const { value } = event.target as HTMLInputElement;
@@ -210,6 +233,8 @@ const ManagementStrategiesMethodList: FC<
           <ManagementStrategiesMethodTabs
             strategyMethods={strategyMethods}
             currentStrategyId={currentStrategyId}
+            readContract={readContract}
+            writeContract={writeContract}
           />
         </Box>
       )}

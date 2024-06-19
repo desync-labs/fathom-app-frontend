@@ -258,7 +258,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
         setPerformanceFee(performanceFeeRes / 100);
       }
     }
-  }, [vaultsFactories]);
+  }, [vaultsFactories, vaultsFactoriesLoading]);
 
   const updateVaultDepositLimit = async (
     vaultData: IVault,
@@ -310,6 +310,32 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
           updateVaultDepositLimit(vaultData, account, isTfVaultType);
         }
       });
+
+      /**
+       * Fetch additional data for strategies
+       */
+      if (vault && vault?.strategies && vault?.strategies?.length) {
+        const promises: Promise<boolean>[] = [];
+        vault?.strategies.forEach((strategy: IVaultStrategy) => {
+          promises.push(vaultService.isStrategyShutdown(strategy.id));
+        });
+
+        Promise.all(promises).then((response) => {
+          const strategies = vault?.strategies.map(
+            (strategy: IVaultStrategy, index: number) => {
+              return {
+                ...strategy,
+                isShutdown: response[index],
+              };
+            }
+          );
+
+          setVault((prev) => ({
+            ...prev,
+            strategies,
+          }));
+        });
+      }
     }
   }, [loadVault, vaultId, account, isTfVaultType, chainId]);
 
