@@ -1,3 +1,4 @@
+import { FC } from "react";
 import { Box, StepContent, StepLabel, styled } from "@mui/material";
 import { CustomSkeleton } from "components/AppComponents/AppSkeleton/AppSkeleton";
 import { AppFlexBox } from "components/AppComponents/AppBox/AppBox";
@@ -10,7 +11,7 @@ import {
   StepLabelOptionalValue,
 } from "components/Vaults/VaultDetail/VaultLockingBar";
 import AppPopover from "components/AppComponents/AppPopover/AppPopover";
-import { FC } from "react";
+import { getPeriodInDays } from "utils/getPeriodInDays";
 
 const CustomPaper = styled(Box)`
   position: relative;
@@ -59,7 +60,8 @@ const VaultModalLockingBar: FC<VaultModalLockingBarProps> = ({
       key: "lock-time", // added key to the object
       label: (
         <LockWrapper>
-          Lock Time
+          Lock Time (
+          {getPeriodInDays(tfVaultDepositEndDate, tfVaultLockEndDate)} days)
           <AppPopover
             id={"lock-time"}
             text={

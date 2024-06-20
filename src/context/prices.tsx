@@ -147,14 +147,21 @@ export const PricesProvider: FC<PricesProviderType> = ({ children }) => {
   }, [fetchPairPrices]);
 
   useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout>;
     if (
       (syncFXD && !prevSyncFxd) ||
       (syncDao && !prevSyncDao) ||
       (syncVault && !prevSyncVault) ||
       (syncDex && !prevSyncDex)
     ) {
-      fetchPairPrices();
+      timeout = setTimeout(() => {
+        fetchPairPrices();
+      }, 300);
     }
+
+    return () => {
+      timeout && clearTimeout(timeout);
+    };
   }, [
     syncFXD,
     prevSyncFxd,

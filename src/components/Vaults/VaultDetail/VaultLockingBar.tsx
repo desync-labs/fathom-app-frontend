@@ -11,15 +11,16 @@ import {
 } from "@mui/material";
 import useSharedContext from "context/shared";
 import useVaultContext from "context/vault";
+import { getPeriodInDays } from "utils/getPeriodInDays";
 import { VaultPaper } from "components/AppComponents/AppPaper/AppPaper";
 import { AppFlexBox } from "components/AppComponents/AppBox/AppBox";
 import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
 import { CustomSkeleton } from "components/AppComponents/AppSkeleton/AppSkeleton";
+import AppPopover from "components/AppComponents/AppPopover/AppPopover";
 
 import LockAquaSrc from "assets/svg/lock-aqua.svg";
 import StepperItemIcon from "assets/svg/icons/stepper-item-icon.svg";
 import StepperItemIconActive from "assets/svg/icons/stepper-item-icon-active.svg";
-import AppPopover from "../../AppComponents/AppPopover/AppPopover";
 
 const SummaryWrapper = styled(AppFlexBox)`
   justify-content: flex-start;
@@ -230,7 +231,8 @@ const VaultLockingBar = () => {
       key: "lock-time", // added key to the object
       label: (
         <LockWrapper>
-          Lock Time
+          Lock Time (
+          {getPeriodInDays(tfVaultDepositEndDate, tfVaultLockEndDate)} days)
           <AppPopover
             id={"lock-time"}
             text={
