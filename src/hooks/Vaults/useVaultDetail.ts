@@ -509,7 +509,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     fetchVaultPosition,
     account,
     chainId,
-    vault,
+    vault.id,
     vaultService,
     setVaultPosition,
   ]);
@@ -662,7 +662,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
 
   useEffect(() => {
     if (syncVault && !prevSyncVault && vaultPosition && vault.id) {
-      fetchVaultPosition().then((vaultPosition: IVaultPosition) => {
+      fetchVaultPosition()?.then((vaultPosition: IVaultPosition) => {
         Promise.all([
           fetchPositionTransactions(TransactionFetchType.PROMISE),
           fetchBalanceToken(FetchBalanceTokenType.PROMISE, vaultPosition),
