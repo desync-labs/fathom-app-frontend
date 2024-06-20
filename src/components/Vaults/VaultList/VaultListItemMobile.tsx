@@ -104,6 +104,7 @@ const VaultListItemMobile = ({
     tfVaultDepositLimit,
     handleWithdrawAll,
     minimumDeposit,
+    withdrawLimitExceeded,
   } = useVaultListItem({ vaultPosition, vault: vaultItemData });
 
   const handleOpenPreviewModal = () => {
@@ -218,6 +219,7 @@ const VaultListItemMobile = ({
               tfVaultLockEndDate={tfVaultLockEndDate}
               activeTfPeriod={activeTfPeriod}
               minimumDeposit={minimumDeposit}
+              withdrawLimitExceeded={withdrawLimitExceeded}
               onClose={() => setManageVault(false)}
             />
           )

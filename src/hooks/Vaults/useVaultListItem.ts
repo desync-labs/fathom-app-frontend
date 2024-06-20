@@ -10,6 +10,7 @@ import useRpcError from "hooks/General/useRpcError";
 import { VAULT_POSITION_TRANSACTIONS } from "apollo/queries";
 import { vaultType } from "utils/getVaultType";
 import dayjs from "dayjs";
+import { formatNumber } from "../../utils/format";
 
 interface UseVaultListItemProps {
   vaultPosition: IVaultPosition | null | undefined;
@@ -319,6 +320,31 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     }
   }, [vaultPosition, account, vaultService, setLastTransactionBlock]);
 
+  const withdrawLimitExceeded = (value: string) => {
+    /**
+     * Logic for TradeFlowVault
+     */
+    if (vault.type === VaultType.TRADEFLOW) {
+      const maxBalanceToken = BigNumber(balanceToken).dividedBy(10 ** 18);
+
+      if (
+        BigNumber(maxBalanceToken).minus(value).isGreaterThan(0) &&
+        BigNumber(maxBalanceToken).minus(value).isLessThan(minimumDeposit)
+      ) {
+        return `After withdraw ${formatNumber(Number(value))} ${
+          vault.token.name
+        }  you will have ${formatNumber(
+          BigNumber(maxBalanceToken).minus(value).toNumber()
+        )} ${vault.token.name} less then minimum allowed deposit ${
+          minimumDeposit / 1000
+        }k ${vault.token.name}, you can do full withdraw instead.`;
+      }
+      return false;
+    } else {
+      return false;
+    }
+  };
+
   return {
     balanceEarned,
     balanceToken,
@@ -334,6 +360,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     activeTfPeriod,
     tfVaultDepositLimit,
     handleWithdrawAll,
+    withdrawLimitExceeded,
   };
 };
 
