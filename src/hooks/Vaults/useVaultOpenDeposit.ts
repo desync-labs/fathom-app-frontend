@@ -202,7 +202,14 @@ const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
     } finally {
       setOpenDepositLoading(false);
     }
-  }, [account, deposit, vault]);
+  }, [
+    account,
+    deposit,
+    vault,
+    vaultService,
+    setLastTransactionBlock,
+    setOpenDepositLoading,
+  ]);
 
   return {
     methods,
