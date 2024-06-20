@@ -384,7 +384,19 @@ const useVaultManageDeposit = (
         }
       }
     },
-    [account, vaultPosition, isFullWithdraw, formType, vault, setIsFullWithdraw]
+    [
+      account,
+      vaultPosition,
+      formSharedToken,
+      isFullWithdraw,
+      formType,
+      vault,
+      vaultService,
+      setIsFullWithdraw,
+      setOpenDepositLoading,
+      setLastTransactionBlock,
+      setIsFullWithdraw,
+    ]
   );
 
   return {
