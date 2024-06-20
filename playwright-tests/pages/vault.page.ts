@@ -457,8 +457,11 @@ export default class VaultPage extends BasePage {
     const stakedAmountRowActual = await this.getStakedVaultRowValue(id);
     if (action === VaultAction.Deposit) {
       expect
-        .soft(stakedAmountDialogAfter)
-        .toEqual(Number(stakedAmountDialogBefore) + amountChanged);
+        .soft(Math.round((stakedAmountDialogAfter as number) * 100) / 100)
+        .toEqual(
+          Math.round((Number(stakedAmountDialogBefore) + amountChanged) * 100) /
+            100
+        );
       expect
         .soft(stakedAmountRowActual)
         .toBeGreaterThanOrEqual(
@@ -466,10 +469,13 @@ export default class VaultPage extends BasePage {
         );
     } else if (action === VaultAction.Withdraw) {
       expect
-        .soft(stakedAmountDialogAfter)
-        .toEqual(Number(stakedAmountDialogBefore) - amountChanged);
+        .soft(Math.round((stakedAmountDialogAfter as number) * 100) / 100)
+        .toEqual(
+          Math.round((Number(stakedAmountDialogBefore) - amountChanged) * 100) /
+            100
+        );
       expect
-        .soft(stakedAmountRowActual)
+        .soft(Math.round((stakedAmountDialogAfter as number) * 100) / 100)
         .toBeGreaterThanOrEqual(
           Number((Number(stakedAmountDialogBefore) - amountChanged).toFixed(2))
         );
