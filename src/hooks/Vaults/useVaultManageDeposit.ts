@@ -135,8 +135,12 @@ const useVaultManageDeposit = (
   }, [formType]);
 
   useEffect(() => {
-    formToken.trim() && approvalStatus(formToken);
-  }, [vault, formToken]);
+    if (formToken.trim()) {
+      approvalStatus(formToken);
+    } else {
+      setApproveBtn(false);
+    }
+  }, [vault, formToken, setApproveBtn]);
 
   useEffect(() => {
     getBalancePosition();
