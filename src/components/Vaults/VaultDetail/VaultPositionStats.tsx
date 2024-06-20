@@ -7,7 +7,6 @@ import { formatNumber } from "utils/format";
 import { StatsValueSkeleton } from "components/AppComponents/AppSkeleton/AppSkeleton";
 import { memo, useEffect, useRef, useState } from "react";
 import useWindowResize from "hooks/General/useWindowResize";
-import { VaultType } from "fathom-sdk";
 
 const VaultPositionTitle = styled(Typography)`
   color: #fff;
@@ -81,6 +80,8 @@ const VaultPositionStats = () => {
     vaultPosition,
     vaultPositionLoading,
     balanceEarned,
+    tfVaultDepositLimit,
+    isTfVaultType,
   } = useVaultContext();
   const { fxdPrice, fetchPricesInProgress } = usePricesContext();
   const { isMobile } = useSharedContext();
@@ -217,10 +218,8 @@ const VaultPositionStats = () => {
                 <>
                   {formatNumber(
                     BigNumber.max(
-                      vault.type === VaultType.TRADEFLOW
-                        ? BigNumber(vault?.depositLimit || 0).dividedBy(
-                            10 ** 18
-                          )
+                      isTfVaultType
+                        ? BigNumber(tfVaultDepositLimit).dividedBy(10 ** 18)
                         : BigNumber(vault?.depositLimit || 0)
                             .minus(BigNumber(vault?.balanceTokens || 0))
                             .dividedBy(10 ** 18),
@@ -230,18 +229,25 @@ const VaultPositionStats = () => {
                   {vault?.token?.symbol}
                   <UsdValue>
                     {"$" +
-                      formatNumber(
-                        BigNumber.max(
-                          BigNumber(vault?.depositLimit || 0)
-                            .minus(vault?.balanceTokens || 0)
-                            .dividedBy(10 ** 18)
-                            .toNumber(),
-                          0
-                        )
-                          .multipliedBy(fxdPrice)
-                          .dividedBy(10 ** 18)
-                          .toNumber()
-                      )}
+                      (isTfVaultType
+                        ? formatNumber(
+                            BigNumber(tfVaultDepositLimit)
+                              .multipliedBy(fxdPrice)
+                              .dividedBy(10 ** 36)
+                              .toNumber()
+                          )
+                        : formatNumber(
+                            BigNumber.max(
+                              BigNumber(vault?.depositLimit || 0)
+                                .minus(vault?.balanceTokens || 0)
+                                .dividedBy(10 ** 18)
+                                .toNumber(),
+                              0
+                            )
+                              .multipliedBy(fxdPrice)
+                              .dividedBy(10 ** 18)
+                              .toNumber()
+                          ))}
                   </UsdValue>
                 </>
               )}
