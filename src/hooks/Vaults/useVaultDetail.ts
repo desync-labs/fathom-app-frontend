@@ -113,6 +113,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     null
   );
   const [activeTfPeriod, setActiveTfPeriod] = useState(0);
+  const [tfVaultDepositLimit, setTfVaultDepositLimit] = useState<string>("0");
 
   const { syncVault, prevSyncVault, setLastTransactionBlock } =
     useSyncContext();
@@ -277,6 +278,8 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
         account
       );
 
+      setTfVaultDepositLimit(depositLimitValue);
+
       const updatedVault = {
         ...vaultData,
         depositLimit: BigNumber(depositLimitValue).toString(),
@@ -360,7 +363,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
               });
 
               Promise.all(promises).then((response) => {
-                const strategies = vault?.strategies.map(
+                const strategies = vaultData?.strategies.map(
                   (strategy: IVaultStrategy, index: number) => {
                     return {
                       ...strategy,
@@ -810,6 +813,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     isReportsLoaded,
     isUserKycPassed,
     isTfVaultType,
+    tfVaultDepositLimit,
     tfVaultDepositEndDate,
     tfVaultLockEndDate,
     activeTfPeriod,
