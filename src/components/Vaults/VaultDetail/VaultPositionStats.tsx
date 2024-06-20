@@ -155,6 +155,20 @@ const VaultPositionStats = () => {
     };
   }, [vaultLoading, vaultPositionLoading, setIsLoading]);
 
+  const getVaultDepositLimit = () => {
+    if (isTfVaultType) {
+      return BigNumber(tfVaultDepositLimit).dividedBy(10 ** 18);
+    } else {
+      return BigNumber.max(
+        BigNumber(vault?.depositLimit || 0)
+          .minus(vault?.balanceTokens || 0)
+          .dividedBy(10 ** 18)
+          .toNumber(),
+        0
+      );
+    }
+  };
+
   return (
     <Box pb={isMobile ? "20px" : "24px"} ref={container}>
       <VaultPositionTitle variant="h1">Your Position</VaultPositionTitle>
@@ -216,38 +230,16 @@ const VaultPositionStats = () => {
                 />
               ) : (
                 <>
-                  {formatNumber(
-                    BigNumber.max(
-                      isTfVaultType
-                        ? BigNumber(tfVaultDepositLimit).dividedBy(10 ** 18)
-                        : BigNumber(vault?.depositLimit || 0)
-                            .minus(BigNumber(vault?.balanceTokens || 0))
-                            .dividedBy(10 ** 18),
-                      0
-                    ).toNumber()
-                  )}{" "}
+                  {formatNumber(getVaultDepositLimit().toNumber())}{" "}
                   {vault?.token?.symbol}
                   <UsdValue>
                     {"$" +
-                      (isTfVaultType
-                        ? formatNumber(
-                            BigNumber(tfVaultDepositLimit)
-                              .multipliedBy(fxdPrice)
-                              .dividedBy(10 ** 36)
-                              .toNumber()
-                          )
-                        : formatNumber(
-                            BigNumber.max(
-                              BigNumber(vault?.depositLimit || 0)
-                                .minus(vault?.balanceTokens || 0)
-                                .dividedBy(10 ** 18)
-                                .toNumber(),
-                              0
-                            )
-                              .multipliedBy(fxdPrice)
-                              .dividedBy(10 ** 18)
-                              .toNumber()
-                          ))}
+                      formatNumber(
+                        getVaultDepositLimit()
+                          .multipliedBy(fxdPrice)
+                          .dividedBy(10 ** 18)
+                          .toNumber()
+                      )}
                   </UsdValue>
                 </>
               )}

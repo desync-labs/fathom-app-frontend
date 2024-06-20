@@ -294,19 +294,21 @@ const VaultLockingBar = () => {
             ))}
           </AppStepper>
         </CustomPaper>
-        <CustomPaper className="withdraw-btn">
-          <ButtonPrimary
-            type="button"
-            disabled={
-              !vaultPosition ||
-              vaultPosition.balanceShares === "0" ||
-              activeTfPeriod !== 2
-            }
-            onClick={handleWithdrawAll}
-          >
-            Withdraw
-          </ButtonPrimary>
-        </CustomPaper>
+        {activeTfPeriod === 2 && (
+          <CustomPaper className="withdraw-btn">
+            <ButtonPrimary
+              type="button"
+              disabled={
+                !vaultPosition ||
+                vaultPosition.balanceShares === "0" ||
+                activeTfPeriod !== 2
+              }
+              onClick={handleWithdrawAll}
+            >
+              Withdraw
+            </ButtonPrimary>
+          </CustomPaper>
+        )}
       </AppFlexBox>
     </VaultPaper>
   );
