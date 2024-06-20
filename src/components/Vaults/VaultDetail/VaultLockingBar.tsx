@@ -301,6 +301,7 @@ const VaultLockingBar = () => {
               disabled={
                 !vaultPosition ||
                 vaultPosition.balanceShares === "0" ||
+                vaultPosition.balanceShares === undefined ||
                 activeTfPeriod !== 2
               }
               onClick={handleWithdrawAll}
