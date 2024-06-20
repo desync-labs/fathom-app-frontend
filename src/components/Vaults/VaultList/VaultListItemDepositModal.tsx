@@ -87,6 +87,7 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
     validateMaxDepositValue,
     handleSubmit,
     onSubmit,
+    depositLimitExceeded,
   } = useVaultOpenDeposit(vaultItemData, onClose);
   const { account } = useConnector();
 
@@ -125,6 +126,7 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
             handleSubmit={handleSubmit}
             onSubmit={onSubmit}
             minimumDeposit={minimumDeposit}
+            depositLimitExceeded={depositLimitExceeded}
           />
           <DepositVaultInfo
             vaultItemData={vaultItemData}

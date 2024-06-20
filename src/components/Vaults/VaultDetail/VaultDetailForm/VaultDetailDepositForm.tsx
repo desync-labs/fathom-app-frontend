@@ -58,6 +58,7 @@ const VaultDetailDepositForm: FC<{ notLoading: boolean }> = ({
     validateMaxDepositValue,
     handleSubmit,
     onSubmit,
+    depositLimitExceeded,
   } = useVaultOpenDeposit(vault, onClose);
 
   if (!notLoading) {
@@ -101,6 +102,7 @@ const VaultDetailDepositForm: FC<{ notLoading: boolean }> = ({
               onSubmit={onSubmit}
               validateMaxDepositValue={validateMaxDepositValue}
               minimumDeposit={minimumDeposit}
+              depositLimitExceeded={depositLimitExceeded}
             />
           </VaultDetailFormColumn>
           <DepositVaultInfo

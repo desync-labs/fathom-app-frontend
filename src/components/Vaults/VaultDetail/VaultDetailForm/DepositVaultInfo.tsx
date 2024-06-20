@@ -175,7 +175,7 @@ const DepositVaultInfo: FC<DepositVaultInfoProps> = ({
             <Typography>Wallet balance is not enough to deposit.</Typography>
           </ErrorBox>
         )}
-      {approveBtn && walletBalance !== "0" && (
+      {approveBtn && BigNumber(walletBalance).isGreaterThan(0) && (
         <InfoBoxV2>
           <InfoIcon />
           <Box flexDirection="column">

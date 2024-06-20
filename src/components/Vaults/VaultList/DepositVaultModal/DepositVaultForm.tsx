@@ -57,6 +57,7 @@ type VaultDepositFormProps = {
   >;
   onSubmit: () => Promise<void>;
   minimumDeposit: number;
+  depositLimitExceeded: (value: string) => string | boolean;
 };
 
 const DepositVaultForm: FC<VaultDepositFormProps> = ({
@@ -68,6 +69,7 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
   handleSubmit,
   onSubmit,
   minimumDeposit,
+  depositLimitExceeded,
 }) => {
   const { token, depositLimit, balanceTokens } = vaultItemData;
   const { fxdPrice } = usePricesContext();
@@ -110,6 +112,25 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
                 placeholder={"0"}
                 helperText={
                   <>
+                    {depositLimitExceeded(value) && (
+                      <AppFormInputErrorWrapper>
+                        <InfoIcon
+                          sx={{
+                            float: "left",
+                            width: "14px",
+                            height: "14px",
+                            marginRight: "0",
+                          }}
+                        />
+                        <Box
+                          component={"span"}
+                          sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                        >
+                          {depositLimitExceeded(value)}
+                        </Box>
+                      </AppFormInputErrorWrapper>
+                    )}
+
                     {error && error.type === "required" && (
                       <AppFormInputErrorWrapper>
                         <InfoIcon
@@ -160,7 +181,8 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
                           component={"span"}
                           sx={{ fontSize: "12px", paddingLeft: "6px" }}
                         >
-                          Minimum deposit is {formatNumber(minimumDeposit)}
+                          Minimum deposit is {formatNumber(minimumDeposit)}{" "}
+                          {token.name}
                         </Box>
                       </AppFormInputErrorWrapper>
                     )}

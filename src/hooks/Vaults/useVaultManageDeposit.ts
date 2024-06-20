@@ -203,13 +203,29 @@ const useVaultManageDeposit = (
 
   const depositLimitExceeded = (value: string) => {
     const formattedDepositLimit = BigNumber(depositLimit).dividedBy(10 ** 18);
+
+    console.log({
+      value,
+      isEqual: BigNumber(balancePosition)
+        .dividedBy(10 ** 18)
+        .plus(value)
+        .decimalPlaces(0, BigNumber.ROUND_UP)
+        .isGreaterThanOrEqualTo(formattedDepositLimit),
+      total: BigNumber(balancePosition)
+        .dividedBy(10 ** 18)
+        .plus(value)
+        .decimalPlaces(0, BigNumber.ROUND_UP)
+        .toString(),
+      formattedDepositLimit: formattedDepositLimit.toString(),
+    });
+
     const rule =
       type === VaultType.TRADEFLOW
         ? BigNumber(value).isGreaterThanOrEqualTo(formattedDepositLimit)
         : BigNumber(balancePosition)
             .dividedBy(10 ** 18)
             .plus(value)
-            .decimalPlaces(6, BigNumber.ROUND_UP)
+            .decimalPlaces(0, BigNumber.ROUND_UP)
             .isGreaterThanOrEqualTo(formattedDepositLimit);
 
     if (rule) {
