@@ -294,7 +294,7 @@ const VaultLockingBar = () => {
             ))}
           </AppStepper>
         </CustomPaper>
-        {activeTfPeriod === 2 && (
+        {activeTfPeriod > 0 && (
           <CustomPaper className="withdraw-btn">
             <ButtonPrimary
               type="button"
@@ -305,7 +305,7 @@ const VaultLockingBar = () => {
               }
               onClick={handleWithdrawAll}
             >
-              Withdraw
+              Withdraw all
             </ButtonPrimary>
           </CustomPaper>
         )}

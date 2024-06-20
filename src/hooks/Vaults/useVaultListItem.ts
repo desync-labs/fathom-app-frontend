@@ -54,6 +54,8 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
   const [tfVaultDepositLimit, setTfVaultDepositLimit] = useState<string>("0");
   const [activeTfPeriod, setActiveTfPeriod] = useState(0);
 
+  const [minimumDeposit, setMinimumDeposit] = useState<number>(0.0000000001);
+
   const { account } = useConnector();
   const { vaultService } = useServices();
   const { showErrorNotification } = useRpcError();
@@ -205,6 +207,22 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
   }, [isTfVaultType, vault, account, setTfVaultDepositLimit]);
 
   useEffect(() => {
+    /**
+     * Min Deposit for TradeFlow vaults is 10,000
+     * Min Deposit for other vaults is 0.0000000001
+     */
+    isTfVaultType
+      ? vaultService.getMinUserDeposit(vault.id).then((res) => {
+          setMinimumDeposit(
+            BigNumber(res)
+              .dividedBy(10 ** 18)
+              .toNumber()
+          );
+        })
+      : setMinimumDeposit(0.0000000001);
+  }, [isTfVaultType, vault, setMinimumDeposit]);
+
+  useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
     let timeout: ReturnType<typeof setTimeout>;
 
@@ -306,6 +324,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     balanceToken,
     manageVault,
     newVaultDeposit,
+    minimumDeposit,
     setManageVault,
     setNewVaultDeposit,
     isTfVaultType,
