@@ -158,7 +158,7 @@ strategyTitle["0x4e2fc8a4e62cf515ee7954fd01346cd2501e7e81"] =
 strategyTitle["0x0425b4f142059eb15cae157dac4277f89b9894c2"] =
   "FXD - Lending Strategy 1";
 
-strategyTitle["0x532cf401a9daa773df46f6648c7480a152730f11"] =
+strategyTitle["0xBc8C9999a3D56e799Bb470D8402A9dA121FcBf14"] =
   "Fathom Trade Fintech Strategy 1";
 
 export { strategyTitle, strategyDescription };
