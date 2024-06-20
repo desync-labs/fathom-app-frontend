@@ -8,7 +8,7 @@ import { AppFlexBox } from "components/AppComponents/AppBox/AppBox";
 import DepositVaultForm from "components/Vaults/VaultList/DepositVaultModal/DepositVaultForm";
 import DepositVaultInfo from "components/Vaults/VaultDetail/VaultDetailForm/DepositVaultInfo";
 import { CustomSkeleton } from "components/AppComponents/AppSkeleton/AppSkeleton";
-import { FC } from "react";
+import { FC, memo } from "react";
 
 const VaultFormWrapper = styled(AppFlexBox)`
   align-items: flex-start;
@@ -35,7 +35,7 @@ const VaultDepositPaper = styled(VaultPaper)`
 const VaultDetailDepositForm: FC<{ notLoading: boolean }> = ({
   notLoading,
 }) => {
-  const { vault } = useVaultContext();
+  const { vault, minimumDeposit } = useVaultContext();
   const { isMobile } = useSharedContext();
 
   const onClose = () => {
@@ -100,6 +100,7 @@ const VaultDetailDepositForm: FC<{ notLoading: boolean }> = ({
               handleSubmit={handleSubmit}
               onSubmit={onSubmit}
               validateMaxDepositValue={validateMaxDepositValue}
+              minimumDeposit={minimumDeposit}
             />
           </VaultDetailFormColumn>
           <DepositVaultInfo
@@ -123,4 +124,4 @@ const VaultDetailDepositForm: FC<{ notLoading: boolean }> = ({
   );
 };
 
-export default VaultDetailDepositForm;
+export default memo(VaultDetailDepositForm);

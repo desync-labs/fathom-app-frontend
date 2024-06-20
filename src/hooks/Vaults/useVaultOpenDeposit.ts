@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import BigNumber from "bignumber.js";
 import debounce from "lodash.debounce";
-import { IVault } from "fathom-sdk";
+import { IVault, VaultType } from "fathom-sdk";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 import { useServices } from "context/services";
@@ -26,7 +26,7 @@ const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
     mode: "onChange",
   });
 
-  const { token, depositLimit, balanceTokens } = vault;
+  const { token, depositLimit, balanceTokens, type } = vault;
   const [walletBalance, setWalletBalance] = useState<string>("0");
   const [isWalletFetching, setIsWalletFetching] = useState<boolean>(false);
   const [openDepositLoading, setOpenDepositLoading] = useState<boolean>(false);
@@ -114,8 +114,7 @@ const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
           .minus(balanceTokens)
           .dividedBy(10 ** 18),
         BigNumber(0)
-      ),
-      BigNumber(MAX_PERSONAL_DEPOSIT)
+      )
     ).decimalPlaces(6, BigNumber.ROUND_DOWN);
 
     methods.setValue("deposit", maxWalletBalance.toString(), {
@@ -124,10 +123,16 @@ const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
   }, [methods, walletBalance, depositLimit, balanceTokens]);
 
   const depositLimitExceeded = (value: string) => {
-    if (BigNumber(value).isGreaterThanOrEqualTo(MAX_PERSONAL_DEPOSIT)) {
-      return `The ${MAX_PERSONAL_DEPOSIT / 1000}k ${
-        token.symbol
-      } limit has been exceeded.`;
+    if (
+      BigNumber(value).isGreaterThanOrEqualTo(
+        BigNumber(depositLimit).dividedBy(10 ** 18)
+      )
+    ) {
+      return `The ${
+        BigNumber(depositLimit)
+          .dividedBy(10 ** 18)
+          .toNumber() / 1000
+      }k ${token.symbol} limit has been exceeded.`;
     } else {
       return false;
     }
@@ -138,10 +143,12 @@ const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
       const formattedMaxWalletBalance = BigNumber(walletBalance).dividedBy(
         10 ** 18
       );
-      const formattedMaxDepositLimit = Math.max(
-        BigNumber(depositLimit)
-          .minus(BigNumber(balanceTokens).dividedBy(10 ** 18))
-          .toNumber(),
+      const formattedMaxDepositLimit = BigNumber.max(
+        type === VaultType.TRADEFLOW
+          ? BigNumber(depositLimit).dividedBy(10 ** 18)
+          : BigNumber(depositLimit).minus(
+              BigNumber(balanceTokens).dividedBy(10 ** 18)
+            ),
         0
       );
       if (BigNumber(value).isGreaterThan(formattedMaxWalletBalance)) {
@@ -150,18 +157,26 @@ const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
 
       if (BigNumber(value).isGreaterThan(formattedMaxDepositLimit)) {
         return `Deposit value exceeds the maximum allowed limit ${formatNumber(
-          formattedMaxDepositLimit
+          formattedMaxDepositLimit.toNumber()
         )} ${token.symbol}`;
       }
-      if (BigNumber(value).isGreaterThan(MAX_PERSONAL_DEPOSIT)) {
-        return `The ${MAX_PERSONAL_DEPOSIT / 1000}k ${
+      if (
+        BigNumber(value).isGreaterThan(
+          BigNumber(depositLimit).dividedBy(10 ** 18)
+        )
+      ) {
+        return `The ${
+          BigNumber(depositLimit)
+            .dividedBy(10 ** 18)
+            .toNumber() / 1000
+        }k ${
           token.symbol
         } limit has been exceeded. Please reduce the amount to continue.`;
       }
 
       return true;
     },
-    [depositLimit, balanceTokens, walletBalance]
+    [type, depositLimit, balanceTokens, walletBalance]
   );
 
   const onSubmit = useCallback(async () => {

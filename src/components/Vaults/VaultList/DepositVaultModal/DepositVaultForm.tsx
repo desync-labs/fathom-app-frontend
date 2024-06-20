@@ -56,6 +56,7 @@ type VaultDepositFormProps = {
     undefined
   >;
   onSubmit: () => Promise<void>;
+  minimumDeposit: number;
 };
 
 const DepositVaultForm: FC<VaultDepositFormProps> = ({
@@ -66,9 +67,11 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
   validateMaxDepositValue,
   handleSubmit,
   onSubmit,
+  minimumDeposit,
 }) => {
   const { token, depositLimit, balanceTokens } = vaultItemData;
   const { fxdPrice } = usePricesContext();
+
   return (
     <DepositVaultItemFormWrapper>
       <ManageVaultForm
@@ -81,7 +84,7 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
           name="deposit"
           rules={{
             required: true,
-            min: 0.0000000001,
+            min: minimumDeposit,
             validate: validateMaxDepositValue,
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
@@ -157,7 +160,7 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
                           component={"span"}
                           sx={{ fontSize: "12px", paddingLeft: "6px" }}
                         >
-                          Deposit amount should be positive.
+                          Minimum deposit is {formatNumber(minimumDeposit)}
                         </Box>
                       </AppFormInputErrorWrapper>
                     )}

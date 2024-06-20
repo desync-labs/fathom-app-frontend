@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { IVault, IVaultPosition } from "fathom-sdk";
+import { IVault, IVaultPosition, VaultType } from "fathom-sdk";
 import BigNumber from "bignumber.js";
 import { useLazyQuery } from "@apollo/client";
 
@@ -8,6 +8,8 @@ import useConnector from "context/connector";
 import useSyncContext from "context/sync";
 import useRpcError from "hooks/General/useRpcError";
 import { VAULT_POSITION_TRANSACTIONS } from "apollo/queries";
+import { vaultType } from "utils/getVaultType";
+import dayjs from "dayjs";
 
 interface UseVaultListItemProps {
   vaultPosition: IVaultPosition | null | undefined;
@@ -41,9 +43,21 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
   const [transactionsLoading, setTransactionLoading] = useState<boolean>(false);
   const { syncVault, prevSyncVault } = useSyncContext();
 
+  const [isTfVaultType, setIsTfVaultType] = useState<boolean>(false);
+  const [isUserKycPassed, setIsUserKycPassed] = useState<boolean>(false);
+  const [tfVaultDepositEndDate, setTfVaultDepositEndDate] = useState<
+    string | null
+  >(null);
+  const [tfVaultLockEndDate, setTfVaultLockEndDate] = useState<string | null>(
+    null
+  );
+  const [tfVaultDepositLimit, setTfVaultDepositLimit] = useState<string>("0");
+  const [activeTfPeriod, setActiveTfPeriod] = useState(0);
+
   const { account } = useConnector();
   const { vaultService } = useServices();
   const { showErrorNotification } = useRpcError();
+  const { setLastTransactionBlock } = useSyncContext();
 
   const [loadPositionTransactions, { refetch: refetchTransactions }] =
     useLazyQuery(VAULT_POSITION_TRANSACTIONS, {
@@ -129,6 +143,68 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
   );
 
   useEffect(() => {
+    if (
+      vault.id &&
+      vaultType[vault.id.toLowerCase()] &&
+      vaultType[vault.id.toLowerCase()] === VaultType.TRADEFLOW
+    ) {
+      setIsTfVaultType(true);
+    } else {
+      setIsTfVaultType(false);
+    }
+  }, [vault]);
+
+  useEffect(() => {
+    if (vault.id && account && isTfVaultType) {
+      vaultService.kycPassed(vault.id, account).then((res) => {
+        setIsUserKycPassed(res);
+      });
+    }
+  }, [vault, account, isTfVaultType]);
+
+  useEffect(() => {
+    if (isTfVaultType && vault.strategies?.length) {
+      vaultService
+        .getTradeFlowVaultDepositEndDate(vault.strategies[0].id)
+        .then((res) => {
+          setTfVaultDepositEndDate(res);
+        });
+
+      vaultService
+        .getTradeFlowVaultLockEndDate(vault.strategies[0].id)
+        .then((res) => {
+          setTfVaultLockEndDate(res);
+        });
+    }
+  }, [vault, isTfVaultType]);
+
+  useEffect(() => {
+    if (!tfVaultDepositEndDate || !tfVaultLockEndDate) return;
+    const now = dayjs();
+    let activePeriod = 2;
+
+    if (now.isBefore(dayjs.unix(Number(tfVaultLockEndDate)))) {
+      activePeriod = 1;
+    }
+
+    if (now.isBefore(dayjs.unix(Number(tfVaultDepositEndDate)))) {
+      activePeriod = 0;
+    }
+
+    setActiveTfPeriod(activePeriod);
+  }, [tfVaultDepositEndDate, tfVaultLockEndDate, setActiveTfPeriod]);
+
+  useEffect(() => {
+    if (account && isTfVaultType) {
+      vaultService
+        .getDepositLimit(vault.id, isTfVaultType, account)
+        .then((res) => {
+          setTfVaultDepositLimit(res);
+        });
+    }
+  }, [isTfVaultType, vault, account, setTfVaultDepositLimit]);
+
+  useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
     let timeout: ReturnType<typeof setTimeout>;
 
@@ -206,6 +282,25 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     transactionsLoading,
   ]);
 
+  const handleWithdrawAll = useCallback(async () => {
+    if (vaultPosition) {
+      try {
+        const blockNumber = await vaultService.redeem(
+          BigNumber(vaultPosition.balanceShares)
+            .dividedBy(10 ** 18)
+            .toString(),
+          account,
+          account,
+          vault.shareToken.id
+        );
+
+        setLastTransactionBlock(blockNumber as number);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }, [vaultPosition, account, vaultService, setLastTransactionBlock]);
+
   return {
     balanceEarned,
     balanceToken,
@@ -213,6 +308,13 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     newVaultDeposit,
     setManageVault,
     setNewVaultDeposit,
+    isTfVaultType,
+    isUserKycPassed,
+    tfVaultDepositEndDate,
+    tfVaultLockEndDate,
+    activeTfPeriod,
+    tfVaultDepositLimit,
+    handleWithdrawAll,
   };
 };
 

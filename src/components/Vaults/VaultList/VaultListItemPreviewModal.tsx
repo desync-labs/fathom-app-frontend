@@ -155,6 +155,10 @@ interface VaultListItemPreviewModalProps {
   handleClosePreview: () => void;
   setNewVaultDeposit: (value: boolean) => void;
   setManageVault: (value: boolean) => void;
+  tfVaultDepositLimit: string;
+  handleWithdrawAll: () => void;
+  isTfVaultType: boolean;
+  activeTfPeriod: number;
 }
 
 const BreadcrumbsWrapperContainer = styled(Box)`
@@ -171,6 +175,10 @@ const VaultListItemPreviewModal: FC<VaultListItemPreviewModalProps> = ({
   isOpenPreviewModal,
   setNewVaultDeposit,
   setManageVault,
+  tfVaultDepositLimit,
+  handleWithdrawAll,
+  isTfVaultType,
+  activeTfPeriod,
 }) => {
   const navigate = useNavigate();
   const { fxdPrice } = usePricesContext();
@@ -259,15 +267,21 @@ const VaultListItemPreviewModal: FC<VaultListItemPreviewModalProps> = ({
             <AppListItem
               secondaryAction={
                 <>
-                  {formatNumber(
-                    Math.max(
-                      BigNumber(depositLimit)
-                        .minus(BigNumber(balanceTokens))
-                        .dividedBy(10 ** 18)
-                        .toNumber(),
-                      0
-                    )
-                  )}{" "}
+                  {isTfVaultType
+                    ? formatNumber(
+                        BigNumber(tfVaultDepositLimit)
+                          .dividedBy(10 ** 18)
+                          .toNumber()
+                      )
+                    : formatNumber(
+                        Math.max(
+                          BigNumber(depositLimit)
+                            .minus(BigNumber(balanceTokens))
+                            .dividedBy(10 ** 18)
+                            .toNumber(),
+                          0
+                        )
+                      )}{" "}
                   {token.symbol}
                 </>
               }
@@ -320,7 +334,8 @@ const VaultListItemPreviewModal: FC<VaultListItemPreviewModalProps> = ({
           </ButtonSecondary>
           {(!vaultPosition ||
             !BigNumber(vaultPosition.balanceShares).isGreaterThan(0)) &&
-            !shutdown && (
+            !shutdown &&
+            activeTfPeriod !== 2 && (
               <ButtonPrimary
                 onClick={() => setNewVaultDeposit(true)}
                 sx={{ height: "36px", minWidth: "100px" }}
@@ -330,7 +345,8 @@ const VaultListItemPreviewModal: FC<VaultListItemPreviewModalProps> = ({
             )}
           {vaultPosition &&
             BigNumber(vaultPosition.balanceShares).isGreaterThan(0) &&
-            !shutdown && (
+            !shutdown &&
+            activeTfPeriod !== 2 && (
               <ButtonPrimary
                 onClick={() => setManageVault(true)}
                 sx={{ height: "36px", minWidth: "100px" }}
@@ -340,12 +356,24 @@ const VaultListItemPreviewModal: FC<VaultListItemPreviewModalProps> = ({
             )}
           {vaultPosition &&
             BigNumber(vaultPosition.balanceShares).isGreaterThan(0) &&
-            shutdown && (
+            shutdown &&
+            activeTfPeriod !== 2 && (
               <ButtonPrimary
                 onClick={() => setManageVault(true)}
                 sx={{ height: "36px", minWidth: "100px" }}
               >
                 Withdraw
+              </ButtonPrimary>
+            )}
+          {vaultPosition &&
+            BigNumber(vaultPosition.balanceShares).isGreaterThan(0) &&
+            isTfVaultType &&
+            activeTfPeriod === 2 && (
+              <ButtonPrimary
+                onClick={handleWithdrawAll}
+                sx={{ height: "36px", minWidth: "100px" }}
+              >
+                Withdraw all
               </ButtonPrimary>
             )}
         </ButtonsWrapper>

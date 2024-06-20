@@ -3,7 +3,7 @@ import { FC, memo, useCallback, useEffect, useState } from "react";
 import { Contract, BigNumber as eBigNumber, utils } from "fathom-ethers";
 import { FunctionFragment } from "@into-the-fathom/abi";
 import { getEstimateGas } from "fathom-sdk";
-import { ESTIMATE_GAS_MULTIPLIER } from "fathom-sdk/dist/cjs/utils/Constants";
+import { ESTIMATE_GAS_MULTIPLIER } from "fathom-sdk";
 import {
   Accordion,
   AccordionDetails,

@@ -147,6 +147,13 @@ const VaultListItem = ({
     newVaultDeposit,
     setManageVault,
     setNewVaultDeposit,
+    isTfVaultType,
+    isUserKycPassed,
+    tfVaultDepositEndDate,
+    tfVaultLockEndDate,
+    activeTfPeriod,
+    tfVaultDepositLimit,
+    handleWithdrawAll,
   } = useVaultListItem({ vaultPosition, vault: vaultItemData });
 
   const redirectToVaultDetail = useCallback(() => {
@@ -233,15 +240,21 @@ const VaultListItem = ({
           sx={{ width: "14%" }}
         >
           <VaultAvailable className={"blue"}>
-            {formatNumber(
-              Math.max(
-                BigNumber(depositLimit)
-                  .minus(BigNumber(balanceTokens))
-                  .dividedBy(10 ** 18)
-                  .toNumber(),
-                0
-              )
-            )}{" "}
+            {isTfVaultType
+              ? formatNumber(
+                  BigNumber(tfVaultDepositLimit)
+                    .dividedBy(10 ** 18)
+                    .toNumber()
+                )
+              : formatNumber(
+                  Math.max(
+                    BigNumber(depositLimit)
+                      .minus(BigNumber(balanceTokens))
+                      .dividedBy(10 ** 18)
+                      .toNumber(),
+                    0
+                  )
+                )}{" "}
             {token.symbol}
           </VaultAvailable>
         </TableCell>
@@ -282,7 +295,8 @@ const VaultListItem = ({
           >
             {(!vaultPosition ||
               !BigNumber(vaultPosition.balanceShares).isGreaterThan(0)) &&
-              !shutdown && (
+              !shutdown &&
+              activeTfPeriod !== 2 && (
                 <ButtonPrimary
                   onClick={() => setNewVaultDeposit(true)}
                   data-testid={`vaultRow-${vaultTestId}-depositButton`}
@@ -293,7 +307,8 @@ const VaultListItem = ({
               )}
             {vaultPosition &&
               BigNumber(vaultPosition.balanceShares).isGreaterThan(0) &&
-              !shutdown && (
+              !shutdown &&
+              activeTfPeriod !== 2 && (
                 <ButtonPrimary
                   onClick={() => setManageVault(true)}
                   data-testid={`vaultRowDetails-${vaultTestId}-managePositionButton`}
@@ -304,12 +319,24 @@ const VaultListItem = ({
               )}
             {vaultPosition &&
               BigNumber(vaultPosition.balanceShares).isGreaterThan(0) &&
-              shutdown && (
+              shutdown &&
+              activeTfPeriod !== 2 && (
                 <ButtonPrimary
                   onClick={() => setManageVault(true)}
                   sx={{ height: "36px", minWidth: "100px" }}
                 >
                   Withdraw
+                </ButtonPrimary>
+              )}
+            {vaultPosition &&
+              BigNumber(vaultPosition.balanceShares).isGreaterThan(0) &&
+              isTfVaultType &&
+              activeTfPeriod === 2 && (
+                <ButtonPrimary
+                  onClick={handleWithdrawAll}
+                  sx={{ height: "36px", minWidth: "100px" }}
+                >
+                  Withdraw all
                 </ButtonPrimary>
               )}
           </AppFlexBox>
@@ -321,6 +348,11 @@ const VaultListItem = ({
             <VaultListItemDepositModal
               vaultItemData={vaultItemData}
               performanceFee={performanceFee}
+              isTfVaultType={isTfVaultType}
+              isUserKycPassed={isUserKycPassed}
+              tfVaultDepositEndDate={tfVaultDepositEndDate}
+              tfVaultLockEndDate={tfVaultLockEndDate}
+              activeTfPeriod={activeTfPeriod}
               onClose={() => setNewVaultDeposit(false)}
             />
           )
@@ -334,6 +366,10 @@ const VaultListItem = ({
               vaultItemData={vaultItemData}
               vaultPosition={vaultPosition}
               performanceFee={performanceFee}
+              isTfVaultType={isTfVaultType}
+              tfVaultDepositEndDate={tfVaultDepositEndDate}
+              tfVaultLockEndDate={tfVaultLockEndDate}
+              activeTfPeriod={activeTfPeriod}
               onClose={() => setManageVault(false)}
             />
           )

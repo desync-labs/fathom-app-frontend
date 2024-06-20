@@ -31,6 +31,7 @@ import {
 import WalletConnectBtn from "components/Common/WalletConnectBtn";
 import { ErrorBox, InfoBoxV2 } from "components/AppComponents/AppBox/AppBox";
 import { InfoIcon } from "components/Governance/Propose";
+import VaultModalLockingBar from "./DepositVaultModal/VaultModalLockingBar";
 
 const VaultManageGridDialogWrapper = styled(AppDialog)`
   & .MuiDialog-paper {
@@ -64,6 +65,10 @@ export type VaultManageProps = {
   vaultItemData: IVault;
   vaultPosition: IVaultPosition;
   performanceFee: number;
+  isTfVaultType: boolean;
+  tfVaultDepositEndDate: string | null;
+  tfVaultLockEndDate: string | null;
+  activeTfPeriod: number;
   onClose: () => void;
 };
 
@@ -71,6 +76,10 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
   vaultItemData,
   vaultPosition,
   performanceFee,
+  isTfVaultType,
+  tfVaultDepositEndDate,
+  tfVaultLockEndDate,
+  activeTfPeriod,
   onClose,
 }) => {
   const {
@@ -92,7 +101,7 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
     validateMaxValue,
     handleSubmit,
     onSubmit,
-  } = useVaultManageDeposit(vaultItemData, vaultPosition, onClose);
+  } = useVaultManageDeposit(vaultItemData, vaultPosition, 10000, onClose);
   const { account } = useConnector();
   const { shutdown } = vaultItemData;
 
@@ -131,6 +140,13 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
       </AppDialogTitle>
 
       <DialogContent>
+        {isTfVaultType && (
+          <VaultModalLockingBar
+            tfVaultLockEndDate={tfVaultLockEndDate}
+            tfVaultDepositEndDate={tfVaultDepositEndDate}
+            activeTfPeriod={activeTfPeriod}
+          />
+        )}
         <FormProvider {...methods}>
           <ManageVaultForm
             balanceToken={balanceToken}
@@ -187,7 +203,10 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
               walletBalance !== "0" ? (
               <ButtonPrimary
                 onClick={approve}
-                disabled={!!Object.keys(errors).length}
+                disabled={
+                  !!Object.keys(errors).length ||
+                  (isTfVaultType && activeTfPeriod > 0)
+                }
               >
                 {" "}
                 {approvalPending ? (
@@ -203,7 +222,8 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
                 disabled={
                   openDepositLoading ||
                   (formType === FormType.DEPOSIT && approveBtn) ||
-                  !!Object.keys(errors).length
+                  !!Object.keys(errors).length ||
+                  (isTfVaultType && activeTfPeriod > 0)
                 }
                 isLoading={openDepositLoading}
               >
