@@ -144,18 +144,7 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
                 </Typography>
               </ErrorBox>
             )}
-          {approveBtn && walletBalance !== "0" && (
-            <InfoBoxV2>
-              <InfoIcon />
-              <Box flexDirection="column">
-                <Typography width="100%">
-                  First-time connect? Please allow token approval in your
-                  MetaMask
-                </Typography>
-              </Box>
-            </InfoBoxV2>
-          )}
-          {isTfVaultType && !isUserKycPassed && (
+          {isTfVaultType && !isUserKycPassed && activeTfPeriod === 0 && (
             <WarningBox>
               <InfoIcon
                 sx={{ width: "20px", color: "#F5953D", height: "20px" }}
@@ -173,6 +162,29 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
                 </Typography>
               </Box>
             </WarningBox>
+          )}
+          {activeTfPeriod === 1 && (
+            <WarningBox>
+              <InfoIcon
+                sx={{ width: "20px", color: "#F5953D", height: "20px" }}
+              />
+              <Box flexDirection="column">
+                <Typography width="100%">
+                  Deposit period has been completed.
+                </Typography>
+              </Box>
+            </WarningBox>
+          )}
+          {approveBtn && walletBalance !== "0" && (
+            <InfoBoxV2>
+              <InfoIcon />
+              <Box flexDirection="column">
+                <Typography width="100%">
+                  First-time connect? Please allow token approval in your
+                  MetaMask
+                </Typography>
+              </Box>
+            </InfoBoxV2>
           )}
           <ModalButtonWrapper>
             <ButtonSecondary onClick={onClose}>Close</ButtonSecondary>
