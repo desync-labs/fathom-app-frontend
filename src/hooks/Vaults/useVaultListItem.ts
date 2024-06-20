@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { IVault, IVaultPosition, VaultType } from "fathom-sdk";
 import BigNumber from "bignumber.js";
 import { useLazyQuery } from "@apollo/client";
+import dayjs from "dayjs";
 
 import { useServices } from "context/services";
 import useConnector from "context/connector";
@@ -9,8 +10,8 @@ import useSyncContext from "context/sync";
 import useRpcError from "hooks/General/useRpcError";
 import { VAULT_POSITION_TRANSACTIONS } from "apollo/queries";
 import { vaultType } from "utils/getVaultType";
-import dayjs from "dayjs";
-import { formatNumber } from "../../utils/format";
+import { formatNumber } from "utils/format";
+import { getVaultLockEndDate } from "utils/getVaultLockEndDate";
 
 interface UseVaultListItemProps {
   vaultPosition: IVaultPosition | null | undefined;
@@ -176,7 +177,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
       vaultService
         .getTradeFlowVaultLockEndDate(vault.strategies[0].id)
         .then((res) => {
-          setTfVaultLockEndDate(res);
+          setTfVaultLockEndDate(getVaultLockEndDate(res).toString());
         });
     }
   }, [vault, isTfVaultType]);
