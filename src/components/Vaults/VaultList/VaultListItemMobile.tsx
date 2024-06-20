@@ -103,6 +103,7 @@ const VaultListItemMobile = ({
     activeTfPeriod,
     tfVaultDepositLimit,
     handleWithdrawAll,
+    minimumDeposit,
   } = useVaultListItem({ vaultPosition, vault: vaultItemData });
 
   const handleOpenPreviewModal = () => {
@@ -198,6 +199,7 @@ const VaultListItemMobile = ({
               tfVaultDepositEndDate={tfVaultDepositEndDate}
               tfVaultLockEndDate={tfVaultLockEndDate}
               activeTfPeriod={activeTfPeriod}
+              minimumDeposit={minimumDeposit}
               onClose={() => setNewVaultDeposit(false)}
             />
           )
@@ -215,6 +217,7 @@ const VaultListItemMobile = ({
               tfVaultDepositEndDate={tfVaultDepositEndDate}
               tfVaultLockEndDate={tfVaultLockEndDate}
               activeTfPeriod={activeTfPeriod}
+              minimumDeposit={minimumDeposit}
               onClose={() => setManageVault(false)}
             />
           )

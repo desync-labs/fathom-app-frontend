@@ -56,6 +56,7 @@ export type VaultDepositProps = {
   tfVaultDepositEndDate: string | null;
   tfVaultLockEndDate: string | null;
   activeTfPeriod: number;
+  minimumDeposit: number;
   onClose: () => void;
 };
 
@@ -67,6 +68,7 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
   tfVaultDepositEndDate,
   tfVaultLockEndDate,
   activeTfPeriod,
+  minimumDeposit,
   onClose,
 }) => {
   const {
@@ -122,7 +124,7 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
             validateMaxDepositValue={validateMaxDepositValue}
             handleSubmit={handleSubmit}
             onSubmit={onSubmit}
-            minimumDeposit={10000}
+            minimumDeposit={minimumDeposit}
           />
           <DepositVaultInfo
             vaultItemData={vaultItemData}

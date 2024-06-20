@@ -154,6 +154,7 @@ const VaultListItem = ({
     activeTfPeriod,
     tfVaultDepositLimit,
     handleWithdrawAll,
+    minimumDeposit,
   } = useVaultListItem({ vaultPosition, vault: vaultItemData });
 
   const redirectToVaultDetail = useCallback(() => {
@@ -353,6 +354,7 @@ const VaultListItem = ({
               tfVaultDepositEndDate={tfVaultDepositEndDate}
               tfVaultLockEndDate={tfVaultLockEndDate}
               activeTfPeriod={activeTfPeriod}
+              minimumDeposit={minimumDeposit}
               onClose={() => setNewVaultDeposit(false)}
             />
           )
@@ -370,6 +372,7 @@ const VaultListItem = ({
               tfVaultDepositEndDate={tfVaultDepositEndDate}
               tfVaultLockEndDate={tfVaultLockEndDate}
               activeTfPeriod={activeTfPeriod}
+              minimumDeposit={minimumDeposit}
               onClose={() => setManageVault(false)}
             />
           )

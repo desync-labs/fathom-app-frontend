@@ -69,6 +69,7 @@ export type VaultManageProps = {
   tfVaultDepositEndDate: string | null;
   tfVaultLockEndDate: string | null;
   activeTfPeriod: number;
+  minimumDeposit: number;
   onClose: () => void;
 };
 
@@ -80,6 +81,7 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
   tfVaultDepositEndDate,
   tfVaultLockEndDate,
   activeTfPeriod,
+  minimumDeposit,
   onClose,
 }) => {
   const {
@@ -101,7 +103,12 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
     validateMaxValue,
     handleSubmit,
     onSubmit,
-  } = useVaultManageDeposit(vaultItemData, vaultPosition, 10000, onClose);
+  } = useVaultManageDeposit(
+    vaultItemData,
+    vaultPosition,
+    minimumDeposit,
+    onClose
+  );
   const { account } = useConnector();
   const { shutdown } = vaultItemData;
 
