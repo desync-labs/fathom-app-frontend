@@ -82,7 +82,7 @@ type VaultManageInfoProps = {
     undefined
   >;
   onSubmit: (values: Record<string, any>) => Promise<void>;
-  withdrawLimitExceeded: (value: string) => string;
+  withdrawLimitExceeded: (value: string) => string | boolean;
 };
 
 const ManageVaultInfo: FC<VaultManageInfoProps> = ({
@@ -279,7 +279,7 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
             <Typography>Wallet balance is not enough to deposit.</Typography>
           </ErrorBox>
         )}
-      {withdrawLimitExceeded(formToken) && (
+      {formType === FormType.WITHDRAW && withdrawLimitExceeded(formToken) && (
         <ErrorBox sx={{ marginBottom: 0 }}>
           <InfoIcon />
           <Typography>{withdrawLimitExceeded(formToken)}</Typography>
@@ -322,7 +322,9 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
             disabled={
               openDepositLoading ||
               (formType === FormType.DEPOSIT && approveBtn) ||
-              !!Object.keys(errors).length
+              !!Object.keys(errors).length ||
+              (formType === FormType.WITHDRAW &&
+                !!withdrawLimitExceeded(formToken))
             }
             isLoading={openDepositLoading}
           >

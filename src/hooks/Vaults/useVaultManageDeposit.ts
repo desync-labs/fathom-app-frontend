@@ -135,8 +135,12 @@ const useVaultManageDeposit = (
   }, [formType]);
 
   useEffect(() => {
-    formToken.trim() && approvalStatus(formToken);
-  }, [vault, formToken]);
+    if (formToken.trim()) {
+      approvalStatus(formToken);
+    } else {
+      setApproveBtn(false);
+    }
+  }, [vault, formToken, setApproveBtn]);
 
   useEffect(() => {
     getBalancePosition();
@@ -249,11 +253,11 @@ const useVaultManageDeposit = (
           BigNumber(maxBalanceToken).minus(value).toNumber()
         )} ${token.name} less then minimum allowed deposit ${
           minimumDeposit / 1000
-        }k ${token.name}, so we will process full withdraw.`;
+        }k ${token.name}, you can do full withdraw instead.`;
       }
-      return "";
+      return false;
     } else {
-      return "";
+      return false;
     }
   };
 
@@ -374,19 +378,8 @@ const useVaultManageDeposit = (
         }
       } else {
         try {
-          console.log({
-            formSharedToken,
-            full: BigNumber(vaultPosition.balanceShares)
-              .dividedBy(10 ** 18)
-              .toString(),
-          });
-
           const blockNumber = await vaultService.redeem(
-            isFullWithdraw
-              ? BigNumber(vaultPosition.balanceShares)
-                  .dividedBy(10 ** 18)
-                  .toString()
-              : formSharedToken,
+            formSharedToken,
             account,
             account,
             vault.shareToken.id
