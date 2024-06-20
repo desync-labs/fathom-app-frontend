@@ -51,6 +51,9 @@ const VAULT_REPORTS_PER_PAGE = 1000;
 
 const VAULT_ABI = SmartContractFactory.FathomVault("").abi;
 const STRATEGY_ABI = SmartContractFactory.FathomVaultStrategy("").abi;
+const TRADE_FLOW_VAULT_ABI = SmartContractFactory.FathomTradeFlowVault("").abi;
+const TRADE_FLOW_STRATEGY_ABI =
+  SmartContractFactory.FathomTradeFlowStrategy("").abi;
 
 export type IVaultStrategyHistoricalApr = {
   id: string;
@@ -513,27 +516,29 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
 
   useEffect(() => {
     try {
-      const methods = (VAULT_ABI as FunctionFragment[]).filter(
-        (item: FunctionFragment) => item.type === "function"
-      );
+      const methods = (
+        (isTfVaultType ? TRADE_FLOW_VAULT_ABI : VAULT_ABI) as FunctionFragment[]
+      ).filter((item: FunctionFragment) => item.type === "function");
 
       setVaultMethods(methods);
     } catch (e: any) {
       console.error(e);
     }
-  }, [setVaultMethods]);
+  }, [setVaultMethods, isTfVaultType]);
 
   useEffect(() => {
     try {
-      const methods = (STRATEGY_ABI as FunctionFragment[]).filter(
-        (item: FunctionFragment) => item.type === "function"
-      );
+      const methods = (
+        (isTfVaultType
+          ? TRADE_FLOW_STRATEGY_ABI
+          : STRATEGY_ABI) as FunctionFragment[]
+      ).filter((item: FunctionFragment) => item.type === "function");
 
       setStrategyMethods(methods);
     } catch (e: any) {
       console.error(e);
     }
-  }, [setStrategyMethods]);
+  }, [setStrategyMethods, isTfVaultType]);
 
   const fetchBalanceToken = useCallback(
     (
