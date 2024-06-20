@@ -27,6 +27,7 @@ import {
 import { vaultTitle } from "utils/getVaultTitleAndDescription";
 import { vaultType } from "utils/getVaultType";
 import dayjs from "dayjs";
+import { getVaultLockEndDate } from "utils/getVaultLockEndDate";
 
 declare module "fathom-sdk" {
   interface IVault {
@@ -284,6 +285,10 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
         account
       );
 
+      if (type === VaultType.TRADEFLOW && !account) {
+        depositLimitValue = "0";
+      }
+
       setTfVaultDepositLimit(depositLimitValue);
 
       const updatedVault = {
@@ -413,7 +418,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
       vaultService
         .getTradeFlowVaultLockEndDate(vault.strategies[0].id)
         .then((res) => {
-          setTfVaultLockEndDate(res);
+          setTfVaultLockEndDate(getVaultLockEndDate(res).toString());
         });
     }
   }, [vault, isTfVaultType]);

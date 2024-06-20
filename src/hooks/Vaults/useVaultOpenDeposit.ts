@@ -87,8 +87,12 @@ const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
   }, [account, vault, vaultService, setApprovalPending, setApproveBtn]);
 
   useEffect(() => {
-    deposit.trim() && approvalStatus(deposit);
-  }, [vault, deposit]);
+    if (deposit.trim()) {
+      approvalStatus(deposit);
+    } else {
+      setApproveBtn(false);
+    }
+  }, [deposit, approvalStatus, setApproveBtn]);
 
   useEffect(() => {
     if (account && vault.token) {
@@ -123,15 +127,17 @@ const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
   }, [methods, walletBalance, depositLimit, balanceTokens]);
 
   const depositLimitExceeded = (value: string) => {
-    if (
-      BigNumber(value).isGreaterThanOrEqualTo(
-        BigNumber(depositLimit).dividedBy(10 ** 18)
-      )
-    ) {
+    const formattedDepositLimit = BigNumber(depositLimit).dividedBy(10 ** 18);
+    const rule =
+      type === VaultType.TRADEFLOW
+        ? BigNumber(value).isGreaterThanOrEqualTo(formattedDepositLimit)
+        : BigNumber(value).isGreaterThanOrEqualTo(MAX_PERSONAL_DEPOSIT);
+
+    if (rule) {
       return `The ${
-        BigNumber(depositLimit)
-          .dividedBy(10 ** 18)
-          .toNumber() / 1000
+        (type === VaultType.TRADEFLOW
+          ? formattedDepositLimit.toNumber()
+          : MAX_PERSONAL_DEPOSIT) / 1000
       }k ${token.symbol} limit has been exceeded.`;
     } else {
       return false;

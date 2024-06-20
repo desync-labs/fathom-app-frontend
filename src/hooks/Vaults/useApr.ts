@@ -3,7 +3,10 @@ import { IVault } from "fathom-sdk";
 import BigNumber from "bignumber.js";
 
 const EDUCATION_STRATEGY_ID = "0x3c8e9896933b374e638f9a5c309535409129aaa2";
-const TF_TEST_VAULT = "0xbf4adcc0a8f2c7e29f934314ce60cf5de38bfe8f";
+
+const ApyConfig = {
+  ["0xbf4adcc0a8f2c7e29f934314ce60cf5de38bfe8f".toLowerCase()]: 10,
+} as const;
 
 const useApr = (vault: IVault) => {
   if (vault.id === EDUCATION_STRATEGY_ID) {
@@ -16,8 +19,8 @@ const useApr = (vault: IVault) => {
     );
   }
 
-  if (vault.id === TF_TEST_VAULT) {
-    return formatNumber(33);
+  if (ApyConfig[vault.id]) {
+    return formatNumber(ApyConfig[vault.id]);
   }
 
   return formatNumber(Number(vault.apr));
@@ -34,8 +37,8 @@ const useAprNumber = (vault: IVault) => {
     );
   }
 
-  if (vault.id === TF_TEST_VAULT) {
-    return 33;
+  if (ApyConfig[vault.id]) {
+    return ApyConfig[vault.id];
   }
 
   return Number(vault.apr);
@@ -49,9 +52,10 @@ const getApr = (currentDept: string, vaultId: string, apr: string) => {
       .toString();
   }
 
-  if (vaultId === TF_TEST_VAULT) {
-    return "33";
+  if (ApyConfig[vaultId]) {
+    return ApyConfig[vaultId].toString();
   }
+
   return apr;
 };
 
