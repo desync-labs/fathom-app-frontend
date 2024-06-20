@@ -109,6 +109,7 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
     validateMaxValue,
     handleSubmit,
     onSubmit,
+    depositLimitExceeded,
   } = useVaultManageDeposit(
     vaultItemData,
     vaultPosition,
@@ -172,6 +173,7 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
             validateMaxValue={validateMaxValue}
             handleSubmit={handleSubmit}
             onSubmit={onSubmit}
+            depositLimitExceeded={depositLimitExceeded}
           />
           <ManageVaultInfo
             formType={formType}

@@ -60,6 +60,7 @@ type VaultManageFormProps = {
     undefined
   >;
   onSubmit: (values: Record<string, any>) => Promise<void>;
+  depositLimitExceeded: (value: string) => string | boolean;
 };
 
 const ManageVaultForm: FC<VaultManageFormProps> = ({
@@ -72,6 +73,7 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
   validateMaxValue,
   handleSubmit,
   onSubmit,
+  depositLimitExceeded,
 }) => {
   const { token, balanceTokens, depositLimit } = vaultItemData;
   const { fxdPrice } = usePricesContext();
@@ -130,6 +132,24 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
                 placeholder={"0"}
                 helperText={
                   <>
+                    {depositLimitExceeded(value) && (
+                      <AppFormInputErrorWrapper>
+                        <InfoIcon
+                          sx={{
+                            float: "left",
+                            width: "14px",
+                            height: "14px",
+                            marginRight: "0",
+                          }}
+                        />
+                        <Box
+                          component={"span"}
+                          sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                        >
+                          {depositLimitExceeded(value)}
+                        </Box>
+                      </AppFormInputErrorWrapper>
+                    )}
                     {error && error.type === "required" && (
                       <AppFormInputErrorWrapper>
                         <InfoIcon

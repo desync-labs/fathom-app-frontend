@@ -203,6 +203,7 @@ const useVaultManageDeposit = (
 
   const depositLimitExceeded = (value: string) => {
     const formattedDepositLimit = BigNumber(depositLimit).dividedBy(10 ** 18);
+
     const rule =
       type === VaultType.TRADEFLOW
         ? BigNumber(value).isGreaterThanOrEqualTo(formattedDepositLimit)
@@ -210,31 +211,18 @@ const useVaultManageDeposit = (
             .dividedBy(10 ** 18)
             .plus(value)
             .decimalPlaces(6, BigNumber.ROUND_UP)
-            .isGreaterThanOrEqualTo(formattedDepositLimit);
+            .isGreaterThanOrEqualTo(MAX_PERSONAL_DEPOSIT);
 
     if (rule) {
-      return `The ${formattedDepositLimit.toNumber() / 1000}k ${
-        token.symbol
-      } limit has been exceeded.`;
+      return `The ${
+        type === VaultType.TRADEFLOW
+          ? formattedDepositLimit.toNumber()
+          : MAX_PERSONAL_DEPOSIT / 1000
+      }k ${token.symbol} limit has been exceeded.`;
     } else {
       return false;
     }
   };
-
-  useEffect(() => {
-    if (type === VaultType.TRADEFLOW) {
-      const maxBalanceToken = BigNumber(balanceToken).dividedBy(10 ** 18);
-
-      if (
-        BigNumber(maxBalanceToken).minus(formToken).isGreaterThan(0) &&
-        BigNumber(maxBalanceToken).minus(formToken).isLessThan(minimumDeposit)
-      ) {
-        setIsFullWithdraw(true);
-      } else {
-        setIsFullWithdraw(false);
-      }
-    }
-  }, [balanceToken, type, formToken]);
 
   const withdrawLimitExceeded = (value: string) => {
     /**

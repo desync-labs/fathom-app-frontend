@@ -59,6 +59,7 @@ const VaultDetailManageForm = () => {
     onSubmit,
     methods,
     withdrawLimitExceeded,
+    depositLimitExceeded,
   } = useVaultManageDeposit(vault, vaultPosition, minimumDeposit, onClose);
   const { isMobile } = useSharedContext();
 
@@ -96,6 +97,7 @@ const VaultDetailManageForm = () => {
               handleSubmit={handleSubmit}
               onSubmit={onSubmit}
               vaultPosition={vaultPosition}
+              depositLimitExceeded={depositLimitExceeded}
             />
           </VaultDetailFormColumn>
           <ManageVaultInfo
