@@ -12,11 +12,13 @@ import { IVault } from "fathom-sdk";
 import { FieldErrors, UseFormHandleSubmit } from "react-hook-form";
 import { formatNumber, formatPercentage } from "utils/format";
 import useConnector from "context/connector";
+import useVaultContext from "context/vault";
 import { AppList, AppListItem } from "components/AppComponents/AppList/AppList";
 import {
   ErrorBox,
   InfoBoxV2,
   SummaryVaultFormInfo,
+  WarningBox,
 } from "components/AppComponents/AppBox/AppBox";
 import {
   ButtonPrimary,
@@ -96,6 +98,7 @@ const DepositVaultInfo: FC<DepositVaultInfoProps> = ({
   handleSubmit,
   onSubmit,
 }) => {
+  const { isTfVaultType, isUserKycPassed } = useVaultContext();
   const { token, shareToken, sharesSupply } = vaultItemData;
   const { account } = useConnector();
 
@@ -182,6 +185,23 @@ const DepositVaultInfo: FC<DepositVaultInfoProps> = ({
           </Box>
         </InfoBoxV2>
       )}
+      {isTfVaultType && !isUserKycPassed && (
+        <WarningBox>
+          <InfoIcon sx={{ width: "20px", color: "#F5953D", height: "20px" }} />
+          <Box flexDirection="column">
+            <Typography width="100%">
+              Only KYC-verified users can deposit. Please completing KYC at{" "}
+              <a
+                href={"https://kyc.tradeflow.network/"}
+                target={"_blank"}
+                rel={"noreferrer"}
+              >
+                https://kyc.tradeflow.network/
+              </a>
+            </Typography>
+          </Box>
+        </WarningBox>
+      )}
       <VaultDetailFormButtonWrapper>
         <ButtonSecondary className={"reset"} onClick={onClose}>
           Reset
@@ -191,7 +211,10 @@ const DepositVaultInfo: FC<DepositVaultInfoProps> = ({
         ) : approveBtn && walletBalance !== "0" ? (
           <ButtonPrimary
             onClick={approve}
-            disabled={!!Object.keys(errors).length}
+            disabled={
+              !!Object.keys(errors).length ||
+              (isTfVaultType && !isUserKycPassed)
+            }
           >
             {" "}
             {approvalPending ? (
@@ -205,7 +228,10 @@ const DepositVaultInfo: FC<DepositVaultInfoProps> = ({
             type="button"
             onClick={handleSubmit(onSubmit)}
             disabled={
-              openDepositLoading || approveBtn || !!Object.keys(errors).length
+              openDepositLoading ||
+              approveBtn ||
+              !!Object.keys(errors).length ||
+              (isTfVaultType && !isUserKycPassed)
             }
             isLoading={openDepositLoading}
           >

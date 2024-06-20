@@ -6,7 +6,10 @@ import {
   IVaultStrategy,
   IVaultStrategyReport,
   SmartContractFactory,
+  VaultType,
+  IAccountVaultPosition,
 } from "fathom-sdk";
+import { FunctionFragment } from "@into-the-fathom/abi";
 import BigNumber from "bignumber.js";
 import { Contract } from "fathom-ethers";
 import { useLazyQuery, useQuery } from "@apollo/client";
@@ -23,7 +26,8 @@ import {
   VAULT_STRATEGY_REPORTS,
 } from "apollo/queries";
 import { vaultTitle } from "utils/getVaultTitleAndDescription";
-import { FunctionFragment } from "@into-the-fathom/abi";
+import { vaultType } from "utils/getVaultType";
+import dayjs from "dayjs";
 
 declare module "fathom-sdk" {
   interface IVault {
@@ -99,6 +103,16 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
   );
   const [isUserManager, setIsUserManager] = useState<boolean>(false);
 
+  const [isTfVaultType, setIsTfVaultType] = useState<boolean>(false);
+  const [isUserKycPassed, setIsUserKycPassed] = useState<boolean>(false);
+  const [tfVaultDepositEndDate, setTfVaultDepositEndDate] = useState<
+    string | null
+  >(null);
+  const [tfVaultLockEndDate, setTfVaultLockEndDate] = useState<string | null>(
+    null
+  );
+  const [activeTfPeriod, setActiveTfPeriod] = useState(0);
+
   const { syncVault, prevSyncVault } = useSyncContext();
 
   const [activeVaultInfoTab, setActiveVaultInfoTab] = useState<VaultInfoTabs>(
@@ -114,11 +128,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
   const { vaultService, poolService } = useServices();
   const { showErrorNotification } = useRpcError();
 
-  const { data: vaultItemData, loading: vaultLoading } = useQuery(VAULT, {
-    variables: {
-      id: vaultId,
-      chainId,
-    },
+  const [loadVault, { loading: vaultLoading }] = useLazyQuery(VAULT, {
     context: { clientName: "vaults", chainId },
     fetchPolicy: "network-only",
   });
@@ -156,6 +166,18 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
       },
     }
   );
+
+  useEffect(() => {
+    if (
+      vaultId &&
+      vaultType[vaultId.toLowerCase()] &&
+      vaultType[vaultId.toLowerCase()] === VaultType.TRADEFLOW
+    ) {
+      setIsTfVaultType(true);
+    } else {
+      setIsTfVaultType(false);
+    }
+  }, [vaultId]);
 
   const fetchReports = (
     strategyId: string,
@@ -240,47 +262,159 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     }
   }, [vaultsFactories, vaultsFactoriesLoading]);
 
+  const updateVaultDepositLimit = async (
+    vaultData: IVault,
+    account: string,
+    isTfVaultType: boolean
+  ) => {
+    let depositLimitValue = vaultData.depositLimit;
+    try {
+      if (account && isTfVaultType) {
+        depositLimitValue = await vaultService.getDepositLimit(
+          vaultData.id,
+          account,
+          isTfVaultType
+        );
+      }
+
+      const updatedVault = {
+        ...vaultData,
+        depositLimit: depositLimitValue,
+        name: vaultTitle[vaultData.id.toLowerCase()]
+          ? vaultTitle[vaultData.id.toLowerCase()]
+          : vaultData.token.name,
+        type: vaultType[vaultData.id.toLowerCase()]
+          ? vaultType[vaultData.id.toLowerCase()]
+          : VaultType.DEFAULT,
+      };
+
+      setVault(updatedVault);
+
+      return updatedVault;
+    } catch (error) {
+      console.error("Error updating vault deposit limit:", error);
+      return vaultData;
+    }
+  };
+
   useEffect(() => {
-    if ((!vaultItemData || vaultItemData?.vault === null) && !vaultLoading) {
+    if (!vaultId) {
       navigate("/vaults");
-    } else if (vaultItemData && !vaultLoading) {
-      const { vault } = vaultItemData;
-      setVault({
-        ...vault,
-        name: vaultTitle[vault.id.toLowerCase()]
-          ? vaultTitle[vault.id.toLowerCase()]
-          : vault.token.name,
-      });
-
-      /**
-       * Fetch additional data for strategies
-       */
-      if (vault && vault?.strategies && vault?.strategies?.length) {
-        const promises: Promise<boolean>[] = [];
-        vault?.strategies.forEach((strategy: IVaultStrategy) => {
-          promises.push(vaultService.isStrategyShutdown(strategy.id));
-        });
-
-        Promise.all(promises).then((response) => {
-          const strategies = vault?.strategies.map(
-            (strategy: IVaultStrategy, index: number) => {
-              return {
-                ...strategy,
-                isShutdown: response[index],
-              };
-            }
+    } else {
+      loadVault({
+        variables: {
+          id: vaultId,
+          chainId,
+        },
+      }).then(async (res) => {
+        if (!res.data?.vault) {
+          navigate("/vaults");
+        } else {
+          let vaultData = res.data.vault;
+          vaultData = await updateVaultDepositLimit(
+            vaultData,
+            account,
+            isTfVaultType
           );
 
-          setVault((prev) => ({
-            ...prev,
-            strategies,
-          }));
-        });
-      }
-    }
-  }, [vaultItemData, vaultLoading, setVault]);
+          /**
+           * Fetch additional data for strategies
+           */
+          if (
+            vaultData &&
+            vaultData?.strategies &&
+            vaultData?.strategies?.length
+          ) {
+            if (vaultData.type === VaultType.TRADEFLOW) {
+              const strategies = vaultData?.strategies.map(
+                (strategy: IVaultStrategy) => {
+                  return {
+                    ...strategy,
+                    isShutdown: false,
+                  };
+                }
+              );
+              setVault({
+                ...vaultData,
+                strategies,
+              });
+            } else {
+              const promises: Promise<boolean>[] = [];
+              vaultData?.strategies.forEach((strategy: IVaultStrategy) => {
+                promises.push(vaultService.isStrategyShutdown(strategy.id));
+              });
 
-  const fetchVaultPosition = useCallback(() => {
+              Promise.all(promises).then((response) => {
+                const strategies = vault?.strategies.map(
+                  (strategy: IVaultStrategy, index: number) => {
+                    return {
+                      ...strategy,
+                      isShutdown: response[index],
+                    };
+                  }
+                );
+
+                setVault({
+                  ...vaultData,
+                  strategies,
+                });
+              });
+            }
+          }
+        }
+      });
+    }
+  }, [
+    loadVault,
+    vaultId,
+    account,
+    isTfVaultType,
+    chainId,
+    vaultService,
+    setVault,
+  ]);
+
+  useEffect(() => {
+    if (vaultId && account && isTfVaultType) {
+      vaultService.kycPassed(vaultId, account).then((res) => {
+        setIsUserKycPassed(res);
+      });
+    }
+  }, [vaultId, account, isTfVaultType]);
+
+  useEffect(() => {
+    if (isTfVaultType && vault.strategies?.length) {
+      vaultService
+        .getTradeFlowVaultDepositEndDate(vault.strategies[0].id)
+        .then((res) => {
+          setTfVaultDepositEndDate(res);
+        });
+
+      vaultService
+        .getTradeFlowVaultLockEndDate(vault.strategies[0].id)
+        .then((res) => {
+          setTfVaultLockEndDate(res);
+        });
+    }
+  }, [vault, isTfVaultType]);
+
+  useEffect(() => {
+    if (!tfVaultDepositEndDate || !tfVaultLockEndDate) return;
+    const now = dayjs();
+    let activePeriod = 2;
+
+    if (now.isBefore(dayjs.unix(Number(tfVaultLockEndDate)))) {
+      activePeriod = 1;
+    }
+
+    if (now.isBefore(dayjs.unix(Number(tfVaultDepositEndDate)))) {
+      activePeriod = 0;
+    }
+
+    setActiveTfPeriod(activePeriod);
+  }, [tfVaultDepositEndDate, tfVaultLockEndDate, setActiveTfPeriod]);
+
+  const fetchVaultPosition = useCallback((): Promise<IAccountVaultPosition> => {
     return new Promise((resolve, reject) => {
       loadPosition({
         variables: { account: account.toLowerCase(), vault: vaultId },
@@ -322,7 +456,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
           }
         } else {
           setVaultPosition({} as IVaultPosition);
-          resolve({});
+          resolve({} as IAccountVaultPosition);
         }
       });
     });
@@ -370,13 +504,14 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
 
   const fetchBalanceToken = useCallback(
     (
-      fetchBalanceTokenType: FetchBalanceTokenType = FetchBalanceTokenType.FETCH
+      fetchBalanceTokenType: FetchBalanceTokenType = FetchBalanceTokenType.FETCH,
+      updatedVaultPosition?: IAccountVaultPosition
     ) => {
       if (fetchBalanceTokenType === FetchBalanceTokenType.PROMISE) {
         setFetchBalanceLoading(true);
         return vaultService
           .previewRedeem(
-            BigNumber(vaultPosition?.balanceShares as string)
+            BigNumber(updatedVaultPosition?.balanceShares as string)
               .dividedBy(10 ** 18)
               .toString(),
             vault.id
@@ -487,10 +622,10 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
 
   useEffect(() => {
     if (syncVault && !prevSyncVault && vaultPosition && vault.id) {
-      fetchVaultPosition().then(() => {
+      fetchVaultPosition().then((vaultPosition: IAccountVaultPosition) => {
         Promise.all([
           fetchPositionTransactions(TransactionFetchType.PROMISE),
-          fetchBalanceToken(FetchBalanceTokenType.PROMISE),
+          fetchBalanceToken(FetchBalanceTokenType.PROMISE, vaultPosition),
         ]).then(([transactions, balanceToken]) => {
           setBalanceToken(balanceToken as string);
           transactions?.data?.deposits &&
@@ -627,6 +762,11 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     isUserManager,
     updateVaultPositionLoading,
     isReportsLoaded,
+    isUserKycPassed,
+    isTfVaultType,
+    tfVaultDepositEndDate,
+    tfVaultLockEndDate,
+    activeTfPeriod,
   };
 };
 

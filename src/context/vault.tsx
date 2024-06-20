@@ -2,6 +2,7 @@ import {
   createContext,
   Dispatch,
   FC,
+  memo,
   ReactElement,
   SetStateAction,
   useContext,
@@ -36,19 +37,26 @@ export type UseVaultContextReturnType = {
   managedStrategiesIds: string[];
   isUserManager: boolean;
   isReportsLoaded: boolean;
+  isUserKycPassed: boolean;
+  isTfVaultType: boolean;
+  tfVaultDepositEndDate: string | null;
+  tfVaultLockEndDate: string | null;
+  activeTfPeriod: number;
 };
 
 export const VaultContext = createContext<UseVaultContextReturnType>(
   {} as UseVaultContextReturnType
 );
 
-export const VaultProvider: FC<VaultContextType> = ({ vaultId, children }) => {
-  const values = useVaultDetail({ vaultId });
+export const VaultProvider: FC<VaultContextType> = memo(
+  ({ vaultId, children }) => {
+    const values = useVaultDetail({ vaultId });
 
-  return (
-    <VaultContext.Provider value={values}>{children}</VaultContext.Provider>
-  );
-};
+    return (
+      <VaultContext.Provider value={values}>{children}</VaultContext.Provider>
+    );
+  }
+);
 
 const useVaultContext = () => useContext(VaultContext);
 
