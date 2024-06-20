@@ -20,6 +20,7 @@ import LockAquaSrc from "assets/svg/lock-aqua.svg";
 import StepperItemIcon from "assets/svg/icons/stepper-item-icon.svg";
 import StepperItemIconActive from "assets/svg/icons/stepper-item-icon-active.svg";
 import AppPopover from "../../AppComponents/AppPopover/AppPopover";
+import { getPeriodInDays } from "../../../utils/getPeriodInDays";
 
 const SummaryWrapper = styled(AppFlexBox)`
   justify-content: flex-start;
@@ -230,7 +231,8 @@ const VaultLockingBar = () => {
       key: "lock-time", // added key to the object
       label: (
         <LockWrapper>
-          Lock Time
+          Lock Time (
+          {getPeriodInDays(tfVaultDepositEndDate, tfVaultLockEndDate)} days)
           <AppPopover
             id={"lock-time"}
             text={
