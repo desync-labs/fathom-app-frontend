@@ -100,7 +100,7 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
                         .toNumber()
                     ) +
                       " " +
-                      token.name}
+                      token?.name}
                   </VaultWalletBalance>
                 </AppFlexBox>
               </AppFormLabelRow>
@@ -178,8 +178,8 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
               )}`}</AppFormInputUsdIndicator>
               <AppFormInputLogoV2
                 className={"extendedInput"}
-                src={getTokenLogoURL(token.symbol)}
-                alt={token.name}
+                src={getTokenLogoURL(token?.symbol)}
+                alt={token?.name}
               />
               <MaxButtonV2 onClick={() => setMax()}>Max</MaxButtonV2>
             </AppFormInputWrapperV2>

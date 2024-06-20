@@ -266,14 +266,17 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
 
   const updateVaultDepositLimit = async (
     vaultData: IVault,
-    account: string,
-    isTfVaultType: boolean
+    account: string
   ) => {
     let depositLimitValue = vaultData.depositLimit;
     try {
+      const type = vaultType[vaultData.id.toLowerCase()]
+        ? vaultType[vaultData.id.toLowerCase()]
+        : VaultType.DEFAULT;
+
       depositLimitValue = await vaultService.getDepositLimit(
         vaultData.id,
-        isTfVaultType,
+        type === VaultType.TRADEFLOW,
         account
       );
 
@@ -283,9 +286,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
         name: vaultTitle[vaultData.id.toLowerCase()]
           ? vaultTitle[vaultData.id.toLowerCase()]
           : vaultData.token.name,
-        type: vaultType[vaultData.id.toLowerCase()]
-          ? vaultType[vaultData.id.toLowerCase()]
-          : VaultType.DEFAULT,
+        type,
       };
 
       setVault(updatedVault);
@@ -325,11 +326,9 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
         } else {
           let vaultData = res.data.vault;
 
-          vaultData = await updateVaultDepositLimit(
-            vaultData,
-            account,
-            isTfVaultType
-          );
+          setVault(vaultData);
+
+          vaultData = await updateVaultDepositLimit(vaultData, account);
 
           /**
            * Fetch additional data for strategies
@@ -360,7 +359,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
               });
 
               Promise.all(promises).then((response) => {
-                const strategies = vault?.strategies.map(
+                const strategies = vaultData?.strategies.map(
                   (strategy: IVaultStrategy, index: number) => {
                     return {
                       ...strategy,
@@ -500,7 +499,14 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     } else {
       setVaultPosition({} as IVaultPosition);
     }
-  }, [fetchVaultPosition, account, vault, vaultService, setVaultPosition]);
+  }, [
+    fetchVaultPosition,
+    account,
+    chainId,
+    vault,
+    vaultService,
+    setVaultPosition,
+  ]);
 
   useEffect(() => {
     try {
@@ -618,6 +624,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     let interval: ReturnType<typeof setInterval>;
     let timeout: ReturnType<typeof setTimeout>;
     if (
+      chainId &&
       vaultPosition &&
       vault.id &&
       !vaultPositionLoading &&
@@ -637,6 +644,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
       clearTimeout(timeout);
     };
   }, [
+    chainId,
     vault,
     fetchBalanceToken,
     fetchPositionTransactions,
@@ -647,9 +655,6 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
   useEffect(() => {
     if (syncVault && !prevSyncVault && vaultPosition && vault.id) {
       fetchVaultPosition().then((vaultPosition: IVaultPosition) => {
-        console.log({
-          updatePosition: vaultPosition,
-        });
         Promise.all([
           fetchPositionTransactions(TransactionFetchType.PROMISE),
           fetchBalanceToken(FetchBalanceTokenType.PROMISE, vaultPosition),
@@ -663,13 +668,12 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
       });
     }
   }, [
-    fetchVaultPosition,
-    vaultPosition,
     vault,
     syncVault,
     prevSyncVault,
     fetchPositionTransactions,
     fetchBalanceToken,
+    fetchVaultPosition,
     setBalanceToken,
     setDepositsList,
     setWithdrawalsList,
