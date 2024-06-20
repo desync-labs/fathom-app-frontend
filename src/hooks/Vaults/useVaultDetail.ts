@@ -440,7 +440,6 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
   const fetchVaultPosition = useCallback(
     (vaultId: string, account: string): Promise<IVaultPosition> => {
       return new Promise((resolve) => {
-        console.log("fetchVaultPosition");
         loadPosition({
           variables: { account: account.toLowerCase(), vault: vaultId },
         }).then(async (res) => {
@@ -526,7 +525,10 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
       fetchBalanceTokenType: FetchBalanceTokenType = FetchBalanceTokenType.FETCH,
       vaultPosition: IVaultPosition
     ) => {
-      console.log("fetchBalanceToken");
+      if (!vaultPosition?.balanceShares) {
+        setBalanceToken("0");
+        return "0";
+      }
       if (fetchBalanceTokenType === FetchBalanceTokenType.PROMISE) {
         setFetchBalanceLoading(true);
         return vaultService
@@ -571,7 +573,6 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
       fetchType: TransactionFetchType = TransactionFetchType.FETCH,
       vaultId: string
     ) => {
-      console.log("fetchPositionTransactions");
       if (account) {
         if (fetchType === TransactionFetchType.PROMISE) {
           return loadPositionTransactions({
