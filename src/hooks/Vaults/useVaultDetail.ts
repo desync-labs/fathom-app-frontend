@@ -285,6 +285,10 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
         account
       );
 
+      if (type === VaultType.TRADEFLOW && !account) {
+        depositLimitValue = "0";
+      }
+
       setTfVaultDepositLimit(depositLimitValue);
 
       const updatedVault = {
