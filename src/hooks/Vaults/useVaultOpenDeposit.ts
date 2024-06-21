@@ -103,7 +103,7 @@ const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
   }, [deposit, approvalStatus, setApproveBtn]);
 
   useEffect(() => {
-    if (account && token.id) {
+    if (account && token?.id) {
       getVaultTokenBalance();
     }
   }, [account, token?.id, getVaultTokenBalance]);

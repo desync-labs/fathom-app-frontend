@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, memo, useState } from "react";
 import BigNumber from "bignumber.js";
 import { Box, styled, Typography } from "@mui/material";
 
@@ -91,36 +91,37 @@ const InputTokenLabel = ({ tokenSymbol }: { tokenSymbol: string }) => {
   );
 };
 
+const getEstimatedEarning = (
+  depositAmount: string,
+  apy: string,
+  days: number
+): string => {
+  if (
+    !depositAmount ||
+    !days ||
+    BigNumber(depositAmount).isLessThanOrEqualTo("0") ||
+    BigNumber(apy).isEqualTo("0")
+  ) {
+    return "0";
+  }
+
+  const principal = BigNumber(depositAmount);
+  const annualRate = BigNumber(apy).div(100);
+  const timeInYears = BigNumber(days).div(365);
+
+  const profit = principal.times(annualRate).times(timeInYears);
+
+  return profit.toFixed(2);
+};
+
 const VaultProfitCalculator = () => {
-  const [tokenAmount, setTokenAmount] = useState<string>("0");
+  const [tokenAmount, setTokenAmount] = useState<string>("");
   const [estimatedEarning, setEstimatedEarning] = useState<string>("0");
 
   const { vault, isTfVaultType, tfVaultDepositEndDate, tfVaultLockEndDate } =
     useVaultContext();
   const { fxdPrice } = usePricesContext();
   const { token } = vault;
-
-  const getEstimatedEarning = (
-    depositAmount: string,
-    apy: string,
-    days: number
-  ): string => {
-    if (
-      depositAmount === "" ||
-      days === 0 ||
-      BigNumber(depositAmount).isLessThanOrEqualTo("0") ||
-      BigNumber(apy).isEqualTo("0")
-    )
-      return "0";
-
-    const principal = new BigNumber(depositAmount);
-    const annualRate = new BigNumber(apy).div(100);
-    const timeInYears = new BigNumber(days).div(365);
-
-    const profit = principal.times(annualRate).times(timeInYears);
-
-    return profit.toFixed(2);
-  };
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     let period = 365;
@@ -179,12 +180,12 @@ const VaultProfitCalculator = () => {
             <AppFormLabelV2>I have</AppFormLabelV2>
           </AppFormLabelRow>
           <CalculatorTextField
-            error={BigNumber(tokenAmount).isLessThan("0")}
+            error={!!(tokenAmount && isNaN(tokenAmount as unknown as number))}
             id="outlined-helperText"
             placeholder={"0"}
             helperText={
               <>
-                {BigNumber(tokenAmount).isLessThan("0") && (
+                {!!(tokenAmount && isNaN(tokenAmount as unknown as number)) && (
                   <AppFormInputErrorWrapper>
                     <InfoIcon
                       sx={{
@@ -239,4 +240,4 @@ const VaultProfitCalculator = () => {
   );
 };
 
-export default VaultProfitCalculator;
+export default memo(VaultProfitCalculator);
