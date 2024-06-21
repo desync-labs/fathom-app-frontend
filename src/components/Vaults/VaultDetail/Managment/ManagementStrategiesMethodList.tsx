@@ -3,7 +3,7 @@ import { Box, Divider, MenuItem, styled, Tab, Typography } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { FunctionFragment } from "@into-the-fathom/abi";
 
-import { strategyTitle } from "utils/getStrategyTitleAndDescription";
+import { strategyTitle } from "utils/Vaults/getStrategyTitleAndDescription";
 import { formatHashShorten } from "utils/format";
 import { AppSelect } from "components/AppComponents/AppForm/AppForm";
 import {

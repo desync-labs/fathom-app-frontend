@@ -20,7 +20,7 @@ export const VaultAboutTitle = styled(Typography)`
   }
 `;
 
-vaultDescription["0x50d150069a0fce09e6ded55a75aec67d2be79037"] = (
+vaultDescription["0x50d150069a0fce09e6ded55a75aec67d2be79037".toLowerCase()] = (
   <>
     <VaultAboutTitle>
       Gold World ETF Vault: Bridging Traditional Assets and Decentralized
@@ -73,8 +73,9 @@ vaultDescription["0x50d150069a0fce09e6ded55a75aec67d2be79037"] = (
   </>
 );
 
-vaultTitle["0x50d150069a0fce09e6ded55a75aec67d2be79037"] = "Gold World ETF";
-vaultTitle["0xbf4adcc0a8f2c7e29f934314ce60cf5de38bfe8f"] =
+vaultTitle["0x50d150069a0fce09e6ded55a75aec67d2be79037".toLowerCase()] =
+  "Gold World ETF";
+vaultTitle["0xbf4adcc0a8f2c7e29f934314ce60cf5de38bfe8f".toLowerCase()] =
   "Trade Fintech Vault";
 
 export { vaultTitle, vaultDescription };

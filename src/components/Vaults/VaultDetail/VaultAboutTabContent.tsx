@@ -4,7 +4,7 @@ import { Box, ListItemText, styled, Typography } from "@mui/material";
 import {
   VaultAboutTitle,
   vaultDescription,
-} from "utils/getVaultTitleAndDescription";
+} from "utils/Vaults/getVaultTitleAndDescription";
 import { getAccountUrl } from "utils/explorer";
 import { DEFAULT_CHAIN_ID } from "utils/Constants";
 import useVaultContext from "context/vault";
@@ -18,6 +18,7 @@ import {
   VaultDescriptionWrapper,
 } from "components/Vaults/VaultDetail/VaultDetailInfoTabAbout";
 import AppPopover from "../../AppComponents/AppPopover/AppPopover";
+import { getDefaultVaultDescription } from "../../../utils/Vaults/getStrategyTitleAndDescription";
 
 const FeesItemWrapper = styled(Box)`
   display: flex;
@@ -36,18 +37,7 @@ const VaultAboutTabContent = () => {
           <>
             <VaultAboutTitle variant={"h5"}>Description</VaultAboutTitle>
             <Typography component={"span"}>
-              The FXD vault functions as a pool of funds with an
-              auto-compounding strategy that manages and executes various tasks
-              based on predefined conditions. Users can deposit FXD only into
-              this vault, which then uses algorithms to perform actions such as
-              yield farming: lending, borrowing, etc. The FXD can consist of
-              different strategies, all separately investable. Each strategy
-              investment returns a strategy share token. Note that this is a
-              share token and so not 1:1 equivalent with FXD deposited. The FXD
-              vault only charges performance fees when strategy tokens are
-              redeemed. There is no management fee. Note that the vault
-              strategies have been carefully audited, nevertheless users are -
-              as always in defi - exposed to smart contract risk.
+              {getDefaultVaultDescription(vault.type)}
             </Typography>
           </>
         )}

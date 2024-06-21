@@ -1,6 +1,6 @@
 import { Box, ListItemText, Skeleton, styled } from "@mui/material";
 import { FC } from "react";
-import { VaultAboutTitle } from "utils/getVaultTitleAndDescription";
+import { VaultAboutTitle } from "utils/Vaults/getVaultTitleAndDescription";
 import {
   AppListApy,
   AppListFees,

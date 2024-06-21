@@ -74,7 +74,6 @@ export type VaultManageProps = {
   tfVaultLockEndDate: string | null;
   activeTfPeriod: number;
   minimumDeposit: number;
-  withdrawLimitExceeded: (value: string) => string | boolean;
   onClose: () => void;
 };
 
@@ -87,7 +86,6 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
   tfVaultLockEndDate,
   activeTfPeriod,
   minimumDeposit,
-  withdrawLimitExceeded,
   onClose,
 }) => {
   const {
@@ -100,7 +98,7 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
     approveBtn,
     approvalPending,
     formType,
-    balanceToken,
+    balancePosition,
     openDepositLoading,
     errors,
     setFormType,
@@ -110,6 +108,7 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
     handleSubmit,
     onSubmit,
     depositLimitExceeded,
+    withdrawLimitExceeded,
   } = useVaultManageDeposit(
     vaultItemData,
     vaultPosition,
@@ -163,7 +162,7 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
         )}
         <FormProvider {...methods}>
           <ManageVaultForm
-            balanceToken={balanceToken}
+            balanceToken={balancePosition}
             vaultItemData={vaultItemData}
             vaultPosition={vaultPosition}
             walletBalance={walletBalance}
