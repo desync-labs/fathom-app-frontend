@@ -43,14 +43,14 @@ const useVaultManageDeposit = (
     formState: { errors },
   } = methods;
 
-  const { token, depositLimit, balanceTokens, shutdown, type } = vault;
+  const { token, depositLimit, balanceTokens, shutdown, type, shareToken } =
+    vault;
   const [formType, setFormType] = useState<FormType>(
     shutdown ? FormType.WITHDRAW : FormType.DEPOSIT
   );
   const [walletBalance, setWalletBalance] = useState<string>("0");
   const [isWalletFetching, setIsWalletFetching] = useState<boolean>(false);
   const [openDepositLoading, setOpenDepositLoading] = useState<boolean>(false);
-  const [balanceToken, setBalanceToken] = useState<string>("0");
 
   const [approveBtn, setApproveBtn] = useState<boolean>(false);
   const [approvalPending, setApprovalPending] = useState<boolean>(false);
@@ -64,13 +64,13 @@ const useVaultManageDeposit = (
       debounce(async (formToken: string) => {
         const approved = await vaultService.approvalStatus(
           account,
-          vault.token.id,
-          vault.shareToken.id,
+          token.id,
+          shareToken.id,
           formToken
         );
         approved ? setApproveBtn(false) : setApproveBtn(true);
       }, 1000),
-    [vaultService, vault, account]
+    [vaultService, token.id, shareToken.id, account]
   );
 
   const updateSharedAmount = useMemo(
@@ -95,62 +95,52 @@ const useVaultManageDeposit = (
 
         setValue("formSharedToken", sharedConverted);
       }, 500),
-    [vaultService, vault, formType, isFullWithdraw, setIsFullWithdraw]
+    [vaultService, vault.id, formType, isFullWithdraw, setIsFullWithdraw]
   );
 
   const approve = useCallback(async () => {
     setApprovalPending(true);
     try {
-      await vaultService.approve(account, vault.token.id, vault.shareToken.id);
+      await vaultService.approve(account, token.id, shareToken.id);
       setApproveBtn(false);
     } catch (e) {
       setApproveBtn(true);
+    } finally {
+      setApprovalPending(false);
     }
-
-    setApprovalPending(false);
-  }, [account, vault, vaultService, setApprovalPending, setApproveBtn]);
-
-  const getBalancePosition = useCallback(() => {
-    vaultService
-      .previewRedeem(
-        BigNumber(vaultPosition.balanceShares)
-          .dividedBy(10 ** 18)
-          .toString(),
-        vault.id
-      )
-      .then((balanceToken: string) => {
-        setBalanceToken(balanceToken);
-      });
-  }, [vaultService, vault, vaultPosition, setBalanceToken]);
+  }, [
+    account,
+    token.id,
+    shareToken.id,
+    vaultService,
+    setApprovalPending,
+    setApproveBtn,
+  ]);
 
   const getVaultTokenBalance = useCallback(async () => {
     const balance = await poolService.getUserTokenBalance(account, token.id);
     setWalletBalance(balance.toString());
     setIsWalletFetching(true);
-  }, [account]);
+  }, [account, token.id, setWalletBalance, setIsWalletFetching]);
 
   useEffect(() => {
     setValue("formToken", "", { shouldValidate: false });
     setValue("formSharedToken", "", { shouldValidate: false });
-  }, [formType]);
+  }, [formType, setValue]);
 
   useEffect(() => {
-    if (formToken.trim()) {
+    if (formToken.trim() && formType === FormType.DEPOSIT) {
       approvalStatus(formToken);
     } else {
       setApproveBtn(false);
     }
-  }, [vault, formToken, setApproveBtn]);
+  }, [formToken, formType, setApproveBtn]);
 
   useEffect(() => {
-    getBalancePosition();
-  }, [vaultPosition, vault]);
-
-  useEffect(() => {
-    if (account && vault.token) {
+    if (account && token.id) {
       getVaultTokenBalance();
     }
-  }, [account, vault, getVaultTokenBalance]);
+  }, [account, token.id, getVaultTokenBalance]);
 
   useEffect(() => {
     let timeout: ReturnType<typeof setTimeout>;
@@ -166,7 +156,7 @@ const useVaultManageDeposit = (
     return () => {
       timeout && clearTimeout(timeout);
     };
-  }, [formToken, updateSharedAmount]);
+  }, [formToken, updateSharedAmount, setValue]);
 
   const validateDeposit = (
     value: string,
@@ -185,7 +175,7 @@ const useVaultManageDeposit = (
 
     const formattedDeposit = BigNumber(depositLimit).dividedBy(10 ** 18);
     const rule =
-      type === VaultType.TRADEFLOW
+      type === VaultType.TRADEFI
         ? BigNumber(value).isGreaterThan(formattedDeposit)
         : BigNumber(balancePosition)
             .dividedBy(10 ** 18)
@@ -205,7 +195,7 @@ const useVaultManageDeposit = (
     const formattedDepositLimit = BigNumber(depositLimit).dividedBy(10 ** 18);
 
     const rule =
-      type === VaultType.TRADEFLOW
+      type === VaultType.TRADEFI
         ? BigNumber(value).isGreaterThanOrEqualTo(formattedDepositLimit)
         : BigNumber(balancePosition)
             .dividedBy(10 ** 18)
@@ -215,7 +205,7 @@ const useVaultManageDeposit = (
 
     if (rule) {
       return `The ${
-        type === VaultType.TRADEFLOW
+        type === VaultType.TRADEFI
           ? formattedDepositLimit.toNumber()
           : MAX_PERSONAL_DEPOSIT / 1000
       }k ${token.symbol} limit has been exceeded.`;
@@ -228,8 +218,8 @@ const useVaultManageDeposit = (
     /**
      * Logic for TradeFlowVault
      */
-    if (type === VaultType.TRADEFLOW) {
-      const maxBalanceToken = BigNumber(balanceToken).dividedBy(10 ** 18);
+    if (type === VaultType.TRADEFI) {
+      const maxBalanceToken = BigNumber(balancePosition).dividedBy(10 ** 18);
 
       if (
         BigNumber(maxBalanceToken).minus(value).isGreaterThan(0) &&
@@ -265,7 +255,7 @@ const useVaultManageDeposit = (
           10 ** 18
         );
         const maxDepositLimit =
-          type === VaultType.TRADEFLOW
+          type === VaultType.TRADEFI
             ? BigNumber.max(formattedDepositLimit, 0)
             : BigNumber.max(
                 BigNumber(formattedDepositLimit)
@@ -276,16 +266,16 @@ const useVaultManageDeposit = (
 
         return validateDeposit(value, maxWalletBalance, maxDepositLimit);
       } else {
-        const maxBalanceToken = BigNumber(balanceToken).dividedBy(10 ** 18);
+        const maxBalanceToken = BigNumber(balancePosition).dividedBy(10 ** 18);
         return validateRepay(value, maxBalanceToken);
       }
     },
-    [depositLimit, balanceTokens, walletBalance, balanceToken, formType]
+    [depositLimit, balanceTokens, walletBalance, balancePosition, formType]
   );
 
   const setMax = useCallback(() => {
     if (formType === FormType.DEPOSIT) {
-      if (type === VaultType.TRADEFLOW) {
+      if (type === VaultType.TRADEFI) {
         const max = BigNumber.min(walletBalance, depositLimit)
           .dividedBy(10 ** 18)
           .decimalPlaces(6, BigNumber.ROUND_DOWN);
@@ -316,7 +306,7 @@ const useVaultManageDeposit = (
       setIsFullWithdraw(true);
       setValue(
         "formToken",
-        BigNumber(balanceToken)
+        BigNumber(balancePosition)
           .dividedBy(10 ** 18)
           .toString(),
         { shouldValidate: true }
@@ -337,7 +327,6 @@ const useVaultManageDeposit = (
     balancePosition,
     depositLimit,
     balanceTokens,
-    balanceToken,
     formType,
     balanceShares,
   ]);
@@ -353,7 +342,7 @@ const useVaultManageDeposit = (
           const blockNumber = await vaultService.deposit(
             formToken,
             account,
-            vault.shareToken.id
+            shareToken.id
           );
 
           setLastTransactionBlock(blockNumber as number);
@@ -370,7 +359,7 @@ const useVaultManageDeposit = (
             formSharedToken,
             account,
             account,
-            vault.shareToken.id
+            shareToken.id
           );
 
           setIsFullWithdraw(false);
@@ -390,7 +379,7 @@ const useVaultManageDeposit = (
       formSharedToken,
       isFullWithdraw,
       formType,
-      vault,
+      shareToken.id,
       vaultService,
       setIsFullWithdraw,
       setOpenDepositLoading,
@@ -406,13 +395,13 @@ const useVaultManageDeposit = (
     control,
     formToken,
     formSharedToken,
-    balanceToken,
     approveBtn,
     approvalPending,
     formType,
     openDepositLoading,
-    errors: errors,
+    errors,
     setFormType,
+    balancePosition,
     approve,
     setMax,
     validateMaxValue,

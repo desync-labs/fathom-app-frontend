@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { FC, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { Box, CircularProgress, TableCell } from "@mui/material";
@@ -126,14 +126,16 @@ export const VaultListItemImageWrapper = styled("div")`
   }
 `;
 
-const VaultListItem = ({
-  vaultItemData,
-  vaultPosition,
-  performanceFee,
-}: {
+type VaultListItemProps = {
   vaultItemData: IVault;
   vaultPosition: IVaultPosition | null;
   performanceFee: number;
+};
+
+const VaultListItem: FC<VaultListItemProps> = ({
+  vaultItemData,
+  vaultPosition,
+  performanceFee,
 }) => {
   const { token, balanceTokens, depositLimit, shutdown } = vaultItemData;
   const formattedApr = useApr(vaultItemData);
@@ -155,7 +157,6 @@ const VaultListItem = ({
     tfVaultDepositLimit,
     handleWithdrawAll,
     minimumDeposit,
-    withdrawLimitExceeded,
   } = useVaultListItem({ vaultPosition, vault: vaultItemData });
 
   const redirectToVaultDetail = useCallback(() => {
@@ -262,7 +263,7 @@ const VaultListItem = ({
         </TableCell>
         <TableCell
           colSpan={1}
-          sx={{ width: "13%" }}
+          sx={{ width: "15%" }}
           data-testid={`vaultRow-${vaultTestId}-stakedValueCell`}
         >
           <VaultStacked>
@@ -374,7 +375,6 @@ const VaultListItem = ({
               tfVaultLockEndDate={tfVaultLockEndDate}
               activeTfPeriod={activeTfPeriod}
               minimumDeposit={minimumDeposit}
-              withdrawLimitExceeded={withdrawLimitExceeded}
               onClose={() => setManageVault(false)}
             />
           )

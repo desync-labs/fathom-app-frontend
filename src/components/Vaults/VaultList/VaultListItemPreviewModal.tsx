@@ -150,7 +150,7 @@ const PseudoBreadcrumbs = ({
 interface VaultListItemPreviewModalProps {
   isOpenPreviewModal: boolean;
   vault: IVault;
-  vaultPosition: IVaultPosition | null;
+  vaultPosition: IVaultPosition | undefined;
   balanceEarned: number;
   handleClosePreview: () => void;
   setNewVaultDeposit: (value: boolean) => void;
