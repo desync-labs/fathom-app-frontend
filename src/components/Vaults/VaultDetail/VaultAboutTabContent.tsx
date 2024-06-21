@@ -17,8 +17,8 @@ import {
   VaultContractAddress,
   VaultDescriptionWrapper,
 } from "components/Vaults/VaultDetail/VaultDetailInfoTabAbout";
-import AppPopover from "../../AppComponents/AppPopover/AppPopover";
-import { getDefaultVaultDescription } from "../../../utils/Vaults/getStrategyTitleAndDescription";
+import AppPopover from "components/AppComponents/AppPopover/AppPopover";
+import { getDefaultVaultDescription } from "utils/Vaults/getVaultTitleAndDescription";
 
 const FeesItemWrapper = styled(Box)`
   display: flex;
