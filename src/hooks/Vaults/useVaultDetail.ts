@@ -603,6 +603,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
 
   useEffect(() => {
     if (
+      !vault.id ||
       updateVaultPositionLoading ||
       vaultPositionLoading ||
       transactionsLoading ||
