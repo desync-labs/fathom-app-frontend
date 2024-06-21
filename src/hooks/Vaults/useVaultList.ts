@@ -166,7 +166,7 @@ const useVaultList = () => {
       });
       vaultsRefetch();
     }
-  }, [syncVault, prevSyncVault, vaultsRefetch]);
+  }, [syncVault, prevSyncVault, vaultsRefetch, positionsRefetch]);
 
   useEffect(() => {
     if (!vaultsFactoriesLoading && vaultsFactories) {
@@ -177,7 +177,7 @@ const useVaultList = () => {
         setPerformanceFee(performanceFeeRes / 100);
       }
     }
-  }, [vaultsFactories]);
+  }, [vaultsFactoriesLoading, vaultsFactories]);
 
   useEffect(() => {
     if (vaultItemsData && vaultItemsData.vaults) {

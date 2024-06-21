@@ -265,7 +265,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
         setPerformanceFee(performanceFeeRes / 100);
       }
     }
-  }, [vaultsFactories, vaultsFactoriesLoading]);
+  }, [vaultsFactoriesLoading, vaultsFactories]);
 
   const updateVaultDepositLimit = async (
     vaultData: IVault,
