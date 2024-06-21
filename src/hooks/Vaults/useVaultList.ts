@@ -6,7 +6,7 @@ import {
   VAULTS,
   VAULT_FACTORIES,
 } from "apollo/queries";
-import { COUNT_PER_PAGE } from "utils/Constants";
+import { COUNT_PER_PAGE_VAULT } from "utils/Constants";
 import { vaultTitle } from "utils/Vaults/getVaultTitleAndDescription";
 import { vaultType } from "utils/Vaults/getVaultType";
 import useConnector from "context/connector";
@@ -56,7 +56,7 @@ const useVaultList = () => {
     fetchMore,
   } = useQuery(VAULTS, {
     variables: {
-      first: COUNT_PER_PAGE,
+      first: COUNT_PER_PAGE_VAULT,
       skip: 0,
       shutdown: isShutdown,
       chainId,
@@ -278,8 +278,8 @@ const useVaultList = () => {
     (event: ChangeEvent<unknown>, page: number) => {
       fetchMore({
         variables: {
-          first: COUNT_PER_PAGE,
-          skip: (page - 1) * COUNT_PER_PAGE,
+          first: COUNT_PER_PAGE_VAULT,
+          skip: (page - 1) * COUNT_PER_PAGE_VAULT,
         },
       });
       setVaultCurrentPage(page);

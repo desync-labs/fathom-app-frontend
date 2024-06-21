@@ -11,7 +11,7 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { COUNT_PER_PAGE } from "utils/Constants";
+import { COUNT_PER_PAGE_VAULT } from "utils/Constants";
 import AppPopover from "components/AppComponents/AppPopover/AppPopover";
 import { VaultListItemSkeleton } from "components/Vaults/VaultList/VaultListItemSkeleton";
 import VaultListItem from "components/Vaults/VaultList/VaultListItem";
@@ -139,10 +139,10 @@ const VaultsList: FC<VaultListPropsType> = ({
           )}
         </TableBody>
       </Table>
-      {!vaultsLoading && vaults.length > COUNT_PER_PAGE && (
+      {!vaultsLoading && vaults.length > COUNT_PER_PAGE_VAULT && (
         <PaginationWrapper>
           <Pagination
-            count={Math.ceil(vaultItemsCount / COUNT_PER_PAGE)}
+            count={Math.ceil(vaultItemsCount / COUNT_PER_PAGE_VAULT)}
             page={vaultCurrentPage}
             onChange={handlePageChange}
           />

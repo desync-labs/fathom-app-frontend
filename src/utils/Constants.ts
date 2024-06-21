@@ -26,3 +26,4 @@ export const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
 export const TransactionCheckUpdateInterval = 2000;
 
 export const COUNT_PER_PAGE = 4;
+export const COUNT_PER_PAGE_VAULT = 10;
