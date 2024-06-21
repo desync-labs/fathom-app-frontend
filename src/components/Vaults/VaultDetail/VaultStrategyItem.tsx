@@ -13,7 +13,7 @@ import {
   DescriptionList,
   strategyDescription,
   strategyTitle,
-} from "utils/getStrategyTitleAndDescription";
+} from "utils/Vaults/getStrategyTitleAndDescription";
 import { getApr } from "hooks/Vaults/useApr";
 import { IVaultStrategyHistoricalApr } from "hooks/Vaults/useVaultListItem";
 import VaultHistoryChart, {

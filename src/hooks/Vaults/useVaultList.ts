@@ -6,13 +6,14 @@ import {
   VAULTS,
   VAULT_FACTORIES,
 } from "apollo/queries";
-import { COUNT_PER_PAGE } from "utils/Constants";
-import { vaultTitle } from "utils/getVaultTitleAndDescription";
-import { vaultType } from "utils/getVaultType";
+import { COUNT_PER_PAGE_VAULT } from "utils/Constants";
+import { vaultTitle } from "utils/Vaults/getVaultTitleAndDescription";
+import { vaultType } from "utils/Vaults/getVaultType";
 import useConnector from "context/connector";
 import useSyncContext from "context/sync";
 import { useServices } from "context/services";
 import BigNumber from "bignumber.js";
+import { getDefaultVaultTitle } from "utils/Vaults/getStrategyTitleAndDescription";
 
 declare module "fathom-sdk" {
   interface IVault {
@@ -55,7 +56,7 @@ const useVaultList = () => {
     fetchMore,
   } = useQuery(VAULTS, {
     variables: {
-      first: COUNT_PER_PAGE,
+      first: COUNT_PER_PAGE_VAULT,
       skip: 0,
       shutdown: isShutdown,
       chainId,
@@ -165,17 +166,7 @@ const useVaultList = () => {
       });
       vaultsRefetch();
     }
-  }, [syncVault, prevSyncVault, vaultsRefetch]);
-
-  useEffect(() => {
-    /**
-     * Refetch vaults every 60 seconds
-     */
-    const interval = setInterval(() => {
-      vaultsRefetch();
-    }, 60 * 1000);
-    return () => clearInterval(interval);
-  }, [vaultsRefetch, account]);
+  }, [syncVault, prevSyncVault, vaultsRefetch, positionsRefetch]);
 
   useEffect(() => {
     if (!vaultsFactoriesLoading && vaultsFactories) {
@@ -186,7 +177,7 @@ const useVaultList = () => {
         setPerformanceFee(performanceFeeRes / 100);
       }
     }
-  }, [vaultsFactories]);
+  }, [vaultsFactoriesLoading, vaultsFactories]);
 
   useEffect(() => {
     if (vaultItemsData && vaultItemsData.vaults) {
@@ -201,7 +192,9 @@ const useVaultList = () => {
     }
   }, [sortBy, search, vaultItemsData]);
 
-  // Sort vaults
+  /**
+   * Sorting vaults by TVL, Earned, Staked
+   */
   const sortingVaults = useCallback(
     (vaultData: IVault[]) => {
       let sortedVaults = [...vaultData];
@@ -256,15 +249,17 @@ const useVaultList = () => {
 
   const filteringVaultsBySearch = useCallback(
     (vaultList: IVault[]) => {
-      let vaultListWithNames = vaultList.map((vault) => {
+      let vaultListWithNames = vaultList.map((vault, index) => {
         return {
           ...vault,
           name: vaultTitle[vault.id.toLowerCase()]
             ? vaultTitle[vault.id.toLowerCase()]
-            : vault.token.name,
-          type: vaultType[vault.id.toLowerCase()]
-            ? vaultType[vault.id.toLowerCase()]
-            : VaultType.DEFAULT,
+            : getDefaultVaultTitle(
+                vaultType[vault.id.toLowerCase()] || VaultType.DEFAULT,
+                index + 1,
+                vault.token.name
+              ),
+          type: vaultType[vault.id.toLowerCase()] || VaultType.DEFAULT,
         };
       });
 
@@ -283,8 +278,8 @@ const useVaultList = () => {
     (event: ChangeEvent<unknown>, page: number) => {
       fetchMore({
         variables: {
-          first: COUNT_PER_PAGE,
-          skip: (page - 1) * COUNT_PER_PAGE,
+          first: COUNT_PER_PAGE_VAULT,
+          skip: (page - 1) * COUNT_PER_PAGE_VAULT,
         },
       });
       setVaultCurrentPage(page);

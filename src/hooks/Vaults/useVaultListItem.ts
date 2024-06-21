@@ -9,9 +9,8 @@ import useConnector from "context/connector";
 import useSyncContext from "context/sync";
 import useRpcError from "hooks/General/useRpcError";
 import { VAULT_POSITION_TRANSACTIONS } from "apollo/queries";
-import { vaultType } from "utils/getVaultType";
-import { formatNumber } from "utils/format";
-import { getVaultLockEndDate } from "utils/getVaultLockEndDate";
+import { vaultType } from "utils/Vaults/getVaultType";
+import { getVaultLockEndDate } from "utils/Vaults/getVaultLockEndDate";
 
 interface UseVaultListItemProps {
   vaultPosition: IVaultPosition | null | undefined;
@@ -42,7 +41,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
 
   const [depositsList, setDepositsList] = useState([]);
   const [withdrawalsList, setWithdrawalsList] = useState([]);
-  const [transactionsLoading, setTransactionLoading] = useState<boolean>(false);
+
   const { syncVault, prevSyncVault } = useSyncContext();
 
   const [isTfVaultType, setIsTfVaultType] = useState<boolean>(false);
@@ -63,7 +62,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
   const { showErrorNotification } = useRpcError();
   const { setLastTransactionBlock } = useSyncContext();
 
-  const [loadPositionTransactions, { refetch: refetchTransactions }] =
+  const [loadPositionTransactions, { loading: transactionsLoading }] =
     useLazyQuery(VAULT_POSITION_TRANSACTIONS, {
       context: { clientName: "vaults", chainId },
       variables: { chainId, first: 1000 },
@@ -109,62 +108,58 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     (fetchType: TransactionFetchType = TransactionFetchType.FETCH) => {
       if (account) {
         if (fetchType === TransactionFetchType.PROMISE) {
-          return refetchTransactions({
-            account: account.toLowerCase(),
-            vault: vault.id,
-            chainId,
+          return loadPositionTransactions({
+            variables: {
+              account: account.toLowerCase(),
+              vault: vault.id,
+              chainId,
+            },
           });
         }
-        setTransactionLoading(true);
-
         return loadPositionTransactions({
           variables: {
             account: account.toLowerCase(),
             vault: vault.id,
             chainId,
           },
-        })
-          .then((res) => {
-            res.data?.deposits && setDepositsList(res.data.deposits);
-            res.data?.withdrawals && setWithdrawalsList(res.data.withdrawals);
-          })
-          .finally(() => setTransactionLoading(false));
+        }).then((res) => {
+          res.data?.deposits && setDepositsList(res.data.deposits);
+          res.data?.withdrawals && setWithdrawalsList(res.data.withdrawals);
+        });
       } else {
         setDepositsList([]);
         setWithdrawalsList([]);
         return;
       }
     },
-    [
-      vault,
-      chainId,
-      account,
-      setDepositsList,
-      setTransactionLoading,
-      loadPositionTransactions,
-      refetchTransactions,
-    ]
+    [vault.id, chainId, account, setDepositsList, loadPositionTransactions]
   );
 
   useEffect(() => {
     if (
       vault.id &&
       vaultType[vault.id.toLowerCase()] &&
-      vaultType[vault.id.toLowerCase()] === VaultType.TRADEFLOW
+      vaultType[vault.id.toLowerCase()] === VaultType.TRADEFI
     ) {
       setIsTfVaultType(true);
     } else {
       setIsTfVaultType(false);
     }
-  }, [vault]);
+  }, [vault.id, setIsTfVaultType]);
 
   useEffect(() => {
     if (vault.id && account && isTfVaultType) {
-      vaultService.kycPassed(vault.id, account).then((res) => {
-        setIsUserKycPassed(res);
-      });
+      vaultService
+        .kycPassed(vault.id, account)
+        .then((res) => {
+          setIsUserKycPassed(res);
+        })
+        .catch((e) => {
+          console.log(e);
+          setIsUserKycPassed(false);
+        });
     }
-  }, [vault, account, isTfVaultType]);
+  }, [vault.id, account, isTfVaultType, setIsUserKycPassed]);
 
   useEffect(() => {
     if (isTfVaultType && vault.strategies?.length) {
@@ -206,7 +201,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
           setTfVaultDepositLimit(res);
         });
     }
-  }, [isTfVaultType, vault, account, setTfVaultDepositLimit]);
+  }, [isTfVaultType, vault.id, account, setTfVaultDepositLimit]);
 
   useEffect(() => {
     /**
@@ -222,41 +217,35 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
           );
         })
       : setMinimumDeposit(0.0000000001);
-  }, [isTfVaultType, vault, setMinimumDeposit]);
+  }, [isTfVaultType, vault.id, setMinimumDeposit]);
 
   useEffect(() => {
-    let interval: ReturnType<typeof setInterval>;
     let timeout: ReturnType<typeof setTimeout>;
 
     if (vaultPosition && vault) {
       timeout = setTimeout(() => {
         fetchBalanceToken();
         fetchPositionTransactions();
-        interval = setInterval(() => fetchBalanceToken(), 15 * 1000);
       }, 200);
     }
 
     return () => {
-      interval && clearInterval(interval);
       timeout && clearTimeout(timeout);
     };
   }, [vault, fetchBalanceToken, fetchPositionTransactions]);
 
   useEffect(() => {
     if (syncVault && !prevSyncVault && vaultPosition) {
-      setTransactionLoading(true);
       Promise.all([
         fetchPositionTransactions(TransactionFetchType.PROMISE),
         fetchBalanceToken(FetchBalanceTokenType.PROMISE),
-      ])
-        .then(([transactions, balanceToken]) => {
-          setBalanceToken(balanceToken as string);
-          transactions?.data?.deposits &&
-            setDepositsList(transactions?.data.deposits);
-          transactions?.data?.withdrawals &&
-            setWithdrawalsList(transactions?.data.withdrawals);
-        })
-        .finally(() => setTransactionLoading(false));
+      ]).then(([transactions, balanceToken]) => {
+        setBalanceToken(balanceToken as string);
+        transactions?.data?.deposits &&
+          setDepositsList(transactions?.data.deposits);
+        transactions?.data?.withdrawals &&
+          setWithdrawalsList(transactions?.data.withdrawals);
+      });
     }
   }, [
     syncVault,
@@ -268,7 +257,6 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     setBalanceToken,
     setDepositsList,
     setWithdrawalsList,
-    setTransactionLoading,
   ]);
 
   const balanceEarned = useMemo(() => {
@@ -321,31 +309,6 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     }
   }, [vaultPosition, account, vaultService, setLastTransactionBlock]);
 
-  const withdrawLimitExceeded = (value: string) => {
-    /**
-     * Logic for TradeFlowVault
-     */
-    if (vault.type === VaultType.TRADEFLOW) {
-      const maxBalanceToken = BigNumber(balanceToken).dividedBy(10 ** 18);
-
-      if (
-        BigNumber(maxBalanceToken).minus(value).isGreaterThan(0) &&
-        BigNumber(maxBalanceToken).minus(value).isLessThan(minimumDeposit)
-      ) {
-        return `After withdraw ${formatNumber(Number(value))} ${
-          vault.token.name
-        }  you will have ${formatNumber(
-          BigNumber(maxBalanceToken).minus(value).toNumber()
-        )} ${vault.token.name} less then minimum allowed deposit ${
-          minimumDeposit / 1000
-        }k ${vault.token.name}, you can do full withdraw instead.`;
-      }
-      return false;
-    } else {
-      return false;
-    }
-  };
-
   return {
     balanceEarned,
     balanceToken,
@@ -361,7 +324,6 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     activeTfPeriod,
     tfVaultDepositLimit,
     handleWithdrawAll,
-    withdrawLimitExceeded,
   };
 };
 

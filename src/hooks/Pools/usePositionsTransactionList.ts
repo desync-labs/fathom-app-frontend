@@ -10,7 +10,7 @@ import {
   filterPoolCollateralAddress,
   filterPoolSymbol,
   filterTransaction,
-} from "utils/fxdActivitiesFilters";
+} from "utils/Fxd/fxdActivitiesFilters";
 import { useServices } from "context/services";
 
 export enum PositionActivityState {

@@ -93,7 +93,7 @@ const useOpenPosition = (
 
   const getCollateralTokenAndBalance = useCallback(async () => {
     /**
-     * Native token collateral.
+     * Native asset collateral.
      */
     if (NATIVE_ASSETS.includes(pool.poolName.toUpperCase())) {
       const balance = await library.getBalance(account);
@@ -191,8 +191,8 @@ const useOpenPosition = (
         .toString();
 
       setFxdToBeBorrowed(safeMax);
-      setValue("safeMax", safeMax);
-      setValue("dangerSafeMax", dangerSafeMax);
+      setValue("safeMax", safeMax, { shouldValidate: false });
+      setValue("dangerSafeMax", dangerSafeMax, { shouldValidate: false });
 
       const collateralAvailableToWithdraw = (
         BigNumber(priceWithSafetyMargin).isGreaterThan(0)
@@ -315,6 +315,9 @@ const useOpenPosition = (
       try {
         let blockNumber;
         if (NATIVE_ASSETS.includes(pool.poolName.toUpperCase())) {
+          /**
+           * Native asset collateral.
+           */
           blockNumber = await positionService.openPosition(
             account,
             pool,
@@ -367,9 +370,9 @@ const useOpenPosition = (
     } catch (e) {
       console.error(e);
       setApproveBtn(true);
+    } finally {
+      setApprovalPending(false);
     }
-
-    setApprovalPending(false);
   }, [
     account,
     collateralTokenAddress,
@@ -391,8 +394,10 @@ const useOpenPosition = (
       handleUpdates(collateral, fathomToken);
     }
 
-    if (collateralTokenAddress && proxyWallet !== ZERO_ADDRESS) {
-      approvalStatus(collateral || "0");
+    if (collateralTokenAddress && proxyWallet !== ZERO_ADDRESS && collateral) {
+      approvalStatus(collateral);
+    } else {
+      setApproveBtn(false);
     }
   }, [
     proxyWallet,

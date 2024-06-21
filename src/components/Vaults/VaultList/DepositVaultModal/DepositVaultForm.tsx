@@ -55,7 +55,7 @@ type VaultDepositFormProps = {
     },
     undefined
   >;
-  onSubmit: () => Promise<void>;
+  onSubmit: (values: Record<string, any>) => Promise<void>;
   minimumDeposit: number;
   depositLimitExceeded: (value: string) => string | boolean;
 };

@@ -67,9 +67,7 @@ const useTotalStats = (
           }
         });
       } else {
-        setDepositsList([]);
-        setWithdrawalsList([]);
-        return;
+        return setDepositsList([]);
       }
     },
     [chainId, account, setDepositsList, loadAccountDeposits]
@@ -99,9 +97,7 @@ const useTotalStats = (
           }
         });
       } else {
-        setDepositsList([]);
-        setWithdrawalsList([]);
-        return;
+        return setWithdrawalsList([]);
       }
     },
     [chainId, account, setDepositsList, loadAccountWithdrawals]
@@ -130,10 +126,11 @@ const useTotalStats = (
       fetchAccountDeposits([]);
       fetchAccountWithdrawals([]);
     }
-  }, [syncVault, prevSyncVault]);
+  }, [syncVault, prevSyncVault, fetchAccountDeposits, fetchAccountWithdrawals]);
 
   const balanceEarned = useMemo(() => {
     if (totalBalance === "-1") return "0";
+    if (fetchDepositsLoading || fetchWithdrawalsLoading) return "-1";
 
     const sumTokenDeposits = depositsList.reduce(
       (acc: BigNumber, deposit: any) => acc.plus(deposit.tokenAmount),
@@ -145,17 +142,15 @@ const useTotalStats = (
       new BigNumber(0)
     );
 
-    return fetchDepositsLoading || fetchWithdrawalsLoading
-      ? "-1"
-      : BigNumber(totalBalance || "0")
-          .minus(sumTokenDeposits.minus(sumTokenWithdrawals))
-          .toString();
+    return BigNumber(totalBalance || "0")
+      .minus(sumTokenDeposits.minus(sumTokenWithdrawals))
+      .toString();
   }, [
+    fetchDepositsLoading,
+    fetchWithdrawalsLoading,
     totalBalance,
     depositsList,
     withdrawalsList,
-    fetchDepositsLoading,
-    fetchWithdrawalsLoading,
   ]);
 
   return {

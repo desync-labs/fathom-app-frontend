@@ -24,10 +24,10 @@ import {
   VAULT_POSITION_TRANSACTIONS,
   VAULT_STRATEGY_REPORTS,
 } from "apollo/queries";
-import { vaultTitle } from "utils/getVaultTitleAndDescription";
-import { vaultType } from "utils/getVaultType";
+import { vaultTitle } from "utils/Vaults/getVaultTitleAndDescription";
+import { vaultType } from "utils/Vaults/getVaultType";
 import dayjs from "dayjs";
-import { getVaultLockEndDate } from "utils/getVaultLockEndDate";
+import { getVaultLockEndDate } from "utils/Vaults/getVaultLockEndDate";
 
 declare module "fathom-sdk" {
   interface IVault {
@@ -176,7 +176,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     if (
       vaultId &&
       vaultType[vaultId.toLowerCase()] &&
-      vaultType[vaultId.toLowerCase()] === VaultType.TRADEFLOW
+      vaultType[vaultId.toLowerCase()] === VaultType.TRADEFI
     ) {
       setIsTfVaultType(true);
     } else {
@@ -265,7 +265,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
         setPerformanceFee(performanceFeeRes / 100);
       }
     }
-  }, [vaultsFactories, vaultsFactoriesLoading]);
+  }, [vaultsFactoriesLoading, vaultsFactories]);
 
   const updateVaultDepositLimit = async (
     vaultData: IVault,
@@ -273,17 +273,15 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
   ) => {
     let depositLimitValue = vaultData.depositLimit;
     try {
-      const type = vaultType[vaultData.id.toLowerCase()]
-        ? vaultType[vaultData.id.toLowerCase()]
-        : VaultType.DEFAULT;
+      const type = vaultType[vaultData.id.toLowerCase()] || VaultType.DEFAULT;
 
       depositLimitValue = await vaultService.getDepositLimit(
         vaultData.id,
-        type === VaultType.TRADEFLOW,
+        type === VaultType.TRADEFI,
         account
       );
 
-      if (type === VaultType.TRADEFLOW && !account) {
+      if (type === VaultType.TRADEFI && !account) {
         depositLimitValue = "0";
       }
 
@@ -305,7 +303,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
        * Min Deposit for other vaults is 0.0000000001
        */
       setMinimumDeposit(
-        updatedVault.type === VaultType.TRADEFLOW
+        updatedVault.type === VaultType.TRADEFI
           ? BigNumber(await vaultService.getMinUserDeposit(vaultData.id))
               .dividedBy(10 ** 18)
               .toNumber()
@@ -347,7 +345,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
             vaultData?.strategies &&
             vaultData?.strategies?.length
           ) {
-            if (vaultData.type === VaultType.TRADEFLOW) {
+            if (vaultData.type === VaultType.TRADEFI) {
               const strategies = vaultData?.strategies.map(
                 (strategy: IVaultStrategy) => {
                   return {
