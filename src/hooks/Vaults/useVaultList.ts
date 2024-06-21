@@ -13,7 +13,7 @@ import useConnector from "context/connector";
 import useSyncContext from "context/sync";
 import { useServices } from "context/services";
 import BigNumber from "bignumber.js";
-import { getDefaultVaultTitle } from "../../utils/Vaults/getStrategyTitleAndDescription";
+import { getDefaultVaultTitle } from "utils/Vaults/getVaultTitleAndDescription";
 
 declare module "fathom-sdk" {
   interface IVault {
