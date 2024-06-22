@@ -36,7 +36,12 @@ export enum FetchBalanceTokenType {
 const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
   const [manageVault, setManageVault] = useState<boolean>(false);
   const [newVaultDeposit, setNewVaultDeposit] = useState<boolean>(false);
+
   const [balanceToken, setBalanceToken] = useState<string>("0");
+  const [balanceTokenLoading, setBalanceTokenLoading] =
+    useState<boolean>(false);
+  const [loadingEarning, setLoadingEarning] = useState<boolean>(true);
+
   const { chainId } = useConnector();
 
   const [depositsList, setDepositsList] = useState([]);
@@ -74,6 +79,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
       fetchBalanceTokenType: FetchBalanceTokenType = FetchBalanceTokenType.FETCH
     ) => {
       if (fetchBalanceTokenType === FetchBalanceTokenType.PROMISE) {
+        setBalanceTokenLoading(true);
         return vaultService
           .previewRedeem(
             BigNumber(vaultPosition?.balanceShares as string)
@@ -84,6 +90,9 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
           .catch((error) => {
             showErrorNotification(error);
             return "-1";
+          })
+          .finally(() => {
+            setBalanceTokenLoading(false);
           });
       }
       return vaultService
@@ -99,6 +108,9 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
         .catch((error) => {
           setBalanceToken("-1");
           showErrorNotification(error);
+        })
+        .finally(() => {
+          setBalanceTokenLoading(false);
         });
     },
     [vaultService, vault.id, vaultPosition, setBalanceToken]
@@ -160,6 +172,14 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
         });
     }
   }, [vault.id, account, isTfVaultType, setIsUserKycPassed]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setLoadingEarning(balanceTokenLoading || transactionsLoading);
+    }, 300);
+
+    return () => clearTimeout(timeout);
+  }, [balanceTokenLoading, transactionsLoading, setLoadingEarning]);
 
   useEffect(() => {
     if (isTfVaultType && vault.strategies?.length) {
@@ -260,6 +280,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
   ]);
 
   const balanceEarned = useMemo(() => {
+    if (loadingEarning) return -1;
     if (balanceToken === "-1") return 0;
 
     const sumTokenDeposits = depositsList.reduce(
@@ -277,17 +298,13 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
       .dividedBy(10 ** 18)
       .toNumber();
 
-    return transactionsLoading
-      ? -1
-      : BigNumber(earnedValue).isLessThan(0.0001)
-      ? 0
-      : earnedValue;
+    return BigNumber(earnedValue).isLessThan(0.0001) ? 0 : earnedValue;
   }, [
     vaultPosition,
     balanceToken,
     depositsList,
     withdrawalsList,
-    transactionsLoading,
+    loadingEarning,
   ]);
 
   const handleWithdrawAll = useCallback(async () => {
