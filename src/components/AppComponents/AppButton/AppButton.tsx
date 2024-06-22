@@ -107,7 +107,7 @@ export const ButtonSecondaryLink = styled("a")`
     background: transparent;
     color: #B3FFF9;
     border: 1px solid #B3FFF9;
-    svg: {
+    svg {
       color: #B3FFF9;
     }, 
   }
@@ -158,7 +158,7 @@ export const OpenPositionButton = styled(MuiButton)`
     border: 1px solid #b3fff9;
     pointer-events: all !important;
     cursor: pointer;
-    svg: {
+    svg {
       color: #b3fff9;
     }
   }
@@ -178,7 +178,7 @@ export const ManagePositionButton = styled(MuiButton)`
     background: transparent;
     color: #B3FFF9;
     border: 1px solid #B3FFF9;
-    svg: {
+    svg {
       color: #B3FFF9;
     },
   }
@@ -387,9 +387,11 @@ export const FarmFilterMobileBtn = styled(MuiButton)`
   border-radius: 8px;
 `;
 
-export const ExtLinkIcon = styled(OpenInNewRoundedIcon)`
-  width: 16px;
-  height: 16px;
+export const ExtLinkIcon = styled(OpenInNewRoundedIcon, {
+  shouldForwardProp: (prop) => prop !== "scroll",
+})<{ width?: string; height?: string }>`
+  width: ${({ width = "16px" }) => width};
+  height: ${({ height = "16px" }) => height};
   color: #43fff1;
   margin-left: 4px;
   ${({ theme }) => theme.breakpoints.down("sm")} {

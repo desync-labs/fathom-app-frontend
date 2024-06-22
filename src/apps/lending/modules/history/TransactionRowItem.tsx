@@ -108,7 +108,7 @@ const TransactionRowItem: FC<TransactionHistoryItemProps> = ({
                   })
                 }
               >
-                View <ExtLinkIcon />
+                View <ExtLinkIcon width={"12px"} height={"12px"} />
               </Button>
             )}
           </Box>

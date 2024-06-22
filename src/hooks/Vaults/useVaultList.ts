@@ -7,7 +7,10 @@ import {
   VAULT_FACTORIES,
 } from "apollo/queries";
 import { COUNT_PER_PAGE_VAULT } from "utils/Constants";
-import { vaultTitle } from "utils/Vaults/getVaultTitleAndDescription";
+import {
+  clearCounters,
+  vaultTitle,
+} from "utils/Vaults/getVaultTitleAndDescription";
 import { vaultType } from "utils/Vaults/getVaultType";
 import useConnector from "context/connector";
 import useSyncContext from "context/sync";
@@ -249,14 +252,17 @@ const useVaultList = () => {
 
   const filteringVaultsBySearch = useCallback(
     (vaultList: IVault[]) => {
-      let vaultListWithNames = vaultList.map((vault, index) => {
+      /**
+       * Reset counters for default vault titles
+       */
+      clearCounters();
+      let vaultListWithNames = vaultList.map((vault) => {
         return {
           ...vault,
           name: vaultTitle[vault.id.toLowerCase()]
             ? vaultTitle[vault.id.toLowerCase()]
             : getDefaultVaultTitle(
                 vaultType[vault.id.toLowerCase()] || VaultType.DEFAULT,
-                index + 1,
                 vault.token.name
               ),
           type: vaultType[vault.id.toLowerCase()] || VaultType.DEFAULT,

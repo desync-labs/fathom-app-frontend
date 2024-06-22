@@ -1,4 +1,4 @@
-import { FC, useCallback } from "react";
+import { FC, memo, useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Box,
@@ -40,8 +40,10 @@ import CloseIcon from "@mui/icons-material/Close";
 import LockAquaSrc from "assets/svg/lock-aqua.svg";
 import LockSrc from "assets/svg/lock.svg";
 
-const FullScreenDialog = styled(Dialog)`
-  top: 116px;
+const FullScreenDialog = styled(Dialog, {
+  shouldForwardProp: (prop) => prop !== "offset",
+})<{ offset?: boolean }>`
+  top: ${({ offset = true }) => (offset ? "116px" : "0px")}; ;
   height: calc(100% - 116px);
   z-index: 100;
 
@@ -180,6 +182,7 @@ const VaultListItemPreviewModal: FC<VaultListItemPreviewModalProps> = ({
   isTfVaultType,
   activeTfPeriod,
 }) => {
+  const [scrollTop, setScrollTop] = useState<number>(0);
   const navigate = useNavigate();
   const { fxdPrice } = usePricesContext();
   const { token, shutdown, balanceTokens, depositLimit } = vault;
@@ -190,8 +193,17 @@ const VaultListItemPreviewModal: FC<VaultListItemPreviewModalProps> = ({
     navigate(`/vaults/${vault.id}`);
   }, [vault.id]);
 
+  useEffect(() => {
+    if (isOpenPreviewModal) {
+      const scroll =
+        document.documentElement.scrollTop || document.body.scrollTop;
+      setScrollTop(scroll);
+    }
+  }, [isOpenPreviewModal, setScrollTop]);
+
   return (
     <FullScreenDialog
+      offset={scrollTop < 116}
       fullScreen={true}
       open={isOpenPreviewModal}
       onClose={handleClosePreview}
@@ -382,4 +394,4 @@ const VaultListItemPreviewModal: FC<VaultListItemPreviewModalProps> = ({
   );
 };
 
-export default VaultListItemPreviewModal;
+export default memo(VaultListItemPreviewModal);

@@ -21,21 +21,34 @@ export const VaultAboutTitle = styled(Typography)`
   }
 `;
 
+let defiCounter = 0;
+let tradefiCounter = 0;
+let incentiveCounter = 0;
+
 export const getDefaultVaultTitle = (
   vaultType: VaultType = VaultType.INCENTIVE,
-  index = 1,
   asset = "FXD"
 ) => {
   switch (vaultType) {
     case VaultType.DEFI:
-      return `DeFi vault (${asset}) #${index}`;
+      defiCounter++;
+      return `DeFi vault (${asset}) #${defiCounter}`;
     case VaultType.TRADEFI:
-      return `TradeFi vault (${asset}) #${index}`;
+      tradefiCounter++;
+      return `TradeFi vault (${asset}) #${tradefiCounter}`;
     case VaultType.INCENTIVE:
-      return `Incentive vault (${asset}) #${index}`;
+      incentiveCounter++;
+      return `Incentive vault (${asset}) #${incentiveCounter}`;
     default:
-      return `Incentive (${asset}) #${index}`;
+      incentiveCounter++;
+      return `Incentive (${asset}) #${incentiveCounter}`;
   }
+};
+
+export const clearCounters = () => {
+  defiCounter = 0;
+  tradefiCounter = 0;
+  incentiveCounter = 0;
 };
 
 export const getDefaultVaultDescription = (
