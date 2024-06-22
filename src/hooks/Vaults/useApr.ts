@@ -6,6 +6,8 @@ const EDUCATION_STRATEGY_ID = "0x3c8e9896933b374e638f9a5c309535409129aaa2";
 
 const ApyConfig = {
   ["0xbf4adcc0a8f2c7e29f934314ce60cf5de38bfe8f".toLowerCase()]: 10,
+  ["0x2D8A913F47B905C71F0A3d387de863F3a1Cc8d78".toLowerCase()]: 10,
+  ["0xA6272625f8fCd6FC3b53A167E471b7D55095a40b".toLowerCase()]: 10,
 } as const;
 
 const useApr = (vault: IVault) => {
