@@ -107,7 +107,7 @@ export const ButtonSecondaryLink = styled("a")`
     background: transparent;
     color: #B3FFF9;
     border: 1px solid #B3FFF9;
-    svg: {
+    svg {
       color: #B3FFF9;
     }, 
   }
@@ -158,7 +158,7 @@ export const OpenPositionButton = styled(MuiButton)`
     border: 1px solid #b3fff9;
     pointer-events: all !important;
     cursor: pointer;
-    svg: {
+    svg {
       color: #b3fff9;
     }
   }
@@ -178,7 +178,7 @@ export const ManagePositionButton = styled(MuiButton)`
     background: transparent;
     color: #B3FFF9;
     border: 1px solid #B3FFF9;
-    svg: {
+    svg {
       color: #B3FFF9;
     },
   }
