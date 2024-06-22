@@ -650,8 +650,8 @@ export function getThemedComponents(theme: Theme) {
       MuiTooltip: {
         styleOverrides: {
           tooltip: {
-            backgroundColor: theme.palette.background.paper,
-            color: theme.palette.text.light,
+            backgroundColor: "#fff",
+            color: "#000c24",
             boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
             borderRadius: "8px",
             padding: "8px 12px",

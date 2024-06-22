@@ -17,6 +17,9 @@ const PageHeader = styled(Box)`
   padding: 0 24px;
   margin-top: 48px;
   margin-bottom: 48px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    padding: 0;
+  }
 `;
 
 const TxListWrapper = styled(AppPaper)`

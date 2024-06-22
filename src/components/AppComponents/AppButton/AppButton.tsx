@@ -387,9 +387,11 @@ export const FarmFilterMobileBtn = styled(MuiButton)`
   border-radius: 8px;
 `;
 
-export const ExtLinkIcon = styled(OpenInNewRoundedIcon)`
-  width: 16px;
-  height: 16px;
+export const ExtLinkIcon = styled(OpenInNewRoundedIcon, {
+  shouldForwardProp: (prop) => prop !== "scroll",
+})<{ width?: string; height?: string }>`
+  width: ${({ width = "16px" }) => width};
+  height: ${({ height = "16px" }) => height};
   color: #43fff1;
   margin-left: 4px;
   ${({ theme }) => theme.breakpoints.down("sm")} {

@@ -12,6 +12,7 @@ import {
   filterTransaction,
 } from "utils/Fxd/fxdActivitiesFilters";
 import { useServices } from "context/services";
+import useSyncContext from "../../context/sync";
 
 export enum PositionActivityState {
   CREATED = "created",
@@ -60,6 +61,7 @@ const usePositionsTransactionList = () => {
   const { account, chainId } = useConnector();
   const { proxyWallet } = useDashboard();
   const { poolService } = useServices();
+  const { syncFXD, prevSyncFxd } = useSyncContext();
 
   const [fetchActivities, { refetch: refetchActivities, loading }] =
     useLazyQuery(FXD_ACTIVITIES, {
@@ -90,6 +92,17 @@ const usePositionsTransactionList = () => {
       setCollateralTokenAddresses([]);
     }
   }, [pools, poolService, setCollateralTokenAddresses]);
+
+  useEffect(() => {
+    if (syncFXD && !prevSyncFxd) {
+      refetchActivities({
+        first: 1000,
+        chainId,
+        orderBy: "blockNumber",
+        orderDirection: "desc",
+      });
+    }
+  }, [syncFXD, prevSyncFxd, chainId]);
 
   useEffect(() => {
     if (account && proxyWallet && chainId) {
