@@ -21,10 +21,15 @@ import {
   TransactionHistoryItem,
 } from "apps/lending/modules/history/types";
 import { ExtLinkIcon } from "components/AppComponents/AppButton/AppButton";
+import useSharedContext from "context/shared";
 
 const ActionTitle: FC<{ action: string }> = ({ action }) => {
+  const { isMobile } = useSharedContext();
   return (
-    <Typography sx={{ width: "180px" }} color={"text.light"}>
+    <Typography
+      sx={{ width: isMobile ? "180px" : "500px" }}
+      color={"text.light"}
+    >
       <ActionTextMap action={action} />
     </Typography>
   );

@@ -42,9 +42,9 @@ import LockSrc from "assets/svg/lock.svg";
 
 const FullScreenDialog = styled(Dialog, {
   shouldForwardProp: (prop) => prop !== "offset",
-})<{ offset?: boolean }>`
-  top: ${({ offset = true }) => (offset ? "116px" : "0px")}; ;
-  height: calc(100% - 116px);
+})<{ offset?: number }>`
+  top: ${({ offset = 116 }) => `${offset}px`};
+  height: ${({ offset = 116 }) => `calc(100% - ${offset}px)`};
   z-index: 100;
 
   & .MuiDialog-paper {
@@ -53,7 +53,7 @@ const FullScreenDialog = styled(Dialog, {
     border-radius: 0;
   }
   & .MuiBackdrop-root {
-    top: 116px
+    top: ${({ offset = 116 }) => `${offset}px`};
   },
 `;
 
@@ -182,7 +182,7 @@ const VaultListItemPreviewModal: FC<VaultListItemPreviewModalProps> = ({
   isTfVaultType,
   activeTfPeriod,
 }) => {
-  const [scrollTop, setScrollTop] = useState<number>(0);
+  const [modalOffset, setModalOffset] = useState<number>(0);
   const navigate = useNavigate();
   const { fxdPrice } = usePricesContext();
   const { token, shutdown, balanceTokens, depositLimit } = vault;
@@ -195,15 +195,16 @@ const VaultListItemPreviewModal: FC<VaultListItemPreviewModalProps> = ({
 
   useEffect(() => {
     if (isOpenPreviewModal) {
-      const scroll =
-        document.documentElement.scrollTop || document.body.scrollTop;
-      setScrollTop(scroll);
+      let scroll =
+        116 - (document.documentElement.scrollTop || document.body.scrollTop);
+      scroll = scroll < 0 ? 0 : scroll;
+      setModalOffset(scroll);
     }
-  }, [isOpenPreviewModal, setScrollTop]);
+  }, [isOpenPreviewModal, setModalOffset]);
 
   return (
     <FullScreenDialog
-      offset={scrollTop < 116}
+      offset={modalOffset}
       fullScreen={true}
       open={isOpenPreviewModal}
       onClose={handleClosePreview}

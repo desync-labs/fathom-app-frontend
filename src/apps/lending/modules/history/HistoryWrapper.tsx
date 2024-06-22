@@ -36,10 +36,10 @@ import {
 } from "apps/lending/modules/history/types";
 
 const HistoryWrapper = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [loadingDownload, setLoadingDownload] = useState(false);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [loadingDownload, setLoadingDownload] = useState<boolean>(false);
   const [filterQuery, setFilterQuery] = useState<FilterOptions[]>([]);
-  const [searchResetKey, setSearchResetKey] = useState(0);
+  const [searchResetKey, setSearchResetKey] = useState<number>(0);
 
   const isFilterActive = searchQuery.length > 0 || filterQuery.length > 0;
   const trackEvent = useRootStore((store) => store.trackEvent);
@@ -162,18 +162,7 @@ const HistoryWrapper = () => {
   const filterActive = searchQuery !== "" || filterQuery.length > 0;
 
   return (
-    <ListWrapper
-      titleComponent={
-        <Typography
-          component="div"
-          variant="h2"
-          sx={{ mr: 2 }}
-          color="text.primary"
-        >
-          Transactions
-        </Typography>
-      }
-    >
+    <ListWrapper titleComponent={null}>
       <Box
         sx={{
           display: "flex",
