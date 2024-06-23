@@ -41,7 +41,11 @@ export type UseVaultContextReturnType = {
   isTfVaultType: boolean;
   tfVaultDepositEndDate: string | null;
   tfVaultLockEndDate: string | null;
+  tfVaultDepositLimit: string;
   activeTfPeriod: number;
+  minimumDeposit: number;
+  setMinimumDeposit: Dispatch<SetStateAction<number>>;
+  handleWithdrawAll: () => void;
 };
 
 export const VaultContext = createContext<UseVaultContextReturnType>(

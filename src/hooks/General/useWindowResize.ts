@@ -4,13 +4,15 @@ const useWindowSize = () => {
   const [size, setSize] = useState<[number, number]>([0, 0]);
   useLayoutEffect(() => {
     function updateSize() {
-      setSize([window.innerWidth, window.innerHeight]);
+      if (window.innerWidth !== size[0] || window.innerHeight !== size[1]) {
+        setSize([window.innerWidth, window.innerHeight]);
+      }
     }
 
     window.addEventListener("resize", updateSize);
     updateSize();
     return () => window.removeEventListener("resize", updateSize);
-  }, []);
+  }, [size, setSize]);
 
   return size;
 };

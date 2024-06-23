@@ -29,8 +29,13 @@ import {
   ModalButtonWrapper,
 } from "components/AppComponents/AppButton/AppButton";
 import WalletConnectBtn from "components/Common/WalletConnectBtn";
-import { ErrorBox, InfoBoxV2 } from "components/AppComponents/AppBox/AppBox";
+import {
+  ErrorBox,
+  InfoBoxV2,
+  WarningBox,
+} from "components/AppComponents/AppBox/AppBox";
 import { InfoIcon } from "components/Governance/Propose";
+import VaultModalLockingBar from "components/Vaults/VaultList/DepositVaultModal/VaultModalLockingBar";
 
 const VaultManageGridDialogWrapper = styled(AppDialog)`
   & .MuiDialog-paper {
@@ -64,6 +69,11 @@ export type VaultManageProps = {
   vaultItemData: IVault;
   vaultPosition: IVaultPosition;
   performanceFee: number;
+  isTfVaultType: boolean;
+  tfVaultDepositEndDate: string | null;
+  tfVaultLockEndDate: string | null;
+  activeTfPeriod: number;
+  minimumDeposit: number;
   onClose: () => void;
 };
 
@@ -71,6 +81,11 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
   vaultItemData,
   vaultPosition,
   performanceFee,
+  isTfVaultType,
+  tfVaultDepositEndDate,
+  tfVaultLockEndDate,
+  activeTfPeriod,
+  minimumDeposit,
   onClose,
 }) => {
   const {
@@ -83,7 +98,7 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
     approveBtn,
     approvalPending,
     formType,
-    balanceToken,
+    balancePosition,
     openDepositLoading,
     errors,
     setFormType,
@@ -92,7 +107,14 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
     validateMaxValue,
     handleSubmit,
     onSubmit,
-  } = useVaultManageDeposit(vaultItemData, vaultPosition, onClose);
+    depositLimitExceeded,
+    withdrawLimitExceeded,
+  } = useVaultManageDeposit(
+    vaultItemData,
+    vaultPosition,
+    minimumDeposit,
+    onClose
+  );
   const { account } = useConnector();
   const { shutdown } = vaultItemData;
 
@@ -135,9 +157,16 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
       </AppDialogTitle>
 
       <DialogContent>
+        {isTfVaultType && (
+          <VaultModalLockingBar
+            tfVaultLockEndDate={tfVaultLockEndDate}
+            tfVaultDepositEndDate={tfVaultDepositEndDate}
+            activeTfPeriod={activeTfPeriod}
+          />
+        )}
         <FormProvider {...methods}>
           <ManageVaultForm
-            balanceToken={balanceToken}
+            balanceToken={balancePosition}
             vaultItemData={vaultItemData}
             vaultPosition={vaultPosition}
             walletBalance={walletBalance}
@@ -147,6 +176,7 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
             validateMaxValue={validateMaxValue}
             handleSubmit={handleSubmit}
             onSubmit={onSubmit}
+            depositLimitExceeded={depositLimitExceeded}
             dataTestIdPrefix="vault-listItemManageModal"
           />
           <ManageVaultInfo
@@ -170,6 +200,25 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
                 </Typography>
               </ErrorBox>
             )}
+          {formType === FormType.WITHDRAW &&
+            withdrawLimitExceeded(formToken) && (
+              <ErrorBox sx={{ marginBottom: 0 }}>
+                <InfoIcon />
+                <Typography>{withdrawLimitExceeded(formToken)}</Typography>
+              </ErrorBox>
+            )}
+          {activeTfPeriod === 1 && (
+            <WarningBox>
+              <InfoIcon
+                sx={{ width: "20px", color: "#F5953D", height: "20px" }}
+              />
+              <Box flexDirection="column">
+                <Typography width="100%">
+                  Deposit period has been completed.
+                </Typography>
+              </Box>
+            </WarningBox>
+          )}
           {approveBtn &&
             formType === FormType.DEPOSIT &&
             walletBalance !== "0" && (
@@ -197,7 +246,10 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
               walletBalance !== "0" ? (
               <ButtonPrimary
                 onClick={approve}
-                disabled={!!Object.keys(errors).length}
+                disabled={
+                  !!Object.keys(errors).length ||
+                  (isTfVaultType && activeTfPeriod > 0)
+                }
                 data-testid="vault-listItemManageModal-approveTokenButton"
               >
                 {" "}
@@ -214,7 +266,10 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
                 disabled={
                   openDepositLoading ||
                   (formType === FormType.DEPOSIT && approveBtn) ||
-                  !!Object.keys(errors).length
+                  !!Object.keys(errors).length ||
+                  (isTfVaultType && activeTfPeriod > 0) ||
+                  (formType === FormType.WITHDRAW &&
+                    !!withdrawLimitExceeded(formToken))
                 }
                 isLoading={openDepositLoading}
                 data-testid={`vault-listItemManageModal-${

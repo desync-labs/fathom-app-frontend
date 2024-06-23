@@ -1,9 +1,13 @@
 import { FC, useState, SyntheticEvent, useMemo, memo, ReactNode } from "react";
 import { Box, styled, Tab, Tabs, Typography } from "@mui/material";
 import { FunctionFragment } from "@into-the-fathom/abi";
-import MethodListItem from "components/Vaults/VaultDetail/Managment/MethodListItem";
+import MethodListItem, {
+  ReadeMethodIcon,
+  WriteMethodIcon,
+} from "components/Vaults/VaultDetail/Managment/MethodListItem";
 import { Contract } from "@into-the-fathom/contracts";
 import useConnector from "context/connector";
+import { AppFlexBox } from "components/AppComponents/AppBox/AppBox";
 
 export const ContractMethodListWrapper = styled(Box)`
   padding: 0;
@@ -123,6 +127,24 @@ const ManagementVaultMethodList: FC<VaultItemManagementProps> = ({
             <Tab label="Read Contract" {...a11yProps(0)} />
             <Tab label="Write Contract" {...a11yProps(1)} />
           </MethodTypesTabs>
+          <AppFlexBox
+            sx={{
+              justifyContent: "flex-start",
+              justifyItems: "center",
+              mt: "30px",
+            }}
+          >
+            {value === 0 ? (
+              <ReadeMethodIcon color={"#6D86B2"} />
+            ) : (
+              <WriteMethodIcon color={"#6D86B2"} />
+            )}
+            <Typography sx={{ color: "#fff", fontSize: "14px" }}>
+              {value === 0
+                ? "Read contract information"
+                : "Write contract information"}
+            </Typography>
+          </AppFlexBox>
           <MethodsTabPanel value={value} index={0}>
             {useMemo(
               () =>

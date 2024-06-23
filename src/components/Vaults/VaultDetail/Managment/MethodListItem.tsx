@@ -3,7 +3,7 @@ import { FC, memo, useCallback, useEffect, useState } from "react";
 import { Contract, BigNumber as eBigNumber, utils } from "fathom-ethers";
 import { FunctionFragment } from "@into-the-fathom/abi";
 import { getEstimateGas } from "fathom-sdk";
-import { ESTIMATE_GAS_MULTIPLIER } from "fathom-sdk/dist/cjs/utils/Constants";
+import { ESTIMATE_GAS_MULTIPLIER } from "fathom-sdk";
 import {
   Accordion,
   AccordionDetails,
@@ -134,6 +134,44 @@ const MethodInputFormGroup = styled(FormGroup)`
     }
   }
 `;
+
+export const ReadeMethodIcon = ({ color = "#2C4066" }: { color?: string }) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+    >
+      <path
+        d="M20 22H5C3.34315 22 2 20.6569 2 19V5C2 3.34315 3.34315 2 5 2H15C16.6569 2 18 3.34315 18 5V8M20 22C18.8954 22 18 21.1046 18 20V8M20 22C21.1046 22 22 21.1046 22 20V10C22 8.89543 21.1046 8 20 8H18M6 7H14M6 12H14M6 17H10"
+        stroke={color}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+};
+export const WriteMethodIcon = ({ color = "#2C4066" }: { color?: string }) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="22"
+      height="22"
+      viewBox="0 0 22 22"
+      fill="none"
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M1.75 5C1.75 3.20507 3.20507 1.75 5 1.75H11C11.4142 1.75 11.75 1.41421 11.75 1C11.75 0.585786 11.4142 0.25 11 0.25H5C2.37665 0.25 0.25 2.37665 0.25 5V17C0.25 19.6234 2.37665 21.75 5 21.75H17C19.6234 21.75 21.75 19.6234 21.75 17V11C21.75 10.5858 21.4142 10.25 21 10.25C20.5858 10.25 20.25 10.5858 20.25 11V17C20.25 18.7949 18.7949 20.25 17 20.25H5C3.20507 20.25 1.75 18.7949 1.75 17V5ZM15.419 1.67708C16.3218 0.774305 17.7855 0.774305 18.6883 1.67708L20.3229 3.31171C21.2257 4.21449 21.2257 5.67818 20.3229 6.58096L18.8736 8.03028C18.7598 7.97394 18.6401 7.91302 18.516 7.84767C17.6806 7.40786 16.6892 6.79057 15.9493 6.05069C15.2095 5.31082 14.5922 4.31945 14.1524 3.48403C14.087 3.35989 14.0261 3.24018 13.9697 3.12639L15.419 1.67708ZM14.8887 7.11135C15.7642 7.98687 16.8777 8.67594 17.7595 9.14441L12.06 14.8438C11.7064 15.1975 11.2475 15.4269 10.7523 15.4977L7.31963 15.9881C6.5568 16.097 5.90295 15.4432 6.01193 14.6804L6.50231 11.2477C6.57305 10.7525 6.80248 10.2936 7.15616 9.93996L12.8556 4.24053C13.3241 5.12234 14.0131 6.23582 14.8887 7.11135Z"
+        fill={color}
+      />
+    </svg>
+  );
+};
 
 const MethodListItem: FC<{
   method: FunctionFragment;
@@ -294,6 +332,8 @@ const MethodListItem: FC<{
         aria-controls="panel1a-content"
         id="panel1a-header"
       >
+        {methodType === MethodType.View && <ReadeMethodIcon />}
+        {methodType === MethodType.Mutate && <WriteMethodIcon />}
         <Typography>{`${index + 1}. ${method.name}`}</Typography>
       </AccordionSummaryStyled>
       <AccordionDetails sx={{ padding: "10px 0" }}>

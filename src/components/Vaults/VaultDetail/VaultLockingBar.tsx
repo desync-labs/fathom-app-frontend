@@ -11,10 +11,12 @@ import {
 } from "@mui/material";
 import useSharedContext from "context/shared";
 import useVaultContext from "context/vault";
+import { getPeriodInDays } from "utils/getPeriodInDays";
 import { VaultPaper } from "components/AppComponents/AppPaper/AppPaper";
 import { AppFlexBox } from "components/AppComponents/AppBox/AppBox";
 import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
 import { CustomSkeleton } from "components/AppComponents/AppSkeleton/AppSkeleton";
+import AppPopover from "components/AppComponents/AppPopover/AppPopover";
 
 import LockAquaSrc from "assets/svg/lock-aqua.svg";
 import StepperItemIcon from "assets/svg/icons/stepper-item-icon.svg";
@@ -43,9 +45,18 @@ const CustomPaper = styled(Box)`
       padding: 8px 16px;
     }
   }
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    &.withdraw-btn {
+      width: 100%;
+
+      button {
+        width: 100%;
+      }
+    }
+  }
 `;
 
-const AppStepper = styled(Stepper)`
+export const AppStepper = styled(Stepper)`
   & .MuiStepConnector-root {
     margin-left: 8px;
   }
@@ -56,7 +67,7 @@ const AppStepper = styled(Stepper)`
   }
 `;
 
-const AppStep = styled(Step)`
+export const AppStep = styled(Step)`
   position: relative;
   & .MuiStepLabel-root {
     padding: 2px 0;
@@ -89,7 +100,7 @@ const AppStep = styled(Step)`
   }
 `;
 
-const StepLabelOptionalValue = styled("div")`
+export const StepLabelOptionalValue = styled("div")`
   position: absolute;
   right: 0;
   top: 1px;
@@ -103,26 +114,31 @@ const StepLabelOptionalValue = styled("div")`
   margin: 0;
 `;
 
-const CounterIndicator = styled("div")`
+export const CounterIndicator = styled("div")`
   color: #f5953d;
   font-size: 14px;
   font-weight: 600;
   line-height: 20px;
 `;
 
-const QontoStepIconRoot = styled("div")<{ ownerState: { active?: boolean } }>(
-  ({ theme, ownerState }) => ({
-    color: theme.palette.mode === "dark" ? theme.palette.grey[700] : "#eaeaf0",
-    display: "flex",
-    height: 22,
-    alignItems: "center",
-    ...(ownerState.active && {
-      color: "#784af4",
-    }),
-  })
-);
+export const LockWrapper = styled(Box)`
+  display: flex;
+  gap: 4px;
+`;
 
-const QontoStepIcon = (props: StepIconProps) => {
+export const QontoStepIconRoot = styled("div")<{
+  ownerState: { active?: boolean };
+}>(({ theme, ownerState }) => ({
+  color: theme.palette.mode === "dark" ? theme.palette.grey[700] : "#eaeaf0",
+  display: "flex",
+  height: 22,
+  alignItems: "center",
+  ...(ownerState.active && {
+    color: "#784af4",
+  }),
+}));
+
+export const QontoStepIcon = (props: StepIconProps) => {
   const { active, completed, className } = props;
 
   return (
@@ -141,7 +157,7 @@ const QontoStepIcon = (props: StepIconProps) => {
   );
 };
 
-const calculateTimeLeft = (date: Date | null) => {
+export const calculateTimeLeft = (date: Date | null) => {
   if (!date) return { days: 0, hours: 0, minutes: 0, seconds: 0 };
 
   const difference = +date - +new Date();
@@ -159,7 +175,7 @@ const calculateTimeLeft = (date: Date | null) => {
   return timeLeft;
 };
 
-const StepContentCounter = ({ date }: { date: Date }) => {
+export const StepContentCounter = ({ date }: { date: Date }) => {
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft(date));
 
   useEffect(() => {
@@ -180,19 +196,57 @@ const StepContentCounter = ({ date }: { date: Date }) => {
 
 const VaultLockingBar = () => {
   const { isMobile } = useSharedContext();
-  const { tfVaultDepositEndDate, tfVaultLockEndDate, activeTfPeriod } =
-    useVaultContext();
+  const {
+    vaultPosition,
+    tfVaultDepositEndDate,
+    tfVaultLockEndDate,
+    activeTfPeriod,
+    handleWithdrawAll,
+  } = useVaultContext();
 
   const steps = [
     {
-      label: "Deposit Time",
+      key: "deposit-time", // added key to the object
+      label: (
+        <LockWrapper>
+          Deposit Time
+          <AppPopover
+            id={"deposit-time"}
+            text={
+              <>
+                Deposit Time - the period when users are allowed to deposit and
+                withdraw funds.
+              </>
+            }
+            iconSize={"14px"}
+          />
+        </LockWrapper>
+      ),
       date:
         tfVaultDepositEndDate === null
           ? tfVaultDepositEndDate
           : new Date(Number(tfVaultDepositEndDate) * 1000),
     },
     {
-      label: "Lock Time",
+      key: "lock-time", // added key to the object
+      label: (
+        <LockWrapper>
+          Lock Time (
+          {getPeriodInDays(tfVaultDepositEndDate, tfVaultLockEndDate)} days)
+          <AppPopover
+            id={"lock-time"}
+            text={
+              <>
+                Lock Time - the period of time when deposited funds are used to
+                generate yield according to the strategy. <br />
+                Users can’t withdraw and deposit any funds within this period.{" "}
+                After the lock period ends, users can withdraw funds.
+              </>
+            }
+            iconSize={"14px"}
+          />
+        </LockWrapper>
+      ),
       date:
         tfVaultLockEndDate === null
           ? tfVaultLockEndDate
@@ -207,11 +261,11 @@ const VaultLockingBar = () => {
           Locking Period
         </Typography>
       </SummaryWrapper>
-      <AppFlexBox mt="12px">
+      <AppFlexBox mt="12px" sx={{ flexDirection: isMobile ? "column" : "row" }}>
         <CustomPaper>
           <AppStepper activeStep={activeTfPeriod} orientation="vertical">
             {steps.map((step, index) => (
-              <AppStep key={step.label}>
+              <AppStep key={step.key}>
                 <AppFlexBox>
                   <StepLabel
                     StepIconComponent={QontoStepIcon}
@@ -242,14 +296,22 @@ const VaultLockingBar = () => {
             ))}
           </AppStepper>
         </CustomPaper>
-        <CustomPaper className="withdraw-btn">
-          <ButtonPrimary
-            type="button"
-            disabled={activeTfPeriod !== steps.length}
-          >
-            Withdraw
-          </ButtonPrimary>
-        </CustomPaper>
+        {activeTfPeriod > 0 && (
+          <CustomPaper className="withdraw-btn">
+            <ButtonPrimary
+              type="button"
+              disabled={
+                !vaultPosition ||
+                vaultPosition.balanceShares === "0" ||
+                vaultPosition.balanceShares === undefined ||
+                activeTfPeriod !== 2
+              }
+              onClick={handleWithdrawAll}
+            >
+              Withdraw all
+            </ButtonPrimary>
+          </CustomPaper>
+        )}
       </AppFlexBox>
     </VaultPaper>
   );

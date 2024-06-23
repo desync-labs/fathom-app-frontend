@@ -55,7 +55,9 @@ type VaultDepositFormProps = {
     },
     undefined
   >;
-  onSubmit: () => Promise<void>;
+  onSubmit: (values: Record<string, any>) => Promise<void>;
+  minimumDeposit: number;
+  depositLimitExceeded: (value: string) => string | boolean;
   dataTestIdPrefix?: string;
 };
 
@@ -67,10 +69,13 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
   validateMaxDepositValue,
   handleSubmit,
   onSubmit,
+  minimumDeposit,
+  depositLimitExceeded,
   dataTestIdPrefix,
 }) => {
   const { token, depositLimit, balanceTokens } = vaultItemData;
   const { fxdPrice } = usePricesContext();
+
   return (
     <DepositVaultItemFormWrapper>
       <ManageVaultForm
@@ -83,7 +88,7 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
           name="deposit"
           rules={{
             required: true,
-            min: 0.0000000001,
+            min: minimumDeposit,
             validate: validateMaxDepositValue,
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
@@ -99,7 +104,7 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
                         .toNumber()
                     ) +
                       " " +
-                      token.name}
+                      token?.name}
                   </VaultWalletBalance>
                 </AppFlexBox>
               </AppFormLabelRow>
@@ -109,6 +114,25 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
                 placeholder={"0"}
                 helperText={
                   <>
+                    {depositLimitExceeded(value) && (
+                      <AppFormInputErrorWrapper>
+                        <InfoIcon
+                          sx={{
+                            float: "left",
+                            width: "14px",
+                            height: "14px",
+                            marginRight: "0",
+                          }}
+                        />
+                        <Box
+                          component={"span"}
+                          sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                        >
+                          {depositLimitExceeded(value)}
+                        </Box>
+                      </AppFormInputErrorWrapper>
+                    )}
+
                     {error && error.type === "required" && (
                       <AppFormInputErrorWrapper>
                         <InfoIcon
@@ -159,7 +183,8 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
                           component={"span"}
                           sx={{ fontSize: "12px", paddingLeft: "6px" }}
                         >
-                          Deposit amount should be positive.
+                          Minimum deposit is {formatNumber(minimumDeposit)}{" "}
+                          {token.name}
                         </Box>
                       </AppFormInputErrorWrapper>
                     )}
@@ -182,8 +207,8 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
               )}`}</AppFormInputUsdIndicator>
               <AppFormInputLogoV2
                 className={"extendedInput"}
-                src={getTokenLogoURL(token.symbol)}
-                alt={token.name}
+                src={getTokenLogoURL(token?.symbol)}
+                alt={token?.name}
               />
               <MaxButtonV2
                 onClick={() => setMax()}

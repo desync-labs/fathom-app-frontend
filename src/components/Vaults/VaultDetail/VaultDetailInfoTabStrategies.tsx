@@ -2,7 +2,7 @@ import { memo, useState } from "react";
 import { Box, Button, ButtonGroup, styled, Typography } from "@mui/material";
 import { IVaultStrategy } from "fathom-sdk";
 import useVaultContext from "context/vault";
-import { strategyTitle } from "utils/getStrategyTitleAndDescription";
+import { strategyTitle } from "utils/Vaults/getStrategyTitleAndDescription";
 import VaultStrategyItem from "components/Vaults/VaultDetail/VaultStrategyItem";
 import { VaultStrategiesSkeleton } from "components/AppComponents/AppSkeleton/AppSkeleton";
 

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import BigNumber from "bignumber.js";
 import debounce from "lodash.debounce";
-import { IVault } from "fathom-sdk";
+import { IVault, VaultType } from "fathom-sdk";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 import { useServices } from "context/services";
@@ -26,7 +26,15 @@ const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
     mode: "onChange",
   });
 
-  const { token, depositLimit, balanceTokens } = vault;
+  const {
+    handleSubmit,
+    control,
+    setValue,
+    watch,
+    formState: { errors },
+  } = methods;
+
+  const { token, depositLimit, balanceTokens, type, shareToken } = vault;
   const [walletBalance, setWalletBalance] = useState<string>("0");
   const [isWalletFetching, setIsWalletFetching] = useState<boolean>(false);
   const [openDepositLoading, setOpenDepositLoading] = useState<boolean>(false);
@@ -34,21 +42,21 @@ const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
   const [approveBtn, setApproveBtn] = useState<boolean>(false);
   const [approvalPending, setApprovalPending] = useState<boolean>(false);
 
-  const deposit = methods.watch("deposit");
-  const sharedToken = methods.watch("sharedToken");
+  const deposit = watch("deposit");
+  const sharedToken = watch("sharedToken");
 
   const approvalStatus = useMemo(
     () =>
       debounce(async (deposit: string) => {
         const approved = await vaultService.approvalStatus(
           account,
-          vault.token.id,
-          vault.shareToken.id,
+          token.id,
+          shareToken.id,
           deposit
         );
         approved ? setApproveBtn(false) : setApproveBtn(true);
       }, 1000),
-    [vaultService, vault, account, deposit]
+    [vaultService, token?.id, shareToken?.id, account]
   );
 
   const updateSharedAmount = useMemo(
@@ -63,48 +71,52 @@ const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
           .dividedBy(10 ** 18)
           .toFixed();
 
-        methods.setValue("sharedToken", sharedConverted);
+        setValue("sharedToken", sharedConverted);
       }, 500),
-    [vaultService, vault, deposit]
+    [vaultService, vault?.id, deposit, setValue]
   );
 
   const getVaultTokenBalance = useCallback(async () => {
     const balance = await poolService.getUserTokenBalance(account, token.id);
     setWalletBalance(balance.toString());
     setIsWalletFetching(true);
-  }, [account, token, setWalletBalance, setIsWalletFetching]);
+  }, [account, token?.id, setWalletBalance, setIsWalletFetching]);
 
   const approve = useCallback(async () => {
     setApprovalPending(true);
     try {
-      await vaultService.approve(account, vault.token.id, vault.shareToken.id);
+      await vaultService.approve(account, token?.id, shareToken?.id);
       setApproveBtn(false);
     } catch (e) {
       setApproveBtn(true);
+    } finally {
+      setApprovalPending(false);
     }
-
-    setApprovalPending(false);
-  }, [account, vault, vaultService, setApprovalPending, setApproveBtn]);
+  }, [account, token?.id, vaultService, setApprovalPending, setApproveBtn]);
 
   useEffect(() => {
-    deposit.trim() && approvalStatus(deposit);
-  }, [vault, deposit]);
+    if (deposit.trim()) {
+      approvalStatus(deposit);
+    } else {
+      setApproveBtn(false);
+    }
+  }, [deposit, approvalStatus, setApproveBtn]);
 
   useEffect(() => {
-    if (account && vault.token) {
+    if (account && token?.id) {
       getVaultTokenBalance();
     }
-  }, [account, vault, getVaultTokenBalance]);
+  }, [account, token?.id, getVaultTokenBalance]);
 
   useEffect(() => {
     if (deposit && BigNumber(deposit).isGreaterThan(0)) {
       updateSharedAmount(deposit);
     } else {
       setTimeout(() => {
-        methods.setValue("sharedToken", "0");
+        setValue("sharedToken", "0");
       }, 600);
     }
-  }, [deposit]);
+  }, [deposit, setValue, updateSharedAmount]);
 
   const setMax = useCallback(() => {
     const maxWalletBalance = BigNumber.min(
@@ -114,20 +126,27 @@ const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
           .minus(balanceTokens)
           .dividedBy(10 ** 18),
         BigNumber(0)
-      ),
-      BigNumber(MAX_PERSONAL_DEPOSIT)
+      )
     ).decimalPlaces(6, BigNumber.ROUND_DOWN);
 
-    methods.setValue("deposit", maxWalletBalance.toString(), {
+    setValue("deposit", maxWalletBalance.toString(), {
       shouldValidate: true,
     });
-  }, [methods, walletBalance, depositLimit, balanceTokens]);
+  }, [walletBalance, depositLimit, balanceTokens, setValue]);
 
   const depositLimitExceeded = (value: string) => {
-    if (BigNumber(value).isGreaterThanOrEqualTo(MAX_PERSONAL_DEPOSIT)) {
-      return `The ${MAX_PERSONAL_DEPOSIT / 1000}k ${
-        token.symbol
-      } limit has been exceeded.`;
+    const formattedDepositLimit = BigNumber(depositLimit).dividedBy(10 ** 18);
+    const rule =
+      type === VaultType.TRADEFI
+        ? BigNumber(value).isGreaterThanOrEqualTo(formattedDepositLimit)
+        : BigNumber(value).isGreaterThanOrEqualTo(MAX_PERSONAL_DEPOSIT);
+
+    if (rule) {
+      return `The ${
+        (type === VaultType.TRADEFI
+          ? formattedDepositLimit.toNumber()
+          : MAX_PERSONAL_DEPOSIT) / 1000
+      }k ${token.symbol} limit has been exceeded.`;
     } else {
       return false;
     }
@@ -138,10 +157,12 @@ const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
       const formattedMaxWalletBalance = BigNumber(walletBalance).dividedBy(
         10 ** 18
       );
-      const formattedMaxDepositLimit = Math.max(
-        BigNumber(depositLimit)
-          .minus(BigNumber(balanceTokens).dividedBy(10 ** 18))
-          .toNumber(),
+      const formattedMaxDepositLimit = BigNumber.max(
+        type === VaultType.TRADEFI
+          ? BigNumber(depositLimit).dividedBy(10 ** 18)
+          : BigNumber(depositLimit).minus(
+              BigNumber(balanceTokens).dividedBy(10 ** 18)
+            ),
         0
       );
       if (BigNumber(value).isGreaterThan(formattedMaxWalletBalance)) {
@@ -150,54 +171,73 @@ const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
 
       if (BigNumber(value).isGreaterThan(formattedMaxDepositLimit)) {
         return `Deposit value exceeds the maximum allowed limit ${formatNumber(
-          formattedMaxDepositLimit
+          formattedMaxDepositLimit.toNumber()
         )} ${token.symbol}`;
       }
-      if (BigNumber(value).isGreaterThan(MAX_PERSONAL_DEPOSIT)) {
-        return `The ${MAX_PERSONAL_DEPOSIT / 1000}k ${
+      if (
+        BigNumber(value).isGreaterThan(
+          BigNumber(depositLimit).dividedBy(10 ** 18)
+        )
+      ) {
+        return `The ${
+          BigNumber(depositLimit)
+            .dividedBy(10 ** 18)
+            .toNumber() / 1000
+        }k ${
           token.symbol
         } limit has been exceeded. Please reduce the amount to continue.`;
       }
 
       return true;
     },
-    [depositLimit, balanceTokens, walletBalance]
+    [type, depositLimit, balanceTokens, walletBalance]
   );
 
-  const onSubmit = useCallback(async () => {
-    setOpenDepositLoading(true);
+  const onSubmit = useCallback(
+    async (values: Record<string, any>) => {
+      setOpenDepositLoading(true);
 
-    try {
-      const blockNumber = await vaultService.deposit(
-        deposit,
-        account,
-        vault.shareToken.id
-      );
+      const { deposit } = values;
 
-      setLastTransactionBlock(blockNumber as number);
-      onClose();
-    } catch (e) {
-      console.log(e);
-    } finally {
-      setOpenDepositLoading(false);
-    }
-  }, [account, deposit, vault]);
+      try {
+        const blockNumber = await vaultService.deposit(
+          deposit,
+          account,
+          shareToken.id
+        );
+
+        setLastTransactionBlock(blockNumber as number);
+        onClose();
+      } catch (e) {
+        console.log(e);
+      } finally {
+        setOpenDepositLoading(false);
+      }
+    },
+    [
+      account,
+      shareToken?.id,
+      vaultService,
+      setLastTransactionBlock,
+      setOpenDepositLoading,
+    ]
+  );
 
   return {
     methods,
     walletBalance,
     isWalletFetching,
-    control: methods.control,
+    control,
     deposit,
     sharedToken,
     approveBtn,
     approvalPending,
     openDepositLoading,
-    errors: methods.formState.errors,
+    errors,
     approve,
     setMax,
     validateMaxDepositValue,
-    handleSubmit: methods.handleSubmit,
+    handleSubmit,
     onSubmit,
     depositLimitExceeded,
   };

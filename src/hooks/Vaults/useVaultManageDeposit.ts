@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { IVault, IVaultPosition } from "fathom-sdk";
+import { IVault, IVaultPosition, VaultType } from "fathom-sdk";
 import { useForm } from "react-hook-form";
 import BigNumber from "bignumber.js";
 import debounce from "lodash.debounce";
@@ -7,7 +7,7 @@ import useConnector from "context/connector";
 import { useServices } from "context/services";
 import useSyncContext from "context/sync";
 import { formatNumber } from "utils/format";
-import { MAX_PERSONAL_DEPOSIT } from "hooks/Vaults/useVaultOpenDeposit";
+import { MAX_PERSONAL_DEPOSIT } from "./useVaultOpenDeposit";
 
 export const defaultValues = {
   formToken: "",
@@ -21,6 +21,7 @@ export enum FormType {
 const useVaultManageDeposit = (
   vault: IVault,
   vaultPosition: IVaultPosition,
+  minimumDeposit: number,
   onClose: () => void
 ) => {
   const { account } = useConnector();
@@ -42,14 +43,14 @@ const useVaultManageDeposit = (
     formState: { errors },
   } = methods;
 
-  const { token, depositLimit, balanceTokens, shutdown } = vault;
+  const { token, depositLimit, balanceTokens, shutdown, type, shareToken } =
+    vault;
   const [formType, setFormType] = useState<FormType>(
     shutdown ? FormType.WITHDRAW : FormType.DEPOSIT
   );
   const [walletBalance, setWalletBalance] = useState<string>("0");
   const [isWalletFetching, setIsWalletFetching] = useState<boolean>(false);
   const [openDepositLoading, setOpenDepositLoading] = useState<boolean>(false);
-  const [balanceToken, setBalanceToken] = useState<string>("0");
 
   const [approveBtn, setApproveBtn] = useState<boolean>(false);
   const [approvalPending, setApprovalPending] = useState<boolean>(false);
@@ -63,13 +64,13 @@ const useVaultManageDeposit = (
       debounce(async (formToken: string) => {
         const approved = await vaultService.approvalStatus(
           account,
-          vault.token.id,
-          vault.shareToken.id,
+          token.id,
+          shareToken.id,
           formToken
         );
         approved ? setApproveBtn(false) : setApproveBtn(true);
       }, 1000),
-    [vaultService, vault, account]
+    [vaultService, token.id, shareToken.id, account]
   );
 
   const updateSharedAmount = useMemo(
@@ -94,58 +95,52 @@ const useVaultManageDeposit = (
 
         setValue("formSharedToken", sharedConverted);
       }, 500),
-    [vaultService, vault, formType, isFullWithdraw, setIsFullWithdraw]
+    [vaultService, vault.id, formType, isFullWithdraw, setIsFullWithdraw]
   );
 
   const approve = useCallback(async () => {
     setApprovalPending(true);
     try {
-      await vaultService.approve(account, vault.token.id, vault.shareToken.id);
+      await vaultService.approve(account, token.id, shareToken.id);
       setApproveBtn(false);
     } catch (e) {
       setApproveBtn(true);
+    } finally {
+      setApprovalPending(false);
     }
-
-    setApprovalPending(false);
-  }, [account, vault, vaultService, setApprovalPending, setApproveBtn]);
-
-  const getBalancePosition = useCallback(() => {
-    vaultService
-      .previewRedeem(
-        BigNumber(vaultPosition.balanceShares)
-          .dividedBy(10 ** 18)
-          .toString(),
-        vault.id
-      )
-      .then((balanceToken: string) => {
-        setBalanceToken(balanceToken);
-      });
-  }, [vaultService, vault, vaultPosition, setBalanceToken]);
+  }, [
+    account,
+    token.id,
+    shareToken.id,
+    vaultService,
+    setApprovalPending,
+    setApproveBtn,
+  ]);
 
   const getVaultTokenBalance = useCallback(async () => {
     const balance = await poolService.getUserTokenBalance(account, token.id);
     setWalletBalance(balance.toString());
     setIsWalletFetching(true);
-  }, [account]);
+  }, [account, token.id, setWalletBalance, setIsWalletFetching]);
 
   useEffect(() => {
     setValue("formToken", "", { shouldValidate: false });
     setValue("formSharedToken", "", { shouldValidate: false });
-  }, [formType]);
+  }, [formType, setValue]);
 
   useEffect(() => {
-    formToken.trim() && approvalStatus(formToken);
-  }, [vault, formToken]);
+    if (formToken.trim() && formType === FormType.DEPOSIT) {
+      approvalStatus(formToken);
+    } else {
+      setApproveBtn(false);
+    }
+  }, [formToken, formType, setApproveBtn]);
 
   useEffect(() => {
-    getBalancePosition();
-  }, [vaultPosition, vault]);
-
-  useEffect(() => {
-    if (account && vault.token) {
+    if (account && token.id) {
       getVaultTokenBalance();
     }
-  }, [account, vault, getVaultTokenBalance]);
+  }, [account, token.id, getVaultTokenBalance]);
 
   useEffect(() => {
     let timeout: ReturnType<typeof setTimeout>;
@@ -161,7 +156,7 @@ const useVaultManageDeposit = (
     return () => {
       timeout && clearTimeout(timeout);
     };
-  }, [formToken, updateSharedAmount]);
+  }, [formToken, updateSharedAmount, setValue]);
 
   const validateDeposit = (
     value: string,
@@ -178,14 +173,17 @@ const useVaultManageDeposit = (
       )} ${token.symbol}`;
     }
 
-    if (
-      BigNumber(value).isGreaterThan(MAX_PERSONAL_DEPOSIT) ||
-      BigNumber(balancePosition)
-        .dividedBy(10 ** 18)
-        .plus(value)
-        .isGreaterThan(MAX_PERSONAL_DEPOSIT)
-    ) {
-      return `The ${MAX_PERSONAL_DEPOSIT / 1000}k ${
+    const formattedDeposit = BigNumber(depositLimit).dividedBy(10 ** 18);
+    const rule =
+      type === VaultType.TRADEFI
+        ? BigNumber(value).isGreaterThan(formattedDeposit)
+        : BigNumber(balancePosition)
+            .dividedBy(10 ** 18)
+            .plus(value)
+            .isGreaterThan(formattedDeposit);
+
+    if (rule) {
+      return `The ${formattedDeposit.toNumber() / 1000}k ${
         token.symbol
       } limit has been exceeded. Please reduce the amount to continue.`;
     }
@@ -194,17 +192,48 @@ const useVaultManageDeposit = (
   };
 
   const depositLimitExceeded = (value: string) => {
-    if (
-      BigNumber(value).isGreaterThanOrEqualTo(MAX_PERSONAL_DEPOSIT) ||
-      BigNumber(balancePosition)
-        .dividedBy(10 ** 18)
-        .plus(value)
-        .decimalPlaces(6, BigNumber.ROUND_UP)
-        .isGreaterThanOrEqualTo(MAX_PERSONAL_DEPOSIT)
-    ) {
-      return `The ${MAX_PERSONAL_DEPOSIT / 1000}k ${
-        token.symbol
-      } limit has been exceeded.`;
+    const formattedDepositLimit = BigNumber(depositLimit).dividedBy(10 ** 18);
+
+    const rule =
+      type === VaultType.TRADEFI
+        ? BigNumber(value).isGreaterThanOrEqualTo(formattedDepositLimit)
+        : BigNumber(balancePosition)
+            .dividedBy(10 ** 18)
+            .plus(value)
+            .decimalPlaces(6, BigNumber.ROUND_UP)
+            .isGreaterThanOrEqualTo(MAX_PERSONAL_DEPOSIT);
+
+    if (rule) {
+      return `The ${
+        type === VaultType.TRADEFI
+          ? formattedDepositLimit.toNumber()
+          : MAX_PERSONAL_DEPOSIT / 1000
+      }k ${token.symbol} limit has been exceeded.`;
+    } else {
+      return false;
+    }
+  };
+
+  const withdrawLimitExceeded = (value: string) => {
+    /**
+     * Logic for TradeFlowVault
+     */
+    if (type === VaultType.TRADEFI) {
+      const maxBalanceToken = BigNumber(balancePosition).dividedBy(10 ** 18);
+
+      if (
+        BigNumber(maxBalanceToken).minus(value).isGreaterThan(0) &&
+        BigNumber(maxBalanceToken).minus(value).isLessThan(minimumDeposit)
+      ) {
+        return `After withdraw ${formatNumber(Number(value))} ${
+          token.name
+        }  you will have ${formatNumber(
+          BigNumber(maxBalanceToken).minus(value).toNumber()
+        )} ${token.name} less then minimum allowed deposit ${
+          minimumDeposit / 1000
+        }k ${token.name}, you can do full withdraw instead.`;
+      }
+      return false;
     } else {
       return false;
     }
@@ -222,44 +251,62 @@ const useVaultManageDeposit = (
     (value: string) => {
       if (formType === FormType.DEPOSIT) {
         const maxWalletBalance = BigNumber(walletBalance).dividedBy(10 ** 18);
-        const maxDepositLimit = BigNumber.max(
-          BigNumber(depositLimit)
-            .minus(BigNumber(balanceTokens).dividedBy(10 ** 18))
-            .toNumber(),
-          0
+        const formattedDepositLimit = BigNumber(depositLimit).dividedBy(
+          10 ** 18
         );
+        const maxDepositLimit =
+          type === VaultType.TRADEFI
+            ? BigNumber.max(formattedDepositLimit, 0)
+            : BigNumber.max(
+                BigNumber(formattedDepositLimit)
+                  .minus(BigNumber(balanceTokens).dividedBy(10 ** 18))
+                  .toNumber(),
+                0
+              );
 
         return validateDeposit(value, maxWalletBalance, maxDepositLimit);
       } else {
-        const maxBalanceToken = BigNumber(balanceToken).dividedBy(10 ** 18);
+        const maxBalanceToken = BigNumber(balancePosition).dividedBy(10 ** 18);
         return validateRepay(value, maxBalanceToken);
       }
     },
-    [depositLimit, balanceTokens, walletBalance, balanceToken, formType]
+    [depositLimit, balanceTokens, walletBalance, balancePosition, formType]
   );
 
   const setMax = useCallback(() => {
     if (formType === FormType.DEPOSIT) {
-      const max = BigNumber.min(
-        BigNumber(walletBalance).dividedBy(10 ** 18),
-        BigNumber(depositLimit)
-          .minus(balanceTokens)
-          .dividedBy(10 ** 18),
-        BigNumber(MAX_PERSONAL_DEPOSIT).minus(
-          BigNumber(balancePosition).dividedBy(10 ** 18)
-        )
-      ).decimalPlaces(6, BigNumber.ROUND_DOWN);
+      if (type === VaultType.TRADEFI) {
+        const max = BigNumber.min(walletBalance, depositLimit)
+          .dividedBy(10 ** 18)
+          .decimalPlaces(6, BigNumber.ROUND_DOWN);
 
-      const maxCapped = max.isNegative() ? BigNumber(0) : max;
+        const maxCapped = max.isNegative() ? BigNumber(0) : max;
 
-      setValue("formToken", maxCapped.toString(), {
-        shouldValidate: true,
-      });
+        setValue("formToken", maxCapped.toString(), {
+          shouldValidate: true,
+        });
+      } else {
+        const max = BigNumber.min(
+          BigNumber(walletBalance).dividedBy(10 ** 18),
+          BigNumber(depositLimit)
+            .minus(balanceTokens)
+            .dividedBy(10 ** 18),
+          BigNumber(MAX_PERSONAL_DEPOSIT).minus(
+            BigNumber(balancePosition).dividedBy(10 ** 18)
+          )
+        ).decimalPlaces(6, BigNumber.ROUND_DOWN);
+
+        const maxCapped = max.isNegative() ? BigNumber(0) : max;
+
+        setValue("formToken", maxCapped.toString(), {
+          shouldValidate: true,
+        });
+      }
     } else {
       setIsFullWithdraw(true);
       setValue(
         "formToken",
-        BigNumber(balanceToken)
+        BigNumber(balancePosition)
           .dividedBy(10 ** 18)
           .toString(),
         { shouldValidate: true }
@@ -280,7 +327,6 @@ const useVaultManageDeposit = (
     balancePosition,
     depositLimit,
     balanceTokens,
-    balanceToken,
     formType,
     balanceShares,
   ]);
@@ -296,7 +342,7 @@ const useVaultManageDeposit = (
           const blockNumber = await vaultService.deposit(
             formToken,
             account,
-            vault.shareToken.id
+            shareToken.id
           );
 
           setLastTransactionBlock(blockNumber as number);
@@ -313,9 +359,10 @@ const useVaultManageDeposit = (
             formSharedToken,
             account,
             account,
-            vault.shareToken.id
+            shareToken.id
           );
 
+          setIsFullWithdraw(false);
           setLastTransactionBlock(blockNumber as number);
 
           onClose();
@@ -326,7 +373,19 @@ const useVaultManageDeposit = (
         }
       }
     },
-    [account, formType, vault]
+    [
+      account,
+      vaultPosition,
+      formSharedToken,
+      isFullWithdraw,
+      formType,
+      shareToken.id,
+      vaultService,
+      setIsFullWithdraw,
+      setOpenDepositLoading,
+      setLastTransactionBlock,
+      setIsFullWithdraw,
+    ]
   );
 
   return {
@@ -336,13 +395,13 @@ const useVaultManageDeposit = (
     control,
     formToken,
     formSharedToken,
-    balanceToken,
     approveBtn,
     approvalPending,
     formType,
     openDepositLoading,
-    errors: errors,
+    errors,
     setFormType,
+    balancePosition,
     approve,
     setMax,
     validateMaxValue,
@@ -350,6 +409,7 @@ const useVaultManageDeposit = (
     onSubmit,
     methods,
     depositLimitExceeded,
+    withdrawLimitExceeded,
   };
 };
 

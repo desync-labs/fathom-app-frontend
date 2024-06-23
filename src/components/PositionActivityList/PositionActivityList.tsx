@@ -8,7 +8,7 @@ import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
 import PositionActivityFilters from "components/PositionActivityList/PositionActivityFilters";
 import PositionActivityListItem from "components/PositionActivityList/PositionActivityListItem";
 import { PositionActivityListLoader } from "components/PositionActivityList/PositionActivityListLoader";
-import { fxdActivitiesGroupByDate } from "utils/fxdActivitiesGroupByDate";
+import { fxdActivitiesGroupByDate } from "utils/Fxd/fxdActivitiesGroupByDate";
 
 const PageHeader = styled(Box)`
   display: flex;
@@ -17,6 +17,9 @@ const PageHeader = styled(Box)`
   padding: 0 24px;
   margin-top: 48px;
   margin-bottom: 48px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    padding: 0;
+  }
 `;
 
 const TxListWrapper = styled(AppPaper)`

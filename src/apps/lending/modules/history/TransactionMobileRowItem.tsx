@@ -104,6 +104,7 @@ const TransactionMobileRowItem: FC<TransactionHistoryItemProps> = ({
                   fontSize: "0.6rem",
                   alignItems: "center",
                   justifyContent: "center",
+                  gap: "5px",
                   pl: 0.5,
                   pr: 0.5,
                 }}
@@ -117,7 +118,7 @@ const TransactionMobileRowItem: FC<TransactionHistoryItemProps> = ({
                   })
                 }
               >
-                VIEW TX <ExtLinkIcon />
+                VIEW TX <ExtLinkIcon width={"10px"} height={"10px"} />
               </Button>
             </Box>
           </Box>

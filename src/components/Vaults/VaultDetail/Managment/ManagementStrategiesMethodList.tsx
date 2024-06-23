@@ -3,7 +3,7 @@ import { Box, Divider, MenuItem, styled, Tab, Typography } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { FunctionFragment } from "@into-the-fathom/abi";
 
-import { strategyTitle } from "utils/getStrategyTitleAndDescription";
+import { strategyTitle } from "utils/Vaults/getStrategyTitleAndDescription";
 import { formatHashShorten } from "utils/format";
 import { AppSelect } from "components/AppComponents/AppForm/AppForm";
 import {
@@ -13,11 +13,15 @@ import {
   MethodTypesTabs,
   STATE_MUTABILITY_TRANSACTIONS,
 } from "components/Vaults/VaultDetail/Managment/ManagementVaultMethodList";
-import MethodListItem from "components/Vaults/VaultDetail/Managment/MethodListItem";
+import MethodListItem, {
+  ReadeMethodIcon,
+  WriteMethodIcon,
+} from "components/Vaults/VaultDetail/Managment/MethodListItem";
 import StrategyStatusBar from "components/Vaults/VaultDetail/Managment/StrategyStatusBar";
 import useSharedContext from "context/shared";
 import { Contract } from "@into-the-fathom/contracts";
 import useConnector from "context/connector";
+import { AppFlexBox } from "components/AppComponents/AppBox/AppBox";
 
 const StrategyManagerDescription = styled("div")`
   color: #fff;
@@ -114,6 +118,24 @@ const ManagementStrategiesMethodTabs: FC<{
           <Tab label="Read Contract" {...a11yProps(0)} />
           <Tab label="Write Contract" {...a11yProps(1)} />
         </MethodTypesTabs>
+        <AppFlexBox
+          sx={{
+            justifyContent: "flex-start",
+            justifyItems: "center",
+            mt: "30px",
+          }}
+        >
+          {value === 0 ? (
+            <ReadeMethodIcon color={"#6D86B2"} />
+          ) : (
+            <WriteMethodIcon color={"#6D86B2"} />
+          )}
+          <Typography sx={{ color: "#fff", fontSize: "14px" }}>
+            {value === 0
+              ? "Read contract information"
+              : "Write contract information"}
+          </Typography>
+        </AppFlexBox>
         <MethodsTabPanel value={value} index={0}>
           {useMemo(
             () =>

@@ -13,6 +13,7 @@ import {
 import { AppFlexBox } from "components/AppComponents/AppBox/AppBox";
 import ManageVaultInfo from "components/Vaults/VaultDetail/VaultDetailForm/ManageVaultInfo";
 import ManageVaultForm from "components/Vaults/VaultList/ManageVaultModal/ManageVaultForm";
+import { memo } from "react";
 
 const VaultFormWrapper = styled(AppFlexBox)`
   align-items: flex-start;
@@ -32,7 +33,8 @@ const VaultDetailFormColumn = styled(Box)`
 `;
 
 const VaultDetailManageForm = () => {
-  const { vault, vaultPosition, balanceToken } = useVaultContext();
+  const { vault, vaultPosition, balanceToken, minimumDeposit } =
+    useVaultContext();
 
   const onClose = () => {
     methods.reset();
@@ -56,7 +58,9 @@ const VaultDetailManageForm = () => {
     handleSubmit,
     onSubmit,
     methods,
-  } = useVaultManageDeposit(vault, vaultPosition, onClose);
+    withdrawLimitExceeded,
+    depositLimitExceeded,
+  } = useVaultManageDeposit(vault, vaultPosition, minimumDeposit, onClose);
   const { isMobile } = useSharedContext();
 
   const { shutdown } = vault;
@@ -93,6 +97,7 @@ const VaultDetailManageForm = () => {
               handleSubmit={handleSubmit}
               onSubmit={onSubmit}
               vaultPosition={vaultPosition}
+              depositLimitExceeded={depositLimitExceeded}
               dataTestIdPrefix="vault-detailManageModal"
             />
           </VaultDetailFormColumn>
@@ -112,6 +117,7 @@ const VaultDetailManageForm = () => {
             approvalPending={approvalPending}
             handleSubmit={handleSubmit}
             onSubmit={onSubmit}
+            withdrawLimitExceeded={withdrawLimitExceeded}
           />
         </FormProvider>
       </VaultFormWrapper>
@@ -119,4 +125,4 @@ const VaultDetailManageForm = () => {
   );
 };
 
-export default VaultDetailManageForm;
+export default memo(VaultDetailManageForm);

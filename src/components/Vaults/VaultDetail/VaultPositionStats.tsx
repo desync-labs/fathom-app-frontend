@@ -80,6 +80,8 @@ const VaultPositionStats = () => {
     vaultPosition,
     vaultPositionLoading,
     balanceEarned,
+    tfVaultDepositLimit,
+    isTfVaultType,
   } = useVaultContext();
   const { fxdPrice, fetchPricesInProgress } = usePricesContext();
   const { isMobile } = useSharedContext();
@@ -153,6 +155,20 @@ const VaultPositionStats = () => {
     };
   }, [vaultLoading, vaultPositionLoading, setIsLoading]);
 
+  const getVaultDepositLimit = () => {
+    if (isTfVaultType) {
+      return BigNumber(tfVaultDepositLimit).dividedBy(10 ** 18);
+    } else {
+      return BigNumber.max(
+        BigNumber(vault?.depositLimit || 0)
+          .minus(vault?.balanceTokens || 0)
+          .dividedBy(10 ** 18)
+          .toNumber(),
+        0
+      );
+    }
+  };
+
   return (
     <Box pb={isMobile ? "20px" : "24px"} ref={container}>
       <VaultPositionTitle variant="h1">Your Position</VaultPositionTitle>
@@ -214,26 +230,12 @@ const VaultPositionStats = () => {
                 />
               ) : (
                 <>
-                  {formatNumber(
-                    Math.max(
-                      BigNumber(vault?.depositLimit || 0)
-                        .minus(vault?.balanceTokens || 0)
-                        .dividedBy(10 ** 18)
-                        .toNumber(),
-                      0
-                    )
-                  )}{" "}
+                  {formatNumber(getVaultDepositLimit().toNumber())}{" "}
                   {vault?.token?.symbol}
                   <UsdValue>
                     {"$" +
                       formatNumber(
-                        BigNumber.max(
-                          BigNumber(vault?.depositLimit || 0)
-                            .minus(vault?.balanceTokens || 0)
-                            .dividedBy(10 ** 18)
-                            .toNumber(),
-                          0
-                        )
+                        getVaultDepositLimit()
                           .multipliedBy(fxdPrice)
                           .dividedBy(10 ** 18)
                           .toNumber()

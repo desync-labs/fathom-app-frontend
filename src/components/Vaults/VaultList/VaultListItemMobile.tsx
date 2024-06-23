@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { FC, useMemo, useState } from "react";
 import { styled } from "@mui/material/styles";
 import { TableCell } from "@mui/material";
 import { IVault, IVaultPosition } from "fathom-sdk";
@@ -74,14 +74,16 @@ export const VaultListItemImageWrapper = styled("div")`
   }
 `;
 
-const VaultListItemMobile = ({
-  vaultItemData,
-  vaultPosition,
-  performanceFee,
-}: {
+type VaultListItemMobileProps = {
   vaultItemData: IVault;
   vaultPosition: IVaultPosition | null;
   performanceFee: number;
+};
+
+const VaultListItemMobile: FC<VaultListItemMobileProps> = ({
+  vaultItemData,
+  vaultPosition,
+  performanceFee,
 }) => {
   const { token, balanceTokens, shutdown } = vaultItemData;
   const formattedApr = useApr(vaultItemData);
@@ -96,6 +98,14 @@ const VaultListItemMobile = ({
     newVaultDeposit,
     setManageVault,
     setNewVaultDeposit,
+    isTfVaultType,
+    isUserKycPassed,
+    tfVaultDepositEndDate,
+    tfVaultLockEndDate,
+    activeTfPeriod,
+    tfVaultDepositLimit,
+    handleWithdrawAll,
+    minimumDeposit,
   } = useVaultListItem({ vaultPosition, vault: vaultItemData });
 
   const handleOpenPreviewModal = () => {
@@ -161,11 +171,15 @@ const VaultListItemMobile = ({
           <VaultListItemPreviewModal
             isOpenPreviewModal={isOpenPreviewModal}
             vault={vaultItemData}
-            vaultPosition={vaultPosition}
+            vaultPosition={vaultPosition as IVaultPosition}
             balanceEarned={balanceEarned}
             handleClosePreview={handleClosePreviewModal}
             setManageVault={setManageVault}
             setNewVaultDeposit={setNewVaultDeposit}
+            tfVaultDepositLimit={tfVaultDepositLimit}
+            handleWithdrawAll={handleWithdrawAll}
+            isTfVaultType={isTfVaultType}
+            activeTfPeriod={activeTfPeriod}
           />
         );
       }, [
@@ -182,6 +196,12 @@ const VaultListItemMobile = ({
             <VaultListItemDepositModal
               vaultItemData={vaultItemData}
               performanceFee={performanceFee}
+              isTfVaultType={isTfVaultType}
+              isUserKycPassed={isUserKycPassed}
+              tfVaultDepositEndDate={tfVaultDepositEndDate}
+              tfVaultLockEndDate={tfVaultLockEndDate}
+              activeTfPeriod={activeTfPeriod}
+              minimumDeposit={minimumDeposit}
               onClose={() => setNewVaultDeposit(false)}
             />
           )
@@ -195,6 +215,11 @@ const VaultListItemMobile = ({
               vaultItemData={vaultItemData}
               vaultPosition={vaultPosition}
               performanceFee={performanceFee}
+              isTfVaultType={isTfVaultType}
+              tfVaultDepositEndDate={tfVaultDepositEndDate}
+              tfVaultLockEndDate={tfVaultLockEndDate}
+              activeTfPeriod={activeTfPeriod}
+              minimumDeposit={minimumDeposit}
               onClose={() => setManageVault(false)}
             />
           )
