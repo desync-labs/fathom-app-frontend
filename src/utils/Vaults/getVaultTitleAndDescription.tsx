@@ -187,5 +187,7 @@ vaultTitle["0x50d150069a0fce09e6ded55a75aec67d2be79037".toLowerCase()] =
   "Gold World ETF";
 vaultTitle["0xbf4adcc0a8f2c7e29f934314ce60cf5de38bfe8f".toLowerCase()] =
   "Trade Fintech Vault";
+vaultTitle["0x3c8e9896933b374e638f9a5c309535409129aaa2".toLowerCase()] =
+  "Education Vault";
 
 export { vaultTitle, vaultDescription };
