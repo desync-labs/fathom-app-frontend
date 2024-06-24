@@ -30,4 +30,4 @@ export const COUNT_PER_PAGE_VAULT = 10;
 /**
  * Step for trade FI vault report in hours.
  */
-export const TRADE_FI_VAULT_REPORT_STEP = 1;
+export const TRADE_FI_VAULT_REPORT_STEP = 2;

@@ -114,7 +114,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
   const [tfVaultLockEndDate, setTfVaultLockEndDate] = useState<string | null>(
     null
   );
-  const [activeTfPeriod, setActiveTfPeriod] = useState(0);
+  const [activeTfPeriod, setActiveTfPeriod] = useState<number>(0);
   const [tfVaultDepositLimit, setTfVaultDepositLimit] = useState<string>("0");
 
   const { syncVault, prevSyncVault, setLastTransactionBlock } =
@@ -290,6 +290,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
             const timestamp = (
               Number(depositEndDate.add(i, "hour").unix()) * 1000
             ).toString();
+
             const gain = BigNumber(apr)
               .dividedBy(100)
               .multipliedBy(vault.balanceTokens)

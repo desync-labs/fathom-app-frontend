@@ -1,7 +1,7 @@
 import { memo, useEffect, useState } from "react";
 import BigNumber from "bignumber.js";
 import { Box, styled } from "@mui/material";
-import { IVaultStrategyReport } from "fathom-sdk";
+import { IVaultStrategyReport, VaultType } from "fathom-sdk";
 import { AppListVault } from "components/AppComponents/AppList/AppList";
 import VaultHistoryChart, {
   HistoryChartDataType,
@@ -99,11 +99,18 @@ export const AppListFees = styled(AppListVault)`
 `;
 
 const VaultDetailInfoTabAbout = () => {
-  const { vault, reports, historicalApr, vaultLoading, isReportsLoaded } =
-    useVaultContext();
+  const {
+    vault,
+    reports,
+    historicalApr,
+    vaultLoading,
+    isReportsLoaded,
+    activeTfPeriod,
+  } = useVaultContext();
   const [earnedHistoryArr, setEarnedHistoryArr] = useState<
     HistoryChartDataType[]
   >([]);
+  const { type } = vault;
 
   useEffect(() => {
     if (!Object.keys(reports).length) {
@@ -147,13 +154,15 @@ const VaultDetailInfoTabAbout = () => {
       ) : (
         <VaultAboutTabContent />
       )}
-      <VaultHistoryChart
-        title={"Cumulative Earnings"}
-        chartDataArray={earnedHistoryArr}
-        valueLabel="Earnings"
-        valueUnits={` ${vault?.token?.name}`}
-        isLoading={!isReportsLoaded}
-      />
+      {type === VaultType.TRADEFI && activeTfPeriod === 0 ? null : (
+        <VaultHistoryChart
+          title={"Cumulative Earnings"}
+          chartDataArray={earnedHistoryArr}
+          valueLabel="Earnings"
+          valueUnits={` ${vault?.token?.name}`}
+          isLoading={!isReportsLoaded}
+        />
+      )}
     </VaultInfoWrapper>
   );
 };
