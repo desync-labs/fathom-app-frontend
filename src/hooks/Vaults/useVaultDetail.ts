@@ -24,7 +24,10 @@ import {
   VAULT_POSITION_TRANSACTIONS,
   VAULT_STRATEGY_REPORTS,
 } from "apollo/queries";
-import { vaultTitle } from "utils/Vaults/getVaultTitleAndDescription";
+import {
+  getDefaultVaultTitle,
+  vaultTitle,
+} from "utils/Vaults/getVaultTitleAndDescription";
 import { vaultType } from "utils/Vaults/getVaultType";
 import dayjs from "dayjs";
 import { getVaultLockEndDate } from "utils/Vaults/getVaultLockEndDate";
@@ -139,7 +142,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
 
   const [loadVault, { loading: vaultLoading }] = useLazyQuery(VAULT, {
     context: { clientName: "vaults", chainId },
-    fetchPolicy: "network-only",
+    fetchPolicy: "no-cache",
   });
 
   const [loadPosition, { loading: vaultPositionLoading }] = useLazyQuery(
@@ -294,7 +297,10 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
         depositLimit: BigNumber(depositLimitValue).toString(),
         name: vaultTitle[vaultData.id.toLowerCase()]
           ? vaultTitle[vaultData.id.toLowerCase()]
-          : vaultData.token.name,
+          : getDefaultVaultTitle(
+              vaultType[vaultData.id.toLowerCase()] || VaultType.DEFAULT,
+              vaultData.token.name
+            ),
         type,
       };
 
@@ -320,10 +326,8 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     }
   };
 
-  useEffect(() => {
-    if (!vaultId) {
-      navigate("/vaults");
-    } else {
+  const fetchVaultData = useCallback(
+    (vaultId: string): void => {
       loadVault({
         variables: {
           id: vaultId,
@@ -386,16 +390,17 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
           }
         }
       });
+    },
+    [account, isTfVaultType, chainId, vaultService, loadVault, setVault]
+  );
+
+  useEffect(() => {
+    if (!vaultId) {
+      navigate("/vaults");
+    } else {
+      fetchVaultData(vaultId);
     }
-  }, [
-    vaultId,
-    account,
-    isTfVaultType,
-    chainId,
-    vaultService,
-    loadVault,
-    setVault,
-  ]);
+  }, [vaultId]);
 
   useEffect(() => {
     if (vaultId && account && isTfVaultType) {
@@ -628,7 +633,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
             })
             .finally(() => {
               setVaultPosition(vaultPosition);
-              updateVaultDepositLimit(vault, account);
+              fetchVaultData(vault.id);
             });
         }
       );
