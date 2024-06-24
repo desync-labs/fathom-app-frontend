@@ -137,7 +137,7 @@ export default class VaultPage extends BasePage {
       "vault-listItemDepositModal-approveButton"
     );
     this.btnConnectWallet = this.page.locator(
-      "[data-testid*='connectWalletButton']"
+      "//button[text()='Connect Wallet']"
     );
     this.vaultContractAddressDetailAbout = this.page.locator(
       "//div[text()='Vault contract address:']//a"
@@ -160,13 +160,7 @@ export default class VaultPage extends BasePage {
     return this.page.locator(`[data-testid="vaultRow-${id}-depositButton"]`);
   }
 
-  getConnectWalletButtonRowLocatorById(id: string): Locator {
-    return this.page.locator(
-      `[data-testid="vaultRow-${id}-connectWalletButton"]`
-    );
-  }
-
-  getManageVaultButtonRowDetailsLocatorById(id: string): Locator {
+  getManageVaultButtonRowLocatorById(id: string): Locator {
     return this.page.locator(
       `[data-testid="vaultRowDetails-${id}-managePositionButton"]`
     );
@@ -364,7 +358,7 @@ export default class VaultPage extends BasePage {
     shareTokenName: string;
     depositAmount: number;
   }): Promise<VaultDepositData> {
-    await this.getManageVaultButtonRowDetailsLocatorById(id).click();
+    await this.getManageVaultButtonRowLocatorById(id).click();
     await expect(this.dialogListItemManageModal).toBeVisible();
     await this.btnDepositNavItemListItemManageModal.click();
     await this.enterDepositAmountDialogManageModal(depositAmount);
@@ -588,7 +582,7 @@ export default class VaultPage extends BasePage {
     id: string;
     withdrawAmount: number;
   }): Promise<VaultDepositData> {
-    await this.getManageVaultButtonRowDetailsLocatorById(id).click();
+    await this.getManageVaultButtonRowLocatorById(id).click();
     await expect(this.dialogListItemManageModal).toBeVisible();
     await this.btnWithdrawNavItemListItemManageModal.click();
     await this.enterWithdrawAmountDialogManageModal(withdrawAmount);
@@ -673,7 +667,7 @@ export default class VaultPage extends BasePage {
   }
 
   async manageVaultWithdrawFully({ id }: { id: string }): Promise<void> {
-    await this.getManageVaultButtonRowDetailsLocatorById(id).click();
+    await this.getManageVaultButtonRowLocatorById(id).click();
     await expect(this.dialogListItemManageModal).toBeVisible();
     await this.btnWithdrawNavItemListItemManageModal.click();
     await this.page.waitForTimeout(2000);
@@ -729,15 +723,18 @@ export default class VaultPage extends BasePage {
   }
 
   async approveTokensMaxUintListItemDepositModal() {
-    await this.btnApproveListItemDepositModal.click();
-    await expect.soft(this.progressBar).toBeVisible();
-    await this.page.waitForTimeout(1000);
-    await expect(this.divAlert).toBeHidden({ timeout: 100 });
-    await metamask.confirmPermissionToSpend();
-    await this.validateAlertMessage({
-      status: "success",
-      title: "Token approval was successful!",
-    });
+    await expect(this.dialogListItemDepositModal).toBeVisible();
+    if (await this.btnApproveListItemDepositModal.isVisible()) {
+      await this.btnApproveListItemDepositModal.click();
+      await expect.soft(this.progressBar).toBeVisible();
+      await this.page.waitForTimeout(1000);
+      await expect(this.divAlert).toBeHidden({ timeout: 100 });
+      await metamask.confirmPermissionToSpend();
+      await this.validateAlertMessage({
+        status: "success",
+        title: "Token approval was successful!",
+      });
+    }
   }
 
   async depositFirstTime({
@@ -838,30 +835,6 @@ export default class VaultPage extends BasePage {
     await this.page.waitForLoadState("load");
     await this.page.waitForTimeout(2000);
     return vaultDepositDataExpected;
-  }
-
-  async validateYourPositionTabIsVisible(id: string): Promise<void> {
-    await expect
-      .soft(this.getVaultDetailsTabLocator(id, VaultDetailsTabs.YourPosition))
-      .toBeVisible();
-  }
-
-  async validateAboutTabIsVisible(id: string): Promise<void> {
-    await expect
-      .soft(this.getVaultDetailsTabLocator(id, VaultDetailsTabs.About))
-      .toBeVisible();
-  }
-
-  async validateStrategiesTabIsVisible(id: string): Promise<void> {
-    await expect
-      .soft(this.getVaultDetailsTabLocator(id, VaultDetailsTabs.Strategies))
-      .toBeVisible();
-  }
-
-  async validateYourPositionTabNotVisible(id: string): Promise<void> {
-    await expect
-      .soft(this.getVaultDetailsTabLocator(id, VaultDetailsTabs.YourPosition))
-      .not.toBeVisible();
   }
 
   async connectWalletVault(

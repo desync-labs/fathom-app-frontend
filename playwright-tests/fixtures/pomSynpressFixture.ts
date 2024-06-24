@@ -13,7 +13,7 @@ import VaultPage from "../pages/vault.page";
 import DexPage from "../pages/dex.page";
 import LendingPage from "../pages/lending.page";
 import DaoPage from "../pages/dao.page";
-import { APOTHEM_RPC, XDC_RPC } from "../../src/connectors/networks";
+import { XDC_RPC } from "../../src/connectors/networks";
 dotenv.config();
 
 let networkName: string;
@@ -21,6 +21,7 @@ let rpcUrl: string;
 let chainId: string;
 let symbol: string;
 let blockExplorer: string;
+const APOTHEM_RPC_INTERNAL = "https://rpc.apothem.fathom.fi/";
 
 switch (process.env.ENVIRONMENT_URL) {
   case "https://dapp.fathom.fi":
@@ -33,14 +34,14 @@ switch (process.env.ENVIRONMENT_URL) {
   case "https://dev-app-frontend-wpa8a.ondigitalocean.app" ||
     "http://127.0.0.1:3000":
     networkName = "XDC Test";
-    rpcUrl = APOTHEM_RPC;
+    rpcUrl = APOTHEM_RPC_INTERNAL;
     chainId = "51";
     symbol = "TXDC";
     blockExplorer = "https://apothem.blocksscan.io/";
     break;
   default:
     networkName = "XDC Test";
-    rpcUrl = APOTHEM_RPC;
+    rpcUrl = APOTHEM_RPC_INTERNAL;
     chainId = "51";
     symbol = "TXDC";
     blockExplorer = "https://apothem.blocksscan.io/";

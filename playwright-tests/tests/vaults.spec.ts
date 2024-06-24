@@ -104,9 +104,6 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     await expect(
       vaultPage.getDepositButtonRowLocatorById(lendingLiquidationVaultData.id)
     ).toHaveText("Deposit");
-    await vaultPage.validateYourPositionTabNotVisible(
-      lendingLiquidationVaultData.id
-    );
     const vaultExpectedData = await vaultPage.depositFirstTime({
       id: lendingLiquidationVaultData.id,
       shareTokenName: lendingLiquidationVaultData.shareTokenName,
@@ -160,48 +157,49 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
       .toEqual(0);
   });
 
-  // test("FXD Vault: Wallet not connected state layout is correct, vault connect wallet functionality is successful", async ({
-  //   vaultPage,
-  // }) => {
-  //   await vaultPage.navigate();
-  //   await expect.soft(vaultPage.btnConnectWallet).toBeVisible();
-  //   await expect
-  //     .soft(vaultPage.btnConnectWallet)
-  //     .toContainText("Connect Wallet");
-  //   await vaultPage.extendVaultDetails(lendingLiquidationVaultData.id);
-  //   await vaultPage.validateYourPositionTabNotVisible(
-  //     lendingLiquidationVaultData.id
-  //   );
-  //   await vaultPage.validateAboutTabIsVisible(lendingLiquidationVaultData.id);
-  //   await vaultPage.validateStrategiesTabIsVisible(
-  //     lendingLiquidationVaultData.id
-  //   );
-  //   expect
-  //     .soft(
-  //       await vaultPage.getStakedVaultRowValue(lendingLiquidationVaultData.id)
-  //     )
-  //     .toEqual(0);
-  //   await vaultPage.connectWalletVault(WalletConnectOptions.Metamask);
-  //   await vaultPage.validateConnectedWalletAddress();
-  //   await vaultPage.extendVaultDetails(lendingLiquidationVaultData.id);
-  //   await vaultPage.validateYourPositionTabIsVisible(
-  //     lendingLiquidationVaultData.id
-  //   );
-  //   await vaultPage.validateAboutTabIsVisible(lendingLiquidationVaultData.id);
-  //   await vaultPage.validateStrategiesTabIsVisible(
-  //     lendingLiquidationVaultData.id
-  //   );
-  //   await expect(
-  //     vaultPage.getManageVaultButtonRowDetailsLocatorById(
-  //       lendingLiquidationVaultData.id
-  //     )
-  //   ).toBeVisible();
-  //   await expect
-  //     .soft(
-  //       vaultPage.getConnectWalletButtonRowLocatorById(
-  //         lendingLiquidationVaultData.id
-  //       )
-  //     )
-  //     .not.toBeVisible();
-  // });
+  test("FXD Vault: Wallet not connected state layout is correct, vault connect wallet functionality is successful", async ({
+    vaultPage,
+  }) => {
+    await vaultPage.navigate();
+    await vaultPage.page.waitForTimeout(2000);
+    expect
+      .soft(
+        await vaultPage.getStakedVaultRowValue(lendingLiquidationVaultData.id)
+      )
+      .toEqual(0);
+    expect
+      .soft(
+        await vaultPage.getEarnedVaultRowValue(lendingLiquidationVaultData.id)
+      )
+      .toEqual(0);
+    await expect
+      .soft(
+        vaultPage.getDepositButtonRowLocatorById(lendingLiquidationVaultData.id)
+      )
+      .toBeVisible();
+    await vaultPage
+      .getDepositButtonRowLocatorById(lendingLiquidationVaultData.id)
+      .click();
+    await expect(vaultPage.dialogListItemDepositModal).toBeVisible();
+    await expect(vaultPage.btnConnectWallet).toBeVisible();
+    await vaultPage.connectWalletVault(WalletConnectOptions.Metamask);
+    await vaultPage.page.waitForTimeout(2000);
+    expect
+      .soft(
+        await vaultPage.getStakedVaultRowValue(lendingLiquidationVaultData.id)
+      )
+      .toBeGreaterThan(0);
+    expect
+      .soft(
+        await vaultPage.getEarnedVaultRowValue(lendingLiquidationVaultData.id)
+      )
+      .toBeGreaterThan(0);
+    await expect
+      .soft(
+        vaultPage.getManageVaultButtonRowLocatorById(
+          lendingLiquidationVaultData.id
+        )
+      )
+      .toBeVisible();
+  });
 });
