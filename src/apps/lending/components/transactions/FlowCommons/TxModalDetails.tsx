@@ -245,6 +245,7 @@ export const DetailsNumberLineWithSub: FC<DetailsNumberLineWithSubProps> = memo(
                   </>
                 )}
                 <FormattedNumber
+                  sx={{ pt: 0.5 }}
                   value={futureValueUSD}
                   variant="helperText"
                   compact
