@@ -45,7 +45,8 @@ const VaultListView = () => {
         handleIsShutdown={handleIsShutdown}
         isShutdown={isShutdown}
       />
-      {vaultSortedList.length === 0 ? (
+      {vaultSortedList.length === 0 &&
+      !(vaultsLoading || vaultPositionsLoading) ? (
         <EmptyVaultsWrapper>
           <Typography>
             No vaults found.{" "}
