@@ -261,7 +261,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     return () => {
       timeout && clearTimeout(timeout);
     };
-  }, [vault?.strategies, chainId, isTfVaultType]);
+  }, [vault?.strategies, chainId, isTfVaultType, activeTfPeriod]);
 
   useEffect(() => {
     if (!tfVaultLockEndDate || !tfVaultDepositEndDate) return;
