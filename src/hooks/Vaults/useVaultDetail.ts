@@ -233,7 +233,13 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     /**
      * Fetch reports only for non-TradeFi vaults
      */
-    if (vault?.strategies && vault?.strategies?.length && !isTfVaultType) {
+    if (vault?.strategies && vault?.strategies?.length) {
+      /**
+       * Fetch reports for TradeFi vault only after the lock period is end.
+       */
+      if (isTfVaultType && activeTfPeriod < 2) {
+        return;
+      }
       timeout = setTimeout(() => {
         vault?.strategies.forEach((strategy: IVaultStrategy) => {
           /**
@@ -256,14 +262,6 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
       timeout && clearTimeout(timeout);
     };
   }, [vault?.strategies, chainId, isTfVaultType]);
-
-  /**
-   * currentDebt
-   * gain
-   * id
-   * loss
-   * timestamp
-   */
 
   useEffect(() => {
     if (!tfVaultLockEndDate || !tfVaultDepositEndDate) return;
