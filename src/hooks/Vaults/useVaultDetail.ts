@@ -605,7 +605,6 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
             })
             .finally(() => {
               setVaultPosition(vaultPosition);
-              updateVaultDepositLimit(vault, account);
             });
         }
       );
