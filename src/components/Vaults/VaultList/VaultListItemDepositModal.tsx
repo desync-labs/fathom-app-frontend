@@ -189,7 +189,12 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
             </InfoBoxV2>
           )}
           <ModalButtonWrapper>
-            <ButtonSecondary onClick={onClose}>Close</ButtonSecondary>
+            <ButtonSecondary
+              onClick={onClose}
+              disabled={approvalPending || openDepositLoading}
+            >
+              Close
+            </ButtonSecondary>
             {!account ? (
               <WalletConnectBtn />
             ) : approveBtn && walletBalance !== "0" ? (
@@ -198,7 +203,8 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
                 disabled={
                   !!Object.keys(errors).length ||
                   (isTfVaultType && !isUserKycPassed) ||
-                  (isTfVaultType && activeTfPeriod > 0)
+                  (isTfVaultType && activeTfPeriod > 0) ||
+                  approvalPending
                 }
               >
                 {" "}

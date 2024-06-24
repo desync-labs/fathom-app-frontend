@@ -106,6 +106,7 @@ const VaultListItemMobile: FC<VaultListItemMobileProps> = ({
     tfVaultDepositLimit,
     handleWithdrawAll,
     minimumDeposit,
+    isWithdrawLoading,
   } = useVaultListItem({ vaultPosition, vault: vaultItemData });
 
   const handleOpenPreviewModal = () => {
@@ -180,6 +181,7 @@ const VaultListItemMobile: FC<VaultListItemMobileProps> = ({
             handleWithdrawAll={handleWithdrawAll}
             isTfVaultType={isTfVaultType}
             activeTfPeriod={activeTfPeriod}
+            isWithdrawLoading={isWithdrawLoading}
           />
         );
       }, [

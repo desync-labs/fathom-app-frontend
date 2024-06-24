@@ -161,6 +161,7 @@ interface VaultListItemPreviewModalProps {
   handleWithdrawAll: () => void;
   isTfVaultType: boolean;
   activeTfPeriod: number;
+  isWithdrawLoading: boolean;
 }
 
 const BreadcrumbsWrapperContainer = styled(Box)`
@@ -181,6 +182,7 @@ const VaultListItemPreviewModal: FC<VaultListItemPreviewModalProps> = ({
   handleWithdrawAll,
   isTfVaultType,
   activeTfPeriod,
+  isWithdrawLoading,
 }) => {
   const [modalOffset, setModalOffset] = useState<number>(0);
   const navigate = useNavigate();
@@ -384,6 +386,7 @@ const VaultListItemPreviewModal: FC<VaultListItemPreviewModalProps> = ({
             activeTfPeriod === 2 && (
               <ButtonPrimary
                 onClick={handleWithdrawAll}
+                disabled={isWithdrawLoading}
                 sx={{ height: "36px", minWidth: "100px" }}
               >
                 Withdraw all
