@@ -61,6 +61,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
   const [activeTfPeriod, setActiveTfPeriod] = useState(0);
 
   const [minimumDeposit, setMinimumDeposit] = useState<number>(0.0000000001);
+  const [isWithdrawLoading, setIsWithdrawLoading] = useState<boolean>(false);
 
   const { account } = useConnector();
   const { vaultService } = useServices();
@@ -309,6 +310,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
 
   const handleWithdrawAll = useCallback(async () => {
     if (vaultPosition) {
+      setIsWithdrawLoading(true);
       try {
         const blockNumber = await vaultService.redeem(
           BigNumber(vaultPosition.balanceShares)
@@ -322,6 +324,8 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
         setLastTransactionBlock(blockNumber as number);
       } catch (e) {
         console.log(e);
+      } finally {
+        setIsWithdrawLoading(false);
       }
     }
   }, [vaultPosition, account, vaultService, setLastTransactionBlock]);
@@ -341,6 +345,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     activeTfPeriod,
     tfVaultDepositLimit,
     handleWithdrawAll,
+    isWithdrawLoading,
   };
 };
 

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import {
   Box,
+  CircularProgress,
   Step,
   StepContent,
   StepIconProps,
@@ -202,6 +203,7 @@ const VaultLockingBar = () => {
     tfVaultLockEndDate,
     activeTfPeriod,
     handleWithdrawAll,
+    isWithdrawAllLoading,
   } = useVaultContext();
 
   const steps = [
@@ -304,11 +306,17 @@ const VaultLockingBar = () => {
                 !vaultPosition ||
                 vaultPosition.balanceShares === "0" ||
                 vaultPosition.balanceShares === undefined ||
-                activeTfPeriod !== 2
+                activeTfPeriod !== 2 ||
+                isWithdrawAllLoading
               }
               onClick={handleWithdrawAll}
+              isLoading={isWithdrawAllLoading}
             >
-              Withdraw all
+              {isWithdrawAllLoading ? (
+                <CircularProgress sx={{ color: "#0D1526" }} size={20} />
+              ) : (
+                "Withdraw all"
+              )}
             </ButtonPrimary>
           </CustomPaper>
         )}

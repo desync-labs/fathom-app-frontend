@@ -130,6 +130,8 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
   const [strategyMethods, setStrategyMethods] = useState<FunctionFragment[]>(
     []
   );
+  const [isWithdrawAllLoading, setIsWithdrawAllLoading] =
+    useState<boolean>(false);
 
   const { chainId, account, library } = useConnector();
   const { vaultService, poolService } = useServices();
@@ -744,6 +746,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
 
   const handleWithdrawAll = useCallback(async () => {
     if (vaultPosition) {
+      setIsWithdrawAllLoading(true);
       try {
         const blockNumber = await vaultService.redeem(
           BigNumber(vaultPosition.balanceShares)
@@ -757,6 +760,8 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
         setLastTransactionBlock(blockNumber as number);
       } catch (e) {
         console.log(e);
+      } finally {
+        setIsWithdrawAllLoading(false);
       }
     }
   }, [vaultPosition, account, vaultService, setLastTransactionBlock]);
@@ -789,6 +794,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     minimumDeposit,
     setMinimumDeposit,
     handleWithdrawAll,
+    isWithdrawAllLoading,
   };
 };
 
