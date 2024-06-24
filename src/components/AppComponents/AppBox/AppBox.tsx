@@ -378,3 +378,10 @@ export const AppFlexBox = styled(Box)`
   justify-content: space-between;
   gap: 8px;
 `;
+
+export const EmptyVaultsWrapper = styled(Box)`
+  width: 100%;
+  background: rgb(19, 35, 64);
+  border-radius: 12px;
+  padding: 16px;
+`;

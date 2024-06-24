@@ -1,3 +1,4 @@
+import { Typography } from "@mui/material";
 import useVaultList from "hooks/Vaults/useVaultList";
 import useSharedContext from "context/shared";
 import VaultsTotalStats from "components/Vaults/VaultList/VaultsTotalStats";
@@ -5,6 +6,7 @@ import VaultsList from "components/Vaults/VaultList/VaultsList";
 import VaultsListMobile from "components/Vaults/VaultList/VaultsListMobile";
 import VaultFilters from "components/Vaults/VaultList/VaultFilters";
 import VaultPageHeader from "components/Vaults/VaultList/VaultPageHeader";
+import { EmptyVaultsWrapper } from "components/AppComponents/AppBox/AppBox";
 
 const VaultListView = () => {
   const {
@@ -43,7 +45,14 @@ const VaultListView = () => {
         handleIsShutdown={handleIsShutdown}
         isShutdown={isShutdown}
       />
-      {isMobile ? (
+      {vaultSortedList.length === 0 ? (
+        <EmptyVaultsWrapper>
+          <Typography>
+            No vaults found.{" "}
+            {search && <>Please try a different search criteria.</>}
+          </Typography>
+        </EmptyVaultsWrapper>
+      ) : isMobile ? (
         <VaultsListMobile
           vaults={vaultSortedList}
           vaultsLoading={vaultsLoading}
