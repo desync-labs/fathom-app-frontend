@@ -29,6 +29,8 @@ import { vaultType } from "utils/Vaults/getVaultType";
 import dayjs from "dayjs";
 import { getVaultLockEndDate } from "utils/Vaults/getVaultLockEndDate";
 import { ChainId } from "connectors/networks";
+import { TRADE_FI_VAULT_REPORT_STEP } from "utils/Constants";
+import { useAprNumber } from "hooks/Vaults/useApr";
 
 declare module "fathom-sdk" {
   interface IVault {
@@ -121,6 +123,8 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
   const [activeVaultInfoTab, setActiveVaultInfoTab] = useState<VaultInfoTabs>(
     VaultInfoTabs.ABOUT
   );
+
+  const apr = useAprNumber(vault);
 
   const [vaultMethods, setVaultMethods] = useState<FunctionFragment[]>([]);
   const [strategyMethods, setStrategyMethods] = useState<FunctionFragment[]>(
@@ -226,7 +230,10 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
 
   useEffect(() => {
     let timeout: ReturnType<typeof setTimeout>;
-    if (vault?.strategies && vault?.strategies?.length) {
+    /**
+     * Fetch reports only for non-TradeFi vaults
+     */
+    if (vault?.strategies && vault?.strategies?.length && !isTfVaultType) {
       timeout = setTimeout(() => {
         vault?.strategies.forEach((strategy: IVaultStrategy) => {
           /**
@@ -248,7 +255,75 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     return () => {
       timeout && clearTimeout(timeout);
     };
-  }, [vault?.strategies, chainId]);
+  }, [vault?.strategies, chainId, isTfVaultType]);
+
+  /**
+   * currentDebt
+   * gain
+   * id
+   * loss
+   * timestamp
+   */
+
+  useEffect(() => {
+    if (!tfVaultLockEndDate || !tfVaultDepositEndDate) return;
+
+    const now = dayjs();
+    const lockEndDate = dayjs.unix(Number(tfVaultLockEndDate));
+    const depositEndDate = dayjs.unix(Number(tfVaultDepositEndDate));
+
+    if (
+      isTfVaultType &&
+      now.isAfter(depositEndDate) &&
+      apr &&
+      BigNumber(vault?.balanceTokens).isGreaterThan(0)
+    ) {
+      const countOfHours = now.isBefore(lockEndDate)
+        ? now.diff(depositEndDate, "hour")
+        : lockEndDate.diff(depositEndDate, "hour");
+
+      if (BigNumber(countOfHours).isGreaterThan(0)) {
+        const reports: { gain: string; timestamp: string; loss: string }[] = [];
+
+        for (let i = 0; i <= countOfHours; i++) {
+          if (i % TRADE_FI_VAULT_REPORT_STEP === 0) {
+            const timestamp = (
+              Number(depositEndDate.add(i, "hour").unix()) * 1000
+            ).toString();
+            const gain = BigNumber(apr)
+              .dividedBy(100)
+              .multipliedBy(vault.balanceTokens)
+              .dividedBy(365 * 24)
+              .multipliedBy(TRADE_FI_VAULT_REPORT_STEP)
+              .dividedBy(10 ** 18)
+              .toString();
+
+            reports.push({
+              timestamp,
+              gain: BigNumber(gain)
+                .multipliedBy(10 ** 18)
+                .toString(),
+              loss: "0",
+            });
+          }
+        }
+
+        setReports((prev) => ({
+          ...prev,
+          [vault.strategies[0].id]: reports as IVaultStrategyReport[],
+        }));
+        setIsReportsLoaded(true);
+      }
+    }
+  }, [
+    isTfVaultType,
+    tfVaultLockEndDate,
+    tfVaultDepositEndDate,
+    apr,
+    vault?.balanceTokens,
+    setReports,
+    setIsReportsLoaded,
+  ]);
 
   useEffect(() => {
     if (!vaultsFactoriesLoading && vaultsFactories) {

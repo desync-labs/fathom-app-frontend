@@ -106,7 +106,7 @@ const VaultDetailInfoTabAbout = () => {
   >([]);
 
   useEffect(() => {
-    if (!Object.keys(reports).length || !Object.keys(historicalApr).length) {
+    if (!Object.keys(reports).length) {
       return;
     }
 
@@ -118,7 +118,7 @@ const VaultDetailInfoTabAbout = () => {
       allReports = [...allReports, ...reportsCollection];
     }
 
-    allReports.sort((a, b) => parseInt(a.timestamp) - parseInt(b.timestamp));
+    allReports.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
 
     for (let i = 0; i <= allReports.length - 1; i++) {
       const report = allReports[i];
