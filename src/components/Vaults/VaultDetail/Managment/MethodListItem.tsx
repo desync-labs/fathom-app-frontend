@@ -234,7 +234,7 @@ const MethodListItem: FC<{
     method.inputs.forEach((input, index) => {
       if (input.type === "uint256") {
         // @ts-ignore
-        args[index] = utils.parseUnits(values[input.name], 18);
+        args[index] = values[input.name];
       } else if (input.type === "address") {
         // @ts-ignore
         args[index] = values[input.name].toLowerCase();
@@ -366,7 +366,9 @@ const MethodListItem: FC<{
               control={control}
               render={({ field, fieldState: { error } }) => (
                 <MethodInputFormGroup>
-                  <AppFormLabel>{`${input.name} (${input.type})`}</AppFormLabel>
+                  <AppFormLabel>{`${input.name} (${input.type}${
+                    input.type === "uint256" ? " in wei" : ""
+                  })`}</AppFormLabel>
                   <AppTextField error={!!error} multiline rows={1} {...field} />
                 </MethodInputFormGroup>
               )}
