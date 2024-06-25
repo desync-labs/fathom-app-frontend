@@ -17,6 +17,7 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import useConnector from "context/connector";
+import useRpcError from "hooks/General/useRpcError";
 import {
   AppFormLabel,
   AppTextField,
@@ -187,6 +188,7 @@ const MethodListItem: FC<{
   });
 
   const { account, library } = useConnector();
+  const { showErrorNotification } = useRpcError();
 
   const [methodType, setMethodType] = useState<MethodType>(MethodType.View);
   const [contract, setContract] = useState<Contract>();
@@ -236,6 +238,17 @@ const MethodListItem: FC<{
       } else if (input.type === "address") {
         // @ts-ignore
         args[index] = values[input.name].toLowerCase();
+      } else if (input.type === "address[]") {
+        // @ts-ignore
+        if (values[input.name] === "" || values[input.name] === undefined) {
+          // @ts-ignore
+          args[index] = [];
+        } else {
+          // @ts-ignore
+          args[index] = values[input.name]
+            .split(",")
+            .map((addr: string) => addr.trim().toLowerCase());
+        }
       } else {
         // @ts-ignore
         args[index] = values[input.name];
@@ -265,6 +278,8 @@ const MethodListItem: FC<{
       setResponse(response);
     } catch (e: any) {
       console.error(e);
+      showErrorNotification(e);
+      setIsLoading(false);
     } finally {
       setIsLoading(false);
     }
@@ -347,7 +362,7 @@ const MethodListItem: FC<{
             <Controller
               key={input.name}
               name={input.name as never}
-              rules={{ required: true }}
+              rules={{ required: input.type !== "address[]" }}
               control={control}
               render={({ field, fieldState: { error } }) => (
                 <MethodInputFormGroup>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import {
   Box,
+  CircularProgress,
   Step,
   StepContent,
   StepIconProps,
@@ -13,10 +14,11 @@ import useSharedContext from "context/shared";
 import useVaultContext from "context/vault";
 import { getPeriodInDays } from "utils/getPeriodInDays";
 import { VaultPaper } from "components/AppComponents/AppPaper/AppPaper";
-import { AppFlexBox } from "components/AppComponents/AppBox/AppBox";
+import { AppFlexBox, WarningBox } from "components/AppComponents/AppBox/AppBox";
 import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
 import { CustomSkeleton } from "components/AppComponents/AppSkeleton/AppSkeleton";
 import AppPopover from "components/AppComponents/AppPopover/AppPopover";
+import { InfoIcon } from "components/Governance/Propose";
 
 import LockAquaSrc from "assets/svg/lock-aqua.svg";
 import StepperItemIcon from "assets/svg/icons/stepper-item-icon.svg";
@@ -35,7 +37,10 @@ const CustomPaper = styled(Box)`
   padding: 16px;
 
   &.withdraw-btn {
+    display: flex;
+    align-items: center;
     width: fit-content;
+    height: inherit;
     padding: 24px;
 
     button {
@@ -202,6 +207,8 @@ const VaultLockingBar = () => {
     tfVaultLockEndDate,
     activeTfPeriod,
     handleWithdrawAll,
+    isWithdrawAllLoading,
+    showWithdrawAllButton,
   } = useVaultContext();
 
   const steps = [
@@ -261,7 +268,13 @@ const VaultLockingBar = () => {
           Locking Period
         </Typography>
       </SummaryWrapper>
-      <AppFlexBox mt="12px" sx={{ flexDirection: isMobile ? "column" : "row" }}>
+      <AppFlexBox
+        mt="12px"
+        sx={{
+          flexDirection: isMobile ? "column" : "row",
+          alignItems: "stretch",
+        }}
+      >
         <CustomPaper>
           <AppStepper activeStep={activeTfPeriod} orientation="vertical">
             {steps.map((step, index) => (
@@ -295,6 +308,18 @@ const VaultLockingBar = () => {
               </AppStep>
             ))}
           </AppStepper>
+          {activeTfPeriod === 2 && !showWithdrawAllButton && (
+            <WarningBox sx={{ margin: "10px 0 0" }}>
+              <InfoIcon
+                sx={{ width: "20px", color: "#F5953D", height: "20px" }}
+              />
+              <Box flexDirection="column">
+                <Typography width="100%">
+                  Please wait for funds to be processed by counterparty.
+                </Typography>
+              </Box>
+            </WarningBox>
+          )}
         </CustomPaper>
         {activeTfPeriod > 0 && (
           <CustomPaper className="withdraw-btn">
@@ -304,11 +329,18 @@ const VaultLockingBar = () => {
                 !vaultPosition ||
                 vaultPosition.balanceShares === "0" ||
                 vaultPosition.balanceShares === undefined ||
-                activeTfPeriod !== 2
+                activeTfPeriod !== 2 ||
+                isWithdrawAllLoading ||
+                !showWithdrawAllButton
               }
               onClick={handleWithdrawAll}
+              isLoading={isWithdrawAllLoading}
             >
-              Withdraw all
+              {isWithdrawAllLoading ? (
+                <CircularProgress sx={{ color: "#0D1526" }} size={20} />
+              ) : (
+                "Withdraw all"
+              )}
             </ButtonPrimary>
           </CustomPaper>
         )}

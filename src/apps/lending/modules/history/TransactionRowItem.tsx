@@ -24,10 +24,10 @@ import { ExtLinkIcon } from "components/AppComponents/AppButton/AppButton";
 import useSharedContext from "context/shared";
 
 const ActionTitle: FC<{ action: string }> = ({ action }) => {
-  const { isMobile } = useSharedContext();
+  const { isMobile, isSmallDesktop } = useSharedContext();
   return (
     <Typography
-      sx={{ width: isMobile ? "180px" : "500px" }}
+      sx={{ width: isMobile ? "180px" : isSmallDesktop ? "260px" : "500px" }}
       color={"text.light"}
     >
       <ActionTextMap action={action} />

@@ -46,6 +46,8 @@ export type UseVaultContextReturnType = {
   minimumDeposit: number;
   setMinimumDeposit: Dispatch<SetStateAction<number>>;
   handleWithdrawAll: () => void;
+  isWithdrawAllLoading: boolean;
+  showWithdrawAllButton: boolean;
 };
 
 export const VaultContext = createContext<UseVaultContextReturnType>(

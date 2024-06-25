@@ -203,7 +203,11 @@ const DepositVaultInfo: FC<DepositVaultInfoProps> = ({
         </WarningBox>
       )}
       <VaultDetailFormButtonWrapper>
-        <ButtonSecondary className={"reset"} onClick={onClose}>
+        <ButtonSecondary
+          className={"reset"}
+          onClick={onClose}
+          disabled={approvalPending || openDepositLoading}
+        >
           Reset
         </ButtonSecondary>
         {!account ? (
@@ -213,7 +217,8 @@ const DepositVaultInfo: FC<DepositVaultInfoProps> = ({
             onClick={approve}
             disabled={
               !!Object.keys(errors).length ||
-              (isTfVaultType && !isUserKycPassed)
+              (isTfVaultType && !isUserKycPassed) ||
+              approvalPending
             }
           >
             {" "}

@@ -296,7 +296,11 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
         </InfoBoxV2>
       )}
       <VaultDetailFormButtonWrapper>
-        <ButtonSecondary className={"reset"} onClick={onClose}>
+        <ButtonSecondary
+          className={"reset"}
+          onClick={onClose}
+          disabled={approvalPending || openDepositLoading}
+        >
           Reset
         </ButtonSecondary>
         {!account ? (
@@ -306,7 +310,7 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
           walletBalance !== "0" ? (
           <ButtonPrimary
             onClick={approve}
-            disabled={!!Object.keys(errors).length}
+            disabled={!!Object.keys(errors).length || approvalPending}
           >
             {" "}
             {approvalPending ? (
