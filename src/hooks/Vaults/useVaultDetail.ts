@@ -98,9 +98,6 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
   const [reports, setReports] = useState<
     Record<string, IVaultStrategyReport[]>
   >({});
-  const [tfReport, setTfReport] = useState<IVaultStrategyReport>(
-    {} as IVaultStrategyReport
-  );
   const [isReportsLoaded, setIsReportsLoaded] = useState<boolean>(false);
 
   const [historicalApr, setHistoricalApr] = useState<
@@ -144,6 +141,8 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
   );
   const [isWithdrawAllLoading, setIsWithdrawAllLoading] =
     useState<boolean>(false);
+  const [isShowWithdrawAllButtonLoading, setIsShowWithdrawAllButtonLoading] =
+    useState<boolean>(true);
 
   const { chainId, account, library } = useConnector();
   const { vaultService, poolService } = useServices();
@@ -162,11 +161,14 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     }
   );
 
-  const [loadReports] = useLazyQuery(VAULT_STRATEGY_REPORTS, {
-    context: { clientName: "vaults", chainId },
-    variables: { chainId },
-    fetchPolicy: "no-cache",
-  });
+  const [loadReports, { loading: reportsLoading }] = useLazyQuery(
+    VAULT_STRATEGY_REPORTS,
+    {
+      context: { clientName: "vaults", chainId },
+      variables: { chainId },
+      fetchPolicy: "no-cache",
+    }
+  );
 
   const [loadPositionTransactions, { loading: transactionsLoading }] =
     useLazyQuery(VAULT_POSITION_TRANSACTIONS, {
@@ -226,16 +228,11 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
           isTfVault
         );
       } else {
-        if (isTfVault) {
-          setTfReport(data?.strategyReports[0] as IVaultStrategyReport);
-        } else {
-          setReports((prev) => ({
-            ...prev,
-            [strategyId]: [
-              ...prevStateReports,
-              ...(data?.strategyReports || []),
-            ],
-          }));
+        setReports((prev) => ({
+          ...prev,
+          [strategyId]: [...prevStateReports, ...(data?.strategyReports || [])],
+        }));
+        if (!isTfVault) {
           setHistoricalApr((prev) => ({
             ...prev,
             [strategyId]: [
@@ -264,16 +261,14 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
           /**
            * Clear reports and historical APRs necessary for chain switch only for non-TradeFi vaults
            */
-          if (!isTfVaultType) {
-            setReports((prev) => ({
-              ...prev,
-              [strategy.id]: [],
-            }));
-            setHistoricalApr((prev) => ({
-              ...prev,
-              [strategy.id]: [],
-            }));
-          }
+          setReports((prev) => ({
+            ...prev,
+            [strategy.id]: [],
+          }));
+          setHistoricalApr((prev) => ({
+            ...prev,
+            [strategy.id]: [],
+          }));
           fetchReports(strategy.id, [], [], isTfVaultType);
         });
       }, 300);
@@ -294,6 +289,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     if (
       isTfVaultType &&
       now.isAfter(depositEndDate) &&
+      now.isBefore(lockEndDate) &&
       apr &&
       BigNumber(vault?.balanceTokens).isGreaterThan(0)
     ) {
@@ -332,8 +328,8 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
           ...prev,
           [vault.strategies[0].id]: reports as IVaultStrategyReport[],
         }));
-        setIsReportsLoaded(true);
       }
+      setIsReportsLoaded(true);
     }
   }, [
     isTfVaultType,
@@ -479,7 +475,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
         }
       });
     },
-    [loadVault, setVault, navigate, vaultService]
+    [loadVault, setVault, navigate, vaultService, account]
   );
 
   useEffect(() => {
@@ -765,29 +761,43 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     fetchBalanceLoading,
   ]);
 
-  const showWithdrawAllButton = useMemo(() => {
-    if (
-      !isTfVaultType ||
-      !isReportsLoaded ||
-      tfVaultDepositEndTimeLoading ||
-      tfVaultLockEndTimeLoading
-    ) {
-      return false;
-    }
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setIsShowWithdrawAllButtonLoading(
+        !isTfVaultType ||
+          !isReportsLoaded ||
+          tfVaultDepositEndTimeLoading ||
+          tfVaultLockEndTimeLoading ||
+          reportsLoading ||
+          !Object.values(reports).length
+      );
+    }, 300);
 
-    return (
-      isTfVaultType &&
-      activeTfPeriod === 2 &&
-      BigNumber(tfReport?.gain || "0").isGreaterThan(0)
-    );
+    return () => {
+      timeout && clearTimeout(timeout);
+    };
   }, [
-    tfReport,
     isTfVaultType,
-    activeTfPeriod,
     isReportsLoaded,
     tfVaultDepositEndTimeLoading,
     tfVaultLockEndTimeLoading,
+    reportsLoading,
+    reports,
+    setIsShowWithdrawAllButtonLoading,
   ]);
+
+  const showWithdrawAllButton = useMemo(() => {
+    if (isShowWithdrawAllButtonLoading) {
+      return false;
+    }
+
+    const firstReport = Object.values(reports)[0][0];
+
+    return (
+      activeTfPeriod === 2 &&
+      BigNumber(firstReport?.gain || "0").isGreaterThan(0)
+    );
+  }, [isShowWithdrawAllButtonLoading, reports, activeTfPeriod]);
 
   const executeHasRoleMethod = async (): Promise<boolean> => {
     if (vault === null) {
@@ -884,7 +894,6 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     vaultPosition,
     vaultPositionLoading,
     reports,
-    tfReport,
     historicalApr,
     balanceEarned,
     balanceToken,
@@ -908,7 +917,10 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     setMinimumDeposit,
     isWithdrawAllLoading,
     handleWithdrawAll,
+    tfVaultDepositEndTimeLoading,
+    tfVaultLockEndTimeLoading,
     showWithdrawAllButton,
+    isShowWithdrawAllButtonLoading,
   };
 };
 
