@@ -209,6 +209,7 @@ const VaultLockingBar = () => {
     handleWithdrawAll,
     isWithdrawAllLoading,
     showWithdrawAllButton,
+    isShowWithdrawAllButtonLoading,
   } = useVaultContext();
 
   const steps = [
@@ -308,18 +309,20 @@ const VaultLockingBar = () => {
               </AppStep>
             ))}
           </AppStepper>
-          {activeTfPeriod === 2 && !showWithdrawAllButton && (
-            <WarningBox sx={{ margin: "10px 0 0" }}>
-              <InfoIcon
-                sx={{ width: "20px", color: "#F5953D", height: "20px" }}
-              />
-              <Box flexDirection="column">
-                <Typography width="100%">
-                  Please wait for funds to be processed by counterparty.
-                </Typography>
-              </Box>
-            </WarningBox>
-          )}
+          {activeTfPeriod === 2 &&
+            !showWithdrawAllButton &&
+            !isShowWithdrawAllButtonLoading && (
+              <WarningBox sx={{ margin: "10px 0 0" }}>
+                <InfoIcon
+                  sx={{ width: "20px", color: "#F5953D", height: "20px" }}
+                />
+                <Box flexDirection="column">
+                  <Typography width="100%">
+                    Please wait for funds to be processed by counterparty.
+                  </Typography>
+                </Box>
+              </WarningBox>
+            )}
         </CustomPaper>
         {activeTfPeriod > 0 && (
           <CustomPaper className="withdraw-btn">
@@ -328,8 +331,8 @@ const VaultLockingBar = () => {
               disabled={
                 !vaultPosition ||
                 vaultPosition.balanceShares === "0" ||
-                vaultPosition.balanceShares === undefined ||
-                activeTfPeriod !== 2 ||
+                !vaultPosition.balanceShares ||
+                activeTfPeriod < 2 ||
                 isWithdrawAllLoading ||
                 !showWithdrawAllButton
               }

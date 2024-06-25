@@ -156,7 +156,11 @@ const VaultDetailInfoTabAbout = () => {
       )}
       {type === VaultType.TRADEFI && activeTfPeriod === 0 ? null : (
         <VaultHistoryChart
-          title={"Cumulative Earnings"}
+          title={
+            type === VaultType.TRADEFI && activeTfPeriod < 2
+              ? "Expected Cumulative Earnings"
+              : "Cumulative Earnings"
+          }
           chartDataArray={earnedHistoryArr}
           valueLabel="Earnings"
           valueUnits={` ${vault?.token?.name}`}

@@ -48,6 +48,7 @@ export type UseVaultContextReturnType = {
   handleWithdrawAll: () => void;
   isWithdrawAllLoading: boolean;
   showWithdrawAllButton: boolean;
+  isShowWithdrawAllButtonLoading: boolean;
 };
 
 export const VaultContext = createContext<UseVaultContextReturnType>(
