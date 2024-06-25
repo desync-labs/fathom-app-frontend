@@ -35,7 +35,7 @@ const VaultDetailContent = () => {
     <>
       <VaultBreadcrumbs />
       <VaultPositionStats />
-      {!vaultLoading && isTfVaultType && <VaultLockingBar />}
+      {isTfVaultType && <VaultLockingBar />}
       {!isMobile && <VaultProfitCalculator />}
       {isTfVaultType && activeTfPeriod > 0 ? null : notLoading &&
         BigNumber(vaultPosition.balanceShares).isGreaterThan(0) ? (
