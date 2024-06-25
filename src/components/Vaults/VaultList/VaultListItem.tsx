@@ -158,6 +158,7 @@ const VaultListItem: FC<VaultListItemProps> = ({
     handleWithdrawAll,
     minimumDeposit,
     isWithdrawLoading,
+    showWithdrawAllButton,
   } = useVaultListItem({ vaultPosition, vault: vaultItemData });
 
   const redirectToVaultDetail = useCallback(() => {
@@ -338,7 +339,7 @@ const VaultListItem: FC<VaultListItemProps> = ({
               activeTfPeriod === 2 && (
                 <ButtonPrimary
                   onClick={handleWithdrawAll}
-                  disabled={isWithdrawLoading}
+                  disabled={isWithdrawLoading || !showWithdrawAllButton}
                   sx={{ height: "36px", minWidth: "100px" }}
                 >
                   Withdraw all
