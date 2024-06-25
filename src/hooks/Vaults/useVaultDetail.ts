@@ -24,7 +24,10 @@ import {
   VAULT_POSITION_TRANSACTIONS,
   VAULT_STRATEGY_REPORTS,
 } from "apollo/queries";
-import { vaultTitle } from "utils/Vaults/getVaultTitleAndDescription";
+import {
+  getDefaultVaultTitle,
+  vaultTitle,
+} from "utils/Vaults/getVaultTitleAndDescription";
 import { vaultType } from "utils/Vaults/getVaultType";
 import dayjs from "dayjs";
 import { getVaultLockEndDate } from "utils/Vaults/getVaultLockEndDate";
@@ -382,7 +385,10 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
         depositLimit: BigNumber(depositLimitValue).toString(),
         name: vaultTitle[vaultData.id.toLowerCase()]
           ? vaultTitle[vaultData.id.toLowerCase()]
-          : vaultData.token.name,
+          : getDefaultVaultTitle(
+              vaultType[vaultData.id.toLowerCase()] || VaultType.DEFAULT,
+              vaultData.token.name
+            ),
         type,
       };
 
