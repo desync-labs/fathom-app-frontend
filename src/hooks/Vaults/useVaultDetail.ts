@@ -473,7 +473,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
         }
       });
     },
-    [loadVault, setVault, navigate, vaultService]
+    [loadVault, setVault, navigate, vaultService, account]
   );
 
   useEffect(() => {

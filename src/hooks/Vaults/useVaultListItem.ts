@@ -245,7 +245,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
      * Min Deposit for TradeFlow vaults is 10,000
      * Min Deposit for other vaults is 0.0000000001
      */
-    isTfVaultType
+    vaultType[vault.id.toLowerCase()] === VaultType.TRADEFI
       ? vaultService.getMinUserDeposit(vault.id).then((res) => {
           setMinimumDeposit(
             BigNumber(res)
