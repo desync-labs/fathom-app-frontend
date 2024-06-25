@@ -21,34 +21,68 @@ export const VaultAboutTitle = styled(Typography)`
   }
 `;
 
-let defiCounter = 0;
-let tradefiCounter = 0;
-let incentiveCounter = 0;
+type ITitleItem = { title: string; index: number; type: VaultType };
 
 export const getDefaultVaultTitle = (
   vaultType: VaultType = VaultType.INCENTIVE,
-  asset = "FXD"
+  asset = "FXD",
+  vaultId: string
 ) => {
+  const vaultTitles: { [key: string]: ITitleItem } = sessionStorage.getItem(
+    "vaultTitles"
+  )
+    ? JSON.parse(sessionStorage.getItem("vaultTitles") as string)
+    : {};
+
+  if (vaultTitles && vaultTitles[vaultId]) {
+    return vaultTitles[vaultId]?.title;
+  }
+
+  let title = "";
+  let index = 0;
+  let type = vaultType;
+  let indexes: number[] = [];
   switch (vaultType) {
     case VaultType.DEFI:
-      defiCounter++;
-      return `DeFi vault (${asset}) #${defiCounter}`;
+      indexes = Object.values(vaultTitles)
+        .filter((item) => item.type === VaultType.DEFI)
+        .map((item) => item.index as number);
+      index = indexes.length ? Math.max(...indexes) : 0;
+      index++;
+      title = `DeFi vault (${asset}) #${index}`;
+      break;
     case VaultType.TRADEFI:
-      tradefiCounter++;
-      return `TradeFi vault (${asset}) #${tradefiCounter}`;
+      indexes = Object.values(vaultTitles)
+        .filter((item) => item.type === VaultType.TRADEFI)
+        .map((item) => item.index as number);
+      index = indexes.length ? Math.max(...indexes) : 0;
+      index++;
+      title = `TradeFi vault (${asset}) #${index}`;
+      break;
     case VaultType.INCENTIVE:
-      incentiveCounter++;
-      return `Incentive vault (${asset}) #${incentiveCounter}`;
+      indexes = Object.values(vaultTitles)
+        .filter((item) => item.type === VaultType.INCENTIVE)
+        .map((item) => item.index as number);
+      index = indexes.length ? Math.max(...indexes) : 0;
+      index++;
+      title = `Incentive vault (${asset}) #${index}`;
+      break;
     default:
-      incentiveCounter++;
-      return `Incentive (${asset}) #${incentiveCounter}`;
+      indexes = Object.values(vaultTitles)
+        .filter((item) => item.type === VaultType.INCENTIVE)
+        .map((item) => item.index as number);
+      index = indexes.length ? Math.max(...indexes) : 0;
+      index++;
+      type = VaultType.INCENTIVE;
+      title = `Default vault (${asset}) #${index}`;
+      break;
   }
-};
 
-export const clearCounters = () => {
-  defiCounter = 0;
-  tradefiCounter = 0;
-  incentiveCounter = 0;
+  vaultTitles[vaultId] = { title, index, type };
+
+  sessionStorage.setItem("vaultTitles", JSON.stringify(vaultTitles));
+
+  return title;
 };
 
 export const getDefaultVaultDescription = (

@@ -383,7 +383,8 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
           ? vaultTitle[vaultData.id.toLowerCase()]
           : getDefaultVaultTitle(
               vaultType[vaultData.id.toLowerCase()] || VaultType.DEFAULT,
-              vaultData.token.name
+              vaultData.token.name,
+              vaultData.id
             ),
         type,
       };
