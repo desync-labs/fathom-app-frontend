@@ -12,7 +12,7 @@ import {
   filterTransaction,
 } from "utils/Fxd/fxdActivitiesFilters";
 import { useServices } from "context/services";
-import useSyncContext from "../../context/sync";
+import useSyncContext from "context/sync";
 
 export enum PositionActivityState {
   CREATED = "created",
@@ -57,24 +57,27 @@ const usePositionsTransactionList = () => {
    * Activities
    */
   const [fxdActivities, setFxdActivities] = useState<IFxdTransaction[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const { account, chainId } = useConnector();
   const { proxyWallet } = useDashboard();
   const { poolService } = useServices();
   const { syncFXD, prevSyncFxd } = useSyncContext();
 
-  const [fetchActivities, { refetch: refetchActivities, loading }] =
-    useLazyQuery(FXD_ACTIVITIES, {
-      context: { clientName: "stable", chainId },
-      variables: {
-        first: 1000,
-        chainId,
-        orderBy: "blockNumber",
-        orderDirection: "desc",
-      },
-    });
+  const [
+    fetchActivities,
+    { refetch: refetchActivities, loading: activitiesLoading },
+  ] = useLazyQuery(FXD_ACTIVITIES, {
+    context: { clientName: "stable", chainId },
+    variables: {
+      first: 1000,
+      chainId,
+      orderBy: "blockNumber",
+      orderDirection: "desc",
+    },
+  });
 
-  const { data: pools } = useQuery(FXD_POOLS, {
+  const { data: pools, loading: poolsLoading } = useQuery(FXD_POOLS, {
     context: { clientName: "stable", chainId },
     variables: { chainId },
   });
@@ -182,9 +185,19 @@ const usePositionsTransactionList = () => {
     return fxdActivities;
   }, [searchValue, fxdActivities, pools, collateralTokenAddresses]);
 
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setIsLoading(activitiesLoading || poolsLoading);
+    }, 300);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [poolsLoading, activitiesLoading]);
+
   return {
     fxdActivities: filteredActivities,
-    isLoading: loading,
+    isLoading,
     filterActive,
     filterByType,
     searchValue,
