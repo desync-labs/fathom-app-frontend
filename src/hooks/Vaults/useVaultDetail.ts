@@ -918,6 +918,8 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     setMinimumDeposit,
     isWithdrawAllLoading,
     handleWithdrawAll,
+    tfVaultDepositEndTimeLoading,
+    tfVaultLockEndTimeLoading,
     showWithdrawAllButton,
     isShowWithdrawAllButtonLoading,
   };

@@ -47,6 +47,8 @@ export type UseVaultContextReturnType = {
   setMinimumDeposit: Dispatch<SetStateAction<number>>;
   handleWithdrawAll: () => void;
   isWithdrawAllLoading: boolean;
+  tfVaultDepositEndTimeLoading: boolean;
+  tfVaultLockEndTimeLoading: boolean;
   showWithdrawAllButton: boolean;
   isShowWithdrawAllButtonLoading: boolean;
 };

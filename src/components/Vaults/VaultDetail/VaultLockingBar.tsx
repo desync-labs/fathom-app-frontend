@@ -210,6 +210,8 @@ const VaultLockingBar = () => {
     isWithdrawAllLoading,
     showWithdrawAllButton,
     isShowWithdrawAllButtonLoading,
+    tfVaultDepositEndTimeLoading,
+    tfVaultLockEndTimeLoading,
   } = useVaultContext();
 
   const steps = [
@@ -231,8 +233,8 @@ const VaultLockingBar = () => {
         </LockWrapper>
       ),
       date:
-        tfVaultDepositEndDate === null
-          ? tfVaultDepositEndDate
+        tfVaultDepositEndTimeLoading || tfVaultDepositEndDate === null
+          ? null
           : new Date(Number(tfVaultDepositEndDate) * 1000),
     },
     {
@@ -256,11 +258,12 @@ const VaultLockingBar = () => {
         </LockWrapper>
       ),
       date:
-        tfVaultLockEndDate === null
-          ? tfVaultLockEndDate
+        tfVaultLockEndTimeLoading || tfVaultLockEndDate === null
+          ? null
           : new Date(Number(tfVaultLockEndDate) * 1000),
     },
   ];
+
   return (
     <VaultPaper sx={{ marginBottom: isMobile ? "20px" : "24px" }}>
       <SummaryWrapper>
