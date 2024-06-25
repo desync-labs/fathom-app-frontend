@@ -258,7 +258,7 @@ const useVaultList = () => {
           name: vaultTitle[vault.id.toLowerCase()]
             ? vaultTitle[vault.id.toLowerCase()]
             : getDefaultVaultTitle(
-                vaultType[vault.id.toLowerCase()] || VaultType.INCENTIVE,
+                vaultType[vault.id.toLowerCase()] || VaultType.DEFAULT,
                 vault.token.name,
                 vault.id.toLowerCase()
               ),

@@ -74,7 +74,7 @@ export const getDefaultVaultTitle = (
       index = indexes.length ? Math.max(...indexes) : 0;
       index++;
       type = VaultType.INCENTIVE;
-      title = `Default vault (${asset}) #${index}`;
+      title = `Incentive vault (${asset}) #${index}`;
       break;
   }
 
