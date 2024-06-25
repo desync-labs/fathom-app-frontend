@@ -778,7 +778,6 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     tfReport,
     isTfVaultType,
     activeTfPeriod,
-    vault,
     isReportsLoaded,
     tfVaultDepositEndTimeLoading,
     tfVaultLockEndTimeLoading,
@@ -831,25 +830,25 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     return Promise.all(strategyIdsPromises).then(
       (authorizedIds) => authorizedIds.filter((id) => id !== null) as string[]
     );
-  }, [vault]);
+  }, [vault?.strategies]);
 
   useEffect(() => {
-    if (vault.id && account) {
+    if (vault?.id && account) {
       getStrategiesIds.then((authorizedIds) =>
         setManagedStrategiesIds(authorizedIds)
       );
     } else {
       setManagedStrategiesIds([]);
     }
-  }, [vault, account, getStrategiesIds]);
+  }, [vault?.id, account, getStrategiesIds]);
 
   useEffect(() => {
-    if (vault.id && account) {
+    if (vault?.id && account) {
       executeHasRoleMethod().then((isManager) => setIsUserManager(isManager));
     } else {
       setIsUserManager(false);
     }
-  }, [vault, account]);
+  }, [vault?.id, account]);
 
   const handleWithdrawAll = useCallback(async () => {
     if (vaultPosition) {
