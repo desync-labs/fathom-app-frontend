@@ -10,6 +10,7 @@ const ApyConfig = {
   ["0xA6272625f8fCd6FC3b53A167E471b7D55095a40b".toLowerCase()]: 10,
   ["0xfa6ed4d32110e1c27c9d8c2930e217746cb8acab".toLowerCase()]: 10,
   ["0xb8e027e707da68c98919686d5edf9adbf2746ed9".toLowerCase()]: 10,
+  ["0x8134c61A86775CF688d3d321E5cd32787c4c7f88".toLowerCase()]: 10,
 } as const;
 
 const useApr = (vault: IVault) => {
