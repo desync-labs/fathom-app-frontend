@@ -98,9 +98,6 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
   const [reports, setReports] = useState<
     Record<string, IVaultStrategyReport[]>
   >({});
-  const [tfReport, setTfReport] = useState<IVaultStrategyReport>(
-    {} as IVaultStrategyReport
-  );
   const [isReportsLoaded, setIsReportsLoaded] = useState<boolean>(false);
 
   const [historicalApr, setHistoricalApr] = useState<
@@ -226,16 +223,11 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
           isTfVault
         );
       } else {
-        if (isTfVault) {
-          setTfReport(data?.strategyReports[0] as IVaultStrategyReport);
-        } else {
-          setReports((prev) => ({
-            ...prev,
-            [strategyId]: [
-              ...prevStateReports,
-              ...(data?.strategyReports || []),
-            ],
-          }));
+        setReports((prev) => ({
+          ...prev,
+          [strategyId]: [...prevStateReports, ...(data?.strategyReports || [])],
+        }));
+        if (!isTfVault) {
           setHistoricalApr((prev) => ({
             ...prev,
             [strategyId]: [
@@ -264,16 +256,14 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
           /**
            * Clear reports and historical APRs necessary for chain switch only for non-TradeFi vaults
            */
-          if (!isTfVaultType) {
-            setReports((prev) => ({
-              ...prev,
-              [strategy.id]: [],
-            }));
-            setHistoricalApr((prev) => ({
-              ...prev,
-              [strategy.id]: [],
-            }));
-          }
+          setReports((prev) => ({
+            ...prev,
+            [strategy.id]: [],
+          }));
+          setHistoricalApr((prev) => ({
+            ...prev,
+            [strategy.id]: [],
+          }));
           fetchReports(strategy.id, [], [], isTfVaultType);
         });
       }, 300);
@@ -300,6 +290,10 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
       const countOfHours = now.isBefore(lockEndDate)
         ? now.diff(depositEndDate, "hour")
         : lockEndDate.diff(depositEndDate, "hour");
+
+      console.log({
+        countOfHours,
+      });
 
       if (BigNumber(countOfHours).isGreaterThan(0)) {
         const reports: { gain: string; timestamp: string; loss: string }[] = [];
@@ -332,8 +326,8 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
           ...prev,
           [vault.strategies[0].id]: reports as IVaultStrategyReport[],
         }));
-        setIsReportsLoaded(true);
       }
+      setIsReportsLoaded(true);
     }
   }, [
     isTfVaultType,
@@ -770,18 +764,21 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
       !isTfVaultType ||
       !isReportsLoaded ||
       tfVaultDepositEndTimeLoading ||
-      tfVaultLockEndTimeLoading
+      tfVaultLockEndTimeLoading ||
+      !Object.values(reports).length
     ) {
       return false;
     }
 
+    const firstReport = Object.values(reports)[0][0];
+
     return (
       isTfVaultType &&
       activeTfPeriod === 2 &&
-      BigNumber(tfReport?.gain || "0").isGreaterThan(0)
+      BigNumber(firstReport?.gain || "0").isGreaterThan(0)
     );
   }, [
-    tfReport,
+    reports,
     isTfVaultType,
     activeTfPeriod,
     isReportsLoaded,
@@ -884,7 +881,6 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     vaultPosition,
     vaultPositionLoading,
     reports,
-    tfReport,
     historicalApr,
     balanceEarned,
     balanceToken,
