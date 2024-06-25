@@ -42,24 +42,6 @@ const PositionActivityList = () => {
   } = usePositionsTransactionList();
   const { isMobile } = useSharedContext();
 
-  // return (
-  //   <Container
-  //     maxWidth="lg"
-  //     sx={{ mt: isMobile ? 2 : 4, mb: isMobile ? 2 : 4 }}
-  //   >
-  //     <TxListWrapper>
-  //       <PositionActivityFilters
-  //         filterByType={filterByType}
-  //         handleFilterByType={handleFilterByType}
-  //         searchValue={searchValue}
-  //         setSearchValue={setSearchValue}
-  //       />
-  //       <PositionActivityListLoader />
-  //       <PositionActivityListLoader />
-  //     </TxListWrapper>
-  //   </Container>
-  // );
-
   return (
     <Container
       maxWidth="lg"
