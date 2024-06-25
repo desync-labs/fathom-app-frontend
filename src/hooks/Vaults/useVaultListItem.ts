@@ -204,10 +204,6 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
     ) {
       Promise.all([fetchPositionTransactions(), fetchBalanceToken()]).then(
         ([transactions, balanceToken]) => {
-          console.log({
-            balanceToken,
-            transactions: transactions?.data,
-          });
           setBalanceToken(balanceToken as string);
           transactions?.data?.deposits &&
             setDepositsList(transactions?.data.deposits);
@@ -248,13 +244,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
       .toNumber();
 
     return BigNumber(earnedValue).isLessThan(0.0001) ? 0 : earnedValue;
-  }, [
-    vaultPosition,
-    balanceToken,
-    depositsList,
-    withdrawalsList,
-    loadingEarning,
-  ]);
+  }, [balanceToken, depositsList, withdrawalsList, loadingEarning]);
 
   const handleWithdrawAll = useCallback(async () => {
     if (vaultPosition) {
@@ -276,7 +266,13 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
         setIsWithdrawLoading(false);
       }
     }
-  }, [vaultPosition, account, vaultService, setLastTransactionBlock]);
+  }, [
+    vaultPosition?.balanceShares,
+    vault.shareToken.id,
+    account,
+    vaultService,
+    setLastTransactionBlock,
+  ]);
 
   return {
     balanceEarned,
