@@ -209,9 +209,9 @@ const VaultLockingBar = () => {
     handleWithdrawAll,
     isWithdrawAllLoading,
     showWithdrawAllButton,
+    isShowWithdrawAllButtonLoading,
     tfVaultDepositEndTimeLoading,
     tfVaultLockEndTimeLoading,
-    vaultPositionLoading,
   } = useVaultContext();
 
   const steps = [
@@ -313,8 +313,8 @@ const VaultLockingBar = () => {
             ))}
           </AppStepper>
           {activeTfPeriod === 2 &&
-            !vaultPositionLoading &&
-            !showWithdrawAllButton && (
+            !showWithdrawAllButton &&
+            !isShowWithdrawAllButtonLoading && (
               <WarningBox sx={{ margin: "10px 0 0" }}>
                 <InfoIcon
                   sx={{ width: "20px", color: "#F5953D", height: "20px" }}
@@ -334,8 +334,8 @@ const VaultLockingBar = () => {
               disabled={
                 !vaultPosition ||
                 vaultPosition.balanceShares === "0" ||
-                vaultPosition.balanceShares === undefined ||
-                activeTfPeriod !== 2 ||
+                !vaultPosition.balanceShares ||
+                activeTfPeriod < 2 ||
                 isWithdrawAllLoading ||
                 !showWithdrawAllButton
               }
