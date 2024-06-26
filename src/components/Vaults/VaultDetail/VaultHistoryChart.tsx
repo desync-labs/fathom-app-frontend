@@ -201,7 +201,6 @@ const VaultHistoryChart: FC<VaultHistoryChartPropTypes> = ({
     }
   }, [chartDataArray, setMultiplier, setMaxValue, setMinValue]);
 
-  // @ts-ignore
   const tickFormatter = (timestamp: string) => {
     if (chartDataArray.length === 0) {
       const date = dayjs(new Date());

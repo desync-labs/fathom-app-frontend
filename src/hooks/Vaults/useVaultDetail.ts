@@ -482,13 +482,13 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
   useEffect(() => {
     if (!vaultId) {
       navigate("/vaults");
-    } else {
+    } else if (!vaultLoading) {
       fetchVault(vaultId, chainId);
     }
   }, [vaultId, chainId]);
 
   useEffect(() => {
-    if (syncVault && !prevSyncVault && vaultId) {
+    if (syncVault && !prevSyncVault && vaultId && !vaultLoading) {
       fetchVault(vaultId, chainId);
     }
   }, [syncVault, prevSyncVault, vaultId, chainId]);
