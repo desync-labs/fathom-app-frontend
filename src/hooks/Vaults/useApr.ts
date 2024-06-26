@@ -53,22 +53,12 @@ const getApr = (
 
     const value = BigNumber(394200)
       .dividedBy(
-        currentDebt && currentDebt.isGreaterThan(50)
+        currentDebt && currentDebt.isGreaterThan(100)
           ? currentDebt
           : BigNumber(vaultBalanceTokens || "0").dividedBy(10 ** 18)
       )
       .multipliedBy(100)
       .toString();
-
-    if (BigNumber(value).isGreaterThan(10000)) {
-      console.log({
-        currentDebt: currentDebt.toString(),
-        apr,
-        vaultId,
-        vaultBalanceTokens,
-        value,
-      });
-    }
 
     return value;
   }
