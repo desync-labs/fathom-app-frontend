@@ -218,7 +218,6 @@ const Provider: FC<ProviderProps> = ({ children }) => {
 
 export default Provider;
 
-// @ts-ignore
 async function getBulkPairData(
   pairList: any[],
   ethPrice: any,
@@ -315,7 +314,7 @@ async function getBulkPairData(
         })
     );
   } catch (e) {
-    console.log(e);
+    return console.log(e);
   }
 }
 
@@ -686,7 +685,6 @@ export function useDataForList(pairList: any) {
         listedTokens
       );
 
-      // @ts-ignore
       setFetched(newFetched.concat(newPairData));
     }
     if (ethPrice && pairList && pairList.length > 0 && !fetched && !stale) {

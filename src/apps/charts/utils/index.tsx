@@ -394,13 +394,11 @@ export function formattedPercent(percent: string | number) {
     percent = parseFloat(percent);
   }
   if (!percent || percent === 0) {
-    // @ts-ignore
     return <Typography fontWeight={500}>0%</Typography>;
   }
 
   if (percent < 0.0001 && percent > 0) {
     return (
-      // @ts-ignore
       <Typography fontWeight={500} color="green">
         {"< 0.0001%"}
       </Typography>
@@ -409,7 +407,6 @@ export function formattedPercent(percent: string | number) {
 
   if (percent < 0 && percent > -0.0001) {
     return (
-      // @ts-ignore
       <Typography fontWeight={500} color="red">
         {"< 0.0001%"}
       </Typography>
@@ -420,18 +417,14 @@ export function formattedPercent(percent: string | number) {
   if (fixedPercent === "0.00") {
     return "0%";
   }
-  // @ts-ignore
-  if (fixedPercent > 0) {
-    // @ts-ignore
-    if (fixedPercent > 100) {
+  if (Number(fixedPercent) > 0) {
+    if (Number(fixedPercent) > 100) {
       return (
-        // @ts-ignore
         <Typography fontWeight={500} color="text5">{`+${percent
           ?.toFixed(0)
           .toLocaleString()}%`}</Typography>
       );
     } else {
-      // @ts-ignore
       return (
         <Typography
           fontWeight={500}
@@ -440,7 +433,6 @@ export function formattedPercent(percent: string | number) {
       );
     }
   } else {
-    // @ts-ignore
     return (
       <Typography fontWeight={500} color="red">{`${fixedPercent}%`}</Typography>
     );

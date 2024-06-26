@@ -72,9 +72,9 @@ const MarketAssetsList: FC<MarketAssetsListProps> = ({ reserves, loading }) => {
           a.symbol.toUpperCase() < b.symbol.toUpperCase() ? -1 : 1
         );
       } else {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        return reserves.sort((a, b) => a[sortName] - b[sortName]);
+        return reserves.sort(
+          (a, b) => (a as any)[sortName] - (b as any)[sortName]
+        );
       }
     } else {
       if (sortName === "symbol") {
@@ -82,9 +82,9 @@ const MarketAssetsList: FC<MarketAssetsListProps> = ({ reserves, loading }) => {
           b.symbol.toUpperCase() < a.symbol.toUpperCase() ? -1 : 1
         );
       } else {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        return reserves.sort((a, b) => b[sortName] - a[sortName]);
+        return reserves.sort(
+          (a, b) => (b as any)[sortName] - (a as any)[sortName]
+        );
       }
     }
   }, [reserves, sortName, sortDesc]);

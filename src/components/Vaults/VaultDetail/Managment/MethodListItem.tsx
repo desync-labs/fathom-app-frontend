@@ -231,7 +231,7 @@ const MethodListItem: FC<{
   ]);
 
   const handleSubmitForm = useCallback(async () => {
-    const values = getValues();
+    const values: Record<string, any> = getValues();
     const options = { gasLimit: 0 };
     setIsLoading(true);
 
@@ -240,24 +240,18 @@ const MethodListItem: FC<{
     method.inputs.forEach((input, index) => {
       const inputName = input.name !== "" ? input.name : EMPTY_FIELD_NAME;
       if (input.type === "uint256") {
-        // @ts-ignore
         args[index] = values[inputName];
       } else if (input.type === "address") {
-        // @ts-ignore
         args[index] = values[inputName].toLowerCase();
       } else if (input.type === "address[]") {
-        // @ts-ignore
         if (values[inputName] === "" || values[inputName] === undefined) {
-          // @ts-ignore
           args[index] = [];
         } else {
-          // @ts-ignore
           args[index] = values[inputName]
             .split(",")
             .map((addr: string) => addr.trim().toLowerCase());
         }
       } else {
-        // @ts-ignore
         args[index] = values[inputName];
       }
     });
