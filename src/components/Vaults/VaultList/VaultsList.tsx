@@ -54,9 +54,8 @@ const PaginationWrapper = styled(Box)`
 
 type VaultListPropsType = {
   vaults: IVault[];
-  vaultsLoading: boolean;
   performanceFee: number;
-  vaultPositionsLoading: boolean;
+  isLoading: boolean;
   filterCurrentPosition: (vaultId: string) => IVaultPosition | null;
   vaultCurrentPage: number;
   vaultItemsCount: number;
@@ -65,8 +64,7 @@ type VaultListPropsType = {
 
 const VaultsList: FC<VaultListPropsType> = ({
   vaults,
-  vaultsLoading,
-  vaultPositionsLoading,
+  isLoading,
   performanceFee,
   filterCurrentPosition,
   vaultCurrentPage,
@@ -122,7 +120,7 @@ const VaultsList: FC<VaultListPropsType> = ({
           </VaultListTableHeaderRow>
         </TableHead>
         <TableBody>
-          {vaultsLoading || vaultPositionsLoading ? (
+          {isLoading ? (
             <>
               <VaultListItemSkeleton />
               <VaultListItemSkeleton />
@@ -139,7 +137,7 @@ const VaultsList: FC<VaultListPropsType> = ({
           )}
         </TableBody>
       </Table>
-      {!vaultsLoading && vaults.length > COUNT_PER_PAGE_VAULT && (
+      {!isLoading && vaults.length > COUNT_PER_PAGE_VAULT && (
         <PaginationWrapper>
           <Pagination
             count={Math.ceil(vaultItemsCount / COUNT_PER_PAGE_VAULT)}
