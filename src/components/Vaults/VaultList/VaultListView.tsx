@@ -7,6 +7,7 @@ import VaultsListMobile from "components/Vaults/VaultList/VaultsListMobile";
 import VaultFilters from "components/Vaults/VaultList/VaultFilters";
 import VaultPageHeader from "components/Vaults/VaultList/VaultPageHeader";
 import { EmptyVaultsWrapper } from "components/AppComponents/AppBox/AppBox";
+import { useEffect, useState } from "react";
 
 const VaultListView = () => {
   const {
@@ -27,6 +28,19 @@ const VaultListView = () => {
     filterCurrentPosition,
   } = useVaultList();
   const { isMobile } = useSharedContext();
+
+  const [listLoading, setListLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setListLoading(vaultsLoading || vaultPositionsLoading);
+    }, 50);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [vaultsLoading, vaultPositionsLoading, setListLoading]);
+
   return (
     <>
       <VaultPageHeader
@@ -56,8 +70,7 @@ const VaultListView = () => {
       ) : isMobile ? (
         <VaultsListMobile
           vaults={vaultSortedList}
-          vaultsLoading={vaultsLoading}
-          vaultPositionsLoading={vaultPositionsLoading}
+          isLoading={listLoading}
           performanceFee={performanceFee}
           filterCurrentPosition={filterCurrentPosition}
           vaultCurrentPage={vaultCurrentPage}
@@ -67,8 +80,7 @@ const VaultListView = () => {
       ) : (
         <VaultsList
           vaults={vaultSortedList}
-          vaultsLoading={vaultsLoading}
-          vaultPositionsLoading={vaultPositionsLoading}
+          isLoading={listLoading}
           performanceFee={performanceFee}
           filterCurrentPosition={filterCurrentPosition}
           vaultCurrentPage={vaultCurrentPage}

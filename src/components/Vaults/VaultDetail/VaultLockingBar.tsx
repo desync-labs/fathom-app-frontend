@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import {
   Box,
   CircularProgress,
@@ -180,7 +180,7 @@ export const calculateTimeLeft = (date: Date | null) => {
   return timeLeft;
 };
 
-export const StepContentCounter = ({ date }: { date: Date }) => {
+export const StepContentCounter = memo(({ date }: { date: Date }) => {
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft(date));
 
   useEffect(() => {
@@ -189,7 +189,7 @@ export const StepContentCounter = ({ date }: { date: Date }) => {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [date]);
+  }, []);
 
   return (
     <CounterIndicator>
@@ -197,7 +197,7 @@ export const StepContentCounter = ({ date }: { date: Date }) => {
       {timeLeft.seconds}S
     </CounterIndicator>
   );
-};
+});
 
 const VaultLockingBar = () => {
   const { isMobile } = useSharedContext();
@@ -214,55 +214,62 @@ const VaultLockingBar = () => {
     tfVaultLockEndTimeLoading,
   } = useVaultContext();
 
-  const steps = [
-    {
-      key: "deposit-time", // added key to the object
-      label: (
-        <LockWrapper>
-          Deposit Time
-          <AppPopover
-            id={"deposit-time"}
-            text={
-              <>
-                Deposit Time - the period when users are allowed to deposit and
-                withdraw funds.
-              </>
-            }
-            iconSize={"14px"}
-          />
-        </LockWrapper>
-      ),
-      date:
-        tfVaultDepositEndTimeLoading || tfVaultDepositEndDate === null
-          ? null
-          : new Date(Number(tfVaultDepositEndDate) * 1000),
-    },
-    {
-      key: "lock-time", // added key to the object
-      label: (
-        <LockWrapper>
-          Lock Time (
-          {getPeriodInDays(tfVaultDepositEndDate, tfVaultLockEndDate)} days)
-          <AppPopover
-            id={"lock-time"}
-            text={
-              <>
-                Lock Time - the period of time when deposited funds are used to
-                generate yield according to the strategy. <br />
-                Users can’t withdraw and deposit any funds within this period.{" "}
-                After the lock period ends, users can withdraw funds.
-              </>
-            }
-            iconSize={"14px"}
-          />
-        </LockWrapper>
-      ),
-      date:
-        tfVaultLockEndTimeLoading || tfVaultLockEndDate === null
-          ? null
-          : new Date(Number(tfVaultLockEndDate) * 1000),
-    },
-  ];
+  const steps = useMemo(() => {
+    return [
+      {
+        key: "deposit-time", // added key to the object
+        label: (
+          <LockWrapper>
+            Deposit Time
+            <AppPopover
+              id={"deposit-time"}
+              text={
+                <>
+                  Deposit Time - the period when users are allowed to deposit
+                  and withdraw funds.
+                </>
+              }
+              iconSize={"14px"}
+            />
+          </LockWrapper>
+        ),
+        date:
+          tfVaultDepositEndTimeLoading || !tfVaultDepositEndDate
+            ? null
+            : new Date(Number(tfVaultDepositEndDate) * 1000),
+      },
+      {
+        key: "lock-time", // added key to the object
+        label: (
+          <LockWrapper>
+            Lock Time (
+            {getPeriodInDays(tfVaultDepositEndDate, tfVaultLockEndDate)} days)
+            <AppPopover
+              id={"lock-time"}
+              text={
+                <>
+                  Lock Time - the period of time when deposited funds are used
+                  to generate yield according to the strategy. <br />
+                  Users can’t withdraw and deposit any funds within this period.{" "}
+                  After the lock period ends, users can withdraw funds.
+                </>
+              }
+              iconSize={"14px"}
+            />
+          </LockWrapper>
+        ),
+        date:
+          tfVaultLockEndTimeLoading || !tfVaultLockEndDate
+            ? null
+            : new Date(Number(tfVaultLockEndDate) * 1000),
+      },
+    ];
+  }, [
+    tfVaultDepositEndDate,
+    tfVaultLockEndDate,
+    tfVaultDepositEndTimeLoading,
+    tfVaultLockEndTimeLoading,
+  ]);
 
   return (
     <VaultPaper sx={{ marginBottom: isMobile ? "20px" : "24px" }}>
@@ -355,4 +362,4 @@ const VaultLockingBar = () => {
   );
 };
 
-export default VaultLockingBar;
+export default memo(VaultLockingBar);
