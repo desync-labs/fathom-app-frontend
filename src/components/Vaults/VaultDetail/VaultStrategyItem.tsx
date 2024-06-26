@@ -300,7 +300,7 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
           <VaultHistoryChart
             title={"Historical APY"}
             chartDataArray={aprHistoryArr}
-            valueLabel="APR"
+            valueLabel="APY"
             valueUnits="%"
             isLoading={reportsLoading}
           />
