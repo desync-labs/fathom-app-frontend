@@ -32,6 +32,8 @@ enum MethodType {
   Mutate = "mutate",
 }
 
+const EMPTY_FIELD_NAME = "noname";
+
 const MethodResponseStyled = styled(Box)`
   position: relative;
   width: calc(100% - 122px);
@@ -39,6 +41,10 @@ const MethodResponseStyled = styled(Box)`
   font-weight: 500;
   word-wrap: break-word;
   padding-top: 4px;
+
+  &.writeMethodRes {
+    width: 100%;
+  }
 
   ${({ theme }) => theme.breakpoints.down("sm")} {
     font-size: 12px;
@@ -232,26 +238,27 @@ const MethodListItem: FC<{
     const args: any[] = [];
 
     method.inputs.forEach((input, index) => {
+      const inputName = input.name !== "" ? input.name : EMPTY_FIELD_NAME;
       if (input.type === "uint256") {
         // @ts-ignore
-        args[index] = values[input.name];
+        args[index] = values[inputName];
       } else if (input.type === "address") {
         // @ts-ignore
-        args[index] = values[input.name].toLowerCase();
+        args[index] = values[inputName].toLowerCase();
       } else if (input.type === "address[]") {
         // @ts-ignore
-        if (values[input.name] === "" || values[input.name] === undefined) {
+        if (values[inputName] === "" || values[inputName] === undefined) {
           // @ts-ignore
           args[index] = [];
         } else {
           // @ts-ignore
-          args[index] = values[input.name]
+          args[index] = values[inputName]
             .split(",")
             .map((addr: string) => addr.trim().toLowerCase());
         }
       } else {
         // @ts-ignore
-        args[index] = values[input.name];
+        args[index] = values[inputName];
       }
     });
 
@@ -361,7 +368,11 @@ const MethodListItem: FC<{
           {method.inputs.map((input) => (
             <Controller
               key={input.name}
-              name={input.name as never}
+              name={
+                input.name !== ""
+                  ? (input.name as never)
+                  : (EMPTY_FIELD_NAME as never)
+              }
               rules={{ required: input.type !== "address[]" }}
               control={control}
               render={({ field, fieldState: { error } }) => (
@@ -389,9 +400,24 @@ const MethodListItem: FC<{
             />
           )}
           <AppFlexBox
-            sx={{ justifyContent: "space-between", alignItems: "flex-start" }}
+            sx={{
+              flexDirection:
+                methodType === MethodType.Mutate ? "column-reverse" : "row",
+              justifyContent:
+                methodType === MethodType.Mutate
+                  ? "flex-start"
+                  : "space-between",
+              alignItems:
+                methodType === MethodType.Mutate ? "flex-end" : "flex-start",
+            }}
           >
-            <MethodResponseStyled>
+            <MethodResponseStyled
+              className={
+                methodType === MethodType.Mutate
+                  ? "writeMethodRes"
+                  : "viewMethodRes"
+              }
+            >
               {response !== undefined && <>{renderResponse()}</>}
             </MethodResponseStyled>
             <ApproveButton
