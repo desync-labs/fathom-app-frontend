@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Grid, CircularProgress, Pagination, Box } from "@mui/material";
-import { useAllProposals } from "hooks/useAllProposals";
+import { useAllProposals } from "hooks/Governance/useAllProposals";
 import { IProposal } from "fathom-sdk";
 import { PageHeader } from "components/Dashboard/PageHeader";
 import ViewAllProposalItem from "components/Governance/ViewAllProposalItem";

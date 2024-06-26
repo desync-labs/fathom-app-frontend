@@ -1,6 +1,6 @@
 import BigNumber from "bignumber.js";
 import { CircularProgress, Container, Grid } from "@mui/material";
-import useStableSwapAddLiquidity from "hooks/useStableSwapAddLiquidity";
+import useStableSwapAddLiquidity from "hooks/StableSwap/useStableSwapAddLiquidity";
 import { PageHeader } from "components/Dashboard/PageHeader";
 
 import { StableSwapPaper } from "components/AppComponents/AppPaper/AppPaper";

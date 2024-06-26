@@ -26,6 +26,32 @@ export const AppList = styled(MuiList)`
     }
   }
 `;
+export const AppListVault = styled(MuiList)`
+  width: 100%;
+  & li {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 400;
+    padding: 3px 0;
+    span {
+      font-size: 14px;
+    }
+    & div:last-child {
+      font-weight: 600;
+    }
+  }
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    > .MuiListItem-root {
+      padding-left: 0;
+      > .MuiListItemText-root {
+        max-width: 75%;
+      }
+      .MuiListItemSecondaryAction-root {
+        right: 0;
+      }
+    }
+  }
+`;
 
 export const AppListItem = styled(ListItem)`
   &.MuiListItem-root {

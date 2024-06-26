@@ -3,7 +3,7 @@ import { Box, SvgIcon, Typography } from "@mui/material";
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
 import { TokenIcon } from "apps/lending/components/primitives/TokenIcon";
 
-import { BaseSuccessView } from "../FlowCommons/BaseSuccess";
+import { BaseSuccessView } from "apps/lending/components/transactions/FlowCommons/BaseSuccess";
 
 export type WithdrawAndSwitchTxSuccessViewProps = {
   txHash?: string;

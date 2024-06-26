@@ -65,7 +65,6 @@ export const TimeRangeSelector: FC<TimeRangeSelectorProps> = memo(
             <ToggleButton
               key={interval}
               value={interval}
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
               // @ts-ignore
               sx={(theme): SxProps<Theme> | undefined => ({
                 "&.MuiToggleButtonGroup-grouped:not(.Mui-selected), &.MuiToggleButtonGroup-grouped&.Mui-disabled":

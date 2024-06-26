@@ -12,7 +12,7 @@ import useStakingView, {
   DialogActions,
   FlowType,
   UnlockType,
-} from "hooks/useStakingView";
+} from "hooks/Staking/useStakingView";
 import { ChainId } from "connectors/networks";
 import { ILockPosition } from "fathom-sdk";
 

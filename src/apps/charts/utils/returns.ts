@@ -176,17 +176,15 @@ export async function getHistoricalPairReturns(
   pairSnapshots: any[],
   currentETHPrice: number
 ) {
-  // catch case where data not puplated yet
-  if (!currentPairData.createdAtTimestamp) {
+  // catch case where data not populated yet
+  if (!currentPairData.createdAtTimestamp || !startDateTimestamp) {
     return [];
   }
-  // @ts-ignore
   let dayIndex: number = Math.round(startDateTimestamp / 86400); // get unique day bucket unix
   const currentDayIndex: number = Math.round(dayjs.utc().unix() / 86400);
   const sortedPositions = pairSnapshots.sort((a, b) => {
     return parseInt(a.timestamp) > parseInt(b.timestamp) ? 1 : -1;
   });
-  // @ts-ignore
   if (sortedPositions[0].timestamp > startDateTimestamp) {
     dayIndex = Math.round(sortedPositions[0].timestamp / 86400);
   }
@@ -204,9 +202,8 @@ export async function getHistoricalPairReturns(
     currentPairData.id,
     dayTimestamps
   );
-  const shareValuesFormatted = {};
+  const shareValuesFormatted: { [key: string]: any } = {};
   shareValues.map((share: { timestamp: string | number }) => {
-    // @ts-ignore
     return (shareValuesFormatted[share.timestamp] = share);
   });
 
@@ -236,7 +233,6 @@ export async function getHistoricalPairReturns(
     }
 
     // now treat the end of the day as a hypothetical position
-    // @ts-ignore
     let positionT1 = shareValuesFormatted[dayTimestamp + 86400];
     if (!positionT1) {
       positionT1 = {

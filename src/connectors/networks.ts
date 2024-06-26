@@ -2,7 +2,7 @@ import { InjectedConnector } from "@web3-react/injected-connector";
 import { WalletConnectConnector } from "connectors/wallet-connect-connector/WalletConnectConnector";
 import { EthereumProviderOptions } from "@walletconnect/ethereum-provider/dist/types/EthereumProvider";
 import { JsonRpcProvider, Web3Provider } from "@into-the-fathom/providers";
-import { DEFAULT_CHAIN_ID } from "../utils/Constants";
+import { DEFAULT_CHAIN_ID } from "utils/Constants";
 
 export const APOTHEM_RPC = "https://erpc.apothem.network/";
 export const XDC_RPC = "https://rpc.ankr.com/xdc/";

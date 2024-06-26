@@ -3,7 +3,7 @@ import { createChart, IChartApi } from "lightweight-charts";
 import { Box, styled } from "@mui/material";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import { usePrevious } from "hooks/usePrevious";
+import { usePrevious } from "hooks/General/usePrevious";
 import { formattedNum } from "apps/charts/utils";
 import { IconWrapper } from "apps/charts/components";
 

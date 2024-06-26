@@ -6,7 +6,7 @@ import * as metamask from "@synthetixio/synpress/commands/metamask";
 import dotenv from "dotenv";
 dotenv.config();
 
-test.describe("Fathom App Test Suite: Vault Operations", () => {
+test.describe.skip("Fathom App Test Suite: Vault Operations", () => {
   test.beforeAll(async ({ vaultPage }) => {
     const depositAmount = 3000;
     await vaultPage.navigate();

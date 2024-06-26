@@ -3,12 +3,12 @@ import { Box, Button, Container, styled, Typography } from "@mui/material";
 import useSharedContext from "context/shared";
 import usePositionsTransactionList, {
   IFxdTransaction,
-} from "hooks/usePositionsTransactionList";
+} from "hooks/Pools/usePositionsTransactionList";
 import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
 import PositionActivityFilters from "components/PositionActivityList/PositionActivityFilters";
 import PositionActivityListItem from "components/PositionActivityList/PositionActivityListItem";
 import { PositionActivityListLoader } from "components/PositionActivityList/PositionActivityListLoader";
-import { fxdActivitiesGroupByDate } from "utils/fxdActivitiesGroupByDate";
+import { fxdActivitiesGroupByDate } from "utils/Fxd/fxdActivitiesGroupByDate";
 
 const PageHeader = styled(Box)`
   display: flex;
@@ -17,6 +17,9 @@ const PageHeader = styled(Box)`
   padding: 0 24px;
   margin-top: 48px;
   margin-bottom: 48px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    padding: 0;
+  }
 `;
 
 const TxListWrapper = styled(AppPaper)`
@@ -38,24 +41,6 @@ const PositionActivityList = () => {
     setSearchValue,
   } = usePositionsTransactionList();
   const { isMobile } = useSharedContext();
-
-  // return (
-  //   <Container
-  //     maxWidth="lg"
-  //     sx={{ mt: isMobile ? 2 : 4, mb: isMobile ? 2 : 4 }}
-  //   >
-  //     <TxListWrapper>
-  //       <PositionActivityFilters
-  //         filterByType={filterByType}
-  //         handleFilterByType={handleFilterByType}
-  //         searchValue={searchValue}
-  //         setSearchValue={setSearchValue}
-  //       />
-  //       <PositionActivityListLoader />
-  //       <PositionActivityListLoader />
-  //     </TxListWrapper>
-  //   </Container>
-  // );
 
   return (
     <Container

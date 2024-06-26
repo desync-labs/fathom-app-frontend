@@ -2,11 +2,13 @@ import { Box, Skeleton } from "@mui/material";
 
 import { ListColumn } from "apps/lending/components/lists/ListColumn";
 import { ListItem } from "apps/lending/components/lists/ListItem";
+import useSharedContext from "context/shared";
 
 const HistoryRowItem = () => {
+  const { isSmallDesktop } = useSharedContext();
   return (
     <ListItem px={3} minHeight={68}>
-      <ListColumn isRow maxWidth={280}>
+      <ListColumn isRow maxWidth={760} minWidth={isSmallDesktop ? 300 : 540}>
         <Skeleton variant="circular" width={24} height={24} />
         <Box sx={{ pl: 3, overflow: "hidden" }}>
           <Skeleton width={48} height={14} />

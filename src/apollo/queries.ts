@@ -273,6 +273,67 @@ export const VAULTS = gql`
     }
   }
 `;
+export const VAULT = gql`
+  query Vault($id: ID, $chainId: String) {
+    vault(id: $id) {
+      id
+      token {
+        id
+        decimals
+        name
+        symbol
+      }
+      shareToken {
+        id
+        decimals
+        name
+        symbol
+      }
+      sharesSupply
+      balanceTokens
+      balanceTokensIdle
+      depositLimit
+      apr
+      shutdown
+      strategies(orderBy: activation, orderDirection: asc) {
+        id
+        delegatedAssets
+        currentDebt
+        maxDebt
+        apr
+      }
+    }
+  }
+`;
+
+export const VAULT_POSITION = gql`
+  query AccountVaultPositions(
+    $account: String!
+    $vault: String!
+    $chainId: String
+  ) {
+    accountVaultPositions(where: { account: $account, vault: $vault }) {
+      id
+      balancePosition
+      balanceProfit
+      balanceShares
+      balanceTokens
+      vault {
+        id
+      }
+      token {
+        id
+        symbol
+        name
+      }
+      shareToken {
+        id
+        symbol
+        name
+      }
+    }
+  }
+`;
 
 export const VAULT_STRATEGY_REPORTS = gql`
   query VaultStrategyReports(
@@ -297,6 +358,7 @@ export const VAULT_STRATEGY_REPORTS = gql`
       skip: $reportsSkip
       where: { strategy: $strategy }
     ) {
+      id
       timestamp
       gain
       loss
@@ -306,8 +368,19 @@ export const VAULT_STRATEGY_REPORTS = gql`
 `;
 
 export const ACCOUNT_VAULT_POSITIONS = gql`
-  query AccountVaultPositions($account: String!, $chainId: String) {
-    accountVaultPositions(where: { account: $account }) {
+  query AccountVaultPositions(
+    $account: String!
+    $chainId: String
+    $first: Int!
+    $shutdown_not_in: Boolean
+  ) {
+    accountVaultPositions(
+      where: {
+        account: $account
+        vault_: { shutdown_not_in: [$shutdown_not_in] }
+      }
+      first: $first
+    ) {
       id
       balancePosition
       balanceProfit
@@ -333,8 +406,8 @@ export const ACCOUNT_VAULT_POSITIONS = gql`
 export const VAULT_FACTORIES = gql`
   query VaultFactories($chainId: String) {
     factories {
-      feeRecipient
       id
+      feeRecipient
       protocolFee
       timestamp
       vaultPackage
@@ -379,6 +452,50 @@ export const VAULT_POSITION_TRANSACTIONS = gql`
       }
       first: $first
       orderBy: blockNumber
+    ) {
+      id
+      timestamp
+      sharesBurnt
+      tokenAmount
+      blockNumber
+    }
+  }
+`;
+
+export const VAULTS_ACCOUNT_DEPOSITS = gql`
+  query VaultAccountDeposits(
+    $account: String!
+    $chainId: String
+    $first: Int
+    $skip: Int
+  ) {
+    deposits(
+      where: { account_contains_nocase: $account }
+      orderBy: blockNumber
+      first: $first
+      skip: $skip
+    ) {
+      id
+      timestamp
+      sharesMinted
+      tokenAmount
+      blockNumber
+    }
+  }
+`;
+
+export const VAULTS_ACCOUNT_WITHDRAWALS = gql`
+  query VaultAccountWithdrawals(
+    $account: String!
+    $chainId: String
+    $first: Int
+    $skip: Int
+  ) {
+    withdrawals(
+      where: { account_contains_nocase: $account }
+      orderBy: blockNumber
+      first: $first
+      skip: $skip
     ) {
       id
       timestamp

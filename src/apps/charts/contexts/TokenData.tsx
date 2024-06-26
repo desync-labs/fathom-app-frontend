@@ -240,8 +240,12 @@ const Provider: FC<ProviderProps> = ({ children }) => {
 
 export default Provider;
 
-// @ts-ignore
-const getTopTokens = async (ethPrice, ethPriceOld, fxdPrice, listedTokens) => {
+const getTopTokens = async (
+  ethPrice: number,
+  ethPriceOld: number,
+  fxdPrice: string,
+  listedTokens: string | Record<string, any>
+) => {
   const utcCurrentTime = dayjs();
   const utcOneDayBack = utcCurrentTime.subtract(1, "day").unix();
   const utcTwoDaysBack = utcCurrentTime.subtract(2, "day").unix();
@@ -398,7 +402,7 @@ const getTopTokens = async (ethPrice, ethPriceOld, fxdPrice, listedTokens) => {
 
     // calculate percentage changes and daily changes
   } catch (e) {
-    console.log(e);
+    return console.log(e);
   }
 };
 
@@ -746,7 +750,7 @@ export function Updater() {
         ethPrice,
         ethPriceOld,
         fxdPrice,
-        listedTokens
+        listedTokens as Record<string, any>
       );
       topTokens && updateTopTokens(topTokens);
     }

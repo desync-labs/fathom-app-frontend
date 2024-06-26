@@ -107,7 +107,7 @@ export const ButtonSecondaryLink = styled("a")`
     background: transparent;
     color: #B3FFF9;
     border: 1px solid #B3FFF9;
-    svg: {
+    svg {
       color: #B3FFF9;
     }, 
   }
@@ -158,7 +158,7 @@ export const OpenPositionButton = styled(MuiButton)`
     border: 1px solid #b3fff9;
     pointer-events: all !important;
     cursor: pointer;
-    svg: {
+    svg {
       color: #b3fff9;
     }
   }
@@ -178,7 +178,7 @@ export const ManagePositionButton = styled(MuiButton)`
     background: transparent;
     color: #B3FFF9;
     border: 1px solid #B3FFF9;
-    svg: {
+    svg {
       color: #B3FFF9;
     },
   }
@@ -198,6 +198,37 @@ export const MaxButton = styled(MuiButton)`
   top: 23px;
   right: 7px;
   cursor: pointer;
+`;
+export const MaxButtonV2 = styled(MuiButton)`
+  position: absolute;
+  top: 35px;
+  right: 16px;
+  height: 40px;
+  color: #43fff1;
+  text-align: center;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+  border-radius: 8px;
+  border: 0.7px solid #2c4066;
+  background: #091433;
+  cursor: pointer;
+  padding: 8px;
+
+  &:hover {
+    border: 0.7px solid #43fff1;
+    background: #253656;
+  }
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    top: 32px;
+    right: 8px;
+    height: 32px;
+    font-size: 11px;
+    color: #fff;
+    border: 0.7px solid #2c4066;
+    background: #243454;
+  }
 `;
 
 export const ApproveButton = styled(MuiButton)`
@@ -231,6 +262,61 @@ export const ButtonsWrapper = styled(Box)`
     > button {
       width: 100%;
       margin-bottom: 10px;
+    }
+  }
+`;
+
+export const ModalButtonWrapper = styled(Box)`
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 20px;
+
+  & > button {
+    height: 48px;
+    font-size: 17px;
+    font-weight: 600;
+    padding: 8px 32px;
+
+    &:first-of-type {
+      width: 118px;
+    }
+    &:last-child {
+      width: calc(100% - 128px);
+    }
+  }
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    & > button {
+      height: 36px;
+      font-size: 15px;
+      padding: 4px 18px;
+    }
+  }
+`;
+
+export const VaultDetailFormButtonWrapper = styled(Box)`
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 20px;
+
+  & > button {
+    height: 48px;
+    width: calc(70% - 4px);
+    font-size: 17px;
+    font-weight: 600;
+    padding: 8px 32px;
+    &.reset {
+      width: 30%;
+    }
+  }
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    & > button {
+      height: 34px;
+      font-size: 15px;
+      padding: 4px 18px;
     }
   }
 `;
@@ -301,9 +387,11 @@ export const FarmFilterMobileBtn = styled(MuiButton)`
   border-radius: 8px;
 `;
 
-export const ExtLinkIcon = styled(OpenInNewRoundedIcon)`
-  width: 16px;
-  height: 16px;
+export const ExtLinkIcon = styled(OpenInNewRoundedIcon, {
+  shouldForwardProp: (prop) => prop !== "scroll",
+})<{ width?: string; height?: string }>`
+  width: ${({ width = "16px" }) => width};
+  height: ${({ height = "16px" }) => height};
   color: #43fff1;
   margin-left: 4px;
   ${({ theme }) => theme.breakpoints.down("sm")} {

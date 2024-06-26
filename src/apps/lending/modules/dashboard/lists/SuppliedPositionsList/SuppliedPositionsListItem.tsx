@@ -9,11 +9,11 @@ import { GENERAL } from "apps/lending/utils/mixPanelEvents";
 import { ListColumn } from "apps/lending/components/lists/ListColumn";
 import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContext";
 import { isFeatureEnabled } from "apps/lending/utils/marketsAndNetworksConfig";
-import { ListAPRColumn } from "../ListAPRColumn";
-import { ListButtonsColumn } from "../ListButtonsColumn";
-import { ListItemUsedAsCollateral } from "../ListItemUsedAsCollateral";
-import { ListItemWrapper } from "../ListItemWrapper";
-import { ListValueColumn } from "../ListValueColumn";
+import { ListAPRColumn } from "apps/lending/modules/dashboard/lists/ListAPRColumn";
+import { ListButtonsColumn } from "apps/lending/modules/dashboard/lists/ListButtonsColumn";
+import { ListItemUsedAsCollateral } from "apps/lending/modules/dashboard/lists/ListItemUsedAsCollateral";
+import { ListItemWrapper } from "apps/lending/modules/dashboard/lists/ListItemWrapper";
+import { ListValueColumn } from "apps/lending/modules/dashboard/lists/ListValueColumn";
 
 export const SuppliedPositionsListItem = ({
   reserve,

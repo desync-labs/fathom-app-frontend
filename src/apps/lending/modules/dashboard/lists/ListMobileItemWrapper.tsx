@@ -1,8 +1,8 @@
 import { FC, memo, ReactNode } from "react";
 import { CustomMarket } from "apps/lending/ui-config/marketsConfig";
 import { ListMobileItem } from "apps/lending/components/lists/ListMobileItem";
-import { FrozenTooltip } from "../../../components/infoTooltips/FrozenTooltip";
-import { BorrowDisabledToolTip } from "../../../components/infoTooltips/BorrowDisabledToolTip";
+import { FrozenTooltip } from "apps/lending/components/infoTooltips/FrozenTooltip";
+import { BorrowDisabledToolTip } from "apps/lending/components/infoTooltips/BorrowDisabledToolTip";
 
 // These are all optional due to MobileListItemLoader
 interface ListMobileItemWrapperProps {

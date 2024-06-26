@@ -3,7 +3,7 @@ import { FC, ReactNode } from "react";
 
 import { ConnectWalletButton } from "apps/lending/components/WalletConnection/ConnectWalletButton";
 
-import { ReactComponent as FathomLogo } from "../assets/Fathom-logo.svg";
+import { ReactComponent as FathomLogo } from "apps/lending/assets/Fathom-logo.svg";
 
 interface ConnectWalletPaperProps extends PaperProps {
   loading?: boolean;

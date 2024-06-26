@@ -395,7 +395,6 @@ const TxnList: FC<TxnListProps> = (props) => {
         }
         return true;
       });
-      // @ts-ignore
       setFilteredItems(filtered);
       let extraPages = 1;
       if (filtered.length % ITEMS_PER_PAGE === 0) {

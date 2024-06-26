@@ -24,7 +24,7 @@ import StableSwapAddLiquidity from "components/Stableswap/StableSwapAddLiquidity
 import StableSwapRemoveLiquidity from "components/Stableswap/StableSwapRemoveLiquidity";
 import StableSwapManageFees from "components/Stableswap/StableSwapManageFees";
 
-import AllVaultView from "components/Vault/AllVaultView";
+import VaultsView from "components/Vaults/VaultsView";
 import Web3Status from "components/Web3Status/Web3Status";
 
 import AllProposalsView from "components/Governance/ViewAllProposals";
@@ -83,7 +83,7 @@ import History from "apps/lending/pages/history.page";
 import ReserveOverview from "apps/lending/pages/reserve-overview.page";
 import Faucet from "apps/lending/pages/faucet.page";
 
-import useMainLayout from "hooks/useMainLayout";
+import useMainLayout from "hooks/General/useMainLayout";
 import { StakingProvider } from "context/staking";
 import { ProposalProvider } from "context/proposal";
 import useConnector from "context/connector";
@@ -115,8 +115,11 @@ import {
 import Transactions from "apps/dex/pages/Transactions";
 import { memo, useEffect } from "react";
 import ReactGA from "react-ga4";
+import VaultListView from "components/Vaults/VaultList/VaultListView";
+import VaultTutorial from "components/Vaults/VaultTutorial/VaultTutorial";
+import VaultDetailView from "components/Vaults/VaultDetail/VaultDetailView";
 
-import PositionsTransactionList from "../PositionActivityList/PositionActivityList";
+import PositionsTransactionList from "components/PositionActivityList/PositionActivityList";
 import {
   ChainId,
   DISPLAY_CHARTS,
@@ -130,7 +133,7 @@ import {
 } from "connectors/networks";
 import { DEFAULT_CHAIN_ID } from "utils/Constants";
 import CookieConsent from "components/Common/CookieConsent";
-import { FxdProvider } from "../../context/fxd";
+import { FxdProvider } from "context/fxd";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -281,11 +284,9 @@ const MainLayout = () => {
     open,
     isMetamask,
     isWalletConnect,
-    isMobileFiltersOpen,
     toggleDrawer,
     mainBlockClickHandler,
     openMobileMenu,
-    openMobileFilterMenu,
     drawerRef,
     showToggleDrawerBtn,
     setOpenMobile,
@@ -618,15 +619,11 @@ const MainLayout = () => {
                   </Route>
                 ) : null}
                 {!chainId || DISPLAY_VAULTS.includes(chainId) ? (
-                  <Route
-                    path="/vaults"
-                    element={
-                      <AllVaultView
-                        isMobileFiltersOpen={isMobileFiltersOpen}
-                        openMobileFilterMenu={openMobileFilterMenu}
-                      />
-                    }
-                  ></Route>
+                  <Route path="/vaults" element={<VaultsView />}>
+                    <Route index element={<VaultListView />} />
+                    <Route path="tutorial" index element={<VaultTutorial />} />
+                    <Route path=":vaultAddress" element={<VaultDetailView />} />
+                  </Route>
                 ) : null}
                 {!chainId || DISPLAY_CHARTS.includes(chainId) ? (
                   <Route path="/charts" element={<ChartsView />}>

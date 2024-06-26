@@ -34,8 +34,8 @@ export const ListWrapper: FC<ListWrapperProps> = ({
     localStorageName ? localStorage.getItem(localStorageName) === "true" : false
   );
   const trackEvent = useRootStore((store) => store.trackEvent);
-  // @ts-ignore
-  const handleTrackingEvents = () => {
+
+  const handleTrackingEvents = (): void | null => {
     if (!isCollapse) {
       switch (localStorageName as string | boolean) {
         case "borrowAssetsDashboardTableCollapse":

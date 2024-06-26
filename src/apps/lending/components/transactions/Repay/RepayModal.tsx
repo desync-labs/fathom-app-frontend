@@ -13,10 +13,13 @@ import { useProtocolDataContext } from "apps/lending/hooks/useProtocolDataContex
 import { isFeatureEnabled } from "apps/lending/utils/marketsAndNetworksConfig";
 
 import { BasicModal } from "apps/lending/components/primitives/BasicModal";
-import { ModalWrapper } from "../FlowCommons/ModalWrapper";
+import { ModalWrapper } from "apps/lending/components/transactions/FlowCommons/ModalWrapper";
 import { CollateralRepayModalContent } from "./CollateralRepayModalContent";
-import { RepayModalContent } from "./RepayModalContent";
-import { RepayType, RepayTypeSelector } from "./RepayTypeSelector";
+import { RepayModalContent } from "apps/lending/components/transactions/Repay/RepayModalContent";
+import {
+  RepayType,
+  RepayTypeSelector,
+} from "apps/lending/components/transactions/Repay/RepayTypeSelector";
 
 const RepayModal = () => {
   const { type, close, args, mainTxState } =

@@ -11,7 +11,7 @@ import { Row } from "apps/lending/components/primitives/Row";
 import { useModalContext } from "apps/lending/hooks/useModal";
 import { ListItemCanBeCollateral } from "apps/lending/modules/dashboard/lists/ListItemCanBeCollateral";
 import { ListMobileItemWrapper } from "apps/lending/modules/dashboard/lists/ListMobileItemWrapper";
-import { ListValueRow } from "../ListValueRow";
+import { ListValueRow } from "apps/lending/modules/dashboard/lists/ListValueRow";
 import { FC, memo } from "react";
 
 export const SupplyAssetsListMobileItem: FC<DashboardReserve> = memo(

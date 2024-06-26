@@ -13,6 +13,7 @@ export default function History() {
       "Page Name": "History",
     });
   }, [trackEvent]);
+
   return (
     <>
       <HistoryTopPanel />

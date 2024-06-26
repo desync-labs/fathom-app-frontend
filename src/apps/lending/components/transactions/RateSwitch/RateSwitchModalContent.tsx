@@ -10,8 +10,8 @@ import {
   DetailsIncentivesLine,
   DetailsNumberLine,
   TxModalDetails,
-} from "../FlowCommons/TxModalDetails";
-import { RateSwitchActions } from "./RateSwitchActions";
+} from "apps/lending/components/transactions/FlowCommons/TxModalDetails";
+import { RateSwitchActions } from "apps/lending/components/transactions/RateSwitch/RateSwitchActions";
 import { FC, memo } from "react";
 
 export enum ErrorType {

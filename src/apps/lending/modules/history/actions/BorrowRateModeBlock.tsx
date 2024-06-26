@@ -1,7 +1,10 @@
 import { Typography } from "@mui/material";
 import { formatUnits } from "fathom-ethers/lib/utils";
 
-import { ActionFields, TransactionHistoryItem } from "../types";
+import {
+  ActionFields,
+  TransactionHistoryItem,
+} from "apps/lending/modules/history/types";
 import { FC } from "react";
 
 export const BorrowRateModeBlock: FC<{
