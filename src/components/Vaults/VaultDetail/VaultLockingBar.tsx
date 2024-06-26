@@ -214,6 +214,24 @@ const VaultLockingBar = () => {
     tfVaultLockEndTimeLoading,
   } = useVaultContext();
 
+  const [lockPeriodsLoading, setLockPeriodsLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setLockPeriodsLoading(
+        tfVaultDepositEndTimeLoading || tfVaultLockEndTimeLoading
+      );
+    }, 100);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [
+    tfVaultDepositEndTimeLoading,
+    tfVaultLockEndTimeLoading,
+    setLockPeriodsLoading,
+  ]);
+
   const steps = useMemo(() => {
     return [
       {
@@ -234,7 +252,7 @@ const VaultLockingBar = () => {
           </LockWrapper>
         ),
         date:
-          tfVaultDepositEndTimeLoading || !tfVaultDepositEndDate
+          lockPeriodsLoading || !tfVaultDepositEndDate
             ? null
             : new Date(Number(tfVaultDepositEndDate) * 1000),
       },
@@ -259,17 +277,12 @@ const VaultLockingBar = () => {
           </LockWrapper>
         ),
         date:
-          tfVaultLockEndTimeLoading || !tfVaultLockEndDate
+          lockPeriodsLoading || !tfVaultLockEndDate
             ? null
             : new Date(Number(tfVaultLockEndDate) * 1000),
       },
     ];
-  }, [
-    tfVaultDepositEndDate,
-    tfVaultLockEndDate,
-    tfVaultDepositEndTimeLoading,
-    tfVaultLockEndTimeLoading,
-  ]);
+  }, [tfVaultDepositEndDate, tfVaultLockEndDate, lockPeriodsLoading]);
 
   return (
     <VaultPaper sx={{ marginBottom: isMobile ? "20px" : "24px" }}>
