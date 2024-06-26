@@ -158,8 +158,9 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
           timestamp: reportsItem.timestamp,
           chartValue: getApr(
             reportsItem.currentDebt,
+            historicalApr[index]?.apr,
             vaultId,
-            historicalApr[index]?.apr
+            vaultBalanceTokens
           ),
         };
       })
@@ -272,7 +273,14 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
         <VaultIndicatorItem
           title="APY"
           value={formatNumber(
-            Number(getApr(strategyData.currentDebt, vaultId, strategyData.apr))
+            Number(
+              getApr(
+                strategyData.currentDebt,
+                strategyData.apr,
+                vaultId,
+                vaultBalanceTokens
+              )
+            )
           )}
           units="%"
         />
