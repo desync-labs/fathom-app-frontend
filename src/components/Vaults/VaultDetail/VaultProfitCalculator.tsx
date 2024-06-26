@@ -141,7 +141,7 @@ const VaultProfitCalculator = () => {
       <VaultPaper sx={{ marginBottom: "24px" }}>
         <SummaryWrapper>
           <Typography variant="h3" sx={{ fontSize: "16px" }}>
-            Annual Percentage Rate (APR) Calculator
+            Annual Percentage Yield (APY) Calculator
           </Typography>
         </SummaryWrapper>
         <AppFlexBox mt="12px" sx={{ flexDirection: "row" }}>
@@ -167,11 +167,11 @@ const VaultProfitCalculator = () => {
       <SummaryWrapper>
         <Typography variant="h3" sx={{ fontSize: "16px" }}>
           {isTfVaultType
-            ? `Percentage Rate Calculator for ${getPeriodInDays(
+            ? `Percentage Yield Calculator for ${getPeriodInDays(
                 tfVaultDepositEndDate,
                 tfVaultLockEndDate
               )} days deposit`
-            : "Annual Percentage Rate (APR) Calculator"}
+            : "Annual Percentage Yield (APY) Calculator"}
         </Typography>
       </SummaryWrapper>
       <AppFlexBox mt="12px" sx={{ flexDirection: "row", gap: "20px" }}>
