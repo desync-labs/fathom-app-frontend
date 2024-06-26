@@ -8,4 +8,5 @@ export const ApyConfig = {
   ["0x1da8f639ef48ebb5e3ffacaaa14a01f0fea4b70f".toLowerCase()]: 10,
   ["0x65de7b772e7539f6ef7f5a3fb7118b600d0d70a4".toLowerCase()]: 10,
   ["0x7a03cead6757fff3bc623f9c76ff61981ffe8f8a".toLowerCase()]: 10,
+  ["0x5a51e6d4c58f1585d74ce71cf709c4f939c3dac2".toLowerCase()]: 10,
 } as const;
