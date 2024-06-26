@@ -7,6 +7,7 @@ import {
 } from "@apollo/client";
 import { SUBGRAPH_URLS } from "connectors/networks";
 import { DEFAULT_CHAIN_ID } from "utils/Constants";
+import { loadDevMessages, loadErrorMessages } from "@apollo/client/dev";
 
 /***
  * For Query we have pagination, So we need to return incoming items
@@ -101,6 +102,12 @@ const cache = new InMemoryCache({
     },
   },
 });
+
+if (process.env.REACT_APP_ENV === "dev") {
+  // Adds messages only in a dev environment
+  loadDevMessages();
+  loadErrorMessages();
+}
 
 const httpLink = new HttpLink({ uri: SUBGRAPH_URLS[DEFAULT_CHAIN_ID] });
 
