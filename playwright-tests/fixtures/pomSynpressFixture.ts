@@ -14,6 +14,7 @@ import DexPage from "../pages/dex.page";
 import LendingPage from "../pages/lending.page";
 import DaoPage from "../pages/dao.page";
 import { XDC_RPC } from "../../src/connectors/networks";
+import { APOTHEM_RPC_INTERNAL } from "./global.data";
 dotenv.config();
 
 let networkName: string;
@@ -21,7 +22,6 @@ let rpcUrl: string;
 let chainId: string;
 let symbol: string;
 let blockExplorer: string;
-const APOTHEM_RPC_INTERNAL = "https://rpc.apothem.fathom.fi/";
 
 switch (process.env.ENVIRONMENT_URL) {
   case "https://dapp.fathom.fi":

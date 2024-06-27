@@ -8,3 +8,5 @@ export const logoLinks = {
   daoFTHMLogo:
     "https://raw.githubusercontent.com/Into-the-Fathom/assets/master/blockchains/xinfin/0x3279dBEfABF3C6ac29d7ff24A6c46645f3F4403c/logo.png",
 };
+
+export const APOTHEM_RPC_INTERNAL = "https://rpc.apothem.fathom.fi/";
