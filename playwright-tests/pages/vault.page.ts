@@ -670,7 +670,7 @@ export default class VaultPage extends BasePage {
     await this.getManageVaultButtonRowLocatorById(id).click();
     await expect(this.dialogListItemManageModal).toBeVisible();
     await this.btnWithdrawNavItemListItemManageModal.click();
-    await this.page.waitForTimeout(2000);
+    await this.page.waitForTimeout(5000);
     await this.btnMaxWithdrawInputListItemManageModal.click();
     await this.page.waitForTimeout(2000);
     const depositedValueAfterText =

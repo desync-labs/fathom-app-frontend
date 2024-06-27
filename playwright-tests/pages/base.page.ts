@@ -157,13 +157,13 @@ export default class BasePage {
   ): Promise<Request> {
     const request = await this.page.waitForRequest(
       (request) => {
-        const includesFxdPositions = request
+        const includesOperationName = request
           .postData()
           ?.includes(operationName);
-        if (includesFxdPositions !== undefined) {
+        if (includesOperationName !== undefined) {
           return (
             request.url() === `${this.graphAPIBaseUrl}${endpoint}` &&
-            includesFxdPositions
+            includesOperationName
           );
         } else {
           return false;
