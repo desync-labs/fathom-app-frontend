@@ -3,10 +3,10 @@ import { styled } from "@mui/material/styles";
 import useProtocolStats from "hooks/General/useProtocolStats";
 import { formatCurrency, formatNumber } from "utils/format";
 import usePricesContext from "context/prices";
+import useSharedContext from "context/shared";
 import AppPopover from "components/AppComponents/AppPopover/AppPopover";
 import BigNumber from "bignumber.js";
 import { StatsValueSkeleton } from "components/AppComponents/AppSkeleton/AppSkeleton";
-import useSharedContext from "../../context/shared";
 
 const StatsItem = styled(Grid)`
   text-align: left;
