@@ -76,7 +76,7 @@ const VaultsList: FC<VaultListPropsType> = ({
       <Table aria-label="simple table">
         <TableHead>
           <VaultListTableHeaderRow>
-            <VaultListTableCell colSpan={2}>Token</VaultListTableCell>
+            <VaultListTableCell colSpan={2}>Name</VaultListTableCell>
             <VaultListTableCell colSpan={1}>
               <VaultListTableCellPopover>
                 Earned
