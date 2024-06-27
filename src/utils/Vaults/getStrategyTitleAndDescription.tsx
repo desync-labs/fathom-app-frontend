@@ -134,6 +134,18 @@ strategyDescription["0x0425b4f142059eb15cae157dac4277f89b9894c2"] = (
   </>
 );
 
+strategyDescription["0xb2f928bfd9d2107a7c5b8a2208de4a017cdf1bfc"] = (
+  <>
+    <p>Strategy based on off-chain TradeFi products.</p>
+  </>
+);
+
+strategyDescription["0x676a616d4fa846c6699437a4f1209c5808e5b1ab"] = (
+  <>
+    <p>Strategy based on off-chain TradeFi products.</p>
+  </>
+);
+
 strategyTitle["0xe2dea7e0c272de04e8708674dae73ebd6e5c1455"] =
   "FXD Strategy - 3 Months - 100.000 FXD";
 
@@ -160,5 +172,11 @@ strategyTitle["0x0425b4f142059eb15cae157dac4277f89b9894c2"] =
 
 strategyTitle["0xBc8C9999a3D56e799Bb470D8402A9dA121FcBf14"] =
   "Fathom Trade Fintech Strategy 1";
+
+strategyTitle["0xb2f928bfd9d2107a7c5b8a2208de4a017cdf1bfc"] =
+  "TradeFlow strategy #1";
+
+strategyTitle["0x676a616d4fa846c6699437a4f1209c5808e5b1ab"] =
+  "TradeFlow strategy #1";
 
 export { strategyTitle, strategyDescription };

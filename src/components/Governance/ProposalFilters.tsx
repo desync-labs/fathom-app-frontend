@@ -34,12 +34,12 @@ const AddProposalButton = styled(ButtonPrimary)`
 `;
 
 const ProposalFilters: FC<ProposalFiltersType> = ({
-  // search,
-  // setSearch,
-  // time,
-  // setTime,
-  // proposals,
-  // setProposals,
+  /*search,
+  setSearch,
+  time,
+  setTime,
+  proposals,
+  setProposals,*/
   setCreateProposal,
 }) => {
   return (
@@ -76,7 +76,6 @@ const ProposalFilters: FC<ProposalFiltersType> = ({
         <Grid item xs={2}>
           <ProposalSelect
             value={proposals}
-            // @ts-ignore
             onChange={(event: SelectChangeEvent) => {
               setProposals(event.target.value);
             }}

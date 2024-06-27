@@ -17,6 +17,7 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import useConnector from "context/connector";
+import useRpcError from "hooks/General/useRpcError";
 import {
   AppFormLabel,
   AppTextField,
@@ -31,6 +32,8 @@ enum MethodType {
   Mutate = "mutate",
 }
 
+const EMPTY_FIELD_NAME = "noname";
+
 const MethodResponseStyled = styled(Box)`
   position: relative;
   width: calc(100% - 122px);
@@ -38,6 +41,10 @@ const MethodResponseStyled = styled(Box)`
   font-weight: 500;
   word-wrap: break-word;
   padding-top: 4px;
+
+  &.writeMethodRes {
+    width: 100%;
+  }
 
   ${({ theme }) => theme.breakpoints.down("sm")} {
     font-size: 12px;
@@ -187,6 +194,7 @@ const MethodListItem: FC<{
   });
 
   const { account, library } = useConnector();
+  const { showErrorNotification } = useRpcError();
 
   const [methodType, setMethodType] = useState<MethodType>(MethodType.View);
   const [contract, setContract] = useState<Contract>();
@@ -223,22 +231,28 @@ const MethodListItem: FC<{
   ]);
 
   const handleSubmitForm = useCallback(async () => {
-    const values = getValues();
+    const values: Record<string, any> = getValues();
     const options = { gasLimit: 0 };
     setIsLoading(true);
 
     const args: any[] = [];
 
     method.inputs.forEach((input, index) => {
+      const inputName = input.name !== "" ? input.name : EMPTY_FIELD_NAME;
       if (input.type === "uint256") {
-        // @ts-ignore
-        args[index] = utils.parseUnits(values[input.name], 18);
+        args[index] = values[inputName];
       } else if (input.type === "address") {
-        // @ts-ignore
-        args[index] = values[input.name].toLowerCase();
+        args[index] = values[inputName].toLowerCase();
+      } else if (input.type === "address[]") {
+        if (values[inputName] === "" || values[inputName] === undefined) {
+          args[index] = [];
+        } else {
+          args[index] = values[inputName]
+            .split(",")
+            .map((addr: string) => addr.trim().toLowerCase());
+        }
       } else {
-        // @ts-ignore
-        args[index] = values[input.name];
+        args[index] = values[inputName];
       }
     });
 
@@ -265,6 +279,8 @@ const MethodListItem: FC<{
       setResponse(response);
     } catch (e: any) {
       console.error(e);
+      showErrorNotification(e);
+      setIsLoading(false);
     } finally {
       setIsLoading(false);
     }
@@ -346,12 +362,18 @@ const MethodListItem: FC<{
           {method.inputs.map((input) => (
             <Controller
               key={input.name}
-              name={input.name as never}
-              rules={{ required: true }}
+              name={
+                input.name !== ""
+                  ? (input.name as never)
+                  : (EMPTY_FIELD_NAME as never)
+              }
+              rules={{ required: input.type !== "address[]" }}
               control={control}
               render={({ field, fieldState: { error } }) => (
                 <MethodInputFormGroup>
-                  <AppFormLabel>{`${input.name} (${input.type})`}</AppFormLabel>
+                  <AppFormLabel>{`${input.name} (${input.type}${
+                    input.type === "uint256" ? " in wei" : ""
+                  })`}</AppFormLabel>
                   <AppTextField error={!!error} multiline rows={1} {...field} />
                 </MethodInputFormGroup>
               )}
@@ -372,9 +394,24 @@ const MethodListItem: FC<{
             />
           )}
           <AppFlexBox
-            sx={{ justifyContent: "space-between", alignItems: "flex-start" }}
+            sx={{
+              flexDirection:
+                methodType === MethodType.Mutate ? "column-reverse" : "row",
+              justifyContent:
+                methodType === MethodType.Mutate
+                  ? "flex-start"
+                  : "space-between",
+              alignItems:
+                methodType === MethodType.Mutate ? "flex-end" : "flex-start",
+            }}
           >
-            <MethodResponseStyled>
+            <MethodResponseStyled
+              className={
+                methodType === MethodType.Mutate
+                  ? "writeMethodRes"
+                  : "viewMethodRes"
+              }
+            >
               {response !== undefined && <>{renderResponse()}</>}
             </MethodResponseStyled>
             <ApproveButton

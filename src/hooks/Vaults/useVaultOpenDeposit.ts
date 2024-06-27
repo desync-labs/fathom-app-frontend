@@ -103,9 +103,14 @@ const useVaultOpenDeposit = (vault: IVault, onClose: () => void) => {
   }, [deposit, approvalStatus, setApproveBtn]);
 
   useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout>;
     if (account && token?.id) {
-      getVaultTokenBalance();
+      timeout = setTimeout(() => {
+        getVaultTokenBalance();
+      }, 300);
     }
+
+    return () => timeout && clearTimeout(timeout);
   }, [account, token?.id, getVaultTokenBalance]);
 
   useEffect(() => {

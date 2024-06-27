@@ -1,7 +1,7 @@
 import { memo, useEffect, useState } from "react";
 import BigNumber from "bignumber.js";
 import { Box, styled } from "@mui/material";
-import { IVaultStrategyReport } from "fathom-sdk";
+import { IVaultStrategyReport, VaultType } from "fathom-sdk";
 import { AppListVault } from "components/AppComponents/AppList/AppList";
 import VaultHistoryChart, {
   HistoryChartDataType,
@@ -99,14 +99,21 @@ export const AppListFees = styled(AppListVault)`
 `;
 
 const VaultDetailInfoTabAbout = () => {
-  const { vault, reports, historicalApr, vaultLoading, isReportsLoaded } =
-    useVaultContext();
+  const {
+    vault,
+    reports,
+    historicalApr,
+    vaultLoading,
+    isReportsLoaded,
+    activeTfPeriod,
+  } = useVaultContext();
   const [earnedHistoryArr, setEarnedHistoryArr] = useState<
     HistoryChartDataType[]
   >([]);
+  const { type } = vault;
 
   useEffect(() => {
-    if (!Object.keys(reports).length || !Object.keys(historicalApr).length) {
+    if (!Object.keys(reports).length) {
       return;
     }
 
@@ -118,7 +125,7 @@ const VaultDetailInfoTabAbout = () => {
       allReports = [...allReports, ...reportsCollection];
     }
 
-    allReports.sort((a, b) => parseInt(a.timestamp) - parseInt(b.timestamp));
+    allReports.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
 
     for (let i = 0; i <= allReports.length - 1; i++) {
       const report = allReports[i];
@@ -147,13 +154,19 @@ const VaultDetailInfoTabAbout = () => {
       ) : (
         <VaultAboutTabContent />
       )}
-      <VaultHistoryChart
-        title={"Cumulative Earnings"}
-        chartDataArray={earnedHistoryArr}
-        valueLabel="Earnings"
-        valueUnits={` ${vault?.token?.name}`}
-        isLoading={!isReportsLoaded}
-      />
+      {type === VaultType.TRADEFI && activeTfPeriod === 0 ? null : (
+        <VaultHistoryChart
+          title={
+            type === VaultType.TRADEFI && activeTfPeriod < 2
+              ? "Expected Cumulative Earnings"
+              : "Cumulative Earnings"
+          }
+          chartDataArray={earnedHistoryArr}
+          valueLabel="Earnings"
+          valueUnits={` ${vault?.token?.name}`}
+          isLoading={!isReportsLoaded}
+        />
+      )}
     </VaultInfoWrapper>
   );
 };

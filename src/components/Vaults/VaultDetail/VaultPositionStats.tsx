@@ -27,6 +27,8 @@ const PositionStatItem = styled(Grid)`
     padding: 12px 24px;
   }
   ${({ theme }) => theme.breakpoints.down("sm")} {
+    height: auto !important;
+    margin: 0 !important;
     & > .MuiBox-root {
       border: none;
       background: #1e2f4c;
@@ -185,7 +187,7 @@ const VaultPositionStats = () => {
             <PositionStatItemValue>
               {isLoading ? (
                 <StatsValueSkeleton
-                  height={isMobile ? 20 : 42}
+                  height={isMobile ? 40 : 42}
                   width={"100%"}
                   isMobile={isMobile}
                 />
@@ -224,7 +226,7 @@ const VaultPositionStats = () => {
             <PositionStatItemValue>
               {isLoading ? (
                 <StatsValueSkeleton
-                  height={isMobile ? 20 : 42}
+                  height={isMobile ? 40 : 42}
                   width={"100%"}
                   isMobile={isMobile}
                 />
@@ -258,7 +260,7 @@ const VaultPositionStats = () => {
             <PositionStatItemValue>
               {isLoading ? (
                 <StatsValueSkeleton
-                  height={isMobile ? 20 : 42}
+                  height={isMobile ? 40 : 42}
                   width={"100%"}
                   isMobile={isMobile}
                 />
@@ -298,7 +300,7 @@ const VaultPositionStats = () => {
               <>
                 {isLoading || balanceEarned === -1 ? (
                   <StatsValueSkeleton
-                    height={isMobile ? 20 : 42}
+                    height={isMobile ? 40 : 42}
                     width={"100%"}
                     isMobile={isMobile}
                   />

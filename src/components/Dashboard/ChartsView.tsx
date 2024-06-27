@@ -2,7 +2,7 @@ import { useLocation } from "react-router-dom";
 import { FC, Suspense, useMemo } from "react";
 import { styled } from "@mui/material/styles";
 import {
-  OverviewIcon,
+  DashboardIcon,
   TokensIcon,
   PairsIcon,
   AccountsIcon,
@@ -56,7 +56,7 @@ const ChartsView: FC = () => {
           className={isOverviewActive ? "active" : ""}
           to="/charts"
         >
-          <OverviewIcon isactive={isOverviewActive ? "true" : ""} />
+          <DashboardIcon isactive={isOverviewActive ? "true" : ""} />
           Overview
         </NestedRouteLink>
         <NestedRouteLink

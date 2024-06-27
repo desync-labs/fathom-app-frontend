@@ -9,6 +9,7 @@ import { formatNumber } from "utils/format";
 import { getAccountUrl } from "utils/explorer";
 import { DEFAULT_CHAIN_ID } from "utils/Constants";
 import useSharedContext from "context/shared";
+import useVaultContext from "context/vault";
 import {
   DescriptionList,
   strategyDescription,
@@ -145,6 +146,7 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
   const [lastReportDate, setLastReportDate] = useState<string>("");
   const [allocationShare, setAllocationShare] = useState<number>(0);
 
+  const { isTfVaultType } = useVaultContext();
   const { isMobile } = useSharedContext();
 
   useEffect(() => {
@@ -156,8 +158,9 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
           timestamp: reportsItem.timestamp,
           chartValue: getApr(
             reportsItem.currentDebt,
+            historicalApr[index]?.apr,
             vaultId,
-            historicalApr[index]?.apr
+            vaultBalanceTokens
           ),
         };
       })
@@ -270,7 +273,14 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
         <VaultIndicatorItem
           title="APY"
           value={formatNumber(
-            Number(getApr(strategyData.currentDebt, vaultId, strategyData.apr))
+            Number(
+              getApr(
+                strategyData.currentDebt,
+                strategyData.apr,
+                vaultId,
+                vaultBalanceTokens
+              )
+            )
           )}
           units="%"
         />
@@ -285,15 +295,17 @@ const VaultStrategyItem: FC<VaultStrategyItemPropsType> = ({
           units="%"
         />
       </VaultIndicatorsWrapper>
-      <Box width={"100%"}>
-        <VaultHistoryChart
-          title={"Historical APY"}
-          chartDataArray={aprHistoryArr}
-          valueLabel="APR"
-          valueUnits="%"
-          isLoading={reportsLoading}
-        />
-      </Box>
+      {!isTfVaultType && (
+        <Box width={"100%"}>
+          <VaultHistoryChart
+            title={"Historical APY"}
+            chartDataArray={aprHistoryArr}
+            valueLabel="APY"
+            valueUnits="%"
+            isLoading={reportsLoading}
+          />
+        </Box>
+      )}
     </Box>
   );
 };

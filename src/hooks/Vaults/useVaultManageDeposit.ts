@@ -62,6 +62,9 @@ const useVaultManageDeposit = (
   const approvalStatus = useMemo(
     () =>
       debounce(async (formToken: string) => {
+        if (!formToken) {
+          return;
+        }
         const approved = await vaultService.approvalStatus(
           account,
           token.id,
@@ -129,7 +132,7 @@ const useVaultManageDeposit = (
   }, [formType, setValue]);
 
   useEffect(() => {
-    if (formToken.trim() && formType === FormType.DEPOSIT) {
+    if (formType === FormType.DEPOSIT) {
       approvalStatus(formToken);
     } else {
       setApproveBtn(false);
@@ -137,9 +140,14 @@ const useVaultManageDeposit = (
   }, [formToken, formType, setApproveBtn]);
 
   useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout>;
     if (account && token.id) {
-      getVaultTokenBalance();
+      timeout = setTimeout(() => {
+        getVaultTokenBalance();
+      }, 300);
     }
+
+    return () => timeout && clearTimeout(timeout);
   }, [account, token.id, getVaultTokenBalance]);
 
   useEffect(() => {

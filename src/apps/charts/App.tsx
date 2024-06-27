@@ -97,8 +97,7 @@ const App = () => {
 
   const showWarning =
     headBlock && latestBlock
-      ? // @ts-ignore
-        headBlock - latestBlock > BLOCK_DIFFERENCE_THRESHOLD
+      ? Number(headBlock) - Number(latestBlock) > BLOCK_DIFFERENCE_THRESHOLD
       : false;
 
   return (

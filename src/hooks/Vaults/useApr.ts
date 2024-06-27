@@ -1,17 +1,13 @@
 import { formatNumber } from "utils/format";
 import { IVault } from "fathom-sdk";
 import BigNumber from "bignumber.js";
+import { ApyConfig } from "utils/Vaults/getApyConfig";
 
-const EDUCATION_STRATEGY_ID = "0x3c8e9896933b374e638f9a5c309535409129aaa2";
-
-const ApyConfig = {
-  ["0xbf4adcc0a8f2c7e29f934314ce60cf5de38bfe8f".toLowerCase()]: 10,
-  ["0x2D8A913F47B905C71F0A3d387de863F3a1Cc8d78".toLowerCase()]: 10,
-  ["0xA6272625f8fCd6FC3b53A167E471b7D55095a40b".toLowerCase()]: 10,
-} as const;
+const EDUCATION_STRATEGY_ID =
+  "0x3c8e9896933b374e638f9a5c309535409129aaa2".toLowerCase();
 
 const useApr = (vault: IVault) => {
-  if (vault.id === EDUCATION_STRATEGY_ID) {
+  if (vault.id?.toLowerCase() === EDUCATION_STRATEGY_ID) {
     return formatNumber(
       (394200 /
         BigNumber(vault.balanceTokens)
@@ -29,7 +25,7 @@ const useApr = (vault: IVault) => {
 };
 
 const useAprNumber = (vault: IVault) => {
-  if (vault.id === EDUCATION_STRATEGY_ID) {
+  if (vault.id?.toLowerCase() === EDUCATION_STRATEGY_ID) {
     return (
       (394200 /
         BigNumber(vault.balanceTokens)
@@ -46,12 +42,25 @@ const useAprNumber = (vault: IVault) => {
   return Number(vault.apr);
 };
 
-const getApr = (currentDept: string, vaultId: string, apr: string) => {
-  if (vaultId === EDUCATION_STRATEGY_ID) {
-    return BigNumber(394200)
-      .dividedBy(BigNumber(currentDept).dividedBy(10 ** 18))
+const getApr = (
+  currentDept: string,
+  apr: string,
+  vaultId: string,
+  vaultBalanceTokens?: string
+) => {
+  if (vaultId.toLowerCase() === EDUCATION_STRATEGY_ID) {
+    const currentDebt = BigNumber(currentDept).dividedBy(10 ** 18);
+
+    const value = BigNumber(394200)
+      .dividedBy(
+        currentDebt && currentDebt.isGreaterThan(100)
+          ? currentDebt
+          : BigNumber(vaultBalanceTokens || "0").dividedBy(10 ** 18)
+      )
       .multipliedBy(100)
       .toString();
+
+    return value;
   }
 
   if (ApyConfig[vaultId]) {

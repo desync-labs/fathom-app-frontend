@@ -235,6 +235,7 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
           <ModalButtonWrapper>
             <ButtonSecondary
               onClick={onClose}
+              disabled={approvalPending || openDepositLoading}
               data-testid="vault-listItemManageModal-closeButton"
             >
               Close
@@ -248,7 +249,8 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
                 onClick={approve}
                 disabled={
                   !!Object.keys(errors).length ||
-                  (isTfVaultType && activeTfPeriod > 0)
+                  (isTfVaultType && activeTfPeriod > 0) ||
+                  approvalPending
                 }
                 data-testid="vault-listItemManageModal-approveTokenButton"
               >

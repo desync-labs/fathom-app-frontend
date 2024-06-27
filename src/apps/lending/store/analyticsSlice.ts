@@ -21,8 +21,6 @@ export const createAnalyticsSlice: StateCreator<
   [["zustand/subscribeWithSelector", never], ["zustand/devtools", never]],
   [],
   AnalyticsSlice
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
 > = (set, get) => {
   return {
     trackEvent: (eventName: string, properties?: TrackEventProperties) => {

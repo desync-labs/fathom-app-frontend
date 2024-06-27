@@ -24,10 +24,16 @@ import {
   VAULT_POSITION_TRANSACTIONS,
   VAULT_STRATEGY_REPORTS,
 } from "apollo/queries";
-import { vaultTitle } from "utils/Vaults/getVaultTitleAndDescription";
+import {
+  getDefaultVaultTitle,
+  vaultTitle,
+} from "utils/Vaults/getVaultTitleAndDescription";
 import { vaultType } from "utils/Vaults/getVaultType";
 import dayjs from "dayjs";
 import { getVaultLockEndDate } from "utils/Vaults/getVaultLockEndDate";
+import { ChainId } from "connectors/networks";
+import { TRADE_FI_VAULT_REPORT_STEP } from "utils/Constants";
+import { useAprNumber } from "hooks/Vaults/useApr";
 
 declare module "fathom-sdk" {
   interface IVault {
@@ -65,11 +71,6 @@ export type IVaultStrategyHistoricalApr = {
 enum TransactionFetchType {
   FETCH = "fetch",
   PROMISE = "promise",
-}
-
-enum FetchBalanceTokenType {
-  PROMISE = "promise",
-  FETCH = "fetch",
 }
 
 const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
@@ -116,7 +117,13 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
   const [tfVaultLockEndDate, setTfVaultLockEndDate] = useState<string | null>(
     null
   );
-  const [activeTfPeriod, setActiveTfPeriod] = useState(0);
+
+  const [tfVaultDepositEndTimeLoading, setTfVaultDepositEndTimeLoading] =
+    useState<boolean>(false);
+  const [tfVaultLockEndTimeLoading, setTfVaultLockEndTimeLoading] =
+    useState<boolean>(false);
+
+  const [activeTfPeriod, setActiveTfPeriod] = useState<number>(0);
   const [tfVaultDepositLimit, setTfVaultDepositLimit] = useState<string>("0");
 
   const { syncVault, prevSyncVault, setLastTransactionBlock } =
@@ -126,10 +133,16 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     VaultInfoTabs.ABOUT
   );
 
+  const apr = useAprNumber(vault);
+
   const [vaultMethods, setVaultMethods] = useState<FunctionFragment[]>([]);
   const [strategyMethods, setStrategyMethods] = useState<FunctionFragment[]>(
     []
   );
+  const [isWithdrawAllLoading, setIsWithdrawAllLoading] =
+    useState<boolean>(false);
+  const [isShowWithdrawAllButtonLoading, setIsShowWithdrawAllButtonLoading] =
+    useState<boolean>(true);
 
   const { chainId, account, library } = useConnector();
   const { vaultService, poolService } = useServices();
@@ -137,7 +150,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
 
   const [loadVault, { loading: vaultLoading }] = useLazyQuery(VAULT, {
     context: { clientName: "vaults", chainId },
-    fetchPolicy: "network-only",
+    fetchPolicy: "no-cache",
   });
 
   const [loadPosition, { loading: vaultPositionLoading }] = useLazyQuery(
@@ -148,11 +161,14 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     }
   );
 
-  const [loadReports] = useLazyQuery(VAULT_STRATEGY_REPORTS, {
-    context: { clientName: "vaults", chainId },
-    variables: { chainId },
-    fetchPolicy: "no-cache",
-  });
+  const [loadReports, { loading: reportsLoading }] = useLazyQuery(
+    VAULT_STRATEGY_REPORTS,
+    {
+      context: { clientName: "vaults", chainId },
+      variables: { chainId },
+      fetchPolicy: "no-cache",
+    }
+  );
 
   const [loadPositionTransactions, { loading: transactionsLoading }] =
     useLazyQuery(VAULT_POSITION_TRANSACTIONS, {
@@ -187,7 +203,8 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
   const fetchReports = (
     strategyId: string,
     prevStateReports: IVaultStrategyReport[] = [],
-    prevStateApr: IVaultStrategyHistoricalApr[] = []
+    prevStateApr: IVaultStrategyHistoricalApr[] = [],
+    isTfVault = false
   ) => {
     loadReports({
       variables: {
@@ -207,20 +224,24 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
         fetchReports(
           strategyId,
           [...prevStateReports, ...(data?.strategyReports || [])],
-          [...prevStateApr, ...(data?.strategyHistoricalAprs || [])]
+          [...prevStateApr, ...(data?.strategyHistoricalAprs || [])],
+          isTfVault
         );
       } else {
         setReports((prev) => ({
           ...prev,
           [strategyId]: [...prevStateReports, ...(data?.strategyReports || [])],
         }));
-        setHistoricalApr((prev) => ({
-          ...prev,
-          [strategyId]: [
-            ...prevStateApr,
-            ...(data?.strategyHistoricalAprs || []),
-          ],
-        }));
+        if (!isTfVault) {
+          setHistoricalApr((prev) => ({
+            ...prev,
+            [strategyId]: [
+              ...prevStateApr,
+              ...(data?.strategyHistoricalAprs || []),
+            ],
+          }));
+        }
+
         setIsReportsLoaded(true);
       }
     });
@@ -228,11 +249,17 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
 
   useEffect(() => {
     let timeout: ReturnType<typeof setTimeout>;
-    if (vault && vault?.strategies && vault?.strategies?.length) {
+    if (vault?.strategies && vault?.strategies?.length) {
+      /**
+       * Fetch reports for TradeFi vault only after the lock period is end.
+       */
+      if (isTfVaultType && activeTfPeriod < 2) {
+        return;
+      }
       timeout = setTimeout(() => {
         vault?.strategies.forEach((strategy: IVaultStrategy) => {
           /**
-           * Clear reports and historical APRs necessary for chain switch
+           * Clear reports and historical APRs necessary for chain switch only for non-TradeFi vaults
            */
           setReports((prev) => ({
             ...prev,
@@ -242,7 +269,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
             ...prev,
             [strategy.id]: [],
           }));
-          fetchReports(strategy.id, [], []);
+          fetchReports(strategy.id, [], [], isTfVaultType);
         });
       }, 300);
     }
@@ -250,7 +277,69 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     return () => {
       timeout && clearTimeout(timeout);
     };
-  }, [vault, chainId]);
+  }, [vault?.strategies, chainId, isTfVaultType, activeTfPeriod]);
+
+  useEffect(() => {
+    if (!tfVaultLockEndDate || !tfVaultDepositEndDate) return;
+
+    const now = dayjs();
+    const lockEndDate = dayjs.unix(Number(tfVaultLockEndDate));
+    const depositEndDate = dayjs.unix(Number(tfVaultDepositEndDate));
+
+    if (
+      isTfVaultType &&
+      now.isAfter(depositEndDate) &&
+      now.isBefore(lockEndDate) &&
+      apr &&
+      BigNumber(vault?.balanceTokens).isGreaterThan(0)
+    ) {
+      const countOfHours = now.isBefore(lockEndDate)
+        ? now.diff(depositEndDate, "hour")
+        : lockEndDate.diff(depositEndDate, "hour");
+
+      if (BigNumber(countOfHours).isGreaterThan(0)) {
+        const reports: { gain: string; timestamp: string; loss: string }[] = [];
+
+        for (let i = 0; i <= countOfHours; i++) {
+          if (i % TRADE_FI_VAULT_REPORT_STEP === 0) {
+            const timestamp = (
+              Number(depositEndDate.add(i, "hour").unix()) * 1000
+            ).toString();
+
+            const gain = BigNumber(apr)
+              .dividedBy(100)
+              .multipliedBy(vault.balanceTokens)
+              .dividedBy(365 * 24)
+              .multipliedBy(TRADE_FI_VAULT_REPORT_STEP)
+              .dividedBy(10 ** 18)
+              .toString();
+
+            reports.push({
+              timestamp,
+              gain: BigNumber(gain)
+                .multipliedBy(10 ** 18)
+                .toString(),
+              loss: "0",
+            });
+          }
+        }
+
+        setReports((prev) => ({
+          ...prev,
+          [vault.strategies[0].id]: reports as IVaultStrategyReport[],
+        }));
+      }
+      setIsReportsLoaded(true);
+    }
+  }, [
+    isTfVaultType,
+    tfVaultLockEndDate,
+    tfVaultDepositEndDate,
+    apr,
+    vault?.balanceTokens,
+    setReports,
+    setIsReportsLoaded,
+  ]);
 
   useEffect(() => {
     if (!vaultsFactoriesLoading && vaultsFactories) {
@@ -292,7 +381,11 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
         depositLimit: BigNumber(depositLimitValue).toString(),
         name: vaultTitle[vaultData.id.toLowerCase()]
           ? vaultTitle[vaultData.id.toLowerCase()]
-          : vaultData.token.name,
+          : getDefaultVaultTitle(
+              vaultType[vaultData.id.toLowerCase()] || VaultType.DEFAULT,
+              vaultData.token.name,
+              vaultData.id
+            ),
         type,
       };
 
@@ -318,10 +411,8 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     }
   };
 
-  useEffect(() => {
-    if (!vaultId) {
-      navigate("/vaults");
-    } else {
+  const fetchVault = useCallback(
+    (vaultId: string, chainId: ChainId) => {
       loadVault({
         variables: {
           id: vaultId,
@@ -384,16 +475,23 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
           }
         }
       });
+    },
+    [loadVault, setVault, navigate, vaultService, account]
+  );
+
+  useEffect(() => {
+    if (!vaultId) {
+      navigate("/vaults");
+    } else if (!vaultLoading) {
+      fetchVault(vaultId, chainId);
     }
-  }, [
-    vaultId,
-    account,
-    isTfVaultType,
-    chainId,
-    vaultService,
-    loadVault,
-    setVault,
-  ]);
+  }, [vaultId, chainId]);
+
+  useEffect(() => {
+    if (syncVault && !prevSyncVault && vaultId && !vaultLoading) {
+      fetchVault(vaultId, chainId);
+    }
+  }, [syncVault, prevSyncVault, vaultId, chainId]);
 
   useEffect(() => {
     if (vaultId && account && isTfVaultType) {
@@ -405,19 +503,32 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
 
   useEffect(() => {
     if (isTfVaultType && vault.strategies?.length) {
+      setTfVaultDepositEndTimeLoading(true);
       vaultService
         .getTradeFlowVaultDepositEndDate(vault.strategies[0].id)
         .then((res) => {
           setTfVaultDepositEndDate(res);
+        })
+        .finally(() => {
+          setTfVaultDepositEndTimeLoading(false);
         });
 
+      setTfVaultLockEndTimeLoading(true);
       vaultService
         .getTradeFlowVaultLockEndDate(vault.strategies[0].id)
         .then((res) => {
           setTfVaultLockEndDate(getVaultLockEndDate(res).toString());
+        })
+        .finally(() => {
+          setTfVaultLockEndTimeLoading(false);
         });
     }
-  }, [vault, isTfVaultType]);
+  }, [
+    vault,
+    isTfVaultType,
+    setTfVaultDepositEndTimeLoading,
+    setTfVaultLockEndTimeLoading,
+  ]);
 
   useEffect(() => {
     if (!tfVaultDepositEndDate || !tfVaultLockEndDate) return;
@@ -519,29 +630,9 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
   }, [setStrategyMethods, isTfVaultType]);
 
   const fetchBalanceToken = useCallback(
-    (
-      fetchBalanceTokenType: FetchBalanceTokenType = FetchBalanceTokenType.FETCH,
-      vaultPosition: IVaultPosition
-    ) => {
+    (vaultPosition: IVaultPosition) => {
       if (!vaultPosition?.balanceShares) {
-        setBalanceToken("0");
-        return "0";
-      }
-      if (fetchBalanceTokenType === FetchBalanceTokenType.PROMISE) {
-        setFetchBalanceLoading(true);
-        return vaultService
-          .previewRedeem(
-            BigNumber(vaultPosition?.balanceShares as string)
-              .dividedBy(10 ** 18)
-              .toString(),
-            vault.id
-          )
-          .catch((error) => {
-            console.error("Error fetching balance token:", error);
-            showErrorNotification(error);
-            return "-1";
-          })
-          .finally(() => setFetchBalanceLoading(false));
+        return Promise.resolve("0");
       }
 
       setFetchBalanceLoading(true);
@@ -552,14 +643,10 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
             .toString(),
           vault.id
         )
-        .then((balanceToken: string) => {
-          setBalanceToken(balanceToken);
-          return balanceToken;
-        })
         .catch((error) => {
           console.error("Error fetching balance token:", error);
-          setBalanceToken("-1");
           showErrorNotification(error);
+          return "-1";
         })
         .finally(() => setFetchBalanceLoading(false));
     },
@@ -615,7 +702,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
         (vaultPosition: IVaultPosition) => {
           Promise.all([
             fetchPositionTransactions(TransactionFetchType.PROMISE, vault.id),
-            fetchBalanceToken(FetchBalanceTokenType.PROMISE, vaultPosition),
+            fetchBalanceToken(vaultPosition),
           ])
             .then(([transactions, balanceToken]) => {
               setBalanceToken(balanceToken as string);
@@ -626,7 +713,6 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
             })
             .finally(() => {
               setVaultPosition(vaultPosition);
-              updateVaultDepositLimit(vault, account);
             });
         }
       );
@@ -649,6 +735,9 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
 
   const balanceEarned = useMemo(() => {
     if (balanceToken === "-1") return 0;
+    if (transactionsLoading || fetchBalanceLoading) {
+      return -1;
+    }
 
     const sumTokenDeposits = depositsList.reduce(
       (acc: BigNumber, deposit: any) => acc.plus(deposit.tokenAmount),
@@ -660,12 +749,10 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
       new BigNumber(0)
     );
 
-    return transactionsLoading || fetchBalanceLoading
-      ? -1
-      : BigNumber(balanceToken || "0")
-          .minus(sumTokenDeposits.minus(sumTokenWithdrawals))
-          .dividedBy(10 ** 18)
-          .toNumber();
+    return BigNumber(balanceToken || "0")
+      .minus(sumTokenDeposits.minus(sumTokenWithdrawals))
+      .dividedBy(10 ** 18)
+      .toNumber();
   }, [
     vaultPosition,
     balanceToken,
@@ -674,6 +761,44 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     transactionsLoading,
     fetchBalanceLoading,
   ]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setIsShowWithdrawAllButtonLoading(
+        !isTfVaultType ||
+          !isReportsLoaded ||
+          tfVaultDepositEndTimeLoading ||
+          tfVaultLockEndTimeLoading ||
+          reportsLoading ||
+          !Object.values(reports).length
+      );
+    }, 300);
+
+    return () => {
+      timeout && clearTimeout(timeout);
+    };
+  }, [
+    isTfVaultType,
+    isReportsLoaded,
+    tfVaultDepositEndTimeLoading,
+    tfVaultLockEndTimeLoading,
+    reportsLoading,
+    reports,
+    setIsShowWithdrawAllButtonLoading,
+  ]);
+
+  const showWithdrawAllButton = useMemo(() => {
+    if (isShowWithdrawAllButtonLoading) {
+      return false;
+    }
+
+    const firstReport = Object.values(reports)[0][0];
+
+    return (
+      activeTfPeriod === 2 &&
+      BigNumber(firstReport?.gain || "0").isGreaterThan(0)
+    );
+  }, [isShowWithdrawAllButtonLoading, reports, activeTfPeriod]);
 
   const executeHasRoleMethod = async (): Promise<boolean> => {
     if (vault === null) {
@@ -722,28 +847,29 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     return Promise.all(strategyIdsPromises).then(
       (authorizedIds) => authorizedIds.filter((id) => id !== null) as string[]
     );
-  }, [vault]);
+  }, [vault?.strategies]);
 
   useEffect(() => {
-    if (vault.id && account) {
+    if (vault?.id && account) {
       getStrategiesIds.then((authorizedIds) =>
         setManagedStrategiesIds(authorizedIds)
       );
     } else {
       setManagedStrategiesIds([]);
     }
-  }, [vault, account, getStrategiesIds]);
+  }, [vault?.id, account, getStrategiesIds]);
 
   useEffect(() => {
-    if (vault.id && account) {
+    if (vault?.id && account) {
       executeHasRoleMethod().then((isManager) => setIsUserManager(isManager));
     } else {
       setIsUserManager(false);
     }
-  }, [vault, account]);
+  }, [vault?.id, account]);
 
   const handleWithdrawAll = useCallback(async () => {
     if (vaultPosition) {
+      setIsWithdrawAllLoading(true);
       try {
         const blockNumber = await vaultService.redeem(
           BigNumber(vaultPosition.balanceShares)
@@ -757,6 +883,8 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
         setLastTransactionBlock(blockNumber as number);
       } catch (e) {
         console.log(e);
+      } finally {
+        setIsWithdrawAllLoading(false);
       }
     }
   }, [vaultPosition, account, vaultService, setLastTransactionBlock]);
@@ -788,7 +916,12 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     activeTfPeriod,
     minimumDeposit,
     setMinimumDeposit,
+    isWithdrawAllLoading,
     handleWithdrawAll,
+    tfVaultDepositEndTimeLoading,
+    tfVaultLockEndTimeLoading,
+    showWithdrawAllButton,
+    isShowWithdrawAllButtonLoading,
   };
 };
 

@@ -194,6 +194,7 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
           <ModalButtonWrapper>
             <ButtonSecondary
               onClick={onClose}
+              disabled={approvalPending || openDepositLoading}
               data-testid="vault-listItemDepositModal-closeButton"
             >
               Close
@@ -206,7 +207,8 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
                 disabled={
                   !!Object.keys(errors).length ||
                   (isTfVaultType && !isUserKycPassed) ||
-                  (isTfVaultType && activeTfPeriod > 0)
+                  (isTfVaultType && activeTfPeriod > 0) ||
+                  approvalPending
                 }
                 data-testid="vault-listItemDepositModal-approveButton"
               >

@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import {
   Box,
+  CircularProgress,
   Step,
   StepContent,
   StepIconProps,
@@ -13,10 +14,11 @@ import useSharedContext from "context/shared";
 import useVaultContext from "context/vault";
 import { getPeriodInDays } from "utils/getPeriodInDays";
 import { VaultPaper } from "components/AppComponents/AppPaper/AppPaper";
-import { AppFlexBox } from "components/AppComponents/AppBox/AppBox";
+import { AppFlexBox, WarningBox } from "components/AppComponents/AppBox/AppBox";
 import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
 import { CustomSkeleton } from "components/AppComponents/AppSkeleton/AppSkeleton";
 import AppPopover from "components/AppComponents/AppPopover/AppPopover";
+import { InfoIcon } from "components/Governance/Propose";
 
 import LockAquaSrc from "assets/svg/lock-aqua.svg";
 import StepperItemIcon from "assets/svg/icons/stepper-item-icon.svg";
@@ -35,7 +37,10 @@ const CustomPaper = styled(Box)`
   padding: 16px;
 
   &.withdraw-btn {
+    display: flex;
+    align-items: center;
     width: fit-content;
+    height: inherit;
     padding: 24px;
 
     button {
@@ -175,7 +180,7 @@ export const calculateTimeLeft = (date: Date | null) => {
   return timeLeft;
 };
 
-export const StepContentCounter = ({ date }: { date: Date }) => {
+export const StepContentCounter = memo(({ date }: { date: Date }) => {
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft(date));
 
   useEffect(() => {
@@ -184,7 +189,7 @@ export const StepContentCounter = ({ date }: { date: Date }) => {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [date]);
+  }, []);
 
   return (
     <CounterIndicator>
@@ -192,7 +197,7 @@ export const StepContentCounter = ({ date }: { date: Date }) => {
       {timeLeft.seconds}S
     </CounterIndicator>
   );
-};
+});
 
 const VaultLockingBar = () => {
   const { isMobile } = useSharedContext();
@@ -202,57 +207,70 @@ const VaultLockingBar = () => {
     tfVaultLockEndDate,
     activeTfPeriod,
     handleWithdrawAll,
+    isWithdrawAllLoading,
+    showWithdrawAllButton,
+    isShowWithdrawAllButtonLoading,
+    tfVaultDepositEndTimeLoading,
+    tfVaultLockEndTimeLoading,
   } = useVaultContext();
 
-  const steps = [
-    {
-      key: "deposit-time", // added key to the object
-      label: (
-        <LockWrapper>
-          Deposit Time
-          <AppPopover
-            id={"deposit-time"}
-            text={
-              <>
-                Deposit Time - the period when users are allowed to deposit and
-                withdraw funds.
-              </>
-            }
-            iconSize={"14px"}
-          />
-        </LockWrapper>
-      ),
-      date:
-        tfVaultDepositEndDate === null
-          ? tfVaultDepositEndDate
-          : new Date(Number(tfVaultDepositEndDate) * 1000),
-    },
-    {
-      key: "lock-time", // added key to the object
-      label: (
-        <LockWrapper>
-          Lock Time (
-          {getPeriodInDays(tfVaultDepositEndDate, tfVaultLockEndDate)} days)
-          <AppPopover
-            id={"lock-time"}
-            text={
-              <>
-                Lock Time - the period of time when deposited funds are used to
-                generate yield according to the strategy. <br />
-                Users can’t withdraw and deposit any funds within this period.{" "}
-                After the lock period ends, users can withdraw funds.
-              </>
-            }
-            iconSize={"14px"}
-          />
-        </LockWrapper>
-      ),
-      date:
-        tfVaultLockEndDate === null
-          ? tfVaultLockEndDate
-          : new Date(Number(tfVaultLockEndDate) * 1000),
-    },
-  ];
+  const steps = useMemo(() => {
+    return [
+      {
+        key: "deposit-time", // added key to the object
+        label: (
+          <LockWrapper>
+            Deposit Time
+            <AppPopover
+              id={"deposit-time"}
+              text={
+                <>
+                  Deposit Time - the period when users are allowed to deposit
+                  and withdraw funds.
+                </>
+              }
+              iconSize={"14px"}
+            />
+          </LockWrapper>
+        ),
+        date:
+          tfVaultDepositEndTimeLoading || !tfVaultDepositEndDate
+            ? null
+            : new Date(Number(tfVaultDepositEndDate) * 1000),
+      },
+      {
+        key: "lock-time", // added key to the object
+        label: (
+          <LockWrapper>
+            Lock Time (
+            {getPeriodInDays(tfVaultDepositEndDate, tfVaultLockEndDate)} days)
+            <AppPopover
+              id={"lock-time"}
+              text={
+                <>
+                  Lock Time - the period of time when deposited funds are used
+                  to generate yield according to the strategy. <br />
+                  Users can’t withdraw and deposit any funds within this period.{" "}
+                  After the lock period ends, users can withdraw funds.
+                </>
+              }
+              iconSize={"14px"}
+            />
+          </LockWrapper>
+        ),
+        date:
+          tfVaultLockEndTimeLoading || !tfVaultLockEndDate
+            ? null
+            : new Date(Number(tfVaultLockEndDate) * 1000),
+      },
+    ];
+  }, [
+    tfVaultDepositEndDate,
+    tfVaultLockEndDate,
+    tfVaultDepositEndTimeLoading,
+    tfVaultLockEndTimeLoading,
+  ]);
+
   return (
     <VaultPaper sx={{ marginBottom: isMobile ? "20px" : "24px" }}>
       <SummaryWrapper>
@@ -261,7 +279,13 @@ const VaultLockingBar = () => {
           Locking Period
         </Typography>
       </SummaryWrapper>
-      <AppFlexBox mt="12px" sx={{ flexDirection: isMobile ? "column" : "row" }}>
+      <AppFlexBox
+        mt="12px"
+        sx={{
+          flexDirection: isMobile ? "column" : "row",
+          alignItems: "stretch",
+        }}
+      >
         <CustomPaper>
           <AppStepper activeStep={activeTfPeriod} orientation="vertical">
             {steps.map((step, index) => (
@@ -295,6 +319,20 @@ const VaultLockingBar = () => {
               </AppStep>
             ))}
           </AppStepper>
+          {activeTfPeriod === 2 &&
+            !showWithdrawAllButton &&
+            !isShowWithdrawAllButtonLoading && (
+              <WarningBox sx={{ margin: "10px 0 0" }}>
+                <InfoIcon
+                  sx={{ width: "20px", color: "#F5953D", height: "20px" }}
+                />
+                <Box flexDirection="column">
+                  <Typography width="100%">
+                    Please wait for funds to be processed by counterparty.
+                  </Typography>
+                </Box>
+              </WarningBox>
+            )}
         </CustomPaper>
         {activeTfPeriod > 0 && (
           <CustomPaper className="withdraw-btn">
@@ -303,12 +341,19 @@ const VaultLockingBar = () => {
               disabled={
                 !vaultPosition ||
                 vaultPosition.balanceShares === "0" ||
-                vaultPosition.balanceShares === undefined ||
-                activeTfPeriod !== 2
+                !vaultPosition.balanceShares ||
+                activeTfPeriod < 2 ||
+                isWithdrawAllLoading ||
+                !showWithdrawAllButton
               }
               onClick={handleWithdrawAll}
+              isLoading={isWithdrawAllLoading}
             >
-              Withdraw all
+              {isWithdrawAllLoading ? (
+                <CircularProgress sx={{ color: "#0D1526" }} size={20} />
+              ) : (
+                "Withdraw all"
+              )}
             </ButtonPrimary>
           </CustomPaper>
         )}
@@ -317,4 +362,4 @@ const VaultLockingBar = () => {
   );
 };
 
-export default VaultLockingBar;
+export default memo(VaultLockingBar);

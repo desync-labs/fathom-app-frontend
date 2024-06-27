@@ -65,9 +65,9 @@ const handleSortDesc = (
     sortName === "usageAsCollateralEnabledOnUser" ||
     sortName === "debt"
   ) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    return positions.sort((a, b) => Number(a[sortName]) - Number(b[sortName]));
+    return positions.sort(
+      (a, b) => Number((a as any)[sortName]) - Number((b as any)[sortName])
+    );
   } else {
     if (isBorrowedPosition) {
       positions.sort((a, b) =>
@@ -78,9 +78,9 @@ const handleSortDesc = (
             Number(a.reserve.stableBorrowAPY)
       );
     }
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    return positions.sort((a, b) => a[sortName] - b[sortName]);
+    return positions.sort(
+      (a, b) => (a as any)[sortName] - (b as any)[sortName]
+    );
   }
 };
 
@@ -97,9 +97,9 @@ const sortAsc = (
     sortName === "debt"
   ) {
     // NOTE parse to number for sorting
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    return positions.sort((a, b) => Number(b[sortName]) - Number(a[sortName]));
+    return positions.sort(
+      (a, b) => Number((b as any)[sortName]) - Number((a as any)[sortName])
+    );
   } else {
     // Note because borrow positions have extra logic we need to have this
     if (isBorrowedPosition) {
@@ -111,9 +111,9 @@ const sortAsc = (
             Number(b.reserve.stableBorrowAPY)
       );
     }
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    return positions.sort((a, b) => b[sortName] - a[sortName]);
+    return positions.sort(
+      (a, b) => (b as any)[sortName] - (a as any)[sortName]
+    );
   }
 };
 
@@ -130,8 +130,6 @@ const handleSymbolSort = (
         a.reserve.symbol.toUpperCase() < b.reserve.symbol.toUpperCase() ? -1 : 1
       );
     }
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     return positions.sort((a, b) =>
       a.symbol.toUpperCase() < b.symbol.toUpperCase() ? -1 : 1
     );
@@ -142,8 +140,6 @@ const handleSymbolSort = (
       b.reserve.symbol.toUpperCase() < a.reserve.symbol.toUpperCase() ? -1 : 1
     );
   }
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
   return positions.sort((a, b) =>
     b.symbol.toUpperCase() < a.symbol.toUpperCase() ? -1 : 1
   );
