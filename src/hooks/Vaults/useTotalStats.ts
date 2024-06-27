@@ -26,11 +26,13 @@ const useTotalStats = (
   const [totalBalance, setTotalBalance] = useState("-1");
   const [depositsList, setDepositsList] = useState<TransactionItem[]>([]);
   const [withdrawalsList, setWithdrawalsList] = useState<TransactionItem[]>([]);
+  const [balanceEarnedLoading, setBalanceEarnedLoading] =
+    useState<boolean>(true);
 
   const { chainId, account } = useConnector();
   const { syncVault, prevSyncVault } = useSyncContext();
 
-  const [loadAccountDeposits, { loading: fetchDepositsLoading }] = useLazyQuery(
+  const [loadAccountDeposits, { loading: depositsLoading }] = useLazyQuery(
     VAULTS_ACCOUNT_DEPOSITS,
     {
       context: { clientName: "vaults", chainId },
@@ -39,7 +41,7 @@ const useTotalStats = (
     }
   );
 
-  const [loadAccountWithdrawals, { loading: fetchWithdrawalsLoading }] =
+  const [loadAccountWithdrawals, { loading: withdrawalsLoading }] =
     useLazyQuery(VAULTS_ACCOUNT_WITHDRAWALS, {
       context: { clientName: "vaults", chainId },
       variables: { chainId, first: TRANSACTIONS_PER_PAGE },
@@ -104,6 +106,23 @@ const useTotalStats = (
   );
 
   useEffect(() => {
+    const timeout = setTimeout(() => {
+      setBalanceEarnedLoading(
+        positionsLoading || withdrawalsLoading || depositsLoading
+      );
+    }, 100);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [
+    positionsLoading,
+    withdrawalsLoading,
+    depositsLoading,
+    setBalanceEarnedLoading,
+  ]);
+
+  useEffect(() => {
     if (positionsLoading) {
       setTotalBalance("-1");
     } else if (positionsList.length && !positionsLoading) {
@@ -129,8 +148,8 @@ const useTotalStats = (
   }, [syncVault, prevSyncVault, fetchAccountDeposits, fetchAccountWithdrawals]);
 
   const balanceEarned = useMemo(() => {
+    if (balanceEarnedLoading) return "-1";
     if (totalBalance === "-1") return "0";
-    if (fetchDepositsLoading || fetchWithdrawalsLoading) return "-1";
 
     const sumTokenDeposits = depositsList.reduce(
       (acc: BigNumber, deposit: any) => acc.plus(deposit.tokenAmount),
@@ -145,17 +164,11 @@ const useTotalStats = (
     return BigNumber(totalBalance || "0")
       .minus(sumTokenDeposits.minus(sumTokenWithdrawals))
       .toString();
-  }, [
-    fetchDepositsLoading,
-    fetchWithdrawalsLoading,
-    totalBalance,
-    depositsList,
-    withdrawalsList,
-  ]);
+  }, [balanceEarnedLoading, totalBalance, depositsList, withdrawalsList]);
 
   return {
-    fetchDepositsLoading,
-    fetchWithdrawalsLoading,
+    depositsLoading,
+    withdrawalsLoading,
     totalBalance,
     balanceEarned,
   };

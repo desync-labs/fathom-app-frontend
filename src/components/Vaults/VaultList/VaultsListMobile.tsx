@@ -65,7 +65,7 @@ const VaultsListMobile: FC<VaultListPropsType> = ({
       <Table aria-label="vaults table">
         <TableHead>
           <VaultListTableHeaderRow>
-            <VaultListTableCell colSpan={2}>Vault</VaultListTableCell>
+            <VaultListTableCell colSpan={2}>Name</VaultListTableCell>
             <VaultListTableCell colSpan={1}>Apy</VaultListTableCell>
             <VaultListTableCell colSpan={2}>Tvl</VaultListTableCell>
             <VaultListTableCell colSpan={1}>Status</VaultListTableCell>
