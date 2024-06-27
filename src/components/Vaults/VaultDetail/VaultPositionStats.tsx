@@ -118,18 +118,9 @@ const VaultPositionStats = () => {
           heights.push(totalHeight + 24);
         });
         const maxHeight = Math.max(...heights);
-        blocks.forEach((block, index) => {
+        blocks.forEach((block) => {
           (block.firstChild as HTMLElement).style.height = `${maxHeight}px`;
           (block as HTMLElement).style.height = `${maxHeight + 12}px`;
-          if (isMobile) {
-            if (index % 2 === 0) {
-              (block.firstChild as HTMLElement).style.marginRight = "5px";
-            }
-            if (index > 1) {
-              (block.firstChild as HTMLElement).style.marginTop = "5px";
-              (block as HTMLElement).style.marginTop = `5px`;
-            }
-          }
         });
       });
     }
@@ -137,15 +128,7 @@ const VaultPositionStats = () => {
     return () => {
       timer && clearTimeout(timer);
     };
-  }, [
-    container,
-    vault,
-    isLoading,
-    fetchPricesInProgress,
-    isMobile,
-    width,
-    height,
-  ]);
+  }, [container, vault, isLoading, fetchPricesInProgress, width, height]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
