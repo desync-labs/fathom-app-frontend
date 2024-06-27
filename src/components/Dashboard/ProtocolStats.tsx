@@ -3,6 +3,7 @@ import { styled } from "@mui/material/styles";
 import useProtocolStats from "hooks/General/useProtocolStats";
 import { formatCurrency, formatNumber } from "utils/format";
 import usePricesContext from "context/prices";
+import useSharedContext from "context/shared";
 import AppPopover from "components/AppComponents/AppPopover/AppPopover";
 import BigNumber from "bignumber.js";
 import { StatsValueSkeleton } from "components/AppComponents/AppSkeleton/AppSkeleton";
@@ -55,16 +56,18 @@ const StatsValue = styled(Typography)`
   font-size: 24px;
   line-height: 28px;
   margin: 0;
-  padding: 7px 0 0 0;
+  padding: 12px 0 0 0;
   text-align: center;
   ${({ theme }) => theme.breakpoints.down("sm")} {
     text-align: left;
+    padding: 0;
   }
 `;
 
 const ProtocolStats = () => {
   const { tvl, loading, poolsLoading, totalBorrowed } = useProtocolStats();
   const { fxdPrice, fetchPricesInProgress } = usePricesContext();
+  const { isMobile } = useSharedContext();
 
   return (
     <ProtocolStatsContainer container>
@@ -80,7 +83,7 @@ const ProtocolStats = () => {
             />
           </StatsTitle>
           {poolsLoading ? (
-            <StatsValueSkeleton />
+            <StatsValueSkeleton isMobile={isMobile} />
           ) : (
             <StatsValue variant={"body2"}>
               {formatNumber(totalBorrowed) + " FXD"}
@@ -100,7 +103,7 @@ const ProtocolStats = () => {
             />
           </StatsTitle>
           {loading ? (
-            <StatsValueSkeleton />
+            <StatsValueSkeleton isMobile={isMobile} />
           ) : (
             <StatsValue>{formatCurrency(tvl)}</StatsValue>
           )}
@@ -110,7 +113,7 @@ const ProtocolStats = () => {
         <Box>
           <StatsTitle>FXD Price</StatsTitle>
           {fetchPricesInProgress ? (
-            <StatsValueSkeleton />
+            <StatsValueSkeleton isMobile={isMobile} />
           ) : (
             <StatsValue>
               {formatCurrency(

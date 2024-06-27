@@ -45,7 +45,7 @@ export const StatsValueSkeleton: FC<StatsValueSkeletonProps> = ({
       animation={animation}
       width={width}
       height={height}
-      sx={{ bgcolor: "#2536564a", marginTop: isMobile ? "0" : "7px" }}
+      sx={{ bgcolor: "#2536564a", marginTop: isMobile ? "0" : "12px" }}
     />
   );
 };
