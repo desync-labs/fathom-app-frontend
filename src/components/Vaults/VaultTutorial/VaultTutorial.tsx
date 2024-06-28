@@ -14,12 +14,18 @@ const EmbedVideoWrapper = styled("div")`
   max-height: 70vh;
 `;
 
+const VaultTitle = styled(Typography)`
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    margin-bottom: -50px;
+  }
+`;
+
 const VaultTutorial = () => {
   const { isMobile } = useSharedContext();
 
   return (
     <Box>
-      <Typography variant={"h1"}>Vault Tutorial</Typography>
+      <VaultTitle variant={"h1"}>Vault Tutorial</VaultTitle>
       <EmbedVideoWrapper>
         <ReactPlayer
           url={"/videos/vaults/vault-tutorial.mp4"}
