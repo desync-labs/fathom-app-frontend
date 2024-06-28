@@ -6,6 +6,7 @@ import {
   NestedRouteNav,
 } from "components/AppComponents/AppBox/AppBox";
 import useSharedContext from "context/shared";
+import { TutorialIcon, VaultManagement } from "components/Common/MenuIcons";
 
 const VaultsView = () => {
   const location = useLocation();
@@ -31,12 +32,14 @@ const VaultsView = () => {
             className={isVaultListActive ? "active" : ""}
             to="/vaults"
           >
+            <VaultManagement isactive={isVaultListActive ? "true" : ""} />
             Vault Management
           </NestedRouteLink>
           <NestedRouteLink
             className={isVaultTutorialActive ? "active" : ""}
             to="/vaults/tutorial"
           >
+            <TutorialIcon isactive={isVaultTutorialActive ? "true" : ""} />
             Tutorial
           </NestedRouteLink>
         </NestedRouteNav>
