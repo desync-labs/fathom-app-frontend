@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, memo } from "react";
 import { FormProvider } from "react-hook-form";
 import {
   Box,
@@ -247,4 +247,4 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
   );
 };
 
-export default VaultListItemDepositModal;
+export default memo(VaultListItemDepositModal);

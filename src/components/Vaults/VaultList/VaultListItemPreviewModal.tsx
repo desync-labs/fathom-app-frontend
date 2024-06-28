@@ -123,31 +123,32 @@ const ButtonsWrapper = styled(ModalButtonWrapper)`
   }
 `;
 
-const PseudoBreadcrumbs = ({
-  vaultName,
-  handleCloseModal,
-}: {
+type PseudoBreadcrumbsProps = {
   vaultName: string;
   handleCloseModal: () => void;
-}) => {
-  const breadcrumbs = [
-    <VaultBreadcrumbsCloseModal key="1" onClick={handleCloseModal}>
-      Vaults
-    </VaultBreadcrumbsCloseModal>,
-    <VaultBreadcrumbsCurrentPage key="2">
-      {vaultName}
-    </VaultBreadcrumbsCurrentPage>,
-  ];
-
-  return (
-    <BreadcrumbsWrapper
-      separator={<KeyboardArrowRightRoundedIcon fontSize="small" />}
-      aria-label="breadcrumb"
-    >
-      {breadcrumbs}
-    </BreadcrumbsWrapper>
-  );
 };
+
+const PseudoBreadcrumbs: FC<PseudoBreadcrumbsProps> = memo(
+  ({ vaultName, handleCloseModal }) => {
+    const breadcrumbs = [
+      <VaultBreadcrumbsCloseModal key="1" onClick={handleCloseModal}>
+        Vaults
+      </VaultBreadcrumbsCloseModal>,
+      <VaultBreadcrumbsCurrentPage key="2">
+        {vaultName}
+      </VaultBreadcrumbsCurrentPage>,
+    ];
+
+    return (
+      <BreadcrumbsWrapper
+        separator={<KeyboardArrowRightRoundedIcon fontSize="small" />}
+        aria-label="breadcrumb"
+      >
+        {breadcrumbs}
+      </BreadcrumbsWrapper>
+    );
+  }
+);
 
 interface VaultListItemPreviewModalProps {
   isOpenPreviewModal: boolean;
@@ -217,7 +218,7 @@ const VaultListItemPreviewModal: FC<VaultListItemPreviewModalProps> = ({
             vaultName={vault.name}
             handleCloseModal={handleClosePreview}
           />
-          <CloseIcon sx={{ color: "#6d86b2" }} onClick={handleClosePreview} />
+          <CloseIcon sx={{ color: "#fff" }} onClick={handleClosePreview} />
         </BreadcrumbsWrapperContainer>
         <AppFlexBox>
           <AppFlexBox sx={{ justifyContent: "flex-start", gap: "4px" }}>
