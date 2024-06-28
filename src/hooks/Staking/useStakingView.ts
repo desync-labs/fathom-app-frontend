@@ -251,15 +251,15 @@ const useStakingView = () => {
       }
 
       if (action === FlowType.UNSTAKE_COOLDOWN_UNSTAKE) {
-        setDialogAction(DialogActions.UNSTAKE_COOLDOWN);
         console.log("Unstake", position);
         !!position && setUnstake(position);
+        setDialogAction(DialogActions.UNSTAKE_COOLDOWN);
       }
 
       if (action === FlowType.UNSTAKE_COOLDOWN_EARLY_UNSTAKE) {
-        setDialogAction(DialogActions.UNSTAKE_COOLDOWN);
         console.log("Early unstake", position);
         !!position && setEarlyUnstake(position);
+        setDialogAction(DialogActions.UNSTAKE_COOLDOWN);
       }
 
       action === FlowType.CLAIM_COOLDOWN &&
