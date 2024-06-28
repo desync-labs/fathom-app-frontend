@@ -1,4 +1,4 @@
-import { FC, useCallback, useMemo } from "react";
+import { FC, memo, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { Box, CircularProgress, TableCell } from "@mui/material";
@@ -387,4 +387,4 @@ const VaultListItem: FC<VaultListItemProps> = ({
   );
 };
 
-export default VaultListItem;
+export default memo(VaultListItem);

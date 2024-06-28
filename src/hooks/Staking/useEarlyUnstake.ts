@@ -26,8 +26,9 @@ const useEarlyUnstake = (
   }, [lockPosition, setPenaltyFeePercent]);
 
   const earlyUnstakeHandler = useCallback(async () => {
-    await handleEarlyUnstake(lockPosition.lockId);
-    onFinish(lockPosition.amount - penaltyFee);
+    handleEarlyUnstake(lockPosition.lockId).then(() => {
+      onFinish(lockPosition.amount - penaltyFee);
+    });
   }, [lockPosition, penaltyFee, handleEarlyUnstake, onFinish]);
 
   return {

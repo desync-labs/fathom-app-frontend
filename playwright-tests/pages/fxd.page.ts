@@ -260,7 +260,7 @@ export default class FxdPage extends BasePage {
     await expect(this.tableYourPositions).toBeVisible();
     const allRowsOnPageLocators = await this.page
       .locator(
-        '//h2[text()="Your Positions"]/following-sibling::div/table/tbody/tr'
+        '//h2[text()="Your Positions"]//parent::div//following-sibling::div/table/tbody/tr'
       )
       .all();
     expect(allRowsOnPageLocators.length).toEqual(countExpected);

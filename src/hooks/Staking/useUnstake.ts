@@ -88,19 +88,21 @@ const useUnstake = (
         .dividedBy(10 ** 18)
         .isEqualTo(unStakeAmount)
     ) {
-      await handleUnlock(lockPosition?.lockId as number, UnlockType.FULL);
+      handleUnlock(lockPosition?.lockId as number, UnlockType.FULL).then(() => {
+        onFinish(Number(unStakeAmount));
+      });
     } else {
       /**
        * Partial unlock.
        */
-      await handleUnlock(
+      handleUnlock(
         lockPosition?.lockId as number,
         UnlockType.PARTIAL,
         unStakeAmount
-      );
+      ).then(() => {
+        onFinish(Number(unStakeAmount));
+      });
     }
-
-    onFinish(Number(unStakeAmount));
   }, [lockPosition, handleUnlock, onFinish, unStakeAmount, totalBalance]);
 
   return {

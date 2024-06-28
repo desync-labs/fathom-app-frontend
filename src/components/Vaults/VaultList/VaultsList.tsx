@@ -1,4 +1,4 @@
-import { ChangeEvent, FC } from "react";
+import { ChangeEvent, FC, memo } from "react";
 import { IVault, IVaultPosition } from "fathom-sdk";
 import { styled } from "@mui/material/styles";
 import {
@@ -150,4 +150,4 @@ const VaultsList: FC<VaultListPropsType> = ({
   );
 };
 
-export default VaultsList;
+export default memo(VaultsList);

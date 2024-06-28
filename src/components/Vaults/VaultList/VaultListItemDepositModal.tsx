@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, memo } from "react";
 import { FormProvider } from "react-hook-form";
 import {
   Box,
@@ -98,12 +98,14 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
       open={true}
       fullWidth
       maxWidth="sm"
+      data-testid="vault-listItemDepositModal"
     >
       <AppDialogTitle
         id="customized-dialog-title"
         onClose={onClose}
         sx={{ padding: "24px !important" }}
         sxCloseIcon={{ right: "16px", top: "16px" }}
+        data-testid="vault-listItemDepositModal-dialogTitle"
       >
         Deposit
       </AppDialogTitle>
@@ -127,6 +129,7 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
             onSubmit={onSubmit}
             minimumDeposit={minimumDeposit}
             depositLimitExceeded={depositLimitExceeded}
+            dataTestIdPrefix="vault-listItemDepositModal"
           />
           <DepositVaultInfo
             vaultItemData={vaultItemData}
@@ -192,6 +195,7 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
             <ButtonSecondary
               onClick={onClose}
               disabled={approvalPending || openDepositLoading}
+              data-testid="vault-listItemDepositModal-closeButton"
             >
               Close
             </ButtonSecondary>
@@ -206,6 +210,7 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
                   (isTfVaultType && activeTfPeriod > 0) ||
                   approvalPending
                 }
+                data-testid="vault-listItemDepositModal-approveButton"
               >
                 {" "}
                 {approvalPending ? (
@@ -226,6 +231,7 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
                   (isTfVaultType && activeTfPeriod > 0)
                 }
                 isLoading={openDepositLoading}
+                data-testid="vault-listItemDepositModal-depositButton"
               >
                 {openDepositLoading ? (
                   <CircularProgress sx={{ color: "#0D1526" }} size={20} />
@@ -241,4 +247,4 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
   );
 };
 
-export default VaultListItemDepositModal;
+export default memo(VaultListItemDepositModal);

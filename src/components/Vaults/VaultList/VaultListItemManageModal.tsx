@@ -125,12 +125,14 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
       open={true}
       fullWidth
       maxWidth="sm"
+      data-testid="vault-listItemManageModal"
     >
       <AppDialogTitle
         id="customized-dialog-title"
         onClose={onClose}
         sx={{ padding: "24px" }}
         sxCloseIcon={{ right: "16px", top: "16px" }}
+        data-testid="vault-listItemManageModal-dialogTitle"
       >
         {shutdown ? (
           "Withdrawing"
@@ -139,12 +141,14 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
             <AppNavItem
               onClick={() => setFormType(FormType.DEPOSIT)}
               className={formType === FormType.DEPOSIT ? "active" : ""}
+              data-testid="vault-listItemManageModal-depositNavItem"
             >
               Deposit
             </AppNavItem>
             <AppNavItem
               onClick={() => setFormType(FormType.WITHDRAW)}
               className={formType === FormType.WITHDRAW ? "active" : ""}
+              data-testid="vault-listItemManageModal-withdrawNavItem"
             >
               Withdraw
             </AppNavItem>
@@ -173,6 +177,7 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
             handleSubmit={handleSubmit}
             onSubmit={onSubmit}
             depositLimitExceeded={depositLimitExceeded}
+            dataTestIdPrefix="vault-listItemManageModal"
           />
           <ManageVaultInfo
             formType={formType}
@@ -231,6 +236,7 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
             <ButtonSecondary
               onClick={onClose}
               disabled={approvalPending || openDepositLoading}
+              data-testid="vault-listItemManageModal-closeButton"
             >
               Close
             </ButtonSecondary>
@@ -246,6 +252,7 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
                   (isTfVaultType && activeTfPeriod > 0) ||
                   approvalPending
                 }
+                data-testid="vault-listItemManageModal-approveTokenButton"
               >
                 {" "}
                 {approvalPending ? (
@@ -267,6 +274,11 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
                     !!withdrawLimitExceeded(formToken))
                 }
                 isLoading={openDepositLoading}
+                data-testid={`vault-listItemManageModal-${
+                  formType === FormType.DEPOSIT
+                    ? "depositButton"
+                    : "withdrawButton"
+                }`}
               >
                 {openDepositLoading ? (
                   <CircularProgress sx={{ color: "#0D1526" }} size={20} />

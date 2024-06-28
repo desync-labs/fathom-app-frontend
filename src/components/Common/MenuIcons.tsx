@@ -15,11 +15,25 @@ import { ReactComponent as AccountsSrc } from "assets/svg/icons/account.svg";
 import { ReactComponent as LendingSrc } from "assets/svg/icons/lending.svg";
 import { ReactComponent as DashboardSrc } from "assets/svg/icons/dashboard.svg";
 import { ReactComponent as MarketsSrc } from "assets/svg/icons/markets.svg";
+import { ReactComponent as VaultManagementSrc } from "assets/svg/icons/vault-management.svg";
+import { ReactComponent as TutorialSrc } from "assets/svg/icons/tutorial.svg";
 
 import { styled } from "@mui/material/styles";
 
 const ACTIVE_HEX = "#43FFF1";
 const INACTIVE_HEX = "#6379A1";
+
+export const VaultManagement = styled(VaultManagementSrc)<{ isactive: string }>`
+  & path {
+    fill: ${({ isactive }) => (isactive ? ACTIVE_HEX : INACTIVE_HEX)};
+  }
+`;
+
+export const TutorialIcon = styled(TutorialSrc)<{ isactive: string }>`
+  & path {
+    fill: ${({ isactive }) => (isactive ? ACTIVE_HEX : INACTIVE_HEX)};
+  }
+`;
 
 export const FxdIcon = styled(FxdSrc)<{ isactive: string }>`
   & path {

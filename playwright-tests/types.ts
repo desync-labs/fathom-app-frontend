@@ -30,12 +30,12 @@ export interface PositionData {
 }
 
 export interface VaultDepositData {
-  stakedAmountDialogBefore: number | null;
+  stakedAmountDialogBefore?: number | null;
   poolShareDialogBefore?: number | null;
   shareTokensDialogBefore?: number | null;
-  stakedAmountDialogAfter: number | null;
-  poolShareDialogAfter: number | null;
-  shareTokensDialogAfter: number | null;
+  stakedAmountDialogAfter?: number | null;
+  poolShareDialogAfter?: number | null;
+  shareTokensDialogAfter?: number | null;
 }
 
 export interface ValidateVaultDataParams extends VaultDepositData {

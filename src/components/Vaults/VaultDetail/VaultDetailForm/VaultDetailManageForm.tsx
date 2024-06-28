@@ -72,6 +72,7 @@ const VaultDetailManageForm = () => {
           <AppNavItem
             className={formType === FormType.DEPOSIT ? "active" : ""}
             onClick={() => setFormType(FormType.DEPOSIT)}
+            data-testid="vault-detailManageModal-depositNavItem"
           >
             Deposit
           </AppNavItem>
@@ -79,6 +80,7 @@ const VaultDetailManageForm = () => {
         <AppNavItem
           className={formType === FormType.WITHDRAW ? "active" : ""}
           onClick={() => setFormType(FormType.WITHDRAW)}
+          data-testid="vault-detailManageModal-withdrawNavItem"
         >
           Withdraw
         </AppNavItem>
@@ -98,6 +100,7 @@ const VaultDetailManageForm = () => {
               onSubmit={onSubmit}
               vaultPosition={vaultPosition}
               depositLimitExceeded={depositLimitExceeded}
+              dataTestIdPrefix="vault-detailManageModal"
             />
           </VaultDetailFormColumn>
           <ManageVaultInfo

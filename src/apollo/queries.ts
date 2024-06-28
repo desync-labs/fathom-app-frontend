@@ -411,9 +411,7 @@ export const VAULT_FACTORIES = gql`
       protocolFee
       timestamp
       vaultPackage
-      vaults {
-        id
-      }
+      vaults
     }
     accountants {
       id
