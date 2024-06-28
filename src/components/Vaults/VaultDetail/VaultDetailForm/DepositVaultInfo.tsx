@@ -207,6 +207,7 @@ const DepositVaultInfo: FC<DepositVaultInfoProps> = ({
           className={"reset"}
           onClick={onClose}
           disabled={approvalPending || openDepositLoading}
+          data-testid="vault-detailDepositModal-resetButton"
         >
           Reset
         </ButtonSecondary>
@@ -220,6 +221,7 @@ const DepositVaultInfo: FC<DepositVaultInfoProps> = ({
               (isTfVaultType && !isUserKycPassed) ||
               approvalPending
             }
+            data-testid="vault-detailDepositModal-approveButton"
           >
             {" "}
             {approvalPending ? (
@@ -239,6 +241,7 @@ const DepositVaultInfo: FC<DepositVaultInfoProps> = ({
               (isTfVaultType && !isUserKycPassed)
             }
             isLoading={openDepositLoading}
+            data-testid="vault-detailDepositModal-depositButton"
           >
             {openDepositLoading ? (
               <CircularProgress sx={{ color: "#0D1526" }} size={20} />

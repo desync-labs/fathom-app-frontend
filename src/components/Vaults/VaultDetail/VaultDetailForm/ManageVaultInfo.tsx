@@ -300,6 +300,7 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
           className={"reset"}
           onClick={onClose}
           disabled={approvalPending || openDepositLoading}
+          data-testid="vault-detailManageModal-resetButton"
         >
           Reset
         </ButtonSecondary>
@@ -311,6 +312,7 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
           <ButtonPrimary
             onClick={approve}
             disabled={!!Object.keys(errors).length || approvalPending}
+            data-testid="vault-detailManageModal-approveButton"
           >
             {" "}
             {approvalPending ? (
@@ -331,6 +333,9 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
                 !!withdrawLimitExceeded(formToken))
             }
             isLoading={openDepositLoading}
+            data-testid={`vault-detailManageModal-${
+              formType === FormType.DEPOSIT ? "depositButton" : "withdrawButton"
+            }`}
           >
             {openDepositLoading ? (
               <CircularProgress sx={{ color: "#0D1526" }} size={20} />

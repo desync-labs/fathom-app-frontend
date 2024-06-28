@@ -47,6 +47,18 @@ export default class VaultPage extends BasePage {
   readonly btnApproveListItemDepositModal: Locator;
   readonly btnConnectWallet: Locator;
   readonly vaultContractAddressDetailAbout: Locator;
+  readonly balanceValueVaultDetails: Locator;
+  readonly btnDepositNavItemDetailManageModal: Locator;
+  readonly btnWithdrawNavItemDetailManageModal: Locator;
+  readonly inputDepositAmountDetailManageModal: Locator;
+  readonly inputReceiveSharesTokenDetailManageModal: Locator;
+  readonly inputWithdrawAmountDetailManageModal: Locator;
+  readonly inputBurnSharesTokenDetailManageModal: Locator;
+  readonly btnDepositDetailManageModal: Locator;
+  readonly btnResetDetailManageModal: Locator;
+  readonly btnWithdrawDetailManageModal: Locator;
+  readonly btnMaxDepositInputDetailManageModal: Locator;
+  readonly btnMaxWithdrawInputDetailManageModal: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -141,6 +153,42 @@ export default class VaultPage extends BasePage {
     );
     this.vaultContractAddressDetailAbout = this.page.locator(
       "//div[text()='Vault contract address:']//a"
+    );
+    this.balanceValueVaultDetails = this.page.getByTestId(
+      "vault-detailsPositionStats-balanceValue"
+    );
+    this.btnDepositNavItemDetailManageModal = this.page.getByTestId(
+      "vault-detailManageModal-depositNavItem"
+    );
+    this.btnWithdrawNavItemDetailManageModal = this.page.getByTestId(
+      "vault-detailManageModal-withdrawNavItem"
+    );
+    this.inputDepositAmountDetailManageModal = this.page
+      .getByTestId("vault-detailManageModal-depositInputWrapper")
+      .locator("input");
+    this.inputReceiveSharesTokenDetailManageModal = this.page
+      .getByTestId("vault-detailManageModal-receiveSharesInputWrapper")
+      .locator("input");
+    this.inputWithdrawAmountDetailManageModal = this.page
+      .getByTestId("vault-detailManageModal-withdrawInputWrapper")
+      .locator("input");
+    this.inputBurnSharesTokenDetailManageModal = this.page
+      .getByTestId("vault-detailManageModal-burnSharesInputWrapper")
+      .locator("input");
+    this.btnResetDetailManageModal = this.page.getByTestId(
+      "vault-detailManageModal-resetButton"
+    );
+    this.btnDepositDetailManageModal = this.page.getByTestId(
+      "vault-detailManageModal-depositButton"
+    );
+    this.btnWithdrawDetailManageModal = this.page.getByTestId(
+      "vault-detailManageModal-withdrawButton"
+    );
+    this.btnMaxDepositInputDetailManageModal = this.page.getByTestId(
+      "vault-detailManageModal-depositInput-maxButton"
+    );
+    this.btnMaxWithdrawInputDetailManageModal = this.page.getByTestId(
+      "vault-detailManageModal-withdrawInput-maxButton"
     );
   }
 
@@ -469,7 +517,7 @@ export default class VaultPage extends BasePage {
             100
         );
       expect
-        .soft(Math.round((stakedAmountDialogAfter as number) * 100) / 100)
+        .soft(stakedAmountRowActual)
         .toBeGreaterThanOrEqual(
           Number((Number(stakedAmountDialogBefore) - amountChanged).toFixed(2))
         );
@@ -573,6 +621,62 @@ export default class VaultPage extends BasePage {
       .toBeGreaterThanOrEqual(
         Math.round((shareTokensDialogAfter as number) * 100) / 100
       );
+    const balanceValueText = await this.balanceValueVaultDetails.textContent();
+    const balanceValue = extractNumericValue(balanceValueText as string);
+    expect
+      .soft(balanceValue)
+      .toEqual(Number((stakedAmountDialogAfter as number).toFixed(2)));
+    await expect.soft(this.btnDepositNavItemDetailManageModal).toBeVisible();
+    await expect.soft(this.btnDepositNavItemDetailManageModal).toBeEnabled();
+    await expect.soft(this.btnWithdrawNavItemDetailManageModal).toBeVisible();
+    await expect.soft(this.btnWithdrawNavItemDetailManageModal).toBeEnabled();
+    await expect.soft(this.inputDepositAmountDetailManageModal).toBeVisible();
+    await expect.soft(this.inputDepositAmountDetailManageModal).toHaveValue("");
+    await expect
+      .soft(this.inputDepositAmountDetailManageModal)
+      .toHaveAttribute("placeholder", "0");
+    await expect.soft(this.btnMaxDepositInputDetailManageModal).toBeVisible();
+    await expect.soft(this.btnMaxDepositInputDetailManageModal).toBeEnabled();
+    await expect
+      .soft(this.inputReceiveSharesTokenDetailManageModal)
+      .toBeVisible();
+    await expect
+      .soft(this.inputReceiveSharesTokenDetailManageModal)
+      .toBeDisabled();
+    await expect
+      .soft(this.inputReceiveSharesTokenDetailManageModal)
+      .toHaveValue("");
+    await expect
+      .soft(this.inputReceiveSharesTokenDetailManageModal)
+      .toHaveAttribute("placeholder", "0");
+    await expect.soft(this.btnDepositDetailManageModal).toBeVisible();
+    await expect.soft(this.btnDepositDetailManageModal).toBeEnabled();
+    await expect.soft(this.btnResetDetailManageModal).toBeVisible();
+    await expect.soft(this.btnResetDetailManageModal).toBeEnabled();
+    await this.btnWithdrawNavItemDetailManageModal.click();
+    await expect.soft(this.inputWithdrawAmountDetailManageModal).toBeVisible();
+    await expect
+      .soft(this.inputWithdrawAmountDetailManageModal)
+      .toHaveValue("");
+    await expect
+      .soft(this.inputWithdrawAmountDetailManageModal)
+      .toHaveAttribute("placeholder", "0");
+    await expect.soft(this.btnMaxWithdrawInputDetailManageModal).toBeVisible();
+    await expect.soft(this.btnMaxWithdrawInputDetailManageModal).toBeEnabled();
+    await expect.soft(this.inputBurnSharesTokenDetailManageModal).toBeVisible();
+    await expect
+      .soft(this.inputBurnSharesTokenDetailManageModal)
+      .toBeDisabled();
+    await expect
+      .soft(this.inputBurnSharesTokenDetailManageModal)
+      .toHaveValue("");
+    await expect
+      .soft(this.inputBurnSharesTokenDetailManageModal)
+      .toHaveAttribute("placeholder", "0");
+    await expect.soft(this.btnWithdrawDetailManageModal).toBeVisible();
+    await expect.soft(this.btnWithdrawDetailManageModal).toBeEnabled();
+    await expect.soft(this.btnResetDetailManageModal).toBeVisible();
+    await expect.soft(this.btnResetDetailManageModal).toBeEnabled();
   }
 
   async manageVaultWithdrawPartially({

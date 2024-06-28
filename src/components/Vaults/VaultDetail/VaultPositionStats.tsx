@@ -240,7 +240,7 @@ const VaultPositionStats = () => {
         >
           <Box>
             <PositionStatItemTitle>Balance</PositionStatItemTitle>
-            <PositionStatItemValue>
+            <PositionStatItemValue data-testid="vault-detailsPositionStats-balanceValue">
               {isLoading ? (
                 <StatsValueSkeleton
                   height={isMobile ? 40 : 42}
