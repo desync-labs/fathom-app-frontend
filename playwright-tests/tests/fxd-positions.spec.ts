@@ -5,7 +5,7 @@ import * as metamask from "@synthetixio/synpress/commands/metamask";
 import dotenv from "dotenv";
 dotenv.config();
 
-test.describe.skip("Fathom App Test Suite: FXD Positions Operations", () => {
+test.describe("Fathom App Test Suite: FXD Positions Operations", () => {
   test.describe.serial("Scenario 1 @smoke", () => {
     test("Creating a position with 100 collateral and safe max borrow amount is successful", async ({
       fxdPage,
@@ -17,7 +17,7 @@ test.describe.skip("Fathom App Test Suite: FXD Positions Operations", () => {
         collateralAmount: 100,
         borrowAmount: "safeMax",
       });
-      await fxdPage.page.waitForTimeout(3000);
+      await fxdPage.page.waitForTimeout(5000);
       await fxdPage.validateLatestPositionDisplayedData({
         positionIdExpected: positionData.positionId,
         borrowAmountExpected: positionData.borrowAmount,
@@ -47,7 +47,7 @@ test.describe.skip("Fathom App Test Suite: FXD Positions Operations", () => {
         collateralAmount: 150,
         borrowAmount: 1,
       });
-      await fxdPage.page.waitForTimeout(3000);
+      await fxdPage.page.waitForTimeout(5000);
       await fxdPage.validateLatestPositionDisplayedData({
         positionIdExpected: positionData.positionId,
         borrowAmountExpected: positionData.borrowAmount,
@@ -64,7 +64,7 @@ test.describe.skip("Fathom App Test Suite: FXD Positions Operations", () => {
         collateralAmount: 60,
         borrowAmount: 1,
       });
-      await fxdPage.page.waitForTimeout(3000);
+      await fxdPage.page.waitForTimeout(5000);
       await fxdPage.validateLatestPositionDisplayedData({
         positionIdExpected: toppedUpPositionData.positionId,
         borrowAmountExpected: toppedUpPositionData.borrowAmount,
@@ -95,7 +95,7 @@ test.describe.skip("Fathom App Test Suite: FXD Positions Operations", () => {
         collateralAmount: 105.5,
         borrowAmount: 1.5,
       });
-      await fxdPage.page.waitForTimeout(3000);
+      await fxdPage.page.waitForTimeout(5000);
       await fxdPage.validateLatestPositionDisplayedData({
         positionIdExpected: positionData.positionId,
         borrowAmountExpected: positionData.borrowAmount,
@@ -111,7 +111,7 @@ test.describe.skip("Fathom App Test Suite: FXD Positions Operations", () => {
       const positionData = await fxdPage.partiallyCloseLatestPosition({
         repayAmount: 0.5,
       });
-      await fxdPage.page.waitForTimeout(3000);
+      await fxdPage.page.waitForTimeout(5000);
       await fxdPage.validateLatestPositionDisplayedData({
         positionIdExpected: positionData.positionId,
         borrowAmountExpected: positionData.borrowAmount,

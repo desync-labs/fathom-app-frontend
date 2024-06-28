@@ -1,13 +1,12 @@
 import { type Page, type Locator, expect } from "@playwright/test";
 import BasePage from "./base.page";
-import { extractNumericValue, transformToSameDecimals } from "../utils/helpers";
+import { extractNumericValue } from "../utils/helpers";
 import {
   GraphOperationName,
   ValidateVaultDataParams,
   VaultAction,
   VaultDepositData,
   VaultDetailsTabs,
-  VaultFilterName,
   WalletConnectOptions,
 } from "../types";
 // @ts-ignore
@@ -16,23 +15,28 @@ import { graphAPIEndpoints } from "../fixtures/api.data";
 
 export default class VaultPage extends BasePage {
   readonly path: string;
-  readonly dialogManageVault: Locator;
+  readonly dialogListItemManageModal: Locator;
+  readonly dialogListItemDepositModal: Locator;
   readonly spanDepositedValueAfterManageVaultDialog: Locator;
   readonly spanPoolShareValueAfterManageVaultDialog: Locator;
   readonly spanShareTokensValueAfterManageVaultDialog: Locator;
   readonly spanDepositedValueBeforeManageVaultDialog: Locator;
   readonly spanPoolShareValueBeforeManageVaultDialog: Locator;
   readonly spanShareTokensValueBeforeManageVaultDialog: Locator;
-  readonly inputDepositAmount: Locator;
-  readonly inputReceiveSharesTokenAmount: Locator;
-  readonly inputWithdrawAmount: Locator;
-  readonly inputBurnSharesTokenAmount: Locator;
-  readonly btnMax: Locator;
-  readonly btnConfirmDepositDialogModal: Locator;
-  readonly btnCloseManageDialogModal: Locator;
-  readonly btnConfirmWithdrawManageDialogModal: Locator;
-  readonly btnLiveNow: Locator;
-  readonly btnFinished: Locator;
+  readonly inputDepositAmountListItemManageModal: Locator;
+  readonly inputReceiveSharesTokenListItemManageModal: Locator;
+  readonly inputWithdrawAmountListItemManageModal: Locator;
+  readonly inputBurnSharesTokenListItemManageModal: Locator;
+  readonly inputDepositAmountListItemDepositModal: Locator;
+  readonly inputReceiveSharesTokenListItemDepositModal: Locator;
+  readonly btnMaxDepositInputListItemManageModal: Locator;
+  readonly btnMaxWithdrawInputListItemManageModal: Locator;
+  readonly btnMaxDepositInputListItemDepositModal: Locator;
+  readonly btnConfirmDepositListItemManageModal: Locator;
+  readonly btnConfirmWithdrawListItemManageModal: Locator;
+  readonly btnConfirmDepositListItemDepositModal: Locator;
+  readonly btnDepositNavItemListItemManageModal: Locator;
+  readonly btnWithdrawNavItemListItemManageModal: Locator;
   readonly progressBar: Locator;
   readonly divDialogModalPositionOpenedSuccessfully: Locator;
   readonly btnCloseModal: Locator;
@@ -40,21 +44,33 @@ export default class VaultPage extends BasePage {
   readonly headingFourModal: Locator;
   readonly spanBodyOneModal: Locator;
   readonly spanBodyTwoModal: Locator;
-  readonly btnDepositNavManageDialogModal: Locator;
-  readonly btnWithdrawNavManageDialogModal: Locator;
-  readonly diaologDepositToVaultModal: Locator;
-  readonly btnConfirmDepositDepositToVaultModal: Locator;
-  readonly btnApproveTokens: Locator;
+  readonly btnApproveListItemDepositModal: Locator;
   readonly btnConnectWallet: Locator;
+  readonly vaultContractAddressDetailAbout: Locator;
+  readonly balanceValueVaultDetails: Locator;
+  readonly btnDepositNavItemDetailManageModal: Locator;
+  readonly btnWithdrawNavItemDetailManageModal: Locator;
+  readonly inputDepositAmountDetailManageModal: Locator;
+  readonly inputReceiveSharesTokenDetailManageModal: Locator;
+  readonly inputWithdrawAmountDetailManageModal: Locator;
+  readonly inputBurnSharesTokenDetailManageModal: Locator;
+  readonly btnDepositDetailManageModal: Locator;
+  readonly btnResetDetailManageModal: Locator;
+  readonly btnWithdrawDetailManageModal: Locator;
+  readonly btnMaxDepositInputDetailManageModal: Locator;
+  readonly btnMaxWithdrawInputDetailManageModal: Locator;
 
   constructor(page: Page) {
     super(page);
     this.path = "/#/vaults";
 
     // Locators
-    this.dialogManageVault = this.page.locator(
-      '//h2[text()="Manage Vault"]/parent::div'
-    );
+    this.dialogListItemManageModal = this.page
+      .getByTestId("vault-listItemManageModal")
+      .locator('//div[@role="dialog"]');
+    this.dialogListItemDepositModal = this.page
+      .getByTestId("vault-listItemDepositModal")
+      .locator('//div[@role="dialog"]');
     this.spanDepositedValueAfterManageVaultDialog = this.page.locator(
       '//span[contains(text(), "Deposited")]//ancestor::li/div[2]/span'
     );
@@ -73,34 +89,43 @@ export default class VaultPage extends BasePage {
     this.spanShareTokensValueBeforeManageVaultDialog = this.page.locator(
       '//span[contains(text(), "Share tokens")]//ancestor::li/div[2]'
     );
-    this.inputDepositAmount = this.page.locator(
-      '//label[contains(text(), "Deposit")]/parent::div//input'
+    this.inputDepositAmountListItemManageModal = this.page
+      .getByTestId("vault-listItemManageModal-depositInputWrapper")
+      .locator("input");
+    this.inputReceiveSharesTokenListItemManageModal = this.page
+      .getByTestId("vault-listItemManageModal-receiveSharesInputWrapper")
+      .locator("input");
+    this.inputWithdrawAmountListItemManageModal = this.page
+      .getByTestId("vault-listItemManageModal-withdrawInputWrapper")
+      .locator("input");
+    this.inputBurnSharesTokenListItemManageModal = this.page
+      .getByTestId("vault-listItemManageModal-burnSharesInputWrapper")
+      .locator("input");
+    this.inputDepositAmountListItemDepositModal = this.page
+      .getByTestId("vault-listItemDepositModal-depositInputWrapper")
+      .locator("input");
+    this.inputReceiveSharesTokenListItemDepositModal = this.page
+      .getByTestId("vault-listItemDepositModal-receiveSharesInputWrapper")
+      .locator("input");
+    this.btnMaxDepositInputListItemManageModal = this.page.getByTestId(
+      "vault-listItemManageModal-depositInput-maxButton"
     );
-    this.inputReceiveSharesTokenAmount = this.page.locator(
-      '//label[contains(text(), "Receive Shares")]/parent::div//input'
+    this.btnMaxWithdrawInputListItemManageModal = this.page.getByTestId(
+      "vault-listItemManageModal-withdrawInput-maxButton"
     );
-    this.inputWithdrawAmount = this.page.locator(
-      '//label[contains(text(), "Withdraw")]/parent::div//input'
+    this.btnMaxDepositInputListItemDepositModal = this.page.getByTestId(
+      "vault-listItemDepositModal-depositInput-maxButton"
     );
-    this.inputBurnSharesTokenAmount = this.page.locator(
-      '//label[contains(text(), "Burn Shares")]/parent::div//input'
+    this.btnConfirmDepositListItemManageModal = this.page.getByTestId(
+      "vault-listItemManageModal-depositButton"
     );
-    this.btnMax = this.page.getByText("Max");
-    this.btnConfirmDepositDialogModal = this.page.locator(
-      '//button[text()="Deposit"][@type="submit"]'
+    this.btnConfirmWithdrawListItemManageModal = this.page.getByTestId(
+      "vault-listItemManageModal-withdrawButton"
     );
-    this.btnConfirmWithdrawManageDialogModal = this.dialogManageVault.locator(
-      '//button[text()="Withdraw"][@type="submit"]'
+    this.btnConfirmDepositListItemDepositModal = this.page.getByTestId(
+      "vault-listItemDepositModal-depositButton"
     );
-    this.btnCloseManageDialogModal = this.dialogManageVault.locator(
-      '//button[text()="Close"]'
-    );
-    this.btnLiveNow = this.page.locator(
-      '//button[contains(text(), "Live Now")]'
-    );
-    this.btnFinished = this.page.locator(
-      '//button[contains(text(), "Finished")]'
-    );
+
     this.progressBar = this.page.locator('[role="progressbar"]');
     this.btnCloseModal = this.page.locator('button[aria-label="close"]');
     this.doneIconModal = this.page.locator('[data-testid="DoneIcon"]');
@@ -114,24 +139,56 @@ export default class VaultPage extends BasePage {
     this.divDialogModalPositionOpenedSuccessfully = this.page.locator(
       '//h4[text()="All done!"]/parent::div'
     );
-    this.btnDepositNavManageDialogModal = this.dialogManageVault.locator(
-      '//button[text()="Deposit"][not(@type="submit")]'
+    this.btnDepositNavItemListItemManageModal = this.page.getByTestId(
+      "vault-listItemManageModal-depositNavItem"
     );
-    this.btnWithdrawNavManageDialogModal = this.dialogManageVault.locator(
-      '//button[text()="Withdraw"]'
+    this.btnWithdrawNavItemListItemManageModal = this.page.getByTestId(
+      "vault-listItemManageModal-withdrawNavItem"
     );
-    this.diaologDepositToVaultModal = this.page.locator(
-      '//h2[text()="Deposit To Vault"]/parent::div'
-    );
-    this.btnConfirmDepositDepositToVaultModal =
-      this.diaologDepositToVaultModal.locator(
-        '//button[text()="Deposit"][@type="submit"]'
-      );
-    this.btnApproveTokens = this.page.locator(
-      '//button[text()="Approve token"]'
+    this.btnApproveListItemDepositModal = this.page.getByTestId(
+      "vault-listItemDepositModal-approveButton"
     );
     this.btnConnectWallet = this.page.locator(
-      "[data-testid*='connectWalletButton']"
+      "//button[text()='Connect Wallet']"
+    );
+    this.vaultContractAddressDetailAbout = this.page.locator(
+      "//div[text()='Vault contract address:']//a"
+    );
+    this.balanceValueVaultDetails = this.page.getByTestId(
+      "vault-detailsPositionStats-balanceValue"
+    );
+    this.btnDepositNavItemDetailManageModal = this.page.getByTestId(
+      "vault-detailManageModal-depositNavItem"
+    );
+    this.btnWithdrawNavItemDetailManageModal = this.page.getByTestId(
+      "vault-detailManageModal-withdrawNavItem"
+    );
+    this.inputDepositAmountDetailManageModal = this.page
+      .getByTestId("vault-detailManageModal-depositInputWrapper")
+      .locator("input");
+    this.inputReceiveSharesTokenDetailManageModal = this.page
+      .getByTestId("vault-detailManageModal-receiveSharesInputWrapper")
+      .locator("input");
+    this.inputWithdrawAmountDetailManageModal = this.page
+      .getByTestId("vault-detailManageModal-withdrawInputWrapper")
+      .locator("input");
+    this.inputBurnSharesTokenDetailManageModal = this.page
+      .getByTestId("vault-detailManageModal-burnSharesInputWrapper")
+      .locator("input");
+    this.btnResetDetailManageModal = this.page.getByTestId(
+      "vault-detailManageModal-resetButton"
+    );
+    this.btnDepositDetailManageModal = this.page.getByTestId(
+      "vault-detailManageModal-depositButton"
+    );
+    this.btnWithdrawDetailManageModal = this.page.getByTestId(
+      "vault-detailManageModal-withdrawButton"
+    );
+    this.btnMaxDepositInputDetailManageModal = this.page.getByTestId(
+      "vault-detailManageModal-depositInput-maxButton"
+    );
+    this.btnMaxWithdrawInputDetailManageModal = this.page.getByTestId(
+      "vault-detailManageModal-withdrawInput-maxButton"
     );
   }
 
@@ -151,13 +208,7 @@ export default class VaultPage extends BasePage {
     return this.page.locator(`[data-testid="vaultRow-${id}-depositButton"]`);
   }
 
-  getConnectWalletButtonRowLocatorById(id: string): Locator {
-    return this.page.locator(
-      `[data-testid="vaultRow-${id}-connectWalletButton"]`
-    );
-  }
-
-  getManageVaultButtonRowDetailsLocatorById(id: string): Locator {
+  getManageVaultButtonRowLocatorById(id: string): Locator {
     return this.page.locator(
       `[data-testid="vaultRowDetails-${id}-managePositionButton"]`
     );
@@ -256,69 +307,42 @@ export default class VaultPage extends BasePage {
     return this.page.locator(`[data-testid="vaultRow-${id}-hideButton"]`);
   }
 
-  async toggleFilter(filterName: VaultFilterName): Promise<void> {
-    await expect.soft(this.btnLiveNow).toBeVisible();
-    await expect.soft(this.btnFinished).toBeVisible();
-    if (
-      filterName === VaultFilterName.LiveNow &&
-      (await this.btnLiveNow.getAttribute("aria-pressed")) === "false"
-    ) {
-      await this.btnLiveNow.click();
-      expect(await this.btnLiveNow.getAttribute("aria-pressed")).toEqual(
-        "true"
-      );
-    }
-    if (
-      filterName === VaultFilterName.Finished &&
-      (await this.btnFinished.getAttribute("aria-pressed")) === "false"
-    ) {
-      await this.btnFinished.click();
-      expect(await this.btnFinished.getAttribute("aria-pressed")).toEqual(
-        "true"
-      );
-    }
-  }
-
-  async extendVaultDetails(id: string): Promise<void> {
-    await this.page.waitForLoadState("load");
-    await expect(this.getVaultRowLocatorById(id)).toBeVisible();
-    if (await this.getExtendDetailsButtonVaultRow(id).isVisible()) {
-      await this.getExtendDetailsButtonVaultRow(id).click();
-      expect(this.getVaultRowDetailsLocatorById(id)).toBeVisible();
-    }
-  }
-
-  async hideVaultDetails(id: string): Promise<void> {
-    await this.page.waitForLoadState("load");
-    await expect(this.getVaultRowLocatorById(id)).toBeVisible();
-    if (await this.getHideDetailsButtonVaultRow(id).isVisible()) {
-      await this.getHideDetailsButtonVaultRow(id).click();
-      expect(this.getVaultRowDetailsLocatorById(id)).not.toBeVisible();
-    }
-  }
-
-  async enterDepositAmount(amount: number): Promise<void> {
+  async enterDepositAmountDialogManageModal(amount: number): Promise<void> {
     await this.page.waitForTimeout(1000);
-    await this.inputDepositAmount.clear();
-    await this.inputDepositAmount.fill(amount.toString());
+    await this.inputDepositAmountListItemManageModal.clear();
+    await this.inputDepositAmountListItemManageModal.fill(amount.toString());
   }
 
-  async enterWithdrawAmount(amount: number): Promise<void> {
+  async enterWithdrawAmountDialogManageModal(amount: number): Promise<void> {
     await this.page.waitForTimeout(1000);
-    await this.inputWithdrawAmount.clear();
-    await this.inputWithdrawAmount.fill(amount.toString());
+    await this.inputWithdrawAmountListItemManageModal.clear();
+    await this.inputWithdrawAmountListItemManageModal.fill(amount.toString());
   }
 
-  async confirmDeposit(): Promise<void> {
-    await this.btnConfirmDepositDialogModal.click();
+  async confirmDepositDialogManageModal(): Promise<void> {
+    await this.btnConfirmDepositListItemManageModal.click();
     await expect.soft(this.progressBar).toBeVisible();
     await this.page.waitForTimeout(1000);
     await expect(this.divAlert).toBeHidden({ timeout: 100 });
     await metamask.confirmTransaction();
   }
 
-  async confirmWithdraw(): Promise<void> {
-    await this.btnConfirmWithdrawManageDialogModal.click();
+  async enterDepositAmountDialogDepositModal(amount: number): Promise<void> {
+    await this.page.waitForTimeout(1000);
+    await this.inputDepositAmountListItemDepositModal.clear();
+    await this.inputDepositAmountListItemDepositModal.fill(amount.toString());
+  }
+
+  async confirmDepositDialogDepositModal(): Promise<void> {
+    await this.btnConfirmDepositListItemDepositModal.click();
+    await expect.soft(this.progressBar).toBeVisible();
+    await this.page.waitForTimeout(1000);
+    await expect(this.divAlert).toBeHidden({ timeout: 100 });
+    await metamask.confirmTransaction();
+  }
+
+  async confirmWithdrawDialogManageModal(): Promise<void> {
+    await this.btnConfirmWithdrawListItemManageModal.click();
     await expect.soft(this.progressBar).toBeVisible();
     await this.page.waitForTimeout(1000);
     await expect(this.divAlert).toBeHidden({ timeout: 100 });
@@ -326,7 +350,7 @@ export default class VaultPage extends BasePage {
   }
 
   async validateManagePositionDialogNotVisible(): Promise<void> {
-    await expect.soft(this.dialogManageVault).not.toBeVisible({
+    await expect.soft(this.dialogListItemManageModal).not.toBeVisible({
       timeout: 20000,
     });
   }
@@ -362,14 +386,18 @@ export default class VaultPage extends BasePage {
     );
   }
 
-  async clickVaultDetailsTab(
-    id: string,
-    tabName: VaultDetailsTabs
-  ): Promise<void> {
-    await this.getVaultDetailsTabLocator(id, tabName).click();
+  async openVaultDetails(id: string): Promise<void> {
+    await expect(this.getVaultRowLocatorById(id)).toBeVisible();
+    await this.page.getByTestId(`vaultRow-${id}-tokenTitle`).click();
   }
 
-  async manageVaultDeposit({
+  async getContractAddressDetailAbout(): Promise<string> {
+    const addressValue =
+      (await this.vaultContractAddressDetailAbout.textContent()) as string;
+    return addressValue;
+  }
+
+  async manageVaultDialogDeposit({
     id,
     shareTokenName,
     depositAmount,
@@ -378,13 +406,10 @@ export default class VaultPage extends BasePage {
     shareTokenName: string;
     depositAmount: number;
   }): Promise<VaultDepositData> {
-    await this.toggleFilter(VaultFilterName.LiveNow);
-    await this.extendVaultDetails(id);
-    await this.clickVaultDetailsTab(id, VaultDetailsTabs.YourPosition);
-    await this.getManageVaultButtonRowDetailsLocatorById(id).click();
-    await expect(this.dialogManageVault).toBeVisible();
-    await this.btnDepositNavManageDialogModal.click();
-    await this.enterDepositAmount(depositAmount);
+    await this.getManageVaultButtonRowLocatorById(id).click();
+    await expect(this.dialogListItemManageModal).toBeVisible();
+    await this.btnDepositNavItemListItemManageModal.click();
+    await this.enterDepositAmountDialogManageModal(depositAmount);
     await this.page.waitForTimeout(2000);
     const depositedValueBeforeText =
       await this.spanDepositedValueBeforeManageVaultDialog.textContent();
@@ -440,7 +465,7 @@ export default class VaultPage extends BasePage {
       poolShareDialogAfter: poolShareValueAfter,
       shareTokensDialogAfter: shareTokensValueAfter,
     };
-    await this.confirmDeposit();
+    await this.confirmDepositDialogManageModal();
     await Promise.all([
       this.validateAlertMessage({
         status: "pending",
@@ -464,69 +489,194 @@ export default class VaultPage extends BasePage {
     return vaultDepositDataExpected;
   }
 
-  async validateVaultData({
+  async validateVaultDataListItemPage({
     id,
     action,
     amountChanged,
     stakedAmountDialogBefore,
     stakedAmountDialogAfter,
-    poolShareDialogAfter,
-    shareTokensDialogAfter,
   }: ValidateVaultDataParams): Promise<void> {
-    await this.extendVaultDetails(id);
     const stakedAmountRowActual = await this.getStakedVaultRowValue(id);
-    const pooledValueRowDetailsActual =
-      await this.getPooledVaultRowDetailsValue(id);
-    const yourShareValueRowDetailsActual =
-      await this.getYourShareVaultRowDetailsValue(id);
-    const shareTokenValueRowDetailsActual =
-      await this.getShareTokenVaultRowDetailsValue(id);
-    // Staked / Withdraw Amount Row and Pooled amount Row Details Validations
     if (action === VaultAction.Deposit) {
       expect
-        .soft(stakedAmountDialogAfter)
-        .toEqual(Number(stakedAmountDialogBefore) + amountChanged);
+        .soft(Math.round((stakedAmountDialogAfter as number) * 100) / 100)
+        .toEqual(
+          Math.round((Number(stakedAmountDialogBefore) + amountChanged) * 100) /
+            100
+        );
       expect
         .soft(stakedAmountRowActual)
         .toBeGreaterThanOrEqual(
           Number((Number(stakedAmountDialogBefore) + amountChanged).toFixed(2))
         );
-      expect
-        .soft(pooledValueRowDetailsActual)
-        .toBeGreaterThanOrEqual(
-          Number(stakedAmountDialogBefore) + amountChanged
-        );
     } else if (action === VaultAction.Withdraw) {
       expect
-        .soft(stakedAmountDialogAfter)
-        .toEqual(Number(stakedAmountDialogBefore) - amountChanged);
+        .soft(Math.round((stakedAmountDialogAfter as number) * 100) / 100)
+        .toEqual(
+          Math.round((Number(stakedAmountDialogBefore) - amountChanged) * 100) /
+            100
+        );
       expect
         .soft(stakedAmountRowActual)
         .toBeGreaterThanOrEqual(
           Number((Number(stakedAmountDialogBefore) - amountChanged).toFixed(2))
         );
-      expect
-        .soft(pooledValueRowDetailsActual)
-        .toBeGreaterThanOrEqual(
-          Number(stakedAmountDialogBefore) - amountChanged
-        );
     }
-    // Your Share Value Row Details Validations
-    expect.soft(yourShareValueRowDetailsActual).toBeGreaterThanOrEqual(0);
-    expect.soft(yourShareValueRowDetailsActual).toBeLessThanOrEqual(100);
+  }
+
+  async validateVaultDataDetailManagePage({
+    id,
+    stakedAmountDialogAfter,
+    poolShareDialogAfter,
+    shareTokensDialogAfter,
+  }: ValidateVaultDataParams): Promise<void> {
+    await expect(
+      this.page.getByTestId("KeyboardArrowRightRoundedIcon")
+    ).toBeVisible();
+    expect.soft(await this.getContractAddressDetailAbout()).toEqual(id);
+    await this.page.waitForTimeout(2000);
+    const depositedValueDetailPageBeforeText =
+      await this.spanDepositedValueBeforeManageVaultDialog.textContent();
+    const depositedValueDetailPageAfterText =
+      await this.spanDepositedValueAfterManageVaultDialog.textContent();
+    const poolShareValueDetailPageBeforeText =
+      await this.spanPoolShareValueBeforeManageVaultDialog.textContent();
+    const poolShareValueDetailPageAfterText =
+      await this.spanPoolShareValueAfterManageVaultDialog.textContent();
+    const shareTokensValueDetailPageBeforeText =
+      await this.spanShareTokensValueBeforeManageVaultDialog.textContent();
+    const shareTokensValueDetailPageAfterText =
+      await this.spanShareTokensValueAfterManageVaultDialog.textContent();
+    let depositedValueDetailPageBefore: number | null;
+    let poolShareValueDetailPageBefore: number | null;
+    let shareTokensValueDetailPageBefore: number | null;
+    let depositedValueDetailPageAfter: number | null;
+    let poolShareValueDetailPageAfter: number | null;
+    let shareTokensValueDetailPageAfter: number | null;
+    if (
+      depositedValueDetailPageBeforeText !== null &&
+      poolShareValueDetailPageBeforeText !== null &&
+      shareTokensValueDetailPageBeforeText !== null &&
+      depositedValueDetailPageAfterText !== null &&
+      poolShareValueDetailPageAfterText !== null &&
+      shareTokensValueDetailPageAfterText !== null
+    ) {
+      depositedValueDetailPageBefore = extractNumericValue(
+        depositedValueDetailPageBeforeText
+      );
+      poolShareValueDetailPageBefore = extractNumericValue(
+        poolShareValueDetailPageBeforeText
+      );
+      shareTokensValueDetailPageBefore = extractNumericValue(
+        shareTokensValueDetailPageBeforeText
+      );
+      depositedValueDetailPageAfter = extractNumericValue(
+        depositedValueDetailPageAfterText
+      );
+      poolShareValueDetailPageAfter = extractNumericValue(
+        poolShareValueDetailPageAfterText
+      );
+      shareTokensValueDetailPageAfter = extractNumericValue(
+        shareTokensValueDetailPageAfterText
+      );
+    } else {
+      depositedValueDetailPageBefore = null;
+      expect(depositedValueDetailPageBefore).not.toBeNull();
+      poolShareValueDetailPageBefore = null;
+      expect(poolShareValueDetailPageBefore).not.toBeNull();
+      shareTokensValueDetailPageBefore = null;
+      expect(shareTokensValueDetailPageBefore).not.toBeNull();
+      depositedValueDetailPageAfter = null;
+      expect(depositedValueDetailPageAfter).not.toBeNull();
+      poolShareValueDetailPageAfter = null;
+      expect(poolShareValueDetailPageAfter).not.toBeNull();
+      shareTokensValueDetailPageAfter = null;
+      expect(shareTokensValueDetailPageAfter).not.toBeNull();
+    }
+    expect
+      .soft(Math.round((depositedValueDetailPageBefore as number) * 100) / 100)
+      .toBeGreaterThanOrEqual(
+        Math.round((stakedAmountDialogAfter as number) * 100) / 100
+      );
+    expect
+      .soft(Math.round((depositedValueDetailPageAfter as number) * 100) / 100)
+      .toBeGreaterThanOrEqual(
+        Math.round((stakedAmountDialogAfter as number) * 100) / 100
+      );
+    expect
+      .soft(Math.round((poolShareValueDetailPageBefore as number) * 100) / 100)
+      .toEqual(Math.round((poolShareDialogAfter as number) * 100) / 100);
+    expect
+      .soft(Math.round((poolShareValueDetailPageAfter as number) * 100) / 100)
+      .toEqual(Math.round((poolShareDialogAfter as number) * 100) / 100);
     expect
       .soft(
-        transformToSameDecimals(
-          Number(poolShareDialogAfter),
-          Number(yourShareValueRowDetailsActual)
-        )
+        Math.round((shareTokensValueDetailPageBefore as number) * 100) / 100
       )
-      .toEqual(poolShareDialogAfter);
-    // Share Token Row Details Value Validations
-    expect.soft(shareTokenValueRowDetailsActual).toBeGreaterThanOrEqual(0);
+      .toBeGreaterThanOrEqual(
+        Math.round((shareTokensDialogAfter as number) * 100) / 100
+      );
     expect
-      .soft(shareTokenValueRowDetailsActual)
-      .toEqual(shareTokensDialogAfter);
+      .soft(Math.round((shareTokensValueDetailPageAfter as number) * 100) / 100)
+      .toBeGreaterThanOrEqual(
+        Math.round((shareTokensDialogAfter as number) * 100) / 100
+      );
+    const balanceValueText = await this.balanceValueVaultDetails.textContent();
+    const balanceValue = extractNumericValue(balanceValueText as string);
+    expect
+      .soft(balanceValue)
+      .toEqual(Number((stakedAmountDialogAfter as number).toFixed(2)));
+    await expect.soft(this.btnDepositNavItemDetailManageModal).toBeVisible();
+    await expect.soft(this.btnDepositNavItemDetailManageModal).toBeEnabled();
+    await expect.soft(this.btnWithdrawNavItemDetailManageModal).toBeVisible();
+    await expect.soft(this.btnWithdrawNavItemDetailManageModal).toBeEnabled();
+    await expect.soft(this.inputDepositAmountDetailManageModal).toBeVisible();
+    await expect.soft(this.inputDepositAmountDetailManageModal).toHaveValue("");
+    await expect
+      .soft(this.inputDepositAmountDetailManageModal)
+      .toHaveAttribute("placeholder", "0");
+    await expect.soft(this.btnMaxDepositInputDetailManageModal).toBeVisible();
+    await expect.soft(this.btnMaxDepositInputDetailManageModal).toBeEnabled();
+    await expect
+      .soft(this.inputReceiveSharesTokenDetailManageModal)
+      .toBeVisible();
+    await expect
+      .soft(this.inputReceiveSharesTokenDetailManageModal)
+      .toBeDisabled();
+    await expect
+      .soft(this.inputReceiveSharesTokenDetailManageModal)
+      .toHaveValue("");
+    await expect
+      .soft(this.inputReceiveSharesTokenDetailManageModal)
+      .toHaveAttribute("placeholder", "0");
+    await expect.soft(this.btnDepositDetailManageModal).toBeVisible();
+    await expect.soft(this.btnDepositDetailManageModal).toBeEnabled();
+    await expect.soft(this.btnResetDetailManageModal).toBeVisible();
+    await expect.soft(this.btnResetDetailManageModal).toBeEnabled();
+    await this.btnWithdrawNavItemDetailManageModal.click();
+    await expect.soft(this.inputWithdrawAmountDetailManageModal).toBeVisible();
+    await expect
+      .soft(this.inputWithdrawAmountDetailManageModal)
+      .toHaveValue("");
+    await expect
+      .soft(this.inputWithdrawAmountDetailManageModal)
+      .toHaveAttribute("placeholder", "0");
+    await expect.soft(this.btnMaxWithdrawInputDetailManageModal).toBeVisible();
+    await expect.soft(this.btnMaxWithdrawInputDetailManageModal).toBeEnabled();
+    await expect.soft(this.inputBurnSharesTokenDetailManageModal).toBeVisible();
+    await expect
+      .soft(this.inputBurnSharesTokenDetailManageModal)
+      .toBeDisabled();
+    await expect
+      .soft(this.inputBurnSharesTokenDetailManageModal)
+      .toHaveValue("");
+    await expect
+      .soft(this.inputBurnSharesTokenDetailManageModal)
+      .toHaveAttribute("placeholder", "0");
+    await expect.soft(this.btnWithdrawDetailManageModal).toBeVisible();
+    await expect.soft(this.btnWithdrawDetailManageModal).toBeEnabled();
+    await expect.soft(this.btnResetDetailManageModal).toBeVisible();
+    await expect.soft(this.btnResetDetailManageModal).toBeEnabled();
   }
 
   async manageVaultWithdrawPartially({
@@ -536,13 +686,10 @@ export default class VaultPage extends BasePage {
     id: string;
     withdrawAmount: number;
   }): Promise<VaultDepositData> {
-    await this.toggleFilter(VaultFilterName.LiveNow);
-    await this.extendVaultDetails(id);
-    await this.clickVaultDetailsTab(id, VaultDetailsTabs.YourPosition);
-    await this.getManageVaultButtonRowDetailsLocatorById(id).click();
-    await expect(this.dialogManageVault).toBeVisible();
-    await this.btnWithdrawNavManageDialogModal.click();
-    await this.enterWithdrawAmount(withdrawAmount);
+    await this.getManageVaultButtonRowLocatorById(id).click();
+    await expect(this.dialogListItemManageModal).toBeVisible();
+    await this.btnWithdrawNavItemListItemManageModal.click();
+    await this.enterWithdrawAmountDialogManageModal(withdrawAmount);
     await this.page.waitForTimeout(2000);
     const depositedValueBeforeText =
       await this.spanDepositedValueBeforeManageVaultDialog.textContent();
@@ -598,7 +745,7 @@ export default class VaultPage extends BasePage {
       poolShareDialogAfter: poolShareValueAfter,
       shareTokensDialogAfter: shareTokensValueAfter,
     };
-    await this.confirmWithdraw();
+    await this.confirmWithdrawDialogManageModal();
     await Promise.all([
       this.validateAlertMessage({
         status: "pending",
@@ -624,14 +771,11 @@ export default class VaultPage extends BasePage {
   }
 
   async manageVaultWithdrawFully({ id }: { id: string }): Promise<void> {
-    await this.toggleFilter(VaultFilterName.LiveNow);
-    await this.extendVaultDetails(id);
-    await this.clickVaultDetailsTab(id, VaultDetailsTabs.YourPosition);
-    await this.getManageVaultButtonRowDetailsLocatorById(id).click();
-    await expect(this.dialogManageVault).toBeVisible();
-    await this.btnWithdrawNavManageDialogModal.click();
-    await this.page.waitForTimeout(2000);
-    await this.btnMax.click();
+    await this.getManageVaultButtonRowLocatorById(id).click();
+    await expect(this.dialogListItemManageModal).toBeVisible();
+    await this.btnWithdrawNavItemListItemManageModal.click();
+    await this.page.waitForTimeout(5000);
+    await this.btnMaxWithdrawInputListItemManageModal.click();
     await this.page.waitForTimeout(2000);
     const depositedValueAfterText =
       await this.spanDepositedValueAfterManageVaultDialog.textContent();
@@ -658,7 +802,7 @@ export default class VaultPage extends BasePage {
     expect.soft(depositedValueAfter).toEqual(0);
     expect.soft(poolShareValueAfter).toEqual(0);
     expect.soft(shareTokensValueAfter).toEqual(0);
-    await this.confirmWithdraw();
+    await this.confirmWithdrawDialogManageModal();
     await Promise.all([
       this.validateAlertMessage({
         status: "pending",
@@ -682,16 +826,19 @@ export default class VaultPage extends BasePage {
     await this.page.waitForTimeout(2000);
   }
 
-  async approveTokensMaxUint() {
-    await this.btnApproveTokens.click();
-    await expect.soft(this.progressBar).toBeVisible();
-    await this.page.waitForTimeout(1000);
-    await expect(this.divAlert).toBeHidden({ timeout: 100 });
-    await metamask.confirmPermissionToSpend();
-    await this.validateAlertMessage({
-      status: "success",
-      title: "Token approval was successful!",
-    });
+  async approveTokensMaxUintListItemDepositModal() {
+    await expect(this.dialogListItemDepositModal).toBeVisible();
+    if (await this.btnApproveListItemDepositModal.isVisible()) {
+      await this.btnApproveListItemDepositModal.click();
+      await expect.soft(this.progressBar).toBeVisible();
+      await this.page.waitForTimeout(1000);
+      await expect(this.divAlert).toBeHidden({ timeout: 100 });
+      await metamask.confirmPermissionToSpend();
+      await this.validateAlertMessage({
+        status: "success",
+        title: "Token approval was successful!",
+      });
+    }
   }
 
   async depositFirstTime({
@@ -703,7 +850,6 @@ export default class VaultPage extends BasePage {
     shareTokenName: string;
     depositAmount: number;
   }): Promise<VaultDepositData> {
-    await this.toggleFilter(VaultFilterName.LiveNow);
     await expect
       .soft(this.getDepositButtonRowLocatorById(id))
       .toHaveText("Deposit");
@@ -711,11 +857,11 @@ export default class VaultPage extends BasePage {
       .soft(this.getVaultDetailsTabLocator(id, VaultDetailsTabs.YourPosition))
       .not.toBeVisible();
     await this.getDepositButtonRowLocatorById(id).click();
-    await expect(this.diaologDepositToVaultModal).toBeVisible();
+    await expect(this.dialogListItemDepositModal).toBeVisible();
     await this.page.waitForTimeout(2000);
-    await this.enterDepositAmount(depositAmount);
+    await this.enterDepositAmountDialogDepositModal(depositAmount);
     await this.page.waitForTimeout(2000);
-    await this.approveTokensMaxUint();
+    await this.approveTokensMaxUintListItemDepositModal();
     await this.page.waitForTimeout(2000);
     const depositedValueBeforeText =
       await this.spanDepositedValueBeforeManageVaultDialog.textContent();
@@ -771,7 +917,7 @@ export default class VaultPage extends BasePage {
       poolShareDialogAfter: poolShareValueAfter,
       shareTokensDialogAfter: shareTokensValueAfter,
     };
-    await this.confirmDeposit();
+    await this.confirmDepositDialogDepositModal();
     await Promise.all([
       this.validateAlertMessage({
         status: "pending",
@@ -792,35 +938,7 @@ export default class VaultPage extends BasePage {
     await this.closeDepositSuccessfuldModal();
     await this.page.waitForLoadState("load");
     await this.page.waitForTimeout(2000);
-    await this.extendVaultDetails(id);
-    await expect
-      .soft(this.getVaultDetailsTabLocator(id, VaultDetailsTabs.YourPosition))
-      .toBeVisible();
     return vaultDepositDataExpected;
-  }
-
-  async validateYourPositionTabIsVisible(id: string): Promise<void> {
-    await expect
-      .soft(this.getVaultDetailsTabLocator(id, VaultDetailsTabs.YourPosition))
-      .toBeVisible();
-  }
-
-  async validateAboutTabIsVisible(id: string): Promise<void> {
-    await expect
-      .soft(this.getVaultDetailsTabLocator(id, VaultDetailsTabs.About))
-      .toBeVisible();
-  }
-
-  async validateStrategiesTabIsVisible(id: string): Promise<void> {
-    await expect
-      .soft(this.getVaultDetailsTabLocator(id, VaultDetailsTabs.Strategies))
-      .toBeVisible();
-  }
-
-  async validateYourPositionTabNotVisible(id: string): Promise<void> {
-    await expect
-      .soft(this.getVaultDetailsTabLocator(id, VaultDetailsTabs.YourPosition))
-      .not.toBeVisible();
   }
 
   async connectWalletVault(

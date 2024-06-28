@@ -103,6 +103,7 @@ const VaultDetailDepositForm: FC<{ notLoading: boolean }> = ({
               validateMaxDepositValue={validateMaxDepositValue}
               minimumDeposit={minimumDeposit}
               depositLimitExceeded={depositLimitExceeded}
+              dataTestIdPrefix="vault-detailDepositModal"
             />
           </VaultDetailFormColumn>
           <DepositVaultInfo

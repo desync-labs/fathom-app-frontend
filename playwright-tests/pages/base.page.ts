@@ -15,7 +15,7 @@ import {
 import { ethers } from "fathom-ethers";
 import FathomStablecoin from "../fixtures/abis/FathomStablecoin.json";
 import { contractAddresses } from "../fixtures/global.data";
-import { APOTHEM_RPC } from "../../src/connectors/networks";
+import { APOTHEM_RPC_INTERNAL } from "../fixtures/global.data";
 dotenv.config();
 
 export default class BasePage {
@@ -157,13 +157,13 @@ export default class BasePage {
   ): Promise<Request> {
     const request = await this.page.waitForRequest(
       (request) => {
-        const includesFxdPositions = request
+        const includesOperationName = request
           .postData()
           ?.includes(operationName);
-        if (includesFxdPositions !== undefined) {
+        if (includesOperationName !== undefined) {
           return (
             request.url() === `${this.graphAPIBaseUrl}${endpoint}` &&
-            includesFxdPositions
+            includesOperationName
           );
         } else {
           return false;
@@ -203,7 +203,7 @@ export default class BasePage {
     address: string,
     amount: number
   ): Promise<void> {
-    const rpcUrl = APOTHEM_RPC;
+    const rpcUrl = APOTHEM_RPC_INTERNAL;
     const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
     const wallet = new ethers.Wallet(this.privateKeyMainAccount, provider);
     const signer = wallet.connect(provider);
@@ -232,7 +232,7 @@ export default class BasePage {
   ): Promise<void> {
     const senderPrivateKey = this.privateKeyMainAccount;
     const receiverAddress = address;
-    const rpcUrl = APOTHEM_RPC;
+    const rpcUrl = APOTHEM_RPC_INTERNAL;
     const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
     const senderWallet = new ethers.Wallet(senderPrivateKey, provider);
     const tokenAmount = ethers.utils.parseEther(amountToSend.toString());
