@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, memo } from "react";
 import { Box, styled, Typography } from "@mui/material";
 
 const PageHeaderWrapper = styled(Box)`
@@ -42,4 +42,4 @@ const VaultPageHeader: FC<PageHeaderType> = ({ title, description }) => {
   );
 };
 
-export default VaultPageHeader;
+export default memo(VaultPageHeader);

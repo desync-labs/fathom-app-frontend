@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, memo } from "react";
 import { Box, styled } from "@mui/material";
 import { IVaultPosition } from "fathom-sdk";
 import BigNumber from "bignumber.js";
@@ -81,7 +81,7 @@ type VaultsTotalStatsType = {
 
 type StatItemPropsType = { title: string; value: string; icon: JSX.Element };
 
-const StatItem: FC<StatItemPropsType> = ({ title, value, icon }) => {
+const StatItem: FC<StatItemPropsType> = memo(({ title, value, icon }) => {
   const { fxdPrice, fetchPricesInProgress } = usePricesContext();
   const { isMobile } = useSharedContext();
   return (
@@ -110,7 +110,7 @@ const StatItem: FC<StatItemPropsType> = ({ title, value, icon }) => {
       </StatItemInfo>
     </StatItemWrapper>
   );
-};
+});
 
 const VaultsTotalStats: FC<VaultsTotalStatsType> = ({
   positionsList,
@@ -133,4 +133,4 @@ const VaultsTotalStats: FC<VaultsTotalStatsType> = ({
   );
 };
 
-export default VaultsTotalStats;
+export default memo(VaultsTotalStats);

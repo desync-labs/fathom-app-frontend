@@ -1,4 +1,4 @@
-import { FC, useMemo, useState } from "react";
+import { FC, memo, useMemo, useState } from "react";
 import { styled } from "@mui/material/styles";
 import { TableCell } from "@mui/material";
 import { IVault, IVaultPosition } from "fathom-sdk";
@@ -231,4 +231,4 @@ const VaultListItemMobile: FC<VaultListItemMobileProps> = ({
   );
 };
 
-export default VaultListItemMobile;
+export default memo(VaultListItemMobile);
