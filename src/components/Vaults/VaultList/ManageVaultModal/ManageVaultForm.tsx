@@ -77,7 +77,7 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
   depositLimitExceeded,
   dataTestIdPrefix,
 }) => {
-  const { token, balanceTokens, depositLimit } = vaultItemData;
+  const { token, balanceTokens, depositLimit, shutdown } = vaultItemData;
   const { fxdPrice } = usePricesContext();
   const formattedBalanceToken = useMemo(
     () =>
@@ -134,7 +134,7 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
                 placeholder={"0"}
                 helperText={
                   <>
-                    {depositLimitExceeded(value) && (
+                    {!shutdown && depositLimitExceeded(value) && (
                       <AppFormInputErrorWrapper>
                         <InfoIcon
                           sx={{
