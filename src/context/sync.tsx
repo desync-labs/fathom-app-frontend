@@ -34,7 +34,7 @@ export const SyncContext = createContext<UseSyncContextReturn>(
 );
 
 export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
-  const [lastTransactionBlock, setLastTransactionBlock] = useState<number>();
+  const [lastTransactionBlock, setLastTransactionBlock] = useState<number>(0);
   const [syncFXD, setSyncFXD] = useState<boolean>(true);
   const [syncDao, setSyncDao] = useState<boolean>(true);
   const [syncVault, setSyncVault] = useState<boolean>(true);
@@ -92,9 +92,20 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
 
   useEffect(() => {
     if (chainId) {
-      setLastTransactionBlock(undefined);
+      setLastTransactionBlock(0);
+      setSyncFXD(true);
+      setSyncVault(true);
+      setSyncDex(true);
+      setSyncDao(true);
     }
-  }, [chainId, setLastTransactionBlock]);
+  }, [
+    chainId,
+    setLastTransactionBlock,
+    setSyncFXD,
+    setSyncVault,
+    setSyncDex,
+    setSyncDao,
+  ]);
 
   const values = useMemo(() => {
     return {
@@ -109,6 +120,10 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
       setLastTransactionBlock,
     };
   }, [setLastTransactionBlock, syncFXD, syncDao, syncVault, syncDex]);
+
+  console.log({
+    values,
+  });
 
   useEffect(() => {
     prevSyncFxd.current = syncFXD;
@@ -127,28 +142,17 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
   }, [syncDex]);
 
   useEffect(() => {
-    if (
-      !lastTransactionBlock &&
-      fxdData?.indexingStatusForCurrentVersion?.chains[0]?.latestBlock?.number
-    ) {
-      setSyncFXD(true);
-      return setLastTransactionBlock(
-        Number(
-          fxdData?.indexingStatusForCurrentVersion?.chains[0]?.latestBlock
-            ?.number
-        )
-      );
-    }
-
     /***
      * Check if transaction block from transaction receipt has block number higher than latestBlock from Graph, if so our Graph state is not up-to-date.
      */
     let interval: ReturnType<typeof setInterval>;
     if (
+      lastTransactionBlock &&
       Number(lastTransactionBlock) >=
-      Number(
-        fxdData?.indexingStatusForCurrentVersion?.chains[0]?.latestBlock?.number
-      )
+        Number(
+          fxdData?.indexingStatusForCurrentVersion?.chains[0]?.latestBlock
+            ?.number
+        )
     ) {
       interval = setInterval(() => {
         refetchFxd();
@@ -162,37 +166,20 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
     return () => {
       interval && clearInterval(interval);
     };
-  }, [
-    lastTransactionBlock,
-    fxdData,
-    setLastTransactionBlock,
-    refetchFxd,
-    setSyncFXD,
-  ]);
+  }, [lastTransactionBlock, fxdData, refetchFxd, setSyncFXD]);
 
   useEffect(() => {
-    if (
-      !lastTransactionBlock &&
-      daoData?.indexingStatusForCurrentVersion?.chains[0]?.latestBlock?.number
-    ) {
-      setSyncDao(true);
-      return setLastTransactionBlock(
-        Number(
-          daoData?.indexingStatusForCurrentVersion?.chains[0]?.latestBlock
-            ?.number
-        )
-      );
-    }
-
     /***
      * Check if transaction block from transaction receipt has block number higher than latestBlock from Graph, if so our Graph state is not up-to-date.
      */
     let interval: ReturnType<typeof setInterval>;
     if (
+      lastTransactionBlock &&
       Number(lastTransactionBlock) >=
-      Number(
-        daoData?.indexingStatusForCurrentVersion?.chains[0]?.latestBlock?.number
-      )
+        Number(
+          daoData?.indexingStatusForCurrentVersion?.chains[0]?.latestBlock
+            ?.number
+        )
     ) {
       interval = setInterval(() => {
         refetchDao();
@@ -206,43 +193,25 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
     return () => {
       interval && clearInterval(interval);
     };
-  }, [
-    lastTransactionBlock,
-    daoData,
-    setLastTransactionBlock,
-    refetchDao,
-    setSyncDao,
-  ]);
+  }, [lastTransactionBlock, daoData, refetchDao, setSyncDao]);
 
   useEffect(() => {
-    if (
-      !lastTransactionBlock &&
-      vaultData?.indexingStatusForCurrentVersion?.chains[0]?.latestBlock?.number
-    ) {
-      setSyncVault(true);
-      return setLastTransactionBlock(
-        Number(
-          vaultData?.indexingStatusForCurrentVersion?.chains[0]?.latestBlock
-            ?.number
-        )
-      );
-    }
-
     /***
      * Check if transaction block from transaction receipt has block number higher than latestBlock from Graph, if so our Graph state is not up-to-date.
      */
     let interval: ReturnType<typeof setInterval>;
     if (
+      lastTransactionBlock &&
       Number(lastTransactionBlock) >=
-      Number(
-        vaultData?.indexingStatusForCurrentVersion?.chains[0]?.latestBlock
-          ?.number
-      )
+        Number(
+          vaultData?.indexingStatusForCurrentVersion?.chains[0]?.latestBlock
+            ?.number
+        )
     ) {
       interval = setInterval(() => {
         refetchVault();
       }, 500);
-
+      console.log("not sync vaults", lastTransactionBlock);
       setSyncVault(false);
     } else {
       setSyncVault(true);
@@ -251,37 +220,20 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
     return () => {
       interval && clearInterval(interval);
     };
-  }, [
-    lastTransactionBlock,
-    vaultData,
-    setLastTransactionBlock,
-    refetchVault,
-    setSyncVault,
-  ]);
+  }, [lastTransactionBlock, vaultData, refetchVault, setSyncVault]);
 
   useEffect(() => {
-    if (
-      !lastTransactionBlock &&
-      dexData?.indexingStatusForCurrentVersion?.chains[0]?.latestBlock?.number
-    ) {
-      setSyncDex(true);
-      return setLastTransactionBlock(
-        Number(
-          dexData?.indexingStatusForCurrentVersion?.chains[0]?.latestBlock
-            ?.number
-        )
-      );
-    }
-
     /***
      * Check if transaction block from transaction receipt has block number higher than latestBlock from Graph, if so our Graph state is not up-to-date.
      */
     let interval: ReturnType<typeof setInterval>;
     if (
+      lastTransactionBlock &&
       Number(lastTransactionBlock) >=
-      Number(
-        dexData?.indexingStatusForCurrentVersion?.chains[0]?.latestBlock?.number
-      )
+        Number(
+          dexData?.indexingStatusForCurrentVersion?.chains[0]?.latestBlock
+            ?.number
+        )
     ) {
       interval = setInterval(() => {
         refetchDex();
@@ -295,13 +247,7 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
     return () => {
       interval && clearInterval(interval);
     };
-  }, [
-    lastTransactionBlock,
-    dexData,
-    setLastTransactionBlock,
-    refetchDex,
-    setSyncDex,
-  ]);
+  }, [lastTransactionBlock, dexData, refetchDex, setSyncDex]);
 
   return <SyncContext.Provider value={values}>{children}</SyncContext.Provider>;
 };
