@@ -82,7 +82,7 @@ const useVaultList = () => {
   ] = useLazyQuery(ACCOUNT_VAULT_POSITIONS, {
     context: { clientName: "vaults", chainId },
     fetchPolicy: "network-only",
-    variables: { chainId, first: 1000, shutdown_not_in: true },
+    variables: { chainId, first: 1000 },
   });
 
   useEffect(() => {
@@ -159,7 +159,7 @@ const useVaultList = () => {
 
   useEffect(() => {
     if (syncVault && !prevSyncVault) {
-      positionsRefetch({ account: account.toLowerCase() }).then((res) => {
+      positionsRefetch({ account: account?.toLowerCase() }).then((res) => {
         res.data?.accountVaultPositions
           ? setVaultPositionsList(res.data.accountVaultPositions)
           : setVaultPositionsList([]);

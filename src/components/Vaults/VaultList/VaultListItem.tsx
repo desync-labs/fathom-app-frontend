@@ -325,7 +325,7 @@ const VaultListItem: FC<VaultListItemProps> = ({
             {vaultPosition &&
               BigNumber(vaultPosition.balanceShares).isGreaterThan(0) &&
               shutdown &&
-              activeTfPeriod !== 2 && (
+              activeTfPeriod < 2 && (
                 <ButtonPrimary
                   onClick={() => setManageVault(true)}
                   sx={{ height: "36px", minWidth: "100px" }}

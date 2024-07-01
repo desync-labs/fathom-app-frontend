@@ -372,15 +372,8 @@ export const ACCOUNT_VAULT_POSITIONS = gql`
     $account: String!
     $chainId: String
     $first: Int!
-    $shutdown_not_in: Boolean
   ) {
-    accountVaultPositions(
-      where: {
-        account: $account
-        vault_: { shutdown_not_in: [$shutdown_not_in] }
-      }
-      first: $first
-    ) {
+    accountVaultPositions(where: { account: $account }, first: $first) {
       id
       balancePosition
       balanceProfit
