@@ -427,7 +427,6 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
           setVault(vaultData);
 
           vaultData = await updateVaultDepositLimit(vaultData, account);
-
           /**
            * Fetch additional data for strategies
            */

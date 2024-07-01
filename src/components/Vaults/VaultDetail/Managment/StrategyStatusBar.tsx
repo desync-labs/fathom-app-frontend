@@ -4,7 +4,7 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import { formatHashShorten } from "utils/format";
 import { AppFlexBox } from "components/AppComponents/AppBox/AppBox";
 import useVaultContext from "context/vault";
-import { FC, useEffect, useState } from "react";
+import { FC, memo, useEffect, useState } from "react";
 
 const StatusBarWrapper = styled(Box)`
   display: flex;
@@ -49,40 +49,44 @@ const StatusBoxStyled = styled(Box)`
 `;
 
 //ToDo: Implement the StatusLabel component
-export const StatusLabel: FC<{ strategyId?: string }> = ({ strategyId }) => {
-  const [isShutDown, setIsShutDown] = useState(true);
-  const { vault } = useVaultContext();
-  const { strategies } = vault;
+export const StatusLabel: FC<{ strategyId?: string }> = memo(
+  ({ strategyId }) => {
+    const [isShutDown, setIsShutDown] = useState(true);
+    const { vault } = useVaultContext();
+    const { strategies } = vault;
 
-  useEffect(() => {
-    if (strategies) {
-      const strategy = strategies.find(
-        (strategy) => strategy.id === strategyId
-      );
-      if (strategy) {
-        setIsShutDown(strategy.isShutdown as boolean);
+    useEffect(() => {
+      if (strategies) {
+        const strategy = strategies.find(
+          (strategy) => strategy.id === strategyId
+        );
+        if (strategy) {
+          setIsShutDown(strategy.isShutdown as boolean);
+        }
       }
-    }
-  }, [strategies]);
+    }, [strategyId, strategies]);
 
-  return (
-    <StatusBoxStyled className={isShutDown ? "inactive" : "active"}>
-      {isShutDown ? (
-        <CancelIcon sx={{ width: "16px", height: "16px" }} />
-      ) : (
-        <CheckCircleRoundedIcon sx={{ width: "16px", height: "16px" }} />
-      )}
-      {isShutDown ? "Inactive" : "Active"}
-    </StatusBoxStyled>
-  );
-};
+    return (
+      <StatusBoxStyled className={isShutDown ? "inactive" : "active"}>
+        {isShutDown ? (
+          <CancelIcon sx={{ width: "16px", height: "16px" }} />
+        ) : (
+          <CheckCircleRoundedIcon sx={{ width: "16px", height: "16px" }} />
+        )}
+        {isShutDown ? "Inactive" : "Active"}
+      </StatusBoxStyled>
+    );
+  }
+);
 
-const StrategyStatusBar = ({
-  strategyId,
-  strategyName,
-}: {
+type StrategyStatusBarProps = {
   strategyId: string;
   strategyName: string;
+};
+
+const StrategyStatusBar: FC<StrategyStatusBarProps> = ({
+  strategyId,
+  strategyName,
 }) => {
   return (
     <StatusBarWrapper>
@@ -96,4 +100,4 @@ const StrategyStatusBar = ({
   );
 };
 
-export default StrategyStatusBar;
+export default memo(StrategyStatusBar);

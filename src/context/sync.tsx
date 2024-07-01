@@ -145,7 +145,7 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
      */
     let interval: ReturnType<typeof setInterval>;
     if (
-      Number(lastTransactionBlock) >
+      Number(lastTransactionBlock) >=
       Number(
         fxdData?.indexingStatusForCurrentVersion?.chains[0]?.latestBlock?.number
       )
@@ -160,7 +160,7 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
     }
 
     return () => {
-      clearInterval(interval);
+      interval && clearInterval(interval);
     };
   }, [
     lastTransactionBlock,
@@ -189,7 +189,7 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
      */
     let interval: ReturnType<typeof setInterval>;
     if (
-      Number(lastTransactionBlock) >
+      Number(lastTransactionBlock) >=
       Number(
         daoData?.indexingStatusForCurrentVersion?.chains[0]?.latestBlock?.number
       )
@@ -204,7 +204,7 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
     }
 
     return () => {
-      clearInterval(interval);
+      interval && clearInterval(interval);
     };
   }, [
     lastTransactionBlock,
@@ -233,7 +233,7 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
      */
     let interval: ReturnType<typeof setInterval>;
     if (
-      Number(lastTransactionBlock) >
+      Number(lastTransactionBlock) >=
       Number(
         vaultData?.indexingStatusForCurrentVersion?.chains[0]?.latestBlock
           ?.number
@@ -249,7 +249,7 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
     }
 
     return () => {
-      clearInterval(interval);
+      interval && clearInterval(interval);
     };
   }, [
     lastTransactionBlock,
@@ -278,7 +278,7 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
      */
     let interval: ReturnType<typeof setInterval>;
     if (
-      Number(lastTransactionBlock) >
+      Number(lastTransactionBlock) >=
       Number(
         dexData?.indexingStatusForCurrentVersion?.chains[0]?.latestBlock?.number
       )
@@ -293,7 +293,7 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
     }
 
     return () => {
-      clearInterval(interval);
+      interval && clearInterval(interval);
     };
   }, [
     lastTransactionBlock,

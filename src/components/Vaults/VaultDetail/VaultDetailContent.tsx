@@ -17,8 +17,10 @@ const VaultDetailContent = () => {
     vaultPositionLoading,
     isTfVaultType,
     activeTfPeriod,
+    vault,
   } = useVaultContext();
   const { isMobile } = useSharedContext();
+  const { shutdown } = vault;
 
   const [notLoading, setNotLoaded] = useState(false);
 
@@ -40,9 +42,9 @@ const VaultDetailContent = () => {
       {isTfVaultType && activeTfPeriod > 0 ? null : notLoading &&
         BigNumber(vaultPosition.balanceShares).isGreaterThan(0) ? (
         <VaultDetailManageForm />
-      ) : (
+      ) : !shutdown ? (
         <VaultDetailDepositForm notLoading={notLoading} />
-      )}
+      ) : null}
       <VaultDetailInfoTabs />
     </>
   );
