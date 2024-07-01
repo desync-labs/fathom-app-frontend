@@ -159,7 +159,7 @@ const useVaultList = () => {
 
   useEffect(() => {
     if (syncVault && !prevSyncVault) {
-      positionsRefetch({ account: account.toLowerCase() }).then((res) => {
+      positionsRefetch({ account: account?.toLowerCase() }).then((res) => {
         res.data?.accountVaultPositions
           ? setVaultPositionsList(res.data.accountVaultPositions)
           : setVaultPositionsList([]);
