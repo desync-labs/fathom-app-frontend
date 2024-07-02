@@ -121,7 +121,7 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
                   .toNumber()
               ) +
                 " " +
-                token.name +
+                token?.name +
                 " "}
               <Box
                 component="span"
@@ -138,7 +138,7 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
                         .toNumber()
                     ) +
                     " " +
-                    token.name +
+                    token?.name +
                     " "
                   : formatPercentage(
                       Math.max(
@@ -150,13 +150,13 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
                       )
                     ) +
                     " " +
-                    token.name +
+                    token?.name +
                     " "}
               </Box>
             </>
           }
         >
-          <ListItemText primary={token.name + " Deposited"} />
+          <ListItemText primary={token?.name + " Deposited"} />
         </AppListItem>
         <AppListItem
           secondaryAction={
@@ -232,7 +232,7 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
                   .toNumber()
               ) +
                 " " +
-                shareToken.symbol +
+                shareToken?.symbol +
                 " "}
               <Box
                 component="span"
@@ -249,7 +249,7 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
                         .toNumber()
                     ) +
                     " " +
-                    shareToken.symbol
+                    shareToken?.symbol
                   : formatPercentage(
                       Math.max(
                         BigNumber(balanceShares)
@@ -260,7 +260,7 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
                       )
                     ) +
                     " " +
-                    shareToken.symbol}{" "}
+                    shareToken?.symbol}{" "}
               </Box>
             </>
           }
