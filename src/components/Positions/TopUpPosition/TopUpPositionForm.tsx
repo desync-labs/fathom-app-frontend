@@ -42,7 +42,7 @@ import useSharedContext from "context/shared";
 
 const TopUpPositionFormWrapper = styled(Grid)`
   padding-left: 20px;
-  width: calc(50% - 1px);
+  width: calc(50% - 3px);
   position: relative;
 
   ${({ theme }) => theme.breakpoints.down("sm")} {
