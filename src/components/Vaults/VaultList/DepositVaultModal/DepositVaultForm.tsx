@@ -94,7 +94,7 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <AppFormInputWrapperV2>
               <AppFormLabelRow>
-                <AppFormLabelV2>Deposit {token.name}</AppFormLabelV2>
+                <AppFormLabelV2>Deposit {token?.name}</AppFormLabelV2>
                 <AppFlexBox sx={{ width: "auto", justifyContent: "flex-end" }}>
                   <VaultWalletBalance>
                     Balance:{" "}
@@ -184,7 +184,7 @@ const DepositVaultForm: FC<VaultDepositFormProps> = ({
                           sx={{ fontSize: "12px", paddingLeft: "6px" }}
                         >
                           Minimum deposit is {formatNumber(minimumDeposit)}{" "}
-                          {token.name}
+                          {token?.name}
                         </Box>
                       </AppFormInputErrorWrapper>
                     )}
