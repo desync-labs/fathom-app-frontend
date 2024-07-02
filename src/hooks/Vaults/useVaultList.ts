@@ -192,6 +192,19 @@ const useVaultList = () => {
     }
   }, [sortBy, search, vaultItemsData]);
 
+  useEffect(() => {
+    const isShutdown = sessionStorage.getItem("isShutdown");
+    const sortBy = sessionStorage.getItem("sortBy");
+    setIsShutdown(isShutdown === "true");
+    setSortBy(sortBy ? (sortBy as SortType) : SortType.TVL);
+  }, [setIsShutdown, setSortBy]);
+
+  useEffect(() => {
+    if (sortBy) {
+      sessionStorage.setItem("sortBy", sortBy);
+    }
+  }, [sortBy]);
+
   /**
    * Sorting vaults by TVL, Earned, Staked
    */
@@ -303,6 +316,7 @@ const useVaultList = () => {
 
   const handleIsShutdown = (newValue: boolean) => {
     if (newValue !== null) {
+      sessionStorage.setItem("isShutdown", newValue ? "true" : "false");
       setIsShutdown(newValue);
     }
   };
