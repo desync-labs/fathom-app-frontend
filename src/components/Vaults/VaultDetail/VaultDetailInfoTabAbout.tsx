@@ -32,6 +32,18 @@ export const VaultDescriptionWrapper = styled(Box)`
     font-weight: 400;
     color: #b7c8e5;
   }
+
+  ul {
+    strong {
+      font-weight: 600;
+      font-size: 14px;
+      text-decoration-line: underline;
+    }
+    li {
+      margin-bottom: 12px;
+    }
+  }
+
   ${({ theme }) => theme.breakpoints.down("sm")} {
     font-size: 12px;
     span {
