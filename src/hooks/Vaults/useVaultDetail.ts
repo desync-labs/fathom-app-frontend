@@ -495,7 +495,6 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
 
   useEffect(() => {
     if (syncVault && !prevSyncVault && vaultId && !vaultLoading) {
-      console.log("fetch vault 2");
       fetchVault(vaultId, chainId);
     }
   }, [syncVault, prevSyncVault, vaultId, chainId]);
