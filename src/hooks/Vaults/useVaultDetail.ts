@@ -485,7 +485,7 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     } else if (!vaultLoading) {
       timeout = setTimeout(() => {
         fetchVault(vaultId, chainId);
-      }, 100);
+      }, 150);
     }
 
     return () => {
