@@ -111,14 +111,14 @@ const DepositVaultInfo: FC<DepositVaultInfoProps> = ({
           alignItems="flex-start"
           secondaryAction={
             <>
-              0 {token.name + " "}
+              0 {token?.name + " "}
               <Box component="span" sx={{ color: "#29C20A" }}>
-                → {formatPercentage(Number(deposit || "0")) + " " + token.name}
+                → {formatPercentage(Number(deposit || "0")) + " " + token?.name}
               </Box>
             </>
           }
         >
-          <ListItemText primary={token.name + " Deposited"} />
+          <ListItemText primary={token?.name + " Deposited"} />
         </AppListItem>
         <AppListItem
           alignItems="flex-start"
@@ -152,12 +152,12 @@ const DepositVaultInfo: FC<DepositVaultInfoProps> = ({
           alignItems="flex-start"
           secondaryAction={
             <>
-              {`0 ${shareToken.symbol} `}
+              {`0 ${shareToken?.symbol} `}
               <Box component="span" sx={{ color: "#29C20A" }}>
                 →{" "}
                 {formatPercentage(Number(sharedToken || "0")) +
                   " " +
-                  shareToken.symbol}
+                  shareToken?.symbol}
               </Box>
             </>
           }

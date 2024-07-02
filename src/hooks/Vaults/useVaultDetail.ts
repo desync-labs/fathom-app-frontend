@@ -479,12 +479,19 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
   );
 
   useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout>;
     if (!vaultId) {
       navigate("/vaults");
     } else if (!vaultLoading) {
-      fetchVault(vaultId, chainId);
+      timeout = setTimeout(() => {
+        fetchVault(vaultId, chainId);
+      }, 150);
     }
-  }, [vaultId, chainId]);
+
+    return () => {
+      timeout && clearTimeout(timeout);
+    };
+  }, [vaultId, chainId, account, fetchVault]);
 
   useEffect(() => {
     if (syncVault && !prevSyncVault && vaultId && !vaultLoading) {

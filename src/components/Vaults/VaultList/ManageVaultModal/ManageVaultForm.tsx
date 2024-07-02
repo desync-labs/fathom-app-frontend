@@ -107,8 +107,8 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
               <AppFormLabelRow>
                 <AppFormLabelV2>
                   {formType === FormType.DEPOSIT
-                    ? `Deposit ${token.name}`
-                    : `Withdraw ${token.name}`}
+                    ? `Deposit ${token?.name}`
+                    : `Withdraw ${token?.name}`}
                 </AppFormLabelV2>
                 <AppFlexBox sx={{ width: "auto", justifyContent: "flex-end" }}>
                   <VaultWalletBalance>
@@ -120,11 +120,11 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
                             .toNumber()
                         ) +
                         " " +
-                        token.name
+                        token?.name
                       : "Vault Available: " +
                         formatNumber(formattedBalanceToken) +
                         " " +
-                        token.name}
+                        token?.name}
                   </VaultWalletBalance>
                 </AppFlexBox>
               </AppFormLabelRow>
@@ -229,8 +229,8 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
               )}`}</AppFormInputUsdIndicator>
               <AppFormInputLogoV2
                 className={"extendedInput"}
-                src={getTokenLogoURL(token.symbol)}
-                alt={token.name}
+                src={getTokenLogoURL(token?.symbol)}
+                alt={token?.name}
               />
               <MaxButtonV2
                 onClick={() => setMax()}
