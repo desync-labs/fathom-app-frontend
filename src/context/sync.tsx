@@ -121,10 +121,6 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
     };
   }, [setLastTransactionBlock, syncFXD, syncDao, syncVault, syncDex]);
 
-  console.log({
-    values,
-  });
-
   useEffect(() => {
     prevSyncFxd.current = syncFXD;
   }, [syncFXD]);

@@ -35,7 +35,7 @@ import useSharedContext from "context/shared";
 
 const OpenPositionFormWrapper = styled(Grid)`
   padding-left: 20px;
-  width: calc(50% - 1px);
+  width: calc(50% - 3px);
   position: relative;
   padding-bottom: 40px;
 
