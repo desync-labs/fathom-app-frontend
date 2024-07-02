@@ -207,7 +207,6 @@ export const SyncProvider: FC<StakingProviderType> = ({ children }) => {
       interval = setInterval(() => {
         refetchVault();
       }, 500);
-      console.log("not sync vaults", lastTransactionBlock);
       setSyncVault(false);
     } else {
       setSyncVault(true);

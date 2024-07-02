@@ -142,7 +142,58 @@ strategyDescription["0xb2f928bfd9d2107a7c5b8a2208de4a017cdf1bfc"] = (
 
 strategyDescription["0x676a616d4fa846c6699437a4f1209c5808e5b1ab"] = (
   <>
-    <p>Strategy based on off-chain TradeFi products.</p>
+    <h3>Investment description</h3>
+    <ul>
+      <li>
+        Fund transactions backed by over collateralized liquid commodity assets.
+      </li>
+      <li>
+        Multi-year successful track record (Zero defaults, low volatility,
+        consistent returns).
+      </li>
+      <li>
+        Each fund transaction is fully insured for loss, damage or theft by
+        global insurers.
+      </li>
+    </ul>
+    <p>
+      Tradeflow USD is an investment grade Commodity finance fund that has had a
+      successful track record since 2018. The TradeFlow funds currently manage
+      around $130 million in assets. The TradeFlow funds focus on supporting
+      Small Medium size firms in their import/export transactions of physical
+      commodities e.g. non-perishable food crops, agricultural farming inputs,
+      metals for recycling and some energy products. The fund invests in insured
+      physical commodity transactions with a maximum duration of 90 days. This
+      means it provides financing for the import and export of physical
+      commodities, with the commodities themselves used as the collateral. The
+      Vault issuance allows investors to gain exposure to this asset backed
+      commodity funding strategy as a short-term, commodity-backed cash
+      alternative investment. The funds raised through the Vault product will
+      allow the Tradeflow fund to expand its investment capacity.
+    </p>
+    <h3>Disclaimer</h3>
+    <p>
+      Investment in the Tradeflow USD fund carries risk. Although the fund has
+      had a history of low volatility and no defaults since its inception in
+      April 2018, and as of July 1, 2024 carries an A- investment grade senior
+      debt rating, there is no guarantee that this performance will continue.
+      The fund is registered in the Cayman Islands with the CIMA regulatory
+      authority as a mutual fund, and is audited by Deloitte and administered by
+      APEX Fund Services based in the DIFC Dubai. APEX group is a regulated fund
+      administration group which currently administers over US$2 Trillion
+      dollars of assets with over 13,000 employees across 112 offices worldwide.
+      TradeFlow Capital Management Pte Ltd, based in Singapore{" "}
+      <a href={"https://www.tradeflow.capital"} target={"_blank"}>
+        (www.tradeflow.capital)
+      </a>
+      , is the investment advisor to the fund and manages the day-to-day
+      portfolio. APEX Fund Services in the DIFC Dubai manages the independent
+      accounting of the fund, generates the official management accounts for
+      investor reporting, and reports data directly to Deloitte. Prospective
+      investors should consider their own investment objectives, risk tolerance,
+      and financial circumstances before investing in the TradeFlow USD fund
+      vault.
+    </p>
   </>
 );
 
