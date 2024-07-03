@@ -237,7 +237,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
               );
             }
           });
-      }, 50);
+      }, 30);
     }
 
     return () => {

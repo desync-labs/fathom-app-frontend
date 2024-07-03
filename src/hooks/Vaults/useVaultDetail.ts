@@ -374,6 +374,15 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
         depositLimitValue = "0";
       }
 
+      if (
+        type === VaultType.TRADEFI &&
+        BigNumber(depositLimitValue).isEqualTo(0)
+      ) {
+        depositLimitValue = BigNumber(vaultData.strategies[0].maxDebt)
+          .minus(vaultData.balanceTokens)
+          .toString();
+      }
+
       setTfVaultDepositLimit(depositLimitValue);
 
       const updatedVault = {
