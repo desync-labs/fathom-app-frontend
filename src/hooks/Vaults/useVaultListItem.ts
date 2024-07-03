@@ -31,16 +31,6 @@ export type IVaultStrategyHistoricalApr = {
   timestamp: string;
 };
 
-export enum TransactionFetchType {
-  FETCH = "fetch",
-  PROMISE = "promise",
-}
-
-export enum FetchBalanceTokenType {
-  PROMISE = "promise",
-  FETCH = "fetch",
-}
-
 const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
   const [manageVault, setManageVault] = useState<boolean>(false);
   const [newVaultDeposit, setNewVaultDeposit] = useState<boolean>(false);
@@ -51,6 +41,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
   const [loadingEarning, setLoadingEarning] = useState<boolean>(true);
 
   const { chainId } = useConnector();
+  const { balanceTokens } = vault;
 
   const [depositsList, setDepositsList] = useState([]);
   const [withdrawalsList, setWithdrawalsList] = useState([]);
@@ -231,14 +222,28 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
   }, [tfVaultDepositEndDate, tfVaultLockEndDate, setActiveTfPeriod]);
 
   useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout>;
     if (account && isTfVaultType) {
-      vaultService
-        .getDepositLimit(vault.id, isTfVaultType, account)
-        .then((res) => {
-          setTfVaultDepositLimit(res);
-        });
+      timeout = setTimeout(() => {
+        vaultService
+          .getDepositLimit(vault.id, isTfVaultType, account)
+          .then((res) => {
+            setTfVaultDepositLimit(res);
+            if (BigNumber(res).isEqualTo(0)) {
+              setTfVaultDepositLimit(
+                BigNumber(vault.strategies[0].maxDebt)
+                  .minus(balanceTokens)
+                  .toString()
+              );
+            }
+          });
+      }, 30);
     }
-  }, [isTfVaultType, vault.id, account, setTfVaultDepositLimit]);
+
+    return () => {
+      timeout && clearTimeout(timeout);
+    };
+  }, [isTfVaultType, vault.id, account, balanceTokens, setTfVaultDepositLimit]);
 
   useEffect(() => {
     /**
