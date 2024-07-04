@@ -325,27 +325,39 @@ export default class VaultPage extends BasePage {
     }
   }
 
-  getExtendDetailsButtonVaultRow(id: string): Locator {
-    return this.page.locator(`[data-testid="vaultRow-${id}-extendButton"]`);
-  }
-
-  getHideDetailsButtonVaultRow(id: string): Locator {
-    return this.page.locator(`[data-testid="vaultRow-${id}-hideButton"]`);
-  }
-
-  async enterDepositAmountDialogManageModal(amount: number): Promise<void> {
+  async enterDepositAmountVaultListItemManageModal(
+    amount: number
+  ): Promise<void> {
     await this.page.waitForTimeout(1000);
     await this.inputDepositAmountListItemManageModal.clear();
     await this.inputDepositAmountListItemManageModal.fill(amount.toString());
   }
 
-  async enterWithdrawAmountDialogManageModal(amount: number): Promise<void> {
+  async enterDepositAmountVaultDetailManageModal(
+    amount: number
+  ): Promise<void> {
+    await this.page.waitForTimeout(1000);
+    await this.inputDepositAmountDetailManageModal.clear();
+    await this.inputDepositAmountDetailManageModal.fill(amount.toString());
+  }
+
+  async enterWithdrawAmountVaultListItemManageModal(
+    amount: number
+  ): Promise<void> {
     await this.page.waitForTimeout(1000);
     await this.inputWithdrawAmountListItemManageModal.clear();
     await this.inputWithdrawAmountListItemManageModal.fill(amount.toString());
   }
 
-  async confirmDepositDialogManageModal(): Promise<void> {
+  async enterWithdrawAmountVaultDetailManageModal(
+    amount: number
+  ): Promise<void> {
+    await this.page.waitForTimeout(1000);
+    await this.inputWithdrawAmountDetailManageModal.clear();
+    await this.inputWithdrawAmountDetailManageModal.fill(amount.toString());
+  }
+
+  async confirmDepositVaultListItemManageModal(): Promise<void> {
     await this.btnConfirmDepositListItemManageModal.click();
     await expect.soft(this.progressBar).toBeVisible();
     await this.page.waitForTimeout(1000);
@@ -353,13 +365,31 @@ export default class VaultPage extends BasePage {
     await metamask.confirmTransaction();
   }
 
-  async enterDepositAmountDialogDepositModal(amount: number): Promise<void> {
+  async confirmDepositVaultDetailManageModal(): Promise<void> {
+    await this.btnDepositDetailManageModal.click();
+    await expect.soft(this.progressBar).toBeVisible();
+    await this.page.waitForTimeout(1000);
+    await expect(this.divAlert).toBeHidden({ timeout: 100 });
+    await metamask.confirmTransaction();
+  }
+
+  async enterDepositAmountVaultListItemDepositModal(
+    amount: number
+  ): Promise<void> {
     await this.page.waitForTimeout(1000);
     await this.inputDepositAmountListItemDepositModal.clear();
     await this.inputDepositAmountListItemDepositModal.fill(amount.toString());
   }
 
-  async confirmDepositDialogDepositModal(): Promise<void> {
+  async enterDepositAmountVaultDetailDepositModal(
+    amount: number
+  ): Promise<void> {
+    await this.page.waitForTimeout(1000);
+    await this.inputDepositAmountDetailDepositModal.clear();
+    await this.inputDepositAmountDetailDepositModal.fill(amount.toString());
+  }
+
+  async confirmDepositVaultListItemDepositModal(): Promise<void> {
     await this.btnConfirmDepositListItemDepositModal.click();
     await expect.soft(this.progressBar).toBeVisible();
     await this.page.waitForTimeout(1000);
@@ -367,7 +397,15 @@ export default class VaultPage extends BasePage {
     await metamask.confirmTransaction();
   }
 
-  async confirmWithdrawDialogManageModal(): Promise<void> {
+  async confirmDepositVaultDetailDepositModal(): Promise<void> {
+    await this.btnDepositDetailDepositModal.click();
+    await expect.soft(this.progressBar).toBeVisible();
+    await this.page.waitForTimeout(1000);
+    await expect(this.divAlert).toBeHidden({ timeout: 100 });
+    await metamask.confirmTransaction();
+  }
+
+  async confirmWithdrawVaultListItemManageModal(): Promise<void> {
     await this.btnConfirmWithdrawListItemManageModal.click();
     await expect.soft(this.progressBar).toBeVisible();
     await this.page.waitForTimeout(1000);
@@ -375,7 +413,15 @@ export default class VaultPage extends BasePage {
     await metamask.confirmTransaction();
   }
 
-  async validateManagePositionDialogNotVisible(): Promise<void> {
+  async confirmWithdrawVaultDetailManageModal(): Promise<void> {
+    await this.btnWithdrawDetailManageModal.click();
+    await expect.soft(this.progressBar).toBeVisible();
+    await this.page.waitForTimeout(1000);
+    await expect(this.divAlert).toBeHidden({ timeout: 100 });
+    await metamask.confirmTransaction();
+  }
+
+  async validateManagePositionVaultListItemNotVisible(): Promise<void> {
     await expect.soft(this.dialogListItemManageModal).not.toBeVisible({
       timeout: 20000,
     });
@@ -423,7 +469,7 @@ export default class VaultPage extends BasePage {
     return addressValue;
   }
 
-  async manageVaultDialogDeposit({
+  async manageVaultListItemDeposit({
     id,
     shareTokenName,
     depositAmount,
@@ -435,7 +481,7 @@ export default class VaultPage extends BasePage {
     await this.getManageVaultButtonRowLocatorById(id).click();
     await expect(this.dialogListItemManageModal).toBeVisible();
     await this.btnDepositNavItemListItemManageModal.click();
-    await this.enterDepositAmountDialogManageModal(depositAmount);
+    await this.enterDepositAmountVaultListItemManageModal(depositAmount);
     await this.page.waitForTimeout(2000);
     const depositedValueBeforeText =
       await this.spanDepositedValueBeforeManageVaultDialog.textContent();
@@ -475,7 +521,7 @@ export default class VaultPage extends BasePage {
       poolShareDialogAfter: poolShareValueAfter,
       shareTokensDialogAfter: shareTokensValueAfter,
     };
-    await this.confirmDepositDialogManageModal();
+    await this.confirmDepositVaultListItemManageModal();
     await Promise.all([
       this.validateAlertMessage({
         status: "pending",
@@ -491,7 +537,7 @@ export default class VaultPage extends BasePage {
         GraphOperationName.AccountVaultPositions
       ),
     ]);
-    await this.validateManagePositionDialogNotVisible();
+    await this.validateManagePositionVaultListItemNotVisible();
     await this.validateDepositSuccessfulModal({ shareTokenName });
     await this.closeDepositSuccessfuldModal();
     await this.page.waitForLoadState("load");
@@ -659,7 +705,7 @@ export default class VaultPage extends BasePage {
     await expect.soft(this.btnResetDetailManageModal).toBeEnabled();
   }
 
-  async manageVaultWithdrawPartially({
+  async manageVaultListItemWithdrawPartially({
     id,
     withdrawAmount,
   }: {
@@ -669,7 +715,7 @@ export default class VaultPage extends BasePage {
     await this.getManageVaultButtonRowLocatorById(id).click();
     await expect(this.dialogListItemManageModal).toBeVisible();
     await this.btnWithdrawNavItemListItemManageModal.click();
-    await this.enterWithdrawAmountDialogManageModal(withdrawAmount);
+    await this.enterWithdrawAmountVaultListItemManageModal(withdrawAmount);
     await this.page.waitForTimeout(2000);
     const depositedValueBeforeText =
       await this.spanDepositedValueBeforeManageVaultDialog.textContent();
@@ -683,40 +729,24 @@ export default class VaultPage extends BasePage {
       await this.spanPoolShareValueAfterManageVaultDialog.textContent();
     const shareTokensValueAfterText =
       await this.spanShareTokensValueAfterManageVaultDialog.textContent();
-    let depositedValueBefore: number | null;
-    let poolShareValueBefore: number | null;
-    let shareTokensValueBefore: number | null;
-    let depositedValueAfter: number | null;
-    let poolShareValueAfter: number | null;
-    let shareTokensValueAfter: number | null;
-    if (
-      depositedValueBeforeText !== null &&
-      poolShareValueBeforeText !== null &&
-      shareTokensValueBeforeText !== null &&
-      depositedValueAfterText !== null &&
-      poolShareValueAfterText !== null &&
-      shareTokensValueAfterText !== null
-    ) {
-      depositedValueBefore = extractNumericValue(depositedValueBeforeText);
-      poolShareValueBefore = extractNumericValue(poolShareValueBeforeText);
-      shareTokensValueBefore = extractNumericValue(shareTokensValueBeforeText);
-      depositedValueAfter = extractNumericValue(depositedValueAfterText);
-      poolShareValueAfter = extractNumericValue(poolShareValueAfterText);
-      shareTokensValueAfter = extractNumericValue(shareTokensValueAfterText);
-    } else {
-      depositedValueBefore = null;
-      expect(depositedValueBefore).not.toBeNull();
-      poolShareValueBefore = null;
-      expect(poolShareValueBefore).not.toBeNull();
-      shareTokensValueBefore = null;
-      expect(shareTokensValueBefore).not.toBeNull();
-      depositedValueAfter = null;
-      expect(depositedValueAfter).not.toBeNull();
-      poolShareValueAfter = null;
-      expect(poolShareValueAfter).not.toBeNull();
-      shareTokensValueAfter = null;
-      expect(shareTokensValueAfter).not.toBeNull();
-    }
+    const depositedValueBefore = extractNumericValue(
+      depositedValueBeforeText as string
+    );
+    const poolShareValueBefore = extractNumericValue(
+      poolShareValueBeforeText as string
+    );
+    const shareTokensValueBefore = extractNumericValue(
+      shareTokensValueBeforeText as string
+    );
+    const depositedValueAfter = extractNumericValue(
+      depositedValueAfterText as string
+    );
+    const poolShareValueAfter = extractNumericValue(
+      poolShareValueAfterText as string
+    );
+    const shareTokensValueAfter = extractNumericValue(
+      shareTokensValueAfterText as string
+    );
     const vaultDepositDataExpected: VaultDepositData = {
       stakedAmountDialogBefore: depositedValueBefore,
       poolShareDialogBefore: poolShareValueBefore,
@@ -725,7 +755,7 @@ export default class VaultPage extends BasePage {
       poolShareDialogAfter: poolShareValueAfter,
       shareTokensDialogAfter: shareTokensValueAfter,
     };
-    await this.confirmWithdrawDialogManageModal();
+    await this.confirmWithdrawVaultListItemManageModal();
     await Promise.all([
       this.validateAlertMessage({
         status: "pending",
@@ -750,7 +780,11 @@ export default class VaultPage extends BasePage {
     return vaultDepositDataExpected;
   }
 
-  async manageVaultWithdrawFully({ id }: { id: string }): Promise<void> {
+  async manageVaultListItemWithdrawFully({
+    id,
+  }: {
+    id: string;
+  }): Promise<void> {
     await this.getManageVaultButtonRowLocatorById(id).click();
     await expect(this.dialogListItemManageModal).toBeVisible();
     await this.btnWithdrawNavItemListItemManageModal.click();
@@ -782,7 +816,7 @@ export default class VaultPage extends BasePage {
     expect.soft(depositedValueAfter).toEqual(0);
     expect.soft(poolShareValueAfter).toEqual(0);
     expect.soft(shareTokensValueAfter).toEqual(0);
-    await this.confirmWithdrawDialogManageModal();
+    await this.confirmWithdrawVaultListItemManageModal();
     await Promise.all([
       this.validateAlertMessage({
         status: "pending",
@@ -821,7 +855,7 @@ export default class VaultPage extends BasePage {
     }
   }
 
-  async depositFirstTime({
+  async depositFirstTimeVaultListItem({
     id,
     shareTokenName,
     depositAmount,
@@ -839,7 +873,7 @@ export default class VaultPage extends BasePage {
     await this.getDepositButtonRowLocatorById(id).click();
     await expect(this.dialogListItemDepositModal).toBeVisible();
     await this.page.waitForTimeout(2000);
-    await this.enterDepositAmountDialogDepositModal(depositAmount);
+    await this.enterDepositAmountVaultListItemDepositModal(depositAmount);
     await this.page.waitForTimeout(2000);
     await this.approveTokensMaxUintListItemDepositModal();
     await this.page.waitForTimeout(2000);
@@ -881,7 +915,7 @@ export default class VaultPage extends BasePage {
       poolShareDialogAfter: poolShareValueAfter,
       shareTokensDialogAfter: shareTokensValueAfter,
     };
-    await this.confirmDepositDialogDepositModal();
+    await this.confirmDepositVaultListItemDepositModal();
     await Promise.all([
       this.validateAlertMessage({
         status: "pending",
@@ -897,7 +931,7 @@ export default class VaultPage extends BasePage {
         GraphOperationName.AccountVaultPositions
       ),
     ]);
-    await this.validateManagePositionDialogNotVisible();
+    await this.validateManagePositionVaultListItemNotVisible();
     await this.validateDepositSuccessfulModal({ shareTokenName });
     await this.closeDepositSuccessfuldModal();
     await this.page.waitForLoadState("load");
@@ -905,7 +939,7 @@ export default class VaultPage extends BasePage {
     return vaultDepositDataExpected;
   }
 
-  async connectWalletVault(
+  async connectWalletVaultListItem(
     wallet: WalletConnectOptions,
     options?: { allAccounts: boolean }
   ): Promise<void> {
@@ -1004,5 +1038,82 @@ export default class VaultPage extends BasePage {
     await expect.soft(this.btnDepositDetailDepositModal).toBeEnabled();
     await expect.soft(this.btnDepositDetailDepositModal).toBeVisible();
     await expect.soft(this.btnDepositDetailDepositModal).toBeEnabled();
+  }
+
+  async manageVaultDetailDeposit({
+    id,
+    shareTokenName,
+    depositAmount,
+  }: {
+    id: string;
+    shareTokenName: string;
+    depositAmount: number;
+  }): Promise<VaultDepositData> {
+    await this.openVaultDetails(id);
+    await expect(this.btnDepositNavItemDetailManageModal).toBeVisible({
+      timeout: 10000,
+    });
+    await this.btnDepositNavItemDetailManageModal.click();
+    await this.enterDepositAmountVaultDetailManageModal(depositAmount);
+    await this.page.waitForTimeout(2000);
+    const depositedValueBeforeText =
+      await this.spanDepositedValueBeforeManageVaultDialog.textContent();
+    const poolShareValueBeforeText =
+      await this.spanPoolShareValueBeforeManageVaultDialog.textContent();
+    const shareTokensValueBeforeText =
+      await this.spanShareTokensValueBeforeManageVaultDialog.textContent();
+    const depositedValueAfterText =
+      await this.spanDepositedValueAfterManageVaultDialog.textContent();
+    const poolShareValueAfterText =
+      await this.spanPoolShareValueAfterManageVaultDialog.textContent();
+    const shareTokensValueAfterText =
+      await this.spanShareTokensValueAfterManageVaultDialog.textContent();
+    const depositedValueBefore = extractNumericValue(
+      depositedValueBeforeText as string
+    );
+    const poolShareValueBefore = extractNumericValue(
+      poolShareValueBeforeText as string
+    );
+    const shareTokensValueBefore = extractNumericValue(
+      shareTokensValueBeforeText as string
+    );
+    const depositedValueAfter = extractNumericValue(
+      depositedValueAfterText as string
+    );
+    const poolShareValueAfter = extractNumericValue(
+      poolShareValueAfterText as string
+    );
+    const shareTokensValueAfter = extractNumericValue(
+      shareTokensValueAfterText as string
+    );
+    const vaultDepositDataExpected: VaultDepositData = {
+      stakedAmountDialogBefore: depositedValueBefore,
+      poolShareDialogBefore: poolShareValueBefore,
+      shareTokensDialogBefore: shareTokensValueBefore,
+      stakedAmountDialogAfter: depositedValueAfter,
+      poolShareDialogAfter: poolShareValueAfter,
+      shareTokensDialogAfter: shareTokensValueAfter,
+    };
+    await this.confirmDepositVaultDetailManageModal();
+    await Promise.all([
+      this.validateAlertMessage({
+        status: "pending",
+        title: "New Deposit Pending.",
+        body: "Click on transaction to view on Block Explorer.",
+      }),
+      this.waitForGraphRequestByOperationName(
+        graphAPIEndpoints.vaultsSubgraph,
+        GraphOperationName.Vault
+      ),
+      this.waitForGraphRequestByOperationName(
+        graphAPIEndpoints.vaultsSubgraph,
+        GraphOperationName.AccountVaultPositions
+      ),
+    ]);
+    await this.validateDepositSuccessfulModal({ shareTokenName });
+    await this.closeDepositSuccessfuldModal();
+    await this.page.waitForLoadState("load");
+    await this.page.waitForTimeout(2000);
+    return vaultDepositDataExpected;
   }
 }
