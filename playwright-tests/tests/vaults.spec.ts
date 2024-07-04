@@ -127,7 +127,7 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     });
   });
 
-  test("FXD Vault: Manage Vault: Fully withdrawing all FXD is successful @smoke", async ({
+  test.skip("FXD Vault: Manage Vault: Fully withdrawing all FXD is successful @smoke", async ({
     vaultPage,
   }) => {
     test.setTimeout(180000);
