@@ -76,6 +76,7 @@ const OpenPositionForm = () => {
     maxBorrowAmount,
     proxyWalletExists,
     minCollateralAmount,
+    validateMaxBorrowAmount,
   } = useOpenPositionContext();
   const { isMobile } = useSharedContext();
 
@@ -177,7 +178,6 @@ const OpenPositionForm = () => {
           rules={{
             required: true,
             min: FXD_MINIMUM_BORROW_AMOUNT,
-            max: maxBorrowAmount,
             validate: (value) => {
               if (BigNumber(value).isGreaterThan(availableFathomInPool)) {
                 return "Not enough FXD in pool";
@@ -185,6 +185,10 @@ const OpenPositionForm = () => {
 
               if (BigNumber(value).isGreaterThan(safeMax)) {
                 return `You can't borrow more than ${fxdToBeBorrowed}`;
+              }
+
+              if (validateMaxBorrowAmount()) {
+                return validateMaxBorrowAmount();
               }
 
               return true;

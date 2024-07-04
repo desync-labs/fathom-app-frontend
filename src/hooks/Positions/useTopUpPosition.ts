@@ -9,6 +9,7 @@ import useConnector from "context/connector";
 import { IOpenPosition } from "fathom-sdk";
 import { DANGER_SAFETY_BUFFER } from "utils/Constants";
 import { NATIVE_ASSETS } from "connectors/networks";
+import { formatNumber } from "utils/format";
 
 const defaultValues = {
   collateral: "",
@@ -149,6 +150,15 @@ const useTopUpPosition = (
       setMaxBorrowAmount(debtCeiling);
     });
   }, [positionService, pool, setMaxBorrowAmount]);
+
+  const validateMaxBorrowAmount = useCallback(() => {
+    if (BigNumber(totalFathomToken).isGreaterThanOrEqualTo(maxBorrowAmount)) {
+      return `Borrow amount should be less than ${formatNumber(
+        Number(maxBorrowAmount)
+      )}.`;
+    }
+    return false;
+  }, [totalFathomToken, maxBorrowAmount]);
 
   const getCollateralTokenAndBalance = useCallback(async () => {
     if (NATIVE_ASSETS.includes(pool.poolName.toUpperCase())) {
@@ -455,6 +465,7 @@ const useTopUpPosition = (
     maxBorrowAmount,
     availableFathomInPool,
     errorAtLeastOneField,
+    validateMaxBorrowAmount,
   };
 };
 

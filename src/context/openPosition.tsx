@@ -43,6 +43,7 @@ export type UseOpenPositionContextReturnType = {
   maxBorrowAmount: string;
   proxyWalletExists: boolean;
   minCollateralAmount: number;
+  validateMaxBorrowAmount: () => boolean | string;
 };
 
 export const OpenPositionContext =
