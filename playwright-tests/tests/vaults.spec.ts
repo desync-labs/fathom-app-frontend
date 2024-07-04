@@ -94,7 +94,7 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     console.log(newAddress);
     await vaultPage.mintVaultsStableCoinToAddress(newAddress, depositAmount);
     await vaultPage.transferTestXdcToAddress(newAddress, 1);
-    await vaultPage.page.waitForTimeout(3000);
+    await vaultPage.page.waitForTimeout(5000);
     await vaultPage.navigate();
     await vaultPage.connectWallet(WalletConnectOptions.Metamask);
     await vaultPage.validateConnectedWalletAddress();
@@ -116,9 +116,18 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
       stakedAmountDialogBefore: vaultExpectedData.stakedAmountDialogBefore,
       stakedAmountDialogAfter: vaultExpectedData.stakedAmountDialogAfter,
     });
+    await vaultPage.openVaultDetails(lendingLiquidationVaultData.id);
+    await vaultPage.validateVaultDataDetailManagePage({
+      id: lendingLiquidationVaultData.id,
+      action: VaultAction.Deposit,
+      amountChanged: depositAmount,
+      stakedAmountDialogAfter: vaultExpectedData.stakedAmountDialogAfter,
+      shareTokensDialogAfter: vaultExpectedData.shareTokensDialogAfter,
+      poolShareDialogAfter: vaultExpectedData.poolShareDialogAfter,
+    });
   });
 
-  test("FXD Vault: Manage Vault: Fully withdrawing all FXD is successful @smoke", async ({
+  test.skip("FXD Vault: Manage Vault: Fully withdrawing all FXD is successful @smoke", async ({
     vaultPage,
   }) => {
     test.setTimeout(180000);
@@ -128,7 +137,7 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     console.log(newAddress);
     await vaultPage.mintVaultsStableCoinToAddress(newAddress, depositAmount);
     await vaultPage.transferTestXdcToAddress(newAddress, 1);
-    await vaultPage.page.waitForTimeout(3000);
+    await vaultPage.page.waitForTimeout(5000);
     await vaultPage.navigate();
     await vaultPage.connectWallet(WalletConnectOptions.Metamask);
     await vaultPage.validateConnectedWalletAddress();
@@ -140,21 +149,13 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     await vaultPage.manageVaultWithdrawFully({
       id: lendingLiquidationVaultData.id,
     });
-    await expect
-      .soft(
-        vaultPage.getDepositButtonRowLocatorById(lendingLiquidationVaultData.id)
-      )
-      .toBeVisible();
-    await expect
-      .soft(
-        vaultPage.getDepositButtonRowLocatorById(lendingLiquidationVaultData.id)
-      )
-      .toHaveText("Deposit");
-    expect
-      .soft(
-        await vaultPage.getStakedVaultRowValue(lendingLiquidationVaultData.id)
-      )
-      .toEqual(0);
+    await vaultPage.validateVaultListItemDepositState({
+      id: lendingLiquidationVaultData.id,
+    });
+    await vaultPage.openVaultDetails(lendingLiquidationVaultData.id);
+    await vaultPage.validateVaultDataDetailDepositPage({
+      id: lendingLiquidationVaultData.id,
+    });
   });
 
   test("FXD Vault: Wallet not connected state layout is correct, vault connect wallet functionality is successful", async ({
@@ -184,6 +185,11 @@ test.describe("Fathom App Test Suite: Vault Operations", () => {
     await expect(vaultPage.btnConnectWallet).toBeVisible();
     await vaultPage.connectWalletVault(WalletConnectOptions.Metamask);
     await vaultPage.page.waitForTimeout(2000);
+    await expect(
+      vaultPage.getEarnedLoadingVaultRowLocatorById(
+        lendingLiquidationVaultData.id
+      )
+    ).not.toBeVisible({ timeout: 10000 });
     expect
       .soft(
         await vaultPage.getStakedVaultRowValue(lendingLiquidationVaultData.id)

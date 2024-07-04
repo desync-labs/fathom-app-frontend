@@ -9,6 +9,7 @@ import useConnector from "context/connector";
 import { DANGER_SAFETY_BUFFER } from "utils/Constants";
 import { ZERO_ADDRESS } from "fathom-sdk";
 import { NATIVE_ASSETS } from "connectors/networks";
+import { formatNumber } from "utils/format";
 
 export const defaultValues = {
   collateral: "",
@@ -120,7 +121,7 @@ const useOpenPosition = (
   const getPositionDebtCeiling = useCallback(() => {
     positionService
       .getPositionDebtCeiling(pool.id)
-      .then((debtCeiling: string) => {
+      .then((debtCeiling) => {
         setMaxBorrowAmount(debtCeiling);
       })
       .catch(() => {
@@ -389,6 +390,15 @@ const useOpenPosition = (
     [setValue]
   );
 
+  const validateMaxBorrowAmount = useCallback(() => {
+    if (BigNumber(fathomToken).isGreaterThanOrEqualTo(maxBorrowAmount)) {
+      return `Borrow amount should be less than ${formatNumber(
+        Number(maxBorrowAmount)
+      )}.`;
+    }
+    return false;
+  }, [fathomToken, maxBorrowAmount]);
+
   useEffect(() => {
     if (isTouched) {
       handleUpdates(collateral, fathomToken);
@@ -417,7 +427,7 @@ const useOpenPosition = (
     } else {
       setIsDirty(false);
     }
-  }, [collateral, fathomToken]);
+  }, [collateral, fathomToken, setIsTouched, setIsDirty]);
 
   useEffect(() => {
     if (account && chainId) {
@@ -456,6 +466,7 @@ const useOpenPosition = (
     errors,
     maxBorrowAmount,
     minCollateralAmount,
+    validateMaxBorrowAmount,
   };
 };
 
