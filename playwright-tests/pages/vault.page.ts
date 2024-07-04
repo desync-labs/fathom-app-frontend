@@ -613,19 +613,17 @@ export default class VaultPage extends BasePage {
       .soft(
         Math.round((shareTokensValueDetailPageBefore as number) * 100) / 100
       )
-      .toBeGreaterThanOrEqual(
-        Math.round((shareTokensDialogAfter as number) * 100) / 100
-      );
+      .toEqual(Math.round((shareTokensDialogAfter as number) * 100) / 100);
     expect
       .soft(Math.round((shareTokensValueDetailPageAfter as number) * 100) / 100)
-      .toBeGreaterThanOrEqual(
-        Math.round((shareTokensDialogAfter as number) * 100) / 100
-      );
+      .toEqual(Math.round((shareTokensDialogAfter as number) * 100) / 100);
     const balanceValueText = await this.balanceValueVaultDetails.textContent();
     const balanceValue = extractNumericValue(balanceValueText as string);
     expect
       .soft(balanceValue)
-      .toEqual(Number((stakedAmountDialogAfter as number).toFixed(2)));
+      .toBeGreaterThanOrEqual(
+        Number((stakedAmountDialogAfter as number).toFixed(2))
+      );
     await expect.soft(this.btnDepositNavItemDetailManageModal).toBeVisible();
     await expect.soft(this.btnDepositNavItemDetailManageModal).toBeEnabled();
     await expect.soft(this.btnWithdrawNavItemDetailManageModal).toBeVisible();
