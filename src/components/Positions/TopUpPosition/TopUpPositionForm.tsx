@@ -81,6 +81,7 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
     maxBorrowAmount,
     availableFathomInPool,
     errorAtLeastOneField,
+    validateMaxBorrowAmount,
   } = useTopUpPositionContext();
   const { isMobile } = useSharedContext();
 
@@ -190,10 +191,13 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
                 return `You can't borrow more than ${safeMax}`;
               }
 
+              if (validateMaxBorrowAmount()) {
+                return validateMaxBorrowAmount();
+              }
+
               return true;
             },
             min: FXD_MINIMUM_BORROW_AMOUNT,
-            max: maxBorrowAmount,
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => {
             return (
