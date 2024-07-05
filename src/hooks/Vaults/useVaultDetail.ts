@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   IVault,
   IVaultPosition,
@@ -43,13 +43,14 @@ declare module "fathom-sdk" {
 
 interface UseVaultDetailProps {
   vaultId: string | undefined;
+  urlParams: string | undefined;
 }
 
 export enum VaultInfoTabs {
-  ABOUT,
-  STRATEGIES,
-  MANAGEMENT_VAULT,
-  MANAGEMENT_STRATEGY,
+  ABOUT = "about",
+  STRATEGIES = "strategies",
+  MANAGEMENT_VAULT = "management-vault",
+  MANAGEMENT_STRATEGY = "management-strategy",
 }
 
 const DEFAULT_ADMIN_ROLE =
@@ -73,8 +74,9 @@ enum TransactionFetchType {
   PROMISE = "promise",
 }
 
-const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
+const useVaultDetail = ({ vaultId, urlParams }: UseVaultDetailProps) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [vault, setVault] = useState<IVault>({} as IVault);
 
   const [vaultPosition, setVaultPosition] = useState<IVaultPosition>(
@@ -485,6 +487,44 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
       });
     },
     [loadVault, setVault, navigate, vaultService, account]
+  );
+
+  useEffect(() => {
+    let params: string | string[] = urlParams || "";
+    params = params.split("/");
+    const tabIndex = params.indexOf("tab");
+    if (tabIndex !== -1) {
+      const activeTab = params[tabIndex + 1];
+      setActiveVaultInfoTab(activeTab as VaultInfoTabs);
+    }
+  }, [urlParams, setActiveVaultInfoTab]);
+
+  const setActiveVaultInfoTabHandler = useCallback(
+    (value: VaultInfoTabs) => {
+      let params: string | string[] = urlParams || "";
+      params = params ? params.split("/") : [];
+      const index = params.indexOf("tab");
+      if (index !== -1) {
+        const replaceString = `tab/${params[index + 1]}`;
+        window.history.replaceState(
+          undefined,
+          "",
+          `#${location.pathname.replace(
+            replaceString,
+            "tab/" + value.toLowerCase()
+          )}`
+        );
+      } else {
+        window.history.replaceState(
+          undefined,
+          "",
+          `#${location.pathname}/tab/${value.toLowerCase()}`
+        );
+      }
+
+      setActiveVaultInfoTab(value);
+    },
+    [setActiveVaultInfoTab, location, navigate, urlParams]
   );
 
   useEffect(() => {
@@ -937,6 +977,8 @@ const useVaultDetail = ({ vaultId }: UseVaultDetailProps) => {
     tfVaultLockEndTimeLoading,
     showWithdrawAllButton,
     isShowWithdrawAllButtonLoading,
+    setActiveVaultInfoTabHandler,
+    urlParams,
   };
 };
 
