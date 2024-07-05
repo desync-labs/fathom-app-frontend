@@ -34,6 +34,8 @@ export const VaultDescriptionWrapper = styled(Box)`
   }
 
   ul {
+    list-style: none;
+    padding: 0;
     strong {
       font-weight: 600;
       font-size: 14px;

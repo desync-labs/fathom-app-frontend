@@ -49,6 +49,9 @@ export const VaultStrategyDescription = styled(Box)`
     display: inline-block;
     margin-top: 8px;
   }
+  ul {
+    padding-left: 20px;
+  }
   ${({ theme }) => theme.breakpoints.down("sm")} {
     font-size: 12px;
   }

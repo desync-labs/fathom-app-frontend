@@ -622,7 +622,10 @@ const MainLayout = () => {
                   <Route path="/vaults" element={<VaultsView />}>
                     <Route index element={<VaultListView />} />
                     <Route path="tutorial" index element={<VaultTutorial />} />
-                    <Route path=":vaultAddress" element={<VaultDetailView />} />
+                    <Route
+                      path=":vaultAddress/*"
+                      element={<VaultDetailView />}
+                    />
                   </Route>
                 ) : null}
                 {!chainId || DISPLAY_CHARTS.includes(chainId) ? (
