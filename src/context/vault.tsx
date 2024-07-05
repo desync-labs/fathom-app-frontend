@@ -17,6 +17,7 @@ import { FunctionFragment } from "@into-the-fathom/abi";
 export type VaultContextType = {
   vaultId: string | undefined;
   children: ReactElement;
+  urlParams: string | undefined;
 };
 
 export type UseVaultContextReturnType = {
@@ -51,6 +52,8 @@ export type UseVaultContextReturnType = {
   tfVaultLockEndTimeLoading: boolean;
   showWithdrawAllButton: boolean;
   isShowWithdrawAllButtonLoading: boolean;
+  setActiveVaultInfoTabHandler: (value: VaultInfoTabs) => void;
+  urlParams: string | undefined;
 };
 
 export const VaultContext = createContext<UseVaultContextReturnType>(
@@ -58,8 +61,8 @@ export const VaultContext = createContext<UseVaultContextReturnType>(
 );
 
 export const VaultProvider: FC<VaultContextType> = memo(
-  ({ vaultId, children }) => {
-    const values = useVaultDetail({ vaultId });
+  ({ vaultId, children, urlParams }) => {
+    const values = useVaultDetail({ vaultId, urlParams });
 
     return (
       <VaultContext.Provider value={values}>{children}</VaultContext.Provider>

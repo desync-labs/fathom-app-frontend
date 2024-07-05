@@ -1,10 +1,11 @@
-import { memo, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import { Box, Button, ButtonGroup, styled, Typography } from "@mui/material";
 import { IVaultStrategy } from "fathom-sdk";
 import useVaultContext from "context/vault";
 import { strategyTitle } from "utils/Vaults/getStrategyTitleAndDescription";
 import VaultStrategyItem from "components/Vaults/VaultDetail/VaultStrategyItem";
 import { VaultStrategiesSkeleton } from "components/AppComponents/AppSkeleton/AppSkeleton";
+import { useLocation } from "react-router-dom";
 
 export const VaultInfoWrapper = styled(Box)`
   display: flex;
@@ -102,10 +103,54 @@ const VaultDetailInfoTabStrategies = () => {
     reports,
     historicalApr,
     isReportsLoaded,
+    urlParams,
   } = useVaultContext();
   const { strategies, balanceTokens, token } = vault;
+  const location = useLocation();
 
-  const [activeStrategy, setActiveStrategy] = useState(0);
+  const [activeStrategy, setActiveStrategy] = useState<string>("");
+
+  useEffect(() => {
+    if (!strategies || !strategies.length) return;
+
+    let params: string | string[] = urlParams || "";
+    params = params.split("/");
+    const strategyIndex = params.indexOf("strategy");
+    if (strategyIndex !== -1) {
+      const strategyId = params[strategyIndex + 1];
+      setActiveStrategy(strategyId);
+    } else {
+      setActiveStrategy(strategies[0].id);
+    }
+  }, [urlParams, setActiveStrategy, strategies]);
+
+  const setActiveStrategyHandler = useCallback(
+    (strategyId: string) => {
+      let params: string | string[] = urlParams || "";
+      params = params ? params.split("/") : [];
+      const strategyIndex = params.indexOf("strategy");
+      const tabIndex = params.indexOf("tab");
+      if (strategyIndex !== -1) {
+        const replaceString = `strategy/${params[strategyIndex + 1]}`;
+        const replaceValue =
+          tabIndex === -1
+            ? `tab/strategies/strategy/${strategyId.toLowerCase()}`
+            : `strategy/${strategyId.toLowerCase()}`;
+        window.history.replaceState(
+          undefined,
+          "",
+          `#${location.pathname.replace(replaceString, replaceValue)}`
+        );
+      } else {
+        const urlValue = `#${
+          location.pathname
+        }/tab/strategies/strategy/${strategyId.toLowerCase()}`;
+        window.history.replaceState(undefined, "", urlValue);
+      }
+      setActiveStrategy(strategyId);
+    },
+    [urlParams, setActiveStrategy, location]
+  );
 
   if (!vault?.strategies?.length && !vaultLoading) {
     return (
@@ -127,9 +172,9 @@ const VaultDetailInfoTabStrategies = () => {
               {strategies.map((strategy: IVaultStrategy, index: number) => (
                 <Button
                   key={strategy.id}
-                  onClick={() => setActiveStrategy(index)}
+                  onClick={() => setActiveStrategyHandler(strategy.id)}
                   className={
-                    activeStrategy === index
+                    activeStrategy === strategy.id
                       ? "activeStrategyItem"
                       : "strategyItem"
                   }
@@ -155,7 +200,7 @@ const VaultDetailInfoTabStrategies = () => {
               tokenName={token.name}
               performanceFee={performanceFee}
               index={index}
-              isShow={activeStrategy === index}
+              isShow={activeStrategy === strategy.id}
               key={strategy.id}
               reportsLoading={!isReportsLoaded}
             />

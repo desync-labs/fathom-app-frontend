@@ -3,10 +3,10 @@ import { VaultProvider } from "context/vault";
 import VaultDetailContent from "components/Vaults/VaultDetail/VaultDetailContent";
 
 const VaultDetailView = () => {
-  const { vaultAddress } = useParams();
+  const { vaultAddress, ...rest } = useParams();
 
   return (
-    <VaultProvider vaultId={vaultAddress}>
+    <VaultProvider vaultId={vaultAddress} urlParams={rest["*"]}>
       <VaultDetailContent />
     </VaultProvider>
   );
