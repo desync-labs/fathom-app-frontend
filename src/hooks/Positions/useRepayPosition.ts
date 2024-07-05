@@ -161,12 +161,17 @@ const useRepayPosition = (
   }, [positionService, account, setBalance]);
 
   const getDebtValue = useCallback(async () => {
-    const debtValue = await positionService.getDebtValue(
+    let debtValue: string | BigNumber = await positionService.getDebtValue(
       position.debtShare,
       position.collateralPool
     );
 
-    const liquidationPrice = BigNumber(debtValue)
+    /**
+     * Slightly increase debt value to avoid rounding errors
+     */
+    debtValue = BigNumber(debtValue).multipliedBy(1.0001);
+
+    const liquidationPrice = debtValue
       .dividedBy(position.lockedCollateral)
       .multipliedBy(pool.liquidationRatio)
       .toNumber();
@@ -179,7 +184,7 @@ const useRepayPosition = (
 
     setLtv(ltv);
     setLiquidationPrice(liquidationPrice);
-    setDebtValue(debtValue);
+    setDebtValue(debtValue.toString());
   }, [
     pool,
     position,
