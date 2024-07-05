@@ -231,4 +231,26 @@ test.describe("Fathom App Test Suite: Vault Operations - Lending & Liquidation V
       poolShareDialogAfter: vaultExpectedData.poolShareDialogAfter,
     });
   });
+
+  test("Vault Detail Page - Manage Vault: Partially withdrawing 100.5 FXD is successful", async ({
+    vaultPage,
+  }) => {
+    const withdrawAmount = 100.5;
+    await vaultPage.navigate();
+    await vaultPage.connectWallet(WalletConnectOptions.Metamask);
+    await vaultPage.validateConnectedWalletAddress();
+    const vaultExpectedData =
+      await vaultPage.manageVaultDetailWithdrawPartially({
+        id: lendingLiquidationVaultData.id,
+        withdrawAmount,
+      });
+    await vaultPage.validateVaultDataDetailManagePage({
+      id: lendingLiquidationVaultData.id,
+      action: VaultAction.Deposit,
+      amountChanged: withdrawAmount,
+      stakedAmountDialogAfter: vaultExpectedData.stakedAmountDialogAfter,
+      shareTokensDialogAfter: vaultExpectedData.shareTokensDialogAfter,
+      poolShareDialogAfter: vaultExpectedData.poolShareDialogAfter,
+    });
+  });
 });
