@@ -286,7 +286,7 @@ test.describe("Fathom App Test Suite: Vault Operations - Lending & Liquidation V
     vaultPage,
   }) => {
     test.setTimeout(180000);
-    const depositAmount = 0.5;
+    const depositAmount = 0.9;
     await metamask.switchAccount("Account 1");
     const newAddress = await metamask.getWalletAddress();
     console.log(newAddress);
