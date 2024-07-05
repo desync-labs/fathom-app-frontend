@@ -37,20 +37,21 @@ const VaultNavItem = styled(AppNavItem)`
 const VaultDetailInfoNav = () => {
   const {
     activeVaultInfoTab,
-    setActiveVaultInfoTab,
     managedStrategiesIds,
     isUserManager,
+    setActiveVaultInfoTabHandler,
   } = useVaultContext();
+
   return (
     <VaultNavWrapper>
       <VaultNavItem
-        onClick={() => setActiveVaultInfoTab(VaultInfoTabs.ABOUT)}
+        onClick={() => setActiveVaultInfoTabHandler(VaultInfoTabs.ABOUT)}
         className={activeVaultInfoTab === VaultInfoTabs.ABOUT ? "active" : ""}
       >
         About
       </VaultNavItem>
       <VaultNavItem
-        onClick={() => setActiveVaultInfoTab(VaultInfoTabs.STRATEGIES)}
+        onClick={() => setActiveVaultInfoTabHandler(VaultInfoTabs.STRATEGIES)}
         className={
           activeVaultInfoTab === VaultInfoTabs.STRATEGIES ? "active" : ""
         }
@@ -59,7 +60,9 @@ const VaultDetailInfoNav = () => {
       </VaultNavItem>
       {isUserManager && (
         <VaultNavItem
-          onClick={() => setActiveVaultInfoTab(VaultInfoTabs.MANAGEMENT_VAULT)}
+          onClick={() =>
+            setActiveVaultInfoTabHandler(VaultInfoTabs.MANAGEMENT_VAULT)
+          }
           className={
             activeVaultInfoTab === VaultInfoTabs.MANAGEMENT_VAULT
               ? "active"
@@ -72,7 +75,7 @@ const VaultDetailInfoNav = () => {
       {managedStrategiesIds.length > 0 && (
         <VaultNavItem
           onClick={() =>
-            setActiveVaultInfoTab(VaultInfoTabs.MANAGEMENT_STRATEGY)
+            setActiveVaultInfoTabHandler(VaultInfoTabs.MANAGEMENT_STRATEGY)
           }
           className={
             activeVaultInfoTab === VaultInfoTabs.MANAGEMENT_STRATEGY
