@@ -210,7 +210,7 @@ test.describe("Fathom App Test Suite: Vault Operations - Lending & Liquidation V
       .toBeVisible();
   });
 
-  test("Vault Detail Page - Manage Vault: Manage Vault: Depositing 100.5 FXD is successful", async ({
+  test("Vault Detail Page - Manage Vault: Depositing 100.5 FXD is successful", async ({
     vaultPage,
   }) => {
     const depositAmount = 100.5;
