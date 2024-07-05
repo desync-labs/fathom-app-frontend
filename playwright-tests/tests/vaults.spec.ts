@@ -128,7 +128,7 @@ test.describe("Fathom App Test Suite: Vault Operations - Lending & Liquidation V
     });
   });
 
-  test.skip("Vault List Item Page - Manage Vault: Fully withdrawing all FXD is successful @smoke", async ({
+  test.skip("Vault List Item Page - Manage Vault: Fully withdrawing all FXD is successful", async ({
     vaultPage,
   }) => {
     test.setTimeout(180000);
@@ -217,8 +217,8 @@ test.describe("Fathom App Test Suite: Vault Operations - Lending & Liquidation V
     await vaultPage.navigate();
     await vaultPage.connectWallet(WalletConnectOptions.Metamask);
     await vaultPage.validateConnectedWalletAddress();
+    await vaultPage.openVaultDetails(lendingLiquidationVaultData.id);
     const vaultExpectedData = await vaultPage.manageVaultDetailDeposit({
-      id: lendingLiquidationVaultData.id,
       shareTokenName: lendingLiquidationVaultData.shareTokenName,
       depositAmount,
     });
@@ -239,9 +239,9 @@ test.describe("Fathom App Test Suite: Vault Operations - Lending & Liquidation V
     await vaultPage.navigate();
     await vaultPage.connectWallet(WalletConnectOptions.Metamask);
     await vaultPage.validateConnectedWalletAddress();
+    await vaultPage.openVaultDetails(lendingLiquidationVaultData.id);
     const vaultExpectedData =
       await vaultPage.manageVaultDetailWithdrawPartially({
-        id: lendingLiquidationVaultData.id,
         withdrawAmount,
       });
     await vaultPage.validateVaultDataDetailManagePage({
@@ -251,6 +251,59 @@ test.describe("Fathom App Test Suite: Vault Operations - Lending & Liquidation V
       stakedAmountDialogAfter: vaultExpectedData.stakedAmountDialogAfter,
       shareTokensDialogAfter: vaultExpectedData.shareTokensDialogAfter,
       poolShareDialogAfter: vaultExpectedData.poolShareDialogAfter,
+    });
+  });
+
+  test("Vault Detail Page - Deposit: Depositing first 0.85 FXD is successful", async ({
+    vaultPage,
+  }) => {
+    const depositAmount = 0.85;
+    await metamask.switchAccount("Account 1");
+    const newAddress = await metamask.getWalletAddress();
+    console.log(newAddress);
+    await vaultPage.mintVaultsStableCoinToAddress(newAddress, depositAmount);
+    await vaultPage.transferTestXdcToAddress(newAddress, 1);
+    await vaultPage.page.waitForTimeout(5000);
+    await vaultPage.navigate();
+    await vaultPage.connectWallet(WalletConnectOptions.Metamask);
+    await vaultPage.validateConnectedWalletAddress();
+    await vaultPage.openVaultDetails(lendingLiquidationVaultData.id);
+    const vaultExpectedData = await vaultPage.depositFirstTimeVaultDetail({
+      shareTokenName: lendingLiquidationVaultData.shareTokenName,
+      depositAmount,
+    });
+    await vaultPage.validateVaultDataDetailManagePage({
+      id: lendingLiquidationVaultData.id,
+      action: VaultAction.Deposit,
+      amountChanged: depositAmount,
+      stakedAmountDialogAfter: vaultExpectedData.stakedAmountDialogAfter,
+      shareTokensDialogAfter: vaultExpectedData.shareTokensDialogAfter,
+      poolShareDialogAfter: vaultExpectedData.poolShareDialogAfter,
+    });
+  });
+
+  test("Vault Detail Page - Manage Vault: Fully withdrawing all FXD is successful @smoke", async ({
+    vaultPage,
+  }) => {
+    test.setTimeout(180000);
+    const depositAmount = 0.5;
+    await metamask.switchAccount("Account 1");
+    const newAddress = await metamask.getWalletAddress();
+    console.log(newAddress);
+    await vaultPage.mintVaultsStableCoinToAddress(newAddress, depositAmount);
+    await vaultPage.transferTestXdcToAddress(newAddress, 1);
+    await vaultPage.page.waitForTimeout(5000);
+    await vaultPage.navigate();
+    await vaultPage.connectWallet(WalletConnectOptions.Metamask);
+    await vaultPage.validateConnectedWalletAddress();
+    await vaultPage.openVaultDetails(lendingLiquidationVaultData.id);
+    await vaultPage.depositFirstTimeVaultDetail({
+      shareTokenName: lendingLiquidationVaultData.shareTokenName,
+      depositAmount,
+    });
+    await vaultPage.manageVaultDetailWithdrawFully();
+    await vaultPage.validateVaultDataDetailDepositPage({
+      id: lendingLiquidationVaultData.id,
     });
   });
 });
