@@ -279,7 +279,7 @@ const VaultPositionStats = () => {
         >
           <Box>
             <PositionStatItemTitle>Earned</PositionStatItemTitle>
-            <PositionStatItemValue>
+            <PositionStatItemValue data-testid="vault-detailsPositionStats-earnedValue">
               <>
                 {isLoading || balanceEarned === -1 ? (
                   <StatsValueSkeleton

@@ -65,6 +65,7 @@ export default class VaultPage extends BasePage {
   readonly btnDepositDetailDepositModal: Locator;
   readonly btnResetDetailDepositModal: Locator;
   readonly btnApproveDetailDepositModal: Locator;
+  readonly earnedValueVaultDetails: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -161,6 +162,9 @@ export default class VaultPage extends BasePage {
     );
     this.balanceValueVaultDetails = this.page.getByTestId(
       "vault-detailsPositionStats-balanceValue"
+    );
+    this.earnedValueVaultDetails = this.page.getByTestId(
+      "vault-detailsPositionStats-earnedValue"
     );
     this.btnDepositNavItemDetailManageModal = this.page.getByTestId(
       "vault-detailManageModal-depositNavItem"
@@ -431,6 +435,18 @@ export default class VaultPage extends BasePage {
     });
   }
 
+  async getBalanceVaultDetailValue(): Promise<number | null> {
+    const balanceValueText = await this.balanceValueVaultDetails.textContent();
+    const balanceValue = extractNumericValue(balanceValueText as string);
+    return balanceValue;
+  }
+
+  async getEarnedVaultDetailValue(): Promise<number | null> {
+    const earnedValueText = await this.earnedValueVaultDetails.textContent();
+    const earnedValue = extractNumericValue(earnedValueText as string);
+    return earnedValue;
+  }
+
   async validateDepositSuccessfulModal({
     shareTokenName,
   }: {
@@ -649,8 +665,7 @@ export default class VaultPage extends BasePage {
     expect
       .soft(Math.round((shareTokensValueDetailPageAfter as number) * 100) / 100)
       .toEqual(Math.round((shareTokensDialogAfter as number) * 100) / 100);
-    const balanceValueText = await this.balanceValueVaultDetails.textContent();
-    const balanceValue = extractNumericValue(balanceValueText as string);
+    const balanceValue = await this.getBalanceVaultDetailValue();
     expect
       .soft(balanceValue)
       .toBeGreaterThanOrEqual(
@@ -959,7 +974,7 @@ export default class VaultPage extends BasePage {
     return vaultDepositDataExpected;
   }
 
-  async connectWalletVaultListItem(
+  async connectWalletVault(
     wallet: WalletConnectOptions,
     options?: { allAccounts: boolean }
   ): Promise<void> {
@@ -1030,8 +1045,7 @@ export default class VaultPage extends BasePage {
     expect.soft(poolShareValueDetailPageAfter).toEqual(0);
     expect.soft(shareTokensValueDetailPageBefore).toEqual(0);
     expect.soft(shareTokensValueDetailPageAfter).toEqual(0);
-    const balanceValueText = await this.balanceValueVaultDetails.textContent();
-    const balanceValue = extractNumericValue(balanceValueText as string);
+    const balanceValue = await this.getBalanceVaultDetailValue();
     expect.soft(balanceValue).toEqual(0);
     await expect.soft(this.inputDepositAmountDetailDepositModal).toBeVisible();
     await expect

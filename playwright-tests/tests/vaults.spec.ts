@@ -184,7 +184,7 @@ test.describe("Fathom App Test Suite: Vault Operations - Lending & Liquidation V
       .click();
     await expect(vaultPage.dialogListItemDepositModal).toBeVisible();
     await expect(vaultPage.btnConnectWallet).toBeVisible();
-    await vaultPage.connectWalletVaultListItem(WalletConnectOptions.Metamask);
+    await vaultPage.connectWalletVault(WalletConnectOptions.Metamask);
     await vaultPage.page.waitForTimeout(2000);
     await expect(
       vaultPage.getEarnedLoadingVaultRowLocatorById(
@@ -305,5 +305,26 @@ test.describe("Fathom App Test Suite: Vault Operations - Lending & Liquidation V
     await vaultPage.validateVaultDataDetailDepositPage({
       id: lendingLiquidationVaultData.id,
     });
+  });
+
+  test("Vault Detail Page: Wallet not connected state layout is correct, vault connect wallet functionality is successful", async ({
+    vaultPage,
+  }) => {
+    await vaultPage.navigate();
+    await vaultPage.openVaultDetails(lendingLiquidationVaultData.id);
+    await expect(vaultPage.btnConnectWallet).toBeVisible({ timeout: 5000 });
+    const balanceValue = await vaultPage.getBalanceVaultDetailValue();
+    expect(balanceValue).toEqual(0);
+    const earnedValue = await vaultPage.getEarnedVaultDetailValue();
+    expect(earnedValue).toEqual(0);
+    await vaultPage.connectWalletVault(WalletConnectOptions.Metamask);
+    await expect(vaultPage.btnDepositDetailManageModal).toBeVisible({
+      timeout: 5000,
+    });
+    await expect(vaultPage.btnConnectWallet).not.toBeVisible({ timeout: 5000 });
+    const balanceValueConnected = await vaultPage.getBalanceVaultDetailValue();
+    expect(balanceValueConnected).toBeGreaterThan(0);
+    const earnedValueConnected = await vaultPage.getEarnedVaultDetailValue();
+    expect(earnedValueConnected).toBeGreaterThan(0);
   });
 });
