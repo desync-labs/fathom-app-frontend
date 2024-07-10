@@ -29,13 +29,10 @@ import {
   ModalButtonWrapper,
 } from "components/AppComponents/AppButton/AppButton";
 import WalletConnectBtn from "components/Common/WalletConnectBtn";
-import {
-  ErrorBox,
-  InfoBoxV2,
-  WarningBox,
-} from "components/AppComponents/AppBox/AppBox";
+import { ErrorBox, InfoBoxV2 } from "components/AppComponents/AppBox/AppBox";
 import { InfoIcon } from "components/Governance/Propose";
 import VaultModalLockingBar from "components/Vaults/VaultList/DepositVaultModal/VaultModalLockingBar";
+import { VaultWarningBox } from "components/Vaults/VaultList/VaultListItemDepositModal";
 
 const VaultManageGridDialogWrapper = styled(AppDialog)`
   & .MuiDialog-paper {
@@ -208,7 +205,7 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
               </ErrorBox>
             )}
           {activeTfPeriod === 1 && (
-            <WarningBox>
+            <VaultWarningBox>
               <InfoIcon
                 sx={{ width: "20px", color: "#F5953D", height: "20px" }}
               />
@@ -217,7 +214,7 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
                   Deposit period has been completed.
                 </Typography>
               </Box>
-            </WarningBox>
+            </VaultWarningBox>
           )}
           {approveBtn &&
             formType === FormType.DEPOSIT &&

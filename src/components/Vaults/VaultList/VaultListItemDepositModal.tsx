@@ -48,6 +48,10 @@ const VaultManageGridDialogWrapper = styled(AppDialog)`
   }
 `;
 
+export const VaultWarningBox = styled(WarningBox)`
+  margin: 25px 0 20px;
+`;
+
 export type VaultDepositProps = {
   vaultItemData: IVault;
   performanceFee: number;
@@ -169,7 +173,7 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
             </WarningBox>
           )}
           {activeTfPeriod === 1 && (
-            <WarningBox>
+            <VaultWarningBox>
               <InfoIcon
                 sx={{ width: "20px", color: "#F5953D", height: "20px" }}
               />
@@ -178,7 +182,7 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
                   Deposit period has been completed.
                 </Typography>
               </Box>
-            </WarningBox>
+            </VaultWarningBox>
           )}
           {approveBtn && walletBalance !== "0" && (
             <InfoBoxV2>
