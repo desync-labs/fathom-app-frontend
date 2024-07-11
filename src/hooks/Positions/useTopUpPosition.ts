@@ -60,6 +60,8 @@ const useTopUpPosition = (
   const [approveBtn, setApproveBtn] = useState<boolean>(false);
   const [approvalPending, setApprovalPending] = useState<boolean>(false);
 
+  const [priceOfCollateral, setPriceOfCollateral] = useState<string>("0");
+
   const availableFathomInPool = useMemo(() => {
     return pool.availableFathomInPool;
   }, [pool]);
@@ -126,6 +128,7 @@ const useTopUpPosition = (
       .multipliedBy(100)
       .toNumber();
 
+    setPriceOfCollateral(priceOfCollateralFromDex.toString());
     setOverCollateral(overCollateral);
 
     setLtv(ltv);
@@ -466,6 +469,7 @@ const useTopUpPosition = (
     availableFathomInPool,
     errorAtLeastOneField,
     validateMaxBorrowAmount,
+    priceOfCollateral,
   };
 };
 

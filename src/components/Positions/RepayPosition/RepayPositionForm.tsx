@@ -1,57 +1,30 @@
 import { FC } from "react";
-import { Box, CircularProgress, Grid, Typography } from "@mui/material";
-import {
-  ApproveBox,
-  ApproveBoxTypography,
-  InfoLabel,
-  InfoValue,
-  InfoWrapper,
-  Summary,
-  WalletBalance,
-  WarningBox,
-} from "components/AppComponents/AppBox/AppBox";
-import {
-  ButtonPrimary,
-  ButtonSecondary,
-  ManagePositionRepayTypeWrapper,
-  MaxButton,
-  ButtonsWrapper,
-  ManageTypeButton,
-  ApproveButton,
-} from "components/AppComponents/AppButton/AppButton";
-import {
-  AppFormInputLogo,
-  AppFormInputWrapper,
-  AppFormLabel,
-  AppTextField,
-} from "components/AppComponents/AppForm/AppForm";
+import BigNumber from "bignumber.js";
+import { Box, Stack, Typography } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 
+import usePricesContext from "context/prices";
 import useRepayPositionContext from "context/repayPosition";
-import { styled } from "@mui/material/styles";
-import { ClosePositionDialogPropsType } from "components/Positions/RepayPositionDialog";
-
 import { getTokenLogoURL } from "utils/tokenLogo";
-import { formatPercentage } from "utils/format";
-import useSharedContext from "context/shared";
+import { formatNumber, formatPercentage } from "utils/format";
 
-const ClosePositionWrapper = styled(Grid)`
-  padding-left: 20px;
-  width: calc(50% - 3px);
-  position: relative;
-  ${({ theme }) => theme.breakpoints.down("sm")} {
-    width: 100%;
-    padding: 0;
-  }
-`;
-
-const RepayApproveBox = styled(ApproveBox)`
-  margin-bottom: 20px;
-`;
-
-const RepayApproveButton = styled(ApproveButton)`
-  margin-left: 0;
-`;
+import { ClosePositionDialogPropsType } from "components/Positions/RepayPositionDialog";
+import {
+  BaseDialogFormWrapper,
+  BaseFormInputErrorWrapper,
+  BaseFormInputLabel,
+  BaseFormInputLogo,
+  BaseFormInputUsdIndicator,
+  BaseFormInputWrapper,
+  BaseFormLabelRow,
+  BaseFormSetMaxButton,
+  BaseFormTextField,
+  BaseFormWalletBalance,
+} from "components/Base/Form/StyledForm";
+import {
+  BaseButtonsSwitcherGroup,
+  BaseSwitcherButton,
+} from "components/Base/Buttons/StyledButtons";
 
 const RepayPositionForm: FC<ClosePositionDialogPropsType> = ({
   topUpPosition,
@@ -66,187 +39,142 @@ const RepayPositionForm: FC<ClosePositionDialogPropsType> = ({
     balanceError,
     balanceErrorNotFilled,
     fathomTokenIsDirty,
-    disableClosePosition,
     fathomToken,
     handleFathomTokenTextFieldChange,
     handleCollateralTextFieldChange,
     setMax,
-    onClose,
-    closePositionHandler,
     debtValue,
     switchPosition,
-    approveBtn,
-    approvalPending,
-    approve,
+    priceOfCollateral,
   } = useRepayPositionContext();
-  const { isMobile } = useSharedContext();
+  const { fxdPrice } = usePricesContext();
 
   return (
-    <ClosePositionWrapper item>
-      <Summary>Summary</Summary>
-      <ManagePositionRepayTypeWrapper>
-        <ManageTypeButton
-          sx={{ marginRight: "5px" }}
+    <BaseDialogFormWrapper>
+      <BaseButtonsSwitcherGroup>
+        <BaseSwitcherButton
           className={`${topUpPosition ? "active" : null}`}
           onClick={() => !topUpPosition && switchPosition(setTopUpPosition)}
         >
           Top Up Position
-        </ManageTypeButton>
-        <ManageTypeButton
+        </BaseSwitcherButton>
+        <BaseSwitcherButton
           className={`${closePosition ? "active" : null}`}
           onClick={() => !closePosition && switchPosition(setClosePosition)}
         >
           Repay Position
-        </ManageTypeButton>
-      </ManagePositionRepayTypeWrapper>
-      <Box sx={{ mb: "20px" }}>
+        </BaseSwitcherButton>
+      </BaseButtonsSwitcherGroup>
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+        mb="16px"
+      >
         <Box
           sx={{
-            fontWeight: "bold",
-            fontSize: "10px",
+            fontWeight: 600,
+            fontSize: "11px",
             textTransform: "uppercase",
-            color: "#9FADC6",
+            letterSpacing: "1px",
+            color: "#B7C8E5",
           }}
         >
           Total debt:
         </Box>
-        <Box sx={{ fontWeight: "bold", fontSize: "14px" }}>
+        <Box sx={{ fontWeight: 600, fontSize: "14px" }}>
           {formatPercentage(Number(debtValue))} FXD
         </Box>
-      </Box>
-      <AppFormInputWrapper>
-        <AppFormLabel>Repaying</AppFormLabel>
-        {balance && (
-          <WalletBalance>
-            Wallet Available: {formatPercentage(Number(balance))} FXD
-          </WalletBalance>
-        )}
-        <AppTextField
+      </Stack>
+      <BaseFormInputWrapper>
+        <BaseFormLabelRow>
+          <BaseFormInputLabel>Repaying</BaseFormInputLabel>
+          {balance && (
+            <BaseFormWalletBalance>
+              Balance: {formatPercentage(Number(balance))} FXD
+            </BaseFormWalletBalance>
+          )}
+        </BaseFormLabelRow>
+        <BaseFormTextField
           error={balanceError || balanceErrorNotFilled}
           id="outlined-helperText"
           placeholder={"0"}
           helperText={
             <>
               {balanceError ? (
-                <Box
-                  sx={{ mt: "5px", display: "flex", alignItems: "center" }}
-                  component={"span"}
-                >
-                  <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
+                <BaseFormInputErrorWrapper>
+                  <InfoIcon sx={{ float: "left", fontSize: "14px" }} />
                   <Typography
                     component={"span"}
                     sx={{ fontSize: "12px", paddingLeft: "5px" }}
                   >
                     You don't have enough to repay that amount
                   </Typography>
-                </Box>
+                </BaseFormInputErrorWrapper>
               ) : balanceErrorNotFilled && fathomTokenIsDirty ? (
-                <Box
-                  sx={{ mt: "5px", display: "flex", alignItems: "center" }}
-                  component={"span"}
-                >
-                  <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
+                <BaseFormInputErrorWrapper>
+                  <InfoIcon sx={{ float: "left", fontSize: "14px" }} />
                   <Typography
                     component={"span"}
                     sx={{ fontSize: "12px", paddingLeft: "5px" }}
                   >
                     Please fill repaying amount
                   </Typography>
-                </Box>
+                </BaseFormInputErrorWrapper>
               ) : (
-                "Enter the Repaying."
+                <BaseFormInputErrorWrapper>
+                  <InfoIcon sx={{ float: "left", fontSize: "14px" }} />
+                  <Box
+                    component={"span"}
+                    sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                  >
+                    Enter the Repaying.
+                  </Box>
+                </BaseFormInputErrorWrapper>
               )}
             </>
           }
           value={fathomToken}
           onChange={handleFathomTokenTextFieldChange}
         />
-        <AppFormInputLogo src={getTokenLogoURL("FXD")} />
-        <MaxButton onClick={() => setMax()}>Max</MaxButton>
-      </AppFormInputWrapper>
-      {approveBtn && (
-        <RepayApproveBox>
-          <InfoIcon
-            sx={{
-              color: "#7D91B5",
-              float: "left",
-              marginRight: "10px",
-            }}
-          />
-          <ApproveBoxTypography>
-            Please allow token approval in your MetaMask
-          </ApproveBoxTypography>
-          <RepayApproveButton onClick={approve} disabled={approvalPending}>
-            {" "}
-            {approvalPending ? (
-              <CircularProgress size={20} sx={{ color: "#0D1526" }} />
-            ) : (
-              "Approve"
-            )}{" "}
-          </RepayApproveButton>
-        </RepayApproveBox>
-      )}
-      <AppFormInputWrapper>
-        <AppFormLabel>Receive</AppFormLabel>
-        <AppTextField
+        <BaseFormInputUsdIndicator>{`$${formatNumber(
+          BigNumber(fathomToken || 0)
+            .multipliedBy(fxdPrice)
+            .dividedBy(10 ** 18)
+            .toNumber()
+        )}`}</BaseFormInputUsdIndicator>
+        <BaseFormInputLogo
+          className={"extendedInput"}
+          src={getTokenLogoURL("FXD")}
+        />
+        <BaseFormSetMaxButton onClick={() => setMax()}>
+          Max
+        </BaseFormSetMaxButton>
+      </BaseFormInputWrapper>
+
+      <BaseFormInputWrapper>
+        <BaseFormLabelRow>
+          <BaseFormInputLabel>Receive</BaseFormInputLabel>
+        </BaseFormLabelRow>
+        <BaseFormTextField
           id="outlined-helperText"
           value={collateral}
           onChange={handleCollateralTextFieldChange}
         />
-        <AppFormInputLogo
+        <BaseFormInputUsdIndicator>{`$${formatNumber(
+          BigNumber(collateral || 0)
+            .multipliedBy(priceOfCollateral)
+            .dividedBy(10 ** 18)
+            .toNumber()
+        )}`}</BaseFormInputUsdIndicator>
+        <BaseFormInputLogo
+          className={"extendedInput"}
           src={getTokenLogoURL(
             pool?.poolName === "XDC" ? "WXDC" : pool?.poolName
           )}
         />
-      </AppFormInputWrapper>
-      {fathomToken ? (
-        <InfoWrapper>
-          <InfoLabel>Repaying</InfoLabel>
-          <InfoValue>{formatPercentage(Number(fathomToken))} FXD</InfoValue>
-        </InfoWrapper>
-      ) : null}
-      {fathomToken ? (
-        <InfoWrapper>
-          <InfoLabel>Receive</InfoLabel>
-          <InfoValue>
-            {formatPercentage(Number(collateral))} {pool?.poolName}
-          </InfoValue>
-        </InfoWrapper>
-      ) : null}
-      {balanceError && (
-        <WarningBox>
-          <InfoIcon />
-          <Typography>
-            Wallet balance is not enough to close this position entirely (repay
-            in full).
-          </Typography>
-        </WarningBox>
-      )}
-      <ButtonsWrapper
-        sx={{ position: "static", float: "right", marginTop: "20px" }}
-      >
-        {!isMobile && (
-          <ButtonSecondary onClick={onClose}>Close</ButtonSecondary>
-        )}
-        <ButtonPrimary
-          onClick={closePositionHandler}
-          disabled={
-            balanceError ||
-            balanceErrorNotFilled ||
-            disableClosePosition ||
-            approveBtn
-          }
-          isLoading={disableClosePosition}
-        >
-          {disableClosePosition ? (
-            <CircularProgress size={20} />
-          ) : (
-            "Repay this position"
-          )}
-        </ButtonPrimary>
-        {isMobile && <ButtonSecondary onClick={onClose}>Close</ButtonSecondary>}
-      </ButtonsWrapper>
-    </ClosePositionWrapper>
+      </BaseFormInputWrapper>
+    </BaseDialogFormWrapper>
   );
 };
 

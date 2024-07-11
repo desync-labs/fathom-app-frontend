@@ -5,6 +5,7 @@ import { Box } from "@mui/material";
 const ImageWrapper = styled(Box)`
   width: 32px;
   height: 32px;
+  min-width: 32px;
   overflow: hidden;
   border-radius: 16px;
 `;

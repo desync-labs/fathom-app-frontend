@@ -4,45 +4,43 @@ import {
   CircularProgress,
   Table,
   TableBody,
-  TableCell,
-  TableContainer,
   TableHead,
   Pagination,
 } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import { IOpenPosition } from "fathom-sdk";
+
+import useSharedContext from "context/shared";
+import { COUNT_PER_PAGE } from "utils/Constants";
+import useOpenPositionList from "hooks/Positions/useOpenPositionList";
+import { ClosePositionProvider } from "context/repayPosition";
+import { TopUpPositionProvider } from "context/topUpPosition";
+
 import ClosePositionDialog from "components/Positions/RepayPositionDialog";
-import {
-  AppTableHeaderRow,
-  AppTableCellWithPopover,
-} from "components/AppComponents/AppTable/AppTable";
+import PositionListItem from "components/PositionList/PositionListItem";
+import PositionListItemMobile from "components/PositionList/PositionListItemMobile";
+import TopUpPositionDialog from "components/Positions/TopUpPositionDialog";
+import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
+import BasePopover from "components/Base/Popover/BasePopover";
 import {
   TitleSecondary,
   NoResults,
   CircleWrapper,
 } from "components/AppComponents/AppBox/AppBox";
-import PositionListItem from "components/PositionList/PositionListItem";
-import PositionListItemMobile from "components/PositionList/PositionListItemMobile";
-import useOpenPositionList from "hooks/Positions/useOpenPositionList";
-import { styled } from "@mui/material/styles";
-import { COUNT_PER_PAGE } from "utils/Constants";
+import {
+  BaseTableCell,
+  BaseTableCellPopover,
+  BaseTableContainer,
+  BaseTableHeaderRow,
+  BaseTablePaginationWrapper,
+} from "components/Base/Table/StyledTable";
 
-import { ClosePositionProvider } from "context/repayPosition";
-import { TopUpPositionProvider } from "context/topUpPosition";
-import TopUpPositionDialog from "components/Positions/TopUpPositionDialog";
-import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
-import AppPopover from "components/AppComponents/AppPopover/AppPopover";
-import useSharedContext from "context/shared";
-
-const FlexBox = styled(Box)`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const PaginationWrapper = styled(Box)`
-  display: flex;
-  justify-content: center;
-  margin-top: 10px;
+const PositionsTitle = styled(TitleSecondary)`
+  font-size: 20px;
+  margin-bottom: 12px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    margin-top: 25px;
+  }
 `;
 
 type PositionsListProps = {
@@ -79,10 +77,8 @@ const PositionsList: FC<PositionsListProps> = ({
   );
 
   return (
-    <>
-      <FlexBox>
-        <TitleSecondary variant={"h2"}>Your Positions</TitleSecondary>
-      </FlexBox>
+    <Box>
+      <PositionsTitle variant={"h2"}>Your Positions</PositionsTitle>
       {useMemo(
         () => (
           <>
@@ -99,31 +95,29 @@ const PositionsList: FC<PositionsListProps> = ({
             )}
 
             {!!positions.length && !listLoading && !isMobile && (
-              <>
-                <TableContainer>
-                  <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                    <TableHead>
-                      <AppTableHeaderRow
-                        sx={{
-                          th: { textAlign: "left", paddingLeft: "10px" },
-                        }}
-                      >
-                        <TableCell>Id</TableCell>
-                        <TableCell>Asset</TableCell>
-                        <AppTableCellWithPopover>
+              <BaseTableContainer>
+                <Table aria-label="positions table">
+                  <TableHead>
+                    <BaseTableHeaderRow>
+                      <BaseTableCell>Id</BaseTableCell>
+                      <BaseTableCell>Asset</BaseTableCell>
+                      <BaseTableCell>
+                        <BaseTableCellPopover>
                           Liquidation price
-                          <AppPopover
+                          <BasePopover
                             id={"liquidation-price"}
                             text={
                               "Liquidation Price is the price of the collateral token when your collateral will be automatically sold to partially or fully repay the loan if your collateral value drops. It's a safety mechanism to ensure that loans are always sufficiently collateralized. Monitoring this price helps prevent the unwanted liquidation of your assets."
                             }
                           />
-                        </AppTableCellWithPopover>
-                        <TableCell>Borrowed</TableCell>
-                        <TableCell>Collateral</TableCell>
-                        <AppTableCellWithPopover>
+                        </BaseTableCellPopover>
+                      </BaseTableCell>
+                      <BaseTableCell>Borrowed</BaseTableCell>
+                      <BaseTableCell>Collateral</BaseTableCell>
+                      <BaseTableCell>
+                        <BaseTableCellPopover>
                           Safety buffer
-                          <AppPopover
+                          <BasePopover
                             id={"safety-buffer"}
                             text={
                               <>
@@ -151,30 +145,30 @@ const PositionsList: FC<PositionsListProps> = ({
                               </>
                             }
                           />
-                        </AppTableCellWithPopover>
-                        <TableCell></TableCell>
-                      </AppTableHeaderRow>
-                    </TableHead>
-                    <TableBody>
-                      {positions.map((position: IOpenPosition) => (
-                        <PositionListItem
-                          key={position.id}
-                          position={position}
-                          setClosePosition={setClosePosition}
-                          setTopUpPosition={setTopUpPosition}
-                        />
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-                <PaginationWrapper>
+                        </BaseTableCellPopover>
+                      </BaseTableCell>
+                      <BaseTableCell></BaseTableCell>
+                    </BaseTableHeaderRow>
+                  </TableHead>
+                  <TableBody>
+                    {positions.map((position: IOpenPosition) => (
+                      <PositionListItem
+                        key={position.id}
+                        position={position}
+                        setClosePosition={setClosePosition}
+                        setTopUpPosition={setTopUpPosition}
+                      />
+                    ))}
+                  </TableBody>
+                </Table>
+                <BaseTablePaginationWrapper>
                   <Pagination
                     count={Math.ceil(positionsItemsCount / COUNT_PER_PAGE)}
                     page={positionCurrentPage}
                     onChange={handlePageChange}
                   />
-                </PaginationWrapper>
-              </>
+                </BaseTablePaginationWrapper>
+              </BaseTableContainer>
             )}
             {!!positions.length && !listLoading && isMobile && (
               <>
@@ -186,13 +180,13 @@ const PositionsList: FC<PositionsListProps> = ({
                     setTopUpPosition={setTopUpPosition}
                   />
                 ))}
-                <PaginationWrapper>
+                <BaseTablePaginationWrapper>
                   <Pagination
                     count={Math.ceil(positionsItemsCount / COUNT_PER_PAGE)}
                     page={positionCurrentPage}
                     onChange={handlePageChange}
                   />
-                </PaginationWrapper>
+                </BaseTablePaginationWrapper>
               </>
             )}
           </>
@@ -243,7 +237,7 @@ const PositionsList: FC<PositionsListProps> = ({
           )}
         </AppDialog>
       ) : null}
-    </>
+    </Box>
   );
 };
 

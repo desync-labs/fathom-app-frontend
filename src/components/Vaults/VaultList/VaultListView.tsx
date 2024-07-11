@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Typography } from "@mui/material";
 import useVaultList from "hooks/Vaults/useVaultList";
 import useSharedContext from "context/shared";
@@ -5,9 +6,8 @@ import VaultsTotalStats from "components/Vaults/VaultList/VaultsTotalStats";
 import VaultsList from "components/Vaults/VaultList/VaultsList";
 import VaultsListMobile from "components/Vaults/VaultList/VaultsListMobile";
 import VaultFilters from "components/Vaults/VaultList/VaultFilters";
-import VaultPageHeader from "components/Vaults/VaultList/VaultPageHeader";
+import BasePageHeader from "components/Base/PageHeader";
 import { EmptyVaultsWrapper } from "components/AppComponents/AppBox/AppBox";
-import { useEffect, useState } from "react";
 
 const VaultListView = () => {
   const {
@@ -43,7 +43,7 @@ const VaultListView = () => {
 
   return (
     <>
-      <VaultPageHeader
+      <BasePageHeader
         title={"Vaults"}
         description={`Explore existing Vaults, and deposit your assets for a sustainable yield.`}
       />

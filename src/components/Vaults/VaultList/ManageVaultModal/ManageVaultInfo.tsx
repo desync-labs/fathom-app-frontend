@@ -1,28 +1,17 @@
 import { FC, memo } from "react";
 import BigNumber from "bignumber.js";
-import { Box, Divider, ListItemText, styled } from "@mui/material";
+import { Box, Divider, ListItemText } from "@mui/material";
 import { IVault, IVaultPosition } from "fathom-sdk";
+
 import { FormType } from "hooks/Vaults/useVaultManageDeposit";
-import {
-  AppListItem,
-  AppListVault,
-} from "components/AppComponents/AppList/AppList";
-import { Summary } from "components/AppComponents/AppBox/AppBox";
 import { formatNumber, formatPercentage } from "utils/format";
 import { useApr } from "hooks/Vaults/useApr";
-
-const ManageVaultFormInfoWrapper = styled(Box)`
-  position: relative;
-  width: 100%;
-  border-radius: 12px;
-  background: #1e2f4c;
-  padding: 24px;
-  margin-top: 20px;
-
-  ${({ theme }) => theme.breakpoints.down("sm")} {
-    padding: 24px 16px;
-  }
-`;
+import { AppListItem } from "components/AppComponents/AppList/AppList";
+import { Summary } from "components/AppComponents/AppBox/AppBox";
+import {
+  BaseDialogFormInfoWrapper,
+  BaseFormInfoList,
+} from "components/Base/Form/StyledForm";
 
 type VaultManageInfoProps = {
   vaultItemData: IVault;
@@ -46,10 +35,10 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
   const formattedApr = useApr(vaultItemData);
 
   return (
-    <ManageVaultFormInfoWrapper>
+    <BaseDialogFormInfoWrapper>
       <Summary>Summary</Summary>
       <Divider />
-      <AppListVault>
+      <BaseFormInfoList>
         <AppListItem
           alignItems="flex-start"
           secondaryAction={
@@ -220,8 +209,8 @@ const ManageVaultInfo: FC<VaultManageInfoProps> = ({
         >
           <ListItemText primary="Estimated APY" />
         </AppListItem>
-      </AppListVault>
-    </ManageVaultFormInfoWrapper>
+      </BaseFormInfoList>
+    </BaseDialogFormInfoWrapper>
   );
 };
 

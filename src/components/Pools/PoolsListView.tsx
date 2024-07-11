@@ -3,8 +3,6 @@ import {
   CircularProgress,
   Table,
   TableBody,
-  TableCell,
-  TableContainer,
   TableHead,
   Box,
 } from "@mui/material";
@@ -12,7 +10,6 @@ import { ICollateralPool } from "fathom-sdk";
 import PoolsListItem from "components/Pools/PoolsListItem";
 import OpenNewPositionDialog from "components/Positions/OpenNewPositionDialog";
 import { styled } from "@mui/material/styles";
-import { AppTableHeaderRow } from "components/AppComponents/AppTable/AppTable";
 import {
   NoResults,
   TitleSecondary,
@@ -21,14 +18,11 @@ import usePoolsList from "hooks/Pools/usePoolsList";
 import PoolsListItemMobile from "components/Pools/PoolsListItemMobile";
 import { OpenPositionProvider } from "context/openPosition";
 import useSharedContext from "context/shared";
-
-const PoolsListHeaderRow = styled(AppTableHeaderRow)`
-  background: transparent;
-
-  th {
-    text-align: left;
-  }
-`;
+import {
+  BaseTableCell,
+  BaseTableContainer,
+  BaseTableHeaderRow,
+} from "components/Base/Table/StyledTable";
 
 const CircleWrapper = styled(Box)`
   width: 100%;
@@ -39,6 +33,8 @@ const CircleWrapper = styled(Box)`
 `;
 
 const PoolsTitle = styled(TitleSecondary)`
+  font-size: 20px;
+  margin-bottom: 12px;
   ${({ theme }) => theme.breakpoints.down("sm")} {
     margin-top: 25px;
   }
@@ -58,7 +54,7 @@ const PoolsListView: FC<PoolsListViewProps> = ({
   const { isMobile } = useSharedContext();
 
   return (
-    <>
+    <Box>
       <PoolsTitle variant="h2">Available Pools</PoolsTitle>
       {pools.length === 0 ? (
         <NoResults variant={"h6"}>
@@ -73,19 +69,16 @@ const PoolsListView: FC<PoolsListViewProps> = ({
       ) : (
         <>
           {!isMobile && (
-            <TableContainer>
-              <Table
-                sx={{ minWidth: 500, "& td": { padding: "9px" } }}
-                aria-label="simple table"
-              >
+            <BaseTableContainer>
+              <Table aria-label="pools table">
                 <TableHead>
-                  <PoolsListHeaderRow>
-                    <TableCell>Pool</TableCell>
-                    <TableCell>Price</TableCell>
-                    <TableCell>Borrowed</TableCell>
-                    <TableCell>Available</TableCell>
-                    <TableCell></TableCell>
-                  </PoolsListHeaderRow>
+                  <BaseTableHeaderRow>
+                    <BaseTableCell>Pool</BaseTableCell>
+                    <BaseTableCell>Price</BaseTableCell>
+                    <BaseTableCell>Borrowed</BaseTableCell>
+                    <BaseTableCell>Available</BaseTableCell>
+                    <BaseTableCell></BaseTableCell>
+                  </BaseTableHeaderRow>
                 </TableHead>
 
                 <TableBody>
@@ -98,7 +91,7 @@ const PoolsListView: FC<PoolsListViewProps> = ({
                   ))}
                 </TableBody>
               </Table>
-            </TableContainer>
+            </BaseTableContainer>
           )}
           {isMobile &&
             pools.map((pool: ICollateralPool) => (
@@ -124,7 +117,7 @@ const PoolsListView: FC<PoolsListViewProps> = ({
           )
         );
       }, [selectedPool, onCloseNewPosition, proxyWallet])}
-    </>
+    </Box>
   );
 };
 

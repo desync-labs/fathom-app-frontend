@@ -1,18 +1,20 @@
 import BigNumber from "bignumber.js";
-import { Box, Divider, Grid, ListItemText } from "@mui/material";
+import { Box, Divider, ListItemText } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { AppList, AppListItem } from "components/AppComponents/AppList/AppList";
 import { formatPercentage, formatNumber } from "utils/format";
 import useTopUpPositionContext from "context/topUpPosition";
-import AppPopover from "components/AppComponents/AppPopover/AppPopover";
+
+import BasePopover from "components/Base/Popover/BasePopover";
+import { AppListItem } from "components/AppComponents/AppList/AppList";
 import { ListTitleWrapper } from "components/Positions/OpenPosition/OpenPositionInfo";
+import { Summary } from "components/AppComponents/AppBox/AppBox";
+import {
+  BaseDialogFormInfoWrapper,
+  BaseFormInfoList,
+} from "components/Base/Form/StyledForm";
 
 const ListDivider = styled(Divider)`
-  margin: 20px 20px 20px 5px;
-
-  ${({ theme }) => theme.breakpoints.down("sm")} {
-    margin: 20px 0 20px 0;
-  }
+  margin: 0 0 8px 0;
 `;
 
 const TopUpPositionInfo = () => {
@@ -28,8 +30,10 @@ const TopUpPositionInfo = () => {
   } = useTopUpPositionContext();
 
   return (
-    <Grid item xs={12} sm={6}>
-      <AppList>
+    <BaseDialogFormInfoWrapper>
+      <Summary>Summary</Summary>
+      <Divider />
+      <BaseFormInfoList>
         <AppListItem
           alignItems="flex-start"
           secondaryAction={
@@ -65,7 +69,7 @@ const TopUpPositionInfo = () => {
             primary={
               <ListTitleWrapper>
                 Collateralization Ratio
-                <AppPopover
+                <BasePopover
                   id={"collateralization-ratio"}
                   text={
                     <>
@@ -92,7 +96,7 @@ const TopUpPositionInfo = () => {
             primary={
               <ListTitleWrapper>
                 Safety Buffer
-                <AppPopover
+                <BasePopover
                   id={"safety-buffer"}
                   text={
                     <>
@@ -131,7 +135,7 @@ const TopUpPositionInfo = () => {
             primary={
               <ListTitleWrapper>
                 Liquidation Price of {pool?.poolName}
-                <AppPopover
+                <BasePopover
                   id={"liquidation-price"}
                   text={
                     <>
@@ -155,7 +159,7 @@ const TopUpPositionInfo = () => {
             primary={
               <ListTitleWrapper>
                 Stability Fee
-                <AppPopover
+                <BasePopover
                   id={"stability-fee"}
                   text={
                     <>
@@ -170,8 +174,8 @@ const TopUpPositionInfo = () => {
             }
           />
         </AppListItem>
-      </AppList>
-    </Grid>
+      </BaseFormInfoList>
+    </BaseDialogFormInfoWrapper>
   );
 };
 

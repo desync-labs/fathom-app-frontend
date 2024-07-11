@@ -14,7 +14,7 @@ const PageTitle = styled(Typography)`
   }
 `;
 
-const PageDescription = styled("p")`
+const PageDescription = styled(Box)`
   color: #fff;
   font-size: 14px;
   font-weight: 400;
@@ -33,13 +33,15 @@ type PageHeaderType = {
   description: string;
 };
 
-const VaultPageHeader: FC<PageHeaderType> = ({ title, description }) => {
+const BasePageHeader: FC<PageHeaderType> = ({ title, description }) => {
   return (
     <PageHeaderWrapper>
       <PageTitle variant={"h1"}>{title}</PageTitle>
-      <PageDescription>{description}</PageDescription>
+      <PageDescription
+        dangerouslySetInnerHTML={{ __html: description }}
+      ></PageDescription>
     </PageHeaderWrapper>
   );
 };
 
-export default memo(VaultPageHeader);
+export default memo(BasePageHeader);

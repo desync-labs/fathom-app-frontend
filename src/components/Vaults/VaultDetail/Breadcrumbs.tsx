@@ -5,13 +5,13 @@ import useVaultContext from "context/vault";
 import { CustomSkeleton } from "components/AppComponents/AppSkeleton/AppSkeleton";
 
 export const BreadcrumbsWrapper = styled(Breadcrumbs)`
-  margin-top: 40px;
+  margin-top: 8px;
   margin-bottom: 40px;
   .close {
     float: right;
   }
   ${({ theme }) => theme.breakpoints.down("sm")} {
-    margin-top: 24px;
+    margin-top: 0;
     margin-bottom: 20px;
 
     & .MuiBreadcrumbs-separator {

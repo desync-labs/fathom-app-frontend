@@ -74,6 +74,8 @@ const useOpenPosition = (
   const [approveBtn, setApproveBtn] = useState<boolean>(false);
   const [approvalPending, setApprovalPending] = useState<boolean>(false);
 
+  const [priceOfCollateral, setPriceOfCollateral] = useState<string>("0");
+
   const proxyWalletExists = useMemo(
     () => proxyWallet !== ZERO_ADDRESS,
     [proxyWallet]
@@ -248,6 +250,7 @@ const useOpenPosition = (
         .multipliedBy(100)
         .toString();
 
+      setPriceOfCollateral(priceOfCollateralFromDex.toString());
       setOverCollateral(overCollateral);
       setDebtRatio(debtRatio);
 
@@ -467,6 +470,7 @@ const useOpenPosition = (
     maxBorrowAmount,
     minCollateralAmount,
     validateMaxBorrowAmount,
+    priceOfCollateral,
   };
 };
 

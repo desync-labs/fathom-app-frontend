@@ -35,6 +35,7 @@ export type UseRepayPositionContextReturnType = {
   approveBtn: boolean;
   approvalPending: boolean;
   approve: () => Promise<void>;
+  priceOfCollateral: string;
 };
 
 export const RepayPositionContext =

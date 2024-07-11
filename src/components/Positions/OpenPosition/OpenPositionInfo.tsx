@@ -1,25 +1,26 @@
-import { Divider, Grid, ListItemText } from "@mui/material";
-
-import { AppListItem } from "components/AppComponents/AppList/AppList";
-import { AppList } from "components/AppComponents/AppList/AppList";
+import BigNumber from "bignumber.js";
+import { Divider, ListItemText } from "@mui/material";
+import { styled } from "@mui/material/styles";
 
 import useOpenPositionContext from "context/openPosition";
-import { styled } from "@mui/material/styles";
 import { formatNumber, formatPercentage } from "utils/format";
-import AppPopover from "components/AppComponents/AppPopover/AppPopover";
-import BigNumber from "bignumber.js";
+
+import { AppListItem } from "components/AppComponents/AppList/AppList";
+import { Summary } from "components/AppComponents/AppBox/AppBox";
+import BasePopover from "components/Base/Popover/BasePopover";
+import {
+  BaseDialogFormInfoWrapper,
+  BaseFormInfoList,
+} from "components/Base/Form/StyledForm";
 
 const ListDivider = styled(Divider)`
-  margin: 20px 20px 20px 5px;
-
-  ${({ theme }) => theme.breakpoints.down("sm")} {
-    margin: 20px 0 20px 0;
-  }
+  margin: 0 0 8px 0;
 `;
 
 export const ListTitleWrapper = styled("div")`
   display: flex;
-  gap: 7px;
+  gap: 8px;
+  align-items: center;
 `;
 
 const OpenPositionInfo = () => {
@@ -35,8 +36,10 @@ const OpenPositionInfo = () => {
   } = useOpenPositionContext();
 
   return (
-    <Grid item xs={12} sm={6}>
-      <AppList>
+    <BaseDialogFormInfoWrapper>
+      <Summary>Summary</Summary>
+      <Divider />
+      <BaseFormInfoList>
         <AppListItem
           alignItems="flex-start"
           secondaryAction={`${formatNumber(Number(collateralToBeLocked))} ${
@@ -47,7 +50,7 @@ const OpenPositionInfo = () => {
             primary={
               <ListTitleWrapper>
                 Collateral to be Locked
-                <AppPopover
+                <BasePopover
                   id={"collateral-locked"}
                   text={
                     <>
@@ -70,7 +73,7 @@ const OpenPositionInfo = () => {
             primary={
               <ListTitleWrapper>
                 Safety Buffer
-                <AppPopover
+                <BasePopover
                   id={"safety-buffer"}
                   text={
                     <>
@@ -107,7 +110,7 @@ const OpenPositionInfo = () => {
             primary={
               <ListTitleWrapper>
                 Max FXD can be Borrowed
-                <AppPopover
+                <BasePopover
                   id={"max-fxd-borrowed"}
                   text={
                     <>
@@ -136,7 +139,7 @@ const OpenPositionInfo = () => {
             primary={
               <ListTitleWrapper>
                 Collateralization Ratio
-                <AppPopover
+                <BasePopover
                   id={"collateralization-ratio"}
                   text={
                     <>
@@ -169,7 +172,7 @@ const OpenPositionInfo = () => {
             primary={
               <ListTitleWrapper>
                 Liquidation Price of {pool?.poolName}
-                <AppPopover
+                <BasePopover
                   id={"liquidation-price"}
                   text={
                     <>
@@ -193,7 +196,7 @@ const OpenPositionInfo = () => {
             primary={
               <ListTitleWrapper>
                 Stability Fee
-                <AppPopover
+                <BasePopover
                   id={"stability-fee"}
                   text={
                     <>
@@ -208,8 +211,8 @@ const OpenPositionInfo = () => {
             }
           />
         </AppListItem>
-      </AppList>
-    </Grid>
+      </BaseFormInfoList>
+    </BaseDialogFormInfoWrapper>
   );
 };
 

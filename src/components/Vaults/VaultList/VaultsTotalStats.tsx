@@ -14,10 +14,8 @@ import useTotalStats from "hooks/Vaults/useTotalStats";
 
 const StatsWrapper = styled(AppFlexBox)`
   gap: 16px;
-  padding: 40px 0;
   ${({ theme }) => theme.breakpoints.down("sm")} {
     gap: 4px;
-    padding: 16px 0;
   }
 `;
 

@@ -9,29 +9,20 @@ import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatNumber } from "utils/format";
 import usePricesContext from "context/prices";
 
-import {
-  AppFlexBox,
-  VaultWalletBalance,
-} from "components/AppComponents/AppBox/AppBox";
-import { MaxButtonV2 } from "components/AppComponents/AppButton/AppButton";
-import {
-  AppFormInputErrorWrapper,
-  AppFormInputLogoV2,
-  AppFormInputUsdIndicator,
-  AppFormInputWrapperV2,
-  AppFormLabelRow,
-  AppFormLabelV2,
-  AppTextFieldV2,
-} from "components/AppComponents/AppForm/AppForm";
+import { AppFlexBox } from "components/AppComponents/AppBox/AppBox";
 import { InfoIcon } from "components/Governance/Propose";
-
-const ManageVaultItemFormWrapper = styled(Box)`
-  position: relative;
-  width: 100%;
-  border-radius: 12px;
-  background: #1e2f4d;
-  padding: 24px 16px;
-`;
+import {
+  BaseDialogFormWrapper,
+  BaseFormInputErrorWrapper,
+  BaseFormInputLabel,
+  BaseFormInputLogo,
+  BaseFormInputUsdIndicator,
+  BaseFormInputWrapper,
+  BaseFormLabelRow,
+  BaseFormSetMaxButton,
+  BaseFormTextField,
+  BaseFormWalletBalance,
+} from "components/Base/Form/StyledForm";
 
 const ManageVaultFormStyled = styled("form")`
   padding-bottom: 0;
@@ -88,7 +79,7 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
   );
 
   return (
-    <ManageVaultItemFormWrapper>
+    <BaseDialogFormWrapper>
       <ManageVaultFormStyled
         onSubmit={handleSubmit(onSubmit)}
         noValidate
@@ -103,15 +94,15 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
             validate: validateMaxValue,
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
-            <AppFormInputWrapperV2>
-              <AppFormLabelRow>
-                <AppFormLabelV2>
+            <BaseFormInputWrapper>
+              <BaseFormLabelRow>
+                <BaseFormInputLabel>
                   {formType === FormType.DEPOSIT
                     ? `Deposit ${token?.name}`
                     : `Withdraw ${token?.name}`}
-                </AppFormLabelV2>
+                </BaseFormInputLabel>
                 <AppFlexBox sx={{ width: "auto", justifyContent: "flex-end" }}>
-                  <VaultWalletBalance>
+                  <BaseFormWalletBalance>
                     {formType === FormType.DEPOSIT
                       ? "Balance: " +
                         formatNumber(
@@ -125,17 +116,17 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
                         formatNumber(formattedBalanceToken) +
                         " " +
                         token?.name}
-                  </VaultWalletBalance>
+                  </BaseFormWalletBalance>
                 </AppFlexBox>
-              </AppFormLabelRow>
-              <AppTextFieldV2
+              </BaseFormLabelRow>
+              <BaseFormTextField
                 error={!!error}
                 id="outlined-helperText"
                 placeholder={"0"}
                 helperText={
                   <>
                     {!shutdown && depositLimitExceeded(value) && (
-                      <AppFormInputErrorWrapper>
+                      <BaseFormInputErrorWrapper>
                         <InfoIcon
                           sx={{
                             float: "left",
@@ -150,10 +141,10 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
                         >
                           {depositLimitExceeded(value)}
                         </Box>
-                      </AppFormInputErrorWrapper>
+                      </BaseFormInputErrorWrapper>
                     )}
                     {error && error.type === "required" && (
-                      <AppFormInputErrorWrapper>
+                      <BaseFormInputErrorWrapper>
                         <InfoIcon
                           sx={{
                             float: "left",
@@ -168,10 +159,10 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
                         >
                           This field is required
                         </Box>
-                      </AppFormInputErrorWrapper>
+                      </BaseFormInputErrorWrapper>
                     )}
                     {error && error.type === "validate" && (
-                      <AppFormInputErrorWrapper>
+                      <BaseFormInputErrorWrapper>
                         <InfoIcon
                           sx={{
                             float: "left",
@@ -186,10 +177,10 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
                         >
                           {error.message}
                         </Box>
-                      </AppFormInputErrorWrapper>
+                      </BaseFormInputErrorWrapper>
                     )}
                     {error && error.type === "min" && (
-                      <AppFormInputErrorWrapper>
+                      <BaseFormInputErrorWrapper>
                         <InfoIcon
                           sx={{
                             float: "left",
@@ -204,7 +195,7 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
                         >
                           This field should be positive.
                         </Box>
-                      </AppFormInputErrorWrapper>
+                      </BaseFormInputErrorWrapper>
                     )}
                   </>
                 }
@@ -221,18 +212,18 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
                     : null
                 }
               />
-              <AppFormInputUsdIndicator>{`$${formatNumber(
+              <BaseFormInputUsdIndicator>{`$${formatNumber(
                 BigNumber(value || 0)
                   .multipliedBy(fxdPrice)
                   .dividedBy(10 ** 18)
                   .toNumber()
-              )}`}</AppFormInputUsdIndicator>
-              <AppFormInputLogoV2
+              )}`}</BaseFormInputUsdIndicator>
+              <BaseFormInputLogo
                 className={"extendedInput"}
                 src={getTokenLogoURL(token?.symbol)}
                 alt={token?.name}
               />
-              <MaxButtonV2
+              <BaseFormSetMaxButton
                 onClick={() => setMax()}
                 data-testid={
                   dataTestIdPrefix !== undefined
@@ -245,8 +236,8 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
                 }
               >
                 Max
-              </MaxButtonV2>
-            </AppFormInputWrapperV2>
+              </BaseFormSetMaxButton>
+            </BaseFormInputWrapper>
           )}
         />
         <Controller
@@ -263,21 +254,21 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => {
             return (
-              <AppFormInputWrapperV2>
-                <AppFormLabelRow>
-                  <AppFormLabelV2>
+              <BaseFormInputWrapper>
+                <BaseFormLabelRow>
+                  <BaseFormInputLabel>
                     {formType === FormType.DEPOSIT
                       ? "Receive shares token"
                       : "Burn Shares token"}
-                  </AppFormLabelV2>
-                </AppFormLabelRow>
-                <AppTextFieldV2
+                  </BaseFormInputLabel>
+                </BaseFormLabelRow>
+                <BaseFormTextField
                   error={!!error}
                   id="outlined-helperText"
                   helperText={
                     <>
                       {error && error.type === "max" && (
-                        <AppFormInputErrorWrapper>
+                        <BaseFormInputErrorWrapper>
                           <InfoIcon
                             sx={{
                               float: "left",
@@ -299,7 +290,7 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
                             )}
                             .
                           </Box>
-                        </AppFormInputErrorWrapper>
+                        </BaseFormInputErrorWrapper>
                       )}
                     </>
                   }
@@ -318,13 +309,13 @@ const ManageVaultForm: FC<VaultManageFormProps> = ({
                       : null
                   }
                 />
-                <AppFormInputLogoV2 src={getTokenLogoURL("FXD")} />
-              </AppFormInputWrapperV2>
+                <BaseFormInputLogo src={getTokenLogoURL("FXD")} />
+              </BaseFormInputWrapper>
             );
           }}
         />
       </ManageVaultFormStyled>
-    </ManageVaultItemFormWrapper>
+    </BaseDialogFormWrapper>
   );
 };
 

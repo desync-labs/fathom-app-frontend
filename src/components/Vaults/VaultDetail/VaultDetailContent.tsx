@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import BigNumber from "bignumber.js";
+import { Box } from "@mui/material";
 import useVaultContext from "context/vault";
 import useSharedContext from "context/shared";
 import VaultBreadcrumbs from "components/Vaults/VaultDetail/Breadcrumbs";
@@ -34,7 +35,7 @@ const VaultDetailContent = () => {
     };
   }, [vaultPosition, vaultPositionLoading, vaultLoading, setNotLoaded]);
   return (
-    <>
+    <Box>
       <VaultBreadcrumbs />
       <VaultPositionStats />
       {isTfVaultType && <VaultLockingBar />}
@@ -46,7 +47,7 @@ const VaultDetailContent = () => {
         <VaultDetailDepositForm notLoading={notLoading} />
       ) : null}
       <VaultDetailInfoTabs />
-    </>
+    </Box>
   );
 };
 
