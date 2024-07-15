@@ -66,9 +66,9 @@ const PositionListItem: FC<PositionListItemProps> = ({
       </TableCell>
       <TableCell
         sx={{
-          color: BigNumber(position.safetyBufferInPercent).isLessThan(
-            DANGER_SAFETY_BUFFER
-          )
+          color: BigNumber(position.safetyBufferInPercent)
+            .decimalPlaces(3, BigNumber.ROUND_UP)
+            .isLessThan(DANGER_SAFETY_BUFFER)
             ? "#F04242 !important"
             : "#fff",
         }}
