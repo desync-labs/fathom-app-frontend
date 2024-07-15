@@ -26,6 +26,7 @@ import {
   BreadcrumbsWrapper,
   VaultBreadcrumbsCurrentPage,
 } from "components/Vaults/VaultDetail/Breadcrumbs";
+import useConnector from "../../context/connector";
 
 const BreadcrumbsContainer = styled(Box)`
   display: flex;
@@ -97,16 +98,19 @@ interface PositionListItemPreviewModalProps {
   setTopUpPosition: (position: IOpenPosition) => void;
 }
 
-const PositionListItemPreviewModal = ({
+const PositionListItemPreviewModal: FC<PositionListItemPreviewModalProps> = ({
   position,
   isOpenPreviewModal,
   handleClosePreview,
   setTopUpPosition,
-}: PositionListItemPreviewModalProps) => {
+}) => {
+  const { account } = useConnector();
+
   return (
     <BaseDialogFullScreen
       isOpen={isOpenPreviewModal}
       onClose={handleClosePreview}
+      tabVisible={!!account}
     >
       <BreadcrumbsContainer>
         <PseudoBreadcrumbs

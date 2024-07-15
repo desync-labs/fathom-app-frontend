@@ -31,23 +31,27 @@ interface BaseDialogFullScreenProps {
   isOpen: boolean;
   onClose: () => void;
   children: ReactNode;
+  tabVisible?: boolean;
 }
 
 const BaseDialogFullScreen: FC<BaseDialogFullScreenProps> = ({
   isOpen,
   onClose,
   children,
-}: any) => {
+  tabVisible = true,
+}) => {
   const [modalOffset, setModalOffset] = useState<number>(0);
 
   useEffect(() => {
     if (isOpen) {
       let scroll =
-        116 - (document.documentElement.scrollTop || document.body.scrollTop);
+        116 -
+        (tabVisible ? 0 : 60) -
+        (document.documentElement.scrollTop || document.body.scrollTop);
       scroll = scroll < 0 ? 0 : scroll;
       setModalOffset(scroll);
     }
-  }, [isOpen, setModalOffset]);
+  }, [isOpen, setModalOffset, tabVisible]);
 
   return (
     <FullScreenDialog

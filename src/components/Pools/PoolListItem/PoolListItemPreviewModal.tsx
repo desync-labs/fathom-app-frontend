@@ -24,6 +24,7 @@ import {
   BaseListItem,
   BaseListPreviewModal,
 } from "components/Base/List/StyledList";
+import useConnector from "../../../context/connector";
 
 const BreadcrumbsContainer = styled(Box)`
   display: flex;
@@ -102,10 +103,12 @@ const PoolListItemPreviewModal: FC<PoolListItemPreviewModalProps> = ({
   setSelectedPool,
 }) => {
   const { xdcPrice, prevXdcPrice } = usePricesContext();
+  const { account } = useConnector();
   return (
     <BaseDialogFullScreen
       isOpen={isOpenPreviewModal}
       onClose={handleClosePreview}
+      tabVisible={!!account}
     >
       <BreadcrumbsContainer>
         <PseudoBreadcrumbs
