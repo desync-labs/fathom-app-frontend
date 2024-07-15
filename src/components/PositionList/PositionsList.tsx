@@ -24,6 +24,7 @@ import {
 } from "components/Base/Table/StyledTable";
 import { NoResults } from "components/Base/Typography/StyledTypography";
 import { PositionsListSkeleton } from "components/Base/Skeletons/StablecoinSkeletons";
+import { BaseDialogWrapper } from "components/Base/Dialog/StyledDialog";
 
 const PositionsTitle = styled(TitleSecondary)`
   font-size: 20px;
@@ -194,30 +195,39 @@ const PositionsList: FC<PositionsListProps> = ({
           setTopUpPosition,
         ]
       )}
-      {closePosition && (
-        <ClosePositionProvider position={closePosition} onClose={onClose}>
-          <ClosePositionDialog
-            topUpPosition={topUpPosition}
-            closePosition={closePosition}
-            setTopUpPosition={setTopUpPosition}
-            setClosePosition={setClosePosition}
-          />
-        </ClosePositionProvider>
-      )}
-      {topUpPosition && (
-        <TopUpPositionProvider
-          position={topUpPosition}
-          pool={topUpPositionPool}
+      {closePosition || topUpPosition ? (
+        <BaseDialogWrapper
           onClose={onClose}
+          maxWidth="sm"
+          open={true}
+          fullWidth
         >
-          <TopUpPositionDialog
-            topUpPosition={topUpPosition}
-            closePosition={closePosition}
-            setTopUpPosition={setTopUpPosition}
-            setClosePosition={setClosePosition}
-          />
-        </TopUpPositionProvider>
-      )}
+          {closePosition && (
+            <ClosePositionProvider position={closePosition} onClose={onClose}>
+              <ClosePositionDialog
+                topUpPosition={topUpPosition}
+                closePosition={closePosition}
+                setTopUpPosition={setTopUpPosition}
+                setClosePosition={setClosePosition}
+              />
+            </ClosePositionProvider>
+          )}
+          {topUpPosition && (
+            <TopUpPositionProvider
+              position={topUpPosition}
+              pool={topUpPositionPool}
+              onClose={onClose}
+            >
+              <TopUpPositionDialog
+                topUpPosition={topUpPosition}
+                closePosition={closePosition}
+                setTopUpPosition={setTopUpPosition}
+                setClosePosition={setClosePosition}
+              />
+            </TopUpPositionProvider>
+          )}
+        </BaseDialogWrapper>
+      ) : null}
     </Box>
   );
 };

@@ -12,7 +12,6 @@ import useRepayPositionContext from "context/repayPosition";
 import { BaseDialogTitle } from "components/Base/Dialog/BaseDialogTitle";
 import RepayPositionInfo from "components/Positions/RepayPosition/RepayPositionInfo";
 import RepayPositionForm from "components/Positions/RepayPosition/RepayPositionForm";
-import { BaseDialogWrapper } from "components/Base/Dialog/StyledDialog";
 import { BaseInfoBox, BaseWarningBox } from "components/Base/Boxes/StyledBoxes";
 import {
   ButtonPrimary,
@@ -46,7 +45,7 @@ const RepayPositionDialog: FC<ClosePositionDialogPropsType> = ({
   } = useRepayPositionContext();
 
   return (
-    <BaseDialogWrapper onClose={onClose} maxWidth="sm" open={true} fullWidth>
+    <>
       <BaseDialogTitle id="customized-dialog-title" onClose={onClose}>
         Repay Position
       </BaseDialogTitle>
@@ -114,7 +113,7 @@ const RepayPositionDialog: FC<ClosePositionDialogPropsType> = ({
           )}
         </ModalButtonWrapper>
       </DialogContent>
-    </BaseDialogWrapper>
+    </>
   );
 };
 
