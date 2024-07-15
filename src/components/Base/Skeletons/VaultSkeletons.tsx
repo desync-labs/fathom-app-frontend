@@ -1,13 +1,15 @@
-import { Box, ListItemText, Skeleton, styled } from "@mui/material";
-import { FC } from "react";
+import { Box, ListItemText } from "@mui/material";
 import { VaultAboutTitle } from "utils/Vaults/getVaultTitleAndDescription";
+import {
+  StrategySelector,
+  StrategySelectorLabel,
+} from "components/Vaults/VaultDetail/VaultDetailInfoTabStrategies";
 import {
   AppListApy,
   AppListFees,
   VaultContractAddress,
   VaultDescriptionWrapper,
 } from "components/Vaults/VaultDetail/VaultDetailInfoTabAbout";
-import { AppListItem } from "components/AppComponents/AppList/AppList";
 import {
   VaultIndicatorItemLabel,
   VaultIndicatorItemWrapper,
@@ -15,40 +17,9 @@ import {
   VaultStrategyDescription,
   VaultStrategyTitle,
 } from "components/Vaults/VaultDetail/VaultStrategyItem";
-import {
-  StrategySelector,
-  StrategySelectorLabel,
-} from "components/Vaults/VaultDetail/VaultDetailInfoTabStrategies";
+import { CustomSkeleton } from "components/Base/Skeletons/StyledSkeleton";
+import { BaseListItem } from "components/Base/List/StyledList";
 
-export const CustomSkeleton = styled(Skeleton)`
-  background-color: #2536564a;
-`;
-
-type StatsValueSkeletonProps = {
-  width?: number | string;
-  height?: number | string;
-  variant?: "text" | "circular" | "rectangular" | "rounded";
-  animation?: "pulse" | "wave" | false;
-  isMobile?: boolean;
-};
-
-export const StatsValueSkeleton: FC<StatsValueSkeletonProps> = ({
-  width = 200,
-  height = 28,
-  variant = "rounded",
-  animation = "wave",
-  isMobile = false,
-}) => {
-  return (
-    <Skeleton
-      variant={variant}
-      animation={animation}
-      width={width}
-      height={height}
-      sx={{ bgcolor: "#2536564a", marginTop: isMobile ? "0" : "12px" }}
-    />
-  );
-};
 export const VaultAboutSkeleton = () => {
   return (
     <>
@@ -83,7 +54,7 @@ export const VaultAboutSkeleton = () => {
         </VaultAboutTitle>
         <Box width={"100%"}>
           <AppListApy>
-            <AppListItem
+            <BaseListItem
               alignItems="flex-start"
               secondaryAction={
                 <CustomSkeleton
@@ -95,8 +66,8 @@ export const VaultAboutSkeleton = () => {
               sx={{ padding: "0 !important" }}
             >
               <ListItemText primary={"Weekly APY"} />
-            </AppListItem>
-            <AppListItem
+            </BaseListItem>
+            <BaseListItem
               alignItems="flex-start"
               secondaryAction={
                 <CustomSkeleton
@@ -108,8 +79,8 @@ export const VaultAboutSkeleton = () => {
               sx={{ padding: "0 !important" }}
             >
               <ListItemText primary={"Monthly APY"} />
-            </AppListItem>
-            <AppListItem
+            </BaseListItem>
+            <BaseListItem
               alignItems="flex-start"
               secondaryAction={
                 <CustomSkeleton
@@ -121,14 +92,14 @@ export const VaultAboutSkeleton = () => {
               sx={{ padding: "0 !important" }}
             >
               <ListItemText primary={"Yearly APY"} />
-            </AppListItem>
+            </BaseListItem>
           </AppListApy>
         </Box>
       </Box>
       <Box>
         <VaultAboutTitle sx={{ marginBottom: 0 }}>Fees</VaultAboutTitle>
         <AppListFees>
-          <AppListItem
+          <BaseListItem
             alignItems="flex-start"
             secondaryAction={
               <CustomSkeleton variant={"text"} animation={"wave"} width={50} />
@@ -136,8 +107,8 @@ export const VaultAboutSkeleton = () => {
             sx={{ padding: "0 !important" }}
           >
             <ListItemText primary={"Protocol fee"} />
-          </AppListItem>
-          <AppListItem
+          </BaseListItem>
+          <BaseListItem
             alignItems="flex-start"
             secondaryAction={
               <CustomSkeleton variant={"text"} animation={"wave"} width={50} />
@@ -145,7 +116,7 @@ export const VaultAboutSkeleton = () => {
             sx={{ padding: "0 !important" }}
           >
             <ListItemText primary={"Total fee"} />
-          </AppListItem>
+          </BaseListItem>
         </AppListFees>
       </Box>
     </>
@@ -249,7 +220,3 @@ export const VaultStrategiesSkeleton = () => {
     </>
   );
 };
-
-export const AppSkeletonValue = styled(Skeleton)`
-  background-color: #8ea4cc26;
-`;

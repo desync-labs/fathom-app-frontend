@@ -12,3 +12,13 @@ export const BaseSummary = styled(Typography)`
     font-size: 14px;
   }
 `;
+
+export const NoResults = styled(Typography)`
+  color: #6d86b2;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  background: #132340;
+  border-radius: 8px;
+  padding: 16px 24px;
+`;

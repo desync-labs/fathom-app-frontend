@@ -5,9 +5,9 @@ import useVaultContext from "context/vault";
 import usePricesContext from "context/prices";
 import useSharedContext from "context/shared";
 import { formatNumber } from "utils/format";
-import { StatsValueSkeleton } from "components/AppComponents/AppSkeleton/AppSkeleton";
 import BasePageStatsWrapper from "components/Base/PageStatsGrid/PageStatsWrapper";
 import BasePageStatsItem from "components/Base/PageStatsGrid/PageStatsItem";
+import { StatsValueSkeleton } from "components/Base/Skeletons/StyledSkeleton";
 
 const VaultPositionTitle = styled(Typography)`
   color: #fff;

@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Breadcrumbs, styled, Typography } from "@mui/material";
 import KeyboardArrowRightRoundedIcon from "@mui/icons-material/KeyboardArrowRightRounded";
 import useVaultContext from "context/vault";
-import { CustomSkeleton } from "components/AppComponents/AppSkeleton/AppSkeleton";
+import { CustomSkeleton } from "components/Base/Skeletons/StyledSkeleton";
 
 export const BreadcrumbsWrapper = styled(Breadcrumbs)`
   margin-top: 8px;

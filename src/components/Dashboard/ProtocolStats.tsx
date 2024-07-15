@@ -3,9 +3,9 @@ import useProtocolStats from "hooks/General/useProtocolStats";
 import { formatCurrency, formatNumber } from "utils/format";
 import usePricesContext from "context/prices";
 import useSharedContext from "context/shared";
-import { StatsValueSkeleton } from "components/AppComponents/AppSkeleton/AppSkeleton";
 import BasePageStatsWrapper from "components/Base/PageStatsGrid/PageStatsWrapper";
 import BasePageStatsItem from "components/Base/PageStatsGrid/PageStatsItem";
+import { StatsValueSkeleton } from "components/Base/Skeletons/StyledSkeleton";
 
 const ProtocolStats = () => {
   const { tvl, loading, poolsLoading, totalBorrowed } = useProtocolStats();
@@ -21,7 +21,11 @@ const ProtocolStats = () => {
         }
         value={
           poolsLoading ? (
-            <StatsValueSkeleton isMobile={isMobile} />
+            <StatsValueSkeleton
+              height={isMobile ? "20px" : "28px"}
+              width={isMobile ? "100px" : "200px"}
+              isMobile={isMobile}
+            />
           ) : (
             formatNumber(totalBorrowed) + " FXD"
           )
@@ -38,7 +42,11 @@ const ProtocolStats = () => {
         }
         value={
           loading ? (
-            <StatsValueSkeleton isMobile={isMobile} />
+            <StatsValueSkeleton
+              height={isMobile ? "20px" : "28px"}
+              width={isMobile ? "100px" : "200px"}
+              isMobile={isMobile}
+            />
           ) : (
             formatCurrency(tvl)
           )
@@ -52,7 +60,11 @@ const ProtocolStats = () => {
         title={"FXD Price"}
         value={
           fetchPricesInProgress ? (
-            <StatsValueSkeleton isMobile={isMobile} />
+            <StatsValueSkeleton
+              height={isMobile ? "20px" : "28px"}
+              width={isMobile ? "100px" : "200px"}
+              isMobile={isMobile}
+            />
           ) : (
             formatCurrency(
               BigNumber(fxdPrice)

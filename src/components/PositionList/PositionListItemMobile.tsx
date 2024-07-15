@@ -9,7 +9,7 @@ import { PositionListItemProps } from "components/PositionList/PositionListItem"
 import PoolName from "components/Pools/PoolListItem/PoolName";
 import PositionListItemPreviewModal from "components/PositionList/PositionListItemPreviewModal";
 
-const PositionListItemMobileContainer = styled(Box)`
+export const PositionListItemMobileContainer = styled(Box)`
   display: flex;
   flex-direction: row;
   justify-content: space-between;

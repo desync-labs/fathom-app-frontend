@@ -1,12 +1,5 @@
 import { Dispatch, FC, useMemo, memo } from "react";
-import {
-  Box,
-  CircularProgress,
-  Table,
-  TableBody,
-  TableHead,
-  Pagination,
-} from "@mui/material";
+import { Box, Table, TableBody, TableHead, Pagination } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { IOpenPosition } from "fathom-sdk";
 
@@ -20,13 +13,8 @@ import ClosePositionDialog from "components/Positions/RepayPositionDialog";
 import PositionListItem from "components/PositionList/PositionListItem";
 import PositionListItemMobile from "components/PositionList/PositionListItemMobile";
 import TopUpPositionDialog from "components/Positions/TopUpPositionDialog";
-import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
 import BasePopover from "components/Base/Popover/BasePopover";
-import {
-  TitleSecondary,
-  NoResults,
-  CircleWrapper,
-} from "components/AppComponents/AppBox/AppBox";
+import { TitleSecondary } from "components/AppComponents/AppBox/AppBox";
 import {
   BaseTableCell,
   BaseTableCellPopover,
@@ -34,6 +22,8 @@ import {
   BaseTableHeaderRow,
   BaseTablePaginationWrapper,
 } from "components/Base/Table/StyledTable";
+import { NoResults } from "components/Base/Typography/StyledTypography";
+import { PositionsListSkeleton } from "components/Base/Skeletons/StablecoinSkeletons";
 
 const PositionsTitle = styled(TitleSecondary)`
   font-size: 20px;
@@ -80,19 +70,20 @@ const PositionsList: FC<PositionsListProps> = ({
   return (
     <Box>
       <PositionsTitle variant={"h2"}>Your Positions</PositionsTitle>
+
       {useMemo(
         () => (
           <>
             {(positions.length === 0 || listLoading) && (
-              <NoResults mt={isMobile ? 2 : 3}>
+              <>
                 {loading ? (
-                  <CircleWrapper>
-                    <CircularProgress size={30} />
-                  </CircleWrapper>
+                  <PositionsListSkeleton />
                 ) : (
-                  "You have not opened any position."
+                  <NoResults mt={isMobile ? 2 : 3}>
+                    You have not opened any position.
+                  </NoResults>
                 )}
-              </NoResults>
+              </>
             )}
 
             {!!positions.length && !listLoading && !isMobile && (
@@ -203,41 +194,30 @@ const PositionsList: FC<PositionsListProps> = ({
           setTopUpPosition,
         ]
       )}
-      {closePosition || topUpPosition ? (
-        <AppDialog
+      {closePosition && (
+        <ClosePositionProvider position={closePosition} onClose={onClose}>
+          <ClosePositionDialog
+            topUpPosition={topUpPosition}
+            closePosition={closePosition}
+            setTopUpPosition={setTopUpPosition}
+            setClosePosition={setClosePosition}
+          />
+        </ClosePositionProvider>
+      )}
+      {topUpPosition && (
+        <TopUpPositionProvider
+          position={topUpPosition}
+          pool={topUpPositionPool}
           onClose={onClose}
-          aria-labelledby="customized-dialog-title"
-          open={true}
-          fullWidth
-          maxWidth="md"
-          color="primary"
         >
-          {closePosition && (
-            <ClosePositionProvider position={closePosition} onClose={onClose}>
-              <ClosePositionDialog
-                topUpPosition={topUpPosition}
-                closePosition={closePosition}
-                setTopUpPosition={setTopUpPosition}
-                setClosePosition={setClosePosition}
-              />
-            </ClosePositionProvider>
-          )}
-          {topUpPosition && (
-            <TopUpPositionProvider
-              position={topUpPosition}
-              pool={topUpPositionPool}
-              onClose={onClose}
-            >
-              <TopUpPositionDialog
-                topUpPosition={topUpPosition}
-                closePosition={closePosition}
-                setTopUpPosition={setTopUpPosition}
-                setClosePosition={setClosePosition}
-              />
-            </TopUpPositionProvider>
-          )}
-        </AppDialog>
-      ) : null}
+          <TopUpPositionDialog
+            topUpPosition={topUpPosition}
+            closePosition={closePosition}
+            setTopUpPosition={setTopUpPosition}
+            setClosePosition={setClosePosition}
+          />
+        </TopUpPositionProvider>
+      )}
     </Box>
   );
 };

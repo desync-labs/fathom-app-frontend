@@ -11,7 +11,7 @@ import { useApr } from "hooks/Vaults/useApr";
 import { InfoIcon } from "components/Governance/Propose";
 import { VaultPaper } from "components/AppComponents/AppPaper/AppPaper";
 import { AppFlexBox } from "components/AppComponents/AppBox/AppBox";
-import { CustomSkeleton } from "components/AppComponents/AppSkeleton/AppSkeleton";
+import { CustomSkeleton } from "components/Base/Skeletons/StyledSkeleton";
 import {
   AppFormInputErrorWrapper,
   AppFormInputUsdIndicator,

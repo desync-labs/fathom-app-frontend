@@ -1,11 +1,5 @@
 import { FC, useMemo, memo } from "react";
-import {
-  CircularProgress,
-  Table,
-  TableBody,
-  TableHead,
-  Box,
-} from "@mui/material";
+import { Table, TableBody, TableHead, Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { ICollateralPool } from "fathom-sdk";
 
@@ -14,24 +8,15 @@ import useSharedContext from "context/shared";
 import usePoolsList from "hooks/Pools/usePoolsList";
 import PoolsListItem from "components/Pools/PoolsListItem";
 import OpenNewPositionDialog from "components/Positions/OpenNewPositionDialog";
-import {
-  NoResults,
-  TitleSecondary,
-} from "components/AppComponents/AppBox/AppBox";
+import { TitleSecondary } from "components/AppComponents/AppBox/AppBox";
 import PoolsListItemMobile from "components/Pools/PoolsListItemMobile";
 import {
   BaseTableCell,
   BaseTableContainer,
   BaseTableHeaderRow,
 } from "components/Base/Table/StyledTable";
-
-const CircleWrapper = styled(Box)`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
+import { NoResults } from "components/Base/Typography/StyledTypography";
+import { PoolListSkeleton } from "components/Base/Skeletons/StablecoinSkeletons";
 
 const PoolsTitle = styled(TitleSecondary)`
   font-size: 20px;
@@ -59,15 +44,13 @@ const PoolsListView: FC<PoolsListViewProps> = ({
     <Box>
       <PoolsTitle variant="h2">Available Pools</PoolsTitle>
       {pools.length === 0 ? (
-        <NoResults variant={"h6"}>
+        <>
           {loading ? (
-            <CircleWrapper>
-              <CircularProgress size={30} />
-            </CircleWrapper>
+            <PoolListSkeleton />
           ) : (
-            "No Pool Available!"
+            <NoResults variant={"h6"}>No Pool Available!</NoResults>
           )}
-        </NoResults>
+        </>
       ) : (
         <>
           {!isMobile && (

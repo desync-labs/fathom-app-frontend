@@ -16,7 +16,7 @@ import { getPeriodInDays } from "utils/getPeriodInDays";
 import { VaultPaper } from "components/AppComponents/AppPaper/AppPaper";
 import { AppFlexBox, WarningBox } from "components/AppComponents/AppBox/AppBox";
 import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
-import { CustomSkeleton } from "components/AppComponents/AppSkeleton/AppSkeleton";
+import { CustomSkeleton } from "components/Base/Skeletons/StyledSkeleton";
 import AppPopover from "components/AppComponents/AppPopover/AppPopover";
 import { InfoIcon } from "components/Governance/Propose";
 
