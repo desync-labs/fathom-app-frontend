@@ -23,7 +23,10 @@ import {
   BaseTablePaginationWrapper,
 } from "components/Base/Table/StyledTable";
 import { NoResults } from "components/Base/Typography/StyledTypography";
-import { PositionsListSkeleton } from "components/Base/Skeletons/StablecoinSkeletons";
+import {
+  PositionListItemMobileSkeleton,
+  PositionListItemSkeleton,
+} from "components/Base/Skeletons/StablecoinSkeletons";
 import { BaseDialogWrapper } from "components/Base/Dialog/StyledDialog";
 
 const PositionsTitle = styled(TitleSecondary)`
@@ -82,21 +85,14 @@ const PositionsList: FC<PositionsListProps> = ({
   return (
     <Box>
       <PositionsTitle variant={"h2"}>Your Positions</PositionsTitle>
-
       <>
-        {(positions.length === 0 || listLoading) && (
-          <>
-            {loading ? (
-              <PositionsListSkeleton />
-            ) : (
-              <NoResults mt={isMobile ? 2 : 3}>
-                You have not opened any position.
-              </NoResults>
-            )}
-          </>
+        {positions.length === 0 && !listLoading && (
+          <NoResults mt={isMobile ? 2 : 3}>
+            You have not opened any position.
+          </NoResults>
         )}
 
-        {!!positions.length && !listLoading && !isMobile && (
+        {!isMobile && (!!positions.length || listLoading) && (
           <BaseTableContainer>
             <Table aria-label="positions table">
               <TableHead>
@@ -151,14 +147,24 @@ const PositionsList: FC<PositionsListProps> = ({
                 </BaseTableHeaderRow>
               </TableHead>
               <TableBody>
-                {positions.map((position: IOpenPosition) => (
-                  <PositionListItem
-                    key={position.id}
-                    position={position}
-                    setClosePosition={setClosePosition}
-                    setTopUpPosition={setTopUpPosition}
-                  />
-                ))}
+                {listLoading ? (
+                  <>
+                    <PositionListItemSkeleton />
+                    <PositionListItemSkeleton />
+                    <PositionListItemSkeleton />
+                    <PositionListItemSkeleton />
+                  </>
+                ) : (
+                  positions.map((position: IOpenPosition) => (
+                    <PositionListItem
+                      key={position.id}
+                      position={position}
+                      setClosePosition={setClosePosition}
+                      setTopUpPosition={setTopUpPosition}
+                    />
+                  ))
+                )}
+                {}
               </TableBody>
             </Table>
             {pageCount > 1 && (
@@ -172,16 +178,25 @@ const PositionsList: FC<PositionsListProps> = ({
             )}
           </BaseTableContainer>
         )}
-        {!!positions.length && !listLoading && isMobile && (
+        {isMobile && (!!positions.length || listLoading) && (
           <>
-            {positions.map((position: IOpenPosition) => (
-              <PositionListItemMobile
-                key={position.id}
-                position={position}
-                setClosePosition={setClosePosition}
-                setTopUpPosition={setTopUpPosition}
-              />
-            ))}
+            {listLoading ? (
+              <>
+                <PositionListItemMobileSkeleton />
+                <PositionListItemMobileSkeleton />
+                <PositionListItemMobileSkeleton />
+                <PositionListItemMobileSkeleton />
+              </>
+            ) : (
+              positions.map((position: IOpenPosition) => (
+                <PositionListItemMobile
+                  key={position.id}
+                  position={position}
+                  setClosePosition={setClosePosition}
+                  setTopUpPosition={setTopUpPosition}
+                />
+              ))
+            )}
             {pageCount > 1 && (
               <BaseTablePaginationWrapper>
                 <Pagination
