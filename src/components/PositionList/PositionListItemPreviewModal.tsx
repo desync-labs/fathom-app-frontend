@@ -110,7 +110,7 @@ const PositionListItemPreviewModal = ({
     >
       <BreadcrumbsContainer>
         <PseudoBreadcrumbs
-          poolName={position?.collateralPoolName}
+          poolName={`#${position.positionId} - ${position?.collateralPoolName}`}
           handleCloseModal={handleClosePreview}
         />
         <CloseIcon sx={{ color: "#fff" }} onClick={handleClosePreview} />
