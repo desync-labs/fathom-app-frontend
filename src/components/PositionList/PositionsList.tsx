@@ -82,11 +82,6 @@ const PositionsList: FC<PositionsListProps> = ({
     return Math.ceil(positionsItemsCount / COUNT_PER_PAGE);
   }, [positionsItemsCount]);
 
-  useEffect(() => {
-    console.log("loadingPositions", loadingPositions);
-    console.log("loading", loading);
-  }, [loadingPositions, loading]);
-
   return (
     <Box>
       <PositionsTitle variant={"h2"}>Your Positions</PositionsTitle>
