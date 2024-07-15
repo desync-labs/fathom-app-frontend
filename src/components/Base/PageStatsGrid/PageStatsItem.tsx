@@ -104,9 +104,7 @@ const BasePageStatsItem: FC<PageStatsItemProps> = ({
           {helpText && (
             <BasePopover
               id={title.toLowerCase()}
-              text={
-                "The total amount of FXD has been issued through borrowing from protocol and is currently in circulation."
-              }
+              text={helpText}
               iconSize={"16px"}
             />
           )}
