@@ -14,7 +14,7 @@ type StatsValueSkeletonProps = {
   height?: number | string;
   variant?: "text" | "circular" | "rectangular" | "rounded";
   animation?: "pulse" | "wave" | false;
-  isMobile?: boolean;
+  marginTop?: string;
 };
 
 export const StatsValueSkeleton: FC<StatsValueSkeletonProps> = ({
@@ -22,15 +22,17 @@ export const StatsValueSkeleton: FC<StatsValueSkeletonProps> = ({
   height = 28,
   variant = "rounded",
   animation = "wave",
-  isMobile = false,
+  marginTop = "0",
 }) => {
+  console.log({ bgcolor: "#2536564a", marginTop });
+
   return (
     <Skeleton
       variant={variant}
       animation={animation}
       width={width}
       height={height}
-      sx={{ bgcolor: "#2536564a", marginTop: isMobile ? "0" : "12px" }}
+      sx={{ bgcolor: "#2536564a", marginTop }}
     />
   );
 };

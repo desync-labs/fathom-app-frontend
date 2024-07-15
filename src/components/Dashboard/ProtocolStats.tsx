@@ -35,9 +35,9 @@ const ProtocolStats = () => {
         value={
           isLoading ? (
             <StatsValueSkeleton
-              height={isMobile ? "20px" : "22px"}
+              height={isMobile ? "20px" : "26px"}
               width={isMobile ? "100px" : "200px"}
-              isMobile={isMobile}
+              marginTop={isMobile ? "0" : "8px"}
             />
           ) : (
             formatNumber(totalBorrowed) + " FXD"
@@ -56,9 +56,9 @@ const ProtocolStats = () => {
         value={
           isLoading ? (
             <StatsValueSkeleton
-              height={isMobile ? "20px" : "22px"}
+              height={isMobile ? "20px" : "26px"}
               width={isMobile ? "100px" : "200px"}
-              isMobile={isMobile}
+              marginTop={isMobile ? "0" : "8px"}
             />
           ) : (
             formatCurrency(tvl)
@@ -74,9 +74,9 @@ const ProtocolStats = () => {
         value={
           isLoading ? (
             <StatsValueSkeleton
-              height={isMobile ? "20px" : "22px"}
+              height={isMobile ? "20px" : "26px"}
               width={isMobile ? "100px" : "200px"}
-              isMobile={isMobile}
+              marginTop={isMobile ? "0" : "8px"}
             />
           ) : (
             formatCurrency(

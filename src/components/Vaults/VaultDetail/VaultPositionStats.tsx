@@ -77,7 +77,7 @@ const VaultPositionStats = () => {
               <StatsValueSkeleton
                 height={isMobile ? 40 : 42}
                 width={"100%"}
-                isMobile={isMobile}
+                marginTop={isMobile ? "0" : "12px"}
               />
             ) : (
               <>
@@ -111,7 +111,7 @@ const VaultPositionStats = () => {
               <StatsValueSkeleton
                 height={isMobile ? 40 : 42}
                 width={"100%"}
-                isMobile={isMobile}
+                marginTop={isMobile ? "0" : "12px"}
               />
             ) : (
               <>
@@ -141,7 +141,7 @@ const VaultPositionStats = () => {
               <StatsValueSkeleton
                 height={isMobile ? 40 : 42}
                 width={"100%"}
-                isMobile={isMobile}
+                marginTop={isMobile ? "0" : "12px"}
               />
             ) : (
               <>
@@ -177,7 +177,7 @@ const VaultPositionStats = () => {
                 <StatsValueSkeleton
                   height={isMobile ? 40 : 42}
                   width={"100%"}
-                  isMobile={isMobile}
+                  marginTop={isMobile ? "0" : "12px"}
                 />
               ) : BigNumber(balanceEarned).isGreaterThan(0) ? (
                 <>
