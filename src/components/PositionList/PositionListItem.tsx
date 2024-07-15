@@ -37,10 +37,6 @@ const PositionListItem: FC<PositionListItemProps> = ({
   position,
   setTopUpPosition,
 }) => {
-  console.log({
-    safetyBufferInPercent: position.safetyBufferInPercent,
-  });
-
   return (
     <BaseTableItemRow key={position.id}>
       <TableCell component="td" scope="row">

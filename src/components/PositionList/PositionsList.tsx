@@ -1,4 +1,4 @@
-import { Dispatch, FC, useMemo, memo } from "react";
+import { Dispatch, FC, memo, useState, useEffect, useMemo } from "react";
 import { Box, Table, TableBody, TableHead, Pagination } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { IOpenPosition } from "fathom-sdk";
@@ -62,138 +62,137 @@ const PositionsList: FC<PositionsListProps> = ({
   } = useOpenPositionList(setPositionCurrentPage, proxyWallet);
   const { isMobile } = useSharedContext();
 
-  const listLoading = useMemo(
-    () => loadingPositions || loading,
-    [loadingPositions, loading]
-  );
+  const [listLoading, setListLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setListLoading(loadingPositions || loading);
+    }, 300);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [setListLoading, loadingPositions, loading]);
+
+  const pageCount = useMemo(() => {
+    return Math.ceil(positionsItemsCount / COUNT_PER_PAGE);
+  }, [positionsItemsCount]);
 
   return (
     <Box>
       <PositionsTitle variant={"h2"}>Your Positions</PositionsTitle>
 
-      {useMemo(
-        () => (
+      <>
+        {(positions.length === 0 || listLoading) && (
           <>
-            {(positions.length === 0 || listLoading) && (
-              <>
-                {loading ? (
-                  <PositionsListSkeleton />
-                ) : (
-                  <NoResults mt={isMobile ? 2 : 3}>
-                    You have not opened any position.
-                  </NoResults>
-                )}
-              </>
+            {loading ? (
+              <PositionsListSkeleton />
+            ) : (
+              <NoResults mt={isMobile ? 2 : 3}>
+                You have not opened any position.
+              </NoResults>
             )}
+          </>
+        )}
 
-            {!!positions.length && !listLoading && !isMobile && (
-              <BaseTableContainer>
-                <Table aria-label="positions table">
-                  <TableHead>
-                    <BaseTableHeaderRow>
-                      <BaseTableCell>Id</BaseTableCell>
-                      <BaseTableCell>Asset</BaseTableCell>
-                      <BaseTableCell>
-                        <BaseTableCellPopover>
-                          Liquidation price
-                          <BasePopover
-                            id={"liquidation-price"}
-                            text={
-                              "Liquidation Price is the price of the collateral token when your collateral will be automatically sold to partially or fully repay the loan if your collateral value drops. It's a safety mechanism to ensure that loans are always sufficiently collateralized. Monitoring this price helps prevent the unwanted liquidation of your assets."
-                            }
-                          />
-                        </BaseTableCellPopover>
-                      </BaseTableCell>
-                      <BaseTableCell>Borrowed</BaseTableCell>
-                      <BaseTableCell>Collateral</BaseTableCell>
-                      <BaseTableCell>
-                        <BaseTableCellPopover>
-                          Safety buffer
-                          <BasePopover
-                            id={"safety-buffer"}
-                            text={
-                              <>
-                                Safety Buffer represents the extra collateral
-                                value above your borrowed amount. This is
-                                maintained to protect against market volatility
-                                and prevent the automatic liquidation of your
-                                assets. The larger your safety buffer, the lower
-                                your risk of reaching the liquidation price.{" "}
-                                <br />
-                                <br />
-                                Safety buffer is calculated from LTV. When you
-                                multiply your collateral value with LTV - you
-                                will get how much you can borrow maximum with a
-                                0% safety buffer. For example, if your
-                                collateral value is $100, with 25% LTV, you can
-                                maximum borrow 75 FXD, which gives you 0% Safety
-                                Buffer, and your position becomes very risky for
-                                liquidation.
-                                <br />
-                                <br />
-                                We recommend at least 50% Safety Buffer. Using
-                                the example above, the recommended amount to
-                                borrow is 75 FXD * 50% = 37.5 FXD.
-                              </>
-                            }
-                          />
-                        </BaseTableCellPopover>
-                      </BaseTableCell>
-                      <BaseTableCell></BaseTableCell>
-                    </BaseTableHeaderRow>
-                  </TableHead>
-                  <TableBody>
-                    {positions.map((position: IOpenPosition) => (
-                      <PositionListItem
-                        key={position.id}
-                        position={position}
-                        setClosePosition={setClosePosition}
-                        setTopUpPosition={setTopUpPosition}
+        {!!positions.length && !listLoading && !isMobile && (
+          <BaseTableContainer>
+            <Table aria-label="positions table">
+              <TableHead>
+                <BaseTableHeaderRow>
+                  <BaseTableCell>Id</BaseTableCell>
+                  <BaseTableCell>Asset</BaseTableCell>
+                  <BaseTableCell>
+                    <BaseTableCellPopover>
+                      Liquidation price
+                      <BasePopover
+                        id={"liquidation-price"}
+                        text={
+                          "Liquidation Price is the price of the collateral token when your collateral will be automatically sold to partially or fully repay the loan if your collateral value drops. It's a safety mechanism to ensure that loans are always sufficiently collateralized. Monitoring this price helps prevent the unwanted liquidation of your assets."
+                        }
                       />
-                    ))}
-                  </TableBody>
-                </Table>
-                <BaseTablePaginationWrapper>
-                  <Pagination
-                    count={Math.ceil(positionsItemsCount / COUNT_PER_PAGE)}
-                    page={positionCurrentPage}
-                    onChange={handlePageChange}
-                  />
-                </BaseTablePaginationWrapper>
-              </BaseTableContainer>
-            )}
-            {!!positions.length && !listLoading && isMobile && (
-              <>
+                    </BaseTableCellPopover>
+                  </BaseTableCell>
+                  <BaseTableCell>Borrowed</BaseTableCell>
+                  <BaseTableCell>Collateral</BaseTableCell>
+                  <BaseTableCell>
+                    <BaseTableCellPopover>
+                      Safety buffer
+                      <BasePopover
+                        id={"safety-buffer"}
+                        text={
+                          <>
+                            Safety Buffer represents the extra collateral value
+                            above your borrowed amount. This is maintained to
+                            protect against market volatility and prevent the
+                            automatic liquidation of your assets. The larger
+                            your safety buffer, the lower your risk of reaching
+                            the liquidation price. <br />
+                            <br />
+                            Safety buffer is calculated from LTV. When you
+                            multiply your collateral value with LTV - you will
+                            get how much you can borrow maximum with a 0% safety
+                            buffer. For example, if your collateral value is
+                            $100, with 25% LTV, you can maximum borrow 75 FXD,
+                            which gives you 0% Safety Buffer, and your position
+                            becomes very risky for liquidation.
+                            <br />
+                            <br />
+                            We recommend at least 50% Safety Buffer. Using the
+                            example above, the recommended amount to borrow is
+                            75 FXD * 50% = 37.5 FXD.
+                          </>
+                        }
+                      />
+                    </BaseTableCellPopover>
+                  </BaseTableCell>
+                  <BaseTableCell></BaseTableCell>
+                </BaseTableHeaderRow>
+              </TableHead>
+              <TableBody>
                 {positions.map((position: IOpenPosition) => (
-                  <PositionListItemMobile
+                  <PositionListItem
                     key={position.id}
                     position={position}
                     setClosePosition={setClosePosition}
                     setTopUpPosition={setTopUpPosition}
                   />
                 ))}
-                <BaseTablePaginationWrapper>
-                  <Pagination
-                    count={Math.ceil(positionsItemsCount / COUNT_PER_PAGE)}
-                    page={positionCurrentPage}
-                    onChange={handlePageChange}
-                  />
-                </BaseTablePaginationWrapper>
-              </>
+              </TableBody>
+            </Table>
+            {pageCount > 1 && (
+              <BaseTablePaginationWrapper>
+                <Pagination
+                  count={Math.ceil(positionsItemsCount / COUNT_PER_PAGE)}
+                  page={positionCurrentPage}
+                  onChange={handlePageChange}
+                />
+              </BaseTablePaginationWrapper>
+            )}
+          </BaseTableContainer>
+        )}
+        {!!positions.length && !listLoading && isMobile && (
+          <>
+            {positions.map((position: IOpenPosition) => (
+              <PositionListItemMobile
+                key={position.id}
+                position={position}
+                setClosePosition={setClosePosition}
+                setTopUpPosition={setTopUpPosition}
+              />
+            ))}
+            {pageCount > 1 && (
+              <BaseTablePaginationWrapper>
+                <Pagination
+                  count={Math.ceil(positionsItemsCount / COUNT_PER_PAGE)}
+                  page={positionCurrentPage}
+                  onChange={handlePageChange}
+                />
+              </BaseTablePaginationWrapper>
             )}
           </>
-        ),
-        [
-          loading,
-          positions,
-          handlePageChange,
-          positionCurrentPage,
-          positionsItemsCount,
-          isMobile,
-          setClosePosition,
-          setTopUpPosition,
-        ]
-      )}
+        )}
+      </>
       {closePosition && (
         <ClosePositionProvider position={closePosition} onClose={onClose}>
           <ClosePositionDialog
