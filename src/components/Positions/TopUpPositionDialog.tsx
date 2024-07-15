@@ -16,7 +16,6 @@ import { BaseDialogTitle } from "components/Base/Dialog/BaseDialogTitle";
 import { ClosePositionDialogPropsType } from "components/Positions/RepayPositionDialog";
 import TopUpPositionInfo from "components/Positions/TopUpPosition/TopUpPositionInfo";
 import TopUpPositionForm from "components/Positions/TopUpPosition/TopUpPositionForm";
-import { BaseDialogWrapper } from "components/Base/Dialog/StyledDialog";
 import WalletConnectBtn from "components/Common/WalletConnectBtn";
 import {
   ButtonPrimary,
@@ -51,7 +50,7 @@ const TopUpPositionDialog: FC<ClosePositionDialogPropsType> = ({
   const { account } = useConnector();
 
   return (
-    <BaseDialogWrapper onClose={onClose} maxWidth="sm" open={true} fullWidth>
+    <>
       <BaseDialogTitle id="customized-dialog-title" onClose={onClose}>
         Top Up Position
       </BaseDialogTitle>
@@ -133,7 +132,7 @@ const TopUpPositionDialog: FC<ClosePositionDialogPropsType> = ({
           )}
         </ModalButtonWrapper>
       </DialogContent>
-    </BaseDialogWrapper>
+    </>
   );
 };
 

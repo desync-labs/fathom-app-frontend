@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import BigNumber from "bignumber.js";
 import useProtocolStats from "hooks/General/useProtocolStats";
 import { formatCurrency, formatNumber } from "utils/format";
@@ -8,12 +9,24 @@ import BasePageStatsItem from "components/Base/PageStatsGrid/PageStatsItem";
 import { StatsValueSkeleton } from "components/Base/Skeletons/StyledSkeleton";
 
 const ProtocolStats = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
   const { tvl, loading, poolsLoading, totalBorrowed } = useProtocolStats();
   const { fxdPrice, fetchPricesInProgress } = usePricesContext();
   const { isMobile } = useSharedContext();
 
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setIsLoading(poolsLoading || loading || fetchPricesInProgress);
+    }, 300);
+
+    return () => {
+      timeout && clearTimeout(timeout);
+    };
+  }, [poolsLoading, loading, fetchPricesInProgress, setIsLoading]);
+
   return (
-    <BasePageStatsWrapper>
+    <BasePageStatsWrapper isLoading={isLoading}>
       <BasePageStatsItem
         title={"Total Issued"}
         helpText={
@@ -22,7 +35,7 @@ const ProtocolStats = () => {
         value={
           poolsLoading ? (
             <StatsValueSkeleton
-              height={isMobile ? "20px" : "28px"}
+              height={isMobile ? "20px" : "24px"}
               width={isMobile ? "100px" : "200px"}
               isMobile={isMobile}
             />
@@ -43,7 +56,7 @@ const ProtocolStats = () => {
         value={
           loading ? (
             <StatsValueSkeleton
-              height={isMobile ? "20px" : "28px"}
+              height={isMobile ? "20px" : "24px"}
               width={isMobile ? "100px" : "200px"}
               isMobile={isMobile}
             />
@@ -61,7 +74,7 @@ const ProtocolStats = () => {
         value={
           fetchPricesInProgress ? (
             <StatsValueSkeleton
-              height={isMobile ? "20px" : "28px"}
+              height={isMobile ? "20px" : "24px"}
               width={isMobile ? "100px" : "200px"}
               isMobile={isMobile}
             />

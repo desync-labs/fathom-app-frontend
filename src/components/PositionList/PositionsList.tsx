@@ -24,6 +24,7 @@ import {
 } from "components/Base/Table/StyledTable";
 import { NoResults } from "components/Base/Typography/StyledTypography";
 import { PositionsListSkeleton } from "components/Base/Skeletons/StablecoinSkeletons";
+import { BaseDialogWrapper } from "components/Base/Dialog/StyledDialog";
 
 const PositionsTitle = styled(TitleSecondary)`
   font-size: 20px;
