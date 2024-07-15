@@ -21,7 +21,7 @@ const ProtocolStats = () => {
     }, 300);
 
     return () => {
-      timeout && clearTimeout(timeout);
+      clearTimeout(timeout);
     };
   }, [poolsLoading, loading, fetchPricesInProgress, setIsLoading]);
 
@@ -33,9 +33,9 @@ const ProtocolStats = () => {
           "The total amount of FXD has been issued through borrowing from protocol and is currently in circulation."
         }
         value={
-          poolsLoading ? (
+          isLoading ? (
             <StatsValueSkeleton
-              height={isMobile ? "20px" : "24px"}
+              height={isMobile ? "20px" : "22px"}
               width={isMobile ? "100px" : "200px"}
               isMobile={isMobile}
             />
@@ -54,9 +54,9 @@ const ProtocolStats = () => {
           "TVL, or Total Value Locked, signifies the total amount of assets currently deposited in the platform and used to borrow FXD."
         }
         value={
-          loading ? (
+          isLoading ? (
             <StatsValueSkeleton
-              height={isMobile ? "20px" : "24px"}
+              height={isMobile ? "20px" : "22px"}
               width={isMobile ? "100px" : "200px"}
               isMobile={isMobile}
             />
@@ -72,9 +72,9 @@ const ProtocolStats = () => {
       <BasePageStatsItem
         title={"FXD Price"}
         value={
-          fetchPricesInProgress ? (
+          isLoading ? (
             <StatsValueSkeleton
-              height={isMobile ? "20px" : "24px"}
+              height={isMobile ? "20px" : "22px"}
               width={isMobile ? "100px" : "200px"}
               isMobile={isMobile}
             />
