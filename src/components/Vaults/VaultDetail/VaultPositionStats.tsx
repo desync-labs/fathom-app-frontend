@@ -170,6 +170,7 @@ const VaultPositionStats = () => {
         />
         <BasePageStatsItem
           title={"Earned"}
+          testId="vault-detailsPositionStats-earnedValue"
           value={
             <>
               {isLoading || balanceEarned === -1 ? (
