@@ -121,7 +121,7 @@ const authMiddleware = new ApolloLink((operation, forward) => {
       : SUBGRAPH_URLS[DEFAULT_CHAIN_ID];
 
   if (operation.getContext().clientName === "stable") {
-    uri += "/subgraphs/name/stablecoin-subgraph-v2";
+    uri += "/subgraphs/name/stablecoin-subgraph";
   } else if (operation.getContext().clientName === "governance") {
     uri += "/subgraphs/name/dao-subgraph";
   } else if (operation.getContext().clientName === "vaults") {
